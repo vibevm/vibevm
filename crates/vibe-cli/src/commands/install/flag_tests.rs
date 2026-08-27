@@ -51,6 +51,7 @@ fn base_args() -> InstallArgs {
         embedded_short_circuit: false,
         prefer_local: false,
         no_prefer_local: false,
+        trace_compile: false,
     }
 }
 

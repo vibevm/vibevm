@@ -20,11 +20,25 @@ use crate::cli::InstallArgs;
 /// entry for the same pkgref to keep `manifest.requires` in a valid
 /// shape (no duplicate `(kind, name)` between `packages` and
 /// `git_packages`).
+///
+/// The value written back is the caller's STORED RAW snapshot — the one this
+/// command read once, before it built anything. Two reasons, and both are
+/// load-bearing:
+///
+/// * re-reading here would be a second byte version of a file this command is
+///   itself about to rewrite, and the write would persist whichever version
+///   won the race;
+/// * writing back the FINALISED copy instead would rewrite an operator's
+///   `[workspace.versions]` placeholders into the concrete versions the loader
+///   resolved — versions they never typed.
+///
+/// The returned dep is the delta, and only the delta, for the caller to replay
+/// onto the finalised in-memory node.
 pub(crate) fn apply_git_source_flag(
     args: &InstallArgs,
     manifest: &mut Manifest,
     project_root: &std::path::Path,
-) -> Result<()> {
+) -> Result<vibe_core::manifest::GitPackageDep> {
     use vibe_core::manifest::{AuthKind, GitPackageDep, GitRefKind};
 
     if args.exact {
@@ -98,7 +112,7 @@ pub(crate) fn apply_git_source_flag(
     // translates flags into the typed dep and hands it over, then
     // persists before resolving so a panic mid-resolve cannot strand the
     // declaration off disk.
-    vibe_install::record_git_source(manifest, dep);
+    vibe_install::record_git_source(manifest, dep.clone());
     manifest.write(project_root.join(Manifest::FILENAME))?;
-    Ok(())
+    Ok(dep)
 }

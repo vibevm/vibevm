@@ -44,9 +44,10 @@ mod slot_verify;
 mod visibility_projection;
 
 pub use apply::{
-    ApplyReport, SlotLifecycleSeams, apply, apply_with_spec_format,
+    ApplyReport, PreparedApplyReport, SlotLifecycleSeams, apply, apply_with_spec_format,
     apply_with_spec_format_and_hook_output, apply_with_spec_format_and_lifecycle_observed,
     apply_with_spec_format_and_lifecycle_observed_traced,
+    apply_with_spec_format_and_lifecycle_observed_traced_prepared,
 };
 pub use error::Error;
 pub use events::{NullObserver, PlanEvent, PlanObserver};
@@ -55,7 +56,10 @@ pub use lifecycle::{
     InstallProgress, InstallSlotLifecycle, NoSlotLifecycleObserver, SlotLifecycleObserver,
     SlotLifecyclePlan, SlotLifecyclePlanEntry, SlotLifecycleReport,
 };
-pub use plan::{InstallRequest, Plan, PlannedInstall, plan, plan_with_spec_format};
+pub use plan::{
+    InstallRequest, Plan, PlannedInstall, plan, plan_prepared_with_spec_format,
+    plan_with_spec_format,
+};
 pub use record::{
     exact_pinned_pkgref, finalize_pkgref_for_manifest, merge_manifest_requires,
     merge_root_dependencies, record_git_source,

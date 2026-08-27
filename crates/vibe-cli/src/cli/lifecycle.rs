@@ -76,6 +76,13 @@ pub struct LifecycleArgs {
     /// Ignore reusable lifecycle fingerprints for this invocation.
     #[arg(long)]
     pub force: bool,
+
+    /// PROP-054 `##OBS-TRACE`: record every compiler pass this phase runs —
+    /// including its prerequisite install's — into `.vibe/trace/<run-id>/`.
+    /// Same two-sided activation as `vibe install --trace-compile`: this flag
+    /// OR the selected project's `[compile] trace`.
+    #[arg(long)]
+    pub trace_compile: bool,
 }
 
 impl LifecycleArgs {
@@ -108,6 +115,11 @@ impl LifecycleArgs {
             git_auth: None,
             git_token_env: None,
             force: self.force,
+            // The one flag that must survive the conversion: a phase verb's
+            // prerequisite install is part of the SAME traced run, so dropping
+            // it here would leave the install's compiles out of the trace the
+            // command otherwise owns.
+            trace_compile: self.trace_compile,
         }
     }
 }

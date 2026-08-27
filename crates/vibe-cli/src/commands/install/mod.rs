@@ -8,20 +8,34 @@
 //! (R-001 — the registry module builds the cells), the interactive
 //! confirmation between plan and apply, and rendering. The pipeline
 //! itself lives in `vibe-install`.
+//!
+//! ## Where the compile trace enters
+//!
+//! [`execute_prepared`] BORROWS `Option<&TraceRun>` and hands it to the traced
+//! sibling of every API that compiles: the empty-world regeneration, the fresh
+//! fast path's regeneration, and the ready apply. It never opens, finishes or
+//! clones a recorder — the owner is the command boundary above
+//! ([`direct::run`] for `vibe install`, `lifecycle::execute` for a phase
+//! verb), and a second owner of the project's cooperative lock would be a
+//! second answer to "is this workspace being traced right now".
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail");
 
 mod closure_diff;
-mod document;
+mod direct;
+mod draft;
 mod events;
 mod inputs;
 mod observer;
 mod project_local;
+mod ready;
 mod report;
 mod resolver;
 mod resume;
 
 pub(crate) use closure_diff::{emit_closure_diff, lane_sizes};
+pub(crate) use direct::run as run_direct;
+pub(crate) use draft::InstallDraft;
 pub(crate) use project_local::project_packages_root;
 pub(crate) use report::{HookReportPresentation, HookReportView, LifecycleHookView};
 pub(crate) use resolver::{InstallResolver, build_install_resolver};
@@ -29,26 +43,25 @@ pub(crate) use vibe_install::exact_pinned_pkgref;
 
 use std::path::{Path, PathBuf};
 
-use anyhow::{Context, Result, bail};
-use dialoguer::Confirm;
+use anyhow::{Context, Result};
 use vibe_core::PackageRef;
-use vibe_core::manifest::{Lockfile, Manifest};
+use vibe_core::manifest::Lockfile;
 use vibe_core::user_config::UserConfig;
 use vibe_install::{InstallRequest, Plan, SlotLifecycleReport};
-use vibe_lifecycle::process::StreamMode;
 use vibe_lifecycle::{LifecycleRunHandle, RunMetadata};
 use vibe_resolver::FeatureRequest;
 use vibe_workspace::Workspace;
+use vibe_workspace::compile_trace::TraceRun;
 
 use crate::cli::InstallArgs;
 use crate::commands::short_name;
-use crate::exit_code::InstallError;
 use crate::output;
 
-pub(crate) use document::emit_command_document;
-use document::fresh_run;
 use events::CtxObserver;
-pub(crate) use inputs::{generated_by, resolve_project_root, resolve_spec_format};
+pub(crate) use inputs::{
+    PreparedWorkspace, SelectedManifest, generated_by, resolve_project_root, resolve_spec_format,
+    selected_node_manifest,
+};
 pub(crate) use observer::LifecycleSlotObserver;
 use resolver::apply_git_source_flag;
 pub(crate) use resume::{ResumeRequest, resume_slot_continuation};
@@ -150,120 +163,129 @@ pub(crate) struct WorldCallbackOutcome {
     pub(crate) parked: Option<vibe_lifecycle::Delegation>,
 }
 
-#[allow(
-    dead_code,
-    reason = "the bare install facade is a public seam kept for callers that need no \
-              post-durability callback; `vibe install` itself uses `run_with_world_callback`"
-)]
-pub fn run(
-    ctx: &output::Context,
-    args: InstallArgs,
-    embedded_root: Option<PathBuf>,
-    root_offline: bool,
-) -> Result<InstallRun> {
-    run_with_world_callback(ctx, args, embedded_root, root_offline, |_, _, _| {
-        Ok(WorldCallbackOutcome::default())
-    })
+/// Everything one install execution needs that its caller already decided.
+///
+/// The identity is NOT selected here any more. A caller either owns the
+/// command (and selected one identity together with its trace request, before
+/// anything was allocated) or is chained inside one (and carries that outer
+/// metadata unchanged). A fallback selection at this depth was a second
+/// selector: it ran after the config load, could allocate a second run
+/// directory, and had no way to know the effective trace bit its caller had
+/// already committed to.
+pub(crate) struct InstallExecution<'a> {
+    pub(crate) args: InstallArgs,
+    pub(crate) embedded_root: Option<PathBuf>,
+    pub(crate) root_offline: bool,
+    /// The ONE canonical selection of this command's project root. Resolved by
+    /// the prelude epoch and carried; nothing below re-canonicalises a path.
+    pub(crate) project_root: PathBuf,
+    /// The command's ONE `UserConfig` load. Prepared by the owner, because it
+    /// has to be: the config decides the offline posture that goes into the
+    /// metadata, and the metadata is fixed before this function runs.
+    pub(crate) user_config: UserConfig,
+    /// The command's ONE selected-manifest snapshot — see
+    /// [`SelectedManifest`]. Consumed below at the boundary that historically
+    /// performed the read.
+    pub(crate) manifest: SelectedManifest,
+    /// What the owner's ONE attempt to build the workspace produced — see
+    /// [`PreparedWorkspace`]. Consumed below; never retried.
+    pub(crate) workspace: PreparedWorkspace,
+    pub(crate) metadata: RunMetadata,
+    /// Where slot-lifecycle narration goes when the install is a phase verb's
+    /// prerequisite: the OUTER context, so its rows are still visible while
+    /// the install's own summary stays suppressed.
+    pub(crate) lifecycle_output: Option<&'a output::Context>,
+    /// The command owner's recorder, borrowed. `None` is not "off" here — it
+    /// is "this caller's command is not tracing", which is the same thing to
+    /// every layer below.
+    pub(crate) trace: Option<&'a TraceRun>,
 }
 
-/// The one install implementation with an additive post-durability callback.
+/// The one install implementation, with an additive post-durability callback.
 ///
-/// Only the direct top-level install facade supplies a non-empty callback. All
-/// install-family callers retain [`run`]'s byte-for-byte rendering behaviour.
-pub(crate) fn run_with_world_callback(
+/// Renders nothing: every path returns [`InstallRun`] or an error, and the
+/// outermost command owns the single document.
+pub(crate) fn execute_prepared(
     ctx: &output::Context,
-    args: InstallArgs,
-    embedded_root: Option<PathBuf>,
-    root_offline: bool,
+    execution: InstallExecution<'_>,
+    // The callback receives the CURRENT workspace by borrow — the one this
+    // execution loaded and, on a `--git` run, mutated in place. Post-durability
+    // world planning must see that exact value; rediscovering would be a second
+    // byte snapshot of a tree this command just changed.
     after_durable_world: impl FnOnce(
         &Path,
         InstallDisposition,
         InstallRunContext,
+        &Workspace,
     ) -> Result<WorldCallbackOutcome>,
 ) -> Result<InstallRun> {
-    run_with_lifecycle_context(
-        ctx,
+    let InstallExecution {
         args,
         embedded_root,
         root_offline,
-        None,
-        None,
-        after_durable_world,
-    )
-}
-
-pub(crate) fn run_with_lifecycle_context(
-    ctx: &output::Context,
-    args: InstallArgs,
-    embedded_root: Option<PathBuf>,
-    root_offline: bool,
-    metadata: Option<RunMetadata>,
-    lifecycle_output: Option<&output::Context>,
-    after_durable_world: impl FnOnce(
-        &Path,
-        InstallDisposition,
-        InstallRunContext,
-    ) -> Result<WorldCallbackOutcome>,
-) -> Result<InstallRun> {
+        project_root,
+        user_config,
+        manifest,
+        workspace,
+        metadata,
+        lifecycle_output,
+        trace,
+    } = execution;
     let mut after_durable_world = Some(after_durable_world);
-    let project_root = resolve_project_root(&args.path)?;
-    // PROP-011 §2.3 — the materialise-diff strategy, read once from the
-    // user config so a malformed config fails before any resolution. The
-    // same load supplies the `[net].offline` rung of the offline ladder.
-    let user_config = UserConfig::load().context("loading the user config")?;
+    // PROP-011 §2.3 — the materialise-diff strategy, read from the ONE user
+    // config this command loaded before anything was allocated. The same load
+    // supplied the `[net].offline` rung of the offline ladder.
     let slot_integrity = user_config.install.slot_integrity;
     // PROP-010 §2.5 — the resolved offline posture: CLI flag (root
     // `--offline` OR this command's PROP-030 §3.1 `--offline`) >
     // `VIBE_OFFLINE` > user-config `[net].offline`. Resolved here, once,
     // so the resolver below receives a single boolean.
     let offline = output::resolve_offline(root_offline || args.offline, user_config.net.offline);
-    let metadata = metadata.unwrap_or_else(|| RunMetadata {
-        requested: "install".into(),
-        chain: vec!["validate".into(), "install".into()],
-        offline,
-        assume_yes: args.assume_yes || ctx.is_unattended() || ctx.is_json(),
-        agent_mode: ctx.agent_mode(),
-        force: args.force,
-        trace_compile: false,
-        run_id: String::new(),
-        started: crate::commands::init::current_timestamp_utc(),
-    });
-    // An explicit `vibe install` selects its own durable identity through the
-    // ONE selector, exactly as a phase verb does; a chained install inherits
-    // the caller's already-selected metadata unchanged.
-    let metadata = if metadata.run_id.is_empty() {
-        let identity = super::lifecycle::run_identity(
-            ctx,
-            &args.path,
-            &metadata.requested,
-            &metadata.chain,
-            metadata.force,
-        )
-        .context("selecting the install lifecycle run identity")?;
-        RunMetadata {
-            run_id: identity.run_id,
-            started: identity.started,
-            // Taken from the selection, not preserved from the
-            // pre-selection default above: an adopted traced run's
-            // sticky bit is only known once the selector has read the
-            // prior state, and a struct update that kept the placeholder
-            // false would silently untrace every resume.
-            trace_compile: identity.compile_trace,
-            ..metadata
-        }
-    } else {
-        metadata
-    };
     // The resolved run metadata is the invocation's identity; the callback
     // context owns a clone so a later seam can still read it.
     let run_metadata = metadata.clone();
-    let mut lifecycle_run = InstallRunContext {
+    let lifecycle_run = InstallRunContext {
         metadata,
         lifecycle_run: None,
         lifecycle_reports: Vec::new(),
     };
 
-    let mut manifest = Manifest::read(project_root.join(Manifest::FILENAME))?;
+    // The command's ONE authoritative read of its world, consumed at exactly
+    // the point this function has always read the tree: after the config load
+    // and after the identity was selected, so a malformed manifest still fails
+    // here, with the same error, after the same side effects.
+    //
+    // The lock entries beside it are the provenance channel for store-backed
+    // resolutions (PROP-010 §2.6) and ride into the resolver as a builder
+    // input; the same snapshot serves short-name qualification below.
+    // The stored manifest result FIRST: a malformed selected manifest is this
+    // command's error, in its own words, at the point it has always been
+    // raised — after the config load and after the identity was selected.
+    let mut manifest = manifest.into_manifest()?;
+    let mut workspace = match workspace {
+        PreparedWorkspace::Loaded(workspace) => *workspace,
+        // The FIRST answer, returned as it was. Retrying here could succeed
+        // against a tree the identity and the trace were never prepared for.
+        PreparedWorkspace::DiscoveryFailed(error) => {
+            return Err(anyhow::Error::new(*error)
+                .context("discovering the workspace enclosing the project"));
+        }
+        // A caller with no prelude builds the tree here — from the snapshot
+        // just consumed, so this is still one read of the selected node.
+        PreparedWorkspace::DiscoverHere => {
+            Workspace::discover_with_selected_manifest(&project_root, &manifest)
+                .context("discovering the workspace enclosing the project")?
+        }
+        // Unreachable in practice: the line above returns the stored manifest
+        // error first. Named rather than merged so that a future caller which
+        // rewraps a parsed manifest beside this arm is a compile-time question
+        // instead of a silent success.
+        PreparedWorkspace::SelectedManifestInvalid => {
+            anyhow::bail!(
+                "internal: the selected manifest was reported invalid but its error was                  already consumed"
+            );
+        }
+    };
     let spec_format = resolve_spec_format(&manifest, &user_config);
 
     // M1.15: `vibe install <pkgref> --git <url> --tag/branch/rev <ref>`
@@ -272,18 +294,19 @@ pub(crate) fn run_with_lifecycle_context(
     // built immediately below; subsequent installs of the same project
     // reproduce the install via the now-recorded git-source entry.
     if args.git.is_some() {
-        apply_git_source_flag(&args, &mut manifest, &project_root)
+        // Built once, applied to the STORED RAW snapshot, and persisted from
+        // that same value — no second read of a file this command is rewriting.
+        let dep = apply_git_source_flag(&args, &mut manifest, &project_root)
             .context("recording --git declaration to vibe.toml")?;
+        // Then the SAME delta is replayed onto the finalised node inside the
+        // loaded tree — never an assignment, which would restore
+        // `var_packages` and erase the concrete versions the loader resolved.
+        if let Some(selected) = inputs::selected_node_manifest_mut(&mut workspace, &project_root) {
+            vibe_install::record_git_source(selected, dep);
+        }
     }
 
     let global = vibe_core::GlobalRegistryConfig::load()?;
-    // The workspace and its lockfile are read BEFORE the resolver is
-    // built: the lock entries are the provenance channel for
-    // store-backed resolutions (PROP-010 §2.6) and ride into the
-    // resolver as a builder input. The same snapshot serves short-name
-    // qualification below — one read, two consumers.
-    let workspace = Workspace::discover(&project_root)
-        .context("discovering the workspace enclosing the project")?;
     let lockfile_path = workspace.root.join(Lockfile::FILENAME);
     // An unsupported-schema lock reads as EMPTY on the install path: install
     // is the regeneration verb the schema policy names, so it must never
@@ -315,14 +338,18 @@ pub(crate) fn run_with_lifecycle_context(
         && lockfile_snapshot.meta.root_dependencies.is_empty()
     {
         ctx.heading("nothing declared — regenerating boot artifacts for the empty world");
-        let nodes =
-            vibe_workspace::install::regenerate_boot_with_spec_format(&workspace, spec_format)
-                .context("regenerating boot artifacts for the empty world")?;
+        let nodes = vibe_workspace::install::regenerate_boot_traced(&workspace, spec_format, trace)
+            .context("regenerating boot artifacts for the empty world")?;
         let after = after_durable_world
             .take()
             .context("internal: install durable-world callback already consumed")?;
-        let world = after(&project_root, InstallDisposition::Fresh, lifecycle_run)?;
-        return Ok(fresh_run(&project_root, nodes, world));
+        let world = after(
+            &project_root,
+            InstallDisposition::Fresh,
+            lifecycle_run,
+            &workspace,
+        )?;
+        return Ok(InstallDraft::fresh_run(&project_root, nodes, world));
     }
 
     // PROP-050 ##VERIFY-LOCK-DIFF — the lane-size half of the pre-apply
@@ -364,9 +391,15 @@ pub(crate) fn run_with_lifecycle_context(
         generated_by: generated_by(),
     };
 
-    let plan = vibe_install::plan_with_spec_format(
+    // The PREPARED planner, over the two values this command already owns.
+    // The compatibility wrapper would re-read the selected `vibe.toml` — the
+    // very file a `--git` run rewrote a few lines above — and re-discover the
+    // tree that rewrite was replayed into.
+    let plan = vibe_install::plan_prepared_with_spec_format(
         &resolver,
         &project_root,
+        &mut manifest,
+        &mut workspace,
         request,
         spec_format,
         &CtxObserver(ctx),
@@ -376,10 +409,14 @@ pub(crate) fn run_with_lifecycle_context(
             // PROP-011 §2.2 — application is just a whole-tree boot
             // regeneration (cheap, self-healing — §2.4).
             ctx.heading("vibe.lock is fresh — skipping resolution");
-            let ws = Workspace::discover(&project_root)
-                .context("re-discovering the workspace for boot regeneration")?;
-            let nodes = vibe_workspace::install::regenerate_boot_with_spec_format(&ws, spec_format)
-                .context("regenerating boot artifacts from the materialised state")?;
+            // The one workspace snapshot this command owns. Nothing between
+            // its read and here mutated the tree — the fresh fast path
+            // resolves nothing and copies nothing — so a re-read could only
+            // ever differ by racing another process, which is exactly the
+            // difference a single snapshot exists to refuse.
+            let nodes =
+                vibe_workspace::install::regenerate_boot_traced(&workspace, spec_format, trace)
+                    .context("regenerating boot artifacts from the materialised state")?;
             let after = after_durable_world
                 .take()
                 .context("internal: install durable-world callback already consumed")?;
@@ -403,185 +440,45 @@ pub(crate) fn run_with_lifecycle_context(
                     packages_resolved: 0,
                 },
             )? {
-                return Ok(resumed);
+                // A satisfied resume still owes the post-durability world: the
+                // hosting output arrived, so an authored `phase:install` row
+                // must run, in the run the resume just finished.
+                return resume::finish_resumed(resumed, &project_root, &workspace, after);
             }
-            let world = after(&project_root, InstallDisposition::Fresh, lifecycle_run)?;
-            Ok(fresh_run(&project_root, nodes, world))
+            let world = after(
+                &project_root,
+                InstallDisposition::Fresh,
+                lifecycle_run,
+                &workspace,
+            )?;
+            Ok(InstallDraft::fresh_run(&project_root, nodes, world))
         }
-        Plan::Ready(planned) => {
-            // Show the plan: the packages to materialise.
-            report::present_resolution(ctx, &planned.resolution);
-            // Counted here, from the solved graph itself, before the plan is
-            // consumed by the apply.
-            let packages_resolved = planned.resolution.len();
-
-            // Confirm (unless --assume-yes or --json or not a TTY).
-            let approved = if args.assume_yes || ctx.is_unattended() || ctx.is_json() {
-                true
-            } else if !console::user_attended() {
-                // No TTY → refuse to apply without explicit --assume-yes.
-                // This matches the book's "ask a human" discipline for any
-                // destructive action.
-                bail!(
-                    "no TTY available for confirmation; re-run with `--assume-yes` to apply this plan non-interactively"
-                );
-            } else {
-                Confirm::new()
-                    .with_prompt(format!(
-                        "Materialise {} package{} into vibedeps/ and regenerate boot artifacts?",
-                        planned.resolution.len(),
-                        if planned.resolution.len() == 1 {
-                            ""
-                        } else {
-                            "s"
-                        },
-                    ))
-                    .default(false)
-                    .interact()
-                    .context("reading user confirmation")?
-            };
-            if !approved {
-                return Err(InstallError::UserDeclined.into());
-            }
-
-            // PROP-054 ##INSTALL-IS-CONSENT: `[hooks]` is translated to
-            // `slot:` contributions and runs through the lifecycle handler
-            // engine. The install confirmation above is the sole trust
-            // decision; there is no hook-specific prompt or allow flag.
-            let observer = LifecycleSlotObserver::new(
-                lifecycle_output.unwrap_or(ctx),
-                lifecycle_run.metadata.clone(),
-            );
-            let applied = vibe_install::apply_with_spec_format_and_lifecycle_observed(
-                &resolver,
-                *planned,
+        // The ready apply is its own cell — the confirmation, the traced
+        // apply, the slot-failure carrier and the closure diff — so this
+        // function stays the shape of the DECISION (empty / fresh / ready)
+        // rather than of the largest branch.
+        Plan::Ready(planned) => ready::apply(
+            ctx,
+            ready::ReadyApply {
+                args: &args,
+                project_root: &project_root,
+                manifest: &manifest,
+                workspace: &workspace,
+                resolver: &resolver,
+                planned: *planned,
                 slot_integrity,
                 spec_format,
-                lifecycle_run.metadata.clone(),
-                if ctx.is_json() {
-                    StreamMode::Capture
-                } else if ctx.suppresses_output() {
-                    StreamMode::Null
-                } else {
-                    StreamMode::Inherit
-                },
-                // `agent` is legal at `slot:` points too, so the same
-                // `vibe-llm` adapter the create phase uses is injected here;
-                // an install-time agent contribution must not silently degrade
-                // to the refusing default just because it ran at the barrier.
-                vibe_install::SlotLifecycleSeams {
-                    observer: std::sync::Arc::new(observer),
-                    agent: std::sync::Arc::new(crate::commands::lifecycle::install_agent_backend(
-                        &project_root,
-                    )?),
-                },
-            );
-            // A parked slot row is a durable handoff, not an install failure:
-            // the chain stopped at that row's point, whatever preceded it is
-            // already durable and measured in `progress`, and nothing was paid
-            // for. It travels OUT as a value — this layer renders nothing, so
-            // the outermost command owns the single document.
-            let applied = match applied {
-                Ok(applied) => applied,
-                Err(vibe_install::Error::Delegated {
-                    delegation,
-                    reports,
-                    progress,
-                }) => {
-                    crate::commands::lifecycle::check_delegation(&delegation)?;
-                    let mut parked =
-                        InstallRun::new(project_root.clone(), InstallDisposition::Parked);
-                    parked.packages_resolved = packages_resolved;
-                    parked.progress = *progress;
-                    parked.slot_reports = reports;
-                    parked.parked = Some(*delegation);
-                    return Ok(parked);
-                }
-                // A slot row FAILED. `vibe install` is still the outermost
-                // command, so its one document reports the failure —
-                // `ok: false` with the executed rows — before the error
-                // reaches the exit code. Without this, removing the per-row
-                // echo would have taken the machine record of a failed
-                // install with it.
-                Err(vibe_install::Error::SlotFailed {
-                    source,
-                    reports,
-                    progress,
-                }) => {
-                    report::emit_failed_document(ctx, &project_root, &progress, &reports)?;
-                    return Err(anyhow::Error::new(*source));
-                }
-                Err(error) => return Err(error.into()),
-            };
-            lifecycle_run.lifecycle_run = applied.lifecycle_run.clone();
-            lifecycle_run.lifecycle_reports = applied.lifecycle_reports.clone();
-            let after = after_durable_world
+                lockfile_path: &lockfile_path,
+                lockfile_snapshot: &lockfile_snapshot,
+                lanes_before: &lanes_before,
+                run_metadata: &run_metadata,
+                lifecycle_output,
+                trace,
+            },
+            lifecycle_run,
+            after_durable_world
                 .take()
-                .context("internal: install durable-world callback already consumed")?;
-            // An apply can finish without visiting a live slot-scoped park:
-            // an unchanged slot produces no payload event, so the post-install
-            // plan is empty and the delegated row is never revisited. The
-            // persisted continuation is exactly the mechanism for that case —
-            // consume it before anything reports a completed run.
-            if let Some(resumed) = resume_slot_continuation(
-                ctx,
-                resume::ResumeRequest {
-                    project_root: &project_root,
-                    workspace: &workspace,
-                    manifest: &manifest,
-                    metadata: &run_metadata,
-                    spec_format,
-                    disposition: InstallDisposition::Applied,
-                    progress: applied.progress.clone(),
-                    packages_resolved,
-                },
-            )? {
-                return Ok(resumed);
-            }
-            let world = after(&project_root, InstallDisposition::Applied, lifecycle_run)?;
-            // PROP-050 ##VERIFY-LOCK-DIFF — after a successful apply, print
-            // the closure diff (the pre-apply lock snapshot vs the freshly
-            // written one, lane bytes before/after): a mid-graph re-export
-            // widening is a reviewed event, not a silent seep. Emitted ahead
-            // of the final report so the `--json` stream keeps the report as
-            // its last document. A read failure of the just-written lock
-            // skips the diff rather than failing the completed install.
-            if let Ok(new_lock) = Lockfile::read(&lockfile_path) {
-                emit_closure_diff(
-                    ctx,
-                    "install",
-                    &lockfile_snapshot,
-                    &new_lock,
-                    &lanes_before,
-                    &lane_sizes(&workspace.root),
-                );
-            }
-            let mut run = InstallRun::new(
-                project_root.clone(),
-                if world.parked.is_some() {
-                    InstallDisposition::Parked
-                } else {
-                    InstallDisposition::Applied
-                },
-            );
-            run.packages_resolved = packages_resolved;
-            run.progress = applied.progress.clone();
-            run.hooks = applied
-                .outcome
-                .hook_reports
-                .iter()
-                .chain(&applied.post_install_reports)
-                .cloned()
-                .collect();
-            run.slot_reports = applied.lifecycle_reports.clone();
-            // ONLY the phase-ritual rows: the slot rows live on
-            // `slot_reports`, and the document joins the two exactly once.
-            // Carrying them in both places double-counted every slot row.
-            run.contributions = world.contributions;
-            run.notices = world.notices;
-            run.parked = world.parked;
-            run.world_summary = world.summary;
-            Ok(run)
-        }
+                .context("internal: install durable-world callback already consumed")?,
+        ),
     }
 }

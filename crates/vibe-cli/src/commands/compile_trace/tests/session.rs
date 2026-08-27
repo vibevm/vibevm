@@ -5,7 +5,7 @@ use vibe_wire::generated::compiler_trace_index::e1::index::RunStatus;
 use vibe_wire::generated::shared::TraceReportStatus;
 use vibe_workspace::compile_trace::TraceRun;
 
-use super::super::{CommandExit, finalize, prepare};
+use super::super::{CommandExit, finalize, prepare, without_workspace};
 use super::support::{
     RUN_A, RUN_B, STARTED_A, STARTED_B, Ticks, after, all_trace_bytes, at, displacing, identity,
     project, read_index, run_dir, run_directories, started, trace_root,
@@ -369,4 +369,85 @@ fn an_unparsable_start_is_unavailable_rather_than_an_error() {
     let trace = finalized.trace.expect("a member says why");
     assert_eq!(trace.status, TraceReportStatus::Unavailable);
     assert!(!trace_root(root.path()).exists());
+}
+
+/// No canonical root means no supersession — and the operator is told so.
+///
+/// A displaced predecessor is a fact about the STATE, not about this
+/// invocation's flags: its index still reads `running`, this command has taken
+/// its identity, and closing it needs the very root that could not be found.
+/// So the notice exists whether or not this run wanted a trace, and nothing is
+/// created on disk to say it.
+#[test]
+fn a_workspaceless_owner_reports_the_predecessor_it_could_not_supersede() {
+    for requested in [false, true] {
+        let root = project();
+        let mut identity = displacing(RUN_A, RUN_B);
+        identity.compile_trace = requested;
+
+        let preparation = without_workspace(&identity);
+        assert_eq!(
+            preparation.trace_requested(),
+            requested,
+            "the SESSION follows the request",
+        );
+        assert!(
+            preparation.recorder().is_none(),
+            "and never opens a recorder without a root",
+        );
+
+        let finalized = finalize(
+            preparation,
+            CommandExit::Success(()),
+            &Ticks::new(9_000).clock(),
+        );
+
+        let notices = &finalized.notices;
+        assert_eq!(
+            notices.len(),
+            1,
+            "exactly one notice, whatever the request: {notices:?}",
+        );
+        assert!(
+            notices[0].contains(RUN_B),
+            "naming the displaced run: {}",
+            notices[0],
+        );
+        assert!(
+            notices[0].contains("could not be superseded"),
+            "and saying what could not be done: {}",
+            notices[0],
+        );
+
+        if requested {
+            let member = finalized
+                .trace
+                .expect("a requested trace still reports its own fate");
+            assert_eq!(
+                member.status,
+                TraceReportStatus::Unavailable,
+                "requested and never opened is `unavailable`",
+            );
+            assert!(
+                member.warnings.iter().any(|w| w.contains(RUN_B)),
+                "and the member carries the notice too: {:?}",
+                member.warnings,
+            );
+        } else {
+            assert!(
+                finalized.trace.is_none(),
+                "an unrequested run has no member to carry",
+            );
+        }
+
+        // Nothing was created to hold any of it.
+        assert!(
+            run_directories(root.path()).is_empty(),
+            "no run tree without a canonical root",
+        );
+        assert!(
+            !trace_root(root.path()).exists(),
+            "not even the `.vibe/trace` parent",
+        );
+    }
 }

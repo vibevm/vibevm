@@ -16,9 +16,20 @@ use vibe_core::manifest::{Manifest, Requires, WorkspaceSection};
 use vibe_core::{PackageRef, RelPath, VersionSpec};
 
 use crate::{
-    Result, WorkspaceError, WorkspaceMember, canonical, is_glob_pattern, path_to_slash,
-    read_manifest, rel_or_dot,
+    Result, WorkspaceError, WorkspaceMember, canonical, is_glob_pattern, path_to_slash, rel_or_dot,
 };
+
+/// The two facts that are the SAME at every level of the recursion: which
+/// directory is the absolute root, and whose manifest the caller already read.
+///
+/// Grouped because they travel together and neither ever changes — passing
+/// them as two more positional arguments through a recursive call is how a
+/// nested expansion quietly ends up rooted somewhere else.
+#[derive(Clone, Copy)]
+pub(crate) struct ExpandContext<'a> {
+    pub(crate) root: &'a Path,
+    pub(crate) over: Option<&'a crate::discovery::ManifestOverride<'a>>,
+}
 
 /// Expand one node's `[workspace].members` into [`WorkspaceMember`]s,
 /// recursing into nested workspaces (PROP-007 §2.3).
@@ -26,11 +37,12 @@ pub(crate) fn expand(
     node_dir: &Path,
     workspace: &WorkspaceSection,
     node_rel: Option<&str>,
-    root: &Path,
+    context: ExpandContext<'_>,
     depth: usize,
     visited: &mut HashSet<PathBuf>,
     out: &mut Vec<WorkspaceMember>,
 ) -> Result<()> {
+    let ExpandContext { root, over } = context;
     for pattern in &workspace.members {
         let is_glob = is_glob_pattern(pattern);
         let matched = glob_member_dirs(node_dir, pattern)?;
@@ -38,7 +50,11 @@ pub(crate) fn expand(
 
         for member_dir in matched {
             let manifest_path = member_dir.join(Manifest::FILENAME);
-            if !manifest_path.is_file() {
+            // The selected node's manifest is the caller's snapshot, so it is
+            // present whatever the file system now says — the same reason the
+            // ancestor walk honours the override.
+            if !manifest_path.is_file() && crate::discovery::overridden(over, &member_dir).is_none()
+            {
                 // A glob may legitimately sweep up non-package directories
                 // (registry metadata, build output) — skip those. An explicit
                 // path that names a directory with no manifest is an error.
@@ -65,7 +81,7 @@ pub(crate) fn expand(
                 return Err(WorkspaceError::NestingCycle { path: rel_path });
             }
 
-            let manifest = read_manifest(&member_dir)?;
+            let manifest = crate::discovery::read_manifest_with_override(&member_dir, over)?;
             // Recurse into a nested workspace before pushing — the recursion
             // borrows `manifest`, then the push moves it. `out` ends up
             // children-before-parent, which the caller's sort normalises.
@@ -74,7 +90,7 @@ pub(crate) fn expand(
                     &member_dir,
                     section,
                     Some(&rel_path),
-                    root,
+                    context,
                     depth + 1,
                     visited,
                     out,

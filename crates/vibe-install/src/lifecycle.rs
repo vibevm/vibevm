@@ -2,42 +2,35 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#H-SCRIPT");
 
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 use std::sync::{Arc, Mutex};
 
 use vibe_core::PackageName;
 use vibe_core::lifecycle::{ExtensionPoint, SlotPoint};
-use vibe_core::manifest::Manifest;
 use vibe_lifecycle::handlers::{BinaryBackend, HandlerRuntime, HandlerStreams};
 use vibe_lifecycle::process::{StreamMode, SystemProcessRunner};
 use vibe_lifecycle::{
     Delegation, DependencyExtensionSource, DependencyProviderId, DispatchError, ExecutionReuse,
-    ExtensionProvider, HandlerExecution, HostIdentity, LifecycleRun, LifecycleRunError,
-    LifecycleRunHandle, Phase, RunMetadata, inclusive_chain,
+    ExtensionProvider, HandlerExecution, HostIdentity, LifecycleRunError, LifecycleRunHandle,
 };
 use vibe_wire::generated::lifecycle_state::{ExecutionRecordStatus, SlotTargetRecord};
-use vibe_workspace::Workspace;
 use vibe_workspace::hooks::SystemProbe;
 use vibe_workspace::install::{
     ResolvedDep, SlotLifecycle, SlotLifecycleContext, SlotLifecycleTarget,
 };
 
 use crate::error::{Error, Result};
-use crate::plan::PlannedInstall;
 
+mod construct;
 mod envelope;
 mod plan;
 mod progress;
 mod reconcile;
-use envelope::{
-    dependency_provider, host_source, nonempty, project_envelope, slot_target, world_envelope,
-};
-use plan::build_slot_plan;
+use envelope::{nonempty, slot_target};
 pub use plan::{
     NoSlotLifecycleObserver, SlotLifecycleObserver, SlotLifecyclePlan, SlotLifecyclePlanEntry,
 };
 pub use progress::InstallProgress;
-use reconcile::reconcile_removed_slot_parks;
 
 /// One legacy hook after translation into and execution by the lifecycle engine.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -88,107 +81,10 @@ pub struct InstallSlotLifecycle {
 }
 
 impl InstallSlotLifecycle {
-    pub(crate) fn from_plan_observed(
-        planned: &PlannedInstall,
-        run: RunMetadata,
-        streams: StreamMode,
-        seams: crate::SlotLifecycleSeams,
-    ) -> Result<Self> {
-        Self::from_resolution_observed(
-            &planned.project_root,
-            &planned.manifest,
-            &planned.resolution,
-            run,
-            streams,
-            seams,
-        )
-    }
-
-    pub fn from_resolution_observed(
-        project_root: &Path,
-        manifest: &Manifest,
-        resolution: &[ResolvedDep],
-        run: RunMetadata,
-        streams: StreamMode,
-        seams: crate::SlotLifecycleSeams,
-    ) -> Result<Self> {
-        Self::from_projection_observed(
-            project_root,
-            manifest,
-            resolution,
-            resolution,
-            run,
-            streams,
-            seams,
-        )
-    }
-
-    /// `seams` is not optional, and [`crate::SlotLifecycleSeams`] has no
-    /// `Default`: `agent` is legal at slot points, so a construction site that
-    /// could *forget* the caller's backend would silently degrade a selected
-    /// contribution to a refusal. Requiring the argument turns "every CLI path
-    /// injects it" from a habit into a compile error.
-    pub fn from_projection_observed(
-        project_root: &Path,
-        manifest: &Manifest,
-        world_resolution: &[ResolvedDep],
-        event_targets: &[ResolvedDep],
-        run: RunMetadata,
-        streams: StreamMode,
-        seams: crate::SlotLifecycleSeams,
-    ) -> Result<Self> {
-        let workspace = Workspace::discover(project_root)?;
-        let installed = world_resolution
-            .iter()
-            .map(|dep| {
-                Ok(DependencyExtensionSource {
-                    provider: dependency_provider(&workspace.root, dep)?,
-                    declarations: dep.manifest.extensions.clone(),
-                })
-            })
-            .collect::<Result<Vec<_>>>()?;
-        let host = host_source(project_root, manifest)?;
-        let plan = build_slot_plan(&installed, &host, event_targets)?;
-        let project = project_envelope(project_root, manifest);
-        let world = world_envelope(&workspace, world_resolution);
-        let state_chain = run
-            .requested
-            .parse::<Phase>()
-            .map(|phase| {
-                inclusive_chain(phase)
-                    .iter()
-                    .map(|phase| phase.to_string())
-                    .collect()
-            })
-            .unwrap_or_else(|_| {
-                run.chain
-                    .iter()
-                    .filter(|phase| phase.as_str() != "clean")
-                    .cloned()
-                    .collect()
-            });
-        let run = LifecycleRun::begin(&workspace.root, project, world, run, state_chain)
-            .map_err(|error| Error::Lifecycle(error.to_string()))?
-            .shared();
-        // The slot half of the same reconciliation the phase plan performs at
-        // its own boundary. This is the ONE place a slot plan is adopted, so
-        // it is the one place that can notice a slot-scoped park whose
-        // declaration is gone from the plan this run just built.
-        let cancelled = reconcile_removed_slot_parks(&run, &plan, &workspace.root)?;
-        Ok(Self {
-            installed,
-            plan,
-            streams,
-            run,
-            reports: Mutex::new(cancelled),
-            parked: Mutex::new(None),
-            progress: Mutex::new(InstallProgress::default()),
-            observer: seams.observer,
-            agent: seams.agent,
-        })
-    }
-
-    pub(crate) fn run_handle(&self) -> LifecycleRunHandle {
+    /// The run this lifecycle is executing under. A caller that services a
+    /// resume needs it to continue the SAME run rather than begin a second
+    /// one, so it is public alongside `take_reports`.
+    pub fn run_handle(&self) -> LifecycleRunHandle {
         self.run.clone()
     }
 

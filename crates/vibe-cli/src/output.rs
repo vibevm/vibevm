@@ -346,12 +346,44 @@ impl Context {
         }
     }
 
-    pub fn error(&self, err: &anyhow::Error) {
+    /// A bounded diagnostic that belongs to no document.
+    ///
+    /// The one home for text a command must not lose but cannot put in a
+    /// report — a superseded predecessor's close, a report that itself failed
+    /// to render. It is stderr in EVERY mode on purpose: JSON's stdout is a
+    /// document stream and a stray object in it is a parse error for the
+    /// reader, while dropping the text in JSON mode would make the machine
+    /// path the one that silently knows less.
+    pub fn diagnostic(&self, text: &str) {
+        if self.suppress_output {
+            return;
+        }
+        eprintln!("{} {text}", self.warn.apply_to("vibe: warning:"));
+    }
+
+    /// The terminal error line, with an optional compact suffix.
+    ///
+    /// The suffix exists for exactly one shape: a QUIET command that failed.
+    /// Quiet's contract is one line, and a failed command's one line is this
+    /// one — so a trace summary has nowhere else to go. Human mode already
+    /// printed a table and JSON already carries the member inside its root, so
+    /// appending there would be the second copy each of them forbids.
+    ///
+    /// `None` reproduces the old line byte for byte, which is what every
+    /// untraced command in the binary still passes.
+    pub fn error_with_suffix(&self, err: &anyhow::Error, suffix: Option<&str>) {
         if self.suppress_output {
             return;
         }
         match self.mode {
-            Mode::Human | Mode::HumanQuiet => {
+            Mode::HumanQuiet => {
+                eprintln!(
+                    "{} {err:#}{}",
+                    self.cross.apply_to("error:"),
+                    suffix.unwrap_or_default()
+                );
+            }
+            Mode::Human => {
                 eprintln!("{} {err:#}", self.cross.apply_to("error:"));
             }
             Mode::Json => {

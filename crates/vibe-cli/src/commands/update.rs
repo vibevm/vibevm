@@ -100,15 +100,33 @@ pub fn run(
             root_offline || user_config.net.offline,
             args.assume_yes,
         )?;
-        let run = super::install::run_with_lifecycle_context(
+        let run = super::install::execute_prepared(
             ctx,
-            install_args_from(&args),
-            embedded_root,
-            root_offline,
-            Some(metadata),
-            None,
-            |_, _, _| Ok(super::install::WorldCallbackOutcome::default()),
-        )?;
+            super::install::InstallExecution {
+                args: install_args_from(&args),
+                embedded_root,
+                root_offline,
+                project_root: project_root.clone(),
+                user_config,
+                manifest: super::install::SelectedManifest::read(&project_root),
+                // No prelude here: whole update keeps the single workspace
+                // load the install substrate has always done, until its own
+                // atom gives it one.
+                workspace: super::install::PreparedWorkspace::DiscoverHere,
+                metadata,
+                lifecycle_output: None,
+                // Whole update's own trace atom lands separately; until then
+                // its install delegate is mechanically untraced.
+                trace: None,
+            },
+            |_, _, _, _| Ok(super::install::WorldCallbackOutcome::default()),
+        )
+        // Whole update has no trace funnel of its own yet, so a measured
+        // failure from the install substrate must be unwrapped HERE: letting
+        // the carrier reach `main` would suppress the registered root this
+        // path has always emitted and hand the exit code a wrapper instead of
+        // the command's error.
+        .map_err(|error| crate::commands::compile_trace::render_carried_untraced(ctx, error))?;
         if let Some(delegation) = run.parked.as_ref() {
             crate::commands::lifecycle::check_delegation(delegation)?;
         }
@@ -418,9 +436,12 @@ pub fn run(
         lifecycle::stream_mode(ctx),
         vibe_install::SlotLifecycleSeams {
             observer: std::sync::Arc::new(lifecycle_observer),
+            // Built from the values this command already holds — no
+            // discovery, no second manifest read.
             agent: std::sync::Arc::new(crate::commands::lifecycle::install_agent_backend(
-                &project_root,
-            )?),
+                &workspace.root,
+                &manifest,
+            )),
         },
     )?;
     // The prune already happened; a park inside the materialise pass must

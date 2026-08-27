@@ -261,7 +261,11 @@ fn summary_at(run_id: &str) -> TraceSummary {
 fn a_failed_close_never_persists_the_command_error() {
     const SENTINEL: &str = "sk-live-2f9c-DO-NOT-PERSIST-9e41";
     let root = project();
-    let original = anyhow::anyhow!("provider rejected the token {SENTINEL}")
+    // A REAL exit-bearing base error, not an ad-hoc string: the exit code the
+    // caller ends up with is downcast out of this object, so the round trip
+    // has to preserve the type and not merely the words.
+    let original = anyhow::Error::new(crate::exit_code::InstallError::UserDeclined)
+        .context(format!("provider rejected the token {SENTINEL}"))
         .context(format!("captured stderr: {}", SENTINEL.repeat(400)));
     let preparation = prepare(
         root.path(),
@@ -293,7 +297,14 @@ fn a_failed_close_never_persists_the_command_error() {
     let trace = finalized.trace.expect("a member");
     assert!(trace.warnings.iter().all(|w| !w.contains(SENTINEL)));
     assert!(finalized.notices.iter().all(|n| !n.contains(SENTINEL)));
-    // And the caller keeps the rich object it handed over.
+    // And the caller keeps the rich object it handed over — same words AND
+    // same downcast identity, so `as_exit_code` still finds its variant.
     let returned = finalized.original_error.expect("the error comes back");
     assert!(format!("{returned:#}").contains(SENTINEL));
+    assert!(
+        returned
+            .downcast_ref::<crate::exit_code::InstallError>()
+            .is_some(),
+        "the typed base survives the funnel, so the exit code is unchanged",
+    );
 }

@@ -119,19 +119,13 @@ fn main() -> ExitCode {
         Command::List(args) => commands::list::run(&ctx, args),
         Command::Extensions(args) => commands::extensions::run(&ctx, args),
         Command::Validate(args) => run_lifecycle(vibe_lifecycle::Phase::Validate, args),
-        // `vibe install` is the OUTERMOST command on this path: the substrate
-        // returns what it did, and exactly one `cli-install-report` is
-        // rendered here — apply, fresh or parked alike.
-        Command::Install(args) => commands::install::run_with_world_callback(
-            &ctx,
-            args,
-            discover_embedded_root(),
-            cli.offline,
-            |project_root, disposition, run| {
-                commands::lifecycle::after_direct_install(&ctx, project_root, disposition, run)
-            },
-        )
-        .and_then(|run| commands::install::emit_command_document(&ctx, run)),
+        // `vibe install` is the OUTERMOST command on this path: it owns the
+        // one compile-trace session, prepares its own inputs (no config,
+        // manifest, workspace or clock is read here) and renders exactly one
+        // `cli-install-report` — apply, fresh or parked alike.
+        Command::Install(args) => {
+            commands::install::run_direct(&ctx, args, discover_embedded_root(), cli.offline)
+        }
         Command::Generate(args) => run_lifecycle(vibe_lifecycle::Phase::Generate, args),
         Command::Build(args) => run_lifecycle(vibe_lifecycle::Phase::Build, args),
         Command::Test(args) => run_lifecycle(vibe_lifecycle::Phase::Test, args),
@@ -290,7 +284,13 @@ fn main() -> ExitCode {
             // A failure is an outcome too: release the held-back plan
             // documents rather than swallowing them with the error.
             let _ = ctx.flush_json_plans();
-            ctx.error(&err);
+            // A quiet command's only line is the one below, so a traced
+            // failure has nowhere else to report its trace. The wrapper is
+            // consumed HERE and immediately: what comes back is the same error
+            // object — same context chain for stderr, same downcast identity
+            // for the exit code — and a suffix that only `HumanQuiet` prints.
+            let (err, suffix) = commands::compile_trace::detach_quiet_suffix(err);
+            ctx.error_with_suffix(&err, suffix.as_deref());
             as_exit_code(&err)
         }
     }

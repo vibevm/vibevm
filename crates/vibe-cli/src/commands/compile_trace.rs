@@ -46,14 +46,6 @@
 //! [`FinalizedCommand`], and the four command reports attach its `trace`
 //! member themselves.
 
-// The four consumers — install, lifecycle, update and reinstall — attach this
-// member in the immediately following atom. Until they do, every item here is
-// reachable only from this module's own reds, and the bin builds with
-// `-D warnings`. The alternative would be publishing the owner to appease a
-// lint, which promises a surface the CLI is not ready to keep; this allowance
-// is narrower and goes away with the next atom.
-#![allow(dead_code)]
-
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE");
 
 use std::fmt;
@@ -63,10 +55,25 @@ use vibe_lifecycle::{RunIdentity, SupersededTrace};
 use vibe_wire::generated::shared::{CompileTraceReport, Timestamp};
 use vibe_workspace::compile_trace::{RunOutcome, TraceRun, TraceSummary, TraceWarning};
 
+mod adapter;
 mod bounded;
+mod draft;
+mod present;
+mod quiet;
 mod report;
+mod request;
 
 use bounded::BoundedDiagnostic;
+
+pub(crate) use adapter::render_carried_untraced;
+pub(crate) use adapter::render_finalized;
+#[cfg(test)]
+pub(crate) use draft::uncarry;
+pub(crate) use draft::{
+    RegisteredReportDraft, carry, carry_measured, classify, is_carried, prepend_lifecycle_rows,
+};
+pub(crate) use quiet::detach as detach_quiet_suffix;
+pub(crate) use request::effective_request;
 
 #[cfg(test)]
 mod tests;
@@ -137,6 +144,56 @@ impl TracePreparation {
     pub(crate) fn trace_requested(&self) -> bool {
         !matches!(self.session, TraceSession::Disabled)
     }
+}
+
+/// The owner for an invocation whose workspace discovery FAILED, so there is
+/// no canonical root to store a trace under.
+///
+/// Deliberately NOT a fall back to the selected project root: entering a
+/// workspace through a member would then lock and write a trace home that is
+/// not the one the run's compiles belong to, and two members would race for
+/// the same work. Nothing here creates a lock or a tree.
+///
+/// The SESSION depends on the request, not on the failure:
+///
+/// * a run that asked for nothing is `disabled`, and owes no explanation;
+/// * a run that ASKED is `unavailable`, with the fixed reason below. Calling
+///   it `disabled` would answer an explicit `--trace-compile` with silence,
+///   and would make a command that COULD NOT be traced indistinguishable from
+///   one nobody asked to trace — the exact confusion the third state exists
+///   to prevent.
+///
+/// The NOTICE does not depend on the request at all. A displaced predecessor
+/// is a fact about the state, not about this invocation's flags: the prior
+/// parked run's index still says `running`, this command has taken its
+/// identity, and nothing here can close it because closing needs the very root
+/// that could not be found. That is true whether or not this run wanted a
+/// trace, so an untraced invocation still owes the operator the sentence.
+pub(crate) fn without_workspace(identity: &RunIdentity) -> TracePreparation {
+    let session = if identity.compile_trace {
+        unavailable(
+            &identity.run_id,
+            format_args!(
+                "the workspace enclosing this project could not be discovered, so there is no \
+                 canonical root to store a trace under and this invocation compiles untraced"
+            ),
+        )
+    } else {
+        TraceSession::Disabled
+    };
+    let notices = identity
+        .superseded_trace
+        .as_ref()
+        .map(|superseded| {
+            vec![BoundedDiagnostic::new(format_args!(
+                "the displaced trace run `{}` could not be superseded: the workspace enclosing \
+                 this project could not be discovered, so its trace home cannot be named and its \
+                 index still reads `running`",
+                superseded.run_id
+            ))]
+        })
+        .unwrap_or_default();
+    TracePreparation { session, notices }
 }
 
 /// Open the command's trace from the already-selected lifecycle identity.
@@ -314,11 +371,30 @@ pub(crate) enum CommandExit<R> {
     },
 }
 
+/// What the deferred JSON plan previews owe this outcome.
+///
+/// A TYPED fact, decided from the command exit itself. Reading it back off the
+/// finished report — "does the draft carry a delegation member?" — would be an
+/// inference: the two agree today, and a renderer that quietly disagreed with
+/// the funnel about whether a run parked would either drop a preview a
+/// completed run owes, or print one beside a handoff that is supposed to stand
+/// alone.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(crate) enum PlanDisposition {
+    /// Success and failure alike: a preview records what this invocation was
+    /// doing, and both are outcomes.
+    Flush,
+    /// A park emits ONE document in total.
+    Discard,
+}
+
 /// Everything the caller needs to render, and nothing rendered.
 #[must_use = "the join must be handled: it owns the report draft, the original error to \
               return, the emission decision and the notices to present"]
 pub(crate) struct FinalizedCommand<R> {
     pub(crate) report: R,
+    /// What the deferred plan previews owe — from the EXIT, not the report.
+    pub(crate) plan: PlanDisposition,
     /// The shared generated member, or `None` when tracing was off — or when
     /// the member itself would have broken its own wire law.
     pub(crate) trace: Option<CompileTraceReport>,
@@ -339,7 +415,15 @@ pub(crate) struct FinalizedCommand<R> {
 enum Disposition<'a> {
     Success,
     Parked,
-    Failed(&'a anyhow::Error),
+    Failed(
+        #[allow(
+            dead_code,
+            reason = "borrowed precisely so this cell CANNOT format or store the command's \
+                      error; never reading it is the invariant, and the borrow is what makes \
+                      an attempt to read it visible in a diff"
+        )]
+        &'a anyhow::Error,
+    ),
 }
 
 /// The one consuming funnel: take the owner and the typed exit, finish the
@@ -384,6 +468,11 @@ pub(crate) fn finalize<R>(
     };
     FinalizedCommand {
         report,
+        plan: if parked {
+            PlanDisposition::Discard
+        } else {
+            PlanDisposition::Flush
+        },
         trace,
         original_error,
         emit_report,

@@ -27,7 +27,6 @@
 #![forbid(unsafe_code)]
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#nesting");
 
-use std::collections::HashSet;
 use std::path::{Path, PathBuf};
 
 use specmark::spec;
@@ -46,6 +45,7 @@ pub mod publish;
 pub mod tools;
 pub mod vibedeps;
 
+pub(crate) mod discovery;
 mod expand;
 mod layout_paths;
 mod safe_file;
@@ -365,82 +365,6 @@ pub struct Workspace {
 }
 
 impl Workspace {
-    /// Discover the workspace enclosing `start` and load the whole tree.
-    ///
-    /// Walks up from `start` to the topmost `[workspace]` that transitively
-    /// includes the starting node (PROP-007 §2.3). A node with no enclosing
-    /// `[workspace]` is its own root — a standalone workspace.
-    #[spec(
-        implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#nesting",
-        r = 1
-    )]
-    pub fn discover(start: impl AsRef<Path>) -> Result<Workspace> {
-        let start = start.as_ref();
-        let start_abs = canonical(start)?;
-        let start_node =
-            nearest_manifest_dir(&start_abs).ok_or_else(|| WorkspaceError::NoManifest {
-                start: start.to_path_buf(),
-            })?;
-
-        // Collect every ancestor (including the start node) whose vibe.toml
-        // carries a `[workspace]` table. A malformed / unreadable ancestor
-        // manifest is skipped, not fatal — discovery must not break because
-        // some unrelated directory higher up has a broken vibe.toml.
-        let mut ws_ancestors: Vec<PathBuf> = Vec::new();
-        let mut cursor: Option<&Path> = Some(start_node.as_path());
-        while let Some(dir) = cursor {
-            let mf = dir.join(Manifest::FILENAME);
-            if mf.is_file()
-                && let Ok(m) = Manifest::read(&mf)
-                && m.workspace.is_some()
-            {
-                ws_ancestors.push(dir.to_path_buf());
-            }
-            cursor = dir.parent();
-        }
-
-        // Topmost first. The first enclosing workspace whose tree contains
-        // the start node is the absolute root.
-        ws_ancestors.reverse();
-        for candidate in &ws_ancestors {
-            let ws = Workspace::load(candidate)?;
-            if ws.contains_dir(&start_node) {
-                return Ok(ws);
-            }
-        }
-
-        // No enclosing workspace — the start node stands alone.
-        Workspace::load(&start_node)
-    }
-
-    /// Load a workspace from a known root directory. The root's `vibe.toml`
-    /// is read; if it carries `[workspace]`, members are expanded
-    /// recursively. A root without `[workspace]` yields a standalone
-    /// workspace with no members.
-    pub fn load(root_dir: impl AsRef<Path>) -> Result<Workspace> {
-        let root = canonical(root_dir.as_ref())?;
-        let mut root_manifest = read_manifest(&root)?;
-
-        let mut members: Vec<WorkspaceMember> = Vec::new();
-        if let Some(section) = &root_manifest.workspace {
-            let mut visited: HashSet<PathBuf> = HashSet::new();
-            visited.insert(root.clone());
-            expand::expand(&root, section, None, &root, 0, &mut visited, &mut members)?;
-        }
-        members.sort_by(|a, b| a.rel_path.cmp(&b.rel_path));
-
-        // Resolve every `version.var` placeholder against the recursive
-        // `[workspace.versions]` chain — after this pass the in-memory
-        // manifests carry only concrete versions (PROP-007 §2.6).
-        expand::finalize_versions(&mut root_manifest, &mut members)?;
-
-        Ok(Workspace {
-            root,
-            root_manifest,
-            members,
-        })
-    }
-
     /// `true` iff this is a standalone node — no `[workspace]` table, no
     /// members. The common shape of a single-package vibevm project.
     pub fn is_standalone(&self) -> bool {
@@ -516,17 +440,9 @@ impl Workspace {
 
 /// Read and validate the `vibe.toml` in `dir`, mapping any error into
 /// [`WorkspaceError::Manifest`] with the manifest path attached.
-fn read_manifest(dir: &Path) -> Result<Manifest> {
-    let path = dir.join(Manifest::FILENAME);
-    Manifest::read(&path).map_err(|source| WorkspaceError::Manifest {
-        path,
-        source: Box::new(source),
-    })
-}
-
 /// Canonicalise a path, stripping the Windows `\\?\` UNC prefix so paths
 /// compare and display cleanly.
-fn canonical(path: &Path) -> Result<PathBuf> {
+pub(crate) fn canonical(path: &Path) -> Result<PathBuf> {
     let canon = path.canonicalize().map_err(|e| WorkspaceError::Io {
         path: path.to_path_buf(),
         reason: e.to_string(),
@@ -546,22 +462,6 @@ fn strip_unc(p: PathBuf) -> PathBuf {
 #[cfg(not(windows))]
 fn strip_unc(p: PathBuf) -> PathBuf {
     p
-}
-
-/// Nearest directory at or above `start` that carries a `vibe.toml`.
-fn nearest_manifest_dir(start: &Path) -> Option<PathBuf> {
-    let mut cursor: Option<&Path> = if start.is_dir() {
-        Some(start)
-    } else {
-        start.parent()
-    };
-    while let Some(dir) = cursor {
-        if dir.join(Manifest::FILENAME).is_file() {
-            return Some(dir.to_path_buf());
-        }
-        cursor = dir.parent();
-    }
-    None
 }
 
 /// `true` iff a `members` entry is a glob pattern rather than an explicit
@@ -598,3 +498,7 @@ fn rel_or_dot(root: &Path, dir: &Path) -> String {
 #[cfg(test)]
 #[path = "lib/tests.rs"]
 mod tests;
+
+#[cfg(test)]
+#[path = "lib/selected_manifest_tests.rs"]
+mod selected_manifest_tests;

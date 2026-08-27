@@ -42,6 +42,8 @@ pub(super) fn install_args_from(args: &UpdateArgs) -> InstallArgs {
         embedded_short_circuit: false,
         prefer_local: false,
         no_prefer_local: false,
+        // Update owns its own trace atom; until then it is mechanically off.
+        trace_compile: false,
     }
 }
 

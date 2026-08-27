@@ -56,9 +56,26 @@ impl RitualPlan {
 /// One effective declaration retained for execution in canonical order.
 pub(crate) type PlannedExecution = vibe_lifecycle::ExecutableContribution;
 
-/// Load the selected node's effective world and plan the requested default phases.
-pub(crate) fn plan_default(path: &Path, phases: &[Phase]) -> Result<RitualPlan> {
-    let loaded = load_registry(path, WorldLoadMode::Default)?;
+/// Load the selected node's effective world and plan the requested default
+/// phases, from a workspace the caller ALREADY has.
+///
+/// This is the production seam. It performs no path resolution, no discovery
+/// and no read of the selected manifest: those answers arrived with the
+/// prepared `Workspace`, which is also the only copy carrying this
+/// invocation's own in-memory `--git` delta. A rediscovery here would be a
+/// second byte snapshot of a tree the command is itself changing, and — on a
+/// validate-only chain — could succeed where the first attempt failed.
+///
+/// It DOES read the current lockfile and the materialised dependency slot
+/// manifests. That is the point of a post-install epoch: those are the
+/// artifacts the install just wrote, and reading them is how the world it
+/// produced is collected at all.
+pub(crate) fn plan_default_prepared(
+    selected_project_root: &Path,
+    workspace: &Workspace,
+    phases: &[Phase],
+) -> Result<RitualPlan> {
+    let loaded = load_registry_prepared(selected_project_root, workspace, WorldLoadMode::Default)?;
     let executions = ExecutablePlan::from_points(
         &loaded.registry,
         phases.iter().map(|phase| {
@@ -85,6 +102,20 @@ pub(crate) fn plan_default(path: &Path, phases: &[Phase]) -> Result<RitualPlan> 
         package_phase_planned: phases.contains(&Phase::Package),
         llm: loaded.llm,
     })
+}
+
+/// The compatibility wrapper: ONE ordinary discovery, then the prepared seam.
+///
+/// `#[cfg(test)]` on purpose. Every production caller now has a prepared
+/// workspace, and gating this behind the test cfg makes "no production path
+/// rediscovers to plan its world" a fact the compiler enforces rather than one
+/// a reviewer has to re-check. Tests that build a project and plan it in one
+/// step still want it.
+#[cfg(test)]
+pub(crate) fn plan_default(path: &Path, phases: &[Phase]) -> Result<RitualPlan> {
+    let selected = super::super::install::resolve_project_root(path)?;
+    let workspace = discover_for_collection(&selected)?;
+    plan_default_prepared(&selected, &workspace, phases)
 }
 
 /// Load and plan the independent clean point before any destructive wipe.
@@ -139,11 +170,26 @@ pub(crate) fn inspect(path: &Path) -> Result<LoadedRegistry> {
     load_registry(path, WorldLoadMode::Default)
 }
 
+/// The one discovery the compatibility paths perform.
+fn discover_for_collection(selected: &Path) -> Result<Workspace> {
+    Workspace::discover(selected)
+        .context("discovering the workspace for lifecycle contribution collection")
+}
+
 fn load_registry(selected: &Path, mode: WorldLoadMode) -> Result<LoadedRegistry> {
     let selected = super::super::install::resolve_project_root(selected)?;
-    let workspace = Workspace::discover(&selected)
-        .context("discovering the workspace for lifecycle contribution collection")?;
-    let host_manifest = selected_manifest(&workspace, &selected)?.clone();
+    let workspace = discover_for_collection(&selected)?;
+    load_registry_prepared(&selected, &workspace, mode)
+}
+
+/// Collect one node's effective world from an ALREADY-prepared workspace.
+fn load_registry_prepared(
+    selected: &Path,
+    workspace: &Workspace,
+    mode: WorldLoadMode,
+) -> Result<LoadedRegistry> {
+    let selected = selected.to_path_buf();
+    let host_manifest = selected_manifest(workspace, &selected)?.clone();
     let manifest_kind = effective_manifest_kind(&host_manifest);
     let llm = host_manifest.llm.clone();
     let lock_path = workspace.lockfile_path();
@@ -185,7 +231,7 @@ fn load_registry(selected: &Path, mode: WorldLoadMode) -> Result<LoadedRegistry>
         } else {
             Lockfile::empty("lifecycle-empty-world", "1970-01-01T00:00:00Z")
         };
-        dependency_sources(&workspace, &host_manifest, &lock, mode)?
+        dependency_sources(workspace, &host_manifest, &lock, mode)?
     };
     let installed = loaded_dependencies
         .iter()
@@ -200,7 +246,7 @@ fn load_registry(selected: &Path, mode: WorldLoadMode) -> Result<LoadedRegistry>
     }
 
     let project = envelope_project(&host.provider, &selected);
-    let world = envelope_world(&workspace, &installed);
+    let world = envelope_world(workspace, &installed);
     let (presets, package_bindings, package_desired_keys) = if mode == WorldLoadMode::Default {
         package_skill::presets(
             &selected,
@@ -351,180 +397,6 @@ fn selected_manifest<'workspace>(
         })
 }
 
-fn dependency_sources(
-    workspace: &Workspace,
-    host: &Manifest,
-    lock: &Lockfile,
-    mode: WorldLoadMode,
-) -> Result<Vec<LoadedDependency>> {
-    let by_id: BTreeMap<(&Group, &str), usize> = lock
-        .packages
-        .iter()
-        .enumerate()
-        .map(|(index, package)| ((&package.group, package.name.as_str()), index))
-        .collect();
-    let mut queue = VecDeque::new();
-    for (group, name) in host.requires.iter_pkgrefs() {
-        let group = group
-            .cloned()
-            .with_context(|| format!("selected host requirement `{name}` has no group"))?;
-        if !by_id.contains_key(&(&group, name)) {
-            // A host edit may be ahead of its lock. Pre-clean sees only the
-            // old installed intersection; after the install barrier, the same
-            // omission is a malformed durable world and must never hide that
-            // provider's contributions.
-            if mode == WorldLoadMode::PreClean {
-                continue;
-            }
-            bail!(
-                "selected host requires `{group}/{name}`, but it is absent from effective-world lock `{}`; run `vibe install`",
-                workspace.lockfile_path().display(),
-            );
-        }
-        queue.push_back((group, name.to_string()));
-    }
-    let mut reachable = BTreeSet::new();
-
-    while let Some((group, name)) = queue.pop_front() {
-        if !reachable.insert((group.clone(), name.clone())) {
-            continue;
-        }
-        let index = by_id
-            .get(&(&group, name.as_str()))
-            .copied()
-            .with_context(|| {
-                format!(
-                    "selected host reaches `{group}/{name}`, but the package is absent from `{}`; run `vibe install`",
-                    workspace.lockfile_path().display()
-                )
-            })?;
-        for dependency in &lock.packages[index].dependencies {
-            let dependency_group = dependency.group.clone().with_context(|| {
-                format!("locked dependency `{dependency}` of `{group}/{name}` has no group")
-            })?;
-            queue.push_back((dependency_group, dependency.name.to_string()));
-        }
-    }
-
-    lock.packages
-        .iter()
-        .filter(|package| reachable.contains(&(package.group.clone(), package.name.to_string())))
-        .map(|package| dependency_source(workspace, package))
-        .collect()
-}
-
-fn dependency_source(
-    workspace: &Workspace,
-    package: &vibe_core::manifest::LockedPackage,
-) -> Result<LoadedDependency> {
-    let root = match package.materialization {
-        Materialization::InPlace => {
-            in_place_slot_abs_path(&workspace.root, &package.group, &package.name)
-        }
-        Materialization::Copy | Materialization::Hardlink => slot_abs_path(
-            &workspace.root,
-            &package.group,
-            &package.name,
-            &package.version,
-        ),
-    };
-    if !root.is_dir() {
-        bail!(
-            "reachable locked package `{}/{}@{}` has no materialised {} slot `{}`; run `vibe install`",
-            package.group,
-            package.name,
-            package.version,
-            if package.materialization.is_in_place() {
-                "unversioned in-place"
-            } else {
-                "versioned"
-            },
-            root.display(),
-        );
-    }
-    let manifest = Manifest::read(root.join(Manifest::FILENAME)).with_context(|| {
-        format!(
-            "reading reachable slot manifest `{}`; remove or repair slot `{}`, then run `vibe install`",
-            root.join(Manifest::FILENAME).display(),
-            root.display(),
-        )
-    })?;
-    let declared = manifest.package.as_ref().with_context(|| {
-        format!(
-            "reachable slot `{}` has no `[package]` identity; remove or repair the slot, then run `vibe install`",
-            root.display()
-        )
-    })?;
-    if declared.group != package.group
-        || declared.name != package.name
-        || declared.version != package.version
-        || declared.kind != package.kind
-    {
-        bail!(
-            "reachable slot `{}` declares `{}:{}/{}@{}`, but the lock requires `{}:{}/{}@{}`; remove or repair the slot, then run `vibe install`",
-            root.display(),
-            declared.kind,
-            declared.group,
-            declared.name,
-            declared.version,
-            package.kind,
-            package.group,
-            package.name,
-            package.version,
-        );
-    }
-
-    Ok(LoadedDependency {
-        skills: manifest.skills,
-        source: DependencyExtensionSource {
-            provider: DependencyProvider {
-                id: DependencyProviderId::new(package.group.clone(), package.name.clone()),
-                root,
-                version: package.version.to_string(),
-                kind: package.kind,
-                content_hash: package.content_hash.clone(),
-            },
-            declarations: manifest.extensions,
-        },
-    })
-}
-
-fn effective_stack(
-    host: &Manifest,
-    installed: &[DependencyExtensionSource],
-    mode: WorldLoadMode,
-) -> Result<Option<DependencyProviderId>> {
-    let Some(short_name) = host
-        .active
-        .as_ref()
-        .and_then(|active| active.stack.as_deref())
-    else {
-        return Ok(None);
-    };
-    let matches: Vec<_> = installed
-        .iter()
-        .filter(|source| {
-            source.provider.kind == PackageKind::Stack
-                && source.provider.id.name().as_str() == short_name
-        })
-        .map(|source| source.provider.id.clone())
-        .collect();
-    match matches.as_slice() {
-        [id] => Ok(Some(id.clone())),
-        [] if mode == WorldLoadMode::PreClean => Ok(None),
-        [] => bail!(
-            "[active].stack `{short_name}` names no installed reachable stack package; run `vibe install` or correct the short name"
-        ),
-        many => bail!(
-            "[active].stack `{short_name}` is ambiguous across installed reachable stacks: {}; use a unique stack short name",
-            many.iter()
-                .map(ToString::to_string)
-                .collect::<Vec<_>>()
-                .join(", ")
-        ),
-    }
-}
-
 fn host_source(manifest: Manifest, root: PathBuf) -> Result<HostExtensionSource> {
     let (identity, version, kind) = if let Some(package) = &manifest.package {
         (
@@ -561,6 +433,17 @@ fn host_source(manifest: Manifest, root: PathBuf) -> Result<HostExtensionSource>
     })
 }
 
+#[path = "world/dependencies.rs"]
+mod dependencies;
+
+#[cfg(test)]
+use dependencies::dependency_source;
+use dependencies::{dependency_sources, effective_stack};
+
 #[cfg(test)]
 #[path = "world/tests.rs"]
 mod tests;
+
+#[cfg(test)]
+#[path = "world/prepared_tests.rs"]
+mod prepared_tests;

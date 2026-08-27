@@ -1,22 +1,67 @@
 //! One-contribution lifecycle execution with per-transition checkpoints.
 
 use anyhow::Result;
-use vibe_lifecycle::handlers::{
-    BinaryBackend, HandlerRuntime, PackageBindingArtifact, PackageBindingBackend,
-    PackageBindingOutcome,
-};
+use vibe_lifecycle::handlers::{HandlerRuntime, PackageBindingBackend};
 use vibe_lifecycle::process::{StreamMode, SystemProcessRunner};
 use vibe_lifecycle::{
     Delegation, ExecutionReuse, HandlerExecution, LifecycleRun, LifecycleRunHandle, RunMetadata,
 };
 use vibe_lifecycle::{REMOVED_DECLARATION, UNKNOWN_PROVENANCE};
-use vibe_wire::generated::lifecycle_report::LifecycleContributionReport;
+use vibe_wire::generated::lifecycle_report::{
+    LifecycleContributionReport, LifecycleReport, LifecycleStepReport,
+};
 use vibe_wire::generated::lifecycle_state::{ExecutionRecordScope, ExecutionRecordStatus};
 
+use crate::commands::compile_trace::{RegisteredReportDraft, carry, carry_measured};
 use crate::output;
 
+use backends::{ProjectPackageBindingBackend, WorkspaceBinaryBackend};
+
 use super::agent::CliAgentBackend;
+use super::draft::LifecycleDraft;
 use super::world;
+
+#[path = "dispatch/backends.rs"]
+mod backends;
+
+#[cfg(test)]
+#[path = "dispatch/inject.rs"]
+pub(super) mod inject;
+
+/// The UNTRACKED clean epoch's failure document, unchanged and still internal.
+///
+/// The clean lifecycle keeps no state record and its wipe destroys the tree a
+/// trace would live in, so it never opens a session and has no outer funnel to
+/// hand a draft to. Moving this one outward would mean inventing a boundary
+/// for a command that deliberately has none.
+fn emit_untracked_failure_outcome(
+    ctx: &output::Context,
+    metadata: &RunMetadata,
+    phase: &str,
+    contributions: &[LifecycleContributionReport],
+) -> Result<()> {
+    if !ctx.is_json() {
+        return Ok(());
+    }
+    // A failing run still shows the plan it was executing: the deferral only
+    // ever holds documents back until the outcome is known, and a failure is
+    // an outcome.
+    ctx.flush_json_plans()?;
+    ctx.emit_json(&LifecycleReport {
+        chain: metadata.chain.clone(),
+        command: "lifecycle".into(),
+        contributions: contributions.to_vec(),
+        notices: Vec::new(),
+        ok: false,
+        requested: metadata.requested.clone(),
+        steps: vec![LifecycleStepReport {
+            phase: phase.into(),
+            status: "fail".into(),
+        }],
+        delegation: None,
+        trace: None,
+    })
+}
 
 /// What one dispatch pass produced: the contribution rows it reported and,
 /// when a hosted agent row parked, the typed handoff plus the phase the chain
@@ -52,7 +97,7 @@ pub(super) fn dispatch_plan_untracked(
                             Some(failed.message.clone()),
                             Some(&failed.streams),
                         ));
-                        super::emit_failure_outcome(ctx, &metadata, &execution.phase, &reports)?;
+                        emit_untracked_failure_outcome(ctx, &metadata, &execution.phase, &reports)?;
                     }
                     return Err(error.into());
                 }
@@ -86,11 +131,44 @@ pub(super) fn dispatch_plan(
     dispatch_plan_with_run(ctx, plan, &run, &metadata)
 }
 
+/// Dispatch one phase plan, carrying whatever rows were measured out with ANY
+/// failure.
+///
+/// The inner pass freezes rows only for the failure it can name — a handler
+/// that reported a failed transition. Every other way the pass can stop (the
+/// state write behind a checkpoint, a park reconciliation, the execution-prefix
+/// retention) happens AFTER rows already exist, and returning a bare error
+/// there would report a run that had done several things successfully as one
+/// that did nothing.
+///
+/// So the rows live in an accumulator this function owns, and any uncarried
+/// error leaving the inner pass picks them up on the way out. The original
+/// error object is untouched — `carry_measured` moves it, never reformats it.
 pub(super) fn dispatch_plan_with_run(
     ctx: &output::Context,
     plan: &world::RitualPlan,
     run: &LifecycleRunHandle,
     metadata: &RunMetadata,
+) -> Result<DispatchOutcome> {
+    let mut measured: Vec<LifecycleContributionReport> = Vec::new();
+    dispatch_measured(ctx, plan, run, metadata, &mut measured).map_err(|error| {
+        carry_measured(error, || {
+            RegisteredReportDraft::Lifecycle(Box::new(LifecycleDraft::failed(
+                &metadata.requested,
+                metadata.chain.clone(),
+                &metadata.requested,
+                measured,
+            )))
+        })
+    })
+}
+
+fn dispatch_measured(
+    ctx: &output::Context,
+    plan: &world::RitualPlan,
+    run: &LifecycleRunHandle,
+    metadata: &RunMetadata,
+    measured: &mut Vec<LifecycleContributionReport>,
 ) -> Result<DispatchOutcome> {
     let package_binding = ProjectPackageBindingBackend::new(plan);
     let agent = CliAgentBackend::for_plan(plan);
@@ -103,7 +181,12 @@ pub(super) fn dispatch_plan_with_run(
         .lock()
         .map_err(|_| anyhow::anyhow!("lifecycle run lock was poisoned"))?;
     run.rebind_world(plan.project.clone(), plan.world.clone())?;
-    reconcile_removed_parks(&mut run, plan, &mut outcome.reports)?;
+    // Reconciliation can both PRODUCE rows and then fail, so the accumulator
+    // is refreshed either way — a cancellation the operator needs to see must
+    // not disappear because the next step went wrong.
+    let reconciled = reconcile_removed_parks(&mut run, plan, &mut outcome.reports);
+    measured.clone_from(&outcome.reports);
+    reconciled?;
     for execution in plan.executions.iter() {
         let handler = HandlerExecution::from_row(&execution.row);
         let transition = match run.execute_one(
@@ -114,14 +197,43 @@ pub(super) fn dispatch_plan_with_run(
         ) {
             Ok(transition) => transition,
             Err(error) => {
-                if let Some(failed) = error.failed_transition() {
+                // The rows this handler produced are measured HERE, and this
+                // is the only place they exist. Copy what the report needs
+                // before the error is moved into the contextual anyhow the
+                // caller has always seen.
+                let failed_row = error
+                    .failed_transition()
+                    .map(|failed| (failed.message.clone(), failed.streams.clone()));
+                if let Some((message, streams)) = failed_row {
                     outcome.reports.push(contribution_status_report(
                         execution,
                         "fail",
-                        Some(failed.message.clone()),
-                        Some(&failed.streams),
+                        Some(message),
+                        Some(&streams),
                     ));
-                    super::emit_failure_outcome(ctx, metadata, &execution.phase, &outcome.reports)?;
+                    // Constructed exactly once, exactly where it always was —
+                    // `HandlerError` plus the `phase … stopped …` context —
+                    // and then MOVED into the carrier. Nothing strips or
+                    // re-adds context after this point, so stderr, the chain
+                    // and every downcast stay identical with tracing off.
+                    let original = anyhow::Error::new(error).context(format!(
+                        "phase `{}` stopped before any later lifecycle contribution",
+                        execution.phase
+                    ));
+                    measured.clone_from(&outcome.reports);
+                    return Err(carry(
+                        RegisteredReportDraft::Lifecycle(Box::new(LifecycleDraft::failed(
+                            &metadata.requested,
+                            metadata.chain.clone(),
+                            &execution.phase,
+                            outcome.reports.clone(),
+                        ))),
+                        original,
+                        // The policy this site has always had: the failed root
+                        // is a machine document, emitted only in JSON mode and
+                        // only by an unsuppressed context.
+                        ctx.is_json() && !ctx.suppresses_output(),
+                    ));
                 }
                 return Err(anyhow::Error::new(error).context(format!(
                     "phase `{}` stopped before any later lifecycle contribution",
@@ -140,6 +252,16 @@ pub(super) fn dispatch_plan_with_run(
         );
         render_outcome(ctx, &report);
         outcome.reports.push(report);
+        measured.clone_from(&outcome.reports);
+        // A deterministic stand-in for the generic post-row failures this
+        // boundary really has — a state write, a checkpoint, a reconciliation.
+        // Compiled out entirely outside `cfg(test)`; see `inject`.
+        #[cfg(test)]
+        if inject::armed_at(outcome.reports.len()) {
+            return Err(
+                anyhow::anyhow!("injected state fault").context("writing the execution checkpoint")
+            );
+        }
         // The first unsatisfied hosted row wins: every later contribution AND
         // every later phase of this plan is skipped. The rows are already in
         // chain order, so returning here stops both.
@@ -297,170 +419,6 @@ fn runtime<'a>(
     }
 }
 
-struct ProjectPackageBindingBackend<'a> {
-    project_root: &'a std::path::Path,
-    bindings: &'a std::collections::BTreeMap<String, vibe_mcp::pkgskill::ProjectSkillBinding>,
-    desired: &'a std::collections::BTreeSet<String>,
-}
-
-impl<'a> ProjectPackageBindingBackend<'a> {
-    fn new(plan: &'a world::RitualPlan) -> Self {
-        Self {
-            project_root: std::path::Path::new(&plan.project.root),
-            bindings: &plan.package_bindings,
-            desired: &plan.package_desired_keys,
-        }
-    }
-}
-
-impl PackageBindingBackend for ProjectPackageBindingBackend<'_> {
-    fn probe(
-        &self,
-        key: &str,
-        artifacts: &[vibe_wire::generated::lifecycle_state::StateArtifact],
-    ) -> Result<bool, String> {
-        if key == world::PACKAGE_SKILL_RECOVER_KEY {
-            return vibe_mcp::pkgskill::probe_recovered_project_skill_bindings(
-                self.project_root,
-                artifacts,
-            )
-            .map_err(|error| error.to_string());
-        }
-        if key == world::PACKAGE_SKILL_RECONCILE_KEY {
-            return vibe_mcp::pkgskill::probe_vanished_project_skill_bindings(
-                self.project_root,
-                self.desired,
-                artifacts,
-            )
-            .map_err(|error| error.to_string());
-        }
-        let binding = self.bindings.get(key).ok_or_else(|| {
-            format!("package binding `{key}` was not present in the prepared plan")
-        })?;
-        vibe_mcp::pkgskill::probe_project_skill_binding(self.project_root, binding, artifacts)
-            .map_err(|error| error.to_string())
-    }
-
-    fn execute(&self, key: &str) -> Result<PackageBindingOutcome, String> {
-        if key == world::PACKAGE_SKILL_RECOVER_KEY {
-            let reports = vibe_mcp::pkgskill::recover_project_skill_bindings(self.project_root)
-                .map_err(|error| error.to_string())?;
-            return Ok(PackageBindingOutcome {
-                artifacts: Vec::new(),
-                message: Some(format!(
-                    "recovered {} pending package-skill target(s)",
-                    reports.len()
-                )),
-            });
-        }
-        if key == world::PACKAGE_SKILL_RECONCILE_KEY {
-            let reports = vibe_mcp::pkgskill::reconcile_vanished_project_skill_bindings(
-                self.project_root,
-                self.desired,
-            )
-            .map_err(|error| error.to_string())?;
-            return Ok(PackageBindingOutcome {
-                artifacts: Vec::new(),
-                message: Some(format!(
-                    "reconciled {} vanished project skill target(s)",
-                    reports.len()
-                )),
-            });
-        }
-        let binding = self.bindings.get(key).ok_or_else(|| {
-            format!("package binding `{key}` was not present in the prepared plan")
-        })?;
-        let reports =
-            vibe_mcp::pkgskill::reconcile_project_skill_binding(self.project_root, binding)
-                .map_err(|error| error.to_string())?;
-        let artifacts = if binding.selected_files.is_some() {
-            binding
-                .targets
-                .iter()
-                .map(|target| PackageBindingArtifact {
-                    id: binding.artifact_id(target.agent),
-                    kind: "agent-skill".into(),
-                    path: vibe_core::machine_json_path(&target.path),
-                })
-                .collect()
-        } else {
-            Vec::new()
-        };
-        let summary = if reports.is_empty() && binding.selected_files.is_none() {
-            "source=missing, no receipt-owned target changed".to_string()
-        } else {
-            reports
-                .iter()
-                .map(|report| format!("{}={}", report.agent, report.status))
-                .collect::<Vec<_>>()
-                .join(", ")
-        };
-        Ok(PackageBindingOutcome {
-            artifacts,
-            message: Some(format!(
-                "projected skill `{}` ({summary})",
-                binding.skill.decl.name
-            )),
-        })
-    }
-}
-
-struct WorkspaceBinaryBackend {
-    quiet: bool,
-}
-impl BinaryBackend for WorkspaceBinaryBackend {
-    fn resolve_or_build(
-        &self,
-        row: &vibe_lifecycle::ExtensionRegistryRow,
-        name: &str,
-    ) -> Result<std::path::PathBuf, String> {
-        let (binary, home) = match row.provider() {
-            vibe_lifecycle::ExtensionProvider::Dependency(provider) => (
-                vibe_workspace::bins::find_binary_in_provider_slot(
-                    &provider.root,
-                    provider.id.group(),
-                    provider.id.name().as_str(),
-                    &provider.version,
-                    name,
-                ),
-                vibe_workspace::bins::BinaryProviderHome::InstalledSlot,
-            ),
-            vibe_lifecycle::ExtensionProvider::Host(provider) => {
-                let vibe_lifecycle::HostIdentity::Coordinate(id) = &provider.identity else {
-                    return Err("binary handler host must be a package-role coordinate".into());
-                };
-                if provider.kind.is_none() {
-                    return Err("binary handler host must be an authored package root".into());
-                }
-                (
-                    vibe_workspace::bins::find_binary_in_authored_package_root(
-                        &provider.root,
-                        id.group(),
-                        id.name().as_str(),
-                        &provider.version,
-                        name,
-                    ),
-                    vibe_workspace::bins::BinaryProviderHome::AuthoredPackageRoot,
-                )
-            }
-        };
-        let binary = binary.map_err(|error| error.to_string())?;
-        if !binary.artifact().exists() {
-            vibe_workspace::bins::build_binary_authorized_with_output(
-                &binary,
-                vibe_workspace::bins::BuildAuthorization::InstalledExtension { home },
-                if self.quiet {
-                    vibe_workspace::bins::BuildOutput::Quiet
-                } else {
-                    vibe_workspace::bins::BuildOutput::Inherit
-                },
-            )
-            .map_err(|error| error.to_string())?;
-        }
-        Ok(binary.artifact())
-    }
-}
-
 fn render_outcome(ctx: &output::Context, report: &LifecycleContributionReport) {
     if ctx.is_json() || ctx.is_quiet() {
         return;
@@ -478,3 +436,7 @@ fn render_outcome(ctx: &output::Context, report: &LifecycleContributionReport) {
         }
     }
 }
+
+#[cfg(test)]
+#[path = "dispatch/tests.rs"]
+mod tests;

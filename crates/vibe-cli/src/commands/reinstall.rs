@@ -442,9 +442,12 @@ fn run_force(
         reinstall_stream_mode(ctx),
         vibe_install::SlotLifecycleSeams {
             observer: std::sync::Arc::new(lifecycle_observer),
+            // Built from the values this command already holds — no
+            // discovery, no second manifest read.
             agent: std::sync::Arc::new(crate::commands::lifecycle::install_agent_backend(
                 &workspace.root,
-            )?),
+                &manifest,
+            )),
         },
     )?;
     let applied = apply_resolution_with_spec_format_and_slot_lifecycle(

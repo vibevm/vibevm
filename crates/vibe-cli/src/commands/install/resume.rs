@@ -17,7 +17,7 @@ use vibe_workspace::Workspace;
 
 use crate::output;
 
-use super::{InstallDisposition, InstallRun, LifecycleSlotObserver};
+use super::{InstallDisposition, InstallRun, InstallRunContext, LifecycleSlotObserver};
 
 /// Finish a slot run that parked AFTER the lockfile barrier.
 ///
@@ -48,10 +48,22 @@ pub(crate) struct ResumeRequest<'a> {
     pub(crate) progress: vibe_install::InstallProgress,
 }
 
+/// A serviced continuation, plus what the SAME lifecycle run needs to carry on.
+///
+/// The context is not a courtesy: a satisfied slot resume still owes its
+/// caller the post-durability phase work (an authored `phase:install`
+/// contribution, a lifecycle prerequisite's later phases). That work must join
+/// the run this resume just finished — its real handle, its metadata, and the
+/// rows it produced — rather than begin a second run beside it.
+pub(crate) struct ResumedInstall {
+    pub(crate) run: InstallRun,
+    pub(crate) context: InstallRunContext,
+}
+
 pub(crate) fn resume_slot_continuation(
     ctx: &output::Context,
     request: ResumeRequest<'_>,
-) -> Result<Option<InstallRun>> {
+) -> Result<Option<ResumedInstall>> {
     let ResumeRequest {
         project_root,
         workspace,
@@ -107,11 +119,16 @@ pub(crate) fn resume_slot_continuation(
         .cloned()
         .collect();
     let observer = LifecycleSlotObserver::new(ctx, metadata.clone());
-    let lifecycle = vibe_install::InstallSlotLifecycle::from_projection_observed(
+    // The PREPARED constructor: this continuation already carries the exact
+    // tree its caller owns — for an applied resume, the post-apply one — so
+    // the wrapper's discovery would replace a known value with a fresh read of
+    // a tree the same command just rewrote.
+    let lifecycle = vibe_install::InstallSlotLifecycle::from_projection_observed_prepared(
         project_root,
         manifest,
         &world,
         &selected,
+        workspace,
         metadata.clone(),
         if ctx.is_json() {
             StreamMode::Capture
@@ -122,9 +139,13 @@ pub(crate) fn resume_slot_continuation(
         },
         vibe_install::SlotLifecycleSeams {
             observer: std::sync::Arc::new(observer),
+            // Built from the values this continuation already carries — the
+            // prepared workspace root and the selected manifest — so the
+            // backend serves the same world the run does.
             agent: std::sync::Arc::new(crate::commands::lifecycle::install_agent_backend(
-                project_root,
-            )?),
+                &workspace.root,
+                manifest,
+            )),
         },
     )?;
     // This slot plan's exact ordered target set is the persisted continuation
@@ -153,17 +174,69 @@ pub(crate) fn resume_slot_continuation(
     let mut run = InstallRun::new(project_root.to_path_buf(), disposition);
     run.packages_resolved = packages_resolved;
     run.progress = progress;
+    // The ONE handle to the run this resume is servicing, taken before the
+    // reports so both halves below describe the same run.
+    let mut context = InstallRunContext {
+        metadata: metadata.clone(),
+        lifecycle_run: Some(lifecycle.run_handle()),
+        lifecycle_reports: Vec::new(),
+    };
     if let Some(delegation) = lifecycle.parked() {
         crate::commands::lifecycle::check_delegation(&delegation)?;
         run.disposition = InstallDisposition::Parked;
         run.parked = Some(delegation);
         run.slot_reports = lifecycle.take_reports()?;
-        return Ok(Some(run));
+        // Still parked: the caller returns it untouched, so the context
+        // carries no rows it would fold anywhere.
+        return Ok(Some(ResumedInstall { run, context }));
     }
     ran.context("finishing the parked slot run")?;
     // Nothing is owed any more: the continuation goes before anything reports
     // a completed run.
     lifecycle.clear_continuation().map_err(anyhow::Error::msg)?;
-    run.slot_reports = lifecycle.take_reports()?;
-    Ok(Some(run))
+    // ONE take. The install report joins these rows to its document, and the
+    // post-durability callback counts them in its summary the same way the
+    // ordinary applied path does — hence the clone, not a second take.
+    let reports = lifecycle.take_reports()?;
+    context.lifecycle_reports = reports.clone();
+    run.slot_reports = reports;
+    Ok(Some(ResumedInstall { run, context }))
+}
+
+/// Finish a serviced continuation: run the post-durability callback and fold
+/// what it produced into the resumed run.
+///
+/// Both resume sites used to `return Ok(resumed)` here, which skipped the
+/// callback entirely — so an authored `phase:install` contribution never ran
+/// once a park had been satisfied, and a lifecycle prerequisite never saw the
+/// resumed rows. The fold below is deliberately the SAME one the ordinary
+/// completed branch performs, including the rule that a callback park is what
+/// turns a completed disposition into `Parked`.
+pub(crate) fn finish_resumed(
+    resumed: ResumedInstall,
+    project_root: &Path,
+    workspace: &Workspace,
+    after: impl FnOnce(
+        &Path,
+        InstallDisposition,
+        InstallRunContext,
+        &Workspace,
+    ) -> Result<super::WorldCallbackOutcome>,
+) -> Result<InstallRun> {
+    let ResumedInstall { mut run, context } = resumed;
+    // A run that is STILL parked owes the caller nothing further: its chain
+    // stopped at the delegated row, and post-install phase work belongs after
+    // that row, not around it.
+    if run.parked.is_some() {
+        return Ok(run);
+    }
+    let world = after(project_root, run.disposition, context, workspace)?;
+    run.contributions = world.contributions;
+    run.notices = world.notices;
+    run.world_summary = world.summary;
+    if world.parked.is_some() {
+        run.disposition = InstallDisposition::Parked;
+        run.parked = world.parked;
+    }
+    Ok(run)
 }

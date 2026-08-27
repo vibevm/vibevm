@@ -59,6 +59,23 @@ pub struct ApplyReport {
     pub progress: InstallProgress,
 }
 
+/// [`ApplyReport`] plus the workspace AS OF the end of this apply.
+///
+/// A separate type on purpose. `ApplyReport` is public 1.0 surface, and a new
+/// `pub` field on it breaks every downstream struct literal and exhaustive
+/// pattern — a semver-major change for what is additive information. So the
+/// prepared sibling returns this, the existing entry points return only
+/// `.report`, and nothing outside this crate has to change.
+///
+/// Step 7 of the apply rewrites `[requires]` with the finalised roots and
+/// rebuilds the tree so the boot computation reads them. A caller that plans a
+/// post-durability world needs exactly that snapshot: the pre-apply one it
+/// passed in does not yet contain the requirements this apply just recorded.
+pub struct PreparedApplyReport {
+    pub report: ApplyReport,
+    pub workspace: Workspace,
+}
+
 /// Apply a confirmed plan. `slot_integrity` selects the PROP-011 §2.3
 /// materialise-diff strategy (the caller reads it from the user
 /// config, so a malformed config fails before resolution, not here):
@@ -117,6 +134,9 @@ pub fn apply_with_spec_format_and_hook_output<S: InstallSource + ?Sized>(
         None,
         None,
     )
+    // The legacy entry points predate the post-apply tree and have no use for
+    // it; dropping it here keeps their signatures byte-identical.
+    .map(|prepared| prepared.report)
 }
 
 /// Apply through the canonical lifecycle handler engine. `[hooks]` is sugar
@@ -186,6 +206,38 @@ pub fn apply_with_spec_format_and_lifecycle_observed_traced<S: InstallSource + ?
     seams: SlotLifecycleSeams,
     trace: Option<&vibe_workspace::compile_trace::TraceRun>,
 ) -> Result<ApplyReport> {
+    apply_with_spec_format_and_lifecycle_observed_traced_prepared(
+        source,
+        planned,
+        slot_integrity,
+        spec_format,
+        run,
+        streams,
+        seams,
+        trace,
+    )
+    .map(|prepared| prepared.report)
+}
+
+/// The same apply, returning the post-apply workspace beside the report.
+///
+/// This is where the algorithm lives; the entry point above is the
+/// compatibility shape that discards the extra value. A caller that must plan
+/// a post-durability world — the CLI's Ready path — takes this one, because
+/// the tree step 7 rebuilt is the only one that carries the requirements this
+/// apply just recorded, and rediscovering it would be a second byte snapshot
+/// of a tree the command is midway through changing.
+#[allow(clippy::too_many_arguments)]
+pub fn apply_with_spec_format_and_lifecycle_observed_traced_prepared<S: InstallSource + ?Sized>(
+    source: &S,
+    planned: PlannedInstall,
+    slot_integrity: SlotIntegrity,
+    spec_format: SpecFormat,
+    run: RunMetadata,
+    streams: StreamMode,
+    seams: SlotLifecycleSeams,
+    trace: Option<&vibe_workspace::compile_trace::TraceRun>,
+) -> Result<PreparedApplyReport> {
     let lifecycle = InstallSlotLifecycle::from_plan_observed(&planned, run, streams, seams)?;
     let lifecycle_run = lifecycle.run_handle();
     let applied = apply_with_spec_format_and_slot_lifecycle(
@@ -201,8 +253,8 @@ pub fn apply_with_spec_format_and_lifecycle_observed_traced<S: InstallSource + ?
     // stopping channel. It is a durable handoff, not a failure — so it is
     // retyped here, WITH the rows executed up to the park, before any caller
     // can mistake the sentinel for an install error.
-    let mut report = match applied {
-        Ok(report) => report,
+    let mut prepared = match applied {
+        Ok(prepared) => prepared,
         Err(error) => {
             return Err(match lifecycle.parked() {
                 Some(delegation) => Error::Delegated {
@@ -225,13 +277,13 @@ pub fn apply_with_spec_format_and_lifecycle_observed_traced<S: InstallSource + ?
             });
         }
     };
-    report.lifecycle_reports = lifecycle.take_reports()?;
-    report.lifecycle_run = Some(lifecycle_run);
-    report.progress = InstallProgress::complete(&report.outcome);
+    prepared.report.lifecycle_reports = lifecycle.take_reports()?;
+    prepared.report.lifecycle_run = Some(lifecycle_run);
+    prepared.report.progress = InstallProgress::complete(&prepared.report.outcome);
     // The slot run reached its end: nothing is owed, so the durable
     // continuation goes. A resume must never rebuild a run that finished.
     lifecycle.clear_continuation().map_err(Error::Lifecycle)?;
-    Ok(report)
+    Ok(prepared)
 }
 
 fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
@@ -248,7 +300,7 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
     // The borrowed compile-trace run, when the command owns one; carried into
     // the workspace apply's boot regeneration and no further.
     trace: Option<&vibe_workspace::compile_trace::TraceRun>,
-) -> Result<ApplyReport> {
+) -> Result<PreparedApplyReport> {
     let PlannedInstall {
         project_root,
         request,
@@ -258,6 +310,10 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
         roots,
         mut fetched,
         mut resolution,
+        // The plan's pre-apply tree. Step 7 below replaces it with the
+        // post-write epoch, so it is deliberately not read between here and
+        // there — a value that is about to be stale must not be consulted.
+        workspace: _pre_apply_workspace,
     } = planned;
 
     // 6. Update `vibe.toml` `[requires].packages` with the requested
@@ -305,9 +361,15 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
         manifest.write(project_root.join(Manifest::FILENAME))?;
     }
 
-    // 7. Re-discover the workspace so the boot computation reads the
-    //    just-updated `[requires]` from disk.
-    let workspace = Workspace::discover(&project_root)?;
+    // 7. Rebuild the workspace so the boot computation reads the just-updated
+    //    `[requires]`. This is a legitimate NEW epoch — the manifest above was
+    //    rewritten, so the pre-apply tree is genuinely stale — but not a
+    //    licence to re-read the selected file: the bytes it would parse are
+    //    the ones this function just wrote, and re-reading them would let a
+    //    concurrent writer decide what this command installed. The preloaded
+    //    seam takes the in-memory value for the selected node and discovers
+    //    the rest of the tree around it.
+    let workspace = Workspace::discover_with_selected_manifest(&project_root, &manifest)?;
 
     // 7a. PROP-022 §2.4 — perform the deferred incremental `in-place` updates
     //     the plan held back (a re-resolve of an already-present in-place
@@ -415,12 +477,15 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
         None => Vec::new(),
     };
 
-    Ok(ApplyReport {
-        progress: InstallProgress::complete(&outcome),
-        outcome,
-        post_install_reports,
-        lifecycle_reports: Vec::new(),
-        lifecycle_run: None,
+    Ok(PreparedApplyReport {
+        workspace,
+        report: ApplyReport {
+            progress: InstallProgress::complete(&outcome),
+            outcome,
+            post_install_reports,
+            lifecycle_reports: Vec::new(),
+            lifecycle_run: None,
+        },
     })
 }
 

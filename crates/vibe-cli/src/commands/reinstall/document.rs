@@ -98,7 +98,10 @@ pub(super) fn resume_reinstall_continuation(
     let manifest = vibe_core::manifest::Manifest::read(
         workspace.root.join(vibe_core::manifest::Manifest::FILENAME),
     )?;
-    let Some(run) = crate::commands::install::resume_slot_continuation(
+    // Mechanical: the seam now returns the run PLUS the context a direct
+    // install would continue with. Reinstall's behaviour is closed, so it takes
+    // the run and ignores the context.
+    let Some(resumed) = crate::commands::install::resume_slot_continuation(
         ctx,
         crate::commands::install::ResumeRequest {
             project_root: &workspace.root,
@@ -116,6 +119,7 @@ pub(super) fn resume_reinstall_continuation(
     else {
         return Ok(None);
     };
+    let run = resumed.run;
     if let Some(delegation) = run.parked.as_ref() {
         crate::commands::lifecycle::check_delegation(delegation)?;
     }

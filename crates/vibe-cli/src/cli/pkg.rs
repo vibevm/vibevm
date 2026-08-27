@@ -281,6 +281,13 @@ pub struct InstallArgs {
     /// post-durability callback. Resolution/materialisation semantics are unchanged.
     #[arg(long)]
     pub force: bool,
+
+    /// PROP-054 `##OBS-TRACE`: record every compiler pass this invocation runs
+    /// into `.vibe/trace/<run-id>/`. The flag is one half of the activation —
+    /// the selected project's own `[compile] trace = true` is the other, and
+    /// either alone enables it. Neither can switch the other off.
+    #[arg(long)]
+    pub trace_compile: bool,
 }
 
 #[derive(Debug, clap::Args)]

@@ -178,7 +178,9 @@ pub(super) fn service_continuation(
     if !lifecycle.owes_slot_work() {
         return Ok(None);
     }
-    let Some(run) = crate::commands::install::resume_slot_continuation(
+    // Mechanical: take the run, ignore the continuation context — update's
+    // behaviour is closed.
+    let Some(resumed) = crate::commands::install::resume_slot_continuation(
         ctx,
         crate::commands::install::ResumeRequest {
             project_root,
@@ -194,6 +196,7 @@ pub(super) fn service_continuation(
     else {
         return Ok(None);
     };
+    let run = resumed.run;
     if let Some(delegation) = run.parked.as_ref() {
         crate::commands::lifecycle::check_delegation(delegation)?;
     }

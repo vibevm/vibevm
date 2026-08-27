@@ -4,12 +4,10 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail");
 
-use anyhow::Result;
 use serde::Serialize;
 use vibe_install::SlotLifecycleReport;
 use vibe_wire::generated::install_report::{
-    InstallContributionReport, InstallDelegation, InstallHookReport, InstallReport,
-    InstallSlotTarget,
+    InstallContributionReport, InstallDelegation, InstallHookReport, InstallSlotTarget,
 };
 use vibe_workspace::hooks::HookReport;
 use vibe_workspace::install::ResolvedDep;
@@ -173,127 +171,7 @@ pub(super) fn present_resolution(ctx: &output::Context, resolution: &[ResolvedDe
     println!();
 }
 
-/// Everything the one install document reports. Grouped so the renderer reads
-/// as one outcome rather than a positional list.
-pub(super) struct InstallOutcome<'a> {
-    pub(super) project_root: &'a std::path::Path,
-    pub(super) progress: &'a vibe_install::InstallProgress,
-    pub(super) hooks: &'a HookReportView<'a>,
-    pub(super) contributions: Vec<InstallContributionReport>,
-    pub(super) notices: &'a [String],
-    pub(super) delegation: Option<&'a vibe_lifecycle::Delegation>,
-    pub(super) world_summary: WorldCallbackSummary,
-}
-
-/// The ONE `cli-install-report` document, whatever this invocation did.
-///
-/// Normal apply, the fresh fast path and a hosted park all render through
-/// here: the command's registered root format never changes with runtime
-/// status, and no path appends a second object. Progress is the slot-level
-/// record the engine actually measured — directories, never a file census.
-///
-/// A parked run prints the one fenced handoff and NO completed summary: this
-/// install did not finish, and saying otherwise would be the lie the whole
-/// handoff exists to avoid.
-pub(super) fn emit_install_document(
-    ctx: &output::Context,
-    outcome: InstallOutcome<'_>,
-) -> Result<()> {
-    let InstallOutcome {
-        project_root,
-        progress,
-        hooks,
-        contributions,
-        notices,
-        delegation,
-        world_summary,
-    } = outcome;
-    let report = InstallReport {
-        ok: true,
-        command: "install".into(),
-        project: vibe_core::machine_json_path(project_root),
-        // `complete` is the COMMAND's completion, not the materialise pass's.
-        // A park after the barrier has a finished materialisation and an
-        // unfinished command: the run is waiting on the hosting agent and will
-        // be resumed. Deciding it here, at the one document construction,
-        // makes "a parked command is never complete" true by construction
-        // rather than by every progress producer remembering to say so.
-        complete: progress.complete && delegation.is_none(),
-        unchanged: progress.fresh,
-        materialised: progress.materialised.clone(),
-        skipped: progress.skipped.clone(),
-        pruned: progress.pruned.clone(),
-        nodes_regenerated: progress.nodes_regenerated.clone(),
-        contributions,
-        notices: notices.to_vec(),
-        hooks: hooks.typed(),
-        delegation: delegation.map(handoff_member),
-        // R3.4: the shared trace member. Construction from a live recorder
-        // lands with the command-owner atom; disabled omits it byte-for-byte.
-        trace: None,
-    };
-    if ctx.is_json() {
-        if delegation.is_some() {
-            // A park emits exactly one document IN TOTAL: the plan preview
-            // this run buffered is dropped rather than printed beside the
-            // handoff. (A completed run keeps preview + one root.)
-            ctx.discard_json_plans();
-        } else {
-            ctx.flush_json_plans()?;
-        }
-        return ctx.emit_json(&report);
-    }
-    if let Some(delegation) = delegation {
-        super::super::lifecycle::render_agent_task_fence(
-            ctx,
-            &delegation.run_id,
-            &delegation.tasks,
-            &delegation.resume,
-        );
-        ctx.summary(&format!(
-            "vibe install: parked for the hosting agent — {} task(s) await it; \
-             {} slot(s) materialised so far, resume with `{}`",
-            delegation.tasks.len(),
-            progress.materialised.len(),
-            delegation.resume,
-        ));
-        return Ok(());
-    }
-    render_human_progress(ctx, progress, hooks, world_summary);
-    Ok(())
-}
-
-/// The ONE document a FAILED `vibe install` emits: same registered root, same
-/// typed rows, `ok: false`. The exit code still comes from the error itself.
-pub(super) fn emit_failed_document(
-    ctx: &output::Context,
-    project_root: &std::path::Path,
-    progress: &vibe_install::InstallProgress,
-    reports: &[SlotLifecycleReport],
-) -> Result<()> {
-    if !ctx.is_json() {
-        return Ok(());
-    }
-    ctx.flush_json_plans()?;
-    ctx.emit_json(&InstallReport {
-        ok: false,
-        command: "install".into(),
-        project: vibe_core::machine_json_path(project_root),
-        complete: progress.complete,
-        unchanged: progress.fresh,
-        materialised: progress.materialised.clone(),
-        skipped: progress.skipped.clone(),
-        pruned: progress.pruned.clone(),
-        nodes_regenerated: progress.nodes_regenerated.clone(),
-        contributions: contribution_rows(reports),
-        notices: Vec::new(),
-        hooks: Vec::new(),
-        delegation: None,
-        trace: None,
-    })
-}
-
-fn handoff_member(delegation: &vibe_lifecycle::Delegation) -> InstallDelegation {
+pub(super) fn handoff_member(delegation: &vibe_lifecycle::Delegation) -> InstallDelegation {
     InstallDelegation {
         resume: delegation.resume.clone(),
         run_id: delegation.run_id.clone(),
@@ -335,15 +213,21 @@ pub(crate) fn contribution_rows(reports: &[SlotLifecycleReport]) -> Vec<InstallC
         .collect()
 }
 
-fn render_human_progress(
+/// The human/quiet half of a SUCCESSFUL install document.
+///
+/// `trace_suffix` is appended to whichever line is this command's single
+/// summary — never printed on its own, because quiet mode's contract is one
+/// line and a second one breaks every script that reads it.
+pub(super) fn render_human_progress(
     ctx: &output::Context,
     progress: &vibe_install::InstallProgress,
     hooks: &HookReportView<'_>,
     world_summary: WorldCallbackSummary,
+    trace_suffix: &str,
 ) {
     if progress.fresh {
         ctx.summary(&format!(
-            "vibe install: vibe.lock unchanged — nothing to re-resolve ({} node{} up to date){}",
+            "vibe install: vibe.lock unchanged — nothing to re-resolve ({} node{} up to date){}{trace_suffix}",
             progress.nodes_regenerated.len(),
             if progress.nodes_regenerated.len() == 1 {
                 ""
@@ -358,7 +242,7 @@ fn render_human_progress(
     let plural = if count == 1 { "" } else { "s" };
     if ctx.is_quiet() {
         ctx.summary(&format!(
-            "vibe install: {count} package{plural} materialised{}{}",
+            "vibe install: {count} package{plural} materialised{}{}{trace_suffix}",
             hooks.quiet_suffix(),
             ritual_suffix(world_summary),
         ));

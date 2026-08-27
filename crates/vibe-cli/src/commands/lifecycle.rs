@@ -6,7 +6,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM");
 
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result};
 use specmark::spec;
@@ -14,38 +14,46 @@ use vibe_core::user_config::UserConfig;
 use vibe_lifecycle::{LifecycleRequest, LifecycleStep, Phase, RunMetadata};
 use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
 use vibe_wire::generated::lifecycle_report::LifecycleStepReport;
-use vibe_workspace::Workspace;
 
 use crate::cli::{CleanArgs, CleanChain, InstallArgs, LifecycleArgs};
+use crate::commands::compile_trace;
 use crate::output;
 
-use super::install::{InstallDisposition, InstallRunContext, WorldCallbackSummary};
+use super::install::{InstallDisposition, PreparedWorkspace};
 
 mod agent;
+mod callback;
 mod dispatch;
+mod draft;
+mod phase;
 mod plan;
 mod report;
 mod slot;
 pub(crate) mod world;
 
+pub(crate) use callback::after_direct_install;
+pub(crate) use draft::LifecycleDraft;
 use plan::{provider_and_version, surface_plan, tier_name};
-pub(super) use report::emit_failure_outcome;
-use report::emit_report;
 pub(crate) use report::{check_delegation, render_agent_task_fence};
 pub(crate) use slot::{
     emit_transition_outcome as emit_slot_transition_outcome, surface_plan as surface_slot_plan,
 };
 
-/// The agent backend the install barrier injects. It reads the selected node's
-/// manifest for project `[llm]` and nothing else — no credential, no endpoint,
-/// no provider construction happens until an actual agent execution runs.
-pub(crate) fn install_agent_backend(project_root: &Path) -> Result<agent::CliAgentBackend> {
-    let workspace = Workspace::discover(project_root)
-        .context("discovering the workspace for the install-time agent backend")?;
-    let llm = vibe_core::manifest::Manifest::read(project_root.join("vibe.toml"))
-        .ok()
-        .and_then(|manifest| manifest.llm);
-    Ok(agent::CliAgentBackend::new(workspace.root.clone(), llm))
+/// The agent backend the install barrier injects.
+///
+/// Built from values the caller ALREADY has: the workspace root it discovered
+/// and the selected node's `[llm]` table from the manifest that discovery
+/// produced. It reads nothing — no credential, no endpoint, and no provider
+/// construction happens until an actual agent execution runs.
+///
+/// It used to discover the workspace and re-read the manifest itself, which
+/// made it a second (and third) read of a tree the install is mutating: a
+/// backend built from a different snapshot than the run it serves.
+pub(crate) fn install_agent_backend(
+    workspace_root: &Path,
+    manifest: &vibe_core::manifest::Manifest,
+) -> agent::CliAgentBackend {
+    agent::CliAgentBackend::new(workspace_root.to_path_buf(), manifest.llm.clone())
 }
 
 /// Execute a top-level default-lifecycle phase verb.
@@ -134,8 +142,10 @@ pub(crate) fn run_clean_only(
         ctx.clone()
     };
     super::clean::apply_wipe(&wipe_ctx, wipe_plan)?;
-    emit_report(
-        ctx,
+    // Clean-only never creates a trace session — it compiles nothing, and its
+    // wipe would destroy the very directory a session lives in — so it renders
+    // its draft directly, with no member and no suffix.
+    let draft = LifecycleDraft::completed(
         "clean",
         chain,
         vec![step_report("clean", StepStatus::Ok)],
@@ -144,7 +154,9 @@ pub(crate) fn run_clean_only(
         // The clean epoch is untracked, so it can never park: an agent row
         // here is refused above, before anything is wiped.
         None,
-    )
+    );
+    ctx.flush_json_plans()?;
+    draft.render(ctx, None, "")
 }
 
 /// The clean epoch runs UNTRACKED: it keeps no `.vibe/lifecycle.toml` record,
@@ -206,10 +218,17 @@ fn execute(
     root_offline: bool,
 ) -> Result<()> {
     let child = ctx.quiet_child();
-    let mut prepare_install = Some(prepare_install);
     let steps = request.steps();
     let chain = steps.iter().map(step_name).collect::<Vec<_>>();
-    let offline = effective_offline(root_offline, &install_args)?;
+    // The ONE user-config load of this command. It decides the offline
+    // posture below AND rides into the prerequisite install, which used to
+    // load its own — two loads of a file an operator can edit mid-run being
+    // two answers to the same question.
+    let user_config = UserConfig::load().context("loading user config for lifecycle envelope")?;
+    let offline = output::resolve_offline(
+        root_offline || install_args.offline,
+        user_config.net.offline,
+    );
     let assume_yes =
         clean_assume_yes || install_args.assume_yes || ctx.is_unattended() || ctx.is_json();
     // The durable identity is chosen ONCE, here, after the project/state root
@@ -227,12 +246,24 @@ fn execute(
     if let Some(clean_plan) = clean_plan.as_ref() {
         refuse_untracked_agent_rows(ctx, clean_plan)?;
     }
-    let identity = run_identity(
+    // The command's ONE selected-manifest snapshot: it answers compile-trace
+    // activation here, and the prerequisite install consumes it at the
+    // boundary that has always read `vibe.toml`. Two reads would be two
+    // answers, and the second would race the first.
+    let project_root = super::install::resolve_project_root(&install_args.path)?;
+    let manifest = super::install::SelectedManifest::read(&project_root);
+    // Built FROM that snapshot — one read, one tree. `None` when the snapshot
+    // itself did not parse: there is no sound workspace to build then, and the
+    // stored error speaks at its own boundary inside the executed region.
+    let workspace = manifest.prepare_workspace(&project_root);
+    let prelude = run_prelude(
         ctx,
-        &install_args.path,
+        project_root,
+        workspace,
         &requested.to_string(),
         &chain,
         install_args.force,
+        manifest.request(install_args.trace_compile),
     )?;
     let metadata = RunMetadata {
         requested: requested.to_string(),
@@ -241,22 +272,23 @@ fn execute(
         assume_yes,
         agent_mode: ctx.agent_mode(),
         force: install_args.force,
-        // The EFFECTIVE bit the one selector computed — never a
-        // hard-coded false. `current_request` is still absent (the
-        // CLI/manifest flag is the next atom), so this is false today
-        // for a fresh run; for an ADOPTED run it is the parked run's
-        // own sticky bit, and carrying it here is what stops
+        // The EFFECTIVE bit the one selector computed — never the raw
+        // request. For an ADOPTED run it is the parked run's own sticky
+        // bit, and carrying it here is what stops
         // `LifecycleStateStore::begin` from rewriting a traced run's
         // header back to untraced on its own resume.
-        trace_compile: identity.compile_trace,
-        run_id: identity.run_id,
-        started: identity.started,
+        trace_compile: prelude.identity.compile_trace,
+        run_id: prelude.identity.run_id.clone(),
+        started: prelude.identity.started.clone(),
     };
     let mut reports = Vec::with_capacity(steps.len());
     let mut contribution_reports = Vec::new();
     let mut notices = Vec::new();
-    let mut install_lifecycle_run = None;
-    let mut install_contribution_reports = Vec::new();
+    let RunPrelude {
+        identity,
+        mut project_root,
+        mut workspace,
+    } = prelude;
 
     if let Some(clean_plan) = clean_plan {
         notices.extend(clean_plan.notices.clone());
@@ -271,8 +303,40 @@ fn execute(
         let root = super::clean::apply_wipe(&child, wipe_plan)?;
         install_args.path = root;
         reports.push(step_report("clean", StepStatus::Ok));
+        // The identity was chosen before the wipe, as it always was — but the
+        // SESSION may only open now: a recorder opened first would have had
+        // its own lock file and index deleted underneath it by the very clean
+        // it belongs to. Every failure up to this line is therefore untraced,
+        // which is exactly right — nothing had compiled yet.
+        //
+        // ONE strict rediscovery, from the same snapshot, and a failure here is
+        // this command's error. It is deliberately not `.ok()`: the wipe just
+        // rewrote the tree, so a workspace that will not load afterwards is a
+        // real fault, and quietly continuing would install into a world nobody
+        // could describe.
+        project_root = super::install::resolve_project_root(&install_args.path)?;
+        workspace = match manifest.parsed_ref() {
+            // The ONE strict post-wipe load, from the SAME snapshot. A failure
+            // returns here — before any trace opens — because a tree that will
+            // not load right after a clean is a real fault.
+            Some(_) => PreparedWorkspace::Loaded(Box::new(
+                manifest
+                    .rediscover(&project_root)
+                    .context("re-reading the workspace after the clean epoch")?,
+            )),
+            // An invalid snapshot is unchanged by a wipe, and its stored error
+            // is still owed to the command funnel — replacing it with a
+            // generic rediscovery error would report the wrong thing.
+            None => PreparedWorkspace::SelectedManifestInvalid,
+        };
     }
 
+    let prelude = RunPrelude {
+        identity,
+        project_root,
+        workspace,
+    };
+    let preparation = prelude.prepare_trace(&now);
     let phases = steps
         .iter()
         .filter_map(|step| match step {
@@ -280,191 +344,135 @@ fn execute(
             LifecycleStep::Clean => None,
         })
         .collect::<Vec<_>>();
-    let mut validate_status = None;
-    let mut install_status = None;
-    for phase in &phases {
-        match phase {
-            Phase::Validate => {
-                install_args.path = validate(&install_args.path)?;
-                validate_status = Some(StepStatus::Ok);
-            }
-            Phase::Install => {
-                let prepare = prepare_install
-                    .take()
-                    .context("internal: install inputs prepared more than once")?;
-                let install_run = super::install::run_with_lifecycle_context(
-                    &child,
-                    install_args.clone(),
-                    prepare(),
-                    root_offline,
-                    Some(metadata.clone()),
-                    Some(ctx),
-                    |_, _, run| {
-                        install_lifecycle_run = run.lifecycle_run;
-                        install_contribution_reports = run
-                            .lifecycle_reports
-                            .into_iter()
-                            .map(slot::contribution_report)
-                            .collect();
-                        Ok(super::install::WorldCallbackOutcome::default())
-                    },
-                )?;
-                // A parked prerequisite install stops the whole chain — and
-                // THIS command renders the one document, because it is the
-                // outermost one. The step list is the prefix that really ran:
-                // whatever preceded install, then `install: delegated`, and
-                // nothing after it.
-                if let Some(delegation) = install_run.parked {
-                    let mut prefix = reports;
-                    if validate_status.is_some() {
-                        prefix.push(step_report(
-                            Phase::Validate.as_str(),
-                            validate_status.unwrap_or(StepStatus::Ok),
-                        ));
-                    }
-                    prefix.push(step_report(Phase::Install.as_str(), StepStatus::Delegated));
-                    let mut rows = install_contribution_reports;
-                    rows.extend(
-                        install_run
-                            .slot_reports
-                            .into_iter()
-                            .map(slot::contribution_report),
-                    );
-                    return emit_report(
-                        ctx,
-                        requested.as_str(),
-                        chain,
-                        prefix,
-                        rows,
-                        notices,
-                        Some(delegation),
-                    );
-                }
-                install_status = Some(match install_run.disposition {
-                    InstallDisposition::Fresh => StepStatus::Fresh,
-                    InstallDisposition::Applied => StepStatus::Ok,
-                    InstallDisposition::Parked => unreachable!("returned above"),
-                });
-            }
-            _ => {}
-        }
-    }
-
-    let ritual = world::plan_default(&install_args.path, &phases)?;
-    notices.extend(ritual.notices.clone());
-    surface_plan(ctx, &ritual, &metadata, true)?;
-    let state_chain = phases.iter().map(ToString::to_string).collect();
-    let outcome = if let Some(shared) = install_lifecycle_run {
-        dispatch::dispatch_plan_with_run(ctx, &ritual, &shared, &metadata)?
-    } else {
-        dispatch::dispatch_plan(ctx, &ritual, metadata, state_chain)?
-    };
-    let parked = outcome.parked;
-    contribution_reports.extend(outcome.reports);
-    // The prerequisite install's slot rows belong to THIS report, in every
-    // mode. They used to be excluded from JSON because each one was echoed as
-    // its own `lifecycle` document; that echo is gone, so excluding them here
-    // would drop the machine record of work this command really ran.
-    if !install_contribution_reports.is_empty() {
-        install_contribution_reports.append(&mut contribution_reports);
-        contribution_reports = install_contribution_reports;
-    }
-    for phase in phases {
-        let status = match phase {
-            Phase::Validate => validate_status.unwrap_or(StepStatus::Ok),
-            Phase::Install => install_status.unwrap_or(StepStatus::Ok),
-            _ if ritual.count_for(phase) == 0 => StepStatus::NoOp,
-            _ if contribution_reports
-                .iter()
-                .filter(|row| row.phase == phase.as_str())
-                .all(|row| row.status == "fresh") =>
-            {
-                StepStatus::Fresh
-            }
-            _ => StepStatus::Ok,
-        };
-        // Steps end AT the parked phase: later phases did not run, so they
-        // are not reported as if they had.
-        let parked_here = parked
-            .as_ref()
-            .is_some_and(|(stopped, _)| stopped == phase.as_str());
-        reports.push(step_report(
-            phase.as_str(),
-            if parked_here {
-                StepStatus::Delegated
-            } else {
-                status
-            },
-        ));
-        if parked_here {
-            break;
-        }
-    }
-
-    emit_report(
+    let exit = phase::execute_after_open(
         ctx,
-        requested.as_str(),
-        chain,
-        reports,
-        contribution_reports,
-        notices,
-        parked.map(|(_, delegation)| delegation),
-    )
+        &child,
+        phase::PhaseInputs {
+            requested,
+            phases,
+            chain,
+            metadata,
+            install_args,
+            root_offline,
+            project_root: prelude.project_root,
+            user_config,
+            manifest,
+            workspace: prelude.workspace,
+            steps: reports,
+            contributions: contribution_reports,
+            notices,
+        },
+        prepare_install,
+        preparation.recorder(),
+    );
+    // Consumes the owner: finishes the index against the real outcome, drops
+    // the last handle (and with it the cooperative lock), and returns the
+    // member the one root attaches.
+    let finalized = compile_trace::finalize(preparation, exit, &now);
+    compile_trace::render_finalized(ctx, finalized)
 }
 
-/// Direct install callback after durability and before its final document.
-pub(crate) fn after_direct_install(
-    ctx: &output::Context,
-    path: &Path,
-    disposition: InstallDisposition,
-    run: InstallRunContext,
-) -> Result<super::install::WorldCallbackOutcome> {
-    let _ = disposition;
-    let phases = [Phase::Validate, Phase::Install];
-    let ritual = world::plan_default(path, &phases)?;
-    let metadata = run.metadata.clone();
-    surface_plan(ctx, &ritual, &metadata, false)?;
-    let state_chain = metadata.chain.clone();
-    let slot_reports = run.lifecycle_reports;
-    let outcome = if let Some(shared) = run.lifecycle_run {
-        dispatch::dispatch_plan_with_run(ctx, &ritual, &shared, &metadata)?
-    } else {
-        dispatch::dispatch_plan(ctx, &ritual, metadata, state_chain)?
-    };
-    let parked = outcome.parked.map(|(_, delegation)| delegation);
-    let contributions = outcome.reports;
-    // NOTHING is rendered here. `vibe install` is the outermost command on
-    // this path, so its one `cli-install-report` carries these rows and any
-    // handoff; emitting a lifecycle report beside it was the second document.
-    Ok(super::install::WorldCallbackOutcome {
-        summary: WorldCallbackSummary {
-            selected_contributions: ritual.executions.len() + slot_reports.len(),
-            executed_contributions: contributions
-                .iter()
-                .filter(|row| row.status != "fresh")
-                .count()
-                + slot_reports.len(),
-            successful_contributions: contributions
-                .iter()
-                .filter(|row| row.status == "ok")
-                .count()
-                + slot_reports.iter().filter(|row| row.status == "ok").count(),
-            fresh_contributions: contributions
-                .iter()
-                .filter(|row| row.status == "fresh")
-                .count(),
-            notices: ritual.notices.len(),
-        },
-        contributions,
-        notices: ritual.notices.clone(),
-        parked,
-    })
+/// The injected instant. Both the supersession pass and the finish read time
+/// through this one closure — there is no clock inside the owner, and no
+/// `Drop` that invents a timestamp.
+fn now() -> vibe_wire::generated::shared::Timestamp {
+    chrono::Utc::now()
+}
+
+/// This invocation's durable run identity, plus the ONE root its trace may be
+/// stored under.
+///
+/// The two answers come from the same discovery and must not be confused:
+///
+/// * **identity/state** may fall back to the selected project root. That
+///   fallback is old, load-bearing and compatible — a project outside any
+///   discoverable workspace still gets a run id and a `.vibe/lifecycle.toml`.
+/// * **trace storage** may NOT. A trace's lock and index belong to the
+///   canonical workspace root, because one install regenerates shared package
+///   units plus every node — so an invocation entered through a member that
+///   silently traced into the member's own directory would let two members
+///   hold independent locks over the same work. When discovery genuinely
+///   fails there is no canonical root to name, so no trace opens at all and
+///   the command's own validation error stays authoritative.
+///
+/// Hence `workspace` is the typed [`PreparedWorkspace`] state rather than an
+/// `Option`: `Loaded` alone names a trace home, and the two unavailable arms
+/// say WHICH way the one attempt failed so that nothing downstream retries it.
+/// The whole workspace VALUE is retained, not just its root — the command is
+/// about to validate against it, install through it and lock a trace to it,
+/// and re-reading it for each of those would be three snapshots of a tree the
+/// command is itself changing.
+///
+/// The canonical `project_root` is carried for the same reason: it is selected
+/// once per prelude epoch, and nothing downstream re-resolves it.
+pub(crate) struct RunPrelude {
+    pub(crate) identity: vibe_lifecycle::RunIdentity,
+    pub(crate) project_root: PathBuf,
+    pub(crate) workspace: PreparedWorkspace,
+}
+
+impl RunPrelude {
+    /// Open the owner against the canonical trace home — or stand down
+    /// honestly, without a lock and without a tree.
+    pub(crate) fn prepare_trace(
+        &self,
+        clock: &dyn Fn() -> vibe_wire::generated::shared::Timestamp,
+    ) -> compile_trace::TracePreparation {
+        match self.workspace.loaded_root() {
+            Some(root) => compile_trace::prepare(root, &self.identity, &clock),
+            None => compile_trace::without_workspace(&self.identity),
+        }
+    }
 }
 
 /// Choose this invocation's durable run identity through the one selector,
-/// before anything is allocated. `state_root` is the workspace root (where
-/// `.vibe/lifecycle.toml` lives); the fresh candidate is allocated under the
-/// selected project root.
+/// before anything is allocated.
+///
+/// It RESOLVES and DISCOVERS nothing: the caller has already canonicalised the
+/// project root once and already built (or failed to build) the workspace from
+/// its own manifest snapshot. A second resolution here would be a second
+/// answer to "which node is this", and a second discovery a second answer to
+/// "what does its tree look like".
+pub(crate) fn run_prelude(
+    ctx: &output::Context,
+    project_root: PathBuf,
+    workspace: PreparedWorkspace,
+    requested: &str,
+    chain: &[String],
+    force: bool,
+    compile_trace: bool,
+) -> Result<RunPrelude> {
+    // The selected-root fallback is for IDENTITY ALLOCATION only: a project
+    // outside any loadable workspace still gets a run id and a
+    // `.vibe/lifecycle.toml`, exactly as it always has. It is never the trace
+    // home — see `prepare_trace`, which has no fallback at all.
+    let state_root = workspace
+        .loaded_root()
+        .map_or_else(|| project_root.clone(), Path::to_path_buf);
+    let identity = vibe_lifecycle::select_run_identity(
+        &state_root,
+        &project_root,
+        requested,
+        chain,
+        ctx.agent_mode(),
+        force,
+        compile_trace,
+        crate::commands::init::current_timestamp_utc(),
+    )?;
+    Ok(RunPrelude {
+        identity,
+        project_root,
+        workspace,
+    })
+}
+
+/// The identity alone, for callers that do not own a trace session.
+///
+/// `vibe update` and `vibe reinstall` select an identity exactly as before and
+/// request nothing: their own trace atom lands separately, and a request they
+/// cannot honour would set a sticky bit no recorder ever backed. They keep the
+/// legacy shape — read the manifest, load what can be loaded — because they
+/// have no prepared world to carry.
 pub(crate) fn run_identity(
     ctx: &output::Context,
     path: &Path,
@@ -473,22 +481,10 @@ pub(crate) fn run_identity(
     force: bool,
 ) -> Result<vibe_lifecycle::RunIdentity> {
     let project_root = super::install::resolve_project_root(path)?;
-    let workspace_root = Workspace::discover(&project_root)
-        .map(|workspace| workspace.root)
-        .unwrap_or_else(|_| project_root.clone());
-    vibe_lifecycle::select_run_identity(
-        &workspace_root,
-        &project_root,
-        requested,
-        chain,
-        ctx.agent_mode(),
-        force,
-        // The CLI/manifest trace request lands in the next command atom;
-        // every current call site selects with the request absent.
-        false,
-        crate::commands::init::current_timestamp_utc(),
-    )
-    .map_err(Into::into)
+    let workspace =
+        super::install::SelectedManifest::read(&project_root).prepare_workspace(&project_root);
+    run_prelude(ctx, project_root, workspace, requested, chain, force, false)
+        .map(|prelude| prelude.identity)
 }
 
 fn new_run_id(project_root: &Path) -> Result<String> {
@@ -528,20 +524,6 @@ impl StepStatus {
             Self::Delegated => "delegated",
         }
     }
-}
-
-fn validate(path: &Path) -> Result<std::path::PathBuf> {
-    let project_root = super::install::resolve_project_root(path)?;
-    Workspace::discover(&project_root).context("validating the workspace and its manifests")?;
-    Ok(project_root)
-}
-
-fn effective_offline(root_offline: bool, install_args: &InstallArgs) -> Result<bool> {
-    let user = UserConfig::load().context("loading user config for lifecycle envelope")?;
-    Ok(output::resolve_offline(
-        root_offline || install_args.offline,
-        user.net.offline,
-    ))
 }
 
 fn effective_clean_offline(root_offline: bool) -> Result<bool> {

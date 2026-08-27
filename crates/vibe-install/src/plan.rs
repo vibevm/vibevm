@@ -84,6 +84,13 @@ pub struct PlannedInstall {
     /// The packages to materialise, in resolution order — the shape
     /// the caller presents for confirmation.
     pub resolution: Vec<ResolvedDep>,
+    /// The workspace this plan was computed over, carried by value.
+    ///
+    /// Apply and the slot lifecycle need the same tree the plan reasoned
+    /// about, including a case-c migration delta that exists only in memory
+    /// until apply writes it. Rediscovering there would be a second byte
+    /// snapshot of a tree the command is midway through changing.
+    pub(crate) workspace: Workspace,
 }
 
 /// Plan an install transaction over `source` for the project at
@@ -103,8 +110,12 @@ pub fn plan<S: InstallSource + ?Sized>(
 }
 
 /// Plan an install under the effective PROP-045 spec representation.
-/// A fresh dependency graph is not a fresh install when any existing slot
-/// carries a different representation, so that case proceeds to resolution.
+///
+/// The COMPATIBILITY shape: it performs its one legacy read of the selected
+/// manifest and its one legacy discovery, then delegates to
+/// [`plan_prepared_with_spec_format`], which holds the algorithm. A caller
+/// that already owns those two values calls the prepared sibling directly and
+/// touches the disk for neither.
 pub fn plan_with_spec_format<S: InstallSource + ?Sized>(
     source: &S,
     project_root: &Path,
@@ -112,12 +123,48 @@ pub fn plan_with_spec_format<S: InstallSource + ?Sized>(
     spec_format: SpecFormat,
     observer: &dyn PlanObserver,
 ) -> Result<Plan> {
-    let workspace = Workspace::discover(project_root)?;
+    let mut workspace = Workspace::discover(project_root)?;
     let mut manifest = Manifest::read(project_root.join(Manifest::FILENAME))?;
+    plan_prepared_with_spec_format(
+        source,
+        project_root,
+        &mut manifest,
+        &mut workspace,
+        request,
+        spec_format,
+        observer,
+    )
+}
+
+/// Plan an install from values the caller ALREADY owns.
+///
+/// This is the real planning algorithm, and it reads neither the selected
+/// `vibe.toml` nor the workspace tree: `manifest` is the raw selected manifest
+/// (unexpanded, the shape `[i18n]`, visibility and the case-c migration write
+/// operate on) and `workspace` is the finalised tree (expanded, the shape the
+/// root union and the freshness check read). Every place the compatibility
+/// wrapper used to re-`discover` now consults the supplied tree instead.
+///
+/// Both are taken by `&mut` because case-c migration is a real mutation: it
+/// seeds the raw manifest from the lockfile, persists it, and applies the same
+/// concrete requirement delta to the exact selected node of the finalised
+/// tree. It is a delta and not a wholesale copy on purpose — the finalised
+/// node has had `[workspace.versions]` placeholders resolved, and overwriting
+/// it with the raw table would undo that.
+#[allow(clippy::too_many_arguments)]
+pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
+    source: &S,
+    project_root: &Path,
+    manifest: &mut Manifest,
+    workspace: &mut Workspace,
+    request: InstallRequest,
+    spec_format: SpecFormat,
+    observer: &dyn PlanObserver,
+) -> Result<Plan> {
     let lockfile = load_or_empty_lockfile(&workspace.root, &request.generated_by)?;
 
     // PROP-003 §2.7 language chain (caller override > project [i18n]).
-    let language_chain = build_language_chain(request.language.as_deref(), &manifest);
+    let language_chain = build_language_chain(request.language.as_deref(), manifest);
 
     // 1. Decide the effective root list. Three input shapes:
     //
@@ -151,16 +198,22 @@ pub fn plan_with_spec_format<S: InstallSource + ?Sized>(
                 .packages
                 .clone_from(&lockfile.meta.root_dependencies);
             manifest.write(project_root.join(Manifest::FILENAME))?;
+            // The finalised tree below is what the root union reads, so the
+            // migration has to reach it too. The wrapper used to get this by
+            // re-discovering; here the SAME concrete entries are appended to
+            // the exact selected node, which is the only node the write above
+            // changed. Nothing else in the tree is touched, and the node's
+            // already-expanded entries survive.
+            migrate_selected_node(workspace, project_root, &lockfile.meta.root_dependencies);
         }
         // Unified resolution (PROP-009 §2.7): the root set is the union
-        // of every workspace node's `[requires]`. Re-discover so the
-        // migration above, an earlier `--git` declaration, and any
-        // `[workspace.versions]` placeholders are all reflected; a
-        // standalone project is a one-node workspace, so this
-        // degenerates to "just the entry node". The source dispatches
-        // each pkgref through the right path internally
-        // (override > git > registry).
-        let discovered = Workspace::discover(project_root)?;
+        // of every workspace node's `[requires]`. The supplied tree
+        // reflects the migration above, an earlier `--git` declaration,
+        // and any `[workspace.versions]` placeholders; a standalone
+        // project is a one-node workspace, so this degenerates to "just
+        // the entry node". The source dispatches each pkgref through the
+        // right path internally (override > git > registry).
+        let discovered = &*workspace;
         let mut all: Vec<PackageRef> = Vec::new();
         // De-duplicate on the `(group, name)` identity (PROP-008 §2.3).
         // A manifest pkgref is group-qualified, so `group` is present.
@@ -193,7 +246,7 @@ pub fn plan_with_spec_format<S: InstallSource + ?Sized>(
         // erase every other slot and rewrite the lock to X's closure.
         // The named refs stay as written (re-resolved fresh); every
         // untouched manifest root is held to its locked pin below.
-        let discovered = Workspace::discover(project_root)?;
+        let discovered = &*workspace;
         let mut all: Vec<PackageRef> = request.roots.clone();
         let mut seen: std::collections::HashSet<(Option<Group>, String)> = all
             .iter()
@@ -247,8 +300,8 @@ pub fn plan_with_spec_format<S: InstallSource + ?Sized>(
     // version drift inside a constraint. An explicit
     // `vibe install <pkgref>` always runs the full pipeline.
     if request.roots.is_empty() {
-        let ws = Workspace::discover(project_root)?;
-        match vibe_workspace::freshness::check(&ws, &lockfile) {
+        let ws = &*workspace;
+        match vibe_workspace::freshness::check(ws, &lockfile) {
             vibe_workspace::freshness::Freshness::Fresh
                 if slots_match_spec_format(&ws.root, &lockfile, spec_format) =>
             {
@@ -294,8 +347,8 @@ pub fn plan_with_spec_format<S: InstallSource + ?Sized>(
         Err(e) => return Err(e.into()),
     };
 
-    let root_id = visibility_root_id(&manifest);
-    let effective = resolve_effective(source, &strict_roots, &manifest, &root_id, graph)?;
+    let root_id = visibility_root_id(manifest);
+    let effective = resolve_effective(source, &strict_roots, manifest, &root_id, graph)?;
     let graph = effective.graph;
     let mut visibility_analysis = effective.analysis;
     let _visibility_iterations = effective.iterations;
@@ -364,7 +417,7 @@ pub fn plan_with_spec_format<S: InstallSource + ?Sized>(
         &workspace.root,
         &language_chain,
         &request.features,
-        &manifest,
+        manifest,
         &root_id,
         &mut fetched,
         &mut visibility_analysis,
@@ -413,13 +466,56 @@ pub fn plan_with_spec_format<S: InstallSource + ?Sized>(
     Ok(Plan::Ready(Box::new(PlannedInstall {
         project_root: project_root.to_path_buf(),
         request,
-        manifest,
+        manifest: manifest.clone(),
         lockfile,
         language_chain,
         roots,
         fetched,
         resolution,
+        // A value, not a rediscovery: apply and the slot lifecycle work on the
+        // exact tree that produced this plan.
+        workspace: workspace.clone(),
     })))
+}
+
+/// Append the case-c migration's concrete entries to the selected node of the
+/// finalised tree.
+///
+/// A delta, never a wholesale replacement. The raw manifest may carry
+/// `[workspace.versions]` placeholders that discovery already resolved in this
+/// node; copying the raw table over would put them back. Entries the node
+/// already declares are left alone, so applying the migration twice is a no-op.
+fn migrate_selected_node(workspace: &mut Workspace, project_root: &Path, entries: &[PackageRef]) {
+    let Some(node) = selected_node_manifest_mut(workspace, project_root) else {
+        return;
+    };
+    for entry in entries {
+        let already = node
+            .requires
+            .packages
+            .iter()
+            .any(|p| p.group == entry.group && p.name == entry.name);
+        if !already {
+            node.requires.packages.push(entry.clone());
+        }
+    }
+}
+
+/// The node of `workspace` whose directory IS `project_root` — the one the
+/// selected manifest describes. `None` only if the tree does not contain the
+/// selected node at all, which discovery cannot produce.
+fn selected_node_manifest_mut<'a>(
+    workspace: &'a mut Workspace,
+    project_root: &Path,
+) -> Option<&'a mut Manifest> {
+    if workspace.root == project_root {
+        return Some(&mut workspace.root_manifest);
+    }
+    let selected = workspace
+        .members
+        .iter()
+        .position(|member| workspace.member_abs_path(member) == project_root)?;
+    Some(&mut workspace.members[selected].manifest)
 }
 
 fn visibility_root_id(manifest: &Manifest) -> String {
