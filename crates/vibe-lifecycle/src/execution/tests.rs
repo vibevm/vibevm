@@ -410,9 +410,10 @@ fn durable_post_softness_is_typed_and_display_independent() {
     let checkpoint = crate::LifecycleRunError::Checkpoint {
         key: "typed-nonzero".into(),
         primary: "handler failed".into(),
-        checkpoint: Box::new(crate::LifecycleStateError::Write {
+        checkpoint: Box::new(crate::LifecycleStateError::Publication {
             path: "lifecycle.toml".into(),
-            source: std::io::Error::other("checkpoint failed"),
+            stage: vibe_safefs::PublishStage::BeforePublication,
+            failure: "checkpoint failed".into(),
         }),
         transition: Some(Box::new(transition)),
         dispatch: Some(Box::new(nonzero())),

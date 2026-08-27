@@ -12,7 +12,8 @@ use specmark::spec;
 use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
 use vibe_wire::generated::lifecycle_state::ExecutionRecordStatus;
 
-use super::store::{LifecycleStateError, LifecycleStateStore, read_prior};
+use super::error::LifecycleStateError;
+use super::io;
 use crate::process::is_valid_run_id;
 
 /// One invocation's durable identity, decided before anything is allocated.
@@ -91,6 +92,11 @@ pub struct SupersededTrace {
 /// `state_root` is where `.vibe/lifecycle.toml` lives (the workspace root);
 /// `allocation_root` is where a fresh scratch run directory is created (the
 /// selected project root) — the two differ only in a multi-node workspace.
+/// BOTH must be existing ABSOLUTE paths: the state root is pinned into the
+/// capability cell, so a relative or missing root refuses as the typed
+/// [`LifecycleStateError::Root`] (a root problem, never a state-cache
+/// problem), and an unallocatable selected root refuses as
+/// [`LifecycleStateError::Allocation`] naming that root.
 /// Selection completes BEFORE allocation, so an adopted run never mints and
 /// abandons a candidate scratch directory.
 #[allow(clippy::too_many_arguments)]
@@ -106,7 +112,7 @@ pub fn select_run_identity(
     current_request: bool,
     fresh_started: String,
 ) -> Result<RunIdentity, LifecycleStateError> {
-    let prior = read_prior(&state_root.join(LifecycleStateStore::FILE))?;
+    let prior = io::read_prior_state(state_root)?;
     let parked = prior.as_ref().is_some_and(|state| {
         state
             .execution
@@ -153,7 +159,8 @@ pub fn select_run_identity(
             .flatten()
     });
     Ok(RunIdentity {
-        run_id: crate::process::allocate_run_id(allocation_root).map_err(allocate_failed)?,
+        run_id: crate::process::allocate_run_id(allocation_root)
+            .map_err(|source| allocate_failed(allocation_root, source))?,
         started: fresh_started,
         adopted: false,
         compile_trace: current_request,
@@ -161,9 +168,12 @@ pub fn select_run_identity(
     })
 }
 
-fn allocate_failed(source: crate::process::ScratchError) -> LifecycleStateError {
-    LifecycleStateError::Write {
-        path: std::path::PathBuf::from(LifecycleStateStore::FILE),
-        source: std::io::Error::other(source.to_string()),
+/// A failed fresh-id allocation is an allocation problem at the SELECTED
+/// root, named as such — never a state-publication problem and never a
+/// reason to touch the state cache.
+fn allocate_failed(root: &Path, source: crate::process::ScratchError) -> LifecycleStateError {
+    LifecycleStateError::Allocation {
+        path: root.to_path_buf(),
+        reason: source.to_string(),
     }
 }

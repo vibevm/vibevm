@@ -27,6 +27,22 @@ mod adoption;
 mod lockfile;
 
 #[cfg(test)]
+#[path = "tests/publication.rs"]
+mod publication;
+
+#[cfg(test)]
+#[path = "tests/recovery.rs"]
+mod recovery;
+
+#[cfg(test)]
+#[path = "tests/safety.rs"]
+mod safety;
+
+#[cfg(test)]
+#[path = "tests/support.rs"]
+mod support;
+
+#[cfg(test)]
 #[path = "tests/transaction.rs"]
 mod transaction;
 
