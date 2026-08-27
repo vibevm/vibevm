@@ -27,6 +27,7 @@ mod armed {
         static BEFORE_LINK: RefCell<Option<Hook>> = const { RefCell::new(None) };
         static BEFORE_PROVED_REMOVAL: RefCell<Option<Hook>> = const { RefCell::new(None) };
         static BEFORE_LOCK: RefCell<Option<Hook>> = const { RefCell::new(None) };
+        static BEFORE_BOUNDED_READ: RefCell<Option<Hook>> = const { RefCell::new(None) };
         static LOCK_IDENTITY_CHECK: RefCell<Option<IdentityCheckHook>> = const { RefCell::new(None) };
     }
 
@@ -64,6 +65,25 @@ mod armed {
                 .as_mut()
                 .map_or(actual, |hook| hook(actual))
         })
+    }
+
+    /// Run `hook` on this thread in the window a bounded read exists to close:
+    /// **after** the opened handle's metadata length was checked against the
+    /// cap and **before** the fenced read starts. Pass `None` to disarm.
+    ///
+    /// A hook that extends the file here produces exactly the state the
+    /// metadata check cannot see — the file grew inside the one read epoch —
+    /// which is what the `take(cap + 1)` fence refuses instead of returning a
+    /// truncated prefix. Compiled out of shipped builds.
+    pub fn arm_before_bounded_read(hook: Option<Hook>) {
+        BEFORE_BOUNDED_READ.with(|slot| *slot.borrow_mut() = hook);
+    }
+
+    pub(crate) fn before_bounded_read(holder: &crate::Pinned, name: &str) {
+        let hook = BEFORE_BOUNDED_READ.with(|slot| slot.borrow_mut().take());
+        if let Some(hook) = hook {
+            hook(holder, name);
+        }
     }
 
     /// Run `hook` on this thread in the window a create-new publication cannot
@@ -144,13 +164,13 @@ mod armed {
 
 #[cfg(any(test, feature = "inject-failures"))]
 pub(crate) use armed::{
-    after_create_dir, before_create_dir, before_link, before_lock, before_proved_removal,
-    lock_identity_matches,
+    after_create_dir, before_bounded_read, before_create_dir, before_link, before_lock,
+    before_proved_removal, lock_identity_matches,
 };
 #[cfg(any(test, feature = "inject-failures"))]
 pub use armed::{
-    arm_after_create_dir, arm_before_create_dir, arm_before_link, arm_before_lock,
-    arm_before_proved_removal, arm_lock_identity_check,
+    arm_after_create_dir, arm_before_bounded_read, arm_before_create_dir, arm_before_link,
+    arm_before_lock, arm_before_proved_removal, arm_lock_identity_check,
 };
 
 #[cfg(not(any(test, feature = "inject-failures")))]
@@ -172,6 +192,9 @@ pub(crate) fn before_proved_removal(_directory: &crate::Pinned, _name: &str) {}
 
 #[cfg(not(any(test, feature = "inject-failures")))]
 pub(crate) fn before_lock(_directory: &crate::Pinned, _name: &str) {}
+
+#[cfg(not(any(test, feature = "inject-failures")))]
+pub(crate) fn before_bounded_read(_holder: &crate::Pinned, _name: &str) {}
 
 #[cfg(not(any(test, feature = "inject-failures")))]
 pub(crate) const fn lock_identity_matches(actual: bool) -> bool {

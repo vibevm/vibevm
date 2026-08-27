@@ -21,6 +21,7 @@ use crate::component::{STAGE_PREFIX, split_relative};
 use crate::project::{Pinned, Project, descend};
 use crate::publish::{PublishError, Published};
 
+mod bounded;
 mod create_new;
 pub(crate) mod identity;
 #[cfg(any(test, feature = "inject-failures"))]
@@ -520,6 +521,10 @@ pub(crate) fn verify_regular_single_link(file: &std::fs::File, display: &Path) -
     }
     Ok(())
 }
+
+#[cfg(test)]
+#[path = "file/bounded_tests.rs"]
+mod bounded_tests;
 
 #[cfg(test)]
 #[path = "file/identity_tests.rs"]
