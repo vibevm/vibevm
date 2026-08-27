@@ -247,7 +247,7 @@ fn post_handler_plus_checkpoint_failure_is_hard_and_stops_later_targets() {
     let failed = docs
         .iter()
         .position(|doc| {
-            doc["command"] == "lifecycle"
+            doc["command"] == "install"
                 && doc["contributions"]
                     .as_array()
                     .is_some_and(|rows| rows.iter().any(|row| row["status"] == "fail"))
@@ -258,6 +258,7 @@ fn post_handler_plus_checkpoint_failure_is_hard_and_stops_later_targets() {
     assert_eq!(row["status"], "fail");
     assert!(row.get("flagged").is_none());
     assert!(row["stderr"].as_str().unwrap().contains("CHECKPOINT-DIAG"));
-    assert!(docs.iter().all(|doc| doc["command"] != "install"));
+    assert_eq!(docs.last().unwrap()["command"], "install");
+    assert!(docs.iter().all(|doc| doc["command"] != "lifecycle"));
     assert!(!output.stderr.is_empty());
 }

@@ -49,10 +49,25 @@ fn post_fail_reply_keeps_bounded_script_streams_in_generated_outcome() {
         .into_iter::<serde_json::Value>()
         .collect::<Result<Vec<_>, _>>()
         .unwrap();
-    let row = docs
+    let install_roots: Vec<&serde_json::Value> = docs
         .iter()
-        .filter(|doc| doc["command"] == "lifecycle")
-        .flat_map(|doc| doc["contributions"].as_array().into_iter().flatten())
+        .filter(|doc| doc["command"] == "install")
+        .collect();
+    assert_eq!(install_roots.len(), 1, "one final Install root: {docs:#?}");
+    let root = install_roots[0];
+    assert_eq!(
+        docs.last(),
+        Some(root),
+        "the command root is final: {docs:#?}"
+    );
+    assert!(
+        docs.iter().all(|doc| doc["command"] != "lifecycle"),
+        "slot rows are members of the command root, never per-row echoes: {docs:#?}",
+    );
+    let row = root["contributions"]
+        .as_array()
+        .into_iter()
+        .flatten()
         .find(|row| row["point"] == "slot:post-install")
         .unwrap();
     assert_eq!(row["status"], "fail");
@@ -61,5 +76,4 @@ fn post_fail_reply_keeps_bounded_script_streams_in_generated_outcome() {
     assert!(row["stderr"].as_str().unwrap().contains("FAIL-REPLY-ERR"));
     assert_eq!(row["stderr"].as_str().unwrap().len(), 1024 * 1024);
     assert_eq!(row["stderr_truncated"], true);
-    assert_eq!(docs.last().unwrap()["command"], "install");
 }
