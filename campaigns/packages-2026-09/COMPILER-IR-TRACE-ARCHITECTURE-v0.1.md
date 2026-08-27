@@ -466,6 +466,42 @@ its own live lock/index. Validate-only (and `clean validate`) may therefore
 finish a truthful zero-scope trace; the explicit exemption is clean-only, not
 every compile-free lifecycle verb.
 
+The install/lifecycle command activation landed at `dcbf89b0`. Exactly two
+production boundaries own `prepare`/`finalize`: direct `vibe install` and the
+outer lifecycle command. Every compile below them borrows `Option<&TraceRun>`;
+whole update and reinstall remain compatibility callers until their own R3.4
+atom.
+
+Those boundaries also own one prepared input epoch. The selected manifest is
+read once into a stored `Result`; a valid value is handed to
+`Workspace::discover_with_selected_manifest`, whose exact canonical-path
+override participates in ancestor selection, recursive expansion and version
+finalisation without rereading that node. `PreparedWorkspace` distinguishes a
+bad selected manifest, a loaded tree, the exact first workspace failure and a
+legacy discover-here caller. Manifest failure is consumed first at its old
+command boundary; a workspace failure is carried and returned rather than
+retried. User config and canonical selected root are likewise selected once.
+
+Prepared siblings continue through `vibe-install` planning and slot-lifecycle
+construction. Existing public wrappers keep their old signatures and perform
+one compatibility discovery; direct install/lifecycle call only the prepared
+forms. A Ready apply returns an additive `PreparedApplyReport` beside the
+unchanged public `ApplyReport`: apply step 7 is the deliberate post-write
+workspace epoch, built with the just-written selected manifest rather than a
+selected-file reread. Post-durability world collection then reuses that
+Workspace while reading the current lock and materialised slot manifests. The
+two epochs are therefore explicit: prepared pre-apply world, then measured
+post-apply world—never an ambient third snapshot.
+
+Slot continuation resume carries its real lifecycle handle and rows through
+the same post-durability callback. Fresh and Ready resumes both run authored
+`phase:install` work; Ready preserves current-apply rows/hooks/progress, then
+resumed rows, then callback rows, and shares the ordinary closure-diff tail.
+Every direct post-durability refusal is Lifecycle-shaped, retains prior slot
+rows and the original error object, while the trace persists only fixed
+`command failed`. Notice routing is one tested render executor: member warnings,
+JSON root notices, human diagnostics and quiet counts are mutually exclusive.
+
 ### 5.4 One JTD trace member across four command reports
 
 `formats/vocabularies.json` becomes the single schema home for the shared

@@ -71,8 +71,11 @@ fronts currently in flight. A worker report or old worktree is never completion.
       through attempt-aware package-unit/node compilation is landed
       (`be04a184`; off-mode compatibility wrappers remain exact). Command-owned
       non-creating reopen and the one generic outcome funnel are landed
-      (`cad8ecc1`; rich errors remain outside trace files). Flags, four-command
-      wiring, timing presentation and cross-command e2e remain.
+      (`cad8ecc1`; rich errors remain outside trace files). Direct install and
+      lifecycle activation, one prepared manifest/workspace epoch, timing
+      presentation, typed failure roots, hosted Fresh/Ready resume and their
+      command-level e2e are landed (`dcbf89b0`). Update/reinstall command
+      ownership and final four-command parity remain.
 - [ ] **R4.0–R4.3** — shared lower registry; four staged positions;
       transforms header/fingerprint/reference oracle; minify binding; analyzer.
 - [ ] **R5.1–R5.5** — native schemas/SDK, loader, source/prebuilt build,

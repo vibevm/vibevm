@@ -31,9 +31,10 @@ only durable home of a decision.
 
 ## 2. Evidence standard and current baseline
 
-- Integration checkpoint: `main` at `1a81cffd` after hosted lifecycle resume,
+- Integration checkpoint: `main` at `dcbf89b0` after hosted lifecycle resume,
   compiler observer/writer, the shared trace command-report wire, sticky
-  lifecycle trace identity and the R7.4 implementation architecture.
+  lifecycle trace identity, the command-owner core and install/lifecycle trace
+  activation.
 - `cargo test --workspace --locked`: green on 2026-08-27 at the unchanged
   product checkpoint.
 - `cargo xtask specmap`: 6774 units, 2050 tagged code items, 1833 edges,
@@ -90,6 +91,18 @@ only durable home of a decision.
   fmt and strict two-crate clippy; two independent final reviews ended PASS.
   Specmap is clean at `1a81cffd` with zero suspects/gated orphans/unresolved
   host edges.
+- R3.4 install/lifecycle activation evidence on the current tree: `dcbf89b0`
+  adds the two command owners, flag/manifest activation, one prepared
+  manifest/config/root/workspace epoch, prepared `vibe-install` planning and
+  slot-lifecycle siblings, additive post-apply Workspace return, the typed
+  report/failure/presentation funnel and Fresh/Ready hosted resume continuity.
+  Root's merged-tree gate passed all 434 `vibe-workspace` library tests, every
+  `vibe-install` suite, 594 CLI unit tests, the five trace targets (7/7/7/5/3),
+  three resume paths, the direct-callback failure RED and the exact lifecycle /
+  hosted / update compatibility targets. Workspace-wide check, fmt and strict
+  four-crate clippy are clean; three independent final reviews ended PASS.
+  The two old per-row-echo tests remain red identically on the pre-atom main
+  and are not represented as regressions or as green evidence.
 - R7.3 integration evidence on the current tree: state transaction tests 5/5;
   hosted cancellation/progress/sequential-slot e2e 2/5/1; targeted five-crate
   clippy clean; 48-schema codegen idempotent; specmap has zero gated orphans;
@@ -154,7 +167,7 @@ this campaign, but compatibility law is preserved.
 | R3.1 five levels, six carriers, typed pass manager | done | `3630ab9e`; `compiler/{ir,pass,pipeline}.rs` |
 | R3.2 parse→close→merge→embed→qualify→absorb→link→assemble→emit | done | `a7961003`, `96eef07d`, `e53b9a4e`, `ec7ea7fe`, `e653654d`, `2feef271`, `6de7ef05`, `6f3fa61a`, `302a3509`, `4403cb55`; 84 boot-artifact + 10 emit gates |
 | R3.3 verifier-each skeleton | done | `15793f2e`; immutable test-only manager verifier, typed level/transition errors, SCC/document/lane/marker/fence invariants; 61 focused verifier tests + independent freeze |
-| R3.4 compile snapshots/timings | in progress | `6f4a717d` metadata/index/filename; `7adfbb5a` manifest activation; `fa0662a9` observer/pre-encode; `4d95a129` writer/lock/retention/budget; `34d3f363` shared report; `0301f8f2` sticky/displaced identity; `be04a184` borrowed workspace/install compilation; `cad8ecc1` open-existing + one generic command owner/funnel. Flags, four-command wiring/presentation and cross-command e2e remain |
+| R3.4 compile snapshots/timings | in progress | `6f4a717d` metadata/index/filename; `7adfbb5a` manifest activation; `fa0662a9` observer/pre-encode; `4d95a129` writer/lock/retention/budget; `34d3f363` shared report; `0301f8f2` sticky/displaced identity; `be04a184` borrowed workspace/install compilation; `cad8ecc1` open-existing + generic command owner; `dcbf89b0` direct install/lifecycle flags, prepared owners, presentation, failure/park/resume matrix and e2e. Update/reinstall ownership plus final four-command parity remain |
 
 R3.2 also landed a crash-safe whole-artifact transaction/selector tier. That
 unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
@@ -396,6 +409,31 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
     not cover Display prefixes); CLI copies neither cap nor formatter. Failed
     report emission is the explicit `old-policy OR trace-requested` bit, never
     inferred from whether validation retained the optional member.
+24. One command uses one selected-manifest byte snapshot. The raw manifest
+    `Result` decides activation without consuming its error; the exact valid
+    value is the selected-node override used by workspace discovery. The
+    prepared state carries invalid-manifest / loaded / first-discovery-failure
+    as distinct variants, so validate-only, install and later world planning
+    cannot retry into a different answer. Canonical selected root and user
+    config obey the same one-epoch law.
+25. Install has explicit pre-apply and post-write workspace epochs. Prepared
+    planning, freshness and slot lifecycle use the caller's pre-apply value.
+    Apply step 7 returns the Workspace it already rebuilt through the additive
+    `PreparedApplyReport`, leaving public `ApplyReport` unchanged; lifecycle
+    world collection reuses that value and reads only current lock/slot
+    artifacts. Ambient rediscovery between identity, trace, solve and
+    contribution collection is forbidden.
+26. A satisfied slot continuation does not end the command early. Fresh and
+    Ready resumes carry their real lifecycle handle/rows into the authored
+    post-durability callback. Ready report order is current-apply rows, resumed
+    rows, then phase rows; its ordinary closure-diff/progress/hooks tail runs on
+    both paths. A missing Ready callback, reversed merge or one-carrier-only
+    merge is mutation-tested.
+27. Direct-install failures after durability belong to the Lifecycle report
+    family even when world planning fails before dispatch. Slot/resume rows are
+    frozen before the first fallible callback operation and prepended once to
+    carried handler failures. The trace retains only fixed `command failed`;
+    the original typed error, exit code and terminal text remain unchanged.
 
 ## 6. Physical state and loss prevention
 
