@@ -1,8 +1,9 @@
 # ТЗ: lifecycle-движок и машина расширений — входная точка исполнителя
 
-_STATUS: В РАБОТЕ — R1 и R2 завершены; R3.1–R3.2, R7.1 и первый
-R8 package-skill binding посажены; остальные шаги открыты. Точная гранулярная
-сверка, физический recovery-аудит и действующий dependency plan:
+_STATUS: В РАБОТЕ — R1/R2, R3.1–R3.3, R6.2a/b, R7.1–R7.2, R8.1 и
+R8.2a завершены; R3.4 и R7.3 активны, остальные строки остаются открытыми.
+Эта шапка — краткий указатель, не второй журнал. Точная гранулярная сверка,
+физический recovery-аудит и действующий atom-level dependency plan:
 `LIFECYCLE-EXTENSIONS-IMPLEMENTATION-LEDGER.md`. Спека-закон:
 `vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml` (при расхождении
 спека главнее этого файла; о расхождении — доложить, не чинить молча)._
@@ -200,7 +201,9 @@ R8 package-skill binding посажены; остальные шаги откр�
 - **Ш3.3 — verifier-скелет.** Инварианты уровней (`DuplicateId`-гейт, ацикличность,
   целостность маркеров) как проверки «после пасса», пока включаются только в тестах.
 - **Ш3.4 — трассировка.** `--trace-compile`/`[compile] trace`: снапшоты
-  `.vibe/trace/<run>/NN-<pass>.json` + таблица таймингов (`##OBS-TRACE`).
+  `.vibe/trace/<run>/<seq>-<pass>-<kind>_<scope>_<artifact>-<ordinal>.json`
+  (точный full/short Windows-safe codec, retention и бюджет — в
+  `COMPILER-IR-TRACE-ARCHITECTURE-v0.1.md`) + таблица таймингов (`##OBS-TRACE`).
   **Демо:** `vibe install --trace-compile` на фикстуре → каталог с пронумерованными
   снапшотами; дифф двух соседних показывает работу qualify.
   Коммиты волны: `refactor(vibe-spec): …the <pass> phase becomes a pass` (серия),
@@ -281,16 +284,23 @@ R8 package-skill binding посажены; остальные шаги откр�
   Коммиты: `feat(vibe-llm): the provider seam gets a real provider`,
   `feat(vibe-lifecycle): create — the agent handshake`.
 
-### R8 — package/deploy (спека §4.2; форма — по прибытии)
+### R8 — package/build/deploy (спека §4.2 + принятый successor-дизайн)
 
-Минимум: package-биндинг скилл-проекции (существующий `vibe skill`/pkgskill-жанр как
-исполнение фазы), zip-инсталлятор жанра C9 (`distribution/windows/`), один
-deploy-плагин-фикстура. Перед волной — свериться с владельцем по `##OPEN-DEPLOY-TARGETS`.
+Цели deploy уже выбраны владельцем; `##OPEN-DEPLOY-TARGETS` не является
+развилкой. Полная форма и порядок — в
+`BUILD-PACKAGE-DEPLOY-ARCHITECTURE-v0.1.md` и
+`SPEC-DEBT-LIFECYCLE-R7-R8.md`: artifact records/DAG, один общий mechanism
+registry, Cargo commissioning, полностью статический skill, Agent Plugin 1.0,
+Claude/Codex/OpenCode projections, profiles/intent/receipt/recovery,
+`deploy:vibe-bin`, plugin replacement и Windows zip. Будущий VibeVM OS остаётся
+compatibility horizon, не текущей системной мутацией.
 
 ## §4. Сквозные гейты (каждый коммит, каждая волна)
 
-- Панель целиком: `CARGO_BUILD_JOBS=4 bash tools/self-check.sh; echo "EXIT=$?"` —
-  зелёный ХВОСТ обязателен; панель, запущенная до последней правки, — не про то дерево.
+- На каждом атоме — только точные affected tests/check/clippy. Полная панель
+  `CARGO_BUILD_JOBS=4 bash tools/self-check.sh; echo "EXIT=$?"` запускается на
+  неизменившемся дереве в конце связного batch и в финале эпика; её зелёный
+  ХВОСТ обязателен. Панель до последней правки — не про то дерево.
 - `cargo xtask specmap` — 0 unresolved, 0 suspects (21 warning — стоячие, их не плодить).
 - Byte-identity лейнов (R3+): `git diff --exit-code vibevm/vibespecs/boot/` после
   перегенерации без включённых трансформов.
@@ -317,11 +327,15 @@ deploy-плагин-фикстура. Перед волной — сверить
 
 ## §6. Зависимости и параллелизм волн
 
-R1 → (R2, R3) — обе зависят только от R1 и не друг от друга: можно вести двумя потоками.
-R4 ← R3. R5 ← R2 (build-фаза) + R4 (что грузить). R6 ← R3+R5. R7 ← R2 (+R5 не нужен).
-R8 ← R2. Внутри волны шаги строго по порядку. Конфликтоопасные файлы между потоками:
-`vibe-core/manifest` (Ш2.1) и `vibe-spec/*` (R3) не пересекаются; `install.rs` трогают
-только R1 и Ш2.2 (verb-фасад) — развести по времени.
+Историческая wave-формула была слишком грубой; действуют atom-level зависимости
+ledger'а. R1 → (R2, R3 core). R6.2a/b следуют за R3.3 и предшествуют R3.4 — этот
+порядок уже выполнен. R4.0 следует после коллектора R2 и typed compiler core;
+R4.1–R4.3 используют один его kernel. R5 phase-native требует R2+R4, а native
+compiler path также R6.2. R6.3–R6.5 требуют R3/R5/R6.2; R7 требует R2, не R5.
+R8 artifact records/DAG могут идти после R2 параллельно, но mechanism
+world/selection обязаны дождаться R4.0 и расширить тот же kernel — второй
+collector запрещён. Внутри каждого атома зависимости и конфликтные manifest /
+install / compiler периметры сверяются с ledger перед fan-out.
 
 ## §7. Definition of Done эпика
 

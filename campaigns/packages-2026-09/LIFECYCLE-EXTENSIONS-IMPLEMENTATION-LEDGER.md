@@ -28,8 +28,8 @@ only durable home of a decision.
 
 ## 2. Evidence standard and current baseline
 
-- Integration checkpoint: `main` at `781dc1f6` after strict compiler-domain
-  wire conversion and its regenerated spec map.
+- Integration checkpoint: `main` at `bcba4290` after strict compiler-domain
+  wire conversion, its regenerated spec map and the durable campaign record.
 - `cargo test --workspace --locked`: green on 2026-08-27 at the unchanged
   product checkpoint.
 - `cargo xtask specmap`: 6772 units, 1971 tagged code items, 1763 edges,
@@ -60,7 +60,7 @@ only durable home of a decision.
   37 tracked slots to strict ownership records with 1,354 independently
   rehashed rows; subsequent install materialised 0/37 and the boot tree was
   byte-identical (`BOOT_BYTE_NOOP=True`).
-- Publication: `cargo xtask mirror` fanned `main` at `b90cd209` plus tags to
+- Publication: `cargo xtask mirror` fanned `main` at `bcba4290` plus tags to
   GitVerse and GitHub successfully on 2026-08-27.
 
 ## 3. Granular R1–R8 ledger
@@ -99,7 +99,7 @@ this campaign, but compatibility law is preserved.
 | R3.1 five levels, six carriers, typed pass manager | done | `3630ab9e`; `compiler/{ir,pass,pipeline}.rs` |
 | R3.2 parse→close→merge→embed→qualify→absorb→link→assemble→emit | done | `a7961003`, `96eef07d`, `e53b9a4e`, `ec7ea7fe`, `e653654d`, `2feef271`, `6de7ef05`, `6f3fa61a`, `302a3509`, `4403cb55`; 84 boot-artifact + 10 emit gates |
 | R3.3 verifier-each skeleton | done | `15793f2e`; immutable test-only manager verifier, typed level/transition errors, SCC/document/lane/marker/fence invariants; 61 focused verifier tests + independent freeze |
-| R3.4 compile snapshots/timings | in progress | `6f4a717d` lands the JTD-first `compiler-trace-index/e1` metadata contract, exact canonical full/short filename codec, dense invocation/order/timing laws, permissive-many reader corpus and hostile-input validator; `7adfbb5a` lands strict role-equipotent `[compile] trace = bool` with default-false canonical omission; pass observer, atomic writer/retention, CLI flag/threading/presentation and e2e remain |
+| R3.4 compile snapshots/timings | in progress | `6f4a717d` lands the JTD-first `compiler-trace-index/e1` metadata contract, exact canonical full/short filename codec, dense invocation/order/timing laws, permissive-many reader corpus and hostile-input validator; `7adfbb5a` lands strict role-equipotent `[compile] trace = bool` with default-false canonical omission; pass observer, atomic writer, newest-9-complete retention, 128 MiB/run budget, CLI flag/threading/presentation and e2e remain |
 
 R3.2 also landed a crash-safe whole-artifact transaction/selector tier. That
 unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
@@ -306,11 +306,13 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
 - `cache/` is untracked and unignored. It is not a product home. Important
   decisions from its R3.3, R4–R5 and R6–R8 reports are now represented in this
   ledger; future accepted decisions go directly here/spec-debt/code comments.
-- `main` was mirrored at `b90cd209` after the green batch panel; it must not
+- `main` was mirrored at `bcba4290` after the R6.2b atom; it must not
   remain single-box-only across another long wave. Build caches are reclaimed
   continuously: the first cleanup returned 164.6 GiB from root plus roughly
   372 GiB from inactive worktrees, and accepted R6.2a/R7.2 worktrees returned a
-  further roughly 53 GiB immediately after integration.
+  further roughly 53 GiB immediately after integration. R6.2b then returned
+  another 10,977,020,458 bytes immediately after its equivalent branch commit
+  was proven present on `main`.
 
 ## 7. Dependency plan and parallel lanes
 
@@ -325,7 +327,9 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
 
 1. R3.3 verifier.
 2. Compiler IR JTD epoch and strict domain conversion substrate.
-3. R3.4 trace/timings using that same wire.
+3. R3.4 trace/timings using that same wire: observer/pre-encode budget seam,
+   atomic writer + newest-nine retention, one recorder through workspace/CLI,
+   then presentation/e2e.
 4. Pure registry extraction.
 5. R4.1 staged positions/header/oracle/fingerprint.
 6. R4.2 XML minify binding and full RED corpus.
@@ -343,11 +347,14 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
 
 ### Lane C — artifact/build/package/deploy (parallel, manifest edits serialized)
 
-1. Artifact records/target DAG and mechanism registry/routing.
-2. Cargo provider and `[[binary]]` compatibility lowering.
-3. Static-skill and Agent Plugin package providers in parallel.
-4. Client projections and general deploy planner/intent/receipt/recovery.
-5. `vibe-bin`, profiles/plan/undeploy, plugin replacement fixture and Windows
+1. Artifact records/target DAG may proceed in parallel after R2.
+2. Mechanism world/selection does **not** create a Lane-C registry: after Lane
+   A lands R4.0, extend that same `vibe-extension-registry` kernel with the
+   already-landed `[[mechanism]]` declarations, host routes and exact pins.
+3. Cargo provider and `[[binary]]` compatibility lowering.
+4. Static-skill and Agent Plugin package providers in parallel.
+5. Client projections and general deploy planner/intent/receipt/recovery.
+6. `vibe-bin`, profiles/plan/undeploy, plugin replacement fixture and Windows
    zip provider.
 
 ### Final serialization

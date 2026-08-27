@@ -13,16 +13,18 @@ Landed evidence safe to cite now:
 | `e2392893` | JTD-first OpenAI-compatible request/response; synchronous object-safe provider; project/user config merge; credential/endpoint/redirect/proxy/body/timeout safety; provider-independent usage |
 | `c0fa49be` | package-skill inventory and project projection have one library owner below the CLI |
 | `f42334ff` | initial Chat Completions schema/corpus registration |
+| `26929050` | R7.2 strict generated agent-result wire, selected-world prompt resolution, optional CLI provider execution and safe multi-output publication; no selected agent row keeps the complete algorithmic path |
+| `9275f373`, `67886ea7` | project package-skill binding has strict JTD receipt, intent/recovery/CAS, exact ownership, lossless path handling and Unicode-9 physical-alias protection across Claude/Codex/OpenCode projections |
+| `2a3f3b44` | strict artifact/mechanism/deploy grammar, target DAGs, provider pins/routes and named profiles with parse/write symmetry |
 
 The production provider's mock, loopback, proxy, redirect, size, redaction and
-timeout gates are green. One owner-authorised live Z.AI call was attempted
-through production `reqwest` and failed before HTTP with body-free
-`Transport(RequestFailed)`. Independent curl and Node requests to both Z.AI
-Coding and Anthropic endpoints reset/timed out from the ordinary process
-environment, while the `claudez` launcher itself completed live GLM calls.
-Therefore this is recorded as an environment/transport observation, not a live
-provider PASS and not a wire/config failure. No token or response body was
-printed.
+timeout gates are green. The earlier ordinary-process transport failure was
+superseded on 2026-08-27 by an owner-authorised production smoke: central
+`vibe create` called the official OpenAI-compatible coding endpoint with
+`glm-5-turbo`, read the claudez credential only through its token-file path,
+exited 0 and produced the exact declared `LIVE_OK\n` output. No token or
+provider response body was printed. This proves the live provider seam; mock
+and security gates remain the deterministic acceptance evidence.
 
 The remaining sections include owner rulings made after PROP-054 was written.
 They authorise implementation but remain draft amendments at their owning
@@ -40,15 +42,16 @@ Replace the stale “stub in M0, real in M1.5” row with:
 object-safe LLM provider abstraction and its first real OpenAI-compatible Chat
 Completions adapter. R7.1 ships JTD-generated request/response wires, layered
 configuration, secret-safe endpoint/transport policy, bounded blocking calls
-and provider-independent usage. Lifecycle agent execution, hosted delegation
-and MCP surfaces remain R7.2–R7.4 work; the provider's existence alone activates
-nothing.</CRATE-LLM>
+and provider-independent usage. R7.2 ships selected-world prompt resolution,
+strict agent-result output and the optional CLI execution path. Hosted
+delegation and MCP remain R7.3–R7.4 work; the provider's existence alone
+activates nothing.</CRATE-LLM>
 ```
 
 Proposed status is `impl/work`, not `impl/done`: the crate is real, but the R7
 feature family is intentionally incomplete.
 
-## 2. PROP-054 `##AGENT-CLI` — R7.1 successor and config ruling
+## 2. PROP-054 `##AGENT-CLI` — R7.1/R7.2 successors and config ruling
 
 Append beside `##AGENT-CLI`:
 
@@ -63,6 +66,16 @@ operator-owned. A nonempty project env source wins over a token file and fails
 honestly when absent; it never silently falls through to another credential.
 Absolute token paths are legal operator configuration; relative paths resolve
 beside the selected user config; `~` is literal, never expanded.</AGENT-PROVIDER-SEAM>
+
+<AGENT-CLI-EXECUTION fact="true" status="impl/done">R7.2 resolves each
+explicitly selected agent prompt against the selected package world, invokes
+the configured provider only in CLI mode, validates a strict generated
+`AgentResult`, and publishes every declared output through the shared safe
+filesystem cell. Multi-output apply is planned before mutation and preserves
+the algorithmic baseline: with no selected agent contribution, no provider is
+constructed, no credential is read and the lifecycle remains complete.
+Hosted outbox/resume and MCP are separate R7.3/R7.4 adapters over this result
+contract.</AGENT-CLI-EXECUTION>
 ```
 
 Keep exact provider ids; no aliases route Anthropic/OpenRouter names through an
@@ -317,12 +330,15 @@ where the client documents it. Config writes parse/merge/atomic-replace and
 carry before/after hashes. Physical paths are de-duplicated across selected
 clients.
 
-The existing project package-skill writer requires a safety successor before
-automatic binding: validated safe names/paths, authenticated selected-world
-inputs, plan-time physical collision detection, provider-qualified artifact ids,
-strict project receipt, owned-file diff, output probe before fresh, and desired-
-versus-owned reconciliation. An unowned same-name directory must survive and
-cause refusal; whole-directory `remove_dir_all` is not ownership.
+The project package-skill writer's safety successor is landed at
+`9275f373`/`67886ea7`: validated safe names/paths, authenticated selected-world
+inputs, plan-time physical collision detection, provider-qualified artifact
+ids, strict JTD receipt, intent/recovery/CAS, owned-file diff, output probe
+before fresh and desired-versus-owned reconciliation. Physical identity uses
+NFC → Unicode-9 full fold → NFC while receipts keep lossless OS path units. An
+unowned same-name directory survives and causes refusal; whole-directory
+`remove_dir_all` is not ownership. This closes safety for automatic **project**
+binding only. User/client installation remains explicit general deploy work.
 
 ## 11. Two launcher genres under `~/.vibe/bin`
 
@@ -360,9 +376,11 @@ No movement is applied by this draft.
 | Anchor | Proposed when evidence lands |
 |---|---|
 | PROP-000 `##CRATE-LLM` | `impl/work` now (`e2392893`) |
-| PROP-054 `##AGENT-CLI` provider seam | add `impl/done` successor now; handler/hosted remain work |
+| PROP-054 `##AGENT-CLI` provider seam | add `impl/done` provider successor (`e2392893`) |
+| PROP-054 `##AGENT-CLI` CLI execution | add `impl/done` successor (`26929050`); hosted/MCP remain work |
 | `##OPEN-CREATE-BUDGET` | close by §3 owner ruling after mode/budget implementation |
-| `##OPEN-DEPLOY-TARGETS` | close by §8 owner ruling; implementation statuses remain open |
+| `##OPEN-DEPLOY-TARGETS` | close by §8 owner ruling; grammar/profiles landed at `2a3f3b44`, runtime statuses remain open |
+| project package-skill binding | record `impl/done` safety successor at `9275f373`/`67886ea7`; do not imply user deploy |
+| artifact/mechanism/deploy grammar | record `impl/done` grammar successor at `2a3f3b44`; records/routing/runtime remain open |
 | `##PHASE-BUILD`, `##PHASE-PACKAGE`, `##PHASE-DEPLOY` | move only per landed mechanism/target evidence |
 | PROP-024/025 build wording | amend with Cargo/general mechanism compatibility when Cargo atom lands |
-

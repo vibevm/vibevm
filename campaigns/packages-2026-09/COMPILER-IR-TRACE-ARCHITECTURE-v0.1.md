@@ -231,6 +231,28 @@ primitives. Trace writes are not part of the boot-artifact transaction: a
 failed compile deliberately leaves a partial diagnostic run, while existing
 boot artifacts remain untouched. Final index status is written last.
 
+### 4.3 Retention and the per-run budget
+
+Trace diagnostics are bounded by two independent measures. When a recorder is
+opened, it considers only no-follow directories whose names are exact
+32-lowercase-hex run ids and whose terminal index proves a complete trace. It
+keeps the newest nine completed runs, ordered by `index.json.started` (directory
+mtime is the fallback ordering evidence when the timestamp cannot be read),
+before creating the new run. Thus a successful open leaves at most nine older
+complete traces plus the live tenth. A malformed, link-like or non-owned entry
+is residue to report/refuse, never something retention silently deletes.
+
+One run may publish at most 128 MiB of snapshot payload before the recorder
+stands down. Once the spent snapshot-byte counter reaches that ceiling, later
+pass invocations are recorded as `snapshot-skipped-budget`: pass/verify timing
+remains, while encode timing and a snapshot filename are absent exactly as the
+index epoch requires. `index.json` remains writable so a budget-limited run is
+still readable and reconcilable. The counter uses checked/saturating arithmetic;
+neither a large carrier nor a wrapping sum may reopen the budget. Retention
+count and byte budget are separate REDs: twelve completed seed runs plus one
+new run leave ten, and a budget-exhausted run keeps dense events/timings while
+creating no further snapshot files.
+
 ## 5. Manifest and CLI
 
 `vibe-core` carries strict consumer-side `[compile] trace = bool`, default
@@ -278,7 +300,8 @@ JSON output extends a JTD-owned report; it does not append an ad-hoc object.
 1. Land R6.2a schema/corpus.
 2. Implement strict bidirectional conversion + gate registry (**landed at
    `17afb5b6`**).
-3. Add in-memory pass observer/timing with no-trace compatibility wrappers.
+3. Add in-memory pass observer/timing with no-trace compatibility wrappers,
+   including the pre-encode `snapshot-skipped-budget` decision seam.
 4. Add trace-index JTD/generated types (**metadata contract landed at
    `6f4a717d`**) and atomic run writer (remaining).
 5. Thread one recorder through workspace/install/CLI and add flags/config.
