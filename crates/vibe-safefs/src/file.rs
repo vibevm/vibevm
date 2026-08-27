@@ -6,7 +6,9 @@
 //! attacker-planted spelling, or another caller's in-flight stage, so this
 //! crate never overwrites or deletes a neighbour it does not own. The stage is
 //! written, synced, renamed through the pinned directory capability, and the
-//! visible result is reopened and byte-verified. A namespace swap after the
+//! visible result is reopened and byte-verified under the candidate's own
+//! length cap, so verification of a hostile replacement is bounded by what the
+//! caller wrote. A namespace swap after the
 //! walk cannot redirect any of it: every step goes through the capability, not
 //! through a path re-resolved with ambient authority.
 
@@ -127,7 +129,18 @@ impl Project {
         }
         // Past this line the destination entry may already be the new bytes.
         let possibly = |error: anyhow::Error| PublishError::possibly(created.clone(), error);
-        match self.read_file_in(&destination, &name).map_err(&possibly)? {
+        // The window a hostile replacement of the just-published file lands
+        // in: the rename is done and the verification read is the next step.
+        crate::race_hook::before_publish_verify(&destination, &name);
+        // The verification read is bounded by the candidate's own byte length,
+        // never an unbounded read of whatever the name holds now: a racing
+        // replacement larger than the candidate refuses at its own metadata —
+        // spending nothing past `cap + 1` — instead of allocating a foreign
+        // payload to compare against, and it never offers a prefix as success.
+        match self
+            .read_file_bounded_in(&destination, &name, bytes.len())
+            .map_err(&possibly)?
+        {
             Some(visible) if visible.as_slice() == bytes => {}
             Some(_) => {
                 return Err(possibly(anyhow::anyhow!(
@@ -529,3 +542,7 @@ mod bounded_tests;
 #[cfg(test)]
 #[path = "file/identity_tests.rs"]
 mod identity_tests;
+
+#[cfg(test)]
+#[path = "file/publish_verify_tests.rs"]
+mod publish_verify_tests;

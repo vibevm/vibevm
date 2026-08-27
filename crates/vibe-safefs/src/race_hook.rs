@@ -28,6 +28,7 @@ mod armed {
         static BEFORE_PROVED_REMOVAL: RefCell<Option<Hook>> = const { RefCell::new(None) };
         static BEFORE_LOCK: RefCell<Option<Hook>> = const { RefCell::new(None) };
         static BEFORE_BOUNDED_READ: RefCell<Option<Hook>> = const { RefCell::new(None) };
+        static BEFORE_PUBLISH_VERIFY: RefCell<Option<Hook>> = const { RefCell::new(None) };
         static LOCK_IDENTITY_CHECK: RefCell<Option<IdentityCheckHook>> = const { RefCell::new(None) };
     }
 
@@ -83,6 +84,26 @@ mod armed {
         let hook = BEFORE_BOUNDED_READ.with(|slot| slot.borrow_mut().take());
         if let Some(hook) = hook {
             hook(holder, name);
+        }
+    }
+
+    /// Run `hook` on this thread in the window a replacing publication cannot
+    /// take back: **after** the rename has landed and **before** the visible
+    /// destination is reopened for verification. Pass `None` to disarm.
+    ///
+    /// A hostile or racing replacement of the just-published file lands exactly
+    /// here, and the verifier's read is the next thing to run — so what the
+    /// hook leaves at the name is what verification must judge, on the
+    /// candidate's own byte budget and never an unbounded read of a foreign
+    /// payload. Compiled out of shipped builds.
+    pub fn arm_before_publish_verify(hook: Option<Hook>) {
+        BEFORE_PUBLISH_VERIFY.with(|slot| *slot.borrow_mut() = hook);
+    }
+
+    pub(crate) fn before_publish_verify(directory: &crate::Pinned, name: &str) {
+        let hook = BEFORE_PUBLISH_VERIFY.with(|slot| slot.borrow_mut().take());
+        if let Some(hook) = hook {
+            hook(directory, name);
         }
     }
 
@@ -165,12 +186,12 @@ mod armed {
 #[cfg(any(test, feature = "inject-failures"))]
 pub(crate) use armed::{
     after_create_dir, before_bounded_read, before_create_dir, before_link, before_lock,
-    before_proved_removal, lock_identity_matches,
+    before_proved_removal, before_publish_verify, lock_identity_matches,
 };
 #[cfg(any(test, feature = "inject-failures"))]
 pub use armed::{
     arm_after_create_dir, arm_before_bounded_read, arm_before_create_dir, arm_before_link,
-    arm_before_lock, arm_before_proved_removal, arm_lock_identity_check,
+    arm_before_lock, arm_before_proved_removal, arm_before_publish_verify, arm_lock_identity_check,
 };
 
 #[cfg(not(any(test, feature = "inject-failures")))]
@@ -195,6 +216,9 @@ pub(crate) fn before_lock(_directory: &crate::Pinned, _name: &str) {}
 
 #[cfg(not(any(test, feature = "inject-failures")))]
 pub(crate) fn before_bounded_read(_holder: &crate::Pinned, _name: &str) {}
+
+#[cfg(not(any(test, feature = "inject-failures")))]
+pub(crate) fn before_publish_verify(_directory: &crate::Pinned, _name: &str) {}
 
 #[cfg(not(any(test, feature = "inject-failures")))]
 pub(crate) const fn lock_identity_matches(actual: bool) -> bool {

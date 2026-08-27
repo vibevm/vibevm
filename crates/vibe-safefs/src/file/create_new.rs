@@ -20,8 +20,11 @@
 //! two steps are load-bearing rather than decorative:
 //!
 //! 1. the stage is removed, and
-//! 2. the destination is reopened and held to
-//!    [`verify_regular_single_link`](super::verify_regular_single_link).
+//! 2. the destination is reopened, held to
+//!    [`verify_regular_single_link`](super::verify_regular_single_link), and
+//!    byte-verified under the candidate's own length cap — the same bounded
+//!    verify law as the replacing publication, so no safefs path verifies an
+//!    attacker-sized replacement with an unbounded read.
 //!
 //! A surviving stage is therefore not something a caller has to notice: the
 //! link count says so, and the publication reports
@@ -122,9 +125,20 @@ impl Project {
                 directory.join(&staged_name).display()
             ))));
         }
-        // The single-link check inside `read_file_in` is what proves step
-        // above actually took effect — a surviving second name cannot pass it.
-        match self.read_file_in(directory, name).map_err(&possibly)? {
+        // The same window the replacing publication's verify occupies: the
+        // publication is whole (the link landed, the stage was collected) and
+        // the verification read is the next step.
+        crate::race_hook::before_publish_verify(directory, name);
+        // The single-link check inside the bounded read is what proves the
+        // step above actually took effect — a surviving second name cannot
+        // pass it — and the read is capped at the candidate's own byte
+        // length: a hostile replacement of the just-published name refuses
+        // on its own metadata, spending nothing past `cap + 1`, rather than
+        // being read whole to be told it mismatches.
+        match self
+            .read_file_bounded_in(directory, name, bytes.len())
+            .map_err(&possibly)?
+        {
             Some(visible) if visible.as_slice() == bytes => {}
             Some(_) => {
                 return Err(possibly(anyhow::anyhow!(
