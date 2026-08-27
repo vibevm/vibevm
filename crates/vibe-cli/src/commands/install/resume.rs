@@ -6,6 +6,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#REF-AGENT-RESUME");
 
+use std::fmt;
 use std::path::Path;
 
 use anyhow::{Context, Result};
@@ -60,10 +61,93 @@ pub(crate) struct ResumedInstall {
     pub(crate) context: InstallRunContext,
 }
 
+/// What servicing a continuation produced — as a VALUE, including the failure.
+///
+/// A resume builds its OWN [`vibe_install::InstallSlotLifecycle`], and that is
+/// the whole reason this is a sum rather than a `Result<Option<_>>`. A `?` out
+/// of the row-owning region drops that lifecycle, and with it every row the
+/// resumed run had already produced: an earlier contribution that succeeded,
+/// the delegated row it satisfied, the point it reached. No caller can recover
+/// them afterwards — the outer command's own lifecycle is a DIFFERENT run and
+/// never saw them — so a failed resume used to report an empty run over work
+/// that really happened.
+///
+/// The error travels as the ORIGINAL object. Nothing here formats or re-wraps
+/// it: the exit code is read by downcasting through its chain.
+pub(crate) enum ResumeOutcome {
+    /// Nothing was owed, so the ordinary path proceeds untouched.
+    Nothing,
+    Completed(Box<ResumedInstall>),
+    Failed(ResumeFailure),
+}
+
+/// A resume that failed AFTER its lifecycle existed.
+///
+/// Deliberately NEUTRAL: it carries the measurement and nothing else. It is not
+/// a [`crate::commands::compile_trace::RegisteredReportDraft`], it names no
+/// report family, and it never formats the error — because the family is not
+/// knowable here. The same `execute_prepared` is the prerequisite of a phase
+/// verb (lifecycle-shaped), the body of `vibe install` (install-shaped) and the
+/// delegate of `vibe update --all` (update-shaped), and each of those three
+/// outer commands answers differently. Choosing here would pick one of the
+/// three and be wrong for the other two.
+#[derive(Debug)]
+pub(crate) struct ResumeFailure {
+    /// The caller's error, unchanged — same downcast identity, same chain.
+    pub(crate) original: anyhow::Error,
+    /// What was durable when this resume began.
+    ///
+    /// The resume's own lifecycle measures no materialisation — it runs slot
+    /// rows over a world somebody else already made durable — so its
+    /// `progress()` is empty by construction. The caller's snapshot is the real
+    /// account, and it is the one a failed report must carry.
+    pub(crate) progress: vibe_install::InstallProgress,
+    /// Every row the resumed run produced, taken exactly once.
+    pub(crate) reports: Vec<vibe_install::SlotLifecycleReport>,
+    /// The resolved-package count of the run being serviced, carried through so
+    /// an outer report does not have to invent a zero.
+    pub(crate) packages_resolved: usize,
+}
+
+impl fmt::Display for ResumeFailure {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        fmt::Display::fmt(&self.original, formatter)
+    }
+}
+
+impl std::error::Error for ResumeFailure {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        self.original.source()
+    }
+}
+
+/// Hand a measured resume failure outward through the ordinary `Result`
+/// channel, still NEUTRAL.
+///
+/// The `anyhow` wrapper is TRANSPORT only, exactly like the registered-draft
+/// carrier one layer up — with one difference that matters: this one is
+/// consumed by the three `execute_prepared` CALLERS, before the registered
+/// classifier ever sees the error. It must not reach `main`, and every caller
+/// therefore takes it apart explicitly.
+pub(crate) fn carry_resume_failure(failure: ResumeFailure) -> anyhow::Error {
+    anyhow::Error::new(failure)
+}
+
+/// Take a transported resume failure back out, exactly, or return the error
+/// untouched.
+///
+/// Total, so a caller can branch without consuming an error it may need to pass
+/// on unchanged.
+pub(crate) fn take_resume_failure(
+    error: anyhow::Error,
+) -> std::result::Result<ResumeFailure, anyhow::Error> {
+    error.downcast::<ResumeFailure>()
+}
+
 pub(crate) fn resume_slot_continuation(
     ctx: &output::Context,
     request: ResumeRequest<'_>,
-) -> Result<Option<ResumedInstall>> {
+) -> Result<ResumeOutcome> {
     let ResumeRequest {
         project_root,
         workspace,
@@ -79,17 +163,17 @@ pub(crate) fn resume_slot_continuation(
     // `begin` would replace the persisted chain with this caller's own, which
     // silently rewrote a clean-composed run's recorded chain.
     let Some(state) = vibe_lifecycle::LifecycleStateStore::peek(&workspace.root)? else {
-        return Ok(None);
+        return Ok(ResumeOutcome::Nothing);
     };
     let Some(continuation) = state.run.slot_continuation.clone() else {
-        return Ok(None);
+        return Ok(ResumeOutcome::Nothing);
     };
     let owes_slot_work = state
         .execution
         .values()
         .any(|record| record.scope == Some(ExecutionRecordScope::Slot));
     if !owes_slot_work || continuation.targets.is_empty() {
-        return Ok(None);
+        return Ok(ResumeOutcome::Nothing);
     }
     drop(state);
 
@@ -148,24 +232,165 @@ pub(crate) fn resume_slot_continuation(
             )),
         },
     )?;
+    // ---- everything past this line owns rows ------------------------------
+    //
+    // The lifecycle now exists, so a bare `?` here would drop it and every row
+    // it has produced. The region is a function returning a `Result`, and its
+    // failure is captured with ONE `take_reports()` and the caller's durable
+    // progress.
+    let outcome = serviced(Serviced {
+        lifecycle: &lifecycle,
+        workspace,
+        world: &world,
+        targets: &targets,
+        selected: &selected,
+        metadata,
+        project_root,
+        disposition,
+        packages_resolved,
+        progress: progress.clone(),
+    });
+    Ok(capture(
+        outcome,
+        progress,
+        packages_resolved,
+        // LAZY: the take is destructive, and it belongs to the failure arm
+        // alone. Calling it eagerly would empty the lifecycle on a successful
+        // resume, whose own rows the completed arm still has to read.
+        || lifecycle.take_reports().unwrap_or_default(),
+    ))
+}
+
+/// Turn the row-owning region's `Result` into the typed outcome.
+///
+/// The whole capture is here, in one function with its destructive dependency
+/// INJECTED, so that the three things it must get right can be driven directly:
+/// the rows are taken exactly once and only on the failure arm, every measured
+/// field crosses unchanged, and the error is moved rather than formatted.
+///
+/// `take` is `FnOnce` and lazy on purpose. `take_reports` empties the
+/// lifecycle, so an eager call would strip a SUCCESSFUL resume of the rows its
+/// completed arm is about to report — a failure mode no assertion on the
+/// failure arm could ever see.
+fn capture(
+    outcome: Result<ResumeOutcome>,
+    progress: vibe_install::InstallProgress,
+    packages_resolved: usize,
+    take: impl FnOnce() -> Vec<vibe_install::SlotLifecycleReport>,
+) -> ResumeOutcome {
+    match outcome {
+        Ok(outcome) => outcome,
+        Err(original) => ResumeOutcome::Failed(ResumeFailure {
+            // MOVED, never formatted: the exit code is read by downcasting
+            // through this object's chain.
+            original,
+            progress,
+            reports: take(),
+            packages_resolved,
+        }),
+    }
+}
+
+/// Own the ordering of a resume that has a CURRENT pass in front of it.
+///
+/// Two lifecycles exist on the scoped-update and forced-reinstall paths: the
+/// command's own, and the one the resume builds. This is the single place that
+/// joins them, and the ordering it fixes is the whole contract:
+///
+/// ```text
+/// resume (lazy)  ->  match  ->  take the current rows (lazy)  ->  prefix
+/// ```
+///
+/// Both dependencies are injected and lazy so the ordering is provable. The
+/// take must not run before the resume result exists (an early take would empty
+/// the current pass while the resume then reports "nothing was owed"), and it
+/// must not run on `Nothing` or on an ordinary `Err` — those paths still owe
+/// their rows to the caller's own failure fallback, which takes them itself.
+pub(crate) fn own_resume(
+    resume: impl FnOnce() -> Result<ResumeOutcome>,
+    take_current: impl FnOnce() -> Vec<vibe_install::SlotLifecycleReport>,
+) -> Result<ResumeOutcome> {
+    Ok(match resume()? {
+        ResumeOutcome::Nothing => ResumeOutcome::Nothing,
+        ResumeOutcome::Completed(mut resumed) => {
+            // VALIDATE FIRST. A malformed handoff is a failed command, and the
+            // check is the last fallible thing on this arm — so it must happen
+            // while both halves are still recoverable. Taking first and
+            // validating afterwards loses BOTH: the joined outcome is dropped
+            // on the error path, and the outer fallback then reads a lifecycle
+            // this seam has already emptied, reporting a run that did nothing
+            // over one that did several things.
+            //
+            // Root-neutral: the exact validation error is returned, and the
+            // caller's own fallback still chooses the family.
+            if let Some(delegation) = resumed.run.parked.as_ref() {
+                crate::commands::lifecycle::check_delegation(delegation)?;
+            }
+            resumed.run.slot_reports = prefixed(take_current(), resumed.run.slot_reports);
+            ResumeOutcome::Completed(resumed)
+        }
+        ResumeOutcome::Failed(mut failure) => {
+            failure.reports = prefixed(take_current(), failure.reports);
+            ResumeOutcome::Failed(failure)
+        }
+    })
+}
+
+/// `current` rows, then `resumed` ones. Pure, so the order is provable alone.
+pub(crate) fn prefixed(
+    current: Vec<vibe_install::SlotLifecycleReport>,
+    resumed: Vec<vibe_install::SlotLifecycleReport>,
+) -> Vec<vibe_install::SlotLifecycleReport> {
+    let mut rows = current;
+    rows.extend(resumed);
+    rows
+}
+
+/// The borrowed inputs of the row-owning region.
+struct Serviced<'a> {
+    lifecycle: &'a vibe_install::InstallSlotLifecycle,
+    workspace: &'a Workspace,
+    world: &'a [vibe_workspace::install::ResolvedDep],
+    targets: &'a [(String, String, String)],
+    selected: &'a [vibe_workspace::install::ResolvedDep],
+    metadata: &'a RunMetadata,
+    project_root: &'a Path,
+    disposition: InstallDisposition,
+    packages_resolved: usize,
+    progress: vibe_install::InstallProgress,
+}
+
+fn serviced(inputs: Serviced<'_>) -> Result<ResumeOutcome> {
+    let Serviced {
+        lifecycle,
+        workspace,
+        world,
+        targets,
+        selected,
+        metadata,
+        project_root,
+        disposition,
+        packages_resolved,
+        progress,
+    } = inputs;
     // This slot plan's exact ordered target set is the persisted continuation
     // itself. Announcing it is what lets a LATER declared row park once the
     // one being resumed is satisfied — between those two writes the run owes
     // nothing, so the durable continuation is correctly dropped.
     lifecycle
-        .stage_resumed_targets(&selected)
+        .stage_resumed_targets(selected)
         .map_err(anyhow::Error::msg)?;
     let Some(plan) = vibe_workspace::install::PostInstallPlan::resume_for_targets(
         &workspace.root,
-        &world,
-        &targets,
+        world,
+        targets,
     )?
     else {
-        return Ok(None);
+        return Ok(ResumeOutcome::Nothing);
     };
     let ran = vibe_workspace::install::run_post_install_slot_lifecycle(
         plan,
-        vibe_workspace::install::SlotLifecycleMode::Callback(&lifecycle),
+        vibe_workspace::install::SlotLifecycleMode::Callback(lifecycle),
     );
     // The continuation is serviced on BOTH the fresh fast path and after a
     // completed apply, so the progress this returns is the caller's, not a
@@ -188,7 +413,10 @@ pub(crate) fn resume_slot_continuation(
         run.slot_reports = lifecycle.take_reports()?;
         // Still parked: the caller returns it untouched, so the context
         // carries no rows it would fold anywhere.
-        return Ok(Some(ResumedInstall { run, context }));
+        return Ok(ResumeOutcome::Completed(Box::new(ResumedInstall {
+            run,
+            context,
+        })));
     }
     ran.context("finishing the parked slot run")?;
     // Nothing is owed any more: the continuation goes before anything reports
@@ -200,8 +428,15 @@ pub(crate) fn resume_slot_continuation(
     let reports = lifecycle.take_reports()?;
     context.lifecycle_reports = reports.clone();
     run.slot_reports = reports;
-    Ok(Some(ResumedInstall { run, context }))
+    Ok(ResumeOutcome::Completed(Box::new(ResumedInstall {
+        run,
+        context,
+    })))
 }
+
+#[cfg(test)]
+#[path = "resume/tests.rs"]
+mod tests;
 
 /// Finish a serviced continuation: run the post-durability callback and fold
 /// what it produced into the resumed run.

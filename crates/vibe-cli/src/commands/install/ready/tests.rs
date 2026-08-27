@@ -1,18 +1,21 @@
-//! Freeze the Ready-resume row merge.
+//! Freeze the Ready-resume row merge — on ALL THREE arms.
 //!
 //! A serviced continuation arrives with rows of its own, and the apply that
-//! serviced it has rows of its own too. The merge is one line of ordering and
-//! two carriers, which is exactly the shape that goes wrong quietly: reverse
-//! it and the document tells the operator the older park happened first; skip
-//! one carrier and the report and the callback describe different runs.
+//! serviced it has rows of its own too. The merge is one line of ordering and,
+//! on the completed arm, two carriers: exactly the shape that goes wrong
+//! quietly. Reverse it and the document tells the operator the older park
+//! happened first; update one carrier and the report and the callback describe
+//! different runs; handle only the completed arm and a FAILED resume reports a
+//! run with no apply in it.
 //!
-//! So the two carriers here start with DIFFERENT resumed rows. That is what
-//! makes "updated only one" and "copied the wrong vector into both" separately
-//! visible — with identical rows on both sides, either mistake would still
-//! produce a plausible-looking answer.
+//! That last one is why every arm is driven here, through the one production
+//! [`join_applied_rows`] the Ready match calls. A helper tested only on the
+//! completed arm stayed green while the failed arm did its own thing inline.
 //!
-//! This drives the same [`prefix_applied_rows`] the one production completion
-//! site calls, so the two cannot drift apart.
+//! The completed carriers start with DIFFERENT resumed rows on purpose. That is
+//! what makes "updated only one" and "copied the wrong vector into both"
+//! separately visible — with identical rows on both sides, either mistake would
+//! still produce a plausible-looking answer.
 
 use vibe_lifecycle::RunMetadata;
 use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
@@ -45,15 +48,19 @@ fn keys(rows: &[vibe_install::SlotLifecycleReport]) -> Vec<&str> {
     rows.iter().map(|row| row.key.as_str()).collect()
 }
 
+#[derive(Debug, thiserror::Error)]
+#[error("the resumed row refused")]
+struct Sentinel;
+
 /// A serviced continuation carrying one row in each carrier, deliberately
 /// different from each other.
-fn resumed() -> resume::ResumedInstall {
+fn resumed() -> ResumeOutcome {
     let mut run = InstallRun::new(
         std::path::PathBuf::from("/demo"),
         InstallDisposition::Applied,
     );
     run.slot_reports = vec![row("resumed-in-run")];
-    resume::ResumedInstall {
+    ResumeOutcome::Completed(Box::new(resume::ResumedInstall {
         run,
         context: InstallRunContext {
             metadata: RunMetadata {
@@ -70,83 +77,145 @@ fn resumed() -> resume::ResumedInstall {
             lifecycle_run: None,
             lifecycle_reports: vec![row("resumed-in-context")],
         },
+    }))
+}
+
+fn failed() -> ResumeOutcome {
+    ResumeOutcome::Failed(crate::commands::install::ResumeFailure {
+        original: anyhow::Error::new(Sentinel).context("finishing the parked slot run"),
+        progress: vibe_install::InstallProgress::fresh(vec![".".into()]),
+        reports: vec![row("resumed-in-failure")],
+        packages_resolved: 5,
+    })
+}
+
+fn completed_of(outcome: ResumeOutcome) -> resume::ResumedInstall {
+    match outcome {
+        ResumeOutcome::Completed(resumed) => *resumed,
+        _ => panic!("the completed arm"),
     }
 }
 
-/// The applied rows go IN FRONT, in both carriers, and each carrier keeps its
-/// own tail.
+fn failure_of(outcome: ResumeOutcome) -> crate::commands::install::ResumeFailure {
+    match outcome {
+        ResumeOutcome::Failed(failure) => failure,
+        _ => panic!("the failed arm"),
+    }
+}
+
+/// COMPLETED: the applied rows go IN FRONT, in both carriers, and each carrier
+/// keeps its own tail.
 #[test]
 fn the_applied_rows_precede_the_resumed_ones_in_both_carriers() {
-    let mut resumed = resumed();
-    prefix_applied_rows(&mut resumed, &[row("applied")]);
+    let joined = completed_of(join_applied_rows(resumed(), &[row("applied")]));
 
     assert_eq!(
-        keys(&resumed.run.slot_reports),
+        keys(&joined.run.slot_reports),
         ["applied", "resumed-in-run"],
         "the document's carrier: this apply's work, then the park it finished",
     );
     assert_eq!(
-        keys(&resumed.context.lifecycle_reports),
+        keys(&joined.context.lifecycle_reports),
         ["applied", "resumed-in-context"],
         "and the callback's carrier, merged the same way from its OWN tail",
     );
 }
 
 /// Several applied rows keep their relative order, and nothing is duplicated.
-///
-/// The prefix is a whole vector in the order the apply produced it, not a
-/// single row and not a set.
 #[test]
 fn a_multi_row_prefix_keeps_its_order_and_duplicates_nothing() {
-    let mut resumed = resumed();
-    prefix_applied_rows(&mut resumed, &[row("applied-first"), row("applied-second")]);
+    let joined = completed_of(join_applied_rows(
+        resumed(),
+        &[row("applied-first"), row("applied-second")],
+    ));
 
     assert_eq!(
-        keys(&resumed.run.slot_reports),
+        keys(&joined.run.slot_reports),
         ["applied-first", "applied-second", "resumed-in-run"],
     );
     assert_eq!(
-        keys(&resumed.context.lifecycle_reports),
+        keys(&joined.context.lifecycle_reports),
         ["applied-first", "applied-second", "resumed-in-context"],
     );
 }
 
 /// An empty prefix leaves both carriers exactly as they were.
-///
-/// The early return is not an optimisation — a Ready apply whose own slot
-/// lifecycle produced nothing must not gain a row, and must not have its
-/// resumed rows reordered or cloned on the way past.
 #[test]
 fn an_empty_prefix_changes_neither_carrier() {
-    let before = resumed();
-    let mut resumed = resumed();
-    prefix_applied_rows(&mut resumed, &[]);
+    let before = completed_of(resumed());
+    let joined = completed_of(join_applied_rows(resumed(), &[]));
 
-    assert_eq!(resumed.run.slot_reports, before.run.slot_reports);
+    assert_eq!(joined.run.slot_reports, before.run.slot_reports);
     assert_eq!(
-        resumed.context.lifecycle_reports,
+        joined.context.lifecycle_reports,
         before.context.lifecycle_reports,
     );
 }
 
 /// The two carriers are never conflated.
-///
-/// Merging one carrier and copying the result into the other would satisfy a
-/// test written with identical rows on both sides. Here it cannot: each
-/// carrier's tail is its own, and this says so directly.
 #[test]
 fn neither_carrier_receives_the_others_rows() {
-    let mut resumed = resumed();
-    prefix_applied_rows(&mut resumed, &[row("applied")]);
+    let joined = completed_of(join_applied_rows(resumed(), &[row("applied")]));
 
     assert!(
-        !keys(&resumed.run.slot_reports).contains(&"resumed-in-context"),
+        !keys(&joined.run.slot_reports).contains(&"resumed-in-context"),
         "the document's carrier never picks up the callback's tail: {:?}",
-        keys(&resumed.run.slot_reports),
+        keys(&joined.run.slot_reports),
     );
     assert!(
-        !keys(&resumed.context.lifecycle_reports).contains(&"resumed-in-run"),
+        !keys(&joined.context.lifecycle_reports).contains(&"resumed-in-run"),
         "nor the other way round: {:?}",
-        keys(&resumed.context.lifecycle_reports),
+        keys(&joined.context.lifecycle_reports),
     );
+}
+
+/// FAILED: the same prefix, into the neutral transport's own row list, once —
+/// and every other measured field crosses unchanged.
+///
+/// This is the arm the old split lost. A Ready apply that materialised slots
+/// and then hit a failing resumed row would report the resumed rows alone, as
+/// though the apply had never run.
+#[test]
+fn a_failed_resume_receives_the_same_prefix_and_keeps_its_measurement() {
+    let failure = failure_of(join_applied_rows(
+        failed(),
+        &[row("applied-first"), row("applied-second")],
+    ));
+
+    assert_eq!(
+        keys(&failure.reports),
+        ["applied-first", "applied-second", "resumed-in-failure"],
+        "this apply's rows, in order, then the resumed run's",
+    );
+    assert_eq!(
+        failure.progress.nodes_regenerated,
+        ["."],
+        "the durable progress is untouched by the join",
+    );
+    assert_eq!(failure.packages_resolved, 5);
+    assert!(
+        failure.original.downcast_ref::<Sentinel>().is_some(),
+        "and the error is still the original object",
+    );
+}
+
+/// FAILED with no applied rows: the resumed rows are neither dropped nor
+/// duplicated.
+#[test]
+fn a_failed_resume_with_an_empty_prefix_keeps_exactly_its_own_rows() {
+    let failure = failure_of(join_applied_rows(failed(), &[]));
+    assert_eq!(keys(&failure.reports), ["resumed-in-failure"]);
+}
+
+/// NOTHING stays nothing, and gains no fabricated rows.
+///
+/// The applied rows still belong to the ordinary completion path below the
+/// match; inventing a resumed value here would report a continuation that was
+/// never owed.
+#[test]
+fn nothing_owed_stays_nothing_and_fabricates_no_rows() {
+    assert!(matches!(
+        join_applied_rows(ResumeOutcome::Nothing, &[row("applied")]),
+        ResumeOutcome::Nothing
+    ));
 }

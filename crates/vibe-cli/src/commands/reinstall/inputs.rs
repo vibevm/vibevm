@@ -1,5 +1,13 @@
-//! Reinstall's inputs: its run metadata and stream policy, the exact pkgref
-//! that re-fetches the locked version, and the confirmation seam.
+//! Reinstall's inputs: its stream policy, the exact pkgref that re-fetches the
+//! locked version, the resolver arguments, the confirmation seam and the
+//! lockfile reader.
+//!
+//! The run METADATA is not built here any more, and neither is the project
+//! root: both belong to the command's one prepared epoch ([`super::prepare`]).
+//! A helper that selected an identity of its own — as this cell used to, and as
+//! the continuation helper did a second time — was a second selector, running
+//! later, able to allocate a second run directory, and blind to the effective
+//! trace bit the command had already committed to.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail");
 
@@ -7,46 +15,12 @@ use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
 use dialoguer::Confirm;
-use vibe_core::manifest::{Lockfile, Manifest};
+use vibe_core::manifest::Lockfile;
 use vibe_core::{Group, PackageKind, PackageRef, VersionSpec};
-use vibe_lifecycle::RunMetadata;
 use vibe_lifecycle::process::StreamMode;
 
 use crate::cli::{InstallArgs, ReinstallArgs};
 use crate::output;
-
-pub(super) fn reinstall_metadata(
-    ctx: &output::Context,
-    root: &Path,
-    offline: bool,
-    args: &ReinstallArgs,
-) -> Result<RunMetadata> {
-    let chain = vec!["install".to_string()];
-    // MATERIALISATION force and HOSTED-REPARK force are different things.
-    //
-    // `--force` is what re-fetches from source and so reaches changed slot
-    // callbacks. The generic `RunMetadata.force` means something else
-    // entirely: "fresh run id, no probe, repark". Setting it here made a
-    // forced reinstall unable to satisfy its own task — every resume minted a
-    // new id and reparked, forever. So the lifecycle force stays FALSE, and
-    // `--force` keeps its own, unrelated job.
-    //
-    // An explicit `--force` on an ordinary lifecycle row still reparks under a
-    // fresh id: that law lives on the phase verbs' `--force`, untouched here.
-    let identity = crate::commands::lifecycle::run_identity(ctx, root, "reinstall", &chain, false)?;
-    Ok(RunMetadata {
-        requested: "reinstall".into(),
-        chain,
-        offline,
-        assume_yes: args.assume_yes || ctx.is_unattended() || ctx.is_json(),
-        agent_mode: ctx.agent_mode(),
-        force: false,
-        // The selector's effective sticky bit, not a hard-coded false.
-        trace_compile: identity.compile_trace,
-        run_id: identity.run_id,
-        started: identity.started,
-    })
-}
 
 pub(super) fn reinstall_stream_mode(ctx: &output::Context) -> StreamMode {
     if ctx.is_json() {
@@ -118,7 +92,10 @@ pub(super) fn resolver_args() -> InstallArgs {
         embedded_short_circuit: false,
         prefer_local: false,
         no_prefer_local: false,
-        // Reinstall owns its own trace atom; until then it is mechanically off.
+        // FALSE on purpose, whatever `vibe reinstall --trace-compile` said.
+        // These arguments only ever reach the resolver builder, and the command
+        // already owns the ONE recorder; a request at this depth could only
+        // mean a second owner of the project's cooperative trace lock.
         trace_compile: false,
     }
 }
@@ -141,20 +118,6 @@ pub(super) fn confirm(ctx: &output::Context, args: &ReinstallArgs, prompt: &str)
         .default(false)
         .interact()
         .context("reading user confirmation")
-}
-
-pub(super) fn resolve_project_root(path: &Path) -> Result<PathBuf> {
-    let canonical = path
-        .canonicalize()
-        .with_context(|| format!("canonicalizing `{}`", path.display()))?;
-    let stripped = crate::commands::init::strip_unc_public(canonical);
-    if !stripped.join(Manifest::FILENAME).exists() {
-        bail!(
-            "no `vibe.toml` in `{}`; run `vibe init` first",
-            stripped.display()
-        );
-    }
-    Ok(stripped)
 }
 
 /// Load the workspace lockfile, or an empty one when none exists yet.

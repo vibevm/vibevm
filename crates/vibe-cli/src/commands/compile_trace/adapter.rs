@@ -23,12 +23,24 @@
 //!
 //! ```text
 //! member present            → the member's warnings, and nothing else
-//! JSON, no member, a root   → the registered root's `notices`, once
+//! JSON, no member, a root   → the registered root's `notices`, once —
+//!                             unless that root has no `notices` member, and
+//!                             then stderr, once (see below)
 //! JSON, no member, NO root  → stderr diagnostics (a root that is never
 //!                             emitted carries nothing)
 //! human, no member          → one bounded stderr diagnostic per notice
 //! quiet, no member          → a COUNT, folded into the single line quiet owns
 //! ```
+//!
+//! The "unless" is a capability, not a special case. `cli-update-report` and
+//! `cli-reinstall-report` declare no `notices` list, and the two obvious
+//! repairs are both silent corruptions: inventing the field puts a member on a
+//! registered format nobody agreed to, and dropping the notice deletes the only
+//! account of, say, a predecessor run left `running` on disk. So
+//! [`RegisteredReportDraft::absorb_notices`] answers by type and hands back
+//! what it could not take, and the leftovers reach stderr here — the one
+//! channel that exists in every mode and is not part of the document stream a
+//! machine reader parses.
 //!
 //! Quiet is the sharp case. Its contract is exactly one line, and a `notices`
 //! member is invisible on a terminal while a diagnostic line would be a second
@@ -45,7 +57,7 @@ use vibe_wire::generated::shared::CompileTraceReport;
 use crate::output;
 
 use super::bounded::BoundedDiagnostic;
-use super::draft::{RegisteredReportDraft, uncarry};
+use super::draft::RegisteredReportDraft;
 use super::{FinalizedCommand, PlanDisposition, present, quiet};
 
 /// Consume the join and produce the command's whole observable output.
@@ -95,7 +107,10 @@ pub(crate) fn render_finalized_with_sink(
     // The tests below drive the same two functions with a captured sink, so
     // deleting either half is red rather than merely unobserved.
     let notice_plan = plan_notices(&trace, quiet_mode, ctx.is_json(), emit_report, notices);
-    let folded_notices = notice_plan.absorb_into(&mut report);
+    let NoticeResidue {
+        folded: folded_notices,
+        unabsorbed,
+    } = notice_plan.absorb_into(&mut report);
 
     let mut suffix = match trace.as_ref() {
         Some(trace) if quiet_mode => present::quiet_suffix(trace),
@@ -137,6 +152,13 @@ pub(crate) fn render_finalized_with_sink(
         present::render_human(ctx, trace);
     }
     notice_plan.emit(sink);
+    // The one routing the plan could not decide alone: whether the SELECTED
+    // root can hold a notice at all is a property of its generated type, and
+    // the plan is built before the root is known. Emitted here, once, and only
+    // for the notices `absorb_into` really refused.
+    for notice in &unabsorbed {
+        sink.diagnostic(notice);
+    }
 
     match (rendered, original_error) {
         (Ok(()), None) => Ok(()),
@@ -213,16 +235,30 @@ pub(crate) struct NoticePlan {
     folded: usize,
 }
 
+/// What absorbing left over: the quiet count, and the notices the selected
+/// root's generated type has no member for.
+pub(crate) struct NoticeResidue {
+    /// Counted into quiet's single line.
+    pub(crate) folded: usize,
+    /// Refused by the root, and therefore still owed a channel.
+    pub(crate) unabsorbed: Vec<String>,
+}
+
 impl NoticePlan {
-    /// Perform the report half, and report the quiet count.
+    /// Perform the report half, and report what is left.
     ///
     /// The mutation lives HERE rather than at the call site so that "plan says
     /// root, root actually gets it" is one function a test can drive.
-    pub(crate) fn absorb_into(&self, report: &mut RegisteredReportDraft) -> usize {
-        if !self.root.is_empty() {
-            report.absorb_notices(self.root.clone());
+    pub(crate) fn absorb_into(&self, report: &mut RegisteredReportDraft) -> NoticeResidue {
+        let unabsorbed = if self.root.is_empty() {
+            Vec::new()
+        } else {
+            report.absorb_notices(self.root.clone())
+        };
+        NoticeResidue {
+            folded: self.folded,
+            unabsorbed,
         }
-        self.folded
     }
 
     /// Perform the diagnostic half.
@@ -266,44 +302,6 @@ pub(crate) fn plan_notices(
         stderr,
         folded,
     }
-}
-
-/// The compatibility path: a command with no trace owner that received a
-/// carried failure from the install substrate.
-///
-/// Whole `vibe update` delegates to the install execution but has no funnel of
-/// its own yet, so a carrier must not escape to `main`: it would suppress the
-/// registered root that path has always emitted and hand `main` a wrapper
-/// whose downcast identity is not the command's error.
-///
-/// So this performs the EXACT old disposition — the same policy bit, the same
-/// plan flush, the same root with `trace: None` — and hands back the original
-/// object. A rendering refusal here is a secondary diagnostic for the same
-/// reason as above: the command's error is what the operator is chasing.
-pub(crate) fn render_carried_untraced(
-    ctx: &output::Context,
-    error: anyhow::Error,
-) -> anyhow::Error {
-    let carried = match uncarry(error) {
-        Ok(carried) => carried,
-        // Not carried: an ordinary error, unchanged.
-        Err(error) => return error,
-    };
-    if !carried.emit_when_trace_disabled {
-        return carried.original;
-    }
-    let rendered = ctx
-        .flush_json_plans()
-        .and_then(|()| carried.draft.render(ctx, None, ""));
-    if let Err(refusal) = rendered {
-        ctx.diagnostic(
-            BoundedDiagnostic::new(format_args!(
-                "this command's report could not be written: {refusal:#}"
-            ))
-            .as_str(),
-        );
-    }
-    carried.original
 }
 
 #[cfg(test)]

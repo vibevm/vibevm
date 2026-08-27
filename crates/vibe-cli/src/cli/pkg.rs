@@ -418,6 +418,13 @@ pub struct UpdateArgs {
     /// registry outage.
     #[arg(long)]
     pub auth_required: bool,
+
+    /// PROP-054 `##OBS-TRACE`: record every compiler pass this invocation runs
+    /// into `.vibe/trace/<run-id>/`. The flag is one half of the activation —
+    /// the selected project's own `[compile] trace = true` is the other, and
+    /// either alone enables it. Neither can switch the other off.
+    #[arg(long)]
+    pub trace_compile: bool,
 }
 
 #[derive(Debug, clap::Args)]
@@ -442,6 +449,16 @@ pub struct ReinstallArgs {
     /// Skip the interactive confirmation prompt.
     #[arg(long, alias = "yes")]
     pub assume_yes: bool,
+
+    /// PROP-054 `##OBS-TRACE`: record every compiler pass this invocation runs
+    /// into `.vibe/trace/<run-id>/`. The flag is one half of the activation —
+    /// the selected project's own `[compile] trace = true` is the other, and
+    /// either alone enables it. Neither can switch the other off.
+    ///
+    /// `--force` is a MATERIALISATION force and unrelated: it re-fetches from
+    /// source, while this only asks the compiler to narrate itself.
+    #[arg(long)]
+    pub trace_compile: bool,
 }
 
 #[derive(Debug, clap::Args)]

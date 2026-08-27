@@ -65,7 +65,6 @@ mod request;
 
 use bounded::BoundedDiagnostic;
 
-pub(crate) use adapter::render_carried_untraced;
 pub(crate) use adapter::render_finalized;
 #[cfg(test)]
 pub(crate) use draft::uncarry;

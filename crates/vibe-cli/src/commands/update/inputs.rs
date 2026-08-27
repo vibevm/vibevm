@@ -1,13 +1,18 @@
-//! `vibe update`'s inputs: the delegated install arguments, the project
-//! manifest and lockfile readers, and the locked-entry rebuild.
+//! `vibe update`'s inputs: the delegated install arguments, the lockfile
+//! reader, and the locked-entry rebuild.
+//!
+//! The project root, the selected manifest and the workspace are NOT here any
+//! more: they belong to the command's one prepared epoch
+//! ([`super::prepare`]), because compile-trace activation, the run identity
+//! and the metadata all read them and two reads would be two answers.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail");
 
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
-use anyhow::{Context, Result, bail};
+use anyhow::{Result, bail};
 use vibe_core::PackageRef;
-use vibe_core::manifest::{LockedPackage, Lockfile, Manifest, SourceKind};
+use vibe_core::manifest::{LockedPackage, Lockfile, SourceKind};
 use vibe_registry::CachedPackage;
 
 use crate::cli::{InstallArgs, UpdateArgs};
@@ -42,7 +47,12 @@ pub(super) fn install_args_from(args: &UpdateArgs) -> InstallArgs {
         embedded_short_circuit: false,
         prefer_local: false,
         no_prefer_local: false,
-        // Update owns its own trace atom; until then it is mechanically off.
+        // FALSE on purpose, whatever `vibe update --trace-compile` said. These
+        // arguments only ever reach the resolver builder and the install
+        // delegate, and this command already owns the ONE recorder — a request
+        // at this depth could only mean a second owner of the project's
+        // cooperative trace lock. The delegate receives the borrowed recorder
+        // separately, through `InstallExecution::trace`.
         trace_compile: false,
     }
 }
@@ -95,24 +105,6 @@ pub(super) fn locked_package(
         // carry the freshly-fetched manifest's declared mode (PROP-022 §2.1).
         materialization: cached.package_meta().materialization,
     }
-}
-
-pub(super) fn resolve_project_root(path: &Path) -> Result<PathBuf> {
-    let canonical = path
-        .canonicalize()
-        .with_context(|| format!("canonicalizing `{}`", path.display()))?;
-    let stripped = crate::commands::init::strip_unc_public(canonical);
-    if !stripped.join(Manifest::FILENAME).exists() {
-        bail!(
-            "no `vibe.toml` in `{}`; run `vibe init` first",
-            stripped.display()
-        );
-    }
-    Ok(stripped)
-}
-
-pub(super) fn load_project_manifest(root: &Path) -> Result<Manifest> {
-    Ok(Manifest::read(root.join(Manifest::FILENAME))?)
 }
 
 pub(super) fn load_lockfile(root: &Path) -> Result<Lockfile> {

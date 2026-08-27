@@ -1,14 +1,26 @@
 //! The closed sum of registered report roots a command boundary may return,
 //! and the typed carrier an inner layer uses to hand one outward.
 //!
-//! ## Why a sum, and why exactly these two
+//! ## Why a sum, and why exactly these four
+//!
+//! The four registered report families — `cli-install-report`,
+//! `cli-lifecycle-report`, `cli-update-report`, `cli-reinstall-report` — are
+//! the whole set a command boundary may return, and the sum is closed so that
+//! adding a fifth is a compile error at every site that decides one.
 //!
 //! A command's failure root is not a property of the command. `vibe install`
 //! reports a slot failure in a `cli-install-report`, but reports a failure of
 //! its own post-durability lifecycle callback in a `cli-lifecycle-report` and
 //! emits NO install root at all — that is characterised behaviour, and a
 //! hosting agent parses it. A phase verb's prerequisite install can likewise
-//! fail with an install-shaped root inside a lifecycle command.
+//! fail with an install-shaped root inside a lifecycle command, and a WHOLE
+//! `vibe update` returns the install substrate's own slot-failure root rather
+//! than an update one.
+//!
+//! The families are not interchangeable in what they can CARRY, either: the
+//! install and lifecycle roots declare a `notices` list and the update and
+//! reinstall roots do not. That difference is answered by
+//! [`RegisteredReportDraft::absorb_notices`], not by inventing a member.
 //!
 //! So the root family is decided at the site that first MEASURES the failure —
 //! where the rows and progress are still in hand — and travels outward as a
@@ -33,6 +45,8 @@ use vibe_wire::generated::shared::CompileTraceReport;
 
 use crate::commands::install::InstallDraft;
 use crate::commands::lifecycle::LifecycleDraft;
+use crate::commands::reinstall::ReinstallDraft;
+use crate::commands::update::UpdateDraft;
 use crate::output;
 
 use super::CommandExit;
@@ -43,6 +57,8 @@ use super::CommandExit;
 pub(crate) enum RegisteredReportDraft {
     Install(Box<InstallDraft>),
     Lifecycle(Box<LifecycleDraft>),
+    Update(Box<UpdateDraft>),
+    Reinstall(Box<ReinstallDraft>),
 }
 
 impl RegisteredReportDraft {
@@ -55,18 +71,34 @@ impl RegisteredReportDraft {
         match self {
             Self::Install(draft) => draft.delegation.is_some(),
             Self::Lifecycle(draft) => draft.delegation.is_some(),
+            Self::Update(draft) => draft.delegation.is_some(),
+            Self::Reinstall(draft) => draft.delegation.is_some(),
         }
     }
 
-    /// Fold owner notices into the root's own `notices` member.
+    /// Fold owner notices into the root's own `notices` member, and hand back
+    /// whatever this family CANNOT carry.
     ///
-    /// Called ONLY when there is no trace member to carry them — see the
-    /// adapter. Both roots have a notices list, which is why this can be a
-    /// total operation rather than a special case per family.
-    pub(crate) fn absorb_notices(&mut self, notices: Vec<String>) {
+    /// Called only when there is no trace member to carry them — see the
+    /// adapter. It is deliberately not a total operation: `cli-install-report`
+    /// and `cli-lifecycle-report` declare a `notices` list, and
+    /// `cli-update-report` / `cli-reinstall-report` do not. Inventing one for
+    /// them would be a new wire field on a registered format; silently dropping
+    /// the notice would delete the only account of a predecessor left running.
+    /// So the capability is answered here, by type, and the leftovers travel
+    /// back to the adapter, which has a channel every mode can show.
+    #[must_use = "a notice this root cannot carry must still be routed somewhere — see the adapter"]
+    pub(crate) fn absorb_notices(&mut self, notices: Vec<String>) -> Vec<String> {
         match self {
-            Self::Install(draft) => draft.notices.extend(notices),
-            Self::Lifecycle(draft) => draft.notices.extend(notices),
+            Self::Install(draft) => {
+                draft.notices.extend(notices);
+                Vec::new()
+            }
+            Self::Lifecycle(draft) => {
+                draft.notices.extend(notices);
+                Vec::new()
+            }
+            Self::Update(_) | Self::Reinstall(_) => notices,
         }
     }
 
@@ -84,6 +116,8 @@ impl RegisteredReportDraft {
         match self {
             Self::Install(draft) => draft.render(ctx, trace, quiet_suffix),
             Self::Lifecycle(draft) => draft.render(ctx, trace, quiet_suffix),
+            Self::Update(draft) => draft.render(ctx, trace, quiet_suffix),
+            Self::Reinstall(draft) => draft.render(ctx, trace, quiet_suffix),
         }
     }
 }
@@ -207,9 +241,11 @@ pub(crate) fn is_carried(error: &anyhow::Error) -> bool {
 
 /// Take a carried failure apart WITHOUT deciding anything about it.
 ///
-/// The compatibility path (an untraced command that never opened an owner)
-/// needs the draft and the policy so it can perform the exact disposition it
-/// always did, and then return the original object.
+/// Test-only. Production has exactly one consumer of a carrier — [`classify`],
+/// at a command boundary that owns a trace session — and a second one that
+/// merely unwrapped it would be a second place deciding a root family. It is
+/// kept because the sites that BUILD carriers are worth proving directly.
+#[cfg(test)]
 pub(crate) fn uncarry(error: anyhow::Error) -> Result<FailedDraft, anyhow::Error> {
     error.downcast::<FailedDraft>()
 }
@@ -444,7 +480,8 @@ mod tests {
     #[test]
     fn notices_fold_into_whichever_root_is_carried() {
         let mut draft = lifecycle_draft();
-        draft.absorb_notices(vec!["displaced run left running".into()]);
+        let unabsorbed = draft.absorb_notices(vec!["displaced run left running".into()]);
+        assert!(unabsorbed.is_empty(), "this family declares `notices`");
         match draft {
             RegisteredReportDraft::Lifecycle(draft) => {
                 assert_eq!(
@@ -452,7 +489,66 @@ mod tests {
                     vec!["displaced run left running".to_string()]
                 );
             }
-            RegisteredReportDraft::Install(_) => panic!("wrong family"),
+            _ => panic!("wrong family"),
         }
+    }
+
+    /// The capability answer this seam exists for.
+    ///
+    /// `cli-update-report` and `cli-reinstall-report` have no `notices`
+    /// member. The two wrong repairs are equally silent: invent the field (a
+    /// new member on a registered format) or drop the notice (delete the only
+    /// account of a predecessor left running). So the leftovers come BACK, and
+    /// the adapter routes them.
+    #[test]
+    fn a_root_without_a_notices_member_returns_the_notices_it_cannot_carry() {
+        for mut draft in [update_draft(), reinstall_draft()] {
+            let unabsorbed = draft.absorb_notices(vec!["displaced run left running".into()]);
+            assert_eq!(
+                unabsorbed,
+                vec!["displaced run left running".to_string()],
+                "the notice survives the root that cannot hold it",
+            );
+            let json = match draft {
+                RegisteredReportDraft::Update(draft) => {
+                    serde_json::to_string(&draft.into_report(None)).unwrap()
+                }
+                RegisteredReportDraft::Reinstall(draft) => {
+                    serde_json::to_string(&draft.into_report(None)).unwrap()
+                }
+                _ => panic!("wrong family"),
+            };
+            assert!(
+                !json.contains("notices"),
+                "and no `notices` key was invented on the wire: {json}",
+            );
+        }
+    }
+
+    fn update_draft() -> RegisteredReportDraft {
+        RegisteredReportDraft::Update(Box::new(crate::commands::update::UpdateDraft::failed(
+            &crate::commands::update::UpdateIdentity {
+                project_root: std::path::PathBuf::from("/p"),
+                scope: vibe_wire::generated::update_report::UpdateReportScope::All,
+                packages: Vec::new(),
+            },
+            0,
+            Vec::new(),
+            vibe_install::InstallProgress::default(),
+            Vec::new(),
+        )))
+    }
+
+    fn reinstall_draft() -> RegisteredReportDraft {
+        RegisteredReportDraft::Reinstall(Box::new(
+            crate::commands::reinstall::ReinstallDraft::failed(
+                &crate::commands::reinstall::ReinstallIdentity {
+                    selected_project_root: std::path::PathBuf::from("/p"),
+                    forced: false,
+                },
+                vibe_install::InstallProgress::default(),
+                Vec::new(),
+            ),
+        ))
     }
 }

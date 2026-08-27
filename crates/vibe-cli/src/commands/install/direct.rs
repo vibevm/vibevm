@@ -211,13 +211,39 @@ fn execute_after_open(
         // generic stage failure and takes the default install draft — the same
         // registered family this command has always reported, with the
         // historical silence of stages that never emitted one.
-        Err(error) => compile_trace::classify(error, || {
+        Err(error) => compile_trace::classify(absorb_resume_failure(error, &failed_root), || {
             RegisteredReportDraft::Install(Box::new(InstallDraft::failed(
                 &failed_root,
                 vibe_install::InstallProgress::default(),
                 Vec::new(),
             )))
         }),
+    }
+}
+
+/// Give a NEUTRAL resume failure this command's registered family.
+///
+/// The substrate cannot pick one — the same code is a phase verb's prerequisite
+/// and `vibe update --all`'s delegate — so it transports the measurement and
+/// the outer command decides. For `vibe install` the answer is the install
+/// root, with the emission policy a generic resume failure has always had:
+/// silence while tracing is off. The error object is never formatted; it is
+/// handed straight back to the carrier that returns it.
+///
+/// Total: an error that is not a transported resume failure is returned exactly
+/// as it arrived, so the carried-draft classifier below still sees its own.
+fn absorb_resume_failure(error: anyhow::Error, root: &std::path::Path) -> anyhow::Error {
+    match crate::commands::install::take_resume_failure(error) {
+        Ok(failure) => compile_trace::carry(
+            RegisteredReportDraft::Install(Box::new(InstallDraft::failed(
+                root,
+                failure.progress,
+                failure.reports,
+            ))),
+            failure.original,
+            false,
+        ),
+        Err(error) => error,
     }
 }
 
@@ -238,4 +264,105 @@ fn classify_success(run: InstallRun) -> CommandExit<RegisteredReportDraft> {
 /// disabled path never asked.
 fn now() -> vibe_wire::generated::shared::Timestamp {
     chrono::Utc::now()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::commands::compile_trace::{CommandExit, classify};
+    use crate::commands::install::{ResumeFailure, resume};
+
+    #[derive(Debug, thiserror::Error)]
+    #[error("the resumed row refused")]
+    struct Sentinel;
+
+    fn row(point: &str, status: &str) -> vibe_install::SlotLifecycleReport {
+        vibe_install::SlotLifecycleReport {
+            key: format!("org.demo/tools#{point}"),
+            point: point.into(),
+            handler: "builtin".into(),
+            provider: "org.demo/tools".into(),
+            tier: "dependency".into(),
+            status: status.into(),
+            message: None,
+            version: None,
+            reference: "spec://org.demo/tools".into(),
+            flagged: false,
+            stdout: None,
+            stderr: None,
+            stdout_truncated: false,
+            stderr_truncated: false,
+            slot_target: None,
+        }
+    }
+
+    fn transported() -> anyhow::Error {
+        resume::carry_resume_failure(ResumeFailure {
+            original: anyhow::Error::new(Sentinel).context("finishing the parked slot run"),
+            progress: vibe_install::InstallProgress {
+                complete: true,
+                fresh: false,
+                materialised: vec!["vibedeps/org.demo.tools/0.1.0".into()],
+                skipped: Vec::new(),
+                pruned: Vec::new(),
+                nodes_regenerated: vec![".".into()],
+            },
+            reports: vec![
+                row("slot:pre-install", "ok"),
+                row("slot:post-install", "fail"),
+            ],
+            packages_resolved: 4,
+        })
+    }
+
+    /// `vibe install` names the INSTALL family for a neutral resume failure,
+    /// keeps the rows and progress the substrate measured, and returns the
+    /// exact original error with the historical silence of a generic resume
+    /// failure.
+    ///
+    /// Reducing the transport to `failure.original` — what this site used to do
+    /// — makes the fallback report `InstallProgress::default()` and zero rows
+    /// over a run that had already finished somebody's parked slot work.
+    #[test]
+    fn a_neutral_resume_failure_becomes_a_measured_install_root() {
+        let root = std::path::PathBuf::from("/p");
+        let absorbed = absorb_resume_failure(transported(), &root);
+        let CommandExit::Failed {
+            report,
+            original_error,
+            emit_when_trace_disabled,
+        } = classify(absorbed, || panic!("the carrier decides, not the fallback"))
+        else {
+            panic!("a failure is a failure");
+        };
+        assert!(!emit_when_trace_disabled, "historically silent");
+        assert!(original_error.downcast_ref::<Sentinel>().is_some());
+        assert!(
+            original_error.downcast_ref::<ResumeFailure>().is_none(),
+            "the neutral wrapper never escapes to main",
+        );
+        let RegisteredReportDraft::Install(draft) = report else {
+            panic!("this command's own family");
+        };
+        let built = draft.into_report(None);
+        assert!(!built.ok);
+        assert_eq!(built.materialised, ["vibedeps/org.demo.tools/0.1.0"]);
+        let statuses: Vec<&str> = built
+            .contributions
+            .iter()
+            .map(|row| row.status.as_str())
+            .collect();
+        assert_eq!(statuses, ["ok", "fail"], "both rows, in order");
+    }
+
+    /// Anything else is left exactly as it arrived, so the carried-draft
+    /// classifier still sees its own carriers.
+    #[test]
+    fn an_ordinary_error_passes_through_untouched() {
+        let error = absorb_resume_failure(
+            anyhow::anyhow!("planning blew up"),
+            std::path::Path::new("/p"),
+        );
+        assert_eq!(error.to_string(), "planning blew up");
+    }
 }

@@ -150,6 +150,13 @@ pub(crate) enum PreparedWorkspace {
     SelectedManifestInvalid,
     Loaded(Box<Workspace>),
     DiscoveryFailed(Box<vibe_workspace::WorkspaceError>),
+    #[allow(
+        dead_code,
+        reason = "every command in the binary now owns a prelude epoch, so nothing constructs \
+                  this arm; it is the documented signature of `execute_prepared` as a public \
+                  seam — a caller arriving with only a parsed manifest — and the three sites \
+                  that match on it stay honest about what they would do with one"
+    )]
     DiscoverHere,
 }
 

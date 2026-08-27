@@ -37,7 +37,7 @@ pub(crate) use closure_diff::{emit_closure_diff, lane_sizes};
 pub(crate) use direct::run as run_direct;
 pub(crate) use draft::InstallDraft;
 pub(crate) use project_local::project_packages_root;
-pub(crate) use report::{HookReportPresentation, HookReportView, LifecycleHookView};
+pub(crate) use report::{HookReportPresentation, LifecycleHookView};
 pub(crate) use resolver::{InstallResolver, build_install_resolver};
 pub(crate) use vibe_install::exact_pinned_pkgref;
 
@@ -64,7 +64,17 @@ pub(crate) use inputs::{
 };
 pub(crate) use observer::LifecycleSlotObserver;
 use resolver::apply_git_source_flag;
-pub(crate) use resume::{ResumeRequest, resume_slot_continuation};
+/// The serviced-continuation value, for the cross-module reds that build one.
+#[cfg(test)]
+pub(crate) use resume::ResumedInstall;
+/// The neutral transport, for the cross-module reds that build one by hand.
+/// Production constructs it only inside the resume seam.
+#[cfg(test)]
+pub(crate) use resume::carry_resume_failure;
+pub(crate) use resume::{
+    ResumeFailure, ResumeOutcome, ResumeRequest, own_resume, prefixed, resume_slot_continuation,
+    take_resume_failure,
+};
 
 /// Whether the existing install implementation applied a plan or proved the
 /// materialised world fresh. Lifecycle callers consume this instead of
@@ -115,7 +125,7 @@ pub(crate) struct InstallRun {
 }
 
 impl InstallRun {
-    fn new(project_root: PathBuf, disposition: InstallDisposition) -> Self {
+    pub(crate) fn new(project_root: PathBuf, disposition: InstallDisposition) -> Self {
         Self {
             disposition,
             progress: vibe_install::InstallProgress::default(),
@@ -426,7 +436,7 @@ pub(crate) fn execute_prepared(
             // clean completion over a live delegated row. Rebuild it from the
             // exact target set the original pass recorded, and finish it
             // before anything reports fresh.
-            if let Some(resumed) = resume_slot_continuation(
+            match resume_slot_continuation(
                 ctx,
                 resume::ResumeRequest {
                     project_root: &project_root,
@@ -443,7 +453,18 @@ pub(crate) fn execute_prepared(
                 // A satisfied resume still owes the post-durability world: the
                 // hosting output arrived, so an authored `phase:install` row
                 // must run, in the run the resume just finished.
-                return resume::finish_resumed(resumed, &project_root, &workspace, after);
+                ResumeOutcome::Completed(resumed) => {
+                    return resume::finish_resumed(*resumed, &project_root, &workspace, after);
+                }
+                // TRANSPORTED, not reduced. The family is not knowable here —
+                // this same function is `vibe install`'s body, a phase verb's
+                // prerequisite and `vibe update --all`'s delegate — so the
+                // measurement travels outward neutrally and the one outer
+                // command that owns the report consumes it.
+                ResumeOutcome::Failed(failure) => {
+                    return Err(resume::carry_resume_failure(failure));
+                }
+                ResumeOutcome::Nothing => {}
             }
             let world = after(
                 &project_root,

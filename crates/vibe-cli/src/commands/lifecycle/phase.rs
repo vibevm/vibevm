@@ -67,6 +67,31 @@ struct Measured {
     contributions: Vec<LifecycleContributionReport>,
 }
 
+/// Absorb a NEUTRAL resume failure from the prerequisite install into THIS
+/// command's accumulator, then let the error travel on uncarried.
+///
+/// The substrate transports the measurement without naming a family, because
+/// the same code is also `vibe install`'s body and `vibe update --all`'s
+/// delegate. Here the family is the lifecycle one, and this command already has
+/// a mechanism for choosing it — the fallback in `execute_after_open` — so the
+/// only thing missing is the rows. They are the resumed run's ONLY copy: the
+/// resume built its own lifecycle, and nothing in this function ever saw it.
+///
+/// Appended in chronology, after whatever the clean epoch and the install
+/// callback already recorded, and the ORIGINAL error is returned so the
+/// fallback keeps its historical silence and its exact downcast identity.
+fn absorb_resume_failure(error: anyhow::Error, measured: &mut Measured) -> anyhow::Error {
+    match crate::commands::install::take_resume_failure(error) {
+        Ok(failure) => {
+            measured
+                .contributions
+                .extend(failure.reports.into_iter().map(slot::contribution_report));
+            failure.original
+        }
+        Err(error) => error,
+    }
+}
+
 /// The one boundary. No `?` escapes it.
 pub(super) fn execute_after_open(
     ctx: &output::Context,
@@ -236,7 +261,8 @@ fn run(
                         current_workspace = Some(workspace.clone());
                         Ok(crate::commands::install::WorldCallbackOutcome::default())
                     },
-                )?;
+                )
+                .map_err(|error| absorb_resume_failure(error, measured))?;
                 // A parked prerequisite install stops the whole chain — and
                 // THIS command renders the one document, because it is the
                 // outermost one. The step list is the prefix that really ran:
@@ -370,3 +396,7 @@ fn run(
         Outcome::Completed(draft)
     })
 }
+
+#[cfg(test)]
+#[path = "phase/tests.rs"]
+mod tests;

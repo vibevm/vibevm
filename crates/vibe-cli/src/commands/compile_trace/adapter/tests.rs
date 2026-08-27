@@ -95,34 +95,6 @@ fn a_disabled_failure_returns_an_unwrapped_error() {
     assert!(original.downcast_ref::<Sentinel>().is_some());
 }
 
-/// The compatibility path returns the ORIGINAL object, and stays silent
-/// when the site's own policy says the old root was never emitted.
-#[test]
-fn the_untraced_compatibility_path_returns_the_original_error() {
-    let ctx = quiet_ctx();
-    let carried = super::super::carry(
-        draft(),
-        anyhow::Error::new(Sentinel).context("updating"),
-        false,
-    );
-    let recovered = render_carried_untraced(&ctx, carried);
-    assert!(recovered.downcast_ref::<Sentinel>().is_some());
-    assert_eq!(format!("{recovered:#}"), "updating: the slot refused");
-    assert!(
-        recovered
-            .downcast_ref::<super::super::draft::FailedDraft>()
-            .is_none(),
-        "the carrier never escapes to main",
-    );
-}
-
-#[test]
-fn an_uncarried_error_passes_through_the_compatibility_path_unchanged() {
-    let ctx = quiet_ctx();
-    let recovered = render_carried_untraced(&ctx, anyhow::anyhow!("plain"));
-    assert_eq!(recovered.to_string(), "plain");
-}
-
 fn json_ctx() -> output::Context {
     output::Context::from_flags(false, true, None, true, crate::cli::AgentModeArg::Cli)
 }
@@ -131,8 +103,11 @@ fn json_ctx() -> output::Context {
 #[derive(Default)]
 struct Captured {
     diagnostics: Vec<String>,
-    /// The `notices` member of the root the executor actually rendered.
+    /// The `notices` member of the install root the executor actually
+    /// rendered.
     root_notices: Option<Vec<String>>,
+    /// The serialized root, for families whose capability is the point.
+    root: Option<String>,
 }
 
 impl DiagnosticSink for Captured {
@@ -147,10 +122,22 @@ impl DiagnosticSink for Captured {
         trace: Option<CompileTraceReport>,
         _quiet_suffix: &str,
     ) -> Result<()> {
-        let RegisteredReportDraft::Install(draft) = report else {
-            panic!("these fixtures build install drafts");
-        };
-        self.root_notices = Some(draft.into_report(trace).notices);
+        match report {
+            RegisteredReportDraft::Install(draft) => {
+                let built = draft.into_report(trace);
+                self.root = Some(serde_json::to_string(&built).unwrap());
+                self.root_notices = Some(built.notices);
+            }
+            RegisteredReportDraft::Update(draft) => {
+                self.root = Some(serde_json::to_string(&draft.into_report(trace)).unwrap());
+            }
+            RegisteredReportDraft::Reinstall(draft) => {
+                self.root = Some(serde_json::to_string(&draft.into_report(trace)).unwrap());
+            }
+            RegisteredReportDraft::Lifecycle(draft) => {
+                self.root = Some(serde_json::to_string(&draft.into_report(trace)).unwrap());
+            }
+        }
         Ok(())
     }
 }
@@ -168,7 +155,11 @@ const NOTICE: &str = "the displaced run could not be superseded";
 fn json_notices_survive_a_failure_that_emits_no_root() {
     let plan = plan_notices(&None, false, true, false, vec![NOTICE.to_string()]);
     let mut report = draft();
-    assert_eq!(plan.absorb_into(&mut report), 0, "quiet folds nothing here");
+    assert_eq!(
+        plan.absorb_into(&mut report).folded,
+        0,
+        "quiet folds nothing here"
+    );
 
     let mut sink = Captured::default();
     plan.emit(&mut sink);
@@ -193,7 +184,12 @@ fn json_notices_survive_a_failure_that_emits_no_root() {
 fn json_notices_ride_the_root_when_one_is_emitted() {
     let plan = plan_notices(&None, false, true, true, vec![NOTICE.to_string()]);
     let mut report = draft();
-    assert_eq!(plan.absorb_into(&mut report), 0);
+    let residue = plan.absorb_into(&mut report);
+    assert_eq!(residue.folded, 0);
+    assert!(
+        residue.unabsorbed.is_empty(),
+        "this root declares a `notices` member",
+    );
 
     let RegisteredReportDraft::Install(built) = report else {
         panic!("family");
@@ -218,7 +214,7 @@ fn json_notices_ride_the_root_when_one_is_emitted() {
 fn a_member_deduplicates_every_other_channel() {
     let plan = plan_notices(&Some(member()), false, true, true, vec![NOTICE.to_string()]);
     let mut report = draft();
-    assert_eq!(plan.absorb_into(&mut report), 0);
+    assert_eq!(plan.absorb_into(&mut report).folded, 0);
     let mut sink = Captured::default();
     plan.emit(&mut sink);
     assert!(sink.diagnostics.is_empty(), "the member already carries it");
@@ -239,10 +235,66 @@ fn quiet_counts_notices_instead_of_printing_them() {
         vec![NOTICE.to_string(), "and another".to_string()],
     );
     let mut report = draft();
-    assert_eq!(plan.absorb_into(&mut report), 2, "quiet folds a count");
+    assert_eq!(
+        plan.absorb_into(&mut report).folded,
+        2,
+        "quiet folds a count"
+    );
     let mut sink = Captured::default();
     plan.emit(&mut sink);
     assert!(sink.diagnostics.is_empty(), "and never a second line");
+}
+
+/// A JSON root that has NO `notices` member still shows the notice — once,
+/// on stderr — and never grows an invented field.
+///
+/// Driven through the production executor with a captured sink, so deleting
+/// the leftover-routing loop is red. `cli-update-report` is emitted here (it
+/// is a successful command), which is exactly the case a "fold it into the
+/// root" implementation silently loses.
+#[test]
+fn the_executor_routes_a_notice_no_update_root_can_carry() {
+    let finalized = FinalizedCommand {
+        report: update_draft(),
+        plan: PlanDisposition::Flush,
+        trace: None,
+        original_error: None,
+        emit_report: true,
+        trace_requested: false,
+        notices: vec![NOTICE.to_string()],
+    };
+    let mut sink = Captured::default();
+    render_finalized_with_sink(&json_ctx(), finalized, &mut sink).expect("the command succeeded");
+
+    assert_eq!(
+        sink.diagnostics,
+        vec![NOTICE.to_string()],
+        "the notice reached the one channel this root leaves for it",
+    );
+    let rendered = sink.root.expect("the update root was rendered");
+    assert!(
+        !rendered.contains("notices"),
+        "and the registered format grew no member: {rendered}",
+    );
+    assert!(
+        !rendered.contains("\"trace\""),
+        "nor a trace field it never had: {rendered}",
+    );
+}
+
+fn update_draft() -> RegisteredReportDraft {
+    RegisteredReportDraft::Update(Box::new(crate::commands::update::UpdateDraft::completed(
+        &crate::commands::update::UpdateIdentity {
+            project_root: std::path::PathBuf::from("/p"),
+            scope: vibe_wire::generated::update_report::UpdateReportScope::All,
+            packages: Vec::new(),
+        },
+        0,
+        Vec::new(),
+        vibe_install::InstallProgress::fresh(vec![".".into()]),
+        Vec::new(),
+        None,
+    )))
 }
 
 /// The PRODUCTION executor, driven with a capturing sink.

@@ -34,12 +34,6 @@ impl<'a> HookReportView<'a> {
         }
     }
 
-    pub(crate) fn empty() -> Self {
-        Self {
-            reports: Vec::new(),
-        }
-    }
-
     /// The typed rows the one install document carries. Generated wire, not
     /// an ad-hoc object: the hook record is part of the registered format.
     pub(crate) fn typed(&self) -> Vec<InstallHookReport> {

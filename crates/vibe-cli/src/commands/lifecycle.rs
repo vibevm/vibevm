@@ -466,26 +466,14 @@ pub(crate) fn run_prelude(
     })
 }
 
-/// The identity alone, for callers that do not own a trace session.
-///
-/// `vibe update` and `vibe reinstall` select an identity exactly as before and
-/// request nothing: their own trace atom lands separately, and a request they
-/// cannot honour would set a sticky bit no recorder ever backed. They keep the
-/// legacy shape — read the manifest, load what can be loaded — because they
-/// have no prepared world to carry.
-pub(crate) fn run_identity(
-    ctx: &output::Context,
-    path: &Path,
-    requested: &str,
-    chain: &[String],
-    force: bool,
-) -> Result<vibe_lifecycle::RunIdentity> {
-    let project_root = super::install::resolve_project_root(path)?;
-    let workspace =
-        super::install::SelectedManifest::read(&project_root).prepare_workspace(&project_root);
-    run_prelude(ctx, project_root, workspace, requested, chain, force, false)
-        .map(|prelude| prelude.identity)
-}
+// The identity-only selector that `vibe update` and `vibe reinstall` used to
+// call is gone. It existed because those two commands owned no trace session:
+// they read the manifest themselves, loaded what could be loaded, and requested
+// nothing — a shape that could not carry an effective trace bit and, worse,
+// could run a SECOND time inside the same invocation (update selected once for
+// its metadata and again for its slot lifecycle; reinstall selected a third
+// time inside its continuation helper). Both now own a prelude epoch and call
+// `run_prelude` exactly once, like every other command in the binary.
 
 fn new_run_id(project_root: &Path) -> Result<String> {
     vibe_lifecycle::process::allocate_run_id(project_root).map_err(Into::into)

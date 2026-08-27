@@ -127,6 +127,65 @@ pub fn quiet_install(user: &UserScratch, project: &Path, extra: &[&str]) -> Stri
     String::from_utf8_lossy(&output.stdout).into_owned()
 }
 
+/// A whole-graph `vibe update --json`, plus extra flags.
+pub fn update_json(user: &UserScratch, project: &Path, extra: &[&str]) -> Value {
+    let output = update_output(user, project, extra);
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    sole_root(&output.stdout, "update")
+}
+
+pub fn update_output(user: &UserScratch, project: &Path, extra: &[&str]) -> std::process::Output {
+    user.vibe()
+        .args(["update", "--all", "--json", "--offline", "--assume-yes"])
+        .args(extra)
+        .arg("--path")
+        .arg(project)
+        .output()
+        .unwrap()
+}
+
+/// `vibe reinstall <path> --json`, plus extra flags.
+///
+/// The path is POSITIONAL here — that is reinstall's own grammar, and it is
+/// what makes a member invocation expressible at all.
+pub fn reinstall_json(user: &UserScratch, project: &Path, extra: &[&str]) -> Value {
+    let output = reinstall_output(user, project, extra);
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    sole_root(&output.stdout, "reinstall")
+}
+
+pub fn reinstall_output(
+    user: &UserScratch,
+    project: &Path,
+    extra: &[&str],
+) -> std::process::Output {
+    user.vibe()
+        .args(["reinstall", "--json", "--assume-yes"])
+        .args(extra)
+        .arg(project)
+        .output()
+        .unwrap()
+}
+
+/// The whole of a quiet run's stdout — which is supposed to be at most one
+/// line.
+pub fn quiet_stdout(output: &std::process::Output) -> String {
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    String::from_utf8_lossy(&output.stdout).into_owned()
+}
+
 /// A dependency that traces its OWN builds. Installing it must not switch
 /// tracing on for the project that consumes it.
 pub fn publish_tracing_package(registry: &Path) {

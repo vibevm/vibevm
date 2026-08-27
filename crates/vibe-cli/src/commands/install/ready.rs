@@ -28,8 +28,8 @@ use crate::output;
 use super::report;
 use super::{
     InstallDisposition, InstallDraft, InstallResolver, InstallRun, InstallRunContext,
-    LifecycleSlotObserver, WorldCallbackOutcome, emit_closure_diff, lane_sizes, resume,
-    resume_slot_continuation,
+    LifecycleSlotObserver, ResumeOutcome, WorldCallbackOutcome, emit_closure_diff, lane_sizes,
+    resume, resume_slot_continuation,
 };
 
 /// Everything the ready branch borrows from the command body.
@@ -224,27 +224,31 @@ pub(super) fn apply(
             root: post_workspace.root.display().to_string(),
             selected: project_root.display().to_string(),
         })?;
-    if let Some(resumed) = resume_slot_continuation(
-        ctx,
-        resume::ResumeRequest {
-            project_root,
-            workspace: &post_workspace,
-            manifest: resumed_manifest,
-            metadata: run_metadata,
-            spec_format,
-            disposition: InstallDisposition::Applied,
-            progress: applied.progress.clone(),
-            packages_resolved,
-        },
-    )? {
-        return complete_ready_resume(
-            resumed,
-            project_root,
-            &post_workspace,
-            &applied.lifecycle_reports,
-            tail,
-            after,
-        );
+    // ONE join for all three arms. The two lifecycles are different objects and
+    // only this site holds both, so the chronology is fixed here — before the
+    // match — rather than separately in each branch.
+    match join_applied_rows(
+        resume_slot_continuation(
+            ctx,
+            resume::ResumeRequest {
+                project_root,
+                workspace: &post_workspace,
+                manifest: resumed_manifest,
+                metadata: run_metadata,
+                spec_format,
+                disposition: InstallDisposition::Applied,
+                progress: applied.progress.clone(),
+                packages_resolved,
+            },
+        )?,
+        &applied.lifecycle_reports,
+    ) {
+        ResumeOutcome::Completed(resumed) => {
+            return complete_ready_resume(*resumed, project_root, &post_workspace, tail, after);
+        }
+        // TRANSPORTED neutrally — the family is the outer command's to choose.
+        ResumeOutcome::Failed(failure) => return Err(resume::carry_resume_failure(failure)),
+        ResumeOutcome::Nothing => {}
     }
     // The apply's OWN post-durability workspace, not the pre-apply one this
     // function was handed: step 7 of the apply rewrites `[requires]` with the
@@ -344,15 +348,12 @@ fn finish_ready(tail: ReadyTail<'_>, mut run: InstallRun) -> InstallRun {
 
 /// The WHOLE Ready-resume completion, in one place.
 ///
-/// Merge, callback, shared tail — in that order and nowhere else. A second
-/// completion site could merge differently from this one and nothing would
-/// notice, so there is exactly one, and the unit that freezes the merge drives
-/// the same [`prefix_applied_rows`] this calls.
+/// Callback, shared tail — in that order and nowhere else. The row merge has
+/// already happened, once, in [`join_applied_rows`].
 fn complete_ready_resume(
-    mut resumed: resume::ResumedInstall,
+    resumed: resume::ResumedInstall,
     project_root: &Path,
     post_workspace: &Workspace,
-    applied_rows: &[vibe_install::SlotLifecycleReport],
     tail: ReadyTail<'_>,
     after: impl FnOnce(
         &Path,
@@ -361,35 +362,50 @@ fn complete_ready_resume(
         &Workspace,
     ) -> Result<WorldCallbackOutcome>,
 ) -> Result<InstallRun> {
-    // Chronology: THIS apply's own slot rows happened before the older
-    // continuation this resume just serviced, which happened before the phase
-    // callback below.
-    prefix_applied_rows(&mut resumed, applied_rows);
     let run = resume::finish_resumed(resumed, project_root, post_workspace, after)?;
     Ok(finish_ready(tail, run))
 }
 
-/// Put this apply's own slot rows in front of the resumed continuation's, in
-/// both carriers, exactly once.
+/// Put THIS apply's own slot rows in front of whatever the resume produced —
+/// once, on whichever arm carries rows, and never on `Nothing`.
 ///
-/// BOTH, because the two are read by different consumers and a run described
-/// one way to the document and another way to the callback is a run nobody can
-/// reconcile: the install report joins `slot_reports`, and the post-durability
-/// callback counts the context's copy in its summary.
-fn prefix_applied_rows(
-    resumed: &mut resume::ResumedInstall,
+/// One seam for all three arms, because they are the same fact: the apply ran
+/// before the older continuation it serviced. Splitting it across the match —
+/// a helper for the completed arm and an inline `append` for the failed one —
+/// is how the two drifted, and how a test of the helper could stay green while
+/// the failed arm reported a run with no apply in it.
+///
+/// The COMPLETED arm merges BOTH carriers. They are read by different
+/// consumers, and a run described one way to the document and another way to
+/// the callback is a run nobody can reconcile: the install report joins
+/// `slot_reports`, and the post-durability callback counts the context's copy
+/// in its summary.
+fn join_applied_rows(
+    outcome: ResumeOutcome,
     applied_rows: &[vibe_install::SlotLifecycleReport],
-) {
-    if applied_rows.is_empty() {
-        return;
-    }
-    for rows in [
-        &mut resumed.run.slot_reports,
-        &mut resumed.context.lifecycle_reports,
-    ] {
-        let mut prefixed = applied_rows.to_vec();
-        prefixed.append(rows);
-        *rows = prefixed;
+) -> ResumeOutcome {
+    match outcome {
+        // No rows, nothing to put them in front of, and nothing fabricated.
+        ResumeOutcome::Nothing => ResumeOutcome::Nothing,
+        ResumeOutcome::Completed(mut resumed) => {
+            if !applied_rows.is_empty() {
+                for rows in [
+                    &mut resumed.run.slot_reports,
+                    &mut resumed.context.lifecycle_reports,
+                ] {
+                    *rows = crate::commands::install::prefixed(
+                        applied_rows.to_vec(),
+                        rows.split_off(0),
+                    );
+                }
+            }
+            ResumeOutcome::Completed(resumed)
+        }
+        ResumeOutcome::Failed(mut failure) => {
+            failure.reports =
+                crate::commands::install::prefixed(applied_rows.to_vec(), failure.reports);
+            ResumeOutcome::Failed(failure)
+        }
     }
 }
 

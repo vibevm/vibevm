@@ -1,37 +1,21 @@
-use std::path::Path;
+//! The lifecycle world `vibe update` runs its slot rows over.
+//!
+//! The run METADATA is not built here any more: it belongs to the command's
+//! one prepared epoch ([`super::prepare`]), which selects exactly one identity
+//! and hands the same value to the trace owner, the slot lifecycle and every
+//! continuation. A helper that selected an identity of its own — as this cell
+//! used to — was a second selector: it ran later, could allocate a second run
+//! directory, and had no way to know the effective trace bit the command had
+//! already committed to.
 
 use anyhow::{Context, Result};
 use vibe_core::manifest::{Lockfile, Manifest};
-use vibe_lifecycle::RunMetadata;
 use vibe_lifecycle::process::StreamMode;
 use vibe_workspace::Workspace;
 use vibe_workspace::install::ResolvedDep;
 use vibe_workspace::vibedeps;
 
 use crate::output;
-
-pub(super) fn metadata(
-    ctx: &output::Context,
-    root: &Path,
-    requested: &str,
-    offline: bool,
-    assume_yes: bool,
-) -> Result<RunMetadata> {
-    let chain = vec!["install".to_string()];
-    let identity = crate::commands::lifecycle::run_identity(ctx, root, requested, &chain, false)?;
-    Ok(RunMetadata {
-        requested: requested.into(),
-        chain,
-        offline,
-        assume_yes: assume_yes || ctx.is_unattended() || ctx.is_json(),
-        agent_mode: ctx.agent_mode(),
-        force: false,
-        // The selector's effective sticky bit, not a hard-coded false.
-        trace_compile: identity.compile_trace,
-        run_id: identity.run_id,
-        started: identity.started,
-    })
-}
 
 pub(super) fn stream_mode(ctx: &output::Context) -> StreamMode {
     if ctx.is_json() {

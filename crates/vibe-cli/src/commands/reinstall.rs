@@ -24,56 +24,58 @@
 //! regenerates the whole workspace — a node and every ancestor
 //! (PROP-009 §2.10): a node's aggregated boot depends on its members'.
 //!
+//! ## One command, one owner
+//!
+//! Every branch — plain, empty `--force`, ordinary `--force`, and the
+//! continuation any of them may service — runs under exactly one
+//! [`compile_trace::TracePreparation`], opened here before anything compiles
+//! and consumed by exactly one typed exit. `--force` is a MATERIALISATION
+//! force and never a lifecycle repark force, so a forced run can still adopt
+//! and finish the park it created.
+//!
+//! Nothing between `prepare` and `finalize` returns with `?`: an open recorder
+//! holds the project's cooperative lock and leaves its index `running` on disk,
+//! so the executed region is a function returning a value and every error
+//! inside it is classified into that value.
+//!
 //! Spec: spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009-loading-model §2.10.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#cli-surface");
 
-mod document;
+mod continuation;
+mod draft;
+mod force;
 mod inputs;
-mod report;
+mod prepare;
+mod regenerate;
 
-use std::collections::HashMap;
+pub(crate) use draft::{ReinstallDraft, ReinstallIdentity};
+
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
-use vibe_core::manifest::{Lockfile, Manifest, Materialization, SpecFormat};
-use vibe_core::user_config::{SlotIntegrity, UserConfig};
+use vibe_core::manifest::{Manifest, Materialization, SpecFormat};
+use vibe_core::user_config::UserConfig;
 use vibe_core::{ContentHash, Group};
-use vibe_install::{InstallSlotLifecycle, InstallSource};
+use vibe_install::{InstallProgress, InstallSource};
 use vibe_workspace::Workspace;
-use vibe_workspace::install::{
-    ResolvedDep, SlotCheck, SlotLifecycleMode, SlotVerifier,
-    apply_resolution_with_spec_format_and_slot_lifecycle, regenerate_boot_with_spec_format,
-    run_post_install_slot_lifecycle,
-};
+use vibe_workspace::compile_trace::TraceRun;
 use vibe_workspace::vibedeps;
 
 use crate::cli::ReinstallArgs;
-use crate::commands::install::{HookReportView, LifecycleHookView, build_install_resolver};
-use crate::exit_code::InstallError;
+use crate::commands::compile_trace::{self, CommandExit, RegisteredReportDraft, render_finalized};
+use crate::commands::install::{PreparedWorkspace, SelectedManifest, build_install_resolver};
 use crate::output;
 
-use document::{emit_reinstall_document, resume_reinstall_continuation};
-use inputs::{
-    confirm, exact_pkgref, load_lockfile, reinstall_metadata, reinstall_stream_mode,
-    resolve_project_root, resolver_args,
-};
-
-struct SourceHashes(HashMap<(Group, String), String>);
-
-impl SlotVerifier for SourceHashes {
-    fn source_hash<'a>(&'a self, dep: &ResolvedDep) -> Option<&'a str> {
-        self.0
-            .get(&(dep.group.clone(), dep.name.clone()))
-            .map(String::as_str)
-    }
-
-    fn verify_slot(&self, _dep: &ResolvedDep, _slot_abs: &Path) -> SlotCheck {
-        SlotCheck::Unverifiable
-    }
-}
+use inputs::{exact_pkgref, load_lockfile, resolver_args};
+use prepare::PreparedReinstall;
 
 /// Reload and re-derive exactly one installed transformed slot.
+///
+/// NOT a `vibe reinstall` outer-command path: it is a point repair W2 calls,
+/// with no lifecycle run, no report and therefore no trace owner. It keeps its
+/// own discovery and its own config load precisely because it is not this
+/// command.
 ///
 /// `false` means the package has no versioned slot. Mixed and in-place slots
 /// are deliberately left alone by W2 because they carry no derived manifest.
@@ -164,341 +166,165 @@ pub fn run(
     embedded_root: Option<PathBuf>,
     root_offline: bool,
 ) -> Result<()> {
-    let project_root = resolve_project_root(&args.path)?;
-    let workspace = Workspace::discover(&project_root)
-        .context("discovering the workspace enclosing the project")?;
+    let PreparedReinstall {
+        project_root,
+        user_config,
+        offline,
+        metadata,
+        manifest,
+        workspace,
+        trace,
+    } = prepare::prepare(ctx, &args, root_offline)?;
+    let exit = execute_after_open(
+        ctx,
+        Execution {
+            args,
+            embedded_root,
+            offline,
+            project_root,
+            user_config,
+            manifest,
+            workspace,
+            metadata,
+        },
+        trace.recorder(),
+    );
+    // Consumes the owner: finishes the index, drops the last handle (and with
+    // it the cooperative lock), and returns the member to attach.
+    let finalized = compile_trace::finalize(trace, exit, &now);
+    render_finalized(ctx, finalized)
+}
+
+/// The prepared inputs the executed region owns.
+struct Execution {
+    args: ReinstallArgs,
+    embedded_root: Option<PathBuf>,
+    offline: bool,
+    project_root: PathBuf,
+    user_config: UserConfig,
+    manifest: SelectedManifest,
+    workspace: PreparedWorkspace,
+    metadata: vibe_lifecycle::RunMetadata,
+}
+
+/// The one boundary: everything after `prepare` and before `finalize`.
+fn execute_after_open(
+    ctx: &output::Context,
+    execution: Execution,
+    trace: Option<&TraceRun>,
+) -> CommandExit<RegisteredReportDraft> {
+    // The report identity is the SELECTED node, decided before anything can
+    // move it — see `ReinstallIdentity`. Operational facts stay workspace-
+    // rooted; this answers "which invocation is this document about".
+    let identity = ReinstallIdentity {
+        selected_project_root: execution.project_root.clone(),
+        forced: execution.args.force,
+    };
+    match run_inner(ctx, execution, trace) {
+        Ok(draft) => {
+            let parked = draft.delegation.is_some();
+            let draft = RegisteredReportDraft::Reinstall(Box::new(draft));
+            if parked {
+                CommandExit::Parked(draft)
+            } else {
+                CommandExit::Success(draft)
+            }
+        }
+        Err(error) => compile_trace::classify(error, || {
+            RegisteredReportDraft::Reinstall(Box::new(ReinstallDraft::failed(
+                &identity,
+                InstallProgress::default(),
+                Vec::new(),
+            )))
+        }),
+    }
+}
+
+fn run_inner(
+    ctx: &output::Context,
+    execution: Execution,
+    trace: Option<&TraceRun>,
+) -> Result<ReinstallDraft> {
+    let Execution {
+        args,
+        embedded_root,
+        offline,
+        project_root,
+        user_config,
+        manifest,
+        workspace,
+        metadata,
+    } = execution;
+    // The stored snapshot is consumed for its ERROR first: a malformed selected
+    // `vibe.toml` is this command's failure, in its own words. Its VALUE is
+    // deliberately not the operational manifest — see `prepare`.
+    let identity = ReinstallIdentity {
+        selected_project_root: project_root.clone(),
+        forced: args.force,
+    };
+    let selected = manifest.into_manifest()?;
+    // The ONE workspace answer, returned as it was. Retrying could succeed
+    // against a tree the identity and the trace were never prepared for.
+    let workspace = match workspace {
+        PreparedWorkspace::Loaded(workspace) => *workspace,
+        PreparedWorkspace::DiscoveryFailed(error) => {
+            return Err(anyhow::Error::new(*error)
+                .context("discovering the workspace enclosing the project"));
+        }
+        // Unreachable through the owner above, which consumes the manifest
+        // error first; named rather than merged so a future caller is a
+        // compile-time question instead of a silent success.
+        PreparedWorkspace::SelectedManifestInvalid => {
+            bail!(
+                "internal: the selected manifest was reported invalid but its error was \
+                 already consumed"
+            );
+        }
+        PreparedWorkspace::DiscoverHere => {
+            Workspace::discover_with_selected_manifest(&project_root, &selected)
+                .context("discovering the workspace enclosing the project")?
+        }
+    };
+
     let lockfile = load_lockfile(&workspace.root)?;
-    let user_config = UserConfig::load().context("loading the user config")?;
+    // The workspace ROOT's manifest, from the tree already in hand.
     let spec_format =
         crate::commands::install::resolve_spec_format(&workspace.root_manifest, &user_config);
 
     if args.force {
-        run_force(
+        force::run(
             ctx,
-            &workspace,
-            &lockfile,
-            &args,
-            embedded_root.as_deref(),
-            root_offline,
-            spec_format,
+            force::Forced {
+                args: &args,
+                identity: &identity,
+                workspace: &workspace,
+                lockfile: &lockfile,
+                metadata: &metadata,
+                spec_format,
+                trace,
+                embedded_root: embedded_root.as_deref(),
+                offline,
+            },
         )
     } else {
-        run_regenerate(ctx, &workspace, &lockfile, &args, spec_format)
-    }
-}
-
-/// `vibe reinstall` — regenerate every node's boot artifacts from the
-/// materialised `vibedeps/` tree already on disk. No fetch, no network.
-fn run_regenerate(
-    ctx: &output::Context,
-    workspace: &Workspace,
-    lockfile: &Lockfile,
-    args: &ReinstallArgs,
-    spec_format: SpecFormat,
-) -> Result<()> {
-    // Without `--force` the materialised `vibedeps/` tree is the only
-    // content source. Every locked package must have its slot on disk —
-    // a missing slot is content this mode cannot conjure; only a fetch
-    // (`--force`) can.
-    // An in-place package's slot is the unversioned git working tree
-    // (PROP-022 §2.4); every other mode is the versioned slot. Check, and
-    // name, the right one per mode.
-    let slot_present = |p: &vibe_core::manifest::LockedPackage| {
-        if p.materialization.is_in_place() {
-            vibedeps::is_in_place_slot(&workspace.root, &p.group, &p.name)
-        } else {
-            vibedeps::is_materialised(&workspace.root, &p.group, &p.name, &p.version)
-        }
-    };
-    let slot_label = |p: &vibe_core::manifest::LockedPackage| {
-        if p.materialization.is_in_place() {
-            vibedeps::in_place_slot_rel_path(&p.group, &p.name)
-        } else {
-            vibedeps::slot_rel_path(&p.group, &p.name, &p.version)
-        }
-    };
-    let missing: Vec<String> = lockfile
-        .packages
-        .iter()
-        .filter(|p| !slot_present(p))
-        .map(slot_label)
-        .collect();
-    if !missing.is_empty() {
-        bail!(
-            "the materialised `vibedeps/` tree is incomplete — {} slot{} missing:\n  {}\n\
-             Run `vibe reinstall --force` to re-fetch the content from source.",
-            missing.len(),
-            if missing.len() == 1 { "" } else { "s" },
-            missing.join("\n  "),
-        );
-    }
-
-    let node_count = workspace.iter_nodes().count();
-    ctx.heading(&format!(
-        "\nReinstall — regenerate boot artifacts for {node_count} node{} from vibedeps/.",
-        if node_count == 1 { "" } else { "s" },
-    ));
-
-    if !confirm(
-        ctx,
-        args,
-        "Regenerate the boot artifacts from the materialised vibedeps/ tree?",
-    )? {
-        return Err(InstallError::UserDeclined.into());
-    }
-
-    // A forced reinstall that parked left a live `requested=reinstall` slot
-    // continuation. Service it from the locked world BEFORE ordinary boot
-    // regeneration: the plain `vibe reinstall` the handoff names is what has
-    // to be able to finish it.
-    if let Some(resumed) = resume_reinstall_continuation(ctx, workspace, args, spec_format)? {
-        return resumed;
-    }
-    let nodes = regenerate_boot_with_spec_format(workspace, spec_format)
-        .context("regenerating boot artifacts")?;
-    report::emit(
-        ctx,
-        &workspace.root,
-        false,
-        &[],
-        &nodes,
-        &[],
-        &HookReportView::empty(),
-    )?;
-    Ok(())
-}
-
-/// `vibe reinstall --force` — re-fetch every locked package from source,
-/// bypassing the project cache, then re-materialise and regenerate boot.
-///
-/// `root_offline` carries the invocation's offline posture (PROP-010
-/// §2.5): `--force` is the reinstall mode that touches the network, so
-/// the root flag / `VIBE_OFFLINE` / `[net].offline` ladder resolves here
-/// and narrows the resolver exactly as it does for `vibe install`.
-fn run_force(
-    ctx: &output::Context,
-    workspace: &Workspace,
-    lockfile: &Lockfile,
-    args: &ReinstallArgs,
-    embedded_root: Option<&Path>,
-    root_offline: bool,
-    spec_format: SpecFormat,
-) -> Result<()> {
-    // No locked packages — `--force` has nothing to re-fetch. Still
-    // regenerate boot so a stale artifact is recomputed.
-    if lockfile.packages.is_empty() {
-        ctx.heading("\nReinstall --force — no packages locked; regenerate boot only.");
-        if !confirm(
+        regenerate::run(
             ctx,
-            args,
-            "No packages are locked — regenerate boot artifacts only?",
-        )? {
-            return Err(InstallError::UserDeclined.into());
-        }
-        let outcome = apply_resolution_with_spec_format_and_slot_lifecycle(
-            workspace,
-            &[],
-            SlotIntegrity::Verify,
-            spec_format,
-            None,
-            SlotLifecycleMode::None,
-        )
-        .context("regenerating the workspace")?;
-        let hook_reports = HookReportView::empty();
-        report::emit(
-            ctx,
-            &workspace.root,
-            true,
-            &[],
-            &outcome.nodes_regenerated,
-            &outcome.pruned,
-            &hook_reports,
-        )?;
-        return Ok(());
-    }
-
-    ctx.heading(&format!(
-        "\nReinstall --force — re-fetch {} package{} from source:",
-        lockfile.packages.len(),
-        if lockfile.packages.len() == 1 {
-            ""
-        } else {
-            "s"
-        },
-    ));
-    for p in &lockfile.packages {
-        ctx.step(&format!("{}:{}@{}", p.kind, p.name, p.version));
-    }
-
-    if !confirm(
-        ctx,
-        args,
-        &format!(
-            "Re-fetch {} package{} from source and re-materialise vibedeps/?",
-            lockfile.packages.len(),
-            if lockfile.packages.len() == 1 {
-                ""
-            } else {
-                "s"
+            regenerate::Plain {
+                args: &args,
+                identity: &identity,
+                workspace: &workspace,
+                lockfile: &lockfile,
+                metadata: &metadata,
+                spec_format,
+                trace,
             },
-        ),
-    )? {
-        return Err(InstallError::UserDeclined.into());
+        )
     }
+}
 
-    // The resolver is built from the workspace root manifest — registries,
-    // mirrors, overrides, and git-source declarations are root-level. The
-    // offline posture is resolved with the same ladder install uses
-    // (PROP-010 §2.5): root `--offline` > `VIBE_OFFLINE` > `[net].offline`.
-    // `vibe reinstall` carries no local `--offline` flag of its own.
-    let global = vibe_core::GlobalRegistryConfig::load()?;
-    let offline = crate::output::resolve_offline(
-        root_offline,
-        vibe_core::user_config::UserConfig::load()
-            .context("loading the user config")?
-            .net
-            .offline,
-    );
-    let resolver = build_install_resolver(
-        &resolver_args(),
-        &workspace.root_manifest,
-        embedded_root,
-        &workspace.root,
-        &global,
-        offline,
-        &lockfile.packages,
-    )
-    .context("building the install resolver")?;
-
-    // Re-fetch every locked package at its exact pinned version — no
-    // re-resolution, the lockfile decides the version. The recorded
-    // `content_hash` is forwarded so a source serving disagreeing bytes
-    // is rejected: `vibe reinstall` reproduces the lock, never drifts it.
-    //
-    // The old "wipe the project cache so every fetch re-downloads"
-    // step (PROP-009 §2.10) retired with the project cache itself:
-    // payload now lands in the machine-global store (`~/.vibe/cache/`,
-    // PROP-010 §2.7), which our code never rewrites — every fetch
-    // still walks the sources, and the pin gate plus the read-time
-    // entry check make the re-fetched bytes prove themselves against
-    // the lockfile regardless of what the store already holds.
-    let store_root =
-        vibe_registry::store::store_root().context("resolving the machine package store root")?;
-
-    let mut resolution: Vec<ResolvedDep> = Vec::with_capacity(lockfile.packages.len());
-    let mut source_hashes = HashMap::new();
-    for locked in &lockfile.packages {
-        let pkgref = exact_pkgref(locked.kind, &locked.group, &locked.name, &locked.version)?;
-        let cached = resolver
-            .resolve_and_fetch(&pkgref, &store_root, Some(&locked.content_hash))
-            .with_context(|| {
-                format!(
-                    "re-fetching `{}/{}@{}` from source",
-                    locked.group, locked.name, locked.version
-                )
-            })?;
-        source_hashes.insert(
-            (cached.resolved.group.clone(), cached.resolved.name.clone()),
-            cached.content_hash.clone(),
-        );
-        resolution.push(ResolvedDep {
-            kind: cached.package_meta().kind,
-            group: cached.resolved.group.clone(),
-            name: cached.resolved.name.clone(),
-            version: cached.resolved.version.clone(),
-            content_dir: cached.cache_dir.clone(),
-            source_hash: Some(ContentHash::from_validated(cached.content_hash.clone())),
-            manifest: cached.manifest.clone(),
-            // The recorded resolution edges — `apply_resolution` walks
-            // them to compose each node's dependency boot. A lockfile
-            // dependency pkgref is group-qualified (PROP-008 §2.6).
-            requires: locked
-                .dependencies
-                .iter()
-                .filter_map(|p| p.group.clone().map(|g| (g, p.name.to_string())))
-                .collect(),
-            admitted_by: None,
-            via_override: None,
-            // `--force` materialises with `Verify` (below), so this flag does
-            // not change reinstall's behaviour; set from the source for
-            // consistency with `vibe install` (PROP-011 §2.6).
-            source_mutable: vibe_workspace::freshness::is_in_workspace_file_source(
-                &cached.source_uri,
-                &workspace.root,
-            ),
-            in_place_changed: None,
-        });
-    }
-
-    let manifest = Manifest::read(workspace.root.join(Manifest::FILENAME))?;
-    let lifecycle_metadata = reinstall_metadata(ctx, &workspace.root, root_offline, args)?;
-    let lifecycle_observer =
-        crate::commands::install::LifecycleSlotObserver::new(ctx, lifecycle_metadata.clone());
-    let lifecycle = InstallSlotLifecycle::from_resolution_observed(
-        &workspace.root,
-        &manifest,
-        &resolution,
-        lifecycle_metadata.clone(),
-        reinstall_stream_mode(ctx),
-        vibe_install::SlotLifecycleSeams {
-            observer: std::sync::Arc::new(lifecycle_observer),
-            // Built from the values this command already holds — no
-            // discovery, no second manifest read.
-            agent: std::sync::Arc::new(crate::commands::lifecycle::install_agent_backend(
-                &workspace.root,
-                &manifest,
-            )),
-        },
-    )?;
-    let applied = apply_resolution_with_spec_format_and_slot_lifecycle(
-        workspace,
-        &resolution,
-        SlotIntegrity::Verify,
-        spec_format,
-        Some(&SourceHashes(source_hashes)),
-        SlotLifecycleMode::Callback(&lifecycle),
-    );
-    // A hosted row parked: a durable handoff for THIS command, reported as
-    // `reinstall` with `resume: vibe reinstall`, exit 0, nothing paid for and
-    // every post-barrier row skipped.
-    if let Some(delegation) = lifecycle.parked() {
-        crate::commands::lifecycle::check_delegation(&delegation)?;
-        return emit_reinstall_document(
-            ctx,
-            &workspace.root,
-            &lifecycle.progress(),
-            true,
-            &lifecycle.take_reports().unwrap_or_default(),
-            Some(&delegation),
-        );
-    }
-    let mut outcome = applied.context("re-materialising the workspace")?;
-    if let Some(plan) = outcome.take_post_install_plan() {
-        let ran = run_post_install_slot_lifecycle(plan, SlotLifecycleMode::Callback(&lifecycle));
-        if let Some(delegation) = lifecycle.parked() {
-            crate::commands::lifecycle::check_delegation(&delegation)?;
-            return emit_reinstall_document(
-                ctx,
-                &workspace.root,
-                &lifecycle.progress(),
-                true,
-                &lifecycle.take_reports().unwrap_or_default(),
-                Some(&delegation),
-            );
-        }
-        ran.context("running post-install lifecycle")?;
-    }
-    lifecycle.clear_continuation().map_err(anyhow::Error::msg)?;
-    let lifecycle_reports = lifecycle.take_reports()?;
-    let hook_reports = LifecycleHookView::new(&lifecycle_reports);
-    report::emit(
-        ctx,
-        &workspace.root,
-        true,
-        &lifecycle_reports,
-        &outcome.nodes_regenerated,
-        &outcome.pruned,
-        &hook_reports,
-    )?;
-    Ok(())
+/// The injected instant. Both the supersession pass and the finish read time
+/// through this one closure, so a test can count its calls and prove the
+/// disabled path never asked.
+pub(super) fn now() -> vibe_wire::generated::shared::Timestamp {
+    chrono::Utc::now()
 }

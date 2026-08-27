@@ -152,19 +152,43 @@ fn scoped_update_uses_full_lock_world_and_unchanged_activated_provider() {
         .into_iter::<serde_json::Value>()
         .collect::<Result<Vec<_>, _>>()
         .unwrap();
-    let slot_rows = docs
+    // The rows live on the ONE registered `update` root.
+    //
+    // They used to be read from standalone `{"command":"lifecycle"}` documents
+    // — a per-row echo that put a second and third document on the same stdout,
+    // and that R3.4 deliberately removed. The rows themselves did not go
+    // anywhere: `vibe update` is the outermost command on this path, so its
+    // single report is the only place either kind of row can be observed. This
+    // still goes red if the Update owner drops the slot row, because that row
+    // is now the report's own `contributions` member.
+    let update_roots: Vec<&serde_json::Value> = docs
         .iter()
-        .filter(|doc| doc["command"] == "lifecycle")
-        .flat_map(|doc| doc["contributions"].as_array().into_iter().flatten())
+        .filter(|doc| doc["command"] == "update")
+        .collect();
+    assert_eq!(
+        update_roots.len(),
+        1,
+        "EXACTLY one update root — a first rowful root followed by a rowless          duplicate would satisfy a `find`, and would be two documents where the          command owes one: {docs:#?}",
+    );
+    // The FINAL document, which is also that root: nothing may follow the one
+    // registered report a command emits.
+    let update_root = docs.last().expect("at least one document");
+    assert_eq!(
+        update_root["command"], "update",
+        "and it is the LAST document on stdout: {docs:#?}",
+    );
+    let slot_rows = update_root["contributions"]
+        .as_array()
+        .into_iter()
+        .flatten()
         .filter(|row| row["point"] == "slot:pre-install")
         .collect::<Vec<_>>();
     assert_eq!(
         slot_rows.len(),
         1,
-        "unchanged provider emits no target event"
+        "unchanged provider emits no target event: {update_root:#}"
     );
     assert_eq!(slot_rows[0]["provider"], "org.world/provider");
     assert_eq!(slot_rows[0]["tier"], "host-activation");
-    assert_eq!(docs.last().unwrap()["command"], "update");
-    assert_eq!(docs.last().unwrap()["hooks"], serde_json::json!([]));
+    assert_eq!(update_root["hooks"], serde_json::json!([]));
 }
