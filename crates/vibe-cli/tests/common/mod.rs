@@ -21,6 +21,8 @@ use std::path::{Path, PathBuf};
 pub mod agent_provider;
 pub mod hook_slot;
 pub mod hosted_slot;
+/// The R3.4 failure reds' git-backed `org.demo/tools` fixture.
+pub mod trace_failure_slot;
 
 /// `vibe()` and `UserScratch` moved into `vibe-test-support` (DRIFT-020) so
 /// `vibe-index`'s test binaries can reach them too, and — the point of the
