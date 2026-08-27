@@ -42,6 +42,22 @@ use crate::project::{Pinned, Project};
 /// Deliberately not `Display`, not destructurable and carrying no accessor:
 /// the only thing a caller may do with one is hand it back to a proved
 /// removal. Two proofs comparing equal means the OS calls them one object.
+///
+/// The canonical arc — judge a file through the pinned capability, then
+/// remove exactly the object that was judged:
+///
+/// ```no_run
+/// let project = vibe_safefs::Project::open(std::path::Path::new("/abs/project")).unwrap();
+/// let archive = project.dir(&["archive"], true).unwrap();
+/// let (proof, _bytes) = project
+///     .inspect_file_in(&archive, "spent.log")
+///     .unwrap()
+///     .expect("the judged file is there");
+/// // Evidence, never a number: Debug reports that a proof exists, not what it is.
+/// assert_eq!(format!("{proof:?}"), "EntryProof(..)");
+/// // The one blessed move — hand it back; a rebound name refuses, untouched.
+/// project.remove_file_proved_in(&archive, "spent.log", &proof).unwrap();
+/// ```
 #[derive(Clone, Copy, PartialEq, Eq)]
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE")]
 pub struct EntryProof(FileIdentity);
