@@ -107,10 +107,28 @@ applies_to={packages=["org.phantom/*"]}
                 .is_some_and(|point| point.starts_with("slot:"))
         })
         .collect::<Vec<_>>();
-    let outcomes = docs
+    let install_roots = docs
         .iter()
-        .filter(|doc| doc["command"] == "lifecycle")
-        .flat_map(|doc| doc["contributions"].as_array().into_iter().flatten())
+        .filter(|doc| doc["command"] == "install")
+        .collect::<Vec<_>>();
+    assert_eq!(
+        install_roots.len(),
+        1,
+        "exactly one install root: {docs:#?}"
+    );
+    assert_eq!(
+        docs.last(),
+        install_roots.first().copied(),
+        "the command root is the final document"
+    );
+    assert!(
+        docs.iter().all(|doc| doc["command"] != "lifecycle"),
+        "slot rows belong to the command root, never a lifecycle echo: {docs:#?}"
+    );
+    let outcomes = install_roots[0]["contributions"]
+        .as_array()
+        .into_iter()
+        .flatten()
         .filter(|row| {
             row["point"]
                 .as_str()
@@ -127,5 +145,4 @@ applies_to={packages=["org.phantom/*"]}
             .iter()
             .all(|row| row["slot_target"]["name"] != "hooked")
     );
-    assert_eq!(docs.last().unwrap()["command"], "install");
 }
