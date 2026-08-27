@@ -26,7 +26,11 @@
 //! Each tool is a [`tools::McpTool`] implementation (one `#[cell]` per
 //! tool); [`Server::register_default_tools`] installs the set returned by
 //! [`tools::default_tools`], and the dispatcher routes by each tool's
-//! declared name.
+//! declared name. Results come back as [`tools::ToolOutput`] — the
+//! executed channel (ordinary success, or an executed structured failure
+//! that keeps its report under `isError: true`) — while [`ToolError`]
+//! stays the preflight / tool-failure channel, rendered text-only with
+//! no structured content.
 
 #![forbid(unsafe_code)]
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#server");
@@ -52,7 +56,7 @@ pub mod transport;
 
 pub use agents::{Agent, ConfigFormat, ConfigPayload, SKILL_NAME, Scope, What, detect_agents};
 pub use jsonrpc::{JsonRpcError, JsonRpcMessage, JsonRpcRequest, JsonRpcResponse};
-pub use tools::{McpTool, default_tools};
+pub use tools::{McpTool, ToolOutput, default_tools};
 pub use transport::{MemoryTransport, StdioTransport, Transport};
 
 /// MCP protocol version this server speaks. The shipped MCP spec uses
@@ -328,19 +332,19 @@ impl<T: Transport> Server<T> {
             }
         };
         match tool.run(&args, &self.context) {
-            Ok(value) => {
-                let text = match &value {
-                    Value::String(s) => s.clone(),
-                    other => {
-                        serde_json::to_string_pretty(other).unwrap_or_else(|_| other.to_string())
-                    }
-                };
+            Ok(output) => {
+                // The constructor owns the text projection (fixed at
+                // construction — mandatory on both shapes), so the
+                // dispatcher only assembles the result, moving the
+                // structured value in via `into_parts` rather than
+                // cloning it out.
+                let (structured, text, is_error) = output.into_parts();
                 let result = serde_json::json!({
                     "content": [
                         { "type": "text", "text": text }
                     ],
-                    "isError": false,
-                    "structuredContent": value,
+                    "isError": is_error,
+                    "structuredContent": structured,
                 });
                 JsonRpcResponse::ok(req.id, result)
             }

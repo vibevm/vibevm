@@ -12,6 +12,11 @@ use vibe_mcp::tools::{
 };
 use vibe_mcp::{ServerContext, dispatch_one};
 
+// The dispatcher-compatibility oracles for the three result arms live
+// out of line for the 600-line file budget, by the crate's own idiom.
+#[path = "tools_oracle/dispatch_compat.rs"]
+mod dispatch_compat;
+
 const LOCKFILE_FIXTURE: &str = r#"
 [meta]
 generated_by = "vibe-test"
@@ -263,7 +268,7 @@ fn list_tools_cell_returns_an_array_and_tolerates_an_empty_project() {
     let arr = out.as_array().expect("an array");
     // The fixture's package declares no `[[binary]]`, so the registry is
     // legitimately empty — and empty is a value, not a failure.
-    assert!(arr.is_empty(), "fixture declares no tools: {out}");
+    assert!(arr.is_empty(), "fixture declares no tools: {out:?}");
 }
 
 /// End-to-end through the registered server, so the tool is reachable by

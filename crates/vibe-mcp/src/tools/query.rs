@@ -11,7 +11,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools"
 use serde_json::{Value, json};
 use specmark::{cell, spec};
 
-use super::McpTool;
+use super::{McpTool, ToolOutput};
 use crate::{ServerContext, ToolDescriptor, ToolError};
 
 /// Search the project's code↔spec map for the **many** nodes that fit
@@ -70,7 +70,7 @@ impl McpTool for QueryMcpTool {
         }
     }
 
-    fn run(&self, args: &Value, ctx: &ServerContext) -> Result<Value, ToolError> {
+    fn run(&self, args: &Value, ctx: &ServerContext) -> Result<ToolOutput, ToolError> {
         let uri = args.get("uri").and_then(|v| v.as_str()).map(str::to_owned);
         let symbol = args
             .get("symbol")
@@ -99,6 +99,6 @@ impl McpTool for QueryMcpTool {
                 "json render did not return the json view".into(),
             ));
         };
-        Ok(value)
+        Ok(ToolOutput::ok(value))
     }
 }

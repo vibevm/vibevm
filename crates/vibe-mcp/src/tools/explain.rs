@@ -9,7 +9,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools"
 use serde_json::{Value, json};
 use specmark::{cell, spec};
 
-use super::McpTool;
+use super::{McpTool, ToolOutput};
 use crate::{ServerContext, ToolDescriptor, ToolError};
 
 /// Answer a traceability question over THIS project's tree — the MCP face
@@ -52,7 +52,7 @@ impl McpTool for ExplainMcpTool {
         }
     }
 
-    fn run(&self, args: &Value, ctx: &ServerContext) -> Result<Value, ToolError> {
+    fn run(&self, args: &Value, ctx: &ServerContext) -> Result<ToolOutput, ToolError> {
         let target = args
             .get("target")
             .and_then(|v| v.as_str())
@@ -60,9 +60,9 @@ impl McpTool for ExplainMcpTool {
         let json = args.get("json").and_then(|v| v.as_bool()).unwrap_or(false);
         let out = vibe_trace::explain(&ctx.project_root, target, json)
             .map_err(|e| ToolError::NotFound(e.to_string()))?;
-        Ok(match out {
+        Ok(ToolOutput::ok(match out {
             vibe_trace::Explain::Text(text) => Value::String(text),
             vibe_trace::Explain::Json(value) => value,
-        })
+        }))
     }
 }

@@ -16,6 +16,9 @@ use vibe_core::{Group, PackageRef, machine_json_path};
 
 use crate::{ServerContext, ToolDescriptor, ToolError};
 
+pub mod output;
+pub use output::ToolOutput;
+
 /// The MCP tool seam (PROP-015 §2.2): a tool describes itself (name,
 /// human description, JSON-Schema input shape) and runs against parsed
 /// `arguments` plus the read-only [`ServerContext`]. Every tool is a cell
@@ -36,7 +39,14 @@ pub trait McpTool {
     /// The tool's `tools/list` descriptor.
     fn descriptor(&self) -> ToolDescriptor;
     /// Run the tool against parsed `arguments` and the server context.
-    fn run(&self, args: &Value, ctx: &ServerContext) -> Result<Value, ToolError>;
+    ///
+    /// `Ok(ToolOutput)` means the operation **executed** — ordinary
+    /// success, or an executed structured failure whose report survives
+    /// in `structuredContent` under `isError: true`. `Err(ToolError)`
+    /// is the preflight / tool-failure channel: the operation never
+    /// ran, so the dispatcher renders text only, with no structured
+    /// content. See [`ToolOutput`] for the full distinction.
+    fn run(&self, args: &Value, ctx: &ServerContext) -> Result<ToolOutput, ToolError>;
 }
 
 /// The built-in tool set — the one registration point (PROP-015 §2.2).
@@ -93,11 +103,12 @@ impl McpTool for ListToolsMcpTool {
         }
     }
 
-    fn run(&self, _args: &Value, ctx: &ServerContext) -> Result<Value, ToolError> {
+    fn run(&self, _args: &Value, ctx: &ServerContext) -> Result<ToolOutput, ToolError> {
         let tools = vibe_workspace::tools::collect_tools(&ctx.project_root)
             .map_err(|e| ToolError::Internal(format!("collecting tools: {e}")))?;
-        serde_json::to_value(&tools)
-            .map_err(|e| ToolError::Internal(format!("serialising tools: {e}")))
+        let value = serde_json::to_value(&tools)
+            .map_err(|e| ToolError::Internal(format!("serialising tools: {e}")))?;
+        Ok(ToolOutput::ok(value))
     }
 }
 
@@ -137,7 +148,7 @@ impl McpTool for QueryPackageMcpTool {
         }
     }
 
-    fn run(&self, args: &Value, ctx: &ServerContext) -> Result<Value, ToolError> {
+    fn run(&self, args: &Value, ctx: &ServerContext) -> Result<ToolOutput, ToolError> {
         let name = args
             .get("name")
             .and_then(|v| v.as_str())
@@ -169,7 +180,7 @@ impl McpTool for QueryPackageMcpTool {
             .map(|path| Value::String(machine_json_path(path)))
             .collect();
 
-        Ok(json!({
+        Ok(ToolOutput::ok(json!({
             "kind": entry.kind.as_str(),
             "name": entry.name,
             "version": entry.version.to_string(),
@@ -184,7 +195,7 @@ impl McpTool for QueryPackageMcpTool {
             "subskills_active": subskills,
             "describes": entry.describes,
             "language": entry.language,
-        }))
+        })))
     }
 }
 
@@ -228,7 +239,7 @@ impl McpTool for ReadSubskillMcpTool {
         }
     }
 
-    fn run(&self, args: &Value, ctx: &ServerContext) -> Result<Value, ToolError> {
+    fn run(&self, args: &Value, ctx: &ServerContext) -> Result<ToolOutput, ToolError> {
         let package = args
             .get("package")
             .and_then(|v| v.as_str())
@@ -310,14 +321,14 @@ impl McpTool for ReadSubskillMcpTool {
             }
         }
 
-        Ok(json!({
+        Ok(ToolOutput::ok(json!({
             "package": package,
             "subskill_path": sub.path,
             "delivery": sub.delivery,
             "describes": sub.describes,
             "paths": paths_returned,
             "content": content,
-        }))
+        })))
     }
 }
 
@@ -366,7 +377,7 @@ impl McpTool for MaterialiseSubskillMcpTool {
         }
     }
 
-    fn run(&self, args: &Value, ctx: &ServerContext) -> Result<Value, ToolError> {
+    fn run(&self, args: &Value, ctx: &ServerContext) -> Result<ToolOutput, ToolError> {
         let package = args
             .get("package")
             .and_then(|v| v.as_str())
@@ -395,7 +406,7 @@ impl McpTool for MaterialiseSubskillMcpTool {
                 ))
             })?;
         if sub.delivery != "lazy-pull" {
-            return Ok(json!({
+            return Ok(ToolOutput::ok(json!({
                 "package": package,
                 "subskill_path": sub.path,
                 "delivery": sub.delivery,
@@ -405,7 +416,7 @@ impl McpTool for MaterialiseSubskillMcpTool {
                     sub.delivery
                 ),
                 "written": Vec::<Value>::new(),
-            }));
+            })));
         }
         // The machine store entry for this package identity
         // (`<store>/<group>/<name>/v<version>/`, PROP-010 §2.7) — the
@@ -444,7 +455,7 @@ impl McpTool for MaterialiseSubskillMcpTool {
             std::fs::copy(&source, &target)?;
             written.push(Value::String(machine_json_path(rel)));
         }
-        Ok(json!({
+        Ok(ToolOutput::ok(json!({
             "package": package,
             "subskill_path": sub.path,
             "delivery": sub.delivery,
@@ -457,7 +468,7 @@ impl McpTool for MaterialiseSubskillMcpTool {
             },
             "written": written,
             "skipped": skipped,
-        }))
+        })))
     }
 }
 
@@ -494,7 +505,7 @@ impl McpTool for AgenticExplainMcpTool {
         }
     }
 
-    fn run(&self, _args: &Value, ctx: &ServerContext) -> Result<Value, ToolError> {
+    fn run(&self, _args: &Value, ctx: &ServerContext) -> Result<ToolOutput, ToolError> {
         use crate::agentic::{
             ActiveBackend, BackendOutcome, EXPLAIN_AFFINITY, InferenceBackend, InlineBackend,
             check_affinity, explain_intent,
@@ -516,13 +527,13 @@ impl McpTool for AgenticExplainMcpTool {
                 "inline backend did not return an inline outcome".into(),
             ));
         };
-        Ok(json!({
+        Ok(ToolOutput::ok(json!({
             "source": intent.source,
             "title": intent.title,
             "instruction": intent.body,
             "delivery": "inline",
             "note": "Carry out this instruction yourself on your own model; nothing was written to disk.",
-        }))
+        })))
     }
 }
 
