@@ -1,9 +1,12 @@
 mod common;
+mod trace_support;
 
 use std::fs;
 use std::path::{Path, PathBuf};
 
 use common::{UserScratch, git_available, run_git, write_project_with_per_package_registry};
+use trace_support::{index_of, run_directories, trace_dir, trace_member};
+use vibe_wire::generated::compiler_trace_index::e1::index::RunStatus;
 
 fn registry_url(registry: &Path) -> String {
     format!(
@@ -12,9 +15,30 @@ fn registry_url(registry: &Path) -> String {
     )
 }
 
-fn publish_repo(registry: &Path, group: &str, name: &str, versions: &[&str], extension: bool) {
+/// Publish one source repo as a bare per-package registry entry.
+///
+/// `extension` adds the watching provider row; `boot` makes the package
+/// BOOT-BEARING — a version-distinct `boot/40-target.md` plus the
+/// `[boot_snippet]` declaration that puts it in the flow band — which is what
+/// gives a STATICALLY linked consumer something to compile and a traced run
+/// real scopes, events and snapshots to record.
+fn publish_repo(
+    registry: &Path,
+    group: &str,
+    name: &str,
+    versions: &[&str],
+    extension: bool,
+    boot: bool,
+) {
     let source = registry.join(format!("src-{name}"));
     fs::create_dir_all(source.join("hooks")).unwrap();
+    if boot {
+        fs::create_dir_all(source.join("boot")).unwrap();
+        // The snippet is PARSED as spec Markdown on the consumer side, so pin
+        // LF: a checkout that mangles line endings would make the fixture's
+        // validity depend on the host's git configuration.
+        fs::write(source.join(".gitattributes"), "* text=auto eol=lf\n").unwrap();
+    }
     run_git(&source, &["init", "--initial-branch=main"]);
     run_git(&source, &["config", "user.email", "t@example.com"]);
     run_git(&source, &["config", "user.name", "Test"]);
@@ -30,14 +54,29 @@ applies_to = { packages = ["org.world/target"] }
         } else {
             ""
         };
+        let boot_section = if boot {
+            "\n[boot_snippet]\nsource = \"boot/40-target.md\"\ncategory = \"flow\"\n"
+        } else {
+            ""
+        };
         fs::write(
             source.join("vibe.toml"),
             format!(
-                "[package]\ngroup='{group}'\nname='{name}'\nkind='tool'\nversion='{version}'\n{extra}"
+                "[package]\ngroup='{group}'\nname='{name}'\nkind='tool'\nversion='{version}'\n{extra}{boot_section}"
             ),
         )
         .unwrap();
         fs::write(source.join("payload.txt"), format!("{name}-{version}\n")).unwrap();
+        if boot {
+            // Version-DISTINCT on purpose: the 0.1.0 -> 0.2.0 bump must change
+            // the compiled bytes, or a regeneration that silently kept the old
+            // artifact would still fingerprint as fresh.
+            fs::write(
+                source.join("boot/40-target.md"),
+                format!("# Target {{#root}}\n\nTARGET BOOT {version}\n"),
+            )
+            .unwrap();
+        }
         if extension {
             fs::write(
                 source.join("hooks/watch.sh"),
@@ -75,8 +114,15 @@ fn setup() -> Option<(UserScratch, tempfile::TempDir, PathBuf)> {
         return None;
     }
     let registry = tempfile::tempdir().unwrap().keep();
-    publish_repo(&registry, "org.world", "provider", &["0.1.0"], true);
-    publish_repo(&registry, "org.world", "target", &["0.1.0", "0.2.0"], false);
+    publish_repo(&registry, "org.world", "provider", &["0.1.0"], true, false);
+    publish_repo(
+        &registry,
+        "org.world",
+        "target",
+        &["0.1.0", "0.2.0"],
+        false,
+        true,
+    );
     let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
     user.init_project(project.path());
@@ -89,6 +135,10 @@ fn setup() -> Option<(UserScratch, tempfile::TempDir, PathBuf)> {
         .arg("--assume-yes")
         .assert()
         .success();
+    assert!(
+        !trace_dir(project.path()).exists(),
+        "the seed is untraced and creates no trace run",
+    );
     let manifest_path = project.path().join("vibe.toml");
     let mut manifest = vibe_core::manifest::Manifest::read(&manifest_path).unwrap();
     let target = manifest
@@ -98,6 +148,14 @@ fn setup() -> Option<(UserScratch, tempfile::TempDir, PathBuf)> {
         .find(|package| package.name == "target")
         .unwrap();
     *target = vibe_core::PackageRef::parse("org.world/target@*").unwrap();
+    // The STATIC link is what makes the widened `@*` a compilation rather
+    // than a resolution-only move: a dynamically linked target contributes an
+    // INDEX line and no compiled artifact, and the traced run below would
+    // record nothing.
+    manifest.requires.links.insert(
+        "org.world/target".to_string(),
+        vibe_core::manifest::LinkType::Static,
+    );
     manifest.write(&manifest_path).unwrap();
     let mut text = fs::read_to_string(&manifest_path).unwrap();
     text.push_str(
@@ -118,7 +176,13 @@ fn scoped_update_uses_full_lock_world_and_unchanged_activated_provider() {
     };
     let output = user
         .vibe()
-        .args(["update", "org.world/target", "--json", "--path"])
+        .args([
+            "update",
+            "org.world/target",
+            "--json",
+            "--trace-compile",
+            "--path",
+        ])
         .arg(project.path())
         .arg("--assume-yes")
         .output()
@@ -170,6 +234,17 @@ fn scoped_update_uses_full_lock_world_and_unchanged_activated_provider() {
         1,
         "EXACTLY one update root — a first rowful root followed by a rowless          duplicate would satisfy a `find`, and would be two documents where the          command owes one: {docs:#?}",
     );
+    // No lifecycle echo and no standalone trace object ever comes back: the
+    // removed per-row roots stay removed, and the member rides the one root.
+    assert!(
+        docs.iter().all(|doc| doc["command"] != "lifecycle"),
+        "no standalone lifecycle document: {docs:#?}",
+    );
+    assert!(
+        docs.iter()
+            .all(|doc| doc.get("run_id").is_none() && doc["command"] != "compile-trace"),
+        "no standalone trace document beside the root: {docs:#?}",
+    );
     // The FINAL document, which is also that root: nothing may follow the one
     // registered report a command emits.
     let update_root = docs.last().expect("at least one document");
@@ -177,10 +252,16 @@ fn scoped_update_uses_full_lock_world_and_unchanged_activated_provider() {
         update_root["command"], "update",
         "and it is the LAST document on stdout: {docs:#?}",
     );
-    let slot_rows = update_root["contributions"]
+    let contributions = update_root["contributions"]
         .as_array()
-        .into_iter()
-        .flatten()
+        .expect("the Update root carries its contribution rows");
+    assert_eq!(
+        contributions.len(),
+        1,
+        "the unchanged activated provider is the root's only contribution: {update_root:#}",
+    );
+    let slot_rows = contributions
+        .iter()
         .filter(|row| row["point"] == "slot:pre-install")
         .collect::<Vec<_>>();
     assert_eq!(
@@ -191,4 +272,77 @@ fn scoped_update_uses_full_lock_world_and_unchanged_activated_provider() {
     assert_eq!(slot_rows[0]["provider"], "org.world/provider");
     assert_eq!(slot_rows[0]["tier"], "host-activation");
     assert_eq!(update_root["hooks"], serde_json::json!([]));
+
+    // ---- the SCOPED shape and the exact bump --------------------------
+    assert_eq!(update_root["scope"], "scoped", "{update_root:#?}");
+    assert_eq!(
+        update_root["packages"],
+        serde_json::json!(["org.world/target"])
+    );
+    assert_eq!(
+        update_root["version_bumps"],
+        serde_json::json!(["org.world/target 0.1.0 -> 0.2.0"]),
+        "the widened `@*` moved exactly this package to exactly 0.2.0",
+    );
+
+    // ---- the traced run behind it -------------------------------------
+    let trace = trace_member(update_root).expect("a traced scoped update carries its member");
+    assert_eq!(trace["status"], "ok");
+    assert_eq!(trace["finalised"], true, "{trace:#?}");
+    let run_id = trace["run_id"].as_str().unwrap().to_string();
+    assert_eq!(
+        run_directories(project.path()),
+        vec![run_id.clone()],
+        "EXACTLY one run — the seed opened none and the update opened one",
+    );
+
+    let index = index_of(project.path(), &run_id);
+    assert!(
+        matches!(index.status, RunStatus::Ok),
+        "the index is terminal Ok: {:?}",
+        index.status,
+    );
+    assert!(
+        !index.scopes.is_empty(),
+        "the static target really compiled — the run has scopes",
+    );
+    assert!(!index.events.is_empty());
+    // One dense global sequence: the proof this is one run rather than
+    // several stitched together.
+    let mut sequences: Vec<u32> = index.events.iter().map(|event| event.sequence).collect();
+    sequences.sort_unstable();
+    assert_eq!(
+        sequences,
+        (0..u32::try_from(sequences.len()).unwrap()).collect::<Vec<_>>(),
+        "one dense global sequence: {sequences:?}",
+    );
+    // The member counts exactly what the index holds — no rounding, no drift.
+    let snapshots = index
+        .events
+        .iter()
+        .filter(|event| event.snapshot.is_some())
+        .count();
+    assert!(
+        snapshots > 0,
+        "the run really wrote certified snapshots, not just pass rows",
+    );
+    assert_eq!(
+        trace["events"].as_str().unwrap(),
+        index.events.len().to_string()
+    );
+    assert_eq!(trace["snapshots"].as_str().unwrap(), snapshots.to_string());
+    // Every snapshot an event NAMES exists below the run directory: an index
+    // that pointed at a file the writer never landed would be an audit trail
+    // of nothing.
+    let run_dir = trace_dir(project.path()).join(&run_id);
+    for name in index
+        .events
+        .iter()
+        .filter_map(|event| event.snapshot.as_ref())
+    {
+        assert!(
+            run_dir.join(name).is_file(),
+            "the named snapshot `{name}` exists below the run directory",
+        );
+    }
 }

@@ -1,6 +1,7 @@
 //! The owner's state machine: which identity opens what, what each state
 //! costs, and what none of them are allowed to create.
 
+use vibe_wire::behaviour::compiler_trace_index::DIAGNOSTIC_CAP_BYTES;
 use vibe_wire::generated::compiler_trace_index::e1::index::RunStatus;
 use vibe_wire::generated::shared::TraceReportStatus;
 use vibe_workspace::compile_trace::TraceRun;
@@ -10,6 +11,16 @@ use super::support::{
     RUN_A, RUN_B, STARTED_A, STARTED_B, Ticks, after, all_trace_bytes, at, displacing, identity,
     project, read_index, run_dir, run_directories, started, trace_root,
 };
+
+/// The exact body of the one structural notice a finalised supersession
+/// emits — the same fixed prose the bounds group pins, so a wording change in
+/// the owner has to break both groups to go unnoticed.
+fn structural(run_id: &str) -> String {
+    format!(
+        "the displaced trace run `{run_id}` was finalised: superseded by a later invocation \
+         of this workspace"
+    )
+}
 
 /// Off means off: no directory, no recorder, no clock, no member — and the
 /// command still reports.
@@ -222,7 +233,10 @@ fn a_previously_unavailable_run_never_starts_mid_run() {
 }
 
 /// A displaced predecessor whose trace really is running becomes a terminal
-/// `failed` — with the fixed superseded word — BEFORE the fresh run opens.
+/// `failed` — with the fixed superseded word — BEFORE the fresh run opens, and
+/// the owner says so in exactly one structural notice, which the traced
+/// current run folds into its member's warnings without a diagnostic
+/// duplicate.
 #[test]
 fn a_real_superseded_running_trace_becomes_terminal_first() {
     let root = project();
@@ -250,14 +264,23 @@ fn a_real_superseded_running_trace_becomes_terminal_first() {
         CommandExit::Success(()),
         &Ticks::new(50).clock(),
     );
-    assert!(finalized.notices.is_empty(), "{:?}", finalized.notices);
+    // The clean finalised supersession is EXACTLY one structural notice —
+    // fixed prose naming the run, the presentation twin of the fixed word the
+    // displaced index now carries.
+    assert_eq!(finalized.notices, vec![structural(RUN_B)]);
+    // A traced current run has a member, so the notice's one channel is the
+    // member's warnings: folded in exactly once, never repeated as a
+    // diagnostic beside the document that carries it.
+    let trace = finalized.trace.expect("the traced current run's member");
+    assert_eq!(trace.warnings, vec![structural(RUN_B)]);
     let mut runs = run_directories(root.path());
     runs.sort();
     assert_eq!(runs, vec![RUN_A.to_string(), RUN_B.to_string()]);
 }
 
 /// The displaced predecessor is terminalised even when THIS run is not being
-/// traced at all.
+/// traced at all — and the structural notice is the ONE thing the disabled
+/// run has to say about it.
 ///
 /// The two facts are independent: the sticky bit that made the predecessor a
 /// traced park is its own, and an abandoned running trace stays abandoned —
@@ -289,12 +312,85 @@ fn a_disabled_run_still_terminalises_its_displaced_predecessor() {
     let displaced = read_index(root.path(), RUN_B);
     assert_eq!(displaced.status, RunStatus::Failed);
     assert_eq!(displaced.finished, Some(after(3_100)));
+    // No member means no warnings member to fold into: the notice is owed
+    // through the diagnostic channel, exactly once, exact body.
+    assert_eq!(finalized.notices, vec![structural(RUN_B)]);
     assert!(
         finalized.trace.is_none(),
         "a disabled run carries no member"
     );
     assert!(!run_dir(root.path(), RUN_A).exists());
     assert_eq!(run_directories(root.path()), vec![RUN_B.to_string()]);
+}
+
+/// A displaced predecessor whose recorded start cannot be spelt as RFC 3339
+/// is refused in ONE bounded line — never terminalised on a guess, never
+/// given a phantom, and never charged a supersede instant.
+///
+/// The refusal is the disabled run's only notice: it names the run, quotes
+/// the exact bad start, and says the trace was left exactly as it is — which
+/// is checked here against the real index, not against the notice's own word.
+#[test]
+fn an_invalid_displaced_start_is_refused_once_and_touches_nothing() {
+    let root = project();
+    let old = TraceRun::open(root.path(), RUN_B, started(STARTED_B)).expect("the parked run opens");
+    drop(old);
+
+    let supersede = Ticks::new(3_050);
+    let mut identity = displacing(RUN_A, RUN_B);
+    identity.compile_trace = false;
+    identity
+        .superseded_trace
+        .as_mut()
+        .expect("a displacing identity")
+        .started = "not-an-rfc3339-time".to_string();
+
+    let preparation = prepare(root.path(), &identity, &supersede.clock());
+    let finalized = finalize(
+        preparation,
+        CommandExit::Success(()),
+        &Ticks::new(60).clock(),
+    );
+
+    assert_eq!(supersede.calls(), 0, "no terminal write was attempted");
+    assert_eq!(
+        finalized.notices.len(),
+        1,
+        "exactly one bounded refusal: {:?}",
+        finalized.notices,
+    );
+    let notice = finalized.notices[0].as_str();
+    assert!(notice.contains(RUN_B), "it names the displaced run");
+    assert!(
+        notice.contains("not-an-rfc3339-time"),
+        "it quotes the exact bad start: {notice}",
+    );
+    assert!(
+        notice.contains("not an RFC 3339"),
+        "it says why nothing was done: {notice}",
+    );
+    assert!(
+        notice.len() <= DIAGNOSTIC_CAP_BYTES,
+        "the refusal is whole-message bounded: {}",
+        notice.len(),
+    );
+    let displaced = read_index(root.path(), RUN_B);
+    assert_eq!(
+        displaced.status,
+        RunStatus::Running,
+        "the predecessor is left exactly as it is",
+    );
+    assert!(displaced.finished.is_none());
+    assert!(displaced.failure.is_none());
+    assert!(
+        finalized.trace.is_none(),
+        "a disabled run carries no member",
+    );
+    assert_eq!(
+        run_directories(root.path()),
+        vec![RUN_B.to_string()],
+        "no current run, no phantom",
+    );
 }
 
 /// Dropping the owner without `finalize` writes NOTHING. There is no I/O

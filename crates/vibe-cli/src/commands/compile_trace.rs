@@ -314,20 +314,23 @@ fn supersede(
 
 /// Everything the displaced run's own close reported, as startup notices.
 ///
-/// Pure, so the two shapes it has to get right can be proved directly instead
-/// of through cross-crate fault injection.
+/// Pure, so the shapes it has to get right can be proved directly instead of
+/// through cross-crate fault injection.
 ///
-/// The writer's warnings are the ONLY account of what went wrong: a terminal
-/// index that landed despite a post-publication fault reports an
-/// `IndexAnomaly`, and one that never landed reports a `NotFinalised` carrying
-/// the exact reason. Dropping them because `finalised` happened to be true —
-/// or replacing the precise one with a generic sentence — throws away the only
-/// text that says WHY, on the one path whose whole job is closing somebody
-/// else's abandoned run.
+/// A finalised supersession always ends in exactly one bounded STRUCTURAL
+/// notice — fixed prose naming the run, the presentation twin of the fixed
+/// [`SUPERSEDED`] word its index now carries — because "the previous run's
+/// trace was closed" is a fact the operator is owed whether or not anything
+/// went wrong while closing it. It comes AFTER every writer warning, in their
+/// original order: the warnings are the ONLY account of what went wrong (a
+/// terminal index that landed despite a post-publication fault reports an
+/// `IndexAnomaly`), and the structural fact closes rather than leads.
 ///
-/// The generic line is therefore a FALLBACK, added only when the run is not
-/// finalised and no warning explains it. When `NotFinalised` is present it
-/// would be a duplicate of a strictly better message.
+/// A run that was NOT finalised never gets the structural notice — that would
+/// claim a close that did not happen. Its warnings stand alone, and the
+/// generic `still reads running` line is a FALLBACK, added only when no
+/// warning explains the refusal: when `NotFinalised` is present it would be a
+/// duplicate of a strictly better message.
 fn supersede_notices(run_id: &str, summary: &TraceSummary) -> Vec<BoundedDiagnostic> {
     let mut notices: Vec<BoundedDiagnostic> = summary
         .warnings
@@ -338,11 +341,17 @@ fn supersede_notices(run_id: &str, summary: &TraceSummary) -> Vec<BoundedDiagnos
             ))
         })
         .collect();
+    if summary.finalised {
+        notices.push(BoundedDiagnostic::new(format_args!(
+            "the displaced trace run `{run_id}` was finalised: {SUPERSEDED}"
+        )));
+        return notices;
+    }
     let explained = summary
         .warnings
         .iter()
         .any(|warning| matches!(warning, TraceWarning::NotFinalised { .. }));
-    if !summary.finalised && !explained {
+    if !explained {
         notices.push(BoundedDiagnostic::new(format_args!(
             "the displaced trace run `{run_id}` could not be finalised, so its index still \
              reads `running`"

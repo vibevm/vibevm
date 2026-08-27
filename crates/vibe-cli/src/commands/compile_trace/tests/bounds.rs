@@ -164,18 +164,31 @@ fn an_impossible_running_and_finalised_pair_is_refused_not_masked() {
     );
 }
 
-/// Closing a displaced predecessor keeps EVERY word its own writer said.
+/// The exact body of the one structural notice a finalised supersession
+/// emits — fixed prose plus the validated run id, and nothing else.
+fn structural(run_id: &str) -> String {
+    format!(
+        "the displaced trace run `{run_id}` was finalised: superseded by a later invocation \
+         of this workspace"
+    )
+}
+
+/// Closing a displaced predecessor keeps EVERY word its own writer said, then
+/// closes with exactly one structural notice — and never claims a close that
+/// did not happen.
 ///
 /// Both shapes matter and they fail in opposite directions. A run that WAS
 /// finalised can still carry an `IndexAnomaly` — the terminal bytes landed
 /// despite a post-publication fault — and a `finalised`-only check would throw
-/// that away entirely. A run that was not finalised carries the exact
-/// `NotFinalised` reason, and replacing it with the generic sentence would
-/// lose the only text that says why.
+/// that away entirely, while dropping the structural notice would leave a
+/// clean supersession unsaid. A run that was not finalised carries the exact
+/// `NotFinalised` reason, and giving it the structural notice would claim a
+/// finalisation the disk contradicts.
 #[test]
-fn superseding_keeps_every_writer_warning_and_only_falls_back_once() {
+fn superseding_keeps_every_warning_then_the_structural_close() {
     // Finalised, but the publication reported a fault after the point of no
-    // return. There is nothing generic to add — the run IS closed.
+    // return. The anomaly LEADS — it is the account of what went wrong — and
+    // the structural fact closes.
     let anomalous = TraceSummary {
         finalised: true,
         status: RunStatus::Failed,
@@ -185,15 +198,28 @@ fn superseding_keeps_every_writer_warning_and_only_falls_back_once() {
         ..summary_at(RUN_A)
     };
     let notices = supersede_notices(RUN_A, &anomalous);
-    assert_eq!(notices.len(), 1, "kept, and nothing invented: {notices:?}");
-    assert!(notices[0].as_str().contains("irreversible step"));
+    assert_eq!(
+        notices.len(),
+        2,
+        "the anomaly kept AND the structural close added: {notices:?}",
+    );
+    assert!(
+        notices[0].as_str().contains("irreversible step"),
+        "the writer's own warning leads, in its original order",
+    );
     assert!(
         notices[0].as_str().contains(RUN_A),
         "and it names which run"
     );
+    assert_eq!(
+        notices[1].as_str(),
+        structural(RUN_A),
+        "the structural notice closes, exactly",
+    );
 
     // Not finalised, and the writer said exactly why. The precise reason is
-    // the notice; the generic fallback would only duplicate it worse.
+    // the notice; the generic fallback would only duplicate it worse — and
+    // the structural notice would be a lie.
     let refused = TraceSummary {
         finalised: false,
         warnings: vec![TraceWarning::NotFinalised {
@@ -204,6 +230,10 @@ fn superseding_keeps_every_writer_warning_and_only_falls_back_once() {
     let notices = supersede_notices(RUN_A, &refused);
     assert_eq!(notices.len(), 1, "no duplicate generic line: {notices:?}");
     assert!(notices[0].as_str().contains("the disk is full"));
+    assert!(
+        !notices[0].as_str().contains("was finalised"),
+        "an unfinalised close never claims to be finalised",
+    );
 
     // Not finalised and NOTHING explains it: now the generic line is the only
     // thing an operator would otherwise get.
@@ -215,27 +245,39 @@ fn superseding_keeps_every_writer_warning_and_only_falls_back_once() {
     let notices = supersede_notices(RUN_A, &silent);
     assert_eq!(notices.len(), 1);
     assert!(notices[0].as_str().contains("still reads `running`"));
+    assert!(!notices[0].as_str().contains("was finalised"));
 
-    // A finalised, silent close says nothing at all.
+    // A finalised, silent close is the one-notice shape: the structural
+    // sentence, byte for byte, and nothing invented around it.
     let clean = TraceSummary {
         finalised: true,
         status: RunStatus::Failed,
         warnings: Vec::new(),
         ..summary_at(RUN_A)
     };
-    assert!(supersede_notices(RUN_A, &clean).is_empty());
+    let notices = supersede_notices(RUN_A, &clean);
+    assert_eq!(notices.len(), 1, "{notices:?}");
+    assert_eq!(notices[0].as_str(), structural(RUN_A));
 
-    // And the prefix plus a hostile field is still whole-message bounded.
+    // And the prefix plus a hostile field is still whole-message bounded,
+    // with the structural close last.
     let hostile = TraceSummary {
         finalised: true,
         status: RunStatus::Failed,
         warnings: vec![over_cap_warning()],
         ..summary_at(RUN_A)
     };
-    for notice in supersede_notices(RUN_A, &hostile) {
+    let notices = supersede_notices(RUN_A, &hostile);
+    assert_eq!(notices.len(), 2);
+    for notice in &notices {
         let text = notice.as_str();
         assert!(text.len() <= DIAGNOSTIC_CAP_BYTES, "{}", text.len());
     }
+    assert_eq!(
+        notices[1].as_str(),
+        structural(RUN_A),
+        "bounded or not, the structural close is still the last word",
+    );
 }
 
 /// A summary skeleton for the shapes a live writer would have to be broken to
