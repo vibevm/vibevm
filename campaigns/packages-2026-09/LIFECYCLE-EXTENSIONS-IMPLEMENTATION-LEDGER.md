@@ -22,7 +22,9 @@ hardening and R7.3 hosted resume have since landed. Their worktrees are
 reclaimed under rolling GC. The R3.4 durable writer, shared command-wire /
 sticky-state prerequisites and borrowed workspace/install plumbing have now
 landed; every accepted worktree was reclaimed immediately. No accepted
-implementation worktree is retained at this checkpoint.
+implementation worktree is retained at this checkpoint. The install/lifecycle
+activation atom `dcbf89b0` has also landed and its accepted worktree was
+reclaimed immediately.
 Missing later waves were never implemented.
 
 The reusable decisions from untracked architecture/review reports are
@@ -444,6 +446,10 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
   report decisions have a durable home, remove that worktree immediately and
   prune the registry. Active dirty worktrees remain protected. Authoritative
   operating law: PROP-055 `ROLLING-WORKTREE-GC`.
+- The accepted R3.4 install/lifecycle activation worktree measured
+  **17,706,580,701 bytes** immediately before removal; after integration,
+  durable decision capture and merged-tree gates it was removed and
+  `git worktree prune` left only `main`.
 - `cache/` is untracked and unignored. It is not a product home. Important
   decisions from its R3.3, R4–R5 and R6–R8 reports are now represented in this
   ledger; future accepted decisions go directly here/spec-debt/code comments.
