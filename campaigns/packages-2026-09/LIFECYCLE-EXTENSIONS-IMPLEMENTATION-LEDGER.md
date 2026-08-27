@@ -131,8 +131,12 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 | R7.3 hosted outbox/delegated resume | missing | delegated enum exists; no durable run id/outbox/fenced block/resume |
 | R7.4 MCP lifecycle surfaces | missing | no `lifecycle_run` or `lifecycle_tasks` tools |
 
-R7.1 live Z.AI smoke was environment-inconclusive; mock/security gates are the
-current proof. The algorithmic system remains fully usable with no provider.
+R7 live Z.AI smoke is now conclusive (2026-08-27): central `vibe create`
+called the official OpenAI-compatible coding endpoint with `glm-5-turbo`, read
+the claudez credential only through its token-file path, exited 0 and produced
+the exact declared `LIVE_OK\n` output. No token or provider response body was
+printed. Mock/security gates remain the deterministic proof; the algorithmic
+system remains fully usable with no selected agent contribution or provider.
 
 ### R8 — package, build and deploy substance
 
