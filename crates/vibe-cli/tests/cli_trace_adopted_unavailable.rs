@@ -225,7 +225,7 @@ fn assert_unavailable_resume(
     );
     assert_eq!(trace["finalised"], false);
     assert!(
-        trace.get("run_path").map_or(true, |path| path.is_null()),
+        trace.get("run_path").is_none_or(|path| path.is_null()),
         "no path is named for a trace that cannot be opened: {trace}",
     );
     assert_eq!(trace["events"], "0", "counts are decimal zeroes");
