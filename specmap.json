@@ -16934,6 +16934,15 @@
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/lib.rs",
+      "item_kind": "fn",
+      "line": 417,
+      "symbol": "vibe_workspace::Workspace::node_rel_of",
+      "end_line": 484,
+      "fingerprint": "tok1:efaecb95c92dc621d4b1357b2bc18580ec05ca2704aadabf9c397e7bb1ea4969"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/lib.rs",
       "item_kind": "enum",
       "line": 58,
       "symbol": "vibe_workspace::WorkspaceError",
@@ -17983,6 +17992,24 @@
       "symbol": "vibe_workspace::lib::tests::nested_workspace_recurses_with_depth",
       "end_line": 176,
       "fingerprint": "tok1:2c892f51c0a7e068c55ae76f23420592dffd70dc473b3a65d531091d91051776"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/lib/tests.rs",
+      "item_kind": "fn",
+      "line": 367,
+      "symbol": "vibe_workspace::lib::tests::node_rel_of_maps_root_direct_and_nested_members",
+      "end_line": 399,
+      "fingerprint": "tok1:b17a92b662f039bf0edcbcde4f203978752a18fcd4f2088857ee0e9c65914052"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/lib/tests.rs",
+      "item_kind": "fn",
+      "line": 427,
+      "symbol": "vibe_workspace::lib::tests::node_rel_of_returns_authored_forward_slash_spelling",
+      "end_line": 454,
+      "fingerprint": "tok1:7aa3ec8d73ba71dd261fa6706f1103b1e0abcbdec0093c037eadd3212ab9d7ea"
     },
     {
       "crate_name": "vibe-workspace",
@@ -32284,6 +32311,14 @@
     },
     {
       "file": "crates/vibe-workspace/src/lib.rs",
+      "from_symbol": "vibe_workspace::Workspace::node_rel_of",
+      "line": 473,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#workspace-section",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-workspace/src/lib.rs",
       "from_symbol": "vibe_workspace::WorkspaceError",
       "line": 79,
       "provenance": "authored",
@@ -33281,6 +33316,24 @@
       "line": 151,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#nesting",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-workspace/src/lib/tests.rs",
+      "from_symbol": "vibe_workspace::lib::tests::node_rel_of_maps_root_direct_and_nested_members",
+      "line": 368,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#workspace-section",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-workspace/src/lib/tests.rs",
+      "from_symbol": "vibe_workspace::lib::tests::node_rel_of_returns_authored_forward_slash_spelling",
+      "line": 428,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#workspace-section",
       "verb": "verifies",
       "pinned_r": 1
     },
