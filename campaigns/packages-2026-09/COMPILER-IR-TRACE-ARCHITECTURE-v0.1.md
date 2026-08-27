@@ -158,10 +158,13 @@ With trace disabled, the old public wrappers call the old execution path with
 `None`; they do not allocate a clock, buffer or filesystem handle. Existing
 compile APIs and no-transform boot bytes remain unchanged.
 
-The worklist parser callback must become a fallible `FnMut` (or an equally typed
-single-owner session), because document invocations mutate the shared recorder
-and wire conversion can refuse. `RefCell`-hiding of an error until later is not
-the production design.
+The observer is diagnostic, not a new compile-failure channel. A snapshot
+encode/write refusal becomes a typed `snapshot-failed` event and never changes
+the pass result or compiler error identity. The worklist parser callback
+therefore stays infallible; one shared recorder session (the schedule already
+has an `Arc<Mutex<…>>` precedent in `CloseState`) serialises document events
+without hiding a deferred compile error in a `RefCell`. Trace-disabled code
+still passes no recorder at all.
 
 ## 4. Durable trace surface
 
@@ -170,18 +173,30 @@ the production design.
 ```text
 .vibe/trace/<run-id>/
   index.json
-  0000-<pass>--<artifact>--<invocation>.json
-  0001-<pass>--<artifact>--<invocation>.json
+  0000-<enc-pass>-<kind>_<enc-scope>_<enc-artifact>-000.json
+  0001-<enc-pass>-<kind>_<enc-scope>_<enc-artifact>-001.json
+  0002-~<digest16>-000.json
   …
 ```
 
-The numeric prefix is one monotonically increasing run sequence. Pass,
-artifact scope and document/invocation suffixes use one reversible UTF-8
-percent codec over a Windows-safe unreserved alphabet; raw `:` from
-`emit:static-xml`, trailing dot/space, separators, device names and length
-overflow never reach a filename. `index.json` retains the exact unencoded
-strings, so shortening an overlong filename with a digest remains reversible
-through the index.
+The full spelling is
+`<seq:04>-<enc(pass)>-<kind>_<enc(scope-label)>_<enc(artifact)>-<ord:03>.json`.
+Widths are minimum widths, not truncation. `enc` leaves only `[A-Za-z0-9.]`
+raw and encodes every other UTF-8 byte as uppercase `%XX`, including `%`,
+`-`, `_`, `~`, separators and `:`; the raw `-`/`_` separators are therefore
+unambiguous. Each `(scope, pass)` spends dense ordinals `0..D-1` in encounter
+order while the numeric prefix is one monotonically increasing run sequence.
+
+A filename is at most 96 ASCII bytes. Path pressure or an overlong middle uses
+`<seq:04>-~<digest16>-<ord:03>.json`, where `digest16` is the first 16 lowercase
+hex characters of SHA-256 over the canonical encoded middle
+`<enc(pass)>-<kind>_<enc(scope-label)>_<enc(artifact)>`; the index validator
+recomputes it. The writer additionally clamps against its absolute run path
+(`min(96, 250 - len(run_dir_abs))`, floor 32), while the index admits either
+verified spelling because that absolute path is not wire data. `index.json`
+retains the exact unencoded strings, so the short name is reversible through
+the index. This exact contract is implemented by `compiler-trace-index/e1` at
+`6f4a717d`; the writer must reuse that cell, not reimplement the codec.
 
 Package-unit iteration is sorted before tracing. The current `HashSet` walk is
 not trace order authority. Each event also carries the outer node/unit label,
@@ -198,6 +213,13 @@ Add one format epoch for the index. At minimum it records:
   `ok|pass-failed|verification-failed|snapshot-failed`, pass/verify/encode
   durations, optional snapshot filename and bounded diagnostic;
 - aggregate timing rows used by the CLI table.
+
+Event sequences are dense globally; invocation ordinals are dense per
+`(scope, pass)`. Root `status` is the compile/lifecycle outcome, not the health
+of its observer: `snapshot-failed` and `snapshot-skipped-budget` are legal under
+root `ok`, while pass/verifier failures are not. Conversely root `failed` may
+carry only successful pass events when failure happened later (for example the
+boot-artifact transaction rolled back a `StaticWrite`).
 
 Durations use an explicitly bounded/scaled numeric representation with a
 saturation marker; no narrowing wraps. The index contains no IR payload and no
@@ -250,7 +272,8 @@ JSON output extends a JTD-owned report; it does not append an ad-hoc object.
 1. Land R6.2a schema/corpus.
 2. Implement strict bidirectional conversion + gate registry.
 3. Add in-memory pass observer/timing with no-trace compatibility wrappers.
-4. Add trace-index JTD/generated types and atomic run writer.
+4. Add trace-index JTD/generated types (**metadata contract landed at
+   `6f4a717d`**) and atomic run writer (remaining).
 5. Thread one recorder through workspace/install/CLI and add flags/config.
 6. Add end-to-end trace, failure and byte-identity tests.
 7. Only then expose the same conversion to native compiler passes in R6.3.

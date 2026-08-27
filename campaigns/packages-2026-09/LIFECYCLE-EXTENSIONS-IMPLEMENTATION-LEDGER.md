@@ -94,7 +94,7 @@ this campaign, but compatibility law is preserved.
 | R3.1 five levels, six carriers, typed pass manager | done | `3630ab9e`; `compiler/{ir,pass,pipeline}.rs` |
 | R3.2 parse→close→merge→embed→qualify→absorb→link→assemble→emit | done | `a7961003`, `96eef07d`, `e53b9a4e`, `ec7ea7fe`, `e653654d`, `2feef271`, `6de7ef05`, `6f3fa61a`, `302a3509`, `4403cb55`; 84 boot-artifact + 10 emit gates |
 | R3.3 verifier-each skeleton | done | `15793f2e`; immutable test-only manager verifier, typed level/transition errors, SCC/document/lane/marker/fence invariants; 61 focused verifier tests + independent freeze |
-| R3.4 compile snapshots/timings | missing | no `trace_compile`, `[compile] trace`, or `.vibe/trace` production surface |
+| R3.4 compile snapshots/timings | in progress | `6f4a717d` lands the JTD-first `compiler-trace-index/e1` metadata contract, exact canonical full/short filename codec, dense invocation/order/timing laws, permissive-many reader corpus and hostile-input validator; pass observer, atomic writer/retention, `[compile] trace`, CLI threading/presentation and e2e remain |
 
 R3.2 also landed a crash-safe whole-artifact transaction/selector tier. That
 unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
@@ -225,8 +225,12 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
     workspace-node artifact. Each successful invocation serialises the accepted
     R6 compiler-IR carrier, repeated document calls receive distinct sequence
     numbers, failed/verifier-rejected calls retain timing without certifying a
-    snapshot, and pass/artifact names use reversible Windows-safe filename
-    encoding. The no-trace path keeps the existing public wrappers and bytes.
+    snapshot, and pass/artifact names use the exact reversible Windows-safe
+    full/short filename contract landed in `6f4a717d`. Trace-side encode/write
+    failure is recorded as `snapshot-failed` but never changes the compiler's
+    verdict; a later boot-transaction failure may still make the root run
+    `failed` after every pass succeeded. The no-trace path keeps the existing
+    public wrappers and bytes.
     Detailed implementation boundary:
     [`COMPILER-IR-TRACE-ARCHITECTURE-v0.1.md`](COMPILER-IR-TRACE-ARCHITECTURE-v0.1.md).
 14. R6.3 keeps one `compiler_ir/e1` JTD and one domain projection. Before a

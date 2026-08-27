@@ -57,7 +57,10 @@ fronts currently in flight. A worker report or old worktree is never completion.
 - [ ] **R6.2b before R3.4** — strict lossless domain↔wire conversion; owned
       custom target identity, with registration/invocation still deferred to
       R6.3.
-- [ ] **R3.4** — compile snapshots/timings over that same wire.
+- [ ] **R3.4** — compile snapshots/timings over that same wire. The metadata
+      contract is landed (`6f4a717d`: `compiler-trace-index/e1`, canonical
+      full/short names, dense events/ordinals and timing reconciliation);
+      observer, writer/retention, config/CLI threading and e2e remain.
 - [ ] **R4.0–R4.3** — shared lower registry; four staged positions;
       transforms header/fingerprint/reference oracle; minify binding; analyzer.
 - [ ] **R5.1–R5.5** — native schemas/SDK, loader, source/prebuilt build,
