@@ -67,7 +67,17 @@ pub struct InstallReport {
     /// per-row echo that used to carry it.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub notices: Vec<String>,
+
+    /// The shared compile-trace member (PROP-054 `##OBS-TRACE`, R3.4): present
+    /// exactly when this command ran with compile tracing enabled; disabled old
+    /// JSON omits it and remains readable.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub trace: Option<CompileTraceReport>,
 }
+
+pub use crate::generated::shared::CompileTraceReport;
+
+pub use crate::generated::shared::Duration;
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct InstallContributionReport {
@@ -154,3 +164,7 @@ pub struct InstallSlotTarget {
 
     pub version: String,
 }
+
+pub use crate::generated::shared::TimingRow;
+
+pub use crate::generated::shared::TraceReportStatus;

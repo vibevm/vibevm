@@ -59,7 +59,17 @@ pub struct ReinstallReport {
     /// document carried this member unconditionally and consumers key on it.
     #[serde(default)]
     pub hooks: Vec<ReinstallHookReport>,
+
+    /// The shared compile-trace member (PROP-054 `##OBS-TRACE`, R3.4): present
+    /// exactly when this command ran with compile tracing enabled; disabled old
+    /// JSON omits it and remains readable.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub trace: Option<CompileTraceReport>,
 }
+
+pub use crate::generated::shared::CompileTraceReport;
+
+pub use crate::generated::shared::Duration;
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ReinstallContributionReport {
@@ -114,3 +124,7 @@ pub struct ReinstallHookReport {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub note: Option<String>,
 }
+
+pub use crate::generated::shared::TimingRow;
+
+pub use crate::generated::shared::TraceReportStatus;

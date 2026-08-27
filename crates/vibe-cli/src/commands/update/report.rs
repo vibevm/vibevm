@@ -75,6 +75,9 @@ pub(super) fn emit_update_document(
             run_id: delegation.run_id.clone(),
             tasks: delegation.tasks.clone(),
         }),
+        // R3.4: the shared trace member. Construction from a live recorder
+        // lands with the command-owner atom; disabled omits it byte-for-byte.
+        trace: None,
     };
     if ctx.is_json() {
         if delegation.is_some() {

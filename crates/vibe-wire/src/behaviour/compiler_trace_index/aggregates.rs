@@ -62,7 +62,11 @@ fn zero() -> Duration {
 /// value was at least the ceiling": the flag is legal only at
 /// `u32::MAX`. The converse is NOT a law — an exact measurement may land
 /// on `u32::MAX` without having saturated, and that stays legal.
-pub(super) fn is_canonical(duration: &Duration) -> bool {
+///
+/// `pub(crate)`: the command-report trace member carries the same
+/// `TimingRow` durations and holds them to the SAME rule — one law, one
+/// implementation, no second canonical predicate beside the report.
+pub(crate) fn is_canonical(duration: &Duration) -> bool {
     !duration.saturated || duration.micros == u32::MAX
 }
 

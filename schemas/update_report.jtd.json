@@ -6,7 +6,8 @@
     },
     "rustOptions": {
       "package": "vibe_wire::update_report"
-    }
+    },
+    "x-vocabularies": ["compile_trace_report"]
   },
   "properties": {
     "ok": {
@@ -128,6 +129,13 @@
       "metadata": {
         "x-empty": "omit",
         "description": "Slot-scoped lifecycle rows this command itself ran. This command is the outermost one on its path and therefore the only one that reports them."
+      }
+    },
+    "trace": {
+      "ref": "compile_trace_report",
+      "metadata": {
+        "x-default": null,
+        "description": "The shared compile-trace member (PROP-054 `##OBS-TRACE`, R3.4): present exactly when this command ran with compile tracing enabled; disabled old JSON omits it and remains readable."
       }
     }
   },

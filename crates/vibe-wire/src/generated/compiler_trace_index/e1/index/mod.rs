@@ -111,19 +111,7 @@ impl<'de> Deserialize<'de> for ArtifactTarget {
     }
 }
 
-/// One measured duration: microseconds plus an explicit saturation marker.
-/// `micros` saturates at u32::MAX rather than wrapping; `saturated` is true
-/// when the measurement hit that ceiling (or contributed to a total that did)
-/// — so the marker is legal ONLY at `micros = u32::MAX`, while an unsaturated
-/// `u32::MAX` stays legal because an exact measurement may land exactly there.
-/// Writer-side saturation policy lands with the recorder; the representable
-/// form is pinned here.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-pub struct Duration {
-    pub micros: u32,
-
-    pub saturated: bool,
-}
+pub use crate::generated::shared::Duration;
 
 /// How many values crossed one invocation: one addressed document, or one
 /// complete artifact. Same vocabulary, same meaning, same duplication ruling
@@ -348,22 +336,4 @@ pub enum ScopeStatus {
 
 pub use crate::generated::shared::Timestamp;
 
-/// One row of the CLI timing table: everything the run spent on one pass name,
-/// recomputable from `events` — the validator never trusts the carried totals.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-pub struct TimingRow {
-    /// Saturating sum of the encode durations.
-    pub encode_total: Duration,
-
-    /// How many events carry this pass name.
-    pub invocations: u32,
-
-    /// Exact pass name this row aggregates.
-    pub pass: String,
-
-    /// Saturating sum of the pass durations this pass name's events carry.
-    pub pass_total: Duration,
-
-    /// Saturating sum of the verify durations.
-    pub verify_total: Duration,
-}
+pub use crate::generated::shared::TimingRow;

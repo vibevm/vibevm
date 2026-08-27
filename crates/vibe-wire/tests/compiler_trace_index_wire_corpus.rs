@@ -476,8 +476,10 @@ fn compiler_ir_remains_the_only_snapshot_payload_contract() {
     );
     assert_eq!(
         schema["metadata"]["x-vocabularies"],
-        serde_json::json!(["timestamp"]),
-        "the only shared vocabulary pulled is the timestamp fragment"
+        serde_json::json!(["timestamp", "duration", "timing_row"]),
+        "the shared vocabularies pulled are the timestamp fragment plus the \
+         duration/timing-row fragments the command-report trace member also \
+         pulls — one generated Duration/TimingRow, not per-module copies"
     );
 }
 

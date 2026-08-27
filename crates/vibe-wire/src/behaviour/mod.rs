@@ -18,6 +18,7 @@
 //! Nothing here is generated, and nothing here edits the generated
 //! files.
 
+pub mod compile_trace_report;
 pub mod compiler_trace_index;
 pub mod projections;
 pub mod records;

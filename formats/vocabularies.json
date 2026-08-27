@@ -45,6 +45,71 @@
     },
     "type": "timestamp"
   },
+  "duration": {
+    "metadata": {
+      "description": "One measured duration: microseconds plus an explicit saturation marker. `micros` saturates at u32::MAX rather than wrapping; `saturated` is true when the measurement hit that ceiling (or contributed to a total that did) — so the marker is legal ONLY at `micros = u32::MAX`, while an unsaturated `u32::MAX` stays legal because an exact measurement may land exactly there. Writer-side saturation policy lands with the recorder; the representable form is pinned here. Shared as a vocabulary because the trace index, the timing row and every command report's trace member carry the SAME record (JTD has no cross-file refs, G9)."
+    },
+    "properties": {
+      "micros": { "type": "uint32" },
+      "saturated": { "type": "boolean" }
+    }
+  },
+  "timing_row": {
+    "metadata": {
+      "description": "One row of the CLI timing table: everything the run spent on one pass name, recomputable from `events` — the validator never trusts the carried totals. Shared as a vocabulary so the trace index and every command report's trace member use ONE generated `TimingRow`, not same-shaped per-module types that would need converters.",
+      "x-vocabularies": ["duration"]
+    },
+    "properties": {
+      "pass": { "type": "string", "metadata": { "description": "Exact pass name this row aggregates." } },
+      "invocations": { "type": "uint32", "metadata": { "description": "How many events carry this pass name." } },
+      "pass_total": { "ref": "duration", "metadata": { "description": "Saturating sum of the pass durations this pass name's events carry." } },
+      "verify_total": { "ref": "duration", "metadata": { "description": "Saturating sum of the verify durations." } },
+      "encode_total": { "ref": "duration", "metadata": { "description": "Saturating sum of the encode durations." } }
+    }
+  },
+  "trace_report_status": {
+    "metadata": {
+      "x-vocabulary": "closed",
+      "description": "The trace half of one command report: what the observer knows when the report is built. Closed: an unknown spelling is a reader error, not a newer writer — additive evolution of this record rides new object members, never new status values."
+    },
+    "enum": ["unavailable", "running", "ok", "failed"]
+  },
+  "compile_trace_report": {
+    "metadata": {
+      "description": "The ONE shared trace member every command report root carries (install, lifecycle, update, reinstall): the run's trace identity, its terminal state, lossless canonical-decimal counts and the same timing rows the CLI table prints. Disabled old JSON simply omits the member; `unavailable` is the honest word when tracing was requested but no recorder could be opened — the command still compiles untraced. The relational laws JTD cannot express are named in `x-relational-laws` and enforced by the hand-written validator in `vibe-wire/src/behaviour/compile_trace_report/`; the two label sets are pinned equal by a wire test, so an undocumented law and an unimplemented label are both red.",
+      "x-vocabularies": ["trace_report_status", "timing_row"],
+      "x-diagnostic-cap-bytes": 8192,
+      "x-relational-laws": [
+        "run-id: `run_id` is exactly 32 lowercase hex characters — the same law the trace index and the lifecycle state hold the id to",
+        "canonical-counts: `events`, `snapshots` and `snapshot_bytes` are CANONICAL unsigned decimal strings — nonempty, ASCII digits only, and no leading zero unless the whole value is `0`. JTD has no uint64; a count is never narrowed through a usize/u64 or a lossy float on either side of the wire",
+        "run-path: `run_path`, when present, is ABSOLUTE, forward-slashed (no backslash, no CR/LF/NUL anywhere) and ends with `.vibe/trace/<run_id>`. This law owns only HOW a present path is spelled; WHEN one exists belongs to `status-matrix`, which enforces it from both directions",
+        "status-matrix: `run_path` is present exactly for the ACTIVE statuses — `running`, `ok` and `failed` each name their directory, `unavailable` carries none. `unavailable` is furthermore not finalised, not budget-exhausted (a recorder that never opened never owned a snapshot budget), carries zero events/snapshots/snapshot-bytes, no timing rows, and at least one NONBLANK bounded warning saying why (a vector of empty or whitespace-only strings is not a diagnostic; the nonblank rule is the unavailable-reason law and is not extended to an active run's warnings). `running` is not finalised; `ok` and `failed` are finalised",
+        "count-coherence: `snapshots` ≤ `events`, compared as canonical decimals (length, then lexicographic) — never by narrowing to a machine integer",
+        "warning-cap: every warning is at most the shared diagnostic cap (`x-diagnostic-cap-bytes`)",
+        "timing-rows: pass names are unique and non-blank, and every duration is canonical in the compiler-trace aggregate sense (`saturated` only at `micros = u32::MAX`); the totals algorithm stays the index's — this record carries rows, it never recomputes them"
+      ]
+    },
+    "properties": {
+      "status": { "ref": "trace_report_status", "metadata": { "description": "The trace's state at report time: `unavailable` (requested, never opened), `running` (parked mid-run), `ok`/`failed` (finalised)." } },
+      "run_id": { "type": "string", "metadata": { "description": "The lifecycle run that owns the trace — the exact 32-lowercase-hex `RunMetadata.run_id`. Even `unavailable` carries the id: the run existed, only its trace did not." } },
+      "finalised": { "type": "boolean", "metadata": { "description": "True exactly when the trace index reached a terminal state (`ok`/`failed`); a parked or never-opened trace is not finalised." } },
+      "budget_exhausted": { "type": "boolean", "metadata": { "description": "True when the run's snapshot-byte budget was spent and later invocations stood down as `snapshot-skipped-budget`. Always false for `unavailable`: a recorder that never opened never owned a budget to spend." } },
+      "events": { "type": "string", "metadata": { "description": "How many pass events the trace recorded — a canonical unsigned decimal string (JTD has no uint64)." } },
+      "snapshots": { "type": "string", "metadata": { "description": "How many certified snapshot files the trace published — a canonical unsigned decimal string, at most `events`." } },
+      "snapshot_bytes": { "type": "string", "metadata": { "description": "Total snapshot payload bytes — a canonical unsigned decimal string." } },
+      "timings": {
+        "elements": { "ref": "timing_row" },
+        "metadata": { "x-empty": "emit", "description": "The same aggregate timing rows the CLI table prints, in the index's first-appearance order. Explicit even when empty." }
+      },
+      "warnings": {
+        "elements": { "type": "string" },
+        "metadata": { "x-empty": "emit", "description": "Bounded observer warnings — a requested-but-unavailable open, a scope failure the trace survived. Explicit even when empty (except `unavailable`, which must carry at least one NONBLANK reason)." }
+      }
+    },
+    "optionalProperties": {
+      "run_path": { "type": "string", "metadata": { "x-default": null, "description": "Absolute forward-slashed path of `.vibe/trace/<run_id>`. Present for every ACTIVE status (`running`, `ok`, `failed`) and absent exactly when the trace never opened (`unavailable`) — the optionality is the closed status vocabulary's, not the writer's choice." } }
+    }
+  },
   "boot_snippet_entry": {
     "metadata": {
       "description": "`[boot_snippet]` projection (PROP-005 §2.6): a boot file identified by its `source` path plus an ordering `category`."

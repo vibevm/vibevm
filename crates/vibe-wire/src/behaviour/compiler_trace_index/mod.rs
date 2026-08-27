@@ -50,7 +50,13 @@ pub use errors::{
 pub use snapshot::{SHORT_DIGEST_HEX, SNAPSHOT_NAME_CAP, SnapshotName};
 
 use aggregates::{aggregate_gate, canonical_gate};
-use scalars::{ROOT_DISPLAY, is_backend_id, is_lowercase_hex, scalar_gate};
+use scalars::{ROOT_DISPLAY, is_backend_id, scalar_gate};
+
+// The two pure predicates the sibling command-report trace cell shares:
+// the canonical-duration rule and the 32-hex run-id rule are ONE law
+// each — the report validator reuses them rather than restating them.
+pub(crate) use aggregates::is_canonical;
+pub(crate) use scalars::is_lowercase_hex;
 use snapshot::{SnapshotIdentity, kind_spelling, snapshot_unsafety};
 
 #[cfg(test)]

@@ -2,7 +2,7 @@
   "metadata": {
     "description": "Epoch-1 compile trace INDEX: the metadata half of `.vibe/trace/<run-id>/index.json` (PROP-054 `##OBS-TRACE`, the `-print-after-all` / `-time-passes` genre). It records WHAT ran, in which order, for how long and into which snapshot FILE — never an IR payload. The snapshots themselves are the one `compiler_ir/e1` documents; this record names them by relative filename and nothing else. No IR field, no trace snapshot DTO, no untyped carrier, no dependency on the compiler domain: the generated type is pure metadata. The relational laws JTD cannot express are named below in `x-relational-laws` and enforced by the hand-written validator in `vibe-wire/src/behaviour/compiler_trace_index/` (one pure pass, typed errors, no untrusted scalar cloned into a refusal); the two label sets are pinned equal by a test, so an undocumented law and an unimplemented label are both red.",
     "x-rust-type": "CompilerTraceIndex",
-    "x-vocabularies": ["timestamp"],
+    "x-vocabularies": ["timestamp", "duration", "timing_row"],
     "x-diagnostic-cap-bytes": 8192,
     "x-relational-laws": [
       "schema-epoch: the root `schema` is 1 — the epoch-1 reader refuses any other number",
@@ -76,13 +76,6 @@
         "cardinality": { "ref": "ir_cardinality" }
       }
     },
-    "duration": {
-      "metadata": { "description": "One measured duration: microseconds plus an explicit saturation marker. `micros` saturates at u32::MAX rather than wrapping; `saturated` is true when the measurement hit that ceiling (or contributed to a total that did) — so the marker is legal ONLY at `micros = u32::MAX`, while an unsaturated `u32::MAX` stays legal because an exact measurement may land exactly there. Writer-side saturation policy lands with the recorder; the representable form is pinned here." },
-      "properties": {
-        "micros": { "type": "uint32" },
-        "saturated": { "type": "boolean" }
-      }
-    },
     "scope": {
       "metadata": { "description": "One artifact compilation of the run: a workspace node, a package unit, or a publish artifact. `label` is the exact unencoded outer label (the filename codec percent-encodes; the index retains the true string), `artifact` the artifact id (which repeats `static-md`/`static-xml` across scopes — the pair (`label`, `artifact`) is what disambiguates), `id` the stable scope id events reference." },
       "properties": {
@@ -119,16 +112,6 @@
         "encode_micros": { "ref": "duration", "metadata": { "x-default": null, "description": "Duration of the trace snapshot encoding, recorded separately from pass time; present exactly when an encode was attempted." } },
         "snapshot": { "type": "string", "metadata": { "x-default": null, "description": "The certified snapshot's relative FILENAME — one path component, never a path, in one of the two canonical spellings `snapshot-portability` constructs: `<seq:04>-<enc(pass)>-<kind>_<enc(scope-label)>_<enc(artifact)>-<ord:03>.json`, or `<seq:04>-~<digest16>-<ord:03>.json` when the run directory cannot afford the full one. Only `ok` carries one." } },
         "diagnostic": { "type": "string", "metadata": { "x-default": null, "description": "Bounded diagnostic of a failed invocation; present exactly on the three failure statuses." } }
-      }
-    },
-    "timing_row": {
-      "metadata": { "description": "One row of the CLI timing table: everything the run spent on one pass name, recomputable from `events` — the validator never trusts the carried totals." },
-      "properties": {
-        "pass": { "type": "string", "metadata": { "description": "Exact pass name this row aggregates." } },
-        "invocations": { "type": "uint32", "metadata": { "description": "How many events carry this pass name." } },
-        "pass_total": { "ref": "duration", "metadata": { "description": "Saturating sum of the pass durations this pass name's events carry." } },
-        "verify_total": { "ref": "duration", "metadata": { "description": "Saturating sum of the verify durations." } },
-        "encode_total": { "ref": "duration", "metadata": { "description": "Saturating sum of the encode durations." } }
       }
     }
   }

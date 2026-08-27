@@ -228,6 +228,9 @@ pub(super) fn emit_install_document(
         notices: notices.to_vec(),
         hooks: hooks.typed(),
         delegation: delegation.map(handoff_member),
+        // R3.4: the shared trace member. Construction from a live recorder
+        // lands with the command-owner atom; disabled omits it byte-for-byte.
+        trace: None,
     };
     if ctx.is_json() {
         if delegation.is_some() {
@@ -286,6 +289,7 @@ pub(super) fn emit_failed_document(
         notices: Vec::new(),
         hooks: Vec::new(),
         delegation: None,
+        trace: None,
     })
 }
 

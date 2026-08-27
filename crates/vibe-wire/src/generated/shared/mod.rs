@@ -27,6 +27,64 @@ pub struct CompatibilityEntry {
     pub requires_kinds: Vec<PackageKind>,
 }
 
+/// The ONE shared trace member every command report root carries (install,
+/// lifecycle, update, reinstall): the run's trace identity, its terminal state,
+/// lossless canonical-decimal counts and the same timing rows the CLI table
+/// prints. Disabled old JSON simply omits the member; `unavailable` is the
+/// honest word when tracing was requested but no recorder could be opened —
+/// the command still compiles untraced. The relational laws JTD cannot express
+/// are named in `x-relational-laws` and enforced by the hand-written validator
+/// in `vibe-wire/src/behaviour/compile_trace_report/`; the two label sets are
+/// pinned equal by a wire test, so an undocumented law and an unimplemented
+/// label are both red.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct CompileTraceReport {
+    /// True when the run's snapshot-byte budget was spent and later invocations
+    /// stood down as `snapshot-skipped-budget`. Always false for `unavailable`:
+    /// a recorder that never opened never owned a budget to spend.
+    pub budget_exhausted: bool,
+
+    /// How many pass events the trace recorded — a canonical unsigned decimal
+    /// string (JTD has no uint64).
+    pub events: String,
+
+    /// True exactly when the trace index reached a terminal state
+    /// (`ok`/`failed`); a parked or never-opened trace is not finalised.
+    pub finalised: bool,
+
+    /// The lifecycle run that owns the trace — the exact 32-lowercase-
+    /// hex `RunMetadata.run_id`. Even `unavailable` carries the id: the run
+    /// existed, only its trace did not.
+    pub run_id: String,
+
+    /// Total snapshot payload bytes — a canonical unsigned decimal string.
+    pub snapshot_bytes: String,
+
+    /// How many certified snapshot files the trace published — a canonical
+    /// unsigned decimal string, at most `events`.
+    pub snapshots: String,
+
+    /// The trace's state at report time: `unavailable` (requested, never
+    /// opened), `running` (parked mid-run), `ok`/`failed` (finalised).
+    pub status: TraceReportStatus,
+
+    /// The same aggregate timing rows the CLI table prints, in the index's
+    /// first-appearance order. Explicit even when empty.
+    pub timings: Vec<TimingRow>,
+
+    /// Bounded observer warnings — a requested-but-unavailable open, a
+    /// scope failure the trace survived. Explicit even when empty (except
+    /// `unavailable`, which must carry at least one NONBLANK reason).
+    pub warnings: Vec<String>,
+
+    /// Absolute forward-slashed path of `.vibe/trace/<run_id>`. Present for
+    /// every ACTIVE status (`running`, `ok`, `failed`) and absent exactly when
+    /// the trace never opened (`unavailable`) — the optionality is the closed
+    /// status vocabulary's, not the writer's choice.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub run_path: Option<String>,
+}
+
 /// Conflicts projection: packages this version cannot coexist with.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ConflictsEntry {
@@ -76,6 +134,22 @@ impl<'de> Deserialize<'de> for DeliveryMode {
             _ => DeliveryMode::Unknown(wire),
         })
     }
+}
+
+/// One measured duration: microseconds plus an explicit saturation marker.
+/// `micros` saturates at u32::MAX rather than wrapping; `saturated` is true
+/// when the measurement hit that ceiling (or contributed to a total that did)
+/// — so the marker is legal ONLY at `micros = u32::MAX`, while an unsaturated
+/// `u32::MAX` stays legal because an exact measurement may land exactly there.
+/// Writer-side saturation policy lands with the recorder; the representable
+/// form is pinned here. Shared as a vocabulary because the trace index, the
+/// timing row and every command report's trace member carry the SAME record
+/// (JTD has no cross-file refs, G9).
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Duration {
+    pub micros: u32,
+
+    pub saturated: bool,
 }
 
 /// Feature table: feature names map to activation lists; `exclusive` is the at-
@@ -242,6 +316,48 @@ pub struct SubskillEntry {
 
 /// RFC 3339 timestamp — `chrono::DateTime<Utc>` in code.
 pub type Timestamp = chrono::DateTime<chrono::Utc>;
+
+/// One row of the CLI timing table: everything the run spent on one pass name,
+/// recomputable from `events` — the validator never trusts the carried totals.
+/// Shared as a vocabulary so the trace index and every command report's trace
+/// member use ONE generated `TimingRow`, not same-shaped per-module types that
+/// would need converters.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct TimingRow {
+    /// Saturating sum of the encode durations.
+    pub encode_total: Duration,
+
+    /// How many events carry this pass name.
+    pub invocations: u32,
+
+    /// Exact pass name this row aggregates.
+    pub pass: String,
+
+    /// Saturating sum of the pass durations this pass name's events carry.
+    pub pass_total: Duration,
+
+    /// Saturating sum of the verify durations.
+    pub verify_total: Duration,
+}
+
+/// The trace half of one command report: what the observer knows when the
+/// report is built. Closed: an unknown spelling is a reader error, not a newer
+/// writer — additive evolution of this record rides new object members, never
+/// new status values.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum TraceReportStatus {
+    #[serde(rename = "failed")]
+    Failed,
+
+    #[serde(rename = "ok")]
+    Ok,
+
+    #[serde(rename = "running")]
+    Running,
+
+    #[serde(rename = "unavailable")]
+    Unavailable,
+}
 
 /// Semantic version string — `semver::Version` in code.
 pub type Version = semver::Version;

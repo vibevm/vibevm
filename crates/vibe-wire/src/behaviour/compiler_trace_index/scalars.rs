@@ -33,7 +33,11 @@ pub(super) fn scalar_gate(field: &'static str, value: &str) -> Result<(), TraceI
 }
 
 /// Exactly `len` lowercase hex characters.
-pub(super) fn is_lowercase_hex(value: &str, len: usize) -> bool {
+///
+/// `pub(crate)`: the command-report trace member pins its `run_id` with
+/// the same 32-hex law this index pins its own — one predicate, both
+/// readers.
+pub(crate) fn is_lowercase_hex(value: &str, len: usize) -> bool {
     value.len() == len
         && value
             .bytes()

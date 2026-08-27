@@ -34,6 +34,9 @@ pub(super) fn emit_report(
         requested: requested.to_string(),
         steps,
         delegation: delegation.map(delegation_member).transpose()?,
+        // R3.4: the shared trace member. Construction from a live recorder
+        // lands with the command-owner atom; disabled omits it byte-for-byte.
+        trace: None,
     };
     if ctx.is_json() {
         // Exactly ONE generated document, carrying the handoff as a typed
@@ -193,5 +196,6 @@ pub(crate) fn emit_failure_outcome(
             status: "fail".into(),
         }],
         delegation: None,
+        trace: None,
     })
 }

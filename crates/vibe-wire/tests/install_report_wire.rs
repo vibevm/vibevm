@@ -111,6 +111,7 @@ fn a_partial_park_records_what_it_changed_and_says_it_did_not_finish() {
         contributions: Vec::new(),
         notices: Vec::new(),
         hooks: Vec::new(),
+        trace: None,
         delegation: Some(InstallDelegation {
             run_id: "00112233445566778899aabbccddeeff".into(),
             tasks: vec![".vibe/agentic/outbox/00112233445566778899aabbccddeeff/task-k.md".into()],
