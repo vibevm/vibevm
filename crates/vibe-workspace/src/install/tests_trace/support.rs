@@ -21,16 +21,19 @@ use crate::compile_trace::{TraceLimits, TraceRun};
 /// One injected run id: exactly 32 lowercase hex.
 pub(super) const RUN: &str = "0123456789abcdef0123456789abcdef";
 
+#[cfg(test)]
 pub(super) fn at(seconds: i64) -> Timestamp {
     Timestamp::from_timestamp(seconds, 0).expect("a fixture instant is representable")
 }
 
+#[cfg(test)]
 pub(super) fn traced_run(root: &Path) -> TraceRun {
     TraceRun::open_with_limits(root, RUN, at(1_000), TraceLimits::for_test(u64::MAX, 9))
         .expect("a fresh run under a temporary root opens")
 }
 
 /// Read the run's index exactly as an outside reader would.
+#[cfg(test)]
 pub(super) fn run_index(root: &Path) -> CompilerTraceIndex {
     let bytes = fs::read(
         root.join(".vibe")
@@ -103,6 +106,7 @@ pub(super) fn static_pair(
 /// which STATICALLY links the `corelib` leaf, and which requires `parent`
 /// (and transitively `child`) — so one install compiles BOTH a dirty package
 /// unit (`parent`'s zone) and the root node's own static lane (`corelib`).
+#[cfg(test)]
 pub(super) fn unit_and_root_fixture() -> (TempDir, Workspace, Vec<ResolvedDep>, Vec<TempDir>) {
     let ws_dir = TempDir::new().unwrap();
     write(

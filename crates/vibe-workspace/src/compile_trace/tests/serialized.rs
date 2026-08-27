@@ -374,6 +374,7 @@ fn a_real_filesystem_alias_reopens_the_same_run() {
 /// directory on Unix always admits one, so a failure here is a genuine
 /// failure rather than a missing capability.
 #[cfg(unix)]
+#[cfg(test)]
 fn real_alias(root: &std::path::Path) -> Option<std::path::PathBuf> {
     let name = root.file_name()?.to_str()?;
     let link = root.parent()?.join(format!("{name}-alias"));

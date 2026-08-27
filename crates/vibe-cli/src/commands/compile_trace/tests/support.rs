@@ -28,16 +28,19 @@ pub(super) const RUN_B: &str = "fedcba9876543210fedcba9876543210";
 pub(super) const STARTED_A: &str = "2026-08-27T10:00:00Z";
 pub(super) const STARTED_B: &str = "2026-08-27T09:00:00Z";
 
+#[cfg(test)]
 pub(super) fn project() -> tempfile::TempDir {
     tempfile::tempdir().expect("a temporary workspace root")
 }
 
+#[cfg(test)]
 pub(super) fn at(seconds: i64) -> Timestamp {
     Timestamp::from_timestamp(seconds, 0).expect("a fixture instant is representable")
 }
 
 /// The trace epoch's timestamp for one of the RFC 3339 starts above — derived,
 /// never a hand-computed epoch second, because a reopen compares it exactly.
+#[cfg(test)]
 pub(super) fn started(text: &str) -> Timestamp {
     chrono::DateTime::parse_from_rfc3339(text)
         .expect("a fixture start is RFC 3339")
@@ -111,6 +114,7 @@ pub(super) fn run_dir(root: &Path, run_id: &str) -> PathBuf {
 }
 
 /// Read one run's index exactly as an outside reader would.
+#[cfg(test)]
 pub(super) fn read_index(root: &Path, run_id: &str) -> CompilerTraceIndex {
     let path = run_dir(root, run_id).join("index.json");
     let bytes = std::fs::read(&path)
@@ -119,6 +123,7 @@ pub(super) fn read_index(root: &Path, run_id: &str) -> CompilerTraceIndex {
 }
 
 /// Every 32-lowercase-hex run directory under the root, sorted.
+#[cfg(test)]
 pub(super) fn run_directories(root: &Path) -> Vec<String> {
     let Ok(entries) = std::fs::read_dir(trace_root(root)) else {
         return Vec::new();
@@ -136,6 +141,7 @@ pub(super) fn run_directories(root: &Path) -> Vec<String> {
 
 /// Every byte of every file under `.vibe/trace`, concatenated — the corpus a
 /// leak red searches for its sentinel in.
+#[cfg(test)]
 pub(super) fn all_trace_bytes(root: &Path) -> String {
     let mut found = String::new();
     let mut stack = vec![trace_root(root)];
@@ -199,6 +205,7 @@ impl SectionSource for World {
 /// traced artifact compile does — so the run carries events, snapshots and
 /// aggregate rows rather than a synthetic zero, and leaves no `pending` scope
 /// to make a successful command's terminal `ok` index impossible.
+#[cfg(test)]
 pub(super) fn compile(scope: &TraceScope) {
     let plan = ArtifactPlan::static_lane(
         CompilerTarget::StaticMarkdown,

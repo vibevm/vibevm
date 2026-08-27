@@ -25,18 +25,21 @@ pub(super) const RUN_A: &str = "0123456789abcdef0123456789abcdef";
 
 /// An injected instant. Seconds since the epoch, so ordering is obvious in
 /// the assertion that reads it.
+#[cfg(test)]
 pub(super) fn at(seconds: i64) -> Timestamp {
     Timestamp::from_timestamp(seconds, 0).expect("a fixture instant is representable")
 }
 
 /// A temporary project root. Absolute by construction, which is what the
 /// writer requires.
+#[cfg(test)]
 pub(super) fn project() -> tempfile::TempDir {
     tempfile::tempdir().expect("a temporary project root")
 }
 
 /// Open a fresh run with tiny limits, so budget and retention reds need no
 /// production configuration.
+#[cfg(test)]
 pub(super) fn open(root: &Path, run_id: &str, limits: TraceLimits) -> TraceRun {
     TraceRun::open_with_limits(root, run_id, at(1_000), limits)
         .expect("a fresh run under a temporary root opens")
@@ -75,6 +78,7 @@ pub(super) fn run_dir(root: &Path, run_id: &str) -> std::path::PathBuf {
 
 /// Read the index EXACTLY as an outside reader would: off disk, through the
 /// generated type, held to the epoch's own relational validator.
+#[cfg(test)]
 pub(super) fn read_index(directory: &Path) -> CompilerTraceIndex {
     let bytes = std::fs::read(directory.join("index.json"))
         .unwrap_or_else(|error| panic!("`{}` is readable: {error}", directory.display()));
@@ -86,6 +90,7 @@ pub(super) fn read_index(directory: &Path) -> CompilerTraceIndex {
 
 /// Every entry of a run directory, sorted, so a red can name the whole set
 /// rather than probing one file at a time.
+#[cfg(test)]
 pub(super) fn entries(directory: &Path) -> Vec<String> {
     let mut names: Vec<String> = std::fs::read_dir(directory)
         .expect("the run directory is listable")
@@ -110,6 +115,7 @@ pub(super) fn run_id(n: u128) -> String {
 /// through the same single canonicalisation. A seeded run that carried
 /// anything else would be another project's run, which retention refuses to
 /// touch, so a fixture that faked it would silently stop testing deletion.
+#[cfg(test)]
 pub(super) fn identity_of(root: &Path) -> ProjectIdentity {
     let canonical = std::fs::canonicalize(root).expect("a temporary root canonicalises");
     super::super::identity::project_identity(&canonical)
@@ -158,6 +164,7 @@ pub(super) fn seed_run(root: &Path, run_id: &str, started: i64) -> std::path::Pa
 
 /// Plant a run directory carrying exactly `index`, however (in)eligible that
 /// makes it.
+#[cfg(test)]
 pub(super) fn seed_index_at(
     root: &Path,
     run_id: &str,
@@ -223,6 +230,7 @@ impl SectionSource for World {
 }
 
 /// The real static-lane plan the boot artifacts themselves compile through.
+#[cfg(test)]
 pub(super) fn plan() -> ArtifactPlan {
     ArtifactPlan::static_lane(
         CompilerTarget::StaticMarkdown,
@@ -247,6 +255,7 @@ pub(super) fn compile(scope: &TraceScope, world: &World) -> Option<EmittedArtifa
 
 /// The same, asserting the compile really did succeed — the property every
 /// observer red depends on.
+#[cfg(test)]
 pub(super) fn compile_ok(scope: &TraceScope, world: &World) -> EmittedArtifact {
     compile_artifact_traced(plan(), world, scope).expect("the two-document world compiles")
 }
