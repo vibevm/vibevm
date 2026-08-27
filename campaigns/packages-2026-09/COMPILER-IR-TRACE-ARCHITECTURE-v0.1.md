@@ -233,10 +233,16 @@ boot artifacts remain untouched. Final index status is written last.
 
 ## 5. Manifest and CLI
 
-`vibe-core` gains strict consumer-side `[compile] trace = bool`, default false,
-with parse/write symmetry. `vibe install --trace-compile` and every higher
-lifecycle verb's shared args enable the same option; CLI true OR manifest true
-enables, neither can accidentally disable the other.
+`vibe-core` carries strict consumer-side `[compile] trace = bool`, default
+false, with parse/write symmetry (`7adfbb5a`). The table is role-equipotent:
+legal on project, package, virtual-workspace and combined roots, because a
+package-rooted checkout is still a consumer. It is read only from the selected
+root/workspace manifest; a dependency package's own `[compile]` table never
+activates tracing for its host and is copied into no lock/index/activation
+surface. `Manifest::compile_trace_enabled()` is the role-blind read seam.
+`vibe install --trace-compile` and every higher lifecycle verb's shared args
+enable the same option; CLI true OR manifest true enables, neither can
+accidentally disable the other. There is no user-config rung.
 
 Thread a `CompileTraceOptions`/sink through traced siblings of existing APIs;
 keep current public wrappers as no-trace compatibility calls. `vibe-workspace`
