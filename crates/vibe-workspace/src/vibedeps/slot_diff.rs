@@ -61,10 +61,6 @@ impl PreparedSlotFile {
         }
     }
 
-    pub(super) fn path(&self) -> &Path {
-        &self.path
-    }
-
     pub(super) fn path_wire(&self) -> String {
         path_to_slash(&self.path)
     }
@@ -74,6 +70,17 @@ impl PreparedSlotFile {
     }
 }
 
+/// Order prepared payloads into the canonical persisted order: ascending
+/// flattened forward-slash path — the order `validate_file_rows` enforces
+/// and every payload aggregate hash consumes. Host `Path` order compares
+/// component-wise and diverges from it whenever a directory name prefixes a
+/// sibling file (`a/x` sorts before `a.md` component-wise, after it
+/// flattened), so every `PreparedSlotFile` ordering flows through here —
+/// never through a hand-written `Path` comparator.
+pub(super) fn sort_prepared_files(files: &mut [PreparedSlotFile]) {
+    files.sort_by_cached_key(PreparedSlotFile::path_wire);
+}
+
 /// Walk and hash a mixed source tree without touching its destination slot.
 pub(super) fn prepare_source_tree(
     root: &Path,
@@ -81,7 +88,7 @@ pub(super) fn prepare_source_tree(
 ) -> Result<Vec<PreparedSlotFile>, WorkspaceError> {
     let mut files = Vec::new();
     collect_source_files(root, root, mode, &mut files)?;
-    files.sort_by(|left, right| left.path.cmp(&right.path));
+    sort_prepared_files(&mut files);
     Ok(files)
 }
 

@@ -247,6 +247,67 @@ fn redbook_materialises_fully_xml_with_md_readmes_converted() {
 }
 
 #[test]
+fn transformed_payload_hash_consumes_flattened_slash_order_not_component_order() {
+    let workspace = TempDir::new().unwrap();
+    let source = TempDir::new().unwrap();
+    // Output set: `vibespecs/guide.xml` beside `vibespecs/guide/child.xml` —
+    // a directory (`guide`) whose name prefixes a sibling file (`guide.xml`).
+    // Host `Path` order compares component-wise and puts `guide/child.xml`
+    // first (`guide` < `guide.xml`); the canonical flattened forward-slash
+    // order puts `guide.xml` first (`.` sorts before `/`). The payload hash,
+    // the persisted rows, and verification must all consume the flattened
+    // order — hashing in component order desyncs `derived_hash` from
+    // `compute_recorded_payload_hash` the moment the record is written.
+    write(
+        source.path(),
+        crate::layout_paths::specs_path("guide.md"),
+        "# Guide\n\nText.\n",
+    );
+    write(
+        source.path(),
+        crate::layout_paths::specs_path("guide/child.md"),
+        "# Child\n\nText.\n",
+    );
+
+    materialise_with_spec_format(
+        workspace.path(),
+        &group("org.example"),
+        "order",
+        &version("1.0.0"),
+        source.path(),
+        CopyMode::Copy,
+        SpecFormat::Xml,
+        &source_hash(),
+    )
+    .unwrap();
+
+    let slot = slot_abs_path(
+        workspace.path(),
+        &group("org.example"),
+        "order",
+        &version("1.0.0"),
+    );
+    let record = read_slot_record(&slot).unwrap();
+    assert_eq!(
+        record
+            .files
+            .iter()
+            .map(|file| file.path.as_str())
+            .collect::<Vec<_>>(),
+        [
+            crate::layout_paths::specs("guide.xml"),
+            crate::layout_paths::specs("guide/child.xml"),
+        ],
+        "rows are pinned in ascending flattened forward-slash order"
+    );
+    assert_eq!(
+        record.derived_hash.as_ref().unwrap(),
+        &compute_recorded_payload_hash(&slot, &record.files).unwrap(),
+        "derived_hash must be recomputable from the persisted row order"
+    );
+}
+
+#[test]
 fn unrecorded_outputs_stay_outside_record_identity_and_verification() {
     let workspace = TempDir::new().unwrap();
     let source = TempDir::new().unwrap();

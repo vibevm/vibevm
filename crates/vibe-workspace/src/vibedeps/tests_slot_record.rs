@@ -80,6 +80,52 @@ fn mixed_materialisation_writes_the_slot_record_from_its_footprint() {
 }
 
 #[test]
+fn mixed_materialisation_orders_rows_by_flattened_slash_path() {
+    let workspace = TempDir::new().unwrap();
+    let source = TempDir::new().unwrap();
+    // `guide.md` beside `guide/child.md` — a directory whose name prefixes a
+    // sibling file. Host `Path` order compares component-wise and puts
+    // `guide/child.md` first (`guide` < `guide.md`); the canonical flattened
+    // forward-slash order puts `guide.md` first (`.` sorts before `/`).
+    // Path-ordered rows violate `validate_file_rows`' strictly ascending
+    // order, so the record write itself would fail.
+    write(source.path(), "guide.md", "# Guide\n");
+    write(source.path(), "guide/child.md", "# Child\n");
+    let source_hash = ContentHash::parse(
+        "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    )
+    .unwrap();
+
+    materialise(
+        workspace.path(),
+        &group("org.example"),
+        "order",
+        &version("1.0.0"),
+        source.path(),
+        &source_hash,
+    )
+    .expect("mixed materialisation orders its rows canonically and succeeds");
+
+    let slot = slot_abs_path(
+        workspace.path(),
+        &group("org.example"),
+        "order",
+        &version("1.0.0"),
+    );
+    let record = read_slot_record(&slot).expect("strict read revalidates the record");
+    assert_eq!(
+        record
+            .files
+            .iter()
+            .map(|file| file.path.as_str())
+            .collect::<Vec<_>>(),
+        ["guide.md", "guide/child.md"],
+        "rows must be pinned in ascending flattened forward-slash order"
+    );
+    verify_recorded_files(&slot, &record).expect("payload verifies against the record");
+}
+
+#[test]
 fn legacy_slot_receives_a_record_on_explicit_rematerialisation() {
     let workspace = TempDir::new().unwrap();
     let source = TempDir::new().unwrap();

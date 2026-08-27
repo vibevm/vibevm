@@ -16,6 +16,7 @@ use vibe_specdoc::doc::{Block, Section, SpecDoc, StatusEl, Unit};
 
 use super::slot_diff::{
     MaterialiseReport, PreparedSlotFile, compute_prepared_payload_hash, reconcile_slot,
+    sort_prepared_files,
 };
 use super::{
     CopyMode, SLOT_RECORD_FILENAME, SlotFile, SlotFileDisposition, SlotRecord,
@@ -197,7 +198,13 @@ pub(crate) fn materialise_with_spec_format_report(
         incoming.push(prepared);
     }
 
-    incoming.sort_by(|left, right| left.path().cmp(right.path()));
+    // One canonical order for the payload vector and the persisted rows:
+    // the shared flattened forward-slash sorter — exactly the order
+    // `validate_file_rows` enforces and `compute_recorded_payload_hash`
+    // consumes. Host `Path` order compares component-wise and diverges from
+    // it (e.g. `a/x` sorts before `a.md` component-wise but after it
+    // flattened), which would desync `derived_hash` from verification.
+    sort_prepared_files(&mut incoming);
     files.sort_by(|a, b| a.path.cmp(&b.path));
     let derived_hash = compute_prepared_payload_hash(&incoming)?;
     let record = SlotRecord {
