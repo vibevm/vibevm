@@ -251,8 +251,9 @@ pub(crate) fn prepare(
             Ok(None) => unavailable(
                 &identity.run_id,
                 format_args!(
-                    "this invocation adopted a parked run whose trace was never opened, so it \
-                     compiles untraced rather than starting a partial mid-run history"
+                    "this invocation adopted a parked run whose trace could not be reopened \
+                     because no existing trace directory was found, so it compiles untraced \
+                     rather than starting a partial mid-run history"
                 ),
             ),
             Err(error) => unavailable(

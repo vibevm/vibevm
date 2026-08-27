@@ -278,3 +278,12 @@ fn row_named(key: &str, status: &str) -> vibe_install::SlotLifecycleReport {
         slot_target: None,
     }
 }
+
+/// A continuation never crosses an identity boundary. Adoption preserves the
+/// run id; a displaced or legacy/missing owner must leave the old work alone.
+#[test]
+fn only_the_exact_run_identity_owns_a_continuation() {
+    assert!(owns_continuation(Some("run-a"), "run-a"));
+    assert!(!owns_continuation(Some("run-a"), "run-b"));
+    assert!(!owns_continuation(None, "run-b"));
+}

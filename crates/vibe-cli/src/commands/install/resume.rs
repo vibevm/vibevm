@@ -165,6 +165,15 @@ pub(crate) fn resume_slot_continuation(
     let Some(state) = vibe_lifecycle::LifecycleStateStore::peek(&workspace.root)? else {
         return Ok(ResumeOutcome::Nothing);
     };
+    // A slot continuation is a capability owned by the EXACT lifecycle run
+    // that parked it. Identity selection has already decided whether this
+    // invocation adopted that run or displaced it: adoption preserves the id,
+    // displacement mints a new one. Letting the fresh id service the old
+    // continuation would resurrect cancelled work under a different owner and
+    // can re-park the new command on a task its state just superseded.
+    if !owns_continuation(state.run.run_id.as_deref(), &metadata.run_id) {
+        return Ok(ResumeOutcome::Nothing);
+    }
     let Some(continuation) = state.run.slot_continuation.clone() else {
         return Ok(ResumeOutcome::Nothing);
     };
@@ -259,6 +268,14 @@ pub(crate) fn resume_slot_continuation(
         // resume, whose own rows the completed arm still has to read.
         || lifecycle.take_reports().unwrap_or_default(),
     ))
+}
+
+/// Whether the current lifecycle identity owns the persisted continuation.
+///
+/// Kept pure so the adoption/displacement boundary is pinned without building
+/// a live state store: missing and foreign identities both own nothing.
+fn owns_continuation(state_run_id: Option<&str>, current_run_id: &str) -> bool {
+    state_run_id == Some(current_run_id)
 }
 
 /// Turn the row-owning region's `Result` into the typed outcome.
