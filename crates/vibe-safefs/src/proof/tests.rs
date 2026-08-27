@@ -22,6 +22,11 @@ fn a_proved_file_is_inspected_and_then_removed() {
         .unwrap()
         .expect("an ordinary owned file has a proof");
     assert_eq!(len, 7);
+    assert_eq!(
+        format!("{proof:?}"),
+        "EntryProof(..)",
+        "debug output never exposes the OS identity"
+    );
     project
         .remove_file_proved_in(&archive, "spent.json", &proof)
         .expect("the proved object is still there");
