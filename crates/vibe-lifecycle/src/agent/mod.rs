@@ -59,7 +59,7 @@ pub struct AgentRequest {
 
 /// Provider-independent usage counters reported by a completed call.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#LLM-BUDGET")]
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-CREATE-BUDGET")]
 pub struct AgentUsage {
     pub prompt_tokens: u32,
     pub completion_tokens: u32,

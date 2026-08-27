@@ -14,6 +14,8 @@
 //! diagnostic in this cell carries an [`EscapedOsPath`]: a `Display` value
 //! built once, losslessly, from the OS-native units.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill");
+
 use std::ffi::OsStr;
 use std::path::{Component, Path};
 

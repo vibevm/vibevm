@@ -65,7 +65,7 @@ impl CliAgentBackend {
 
     /// Read the layered configuration and build the provider. Called once per
     /// non-fresh agent execution, never at plan time and never at preparation.
-    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#LLM-LAZY-BOUNDARY")]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-CLI")]
     fn provider(&self) -> Result<Box<dyn LLMProvider>, String> {
         let user = UserConfig::load().map_err(|error| format!("{NO_PROVIDER} ({error})"))?;
         let selected =

@@ -16,6 +16,8 @@ use specmark::spec;
 use unicode_casefold::{Locale, UnicodeCaseFold, Variant};
 use vibe_core::manifest::{DeclarantPathFault, declarant_path, declarant_path_component};
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE");
+
 /// The staging prefix this crate reserves inside a project. A declared output
 /// may never spell one: a caller's own path must not be able to name another
 /// caller's in-flight stage.
