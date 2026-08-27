@@ -20,7 +20,8 @@
 //! with `[project]`, with `[package]` (a cargo-style root package), or with
 //! neither (a virtual workspace root — just a coordinator). Consumer-side
 //! configuration (`[requires]`, `[[registry]]`, `[[mirror]]`, `[[override]]`,
-//! `[active]`, `[llm]`, `[i18n]`, `[boot]`) may appear on any node. Package-role
+//! `[active]`, `[llm]`, `[i18n]`, `[boot]`, `[compile]`) may appear on any
+//! node — the roles are equipotent consumers. Package-role
 //! sections (`[writes]`, `[provides]`, `[[requires_any]]`, `[obsoletes]`,
 //! `[conflicts]`, `[compatibility]`, `[boot_snippet]`, `[features]`,
 //! `[target.*]`) are meaningful only alongside `[package]`.
@@ -40,6 +41,7 @@ use crate::error::{Error, Result};
 use crate::package_ref::PackageRef;
 
 use super::artifact::ArtifactsSection;
+use super::compile::CompileSection;
 use super::deploy::DeploySection;
 use super::extension::{ExtensionDecl, ExtensionsControl};
 use super::i18n::I18nDecl;
@@ -232,6 +234,13 @@ pub struct Manifest {
     /// `[boot]` — workspace-wide loading settings (PROP-009 §2.6).
     #[serde(default, skip_serializing_if = "BootSection::is_empty")]
     pub boot: BootSection,
+
+    /// `[compile]` — consumer-side compiler controls (PROP-054
+    /// `##OBS-TRACE`), the sibling of `[boot]` for the compile side. Legal
+    /// on every role; read only from the selected root/workspace manifest,
+    /// never from a dependency.
+    #[serde(default, skip_serializing_if = "CompileSection::is_default")]
+    pub compile: CompileSection,
 }
 
 impl Serialize for Manifest {

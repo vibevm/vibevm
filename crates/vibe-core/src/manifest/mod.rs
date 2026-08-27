@@ -11,6 +11,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#unified-manifest");
 
 mod artifact;
+mod compile;
 mod consumer;
 mod declarant_path;
 mod decor;
@@ -28,6 +29,7 @@ mod redirect;
 mod subskill;
 
 pub use artifact::{ArtifactInput, ArtifactOutput, ArtifactTarget, ArtifactsSection};
+pub use compile::CompileSection;
 pub use consumer::{ConsumerNode, NodeRole};
 pub use declarant_path::{
     DeclarantPathFault, DeclarantPathMode, declarant_path, declarant_path_component,

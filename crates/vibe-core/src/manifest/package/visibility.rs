@@ -5,6 +5,7 @@ use std::collections::BTreeMap;
 use serde::{Deserialize, Deserializer, Serialize};
 
 use crate::manifest::artifact::ArtifactsWire;
+use crate::manifest::compile::CompileSection;
 use crate::manifest::deploy::DeploySectionWire;
 use crate::manifest::document::{BootSection, Manifest, OriginSection, WorkspaceSection};
 use crate::manifest::extension::{
@@ -370,6 +371,8 @@ pub(crate) struct ManifestWire {
     i18n: I18nDecl,
     #[serde(default, skip_serializing_if = "BootSection::is_empty")]
     boot: BootSection,
+    #[serde(default, skip_serializing_if = "CompileSection::is_default")]
+    compile: CompileSection,
 }
 
 impl TryFrom<ManifestWire> for Manifest {
@@ -435,6 +438,7 @@ impl TryFrom<ManifestWire> for Manifest {
             override_table,
             i18n: wire.i18n,
             boot: wire.boot,
+            compile: wire.compile,
         })
     }
 }
@@ -505,6 +509,7 @@ impl TryFrom<Manifest> for ManifestWire {
             visibility: manifest.visibility,
             i18n: manifest.i18n,
             boot: manifest.boot,
+            compile: manifest.compile,
         })
     }
 }

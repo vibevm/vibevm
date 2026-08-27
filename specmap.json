@@ -6931,6 +6931,96 @@
     },
     {
       "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/compile.rs",
+      "item_kind": "mod",
+      "line": 26,
+      "symbol": "vibe_core::manifest::compile",
+      "end_line": 26,
+      "fingerprint": "tok1:07184da7149c2c3a749de11ebb4b8b7c6707b20dc3a815d03c890158349b6df2"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/compile/tests.rs",
+      "item_kind": "fn",
+      "line": 226,
+      "symbol": "vibe_core::manifest::compile::tests::a_dependency_manifest_carries_its_own_switch_only",
+      "end_line": 250,
+      "fingerprint": "tok1:2400f36b6d405a78923924a9304a6e6885fafeb33aefb326376324b582082b25"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/compile/tests.rs",
+      "item_kind": "fn",
+      "line": 205,
+      "symbol": "vibe_core::manifest::compile::tests::accessor_returns_exactly_the_root_value_for_every_role",
+      "end_line": 222,
+      "fingerprint": "tok1:9380753595b0747a0010df118cd64632845fad133180731d03544a44a3b5fd8f"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/compile/tests.rs",
+      "item_kind": "fn",
+      "line": 71,
+      "symbol": "vibe_core::manifest::compile::tests::explicit_false_equals_absent_and_canonicalises_the_table_away",
+      "end_line": 89,
+      "fingerprint": "tok1:c1191c709dbff5a944d2764e5da1049815976f3f69cbe958a86e2b677d2d4765"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/compile/tests.rs",
+      "item_kind": "fn",
+      "line": 49,
+      "symbol": "vibe_core::manifest::compile::tests::missing_table_is_false_and_stays_off_the_page",
+      "end_line": 67,
+      "fingerprint": "tok1:ce71399770c5544c68b1909bac8e74c95ad1a436be7182e679b1e6e252276c15"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/compile/tests.rs",
+      "item_kind": "fn",
+      "line": 120,
+      "symbol": "vibe_core::manifest::compile::tests::package_root_is_not_a_package_role_offender",
+      "end_line": 149,
+      "fingerprint": "tok1:26df1ff6ef05aee24428b754c4a73bae1a6e2f2db2e4885684b27dd6a00c389c"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/compile/tests.rs",
+      "item_kind": "fn",
+      "line": 153,
+      "symbol": "vibe_core::manifest::compile::tests::project_package_xor_diagnostics_are_unchanged",
+      "end_line": 171,
+      "fingerprint": "tok1:b657c1ce2e5ecb5de86b3f1fe2c95693543d503571df35a0dfc0b0dec4c48480"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/compile/tests.rs",
+      "item_kind": "fn",
+      "line": 252,
+      "symbol": "vibe_core::manifest::compile::tests::section_default_and_is_default_agree_with_the_wire",
+      "end_line": 262,
+      "fingerprint": "tok1:9855b55def146f65a72a8f692de07accb7d664c739b86f0ca963e78acce21d2b"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/compile/tests.rs",
+      "item_kind": "fn",
+      "line": 93,
+      "symbol": "vibe_core::manifest::compile::tests::true_round_trips_for_every_root_shape",
+      "end_line": 116,
+      "fingerprint": "tok1:faee9f2c91b1305886ffb6836a799f36ef6b26aefe0ac5b864a352d4579b065f"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/compile/tests.rs",
+      "item_kind": "fn",
+      "line": 175,
+      "symbol": "vibe_core::manifest::compile::tests::unknown_member_and_wrong_type_refuse",
+      "end_line": 201,
+      "fingerprint": "tok1:9d9711d695eb4455c17571f26e2a3a8bef2b0010b89bd5aa983f1f569db36846"
+    },
+    {
+      "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/consumer.rs",
       "item_kind": "mod",
       "line": 10,
@@ -7131,19 +7221,19 @@
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/document.rs",
       "item_kind": "mod",
-      "line": 28,
+      "line": 29,
       "symbol": "vibe_core::manifest::document",
-      "end_line": 28,
+      "end_line": 29,
       "fingerprint": "tok1:6462f761e1dab8e366e3c8e54a88f5d226c14f3ee15890c119a6b085e7f37744"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/document.rs",
       "item_kind": "struct",
-      "line": 57,
+      "line": 59,
       "symbol": "vibe_core::manifest::document::Manifest",
-      "end_line": 235,
-      "fingerprint": "tok1:8f34c8fe915f3f1b4d002474ad29fa4e17867f316724f00e7b5c3b1cff1a9114"
+      "end_line": 244,
+      "fingerprint": "tok1:7312510008410b87b3be12b2e4a9d34c443cc4c5d814305d8bc546e5a3aec9f7"
     },
     {
       "crate_name": "vibe-core",
@@ -21754,6 +21844,86 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-core/src/manifest/compile.rs",
+      "from_symbol": "vibe_core::manifest::compile",
+      "line": 26,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/compile/tests.rs",
+      "from_symbol": "vibe_core::manifest::compile::tests::a_dependency_manifest_carries_its_own_switch_only",
+      "line": 227,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/compile/tests.rs",
+      "from_symbol": "vibe_core::manifest::compile::tests::accessor_returns_exactly_the_root_value_for_every_role",
+      "line": 206,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#MANIFEST-ROLES-ARE-EQUIPOTENT",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/compile/tests.rs",
+      "from_symbol": "vibe_core::manifest::compile::tests::explicit_false_equals_absent_and_canonicalises_the_table_away",
+      "line": 72,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/compile/tests.rs",
+      "from_symbol": "vibe_core::manifest::compile::tests::missing_table_is_false_and_stays_off_the_page",
+      "line": 50,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/compile/tests.rs",
+      "from_symbol": "vibe_core::manifest::compile::tests::package_root_is_not_a_package_role_offender",
+      "line": 121,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#MANIFEST-ROLES-ARE-EQUIPOTENT",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/compile/tests.rs",
+      "from_symbol": "vibe_core::manifest::compile::tests::project_package_xor_diagnostics_are_unchanged",
+      "line": 154,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#unified-manifest",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/compile/tests.rs",
+      "from_symbol": "vibe_core::manifest::compile::tests::section_default_and_is_default_agree_with_the_wire",
+      "line": 253,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/compile/tests.rs",
+      "from_symbol": "vibe_core::manifest::compile::tests::true_round_trips_for_every_root_shape",
+      "line": 94,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/compile/tests.rs",
+      "from_symbol": "vibe_core::manifest::compile::tests::unknown_member_and_wrong_type_refuse",
+      "line": 176,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE",
+      "verb": "verifies"
+    },
+    {
       "file": "crates/vibe-core/src/manifest/consumer.rs",
       "from_symbol": "vibe_core::manifest::consumer",
       "line": 10,
@@ -21932,7 +22102,7 @@
     {
       "file": "crates/vibe-core/src/manifest/document.rs",
       "from_symbol": "vibe_core::manifest::document",
-      "line": 28,
+      "line": 29,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#unified-manifest",
       "verb": "implements"
@@ -21940,7 +22110,7 @@
     {
       "file": "crates/vibe-core/src/manifest/document.rs",
       "from_symbol": "vibe_core::manifest::document::Manifest",
-      "line": 68,
+      "line": 70,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#unified-manifest",
       "verb": "implements",
