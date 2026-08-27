@@ -15,9 +15,17 @@ use vibe_core::{Group, layout};
 
 use crate::boot::hybrid::{self, UnitEdge, UnitId, UnitInput, ZoneMembership};
 use crate::boot::{BootBand, BootEntry, EffectiveBoot};
+use crate::compile_trace::TraceRun;
 use crate::{WorkspaceError, boot_artifacts, path_to_slash, vibedeps};
 
 use super::super::{ResolvedDep, io_err};
+
+/// One unit's trace occurrence and the fresh-output observation that decides
+/// whether it is declared at all — split out so the observe-then-declare law
+/// has one home and this file keeps its length budget.
+#[path = "hybrid_emit/unit_trace.rs"]
+mod unit_trace;
+use unit_trace::UnitTrace;
 
 /// Build the per-unit table (PROP-038 §2.1) from the resolution: every
 /// materialised package becomes a [`UnitInput`] whose edges carry the link
@@ -132,6 +140,9 @@ fn slot_rel_path(dep: &ResolvedDep) -> String {
     implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#units",
     r = 1
 )]
+// The borrowed recorder is one argument past the lint's threshold; the other
+// seven are the emission inputs this pass already took before R3.4.
+#[allow(clippy::too_many_arguments)]
 pub(super) fn emit_package_units(
     workspace_root: &Path,
     self_coord: &vibe_spec::SelfCoordinate,
@@ -140,11 +151,23 @@ pub(super) fn emit_package_units(
     shared: &HashSet<UnitId>,
     fingerprints: &HashMap<UnitId, String>,
     spec_format: SpecFormat,
+    trace: Option<&TraceRun>,
 ) -> Result<HashSet<UnitId>, WorkspaceError> {
     let slots: HashMap<UnitId, String> = resolution
         .iter()
         .map(|d| ((d.group.clone(), d.name.clone()), slot_rel_path(d)))
         .collect();
+    // The resolved version of each unit — the label half of a unit's trace
+    // identity, read from the resolution exactly as the boot-graph
+    // fingerprint's `versions` map is. `None` when there is no recorder: off
+    // mode allocates no trace-only value at all, not even an empty map it
+    // would never read.
+    let versions: Option<HashMap<UnitId, String>> = trace.map(|_| {
+        resolution
+            .iter()
+            .map(|d| ((d.group.clone(), d.name.clone()), d.version.to_string()))
+            .collect()
+    });
     let zones: HashMap<UnitId, ZoneMembership> = table
         .keys()
         .map(|id| (id.clone(), hybrid::resolve_zone(id, table)))
@@ -171,8 +194,13 @@ pub(super) fn emit_package_units(
     // `hoist::soft_static_pulls` counts package→package static pulls only,
     // never an entry-point node's own, so a member pulled by both the root and
     // an aggregator scores one puller and is never hoisted (§2.4). -->
-    for id in &with_static {
-        let Some(slot) = slots.get(id) else { continue };
+
+    // ONE per-unit body, walked by whichever order the mode is entitled to.
+    // Semantics are identical either way; only the sequence of units differs.
+    let emit_unit = |id: &UnitId| -> Result<(), WorkspaceError> {
+        let Some(slot) = slots.get(id) else {
+            return Ok(());
+        };
         let effective = zone_to_effective(
             id,
             &zones[id],
@@ -184,6 +212,22 @@ pub(super) fn emit_package_units(
         );
         let boot_dir = workspace_root.join(slot).join(layout::current_boot_dir());
         let fp = fingerprints.get(id).map(String::as_str).unwrap_or("");
+        // A unit whose zone has no static content declares no scope at all —
+        // and with no recorder, not one trace-only string is built here.
+        let unit_trace = trace
+            .filter(|_| effective.static_entries().next().is_some())
+            .map(|run| {
+                UnitTrace::new(
+                    run,
+                    id,
+                    versions
+                        .as_ref()
+                        .and_then(|versions| versions.get(id))
+                        .map_or("", String::as_str),
+                    spec_format,
+                    slot,
+                )
+            });
         emit_effective(
             &boot_dir,
             workspace_root,
@@ -191,7 +235,35 @@ pub(super) fn emit_package_units(
             &effective,
             fp,
             spec_format,
-        )?;
+            unit_trace.as_ref(),
+        )
+    };
+
+    match trace {
+        // A recorder present makes ORDER observable — scope ids, event
+        // sequences and snapshot names would otherwise follow hash-table
+        // construction. Only then are the units collected and sorted by their
+        // canonical typed `(group, name)`, before the first descriptor, scope
+        // or compile, so permuting the resolution permutes nothing a reader
+        // sees. The returned set is unchanged: membership, not order, is its
+        // contract.
+        Some(_) => {
+            let mut ordered: Vec<&UnitId> = with_static.iter().collect();
+            ordered.sort();
+            for id in ordered {
+                emit_unit(id)?;
+            }
+        }
+        // Off mode walks the set EXACTLY as it did before the trace existed —
+        // no buffer, no sort, and therefore the historical compile/write order
+        // and the historical first error on a tree with several bad units.
+        // Sorting here would be a trace-only allocation changing untraced
+        // behaviour, which is the one thing the traced siblings may not do.
+        None => {
+            for id in &with_static {
+                emit_unit(id)?;
+            }
+        }
     }
     Ok(with_static)
 }
@@ -329,6 +401,25 @@ fn dynamic_target_path(
 /// static content) into `boot_dir`. Unlike [`boot_artifacts::write_boot_artifacts`]
 /// this writes **no** redirect blocks — a dependency package slot is not an
 /// agent entry point, so it carries no `CLAUDE.md` / `AGENTS.md` / `GEMINI.md`.
+///
+/// The trace law (R3.4), per unit that has a static artifact:
+///
+/// * exact fingerprint-fresh ⇒ the existing selected STATIC file is OBSERVED
+///   first (no-follow/single-link), and only a successful observation declares
+///   an occurrence, immediately `skipped` with the SAME output fingerprint
+///   authority the prior dirty compile completed with: zero events, no
+///   rewrite, mtime untouched. A refusal declares NOTHING — the already-proved
+///   boot freshness stands, one bounded warning names why, and the run carries
+///   no occurrence for a compile that never happened, so it can still finalise
+///   `ok`;
+/// * dirty ⇒ the directory and INDEX are written first, and the occurrence is
+///   acquired at the COMPILE boundary inside [`boot_artifacts`], completing
+///   with the emitted-output fingerprint or failing with the original error.
+///   No pre-compiler refusal here (a directory that cannot be created, an
+///   INDEX that cannot be rendered or written) can leave a pending scope.
+///
+/// Nothing here changes the dirty-subgraph selection or any mtime: the
+/// freshness check is computed exactly as before the trace existed.
 fn emit_effective(
     boot_dir: &Path,
     workspace_root: &Path,
@@ -336,6 +427,7 @@ fn emit_effective(
     effective: &EffectiveBoot,
     fingerprint: &str,
     spec_format: SpecFormat,
+    unit_trace: Option<&UnitTrace<'_>>,
 ) -> Result<(), WorkspaceError> {
     let index = boot_dir.join(boot_artifacts::INDEX_FILE);
     let static_path = boot_dir.join(boot_artifacts::static_file(spec_format));
@@ -355,6 +447,9 @@ fn emit_effective(
             .as_deref()
             == Some(fingerprint);
     if unchanged {
+        if let Some(unit_trace) = unit_trace {
+            unit_trace.record_fresh_skip(workspace_root);
+        }
         return Ok(());
     }
     fs::create_dir_all(boot_dir).map_err(|e| io_err(boot_dir, e))?;
@@ -363,11 +458,12 @@ fn emit_effective(
         boot_artifacts::render_index_with_spec_format(effective, Some(fingerprint), spec_format)?,
     )
     .map_err(|e| io_err(&index, e))?;
-    match boot_artifacts::render_static_with_spec_format(
+    match boot_artifacts::render_static_observed(
         effective,
         workspace_root,
         self_coord,
         spec_format,
+        unit_trace.map(UnitTrace::acquisition),
     )? {
         Some(text) => {
             fs::write(&static_path, text).map_err(|e| io_err(&static_path, e))?;

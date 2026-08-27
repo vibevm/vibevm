@@ -72,12 +72,27 @@ use vibe_wire::generated::compiler_trace_index::e1::index::{
 /// the directory it protects cannot protect that directory's creation.
 const TRACE_LOCK: &str = "compile-trace.lock";
 
+mod attempts;
 mod bounded;
+mod descriptors;
 mod identity;
 mod retention;
 mod sequence;
 mod state;
 mod store;
+
+// The descriptor constructors and the attempt allocator are the workspace's
+// own MUTABLE authority over a run's identity space, so they stay
+// crate-private: a scope base is minted from typed workspace data (a
+// `(group, name)` coordinate, a canonical node rel, a `SpecFormat`) and is
+// acquired only through [`ScopeAcquisition`], never from a string an outside
+// caller composed. The exact `declare_scope` API remains public for tests and
+// other callers.
+pub(crate) use descriptors::ScopeAcquisition;
+// Production code reaches a base only through `ScopeAcquisition`; the reds
+// that plant an interrupted occurrence need the constructor itself.
+#[cfg(test)]
+pub(crate) use descriptors::node_descriptor;
 
 use state::RunState;
 use store::TraceStore;
@@ -187,6 +202,11 @@ pub enum TraceError {
     ScopeAlreadyResolved { id: String },
     #[error("scope `{id}` recorded events, so it cannot be reported as skipped")]
     SkipAfterEvents { id: String },
+    #[error(
+        "scope base `{base}` has spent every attempt id the attempt grammar can address; the \
+         counter refuses rather than saturating or wrapping"
+    )]
+    AttemptExhausted { base: String },
     #[error("the trace index refused the update: {reason}")]
     IndexRefused { reason: String },
     #[error("the run is already finalised")]
@@ -397,6 +417,41 @@ impl TraceRun {
         })
     }
 
+    /// Declare the NEXT attempt of a manager-owned BASE descriptor and take
+    /// its sink — the integration form of [`declare_scope`](Self::declare_scope).
+    ///
+    /// The base id is the stable artifact identity (minted by the workspace
+    /// descriptor constructors); the occurrence id this run declares is
+    /// `<base>::attempt:<positive-decimal>`, allocated by the closed attempt
+    /// grammar: the latest still-`pending` attempt is reacquired exactly after
+    /// a crash, a terminal attempt deterministically mints the next positive
+    /// number, a pending descriptor conflict refuses, and counter exhaustion
+    /// is an explicit error rather than a saturation or a wrap.
+    pub(crate) fn acquire_scope(&self, base: &ScopeDescriptor) -> Result<TraceScope, TraceError> {
+        let id = locked(&self.inner).acquire_scope(base)?;
+        Ok(TraceScope {
+            inner: Arc::clone(&self.inner),
+            id,
+        })
+    }
+
+    /// [`acquire_scope`](Self::acquire_scope) as an observer: a refusal
+    /// becomes a bounded [`TraceWarning::Dropped`] on the run and the answer
+    /// is `None`, meaning the caller compiles UNTRACED. The integration
+    /// adapters never let a declaration fault reach the compiler.
+    pub(crate) fn acquire_scope_lossy(&self, base: &ScopeDescriptor) -> Option<TraceScope> {
+        match self.acquire_scope(base) {
+            Ok(scope) => Some(scope),
+            Err(error) => {
+                locked(&self.inner).dropped(bounded::diagnostic(format_args!(
+                    "scope `{}` could not be declared; this compilation runs untraced: {error}",
+                    bounded::preview(&base.id)
+                )));
+                None
+            }
+        }
+    }
+
     /// The run's terminal word, written LAST.
     pub fn finish(&self, outcome: &RunOutcome, finished: Timestamp) -> TraceSummary {
         let mut state = locked(&self.inner);
@@ -408,6 +463,15 @@ impl TraceRun {
     #[must_use]
     pub fn summary(&self) -> TraceSummary {
         summarise(&locked(&self.inner), &self.run_dir)
+    }
+
+    /// Record an observer-side diagnostic as a bounded
+    /// [`TraceWarning::Dropped`] — the one integration inlet for a trace
+    /// observation that failed without a scope of its own (for example, a
+    /// fresh unit whose emitted bytes could not be re-read for the skip's
+    /// fingerprint). Never a compile or install error.
+    pub(crate) fn note_dropped(&self, reason: &str) {
+        locked(&self.inner).dropped(bounded::diagnostic(format_args!("{reason}")));
     }
 }
 
@@ -432,6 +496,39 @@ impl TraceScope {
     /// scope has recorded events, because a skipped scope is silent by law.
     pub fn skip(&self, fingerprint: &str) -> Result<(), TraceError> {
         locked(&self.inner).resolve_scope(&self.id, ScopeStatus::Skipped, fingerprint)
+    }
+
+    /// [`complete`](Self::complete) as an observer: a refusal becomes a
+    /// bounded [`TraceWarning::Dropped`] and nothing propagates. The artifact
+    /// exists; only its recording failed.
+    pub fn complete_lossy(&self, fingerprint: &str) {
+        self.resolve_lossy(ScopeStatus::Compiled, fingerprint);
+    }
+
+    /// [`fail`](Self::fail) as an observer, in the same shape.
+    pub fn fail_lossy(&self, failure: &str) {
+        self.resolve_lossy(ScopeStatus::Failed, failure);
+    }
+
+    /// [`skip`](Self::skip) as an observer, in the same shape.
+    pub fn skip_lossy(&self, fingerprint: &str) {
+        self.resolve_lossy(ScopeStatus::Skipped, fingerprint);
+    }
+
+    fn resolve_lossy(&self, status: ScopeStatus, witness: &str) {
+        if let Err(error) = locked(&self.inner).resolve_scope(&self.id, status.clone(), witness) {
+            locked(&self.inner).dropped(bounded::diagnostic(format_args!(
+                "scope `{}` could not be reported as `{}`: {error}",
+                bounded::preview(&self.id),
+                // The wire spelling, not `{:?}` of the domain copy.
+                match status {
+                    ScopeStatus::Compiled => "compiled",
+                    ScopeStatus::Failed => "failed",
+                    ScopeStatus::Skipped => "skipped",
+                    ScopeStatus::Pending => "pending",
+                }
+            )));
+        }
     }
 }
 

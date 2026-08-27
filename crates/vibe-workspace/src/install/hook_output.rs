@@ -4,6 +4,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#
 
 use super::*;
 use crate::hooks::ConfiguredHookRunner;
+use crate::install::bootgen::regenerate_boot_from_traced;
 
 /// Additive execution-policy seam for callers that must contain hook streams.
 /// Existing install-family APIs preserve inherited subprocess I/O by routing
@@ -46,6 +47,30 @@ pub fn apply_resolution_with_spec_format_and_slot_lifecycle(
     slot_verifier: Option<&dyn SlotVerifier>,
     lifecycle: SlotLifecycleMode<'_>,
 ) -> Result<InstallOutcome, WorkspaceError> {
+    apply_resolution_with_spec_format_and_slot_lifecycle_traced(
+        workspace,
+        resolution,
+        slot_integrity,
+        spec_format,
+        slot_verifier,
+        lifecycle,
+        None,
+    )
+}
+
+/// The traced sibling of [`apply_resolution_with_spec_format_and_slot_lifecycle`]:
+/// one borrowed run carried through the boot regeneration this apply performs.
+/// Pre-install park/failure still aborts before any boot compilation — the
+/// recorder is only ever BORROWED here, never opened or finished.
+pub fn apply_resolution_with_spec_format_and_slot_lifecycle_traced(
+    workspace: &Workspace,
+    resolution: &[ResolvedDep],
+    slot_integrity: SlotIntegrity,
+    spec_format: SpecFormat,
+    slot_verifier: Option<&dyn SlotVerifier>,
+    lifecycle: SlotLifecycleMode<'_>,
+    trace: Option<&crate::compile_trace::TraceRun>,
+) -> Result<InstallOutcome, WorkspaceError> {
     match lifecycle {
         SlotLifecycleMode::None => apply_with_materialise_lifecycle(
             workspace,
@@ -54,6 +79,7 @@ pub fn apply_resolution_with_spec_format_and_slot_lifecycle(
             spec_format,
             slot_verifier,
             MaterialiseLifecycle::None,
+            trace,
         ),
         SlotLifecycleMode::Callback(callback) => apply_with_materialise_lifecycle(
             workspace,
@@ -62,6 +88,7 @@ pub fn apply_resolution_with_spec_format_and_slot_lifecycle(
             spec_format,
             slot_verifier,
             MaterialiseLifecycle::Callback(callback),
+            trace,
         ),
         SlotLifecycleMode::LegacyHooks { policy, output } => {
             let runner = ConfiguredHookRunner::new(output);
@@ -76,6 +103,7 @@ pub fn apply_resolution_with_spec_format_and_slot_lifecycle(
                     probe: &SystemProbe,
                     runner: &runner,
                 },
+                trace,
             )
         }
     }
@@ -88,6 +116,7 @@ fn apply_with_materialise_lifecycle(
     spec_format: SpecFormat,
     slot_verifier: Option<&dyn SlotVerifier>,
     lifecycle: MaterialiseLifecycle<'_>,
+    trace: Option<&crate::compile_trace::TraceRun>,
 ) -> Result<InstallOutcome, WorkspaceError> {
     // A malformed instruction block aborts before any mutation.
     validate_redirect_blocks(workspace)?;
@@ -111,8 +140,7 @@ fn apply_with_materialise_lifecycle(
 
     let kept: Vec<String> = materialised.iter().chain(&skipped).cloned().collect();
     let pruned = prune_stale_slots(&workspace.root, &kept)?;
-    let nodes_regenerated =
-        regenerate_boot_from_with_spec_format(workspace, resolution, spec_format)?;
+    let nodes_regenerated = regenerate_boot_from_traced(workspace, resolution, spec_format, trace)?;
 
     Ok(InstallOutcome {
         materialised,

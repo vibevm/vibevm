@@ -46,9 +46,11 @@ use vibe_core::{layout, manifest::SpecFormat};
 use vibe_spec::{
     ArtifactCompileError, ArtifactInput, ArtifactInputType, ArtifactPlan, ArtifactTarget,
     EmittedArtifact, FileResolver, FsSectionSource, SelfCoordinate, compile_artifact,
+    compile_artifact_traced,
 };
 
 use crate::boot::EffectiveBoot;
+use crate::compile_trace::{ScopeAcquisition, TraceRun};
 use crate::{WorkspaceError, layout_paths};
 use normal::{hoisted_seed, normal_seed};
 
@@ -216,7 +218,29 @@ pub fn render_static_with_spec_format(
     self_coord: &SelfCoordinate,
     spec_format: SpecFormat,
 ) -> Result<Option<String>, WorkspaceError> {
-    let artifact = compile_static_artifact(boot, workspace_root, self_coord, spec_format)?;
+    render_static_observed(boot, workspace_root, self_coord, spec_format, None)
+}
+
+/// [`render_static_with_spec_format`] through one not-yet-acquired trace
+/// occurrence. `acquisition` is the borrowed run plus the base identity a
+/// traced caller minted for THIS artifact; the occurrence itself is acquired
+/// at the compile boundary inside. `None` is the historical untraced path,
+/// byte-for-byte.
+pub(crate) fn render_static_observed(
+    boot: &EffectiveBoot,
+    workspace_root: &Path,
+    self_coord: &SelfCoordinate,
+    spec_format: SpecFormat,
+    acquisition: Option<&ScopeAcquisition<'_>>,
+) -> Result<Option<String>, WorkspaceError> {
+    let artifact = compile_static_artifact_with(
+        boot,
+        workspace_root,
+        self_coord,
+        spec_format,
+        acquisition,
+        compile_artifact,
+    )?;
     artifact
         .map(|artifact| {
             String::from_utf8(artifact.into_bytes()).map_err(|error| {
@@ -230,26 +254,33 @@ pub fn render_static_with_spec_format(
         .transpose()
 }
 
-fn compile_static_artifact(
-    boot: &EffectiveBoot,
-    workspace_root: &Path,
-    self_coord: &SelfCoordinate,
-    spec_format: SpecFormat,
-) -> Result<Option<EmittedArtifact>, WorkspaceError> {
-    compile_static_artifact_with(
-        boot,
-        workspace_root,
-        self_coord,
-        spec_format,
-        compile_artifact,
-    )
-}
-
+/// Compile one node's static lane exactly once, traced or not.
+///
+/// The trace law of this seam (R3.4): no static entries means no scope AND no
+/// compiler, exactly as before; an acquisition present means the occurrence is
+/// taken **at the compile boundary** — after every fallible preparation step,
+/// immediately before the ONE compiler call — and that call runs through the
+/// resulting sink ([`compile_artifact_traced`]), its result supplying both the
+/// scope's terminal word and the artifact; no acquisition means the historical
+/// `compiler` path, exactly once. A compiler failure fails the scope and then
+/// returns the ORIGINAL error mapping unchanged; a later transaction failure
+/// may legitimately leave the scope `compiled` (the command owner finalises
+/// the run).
+///
+/// Acquiring here rather than in the caller is the point: an input that cannot
+/// be built and a plan the compiler refuses to accept both return before a
+/// scope exists, so no pre-compiler refusal can leave a pending occurrence for
+/// work that was never attempted.
+///
+/// The injected `compiler` is the seam the characterization tests use; it is
+/// consulted only on the untraced path — the traced path is always the real
+/// built-in schedule, because that is the schedule a trace certifies.
 fn compile_static_artifact_with(
     boot: &EffectiveBoot,
     workspace_root: &Path,
     self_coord: &SelfCoordinate,
     spec_format: SpecFormat,
+    acquisition: Option<&ScopeAcquisition<'_>>,
     compiler: impl FnOnce(
         ArtifactPlan,
         &FsSectionSource,
@@ -316,20 +347,42 @@ fn compile_static_artifact_with(
         reason: error.to_string(),
     })?;
     let source = FsSectionSource::new(FileResolver::new(workspace_root, self_coord.clone()));
-    compiler(plan, &source).map(Some).map_err(|error| {
-        let reason = match error {
-            ArtifactCompileError::Input { input, source }
-                if input.kind == ArtifactInputType::Normal =>
-            {
-                format!(
-                    "compiling the normal package `{}` closure (PROP-035 §8): {source}",
-                    input.origin
-                )
+    // THE COMPILE BOUNDARY. Every fallible preparation above has completed;
+    // the next thing that happens is the compiler. Only now is the occurrence
+    // acquired — and a refusal to declare it simply compiles untraced.
+    let scope = acquisition.and_then(ScopeAcquisition::acquire);
+    // The ONE compiler call: through the acquired sink when tracing, through
+    // the historical path when not. Its result — never a second compile —
+    // supplies both the scope's terminal word and the artifact.
+    let compiled = match &scope {
+        Some(scope) => compile_artifact_traced(plan, &source, scope),
+        None => compiler(plan, &source),
+    };
+    match compiled {
+        Ok(artifact) => {
+            if let Some(scope) = &scope {
+                scope.complete_lossy(&artifact.output_fingerprint());
             }
-            error => error.to_string(),
-        };
-        WorkspaceError::InlineCompile { reason }
-    })
+            Ok(Some(artifact))
+        }
+        Err(error) => {
+            if let Some(scope) = &scope {
+                scope.fail_lossy(&error.to_string());
+            }
+            let reason = match error {
+                ArtifactCompileError::Input { input, source }
+                    if input.kind == ArtifactInputType::Normal =>
+                {
+                    format!(
+                        "compiling the normal package `{}` closure (PROP-035 §8): {source}",
+                        input.origin
+                    )
+                }
+                error => error.to_string(),
+            };
+            Err(WorkspaceError::InlineCompile { reason })
+        }
+    }
 }
 
 /// What [`write_boot_artifacts`] wrote — for the caller to report.
@@ -384,9 +437,69 @@ pub fn write_boot_artifacts_with_spec_format(
     boot: &EffectiveBoot,
     spec_format: SpecFormat,
 ) -> Result<WrittenArtifacts, WorkspaceError> {
+    write_boot_artifacts_inner(
+        node_dir,
+        workspace_root,
+        self_coord,
+        boot,
+        spec_format,
+        None,
+    )
+}
+
+/// The traced sibling: one borrowed run, carried through this node's static
+/// compile. `node_rel` is the node's canonical workspace-relative path (`.`)
+/// — the portable identity the trace records, never `node_dir`. A recorder
+/// absent, or a node with no static entries, compiles exactly as the wrapper
+/// above; a recorder present mints the base identity here and the occurrence
+/// is acquired at the compile boundary below, completing from the compiler's
+/// own result. The run is borrowed: this layer never opens or finishes it.
+pub(crate) fn write_boot_artifacts_traced(
+    node_dir: &Path,
+    node_rel: &str,
+    workspace_root: &Path,
+    self_coord: &SelfCoordinate,
+    boot: &EffectiveBoot,
+    spec_format: SpecFormat,
+    trace: Option<&TraceRun>,
+) -> Result<WrittenArtifacts, WorkspaceError> {
+    // A node with no static contributions declares no scope at all, and the
+    // base identity is only minted when a recorder is present, so off mode
+    // allocates no id or label strings.
+    let acquisition = trace
+        .filter(|_| boot.static_entries().next().is_some())
+        .map(|run| ScopeAcquisition::node(run, node_rel, spec_format));
+    write_boot_artifacts_inner(
+        node_dir,
+        workspace_root,
+        self_coord,
+        boot,
+        spec_format,
+        acquisition.as_ref(),
+    )
+}
+
+fn write_boot_artifacts_inner(
+    node_dir: &Path,
+    workspace_root: &Path,
+    self_coord: &SelfCoordinate,
+    boot: &EffectiveBoot,
+    spec_format: SpecFormat,
+    acquisition: Option<&ScopeAcquisition<'_>>,
+) -> Result<WrittenArtifacts, WorkspaceError> {
     // Compile every fallible semantic artifact before touching existing files.
+    // INDEX rendering precedes the compiler and may refuse — which is exactly
+    // why the trace occurrence is NOT acquired here: it is taken inside, at
+    // the compile boundary, so a refusal on this line declares nothing.
     let index_text = render_index_with_spec_format(boot, None, spec_format)?;
-    let static_artifact = compile_static_artifact(boot, workspace_root, self_coord, spec_format)?;
+    let static_artifact = compile_static_artifact_with(
+        boot,
+        workspace_root,
+        self_coord,
+        spec_format,
+        acquisition,
+        compile_artifact,
+    )?;
     let boot_dir = node_dir.join(layout::current_boot_dir());
 
     // INDEX.md — always. A node carries no fingerprint (byte-stable); the

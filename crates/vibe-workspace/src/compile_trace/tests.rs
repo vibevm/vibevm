@@ -6,6 +6,7 @@
 //! test asserts an elapsed value and no production path here reads a clock:
 //! instants are arguments.
 
+mod attempts;
 mod concurrency;
 mod hardening;
 mod lifecycle;

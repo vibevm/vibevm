@@ -48,6 +48,7 @@ pub use model::{InstallOutcome, PostInstallPlan, ResolvedDep, SlotCheck, SlotVer
 pub use hook_output::{
     apply_resolution_with_spec_format_and_hook_output,
     apply_resolution_with_spec_format_and_slot_lifecycle,
+    apply_resolution_with_spec_format_and_slot_lifecycle_traced,
 };
 use hooks_run::SubtreeOutcome;
 pub use hooks_run::{
@@ -60,7 +61,8 @@ pub use slot_lifecycle::{
 
 pub use bootgen::verify_boot_graph;
 pub use bootgen::{
-    regenerate_boot, regenerate_boot_from, regenerate_boot_from_with_spec_format,
+    regenerate_boot, regenerate_boot_from, regenerate_boot_from_traced,
+    regenerate_boot_from_with_spec_format, regenerate_boot_traced,
     regenerate_boot_with_spec_format,
 };
 
@@ -582,3 +584,7 @@ mod tests_mutable;
 #[cfg(test)]
 #[path = "install/tests_slot_lifecycle.rs"]
 mod tests_slot_lifecycle;
+
+#[cfg(test)]
+#[path = "install/tests_trace.rs"]
+mod tests_trace;

@@ -46,6 +46,7 @@ mod visibility_projection;
 pub use apply::{
     ApplyReport, SlotLifecycleSeams, apply, apply_with_spec_format,
     apply_with_spec_format_and_hook_output, apply_with_spec_format_and_lifecycle_observed,
+    apply_with_spec_format_and_lifecycle_observed_traced,
 };
 pub use error::Error;
 pub use events::{NullObserver, PlanEvent, PlanObserver};

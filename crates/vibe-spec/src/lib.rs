@@ -50,6 +50,7 @@ pub use compiler::builtin::{
 pub use compiler::ir::{
     ArtifactContext, ArtifactInput, ArtifactInputType, ArtifactInputWitness, ArtifactPlan,
     ArtifactPlanError, ArtifactTarget, EmissionProvenance, EmittedArtifact,
+    emitted_output_fingerprint,
 };
 // The observation vocabulary itself is NOT re-exported: status, level,
 // cardinality, shape and duration are the generated

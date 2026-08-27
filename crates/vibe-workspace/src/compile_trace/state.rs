@@ -244,6 +244,26 @@ impl RunState {
         }
     }
 
+    /// Declare the NEXT attempt of a manager-owned base descriptor — the
+    /// hosted-resume form of [`declare_scope`](Self::declare_scope). The
+    /// attempt law itself is decided by [`super::attempts::allocate`]; this
+    /// half only mints the occurrence id and declares it, so the reacquire
+    /// path lands in the same publish-and-rollback law as a fresh scope.
+    pub(super) fn acquire_scope(&mut self, base: &ScopeDescriptor) -> Result<String, TraceError> {
+        let attempt = super::attempts::allocate(&self.index.scopes, base)?;
+        let mut occurrence = base.clone();
+        occurrence.id = super::attempts::attempt_id(&base.id, attempt);
+        self.declare_scope(&occurrence)?;
+        Ok(occurrence.id)
+    }
+
+    /// Record an observer-side fault as a bounded [`TraceWarning::Dropped`].
+    /// The integration adapters call this instead of propagating: the compile
+    /// is already done, only its recording failed.
+    pub(super) fn dropped(&mut self, reason: String) {
+        self.warn(TraceWarning::Dropped { reason });
+    }
+
     /// Move one pending scope to its terminal word.
     ///
     /// A `failure` is a DIAGNOSTIC and is bounded to the epoch's cap. A

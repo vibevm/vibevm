@@ -17,7 +17,7 @@ use vibe_workspace::Workspace;
 use vibe_workspace::hooks::{HookOutput, HookPolicy, HookReport};
 use vibe_workspace::install::{
     InstallOutcome, ResolvedDep, SlotLifecycleMode,
-    apply_resolution_with_spec_format_and_slot_lifecycle, run_post_install_slot_lifecycle,
+    apply_resolution_with_spec_format_and_slot_lifecycle_traced, run_post_install_slot_lifecycle,
 };
 use vibe_workspace::vibedeps;
 
@@ -115,6 +115,7 @@ pub fn apply_with_spec_format_and_hook_output<S: InstallSource + ?Sized>(
             output: hook_output,
         },
         None,
+        None,
     )
 }
 
@@ -155,6 +156,36 @@ pub fn apply_with_spec_format_and_lifecycle_observed<S: InstallSource + ?Sized>(
     streams: StreamMode,
     seams: SlotLifecycleSeams,
 ) -> Result<ApplyReport> {
+    apply_with_spec_format_and_lifecycle_observed_traced(
+        source,
+        planned,
+        slot_integrity,
+        spec_format,
+        run,
+        streams,
+        seams,
+        None,
+    )
+}
+
+/// The traced sibling of [`apply_with_spec_format_and_lifecycle_observed`]:
+/// one borrowed compile-trace run, carried through the workspace apply this
+/// phase performs — package-unit emission first, then every node. The
+/// recorder's lifetime is the COMMAND's, not this layer's: apply borrows it
+/// and never opens, finishes or clones it into an outcome. A pre-install
+/// park/failure still aborts before any boot compilation, exactly as
+/// untraced, so a parked run leaves a partial but honest trace.
+#[allow(clippy::too_many_arguments)]
+pub fn apply_with_spec_format_and_lifecycle_observed_traced<S: InstallSource + ?Sized>(
+    source: &S,
+    planned: PlannedInstall,
+    slot_integrity: SlotIntegrity,
+    spec_format: SpecFormat,
+    run: RunMetadata,
+    streams: StreamMode,
+    seams: SlotLifecycleSeams,
+    trace: Option<&vibe_workspace::compile_trace::TraceRun>,
+) -> Result<ApplyReport> {
     let lifecycle = InstallSlotLifecycle::from_plan_observed(&planned, run, streams, seams)?;
     let lifecycle_run = lifecycle.run_handle();
     let applied = apply_with_spec_format_and_slot_lifecycle(
@@ -164,6 +195,7 @@ pub fn apply_with_spec_format_and_lifecycle_observed<S: InstallSource + ?Sized>(
         spec_format,
         SlotLifecycleMode::Callback(&lifecycle),
         Some(&lifecycle),
+        trace,
     );
     // A parked hosted row halts the orchestrator through the seam's only
     // stopping channel. It is a durable handoff, not a failure — so it is
@@ -213,6 +245,9 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
     // it exists. A post-install park then reports the whole apply rather than
     // the pre-install view of it.
     observer: Option<&InstallSlotLifecycle>,
+    // The borrowed compile-trace run, when the command owns one; carried into
+    // the workspace apply's boot regeneration and no further.
+    trace: Option<&vibe_workspace::compile_trace::TraceRun>,
 ) -> Result<ApplyReport> {
     let PlannedInstall {
         project_root,
@@ -296,13 +331,14 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
     //    verifier reads is post-deferral, so an incrementally-updated
     //    in-place slot (which never consults it) still records fresh.
     let slot_verifier = RegistrySlotVerifier::from_fetched(&fetched);
-    let mut outcome = apply_resolution_with_spec_format_and_slot_lifecycle(
+    let mut outcome = apply_resolution_with_spec_format_and_slot_lifecycle_traced(
         &workspace,
         &resolution,
         slot_integrity,
         spec_format,
         Some(&slot_verifier),
         lifecycle,
+        trace,
     )?;
 
     for warning in &outcome.integrity_warnings {

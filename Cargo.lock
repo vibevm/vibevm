@@ -4168,6 +4168,7 @@ version = "1.0.0"
 dependencies = [
  "core-ai-native-specmark",
  "semver",
+ "serde_json",
  "tempfile",
  "thiserror 2.0.18",
  "tracing",
