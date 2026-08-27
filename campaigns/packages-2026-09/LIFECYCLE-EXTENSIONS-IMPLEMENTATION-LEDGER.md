@@ -31,12 +31,12 @@ only durable home of a decision.
 
 ## 2. Evidence standard and current baseline
 
-- Integration checkpoint: `main` at `1298d1af` after hosted lifecycle resume,
+- Integration checkpoint: `main` at `1a81cffd` after hosted lifecycle resume,
   compiler observer/writer, the shared trace command-report wire, sticky
   lifecycle trace identity and the R7.4 implementation architecture.
 - `cargo test --workspace --locked`: green on 2026-08-27 at the unchanged
   product checkpoint.
-- `cargo xtask specmap`: 6774 units, 2048 tagged code items, 1831 edges,
+- `cargo xtask specmap`: 6774 units, 2050 tagged code items, 1833 edges,
   0 suspects, 0 gated orphans, 0 unresolved host edges and 21 standing
   warnings. The 25 non-host edges are outside this map's jurisdiction.
 - R6.2b integration evidence on the current tree: `cargo xtask codegen`
@@ -78,6 +78,18 @@ only durable home of a decision.
   accepted worker commit, and the remaining test differs only by the required
   `RunMetadata.trace_compile=true|false` cross-atom adaptation. Specmap is
   clean at `1298d1af` with zero suspects/gated orphans/unresolved host edges.
+- R3.4 command-owner core evidence on the current tree: `cad8ecc1` adds a
+  non-creating, lock-serialized `TraceRun::open_existing`, one private non-Clone
+  CLI preparation and generic `CommandExit<R> → FinalizedCommand<R>` funnel.
+  Adopted/missing runs never start mid-history; state-proven predecessors are
+  terminalised before the current open; disabled/park/unavailable paths call no
+  finish clock; plain drop performs no I/O. Rich command errors never enter
+  trace files (`command failed` is fixed), while the same error object returns
+  intact; sealed `BoundedDiagnostic` makes the writer's streaming clamp the
+  only whole-message clamp. Root passed 86 writer + 21 CLI owner/security tests,
+  fmt and strict two-crate clippy; two independent final reviews ended PASS.
+  Specmap is clean at `1a81cffd` with zero suspects/gated orphans/unresolved
+  host edges.
 - R7.3 integration evidence on the current tree: state transaction tests 5/5;
   hosted cancellation/progress/sequential-slot e2e 2/5/1; targeted five-crate
   clippy clean; 48-schema codegen idempotent; specmap has zero gated orphans;
@@ -142,7 +154,7 @@ this campaign, but compatibility law is preserved.
 | R3.1 five levels, six carriers, typed pass manager | done | `3630ab9e`; `compiler/{ir,pass,pipeline}.rs` |
 | R3.2 parse→close→merge→embed→qualify→absorb→link→assemble→emit | done | `a7961003`, `96eef07d`, `e53b9a4e`, `ec7ea7fe`, `e653654d`, `2feef271`, `6de7ef05`, `6f3fa61a`, `302a3509`, `4403cb55`; 84 boot-artifact + 10 emit gates |
 | R3.3 verifier-each skeleton | done | `15793f2e`; immutable test-only manager verifier, typed level/transition errors, SCC/document/lane/marker/fence invariants; 61 focused verifier tests + independent freeze |
-| R3.4 compile snapshots/timings | in progress | `6f4a717d` metadata/index/filename; `7adfbb5a` manifest activation; `fa0662a9` observer/pre-encode; `4d95a129` writer/lock/retention/budget; `34d3f363` shared command report; `0301f8f2` sticky/displaced identity; `be04a184` borrowed attempt-aware workspace/install compilation. Command-owned open-existing/outcome funnel, flags/presentation and cross-command e2e remain |
+| R3.4 compile snapshots/timings | in progress | `6f4a717d` metadata/index/filename; `7adfbb5a` manifest activation; `fa0662a9` observer/pre-encode; `4d95a129` writer/lock/retention/budget; `34d3f363` shared report; `0301f8f2` sticky/displaced identity; `be04a184` borrowed workspace/install compilation; `cad8ecc1` open-existing + one generic command owner/funnel. Flags, four-command wiring/presentation and cross-command e2e remain |
 
 R3.2 also landed a crash-safe whole-artifact transaction/selector tier. That
 unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
@@ -411,6 +423,9 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
   The accepted R3.4 borrowed-threading worktree then measured 8,781,245,020
   bytes before its 25 blob-equal files plus one reviewed cross-atom test
   adaptation were proved on `main` and it was reclaimed under the same law.
+  The accepted R3.4 command-core worktree measured 8,159,333,593 bytes before
+  its equivalent product commit, two final reviews, exact main-tree gates and
+  durable decision capture were proved; it was then reclaimed immediately.
 
 ## 7. Dependency plan and parallel lanes
 

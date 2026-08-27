@@ -70,8 +70,9 @@ fronts currently in flight. A worker report or old worktree is never completion.
       exact state-proven displacement (`0301f8f2`). Borrowed recorder plumbing
       through attempt-aware package-unit/node compilation is landed
       (`be04a184`; off-mode compatibility wrappers remain exact). Command-owned
-      open-existing/outcome funnel, flags, timing presentation and cross-command
-      e2e remain.
+      non-creating reopen and the one generic outcome funnel are landed
+      (`cad8ecc1`; rich errors remain outside trace files). Flags, four-command
+      wiring, timing presentation and cross-command e2e remain.
 - [ ] **R4.0–R4.3** — shared lower registry; four staged positions;
       transforms header/fingerprint/reference oracle; minify binding; analyzer.
 - [ ] **R5.1–R5.5** — native schemas/SDK, loader, source/prebuilt build,
