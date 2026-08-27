@@ -128,9 +128,10 @@ pub use runner::{
     UNKNOWN_PROVENANCE,
 };
 pub use state::{
-    FingerprintError, LifecycleStateError, LifecycleStateStore, RunIdentity, fingerprint_execution,
-    fingerprint_execution_with, fingerprint_handler_execution, fingerprint_handler_execution_with,
-    preparation_error_fingerprint, preparation_error_fingerprint_for_identity, select_run_identity,
+    FingerprintError, LifecycleStateError, LifecycleStateStore, RunIdentity, SupersededTrace,
+    fingerprint_execution, fingerprint_execution_with, fingerprint_handler_execution,
+    fingerprint_handler_execution_with, preparation_error_fingerprint,
+    preparation_error_fingerprint_for_identity, select_run_identity,
 };
 pub use vibe_core::lifecycle::{
     CompilePoint, CompilePointParseError, DEFAULT_PHASES, ExtensionPoint, ExtensionPointParseError,

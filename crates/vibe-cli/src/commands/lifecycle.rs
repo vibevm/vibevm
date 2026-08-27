@@ -119,6 +119,7 @@ pub(crate) fn run_clean_only(
         assume_yes: metadata_assume_yes(ctx, args.assume_yes),
         agent_mode: ctx.agent_mode(),
         force: false,
+        trace_compile: false,
         run_id: new_run_id(Path::new(&plan.project.root))?,
         started: crate::commands::init::current_timestamp_utc(),
     };
@@ -240,6 +241,14 @@ fn execute(
         assume_yes,
         agent_mode: ctx.agent_mode(),
         force: install_args.force,
+        // The EFFECTIVE bit the one selector computed — never a
+        // hard-coded false. `current_request` is still absent (the
+        // CLI/manifest flag is the next atom), so this is false today
+        // for a fresh run; for an ADOPTED run it is the parked run's
+        // own sticky bit, and carrying it here is what stops
+        // `LifecycleStateStore::begin` from rewriting a traced run's
+        // header back to untraced on its own resume.
+        trace_compile: identity.compile_trace,
         run_id: identity.run_id,
         started: identity.started,
     };
@@ -474,6 +483,9 @@ pub(crate) fn run_identity(
         chain,
         ctx.agent_mode(),
         force,
+        // The CLI/manifest trace request lands in the next command atom;
+        // every current call site selects with the request absent.
+        false,
         crate::commands::init::current_timestamp_utc(),
     )
     .map_err(Into::into)

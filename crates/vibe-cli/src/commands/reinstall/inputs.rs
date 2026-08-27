@@ -41,6 +41,8 @@ pub(super) fn reinstall_metadata(
         assume_yes: args.assume_yes || ctx.is_unattended() || ctx.is_json(),
         agent_mode: ctx.agent_mode(),
         force: false,
+        // The selector's effective sticky bit, not a hard-coded false.
+        trace_compile: identity.compile_trace,
         run_id: identity.run_id,
         started: identity.started,
     })

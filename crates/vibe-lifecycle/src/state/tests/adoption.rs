@@ -27,6 +27,7 @@ fn parked(root: &Path) {
         chain(&CHAIN),
         STARTED.into(),
         RUN_ID.into(),
+        false,
     )
     .unwrap();
     store
@@ -51,6 +52,7 @@ fn select(
         &chain(phases),
         mode,
         force,
+        false,
         FRESH.into(),
     )
     .unwrap()
@@ -153,6 +155,7 @@ fn a_prior_run_without_a_parked_row_is_not_resumable() {
         chain(&CHAIN),
         STARTED.into(),
         RUN_ID.into(),
+        false,
     )
     .unwrap();
     store
@@ -190,6 +193,7 @@ fn a_pre_r73_state_file_still_opens_and_keeps_its_rows() {
         chain(&CHAIN),
         FRESH.into(),
         identity.run_id.clone(),
+        false,
     )
     .unwrap();
     assert!(store.prior(KEY).is_some(), "old rows are preserved");
@@ -208,6 +212,7 @@ fn a_fresh_run_prunes_prior_delegated_rows_but_keeps_reusable_ones() {
         chain(&CHAIN),
         STARTED.into(),
         RUN_ID.into(),
+        false,
     )
     .unwrap();
     store
@@ -235,6 +240,7 @@ fn a_fresh_run_prunes_prior_delegated_rows_but_keeps_reusable_ones() {
         chain(&["validate", "install", "build"]),
         FRESH.into(),
         OTHER_RUN.into(),
+        false,
     )
     .unwrap();
     assert!(
@@ -268,6 +274,7 @@ fn adopting_the_same_id_retains_the_delegated_row() {
         chain(&CHAIN),
         identity.started,
         identity.run_id,
+        false,
     )
     .unwrap();
     let prior = store.prior(KEY).expect("the park survives its own resume");
@@ -342,6 +349,7 @@ fn corrupt_delegated_state_refuses_rather_than_minting_a_new_identity() {
             &chain(&CHAIN),
             RunAgentMode::Agent,
             false,
+            false,
             FRESH.into(),
         )
         .unwrap_err()
@@ -369,6 +377,7 @@ fn a_non_delegated_row_with_tasks_and_a_bad_header_id_are_both_refused() {
         chain(&CHAIN),
         STARTED.into(),
         RUN_ID.into(),
+        false,
     )
     .unwrap();
     let mut smuggled = record_for(KEY, RUN_ID, ExecutionRecordStatus::Ok, "sha256:x");
@@ -386,6 +395,7 @@ fn a_non_delegated_row_with_tasks_and_a_bad_header_id_are_both_refused() {
         chain(&CHAIN),
         STARTED.into(),
         "NOT-HEX".into(),
+        false,
     )
     .unwrap_err()
     .to_string();
@@ -461,6 +471,7 @@ fn scope_and_continuation_violations_refuse_before_adoption() {
             "create",
             &chain(&CHAIN),
             RunAgentMode::Agent,
+            false,
             false,
             FRESH.into(),
         )

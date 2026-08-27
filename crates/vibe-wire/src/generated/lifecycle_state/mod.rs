@@ -114,6 +114,15 @@ pub struct StateRun {
 
     pub started: String,
 
+    /// Whether this run compiles with the trace observer enabled — the
+    /// STICKY activation bit (PROP-054 `##OBS-TRACE`, R3.4). Written with the
+    /// effective value (current request OR, on adoption, this persisted bit),
+    /// so a resume keeps tracing even when the original one-shot flag is absent
+    /// and the manifest changed meanwhile. Absent in pre-R3.4 files and reads
+    /// false.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub compile_trace: bool,
+
     /// Durable identity of the run that wrote this state. Absent in pre-R7.3
     /// files; present (32 lowercase hex) whenever any row is delegated.
     #[serde(default, skip_serializing_if = "Option::is_none")]

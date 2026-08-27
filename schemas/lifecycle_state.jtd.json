@@ -40,6 +40,13 @@
             "x-default": null,
             "description": "The unfinished slot-lifecycle continuation this run owes, recorded BEFORE the first pre-install callback and cleared when the slot run completes. Present only while a slot-scoped row is delegated; absent in every pre-R7.3 file and after completion."
           }
+        },
+        "compile_trace": {
+          "type": "boolean",
+          "metadata": {
+            "x-default": false,
+            "description": "Whether this run compiles with the trace observer enabled — the STICKY activation bit (PROP-054 `##OBS-TRACE`, R3.4). Written with the effective value (current request OR, on adoption, this persisted bit), so a resume keeps tracing even when the original one-shot flag is absent and the manifest changed meanwhile. Absent in pre-R3.4 files and reads false."
+          }
         }
       }
     },

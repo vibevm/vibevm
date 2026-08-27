@@ -182,6 +182,7 @@ fn prepared(root: &Path, row: &crate::ExtensionRegistryRow) -> (ExecutionSession
             assume_yes: true,
             agent_mode: RunAgentMode::Cli,
             force: false,
+            trace_compile: false,
             run_id,
             started: "2026-08-25T00:00:00Z".into(),
         },

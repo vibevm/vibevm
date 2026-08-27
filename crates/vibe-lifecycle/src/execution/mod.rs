@@ -44,6 +44,13 @@ pub struct RunMetadata {
     pub agent_mode: RunAgentMode,
     /// Freshness override. R2.4 supplies false; R2.5 owns the flag.
     pub force: bool,
+    /// Whether this run compiles under the trace observer — the STICKY
+    /// activation bit the identity selector computes (`current request
+    /// OR the adopted run's persisted bit`, PROP-054 `##OBS-TRACE`,
+    /// R3.4). Host observation, not handler input: the generated
+    /// envelope's `run` member never carries it, and the handler context
+    /// gains no field for it.
+    pub trace_compile: bool,
     /// Machine-safe id used to isolate scratch paths within this run.
     pub run_id: String,
     /// Injected RFC3339 run-start clock value persisted in lifecycle state.

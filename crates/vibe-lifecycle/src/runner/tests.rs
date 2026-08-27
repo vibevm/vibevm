@@ -19,6 +19,13 @@ use crate::process::{StreamMode, SystemProcessRunner};
 use crate::{RunMetadata, select_run_identity};
 use vibe_workspace::hooks::SystemProbe;
 
+/// The sticky-trace half of the hosted branch — the one seam that needs
+/// an explicit metadata value rather than this file's `(run_id, force)`
+/// fixture, kept beside it rather than inside it (600-line cell budget).
+#[cfg(test)]
+#[path = "tests/trace_sticky.rs"]
+mod trace_sticky;
+
 const RUN_ID: &str = "00112233445566778899aabbccddeeff";
 const KEY: &str = "org.demo/tools#produce";
 
@@ -48,6 +55,7 @@ fn metadata(run_id: &str, force: bool) -> RunMetadata {
         assume_yes: true,
         agent_mode: RunAgentMode::Agent,
         force,
+        trace_compile: false,
         run_id: run_id.into(),
         started: "2026-08-26T00:00:00Z".into(),
     }
@@ -80,12 +88,31 @@ fn execute_result(
     run_id: &str,
     force: bool,
 ) -> Result<super::ExecutionTransition, crate::LifecycleRunError> {
+    transition(root, backend, metadata(run_id, force))
+}
+
+/// The same hosted transition driven by an EXPLICIT metadata value — the
+/// seam the trace-sticky RED needs, because what it pins is precisely
+/// which bit the metadata carried into `LifecycleRun::begin`.
+fn execute_with(
+    root: &Path,
+    backend: &RecordingBackend,
+    metadata: RunMetadata,
+) -> super::ExecutionTransition {
+    transition(root, backend, metadata).expect("the hosted transition completes")
+}
+
+fn transition(
+    root: &Path,
+    backend: &RecordingBackend,
+    metadata: RunMetadata,
+) -> Result<super::ExecutionTransition, crate::LifecycleRunError> {
     let row = row(TWO_OUTPUTS, PROMPT);
     let mut run = LifecycleRun::begin(
         root,
         project_fixture(root),
         world_fixture(root),
-        metadata(run_id, force),
+        metadata,
         vec!["validate".into(), "install".into(), "create".into()],
     )
     .unwrap();
@@ -279,6 +306,7 @@ fn force_reparks_under_a_fresh_run_without_probing() {
         &["validate".into(), "install".into(), "create".into()],
         RunAgentMode::Agent,
         true,
+        false,
         "2026-08-26T01:00:00Z".into(),
     )
     .unwrap();

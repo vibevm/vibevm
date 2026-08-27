@@ -30,6 +30,10 @@ mod lockfile;
 #[path = "tests/transaction.rs"]
 mod transaction;
 
+#[cfg(test)]
+#[path = "tests/trace_sticky.rs"]
+mod trace_sticky;
+
 const RUN_ID: &str = "00112233445566778899aabbccddeeff";
 const OTHER_RUN: &str = "ffeeddccbbaa99887766554433221100";
 
@@ -77,6 +81,7 @@ fn missing_state_writes_initial_run_and_preserves_unselected_rows() {
         chain,
         "2026-08-25T12:00:00Z".into(),
         "00112233445566778899aabbccddeeff".into(),
+        false,
     )
     .unwrap();
     assert!(store.path().is_file());
@@ -100,6 +105,7 @@ fn missing_state_writes_initial_run_and_preserves_unselected_rows() {
         ],
         "2026-08-25T13:00:00Z".into(),
         "00112233445566778899aabbccddeeff".into(),
+        false,
     )
     .unwrap();
     assert!(store.prior("__host__/demo#row").is_some());
@@ -126,10 +132,16 @@ fn malformed_unknown_and_unsupported_state_name_path_and_remediation() {
         let path = dir.path().join(LifecycleStateStore::FILE);
         fs::create_dir_all(path.parent().unwrap()).unwrap();
         fs::write(&path, body).unwrap();
-        let error =
-            LifecycleStateStore::begin(dir.path(), "x".into(), vec![], "t".into(), String::new())
-                .unwrap_err()
-                .to_string();
+        let error = LifecycleStateStore::begin(
+            dir.path(),
+            "x".into(),
+            vec![],
+            "t".into(),
+            String::new(),
+            false,
+        )
+        .unwrap_err()
+        .to_string();
         assert!(error.contains(needle), "{error}");
         assert!(error.contains(&path.display().to_string()), "{error}");
         assert!(error.contains("remove this erasable cache"), "{error}");
@@ -145,6 +157,7 @@ fn only_ok_skip_and_fresh_are_reusable_and_fresh_artifacts_survive() {
         vec![],
         "t".into(),
         "00112233445566778899aabbccddeeff".into(),
+        false,
     )
     .unwrap();
     for (status, reusable) in [
@@ -516,6 +529,7 @@ fn fresh_artifact_hydration_enters_downstream_envelope_and_fingerprint() {
             assume_yes: false,
             agent_mode: RunAgentMode::Cli,
             force: false,
+            trace_compile: false,
             run_id: "fixed".into(),
             started: "2026-08-25T12:00:00Z".into(),
         },

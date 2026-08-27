@@ -224,6 +224,7 @@ pub(crate) fn run_with_lifecycle_context(
         assume_yes: args.assume_yes || ctx.is_unattended() || ctx.is_json(),
         agent_mode: ctx.agent_mode(),
         force: args.force,
+        trace_compile: false,
         run_id: String::new(),
         started: crate::commands::init::current_timestamp_utc(),
     });
@@ -242,6 +243,12 @@ pub(crate) fn run_with_lifecycle_context(
         RunMetadata {
             run_id: identity.run_id,
             started: identity.started,
+            // Taken from the selection, not preserved from the
+            // pre-selection default above: an adopted traced run's
+            // sticky bit is only known once the selector has read the
+            // prior state, and a struct update that kept the placeholder
+            // false would silently untrace every resume.
+            trace_compile: identity.compile_trace,
             ..metadata
         }
     } else {

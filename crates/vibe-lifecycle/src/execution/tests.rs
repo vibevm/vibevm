@@ -122,6 +122,7 @@ fn session() -> ExecutionSession {
             assume_yes: true,
             agent_mode: RunAgentMode::Cli,
             force: false,
+            trace_compile: false,
             run_id: "00000000000000000000000000000000".to_string(),
             started: "2026-08-25T12:00:00Z".to_string(),
         },
@@ -134,6 +135,49 @@ fn build_rows(registry: &crate::ExtensionRegistry) -> Vec<crate::ExtensionRegist
         .into_iter()
         .cloned()
         .collect()
+}
+
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#ENVELOPE-LAW")]
+fn a_traced_run_metadata_leaves_the_handler_envelope_byte_identical() {
+    // The sticky trace bit is HOST observation, not handler input: the
+    // generated `run` member carries neither it nor any shadow of it,
+    // and a traced invocation's envelope is member-for-member the
+    // untraced one.
+    let registry = host_registry(vec![builtin("announce", "log", Some("traced"))]);
+    let rows = build_rows(&registry);
+    let mut traced = session();
+    traced.run.trace_compile = true;
+
+    let traced_envelope = traced.envelope_for("build", &rows[0]).unwrap();
+    let plain_envelope = session().envelope_for("build", &rows[0]).unwrap();
+    assert_eq!(
+        serde_json::to_value(&traced_envelope).unwrap(),
+        serde_json::to_value(&plain_envelope).unwrap(),
+        "the domain trace bit never changes the serialized envelope"
+    );
+    let run = serde_json::to_value(&traced_envelope).unwrap()["run"].clone();
+    let members: std::collections::BTreeSet<&str> = run
+        .as_object()
+        .unwrap()
+        .keys()
+        .map(String::as_str)
+        .collect();
+    assert_eq!(
+        members,
+        [
+            "agent_mode",
+            "assume_yes",
+            "chain",
+            "force",
+            "offline",
+            "phase",
+            "requested"
+        ]
+        .into_iter()
+        .collect(),
+        "the handler run member keeps its exact epoch-1 field set"
+    );
 }
 
 #[test]

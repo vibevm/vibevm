@@ -8,14 +8,12 @@ use std::sync::atomic::{AtomicU64, Ordering};
 
 use specmark::spec;
 use thiserror::Error;
-use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
 use vibe_wire::generated::lifecycle_state::{
     ExecutionRecord, ExecutionRecordScope, ExecutionRecordStatus, LifecycleState, SlotContinuation,
     StateRun,
 };
 
 use super::validate::validate_state;
-use crate::process::is_valid_run_id;
 
 const SCHEMA: u32 = 1;
 
@@ -93,6 +91,7 @@ impl LifecycleStateStore {
         chain: Vec<String>,
         started: String,
         run_id: String,
+        compile_trace: bool,
     ) -> Result<Self, LifecycleStateError> {
         let path = workspace_root.join(Self::FILE);
         let prior = read_prior(&path)?;
@@ -129,6 +128,11 @@ impl LifecycleStateStore {
                     // no delegated rows.
                     slot_continuation: adopted.then_some(continuation).flatten(),
                     started,
+                    // The effective sticky activation, written exactly as the
+                    // local writer convention spells a false-defaulted bool:
+                    // omitted while false (byte-compatible with pre-R3.4
+                    // files), `compile_trace = true` once a run traces.
+                    compile_trace,
                 },
                 schema: SCHEMA,
             },
@@ -418,7 +422,7 @@ fn reconcile_continuation(candidate: &mut LifecycleState, staged: Option<&SlotCo
 /// Parse and semantically validate the prior state file. `Ok(None)` when no
 /// state exists yet; every other outcome — unreadable, unsupported schema,
 /// TOML-malformed, or invariant-violating — is the erasable-cache refusal.
-fn read_prior(path: &Path) -> Result<Option<LifecycleState>, LifecycleStateError> {
+pub(super) fn read_prior(path: &Path) -> Result<Option<LifecycleState>, LifecycleStateError> {
     let text = match fs::read_to_string(path) {
         Ok(text) => text,
         Err(error) if error.kind() == std::io::ErrorKind::NotFound => return Ok(None),
@@ -445,90 +449,6 @@ fn read_prior(path: &Path) -> Result<Option<LifecycleState>, LifecycleStateError
         reason,
     })?;
     Ok(Some(previous))
-}
-
-/// One invocation's durable identity, decided before anything is allocated.
-#[derive(Debug, Clone, PartialEq, Eq)]
-#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#REF-AGENT-RESUME")]
-pub struct RunIdentity {
-    /// The effective run id: adopted from the parking invocation, or freshly
-    /// allocated. Everything downstream — scratch, outbox, state — sees this.
-    pub run_id: String,
-    /// The run's original start: preserved on adoption, the injected clock
-    /// value on a fresh run.
-    pub started: String,
-    /// Whether the identity continues a parked run.
-    pub adopted: bool,
-}
-
-/// Decide this invocation's durable run identity in ONE place, before any
-/// scratch directory is created, so adopting a parked run can never leak an
-/// abandoned candidate directory (PROP-054 `##REF-AGENT-RESUME`).
-///
-/// The original parking invocation and its resume are the SAME run exactly
-/// when: the resolved mode is agent, `--force` is absent, the prior run
-/// requested the same phase, the prior COMPLETE persisted chain equals this
-/// invocation's complete chain exactly, at least one prior execution is
-/// delegated, and the persisted run id is valid. Every other case — different
-/// command, different chain, CLI mode, no delegated row, `--force`, or a
-/// missing/invalid identity — gets one fresh allocated id. Corrupt delegated
-/// state is refused upstream of here (`read_prior`); it never silently mints a
-/// new identity.
-///
-/// The comparison is exact — no phase is stripped from either side. A
-/// clean-composed invocation therefore never adopts: `vibe clean create`
-/// carries a leading `clean` its predecessor's persisted chain does not, so it
-/// wipes and reparks honestly. Its own resume is `vibe create` (the handoff's
-/// `resume` line), whose chain is the persisted one, and that adopts.
-///
-/// `state_root` is where `.vibe/lifecycle.toml` lives (the workspace root);
-/// `allocation_root` is where a fresh scratch run directory is created (the
-/// selected project root) — the two differ only in a multi-node workspace.
-/// Selection completes BEFORE allocation, so an adopted run never mints and
-/// abandons a candidate scratch directory.
-#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#REF-AGENT-RESUME")]
-pub fn select_run_identity(
-    state_root: &Path,
-    allocation_root: &Path,
-    requested: &str,
-    chain: &[String],
-    agent_mode: RunAgentMode,
-    force: bool,
-    fresh_started: String,
-) -> Result<RunIdentity, LifecycleStateError> {
-    if agent_mode == RunAgentMode::Agent
-        && !force
-        && let Some(prior) = read_prior(&state_root.join(LifecycleStateStore::FILE))?
-    {
-        let parked = prior
-            .execution
-            .values()
-            .any(|record| record.status == ExecutionRecordStatus::Delegated);
-        if prior.run.requested == requested
-            && prior.run.chain == chain
-            && parked
-            && let Some(run_id) = prior.run.run_id.as_deref()
-            && is_valid_run_id(run_id)
-        {
-            return Ok(RunIdentity {
-                run_id: run_id.to_string(),
-                started: prior.run.started.clone(),
-                adopted: true,
-            });
-        }
-    }
-    Ok(RunIdentity {
-        run_id: crate::process::allocate_run_id(allocation_root).map_err(allocate_failed)?,
-        started: fresh_started,
-        adopted: false,
-    })
-}
-
-fn allocate_failed(source: crate::process::ScratchError) -> LifecycleStateError {
-    LifecycleStateError::Write {
-        path: PathBuf::from(LifecycleStateStore::FILE),
-        source: std::io::Error::other(source.to_string()),
-    }
 }
 
 /// Injection point for a durable state-write failure, so the cancellation REDs
