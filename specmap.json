@@ -50190,7 +50190,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:8d498718e433dbe4463159175b2e8f26a4aa679548f5a155eb073cae4cf9fbee",
+      "content_hash": "sha256:e4da90d2d95c40996d145e5f8d45d16684421f89115faf55235122864c9f7013",
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "PROP-055 — ChatGPT-only campaign execution pool",
@@ -50550,7 +50550,7 @@
     },
     {
       "anchor": "gates",
-      "content_hash": "sha256:ccc4065f2ff9f3b6bfed65fc6febe3ff2039ab15a69a6d0a540bdb8e4d7d995b",
+      "content_hash": "sha256:e3b88c7031950decd28811fd565aad29a864fa2fa0ae3a3dcf65d66289ec59c2",
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "5. Fast development gates and the full-panel cadence",
@@ -50568,10 +50568,10 @@
     },
     {
       "anchor": "EXACT-GATES-PER-ATOM",
-      "content_hash": "sha256:914446bbac07e2d8679ff19336be062f679657e1cb97f3b0daef0a6d73e74911",
+      "content_hash": "sha256:5a3077675da51c60f77a8b86ef0d0b47fd3502f55e0e401118ed0a6c9a85826d",
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
-      "heading": "Before accepting an\n      atom, run formatting for each touched workspace, `git diff --check`, exact\n      unit/integration tests for changed behavior, checks/clippy for touched\n      crates, and the task-specific oracle: codegen idempotence plus wire corpus\n      for schemas; byte identity for compiler changes; isolated homes for\n      user-state code; a red mutation or independent negative fixture for every\n      load-bearing branch. Expand only when dependency analysis names a real\n      affected consumer. @status:spec/done",
+      "heading": "Before accepting an atom, run formatting for each touched workspace, `git diff --check`, exact\n      unit/integration tests, checks/clippy for touched crates, and the task oracle: codegen+wire corpus for schemas; compiler byte identity; isolated homes;\n      and a red mutation/negative fixture per load-bearing branch. A Rust edit in a `conform.toml`-gated crate also runs `cargo xtask conform check --scope\n      <crate-path>`; split test-support carries truthful per-item `#[cfg(test)]` because the syntax frontend reads it without its parent. New/moved\n      `specmark::scope!` or `#[specmark::spec(...)]` edges run `cargo xtask specmap` and review the derived map in the same atom. Expand only for another\n      named consumer. This closes the 2026-08-28 R3.4 findings: exact tests/clippy missed 52 conform findings; four later lawful edges stopped on a stale map. @status:spec/done",
       "line": 264,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#EXACT-GATES-PER-ATOM"
     },
@@ -50581,7 +50581,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "`cargo xtask\n      check-codegen` finishes by comparing the worktree against `HEAD`; in the\n      mandated ordinary-unstaged worker handoff, an intended generated product\n      diff therefore makes it fail by construction. A schema/codegen worker\n      runs the generator, captures a stable hash of the relevant visible diff,\n      runs the generator again and proves the hash unchanged (plus focused\n      wire/corpus tests). Root runs the real `check-codegen` after staging the\n      atom in its human-authored commit/integrated tree. A worker's dirty-tree\n      exit is not codegen drift evidence by itself. @status:spec/done",
-      "line": 272,
+      "line": 270,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#DIRTY-CODEGEN-GATE"
     },
     {
@@ -50590,7 +50590,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "A worker never runs\n      the full panel. It runs the narrow self-verify named by its packet. The\n      central coordinator does not run the full panel merely because a worker\n      finished. @status:spec/done",
-      "line": 281,
+      "line": 279,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#NO-WORKER-FULL-PANEL"
     },
     {
@@ -50599,7 +50599,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "A coherent batch may\n      contain several atomic local Conventional Commits, each accepted by its\n      exact gate. They remain unmirrored until the batch integration panel is\n      green. If that panel finds a defect, repair forward in the same batch and\n      rerun newly relevant narrow tests before the next panel. @status:spec/done",
-      "line": 285,
+      "line": 283,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#ATOMIC-LOCAL-COMMITS"
     },
     {
@@ -50608,7 +50608,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Run the full\n      `CARGO_BUILD_JOBS=4 tools/self-check.sh` panel when: **(1)** a cross-crate\n      integration batch is ready to leave local state; **(2)** a lifecycle wave\n      or owner scenario is declared green; **(3)** before mirror/push of\n      accumulated code; **(4)** before final epic acceptance; **(5)** a\n      high-risk change has no cheaper complete affected set. One panel may\n      satisfy several triggers for the same unchanged tree. @status:spec/done",
-      "line": 290,
+      "line": 288,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#FULL-PANEL-TRIGGERS"
     },
     {
@@ -50617,7 +50617,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "A panel result\n      belongs to the exact tree measured. A later product change invalidates\n      it. A report/docs-only change runs its document gates and may ride the\n      next integration panel, but cannot rewrite an earlier code verdict. @status:spec/done",
-      "line": 297,
+      "line": 295,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#PANEL-IS-FOR-EXACT-TREE"
     },
     {
@@ -50626,16 +50626,16 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Mirror only\n      after the accumulated batch panel is green and the staging allow-list is\n      reviewed. This preserves atomic human-authored commits while amortising\n      the slow panel over useful integration work. @status:spec/done",
-      "line": 301,
+      "line": 299,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#MIRROR-AFTER-GREEN-BATCH"
     },
     {
       "anchor": "observability",
-      "content_hash": "sha256:de4160878c131aa7b644c4002a7b7e176f97fa087be42ed8345e6a314165e2d2",
+      "content_hash": "sha256:89bdc9452431ca780c92867945d8f7ed1af469c020ae459008d2be4c3c50bee5",
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "6. Live lane observations",
-      "line": 308,
+      "line": 306,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#observability"
     },
     {
@@ -50644,7 +50644,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Record only a live\n      task's exit, durable report, resolved-model metadata and reviewed quality.\n      A ping proves transport, not coding quality; an old successful run does\n      not prove a five-hour quota remains open. @status:spec/done",
-      "line": 310,
+      "line": 308,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#OBSERVE-NOT-ASSUME"
     },
     {
@@ -50653,7 +50653,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Live work, not a ping,\n      measured both extra lanes. `claudez` resolved to `glm-5.3[1m]`, completed\n      an independent R7.1 review, found the missing blocking-HTTP timeouts, then\n      used same-cwd `-c` to implement and gate the repair; root additionally\n      repeated the Windows proxy canary 20 times. Plain Claude resolved to\n      `claude-opus-5`, produced an adversarial build/package/deploy review and\n      used same-cwd `-c` for nine central objections; it explicitly withdrew or\n      narrowed four earlier claims and strengthened crash/ownership design.\n      Both are high-quality usable lanes. Opus/max is reserved for ambiguous,\n      high-impact judgment because the two passes were materially more costly;\n      `claudez` is a parallel peer for bounded code/review but may hit its\n      separate five-hour wall. Both exceeded the desired prose budget, so\n      `##REPORT-BUDGET` is mandatory on future packets. After a later multi-hour\n      network outage killed every live worker process, their worktrees and\n      reports remained intact; a fresh isolated `claudez -p` returned exact\n      `CLAUDEZ_OK` through `glm-5.3[1m]` in about nine seconds. Recovery is\n      therefore census-first: retain completed artifacts and restart only\n      unfinished packets, never regenerate the batch wholesale. @status:spec/done",
-      "line": 314,
+      "line": 312,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#PROBE-2026-08-26"
     },
     {
@@ -50662,7 +50662,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "A 140-turn R8\n      continuation reached turn 141 and transport-failed **before writing its\n      report**, despite useful code and focused-test progress; it emitted about\n      95k output tokens and repeatedly reran broad filters. Conversely, two\n      independent R3.4 cold implementation packets each consumed all 50 turns\n      in diligent required-input archaeology and reached at most their first\n      product edit; neither hit quota or transport failure. Therefore there is\n      no universal 30–50-turn implementation cap. Use 30–50 turns for a narrow\n      edit/repair or for an explicitly separate archaeology pass. A broad cold\n      implementation is either (a) two-stage — bounded archaeology with a\n      durable handoff, then same-cwd/session `-c` implementation — or (b)\n      uncapped when root has already supplied a sufficiently closed packet.\n      Split child-process tests/review when that prevents scope accretion, and\n      draft the durable report early rather than gambling on the final two\n      turns. Same-cwd `-c` preserves the subscription-paid context and is the\n      default recovery from a turn-cap boundary. `max_turns` exhaustion\n      preserves the worktree but is never PASS. @status:spec/done",
-      "line": 332,
+      "line": 330,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#CLAUDEZ-TURN-BUDGET"
     },
     {
@@ -50671,7 +50671,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Two\n      concurrent broad R3.4 continuations (147 and 111 turns) reached green\n      focused/parent gates and then both received 429 with the **same**\n      advertised reset instant before either wrote its mandated report. They\n      resolved to `glm-5.3[1m]`; the worktrees/logs remained complete. This\n      proves the five-hour allowance is account-wide, not per process:\n      parallel claudez jobs increase throughput but consume one shared window\n      concurrently. An uncapped run therefore does not license report-last\n      execution. Create the report skeleton after the first product slice,\n      update evidence incrementally before long parent gates, and treat quota\n      exhaustion as a preserved handoff to root/Opus rather than retrying\n      against the published reset. The hourly probe observes recovery; it does\n      not estimate remaining quota. @status:spec/done",
-      "line": 349,
+      "line": 347,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#CLAUDEZ-QUOTA-BOUNDARY-2026-08-27"
     },
     {
@@ -50680,8 +50680,17 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "While this campaign\n      is active, the ChatGPT thread owns an hourly heartbeat named «Проверка\n      доступности claudez». It starts one fresh isolated `claudez -p` elementary\n      task whose only valid answer is `CLAUDEZ_OK`, records resolved model,\n      latency, transport/429 category and advertised reset time, and performs no\n      retry or repository work. This observes five-hour quota recovery without\n      burning a real implementation packet or spinning against a known wall. @status:spec/done",
-      "line": 362,
+      "line": 360,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#CLAUDEZ-HOURLY-PROBE"
+    },
+    {
+      "anchor": "PANEL-DENOMINATOR-2026-08-28",
+      "content_hash": "sha256:2152cff94e90823e8867684e414a149d187bb56e60f53313f7ea5f010fdf17a5",
+      "doc_path": "common/PROP-055",
+      "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
+      "heading": "`tools/self-check.sh` lexically counts `run_step` lines while seven calls execute dynamically, so final\n      R3.4 printed `[54/47]` and still ended `all green` / exit 0. The denominator is an observability bug, never coverage evidence: trust the ordered gates + green tail.\n      A later tooling atom derives the runtime total or removes the false denominator; this docs-only finding does not rewrite the green verdict. @status:spec/done",
+      "line": 367,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#PANEL-DENOMINATOR-2026-08-28"
     },
     {
       "anchor": "claudez-template",
@@ -50689,7 +50698,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "7. Canonical claudez packet template",
-      "line": 372,
+      "line": 373,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#claudez-template"
     },
     {
@@ -50698,7 +50707,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "The central\n    coordinator copies this skeleton into every new `claudez` packet and fills\n    every bracketed field. Do not point a worker at PROP-055 itself: this spec\n    is ChatGPT-only. Task-specific instructions override a template default\n    only when the packet says so explicitly. @status:spec/done",
-      "line": 373,
+      "line": 374,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#TEMPLATE-IS-COPIED"
     },
     {
@@ -50707,7 +50716,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Launch with an\n      explicit autonomous non-interactive permission mode and the normal tool\n      surface; do not construct a tiny deny-list as a substitute for review.\n      `Read Glob Grep`, PowerShell/Bash, read-only git history, formatters and\n      exact tests are legitimate worker instruments. The short pointer prompt\n      repeats only the handoff invariants: keep product work as an unstaged\n      visible diff, do not add/commit/stash/branch/reset/push, do not run the\n      full panel, and write the report before finishing. Root review, not tool\n      starvation, is the safety and acceptance mechanism. Do not set a maximum\n      dollar budget for Opus/Claude runs (owner ruling 2026-08-26); record cost\n      post-facto when JSON telemetry is available. @status:spec/done",
-      "line": 496,
+      "line": 497,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#TEMPLATE-LAUNCH-GUARD"
     },
     {
@@ -50716,7 +50725,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "After `TASK-DONE`,\n      root mechanically compares actual changed files to the report, reads the\n      diff, checks Decisions/Deviations, reruns decisive commands and red proofs,\n      then accepts, sends exact `-c` repair notes, re-commissions or discards.\n      The packet/template reduces review cost; it never replaces review. @status:spec/done",
-      "line": 508,
+      "line": 509,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#TEMPLATE-ROOT-CLOSE"
     },
     {
@@ -50725,7 +50734,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "8. Opus 5 max — CLI lane and accumulated lessons",
-      "line": 517,
+      "line": 518,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#opus-lane"
     },
     {
@@ -50734,7 +50743,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Opus/max uses\n    the canonical packet above with `claudez` replaced by Opus where named.\n    Root still supplies the idea, accepted architecture, task boundaries and\n    red proofs; Opus implements or independently audits, leaves a reviewable\n    worktree, and receives exact acceptance repairs from root. @status:spec/done",
-      "line": 518,
+      "line": 519,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#OPUS-USES-SAME-PACKET"
     },
     {
@@ -50743,7 +50752,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "8.1 Fresh run and continuation",
-      "line": 523,
+      "line": 524,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#invocation"
     },
     {
@@ -50752,7 +50761,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Run the installed\n      Claude Code launcher, never a hand-written direct API client. A first\n      turn is fresh `claude -p`; `-c` means continue the most recent session in\n      that cwd and is therefore used only for root's repair/acceptance follow-up.\n      Every concurrent Opus thread gets its own cwd so `-c` cannot resume a\n      neighbour. Do not use `--no-session-persistence` when a repair loop may\n      be needed. @status:spec/done",
-      "line": 524,
+      "line": 525,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#OPUS-CLI-ONLY"
     },
     {
@@ -50761,7 +50770,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Omit a fallback\n      model and inspect the JSON result's `canonicalModel`; never accept Fable.\n      The 2026-08-26 probes resolved `--model opus` to\n      `claude-opus-5` with a 1,000,000-token context. Omit\n      `--max-budget-usd` by owner ruling: subscription quota, not nominal API\n      accounting, is this lane's resource model. @status:spec/done",
-      "line": 538,
+      "line": 539,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#OPUS-NO-FALLBACK"
     },
     {
@@ -50770,7 +50779,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "8.2 Task shape and parallelism",
-      "line": 545,
+      "line": 546,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#opus-routing"
     },
     {
@@ -50779,7 +50788,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Prefer Opus/max\n        for wide code archaeology, adversarial architecture/transaction review,\n        ambiguous repairs and implementation whose verification needs sustained\n        cross-file judgment. It may code as freely as `claudez`; root retains\n        architecture and acceptance. Deterministic micro-edits still fail the\n        verification-cheaper-than-generation test. @status:spec/done",
-      "line": 547,
+      "line": 548,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#OPUS-JUDGMENT-LANE"
     },
     {
@@ -50788,7 +50797,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Multiple Opus processes\n        may run concurrently in separate cwd/session pairs. Parallel readers\n        may overlap; writers are separated by intersecting product paths. Their\n        subscription quota is independent of `claudez`, so using both families\n        at once expands throughput and supplies review diversity. @status:spec/done",
-      "line": 553,
+      "line": 554,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#OPUS-PARALLEL"
     },
     {
@@ -50797,7 +50806,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Give Opus the normal\n        machine toolset. The first two audits were unnecessarily launched with\n        a read-only tool profile; one sensible PowerShell line-count command\n        was denied. Both still completed, but the owner corrected the policy:\n        PowerShell/Bash, Grep/Glob/Read, read-only git history and exact tests\n        are ordinary reasoning instruments. Protect only the reviewable\n        worktree handoff. @status:spec/done",
-      "line": 558,
+      "line": 559,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#OPUS-TOOLS"
     },
     {
@@ -50806,7 +50815,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "8.3 Live measurements — 2026-08-26",
-      "line": 567,
+      "line": 568,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#measurements"
     },
     {
@@ -50815,7 +50824,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Two Opus/max\n      read-only audits ran concurrently through Claude Code 2.1.220. R3\n      verifier/trace: terminal success, 91 turns, about 9.2 minutes wall,\n      37,491 output tokens, nominal telemetry `$6.57`, 215-line report. R4\n      staged transforms: terminal success, 94 turns, about 9.8 minutes wall,\n      41,137 output tokens, nominal telemetry `$11.01`, 236-line report. Both\n      wrote only their report and produced concrete file/line matrices, red\n      proofs and commit slices. The nominal dollar fields do not change the\n      subscription-lane ruling. @status:spec/done",
-      "line": 568,
+      "line": 569,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#OPUS-FIRST-LIVE-BATCH"
     },
     {
@@ -50824,7 +50833,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "A broad Opus audit\n      genuinely benefits from a 200–240-line cap; implementation reports stay\n      near the canonical 140-line target. Require the report before final\n      completion because screen output is not the handoff. JSON telemetry is\n      kept for model/turn/time observation; it does not replace the durable\n      report. @status:spec/done",
-      "line": 577,
+      "line": 578,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#OPUS-REPORT-SHAPE"
     },
     {
@@ -50833,7 +50842,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "9. History",
-      "line": 586,
+      "line": 587,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#history"
     },
     {
@@ -50842,7 +50851,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Authored from the\n    owner's 2026-08-26 rulings: use `claudez` and Opus/max alongside Sol/native\n    workers because quotas are separate; never select Fable; consolidate the\n    strategy in one ChatGPT-only document; keep the agent-instruction triplet\n    byte-identical; replace per-atom full panels with exact gates and batch\n    panels; trust both launchers with normal machine tools; preserve their\n    result as an unstaged, centrally reviewable worktree rather than a worker\n    commit/stash/index; and never cap subscription runs by nominal dollar\n    budget. @status:spec/done",
-      "line": 587,
+      "line": 588,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#HIST-OWNER-2026-08-26"
     },
     {
@@ -95061,7 +95070,7 @@
     {
       "code": "long-section",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
-      "line": 372,
+      "line": 373,
       "message": "section `7. Canonical claudez packet template` spans 144 lines (threshold 120) — long sections read poorly and churn often; split into smaller leaves"
     },
     {
