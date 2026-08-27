@@ -398,6 +398,57 @@ Every exit after open passes one explicit outcome funnel:
 No `Drop` implementation invents a timestamp or performs I/O. The funnel owns
 the injected finish timestamp and runs before the one command report is built.
 
+#### 5.3.1 Concrete CLI ownership and report boundary
+
+`vibe-cli` owns a private, non-`Clone` command session wrapper. The underlying
+writer may retain its retry-capable API, but the wrapper exposes lower layers
+only `Option<&TraceRun>` and never an owned clone. Its states are `disabled`,
+`unavailable { run_id, warnings }`, and `open { run_id, run }`. Consuming the
+wrapper with one typed command exit produces only an owned generated trace
+report and drops the last run handle before presentation.
+
+The execution/report join is a closed typed sum, conceptually:
+
+```text
+CommandExit<ReportDraft> =
+    success(ReportDraft)
+  | parked(ReportDraft)
+  | failed {
+        report: ReportDraft,
+        original_error: anyhow::Error,
+        emit_when_trace_disabled: bool
+    }
+```
+
+The one consuming funnel maps success/park/failure to finish-ok/suspend/
+finish-failed, obtains the owned summary, drops the recorder, then gives the
+same report draft its optional generated `trace` member. It returns the
+**original error object**, not a reconstructed string error. A trace-finalise
+or report-emission refusal is a secondary diagnostic and may not replace that
+original error. Disabled mode does not call the finish clock.
+
+Two existing inner emitters move outward as typed failure drafts:
+
+- install slot failure currently emits `cli-install-report` inside the install
+  substrate;
+- lifecycle contribution failure currently emits `cli-lifecycle-report`
+  inside dispatch.
+
+Their trace-disabled schema choice, deferred-plan ordering and emission policy
+remain exact. Other failures that were historically silent stay silent when
+trace is disabled; when tracing was requested, the existing registered command
+root is emitted so `unavailable|failed` is observable — never a standalone
+trace object. This policy bit belongs to the typed failure, not an error-string
+inspection. Direct install, lifecycle, whole/scoped update and all reinstall
+branches return drafts rather than rendering at early returns.
+
+Clean-only never creates the wrapper. A chained clean selects one lifecycle
+identity before the wipe but opens the trace only **after** the clean epoch has
+completed and the workspace has been rediscovered, so the wipe cannot destroy
+its own live lock/index. Validate-only (and `clean validate`) may therefore
+finish a truthful zero-scope trace; the explicit exemption is clean-only, not
+every compile-free lifecycle verb.
+
 ### 5.4 One JTD trace member across four command reports
 
 `formats/vocabularies.json` becomes the single schema home for the shared

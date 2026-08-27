@@ -342,6 +342,17 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
     refusal is only a bounded warning and declares no scope. Publishing first
     and leaving `pending` on read refusal would prevent an otherwise successful
     run from durably finalising `ok` and leak a non-retainable running trace.
+22. R3.4 command ownership is a private non-Clone CLI session wrapper plus a
+    closed typed `success|parked|failed` exit. One consuming funnel finalises
+    or suspends the recorder, drops its last handle, attaches only the owned
+    generated trace report, and then renders. Existing inner install/lifecycle
+    failure emitters become typed report drafts; trace-disabled schema choice,
+    plan ordering and historically silent failures remain exact, while a
+    requested trace makes its registered command root observable. Secondary
+    trace/report refusal never replaces the original error object. Chained
+    clean opens only after the wipe; clean-only stays exempt and validate-only
+    may carry a zero-scope trace. Canonical detail: compiler-trace architecture
+    §5.3.1.
 
 ## 6. Physical state and loss prevention
 
