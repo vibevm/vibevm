@@ -56,10 +56,10 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE");
 
+use std::fmt;
 use std::path::{Path, PathBuf};
 use std::sync::{Arc, Mutex, MutexGuard, PoisonError};
 
-use vibe_safefs::Project;
 use vibe_spec::{CompileTraceSink, PassTraceEvent, SnapshotDecision};
 use vibe_wire::generated::compiler_trace_index::e1::index::{
     ArtifactTarget, CompilerTraceIndex, PassShape, RunStatus, Scope, ScopeKind, ScopeStatus,
@@ -76,6 +76,7 @@ mod attempts;
 mod bounded;
 mod descriptors;
 mod identity;
+mod open;
 mod retention;
 mod sequence;
 mod state;
@@ -95,10 +96,30 @@ pub(crate) use descriptors::ScopeAcquisition;
 pub(crate) use descriptors::node_descriptor;
 
 use state::RunState;
-use store::TraceStore;
 
 #[cfg(test)]
 mod tests;
+
+/// Render `args` into at most the wire epoch's diagnostic cap, marker
+/// included, without ever materialising anything larger.
+///
+/// This is the writer's bounded formatter, exposed because its consumers are
+/// not all inside this crate. A CLI that renders a [`TraceWarning`] is
+/// rendering text whose FIELDS this cell already bounded — and then adding a
+/// prefix, which can push the whole message back over the cap the epoch's
+/// validator actually enforces. Clamping the finished message is therefore not
+/// a courtesy; it is the difference between a report that validates and one
+/// that does not. Callers pass `format_args!`, so the unbounded intermediate
+/// string never exists at all.
+///
+/// It is deliberately the SAME cell the index writer uses. A second cap or a
+/// second truncation marker in a consumer would be a second definition of what
+/// "bounded" means, and the one that drifted would be the one a hostile
+/// diagnostic reached.
+#[must_use]
+pub fn bounded_diagnostic(args: fmt::Arguments<'_>) -> String {
+    bounded::diagnostic(args)
+}
 
 /// The two measures that bound a trace, and the only place their numbers are
 /// written down.
@@ -304,101 +325,53 @@ impl TraceRun {
         started: Timestamp,
         limits: TraceLimits,
     ) -> Result<Self, TraceOpenError> {
-        let run_id = identity::checked_run_id(run_id)?;
-        // ONE canonical spelling, resolved once and used for everything after
-        // it: the digest, the run path, the capability and the path pressure.
-        // Two spellings of one root would make a reopen look like somebody
-        // else's project.
-        let canonical = identity::canonical_root(root)?;
-        let run_path = store::run_directory_path(&canonical, &run_id);
-        // Measured before anything is created: a directory that cannot afford
-        // a filename must refuse to open rather than fail every event.
-        let filename_cap = identity::filename_cap(&run_path)?;
-        let project = Project::open(&canonical).map_err(|error| TraceOpenError::Directory {
-            reason: bounded::diagnostic(format_args!("{error:#}")),
-        })?;
-        // Serialize every cooperating writer BEFORE anything is inspected,
-        // reopened, retained or created. Non-blocking on purpose: an observer
-        // that can make a compile wait on another process is an observer that
-        // can deadlock one, so a busy project is simply not traced.
-        let lock = match project.try_lock(TRACE_LOCK) {
-            Ok(Some(lock)) => lock,
-            Ok(None) => {
-                return Err(TraceOpenError::Busy {
-                    project: bounded::path(&canonical),
-                });
-            }
-            Err(error) => {
-                return Err(TraceOpenError::Directory {
-                    reason: bounded::diagnostic(format_args!("{error:#}")),
-                });
-            }
-        };
-        let trace_dir =
-            project
-                .dir(&[".vibe", "trace"], true)
-                .map_err(|error| TraceOpenError::Directory {
-                    reason: bounded::diagnostic(format_args!("{error:#}")),
-                })?;
+        open::create_or_reopen(root, run_id, started, limits)
+    }
 
-        let expected = fresh_index(&canonical, &run_id, started);
-        let (run_dir, index, spent, warnings, adopted) = match trace_dir.open_child_checked(&run_id)
-        {
-            Ok(Some(existing)) => {
-                let (index, spent) = store::reopen(&project, &existing, &expected)?;
-                (existing, index, spent, Vec::new(), true)
-            }
-            Ok(None) => {
-                let warnings = retention::sweep(
-                    &project,
-                    &trace_dir,
-                    limits.retained_runs,
-                    &expected.project,
-                );
-                let created = trace_dir.create_child_exclusive(&run_id).map_err(|error| {
-                    TraceOpenError::Residue {
-                        path: bounded::path(&run_path),
-                        reason: bounded::diagnostic(format_args!("{error}")),
-                    }
-                })?;
-                (created, Box::new(expected), 0, warnings, false)
-            }
-            Err(error) => {
-                return Err(TraceOpenError::Residue {
-                    path: bounded::path(&run_path),
-                    reason: bounded::diagnostic(format_args!(
-                        "does not open as a link-free directory: {error:#}"
-                    )),
-                });
-            }
-        };
+    /// Reopen an EXISTING run, or say that there is none — and either way
+    /// create no TRACE state.
+    ///
+    /// This is the seam a displaced or an adopted run needs. Both have a state
+    /// fact that says tracing was *requested*, which is not the same as saying
+    /// a recorder ever opened: the original invocation may have found the
+    /// project busy, or the directory too deep, and compiled untraced. If that
+    /// caller then reached for [`open`](Self::open), it would create a run
+    /// directory halfway through a lifecycle run and publish a history whose
+    /// early compiles are simply absent — a supersede would manufacture a
+    /// phantom terminal run to supersede, and a resume would turn "never
+    /// observed" into "apparently complete". So absence is answered with
+    /// `Ok(None)`, and no trace directory, run or index is written.
+    ///
+    /// **It is not a read-only call.** Deciding requires the cooperative
+    /// project lock, and taking that lock creates `.vibe/` and
+    /// `.vibe/compile-trace.lock` when they are absent. That is the point
+    /// rather than a side effect: contention has to be settled before absence
+    /// can be claimed, or this call would report "there is no run" about a
+    /// directory another writer is at that moment creating.
+    ///
+    /// Every other answer is exactly the ordinary reopen's answer: same
+    /// project lock, same identity/start/status/entry validation, same typed
+    /// refusals. A present-but-unsafe object is `Residue`, never absence.
+    /// Retention does not run — collecting old runs is a fresh run's job, and
+    /// a caller that only wants to look must not be able to delete.
+    pub fn open_existing(
+        root: &Path,
+        run_id: &str,
+        started: Timestamp,
+    ) -> Result<Option<Self>, TraceOpenError> {
+        Self::open_existing_with_limits(root, run_id, started, TraceLimits::production())
+    }
 
-        let run_dir_path = run_dir.path().to_path_buf();
-        let store = TraceStore::new(project, run_dir, filename_cap);
-        let mut state = RunState::adopt(lock, store, *index, spent, limits, warnings);
-        if !adopted {
-            // A fresh run is readable the moment it exists, not once its
-            // first event lands. If that first index cannot land, the
-            // exclusively created directory is left EXACTLY as it is and
-            // named as residue: deleting it would mean reaching for the
-            // identity-bound removal path on a directory this run never
-            // explained, and an unexplained empty run id is precisely what an
-            // operator should get to see. Returning here drops `state`, which
-            // releases the project lock.
-            if let Err(reason) = state.open_index() {
-                return Err(TraceOpenError::Residue {
-                    path: bounded::path(&run_dir_path),
-                    reason: bounded::diagnostic(format_args!(
-                        "the run directory was created but no index landed, so nothing here \
-                         describes it: {reason}"
-                    )),
-                });
-            }
-        }
-        Ok(Self {
-            inner: Arc::new(Mutex::new(state)),
-            run_dir: run_dir_path,
-        })
+    /// The same, under explicit limits — the budget half of which is
+    /// load-bearing on this path too, because a reopened run inherits the
+    /// snapshot bytes already on disk.
+    pub fn open_existing_with_limits(
+        root: &Path,
+        run_id: &str,
+        started: Timestamp,
+        limits: TraceLimits,
+    ) -> Result<Option<Self>, TraceOpenError> {
+        open::existing_only(root, run_id, started, limits)
     }
 
     /// The absolute run directory.

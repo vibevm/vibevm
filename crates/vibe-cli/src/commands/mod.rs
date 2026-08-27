@@ -31,6 +31,10 @@ pub mod bin;
 pub mod cache;
 pub mod check;
 pub mod clean;
+/// The command-level compile-trace owner and the one command-exit join. Not
+/// `pub`: nothing outside the CLI may hold a recorder, and the four report
+/// consumers that will use it are all in this crate.
+pub(crate) mod compile_trace;
 pub mod explain;
 pub mod extensions;
 pub mod facts;

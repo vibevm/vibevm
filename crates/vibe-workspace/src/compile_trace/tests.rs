@@ -11,6 +11,7 @@ mod concurrency;
 mod hardening;
 mod lifecycle;
 mod names;
+mod open_existing;
 mod publication;
 mod retention;
 mod serialized;
