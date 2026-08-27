@@ -37,7 +37,7 @@ use super::PackageSkillError;
 ///
 /// ```
 /// use std::ffi::OsStr;
-/// use vibe_mcp::pkgskill::EscapedOsPath;
+/// use vibe_agent_projection::pkgskill::EscapedOsPath;
 ///
 /// // Legal text — including non-ASCII — renders as itself.
 /// let name = EscapedOsPath::new(OsStr::new("references/Maße.md"));

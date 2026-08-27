@@ -1,5 +1,5 @@
 [package]
-name = "vibe-mcp"
+name = "vibe-agent-projection"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -8,22 +8,16 @@ license-file.workspace = true
 publish.workspace = true
 repository.workspace = true
 homepage.workspace = true
-description = "Model Context Protocol server for vibevm — exposes installed packages and subskills to coding agents over stdio JSON-RPC"
+description = "Agent-facing package-skill projection for vibevm — agent profiles, receipts, recovery and planning types below the MCP surface"
 
 [dependencies]
 specmark.workspace = true
 vibe-core.workspace = true
 vibe-workspace.workspace = true
-# The moved agent/package-skill projection (R7.4 §5): `vibe_mcp::{agents,
-# pkgskill}` are compatibility re-exports of its public items, and the
-# remaining install module consumes its shared dry-run status helper.
-vibe-agent-projection.workspace = true
-# The shared capability-relative, no-follow project filesystem cell.
+# The shared capability-relative, no-follow project filesystem cell backing
+# the receipt transaction machinery.
 vibe-safefs.workspace = true
 vibe-wire.workspace = true
-# The `explain` MCP tool is a thin surface over the shared `vibe-trace`
-# capability, which both the MCP tool and the `vibe explain` CLI call.
-vibe-trace.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 sha2.workspace = true
@@ -31,10 +25,9 @@ toml.workspace = true
 dirs.workspace = true
 anyhow.workspace = true
 thiserror.workspace = true
-tracing.workspace = true
-tempfile.workspace = true
 
 [dev-dependencies]
+tempfile.workspace = true
 # The staging-residue REDs need deterministic pre/post-publication failures;
 # the feature compiles the injection points out of every shipped build.
 vibe-safefs = { workspace = true, features = ["inject-failures"] }

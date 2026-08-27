@@ -16,6 +16,10 @@ use specmark::spec;
 use vibe_core::machine_json_path;
 
 use crate::agents::{Agent, Scope};
+// The shared dry-run status vocabulary moved down with the package-skill
+// projection (R7.4 §5); the SKILL.md writer consumes the one lower
+// implementation rather than re-spelling it here.
+use vibe_agent_projection::preview_status;
 
 /// Bytes of the `vibevm` SKILL.md template, vendored at compile time.
 pub const SKILL_TEMPLATE: &str = include_str!("skill_template.md");
@@ -132,19 +136,6 @@ pub fn decide_skill_action(path: &Path, body: &str) -> Result<&'static str> {
         Ok("unchanged")
     } else {
         Ok("updated")
-    }
-}
-
-/// Project a diff outcome (`created` / `updated` / `unchanged`) onto its
-/// dry-run preview: a create or update becomes its `would-*` form; anything
-/// else is reported as-is. The SKILL.md writer and the package-skill
-/// projector (PROP-018 §2.6) share this so the dry-run lifecycle vocabulary
-/// lives in one place rather than being re-spelled per writer.
-pub(crate) fn preview_status(base: &'static str, dry_run: bool) -> &'static str {
-    match (base, dry_run) {
-        ("created", true) => "would-create",
-        ("updated", true) => "would-update",
-        (s, _) => s,
     }
 }
 

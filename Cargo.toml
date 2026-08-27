@@ -8,6 +8,7 @@ exclude = ["vibevm"]
 members = [
     "crates/progress-core",
     "crates/vibe-actions",
+    "crates/vibe-agent-projection",
     "crates/vibe-settings",
     "crates/vibe-cli",
     "crates/vibe-core",
@@ -34,6 +35,7 @@ members = [
 default-members = [
     "crates/progress-core",
     "crates/vibe-actions",
+    "crates/vibe-agent-projection",
     "crates/vibe-settings",
     "crates/vibe-cli",
     "crates/vibe-core",
@@ -74,6 +76,9 @@ categories = ["command-line-utilities", "development-tools"]
 # Local crates
 progress-core = { path = "crates/progress-core", version = "1.0.0" }
 vibe-actions = { path = "crates/vibe-actions", version = "1.0.0" }
+# The R7.4 §5 cycle-breaking extraction: agent-facing package-skill
+# projection + agent profiles below the MCP surface.
+vibe-agent-projection = { path = "crates/vibe-agent-projection", version = "1.0.0" }
 vibe-settings = { path = "crates/vibe-settings", version = "1.0.0" }
 vibe-core = { path = "crates/vibe-core", version = "1.0.0" }
 vibe-facts = { path = "crates/vibe-facts", version = "1.0.0" }

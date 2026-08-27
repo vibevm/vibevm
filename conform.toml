@@ -51,6 +51,7 @@ gated = [
     "vibe-core",
     "vibe-facts",
     "vibe-actions",
+    "vibe-agent-projection",
     "vibe-settings",
     "vibe-index",
     "vibe-install",
@@ -76,6 +77,7 @@ gated_pub_doctest = [
     "vibe-lifecycle",
     "vibe-safefs",
     "vibe-llm",
+    "vibe-agent-projection",
     "vibe-mcp",
 ]
 
