@@ -28,11 +28,11 @@ only durable home of a decision.
 
 ## 2. Evidence standard and current baseline
 
-- Integration checkpoint: `main` at `bcba4290` after strict compiler-domain
-  wire conversion, its regenerated spec map and the durable campaign record.
+- Integration checkpoint: `main` at `dee7ccb4` after the compiler observer and
+  its regenerated spec map.
 - `cargo test --workspace --locked`: green on 2026-08-27 at the unchanged
   product checkpoint.
-- `cargo xtask specmap`: 6772 units, 1971 tagged code items, 1763 edges,
+- `cargo xtask specmap`: 6772 units, 1986 tagged code items, 1778 edges,
   0 suspects, 0 gated orphans, 0 unresolved host edges and 21 standing
   warnings. The 25 non-host edges are outside this map's jurisdiction.
 - R6.2b integration evidence on the current tree: `cargo xtask codegen`
@@ -40,6 +40,11 @@ only durable home of a decision.
   passed 628 unit tests plus integration/doc tests; strict package clippy passed
   with `-D warnings`; two independent freeze reviews ended in `PASS` after the
   final hostile diagnostic repair.
+- R3.4 observer evidence on the current tree: 17 focused observer REDs and the
+  complete 647-test `vibe-spec` library/integration/doc suite pass; targeted
+  clippy is clean; independent final freeze is `PASS`. The seam uses generated
+  trace-index metadata types, contains unwinding sink panics, performs no
+  off-mode clock/allocation/encode, and decides budget stand-down before encode.
 - B-107 is closed by `f8f197cd`/`c195eae1`: all 502 judged records map
   one-to-one to live paths (98 retain their extension; 404 become XML), six new
   unjudged live documents bring the corpus to 508, and all 19,548 verdicts plus
@@ -99,7 +104,7 @@ this campaign, but compatibility law is preserved.
 | R3.1 five levels, six carriers, typed pass manager | done | `3630ab9e`; `compiler/{ir,pass,pipeline}.rs` |
 | R3.2 parse→close→merge→embed→qualify→absorb→link→assemble→emit | done | `a7961003`, `96eef07d`, `e53b9a4e`, `ec7ea7fe`, `e653654d`, `2feef271`, `6de7ef05`, `6f3fa61a`, `302a3509`, `4403cb55`; 84 boot-artifact + 10 emit gates |
 | R3.3 verifier-each skeleton | done | `15793f2e`; immutable test-only manager verifier, typed level/transition errors, SCC/document/lane/marker/fence invariants; 61 focused verifier tests + independent freeze |
-| R3.4 compile snapshots/timings | in progress | `6f4a717d` lands the JTD-first `compiler-trace-index/e1` metadata contract, exact canonical full/short filename codec, dense invocation/order/timing laws, permissive-many reader corpus and hostile-input validator; `7adfbb5a` lands strict role-equipotent `[compile] trace = bool` with default-false canonical omission; pass observer, atomic writer, newest-9-complete retention, 128 MiB/run budget, CLI flag/threading/presentation and e2e remain |
+| R3.4 compile snapshots/timings | in progress | `6f4a717d` lands the JTD-first metadata/index/filename contract; `7adfbb5a` lands strict role-equipotent `[compile] trace`; `fa0662a9` lands the real pass observer, generated metadata vocabulary, bounded/panic-contained diagnostic boundary and pre-encode budget decision; atomic writer, newest-9-complete retention, 128 MiB/run enforcement, CLI threading/presentation and e2e remain |
 
 R3.2 also landed a crash-safe whole-artifact transaction/selector tier. That
 unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
