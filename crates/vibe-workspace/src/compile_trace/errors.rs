@@ -80,8 +80,8 @@ pub enum TraceWarning {
     #[error(
         "violates REQ spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE: \
          `{path}` was left in place: {reason}; fix surface: compare the named \
-         path against the retention law (nine complete runs kept) and remove \
-         it by hand if it is expected"
+         path against the retention law (nine complete runs kept), and remove \
+         it only after confirming it is stale"
     )]
     Residue { path: String, reason: String },
     #[error(
@@ -116,8 +116,9 @@ pub enum TraceWarning {
     #[error(
         "violates REQ spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE: \
          the run's terminal status was not written, so the index stays \
-         `running`: {reason}; fix surface: do not trust the stale `running` \
-         index — re-run the command so a fresh run terminalises"
+         `running`: {reason}; fix surface: restore trace-index writability \
+         before the next fresh run; this exact index remains `running`, and \
+         retention will not collect it"
     )]
     NotFinalised { reason: String },
 }
@@ -176,4 +177,50 @@ pub enum TraceError {
          the run before `finish` — a finalised run takes no further events"
     )]
     Finalised,
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{TraceOpenError, TraceWarning};
+
+    #[test]
+    fn a_busy_refusal_never_advises_replacing_the_lock_identity() {
+        let message = TraceOpenError::Busy {
+            project: "C:/project".to_owned(),
+        }
+        .to_string();
+        assert!(
+            message.contains("never delete or replace `.vibe/compile-trace.lock`"),
+            "{message}"
+        );
+    }
+
+    #[test]
+    fn residue_removal_requires_an_explicit_stale_judgment() {
+        let message = TraceWarning::Residue {
+            path: "run/residue".to_owned(),
+            reason: "uncertain identity".to_owned(),
+        }
+        .to_string();
+        assert!(
+            message.contains("remove it only after confirming it is stale"),
+            "{message}"
+        );
+    }
+
+    #[test]
+    fn an_unfinalised_index_never_promises_that_a_fresh_run_repairs_it() {
+        let message = TraceWarning::NotFinalised {
+            reason: "publication refused".to_owned(),
+        }
+        .to_string();
+        assert!(
+            message.contains("this exact index remains `running`"),
+            "{message}"
+        );
+        assert!(
+            message.contains("retention will not collect it"),
+            "{message}"
+        );
+    }
 }
