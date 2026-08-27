@@ -75,6 +75,7 @@ const TRACE_LOCK: &str = "compile-trace.lock";
 mod attempts;
 mod bounded;
 mod descriptors;
+mod errors;
 mod identity;
 mod open;
 mod retention;
@@ -96,6 +97,12 @@ pub(crate) use descriptors::ScopeAcquisition;
 pub(crate) use descriptors::node_descriptor;
 
 use state::RunState;
+
+// The three diagnostic surfaces live in `errors` but stay public through
+// THIS module's name: every internal consumer reaches them as
+// `super::…` and vibe-cli as `vibe_workspace::compile_trace::…`, so the
+// extraction is invisible to every caller.
+pub use errors::{TraceError, TraceOpenError, TraceWarning};
 
 #[cfg(test)]
 mod tests;
@@ -159,79 +166,6 @@ impl Default for TraceLimits {
     fn default() -> Self {
         Self::production()
     }
-}
-
-/// Why a trace run could not be opened. Every arm is a reason to compile
-/// UNTRACED — never a reason to fail a compile.
-#[derive(Debug, thiserror::Error)]
-pub enum TraceOpenError {
-    #[error("the trace project root must be absolute: `{root}`")]
-    RelativeRoot { root: String },
-    #[error("`{run_id}` is not an exact 32-lowercase-hex lifecycle run id")]
-    RunId { run_id: String },
-    #[error(
-        "the run directory is {directory_units} path units deep, leaving {remaining} for a \
-         snapshot name; the shortest canonical name needs {floor}"
-    )]
-    RunDirectoryTooDeep {
-        directory_units: usize,
-        remaining: usize,
-        floor: usize,
-    },
-    #[error("the trace directory could not be opened: {reason}")]
-    Directory { reason: String },
-    #[error("`{path}` is trace residue and was left untouched: {reason}")]
-    Residue { path: String, reason: String },
-    #[error(
-        "another VibeVM trace writer already owns `{project}`; this run is not traced rather \
-         than waiting for it"
-    )]
-    Busy { project: String },
-}
-
-/// Something the trace could not do, reported to whoever renders the run.
-///
-/// Warnings accumulate; none of them ever reaches the compiler.
-#[derive(Debug, Clone, thiserror::Error)]
-pub enum TraceWarning {
-    #[error("`{path}` was left in place: {reason}")]
-    Residue { path: String, reason: String },
-    #[error("a trace index update did not land and will be retried: {reason}")]
-    IndexWrite { reason: String },
-    #[error(
-        "a trace index update landed, but its publication reported a fault after the point of \
-         no return: {reason}"
-    )]
-    IndexAnomaly { reason: String },
-    #[error("event {sequence} produced no snapshot: {reason}")]
-    Snapshot { sequence: u32, reason: String },
-    #[error("an observation was dropped: {reason}")]
-    Dropped { reason: String },
-    #[error("the run's terminal status was not written, so the index stays `running`: {reason}")]
-    NotFinalised { reason: String },
-}
-
-/// Why one scope operation refused. Also never a compile failure — a caller
-/// that cannot record a transition has still compiled the artifact.
-#[derive(Debug, thiserror::Error)]
-pub enum TraceError {
-    #[error("no scope `{id}` was declared on this run")]
-    UnknownScope { id: String },
-    #[error("scope `{id}` is already declared with a different identity")]
-    ScopeConflict { id: String },
-    #[error("scope `{id}` already reached a terminal status")]
-    ScopeAlreadyResolved { id: String },
-    #[error("scope `{id}` recorded events, so it cannot be reported as skipped")]
-    SkipAfterEvents { id: String },
-    #[error(
-        "scope base `{base}` has spent every attempt id the attempt grammar can address; the \
-         counter refuses rather than saturating or wrapping"
-    )]
-    AttemptExhausted { base: String },
-    #[error("the trace index refused the update: {reason}")]
-    IndexRefused { reason: String },
-    #[error("the run is already finalised")]
-    Finalised,
 }
 
 /// How a lifecycle run ended, as the trace records it.
