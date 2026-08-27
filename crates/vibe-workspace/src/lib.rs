@@ -414,6 +414,75 @@ impl Workspace {
         }
     }
 
+    /// Map an **already-canonical** node directory to its workspace-authored
+    /// portable [`RelPath`] — the inverse of [`Workspace::node_abs_path`].
+    ///
+    /// The exact canonical workspace root maps to [`RelPath::root`] (`"."`);
+    /// the exact canonical root of a member — direct or transitively nested —
+    /// maps to a clone of that member's authored
+    /// [`rel_path`](WorkspaceMember::rel_path); anything else maps to `None`.
+    /// An ordinary subdirectory inside a node has no node identity of its
+    /// own, and neither does a path outside the workspace: only a node has
+    /// a portable identity (PROP-007 §2.1).
+    ///
+    /// # Precondition — the input is already canonical
+    ///
+    /// `dir` must arrive from the caller's one canonical resolution epoch —
+    /// `Path::canonicalize` with the `\\?\` prefix stripped, the form
+    /// [`Workspace::load`] and [`Workspace::discover`] produce for the root
+    /// and the selected-node entry points canonicalise into discovery. This
+    /// method deliberately does not canonicalise, case-fold or `stat`: the
+    /// epoch belongs to the caller, and re-running it here could resolve a
+    /// different form than the one the caller already holds (the same
+    /// one-epoch rule `discover_with_selected_manifest` applies to its
+    /// override). With both ends canonical, plain path equality suffices:
+    /// on Windows a drive-case or 8.3 entry alias (`C:\WS\TOOL~1` for
+    /// `c:\ws\tool`) canonicalises to the same bytes before reaching here,
+    /// so the alias maps to the same `RelPath`. A canonical input that
+    /// still differs from the workspace's own reconstruction is a mismatch
+    /// — never folded by guess.
+    ///
+    /// The answer is the authored spelling — the very `RelPath` discovery
+    /// recorded — never a `strip_prefix` reconstruction of the input, a
+    /// case-fold key, an inode/file-index or the OS path spelling: a member
+    /// is named by its forward-slashed `rel_path` on every platform.
+    ///
+    /// ```
+    /// use vibe_core::RelPath;
+    /// use vibe_workspace::Workspace;
+    ///
+    /// let tmp = tempfile::TempDir::new().unwrap();
+    /// std::fs::write(
+    ///     tmp.path().join("vibe.toml"),
+    ///     "[project]\nname = \"mono\"\nversion = \"0.0.1\"\n\n\
+    ///      [workspace]\nmembers = [\"members/tool\"]\n",
+    /// ).unwrap();
+    /// std::fs::create_dir_all(tmp.path().join("members/tool")).unwrap();
+    /// std::fs::write(
+    ///     tmp.path().join("members/tool/vibe.toml"),
+    ///     "[package]\ngroup = \"org.vibevm\"\nname = \"tool\"\nkind = \"flow\"\nversion = \"0.1.0\"\n",
+    /// ).unwrap();
+    ///
+    /// let ws = Workspace::load(tmp.path()).unwrap();
+    /// assert_eq!(ws.node_rel_of(&ws.root), Some(RelPath::root()));
+    /// let tool = ws.node_abs_path("members/tool");
+    /// assert_eq!(ws.node_rel_of(&tool).unwrap().as_str(), "members/tool");
+    /// // A directory inside a node is not a node.
+    /// assert_eq!(ws.node_rel_of(&tool.join("src")), None);
+    /// ```
+    #[spec(
+        documents = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#workspace-section"
+    )]
+    pub fn node_rel_of(&self, dir: &Path) -> Option<RelPath> {
+        if dir == self.root {
+            return Some(RelPath::root());
+        }
+        self.members
+            .iter()
+            .find(|m| self.member_abs_path(m) == dir)
+            .map(|m| m.rel_path.clone())
+    }
+
     /// Iterate every node in the workspace — the root first (as `"."`),
     /// then every member — paired with its manifest. The order after the
     /// root is `rel_path`-sorted.

@@ -357,3 +357,125 @@ fn unknown_version_var_errors() {
         "{err}"
     );
 }
+
+// `node_rel_of` maps an already-canonical node directory to the portable
+// identity the workspace itself authored — the inverse of `node_abs_path`.
+// Both ends are canonical before the comparison, per the method's
+// precondition; these tests build the canonical side with the crate's own
+// `canonical` helper.
+
+#[test]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#workspace-section",
+    r = 1
+)]
+fn node_rel_of_maps_root_direct_and_nested_members() {
+    let tmp = TempDir::new().unwrap();
+    // Root lists `sub`; `sub` is itself a [workspace] listing `leaf`, so
+    // `sub/leaf` is a transitively nested member.
+    write(tmp.path(), "vibe.toml", &workspace_root("mono", &["sub"]));
+    write(
+        tmp.path(),
+        "sub/vibe.toml",
+        &format!(
+            "{}\n[workspace]\nmembers = [\"leaf\"]\n",
+            package("sub", "stack")
+        ),
+    );
+    write(tmp.path(), "sub/leaf/vibe.toml", &package("leaf", "flow"));
+
+    let ws = Workspace::load(tmp.path()).unwrap();
+    // The canonical workspace root maps to "." — the very canonical form
+    // load produced, not a re-resolution.
+    assert_eq!(ws.node_rel_of(&ws.root), Some(RelPath::root()));
+    // Direct member.
+    let sub = canonical(&tmp.path().join("sub")).unwrap();
+    assert_eq!(sub, ws.node_abs_path("sub"));
+    assert_eq!(ws.node_rel_of(&sub).unwrap().as_str(), "sub");
+    // Transitively nested member.
+    let leaf = canonical(&tmp.path().join("sub/leaf")).unwrap();
+    assert_eq!(leaf, ws.node_abs_path("sub/leaf"));
+    assert_eq!(ws.node_rel_of(&leaf).unwrap().as_str(), "sub/leaf");
+}
+
+#[test]
+fn node_rel_of_refuses_non_node_and_outside_paths() {
+    let tmp = TempDir::new().unwrap();
+    write(tmp.path(), "vibe.toml", &workspace_root("mono", &["pkg"]));
+    write(tmp.path(), "pkg/vibe.toml", &package("pkg", "flow"));
+    // Ordinary directories — inside a member and inside the root — plus a
+    // second workspace outside this one.
+    write(tmp.path(), "pkg/src/lib.rs", "// not a node");
+    write(tmp.path(), "scratch/notes.txt", "not a node either");
+    let outside = TempDir::new().unwrap();
+    write(outside.path(), "vibe.toml", &project("solo"));
+
+    let ws = Workspace::load(tmp.path()).unwrap();
+    let src = canonical(&tmp.path().join("pkg/src")).unwrap();
+    assert_eq!(ws.node_rel_of(&src), None);
+    let scratch = canonical(&tmp.path().join("scratch")).unwrap();
+    assert_eq!(ws.node_rel_of(&scratch), None);
+    // An existing directory outside the workspace entirely: another
+    // workspace's root is not a node of this one.
+    let foreign = canonical(outside.path()).unwrap();
+    assert_eq!(ws.node_rel_of(&foreign), None);
+    // A standalone workspace still names its own root.
+    let solo = Workspace::load(outside.path()).unwrap();
+    assert_eq!(solo.node_rel_of(&solo.root), Some(RelPath::root()));
+}
+
+#[test]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#workspace-section",
+    r = 1
+)]
+fn node_rel_of_returns_authored_forward_slash_spelling() {
+    let tmp = TempDir::new().unwrap();
+    write(
+        tmp.path(),
+        "vibe.toml",
+        &workspace_root("mono", &["members/tool"]),
+    );
+    write(
+        tmp.path(),
+        "members/tool/vibe.toml",
+        &package("tool", "flow"),
+    );
+
+    let ws = Workspace::load(tmp.path()).unwrap();
+    let tool = canonical(&tmp.path().join("members/tool")).unwrap();
+    let rel = ws.node_rel_of(&tool).unwrap();
+    // The authored RelPath, not the selected OS path spelling: forward
+    // slashes on every platform, byte-identical to the member's recorded
+    // portable identity.
+    assert_eq!(rel.as_str(), "members/tool");
+    assert!(!rel.as_str().contains('\\'));
+    assert_eq!(rel, ws.member_by_rel_path("members/tool").unwrap().rel_path);
+}
+
+#[cfg(windows)]
+#[test]
+fn node_rel_of_entry_alias_canonicalises_to_same_member() {
+    let tmp = TempDir::new().unwrap();
+    write(
+        tmp.path(),
+        "vibe.toml",
+        &workspace_root("mono", &["members/tool"]),
+    );
+    write(
+        tmp.path(),
+        "members/tool/vibe.toml",
+        &package("tool", "flow"),
+    );
+
+    let ws = Workspace::load(tmp.path()).unwrap();
+    let member = canonical(&tmp.path().join("members/tool")).unwrap();
+    // A differently-cased spelling of the same entry. The host API —
+    // `Path::canonicalize` under the crate helper, no string folding —
+    // must resolve it back to the on-disk form; the assert fails loudly
+    // if it does not, so the alias case is never faked.
+    let alias = member.to_string_lossy().to_ascii_uppercase();
+    let alias = canonical(Path::new(&alias)).unwrap();
+    assert_eq!(alias, member);
+    assert_eq!(ws.node_rel_of(&alias).unwrap().as_str(), "members/tool");
+}
