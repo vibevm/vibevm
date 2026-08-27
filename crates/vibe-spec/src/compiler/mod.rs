@@ -19,6 +19,7 @@ pub(crate) mod pass;
 pub(crate) mod pipeline;
 pub(crate) mod qualify;
 pub(crate) mod source_snapshot;
+pub(crate) mod trace;
 pub(crate) mod verify;
 pub(crate) mod wire;
 pub(crate) mod worklist;

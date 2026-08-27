@@ -4,6 +4,7 @@ use crate::{SectionSource, SpecAddress};
 use super::super::backend::BackendId;
 use super::super::backend::BackendRegistry;
 use super::super::ir::{ArtifactInputWitness, ArtifactPlan, EmittedArtifact, StaticCompileMode};
+use super::super::trace::CompileTraceSink;
 use super::super::worklist::{self, ErrorOwners};
 use super::BuiltinSchedule;
 
@@ -34,17 +35,45 @@ pub fn compile_artifact(
     compile_artifact_with_registry(plan, source, &BackendRegistry::builtins())
 }
 
+/// [`compile_artifact`] under one diagnostic observer (PROP-054 `##OBS-TRACE`).
+///
+/// The sink sees exactly one event per attempted pass of the schedule this
+/// artifact really runs — every worklist `parse` included — and the exact
+/// pretty `compiler_ir/e1` bytes of every accepted output. It is a witness,
+/// never a veto: an encode refusal becomes a `snapshot-failed` event, and the
+/// returned artifact and every error identity are those of
+/// [`compile_artifact`] on the same inputs.
+///
+/// The sink is deliberately NOT part of [`ArtifactPlan`]: a plan is a
+/// semantic, digested value, and an observer is neither.
+pub fn compile_artifact_traced(
+    plan: ArtifactPlan,
+    source: &impl SectionSource,
+    sink: &dyn CompileTraceSink,
+) -> Result<EmittedArtifact, ArtifactCompileError> {
+    compile_artifact_traced_with_registry(plan, source, &BackendRegistry::builtins(), Some(sink))
+}
+
 pub(crate) fn compile_artifact_with_registry(
     plan: ArtifactPlan,
     source: &impl SectionSource,
     registry: &BackendRegistry,
+) -> Result<EmittedArtifact, ArtifactCompileError> {
+    compile_artifact_traced_with_registry(plan, source, registry, None)
+}
+
+pub(crate) fn compile_artifact_traced_with_registry(
+    plan: ArtifactPlan,
+    source: &impl SectionSource,
+    registry: &BackendRegistry,
+    trace: Option<&dyn CompileTraceSink>,
 ) -> Result<EmittedArtifact, ArtifactCompileError> {
     let schedule = BuiltinSchedule::emitted(&plan, registry).map_err(|error| {
         ArtifactCompileError::Registry {
             reason: error.to_string(),
         }
     })?;
-    run(plan, source, schedule)
+    run(plan, source, schedule, trace)
 }
 
 #[cfg(feature = "test-support")]
@@ -60,7 +89,7 @@ pub(crate) fn compile_artifact_with_backend_id(
             reason: error.to_string(),
         })?;
     let schedule = BuiltinSchedule::with_backend(&plan, implementation);
-    run(plan, source, schedule)
+    run(plan, source, schedule, None)
 }
 
 #[cfg(feature = "test-support")]
@@ -119,16 +148,17 @@ fn run(
     plan: ArtifactPlan,
     source: &impl SectionSource,
     schedule: BuiltinSchedule,
+    trace: Option<&dyn CompileTraceSink>,
 ) -> Result<EmittedArtifact, ArtifactCompileError> {
     let worklist = worklist::discover(
         &plan,
         source,
-        |input| schedule.parse_source(input),
+        |input| schedule.parse_source(input, trace),
         |address, reason| schedule.record_failure(address, reason),
     );
     schedule.close_state.set_pending_sources(worklist.sources);
     schedule.close_state.set_pending_embeds(worklist.embeds);
-    schedule.emit(worklist.documents, &plan, &worklist.owners)
+    schedule.emit(worklist.documents, &plan, &worklist.owners, trace)
 }
 
 pub(crate) fn compile_compatibility_artifact(

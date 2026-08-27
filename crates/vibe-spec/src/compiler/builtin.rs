@@ -23,6 +23,7 @@ use super::pipeline::{CompilerPipeline, CompilerPipelineError};
 #[cfg(test)]
 use super::qualify::QUALIFY_PASS_NAME;
 use super::qualify::QualifyPass;
+use super::trace::CompileTraceSink;
 use super::worklist;
 
 const PARSE_PASS_NAME: &str = "parse";
@@ -32,7 +33,7 @@ mod driver;
 #[cfg(test)]
 pub(crate) use driver::compile_artifact_with_registry;
 pub(crate) use driver::compile_compatibility_artifact;
-pub use driver::{ArtifactCompileError, compile_artifact};
+pub use driver::{ArtifactCompileError, compile_artifact, compile_artifact_traced};
 #[cfg(feature = "test-support")]
 pub use driver::{
     compile_artifact_missing_backend_test_vehicle, compile_artifact_opaque_test_vehicle,
@@ -174,9 +175,9 @@ impl BuiltinSchedule {
         schedule
     }
 
-    fn parse_source(&self, source: SourceIr) -> DocumentIr {
+    fn parse_source(&self, source: SourceIr, trace: Option<&dyn CompileTraceSink>) -> DocumentIr {
         self.pipeline
-            .run_document(source)
+            .run_document_traced(source, trace)
             .expect("the private parse segment accepts canonical Markdown sources")
     }
 
@@ -211,6 +212,7 @@ impl BuiltinSchedule {
         documents: Vec<DocumentIr>,
         plan: &ArtifactPlan,
         owners: &worklist::ErrorOwners,
+        trace: Option<&dyn CompileTraceSink>,
     ) -> Result<EmittedArtifact, ArtifactCompileError> {
         let documents = match self.pipeline.gather_documents(documents) {
             Ok(documents) => documents,
@@ -220,7 +222,7 @@ impl BuiltinSchedule {
                 });
             }
         };
-        match self.pipeline.run_to_emitted(documents) {
+        match self.pipeline.run_to_emitted(documents, trace) {
             Ok(emitted) => Ok(emitted),
             Err(CompilerPipelineError::Segment(PassSegmentError::PassFailed { pass, source }))
                 if pass.as_str() == CLOSE_PASS_NAME =>
@@ -396,6 +398,25 @@ impl BuiltinSchedule {
     }
 }
 
+/// Test-only construction of the REAL declared schedules, so a focused test
+/// outside this module can observe the production pass list rather than a
+/// hand-built imitation of it.
+#[cfg(test)]
+impl BuiltinSchedule {
+    pub(crate) fn linked_for_test(plan: &ArtifactPlan) -> Self {
+        Self::linked(plan)
+    }
+
+    pub(crate) fn emitted_for_test(plan: &ArtifactPlan) -> Self {
+        Self::emitted(plan, &BackendRegistry::builtins())
+            .expect("the built-in registry selects every built-in target")
+    }
+
+    pub(crate) fn pipeline_for_test(&self) -> &CompilerPipeline {
+        &self.pipeline
+    }
+}
+
 fn unexpected_pass_error<T>(
     pass: &PassName,
     source: Box<dyn std::error::Error + Send + Sync>,
@@ -418,7 +439,7 @@ pub(crate) fn compile_artifact_prefix(
     let worklist = worklist::discover(
         &plan,
         source,
-        |input| schedule.parse_source(input),
+        |input| schedule.parse_source(input, None),
         |address, reason| schedule.record_failure(address, reason),
     );
     schedule.close_state.set_pending_sources(worklist.sources);
@@ -438,7 +459,7 @@ pub(crate) fn compile_artifact_lane(
     let worklist = worklist::discover(
         &plan,
         source,
-        |input| schedule.parse_source(input),
+        |input| schedule.parse_source(input, None),
         |address, reason| schedule.record_failure(address, reason),
     );
     schedule.close_state.set_pending_sources(worklist.sources);

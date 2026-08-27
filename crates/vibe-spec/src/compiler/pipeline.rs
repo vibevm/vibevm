@@ -14,6 +14,7 @@ use super::ir::{
 use super::pass::{
     AnyIr, IrPayload, Pass, PassDescriptor, PassName, PassSegment, PassSegmentError,
 };
+use super::trace::CompileTraceSink;
 use super::verify::IrVerifier;
 
 const SOURCE_DOCUMENT: IrShape = IrShape::new(IrLevel::Source, IrCardinality::Document);
@@ -178,8 +179,18 @@ impl CompilerPipeline {
         &self,
         source: SourceIr,
     ) -> Result<DocumentIr, CompilerPipelineError> {
+        self.run_document_traced(source, None)
+    }
+
+    /// [`Self::run_document`] under one observer, so every worklist `parse`
+    /// invocation is seen exactly as the untraced one is executed.
+    pub(crate) fn run_document_traced(
+        &self,
+        source: SourceIr,
+        trace: Option<&dyn CompileTraceSink>,
+    ) -> Result<DocumentIr, CompilerPipelineError> {
         self.validate_document_boundaries()?;
-        self.run_document_unchecked(source)
+        self.run_document_unchecked(source, trace)
     }
 
     /// Cross the one scheduler-owned document/artifact cardinality boundary.
@@ -214,6 +225,15 @@ impl CompilerPipeline {
         &self,
         documents: Documents,
     ) -> Result<ClosureIr, CompilerPipelineError> {
+        self.run_to_closure_traced(documents, None)
+    }
+
+    /// [`Self::run_to_closure`] under one observer.
+    pub(crate) fn run_to_closure_traced(
+        &self,
+        documents: Documents,
+        trace: Option<&dyn CompileTraceSink>,
+    ) -> Result<ClosureIr, CompilerPipelineError> {
         self.expect_boundary(
             "artifact segment input",
             DOCUMENT_ARTIFACT,
@@ -226,7 +246,7 @@ impl CompilerPipeline {
         )?;
         let output = self
             .artifact
-            .run_checked(AnyIr::Documents(documents), self.verifier)?;
+            .run_traced(AnyIr::Documents(documents), self.verifier, trace)?;
         match output {
             AnyIr::Closure(closure) => Ok(closure),
             other => Err(CompilerPipelineError::UnexpectedCarrier {
@@ -242,6 +262,15 @@ impl CompilerPipeline {
         &self,
         documents: Documents,
     ) -> Result<LaneIr, CompilerPipelineError> {
+        self.run_to_lane_traced(documents, None)
+    }
+
+    /// [`Self::run_to_lane`] under one observer.
+    pub(crate) fn run_to_lane_traced(
+        &self,
+        documents: Documents,
+        trace: Option<&dyn CompileTraceSink>,
+    ) -> Result<LaneIr, CompilerPipelineError> {
         self.expect_boundary(
             "artifact segment input",
             DOCUMENT_ARTIFACT,
@@ -254,7 +283,7 @@ impl CompilerPipeline {
         )?;
         let output = self
             .artifact
-            .run_checked(AnyIr::Documents(documents), self.verifier)?;
+            .run_traced(AnyIr::Documents(documents), self.verifier, trace)?;
         match output {
             AnyIr::Lane(lane) => Ok(lane),
             other => Err(CompilerPipelineError::UnexpectedCarrier {
@@ -266,9 +295,13 @@ impl CompilerPipeline {
     }
 
     /// Run the declared whole-artifact schedule through its selected backend.
+    ///
+    /// This one has a single caller — the built-in driver — so it carries the
+    /// observer directly instead of keeping an untraced wrapper nobody calls.
     pub(crate) fn run_to_emitted(
         &self,
         documents: Documents,
+        trace: Option<&dyn CompileTraceSink>,
     ) -> Result<EmittedIr, CompilerPipelineError> {
         self.expect_boundary(
             "artifact segment input",
@@ -282,7 +315,7 @@ impl CompilerPipeline {
         )?;
         let output = self
             .artifact
-            .run_checked(AnyIr::Documents(documents), self.verifier)?;
+            .run_traced(AnyIr::Documents(documents), self.verifier, trace)?;
         match output {
             AnyIr::Emitted(emitted) => Ok(emitted),
             other => Err(CompilerPipelineError::UnexpectedCarrier {
@@ -299,7 +332,7 @@ impl CompilerPipeline {
     ) -> Result<Documents, CompilerPipelineError> {
         let mut documents = Vec::with_capacity(sources.len());
         for source in sources {
-            documents.push(self.run_document_unchecked(source)?);
+            documents.push(self.run_document_unchecked(source, None)?);
         }
 
         self.gather_documents(documents)
@@ -308,10 +341,11 @@ impl CompilerPipeline {
     fn run_document_unchecked(
         &self,
         source: SourceIr,
+        trace: Option<&dyn CompileTraceSink>,
     ) -> Result<DocumentIr, CompilerPipelineError> {
         let output = self
             .document
-            .run_checked(AnyIr::Source(source), self.verifier)?;
+            .run_traced(AnyIr::Source(source), self.verifier, trace)?;
         match output {
             AnyIr::Document(document) => Ok(document),
             other => Err(CompilerPipelineError::UnexpectedCarrier {

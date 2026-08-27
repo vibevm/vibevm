@@ -19,7 +19,10 @@ use super::pass::AnyIr;
 use super::verify::{IrVerifier, VerificationError};
 
 mod address;
-mod bounded;
+/// Visible to `compiler` so the R3.4 observer renders its diagnostics through
+/// this ONE reviewed bounded sink rather than growing a second, unreviewed
+/// formatter beside it.
+pub(super) mod bounded;
 mod closure;
 mod emitted;
 mod framing;

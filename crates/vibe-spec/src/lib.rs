@@ -41,7 +41,7 @@ mod transforms;
 mod use_graph;
 
 pub use address::{Authority, SpecAddress, SpecAddressError};
-pub use compiler::builtin::{ArtifactCompileError, compile_artifact};
+pub use compiler::builtin::{ArtifactCompileError, compile_artifact, compile_artifact_traced};
 #[cfg(feature = "test-support")]
 pub use compiler::builtin::{
     compile_artifact_missing_backend_test_vehicle, compile_artifact_opaque_test_vehicle,
@@ -51,6 +51,11 @@ pub use compiler::ir::{
     ArtifactContext, ArtifactInput, ArtifactInputType, ArtifactInputWitness, ArtifactPlan,
     ArtifactPlanError, ArtifactTarget, EmissionProvenance, EmittedArtifact,
 };
+// The observation vocabulary itself is NOT re-exported: status, level,
+// cardinality, shape and duration are the generated
+// `vibe_wire::generated::compiler_trace_index::e1::index` types, and a second
+// spelling of them here is exactly the drift the trace epoch exists to prevent.
+pub use compiler::trace::{CompileTraceSink, PassTraceEvent, SnapshotDecision};
 pub use directives::{Directive, DirectiveError, DirectiveKind, Directives, InPlaceUse};
 pub use doctree::{DocTree, Node, NodeId, NodeKind};
 pub use embed::{EmbedError, FsSectionSource, SectionSource, expand_embeds};
