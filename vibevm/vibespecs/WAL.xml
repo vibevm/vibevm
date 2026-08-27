@@ -10,9 +10,10 @@
     `campaigns/packages-2026-09/LIFECYCLE-EXTENSIONS-IMPLEMENTATION-LEDGER.md`.
     R3.4 is integrated, green and mirrored. R7.4's central architecture has
     passed three claudez audits plus an independent Opus/max adjudication.
-    Implementation starts with disjoint characterization, bounded-read, JTD,
-    typed-output and projection atoms; state/lease/selected ownership and the
-    read-only tasks adapter follow before the shared orchestrator/run adapter.
+    The disjoint characterization, bounded-read, JTD, typed-output and
+    projection atoms are landed and exactly gated. Pinned transactional state
+    I/O is active; lease/selected ownership and the read-only tasks adapter
+    follow before the shared orchestrator/run adapter.
     The owner-approved neutral R7.5 external-work substrate follows R7.4.
     </WAL-PHASE></p>
   </current-phase>
@@ -35,7 +36,8 @@
       implementation is active under
       `R7-MCP-LIFECYCLE-ARCHITECTURE-v0.1.md`: one lower application service,
       selected-node/run ownership, bounded/pinned state, outermost lease,
-      strict JTD tasks query and hosted/no-spend MCP run. R7.5 neutral
+      strict JTD tasks query and hosted/no-spend MCP run. Its first five
+      independent atoms are landed through `17d94f8f`; R7.5 neutral
       evidence/query substrate follows. Provider presence activates nothing
       by itself.</WAL-R7>
       <WAL-R8 fact="true" status="impl/work">R8.1 project-only package-skill
@@ -110,8 +112,8 @@
 
   <next title="Next">
     <p><WAL-NEXT fact="true" status="impl/work">Land the accepted R7.4
-    architecture, then integrate and immediately reclaim the first four
-    disjoint worker atoms. Continue through safe state/lease/selected ownership
+    architecture and first parallel worker wave are landed, with every worker
+    worktree reclaimed. Continue through safe state/lease/selected ownership
     and `lifecycle_tasks`, gate that coherent half once, then extract the shared
     orchestrator and land `lifecycle_run`. Follow with R7.5 exact evidence,
     optional read-only spec-IR facts and a fake external PDSA orchestrator — no

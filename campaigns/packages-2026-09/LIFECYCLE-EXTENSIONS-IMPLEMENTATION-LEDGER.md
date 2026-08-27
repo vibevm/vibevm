@@ -235,7 +235,7 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 | R7.1 real provider seam | done | `f42334ff`, `e2392893`; JTD wire, config, endpoint/redirect/proxy/body/timeout/redaction tests |
 | R7.2 CLI agent handler + output contract | done | `26929050`; strict AgentResult JTD, prepared prompt/world resolution, ResultPlan, optional provider path, create/install/reinstall/update e2e and shared safe filesystem cell |
 | R7.3 hosted outbox/delegated resume | done | `1dd5e1f5`, generated reports `eae4494e`; durable run/outbox, exact task ownership, candidate-state atomicity, phase/slot reconciliation, command-level progress, no-spend sequential resume and independent final freeze |
-| R7.4 MCP lifecycle surfaces | in progress | accepted `R7-MCP-LIFECYCLE-ARCHITECTURE-v0.1.md`: JTD-first tasks query before crate moves; capped/pinned state, outermost lease, selected-node ownership, typed MCP output, minimal projection cut, one lower orchestrator and exact CLI/MCP parity |
+| R7.4 MCP lifecycle surfaces | in progress | architecture `ee2bc67f`; first wave landed: typed executed MCP output `94f30aa9`, bounded capability reads `88600508`, CLI orchestration goldens `87c2bab8`, minimal projection cut `daf6eb31`, lifecycle-tasks JTD/corpus `17d94f8f`, combined specmap `1ada3df8`; A4 pinned transactional state active, then lease/selected/tasks adapter/orchestrator/run |
 | R7.5 external orchestration substrate | missing | owner ruling reaffirmed 2026-08-28: structured lifecycle evidence + exact tree/run identity + optional read-only requirements/spec-IR facts which an external long-running agent may use to see unmet/stale requirements and choose direction; no coding agent or automatic loop inside lifecycle; reference agent is a future campaign |
 
 R7 live Z.AI smoke is now conclusive (2026-08-27): central `vibe create`
@@ -565,9 +565,10 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
    lazy provider/budget accounting where a real enhancement consumes it.
 3. Lifecycle run-id wire; outbox/delegated resume; invoked-by adapter.
 4. MCP run/tasks adapters and standalone/hosted e2e. **R7.4 in progress:**
-   bounded safefs read / wire / ToolOutput / projection atoms first; state,
-   lease, selected-node and tasks adapter second; shared orchestrator + run
-   adapter last. Full panels only at the two coherent boundaries.
+   bounded safefs read / wire / ToolOutput / projection / CLI-characterization
+   first wave is landed and exactly gated; state I/O is active, then lease,
+   selected-node and tasks adapter; shared orchestrator + run adapter last.
+   Full panels only at the two coherent boundaries.
 5. Neutral external-orchestration evidence/query substrate: exact tree/run
    identity, stale/unmet verify evidence, optional read-only spec-IR facts and
    a fake-orchestrator/PDSA reference scenario. An external long-running agent

@@ -97,9 +97,11 @@ fronts currently in flight. A worker report or old worktree is never completion.
       checkpointing, slot/phase reconciliation and no-spend sequential parks.
 - [ ] **R7.4** — shared MCP `lifecycle_run` / `lifecycle_tasks` surfaces over
       the same state and outbox files.
-      - [ ] A0–A3: CLI characterization, bounded safefs read,
+      - [x] A0–A3: CLI characterization, bounded safefs read,
             `lifecycle_tasks` JTD/wire cell, typed MCP output and minimal
-            `vibe-agent-projection` extraction.
+            `vibe-agent-projection` extraction (`87c2bab8`, `88600508`,
+            `17d94f8f`, `94f30aa9`, `daf6eb31`; scoped gates and mutation
+            REDs green; five worker worktrees reclaimed immediately).
       - [ ] A4–A8: pinned transactional state, outermost lifecycle lease,
             selected-node ownership, optimistic tasks query and MCP adapter.
       - [ ] A9–A15: ports-in-place, one `vibe-orchestrator` application
