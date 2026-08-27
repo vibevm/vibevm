@@ -261,14 +261,12 @@
     the scoped successor to older campaign-TZ wording and changes no other
     project or harness.</OWNER-PANEL-RULING></p>
     <facts ordered="false">
-      <EXACT-GATES-PER-ATOM fact="true" status="spec/done">Before accepting an
-      atom, run formatting for each touched workspace, `git diff --check`, exact
-      unit/integration tests for changed behavior, checks/clippy for touched
-      crates, and the task-specific oracle: codegen idempotence plus wire corpus
-      for schemas; byte identity for compiler changes; isolated homes for
-      user-state code; a red mutation or independent negative fixture for every
-      load-bearing branch. Expand only when dependency analysis names a real
-      affected consumer.</EXACT-GATES-PER-ATOM>
+      <EXACT-GATES-PER-ATOM fact="true" status="spec/done">Before accepting an atom, run formatting for each touched workspace, `git diff --check`, exact
+      unit/integration tests, checks/clippy for touched crates, and the task oracle: codegen+wire corpus for schemas; compiler byte identity; isolated homes;
+      and a red mutation/negative fixture per load-bearing branch. A Rust edit in a `conform.toml`-gated crate also runs `cargo xtask conform check --scope
+      &lt;crate-path&gt;`; split test-support carries truthful per-item `#[cfg(test)]` because the syntax frontend reads it without its parent. New/moved
+      `specmark::scope!` or `#[specmark::spec(...)]` edges run `cargo xtask specmap` and review the derived map in the same atom. Expand only for another
+      named consumer. This closes the 2026-08-28 R3.4 findings: exact tests/clippy missed 52 conform findings; four later lawful edges stopped on a stale map.</EXACT-GATES-PER-ATOM>
       <DIRTY-CODEGEN-GATE fact="true" status="spec/done">`cargo xtask
       check-codegen` finishes by comparing the worktree against `HEAD`; in the
       mandated ordinary-unstaged worker handoff, an intended generated product
@@ -366,6 +364,9 @@
       latency, transport/429 category and advertised reset time, and performs no
       retry or repository work. This observes five-hour quota recovery without
       burning a real implementation packet or spinning against a known wall.</CLAUDEZ-HOURLY-PROBE>
+      <PANEL-DENOMINATOR-2026-08-28 fact="true" status="spec/done">`tools/self-check.sh` lexically counts `run_step` lines while seven calls execute dynamically, so final
+      R3.4 printed `[54/47]` and still ended `all green` / exit 0. The denominator is an observability bug, never coverage evidence: trust the ordered gates + green tail.
+      A later tooling atom derives the runtime total or removes the false denominator; this docs-only finding does not rewrite the green verdict.</PANEL-DENOMINATOR-2026-08-28>
     </facts>
   </observability>
 

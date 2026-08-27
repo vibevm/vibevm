@@ -12,9 +12,11 @@ architecture/ledger remain the normative homes.
   directories were censused; the harvest's own output became the 22nd
   report-bearing directory after that count. The same cutoff measured 143
   older tracked campaign-harvest files and 465 Claude/claudez session logs as
-  secondary evidence. After archiving the three accepted R3.4 fan-out reports,
-  the live observed corpus is 90 reports / 25 report directories / 466 logs;
-  these growing counts are telemetry, not normative inventory.
+  secondary evidence. After archiving the final Update/Reinstall corrections,
+  claudez oracle review and conform reviews, the live `cache/agents` source
+  corpus is 91 reports / 26 report directories; the 466-log figure remains the
+  earlier cutoff (heterogeneous log suffixes were not recounted). These growing
+  counts are telemetry, not normative inventory.
 - No tracked campaign document names a missing worker-report path.
 - `cache/agents/R2.2`, `R2.3` and `R2.4` are empty. Their worker prose is not
   recoverable because `cache/` is untracked; their authoritative recovery
@@ -50,6 +52,13 @@ durable content; launcher JSONL remains forensic fallback, not a project API.
    Verify accepts only evidence matching the exact current tree/artifact
    identity; a create mutation makes earlier build/test evidence stale and an
    external second invocation recomputes it without an engine back-edge.
+6. PROP-055 now carries two final-panel lessons: a touched gated Rust crate
+   needs scoped conform in its atom, and a new/moved source spec edge needs
+   specmap in the same atom. Targeted tests/clippy missed 52 R3.4 conform
+   findings; the later error-cell split added four lawful edges whose stale map
+   stopped the panel. The same spec records the panel denominator defect: the
+   final run executed 54 gates while the lexical counter printed `/47`; ordered
+   gate output plus `all green`/exit 0 is the authority.
 
 ## Queued for their owning implementation waves
 
@@ -62,6 +71,8 @@ durable content; launcher JSONL remains forensic fallback, not a project API.
 | Frontend format tokens and same-stem collision grammar | normative | R6 frontend registry | dotless portable ASCII-lowercase tokens, case-insensitive uniqueness, `md/xml` reserved |
 | Artifact runtime state, canonical tree digest and truthful no-provider plan | architecture | R8 artifact-runtime atom | fold the reviewed R8.2B design into BUILD-PACKAGE-DEPLOY when its code lands |
 | Effective pseudo-kind `project` / pure workspace no preset and registry selector-subject wording | wording debt | next PROP-054 preset/registry amendment | two small successor sentences, no code dependency |
+| `EntryProof` / proved-removal code cites handler `REPLY-SHAPE`, which does not govern identity-bound filesystem ownership | normative debt | R7.5/R8 safe-output ownership anchor in PROP-054 | create one governing anchor before the next consumer expands the cell, then repoint the six existing code edges; do not pretend the current address is semantically exact |
+| Commit `7fac07c8` cites nonexistent `discipline://…/guide#bans-and-escape-hatches`; the actual installed fact id is `SWEEP-TESTS-OUT-SPLIT` | historical citation correction | future commit authoring / R7.4 packet gates | do not rewrite published history; resolve anchors before citing them and treat this row as the durable correction |
 
 ## Deliberately not promoted
 

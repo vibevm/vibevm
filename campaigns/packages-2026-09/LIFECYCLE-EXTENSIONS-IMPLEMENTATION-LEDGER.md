@@ -1,6 +1,6 @@
 # Lifecycle/extensions — implementation reconciliation ledger
 
-_Rolling owner-facing checkpoint, 2026-08-27. This is the durable execution
+_Rolling owner-facing checkpoint, 2026-08-28. This is the durable execution
 map for `TZ-LIFECYCLE-EXTENSIONS-v0.1.md`; PROP-054 remains semantic authority.
 `SPEC-DEBT-LIFECYCLE*.md` remains the amendment queue. A row is complete only
 with landed commit, source, and decisive test evidence._
@@ -17,20 +17,15 @@ R8.1 worktrees contain only packets/reports beyond their landed commits.
 Intermediate dirty R2/R3 worktrees were older construction snapshots
 superseded by richer files on `main`. Their unique R4/R5 audit decisions were
 synthesised here, then 33 obsolete worktrees were removed under rolling GC.
-B-107, R3.3, R8.2a grammar, R6.2a/R6.2b, R7.2 and the R8.1 portability
-hardening and R7.3 hosted resume have since landed. Their worktrees are
-reclaimed under rolling GC. The R3.4 durable writer, shared command-wire /
-sticky-state prerequisites and borrowed workspace/install plumbing have now
-landed; every accepted precursor worktree was reclaimed immediately. No
-earlier accepted implementation worktree is retained at this checkpoint; the
-one active warm Update/Reinstall integration worktree is named below. The install/lifecycle
-activation atom `dcbf89b0` has also landed and its accepted worktree was
-reclaimed immediately. The Update/Reinstall owner atom and its final
-four-family parity matrix are accepted on the integration branch through
-`cebdedc5`; all three fan-out worktrees were reclaimed after central review,
-integration and exact gates. Main cherry-pick plus the active warm worktree's
-final GC remain the current mechanical checkpoint, stated again in §2.
-Missing later waves were never implemented.
+B-107, R3.3, R8.2a grammar, R6.2a/R6.2b, R7.2, R7.3 and the R8.1 portability
+hardening have since landed. R3.4 is now fully integrated on `main`: observer,
+writer, shared command wire/state, borrowed workspace/install plumbing,
+Install/Lifecycle/Update/Reinstall owners, exact displaced continuation and
+the final four-family parity matrix. The final quality tail repaired every
+panel-discovered stale oracle and discipline ratchet rather than baselining it.
+All accepted R3.4 worktrees and fan-out worktrees were reviewed, archived and
+reclaimed under rolling GC; **only `main` remains**. Missing later waves were
+never implemented.
 
 The reusable decisions from untracked architecture/review reports are
 synthesised below. Those reports are evidence inputs, not authority and not the
@@ -42,13 +37,20 @@ than depending on untracked `cache/` archaeology.
 
 ## 2. Evidence standard and current baseline
 
-- Integration checkpoint: the accepted R3.4 chain through `cebdedc5` after
-  hosted lifecycle resume, compiler observer/writer, shared command-report
-  wire, all four command owners and the final parity tail; main integration is
-  the current atom's next mechanical step.
-- `cargo test --workspace --locked`: green on 2026-08-27 at the unchanged
-  product checkpoint.
-- `cargo xtask specmap`: 6785 units, 2069 tagged code items, 1852 edges,
+- Integration checkpoint: `main` at `3656a889` contains the complete accepted
+  R3.4 chain, final command-root oracle migration, conform/document REDs and
+  derived retrieval map. `git cherry main wt/r34-update-reinstall` marked all
+  eleven branch commits patch-equivalent before that last worktree was removed.
+- The final unchanged tree passed the whole self-check through
+  `self-check: all green` and `SELF_CHECK_EXIT=0` on 2026-08-28. The script's
+  lexical denominator advertised 47 while dynamic loop calls executed 54
+  gates; the denominator defect is recorded in PROP-055, and every emitted
+  gate including the final whole-run user-home tripwire passed.
+- Final host `vibe check`: 0 errors, 5 warnings, 0 info. Final workspace
+  conform: 27 visible acknowledged findings, 0 frozen and **0 new**. The
+  panel's full workspace tests, clippy `-D warnings`, codegen, wire-diff,
+  package/MCP suites, self-traces and markup validation all passed.
+- Post-checkpoint `cargo xtask specmap`: 6786 units, 2073 tagged code items, 1856 edges,
   0 suspects, 0 gated orphans, 0 unresolved host edges and 21 standing
   warnings. The 25 non-host edges are outside this map's jurisdiction.
 - R6.2b integration evidence on the current tree: `cargo xtask codegen`
@@ -141,17 +143,13 @@ than depending on untracked `cache/` archaeology.
   files / 2,280 verdicts sealable, 191 files / 859 moved facts requiring
   re-judgement, and 236 refused files / 8,634 verdicts; a further 122 moved facts
   live inside 22 refused files and are reported separately, never double-counted.
-  Judging debt at pre-harvest main checkpoint `8f5508ee` is measured:
-  **2,501 unjudged facts in 154 files, 0 orphaned, 484 stale files**. The active
-  worktree lacks the untracked mirror and its zero-count warning is not
-  evidence; remeasure on main after integration. One
-  historical gap is named separately from
+  Judging debt was remeasured on final R3.4 `main` after integration and GC:
+  **2,501 unjudged facts in 154 files, 0 orphaned, 484 stale files** — unchanged
+  from the pre-harvest checkpoint. One historical gap is named separately from
   1,082 comparable moved facts; no sealing or re-judgement occurred.
-- Baseline 54-step panel: green on 2026-08-27 at pre-R3.4 checkpoint
-  `4a51a169`. The official prefix 1–11 and tail 12–54 passed through
-  `self-check: all green`; this is the campaign floor inherited by R3.4, not a
-  claim about the later trace/spec-harvest tree. One current full panel is due
-  after main integration and final specmap, per the milestone-only panel law.
+- Historical baseline panel: green on 2026-08-27 at pre-R3.4 checkpoint
+  `4a51a169`. Superseded as current evidence by the final all-green R3.4 panel
+  at `3656a889` above.
 - Host materialisation is proved: a fresh `vibe reinstall --force` migrated all
   37 tracked slots to strict ownership records with 1,354 independently
   rehashed rows; subsequent install materialised 0/37 and the boot tree was
@@ -195,7 +193,7 @@ this campaign, but compatibility law is preserved.
 | R3.1 five levels, six carriers, typed pass manager | done | `3630ab9e`; `compiler/{ir,pass,pipeline}.rs` |
 | R3.2 parse→close→merge→embed→qualify→absorb→link→assemble→emit | done | `a7961003`, `96eef07d`, `e53b9a4e`, `ec7ea7fe`, `e653654d`, `2feef271`, `6de7ef05`, `6f3fa61a`, `302a3509`, `4403cb55`; 84 boot-artifact + 10 emit gates |
 | R3.3 verifier-each skeleton | done | `15793f2e`; immutable test-only manager verifier, typed level/transition errors, SCC/document/lane/marker/fence invariants; 61 focused verifier tests + independent freeze |
-| R3.4 compile snapshots/timings | done | `6f4a717d` metadata/index/filename; `7adfbb5a` activation; `fa0662a9` observer; `4d95a129` writer/retention/budget; `34d3f363` shared report; `0301f8f2` sticky/displaced identity; `be04a184` borrowed compilation; `cad8ecc1` owner funnel; `dcbf89b0` install/lifecycle; `e589bdaa` Update/Reinstall; `ee63f4a1`/`a045e1f2` displacement and exact continuation ownership; `30482dcc`/`d7676be8`/`eb2e7148`/`cebdedc5` final RED/parity tail |
+| R3.4 compile snapshots/timings | done | `6f4a717d` metadata/index/filename; `7adfbb5a` activation; `fa0662a9` observer; `4d95a129` writer/retention/budget; `34d3f363` shared report; `0301f8f2` sticky/displaced identity; `be04a184` borrowed compilation; `cad8ecc1` owner funnel; `dcbf89b0` install/lifecycle; main owner/parity chain `3091df74`…`f59e26c3`; discipline/RED/specmap tail `6a4a31dc`…`3656a889`; final all-green panel + GC |
 
 R3.2 also landed a crash-safe whole-artifact transaction/selector tier. That
 unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
@@ -498,8 +496,9 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
 
 ## 6. Physical state and loss prevention
 
-- The final R3.2/R7.1/R8.1 branch commits are patch-equivalent or superseded by
-  `main`; their remaining files are reports/packets only.
+- The final R3.2/R7.1/R8.1/R3.4 branch commits are patch-equivalent or
+  superseded by `main`. At this checkpoint `git worktree list` contains only
+  `main`; no campaign branch carries an unintegrated product diff.
 - No campaign stash exists. Worktrees are rolling recovery state, not an
   end-of-campaign archive: once an atom is accepted/integrated and its unique
   report decisions have a durable home, remove that worktree immediately and
@@ -529,6 +528,12 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
   The accepted R3.4 command-core worktree measured 8,159,333,593 bytes before
   its equivalent product commit, two final reviews, exact main-tree gates and
   durable decision capture were proved; it was then reclaimed immediately.
+  The R3.4 quality-tail proof/tests/errors worktrees returned 2,851,895,144,
+  160,679,184 and 160,682,567 bytes respectively. Finally, every one of the
+  active Update/Reinstall branch's eleven commits was patch-equivalent on
+  `main`, its nine unique reports/corrections were archived, and the last warm
+  worktree returned **66,787,222,941 bytes**. The registry was pruned and only
+  `main` remains.
 
 ## 7. Dependency plan and parallel lanes
 
@@ -541,11 +546,11 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
 
 ### Lane A — compiler and native/pass tiers (longest)
 
-1. R3.3 verifier.
-2. Compiler IR JTD epoch and strict domain conversion substrate.
+1. R3.3 verifier. **Done.**
+2. Compiler IR JTD epoch and strict domain conversion substrate. **Done.**
 3. R3.4 trace/timings using that same wire: observer/pre-encode budget seam,
    atomic writer + newest-nine retention, one recorder through workspace/CLI,
-   then presentation/e2e.
+   then presentation/e2e. **Done through final all-green panel and GC.**
 4. Pure registry extraction.
 5. R4.1 staged positions/header/oracle/fingerprint.
 6. R4.2 XML minify binding and full RED corpus.
@@ -559,10 +564,11 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
 2. Feature-level algorithmic enhancement policy (`off/assist/required`) and
    lazy provider/budget accounting where a real enhancement consumes it.
 3. Lifecycle run-id wire; outbox/delegated resume; invoked-by adapter.
-4. MCP run/tasks adapters and standalone/hosted e2e.
+4. MCP run/tasks adapters and standalone/hosted e2e. **Next: R7.4.**
 5. Neutral external-orchestration evidence/query substrate: exact tree/run
    identity, stale/unmet verify evidence, optional read-only spec-IR facts and
-   a fake-orchestrator/PDSA reference scenario. No agent policy or auto-loop.
+   a fake-orchestrator/PDSA reference scenario. **Then R7.5.** No agent policy
+   or auto-loop.
 
 ### Lane C — artifact/build/package/deploy (parallel, manifest edits serialized)
 

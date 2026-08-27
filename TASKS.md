@@ -58,7 +58,7 @@ fronts currently in flight. A worker report or old worktree is never completion.
       (`17afb5b6`); all fifteen ordered gates, production staged replay,
       bounded hostile refusals and owned custom-target identity, with
       registration/invocation still deferred to R6.3.
-- [ ] **R3.4** — compile snapshots/timings over that same wire. The metadata
+- [x] **R3.4** — compile snapshots/timings over that same wire. The metadata
       contract is landed (`6f4a717d`: `compiler-trace-index/e1`, canonical
       full/short names, dense events/ordinals and timing reconciliation), as
       is strict role-equipotent `[compile] trace` (`7adfbb5a`). The real
@@ -75,7 +75,13 @@ fronts currently in flight. A worker report or old worktree is never completion.
       lifecycle activation, one prepared manifest/workspace epoch, timing
       presentation, typed failure roots, hosted Fresh/Ready resume and their
       command-level e2e are landed (`dcbf89b0`). Update/reinstall command
-      ownership and final four-command parity remain.
+      ownership, exact displaced continuation, final four-command parity and
+      the command-root-only report oracles are landed through `3091df74`…
+      `f59e26c3`. The final discipline tail (`6a4a31dc`…`3656a889`) closed the
+      optional-shape census, 52 new conform findings, executable proof/debug
+      REDs and the derived specmap. The unchanged final tree passed every
+      runtime gate through `self-check: all green` / exit 0 on 2026-08-28;
+      its warm 66,787,222,941-byte worktree was then reclaimed.
 - [ ] **R4.0–R4.3** — shared lower registry; four staged positions;
       transforms header/fingerprint/reference oracle; minify binding; analyzer.
 - [ ] **R5.1–R5.5** — native schemas/SDK, loader, source/prebuilt build,

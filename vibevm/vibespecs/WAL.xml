@@ -1,132 +1,134 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
-  <title id="root">WAL — checkpoint 2026-08-26: lifecycle/extensions implementation active</title>
-  <status stage="impl" state="work" comment="R1/R2 complete; R3.1-R3.2, R7.1 and R8.1 landed; verifier, compiler tiers, native/pass tier, agent handshake and expanded build/package/deploy remain active"/>
+  <title id="root">WAL — checkpoint 2026-08-28: R3.4 closed; R7.4 next</title>
+  <status stage="impl" state="work" comment="lifecycle/extensions campaign active; R1/R2, R3.1-R3.4, R6.2a/b, R7.1-R7.3, R8.1 and R8.2a complete; R7.4 is next"/>
 
   <current-phase title="Current phase">
     <p><WAL-PHASE fact="true" status="impl/work">The active epic is
-    `campaigns/packages-2026-09/TZ-LIFECYCLE-EXTENSIONS-v0.1.md`. Its truthful
-    per-step state, owner-addition ledger, physical recovery audit and dependency
-    plan live in
+    `campaigns/packages-2026-09/TZ-LIFECYCLE-EXTENSIONS-v0.1.md`; its granular
+    authority for execution state is
     `campaigns/packages-2026-09/LIFECYCLE-EXTENSIONS-IMPLEMENTATION-LEDGER.md`.
-    R1 and R2 are complete. R3's whole typed parse→close→merge→embed→qualify→
-    absorb→link→assemble→emit schedule is on `main`; R3.3 verifier is in the
-    `codex/r3-verifier` execution worktree. Parallel work has begun on the
-    schema-first six-carrier compiler IR wire (`codex/r6-ir-wire`), R7.2 CLI
-    agent/output contract (`codex/r7-agent-cli`) and R8 artifact/mechanism
-    grammar (`codex/r8-mechanism-grammar`). Root retains architecture, diff
-    acceptance, commits and gates.</WAL-PHASE></p>
+    R3.4 is integrated and closed on product checkpoint `3656a889`: the final
+    exact tree reached `self-check: all green` / exit 0, every accepted worker
+    diff is on `main`, and rolling GC left no campaign worktree. The current
+    edits are the docs/specmap checkpoint that records that close. Next product
+    atom: R7.4 MCP adapters, then the owner-approved neutral R7.5 external-work
+    substrate.</WAL-PHASE></p>
   </current-phase>
 
   <landed title="Landed evidence">
     <facts ordered="false">
-      <WAL-R1 fact="true" status="impl/done">R1 slot ownership/diff/freshness/
-      verify-heal/hook law: `6d606ef2`, `1cf4f189`, `6a7f750d`, `4503fdb6`,
-      `9c545f0d`; amendment draft in `SPEC-DEBT-LIFECYCLE.md`.</WAL-R1>
-      <WAL-R2 fact="true" status="impl/done">R2 lifecycle engine through the
-      phase-announcer owner scenario: grammar/controls, two epochs, nine phases,
-      typed envelope, freshness, script/binary, presets and registry query.
-      Commissioning evidence `3137990c`.</WAL-R2>
-      <WAL-R3 fact="true" status="impl/work">R3.1/R3.2 are complete through
-      `4403cb55`, including one whole artifact, named backends and crash-safe
-      boot publication. R3.3/R3.4 remain open.</WAL-R3>
-      <WAL-R7 fact="true" status="impl/work">R7.1 provider seam is landed at
-      `f42334ff` + `e2392893`; agent execution, hosted resume and MCP remain
-      open. Provider presence activates nothing by itself.</WAL-R7>
-      <WAL-R8 fact="true" status="impl/work">R8.1 project-only skill package
-      binding is landed at `c0fa49be` + `9275f373`, with strict JTD receipt,
-      intent/recovery/CAS and containment. The general artifact/mechanism/deploy
-      plane remains open.</WAL-R8>
+      <WAL-R1 fact="true" status="impl/done">R1 diff materialisation, strict
+      slot ownership, mutable hash gate, verify-heal and hook-on-nonempty-diff
+      are complete.</WAL-R1>
+      <WAL-R2 fact="true" status="impl/done">R2 nine-phase lifecycle,
+      contribution collection/order, controls, envelope, handlers, freshness,
+      presets/query and owner scenario §10.1 are complete.</WAL-R2>
+      <WAL-R3 fact="true" status="impl/done">R3 explicit six-carrier compiler
+      IR, named pass schedule, verifier and command-owned compile trace are
+      complete. Post-checkpoint specmap: 6786 units, 2073 tagged items, 1856 edges,
+      0 suspects, 0 gated orphans, 0 unresolved host edges, 21 standing
+      warnings.</WAL-R3>
+      <WAL-R7 fact="true" status="impl/work">R7.1 provider, R7.2 CLI agent
+      output contract and R7.3 hosted exact-run park/resume are complete. R7.4
+      MCP lifecycle surfaces and R7.5 neutral evidence/query substrate remain.
+      Provider presence activates nothing by itself.</WAL-R7>
+      <WAL-R8 fact="true" status="impl/work">R8.1 project-only package-skill
+      binding and R8.2a mechanism/artifact/deploy grammar are complete. Runtime
+      mechanisms, build/package providers and deploy reconciliation remain.
+      </WAL-R8>
+      <WAL-R34-GATE fact="true" status="impl/done">Final R3.4 panel on
+      `3656a889`: workspace tests and clippy green; host check 0 errors;
+      conform 27 acknowledged / 0 new; codegen, wire-diff, package/MCP suites,
+      self-traces, markup validation and both user-home tripwires green. The
+      script executed 54 gates while its lexical denominator printed 47; the
+      green ordered tail, not that denominator, is evidence.</WAL-R34-GATE>
+      <WAL-R34-GC fact="true" status="impl/done">The final warm R3.4 worktree
+      returned 66,787,222,941 bytes after all eleven branch commits proved
+      patch-equivalent and nine unique reports/corrections were archived. Only
+      `main` remains.</WAL-R34-GC>
     </facts>
   </landed>
 
   <architecture title="Architecture decisions in force">
     <facts ordered="false">
-      <WAL-C-PHASE-BOUNDARY fact="true" status="spec/done">Dependency
-      materialisation is `install`; portable production is `package`; user,
-      client, remote and system reconciliation is `deploy`. `clean` never
-      silently undeploys.</WAL-C-PHASE-BOUNDARY>
-      <WAL-C-ALGORITHMIC-BASELINE fact="true" status="spec/done">VibeVM
-      remains fully useful without an LLM. Paid enhancement is explicit per
-      feature (`off | assist | required`), lazily binds a provider and cannot
-      replace the subsystem's algorithmic mode. An explicitly selected agent
-      handler is itself the requested advanced action and fails honestly when
-      neither provider nor host exists.</WAL-C-ALGORITHMIC-BASELINE>
-      <WAL-C-IR-CARDINALITY fact="true" status="spec/done">Source/document
-      execute per addressed document; Documents gathers once; closure/lane/
-      emitted execute per complete final artifact. One JTD epoch with six
-      discriminated carriers is pulled before R3.4 and is shared by trace and
-      the R6 pass ABI.</WAL-C-IR-CARDINALITY>
-      <WAL-C-VERIFIER fact="true" status="spec/done">The verifier is immutable
-      and manager-owned. Use/Source contract-only cycles follow their existing
-      per-relation law; Embed is acyclic; a union cycle is not automatically a
-      recursive cycle. R3 enables only in tests; R6 enables the same seam for
-      every plugin pass, with no manifest off switch.</WAL-C-VERIFIER>
-      <WAL-C-MECHANISMS fact="true" status="spec/done">Scheduled extensions
-      answer when; sibling qualified mechanism providers answer how. Selection
-      is exact target pin → host route → builtin default → hard failure.
-      Builtins are replaceable providers, never hidden branches.</WAL-C-MECHANISMS>
-      <WAL-C-DEPLOY fact="true" status="spec/done">Deploy uses named target
-      profiles, explicit scope/effects, plan, durable intent, independent verify
-      and strict receipt. Static skill, Agent Plugin, Cargo, client projections,
-      `~/.vibe/bin`, custom installers and future system package providers share
-      this artifact/mechanism plane.</WAL-C-DEPLOY>
-      <WAL-C-WORKER-HANDOFF fact="true" status="spec/done">Claudez and Opus
-      are trusted with normal machine tools. A writing worker's handoff remains
-      a visible unstaged diff plus report; it does not add/commit/stash/branch/
-      reset/push or hide product state. Root reviews and integrates.</WAL-C-WORKER-HANDOFF>
+      <WAL-C-FRAMEWORK fact="true" status="spec/done">Lifecycle is a passive
+      extensible framework, not a coding agent. PDSA is a non-normative
+      external-agent scenario; Plan/Act policy, automatic back-edges and task
+      choice remain outside VibeVM. A reference agent is a future campaign.
+      </WAL-C-FRAMEWORK>
+      <WAL-C-EVIDENCE fact="true" status="spec/done">Verification evidence is
+      valid only for the exact tree/artifact/run identity measured. R7.5 may
+      expose optional read-only requirements/spec-IR facts with stable ids,
+      status and provenance; absence of that adapter changes no lifecycle.
+      </WAL-C-EVIDENCE>
+      <WAL-C-ALGORITHMIC fact="true" status="spec/done">VibeVM remains fully
+      useful without an LLM. Paid enhancement is explicit per feature
+      (`off|assist|required`), binds a provider lazily and never replaces the
+      algorithmic baseline.</WAL-C-ALGORITHMIC>
+      <WAL-C-MECHANISMS fact="true" status="spec/done">Scheduled extension
+      contributions answer when; sibling qualified mechanisms answer how.
+      Builtins are replaceable providers. R4.0 extracts one pure registry
+      kernel reused by lifecycle, compiler, workspace and later R8 selection;
+      a second collector is forbidden.</WAL-C-MECHANISMS>
+      <WAL-C-DEPLOY fact="true" status="spec/done">Install materialises the
+      dependency world; package creates portable artifacts; deploy reconciles
+      named destinations through plan/effect/intent/verify/receipt. Clean never
+      silently undeploys. Static skills, Agent Plugins, Cargo applications,
+      client projections, `~/.vibe/bin`, custom installers and future system
+      resources share this plane.</WAL-C-DEPLOY>
     </facts>
   </architecture>
 
   <constraints title="Current operational constraints">
     <facts ordered="false">
       <WAL-C-GATES fact="true" status="impl/done">Development uses exact
-      affected tests. The full 47-step panel runs only at coherent batch
-      boundaries on the final unchanged tree, with `CARGO_BUILD_JOBS=4` and
-      Git Bash on this Windows host.</WAL-C-GATES>
-      <WAL-C-JTD fact="true" status="impl/done">Every machine JSON/ABI/report
-      starts from JTD + registry + corpus + codegen. Never touch
-      `formats/EPOCHS.toml` or hand-edit generated Rust.</WAL-C-JTD>
-      <WAL-C-FILES fact="true" status="impl/done">Authored changed/new files
-      stay at or below 600 physical lines; split by domain seam before the
-      gate.</WAL-C-FILES>
-      <WAL-C-SCAN fact="true" status="impl/done">`vibe progress scan` writes
-      campaign state. Neither current debt helper measures the live corpus:
-      the host mirror/cache still names 502 pre-relayout Markdown paths, while a
-      detached worktree carries no mirror. Migrate those paths/verdicts to the
-      98 same-extension and 404 XML live targets with anchor-equality proof
-      before scan/seal or any zero-debt claim.</WAL-C-SCAN>
+      affected tests. A touched gated Rust crate also runs scoped conform; new
+      or moved source spec edges run specmap in the same atom. Full panel runs
+      only at coherent batch/final boundaries.</WAL-C-GATES>
+      <WAL-C-WIRE fact="true" status="impl/done">Every machine wire starts
+      from JTD + registry + corpus + codegen. Never edit `formats/EPOCHS.toml`
+      or generated Rust by hand.</WAL-C-WIRE>
+      <WAL-C-WORKERS fact="true" status="impl/done">Claudez is the default
+      delegable execution lane while healthy; Opus/max and Sol/native supply
+      judgment or failover. Root owns architecture, review, commits and gates.
+      Accepted worktrees are reclaimed immediately.</WAL-C-WORKERS>
+      <WAL-C-PANEL-DENOMINATOR fact="true" status="impl/work">Current
+      self-check runtime prints `[54/47]` because `STEP_TOTAL` counts lexical
+      call sites while seven calls execute dynamically. Do not use that total
+      as coverage evidence; tooling follow-up is queued in PROP-055.</WAL-C-PANEL-DENOMINATOR>
     </facts>
   </constraints>
 
   <next title="Next">
-    <p><WAL-NEXT fact="true" status="impl/work">Finish the durable reconciliation
-    commit, run the current unchanged full panel + host check + boot-byte no-op,
-    and mirror the ten single-box commits. Then accept/repair and integrate the
-    four active implementation worktrees in dependency order. The full
-    remaining sequence is in the implementation ledger; no wave or owner
-    addition is dropped merely because the in-memory plan is compacted.</WAL-NEXT></p>
+    <p><WAL-NEXT fact="true" status="impl/work">Commit this R3.4 docs/specmap
+    checkpoint and mirror the green batch. Then implement R7.4
+    `lifecycle_run`/`lifecycle_tasks` as thin MCP adapters over the existing
+    lifecycle state/outbox. Follow with R7.5 structured evidence, exact
+    tree/run identity and optional read-only spec-IR facts plus a fake external
+    PDSA orchestrator — no embedded agent policy. Resume R4 registry/transforms
+    after those neutral adapters, per the implementation ledger.</WAL-NEXT></p>
   </next>
 
   <known-issues title="Known issues">
     <facts ordered="false">
-      <WAL-I-PUBLICATION fact="true" status="impl/work">At this checkpoint,
-      `main` is ten commits ahead of both mirrors. This is the largest immediate
-      loss risk; mirror after the current batch panel, not after the whole epic.
+      <WAL-I-DEBT fact="true" status="impl/work">Final main judging debt:
+      2,501 unjudged facts in 154 files, 0 orphaned verdicts, 484 stale files.
+      No re-judgement or sealing occurred in R3.4.</WAL-I-DEBT>
+      <WAL-I-SAFEFS-ANCHOR fact="true" status="spec/plan">`EntryProof` and
+      proved-removal code currently cite PROP-054 `REPLY-SHAPE`, which does not
+      semantically govern identity-bound filesystem ownership. The harvest
+      queues one safe-output ownership anchor for R7.5/R8, then repointing the
+      six existing code edges. Do not multiply the wrong citation.</WAL-I-SAFEFS-ANCHOR>
+      <WAL-I-CITATION fact="true" status="impl/work">Commit `7fac07c8` cites a
+      nonexistent guide anchor; the real fact id is `SWEEP-TESTS-OUT-SPLIT`.
+      Published history is not rewritten; the harvest is the durable
+      correction and future commits resolve anchors before citing them.
+      </WAL-I-CITATION>
+      <WAL-I-PUBLICATION fact="true" status="impl/work">The accumulated
+      all-green R3.4 batch is single-box until this docs/specmap checkpoint is
+      committed and `cargo xtask mirror` completes to both source mirrors.
       </WAL-I-PUBLICATION>
-      <WAL-I-DURABLE-STATE fact="true" status="impl/work">The prior WAL,
-      CONTINUE, TASKS and TZ header all said implementation had not started.
-      This checkpoint and the new ledger repair that contradiction; CONTINUE
-      and TASKS are refreshed in the same recovery batch.</WAL-I-DURABLE-STATE>
-      <WAL-I-DEBT fact="true" status="impl/work">Judging debt is unmeasured.
-      Host `judging-debt.py` reports 19,496/0/0/35 from stale pre-relayout
-      mirrors; detached worktrees see zero mirrors. Every one of the 502 judged
-      paths moved, and 404 also converted Markdown→XML. This is B-107 plus a
-      campaign-state migration, not evidence of a clean or dirty live corpus.
-      </WAL-I-DEBT>
-      <WAL-I-PANEL fact="true" status="impl/work">Workspace tests are green.
-      The final full panel for the current batch has not yet completed after the
-      two repaired integration findings.</WAL-I-PANEL>
     </facts>
   </known-issues>
 </spec>
