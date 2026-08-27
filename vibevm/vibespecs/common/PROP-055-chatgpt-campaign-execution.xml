@@ -257,6 +257,15 @@
       user-state code; a red mutation or independent negative fixture for every
       load-bearing branch. Expand only when dependency analysis names a real
       affected consumer.</EXACT-GATES-PER-ATOM>
+      <DIRTY-CODEGEN-GATE fact="true" status="spec/done">`cargo xtask
+      check-codegen` finishes by comparing the worktree against `HEAD`; in the
+      mandated ordinary-unstaged worker handoff, an intended generated product
+      diff therefore makes it fail by construction. A schema/codegen worker
+      runs the generator, captures a stable hash of the relevant visible diff,
+      runs the generator again and proves the hash unchanged (plus focused
+      wire/corpus tests). Root runs the real `check-codegen` after staging the
+      atom in its human-authored commit/integrated tree. A worker's dirty-tree
+      exit is not codegen drift evidence by itself.</DIRTY-CODEGEN-GATE>
       <NO-WORKER-FULL-PANEL fact="true" status="spec/done">A worker never runs
       the full panel. It runs the narrow self-verify named by its packet. The
       central coordinator does not run the full panel merely because a worker
