@@ -104,6 +104,10 @@ fronts currently in flight. A worker report or old worktree is never completion.
             REDs green; five worker worktrees reclaimed immediately).
       - [ ] A4–A8: pinned transactional state, outermost lifecycle lease,
             selected-node ownership, optimistic tasks query and MCP adapter.
+            - [x] A4 pinned/bounded state transaction + bounded safefs
+                  post-publication verify (`31ca1e7d`, `0225ce41`,
+                  `970520d4`; Opus-reviewed, Windows junction RED executes).
+            - [ ] A5 outermost cross-process lifecycle lease — next.
       - [ ] A9–A15: ports-in-place, one `vibe-orchestrator` application
             service, credential-free prompt resolution and hosted/no-spend
             `lifecycle_run` parity.

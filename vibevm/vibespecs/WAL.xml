@@ -12,7 +12,8 @@
     passed three claudez audits plus an independent Opus/max adjudication.
     The disjoint characterization, bounded-read, JTD, typed-output and
     projection atoms are landed and exactly gated. Pinned transactional state
-    I/O is active; lease/selected ownership and the read-only tasks adapter
+    I/O plus bounded safefs post-publication verification are landed after
+    independent Opus review; lease/selected ownership and the read-only tasks adapter
     follow before the shared orchestrator/run adapter.
     The owner-approved neutral R7.5 external-work substrate follows R7.4.
     </WAL-PHASE></p>
@@ -36,8 +37,9 @@
       implementation is active under
       `R7-MCP-LIFECYCLE-ARCHITECTURE-v0.1.md`: one lower application service,
       selected-node/run ownership, bounded/pinned state, outermost lease,
-      strict JTD tasks query and hosted/no-spend MCP run. Its first five
-      independent atoms are landed through `17d94f8f`; R7.5 neutral
+      strict JTD tasks query and hosted/no-spend MCP run. Its first wave is
+      landed through `17d94f8f`; A4 is complete at `0225ce41` / `970520d4`
+      with safefs prerequisite `31ca1e7d`. R7.5 neutral
       evidence/query substrate follows. Provider presence activates nothing
       by itself.</WAL-R7>
       <WAL-R8 fact="true" status="impl/work">R8.1 project-only package-skill
@@ -111,10 +113,11 @@
   </constraints>
 
   <next title="Next">
-    <p><WAL-NEXT fact="true" status="impl/work">Land the accepted R7.4
-    architecture and first parallel worker wave are landed, with every worker
-    worktree reclaimed. Continue through safe state/lease/selected ownership
-    and `lifecycle_tasks`, gate that coherent half once, then extract the shared
+    <p><WAL-NEXT fact="true" status="impl/work">The accepted R7.4
+    architecture, first parallel wave and A4 state transaction are landed,
+    with every completed worker worktree reclaimed. Implement the outermost
+    lifecycle lease, selected ownership and `lifecycle_tasks`; gate that
+    coherent half once, then extract the shared
     orchestrator and land `lifecycle_run`. Follow with R7.5 exact evidence,
     optional read-only spec-IR facts and a fake external PDSA orchestrator — no
     embedded agent policy. Resume R4 registry/transforms after those neutral
