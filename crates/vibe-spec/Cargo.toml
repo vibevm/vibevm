@@ -26,6 +26,16 @@ quick-xml.workspace = true
 # reads a `.xml` dependency through `load_spec_text`'s canonical Markdown
 # projection, so the fold/embed closure works unchanged over either form.
 vibe-specdoc.workspace = true
+# The R6 compiler-IR wire conversion (PROP-054 ##WHOLE-IR-WIRE): the generated
+# strict JTD types, their JSON serializer, and the audited base64 codec for
+# opaque emitted bytes. `vibe-spec` sits above `vibe-wire`; never the reverse.
+vibe-wire.workspace = true
+serde_json.workspace = true
+# The strict byte reader's duplicate-key walker is a raw `DeserializeSeed`
+# visitor over the JSON token stream (no derive, no Value). Already a locked
+# workspace dependency of serde_json itself.
+serde.workspace = true
+base64.workspace = true
 
 [dev-dependencies]
 tempfile.workspace = true

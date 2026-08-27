@@ -60,7 +60,7 @@ fn registry_stores_behavior_and_rejects_collision_and_wrong_pass_identity() {
 fn removing_selected_registration_is_a_typed_failure() {
     let registry = BackendRegistry::default();
     assert!(matches!(
-        registry.selected(ArtifactTarget::StaticMarkdown),
+        registry.selected(&ArtifactTarget::StaticMarkdown),
         Err(BackendRegistryError::Missing { ref backend }) if backend == "static-md"
     ));
 }
@@ -72,7 +72,7 @@ fn explicit_replacement_keeps_the_stable_engine_owned_identity() {
         .replace(Arc::new(DummyBackend::new("static-md", "emit:static-md")))
         .unwrap();
     assert_eq!(replaced.id().as_str(), "static-md");
-    let selected = registry.selected(ArtifactTarget::StaticMarkdown).unwrap();
+    let selected = registry.selected(&ArtifactTarget::StaticMarkdown).unwrap();
     assert_eq!(selected.pass_name().as_str(), "emit:static-md");
     assert!(matches!(
         BackendRegistry::default().replace(Arc::new(DummyBackend::new("x", "emit:x"))),

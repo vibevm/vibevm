@@ -36,6 +36,13 @@ impl LinkMarkerKey {
         Self(address.without_pin())
     }
 
+    /// The spelling the wire carries. Coherence with the occurrence's own
+    /// requested address is the lane law's to judge, not the constructor's —
+    /// a plugin may carry any reversible key the lane walk can bracket.
+    pub(crate) fn new(value: impl Into<String>) -> Self {
+        Self(value.into())
+    }
+
     pub(crate) fn as_str(&self) -> &str {
         &self.0
     }

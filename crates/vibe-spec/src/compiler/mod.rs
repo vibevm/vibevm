@@ -20,6 +20,7 @@ pub(crate) mod pipeline;
 pub(crate) mod qualify;
 pub(crate) mod source_snapshot;
 pub(crate) mod verify;
+pub(crate) mod wire;
 pub(crate) mod worklist;
 
 #[cfg(test)]

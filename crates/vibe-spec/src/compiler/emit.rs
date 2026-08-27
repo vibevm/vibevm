@@ -14,7 +14,7 @@ use super::pass::{Pass, PassName};
 
 mod digest;
 pub(crate) use digest::bytes_digest as emitted_bytes_digest;
-mod framing;
+pub(crate) mod framing;
 #[cfg(feature = "test-support")]
 pub(crate) mod opaque_test_vehicle;
 pub(crate) mod static_md;
@@ -42,12 +42,13 @@ impl Pass for EmitPass {
 
     fn run(&self, lane: LaneIr) -> Result<EmittedArtifact, EmitPassError> {
         validate_lane(&lane).map_err(|error| EmitPassError::InvalidLane(Box::new(error)))?;
-        let expected_backend = lane.context().target().backend_id();
+        let target = lane.context().target();
+        let expected_backend = target.backend_id();
         if self.backend.id().as_str() != expected_backend {
             return Err(EmitPassError::TargetMismatch {
                 backend: self.backend.id().as_str().to_string(),
                 expected: expected_backend.to_string(),
-                actual: lane.context().target(),
+                actual: target,
             });
         }
         let witness = capture_witness(&lane, self.backend.id()).map_err(EmitPassError::Backend)?;

@@ -12,7 +12,7 @@ const BYTES_DOMAIN: &[u8] = b"vibe-spec/emitted-bytes/v1";
 pub(super) fn lane_digest(lane: &LaneIr) -> LaneInputDigest {
     let mut digest = StableDigest::new(LANE_DOMAIN);
     digest.field(lane.context().artifact().as_str().as_bytes());
-    digest.byte(target_byte(lane.context().target()));
+    digest.byte(target_byte(&lane.context().target()));
     digest.byte(mode_byte(lane.context().mode()));
     match lane.context().frame() {
         ArtifactFrame::CompatibilityFragment => digest.byte(0),
@@ -212,7 +212,7 @@ fn hash_fence(digest: &mut StableDigest, fence: &LinkFenceSnapshot) {
     }
 }
 
-fn target_byte(target: ArtifactTarget) -> u8 {
+fn target_byte(target: &ArtifactTarget) -> u8 {
     if target.is_static_markdown() {
         0
     } else if target.is_static_xml() {

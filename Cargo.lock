@@ -4329,12 +4329,16 @@ dependencies = [
 name = "vibe-spec"
 version = "1.0.0"
 dependencies = [
+ "base64",
  "core-ai-native-specmark",
  "quick-xml",
+ "serde",
+ "serde_json",
  "sha2",
  "tempfile",
  "thiserror 2.0.18",
  "vibe-specdoc",
+ "vibe-wire",
 ]
 
 [[package]]

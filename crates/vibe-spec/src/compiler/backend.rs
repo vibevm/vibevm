@@ -6,40 +6,9 @@ use std::sync::Arc;
 use super::ir::{ArtifactTarget, LaneIr, PreEmissionWitness};
 use super::pass::PassName;
 
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
-pub(crate) struct BackendId(String);
-
-impl BackendId {
-    pub(crate) fn new(value: impl Into<String>) -> Result<Self, BackendIdError> {
-        let value = value.into();
-        let bytes = value.as_bytes();
-        let valid = (1..=64).contains(&bytes.len())
-            && valid_id_byte(bytes[0])
-            && bytes
-                .iter()
-                .skip(1)
-                .all(|byte| valid_id_byte(*byte) || b"._-".contains(byte));
-        if valid {
-            Ok(Self(value))
-        } else {
-            Err(BackendIdError { value })
-        }
-    }
-
-    pub(crate) fn as_str(&self) -> &str {
-        &self.0
-    }
-}
-
-fn valid_id_byte(byte: u8) -> bool {
-    byte.is_ascii_lowercase() || byte.is_ascii_digit()
-}
-
-#[derive(Debug, thiserror::Error)]
-#[error("invalid emit backend id `{value}`: expected [a-z0-9][a-z0-9._-]{{0,63}}")]
-pub(crate) struct BackendIdError {
-    value: String,
-}
+// The single backend/target identity lives below this registry, in
+// `ir/target.rs`, so `ArtifactTarget` and `BackendRegistry` share one id law.
+pub(crate) use super::ir::BackendId;
 
 #[derive(Debug, thiserror::Error)]
 pub(crate) enum BackendError {
@@ -122,14 +91,19 @@ impl BackendRegistry {
 
     pub(crate) fn selected(
         &self,
-        target: ArtifactTarget,
+        target: &ArtifactTarget,
     ) -> Result<Arc<dyn EmitBackend>, BackendRegistryError> {
-        let id = target.backend_id();
+        // A target's own backend id is a validated id by construction, so this
+        // revalidation cannot fail; Missing keeps the honest refusal.
+        let id =
+            BackendId::new(target.backend_id()).map_err(|error| BackendRegistryError::Missing {
+                backend: error.value,
+            })?;
         self.implementations
-            .get(&BackendId(id.to_string()))
+            .get(&id)
             .cloned()
             .ok_or_else(|| BackendRegistryError::Missing {
-                backend: id.to_string(),
+                backend: id.as_str().to_string(),
             })
     }
 

@@ -126,6 +126,53 @@ fn a_minimal_pending_unplanned_closure_passes() {
     verify(&minimal_closure()).unwrap();
 }
 
+/// `verify_trees` proves the STRUCTURE of every carrier tree before the
+/// DuplicateId verdict runs over any of them, so a duplicate in the first
+/// document never masks a structural fault in a later one. The full
+/// verifier's stable first-failure order must not move (R6.2b repair 1).
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#INTER-PASS-VERIFIER")]
+fn an_early_duplicate_cannot_mask_a_later_structural_fault() {
+    let mut nodes = base_nodes();
+    // Node 0 carries a real duplicate-anchor record...
+    nodes[0].tree = DocTree::parse(
+        "# A {#a}
+##dup one
+
+##dup two
+",
+    );
+    assert!(!nodes[0].tree.duplicate_anchors().is_empty());
+    // ...and node 1 carries a structural fault a later phase would also catch.
+    let parsed = DocTree::parse(
+        "# B {#b}
+body
+",
+    );
+    let (tree_nodes, _, _, lines, _) = parsed.parts();
+    let mut mutated = tree_nodes.to_vec();
+    mutated[1].span = 0..lines.len() + 99;
+    nodes[1].tree = DocTree::corrupt_for_test(mutated, lines.len());
+
+    let closure = closure(
+        nodes,
+        vec![use_edge(1, 0, "spec://org.demo/pkg/common/contract/a#r")],
+        vec![
+            occurrence("spec://org.demo/pkg/common/contract/a#r", 0),
+            occurrence("spec://org.demo/pkg/common/contract/b#r", 1),
+        ],
+        1,
+        Vec::new(),
+        QualificationState::Pending(StaticCompileMode::Plain),
+        AbsorptionState::Unplanned,
+    );
+    let error = verify(&closure).unwrap_err();
+    assert!(
+        matches!(error, VerificationError::DocTree { .. }),
+        "the structural phase over ALL trees runs before any DuplicateId verdict, got {error:?}"
+    );
+}
+
 /// Every recorded request must still name the node it resolved to. A pass that
 /// retargets a request while keeping the node id leaves a carrier whose
 /// provenance lies; downstream that is only a `debug_assert_eq!` in qualify's

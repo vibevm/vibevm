@@ -3,7 +3,7 @@ use std::collections::BTreeMap;
 use super::super::ir::{ContributionMeta, OriginRename};
 
 #[derive(Clone, Copy)]
-pub(super) enum CommentSyntax {
+pub(crate) enum CommentSyntax {
     Markdown,
     Xml,
 }
@@ -27,7 +27,7 @@ fn generated_comment(syntax: CommentSyntax, payload: &str, layout: Layout) -> St
     }
 }
 
-pub(super) fn static_header(syntax: CommentSyntax, generated_path: &str) -> String {
+pub(crate) fn static_header(syntax: CommentSyntax, generated_path: &str) -> String {
     let payloads = header_payloads(generated_path);
     let mut output = String::new();
     for payload in payloads {
@@ -46,7 +46,7 @@ pub(super) fn header_payloads(generated_path: &str) -> [String; 3] {
     ]
 }
 
-pub(super) fn resolution_preamble(syntax: CommentSyntax, source_root: &str) -> String {
+pub(crate) fn resolution_preamble(syntax: CommentSyntax, source_root: &str) -> String {
     format!(
         "{}\n\n",
         generated_comment(syntax, &resolution_payload(source_root), Layout::Block)
@@ -74,14 +74,14 @@ pub(super) fn resolution_payload(source_root: &str) -> String {
     )
 }
 
-pub(super) fn tombstone(syntax: CommentSyntax, renames: &[OriginRename]) -> String {
+pub(crate) fn tombstone(syntax: CommentSyntax, renames: &[OriginRename]) -> String {
     format!(
         "{}\n\n",
         generated_comment(syntax, &tombstone_payload(renames), Layout::Block)
     )
 }
 
-pub(super) fn tombstone_payload(renames: &[OriginRename]) -> String {
+pub(crate) fn tombstone_payload(renames: &[OriginRename]) -> String {
     let mut groups: BTreeMap<String, Vec<(String, String)>> = BTreeMap::new();
     for entry in renames {
         groups
@@ -102,29 +102,29 @@ pub(super) fn tombstone_payload(renames: &[OriginRename]) -> String {
     payload
 }
 
-pub(super) fn static_marker(syntax: CommentSyntax, meta: &ContributionMeta) -> String {
+pub(crate) fn static_marker(syntax: CommentSyntax, meta: &ContributionMeta) -> String {
     generated_comment(syntax, &static_marker_payload(meta), Layout::Inline)
 }
 
-pub(super) fn static_marker_payload(meta: &ContributionMeta) -> String {
+pub(crate) fn static_marker_payload(meta: &ContributionMeta) -> String {
     format!("vibe:static {} — {}", meta.origin, meta.path)
 }
 
-pub(super) fn elided_marker(syntax: CommentSyntax, meta: &ContributionMeta) -> String {
+pub(crate) fn elided_marker(syntax: CommentSyntax, meta: &ContributionMeta) -> String {
     generated_comment(syntax, &elided_marker_payload(meta), Layout::Inline)
 }
 
-pub(super) fn elided_marker_payload(meta: &ContributionMeta) -> String {
+pub(crate) fn elided_marker_payload(meta: &ContributionMeta) -> String {
     format!(
         "vibe:static {} — {}; zone elided: emitted member-by-member in this lane (once-each, B-006)",
         meta.origin, meta.path
     )
 }
 
-pub(super) fn hoisted_marker(syntax: CommentSyntax, origin: &str) -> String {
+pub(crate) fn hoisted_marker(syntax: CommentSyntax, origin: &str) -> String {
     generated_comment(syntax, &hoisted_marker_payload(origin), Layout::Inline)
 }
 
-pub(super) fn hoisted_marker_payload(origin: &str) -> String {
+pub(crate) fn hoisted_marker_payload(origin: &str) -> String {
     format!("vibe:hoisted {origin} — text in the root STATIC.md")
 }

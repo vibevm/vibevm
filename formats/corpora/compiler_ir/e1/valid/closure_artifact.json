@@ -134,7 +134,7 @@
               "heading": "",
               "trailing": "",
               "heading_line": 0,
-              "span": {"start": 0, "end": 6},
+              "span": {"start": 0, "end": 7},
               "children": [1]
             },
             {
@@ -143,7 +143,7 @@
               "heading": "Guide",
               "trailing": "",
               "heading_line": 0,
-              "span": {"start": 0, "end": 6},
+              "span": {"start": 0, "end": 7},
               "children": [2],
               "id": "org-demo--lib--manual-guide-md--root",
               "parent": 0
@@ -171,7 +171,8 @@
             "##org-demo--lib--manual-guide-md--FACT-A One exact fact.",
             "",
             "#use spec://org.demo/lib/manual/part.md",
-            "#use spec://org.demo/lib/manual/part.md#api~r2 as Part"
+            "#use spec://org.demo/lib/manual/part.md#api~r2 as Part",
+            "```"
           ],
           "directives": {
             "directives": [
@@ -426,7 +427,7 @@
       "state": "linked",
       "result": {
         "mode": "qualify-per-node",
-        "input_digest": "ed73521b98c3cab322c923afd66c6a5ecbe81a2a24983071f3ca35de314ea4f8",
+        "input_digest": "0a9aa8d94693ab5f272083c11210ff8528af3e1e36c981566c4f2674d58439f7",
         "contributions": [
           {
             "kind": "normal",
@@ -495,8 +496,8 @@
             },
             "marker": "spec://org.demo/lib/manual/guide.md#root",
             "fence_before": {"state": "open", "delimiter": "`", "run": 3},
-            "fence_after": {"state": "open", "delimiter": "`", "run": 3},
-            "body": "# Guide {#org-demo--lib--manual-guide-md--root}\n\n##org-demo--lib--manual-guide-md--FACT-A One exact fact.\n\n#use spec://org.demo/lib/manual/part.md\n#use spec://org.demo/lib/manual/part.md#api~r2 as Part",
+            "fence_after": {"state": "closed"},
+            "body": "# Guide {#org-demo--lib--manual-guide-md--root}\n\n##org-demo--lib--manual-guide-md--FACT-A One exact fact.\n\n#use spec://org.demo/lib/manual/part.md\n#use spec://org.demo/lib/manual/part.md#api~r2 as Part\n```",
             "trailing_newline_required": true
           },
           {

@@ -356,33 +356,36 @@ fn artifact_context_accepts_only_engine_tuples_and_survives_to_link() {
         },
     ];
     for id in ["static-fragment", "static-md", "static-xml", "other"] {
-        for target in [ArtifactTarget::StaticMarkdown, ArtifactTarget::StaticXml] {
+        for target in [&ArtifactTarget::StaticMarkdown, &ArtifactTarget::StaticXml] {
             for frame in &frames {
                 for mode in [StaticCompileMode::Plain, StaticCompileMode::QualifyPerNode] {
                     let valid = match (id, target, frame, mode) {
-                        (
-                            "static-fragment",
-                            ArtifactTarget::StaticMarkdown,
-                            ArtifactFrame::CompatibilityFragment,
-                            _,
-                        ) => true,
+                        ("static-fragment", target, ArtifactFrame::CompatibilityFragment, _)
+                            if *target == ArtifactTarget::StaticMarkdown =>
+                        {
+                            true
+                        }
                         (
                             "static-md",
-                            ArtifactTarget::StaticMarkdown,
+                            target,
                             ArtifactFrame::StaticLane { generated_path, .. },
                             StaticCompileMode::QualifyPerNode,
-                        ) => generated_path.ends_with(".md"),
+                        ) if *target == ArtifactTarget::StaticMarkdown => {
+                            generated_path.ends_with(".md")
+                        }
                         (
                             "static-xml",
-                            ArtifactTarget::StaticXml,
+                            target,
                             ArtifactFrame::StaticLane { generated_path, .. },
                             StaticCompileMode::QualifyPerNode,
-                        ) => generated_path.ends_with(".xml"),
+                        ) if *target == ArtifactTarget::StaticXml => {
+                            generated_path.ends_with(".xml")
+                        }
                         _ => false,
                     };
                     let actual = ArtifactContext::new(
                         ArtifactId::new(id).unwrap(),
-                        target,
+                        target.clone(),
                         frame.clone(),
                         mode,
                     );

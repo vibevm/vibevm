@@ -161,7 +161,7 @@ impl BuiltinSchedule {
         plan: &ArtifactPlan,
         registry: &BackendRegistry,
     ) -> Result<Self, BackendRegistryError> {
-        let backend = registry.selected(plan.context().target())?;
+        let backend = registry.selected(&plan.context().target())?;
         Ok(Self::with_backend(plan, backend))
     }
 

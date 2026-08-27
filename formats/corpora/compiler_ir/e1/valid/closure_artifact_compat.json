@@ -109,12 +109,12 @@
               "heading_line": 9,
               "span": {"start": 9, "end": 10},
               "children": [],
-              "id": "DUP",
+              "id": "DUP2",
               "parent": 1
             }
           ],
-          "anchors": {"api": 1, "DUP": 2},
-          "duplicate_anchors": ["DUP"],
+          "anchors": {"api": 1, "DUP": 2, "DUP2": 3},
+          "duplicate_anchors": [],
           "lines": [
             "# Notes {#api} :replace",
             "",
@@ -125,7 +125,7 @@
             "",
             "##DUP First claim.",
             "",
-            "##DUP Repeated claim."
+            "##DUP2 Repeated claim."
           ],
           "directives": {
             "directives": [

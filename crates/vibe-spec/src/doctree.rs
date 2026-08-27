@@ -27,6 +27,20 @@ pub(crate) use invariant::DocTreeInvariantError;
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct NodeId(usize);
 
+impl NodeId {
+    /// The one constructor outside `doctree`: the wire conversion builds the
+    /// arena after the bounds gates have run.
+    pub(crate) fn new(index: usize) -> Self {
+        Self(index)
+    }
+
+    /// The arena index this id names. Crate-private: the arena itself is
+    /// private, so only this crate can turn an id back into a position.
+    pub(crate) fn index(self) -> usize {
+        self.0
+    }
+}
+
 /// What kind of IR node this is (PROP-035 §5).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum NodeKind {
@@ -276,6 +290,40 @@ impl DocTree {
         &self.directives
     }
 
+    /// Rebuild a tree from its parts without reparsing text, proving the full
+    /// structural law — root shape, forest/back-references/reachability, spans,
+    /// heading lines, arena order, and the derived anchor/duplicate views —
+    /// before the value exists. The wire conversion's own arena/forest/span
+    /// gates run first so this never sees an index that could panic; this
+    /// constructor then enforces everything [`DocTree::parse`] guarantees.
+    pub(crate) fn from_parts(
+        nodes: Vec<Node>,
+        anchors: HashMap<String, NodeId>,
+        duplicate_anchors: Vec<String>,
+        lines: Vec<String>,
+        directives: Directives,
+    ) -> Result<Self, DocTreeInvariantError> {
+        let tree = Self {
+            nodes,
+            anchors,
+            duplicate_anchors,
+            lines,
+            directives: Box::new(directives),
+        };
+        invariant::verify_structure(&tree).map(|()| tree)
+    }
+
+    /// The immutable whole-part views the wire conversion encodes from.
+    pub(crate) fn parts(&self) -> DocTreeParts<'_> {
+        (
+            &self.nodes,
+            &self.anchors,
+            &self.duplicate_anchors,
+            &self.lines,
+            &self.directives,
+        )
+    }
+
     /// The qualified heirs of a short anchor name (B-011 §6.1 layer 3): every
     /// anchor in this tree whose qualified form ends `--<short>` — i.e. a label
     /// the qualify phase renamed from `short` to `<origin-slug>--short`. Sorted
@@ -384,6 +432,16 @@ impl DocTree {
         invariant::verify_structure(self)
     }
 }
+
+/// The borrowed whole-part view of a [`DocTree`]: the arena, the derived
+/// anchor index, the duplicate record, the source lines, and the scan.
+pub(crate) type DocTreeParts<'a> = (
+    &'a [Node],
+    &'a HashMap<String, NodeId>,
+    &'a [String],
+    &'a [String],
+    &'a Directives,
+);
 
 /// Segment a closed text block `[start, end)` into `##<ID>` fact leaves, push
 /// each as a childless [`NodeKind::Fact`] node parented at `section`, and register

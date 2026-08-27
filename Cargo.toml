@@ -129,6 +129,11 @@ specmark = { package = "core-ai-native-specmark", path = "vibevm/vibepacks/org.v
 # ##XML-PARSER-DEPENDENCY (alternatives — roxmltree, xml-rs, hand-rolling —
 # weighed and rejected there).
 quick-xml = "0.41.0"
+# Canonical standard base64 (padded) for the compiler IR wire's opaque
+# emitted bytes. MIT/Apache-2.0 dual. Already transitively locked at 0.22;
+# declared direct so the wire conversion uses the audited codec rather than a
+# handwritten one (R6.2b central ruling 4).
+base64 = "0.22"
 syn = { version = "2", features = ["full", "visit"] }
 quote = "1"
 proc-macro2 = { version = "1", features = ["span-locations"] }

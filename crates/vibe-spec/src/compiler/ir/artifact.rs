@@ -65,6 +65,13 @@ pub(crate) enum ArtifactFrame {
     CompatibilityFragment,
 }
 
+/// The reserved artifact id of the BUILTIN compatibility row: a
+/// `static-fragment` rendered by the `static-md` target/backend. It is the one
+/// established row whose artifact id is not its backend id, so both the tuple
+/// law and the wire's EMIT IDENTITY gate read it from here rather than
+/// spelling the literal twice.
+pub(crate) const COMPATIBILITY_ARTIFACT_ID: &str = "static-fragment";
+
 /// Immutable identity and policy copied through every artifact-level IR.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ArtifactContext {
@@ -89,31 +96,31 @@ impl ArtifactContext {
             validate_text("generated artifact path", generated_path)?;
             validate_text("spec source root", source_root)?;
         }
-        let valid = match (target, &frame, mode, artifact.as_str()) {
-            (
-                ArtifactTarget::StaticMarkdown,
-                ArtifactFrame::CompatibilityFragment,
-                _,
-                "static-fragment",
-            ) => true,
-            (
-                ArtifactTarget::StaticMarkdown,
-                ArtifactFrame::StaticLane { generated_path, .. },
-                StaticCompileMode::QualifyPerNode,
-                "static-md",
-            ) => generated_path.ends_with(".md"),
-            (
-                ArtifactTarget::StaticXml,
-                ArtifactFrame::StaticLane { generated_path, .. },
-                StaticCompileMode::QualifyPerNode,
-                "static-xml",
-            ) => generated_path.ends_with(".xml"),
-            (target, ArtifactFrame::CompatibilityFragment, _, artifact)
-                if target.is_custom() && artifact == target.backend_id() =>
-            {
-                true
+        let valid = if target == ArtifactTarget::StaticMarkdown {
+            match (&frame, mode, artifact.as_str()) {
+                (ArtifactFrame::CompatibilityFragment, _, COMPATIBILITY_ARTIFACT_ID) => true,
+                (
+                    ArtifactFrame::StaticLane { generated_path, .. },
+                    StaticCompileMode::QualifyPerNode,
+                    "static-md",
+                ) => generated_path.ends_with(".md"),
+                _ => false,
             }
-            _ => false,
+        } else if target == ArtifactTarget::StaticXml {
+            matches!(
+                (&frame, mode, artifact.as_str()),
+                (
+                    ArtifactFrame::StaticLane { generated_path, .. },
+                    StaticCompileMode::QualifyPerNode,
+                    "static-xml",
+                ) if generated_path.ends_with(".xml")
+            )
+        } else {
+            // The one custom-target row: the artifact IS the backend id, under
+            // the compatibility fragment. Identity never implies registration.
+            target.is_custom()
+                && frame == ArtifactFrame::CompatibilityFragment
+                && artifact.as_str() == target.backend_id()
         };
         if !valid {
             return Err(ArtifactPlanError::InvalidContextTuple {
@@ -133,7 +140,7 @@ impl ArtifactContext {
 
     pub(crate) fn compatibility(mode: StaticCompileMode) -> Self {
         Self {
-            artifact: ArtifactId("static-fragment".to_string()),
+            artifact: ArtifactId(COMPATIBILITY_ARTIFACT_ID.to_string()),
             target: ArtifactTarget::StaticMarkdown,
             frame: ArtifactFrame::CompatibilityFragment,
             mode,
@@ -145,7 +152,7 @@ impl ArtifactContext {
     }
 
     pub fn target(&self) -> ArtifactTarget {
-        self.target
+        self.target.clone()
     }
 
     pub(crate) fn frame(&self) -> &ArtifactFrame {
@@ -270,7 +277,8 @@ impl ArtifactPlan {
         backend: &'static str,
         contributions: Vec<ArtifactInput>,
     ) -> Result<Self, ArtifactPlanError> {
-        let target = ArtifactTarget::custom(backend);
+        let target = ArtifactTarget::custom(backend)
+            .expect("the test-support backend id is a valid BackendId");
         let context = ArtifactContext::new(
             ArtifactId::new(backend)?,
             target,
@@ -442,7 +450,9 @@ impl ArtifactInput {
     }
 }
 
-fn validate_package_relation(
+/// Crate-private so the wire conversion can re-run the same origin/target law
+/// on every normal/hoisted contribution a carrier carries, at every level.
+pub(crate) fn validate_package_relation(
     kind: &'static str,
     origin: &str,
     target: &SpecAddress,

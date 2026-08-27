@@ -457,6 +457,16 @@ fn rewrite_line(
     Ok(output)
 }
 
+/// Test-only replay seam: the derived link result of a carrier, so the wire
+/// tests can recompute the corpus's linked `input_digest` through production
+/// domain logic instead of trusting a copied constant.
+#[cfg(test)]
+pub(crate) fn derived_link_digest_for_test(closure: &ClosureIr) -> LinkInputDigest {
+    derive_result(closure)
+        .expect("the caller hands this closure to validate_linked first")
+        .input_digest
+}
+
 pub(crate) fn validate_linked(closure: &ClosureIr) -> Result<(), LinkPassError> {
     let expected = derive_result(closure)?;
     let LinkState::Linked(actual) = &closure.link else {

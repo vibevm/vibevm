@@ -437,6 +437,36 @@ impl ClosureIr {
         pending_sources: Option<SourceResolutionSnapshot>,
         pending_embeds: Option<EmbedResolutionSnapshot>,
     ) -> Self {
+        Self::from_parts(
+            context,
+            nodes,
+            edges,
+            contributions,
+            renames,
+            qualification,
+            absorption,
+            link,
+            pending_sources,
+            pending_embeds,
+        )
+    }
+
+    /// The checked whole-value constructor the wire conversion rebuilds a
+    /// closure through. The parts must already have passed the conversion
+    /// gates; the context is the one domain law this constructor owns.
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) fn from_parts(
+        context: ArtifactContext,
+        nodes: Vec<ClosureDocument>,
+        edges: Vec<ClosureEdge>,
+        contributions: Vec<ClosureContribution>,
+        renames: Vec<OriginRename>,
+        qualification: QualificationState,
+        absorption: AbsorptionState,
+        link: LinkState,
+        pending_sources: Option<SourceResolutionSnapshot>,
+        pending_embeds: Option<EmbedResolutionSnapshot>,
+    ) -> Self {
         Self {
             context,
             nodes,

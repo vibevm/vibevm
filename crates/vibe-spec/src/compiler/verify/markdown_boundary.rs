@@ -160,7 +160,8 @@ fn a_custom_target_is_exempt_from_the_markdown_boundary_law() {
     let custom = LaneIr::assembled(
         crate::compiler::ir::ArtifactContext::new(
             crate::compiler::ir::ArtifactId::new("opaque").unwrap(),
-            crate::compiler::ir::ArtifactTarget::custom("opaque"),
+            crate::compiler::ir::ArtifactTarget::custom("opaque")
+                .expect("opaque is a valid backend id"),
             crate::compiler::ir::ArtifactFrame::CompatibilityFragment,
             StaticCompileMode::Plain,
         )

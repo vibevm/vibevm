@@ -279,7 +279,8 @@ fn compat_closure_is_the_early_state_that_still_carries_its_snapshots() {
             if pkg.version.as_deref() == Some("1.2.3")),
         "a versioned package coordinate survives the wire verbatim"
     );
-    assert_eq!(notes.tree.duplicate_anchors, ["DUP"]);
+    assert_eq!(notes.tree.duplicate_anchors, Vec::<String>::new());
+    assert_eq!(notes.tree.nodes[3].id.as_deref(), Some("DUP2"));
     assert_eq!(notes.tree.nodes[1].trailing, ":replace");
     let DocumentAddress::Spec(base) = &closure.nodes[0].address else {
         panic!("the dependency node is addressed by a spec:// address");

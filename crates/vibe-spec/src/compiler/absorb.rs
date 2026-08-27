@@ -14,7 +14,8 @@ use super::ir::{
     DocumentAddress, QualificationState,
 };
 use super::pass::{Pass, PassName};
-use super::qualify::{QualifyPassError, validate_planned_absorption};
+use super::qualify::QualifyPassError;
+pub(crate) use super::qualify::validate_planned_absorption;
 
 pub(crate) const ABSORB_PASS_NAME: &str = "absorb";
 
