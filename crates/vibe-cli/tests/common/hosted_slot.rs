@@ -24,17 +24,36 @@ pub const HOSTED_BODY: &str = "hosted slot body\n";
 pub struct Published {
     pub registry: PathBuf,
     pub source: PathBuf,
+    /// Whether the published versions carry a `[boot_snippet]`. Private on
+    /// purpose: it is a property of HOW this `Published` was minted, and only
+    /// the version-adding helpers below need to consult it — a caller that
+    /// wanted to inspect it would be re-deriving a fact it already chose.
+    with_boot: bool,
 }
 
 /// Publish `org.demo/tools@<version>` with a slot `agent` row at `point`.
+/// The package declares no boot snippet, so a consumer links it dynamically
+/// and nothing compiles — the shape the park/no-spend family is built on.
 pub fn publish_slot_agent(root: &Path, point: &str, version: &str) -> Published {
+    publish(root, point, version, false)
+}
+
+/// The boot-bearing variant: the same slot `agent` row, plus a `[boot_snippet]`
+/// a consumer can link STATICALLY. A traced run over this package really
+/// compiles, so "the resume appended" is a number that can move. The boot body
+/// names the version, so every bump changes the compiled input.
+pub fn publish_slot_agent_with_boot(root: &Path, point: &str, version: &str) -> Published {
+    publish(root, point, version, true)
+}
+
+fn publish(root: &Path, point: &str, version: &str, with_boot: bool) -> Published {
     let source = root.join(format!("src-{version}"));
     fs::create_dir_all(source.join("vibevm/vibespecs/common")).unwrap();
     run_git(&source, &["init", "--initial-branch=main"]);
     run_git(&source, &["config", "user.email", "t@example.com"]);
     run_git(&source, &["config", "user.name", "Test"]);
     fs::write(source.join(".gitattributes"), "* text=auto eol=lf\n").unwrap();
-    write_version(&source, point, version);
+    write_version(&source, point, version, with_boot);
     run_git(&source, &["add", "-A"]);
     run_git(&source, &["commit", "-m", "publish"]);
     run_git(&source, &["tag", &format!("v{version}")]);
@@ -53,13 +72,15 @@ pub fn publish_slot_agent(root: &Path, point: &str, version: &str) -> Published 
     Published {
         registry: root.to_path_buf(),
         source,
+        with_boot,
     }
 }
 
 /// Commit and tag one more version of an already-published source, so
-/// `vibe update` has somewhere to move to.
+/// `vibe update` has somewhere to move to. A boot-bearing source keeps its
+/// boot declaration, with the body bumped to name the new version.
 pub fn add_version(published: &Published, point: &str, version: &str) {
-    write_version(&published.source, point, version);
+    write_version(&published.source, point, version, published.with_boot);
     run_git(&published.source, &["add", "-A"]);
     run_git(&published.source, &["commit", "-m", "next"]);
     run_git(&published.source, &["tag", &format!("v{version}")]);
@@ -69,8 +90,10 @@ pub fn add_version(published: &Published, point: &str, version: &str) {
 
 /// Commit and tag a version whose slot `agent` DECLARATION IS GONE — only the
 /// builtin sentinel remains. A run that parked on the old version has a
-/// slot-scoped row nothing in the new plan will ever visit again.
+/// slot-scoped row nothing in the new plan will ever visit again. A
+/// boot-bearing source keeps its boot declaration, body bumped to match.
 pub fn add_version_without_agent(published: &Published, point: &str, version: &str) {
+    let boot_table = boot_table(published.with_boot);
     fs::write(
         published.source.join("vibe.toml"),
         format!(
@@ -79,7 +102,7 @@ group = "org.demo"
 name = "tools"
 kind = "flow"
 version = "{version}"
-
+{boot_table}
 [[extension]]
 id = "after-agent"
 point = "{point}"
@@ -89,6 +112,9 @@ config = {{ message = "SENTINEL-AFTER-SLOT-AGENT" }}
         ),
     )
     .unwrap();
+    if published.with_boot {
+        write_boot_body(&published.source, version);
+    }
     fs::write(
         published.source.join("payload.txt"),
         format!(
@@ -104,7 +130,8 @@ config = {{ message = "SENTINEL-AFTER-SLOT-AGENT" }}
     run_git(&bare, &["fetch", "origin", "+refs/*:refs/*", "--prune"]);
 }
 
-fn write_version(source: &Path, point: &str, version: &str) {
+fn write_version(source: &Path, point: &str, version: &str, with_boot: bool) {
+    let boot_table = boot_table(with_boot);
     fs::write(
         source.join("vibe.toml"),
         format!(
@@ -113,7 +140,7 @@ group = "org.demo"
 name = "tools"
 kind = "flow"
 version = "{version}"
-
+{boot_table}
 [[extension]]
 id = "slot-produce"
 point = "{point}"
@@ -131,12 +158,50 @@ config = {{ message = "SENTINEL-AFTER-SLOT-AGENT" }}
         ),
     )
     .unwrap();
+    if with_boot {
+        write_boot_body(source, version);
+    }
     fs::write(
         source.join("vibevm/vibespecs/common/agent-prompt.md"),
         "# Prompt {#root}\n\nWrite the slot document. MARKER=SLOT\n",
     )
     .unwrap();
     fs::write(source.join("payload.txt"), format!("payload {version}\n")).unwrap();
+}
+
+/// The `[boot_snippet]` table a boot-bearing version declares — empty for the
+/// plain variant, so the non-boot manifest stays byte-for-byte what it was.
+fn boot_table(with_boot: bool) -> &'static str {
+    if with_boot {
+        "\n[boot_snippet]\nsource = \"boot/40-tools.md\"\ncategory = \"flow\"\n"
+    } else {
+        ""
+    }
+}
+
+/// The boot body a boot-bearing version compiles from. The version is IN the
+/// body on purpose: a bump changes the compiled input, not just the tag, so a
+/// consumer's static link really recompiles over the new version.
+fn write_boot_body(source: &Path, version: &str) {
+    fs::create_dir_all(source.join("boot")).unwrap();
+    fs::write(
+        source.join("boot/40-tools.md"),
+        format!("# Tools {{#root}}\n\nTOOLS BOOT BODY {version}\n"),
+    )
+    .unwrap();
+}
+
+/// Declare a STATIC requirement on `flow:org.demo/tools` — the link mode that
+/// makes the node compile at all. A dynamic edge contributes an `INDEX.md`
+/// line and no compiled artifact, so a traced run over one records nothing and
+/// proves nothing.
+pub fn declare_static_tools(project: &Path) {
+    let manifest = project.join("vibe.toml");
+    let mut text = fs::read_to_string(&manifest).unwrap();
+    text.push_str(
+        "\n[requires]\npackages = { \"flow:org.demo/tools\" = { version = \"^0.1\", link = \"static\" } }\n",
+    );
+    fs::write(&manifest, text).unwrap();
 }
 
 /// Publish a SECOND package with no lifecycle contributions at all, into the
@@ -277,6 +342,7 @@ Write the slot document. MARKER=SLOT
     Published {
         registry: root.to_path_buf(),
         source,
+        with_boot: false,
     }
 }
 
