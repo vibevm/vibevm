@@ -303,6 +303,114 @@ nor CLI reaches into domain IR.
 The install/lifecycle machine result includes trace run path and timing summary.
 JSON output extends a JTD-owned report; it does not append an ad-hoc object.
 
+### 5.1 One command owner, always at the workspace root
+
+The outermost command opens at most one recorder, after it has the selected
+manifest and the lifecycle `run_id`/original `started`, but before the first
+compile. The storage/lock root is always canonical `Workspace::root`, including
+an invocation entered through a member: install regenerates shared package
+units plus every node, so two members may not acquire independent trace locks
+for that same work. The selected node manifest alone decides activation:
+
+```text
+effective trace = --trace-compile OR selected_manifest.[compile].trace
+```
+
+Dependency manifests never activate host tracing. Lower workspace/install APIs
+borrow `Option<&TraceRun>`; they never open, finish, clone into an outcome, or
+retain a recorder past the command. Lock order once R7.4 lands is lifecycle
+command lease → trace lock.
+
+Existing no-trace APIs remain compatibility wrappers over traced siblings with
+`None`. Off mode does not construct a descriptor, clock, recorder, buffer or
+path and preserves boot bytes, mtimes and freshness exactly.
+
+### 5.2 Scope attempts, output fingerprints and deterministic order
+
+Workspace owns one portable scope constructor: unit identity is qualified
+`(group,name)` plus its stable label/version; node identity is its canonical
+workspace-relative path; target/artifact comes from the selected static format.
+Absolute node paths never become ids. Package units are sorted by canonical
+`(group,name)` before any scope declaration; nodes retain the existing
+root-first, relative-path-sorted order.
+
+An artifact base identity may compile repeatedly inside one adopted run. The
+attempt allocator reacquires the latest exact `pending` occurrence after an
+interruption, but after a terminal occurrence it deterministically mints the
+next scope id. Thus a post-install park/resume can regenerate the same node and
+append events without resetting the run or colliding with a compiled scope.
+
+Dirty compile declares one occurrence, runs the real compiler once through
+that sink and marks it `compiled` with the manager-owned emitted-bytes SHA-256.
+Compiler refusal marks the scope `failed` and returns the original error
+unchanged. A fingerprint-fresh unit reads/validates its existing emitted bytes,
+records `skipped` with the same output digest and emits zero events. Scope
+declaration/resolution failure is an observer warning and falls back to the old
+untraced compile; it never becomes the artifact error.
+
+### 5.3 Park, adoption, displacement and one outcome funnel
+
+Hosted park is suspension: take a running summary, do not call `finish`, drop
+the recorder/last scope to release its lock, and report the running trace in
+the one parked command root. Same-command resume reuses the persisted run id
+and original start, reopens that running index and appends attempts/sequences.
+A completed resume finalises `ok`; a failed resume finalises `failed`.
+
+Trace activation is sticky in the lifecycle state. Add an optional epoch-1
+`compile_trace` run member; new writes carry the effective value, old
+nondelegated state defaults false, and adoption uses `current_request OR
+prior.compile_trace`. A resume therefore keeps tracing even when the original
+one-shot flag is absent and the manifest changed meanwhile.
+
+When identity selection deliberately displaces a state-owned parked run
+(`--force`, changed command/chain/mode, and later selected-node mismatch), it
+returns that exact prior run identity and trace bit. Before opening the fresh
+run, the command attempts to reopen the state-proven old trace and finalise it
+`failed` as superseded. It never infers ownership from a 32-hex directory.
+This converts abandoned running traces into retention-eligible terminals and
+keeps repeated force-reparks bounded.
+
+Every exit after open passes one explicit outcome funnel:
+
+- success → `finish(ok)`;
+- compiler, publication, install or later lifecycle failure →
+  `finish(failed)` while preserving the original command error;
+- park/repark → running summary, no finish;
+- final-index refusal → command result unchanged, report `finalised=false`.
+
+No `Drop` implementation invents a timestamp or performs I/O. The funnel owns
+the injected finish timestamp and runs before the one command report is built.
+
+### 5.4 One JTD trace member across four command reports
+
+`formats/vocabularies.json` becomes the single schema home for the shared
+compiler-trace duration, timing row and command report fragments. The trace
+index and `install`/`lifecycle`/`update`/`reinstall` schemas reference those
+shared fragments; generated modules re-export the same `TimingRow` type. Each
+command root gains one optional `trace` member. Disabled omits it byte-for-byte.
+
+The shared report distinguishes `unavailable|running|ok|failed` and carries:
+
+- exact run id and optional absolute forward-slashed run path;
+- `finalised`, `budget_exhausted`;
+- lossless canonical-decimal event/snapshot/snapshot-byte counts (JTD has no
+  `uint64`; no checked-conversion failure may turn the observer into a veto);
+- ordered generated aggregate timing rows;
+- bounded warnings, including requested-but-unavailable open/scope failures.
+
+Requested but unavailable tracing compiles untraced and reports the bounded
+reason. Human mode renders one table from the same typed member; quiet mode
+keeps one line with a compact suffix. JSON never emits a standalone trace
+object: exactly one registered command report root owns the member, even when
+deferred plan documents precede it.
+
+`--trace-compile` is accepted by install, update, reinstall and every default
+lifecycle verb (including a chained clean continuation). Clean-only compiles
+nothing and opens no trace. `init`, publish staging and uninstall are real
+compile sites but have no lifecycle `RunMetadata`/one-of-four report contract;
+they are explicitly outside R3.4 rather than given one-off identities. Their
+future trace surface must be command-owned and JTD-first in the same way.
+
 ## 6. Acceptance matrix
 
 1. Every valid R6 corpus carrier converts wire→domain→wire identically.
@@ -329,6 +437,22 @@ JSON output extends a JTD-owned report; it does not append an ad-hoc object.
     terminal bytes.
 19. Cooperating writers serialize per project; swapped lock-file identity is
     re-contended before a guard is returned.
+20. Dirty unit plus root node share one run/global sequence; unit order is
+    stable under permuted resolution/map construction.
+21. A fresh unit is event-silent and carries the same emitted-output digest as
+    its prior dirty compile.
+22. Recompiling one artifact after a hosted park allocates the next scope
+    occurrence; an interrupted pending occurrence is reacquired exactly.
+23. Park leaves a running trace; resume without the original one-shot flag
+    reopens it, appends sequence and eventually finalises the same run.
+24. Repeated traced force-reparks leave one active running trace and terminal,
+    retention-eligible state-proven predecessors.
+25. Install/lifecycle/update/reinstall use one shared generated trace member;
+    disabled old JSON still round-trips with it absent and no standalone trace
+    document is emitted.
+26. Empty/fresh/ready install, scoped/whole update, plain/empty-force/normal-
+    force reinstall and post-compile failure all pass through the same outcome
+    funnel without changing command success/error identity.
 
 ## 7. Implementation order
 
@@ -340,9 +464,12 @@ JSON output extends a JTD-owned report; it does not append an ad-hoc object.
    (**landed at `fa0662a9`**).
 4. Add trace-index JTD/generated types (**metadata contract `6f4a717d`**) and
    atomic run writer/newest-nine retention/budget (**landed at `4d95a129`**).
-5. Thread one recorder through workspace/install/CLI and add flags/config.
-6. Add end-to-end trace, failure and byte-identity tests.
-7. Only then expose the same conversion to native compiler passes in R6.3.
+5. Add attempt-aware scope allocation and borrowed traced siblings through
+   workspace/vibe-install while keeping every no-trace wrapper exact.
+6. Add sticky lifecycle activation, the command-owned outcome funnel, shared
+   JTD report member, flags/presentation and cross-command e2e.
+7. Add final failure/park/resume/displacement and byte/mtime identity tests.
+8. Only then expose the same conversion to native compiler passes in R6.3.
 
 This order makes R3.4 a real consumer of the public epoch and makes the native
 ABI reuse a wire already exercised by human debugging, rather than freezing a
