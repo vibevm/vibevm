@@ -486,6 +486,23 @@ foreign_parsers = "none"
 corpus = "formats/corpora/boot-artifact-transaction/e1"
 sunset = "none"
 
+# ── MCP machine-JSON reports (1 JTD), PROP-054 §4.6 / R7.4 ──────────────────
+# The MCP `lifecycle_tasks` tool's durable handoff report: the same
+# validated state/outbox facts the CLI renders, restated as one generated
+# JTD-first document for MCP `structuredContent` and any raw `curl | jq`
+# reader. Rebuildable from lifecycle state (rerun the read), so the computed
+# policy matches every CLI report above. The legacy `mcp-tools` row below
+# stays `schema = "none"` (a human-oriented listing, not a machine contract);
+# that row is no precedent for hand-shaping THIS format — every new
+# machine-to-machine MCP payload is JTD-first or it does not ship.
+[format.mcp-lifecycle-tasks]
+epoch = 1
+schema = "schemas/lifecycle_tasks.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "formats/corpora/lifecycle/e1"
+sunset = "none"
+
 # ── Uninventoried surfaces (PROP-044 §6.5) ──────────────────────────────────
 [format.mcp-tools]
 epoch = 1

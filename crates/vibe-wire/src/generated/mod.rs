@@ -26,6 +26,7 @@ pub mod lifecycle;
 pub mod lifecycle_plan;
 pub mod lifecycle_report;
 pub mod lifecycle_state;
+pub mod lifecycle_tasks;
 pub mod list_report;
 pub mod llm;
 pub mod package_skill_receipt;

@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "status": "idle",
+  "run": {
+    "requested": "build",
+    "chain": [
+      "validate",
+      "install",
+      "generate",
+      "build"
+    ],
+    "started": "2026-08-25T09:00:00Z",
+    "run_id": "ffeeddccbbaa99887766554433221100",
+    "selected": "members/tool"
+  },
+  "tasks": []
+}

@@ -1,0 +1,34 @@
+{
+  "schema": 1,
+  "status": "parked",
+  "run": {
+    "requested": "create",
+    "chain": [
+      "validate",
+      "install",
+      "generate",
+      "build",
+      "test",
+      "create"
+    ],
+    "started": "2026-08-25T12:00:00Z",
+    "run_id": "00112233445566778899aabbccddeeff",
+    "selected": "members/tool"
+  },
+  "tasks": [
+    {
+      "execution": "org.demo/target#post-install",
+      "phase": "install",
+      "scope": "slot",
+      "path": ".vibe/agentic/outbox/00112233445566778899aabbccddeeff/task-org.demo%2Ftarget%23post-install.md",
+      "document": "---\nrun: \"00112233445566778899aabbccddeeff\"\nexecution: \"org.demo/target#post-install\"\nphase: \"install\"\noutputs:\n  - path: \"vibedeps/org.demo.target/2.0.0/receipt.json\"\n    kind: \"file\"\n    accept: \"non-empty\"\n---\n\n# Hosted agent task\n\nThe two sections below are the exact credential-free prose the paid provider call would have carried, verbatim.\n\n## System contract\n\nYou are producing project files for a VibeVM `create`-phase execution.\nAnswer with exactly one JSON document and nothing else: no prose before or after it, no Markdown code fence, no second document.\nThe document shape is {\"outputs\":[{\"path\":\"…\",\"content\":\"…\"}]}.\n`outputs` repeats the declared output contract exactly: the same paths, each exactly once, in the declared order, with no path added, dropped or rewritten.\nEach `content` is the complete UTF-8 body of that file and is never empty.\n\n## Request\n\n# Instructions\n\nWrite the payload-event receipt for the slot target this install just placed, naming the exact group, name and version.\n\n# Lifecycle context\n\n- project: `demo-tool` version `2.0.0` (kind tool)\n- lifecycle: requested `create`, chain [validate, install, generate, build, test, create], now at phase `install`\n- execution: `post-install` contributed by `org.demo/target` at point `slot:post-install`\n- installed packages: org.demo/provider@1.0.0, org.demo/target@2.0.0\n- artifacts already produced this run: none\n\n# Output contract\n\n1. path = \"vibedeps/org.demo.target/2.0.0/receipt.json\", kind = \"file\", accept = \"non-empty\"\n\nEvery row is written to the project root as a `file` and is accepted only as a `non-empty`. Return the rows in this exact order.\n"
+    },
+    {
+      "execution": "org.demo/provider#draft-guide",
+      "phase": "create",
+      "scope": "phase",
+      "path": ".vibe/agentic/outbox/00112233445566778899aabbccddeeff/task-org.demo%2Fprovider%23draft-guide.md",
+      "document": "---\nrun: \"00112233445566778899aabbccddeeff\"\nexecution: \"org.demo/provider#draft-guide\"\nphase: \"create\"\noutputs:\n  - path: \"docs/guide.md\"\n    kind: \"file\"\n    accept: \"non-empty\"\n---\n\n# Hosted agent task\n\nThe two sections below are the exact credential-free prose the paid provider call would have carried, verbatim.\n\n## System contract\n\nYou are producing project files for a VibeVM `create`-phase execution.\nAnswer with exactly one JSON document and nothing else: no prose before or after it, no Markdown code fence, no second document.\nThe document shape is {\"outputs\":[{\"path\":\"…\",\"content\":\"…\"}]}.\n`outputs` repeats the declared output contract exactly: the same paths, each exactly once, in the declared order, with no path added, dropped or rewritten.\nEach `content` is the complete UTF-8 body of that file and is never empty.\n\n## Request\n\n# Instructions\n\nDraft the provider's user guide from its manifest description and the examples in its spec fragments.\n\n# Lifecycle context\n\n- project: `demo-tool` version `2.0.0` (kind tool)\n- lifecycle: requested `create`, chain [validate, install, generate, build, test, create], now at phase `create`\n- execution: `draft-guide` contributed by `org.demo/provider` at point `phase:create`\n- installed packages: org.demo/provider@1.0.0, org.demo/target@2.0.0\n- artifacts already produced this run: guide-plan (text)\n\n# Output contract\n\n1. path = \"docs/guide.md\", kind = \"file\", accept = \"non-empty\"\n\nEvery row is written to the project root as a `file` and is accepted only as a `non-empty`. Return the rows in this exact order.\n"
+    }
+  ]
+}

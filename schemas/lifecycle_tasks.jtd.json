@@ -1,0 +1,127 @@
+{
+  "metadata": {
+    "description": "Wire format for the `lifecycle_tasks` durable handoff report (R7.4 MCP/CLI): what validated lifecycle state owes the hosting agent. Source of truth for `crates/vibe-wire/src/generated/lifecycle_tasks/`.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-HANDSHAKE"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::lifecycle_tasks"
+    }
+  },
+  "properties": {
+    "schema": {
+      "type": "uint32",
+      "metadata": {
+        "description": "Epoch-1 schema number; `1` today."
+      }
+    },
+    "status": {
+      "enum": ["absent", "idle", "parked"],
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "The durable handoff verdict over `.vibe/lifecycle.toml`. `absent` means no state file exists and is the ONLY status that omits `run`; `idle` means valid state with no delegated row — it carries `run` and an empty `tasks`; `parked` means valid state with delegated rows — it carries `run`, a valid run id and a nonempty `tasks`. This status ↔ run/tasks/run-id relation is enforced in Rust over the generated types (the corpus behavior cell): JTD cannot express it."
+      }
+    },
+    "tasks": {
+      "elements": {
+        "ref": "pending_task"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "One row per typed `delegated` execution, ordered by the durable chain's phase order with the execution key as tie-break — never by directory enumeration or filename parsing. Emitted even when empty (`absent`, `idle`)."
+      }
+    }
+  },
+  "optionalProperties": {
+    "run": {
+      "ref": "tasks_run",
+      "metadata": {
+        "description": "The state file's run header, carried for both `idle` and `parked`; only `absent` omits it."
+      }
+    }
+  },
+  "definitions": {
+    "tasks_run": {
+      "metadata": {
+        "description": "The run header the existing state record already carries; `lifecycle_tasks` restates it, it never mints a second run identity."
+      },
+      "properties": {
+        "requested": {
+          "type": "string",
+          "metadata": {
+            "description": "The exact default-lifecycle phase the run requested."
+          }
+        },
+        "chain": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit",
+            "description": "The run's full requested phase chain, in order."
+          }
+        },
+        "started": {
+          "type": "string",
+          "metadata": {
+            "description": "The run's start timestamp."
+          }
+        }
+      },
+      "optionalProperties": {
+        "run_id": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "The durable 32-lowercase-hex run identity the outbox tasks live under. `parked` requires it (relationally checked in Rust, not expressible in JTD); a state no run delegated may omit it."
+          }
+        },
+        "selected": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "The canonical forward-slashed workspace-relative selected-node identity (`.` for the workspace root) — it names the node root that interprets `tasks[].path`. Optional only so readable legacy idle state (pre-R7.4 files without it) still parses; every new write carries it, and `parked` requires it (relationally checked in Rust)."
+          }
+        }
+      }
+    },
+    "pending_task": {
+      "metadata": {
+        "description": "One delegated execution the hosting agent owes: its identity, the plan that parked it, and its exact task document."
+      },
+      "properties": {
+        "execution": {
+          "type": "string",
+          "metadata": {
+            "description": "The delegated row's execution key, verbatim from state."
+          }
+        },
+        "phase": {
+          "type": "string",
+          "metadata": {
+            "description": "The phase whose plan delegated this row."
+          }
+        },
+        "scope": {
+          "enum": ["phase", "slot"],
+          "metadata": {
+            "x-vocabulary": "closed",
+            "description": "Which plan owns the park — recorded by the engine, never inferred by parsing the execution key or a task filename."
+          }
+        },
+        "path": {
+          "type": "string",
+          "metadata": {
+            "description": "The validated state-owned outbox task path — the one file `(run id, execution key)` deterministically owns. It is carried relative to the SELECTED NODE root and interpreted against it (`selected` names that root): the spelling is the unchanged `.vibe/agentic/outbox/<run>/<task>` rel for every member, root or not — never re-spelled with `..` segments, never made absolute, and never relative to the workspace state root."
+          }
+        },
+        "document": {
+          "type": "string",
+          "metadata": {
+            "description": "The exact bounded UTF-8 task document — frontmatter with the ordered output contract plus the verbatim system/request prose. Never reparsed outputs or a second DTO."
+          }
+        }
+      }
+    }
+  }
+}
