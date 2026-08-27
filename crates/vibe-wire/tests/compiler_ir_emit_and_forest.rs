@@ -3,17 +3,19 @@
 //! tape and the identity share a decoder; the labels below say which is which,
 //! and they are not interchangeable.
 //!
-//! * GATE   FOREST (`x-conversion-gates`) — the node arena is a forest rooted
-//!          at 0, checked totally and iteratively. Every decoded carrier owes
-//!          it: a `children` cycle spins `DocTree::facts_under` forever
-//!          instead of panicking, whoever produced the tree.
-//! * GATE   EMIT IDENTITY (`x-conversion-gates`) — artifact/target/backend are
-//!          one id, `producer` is `emit:<backend>`, a builtin tape is valid in
-//!          its own framing while opaque bytes ride a custom target, and
-//!          `bytes_digest` is RECOMPUTED. Says nothing about which bytes.
-//! * ORACLE OPAQUE TAPE (`x-corpus-producer-oracles`) — the fixed three bytes
-//!          `OpaqueTestBackend::new` returns. Characterization of THIS corpus,
-//!          never a decode rule.
+//! **GATE — FOREST (`x-conversion-gates`).** The node arena is a forest rooted
+//! at 0, checked totally and iteratively. Every decoded carrier owes it: a
+//! `children` cycle spins `DocTree::facts_under` forever instead of panicking,
+//! whoever produced the tree.
+//!
+//! **GATE — EMIT IDENTITY (`x-conversion-gates`).** Artifact, target and
+//! backend are one id, `producer` is `emit:<backend>`, a builtin tape is valid
+//! in its own framing while opaque bytes ride a custom target, and
+//! `bytes_digest` is RECOMPUTED. Says nothing about which bytes.
+//!
+//! **ORACLE — OPAQUE TAPE (`x-corpus-producer-oracles`).** The fixed three
+//! bytes `OpaqueTestBackend::new` returns. Characterization of THIS corpus,
+//! never a decode rule.
 //!
 //! The other two gates, PASS/SNAPSHOT and SET PROJECTION, are in
 //! `compiler_ir_domain_invariants.rs`; the CLOSE ORDER and QUALIFY SPELLING

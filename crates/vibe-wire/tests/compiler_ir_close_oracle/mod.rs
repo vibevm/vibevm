@@ -6,19 +6,19 @@
 //!
 //! The oracle owns BOTH witnesses, in this order:
 //!
-//!   1. EDGE WITNESS — reconstruct the `use` edge vector the way
-//!      `close.rs:146-197` mints it: for every normal contribution in
-//!      contribution order, walk the reached nodes in traversal order, take
-//!      each node's OWN carried `tree.directives.directives`, keep
-//!      `kind == use`, sort by `line` exactly as `use_graph::use_addresses`
-//!      does (stably, so equal lines keep declaration order), resolve each
-//!      target by PINLESS address identity to the one carried spec node, and
-//!      append `(from, to, requested_target)` unless that exact tuple is
-//!      already present. Compare to the carrier's `kind == use` edges in exact
-//!      order and exact requested-target fields.
-//!   2. ORDER WITNESS — replay `topology::order_by` on the adjacency DERIVED
-//!      in step 1, never on the carrier's edges, and compare node-for-node
-//!      with the pre-absorb order.
+//! **EDGE WITNESS.** Reconstruct the `use` edge vector the way
+//! `close.rs:146-197` mints it: for every normal contribution in contribution
+//! order, walk the reached nodes in traversal order, take each node's OWN
+//! carried `tree.directives.directives`, keep `kind == use`, sort by `line`
+//! exactly as `use_graph::use_addresses` does (stably, so equal lines keep
+//! declaration order), resolve each target by PINLESS address identity to the
+//! one carried spec node, and append `(from, to, requested_target)` unless that
+//! exact tuple is already present. Compare to the carrier's `kind == use`
+//! edges in exact order and exact requested-target fields.
+//!
+//! **ORDER WITNESS.** Replay `topology::order_by` on the adjacency derived by
+//! the edge witness, never on the carrier's edges, and compare node-for-node
+//! with the pre-absorb order.
 //!
 //! Deriving the adjacency from the directives is what makes step 2 mean
 //! something: replaying DFS over the carrier's own edges would only prove the
@@ -277,8 +277,11 @@ pub fn close_faults(nodes: &[Node], edges: &[Edge], orders: &[(u32, Vec<u32>)]) 
     out
 }
 
+/// Nodes, exact use edges, and one pre-absorb order per normal contribution.
+pub type OracleView = (Vec<Node>, Vec<Edge>, Vec<(u32, Vec<u32>)>);
+
 /// Project a decoded closure into the oracle's view.
-pub fn view(closure: &ClosureIr) -> (Vec<Node>, Vec<Edge>, Vec<(u32, Vec<u32>)>) {
+pub fn view(closure: &ClosureIr) -> OracleView {
     let nodes = closure
         .nodes
         .iter()

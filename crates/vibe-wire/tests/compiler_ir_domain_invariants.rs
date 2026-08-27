@@ -8,8 +8,8 @@
 //! and `compiler_ir_emit_and_forest.rs` and bind nothing a plugin returns.
 //!
 //! * PASS/SNAPSHOT  an edge kind and its own pending snapshot cannot coexist.
-//! * SET PROJECTION a domain `BTreeSet<String>` projected as a list carries
-//!                  its canonical sorted, duplicate-free spelling.
+//! * SET PROJECTION — a domain `BTreeSet<String>` projected as a list carries
+//!   its canonical sorted, duplicate-free spelling.
 
 use std::path::PathBuf;
 
