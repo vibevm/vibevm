@@ -1,0 +1,53 @@
+schema = 1
+source_hash = "sha256:c068ab0517275cc6c7d11ce0e77e20c8dc9f038c6e6e4ae0832902b063ce0fc5"
+spec_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:c7562978f83b1be6f9f94443af19f095db3779d3413fb87b6579df82a6d34252"
+
+[[file]]
+path = "LICENSE"
+sha256 = "7b05e254512285b6a4c33fa97a9b8a4751ff8bf674da7189420f066ef7b9672b"
+disposition = "copied"
+source = "LICENSE"
+
+[[file]]
+path = "README.xml"
+sha256 = "1b2200fc69b0a83928ac506a8849b53d5262cd4c44f3f20493e548582956ef4f"
+disposition = "converted"
+source = "README.md"
+
+[[file]]
+path = "vibe.toml"
+sha256 = "1df4d97290f2f9efd57d8ffa3c22e4f2395474d9601ad51c127fbde2df22377c"
+disposition = "copied"
+source = "vibe.toml"
+
+[[file]]
+path = "vibevm/vibespecs/boot/20-flow-sync-from-code.xml"
+sha256 = "39f99e5a30b6a5c8cc8bfda48404dd7411f6047cf272d4e41fc7577c5fb16285"
+disposition = "copied"
+source = "vibevm/vibespecs/boot/20-flow-sync-from-code.xml"
+
+[[file]]
+path = "vibevm/vibespecs/boot/20a-wal-binding.xml"
+sha256 = "dc07206e44c8eb126b12af884be56f2f8fa1862cd16c5cb7ed27131a98ecc739"
+disposition = "copied"
+source = "vibevm/vibespecs/boot/20a-wal-binding.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/sync-from-code/SYNC-PROTOCOL.xml"
+sha256 = "f40bf411748e7683c58cfc721491ba98e1484fdfe4bd2511dce9db30ae69621b"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/sync-from-code/SYNC-PROTOCOL.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/sync-from-code/review-workflow.xml"
+sha256 = "9e84c70121ee1ef4c06733119cd842c476e19f45b7e8b80d60ee15b56421a732"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/sync-from-code/review-workflow.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/sync-from-code/when-to-apply.xml"
+sha256 = "7348ba635505b048a41a9c5dc8ce8786ffd18ad4b6f929ae2a0384a331090aeb"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/sync-from-code/when-to-apply.xml"

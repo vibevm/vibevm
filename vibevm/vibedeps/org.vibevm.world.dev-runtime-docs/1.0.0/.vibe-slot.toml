@@ -1,0 +1,35 @@
+schema = 1
+source_hash = "sha256:c006b2a93b717fb71459dde404b08ce33d092e9514f4e27a2f350f21d78dad9d"
+spec_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:bd7c6a8707d3673cdfa2ef07e9dd88ae5fde112697fbd0cebb1277e145cb4269"
+
+[[file]]
+path = "LICENSE"
+sha256 = "7b05e254512285b6a4c33fa97a9b8a4751ff8bf674da7189420f066ef7b9672b"
+disposition = "copied"
+source = "LICENSE"
+
+[[file]]
+path = "README.xml"
+sha256 = "6d279cf236cf39bc47a24ed8c09f12adb81096a9375f8d51fd3b313429927ab0"
+disposition = "converted"
+source = "README.md"
+
+[[file]]
+path = "vibe.toml"
+sha256 = "9a78686c3046abe9e0a56e18a6fb2786931c82db82bff04ca3582fea2747a06f"
+disposition = "copied"
+source = "vibe.toml"
+
+[[file]]
+path = "vibevm/vibespecs/boot/58-flow-dev-runtime-docs.xml"
+sha256 = "78635be9245d10473e202881971d66ae71520140eee86538669fa7924c8ad10b"
+disposition = "copied"
+source = "vibevm/vibespecs/boot/58-flow-dev-runtime-docs.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.xml"
+sha256 = "02ba8b8b41c9863fc14e0f44f553f2c8b2f38e7d8e424226c48c861023fff549"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.xml"

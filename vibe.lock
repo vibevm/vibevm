@@ -1,6 +1,6 @@
 [meta]
 generated_by = "vibe 1.0.0"
-generated_at = "2026-08-24T17:49:48Z"
+generated_at = "2026-08-27T01:10:56Z"
 schema_version = 6
 root_dependencies = [
     "flow:org.vibevm.fractality/delegation-first@^1.0.0",
@@ -139,7 +139,7 @@ name = "rust-ai-native-lang"
 group = "org.vibevm.ai-native"
 version = "1.0.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0"
-content_hash = "sha256:4e64f3fe4f1c7e9d620a00ac0d3c3cca3c860d2ad5eb0a94f4110f59a303b843"
+content_hash = "sha256:a363b2a728648275aafbd3a5313560798d4320dfa4a3f046db9315778da69403"
 files_written = []
 dependencies = ["flow:org.vibevm.ai-native/core-ai-native@=1.0.0"]
 admitted_by = "public-chain"
@@ -151,7 +151,7 @@ name = "rust-ai-native-mcp"
 group = "org.vibevm.ai-native"
 version = "1.0.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.0.0"
-content_hash = "sha256:95126f72b6f849b425725eebbaa4fdc72a9e75c0be0d7f4c8b7da286a01efde7"
+content_hash = "sha256:e970944736e533665df444c4ae96e8dda06b37ca7696ea81f7e44d7211c45dd9"
 files_written = []
 dependencies = ["lang:org.vibevm.ai-native/rust-ai-native-lang@=1.0.0"]
 admitted_by = "public-chain"
@@ -163,7 +163,7 @@ name = "typescript-ai-native-lang"
 group = "org.vibevm.ai-native"
 version = "1.0.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.0.0"
-content_hash = "sha256:505c582fe9020a647038b128c77031282161a48bf8f6b5adbcfb6aa0134f09e7"
+content_hash = "sha256:231125de3f3a467e5a257c0308defd74c51dd2ef664b1807f0ec489af31c9cc6"
 files_written = []
 dependencies = ["flow:org.vibevm.ai-native/core-ai-native@=1.0.0"]
 admitted_by = "public-chain"
@@ -175,7 +175,7 @@ name = "typescript-ai-native-mcp"
 group = "org.vibevm.ai-native"
 version = "1.0.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.0.0"
-content_hash = "sha256:5096621035c7ab2aa221889f73a87a392cf42ec4281d4430fda9d4b1742a69e7"
+content_hash = "sha256:29dc2ae566bd24d6802eb4da367255b41cdf9f30249e3deb8a112e730066ed76"
 files_written = []
 dependencies = ["lang:org.vibevm.ai-native/typescript-ai-native-lang@=1.0.0"]
 admitted_by = "public-chain"

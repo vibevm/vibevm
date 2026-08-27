@@ -1,0 +1,35 @@
+schema = 1
+source_hash = "sha256:a6554fa5f09619a13c04be29e81f4d610a123f454dc4f01479f49c8b0a2b83f4"
+spec_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:8f2ade8268b017ee76199a728769debc97795f02e3dbf24dc7b957d8ada0650f"
+
+[[file]]
+path = "LICENSE"
+sha256 = "7b05e254512285b6a4c33fa97a9b8a4751ff8bf674da7189420f066ef7b9672b"
+disposition = "copied"
+source = "LICENSE"
+
+[[file]]
+path = "README.xml"
+sha256 = "46e546ad091c99df5394801aa41287518268ffbd6b5df26c72149365b261f52f"
+disposition = "converted"
+source = "README.md"
+
+[[file]]
+path = "vibe.toml"
+sha256 = "596aa7f5bdfafdd69e9aa13714adb33e23b3f9b0943e7d45e634c6b318a0e142"
+disposition = "copied"
+source = "vibe.toml"
+
+[[file]]
+path = "vibevm/vibespecs/boot/68-flow-omnichannel.xml"
+sha256 = "49d8aae5756914630bd5f90c71a682bdbdbe39be6ad0234a52f5275ff8bbbff3"
+disposition = "copied"
+source = "vibevm/vibespecs/boot/68-flow-omnichannel.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/omnichannel/OMNICHANNEL-PROTOCOL.xml"
+sha256 = "34382568e3f8533562f123c7e9f97fbc34b8d44a7161bbd0aa98648ade855a9c"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/omnichannel/OMNICHANNEL-PROTOCOL.xml"

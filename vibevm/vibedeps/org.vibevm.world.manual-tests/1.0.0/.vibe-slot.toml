@@ -1,0 +1,47 @@
+schema = 1
+source_hash = "sha256:b2bb48eb16931767dc13b925e92449d0ab6c1fe7c4d525c8379d1e11834a70b9"
+spec_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:e761da32d9a5f38dd3e6d03cc8fa1652e6f91286ec5cce85360547aaa9ec3fc7"
+
+[[file]]
+path = "LICENSE.md"
+sha256 = "c0e2a0382616f6ad368f3d15845916310a4a3113802df74a759d41b9d914e1be"
+disposition = "copied"
+source = "LICENSE.md"
+
+[[file]]
+path = "README.xml"
+sha256 = "bf766a56b91648ad48d90a8d4e9da8d10d0b4f5680bcc98539585f77ccad663a"
+disposition = "converted"
+source = "README.md"
+
+[[file]]
+path = "vibe.toml"
+sha256 = "daf77be39ae49360fc436dddbcfd535c1b888350d75b15cd3f0ff7709af7a39d"
+disposition = "copied"
+source = "vibe.toml"
+
+[[file]]
+path = "vibevm/vibespecs/boot/44-flow-manual-tests.xml"
+sha256 = "776a80dc34b2374e54bce15285aa7b1f68d103affba60d56a6e719d194699fae"
+disposition = "copied"
+source = "vibevm/vibespecs/boot/44-flow-manual-tests.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/manual-tests/MANUAL-TESTS-PROTOCOL.xml"
+sha256 = "5c4454bb9a2851cb66ad75365e5acc1a7204cbe49c39ebe568f33df2c5e7d35a"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/manual-tests/MANUAL-TESTS-PROTOCOL.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/manual-tests/authoring-rules.xml"
+sha256 = "3a74edee726a5ca90dbe435fd36e300b33a67c58e0ee4453fc95fb1e28566c22"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/manual-tests/authoring-rules.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/manual-tests/test-template.xml"
+sha256 = "c9dbd5c35cdd417eb5d2ff8cc81c2b26ada2988626f0fdd0837c53e878138246"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/manual-tests/test-template.xml"

@@ -77,7 +77,8 @@ fn init_then_trace_resolves_and_the_gates_catch_violations() {
     let specmap_policy = std::fs::read_to_string(root.join("specmap.toml")).expect("policy");
     assert!(specmap_policy.contains("namespace = \"demo\""));
     assert!(
-        specmap_policy.contains("root = \"vibevm/vibedeps/flow-core-ai-native/0.3.0/vibevm/vibespecs\""),
+        specmap_policy
+            .contains("root = \"vibevm/vibedeps/flow-core-ai-native/0.3.0/vibevm/vibespecs\""),
         "{specmap_policy}"
     );
 

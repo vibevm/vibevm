@@ -1,0 +1,53 @@
+schema = 1
+source_hash = "sha256:1d5856c07f4d3b5481013d262eade8d96b0a8217615ab9a94ac9cfd6f53509e3"
+spec_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:26b84808446fcc97980e64f46313c5ef0862fc08f763fbac2985a0cd92008321"
+
+[[file]]
+path = "LICENSE.md"
+sha256 = "c0e2a0382616f6ad368f3d15845916310a4a3113802df74a759d41b9d914e1be"
+disposition = "copied"
+source = "LICENSE.md"
+
+[[file]]
+path = "README.xml"
+sha256 = "b3edbd175f5059d1471e6eb64d29a9e2f90f0d8bd30bffac0ede5a5745cdb6de"
+disposition = "converted"
+source = "README.md"
+
+[[file]]
+path = "vibe.toml"
+sha256 = "830b5985b41bc047f39ab4878de879f05464bbe3544a71ac28859327cda554f4"
+disposition = "copied"
+source = "vibe.toml"
+
+[[file]]
+path = "vibevm/vibespecs/boot/60-flow-licensing.xml"
+sha256 = "813dcf62879c431b99a2b99b290bc631f4633162aba0c839149fa97958429f47"
+disposition = "copied"
+source = "vibevm/vibespecs/boot/60-flow-licensing.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/licensing/LICENSING-PROTOCOL.xml"
+sha256 = "3331fbf05e0383f4f4a23c9e51bd5db59d18d594d590a337b3d72b0cea647e53"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/licensing/LICENSING-PROTOCOL.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/licensing/dependency-licenses.xml"
+sha256 = "98073ba91e82e3991669c8501192ab0fc4fbb462e5c44420981444d2654f1736"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/licensing/dependency-licenses.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/licensing/eula-template.xml"
+sha256 = "a18ad09ea3ac1273bc787bee5c601008ace310aae87e4c42e030de21a98d523d"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/licensing/eula-template.xml"
+
+[[file]]
+path = "vibevm/vibespecs/skills/draft-eula/SKILL.xml"
+sha256 = "c32fd4ad7e1f843ef81061bf9702a83603fee932153a832a00e8a41785752a8e"
+disposition = "converted"
+source = "vibevm/vibespecs/skills/draft-eula/SKILL.md"

@@ -1,0 +1,47 @@
+schema = 1
+source_hash = "sha256:2d12ef2e83579b2b6b8ee7bdb6d01f6d70d187641e8a5e8fb4c5d08369ac4d3d"
+spec_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:081a424e7540a23799bcfd1ce09783c81d321bd407c8a47e5e4f36b27db742ae"
+
+[[file]]
+path = "LICENSE.md"
+sha256 = "c0e2a0382616f6ad368f3d15845916310a4a3113802df74a759d41b9d914e1be"
+disposition = "copied"
+source = "LICENSE.md"
+
+[[file]]
+path = "README.xml"
+sha256 = "7794ddc74f1a9ea2f7b9335703d4e4dbd25e58f3f5c55ade4016aa0b13b7abda"
+disposition = "converted"
+source = "README.md"
+
+[[file]]
+path = "vibe.toml"
+sha256 = "ae362fa19d0bdb30b4e8b4a2500268e2a4d39304e9ee3bd2c287d38d8a871a32"
+disposition = "copied"
+source = "vibe.toml"
+
+[[file]]
+path = "vibevm/vibespecs/boot/05-flow-two-process-model.xml"
+sha256 = "78c170113e50abd60f71578ef3e9b32e4cce1410216f7f52e2cb430e906b5883"
+disposition = "copied"
+source = "vibevm/vibespecs/boot/05-flow-two-process-model.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/two-process-model/TWO-PROCESS-MODEL.xml"
+sha256 = "8f2e37c2f15a498d943a6cb9bb714395a457f166f4b1a4720b68fc6ca8ca5561"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/two-process-model/TWO-PROCESS-MODEL.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/two-process-model/cognitive-load-split.xml"
+sha256 = "7fbba6582bbe0a0f1c85ae82c663e95f46ae6d6e7672a54f5156eae5767c3c84"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/two-process-model/cognitive-load-split.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/two-process-model/files-as-ipc.xml"
+sha256 = "2397c03c88060ef0ff49fae9ce33edd5113c50e8652f6f65d06b94d57502747e"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/two-process-model/files-as-ipc.xml"

@@ -1,0 +1,2663 @@
+schema = 1
+source_hash = "sha256:dd5a6673ce51323d83b78c9632035aa7b2c7ea4f88ec388f752878c71cc1c9fa"
+spec_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:f55bd59bbb6baf274c3133455187fcbafc4efac7e9749d7fbf291aad4f37a69b"
+
+[[file]]
+path = "AGENTS.md"
+sha256 = "65d779bc9bd1eb0fd21c9b21b4abd729d7bdc9922567acfbfb46dfb5c5c7d3bf"
+disposition = "copied"
+source = "AGENTS.md"
+
+[[file]]
+path = "CLAUDE.md"
+sha256 = "65d779bc9bd1eb0fd21c9b21b4abd729d7bdc9922567acfbfb46dfb5c5c7d3bf"
+disposition = "copied"
+source = "CLAUDE.md"
+
+[[file]]
+path = "GEMINI.md"
+sha256 = "65d779bc9bd1eb0fd21c9b21b4abd729d7bdc9922567acfbfb46dfb5c5c7d3bf"
+disposition = "copied"
+source = "GEMINI.md"
+
+[[file]]
+path = "LICENSE.md"
+sha256 = "c0e2a0382616f6ad368f3d15845916310a4a3113802df74a759d41b9d914e1be"
+disposition = "copied"
+source = "LICENSE.md"
+
+[[file]]
+path = "README.xml"
+sha256 = "4b0de6a46bdbfd9aae451bb178d64df520c5842452e2e866e91dc2331263e8ec"
+disposition = "converted"
+source = "README.md"
+
+[[file]]
+path = "vibe.lock"
+sha256 = "b348da97f64c521e750059e0ed62a54605daceeb8c9b3fb966181e3f6a45020d"
+disposition = "copied"
+source = "vibe.lock"
+
+[[file]]
+path = "vibe.toml"
+sha256 = "4523445170310e85c63a7db2c9fe0373355a03e43ccf951077cd2afeb75fa641"
+disposition = "copied"
+source = "vibe.toml"
+
+[[file]]
+path = "vibevm/vibedeps/flow-addressable-specs/0.1.0/LICENSE.md"
+sha256 = "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-addressable-specs/0.1.0/LICENSE.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-addressable-specs/0.1.0/README.md"
+sha256 = "39381f7a90f3212e2cf8390abc67940297d9a556fa2095cc1cba65ed08e4d687"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-addressable-specs/0.1.0/README.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-addressable-specs/0.1.0/spec/boot/15-flow-addressable-specs.md"
+sha256 = "0e493aa45b21153ae04f5ed8c5e7047a1680dd8639bc296ce60f4c50331f9018"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-addressable-specs/0.1.0/spec/boot/15-flow-addressable-specs.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-addressable-specs/0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md"
+sha256 = "5e7010fe8ec471b659e0e4a863799157152f17bad2ad5dc830352a68f4f41af9"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-addressable-specs/0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-addressable-specs/0.1.0/spec/flows/addressable-specs/authoring-rules.md"
+sha256 = "5211be8866c53d0d9e733175d04c0319b0ed6e58762568db3220a1f14bd3cd33"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-addressable-specs/0.1.0/spec/flows/addressable-specs/authoring-rules.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-addressable-specs/0.1.0/spec/flows/addressable-specs/spec-tree-layout.md"
+sha256 = "fdc4811cc35bd8b9c0179e4dada15867a97d4e0adbe92cf221f85eafca6eb659"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-addressable-specs/0.1.0/spec/flows/addressable-specs/spec-tree-layout.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-addressable-specs/0.1.0/vibe.toml"
+sha256 = "22a47184797fc5e9b8d035038ba7666b4563d9581517815d6e77a03e15288077"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-addressable-specs/0.1.0/vibe.toml"
+
+[[file]]
+path = "vibevm/vibedeps/flow-atomic-commits/0.1.0/LICENSE"
+sha256 = "7b05e254512285b6a4c33fa97a9b8a4751ff8bf674da7189420f066ef7b9672b"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-atomic-commits/0.1.0/LICENSE"
+
+[[file]]
+path = "vibevm/vibedeps/flow-atomic-commits/0.1.0/README.md"
+sha256 = "37a049fdb64ab0b8a7e8306729e01ad2e28847a9368ca87e559d603f068200a0"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-atomic-commits/0.1.0/README.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-atomic-commits/0.1.0/boot/30-flow-atomic-commits.md"
+sha256 = "9b5d20eb4e1e38eef72fdba98ceed73552ddfd465d576cc75b2409a9773eeaa0"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-atomic-commits/0.1.0/boot/30-flow-atomic-commits.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-atomic-commits/0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md"
+sha256 = "aa94c3532ff20d8143aadd777a4a9bcf74884c48d0a819cd75cbc3cbb7eb9d9c"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-atomic-commits/0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-atomic-commits/0.1.0/spec/flows/atomic-commits/conventional-commits.md"
+sha256 = "3ad15763b109e8aa2d13df4aaa2c4d3442f01e1b83add9e35c875e36f365addc"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-atomic-commits/0.1.0/spec/flows/atomic-commits/conventional-commits.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md"
+sha256 = "c1969aaeedd846c0e2b6cad84fa9a108e996bccb333ff1fe8820c38a43907a45"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-atomic-commits/0.1.0/vibe.toml"
+sha256 = "e3c0a3ea4b848a8c18b3a5fd92be1177a4920a80debf036a8cfe9079017e4083"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-atomic-commits/0.1.0/vibe.toml"
+
+[[file]]
+path = "vibevm/vibedeps/flow-attribution-policy/0.1.0/LICENSE.md"
+sha256 = "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-attribution-policy/0.1.0/LICENSE.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-attribution-policy/0.1.0/README.md"
+sha256 = "dac110d8b2be3d01e779872be236171f376cec7da98f6afd080d571ac6650f9e"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-attribution-policy/0.1.0/README.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-attribution-policy/0.1.0/spec/boot/55-flow-attribution-policy.md"
+sha256 = "1685c00d87e6ac73acea7c3c9a83fe92c67a76665a6d78a7ae1e64efa3905da0"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-attribution-policy/0.1.0/spec/boot/55-flow-attribution-policy.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-attribution-policy/0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md"
+sha256 = "8fb72cd70d8644e721634170b7aee36adc38064ef49ae997ffa8949a2183428e"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-attribution-policy/0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-attribution-policy/0.1.0/spec/flows/attribution-policy/disclosure-alternative.md"
+sha256 = "189182abb66a6ef1a1a334a126ca05a00a4e5d381b4af58ef5cef7632c744e5a"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-attribution-policy/0.1.0/spec/flows/attribution-policy/disclosure-alternative.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-attribution-policy/0.1.0/spec/flows/attribution-policy/enforcement-checklist.md"
+sha256 = "9d542eb70015ba6ac5daba66b063a17d25fcd4ba34f5f4361273e5f8bef41bfe"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-attribution-policy/0.1.0/spec/flows/attribution-policy/enforcement-checklist.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-attribution-policy/0.1.0/vibe.toml"
+sha256 = "7fa8377d3b0fd5476f403fe4ad6421b8307227759bc32f9c2568b69aae5ce176"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-attribution-policy/0.1.0/vibe.toml"
+
+[[file]]
+path = "vibevm/vibedeps/flow-campaign-plans/0.1.0/LICENSE.md"
+sha256 = "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-campaign-plans/0.1.0/LICENSE.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-campaign-plans/0.1.0/README.md"
+sha256 = "08775d4c24f8a34818236070254918e659e47d897581924502b3d325fb48b20b"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-campaign-plans/0.1.0/README.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-campaign-plans/0.1.0/spec/boot/40-flow-campaign-plans.md"
+sha256 = "24292ffe3efafd30ac5ff971d1ab3709536b382d52f65067a016104c1c627995"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-campaign-plans/0.1.0/spec/boot/40-flow-campaign-plans.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-campaign-plans/0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md"
+sha256 = "2da3a790c4a93088e774fcbd45b48d49c0589063cfd3fcd353bf114252834f95"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-campaign-plans/0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-campaign-plans/0.1.0/spec/flows/campaign-plans/execution-ledger.md"
+sha256 = "44bf41935d486b79833d968bf14123bcd8e74b0c8df28d4adcb11741fde9b70a"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-campaign-plans/0.1.0/spec/flows/campaign-plans/execution-ledger.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-campaign-plans/0.1.0/spec/flows/campaign-plans/phase-gates.md"
+sha256 = "9725af32c821f293e1e63955da4c2038e1d9bcecce97cbf6988bf2b483972b20"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-campaign-plans/0.1.0/spec/flows/campaign-plans/phase-gates.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-campaign-plans/0.1.0/vibe.toml"
+sha256 = "56e1145974afbe8c22d47e58985b8fa735f5765ca0c8c2ca71ea06bf6e3a8cb0"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-campaign-plans/0.1.0/vibe.toml"
+
+[[file]]
+path = "vibevm/vibedeps/flow-comparative-research/0.1.0/LICENSE.md"
+sha256 = "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-comparative-research/0.1.0/LICENSE.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-comparative-research/0.1.0/README.md"
+sha256 = "a4ad1653c4a68ba7cc9dab245d4576fd38a4104d7501c636a0f9cee889a63d39"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-comparative-research/0.1.0/README.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-comparative-research/0.1.0/spec/boot/52-flow-comparative-research.md"
+sha256 = "a77938efc93a08fa895d756cd0e57e304da36fcf7ad6b1ec9d8db4cbabebcf48"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-comparative-research/0.1.0/spec/boot/52-flow-comparative-research.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-comparative-research/0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md"
+sha256 = "c3f95b7dbf72d30b2aca5ac6201784cfa41cf91090d2c5030bf565abff2ea395"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-comparative-research/0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-comparative-research/0.1.0/spec/flows/comparative-research/from-research-to-roadmap.md"
+sha256 = "ded8d134390757037f2175172a904044a743eb5b18a05fd089580e4f94a0fe17"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-comparative-research/0.1.0/spec/flows/comparative-research/from-research-to-roadmap.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-comparative-research/0.1.0/spec/flows/comparative-research/research-template.md"
+sha256 = "3ecf4c6780037e1e3683a2986349338ae5afd9f8405944836b4142e87f5cc9f1"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-comparative-research/0.1.0/spec/flows/comparative-research/research-template.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-comparative-research/0.1.0/vibe.toml"
+sha256 = "f55b6524e544d39c4ce9c65913c97a76b529a6b49e8e4844b38ae101ce40cfc2"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-comparative-research/0.1.0/vibe.toml"
+
+[[file]]
+path = "vibevm/vibedeps/flow-conflict-protocol/0.1.0/LICENSE.md"
+sha256 = "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-conflict-protocol/0.1.0/LICENSE.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-conflict-protocol/0.1.0/README.md"
+sha256 = "8ecd0060a3936d4b2cfe4bbb39275df88950d8d1a25b2b0da818845fec68267c"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-conflict-protocol/0.1.0/README.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-conflict-protocol/0.1.0/spec/boot/35-flow-conflict-protocol.md"
+sha256 = "7894d5e4190173e3de7138e341c56cab1b82bde7e3c33beeb049b5116eb36310"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-conflict-protocol/0.1.0/spec/boot/35-flow-conflict-protocol.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-conflict-protocol/0.1.0/spec/flows/conflict-protocol/CONFLICT-PROTOCOL.md"
+sha256 = "f0108a36efd765ff4b738ad64731b9e9d0a152fd2f02b62d97adeba046884914"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-conflict-protocol/0.1.0/spec/flows/conflict-protocol/CONFLICT-PROTOCOL.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-conflict-protocol/0.1.0/spec/flows/conflict-protocol/failure-modes.md"
+sha256 = "efdb41a56530b8cd3258315242bf439a57f8912cadeec19fe8e339e961ed072d"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-conflict-protocol/0.1.0/spec/flows/conflict-protocol/failure-modes.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-conflict-protocol/0.1.0/spec/flows/conflict-protocol/uncertainty-protocol.md"
+sha256 = "914b3ba439415a463150c2f1887d5c8147b59cae742c48c410edc96b3829c9c2"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-conflict-protocol/0.1.0/spec/flows/conflict-protocol/uncertainty-protocol.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-conflict-protocol/0.1.0/vibe.toml"
+sha256 = "db9432fc1767601dd0043228f9c4da5aeaead8a8e3b9024fde682f48bf29d017"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-conflict-protocol/0.1.0/vibe.toml"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/Cargo.lock"
+sha256 = "62c6ac4c480ee7aae8179f22a4fa8a11fbc57db54934c35b5747fd6eed2dba5d"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/Cargo.lock"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/Cargo.toml"
+sha256 = "717c5511f6c70eba45ea1167ff0c2c3089ce59f7da3d24bb66ac8873782c3c87"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/Cargo.toml"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/LICENSE.md"
+sha256 = "52f56599723cd1474e0a588c73596650a592cc71577259aaeddc1740d7c0e1ae"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/LICENSE.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/README.md"
+sha256 = "03e5c582531af78e1593437bf06a02ea94936fabc5cd00e4049ff6f97e98ba10"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/README.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/Cargo.toml"
+sha256 = "8ee78c0aae56d3ab418fb26a44c8fd41ddfb747c91abf12ff9cef67c15b8b40a"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/Cargo.toml"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/baseline.rs"
+sha256 = "76074ff52e01712de118af7b91d0a5847fa89d5d0101e8394ebf628818d0cf54"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/baseline.rs"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/config.rs"
+sha256 = "d0f139bded59dcb939a3abb4204c1248db6c5fe10e737e548c1e5dd582bc29b2"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/config.rs"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/facts.rs"
+sha256 = "c616bc59bab5f7712985a6dd3a1e57f68540ea0cecaa391c6d65b9515b1b0ad8"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/facts.rs"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/finding.rs"
+sha256 = "c657ed292a60bf05b7be76e1a0fb5162073adc903c1a1fc15781633d795c15a3"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/finding.rs"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/lib.rs"
+sha256 = "d58c37015bb463f576f9bf9aad54fa0727a0453b1e36728fdfcf7e3bcf8bbf0e"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/lib.rs"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/rules/budget.rs"
+sha256 = "6d000a0be4030344edffd6d63ad90709ab6f4e86aedade8ee7520c169ac72ed5"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/rules/budget.rs"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/rules/diagnostics.rs"
+sha256 = "858876c1252dbf1cede7024a8c96b044bcfaaa9d35cb6db3d45d0dc06be54fff"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/rules/diagnostics.rs"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/rules/mod.rs"
+sha256 = "36f82bc351fab088cb92bf5a73ba51e1142f48d234f5fc64155c2f2b392d8232"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/rules/mod.rs"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/rules/structure.rs"
+sha256 = "dba5bac9240d5e0ca38849a31b3e5d6da9bef6a71af2b83a80e8e1fcaed9ede6"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/rules/structure.rs"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/rules/tests.rs"
+sha256 = "7a30197a5a8f5919fae74454df90244444dc6a285033bf40d7848a1281f18e03"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/rules/tests.rs"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/rules/typescript.rs"
+sha256 = "608c60fcd79ea856d755d716627cea5f967648164a8556c170145def81883e32"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/rules/typescript.rs"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/sarif.rs"
+sha256 = "b5b13057097fe8dbc679be6bc3c237c31760c3672ea7ae1a3228d14bfecae56c"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/sarif.rs"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/store.rs"
+sha256 = "ca58f70d2bae33f62e244348707c3b4e07a67784a18474da77877c36ef65b17a"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/store.rs"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-mcp/Cargo.toml"
+sha256 = "615e496fcb3b61953351ed3842cd21594d50d03f4dc85f355c8c0d7dedcf2d87"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-mcp/Cargo.toml"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-mcp/src/capture.rs"
+sha256 = "5e6b8221b12fbf817451f68df18cf23e43c456e4d5c687adecbd3f7ad8a2e444"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-mcp/src/capture.rs"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-mcp/src/error.rs"
+sha256 = "e743a53b2f773e80c595a8e5c356ee2315314ebdfb439364a5cdf26575c2ca7c"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-mcp/src/error.rs"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-mcp/src/lib.rs"
+sha256 = "3d4f7972529971a6d3a1aa4d33d11988468ed6ffef529bfc322bf0255a11af36"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-mcp/src/lib.rs"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-mcp/src/server.rs"
+sha256 = "896ee8cdd1b1c4b64537eae7831ade4e306b495afa76198dc810bee8e822621f"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-mcp/src/server.rs"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-mcp/src/toolset.rs"
+sha256 = "a0c1ccf1a89c58aeb4a1386682ba35196623a8f90fb01805290f1712a6a190fa"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-mcp/src/toolset.rs"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-mcp/src/wire.rs"
+sha256 = "8a2a13245345c642c8f2358f13c4ebafd5be2738ed456d0c999ffd5dc2634af8"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-mcp/src/wire.rs"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/Cargo.toml"
+sha256 = "a317b906114e5a2e9297ea7e163cc9223157d9970cc23e5ef0d8719172d7d9c3"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/Cargo.toml"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/config.rs"
+sha256 = "d2ab8cfb3e37943a425257ccc0de4e7ef7fd0e0dfc6973dc1da59dbe92af6796"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/config.rs"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/explain.rs"
+sha256 = "fc50f123dfdc178706aa228dd28f46751df57566fc890d0c47ef8f07381700d4"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/explain.rs"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/generated/mod.rs"
+sha256 = "583d8da776cd89a1d789b21f0101a6eb9db4786798f54e56db0991ce88025a18"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/generated/mod.rs"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs"
+sha256 = "1bc4d4d8828c7859d5b379627bf5a7cccfd883ac3f5edf36e6c17a18263dd446"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/index.rs"
+sha256 = "6111b9e349ab125a9c71737e22f490d30333ddd7bfd59fbfbf21fe1789a777fc"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/index.rs"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/ledger.rs"
+sha256 = "b6f43d2bed0cebbb113636eca4592dfeeb4c30de98f421e04b15671faaa42105"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/ledger.rs"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/lib.rs"
+sha256 = "ebd0a7de1f86d044ff0793ea22919199f0ed944c6164c288a9879557f2c5ad48"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/lib.rs"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/mdspec.rs"
+sha256 = "8b7bfb37c7ba6234f091834f16a8e29b64cdd7fe1babdf22823a9215756f0179"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/mdspec.rs"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/ratchet.rs"
+sha256 = "fd61b8d4c08d76ad40e2cb447ad6b0b619586225c9c4c6873603b5624a984459"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/ratchet.rs"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/rscan.rs"
+sha256 = "b5c8839f3dd943664789fc1ca72d97091a6cdaae3732e2ba1f60be28a055c7d6"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/rscan.rs"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/scanner.rs"
+sha256 = "0fef5c76a717bae1315688555edd4ad7a459bc0a99555f12dae9bd9f47b7c4ce"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/scanner.rs"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/testgate.rs"
+sha256 = "42369fad2c108d86ddbb6e8ebf2cff3d824c7e989b5da90874678c0b7ab3a599"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/testgate.rs"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/tripwire.rs"
+sha256 = "452b7e36e419c7fcbcfd2a69b49300fa00c8a8ff8c74242f8e0e9ab077a7847d"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/tripwire.rs"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmark-grammar/Cargo.toml"
+sha256 = "d13d5bc78493be32a8990b2a1fc8f6f83e8fb2e2c2a99494255675c3b55f2e05"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmark-grammar/Cargo.toml"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmark-grammar/src/lib.rs"
+sha256 = "b3d8e927a68ea8231dd4a5442f12de3912c5c16d7b48cd416a57549c16993663"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmark-grammar/src/lib.rs"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmark-grammar/src/lib/tests.rs"
+sha256 = "3b43f969443fdf7b2046710f5b83d5ca767da3e97e6b032329991a3a3cff03c0"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmark-grammar/src/lib/tests.rs"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmark/Cargo.toml"
+sha256 = "17444834b7122cca8ef8dcb0102b343b02817c4ace716d6084c84460fa7b3b17"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmark/Cargo.toml"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmark/src/lib.rs"
+sha256 = "3f6a61e033bac7995928523403766273fa65dd83a9212609fb71084053a0ebd0"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmark/src/lib.rs"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmark/tests/usage.rs"
+sha256 = "5b240256864cf06f2b53b4d899bb44df672d8c6c950438b8d249eaaa81e7c387"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmark/tests/usage.rs"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/00-MANIFESTO.md"
+sha256 = "fd5dc6c45e2bda976a9fbfa075dd5fb3b4cb98b52aa589f0d5dc9635758f04d2"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/00-MANIFESTO.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/01-PATTERN-CARD-FORMAT.md"
+sha256 = "f722973ab8bb737da7a9fb56bb95eb968c8c8a168ca29b1748297871140b5b75"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/01-PATTERN-CARD-FORMAT.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/02-EXECUTABLE-SCAFFOLDS.md"
+sha256 = "f86adb921249df502205f2795b16ef597ad8664729859574e2a3a566d7d6ca98"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/02-EXECUTABLE-SCAFFOLDS.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/03-RAID-PLAYBOOK.md"
+sha256 = "eda8f13a12deb299aeb13616c2e5deacc4928beb46fd8c16e04ff789ab7e7f15"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/03-RAID-PLAYBOOK.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/04-SWEEP-PLAYBOOK.md"
+sha256 = "699dd53388813d3a04395b8def3f1174ce23110c4fdc9a121129e4e3c4158e11"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/04-SWEEP-PLAYBOOK.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/05-CAMPAIGN-FORM.md"
+sha256 = "6cc32d1db0ebb548b25cc8b85d6c3e8fc03620f3f6f8ec0e56936b055725d07f"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/05-CAMPAIGN-FORM.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/06-WAL-CONVENTION.md"
+sha256 = "45828526ed6094099743a79ba188ee44c182ac15f3aa6542a251d72c348957da"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/06-WAL-CONVENTION.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/appendix/ATLAS.md"
+sha256 = "b97f0d255dd1c1573c3880528baf56ee06ad74b00ba4978a1916fbc829aaf025"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/appendix/ATLAS.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/appendix/CONTRADICTION-MAP.md"
+sha256 = "b3175f9f58372048f806810d20b59b334aa81ab372e205fa5f774cdb2aaf1d00"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/appendix/CONTRADICTION-MAP.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/boot/10-flow-core-ai-native.md"
+sha256 = "973265c273c4bb9ea179d63099444d76eb9a594687d490f256b225a3cf4601b5"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/boot/10-flow-core-ai-native.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/legacy-projections/GUIDE-CPP-MISRA2008-v0.1.md"
+sha256 = "f7cee6e6ef54ce6506e467513f370166ae6087c6370747acedf4df60b8d51e2f"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/legacy-projections/GUIDE-CPP-MISRA2008-v0.1.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/legacy-projections/GUIDE-CPP-MODERN-v0.1.md"
+sha256 = "80b81216c377e889eebe519dce6373cbc9079e6167ea4d2c83851e92524d88be"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/legacy-projections/GUIDE-CPP-MODERN-v0.1.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/legacy-projections/GUIDE-CPP-TRADITIONAL-v0.1.md"
+sha256 = "31e45c6569fa3941d79475880c4710c2b753b53ee3dc4a86f334f7b321efcc76"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/legacy-projections/GUIDE-CPP-TRADITIONAL-v0.1.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/legacy-projections/GUIDE-GO-v0.1.md"
+sha256 = "20489efef19664b21955e7c58e2bd014ecc3be98599120b88a4c0078cb3adcdc"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/legacy-projections/GUIDE-GO-v0.1.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/legacy-projections/GUIDE-JAVA-GRAALVM-v0.1.md"
+sha256 = "b3ac943494544b72faa712ded3a2fc8d54faa1cc1122aeb6cc8f0b5d8c616e60"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/legacy-projections/GUIDE-JAVA-GRAALVM-v0.1.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/legacy-projections/GUIDE-JAVA-JAKARTA-v0.1.md"
+sha256 = "dae6a66ffb73f5098ca8438d9a45ff8e865764b4ad078cdaf23fea9625f412e7"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/legacy-projections/GUIDE-JAVA-JAKARTA-v0.1.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/legacy-projections/GUIDE-JAVA-SPRING-v0.1.md"
+sha256 = "2b5f9a61a2c1c867230deceab5e57ef4e177957725ca9f9f2e4b9e232a7213a1"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/legacy-projections/GUIDE-JAVA-SPRING-v0.1.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/legacy-projections/GUIDE-JAVA-v0.1.md"
+sha256 = "8d57cd7f457348d3d02dff475e9c54e57acd7cd2b62671a4d66e1f783a1578d2"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/legacy-projections/GUIDE-JAVA-v0.1.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/legacy-projections/GUIDE-KOTLIN-v0.1.md"
+sha256 = "00af5805ffd96f33ec95d25d7828f1e64e37c0f608863e55db24f84c2aa1c535"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/legacy-projections/GUIDE-KOTLIN-v0.1.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/legacy-projections/GUIDE-PYTHON-v0.1.md"
+sha256 = "9e5efcec5f39de5a6b14184049453c8cebd6f3a94793e796be8b577d5fe7595c"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/legacy-projections/GUIDE-PYTHON-v0.1.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/legacy-projections/GUIDE-TYPESCRIPT-v0.1.md"
+sha256 = "e27e9eef934b2be0cb8bfaa93238e2a9298ce8dbe72271e7520fb02bcae9213e"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/legacy-projections/GUIDE-TYPESCRIPT-v0.1.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.md"
+sha256 = "ba522ed286fc6929aaca6f969576152acea47162dd9b820fb0da7a53db49b74f"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/mechanisms/ENGINE-CONFORM-v0.1.md"
+sha256 = "2fd96af86467ccf1acae3b4836e584c79636cdee9218da464f390fa94b0c4b32"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/mechanisms/ENGINE-CONFORM-v0.1.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/mechanisms/LEDGER-INTENT-v0.1.md"
+sha256 = "a9bdcd4459d3b32adc288ebdc2d366e98038fd3f03f370fdd48ad7a72c60cbdc"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/mechanisms/LEDGER-INTENT-v0.1.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/mechanisms/MCP-CORE-v0.1.md"
+sha256 = "9294a7fafd9bd0bc8baebc3dac84cb8d0e2bad2e825a195826ef486fed0d9cd7"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/mechanisms/MCP-CORE-v0.1.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md"
+sha256 = "0e52784b620871e041b5b5d0eae7d0749024e06f3e48db0da1736973f921975d"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/specmap.toml"
+sha256 = "48ed0aee1491a5c9589f854e78d83b7e074d3f9cfbc46c64def0acbda6cc8a54"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/specmap.toml"
+
+[[file]]
+path = "vibevm/vibedeps/flow-core-ai-native/0.7.0/vibe.toml"
+sha256 = "4f0366b4bf22ef26f6fb73b06da1d351715cd4b60c734b2a635dbfffd5ad04eb"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/vibe.toml"
+
+[[file]]
+path = "vibevm/vibedeps/flow-decision-records/0.1.0/LICENSE.md"
+sha256 = "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-decision-records/0.1.0/LICENSE.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-decision-records/0.1.0/README.md"
+sha256 = "9c834d60bcf9e7a8c866325313ed9dcdf258d4937d1ec6e8f31acc823fb8040e"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-decision-records/0.1.0/README.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-decision-records/0.1.0/spec/boot/25-flow-decision-records.md"
+sha256 = "975d016c834c4fc35c66f90788c7e6c94c26dbc9d997c7d23de5003f3790e477"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-decision-records/0.1.0/spec/boot/25-flow-decision-records.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-decision-records/0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md"
+sha256 = "785053e59fd1d06049a6c267433b08efc78826bba2cd2abecab4550004c09284"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-decision-records/0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-decision-records/0.1.0/spec/flows/decision-records/record-template.md"
+sha256 = "c5d0da0332e26266ce966899c8f93ba6e38e33f9e396f9510b98b18cfb9ac282"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-decision-records/0.1.0/spec/flows/decision-records/record-template.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-decision-records/0.1.0/spec/flows/decision-records/revisit-triggers.md"
+sha256 = "eeb25bc0e537c70787f0030e21daf2e3eb47d397d2cea5fd5793e53675b4b67c"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-decision-records/0.1.0/spec/flows/decision-records/revisit-triggers.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-decision-records/0.1.0/vibe.toml"
+sha256 = "1e51cc9b0aeff8f573205cfddadf147a0a25b5b5c612b500d31375a923df073a"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-decision-records/0.1.0/vibe.toml"
+
+[[file]]
+path = "vibevm/vibedeps/flow-discovery-prompt/0.1.0/LICENSE.md"
+sha256 = "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-discovery-prompt/0.1.0/LICENSE.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-discovery-prompt/0.1.0/README.md"
+sha256 = "90900ca5786256cdbac24b2768e9e77eb9c2782e56f8fb5f95e12cd414e3193d"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-discovery-prompt/0.1.0/README.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-discovery-prompt/0.1.0/spec/boot/50-flow-discovery-prompt.md"
+sha256 = "ccebf47dbf147cccf809ca984256f85eddbd009211de9c6b5bc5fedf7fb96408"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-discovery-prompt/0.1.0/spec/boot/50-flow-discovery-prompt.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-discovery-prompt/0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md"
+sha256 = "2e24d9f0382701df022eb9d2e4c55dd6782f442fe0a46cc6b0449723ddf00ad9"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-discovery-prompt/0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-discovery-prompt/0.1.0/spec/flows/discovery-prompt/usage.md"
+sha256 = "66360dbcd090a43077fe3a01845a0070b077badf356d6341e5fa2e7866fe3c37"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-discovery-prompt/0.1.0/spec/flows/discovery-prompt/usage.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-discovery-prompt/0.1.0/vibe.toml"
+sha256 = "cdf24b9e037fb0fc1a7a657ef72c62a05416ca166826ad80cdee97093c6fa9e3"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-discovery-prompt/0.1.0/vibe.toml"
+
+[[file]]
+path = "vibevm/vibedeps/flow-health-audit/0.1.0/LICENSE.md"
+sha256 = "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-health-audit/0.1.0/LICENSE.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-health-audit/0.1.0/README.md"
+sha256 = "800a634a753e7594f3a233cda28439863913caf3d2f91313ec6a774d18bbb4d6"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-health-audit/0.1.0/README.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md"
+sha256 = "f710fb4280e401377095f32fc6b50f22eb3cc60b8bb5d4ab4ed855942b9960e6"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-health-audit/0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md"
+sha256 = "28a4c50f4bfecf9fb050b4f22da5d1bb82dcf1fd71bbff4eaa86d37824f7f20c"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-health-audit/0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-health-audit/0.1.0/spec/flows/health-audit/audit-checklist.md"
+sha256 = "49ab390b2e72adeff18c23dcdf54d006ea2e4e7ab548ea6ff756c85e4d1cb6ca"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-health-audit/0.1.0/spec/flows/health-audit/audit-checklist.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-health-audit/0.1.0/spec/flows/health-audit/running-an-audit.md"
+sha256 = "982a177cb9461495cf192df8666d5678d669386c9a6e325676a6f671c1fc271b"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-health-audit/0.1.0/spec/flows/health-audit/running-an-audit.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-health-audit/0.1.0/spec/skills/health-audit/SKILL.md"
+sha256 = "80df60e05cb140f306a6993dd3c8a9cdfcc2daeaf3ddec5ce1926ac88cf9fea8"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-health-audit/0.1.0/spec/skills/health-audit/SKILL.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-health-audit/0.1.0/vibe.toml"
+sha256 = "e13f77a304d182409a15c7d119ce204233fc5e9ad60e0c59d7878082de43a6e7"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-health-audit/0.1.0/vibe.toml"
+
+[[file]]
+path = "vibevm/vibedeps/flow-licensing/0.1.0/LICENSE.md"
+sha256 = "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-licensing/0.1.0/LICENSE.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-licensing/0.1.0/README.md"
+sha256 = "ec0933226f9bf38746a2675a6f4695e70695644115d8fe62b33089e9f8a3a77b"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-licensing/0.1.0/README.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-licensing/0.1.0/spec/boot/60-flow-licensing.md"
+sha256 = "f6b0cbe36ddf8a130fd67bdb24df7a8b874472ac1fa144ecc1e570086a97e663"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-licensing/0.1.0/spec/boot/60-flow-licensing.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-licensing/0.1.0/spec/flows/licensing/LICENSING-PROTOCOL.md"
+sha256 = "4dd99b2071503b02666b23a5800f201121b1cb3d000c237dad364e8c0f3c83ac"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-licensing/0.1.0/spec/flows/licensing/LICENSING-PROTOCOL.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-licensing/0.1.0/spec/flows/licensing/dependency-licenses.md"
+sha256 = "0ea9306cc4388c9bc554b94ae29153e1b61c7ae325085c15aeee7e38977351b6"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-licensing/0.1.0/spec/flows/licensing/dependency-licenses.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-licensing/0.1.0/spec/flows/licensing/eula-template.md"
+sha256 = "6e1d7989947359ab3b1cfd91bcc43c6b2344971333f37da7c5d0e2f1e2f24c3b"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-licensing/0.1.0/spec/flows/licensing/eula-template.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-licensing/0.1.0/spec/skills/draft-eula/SKILL.md"
+sha256 = "5200a3ceffc8f939ae73c603aa92a945b6c1107f0c42747e515e3fbd5d72b71b"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-licensing/0.1.0/spec/skills/draft-eula/SKILL.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-licensing/0.1.0/vibe.toml"
+sha256 = "3ecc9060cbe2423aa3c81d25de60ddb7323308afcc0471f796bf925f67f510a8"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-licensing/0.1.0/vibe.toml"
+
+[[file]]
+path = "vibevm/vibedeps/flow-managed-blocks/0.1.0/LICENSE.md"
+sha256 = "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-managed-blocks/0.1.0/LICENSE.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-managed-blocks/0.1.0/README.md"
+sha256 = "57955b0a4fdbe94270965dd745e58987a97f05cd529f1d081ef695d4cce4de1a"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-managed-blocks/0.1.0/README.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-managed-blocks/0.1.0/spec/boot/65-flow-managed-blocks.md"
+sha256 = "7b6289e2c943976e42dd211c41245cb19d2e3a88ac5b7c10b8eef9bc1ce9986e"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-managed-blocks/0.1.0/spec/boot/65-flow-managed-blocks.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-managed-blocks/0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md"
+sha256 = "cc37fb0b4a2766d8fb7490c53df85b37ab4873462c49e8928887a3d36c1a0f92"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-managed-blocks/0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-managed-blocks/0.1.0/spec/flows/managed-blocks/adoption-guide.md"
+sha256 = "c29b6edbab0b2bdc8bb8c62402dc0b9935cebf10d13dd2b6895603e6ba3d3b67"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-managed-blocks/0.1.0/spec/flows/managed-blocks/adoption-guide.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-managed-blocks/0.1.0/spec/flows/managed-blocks/rejected-designs.md"
+sha256 = "5d476ab85b7427fbbb36ef18fa860dacefc10a0ec82c118893e278cc4283dbe5"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-managed-blocks/0.1.0/spec/flows/managed-blocks/rejected-designs.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-managed-blocks/0.1.0/vibe.toml"
+sha256 = "1e2533cc3442c5cae1f50aa85e73e1a0a191b48d9873c1ac854e2345b1d1eec2"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-managed-blocks/0.1.0/vibe.toml"
+
+[[file]]
+path = "vibevm/vibedeps/flow-manual-tests/0.1.0/LICENSE.md"
+sha256 = "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-manual-tests/0.1.0/LICENSE.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-manual-tests/0.1.0/README.md"
+sha256 = "5fd724debe3ed3cff188bfa54be6fd739f26b072d4e0a383a68f9d8b13797d15"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-manual-tests/0.1.0/README.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-manual-tests/0.1.0/spec/boot/44-flow-manual-tests.md"
+sha256 = "6d0a4a0e5d43328f340c4f2c2599aa723844b47780f9099a1050b53cd4a2055d"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-manual-tests/0.1.0/spec/boot/44-flow-manual-tests.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-manual-tests/0.1.0/spec/flows/manual-tests/MANUAL-TESTS-PROTOCOL.md"
+sha256 = "490f73b4062dababf3687d9bde1eedbc876d2605a68dfa098b9b39d9b37ee099"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-manual-tests/0.1.0/spec/flows/manual-tests/MANUAL-TESTS-PROTOCOL.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-manual-tests/0.1.0/spec/flows/manual-tests/authoring-rules.md"
+sha256 = "f393eef8f7d165ad4f0c39b8c7c1a72089f27ef69cd68c620034a6e306b8ffc5"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-manual-tests/0.1.0/spec/flows/manual-tests/authoring-rules.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-manual-tests/0.1.0/spec/flows/manual-tests/test-template.md"
+sha256 = "f82aec83e167d62868ce7bb30a8b8849efea5eb73765eeb055735a04de481eb5"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-manual-tests/0.1.0/spec/flows/manual-tests/test-template.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-manual-tests/0.1.0/vibe.toml"
+sha256 = "3ec21d77297abdde650679cf44763229075ae633bb67219cf0cf073dad52956b"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-manual-tests/0.1.0/vibe.toml"
+
+[[file]]
+path = "vibevm/vibedeps/flow-operating-modes/0.1.0/LICENSE.md"
+sha256 = "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-operating-modes/0.1.0/LICENSE.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-operating-modes/0.1.0/README.md"
+sha256 = "e88660056adadfd5e1fc65fb70326ef69a4758a460653a59c20c21d4ca240b1c"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-operating-modes/0.1.0/README.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-operating-modes/0.1.0/spec/boot/45-flow-operating-modes.md"
+sha256 = "c0913c09f2d93a5dfcc7b238e46ec1063fdbc5d51352bafd36f45578284f351a"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-operating-modes/0.1.0/spec/boot/45-flow-operating-modes.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md"
+sha256 = "850a99e273e3a6ebeacf8e48863d96d3e7714936328d2458b342fadec059ab4c"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/mfbt-mode.md"
+sha256 = "501484c6d6c50bb79e7bc7cf6da27d16d5e0606c1e685107d67fadca185a83d0"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/mfbt-mode.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/writing-a-codeword.md"
+sha256 = "4909375a5c01aaca06586b3ee09eec4878b87ab7a0e03c4b783e9728b82d5e1d"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/writing-a-codeword.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-operating-modes/0.1.0/vibe.toml"
+sha256 = "73e2e420ed8515cee322bc5f282b38987b54ef310aea0d3b4e1f2f7f956ae6f7"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-operating-modes/0.1.0/vibe.toml"
+
+[[file]]
+path = "vibevm/vibedeps/flow-qualified-naming/0.1.0/LICENSE.md"
+sha256 = "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-qualified-naming/0.1.0/LICENSE.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-qualified-naming/0.1.0/README.md"
+sha256 = "85403f7f4f3c7821b30bafbac2b534299408f6e524a60a143b6565269d9db727"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-qualified-naming/0.1.0/README.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-qualified-naming/0.1.0/spec/boot/67-flow-qualified-naming.md"
+sha256 = "a070b23e544be31ffcf44e6419984a714412e036f9e87eaa8804dceae0825f0c"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-qualified-naming/0.1.0/spec/boot/67-flow-qualified-naming.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-qualified-naming/0.1.0/spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md"
+sha256 = "9703849e83b9b774e4fc02d10276639575a22887e0bcd6f48c470edf91b46ac2"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-qualified-naming/0.1.0/spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-qualified-naming/0.1.0/spec/flows/qualified-naming/naming-forks.md"
+sha256 = "3cd3c84d77ca27acaf3d5a4dcdcf7bd2e455ae4fbd44f851f36881459fa2d164"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-qualified-naming/0.1.0/spec/flows/qualified-naming/naming-forks.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-qualified-naming/0.1.0/spec/flows/qualified-naming/ref-grammar.md"
+sha256 = "d432e66fae12d3e4c5bd45f6f7e2590f10e3d761df75c8c82fa6486a13296f06"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-qualified-naming/0.1.0/spec/flows/qualified-naming/ref-grammar.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-qualified-naming/0.1.0/vibe.toml"
+sha256 = "1313450c0ba66ecf90c10a66f93290312c6cde90d0becc9e76f307cdae3cbcad"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-qualified-naming/0.1.0/vibe.toml"
+
+[[file]]
+path = "vibevm/vibedeps/flow-redbook/0.2.0/LICENSE.md"
+sha256 = "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-redbook/0.2.0/LICENSE.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-redbook/0.2.0/README.md"
+sha256 = "0b06c07afc8685d210132cc795c8b2a15de0504776f44c0e86de4f44196f3cdb"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-redbook/0.2.0/README.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-redbook/0.2.0/spec/book/README.md"
+sha256 = "5adb8e5bdf1c9249657a7ca9ef1f0f1ac40b4b0b7925fba13792e038ef36ffef"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-redbook/0.2.0/spec/book/README.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-redbook/0.2.0/spec/book/ru/chapter-1-two-process-model.md"
+sha256 = "8b4406d7112144d3b75a9e436343abdb8ffd51b8e97fdd68374318e2b92138b8"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-redbook/0.2.0/spec/book/ru/chapter-1-two-process-model.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-redbook/0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md"
+sha256 = "5a6df14aa0efad64c755c3f4c0f6e6725facd3bb0390de4a6a27a432269be4bc"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-redbook/0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-redbook/0.2.0/spec/book/ru/chapter-3-memory-individual.md"
+sha256 = "5c4bf31b63b4e52277362af31f2c9882097d50864bd92959af0dfdf13835cf8a"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-redbook/0.2.0/spec/book/ru/chapter-3-memory-individual.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-redbook/0.2.0/spec/boot/03-flow-redbook.md"
+sha256 = "205a4c37d2ca2de2f7230241ffd8177de63263478cca1ddc28a7d24d402ee4b0"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-redbook/0.2.0/spec/boot/03-flow-redbook.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-redbook/0.2.0/vibe.toml"
+sha256 = "ec67a88c84da621a895ce59bf23b19e37d403af4d105f2a016874e49b810a03f"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-redbook/0.2.0/vibe.toml"
+
+[[file]]
+path = "vibevm/vibedeps/flow-secrets-hygiene/0.1.0/LICENSE.md"
+sha256 = "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-secrets-hygiene/0.1.0/LICENSE.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-secrets-hygiene/0.1.0/README.md"
+sha256 = "1f8a8df1a723bcadbbe59c1b172e462388691ab2b3b5eb55b0d0edf86c18108e"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-secrets-hygiene/0.1.0/README.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-secrets-hygiene/0.1.0/spec/boot/57-flow-secrets-hygiene.md"
+sha256 = "5fc82f3d2feb3464604cb1066d7d1cf0f5deb3660f33d5a640512c80463a9fc5"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-secrets-hygiene/0.1.0/spec/boot/57-flow-secrets-hygiene.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-secrets-hygiene/0.1.0/spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.md"
+sha256 = "678a9eb271ab184367dbff2bccf7d70937bdc8485e8608ad9565c1e36288db28"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-secrets-hygiene/0.1.0/spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-secrets-hygiene/0.1.0/spec/flows/secrets-hygiene/scope-discipline.md"
+sha256 = "e62b3328978c6dc56f0f41423fe6f69a21ab5b0eddaff57b91f2c43887d06e9e"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-secrets-hygiene/0.1.0/spec/flows/secrets-hygiene/scope-discipline.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-secrets-hygiene/0.1.0/spec/flows/secrets-hygiene/third-party-code-consent.md"
+sha256 = "b5500251c5e7fb4d67f6821d223ec339e545c0b5eed3f85b9e79ca80af09266b"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-secrets-hygiene/0.1.0/spec/flows/secrets-hygiene/third-party-code-consent.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-secrets-hygiene/0.1.0/vibe.toml"
+sha256 = "50b8858f2e261fe278f3d6d0187450490ebd0292f92a3dd41b815d32ff70d479"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-secrets-hygiene/0.1.0/vibe.toml"
+
+[[file]]
+path = "vibevm/vibedeps/flow-source-mirrors/0.1.0/LICENSE.md"
+sha256 = "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-source-mirrors/0.1.0/LICENSE.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-source-mirrors/0.1.0/README.md"
+sha256 = "b64b5b414d9e3689f57857f64a3f01cc1c537c600b31ef8cc7a1b71ddf6fa55a"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-source-mirrors/0.1.0/README.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-source-mirrors/0.1.0/spec/boot/62-flow-source-mirrors.md"
+sha256 = "498e8d546527552ab38b5ab846c3178ae472db0a44837684e51ed6558aa3c555"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-source-mirrors/0.1.0/spec/boot/62-flow-source-mirrors.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md"
+sha256 = "6e1f6272a8d0994872f433e66b6f133c04d02621b0322fcee7c3de72843dce17"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/daily-loop.md"
+sha256 = "b3cd0d195fb79a1c8ceb33be3d8afcedb3950d229de122ae446c0129611072bb"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/daily-loop.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/fanout-mechanics.md"
+sha256 = "f0c79a218a7b4800a1f1ab1839d0517b4484121a68ff0014b1489b8b207b87b5"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/fanout-mechanics.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-source-mirrors/0.1.0/vibe.toml"
+sha256 = "7a8579db3f9bbb765e63175c751e4d16919bc2eb3c9a981a18ee918cdc6083f0"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-source-mirrors/0.1.0/vibe.toml"
+
+[[file]]
+path = "vibevm/vibedeps/flow-spec-genres/0.1.0/LICENSE.md"
+sha256 = "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-spec-genres/0.1.0/LICENSE.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-spec-genres/0.1.0/README.md"
+sha256 = "e6845eaeeab79ed77224b4de55d88ccae0bda2987460f378dbc49119afb4123b"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-spec-genres/0.1.0/README.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-spec-genres/0.1.0/spec/boot/17-flow-spec-genres.md"
+sha256 = "00619c9794030a27b362af33a19d8bd19b1a33be02f81061eb2251e5550a482f"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-spec-genres/0.1.0/spec/boot/17-flow-spec-genres.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-spec-genres/0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md"
+sha256 = "d0ab7218ca40acb2958efc8152c89a399c3fedf4030dea9885676c4aaaaac942"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-spec-genres/0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-spec-genres/0.1.0/spec/flows/spec-genres/design-docs.md"
+sha256 = "38ee602297b392eb3fa410511e61defa48666eb6c7fc58db552e777fcc8a8920"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-spec-genres/0.1.0/spec/flows/spec-genres/design-docs.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-spec-genres/0.1.0/spec/flows/spec-genres/when-to-write-what.md"
+sha256 = "3fbf082faca8ba3bacee6c7efb75f05e7404e91f7d6021a963f43af24cdaf61a"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-spec-genres/0.1.0/spec/flows/spec-genres/when-to-write-what.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-spec-genres/0.1.0/vibe.toml"
+sha256 = "bed87be9939f34b7117a12a6cc19ababfd5c582668ab8ea3b85c32ada7f744aa"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-spec-genres/0.1.0/vibe.toml"
+
+[[file]]
+path = "vibevm/vibedeps/flow-sync-from-code/0.1.0/LICENSE"
+sha256 = "7b05e254512285b6a4c33fa97a9b8a4751ff8bf674da7189420f066ef7b9672b"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-sync-from-code/0.1.0/LICENSE"
+
+[[file]]
+path = "vibevm/vibedeps/flow-sync-from-code/0.1.0/README.md"
+sha256 = "e7e15a042deecbdc83a6a09dbef6687ba9c56ee532616f8cbf8bbfbfafeeaa8a"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-sync-from-code/0.1.0/README.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-sync-from-code/0.1.0/boot/20-flow-sync-from-code.md"
+sha256 = "dc727d851c9aa69154c75f2cd60c2c3ee0845fe18367eb5ee153177f5ac20bac"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-sync-from-code/0.1.0/boot/20-flow-sync-from-code.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-sync-from-code/0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md"
+sha256 = "53927e2217006aa4d450fb8e05cb70a2fc46f8d4399716496abecbac1702ef4c"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-sync-from-code/0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-sync-from-code/0.1.0/spec/flows/sync-from-code/review-workflow.md"
+sha256 = "6088ae3917a7187d607fd15747af4680a3af1e0f6ca78b250aec4577a99d09dd"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-sync-from-code/0.1.0/spec/flows/sync-from-code/review-workflow.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-sync-from-code/0.1.0/spec/flows/sync-from-code/when-to-apply.md"
+sha256 = "b4306e80742a4e06385768c54cb4edc7d4b125d693b58bd81d475ffa6e4fee83"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-sync-from-code/0.1.0/spec/flows/sync-from-code/when-to-apply.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-sync-from-code/0.1.0/vibe.toml"
+sha256 = "b485fa90a7a5252248b7a8df3058762fc576c264520493ed2ea90fa19e5d3292"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-sync-from-code/0.1.0/vibe.toml"
+
+[[file]]
+path = "vibevm/vibedeps/flow-tool-design-lessons/0.1.0/LICENSE.md"
+sha256 = "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-tool-design-lessons/0.1.0/LICENSE.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-tool-design-lessons/0.1.0/README.md"
+sha256 = "bc3200ac49ccf9604993ae25368eca84e171db829f92c3526a8376cb9f2bd2c9"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-tool-design-lessons/0.1.0/README.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-tool-design-lessons/0.1.0/spec/boot/70-flow-tool-design-lessons.md"
+sha256 = "915af16967e4fef88c3996f436dd136b5f16483585a32afa8bbd3ffc3d178b30"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-tool-design-lessons/0.1.0/spec/boot/70-flow-tool-design-lessons.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-tool-design-lessons/0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md"
+sha256 = "108e78b1ab2a4311fd0486d01c4945051f708b88a6d06f78784183223d172b51"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-tool-design-lessons/0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-tool-design-lessons/0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md"
+sha256 = "18cfefc18ba763ef71fc36372b284dfdda0a30939322159d11615b380087245e"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-tool-design-lessons/0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-tool-design-lessons/0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md"
+sha256 = "2b8609927c69ba21243316a492fb7b045c185f6258ad88f159b4ac5362f03748"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-tool-design-lessons/0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-tool-design-lessons/0.1.0/vibe.toml"
+sha256 = "22122cd23c8eb5387a59513c0070c9d845e110feb6311031051e981cff9b69ad"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-tool-design-lessons/0.1.0/vibe.toml"
+
+[[file]]
+path = "vibevm/vibedeps/flow-two-process-model/0.1.0/LICENSE.md"
+sha256 = "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-two-process-model/0.1.0/LICENSE.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-two-process-model/0.1.0/README.md"
+sha256 = "364e7702aac2e1f935c000f675c19eb79b29496fd8b468107e43c6c36bfea3fd"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-two-process-model/0.1.0/README.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-two-process-model/0.1.0/spec/boot/05-flow-two-process-model.md"
+sha256 = "a74985717dc6f2bfcc351525f502e27dcf4da731d28b2ae9339d64a0ebc35a02"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-two-process-model/0.1.0/spec/boot/05-flow-two-process-model.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-two-process-model/0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md"
+sha256 = "3f9ebeef4556c1f0388d67ca2cc8b4969e182d7f7611b7af3879655d05fbfe99"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-two-process-model/0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-two-process-model/0.1.0/spec/flows/two-process-model/cognitive-load-split.md"
+sha256 = "9fae56ef284f33dce7e5caf6b91d43fcadeb08e4e2b2494521d09910e1d07538"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-two-process-model/0.1.0/spec/flows/two-process-model/cognitive-load-split.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-two-process-model/0.1.0/spec/flows/two-process-model/files-as-ipc.md"
+sha256 = "d4812fda11f9ed7d7fdd0d4209c8f609deaa8b8dce1ef8edf2da647831d61dcc"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-two-process-model/0.1.0/spec/flows/two-process-model/files-as-ipc.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-two-process-model/0.1.0/vibe.toml"
+sha256 = "d11dcd3c9b8365756b68fd830ff9dc3535aeb3a2320fa0949286ead5ef698577"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-two-process-model/0.1.0/vibe.toml"
+
+[[file]]
+path = "vibevm/vibedeps/flow-wal/0.2.0/LICENSE.md"
+sha256 = "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-wal/0.2.0/LICENSE.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-wal/0.2.0/README.md"
+sha256 = "8d1886b2c5a6131429b29da9863ecb8d427c05f81b29eaf2dbae95d6484fa982"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-wal/0.2.0/README.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-wal/0.2.0/spec/boot/10-flow-wal.md"
+sha256 = "835adcb504edafffd260a42ae35eef8a0ba5392b9ac2fe630b85d605234158e6"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-wal/0.2.0/spec/boot/10-flow-wal.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-wal/0.2.0/spec/flows/wal/WAL-PROTOCOL.md"
+sha256 = "b367679ce2a50e72f97e4ca57601824401becc444d47fcdbb1bc24f2c93ed666"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-wal/0.2.0/spec/flows/wal/WAL-PROTOCOL.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-wal/0.2.0/spec/flows/wal/cold-resume.md"
+sha256 = "03af081296f32de853ef36f72affd17669b4a4d924eb804e51201f8bd7d060b9"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-wal/0.2.0/spec/flows/wal/cold-resume.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-wal/0.2.0/spec/flows/wal/morning-routine.md"
+sha256 = "c9e034606031160a317c50398f6e73517e02dc1ea58ed305c7c86d1b62f96830"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-wal/0.2.0/spec/flows/wal/morning-routine.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-wal/0.2.0/spec/flows/wal/session-end-hook.md"
+sha256 = "024319aff31a133836778b26e947792916a90fbda09e00a2d109b176a67a54b7"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-wal/0.2.0/spec/flows/wal/session-end-hook.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-wal/0.2.0/spec/skills/wal-status/SKILL.md"
+sha256 = "e69dfea498662a07e8d2207be171b793e7192f452fde7a06b6fac7f72f829ef5"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-wal/0.2.0/spec/skills/wal-status/SKILL.md"
+
+[[file]]
+path = "vibevm/vibedeps/flow-wal/0.2.0/vibe.toml"
+sha256 = "856f802e306e72445552761f2b9259f1ef9103dfc87d0b3d60c1113373dd0908"
+disposition = "copied"
+source = "vibevm/vibedeps/flow-wal/0.2.0/vibe.toml"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/Cargo.lock"
+sha256 = "0973fac37780adc3ef31b6ea2ed6f3154a5aab3cbb0524c722ffe2d49822d0be"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/Cargo.lock"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/Cargo.toml"
+sha256 = "165c78063260c6746c96ab42490ff8a650138fdb3409bf2dea08bfac4a9193ea"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/Cargo.toml"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/LICENSE.md"
+sha256 = "52f56599723cd1474e0a588c73596650a592cc71577259aaeddc1740d7c0e1ae"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/LICENSE.md"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/README.md"
+sha256 = "d8ad3242a276385e571b462512629bb9d01d9fb5271187ca91d98c8b0f195421"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/README.md"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/Cargo.toml"
+sha256 = "c51487d34ec0bf42cb79197bc1bc201fc55fada71a2914f6d5a6a84bbc56070e"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/Cargo.toml"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/src/codemod.rs"
+sha256 = "43c2df6701c0cae5bda0c94531a53ac1e9d4bbcc71c6fa6d9a883dd78d525fbe"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/src/codemod.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/src/fast_loop.rs"
+sha256 = "111b938cfd01952f79db70bbc844b23fafca907fbab1657cbfbb081347e24758"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/src/fast_loop.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/src/floor.rs"
+sha256 = "a9e8cade373fcc0e7b74d2b92dc6261d87f09c521b11f89ef311305ba7d961d1"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/src/floor.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/src/health.rs"
+sha256 = "d9b804d7d4ec37723fda4d75de62c540a77065aef5417cead0b149972126d064"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/src/health.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/src/init.rs"
+sha256 = "9c64e80a13be1f391ae60085b67f893928c2c7c0cede630ce39cf9d1bf0fb26b"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/src/init.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/src/ledger.rs"
+sha256 = "75f056e909509bcf93f1956d26a3f6742111fa3a8e6792040c6824e0e3de1499"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/src/ledger.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/src/lib.rs"
+sha256 = "cd93874327fadcd69188b8ea334ca273ccbfb318322cd089226f367a05732ae3"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/src/lib.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/src/main.rs"
+sha256 = "4031732f5afe16fd42044b15acc20bbb18c03b2e9f09be483a0ee00a3b09389c"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/src/main.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/src/test_gate.rs"
+sha256 = "8570b782e0f1d138f0941e84ce2428e9d6e4f12801a64e199eeb4c2b66a30468"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/src/test_gate.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/src/trace.rs"
+sha256 = "90f45910b597a8a1b5e88a26133a6d1af4034daf9dbea9c0c4770c071ba89007"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/src/trace.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/src/tripwire.rs"
+sha256 = "cf94922a9108b7aa2525dee515912e02277a48e8a3d89a93677bf16995e5bf6f"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/src/tripwire.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/tests/fresh_project.rs"
+sha256 = "e728164f4e5aef86b32a885aefe29a60d9c81795f3aa9ee1d30272e0a631a6bf"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/tests/fresh_project.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-conform-frontend/Cargo.toml"
+sha256 = "a6f438eba983b2a68435f54654a7e9474b8e89faed51f0c3800540c05d767043"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-conform-frontend/Cargo.toml"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-conform-frontend/src/lib.rs"
+sha256 = "05bde09bfcbc04623beb981930ed0f47cc57732d4d494b8a339799b7846dfa01"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-conform-frontend/src/lib.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-conform-frontend/src/lib/tests.rs"
+sha256 = "dc00c348b34b2d6cd00946e0e0aa03fbfff4d0c8ca57f00a05c8b3bc568533c4"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-conform-frontend/src/lib/tests.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-conform-frontend/tests/engine.rs"
+sha256 = "8aed37e31f866179c80a415007fcfa89766c11a713e693d8e5c6f3d97111b88d"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-conform-frontend/tests/engine.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-conform/Cargo.toml"
+sha256 = "1f4c957a99e2b3e65d7bef8fcc14cfeeb2dfe514d92e2efb5425ecec0a0f591f"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-conform/Cargo.toml"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-conform/src/lib.rs"
+sha256 = "6988d416dca0751a4a8c1d5b3c770e69402b9b48b5c0ec57b98f5789b6a62922"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-conform/src/lib.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-conform/src/main.rs"
+sha256 = "45c8c48368658a7612ba33e10c39b58c06aa97731dc8d8843a0dd0472ec85c12"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-conform/src/main.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-conform/tests/catches_violations.rs"
+sha256 = "a0f9e4c26b8ca6270f60cf1ca2ce47d7de344a158a53e9766433dfe94d891ce5"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-conform/tests/catches_violations.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-mcp/Cargo.toml"
+sha256 = "7c0fc5d753a355df0fc70ce08d297faa961eb93a22a8935e1eb05b92e7edd048"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-mcp/Cargo.toml"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-mcp/src/lib.rs"
+sha256 = "074f06278c5e3d24352b03fdfa7d6045156fce46f22ae9cd164c4694cc01d91a"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-mcp/src/lib.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-mcp/src/main.rs"
+sha256 = "2aa20909bd93372d0cd9002fb62fab79b994be6b22f09aeac12652946b374fbc"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-mcp/src/main.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-mcp/src/tools_discipline.rs"
+sha256 = "5848174e76bf2eb2a3e40ae13207fdf6abb2b77908c5dd140d5d0ab668f742a8"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-mcp/src/tools_discipline.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-mcp/src/tools_tcg.rs"
+sha256 = "e27adbad38fdb0ac46b0fa04b36544e9ca403c5b072482562aec7797fa731255"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-mcp/src/tools_tcg.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-mcp/tests/common/mod.rs"
+sha256 = "f9d3345b729721b591bc7f05dd32c4b6524587d3c74f678b7a6f0431029ae71e"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-mcp/tests/common/mod.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-mcp/tests/live_chain.rs"
+sha256 = "ecef873ed4ee86bdaded8fd83eebb71e999f0e2dcf72f4db020b53773278db53"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-mcp/tests/live_chain.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-mcp/tests/server_replay.rs"
+sha256 = "1261f5bc539c953b22195e236ad2e3dac93470d15ad721f5125f406b94dc6ee8"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-mcp/tests/server_replay.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-specmap/Cargo.toml"
+sha256 = "78fa92c42754a447d0e3c37ffdb80cbfb3df3930bd9c8ab1f7a0cef90c7d1546"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-specmap/Cargo.toml"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-specmap/src/lib.rs"
+sha256 = "3867bdea9fcecb93808f9ed5c558e645ea1f3eb9535f28b012672cce1281144a"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-specmap/src/lib.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-specmap/src/main.rs"
+sha256 = "eccc1d1718f065c641c729d26a66cf547816b5108d5042c586d1e9c3d5fbddbb"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-specmap/src/main.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg-bridge/Cargo.toml"
+sha256 = "1835cabf9bb81ccf8e9079d07152d39a2f82a7d6157218c0293589321e3286e3"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg-bridge/Cargo.toml"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg-bridge/src/client.rs"
+sha256 = "e16a7fb81e343e4f3ac40e85a9920bd26fbbe28359af94a4db17fbba3e2042c3"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg-bridge/src/client.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg-bridge/src/client/tests.rs"
+sha256 = "c59a422e9ae08cc8d5d125418e7bbd5b7e43de6d4f734aa98d7797f7e291721d"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg-bridge/src/client/tests.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg-bridge/src/frame.rs"
+sha256 = "8417d3972c4629bf6d69b51df7afaf3647add3b9bb7e1d8683959b752720df79"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg-bridge/src/frame.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg-bridge/src/lib.rs"
+sha256 = "257c3ab146311aca1d5f6c43f1dd5b87d0670a4afbea26a7aa99d0e99faa8d67"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg-bridge/src/lib.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg-bridge/src/oracle.rs"
+sha256 = "b5aaa188b1a88d1a6b4cff267f9c78b6deb15d1030ed596fc064d79859b0ec0c"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg-bridge/src/oracle.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg-bridge/src/oracle/tests.rs"
+sha256 = "e323b7ce0337e58943299b1dfc734922133c992893e7e47988c79fee3f8e783d"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg-bridge/src/oracle/tests.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg-bridge/src/position.rs"
+sha256 = "be4279b769aedb4a27c078ff471e08c347a55f946b3f92881471013948e81145"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg-bridge/src/position.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg-bridge/tests/live_oracle.rs"
+sha256 = "a0c0a7ebd00258442fac6e9276e2f64e153c340cc3daa0c3c397960b16eb2246"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg-bridge/tests/live_oracle.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg/Cargo.toml"
+sha256 = "9d62b917f105583c3d5e681cf2282fd4121ca30e5a414f191eb1af4cceefb0f5"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg/Cargo.toml"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg/src/bench.rs"
+sha256 = "20c1287464d87a49ba3d023e3430cc29e0864d38b09d67aa1cb990dc64bce29c"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg/src/bench.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg/src/lib.rs"
+sha256 = "471c268dae385e5011048fa17cb2847061b48c9b226223ff82ddda220a65107d"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg/src/lib.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg/src/lib/tests.rs"
+sha256 = "1abf0cba6b8f8d5c81f5276177f3ed519533e565b97e449faf7a65bab5176c93"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg/src/lib/tests.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg/src/main.rs"
+sha256 = "4519ede82dd038d6959f50e30aeb606007f0765b966aa8b9b4231dc7dd936315"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg/src/main.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg/src/serve.rs"
+sha256 = "cd47fc8fa90a9e0cc6bbb65e242a8079775e4b9210e76c3cb3d343ae55d56059"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg/src/serve.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg/tests/finding_parity.rs"
+sha256 = "fbd1761f467fbb139d088a62f57dc832ce483f9c7c1f6756f92ea038ff6add18"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg/tests/finding_parity.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/Cargo.toml"
+sha256 = "8ee78c0aae56d3ab418fb26a44c8fd41ddfb747c91abf12ff9cef67c15b8b40a"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/Cargo.toml"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/baseline.rs"
+sha256 = "76074ff52e01712de118af7b91d0a5847fa89d5d0101e8394ebf628818d0cf54"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/baseline.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/config.rs"
+sha256 = "d0f139bded59dcb939a3abb4204c1248db6c5fe10e737e548c1e5dd582bc29b2"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/config.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/facts.rs"
+sha256 = "c616bc59bab5f7712985a6dd3a1e57f68540ea0cecaa391c6d65b9515b1b0ad8"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/facts.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/finding.rs"
+sha256 = "c657ed292a60bf05b7be76e1a0fb5162073adc903c1a1fc15781633d795c15a3"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/finding.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/lib.rs"
+sha256 = "d58c37015bb463f576f9bf9aad54fa0727a0453b1e36728fdfcf7e3bcf8bbf0e"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/lib.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/rules/budget.rs"
+sha256 = "6d000a0be4030344edffd6d63ad90709ab6f4e86aedade8ee7520c169ac72ed5"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/rules/budget.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/rules/diagnostics.rs"
+sha256 = "858876c1252dbf1cede7024a8c96b044bcfaaa9d35cb6db3d45d0dc06be54fff"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/rules/diagnostics.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/rules/mod.rs"
+sha256 = "36f82bc351fab088cb92bf5a73ba51e1142f48d234f5fc64155c2f2b392d8232"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/rules/mod.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/rules/structure.rs"
+sha256 = "dba5bac9240d5e0ca38849a31b3e5d6da9bef6a71af2b83a80e8e1fcaed9ede6"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/rules/structure.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/rules/tests.rs"
+sha256 = "7a30197a5a8f5919fae74454df90244444dc6a285033bf40d7848a1281f18e03"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/rules/tests.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/rules/typescript.rs"
+sha256 = "608c60fcd79ea856d755d716627cea5f967648164a8556c170145def81883e32"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/rules/typescript.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/sarif.rs"
+sha256 = "b5b13057097fe8dbc679be6bc3c237c31760c3672ea7ae1a3228d14bfecae56c"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/sarif.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/store.rs"
+sha256 = "ca58f70d2bae33f62e244348707c3b4e07a67784a18474da77877c36ef65b17a"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/store.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-mcp/Cargo.toml"
+sha256 = "615e496fcb3b61953351ed3842cd21594d50d03f4dc85f355c8c0d7dedcf2d87"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-mcp/Cargo.toml"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-mcp/src/capture.rs"
+sha256 = "5e6b8221b12fbf817451f68df18cf23e43c456e4d5c687adecbd3f7ad8a2e444"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-mcp/src/capture.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-mcp/src/error.rs"
+sha256 = "e743a53b2f773e80c595a8e5c356ee2315314ebdfb439364a5cdf26575c2ca7c"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-mcp/src/error.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-mcp/src/lib.rs"
+sha256 = "3d4f7972529971a6d3a1aa4d33d11988468ed6ffef529bfc322bf0255a11af36"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-mcp/src/lib.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-mcp/src/server.rs"
+sha256 = "896ee8cdd1b1c4b64537eae7831ade4e306b495afa76198dc810bee8e822621f"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-mcp/src/server.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-mcp/src/toolset.rs"
+sha256 = "a0c1ccf1a89c58aeb4a1386682ba35196623a8f90fb01805290f1712a6a190fa"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-mcp/src/toolset.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-mcp/src/wire.rs"
+sha256 = "8a2a13245345c642c8f2358f13c4ebafd5be2738ed456d0c999ffd5dc2634af8"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-mcp/src/wire.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/Cargo.toml"
+sha256 = "a317b906114e5a2e9297ea7e163cc9223157d9970cc23e5ef0d8719172d7d9c3"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/Cargo.toml"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/config.rs"
+sha256 = "d2ab8cfb3e37943a425257ccc0de4e7ef7fd0e0dfc6973dc1da59dbe92af6796"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/config.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/explain.rs"
+sha256 = "fc50f123dfdc178706aa228dd28f46751df57566fc890d0c47ef8f07381700d4"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/explain.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/generated/mod.rs"
+sha256 = "583d8da776cd89a1d789b21f0101a6eb9db4786798f54e56db0991ce88025a18"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/generated/mod.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/generated/specmap/mod.rs"
+sha256 = "1bc4d4d8828c7859d5b379627bf5a7cccfd883ac3f5edf36e6c17a18263dd446"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/generated/specmap/mod.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/index.rs"
+sha256 = "6111b9e349ab125a9c71737e22f490d30333ddd7bfd59fbfbf21fe1789a777fc"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/index.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/ledger.rs"
+sha256 = "b6f43d2bed0cebbb113636eca4592dfeeb4c30de98f421e04b15671faaa42105"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/ledger.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/lib.rs"
+sha256 = "ebd0a7de1f86d044ff0793ea22919199f0ed944c6164c288a9879557f2c5ad48"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/lib.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/mdspec.rs"
+sha256 = "8b7bfb37c7ba6234f091834f16a8e29b64cdd7fe1babdf22823a9215756f0179"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/mdspec.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/ratchet.rs"
+sha256 = "fd61b8d4c08d76ad40e2cb447ad6b0b619586225c9c4c6873603b5624a984459"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/ratchet.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/rscan.rs"
+sha256 = "b5c8839f3dd943664789fc1ca72d97091a6cdaae3732e2ba1f60be28a055c7d6"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/rscan.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/scanner.rs"
+sha256 = "0fef5c76a717bae1315688555edd4ad7a459bc0a99555f12dae9bd9f47b7c4ce"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/scanner.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/testgate.rs"
+sha256 = "42369fad2c108d86ddbb6e8ebf2cff3d824c7e989b5da90874678c0b7ab3a599"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/testgate.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/tripwire.rs"
+sha256 = "452b7e36e419c7fcbcfd2a69b49300fa00c8a8ff8c74242f8e0e9ab077a7847d"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/tripwire.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmark-grammar/Cargo.toml"
+sha256 = "d13d5bc78493be32a8990b2a1fc8f6f83e8fb2e2c2a99494255675c3b55f2e05"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmark-grammar/Cargo.toml"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmark-grammar/src/lib.rs"
+sha256 = "b3d8e927a68ea8231dd4a5442f12de3912c5c16d7b48cd416a57549c16993663"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmark-grammar/src/lib.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmark-grammar/src/lib/tests.rs"
+sha256 = "3b43f969443fdf7b2046710f5b83d5ca767da3e97e6b032329991a3a3cff03c0"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmark-grammar/src/lib/tests.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmark/Cargo.toml"
+sha256 = "17444834b7122cca8ef8dcb0102b343b02817c4ace716d6084c84460fa7b3b17"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmark/Cargo.toml"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmark/src/lib.rs"
+sha256 = "3f6a61e033bac7995928523403766273fa65dd83a9212609fb71084053a0ebd0"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmark/src/lib.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmark/tests/usage.rs"
+sha256 = "5b240256864cf06f2b53b4d899bb44df672d8c6c950438b8d249eaaa81e7c387"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmark/tests/usage.rs"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/spec/tools/discipline-mcp-rust.md"
+sha256 = "d2d32f59c6ca0396f8bf76ac14943a698d4e8f07c66c2fa6f7ad772daf0c6f58"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/spec/tools/discipline-mcp-rust.md"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/specmap.toml"
+sha256 = "69eb17d1c44c0cba975e1829fdbc2098386dd500d6e53265552e51cf8836bea2"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/specmap.toml"
+
+[[file]]
+path = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/vibe.toml"
+sha256 = "41c6af5c7e974f7a82936947f84946e576258dbcad347650ae1b9b3d089ba186"
+disposition = "copied"
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/vibe.toml"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/Cargo.lock"
+sha256 = "526b10d0bbae5978e9694a9b257ee16fa01dca96c21fd488db444ac1a9f3e11b"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/Cargo.lock"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/Cargo.toml"
+sha256 = "2a88c015a19d96aa76bfe26bc70f02848202e27c2b73fb05de0e77d430224b4c"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/Cargo.toml"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/LICENSE.md"
+sha256 = "52f56599723cd1474e0a588c73596650a592cc71577259aaeddc1740d7c0e1ae"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/LICENSE.md"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/README.md"
+sha256 = "821ef8406114d0166946a7db154857ac649451361fa38d10458787db39cd7cce"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/README.md"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/Cargo.toml"
+sha256 = "c51487d34ec0bf42cb79197bc1bc201fc55fada71a2914f6d5a6a84bbc56070e"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/Cargo.toml"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/src/codemod.rs"
+sha256 = "43c2df6701c0cae5bda0c94531a53ac1e9d4bbcc71c6fa6d9a883dd78d525fbe"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/src/codemod.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/src/fast_loop.rs"
+sha256 = "111b938cfd01952f79db70bbc844b23fafca907fbab1657cbfbb081347e24758"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/src/fast_loop.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/src/floor.rs"
+sha256 = "a9e8cade373fcc0e7b74d2b92dc6261d87f09c521b11f89ef311305ba7d961d1"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/src/floor.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/src/health.rs"
+sha256 = "d9b804d7d4ec37723fda4d75de62c540a77065aef5417cead0b149972126d064"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/src/health.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/src/init.rs"
+sha256 = "9c64e80a13be1f391ae60085b67f893928c2c7c0cede630ce39cf9d1bf0fb26b"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/src/init.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/src/ledger.rs"
+sha256 = "75f056e909509bcf93f1956d26a3f6742111fa3a8e6792040c6824e0e3de1499"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/src/ledger.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/src/lib.rs"
+sha256 = "cd93874327fadcd69188b8ea334ca273ccbfb318322cd089226f367a05732ae3"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/src/lib.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/src/main.rs"
+sha256 = "4031732f5afe16fd42044b15acc20bbb18c03b2e9f09be483a0ee00a3b09389c"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/src/main.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/src/test_gate.rs"
+sha256 = "8570b782e0f1d138f0941e84ce2428e9d6e4f12801a64e199eeb4c2b66a30468"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/src/test_gate.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/src/trace.rs"
+sha256 = "90f45910b597a8a1b5e88a26133a6d1af4034daf9dbea9c0c4770c071ba89007"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/src/trace.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/src/tripwire.rs"
+sha256 = "cf94922a9108b7aa2525dee515912e02277a48e8a3d89a93677bf16995e5bf6f"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/src/tripwire.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/tests/fresh_project.rs"
+sha256 = "e728164f4e5aef86b32a885aefe29a60d9c81795f3aa9ee1d30272e0a631a6bf"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/tests/fresh_project.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-conform-frontend/Cargo.toml"
+sha256 = "a6f438eba983b2a68435f54654a7e9474b8e89faed51f0c3800540c05d767043"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-conform-frontend/Cargo.toml"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-conform-frontend/src/lib.rs"
+sha256 = "05bde09bfcbc04623beb981930ed0f47cc57732d4d494b8a339799b7846dfa01"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-conform-frontend/src/lib.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-conform-frontend/src/lib/tests.rs"
+sha256 = "dc00c348b34b2d6cd00946e0e0aa03fbfff4d0c8ca57f00a05c8b3bc568533c4"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-conform-frontend/src/lib/tests.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-conform-frontend/tests/engine.rs"
+sha256 = "8aed37e31f866179c80a415007fcfa89766c11a713e693d8e5c6f3d97111b88d"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-conform-frontend/tests/engine.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-conform/Cargo.toml"
+sha256 = "1f4c957a99e2b3e65d7bef8fcc14cfeeb2dfe514d92e2efb5425ecec0a0f591f"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-conform/Cargo.toml"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-conform/src/lib.rs"
+sha256 = "6988d416dca0751a4a8c1d5b3c770e69402b9b48b5c0ec57b98f5789b6a62922"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-conform/src/lib.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-conform/src/main.rs"
+sha256 = "45c8c48368658a7612ba33e10c39b58c06aa97731dc8d8843a0dd0472ec85c12"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-conform/src/main.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-conform/tests/catches_violations.rs"
+sha256 = "a0f9e4c26b8ca6270f60cf1ca2ce47d7de344a158a53e9766433dfe94d891ce5"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-conform/tests/catches_violations.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-env-audit/Cargo.toml"
+sha256 = "328774ef8fb756685c94c7232c7ea9dd7df22c3ee84e64e1df58897ee0d25654"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-env-audit/Cargo.toml"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-env-audit/src/lib.rs"
+sha256 = "850c2c74dfd44cd05725e9167b7832c20b3dd5d5f66d774eee052ba786bad58d"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-env-audit/src/lib.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-specmap/Cargo.toml"
+sha256 = "78fa92c42754a447d0e3c37ffdb80cbfb3df3930bd9c8ab1f7a0cef90c7d1546"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-specmap/Cargo.toml"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-specmap/src/lib.rs"
+sha256 = "3867bdea9fcecb93808f9ed5c558e645ea1f3eb9535f28b012672cce1281144a"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-specmap/src/lib.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-specmap/src/main.rs"
+sha256 = "eccc1d1718f065c641c729d26a66cf547816b5108d5042c586d1e9c3d5fbddbb"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-specmap/src/main.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg-bridge/Cargo.toml"
+sha256 = "1835cabf9bb81ccf8e9079d07152d39a2f82a7d6157218c0293589321e3286e3"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg-bridge/Cargo.toml"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg-bridge/src/client.rs"
+sha256 = "e16a7fb81e343e4f3ac40e85a9920bd26fbbe28359af94a4db17fbba3e2042c3"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg-bridge/src/client.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg-bridge/src/client/tests.rs"
+sha256 = "c59a422e9ae08cc8d5d125418e7bbd5b7e43de6d4f734aa98d7797f7e291721d"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg-bridge/src/client/tests.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg-bridge/src/frame.rs"
+sha256 = "8417d3972c4629bf6d69b51df7afaf3647add3b9bb7e1d8683959b752720df79"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg-bridge/src/frame.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg-bridge/src/lib.rs"
+sha256 = "257c3ab146311aca1d5f6c43f1dd5b87d0670a4afbea26a7aa99d0e99faa8d67"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg-bridge/src/lib.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg-bridge/src/oracle.rs"
+sha256 = "b5aaa188b1a88d1a6b4cff267f9c78b6deb15d1030ed596fc064d79859b0ec0c"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg-bridge/src/oracle.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg-bridge/src/oracle/tests.rs"
+sha256 = "e323b7ce0337e58943299b1dfc734922133c992893e7e47988c79fee3f8e783d"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg-bridge/src/oracle/tests.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg-bridge/src/position.rs"
+sha256 = "be4279b769aedb4a27c078ff471e08c347a55f946b3f92881471013948e81145"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg-bridge/src/position.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg-bridge/tests/live_oracle.rs"
+sha256 = "a0c0a7ebd00258442fac6e9276e2f64e153c340cc3daa0c3c397960b16eb2246"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg-bridge/tests/live_oracle.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg/Cargo.toml"
+sha256 = "9d62b917f105583c3d5e681cf2282fd4121ca30e5a414f191eb1af4cceefb0f5"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg/Cargo.toml"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg/src/bench.rs"
+sha256 = "20c1287464d87a49ba3d023e3430cc29e0864d38b09d67aa1cb990dc64bce29c"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg/src/bench.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg/src/lib.rs"
+sha256 = "471c268dae385e5011048fa17cb2847061b48c9b226223ff82ddda220a65107d"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg/src/lib.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg/src/lib/tests.rs"
+sha256 = "1abf0cba6b8f8d5c81f5276177f3ed519533e565b97e449faf7a65bab5176c93"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg/src/lib/tests.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg/src/main.rs"
+sha256 = "4519ede82dd038d6959f50e30aeb606007f0765b966aa8b9b4231dc7dd936315"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg/src/main.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg/src/serve.rs"
+sha256 = "cd47fc8fa90a9e0cc6bbb65e242a8079775e4b9210e76c3cb3d343ae55d56059"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg/src/serve.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg/tests/finding_parity.rs"
+sha256 = "fbd1761f467fbb139d088a62f57dc832ce483f9c7c1f6756f92ea038ff6add18"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg/tests/finding_parity.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/Cargo.toml"
+sha256 = "8ee78c0aae56d3ab418fb26a44c8fd41ddfb747c91abf12ff9cef67c15b8b40a"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/Cargo.toml"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/baseline.rs"
+sha256 = "76074ff52e01712de118af7b91d0a5847fa89d5d0101e8394ebf628818d0cf54"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/baseline.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/config.rs"
+sha256 = "d0f139bded59dcb939a3abb4204c1248db6c5fe10e737e548c1e5dd582bc29b2"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/config.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/facts.rs"
+sha256 = "c616bc59bab5f7712985a6dd3a1e57f68540ea0cecaa391c6d65b9515b1b0ad8"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/facts.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/finding.rs"
+sha256 = "c657ed292a60bf05b7be76e1a0fb5162073adc903c1a1fc15781633d795c15a3"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/finding.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/lib.rs"
+sha256 = "d58c37015bb463f576f9bf9aad54fa0727a0453b1e36728fdfcf7e3bcf8bbf0e"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/lib.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/rules/budget.rs"
+sha256 = "6d000a0be4030344edffd6d63ad90709ab6f4e86aedade8ee7520c169ac72ed5"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/rules/budget.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/rules/diagnostics.rs"
+sha256 = "858876c1252dbf1cede7024a8c96b044bcfaaa9d35cb6db3d45d0dc06be54fff"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/rules/diagnostics.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/rules/mod.rs"
+sha256 = "36f82bc351fab088cb92bf5a73ba51e1142f48d234f5fc64155c2f2b392d8232"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/rules/mod.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/rules/structure.rs"
+sha256 = "dba5bac9240d5e0ca38849a31b3e5d6da9bef6a71af2b83a80e8e1fcaed9ede6"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/rules/structure.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/rules/tests.rs"
+sha256 = "7a30197a5a8f5919fae74454df90244444dc6a285033bf40d7848a1281f18e03"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/rules/tests.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/rules/typescript.rs"
+sha256 = "608c60fcd79ea856d755d716627cea5f967648164a8556c170145def81883e32"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/rules/typescript.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/sarif.rs"
+sha256 = "b5b13057097fe8dbc679be6bc3c237c31760c3672ea7ae1a3228d14bfecae56c"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/sarif.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/store.rs"
+sha256 = "ca58f70d2bae33f62e244348707c3b4e07a67784a18474da77877c36ef65b17a"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/store.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/Cargo.toml"
+sha256 = "a317b906114e5a2e9297ea7e163cc9223157d9970cc23e5ef0d8719172d7d9c3"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/Cargo.toml"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/config.rs"
+sha256 = "d2ab8cfb3e37943a425257ccc0de4e7ef7fd0e0dfc6973dc1da59dbe92af6796"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/config.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/explain.rs"
+sha256 = "fc50f123dfdc178706aa228dd28f46751df57566fc890d0c47ef8f07381700d4"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/explain.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/generated/mod.rs"
+sha256 = "583d8da776cd89a1d789b21f0101a6eb9db4786798f54e56db0991ce88025a18"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/generated/mod.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/generated/specmap/mod.rs"
+sha256 = "1bc4d4d8828c7859d5b379627bf5a7cccfd883ac3f5edf36e6c17a18263dd446"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/generated/specmap/mod.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/index.rs"
+sha256 = "6111b9e349ab125a9c71737e22f490d30333ddd7bfd59fbfbf21fe1789a777fc"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/index.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/ledger.rs"
+sha256 = "b6f43d2bed0cebbb113636eca4592dfeeb4c30de98f421e04b15671faaa42105"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/ledger.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/lib.rs"
+sha256 = "ebd0a7de1f86d044ff0793ea22919199f0ed944c6164c288a9879557f2c5ad48"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/lib.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/mdspec.rs"
+sha256 = "8b7bfb37c7ba6234f091834f16a8e29b64cdd7fe1babdf22823a9215756f0179"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/mdspec.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/ratchet.rs"
+sha256 = "fd61b8d4c08d76ad40e2cb447ad6b0b619586225c9c4c6873603b5624a984459"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/ratchet.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/rscan.rs"
+sha256 = "b5c8839f3dd943664789fc1ca72d97091a6cdaae3732e2ba1f60be28a055c7d6"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/rscan.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/scanner.rs"
+sha256 = "0fef5c76a717bae1315688555edd4ad7a459bc0a99555f12dae9bd9f47b7c4ce"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/scanner.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/testgate.rs"
+sha256 = "42369fad2c108d86ddbb6e8ebf2cff3d824c7e989b5da90874678c0b7ab3a599"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/testgate.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/tripwire.rs"
+sha256 = "452b7e36e419c7fcbcfd2a69b49300fa00c8a8ff8c74242f8e0e9ab077a7847d"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/tripwire.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmark-grammar/Cargo.toml"
+sha256 = "d13d5bc78493be32a8990b2a1fc8f6f83e8fb2e2c2a99494255675c3b55f2e05"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmark-grammar/Cargo.toml"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmark-grammar/src/lib.rs"
+sha256 = "b3d8e927a68ea8231dd4a5442f12de3912c5c16d7b48cd416a57549c16993663"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmark-grammar/src/lib.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmark-grammar/src/lib/tests.rs"
+sha256 = "3b43f969443fdf7b2046710f5b83d5ca767da3e97e6b032329991a3a3cff03c0"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmark-grammar/src/lib/tests.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmark/Cargo.toml"
+sha256 = "17444834b7122cca8ef8dcb0102b343b02817c4ace716d6084c84460fa7b3b17"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmark/Cargo.toml"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmark/src/lib.rs"
+sha256 = "3f6a61e033bac7995928523403766273fa65dd83a9212609fb71084053a0ebd0"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmark/src/lib.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmark/tests/usage.rs"
+sha256 = "5b240256864cf06f2b53b4d899bb44df672d8c6c950438b8d249eaaa81e7c387"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmark/tests/usage.rs"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/boot/20-stack-rust-ai-native-lang.md"
+sha256 = "52a5857072fa47f9052638675cd3d6fb93f1bb32b0dd7822562eeefa6cbb1a18"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/boot/20-stack-rust-ai-native-lang.md"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/cards/INDEX.md"
+sha256 = "7861bea547599abfcf63d5cbfe65d3195ff616d503f2dedb518fff571aa5d9da"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/cards/INDEX.md"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/cards/scaffold-a-generators.md"
+sha256 = "1bfbe6590087d205eb92b0882fcbb1327b96077f14455821ba357fd1b0950ee2"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/cards/scaffold-a-generators.md"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/cards/scaffold-b-typed-builders.md"
+sha256 = "54432d46dad81ea965ce89438836bd2ea1c8f7b4bb908365de97faf0f93890c9"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/cards/scaffold-b-typed-builders.md"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/cards/scaffold-c-runnable-contracts.md"
+sha256 = "b0f09c947c40a7fdff923234899f963b197952e6335c973786f039a0683eb4cb"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/cards/scaffold-c-runnable-contracts.md"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/cards/scaffold-d-differential-oracle.md"
+sha256 = "9e35877aa22eb46a425050310252164e378f52986e917af771cd1d7ed3f5b988"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/cards/scaffold-d-differential-oracle.md"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/cards/scaffold-e-fast-loop.md"
+sha256 = "3327490af5999723b1aadd1d3db726ee8dbf2edbc5c4fa15017c741243579da9"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/cards/scaffold-e-fast-loop.md"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/cards/scaffold-f-structured-diagnostics.md"
+sha256 = "d9050315b2bd84af7281229093a2ffb8d8ce66b174f4bad71a0f5891208dd39d"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/cards/scaffold-f-structured-diagnostics.md"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/cards/scaffold-g-doctests.md"
+sha256 = "909c847ee439a7cf8d9f29ef0d0299fcbcb333d8b53f27150eafab10f4e1e531"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/cards/scaffold-g-doctests.md"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/cards/scaffold-h-simulators.md"
+sha256 = "e6950480611c1ccb91ac02eca15b48749e6db38b2203853b52a5d1b925fb669b"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/cards/scaffold-h-simulators.md"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/cards/scaffold-i-codemods.md"
+sha256 = "5d4d380aa9373232723093ab25db8e41958850c02649b2284e5b2bb5e549673a"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/cards/scaffold-i-codemods.md"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md"
+sha256 = "676845892fc3466c4f953b104968fec2f5928143ac166c5fca88eae655dd6ff9"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.md"
+sha256 = "c1dfa5a9e859d0ee0f65f6cd55734e9827784b9d3478f2f5c77293b4ea7185c3"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.md"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.md"
+sha256 = "dc0cf1b9ff5ac857ca298166fe6d0e75e407c68536c1291973167038e5f5aca4"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.md"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/rust/tools/rust-ai-native-tcg.md"
+sha256 = "3572273eb3d4132fe5ef1ba69e59cb9446588a29b59987a031af0f42b8a36732"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/rust/tools/rust-ai-native-tcg.md"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/rust/tools/vibe-agentic-tcg-rust.md"
+sha256 = "da2f0d7c040e895c72b30f46e6bf62da445812076218901a016bb859d5f4ba20"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/rust/tools/vibe-agentic-tcg-rust.md"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md"
+sha256 = "61a32d1f492df99638b1b8b176546c7ad7d4b0a6777ed0b6ef40ef023135325b"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/skills/rust-ai-native-terraform/SKILL.md"
+sha256 = "0128fa92ddc786f47f28f1a71e1b19dfb7a50bd06e76204d5c953cbf37a1cde4"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/skills/rust-ai-native-terraform/SKILL.md"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/specmap.toml"
+sha256 = "4930f369fe1afcf1ef0368a927682aaf2dcd8cd7bd94dfd91f2b8af67b85178b"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/specmap.toml"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/vibe.toml"
+sha256 = "c719208adee956d89b56838a570937a52235eb00ac4b6e4097a0ebe0a5b21848"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/vibe.toml"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native/0.7.0/README.md"
+sha256 = "93cdcfc2dc3f0e22a045947f54fa61d4caa622b1ceffcc1ad15f070e181e281c"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native/0.7.0/README.md"
+
+[[file]]
+path = "vibevm/vibedeps/stack-rust-ai-native/0.7.0/vibe.toml"
+sha256 = "ddf749556104789528d2e73f955b6970393d7396484d6bc4f7af56ec470178be"
+disposition = "copied"
+source = "vibevm/vibedeps/stack-rust-ai-native/0.7.0/vibe.toml"
+
+[[file]]
+path = "vibevm/vibespecs/boot/77-flow-delegation-rules.xml"
+sha256 = "d8ad3c3794ce02a84ae1a0509b06ccb597c269b09b03aaafd9a9badd0a2b4b9b"
+disposition = "copied"
+source = "vibevm/vibespecs/boot/77-flow-delegation-rules.xml"
+
+[[file]]
+path = "vibevm/vibespecs/boot/INDEX.xml"
+sha256 = "308cdf5d03f9e76310e08bac9fc3abe74587504ae36c596eb1ec2c05bf890932"
+disposition = "converted"
+source = "vibevm/vibespecs/boot/INDEX.md"
+
+[[file]]
+path = "vibevm/vibespecs/flows/delegation-rules/DECISION-MATRIX.xml"
+sha256 = "e384d8e7c5a19bb3491f8501b56ac50da1fc415b8b1ff02847aa411e1c6d35dd"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/delegation-rules/DECISION-MATRIX.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/delegation-rules/playbooks/_template.xml"
+sha256 = "4ea0625cb65039c977e726768f7afa92ad9851dde51eacbf3edefa0c5e12c711"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/delegation-rules/playbooks/_template.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/delegation-rules/playbooks/glm-5-turbo.xml"
+sha256 = "d610fe52f41bdf1abada797c3b2f16215aec731cd3721a50c6ab843ad077a98f"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/delegation-rules/playbooks/glm-5-turbo.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/delegation-rules/playbooks/glm-5.2.xml"
+sha256 = "9b7b71c4900e3ea5eb3e63d7564df383ae357d5de090b7932897f15016f42ea9"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/delegation-rules/playbooks/glm-5.2.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/delegation-rules/routing-policy.toml"
+sha256 = "c97dff34dce1ab7d6809d98ce9cb3e919ba000ff0ec856ced76012d7b4d6b64d"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/delegation-rules/routing-policy.toml"

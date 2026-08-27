@@ -1,0 +1,59 @@
+schema = 1
+source_hash = "sha256:afc21df266cb01af96fb8f46ac4d3abcc3da8650a0e351784bc53f43562c633b"
+spec_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:2f8f2c25e341467b8b6c58c122426a5667ed5ea7630658057e6942eada98aca0"
+
+[[file]]
+path = "LICENSE.md"
+sha256 = "c0e2a0382616f6ad368f3d15845916310a4a3113802df74a759d41b9d914e1be"
+disposition = "copied"
+source = "LICENSE.md"
+
+[[file]]
+path = "README.xml"
+sha256 = "c188a1db838504bf678ff699c22e5eda2a6aeafa8b6bc8720d37321424b9507f"
+disposition = "converted"
+source = "README.md"
+
+[[file]]
+path = "vibe.toml"
+sha256 = "6912be5a7d96a1e83f4abbedb2efaedbb55daba00c91c925f4a109bab073774d"
+disposition = "copied"
+source = "vibe.toml"
+
+[[file]]
+path = "vibevm/vibespecs/boot/42-flow-health-audit.xml"
+sha256 = "d8b458eb62802222bc29d3829a6bb74507e369c804853f7dd84009e07fadae1d"
+disposition = "copied"
+source = "vibevm/vibespecs/boot/42-flow-health-audit.xml"
+
+[[file]]
+path = "vibevm/vibespecs/boot/42a-wal-binding.xml"
+sha256 = "81a3dada895d490f189eb63fa5bb69b4d09bc4b97f5f1e185475046d3e3e37fb"
+disposition = "copied"
+source = "vibevm/vibespecs/boot/42a-wal-binding.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/health-audit/HEALTH-AUDIT-PROTOCOL.xml"
+sha256 = "8096327db314a4719640611e625c5d5c7ab497b1c82ccc1d6539fa6283536643"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/health-audit/HEALTH-AUDIT-PROTOCOL.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/health-audit/audit-checklist.xml"
+sha256 = "368d2fb9c06334bc442c57986655eb4f777539a4570660ddd41aa8de255c2001"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/health-audit/audit-checklist.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/health-audit/running-an-audit.xml"
+sha256 = "596e62c00c707d194cc396c7922725e1a1f4480b7cd20f244f2664c2587ad5e8"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/health-audit/running-an-audit.xml"
+
+[[file]]
+path = "vibevm/vibespecs/skills/health-audit/SKILL.xml"
+sha256 = "cc3208856d3f92092e095f708e80f68429a8dec3073e82558ac86e0e55a434e1"
+disposition = "converted"
+source = "vibevm/vibespecs/skills/health-audit/SKILL.md"

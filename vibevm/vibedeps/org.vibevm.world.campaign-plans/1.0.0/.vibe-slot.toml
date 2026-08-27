@@ -1,0 +1,47 @@
+schema = 1
+source_hash = "sha256:0958aff702a907784bf18262c9f1c1a0e0bb339f9406e1fa14b633cd71985615"
+spec_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:1f20fcb748861895c508386e5f70ca0b720278d9543dda9ef693ec276c0b2f90"
+
+[[file]]
+path = "LICENSE.md"
+sha256 = "c0e2a0382616f6ad368f3d15845916310a4a3113802df74a759d41b9d914e1be"
+disposition = "copied"
+source = "LICENSE.md"
+
+[[file]]
+path = "README.xml"
+sha256 = "0ea09f82b22f4d85364497eb5e0f087fe9697754b46c1f014b56ac6daf92b99f"
+disposition = "converted"
+source = "README.md"
+
+[[file]]
+path = "vibe.toml"
+sha256 = "0c8cbab2d55f1d9b724308b8ced6ad8b0ba727892c02c2d133f87c50c0cf3f1e"
+disposition = "copied"
+source = "vibe.toml"
+
+[[file]]
+path = "vibevm/vibespecs/boot/40-flow-campaign-plans.xml"
+sha256 = "0b0ef38b0eb024ef189a21d8c04802510e847ff1b786a6139e1209467b58f67d"
+disposition = "copied"
+source = "vibevm/vibespecs/boot/40-flow-campaign-plans.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.xml"
+sha256 = "106fdcb753715744ce614a93886932b80e4f7889e621158a79936d10eda3622c"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/campaign-plans/execution-ledger.xml"
+sha256 = "76e0a1213dd60b854e50b0552a56ba6fdf857ef39c1cbab9d199f0534b86a24e"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/campaign-plans/execution-ledger.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/campaign-plans/phase-gates.xml"
+sha256 = "07012f50d12fab7847c69793e3c03b2bb527db4a508473c84bc097dcb6546056"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/campaign-plans/phase-gates.xml"

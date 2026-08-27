@@ -1,0 +1,47 @@
+schema = 1
+source_hash = "sha256:88d66adcd51d8f749c2e96431ddf6b3ea80adb3f1271625bc3a3f09bb658a7a1"
+spec_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:c98147302a02430d993703601f2726d94d675536b8660fe7eb794c3ae78040aa"
+
+[[file]]
+path = "LICENSE.md"
+sha256 = "c0e2a0382616f6ad368f3d15845916310a4a3113802df74a759d41b9d914e1be"
+disposition = "copied"
+source = "LICENSE.md"
+
+[[file]]
+path = "README.xml"
+sha256 = "aee9cbec692a037bd92f55ae1353c414b3dcddb45e3782f4cea74d844998f8b4"
+disposition = "converted"
+source = "README.md"
+
+[[file]]
+path = "vibe.toml"
+sha256 = "30272103179fb829e527a88ab07ef8f6d9ffe79adecace0ac8e46515c1a1ac28"
+disposition = "copied"
+source = "vibe.toml"
+
+[[file]]
+path = "vibevm/vibespecs/boot/52-flow-comparative-research.xml"
+sha256 = "d3495d6c94e4cc95d3ac0b6775b5e2172052df4e3365df6bac05f8710bb01c37"
+disposition = "copied"
+source = "vibevm/vibespecs/boot/52-flow-comparative-research.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.xml"
+sha256 = "a7db2efa6658ba17cf5162e892adce09b6d6b86b8ba7f7fdba611565de7a5f57"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/comparative-research/from-research-to-roadmap.xml"
+sha256 = "322f21a83f32f054318df6fdabb549d5b0eeec9d108bde8bd5bda4c52eb95ace"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/comparative-research/from-research-to-roadmap.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/comparative-research/research-template.xml"
+sha256 = "4dfee13c40229175456da35d2ccd6293f8171daf61c81875e9011b885e2d09bc"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/comparative-research/research-template.xml"

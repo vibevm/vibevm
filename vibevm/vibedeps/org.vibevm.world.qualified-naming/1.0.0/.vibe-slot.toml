@@ -1,0 +1,47 @@
+schema = 1
+source_hash = "sha256:0553a9f7253b3c8f2d0ef8eefeb5cfd0fd09a96db5d36b15f13701a0a878ec55"
+spec_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:03677d2a036524e61ebf2aad75aff89094c2b166ac5505e8d13c7ba0f3b20c64"
+
+[[file]]
+path = "LICENSE.md"
+sha256 = "c0e2a0382616f6ad368f3d15845916310a4a3113802df74a759d41b9d914e1be"
+disposition = "copied"
+source = "LICENSE.md"
+
+[[file]]
+path = "README.xml"
+sha256 = "fd7b16291f2f2a0ce51a0190b270c59b855e9526971942d263f577f5c731b761"
+disposition = "converted"
+source = "README.md"
+
+[[file]]
+path = "vibe.toml"
+sha256 = "f68dbaf1844a153949910e504c3d01dad77864edd76f0c116c8884c62dd5b147"
+disposition = "copied"
+source = "vibe.toml"
+
+[[file]]
+path = "vibevm/vibespecs/boot/67-flow-qualified-naming.xml"
+sha256 = "792c4a695ce492bad127b5fe30222efc1bbfc35fa6144543b9074b49d57816a8"
+disposition = "copied"
+source = "vibevm/vibespecs/boot/67-flow-qualified-naming.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.xml"
+sha256 = "5b203b4fe24b83862df101c3820eede5720cc59d9b083ca6517aa219b76089f1"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/qualified-naming/naming-forks.xml"
+sha256 = "a85a84c02243645e1bb17b3a6affedd3d1e05f93fd713f46118f9ad62c213a11"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/qualified-naming/naming-forks.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/qualified-naming/ref-grammar.xml"
+sha256 = "de61e215f1705573235b073ae8919a199444b81390536a3e4f9d71d417440b3d"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/qualified-naming/ref-grammar.xml"

@@ -264,7 +264,8 @@ mod tests {
         let tmp = tempfile::tempdir().expect("tempdir");
         let root = tmp.path();
         std::fs::create_dir_all(root.join("src/cells")).expect("cells");
-        std::fs::create_dir_all(root.join("vibevm/vibedeps/flow-some-core/0.4.0/vibevm/vibespecs")).expect("slot");
+        std::fs::create_dir_all(root.join("vibevm/vibedeps/flow-some-core/0.4.0/vibevm/vibespecs"))
+            .expect("slot");
         std::fs::write(
             root.join("vibevm/vibedeps/flow-some-core/0.4.0/vibe.toml"),
             "[package]\nname = \"some-core\"\n",
@@ -308,7 +309,9 @@ mod tests {
             .expect("present");
         assert_eq!(specmap.namespace, "demo");
         let policy = std::fs::read_to_string(root.join("specmap.toml")).expect("policy");
-        assert!(policy.contains("root = \"vibevm/vibedeps/flow-some-core/0.4.0/vibevm/vibespecs\""));
+        assert!(
+            policy.contains("root = \"vibevm/vibedeps/flow-some-core/0.4.0/vibevm/vibespecs\"")
+        );
         assert!(
             policy.contains("spec_roots = [\"vibevm/vibespecs\"]"),
             "the generated policy names the live specs root: {policy}"

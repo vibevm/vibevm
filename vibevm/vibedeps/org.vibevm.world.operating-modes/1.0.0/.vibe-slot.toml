@@ -1,0 +1,47 @@
+schema = 1
+source_hash = "sha256:f8141eefd8e3eb76bff982065b66467cff5b7f306c8d600ba47275937153e901"
+spec_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:3b34d850b22c8140f84d0960dc2049f60505ee4eecbbb6a7136e0c46e2b58e0e"
+
+[[file]]
+path = "LICENSE.md"
+sha256 = "c0e2a0382616f6ad368f3d15845916310a4a3113802df74a759d41b9d914e1be"
+disposition = "copied"
+source = "LICENSE.md"
+
+[[file]]
+path = "README.xml"
+sha256 = "fef4c3b18c0dde32ef7806dad76f98baa3ad738e606fa87247042c31df04d93f"
+disposition = "converted"
+source = "README.md"
+
+[[file]]
+path = "vibe.toml"
+sha256 = "d78795bb4bc5c480749825d9829e706cfa29a1ccce3120a0361eba66fcc2f661"
+disposition = "copied"
+source = "vibe.toml"
+
+[[file]]
+path = "vibevm/vibespecs/boot/45-flow-operating-modes.xml"
+sha256 = "242404d1d10bea80d4225d4f33ee66db19c51e084b7ed42dbf34b808ed5afb4d"
+disposition = "copied"
+source = "vibevm/vibespecs/boot/45-flow-operating-modes.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/operating-modes/OPERATING-MODES-PROTOCOL.xml"
+sha256 = "19aa264e9fef2e905e3ba48be4627113c01f89d72370dc7766ef2684c78a1e0f"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/operating-modes/OPERATING-MODES-PROTOCOL.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/operating-modes/mfbt-mode.xml"
+sha256 = "a489d05bc98636824c4c6ad422c882175995ab7189a77eb1f3bac255c9621b56"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/operating-modes/mfbt-mode.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/operating-modes/writing-a-codeword.xml"
+sha256 = "15578733f15bb3f9f3b60912808b2d4ae8874c36d6e974cbecd13b7dff6922e9"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/operating-modes/writing-a-codeword.xml"

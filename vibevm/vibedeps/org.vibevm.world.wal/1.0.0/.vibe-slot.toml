@@ -1,0 +1,59 @@
+schema = 1
+source_hash = "sha256:7f8a273a592342b2f5b9b97785ef31583e9fb95dc9879caeaa3ce2ab1eb1d2a7"
+spec_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:e4c14a33b145a309f247fbb81806e54da4e2c92a4867ea01fa0606954165b775"
+
+[[file]]
+path = "LICENSE.md"
+sha256 = "c0e2a0382616f6ad368f3d15845916310a4a3113802df74a759d41b9d914e1be"
+disposition = "copied"
+source = "LICENSE.md"
+
+[[file]]
+path = "README.xml"
+sha256 = "b75aca547838348ee3a37ecfe869d6f5163f1a89074986b64233898b4826fa38"
+disposition = "converted"
+source = "README.md"
+
+[[file]]
+path = "vibe.toml"
+sha256 = "d84806f866f748cee4f7a46f0432171cb66a7da72385133ad2007b344d70798d"
+disposition = "copied"
+source = "vibe.toml"
+
+[[file]]
+path = "vibevm/vibespecs/boot/10-flow-wal.xml"
+sha256 = "c2507573c8122a8a2f5c09996f1efbe914f5c18be492f605e74cfa550395cc94"
+disposition = "copied"
+source = "vibevm/vibespecs/boot/10-flow-wal.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/wal/WAL-PROTOCOL.xml"
+sha256 = "7cd00a7eb38fca3811449166dc86e5157312e16c5ee06ff0b797112e9cdbb898"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/wal/WAL-PROTOCOL.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/wal/cold-resume.xml"
+sha256 = "15d404ab2503479b1108d8b0a3ca78933b279c556dd5646d589a433e10976fc4"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/wal/cold-resume.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/wal/morning-routine.xml"
+sha256 = "77b4bdb9b9f4a0b50baf0b4d14c754b487b788d44ce57bc7f82a6164f1188626"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/wal/morning-routine.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/wal/session-end-hook.xml"
+sha256 = "074bcf2358e9e784dc9b4eb28f11581701a8dbde7f89ece2663207a19c29fd40"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/wal/session-end-hook.xml"
+
+[[file]]
+path = "vibevm/vibespecs/skills/wal-status/SKILL.xml"
+sha256 = "f396ca2d5d1d5ede4936f3e595bed631dc215b0f65f2f622a17c869e4b349a44"
+disposition = "converted"
+source = "vibevm/vibespecs/skills/wal-status/SKILL.md"

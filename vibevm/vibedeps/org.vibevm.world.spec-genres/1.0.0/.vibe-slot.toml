@@ -1,0 +1,47 @@
+schema = 1
+source_hash = "sha256:a4f109741371ec0f02296bf8515fc360a036e804333f0a9dda71629ae0da1db7"
+spec_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:4d9b20a1a8a98626b97d381508241f38dc3addcea6a3b8114fc21b14e03001e3"
+
+[[file]]
+path = "LICENSE.md"
+sha256 = "c0e2a0382616f6ad368f3d15845916310a4a3113802df74a759d41b9d914e1be"
+disposition = "copied"
+source = "LICENSE.md"
+
+[[file]]
+path = "README.xml"
+sha256 = "c306b43ad0a97db7bb01e0a4f0c012f3b625b6d35c53366e6401aa4d460e2089"
+disposition = "converted"
+source = "README.md"
+
+[[file]]
+path = "vibe.toml"
+sha256 = "8af4ca50ebd3abc4d55c69be3cdbaebb2fca4a04b44b3367e2282545afa40048"
+disposition = "copied"
+source = "vibe.toml"
+
+[[file]]
+path = "vibevm/vibespecs/boot/17-flow-spec-genres.xml"
+sha256 = "49dfaf76b4754507a382eada69329fcc8640621a13c4c91c736eae16a5067356"
+disposition = "copied"
+source = "vibevm/vibespecs/boot/17-flow-spec-genres.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/spec-genres/SPEC-GENRES-PROTOCOL.xml"
+sha256 = "fa316c142171e1db81c93109962c4294ed277784f4b6e5d6007e0c0784fe2091"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/spec-genres/SPEC-GENRES-PROTOCOL.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/spec-genres/design-docs.xml"
+sha256 = "f1eea38a67a0804020da4e5f8907f74e04b432ae05357b7228b110b6602424ed"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/spec-genres/design-docs.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/spec-genres/when-to-write-what.xml"
+sha256 = "230761a81e4ee21ac2dc143bea2bb8d90c73b4b408449d295f59a95cc54123fe"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/spec-genres/when-to-write-what.xml"

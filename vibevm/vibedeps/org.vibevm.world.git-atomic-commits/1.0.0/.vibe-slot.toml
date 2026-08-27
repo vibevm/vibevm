@@ -1,0 +1,41 @@
+schema = 1
+source_hash = "sha256:6f454486ce7f3edcc208231b2b88fea61be6b65938ada1914a98ddfcb957960d"
+spec_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:66a1828063574dece74f3f9ec6382e53ca190b0370affa6375a4db37aa5b2157"
+
+[[file]]
+path = "LICENSE"
+sha256 = "7b05e254512285b6a4c33fa97a9b8a4751ff8bf674da7189420f066ef7b9672b"
+disposition = "copied"
+source = "LICENSE"
+
+[[file]]
+path = "README.xml"
+sha256 = "dbda7e88bc7c7b5ab87a9a340e260cf355904184ed85881a17d07decdc8f4ed5"
+disposition = "converted"
+source = "README.md"
+
+[[file]]
+path = "vibe.toml"
+sha256 = "86feac27d85ae42c8ca65834a02d9dd095614c6c3bf8b3d25a5a47b32cec7dd0"
+disposition = "copied"
+source = "vibe.toml"
+
+[[file]]
+path = "vibevm/vibespecs/boot/30-flow-atomic-commits.xml"
+sha256 = "d94d333e3215616aaaf6f6e6b4d4f6c584e98bef8fd69d944a8cfd4b0eb9a0d7"
+disposition = "copied"
+source = "vibevm/vibespecs/boot/30-flow-atomic-commits.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.xml"
+sha256 = "7da2944a6748c644d55b0824f9c9bb4677d0c7ce55be02f38529b067ca3add06"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/atomic-commits/splitting-large-changes.xml"
+sha256 = "a9acb751b50bb3de718acf012944fb8dcd507aa6bd9b6a5f58c3285fc440b11d"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/atomic-commits/splitting-large-changes.xml"

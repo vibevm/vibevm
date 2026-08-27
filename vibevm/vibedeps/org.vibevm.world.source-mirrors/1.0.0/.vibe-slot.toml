@@ -1,0 +1,47 @@
+schema = 1
+source_hash = "sha256:5aa2bc90bb97123f16e9676db132f6865473b04085f7a24e9bc19651a691dc7e"
+spec_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:3f794bc027167a2764eff0b9597a9ef0e51ec663f812e42015284354eff9b4a4"
+
+[[file]]
+path = "LICENSE.md"
+sha256 = "c0e2a0382616f6ad368f3d15845916310a4a3113802df74a759d41b9d914e1be"
+disposition = "copied"
+source = "LICENSE.md"
+
+[[file]]
+path = "README.xml"
+sha256 = "9867018c0fcc324d1cd270c63a7f4e94cac94ad644ad3b10953aee97e156558e"
+disposition = "converted"
+source = "README.md"
+
+[[file]]
+path = "vibe.toml"
+sha256 = "fac36afd078a3c932146e9862963700226a5c2897be6c655ed716abea9578f4b"
+disposition = "copied"
+source = "vibe.toml"
+
+[[file]]
+path = "vibevm/vibespecs/boot/62-flow-source-mirrors.xml"
+sha256 = "4c2206845fe3e5ae7923ddf34bfb14c974ec94b3d058e5ba0a23649be0404dd9"
+disposition = "copied"
+source = "vibevm/vibespecs/boot/62-flow-source-mirrors.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.xml"
+sha256 = "20f6c4b536aea3e5d45c8f7eb87fd61f3bcd264fe30c00731c938ba0437f453d"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/source-mirrors/daily-loop.xml"
+sha256 = "4661f256b2be3369da56e7d2f6f4378e0908943cf0ae1f6aafeec9bdf94073ab"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/source-mirrors/daily-loop.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/source-mirrors/fanout-mechanics.xml"
+sha256 = "5ca48813fa5209e989ee83da4bb9154fabee79b306333e2754ba3544b8919d2f"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/source-mirrors/fanout-mechanics.xml"

@@ -1,0 +1,53 @@
+schema = 1
+source_hash = "sha256:669fb4a23f0a822cff870f18e5e8f330f82e3c6315515b47c4a691700c7c21e3"
+spec_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:5324f964ad2badf18fc81c7a13280fededbb2b47d6283abb7c94902abf3390f8"
+
+[[file]]
+path = "LICENSE.md"
+sha256 = "c0e2a0382616f6ad368f3d15845916310a4a3113802df74a759d41b9d914e1be"
+disposition = "copied"
+source = "LICENSE.md"
+
+[[file]]
+path = "README.xml"
+sha256 = "8f889ed5a7bc85e7de2b1fcdac5a0f0e8805e3970dff44e87c2fad93e51d1e60"
+disposition = "converted"
+source = "README.md"
+
+[[file]]
+path = "vibe.toml"
+sha256 = "47b66de192fa61bf8f30389857c43f937be1a1f96caf5f3f1bec24536167d1df"
+disposition = "copied"
+source = "vibe.toml"
+
+[[file]]
+path = "vibevm/vibespecs/boot/35-flow-conflict-protocol.xml"
+sha256 = "c72fc8e006bc80b2284512a0925a0db7f954d172b4e8bea966ca2759449a9d82"
+disposition = "copied"
+source = "vibevm/vibespecs/boot/35-flow-conflict-protocol.xml"
+
+[[file]]
+path = "vibevm/vibespecs/boot/35a-wal-binding.xml"
+sha256 = "65a27053e20e7bb72dc2e3a3e0a320f55fc8a88abe73000a183a1b7c40ca8305"
+disposition = "copied"
+source = "vibevm/vibespecs/boot/35a-wal-binding.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/conflict-protocol/CONFLICT-PROTOCOL.xml"
+sha256 = "47818ddf4db92feec75cb609edeca3907ec79ae91fae7fe336f4b15b5004f430"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/conflict-protocol/CONFLICT-PROTOCOL.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/conflict-protocol/failure-modes.xml"
+sha256 = "1d39f5ce44291bd355f9083406c2f53b2e289aa1cc0d0d11b2f724e8d5756ebf"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/conflict-protocol/failure-modes.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/conflict-protocol/uncertainty-protocol.xml"
+sha256 = "075170adcfdd9c7f82e06ed25be7cde76b5faddf9285e5ecd5dfbf6d559b016c"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/conflict-protocol/uncertainty-protocol.xml"

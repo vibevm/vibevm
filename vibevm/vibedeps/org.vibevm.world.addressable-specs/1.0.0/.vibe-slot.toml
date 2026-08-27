@@ -1,0 +1,47 @@
+schema = 1
+source_hash = "sha256:1b30f067bd49a71f8f6d42005deba94f87c610e158cb84c8126ed3c54cf709b8"
+spec_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:a175665286fc368f31e8ce6db98ec51b7e1391a84653ab219595e56cd9b1e2ed"
+
+[[file]]
+path = "LICENSE.md"
+sha256 = "c0e2a0382616f6ad368f3d15845916310a4a3113802df74a759d41b9d914e1be"
+disposition = "copied"
+source = "LICENSE.md"
+
+[[file]]
+path = "README.xml"
+sha256 = "0471a2b4b965677cce202cbdb7f49a670853951cb74ce53eddbff87086c0b84a"
+disposition = "converted"
+source = "README.md"
+
+[[file]]
+path = "vibe.toml"
+sha256 = "5d76d926c576966980438bfa3d4cefaa6dbf092dcaf96acd970233deb6c461b4"
+disposition = "copied"
+source = "vibe.toml"
+
+[[file]]
+path = "vibevm/vibespecs/boot/15-flow-addressable-specs.xml"
+sha256 = "96c9b83561090696e817bb73633af653b14a25b6267382e948b099f8b3954d69"
+disposition = "copied"
+source = "vibevm/vibespecs/boot/15-flow-addressable-specs.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.xml"
+sha256 = "a91cbb661f4106035ee2238c13f526a8e079c69106d7f38e8811b29e89ff4bac"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/addressable-specs/authoring-rules.xml"
+sha256 = "1cce99db92ff713eb26ebc59a25a8c36a0b46dfd03f6e0015adb2170720f31a0"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/addressable-specs/authoring-rules.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/addressable-specs/spec-tree-layout.xml"
+sha256 = "e080e815bf9cc4ba581c18949bd7debb70b74139a3b9b74b7dbd90deb04409de"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/addressable-specs/spec-tree-layout.xml"

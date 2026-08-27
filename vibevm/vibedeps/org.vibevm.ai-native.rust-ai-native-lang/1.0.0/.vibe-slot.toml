@@ -1,0 +1,851 @@
+schema = 1
+source_hash = "sha256:a363b2a728648275aafbd3a5313560798d4320dfa4a3f046db9315778da69403"
+spec_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:d6b9ac8f9dda2da910e9da4d33faddf30bbf9e4afdfab8fa232d025883dc064d"
+
+[[file]]
+path = "Cargo.lock"
+sha256 = "e8df40a53781ab9f6911674c2251c8b6ca548b920f951a3e7c206282a0c57957"
+disposition = "copied"
+source = "Cargo.lock"
+
+[[file]]
+path = "Cargo.toml"
+sha256 = "0d63dccee4e2ccdb0baa1fb7ff853cf9a1a9e74932f70c742ade5076fa8e260c"
+disposition = "copied"
+source = "Cargo.toml"
+
+[[file]]
+path = "LICENSE.md"
+sha256 = "c0e2a0382616f6ad368f3d15845916310a4a3113802df74a759d41b9d914e1be"
+disposition = "copied"
+source = "LICENSE.md"
+
+[[file]]
+path = "README.xml"
+sha256 = "b54739b0a4f5503a4da837a33ea68867e43e36d531552f6121b3491cc8f0eddd"
+disposition = "converted"
+source = "README.md"
+
+[[file]]
+path = "conform-baseline.json"
+sha256 = "1dcff8d3de92221be8fb8631a262dda3b15eb7bd7b4c638c98620e4cccc46b6e"
+disposition = "copied"
+source = "conform-baseline.json"
+
+[[file]]
+path = "conform.toml"
+sha256 = "a69f2d5184aa33e782735fc6dabd352e22e2d30d02dd42704f0ac81e8819af31"
+disposition = "copied"
+source = "conform.toml"
+
+[[file]]
+path = "crates/rust-ai-native-cli/Cargo.toml"
+sha256 = "c51487d34ec0bf42cb79197bc1bc201fc55fada71a2914f6d5a6a84bbc56070e"
+disposition = "copied"
+source = "crates/rust-ai-native-cli/Cargo.toml"
+
+[[file]]
+path = "crates/rust-ai-native-cli/src/codemod.rs"
+sha256 = "43c2df6701c0cae5bda0c94531a53ac1e9d4bbcc71c6fa6d9a883dd78d525fbe"
+disposition = "copied"
+source = "crates/rust-ai-native-cli/src/codemod.rs"
+
+[[file]]
+path = "crates/rust-ai-native-cli/src/fast_loop.rs"
+sha256 = "111b938cfd01952f79db70bbc844b23fafca907fbab1657cbfbb081347e24758"
+disposition = "copied"
+source = "crates/rust-ai-native-cli/src/fast_loop.rs"
+
+[[file]]
+path = "crates/rust-ai-native-cli/src/floor.rs"
+sha256 = "76e99ea20b62e66fc191615a3b0107a1fc8d03a8d370c32d59c56ff9ff2420b3"
+disposition = "copied"
+source = "crates/rust-ai-native-cli/src/floor.rs"
+
+[[file]]
+path = "crates/rust-ai-native-cli/src/health.rs"
+sha256 = "e2f6c9a6d0c8b9af17586f075a2216f0f363731f8a95172d30420288b4af7388"
+disposition = "copied"
+source = "crates/rust-ai-native-cli/src/health.rs"
+
+[[file]]
+path = "crates/rust-ai-native-cli/src/init.rs"
+sha256 = "13fdf2fc2b3dd8fb893caa4c06244db4790d950ba865aa2ae38525ccb46474f6"
+disposition = "copied"
+source = "crates/rust-ai-native-cli/src/init.rs"
+
+[[file]]
+path = "crates/rust-ai-native-cli/src/ledger.rs"
+sha256 = "75f056e909509bcf93f1956d26a3f6742111fa3a8e6792040c6824e0e3de1499"
+disposition = "copied"
+source = "crates/rust-ai-native-cli/src/ledger.rs"
+
+[[file]]
+path = "crates/rust-ai-native-cli/src/lib.rs"
+sha256 = "cd93874327fadcd69188b8ea334ca273ccbfb318322cd089226f367a05732ae3"
+disposition = "copied"
+source = "crates/rust-ai-native-cli/src/lib.rs"
+
+[[file]]
+path = "crates/rust-ai-native-cli/src/main.rs"
+sha256 = "4031732f5afe16fd42044b15acc20bbb18c03b2e9f09be483a0ee00a3b09389c"
+disposition = "copied"
+source = "crates/rust-ai-native-cli/src/main.rs"
+
+[[file]]
+path = "crates/rust-ai-native-cli/src/test_gate.rs"
+sha256 = "8570b782e0f1d138f0941e84ce2428e9d6e4f12801a64e199eeb4c2b66a30468"
+disposition = "copied"
+source = "crates/rust-ai-native-cli/src/test_gate.rs"
+
+[[file]]
+path = "crates/rust-ai-native-cli/src/trace.rs"
+sha256 = "90f45910b597a8a1b5e88a26133a6d1af4034daf9dbea9c0c4770c071ba89007"
+disposition = "copied"
+source = "crates/rust-ai-native-cli/src/trace.rs"
+
+[[file]]
+path = "crates/rust-ai-native-cli/src/tripwire.rs"
+sha256 = "cf94922a9108b7aa2525dee515912e02277a48e8a3d89a93677bf16995e5bf6f"
+disposition = "copied"
+source = "crates/rust-ai-native-cli/src/tripwire.rs"
+
+[[file]]
+path = "crates/rust-ai-native-cli/tests/fresh_project.rs"
+sha256 = "00b6f0f77377e923d33f0428769f4eebb1dad5b342b2681f06f60508bb37e696"
+disposition = "copied"
+source = "crates/rust-ai-native-cli/tests/fresh_project.rs"
+
+[[file]]
+path = "crates/rust-ai-native-conform-frontend/Cargo.toml"
+sha256 = "a6f438eba983b2a68435f54654a7e9474b8e89faed51f0c3800540c05d767043"
+disposition = "copied"
+source = "crates/rust-ai-native-conform-frontend/Cargo.toml"
+
+[[file]]
+path = "crates/rust-ai-native-conform-frontend/src/deviation.rs"
+sha256 = "a16e636bc1cb1c0a0e7d1b8b4b5630efffbf72424c37c81b4b4f1de2c3b75d21"
+disposition = "copied"
+source = "crates/rust-ai-native-conform-frontend/src/deviation.rs"
+
+[[file]]
+path = "crates/rust-ai-native-conform-frontend/src/lib.rs"
+sha256 = "58e1e081f47ba6140a471403ebe973c9e0ff33d1f6daab8d7ef5a7fdfc6038fb"
+disposition = "copied"
+source = "crates/rust-ai-native-conform-frontend/src/lib.rs"
+
+[[file]]
+path = "crates/rust-ai-native-conform-frontend/src/lib/deviation_tests.rs"
+sha256 = "ec1dc2b25309e91bc5d73c932f75a702fe0a33b7451c8b10a46feb9281595fb9"
+disposition = "copied"
+source = "crates/rust-ai-native-conform-frontend/src/lib/deviation_tests.rs"
+
+[[file]]
+path = "crates/rust-ai-native-conform-frontend/src/lib/tests.rs"
+sha256 = "1266c0e59843f54b7e1100721f12f210213fa68f212c6014593719376b113b9c"
+disposition = "copied"
+source = "crates/rust-ai-native-conform-frontend/src/lib/tests.rs"
+
+[[file]]
+path = "crates/rust-ai-native-conform-frontend/src/out_of_line.rs"
+sha256 = "6b2c7659e50aedd3ac7a8504d1fdad527e1967c60776f421fb7d1e18aff14b45"
+disposition = "copied"
+source = "crates/rust-ai-native-conform-frontend/src/out_of_line.rs"
+
+[[file]]
+path = "crates/rust-ai-native-conform-frontend/src/sweep.rs"
+sha256 = "e770c35a456a654bf00193e6e30d2720cb6db11c41db0c7086912ec161fe06ee"
+disposition = "copied"
+source = "crates/rust-ai-native-conform-frontend/src/sweep.rs"
+
+[[file]]
+path = "crates/rust-ai-native-conform-frontend/tests/engine.rs"
+sha256 = "afbf35678dde702ad597f9c5bc00903fc70476294115f53be209e4d5288ef1fc"
+disposition = "copied"
+source = "crates/rust-ai-native-conform-frontend/tests/engine.rs"
+
+[[file]]
+path = "crates/rust-ai-native-conform/Cargo.toml"
+sha256 = "1f4c957a99e2b3e65d7bef8fcc14cfeeb2dfe514d92e2efb5425ecec0a0f591f"
+disposition = "copied"
+source = "crates/rust-ai-native-conform/Cargo.toml"
+
+[[file]]
+path = "crates/rust-ai-native-conform/src/lib.rs"
+sha256 = "0926c02c247be5fa730036ff47778e8a2e3026b5abfd9f7b19cf4a625dfed331"
+disposition = "copied"
+source = "crates/rust-ai-native-conform/src/lib.rs"
+
+[[file]]
+path = "crates/rust-ai-native-conform/src/main.rs"
+sha256 = "45c8c48368658a7612ba33e10c39b58c06aa97731dc8d8843a0dd0472ec85c12"
+disposition = "copied"
+source = "crates/rust-ai-native-conform/src/main.rs"
+
+[[file]]
+path = "crates/rust-ai-native-conform/tests/catches_violations.rs"
+sha256 = "16a2f7af23749f8e7e45b5bfe3a2154dc612c0f2e120274213906b040f7d4dd6"
+disposition = "copied"
+source = "crates/rust-ai-native-conform/tests/catches_violations.rs"
+
+[[file]]
+path = "crates/rust-ai-native-env-audit/Cargo.toml"
+sha256 = "328774ef8fb756685c94c7232c7ea9dd7df22c3ee84e64e1df58897ee0d25654"
+disposition = "copied"
+source = "crates/rust-ai-native-env-audit/Cargo.toml"
+
+[[file]]
+path = "crates/rust-ai-native-env-audit/src/lib.rs"
+sha256 = "5fe117b1bbae0fc9a1206389f08e99af5a128e9f4e9996893411fafdcdfbd85f"
+disposition = "copied"
+source = "crates/rust-ai-native-env-audit/src/lib.rs"
+
+[[file]]
+path = "crates/rust-ai-native-specmap/Cargo.toml"
+sha256 = "78fa92c42754a447d0e3c37ffdb80cbfb3df3930bd9c8ab1f7a0cef90c7d1546"
+disposition = "copied"
+source = "crates/rust-ai-native-specmap/Cargo.toml"
+
+[[file]]
+path = "crates/rust-ai-native-specmap/src/lib.rs"
+sha256 = "3867bdea9fcecb93808f9ed5c558e645ea1f3eb9535f28b012672cce1281144a"
+disposition = "copied"
+source = "crates/rust-ai-native-specmap/src/lib.rs"
+
+[[file]]
+path = "crates/rust-ai-native-specmap/src/main.rs"
+sha256 = "eccc1d1718f065c641c729d26a66cf547816b5108d5042c586d1e9c3d5fbddbb"
+disposition = "copied"
+source = "crates/rust-ai-native-specmap/src/main.rs"
+
+[[file]]
+path = "crates/rust-ai-native-tcg-bridge/Cargo.toml"
+sha256 = "8e4283265a7a58bfecbbea80c222f53b96580665a7062bfe36cfc7bbb9a1a9a8"
+disposition = "copied"
+source = "crates/rust-ai-native-tcg-bridge/Cargo.toml"
+
+[[file]]
+path = "crates/rust-ai-native-tcg-bridge/src/client.rs"
+sha256 = "75f3e43dcbf76bc85895b050f15134a9d04fe01819083adde0d25f8dd3ab3857"
+disposition = "copied"
+source = "crates/rust-ai-native-tcg-bridge/src/client.rs"
+
+[[file]]
+path = "crates/rust-ai-native-tcg-bridge/src/client/tests.rs"
+sha256 = "f71b4010fce04a42c9e2d783c2d6355e5df1b219c8a83ce6c0cb3b191b90e64c"
+disposition = "copied"
+source = "crates/rust-ai-native-tcg-bridge/src/client/tests.rs"
+
+[[file]]
+path = "crates/rust-ai-native-tcg-bridge/src/frame.rs"
+sha256 = "3add51b1752826ca076ac2758a6b5ed4f888db187dba90d8da47ade55a5aaff1"
+disposition = "copied"
+source = "crates/rust-ai-native-tcg-bridge/src/frame.rs"
+
+[[file]]
+path = "crates/rust-ai-native-tcg-bridge/src/lib.rs"
+sha256 = "f257b9d82f110579e2ab5c4752d1a3d69e15fc6e0c354d45a1a6abad47f1f440"
+disposition = "copied"
+source = "crates/rust-ai-native-tcg-bridge/src/lib.rs"
+
+[[file]]
+path = "crates/rust-ai-native-tcg-bridge/src/oracle.rs"
+sha256 = "bc67cab7ef3c0b0392928e74b6267dfeaa2050d4773fda2ec347c8ab25fd5534"
+disposition = "copied"
+source = "crates/rust-ai-native-tcg-bridge/src/oracle.rs"
+
+[[file]]
+path = "crates/rust-ai-native-tcg-bridge/src/oracle/tests.rs"
+sha256 = "e323b7ce0337e58943299b1dfc734922133c992893e7e47988c79fee3f8e783d"
+disposition = "copied"
+source = "crates/rust-ai-native-tcg-bridge/src/oracle/tests.rs"
+
+[[file]]
+path = "crates/rust-ai-native-tcg-bridge/src/position.rs"
+sha256 = "6ea43434911bfa0cbbf415e2327f9c22b03ee61134dcf57075071f66b2edd5b9"
+disposition = "copied"
+source = "crates/rust-ai-native-tcg-bridge/src/position.rs"
+
+[[file]]
+path = "crates/rust-ai-native-tcg-bridge/tests/live_oracle.rs"
+sha256 = "85c5d177b3b7b46c4aa067b5ae62e22d4157c3b3588b4bd39d5f18acfbe76810"
+disposition = "copied"
+source = "crates/rust-ai-native-tcg-bridge/tests/live_oracle.rs"
+
+[[file]]
+path = "crates/rust-ai-native-tcg/Cargo.toml"
+sha256 = "9d62b917f105583c3d5e681cf2282fd4121ca30e5a414f191eb1af4cceefb0f5"
+disposition = "copied"
+source = "crates/rust-ai-native-tcg/Cargo.toml"
+
+[[file]]
+path = "crates/rust-ai-native-tcg/src/bench.rs"
+sha256 = "21070766edd89fb1aaa40948bde92ca8b50f2acbf4d5f6d6d35577fa41477b32"
+disposition = "copied"
+source = "crates/rust-ai-native-tcg/src/bench.rs"
+
+[[file]]
+path = "crates/rust-ai-native-tcg/src/lib.rs"
+sha256 = "6106a3be76540dfce8e8f19bacad92989187ec5f048a22527ebf8b95d098d5f1"
+disposition = "copied"
+source = "crates/rust-ai-native-tcg/src/lib.rs"
+
+[[file]]
+path = "crates/rust-ai-native-tcg/src/lib/tests.rs"
+sha256 = "4d481e5be89a4c8598d94fb3f26a8fcf12dc3def8da353d252f41a00b1e11655"
+disposition = "copied"
+source = "crates/rust-ai-native-tcg/src/lib/tests.rs"
+
+[[file]]
+path = "crates/rust-ai-native-tcg/src/main.rs"
+sha256 = "53458ad771f64bd7b04eae30e799d0b9b6587dd159747f59e69d7ad354d0db52"
+disposition = "copied"
+source = "crates/rust-ai-native-tcg/src/main.rs"
+
+[[file]]
+path = "crates/rust-ai-native-tcg/src/serve.rs"
+sha256 = "c565351ea654ade44e077c4c156b85b039522b634f80c6facad1165e70b3a32c"
+disposition = "copied"
+source = "crates/rust-ai-native-tcg/src/serve.rs"
+
+[[file]]
+path = "crates/rust-ai-native-tcg/tests/finding_parity.rs"
+sha256 = "22ed215d162b8edf1dab7dd303ae4c4c7eb7b85062590e7995ef30eeaedc4487"
+disposition = "copied"
+source = "crates/rust-ai-native-tcg/tests/finding_parity.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-conform/Cargo.toml"
+sha256 = "8ee78c0aae56d3ab418fb26a44c8fd41ddfb747c91abf12ff9cef67c15b8b40a"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-conform/Cargo.toml"
+
+[[file]]
+path = "crates/vendor/core-ai-native-conform/src/baseline.rs"
+sha256 = "e5e8da6778961cbc607b4bf816d6e223b0989075d05d10fab36e14a950e9fbc5"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-conform/src/baseline.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-conform/src/config.rs"
+sha256 = "c681fcfc06118085cc88a2f48acf9de1cc6cf48f93caadf50d20d16ee2ba4baf"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-conform/src/config.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-conform/src/config/coverage.rs"
+sha256 = "9565b4366c8bc9048204ad0579e10fe99e86900b6cef2b9716b92db3ac3b6a55"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-conform/src/config/coverage.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-conform/src/config/tests.rs"
+sha256 = "a087299931409a45c99fe94f823638e7436340c771026c80a3849ade6aa719e2"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-conform/src/config/tests.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-conform/src/config/tombstones.rs"
+sha256 = "4b4cce3ab53cdcb494c94cbcc25fd151a626248e5f6569922e5a244443023aa0"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-conform/src/config/tombstones.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-conform/src/facts.rs"
+sha256 = "25b5c25e80dbe4d9ad5adffbe8a36440a860f12a342f9c7f9f89d0815eb6764e"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-conform/src/facts.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-conform/src/finding.rs"
+sha256 = "0df70b6e663a7deb07fe9f4d7b254a4db1cf81f81fe7b416983acbbded1d90e4"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-conform/src/finding.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-conform/src/lib.rs"
+sha256 = "3ddcb9f26d2eb7896a6801640959e15af4396259c6790517302c4ab4c0085bbb"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-conform/src/lib.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-conform/src/rules/budget.rs"
+sha256 = "e5c104edc98943c75fbc52cb4da844094dd9a54560c6765e39ec4cd1a1bb01de"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-conform/src/rules/budget.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-conform/src/rules/citations.rs"
+sha256 = "e40e38f456c1d4f13144ca9f37152fd38adede37ef245a99a78a2c77003dba2b"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-conform/src/rules/citations.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-conform/src/rules/deviation_reason_tests.rs"
+sha256 = "ae26d859011acdae50a7c6940204e271fe107ce4d5e4718394339f316037e219"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-conform/src/rules/deviation_reason_tests.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-conform/src/rules/diagnostics.rs"
+sha256 = "09f344cd157be8b509fc69ae2b9fd73ee831a2b23ee95b77a9da0ecbfb658b89"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-conform/src/rules/diagnostics.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-conform/src/rules/go.rs"
+sha256 = "95e3cb24e7170c4ba35532ee9567df6ec6f98f64fe32f9bd5a3e4675f591e8cc"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-conform/src/rules/go.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-conform/src/rules/go_parity.rs"
+sha256 = "0fd5fad944c1d3a97975105231d28eb8b353d90369cf7b5b32aff22b64619993"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-conform/src/rules/go_parity.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-conform/src/rules/matrices.rs"
+sha256 = "c0a9f165175a790a5b92823370ad5b9e15f80b9f361a91039e7391f097250a30"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-conform/src/rules/matrices.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-conform/src/rules/mod.rs"
+sha256 = "4ffef4ee5334175dca7b0da402910c245aebaba897a9016e1377d925d7d70263"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-conform/src/rules/mod.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-conform/src/rules/naming.rs"
+sha256 = "120b3cf2f502fa6415bfb811b07c3394378e85bc453a0a0f65066f6a74f00f4e"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-conform/src/rules/naming.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-conform/src/rules/position.rs"
+sha256 = "5ed002ce63db198b89df4bf325d493bd1eca065b4906fab31bbbf34ce2995925"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-conform/src/rules/position.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-conform/src/rules/structure.rs"
+sha256 = "70ccf908b7e1650c5c5f3386e6da52d9ea42e28450944d302b8fa640fecccc5c"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-conform/src/rules/structure.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-conform/src/rules/tests.rs"
+sha256 = "f93a07c9db374e7e5fffddf96acc251e6d4f1977c406a9c93f571c6377367274"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-conform/src/rules/tests.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-conform/src/rules/typescript.rs"
+sha256 = "22820cc6d0bf0b5fd2fe6ddca7f599220aa6ba8e65ee31bc2f893fb6fc7d4829"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-conform/src/rules/typescript.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-conform/src/rules/typescript_parity.rs"
+sha256 = "fa4a38b22659fa76d6cf7e60f87454c9b5deb69a62ce28b2209595a4c2e27342"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-conform/src/rules/typescript_parity.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-conform/src/sarif.rs"
+sha256 = "b0768dc90c45882e24fa262e624c4b6869d5c13844489a9143eb20db061e9889"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-conform/src/sarif.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-conform/src/store.rs"
+sha256 = "e37547daea228c100b49e494b1c10345a87f0acfc20465c4a9bbbcf40f49a1b4"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-conform/src/store.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-conform/src/store/tests.rs"
+sha256 = "986f50c56a43d4125fdd5159a6fd4cfe2e3f7a851b0792b9af8eaf0c6eb5b5b5"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-conform/src/store/tests.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-conform/tests/sarif_ingest.rs"
+sha256 = "0a3e05cd2563c012d5b55de9942c4d74224fb02cb2b7a0fe4c1cf02a2ddb14c1"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-conform/tests/sarif_ingest.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-specmap/Cargo.toml"
+sha256 = "df2d31ef92d9e3388261d9a89afb09ef8a32bbe53d1e21ededdc4bc50b20dee9"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-specmap/Cargo.toml"
+
+[[file]]
+path = "crates/vendor/core-ai-native-specmap/src/config.rs"
+sha256 = "9f88072bb89626401479b8e8671a9582a44dc6fc39d19412b0b8dcd0a7c454d5"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-specmap/src/config.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-specmap/src/cscan.rs"
+sha256 = "f7e721d5254249b4d550b78e156394f74b3e8ca0c5d93d207373f9cb9ccde192"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-specmap/src/cscan.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-specmap/src/explain.rs"
+sha256 = "e26298c83fa8f35e19ebd6bc4bb6ecccc5fc09b6cd05ab51980cca5325fb213a"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-specmap/src/explain.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-specmap/src/fingerprint.rs"
+sha256 = "5fdfca31db37429a79e44b41c23817e2d0b9bd6ea9d6adce31f4d531abce7385"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-specmap/src/fingerprint.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-specmap/src/generated/mod.rs"
+sha256 = "1aecc6379f57bbe787c119bef8a6c2f7b72e3655ea3f995239d5d9b74687bf91"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-specmap/src/generated/mod.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-specmap/src/generated/specmap/mod.rs"
+sha256 = "f32d3ece661f5acd708d486828dbaca6a2a1679e2d9aa95d94c13dbfa575ccad"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-specmap/src/generated/specmap/mod.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-specmap/src/index.rs"
+sha256 = "7329984b45b10242f714f8a079dd74787f55e71ddd91b81e90b9336f08534ab1"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-specmap/src/index.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-specmap/src/index/tests.rs"
+sha256 = "bc18e921caa246f571db20b04266bf687b1f8dbc88595730b21328affed66dc9"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-specmap/src/index/tests.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-specmap/src/jtd.rs"
+sha256 = "402db9e166651b0b1d843aa1c451e200158547a107c81f97d98f25252505a27f"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-specmap/src/jtd.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-specmap/src/jtd/positions.rs"
+sha256 = "416a3ab8ae4cbe6b2ffd71411c4b398a22de4133b7f59ddc42848addef4f5789"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-specmap/src/jtd/positions.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-specmap/src/jtd/tests.rs"
+sha256 = "b327b7e90f344b13efb538139d7361d8b5c174545add83ded6b14260a445143a"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-specmap/src/jtd/tests.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-specmap/src/ledger.rs"
+sha256 = "2d4aa45832414b53a832c567e2a15e4eb3093173bf8adb47ca3d257d7ce49883"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-specmap/src/ledger.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-specmap/src/lib.rs"
+sha256 = "73846811f1a54bf8e8aa3073aa44551cde1ee5108a896160143a993faca5e9b2"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-specmap/src/lib.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-specmap/src/mdspec.rs"
+sha256 = "2cc203d7cbd31aa934e2c6a2ce074cfefefdf06ba94c40b5cc34db36775b711f"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-specmap/src/mdspec.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-specmap/src/mdspec/excludes.rs"
+sha256 = "a7b9cb850d334ddf3d5168439e9b38f0766244aea89f0564c98ccb3ad1061dc4"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-specmap/src/mdspec/excludes.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-specmap/src/mdspec/lines.rs"
+sha256 = "96a443f49a552a26e1b98d035c27233e99b3e583ebff0c1ea0f6e6a72f4fec30"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-specmap/src/mdspec/lines.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-specmap/src/mdspec/tests.rs"
+sha256 = "8dc1a7b01f694d0f18de29f5843a340739690b3e8e747f9e1e2b063c89fab313"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-specmap/src/mdspec/tests.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-specmap/src/mdspec/walk.rs"
+sha256 = "b783c1d639c610586525201bf66d1b60dce9dea5b028a0d206dcc0b006a3b17f"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-specmap/src/mdspec/walk.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-specmap/src/ratchet.rs"
+sha256 = "9afa9a4b07b01baeaea8aa0d93cdc1b99c8d0e9aa3469db039f2c76bcbf021b3"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-specmap/src/ratchet.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-specmap/src/rscan.rs"
+sha256 = "8ce233570ce4eb53f10ec1ad68d29c6f5cabebb8362618fff0d55e2c0021bf18"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-specmap/src/rscan.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-specmap/src/scanner.rs"
+sha256 = "dd235748a45873ee2591f97c83c6ad3a05e6c9ac6256d6edc1e3d548356041bf"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-specmap/src/scanner.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-specmap/src/testgate.rs"
+sha256 = "5a27e13c190a73bec6ad02f7d1c136ebd4e4390c499d5662f4bcab2dccf41efc"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-specmap/src/testgate.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-specmap/src/tripwire.rs"
+sha256 = "f395095e6de7ed02f6451c3a117c4e6d7f595ee3f8f0ee39d09b917d206e6342"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-specmap/src/tripwire.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-specmap/src/xmlspec.rs"
+sha256 = "5690449d21ee36f539a4e39c0b23bf564010778f917a5e3d765c9e6a961d80c5"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-specmap/src/xmlspec.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-specmap/src/xmlspec/blocks.rs"
+sha256 = "2110687d09e2b63740b532831fa5b92590b0ab2f34b1207908d90b2d1559d5bf"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-specmap/src/xmlspec/blocks.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-specmap/src/xmlspec/doc.rs"
+sha256 = "e737145a42efe05e15662564b858286a085e173c1043412a6d99da1ddbda0978"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-specmap/src/xmlspec/doc.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-specmap/src/xmlspec/facts.rs"
+sha256 = "bf4a4e13bff8d5b46877017b05d7f4e0b571939512dacf7e53354ff38d443286"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-specmap/src/xmlspec/facts.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-specmap/src/xmlspec/mdout.rs"
+sha256 = "23969d6c1f395157f4c50c09e29ed50a24e188ae3a9245a1d8e3d5be06031b1e"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-specmap/src/xmlspec/mdout.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-specmap/src/xmlspec/reader.rs"
+sha256 = "c2eab11b5581bac340d2aa548deb0601c3d2065bcb6670ee4463dab4f1e5e08e"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-specmap/src/xmlspec/reader.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-specmap/src/xmlspec/td_tests.rs"
+sha256 = "ea6f79228227e7365707650cd1f7f3ff2fdb43c87039405cd98767e3f88d471f"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-specmap/src/xmlspec/td_tests.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-specmap/src/xmlspec/tests.rs"
+sha256 = "117f4d1fc6dc9d143bacd36dd56f3bda9d156f69ca25af7be4a2dfcc63786df5"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-specmap/src/xmlspec/tests.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-specmark-grammar/Cargo.toml"
+sha256 = "d13d5bc78493be32a8990b2a1fc8f6f83e8fb2e2c2a99494255675c3b55f2e05"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-specmark-grammar/Cargo.toml"
+
+[[file]]
+path = "crates/vendor/core-ai-native-specmark-grammar/src/lib.rs"
+sha256 = "7ec35f63d71ebd7b4981f4dd9c6ea47ce75767f8493014a3d4c89adddc328c01"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-specmark-grammar/src/lib.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-specmark-grammar/src/lib/tests.rs"
+sha256 = "9407fbc9b6d73e941cc163febfb2b4b805a0e9e47fec0cae6f832d8e489c70f1"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-specmark-grammar/src/lib/tests.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-specmark/Cargo.toml"
+sha256 = "17444834b7122cca8ef8dcb0102b343b02817c4ace716d6084c84460fa7b3b17"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-specmark/Cargo.toml"
+
+[[file]]
+path = "crates/vendor/core-ai-native-specmark/src/lib.rs"
+sha256 = "b3b47781e0cc6c119603ffbc28f22449a9a3fa1bf01e80c6bdb1b454b36d91cb"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-specmark/src/lib.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-specmark/tests/usage.rs"
+sha256 = "52598f168e29028d748f632371dafdbff9e6aa1f6a1086cf42dcd9c6ba374359"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-specmark/tests/usage.rs"
+
+[[file]]
+path = "specmap.toml"
+sha256 = "2f076c779d19c66179ec0ada3a83bbed3e4c8037b357ce9df1f829ebaff14d47"
+disposition = "copied"
+source = "specmap.toml"
+
+[[file]]
+path = "vibe.toml"
+sha256 = "06f70316b91442c7a2ffbd6b73533eb9f92987c33182896230a4c21a35d8480c"
+disposition = "copied"
+source = "vibe.toml"
+
+[[file]]
+path = "vibevm/vibespecs/boot/20-stack-rust-ai-native-lang.xml"
+sha256 = "e2c3f67761457033a42f29f536489502b43ed97b6b2188eaf763ae9fcee787f3"
+disposition = "copied"
+source = "vibevm/vibespecs/boot/20-stack-rust-ai-native-lang.xml"
+
+[[file]]
+path = "vibevm/vibespecs/cards/INDEX.xml"
+sha256 = "8ad3805c44e33a555e1d7dc292be0b0e8ce2ac5a942cc132d912cbe45e37bc1b"
+disposition = "copied"
+source = "vibevm/vibespecs/cards/INDEX.xml"
+
+[[file]]
+path = "vibevm/vibespecs/cards/rule-closed-vocabulary-naming.xml"
+sha256 = "fcacfdee89bcbb84074b9776466d1ea95eacfd822a6662962c9c9c82d33a06ae"
+disposition = "copied"
+source = "vibevm/vibespecs/cards/rule-closed-vocabulary-naming.xml"
+
+[[file]]
+path = "vibevm/vibespecs/cards/rule-declared-test-matrices.xml"
+sha256 = "16cbb793a49dd534fe9a3ad3bb6ae47e84437e655f7007016af1f9eaa21b08ea"
+disposition = "copied"
+source = "vibevm/vibespecs/cards/rule-declared-test-matrices.xml"
+
+[[file]]
+path = "vibevm/vibespecs/cards/rule-position-is-a-resource.xml"
+sha256 = "d7412ac7b995c72054e48eee34f705afca9b95add4a16fb5533062f5e2c27b00"
+disposition = "copied"
+source = "vibevm/vibespecs/cards/rule-position-is-a-resource.xml"
+
+[[file]]
+path = "vibevm/vibespecs/cards/scaffold-a-generators.xml"
+sha256 = "a551a9dc45a2a3d5dcb8194bbcf4323d6c378548598b5794608692a015de1b77"
+disposition = "copied"
+source = "vibevm/vibespecs/cards/scaffold-a-generators.xml"
+
+[[file]]
+path = "vibevm/vibespecs/cards/scaffold-b-typed-builders.xml"
+sha256 = "6c4da29009d2130b538e25685ddcf21a10eda4353329a7c943575d81859ad2e8"
+disposition = "copied"
+source = "vibevm/vibespecs/cards/scaffold-b-typed-builders.xml"
+
+[[file]]
+path = "vibevm/vibespecs/cards/scaffold-c-runnable-contracts.xml"
+sha256 = "cbf48245d220dd80b3835859a032ccc9082529f454b833d099495668ac8a213a"
+disposition = "copied"
+source = "vibevm/vibespecs/cards/scaffold-c-runnable-contracts.xml"
+
+[[file]]
+path = "vibevm/vibespecs/cards/scaffold-d-differential-oracle.xml"
+sha256 = "c7d8b2dfa7ed060e7d91cc8703c2fe63ae1987d46ae265429623f258efa4c117"
+disposition = "copied"
+source = "vibevm/vibespecs/cards/scaffold-d-differential-oracle.xml"
+
+[[file]]
+path = "vibevm/vibespecs/cards/scaffold-e-fast-loop.xml"
+sha256 = "ec01ecb73d47772315bb397f349acded34eb0a9e3686c0f8ba60c4992215b021"
+disposition = "copied"
+source = "vibevm/vibespecs/cards/scaffold-e-fast-loop.xml"
+
+[[file]]
+path = "vibevm/vibespecs/cards/scaffold-f-structured-diagnostics.xml"
+sha256 = "2fe3a098f5beceba59d34370bb6d4276293488391ce28ed9df663af179ce44e5"
+disposition = "copied"
+source = "vibevm/vibespecs/cards/scaffold-f-structured-diagnostics.xml"
+
+[[file]]
+path = "vibevm/vibespecs/cards/scaffold-g-doctests.xml"
+sha256 = "617b849dbbafc1a947b091c24c25bc5dda4b87ce893b22dd48e7ea15315d71bd"
+disposition = "copied"
+source = "vibevm/vibespecs/cards/scaffold-g-doctests.xml"
+
+[[file]]
+path = "vibevm/vibespecs/cards/scaffold-h-simulators.xml"
+sha256 = "f87e3655e350b08c41b2a2ae988f8e43de910a8252036f6d7c80d8fd324a0e7b"
+disposition = "copied"
+source = "vibevm/vibespecs/cards/scaffold-h-simulators.xml"
+
+[[file]]
+path = "vibevm/vibespecs/cards/scaffold-i-codemods.xml"
+sha256 = "4594e57a27f225516ce4b7b9e0e30d2934d4bde8c8101ab9ce784db66b70c8de"
+disposition = "copied"
+source = "vibevm/vibespecs/cards/scaffold-i-codemods.xml"
+
+[[file]]
+path = "vibevm/vibespecs/rust/GUIDE-AI-NATIVE-RUST.xml"
+sha256 = "1a277e60731099e7ab8f05ae58a8a68e0f40fff96eeea0adde21b3ee1d0c0b3e"
+disposition = "copied"
+source = "vibevm/vibespecs/rust/GUIDE-AI-NATIVE-RUST.xml"
+
+[[file]]
+path = "vibevm/vibespecs/rust/mechanisms/TCG-ORACLE-RUST-v0.1.xml"
+sha256 = "a1772b4a5af2cda9057adf5a3dbbe8b12ee6f3054213ce03cd1b2935c7647a30"
+disposition = "copied"
+source = "vibevm/vibespecs/rust/mechanisms/TCG-ORACLE-RUST-v0.1.xml"
+
+[[file]]
+path = "vibevm/vibespecs/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.xml"
+sha256 = "2310cce7956e29162436a89b8293ef7302c81bc6f4ef674b5af51d3184f3f462"
+disposition = "copied"
+source = "vibevm/vibespecs/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.xml"
+
+[[file]]
+path = "vibevm/vibespecs/rust/tools/conform-frontend-rust.xml"
+sha256 = "1ed7192e23dd9241348ab292904e75719d2d7e1942891343ba65cdc9df2dedb8"
+disposition = "copied"
+source = "vibevm/vibespecs/rust/tools/conform-frontend-rust.xml"
+
+[[file]]
+path = "vibevm/vibespecs/rust/tools/rust-ai-native-tcg.xml"
+sha256 = "2a42d2ac13677fcc3d9c695570454c97fe7054b9a94c0714cf8067be0154a5a9"
+disposition = "copied"
+source = "vibevm/vibespecs/rust/tools/rust-ai-native-tcg.xml"
+
+[[file]]
+path = "vibevm/vibespecs/rust/tools/vibe-agentic-tcg-rust.xml"
+sha256 = "85d3942d6b07f8c4986204c5fa047def7d69a1d7ac985edbf6710b790c696c7d"
+disposition = "copied"
+source = "vibevm/vibespecs/rust/tools/vibe-agentic-tcg-rust.xml"
+
+[[file]]
+path = "vibevm/vibespecs/skills/rust-ai-native-sweep/SKILL.xml"
+sha256 = "26b7589e3e406ae681dae1b9ac588bd26bc73d35aee27d1d4346f1b21ad70b06"
+disposition = "converted"
+source = "vibevm/vibespecs/skills/rust-ai-native-sweep/SKILL.md"
+
+[[file]]
+path = "vibevm/vibespecs/skills/rust-ai-native-terraform/SKILL.xml"
+sha256 = "06f4737a57e9047f2493f2e424be9260a3a66f268c27d9537b0e906900c35f0f"
+disposition = "converted"
+source = "vibevm/vibespecs/skills/rust-ai-native-terraform/SKILL.md"

@@ -1,0 +1,47 @@
+schema = 1
+source_hash = "sha256:e77db029e4ab66a5de85b74d13acc477ed6c268ab7ac94cdc7cc030f06622410"
+spec_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:b2729453bea7859b41cfa8325b0dd766fa63c66e269c705c679cd71a73583f23"
+
+[[file]]
+path = "LICENSE.md"
+sha256 = "c0e2a0382616f6ad368f3d15845916310a4a3113802df74a759d41b9d914e1be"
+disposition = "copied"
+source = "LICENSE.md"
+
+[[file]]
+path = "README.xml"
+sha256 = "de92a8b11ffedd706387c48c6ebd9d8c850eb4c5b84b9ead6edb3a32b64b20b7"
+disposition = "converted"
+source = "README.md"
+
+[[file]]
+path = "vibe.toml"
+sha256 = "215d80734fe8151d5b4921e98d2b3ea08c528a8fa5a7ab350494a6a5d1c75f97"
+disposition = "copied"
+source = "vibe.toml"
+
+[[file]]
+path = "vibevm/vibespecs/boot/70-flow-tool-design-lessons.xml"
+sha256 = "914477df8c831af5bf07f062462bf4276ba756a65b054ab4c1732a020d43032e"
+disposition = "copied"
+source = "vibevm/vibespecs/boot/70-flow-tool-design-lessons.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.xml"
+sha256 = "a39b8782593eadb633056c5e5beb949d37bc9dc2d5cf53f637753b82dd316caa"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/tool-design-lessons/packaging-lessons.xml"
+sha256 = "d7571a281cd36a28788d7578dab372fb3fb46d3a1123987602a45400fbb1028d"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/tool-design-lessons/packaging-lessons.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/tool-design-lessons/self-updating-tools.xml"
+sha256 = "36670a6822fc9c246c1a0b036364efd4e205776231114cc33c1d29595c5e1572"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/tool-design-lessons/self-updating-tools.xml"

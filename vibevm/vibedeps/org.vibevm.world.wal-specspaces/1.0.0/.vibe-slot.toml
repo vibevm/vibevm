@@ -1,0 +1,35 @@
+schema = 1
+source_hash = "sha256:fd3ddc05880b6af0374e42d18cb9df7f2f35ab2410d61447e0330c51be052d9f"
+spec_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:ce94731d84dfebd31d18aa5409aa0430c1adbd2d39135412c92d77ab466c68c7"
+
+[[file]]
+path = "LICENSE.md"
+sha256 = "c0e2a0382616f6ad368f3d15845916310a4a3113802df74a759d41b9d914e1be"
+disposition = "copied"
+source = "LICENSE.md"
+
+[[file]]
+path = "README.xml"
+sha256 = "d4d89c5866a3d9ba52d45b02057c622b547683f85707df85b2331fb429a8107a"
+disposition = "converted"
+source = "README.md"
+
+[[file]]
+path = "vibe.toml"
+sha256 = "11ad0bf5ac3277622638c12b8de212725572558f19f52daba8bcdbe390c97dae"
+disposition = "copied"
+source = "vibe.toml"
+
+[[file]]
+path = "vibevm/vibespecs/boot/11-flow-wal-specspaces.xml"
+sha256 = "7525a8a510acb634664c80b8d73eaa6f2a0ed9f9fe72e1802a36ef07d1f1970b"
+disposition = "copied"
+source = "vibevm/vibespecs/boot/11-flow-wal-specspaces.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/wal-specspaces/SPECSPACES-PROTOCOL.xml"
+sha256 = "b368c8048c522fb173d7b46b13276946535347222399e7f89ae87180a86d55be"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/wal-specspaces/SPECSPACES-PROTOCOL.xml"

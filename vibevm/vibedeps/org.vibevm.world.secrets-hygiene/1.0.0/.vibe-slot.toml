@@ -1,0 +1,47 @@
+schema = 1
+source_hash = "sha256:384301d5e2bdee4357694666dd8c10a92fd003bb5075e8568a0c306c27363e54"
+spec_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:be5108ab4f619daf3b134a99d9bd192f5a81c1c903ef734380aed250acf8b9bf"
+
+[[file]]
+path = "LICENSE.md"
+sha256 = "c0e2a0382616f6ad368f3d15845916310a4a3113802df74a759d41b9d914e1be"
+disposition = "copied"
+source = "LICENSE.md"
+
+[[file]]
+path = "README.xml"
+sha256 = "e4075f88c9f725fda66ad959690e123d0a062d4d1f6c552f76d1c4cb92faef9e"
+disposition = "converted"
+source = "README.md"
+
+[[file]]
+path = "vibe.toml"
+sha256 = "714859eb412e146094425942ab6e366bdf081d6a49c44d27a17dfdf06b66bce5"
+disposition = "copied"
+source = "vibe.toml"
+
+[[file]]
+path = "vibevm/vibespecs/boot/57-flow-secrets-hygiene.xml"
+sha256 = "121fae0fbbc2c55ca46301bcc7e858e9e516360a2246638a6085f62314dd3ad5"
+disposition = "copied"
+source = "vibevm/vibespecs/boot/57-flow-secrets-hygiene.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.xml"
+sha256 = "40eaae71b4a010e846e5fb4420c801b4cadf4e0db51865b100973df28af3b4bc"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/secrets-hygiene/scope-discipline.xml"
+sha256 = "f7460895b9454b34473618a38f1f2d4f65935f71e075806a508ea6575db67554"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/secrets-hygiene/scope-discipline.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/secrets-hygiene/third-party-code-consent.xml"
+sha256 = "69abe7119d0b7d5a63aab30fe71de2d121cfe59d7652a947880430f2df8fdb19"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/secrets-hygiene/third-party-code-consent.xml"
