@@ -391,7 +391,10 @@ Every exit after open passes one explicit outcome funnel:
 
 - success → `finish(ok)`;
 - compiler, publication, install or later lifecycle failure →
-  `finish(failed)` while preserving the original command error;
+  `finish(failed)` with the fixed safe diagnostic `command failed`, while
+  returning the original rich command error object unchanged and never
+  persisting its Display text (script/provider errors may contain captured
+  stderr, response bodies or secrets);
 - park/repark → running summary, no finish;
 - final-index refusal → command result unchanged, report `finalised=false`.
 
@@ -425,7 +428,21 @@ finish-failed, obtains the owned summary, drops the recorder, then gives the
 same report draft its optional generated `trace` member. It returns the
 **original error object**, not a reconstructed string error. A trace-finalise
 or report-emission refusal is a secondary diagnostic and may not replace that
-original error. Disabled mode does not call the finish clock.
+original error. Disabled mode does not call the finish clock. The owner stores
+startup/supersession notices until this consume point; callers cannot separate
+and lose them.
+
+The writer's existing streaming diagnostic clamp is also the one public
+whole-message formatter for report warnings/notices. Bounding individual
+fields is insufficient because a `TraceWarning` Display prefix can push the
+final string past the wire cap; CLI neither copies that cap nor formats an
+unbounded error first. This clamp is a size/memory boundary, never a secret
+redactor — which is why the rich command error is not formatted at all.
+
+For a failed exit, report emission is
+`emit_when_trace_disabled OR trace_was_requested`. The explicit requested bit
+survives even if an internal report-validator refusal omits the trace member;
+member omission may not reverse command-root emission policy.
 
 Two existing inner emitters move outward as typed failure drafts:
 

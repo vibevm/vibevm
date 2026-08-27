@@ -375,6 +375,15 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
     clean opens only after the wipe; clean-only stays exempt and validate-only
     may carry a zero-scope trace. Canonical detail: compiler-trace architecture
     §5.3.1.
+23. A command failure never serialises the rich `anyhow::Error` into compile
+    trace state: script/binary/provider errors can contain captured stderr,
+    response bodies or secrets, and a byte cap is not redaction. The trace root
+    receives only fixed `command failed`; the same original error object is
+    returned unchanged. The writer's existing streaming bound becomes the one
+    whole-message clamp for `TraceWarning`/startup/report notices (field caps do
+    not cover Display prefixes); CLI copies neither cap nor formatter. Failed
+    report emission is the explicit `old-policy OR trace-requested` bit, never
+    inferred from whether validation retained the optional member.
 
 ## 6. Physical state and loss prevention
 
