@@ -97,6 +97,20 @@ fronts currently in flight. A worker report or old worktree is never completion.
       checkpointing, slot/phase reconciliation and no-spend sequential parks.
 - [ ] **R7.4** — shared MCP `lifecycle_run` / `lifecycle_tasks` surfaces over
       the same state and outbox files.
+      - [ ] A0–A3: CLI characterization, bounded safefs read,
+            `lifecycle_tasks` JTD/wire cell, typed MCP output and minimal
+            `vibe-agent-projection` extraction.
+      - [ ] A4–A8: pinned transactional state, outermost lifecycle lease,
+            selected-node ownership, optimistic tasks query and MCP adapter.
+      - [ ] A9–A15: ports-in-place, one `vibe-orchestrator` application
+            service, credential-free prompt resolution and hosted/no-spend
+            `lifecycle_run` parity.
+- [ ] **R7.5** — neutral external work-loop substrate: structured verification
+      evidence bound to exact tree/artifact/run identity; optional read-only
+      spec-IR facts (`stable id + status + provenance + unmet/stale`); CLI/MCP
+      query/control surfaces; fake external PDSA orchestrator RED. Lifecycle
+      contains no Plan/Act policy, automatic loop, task choice or LLM
+      dependency; the reference long-running agent is a future campaign.
 - [x] **R8.1** — project-only package skill binding with strict ownership,
       recovery and Claude/Codex/OpenCode projections.
 - [x] **R8.2a** — strict mechanism/artifact/deploy-profile manifest grammar

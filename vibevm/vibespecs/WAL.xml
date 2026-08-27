@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
-  <title id="root">WAL — checkpoint 2026-08-28: R3.4 closed; R7.4 next</title>
-  <status stage="impl" state="work" comment="lifecycle/extensions campaign active; R1/R2, R3.1-R3.4, R6.2a/b, R7.1-R7.3, R8.1 and R8.2a complete; R7.4 is next"/>
+  <title id="root">WAL — checkpoint 2026-08-28: R7.4 architecture accepted; implementation active</title>
+  <status stage="impl" state="work" comment="lifecycle/extensions campaign active; R1/R2, R3.1-R3.4, R6.2a/b, R7.1-R7.3, R8.1 and R8.2a complete; R7.4 implementation active"/>
 
   <current-phase title="Current phase">
     <p><WAL-PHASE fact="true" status="impl/work">The active epic is
     `campaigns/packages-2026-09/TZ-LIFECYCLE-EXTENSIONS-v0.1.md`; its granular
     authority for execution state is
     `campaigns/packages-2026-09/LIFECYCLE-EXTENSIONS-IMPLEMENTATION-LEDGER.md`.
-    R3.4 is integrated and closed on product checkpoint `3656a889`: the final
-    exact tree reached `self-check: all green` / exit 0, every accepted worker
-    diff is on `main`, and rolling GC left no campaign worktree. The current
-    edits are the docs/specmap checkpoint that records that close. Next product
-    atom: R7.4 MCP adapters, then the owner-approved neutral R7.5 external-work
-    substrate.</WAL-PHASE></p>
+    R3.4 is integrated, green and mirrored. R7.4's central architecture has
+    passed three claudez audits plus an independent Opus/max adjudication.
+    Implementation starts with disjoint characterization, bounded-read, JTD,
+    typed-output and projection atoms; state/lease/selected ownership and the
+    read-only tasks adapter follow before the shared orchestrator/run adapter.
+    The owner-approved neutral R7.5 external-work substrate follows R7.4.
+    </WAL-PHASE></p>
   </current-phase>
 
   <landed title="Landed evidence">
@@ -31,8 +32,12 @@
       warnings.</WAL-R3>
       <WAL-R7 fact="true" status="impl/work">R7.1 provider, R7.2 CLI agent
       output contract and R7.3 hosted exact-run park/resume are complete. R7.4
-      MCP lifecycle surfaces and R7.5 neutral evidence/query substrate remain.
-      Provider presence activates nothing by itself.</WAL-R7>
+      implementation is active under
+      `R7-MCP-LIFECYCLE-ARCHITECTURE-v0.1.md`: one lower application service,
+      selected-node/run ownership, bounded/pinned state, outermost lease,
+      strict JTD tasks query and hosted/no-spend MCP run. R7.5 neutral
+      evidence/query substrate follows. Provider presence activates nothing
+      by itself.</WAL-R7>
       <WAL-R8 fact="true" status="impl/work">R8.1 project-only package-skill
       binding and R8.2a mechanism/artifact/deploy grammar are complete. Runtime
       mechanisms, build/package providers and deploy reconciliation remain.
@@ -60,7 +65,10 @@
       <WAL-C-EVIDENCE fact="true" status="spec/done">Verification evidence is
       valid only for the exact tree/artifact/run identity measured. R7.5 may
       expose optional read-only requirements/spec-IR facts with stable ids,
-      status and provenance; absence of that adapter changes no lifecycle.
+      status, provenance and unmet/stale relations. An external long-running
+      agent may use them to understand remaining requirements and choose its
+      direction; VibeVM exposes facts, not that choice. Absence of that adapter
+      changes no lifecycle.
       </WAL-C-EVIDENCE>
       <WAL-C-ALGORITHMIC fact="true" status="spec/done">VibeVM remains fully
       useful without an LLM. Paid enhancement is explicit per feature
@@ -101,13 +109,14 @@
   </constraints>
 
   <next title="Next">
-    <p><WAL-NEXT fact="true" status="impl/work">Commit this R3.4 docs/specmap
-    checkpoint and mirror the green batch. Then implement R7.4
-    `lifecycle_run`/`lifecycle_tasks` as thin MCP adapters over the existing
-    lifecycle state/outbox. Follow with R7.5 structured evidence, exact
-    tree/run identity and optional read-only spec-IR facts plus a fake external
-    PDSA orchestrator — no embedded agent policy. Resume R4 registry/transforms
-    after those neutral adapters, per the implementation ledger.</WAL-NEXT></p>
+    <p><WAL-NEXT fact="true" status="impl/work">Land the accepted R7.4
+    architecture, then integrate and immediately reclaim the first four
+    disjoint worker atoms. Continue through safe state/lease/selected ownership
+    and `lifecycle_tasks`, gate that coherent half once, then extract the shared
+    orchestrator and land `lifecycle_run`. Follow with R7.5 exact evidence,
+    optional read-only spec-IR facts and a fake external PDSA orchestrator — no
+    embedded agent policy. Resume R4 registry/transforms after those neutral
+    adapters, per the implementation ledger.</WAL-NEXT></p>
   </next>
 
   <known-issues title="Known issues">

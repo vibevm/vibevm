@@ -1,6 +1,8 @@
 # R7 MCP lifecycle surfaces — implementation architecture v0.1
 
-Status: central implementation design, 2026-08-27. Semantic authority remains
+Status: accepted central implementation design, 2026-08-28. Three independent
+`claudez` audits and one Opus/max adversarial adjudication were reviewed by the
+central coordinator before implementation. Semantic authority remains
 PROP-054 `##AGENT-HANDSHAKE` and `##REF-AGENT-RESUME`. The omnichannel law is
 the installed `flow:org.vibevm.world/omnichannel`: the lifecycle operation
 lives in a library; CLI and MCP are sibling adapters. This document fixes the
@@ -56,7 +58,27 @@ outbox mutation.
 
 The lock uses the strengthened `vibe-safefs` lock primitive and is not a second
 implementation. Its persistent empty lock file is infrastructure of a
-mutating command, not lifecycle state.
+mutating command, not lifecycle state. `clean` already removes only dependency
+slots plus generated boot artifacts; it never removes `.vibe`, so the live
+lock's name survives the clean epoch. `lifecycle.lock` is the outermost project
+lock: code holding `compile-trace.lock`, `package-skills.lock` or
+`vibe-boot-artifacts.lock` may never acquire it. Nested acquisition is a typed
+busy refusal on the supported hosts and is pinned by a RED, not used as a
+reentrancy mechanism.
+
+Locating the canonical workspace root is a read-only preflight, not the
+execution snapshot. The command resolves the selected node, discovers the
+workspace root, acquires the lease, and only then loads the manifest, effective
+world and state that execution will consume. This prevents a just-finished
+concurrent mutator from making a pre-lease world snapshot stale.
+
+The concrete owner is a non-`Clone`, non-`Copy` `LifecycleLease(LockGuard)`.
+One `Arc<LifecycleLease>` may travel through the existing shared
+`LifecycleRun`/install callback channel; cloning that `Arc` proves the one OS
+acquisition and can never reacquire the file. `LifecycleStateStore::begin`
+requires a lease proof by type, while the outer command retains the owner for
+untracked clean paths on which no store exists. Putting acquisition inside the
+store is insufficient: identity selection reads state before the store exists.
 
 `lifecycle_tasks` remains physically read-only and does **not** create a lock
 file. It uses a bounded optimistic `state → exact task files → state` read:
@@ -64,7 +86,7 @@ file. It uses a bounded optimistic `state → exact task files → state` read:
 1. safe-read state bytes (or observe absence);
 2. parse/validate and safe-read every exact state-owned task;
 3. safe-read state again and require byte identity;
-4. retry a bounded number of times on change; only an unchanged snapshot may
+4. retry exactly three times on change; only an unchanged snapshot may
    return.
 
 An absent first read may return `absent`: that result linearizes immediately
@@ -73,6 +95,11 @@ state before becoming an error — if a concurrent resume completed the row, the
 reader retries and returns `idle`; if identical state still owns the missing
 task, it refuses honestly.
 
+State and each task are capped at 8 MiB. The reader also enforces a 16 MiB
+aggregate across the state bytes and all task documents and refuses more than
+64 delegated rows. The current engine parks at most one row per invocation;
+these wider ceilings bound hostile state without imposing a workflow policy.
+
 ### 2.2 Harden the lifecycle state file itself
 
 Before selected-node identity or MCP lands, `LifecycleStateStore` moves from
@@ -80,7 +107,8 @@ ambient `read_to_string`/rename to the shared filesystem cell:
 
 - capability-relative no-follow reads from the canonical workspace root;
 - regular, single-link state only;
-- an 8 MiB read ceiling checked before allocation and while reading;
+- an 8 MiB read ceiling checked before allocation and again while reading at
+  most `cap + 1` bytes through the already-open handle;
 - generated parse plus lifecycle semantic validation;
 - staged atomic replace through the pinned project capability;
 - the command lease around every read/clone/commit transition.
@@ -120,13 +148,21 @@ selected = "." | "members/tool"       # canonical workspace-relative RelPath
 ```
 
 The selected identity is computed from canonical workspace root plus canonical
-selected node, written on every new run, and compared before adoption.
+selected node, written on every new run, and compared before adoption. Both
+ends are canonicalised before relativisation, so a Windows drive-case or 8.3
+entry alias reaches the same workspace node; the persisted value remains the
+portable forward-slashed node rel, never an inode/file-index key. A different
+stored spelling is a mismatch, not something the reader case-folds by guess.
 
 - A newly delegated row requires `run_id` and `selected` together.
 - A pre-R7.4 state with no delegated row remains readable and is refreshed on
   the next begin.
 - A delegated legacy state with no selected identity refuses as erasable
   ambiguous state; it is never adopted by guess.
+- A prior park owned by another selected node is a typed busy/ownership
+  refusal even under CLI force: a member may not silently discard a sibling's
+  live handoff. Same-node force/changed-chain displacement keeps the existing
+  supersession behavior.
 - `select_run_identity` adopts only when mode, force, requested, complete
   chain, selected node, valid run id and a delegated row all agree.
 - `lifecycle_tasks` discovers the workspace from the MCP server's selected
@@ -154,8 +190,10 @@ It performs, in this order:
    never `begin` and never a lock-file-creating read;
 4. validate the generated state and its selected identity;
 5. select only rows whose typed status is `delegated`;
-6. require the one state-owned task path each row already carries and recompute
-   `outbox_task_path(run_id, execution_key)` for equality;
+6. require the one state-owned task path each row already carries; the state
+   validator is the one ownership gate which recomputes
+   `outbox_task_path(run_id, execution_key)`, while the reader asserts that
+   validated relation rather than inventing a second path law;
 7. read that exact project-relative file through `vibe-safefs::Project`
    (capability-relative, no-follow, regular single-link);
 8. decode UTF-8, re-read state for byte identity and return a generated report.
@@ -176,7 +214,13 @@ Add one JTD root `lifecycle_tasks` before Rust code. Its epoch-1 shape is:
 LifecycleTasksReport {
   schema: u32 = 1,
   status: absent | idle | parked,
-  run?: { run_id?: string, requested: string, chain: [string], selected?: string },
+  run?: {
+    run_id?: string,
+    requested: string,
+    chain: [string],
+    selected?: string,
+    started: string
+  },
   tasks: [ {
     execution: string,
     phase: string,
@@ -191,7 +235,16 @@ The task document already contains the ordered output contract in serialized
 frontmatter plus the exact system/request prose. The report does not parse and
 restate those outputs into a second DTO. `absent` means no state file; `idle`
 means valid state with no delegated rows; `parked` requires a nonempty task
-list and valid run id.
+list and valid run id. An existing state carries its run header for both
+`idle` and `parked`; only `absent` omits it. `tasks[].path` is relative to the
+selected **node** root, never the workspace state root. The carried `selected`
+rel is what lets a consumer relate those two roots.
+
+This new machine-to-machine payload is JTD-first despite older hand-shaped MCP
+tools: add `schemas/lifecycle_tasks.jtd.json`, a registered
+`mcp-lifecycle-tasks` format and authored corpus/relational behavior cell.
+`lifecycle_run` reuses the registered lifecycle report schema and adds parked
+and executed-failure corpus examples; it does not mint a second report root.
 
 The schema enters the registry/corpus/codegen in the ordinary JTD-first atom.
 Its behavior cell enforces `absent|idle|parked` against optional run/nonempty
@@ -250,9 +303,13 @@ today its types live at `vibe_mcp::pkgskill`; CLI world planning consequently
 depends upward on the MCP crate. That placement would create a cycle as soon as
 MCP consumes the orchestrator.
 
-Extract the implementation unchanged into a lower library
-`vibe-agent-projection`. It owns project-only Claude/Codex/OpenCode skill
+Extract the minimum cycle-breaking implementation unchanged into a lower
+library `vibe-agent-projection`: `agents.rs`, `pkgskill.rs`,
+`pkgskill/{exact_path,projection,receipt}/**` and the seven-line pure
+`preview_status` helper. It owns project-only Claude/Codex/OpenCode skill
 projection, receipts, recovery, planning types and the package-binding adapter.
+`agent_config.rs`, `pkg_servers.rs`, MCP `install.rs` apart from that helper,
+`agentic.rs` and every transport/config surface stay in `vibe-mcp`.
 `vibe-mcp` re-exports compatibility names for one transition if public callers
 need them, but no behavior remains duplicated. CLI and the orchestrator depend
 on the lower crate. MCP needs a direct dependency only while it provides that
@@ -271,9 +328,8 @@ The current `CliAgentBackend` combines two operations:
 2. construct/read the paid provider and complete the request.
 
 Split the first into a lower credential-free resolver usable by both surfaces.
-It belongs in `vibe-lifecycle::agent` (which already owns preparation and
-depends on the compiler/resolver libraries) or another lower cell selected by
-the implementation review. The hosted MCP adapter uses that resolver and has
+It belongs in `vibe-lifecycle::agent`, beside the existing
+`AgentBackend::resolve_prompt` contract. The hosted MCP adapter uses that resolver and has
 no completion capability. The CLI adapter composes the same resolver with
 `vibe-llm` completion.
 
@@ -281,7 +337,7 @@ No credentials, endpoint, model or response body enter `vibe-orchestrator` or
 `vibe-mcp`. Tests count provider construction/completion calls and require zero
 for every MCP run, including failures and resumes.
 
-## 7. Surface-neutral command API
+## 7. Surface-neutral library command API
 
 The library input for the default chain is conceptually:
 
@@ -296,6 +352,12 @@ LifecycleCommand {
 }
 ```
 
+Those are library facts, not MCP wire members. The MCP adapter pins
+`force = false`, `agent_mode = agent`, `assume_yes = true`; it resolves offline
+posture through the ordinary user/environment policy with no client override.
+No LLM provider, credential reader or transport is constructed. Ordinary
+algorithmic package resolution remains the same operation the CLI uses.
+
 Surface-specific package arguments and prepared install inputs enter through a
 typed input/port rather than a closure capturing CLI state. Process stream mode
 and narration are execution policy/observer ports. The result is a typed
@@ -305,7 +367,9 @@ executed-prefix report plus the typed source error, so CLI JSON and MCP render
 the same facts without emitting a partial document inside the library.
 
 The MCP tool seam gains an output value distinct from transport failure:
-`{ structured, text, is_error }`. Existing tools use the success constructor.
+`{ structured, text, is_error }`, with text mandatory. Existing tools use a
+success constructor which reproduces today's String passthrough / pretty-JSON
+projection byte-for-byte.
 A lifecycle handler/install failure returns a tool output with
 `isError: true` **and the generated `LifecycleReport` as the single
 `structuredContent` root**; malformed JSON-RPC/tool arguments remain ordinary
@@ -322,16 +386,14 @@ Epoch-1 MCP input is deliberately narrow:
 
 ```json
 {
-  "phase": "validate|install|generate|build|test|create|verify|package|deploy",
-  "force": false,
-  "offline": false
+  "phase": "validate|install|generate|build|test|create|verify|package|deploy"
 }
 ```
 
-`phase` is required. `force` and `offline` default false. The descriptor's JSON
+`phase` is the only member and is required. The descriptor's JSON
 Schema is documentation for the host, not runtime authority: before any lock,
 `.vibe`, world or state access, a `#[serde(deny_unknown_fields)]` input type
-strictly decodes the object, the closed `Phase` vocabulary and real booleans.
+strictly decodes the object and the closed `Phase` vocabulary.
 Wrong types, missing phase and unknown members are negative no-mutation REDs.
 There is no `path`
 (the server context is the authority), no provider/model/agent-mode option
@@ -346,6 +408,11 @@ does not report later phases as executed. Malformed state is an in-band MCP
 tool error. Install/handler failure is `isError:true` with the generated
 executed-prefix report retained as structured content and text derived from the
 same typed failure the CLI receives.
+
+The report's existing `delegation.resume` remains the exact CLI command because
+the generated report is surface-identical. MCP-native guidance (call the same
+`lifecycle_run` tool again with the same phase) appears only in the textual MCP
+projection; no surface-conditional wire member or shell subprocess is added.
 
 ## 9. Acceptance matrix
 
@@ -397,22 +464,38 @@ same typed failure the CLI receives.
     from memory that disagrees with disk.
 22. Existing CLI commissioning, hosted cancellation/progress/sequential and
     project-skill tests remain byte/behavior green.
+23. Nested lifecycle-lease acquisition refuses on every supported host, and
+    lock order is lifecycle → compile-trace/package-skill/boot-artifact, never
+    the reverse.
+24. A clean invocation holds the same lease while removing only dependency
+    slots/generated boot; `.vibe/lifecycle.lock` remains named and a concurrent
+    mutator cannot enter.
 
 ## 10. Landing order
 
-1. Harden state I/O and add the workspace-global non-reentrant command lease
-   across every mutating surface; concurrency/race/fault REDs first.
-2. Add selected-node state identity + adoption/legacy/workspace-member REDs.
-3. Add `lifecycle_tasks` JTD/corpus/generated type + relational behavior cell.
-4. Add lower optimistic pending-task reader + MCP `lifecycle_tasks` adapter.
-5. Extract `vibe-agent-projection` and keep package-skill behavior identical.
-6. Extract credential-free prompt resolution.
-7. Add the `vibe-orchestrator` ports/skeleton without moving live behavior.
-8. In one atomic commit, move the whole lifecycle command under CLI
-   characterization tests **and** rewire CLI as its thin adapter; there is
-   never a commit with a broken CLI or two live planners.
-9. Add strict MCP `lifecycle_run`, typed failure output, cross-surface parity
-   and hosted e2e.
+1. Characterise CLI install/build/park/failure bytes, row order, quiet output
+   and error identity before extraction.
+2. In parallel: add the capped safefs read; add `lifecycle_tasks` JTD/registry/
+   corpus/generated behavior cell; extract the minimal `vibe-agent-projection`;
+   evolve `McpTool` to the byte-compatible typed output seam.
+3. Harden state I/O through the pinned capability, including
+   possibly-published recovery and poison-on-third-state REDs.
+4. Add the outermost lifecycle lease to every existing mutating CLI surface;
+   lock-order, nested-acquire, busy-zero-mutation and clean-survival REDs first.
+5. Add selected-node state identity + adoption/legacy/workspace-member REDs.
+6. Add the lower bounded optimistic pending-task reader, then the strict MCP
+   `lifecycle_tasks` adapter. Run the first coherent boundary panel here.
+7. Introduce `RunObserver`, `ConfirmGate` and `ResolverFactory` ports in place
+   under the CLI characterization oracles; no behavior moves yet.
+8. Flip CLI package-skill imports to `vibe-agent-projection`, retaining MCP
+   compatibility reexports.
+9. Move the already-port-shaped planning values into `vibe-orchestrator`.
+10. In one atomic move-and-rewire commit, move dispatch/phase/callback plus the
+    install execution core; never leave a broken CLI or two live planners.
+11. Move trace-funnel values while presentation/adapters stay in CLI.
+12. Extract credential-free prompt resolution into `vibe-lifecycle::agent`.
+13. Add strict MCP `lifecycle_run`, typed executed failure, cross-surface
+    parity and hosted/no-provider e2e. Run the full R7.4 boundary panel.
 
 Each item is an independently gated atomic commit. Schema/codegen atoms land
 before their consumers. Full panel runs only after the coherent R7.4 batch;
