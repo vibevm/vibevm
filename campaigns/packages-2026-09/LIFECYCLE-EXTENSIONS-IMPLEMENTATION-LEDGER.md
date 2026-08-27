@@ -19,10 +19,10 @@ superseded by richer files on `main`. Their unique R4/R5 audit decisions were
 synthesised here, then 33 obsolete worktrees were removed under rolling GC.
 B-107, R3.3, R8.2a grammar, R6.2a/R6.2b, R7.2 and the R8.1 portability
 hardening and R7.3 hosted resume have since landed. Their worktrees are
-reclaimed under rolling GC. The R3.4 durable writer and its shared command-wire
-/ sticky-state prerequisites have now landed; each accepted worktree was or is
-reclaimed immediately. One protected R3.4 borrowed-threading worktree remains
-active until its own review/integration completes.
+reclaimed under rolling GC. The R3.4 durable writer, shared command-wire /
+sticky-state prerequisites and borrowed workspace/install plumbing have now
+landed; every accepted worktree was reclaimed immediately. No accepted
+implementation worktree is retained at this checkpoint.
 Missing later waves were never implemented.
 
 The reusable decisions from untracked architecture/review reports are
@@ -31,12 +31,12 @@ only durable home of a decision.
 
 ## 2. Evidence standard and current baseline
 
-- Integration checkpoint: `main` at `0301f8f2` after hosted lifecycle resume,
+- Integration checkpoint: `main` at `1298d1af` after hosted lifecycle resume,
   compiler observer/writer, the shared trace command-report wire, sticky
   lifecycle trace identity and the R7.4 implementation architecture.
 - `cargo test --workspace --locked`: green on 2026-08-27 at the unchanged
   product checkpoint.
-- `cargo xtask specmap`: 6772 units, 2030 tagged code items, 1811 edges,
+- `cargo xtask specmap`: 6774 units, 2048 tagged code items, 1831 edges,
   0 suspects, 0 gated orphans, 0 unresolved host edges and 21 standing
   warnings. The 25 non-host edges are outside this map's jurisdiction.
 - R6.2b integration evidence on the current tree: `cargo xtask codegen`
@@ -66,6 +66,18 @@ only durable home of a decision.
   the handler-envelope byte-identity RED, post-commit `check-codegen` is clean,
   and an independent final review ended PASS. Disabled report/state members
   remain absent on old bytes; no handler-envelope field was added.
+- R3.4 borrowed compilation evidence on the current tree: `be04a184` threads
+  one optional borrowed run through `vibe-install` and every real workspace
+  unit/node boot compile while the old wrappers pass `None`; attempt allocation
+  reacquires only an exact pending occurrence and evolves terminal attempts;
+  target-bearing portable bases, emitted-output fingerprints, fresh
+  observe-before-declare and traced-only unit sorting are centrally owned.
+  Root's merged-tree gate passed all 411 `vibe-workspace` library tests, the
+  2/2 cross-crate integration test, fmt and strict three-crate clippy. The
+  independent final review ended PASS; 25/26 files are blob-identical to the
+  accepted worker commit, and the remaining test differs only by the required
+  `RunMetadata.trace_compile=true|false` cross-atom adaptation. Specmap is
+  clean at `1298d1af` with zero suspects/gated orphans/unresolved host edges.
 - R7.3 integration evidence on the current tree: state transaction tests 5/5;
   hosted cancellation/progress/sequential-slot e2e 2/5/1; targeted five-crate
   clippy clean; 48-schema codegen idempotent; specmap has zero gated orphans;
@@ -130,7 +142,7 @@ this campaign, but compatibility law is preserved.
 | R3.1 five levels, six carriers, typed pass manager | done | `3630ab9e`; `compiler/{ir,pass,pipeline}.rs` |
 | R3.2 parse→close→merge→embed→qualify→absorb→link→assemble→emit | done | `a7961003`, `96eef07d`, `e53b9a4e`, `ec7ea7fe`, `e653654d`, `2feef271`, `6de7ef05`, `6f3fa61a`, `302a3509`, `4403cb55`; 84 boot-artifact + 10 emit gates |
 | R3.3 verifier-each skeleton | done | `15793f2e`; immutable test-only manager verifier, typed level/transition errors, SCC/document/lane/marker/fence invariants; 61 focused verifier tests + independent freeze |
-| R3.4 compile snapshots/timings | in progress | `6f4a717d` metadata/index/filename contract; `7adfbb5a` manifest activation; `fa0662a9` observer/pre-encode seam; `4d95a129` atomic writer/lock/retention/budget; `34d3f363` one shared generated command-report member; `0301f8f2` sticky adoption + state-proven displacement. Borrowed recorder plumbing through workspace/install, then command-owned open/funnel/presentation/e2e remain |
+| R3.4 compile snapshots/timings | in progress | `6f4a717d` metadata/index/filename; `7adfbb5a` manifest activation; `fa0662a9` observer/pre-encode; `4d95a129` writer/lock/retention/budget; `34d3f363` shared command report; `0301f8f2` sticky/displaced identity; `be04a184` borrowed attempt-aware workspace/install compilation. Command-owned open-existing/outcome funnel, flags/presentation and cross-command e2e remain |
 
 R3.2 also landed a crash-safe whole-artifact transaction/selector tier. That
 unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
@@ -387,6 +399,9 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
   capture and final main-tree exact gates were proved. The accepted R3.4
   wire/state worktree measured 24,735,991,892 bytes immediately before the same
   proof-and-reclaim sequence.
+  The accepted R3.4 borrowed-threading worktree then measured 8,781,245,020
+  bytes before its 25 blob-equal files plus one reviewed cross-atom test
+  adaptation were proved on `main` and it was reclaimed under the same law.
 
 ## 7. Dependency plan and parallel lanes
 
