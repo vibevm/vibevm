@@ -40,6 +40,7 @@ use crate::ExtensionRegistryRow;
 
 pub use contract::{OUTPUT_ACCEPT_NON_EMPTY, OUTPUT_KIND_FILE, OutputContract, OutputRow};
 pub use prompt::{PromptRequest, ResolvedPrompt};
+pub(crate) use prompt::{system_prose, user_prose};
 pub use result::{ResultPlan, probe_outputs};
 
 /// Everything the backend is told about one agent execution. It carries prose
@@ -175,6 +176,13 @@ impl PreparedAgent {
     #[must_use]
     pub fn planned_rows(&self) -> &[vibe_wire::generated::lifecycle::e1::reply::ReplyArtifact] {
         &self.planned
+    }
+
+    /// The exact resolved instructions — the credential-free prose a hosted
+    /// task document publishes for the same execution.
+    #[must_use]
+    pub fn instructions(&self) -> &str {
+        &self.instructions
     }
 }
 
@@ -474,4 +482,4 @@ fn message(written: usize, usage: Option<&AgentUsage>) -> String {
 }
 
 #[cfg(test)]
-mod tests;
+pub(crate) mod tests;

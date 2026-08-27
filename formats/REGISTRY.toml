@@ -62,6 +62,22 @@ foreign_parsers = "many"
 corpus = "none"
 sunset = "none"
 
+[format.cli-update-report]
+epoch = 1
+schema = "schemas/update_report.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+[format.cli-reinstall-report]
+epoch = 1
+schema = "schemas/reinstall_report.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
 [format.cli-lifecycle-report]
 epoch = 1
 schema = "schemas/lifecycle_report.jtd.json"

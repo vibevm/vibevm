@@ -83,6 +83,24 @@ pub struct Cli {
     #[arg(long = "invoked-by", global = true, value_name = "AGENT")]
     pub invoked_by: Option<String>,
 
+    /// PROP-054 `##AGENT-HANDSHAKE`: how this invocation executes `agent`
+    /// lifecycle contributions. `cli` calls the configured provider and pays
+    /// for it (the R7.2 behaviour); `agent` never constructs a provider —
+    /// each selected agent row is PARKED as a Markdown task under
+    /// `.vibe/agentic/outbox/<run-id>/` for the hosting agent to perform,
+    /// and the same command resumes the run once the declared outputs exist.
+    /// The default, `auto`, resolves to `agent` exactly when the resolved
+    /// `--invoked-by` / `VIBE_INVOKED_BY` value is present (something is
+    /// hosting this process) and to `cli` otherwise. An explicit
+    /// `cli`/`agent` always wins over `auto`'s inference.
+    #[arg(
+        long = "agent-mode",
+        global = true,
+        value_name = "MODE",
+        default_value = "auto"
+    )]
+    pub agent_mode: AgentModeArg,
+
     /// Run unattended — skip every confirmation prompt and refuse to
     /// open any interactive wizard. Equivalent to passing
     /// `--assume-yes` (`vibe install` / `vibe uninstall`) or `--yes`

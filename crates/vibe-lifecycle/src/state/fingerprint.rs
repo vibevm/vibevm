@@ -91,12 +91,7 @@ pub fn fingerprint_execution_with(
         Path::new(&context.project.manifest),
         row.key(),
     )?;
-    file_or_missing(
-        &mut hash,
-        "lockfile",
-        Path::new(&context.world.lockfile),
-        row.key(),
-    )?;
+    lockfile_identity(&mut hash, Path::new(&context.world.lockfile), row.key())?;
     declared_inputs(&mut hash, row, Path::new(&context.project.root))?;
     if let Some(prepared) = prepared {
         let (address, bytes) = prepared.fingerprint_material();
@@ -198,6 +193,60 @@ fn provider_material(hash: &mut FramedHash, provider: &ExtensionProvider) {
                     .unwrap_or_default()
                     .as_bytes(),
             );
+        }
+    }
+}
+
+/// The lockfile as an INPUT is the locked world it describes — not the moment
+/// the file happened to be written.
+///
+/// `[meta].generated_at` is a fresh RFC3339 stamp on every write, so hashing
+/// the raw bytes made a row's fingerprint depend on when its lock was last
+/// rewritten. An install that writes the lock and then parks a
+/// `slot:post-install` row could therefore NEVER satisfy that park: the resume
+/// re-reads a lock whose stamp has moved, the fingerprint differs, and the row
+/// reparks forever even though declaration, manifest, resolution and prompt
+/// are all unchanged.
+///
+/// The fix canonicalises at this one authority rather than dropping the input:
+/// the lock is parsed and re-serialised with the provenance stamp neutralised,
+/// so every resolution-bearing field — packages, roots, schema, solver,
+/// features, and `generated_by` (a different vibe can resolve differently) —
+/// still contributes exactly as before. A lock that is unparseable falls back
+/// to its raw bytes, so nothing silently stops being fingerprinted.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-FINGERPRINT")]
+fn lockfile_identity(
+    hash: &mut FramedHash,
+    path: &Path,
+    key: &ExtensionKey,
+) -> Result<(), FingerprintError> {
+    let bytes = match std::fs::read(path) {
+        Ok(bytes) => bytes,
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => {
+            hash.field("lockfile-presence", b"missing");
+            return Ok(());
+        }
+        Err(source) => {
+            return Err(FingerprintError::Read {
+                key: key.clone(),
+                path: machine_path(path),
+                source,
+            });
+        }
+    };
+    hash.field("lockfile-presence", b"present");
+    let canonical = std::str::from_utf8(&bytes)
+        .ok()
+        .and_then(|text| toml::from_str::<vibe_core::manifest::Lockfile>(text).ok())
+        .map(|mut lockfile| {
+            lockfile.meta.generated_at = String::new();
+            lockfile
+        });
+    match canonical {
+        Some(lockfile) => hash.json("lockfile", &lockfile, key),
+        None => {
+            hash.field("lockfile", &bytes);
+            Ok(())
         }
     }
 }

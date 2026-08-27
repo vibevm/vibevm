@@ -8,6 +8,7 @@ use std::path::Path;
 use common::{UserScratch, fixture_registry};
 use vibe_core::PackageRef;
 use vibe_core::manifest::{ActiveSection, ExtensionKey, ExtensionUse, Manifest};
+use vibe_wire::generated::install_report::InstallReport;
 use vibe_wire::generated::lifecycle_report::LifecycleReport;
 
 fn init_project(user: &UserScratch) -> tempfile::TempDir {
@@ -156,18 +157,21 @@ fn direct_install_reloads_the_new_world_and_keeps_its_final_json_document_last()
     assert_eq!(
         documents
             .iter()
-            .filter(|document| document["command"] == "lifecycle")
+            .filter(|document| document["command"] == "install")
             .count(),
         1,
         "the post-durability callback must be consumed exactly once"
     );
     let ritual = documents
         .iter()
-        .find(|document| document["command"] == "lifecycle")
+        .find(|document| document["command"] == "install")
         .expect("ritual document before final install report");
-    let ritual: LifecycleReport = serde_json::from_value(ritual.clone()).unwrap();
-    assert_eq!(status(&ritual, "validate"), "ok");
-    assert_eq!(status(&ritual, "install"), "ok");
+    // `vibe install` is the outermost command: the ritual rows it ran are its
+    // own report's typed `contributions`, and the step vocabulary lives on the
+    // lifecycle report a PHASE VERB emits, not here.
+    let ritual: InstallReport = serde_json::from_value(ritual.clone()).unwrap();
+    assert!(ritual.ok);
+    assert!(!ritual.unchanged, "an applied install is not unchanged");
     assert!(ritual.contributions.iter().any(|row| {
         row.key == "org.vibevm/integration-alpha#install-plan"
             && row.phase == "install"
@@ -206,15 +210,15 @@ fn direct_fresh_install_keeps_builtin_status_separate_from_the_planned_ritual() 
         let documents = json_documents(&output.stdout);
         assert_eq!(documents.last().unwrap()["command"], "install");
         assert_eq!(documents.last().unwrap()["unchanged"], true);
-        let ritual: LifecycleReport = serde_json::from_value(
+        let ritual: InstallReport = serde_json::from_value(
             documents
                 .iter()
-                .find(|document| document["command"] == "lifecycle")
+                .find(|document| document["command"] == "install")
                 .unwrap()
                 .clone(),
         )
         .unwrap();
-        assert_eq!(status(&ritual, "install"), "fresh");
+        assert!(ritual.unchanged, "the lock was fresh");
         assert_eq!(
             ritual.contributions[0].status,
             if force { "ok" } else { "fresh" }
@@ -263,11 +267,11 @@ config = { message = "host install {phase} {package}" }
     assert_eq!(documents.last().unwrap()["unchanged"], true);
     let rituals: Vec<_> = documents
         .iter()
-        .filter(|document| document["command"] == "lifecycle")
+        .filter(|document| document["command"] == "install")
         .collect();
     assert_eq!(rituals.len(), 1, "callback must be consumed once");
-    let ritual: LifecycleReport = serde_json::from_value((*rituals[0]).clone()).unwrap();
-    assert_eq!(status(&ritual, "install"), "fresh");
+    let ritual: InstallReport = serde_json::from_value((*rituals[0]).clone()).unwrap();
+    assert!(ritual.unchanged, "the empty world's lock was fresh");
     assert_eq!(ritual.contributions.len(), 1);
     assert!(ritual.contributions[0].key.ends_with("#host-install"));
     assert_eq!(ritual.contributions[0].tier, "host-declaration");

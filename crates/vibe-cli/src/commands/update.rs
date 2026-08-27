@@ -15,14 +15,15 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary");
 
-mod lifecycle;
+mod inputs;
+pub(crate) mod lifecycle;
+mod report;
 
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
 use dialoguer::Confirm;
-use vibe_core::manifest::{LockedPackage, Lockfile, Manifest, SourceKind};
 use vibe_core::user_config::{SlotIntegrity, UserConfig};
 use vibe_core::{ContentHash, Group, PackageRef, VersionSpec};
 use vibe_install::{InstallSlotLifecycle, InstallSource};
@@ -35,14 +36,18 @@ use vibe_workspace::install::{
 };
 use vibe_workspace::vibedeps;
 
-use crate::cli::{InstallArgs, UpdateArgs};
+use crate::cli::UpdateArgs;
 use crate::commands::install::{
-    HookReportPresentation, LifecycleHookView, build_install_resolver, emit_closure_diff,
-    exact_pinned_pkgref, lane_sizes,
+    LifecycleHookView, build_install_resolver, emit_closure_diff, exact_pinned_pkgref, lane_sizes,
 };
 use crate::commands::short_name;
 use crate::exit_code::InstallError;
 use crate::output;
+
+use inputs::{
+    install_args_from, load_lockfile, load_project_manifest, locked_package, resolve_project_root,
+};
+use report::{emit_report, emit_update_document};
 
 /// A subtree node the scoped update will refresh **in place** rather than
 /// re-fetch: the lockfile already records it as `in-place` (PROP-022 §2.4) and
@@ -82,8 +87,43 @@ pub fn run(
     // root offline flag travels along and the delegate resolves the full
     // posture against its own user-config load.
     if args.all || args.packages.is_empty() {
-        return super::install::run(ctx, install_args_from(&args), embedded_root, root_offline)
-            .map(|_| ());
+        // The whole-graph update runs the install substrate, but it is still
+        // `vibe update`: it supplies its OWN requested phase, chain and run
+        // identity, so the handoff a hosted row publishes resumes with
+        // `vibe update` rather than impersonating install.
+        let project_root = resolve_project_root(&args.path)?;
+        let user_config = UserConfig::load().context("loading the user config")?;
+        let metadata = lifecycle::metadata(
+            ctx,
+            &project_root,
+            "update",
+            root_offline || user_config.net.offline,
+            args.assume_yes,
+        )?;
+        let run = super::install::run_with_lifecycle_context(
+            ctx,
+            install_args_from(&args),
+            embedded_root,
+            root_offline,
+            Some(metadata),
+            None,
+            |_, _, _| Ok(super::install::WorldCallbackOutcome::default()),
+        )?;
+        if let Some(delegation) = run.parked.as_ref() {
+            crate::commands::lifecycle::check_delegation(delegation)?;
+        }
+        return emit_update_document(
+            ctx,
+            report::UpdateOutcome {
+                project_root: &project_root,
+                args: &args,
+                progress: &run.progress,
+                packages_resolved: run.packages_resolved,
+                bumps: &[],
+                rows: &run.slot_reports,
+                delegation: run.parked.as_ref(),
+            },
+        );
     }
 
     // Scoped update: only the named packages and their subtrees move.
@@ -312,7 +352,14 @@ pub fn run(
     // Remove any superseded *versioned* slot so a bump leaves no stale slot
     // (an in-place slot is unversioned — nothing to prune), and record the
     // bumps for the report.
+    //
+    // `pruned` is measured HERE, at the removal itself, and only when the
+    // removal actually removed something: `bumps` is prose for a human, and a
+    // bump whose slot was already absent (or is in-place, so unversioned)
+    // pruned nothing. Deriving one from the other would report a slot path
+    // that no longer describes anything this run did.
     let mut bumps: Vec<String> = Vec::new();
+    let mut pruned: Vec<String> = Vec::new();
     for (cached, _, _) in &updated {
         let name = &cached.resolved.name;
         let Some(old_v) = lockfile
@@ -327,10 +374,15 @@ pub fn run(
             cached.resolved.group, name, old_v, cached.resolved.version
         ));
         if !cached.package_meta().materialization.is_in_place() {
-            vibedeps::remove_slot(&workspace.root, &cached.package_meta().group, name, &old_v)
+            let group = &cached.package_meta().group;
+            let removed = vibedeps::remove_slot(&workspace.root, group, name, &old_v)
                 .context("removing the superseded vibedeps/ slot")?;
+            if removed {
+                pruned.push(vibedeps::slot_rel_path(group, name, &old_v));
+            }
         }
     }
+    pruned.sort();
 
     // Materialise the subtree (copy / hardlink / in-place move) and
     // run each freshly-placed slot's pre-install hook (PROP-020 §2.1) — no
@@ -371,19 +423,55 @@ pub fn run(
             )?),
         },
     )?;
-    let mut subtree = materialise_subtree_with_spec_format_and_slot_lifecycle(
+    // The prune already happened; a park inside the materialise pass must
+    // still report it. Every later `lifecycle.progress()` inherits it.
+    lifecycle.record_pruned(pruned.clone());
+    let materialised = materialise_subtree_with_spec_format_and_slot_lifecycle(
         &workspace.root,
         &resolution,
         SlotIntegrity::Verify,
         spec_format,
         Some(&source_hashes),
         &lifecycle,
-    )
-    .context("re-materialising the updated subtree")?;
+    );
+    // A hosted row parked. That is a durable handoff, not a failure — and it
+    // belongs to THIS command: `vibe update` reports `update`, its own run,
+    // and `resume: vibe update`. It never impersonates install.
+    if let Some(delegation) = lifecycle.parked() {
+        crate::commands::lifecycle::check_delegation(&delegation)?;
+        return emit_update_document(
+            ctx,
+            report::UpdateOutcome {
+                project_root: &project_root,
+                args: &args,
+                progress: &lifecycle.progress(),
+                packages_resolved: updated.len(),
+                bumps: &bumps,
+                rows: &lifecycle.take_reports().unwrap_or_default(),
+                delegation: Some(&delegation),
+            },
+        );
+    }
+    let mut subtree = materialised.context("re-materialising the updated subtree")?;
 
     // Regenerate every node's boot from the new `vibedeps/` state.
-    regenerate_boot_with_spec_format(&workspace, spec_format)
+    let nodes_regenerated = regenerate_boot_with_spec_format(&workspace, spec_format)
         .context("regenerating boot artifacts")?;
+
+    // The scoped update's own complete record, assembled from what each step
+    // really returned: the subtree pass's slot lists, the removals measured
+    // above, and the nodes boot regeneration actually rewrote. Recorded on the
+    // lifecycle BEFORE the post-install callbacks, so a row that parks there
+    // reports a finished materialisation instead of the partial snapshot the
+    // materialise boundary left behind.
+    lifecycle.record_complete(vibe_install::InstallProgress {
+        complete: true,
+        fresh: false,
+        materialised: subtree.materialised.clone(),
+        skipped: subtree.skipped.clone(),
+        pruned,
+        nodes_regenerated,
+    });
 
     // Replace each subtree package's lockfile entry, carrying the
     // install-scoped metadata (features / language) the version bump does
@@ -418,163 +506,58 @@ pub fn run(
     );
 
     if let Some(plan) = subtree.take_post_install_plan() {
-        run_post_install_slot_lifecycle(plan, SlotLifecycleMode::Callback(&lifecycle))
-            .context("running post-install lifecycle")?;
+        let ran = run_post_install_slot_lifecycle(plan, SlotLifecycleMode::Callback(&lifecycle));
+        if let Some(delegation) = lifecycle.parked() {
+            crate::commands::lifecycle::check_delegation(&delegation)?;
+            return emit_update_document(
+                ctx,
+                report::UpdateOutcome {
+                    project_root: &project_root,
+                    args: &args,
+                    progress: &lifecycle.progress(),
+                    packages_resolved: updated.len(),
+                    bumps: &bumps,
+                    rows: &lifecycle.take_reports().unwrap_or_default(),
+                    delegation: Some(&delegation),
+                },
+            );
+        }
+        ran.context("running post-install lifecycle")?;
     }
+    // A scoped update whose slot is already materialised raises no payload
+    // event, so its post-install pass never revisits a live park. The
+    // persisted continuation is exactly the mechanism for that: service it
+    // before anything reports a completed update.
+    if let Some(done) = report::service_continuation(
+        ctx,
+        &lifecycle,
+        &project_root,
+        &workspace,
+        &manifest,
+        &lifecycle_metadata,
+        spec_format,
+        &args,
+        updated.len(),
+        &bumps,
+    )? {
+        return done;
+    }
+    lifecycle.clear_continuation().map_err(anyhow::Error::msg)?;
     let lifecycle_reports = lifecycle.take_reports()?;
     let hook_reports = LifecycleHookView::new(&lifecycle_reports);
 
-    emit_report(ctx, updated.len(), &bumps, &hook_reports)?;
+    emit_report(
+        ctx,
+        report::UpdateOutcome {
+            project_root: &project_root,
+            args: &args,
+            progress: &lifecycle.progress(),
+            packages_resolved: updated.len(),
+            bumps: &bumps,
+            rows: &lifecycle_reports,
+            delegation: None,
+        },
+        &hook_reports,
+    )?;
     Ok(())
-}
-
-/// Build the `InstallArgs` that `vibe update`'s whole-graph path delegates
-/// with, and that `build_install_resolver` reads. `vibe update` carries no
-/// `--registry` / `--git` / feature flags, so those default off.
-fn install_args_from(args: &UpdateArgs) -> InstallArgs {
-    InstallArgs {
-        packages: Vec::new(),
-        path: args.path.clone(),
-        registry: None,
-        assume_yes: args.assume_yes,
-        language: None,
-        features: Vec::new(),
-        no_default_features: false,
-        all_features: false,
-        exact: args.exact,
-        auth_required: args.auth_required,
-        solver: None,
-        git: None,
-        tag: None,
-        branch: None,
-        rev: None,
-        git_auth: None,
-        git_token_env: None,
-        force: false,
-        prefer_embedded: false,
-        no_prefer_embedded: false,
-        no_default_registry: false,
-        offline: false,
-        embedded_short_circuit: false,
-        prefer_local: false,
-        no_prefer_local: false,
-    }
-}
-
-/// Build the lockfile entry for a re-resolved package. Version, hash and
-/// source come from the fresh fetch; the install-scoped `features` /
-/// `subskills_active` / `language` are carried from the previous entry —
-/// a version bump does not re-evaluate them.
-fn locked_package(
-    cached: &CachedPackage,
-    dependencies: &[PackageRef],
-    old: Option<&LockedPackage>,
-) -> LockedPackage {
-    let source_kind = if cached.overridden {
-        SourceKind::Override
-    } else if cached.is_path_source {
-        SourceKind::Path
-    } else if cached.is_git_source {
-        SourceKind::Git
-    } else {
-        SourceKind::Registry
-    };
-    LockedPackage {
-        kind: cached.package_meta().kind,
-        group: cached.resolved.group.clone(),
-        name: vibe_core::PackageName::from_validated(cached.resolved.name.clone()),
-        version: cached.resolved.version.clone(),
-        registry: cached.registry_name.clone(),
-        source_url: vibe_core::SourceUrl::new(cached.source_uri.clone()),
-        source_ref: cached.source_ref.clone(),
-        resolved_commit: cached.resolved_commit.clone(),
-        content_hash: vibe_core::ContentHash::from_validated(cached.content_hash.clone()),
-        boot_snippet: None,
-        files_written: Vec::new(),
-        dependencies: dependencies.to_vec(),
-        admitted_by: old.and_then(|package| package.admitted_by.clone()),
-        via_override: old.and_then(|package| package.via_override.clone()),
-        overridden: cached.overridden,
-        source_kind: Some(source_kind),
-        via_redirect: cached.via_redirect.clone(),
-        features: old.map(|o| o.features.clone()).unwrap_or_default(),
-        subskills_active: old.map(|o| o.subskills_active.clone()).unwrap_or_default(),
-        describes: cached
-            .package_meta()
-            .describes
-            .as_ref()
-            .map(|p| p.to_string()),
-        language: old.and_then(|o| o.language.clone()),
-        // A version bump does not change how the package is materialised —
-        // carry the freshly-fetched manifest's declared mode (PROP-022 §2.1).
-        materialization: cached.package_meta().materialization,
-    }
-}
-
-fn emit_report(
-    ctx: &output::Context,
-    count: usize,
-    bumps: &[String],
-    hook_reports: &dyn HookReportPresentation,
-) -> Result<()> {
-    if ctx.is_json() {
-        ctx.emit_json(&serde_json::json!({
-            "ok": true,
-            "command": "update",
-            "packages_resolved": count,
-            "version_bumps": bumps,
-            "hooks": [],
-        }))?;
-        return Ok(());
-    }
-    if ctx.is_quiet() {
-        ctx.summary(&format!(
-            "vibe update: {count} package{} re-resolved, {} bump{}{}",
-            if count == 1 { "" } else { "s" },
-            bumps.len(),
-            if bumps.len() == 1 { "" } else { "s" },
-            hook_reports.quiet_suffix(),
-        ));
-        return Ok(());
-    }
-    for b in bumps {
-        ctx.created(b);
-    }
-    ctx.summary(&format!(
-        "\nUpdated {count} package{} ({} version bump{}).",
-        if count == 1 { "" } else { "s" },
-        bumps.len(),
-        if bumps.len() == 1 { "" } else { "s" },
-    ));
-    Ok(())
-}
-
-fn resolve_project_root(path: &Path) -> Result<PathBuf> {
-    let canonical = path
-        .canonicalize()
-        .with_context(|| format!("canonicalizing `{}`", path.display()))?;
-    let stripped = super::init::strip_unc_public(canonical);
-    if !stripped.join(Manifest::FILENAME).exists() {
-        bail!(
-            "no `vibe.toml` in `{}`; run `vibe init` first",
-            stripped.display()
-        );
-    }
-    Ok(stripped)
-}
-
-fn load_project_manifest(root: &Path) -> Result<Manifest> {
-    Ok(Manifest::read(root.join(Manifest::FILENAME))?)
-}
-
-fn load_lockfile(root: &Path) -> Result<Lockfile> {
-    let path = root.join(Lockfile::FILENAME);
-    if path.exists() {
-        Ok(Lockfile::read(&path)?)
-    } else {
-        bail!(
-            "no `vibe.lock` in `{}` — nothing to update; run `vibe install` first",
-            root.display()
-        );
-    }
 }

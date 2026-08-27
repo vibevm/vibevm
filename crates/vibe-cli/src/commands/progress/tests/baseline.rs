@@ -100,7 +100,8 @@ fn classify(root: &Path, base: &Baseline) -> Vec<RescanRow> {
 fn the_baseline_round_trips_to_carried_forward() {
     let tmp = tempfile::tempdir().expect("tempdir");
     let root = tmp.path();
-    let ctx = crate::output::Context::from_flags(true, false, None, true);
+    let ctx =
+        crate::output::Context::from_flags(true, false, None, true, crate::cli::AgentModeArg::Auto);
     seeded(root, &ctx).expect("a seeded fixture campaign");
 
     baseline_cmd(&ctx, &baseline_args(root)).expect("write the baseline");
@@ -171,7 +172,8 @@ fn the_baseline_round_trips_to_carried_forward() {
 fn an_edited_unit_is_the_only_row_that_moves() {
     let tmp = tempfile::tempdir().expect("tempdir");
     let root = tmp.path();
-    let ctx = crate::output::Context::from_flags(true, false, None, true);
+    let ctx =
+        crate::output::Context::from_flags(true, false, None, true, crate::cli::AgentModeArg::Auto);
     seeded(root, &ctx).expect("a seeded fixture campaign");
     baseline_cmd(&ctx, &baseline_args(root)).expect("write the baseline");
     let base = Baseline::load(&baseline_path(root)).expect("load");
@@ -217,7 +219,8 @@ fn an_edited_unit_is_the_only_row_that_moves() {
 fn a_second_run_writes_nothing() {
     let tmp = tempfile::tempdir().expect("tempdir");
     let root = tmp.path();
-    let ctx = crate::output::Context::from_flags(true, false, None, true);
+    let ctx =
+        crate::output::Context::from_flags(true, false, None, true, crate::cli::AgentModeArg::Auto);
     seeded(root, &ctx).expect("a seeded fixture campaign");
     let path = baseline_path(root);
 
@@ -265,7 +268,8 @@ fn a_second_run_writes_nothing() {
 fn a_baseline_is_refused_rather_than_truncated() {
     let tmp = tempfile::tempdir().expect("tempdir");
     let root = tmp.path();
-    let ctx = crate::output::Context::from_flags(true, false, None, true);
+    let ctx =
+        crate::output::Context::from_flags(true, false, None, true, crate::cli::AgentModeArg::Auto);
     seeded(root, &ctx).expect("a seeded fixture campaign");
 
     // No campaign zone: `--campaign` points nowhere and `campaigns/` holds

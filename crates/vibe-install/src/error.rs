@@ -82,6 +82,55 @@ pub enum Error {
     )]
     Lifecycle(String),
 
+    /// Not a failure: a hosted `agent` row at a slot point parked for the
+    /// hosting agent, so the install stopped AT THAT POINT and the chain went
+    /// no further.
+    ///
+    /// How much is already durable depends on WHICH point, and this type does
+    /// not pretend otherwise. A `slot:pre-install` park stops before the
+    /// remaining slots are materialised and therefore before the lockfile
+    /// barrier and every post-barrier row; a `slot:post-install` park happens
+    /// AFTER the apply is durable — slots placed, lock written — and stops the
+    /// rows that would have followed it. `progress` below is the
+    /// boundary-measured record of whichever of those actually happened; the
+    /// caller reports that and exits 0.
+    #[error(
+        "the install lifecycle parked run `{}` for the hosting agent at a slot point; the chain \
+         stopped there and the report carries the progress measured up to it; {} task(s) await \
+         it, then resume with `{}` \
+         (governed by spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-HANDSHAKE)",
+        delegation.run_id,
+        delegation.tasks.len(),
+        delegation.resume,
+    )]
+    Delegated {
+        delegation: Box<vibe_lifecycle::Delegation>,
+        reports: Vec<crate::SlotLifecycleReport>,
+        /// What the install really did before the park, measured at the
+        /// mutation boundary rather than assumed from the point. A
+        /// post-install park represents a COMPLETE materialisation; a
+        /// pre-install park represents whatever was placed before it;
+        /// reporting either as nothing would be the dishonest half of an
+        /// honest handoff.
+        progress: Box<crate::InstallProgress>,
+    },
+
+    /// A slot row FAILED, carrying the rows and the boundary-measured
+    /// progress the outermost command needs to report it. A failure is an
+    /// outcome: `vibe install` renders its own document for it rather than
+    /// letting the removal of the per-row echo take the machine record with it.
+    #[error(
+        "{source} \
+         (governed by spec://org.vibevm.core/vibevm/common/PROP-054#FAILURE-BY-PHASE; \
+          fix: apply the inner failure's remediation and rerun the install)"
+    )]
+    SlotFailed {
+        #[source]
+        source: Box<Error>,
+        reports: Vec<crate::SlotLifecycleReport>,
+        progress: Box<crate::InstallProgress>,
+    },
+
     #[error(transparent)]
     Workspace(#[from] vibe_workspace::WorkspaceError),
 }

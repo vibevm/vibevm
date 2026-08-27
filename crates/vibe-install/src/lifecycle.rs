@@ -7,32 +7,37 @@ use std::sync::{Arc, Mutex};
 
 use vibe_core::PackageName;
 use vibe_core::lifecycle::{ExtensionPoint, SlotPoint};
-use vibe_core::manifest::{Manifest, Materialization};
+use vibe_core::manifest::Manifest;
 use vibe_lifecycle::handlers::{BinaryBackend, HandlerRuntime, HandlerStreams};
 use vibe_lifecycle::process::{StreamMode, SystemProcessRunner};
 use vibe_lifecycle::{
-    DependencyExtensionSource, DependencyProvider, DependencyProviderId, DispatchError,
-    ExecutionReuse, ExtensionProvider, HandlerExecution, HostExtensionSource, HostIdentity,
-    HostProvider, LifecycleRun, LifecycleRunError, LifecycleRunHandle, Phase, RunMetadata,
-    SlotTarget, inclusive_chain,
+    Delegation, DependencyExtensionSource, DependencyProviderId, DispatchError, ExecutionReuse,
+    ExtensionProvider, HandlerExecution, HostIdentity, LifecycleRun, LifecycleRunError,
+    LifecycleRunHandle, Phase, RunMetadata, inclusive_chain,
 };
-use vibe_wire::generated::lifecycle::e1::context::{Project, World, WorldPackage};
-use vibe_wire::generated::lifecycle_state::ExecutionRecordStatus;
+use vibe_wire::generated::lifecycle_state::{ExecutionRecordStatus, SlotTargetRecord};
 use vibe_workspace::Workspace;
 use vibe_workspace::hooks::SystemProbe;
 use vibe_workspace::install::{
     ResolvedDep, SlotLifecycle, SlotLifecycleContext, SlotLifecycleTarget,
 };
-use vibe_workspace::vibedeps::{in_place_slot_abs_path, slot_abs_path};
 
 use crate::error::{Error, Result};
 use crate::plan::PlannedInstall;
 
+mod envelope;
 mod plan;
+mod progress;
+mod reconcile;
+use envelope::{
+    dependency_provider, host_source, nonempty, project_envelope, slot_target, world_envelope,
+};
 use plan::build_slot_plan;
 pub use plan::{
     NoSlotLifecycleObserver, SlotLifecycleObserver, SlotLifecyclePlan, SlotLifecyclePlanEntry,
 };
+pub use progress::InstallProgress;
+use reconcile::reconcile_removed_slot_parks;
 
 /// One legacy hook after translation into and execution by the lifecycle engine.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -54,12 +59,26 @@ pub struct SlotLifecycleReport {
     pub stderr_truncated: bool,
 }
 
+/// The sentinel a parked slot row returns through the `Result<(), String>`
+/// slot-lifecycle seam. It is NOT a failure message: the caller recognises it,
+/// reads the typed handoff off the lifecycle, and reports a durable handoff
+/// with exit 0. Returning through the error channel is what STOPS the install
+/// — materialisation of later slots, the lockfile barrier and every
+/// post-install row — before any of it runs.
+pub(crate) const PARKED_SENTINEL: &str = "@vibe/lifecycle/parked";
+
 pub struct InstallSlotLifecycle {
     installed: Vec<DependencyExtensionSource>,
     plan: SlotLifecyclePlan,
     streams: StreamMode,
     run: LifecycleRunHandle,
     reports: Mutex<Vec<SlotLifecycleReport>>,
+    /// The first hosted handoff this install parked, if any.
+    parked: Mutex<Option<Delegation>>,
+    /// What the materialise pass changed, recorded as it happened. A park in a
+    /// deferred pre-install row reads this rather than an outcome that never
+    /// came back.
+    progress: Mutex<InstallProgress>,
     observer: Arc<dyn SlotLifecycleObserver>,
     /// `agent` is legal at slot points as well as phase points, so a direct or
     /// chained install must be able to execute one. It arrives through the
@@ -151,12 +170,19 @@ impl InstallSlotLifecycle {
         let run = LifecycleRun::begin(&workspace.root, project, world, run, state_chain)
             .map_err(|error| Error::Lifecycle(error.to_string()))?
             .shared();
+        // The slot half of the same reconciliation the phase plan performs at
+        // its own boundary. This is the ONE place a slot plan is adopted, so
+        // it is the one place that can notice a slot-scoped park whose
+        // declaration is gone from the plan this run just built.
+        let cancelled = reconcile_removed_slot_parks(&run, &plan, &workspace.root)?;
         Ok(Self {
             installed,
             plan,
             streams,
             run,
-            reports: Mutex::new(Vec::new()),
+            reports: Mutex::new(cancelled),
+            parked: Mutex::new(None),
+            progress: Mutex::new(InstallProgress::default()),
             observer: seams.observer,
             agent: seams.agent,
         })
@@ -164,6 +190,106 @@ impl InstallSlotLifecycle {
 
     pub(crate) fn run_handle(&self) -> LifecycleRunHandle {
         self.run.clone()
+    }
+
+    /// The typed handoff this install parked, if a hosted agent row stopped
+    /// it. Present exactly when the slot seam returned [`PARKED_SENTINEL`].
+    pub fn parked(&self) -> Option<Delegation> {
+        self.parked.lock().ok().and_then(|parked| parked.clone())
+    }
+
+    /// Persist the exact ordered payload-event target set BEFORE any
+    /// pre-install callback can park, so a resume whose lock is already fresh
+    /// can rebuild the SAME slot run rather than infer one.
+    fn record_targets(&self, targets: &[SlotLifecycleTarget]) -> std::result::Result<(), String> {
+        let records = targets
+            .iter()
+            .map(|target| SlotTargetRecord {
+                group: target.group.to_string(),
+                name: target.name.clone(),
+                version: target.version.to_string(),
+            })
+            .collect();
+        self.run
+            .lock()
+            .map_err(|_| "slot lifecycle run lock was poisoned".to_string())?
+            .record_slot_continuation(records)
+            .map_err(|error| error.to_string())
+    }
+
+    /// Stage the exact ordered target set a RESUME rebuilt from the persisted
+    /// continuation.
+    ///
+    /// The materialise pass announces its selection through `targets_ready`;
+    /// a resume has no materialise pass — the lock is already fresh, so it
+    /// reconstructs the set directly from what the parked run recorded — and
+    /// therefore announces it here instead. Skipping this leaves the store
+    /// servicing the resume with nothing staged, and a SECOND declared row
+    /// parking after the first was satisfied then has no target set to name:
+    /// the moment the last delegated row flips to `ok` the continuation is
+    /// correctly dropped, and only the staged set can put it back.
+    pub fn stage_resumed_targets(&self, targets: &[ResolvedDep]) -> Result<()> {
+        let records = targets
+            .iter()
+            .map(|dep| SlotTargetRecord {
+                group: dep.group.to_string(),
+                name: dep.name.clone(),
+                version: dep.version.to_string(),
+            })
+            .collect();
+        self.run
+            .lock()
+            .map_err(|_| Error::Lifecycle("slot lifecycle run lock was poisoned".into()))?
+            .record_slot_continuation(records)
+            .map_err(|error| Error::Lifecycle(error.to_string()))
+    }
+
+    /// Whether a slot-scoped park is still live in this run's state.
+    pub fn owes_slot_work(&self) -> bool {
+        self.run
+            .lock()
+            .map(|run| run.owes_slot_work())
+            .unwrap_or(false)
+    }
+
+    /// The slot run reached its end with nothing owed.
+    pub fn clear_continuation(&self) -> std::result::Result<(), String> {
+        self.run
+            .lock()
+            .map_err(|_| "slot lifecycle run lock was poisoned".to_string())?
+            .clear_slot_continuation()
+            .map_err(|error| error.to_string())
+    }
+
+    /// What the materialise pass had really changed when the seam stopped.
+    pub fn progress(&self) -> InstallProgress {
+        self.progress
+            .lock()
+            .map(|progress| progress.clone())
+            .unwrap_or_default()
+    }
+
+    /// Replace the recorded progress with the complete record of a finished
+    /// apply — used when the park happened AFTER the apply, at a post-install
+    /// row, so the report carries the whole outcome rather than the
+    /// pre-install snapshot.
+    pub fn record_complete(&self, progress: InstallProgress) {
+        if let Ok(mut slot) = self.progress.lock() {
+            *slot = progress;
+        }
+    }
+
+    /// Record slot paths a caller pruned OUTSIDE the materialise pass.
+    ///
+    /// A scoped update removes each superseded versioned slot itself, before
+    /// materialising the subtree, so this is the only place those removals can
+    /// be measured. Recording them here — at the removal, not derived from a
+    /// human-facing bump list — means a park taken anywhere later still
+    /// reports the slots that really went away.
+    pub fn record_pruned(&self, pruned: Vec<String>) {
+        if let Ok(mut slot) = self.progress.lock() {
+            slot.pruned = pruned;
+        }
     }
 
     pub fn take_reports(&self) -> Result<Vec<SlotLifecycleReport>> {
@@ -231,23 +357,41 @@ impl InstallSlotLifecycle {
         let result = run.execute_one(&execution, "install", ExecutionReuse::Always, &runtime);
         drop(run);
         match result {
-            Ok(outcome) => self.push_report(SlotLifecycleReport {
-                key: execution.key(),
-                reference: execution.reference(),
-                slot_target: execution.slot_target().cloned(),
-                point: execution.row().declaration().point.to_string(),
-                provider: execution.row().provider().to_string(),
-                handler: execution.row().declaration().handler.kind().to_string(),
-                tier: tier_name(execution.row().effective_tier()).into(),
-                version: provider_version(execution.row().provider()),
-                status: transition_status(&outcome.status).into(),
-                flagged: false,
-                message: outcome.message,
-                stdout: nonempty(outcome.streams.stdout),
-                stderr: nonempty(outcome.streams.stderr),
-                stdout_truncated: outcome.streams.stdout_truncated,
-                stderr_truncated: outcome.streams.stderr_truncated,
-            }),
+            Ok(outcome) => {
+                let handoff = outcome.delegation.clone();
+                self.push_report(SlotLifecycleReport {
+                    key: execution.key(),
+                    reference: execution.reference(),
+                    slot_target: execution.slot_target().cloned(),
+                    point: execution.row().declaration().point.to_string(),
+                    provider: execution.row().provider().to_string(),
+                    handler: execution.row().declaration().handler.kind().to_string(),
+                    tier: tier_name(execution.row().effective_tier()).into(),
+                    version: provider_version(execution.row().provider()),
+                    status: transition_status(&outcome.status).into(),
+                    flagged: false,
+                    message: outcome.message,
+                    stdout: nonempty(outcome.streams.stdout),
+                    stderr: nonempty(outcome.streams.stderr),
+                    stdout_truncated: outcome.streams.stdout_truncated,
+                    stderr_truncated: outcome.streams.stderr_truncated,
+                })?;
+                // A parked hosted row stops the install HERE — before any
+                // later slot is materialised, before the lockfile barrier and
+                // before every post-install row. The sentinel travels through
+                // the seam's error channel because that is the only channel
+                // that halts the orchestrator; the caller reads the typed
+                // handoff off `parked()` and reports a handoff, not a failure.
+                if let Some(handoff) = handoff {
+                    *self
+                        .parked
+                        .lock()
+                        .map_err(|_| "slot lifecycle park lock was poisoned".to_string())? =
+                        Some(handoff);
+                    return Err(PARKED_SENTINEL.to_string());
+                }
+                Ok(())
+            }
             Err(error) => {
                 let soft_post_failure =
                     point == SlotPoint::PostInstall && is_semantic_handler_failure(&error);
@@ -392,7 +536,24 @@ fn provider_version(provider: &ExtensionProvider) -> Option<String> {
 
 impl SlotLifecycle for InstallSlotLifecycle {
     fn targets_ready(&self, targets: &[SlotLifecycleTarget]) -> std::result::Result<(), String> {
+        self.record_targets(targets)?;
         self.observer.observe(&self.plan.for_targets(targets))
+    }
+
+    fn materialised(&self, materialised: &[String], skipped: &[String]) {
+        if let Ok(mut progress) = self.progress.lock() {
+            progress.materialised = materialised.to_vec();
+            progress.skipped = skipped.to_vec();
+            // Pruning and boot regeneration happen after this boundary, so a
+            // record captured here is explicitly partial.
+            progress.complete = false;
+        }
+    }
+
+    fn rolled_back(&self, slot: &str) {
+        if let Ok(mut progress) = self.progress.lock() {
+            progress.materialised.retain(|entry| entry != slot);
+        }
     }
 
     fn pre_install(&self, context: SlotLifecycleContext<'_>) -> std::result::Result<(), String> {
@@ -401,141 +562,5 @@ impl SlotLifecycle for InstallSlotLifecycle {
 
     fn post_install(&self, context: SlotLifecycleContext<'_>) -> std::result::Result<(), String> {
         self.dispatch(context, SlotPoint::PostInstall)
-    }
-}
-
-fn dependency_provider(workspace_root: &Path, dep: &ResolvedDep) -> Result<DependencyProvider> {
-    let root = if dep
-        .manifest
-        .package
-        .as_ref()
-        .is_some_and(|package| package.materialization == Materialization::InPlace)
-    {
-        in_place_slot_abs_path(workspace_root, &dep.group, &dep.name)
-    } else {
-        slot_abs_path(workspace_root, &dep.group, &dep.name, &dep.version)
-    };
-    Ok(DependencyProvider {
-        id: DependencyProviderId::new(dep.group.clone(), PackageName::parse(&dep.name)?),
-        root,
-        version: dep.version.to_string(),
-        kind: dep.kind,
-        content_hash: dep.source_hash.clone().ok_or_else(|| {
-            Error::Lifecycle(format!(
-                "planned dependency `{}/{}@{}` has no source hash",
-                dep.group, dep.name, dep.version,
-            ))
-        })?,
-    })
-}
-
-fn project_envelope(root: &Path, manifest: &Manifest) -> Project {
-    let (name, version, kind) = if let Some(package) = &manifest.package {
-        (
-            package.name.clone(),
-            package.version.to_string(),
-            package.kind.as_str().to_string(),
-        )
-    } else if let Some(project) = &manifest.project {
-        (
-            project.name.clone(),
-            project.version.clone(),
-            "project".into(),
-        )
-    } else {
-        (
-            "<virtual-workspace>".into(),
-            String::new(),
-            "workspace".into(),
-        )
-    };
-    Project {
-        kind,
-        manifest: vibe_core::machine_json_path(&root.join(Manifest::FILENAME)),
-        name,
-        root: vibe_core::machine_json_path(root),
-        spec_roots: vec![vibe_core::machine_json_path(
-            &root.join(vibe_core::layout::current_specs_root()),
-        )],
-        version,
-    }
-}
-
-fn host_source(root: &Path, manifest: &Manifest) -> Result<HostExtensionSource> {
-    let (identity, version, kind) = if let Some(package) = &manifest.package {
-        (
-            HostIdentity::coordinate(DependencyProviderId::new(
-                package.group.clone(),
-                PackageName::parse(&package.name)?,
-            )),
-            package.version.to_string(),
-            Some(package.kind),
-        )
-    } else if let Some(project) = &manifest.project {
-        let identity = match &project.group {
-            Some(group) => HostIdentity::coordinate(DependencyProviderId::new(
-                group.clone(),
-                PackageName::parse(&project.name)?,
-            )),
-            None => HostIdentity::ungrouped_project(project.name.clone()),
-        };
-        (identity, project.version.clone(), None)
-    } else {
-        (HostIdentity::virtual_workspace(), String::new(), None)
-    };
-    Ok(HostExtensionSource {
-        provider: HostProvider {
-            identity,
-            root: root.to_path_buf(),
-            version,
-            kind,
-            content_hash: None,
-        },
-        declarations: manifest.extensions.clone(),
-        controls: manifest.extension_controls.clone(),
-    })
-}
-
-fn world_envelope(workspace: &Workspace, resolution: &[ResolvedDep]) -> World {
-    World {
-        deps_root: vibe_core::machine_json_path(&workspace.vibedeps_root()),
-        lockfile: vibe_core::machine_json_path(&workspace.lockfile_path()),
-        packages: resolution
-            .iter()
-            .map(|dep| WorldPackage {
-                group: dep.group.to_string(),
-                kind: dep.kind.as_str().to_string(),
-                name: dep.name.clone(),
-                slot: vibe_core::machine_json_path(&dependency_slot(&workspace.root, dep)),
-                version: dep.version.to_string(),
-            })
-            .collect(),
-    }
-}
-
-fn dependency_slot(workspace_root: &Path, dep: &ResolvedDep) -> PathBuf {
-    if dep
-        .manifest
-        .package
-        .as_ref()
-        .is_some_and(|package| package.materialization == Materialization::InPlace)
-    {
-        in_place_slot_abs_path(workspace_root, &dep.group, &dep.name)
-    } else {
-        slot_abs_path(workspace_root, &dep.group, &dep.name, &dep.version)
-    }
-}
-
-fn nonempty(value: String) -> Option<String> {
-    (!value.is_empty()).then_some(value)
-}
-
-fn slot_target(context: SlotLifecycleContext<'_>) -> SlotTarget {
-    SlotTarget {
-        group: context.group.to_string(),
-        name: context.name.to_string(),
-        version: context.version.to_string(),
-        kind: context.kind.to_string(),
-        root: vibe_core::machine_json_path(context.slot),
     }
 }

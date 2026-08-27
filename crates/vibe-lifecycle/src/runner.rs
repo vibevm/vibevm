@@ -6,19 +6,18 @@ use std::sync::{Arc, Mutex};
 use std::time::Instant;
 
 use specmark::spec;
-use thiserror::Error;
-use vibe_wire::generated::lifecycle::e1::context::{Context, Project, World};
+use vibe_wire::generated::lifecycle::e1::context::{Context, Project, RunAgentMode, World};
 use vibe_wire::generated::lifecycle::e1::reply::ReplyStatus;
 use vibe_wire::generated::lifecycle_state::{
     ExecutionRecord, ExecutionRecordStatus, StateArtifact,
 };
 
-use crate::agent::{AgentError, PreparedAgent};
-use crate::handlers::{HandlerError, HandlerRuntime, HandlerStreams};
+use crate::agent::PreparedAgent;
+use crate::delegation::Delegation;
+use crate::handlers::{HandlerRuntime, HandlerStreams};
 use crate::{
-    ContributionOutcome, DispatchError, ExecutionSession, FingerprintError, HandlerExecution,
-    LifecycleStateError, LifecycleStateStore, RunMetadata, fingerprint_handler_execution_with,
-    preparation_error_fingerprint_for_identity,
+    ContributionOutcome, DispatchError, ExecutionSession, HandlerExecution, LifecycleStateStore,
+    RunMetadata, fingerprint_handler_execution_with, preparation_error_fingerprint_for_identity,
 };
 
 /// A shared run is passed through install's slot callbacks and rebound after
@@ -41,6 +40,9 @@ pub struct ExecutionTransition {
     pub message: Option<String>,
     pub artifacts: Vec<StateArtifact>,
     pub streams: HandlerStreams,
+    /// The typed handoff, present exactly when this transition parked an
+    /// agent execution for the hosting agent (`status == delegated`).
+    pub delegation: Option<Delegation>,
 }
 
 #[derive(Debug, Clone)]
@@ -58,131 +60,6 @@ impl ExecutionTransition {
     }
 }
 
-#[derive(Debug, Error)]
-#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#FAILURE-BY-PHASE")]
-#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-STATE-HOME")]
-pub enum LifecycleRunError {
-    #[error(
-        "lifecycle envelope preparation failed for `{key}`: {source} \
-         (governed by spec://org.vibevm.core/vibevm/common/PROP-054#ENVELOPE-LAW; \
-          fix: correct the named execution's configuration and rerun)"
-    )]
-    Envelope {
-        key: String,
-        #[source]
-        source: DispatchError,
-    },
-    #[error(
-        "lifecycle fingerprint preparation failed for `{key}`: {source} \
-         (governed by spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-FINGERPRINT; \
-          fix: correct the named execution's declared inputs and rerun)"
-    )]
-    Fingerprint {
-        key: String,
-        #[source]
-        source: FingerprintError,
-    },
-    #[error(
-        "lifecycle agent preparation failed for `{key}`: {source} \
-         (governed by spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-FINGERPRINT; \
-          fix: correct the named execution's contract or prompt and rerun)"
-    )]
-    AgentPreparation {
-        key: String,
-        #[source]
-        source: Box<AgentError>,
-    },
-    #[error(transparent)]
-    Dispatch(#[from] DispatchError),
-    #[error(
-        "{source} (failed lifecycle transition checkpointed; governed by \
-         spec://org.vibevm.core/vibevm/common/PROP-054#OBS-RUN-RECORD; \
-         fix: correct the named handler and rerun)"
-    )]
-    FailedTransition {
-        transition: Box<FailedExecutionTransition>,
-        #[source]
-        source: Box<DispatchError>,
-    },
-    #[error(transparent)]
-    State(#[from] LifecycleStateError),
-    #[error(
-        "{primary}; also failed to checkpoint lifecycle failure for `{key}`: {checkpoint} \
-         (governed by spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-STATE-HOME; \
-          fix: restore a writable .vibe cache and rerun)"
-    )]
-    Checkpoint {
-        key: String,
-        primary: String,
-        checkpoint: Box<LifecycleStateError>,
-        transition: Option<Box<FailedExecutionTransition>>,
-        dispatch: Option<Box<DispatchError>>,
-    },
-    #[error(
-        "lifecycle run has not been bound to a selected project/world \
-         (governed by spec://org.vibevm.core/vibevm/common/PROP-054#ENVELOPE-LAW; \
-          fix: bind the selected project/world before executing a contribution)"
-    )]
-    Unbound,
-    #[error(
-        "state checkpoint was requested from the state-blind clean runner \
-         (governed by spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-STATE-HOME; \
-          fix: use tracked LifecycleRun::begin for freshness-aware execution)"
-    )]
-    UntrackedCheckpoint,
-}
-
-impl LifecycleRunError {
-    #[must_use]
-    pub fn is_durable_soft_post(&self) -> bool {
-        match self {
-            Self::FailedTransition { source, .. } => source.is_durable_soft_post(),
-            _ => false,
-        }
-    }
-
-    /// The typed agent refusal, whether it came from the credential-free
-    /// preparation or from the dispatched paid half.
-    #[must_use]
-    pub fn agent_error(&self) -> Option<&AgentError> {
-        if let Self::AgentPreparation { source, .. } = self {
-            return Some(source.as_ref());
-        }
-        match self.dispatch_error()? {
-            DispatchError::Handler { error, .. } => match error.as_ref() {
-                HandlerError::Agent { error, .. } => Some(error.as_ref()),
-                _ => None,
-            },
-            _ => None,
-        }
-    }
-
-    #[must_use]
-    pub fn dispatch_error(&self) -> Option<&DispatchError> {
-        match self {
-            Self::Dispatch(error) => Some(error),
-            Self::FailedTransition { source, .. } => Some(source.as_ref()),
-            Self::Checkpoint {
-                dispatch: Some(error),
-                ..
-            } => Some(error.as_ref()),
-            _ => None,
-        }
-    }
-
-    #[must_use]
-    pub fn failed_transition(&self) -> Option<&FailedExecutionTransition> {
-        match self {
-            Self::FailedTransition { transition, .. } => Some(transition.as_ref()),
-            Self::Checkpoint {
-                transition: Some(transition),
-                ..
-            } => Some(transition.as_ref()),
-            _ => None,
-        }
-    }
-}
-
 /// Mutable state for one complete lifecycle invocation.
 #[derive(Debug)]
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM")]
@@ -190,6 +67,8 @@ pub struct LifecycleRun {
     session: Option<ExecutionSession>,
     state: Option<LifecycleStateStore>,
     force: bool,
+    run_id: String,
+    parked: Option<Delegation>,
 }
 
 impl LifecycleRun {
@@ -205,9 +84,13 @@ impl LifecycleRun {
             metadata.requested.clone(),
             state_chain,
             metadata.started.clone(),
+            metadata.run_id.clone(),
         )?;
+        let run_id = metadata.run_id.clone();
         Ok(Self {
             force: metadata.force,
+            run_id,
+            parked: None,
             session: Some(ExecutionSession::new(project, world, metadata)),
             state: Some(state),
         })
@@ -217,11 +100,22 @@ impl LifecycleRun {
     /// transition but never reads or rewrites the erasable freshness cache.
     #[must_use]
     pub fn untracked(project: Project, world: World, metadata: RunMetadata) -> Self {
+        let run_id = metadata.run_id.clone();
         Self {
             force: metadata.force,
+            run_id,
+            parked: None,
             session: Some(ExecutionSession::new(project, world, metadata)),
             state: None,
         }
+    }
+
+    /// The typed handoff of the first execution this invocation parked, if
+    /// any. One invocation parks at most one agent row — the chain stops
+    /// there — so this is a single value, not a log.
+    #[must_use]
+    pub fn parked_delegation(&self) -> Option<&Delegation> {
+        self.parked.as_ref()
     }
 
     pub fn shared(self) -> LifecycleRunHandle {
@@ -306,7 +200,19 @@ impl LifecycleRun {
                     );
                 }
             };
-        let prior = (reuse == ExecutionReuse::FreshnessAware && !self.force)
+        // A HOSTED agent row is freshness-aware whatever the caller asked for.
+        //
+        // `Always` exists so a slot contribution re-runs every time its slot is
+        // touched — correct for a script, and unbounded for a handoff: "run it
+        // again" would mean re-parking a row whose declared outputs this very
+        // engine already recorded, so a target carrying TWO ordered agent rows
+        // could never converge. Row A is satisfied, row B parks, and the next
+        // pass re-parks A, forever. The evidence accepted here is the engine's
+        // own reusable record for this exact execution at this exact
+        // fingerprint — never coincidental files, which the handoff branch
+        // below still refuses.
+        let hosted_agent = prepared.is_some() && envelope.run.agent_mode == RunAgentMode::Agent;
+        let prior = ((reuse == ExecutionReuse::FreshnessAware || hosted_agent) && !self.force)
             .then(|| {
                 self.state
                     .as_ref()
@@ -356,6 +262,8 @@ impl LifecycleRun {
                         fingerprint,
                         phase: phase.into(),
                         status: ExecutionRecordStatus::Fresh,
+                        tasks: Vec::new(),
+                        scope: None,
                     },
                 )?;
             return Ok(ExecutionTransition {
@@ -364,7 +272,26 @@ impl LifecycleRun {
                 message: None,
                 artifacts: prior.artifacts,
                 streams: HandlerStreams::default(),
+                delegation: None,
             });
+        }
+
+        // The hosted handoff, owned by the ENGINE and never by handler reply
+        // vocabulary: an agent row in resolved agent mode parks here, after
+        // credential-free preparation and the ordinary reusable-success probe
+        // and before any provider dispatch. `AgentBackend::complete` is
+        // unreachable below this branch, so a parked execution spends nothing.
+        if let Some(prepared) = prepared.as_ref()
+            && envelope.run.agent_mode == RunAgentMode::Agent
+        {
+            return self.delegated_transition(
+                execution,
+                envelope,
+                prepared,
+                phase,
+                fingerprint,
+                started,
+            );
         }
 
         let dispatched = self
@@ -381,6 +308,8 @@ impl LifecycleRun {
                     fingerprint,
                     phase: phase.into(),
                     status: ExecutionRecordStatus::Fail,
+                    tasks: Vec::new(),
+                    scope: None,
                 };
                 let state = self
                     .state
@@ -441,6 +370,8 @@ impl LifecycleRun {
                     fingerprint,
                     phase: phase.into(),
                     status: status.clone(),
+                    tasks: Vec::new(),
+                    scope: None,
                 },
             )?;
         Ok(ExecutionTransition {
@@ -449,6 +380,7 @@ impl LifecycleRun {
             message: outcome.reply.message,
             artifacts,
             streams: outcome.streams,
+            delegation: None,
         })
     }
 
@@ -466,6 +398,8 @@ impl LifecycleRun {
             fingerprint: preparation_error_fingerprint_for_identity(&execution.key(), phase),
             phase: phase.into(),
             status: ExecutionRecordStatus::Fail,
+            tasks: Vec::new(),
+            scope: None,
         };
         let Some(state) = self.state.as_mut() else {
             return primary;
@@ -518,6 +452,7 @@ impl LifecycleRun {
                 })
                 .collect(),
             streams: outcome.streams,
+            delegation: None,
         })
     }
 }
@@ -538,38 +473,17 @@ fn elapsed_ms(started: Instant) -> u32 {
     u32::try_from(started.elapsed().as_millis()).unwrap_or(u32::MAX)
 }
 
+#[path = "runner/error.rs"]
+mod error;
+pub use error::LifecycleRunError;
+
+#[path = "runner/hosted.rs"]
+mod hosted;
+
+#[path = "runner/owed.rs"]
+mod owed;
+pub use owed::{REMOVED_DECLARATION, REMOVED_SLOT_DECLARATION, UNKNOWN_PROVENANCE};
+
 #[cfg(test)]
-mod diagnostic_tests {
-    use super::{AgentError, LifecycleRunError};
-
-    /// Every run refusal is one sentence. A multi-line `#[error]` literal
-    /// written without a `\` continuation bakes the next line's source
-    /// indentation into the message — and no `contains` assertion on a
-    /// fragment either side of that seam would ever notice.
-    #[test]
-    fn run_refusals_render_as_single_spaced_sentences() {
-        let rendered = LifecycleRunError::AgentPreparation {
-            key: "org.demo/tools#produce".into(),
-            source: Box::new(AgentError::Contract {
-                reason: "`config.outputs` is absent".into(),
-            }),
-        }
-        .to_string();
-
-        assert!(
-            rendered.starts_with(
-                "lifecycle agent preparation failed for `org.demo/tools#produce`: the declared \
-                 output contract is invalid: `config.outputs` is absent (governed by"
-            ),
-            "{rendered}"
-        );
-        assert!(
-            rendered.ends_with("fix: correct the named execution's contract or prompt and rerun)"),
-            "the remediation must survive intact: {rendered}"
-        );
-        assert!(
-            !rendered.contains("  "),
-            "a run of spaces is baked source indentation: {rendered}",
-        );
-    }
-}
+#[path = "runner/tests.rs"]
+mod hosted_tests;

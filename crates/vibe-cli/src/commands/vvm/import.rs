@@ -144,7 +144,7 @@ mod tests {
     use super::*;
 
     fn quiet() -> output::Context {
-        output::Context::from_flags(true, false, None, true)
+        output::Context::from_flags(true, false, None, true, crate::cli::AgentModeArg::Auto)
     }
 
     fn request<'a>(

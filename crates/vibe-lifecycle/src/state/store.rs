@@ -8,9 +8,14 @@ use std::sync::atomic::{AtomicU64, Ordering};
 
 use specmark::spec;
 use thiserror::Error;
+use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
 use vibe_wire::generated::lifecycle_state::{
-    ExecutionRecord, ExecutionRecordStatus, LifecycleState, StateRun,
+    ExecutionRecord, ExecutionRecordScope, ExecutionRecordStatus, LifecycleState, SlotContinuation,
+    StateRun,
 };
+
+use super::validate::validate_state;
+use crate::process::is_valid_run_id;
 
 const SCHEMA: u32 = 1;
 
@@ -54,6 +59,12 @@ pub enum LifecycleStateError {
           fix: report this generated-wire serialization failure)"
     )]
     Encode { path: PathBuf, reason: String },
+    #[error(
+        "lifecycle state `{path}` violates the delegated-run invariant: {reason} \
+         (governed by spec://org.vibevm.core/vibevm/common/PROP-054#REF-AGENT-RESUME; \
+          fix: remove this erasable cache and rerun the lifecycle)"
+    )]
+    Invariant { path: PathBuf, reason: String },
 }
 
 /// Open current state, replace the whole-run header, preserve every old row,
@@ -63,6 +74,14 @@ pub enum LifecycleStateError {
 pub struct LifecycleStateStore {
     path: PathBuf,
     state: LifecycleState,
+    /// The ordered payload-event target set this run WOULD need to rebuild
+    /// itself, held in memory until a slot-scoped park actually exists.
+    ///
+    /// Never serialised. A continuation is meaningful exactly while a
+    /// slot-scoped delegated row is live, so it becomes durable in the SAME
+    /// write that checkpoints that row — never in a write of its own, which
+    /// would leave a crash window holding a continuation nothing owes.
+    staged_continuation: Option<SlotContinuation>,
 }
 
 impl LifecycleStateStore {
@@ -73,45 +92,60 @@ impl LifecycleStateStore {
         requested: String,
         chain: Vec<String>,
         started: String,
+        run_id: String,
     ) -> Result<Self, LifecycleStateError> {
         let path = workspace_root.join(Self::FILE);
-        let execution = match fs::read_to_string(&path) {
-            Ok(text) => {
-                let previous: LifecycleState =
-                    toml::from_str(&text).map_err(|error| LifecycleStateError::Malformed {
-                        path: path.clone(),
-                        reason: error.to_string(),
-                    })?;
-                if previous.schema != SCHEMA {
-                    return Err(LifecycleStateError::Unsupported {
-                        path,
-                        schema: previous.schema,
-                    });
-                }
-                previous.execution
-            }
-            Err(error) if error.kind() == std::io::ErrorKind::NotFound => Default::default(),
-            Err(source) => {
-                return Err(LifecycleStateError::Read {
-                    path: path.clone(),
-                    source,
-                });
-            }
-        };
-        let store = Self {
+        let prior = read_prior(&path)?;
+        // Adoption is identity, not similarity: the SAME run id, and one that
+        // is a real identity rather than the empty untracked placeholder.
+        let adopted = !run_id.is_empty()
+            && prior
+                .as_ref()
+                .is_some_and(|state| state.run.run_id.as_deref() == Some(run_id.as_str()));
+        let continuation = prior
+            .as_ref()
+            .and_then(|state| state.run.slot_continuation.clone());
+        let mut execution = prior.map(|state| state.execution).unwrap_or_default();
+        if !adopted {
+            // Old success/freshness rows are preserved as always, but a fresh
+            // run id may not retain the PREVIOUS run's parked work: those task
+            // paths live under the other run's outbox directory and were
+            // promised to that invocation. The files themselves stay as honest
+            // orphans for a later bounded GC — nothing is deleted broadly here,
+            // and no fresh run claims to supersede a park it does not own.
+            execution.retain(|_, record| record.status != ExecutionRecordStatus::Delegated);
+        }
+        let mut store = Self {
             path,
+            staged_continuation: None,
             state: LifecycleState {
                 execution,
                 run: StateRun {
                     chain,
                     requested,
+                    run_id: (!run_id.is_empty()).then_some(run_id),
+                    // An adopted run inherits the slot continuation it owes;
+                    // a fresh one starts with none, exactly as it starts with
+                    // no delegated rows.
+                    slot_continuation: adopted.then_some(continuation).flatten(),
                     started,
                 },
                 schema: SCHEMA,
             },
         };
-        store.write()?;
+        store.commit(|_| {})?;
         Ok(store)
+    }
+
+    /// Read current state WITHOUT writing a new header.
+    ///
+    /// `begin` is a mutation: it replaces the run header and rewrites the
+    /// file. A caller that only needs to ask "what does this run still owe?"
+    /// must not, as a side effect, overwrite the persisted chain with its own
+    /// — that is how a clean-composed run's phases-only chain got replaced by
+    /// the complete one. `Ok(None)` when no state exists yet.
+    pub fn peek(workspace_root: &Path) -> Result<Option<LifecycleState>, LifecycleStateError> {
+        read_prior(&workspace_root.join(Self::FILE))
     }
 
     #[must_use]
@@ -142,8 +176,111 @@ impl LifecycleStateStore {
         key: String,
         record: ExecutionRecord,
     ) -> Result<(), LifecycleStateError> {
-        self.state.execution.insert(key, record);
-        self.write()
+        self.commit(move |state| {
+            state.execution.insert(key, record);
+        })
+    }
+
+    /// Stage the exact ordered payload-event target set this slot run
+    /// selected, BEFORE the first pre-install callback can park it.
+    ///
+    /// A post-install park happens after the lockfile is written, so the
+    /// resume sees a FRESH lock and would otherwise never rebuild the slot
+    /// run at all. Recording the set — rather than re-deriving it later from
+    /// directory enumeration or by parsing task filenames — is what lets the
+    /// resume reconstruct the SAME run it left.
+    ///
+    /// The set is staged, not written. It becomes durable in the same write
+    /// that checkpoints the first slot-scoped park, and is dropped the moment
+    /// no such park remains, so "a continuation exists exactly while slot work
+    /// is owed" holds across every crash point rather than merely at the ends.
+    ///
+    /// Staging is UNCONDITIONAL, and that is the point. An invocation that
+    /// adopts a parked run may satisfy its last delegated row and then park a
+    /// LATER row in the same pass; between those two writes the run owes
+    /// nothing, so the durable continuation is correctly dropped. Only the
+    /// staged set can put it back — a construction that declined to stage
+    /// because a durable continuation already existed left the new store with
+    /// nothing to restore, and the later park had no target set to name.
+    ///
+    /// Against an adopted continuation the staged set is CHECKED, never
+    /// overwritten: a non-empty set that disagrees with what the parked run
+    /// recorded is a typed invariant refusal, because one of the two is not
+    /// describing the run this store is servicing. An EMPTY set is not a
+    /// disagreement — it is this pass reporting that nothing is
+    /// payload-changing right now, which is exactly what a resume's ordinary
+    /// materialise pass reports — so it retains the adopted set instead.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#REF-AGENT-RESUME")]
+    pub fn record_slot_continuation(
+        &mut self,
+        continuation: SlotContinuation,
+    ) -> Result<(), LifecycleStateError> {
+        if let Some(adopted) = self.state.run.slot_continuation.clone() {
+            if continuation.targets.is_empty() {
+                self.staged_continuation = Some(adopted);
+                return Ok(());
+            }
+            if continuation != adopted {
+                return Err(LifecycleStateError::Invariant {
+                    path: self.path.clone(),
+                    reason: format!(
+                        "this pass selected {} payload-event target(s) but the run it adopted \
+                         parked against {}; the recorded set is what the resume must rebuild, \
+                         so it is never overwritten",
+                        continuation.targets.len(),
+                        adopted.targets.len(),
+                    ),
+                });
+            }
+        }
+        self.staged_continuation = Some(continuation);
+        Ok(())
+    }
+
+    /// The slot continuation this run still owes, if any.
+    #[must_use]
+    pub fn slot_continuation(&self) -> Option<&SlotContinuation> {
+        self.state.run.slot_continuation.as_ref()
+    }
+
+    /// The slot run finished: nothing is owed, so the continuation goes. Kept
+    /// separate from checkpointing so "the run completed" is one durable
+    /// write, not an implicit side effect of the last row.
+    pub fn clear_slot_continuation(&mut self) -> Result<(), LifecycleStateError> {
+        if self.state.run.slot_continuation.is_none() {
+            return Ok(());
+        }
+        self.commit(|state| state.run.slot_continuation = None)
+    }
+
+    /// Every delegated row still live in this state, with the typed scope the
+    /// engine recorded for it. The caller reconciles these against the plan of
+    /// their own scope; nothing here parses an execution key or a filename.
+    #[must_use]
+    pub fn delegated_rows(&self) -> Vec<(String, ExecutionRecord)> {
+        self.state
+            .execution
+            .iter()
+            .filter(|(_, record)| record.status == ExecutionRecordStatus::Delegated)
+            .map(|(key, record)| (key.clone(), record.clone()))
+            .collect()
+    }
+
+    /// Drop one execution row outright — the cancellation half of reconciling
+    /// a delegated row whose declaration no longer exists.
+    /// Drop one execution row outright — TRANSACTIONALLY.
+    ///
+    /// If the durable write fails the in-memory row is restored, so the store
+    /// and the file on disk still agree. Without that, a failed forget left a
+    /// live store whose row had already vanished from memory while the durable
+    /// bytes still named it.
+    pub fn forget(&mut self, key: &str) -> Result<(), LifecycleStateError> {
+        if !self.state.execution.contains_key(key) {
+            return Ok(());
+        }
+        self.commit(|state| {
+            state.execution.remove(key);
+        })
     }
 
     /// Prune vanished synthetic rows only after their owner has reconciled
@@ -153,14 +290,19 @@ impl LifecycleStateStore {
         prefix: &str,
         keep: &BTreeSet<String>,
     ) -> Result<(), LifecycleStateError> {
-        let before = self.state.execution.len();
-        self.state
+        let doomed = self
+            .state
             .execution
-            .retain(|key, _| !key.starts_with(prefix) || keep.contains(key));
-        if self.state.execution.len() != before {
-            self.write()?;
+            .keys()
+            .any(|key| key.starts_with(prefix) && !keep.contains(key));
+        if !doomed {
+            return Ok(());
         }
-        Ok(())
+        self.commit(|state| {
+            state
+                .execution
+                .retain(|key, _| !key.starts_with(prefix) || keep.contains(key));
+        })
     }
 
     #[must_use]
@@ -173,8 +315,44 @@ impl LifecycleStateStore {
         self.path.as_path()
     }
 
-    fn write(&self) -> Result<(), LifecycleStateError> {
-        let bytes = toml::to_string_pretty(&self.state)
+    /// The ONE mutating primitive: build a candidate, prove it durable, and
+    /// only then let it become this store's state.
+    ///
+    /// Every verb that changes rows, the header or the continuation goes
+    /// through here. `self.state` is never touched until the bytes are on
+    /// disk, so an injected fault, a violated invariant, an encode failure or
+    /// an I/O failure all leave the in-memory state structurally equal to the
+    /// durable file it still describes. The alternative — mutate, write,
+    /// hand-restore on failure — has to remember every field it touched, and
+    /// the continuation is exactly the field such a restore forgets.
+    fn commit(
+        &mut self,
+        mutate: impl FnOnce(&mut LifecycleState),
+    ) -> Result<(), LifecycleStateError> {
+        let mut candidate = self.state.clone();
+        mutate(&mut candidate);
+        // Reconciled on the CANDIDATE, against the candidate's own slot debt:
+        // the pair-law is a property of the bytes about to be written, not a
+        // side effect a caller has to sequence correctly.
+        reconcile_continuation(&mut candidate, self.staged_continuation.as_ref());
+        self.persist(&candidate)?;
+        self.state = candidate;
+        Ok(())
+    }
+
+    fn persist(&self, candidate: &LifecycleState) -> Result<(), LifecycleStateError> {
+        #[cfg(test)]
+        if let Some(reason) = inject::armed() {
+            return Err(LifecycleStateError::Write {
+                path: self.path.clone(),
+                source: std::io::Error::other(reason),
+            });
+        }
+        validate_state(candidate).map_err(|reason| LifecycleStateError::Invariant {
+            path: self.path.clone(),
+            reason,
+        })?;
+        let bytes = toml::to_string_pretty(candidate)
             .map_err(|error| LifecycleStateError::Encode {
                 path: self.path.clone(),
                 reason: error.to_string(),
@@ -218,5 +396,160 @@ impl LifecycleStateStore {
             });
         }
         Ok(())
+    }
+}
+
+/// Bring a CANDIDATE state's continuation into agreement with its own slot
+/// debt. A continuation is meaningful exactly while a slot-scoped delegated
+/// row is live: it appears in the same write that records the first such row
+/// and disappears in the write that clears the last one.
+fn reconcile_continuation(candidate: &mut LifecycleState, staged: Option<&SlotContinuation>) {
+    let owed = candidate.execution.values().any(|record| {
+        record.status == ExecutionRecordStatus::Delegated
+            && record.scope == Some(ExecutionRecordScope::Slot)
+    });
+    match (owed, candidate.run.slot_continuation.is_some()) {
+        (true, false) => candidate.run.slot_continuation = staged.cloned(),
+        (false, true) => candidate.run.slot_continuation = None,
+        _ => {}
+    }
+}
+
+/// Parse and semantically validate the prior state file. `Ok(None)` when no
+/// state exists yet; every other outcome — unreadable, unsupported schema,
+/// TOML-malformed, or invariant-violating — is the erasable-cache refusal.
+fn read_prior(path: &Path) -> Result<Option<LifecycleState>, LifecycleStateError> {
+    let text = match fs::read_to_string(path) {
+        Ok(text) => text,
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => return Ok(None),
+        Err(source) => {
+            return Err(LifecycleStateError::Read {
+                path: path.to_path_buf(),
+                source,
+            });
+        }
+    };
+    let previous: LifecycleState =
+        toml::from_str(&text).map_err(|error| LifecycleStateError::Malformed {
+            path: path.to_path_buf(),
+            reason: error.to_string(),
+        })?;
+    if previous.schema != SCHEMA {
+        return Err(LifecycleStateError::Unsupported {
+            path: path.to_path_buf(),
+            schema: previous.schema,
+        });
+    }
+    validate_state(&previous).map_err(|reason| LifecycleStateError::Invariant {
+        path: path.to_path_buf(),
+        reason,
+    })?;
+    Ok(Some(previous))
+}
+
+/// One invocation's durable identity, decided before anything is allocated.
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#REF-AGENT-RESUME")]
+pub struct RunIdentity {
+    /// The effective run id: adopted from the parking invocation, or freshly
+    /// allocated. Everything downstream — scratch, outbox, state — sees this.
+    pub run_id: String,
+    /// The run's original start: preserved on adoption, the injected clock
+    /// value on a fresh run.
+    pub started: String,
+    /// Whether the identity continues a parked run.
+    pub adopted: bool,
+}
+
+/// Decide this invocation's durable run identity in ONE place, before any
+/// scratch directory is created, so adopting a parked run can never leak an
+/// abandoned candidate directory (PROP-054 `##REF-AGENT-RESUME`).
+///
+/// The original parking invocation and its resume are the SAME run exactly
+/// when: the resolved mode is agent, `--force` is absent, the prior run
+/// requested the same phase, the prior COMPLETE persisted chain equals this
+/// invocation's complete chain exactly, at least one prior execution is
+/// delegated, and the persisted run id is valid. Every other case — different
+/// command, different chain, CLI mode, no delegated row, `--force`, or a
+/// missing/invalid identity — gets one fresh allocated id. Corrupt delegated
+/// state is refused upstream of here (`read_prior`); it never silently mints a
+/// new identity.
+///
+/// The comparison is exact — no phase is stripped from either side. A
+/// clean-composed invocation therefore never adopts: `vibe clean create`
+/// carries a leading `clean` its predecessor's persisted chain does not, so it
+/// wipes and reparks honestly. Its own resume is `vibe create` (the handoff's
+/// `resume` line), whose chain is the persisted one, and that adopts.
+///
+/// `state_root` is where `.vibe/lifecycle.toml` lives (the workspace root);
+/// `allocation_root` is where a fresh scratch run directory is created (the
+/// selected project root) — the two differ only in a multi-node workspace.
+/// Selection completes BEFORE allocation, so an adopted run never mints and
+/// abandons a candidate scratch directory.
+pub fn select_run_identity(
+    state_root: &Path,
+    allocation_root: &Path,
+    requested: &str,
+    chain: &[String],
+    agent_mode: RunAgentMode,
+    force: bool,
+    fresh_started: String,
+) -> Result<RunIdentity, LifecycleStateError> {
+    if agent_mode == RunAgentMode::Agent
+        && !force
+        && let Some(prior) = read_prior(&state_root.join(LifecycleStateStore::FILE))?
+    {
+        let parked = prior
+            .execution
+            .values()
+            .any(|record| record.status == ExecutionRecordStatus::Delegated);
+        if prior.run.requested == requested
+            && prior.run.chain == chain
+            && parked
+            && let Some(run_id) = prior.run.run_id.as_deref()
+            && is_valid_run_id(run_id)
+        {
+            return Ok(RunIdentity {
+                run_id: run_id.to_string(),
+                started: prior.run.started.clone(),
+                adopted: true,
+            });
+        }
+    }
+    Ok(RunIdentity {
+        run_id: crate::process::allocate_run_id(allocation_root).map_err(allocate_failed)?,
+        started: fresh_started,
+        adopted: false,
+    })
+}
+
+fn allocate_failed(source: crate::process::ScratchError) -> LifecycleStateError {
+    LifecycleStateError::Write {
+        path: PathBuf::from(LifecycleStateStore::FILE),
+        source: std::io::Error::other(source.to_string()),
+    }
+}
+
+/// Injection point for a durable state-write failure, so the cancellation REDs
+/// have a deterministic counterexample instead of one that depends on
+/// filesystem permissions. Compiled out entirely outside tests, and it reads
+/// no environment: the canonical file's OLD bytes must stay readable, which
+/// deleting or chmod-ing it would not preserve.
+#[cfg(test)]
+pub(crate) mod inject {
+    use std::cell::RefCell;
+
+    thread_local! {
+        static ARMED: RefCell<Option<String>> = const { RefCell::new(None) };
+    }
+
+    /// Make every subsequent state write on THIS thread fail. Pass `None` to
+    /// disarm.
+    pub(crate) fn fail_state_writes(reason: Option<&str>) {
+        ARMED.with(|armed| *armed.borrow_mut() = reason.map(str::to_string));
+    }
+
+    pub(super) fn armed() -> Option<String> {
+        ARMED.with(|armed| armed.borrow().clone())
     }
 }

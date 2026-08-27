@@ -30,7 +30,7 @@
       },
       "metadata": {
         "x-empty": "emit",
-        "description": "The executed phase spellings in order, including a leading `clean` when the clean lifecycle was composed."
+        "description": "The REQUESTED full chain: every phase spelling this invocation set out to run, in order, including a leading `clean` when the clean lifecycle was composed. It does not shrink when the run stops early."
       }
     },
     "steps": {
@@ -39,7 +39,7 @@
       },
       "metadata": {
         "x-empty": "emit",
-        "description": "One outcome for every phase in `chain`, in the same order."
+        "description": "The ACTUALLY EXECUTED prefix of `chain`, in the same order — one outcome per phase that ran. A completed run reports every phase in `chain`; a run that parked for a hosting agent ends at the phase whose status is `delegated`, and the phases after it are absent because they did not run."
       }
     },
     "contributions": {
@@ -58,6 +58,15 @@
       "metadata": {
         "x-empty": "emit",
         "description": "Non-fatal collection notices that must remain observable in structured output."
+      }
+    }
+  },
+  "optionalProperties": {
+    "delegation": {
+      "ref": "lifecycle_delegation",
+      "metadata": {
+        "x-default": null,
+        "description": "Present exactly when the invocation parked an agent execution for the hosting agent. Human/quiet rendering consumes the same value as the typed member."
       }
     }
   },
@@ -181,7 +190,32 @@
         "status": {
           "type": "string",
           "metadata": {
-            "description": "Phase outcome vocabulary. R2.4 writes `ok`, `fresh`, or `no-op`; the first handler failure aborts the chain."
+            "description": "Phase outcome vocabulary. R2.4 writes `ok`, `fresh`, or `no-op`; the first handler failure aborts the chain. R7.3 adds `delegated`: the chain parked at this phase and later phases did not run."
+          }
+        }
+      }
+    },
+    "lifecycle_delegation": {
+      "properties": {
+        "run_id": {
+          "type": "string",
+          "metadata": {
+            "description": "The durable run identity the hosting agent resumes under."
+          }
+        },
+        "tasks": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit",
+            "description": "Ordered project-relative outbox task files awaiting the hosting agent."
+          }
+        },
+        "resume": {
+          "type": "string",
+          "metadata": {
+            "description": "The exact command that resumes this run (`vibe <requested-phase>`)."
           }
         }
       }

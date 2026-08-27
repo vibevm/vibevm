@@ -52,7 +52,7 @@ fn named_xml_facts_are_addressable_and_stable_across_two_scans() {
         .expect("mkdir");
     std::fs::write(root.path().join(spec_rel("doc.xml")), XML_SPEC).expect("write xml");
     std::fs::write(root.path().join("progress.toml"), xml_fixture_config()).expect("write cfg");
-    let ctx = Context::from_flags(true, false, None, false);
+    let ctx = Context::from_flags(true, false, None, false, crate::cli::AgentModeArg::Auto);
 
     scan(&ctx, &args(root.path(), true)).expect("first scan");
     let first = ground(&args(root.path(), false)).expect("first ground");

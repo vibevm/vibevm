@@ -19,6 +19,8 @@ use std::path::{Path, PathBuf};
 
 /// The loopback provider oracle the create-phase e2e binaries share.
 pub mod agent_provider;
+pub mod hook_slot;
+pub mod hosted_slot;
 
 /// `vibe()` and `UserScratch` moved into `vibe-test-support` (DRIFT-020) so
 /// `vibe-index`'s test binaries can reach them too, and — the point of the

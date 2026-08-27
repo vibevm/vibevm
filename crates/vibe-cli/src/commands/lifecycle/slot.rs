@@ -1,13 +1,11 @@
 use anyhow::Result;
 use vibe_lifecycle::RunMetadata;
 use vibe_wire::generated::lifecycle_plan::{LifecyclePlan, PlannedContribution};
-use vibe_wire::generated::lifecycle_report::{
-    LifecycleContributionReport, LifecycleReport, LifecycleStepReport,
-};
+use vibe_wire::generated::lifecycle_report::LifecycleContributionReport;
 
 use crate::output;
 
-pub(super) fn contribution_report(
+pub(crate) fn contribution_report(
     report: vibe_install::SlotLifecycleReport,
 ) -> LifecycleContributionReport {
     LifecycleContributionReport {
@@ -46,29 +44,23 @@ pub(crate) fn emit_transition_outcome(
     if ctx.is_quiet() || ctx.suppresses_output() {
         return Ok(());
     }
-    if !ctx.is_json() {
-        let target = report.slot_target.as_ref().map_or_else(
-            || "unknown target".into(),
-            |target| format!("{}/{}@{}", target.group, target.name, target.version),
-        );
-        ctx.step(&format!(
-            "{} `{}` — provider={} target={target}",
-            report.status, report.key, report.provider
-        ));
+    // JSON narrates NOTHING per row: the outermost command emits exactly one
+    // document, and every slot row this install ran reaches it as a typed
+    // contribution. A per-row echo here was a second (and third) document on
+    // the same stdout.
+    let _ = metadata;
+    if ctx.is_json() {
         return Ok(());
     }
-    ctx.emit_json(&LifecycleReport {
-        chain: metadata.chain.clone(),
-        command: "lifecycle".into(),
-        contributions: vec![contribution_report(report.clone())],
-        notices: Vec::new(),
-        ok: report.status != "fail" || report.flagged,
-        requested: metadata.requested.clone(),
-        steps: vec![LifecycleStepReport {
-            phase: "install".into(),
-            status: report.status.clone(),
-        }],
-    })
+    let target = report.slot_target.as_ref().map_or_else(
+        || "unknown target".into(),
+        |target| format!("{}/{}@{}", target.group, target.name, target.version),
+    );
+    ctx.step(&format!(
+        "{} `{}` — provider={} target={target}",
+        report.status, report.key, report.provider
+    ));
+    Ok(())
 }
 
 pub(crate) fn surface_plan(
@@ -80,7 +72,7 @@ pub(crate) fn surface_plan(
         return Ok(());
     }
     if ctx.is_json() {
-        return ctx.emit_json(&LifecyclePlan {
+        return ctx.defer_json_plan(&LifecyclePlan {
             chain: metadata.chain.clone(),
             command: "lifecycle:plan".into(),
             contributions: plan

@@ -343,11 +343,12 @@ fn direct_install_applied_fresh_and_empty_world_callbacks_are_once_and_json_last
             .iter()
             .position(|document| document["command"] == "lifecycle:plan")
             .unwrap();
-        let outcome_at = documents
-            .iter()
-            .position(|document| document["command"] == "lifecycle")
-            .unwrap();
-        assert!(plan_at < outcome_at && outcome_at < documents.len() - 1);
+        // `vibe install` is the OUTERMOST command here, so it — and only it —
+        // emits a root document. The `phase:install` ritual rows it ran travel
+        // as that report's typed `contributions`; the separate `lifecycle`
+        // echo was removed so a parked run can emit exactly one document.
+        let outcome_at = documents.len() - 1;
+        assert!(plan_at < outcome_at, "the plan precedes the report");
         assert!(
             documents[plan_at]["contributions"][0]
                 .get("status")
@@ -361,24 +362,15 @@ fn direct_install_applied_fresh_and_empty_world_callbacks_are_once_and_json_last
         assert_eq!(
             documents
                 .iter()
-                .filter(|document| document["command"] == "lifecycle")
+                .filter(|document| document["command"] == "install")
                 .count(),
             1,
+            "exactly one root report",
         );
-        let lifecycle: LifecycleReport = serde_json::from_value(
-            documents
-                .iter()
-                .find(|document| document["command"] == "lifecycle")
-                .unwrap()
-                .clone(),
-        )
-        .unwrap();
-        assert_eq!(lifecycle.contributions.len(), 1);
-        assert_eq!(
-            lifecycle.contributions[0].status,
-            if packages { "ok" } else { "fresh" }
-        );
-        assert_eq!(lifecycle.contributions[0].message.is_some(), packages);
+        let rows = documents[outcome_at]["contributions"].as_array().unwrap();
+        assert_eq!(rows.len(), 1);
+        assert_eq!(rows[0]["status"], if packages { "ok" } else { "fresh" });
+        assert_eq!(rows[0].get("message").is_some(), packages);
     }
 
     let empty = init_project(&user);
@@ -403,12 +395,23 @@ config = { message = "EMPTY|{project}|{package}" }
     assert!(output.status.success());
     let documents = json_documents(&output.stdout);
     assert_eq!(documents.last().unwrap()["command"], "install");
+    // The empty world still runs its host `phase:install` row, and that row
+    // reaches the outermost command's ONE report rather than a separate
+    // `lifecycle` echo.
     assert_eq!(
         documents
             .iter()
-            .filter(|document| document["command"] == "lifecycle")
+            .filter(|document| document["command"] == "install")
             .count(),
         1,
+        "exactly one root report",
+    );
+    assert_eq!(
+        documents.last().unwrap()["contributions"]
+            .as_array()
+            .map_or(0, Vec::len),
+        1,
+        "and it carries the host install row: {documents:#?}",
     );
 }
 

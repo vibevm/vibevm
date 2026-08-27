@@ -12,9 +12,14 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail");
 
 mod closure_diff;
+mod document;
+mod events;
+mod inputs;
+mod observer;
 mod project_local;
 mod report;
 mod resolver;
+mod resume;
 
 pub(crate) use closure_diff::{emit_closure_diff, lane_sizes};
 pub(crate) use project_local::project_packages_root;
@@ -27,13 +32,12 @@ use std::path::{Path, PathBuf};
 use anyhow::{Context, Result, bail};
 use dialoguer::Confirm;
 use vibe_core::PackageRef;
-use vibe_core::manifest::{Lockfile, Manifest, SpecFormat};
+use vibe_core::manifest::{Lockfile, Manifest};
 use vibe_core::user_config::UserConfig;
-use vibe_install::{InstallRequest, Plan, PlanEvent, PlanObserver, SlotLifecycleReport};
+use vibe_install::{InstallRequest, Plan, SlotLifecycleReport};
 use vibe_lifecycle::process::StreamMode;
 use vibe_lifecycle::{LifecycleRunHandle, RunMetadata};
 use vibe_resolver::FeatureRequest;
-use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
 use vibe_workspace::Workspace;
 
 use crate::cli::InstallArgs;
@@ -41,83 +45,13 @@ use crate::commands::short_name;
 use crate::exit_code::InstallError;
 use crate::output;
 
+pub(crate) use document::emit_command_document;
+use document::fresh_run;
+use events::CtxObserver;
+pub(crate) use inputs::{generated_by, resolve_project_root, resolve_spec_format};
+pub(crate) use observer::LifecycleSlotObserver;
 use resolver::apply_git_source_flag;
-
-/// Renders the orchestrator's typed plan events in the CLI's voice.
-struct CtxObserver<'a>(&'a output::Context);
-
-impl PlanObserver for CtxObserver<'_> {
-    fn on(&self, event: PlanEvent) {
-        let ctx = self.0;
-        match event {
-            PlanEvent::MigratingRequires { entries } => ctx.step(&format!(
-                "Migrating [requires] from `vibe.lock` meta.root_dependencies ({} entr{})",
-                entries,
-                if entries == 1 { "y" } else { "ies" },
-            )),
-            PlanEvent::Reresolving { reason } => ctx.step(&format!("re-resolving — {reason}")),
-            PlanEvent::HeldPinsConflicted { error } => ctx.step(&format!(
-                "held pins conflicted with the change ({error}); re-resolving freely"
-            )),
-            PlanEvent::ResolvingRoots { roots } => ctx.heading(&format!(
-                "Resolving {} root package{}…",
-                roots,
-                if roots == 1 { "" } else { "s" },
-            )),
-            PlanEvent::GraphSolved { roots, total } => ctx.step(&format!(
-                "{} root, {} transitive — {} package{} total",
-                roots,
-                total - roots,
-                total,
-                if total == 1 { "" } else { "s" },
-            )),
-            PlanEvent::ConditionalIteration { iteration, extras } => ctx.step(&format!(
-                "Conditional dependencies (iter {}): {} extra root{}",
-                iteration,
-                extras,
-                if extras == 1 { "" } else { "s" },
-            )),
-            PlanEvent::FeaturesUnmatched { features } => ctx.step(&format!(
-                "warning: requested feature{} {} not declared on any root package — silently ignored",
-                if features.len() == 1 { "" } else { "s" },
-                features
-                    .iter()
-                    .map(|s| format!("`{s}`"))
-                    .collect::<Vec<_>>()
-                    .join(", ")
-            )),
-        }
-    }
-}
-
-pub(crate) struct LifecycleSlotObserver {
-    ctx: output::Context,
-    metadata: RunMetadata,
-}
-
-impl LifecycleSlotObserver {
-    pub(crate) fn new(ctx: &output::Context, metadata: RunMetadata) -> Self {
-        Self {
-            ctx: ctx.clone(),
-            metadata,
-        }
-    }
-}
-
-impl vibe_install::SlotLifecycleObserver for LifecycleSlotObserver {
-    fn observe(&self, plan: &vibe_install::SlotLifecyclePlan) -> std::result::Result<(), String> {
-        super::lifecycle::surface_slot_plan(&self.ctx, plan, &self.metadata)
-            .map_err(|error| error.to_string())
-    }
-
-    fn outcome(
-        &self,
-        report: &vibe_install::SlotLifecycleReport,
-    ) -> std::result::Result<(), String> {
-        super::lifecycle::emit_slot_transition_outcome(&self.ctx, &self.metadata, report)
-            .map_err(|error| error.to_string())
-    }
-}
+pub(crate) use resume::{ResumeRequest, resume_slot_continuation};
 
 /// Whether the existing install implementation applied a plan or proved the
 /// materialised world fresh. Lifecycle callers consume this instead of
@@ -126,6 +60,62 @@ impl vibe_install::SlotLifecycleObserver for LifecycleSlotObserver {
 pub(crate) enum InstallDisposition {
     Fresh,
     Applied,
+    /// A hosted `agent` row parked for the hosting agent. The install stopped
+    /// AT THAT ROW's point and did NOT render: a park travels outward as a
+    /// value so the outermost command, and only it, emits the one document.
+    ///
+    /// How much is durable when that happens is point-dependent, and nothing
+    /// here assumes. A `slot:pre-install` park precedes the remaining
+    /// materialisation, the lockfile barrier and every post-barrier row; a
+    /// `slot:post-install` or `phase:install` park follows a COMPLETE, durable
+    /// apply and stops only what came after it. The accompanying
+    /// [`vibe_install::InstallProgress`] is the boundary-measured record of
+    /// which of those it was.
+    Parked,
+}
+
+/// What one install invocation did, in the shape its caller renders.
+///
+/// Nothing in the install substrate prints a report any more: `vibe install`
+/// renders a `cli-install-report`, a phase verb renders its own
+/// `cli-lifecycle-report`, and update/reinstall render theirs. Returning the
+/// outcome instead of printing it is what makes "exactly one document" a
+/// property of the call graph rather than a hope at each call site.
+pub(crate) struct InstallRun {
+    pub(crate) disposition: InstallDisposition,
+    pub(crate) progress: vibe_install::InstallProgress,
+    /// How many packages this invocation RESOLVED — the solved graph's size,
+    /// counted where the plan is produced. Not `materialised.len()`: a slot
+    /// that was already present is resolved and skipped, and reading the
+    /// count off the materialised list would silently under-report exactly
+    /// the runs that changed the least. Zero on the fresh fast path, which
+    /// resolves nothing at all.
+    pub(crate) packages_resolved: usize,
+    pub(crate) hooks: Vec<vibe_workspace::hooks::HookReport>,
+    pub(crate) slot_reports: Vec<SlotLifecycleReport>,
+    pub(crate) contributions:
+        Vec<vibe_wire::generated::lifecycle_report::LifecycleContributionReport>,
+    pub(crate) notices: Vec<String>,
+    pub(crate) parked: Option<vibe_lifecycle::Delegation>,
+    pub(crate) world_summary: WorldCallbackSummary,
+    pub(crate) project_root: PathBuf,
+}
+
+impl InstallRun {
+    fn new(project_root: PathBuf, disposition: InstallDisposition) -> Self {
+        Self {
+            disposition,
+            progress: vibe_install::InstallProgress::default(),
+            packages_resolved: 0,
+            hooks: Vec::new(),
+            slot_reports: Vec::new(),
+            contributions: Vec::new(),
+            notices: Vec::new(),
+            parked: None,
+            world_summary: WorldCallbackSummary::default(),
+            project_root,
+        }
+    }
 }
 
 /// Effective invocation facts the durable-world lifecycle callback needs in
@@ -148,14 +138,31 @@ pub(crate) struct WorldCallbackSummary {
     pub(crate) notices: usize,
 }
 
+/// What the post-durability observer produced. The counts are the narration;
+/// the rows and the handoff are machine facts the OUTERMOST command folds into
+/// its single document — the observer itself renders nothing.
+#[derive(Debug, Default)]
+pub(crate) struct WorldCallbackOutcome {
+    pub(crate) summary: WorldCallbackSummary,
+    pub(crate) contributions:
+        Vec<vibe_wire::generated::lifecycle_report::LifecycleContributionReport>,
+    pub(crate) notices: Vec<String>,
+    pub(crate) parked: Option<vibe_lifecycle::Delegation>,
+}
+
+#[allow(
+    dead_code,
+    reason = "the bare install facade is a public seam kept for callers that need no \
+              post-durability callback; `vibe install` itself uses `run_with_world_callback`"
+)]
 pub fn run(
     ctx: &output::Context,
     args: InstallArgs,
     embedded_root: Option<PathBuf>,
     root_offline: bool,
-) -> Result<InstallDisposition> {
+) -> Result<InstallRun> {
     run_with_world_callback(ctx, args, embedded_root, root_offline, |_, _, _| {
-        Ok(WorldCallbackSummary::default())
+        Ok(WorldCallbackOutcome::default())
     })
 }
 
@@ -172,8 +179,8 @@ pub(crate) fn run_with_world_callback(
         &Path,
         InstallDisposition,
         InstallRunContext,
-    ) -> Result<WorldCallbackSummary>,
-) -> Result<InstallDisposition> {
+    ) -> Result<WorldCallbackOutcome>,
+) -> Result<InstallRun> {
     run_with_lifecycle_context(
         ctx,
         args,
@@ -196,8 +203,8 @@ pub(crate) fn run_with_lifecycle_context(
         &Path,
         InstallDisposition,
         InstallRunContext,
-    ) -> Result<WorldCallbackSummary>,
-) -> Result<InstallDisposition> {
+    ) -> Result<WorldCallbackOutcome>,
+) -> Result<InstallRun> {
     let mut after_durable_world = Some(after_durable_world);
     let project_root = resolve_project_root(&args.path)?;
     // PROP-011 §2.3 — the materialise-diff strategy, read once from the
@@ -215,20 +222,34 @@ pub(crate) fn run_with_lifecycle_context(
         chain: vec!["validate".into(), "install".into()],
         offline,
         assume_yes: args.assume_yes || ctx.is_unattended() || ctx.is_json(),
-        agent_mode: RunAgentMode::Cli,
+        agent_mode: ctx.agent_mode(),
         force: args.force,
         run_id: String::new(),
         started: crate::commands::init::current_timestamp_utc(),
     });
+    // An explicit `vibe install` selects its own durable identity through the
+    // ONE selector, exactly as a phase verb does; a chained install inherits
+    // the caller's already-selected metadata unchanged.
     let metadata = if metadata.run_id.is_empty() {
+        let identity = super::lifecycle::run_identity(
+            ctx,
+            &args.path,
+            &metadata.requested,
+            &metadata.chain,
+            metadata.force,
+        )
+        .context("selecting the install lifecycle run identity")?;
         RunMetadata {
-            run_id: vibe_lifecycle::process::allocate_run_id(&project_root)
-                .context("allocating install lifecycle run id")?,
+            run_id: identity.run_id,
+            started: identity.started,
             ..metadata
         }
     } else {
         metadata
     };
+    // The resolved run metadata is the invocation's identity; the callback
+    // context owns a clone so a later seam can still read it.
+    let run_metadata = metadata.clone();
     let mut lifecycle_run = InstallRunContext {
         metadata,
         lifecycle_run: None,
@@ -293,9 +314,8 @@ pub(crate) fn run_with_lifecycle_context(
         let after = after_durable_world
             .take()
             .context("internal: install durable-world callback already consumed")?;
-        let world_summary = after(&project_root, InstallDisposition::Fresh, lifecycle_run)?;
-        report::emit_fresh_report(ctx, &nodes, world_summary)?;
-        return Ok(InstallDisposition::Fresh);
+        let world = after(&project_root, InstallDisposition::Fresh, lifecycle_run)?;
+        return Ok(fresh_run(&project_root, nodes, world));
     }
 
     // PROP-050 ##VERIFY-LOCK-DIFF — the lane-size half of the pre-apply
@@ -356,13 +376,37 @@ pub(crate) fn run_with_lifecycle_context(
             let after = after_durable_world
                 .take()
                 .context("internal: install durable-world callback already consumed")?;
-            let world_summary = after(&project_root, InstallDisposition::Fresh, lifecycle_run)?;
-            report::emit_fresh_report(ctx, &nodes, world_summary)?;
-            Ok(InstallDisposition::Fresh)
+            // A slot run that parked at a POST-install row wrote the lock
+            // first, so its resume lands here — on the fresh fast path, which
+            // would otherwise never rebuild that run at all and would report a
+            // clean completion over a live delegated row. Rebuild it from the
+            // exact target set the original pass recorded, and finish it
+            // before anything reports fresh.
+            if let Some(resumed) = resume_slot_continuation(
+                ctx,
+                resume::ResumeRequest {
+                    project_root: &project_root,
+                    workspace: &workspace,
+                    manifest: &manifest,
+                    metadata: &run_metadata,
+                    spec_format,
+                    disposition: InstallDisposition::Fresh,
+                    progress: vibe_install::InstallProgress::fresh(nodes.clone()),
+                    // The fresh fast path skips resolution entirely.
+                    packages_resolved: 0,
+                },
+            )? {
+                return Ok(resumed);
+            }
+            let world = after(&project_root, InstallDisposition::Fresh, lifecycle_run)?;
+            Ok(fresh_run(&project_root, nodes, world))
         }
         Plan::Ready(planned) => {
             // Show the plan: the packages to materialise.
             report::present_resolution(ctx, &planned.resolution);
+            // Counted here, from the solved graph itself, before the plan is
+            // consumed by the apply.
+            let packages_resolved = planned.resolution.len();
 
             // Confirm (unless --assume-yes or --json or not a TTY).
             let approved = if args.assume_yes || ctx.is_unattended() || ctx.is_json() {
@@ -424,13 +468,70 @@ pub(crate) fn run_with_lifecycle_context(
                         &project_root,
                     )?),
                 },
-            )?;
+            );
+            // A parked slot row is a durable handoff, not an install failure:
+            // the chain stopped at that row's point, whatever preceded it is
+            // already durable and measured in `progress`, and nothing was paid
+            // for. It travels OUT as a value — this layer renders nothing, so
+            // the outermost command owns the single document.
+            let applied = match applied {
+                Ok(applied) => applied,
+                Err(vibe_install::Error::Delegated {
+                    delegation,
+                    reports,
+                    progress,
+                }) => {
+                    crate::commands::lifecycle::check_delegation(&delegation)?;
+                    let mut parked =
+                        InstallRun::new(project_root.clone(), InstallDisposition::Parked);
+                    parked.packages_resolved = packages_resolved;
+                    parked.progress = *progress;
+                    parked.slot_reports = reports;
+                    parked.parked = Some(*delegation);
+                    return Ok(parked);
+                }
+                // A slot row FAILED. `vibe install` is still the outermost
+                // command, so its one document reports the failure —
+                // `ok: false` with the executed rows — before the error
+                // reaches the exit code. Without this, removing the per-row
+                // echo would have taken the machine record of a failed
+                // install with it.
+                Err(vibe_install::Error::SlotFailed {
+                    source,
+                    reports,
+                    progress,
+                }) => {
+                    report::emit_failed_document(ctx, &project_root, &progress, &reports)?;
+                    return Err(anyhow::Error::new(*source));
+                }
+                Err(error) => return Err(error.into()),
+            };
             lifecycle_run.lifecycle_run = applied.lifecycle_run.clone();
             lifecycle_run.lifecycle_reports = applied.lifecycle_reports.clone();
             let after = after_durable_world
                 .take()
                 .context("internal: install durable-world callback already consumed")?;
-            let world_summary = after(&project_root, InstallDisposition::Applied, lifecycle_run)?;
+            // An apply can finish without visiting a live slot-scoped park:
+            // an unchanged slot produces no payload event, so the post-install
+            // plan is empty and the delegated row is never revisited. The
+            // persisted continuation is exactly the mechanism for that case —
+            // consume it before anything reports a completed run.
+            if let Some(resumed) = resume_slot_continuation(
+                ctx,
+                resume::ResumeRequest {
+                    project_root: &project_root,
+                    workspace: &workspace,
+                    manifest: &manifest,
+                    metadata: &run_metadata,
+                    spec_format,
+                    disposition: InstallDisposition::Applied,
+                    progress: applied.progress.clone(),
+                    packages_resolved,
+                },
+            )? {
+                return Ok(resumed);
+            }
+            let world = after(&project_root, InstallDisposition::Applied, lifecycle_run)?;
             // PROP-050 ##VERIFY-LOCK-DIFF — after a successful apply, print
             // the closure diff (the pre-apply lock snapshot vs the freshly
             // written one, lane bytes before/after): a mid-graph re-export
@@ -448,92 +549,32 @@ pub(crate) fn run_with_lifecycle_context(
                     &lane_sizes(&workspace.root),
                 );
             }
-            report::emit_report(ctx, &applied, world_summary)?;
-            Ok(InstallDisposition::Applied)
+            let mut run = InstallRun::new(
+                project_root.clone(),
+                if world.parked.is_some() {
+                    InstallDisposition::Parked
+                } else {
+                    InstallDisposition::Applied
+                },
+            );
+            run.packages_resolved = packages_resolved;
+            run.progress = applied.progress.clone();
+            run.hooks = applied
+                .outcome
+                .hook_reports
+                .iter()
+                .chain(&applied.post_install_reports)
+                .cloned()
+                .collect();
+            run.slot_reports = applied.lifecycle_reports.clone();
+            // ONLY the phase-ritual rows: the slot rows live on
+            // `slot_reports`, and the document joins the two exactly once.
+            // Carrying them in both places double-counted every slot row.
+            run.contributions = world.contributions;
+            run.notices = world.notices;
+            run.parked = world.parked;
+            run.world_summary = world.summary;
+            Ok(run)
         }
-    }
-}
-
-/// Effective PROP-045 setting: a project pin is reproducible and wins over
-/// the operator default; absence at both layers preserves legacy `mixed`.
-pub(crate) fn resolve_spec_format(manifest: &Manifest, user_config: &UserConfig) -> SpecFormat {
-    manifest
-        .consumer_node()
-        .and_then(|node| node.spec_format)
-        .or(user_config.install.spec_format)
-        .unwrap_or_default()
-}
-
-/// The lockfile provenance stamp this binary writes.
-fn generated_by() -> String {
-    format!("vibe {}", env!("CARGO_PKG_VERSION"))
-}
-
-pub(crate) fn resolve_project_root(path: &Path) -> Result<PathBuf> {
-    let canonical = path
-        .canonicalize()
-        .with_context(|| format!("canonicalizing `{}`", path.display()))?;
-    let stripped = crate::commands::init::strip_unc_public(canonical);
-    if !stripped.join(Manifest::FILENAME).exists() {
-        bail!(
-            "no `vibe.toml` in `{}`; run `vibe init` first",
-            stripped.display()
-        );
-    }
-    Ok(stripped)
-}
-
-#[cfg(test)]
-mod spec_format_tests {
-    use super::*;
-
-    fn manifest(project_setting: Option<SpecFormat>) -> Manifest {
-        let mut manifest: Manifest =
-            toml::from_str("[project]\nname = \"demo\"\nversion = \"0.1.0\"\n")
-                .expect("valid manifest");
-        manifest.project.as_mut().expect("project").spec_format = project_setting;
-        manifest
-    }
-
-    #[test]
-    fn package_rooted_spec_format_is_equipotent() {
-        // PROP-024 ##MANIFEST-ROLES-ARE-EQUIPOTENT: a package-rooted
-        // checkout pins its materialisation exactly as a project does.
-        let manifest: Manifest = toml::from_str(
-            "[package]
-name = \"b\"
-group = \"org.x\"
-kind = \"flow\"
-version = \"1.0.0\"
-spec_format = \"xml\"
-",
-        )
-        .expect("valid manifest");
-        let user = UserConfig::default();
-        assert_eq!(resolve_spec_format(&manifest, &user), SpecFormat::Xml);
-    }
-
-    #[test]
-    fn project_spec_format_wins_over_user_default() {
-        let mut user = UserConfig::default();
-        user.install.spec_format = Some(SpecFormat::Markdown);
-        assert_eq!(
-            resolve_spec_format(&manifest(Some(SpecFormat::Xml)), &user),
-            SpecFormat::Xml
-        );
-    }
-
-    #[test]
-    fn user_default_and_builtin_mixed_fill_absent_project_setting() {
-        let mut user = UserConfig::default();
-        user.install.spec_format = Some(SpecFormat::Markdown);
-        assert_eq!(
-            resolve_spec_format(&manifest(None), &user),
-            SpecFormat::Markdown
-        );
-        assert_eq!(
-            resolve_spec_format(&manifest(None), &UserConfig::default()),
-            SpecFormat::Mixed
-        );
     }
 }

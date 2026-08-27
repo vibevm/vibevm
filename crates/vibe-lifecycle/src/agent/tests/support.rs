@@ -18,33 +18,33 @@ use crate::{
     SelectorSubject, collect_extensions,
 };
 
-pub(super) const PROVIDER_GROUP: &str = "org.demo";
-pub(super) const PROVIDER_NAME: &str = "tools";
-pub(super) const PROMPT: &str = "spec://org.demo/tools/common/PROMPT-001#root";
+pub(crate) const PROVIDER_GROUP: &str = "org.demo";
+pub(crate) const PROVIDER_NAME: &str = "tools";
+pub(crate) const PROMPT: &str = "spec://org.demo/tools/common/PROMPT-001#root";
 /// The materialised slot the fixture's declaring provider executes from.
-pub(super) const PROVIDER_ROOT: &str = "vibedeps/org.demo.tools/1.0.0";
+pub(crate) const PROVIDER_ROOT: &str = "vibedeps/org.demo.tools/1.0.0";
 
 /// A backend that records what it was asked and answers from a script. Every
 /// red case asserts against these counters: the strongest evidence that a
 /// guard fires *before* spend is that the paid method was never entered.
-pub(super) struct RecordingBackend {
+pub(crate) struct RecordingBackend {
     prompt_answer: Result<String, String>,
     /// Composition directives the fake backend reports as unsupported, so the
     /// lifecycle's own refusal has a counterexample without a real document.
     unsupported: Vec<String>,
     completion: Mutex<Vec<Result<AgentCompletion, String>>>,
-    pub(super) resolved: Mutex<Vec<PromptRequest>>,
-    pub(super) completed: Mutex<Vec<AgentRequest>>,
+    pub(crate) resolved: Mutex<Vec<PromptRequest>>,
+    pub(crate) completed: Mutex<Vec<AgentRequest>>,
 }
 
 impl RecordingBackend {
-    pub(super) fn answering(text: &str) -> Self {
+    pub(crate) fn answering(text: &str) -> Self {
         Self::answering_prompt("Write the declared outputs.", text)
     }
 
     /// The same backend with an explicit prompt body, so a test can prove the
     /// resolved bytes — not just the address — reach the fingerprint.
-    pub(super) fn answering_prompt(instructions: &str, text: &str) -> Self {
+    pub(crate) fn answering_prompt(instructions: &str, text: &str) -> Self {
         Self::new(
             Ok(instructions.to_string()),
             vec![Ok(AgentCompletion {
@@ -58,11 +58,11 @@ impl RecordingBackend {
         )
     }
 
-    pub(super) fn refusing_prompt(reason: &str) -> Self {
+    pub(crate) fn refusing_prompt(reason: &str) -> Self {
         Self::new(Err(reason.to_string()), Vec::new())
     }
 
-    pub(super) fn refusing_provider(reason: &str) -> Self {
+    pub(crate) fn refusing_provider(reason: &str) -> Self {
         Self::new(
             Ok("Write the declared outputs.".into()),
             vec![Err(reason.to_string())],
@@ -84,7 +84,7 @@ impl RecordingBackend {
 
     /// The same backend, but the resolved closure carries composition this
     /// handler does not perform.
-    pub(super) fn with_unsupported(mut self, unsupported: &[&str]) -> Self {
+    pub(crate) fn with_unsupported(mut self, unsupported: &[&str]) -> Self {
         self.unsupported = unsupported
             .iter()
             .map(|value| (*value).to_string())
@@ -92,7 +92,7 @@ impl RecordingBackend {
         self
     }
 
-    pub(super) fn calls(&self) -> usize {
+    pub(crate) fn calls(&self) -> usize {
         self.completed.lock().unwrap().len()
     }
 }
@@ -119,7 +119,7 @@ impl AgentBackend for RecordingBackend {
 /// One dependency-provided agent contribution in a real collected registry.
 /// `config_toml` is the authored `[extension.config]` body verbatim, so a
 /// contract red case declares exactly what a manifest would declare.
-pub(super) fn row(config_toml: &str, prompt: &str) -> ExtensionRegistryRow {
+pub(crate) fn row(config_toml: &str, prompt: &str) -> ExtensionRegistryRow {
     registry(config_toml, prompt)
         .plan("phase:create".parse().unwrap(), SelectorSubject::unscoped())
         .first()
@@ -179,7 +179,7 @@ fn registry(config_toml: &str, prompt: &str) -> ExtensionRegistry {
 }
 
 /// The declared contract used by the happy path and most red cases.
-pub(super) const TWO_OUTPUTS: &str = r#"
+pub(crate) const TWO_OUTPUTS: &str = r#"
 outputs = [
   { path = "docs/guide.md", kind = "file", accept = "non-empty file" },
   { path = "docs/reference.md", kind = "file", accept = "non-empty file" },
@@ -187,13 +187,13 @@ outputs = [
 "#;
 
 /// The provider answer that satisfies [`TWO_OUTPUTS`].
-pub(super) const TWO_OUTPUTS_RESULT: &str = r##"{"outputs":[
+pub(crate) const TWO_OUTPUTS_RESULT: &str = r##"{"outputs":[
   {"path":"docs/guide.md","content":"# Guide\n"},
   {"path":"docs/reference.md","content":"# Reference\n"}
 ]}"##;
 
 /// An envelope carrying the row's effective config, rooted at `project_root`.
-pub(super) fn context(project_root: &Path, row: &ExtensionRegistryRow) -> Context {
+pub(crate) fn context(project_root: &Path, row: &ExtensionRegistryRow) -> Context {
     let config = row
         .effective_config()
         .map(|config| {

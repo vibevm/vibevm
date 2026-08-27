@@ -14,6 +14,7 @@
 //! `tests/cli_progress_sidecar.rs`, under a relocated `VIBE_SETTINGS`.
 
 use super::*;
+use crate::cli::AgentModeArg;
 
 /// DRIFT-017's own cell — whether a write happens at all, asserted on
 /// mtimes. Split out so this file stays inside the 600-line budget, and
@@ -184,7 +185,7 @@ fn progress_gate_cli_records() {
     .expect("write cfg");
     let campaign = root.join("campaigns").join("progress-test");
     std::fs::create_dir_all(campaign.join("run")).expect("mkdir run");
-    let ctx = crate::output::Context::from_flags(true, false, None, true);
+    let ctx = crate::output::Context::from_flags(true, false, None, true, AgentModeArg::Auto);
     let common = || ProgressCommonArgs {
         path: root.to_path_buf(),
         campaign: Some(campaign.clone()),
@@ -311,7 +312,7 @@ fn warm_and_cold_agree() {
     let tmp = tempfile::tempdir().expect("tempdir");
     let root = tmp.path();
     incremental_fixture(root).expect("fixture tree");
-    let ctx = crate::output::Context::from_flags(true, false, None, true);
+    let ctx = crate::output::Context::from_flags(true, false, None, true, AgentModeArg::Auto);
 
     scan(&ctx, &args(root, false)).expect("cold scan");
     let cold_corpus = read_state(root, "corpus.json");
@@ -371,7 +372,7 @@ fn warm_and_cold_agree_on_every_rendering() {
     let tmp = tempfile::tempdir().expect("tempdir");
     let root = tmp.path();
     incremental_fixture(root).expect("fixture tree");
-    let ctx = crate::output::Context::from_flags(true, false, None, true);
+    let ctx = crate::output::Context::from_flags(true, false, None, true, AgentModeArg::Auto);
     let mirror_dir = root.join("campaigns/progress-test/run/mirror");
 
     let read_mirror = || -> Vec<(String, String)> {
@@ -423,7 +424,7 @@ fn edited_file_is_reparsed() {
     let tmp = tempfile::tempdir().expect("tempdir");
     let root = tmp.path();
     incremental_fixture(root).expect("fixture tree");
-    let ctx = crate::output::Context::from_flags(true, false, None, true);
+    let ctx = crate::output::Context::from_flags(true, false, None, true, AgentModeArg::Auto);
     let cache_path = root.join("campaigns/progress-test/run/cache.json");
 
     scan(&ctx, &args(root, false)).expect("cold scan");
@@ -473,7 +474,7 @@ fn campaign_map_survives_incremental() {
     let tmp = tempfile::tempdir().expect("tempdir");
     let root = tmp.path();
     incremental_fixture(root).expect("fixture tree");
-    let ctx = crate::output::Context::from_flags(true, false, None, true);
+    let ctx = crate::output::Context::from_flags(true, false, None, true, AgentModeArg::Auto);
     let cache_path = root.join("campaigns/progress-test/run/cache.json");
 
     scan(&ctx, &args(root, false)).expect("cold scan");
@@ -513,7 +514,7 @@ fn no_cache_flag_forces_full_parse() {
     let tmp = tempfile::tempdir().expect("tempdir");
     let root = tmp.path();
     incremental_fixture(root).expect("fixture tree");
-    let ctx = crate::output::Context::from_flags(true, false, None, true);
+    let ctx = crate::output::Context::from_flags(true, false, None, true, AgentModeArg::Auto);
 
     scan(&ctx, &args(root, false)).expect("cold scan");
     let mut poisoned = payload_for(root, &spec_rel("a.md")).expect("payload to poison");
@@ -564,7 +565,7 @@ fn verdicts_never_leave_cache_json() {
     let tmp = tempfile::tempdir().expect("tempdir");
     let root = tmp.path();
     incremental_fixture(root).expect("fixture tree");
-    let ctx = crate::output::Context::from_flags(true, false, None, true);
+    let ctx = crate::output::Context::from_flags(true, false, None, true, AgentModeArg::Auto);
     let cache_path = root.join("campaigns/progress-test/run/cache.json");
 
     scan(&ctx, &args(root, false)).expect("cold scan");

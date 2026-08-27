@@ -110,6 +110,50 @@ fn reply_rejects_unknown_fields_at_every_object_boundary() {
 }
 
 #[test]
+fn report_delegation_is_one_typed_member_and_steps_end_at_the_parked_phase() {
+    let authored = serde_json::json!({
+        "ok": true,
+        "command": "lifecycle",
+        "requested": "create",
+        "chain": ["validate", "install", "generate", "build", "test", "create"],
+        "steps": [
+            { "phase": "validate", "status": "ok" },
+            { "phase": "install", "status": "fresh" },
+            { "phase": "generate", "status": "no-op" },
+            { "phase": "build", "status": "no-op" },
+            { "phase": "test", "status": "no-op" },
+            { "phase": "create", "status": "delegated" }
+        ],
+        "contributions": [{
+            "key": "org.demo/provider#draft-guide",
+            "phase": "create",
+            "point": "phase:create",
+            "handler": "agent",
+            "provider": "org.demo/provider",
+            "tier": "dependency",
+            "status": "delegated"
+        }],
+        "notices": [],
+        "delegation": {
+            "run_id": "00112233445566778899aabbccddeeff",
+            "tasks": [".vibe/agentic/outbox/00112233445566778899aabbccddeeff/task-org.demo%23provider.md"],
+            "resume": "vibe create"
+        }
+    });
+    let report: LifecycleReport = serde_json::from_value(authored.clone()).unwrap();
+    let round_trip = serde_json::to_value(&report).unwrap();
+    assert_eq!(round_trip, authored, "the delegation member round-trips");
+    let delegation = report.delegation.as_ref().unwrap();
+    assert_eq!(delegation.resume, "vibe create");
+    assert_eq!(delegation.tasks.len(), 1);
+    assert_eq!(report.steps.last().unwrap().status, "delegated");
+    assert_eq!(
+        report.contributions[0].status, "delegated",
+        "the parked contribution reports the delegated status itself"
+    );
+}
+
+#[test]
 fn plan_is_selection_only_and_precedes_the_distinct_outcome_shape() {
     let plan: LifecyclePlan = read("plan.json");
     let report: LifecycleReport = read("report.json");
@@ -151,11 +195,63 @@ fn state_corpus_round_trips_generated_semantics_and_exact_build_chain() {
     assert_eq!(state.schema, 1);
     assert_eq!(
         state.run.chain,
-        ["validate", "install", "generate", "build"]
+        ["validate", "install", "generate", "build", "test", "create"]
     );
+    assert_eq!(state.run.requested, "create");
     assert_eq!(state.run.started, "2026-08-25T12:00:00Z");
+    assert_eq!(
+        state.run.run_id.as_deref(),
+        Some("00112233445566778899aabbccddeeff"),
+    );
     let row = &state.execution["org.demo/provider#announce"];
     assert_eq!(row.status, ExecutionRecordStatus::Ok);
     assert_eq!(row.duration_ms, 12);
     assert_eq!(row.artifacts[0].kind, "text");
+    assert!(row.tasks.is_empty(), "an ok row carries no task files");
+}
+
+/// A delegated row is the one legal carrier of `tasks`, and the run header
+/// answers with the identity those tasks live under. The round-trip above
+/// proves the authored spelling survives; this pins the R7.3 additions on
+/// their own terms — including that the corpus is COHERENT (the parked row's
+/// phase is one the run header's requested chain actually contains, and its
+/// task lives under the header's own run id), and that a pre-R7.3 file (no
+/// `run_id`, no `tasks` anywhere) still parses through the strict reader.
+#[test]
+fn state_carries_delegated_tasks_under_a_run_id_and_still_reads_pre_r73_files() {
+    let state: LifecycleState = read("state.json");
+    let row = &state.execution["org.demo/provider#draft-guide"];
+    assert_eq!(row.status, ExecutionRecordStatus::Delegated);
+    assert_eq!(row.tasks.len(), 1);
+    assert!(
+        state.run.chain.contains(&row.phase),
+        "the parked row's phase must be part of the run this state records",
+    );
+    let run_id = state.run.run_id.as_deref().unwrap();
+    assert_eq!(
+        row.tasks[0],
+        format!(".vibe/agentic/outbox/{run_id}/task-org.demo%2Fprovider%23draft-guide.md"),
+        "the recorded task is the deterministic path for this run and execution key",
+    );
+
+    let pre_r73 = serde_json::json!({
+        "schema": 1,
+        "run": {
+            "requested": "build",
+            "chain": ["validate", "install", "build"],
+            "started": "2026-08-20T09:00:00Z"
+        },
+        "execution": {
+            "org.demo/provider#announce": {
+                "phase": "build",
+                "fingerprint": "sha256:0123456789abcdef",
+                "status": "ok",
+                "duration_ms": 12,
+                "artifacts": []
+            }
+        }
+    });
+    let legacy: LifecycleState = serde_json::from_value(pre_r73).unwrap();
+    assert_eq!(legacy.run.run_id, None);
+    assert!(legacy.execution.values().all(|row| row.tasks.is_empty()));
 }

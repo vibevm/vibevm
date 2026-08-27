@@ -360,10 +360,18 @@ fn reinstall_runs_post_hook_once_only_for_a_nonempty_force_diff() {
         .into_iter::<serde_json::Value>()
         .collect::<Result<Vec<_>, _>>()
         .unwrap();
+    // The per-row `lifecycle` echo was removed so a parked run can emit one
+    // document; the same rows now travel as typed `contributions` on the
+    // outermost command's own registered root.
     let hooks = reports
         .iter()
-        .find(|report| report["command"] == "lifecycle")
-        .unwrap()["contributions"]
+        .find(|report| {
+            matches!(
+                report["command"].as_str(),
+                Some("reinstall" | "update" | "install")
+            )
+        })
+        .expect("the outermost command emits its root report")["contributions"]
         .as_array()
         .unwrap();
     assert_eq!(
@@ -427,10 +435,18 @@ fn scoped_update_surfaces_a_flagged_post_hook_in_every_output_mode() {
         .unwrap();
     assert_eq!(reports.last().unwrap()["command"], "update");
     assert_eq!(reports.last().unwrap()["hooks"], serde_json::json!([]));
+    // The per-row `lifecycle` echo was removed so a parked run can emit one
+    // document; the same rows now travel as typed `contributions` on the
+    // outermost command's own registered root.
     let hooks = reports
         .iter()
-        .find(|report| report["command"] == "lifecycle")
-        .unwrap()["contributions"]
+        .find(|report| {
+            matches!(
+                report["command"].as_str(),
+                Some("reinstall" | "update" | "install")
+            )
+        })
+        .expect("the outermost command emits its root report")["contributions"]
         .as_array()
         .unwrap();
     assert_eq!(

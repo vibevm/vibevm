@@ -10,16 +10,10 @@ use std::path::Path;
 
 use anyhow::{Context, Result};
 use specmark::spec;
-use vibe_core::manifest::ExtensionHandler;
 use vibe_core::user_config::UserConfig;
-use vibe_lifecycle::{
-    ContributionTier, ExtensionProvider, LifecycleRequest, LifecycleStep, Phase, RunMetadata,
-};
+use vibe_lifecycle::{LifecycleRequest, LifecycleStep, Phase, RunMetadata};
 use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
-use vibe_wire::generated::lifecycle_plan::{LifecyclePlan, PlannedContribution};
-use vibe_wire::generated::lifecycle_report::{
-    LifecycleContributionReport, LifecycleReport, LifecycleStepReport,
-};
+use vibe_wire::generated::lifecycle_report::LifecycleStepReport;
 use vibe_workspace::Workspace;
 
 use crate::cli::{CleanArgs, CleanChain, InstallArgs, LifecycleArgs};
@@ -29,9 +23,15 @@ use super::install::{InstallDisposition, InstallRunContext, WorldCallbackSummary
 
 mod agent;
 mod dispatch;
+mod plan;
+mod report;
 mod slot;
 pub(crate) mod world;
 
+use plan::{provider_and_version, surface_plan, tier_name};
+pub(super) use report::emit_failure_outcome;
+use report::emit_report;
+pub(crate) use report::{check_delegation, render_agent_task_fence};
 pub(crate) use slot::{
     emit_transition_outcome as emit_slot_transition_outcome, surface_plan as surface_slot_plan,
 };
@@ -107,12 +107,17 @@ pub(crate) fn run_clean_only(
 ) -> Result<()> {
     let chain = vec!["clean".to_string()];
     let plan = world::plan_clean(&args.path)?;
+    // The refusal comes FIRST — before a run id is minted, before the plan is
+    // narrated, before the wipe is confirmed. Allocating `.vibe/lifecycle/<id>`
+    // is itself a mutation, and an invocation this build cannot host must
+    // leave the tree byte-identical.
+    refuse_untracked_agent_rows(ctx, &plan)?;
     let metadata = RunMetadata {
         requested: "clean".to_string(),
         chain: chain.clone(),
         offline: effective_clean_offline(root_offline)?,
         assume_yes: metadata_assume_yes(ctx, args.assume_yes),
-        agent_mode: RunAgentMode::Cli,
+        agent_mode: ctx.agent_mode(),
         force: false,
         run_id: new_run_id(Path::new(&plan.project.root))?,
         started: crate::commands::init::current_timestamp_utc(),
@@ -135,6 +140,43 @@ pub(crate) fn run_clean_only(
         vec![step_report("clean", StepStatus::Ok)],
         contributions,
         notices,
+        // The clean epoch is untracked, so it can never park: an agent row
+        // here is refused above, before anything is wiped.
+        None,
+    )
+}
+
+/// The clean epoch runs UNTRACKED: it keeps no `.vibe/lifecycle.toml` record,
+/// and its wipe destroys the very tree a parked task would have to live in.
+/// There is therefore no honest place in R7.3 to park a pre-wipe `agent` row —
+/// and paying the provider for one in resolved agent mode is exactly the
+/// accident this refusal exists to prevent. So: refuse explicitly, before the
+/// wipe confirmation, spending nothing and destroying nothing.
+///
+/// Remaining R7 debt, named rather than hidden: a safe pre-wipe park/resume
+/// for `phase:clean` agent rows through a tracked seam (a clean-epoch state
+/// home that survives its own wipe), tracked with R7.4's bounded outbox GC.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-HANDSHAKE")]
+fn refuse_untracked_agent_rows(ctx: &output::Context, plan: &world::RitualPlan) -> Result<()> {
+    if ctx.agent_mode() != RunAgentMode::Agent {
+        return Ok(());
+    }
+    let hosted: Vec<String> = plan
+        .executions
+        .iter()
+        .filter(|execution| execution.row.declaration().handler.kind() == "agent")
+        .map(|execution| execution.row.key().to_string())
+        .collect();
+    if hosted.is_empty() {
+        return Ok(());
+    }
+    anyhow::bail!(
+        "the clean lifecycle cannot host agent contribution(s) {hosted:?} under \
+         `--agent-mode agent`: the clean epoch is untracked and its wipe would destroy the \
+         outbox a parked task lives in, so this invocation neither paid a provider nor removed \
+         anything (governed by spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-HANDSHAKE; \
+         fix: run the clean lifecycle with `--agent-mode cli`, or disable the named \
+         `phase:clean` agent contribution(s) for hosted runs)"
     )
 }
 
@@ -169,15 +211,37 @@ fn execute(
     let offline = effective_offline(root_offline, &install_args)?;
     let assume_yes =
         clean_assume_yes || install_args.assume_yes || ctx.is_unattended() || ctx.is_json();
+    // The durable identity is chosen ONCE, here, after the project/state root
+    // is known and before anything is allocated: a resume of a parked run
+    // adopts its id and original start, every other invocation gets one fresh
+    // allocation. The resulting metadata then travels unchanged through the
+    // prerequisite install and every later phase.
+    // A clean-composed invocation is planned and judged BEFORE the identity is
+    // selected: `select_run_identity` allocates a scratch run directory on the
+    // fresh branch, and a hosted clean this build cannot serve must not leave
+    // one behind.
+    let clean_plan = (steps.first() == Some(&LifecycleStep::Clean))
+        .then(|| world::plan_clean(&install_args.path))
+        .transpose()?;
+    if let Some(clean_plan) = clean_plan.as_ref() {
+        refuse_untracked_agent_rows(ctx, clean_plan)?;
+    }
+    let identity = run_identity(
+        ctx,
+        &install_args.path,
+        &requested.to_string(),
+        &chain,
+        install_args.force,
+    )?;
     let metadata = RunMetadata {
         requested: requested.to_string(),
         chain: chain.clone(),
         offline,
         assume_yes,
-        agent_mode: RunAgentMode::Cli,
+        agent_mode: ctx.agent_mode(),
         force: install_args.force,
-        run_id: new_run_id(&super::install::resolve_project_root(&install_args.path)?)?,
-        started: crate::commands::init::current_timestamp_utc(),
+        run_id: identity.run_id,
+        started: identity.started,
     };
     let mut reports = Vec::with_capacity(steps.len());
     let mut contribution_reports = Vec::new();
@@ -185,8 +249,7 @@ fn execute(
     let mut install_lifecycle_run = None;
     let mut install_contribution_reports = Vec::new();
 
-    if steps.first() == Some(&LifecycleStep::Clean) {
-        let clean_plan = world::plan_clean(&install_args.path)?;
+    if let Some(clean_plan) = clean_plan {
         notices.extend(clean_plan.notices.clone());
         surface_plan(ctx, &clean_plan, &metadata, true)?;
         let wipe_plan = super::clean::plan_wipe(&install_args.path)?;
@@ -220,7 +283,7 @@ fn execute(
                 let prepare = prepare_install
                     .take()
                     .context("internal: install inputs prepared more than once")?;
-                let disposition = super::install::run_with_lifecycle_context(
+                let install_run = super::install::run_with_lifecycle_context(
                     &child,
                     install_args.clone(),
                     prepare(),
@@ -234,12 +297,44 @@ fn execute(
                             .into_iter()
                             .map(slot::contribution_report)
                             .collect();
-                        Ok(WorldCallbackSummary::default())
+                        Ok(super::install::WorldCallbackOutcome::default())
                     },
                 )?;
-                install_status = Some(match disposition {
+                // A parked prerequisite install stops the whole chain — and
+                // THIS command renders the one document, because it is the
+                // outermost one. The step list is the prefix that really ran:
+                // whatever preceded install, then `install: delegated`, and
+                // nothing after it.
+                if let Some(delegation) = install_run.parked {
+                    let mut prefix = reports;
+                    if validate_status.is_some() {
+                        prefix.push(step_report(
+                            Phase::Validate.as_str(),
+                            validate_status.unwrap_or(StepStatus::Ok),
+                        ));
+                    }
+                    prefix.push(step_report(Phase::Install.as_str(), StepStatus::Delegated));
+                    let mut rows = install_contribution_reports;
+                    rows.extend(
+                        install_run
+                            .slot_reports
+                            .into_iter()
+                            .map(slot::contribution_report),
+                    );
+                    return emit_report(
+                        ctx,
+                        requested.as_str(),
+                        chain,
+                        prefix,
+                        rows,
+                        notices,
+                        Some(delegation),
+                    );
+                }
+                install_status = Some(match install_run.disposition {
                     InstallDisposition::Fresh => StepStatus::Fresh,
                     InstallDisposition::Applied => StepStatus::Ok,
+                    InstallDisposition::Parked => unreachable!("returned above"),
                 });
             }
             _ => {}
@@ -250,12 +345,18 @@ fn execute(
     notices.extend(ritual.notices.clone());
     surface_plan(ctx, &ritual, &metadata, true)?;
     let state_chain = phases.iter().map(ToString::to_string).collect();
-    contribution_reports.extend(if let Some(shared) = install_lifecycle_run {
+    let outcome = if let Some(shared) = install_lifecycle_run {
         dispatch::dispatch_plan_with_run(ctx, &ritual, &shared, &metadata)?
     } else {
         dispatch::dispatch_plan(ctx, &ritual, metadata, state_chain)?
-    });
-    if !ctx.is_json() && !install_contribution_reports.is_empty() {
+    };
+    let parked = outcome.parked;
+    contribution_reports.extend(outcome.reports);
+    // The prerequisite install's slot rows belong to THIS report, in every
+    // mode. They used to be excluded from JSON because each one was echoed as
+    // its own `lifecycle` document; that echo is gone, so excluding them here
+    // would drop the machine record of work this command really ran.
+    if !install_contribution_reports.is_empty() {
         install_contribution_reports.append(&mut contribution_reports);
         contribution_reports = install_contribution_reports;
     }
@@ -273,7 +374,22 @@ fn execute(
             }
             _ => StepStatus::Ok,
         };
-        reports.push(step_report(phase.as_str(), status));
+        // Steps end AT the parked phase: later phases did not run, so they
+        // are not reported as if they had.
+        let parked_here = parked
+            .as_ref()
+            .is_some_and(|(stopped, _)| stopped == phase.as_str());
+        reports.push(step_report(
+            phase.as_str(),
+            if parked_here {
+                StepStatus::Delegated
+            } else {
+                status
+            },
+        ));
+        if parked_here {
+            break;
+        }
     }
 
     emit_report(
@@ -283,163 +399,8 @@ fn execute(
         reports,
         contribution_reports,
         notices,
+        parked.map(|(_, delegation)| delegation),
     )
-}
-
-fn surface_plan(
-    ctx: &output::Context,
-    plan: &world::RitualPlan,
-    metadata: &RunMetadata,
-    emit_empty: bool,
-) -> Result<()> {
-    if !emit_empty && plan.executions.is_empty() && plan.notices.is_empty() {
-        return Ok(());
-    }
-    if ctx.is_json() {
-        return ctx.emit_json(&LifecyclePlan {
-            chain: metadata.chain.clone(),
-            command: "lifecycle:plan".to_string(),
-            contributions: plan.executions.iter().map(planned_contribution).collect(),
-            notices: plan.notices.clone(),
-            requested: metadata.requested.clone(),
-        });
-    }
-    render_ritual(ctx, &plan.notices, &plan.executions);
-    Ok(())
-}
-
-fn planned_contribution(execution: &world::PlannedExecution) -> PlannedContribution {
-    let row = &execution.row;
-    let (provider, version) = provider_and_version(row.provider());
-    PlannedContribution {
-        handler: row.declaration().handler.kind().to_string(),
-        key: row.key().to_string(),
-        phase: execution.phase.clone(),
-        point: row.declaration().point.to_string(),
-        provider,
-        reference: None,
-        slot_target: None,
-        tier: tier_name(row.effective_tier()).to_string(),
-        version,
-    }
-}
-
-fn provider_and_version(provider: &ExtensionProvider) -> (String, Option<String>) {
-    match provider {
-        ExtensionProvider::Dependency(provider) => {
-            (provider.id.to_string(), Some(provider.version.clone()))
-        }
-        ExtensionProvider::Host(provider) => (
-            provider.identity.to_string(),
-            (!provider.version.is_empty()).then(|| provider.version.clone()),
-        ),
-    }
-}
-
-fn render_ritual(
-    ctx: &output::Context,
-    notices: &[String],
-    executions: &[world::PlannedExecution],
-) {
-    if ctx.is_json() || ctx.is_quiet() {
-        return;
-    }
-    for notice in notices {
-        ctx.step(&format!("lifecycle notice: {notice}"));
-    }
-    for execution in executions {
-        let row = &execution.row;
-        let handler = match &row.declaration().handler {
-            ExtensionHandler::Builtin { name } => format!("builtin:{name}"),
-            other => other.kind().to_string(),
-        };
-        ctx.step(&format!(
-            "will run `{}` — point={}, handler={}, provider={} tier={}",
-            row.key(),
-            row.declaration().point,
-            handler,
-            row.provider(),
-            tier_name(row.effective_tier()),
-        ));
-    }
-}
-
-fn emit_report(
-    ctx: &output::Context,
-    requested: &str,
-    chain: Vec<String>,
-    steps: Vec<LifecycleStepReport>,
-    contributions: Vec<LifecycleContributionReport>,
-    notices: Vec<String>,
-) -> Result<()> {
-    let report = LifecycleReport {
-        chain,
-        command: "lifecycle".to_string(),
-        contributions,
-        notices,
-        ok: true,
-        requested: requested.to_string(),
-        steps,
-    };
-    if ctx.is_json() {
-        return ctx.emit_json(&report);
-    }
-    let fresh = report
-        .contributions
-        .iter()
-        .filter(|row| row.status == "fresh")
-        .count();
-    let executed = report.contributions.len() - fresh;
-    let ok = report
-        .contributions
-        .iter()
-        .filter(|row| row.status == "ok")
-        .count();
-    let contribution_summary = format!(
-        "{} contribution(s) selected, {executed} executed, {ok} ok, {fresh} fresh",
-        report.contributions.len(),
-    );
-    if ctx.is_quiet() {
-        ctx.summary(&format!(
-            "vibe lifecycle: {requested} completed ({} phases, {contribution_summary}, {} notice(s))",
-            report.steps.len(),
-            report.notices.len(),
-        ));
-        return Ok(());
-    }
-    ctx.heading(&format!("lifecycle `{requested}`:"));
-    for step in &report.steps {
-        ctx.step(&format!("{}: {}", step.phase, step.status));
-    }
-    ctx.summary(&format!(
-        "vibe lifecycle: {requested} completed ({} phases, {contribution_summary}, {} notice(s))",
-        report.steps.len(),
-        report.notices.len(),
-    ));
-    Ok(())
-}
-
-pub(super) fn emit_failure_outcome(
-    ctx: &output::Context,
-    metadata: &RunMetadata,
-    phase: &str,
-    contributions: &[LifecycleContributionReport],
-) -> Result<()> {
-    if !ctx.is_json() {
-        return Ok(());
-    }
-    ctx.emit_json(&LifecycleReport {
-        chain: metadata.chain.clone(),
-        command: "lifecycle".into(),
-        contributions: contributions.to_vec(),
-        notices: Vec::new(),
-        ok: false,
-        requested: metadata.requested.clone(),
-        steps: vec![LifecycleStepReport {
-            phase: phase.into(),
-            status: "fail".into(),
-        }],
-    })
 }
 
 /// Direct install callback after durability and before its final document.
@@ -448,55 +409,113 @@ pub(crate) fn after_direct_install(
     path: &Path,
     disposition: InstallDisposition,
     run: InstallRunContext,
-) -> Result<WorldCallbackSummary> {
+) -> Result<super::install::WorldCallbackOutcome> {
+    let _ = disposition;
     let phases = [Phase::Validate, Phase::Install];
     let ritual = world::plan_default(path, &phases)?;
     let metadata = run.metadata.clone();
     surface_plan(ctx, &ritual, &metadata, false)?;
     let state_chain = metadata.chain.clone();
     let slot_reports = run.lifecycle_reports;
-    let contributions = if let Some(shared) = run.lifecycle_run {
+    let outcome = if let Some(shared) = run.lifecycle_run {
         dispatch::dispatch_plan_with_run(ctx, &ritual, &shared, &metadata)?
     } else {
         dispatch::dispatch_plan(ctx, &ritual, metadata, state_chain)?
     };
-    if ctx.is_json() && (!contributions.is_empty() || !ritual.notices.is_empty()) {
-        emit_report(
-            ctx,
-            Phase::Install.as_str(),
-            phases.iter().map(ToString::to_string).collect(),
-            vec![
-                step_report(Phase::Validate.as_str(), StepStatus::Ok),
-                step_report(
-                    Phase::Install.as_str(),
-                    match disposition {
-                        InstallDisposition::Fresh => StepStatus::Fresh,
-                        InstallDisposition::Applied => StepStatus::Ok,
-                    },
-                ),
-            ],
-            contributions.clone(),
-            ritual.notices.clone(),
-        )?;
-    }
-    Ok(WorldCallbackSummary {
-        selected_contributions: ritual.executions.len() + slot_reports.len(),
-        executed_contributions: contributions
-            .iter()
-            .filter(|row| row.status != "fresh")
-            .count()
-            + slot_reports.len(),
-        successful_contributions: contributions
-            .iter()
-            .filter(|row| row.status == "ok")
-            .count()
-            + slot_reports.iter().filter(|row| row.status == "ok").count(),
-        fresh_contributions: contributions
-            .iter()
-            .filter(|row| row.status == "fresh")
-            .count(),
-        notices: ritual.notices.len(),
+    let parked = outcome.parked.map(|(_, delegation)| delegation);
+    let contributions = outcome.reports;
+    // NOTHING is rendered here. `vibe install` is the outermost command on
+    // this path, so its one `cli-install-report` carries these rows and any
+    // handoff; emitting a lifecycle report beside it was the second document.
+    Ok(super::install::WorldCallbackOutcome {
+        summary: WorldCallbackSummary {
+            selected_contributions: ritual.executions.len() + slot_reports.len(),
+            executed_contributions: contributions
+                .iter()
+                .filter(|row| row.status != "fresh")
+                .count()
+                + slot_reports.len(),
+            successful_contributions: contributions
+                .iter()
+                .filter(|row| row.status == "ok")
+                .count()
+                + slot_reports.iter().filter(|row| row.status == "ok").count(),
+            fresh_contributions: contributions
+                .iter()
+                .filter(|row| row.status == "fresh")
+                .count(),
+            notices: ritual.notices.len(),
+        },
+        contributions,
+        notices: ritual.notices.clone(),
+        parked,
     })
+}
+
+/// Choose this invocation's durable run identity through the one selector,
+/// before anything is allocated. `state_root` is the workspace root (where
+/// `.vibe/lifecycle.toml` lives); the fresh candidate is allocated under the
+/// selected project root.
+pub(crate) fn run_identity(
+    ctx: &output::Context,
+    path: &Path,
+    requested: &str,
+    chain: &[String],
+    force: bool,
+) -> Result<vibe_lifecycle::RunIdentity> {
+    let project_root = super::install::resolve_project_root(path)?;
+    let workspace_root = Workspace::discover(&project_root)
+        .map(|workspace| workspace.root)
+        .unwrap_or_else(|_| project_root.clone());
+    vibe_lifecycle::select_run_identity(
+        &workspace_root,
+        &project_root,
+        requested,
+        chain,
+        ctx.agent_mode(),
+        force,
+        crate::commands::init::current_timestamp_utc(),
+    )
+    .map_err(Into::into)
+}
+
+fn new_run_id(project_root: &Path) -> Result<String> {
+    vibe_lifecycle::process::allocate_run_id(project_root).map_err(Into::into)
+}
+
+fn step_name(step: &LifecycleStep) -> String {
+    match step {
+        LifecycleStep::Clean => "clean".to_string(),
+        LifecycleStep::Default(phase) => phase.to_string(),
+    }
+}
+
+fn step_report(phase: &str, status: StepStatus) -> LifecycleStepReport {
+    LifecycleStepReport {
+        phase: phase.to_string(),
+        status: status.as_str().to_string(),
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum StepStatus {
+    Ok,
+    Fresh,
+    NoOp,
+    /// The chain parked at this phase for the hosting agent; no later phase
+    /// ran, and none is reported.
+    Delegated,
+}
+
+impl StepStatus {
+    const fn as_str(self) -> &'static str {
+        match self {
+            Self::Ok => "ok",
+            Self::Fresh => "fresh",
+            Self::NoOp => "no-op",
+            Self::Delegated => "delegated",
+        }
+    }
 }
 
 fn validate(path: &Path) -> Result<std::path::PathBuf> {
@@ -520,48 +539,4 @@ fn effective_clean_offline(root_offline: bool) -> Result<bool> {
 
 fn metadata_assume_yes(ctx: &output::Context, explicit: bool) -> bool {
     explicit || ctx.is_unattended() || ctx.is_json()
-}
-
-fn new_run_id(project_root: &Path) -> Result<String> {
-    vibe_lifecycle::process::allocate_run_id(project_root).map_err(Into::into)
-}
-
-fn step_name(step: &LifecycleStep) -> String {
-    match step {
-        LifecycleStep::Clean => "clean".to_string(),
-        LifecycleStep::Default(phase) => phase.to_string(),
-    }
-}
-
-fn step_report(phase: &str, status: StepStatus) -> LifecycleStepReport {
-    LifecycleStepReport {
-        phase: phase.to_string(),
-        status: status.as_str().to_string(),
-    }
-}
-
-const fn tier_name(tier: ContributionTier) -> &'static str {
-    match tier {
-        ContributionTier::Preset => "preset",
-        ContributionTier::Dependency => "dependency",
-        ContributionTier::HostDeclaration => "host-declaration",
-        ContributionTier::HostActivation => "host-activation",
-    }
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-enum StepStatus {
-    Ok,
-    Fresh,
-    NoOp,
-}
-
-impl StepStatus {
-    const fn as_str(self) -> &'static str {
-        match self {
-            Self::Ok => "ok",
-            Self::Fresh => "fresh",
-            Self::NoOp => "no-op",
-        }
-    }
 }

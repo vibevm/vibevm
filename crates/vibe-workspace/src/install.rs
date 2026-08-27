@@ -346,7 +346,7 @@ fn materialise_resolution_with_spec_format(
         }
         materialised.push(slot);
     }
-    pre_install.dispatch()?;
+    pre_install.dispatch(&materialised, &skipped)?;
     Ok(Materialised {
         materialised,
         skipped,

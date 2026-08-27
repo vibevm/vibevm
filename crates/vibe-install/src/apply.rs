@@ -25,7 +25,8 @@ use crate::InstallSource;
 use crate::error::{Error, Result};
 use crate::fetched::Fetched;
 use crate::lifecycle::{
-    InstallSlotLifecycle, NoSlotLifecycleObserver, SlotLifecycleObserver, SlotLifecycleReport,
+    InstallProgress, InstallSlotLifecycle, NoSlotLifecycleObserver, SlotLifecycleObserver,
+    SlotLifecycleReport,
 };
 use crate::plan::PlannedInstall;
 use crate::record::{
@@ -52,6 +53,10 @@ pub struct ApplyReport {
     /// The same canonical run used by slot callbacks; the caller rebinds it
     /// to the durable world before dispatching normal phase contributions.
     pub lifecycle_run: Option<LifecycleRunHandle>,
+    /// What this apply changed, in the one slot-level shape every install-family
+    /// report renders — so no caller re-derives it from `outcome` and no report
+    /// invents a per-file census the engine never measured.
+    pub progress: InstallProgress,
 }
 
 /// Apply a confirmed plan. `slot_integrity` selects the PROP-011 §2.3
@@ -109,6 +114,7 @@ pub fn apply_with_spec_format_and_hook_output<S: InstallSource + ?Sized>(
             policy: hooks,
             output: hook_output,
         },
+        None,
     )
 }
 
@@ -151,15 +157,48 @@ pub fn apply_with_spec_format_and_lifecycle_observed<S: InstallSource + ?Sized>(
 ) -> Result<ApplyReport> {
     let lifecycle = InstallSlotLifecycle::from_plan_observed(&planned, run, streams, seams)?;
     let lifecycle_run = lifecycle.run_handle();
-    let mut report = apply_with_spec_format_and_slot_lifecycle(
+    let applied = apply_with_spec_format_and_slot_lifecycle(
         source,
         planned,
         slot_integrity,
         spec_format,
         SlotLifecycleMode::Callback(&lifecycle),
-    )?;
+        Some(&lifecycle),
+    );
+    // A parked hosted row halts the orchestrator through the seam's only
+    // stopping channel. It is a durable handoff, not a failure — so it is
+    // retyped here, WITH the rows executed up to the park, before any caller
+    // can mistake the sentinel for an install error.
+    let mut report = match applied {
+        Ok(report) => report,
+        Err(error) => {
+            return Err(match lifecycle.parked() {
+                Some(delegation) => Error::Delegated {
+                    delegation: Box::new(delegation),
+                    reports: lifecycle.take_reports().unwrap_or_default(),
+                    // Progress was recorded AS the mutation happened, so a
+                    // pre-install park reports the slots that survived its
+                    // rollback and a post-install park reports the whole
+                    // completed apply. Neither invents a file census.
+                    progress: Box::new(lifecycle.progress()),
+                },
+                // A failure is an outcome too: the rows this pass executed and
+                // the progress it really made travel with it, so the outermost
+                // command can report them.
+                None => Error::SlotFailed {
+                    source: Box::new(error),
+                    reports: lifecycle.take_reports().unwrap_or_default(),
+                    progress: Box::new(lifecycle.progress()),
+                },
+            });
+        }
+    };
     report.lifecycle_reports = lifecycle.take_reports()?;
     report.lifecycle_run = Some(lifecycle_run);
+    report.progress = InstallProgress::complete(&report.outcome);
+    // The slot run reached its end: nothing is owed, so the durable
+    // continuation goes. A resume must never rebuild a run that finished.
+    lifecycle.clear_continuation().map_err(Error::Lifecycle)?;
     Ok(report)
 }
 
@@ -169,6 +208,11 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
     slot_integrity: SlotIntegrity,
     spec_format: SpecFormat,
     lifecycle: SlotLifecycleMode<'_>,
+    // The slot lifecycle, when the caller owns one, so the COMPLETE apply
+    // outcome replaces the partial materialise-boundary snapshot the moment
+    // it exists. A post-install park then reports the whole apply rather than
+    // the pre-install view of it.
+    observer: Option<&InstallSlotLifecycle>,
 ) -> Result<ApplyReport> {
     let PlannedInstall {
         project_root,
@@ -260,6 +304,7 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
         Some(&slot_verifier),
         lifecycle,
     )?;
+
     for warning in &outcome.integrity_warnings {
         tracing::warn!(target: "vibe_install::apply", "{warning}");
     }
@@ -323,12 +368,19 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
     //     (lockfile written, boot regenerated). A non-zero exit is surfaced
     //     as a flagged report, not fatal; a missing interpreter is a hard
     //     error. Only slots whose materialised payload changed run their hook.
+    // The apply is complete: whatever a later post-install row does, the
+    // record of what this install changed is final and is handed to the
+    // observer BEFORE the callbacks that could stop the run.
+    if let Some(observer) = observer {
+        observer.record_complete(InstallProgress::complete(&outcome));
+    }
     let post_install_reports = match outcome.take_post_install_plan() {
         Some(plan) => run_post_install_slot_lifecycle(plan, lifecycle)?,
         None => Vec::new(),
     };
 
     Ok(ApplyReport {
+        progress: InstallProgress::complete(&outcome),
         outcome,
         post_install_reports,
         lifecycle_reports: Vec::new(),

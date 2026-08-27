@@ -70,6 +70,7 @@ fn main() -> ExitCode {
         cli.json,
         cli.invoked_by.as_deref(),
         cli.unattended,
+        cli.agent_mode,
     );
 
     // Ensure `~/.vibe/registry.toml` exists with the default pair (vibespecs
@@ -118,6 +119,9 @@ fn main() -> ExitCode {
         Command::List(args) => commands::list::run(&ctx, args),
         Command::Extensions(args) => commands::extensions::run(&ctx, args),
         Command::Validate(args) => run_lifecycle(vibe_lifecycle::Phase::Validate, args),
+        // `vibe install` is the OUTERMOST command on this path: the substrate
+        // returns what it did, and exactly one `cli-install-report` is
+        // rendered here — apply, fresh or parked alike.
         Command::Install(args) => commands::install::run_with_world_callback(
             &ctx,
             args,
@@ -127,7 +131,7 @@ fn main() -> ExitCode {
                 commands::lifecycle::after_direct_install(&ctx, project_root, disposition, run)
             },
         )
-        .map(|_| ()),
+        .and_then(|run| commands::install::emit_command_document(&ctx, run)),
         Command::Generate(args) => run_lifecycle(vibe_lifecycle::Phase::Generate, args),
         Command::Build(args) => run_lifecycle(vibe_lifecycle::Phase::Build, args),
         Command::Test(args) => run_lifecycle(vibe_lifecycle::Phase::Test, args),
@@ -276,8 +280,16 @@ fn main() -> ExitCode {
     };
 
     match result {
-        Ok(()) => ExitCode::SUCCESS,
+        Ok(()) => {
+            // A command that returned without emitting its own document (a
+            // pure-narration verb) still owes any plan it deferred.
+            let _ = ctx.flush_json_plans();
+            ExitCode::SUCCESS
+        }
         Err(err) => {
+            // A failure is an outcome too: release the held-back plan
+            // documents rather than swallowing them with the error.
+            let _ = ctx.flush_json_plans();
             ctx.error(&err);
             as_exit_code(&err)
         }

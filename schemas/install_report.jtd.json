@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "description": "Wire format for `vibe install --json` (the final apply report). Source of truth for `crates/vibe-wire/src/generated/install_report.rs`.",
+    "description": "Wire format for `vibe install --json` \u2014 the ONE document the command emits, whatever it did. Normal apply, the fresh fast path, a hosted park and a slot failure all use this same root: the command's registered format never changes with runtime status. Every fact the pre-R7.3 document carried stays at the ROOT; parking adds only optional members. The engine measures SLOTS (directories), never a per-file census.",
     "spec": {
       "implements": "spec://org.vibevm.core/vibevm/common/PROP-000#JTD-SSOT"
     },
@@ -21,35 +21,236 @@
     "project": {
       "type": "string"
     },
-    "installed": {
+    "materialised": {
       "elements": {
-        "ref": "applied_report"
+        "type": "string"
       },
       "metadata": {
         "x-empty": "emit",
-        "description": "Required member: an apply that installed nothing writes `[]`, never an absent key — omitting a required collection would produce a document invalid by this same schema (rule R21)."
+        "description": "Dependency-slot paths materialised this run \u2014 a directory each, never counted as files. Excludes any slot a rollback removed."
+      }
+    },
+    "skipped": {
+      "elements": {
+        "type": "string"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Slot paths already present for the resolved version and source identity, trusted without materialising."
+      }
+    },
+    "pruned": {
+      "elements": {
+        "type": "string"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Slot paths removed \u2014 present before, absent from this resolution."
+      }
+    },
+    "nodes_regenerated": {
+      "elements": {
+        "type": "string"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Workspace-relative path of every node whose boot artifacts were regenerated."
+      }
+    },
+    "complete": {
+      "type": "boolean",
+      "metadata": {
+        "description": "True when this invocation ran to completion. False when it stopped part-way \u2014 the slot sets above are then a partial, boundary-measured record, never a final one."
+      }
+    },
+    "unchanged": {
+      "type": "boolean",
+      "metadata": {
+        "description": "True on the PROP-011 \u00a72.2 fast path: `vibe.lock` was already fresh, so no resolution ran and no slot moved."
+      }
+    }
+  },
+  "optionalProperties": {
+    "delegation": {
+      "ref": "install_delegation",
+      "metadata": {
+        "x-default": null,
+        "description": "Present exactly when a hosted `agent` contribution parked this install. The install stopped there and `ok` stays true \u2014 a park is a durable handoff, not a failure \u2014 while `complete` records whether the apply had finished first."
+      }
+    },
+    "hooks": {
+      "elements": {
+        "ref": "install_hook_report"
+      },
+      "metadata": {
+        "x-empty": "omit",
+        "description": "Install-hook reports (PROP-020 \u00a72.1), pre-install first then post-install, so a skipped or flagged hook is never silent."
+      }
+    },
+    "contributions": {
+      "elements": {
+        "ref": "install_contribution_report"
+      },
+      "metadata": {
+        "x-empty": "omit",
+        "description": "Lifecycle contributions this command itself ran \u2014 slot-scoped rows from the install barrier and the `phase:install` ritual. `vibe install` is the outermost command on these paths and therefore the only one that reports them; a phase verb whose prerequisite install runs them reports them in its own lifecycle report instead."
+      }
+    },
+    "notices": {
+      "elements": {
+        "type": "string"
+      },
+      "metadata": {
+        "x-empty": "omit",
+        "description": "Lifecycle notices raised while planning the ritual this command ran \u2014 an ignored auto-compile row, a selector that matched nothing. Surfaced on the outermost command's own report so a notice is never lost with the per-row echo that used to carry it."
       }
     }
   },
   "definitions": {
-    "applied_report": {
+    "install_delegation": {
+      "metadata": {
+        "description": "The hosted handoff, duplicated deliberately from `cli-lifecycle-report`'s `lifecycle_delegation`: JTD has no cross-schema `ref`, so each registered format carries its own copy of this three-field record and a wire test pins the spellings identical."
+      },
       "properties": {
-        "package": {
+        "run_id": {
           "type": "string",
           "metadata": {
-            "description": "Package label in `<kind>:<name>@<version>` form."
+            "description": "The durable run identity the hosting agent resumes under."
           }
         },
-        "files_written": {
-          "type": "uint32"
-        },
-        "paths": {
+        "tasks": {
           "elements": {
             "type": "string"
           },
           "metadata": {
-            "description": "Forward-slash-normalised paths of every file the install wrote. Required member: an entry that wrote nothing still writes `paths` as `[]` — omitting a required collection would produce a document invalid by this same schema (rule R21).",
-            "x-empty": "emit"
+            "x-empty": "emit",
+            "description": "Ordered project-relative outbox task files awaiting the hosting agent."
+          }
+        },
+        "resume": {
+          "type": "string",
+          "metadata": {
+            "description": "The exact command that resumes this run."
+          }
+        }
+      }
+    },
+    "install_slot_target": {
+      "properties": {
+        "group": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "root": {
+          "type": "string"
+        }
+      }
+    },
+    "install_hook_report": {
+      "properties": {
+        "phase": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      },
+      "optionalProperties": {
+        "note": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    },
+    "install_contribution_report": {
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "phase": {
+          "type": "string"
+        },
+        "point": {
+          "type": "string"
+        },
+        "handler": {
+          "type": "string"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "tier": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      },
+      "optionalProperties": {
+        "message": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "version": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "reference": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "flagged": {
+          "type": "boolean",
+          "metadata": {
+            "x-default": null,
+            "description": "A soft post-install failure: reported and surfaced, but not fatal to a durable install."
+          }
+        },
+        "stdout": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "stderr": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "stdout_truncated": {
+          "type": "boolean",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "stderr_truncated": {
+          "type": "boolean",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "slot_target": {
+          "ref": "install_slot_target",
+          "metadata": {
+            "x-default": null,
+            "description": "The materialised slot this row executed against."
           }
         }
       }

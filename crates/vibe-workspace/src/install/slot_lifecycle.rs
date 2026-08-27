@@ -52,6 +52,19 @@ pub trait SlotLifecycle {
         Ok(())
     }
 
+    /// The materialisation boundary, reported BEFORE any deferred pre-install
+    /// callback runs. A callback that then stops the install — a hosted park,
+    /// or a failure — can still name exactly what this pass changed, instead
+    /// of the caller inferring "nothing happened" from an error. Slot paths,
+    /// never file counts: a slot is a directory, and this layer never measured
+    /// its contents.
+    fn materialised(&self, _materialised: &[String], _skipped: &[String]) {}
+
+    /// A slot this pass materialised has just been removed again by rollback.
+    /// The observer drops it, so a park never claims a change the tree no
+    /// longer has.
+    fn rolled_back(&self, _slot: &str) {}
+
     fn pre_install(&self, context: SlotLifecycleContext<'_>) -> Result<(), String>;
     fn post_install(&self, context: SlotLifecycleContext<'_>) -> Result<(), String>;
 }
@@ -165,8 +178,15 @@ impl<'a, 'l> PreInstallPlan<'a, 'l> {
         Ok(())
     }
 
-    pub(super) fn dispatch(self) -> Result<(), WorkspaceError> {
+    pub(super) fn dispatch(
+        self,
+        materialised: &[String],
+        skipped: &[String],
+    ) -> Result<(), WorkspaceError> {
         if let MaterialiseLifecycle::Callback(callback) = self.lifecycle {
+            // The observer learns what really changed BEFORE any deferred row
+            // can stop the pass.
+            callback.materialised(materialised, skipped);
             let targets = self
                 .deferred
                 .iter()
@@ -194,10 +214,17 @@ impl<'a, 'l> PreInstallPlan<'a, 'l> {
     }
 
     fn rollback(&self, dep: &ResolvedDep) {
-        if is_in_place(dep) {
+        let slot = if is_in_place(dep) {
             let _ = vibedeps::remove_in_place_slot(self.workspace_root, &dep.group, &dep.name);
+            vibedeps::in_place_slot_rel_path(&dep.group, &dep.name)
         } else {
             let _ = vibedeps::remove_slot(self.workspace_root, &dep.group, &dep.name, &dep.version);
+            vibedeps::slot_rel_path(&dep.group, &dep.name, &dep.version)
+        };
+        // The slot is gone again: an observer that already recorded it as
+        // materialised must not keep reporting a change the tree no longer has.
+        if let MaterialiseLifecycle::Callback(callback) = self.lifecycle {
+            callback.rolled_back(&slot);
         }
     }
 }

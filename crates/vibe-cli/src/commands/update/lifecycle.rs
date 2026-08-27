@@ -17,15 +17,17 @@ pub(super) fn metadata(
     offline: bool,
     assume_yes: bool,
 ) -> Result<RunMetadata> {
+    let chain = vec!["install".to_string()];
+    let identity = crate::commands::lifecycle::run_identity(ctx, root, requested, &chain, false)?;
     Ok(RunMetadata {
         requested: requested.into(),
-        chain: vec!["install".into()],
+        chain,
         offline,
         assume_yes: assume_yes || ctx.is_unattended() || ctx.is_json(),
-        agent_mode: vibe_wire::generated::lifecycle::e1::context::RunAgentMode::Cli,
+        agent_mode: ctx.agent_mode(),
         force: false,
-        run_id: vibe_lifecycle::process::allocate_run_id(root)?,
-        started: crate::commands::init::current_timestamp_utc(),
+        run_id: identity.run_id,
+        started: identity.started,
     })
 }
 
@@ -39,7 +41,7 @@ pub(super) fn stream_mode(ctx: &output::Context) -> StreamMode {
     }
 }
 
-pub(super) fn provisional_world(
+pub(crate) fn provisional_world(
     workspace: &Workspace,
     lockfile: &Lockfile,
     updated: &[ResolvedDep],

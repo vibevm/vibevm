@@ -212,7 +212,9 @@ pub(crate) fn emit_closure_diff(
                 "lanes": lanes,
             })
         };
-        let _ = ctx.emit_json(&payload);
+        // Supplementary, like the plan preview: held back until the
+        // outcome is known so a parked run emits its handoff alone.
+        let _ = ctx.defer_json_plan(&payload);
         return;
     }
     if ctx.is_quiet() {

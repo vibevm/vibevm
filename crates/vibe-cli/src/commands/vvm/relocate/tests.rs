@@ -277,5 +277,5 @@ fn run_rejects_a_non_source_tree_target() {
 }
 
 fn quiet() -> output::Context {
-    output::Context::from_flags(true, false, None, true)
+    output::Context::from_flags(true, false, None, true, crate::cli::AgentModeArg::Auto)
 }

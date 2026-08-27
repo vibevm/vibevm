@@ -18,7 +18,34 @@ use crate::{
     collect_extensions,
 };
 
+#[cfg(test)]
+#[path = "tests/adoption.rs"]
+mod adoption;
+
+#[cfg(test)]
+#[path = "tests/lockfile.rs"]
+mod lockfile;
+
+#[cfg(test)]
+#[path = "tests/transaction.rs"]
+mod transaction;
+
+const RUN_ID: &str = "00112233445566778899aabbccddeeff";
+const OTHER_RUN: &str = "ffeeddccbbaa99887766554433221100";
+
 fn record(status: ExecutionRecordStatus, fingerprint: &str) -> ExecutionRecord {
+    record_for("key", RUN_ID, status, fingerprint)
+}
+
+/// A record whose `tasks` obey the semantic invariant: a delegated row names
+/// exactly the task `(run id, execution key)` deterministically owns, and
+/// every other status names none.
+fn record_for(
+    key: &str,
+    run_id: &str,
+    status: ExecutionRecordStatus,
+    fingerprint: &str,
+) -> ExecutionRecord {
     ExecutionRecord {
         artifacts: vec![StateArtifact {
             id: "a".into(),
@@ -28,7 +55,12 @@ fn record(status: ExecutionRecordStatus, fingerprint: &str) -> ExecutionRecord {
         duration_ms: 7,
         fingerprint: fingerprint.into(),
         phase: "build".into(),
-        status,
+        status: status.clone(),
+        tasks: matches!(status, ExecutionRecordStatus::Delegated)
+            .then(|| vec![crate::outbox_task_path(run_id, key).unwrap()])
+            .unwrap_or_default(),
+        scope: matches!(status, ExecutionRecordStatus::Delegated)
+            .then_some(vibe_wire::generated::lifecycle_state::ExecutionRecordScope::Phase),
     }
 }
 
@@ -44,6 +76,7 @@ fn missing_state_writes_initial_run_and_preserves_unselected_rows() {
         "build".into(),
         chain,
         "2026-08-25T12:00:00Z".into(),
+        "00112233445566778899aabbccddeeff".into(),
     )
     .unwrap();
     assert!(store.path().is_file());
@@ -66,6 +99,7 @@ fn missing_state_writes_initial_run_and_preserves_unselected_rows() {
             "test".into(),
         ],
         "2026-08-25T13:00:00Z".into(),
+        "00112233445566778899aabbccddeeff".into(),
     )
     .unwrap();
     assert!(store.prior("__host__/demo#row").is_some());
@@ -92,9 +126,10 @@ fn malformed_unknown_and_unsupported_state_name_path_and_remediation() {
         let path = dir.path().join(LifecycleStateStore::FILE);
         fs::create_dir_all(path.parent().unwrap()).unwrap();
         fs::write(&path, body).unwrap();
-        let error = LifecycleStateStore::begin(dir.path(), "x".into(), vec![], "t".into())
-            .unwrap_err()
-            .to_string();
+        let error =
+            LifecycleStateStore::begin(dir.path(), "x".into(), vec![], "t".into(), String::new())
+                .unwrap_err()
+                .to_string();
         assert!(error.contains(needle), "{error}");
         assert!(error.contains(&path.display().to_string()), "{error}");
         assert!(error.contains("remove this erasable cache"), "{error}");
@@ -104,8 +139,14 @@ fn malformed_unknown_and_unsupported_state_name_path_and_remediation() {
 #[test]
 fn only_ok_skip_and_fresh_are_reusable_and_fresh_artifacts_survive() {
     let dir = tempfile::tempdir().unwrap();
-    let mut store =
-        LifecycleStateStore::begin(dir.path(), "build".into(), vec![], "t".into()).unwrap();
+    let mut store = LifecycleStateStore::begin(
+        dir.path(),
+        "build".into(),
+        vec![],
+        "t".into(),
+        "00112233445566778899aabbccddeeff".into(),
+    )
+    .unwrap();
     for (status, reusable) in [
         (ExecutionRecordStatus::Ok, true),
         (ExecutionRecordStatus::Skip, true),

@@ -5,11 +5,13 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#materialise-diff");
 
+use specmark::spec;
 use std::path::{Path, PathBuf};
 
 use vibe_core::manifest::{Manifest, SpecFormat};
 use vibe_core::{ContentHash, Group, PackageKind};
 
+use crate::WorkspaceError;
 use crate::hooks::HookReport;
 
 /// A resolved, fetched dependency ready to materialise — the minimum the
@@ -171,6 +173,48 @@ impl PostInstallPlan {
 
     pub(super) fn into_parts(self) -> (PathBuf, Vec<ResolvedDep>) {
         (self.workspace_root, self.eligible_deps)
+    }
+
+    /// Rebuild the authority for a slot run that PARKED after the lockfile
+    /// barrier, from the exact target set that run recorded before it started.
+    ///
+    /// This is the resume half of the one-shot plan. The lock is already
+    /// fresh, so no materialisation pass will produce a plan; the caller
+    /// supplies the persisted `(group, name, version)` triples and the locked
+    /// world they name, and gets back the same ordered eligible set the
+    /// original pass would have consumed.
+    ///
+    /// CHECKED, deliberately: every named target must be present in
+    /// `resolution` at the recorded version. A target that moved or vanished
+    /// refuses by name — the alternative, silently narrowing or broadening to
+    /// "every installed package", would fire post-install events at packages
+    /// this run never selected.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#REF-AGENT-RESUME")]
+    pub fn resume_for_targets(
+        workspace_root: &Path,
+        resolution: &[ResolvedDep],
+        targets: &[(String, String, String)],
+    ) -> Result<Option<Self>, WorkspaceError> {
+        let mut eligible = Vec::with_capacity(targets.len());
+        for (group, name, version) in targets {
+            let found = resolution.iter().find(|dep| {
+                dep.group.as_str() == group
+                    && dep.name == *name
+                    && dep.version.to_string() == *version
+            });
+            let Some(dep) = found else {
+                return Err(WorkspaceError::SlotLifecycle {
+                    phase: "post-install-resume",
+                    package: format!("{group}/{name}@{version}"),
+                    reason: "the recorded payload-event target is absent from the locked \
+                             world at that exact version; the parked slot run cannot be \
+                             rebuilt from it"
+                        .to_string(),
+                });
+            };
+            eligible.push(dep.clone());
+        }
+        Ok(Self::new(workspace_root, eligible))
     }
 }
 

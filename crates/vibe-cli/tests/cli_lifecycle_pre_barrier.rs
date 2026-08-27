@@ -210,16 +210,20 @@ fn assert_plan_precedes_outcome(docs: &[serde_json::Value], id: &str) {
                     .is_some_and(|rows| rows.iter().any(|row| row["reference"] == id))
         })
         .unwrap();
+    // The per-row `lifecycle` echo was removed so a parked run emits one
+    // document; the same rows now travel as the outermost command's typed
+    // `contributions`, and that root report is last.
     let outcome = docs
         .iter()
         .position(|doc| {
-            doc["command"] == "lifecycle"
+            doc["command"] == "install"
                 && doc["contributions"]
                     .as_array()
                     .is_some_and(|rows| rows.iter().any(|row| row["reference"] == id))
         })
         .unwrap();
-    assert!(plan < outcome && outcome < docs.len() - 1);
+    assert!(plan < outcome);
+    assert_eq!(outcome, docs.len() - 1, "the root report is last");
     assert_eq!(docs.last().unwrap()["command"], "install");
 }
 
@@ -276,7 +280,7 @@ fn fresh_binary_provider_builds_only_after_its_slot_exists() {
     assert_plan_precedes_outcome(&docs, "org.barrier/z-binary-provider#cross-provider-binary");
     let outcome = docs
         .iter()
-        .filter(|doc| doc["command"] == "lifecycle")
+        .filter(|doc| doc["command"] == "install")
         .flat_map(|doc| doc["contributions"].as_array().into_iter().flatten())
         .find(|row| row["reference"] == "org.barrier/z-binary-provider#cross-provider-binary")
         .unwrap();

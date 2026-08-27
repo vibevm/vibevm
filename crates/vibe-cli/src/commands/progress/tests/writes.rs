@@ -72,7 +72,8 @@ fn settled(root: &Path, ctx: &crate::output::Context) -> Result<()> {
 fn second_scan_writes_nothing() {
     let tmp = tempfile::tempdir().expect("tempdir");
     let root = tmp.path();
-    let ctx = crate::output::Context::from_flags(true, false, None, true);
+    let ctx =
+        crate::output::Context::from_flags(true, false, None, true, crate::cli::AgentModeArg::Auto);
     incremental_fixture(root).expect("fixture tree");
 
     scan(&ctx, &args(root, false)).expect("first scan");
@@ -114,7 +115,8 @@ fn second_scan_writes_nothing() {
 fn edited_file_forces_the_write() {
     let tmp = tempfile::tempdir().expect("tempdir");
     let root = tmp.path();
-    let ctx = crate::output::Context::from_flags(true, false, None, true);
+    let ctx =
+        crate::output::Context::from_flags(true, false, None, true, crate::cli::AgentModeArg::Auto);
     settled(root, &ctx).expect("a settled fixture campaign");
     let before = mtimes(root);
 
@@ -170,7 +172,8 @@ fn edited_file_forces_the_write() {
 fn verdict_change_always_writes() {
     let tmp = tempfile::tempdir().expect("tempdir");
     let root = tmp.path();
-    let ctx = crate::output::Context::from_flags(true, false, None, true);
+    let ctx =
+        crate::output::Context::from_flags(true, false, None, true, crate::cli::AgentModeArg::Auto);
     settled(root, &ctx).expect("a settled fixture campaign");
     let cache_path = root.join("campaigns/progress-test/run/cache.json");
 
@@ -252,7 +255,8 @@ fn verdict_change_always_writes() {
 fn absent_file_is_always_written() {
     let tmp = tempfile::tempdir().expect("tempdir");
     let root = tmp.path();
-    let ctx = crate::output::Context::from_flags(true, false, None, true);
+    let ctx =
+        crate::output::Context::from_flags(true, false, None, true, crate::cli::AgentModeArg::Auto);
     settled(root, &ctx).expect("a settled fixture campaign");
 
     // Absent ⇒ written. Every artifact, including the passthroughs, which
@@ -315,7 +319,8 @@ fn absent_file_is_always_written() {
 fn check_writes_nothing_without_write_state() {
     let tmp = tempfile::tempdir().expect("tempdir");
     let root = tmp.path();
-    let ctx = crate::output::Context::from_flags(true, false, None, true);
+    let ctx =
+        crate::output::Context::from_flags(true, false, None, true, crate::cli::AgentModeArg::Auto);
     incremental_fixture(root).expect("fixture tree");
 
     // Seed the zone with a warm scan so there is something to *not* move.
@@ -346,7 +351,8 @@ fn check_writes_nothing_without_write_state() {
 fn check_with_write_state_writes_like_scan() {
     let tmp = tempfile::tempdir().expect("tempdir");
     let root = tmp.path();
-    let ctx = crate::output::Context::from_flags(true, false, None, true);
+    let ctx =
+        crate::output::Context::from_flags(true, false, None, true, crate::cli::AgentModeArg::Auto);
     incremental_fixture(root).expect("fixture tree");
 
     // An empty zone: the first writing run creates every artifact. The

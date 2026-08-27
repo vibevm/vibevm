@@ -14,7 +14,7 @@ mod scratch;
 use scratch::create_unique_file;
 pub use scratch::{
     PendingReply, ScratchError, allocate_pending_reply, allocate_run_id, execution_scratch,
-    write_atomic_json,
+    is_valid_run_id, write_atomic_json,
 };
 
 pub const STREAM_CAP: usize = 1024 * 1024;

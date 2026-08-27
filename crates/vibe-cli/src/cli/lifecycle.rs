@@ -142,3 +142,17 @@ pub enum CleanChain {
     Package(LifecycleArgs),
     Deploy(LifecycleArgs),
 }
+
+/// The authored spelling of `--agent-mode`. `auto` is an INSTRUCTION to
+/// infer, not a third runtime mode: the lifecycle context wire continues to
+/// carry only the resolved `cli|agent`.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, clap::ValueEnum)]
+pub enum AgentModeArg {
+    /// Infer from the resolved invoked-by value: present → `agent`, absent
+    /// → `cli`.
+    Auto,
+    /// Always call the configured provider, as R7.2 did.
+    Cli,
+    /// Never construct a provider; park each agent row for the hosting agent.
+    Agent,
+}

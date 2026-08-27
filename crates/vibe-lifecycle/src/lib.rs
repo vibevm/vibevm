@@ -90,6 +90,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM
 pub mod agent;
 pub mod artifacts;
 mod chain;
+mod delegation;
 mod execution;
 pub mod handlers;
 mod legacy_hooks;
@@ -104,6 +105,9 @@ pub use agent::{
     PreparedAgent, PromptRequest,
 };
 pub use chain::{LifecycleRequest, LifecycleStep, inclusive_chain};
+pub use delegation::{
+    Delegation, DelegationError, OUTBOX_RELATIVE, TASK_CAP, outbox_task_path, task_filename,
+};
 pub use execution::{
     BuiltinRegistry, ContributionOutcome, DispatchBatch, DispatchError, ExecutionSession,
     HandlerExecution, RunMetadata, SlotTarget,
@@ -120,12 +124,13 @@ pub use registry::{
 };
 pub use runner::{
     ExecutionReuse, ExecutionTransition, FailedExecutionTransition, LifecycleRun,
-    LifecycleRunError, LifecycleRunHandle,
+    LifecycleRunError, LifecycleRunHandle, REMOVED_DECLARATION, REMOVED_SLOT_DECLARATION,
+    UNKNOWN_PROVENANCE,
 };
 pub use state::{
-    FingerprintError, LifecycleStateError, LifecycleStateStore, fingerprint_execution,
+    FingerprintError, LifecycleStateError, LifecycleStateStore, RunIdentity, fingerprint_execution,
     fingerprint_execution_with, fingerprint_handler_execution, fingerprint_handler_execution_with,
-    preparation_error_fingerprint, preparation_error_fingerprint_for_identity,
+    preparation_error_fingerprint, preparation_error_fingerprint_for_identity, select_run_identity,
 };
 pub use vibe_core::lifecycle::{
     CompilePoint, CompilePointParseError, DEFAULT_PHASES, ExtensionPoint, ExtensionPointParseError,

@@ -7,6 +7,9 @@ specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#output-format");
 use console::Style;
 use serde::Serialize;
 use serde_json::Value;
+use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
+
+use crate::cli::AgentModeArg;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Mode {
@@ -109,6 +112,21 @@ pub fn resolve_offline(cli_flag: bool, config_offline: bool) -> bool {
     cli_flag || env_offline() || config_offline
 }
 
+/// Resolve `--agent-mode` (PROP-054 `##AGENT-HANDSHAKE`) exactly once per
+/// invocation. An explicit `cli`/`agent` wins outright; `auto` resolves to
+/// `agent` exactly when the already-resolved invoked-by value is present —
+/// something is hosting this process, so an agent row can be handed back to
+/// it — and to `cli` otherwise. `invoked_by` arrives resolved (flag > env),
+/// so this function does not re-derive that ladder and the two cannot drift.
+pub fn resolve_agent_mode(cli_flag: AgentModeArg, invoked_by: Option<&str>) -> RunAgentMode {
+    match cli_flag {
+        AgentModeArg::Cli => RunAgentMode::Cli,
+        AgentModeArg::Agent => RunAgentMode::Agent,
+        AgentModeArg::Auto if invoked_by.is_some() => RunAgentMode::Agent,
+        AgentModeArg::Auto => RunAgentMode::Cli,
+    }
+}
+
 #[derive(Clone)]
 pub struct Context {
     pub mode: Mode,
@@ -133,6 +151,24 @@ pub struct Context {
     /// mode (`is_json`, unattended, invocation provenance). Lifecycle
     /// prerequisite phases use this for a single final outer report.
     suppress_output: bool,
+    /// JSON plan documents held back until the invocation's outcome is known.
+    ///
+    /// A plan is a PREVIEW of the same contributions the final report carries.
+    /// The contract is asymmetric, and deliberately so: a run that PARKS emits
+    /// exactly ONE document in total, so the buffered preview is dropped
+    /// rather than printed beside the handoff; a run that COMPLETES keeps the
+    /// pre-R7.3 stream — the preview is flushed first, then the one registered
+    /// root — so a completed `--json` invocation is byte-compatible with what
+    /// consumers already parse. Shared through `Arc` so a `quiet_child` writes
+    /// into its parent's buffer instead of a private copy that would silently
+    /// vanish.
+    pending_plans: std::sync::Arc<std::sync::Mutex<Vec<Value>>>,
+    /// The resolved handler-facing agent mode for this whole invocation,
+    /// decided ONCE here. Every metadata constructor — ordinary lifecycle,
+    /// clean, explicit install, update, reinstall — reads this rather than
+    /// hard-coding a value, so the mode cannot drift between the phases of
+    /// one command.
+    agent_mode: RunAgentMode,
 }
 
 impl Context {
@@ -141,8 +177,10 @@ impl Context {
         json: bool,
         invoked_by_cli: Option<&str>,
         unattended_cli: bool,
+        agent_mode_cli: AgentModeArg,
     ) -> Self {
         let (invoked_by, invoked_by_provenance) = resolve_invoked_by(invoked_by_cli);
+        let agent_mode = resolve_agent_mode(agent_mode_cli, invoked_by.as_deref());
         let unattended = resolve_unattended(unattended_cli);
         let mode = match (quiet, json) {
             (_, true) => Mode::Json,
@@ -163,6 +201,8 @@ impl Context {
             invoked_by_provenance,
             unattended,
             suppress_output: false,
+            pending_plans: std::sync::Arc::new(std::sync::Mutex::new(Vec::new())),
+            agent_mode,
         }
     }
 
@@ -192,6 +232,58 @@ impl Context {
 
     pub fn invoked_by_provenance(&self) -> InvokedByProvenance {
         self.invoked_by_provenance
+    }
+
+    /// Hold a JSON plan document back until the outcome is known.
+    ///
+    /// Every plan surface goes through here rather than `emit_json`, so a
+    /// parked run can honour "exactly one document IN TOTAL" without each call
+    /// site having to predict the outcome it cannot yet see. A completed run
+    /// still emits its preview plus one registered root — the deferral only
+    /// moves WHEN the preview is written, never whether.
+    pub fn defer_json_plan<T: Serialize>(&self, value: &T) -> anyhow::Result<()> {
+        if !self.is_json() {
+            return Ok(());
+        }
+        if self.suppress_output {
+            return Ok(());
+        }
+        let mut value = serde_json::to_value(value)?;
+        self.stamp_invoked_by(&mut value);
+        self.stamp_unattended(&mut value);
+        if let Ok(mut pending) = self.pending_plans.lock() {
+            pending.push(value);
+        }
+        Ok(())
+    }
+
+    /// The run completed normally: print the held-back plans, in order,
+    /// before its final report.
+    pub fn flush_json_plans(&self) -> anyhow::Result<()> {
+        for value in self.take_pending_plans() {
+            println!("{}", serde_json::to_string_pretty(&value)?);
+        }
+        Ok(())
+    }
+
+    /// The run parked: the handoff document is the whole output, so the
+    /// preview is dropped rather than printed beside it.
+    pub fn discard_json_plans(&self) {
+        let _ = self.take_pending_plans();
+    }
+
+    fn take_pending_plans(&self) -> Vec<Value> {
+        self.pending_plans
+            .lock()
+            .map(|mut pending| std::mem::take(&mut *pending))
+            .unwrap_or_default()
+    }
+
+    /// The one resolved agent mode for this invocation. Every lifecycle
+    /// metadata constructor routes through this; there is no later
+    /// hard-coded `Cli`.
+    pub fn agent_mode(&self) -> RunAgentMode {
+        self.agent_mode.clone()
     }
 
     /// True when `--unattended` was passed on the CLI or

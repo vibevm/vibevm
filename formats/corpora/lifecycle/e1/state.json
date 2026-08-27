@@ -1,9 +1,10 @@
 {
   "schema": 1,
   "run": {
-    "requested": "build",
-    "chain": ["validate", "install", "generate", "build"],
-    "started": "2026-08-25T12:00:00Z"
+    "requested": "create",
+    "chain": ["validate", "install", "generate", "build", "test", "create"],
+    "started": "2026-08-25T12:00:00Z",
+    "run_id": "00112233445566778899aabbccddeeff"
   },
   "execution": {
     "org.demo/provider#announce": {
@@ -13,6 +14,22 @@
       "duration_ms": 12,
       "artifacts": [
         { "id": "demo", "path": "C:/work/demo/out.txt", "kind": "text" }
+      ]
+    },
+    "org.demo/provider#draft-guide": {
+      "phase": "create",
+      "fingerprint": "sha256:fedcba9876543210",
+      "status": "delegated",
+      "duration_ms": 3,
+      "artifacts": [
+        {
+          "id": "docs/guide.md",
+          "path": "C:/work/demo/docs/guide.md",
+          "kind": "file"
+        }
+      ],
+      "tasks": [
+        ".vibe/agentic/outbox/00112233445566778899aabbccddeeff/task-org.demo%2Fprovider%23draft-guide.md"
       ]
     }
   }

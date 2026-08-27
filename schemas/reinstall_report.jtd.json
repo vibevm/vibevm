@@ -1,0 +1,207 @@
+{
+  "metadata": {
+    "description": "Wire format for `vibe reinstall --json` \u2014 the ONE document the command emits, whatever it did. Reinstall owns its own command, run identity and resume line rather than borrowing install's. Every fact the pre-R7.3 document carried stays at the ROOT.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-000#JTD-SSOT"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::reinstall_report"
+    }
+  },
+  "properties": {
+    "ok": {
+      "type": "boolean"
+    },
+    "command": {
+      "type": "string",
+      "metadata": {
+        "description": "Always `\"reinstall\"` for this report."
+      }
+    },
+    "project": {
+      "type": "string"
+    },
+    "forced": {
+      "type": "boolean",
+      "metadata": {
+        "description": "Whether `--force` re-fetched from source. MATERIALISATION force only: it is not the generic lifecycle `force` that mints a fresh run id and reparks a hosted row."
+      }
+    },
+    "materialised": {
+      "elements": {
+        "type": "string"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Dependency-slot paths materialised this run \u2014 a directory each, never counted as files. Excludes any slot a rollback removed."
+      }
+    },
+    "skipped": {
+      "elements": {
+        "type": "string"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Slot paths already present for the resolved version and source identity, trusted without materialising."
+      }
+    },
+    "pruned": {
+      "elements": {
+        "type": "string"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Slot paths removed \u2014 present before, absent from this resolution."
+      }
+    },
+    "nodes_regenerated": {
+      "elements": {
+        "type": "string"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Workspace-relative path of every node whose boot artifacts were regenerated."
+      }
+    },
+    "complete": {
+      "type": "boolean",
+      "metadata": {
+        "description": "True when this invocation ran to completion. False when it stopped part-way \u2014 the slot sets above are then a partial, boundary-measured record, never a final one."
+      }
+    },
+    "unchanged": {
+      "type": "boolean",
+      "metadata": {
+        "description": "True on the PROP-011 \u00a72.2 fast path: `vibe.lock` was already fresh, so no resolution ran and no slot moved."
+      }
+    }
+  },
+  "optionalProperties": {
+    "delegation": {
+      "ref": "reinstall_delegation",
+      "metadata": {
+        "x-default": null,
+        "description": "Present exactly when a hosted `agent` contribution parked this reinstall. `ok` stays true; `resume` is a reinstall command that can actually service the continuation."
+      }
+    },
+    "hooks": {
+      "elements": {
+        "ref": "reinstall_hook_report"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Install-hook reports for this run. Emitted even when empty: the pre-R7.3 document carried this member unconditionally and consumers key on it."
+      }
+    },
+    "contributions": {
+      "elements": {
+        "ref": "reinstall_contribution_report"
+      },
+      "metadata": {
+        "x-empty": "omit",
+        "description": "Slot-scoped lifecycle rows this command itself ran. This command is the outermost one on its path and therefore the only one that reports them."
+      }
+    }
+  },
+  "definitions": {
+    "reinstall_delegation": {
+      "properties": {
+        "run_id": {
+          "type": "string"
+        },
+        "tasks": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "resume": {
+          "type": "string"
+        }
+      }
+    },
+    "reinstall_hook_report": {
+      "properties": {
+        "phase": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      },
+      "optionalProperties": {
+        "note": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    },
+    "reinstall_contribution_report": {
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "phase": {
+          "type": "string"
+        },
+        "point": {
+          "type": "string"
+        },
+        "handler": {
+          "type": "string"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "tier": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      },
+      "optionalProperties": {
+        "message": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "version": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "reference": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "flagged": {
+          "type": "boolean",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "stdout": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "stderr": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    }
+  }
+}

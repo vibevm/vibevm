@@ -25,6 +25,43 @@
           "metadata": { "x-empty": "emit" }
         },
         "started": { "type": "string" }
+      },
+      "optionalProperties": {
+        "run_id": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "Durable identity of the run that wrote this state. Absent in pre-R7.3 files; present (32 lowercase hex) whenever any row is delegated."
+          }
+        },
+        "slot_continuation": {
+          "ref": "slot_continuation",
+          "metadata": {
+            "x-default": null,
+            "description": "The unfinished slot-lifecycle continuation this run owes, recorded BEFORE the first pre-install callback and cleared when the slot run completes. Present only while a slot-scoped row is delegated; absent in every pre-R7.3 file and after completion."
+          }
+        }
+      }
+    },
+    "slot_continuation": {
+      "metadata": {
+        "description": "Exactly which payload-event slot targets this install selected, in the order the orchestrator will visit them. Persisted so a resume whose lock is already fresh can rebuild the SAME slot run instead of inferring one from directory enumeration or from parsing task filenames."
+      },
+      "properties": {
+        "targets": {
+          "elements": { "ref": "slot_target_record" },
+          "metadata": {
+            "x-empty": "emit",
+            "description": "The exact ordered payload-event target set — the same set the one-shot post-install plan consumes."
+          }
+        }
+      }
+    },
+    "slot_target_record": {
+      "properties": {
+        "group": { "type": "string" },
+        "name": { "type": "string" },
+        "version": { "type": "string" }
       }
     },
     "execution_record": {
@@ -39,6 +76,23 @@
         "artifacts": {
           "elements": { "ref": "state_artifact" },
           "metadata": { "x-empty": "emit" }
+        }
+      },
+      "optionalProperties": {
+        "tasks": {
+          "elements": { "type": "string" },
+          "metadata": {
+            "x-empty": "omit",
+            "description": "Project-relative outbox task files this delegated row published. Absent/empty for every non-delegated status."
+          }
+        },
+        "scope": {
+          "enum": ["phase", "slot"],
+          "metadata": {
+            "x-vocabulary": "closed",
+            "x-default": null,
+            "description": "Which plan a delegated row belongs to, recorded by the engine rather than inferred by parsing the execution key or a task filename. `phase` rows are reconciled against the current phase plan, `slot` rows against the current slot plan. Absent for non-delegated rows and in pre-R7.3 files."
+          }
         }
       }
     },

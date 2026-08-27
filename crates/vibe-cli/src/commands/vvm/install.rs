@@ -176,7 +176,7 @@ mod tests {
     }
 
     fn quiet() -> output::Context {
-        output::Context::from_flags(true, false, None, true)
+        output::Context::from_flags(true, false, None, true, crate::cli::AgentModeArg::Auto)
     }
 
     fn req<'a>(resolved: &'a ResolvedVersion, force: bool, now: &'a str) -> InstallRequest<'a> {

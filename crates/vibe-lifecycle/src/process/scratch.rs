@@ -118,17 +118,24 @@ pub fn allocate_run_id(project_root: &Path) -> Result<String, ScratchError> {
     })
 }
 
+/// The shape every durable run identity has: 32 lowercase hex characters.
+/// Owned here because this module mints run ids; the state store, the outbox
+/// path and adoption all judge identity through this one predicate.
+#[must_use]
+pub fn is_valid_run_id(id: &str) -> bool {
+    id.len() == 32
+        && id
+            .bytes()
+            .all(|byte| byte.is_ascii_digit() || matches!(byte, b'a'..=b'f'))
+}
+
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#ENVELOPE-LAW")]
 pub fn execution_scratch(
     project_root: &Path,
     run_id: &str,
     key: &str,
 ) -> Result<PathBuf, ScratchError> {
-    if run_id.len() != 32
-        || !run_id
-            .bytes()
-            .all(|byte| byte.is_ascii_digit() || matches!(byte, b'a'..=b'f'))
-    {
+    if !is_valid_run_id(run_id) {
         return Err(ScratchError::Unsafe {
             path: project_root.into(),
             reason: "run id must be 32 lowercase hex characters".into(),

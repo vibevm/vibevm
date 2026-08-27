@@ -28,19 +28,18 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#cli-surface");
 
+mod document;
+mod inputs;
 mod report;
 
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
-use dialoguer::Confirm;
 use vibe_core::manifest::{Lockfile, Manifest, Materialization, SpecFormat};
 use vibe_core::user_config::{SlotIntegrity, UserConfig};
-use vibe_core::{ContentHash, Group, PackageKind, PackageRef, VersionSpec};
+use vibe_core::{ContentHash, Group};
 use vibe_install::{InstallSlotLifecycle, InstallSource};
-use vibe_lifecycle::RunMetadata;
-use vibe_lifecycle::process::StreamMode;
 use vibe_workspace::Workspace;
 use vibe_workspace::install::{
     ResolvedDep, SlotCheck, SlotLifecycleMode, SlotVerifier,
@@ -49,10 +48,16 @@ use vibe_workspace::install::{
 };
 use vibe_workspace::vibedeps;
 
-use crate::cli::{InstallArgs, ReinstallArgs};
+use crate::cli::ReinstallArgs;
 use crate::commands::install::{HookReportView, LifecycleHookView, build_install_resolver};
 use crate::exit_code::InstallError;
 use crate::output;
+
+use document::{emit_reinstall_document, resume_reinstall_continuation};
+use inputs::{
+    confirm, exact_pkgref, load_lockfile, reinstall_metadata, reinstall_stream_mode,
+    resolve_project_root, resolver_args,
+};
 
 struct SourceHashes(HashMap<(Group, String), String>);
 
@@ -242,9 +247,24 @@ fn run_regenerate(
         return Err(InstallError::UserDeclined.into());
     }
 
+    // A forced reinstall that parked left a live `requested=reinstall` slot
+    // continuation. Service it from the locked world BEFORE ordinary boot
+    // regeneration: the plain `vibe reinstall` the handoff names is what has
+    // to be able to finish it.
+    if let Some(resumed) = resume_reinstall_continuation(ctx, workspace, args, spec_format)? {
+        return resumed;
+    }
     let nodes = regenerate_boot_with_spec_format(workspace, spec_format)
         .context("regenerating boot artifacts")?;
-    report::emit(ctx, false, &nodes, &[], &HookReportView::empty())?;
+    report::emit(
+        ctx,
+        &workspace.root,
+        false,
+        &[],
+        &nodes,
+        &[],
+        &HookReportView::empty(),
+    )?;
     Ok(())
 }
 
@@ -287,7 +307,9 @@ fn run_force(
         let hook_reports = HookReportView::empty();
         report::emit(
             ctx,
+            &workspace.root,
             true,
+            &[],
             &outcome.nodes_regenerated,
             &outcome.pruned,
             &hook_reports,
@@ -425,167 +447,55 @@ fn run_force(
             )?),
         },
     )?;
-    let mut outcome = apply_resolution_with_spec_format_and_slot_lifecycle(
+    let applied = apply_resolution_with_spec_format_and_slot_lifecycle(
         workspace,
         &resolution,
         SlotIntegrity::Verify,
         spec_format,
         Some(&SourceHashes(source_hashes)),
         SlotLifecycleMode::Callback(&lifecycle),
-    )
-    .context("re-materialising the workspace")?;
-    if let Some(plan) = outcome.take_post_install_plan() {
-        run_post_install_slot_lifecycle(plan, SlotLifecycleMode::Callback(&lifecycle))
-            .context("running post-install lifecycle")?;
+    );
+    // A hosted row parked: a durable handoff for THIS command, reported as
+    // `reinstall` with `resume: vibe reinstall`, exit 0, nothing paid for and
+    // every post-barrier row skipped.
+    if let Some(delegation) = lifecycle.parked() {
+        crate::commands::lifecycle::check_delegation(&delegation)?;
+        return emit_reinstall_document(
+            ctx,
+            &workspace.root,
+            &lifecycle.progress(),
+            true,
+            &lifecycle.take_reports().unwrap_or_default(),
+            Some(&delegation),
+        );
     }
+    let mut outcome = applied.context("re-materialising the workspace")?;
+    if let Some(plan) = outcome.take_post_install_plan() {
+        let ran = run_post_install_slot_lifecycle(plan, SlotLifecycleMode::Callback(&lifecycle));
+        if let Some(delegation) = lifecycle.parked() {
+            crate::commands::lifecycle::check_delegation(&delegation)?;
+            return emit_reinstall_document(
+                ctx,
+                &workspace.root,
+                &lifecycle.progress(),
+                true,
+                &lifecycle.take_reports().unwrap_or_default(),
+                Some(&delegation),
+            );
+        }
+        ran.context("running post-install lifecycle")?;
+    }
+    lifecycle.clear_continuation().map_err(anyhow::Error::msg)?;
     let lifecycle_reports = lifecycle.take_reports()?;
     let hook_reports = LifecycleHookView::new(&lifecycle_reports);
     report::emit(
         ctx,
+        &workspace.root,
         true,
+        &lifecycle_reports,
         &outcome.nodes_regenerated,
         &outcome.pruned,
         &hook_reports,
     )?;
     Ok(())
-}
-
-fn reinstall_metadata(
-    ctx: &output::Context,
-    root: &Path,
-    offline: bool,
-    args: &ReinstallArgs,
-) -> Result<RunMetadata> {
-    Ok(RunMetadata {
-        requested: "reinstall".into(),
-        chain: vec!["install".into()],
-        offline,
-        assume_yes: args.assume_yes || ctx.is_unattended() || ctx.is_json(),
-        agent_mode: vibe_wire::generated::lifecycle::e1::context::RunAgentMode::Cli,
-        force: true,
-        run_id: vibe_lifecycle::process::allocate_run_id(root)?,
-        started: crate::commands::init::current_timestamp_utc(),
-    })
-}
-
-fn reinstall_stream_mode(ctx: &output::Context) -> StreamMode {
-    if ctx.is_json() {
-        StreamMode::Capture
-    } else if ctx.suppresses_output() {
-        StreamMode::Null
-    } else {
-        StreamMode::Inherit
-    }
-}
-
-/// Build the `=<version>` pkgref that re-fetches exactly the locked
-/// version — `vibe reinstall` never re-resolves.
-fn exact_pkgref(
-    kind: PackageKind,
-    group: &Group,
-    name: &str,
-    version: &semver::Version,
-) -> Result<PackageRef> {
-    // Build `=<version>` structurally rather than parsing a string —
-    // `VersionReq::parse` panics on a version carrying build metadata
-    // (`1.0.0+build`), the latent panic SHRINK-v0.1 killed at the other
-    // `={v}` sites.
-    let req = semver::VersionReq {
-        comparators: vec![semver::Comparator {
-            op: semver::Op::Exact,
-            major: version.major,
-            minor: Some(version.minor),
-            patch: Some(version.patch),
-            pre: version.pre.clone(),
-        }],
-    };
-    Ok(PackageRef::new(
-        Some(kind),
-        Some(group.clone()),
-        name.to_string(),
-        VersionSpec::Req(req),
-    )?)
-}
-
-/// The `InstallArgs` `build_install_resolver` reads. `vibe reinstall`
-/// carries no `--registry` / `--git` / feature flags, so they default
-/// off — the resolver is built purely from the manifest's `[[registry]]`
-/// / `[[mirror]]` / `[[override]]` / git-source declarations.
-fn resolver_args() -> InstallArgs {
-    InstallArgs {
-        packages: Vec::new(),
-        path: PathBuf::from("."),
-        registry: None,
-        assume_yes: false,
-        language: None,
-        features: Vec::new(),
-        no_default_features: false,
-        all_features: false,
-        exact: false,
-        auth_required: false,
-        solver: None,
-        git: None,
-        tag: None,
-        branch: None,
-        rev: None,
-        git_auth: None,
-        git_token_env: None,
-        force: false,
-        prefer_embedded: false,
-        no_prefer_embedded: false,
-        no_default_registry: false,
-        offline: false,
-        embedded_short_circuit: false,
-        prefer_local: false,
-        no_prefer_local: false,
-    }
-}
-
-/// Interactive confirmation, matching the install / update / uninstall
-/// contract: `--assume-yes`, `--unattended`, and `--json` all imply yes;
-/// a non-TTY with none of those set is a hard error.
-fn confirm(ctx: &output::Context, args: &ReinstallArgs, prompt: &str) -> Result<bool> {
-    if args.assume_yes || ctx.is_unattended() || ctx.is_json() {
-        return Ok(true);
-    }
-    if !console::user_attended() {
-        bail!(
-            "no TTY available for confirmation; re-run with `--assume-yes` to reinstall \
-             non-interactively"
-        );
-    }
-    Confirm::new()
-        .with_prompt(prompt)
-        .default(false)
-        .interact()
-        .context("reading user confirmation")
-}
-
-fn resolve_project_root(path: &Path) -> Result<PathBuf> {
-    let canonical = path
-        .canonicalize()
-        .with_context(|| format!("canonicalizing `{}`", path.display()))?;
-    let stripped = super::init::strip_unc_public(canonical);
-    if !stripped.join(Manifest::FILENAME).exists() {
-        bail!(
-            "no `vibe.toml` in `{}`; run `vibe init` first",
-            stripped.display()
-        );
-    }
-    Ok(stripped)
-}
-
-/// Load the workspace lockfile, or an empty one when none exists yet.
-/// `vibe reinstall` does not require a lockfile — without one it simply
-/// regenerates the boot artifacts from the authored boot-lane tree.
-fn load_lockfile(root: &Path) -> Result<Lockfile> {
-    let path = root.join(Lockfile::FILENAME);
-    if path.exists() {
-        Ok(Lockfile::read(&path)?)
-    } else {
-        Ok(Lockfile::empty(
-            format!("vibe {}", env!("CARGO_PKG_VERSION")),
-            super::init::current_timestamp_utc(),
-        ))
-    }
 }

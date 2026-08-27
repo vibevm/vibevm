@@ -1,0 +1,235 @@
+{
+  "metadata": {
+    "description": "Wire format for `vibe update --json` \u2014 the ONE document the command emits, whatever it did. Update runs on the install substrate but is its OWN command: it reports `update`, its own scope, targets and run identity, and a handoff whose resume line is `vibe update`. It never impersonates install. Every fact the pre-R7.3 document carried stays at the ROOT.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-000#JTD-SSOT"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::update_report"
+    }
+  },
+  "properties": {
+    "ok": {
+      "type": "boolean"
+    },
+    "command": {
+      "type": "string",
+      "metadata": {
+        "description": "Always `\"update\"` for this report."
+      }
+    },
+    "project": {
+      "type": "string"
+    },
+    "scope": {
+      "enum": [
+        "all",
+        "scoped"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "`all` is the whole-workspace update; `scoped` names one or more packages."
+      }
+    },
+    "packages": {
+      "elements": {
+        "type": "string"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "The package coordinates this invocation targeted. Empty for `all`."
+      }
+    },
+    "packages_resolved": {
+      "type": "uint32",
+      "metadata": {
+        "description": "How many packages this update re-resolved."
+      }
+    },
+    "version_bumps": {
+      "elements": {
+        "type": "string"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "One line per package whose locked version moved."
+      }
+    },
+    "materialised": {
+      "elements": {
+        "type": "string"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Dependency-slot paths materialised this run \u2014 a directory each, never counted as files. Excludes any slot a rollback removed."
+      }
+    },
+    "skipped": {
+      "elements": {
+        "type": "string"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Slot paths already present for the resolved version and source identity, trusted without materialising."
+      }
+    },
+    "pruned": {
+      "elements": {
+        "type": "string"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Slot paths removed \u2014 present before, absent from this resolution."
+      }
+    },
+    "nodes_regenerated": {
+      "elements": {
+        "type": "string"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Workspace-relative path of every node whose boot artifacts were regenerated."
+      }
+    },
+    "complete": {
+      "type": "boolean",
+      "metadata": {
+        "description": "True when this invocation ran to completion. False when it stopped part-way \u2014 the slot sets above are then a partial, boundary-measured record, never a final one."
+      }
+    },
+    "unchanged": {
+      "type": "boolean",
+      "metadata": {
+        "description": "True on the PROP-011 \u00a72.2 fast path: `vibe.lock` was already fresh, so no resolution ran and no slot moved."
+      }
+    }
+  },
+  "optionalProperties": {
+    "delegation": {
+      "ref": "update_delegation",
+      "metadata": {
+        "x-default": null,
+        "description": "Present exactly when a hosted `agent` contribution parked this update. `ok` stays true; `resume` is the update command, never `vibe install`."
+      }
+    },
+    "hooks": {
+      "elements": {
+        "ref": "update_hook_report"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Install-hook reports for this run. Emitted even when empty: the pre-R7.3 document carried this member unconditionally and consumers key on it."
+      }
+    },
+    "contributions": {
+      "elements": {
+        "ref": "update_contribution_report"
+      },
+      "metadata": {
+        "x-empty": "omit",
+        "description": "Slot-scoped lifecycle rows this command itself ran. This command is the outermost one on its path and therefore the only one that reports them."
+      }
+    }
+  },
+  "definitions": {
+    "update_delegation": {
+      "properties": {
+        "run_id": {
+          "type": "string"
+        },
+        "tasks": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "resume": {
+          "type": "string"
+        }
+      }
+    },
+    "update_hook_report": {
+      "properties": {
+        "phase": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      },
+      "optionalProperties": {
+        "note": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    },
+    "update_contribution_report": {
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "phase": {
+          "type": "string"
+        },
+        "point": {
+          "type": "string"
+        },
+        "handler": {
+          "type": "string"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "tier": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      },
+      "optionalProperties": {
+        "message": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "version": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "reference": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "flagged": {
+          "type": "boolean",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "stdout": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "stderr": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    }
+  }
+}
