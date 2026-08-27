@@ -311,12 +311,20 @@
       <CLAUDEZ-TURN-BUDGET fact="true" status="spec/done">A 140-turn R8
       continuation reached turn 141 and transport-failed **before writing its
       report**, despite useful code and focused-test progress; it emitted about
-      95k output tokens and repeatedly reran broad filters. Large continuation
-      budgets invite scope accretion rather than completion. Default to a
-      30–50-turn bounded edit packet, split implementation from child-process
-      tests/review, let root compile between packets, and reserve the final two
-      worker turns for the durable report. `max_turns` exhaustion preserves the
-      worktree but is never PASS.</CLAUDEZ-TURN-BUDGET>
+      95k output tokens and repeatedly reran broad filters. Conversely, two
+      independent R3.4 cold implementation packets each consumed all 50 turns
+      in diligent required-input archaeology and reached at most their first
+      product edit; neither hit quota or transport failure. Therefore there is
+      no universal 30–50-turn implementation cap. Use 30–50 turns for a narrow
+      edit/repair or for an explicitly separate archaeology pass. A broad cold
+      implementation is either (a) two-stage — bounded archaeology with a
+      durable handoff, then same-cwd/session `-c` implementation — or (b)
+      uncapped when root has already supplied a sufficiently closed packet.
+      Split child-process tests/review when that prevents scope accretion, and
+      draft the durable report early rather than gambling on the final two
+      turns. Same-cwd `-c` preserves the subscription-paid context and is the
+      default recovery from a turn-cap boundary. `max_turns` exhaustion
+      preserves the worktree but is never PASS.</CLAUDEZ-TURN-BUDGET>
       <CLAUDEZ-HOURLY-PROBE fact="true" status="spec/done">While this campaign
       is active, the ChatGPT thread owns an hourly heartbeat named «Проверка
       доступности claudez». It starts one fresh isolated `claudez -p` elementary
