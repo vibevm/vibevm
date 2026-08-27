@@ -276,7 +276,8 @@ JSON output extends a JTD-owned report; it does not append an ad-hoc object.
 ## 7. Implementation order
 
 1. Land R6.2a schema/corpus.
-2. Implement strict bidirectional conversion + gate registry.
+2. Implement strict bidirectional conversion + gate registry (**landed at
+   `17afb5b6`**).
 3. Add in-memory pass observer/timing with no-trace compatibility wrappers.
 4. Add trace-index JTD/generated types (**metadata contract landed at
    `6f4a717d`**) and atomic run writer (remaining).

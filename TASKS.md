@@ -54,9 +54,10 @@ fronts currently in flight. A worker report or old worktree is never completion.
       (`15793f2e`; verifier-off production bytes/errors preserved).
 - [x] **R6.2a before R3.4** — schema-first six-carrier compiler IR wire and
       corpus (`c26cd039`; strict gates, exact builtin oracles, final freeze).
-- [ ] **R6.2b before R3.4** — strict lossless domain↔wire conversion; owned
-      custom target identity, with registration/invocation still deferred to
-      R6.3.
+- [x] **R6.2b before R3.4** — strict lossless domain↔wire conversion
+      (`17afb5b6`); all fifteen ordered gates, production staged replay,
+      bounded hostile refusals and owned custom-target identity, with
+      registration/invocation still deferred to R6.3.
 - [ ] **R3.4** — compile snapshots/timings over that same wire. The metadata
       contract is landed (`6f4a717d`: `compiler-trace-index/e1`, canonical
       full/short names, dense events/ordinals and timing reconciliation), as

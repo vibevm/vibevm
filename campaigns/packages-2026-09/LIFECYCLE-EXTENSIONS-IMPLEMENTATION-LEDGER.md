@@ -17,9 +17,9 @@ R8.1 worktrees contain only packets/reports beyond their landed commits.
 Intermediate dirty R2/R3 worktrees were older construction snapshots
 superseded by richer files on `main`. Their unique R4/R5 audit decisions were
 synthesised here, then 33 obsolete worktrees were removed under rolling GC.
-B-107, R3.3, R8.2a grammar, R6.2a, R7.2 and the R8.1 portability hardening have
-since landed and their worktrees were reclaimed; one active, unintegrated atom
-(R6.2b) remains.
+B-107, R3.3, R8.2a grammar, R6.2a/R6.2b, R7.2 and the R8.1 portability
+hardening have since landed. Their worktrees were reclaimed under rolling GC;
+R7.3 is the only older active implementation worktree.
 Missing later waves were never implemented.
 
 The reusable decisions from untracked architecture/review reports are
@@ -28,13 +28,18 @@ only durable home of a decision.
 
 ## 2. Evidence standard and current baseline
 
-- Integration checkpoint: `main` at `b90cd209` after the compiler-wire,
-  provider/agent, shared safe-filesystem and host slot-record migrations.
+- Integration checkpoint: `main` at `781dc1f6` after strict compiler-domain
+  wire conversion and its regenerated spec map.
 - `cargo test --workspace --locked`: green on 2026-08-27 at the unchanged
   product checkpoint.
-- `cargo xtask specmap --check`: 6769 units, 1670 tagged code items, 1526
-  edges, 0 suspects, 0 gated orphans, 0 unresolved host edges, 21 standing
-  warnings.
+- `cargo xtask specmap`: 6772 units, 1971 tagged code items, 1763 edges,
+  0 suspects, 0 gated orphans, 0 unresolved host edges and 21 standing
+  warnings. The 25 non-host edges are outside this map's jurisdiction.
+- R6.2b integration evidence on the current tree: `cargo xtask codegen`
+  regenerated all 46 schemas with no diff; `cargo test -p vibe-spec --locked`
+  passed 628 unit tests plus integration/doc tests; strict package clippy passed
+  with `-D warnings`; two independent freeze reviews ended in `PASS` after the
+  final hostile diagnostic repair.
 - B-107 is closed by `f8f197cd`/`c195eae1`: all 502 judged records map
   one-to-one to live paths (98 retain their extension; 404 become XML), six new
   unjudged live documents bring the corpus to 508, and all 19,548 verdicts plus
@@ -124,7 +129,7 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 |---|---|---|
 | R6.1 `compiler_internals` + executable pass grammar | partial | conspicuous flag/raw table land; kind-specific required/forbidden fields intentionally deferred |
 | R6.2a whole-IR wire epoch | done | `c26cd039`; six strict carriers, generated types, derived corpus, 42 conversion-gate/producer-oracle tests and independent final freeze |
-| R6.2b strict domain conversion | missing | one lossless `AnyIr` projection implementing all named gates; open custom target identity is owned here, not refused until R6.3 |
+| R6.2b strict domain conversion | done | `17afb5b6`; lossless `AnyIr` projection, all fifteen ordered gates, production replay at 12–14, emitted identity/framing at 15, owned custom targets, bounded hostile diagnostics and independent final freeze |
 | R6.3 before/after/replace, frontend/backend | missing | compiler never consumes manifest pass rows |
 | R6.4 mandatory verifier after plugin passes | missing | depends on R3.3/R5 |
 | R6.5 `.txt` frontend + JSON lane backend e2e | missing | no custom format registry/backend artifact surface |
