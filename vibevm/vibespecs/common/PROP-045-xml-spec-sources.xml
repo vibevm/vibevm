@@ -294,19 +294,19 @@ freshness decision includes the output format: changing `spec_format`
 re-materialises even though `(kind, name, version)` did not move.
 Semantic equivalence of source and derivative is the converter's own
 proof through the shared IR (the golden corpus), never the hash's job.</HASH-LAW></p>
-    <p><BOOT-LANE-SCOPE fact="true" status="spec/work">**Boot-lane law under the setting (revised by the
-owner's scenario ruling, 2026-08-21).** Boot artifacts are generated
-projections; v1 keeps the COMPILED static artifact (`vibevm/vibespecs/boot/STATIC.xml`)
-Markdown regardless of `spec_format` — but both lanes must be fully ready
-for a transformed vibedeps tree: the static compiler consumes snippets in
-WHATEVER format the slots materialised (an XML-materialised snippet
-converts at splice time — pivot conversion, both directions), and the
-dynamic lane's entries point at the files as materialised — under
-`spec_format = "xml"` a dynamic INCLUDE target IS an `.xml` file, and
-`INDEX.md` carries that path honestly. The dynamic ROUTER is the reading
-agent itself (PROP-009: boot is pure file-reading; a dynamic entry is an
-INCLUDE resolved by the reader), which is why §5a measures agents, not
-code. A fully-XML compiled static artifact remains named follow-up work.</BOOT-LANE-SCOPE></p>
+    <p><BOOT-LANE-SCOPE fact="true" status="impl/done">**Boot-lane law under the setting (revised by the
+owner's scenario ruling, 2026-08-21, and completed by `##STATIC-FOLLOWS-THE-TARGET`).** Boot artifacts are generated
+projections. The static compiler consumes snippets in WHATEVER format the
+slots materialised (an XML-materialised snippet pivots through the shared
+IR) and emits the selected target format: `STATIC.xml` for `xml`,
+`STATIC.md` for `markdown|mixed`. The dynamic lane's entries point at the
+files as materialised — under `spec_format = "xml"` a dynamic INCLUDE target
+IS an `.xml` file, and `INDEX.md` carries that path honestly. The dynamic
+ROUTER is the reading agent itself (PROP-009: boot is pure file-reading; a
+dynamic entry is an INCLUDE resolved by the reader), which is why §5a
+measures agents, not code. The former “compiled static stays Markdown” /
+“fully-XML is follow-up” wording is superseded; the XML polygon and current
+host `STATIC.xml` are its landed proof.</BOOT-LANE-SCOPE></p>
     <p><SCENARIO-ZERO fact="true" status="spec/work">**The owner's named scenario — acceptance case №0
 (ruling 2026-08-21, verbatim: «все спеки в spec написаны в Markdown,
 внутренние пакеты в packages — в Markdown, а формат материализации —
@@ -479,13 +479,12 @@ S5 landing keys the match on the logical stem (`10-flow-wal.xml` and
 origin test — a snippet materialised into `.xml` reports its package.</BOOT-ORIGIN-LITERAL-MATCH></p>
       <p><GENERATED-ARTIFACTS-OUTSIDE-DERIVED fact="true" status="impl/done">**Generated boot artifacts are
 outside the derived identity (S5 polygon finding, law).** Boot
-regeneration writes a child `vibevm/vibespecs/boot/STATIC.xml` / `INDEX.md` INTO a
-dependency slot after materialisation, and by `##BOOT-LANE-SCOPE` those
-projections are Markdown regardless of `spec_format` — so the derived
-hash excludes them (the same exclusion genre as the derived manifest
-itself) and the format-purity claim never counts them: a transformed
-slot's «no foreign-form spec files» is asserted over SOURCES, not over
-projections the machine regenerates at will. The polygon caught both
+regeneration writes a child target-selected `vibevm/vibespecs/boot/STATIC.xml|STATIC.md`
+plus `INDEX.md` INTO a dependency slot after materialisation — so the
+derived hash excludes them (the same exclusion genre as the derived
+manifest itself) and the format-purity claim never counts them: a
+transformed slot's «no foreign-form spec files» is asserted over SOURCES,
+not over projections the machine regenerates at will. The polygon caught both
 failure shapes live before this law existed: a stale derived hash the
 moment boot regenerated, and a fake purity violation on the one slot
 whose snippet compiles to a child STATIC.</GENERATED-ARTIFACTS-OUTSIDE-DERIVED></p>

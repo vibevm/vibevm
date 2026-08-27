@@ -175,6 +175,18 @@
       plus one cargo-heavy review/test at most; text/read-only workers may use
       otherwise free lanes. Cargo runs use `CARGO_BUILD_JOBS=4` where the
       repository rule requires it.</TWO-COLD-CARGO>
+      <LSP-COLD-CACHE fact="true" status="spec/done">A packet-level “do not run
+      Cargo” rule does **not** prevent Claude Code's Rust language server from
+      starting `rust-analyzer`/flycheck after the first Rust edit. Measured on
+      2026-08-27: one patch-only worktree grew a 2,225,158,486-byte local
+      `target/`; a second had already grown 297,254,505 bytes when its process was restarted. Root
+      therefore sets `CARGO_TARGET_DIR` to the one active warm integration
+      target **before launching** every patch-only Rust worker. The sibling
+      launched with that environment before its first edit created no local
+      target. Setting it only on a continuation is too late because an LSP
+      spawned by the original process may outlive that process. Orphaned
+      rust-analyzer processes are stopped only after their worker terminates;
+      the exact worktree is then reclaimed by `##ROLLING-WORKTREE-GC`.</LSP-COLD-CACHE>
       <ATOMIC-CARGO-SLOTS fact="true" status="spec/done">A process census is
       observation, not exclusion: on 2026-08-26 three independent workers all
       observed zero Cargo processes and then started three cold builds in the

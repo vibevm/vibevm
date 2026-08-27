@@ -14,12 +14,12 @@ that is safe to cite as landed is:
 | R1.1 | `6d606ef2 feat(vibe-workspace): persist slot ownership` | typed, strict `.vibe-slot.toml`; source/representation identity and per-file SHA-256 rows; record written last; legacy readers retained |
 | R1.2 | `1cf4f189 feat(vibe-workspace): reconcile recorded slot footprints` | record-to-incoming diff; unchanged files and mtimes retained; stale owned files removed; unrecorded paths retained; hardlinks replaced without mutating the source/cache; record committed atomically last |
 | R1.3 | `6a7f750d feat(vibe-install): let source hashes earn mutable skips` | freshly fetched mutable-source hash compared with the valid record; equality skips payload writes; verify mode still checks payload drift |
-| R1.4 seam | `4503fdb6 refactor(vibe-workspace): report exact slot reconciliation` | neutral accounting of actual writes/removals, migration, identity change and repair-only evidence; no hook-policy choice |
+| R1.4 | `4503fdb6 refactor(vibe-workspace): report exact slot reconciliation` + `9c545f0d` | neutral accounting of actual writes/removals/migration/identity/repair, then owner-selected 3.A hook scheduling over every nonempty payload diff |
 
-R1.4 is **not complete at this checkpoint**. Neutral `MaterialiseReport`
-plumbing is landed, but install deliberately does not consume those facts to
-select hooks yet. This draft therefore does not claim a final hook-rerun policy.
-The policy fork is recorded in §3 for an owner ruling.
+R1.4 is **complete at this checkpoint**. Neutral `MaterialiseReport` plumbing
+landed first; the owner then selected §3.A and `9c545f0d` made every nonempty
+payload diff (including verify repair) rerun declared hooks once. Section 3
+retains the rejected alternative as decision evidence, not as an open fork.
 
 ## 1. PROP-011 — record-aware materialisation and the mutable hash gate
 
@@ -126,7 +126,7 @@ queue.</HOOK-RESET-REMATERIALISE>
 ```
 
 Status remains `impl/done` for the materialisation/reset mechanism. The final
-hook sentence stays policy-neutral until §3 is ruled and R1.4 lands.
+hook sentence is the owner-selected §3.A contract; R1.4 landed at `9c545f0d`.
 
 ### 2.2 Ready hardlink corrections
 

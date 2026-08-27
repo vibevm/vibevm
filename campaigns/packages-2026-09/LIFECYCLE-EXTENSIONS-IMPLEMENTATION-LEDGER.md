@@ -21,25 +21,34 @@ B-107, R3.3, R8.2a grammar, R6.2a/R6.2b, R7.2 and the R8.1 portability
 hardening and R7.3 hosted resume have since landed. Their worktrees are
 reclaimed under rolling GC. The R3.4 durable writer, shared command-wire /
 sticky-state prerequisites and borrowed workspace/install plumbing have now
-landed; every accepted worktree was reclaimed immediately. No accepted
-implementation worktree is retained at this checkpoint. The install/lifecycle
+landed; every accepted precursor worktree was reclaimed immediately. No
+earlier accepted implementation worktree is retained at this checkpoint; the
+one active warm Update/Reinstall integration worktree is named below. The install/lifecycle
 activation atom `dcbf89b0` has also landed and its accepted worktree was
-reclaimed immediately.
+reclaimed immediately. The Update/Reinstall owner atom and its final
+four-family parity matrix are accepted on the integration branch through
+`cebdedc5`; all three fan-out worktrees were reclaimed after central review,
+integration and exact gates. Main cherry-pick plus the active warm worktree's
+final GC remain the current mechanical checkpoint, stated again in §2.
 Missing later waves were never implemented.
 
 The reusable decisions from untracked architecture/review reports are
 synthesised below. Those reports are evidence inputs, not authority and not the
 only durable home of a decision.
+[`RETROSPECTIVE-SPEC-HARVEST-2026-08-27.md`](RETROSPECTIVE-SPEC-HARVEST-2026-08-27.md)
+is the tracked index/queue for report-derived candidates not yet owned by a
+later implementation row; every future wave drains its named candidates rather
+than depending on untracked `cache/` archaeology.
 
 ## 2. Evidence standard and current baseline
 
-- Integration checkpoint: `main` at `dcbf89b0` after hosted lifecycle resume,
-  compiler observer/writer, the shared trace command-report wire, sticky
-  lifecycle trace identity, the command-owner core and install/lifecycle trace
-  activation.
+- Integration checkpoint: the accepted R3.4 chain through `cebdedc5` after
+  hosted lifecycle resume, compiler observer/writer, shared command-report
+  wire, all four command owners and the final parity tail; main integration is
+  the current atom's next mechanical step.
 - `cargo test --workspace --locked`: green on 2026-08-27 at the unchanged
   product checkpoint.
-- `cargo xtask specmap`: 6774 units, 2050 tagged code items, 1833 edges,
+- `cargo xtask specmap`: 6785 units, 2069 tagged code items, 1852 edges,
   0 suspects, 0 gated orphans, 0 unresolved host edges and 21 standing
   warnings. The 25 non-host edges are outside this map's jurisdiction.
 - R6.2b integration evidence on the current tree: `cargo xtask codegen`
@@ -103,8 +112,23 @@ only durable home of a decision.
   three resume paths, the direct-callback failure RED and the exact lifecycle /
   hosted / update compatibility targets. Workspace-wide check, fmt and strict
   four-crate clippy are clean; three independent final reviews ended PASS.
-  The two old per-row-echo tests remain red identically on the pre-atom main
-  and are not represented as regressions or as green evidence.
+  The two old per-row-echo tests were subsequently migrated to the single
+  command-root contribution member by `eb2e7148` and are green.
+- R3.4 Update/Reinstall completion evidence: `e589bdaa` gives both commands one
+  selected input/identity epoch, one borrowed recorder, owned drafts and the
+  four-family funnel; `ee63f4a1`/`a045e1f2` close bounded state-proven
+  supersession, honest unavailable wording and exact-run continuation
+  ownership; `30482dcc`, `d7676be8`, `eb2e7148` and `cebdedc5` land the hard
+  failure, hosted resume/unavailable and compatibility/parity REDs. Central
+  gates passed all 650 CLI unit tests, all 434 `vibe-workspace` library tests,
+  the complete `vibe-install` suite, 21 focused trace/hosted/lifecycle targets,
+  workspace-wide all-target check, fmt and strict four-crate clippy. The matrix
+  proves scoped/whole Update, plain/empty/normal-force Reinstall, success,
+  park, flagless resume, missing adopted trace, displacement, Ready SlotFailed,
+  postcompile hard failure, quiet and exact trace-member omission / root
+  invocation compatibility. One accepted exception is explicit below:
+  Reinstall member invocation now reports the selected node rather than the
+  older, incorrect workspace-root identity.
 - R7.3 integration evidence on the current tree: state transaction tests 5/5;
   hosted cancellation/progress/sequential-slot e2e 2/5/1; targeted five-crate
   clippy clean; 48-schema codegen idempotent; specmap has zero gated orphans;
@@ -117,15 +141,17 @@ only durable home of a decision.
   files / 2,280 verdicts sealable, 191 files / 859 moved facts requiring
   re-judgement, and 236 refused files / 8,634 verdicts; a further 122 moved facts
   live inside 22 refused files and are reported separately, never double-counted.
-  Live judging debt after the three new ChatGPT-runner facts is now measured:
-  **2,501 unjudged facts in 154 files, 0 orphaned, 484 stale files**. One
+  Judging debt at pre-harvest main checkpoint `8f5508ee` is measured:
+  **2,501 unjudged facts in 154 files, 0 orphaned, 484 stale files**. The active
+  worktree lacks the untracked mirror and its zero-count warning is not
+  evidence; remeasure on main after integration. One
   historical gap is named separately from
   1,082 comparable moved facts; no sealing or re-judgement occurred.
-- Full current 54-step panel: green on 2026-08-27. The official prefix 1–11
-  passed on the final code/spec tree; after the sole generated `specmap.json`
-  refresh, the exact official tail 12–54 passed through `self-check: all green`.
-  This includes workspace tests, fmt/clippy/check, wire/codegen/specmap drift,
-  package panels, exhaustive markup, licence and final tripwire gates.
+- Baseline 54-step panel: green on 2026-08-27 at pre-R3.4 checkpoint
+  `4a51a169`. The official prefix 1–11 and tail 12–54 passed through
+  `self-check: all green`; this is the campaign floor inherited by R3.4, not a
+  claim about the later trace/spec-harvest tree. One current full panel is due
+  after main integration and final specmap, per the milestone-only panel law.
 - Host materialisation is proved: a fresh `vibe reinstall --force` migrated all
   37 tracked slots to strict ownership records with 1,354 independently
   rehashed rows; subsequent install materialised 0/37 and the boot tree was
@@ -169,7 +195,7 @@ this campaign, but compatibility law is preserved.
 | R3.1 five levels, six carriers, typed pass manager | done | `3630ab9e`; `compiler/{ir,pass,pipeline}.rs` |
 | R3.2 parse→close→merge→embed→qualify→absorb→link→assemble→emit | done | `a7961003`, `96eef07d`, `e53b9a4e`, `ec7ea7fe`, `e653654d`, `2feef271`, `6de7ef05`, `6f3fa61a`, `302a3509`, `4403cb55`; 84 boot-artifact + 10 emit gates |
 | R3.3 verifier-each skeleton | done | `15793f2e`; immutable test-only manager verifier, typed level/transition errors, SCC/document/lane/marker/fence invariants; 61 focused verifier tests + independent freeze |
-| R3.4 compile snapshots/timings | in progress | `6f4a717d` metadata/index/filename; `7adfbb5a` manifest activation; `fa0662a9` observer/pre-encode; `4d95a129` writer/lock/retention/budget; `34d3f363` shared report; `0301f8f2` sticky/displaced identity; `be04a184` borrowed workspace/install compilation; `cad8ecc1` open-existing + generic command owner; `dcbf89b0` direct install/lifecycle flags, prepared owners, presentation, failure/park/resume matrix and e2e. Update/reinstall ownership plus final four-command parity remain |
+| R3.4 compile snapshots/timings | done | `6f4a717d` metadata/index/filename; `7adfbb5a` activation; `fa0662a9` observer; `4d95a129` writer/retention/budget; `34d3f363` shared report; `0301f8f2` sticky/displaced identity; `be04a184` borrowed compilation; `cad8ecc1` owner funnel; `dcbf89b0` install/lifecycle; `e589bdaa` Update/Reinstall; `ee63f4a1`/`a045e1f2` displacement and exact continuation ownership; `30482dcc`/`d7676be8`/`eb2e7148`/`cebdedc5` final RED/parity tail |
 
 R3.2 also landed a crash-safe whole-artifact transaction/selector tier. That
 unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
@@ -212,6 +238,7 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 | R7.2 CLI agent handler + output contract | done | `26929050`; strict AgentResult JTD, prepared prompt/world resolution, ResultPlan, optional provider path, create/install/reinstall/update e2e and shared safe filesystem cell |
 | R7.3 hosted outbox/delegated resume | done | `1dd5e1f5`, generated reports `eae4494e`; durable run/outbox, exact task ownership, candidate-state atomicity, phase/slot reconciliation, command-level progress, no-spend sequential resume and independent final freeze |
 | R7.4 MCP lifecycle surfaces | missing | no `lifecycle_run` or `lifecycle_tasks` tools |
+| R7.5 external orchestration substrate | missing | owner ruling 2026-08-27: structured lifecycle evidence + exact tree/run identity + optional read-only requirements/spec-IR facts; no coding agent or automatic loop; reference agent is a future campaign |
 
 R7 live Z.AI smoke is now conclusive (2026-08-27): central `vibe create`
 called the official OpenAI-compatible coding endpoint with `glm-5-turbo`, read
@@ -436,6 +463,38 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
     frozen before the first fallible callback operation and prepended once to
     carried handler failures. The trace retains only fixed `command failed`;
     the original typed error, exit code and terminal text remain unchanged.
+28. Update and Reinstall are first-class trace owners, not compatibility
+    wrappers. Each owns one selected manifest/config/root/workspace epoch and
+    one `prepare → execute → finalize → render` funnel across every branch.
+    Operational workspace root and selected report identity remain distinct
+    typed values; offline posture is resolved once. Reinstall's selected-node
+    `project` field intentionally corrects the old member-invocation
+    workspace-root spelling; it is the one accepted trace-off wire migration,
+    not attributed to enabling trace.
+29. A resume failure crosses the shared install substrate as a neutral measured
+    carrier: exact original error, progress, resolved count and ordered rows,
+    no report family. The outer Install/Lifecycle/Update/Reinstall owner chooses
+    its registered root and historical emission bit. When two lifecycles meet,
+    order is `current pass → resumed pass`; destructive row ownership transfers
+    only after the resumed outcome and handoff are validated.
+30. Persisted continuation and compile trace share the exact-identity law. Only
+    the lifecycle `run_id` that parked a continuation may service it. A
+    displaced run terminalises only an existing state-proven trace, produces
+    one bounded structural notice, cancels rather than inherits the old debt
+    and never manufactures a missing trace. Adopted missing trace stays
+    `unavailable` with no partial history.
+31. Report capability governs notice routing. Install/Lifecycle can absorb
+    owner notices; Update/Reinstall schemas cannot, so the adapter routes the
+    bounded residue exactly once without inventing a member. Normal-force
+    Reinstall keeps full internal progress for park/failure/resume but preserves
+    its regenerated-only successful trace-off JSON projection.
+32. Owner ruling 2026-08-27: lifecycle is an external-agent framework, not a
+    built-in coding agent. It supplies phases, contributions, evidence, durable
+    handoff and CLI/MCP adapters; Plan/Act policy and PDSA repetition remain in
+    an external human/agent orchestrator. Requirements/spec IR may be exposed
+    as optional read-only evidence tied to exact tree/run identity, never as
+    lifecycle's hidden planner. A reference agent is a separate future
+    campaign.
 
 ## 6. Physical state and loss prevention
 
@@ -501,6 +560,9 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
    lazy provider/budget accounting where a real enhancement consumes it.
 3. Lifecycle run-id wire; outbox/delegated resume; invoked-by adapter.
 4. MCP run/tasks adapters and standalone/hosted e2e.
+5. Neutral external-orchestration evidence/query substrate: exact tree/run
+   identity, stale/unmet verify evidence, optional read-only spec-IR facts and
+   a fake-orchestrator/PDSA reference scenario. No agent policy or auto-loop.
 
 ### Lane C — artifact/build/package/deploy (parallel, manifest edits serialized)
 

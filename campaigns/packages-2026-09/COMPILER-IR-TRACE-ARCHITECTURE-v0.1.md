@@ -1,6 +1,7 @@
 # Compiler IR wire and compile trace — implementation architecture v0.1
 
-Status: central implementation design, 2026-08-27. Semantic authority remains
+Status: central implementation record, 2026-08-27. R6.2a/b and R3.4 are
+landed; later R5/R6 pass execution still consumes this boundary. Semantic authority remains
 PROP-054 `##IR-LEVELS`, `##WHOLE-IR-WIRE`, `##INTER-PASS-VERIFIER` and
 `##OBS-TRACE`. The R6 compiler-IR JTD epoch is the data authority once landed.
 This document fixes the implementation seams so R6.2 conversion and R3.4 trace
@@ -376,7 +377,8 @@ reopen from converting a previously unavailable observer into an apparently
 complete history with missing early compiles.
 
 When identity selection deliberately displaces a state-owned parked run
-(`--force`, changed command/chain/mode, and later selected-node mismatch), it
+(lifecycle/agent-repark `--force`, changed command/chain/mode, and later
+selected-node mismatch; not Reinstall's materialisation `--force`), it
 returns that exact prior run identity and trace bit. Before opening the fresh
 run, the command attempts to **open the state-proven old trace only if it
 already exists** and finalise it `failed` as superseded. The open-existing
@@ -386,6 +388,14 @@ directory and never runs fresh-run retention. It never infers ownership from a
 32-hex directory. This converts real abandoned running traces into
 retention-eligible terminals, never manufactures a phantom trace merely to
 supersede it, and keeps repeated force-reparks bounded.
+
+A finalised state-proven supersession produces one bounded structural notice
+after every writer warning; a refusal never claims finalisation. A missing
+predecessor produces neither notice nor phantom. Continuation ownership follows
+the same exact-identity law: a persisted slot continuation belongs to the
+`run_id` that parked it. Adoption preserves that id and may service it;
+displacement mints another id, cancels/supersedes the old work and must not
+resume or re-park it under the new command.
 
 Every exit after open passes one explicit outcome funnel:
 
@@ -466,11 +476,13 @@ its own live lock/index. Validate-only (and `clean validate`) may therefore
 finish a truthful zero-scope trace; the explicit exemption is clean-only, not
 every compile-free lifecycle verb.
 
-The install/lifecycle command activation landed at `dcbf89b0`. Exactly two
-production boundaries own `prepare`/`finalize`: direct `vibe install` and the
-outer lifecycle command. Every compile below them borrows `Option<&TraceRun>`;
-whole update and reinstall remain compatibility callers until their own R3.4
-atom.
+The install/lifecycle command activation landed at `dcbf89b0`; Update/Reinstall
+landed at `e589bdaa` with the final displacement/failure/hosted matrix in
+`ee63f4a1`, `a045e1f2`, `30482dcc`, `d7676be8`, `eb2e7148` and `cebdedc5`.
+Exactly four production boundaries own `prepare`/`finalize`: direct
+`vibe install`, the outer lifecycle command, `vibe update` and
+`vibe reinstall`. Every compile below them borrows `Option<&TraceRun>`; no
+compatibility caller selects a second session.
 
 Those boundaries also own one prepared input epoch. The selected manifest is
 read once into a stored `Result`; a valid value is handed to
@@ -481,6 +493,16 @@ bad selected manifest, a loaded tree, the exact first workspace failure and a
 legacy discover-here caller. Manifest failure is consumed first at its old
 command boundary; a workspace failure is carried and returned rather than
 retried. User config and canonical selected root are likewise selected once.
+
+Update and Reinstall apply the same one-epoch law to every branch. Their
+selected report identity may differ from the operational workspace root, but
+both are carried values rather than late re-reads. Offline posture is resolved
+once. Whole Update lends its recorder into the prepared install substrate;
+scoped Update and every Reinstall shape lend it directly to traced materialise
+and boot-regeneration siblings. Reinstall's selected-node report identity is a
+deliberate compatibility correction: an older member invocation printed the
+workspace root. Root invocation and ordinary-success field surfaces remain
+characterised, but this one field is not claimed byte-identical to the bug.
 
 Prepared siblings continue through `vibe-install` planning and slot-lifecycle
 construction. Existing public wrappers keep their old signatures and perform
@@ -502,13 +524,25 @@ rows and the original error object, while the trace persists only fixed
 `command failed`. Notice routing is one tested render executor: member warnings,
 JSON root notices, human diagnostics and quiet counts are mutually exclusive.
 
+A resume failure is neutral while it crosses the shared install substrate: it
+carries the exact original error, measured progress, ordered rows and resolved
+count, but chooses no report family. The actual outer owner maps it to
+Install/Lifecycle/Update/Reinstall with that path's historical emission policy.
+When a current pass precedes a resumed pass, chronology is always
+`current → resumed`; the destructive row take occurs only after the resume
+outcome and its handoff validation are known. Pre-lifecycle in-place progress
+is joined on failure, never defaulted away. Normal-force Reinstall retains a
+full internal completed record for park/failure/resume while projecting its
+ordinary successful JSON through the historical regenerated-only surface.
+
 ### 5.4 One JTD trace member across four command reports
 
 `formats/vocabularies.json` becomes the single schema home for the shared
 compiler-trace duration, timing row and command report fragments. The trace
 index and `install`/`lifecycle`/`update`/`reinstall` schemas reference those
 shared fragments; generated modules re-export the same `TimingRow` type. Each
-command root gains one optional `trace` member. Disabled omits it byte-for-byte.
+command root gains one optional `trace` member. Disabled omits that member
+byte-for-byte from the corrected command root.
 
 The shared report distinguishes `unavailable|running|ok|failed` and carries:
 
@@ -524,6 +558,12 @@ reason. Human mode renders one table from the same typed member; quiet mode
 keeps one line with a compact suffix. JSON never emits a standalone trace
 object: exactly one registered command report root owns the member, even when
 deferred plan documents precede it.
+
+Install/Lifecycle roots can absorb owner notices in their generated `notices`
+member. Update/Reinstall roots intentionally have no such member; notice
+absorption is capability-aware and routes an otherwise unowned bounded notice
+once to diagnostics (or its quiet count), never inventing a wire field. A
+trace member already owns the warning and suppresses every duplicate channel.
 
 `--trace-compile` is accepted by install, update, reinstall and every default
 lifecycle verb (including a chained clean continuation). Clean-only compiles
@@ -590,10 +630,13 @@ future trace surface must be command-owned and JTD-first in the same way.
 4. Add trace-index JTD/generated types (**metadata contract `6f4a717d`**) and
    atomic run writer/newest-nine retention/budget (**landed at `4d95a129`**).
 5. Add attempt-aware scope allocation and borrowed traced siblings through
-   workspace/vibe-install while keeping every no-trace wrapper exact.
+   workspace/vibe-install while keeping every no-trace wrapper exact
+   (**landed through `be04a184`**).
 6. Add sticky lifecycle activation, the command-owned outcome funnel, shared
-   JTD report member, flags/presentation and cross-command e2e.
-7. Add final failure/park/resume/displacement and byte/mtime identity tests.
+   JTD report member, flags/presentation and cross-command e2e
+   (**landed through `dcbf89b0` / `e589bdaa`**).
+7. Add final failure/park/resume/displacement and byte/mtime identity tests
+   (**landed through `cebdedc5`; parity gate green 2026-08-27**).
 8. Only then expose the same conversion to native compiler passes in R6.3.
 
 This order makes R3.4 a real consumer of the public epoch and makes the native

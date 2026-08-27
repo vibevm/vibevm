@@ -1,12 +1,14 @@
 # ТЗ: lifecycle-движок и машина расширений — входная точка исполнителя
 
-_STATUS: В РАБОТЕ — R1/R2, R3.1–R3.3, R6.2a/b, R7.1–R7.3, R8.1 и
-R8.2a завершены; R3.4 активна, остальные строки остаются открытыми.
+_STATUS: В РАБОТЕ — R1/R2, R3.1–R3.4, R6.2a/b, R7.1–R7.3, R8.1 и
+R8.2a завершены; остальные строки остаются открытыми.
 Эта шапка — краткий указатель, не второй журнал. Точная гранулярная сверка,
 физический recovery-аудит и действующий atom-level dependency plan:
 `LIFECYCLE-EXTENSIONS-IMPLEMENTATION-LEDGER.md`. Спека-закон:
 `vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml` (при расхождении
-спека главнее этого файла; о расхождении — доложить, не чинить молча)._
+спека главнее этого файла; о расхождении — доложить, не чинить молча).
+Очередь уникальных report-derived findings после recovery-аудита:
+`RETROSPECTIVE-SPEC-HARVEST-2026-08-27.md`._
 
 Исполнитель: мультиагентная система владельца (модели уровня Opus5/gpt-5.6-sol/glm-5.3).
 Этот файл — единственная входная точка. Он самодостаточен в части ПОРЯДКА и ГЕЙТОВ;
@@ -141,7 +143,7 @@ R8.2a завершены; R3.4 активна, остальные строки �
   Коммит: `feat(cli): the phase line — vibe <phase> runs everything before it`.
 
 - **Ш2.3 — сбор вкладов, порядок, ритуал.** Сбор `[[extension]]` из установленного мира
-  (lock-порядок) + хоста; `[[extension.use]]`/`[extensions].disable`; селекторы
+  (lock-порядок) + хоста; `[[extensions.use]]`/`[extensions].disable`; селекторы
   `applies_to`; печать ритуала до исполнения (`##SURFACE-THE-RITUAL`).
   Тесты: порядок §3.4 (пресет → зависимости по локу → хост); disable глушит ровно одну.
   **Демо:** фикстурный пакет с двумя декларациями → `vibe test` печатает обе в порядке,
@@ -212,7 +214,7 @@ R8.2a завершены; R3.4 активна, остальные строки �
 ### R4 — staged-ярус компилятора (спека §7.2; `vibe-spec` + `vibe-workspace`)
 
 - **Ш4.1 — четыре канонические позиции** как transform-пассы; активация хостом
-  (`[[extension.use]]` для compile-точек; auto=false закон §3.3); заголовок
+  (`[[extensions.use]]` для compile-точек; auto=false закон §3.3); заголовок
   `<!-- vibe:transforms … -->` в артефактах; правило оракула §7.3 (byte-stable сравнение
   делается ДО трансформов).
 - **Ш4.2 — builtin `xml-minify`** по алгоритму `##TEST-XML-MINIFY` (безопасность по
@@ -278,6 +280,16 @@ R8.2a завершены; R3.4 активна, остальные строки �
   Red-proof: невыполненный контракт再-паркуется, выполненный — закрывается.
 - **Ш7.4 — MCP-поверхность**: `lifecycle_run`/`lifecycle_tasks` над теми же файлами
   (жанр `vibe-mcp/src/tools.rs`, оракул-тесты как у `agentic_explain`).
+- **Ш7.5 — нейтральный внешний work-loop substrate (owner ruling 2026-08-27).**
+  Lifecycle остаётся пассивным framework, не кодинговым агентом: structured
+  verification evidence, exact tree/run identity, CLI/MCP control/read surfaces и
+  опциональный read-only adapter требований/spec-IR (stable fact ids/status/provenance,
+  unmet/stale relations). Никаких встроенных Plan/Act policy, автоматического
+  `create→verify→create`, выбора следующей задачи или LLM-зависимости. В PROP-054 —
+  ненормативный PDSA reference scenario внешнего агента; референсная реализация самого
+  агента — отдельная будущая кампания. Red-proof: fake external orchestrator использует
+  только machine reports/tasks/facts; отсутствие IR adapter и LLM не меняет обычный
+  lifecycle.
   **Демо волны:** в терминале с мок-провайдером `vibe create` производит файл по
   контракту; с `VIBE_INVOKED_BY=claude-code` — печатает `vibe-agent-tasks`-блок, повторный
   запуск после ручного изготовления файла продолжает цепочку.
@@ -331,7 +343,9 @@ compatibility horizon, не текущей системной мутацией.
 ledger'а. R1 → (R2, R3 core). R6.2a/b следуют за R3.3 и предшествуют R3.4 — этот
 порядок уже выполнен. R4.0 следует после коллектора R2 и typed compiler core;
 R4.1–R4.3 используют один его kernel. R5 phase-native требует R2+R4, а native
-compiler path также R6.2. R6.3–R6.5 требуют R3/R5/R6.2; R7 требует R2, не R5.
+compiler path также R6.2. R6.3–R6.5 требуют R3/R5/R6.2; R7.1–R7.4 требуют
+R2, не R5. R7.5 следует за нейтральными R7.4-адаптерами и может опционально
+читать landed R6.2/specmap facts, не превращая их в lifecycle dependency.
 R8 artifact records/DAG могут идти после R2 параллельно, но mechanism
 world/selection обязаны дождаться R4.0 и расширить тот же kernel — второй
 collector запрещён. Внутри каждого атома зависимости и конфликтные manifest /
