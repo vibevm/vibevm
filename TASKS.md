@@ -62,9 +62,11 @@ fronts currently in flight. A worker report or old worktree is never completion.
       contract is landed (`6f4a717d`: `compiler-trace-index/e1`, canonical
       full/short names, dense events/ordinals and timing reconciliation), as
       is strict role-equipotent `[compile] trace` (`7adfbb5a`). The real
-      manager observer/pre-encode budget seam is landed (`fa0662a9`); atomic
-      writer/newest-nine retention, 128 MiB/run enforcement, CLI
-      flag/threading and e2e remain.
+      manager observer/pre-encode budget seam is landed (`fa0662a9`); the
+      crash-legible atomic writer, cooperative retention lock, newest-nine
+      collector and concurrent 128 MiB/run enforcement are landed
+      (`4d95a129`). One recorder through workspace/install/CLI, timing
+      presentation and e2e remain.
 - [ ] **R4.0–R4.3** — shared lower registry; four staged positions;
       transforms header/fingerprint/reference oracle; minify binding; analyzer.
 - [ ] **R5.1–R5.5** — native schemas/SDK, loader, source/prebuilt build,

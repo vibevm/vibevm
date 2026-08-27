@@ -19,8 +19,8 @@ superseded by richer files on `main`. Their unique R4/R5 audit decisions were
 synthesised here, then 33 obsolete worktrees were removed under rolling GC.
 B-107, R3.3, R8.2a grammar, R6.2a/R6.2b, R7.2 and the R8.1 portability
 hardening and R7.3 hosted resume have since landed. Their worktrees are
-reclaimed under rolling GC; the R3.4 writer is the only active implementation
-worktree.
+reclaimed under rolling GC. The R3.4 durable writer has now landed; its
+equivalent worktree is the next immediate rolling-GC target.
 Missing later waves were never implemented.
 
 The reusable decisions from untracked architecture/review reports are
@@ -29,8 +29,9 @@ only durable home of a decision.
 
 ## 2. Evidence standard and current baseline
 
-- Integration checkpoint: `main` at `870440ea` after hosted lifecycle resume,
-  combined generated reports and the regenerated spec map.
+- Integration checkpoint: `main` at `4d95a129` after hosted lifecycle resume,
+  compiler observer, durable trace writer and the R7.4 implementation
+  architecture.
 - `cargo test --workspace --locked`: green on 2026-08-27 at the unchanged
   product checkpoint.
 - `cargo xtask specmap`: 6772 units, 2030 tagged code items, 1811 edges,
@@ -46,6 +47,14 @@ only durable home of a decision.
   clippy is clean; independent final freeze is `PASS`. The seam uses generated
   trace-index metadata types, contains unwinding sink panics, performs no
   off-mode clock/allocation/encode, and decides budget stand-down before encode.
+- R3.4 writer evidence on the current tree: `4d95a129`; 61 focused trace REDs,
+  383 `vibe-workspace` library tests, 55 `vibe-safefs` tests plus six doctests,
+  the complete `vibe-wire` suite, targeted three-crate clippy and codegen
+  idempotence pass. Two independent post-repair freezes plus one final
+  concurrency freeze ended in `PASS`. The writer keeps one generated index,
+  create-new snapshots, project-serialized newest-nine retention, exact
+  crash residue, a single concurrent soft-ceiling crossing and no observer→
+  compiler failure channel.
 - R7.3 integration evidence on the current tree: state transaction tests 5/5;
   hosted cancellation/progress/sequential-slot e2e 2/5/1; targeted five-crate
   clippy clean; 48-schema codegen idempotent; specmap has zero gated orphans;
@@ -110,7 +119,7 @@ this campaign, but compatibility law is preserved.
 | R3.1 five levels, six carriers, typed pass manager | done | `3630ab9e`; `compiler/{ir,pass,pipeline}.rs` |
 | R3.2 parse→close→merge→embed→qualify→absorb→link→assemble→emit | done | `a7961003`, `96eef07d`, `e53b9a4e`, `ec7ea7fe`, `e653654d`, `2feef271`, `6de7ef05`, `6f3fa61a`, `302a3509`, `4403cb55`; 84 boot-artifact + 10 emit gates |
 | R3.3 verifier-each skeleton | done | `15793f2e`; immutable test-only manager verifier, typed level/transition errors, SCC/document/lane/marker/fence invariants; 61 focused verifier tests + independent freeze |
-| R3.4 compile snapshots/timings | in progress | `6f4a717d` lands the JTD-first metadata/index/filename contract; `7adfbb5a` lands strict role-equipotent `[compile] trace`; `fa0662a9` lands the real pass observer, generated metadata vocabulary, bounded/panic-contained diagnostic boundary and pre-encode budget decision; atomic writer, newest-9-complete retention, 128 MiB/run enforcement, CLI threading/presentation and e2e remain |
+| R3.4 compile snapshots/timings | in progress | `6f4a717d` lands the JTD-first metadata/index/filename contract; `7adfbb5a` strict role-equipotent `[compile] trace`; `fa0662a9` the real pass observer and pre-encode seam; `4d95a129` the atomic run writer, cooperative lock, identity-bound newest-nine retention, crash truth and concurrent 128 MiB/run enforcement. One recorder through workspace/install/CLI, report presentation and e2e remain |
 
 R3.2 also landed a crash-safe whole-artifact transaction/selector tier. That
 unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
@@ -252,7 +261,14 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
     failure is recorded as `snapshot-failed` but never changes the compiler's
     verdict; a later boot-transaction failure may still make the root run
     `failed` after every pass succeeded. The no-trace path keeps the existing
-    public wrappers and bytes.
+    public wrappers and bytes. Cooperating trace writers serialize under one
+    project lock; retention revalidates opaque entry identity immediately
+    before removal and makes no impossible claim about an uncooperative process
+    racing the final portable unlink. `PossiblyPublished` index bytes are
+    re-read exactly; snapshot residues are conservatively charged. Concurrent
+    scopes admit one soft-ceiling crossing: an already-encoded loser is
+    `snapshot-failed` with no file, and every later decision stands down before
+    encode.
     Detailed implementation boundary:
     [`COMPILER-IR-TRACE-ARCHITECTURE-v0.1.md`](COMPILER-IR-TRACE-ARCHITECTURE-v0.1.md).
 14. R6.3 keeps one `compiler_ir/e1` JTD and one domain projection. Before a

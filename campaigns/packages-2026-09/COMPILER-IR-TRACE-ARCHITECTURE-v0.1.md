@@ -253,6 +253,34 @@ count and byte budget are separate REDs: twelve completed seed runs plus one
 new run leave ten, and a budget-exhausted run keeps dense events/timings while
 creating no further snapshot files.
 
+### 4.4 Writer ownership, crash truth and concurrent budget decisions
+
+The durable writer landed at `4d95a129`. Every cooperating trace writer takes
+one nonblocking `.vibe/compile-trace.lock` before it inspects, reopens, retains
+or creates `.vibe/trace`; the guard lives in the shared run state until the
+last `TraceRun`/`TraceScope` clone drops. Identity proofs are revalidated
+immediately before retention removal. Portable safe Rust has no
+compare-identity-and-unlink syscall, so an uncooperative process racing the
+final OS call is outside this guarantee; the implementation is neither called
+handle-bound nor race-free against that actor.
+
+Index publication keeps `PublishStage`. A before-publication failure retains
+the prior whole index. After `PossiblyPublished`, the destination is re-read
+through the pinned capability and compared byte-for-byte with the attempted
+serialized index: exact bytes are the durable truth and retain the anomaly as
+a warning; any other bytes leave the in-memory root running/not-finalised. A
+fresh directory whose first index cannot land is named as residue rather than
+silently removed.
+
+Snapshot `PossiblyPublished` conservatively charges the attempted payload and
+reserves its final name, including the crash-shaped two-hardlink state where
+the stage survived. Two `Send + Sync` scopes may both receive `Encode` before
+either crossing event records. The mutex gives the first recorder the one
+allowed soft-ceiling crossing; an already-encoded loser becomes an honest
+`snapshot-failed` event and publishes no bytes. Later decisions stand down
+before encode. A closed/finalised scope also stands down at that pre-encode
+seam, so a retained sink records and encodes nothing.
+
 ## 5. Manifest and CLI
 
 `vibe-core` carries strict consumer-side `[compile] trace = bool`, default
@@ -294,6 +322,13 @@ JSON output extends a JTD-owned report; it does not append an ad-hoc object.
 14. Package-unit ordering is stable across filesystem enumeration order.
 15. Full existing compiler/workspace characterization and boot byte oracle stay
     green.
+16. Two barrier-synchronised scopes publish exactly one soft-ceiling crossing;
+    the encoded racer publishes nothing and is reported truthfully.
+17. A closed/finalised retained sink returns the compiler's no-encode decision.
+18. A post-publication index mutation cannot masquerade as the attempted
+    terminal bytes.
+19. Cooperating writers serialize per project; swapped lock-file identity is
+    re-contended before a guard is returned.
 
 ## 7. Implementation order
 
@@ -303,8 +338,8 @@ JSON output extends a JTD-owned report; it does not append an ad-hoc object.
 3. Add in-memory pass observer/timing with no-trace compatibility wrappers,
    including the pre-encode `snapshot-skipped-budget` decision seam
    (**landed at `fa0662a9`**).
-4. Add trace-index JTD/generated types (**metadata contract landed at
-   `6f4a717d`**) and atomic run writer (remaining).
+4. Add trace-index JTD/generated types (**metadata contract `6f4a717d`**) and
+   atomic run writer/newest-nine retention/budget (**landed at `4d95a129`**).
 5. Thread one recorder through workspace/install/CLI and add flags/config.
 6. Add end-to-end trace, failure and byte-identity tests.
 7. Only then expose the same conversion to native compiler passes in R6.3.
