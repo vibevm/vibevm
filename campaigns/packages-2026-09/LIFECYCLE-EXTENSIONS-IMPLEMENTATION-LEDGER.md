@@ -336,6 +336,12 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
     misleading mid-run history on resume, and displacement cannot manufacture
     an empty phantom trace just to mark it superseded. Canonical detail:
     `COMPILER-IR-TRACE-ARCHITECTURE-v0.1.md` §5.3 / acceptance 23–24.
+21. A fresh-unit trace observes the safely opened existing output and computes
+    its canonical digest before it declares a skipped scope. Successful
+    observation then declares+skips before the fresh return; observation
+    refusal is only a bounded warning and declares no scope. Publishing first
+    and leaving `pending` on read refusal would prevent an otherwise successful
+    run from durably finalising `ok` and leak a non-retainable running trace.
 
 ## 6. Physical state and loss prevention
 

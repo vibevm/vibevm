@@ -343,10 +343,15 @@ append events without resetting the run or colliding with a compiled scope.
 Dirty compile declares one occurrence, runs the real compiler once through
 that sink and marks it `compiled` with the manager-owned emitted-bytes SHA-256.
 Compiler refusal marks the scope `failed` and returns the original error
-unchanged. A fingerprint-fresh unit reads/validates its existing emitted bytes,
-records `skipped` with the same output digest and emits zero events. Scope
-declaration/resolution failure is an observer warning and falls back to the old
-untraced compile; it never becomes the artifact error.
+unchanged. A fingerprint-fresh unit first safely reads/validates its existing
+emitted bytes. Only after that observation succeeds does it declare the
+occurrence and record `skipped` with the same output digest, before returning
+with zero events. If the already-fresh output cannot be observed safely, the
+freshness decision still stands, the trace records a bounded warning and no
+scope is declared; it must not publish a `pending` scope that would make a
+successful command's terminal `ok` index impossible. Scope declaration or
+resolution failure is likewise an observer warning and never becomes the
+artifact error.
 
 ### 5.3 Park, adoption, displacement and one outcome funnel
 
@@ -452,7 +457,8 @@ future trace surface must be command-owned and JTD-first in the same way.
 20. Dirty unit plus root node share one run/global sequence; unit order is
     stable under permuted resolution/map construction.
 21. A fresh unit is event-silent and carries the same emitted-output digest as
-    its prior dirty compile.
+    its prior dirty compile. An unreadable already-fresh output produces a
+    warning and no scope, never an orphaned `pending` occurrence.
 22. Recompiling one artifact after a hosted park allocates the next scope
     occurrence; an interrupted pending occurrence is reacquired exactly.
 23. Park leaves a running trace; resume without the original one-shot flag
