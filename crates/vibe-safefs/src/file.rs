@@ -21,7 +21,10 @@ use crate::component::{STAGE_PREFIX, split_relative};
 use crate::project::{Pinned, Project, descend};
 use crate::publish::{PublishError, Published};
 
-mod identity;
+mod create_new;
+pub(crate) mod identity;
+#[cfg(any(test, feature = "inject-failures"))]
+pub use create_new::{fail_before_publish, fail_before_stage_cleanup};
 pub(crate) use identity::is_not_empty;
 use identity::{FileIdentity, file_identity, number_of_links};
 
@@ -101,6 +104,10 @@ impl Project {
                 )),
             ));
         }
+        if let Some(injected) = create_new::injected_pre_publication_failure(relative) {
+            let _ = destination.dir.remove_file(&staged_name);
+            return Err(before(&created, injected));
+        }
         if let Err(error) = destination
             .dir
             .rename(&staged_name, &destination.dir, &name)
@@ -134,13 +141,17 @@ impl Project {
                 )));
             }
         }
-        if let Some(injected) = injected_post_publication_failure(relative) {
-            return Err(possibly(injected));
-        }
         // Directory sync is best-effort: some platforms do not support fsync
         // on directory handles.
         if let Ok(handle) = destination.dir.try_clone() {
             let _ = handle.into_std_file().sync_all();
+        }
+        // A post-publication fault still crosses the same durability attempt
+        // as success. Callers may recover by re-reading the exact bytes; they
+        // must not classify a branch that skipped the directory sync the
+        // ordinary success path performs as equivalent to that success.
+        if let Some(injected) = injected_post_publication_failure(relative) {
+            return Err(possibly(injected));
         }
         Ok(Published {
             created_directories: created,

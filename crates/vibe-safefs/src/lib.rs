@@ -27,6 +27,7 @@ mod component;
 mod file;
 mod identity_hook;
 mod project;
+mod proof;
 mod publish;
 mod race_hook;
 
@@ -37,10 +38,14 @@ pub use component::{
 };
 pub use file::Presence;
 #[cfg(any(test, feature = "inject-failures"))]
-pub use file::fail_after_publish;
+pub use file::{fail_after_publish, fail_before_publish, fail_before_stage_cleanup};
 #[cfg(any(test, feature = "inject-failures"))]
 pub use identity_hook::arm_identity_alias;
 pub use project::{ExclusiveChildError, LockGuard, Pinned, Project};
+pub use proof::{EntryProof, ProofRefusal};
 pub use publish::{PublishError, PublishStage, Published};
 #[cfg(any(test, feature = "inject-failures"))]
-pub use race_hook::{arm_after_create_dir, arm_before_create_dir};
+pub use race_hook::{
+    arm_after_create_dir, arm_before_create_dir, arm_before_link, arm_before_lock,
+    arm_before_proved_removal, arm_lock_identity_check,
+};

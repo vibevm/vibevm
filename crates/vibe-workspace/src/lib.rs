@@ -32,12 +32,12 @@ use std::path::{Path, PathBuf};
 
 use specmark::spec;
 use thiserror::Error;
-use vibe_core::RelPath;
-use vibe_core::manifest::Manifest;
+use vibe_core::{RelPath, manifest::Manifest};
 
 pub mod bins;
 pub mod boot;
 pub mod boot_artifacts;
+pub mod compile_trace;
 pub mod freshness;
 pub mod hooks;
 pub mod install;

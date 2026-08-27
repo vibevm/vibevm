@@ -274,3 +274,111 @@ fn a_loser_refuses_a_link_planted_by_the_winner() {
     assert!(outcome.is_err(), "a symlink planted by the winner refuses");
     assert!(fs::read_dir(outside.path()).unwrap().next().is_none());
 }
+
+/// An OS file lock is taken on an open file description, not on a name. If the
+/// lock file is unlinked and recreated between the open and the lock, a naive
+/// acquisition ends up holding a lock on an object the path no longer names —
+/// and a second holder can lock the *new* one, leaving two owners of one
+/// project.
+///
+/// The post-lock identity recheck refuses that: a stale lock is released and
+/// the acquisition re-contends for whatever the name means now. The hook
+/// performs the rebind without asserting that the host permits it — hosts
+/// differ on unlink-while-open — and the test records which world it ran in,
+/// then asserts the invariant that must hold in both: the guard covers the
+/// file the path names NOW.
+#[test]
+fn a_lock_file_replaced_before_the_lock_is_not_accepted() {
+    use std::sync::Arc;
+    use std::sync::atomic::{AtomicBool, Ordering};
+
+    let dir = tempfile::tempdir().unwrap();
+    let project = Project::open(dir.path()).unwrap();
+    drop(project.try_lock("swap.lock").unwrap().unwrap());
+    let lock_path = dir.path().join(".vibe").join("swap.lock");
+
+    let rebound = Arc::new(AtomicBool::new(false));
+    let flag = Arc::clone(&rebound);
+    let planted = lock_path.clone();
+    crate::arm_before_lock(Some(Box::new(move |_, _| {
+        let done = std::fs::remove_file(&planted)
+            .and_then(|()| std::fs::write(&planted, b"a different lock file"));
+        flag.store(done.is_ok(), Ordering::SeqCst);
+    })));
+    let guard = project.try_lock("swap.lock");
+    crate::arm_before_lock(None);
+
+    let guard = guard
+        .expect("the acquisition re-contends rather than failing")
+        .expect("and it ends up holding the current object");
+
+    if rebound.load(Ordering::SeqCst) {
+        // Read through METADATA, not content: a held OS lock can refuse a
+        // second handle's read of the locked range, and the length is enough
+        // to tell the planted file (non-empty) from the original (empty).
+        assert_eq!(
+            std::fs::metadata(&lock_path).unwrap().len(),
+            b"a different lock file".len() as u64,
+            "the rebind really happened on this host, so the recheck is what saved it",
+        );
+    }
+    // True either way, and the only thing that matters: nobody else can take
+    // the lock the path currently names.
+    assert!(
+        project.try_lock("swap.lock").unwrap().is_none(),
+        "the held guard covers the file the path currently names",
+    );
+    drop(guard);
+    assert!(project.try_lock("swap.lock").unwrap().is_some());
+}
+
+/// The post-lock comparison itself is a mandatory gate even on a host that
+/// refuses the real unlink-while-open race above. The first otherwise-true
+/// comparison is forced false; acquisition must drop that handle, contend a
+/// second time, and consult the gate again before returning a guard.
+#[test]
+fn a_post_lock_identity_mismatch_recontends_deterministically() {
+    use std::sync::Arc;
+    use std::sync::atomic::{AtomicUsize, Ordering};
+
+    let dir = tempfile::tempdir().unwrap();
+    let project = Project::open(dir.path()).unwrap();
+    let checks = Arc::new(AtomicUsize::new(0));
+    let observed = Arc::clone(&checks);
+    crate::arm_lock_identity_check(Some(Box::new(move |actual| {
+        assert!(actual, "the real path and handle agree in this fixture");
+        observed.fetch_add(1, Ordering::SeqCst) != 0
+    })));
+    let guard = project.try_lock("identity.lock");
+    crate::arm_lock_identity_check(None);
+
+    let guard = guard
+        .expect("the injected mismatch is retried")
+        .expect("the second, matching attempt owns the lock");
+    assert_eq!(
+        checks.load(Ordering::SeqCst),
+        2,
+        "one rejected comparison plus one successful recheck",
+    );
+    assert!(project.try_lock("identity.lock").unwrap().is_none());
+    drop(guard);
+}
+
+/// The ordinary path is unchanged: one holder at a time, and the guard is
+/// released by drop.
+#[test]
+fn an_exclusive_lock_admits_one_holder_at_a_time() {
+    let dir = tempfile::tempdir().unwrap();
+    let project = Project::open(dir.path()).unwrap();
+
+    let held = project.try_lock("run.lock").unwrap().expect("first holder");
+    assert!(
+        project.try_lock("run.lock").unwrap().is_none(),
+        "a second holder is refused while the first lives",
+    );
+    drop(held);
+    assert!(
+        project.try_lock("run.lock").unwrap().is_some(),
+        "and admitted once it drops",
+    );
+}

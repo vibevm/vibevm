@@ -282,42 +282,104 @@ impl Project {
     }
 
     /// Open (creating when absent) `.vibe/<name>` through the capability,
-    /// verify it is a regular single-link file, then take an exclusive OS file
-    /// lock on it. The handle is released by drop or process death; a second
-    /// process blocks until the holder finishes.
+    /// verify it is a regular single-link file, take an exclusive OS file lock
+    /// on it, and then prove the path still names the object that was locked.
+    /// The handle is released by drop or process death; a second holder blocks
+    /// until this one finishes.
     pub fn lock(&self, name: &str) -> Result<LockGuard> {
-        let (file, display) = self.lock_file(name)?;
-        file.lock()
-            .with_context(|| format!("locking `{}`", display.display()))?;
-        Ok(LockGuard { _file: file })
-    }
-
-    /// Try to take the same lock without blocking; `Ok(None)` while another
-    /// process holds it.
-    pub fn try_lock(&self, name: &str) -> Result<Option<LockGuard>> {
-        let (file, display) = self.lock_file(name)?;
-        match file.try_lock() {
-            Ok(()) => Ok(Some(LockGuard { _file: file })),
-            Err(std::fs::TryLockError::WouldBlock) => Ok(None),
-            Err(error) => {
-                Err(anyhow::Error::new(error)
-                    .context(format!("try-locking `{}`", display.display())))
-            }
+        match self.acquire(name, true)? {
+            Some(guard) => Ok(guard),
+            // A blocking acquisition only returns without a guard if the OS
+            // said "would block", which `lock()` never does.
+            None => bail!("locking `.vibe/{name}` returned no guard"),
         }
     }
 
-    fn lock_file(&self, name: &str) -> Result<(std::fs::File, PathBuf)> {
+    /// Try to take the same lock without blocking; `Ok(None)` while another
+    /// holder owns it.
+    pub fn try_lock(&self, name: &str) -> Result<Option<LockGuard>> {
+        self.acquire(name, false)
+    }
+
+    /// The whole acquisition, including the recheck the naive version is
+    /// missing.
+    ///
+    /// An OS file lock is taken on an **open file description**, not on a
+    /// name. Between opening `.vibe/<name>` and locking the handle, another
+    /// process can unlink that name and create a fresh file at it — and then
+    /// two holders each own a lock, on two different objects, while both
+    /// believe they own the project. So after the lock is held, the name is
+    /// reopened through the same pinned capability and its identity compared
+    /// to the locked handle's. A mismatch means the lock is on a stale object:
+    /// it is released and the acquisition retried, because the winner of that
+    /// race is whoever locks the file the path currently names.
+    fn acquire(&self, name: &str, blocking: bool) -> Result<Option<LockGuard>> {
         ensure_safe_component(name)?;
         let vibe = self.dir(&[".vibe"], true)?;
         let display = vibe.join(name);
-        let mut options = crate::file::cap_options();
-        let file = vibe
-            .dir
-            .open_with(name, options.read(true).write(true).create(true))
-            .with_context(|| format!("opening lock `{}`", display.display()))?;
-        let file = file.into_std();
-        crate::file::verify_regular_single_link(&file, &display)?;
-        Ok((file, display))
+        for _ in 0..LOCK_ATTEMPTS {
+            let mut options = crate::file::cap_options();
+            let file = vibe
+                .dir
+                .open_with(name, options.read(true).write(true).create(true))
+                .with_context(|| format!("opening lock `{}`", display.display()))?
+                .into_std();
+            crate::file::verify_regular_single_link(&file, &display)?;
+            crate::race_hook::before_lock(&vibe, name);
+            let held = if blocking {
+                file.lock()
+                    .map(|()| true)
+                    .with_context(|| format!("locking `{}`", display.display()))?
+            } else {
+                match file.try_lock() {
+                    Ok(()) => true,
+                    Err(std::fs::TryLockError::WouldBlock) => false,
+                    Err(error) => {
+                        return Err(anyhow::Error::new(error)
+                            .context(format!("try-locking `{}`", display.display())));
+                    }
+                }
+            };
+            if !held {
+                return Ok(None);
+            }
+            if still_named(&vibe, name, &file, &display)? {
+                return Ok(Some(LockGuard { _file: file }));
+            }
+            // Dropping releases the lock on the object the name no longer
+            // means, so the next attempt can contend for the current one.
+            drop(file);
+        }
+        bail!(
+            "`{}` was replaced under every one of {LOCK_ATTEMPTS} lock attempts; refusing to \
+             hold a lock on an object the path no longer names",
+            display.display()
+        )
+    }
+}
+
+/// How many times an acquisition re-contends after losing the object it
+/// locked. A name that is rebound this many times in a row is not a lock file
+/// anyone is cooperating over.
+const LOCK_ATTEMPTS: u32 = 8;
+
+/// Whether `name` still resolves to the very object `locked` holds.
+fn still_named(vibe: &Pinned, name: &str, locked: &std::fs::File, display: &Path) -> Result<bool> {
+    let mut options = crate::file::cap_options();
+    match vibe.dir.open_with(name, options.read(true)) {
+        Ok(current) => {
+            let current = current.into_std();
+            crate::file::verify_regular_single_link(&current, display)?;
+            let held = crate::file::identity::file_identity(locked, display)?;
+            let named = crate::file::identity::file_identity(&current, display)?;
+            Ok(crate::race_hook::lock_identity_matches(held == named))
+        }
+        // Unlinked under us: the lock is on an object with no name at all.
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => Ok(false),
+        Err(error) => {
+            Err(anyhow::Error::new(error)
+                .context(format!("rechecking lock `{}`", display.display())))
+        }
     }
 }
 

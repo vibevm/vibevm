@@ -42,11 +42,12 @@ mod errors;
 mod scalars;
 mod snapshot;
 
+pub use aggregates::build_aggregates;
 pub use errors::{
     DiagnosticSite, DurationSite, EventField, SCALAR_PREVIEW_BYTES, ScalarPreview,
     SnapshotUnsafety, TimingColumn, TraceIndexError,
 };
-pub use snapshot::{SHORT_DIGEST_HEX, SNAPSHOT_NAME_CAP};
+pub use snapshot::{SHORT_DIGEST_HEX, SNAPSHOT_NAME_CAP, SnapshotName};
 
 use aggregates::{aggregate_gate, canonical_gate};
 use scalars::{ROOT_DISPLAY, is_backend_id, is_lowercase_hex, scalar_gate};

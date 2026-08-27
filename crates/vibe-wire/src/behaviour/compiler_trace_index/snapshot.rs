@@ -39,6 +39,12 @@
 //! stops at the cap, so a multi-megabyte label costs a bounded number of
 //! iterations and one ≤96-byte string; the digest streams through a
 //! fixed buffer.
+//!
+//! The WRITER reaches the very same codec through [`SnapshotName`]: a
+//! durable recorder picks the name it is about to publish from the
+//! builder its own validator will later reconstruct, so the producer and
+//! the reader cannot drift apart over two copies of a percent encoder,
+//! a digest width or a pad.
 
 use sha2::{Digest, Sha256};
 
@@ -104,11 +110,94 @@ pub(super) fn snapshot_unsafety(
     })
 }
 
+/// The name a WRITER is about to give one certified snapshot — the
+/// public half of this cell, built from exactly what the event and its
+/// scope already say.
+///
+/// It exists so a durable recorder never carries its own copy of the
+/// percent encoder, the digest width or the zero pads: the writer asks
+/// this builder, and the validator later rebuilds the same two forms
+/// from the index and compares. `kind` is the GENERATED scope-kind
+/// value, so a caller cannot spell a kind the epoch does not have.
+#[derive(Debug, Clone, Copy)]
+pub struct SnapshotName<'a> {
+    /// Dense global run sequence — the filename's decimal prefix.
+    pub sequence: u32,
+    /// Dense `(scope, pass)` invocation ordinal.
+    pub invocation: u32,
+    /// Which kind of compilation the owning scope names.
+    pub kind: &'a ScopeKind,
+    /// The exact pass name, unencoded.
+    pub pass: &'a str,
+    /// The owning scope's exact unencoded label.
+    pub label: &'a str,
+    /// The owning scope's artifact id.
+    pub artifact: &'a str,
+}
+
+impl SnapshotName<'_> {
+    fn identity(&self) -> SnapshotIdentity<'_> {
+        SnapshotIdentity {
+            sequence: self.sequence,
+            invocation: self.invocation,
+            kind: kind_spelling(self.kind),
+            pass: self.pass,
+            label: self.label,
+            artifact: self.artifact,
+        }
+    }
+
+    /// The full canonical spelling, or `None` when it would pass
+    /// [`SNAPSHOT_NAME_CAP`] — in which case only [`short`](Self::short)
+    /// is admissible.
+    #[must_use]
+    pub fn full(&self) -> Option<String> {
+        self.identity().full_name()
+    }
+
+    /// The short canonical spelling. Bounded by construction, so it
+    /// always exists — but a caller with its own ceiling still has to
+    /// check that it fits, which is what [`within`](Self::within) does.
+    #[must_use]
+    pub fn short(&self) -> String {
+        self.identity().short_name()
+    }
+
+    /// The name to publish under a caller's own byte ceiling: the full
+    /// form when it fits, otherwise the short one, and `None` when even
+    /// the short form does not fit.
+    ///
+    /// The caller's ceiling is the pressure the index cannot see — the
+    /// absolute run directory against Windows `MAX_PATH` — and it is
+    /// always taken together with the epoch's own cap, never above it.
+    /// `None` is a real answer: a run directory that cannot afford 31
+    /// bytes of filename must refuse rather than publish a truncated
+    /// name no validator would reconstruct.
+    #[must_use]
+    pub fn within(&self, cap: usize) -> Option<String> {
+        let cap = cap.min(SNAPSHOT_NAME_CAP);
+        let identity = self.identity();
+        if let Some(full) = identity.full_name_within(cap) {
+            return Some(full);
+        }
+        let short = identity.short_name();
+        (short.len() <= cap).then_some(short)
+    }
+}
+
 impl SnapshotIdentity<'_> {
-    /// The full canonical name, or `None` when it would pass the cap —
-    /// in which case the short form is the only admissible spelling.
+    /// The full canonical name, or `None` when it would pass the epoch's
+    /// cap — in which case the short form is the only admissible
+    /// spelling.
     fn full_name(&self) -> Option<String> {
-        let mut name = Capped::new(SNAPSHOT_NAME_CAP);
+        self.full_name_within(SNAPSHOT_NAME_CAP)
+    }
+
+    /// The same construction under an arbitrary ceiling at or below the
+    /// epoch's own, so a writer under path pressure and the validator
+    /// run one builder rather than two.
+    fn full_name_within(&self, cap: usize) -> Option<String> {
+        let mut name = Capped::new(cap.min(SNAPSHOT_NAME_CAP));
         write_number(&mut name, self.sequence, 4);
         name.ascii(b'-');
         write_encoded(&mut name, self.pass);

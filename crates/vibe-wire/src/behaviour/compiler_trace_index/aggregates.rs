@@ -122,24 +122,73 @@ pub(super) fn increment_count(count: &mut u32, pass: &str) -> Result<(), TraceIn
     Ok(())
 }
 
+/// Rebuild every pass name's totals from the events, in first-appearance
+/// order — the ONE implementation of the table, shared by the writer
+/// that produces `aggregates` and the validator that refuses a carried
+/// table which disagrees with it.
+fn recompute(events: &[PassEvent]) -> Result<Vec<(&str, Totals)>, TraceIndexError> {
+    // ONE representation, built in first-appearance order as the walk goes:
+    // the rows themselves are the result, and the map only remembers where
+    // each pass name's row already sits. Keeping the totals in a second
+    // container and moving them out afterwards needs an "unreachable" unwrap
+    // to reunite them — a panic path in domain logic, in a cell whose whole
+    // input is an untrusted file.
+    let mut rows: Vec<(&str, Totals)> = Vec::new();
+    let mut position_of: BTreeMap<&str, usize> = BTreeMap::new();
+    for event in events {
+        let pass = event.pass.as_str();
+        let position = match position_of.get(pass) {
+            Some(position) => *position,
+            None => {
+                let position = rows.len();
+                position_of.insert(pass, position);
+                rows.push((pass, Totals::default()));
+                position
+            }
+        };
+        let Some((_, totals)) = rows.get_mut(position) else {
+            // Construction says this is unreachable, but an untrusted index
+            // is never allowed to turn an internal bookkeeping defect into a
+            // panic. Reuse the cell's existing missing-row refusal instead.
+            return Err(TraceIndexError::AggregateRowMissing {
+                pass: ScalarPreview::of(pass),
+            });
+        };
+        accumulate(totals, event, pass)?;
+    }
+    Ok(rows)
+}
+
+/// Build the CLI timing table a writer stores in `aggregates`.
+///
+/// Same walk, same checked counts and same saturating sums the validator
+/// uses, so a produced table reconciles by construction rather than by a
+/// second algorithm that happens to agree today.
+pub fn build_aggregates(events: &[PassEvent]) -> Result<Vec<TimingRow>, TraceIndexError> {
+    Ok(recompute(events)?
+        .into_iter()
+        .map(|(pass, totals)| TimingRow {
+            pass: pass.to_string(),
+            invocations: totals.invocations,
+            pass_total: totals.pass,
+            verify_total: totals.verify,
+            encode_total: totals.encode,
+        })
+        .collect())
+}
+
 /// The whole law: rebuild the table from the events, then hold the
 /// carried table to it — membership, order, counts and every column.
 pub(super) fn aggregate_gate(
     events: &[PassEvent],
     rows: &[TimingRow],
 ) -> Result<(), TraceIndexError> {
-    // First-appearance order is the table's order authority; the map
-    // carries the recomputation keyed by the same names.
-    let mut order: Vec<&str> = Vec::new();
-    let mut recomputed: BTreeMap<&str, Totals> = BTreeMap::new();
-    for event in events {
-        let pass = event.pass.as_str();
-        let totals = recomputed.entry(pass).or_insert_with(|| {
-            order.push(pass);
-            Totals::default()
-        });
-        accumulate(totals, event, pass)?;
-    }
+    let rebuilt = recompute(events)?;
+    let order: Vec<&str> = rebuilt.iter().map(|(pass, _)| *pass).collect();
+    let recomputed: BTreeMap<&str, &Totals> = rebuilt
+        .iter()
+        .map(|(pass, totals)| (*pass, totals))
+        .collect();
 
     // Every row is a legible identity carrying canonical durations,
     // before any comparison reads its numbers.

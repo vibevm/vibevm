@@ -21,10 +21,17 @@ glob.workspace = true
 semver.workspace = true
 sha2.workspace = true
 serde.workspace = true
+# The compile-trace index is JTD-owned metadata, so the run writer serialises
+# and reads the GENERATED type rather than growing a hand-written encoder.
+serde_json.workspace = true
 tempfile.workspace = true
 toml.workspace = true
 vibe-core.workspace = true
 vibe-facts.workspace = true
+# Capability-relative, no-follow publication: the trace writer publishes
+# snapshots create-new and replaces its index atomically through the one
+# containment law rather than a second copy of it.
+vibe-safefs.workspace = true
 vibe-spec.workspace = true
 vibe-wire.workspace = true
 
@@ -41,3 +48,6 @@ winapi-util.workspace = true
 [dev-dependencies]
 proptest.workspace = true
 vibe-spec = { workspace = true, features = ["test-support"] }
+# The two publication faults the trace REDs inject are compiled out of every
+# shipped build; the tests turn them on for this crate's own test profile.
+vibe-safefs = { workspace = true, features = ["inject-failures"] }
