@@ -240,6 +240,19 @@ fronts currently in flight. A worker report or old worktree is never completion.
       - [ ] R7.5-P2 library atom: read-only `vibe-specdoc` + `vibe-facts`
             projection with optional current-specmap relations; absence is
             typed unavailability/enrichment loss, never lifecycle failure.
+            - [x] P2-A1 (`1dac7531`, `65b0cba6`): dependency-clean
+                  `vibe-facts` root scanner, canonical address prefix and
+                  four-state per-address adoption join; CLI facts reuses the
+                  scanner. MD/XML projection parity, split-brain refusal,
+                  boot-lane exclusion, source-kind scope, coordinate grammar,
+                  deterministic duplicates/order and all adoption states are
+                  RED-proven; 16 unit + 8 doctest + 6 CLI integrations green,
+                  clippy/conform/specmap clean.
+            - [ ] P2-A2/A3: shared `vibe-requirements` query/provider and the
+                  current/carried `vibe-trace` adapter.
+            - [ ] P2-A4/A5: one-pass measurement/artifact witnesses and verify
+                  reconciliation/report funnel under the corrected hosted-vs-
+                  stale laws (`1898382d`, `7a5b6837`).
       - [ ] R7.5-P3 surfaces/e2e atom: strict CLI+MCP query/control projection
             and fake external PDSA orchestrator; zero mutation/provider calls,
             no phase enum/state-machine PDSA names and no automatic back-edge.

@@ -153,6 +153,15 @@ than depending on untracked `cache/` archaeology.
   paths, a four-state base source layer and optional relation enrichment; it
   ships no source body, heuristic verdict, new evidence command or runtime
   provider.
+- R7.5 P2/A1 facts evidence: `1dac7531` moves the package authored-source
+  scanner, canonical address-prefix builder and four-state per-address
+  adoption join into dependency-clean `vibe-facts`; `65b0cba6` indexes both
+  new code edges. Root passed 16 unit + 8 doctest and the existing 6/6
+  `cli_facts` integrations, strict two-crate clippy, conform 27 known / 0 new,
+  fmt and specmap 6814/2220/1989 with zero suspects/orphans/unresolved. The
+  scanner uses the shared MD/XML projection and pair-collision law, excludes
+  generated boot lanes, supports in-place slots without slot-record or
+  `vibe-workspace` coupling and ships no source body.
 - B-107 is closed by `f8f197cd`/`c195eae1`: all 502 judged records map
   one-to-one to live paths (98 retain their extension; 404 become XML), six new
   unjudged live documents bring the corpus to 508, and all 19,548 verdicts plus
@@ -253,7 +262,7 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 | R7.2 CLI agent handler + output contract | done | `26929050`; strict AgentResult JTD, prepared prompt/world resolution, ResultPlan, optional provider path, create/install/reinstall/update e2e and shared safe filesystem cell |
 | R7.3 hosted outbox/delegated resume | done | `1dd5e1f5`, generated reports `eae4494e`; durable run/outbox, exact task ownership, candidate-state atomicity, phase/slot reconciliation, command-level progress, no-spend sequential resume and independent final freeze |
 | R7.4 MCP lifecycle surfaces | done | architecture `ee2bc67f`; first wave `94f30aa9`, `88600508`, `87c2bab8`, `daf6eb31`, `17d94f8f`; A4 `31ca1e7d` / `0225ce41` / `970520d4`; A5 `7e330974` / `93177db6`; A6 `7bd335e2` / `b3ff308c`, `e1121d9b`, `b4d91749`, `8debdf2e`, `c82012c3`; A7–A8 tasks cut `cf5ec17d`, `ee741f2e` / `d338e880`, `30534ff9` / `7b9732f0`, `df678d7b` / `c62177fe`; A0–A8 panel `a4253de7` all green; A9 ports `5506cf88` / `9732ba38` / `18a797b2`; A10 projection `53e84790`; A11 plan `2560ee57` / `78ea8cc5`; A12 application `053b7e37` / `ba874cdf`; A13 trace `3f01e2dc` / `afdd3adc`; A14 selected-world prompt resolver `cd793ca9` / `2b08c818`; A15a package source `5df76260` / `23044cfd`, selected-member repair `da2ff985`, B-109 `b615ebe5`; A15b two-stage lease-first default command `0ef2f8f5` / `a4336ea2`, scoped clean debt B-110 `fc279fbe`; A15c hosted backend `1027ca5e`, strict MCP run/parity `9c340df8`, map `a0276a0d`, selected-resolver debt B-111 `65b145f0`; full-panel ratchet decision `602ef5e8`, Windows mandatory-lock repair `9fc6c2bb` / map `6f074e66`. Final panel on exact tree `6f074e66` ran 54 dynamic gates: workspace tests + clippy, host check 0 errors, conform 27 known / 0 new, clean codegen/specmap/wire, all package/MCP suites, both user-home tripwires and markup 508/0; ordered tail `self-check: all green` |
-| R7.5 external orchestration substrate | in progress | P0 laws `41abb4db`, foundational vocabulary/present truth `cd9999cc`, frozen architecture `653a3c32`, map `e8e67280`; P1 coherence `6d843467`, JTD/state/report/requirements substrate `d3a9d59b`, map `55937044`. P1 freezes canonical declared-input/artifact witnesses, five outcomes, additive strict lifecycle state/report, metadata-only requirements sources/relations and ten closed vocabularies without widening execution status or shipping prose. Root gates: vibe-wire 245/245, check-codegen/wire-diff, conform 27/0, host 0 errors, markup 508/0, specmap 6814/2218/1987 with zero suspects/orphans/unresolved. P2 libraries next; no whole-tree hashing, fingerprint relabelling, `unmet`, duplicate evidence command, coding agent, heuristic or automatic loop |
+| R7.5 external orchestration substrate | in progress | P0 laws `41abb4db`, foundational vocabulary `cd9999cc`, architecture `653a3c32`, map `e8e67280`; P1 coherence `6d843467`, JTD/state/report/requirements `d3a9d59b`, map `55937044`; P2/A1 facts extraction `1dac7531`, map `65b0cba6`; hosted/stale and measurement/failure-funnel correction `1898382d`, map `7a5b6837`. P1 root gates: vibe-wire 245/245, check-codegen/wire-diff, conform 27/0, host 0 errors, markup 508/0. A1: 16 unit + 8 doctest + 6 CLI, strict clippy/conform, specmap 6814/2220/1989 with zero suspects/orphans/unresolved. A2 query/provider next; no whole-tree hashing, fingerprint relabelling, prose, `unmet`, duplicate evidence command, coding agent, heuristic or automatic loop |
 
 R7 live Z.AI smoke is now conclusive (2026-08-27): central `vibe create`
 called the official OpenAI-compatible coding endpoint with `glm-5-turbo`, read
@@ -607,6 +616,22 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
     materialisation optimisation, not an address dependency. This supports
     in-place package slots without creating a `vibe-facts → vibe-workspace`
     back-edge.
+47. Hosted resume and stale evidence are adjacent but different proofs. A
+    hosted resume re-enters the inclusive chain and legitimately reruns an
+    invalidated deterministic predecessor before accepting the delegated row,
+    so it may match immediately. Stale→recompute instead comes from a local
+    create mutation later in one uninterrupted invocation; only the external
+    second invocation recomputes. No resume law is weakened to manufacture a
+    demo.
+48. Verify selects current-plan input declarations plus every current
+    accumulated artifact. Removed successful declarations are freshness-cache
+    residue, not permanent audit rows; unwitnessed current artifacts stay
+    visible as `unavailable`. Evidence stability is detection-bound (two equal
+    no-follow reads and equal handle identity/length, not an atomic tree claim),
+    hardlinks keep legacy fingerprint bytes while evidence refuses them, and
+    the generated comparison must survive stale-stop and later-handler-failure
+    carriers. `evidence_id` is one schema-order length-framed digest, never a
+    JSON/Rust-layout hash.
 
 ## 6. Physical state and loss prevention
 
