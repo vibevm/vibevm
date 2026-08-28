@@ -388,3 +388,118 @@ fn an_extra_package_poisons_sources_the_answer_omitted_too() {
         );
     }
 }
+
+// --- A2c: lock source authority carried into the provider request ---
+
+use std::cell::RefCell;
+
+struct Capture(RefCell<Vec<(String, Option<String>)>>);
+
+impl crate::RelationProvider for Capture {
+    fn relations(
+        &self,
+        request: &crate::RelationRequest<'_>,
+    ) -> Result<Vec<(String, crate::ProviderOutcome)>, crate::ProviderError> {
+        for source in request.sources {
+            self.0.borrow_mut().push((
+                source.package.to_string(),
+                source.expected_content_hash.map(str::to_string),
+            ));
+        }
+        Ok(Vec::new())
+    }
+}
+
+fn two_package_lock(root: &std::path::Path, ghost_hash: &str) {
+    std::fs::write(
+        root.join("vibe.lock"),
+        format!(
+            "[meta]
+generated_by = \"f\"
+generated_at = \"2026-01-01T00:00:00Z\"
+             schema_version = 6
+
+[[package]]
+kind = \"feat\"
+name = \"pkg\"
+             group = \"org.example\"
+version = \"1.0.0\"
+             source_url = \"https://example.invalid/pkg.git\"
+             content_hash = \"sha256:{}\"
+
+             [[package]]
+kind = \"feat\"
+name = \"ghost\"
+             group = \"org.example\"
+version = \"2.0.0\"
+             source_url = \"https://example.invalid/ghost.git\"
+             content_hash = \"sha256:{ghost_hash}\"
+",
+            "a".repeat(64),
+        ),
+    )
+    .unwrap();
+}
+
+#[test]
+fn the_provider_sees_the_locks_exact_content_hash_per_the_matrix() {
+    // Host + materialised locked package from the shared fixture; the
+    // custom lock adds a second, NEVER-materialised locked package; the
+    // registry adds an entry for a coordinate the lock never named.
+    let root = two_sources();
+    two_package_lock(root.path(), &"b".repeat(64));
+    let mut registry = vibe_facts::Registry::load(root.path()).unwrap();
+    registry
+        .upsert(
+            root.path(),
+            vibe_facts::FactEntry {
+                address: "spec://org.example/never/RULE#X".to_string(),
+                origin: vibe_facts::FactOrigin::Package,
+                package: Some("org.example/never".to_string()),
+                status: None,
+                comment: None,
+            },
+        )
+        .unwrap();
+
+    let capture = Capture(RefCell::new(Vec::new()));
+    let q = RequirementsQuery::try_new(None, 100, true).unwrap();
+    let report = query(&q, &ctx(root.path()), Some(&capture)).unwrap();
+    assert_eq!(report.rows.len(), 2, "base rows still return");
+
+    let observed: std::collections::BTreeMap<String, Option<String>> =
+        capture.0.borrow().iter().cloned().collect();
+    // Host: no lock row speaks for it.
+    assert_eq!(observed.get("org.example/demo"), Some(&None));
+    // Materialised locked package: the EXACT authored hash, verbatim.
+    let pkg_hash = format!("sha256:{}", "a".repeat(64));
+    assert_eq!(
+        observed.get("org.example/pkg"),
+        Some(&Some(pkg_hash.clone()))
+    );
+    // Locked but NEVER materialised: the authority exists even when the
+    // materialisation does not.
+    let ghost_hash = format!("sha256:{}", "b".repeat(64));
+    assert_eq!(observed.get("org.example/ghost"), Some(&Some(ghost_hash)));
+    // Registry-only orphan: the lock never named it.
+    assert_eq!(observed.get("org.example/never"), Some(&None));
+    let plain_before = query(&RequirementsQuery::default(), &ctx(root.path()), None).unwrap();
+    // And the observed value IS the lock's authored bytes — re-author
+    // the ghost hash and the provider observes the new value, with no
+    // lock read of its own (its only input is the request).
+    two_package_lock(root.path(), &"c".repeat(64));
+    let capture = Capture(RefCell::new(Vec::new()));
+    query(&q, &ctx(root.path()), Some(&capture)).unwrap();
+    let observed: std::collections::BTreeMap<String, Option<String>> =
+        capture.0.borrow().iter().cloned().collect();
+    assert_eq!(
+        observed.get("org.example/ghost"),
+        Some(&Some(format!("sha256:{}", "c".repeat(64)))),
+        "the request carries the lock's CURRENT authority, verbatim"
+    );
+    // The authority is provider-request metadata only. With relations
+    // unrequested, changing ONLY that hash cannot move any wire member or
+    // digest (the report carries no version/hash field of its own).
+    let plain_after = query(&RequirementsQuery::default(), &ctx(root.path()), None).unwrap();
+    assert_eq!(plain_after, plain_before);
+}

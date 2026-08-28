@@ -31,12 +31,16 @@ pub(crate) const REASON_REGISTRY_ONLY: &str = "registry-only-adoption-entries";
 /// One enumerated source: its wire kind, coordinate and — when the
 /// source physically exists here — the root the A2a scanner walks.
 /// `locked` says the coordinate came from `vibe.lock` (its no-root
-/// reason differs from a registry-only orphan's).
+/// reason differs from a registry-only orphan's). `content_hash` is the
+/// lock's exact authority for that package — present for EVERY
+/// lock-selected coordinate (authority exists even when materialisation
+/// does not), absent for the host and for registry-only orphans.
 pub(crate) struct SourceCoord {
     pub kind: RequirementSourceKind,
     pub package: String,
     pub root: Option<PathBuf>,
     pub locked: bool,
+    pub content_hash: Option<String>,
 }
 
 /// One source's contribution to the report: its typed result and, when
@@ -111,6 +115,7 @@ pub(crate) fn enumerate(
             package: host.clone(),
             root: Some(selected_root.to_path_buf()),
             locked: false,
+            content_hash: None,
         },
     );
 
@@ -159,6 +164,11 @@ pub(crate) fn enumerate(
                     package,
                     root: slot.is_dir().then_some(slot),
                     locked: true,
+                    // The lock's exact authority for this package —
+                    // kept even when the slot is absent (A2c: A3's
+                    // carried-map trust needs it precisely for the
+                    // missing/unmaterialised cases too).
+                    content_hash: Some(locked.content_hash.to_string()),
                 },
             );
         }
@@ -187,6 +197,7 @@ pub(crate) fn enumerate(
                 package: package.clone(),
                 root: None,
                 locked: false,
+                content_hash: None,
             },
         );
     }

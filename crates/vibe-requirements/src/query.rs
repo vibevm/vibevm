@@ -197,6 +197,10 @@ pub fn query(
             kind: outcome.result.source.kind.clone(),
             package: outcome.result.source.package.as_str(),
             root: coord_root(&coords, &outcome.result.source.package),
+            // The lock's exact authority for the coordinate, projected
+            // from the enumeration's one lock read — trusted request
+            // metadata for the provider's own trust decision (A2c).
+            expected_content_hash: coord_content_hash(&coords, &outcome.result.source.package),
         })
         .collect();
     let request = RelationRequest {
@@ -286,4 +290,14 @@ fn coord_root<'a>(
         .iter()
         .find(|coord| coord.package == package)
         .and_then(|coord| coord.root.as_deref())
+}
+
+/// The lock's exact content hash for one enumerated coordinate, from
+/// the enumeration's own single lock read — `None` for the host and
+/// registry-only orphans.
+fn coord_content_hash<'a>(coords: &'a [sources::SourceCoord], package: &str) -> Option<&'a str> {
+    coords
+        .iter()
+        .find(|coord| coord.package == package)
+        .and_then(|coord| coord.content_hash.as_deref())
 }

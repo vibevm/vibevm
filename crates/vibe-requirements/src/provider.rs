@@ -40,7 +40,8 @@ pub(crate) const REASON_EDGE_DUPLICATE: &str = "provider-edge-duplicate";
 const REASON_CAP_BYTES: usize = 8192;
 
 /// One enumerated base source as the provider sees it: the wire kind,
-/// the coordinate, and the materialised root when one physically exists.
+/// the coordinate, the materialised root when one physically exists,
+/// and the lock's content-hash authority for the package.
 #[derive(Debug, Clone)]
 pub struct ProviderSource<'a> {
     /// Host or package — decides the provenance the library derives.
@@ -49,6 +50,22 @@ pub struct ProviderSource<'a> {
     pub package: &'a str,
     /// The source's root on this machine, when it exists here.
     pub root: Option<&'a Path>,
+    /// The EXACT `content_hash` the lock pins for this package — trusted
+    /// request metadata projected from the query's one lock read, so a
+    /// provider (A3) can compare it against a slot record / carried map
+    /// without reading `vibe.lock` again. The matrix:
+    ///
+    /// - host source → `None` (no lock row speaks for the host);
+    /// - every lock-selected package → `Some("<exact locked hash>")`,
+    ///   INCLUDING one whose slot is missing or unmaterialised — the
+    ///   authority exists even when the materialisation does not;
+    /// - registry-only orphan → `None` (the lock never named it).
+    ///
+    /// This is NOT a wire member and does not feed the source or
+    /// observation digests; it only lets the provider's own
+    /// trust decision (whose result rides `relation_sources`) be made
+    /// from the request alone.
+    pub expected_content_hash: Option<&'a str>,
 }
 
 /// The one request: trusted roots, every enumerated base source, and
@@ -157,6 +174,7 @@ pub struct ProviderError(pub String);
 ///     kind: vibe_wire::generated::requirements_report::RequirementSourceKind::Package,
 ///     package: "org.example/pkg",
 ///     root: Some(root),
+///     expected_content_hash: Some("sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
 /// }];
 /// let addresses = vec!["spec://org.example/pkg/RULE#P".to_string()];
 /// let request = RelationRequest {
