@@ -56,11 +56,18 @@ pub(crate) struct CleanPlan {
     generated: Vec<PathBuf>,
 }
 
-pub(crate) fn plan_wipe(path: &Path) -> Result<CleanPlan> {
-    let project_root = super::install::resolve_project_root(path)?;
-    let workspace = Workspace::discover(&project_root)
-        .context("discovering the workspace enclosing the project")?;
-
+/// Plan the wipe from a root and tree the caller ALREADY owns.
+///
+/// There is deliberately NO raw-path sibling. The clean epoch resolves its
+/// canonical root once, at the outer boundary, and leases THAT root; the raw
+/// `--path` it came from is not an identity. A `plan_wipe(path)` entry point
+/// would re-resolve and re-discover, and a retarget between the two — a symlink
+/// flip, a member moved under a different root — would let this command delete
+/// a tree it never leased. Requiring the root and the tree as arguments makes
+/// that second discovery impossible by construction rather than by review: a
+/// caller has nowhere to get them except the epoch that already proved them
+/// against the lease.
+pub(crate) fn plan_wipe_prepared(project_root: &Path, workspace: &Workspace) -> Result<CleanPlan> {
     let deps_root = workspace
         .root
         .join(vibe_core::layout::current_vibedeps_root());
@@ -76,7 +83,7 @@ pub(crate) fn plan_wipe(path: &Path) -> Result<CleanPlan> {
         .collect();
 
     Ok(CleanPlan {
-        project_root,
+        project_root: project_root.to_path_buf(),
         deps_root,
         slot_count,
         generated,

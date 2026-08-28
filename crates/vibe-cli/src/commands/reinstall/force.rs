@@ -200,6 +200,14 @@ pub(super) fn run(ctx: &output::Context, inputs: Forced<'_>) -> Result<Reinstall
     // wrapper's own `Workspace::discover` would be a second read of the very
     // tree the apply below is about to rewrite, and the manifest it needs is
     // already on that tree.
+    // The command's ONE agent backend, built from the values it already holds
+    // — no discovery, no second manifest read — and shared by the apply and any
+    // continuation it services.
+    let agent: std::sync::Arc<dyn vibe_lifecycle::AgentBackend> =
+        std::sync::Arc::new(crate::commands::lifecycle::install_agent_backend(
+            &workspace.root,
+            &workspace.root_manifest,
+        ));
     let lifecycle = InstallSlotLifecycle::from_projection_observed_prepared(
         &workspace.root,
         &workspace.root_manifest,
@@ -210,12 +218,7 @@ pub(super) fn run(ctx: &output::Context, inputs: Forced<'_>) -> Result<Reinstall
         reinstall_stream_mode(ctx),
         vibe_install::SlotLifecycleSeams {
             observer: std::sync::Arc::new(LifecycleSlotObserver::new(ctx, metadata.clone())),
-            // Built from the values this command already holds — no
-            // discovery, no second manifest read.
-            agent: std::sync::Arc::new(crate::commands::lifecycle::install_agent_backend(
-                &workspace.root,
-                &workspace.root_manifest,
-            )),
+            agent: agent.clone(),
         },
         lease.clone(),
     )?;
@@ -233,6 +236,7 @@ pub(super) fn run(ctx: &output::Context, inputs: Forced<'_>) -> Result<Reinstall
             resolution: &resolution,
             source_hashes: SourceHashes(source_hashes),
             lease,
+            agent: &agent,
         },
     );
     outcome.map_err(|error| {
@@ -260,6 +264,9 @@ struct Apply<'a> {
     resolution: &'a [ResolvedDep],
     source_hashes: SourceHashes,
     lease: &'a std::sync::Arc<LifecycleLease>,
+    /// The command's ONE agent backend, shared with the continuation this
+    /// apply may service.
+    agent: &'a std::sync::Arc<dyn vibe_lifecycle::AgentBackend>,
 }
 
 fn apply(ctx: &output::Context, inputs: Apply<'_>) -> Result<ReinstallDraft> {
@@ -273,6 +280,7 @@ fn apply(ctx: &output::Context, inputs: Apply<'_>) -> Result<ReinstallDraft> {
         resolution,
         source_hashes,
         lease,
+        agent,
     } = inputs;
     let applied = apply_resolution_with_spec_format_and_slot_lifecycle_traced(
         workspace,
@@ -318,13 +326,12 @@ fn apply(ctx: &output::Context, inputs: Apply<'_>) -> Result<ReinstallDraft> {
         continuation::Request {
             identity,
             workspace,
-            manifest: &workspace.root_manifest,
             metadata,
-            spec_format,
             // The COMPLETED record promoted above, so a resumed park reports
             // the boot this apply really regenerated.
             progress: lifecycle.progress(),
             lease,
+            agent: agent.clone(),
         },
     )? {
         return Ok(ReinstallDraft::completed(

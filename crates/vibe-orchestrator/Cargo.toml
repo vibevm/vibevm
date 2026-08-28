@@ -11,10 +11,20 @@ homepage.workspace = true
 description = "Surface-neutral lifecycle orchestration values and application service for vibevm"
 
 [dependencies]
+anyhow.workspace = true
 specmark.workspace = true
 vibe-agent-projection.workspace = true
+vibe-core.workspace = true
+vibe-install.workspace = true
 vibe-lifecycle.workspace = true
+toml.workspace = true
+vibe-resolver.workspace = true
 vibe-wire.workspace = true
+vibe-workspace.workspace = true
 
 [dev-dependencies]
-toml.workspace = true
+serde_json.workspace = true
+tempfile.workspace = true
+thiserror.workspace = true
+vibe-registry.workspace = true
+vibe-test-support.workspace = true

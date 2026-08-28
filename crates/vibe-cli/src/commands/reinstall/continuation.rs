@@ -27,14 +27,14 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#REF-AGENT-RESUME");
 
 use anyhow::Result;
-use vibe_core::manifest::{Manifest, SpecFormat};
 use vibe_install::{InstallProgress, InstallSlotLifecycle, SlotLifecycleReport};
 use vibe_lifecycle::{LifecycleLease, RunMetadata};
 use vibe_workspace::Workspace;
 
 use crate::commands::compile_trace::{RegisteredReportDraft, carry_measured};
 use crate::commands::install::{
-    InstallDisposition, ResumeFailure, ResumeOutcome, ResumeRequest, resume_slot_continuation,
+    InstallDisposition, MeasuredFailure, Measurement, ResumeOutcome, ResumeRequest,
+    resume_slot_continuation,
 };
 use crate::output;
 
@@ -52,18 +52,20 @@ pub(super) struct Serviced {
 
 pub(super) struct Request<'a> {
     pub(super) identity: &'a ReinstallIdentity,
+    /// The tree this continuation runs over. Its selected node's manifest is
+    /// DERIVED from it by the resume itself — reinstall's operational host —
+    /// never passed beside it, so the two cannot come from different moments.
     pub(super) workspace: &'a Workspace,
-    /// The workspace ROOT's manifest — reinstall's operational host, taken
-    /// from the already-loaded tree rather than re-read from disk.
-    pub(super) manifest: &'a Manifest,
     pub(super) metadata: &'a RunMetadata,
-    pub(super) spec_format: SpecFormat,
     /// The command's mutation lease: the resumed slot run is rebuilt on the
     /// caller's ONE acquisition — a resume never reacquires.
     pub(super) lease: &'a std::sync::Arc<LifecycleLease>,
     /// What the CALLER's own pass did. A forced reinstall hands in the run's
     /// real completed progress; a plain one has nothing of its own yet.
     pub(super) progress: InstallProgress,
+    /// The command's ONE agent backend: a continuation finishes a run somebody
+    /// else began and must serve its agent rows from the same seam.
+    pub(super) agent: std::sync::Arc<dyn vibe_lifecycle::AgentBackend>,
 }
 
 /// A run whose rows this command's CURRENT pass owns.
@@ -111,8 +113,10 @@ pub(super) fn service_if_owed(
     current: &impl CurrentRows,
     request: Request<'_>,
 ) -> Result<Option<Serviced>> {
+    let observer = crate::commands::install::CliInstallObserver::new(ctx, None);
+    let agent = request.agent.clone();
     forced_continuation(current, request.identity, || {
-        resume_slot_continuation(ctx, resume_request(request))
+        resume_slot_continuation(&observer, &agent, resume_request(request))
     })
 }
 
@@ -137,9 +141,11 @@ fn forced_continuation(
 /// else, so its prefix is EXPLICITLY empty rather than an absent option.
 pub(super) fn service(ctx: &output::Context, request: Request<'_>) -> Result<Option<Serviced>> {
     let identity = request.identity;
+    let observer = crate::commands::install::CliInstallObserver::new(ctx, None);
+    let agent = request.agent.clone();
     owned_continuation(
         identity,
-        || resume_slot_continuation(ctx, resume_request(request)),
+        || resume_slot_continuation(&observer, &agent, resume_request(request)),
         Vec::new,
     )
 }
@@ -149,10 +155,8 @@ fn resume_request(request: Request<'_>) -> ResumeRequest<'_> {
     ResumeRequest {
         project_root: &request.workspace.root,
         workspace: request.workspace,
-        manifest: request.manifest,
         metadata: request.metadata,
         lease: request.lease,
-        spec_format: request.spec_format,
         disposition: InstallDisposition::Fresh,
         progress: request.progress,
         // A reinstall report carries no resolved count; this path only
@@ -199,9 +203,19 @@ fn owned_continuation(
 /// draft is the reinstall family with the selected identity, and the emission
 /// policy is the historical one — silence while tracing is off, observable the
 /// moment tracing is requested.
-fn carry_failure(identity: &ReinstallIdentity, failure: ResumeFailure) -> anyhow::Error {
-    let progress = failure.progress;
-    let reports = failure.reports;
+fn carry_failure(identity: &ReinstallIdentity, failure: MeasuredFailure) -> anyhow::Error {
+    let (progress, reports) = match failure.measurement {
+        Measurement::Slot {
+            progress, reports, ..
+        }
+        | Measurement::InstallBarrier {
+            progress, reports, ..
+        } => (*progress, reports),
+        // A reinstall continuation measures slot work and nothing else; a
+        // lifecycle measurement here would be an internal contradiction, and
+        // reporting an empty run is honest rather than inventing rows.
+        Measurement::Lifecycle { .. } => (InstallProgress::default(), Vec::new()),
+    };
     // `carry_measured` supplies `emit_when_trace_disabled: false`: a failure on
     // this path has never emitted a document, and adding one now would be a new
     // root on an old path. Requested tracing is what makes it observable.

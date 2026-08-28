@@ -173,7 +173,7 @@ pub(super) fn stage(
             })
             .collect(),
     );
-    let provisional_world = lifecycle::provisional_world(workspace, lockfile, &resolution)?;
+    let provisional_world = vibe_orchestrator::provisional_world(workspace, lockfile, &resolution)?;
     // The PREPARED constructor: this command already owns the tree its identity
     // and its trace were selected against, so the wrapper's own discovery would
     // be a second read of a tree this run has already started changing.

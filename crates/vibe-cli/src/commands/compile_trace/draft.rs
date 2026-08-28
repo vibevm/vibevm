@@ -187,69 +187,6 @@ pub(crate) fn carry_measured(
     carry(draft(), error, false)
 }
 
-/// Prepend rows measured BEFORE the failing site to a carried Lifecycle draft.
-///
-/// A site that fails freezes what IT measured. It cannot know about work an
-/// outer stage already did — a chained clean's contributions, a prerequisite
-/// install's slot rows — because those never passed through it. So the outer
-/// stage hands them down here, once, and the draft keeps everything else it
-/// owns: the same error object, the same root family, the same emission
-/// policy.
-///
-/// An uncarried error is returned untouched. Its caller's fallback builds from
-/// the same accumulator, so prepending here would duplicate every row.
-pub(crate) fn prepend_lifecycle_rows(
-    error: anyhow::Error,
-    prefix: Vec<vibe_wire::generated::lifecycle_report::LifecycleContributionReport>,
-) -> anyhow::Error {
-    if prefix.is_empty() {
-        return error;
-    }
-    match error.downcast::<FailedDraft>() {
-        Ok(FailedDraft {
-            draft: RegisteredReportDraft::Lifecycle(mut draft),
-            original,
-            emit_when_trace_disabled,
-        }) => {
-            let mut rows = prefix;
-            rows.append(&mut draft.contributions);
-            draft.contributions = rows;
-            carry(
-                RegisteredReportDraft::Lifecycle(draft),
-                original,
-                emit_when_trace_disabled,
-            )
-        }
-        // An Install-shaped carrier belongs to a different report family and
-        // never carries lifecycle rows; re-carry it exactly as it was.
-        Ok(carried) => carry(
-            carried.draft,
-            carried.original,
-            carried.emit_when_trace_disabled,
-        ),
-        Err(error) => error,
-    }
-}
-
-/// Whether this error already carries a measured draft.
-///
-/// Asked, rather than discovered by a failed `downcast`, so a classifier can
-/// branch without consuming the error it may need to pass on untouched.
-pub(crate) fn is_carried(error: &anyhow::Error) -> bool {
-    error.is::<FailedDraft>()
-}
-
-/// Take a carried failure apart WITHOUT deciding anything about it.
-///
-/// Test-only. Production has exactly one consumer of a carrier — [`classify`],
-/// at a command boundary that owns a trace session — and a second one that
-/// merely unwrapped it would be a second place deciding a root family. It is
-/// kept because the sites that BUILD carriers are worth proving directly.
-#[cfg(test)]
-pub(crate) fn uncarry(error: anyhow::Error) -> Result<FailedDraft, anyhow::Error> {
-    error.downcast::<FailedDraft>()
-}
-
 /// Turn any error into the one typed failure exit.
 ///
 /// A carried draft is unwrapped to exactly what its site measured. Anything
@@ -286,8 +223,23 @@ mod tests {
     #[error("the handler refused")]
     struct Sentinel;
 
+    /// The surviving surface wrapper over the shared failed values.
+    fn lifecycle_values_failed(
+        requested: &str,
+        chain: Vec<String>,
+        phase: &str,
+        contributions: Vec<vibe_wire::generated::lifecycle_report::LifecycleContributionReport>,
+    ) -> LifecycleDraft {
+        LifecycleDraft(vibe_orchestrator::values::LifecycleValues::failed(
+            requested,
+            chain,
+            phase,
+            contributions,
+        ))
+    }
+
     fn lifecycle_draft() -> RegisteredReportDraft {
-        RegisteredReportDraft::Lifecycle(Box::new(LifecycleDraft::failed(
+        RegisteredReportDraft::Lifecycle(Box::new(lifecycle_values_failed(
             "build",
             vec!["validate".into(), "install".into(), "build".into()],
             "build",
@@ -383,7 +335,7 @@ mod tests {
         let carried = carry_measured(
             anyhow::Error::new(Sentinel).context("writing the execution checkpoint"),
             || {
-                RegisteredReportDraft::Lifecycle(Box::new(LifecycleDraft::failed(
+                RegisteredReportDraft::Lifecycle(Box::new(lifecycle_values_failed(
                     "build",
                     vec!["build".into()],
                     "build",
@@ -425,7 +377,7 @@ mod tests {
     #[test]
     fn carrying_rows_never_overwrites_a_draft_its_own_site_measured() {
         let specific = carry(
-            RegisteredReportDraft::Lifecycle(Box::new(LifecycleDraft::failed(
+            RegisteredReportDraft::Lifecycle(Box::new(lifecycle_values_failed(
                 "build",
                 Vec::new(),
                 "build",
@@ -435,7 +387,7 @@ mod tests {
             true,
         );
         let carried = carry_measured(specific, || {
-            RegisteredReportDraft::Lifecycle(Box::new(LifecycleDraft::failed(
+            RegisteredReportDraft::Lifecycle(Box::new(lifecycle_values_failed(
                 "build",
                 Vec::new(),
                 "build",
@@ -466,7 +418,7 @@ mod tests {
     #[test]
     fn parked_is_the_typed_delegation_member() {
         assert!(!lifecycle_draft().parked());
-        let mut parked = LifecycleDraft::failed("build", Vec::new(), "build", Vec::new());
+        let mut parked = lifecycle_values_failed("build", Vec::new(), "build", Vec::new());
         parked.delegation = Some(
             vibe_wire::generated::lifecycle_report::LifecycleDelegation {
                 resume: "vibe build".into(),

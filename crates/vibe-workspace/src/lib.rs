@@ -534,6 +534,16 @@ pub(crate) fn canonical(path: &Path) -> Result<PathBuf> {
     Ok(strip_unc(canon))
 }
 
+/// Strip a Windows `\?\` prefix; a no-op for an ordinary canonical spelling.
+///
+/// ```
+/// let path = std::path::PathBuf::from("project");
+/// assert_eq!(vibe_workspace::strip_unc_prefix(path.clone()), path);
+/// ```
+pub fn strip_unc_prefix(path: PathBuf) -> PathBuf {
+    strip_unc(path)
+}
+
 #[cfg(windows)]
 fn strip_unc(p: PathBuf) -> PathBuf {
     let s = p.as_os_str().to_string_lossy();

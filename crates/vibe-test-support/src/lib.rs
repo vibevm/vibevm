@@ -166,3 +166,36 @@ impl Default for UserScratch {
         Self::new()
     }
 }
+
+/// One real lifecycle lease for fixtures that must carry the proof as a VALUE
+/// (an `InstallRunContext` built by hand).
+///
+/// Acquired ONCE per test process; these fixtures never dispatch through it,
+/// so sharing one acquisition across them is exactly the `Arc` proof the
+/// production channel carries. The owner RETAINS its `TempDir` (a plain
+/// `keep()` leak would orphan the directory even when nothing else wants it).
+/// Statics are never dropped in today's Rust, so process-exit cleanup is not
+/// delivered — the temp filesystem's own sweeper is the backstop — but the
+/// ownership is honest: the day static destructors run, this directory is
+/// cleaned with the rest.
+pub fn retained_lifecycle_lease() -> std::sync::Arc<vibe_lifecycle::LifecycleLease> {
+    /// The retained owner: the lease AND the directory it was taken over, so
+    /// both live (and, if statics ever drop, die) together.
+    struct LeaseOwner {
+        lease: std::sync::Arc<vibe_lifecycle::LifecycleLease>,
+        _dir: tempfile::TempDir,
+    }
+    static OWNER: std::sync::OnceLock<LeaseOwner> = std::sync::OnceLock::new();
+    OWNER
+        .get_or_init(|| {
+            let dir = tempfile::tempdir().expect("a temp root for the test lease");
+            let lease = vibe_lifecycle::LifecycleLease::acquire(dir.path())
+                .expect("the retained test root is leasable");
+            LeaseOwner {
+                lease: std::sync::Arc::new(lease),
+                _dir: dir,
+            }
+        })
+        .lease
+        .clone()
+}

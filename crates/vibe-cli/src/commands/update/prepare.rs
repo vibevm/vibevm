@@ -17,7 +17,6 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE");
 
-use std::path::PathBuf;
 use std::sync::Arc;
 
 use anyhow::{Context, Result};
@@ -27,12 +26,12 @@ use vibe_lifecycle::{LifecycleLease, RunMetadata};
 use crate::cli::UpdateArgs;
 use crate::commands::compile_trace::TracePreparation;
 use crate::commands::install::{
-    PreparedWorkspace, SelectedManifest, acquire_lease, resolve_project_root,
+    PreparedSelection, SelectedManifest, acquire_lease, resolve_project_root,
 };
+use crate::commands::lifecycle::PrepareTrace as _;
 use crate::output;
 
 pub(super) struct PreparedUpdate {
-    pub(super) project_root: PathBuf,
     /// The workspace mutation lease, acquired BEFORE the config/manifest/
     /// workspace reads below — the outermost lock of the whole command.
     pub(super) lease: Arc<LifecycleLease>,
@@ -49,8 +48,11 @@ pub(super) struct PreparedUpdate {
     /// did.
     pub(super) offline: bool,
     pub(super) metadata: RunMetadata,
-    pub(super) manifest: SelectedManifest,
-    pub(super) workspace: PreparedWorkspace,
+    /// The ONE selected-world provenance bundle: the canonical root, the
+    /// manifest snapshot taken at it, and the tree built from THAT snapshot.
+    /// One value rather than three fields, so the executed region cannot be
+    /// handed a manifest from one moment and a tree from another.
+    pub(super) selection: PreparedSelection,
     pub(super) trace: TracePreparation,
 }
 
@@ -72,24 +74,23 @@ pub(super) fn prepare(
     // The ONE read of this command's selected `vibe.toml`, and the ONE tree
     // built from it. Its stored error is consumed inside the executed region,
     // at the boundary that has always reported it.
-    let manifest = SelectedManifest::read(&project_root);
-    let workspace = manifest.prepare_workspace(&project_root);
+    let selection = SelectedManifest::read(&project_root).prepare();
     let requested = "update";
     let chain = vec!["install".to_string()];
     // `vibe update` supplies its OWN requested phase, chain and run identity,
     // so the handoff a hosted row publishes resumes with `vibe update` rather
     // than impersonating install.
+    let trace_request = selection.request(args.trace_compile);
     let prelude = crate::commands::lifecycle::run_prelude(
         ctx,
-        project_root,
-        workspace,
+        selection,
         lease.clone(),
         requested,
         &chain,
         // MATERIALISATION scope is what `--all` selects; there is no lifecycle
         // repark force on this command at all.
         false,
-        manifest.request(args.trace_compile),
+        trace_request,
     )
     .context("selecting the update lifecycle run identity")?;
     let metadata = RunMetadata {
@@ -109,13 +110,11 @@ pub(super) fn prepare(
     };
     let trace = prelude.prepare_trace(&super::now);
     Ok(PreparedUpdate {
-        project_root: prelude.project_root,
         lease: prelude.lease,
         user_config,
         offline,
         metadata,
-        manifest,
-        workspace: prelude.workspace,
+        selection: prelude.selection,
         trace,
     })
 }

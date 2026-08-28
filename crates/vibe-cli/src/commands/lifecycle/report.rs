@@ -8,41 +8,9 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-HANDSHAKE");
 
-use anyhow::Result;
 use vibe_wire::generated::lifecycle_report::LifecycleDelegation;
 
 use crate::output;
-
-/// The typed handoff is the SOURCE for every rendering. The engine adapter
-/// validates it here, once: a non-empty task list, and every task the exact
-/// deterministic path the reported run owns. A machine fact this load-bearing
-/// is never smuggled into a prose notice.
-pub(super) fn delegation_member(
-    delegation: vibe_lifecycle::Delegation,
-) -> Result<LifecycleDelegation> {
-    if delegation.tasks.is_empty() {
-        anyhow::bail!(
-            "internal: run `{}` reported a hosted handoff with no task file",
-            delegation.run_id
-        );
-    }
-    let home = format!("{}/{}/", vibe_lifecycle::OUTBOX_RELATIVE, delegation.run_id);
-    for task in &delegation.tasks {
-        let owned = task
-            .strip_prefix(&home)
-            .is_some_and(|name| !name.contains('/') && name.ends_with(".md"));
-        anyhow::ensure!(
-            owned,
-            "internal: task `{task}` does not live directly under run `{}`",
-            delegation.run_id,
-        );
-    }
-    Ok(LifecycleDelegation {
-        resume: delegation.resume,
-        run_id: delegation.run_id,
-        tasks: delegation.tasks,
-    })
-}
 
 /// Exactly one fenced `vibe-agent-tasks` block, in human AND quiet mode, read
 /// from the same typed value the JSON document carries.
@@ -76,11 +44,4 @@ pub(crate) fn render_agent_task_fence(
     block.push_str(&format!("resume: {resume}\n"));
     block.push_str("```");
     ctx.summary(&block);
-}
-
-/// Validate a typed handoff at the engine adapter, wherever it is rendered:
-/// a non-empty task list, and every task the exact deterministic path the
-/// reported run owns.
-pub(crate) fn check_delegation(delegation: &vibe_lifecycle::Delegation) -> Result<()> {
-    delegation_member(delegation.clone()).map(|_| ())
 }

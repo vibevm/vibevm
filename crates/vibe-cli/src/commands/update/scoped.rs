@@ -50,7 +50,7 @@ use vibe_workspace::vibedeps;
 
 use crate::commands::compile_trace::{self, CommandExit, RegisteredReportDraft, carry_measured};
 use crate::commands::install::{
-    PreparedWorkspace, build_install_resolver, exact_pinned_pkgref, lane_sizes, resolve_spec_format,
+    build_install_resolver, exact_pinned_pkgref, lane_sizes, resolve_spec_format,
 };
 use crate::commands::short_name;
 use crate::exit_code::InstallError;
@@ -87,7 +87,7 @@ pub(super) fn execute_after_open(
     execution: Execution,
     trace: Option<&TraceRun>,
 ) -> CommandExit<RegisteredReportDraft> {
-    let identity = UpdateIdentity::from_args(&execution.project_root, &execution.args);
+    let identity = UpdateIdentity::from_args(execution.selection.root(), &execution.args);
     match run(ctx, execution, trace) {
         Ok(draft) => {
             let parked = draft.delegation.is_some();
@@ -123,38 +123,22 @@ fn run(
         embedded_root,
         offline,
         lease,
-        project_root,
         user_config,
-        manifest,
-        workspace,
+        selection,
         metadata,
     } = execution;
-    let identity = UpdateIdentity::from_args(&project_root, &args);
-    // The stored manifest result FIRST — a malformed selected manifest is this
-    // command's error, in its own words, and no workspace was ever built from
-    // it. Then the ONE workspace answer, returned as it was: retrying could
-    // succeed against a tree the identity and the trace were never prepared for.
-    let manifest = manifest.into_manifest()?;
-    let workspace = match workspace {
-        PreparedWorkspace::Loaded(workspace) => *workspace,
-        PreparedWorkspace::DiscoveryFailed(error) => {
-            return Err(anyhow::Error::new(*error)
-                .context("discovering the workspace enclosing the project"));
-        }
-        // Unreachable through the owner above (it consumes the manifest error
-        // first), and named rather than merged so a future caller is a
-        // compile-time question instead of a silent success.
-        PreparedWorkspace::SelectedManifestInvalid => {
-            anyhow::bail!(
-                "internal: the selected manifest was reported invalid but its error was \
-                 already consumed"
-            );
-        }
-        PreparedWorkspace::DiscoverHere => {
-            Workspace::discover_with_selected_manifest(&project_root, &manifest)
-                .context("discovering the workspace enclosing the project")?
-        }
-    };
+    let identity = UpdateIdentity::from_args(selection.root(), &args);
+    // The bundle PROVEN, in the historical order: the stored manifest result
+    // first — a malformed selected manifest is this command's error, in its own
+    // words, and no workspace was ever built from it — then the ONE workspace
+    // answer, returned as it was. Retrying could succeed against a tree the
+    // identity and the trace were never prepared for.
+    let proven = selection.prove()?;
+    let (project_root, manifest, workspace) = (
+        proven.root().to_path_buf(),
+        proven.manifest().clone(),
+        proven.workspace(),
+    );
 
     let mut lockfile = load_lockfile(&workspace.root)?;
     // PROP-050 ##VERIFY-LOCK-DIFF — the scoped update's own pre-apply
@@ -163,7 +147,7 @@ fn run(
     // the post-write state once the apply is durable.
     let old_lock = lockfile.clone();
     let lanes_before = lane_sizes(&workspace.root);
-    let spec_format = resolve_spec_format(&manifest, &user_config);
+    let spec_format = resolve_spec_format(&manifest, user_config.install.spec_format);
 
     if manifest.registries.is_empty() {
         bail!(
@@ -241,14 +225,19 @@ fn run(
 
     // ---- region 2: the first durable mutation ----------------------------
     let mut measured = Measured::default();
+    // The command's ONE agent backend, shared by the staged apply and any
+    // continuation it services.
+    let agent: std::sync::Arc<dyn vibe_lifecycle::AgentBackend> = std::sync::Arc::new(
+        crate::commands::lifecycle::install_agent_backend(&workspace.root, &manifest),
+    );
     let staged = stage(
         ctx,
         &mut measured,
         Stage {
             resolver: &resolver,
-            workspace: &workspace,
-            project_root: &project_root,
             manifest: &manifest,
+            workspace,
+            project_root: &project_root,
             lockfile: &lockfile,
             metadata: &metadata,
             lease: &lease,
@@ -279,8 +268,7 @@ fn run(
             measured: &mut measured,
             identity: &identity,
             project_root: &project_root,
-            manifest: &manifest,
-            workspace: &workspace,
+            workspace,
             metadata: &metadata,
             spec_format,
             trace,
@@ -292,6 +280,7 @@ fn run(
             lockfile: &mut lockfile,
             old_lock: &old_lock,
             lanes_before: &lanes_before,
+            agent: &agent,
         },
     );
     outcome.map_err(|error| {

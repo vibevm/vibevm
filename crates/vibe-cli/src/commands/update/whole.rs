@@ -51,7 +51,7 @@ pub(super) fn execute_after_open(
     // Built from the same values the execution uses, before they move: a
     // failure draft that re-derived the root would be a second answer to
     // "which node did this command act on".
-    let identity = UpdateIdentity::from_args(&execution.project_root, &execution.args);
+    let identity = UpdateIdentity::from_args(execution.selection.root(), &execution.args);
     match run(ctx, execution, trace) {
         Ok(draft) => classify_success(draft),
         // A carried Install failure keeps its own root, error and policy; a
@@ -81,17 +81,38 @@ pub(super) fn execute_after_open(
 /// the transport rather than from a default, and the emission policy is the
 /// historical silence of a generic update-stage failure.
 fn absorb_resume_failure(error: anyhow::Error, identity: &UpdateIdentity) -> anyhow::Error {
-    match install::take_resume_failure(error) {
-        Ok(failure) => compile_trace::carry(
+    match install::take_measured_failure(error) {
+        Ok(install::MeasuredFailure {
+            original,
+            measurement:
+                install::Measurement::Slot {
+                    progress,
+                    reports,
+                    packages_resolved,
+                },
+            emit_machine_failure,
+        }) => compile_trace::carry(
             RegisteredReportDraft::Update(Box::new(UpdateDraft::failed(
                 identity,
-                failure.packages_resolved,
+                packages_resolved,
                 Vec::new(),
-                failure.progress,
-                failure.reports,
+                *progress,
+                reports,
             ))),
+            original,
+            emit_machine_failure,
+        ),
+        // Everything else keeps the family its own site froze: an
+        // `InstallBarrier` measurement is the substrate's install-shaped
+        // barrier failure and stays install-shaped, and a LIFECYCLE
+        // measurement is the post-durability stage's own failure.
+        Ok(failure) => compile_trace::carry(
+            crate::commands::lifecycle::registered_family(
+                &identity.project_root,
+                failure.measurement,
+            ),
             failure.original,
-            false,
+            failure.emit_machine_failure,
         ),
         Err(error) => error,
     }
@@ -117,42 +138,54 @@ fn run(
         embedded_root,
         offline,
         lease,
-        project_root,
         user_config,
-        manifest,
-        workspace,
+        selection,
         metadata,
     } = execution;
-    let identity = UpdateIdentity::from_args(&project_root, &args);
+    let identity = UpdateIdentity::from_args(selection.root(), &args);
     let install_args = install_args_from(&args);
     let confirm_gate = install::CliConfirmGate::new(ctx, install_args.assume_yes);
+    let install_observer = install::CliInstallObserver::new(ctx, None);
+    let sources = install::CliPackageSourceFactory {
+        args: &install_args,
+    };
+    let policy = install_args.policy(offline, &user_config);
+    let environment = install::CliRegistryEnvironment::new(move || embedded_root);
+    // A whole update owns no lifecycle stage of its own, and admits no
+    // manifest-mutating flag: both are the NAMED no-ops.
+    let mut world_stage = install::NoAfterDurableWorld;
+    // From the root the lease already pinned and the bundle's own snapshot —
+    // no locator call.
+    let agent: std::sync::Arc<dyn vibe_lifecycle::AgentBackend> =
+        std::sync::Arc::new(crate::commands::lifecycle::install_agent_backend_from(
+            lease.root(),
+            selection.parsed_ref(),
+        ));
     let run = install::execute_prepared(
-        ctx,
         install::InstallExecution {
             // The delegated resolver arguments carry `trace_compile: false`:
             // this command already owns the one recorder, and a second request
             // at this depth could only ever mean a second owner.
-            args: install_args,
-            embedded_root,
+            args: install_args.inputs(),
+            environment: &environment,
+            policy,
             // The owner's ALREADY-resolved posture, handed in at the delegate's
             // root rung. `install_args_from` sets the delegate's own
             // `--offline` false, and `resolve_offline` is idempotent over a
             // value that already absorbed `VIBE_OFFLINE` and `[net].offline`,
             // so the substrate reaches exactly this boolean without loading a
             // second config.
-            root_offline: offline,
             lease,
-            project_root,
-            user_config,
-            manifest,
-            workspace,
+            manifest_mutation: &install::NoManifestMutation,
+            selection,
             metadata,
-            resolver_factory: &install::CliResolverFactory,
+            sources: &sources,
             confirm_gate: &confirm_gate,
-            lifecycle_output: None,
+            observer: &install_observer,
+            agent,
             trace,
         },
-        |_, _, _, _| Ok(install::WorldCallbackOutcome::default()),
+        &mut world_stage,
     )?;
     if let Some(delegation) = run.parked.as_ref() {
         crate::commands::lifecycle::check_delegation(delegation)?;
@@ -175,7 +208,7 @@ fn run(
 mod tests {
     use super::*;
     use crate::commands::compile_trace::{CommandExit, classify};
-    use crate::commands::install::ResumeFailure;
+    use crate::commands::install::{MeasuredFailure, Measurement};
     use vibe_wire::generated::update_report::UpdateReportScope;
 
     #[derive(Debug, thiserror::Error)]
@@ -220,21 +253,24 @@ mod tests {
     #[test]
     fn a_neutral_resume_failure_becomes_a_measured_update_root() {
         let carried = absorb_resume_failure(
-            crate::commands::install::carry_resume_failure(ResumeFailure {
+            vibe_orchestrator::failure::carry(MeasuredFailure {
                 original: anyhow::Error::new(Sentinel).context("finishing the parked slot run"),
-                progress: vibe_install::InstallProgress {
-                    complete: true,
-                    fresh: false,
-                    materialised: vec!["vibedeps/org.demo.tools/0.2.0".into()],
-                    skipped: Vec::new(),
-                    pruned: Vec::new(),
-                    nodes_regenerated: vec![".".into()],
+                measurement: Measurement::Slot {
+                    progress: Box::new(vibe_install::InstallProgress {
+                        complete: true,
+                        fresh: false,
+                        materialised: vec!["vibedeps/org.demo.tools/0.2.0".into()],
+                        skipped: Vec::new(),
+                        pruned: Vec::new(),
+                        nodes_regenerated: vec![".".into()],
+                    }),
+                    reports: vec![
+                        row("slot:pre-install", "ok"),
+                        row("slot:post-install", "fail"),
+                    ],
+                    packages_resolved: 7,
                 },
-                reports: vec![
-                    row("slot:pre-install", "ok"),
-                    row("slot:post-install", "fail"),
-                ],
-                packages_resolved: 7,
+                emit_machine_failure: false,
             }),
             &identity(),
         );
@@ -252,7 +288,7 @@ mod tests {
         );
         assert!(original_error.downcast_ref::<Sentinel>().is_some());
         assert!(
-            original_error.downcast_ref::<ResumeFailure>().is_none(),
+            !vibe_orchestrator::failure::is_measured(&original_error),
             "the neutral wrapper never escapes to main",
         );
         let RegisteredReportDraft::Update(draft) = report else {

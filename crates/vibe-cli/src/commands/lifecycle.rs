@@ -6,43 +6,43 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM");
 
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 use anyhow::{Context, Result};
 use specmark::spec;
 use vibe_core::user_config::UserConfig;
 use vibe_lifecycle::{LifecycleRequest, LifecycleStep, Phase, RunMetadata};
-use vibe_wire::generated::lifecycle_report::LifecycleStepReport;
 
 use crate::cli::{InstallArgs, LifecycleArgs};
+use vibe_orchestrator::ports::RunObserver;
+
 use crate::commands::compile_trace;
 use crate::output;
 
-use super::install::{InstallDisposition, PreparedWorkspace};
+use super::install::{
+    CliInstallObserver, CliPackageSourceFactory, CliRegistryEnvironment, PreparedSelection,
+};
 
 mod agent;
 mod callback;
 mod clean;
-mod dispatch;
 mod draft;
 mod observer;
-mod phase;
 mod plan;
 mod report;
 mod slot;
-pub(crate) mod world;
 
-pub(crate) use callback::after_direct_install;
+pub(crate) use callback::DirectInstallWorld;
 use clean::refuse_untracked_agent_rows;
 pub use clean::run_clean;
 pub(crate) use clean::run_clean_only;
 pub(crate) use draft::LifecycleDraft;
-pub(crate) use observer::{CliRunObserver, RunObserver};
-use plan::{provider_and_version, surface_plan, tier_name};
-pub(crate) use report::{check_delegation, render_agent_task_fence};
+pub(crate) use observer::CliRunObserver;
+pub(crate) use report::render_agent_task_fence;
 pub(crate) use slot::{
     emit_transition_outcome as emit_slot_transition_outcome, surface_plan as surface_slot_plan,
 };
+pub(crate) use vibe_orchestrator::values::{StepStatus, check_delegation, step_report};
 
 /// The agent backend the install barrier injects.
 ///
@@ -59,6 +59,29 @@ pub(crate) fn install_agent_backend(
     manifest: &vibe_core::manifest::Manifest,
 ) -> agent::CliAgentBackend {
     agent::CliAgentBackend::new(workspace_root.to_path_buf(), manifest.llm.clone())
+}
+
+/// The ONE agent backend a command injects, built from values it ALREADY holds
+/// — the STORED snapshot before it has been consumed, and a root the caller
+/// carried. An unreadable manifest carries no `[llm]`, and the stored parse
+/// error is still owed to the boundary that proves the bundle.
+///
+/// `workspace_root` is the caller's own — `lease.root()`, or the bundle's loaded
+/// root. It is deliberately not a path this function locates: the previous
+/// shape called `lease_root(project_root)`, which ran a whole extra
+/// `Workspace::discover` and, when that discovery failed, silently swallowed
+/// the error and fell back to the selected root. So a command that had already
+/// leased a workspace root could hand its agent a DIFFERENT root, and nothing
+/// said so. The snapshot contributes exactly one thing — a clone of `[llm]` —
+/// and nothing else about it crosses into the backend.
+pub(crate) fn install_agent_backend_from(
+    workspace_root: &Path,
+    llm: Option<&vibe_core::manifest::Manifest>,
+) -> agent::CliAgentBackend {
+    agent::CliAgentBackend::new(
+        workspace_root.to_path_buf(),
+        llm.and_then(|parsed| parsed.llm.clone()),
+    )
 }
 
 /// Execute a top-level default-lifecycle phase verb.
@@ -123,30 +146,47 @@ fn execute(
     // selected: `select_run_identity` allocates a scratch run directory on the
     // fresh branch, and a hosted clean this build cannot serve must not leave
     // one behind.
-    let clean_plan = (steps.first() == Some(&LifecycleStep::Clean))
-        .then(|| world::plan_clean(&install_args.path))
+    // The PRE-WIPE epoch owns its own snapshot: its own manifest read, its own
+    // tree built from that read, and its own backend derived from it. It is
+    // deliberately NOT the command snapshot taken below — that one describes
+    // the tree AFTER the wipe, and reusing it here would plan the clean point
+    // against a world this epoch has not seen.
+    // It is prepared over the root this command ALREADY resolved and leased —
+    // never over the raw `--path` again, so the tree it wipes is the tree the
+    // lease pins.
+    let clean_epoch = (steps.first() == Some(&LifecycleStep::Clean))
+        .then(|| clean::prepare_epoch(&project_root, &lease))
         .transpose()?;
-    if let Some(clean_plan) = clean_plan.as_ref() {
+    let clean_plan = clean_epoch.as_ref().map(|epoch| &epoch.plan);
+    if let Some(clean_plan) = clean_plan {
         refuse_untracked_agent_rows(ctx, clean_plan)?;
     }
     // The command's ONE selected-manifest snapshot: it answers compile-trace
     // activation here, and the prerequisite install consumes it at the
     // boundary that has always read `vibe.toml`. Two reads would be two
     // answers, and the second would race the first.
-    let manifest = super::install::SelectedManifest::read(&project_root);
-    // Built FROM that snapshot — one read, one tree. `None` when the snapshot
-    // itself did not parse: there is no sound workspace to build then, and the
-    // stored error speaks at its own boundary inside the executed region.
-    let workspace = manifest.prepare_workspace(&project_root);
+    // The command's ONE selected-world bundle, bound to the root this command
+    // already resolved and leased: the snapshot answers compile-trace activation
+    // here, and the prerequisite install proves the pair at the boundary that
+    // has always read `vibe.toml`. Two reads would be two answers, and the
+    // second would race the first.
+    let selection = super::install::SelectedManifest::read(&project_root).prepare();
+    // The ONE agent backend this command injects. Built from the bundle the
+    // command already owns and the root the lease already pinned — no locator
+    // call — it serves the prerequisite install's slot barrier, every resume,
+    // and the phase dispatch: one seam, one configuration, one answer.
+    let agent: std::sync::Arc<dyn vibe_lifecycle::AgentBackend> = std::sync::Arc::new(
+        install_agent_backend_from(lease.root(), selection.parsed_ref()),
+    );
+    let trace_request = selection.request(install_args.trace_compile);
     let prelude = run_prelude(
         ctx,
-        project_root,
-        workspace,
+        selection,
         lease.clone(),
         &requested.to_string(),
         &chain,
         install_args.force,
-        manifest.request(install_args.trace_compile),
+        trace_request,
     )?;
     let metadata = RunMetadata {
         requested: requested.to_string(),
@@ -170,22 +210,31 @@ fn execute(
     let mut notices = Vec::new();
     let RunPrelude {
         identity,
-        mut project_root,
-        mut workspace,
+        mut selection,
         lease,
         selected,
     } = prelude;
 
-    if let Some(clean_plan) = clean_plan {
-        notices.extend(clean_plan.notices.clone());
+    if let Some(epoch) = clean_epoch {
+        let clean::CleanEpoch {
+            plan: clean_plan,
+            agent: clean_agent,
+            selection: clean_selection,
+        } = epoch;
+        notices.extend(clean_plan.notices().to_vec());
         let observer = CliRunObserver::new(ctx);
-        surface_plan(&observer, &clean_plan, &metadata, true)?;
-        let wipe_plan = super::clean::plan_wipe(&install_args.path)?;
+        observer.observe_plan(&clean_plan, &metadata, true)?;
+        // From the epoch's own carried root and tree: the wipe removes exactly
+        // what the pre-wipe epoch planned over, with no second discovery
+        // between the plan and the removal.
+        let wipe_plan =
+            super::clean::plan_wipe_prepared(clean_selection.root(), clean_selection.workspace())?;
         super::clean::confirm_wipe(ctx, &wipe_plan, assume_yes)?;
-        contribution_reports.extend(dispatch::dispatch_plan_untracked(
-            ctx,
+        contribution_reports.extend(vibe_orchestrator::dispatch_plan_untracked(
+            &observer,
             &clean_plan,
             &lease,
+            &clean_agent,
             metadata.clone(),
         )?);
         let root = super::clean::apply_wipe(&child, wipe_plan)?;
@@ -202,28 +251,19 @@ fn execute(
         // rewrote the tree, so a workspace that will not load afterwards is a
         // real fault, and quietly continuing would install into a world nobody
         // could describe.
-        project_root = super::install::resolve_project_root(&install_args.path)?;
-        workspace = match manifest.parsed_ref() {
-            // The ONE strict post-wipe load, from the SAME snapshot. A failure
-            // returns here — before any trace opens — because a tree that will
-            // not load right after a clean is a real fault.
-            Some(_) => PreparedWorkspace::Loaded(Box::new(
-                manifest
-                    .rediscover(&project_root)
-                    .context("re-reading the workspace after the clean epoch")?,
-            )),
-            // An invalid snapshot is unchanged by a wipe, and its stored error
-            // is still owed to the command funnel — replacing it with a
-            // generic rediscovery error would report the wrong thing.
-            None => PreparedWorkspace::SelectedManifestInvalid,
-        };
+        // The ONE strict post-wipe reload, rebuilding at the SAME carried
+        // root. A failure returns here — before any trace opens —
+        // because a tree that will not load right after a clean is a real
+        // fault; an invalid snapshot is unchanged by a wipe and keeps its own
+        // stored error for the funnel.
+        selection = selection.reload_after_clean()?;
         // The post-wipe reload is a SECOND workspace load under the SAME
         // lease, so it owes the same root agreement: a tree that rediscovered
         // under a different root would run the remaining phases against a
         // workspace this command never leased. The gate is the lease's one
         // `ensure_root` — which is also why this refusal can never again
         // carry the mangled spacing a hand-rolled string continuation did.
-        if let Some(loaded) = workspace.loaded_root() {
+        if let Some(loaded) = selection.loaded_root() {
             lease.ensure_root(loaded, "after the clean epoch's rediscovery")?;
         }
         // …and the selected-node twin of that gate. `selected` was derived
@@ -233,9 +273,9 @@ fn execute(
         // written yet), so what is at stake is the carried identity itself —
         // and, at any future or reused reload boundary that sits after
         // writes, state/outbox bytes minted under it.
-        if let Some(loaded) = workspace.loaded_workspace() {
+        if let Some(loaded) = selection.loaded_workspace() {
             let observed = loaded
-                .node_rel_of(&project_root)
+                .node_rel_of(selection.root())
                 .map(|rel| rel.as_str().to_string());
             lease.ensure_selected(
                 &metadata.selected,
@@ -247,8 +287,7 @@ fn execute(
 
     let prelude = RunPrelude {
         identity,
-        project_root,
-        workspace,
+        selection,
         lease,
         selected,
     };
@@ -258,6 +297,9 @@ fn execute(
     // workspace stays owned until the last byte this invocation owes is
     // written.
     let lease_owner = prelude.lease.clone();
+    // The same root the execution used, cloned rather than re-resolved: two
+    // canonicalisations are two answers to "which node did this command act on".
+    let failed_root = prelude.selection.root().to_path_buf();
     let preparation = prelude.prepare_trace(&now);
     let phases = steps
         .iter()
@@ -267,28 +309,37 @@ fn execute(
         })
         .collect::<Vec<_>>();
     let observer = CliRunObserver::new(ctx);
-    let exit = phase::execute_after_open(
-        ctx,
-        &child,
-        &observer,
-        phase::PhaseInputs {
+    let install_observer = CliInstallObserver::new(&child, Some(ctx));
+    let confirm_gate = super::install::CliConfirmGate::new(&child, install_args.assume_yes);
+    let sources = CliPackageSourceFactory {
+        args: &install_args,
+    };
+    let environment = CliRegistryEnvironment::new(prepare_install);
+    let exit = execute_after_open(
+        &failed_root,
+        vibe_orchestrator::PhaseRun {
             requested,
             phases,
             chain,
             metadata,
-            install_args,
-            root_offline,
+            install_args: install_args.inputs(),
+            policy: install_args.policy(root_offline, &user_config),
             lease: prelude.lease,
-            project_root: prelude.project_root,
-            user_config,
-            manifest,
-            workspace: prelude.workspace,
+            selection: prelude.selection,
             steps: reports,
             contributions: contribution_reports,
             notices,
+            observer: &observer,
+            install_observer: &install_observer,
+            confirm_gate: &confirm_gate,
+            sources: &sources,
+            environment: &environment,
+            // A phase verb admits no manifest-mutating flag: `--git` and its
+            // siblings live only on the explicit `vibe install` verb.
+            manifest_mutation: &super::install::NoManifestMutation,
+            agent,
+            trace: preparation.recorder(),
         },
-        prepare_install,
-        preparation.recorder(),
     );
     // Consumes the owner: finishes the index against the real outcome, drops
     // the last handle (and with it the cooperative lock), and returns the
@@ -306,57 +357,112 @@ fn now() -> vibe_wire::generated::shared::Timestamp {
     chrono::Utc::now()
 }
 
-/// This invocation's durable run identity, plus the ONE root its trace may be
-/// stored under.
+/// Classify the shared phase run into this command's registered report family.
 ///
-/// The two answers come from the same discovery and must not be confused:
-///
-/// * **identity/state** may fall back to the selected project root. That
-///   fallback is old, load-bearing and compatible — a project outside any
-///   discoverable workspace still gets a run id and a `.vibe/lifecycle.toml`.
-/// * **trace storage** may NOT. A trace's lock and index belong to the
-///   canonical workspace root, because one install regenerates shared package
-///   units plus every node — so an invocation entered through a member that
-///   silently traced into the member's own directory would let two members
-///   hold independent locks over the same work. When discovery genuinely
-///   fails there is no canonical root to name, so no trace opens at all and
-///   the command's own validation error stays authoritative.
-///
-/// Hence `workspace` is the typed [`PreparedWorkspace`] state rather than an
-/// `Option`: `Loaded` alone names a trace home, and the two unavailable arms
-/// say WHICH way the one attempt failed so that nothing downstream retries it.
-/// The whole workspace VALUE is retained, not just its root — the command is
-/// about to validate against it, install through it and lock a trace to it,
-/// and re-reading it for each of those would be three snapshots of a tree the
-/// command is itself changing.
-///
-/// The canonical `project_root` is carried for the same reason: it is selected
-/// once per prelude epoch, and nothing downstream re-resolves it.
-pub(crate) struct RunPrelude {
-    pub(crate) identity: vibe_lifecycle::RunIdentity,
-    pub(crate) project_root: PathBuf,
-    pub(crate) workspace: PreparedWorkspace,
-    /// The workspace mutation lease this command holds — see
-    /// [`run_prelude`], which both receives and returns it.
-    pub(crate) lease: std::sync::Arc<vibe_lifecycle::LifecycleLease>,
-    /// The canonical workspace-relative identity of the selected node this
-    /// command runs from — derived ONCE in [`run_prelude`] from the prepared
-    /// workspace (never re-derived, not even across the post-clean reload,
-    /// which instead PROVES it still holds). It is selector input (which
-    /// park this invocation may adopt) and the value the metadata carries
-    /// into the state header, deliberately NOT a member of `RunIdentity`:
-    /// the selector decides identity, it does not echo its inputs.
-    pub(crate) selected: String,
+/// The shared service names no family — the same core is also `vibe install`'s
+/// body and `vibe update --all`'s delegate — so it hands back the measurement,
+/// the caller's exact error object and the emission bit its own site froze, and
+/// THIS boundary chooses `cli-lifecycle-report`. Nothing is reformatted: the
+/// error is moved into the carrier the trace funnel already unwraps.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM")]
+fn execute_after_open(
+    project_root: &Path,
+    inputs: vibe_orchestrator::PhaseRun<'_>,
+) -> compile_trace::CommandExit<compile_trace::RegisteredReportDraft> {
+    match vibe_orchestrator::run_phases(inputs) {
+        vibe_orchestrator::PhaseOutcome::Completed(values) => compile_trace::CommandExit::Success(
+            compile_trace::RegisteredReportDraft::Lifecycle(Box::new(LifecycleDraft(values))),
+        ),
+        vibe_orchestrator::PhaseOutcome::Parked(values) => compile_trace::CommandExit::Parked(
+            compile_trace::RegisteredReportDraft::Lifecycle(Box::new(LifecycleDraft(values))),
+        ),
+        vibe_orchestrator::PhaseOutcome::Failed {
+            measurement,
+            original,
+            emit_machine_failure,
+        } => compile_trace::CommandExit::Failed {
+            report: registered_family(project_root, measurement),
+            original_error: original,
+            emit_when_trace_disabled: emit_machine_failure,
+        },
+    }
 }
 
-impl RunPrelude {
+/// Project a measurement into the registered family its measuring site chose.
+///
+/// The substrate's own barrier failure is install-shaped and stays so, even
+/// inside a phase verb: a prerequisite install's slot failure has always
+/// emitted a `cli-install-report` and no lifecycle root beside it, and a
+/// hosting agent parses exactly that. Everything else is this command's own
+/// lifecycle family.
+pub(crate) fn registered_family(
+    project_root: &Path,
+    measurement: vibe_orchestrator::failure::Measurement,
+) -> compile_trace::RegisteredReportDraft {
+    match measurement {
+        vibe_orchestrator::failure::Measurement::InstallBarrier {
+            progress, reports, ..
+        } => compile_trace::RegisteredReportDraft::Install(Box::new(
+            super::install::InstallDraft::failed(project_root, *progress, reports),
+        )),
+        other => lifecycle_family(other),
+    }
+}
+
+/// Project ANY measurement into this command's own registered family.
+///
+/// A slot measurement reaches here when the prerequisite install failed inside
+/// a phase verb; its rows become lifecycle rows exactly as they always did,
+/// because this command's document is the one a hosting agent parses.
+pub(crate) fn lifecycle_family(
+    measurement: vibe_orchestrator::failure::Measurement,
+) -> compile_trace::RegisteredReportDraft {
+    let values = match measurement {
+        vibe_orchestrator::failure::Measurement::Lifecycle {
+            rows,
+            stopped_phase,
+            requested,
+            chain,
+        } => vibe_orchestrator::values::LifecycleValues::failed(
+            &requested,
+            chain,
+            &stopped_phase,
+            rows,
+        ),
+        vibe_orchestrator::failure::Measurement::Slot { reports, .. }
+        | vibe_orchestrator::failure::Measurement::InstallBarrier { reports, .. } => {
+            vibe_orchestrator::values::LifecycleValues::failed(
+                Phase::Install.as_str(),
+                Vec::new(),
+                Phase::Install.as_str(),
+                reports
+                    .into_iter()
+                    .map(vibe_orchestrator::values::contribution_report)
+                    .collect(),
+            )
+        }
+    };
+    compile_trace::RegisteredReportDraft::Lifecycle(Box::new(LifecycleDraft(values)))
+}
+
+/// The prelude epoch's trace half, which stays here because the recorder does.
+pub(crate) use vibe_orchestrator::RunPrelude;
+
+pub(crate) trait PrepareTrace {
     /// Open the owner against the canonical trace home — or stand down
     /// honestly, without a lock and without a tree.
-    pub(crate) fn prepare_trace(
+    fn prepare_trace(
+        &self,
+        clock: &dyn Fn() -> vibe_wire::generated::shared::Timestamp,
+    ) -> compile_trace::TracePreparation;
+}
+
+impl PrepareTrace for RunPrelude {
+    fn prepare_trace(
         &self,
         clock: &dyn Fn() -> vibe_wire::generated::shared::Timestamp,
     ) -> compile_trace::TracePreparation {
-        match self.workspace.loaded_root() {
+        match self.selection.loaded_root() {
             Some(root) => compile_trace::prepare(root, &self.identity, &clock),
             None => compile_trace::without_workspace(&self.identity),
         }
@@ -374,65 +480,26 @@ impl RunPrelude {
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn run_prelude(
     ctx: &output::Context,
-    project_root: PathBuf,
-    workspace: PreparedWorkspace,
+    selection: PreparedSelection,
     lease: std::sync::Arc<vibe_lifecycle::LifecycleLease>,
     requested: &str,
     chain: &[String],
     force: bool,
     compile_trace: bool,
 ) -> Result<RunPrelude> {
-    // The post-acquisition root law: a workspace loaded under a DIFFERENT
-    // root than the one this command leased would read and write state
-    // beside another process's lock, on a pre-lease snapshot this lease
-    // never authorised. The one gate — and the one refusal spelling — is
-    // the lease's own `ensure_root`; the locator's discovery-failed fallback
-    // is the one exception (the lease already pins the selected root under
-    // the same fallback law identity selection has always applied, and the
-    // execution boundary then surfaces the stored discovery error itself).
-    if let Some(loaded) = workspace.loaded_root() {
-        lease.ensure_root(loaded, "at the run prelude")?;
-    }
-    // The selected-node identity, derived from the ONE prepared snapshot: a
-    // `Loaded` tree maps the canonical selected root through the workspace's
-    // own authored rels — and a Loaded tree that cannot map it is an
-    // internal refusal, never a fallback guess. Every unavailable arm falls
-    // back to `"."` under the same fallback law the state root itself
-    // applies there: when discovery failed, the selected node IS the root.
-    let selected = match workspace.loaded_workspace() {
-        Some(workspace) => workspace
-            .node_rel_of(&project_root)
-            .with_context(|| {
-                format!(
-                    "internal: the canonical selected root `{}` is not a node of the \
-                     workspace loaded for this run",
-                    project_root.display()
-                )
-            })?
-            .as_str()
-            .to_string(),
-        None => ".".to_string(),
-    };
-    // The identity borrows the lease BEFORE its state read, so the prior
-    // state it decides adoption against is a post-acquisition snapshot.
-    let identity = vibe_lifecycle::select_run_identity(
-        &lease,
-        &project_root,
+    // The whole epoch — the post-acquisition root law, the selected-node
+    // derivation and the one identity selection — is the shared service's.
+    // This surface contributes exactly one fact it owns: its resolved agent
+    // mode.
+    vibe_orchestrator::run_prelude(
+        selection,
+        lease,
         requested,
         chain,
-        &selected,
         ctx.agent_mode(),
         force,
         compile_trace,
-        crate::commands::init::current_timestamp_utc(),
-    )?;
-    Ok(RunPrelude {
-        identity,
-        project_root,
-        workspace,
-        lease,
-        selected,
-    })
+    )
 }
 
 // The identity-only selector that `vibe update` and `vibe reinstall` used to
@@ -448,33 +515,5 @@ fn step_name(step: &LifecycleStep) -> String {
     match step {
         LifecycleStep::Clean => "clean".to_string(),
         LifecycleStep::Default(phase) => phase.to_string(),
-    }
-}
-
-fn step_report(phase: &str, status: StepStatus) -> LifecycleStepReport {
-    LifecycleStepReport {
-        phase: phase.to_string(),
-        status: status.as_str().to_string(),
-    }
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-enum StepStatus {
-    Ok,
-    Fresh,
-    NoOp,
-    /// The chain parked at this phase for the hosting agent; no later phase
-    /// ran, and none is reported.
-    Delegated,
-}
-
-impl StepStatus {
-    const fn as_str(self) -> &'static str {
-        match self {
-            Self::Ok => "ok",
-            Self::Fresh => "fresh",
-            Self::NoOp => "no-op",
-            Self::Delegated => "delegated",
-        }
     }
 }

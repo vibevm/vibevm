@@ -59,10 +59,6 @@ impl CliAgentBackend {
         }
     }
 
-    pub(crate) fn for_plan(plan: &super::world::RitualPlan) -> Self {
-        Self::new(plan.workspace_root.clone(), plan.llm.clone())
-    }
-
     /// Read the layered configuration and build the provider. Called once per
     /// non-fresh agent execution, never at plan time and never at preparation.
     #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-CLI")]
@@ -155,4 +151,78 @@ fn unsupported_composition(expanded: &str) -> Vec<String> {
         .filter(|directive| matches!(directive.kind, DirectiveKind::Use | DirectiveKind::Source))
         .map(|directive| format!("{} {}", directive.kind.keyword(), directive.address.raw))
         .collect()
+}
+
+#[cfg(test)]
+mod tests {
+    /// The agent backend is built from a CARRIED root — never located.
+    ///
+    /// `install_agent_backend_from` used to call `lease_root(project_root)`,
+    /// which ran a whole extra `Workspace::discover` and, when that discovery
+    /// failed, swallowed the error and quietly fell back to the selected root.
+    /// So a command that had already leased a workspace root could hand its
+    /// agent a DIFFERENT root — and prompt resolution is pinned to that root, so
+    /// a workspace member's `spec://` address could fall through to the wrong
+    /// document with nothing saying so.
+    ///
+    /// The signature is half the proof: it takes `&Path` and an
+    /// `Option<&Manifest>`, so there is no path for it to locate. This scan is
+    /// the other half — it reads the production sources and refuses a locator
+    /// call anywhere in the construction path.
+    ///
+    /// The mutation this kills is reintroducing `lease_root(...)` (or a bare
+    /// `Workspace::discover`) at any of the four call sites.
+    #[test]
+    fn no_agent_backend_construction_locates_a_root() {
+        let src = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("src/commands");
+        let mut offenders: Vec<String> = Vec::new();
+        let mut stack = vec![src];
+        while let Some(dir) = stack.pop() {
+            for entry in std::fs::read_dir(&dir).unwrap() {
+                let path = entry.unwrap().path();
+                if path.is_dir() {
+                    stack.push(path);
+                    continue;
+                }
+                if path.extension().and_then(|ext| ext.to_str()) != Some("rs") {
+                    continue;
+                }
+                let body = std::fs::read_to_string(&path)
+                    .unwrap()
+                    .replace(char::from(13), "");
+                for (index, line) in body.lines().enumerate() {
+                    let trimmed = line.trim_start();
+                    // Prose about the defect is exactly what this file carries,
+                    // so comments are not the subject.
+                    if trimmed.starts_with("//") {
+                        continue;
+                    }
+                    if !line.contains("install_agent_backend") {
+                        continue;
+                    }
+                    // The construction line itself, plus the two that follow it,
+                    // are where a locator would be spelled.
+                    let window: String = body
+                        .lines()
+                        .skip(index)
+                        .take(4)
+                        .collect::<Vec<_>>()
+                        .join(" ");
+                    for locator in ["lease_root(", "Workspace::discover("] {
+                        if window.contains(locator) {
+                            offenders.push(format!(
+                                "{}:{} builds the agent backend through `{locator}`",
+                                path.display(),
+                                index + 1,
+                            ));
+                        }
+                    }
+                }
+            }
+        }
+        assert!(
+            offenders.is_empty(),
+            "the agent backend takes the root its caller already holds: {offenders:#?}",
+        );
+    }
 }

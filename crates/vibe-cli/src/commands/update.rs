@@ -60,13 +60,11 @@ pub fn run(
     root_offline: bool,
 ) -> Result<()> {
     let PreparedUpdate {
-        project_root,
         lease,
         user_config,
         offline,
         metadata,
-        manifest,
-        workspace,
+        selection,
         trace,
     } = prepare::prepare(ctx, &args, root_offline)?;
     // The boundary's OWNER share: the executed regions below consume their
@@ -83,10 +81,8 @@ pub fn run(
         embedded_root,
         offline,
         lease,
-        project_root,
         user_config,
-        manifest,
-        workspace,
+        selection,
         metadata,
     };
     let exit = if whole {
@@ -118,10 +114,10 @@ pub(super) struct Execution {
     /// The workspace mutation lease from the prepare epoch — the ONE
     /// acquisition, borrowed by both executed regions below.
     pub(super) lease: std::sync::Arc<vibe_lifecycle::LifecycleLease>,
-    pub(super) project_root: PathBuf,
     pub(super) user_config: vibe_core::user_config::UserConfig,
-    pub(super) manifest: crate::commands::install::SelectedManifest,
-    pub(super) workspace: crate::commands::install::PreparedWorkspace,
+    /// The ONE selected-world provenance bundle: the canonical root, the
+    /// manifest snapshot taken at it, and the tree built from THAT snapshot.
+    pub(super) selection: crate::commands::install::PreparedSelection,
     pub(super) metadata: vibe_lifecycle::RunMetadata,
 }
 

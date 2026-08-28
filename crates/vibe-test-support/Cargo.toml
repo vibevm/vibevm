@@ -18,3 +18,4 @@ path = "src/lib.rs"
 assert_cmd = { workspace = true }
 tempfile = { workspace = true }
 vibe-core = { workspace = true }
+vibe-lifecycle = { workspace = true }

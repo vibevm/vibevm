@@ -26,7 +26,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary");
 use std::path::Path;
 
 use anyhow::{Context, Result};
-use vibe_core::manifest::{Lockfile, Manifest, SpecFormat};
+use vibe_core::manifest::{Lockfile, SpecFormat};
 use vibe_install::{InstallProgress, InstallSlotLifecycle};
 use vibe_lifecycle::RunMetadata;
 use vibe_workspace::Workspace;
@@ -53,7 +53,6 @@ pub(super) struct ScopedApply<'a> {
     pub(super) measured: &'a mut Measured,
     pub(super) identity: &'a UpdateIdentity,
     pub(super) project_root: &'a Path,
-    pub(super) manifest: &'a Manifest,
     pub(super) workspace: &'a Workspace,
     pub(super) metadata: &'a RunMetadata,
     pub(super) spec_format: SpecFormat,
@@ -68,6 +67,8 @@ pub(super) struct ScopedApply<'a> {
     pub(super) lockfile: &'a mut Lockfile,
     pub(super) old_lock: &'a Lockfile,
     pub(super) lanes_before: &'a [(String, Option<u64>)],
+    /// The command's ONE agent backend.
+    pub(super) agent: &'a std::sync::Arc<dyn vibe_lifecycle::AgentBackend>,
 }
 
 pub(super) fn apply(ctx: &output::Context, inputs: ScopedApply<'_>) -> Result<UpdateDraft> {
@@ -76,7 +77,6 @@ pub(super) fn apply(ctx: &output::Context, inputs: ScopedApply<'_>) -> Result<Up
         measured,
         identity,
         project_root,
-        manifest,
         workspace,
         metadata,
         spec_format,
@@ -89,6 +89,7 @@ pub(super) fn apply(ctx: &output::Context, inputs: ScopedApply<'_>) -> Result<Up
         lockfile,
         old_lock,
         lanes_before,
+        agent,
     } = inputs;
 
     // Remove every superseded slot, recording each real removal as it happens.
@@ -205,11 +206,10 @@ pub(super) fn apply(ctx: &output::Context, inputs: ScopedApply<'_>) -> Result<Up
             identity,
             project_root,
             workspace,
-            manifest,
             metadata,
-            spec_format,
             resolved,
             lease,
+            agent,
         },
     )? {
         return Ok(done);
@@ -259,14 +259,17 @@ struct Continuation<'a> {
     measured: &'a Measured,
     identity: &'a UpdateIdentity,
     project_root: &'a Path,
+    /// The tree this continuation runs over. Its selected node's manifest is
+    /// DERIVED from it by the resume itself, never passed beside it.
     workspace: &'a Workspace,
-    manifest: &'a Manifest,
     metadata: &'a RunMetadata,
-    spec_format: SpecFormat,
     resolved: usize,
     /// The command's mutation lease: the resumed slot run is rebuilt on the
     /// ONE acquisition the update boundary made — a resume never reacquires.
     lease: &'a std::sync::Arc<vibe_lifecycle::LifecycleLease>,
+    /// The command's ONE agent backend, shared with the pass this continuation
+    /// finishes.
+    agent: &'a std::sync::Arc<dyn vibe_lifecycle::AgentBackend>,
 }
 
 /// Finish a slot run this project still owes, as a VALUE.
@@ -290,13 +293,12 @@ fn service_continuation(
         return Ok(None);
     }
     let lifecycle = inputs.lifecycle;
+    let observer = crate::commands::install::CliInstallObserver::new(ctx, None);
     let request = ResumeRequest {
         project_root: inputs.project_root,
         workspace: inputs.workspace,
-        manifest: inputs.manifest,
         metadata: inputs.metadata,
         lease: inputs.lease,
-        spec_format: inputs.spec_format,
         disposition: crate::commands::install::InstallDisposition::Fresh,
         progress: lifecycle.progress(),
         packages_resolved: inputs.resolved,
@@ -307,7 +309,7 @@ fn service_continuation(
         inputs.measured,
         inputs.identity,
         inputs.resolved,
-        || resume_slot_continuation(ctx, request),
+        || resume_slot_continuation(&observer, inputs.agent, request),
         || lifecycle.take_reports().unwrap_or_default(),
     )
 }
@@ -340,8 +342,18 @@ fn owned_continuation_values(
         // A resume builds its OWN lifecycle, so its rows exist nowhere else,
         // and the in-place prefix predates BOTH lifecycles — hence the join.
         ResumeOutcome::Failed(failure) => {
-            let progress = measured.joined(failure.progress);
-            let rows = failure.reports;
+            let (own_progress, rows) = match failure.measurement {
+                crate::commands::install::Measurement::Slot {
+                    progress, reports, ..
+                }
+                | crate::commands::install::Measurement::InstallBarrier {
+                    progress, reports, ..
+                } => (*progress, reports),
+                crate::commands::install::Measurement::Lifecycle { .. } => {
+                    (vibe_install::InstallProgress::default(), Vec::new())
+                }
+            };
+            let progress = measured.joined(own_progress);
             let bumps = measured.bumps().to_vec();
             return Err(carry_measured(failure.original, || {
                 RegisteredReportDraft::Update(Box::new(UpdateDraft::failed(

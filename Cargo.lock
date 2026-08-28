@@ -4265,11 +4265,21 @@ dependencies = [
 name = "vibe-orchestrator"
 version = "1.0.0"
 dependencies = [
+ "anyhow",
  "core-ai-native-specmark",
+ "serde_json",
+ "tempfile",
+ "thiserror 2.0.18",
  "toml 0.9.12+spec-1.1.0",
  "vibe-agent-projection",
+ "vibe-core",
+ "vibe-install",
  "vibe-lifecycle",
+ "vibe-registry",
+ "vibe-resolver",
+ "vibe-test-support",
  "vibe-wire",
+ "vibe-workspace",
 ]
 
 [[package]]
@@ -4394,6 +4404,7 @@ dependencies = [
  "assert_cmd",
  "tempfile",
  "vibe-core",
+ "vibe-lifecycle",
 ]
 
 [[package]]

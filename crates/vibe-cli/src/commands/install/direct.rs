@@ -44,9 +44,11 @@ use crate::commands::compile_trace::{
 };
 use crate::output;
 
+use crate::commands::lifecycle::PrepareTrace as _;
+
 use super::{
-    InstallDisposition, InstallDraft, InstallExecution, InstallRun, InstallRunContext,
-    PreparedWorkspace, SelectedManifest, acquire_lease, execute_prepared, resolve_project_root,
+    InstallDisposition, InstallDraft, InstallExecution, InstallRun, PreparedSelection,
+    SelectedManifest, acquire_lease, execute_prepared, resolve_project_root,
 };
 
 /// Everything `vibe install` reads before it may compile.
@@ -55,15 +57,15 @@ use super::{
 /// consumes exactly these — it re-reads none of them, so the tree the trace
 /// was locked against is the tree the install works on.
 struct PreparedInstall {
-    project_root: PathBuf,
     /// The workspace mutation lease, acquired BEFORE the config/manifest/
     /// workspace reads below: the locator epoch discovers the root, the
     /// lease pins it, and only then may execution read the tree.
     lease: Arc<LifecycleLease>,
     user_config: UserConfig,
     metadata: RunMetadata,
-    manifest: SelectedManifest,
-    workspace: PreparedWorkspace,
+    /// The ONE selected-world provenance bundle: root, snapshot and tree, as a
+    /// single value execution cannot be handed piecemeal.
+    selection: PreparedSelection,
     trace: TracePreparation,
 }
 
@@ -87,19 +89,18 @@ fn prepare_direct_install(
     // built from it. A malformed manifest yields no workspace here and no
     // trace storage below, and its stored error is consumed at the boundary
     // that has always reported it — after the identity is selected.
-    let manifest = SelectedManifest::read(&project_root);
-    let workspace = manifest.prepare_workspace(&project_root);
+    let selection = SelectedManifest::read(&project_root).prepare();
     let requested = "install";
     let chain = vec!["validate".to_string(), "install".to_string()];
+    let trace_request = selection.request(args.trace_compile);
     let prelude = crate::commands::lifecycle::run_prelude(
         ctx,
-        project_root,
-        workspace,
+        selection,
         lease.clone(),
         requested,
         &chain,
         args.force,
-        manifest.request(args.trace_compile),
+        trace_request,
     )
     .context("selecting the install lifecycle run identity")?;
     let metadata = RunMetadata {
@@ -119,12 +120,10 @@ fn prepare_direct_install(
     };
     let trace = prelude.prepare_trace(&now);
     Ok(PreparedInstall {
-        project_root: prelude.project_root,
         lease: prelude.lease,
         user_config,
         metadata,
-        manifest,
-        workspace: prelude.workspace,
+        selection: prelude.selection,
         trace,
     })
 }
@@ -137,12 +136,10 @@ pub(crate) fn run(
     root_offline: bool,
 ) -> Result<()> {
     let PreparedInstall {
-        project_root,
         lease,
         user_config,
         metadata,
-        manifest,
-        workspace,
+        selection,
         trace,
     } = prepare_direct_install(ctx, &args, root_offline)?;
     // The boundary's OWNER share: the executed region consumes its own clones
@@ -157,10 +154,8 @@ pub(crate) fn run(
             root_offline,
             lease,
             user_config,
-            manifest,
-            workspace,
+            selection,
             metadata,
-            project_root,
         },
         trace.recorder(),
     );
@@ -179,10 +174,8 @@ struct Execution {
     root_offline: bool,
     lease: Arc<LifecycleLease>,
     user_config: UserConfig,
-    manifest: SelectedManifest,
-    workspace: PreparedWorkspace,
+    selection: PreparedSelection,
     metadata: RunMetadata,
-    project_root: PathBuf,
 }
 
 /// The one boundary: everything after `prepare` and before `finalize`.
@@ -200,36 +193,48 @@ fn execute_after_open(
         root_offline,
         lease,
         user_config,
-        manifest,
-        workspace,
+        selection,
         metadata,
-        project_root,
     } = execution;
-    // The failure draft below names the same root the execution used, so it
-    // is cloned rather than re-resolved: two canonicalisations are two answers
-    // to "which node did this command act on".
-    let failed_root = project_root.clone();
+    // The failure draft below names the same root the execution used, taken
+    // from the bundle rather than re-resolved: two canonicalisations are two
+    // answers to "which node did this command act on".
+    let failed_root = selection.root().to_path_buf();
     let confirm_gate = super::CliConfirmGate::new(ctx, args.assume_yes);
+    let install_observer = super::CliInstallObserver::new(ctx, None);
+    let sources = super::CliPackageSourceFactory { args: &args };
+    let manifest_mutation = super::CliGitSourceMutation { args: &args };
+    let environment = super::CliRegistryEnvironment::new(move || embedded_root);
+    // The ONE injected backend, from the snapshot this command already read
+    // and the root its lease already pinned — no locator call.
+    let agent: std::sync::Arc<dyn vibe_lifecycle::AgentBackend> =
+        std::sync::Arc::new(crate::commands::lifecycle::install_agent_backend_from(
+            lease.root(),
+            selection.parsed_ref(),
+        ));
+    let policy = args.policy(root_offline, &user_config);
+    let run_observer = crate::commands::lifecycle::CliRunObserver::new(ctx);
+    // The post-durability stage, NAMED: it holds the observation policy and the
+    // backend, and nothing else. The closure it replaced captured this
+    // command's whole rendering context.
+    let mut world_stage =
+        crate::commands::lifecycle::DirectInstallWorld::new(&run_observer, &agent);
     let outcome = execute_prepared(
-        ctx,
         InstallExecution {
-            args,
-            embedded_root,
-            root_offline,
+            args: args.inputs(),
+            environment: &environment,
+            policy,
             lease,
-            project_root,
-            user_config,
-            manifest,
-            workspace,
+            manifest_mutation: &manifest_mutation,
+            selection,
             metadata,
-            resolver_factory: &super::CliResolverFactory,
+            sources: &sources,
             confirm_gate: &confirm_gate,
-            lifecycle_output: None,
+            observer: &install_observer,
+            agent: agent.clone(),
             trace,
         },
-        |root, disposition, run: InstallRunContext, workspace: &vibe_workspace::Workspace| {
-            crate::commands::lifecycle::after_direct_install(ctx, root, disposition, run, workspace)
-        },
+        &mut world_stage,
     );
     match outcome {
         Ok(run) => classify_success(run),
@@ -260,15 +265,31 @@ fn execute_after_open(
 /// Total: an error that is not a transported resume failure is returned exactly
 /// as it arrived, so the carried-draft classifier below still sees its own.
 fn absorb_resume_failure(error: anyhow::Error, root: &std::path::Path) -> anyhow::Error {
-    match crate::commands::install::take_resume_failure(error) {
-        Ok(failure) => compile_trace::carry(
+    match crate::commands::install::take_measured_failure(error) {
+        Ok(crate::commands::install::MeasuredFailure {
+            original,
+            measurement:
+                crate::commands::install::Measurement::Slot {
+                    progress, reports, ..
+                }
+                | crate::commands::install::Measurement::InstallBarrier {
+                    progress, reports, ..
+                },
+            emit_machine_failure,
+        }) => compile_trace::carry(
             RegisteredReportDraft::Install(Box::new(InstallDraft::failed(
-                root,
-                failure.progress,
-                failure.reports,
+                root, *progress, reports,
             ))),
+            original,
+            emit_machine_failure,
+        ),
+        // A LIFECYCLE measurement inside `vibe install` is the post-durability
+        // stage's own failure, and it has always reported the lifecycle root
+        // with no install root beside it.
+        Ok(failure) => compile_trace::carry(
+            crate::commands::lifecycle::lifecycle_family(failure.measurement),
             failure.original,
-            false,
+            failure.emit_machine_failure,
         ),
         Err(error) => error,
     }
@@ -297,7 +318,7 @@ fn now() -> vibe_wire::generated::shared::Timestamp {
 mod tests {
     use super::*;
     use crate::commands::compile_trace::{CommandExit, classify};
-    use crate::commands::install::{ResumeFailure, resume};
+    use crate::commands::install::{MeasuredFailure, Measurement};
 
     /// A fully-defaulted `InstallArgs` for the preparation-boundary red —
     /// every flag off, exactly one field (the path) set by the caller.
@@ -419,21 +440,24 @@ trace = true
     }
 
     fn transported() -> anyhow::Error {
-        resume::carry_resume_failure(ResumeFailure {
+        vibe_orchestrator::failure::carry(MeasuredFailure {
             original: anyhow::Error::new(Sentinel).context("finishing the parked slot run"),
-            progress: vibe_install::InstallProgress {
-                complete: true,
-                fresh: false,
-                materialised: vec!["vibedeps/org.demo.tools/0.1.0".into()],
-                skipped: Vec::new(),
-                pruned: Vec::new(),
-                nodes_regenerated: vec![".".into()],
+            measurement: Measurement::Slot {
+                progress: Box::new(vibe_install::InstallProgress {
+                    complete: true,
+                    fresh: false,
+                    materialised: vec!["vibedeps/org.demo.tools/0.1.0".into()],
+                    skipped: Vec::new(),
+                    pruned: Vec::new(),
+                    nodes_regenerated: vec![".".into()],
+                }),
+                reports: vec![
+                    row("slot:pre-install", "ok"),
+                    row("slot:post-install", "fail"),
+                ],
+                packages_resolved: 4,
             },
-            reports: vec![
-                row("slot:pre-install", "ok"),
-                row("slot:post-install", "fail"),
-            ],
-            packages_resolved: 4,
+            emit_machine_failure: false,
         })
     }
 
@@ -460,7 +484,7 @@ trace = true
         assert!(!emit_when_trace_disabled, "historically silent");
         assert!(original_error.downcast_ref::<Sentinel>().is_some());
         assert!(
-            original_error.downcast_ref::<ResumeFailure>().is_none(),
+            !vibe_orchestrator::failure::is_measured(&original_error),
             "the neutral wrapper never escapes to main",
         );
         let RegisteredReportDraft::Install(draft) = report else {

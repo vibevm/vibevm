@@ -11,6 +11,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-HANDSHAKE");
 
 use anyhow::Result;
+use vibe_orchestrator::values::LifecycleValues;
 use vibe_wire::generated::lifecycle_report::{
     LifecycleContributionReport, LifecycleDelegation, LifecycleReport, LifecycleStepReport,
 };
@@ -20,17 +21,24 @@ use crate::output;
 
 use super::report::render_handoff;
 
-/// Everything the one lifecycle document reports, owned.
+/// Everything the one lifecycle document reports — the shared service's own
+/// values, wrapped so THIS surface owns the rendering and the registered
+/// family. There is no second copy of the fields: A13 removes the wrapper.
 #[derive(Debug)]
-pub(crate) struct LifecycleDraft {
-    pub(crate) ok: bool,
-    pub(crate) requested: String,
-    pub(crate) chain: Vec<String>,
-    pub(crate) steps: Vec<LifecycleStepReport>,
-    pub(crate) contributions: Vec<LifecycleContributionReport>,
-    pub(crate) notices: Vec<String>,
-    /// Already validated — see the module note.
-    pub(crate) delegation: Option<LifecycleDelegation>,
+pub(crate) struct LifecycleDraft(pub(crate) LifecycleValues);
+
+impl std::ops::Deref for LifecycleDraft {
+    type Target = LifecycleValues;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+
+impl std::ops::DerefMut for LifecycleDraft {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.0
+    }
 }
 
 impl LifecycleDraft {
@@ -43,38 +51,14 @@ impl LifecycleDraft {
         notices: Vec<String>,
         delegation: Option<LifecycleDelegation>,
     ) -> Self {
-        Self {
-            ok: true,
-            requested: requested.to_string(),
+        Self(LifecycleValues::completed(
+            requested,
             chain,
             steps,
             contributions,
             notices,
             delegation,
-        }
-    }
-
-    /// A failed phase run: the rows measured up to the failure, one `fail`
-    /// step for the phase it stopped at, and no handoff — a park is not a
-    /// failure and a failure never parked.
-    pub(crate) fn failed(
-        requested: &str,
-        chain: Vec<String>,
-        phase: &str,
-        contributions: Vec<LifecycleContributionReport>,
-    ) -> Self {
-        Self {
-            ok: false,
-            requested: requested.to_string(),
-            chain,
-            steps: vec![LifecycleStepReport {
-                phase: phase.to_string(),
-                status: "fail".to_string(),
-            }],
-            contributions,
-            notices: Vec::new(),
-            delegation: None,
-        }
+        ))
     }
 
     /// The generated root, with the member attached — pure, total, and the
@@ -82,15 +66,24 @@ impl LifecycleDraft {
     /// [`crate::commands::install::InstallDraft::into_report`] for why the
     /// attachment is a seam of its own.
     pub(crate) fn into_report(self, trace: Option<CompileTraceReport>) -> LifecycleReport {
+        let LifecycleValues {
+            ok,
+            requested,
+            chain,
+            steps,
+            contributions,
+            notices,
+            delegation,
+        } = self.0;
         LifecycleReport {
-            chain: self.chain,
+            chain,
             command: "lifecycle".to_string(),
-            contributions: self.contributions,
-            notices: self.notices,
-            ok: self.ok,
-            requested: self.requested,
-            steps: self.steps,
-            delegation: self.delegation,
+            contributions,
+            notices,
+            ok,
+            requested,
+            steps,
+            delegation,
             trace,
         }
     }
@@ -201,7 +194,12 @@ mod refusal_tests {
 
     #[test]
     fn a_disabled_lifecycle_root_omits_the_member() {
-        let draft = LifecycleDraft::failed("build", Vec::new(), "build", Vec::new());
+        let draft = LifecycleDraft(LifecycleValues::failed(
+            "build",
+            Vec::new(),
+            "build",
+            Vec::new(),
+        ));
         let report = draft.into_report(None);
         assert!(report.trace.is_none());
     }

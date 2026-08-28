@@ -34,7 +34,8 @@ pub fn run(ctx: &output::Context, args: UninstallArgs) -> Result<()> {
     let mut manifest = load_project_manifest(&project_root)?;
     let mut lockfile = load_lockfile(&workspace.root)?;
     let user_config = UserConfig::load().context("loading the user config")?;
-    let spec_format = crate::commands::install::resolve_spec_format(&manifest, &user_config);
+    let spec_format =
+        crate::commands::install::resolve_spec_format(&manifest, user_config.install.spec_format);
 
     let pkgref =
         PackageRef::parse(&args.package).with_context(|| format!("parsing `{}`", args.package))?;

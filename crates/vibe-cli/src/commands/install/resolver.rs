@@ -19,8 +19,9 @@ use vibe_resolver::{EmbeddedPrecedence, SolveError};
 use crate::cli::InstallArgs;
 use crate::registry::ProviderCell;
 
+mod git_source_flag;
 mod port;
-pub(crate) use port::{CliResolverFactory, ResolverBuild, ResolverFactory};
+pub(crate) use port::{CliGitSourceMutation, CliPackageSourceFactory};
 
 /// Either a M0-shape local-directory registry (used by `--registry <path>`
 /// and the in-tree fixture path) or a full PROP-002 multi-registry
@@ -319,9 +320,6 @@ impl InstallResolver {
         }
     }
 }
-
-mod git_source_flag;
-pub(super) use git_source_flag::apply_git_source_flag;
 
 /// Validate the `--solver` flag into the cell name the R-001 selection
 /// seam accepts; `None` keeps the built-in default (resolvo).

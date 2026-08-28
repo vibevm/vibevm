@@ -61,18 +61,12 @@ mod draft;
 mod present;
 mod quiet;
 mod report;
-mod request;
 
 use bounded::BoundedDiagnostic;
 
 pub(crate) use adapter::render_finalized;
-#[cfg(test)]
-pub(crate) use draft::uncarry;
-pub(crate) use draft::{
-    RegisteredReportDraft, carry, carry_measured, classify, is_carried, prepend_lifecycle_rows,
-};
+pub(crate) use draft::{RegisteredReportDraft, carry, carry_measured, classify};
 pub(crate) use quiet::detach as detach_quiet_suffix;
-pub(crate) use request::effective_request;
 
 #[cfg(test)]
 mod tests;

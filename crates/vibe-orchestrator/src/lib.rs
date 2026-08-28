@@ -1,8 +1,19 @@
-//! Surface-neutral lifecycle orchestration.
+//! Surface-neutral lifecycle orchestration — the one shared application
+//! service both the CLI and a hosted MCP surface execute a default-lifecycle
+//! chain through.
 //!
-//! This first extraction owns the canonical planned-run value. Execution,
-//! filesystem loading and surface presentation move behind it in later R7.4
-//! atoms; provider/model/credential configuration never enters this crate.
+//! It owns selected-world loading and plan construction, run-identity
+//! selection, the validate/install barrier and slot continuation, phase
+//! dispatch and removed-row reconciliation, package-binding composition, and
+//! the report-neutral success/park/failure values. Terminal and JSON
+//! rendering, interactive confirmation, argument grammar, registry cell
+//! composition and provider construction stay in the surfaces, behind
+//! [`ports`].
+//!
+//! Provider, model and credential configuration is not a planning fact and
+//! cannot cross this boundary: the surface injects an already-built
+//! [`vibe_lifecycle::AgentBackend`], and a hosted surface injects one that
+//! parks instead of paying.
 
 #![forbid(unsafe_code)]
 
@@ -16,72 +27,123 @@ use vibe_agent_projection::pkgskill::ProjectSkillBinding;
 use vibe_lifecycle::{ExecutablePlan, Phase};
 use vibe_wire::generated::lifecycle::e1::context::{Project, World};
 
+pub mod failure;
+pub mod ports;
+pub mod values;
+
+mod callback;
+mod dispatch;
+mod install;
+mod phase;
+mod plan;
+mod prelude;
+mod world;
+
+pub use callback::after_durable_world_stage;
+pub use dispatch::dispatch_plan_untracked;
+pub use install::{
+    InstallDisposition, InstallExecution, InstallInputs, InstallPolicy, InstallRun,
+    InstallRunContext, PreparedSelection, ProvenSelection, ResumeOutcome, ResumeRequest,
+    ResumedInstall, SelectedManifest, WorldCallbackOutcome, WorldCallbackSummary, acquire_lease,
+    execute_prepared, generated_by, lease_root, own_resume, prefixed, provisional_world,
+    resolve_project_root, resolve_spec_format, resume_slot_continuation, selected_node_manifest,
+};
+pub use phase::{PhaseOutcome, PhaseRun, run_phases};
+pub use plan::{planned_contribution, provider_and_version, tier_name};
+pub use prelude::{RunPrelude, run_prelude};
+pub use world::{
+    LoadedRegistry, PACKAGE_SKILL_RECONCILE_KEY, PACKAGE_SKILL_RECOVER_KEY, inspect,
+    plan_clean_prepared, plan_default_prepared,
+};
+
 /// One owned, surface-neutral lifecycle plan.
 ///
-/// It contains only selected execution and world facts. In particular, LLM
-/// provider/model/credential configuration is not a planning fact and cannot
-/// cross this boundary.
+/// It contains only selected execution and world facts — eight fields, and no
+/// ninth. In particular NO manifest rides here: a complete `Manifest` carries
+/// `[llm]` provider/model/credential configuration, so storing one would smuggle
+/// exactly the seam this boundary exists to keep out. A surface reads its own
+/// snapshot, derives its own configuration from it, and injects an already-built
+/// backend. The structural RED below destructures every field with no `..`, so a
+/// hidden ninth carrier is a compile error rather than a review question.
+///
+/// The fields are PRIVATE. Every one of them is an invariant this crate
+/// establishes at collection time and every dispatch entry point then trusts —
+/// `workspace_root` is checked against the lease, `executions` is canonically
+/// ordered, `package_bindings`/`package_desired_keys` are the reconciliation
+/// pair. A surface that could mutate any of them could hand a gate a root it
+/// already passed and then run against a different one. What a surface really
+/// needs is presentation, so that is what it gets: read-only borrows.
 ///
 /// ```
-/// use std::collections::{BTreeMap, BTreeSet};
-/// use std::path::PathBuf;
-/// use vibe_lifecycle::{ExecutablePlan, Phase};
+/// use vibe_lifecycle::Phase;
 /// use vibe_orchestrator::RitualPlan;
-/// use vibe_wire::generated::lifecycle::e1::context::{Project, World};
 ///
-/// let plan = RitualPlan {
-///     executions: ExecutablePlan::default(),
-///     notices: Vec::new(),
-///     project: Project {
-///         kind: "project".into(),
-///         manifest: "vibe.toml".into(),
-///         name: "demo".into(),
-///         root: ".".into(),
-///         spec_roots: Vec::new(),
-///         version: "0.1.0".into(),
-///     },
-///     world: World {
-///         deps_root: "vibevm/vibedeps".into(),
-///         lockfile: "vibe.lock".into(),
-///         packages: Vec::new(),
-///     },
-///     workspace_root: PathBuf::from("."),
-///     package_bindings: BTreeMap::new(),
-///     package_desired_keys: BTreeSet::new(),
-///     package_phase_planned: false,
-/// };
-/// assert_eq!(plan.count_for(Phase::Build), 0);
+/// fn count(plan: &RitualPlan) -> usize {
+///     plan.count_for(Phase::Build)
+/// }
 /// ```
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM")]
 #[derive(Debug)]
 pub struct RitualPlan {
     /// Canonically ordered executable contributions.
-    pub executions: ExecutablePlan,
+    pub(crate) executions: ExecutablePlan,
     /// Non-fatal collection notices in deterministic order.
-    pub notices: Vec<String>,
+    pub(crate) notices: Vec<String>,
     /// Selected-project facts carried into handler envelopes.
-    pub project: Project,
+    pub(crate) project: Project,
     /// Effective installed-world facts carried into handler envelopes.
-    pub world: World,
+    pub(crate) world: World,
     /// Canonical workspace root which owns lifecycle state.
-    pub workspace_root: PathBuf,
+    pub(crate) workspace_root: PathBuf,
     /// Planned project-skill bindings keyed by execution identity.
-    pub package_bindings: BTreeMap<String, ProjectSkillBinding>,
+    pub(crate) package_bindings: BTreeMap<String, ProjectSkillBinding>,
     /// Complete desired project-skill execution-key set.
-    pub package_desired_keys: BTreeSet<String>,
+    pub(crate) package_desired_keys: BTreeSet<String>,
     /// Whether the requested chain contains the package phase.
-    pub package_phase_planned: bool,
+    pub(crate) package_phase_planned: bool,
 }
 
 impl RitualPlan {
     /// Count contributions selected for one canonical default phase.
     ///
-    /// The struct-level example constructs an empty plan and demonstrates this
-    /// query for `Phase::Build`.
+    /// The struct-level example demonstrates this query for `Phase::Build`.
     #[must_use]
     #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM")]
     pub fn count_for(&self, phase: Phase) -> usize {
         self.executions.count_for(phase.as_str())
+    }
+
+    /// The canonically ordered contributions, for a surface to render.
+    ///
+    /// See [`Self::count_for`] for the query form.
+    #[must_use]
+    pub fn executions(&self) -> &ExecutablePlan {
+        &self.executions
+    }
+
+    /// The collection notices, for a surface to render.
+    ///
+    /// See [`Self::count_for`].
+    #[must_use]
+    pub fn notices(&self) -> &[String] {
+        &self.notices
+    }
+
+    /// The selected-project facts, for a surface to render.
+    ///
+    /// See [`Self::count_for`].
+    #[must_use]
+    pub fn project(&self) -> &Project {
+        &self.project
+    }
+
+    /// The canonical workspace root this plan was collected over — the value a
+    /// surface's own lease gate checks against.
+    ///
+    /// See [`Self::count_for`].
+    #[must_use]
+    pub fn workspace_root(&self) -> &std::path::Path {
+        &self.workspace_root
     }
 }
 
@@ -99,8 +161,17 @@ pub type PlannedExecution = vibe_lifecycle::ExecutableContribution;
 mod tests {
     use std::collections::BTreeSet;
 
+    /// A12 widened the value-only atom into the shared application service.
+    /// The set is still EXACT, and still contains no surface, provider or
+    /// transport edge: the whole point of the extraction is that neither CLI
+    /// nor MCP can be reached from here.
+    ///
+    /// `toml` is the one edge beyond the accepted nine, and it is accepted:
+    /// the moved package-skill preset builder constructs
+    /// `ExtensionConfig::from_table(toml::Table)`, a `vibe-core` public type
+    /// whose crate that crate does not re-export.
     #[test]
-    fn the_value_only_atom_has_exactly_the_four_lower_dependencies() {
+    fn the_application_service_has_exactly_the_accepted_lower_dependencies() {
         let manifest: toml::Table = toml::from_str(include_str!("../Cargo.toml")).unwrap();
         let dependencies = manifest
             .get("dependencies")
@@ -111,14 +182,115 @@ mod tests {
             .map(String::as_str)
             .collect::<BTreeSet<_>>();
         let expected = BTreeSet::from([
+            "anyhow",
             "specmark",
+            "toml",
             "vibe-agent-projection",
+            "vibe-core",
+            "vibe-install",
             "vibe-lifecycle",
+            "vibe-resolver",
             "vibe-wire",
+            "vibe-workspace",
         ]);
         assert_eq!(
             actual, expected,
-            "A11 carries values only: no CLI, MCP, LLM, install or workspace edge"
+            "A12 carries the shared algorithm only: no CLI, MCP or LLM edge"
         );
+        // The exactness above is the fence; this states the INTENT it exists
+        // for, so a widening that happened to keep the set exact is still
+        // caught by name.
+        for forbidden in ["vibe-cli", "vibe-mcp", "vibe-llm", "dialoguer", "console"] {
+            assert!(
+                !actual.contains(forbidden),
+                "`{forbidden}` is a surface or provider edge and can never be a normal dependency",
+            );
+        }
+    }
+
+    /// The plan carries EIGHT fields, and the compiler proves it.
+    ///
+    /// Destructured with no `..`, so a ninth field — a manifest, a config, any
+    /// carrier that could smuggle provider settings below the surface — is a
+    /// compile error here rather than a review question. This is the structural
+    /// half of the fence; the source scan below is the textual half.
+    #[test]
+    fn the_shared_plan_carries_exactly_its_eight_neutral_fields() {
+        fn destructure(plan: super::RitualPlan) {
+            let super::RitualPlan {
+                executions,
+                notices,
+                project,
+                world,
+                workspace_root,
+                package_bindings,
+                package_desired_keys,
+                package_phase_planned,
+            } = plan;
+            let _ = (
+                executions,
+                notices,
+                project,
+                world,
+                workspace_root,
+                package_bindings,
+                package_desired_keys,
+                package_phase_planned,
+            );
+        }
+        let _ = destructure;
+    }
+
+    /// The dependency set is a necessary but not sufficient fence: a provider
+    /// seam can also arrive as a stored type, a config field or a borrowed CLI
+    /// vocabulary. This reads the crate's own PRODUCTION sources.
+    ///
+    /// It deliberately does NOT forbid `Manifest` outright — world collection
+    /// and the install core legitimately parse manifests. What it forbids is
+    /// the named seams: the whole user config, the provider section, and the
+    /// surface's own source-mutation grammar.
+    #[test]
+    fn no_production_source_names_a_config_provider_or_surface_seam() {
+        let root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("src");
+        let mut offenders: Vec<String> = Vec::new();
+        let mut stack = vec![root];
+        while let Some(dir) = stack.pop() {
+            for entry in std::fs::read_dir(&dir).unwrap() {
+                let path = entry.unwrap().path();
+                if path.is_dir() {
+                    stack.push(path);
+                    continue;
+                }
+                if path.extension().and_then(|ext| ext.to_str()) != Some("rs") {
+                    continue;
+                }
+                // Test cells legitimately construct fixtures with wider
+                // vocabulary; the fence is on production source.
+                let name = path.file_name().unwrap().to_string_lossy().to_string();
+                if name == "tests.rs" || name.ends_with("_tests.rs") {
+                    continue;
+                }
+                let body = std::fs::read_to_string(&path).unwrap();
+                // Spelled in halves on purpose: this checker's own source must
+                // not contain the strings it forbids, or it would report
+                // itself and never fail for a real offender.
+                for needle in [
+                    concat!("vibe", "_cli"),
+                    concat!("vibe", "_mcp"),
+                    concat!("vibe", "_llm"),
+                    concat!("Llm", "Section"),
+                    concat!(".", "llm"),
+                    concat!("User", "Config"),
+                    concat!("git", "_auth"),
+                    concat!("git", "_token_env"),
+                    concat!("credential", "_helper"),
+                ] {
+                    if body.contains(needle) {
+                        offenders.push(format!("{} names `{needle}`", path.display()));
+                    }
+                }
+            }
+        }
+        assert!(offenders.is_empty(), "{offenders:#?}");
     }
 }

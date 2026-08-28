@@ -59,7 +59,7 @@ fn a_successful_reinstall_root_carries_a_refused_member_unchanged() {
     assert_eq!(
         report.project,
         vibe_core::machine_json_path(&PathBuf::from("/p/member")),
-        "the report names the SELECTED node — a reinstall invoked inside a          member regenerates the whole tree, but the document is about the          invocation, not the tree",
+        "the report names the SELECTED node — a reinstall invoked inside a member \n         regenerates the whole tree, but the document is about the invocation, \n         not the tree",
     );
     let attached = report.trace.expect("and the member was not dropped");
     assert_eq!(attached, member, "carried through byte for byte");

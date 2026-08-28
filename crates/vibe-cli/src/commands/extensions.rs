@@ -24,7 +24,7 @@ use vibe_wire::generated::extensions_report::{
 use crate::cli::ExtensionsArgs;
 use crate::output;
 
-use super::lifecycle::world;
+use vibe_orchestrator as world;
 
 pub fn run(ctx: &output::Context, args: ExtensionsArgs) -> Result<()> {
     let loaded = world::inspect(&args.path)?;

@@ -97,6 +97,49 @@ pub struct ListArgs {
     pub verbose: bool,
 }
 
+impl InstallArgs {
+    /// Project this grammar onto the shared service's neutral inputs.
+    ///
+    /// Only what the shared core itself reads crosses. Registry, solver and
+    /// source-preference flags do not: their one consumer is the package-source
+    /// factory, which is this surface's own composition root and closes over
+    /// these args directly. Neither does any source-mutation grammar —
+    /// `--git`/`--tag`/`--branch`/`--rev`/`--git-auth`/`--git-token-env` are
+    /// this surface's vocabulary with this surface's exit codes, and they reach
+    /// the core only through the manifest-mutation port.
+    pub(crate) fn inputs(&self) -> vibe_orchestrator::InstallInputs {
+        vibe_orchestrator::InstallInputs {
+            packages: self.packages.clone(),
+            features: self.features.clone(),
+            no_default_features: self.no_default_features,
+            all_features: self.all_features,
+            language: self.language.clone(),
+            exact: self.exact,
+        }
+    }
+
+    /// The narrow execution policy, decided from the ONE user config this
+    /// command loaded and the offline ladder it already resolved.
+    ///
+    /// `root_offline` is the root command's own `--offline`; the ladder
+    /// (surface flags > `VIBE_OFFLINE` > user config) collapses HERE, at the
+    /// surface that owns every rung, so no rung is re-derived below.
+    pub(crate) fn policy(
+        &self,
+        root_offline: bool,
+        user_config: &vibe_core::user_config::UserConfig,
+    ) -> vibe_orchestrator::InstallPolicy {
+        vibe_orchestrator::InstallPolicy {
+            offline: crate::output::resolve_offline(
+                root_offline || self.offline,
+                user_config.net.offline,
+            ),
+            slot_integrity: user_config.install.slot_integrity,
+            spec_format_default: user_config.install.spec_format,
+        }
+    }
+}
+
 #[derive(Debug, Clone, clap::Args)]
 pub struct InstallArgs {
     /// Zero or more package references, each `<kind>:<name>[@<version>]`.

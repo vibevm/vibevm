@@ -66,29 +66,6 @@ impl InstallDraft {
         }
     }
 
-    /// The fresh fast path as a typed outcome: nothing moved, so progress says
-    /// exactly that and the caller renders it.
-    pub(crate) fn fresh_run(
-        project_root: &Path,
-        nodes: Vec<String>,
-        world: super::WorldCallbackOutcome,
-    ) -> InstallRun {
-        let mut run = InstallRun::new(
-            project_root.to_path_buf(),
-            if world.parked.is_some() {
-                super::InstallDisposition::Parked
-            } else {
-                super::InstallDisposition::Fresh
-            },
-        );
-        run.progress = InstallProgress::fresh(nodes);
-        run.contributions = world.contributions;
-        run.notices = world.notices;
-        run.parked = world.parked;
-        run.world_summary = world.summary;
-        run
-    }
-
     /// The draft a FAILED install carries: `ok: false`, the rows and progress
     /// the engine really measured, and nothing invented to fill the rest.
     ///

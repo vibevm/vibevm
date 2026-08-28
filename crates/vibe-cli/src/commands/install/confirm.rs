@@ -2,19 +2,10 @@
 
 use anyhow::{Context, Result, bail};
 use dialoguer::Confirm;
+use vibe_orchestrator::ports::ConfirmGate;
 
 use crate::exit_code::InstallError;
 use crate::output;
-
-/// Confirmation policy supplied by the command surface.
-///
-/// The install kernel asks once, after it has a solved Ready plan and before
-/// any materialisation. Headless adapters can approve without importing a
-/// terminal library; the CLI implementation below preserves the exact prompt
-/// and error identity.
-pub(crate) trait ConfirmGate: Send + Sync {
-    fn confirm_install(&self, packages: usize) -> Result<()>;
-}
 
 /// CLI confirmation over the invocation's already-resolved posture.
 pub(crate) struct CliConfirmGate<'a> {

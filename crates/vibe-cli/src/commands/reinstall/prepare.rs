@@ -22,7 +22,6 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE");
 
-use std::path::PathBuf;
 use std::sync::Arc;
 
 use anyhow::{Context, Result};
@@ -32,12 +31,12 @@ use vibe_lifecycle::{LifecycleLease, RunMetadata};
 use crate::cli::ReinstallArgs;
 use crate::commands::compile_trace::TracePreparation;
 use crate::commands::install::{
-    PreparedWorkspace, SelectedManifest, acquire_lease, resolve_project_root,
+    PreparedSelection, SelectedManifest, acquire_lease, resolve_project_root,
 };
+use crate::commands::lifecycle::PrepareTrace as _;
 use crate::output;
 
 pub(super) struct PreparedReinstall {
-    pub(super) project_root: PathBuf,
     /// The workspace mutation lease, acquired BEFORE the config/manifest/
     /// workspace reads below — the outermost lock of the whole command.
     pub(super) lease: Arc<LifecycleLease>,
@@ -51,8 +50,11 @@ pub(super) struct PreparedReinstall {
     /// question, on a file the operator can edit between them.
     pub(super) offline: bool,
     pub(super) metadata: RunMetadata,
-    pub(super) manifest: SelectedManifest,
-    pub(super) workspace: PreparedWorkspace,
+    /// The ONE selected-world provenance bundle: the canonical root, the
+    /// manifest snapshot taken at it, and the tree built from THAT snapshot.
+    /// One value rather than three fields, so the executed region cannot be
+    /// handed a manifest from one moment and a tree from another.
+    pub(super) selection: PreparedSelection,
     pub(super) trace: TracePreparation,
 }
 
@@ -70,8 +72,7 @@ pub(super) fn prepare(
     let offline = output::resolve_offline(root_offline, user_config.net.offline);
     // The ONE read of the SELECTED node's `vibe.toml` — see the module note on
     // what it decides and what it does not.
-    let manifest = SelectedManifest::read(&project_root);
-    let workspace = manifest.prepare_workspace(&project_root);
+    let selection = SelectedManifest::read(&project_root).prepare();
     let requested = "reinstall";
     let chain = vec!["install".to_string()];
     // MATERIALISATION force and HOSTED-REPARK force are different things.
@@ -82,15 +83,15 @@ pub(super) fn prepare(
     // unable to satisfy its own task — every resume minted a new id and
     // reparked, forever. So the lifecycle force stays FALSE, in the selector
     // and in the metadata, and `--force` keeps its own unrelated job.
+    let trace_request = selection.request(args.trace_compile);
     let prelude = crate::commands::lifecycle::run_prelude(
         ctx,
-        project_root,
-        workspace,
+        selection,
         lease.clone(),
         requested,
         &chain,
         false,
-        manifest.request(args.trace_compile),
+        trace_request,
     )
     .context("selecting the reinstall lifecycle run identity")?;
     let metadata = RunMetadata {
@@ -109,13 +110,11 @@ pub(super) fn prepare(
     };
     let trace = prelude.prepare_trace(&super::now);
     Ok(PreparedReinstall {
-        project_root: prelude.project_root,
         lease: prelude.lease,
         user_config,
         offline,
         metadata,
-        manifest,
-        workspace: prelude.workspace,
+        selection: prelude.selection,
         trace,
     })
 }

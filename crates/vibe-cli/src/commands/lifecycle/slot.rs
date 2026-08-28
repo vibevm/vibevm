@@ -1,40 +1,8 @@
 use anyhow::Result;
 use vibe_lifecycle::RunMetadata;
 use vibe_wire::generated::lifecycle_plan::{LifecyclePlan, PlannedContribution};
-use vibe_wire::generated::lifecycle_report::LifecycleContributionReport;
 
 use crate::output;
-
-pub(crate) fn contribution_report(
-    report: vibe_install::SlotLifecycleReport,
-) -> LifecycleContributionReport {
-    LifecycleContributionReport {
-        flagged: report.flagged.then_some(true),
-        handler: report.handler,
-        key: report.key,
-        message: report.message,
-        stderr: report.stderr,
-        stderr_truncated: report.stderr_truncated.then_some(true),
-        stdout: report.stdout,
-        stdout_truncated: report.stdout_truncated.then_some(true),
-        phase: "install".into(),
-        point: report.point,
-        provider: report.provider,
-        reference: Some(report.reference),
-        slot_target: report.slot_target.map(|target| {
-            vibe_wire::generated::lifecycle_report::SlotTarget {
-                group: target.group,
-                kind: target.kind,
-                name: target.name,
-                root: target.root,
-                version: target.version,
-            }
-        }),
-        status: report.status,
-        tier: report.tier,
-        version: report.version,
-    }
-}
 
 pub(crate) fn emit_transition_outcome(
     ctx: &output::Context,

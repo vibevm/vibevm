@@ -64,7 +64,7 @@ use vibe_workspace::vibedeps;
 
 use crate::cli::ReinstallArgs;
 use crate::commands::compile_trace::{self, CommandExit, RegisteredReportDraft, render_finalized};
-use crate::commands::install::{PreparedWorkspace, SelectedManifest, build_install_resolver};
+use crate::commands::install::build_install_resolver;
 use crate::output;
 
 use inputs::{exact_pkgref, load_lockfile, resolver_args};
@@ -111,7 +111,8 @@ pub(super) fn rederive_package(project_root: &Path, package: &str) -> Result<boo
 
     let manifest = Manifest::read(workspace.root.join(Manifest::FILENAME))?;
     let user_config = UserConfig::load().context("loading the user config")?;
-    let spec_format = crate::commands::install::resolve_spec_format(&manifest, &user_config);
+    let spec_format =
+        crate::commands::install::resolve_spec_format(&manifest, user_config.install.spec_format);
     if spec_format == SpecFormat::Mixed {
         return Ok(true);
     }
@@ -167,13 +168,11 @@ pub fn run(
     root_offline: bool,
 ) -> Result<()> {
     let PreparedReinstall {
-        project_root,
         lease,
         user_config,
         offline,
         metadata,
-        manifest,
-        workspace,
+        selection,
         trace,
     } = prepare::prepare(ctx, &args, root_offline)?;
     // The boundary's OWNER share: the executed region below consumes its own
@@ -187,10 +186,8 @@ pub fn run(
             embedded_root,
             offline,
             lease,
-            project_root,
             user_config,
-            manifest,
-            workspace,
+            selection,
             metadata,
         },
         trace.recorder(),
@@ -211,10 +208,10 @@ struct Execution {
     /// The workspace mutation lease from the prepare epoch — the ONE
     /// acquisition, borrowed by both modes below.
     lease: std::sync::Arc<vibe_lifecycle::LifecycleLease>,
-    project_root: PathBuf,
     user_config: UserConfig,
-    manifest: SelectedManifest,
-    workspace: PreparedWorkspace,
+    /// The ONE selected-world provenance bundle: the canonical root, the
+    /// manifest snapshot taken at it, and the tree built from THAT snapshot.
+    selection: crate::commands::install::PreparedSelection,
     metadata: vibe_lifecycle::RunMetadata,
 }
 
@@ -228,7 +225,7 @@ fn execute_after_open(
     // move it — see `ReinstallIdentity`. Operational facts stay workspace-
     // rooted; this answers "which invocation is this document about".
     let identity = ReinstallIdentity {
-        selected_project_root: execution.project_root.clone(),
+        selected_project_root: execution.selection.root().to_path_buf(),
         forced: execution.args.force,
     };
     match run_inner(ctx, execution, trace) {
@@ -261,47 +258,28 @@ fn run_inner(
         embedded_root,
         offline,
         lease,
-        project_root,
         user_config,
-        manifest,
-        workspace,
+        selection,
         metadata,
     } = execution;
-    // The stored snapshot is consumed for its ERROR first: a malformed selected
-    // `vibe.toml` is this command's failure, in its own words. Its VALUE is
-    // deliberately not the operational manifest — see `prepare`.
+    // The bundle is proven for its ERROR first: a malformed selected
+    // `vibe.toml` is this command's failure, in its own words. Its manifest
+    // VALUE is deliberately not the operational one — see `prepare`.
     let identity = ReinstallIdentity {
-        selected_project_root: project_root.clone(),
+        selected_project_root: selection.root().to_path_buf(),
         forced: args.force,
     };
-    let selected = manifest.into_manifest()?;
-    // The ONE workspace answer, returned as it was. Retrying could succeed
+    // …and the ONE workspace answer, returned as it was. Retrying could succeed
     // against a tree the identity and the trace were never prepared for.
-    let workspace = match workspace {
-        PreparedWorkspace::Loaded(workspace) => *workspace,
-        PreparedWorkspace::DiscoveryFailed(error) => {
-            return Err(anyhow::Error::new(*error)
-                .context("discovering the workspace enclosing the project"));
-        }
-        // Unreachable through the owner above, which consumes the manifest
-        // error first; named rather than merged so a future caller is a
-        // compile-time question instead of a silent success.
-        PreparedWorkspace::SelectedManifestInvalid => {
-            bail!(
-                "internal: the selected manifest was reported invalid but its error was \
-                 already consumed"
-            );
-        }
-        PreparedWorkspace::DiscoverHere => {
-            Workspace::discover_with_selected_manifest(&project_root, &selected)
-                .context("discovering the workspace enclosing the project")?
-        }
-    };
+    let proven = selection.prove()?;
+    let workspace = proven.workspace();
 
     let lockfile = load_lockfile(&workspace.root)?;
     // The workspace ROOT's manifest, from the tree already in hand.
-    let spec_format =
-        crate::commands::install::resolve_spec_format(&workspace.root_manifest, &user_config);
+    let spec_format = crate::commands::install::resolve_spec_format(
+        &workspace.root_manifest,
+        user_config.install.spec_format,
+    );
 
     if args.force {
         force::run(
@@ -309,7 +287,7 @@ fn run_inner(
             force::Forced {
                 args: &args,
                 identity: &identity,
-                workspace: &workspace,
+                workspace,
                 lockfile: &lockfile,
                 metadata: &metadata,
                 spec_format,
@@ -325,7 +303,7 @@ fn run_inner(
             regenerate::Plain {
                 args: &args,
                 identity: &identity,
-                workspace: &workspace,
+                workspace,
                 lockfile: &lockfile,
                 metadata: &metadata,
                 spec_format,

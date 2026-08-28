@@ -90,10 +90,10 @@ fn completed(rows: Vec<SlotLifecycleReport>) -> ResumeOutcome {
     );
     run.slot_reports = rows;
     run.progress = resumed_progress();
-    ResumeOutcome::Completed(Box::new(crate::commands::install::ResumedInstall {
+    ResumeOutcome::Completed(Box::new(vibe_orchestrator::ResumedInstall {
         run,
         context: crate::commands::install::InstallRunContext {
-            lease: crate::commands::install::test_lease(),
+            lease: vibe_test_support::retained_lifecycle_lease(),
             metadata: metadata(),
             lifecycle_run: None,
             lifecycle_reports: Vec::new(),
@@ -102,18 +102,21 @@ fn completed(rows: Vec<SlotLifecycleReport>) -> ResumeOutcome {
 }
 
 fn failed(rows: Vec<SlotLifecycleReport>) -> ResumeOutcome {
-    ResumeOutcome::Failed(ResumeFailure {
+    ResumeOutcome::Failed(crate::commands::install::MeasuredFailure {
         original: anyhow::Error::new(Sentinel).context("finishing the parked slot run"),
-        progress: InstallProgress {
-            complete: true,
-            fresh: false,
-            materialised: vec!["vibedeps/org.demo.tools/0.1.0".into()],
-            skipped: Vec::new(),
-            pruned: Vec::new(),
-            nodes_regenerated: vec![".".into()],
+        measurement: crate::commands::install::Measurement::Slot {
+            progress: Box::new(InstallProgress {
+                complete: true,
+                fresh: false,
+                materialised: vec!["vibedeps/org.demo.tools/0.1.0".into()],
+                skipped: Vec::new(),
+                pruned: Vec::new(),
+                nodes_regenerated: vec![".".into()],
+            }),
+            reports: rows,
+            packages_resolved: 0,
         },
-        reports: rows,
-        packages_resolved: 0,
+        emit_machine_failure: false,
     })
 }
 
@@ -468,7 +471,7 @@ fn an_invalid_handoff_is_refused_before_the_current_rows_are_taken() {
         "and the exact validation error is returned: {error:#}",
     );
     assert!(
-        !crate::commands::compile_trace::is_carried(&error),
+        !vibe_orchestrator::failure::is_measured(&error),
         "root-neutral: no family was chosen here",
     );
 }

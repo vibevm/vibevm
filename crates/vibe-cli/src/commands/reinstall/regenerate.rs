@@ -87,17 +87,22 @@ pub(super) fn run(ctx: &output::Context, inputs: Plain<'_>) -> Result<ReinstallD
         return Err(InstallError::UserDeclined.into());
     }
 
+    // The ONE backend, from the values this command already holds.
+    let agent: std::sync::Arc<dyn vibe_lifecycle::AgentBackend> =
+        std::sync::Arc::new(crate::commands::lifecycle::install_agent_backend(
+            &workspace.root,
+            &workspace.root_manifest,
+        ));
     // Service what a forced run parked, BEFORE ordinary boot regeneration.
     let serviced = continuation::service(
         ctx,
         continuation::Request {
             identity,
             workspace,
-            manifest: &workspace.root_manifest,
             metadata,
-            spec_format,
             progress: InstallProgress::fresh(Vec::new()),
             lease,
+            agent: agent.clone(),
         },
     )?;
     let rows = match serviced {
