@@ -28,6 +28,10 @@ vibe-agent-projection.workspace = true
 # The create-phase agent backend: the CLI supplies `vibe-llm` behind the
 # lifecycle's transport-neutral agent seam.
 vibe-llm.workspace = true
+# `vibe requirements` (R7.5 §6.1) is a thin parser/renderer over the ONE
+# requirements query library — the same call the MCP `requirements_query`
+# tool makes, so the two surfaces cannot answer differently.
+vibe-requirements.workspace = true
 vibe-registry.workspace = true
 vibe-resolver.workspace = true
 # The shared package-source composition (R7.4 A15a): the CLI projects its

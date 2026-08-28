@@ -33,8 +33,14 @@ vibe-package-source.workspace = true
 vibe-install.workspace = true
 vibe-wire.workspace = true
 # The `explain` MCP tool is a thin surface over the shared `vibe-trace`
-# capability, which both the MCP tool and the `vibe explain` CLI call.
+# capability, which both the MCP tool and the `vibe explain` CLI call;
+# `requirements_query` injects the same crate's read-only
+# `SpecmapRelationProvider` when — and only when — relations are asked for.
 vibe-trace.workspace = true
+# The ONE read-only requirements answer (R7.5 §5): `requirements_query` is a
+# thin argument parser / renderer over `vibe_requirements::query`, exactly as
+# the CLI is. No report member is assembled on this side.
+vibe-requirements.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 sha2.workspace = true

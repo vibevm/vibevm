@@ -24,6 +24,7 @@ mod prefs;
 mod progress;
 mod query;
 mod registry;
+mod requirements;
 mod select;
 mod skill;
 mod specmap;
@@ -45,6 +46,7 @@ pub use prefs::*;
 pub use progress::*;
 pub use query::*;
 pub use registry::*;
+pub use requirements::*;
 pub use select::*;
 pub use skill::*;
 pub use specmap::*;
@@ -250,6 +252,14 @@ pub enum Command {
 
     /// Inspect and edit the project's consumer-owned adoption-facts registry.
     Facts(crate::commands::facts::FactsArgs),
+
+    /// One bounded, read-only metadata answer about what the selected
+    /// project's specs declare and what it recorded about them (PROP-054
+    /// `##REF-REQUIREMENTS-SURFACES`): per addressed fact its authoring
+    /// status, this project's consumer adoption, and — with `--relations`
+    /// — the edges a specmap carries. `--json` is the generated report
+    /// exactly; combining the axes into a verdict is never this query's.
+    Requirements(RequirementsArgs),
 
     /// Explain why a package is in (or out of) this project's effective
     /// world: the admitting chain with its rule, or the blocked edges and

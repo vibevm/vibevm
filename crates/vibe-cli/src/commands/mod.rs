@@ -53,6 +53,7 @@ pub mod query;
 pub mod refactor;
 pub mod registry;
 pub mod reinstall;
+pub mod requirements;
 pub mod search;
 pub mod select;
 pub mod short_name;
