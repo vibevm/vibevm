@@ -240,6 +240,11 @@
       source it read; exact citations replace narrative. The 2026-08-26 probes
       showed that a good Opus review can consume 47k output tokens and a GLM
       review 30k when no report budget is stated.</REPORT-BUDGET>
+    </facts>
+  </transport>
+
+  <handoff title="4.1. Accepted evidence and terminal lane state">
+    <facts ordered="false">
       <ACCEPTED-WISDOM-HARVEST fact="true" status="spec/done">An untracked
       worker report is evidence, never the sole durable home of an accepted
       fact. Before root accepts an atom or permits its report/worktree/cache to
@@ -280,7 +285,7 @@
       centrally; wrong judgment or behavior uses same-cwd continuation when
       economical.</ROOT-ACCEPTANCE>
     </facts>
-  </transport>
+  </handoff>
 
   <gates title="5. Fast development gates and the full-panel cadence">
     <p><OWNER-PANEL-RULING fact="true" status="spec/done">**Owner ruling,
