@@ -1,27 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
-  <title id="root">WAL — checkpoint 2026-08-28: R7.4 A14 prompt resolver landed; A15 next</title>
-  <status stage="impl" state="work" comment="lifecycle/extensions campaign active; R1/R2, R3.1-R3.4, R6.2a/b, R7.1-R7.3, R8.1 and R8.2a complete; R7.4 implementation active"/>
+  <title id="root">WAL — checkpoint 2026-08-28: R7.4 complete and green; R7.5 next</title>
+  <status stage="impl" state="work" comment="lifecycle/extensions campaign active; R1/R2, R3.1-R3.4, R6.2a/b, R7.1-R7.4, R8.1 and R8.2a complete; R7.5 next"/>
 
   <current-phase title="Current phase">
     <p><WAL-PHASE fact="true" status="impl/work">The active epic is
     `campaigns/packages-2026-09/TZ-LIFECYCLE-EXTENSIONS-v0.1.md`; its granular
     authority for execution state is
     `campaigns/packages-2026-09/LIFECYCLE-EXTENSIONS-IMPLEMENTATION-LEDGER.md`.
-    R3.4 is integrated, green and mirrored. R7.4's central architecture has
-    passed three claudez audits plus an independent Opus/max adjudication.
-    The disjoint characterization, bounded-read, JTD, typed-output and
-    projection atoms are landed and exactly gated. Pinned transactional state
-    I/O, lease/selected ownership and the read-only tasks adapter are green
-    under the first coherent panel. A9 execution ports, A10 lower projection
-    imports, A11's neutral plan carrier, A12's application service and A13's
-    non-rendering trace funnel and A14 selected-world prompt resolver are landed
-    through `cd793ca9` / `2b08c818`.
-    The lower service owns opaque selected-world provenance, install/resume,
-    phase dispatch, trace-home selection and finalisation; `[llm]`, registered
-    report families, deferred-plan routing, presentation and credentials remain
-    CLI-owned. A15 now adds the strict hosted/no-spend MCP run adapter.
-    The owner-approved neutral R7.5 external-work substrate follows R7.4.
+    R3.4 is integrated, green and mirrored. R7.4 is now complete on exact tree
+    `6f074e66`: `lifecycle_tasks` and strict hosted/no-spend `lifecycle_run`
+    share bounded/pinned state, selected-node/run ownership, the outermost
+    lifecycle lease, one lower application/trace command, real package-source
+    composition and generated report semantics with the CLI. Agent rows park
+    without constructing a provider; ordinary algorithmic rows remain complete
+    without an LLM. The final panel executed all 54 dynamic gates and ended
+    `self-check: all green` after the named wire-ratchet decision and a
+    deterministic Windows mandatory-lock repair found by the boundary run.
+    R7.5 is the next atom family: exact evidence identity, optional read-only
+    spec/facts observations and CLI/MCP projections for an external PDSA
+    orchestrator. Lifecycle still contains no coding agent or automatic loop.
     </WAL-PHASE></p>
   </current-phase>
 
@@ -35,13 +33,12 @@
       presets/query and owner scenario §10.1 are complete.</WAL-R2>
       <WAL-R3 fact="true" status="impl/done">R3 explicit six-carrier compiler
       IR, named pass schedule, verifier and command-owned compile trace are
-      complete. Post-A14 checkpoint specmap: 6790 units, 2178 tagged items, 1959 edges,
-      0 suspects, 0 gated orphans, 0 unresolved host edges, 21 standing
+      complete. Post-R7.4 checkpoint specmap: 6793 units, 2205 tagged items, 1986 edges,
+      0 suspects, 0 gated orphans, 0 unresolved host edges, 24 standing
       warnings.</WAL-R3>
-      <WAL-R7 fact="true" status="impl/work">R7.1 provider, R7.2 CLI agent
-      output contract and R7.3 hosted exact-run park/resume are complete. R7.4
-      implementation is active under
-      `R7-MCP-LIFECYCLE-ARCHITECTURE-v0.1.md`: one lower application service,
+      <WAL-R7 fact="true" status="impl/done">R7.1 provider, R7.2 CLI agent
+      output contract, R7.3 hosted exact-run park/resume and R7.4 MCP lifecycle
+      surfaces are complete under `R7-MCP-LIFECYCLE-ARCHITECTURE-v0.1.md`: one lower application service,
       selected-node/run ownership, bounded/pinned state, outermost lease,
       strict JTD tasks query and hosted/no-spend MCP run. Its first wave is
       landed through `17d94f8f`; A4 is complete at `0225ce41` / `970520d4`
@@ -70,10 +67,14 @@
       A14 is complete at `cd793ca9` / `2b08c818`: one credential-free
       `SelectedWorldPromptResolver`, exact self/lock-selected embed resolution,
       eleven lower REDs, 213 unit + 14 doctest and 36 CLI integrations green.
-      Config, credentials, network transport and completion remain CLI-only.
-      R7.5 neutral
-      evidence/query substrate follows. Provider presence activates nothing
-      by itself.</WAL-R7>
+      A15a/b/c are complete at `5df76260` / `23044cfd`, `0ef2f8f5` /
+      `a4336ea2`, `1027ca5e`, `9c340df8` / `a0276a0d`; the named boundary
+      repairs are `602ef5e8`, `9fc6c2bb` / `6f074e66`. The final R7.4 panel on
+      `6f074e66` ran workspace tests/clippy, host check, conform 0 new,
+      codegen/specmap/wire, every package/MCP suite, both user-home tripwires
+      and markup 508/0 through `self-check: all green`. Config, credentials,
+      network transport and completion remain CLI-only; provider presence
+      activates nothing by itself.</WAL-R7>
       <WAL-R8 fact="true" status="impl/work">R8.1 project-only package-skill
       binding and R8.2a mechanism/artifact/deploy grammar are complete. Runtime
       mechanisms, build/package providers and deploy reconciliation remain.
@@ -149,14 +150,14 @@
   </constraints>
 
   <next title="Next">
-    <p><WAL-NEXT fact="true" status="impl/work">The accepted R7.4
-    architecture through A14 is landed: state/lease/selected/tasks, three
-    execution ports, the lower projection dependency and a surface-neutral
-    orchestrator application + trace service and the credential-free prompt
-    resolver. Complete A15 hosted
-    `lifecycle_run`, then run the R7.4 boundary panel. Follow with R7.5 exact evidence,
-    optional read-only spec-IR facts and a fake external PDSA orchestrator — no
-    embedded agent policy. Resume R4 registry/transforms after those neutral
+    <p><WAL-NEXT fact="true" status="impl/work">R7.4 is complete and green.
+    Execute R7.5 in four atoms: reconcile the evidence/optional-provider and
+    lifecycle vocabulary laws; add JTD-first exact evidence identity and a
+    metadata-only requirements query; build the optional read-only
+    `vibe-specdoc` + `vibe-facts` projection; then expose strict CLI/MCP
+    query/control surfaces and prove them with a fake external PDSA
+    orchestrator. No lifecycle-embedded agent policy, task heuristic or
+    automatic back-edge. Resume R4 registry/transforms after those neutral
     adapters, per the implementation ledger.</WAL-NEXT></p>
   </next>
 
