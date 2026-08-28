@@ -6,10 +6,14 @@
 //! caller cannot size in advance, and an unbounded `read_to_end` there turns a
 //! corrupted or hostile length into an unbounded allocation. The bounded entry
 //! points keep every refusal the ordinary read enforces and add exactly one
-//! law: the answer is at most `cap` bytes, or it is an error — never a
-//! truncated prefix presented as the file.
+//! law on the answer's size — at most `cap` bytes, or an error, never a
+//! truncated prefix presented as the file — and one on its identity: at EOF,
+//! the final name is reopened through the same pinned capability and must
+//! still denote the very object that supplied the bytes, so a read can never
+//! answer for an object the path has already swapped out from under it.
 
 use std::io::Read;
+use std::path::Path;
 
 use anyhow::{Context, Result, bail};
 
@@ -56,7 +60,13 @@ impl Project {
 
     /// The same bounded read below an already-pinned `directory`, or `None`
     /// when absent. A link, a non-regular file, or a hard link count != 1
-    /// refuses exactly as in [`read_file_in`](Self::read_file_in).
+    /// refuses exactly as in [`read_file_in`](Self::read_file_in)], and so
+    /// does a final name that no longer denotes the object the bytes were
+    /// read from: the name is reopened at EOF through the same pinned
+    /// capability and its file identity compared to the held handle's, so a
+    /// rename-swap under the read is a refusal, never stale bytes as
+    /// `Ok`. Absence is `None` only at the initial open — after a handle
+    /// was read, a vanished name is an error.
     ///
     /// ```rust
     /// # fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -139,6 +149,15 @@ impl Project {
                         }
                     };
                     if used == 0 {
+                        // EOF under the fence — but not yet an answer. The
+                        // bytes count only if the final name still denotes
+                        // the very object that supplied them: a held
+                        // handle's metadata alone cannot prove that, because
+                        // on POSIX the inode behind it can be renamed away
+                        // (still regular, still single-link) while a fresh
+                        // regular single-link file takes the original name.
+                        let held = fenced.into_inner();
+                        ensure_still_final_name(&holder, &name, &held, &display)?;
                         return Ok(Some(bytes));
                     }
                     // Loop invariant: `bytes.len() <= cap`, so the subtraction
@@ -167,5 +186,67 @@ impl Project {
                 Err(anyhow::Error::new(error).context(format!("opening `{}`", display.display())))
             }
         }
+    }
+}
+
+/// Refuse unless the final `name` still denotes, through `holder`'s pinned
+/// capability, exactly the object `held` finished reading.
+///
+/// The reopen answers through the same no-follow capability the read used —
+/// never ambient authority — and every answer short of "the same object" is a
+/// hard refusal that names the path and the final-name race: the name may be
+/// gone, occupied by a link/reparse point, shared as a hard link, a
+/// directory, or a different regular single-link file. There is deliberately
+/// no retry and no cache: a caller that wants certainty re-reads.
+fn ensure_still_final_name(
+    holder: &Pinned,
+    name: &str,
+    held: &std::fs::File,
+    display: &Path,
+) -> Result<()> {
+    let mut options = cap_options();
+    match holder.dir.open_with(name, options.read(true)) {
+        Ok(current) => {
+            let current = current.into_std();
+            verify_regular_single_link(&current, display).with_context(|| {
+                format!(
+                    "rechecking `{}` after the bounded read (final-name race)",
+                    display.display()
+                )
+            })?;
+            let held_id = crate::file::identity::file_identity(held, display).with_context(|| {
+                format!(
+                    "identifying the held object for `{}` after the bounded read (final-name race)",
+                    display.display()
+                )
+            })?;
+            let named_id =
+                crate::file::identity::file_identity(&current, display).with_context(|| {
+                    format!(
+                        "identifying the currently named object for `{}` after the bounded read \
+                         (final-name race)",
+                        display.display()
+                    )
+                })?;
+            if crate::race_hook::bounded_read_identity_matches(held_id == named_id) {
+                Ok(())
+            } else {
+                bail!(
+                    "`{}` was replaced while being read (final-name race): the bytes in hand came \
+                     from an object the path no longer denotes — re-read",
+                    display.display()
+                );
+            }
+        }
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => bail!(
+            "`{}` was removed while being read (final-name race): the bytes in hand belong to an \
+             object the path no longer names — re-read",
+            display.display()
+        ),
+        Err(error) => Err(anyhow::Error::new(error).context(format!(
+            "reopening final name `{}` after the bounded read failed (final-name race): it no \
+             longer opens as a regular single-link file",
+            display.display()
+        ))),
     }
 }

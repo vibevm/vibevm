@@ -30,6 +30,9 @@ mod armed {
         static BEFORE_BOUNDED_READ: RefCell<Option<Hook>> = const { RefCell::new(None) };
         static BEFORE_PUBLISH_VERIFY: RefCell<Option<Hook>> = const { RefCell::new(None) };
         static LOCK_IDENTITY_CHECK: RefCell<Option<IdentityCheckHook>> = const { RefCell::new(None) };
+        static BOUNDED_READ_IDENTITY_CHECK: RefCell<Option<IdentityCheckHook>> = const {
+            RefCell::new(None)
+        };
     }
 
     /// Run `hook` on this thread in the window an OS file lock cannot cover:
@@ -62,6 +65,24 @@ mod armed {
 
     pub(crate) fn lock_identity_matches(actual: bool) -> bool {
         LOCK_IDENTITY_CHECK.with(|slot| {
+            slot.borrow_mut()
+                .as_mut()
+                .map_or(actual, |hook| hook(actual))
+        })
+    }
+
+    /// Override the next end-of-read identity comparison of a bounded read.
+    /// This deterministic seam proves the final-name refusal on hosts (notably
+    /// Windows) whose sharing rules refuse to stage the real rename race
+    /// while the read handle is open. Like the lock seam it remains armed
+    /// until explicitly cleared, so one test can prove both the refused read
+    /// and the clean re-read after disarming. Compiled out of shipped builds.
+    pub fn arm_bounded_read_identity_check(hook: Option<IdentityCheckHook>) {
+        BOUNDED_READ_IDENTITY_CHECK.with(|slot| *slot.borrow_mut() = hook);
+    }
+
+    pub(crate) fn bounded_read_identity_matches(actual: bool) -> bool {
+        BOUNDED_READ_IDENTITY_CHECK.with(|slot| {
             slot.borrow_mut()
                 .as_mut()
                 .map_or(actual, |hook| hook(actual))
@@ -186,12 +207,14 @@ mod armed {
 #[cfg(any(test, feature = "inject-failures"))]
 pub(crate) use armed::{
     after_create_dir, before_bounded_read, before_create_dir, before_link, before_lock,
-    before_proved_removal, before_publish_verify, lock_identity_matches,
+    before_proved_removal, before_publish_verify, bounded_read_identity_matches,
+    lock_identity_matches,
 };
 #[cfg(any(test, feature = "inject-failures"))]
 pub use armed::{
     arm_after_create_dir, arm_before_bounded_read, arm_before_create_dir, arm_before_link,
-    arm_before_lock, arm_before_proved_removal, arm_before_publish_verify, arm_lock_identity_check,
+    arm_before_lock, arm_before_proved_removal, arm_before_publish_verify,
+    arm_bounded_read_identity_check, arm_lock_identity_check,
 };
 
 #[cfg(not(any(test, feature = "inject-failures")))]
@@ -222,5 +245,10 @@ pub(crate) fn before_publish_verify(_directory: &crate::Pinned, _name: &str) {}
 
 #[cfg(not(any(test, feature = "inject-failures")))]
 pub(crate) const fn lock_identity_matches(actual: bool) -> bool {
+    actual
+}
+
+#[cfg(not(any(test, feature = "inject-failures")))]
+pub(crate) const fn bounded_read_identity_matches(actual: bool) -> bool {
     actual
 }

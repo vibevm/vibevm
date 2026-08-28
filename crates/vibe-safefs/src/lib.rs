@@ -48,5 +48,5 @@ pub use publish::{PublishError, PublishStage, Published};
 pub use race_hook::{
     arm_after_create_dir, arm_before_bounded_read, arm_before_create_dir, arm_before_link,
     arm_before_lock, arm_before_proved_removal, arm_before_publish_verify,
-    arm_lock_identity_check,
+    arm_bounded_read_identity_check, arm_lock_identity_check,
 };

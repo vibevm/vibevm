@@ -9,12 +9,14 @@
 //! read already enforces — and the returned buffer's *capacity*, which is the
 //! mechanical half of the promise: metadata-derived on the stable path,
 //! exactly-reserved and never past `cap + 1` when growth stays inside the cap.
+//! They also pin the final-name identity law: bytes count only while the
+//! capability-relative name still denotes the object that supplied them.
 
 use std::fs;
 use std::io::Write;
 use std::path::Path;
 
-use crate::{Project, arm_before_bounded_read};
+use crate::{Project, arm_before_bounded_read, arm_bounded_read_identity_check};
 
 fn project() -> (tempfile::TempDir, Project) {
     let dir = tempfile::tempdir().unwrap();
@@ -288,4 +290,205 @@ fn a_max_cap_refuses_overflow_rather_than_wrapping() {
         format!("{error:#}").contains("overflow"),
         "the refusal must name the overflow, not report a read",
     );
+}
+
+/// A stable name is the ordinary outcome, and the final-name gate really ran
+/// to allow it: the comparator observed an actual `true` exactly once, and
+/// the exact bytes come back whole. This is the anchor the override and
+/// mutation proofs hang off — a gate that never fires discriminates nothing.
+#[test]
+fn a_stable_name_reads_whole_through_an_observed_true_identity() {
+    use std::sync::Arc;
+    use std::sync::atomic::{AtomicUsize, Ordering};
+
+    let (dir, project) = project();
+    fs::write(dir.path().join("state.json"), b"12345").unwrap();
+
+    let checks = Arc::new(AtomicUsize::new(0));
+    let observed = Arc::clone(&checks);
+    arm_bounded_read_identity_check(Some(Box::new(move |actual| {
+        assert!(
+            actual,
+            "a stable fixture leaves the held and named identities equal"
+        );
+        observed.fetch_add(1, Ordering::SeqCst);
+        actual
+    })));
+    let bytes = project
+        .read_file_bounded("state.json", 16)
+        .unwrap()
+        .expect("a stable file reads whole");
+    arm_bounded_read_identity_check(None);
+
+    assert_eq!(bytes, b"12345");
+    assert_eq!(
+        checks.load(Ordering::SeqCst),
+        1,
+        "the final-name comparison ran exactly once and saw a real `true`",
+    );
+}
+
+/// The final-name comparison is a mandatory gate even where the physical race
+/// cannot be staged — Windows sharing rules may hold the name while the read
+/// handle is open. Forcing the next otherwise-true comparison false must
+/// refuse: this is the deterministic, all-host RED for the swap the Unix
+/// tests below perform for real.
+#[test]
+fn a_forced_identity_mismatch_refuses_the_read_deterministically() {
+    let (dir, project) = project();
+    fs::write(dir.path().join("state.json"), b"12345").unwrap();
+
+    arm_bounded_read_identity_check(Some(Box::new(|actual| {
+        assert!(actual, "the real handle and name agree in this fixture");
+        false
+    })));
+    let outcome = project.read_file_bounded("state.json", 16);
+    arm_bounded_read_identity_check(None);
+
+    let error = outcome.expect_err("an identity mismatch is a hard refusal");
+    let rendered = format!("{error:#}");
+    assert!(rendered.contains("state.json"), "{rendered}");
+    assert!(rendered.contains("final-name race"), "{rendered}");
+}
+
+/// The race the gate exists for, staged physically: in the read window the
+/// held inode is renamed to a sibling (still regular, still single-link) and
+/// a different valid file takes the original name. A held handle's metadata
+/// alone cannot see this — both objects are ordinary files with one link —
+/// but the reopened name's identity can, and the read must refuse rather
+/// than return either the old or the replacement bytes.
+#[cfg(unix)]
+#[test]
+fn a_file_renamed_under_the_read_refuses_rather_than_returning_either_object() {
+    let (dir, project) = project();
+    let path = dir.path().join("state.json");
+    let moved = dir.path().join("moved.json");
+    fs::write(&path, b"original").unwrap();
+    let (from, to) = (path.clone(), moved.clone());
+    arm_before_bounded_read(Some(Box::new(move |_, _| {
+        // The held inode keeps exactly one link under its new name; a fresh
+        // regular single-link file occupies the original name.
+        fs::rename(&from, &to).unwrap();
+        fs::write(&from, b"replacement").unwrap();
+    })));
+    let outcome = project.read_file_bounded("state.json", 64);
+    arm_before_bounded_read(None);
+
+    let error = outcome.expect_err("the swap is refused, old and new bytes alike");
+    let rendered = format!("{error:#}");
+    assert!(rendered.contains("state.json"), "{rendered}");
+    assert!(rendered.contains("final-name race"), "{rendered}");
+    // Prove the race truly fired: the moved original and the replacement
+    // both exist, so the refusal judged two distinct live objects.
+    assert_eq!(
+        fs::read(&moved).unwrap(),
+        b"original",
+        "the read object survives under its new name",
+    );
+    assert_eq!(
+        fs::read(&path).unwrap(),
+        b"replacement",
+        "a different object now occupies the original name",
+    );
+}
+
+/// The other half of the race: the name vanishes entirely (renamed away,
+/// nothing takes its place). Absence at the INITIAL open stays `Ok(None)`;
+/// absence after a handle was read is a hard refusal — never a quiet `None`
+/// dressed as "not found", and never the stale bytes.
+#[cfg(unix)]
+#[test]
+fn a_name_that_disappears_under_the_read_refuses() {
+    let (dir, project) = project();
+    let path = dir.path().join("state.json");
+    let moved = dir.path().join("moved.json");
+    fs::write(&path, b"original").unwrap();
+    let (from, to) = (path.clone(), moved.clone());
+    arm_before_bounded_read(Some(Box::new(move |_, _| {
+        fs::rename(&from, &to).unwrap();
+    })));
+    let outcome = project.read_file_bounded("state.json", 64);
+    arm_before_bounded_read(None);
+
+    let error = outcome.expect_err("a vanished name is a hard refusal after a read began");
+    let rendered = format!("{error:#}");
+    assert!(rendered.contains("state.json"), "{rendered}");
+    assert!(rendered.contains("final-name race"), "{rendered}");
+    assert_eq!(fs::read(&moved).unwrap(), b"original");
+    assert!(!path.exists(), "the original name is truly gone");
+}
+
+/// A second hard link planted under the read is a physical rebind the reopen
+/// must refuse: the name still denotes the same object, but as one of TWO
+/// names now — the single-link law bites exactly as it does at the initial
+/// open. Staging it needs no rename-under-handle and no symlink privilege,
+/// so it runs on every host whose filesystem offers hard links — the same
+/// capability the existing initial-open test already relies on.
+#[test]
+fn a_hard_link_planted_under_the_read_refuses_at_the_reopen() {
+    let (dir, project) = project();
+    let path = dir.path().join("state.json");
+    let second = dir.path().join("second.json");
+    fs::write(&path, b"shared").unwrap();
+    let (origin, alias) = (path.clone(), second.clone());
+    arm_before_bounded_read(Some(Box::new(move |_, _| {
+        fs::hard_link(&origin, &alias).expect(
+            "both names sit in one temp fixture on one filesystem; a hard link must be creatable \
+             here or the single-link law has no proof on this host",
+        );
+    })));
+    let outcome = project.read_file_bounded("state.json", 64);
+    arm_before_bounded_read(None);
+
+    let error = outcome.expect_err("two names for the read object refuse at the reopen");
+    let rendered = format!("{error:#}");
+    assert!(
+        rendered.contains("names") || rendered.contains("hard link"),
+        "{rendered}",
+    );
+    assert!(rendered.contains("state.json"), "{rendered}");
+    assert!(rendered.contains("final-name race"), "{rendered}");
+}
+
+/// Where the host permits the physical rebind (Unix renames the held inode
+/// away freely), each hostile occupant of the final name — a symlink and a
+/// directory — refuses at the reopen. Windows may make the rename-under-
+/// handle unreachable through sharing rules and needs the symlink privilege
+/// for the other arm; there the deterministic override above is the
+/// non-skipping proof, so these physical cases are honestly cfg'd to Unix
+/// rather than skipped mid-test.
+#[cfg(unix)]
+#[test]
+fn a_rebound_final_name_refuses_symlink_and_directory_occupants() {
+    let (dir, project) = project();
+
+    let linked = dir.path().join("linked.json");
+    let linked_moved = dir.path().join("linked-moved.json");
+    fs::write(&linked, b"original").unwrap();
+    let (from, to) = (linked.clone(), linked_moved.clone());
+    arm_before_bounded_read(Some(Box::new(move |_, _| {
+        fs::rename(&from, &to).unwrap();
+        std::os::unix::fs::symlink(&to, &from).unwrap();
+    })));
+    let outcome = project.read_file_bounded("linked.json", 64);
+    arm_before_bounded_read(None);
+    let error = outcome.expect_err("a symlink at the final name refuses at the reopen");
+    let rendered = format!("{error:#}");
+    assert!(rendered.contains("linked.json"), "{rendered}");
+    assert!(rendered.contains("final-name race"), "{rendered}");
+
+    let occupied = dir.path().join("occupied.json");
+    let occupied_moved = dir.path().join("occupied-moved.json");
+    fs::write(&occupied, b"original").unwrap();
+    let (from, to) = (occupied.clone(), occupied_moved.clone());
+    arm_before_bounded_read(Some(Box::new(move |_, _| {
+        fs::rename(&from, &to).unwrap();
+        fs::create_dir(&from).unwrap();
+    })));
+    let outcome = project.read_file_bounded("occupied.json", 64);
+    arm_before_bounded_read(None);
+    let error = outcome.expect_err("a directory at the final name refuses at the reopen");
+    let rendered = format!("{error:#}");
+    assert!(rendered.contains("occupied.json"), "{rendered}");
+    assert!(rendered.contains("final-name race"), "{rendered}");
 }
