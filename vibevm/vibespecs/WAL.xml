@@ -39,7 +39,9 @@
       selected-node/run ownership, bounded/pinned state, outermost lease,
       strict JTD tasks query and hosted/no-spend MCP run. Its first wave is
       landed through `17d94f8f`; A4 is complete at `0225ce41` / `970520d4`
-      with safefs prerequisite `31ca1e7d`. R7.5 neutral
+      with safefs prerequisite `31ca1e7d`; the selected-node lower mapping is
+      `7bd335e2` / `b3ff308c`; A5 outermost lease is complete at `7e330974` /
+      `93177db6`, exact-gated and independently reviewed. R7.5 neutral
       evidence/query substrate follows. Provider presence activates nothing
       by itself.</WAL-R7>
       <WAL-R8 fact="true" status="impl/work">R8.1 project-only package-skill
@@ -114,10 +116,10 @@
 
   <next title="Next">
     <p><WAL-NEXT fact="true" status="impl/work">The accepted R7.4
-    architecture, first parallel wave and A4 state transaction are landed,
-    with every completed worker worktree reclaimed. Implement the outermost
-    lifecycle lease, selected ownership and `lifecycle_tasks`; gate that
-    coherent half once, then extract the shared
+    architecture, first parallel wave, A4 state transaction and A5 outermost
+    lease are landed, with every completed worker worktree reclaimed. Complete
+    selected-node state ownership and `lifecycle_tasks`; gate that coherent
+    half once, then extract the shared
     orchestrator and land `lifecycle_run`. Follow with R7.5 exact evidence,
     optional read-only spec-IR facts and a fake external PDSA orchestrator — no
     embedded agent policy. Resume R4 registry/transforms after those neutral

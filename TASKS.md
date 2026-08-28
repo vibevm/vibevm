@@ -107,7 +107,14 @@ fronts currently in flight. A worker report or old worktree is never completion.
             - [x] A4 pinned/bounded state transaction + bounded safefs
                   post-publication verify (`31ca1e7d`, `0225ce41`,
                   `970520d4`; Opus-reviewed, Windows junction RED executes).
-            - [ ] A5 outermost cross-process lifecycle lease — next.
+            - [x] A5 outermost cross-process lifecycle lease (`7e330974`,
+                  combined specmap `93177db6`; claudez implementation and
+                  final read-only audit + Opus adversarial review; exact
+                  contention/order/process-death gates green; 10.87 GB
+                  worker worktree reclaimed after patch-equivalence proof).
+            - [ ] A6 selected-node state identity — lower canonical
+                  node-to-`RelPath` mapping already landed at `7bd335e2` /
+                  `b3ff308c`; wire/header/adoption/foreign-park laws next.
       - [ ] A9–A15: ports-in-place, one `vibe-orchestrator` application
             service, credential-free prompt resolution and hosted/no-spend
             `lifecycle_run` parity.

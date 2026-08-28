@@ -235,7 +235,7 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 | R7.1 real provider seam | done | `f42334ff`, `e2392893`; JTD wire, config, endpoint/redirect/proxy/body/timeout/redaction tests |
 | R7.2 CLI agent handler + output contract | done | `26929050`; strict AgentResult JTD, prepared prompt/world resolution, ResultPlan, optional provider path, create/install/reinstall/update e2e and shared safe filesystem cell |
 | R7.3 hosted outbox/delegated resume | done | `1dd5e1f5`, generated reports `eae4494e`; durable run/outbox, exact task ownership, candidate-state atomicity, phase/slot reconciliation, command-level progress, no-spend sequential resume and independent final freeze |
-| R7.4 MCP lifecycle surfaces | in progress | architecture `ee2bc67f`; first wave: `94f30aa9`, `88600508`, `87c2bab8`, `daf6eb31`, `17d94f8f`; A4 complete: bounded publication verify `31ca1e7d`, pinned exact-byte state transaction `0225ce41`, combined specmap `970520d4` after three claudez repairs + Opus review; A5 lease next, then selected/tasks adapter/orchestrator/run |
+| R7.4 MCP lifecycle surfaces | in progress | architecture `ee2bc67f`; first wave: `94f30aa9`, `88600508`, `87c2bab8`, `daf6eb31`, `17d94f8f`; A4 complete: bounded publication verify `31ca1e7d`, pinned exact-byte state transaction `0225ce41`, combined specmap `970520d4`; selected-node lower mapping `7bd335e2` / `b3ff308c`; A5 outermost lease complete at `7e330974` / `93177db6` after claudez implementation/final audit + Opus review and exact gates, its 10.87 GB worktree reclaimed; A6 selected state identity next, then tasks adapter/orchestrator/run |
 | R7.5 external orchestration substrate | missing | owner ruling reaffirmed 2026-08-28: structured lifecycle evidence + exact tree/run identity + optional read-only requirements/spec-IR facts which an external long-running agent may use to see unmet/stale requirements and choose direction; no coding agent or automatic loop inside lifecycle; reference agent is a future campaign |
 
 R7 live Z.AI smoke is now conclusive (2026-08-27): central `vibe create`
@@ -566,8 +566,9 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
 3. Lifecycle run-id wire; outbox/delegated resume; invoked-by adapter.
 4. MCP run/tasks adapters and standalone/hosted e2e. **R7.4 in progress:**
    bounded safefs read / wire / ToolOutput / projection / CLI-characterization
-   first wave is landed and exactly gated; pinned transactional state I/O is
-   landed and Opus-reviewed; outermost lease is next, then selected-node and
+   first wave is landed and exactly gated; pinned transactional state I/O and
+   the outermost cross-process lease are landed and independently reviewed;
+   selected-node lower mapping is landed, with state identity next, then the
    tasks adapter; shared orchestrator + run adapter last.
    Full panels only at the two coherent boundaries.
 5. Neutral external-orchestration evidence/query substrate: exact tree/run
