@@ -117,6 +117,10 @@ impl LifecycleRun {
                             input_measurement: measurement,
                         },
                     )?;
+                // The acceptance boundary's rows are durable now, so this
+                // invocation may remember them as the baseline verify will
+                // compare its own re-observation against.
+                self.remember_baselines(&artifacts);
                 // The success checkpoint is durable; only now may the exact
                 // task this run owns for this execution go — cleanup proves
                 // ownership by recomputing the path, not by recognising a

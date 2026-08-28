@@ -24,7 +24,8 @@ pub use fingerprint::{
 /// the re-export unused.
 #[allow(unused_imports)]
 pub(crate) use fingerprint::{
-    PreparedFingerprint, PreparedInputManifest, prepare_handler_execution_with,
+    FramedHash, InputRefusal, ManifestOutcome, PreparedFingerprint, PreparedInputManifest,
+    prepare_handler_execution_with,
 };
 pub use identity::{RunIdentity, SupersededTrace, select_run_identity};
 pub use store::LifecycleStateStore;

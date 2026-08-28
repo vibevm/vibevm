@@ -96,6 +96,18 @@ pub enum LifecycleRunError {
           fix: use tracked LifecycleRun::begin for freshness-aware execution)"
     )]
     UntrackedCheckpoint,
+    /// The comparison could not be assembled into a member this wire may
+    /// publish. Deliberately NOT one of the five evidence words: those name
+    /// what an honest observation SAW, and there is no observation here — a
+    /// state row that cannot be located under the selected project, or an
+    /// assembled member that breaks its own relational law, is a defect in
+    /// what verify was handed, not a verdict about the project's work.
+    #[error(
+        "lifecycle verification evidence could not be assembled: {reason} \
+         (governed by spec://org.vibevm.core/vibevm/common/PROP-054#EVIDENCE-WIRE-AND-SURFACES; \
+          fix: rebuild `.vibe/lifecycle.toml` by rerunning the lifecycle with --force)"
+    )]
+    Verification { reason: String },
 }
 
 impl LifecycleRunError {

@@ -23,6 +23,7 @@ use crate::{
 };
 
 mod observations;
+mod verify;
 
 /// A shared run is passed through install's slot callbacks and rebound after
 /// the durable-world barrier before normal phase dispatch.
@@ -87,6 +88,10 @@ pub struct LifecycleRun {
     /// Transient by construction — see [`observations`] for why folding it
     /// into the durable baseline would kill E5.
     artifact_observations: BTreeMap<String, crate::artifacts::observe::WitnessOutcome>,
+    /// The PRIOR half, by the same id: the exact durable row this invocation
+    /// checkpointed or preserved. Not a second authority, and the only carrier
+    /// of install-stage slot rows no phase plan names — see [`observations`].
+    artifact_baselines: BTreeMap<String, StateArtifact>,
     /// The workspace's mutation lease, retained for the run's whole life on
     /// BOTH the tracked and the untracked path — the same `Arc` share of the
     /// ONE acquisition the command boundary made, never a reacquisition.
@@ -120,6 +125,7 @@ impl LifecycleRun {
             run_id,
             parked: None,
             artifact_observations: BTreeMap::new(),
+            artifact_baselines: BTreeMap::new(),
             session: Some(ExecutionSession::new(project, world, metadata)),
             state: Some(state),
             _lease: lease,
@@ -144,6 +150,8 @@ impl LifecycleRun {
             run_id,
             parked: None,
             artifact_observations: BTreeMap::new(),
+            // State-blind: it checkpoints nothing, so it copies nothing.
+            artifact_baselines: BTreeMap::new(),
             session: Some(ExecutionSession::new(project, world, metadata)),
             state: None,
             _lease: lease,
@@ -299,7 +307,6 @@ impl LifecycleRun {
             // A fresh skip is NOT a producer. It re-observes the current
             // object into this invocation's transient map and checkpoints the
             // prior rows byte-for-byte — witness, run id and absence alike.
-            //
             // Overwriting the baseline with the current reading is exactly the
             // defect E5 names: verify would then compare W2 against W2 and
             // report `matched` after an external mutation. The mirror move is
@@ -336,6 +343,8 @@ impl LifecycleRun {
                         input_measurement: measurement,
                     },
                 )?;
+            // Durable first, remembered second (see [`observations`]).
+            self.remember_baselines(&artifacts);
             return Ok(ExecutionTransition {
                 envelope,
                 status: ExecutionRecordStatus::Fresh,
@@ -468,6 +477,8 @@ impl LifecycleRun {
                     input_measurement: measurement,
                 },
             )?;
+        // The production boundary's rows, remembered once they are durable.
+        self.remember_baselines(&artifacts);
         Ok(ExecutionTransition {
             envelope: outcome.envelope,
             status,

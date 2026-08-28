@@ -309,6 +309,52 @@ impl ExecutionSession {
             }));
     }
 
+    /// The run facts this session was opened with — the exact header a
+    /// verification claim names (PROP-054 `##VERIFY-EVIDENCE-IDENTITY`).
+    pub(crate) const fn metadata(&self) -> &RunMetadata {
+        &self.run
+    }
+
+    /// The selected project's root, exactly as every envelope spells it.
+    pub(crate) fn project_root(&self) -> &str {
+        &self.project.root
+    }
+
+    /// Everything this run has accumulated, in the canonical order it was
+    /// accumulated — the artifact registry every later envelope already
+    /// carries, read-only.
+    ///
+    /// It is the evidence universe of the artifact half, and deliberately
+    /// wider than any phase plan: an install-stage slot execution hydrates
+    /// here through the same seam an ordinary contribution does, so its
+    /// outputs are compared like every other output instead of vanishing
+    /// because no `RitualPlan` row names them.
+    #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#ARTIFACT-REGISTRY")]
+    pub(crate) fn artifacts(&self) -> &[Artifact] {
+        &self.artifacts
+    }
+
+    /// The same project/world/run facts with an EMPTY artifact registry — the
+    /// replay a verify reconciliation reconstructs declarations against.
+    ///
+    /// It exists because a declaration is reconstructed at the point its
+    /// execution ACTUALLY stood: an agent row's credential-free preparation
+    /// judges its declared outputs against everything earlier phases produced,
+    /// so replaying it against a registry that already holds its OWN outputs
+    /// would refuse a row that ran perfectly well. The replay re-hydrates
+    /// row by row from the exact durable records instead, so the reconstruction
+    /// meets each row with the registry that row met — and never re-discovers
+    /// a world of its own.
+    #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#VERIFY-CURRENT-PREFIX")]
+    pub(crate) fn empty_replay(&self) -> Self {
+        Self {
+            project: self.project.clone(),
+            world: self.world.clone(),
+            run: self.run.clone(),
+            artifacts: Vec::new(),
+        }
+    }
+
     /// Replace the selected durable world without losing run identity or the
     /// artifact registry accumulated before the install barrier.
     pub fn rebind_world(&mut self, project: Project, world: World) {

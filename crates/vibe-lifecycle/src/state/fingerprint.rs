@@ -21,9 +21,10 @@ use crate::agent::PreparedAgent;
 use crate::{ExtensionProvider, ExtensionRegistryRow};
 
 pub(crate) use inputs::{
-    PreparedFingerprint, PreparedInputManifest, prepare_execution_with,
+    ManifestOutcome, PreparedFingerprint, PreparedInputManifest, prepare_execution_with,
     prepare_handler_execution_with,
 };
+pub(crate) use stable::InputRefusal;
 
 #[derive(Debug, Error)]
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-FINGERPRINT")]
@@ -289,7 +290,13 @@ fn machine_path(path: &Path) -> String {
     path.to_string_lossy().replace('\\', "/")
 }
 
-struct FramedHash(Sha256);
+/// The house field frame, seeded by its caller's own domain: every identity
+/// this crate mints is `be64(label_len)||label||be64(value_len)||value` under
+/// exactly one seed. The frame removes AMBIGUITY — two different member
+/// sequences cannot produce one byte stream, and a value cannot drift between
+/// identities that use different domains. It is not, and cannot be, a claim
+/// that SHA-256 itself admits no collision.
+pub(crate) struct FramedHash(Sha256);
 
 impl FramedHash {
     fn new() -> Self {
@@ -300,12 +307,12 @@ impl FramedHash {
     fn declaration() -> Self {
         Self::seeded(b"vibe-execution-declaration-v1\0epoch=1\0")
     }
-    fn seeded(seed: &[u8]) -> Self {
+    pub(crate) fn seeded(seed: &[u8]) -> Self {
         let mut hash = Sha256::new();
         hash.update(seed);
         Self(hash)
     }
-    fn field(&mut self, label: &str, bytes: &[u8]) {
+    pub(crate) fn field(&mut self, label: &str, bytes: &[u8]) {
         self.0.update((label.len() as u64).to_be_bytes());
         self.0.update(label.as_bytes());
         self.0.update((bytes.len() as u64).to_be_bytes());
@@ -314,11 +321,11 @@ impl FramedHash {
     /// An ASCII `0|1` presence byte under `label` — the explicit
     /// optional-member frame the declaration recipe freezes, so an absent
     /// value can never collide with an authored empty one.
-    fn presence(&mut self, label: &str, present: bool) {
+    pub(crate) fn presence(&mut self, label: &str, present: bool) {
         self.field(label, if present { b"1" } else { b"0" });
     }
     /// A canonical decimal UTF-8 count under `label`.
-    fn count(&mut self, label: &str, count: usize) {
+    pub(crate) fn count(&mut self, label: &str, count: usize) {
         self.field(label, count.to_string().as_bytes());
     }
     fn json<T: serde::Serialize>(
@@ -339,7 +346,7 @@ impl FramedHash {
         self.field(label, &bytes);
         Ok(())
     }
-    fn finish(self) -> String {
+    pub(crate) fn finish(self) -> String {
         format!("sha256:{:x}", self.0.finalize())
     }
 }
