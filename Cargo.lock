@@ -4084,6 +4084,7 @@ dependencies = [
  "tracing",
  "tracing-subscriber",
  "vibe-actions",
+ "vibe-agent-projection",
  "vibe-check",
  "vibe-core",
  "vibe-facts",

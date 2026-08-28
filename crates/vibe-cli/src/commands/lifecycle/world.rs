@@ -9,6 +9,7 @@ use std::collections::{BTreeMap, BTreeSet, VecDeque};
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
+use vibe_agent_projection::pkgskill::ProjectSkillBinding;
 use vibe_core::lifecycle::{ExtensionPoint, Phase, PhasePoint};
 use vibe_core::manifest::{
     ExtensionKey, LlmSection, Lockfile, Manifest, Materialization, SkillDecl,
@@ -19,7 +20,6 @@ use vibe_lifecycle::{
     ExecutablePlan, ExtensionRegistry, ExtensionWorld, HostExtensionSource, HostIdentity,
     HostProvider, SelectorSubject, collect_extensions_with_presets,
 };
-use vibe_mcp::pkgskill::ProjectSkillBinding;
 use vibe_wire::generated::lifecycle::e1::context::{
     Project as EnvelopeProject, World as EnvelopeWorld, WorldPackage,
 };

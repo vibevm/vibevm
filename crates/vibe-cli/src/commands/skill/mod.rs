@@ -12,12 +12,12 @@ use std::path::Path;
 
 use anyhow::{Result, bail};
 use dialoguer::Confirm;
-use vibe_core::machine_json_path;
-use vibe_mcp::agents::Scope;
-use vibe_mcp::pkgskill::{
+use vibe_agent_projection::agents::Scope;
+use vibe_agent_projection::pkgskill::{
     DeclaredSkillFilter, PackageSkillReport, collect_declared_skills,
     prepare_declared_skill_projection,
 };
+use vibe_core::machine_json_path;
 
 use crate::cli::{SkillArgs, SkillInstallArgs, SkillListArgs, SkillSubcommand, SkillUninstallArgs};
 use crate::output;

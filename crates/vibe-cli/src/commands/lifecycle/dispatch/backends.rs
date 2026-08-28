@@ -16,7 +16,10 @@ use super::world;
 
 pub(super) struct ProjectPackageBindingBackend<'a> {
     project_root: &'a std::path::Path,
-    bindings: &'a std::collections::BTreeMap<String, vibe_mcp::pkgskill::ProjectSkillBinding>,
+    bindings: &'a std::collections::BTreeMap<
+        String,
+        vibe_agent_projection::pkgskill::ProjectSkillBinding,
+    >,
     desired: &'a std::collections::BTreeSet<String>,
 }
 
@@ -37,14 +40,14 @@ impl PackageBindingBackend for ProjectPackageBindingBackend<'_> {
         artifacts: &[vibe_wire::generated::lifecycle_state::StateArtifact],
     ) -> Result<bool, String> {
         if key == world::PACKAGE_SKILL_RECOVER_KEY {
-            return vibe_mcp::pkgskill::probe_recovered_project_skill_bindings(
+            return vibe_agent_projection::pkgskill::probe_recovered_project_skill_bindings(
                 self.project_root,
                 artifacts,
             )
             .map_err(|error| error.to_string());
         }
         if key == world::PACKAGE_SKILL_RECONCILE_KEY {
-            return vibe_mcp::pkgskill::probe_vanished_project_skill_bindings(
+            return vibe_agent_projection::pkgskill::probe_vanished_project_skill_bindings(
                 self.project_root,
                 self.desired,
                 artifacts,
@@ -54,14 +57,19 @@ impl PackageBindingBackend for ProjectPackageBindingBackend<'_> {
         let binding = self.bindings.get(key).ok_or_else(|| {
             format!("package binding `{key}` was not present in the prepared plan")
         })?;
-        vibe_mcp::pkgskill::probe_project_skill_binding(self.project_root, binding, artifacts)
-            .map_err(|error| error.to_string())
+        vibe_agent_projection::pkgskill::probe_project_skill_binding(
+            self.project_root,
+            binding,
+            artifacts,
+        )
+        .map_err(|error| error.to_string())
     }
 
     fn execute(&self, key: &str) -> Result<PackageBindingOutcome, String> {
         if key == world::PACKAGE_SKILL_RECOVER_KEY {
-            let reports = vibe_mcp::pkgskill::recover_project_skill_bindings(self.project_root)
-                .map_err(|error| error.to_string())?;
+            let reports =
+                vibe_agent_projection::pkgskill::recover_project_skill_bindings(self.project_root)
+                    .map_err(|error| error.to_string())?;
             return Ok(PackageBindingOutcome {
                 artifacts: Vec::new(),
                 message: Some(format!(
@@ -71,11 +79,12 @@ impl PackageBindingBackend for ProjectPackageBindingBackend<'_> {
             });
         }
         if key == world::PACKAGE_SKILL_RECONCILE_KEY {
-            let reports = vibe_mcp::pkgskill::reconcile_vanished_project_skill_bindings(
-                self.project_root,
-                self.desired,
-            )
-            .map_err(|error| error.to_string())?;
+            let reports =
+                vibe_agent_projection::pkgskill::reconcile_vanished_project_skill_bindings(
+                    self.project_root,
+                    self.desired,
+                )
+                .map_err(|error| error.to_string())?;
             return Ok(PackageBindingOutcome {
                 artifacts: Vec::new(),
                 message: Some(format!(
@@ -87,9 +96,11 @@ impl PackageBindingBackend for ProjectPackageBindingBackend<'_> {
         let binding = self.bindings.get(key).ok_or_else(|| {
             format!("package binding `{key}` was not present in the prepared plan")
         })?;
-        let reports =
-            vibe_mcp::pkgskill::reconcile_project_skill_binding(self.project_root, binding)
-                .map_err(|error| error.to_string())?;
+        let reports = vibe_agent_projection::pkgskill::reconcile_project_skill_binding(
+            self.project_root,
+            binding,
+        )
+        .map_err(|error| error.to_string())?;
         let artifacts = if binding.selected_files.is_some() {
             binding
                 .targets

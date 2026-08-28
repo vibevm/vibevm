@@ -296,7 +296,10 @@ fn dispatch_measured(
             let mut keep = plan.package_desired_keys.clone();
             keep.insert(world::PACKAGE_SKILL_RECONCILE_KEY.to_string());
             keep.insert(world::PACKAGE_SKILL_RECOVER_KEY.to_string());
-            run.retain_execution_prefix(vibe_mcp::pkgskill::PROJECT_SKILL_PREFIX, &keep)?;
+            run.retain_execution_prefix(
+                vibe_agent_projection::pkgskill::PROJECT_SKILL_PREFIX,
+                &keep,
+            )?;
         }
     }
     Ok(outcome)

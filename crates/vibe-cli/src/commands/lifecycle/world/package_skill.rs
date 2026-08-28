@@ -4,6 +4,11 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
 
 use anyhow::{Context, Result, bail};
+use vibe_agent_projection::pkgskill::{
+    DeclaredSkillProvider, PROJECT_SKILL_RECONCILE_KEY, PROJECT_SKILL_RECOVER_KEY,
+    ProjectSkillBinding, ProjectSkillProviderInput, lower_project_skill_bindings,
+    project_skill_receipt_exists,
+};
 use vibe_core::lifecycle::{ExtensionPoint, Phase, PhasePoint};
 use vibe_core::manifest::{
     ExtensionConfig, ExtensionDecl, ExtensionHandler, ExtensionKey, SkillDecl,
@@ -11,11 +16,6 @@ use vibe_core::manifest::{
 use vibe_lifecycle::{
     DependencyProvider, DependencyProviderId, ExtensionProvider, HostIdentity, HostProvider,
     SyntheticPresetSource,
-};
-use vibe_mcp::pkgskill::{
-    DeclaredSkillProvider, PROJECT_SKILL_RECONCILE_KEY, PROJECT_SKILL_RECOVER_KEY,
-    ProjectSkillBinding, ProjectSkillProviderInput, lower_project_skill_bindings,
-    project_skill_receipt_exists,
 };
 
 use super::LoadedDependency;
