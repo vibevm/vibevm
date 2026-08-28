@@ -95,7 +95,7 @@ fronts currently in flight. A worker report or old worktree is never completion.
 - [x] **R7.3** — durable hosted outbox/same-command resume (`1dd5e1f5`),
       command-specific generated reports (`eae4494e`), candidate-state
       checkpointing, slot/phase reconciliation and no-spend sequential parks.
-- [ ] **R7.4** — shared MCP `lifecycle_run` / `lifecycle_tasks` surfaces over
+- [x] **R7.4** — shared MCP `lifecycle_run` / `lifecycle_tasks` surfaces over
       the same state and outbox files.
       - [x] A0–A3: CLI characterization, bounded safefs read,
             `lifecycle_tasks` JTD/wire cell, typed MCP output and minimal
@@ -165,8 +165,8 @@ fronts currently in flight. A worker report or old worktree is never completion.
             lifecycle unit + 14 doctest, 36 CLI integration, strict clippy,
             conform 0 new and specmap are green. No-agent projects still
             construct no provider and remain algorithmic.
-      - [ ] A15 strict hosted/no-spend MCP `lifecycle_run`, executed-failure
-            structure and cross-surface parity; then the R7.4 full panel.
+      - [x] A15 strict hosted/no-spend MCP `lifecycle_run`, executed-failure
+            structure, cross-surface parity and the final R7.4 full panel.
             - [x] A15a shared package-source composition (`5df76260`,
                   `23044cfd`): `vibe-package-source` owns the one resolver,
                   project-local/embedded/declared precedence and R-001 cell
@@ -199,8 +199,12 @@ fronts currently in flight. A worker report or old worktree is never completion.
                   588 CLI unit, stdio/parity and wire corpus, strict clippy,
                   conform 0 new, clean codegen/specmap and seven restored
                   mutation REDs. The accepted resolver-authority observation
-                  is durably classified as B-111; only the full R7.4 boundary
-                  panel remains in A15.
+                  is durably classified as B-111. The final panel on
+                  `6f074e66` ran all 54 dynamic gates green after the named
+                  wire-ratchet decision `602ef5e8` and deterministic Windows
+                  lock repair `9fc6c2bb` / map `6f074e66`; workspace 448/448,
+                  both user-home tripwires, markup 508/0 and the ordered tail
+                  ended `self-check: all green`.
 - [ ] **R7.5** — neutral external work-loop substrate (owner ruling reaffirmed
       2026-08-28): structured verification
       evidence bound to exact tree/artifact/run identity; optional read-only
