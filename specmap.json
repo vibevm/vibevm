@@ -3649,15 +3649,6 @@
     },
     {
       "crate_name": "vibe-cli",
-      "file": "crates/vibe-cli/src/commands/compile_trace/request.rs",
-      "item_kind": "mod",
-      "line": 29,
-      "symbol": "vibe_cli::commands::compile_trace::request",
-      "end_line": 29,
-      "fingerprint": "tok1:07184da7149c2c3a749de11ebb4b8b7c6707b20dc3a815d03c890158349b6df2"
-    },
-    {
-      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/explain.rs",
       "item_kind": "mod",
       "line": 8,
@@ -3714,9 +3705,9 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/install/mod.rs",
       "item_kind": "mod",
-      "line": 22,
+      "line": 23,
       "symbol": "vibe_cli::commands::install",
-      "end_line": 22,
+      "end_line": 23,
       "fingerprint": "tok1:f3378888c5e43bf3027524a5a2cd1df62a9ad5a7c5c8f721ae10f3693aba97c8"
     },
     {
@@ -3802,20 +3793,11 @@
     },
     {
       "crate_name": "vibe-cli",
-      "file": "crates/vibe-cli/src/commands/install/inputs.rs",
-      "item_kind": "mod",
-      "line": 4,
-      "symbol": "vibe_cli::commands::install::inputs",
-      "end_line": 4,
-      "fingerprint": "tok1:f3378888c5e43bf3027524a5a2cd1df62a9ad5a7c5c8f721ae10f3693aba97c8"
-    },
-    {
-      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/install/observer.rs",
       "item_kind": "mod",
-      "line": 7,
+      "line": 10,
       "symbol": "vibe_cli::commands::install::observer",
-      "end_line": 7,
+      "end_line": 10,
       "fingerprint": "tok1:bf8043aa125be22cda7699f260bc66ed6de7cb1d1b2d10176eb587a5d8e3b8ce"
     },
     {
@@ -3826,15 +3808,6 @@
       "symbol": "vibe_cli::commands::install::project_local",
       "end_line": 18,
       "fingerprint": "tok1:7c691d53ca7247891f9092ba4c939c3295123cb2e0acf0e37304e7a87e17cd6f"
-    },
-    {
-      "crate_name": "vibe-cli",
-      "file": "crates/vibe-cli/src/commands/install/ready.rs",
-      "item_kind": "mod",
-      "line": 10,
-      "symbol": "vibe_cli::commands::install::ready",
-      "end_line": 10,
-      "fingerprint": "tok1:f3378888c5e43bf3027524a5a2cd1df62a9ad5a7c5c8f721ae10f3693aba97c8"
     },
     {
       "crate_name": "vibe-cli",
@@ -3853,15 +3826,6 @@
       "symbol": "vibe_cli::commands::install::resolver",
       "end_line": 5,
       "fingerprint": "tok1:f3378888c5e43bf3027524a5a2cd1df62a9ad5a7c5c8f721ae10f3693aba97c8"
-    },
-    {
-      "crate_name": "vibe-cli",
-      "file": "crates/vibe-cli/src/commands/install/resume.rs",
-      "item_kind": "mod",
-      "line": 7,
-      "symbol": "vibe_cli::commands::install::resume",
-      "end_line": 7,
-      "fingerprint": "tok1:06a8f09bc76b89a9209cc0ae58549686820324530b934747173b0c896cd62355"
     },
     {
       "crate_name": "vibe-cli",
@@ -3885,28 +3849,37 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/lifecycle/agent.rs",
       "item_kind": "fn",
-      "line": 123,
+      "line": 119,
       "symbol": "vibe_cli::commands::lifecycle::agent::CliAgentBackend::complete",
-      "end_line": 142,
+      "end_line": 138,
       "fingerprint": "tok1:8b0cacb208f3827ff71bb316f0f34d549e7ffe9623853c299789ede68437ab8d"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/lifecycle/agent.rs",
       "item_kind": "fn",
-      "line": 66,
+      "line": 62,
       "symbol": "vibe_cli::commands::lifecycle::agent::CliAgentBackend::provider",
-      "end_line": 86,
+      "end_line": 82,
       "fingerprint": "tok1:6cdc9a7b83acab0907d9a5a5a18f247796979ac6bfefc21517f720970be67586"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/lifecycle/agent.rs",
       "item_kind": "fn",
-      "line": 90,
+      "line": 86,
       "symbol": "vibe_cli::commands::lifecycle::agent::CliAgentBackend::resolve_prompt",
-      "end_line": 121,
+      "end_line": 117,
       "fingerprint": "tok1:4c7408d276c166d0dbe9ade064b49b43254f541b2002082d7b58371f9871dfb5"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/lifecycle/callback.rs",
+      "item_kind": "mod",
+      "line": 14,
+      "symbol": "vibe_cli::commands::lifecycle::callback",
+      "end_line": 14,
+      "fingerprint": "tok1:853b38218301cd0dc8554f533f5a602938fbf104ecc7a4cb623f02e471f01e35"
     },
     {
       "crate_name": "vibe-cli",
@@ -3921,18 +3894,18 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/lifecycle/clean.rs",
       "item_kind": "fn",
-      "line": 124,
+      "line": 209,
       "symbol": "vibe_cli::commands::lifecycle::clean::refuse_untracked_agent_rows",
-      "end_line": 159,
-      "fingerprint": "tok1:361e7dfbe329403106e331d4d0faa16de1b2b1af74994b695933102eaf22ae16"
+      "end_line": 244,
+      "fingerprint": "tok1:34791b6150d81a99dc8d4dbe8b78137a16d028837f654fe3f4d70a748e0ddfaa"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/lifecycle/clean.rs",
       "item_kind": "fn",
-      "line": 27,
+      "line": 104,
       "symbol": "vibe_cli::commands::lifecycle::clean::run_clean",
-      "end_line": 56,
+      "end_line": 133,
       "fingerprint": "tok1:38d43519fb1c4f8e6d46492b267b61db26127c1521495bf27cd00dfd21666a8a"
     },
     {
@@ -3948,27 +3921,27 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/lifecycle.rs",
       "item_kind": "fn",
-      "line": 84,
+      "line": 107,
       "symbol": "vibe_cli::commands::lifecycle::execute",
-      "end_line": 300,
-      "fingerprint": "tok1:7b57cf7fbee3af5a5d298d5eefdd1f1613aa037f46586a5573a9f72fdcf03905"
+      "end_line": 351,
+      "fingerprint": "tok1:5e1c1ee0d57e8f29bd16a43976240bdfb1b366d2ee1c4b0d1d98001dd97bc0c0"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/lifecycle.rs",
+      "item_kind": "fn",
+      "line": 360,
+      "symbol": "vibe_cli::commands::lifecycle::execute_after_open",
+      "end_line": 389,
+      "fingerprint": "tok1:af56bc8aa4a4644ad948471318f447c7fcdc7039acd64c31f693d19721253cc6"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/lifecycle/observer.rs",
       "item_kind": "mod",
-      "line": 3,
+      "line": 9,
       "symbol": "vibe_cli::commands::lifecycle::observer",
-      "end_line": 3,
-      "fingerprint": "tok1:853b38218301cd0dc8554f533f5a602938fbf104ecc7a4cb623f02e471f01e35"
-    },
-    {
-      "crate_name": "vibe-cli",
-      "file": "crates/vibe-cli/src/commands/lifecycle/phase.rs",
-      "item_kind": "mod",
-      "line": 12,
-      "symbol": "vibe_cli::commands::lifecycle::phase",
-      "end_line": 12,
+      "end_line": 9,
       "fingerprint": "tok1:853b38218301cd0dc8554f533f5a602938fbf104ecc7a4cb623f02e471f01e35"
     },
     {
@@ -3993,19 +3966,10 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/lifecycle.rs",
       "item_kind": "fn",
-      "line": 64,
+      "line": 87,
       "symbol": "vibe_cli::commands::lifecycle::run",
-      "end_line": 82,
+      "end_line": 105,
       "fingerprint": "tok1:01038f11c7fb2a9e20422d4cf28d68cee406c9266b769f332e4b544864dd519b"
-    },
-    {
-      "crate_name": "vibe-cli",
-      "file": "crates/vibe-cli/src/commands/lifecycle/world.rs",
-      "item_kind": "mod",
-      "line": 6,
-      "symbol": "vibe_cli::commands::lifecycle::world",
-      "end_line": 6,
-      "fingerprint": "tok1:853b38218301cd0dc8554f533f5a602938fbf104ecc7a4cb623f02e471f01e35"
     },
     {
       "crate_name": "vibe-cli",
@@ -12417,37 +12381,595 @@
       "crate_name": "vibe-orchestrator",
       "file": "crates/vibe-orchestrator/src/lib.rs",
       "item_kind": "mod",
-      "line": 9,
+      "line": 20,
       "symbol": "vibe_orchestrator",
-      "end_line": 9,
+      "end_line": 20,
       "fingerprint": "tok1:853b38218301cd0dc8554f533f5a602938fbf104ecc7a4cb623f02e471f01e35"
     },
     {
       "crate_name": "vibe-orchestrator",
       "file": "crates/vibe-orchestrator/src/lib.rs",
       "item_kind": "type",
-      "line": 88,
+      "line": 150,
       "symbol": "vibe_orchestrator::PlannedExecution",
-      "end_line": 96,
+      "end_line": 158,
       "fingerprint": "tok1:191483bf11bbac73eba16de80a62f8766695782c1f8fbdbb8ca093e1d1a5993e"
     },
     {
       "crate_name": "vibe-orchestrator",
       "file": "crates/vibe-orchestrator/src/lib.rs",
       "item_kind": "struct",
-      "line": 19,
+      "line": 59,
       "symbol": "vibe_orchestrator::RitualPlan",
-      "end_line": 74,
-      "fingerprint": "tok1:5c3d989433d12f05133e2c88bf6c0aad0af0850386bb047a8cdb5069086d0193"
+      "end_line": 104,
+      "fingerprint": "tok1:c63725970b2a1ad1afde7fce14ed5ceafc525f0c0d1f0d44c929772babf29608"
     },
     {
       "crate_name": "vibe-orchestrator",
       "file": "crates/vibe-orchestrator/src/lib.rs",
       "item_kind": "fn",
-      "line": 77,
+      "line": 107,
       "symbol": "vibe_orchestrator::RitualPlan::count_for",
-      "end_line": 85,
-      "fingerprint": "tok1:62bf1cb5d74477c07c79404d88e95d4dfa54bc77a3508cffb0a3c4d7f2de6619"
+      "end_line": 114,
+      "fingerprint": "tok1:cd0162dc26bbc8e8eb4ba7ad66414381a472f6c79bf112ba60362fa407ec7e16"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/callback.rs",
+      "item_kind": "mod",
+      "line": 7,
+      "symbol": "vibe_orchestrator::callback",
+      "end_line": 7,
+      "fingerprint": "tok1:853b38218301cd0dc8554f533f5a602938fbf104ecc7a4cb623f02e471f01e35"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/dispatch/mod.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_orchestrator::dispatch",
+      "end_line": 3,
+      "fingerprint": "tok1:853b38218301cd0dc8554f533f5a602938fbf104ecc7a4cb623f02e471f01e35"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/dispatch/mod.rs",
+      "item_kind": "struct",
+      "line": 32,
+      "symbol": "vibe_orchestrator::dispatch::DispatchOutcome",
+      "end_line": 44,
+      "fingerprint": "tok1:aeef3711ea954c6c99b7fdc5819017e23f9c654b517f2781a8e60fd54fa5f5d0"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/failure.rs",
+      "item_kind": "mod",
+      "line": 22,
+      "symbol": "vibe_orchestrator::failure",
+      "end_line": 22,
+      "fingerprint": "tok1:853b38218301cd0dc8554f533f5a602938fbf104ecc7a4cb623f02e471f01e35"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/failure.rs",
+      "item_kind": "struct",
+      "line": 91,
+      "symbol": "vibe_orchestrator::failure::MeasuredFailure",
+      "end_line": 104,
+      "fingerprint": "tok1:14b255e296b39ed731e4d2a1126b8520775b429da332d7d562ec03c7bc6a0f24"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/failure.rs",
+      "item_kind": "enum",
+      "line": 30,
+      "symbol": "vibe_orchestrator::failure::Measurement",
+      "end_line": 89,
+      "fingerprint": "tok1:bb1d8e778f343612beef4df5b6a0e5b91287c4bf3658098fc41acbcf9ff40e6c"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/failure.rs",
+      "item_kind": "fn",
+      "line": 118,
+      "symbol": "vibe_orchestrator::failure::carry",
+      "end_line": 147,
+      "fingerprint": "tok1:926a67237f418a0e42740a411d834d1440678406fbfc11b49011c948dcc2a0ca"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/failure.rs",
+      "item_kind": "fn",
+      "line": 175,
+      "symbol": "vibe_orchestrator::failure::carry_measured",
+      "end_line": 217,
+      "fingerprint": "tok1:7fe6598d3e58aeb66a369856ec8308883f4933abdcfc7d00e90796615d5f41d7"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/failure.rs",
+      "item_kind": "fn",
+      "line": 160,
+      "symbol": "vibe_orchestrator::failure::is_measured",
+      "end_line": 173,
+      "fingerprint": "tok1:c9f8430676caaf23d3653a97444004b49ca9c6de395e20f268315b0dfba97f96"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/failure.rs",
+      "item_kind": "fn",
+      "line": 219,
+      "symbol": "vibe_orchestrator::failure::prepend_rows",
+      "end_line": 276,
+      "fingerprint": "tok1:da70d6111f3d6599475bf17fe2b47fb791d12228d54761a8b2fb4e19a81dd79c"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/failure.rs",
+      "item_kind": "fn",
+      "line": 149,
+      "symbol": "vibe_orchestrator::failure::take",
+      "end_line": 158,
+      "fingerprint": "tok1:3ae8c1a37aa356576fa8d1460edf0885a9c596adc0ab13c7199dc392195d2b0e"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/install/mod.rs",
+      "item_kind": "mod",
+      "line": 18,
+      "symbol": "vibe_orchestrator::install",
+      "end_line": 18,
+      "fingerprint": "tok1:f3378888c5e43bf3027524a5a2cd1df62a9ad5a7c5c8f721ae10f3693aba97c8"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/install/mod.rs",
+      "item_kind": "struct",
+      "line": 59,
+      "symbol": "vibe_orchestrator::install::InstallExecution",
+      "end_line": 111,
+      "fingerprint": "tok1:81a0878b5b35fbb883e55bee223be390d10a7752a88b414dddd5fb40d248e2f0"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/install/args.rs",
+      "item_kind": "mod",
+      "line": 9,
+      "symbol": "vibe_orchestrator::install::args",
+      "end_line": 9,
+      "fingerprint": "tok1:f3378888c5e43bf3027524a5a2cd1df62a9ad5a7c5c8f721ae10f3693aba97c8"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/install/args.rs",
+      "item_kind": "struct",
+      "line": 15,
+      "symbol": "vibe_orchestrator::install::args::InstallInputs",
+      "end_line": 46,
+      "fingerprint": "tok1:88425f38e3f5a4338cbcf7733a085dee9279d35673478ce0520c500b3bf44581"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/install/args.rs",
+      "item_kind": "struct",
+      "line": 48,
+      "symbol": "vibe_orchestrator::install::args::InstallPolicy",
+      "end_line": 73,
+      "fingerprint": "tok1:fa86ce530f3225deb34a534bebeccb315833cde2773f1e0f80cf69444739c1fa"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/install/inputs.rs",
+      "item_kind": "mod",
+      "line": 4,
+      "symbol": "vibe_orchestrator::install::inputs",
+      "end_line": 4,
+      "fingerprint": "tok1:f3378888c5e43bf3027524a5a2cd1df62a9ad5a7c5c8f721ae10f3693aba97c8"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/install/lease.rs",
+      "item_kind": "fn",
+      "line": 40,
+      "symbol": "vibe_orchestrator::install::lease::acquire_lease",
+      "end_line": 62,
+      "fingerprint": "tok1:efc419aa9345cdd312c1b4b1543e6346d2504baf05dc1c074d3d0a4c5ab70035"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/install/lease.rs",
+      "item_kind": "fn",
+      "line": 18,
+      "symbol": "vibe_orchestrator::install::lease::lease_root",
+      "end_line": 38,
+      "fingerprint": "tok1:2961f876557057bd7f5fb8630c7bd4d3da06dee44e910253043eab7b5466d960"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/install/outcome.rs",
+      "item_kind": "mod",
+      "line": 8,
+      "symbol": "vibe_orchestrator::install::outcome",
+      "end_line": 8,
+      "fingerprint": "tok1:f3378888c5e43bf3027524a5a2cd1df62a9ad5a7c5c8f721ae10f3693aba97c8"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/install/outcome.rs",
+      "item_kind": "enum",
+      "line": 17,
+      "symbol": "vibe_orchestrator::install::outcome::InstallDisposition",
+      "end_line": 39,
+      "fingerprint": "tok1:6285c3ea6373f958d88740e742273182179c54b02040ad808765006201bfd719"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/install/outcome.rs",
+      "item_kind": "struct",
+      "line": 41,
+      "symbol": "vibe_orchestrator::install::outcome::InstallRun",
+      "end_line": 76,
+      "fingerprint": "tok1:9d5a451b5c87d3aa6704da0f1bbbf8639da2a1c07c009515cacaa31ff55fe4c1"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/install/outcome.rs",
+      "item_kind": "struct",
+      "line": 125,
+      "symbol": "vibe_orchestrator::install::outcome::InstallRunContext",
+      "end_line": 142,
+      "fingerprint": "tok1:596cc286c296a9e37f21aa4b23cd1d49c71bc716a538f59114e1698208c46037"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/install/outcome.rs",
+      "item_kind": "struct",
+      "line": 161,
+      "symbol": "vibe_orchestrator::install::outcome::WorldCallbackOutcome",
+      "end_line": 175,
+      "fingerprint": "tok1:d4a40404c4dce75344a8e99bcfbbac38fc924bf7aeeb43a586aea85799eb1099"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/install/outcome.rs",
+      "item_kind": "struct",
+      "line": 144,
+      "symbol": "vibe_orchestrator::install::outcome::WorldCallbackSummary",
+      "end_line": 159,
+      "fingerprint": "tok1:530aab3b19cf891f975cb1541a8ae2139d19c1cc14e33d971319b31cb8478f65"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/install/ready.rs",
+      "item_kind": "mod",
+      "line": 10,
+      "symbol": "vibe_orchestrator::install::ready",
+      "end_line": 10,
+      "fingerprint": "tok1:f3378888c5e43bf3027524a5a2cd1df62a9ad5a7c5c8f721ae10f3693aba97c8"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/install/resume.rs",
+      "item_kind": "mod",
+      "line": 7,
+      "symbol": "vibe_orchestrator::install::resume",
+      "end_line": 7,
+      "fingerprint": "tok1:06a8f09bc76b89a9209cc0ae58549686820324530b934747173b0c896cd62355"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/install/resume.rs",
+      "item_kind": "enum",
+      "line": 78,
+      "symbol": "vibe_orchestrator::install::resume::ResumeOutcome",
+      "end_line": 99,
+      "fingerprint": "tok1:d32f565c65006ea2d4dcd20789dac8abc6f7b31139047d878459bee2975c39cd"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/install/resume.rs",
+      "item_kind": "struct",
+      "line": 24,
+      "symbol": "vibe_orchestrator::install::resume::ResumeRequest",
+      "end_line": 61,
+      "fingerprint": "tok1:a03a3ebb4e06db2aeb77bfb33ef670ebe0f16cd6f7a742482ae3480e396f4956"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/install/resume.rs",
+      "item_kind": "struct",
+      "line": 63,
+      "symbol": "vibe_orchestrator::install::resume::ResumedInstall",
+      "end_line": 76,
+      "fingerprint": "tok1:76f8dedb4c771cea3168d72dcaf18c7bbd6260b5f67cf1b0a4775e16794664a1"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/install/selection.rs",
+      "item_kind": "mod",
+      "line": 32,
+      "symbol": "vibe_orchestrator::install::selection",
+      "end_line": 32,
+      "fingerprint": "tok1:f3378888c5e43bf3027524a5a2cd1df62a9ad5a7c5c8f721ae10f3693aba97c8"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/install/selection.rs",
+      "item_kind": "struct",
+      "line": 178,
+      "symbol": "vibe_orchestrator::install::selection::PreparedSelection",
+      "end_line": 190,
+      "fingerprint": "tok1:e96bf41276258d19c2bee3b3d28ab057d37d8c63e8a36173ac082b43485575f1"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/install/selection.rs",
+      "item_kind": "fn",
+      "line": 205,
+      "symbol": "vibe_orchestrator::install::selection::PreparedSelection::request",
+      "end_line": 210,
+      "fingerprint": "tok1:d4a860adb6aa9dbc2ba662622fb46cdbaec645f9555e61d47cde71c91617999b"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/install/selection.rs",
+      "item_kind": "struct",
+      "line": 368,
+      "symbol": "vibe_orchestrator::install::selection::ProvenSelection",
+      "end_line": 379,
+      "fingerprint": "tok1:7ecce413b3e3a93a12421f63d2397a09665fa4f67b79b5af0d43f7d35db7676c"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/install/selection.rs",
+      "item_kind": "struct",
+      "line": 42,
+      "symbol": "vibe_orchestrator::install::selection::SelectedManifest",
+      "end_line": 66,
+      "fingerprint": "tok1:76a2b3a06588ad66060fae99db9ac495b95d30b1a9ef371bf5c5a206eccadc88"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/install/selection.rs",
+      "item_kind": "fn",
+      "line": 84,
+      "symbol": "vibe_orchestrator::install::selection::SelectedManifest::request",
+      "end_line": 93,
+      "fingerprint": "tok1:6fe1fdc6ff98d3a29f2bda63e8aa0aeed0511cea5d87b406f2b2741a9265e96d"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/install/world_projection.rs",
+      "item_kind": "mod",
+      "line": 8,
+      "symbol": "vibe_orchestrator::install::world_projection",
+      "end_line": 8,
+      "fingerprint": "tok1:06a8f09bc76b89a9209cc0ae58549686820324530b934747173b0c896cd62355"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/phase.rs",
+      "item_kind": "mod",
+      "line": 13,
+      "symbol": "vibe_orchestrator::phase",
+      "end_line": 13,
+      "fingerprint": "tok1:853b38218301cd0dc8554f533f5a602938fbf104ecc7a4cb623f02e471f01e35"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/phase.rs",
+      "item_kind": "enum",
+      "line": 98,
+      "symbol": "vibe_orchestrator::phase::PhaseOutcome",
+      "end_line": 115,
+      "fingerprint": "tok1:fd00d4c88269495289d8b8c1878ceb6126a044dae87102b435ccf9ef95b61ff4"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/phase.rs",
+      "item_kind": "struct",
+      "line": 45,
+      "symbol": "vibe_orchestrator::phase::PhaseRun",
+      "end_line": 96,
+      "fingerprint": "tok1:e83e47a4f8a7f8fc661694d8a01fe5635d6f14007c2558affc5e22b0e8b1a236"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/plan.rs",
+      "item_kind": "mod",
+      "line": 5,
+      "symbol": "vibe_orchestrator::plan",
+      "end_line": 5,
+      "fingerprint": "tok1:853b38218301cd0dc8554f533f5a602938fbf104ecc7a4cb623f02e471f01e35"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/plan.rs",
+      "item_kind": "fn",
+      "line": 25,
+      "symbol": "vibe_orchestrator::plan::planned_contribution",
+      "end_line": 49,
+      "fingerprint": "tok1:f584fb30d01eb69700a168ebc2129a6ff1cc4d12012ee4b196c35f1b56e88616"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/plan.rs",
+      "item_kind": "fn",
+      "line": 51,
+      "symbol": "vibe_orchestrator::plan::provider_and_version",
+      "end_line": 71,
+      "fingerprint": "tok1:4ebeaca021830a74bdd5e7d641188d4613912e5c28ef6486d01989ca3f01c9cd"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/plan.rs",
+      "item_kind": "fn",
+      "line": 73,
+      "symbol": "vibe_orchestrator::plan::tier_name",
+      "end_line": 89,
+      "fingerprint": "tok1:a1118e3489a4c441f9180f1d163e4a177692817a824052e2acc72f0ea3bc91b2"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/ports.rs",
+      "item_kind": "mod",
+      "line": 16,
+      "symbol": "vibe_orchestrator::ports",
+      "end_line": 16,
+      "fingerprint": "tok1:853b38218301cd0dc8554f533f5a602938fbf104ecc7a4cb623f02e471f01e35"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/ports.rs",
+      "item_kind": "struct",
+      "line": 191,
+      "symbol": "vibe_orchestrator::ports::PackageSourceBuild",
+      "end_line": 209,
+      "fingerprint": "tok1:ab92e84c4437d5db172813ab4c9bf41230742e68438f64ce3cc28974dee7862c"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/ports.rs",
+      "item_kind": "struct",
+      "line": 180,
+      "symbol": "vibe_orchestrator::ports::RegistryEnvironmentSnapshot",
+      "end_line": 189,
+      "fingerprint": "tok1:866060df7ec1ba331e2794cb73d7ef69bf61baed87cc599ec30d5c84fe4bc58b"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/prelude.rs",
+      "item_kind": "mod",
+      "line": 4,
+      "symbol": "vibe_orchestrator::prelude",
+      "end_line": 4,
+      "fingerprint": "tok1:853b38218301cd0dc8554f533f5a602938fbf104ecc7a4cb623f02e471f01e35"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/prelude.rs",
+      "item_kind": "struct",
+      "line": 12,
+      "symbol": "vibe_orchestrator::prelude::RunPrelude",
+      "end_line": 65,
+      "fingerprint": "tok1:8be6c346bd7120773e2f51cab3d81436c6543909b5c82b6026cedf33219b53f4"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/prelude.rs",
+      "item_kind": "fn",
+      "line": 67,
+      "symbol": "vibe_orchestrator::prelude::run_prelude",
+      "end_line": 149,
+      "fingerprint": "tok1:535fd908a6dfd428f07aef0e684fcfb4bcebd102a174cbe072e318c0ed7d4d7d"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/values.rs",
+      "item_kind": "mod",
+      "line": 7,
+      "symbol": "vibe_orchestrator::values",
+      "end_line": 7,
+      "fingerprint": "tok1:853b38218301cd0dc8554f533f5a602938fbf104ecc7a4cb623f02e471f01e35"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/values.rs",
+      "item_kind": "struct",
+      "line": 14,
+      "symbol": "vibe_orchestrator::values::LifecycleValues",
+      "end_line": 39,
+      "fingerprint": "tok1:60c7303de73ec6fa84b05752831f2cc90f2a9ba0d20684f36638e1ca3180352b"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/values.rs",
+      "item_kind": "fn",
+      "line": 42,
+      "symbol": "vibe_orchestrator::values::LifecycleValues::completed",
+      "end_line": 65,
+      "fingerprint": "tok1:f7256d5ce297eddb78679150bc56c76f8a63306ab826a1df5af0bda142725925"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/values.rs",
+      "item_kind": "fn",
+      "line": 67,
+      "symbol": "vibe_orchestrator::values::LifecycleValues::failed",
+      "end_line": 92,
+      "fingerprint": "tok1:800a54b797fdeba61c0bed25ab79babf47c0498b8a8fa05cde0333d0e0041e13"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/values.rs",
+      "item_kind": "enum",
+      "line": 95,
+      "symbol": "vibe_orchestrator::values::StepStatus",
+      "end_line": 113,
+      "fingerprint": "tok1:6971dca7daeb0773c1d14a26ba74417f2f8763d43fce8b3247d6c3f79c1a94ee"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/values.rs",
+      "item_kind": "fn",
+      "line": 116,
+      "symbol": "vibe_orchestrator::values::StepStatus::as_str",
+      "end_line": 126,
+      "fingerprint": "tok1:ed83a9182016ee5986757821552b09113b0f77d78f648609520f6f179f57b378"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/values.rs",
+      "item_kind": "fn",
+      "line": 227,
+      "symbol": "vibe_orchestrator::values::check_delegation",
+      "end_line": 241,
+      "fingerprint": "tok1:f3b0e9eac56ba88862ee3f42c5ab735452167e6796fe0647f2516354733b4214"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/values.rs",
+      "item_kind": "fn",
+      "line": 144,
+      "symbol": "vibe_orchestrator::values::contribution_report",
+      "end_line": 184,
+      "fingerprint": "tok1:a7e620b0675dd8227c547021893473e2b97e6167998d8beb0080ce4f45a6eb82"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/values.rs",
+      "item_kind": "fn",
+      "line": 186,
+      "symbol": "vibe_orchestrator::values::delegation_member",
+      "end_line": 225,
+      "fingerprint": "tok1:344b59a7193b62d5b2f6c22b5c5ee4514542a0b980e4b7a77664eaecede3a98e"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/values.rs",
+      "item_kind": "fn",
+      "line": 129,
+      "symbol": "vibe_orchestrator::values::step_report",
+      "end_line": 142,
+      "fingerprint": "tok1:4529271a3ac685795b2325183917875500ad211d909182cfdafac2ab40e045ba"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/world/mod.rs",
+      "item_kind": "mod",
+      "line": 6,
+      "symbol": "vibe_orchestrator::world",
+      "end_line": 6,
+      "fingerprint": "tok1:853b38218301cd0dc8554f533f5a602938fbf104ecc7a4cb623f02e471f01e35"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/world/mod.rs",
+      "item_kind": "struct",
+      "line": 148,
+      "symbol": "vibe_orchestrator::world::LoadedRegistry",
+      "end_line": 165,
+      "fingerprint": "tok1:4c3052bbcc9564984b1347954eb5291e8fdb5f9e6f38a62a219173f9de2675fa"
     },
     {
       "crate_name": "vibe-publish",
@@ -17064,7 +17586,7 @@
       "line": 59,
       "symbol": "vibe_workspace::WorkspaceError",
       "end_line": 290,
-      "fingerprint": "tok1:099c088435dbf9da8e4df4bc5ff8f744fdef9b2ebfec38f6fcf61cedcbd65bed"
+      "fingerprint": "tok1:8557994f08094a97718f92a446dd7f4f10ad11ceec5c2d367cab783e82cbd7ce"
     },
     {
       "crate_name": "vibe-workspace",
@@ -20136,14 +20658,6 @@
       "verb": "implements"
     },
     {
-      "file": "crates/vibe-cli/src/commands/compile_trace/request.rs",
-      "from_symbol": "vibe_cli::commands::compile_trace::request",
-      "line": 29,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE",
-      "verb": "implements"
-    },
-    {
       "file": "crates/vibe-cli/src/commands/explain.rs",
       "from_symbol": "vibe_cli::commands::explain",
       "line": 8,
@@ -20194,7 +20708,7 @@
     {
       "file": "crates/vibe-cli/src/commands/install/mod.rs",
       "from_symbol": "vibe_cli::commands::install",
-      "line": 22,
+      "line": 23,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail",
       "verb": "implements"
@@ -20275,17 +20789,9 @@
       "verb": "verifies"
     },
     {
-      "file": "crates/vibe-cli/src/commands/install/inputs.rs",
-      "from_symbol": "vibe_cli::commands::install::inputs",
-      "line": 4,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail",
-      "verb": "implements"
-    },
-    {
       "file": "crates/vibe-cli/src/commands/install/observer.rs",
       "from_symbol": "vibe_cli::commands::install::observer",
-      "line": 7,
+      "line": 10,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#H-SCRIPT",
       "verb": "implements"
@@ -20296,14 +20802,6 @@
       "line": 18,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#project-local",
-      "verb": "implements"
-    },
-    {
-      "file": "crates/vibe-cli/src/commands/install/ready.rs",
-      "from_symbol": "vibe_cli::commands::install::ready",
-      "line": 10,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail",
       "verb": "implements"
     },
     {
@@ -20320,14 +20818,6 @@
       "line": 5,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail",
-      "verb": "implements"
-    },
-    {
-      "file": "crates/vibe-cli/src/commands/install/resume.rs",
-      "from_symbol": "vibe_cli::commands::install::resume",
-      "line": 7,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-AGENT-RESUME",
       "verb": "implements"
     },
     {
@@ -20349,7 +20839,7 @@
     {
       "file": "crates/vibe-cli/src/commands/lifecycle/agent.rs",
       "from_symbol": "vibe_cli::commands::lifecycle::agent::CliAgentBackend::complete",
-      "line": 123,
+      "line": 119,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-CLI",
       "verb": "implements"
@@ -20357,7 +20847,7 @@
     {
       "file": "crates/vibe-cli/src/commands/lifecycle/agent.rs",
       "from_symbol": "vibe_cli::commands::lifecycle::agent::CliAgentBackend::provider",
-      "line": 68,
+      "line": 64,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-CLI",
       "verb": "implements"
@@ -20365,9 +20855,17 @@
     {
       "file": "crates/vibe-cli/src/commands/lifecycle/agent.rs",
       "from_symbol": "vibe_cli::commands::lifecycle::agent::CliAgentBackend::resolve_prompt",
-      "line": 90,
+      "line": 86,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#H-AGENT",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/lifecycle/callback.rs",
+      "from_symbol": "vibe_cli::commands::lifecycle::callback",
+      "line": 14,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
       "verb": "implements"
     },
     {
@@ -20381,7 +20879,7 @@
     {
       "file": "crates/vibe-cli/src/commands/lifecycle/clean.rs",
       "from_symbol": "vibe_cli::commands::lifecycle::clean::refuse_untracked_agent_rows",
-      "line": 134,
+      "line": 219,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-HANDSHAKE",
       "verb": "implements"
@@ -20389,7 +20887,7 @@
     {
       "file": "crates/vibe-cli/src/commands/lifecycle/clean.rs",
       "from_symbol": "vibe_cli::commands::lifecycle::clean::run_clean",
-      "line": 28,
+      "line": 105,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CHAIN-GENERAL",
       "verb": "implements"
@@ -20405,7 +20903,15 @@
     {
       "file": "crates/vibe-cli/src/commands/lifecycle.rs",
       "from_symbol": "vibe_cli::commands::lifecycle::execute",
-      "line": 84,
+      "line": 107,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/lifecycle.rs",
+      "from_symbol": "vibe_cli::commands::lifecycle::execute_after_open",
+      "line": 367,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
       "verb": "implements"
@@ -20413,15 +20919,7 @@
     {
       "file": "crates/vibe-cli/src/commands/lifecycle/observer.rs",
       "from_symbol": "vibe_cli::commands::lifecycle::observer",
-      "line": 3,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
-      "verb": "implements"
-    },
-    {
-      "file": "crates/vibe-cli/src/commands/lifecycle/phase.rs",
-      "from_symbol": "vibe_cli::commands::lifecycle::phase",
-      "line": 12,
+      "line": 9,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
       "verb": "implements"
@@ -20445,17 +20943,9 @@
     {
       "file": "crates/vibe-cli/src/commands/lifecycle.rs",
       "from_symbol": "vibe_cli::commands::lifecycle::run",
-      "line": 65,
+      "line": 88,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#INVOKE-RUNS-PRIORS",
-      "verb": "implements"
-    },
-    {
-      "file": "crates/vibe-cli/src/commands/lifecycle/world.rs",
-      "from_symbol": "vibe_cli::commands::lifecycle::world",
-      "line": 6,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
       "verb": "implements"
     },
     {
@@ -28281,7 +28771,7 @@
     {
       "file": "crates/vibe-orchestrator/src/lib.rs",
       "from_symbol": "vibe_orchestrator",
-      "line": 9,
+      "line": 20,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
       "verb": "implements"
@@ -28289,7 +28779,7 @@
     {
       "file": "crates/vibe-orchestrator/src/lib.rs",
       "from_symbol": "vibe_orchestrator::PlannedExecution",
-      "line": 95,
+      "line": 157,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
       "verb": "documents"
@@ -28297,7 +28787,7 @@
     {
       "file": "crates/vibe-orchestrator/src/lib.rs",
       "from_symbol": "vibe_orchestrator::RitualPlan",
-      "line": 55,
+      "line": 85,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
       "verb": "documents"
@@ -28305,7 +28795,503 @@
     {
       "file": "crates/vibe-orchestrator/src/lib.rs",
       "from_symbol": "vibe_orchestrator::RitualPlan::count_for",
-      "line": 82,
+      "line": 111,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/callback.rs",
+      "from_symbol": "vibe_orchestrator::callback",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/dispatch/mod.rs",
+      "from_symbol": "vibe_orchestrator::dispatch",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/dispatch/mod.rs",
+      "from_symbol": "vibe_orchestrator::dispatch::DispatchOutcome",
+      "line": 37,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/failure.rs",
+      "from_symbol": "vibe_orchestrator::failure",
+      "line": 22,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/failure.rs",
+      "from_symbol": "vibe_orchestrator::failure::MeasuredFailure",
+      "line": 94,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/failure.rs",
+      "from_symbol": "vibe_orchestrator::failure::Measurement",
+      "line": 46,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/failure.rs",
+      "from_symbol": "vibe_orchestrator::failure::carry",
+      "line": 144,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/failure.rs",
+      "from_symbol": "vibe_orchestrator::failure::carry_measured",
+      "line": 202,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/failure.rs",
+      "from_symbol": "vibe_orchestrator::failure::is_measured",
+      "line": 170,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/failure.rs",
+      "from_symbol": "vibe_orchestrator::failure::prepend_rows",
+      "line": 240,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/failure.rs",
+      "from_symbol": "vibe_orchestrator::failure::take",
+      "line": 155,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/install/mod.rs",
+      "from_symbol": "vibe_orchestrator::install",
+      "line": 18,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/install/mod.rs",
+      "from_symbol": "vibe_orchestrator::install::InstallExecution",
+      "line": 68,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/install/args.rs",
+      "from_symbol": "vibe_orchestrator::install::args",
+      "line": 9,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/install/args.rs",
+      "from_symbol": "vibe_orchestrator::install::args::InstallInputs",
+      "line": 32,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/install/args.rs",
+      "from_symbol": "vibe_orchestrator::install::args::InstallPolicy",
+      "line": 62,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/install/inputs.rs",
+      "from_symbol": "vibe_orchestrator::install::inputs",
+      "line": 4,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/install/lease.rs",
+      "from_symbol": "vibe_orchestrator::install::lease::acquire_lease",
+      "line": 49,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/install/lease.rs",
+      "from_symbol": "vibe_orchestrator::install::lease::lease_root",
+      "line": 33,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/install/outcome.rs",
+      "from_symbol": "vibe_orchestrator::install::outcome",
+      "line": 8,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/install/outcome.rs",
+      "from_symbol": "vibe_orchestrator::install::outcome::InstallDisposition",
+      "line": 21,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/install/outcome.rs",
+      "from_symbol": "vibe_orchestrator::install::outcome::InstallRun",
+      "line": 48,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/install/outcome.rs",
+      "from_symbol": "vibe_orchestrator::install::outcome::InstallRunContext",
+      "line": 128,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/install/outcome.rs",
+      "from_symbol": "vibe_orchestrator::install::outcome::WorldCallbackOutcome",
+      "line": 165,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/install/outcome.rs",
+      "from_symbol": "vibe_orchestrator::install::outcome::WorldCallbackSummary",
+      "line": 147,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/install/ready.rs",
+      "from_symbol": "vibe_orchestrator::install::ready",
+      "line": 10,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/install/resume.rs",
+      "from_symbol": "vibe_orchestrator::install::resume",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-AGENT-RESUME",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/install/resume.rs",
+      "from_symbol": "vibe_orchestrator::install::resume::ResumeOutcome",
+      "line": 91,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-AGENT-RESUME",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/install/resume.rs",
+      "from_symbol": "vibe_orchestrator::install::resume::ResumeRequest",
+      "line": 38,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-AGENT-RESUME",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/install/resume.rs",
+      "from_symbol": "vibe_orchestrator::install::resume::ResumedInstall",
+      "line": 70,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-AGENT-RESUME",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/install/selection.rs",
+      "from_symbol": "vibe_orchestrator::install::selection",
+      "line": 32,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/install/selection.rs",
+      "from_symbol": "vibe_orchestrator::install::selection::PreparedSelection",
+      "line": 185,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/install/selection.rs",
+      "from_symbol": "vibe_orchestrator::install::selection::PreparedSelection::request",
+      "line": 207,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/install/selection.rs",
+      "from_symbol": "vibe_orchestrator::install::selection::ProvenSelection",
+      "line": 374,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/install/selection.rs",
+      "from_symbol": "vibe_orchestrator::install::selection::SelectedManifest",
+      "line": 62,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/install/selection.rs",
+      "from_symbol": "vibe_orchestrator::install::selection::SelectedManifest::request",
+      "line": 90,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/install/world_projection.rs",
+      "from_symbol": "vibe_orchestrator::install::world_projection",
+      "line": 8,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-AGENT-RESUME",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/phase.rs",
+      "from_symbol": "vibe_orchestrator::phase",
+      "line": 13,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/phase.rs",
+      "from_symbol": "vibe_orchestrator::phase::PhaseOutcome",
+      "line": 100,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/phase.rs",
+      "from_symbol": "vibe_orchestrator::phase::PhaseRun",
+      "line": 47,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/plan.rs",
+      "from_symbol": "vibe_orchestrator::plan",
+      "line": 5,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/plan.rs",
+      "from_symbol": "vibe_orchestrator::plan::planned_contribution",
+      "line": 34,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/plan.rs",
+      "from_symbol": "vibe_orchestrator::plan::provider_and_version",
+      "line": 60,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/plan.rs",
+      "from_symbol": "vibe_orchestrator::plan::tier_name",
+      "line": 81,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/ports.rs",
+      "from_symbol": "vibe_orchestrator::ports",
+      "line": 16,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/ports.rs",
+      "from_symbol": "vibe_orchestrator::ports::PackageSourceBuild",
+      "line": 195,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/ports.rs",
+      "from_symbol": "vibe_orchestrator::ports::RegistryEnvironmentSnapshot",
+      "line": 183,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/prelude.rs",
+      "from_symbol": "vibe_orchestrator::prelude",
+      "line": 4,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/prelude.rs",
+      "from_symbol": "vibe_orchestrator::prelude::RunPrelude",
+      "line": 47,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/prelude.rs",
+      "from_symbol": "vibe_orchestrator::prelude::run_prelude",
+      "line": 89,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/values.rs",
+      "from_symbol": "vibe_orchestrator::values",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/values.rs",
+      "from_symbol": "vibe_orchestrator::values::LifecycleValues",
+      "line": 23,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/values.rs",
+      "from_symbol": "vibe_orchestrator::values::LifecycleValues::completed",
+      "line": 47,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/values.rs",
+      "from_symbol": "vibe_orchestrator::values::LifecycleValues::failed",
+      "line": 73,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/values.rs",
+      "from_symbol": "vibe_orchestrator::values::StepStatus",
+      "line": 102,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/values.rs",
+      "from_symbol": "vibe_orchestrator::values::StepStatus::as_str",
+      "line": 118,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/values.rs",
+      "from_symbol": "vibe_orchestrator::values::check_delegation",
+      "line": 238,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-HANDSHAKE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/values.rs",
+      "from_symbol": "vibe_orchestrator::values::contribution_report",
+      "line": 154,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/values.rs",
+      "from_symbol": "vibe_orchestrator::values::delegation_member",
+      "line": 199,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-HANDSHAKE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/values.rs",
+      "from_symbol": "vibe_orchestrator::values::step_report",
+      "line": 136,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/world/mod.rs",
+      "from_symbol": "vibe_orchestrator::world",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/world/mod.rs",
+      "from_symbol": "vibe_orchestrator::world::LoadedRegistry",
+      "line": 148,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
       "verb": "documents"
