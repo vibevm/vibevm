@@ -447,11 +447,16 @@ the counts above are digest material only. The outer witness is
 `sha256:<64 lowerhex>`. Raw inner digests avoid a second hex-case vocabulary;
 the labeled outer frame preserves domain separation. Refusal is per artifact,
 while one refusal anywhere inside a directory refuses that directory's whole
-tree witness. `ok|skip`, fresh re-probe and hosted satisfaction record each
-accepted witness with the current run id; park and failure do not. Fresh never
-copies a prior artifact witness. Agent output probing compares only stable row
-identity `(id, kind, path)`, not additive witness fields, so recording evidence
-cannot make a completed hosted row re-park forever.
+tree witness. Ordinary `ok|skip` and hosted satisfaction record the produced/
+accepted witness with their current run id; park and failure do not. A fresh
+skip is not a producer: it preserves the prior durable witness/run pair exactly
+(including legacy absence), re-probes the current object into a transient
+invocation map, and verify compares that observation against the preserved
+baseline. It never overwrites W1 with W2 or upgrades an unwitnessed legacy
+artifact merely by looking at it; either move would make external artifact
+mutation match itself and kill E5. Agent output probing compares only stable
+row identity `(id, kind, path)`, not additive witness fields, so recording
+evidence cannot make a completed hosted row re-park forever.
 
 State retains the existing absolute machine path needed to reopen the
 artifact. The external evidence comparison normalises it against the canonical
