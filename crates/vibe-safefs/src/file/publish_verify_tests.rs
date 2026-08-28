@@ -103,7 +103,10 @@ fn a_larger_replacement_in_the_verify_window_refuses_on_the_candidate_budget() {
         "the rename crossed the irreversible line; only verification refused"
     );
     let rendered = format!("{error:#}");
-    assert!(rendered.contains("index.json"), "the destination: {rendered}");
+    assert!(
+        rendered.contains("index.json"),
+        "the destination: {rendered}"
+    );
     assert!(
         rendered.contains(&format!("is {hostile_len} bytes")),
         "the replacement's real length: {rendered}"
@@ -141,11 +144,7 @@ fn same_size_and_shorter_replacements_in_the_verify_window_mismatch() {
 
     let same_size = dir.path().to_path_buf();
     crate::arm_before_publish_verify(Some(Box::new(move |_, name| {
-        std::fs::write(
-            same_size.join("holder").join(name),
-            b"THE CANDIDATE BYTES",
-        )
-        .unwrap();
+        std::fs::write(same_size.join("holder").join(name), b"THE CANDIDATE BYTES").unwrap();
     })));
     let outcome = project.write_atomic_in(&holder, "index.json", CANDIDATE);
     crate::arm_before_publish_verify(None);
@@ -223,7 +222,10 @@ fn a_larger_replacement_after_a_create_new_publication_refuses_on_the_candidate_
         "the link crossed the irreversible line; only verification refused"
     );
     let rendered = format!("{error:#}");
-    assert!(rendered.contains("0000.json"), "the destination: {rendered}");
+    assert!(
+        rendered.contains("0000.json"),
+        "the destination: {rendered}"
+    );
     assert!(
         rendered.contains(&format!("is {hostile_len} bytes")),
         "the replacement's real length: {rendered}"
@@ -260,11 +262,7 @@ fn same_size_and_shorter_replacements_after_a_create_new_publication_mismatch() 
 
     let same_size = dir.path().to_path_buf();
     crate::arm_before_publish_verify(Some(Box::new(move |_, name| {
-        std::fs::write(
-            same_size.join("archive").join(name),
-            b"THE CANDIDATE BYTES",
-        )
-        .unwrap();
+        std::fs::write(same_size.join("archive").join(name), b"THE CANDIDATE BYTES").unwrap();
     })));
     let outcome = project.publish_new_in(&archive, "0000.json", CANDIDATE);
     crate::arm_before_publish_verify(None);
