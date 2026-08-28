@@ -11639,72 +11639,99 @@
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/state/fingerprint.rs",
       "item_kind": "enum",
-      "line": 18,
+      "line": 24,
       "symbol": "vibe_lifecycle::state::fingerprint::FingerprintError",
-      "end_line": 48,
-      "fingerprint": "tok1:7bc7380847703aabeedf8c10f58f449aed566e1ff01a73b7da451d05fbaba871"
+      "end_line": 60,
+      "fingerprint": "tok1:34dc323447afca1b5bcca38e97babbdbff630a57503b641f08014d7821592d40"
     },
     {
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/state/fingerprint.rs",
       "item_kind": "fn",
-      "line": 50,
+      "line": 62,
       "symbol": "vibe_lifecycle::state::fingerprint::fingerprint_execution",
-      "end_line": 56,
+      "end_line": 68,
       "fingerprint": "tok1:077d6000347740d2ca310ceb993a7aab35431ab4945a44fa1d26e122022887d6"
     },
     {
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/state/fingerprint.rs",
       "item_kind": "fn",
-      "line": 58,
+      "line": 70,
       "symbol": "vibe_lifecycle::state::fingerprint::fingerprint_execution_with",
-      "end_line": 102,
-      "fingerprint": "tok1:3954929f30d33e570d7e1816d3a0471263485dfa798d919ada8a2875000f509c"
+      "end_line": 85,
+      "fingerprint": "tok1:bf5af5092984ecc97b37e2c2e02f6436bec2920d486b227ba99aa88d8929e37a"
     },
     {
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/state/fingerprint.rs",
       "item_kind": "fn",
-      "line": 104,
+      "line": 87,
       "symbol": "vibe_lifecycle::state::fingerprint::fingerprint_handler_execution",
-      "end_line": 110,
+      "end_line": 93,
       "fingerprint": "tok1:398b7207b5de4ce2df44636e6f835f26bf774fcbc0ad12fccfa42b1b4c67c943"
     },
     {
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/state/fingerprint.rs",
       "item_kind": "fn",
-      "line": 112,
+      "line": 95,
       "symbol": "vibe_lifecycle::state::fingerprint::fingerprint_handler_execution_with",
+      "end_line": 103,
+      "fingerprint": "tok1:b0d8bea33106a25bac3f2c0b1cc8cb13ff95b8348cd7f40a783366e8acf27267"
+    },
+    {
+      "crate_name": "vibe-lifecycle",
+      "file": "crates/vibe-lifecycle/src/state/fingerprint/inputs.rs",
+      "item_kind": "fn",
+      "line": 159,
+      "symbol": "vibe_lifecycle::state::fingerprint::inputs::PreparedInputs::manifest",
+      "end_line": 187,
+      "fingerprint": "tok1:9a71ce4cc97f469ef175e15b906413aae8b1992e56b115771a2807d835d0a8ff"
+    },
+    {
+      "crate_name": "vibe-lifecycle",
+      "file": "crates/vibe-lifecycle/src/state/fingerprint/inputs.rs",
+      "item_kind": "fn",
+      "line": 78,
+      "symbol": "vibe_lifecycle::state::fingerprint::inputs::prepare_execution_with",
       "end_line": 126,
-      "fingerprint": "tok1:4409da59b361fe1b516233a282e103bceee352f6e696652cab026401390ebae2"
+      "fingerprint": "tok1:a93ed71e4d2735c666ea9035f5cc36085599f0565778d90f148e46596895600e"
+    },
+    {
+      "crate_name": "vibe-lifecycle",
+      "file": "crates/vibe-lifecycle/src/state/fingerprint/inputs.rs",
+      "item_kind": "fn",
+      "line": 58,
+      "symbol": "vibe_lifecycle::state::fingerprint::inputs::prepare_handler_execution_with",
+      "end_line": 76,
+      "fingerprint": "tok1:421afbb736f74fe5493e4174b496085f65369512a95716fee653af1d85d10877"
     },
     {
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/state/fingerprint.rs",
       "item_kind": "fn",
-      "line": 200,
+      "line": 177,
       "symbol": "vibe_lifecycle::state::fingerprint::lockfile_identity",
-      "end_line": 252,
+      "end_line": 229,
       "fingerprint": "tok1:2f30a505d7e9b2ac9e4e4aae1b90b6634ae5d716b44fe30c58d4c1ce37faa15c"
     },
     {
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/state/fingerprint.rs",
       "item_kind": "fn",
-      "line": 128,
+      "line": 105,
       "symbol": "vibe_lifecycle::state::fingerprint::preparation_error_fingerprint",
-      "end_line": 133,
+      "end_line": 110,
       "fingerprint": "tok1:254f9fcb28035a9968c790b2c67a0cad51a748a144f00fb02605d934eb6ee6e0"
     },
     {
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/state/fingerprint.rs",
       "item_kind": "fn",
-      "line": 135,
+      "line": 112,
       "symbol": "vibe_lifecycle::state::fingerprint::preparation_error_fingerprint_for_identity",
-      "end_line": 142,
+      "end_line": 119,
       "fingerprint": "tok1:c2810bf93786e146567038e222641cae4ad1763e4d4b169f6f3c7ce707ab3acf"
     },
     {
@@ -28557,7 +28584,7 @@
     {
       "file": "crates/vibe-lifecycle/src/state/fingerprint.rs",
       "from_symbol": "vibe_lifecycle::state::fingerprint::FingerprintError",
-      "line": 19,
+      "line": 25,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-FINGERPRINT",
       "verb": "implements"
@@ -28565,7 +28592,7 @@
     {
       "file": "crates/vibe-lifecycle/src/state/fingerprint.rs",
       "from_symbol": "vibe_lifecycle::state::fingerprint::FingerprintError",
-      "line": 20,
+      "line": 26,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-FINGERPRINT",
       "verb": "documents"
@@ -28573,7 +28600,7 @@
     {
       "file": "crates/vibe-lifecycle/src/state/fingerprint.rs",
       "from_symbol": "vibe_lifecycle::state::fingerprint::fingerprint_execution",
-      "line": 50,
+      "line": 62,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-FINGERPRINT",
       "verb": "implements"
@@ -28581,7 +28608,7 @@
     {
       "file": "crates/vibe-lifecycle/src/state/fingerprint.rs",
       "from_symbol": "vibe_lifecycle::state::fingerprint::fingerprint_execution_with",
-      "line": 66,
+      "line": 78,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-FINGERPRINT",
       "verb": "implements"
@@ -28589,7 +28616,7 @@
     {
       "file": "crates/vibe-lifecycle/src/state/fingerprint.rs",
       "from_symbol": "vibe_lifecycle::state::fingerprint::fingerprint_handler_execution",
-      "line": 104,
+      "line": 87,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-FINGERPRINT",
       "verb": "implements"
@@ -28597,7 +28624,31 @@
     {
       "file": "crates/vibe-lifecycle/src/state/fingerprint.rs",
       "from_symbol": "vibe_lifecycle::state::fingerprint::fingerprint_handler_execution_with",
-      "line": 112,
+      "line": 95,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-FINGERPRINT",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-lifecycle/src/state/fingerprint/inputs.rs",
+      "from_symbol": "vibe_lifecycle::state::fingerprint::inputs::PreparedInputs::manifest",
+      "line": 161,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#EVIDENCE-SCOPE-IS-DECLARED",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-lifecycle/src/state/fingerprint/inputs.rs",
+      "from_symbol": "vibe_lifecycle::state::fingerprint::inputs::prepare_execution_with",
+      "line": 80,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-FINGERPRINT",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-lifecycle/src/state/fingerprint/inputs.rs",
+      "from_symbol": "vibe_lifecycle::state::fingerprint::inputs::prepare_handler_execution_with",
+      "line": 62,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-FINGERPRINT",
       "verb": "implements"
@@ -28605,7 +28656,7 @@
     {
       "file": "crates/vibe-lifecycle/src/state/fingerprint.rs",
       "from_symbol": "vibe_lifecycle::state::fingerprint::lockfile_identity",
-      "line": 217,
+      "line": 194,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-FINGERPRINT",
       "verb": "implements"
@@ -28613,7 +28664,7 @@
     {
       "file": "crates/vibe-lifecycle/src/state/fingerprint.rs",
       "from_symbol": "vibe_lifecycle::state::fingerprint::preparation_error_fingerprint",
-      "line": 130,
+      "line": 107,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-FINGERPRINT",
       "verb": "implements"
@@ -28621,7 +28672,7 @@
     {
       "file": "crates/vibe-lifecycle/src/state/fingerprint.rs",
       "from_symbol": "vibe_lifecycle::state::fingerprint::preparation_error_fingerprint_for_identity",
-      "line": 135,
+      "line": 112,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-FINGERPRINT",
       "verb": "implements"
@@ -50868,7 +50919,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:4d82ca90132429254742a4cbd94feb1151ac25462012b05f979b3dbff7d68b7d",
+      "content_hash": "sha256:726583960cff3b889b129b969b03080c0c091ff4edad123bb3a6ce31429fb714",
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "PROP-054 — The vibe lifecycle and the extension machine",
@@ -51363,7 +51414,7 @@
     },
     {
       "anchor": "lifecycle",
-      "content_hash": "sha256:a642620bb3f4c2ef0977538fe370e2cf2a03edc6be814647f758b62b155ce0c6",
+      "content_hash": "sha256:9b096d8289fa1c585db61d4b6be40d02b889fc7a8641fbf8281c65cdfa5bf1a8",
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "4. The vibe lifecycle",
@@ -51588,7 +51639,7 @@
     },
     {
       "anchor": "external-orchestration",
-      "content_hash": "sha256:ff9cbdde9f4c75b649be2eb24f822526a80e1b90a89050a2df6d8cf2ed9c2d26",
+      "content_hash": "sha256:acbc7c2b73e5e195d5d7aeb04f58081b2aeaa04bf914ed395907af70e751e9db",
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "4.6 The lifecycle is a framework; the development loop is external",
@@ -51624,10 +51675,10 @@
     },
     {
       "anchor": "EVIDENCE-SCOPE-IS-DECLARED",
-      "content_hash": "sha256:7a6df56513354d9da9292b30655daa80d2738e1fc41619e5bf54efac47eb7213",
+      "content_hash": "sha256:52014424a1193455dd1fc0f14c84fd0e63914b71814240abd614e1d83443869d",
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
-      "heading": "**A tree witness certifies a declared byte set, not an imaginary atomic filesystem snapshot.** Evidence-bearing work names project-relative input patterns. Vibe hashes a no-follow, single-link, canonical manifest of the regular files those patterns select (path + bytes, deterministic order, domain-separated algorithm) and records pattern/file/byte counts; absent declaration is typed `unavailable`. A file is accepted only when handle identity/length stay equal around two identical bounded reads; any observed disagreement yields `unstable`. This is detection-bound evidence, never a claim that an adversarial writer could not have written the same bytes between observations, and files are not one atomic tree epoch. The aggregate tree witness is a digest over these per-execution manifests. It never scans or hashes arbitrary build caches, dependency stores, `target/`, `node_modules/` or the whole machine merely to mint identity. A detected source change yields `unstable`, not a hybrid read blessed as exact. @status:spec/done",
+      "heading": "**A tree witness certifies a declared byte set, not an imaginary atomic filesystem snapshot.** Evidence-bearing work names project-relative input patterns. Vibe hashes a no-follow, single-link, canonical manifest of the regular files those patterns select (path + bytes, deterministic order, domain-separated algorithm) and records pattern/file/byte counts; absent declaration is typed `unavailable`. The one input walk preserves the old execution fingerprint's pattern-major repeated stream, while evidence uses the deduplicated file union. The evidence algorithm domain is `sha256:vibe-input-manifest-v1\\0epoch=1\\0`; it length-frames declaration-order pattern count/patterns, sorted union file count and each path/size/bytes, then total bytes, all counts canonical decimal. Authored empty inputs produce the real zero-count digest; absent inputs produce no measurement. A file is accepted only when handle identity/length stay equal around two identical bounded reads; any observed disagreement yields `unstable`. This is detection-bound evidence, never a claim that an adversarial writer could not have written the same bytes between observations, and files are not one atomic tree epoch. The aggregate tree witness is a digest over these per-execution manifests. It never scans or hashes arbitrary build caches, dependency stores, `target/`, `node_modules/` or the whole machine merely to mint identity. A detected source change yields `unstable`, not a hybrid read blessed as exact. @status:spec/done",
       "line": 177,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#EVIDENCE-SCOPE-IS-DECLARED"
     },
