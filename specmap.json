@@ -18126,6 +18126,15 @@
     },
     {
       "crate_name": "vibe-trace",
+      "file": "crates/vibe-trace/src/relations.rs",
+      "item_kind": "mod",
+      "line": 36,
+      "symbol": "vibe_trace::relations",
+      "end_line": 36,
+      "fingerprint": "tok1:f3ba674969dd161e05a0560506fdd123d26290a79b8e3faf11b6a2dcc5b1163b"
+    },
+    {
+      "crate_name": "vibe-trace",
       "file": "crates/vibe-trace/src/search.rs",
       "item_kind": "mod",
       "line": 17,
@@ -34569,6 +34578,14 @@
       "line": 22,
       "provenance": "authored",
       "uri": "spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#addressing-code",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-trace/src/relations.rs",
+      "from_symbol": "vibe_trace::relations",
+      "line": 36,
+      "provenance": "authored",
+      "uri": "spec://core-ai-native/mechanisms/PROP-014#queries",
       "verb": "implements"
     },
     {
