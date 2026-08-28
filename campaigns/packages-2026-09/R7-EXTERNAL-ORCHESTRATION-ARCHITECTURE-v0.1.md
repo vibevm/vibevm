@@ -402,6 +402,57 @@ For each accepted artifact:
 - anything non-regular, linked, aliased, escaping or moving refuses the
   witness and therefore cannot become matched evidence.
 
+Artifact hashing is streaming and has no byte-size cap: a declared prebuilt
+binary or OS image may be multi-gigabyte without being buffered in RAM or
+typed unavailable merely for its size. `vibe-safefs` owns one reusable
+capability primitive which opens the direct child no-follow, proves regular
+single-link identity and initial length, streams raw SHA-256 twice in fixed
+chunks over the **same held handle** with a seek between passes, requires equal
+byte counts and digests, and finally reopens the final name through the pinned
+parent to prove it still denotes that object. It returns `{ u64 length, raw
+32-byte sha256 }`; lifecycle never copies platform no-follow/identity code.
+The two passes are detection-bound and cost 2× artifact bytes per observation,
+but prevent a same-length concurrent rewrite from blessing a torn one-pass
+digest. They are local to each file, not a second tree enumeration.
+
+The outer recipes use the common length frame and canonical-decimal counts:
+
+```text
+sha256:file-v1\0epoch=1\0
+  size, content_sha256                         # raw 32-byte inner SHA-256
+
+sha256:tree-v1\0epoch=1\0
+  for each descendant in deterministic preorder:
+    entry_kind = directory|file, path          # artifact-root-relative, '/'
+    file only: size, content_sha256             # raw 32 bytes
+  directory_count, file_count, total_bytes      # framed after the stream
+```
+
+Tree order is a depth-first preorder: at each directory, direct child names
+are sorted by raw UTF-8 bytes; a directory entry is framed before recursively
+visiting it. The artifact root itself is not an entry. Every descendant
+directory, including empty ones, **is** an entry, so `{}` cannot match
+`{empty/}`. Counts come last deliberately: global path sorting/counts-first
+would require retaining the whole OS tree in memory. The walk retains at most
+one bounded name set per active directory, refuses more than 1,000,000 direct
+children or depth above 256 as `artifact-unbounded`, and places no total entry
+or byte cap on a streamed tree. Directory proof and sorted child-name digest
+are checked before/after its subtree; each file uses the two-pass primitive.
+There is no input-side `shippable_entry` exclusion inside a declared artifact:
+`target/` or an empty hook directory under that artifact is part of the bytes
+the producer chose to claim.
+
+`StateDigestWitness.files` and `.bytes` remain absent for both artifact forms;
+the counts above are digest material only. The outer witness is
+`sha256:<64 lowerhex>`. Raw inner digests avoid a second hex-case vocabulary;
+the labeled outer frame preserves domain separation. Refusal is per artifact,
+while one refusal anywhere inside a directory refuses that directory's whole
+tree witness. `ok|skip`, fresh re-probe and hosted satisfaction record each
+accepted witness with the current run id; park and failure do not. Fresh never
+copies a prior artifact witness. Agent output probing compares only stable row
+identity `(id, kind, path)`, not additive witness fields, so recording evidence
+cannot make a completed hosted row re-park forever.
+
 State retains the existing absolute machine path needed to reopen the
 artifact. The external evidence comparison normalises it against the canonical
 selected root and carries a safe project-relative forward-slashed path. That
@@ -464,6 +515,18 @@ judges that generated context; VibeVM does not invent the project's policy.
 
 If a later verify contribution fails, lifecycle `ok` is false while the
 identity member may remain matched. Do not rewrite one axis into the other.
+
+The five words also close filesystem-observation refusal without a sixth wire
+epoch. With a prior measurement, strict absence alone is `missing`; any other
+failure to obtain one comparable safe current witness is `unstable` — observed
+movement/torn reads, non-regular/link/reparse/hardlink, portable alias,
+escape/malformed path, directory-width/depth refusal or I/O. With no prior
+measurement the row is `unavailable` (and may still carry a safe current
+observation). Closed artifact reasons are
+`artifact-unwitnessed|artifact-absent|artifact-not-regular|artifact-linked|artifact-aliased|artifact-outside-project|artifact-path-malformed|artifact-moved|artifact-torn|artifact-unbounded|artifact-io`.
+Thus `unstable` means the current observation could not establish one safe
+comparable object, not the stronger and false claim that every such object was
+seen moving.
 
 ### 4.3 Two invocations and hosted resume are distinct laws
 
