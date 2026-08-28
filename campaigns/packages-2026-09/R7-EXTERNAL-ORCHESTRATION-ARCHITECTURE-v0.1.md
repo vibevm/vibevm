@@ -323,6 +323,20 @@ measurement is refused: enabling evidence may not silently change freshness.
 `inputs = null` means unavailable. An explicitly authored empty list is a
 complete empty declared scope and remains distinguishable in the measurement.
 
+The one walk produces two deliberate projections. The legacy execution
+fingerprint replays its existing pattern-major stream byte-for-byte: each
+authored pattern in declaration order, then every matching path/byte in path
+order, including the historical repeat when patterns overlap. The evidence
+manifest uses the deduplicated union so one physical path contributes one file
+and one byte count. Its SHA-256 domain is
+`sha256:vibe-input-manifest-v1\0epoch=1\0`; with the §4.2 length frame it writes
+`pattern_count`, every declaration-order `pattern`, `file_count`, then every
+union file in sorted forward-slash path order as `path`, `size`, `bytes`, and
+finally `total_bytes`. Counts are canonical decimal UTF-8. `Some([])` therefore
+has a real digest with zero patterns/files/bytes; `None` has no measurement.
+Changing requested chain/config may move only the execution fingerprint;
+changing a selected input byte moves both.
+
 For each accepted artifact:
 
 - regular file → `sha256:file-v1` over exact bytes;
