@@ -391,7 +391,11 @@ and uninterrupted stale→external-second-invocation as two adjacent scenarios.
 - `relations` boolean default false.
 
 The selected project root is a separate trusted constructor input, never part
-of MCP arguments.
+of MCP arguments. A `QueryContext` also carries an injected `observed_at` and
+optional validated lifecycle run id. CLI and MCP already depend on
+`vibe-lifecycle` and obtain that id through the same read-only
+`LifecycleStateStore::peek`; `vibe-requirements` does not pull the lifecycle
+engine into a metadata library merely to read one join key.
 
 ### 5.2 Source semantics
 
@@ -405,7 +409,13 @@ adoption is:
 - `recorded` with the exact closed status when present.
 
 Registry-only orphans are reported as source observations, not silently
-discarded and not promoted to authored facts.
+discarded and not promoted to authored facts. When a lock-selected source has
+no slot but the registry still carries entries for its coordinate, `orphaned`
+wins over `unavailable` and its reason names both facts: the positive
+adoption-entry count is the more informative observation. A malformed
+registry or malformed lock aborts the query with a typed read error — neither
+has a representable source-result state and silently returning a host-only or
+empty overlay would claim a scope the reader never established.
 
 Each fact row's address coordinate must equal `source.package`; host rows carry
 `adoption=not-applicable`, package rows never do. With relations requested,
@@ -413,20 +423,56 @@ every row's package has one relation-source result even when it has no edges;
 host sources can use only a fresh-project-map provenance, package sources only
 a carried-package-map provenance. These are validator laws, not writer lore.
 
-The observation id hashes canonical source identities/bytes, registry bytes,
-query members and relation-provider result (when requested), excluding
-`observed_at`. It is a digest of exactly this metadata answer, not the project
-tree.
+One-read byte binding lives below the query without exposing bodies. The
+`vibe-specdoc` pivot accepts caller-read raw text for its one extension/project
+decision; `vibe-facts` returns sorted document witnesses
+`{relative_path, raw_sha256, bytes}` beside facts (or beside an invalid parse),
+and `Registry::load_with_witnesses` parses the same bytes whose witnesses it
+returns. Existing text/registry APIs are wrappers over those seams; A2 never
+re-walks or re-reads a source merely to hash it.
+
+The three digest recipes reuse the §4.2 length frame, canonical decimals,
+schema/wire order and explicit optional presence bits:
+
+- `SourceResult.digest`: domain
+  `vibe-requirements-source-digest\0epoch=1\0`; kind, package, document count,
+  then each sorted document's path, byte count and SHA-256 of its exact raw
+  bytes. The aggregate never carries raw prose across the crate boundary.
+- `observation.source_digest`: domain
+  `vibe-requirements-scope-digest\0epoch=1\0`; selected node, every sorted
+  available/invalid source's kind/package/digest, then every sorted registry
+  file witness `{path, bytes, raw_sha256}`. It excludes query, clock, provider
+  result and lifecycle run id. Registry bytes are source bytes for this member,
+  so changing only the adoption registry changes `source_digest`.
+- `observation.observation_id`: domain
+  `vibe-requirements-observation-id\0epoch=1\0`; every canonical report member
+  except `observation_id` and `observed_at`, including requirements epoch,
+  selected, `source_digest`, lifecycle-run-id presence/value, effective query,
+  source results, relation-source results, rows/edges and `truncated`. It is
+  never a JSON/Rust-layout hash. Thus a changed run join key changes the exact
+  observation id while the clock alone does not.
 
 ### 5.3 Optional relations
 
 `relations = false` means `not-requested` and does not load/build any map.
+The one writer emits an explicit `not-requested/none` relation-source row for
+every enumerated base source; the schema permits an empty list for foreign
+writers, but our reference result has one deterministic form.
 When true, the provider returns typed source states and bounded edges. Missing
 config/carried map is `unavailable`; a carried map whose own content witnesses
 do not match is `stale`; malformed present data is `invalid`. Base fact rows
 still return.
 
 No relation provider may change authoring/adoption or lifecycle evidence.
+The provider is called once with the selected/workspace roots, every enumerated
+base source (including its optional materialised root) and the sorted limited
+addresses. It returns per-package `available|stale|unavailable|invalid` plus
+edges; it never chooses `current|carried` or provenance. The library derives
+those wire values from the base source kind, making host-carried and
+package-current combinations unrepresentable. A whole-provider failure maps
+every requested source to typed unavailable enrichment; base rows still
+return. Provider output for an unrequested address is a provider-invalid
+source result, never silently attached elsewhere.
 
 ## 6. P3 — surfaces
 
@@ -523,7 +569,7 @@ automatic back-edge or PDSA enum/phase/verb exists.
 | Q1 | query while lifecycle lease held | succeeds and creates nothing |
 | Q2 | absent `.vibe`/registry/specmap | generated partial result, no path created |
 | Q3 | raw fact/body canary | absent from JSON/text/MCP frame |
-| Q4 | mutate only adoption registry | only adoption + observation id move |
+| Q4 | mutate only adoption registry | adoption + source digest + observation id move; authoring/source-result/relations/lifecycle stay byte-identical |
 | Q5 | `relations=false` with exploding provider | provider counter remains zero |
 | Q6 | remove carried package map | only its relation source becomes unavailable |
 | Q7 | unknown MCP member + valid prefix | refuses before filesystem access |
@@ -554,10 +600,11 @@ automatic back-edge or PDSA enum/phase/verb exists.
 ### P2 — libraries
 
 1. `vibe-facts` address/scanner/join extraction;
-2. new `vibe-requirements` base query and optional-provider trait;
-3. `vibe-trace` current/carried relation adapter;
-4. `vibe-lifecycle` one-pass measurement + artifact witnesses;
-5. verify reconciliation and report funnel.
+2. one-read `vibe-specdoc`/`vibe-facts` document+registry witness seams;
+3. new `vibe-requirements` base query and optional-provider trait;
+4. `vibe-trace` current/carried relation adapter;
+5. `vibe-lifecycle` one-pass measurement + artifact witnesses;
+6. verify reconciliation and report funnel.
 
 Parallelism is by write perimeter; schema/state/lifecycle edits serialize.
 
@@ -613,6 +660,15 @@ and later-handler-failure carriers. Its report correctly exposed that hosted
 resume reruns invalidated predecessors, so the former hosted-stale fixture is
 split into the two scenarios above. Its claim of an atomic/stable filesystem
 epoch is narrowed to the explicit detection-bound observation law in §4.1.
+
+The P2 A2 audit's missing one-read seams and query/provider split are accepted
+with central rulings: malformed registry/lock abort because their scope has no
+wire state; orphaned wins when adoption entries survive a missing slot; run id
+is a surface-injected read-only join key and is included in observation id;
+the reference writer emits explicit not-requested rows; provenance belongs to
+the library, not the provider. Raw bytes never cross into the report or public
+query result — only per-file witnesses do — and Q4 now agrees with the P1
+source-digest contract.
 
 All accepted facts now live here, in normative specs or in the forthcoming
 tests; the untracked reports are disposable after P0 acceptance.
