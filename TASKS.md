@@ -102,7 +102,7 @@ fronts currently in flight. A worker report or old worktree is never completion.
             `vibe-agent-projection` extraction (`87c2bab8`, `88600508`,
             `17d94f8f`, `94f30aa9`, `daf6eb31`; scoped gates and mutation
             REDs green; five worker worktrees reclaimed immediately).
-      - [ ] A4–A8: pinned transactional state, outermost lifecycle lease,
+      - [x] A4–A8: pinned transactional state, outermost lifecycle lease,
             selected-node ownership, optimistic tasks query and MCP adapter.
             - [x] A4 pinned/bounded state transaction + bounded safefs
                   post-publication verify (`31ca1e7d`, `0225ce41`,
@@ -122,8 +122,12 @@ fronts currently in flight. A worker report or old worktree is never completion.
                   workspace; `30534ff9` / `7b9732f0` exact-byte optimistic
                   reader; `df678d7b` / `c62177fe` strict MCP adapter; Opus
                   corrections, 429 fallback, mutation/limit/MCP gates green).
-            - [ ] First coherent A0–A8 full panel — next; one batch gate, not
-                  another per-atom panel.
+            - [x] First coherent A0–A8 full panel on `a4253de7`: dynamic
+                  54-gate run ended `self-check: all green`; workspace tests,
+                  both user-home tripwires, clippy, host check, conform 0 new,
+                  codegen/specmap/wire-diff, every package/MCP gate and markup
+                  508 files / 0 warnings green. Boundary repairs landed as
+                  `4ecd2cc5`, `21567b6c`, `a4253de7` before the final rerun.
       - [ ] A9–A15: ports-in-place, one `vibe-orchestrator` application
             service, credential-free prompt resolution and hosted/no-spend
             `lifecycle_run` parity.

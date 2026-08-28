@@ -46,7 +46,11 @@
       reviewed. A7–A8 tasks query is complete at `cf5ec17d`, `ee741f2e` /
       `d338e880`, `30534ff9` / `7b9732f0`, `df678d7b` / `c62177fe`: exact
       state bytes, final-name-safe tasks, four-attempt optimism and strict MCP
-      projection are narrow-gated; the coherent A0–A8 full panel is next.
+      projection are narrow-gated. The coherent A0–A8 full panel is green on
+      `a4253de7`: 54 dynamic gates, both home tripwires, workspace/package/MCP
+      tests+clippy, conform 0 new, codegen/specmap/wire and markup 508/0 all
+      ended `self-check: all green` after boundary repairs `4ecd2cc5`,
+      `21567b6c`, `a4253de7`.
       R7.5 neutral
       evidence/query substrate follows. Provider presence activates nothing
       by itself.</WAL-R7>
@@ -124,7 +128,7 @@
     <p><WAL-NEXT fact="true" status="impl/work">The accepted R7.4
     architecture, first parallel wave, A4 state transaction, A5 outermost
     lease, A6 selected-node ownership and A7–A8 `lifecycle_tasks` cut are
-    landed. Run the one coherent A0–A8 full panel, then extract the shared
+    landed and green under their coherent full panel. Extract the shared
     orchestrator and land `lifecycle_run`. Follow with R7.5 exact evidence,
     optional read-only spec-IR facts and a fake external PDSA orchestrator — no
     embedded agent policy. Resume R4 registry/transforms after those neutral
