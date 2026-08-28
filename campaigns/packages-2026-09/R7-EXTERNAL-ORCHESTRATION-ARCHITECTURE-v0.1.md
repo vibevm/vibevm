@@ -172,7 +172,9 @@ P1 lands schemas/registry/corpora/generated types before engine consumers.
 Add to `formats/vocabularies.json` (names exact):
 
 - `evidence_status` — closed five-value enum;
-- `digest_witness` — `{ algorithm, digest, files?, bytes? }`;
+- `digest_witness` — `{ algorithm, digest, files?, bytes? }`, where `files`
+  is `uint32` and `bytes` is a canonical unsigned-decimal string (JTD has no
+  `uint64`; a declared input set above 4 GiB must remain representable);
 - `input_measurement` — execution/phase/declaration/patterns/run + witness;
 - `artifact_witness` — id/kind/path/run + digest witness;
 - `verification_evidence` — the exact PROP-054 §14.7 root/member.
@@ -204,6 +206,11 @@ Correct the stale run-id metadata: current post-R7.3 begins carry a real run id
 for every invocation, not only delegated runs; legacy absence remains readable
 when no ownership claim depends on it.
 
+Compatibility is forward only for this recoverable state: current code reads
+legacy absent members; a pre-R7.5 strict state reader may reject new members.
+That downgrade is honest and recoverable by deleting/rebuilding lifecycle
+state, not a reason to weaken the current strict reader.
+
 ### 3.3 Additive lifecycle report
 
 `schemas/lifecycle_report.jtd.json` imports `verification_evidence` and adds one
@@ -226,13 +233,21 @@ Add and register `schemas/requirements_report.jtd.json` with the exact
 PROP-054 §14.7 vocabulary, generated as
 `vibe_wire::generated::requirements_report::RequirementsReport`.
 
+The root carries two source layers before rows:
+
+- `sources[]`: base authored-source results keyed by `(kind, package)`, state
+  `available|unavailable|invalid|orphaned`, with the state-dependent digest,
+  reason and adoption-entry count. Only `available` sources may own fact rows.
+- `relation_sources[]`: optional enrichment state/provenance; it never stands
+  in for a malformed/missing authored source.
+
 Corpora cover:
 
 - host + package facts with distinct authoring/adoption states;
 - relations not requested;
 - current host relations + carried package relations;
-- partial source/unavailable relation provider;
-- truncation at the hard limit;
+- partial/invalid/orphaned authored source and unavailable relation provider;
+- a small reviewable truncation corpus plus explicit 256/257 validator bounds;
 - no prose/body canary.
 
 ## 4. Evidence measurement and verify algorithm
@@ -259,6 +274,12 @@ For each accepted artifact:
 - directory → `sha256:tree-v1` over canonical relative paths + file bytes;
 - anything non-regular, linked, aliased, escaping or moving refuses the
   witness and therefore cannot become matched evidence.
+
+State retains the existing absolute machine path needed to reopen the
+artifact. The external evidence comparison normalises it against the canonical
+selected root and carries a safe project-relative forward-slashed path. That
+portable path plus `run.selected` is exact and does not leak the developer's
+home.
 
 The witness is checkpointed in the same state transaction as the execution
 record. No `.vibe/evidence.*` second state file is created.
@@ -325,6 +346,12 @@ adoption is:
 
 Registry-only orphans are reported as source observations, not silently
 discarded and not promoted to authored facts.
+
+Each fact row's address coordinate must equal `source.package`; host rows carry
+`adoption=not-applicable`, package rows never do. With relations requested,
+every row's package has one relation-source result even when it has no edges;
+host sources can use only a fresh-project-map provenance, package sources only
+a carried-package-map provenance. These are validator laws, not writer lore.
 
 The observation id hashes canonical source identities/bytes, registry bytes,
 query members and relation-provider result (when requested), excluding
@@ -443,6 +470,10 @@ automatic back-edge or PDSA enum/phase/verb exists.
 | Q8 | add `unmet|fulfilled|verified` field/value | schema/generated/source vocabulary fence → RED |
 | Q9 | surface builds/join rows itself | source fence allows only shared library call |
 | Q10 | any provider/LLM dependency in requirements/evidence cells | dependency/source fence → RED |
+| Q11 | row address coordinate differs from source package | source-coherence RED |
+| Q12 | host row carries package adoption (or inverse) | status/source matrix RED |
+| Q13 | malformed/unavailable/orphaned source emits a fact row | source-result matrix RED |
+| Q14 | relations requested but a row package has no relation-source state | relation coverage RED |
 
 ## 9. Landing order and gates
 
