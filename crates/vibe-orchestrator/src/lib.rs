@@ -36,6 +36,7 @@ pub mod trace;
 pub mod values;
 
 mod callback;
+mod command;
 mod dispatch;
 mod install;
 mod phase;
@@ -44,6 +45,10 @@ mod prelude;
 mod world;
 
 pub use callback::after_durable_world_stage;
+pub use command::{
+    DefaultLifecyclePorts, DefaultLifecycleRequest, LeasedDefaultLifecycle,
+    PreparedDefaultLifecycle, lease_default_lifecycle, prepare_default_lifecycle,
+};
 pub use dispatch::dispatch_plan_untracked;
 pub use install::{
     InstallDisposition, InstallExecution, InstallInputs, InstallPolicy, InstallRun,

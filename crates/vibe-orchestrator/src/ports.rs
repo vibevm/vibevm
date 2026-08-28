@@ -1,9 +1,11 @@
 //! The surface ports one lifecycle run is executed through.
 //!
 //! Everything a surface owns — terminal/JSON rendering, dialoguer, credential
-//! and provider construction, registry cell composition, CLI argument grammar —
-//! reaches this crate ONLY through these traits. Nothing here names a report
-//! family, a provider, a model or a credential.
+//! and provider construction, CLI argument grammar — reaches this crate ONLY
+//! through these traits. The neutral package-source/registry-cell composition
+//! is not a surface's either: it lives in the separate `vibe-package-source`
+//! crate's implementation of the [`PackageSource`](PackageSource) port.
+//! Nothing here names a report family, a provider, a model or a credential.
 //!
 //! There are deliberately TWO observation policies, not one. The phase run is
 //! observed by the surface's OUTER context and the prerequisite install by its
@@ -222,7 +224,10 @@ pub struct PackageSourceBuild<'a> {
 pub trait PackageSource: vibe_install::InstallSource {
     /// Qualify one surface-supplied pkgref. An already-qualified reference
     /// passes through untouched; an ambiguous short name is the surface's own
-    /// typed refusal, returned WITHOUT added context so its downcast survives.
+    /// typed refusal, returned unchanged so its historical top-level wording
+    /// and presentation survive. An ordinary context wrapper would NOT hide
+    /// the typed error from a chain-walking downcast; replacing or
+    /// translating the typed error is what would destroy its identity.
     fn qualify(
         &self,
         pkgref: &vibe_core::PackageRef,

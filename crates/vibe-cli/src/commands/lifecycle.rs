@@ -84,7 +84,12 @@ pub(crate) fn install_agent_backend_from(
     )
 }
 
-/// Execute a top-level default-lifecycle phase verb.
+// DEFAULT-PATH-START (the shared command cell owns this composition; the
+// fence test at the bottom of this file pins what may NOT reappear here).
+/// Execute a top-level default-lifecycle phase verb — through the shared
+/// lease-first command cell. The surface's whole share: project the grammar,
+/// load the ONE user config strictly after the lease, build the ONE agent
+/// backend from the cell's own values, and classify the neutral outcome.
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#INVOKE-RUNS-PRIORS")]
 pub fn run(
     ctx: &output::Context,
@@ -93,17 +98,81 @@ pub fn run(
     prepare_install: impl FnOnce() -> Option<std::path::PathBuf>,
     root_offline: bool,
 ) -> Result<()> {
-    execute(
-        ctx,
-        LifecycleRequest::Default(requested),
-        requested,
-        args.install_args(),
-        false,
-        prepare_install,
-        root_offline,
-    )
+    let install_args = args.install_args();
+    // Stage one: resolve + lease, nothing else — a contended workspace
+    // refuses typed, before any config byte, snapshot, run id or state row.
+    let leased = vibe_orchestrator::lease_default_lifecycle(&install_args.path)?;
+    // The ONE user-config load, strictly AFTER the lease (the
+    // load-between-the-stages seam); it rides into the prerequisite
+    // install, which must never load its own.
+    let user_config = UserConfig::load().context("loading user config for lifecycle envelope")?;
+    let policy = install_args.policy(root_offline, &user_config);
+    let assume_yes = install_args.assume_yes || ctx.is_unattended() || ctx.is_json();
+    // Stage two: the ONE snapshot, identity and DERIVED chain — all inside
+    // the cell, none of it suppliable here.
+    let prepared = vibe_orchestrator::prepare_default_lifecycle(
+        leased,
+        vibe_orchestrator::DefaultLifecycleRequest {
+            requested,
+            force: install_args.force,
+            agent_mode: ctx.agent_mode(),
+            assume_yes,
+            trace_flag: install_args.trace_compile,
+            install_inputs: install_args.inputs(),
+            policy,
+        },
+    )?;
+    // The ONE agent backend, built from values the cell already owns —
+    // no locator call, no second read.
+    let agent: std::sync::Arc<dyn vibe_lifecycle::AgentBackend> = std::sync::Arc::new(
+        install_agent_backend_from(prepared.workspace_root(), prepared.selected_manifest()),
+    );
+    // The boundary's OWNER share: held through the finalised report and the
+    // trace finalisation, so the workspace stays owned until the last byte
+    // this invocation owes is written.
+    let lease_owner = prepared.retain_lease();
+    // The same root the run used, cloned rather than re-resolved.
+    let failed_root = prepared.selected_root().to_path_buf();
+    let preparation = prepared.prepare_trace(&now);
+    let child = ctx.quiet_child();
+    let observer = CliRunObserver::new(ctx);
+    let install_observer = CliInstallObserver::new(&child, Some(ctx));
+    let confirm_gate = super::install::CliConfirmGate::new(&child, install_args.assume_yes);
+    let sources = CliPackageSourceFactory {
+        args: &install_args,
+    };
+    let environment = CliRegistryEnvironment::new(prepare_install);
+    let exit = classify_outcome(
+        &failed_root,
+        prepared.run(
+            vibe_orchestrator::DefaultLifecyclePorts {
+                observer: &observer,
+                install_observer: &install_observer,
+                confirm_gate: &confirm_gate,
+                sources: &sources,
+                environment: &environment,
+                // A phase verb admits no manifest-mutating flag.
+                manifest_mutation: &super::install::NoManifestMutation,
+                agent,
+            },
+            preparation.recorder(),
+        ),
+    );
+    // Consumes the owner: finishes the index against the real outcome, drops
+    // the last handle (and with it the cooperative lock).
+    let finalized = compile_trace::finalize(preparation, exit, &now);
+    let rendered = compile_trace::render_finalized(ctx, finalized);
+    drop(lease_owner);
+    rendered
 }
+// DEFAULT-PATH-END
 
+/// The CLI-ONLY clean composition: clean-prefixed and clean-only requests
+/// still walk this hand-composed epoch — the pre-wipe plan, the wipe, the
+/// strict reload and the re-proven selection are surface-side by design
+/// (A15b leaves clean untouched). The ordinary default path NEVER calls
+/// this: it is `run` above, through the shared command cell, and the fence
+/// test at the bottom of this file keeps the two apart.
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM")]
 fn execute(
     ctx: &output::Context,
@@ -161,15 +230,11 @@ fn execute(
     if let Some(clean_plan) = clean_plan {
         refuse_untracked_agent_rows(ctx, clean_plan)?;
     }
-    // The command's ONE selected-manifest snapshot: it answers compile-trace
-    // activation here, and the prerequisite install consumes it at the
+    // The command's ONE selected-world bundle, bound to the root this command
+    // already resolved and leased: the snapshot answers compile-trace
+    // activation here, and the prerequisite install proves the pair at the
     // boundary that has always read `vibe.toml`. Two reads would be two
     // answers, and the second would race the first.
-    // The command's ONE selected-world bundle, bound to the root this command
-    // already resolved and leased: the snapshot answers compile-trace activation
-    // here, and the prerequisite install proves the pair at the boundary that
-    // has always read `vibe.toml`. Two reads would be two answers, and the
-    // second would race the first.
     let selection = super::install::SelectedManifest::read(&project_root).prepare();
     // The ONE agent backend this command injects. Built from the bundle the
     // command already owns and the root the lease already pinned — no locator
@@ -315,9 +380,9 @@ fn execute(
         args: &install_args,
     };
     let environment = CliRegistryEnvironment::new(prepare_install);
-    let exit = execute_after_open(
+    let exit = classify_outcome(
         &failed_root,
-        vibe_orchestrator::PhaseRun {
+        vibe_orchestrator::run_phases(vibe_orchestrator::PhaseRun {
             requested,
             phases,
             chain,
@@ -339,7 +404,7 @@ fn execute(
             manifest_mutation: &super::install::NoManifestMutation,
             agent,
             trace: preparation.recorder(),
-        },
+        }),
     );
     // Consumes the owner: finishes the index against the real outcome, drops
     // the last handle (and with it the cooperative lock), and returns the
@@ -357,19 +422,16 @@ fn now() -> vibe_wire::generated::shared::Timestamp {
     chrono::Utc::now()
 }
 
-/// Classify the shared phase run into this command's registered report family.
-///
-/// The shared service names no family — the same core is also `vibe install`'s
-/// body and `vibe update --all`'s delegate — so it hands back the measurement,
-/// the caller's exact error object and the emission bit its own site froze, and
-/// THIS boundary chooses `cli-lifecycle-report`. Nothing is reformatted: the
-/// error is moved into the carrier the trace funnel already unwraps.
+/// Classify the already-neutral shared phase outcome into this command's
+/// registered report family. The shared service names no family (the same
+/// core is `vibe install`'s body and `vibe update --all`'s delegate); THIS
+/// boundary chooses `cli-lifecycle-report`, reformatting nothing.
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM")]
-fn execute_after_open(
+fn classify_outcome(
     project_root: &Path,
-    inputs: vibe_orchestrator::PhaseRun<'_>,
+    outcome: vibe_orchestrator::PhaseOutcome,
 ) -> compile_trace::CommandExit<compile_trace::RegisteredReportDraft> {
-    match vibe_orchestrator::run_phases(inputs) {
+    match outcome {
         vibe_orchestrator::PhaseOutcome::Completed(values) => compile_trace::CommandExit::Success(
             compile_trace::RegisteredReportDraft::Lifecycle(Box::new(values)),
         ),
@@ -503,3 +565,9 @@ fn step_name(step: &LifecycleStep) -> String {
         LifecycleStep::Default(phase) => phase.to_string(),
     }
 }
+
+// The default path's reds live in their own cell: this file sits at the
+// 600-line budget without them (followup amendment — split test cells).
+#[cfg(test)]
+#[path = "lifecycle_default_path_tests.rs"]
+mod default_path_tests;

@@ -382,3 +382,34 @@ fn a_member_invocation_leases_the_workspace_root() {
     assert_busy(&output, elapsed, "the member's contended validate");
     drop(lease);
 }
+
+/// The lease precedes the user-config load (R7.4 A15b's two-stage seam):
+/// with the lock held AND the user-level config deliberately unparseable,
+/// a phase verb must still refuse with the TYPED Busy — not with the
+/// config-parsing error a config-load-first ordering would produce. The
+/// startup env promotion in `main` only warns on a broken config layer, so
+/// the lifecycle command's own hard load is the one rung that could
+/// mistakenly beat the lease.
+#[test]
+fn a_busy_lease_refuses_before_the_user_config_load() {
+    let user = UserScratch::new();
+    let project = project(&user);
+    // Deliberately invalid user-level config: `net` is not a table.
+    fs::write(user.settings.join("config.toml"), "net = 3\n").unwrap();
+    let _lease = hold(project.path());
+    let (output, elapsed) = run(&user, project.path(), &["build"]);
+    assert_busy(
+        &output,
+        elapsed,
+        "build under contention with a broken config",
+    );
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    // The oracle is the EXACT fatal context the lifecycle command's own hard
+    // load propagates. The startup env promotion may legitimately warn
+    // about the same broken file (nonfatal) — that warning is NOT the
+    // oracle and must not be asserted away wholesale.
+    assert!(
+        !stderr.contains("loading user config for lifecycle envelope"),
+        "the lifecycle envelope's config load must come AFTER the lease: {stderr}"
+    );
+}
