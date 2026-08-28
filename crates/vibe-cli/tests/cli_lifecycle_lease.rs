@@ -308,7 +308,7 @@ fn plant_bait_state(project: &tempfile::TempDir) {
     let body = format!(
         "schema = 1\n\
          [run]\nrequested = 'validate'\nchain = ['validate']\n\
-         started = '2026-08-28T00:00:00Z'\nrun_id = '{RUN_ID}'\n\
+         started = '2026-08-28T00:00:00Z'\nrun_id = '{RUN_ID}'\nselected = '.'\n\
          [execution.'{key}']\n\
          phase = 'validate'\nfingerprint = 'sha256:x'\nstatus = 'delegated'\n\
          duration_ms = 4\nscope = 'phase'\n\
