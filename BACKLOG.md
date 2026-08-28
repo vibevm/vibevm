@@ -1314,3 +1314,15 @@ structure, and it goes when the file does.
 
 - @fact:B111-NO-PRODUCT-BUG **Это не текущий product bug.** Все функциональные ветки отвечают правильно: self берётся из exact provider root, embed — из selected map, unselected отказывает. Долг в типе authority: публичный constructor требует значение, которое не влияет на выбранную семантику, а rustdoc называет его load-bearing. Такая ложная зависимость заставляет следующий surface искать и переносить root без доказуемой причины.
 - @fact:B111-FIX-MUST-KILL-THE-MUTATION **Приёмка будущего атома.** Подмена переданного workspace root на collision tree сегодня не меняет ни один resolver test; после починки такого входа не должно существовать. Existing REDы на provider-self, fresher unselected slot, selected cross-package embed и unselected refusal остаются зелёными, а source fence подтверждает отсутствие slot scan/fallback в selected type.
+
+### B-112 — foundational layout в VIBEVM-SPEC описывает доисторическое дерево {#b-112}
+
+| поле | значение |
+|---|---|
+| @fact:B112-ANCHOR **anchor** | [`VIBEVM-SPEC.md` §4.2 `#directory-layout`](VIBEVM-SPEC.md#directory-layout) против [PROP-052](vibevm/vibespecs/common/PROP-052-directory-layout.xml) и живого `vibe_core::layout` |
+| @fact:B112-LOCATOR **locator** | диаграмма всё ещё обещает `spec/boot/{00-core.md,90-user.md,INLINE.md,INDEX.md}`, `spec/WAL.md`, корневой `vibedeps/flow-wal/0.3.0` и project-local `.vibe/cache`; живое дерево — `vibevm/vibespecs/boot/{00-core.xml,90-user.xml,STATIC.xml,INDEX.md}`, `vibevm/vibespecs/WAL.xml`, `vibevm/vibedeps/<group>.<name>/<version>/`, а machine package store находится в settings/cache, не под проектом. Сама следующая проза повторяет «`spec/` fixed» и ссылается на мёртвый `spec/common/PROP-024…md` |
+| @fact:B112-SEVERITY **severity** | P2 |
+| @fact:B112-DISPOSITION **disposition** | `open` — отдельный present-truth атом должен вывести диаграмму из `vibe_core::layout`/PROP-052 либо заменить её адресуемым указателем, затем пройти все foundational path examples в VIBEVM-SPEC, boot 00-core и runtime docs. Не чинить одну картинку изолированно: соседние §4.3/§4.6/glossary тоже несут старые `spec/`/WAL/effective-cache формы |
+| @fact:B112-FILED **filed by** | R7.5-P0 independent spec audit + central wisdom harvest, 2026-08-28 |
+
+- @fact:B112-WHY-NOT-IN-P0 **Почему не исправлено вместе с R7.5.** P0 меняет evidence/optional-provider/vocabulary authority; layout-долг охватывает всю foundational spec и runtime documentation. Частичная замена четырёх путей сделала бы диаграмму правдоподобнее, но не истиннее, и спрятала бы blast radius, который аудит уже назвал.
