@@ -316,11 +316,32 @@ fn the_four_schema_roots_spell_the_trace_member_identically() {
         "schemas/reinstall_report.jtd.json",
     ] {
         let schema = read_json(path);
-        assert_eq!(
-            schema["metadata"]["x-vocabularies"],
-            serde_json::json!(["compile_trace_report"]),
-            "{path}: the root pulls exactly the shared trace fragment"
+        let pulled: BTreeSet<String> = schema["metadata"]["x-vocabularies"]
+            .as_array()
+            .unwrap_or_else(|| panic!("{path}: the root declares its vocabularies"))
+            .iter()
+            .map(|value| value.as_str().expect("a vocabulary name").to_string())
+            .collect();
+        assert!(
+            pulled.contains("compile_trace_report"),
+            "{path}: the root pulls the shared trace fragment"
         );
+        // The lifecycle root pulls one more — R7.5's verification
+        // evidence member — and it is the ONLY root that may: the
+        // trace member's own parity is what this assertion defends,
+        // not the size of the vocabulary list.
+        let expected: BTreeSet<String> = if path == "schemas/lifecycle_report.jtd.json" {
+            ["compile_trace_report", "verification_evidence"]
+                .into_iter()
+                .map(str::to_string)
+                .collect()
+        } else {
+            ["compile_trace_report"]
+                .into_iter()
+                .map(str::to_string)
+                .collect()
+        };
+        assert_eq!(pulled, expected, "{path}: unexpected vocabulary closure");
         let member = &schema["optionalProperties"]["trace"];
         assert_eq!(member["ref"], "compile_trace_report", "{path}");
         assert_eq!(

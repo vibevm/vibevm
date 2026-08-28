@@ -49,6 +49,8 @@ fn parked_row(status: ExecutionRecordStatus) -> ExecutionRecord {
             id: "docs/slot.md".into(),
             kind: "file".into(),
             path: "C:/out/docs/slot.md".into(),
+            witness: None,
+            measured_run_id: None,
         }],
         duration_ms: 5,
         fingerprint: "sha256:aa".into(),
@@ -60,6 +62,7 @@ fn parked_row(status: ExecutionRecordStatus) -> ExecutionRecord {
             Vec::new()
         },
         scope: delegated.then_some(ExecutionRecordScope::Slot),
+        input_measurement: None,
     }
 }
 

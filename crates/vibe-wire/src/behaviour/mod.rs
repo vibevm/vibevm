@@ -23,4 +23,7 @@ pub mod compiler_trace_index;
 pub mod projections;
 pub mod records;
 pub(crate) mod required_nullable;
+pub mod requirements_report;
+pub(crate) mod scalars;
+pub mod verification_evidence;
 pub mod vocabularies;

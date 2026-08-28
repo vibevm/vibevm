@@ -110,6 +110,288 @@
       "run_path": { "type": "string", "metadata": { "x-default": null, "description": "Absolute forward-slashed path of `.vibe/trace/<run_id>`. Present for every ACTIVE status (`running`, `ok`, `failed`) and absent exactly when the trace never opened (`unavailable`) — the optionality is the closed status vocabulary's, not the writer's choice." } }
     }
   },
+  "evidence_status": {
+    "metadata": {
+      "x-vocabulary": "closed",
+      "description": "The closed five-value evidence-comparison vocabulary (PROP-054 `##EVIDENCE-OUTCOME-VOCABULARY`). `matched` is the ONLY pass; `stale` is a digest or declaration mismatch, `missing` an owed observation that is absent, `unavailable` an honestly undeclared or legacy witness, and `unstable` a source that moved while it was being observed. Closed: an unknown spelling is a reader error, not a newer writer — evidence evolves by new object members, never by a sixth outcome word. The words `unmet`, `met`, `fulfilled` and `verified` are deliberately ABSENT (`##REQUIREMENT-OBSERVATION-AXES`): combining the observation axes into a next-work verdict is the external orchestrator's policy, never this wire's."
+    },
+    "enum": ["matched", "stale", "missing", "unavailable", "unstable"]
+  },
+  "digest_witness": {
+    "metadata": {
+      "description": "One content witness: the algorithm that produced it, the digest itself, and — for the manifest forms that count what they covered — how many files and bytes entered it. `files` and `bytes` are ONE PAIR: both present or both absent, never one alone. They are present exactly for the input-manifest form and absent exactly for the artifact forms that need no counts (a regular file's witness IS its bytes; a directory's is its canonical manifest), so their presence is part of a witness's shape — the `witness-shape` law reads it from both directions, or `matched` would compare two different kinds of claim. `bytes` is a CANONICAL UNSIGNED DECIMAL STRING, not a narrowed integer: JTD has no `uint64`, and a declared input set above 4 GiB must stay representable, so the count rides the same lossless spelling the compile-trace member's counts already use and no reader parses it into a machine integer. `files` stays `uint32` — a declared scope holding more than four billion FILES is not a case this wire owes representation for, and the pair's asymmetry is deliberate. Shared as a vocabulary because the input manifest and both artifact forms carry the SAME record (JTD has no cross-file refs, G9)."
+    },
+    "properties": {
+      "algorithm": {
+        "type": "string",
+        "metadata": {
+          "description": "The domain-separated algorithm name — `sha256:vibe-input-manifest-v1` for a declared-input manifest, `sha256:file-v1` for a regular file, `sha256:tree-v1` for a directory. The name is part of the witness: two digests of the same bytes under different framings are not comparable."
+        }
+      },
+      "digest": {
+        "type": "string",
+        "metadata": {
+          "description": "`sha256:` followed by 64 lowercase hex characters — the digest the named algorithm produced over its declared scope."
+        }
+      }
+    },
+    "optionalProperties": {
+      "files": {
+        "type": "uint32",
+        "metadata": {
+          "x-default": null,
+          "description": "How many regular files entered the manifest. Present for the manifest form, absent for the artifact forms that count nothing."
+        }
+      },
+      "bytes": {
+        "type": "string",
+        "metadata": {
+          "x-default": null,
+          "description": "How many content bytes entered the manifest — a CANONICAL unsigned decimal string (nonempty ASCII digits, no leading zero unless the whole value is `0`). A string because JTD has no `uint64` and a declared input set may exceed 4 GiB; no reader on either side narrows it. Present exactly where `files` is: a count pair is one claim about scope, not two independent numbers."
+        }
+      }
+    }
+  },
+  "evidence_run": {
+    "metadata": {
+      "description": "The run one verification claim was observed under — the identity half PROP-054 `##VERIFY-EVIDENCE-IDENTITY` names first. It is the same run header `.vibe/lifecycle.toml` records, restated on the evidence wire so a reader joins a claim to an invocation without opening machine state. A private supporting fragment: nothing outside `verification_evidence` pulls it, and it exists because JTD cannot express a nested definition shared by two roots."
+    },
+    "properties": {
+      "run_id": {
+        "type": "string",
+        "metadata": {
+          "description": "The durable run identity — exactly 32 lowercase hex characters, the same id the lifecycle state and the compile trace hold themselves to."
+        }
+      },
+      "selected": {
+        "type": "string",
+        "metadata": {
+          "description": "The selected workspace node the run was authored by: `.` for the root, or a forward-slashed workspace-relative member path. Part of the identity: the same execution under a different selected node measured a different tree."
+        }
+      },
+      "requested": {
+        "type": "string",
+        "metadata": {
+          "description": "The phase the user asked for. It is one of `chain` — a request outside its own chain would name a run that never ran."
+        }
+      },
+      "chain": {
+        "elements": { "type": "string" },
+        "metadata": {
+          "x-empty": "emit",
+          "description": "The requested full phase chain, in order. Explicit even when it holds one phase; a run with no chain is not a run."
+        }
+      },
+      "started": {
+        "type": "string",
+        "metadata": {
+          "description": "When the run began, in the state file's own spelling — carried verbatim rather than reparsed, so the evidence header and `.vibe/lifecycle.toml` cannot disagree about one run's start."
+        }
+      }
+    }
+  },
+  "input_measurement": {
+    "metadata": {
+      "x-vocabularies": ["digest_witness", "evidence_status"],
+      "description": "One declared-input comparison row: the execution whose declared inputs were measured, the declaration it was measured against, and what the measured and the currently observed manifests say. The identity members (`execution`, `phase`, `declaration_fingerprint`, `patterns`) are the claim's scope — PROP-054 `##EVIDENCE-SCOPE-IS-DECLARED`: a tree witness certifies the byte set those patterns select, never the machine. `measured` comes from durable execution state, `observed` is recomputed at verify; which of them is present is what the row's `status` means, and the `comparison-shape` law spells the matrix. This is deliberately NOT the durable state record: `.vibe/lifecycle.toml` stores a measurement (identity plus ONE witness), this stores a comparison, and the two shapes are pinned against each other by a wire test rather than fused into a member nobody could read honestly."
+    },
+    "properties": {
+      "execution": {
+        "type": "string",
+        "metadata": {
+          "description": "The provider-qualified execution reference (`org.group/pkg#id`) whose declared inputs this row is about."
+        }
+      },
+      "phase": {
+        "type": "string",
+        "metadata": {
+          "description": "The lifecycle phase that execution ran in — `build`, `test`, `create`, `verify` or any other phase spelling the chain carries."
+        }
+      },
+      "declaration_fingerprint": {
+        "type": "string",
+        "metadata": {
+          "description": "`sha256:` followed by 64 lowercase hex over the execution's declaration. Its sibling, not its alias, is the input manifest digest: the declaration fingerprint answers «is this the same declared work?», the manifest answers «are these the same declared bytes?» (PROP-054 §1.2 of the R7.5 architecture)."
+        }
+      },
+      "patterns": {
+        "elements": { "type": "string" },
+        "metadata": {
+          "x-empty": "emit",
+          "description": "The project-relative glob patterns the execution declared, verbatim and in declaration order. EXPLICIT even when empty: an authored empty list is a complete empty declared scope, and it must stay distinguishable from an ABSENT declaration, which is `unavailable` and never a digest of the empty set."
+        }
+      },
+      "status": {
+        "ref": "evidence_status",
+        "metadata": {
+          "description": "This row's comparison outcome. The root's own status is the worst of every row's, never an independent claim."
+        }
+      }
+    },
+    "optionalProperties": {
+      "measured_run_id": {
+        "type": "string",
+        "metadata": {
+          "x-default": null,
+          "description": "The run that produced `measured` — 32 lowercase hex. Present EXACTLY when `measured` is: the id and the witness are one fact, so a row carries both or neither. Absent only where there is no measurement to attribute at all (a legacy state file, or an execution that declared no inputs), which `comparison-shape` grants to `unavailable` alone."
+        }
+      },
+      "measured": {
+        "ref": "digest_witness",
+        "metadata": {
+          "x-default": null,
+          "description": "The manifest witness durable state recorded when the execution ran. Absent exactly when the measurement itself is what is unavailable."
+        }
+      },
+      "observed": {
+        "ref": "digest_witness",
+        "metadata": {
+          "x-default": null,
+          "description": "The manifest witness recomputed under the current selected world at verify. Absent when the declared scope could not be observed at all — a missing path, or a source that moved while it was read."
+        }
+      },
+      "reason_code": {
+        "type": "string",
+        "metadata": {
+          "x-default": null,
+          "description": "A bounded, nonblank machine reason for a non-`matched` row. Required for `missing`, `unavailable` and `unstable` — a status without a reason is a refusal that says nothing — forbidden for `matched`, and optional (but never blank) for `stale`, whose reason is the digests themselves."
+        }
+      }
+    }
+  },
+  "artifact_witness": {
+    "metadata": {
+      "x-vocabularies": ["digest_witness", "evidence_status"],
+      "description": "One artifact comparison row: the declared artifact's identity (`id`, `kind`, `path`), the witness state recorded when it was produced or fresh-probed, and the witness recomputed at verify. PROP-054 `##EVIDENCE-ARTIFACT-WITNESS`: existence alone never proves freshness, so a row with no `observed` witness is `missing` or `unstable`, never `matched`; and an artifact that was never witnessed (legacy output) is `unavailable` with a reason, not a silent pass. The same `comparison-shape` matrix rules this row and the input row — one law, two carriers, because JTD cannot say «these two records share their comparison half»."
+    },
+    "properties": {
+      "id": {
+        "type": "string",
+        "metadata": {
+          "description": "The artifact id the producing execution declared."
+        }
+      },
+      "kind": {
+        "type": "string",
+        "metadata": {
+          "description": "The artifact kind as the producing contribution spelled it (`file`, `directory`, and whatever else a provider declares) — carried verbatim, never narrowed: the witness algorithm is what says how it was hashed."
+        }
+      },
+      "path": {
+        "type": "string",
+        "metadata": {
+          "description": "The artifact's canonical PROJECT-RELATIVE forward-slashed path under `run.selected` (PROP-054 `##EVIDENCE-ARTIFACT-WITNESS`). Durable lifecycle state keeps the absolute machine path it needs to reopen the file; this external row carries the portable half, because the selected node together with the relative path is the exact identity and an absolute path would leak the operator's home into a published document. The claim is about THIS path's content; a witness recomputed at another path is another claim."
+        }
+      },
+      "status": {
+        "ref": "evidence_status",
+        "metadata": {
+          "description": "This row's comparison outcome, under the same closed vocabulary and the same matrix as an input row."
+        }
+      }
+    },
+    "optionalProperties": {
+      "measured_run_id": {
+        "type": "string",
+        "metadata": {
+          "x-default": null,
+          "description": "The run that produced `measured` — 32 lowercase hex. Present EXACTLY when `measured` is, under the same one-fact rule the input row carries: absent only for the unwitnessed legacy artifact, which is `unavailable`."
+        }
+      },
+      "measured": {
+        "ref": "digest_witness",
+        "metadata": {
+          "x-default": null,
+          "description": "The content witness durable state recorded when the artifact was produced or fresh-probed."
+        }
+      },
+      "observed": {
+        "ref": "digest_witness",
+        "metadata": {
+          "x-default": null,
+          "description": "The content witness recomputed at verify. Absent when the path is gone, is not a regular file or directory any more, is physically aliased, escapes the project, or moved while it was read."
+        }
+      },
+      "reason_code": {
+        "type": "string",
+        "metadata": {
+          "x-default": null,
+          "description": "A bounded, nonblank machine reason for a non-`matched` row, under the same presence rules the input row carries."
+        }
+      }
+    }
+  },
+  "verification_evidence": {
+    "metadata": {
+      "x-vocabularies": [
+        "timestamp",
+        "evidence_status",
+        "evidence_run",
+        "input_measurement",
+        "artifact_witness"
+      ],
+      "x-diagnostic-cap-bytes": 8192,
+      "description": "The ONE generated verification-evidence member (PROP-054 §14.7, `##EVIDENCE-WIRE-AND-SURFACES`): the lifecycle library produces it, the existing generated `LifecycleReport` carries it, and `vibe verify --json` and MCP `lifecycle_run({phase:\"verify\"})` return that same value — terminal text is a projection, never a second assembly. `observed_at` is EXCLUDED from `evidence_id`; the id is a domain-separated digest over every other canonical identity and comparison member, so re-reading the same claim at another wall-clock second does not mint a new identity. The relational laws JTD cannot express are named in `x-relational-laws` and enforced by the hand-written validator in `vibe-wire/src/behaviour/verification_evidence/`; the two label sets are pinned equal by a wire test, so an undocumented law and an unimplemented label are both red — the seam the compile-trace member already carries.",
+      "x-relational-laws": [
+        "evidence-identity: `evidence` is exactly 1 (the epoch this member speaks), and `evidence_id` is `sha256:` followed by 64 lowercase hex characters. The writer's digest recipe lands with the writer; the SHAPE of an identity is this wire's own law, because a reader joins claims by that string",
+        "run-identity: `run.run_id` is exactly 32 lowercase hex — the same law the lifecycle state and the trace index hold the id to; `run.selected` is `.` or a safe forward-slashed workspace-relative path (nonblank, no backslash, no control byte, no leading `/`, no drive letter, no `.`, `..` or empty segment); `run.requested` and `run.started` are nonblank, bounded and control-free; `run.chain` is nonempty and EVERY phase in it is nonblank, bounded and control-free; `run.requested` is one of `run.chain`",
+        "measurement-identity: `measured_run_id` is present EXACTLY when `measured` is — on an input row and an artifact row alike, and whatever the row's status — and when present it is exactly 32 lowercase hex. Neither half stands alone: a `measured` witness with no id is a measurement nobody can be held to, and an id with no witness attributes a measurement the row itself says does not exist, which a reader joining evidence by run id would follow to a claim that was never made. WHICH statuses may take the absent branch is `comparison-shape`'s, and it grants that to `unavailable` alone. Every input row's `declaration_fingerprint` is `sha256:` followed by 64 lowercase hex: a claim measured against an unnameable declaration is not evidence either",
+        "witness-shape: every present witness names a nonblank `algorithm` and a `digest` of `sha256:` followed by 64 lowercase hex, and its `bytes`, when present, is a CANONICAL unsigned decimal string (nonempty ASCII digits, no leading zero unless the value is `0`) — never narrowed through a machine integer. `files` and `bytes` are one pair: within a single witness both are present or both are absent. Which way that goes is decided by the ROW, not by the writer: an input row's witnesses are manifests and MUST carry the pair, an artifact row's witnesses are file/tree digests and MUST NOT, so `matched` can never compare a counted manifest against an uncounted one",
+        "comparison-shape: the per-row status matrix. `matched` carries both witnesses, equal in algorithm, digest and both counts, and NO reason code. `stale` carries both witnesses whose compared values differ, and any reason it carries is nonblank. `missing` carries `measured`, carries no `observed`, and carries a nonblank reason. `unavailable` carries NO `measured` — the measurement is what is unavailable — and carries a nonblank reason; it is the ONLY status that may have no measurement. `unstable` carries `measured` (something WAS measured; the re-observation is what was refused), carries no `observed`, and carries a nonblank reason",
+        "overall-status: with no rows at all the root status is `unavailable` — an empty evidence set is visible, never a silent pass. Otherwise the root status EQUALS the worst row under the precedence `unstable` > `missing` > `stale` > `unavailable` > `matched`, so `matched` at the root requires a nonempty set every row of which is `matched`",
+        "row-identity: input rows are keyed by `execution` and artifact rows by `id`; each key is nonblank and appears at most once. Two rows for one identity would leave a reader with two answers to the same question and no rule for choosing",
+        "pattern-safety: every declared pattern is a nonblank project-relative glob spelling — no backslash, no control byte, no leading `/`, no drive letter, and no `.`, `..` or EMPTY segment. A pattern that escapes the project, or that spells one scope two ways, is a scope this wire may not certify",
+        "path-safety: every artifact `path` is a safe project-relative forward-slashed path under `run.selected`, by the same grammar the patterns answer to — absolute paths, drive prefixes, backslashes, control bytes and `.`/`..`/empty segments are all refused. Durable state keeps the absolute machine path; the published row carries the portable one, and P2 performs the one normalisation between them",
+        "bounded-identity: every identity and diagnostic scalar (`evidence_id`, the run header, `execution`, `phase`, `declaration_fingerprint`, `id`, `kind`, `path`, `algorithm`, `digest`, `reason_code`) is at most the shared diagnostic cap (`x-diagnostic-cap-bytes`) and carries no CR, LF or NUL, and every IDENTITY scalar among them is also nonblank — an unnamed phase or an unnamed artifact kind is an unjoinable claim. A report is a file on disk, so every scalar in it is untrusted text"
+      ]
+    },
+    "properties": {
+      "evidence": {
+        "type": "uint32",
+        "metadata": {
+          "description": "The evidence wire epoch — 1 today. A reader that does not know the number stops rather than guessing at the members."
+        }
+      },
+      "evidence_id": {
+        "type": "string",
+        "metadata": {
+          "description": "`sha256:` followed by 64 lowercase hex over every canonical identity and comparison member EXCEPT `observed_at`. Two reads of the same claim carry the same id; a claim about another tuple carries another one."
+        }
+      },
+      "status": {
+        "ref": "evidence_status",
+        "metadata": {
+          "description": "The overall comparison outcome — the worst row, never an independent verdict, and never the command's own `ok` (a verify handler may fail while the identity matched)."
+        }
+      },
+      "observed_at": {
+        "ref": "timestamp",
+        "metadata": {
+          "description": "When the comparison was performed. Excluded from `evidence_id` on purpose: the clock is an input, not part of what was measured."
+        }
+      },
+      "run": {
+        "ref": "evidence_run",
+        "metadata": {
+          "description": "The run this comparison was observed under."
+        }
+      },
+      "inputs": {
+        "elements": { "ref": "input_measurement" },
+        "metadata": {
+          "x-empty": "emit",
+          "description": "The declared-input comparison rows, in canonical row order. Explicit even when empty — an empty evidence set is the `unavailable` root, said out loud."
+        }
+      },
+      "artifacts": {
+        "elements": { "ref": "artifact_witness" },
+        "metadata": {
+          "x-empty": "emit",
+          "description": "The artifact comparison rows, in canonical row order. Explicit even when empty, for the same reason `inputs` is."
+        }
+      }
+    }
+  },
   "boot_snippet_entry": {
     "metadata": {
       "description": "`[boot_snippet]` projection (PROP-005 §2.6): a boot file identified by its `source` path plus an ordering `category`."

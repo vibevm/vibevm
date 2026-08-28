@@ -128,6 +128,11 @@ impl OutputContract {
                 id: row.id,
                 kind: row.kind,
                 path: row.path,
+                // A PLANNED row is a contract, not an observation: the
+                // content witness is minted where the artifact is actually
+                // probed (R7.5 P2), never guessed from a declaration.
+                witness: None,
+                measured_run_id: None,
             })
             .collect()
     }

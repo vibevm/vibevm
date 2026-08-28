@@ -3,6 +3,62 @@
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
+/// One artifact comparison row: the declared artifact's identity (`id`,
+/// `kind`, `path`), the witness state recorded when it was produced or fresh-
+/// probed, and the witness recomputed at verify. PROP-054 `##EVIDENCE-
+/// ARTIFACT-WITNESS`: existence alone never proves freshness, so a row with
+/// no `observed` witness is `missing` or `unstable`, never `matched`; and an
+/// artifact that was never witnessed (legacy output) is `unavailable` with a
+/// reason, not a silent pass. The same `comparison-shape` matrix rules this row
+/// and the input row — one law, two carriers, because JTD cannot say «these two
+/// records share their comparison half».
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ArtifactWitness {
+    /// The artifact id the producing execution declared.
+    pub id: String,
+
+    /// The artifact kind as the producing contribution spelled it (`file`,
+    /// `directory`, and whatever else a provider declares) — carried verbatim,
+    /// never narrowed: the witness algorithm is what says how it was hashed.
+    pub kind: String,
+
+    /// The artifact's canonical PROJECT-RELATIVE forward-slashed path under
+    /// `run.selected` (PROP-054 `##EVIDENCE-ARTIFACT-WITNESS`). Durable
+    /// lifecycle state keeps the absolute machine path it needs to reopen the
+    /// file; this external row carries the portable half, because the selected
+    /// node together with the relative path is the exact identity and an
+    /// absolute path would leak the operator's home into a published document.
+    /// The claim is about THIS path's content; a witness recomputed at another
+    /// path is another claim.
+    pub path: String,
+
+    /// This row's comparison outcome, under the same closed vocabulary and the
+    /// same matrix as an input row.
+    pub status: EvidenceStatus,
+
+    /// The content witness durable state recorded when the artifact was
+    /// produced or fresh-probed.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub measured: Option<DigestWitness>,
+
+    /// The run that produced `measured` — 32 lowercase hex. Present EXACTLY
+    /// when `measured` is, under the same one-fact rule the input row carries:
+    /// absent only for the unwitnessed legacy artifact, which is `unavailable`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub measured_run_id: Option<String>,
+
+    /// The content witness recomputed at verify. Absent when the path is gone,
+    /// is not a regular file or directory any more, is physically aliased,
+    /// escapes the project, or moved while it was read.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub observed: Option<DigestWitness>,
+
+    /// A bounded, nonblank machine reason for a non-`matched` row, under the
+    /// same presence rules the input row carries.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub reason_code: Option<String>,
+}
+
 /// `[boot_snippet]` projection (PROP-005 §2.6): a boot file identified by its
 /// `source` path plus an ordering `category`.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -136,6 +192,50 @@ impl<'de> Deserialize<'de> for DeliveryMode {
     }
 }
 
+/// One content witness: the algorithm that produced it, the digest itself,
+/// and — for the manifest forms that count what they covered — how many files
+/// and bytes entered it. `files` and `bytes` are ONE PAIR: both present or
+/// both absent, never one alone. They are present exactly for the input-
+/// manifest form and absent exactly for the artifact forms that need no counts
+/// (a regular file's witness IS its bytes; a directory's is its canonical
+/// manifest), so their presence is part of a witness's shape — the `witness-
+/// shape` law reads it from both directions, or `matched` would compare two
+/// different kinds of claim. `bytes` is a CANONICAL UNSIGNED DECIMAL STRING,
+/// not a narrowed integer: JTD has no `uint64`, and a declared input set above
+/// 4 GiB must stay representable, so the count rides the same lossless spelling
+/// the compile-trace member's counts already use and no reader parses it into
+/// a machine integer. `files` stays `uint32` — a declared scope holding more
+/// than four billion FILES is not a case this wire owes representation for, and
+/// the pair's asymmetry is deliberate. Shared as a vocabulary because the input
+/// manifest and both artifact forms carry the SAME record (JTD has no cross-
+/// file refs, G9).
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct DigestWitness {
+    /// The domain-separated algorithm name — `sha256:vibe-input-manifest-v1`
+    /// for a declared-input manifest, `sha256:file-v1` for a regular file,
+    /// `sha256:tree-v1` for a directory. The name is part of the witness: two
+    /// digests of the same bytes under different framings are not comparable.
+    pub algorithm: String,
+
+    /// `sha256:` followed by 64 lowercase hex characters — the digest the named
+    /// algorithm produced over its declared scope.
+    pub digest: String,
+
+    /// How many content bytes entered the manifest — a CANONICAL unsigned
+    /// decimal string (nonempty ASCII digits, no leading zero unless the whole
+    /// value is `0`). A string because JTD has no `uint64` and a declared
+    /// input set may exceed 4 GiB; no reader on either side narrows it. Present
+    /// exactly where `files` is: a count pair is one claim about scope, not two
+    /// independent numbers.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub bytes: Option<String>,
+
+    /// How many regular files entered the manifest. Present for the manifest
+    /// form, absent for the artifact forms that count nothing.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub files: Option<u32>,
+}
+
 /// One measured duration: microseconds plus an explicit saturation marker.
 /// `micros` saturates at u32::MAX rather than wrapping; `saturated` is true
 /// when the measurement hit that ceiling (or contributed to a total that did)
@@ -150,6 +250,67 @@ pub struct Duration {
     pub micros: u32,
 
     pub saturated: bool,
+}
+
+/// The run one verification claim was observed under — the identity half PROP-
+/// 054 `##VERIFY-EVIDENCE-IDENTITY` names first. It is the same run header
+/// `.vibe/lifecycle.toml` records, restated on the evidence wire so a reader
+/// joins a claim to an invocation without opening machine state. A private
+/// supporting fragment: nothing outside `verification_evidence` pulls it,
+/// and it exists because JTD cannot express a nested definition shared by two
+/// roots.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct EvidenceRun {
+    /// The requested full phase chain, in order. Explicit even when it holds
+    /// one phase; a run with no chain is not a run.
+    pub chain: Vec<String>,
+
+    /// The phase the user asked for. It is one of `chain` — a request outside
+    /// its own chain would name a run that never ran.
+    pub requested: String,
+
+    /// The durable run identity — exactly 32 lowercase hex characters, the same
+    /// id the lifecycle state and the compile trace hold themselves to.
+    pub run_id: String,
+
+    /// The selected workspace node the run was authored by: `.` for the
+    /// root, or a forward-slashed workspace-relative member path. Part of the
+    /// identity: the same execution under a different selected node measured a
+    /// different tree.
+    pub selected: String,
+
+    /// When the run began, in the state file's own spelling — carried verbatim
+    /// rather than reparsed, so the evidence header and `.vibe/lifecycle.toml`
+    /// cannot disagree about one run's start.
+    pub started: String,
+}
+
+/// The closed five-value evidence-comparison vocabulary (PROP-054 `##EVIDENCE-
+/// OUTCOME-VOCABULARY`). `matched` is the ONLY pass; `stale` is a digest
+/// or declaration mismatch, `missing` an owed observation that is absent,
+/// `unavailable` an honestly undeclared or legacy witness, and `unstable`
+/// a source that moved while it was being observed. Closed: an unknown
+/// spelling is a reader error, not a newer writer — evidence evolves by new
+/// object members, never by a sixth outcome word. The words `unmet`, `met`,
+/// `fulfilled` and `verified` are deliberately ABSENT (`##REQUIREMENT-
+/// OBSERVATION-AXES`): combining the observation axes into a next-work verdict
+/// is the external orchestrator's policy, never this wire's.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum EvidenceStatus {
+    #[serde(rename = "matched")]
+    Matched,
+
+    #[serde(rename = "missing")]
+    Missing,
+
+    #[serde(rename = "stale")]
+    Stale,
+
+    #[serde(rename = "unavailable")]
+    Unavailable,
+
+    #[serde(rename = "unstable")]
+    Unstable,
 }
 
 /// Feature table: feature names map to activation lists; `exclusive` is the at-
@@ -176,6 +337,73 @@ pub struct I18nEntry {
     /// Default locale; absent when the package declares none.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub default: Option<String>,
+}
+
+/// One declared-input comparison row: the execution whose declared inputs were
+/// measured, the declaration it was measured against, and what the measured
+/// and the currently observed manifests say. The identity members (`execution`,
+/// `phase`, `declaration_fingerprint`, `patterns`) are the claim's scope
+/// — PROP-054 `##EVIDENCE-SCOPE-IS-DECLARED`: a tree witness certifies the
+/// byte set those patterns select, never the machine. `measured` comes from
+/// durable execution state, `observed` is recomputed at verify; which of them
+/// is present is what the row's `status` means, and the `comparison-shape`
+/// law spells the matrix. This is deliberately NOT the durable state record:
+/// `.vibe/lifecycle.toml` stores a measurement (identity plus ONE witness),
+/// this stores a comparison, and the two shapes are pinned against each other
+/// by a wire test rather than fused into a member nobody could read honestly.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct InputMeasurement {
+    /// `sha256:` followed by 64 lowercase hex over the execution's declaration.
+    /// Its sibling, not its alias, is the input manifest digest: the
+    /// declaration fingerprint answers «is this the same declared work?», the
+    /// manifest answers «are these the same declared bytes?» (PROP-054 §1.2 of
+    /// the R7.5 architecture).
+    pub declaration_fingerprint: String,
+
+    /// The provider-qualified execution reference (`org.group/pkg#id`) whose
+    /// declared inputs this row is about.
+    pub execution: String,
+
+    /// The project-relative glob patterns the execution declared, verbatim and
+    /// in declaration order. EXPLICIT even when empty: an authored empty list
+    /// is a complete empty declared scope, and it must stay distinguishable
+    /// from an ABSENT declaration, which is `unavailable` and never a digest of
+    /// the empty set.
+    pub patterns: Vec<String>,
+
+    /// The lifecycle phase that execution ran in — `build`, `test`, `create`,
+    /// `verify` or any other phase spelling the chain carries.
+    pub phase: String,
+
+    /// This row's comparison outcome. The root's own status is the worst of
+    /// every row's, never an independent claim.
+    pub status: EvidenceStatus,
+
+    /// The manifest witness durable state recorded when the execution ran.
+    /// Absent exactly when the measurement itself is what is unavailable.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub measured: Option<DigestWitness>,
+
+    /// The run that produced `measured` — 32 lowercase hex. Present EXACTLY
+    /// when `measured` is: the id and the witness are one fact, so a row
+    /// carries both or neither. Absent only where there is no measurement to
+    /// attribute at all (a legacy state file, or an execution that declared no
+    /// inputs), which `comparison-shape` grants to `unavailable` alone.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub measured_run_id: Option<String>,
+
+    /// The manifest witness recomputed under the current selected world at
+    /// verify. Absent when the declared scope could not be observed at all — a
+    /// missing path, or a source that moved while it was read.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub observed: Option<DigestWitness>,
+
+    /// A bounded, nonblank machine reason for a non-`matched` row. Required for
+    /// `missing`, `unavailable` and `unstable` — a status without a reason is
+    /// a refusal that says nothing — forbidden for `matched`, and optional (but
+    /// never blank) for `stale`, whose reason is the digests themselves.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub reason_code: Option<String>,
 }
 
 /// Repository naming convention mapping a pkgref to a repo name (PROP-008
@@ -357,6 +585,52 @@ pub enum TraceReportStatus {
 
     #[serde(rename = "unavailable")]
     Unavailable,
+}
+
+/// The ONE generated verification-evidence member (PROP-054 §14.7, `##EVIDENCE-
+/// WIRE-AND-SURFACES`): the lifecycle library produces it, the existing
+/// generated `LifecycleReport` carries it, and `vibe verify --json` and
+/// MCP `lifecycle_run({phase:"verify"})` return that same value — terminal
+/// text is a projection, never a second assembly. `observed_at` is EXCLUDED
+/// from `evidence_id`; the id is a domain-separated digest over every other
+/// canonical identity and comparison member, so re-reading the same claim at
+/// another wall-clock second does not mint a new identity. The relational laws
+/// JTD cannot express are named in `x-relational-laws` and enforced by the
+/// hand-written validator in `vibe-wire/src/behaviour/verification_evidence/`;
+/// the two label sets are pinned equal by a wire test, so an undocumented law
+/// and an unimplemented label are both red — the seam the compile-trace member
+/// already carries.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct VerificationEvidence {
+    /// The artifact comparison rows, in canonical row order. Explicit even when
+    /// empty, for the same reason `inputs` is.
+    pub artifacts: Vec<ArtifactWitness>,
+
+    /// The evidence wire epoch — 1 today. A reader that does not know the
+    /// number stops rather than guessing at the members.
+    pub evidence: u32,
+
+    /// `sha256:` followed by 64 lowercase hex over every canonical identity
+    /// and comparison member EXCEPT `observed_at`. Two reads of the same claim
+    /// carry the same id; a claim about another tuple carries another one.
+    pub evidence_id: String,
+
+    /// The declared-input comparison rows, in canonical row order. Explicit
+    /// even when empty — an empty evidence set is the `unavailable` root, said
+    /// out loud.
+    pub inputs: Vec<InputMeasurement>,
+
+    /// When the comparison was performed. Excluded from `evidence_id` on
+    /// purpose: the clock is an input, not part of what was measured.
+    pub observed_at: Timestamp,
+
+    /// The run this comparison was observed under.
+    pub run: EvidenceRun,
+
+    /// The overall comparison outcome — the worst row, never an independent
+    /// verdict, and never the command's own `ok` (a verify handler may fail
+    /// while the identity matched).
+    pub status: EvidenceStatus,
 }
 
 /// Semantic version string — `semver::Version` in code.

@@ -1,0 +1,402 @@
+{
+  "metadata": {
+    "description": "The R7.5 read-only requirements metadata report (PROP-054 §14.7 `##REF-REQUIREMENTS-WIRE`, `##FACT-QUERY-CONTRACT`). ONE bounded answer about what this project's specs declare and what it recorded about them: observation and source digests, the query that was asked, the BASE authored-source results, the optional relation-provider enrichment states, and one row per full `spec://<group>/<package>/<path>#<fact>` address. The two source layers are separate on purpose: `sources[]` says whether a source could be READ at all, `relation_sources[]` says what optional enrichment it could offer, and neither stands in for the other. It is metadata ONLY — no fact prose, no code body, no prompt, no recommendation, no ranking and no next task; the four observation axes (authoring, adoption, relations, lifecycle verification evidence) stay four typed observations, and no member, enum value or rollup is named `unmet`, `met`, `fulfilled` or `verified`, because joining the axes into a verdict is the external orchestrator's policy and never this query's (`##REQUIREMENT-OBSERVATION-AXES`). Verification evidence is a SEPARATE root on the lifecycle report; a `verifies` edge here and a matching evidence document there are two observations an orchestrator may join, never a synthetic verdict this report attaches to a row. Source of truth for `crates/vibe-wire/src/generated/requirements_report/`; the relational laws JTD cannot express live in `crates/vibe-wire/src/behaviour/requirements_report/` and are pinned against this schema's `x-relational-laws` by a wire test.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-REQUIREMENTS-WIRE"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::requirements_report"
+    },
+    "x-vocabularies": ["timestamp"],
+    "x-diagnostic-cap-bytes": 8192,
+    "x-address-cap-bytes": 2048,
+    "x-limit-max": 256,
+    "x-relational-laws": [
+      "report-identity: `requirements` is exactly 1 (the epoch this root speaks), and `observation.observation_id` and `observation.source_digest` are each `sha256:` followed by 64 lowercase hex characters. A present `observation.lifecycle_run_id` is exactly 32 lowercase hex — the same id the lifecycle state and the evidence wire hold themselves to. `observation.selected` is `.` or a safe forward-slashed workspace-relative path (nonblank, no backslash, no control byte, no leading `/`, no drive letter, no `.`, `..` or empty segment)",
+      "query-bounds: `query.limit` is within 1..=256 (`x-limit-max`) — zero answers nothing and an unbounded query is not bounded metadata — and a present `query.address_prefix` starts with `spec://`, never a bare fact id, and carries no CR, LF, NUL or backslash",
+      "address-grammar: every row's `address` is a FULL `spec://<group>/<package>/<path>#<fact>` address: the `spec://` scheme, a group that parses as a `vibe_core::Group`, a package that parses as a `vibe_core::PackageName`, a nonblank forward-slashed path with no `.`, `..` or empty segment, exactly one `#`, and a nonblank fact anchor. Identity is always the full address (`##OPTIONAL-IR-FACT-EVIDENCE`); a bare id names nothing a second reader could resolve, and a coordinate that only LOOKS like one is not one",
+      "prefix-scope: when `query.address_prefix` is present every row's `address` starts with it — a bounded query that answered outside its own scope is not the query that was asked",
+      "row-order: rows are sorted by `address` and each address appears at most once; within a row, relation edges are sorted by (`verb`, `symbol`, `file`, `line`) — the verb by its WIRE spelling, which is not the generated enum's declaration order — and no edge repeats. Deterministic output is what makes two observations of one project diffable",
+      "source-coherence: every package coordinate on this root — a source result's, a row's and a relation source's alike — parses as `vibe_core::Group` and `vibe_core::PackageName`, not merely as a string containing a slash. BOTH source layers are sorted by `package` and carry each package AT MOST ONCE, and in `sources` that uniqueness is by package ALONE, regardless of kind: `relation_sources` names a package and has no kind member to disambiguate with, while its fresh-vs-carried law has to read exactly one kind back off the base layer, so a coordinate enumerated under both kinds would make that verdict depend on which result a lookup reached first. For the same reason every `relation_sources` entry names exactly one base source result — an enrichment state for a source this answer never enumerated is refused rather than judged by a law that skipped itself, which makes the kind constraint total. The wire shape is unchanged by this: it is a relational invariant the shape CAUSES, not a `kind` member added to `relation_source`",
+      "source-result-matrix: an authored source result's members are decided by its `state`. `available` carries a `digest`, no `reason_code` and no `adoption_entries`, and is the ONLY state that may own fact rows. `unavailable` carries no digest, a nonblank reason, no adoption entries, and owns no rows. `invalid` carries a digest AND a nonblank reason (the bytes were read, they did not parse) and owns no rows. `orphaned` carries no digest, a nonblank reason, `adoption_entries` greater than zero, and owns no rows — a registry-only orphan is a SOURCE observation, never a fake `unmarked` authored fact",
+      "row-source-binding: every row names an `available` source result for its `source.package`, agreeing with it on `kind` — one coordinate has one base result, so a row that calls it `host` while the base layer calls it `package` is naming a source that does not exist — and the coordinate parsed out of the row's own full address equals that `source.package`. A row whose address says one package while its source says another is two claims wearing one row",
+      "relation-state-matrix: a relation source's `provenance` is decided by its `state` — `not-requested` and `unavailable` carry `none`, `current` carries `fresh-project-map`, `carried` carries `carried-package-map`, and `stale` or `invalid` carries whichever map failed to prove itself (never `none`). `not-requested` carries no reason code; `stale`, `unavailable` and `invalid` each carry a nonblank one; `current` and `carried` carry none. The KIND of the source constrains the provenance: a host package's relation state is built fresh in memory, so it is `current`/`fresh-project-map` (or `stale`/`invalid` with that provenance, or `unavailable`/`none`) and never `carried`; an installed package's comes from its carried `package.specmap.json`, so it is `carried`/`carried-package-map` (or `stale`/`invalid` with that provenance, or `unavailable`/`none`) and never `current`. With `query.relations = false` every named source is `not-requested`/`none` and NO row carries an edge — a query that did not ask loaded no map. With `query.relations = true` no source is `not-requested`, and every package that owns a row has a relation-source result even when that row has zero edges: silence about a package that was scanned is not an answer. An edge may only appear on a row whose package this answer named a relation source for",
+      "status-presence: authoring `marked` carries a status and `unmarked` carries none; adoption `recorded` carries a status, while `not-applicable`, `absent` and `indeterminate` carry none. The three absent-adoption words are three different facts — a host-authored row has no consumer overlay to consult, a package row with no registry entry has none recorded, and a row whose entry exists without a status is indeterminate — and collapsing them into one boolean is exactly the loss this matrix prevents. The SOURCE kind decides which of them is legal: a `host` row is always `not-applicable`, and a `package` row is never `not-applicable`",
+      "edge-bounds: every relation edge's `line` is at least 1 (source lines are 1-based; a 0 names nothing), and its `symbol` and `file` are nonblank, with `file` a safe repo-relative forward-slashed path — no backslash, no control byte, no absolute root, no drive prefix, no `.`, `..` or empty segment",
+      "bounded-text: every identity and diagnostic scalar is bounded — an `address` or `address_prefix` by `x-address-cap-bytes`, every other scalar by the shared diagnostic cap (`x-diagnostic-cap-bytes`) — and none of them carries CR, LF or NUL. The report is written for a reader that will print it; an unbounded identity is a diagnostic that scrolls a terminal off its own answer",
+      "truncation-honesty: `truncated` is true only when the row count reached `query.limit`, and a truncated answer carries at least one row. A report that dropped nothing never claims it did, and one that claims truncation while holding fewer rows than its own limit is describing another query"
+    ]
+  },
+  "properties": {
+    "requirements": {
+      "type": "uint32",
+      "metadata": {
+        "description": "The requirements wire epoch — 1 today. A reader that does not know the number stops rather than guessing at the members."
+      }
+    },
+    "observation": {
+      "ref": "requirements_observation",
+      "metadata": {
+        "description": "What this answer is, and of what: its own identity, when it was taken, the selected node it was taken over, and the digest of exactly the bytes it read."
+      }
+    },
+    "query": {
+      "ref": "requirements_query",
+      "metadata": {
+        "description": "The query as it was EFFECTIVELY answered — defaults resolved, not the raw arguments. A reader must be able to reconstruct the question from the answer alone."
+      }
+    },
+    "sources": {
+      "elements": { "ref": "source_result" },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "The BASE source layer: one typed result per authored source this answer enumerated, sorted by package and carrying each package at most once whatever its kind. It is what makes a malformed or missing authored source representable — a state `relation_sources` cannot stand in for, because relation enrichment is a different question about different bytes. Only an `available` result may own fact rows; the other three states say, in the report itself, why a package contributed none."
+      }
+    },
+    "relation_sources": {
+      "elements": { "ref": "relation_source" },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "The optional ENRICHMENT layer: one typed state per package the relation provider was asked about, sorted by package. Explicit even when empty — with `relations = false` the empty list and the `not-requested` states are the same honest statement: no map was loaded. It never speaks for the base source layer above."
+      }
+    },
+    "rows": {
+      "elements": { "ref": "requirement_row" },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "One row per addressed fact, sorted by full address. Explicit even when empty: a project with no addressed facts answers with an empty list, not with a missing member."
+      }
+    },
+    "truncated": {
+      "type": "boolean",
+      "metadata": {
+        "description": "True when the query's own `limit` cut the row set. Never a soft warning: an orchestrator that reads a truncated answer as complete would conclude the opposite of what it holds."
+      }
+    }
+  },
+  "definitions": {
+    "requirements_observation": {
+      "metadata": {
+        "description": "The answer's own identity. `observation_id` hashes the canonical source identities and bytes, the registry bytes, the query members and — when relations were requested — the provider's result, EXCLUDING `observed_at`: it is a digest of exactly this metadata answer, never of the project tree (`##FACT-QUERY-CONTRACT`)."
+      },
+      "properties": {
+        "observation_id": {
+          "type": "string",
+          "metadata": {
+            "description": "`sha256:` followed by 64 lowercase hex over every canonical member of this answer except `observed_at`. Two identical observations carry one id; a changed adoption registry moves it."
+          }
+        },
+        "observed_at": {
+          "ref": "timestamp",
+          "metadata": {
+            "description": "When the observation was taken. Excluded from `observation_id` on purpose — the clock is an input, not part of what was read."
+          }
+        },
+        "selected": {
+          "type": "string",
+          "metadata": {
+            "description": "The selected workspace node the answer is about: `.` for the root, or a forward-slashed workspace-relative member path."
+          }
+        },
+        "source_digest": {
+          "type": "string",
+          "metadata": {
+            "description": "`sha256:` followed by 64 lowercase hex over exactly the spec and registry bytes this answer read — the scope claim, kept separate from `observation_id` so a reader can tell «the sources moved» from «the question changed»."
+          }
+        }
+      },
+      "optionalProperties": {
+        "lifecycle_run_id": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "The current lifecycle run id (32 lowercase hex) when one exists in durable state — the join key to a verification-evidence document. Absent on a project that has never run a lifecycle phase; the query itself creates no state and never mints one (`##EXTERNAL-WORK-LOOP`)."
+          }
+        }
+      }
+    },
+    "requirements_query": {
+      "metadata": {
+        "description": "The effective query. There is no project path member: the CLI takes `--path` as a trusted constructor input and MCP takes the server's own context as authority, so a path never rides the answer (`##REF-REQUIREMENTS-SURFACES`)."
+      },
+      "properties": {
+        "limit": {
+          "type": "uint32",
+          "metadata": {
+            "description": "The effective row bound — default 100, inclusive range 1..=256. Present even at its default: an answer must state the bound it was cut by."
+          }
+        },
+        "relations": {
+          "type": "boolean",
+          "metadata": {
+            "description": "Whether relation enrichment was requested. False means `not-requested`: no specmap engine and no carried map is loaded, and no provider is called even once."
+          }
+        }
+      },
+      "optionalProperties": {
+        "address_prefix": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "The `spec://` prefix the query was scoped to. Absent when the query asked about every addressed fact; never a bare fact id, which would name nothing a second reader could resolve."
+          }
+        }
+      }
+    },
+    "source_result": {
+      "metadata": {
+        "description": "One authored source's result. `##FACT-QUERY-CONTRACT`: a malformed present source is named in its OWN source result and never becomes a lifecycle failure, and a registry-only orphan is reported as a source observation rather than silently discarded or promoted into an authored fact. The four states are four different things a reader must be able to act on differently, so the digest, the reason and the adoption count are each present exactly where they mean something."
+      },
+      "properties": {
+        "source": {
+          "ref": "requirement_source",
+          "metadata": {
+            "description": "The (kind, package) coordinate this result is about — the same pair a fact row names, so the two join exactly."
+          }
+        },
+        "state": {
+          "enum": ["available", "unavailable", "invalid", "orphaned"],
+          "metadata": {
+            "x-vocabulary": "closed",
+            "description": "`available` — the source was read and parsed, and it may own fact rows. `unavailable` — no such source exists here (an absent package layout, an unmaterialised slot). `invalid` — the bytes were read and did not parse. `orphaned` — no authored source, but the adoption registry carries entries addressed to it. Closed: each word carries a different instruction, and a reader that met a fifth one would have no safe behaviour."
+          }
+        }
+      },
+      "optionalProperties": {
+        "digest": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "`sha256:` followed by 64 lowercase hex over exactly the bytes this source contributed. Present for `available` and `invalid` — both READ the bytes — and absent for `unavailable` and `orphaned`, where there were none to read."
+          }
+        },
+        "reason_code": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "A bounded, nonblank machine reason. Required for `unavailable`, `invalid` and `orphaned`; forbidden for `available`, which lost nothing and has nothing to explain."
+          }
+        },
+        "adoption_entries": {
+          "type": "uint32",
+          "metadata": {
+            "x-default": null,
+            "description": "How many adoption-registry entries are addressed to a source that does not exist. Present, and greater than zero, exactly for `orphaned`: the count IS what makes the orphan worth reporting."
+          }
+        }
+      }
+    },
+    "relation_source": {
+      "metadata": {
+        "description": "One package's relation-provider result. Optional enrichment loss is TYPED, never silent and never a lifecycle failure: a missing config or carried map is `unavailable`, a carried map whose own content witnesses do not match is `stale`, and malformed present data is `invalid` — the base fact rows still return in every case (`##OPTIONAL-IR-FACT-EVIDENCE`)."
+      },
+      "properties": {
+        "package": {
+          "type": "string",
+          "metadata": {
+            "description": "The `group/name` coordinate this state is about."
+          }
+        },
+        "state": {
+          "enum": [
+            "not-requested",
+            "current",
+            "carried",
+            "stale",
+            "unavailable",
+            "invalid"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed",
+            "description": "What the provider could say. Closed: an unknown spelling is a reader error, and every one of these six words carries a different instruction for an orchestrator deciding whether to trust an edge."
+          }
+        },
+        "provenance": {
+          "enum": ["fresh-project-map", "carried-package-map", "none"],
+          "metadata": {
+            "x-vocabulary": "closed",
+            "description": "WHERE the edges came from — a project map built fresh in memory, the carried `package.specmap.json` of an installed package, or nowhere at all. Closed, and decided by `state` rather than chosen freely."
+          }
+        }
+      },
+      "optionalProperties": {
+        "reason_code": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "A bounded, nonblank machine reason for a state that lost enrichment (`stale`, `unavailable`, `invalid`). Absent for `not-requested`, `current` and `carried` — nothing was lost, so there is nothing to explain."
+          }
+        }
+      }
+    },
+    "requirement_row": {
+      "metadata": {
+        "description": "One addressed fact, observed on up to three independent axes. The row carries NO prose, body, prompt, recommendation, ranking or next task — and no fourth axis synthesised from the first three."
+      },
+      "properties": {
+        "address": {
+          "type": "string",
+          "metadata": {
+            "description": "The full `spec://<group>/<package>/<path>#<fact>` address — always the whole thing, never a bare id (`##OPTIONAL-IR-FACT-EVIDENCE`)."
+          }
+        },
+        "source": {
+          "ref": "requirement_source",
+          "metadata": {
+            "description": "Where the authored document was read from. It must name an `available` entry of the root's `sources[]`, and the coordinate parsed out of this row's own `address` must equal its `package` — the row and the source result are one claim, checked from both ends."
+          }
+        },
+        "authoring": {
+          "ref": "authoring_observation",
+          "metadata": {
+            "description": "What the source document itself claims — the `vibe-specdoc` marker axis."
+          }
+        },
+        "adoption": {
+          "ref": "adoption_observation",
+          "metadata": {
+            "description": "What THIS project recorded about the fact — the consumer-owned `vibe-facts` overlay axis, kept separately present so «no record exists» stays distinguishable from «a record exists with no status»."
+          }
+        },
+        "relations": {
+          "elements": { "ref": "requirement_relation" },
+          "metadata": {
+            "x-empty": "emit",
+            "description": "The relation edges touching this address, sorted and unique. Explicit even when empty — and always empty when the query did not request relations, which the `relation_sources` states say out loud."
+          }
+        }
+      }
+    },
+    "requirement_source": {
+      "properties": {
+        "kind": {
+          "enum": ["host", "package"],
+          "metadata": {
+            "x-vocabulary": "closed",
+            "description": "Whether the document was read from this project's own spec roots or from a lock-selected materialised package slot. Closed: the two have different provenance and different adoption semantics."
+          }
+        },
+        "package": {
+          "type": "string",
+          "metadata": {
+            "description": "The `group/name` coordinate the document belongs to — the host project's own coordinate for a `host` row, the installed package's for a `package` row. Present for both kinds: it is the coordinate half of the row's own address, restated so a reader need not parse the address to group by package."
+          }
+        }
+      }
+    },
+    "authoring_observation": {
+      "properties": {
+        "presence": {
+          "enum": ["marked", "unmarked"],
+          "metadata": {
+            "x-vocabulary": "closed",
+            "description": "Whether the authored document carries a status marker for this fact. An addressed fact with no marker still appears in the answer, as `unmarked` — silence is an observation, not an absence of one."
+          }
+        }
+      },
+      "optionalProperties": {
+        "status": {
+          "ref": "fact_status",
+          "metadata": {
+            "x-default": null,
+            "description": "The authored status. Present exactly for `marked`."
+          }
+        }
+      }
+    },
+    "adoption_observation": {
+      "properties": {
+        "presence": {
+          "enum": ["not-applicable", "absent", "indeterminate", "recorded"],
+          "metadata": {
+            "x-vocabulary": "closed",
+            "description": "How the consumer adoption overlay answers about this address: `not-applicable` for a host-authored fact (there is no consumer overlay to consult), `absent` when no registry row exists, `indeterminate` when a row exists carrying no status, `recorded` with the exact status when one is present. Closed, and four words on purpose — a boolean here would erase three different facts."
+          }
+        }
+      },
+      "optionalProperties": {
+        "status": {
+          "ref": "fact_status",
+          "metadata": {
+            "x-default": null,
+            "description": "The recorded adoption status. Present exactly for `recorded`."
+          }
+        }
+      }
+    },
+    "fact_status": {
+      "metadata": {
+        "description": "One `(stage, state)` pair in the PROP-043 markup vocabulary — the same closed sets `progress-core` carries in code, restated here as the wire's own so a reader needs no Rust to know the domain."
+      },
+      "properties": {
+        "stage": {
+          "enum": [
+            "unknown",
+            "idea",
+            "spec",
+            "impl",
+            "test",
+            "doc",
+            "freeze"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed",
+            "description": "Where the unit stands in its development cycle (PROP-043 §3.3). Closed: a value outside the set is a validation error, never a silent pass-through."
+          }
+        },
+        "state": {
+          "enum": ["hold", "plan", "work", "done", "void"],
+          "metadata": {
+            "x-vocabulary": "closed",
+            "description": "Work state at the current stage (PROP-043 §3.4). Closed for the same reason `stage` is."
+          }
+        }
+      }
+    },
+    "requirement_relation": {
+      "metadata": {
+        "description": "One traceability edge touching this address, as the relation provider reported it. Edges carry coordinates, never bodies: a `file`/`line` pair is where to look, and this report does not ship what is there."
+      },
+      "properties": {
+        "verb": {
+          "enum": [
+            "implements",
+            "verifies",
+            "documents",
+            "deviates",
+            "informs"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed",
+            "description": "The traceability verb, in the specmap engine's own closed spelling. `verifies` is an EDGE, not a verdict: it says a symbol claims to verify this fact, never that verification passed — that answer lives on the lifecycle evidence root and the join is the orchestrator's."
+          }
+        },
+        "provenance": {
+          "enum": ["authored", "generated", "proposed"],
+          "metadata": {
+            "x-vocabulary": "closed",
+            "description": "How the edge came to exist, in the specmap engine's own closed spelling."
+          }
+        },
+        "symbol": {
+          "type": "string",
+          "metadata": {
+            "description": "The module-qualified code symbol the edge starts at."
+          }
+        },
+        "file": {
+          "type": "string",
+          "metadata": {
+            "description": "Forward-slashed repo-relative source path of that symbol."
+          }
+        },
+        "line": {
+          "type": "uint32",
+          "metadata": {
+            "description": "1-based source line of the symbol. At least 1 — line 0 names nothing."
+          }
+        }
+      }
+    }
+  }
+}

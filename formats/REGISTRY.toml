@@ -161,6 +161,28 @@ foreign_parsers = "none"
 corpus = "formats/corpora/lifecycle/e1"
 sunset = "none"
 
+# ── Requirements metadata answer (1 JTD), PROP-054 §14.7 / R7.5 ─────────────
+# The R7.5 read-only requirements answer: one bounded document an external
+# orchestrator reads to learn what this project declares and recorded about
+# its facts. Deliberately NOT named `cli-*`: the same generated root is
+# returned by the shared `vibe_requirements::query` library, by the CLI
+# `vibe requirements` projection and by MCP `requirements_query`, so a
+# surface-named id would be false on two of the three the day it shipped.
+# (`cli-lifecycle-report` above carries exactly that legacy misnaming and is
+# no precedent for a new surface.) Computed policy: rebuildable by re-running
+# the query (`recoverable = true`), read by scripts, agents and raw
+# `curl | jq` (`foreign_parsers = "many"`), so the generated reader stays
+# permissive — the strictness this root DOES carry is its ten closed
+# vocabularies, its exact member set and the hand-written relational
+# validator beside it, never `deny_unknown_fields`.
+[format.requirements-report]
+epoch = 1
+schema = "schemas/requirements_report.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "formats/corpora/requirements/e1"
+sunset = "none"
+
 # ── Compiler IR pass wire (1 JTD), PROP-054 §7.4.4 `##WHOLE-IR-WIRE` ─────────
 # The six manager carriers, one contract, one discriminator, no second
 # trace-only IR shape. TODAY this row models exactly one channel: the HOST

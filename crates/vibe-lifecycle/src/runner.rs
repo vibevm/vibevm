@@ -285,6 +285,11 @@ impl LifecycleRun {
                         status: ExecutionRecordStatus::Fresh,
                         tasks: Vec::new(),
                         scope: None,
+                        // A fresh skip IS an observation the R7.5 P2 pass
+                        // will checkpoint; until that pass lands, this
+                        // runner records no witness rather than reusing
+                        // the prior row's as if it had been re-measured.
+                        input_measurement: None,
                     },
                 )?;
             return Ok(ExecutionTransition {
@@ -331,6 +336,7 @@ impl LifecycleRun {
                     status: ExecutionRecordStatus::Fail,
                     tasks: Vec::new(),
                     scope: None,
+                    input_measurement: None,
                 };
                 let state = self
                     .state
@@ -378,6 +384,11 @@ impl LifecycleRun {
                 id: artifact.id.clone(),
                 kind: artifact.kind.clone(),
                 path: artifact.path.clone(),
+                // The reply names the artifact; witnessing it is the R7.5
+                // P2 measurement pass, which probes the path itself rather
+                // than trusting what the handler said about it.
+                witness: None,
+                measured_run_id: None,
             })
             .collect::<Vec<_>>();
         self.state
@@ -393,6 +404,7 @@ impl LifecycleRun {
                     status: status.clone(),
                     tasks: Vec::new(),
                     scope: None,
+                    input_measurement: None,
                 },
             )?;
         Ok(ExecutionTransition {
@@ -421,6 +433,7 @@ impl LifecycleRun {
             status: ExecutionRecordStatus::Fail,
             tasks: Vec::new(),
             scope: None,
+            input_measurement: None,
         };
         let Some(state) = self.state.as_mut() else {
             return primary;
@@ -470,6 +483,8 @@ impl LifecycleRun {
                     id: artifact.id,
                     kind: artifact.kind,
                     path: artifact.path,
+                    witness: None,
+                    measured_run_id: None,
                 })
                 .collect(),
             streams: outcome.streams,

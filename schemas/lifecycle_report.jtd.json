@@ -7,7 +7,7 @@
     "rustOptions": {
       "package": "vibe_wire::lifecycle_report"
     },
-    "x-vocabularies": ["compile_trace_report"]
+    "x-vocabularies": ["compile_trace_report", "verification_evidence"]
   },
   "properties": {
     "ok": {
@@ -75,6 +75,13 @@
       "metadata": {
         "x-default": null,
         "description": "The shared compile-trace member (PROP-054 `##OBS-TRACE`, R3.4): present exactly when this command ran with compile tracing enabled; disabled old JSON omits it and remains readable."
+      }
+    },
+    "verification": {
+      "ref": "verification_evidence",
+      "metadata": {
+        "x-default": null,
+        "description": "The shared verification-evidence member (PROP-054 §14.7, `##EVIDENCE-WIRE-AND-SURFACES`, R7.5): present exactly when the verify phase reached engine-owned evidence reconciliation — INCLUDING the `stale`, `missing` and `unstable` outcomes, which are the reason the member exists. Reports from earlier phases and every pre-R7.5 document omit it and remain byte-shape compatible. It is a separate axis from this report's own `ok`: a matched identity can sit beside a failed verify contribution, and neither rewrites the other."
       }
     }
   },

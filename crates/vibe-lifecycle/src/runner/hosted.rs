@@ -86,6 +86,10 @@ impl LifecycleRun {
                             // A satisfied row is no longer delegated, so it
                             // carries no scope tag either.
                             scope: None,
+                            // Nor a measurement: the hosted resume adopts
+                            // the row, it does not re-walk the declared
+                            // inputs (that is the R7.5 P2 pass's work).
+                            input_measurement: None,
                         },
                     )?;
                 // The success checkpoint is durable; only now may the exact
@@ -150,6 +154,7 @@ impl LifecycleRun {
                     } else {
                         ExecutionRecordScope::Phase
                     }),
+                    input_measurement: None,
                 },
             )?;
         let handoff = Delegation {

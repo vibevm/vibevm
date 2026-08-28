@@ -94,6 +94,9 @@ impl RunObserver for CliRunObserver<'_> {
             }],
             delegation: None,
             trace: None,
+            // A fatal-outcome report is written before verify could
+            // reconcile anything, so it carries no evidence member.
+            verification: None,
         })
     }
 }

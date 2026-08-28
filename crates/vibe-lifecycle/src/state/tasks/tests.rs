@@ -94,12 +94,15 @@ pub(super) fn delegated_record(
             id: format!("output:{key}"),
             kind: "file".into(),
             path: format!("out/{}.txt", key.replace(['/', '#'], "-")),
+            witness: None,
+            measured_run_id: None,
         }],
         duration_ms: 0,
         fingerprint: format!("sha256:{key}"),
         phase: phase.into(),
         status: ExecutionRecordStatus::Delegated,
         scope: Some(scope),
+        input_measurement: None,
         tasks: vec![crate::outbox_task_path(RUN_ID, key).unwrap()],
     }
 }

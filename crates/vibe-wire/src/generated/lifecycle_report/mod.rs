@@ -45,11 +45,32 @@ pub struct LifecycleReport {
     /// JSON omits it and remains readable.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub trace: Option<CompileTraceReport>,
+
+    /// The shared verification-evidence member (PROP-054 §14.7, `##EVIDENCE-
+    /// WIRE-AND-SURFACES`, R7.5): present exactly when the verify phase reached
+    /// engine-owned evidence reconciliation — INCLUDING the `stale`, `missing`
+    /// and `unstable` outcomes, which are the reason the member exists. Reports
+    /// from earlier phases and every pre-R7.5 document omit it and remain byte-
+    /// shape compatible. It is a separate axis from this report's own `ok`:
+    /// a matched identity can sit beside a failed verify contribution, and
+    /// neither rewrites the other.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub verification: Option<VerificationEvidence>,
 }
+
+pub use crate::generated::shared::ArtifactWitness;
 
 pub use crate::generated::shared::CompileTraceReport;
 
+pub use crate::generated::shared::DigestWitness;
+
 pub use crate::generated::shared::Duration;
+
+pub use crate::generated::shared::EvidenceRun;
+
+pub use crate::generated::shared::EvidenceStatus;
+
+pub use crate::generated::shared::InputMeasurement;
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct LifecycleContributionReport {
@@ -148,6 +169,10 @@ pub struct SlotTarget {
     pub version: String,
 }
 
+pub use crate::generated::shared::Timestamp;
+
 pub use crate::generated::shared::TimingRow;
 
 pub use crate::generated::shared::TraceReportStatus;
+
+pub use crate::generated::shared::VerificationEvidence;

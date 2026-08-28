@@ -26,7 +26,6 @@
 //! a provider's stdout), so no refusal clones the offending scalar:
 //! errors carry a bounded [`ScalarPreview`] and the true byte length.
 
-use std::cmp::Ordering;
 use std::collections::BTreeSet;
 
 use crate::behaviour::compiler_trace_index::{
@@ -94,9 +93,10 @@ fn preview(value: &str) -> crate::behaviour::compiler_trace_index::ScalarPreview
 /// spelling would smuggle a narrowing or a locale-dependent render in
 /// through the one member meant to be lossless.
 fn canonical_decimal(field: &'static str, value: &str) -> Result<(), TraceReportError> {
-    let digits = !value.is_empty() && value.bytes().all(|byte| byte.is_ascii_digit());
-    let canonical = digits && (value.len() == 1 || !value.starts_with('0'));
-    if canonical {
+    // The predicate itself is shared (`behaviour::scalars`): the
+    // evidence witness's `bytes` answers to the same rule, and two
+    // copies of one grammar are two grammars.
+    if crate::behaviour::scalars::is_canonical_decimal(value) {
         Ok(())
     } else {
         Err(TraceReportError::NonCanonicalCount {
@@ -248,11 +248,7 @@ fn unavailable_gate(report: &CompileTraceReport) -> Result<(), TraceReportError>
 /// a count past `u64::MAX` compares correctly rather than refusing or
 /// wrapping.
 fn at_most(events: &str, snapshots: &str) -> bool {
-    match snapshots.len().cmp(&events.len()) {
-        Ordering::Less => true,
-        Ordering::Greater => false,
-        Ordering::Equal => snapshots <= events,
-    }
+    crate::behaviour::scalars::canonical_decimal_at_most(snapshots, events)
 }
 
 /// `warning-cap`: every warning text obeys the shared diagnostic cap.

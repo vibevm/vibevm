@@ -1,0 +1,94 @@
+{
+  "requirements": 1,
+  "observation": {
+    "observation_id": "sha256:aaaaaaaabbbbbbbbccccccccddddddddeeeeeeeeffffffff0000000011111111",
+    "observed_at": "2026-08-28T12:05:00Z",
+    "selected": "members/tool",
+    "source_digest": "sha256:8888888877777777666666665555555544444444333333332222222211111111",
+    "lifecycle_run_id": "00112233445566778899aabbccddeeff"
+  },
+  "query": {
+    "limit": 100,
+    "relations": true
+  },
+  "sources": [
+    {
+      "source": { "kind": "host", "package": "org.demo/host" },
+      "state": "available",
+      "digest": "sha256:aaaa0000bbbb1111cccc2222dddd3333eeee4444ffff55550000666611117777"
+    },
+    {
+      "source": { "kind": "package", "package": "org.vendor/tool" },
+      "state": "available",
+      "digest": "sha256:bbbb1111cccc2222dddd3333eeee4444ffff55550000666611117777aaaa0000"
+    }
+  ],
+  "relation_sources": [
+    {
+      "package": "org.demo/host",
+      "state": "current",
+      "provenance": "fresh-project-map"
+    },
+    {
+      "package": "org.vendor/tool",
+      "state": "carried",
+      "provenance": "carried-package-map"
+    }
+  ],
+  "rows": [
+    {
+      "address": "spec://org.demo/host/vibevm/common/PROP-001#req-one",
+      "source": { "kind": "host", "package": "org.demo/host" },
+      "authoring": {
+        "presence": "marked",
+        "status": { "stage": "impl", "state": "work" }
+      },
+      "adoption": { "presence": "not-applicable" },
+      "relations": [
+        {
+          "verb": "implements",
+          "provenance": "authored",
+          "symbol": "demo::build::compile",
+          "file": "crates/demo/src/build.rs",
+          "line": 42
+        },
+        {
+          "verb": "verifies",
+          "provenance": "authored",
+          "symbol": "demo::build::tests::compiles",
+          "file": "crates/demo/src/build.rs",
+          "line": 310
+        }
+      ]
+    },
+    {
+      "address": "spec://org.vendor/tool/vibevm/modules/PROP-002#adopted",
+      "source": { "kind": "package", "package": "org.vendor/tool" },
+      "authoring": {
+        "presence": "marked",
+        "status": { "stage": "freeze", "state": "done" }
+      },
+      "adoption": {
+        "presence": "recorded",
+        "status": { "stage": "test", "state": "done" }
+      },
+      "relations": [
+        {
+          "verb": "documents",
+          "provenance": "generated",
+          "symbol": "tool::api",
+          "file": "crates/tool/src/api.rs",
+          "line": 7
+        },
+        {
+          "verb": "informs",
+          "provenance": "proposed",
+          "symbol": "tool::api::legacy",
+          "file": "crates/tool/src/api.rs",
+          "line": 88
+        }
+      ]
+    }
+  ],
+  "truncated": false
+}

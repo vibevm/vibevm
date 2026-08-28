@@ -1,0 +1,125 @@
+{
+  "ok": false,
+  "command": "lifecycle",
+  "requested": "verify",
+  "chain": [
+    "validate",
+    "install",
+    "generate",
+    "build",
+    "test",
+    "create",
+    "verify"
+  ],
+  "steps": [
+    { "phase": "validate", "status": "ok" },
+    { "phase": "install", "status": "fresh" },
+    { "phase": "generate", "status": "no-op" },
+    { "phase": "build", "status": "ok" },
+    { "phase": "test", "status": "ok" },
+    { "phase": "create", "status": "ok" },
+    { "phase": "verify", "status": "fail" }
+  ],
+  "contributions": [
+    {
+      "key": "org.demo/provider#compile",
+      "phase": "build",
+      "point": "phase:build",
+      "handler": "builtin",
+      "provider": "org.demo/provider",
+      "tier": "dependency",
+      "status": "ok"
+    },
+    {
+      "key": "org.demo/provider#draft-guide",
+      "phase": "create",
+      "point": "phase:create",
+      "handler": "script",
+      "provider": "org.demo/provider",
+      "tier": "project",
+      "status": "ok"
+    }
+  ],
+  "notices": [],
+  "verification": {
+    "evidence": 1,
+    "evidence_id": "sha256:2222222233333333444444445555555566666666777777778888888899999999",
+    "status": "stale",
+    "observed_at": "2026-08-28T12:04:11Z",
+    "run": {
+      "run_id": "0f1e2d3c4b5a69788796a5b4c3d2e1f0",
+      "selected": "members/tool",
+      "requested": "verify",
+      "chain": [
+        "validate",
+        "install",
+        "generate",
+        "build",
+        "test",
+        "create",
+        "verify"
+      ],
+      "started": "2026-08-28T12:03:02Z"
+    },
+    "inputs": [
+      {
+        "execution": "org.demo/provider#compile",
+        "phase": "build",
+        "declaration_fingerprint": "sha256:1111111122222222333333334444444455555555666666667777777788888888",
+        "patterns": ["src/**", "docs/guide.md"],
+        "measured_run_id": "0f1e2d3c4b5a69788796a5b4c3d2e1f0",
+        "measured": {
+          "algorithm": "sha256:vibe-input-manifest-v1",
+          "digest": "sha256:0a0a0a0a1b1b1b1b2c2c2c2c3d3d3d3d4e4e4e4e5f5f5f5f6060606071717171",
+          "files": 7,
+          "bytes": "1234"
+        },
+        "observed": {
+          "algorithm": "sha256:vibe-input-manifest-v1",
+          "digest": "sha256:0b0b0b0b1c1c1c1c2d2d2d2d3e3e3e3e4f4f4f4f5050505061616161cafecafe",
+          "files": 8,
+          "bytes": "1400"
+        },
+        "status": "stale",
+        "reason_code": "declared-input-changed-after-measurement"
+      },
+      {
+        "execution": "org.demo/provider#unit-tests",
+        "phase": "test",
+        "declaration_fingerprint": "sha256:99999999aaaaaaaabbbbbbbbccccccccddddddddeeeeeeeeffffffff00000000",
+        "patterns": [],
+        "measured_run_id": "0f1e2d3c4b5a69788796a5b4c3d2e1f0",
+        "measured": {
+          "algorithm": "sha256:vibe-input-manifest-v1",
+          "digest": "sha256:1a1a1a1a2b2b2b2b3c3c3c3c4d4d4d4d5e5e5e5e6f6f6f6f7070707081818181",
+          "files": 0,
+          "bytes": "0"
+        },
+        "observed": {
+          "algorithm": "sha256:vibe-input-manifest-v1",
+          "digest": "sha256:1a1a1a1a2b2b2b2b3c3c3c3c4d4d4d4d5e5e5e5e6f6f6f6f7070707081818181",
+          "files": 0,
+          "bytes": "0"
+        },
+        "status": "matched"
+      }
+    ],
+    "artifacts": [
+      {
+        "id": "guide",
+        "kind": "file",
+        "path": "docs/guide.md",
+        "measured_run_id": "0f1e2d3c4b5a69788796a5b4c3d2e1f0",
+        "measured": {
+          "algorithm": "sha256:file-v1",
+          "digest": "sha256:beefbeefcafecafedeadbeef01234567feedfacef00dcafe89abcdef01234567"
+        },
+        "observed": {
+          "algorithm": "sha256:file-v1",
+          "digest": "sha256:beefbeefcafecafedeadbeef01234567feedfacef00dcafe89abcdef01234567"
+        },
+        "status": "matched"
+      }
+    ]
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "requirements": 1,
+  "observation": {
+    "observation_id": "sha256:1111111122222222333333334444444455555555666666667777777788888888",
+    "observed_at": "2026-08-28T12:00:00Z",
+    "selected": ".",
+    "source_digest": "sha256:8888888877777777666666665555555544444444333333332222222211111111",
+    "lifecycle_run_id": "00112233445566778899aabbccddeeff"
+  },
+  "query": {
+    "limit": 100,
+    "relations": false
+  },
+  "sources": [
+    {
+      "source": { "kind": "host", "package": "org.demo/host" },
+      "state": "available",
+      "digest": "sha256:aaaa0000bbbb1111cccc2222dddd3333eeee4444ffff55550000666611117777"
+    },
+    {
+      "source": { "kind": "package", "package": "org.vendor/tool" },
+      "state": "available",
+      "digest": "sha256:bbbb1111cccc2222dddd3333eeee4444ffff55550000666611117777aaaa0000"
+    }
+  ],
+  "relation_sources": [
+    {
+      "package": "org.demo/host",
+      "state": "not-requested",
+      "provenance": "none"
+    },
+    {
+      "package": "org.vendor/tool",
+      "state": "not-requested",
+      "provenance": "none"
+    }
+  ],
+  "rows": [
+    {
+      "address": "spec://org.demo/host/vibevm/common/PROP-001#req-one",
+      "source": { "kind": "host", "package": "org.demo/host" },
+      "authoring": {
+        "presence": "marked",
+        "status": { "stage": "spec", "state": "work" }
+      },
+      "adoption": { "presence": "not-applicable" },
+      "relations": []
+    },
+    {
+      "address": "spec://org.demo/host/vibevm/common/PROP-001#req-two",
+      "source": { "kind": "host", "package": "org.demo/host" },
+      "authoring": { "presence": "unmarked" },
+      "adoption": { "presence": "not-applicable" },
+      "relations": []
+    },
+    {
+      "address": "spec://org.vendor/tool/vibevm/modules/PROP-002#adopted",
+      "source": { "kind": "package", "package": "org.vendor/tool" },
+      "authoring": {
+        "presence": "marked",
+        "status": { "stage": "impl", "state": "done" }
+      },
+      "adoption": {
+        "presence": "recorded",
+        "status": { "stage": "impl", "state": "done" }
+      },
+      "relations": []
+    },
+    {
+      "address": "spec://org.vendor/tool/vibevm/modules/PROP-002#unrecorded",
+      "source": { "kind": "package", "package": "org.vendor/tool" },
+      "authoring": {
+        "presence": "marked",
+        "status": { "stage": "spec", "state": "plan" }
+      },
+      "adoption": { "presence": "absent" },
+      "relations": []
+    },
+    {
+      "address": "spec://org.vendor/tool/vibevm/modules/PROP-002#unstatused",
+      "source": { "kind": "package", "package": "org.vendor/tool" },
+      "authoring": { "presence": "unmarked" },
+      "adoption": { "presence": "indeterminate" },
+      "relations": []
+    }
+  ],
+  "truncated": false
+}

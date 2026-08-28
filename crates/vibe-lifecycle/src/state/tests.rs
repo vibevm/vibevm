@@ -86,6 +86,8 @@ fn record_for(
             id: "a".into(),
             kind: "text".into(),
             path: "C:/out".into(),
+            witness: None,
+            measured_run_id: None,
         }],
         duration_ms: 7,
         fingerprint: fingerprint.into(),
@@ -96,6 +98,7 @@ fn record_for(
             .unwrap_or_default(),
         scope: matches!(status, ExecutionRecordStatus::Delegated)
             .then_some(vibe_wire::generated::lifecycle_state::ExecutionRecordScope::Phase),
+        input_measurement: None,
     }
 }
 
@@ -581,6 +584,8 @@ fn fresh_artifact_hydration_enters_downstream_envelope_and_fingerprint() {
             id: "generated".into(),
             path: "C:/out/generated".into(),
             kind: "text".into(),
+            witness: None,
+            measured_run_id: None,
         }],
     );
     let after = session.envelope_for("build", &row).unwrap();

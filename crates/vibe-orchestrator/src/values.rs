@@ -134,6 +134,11 @@ impl LifecycleValues {
             steps,
             delegation,
             trace,
+            // The R7.5 evidence member is attached by the verify
+            // reconciliation that owns it (P2), never assembled here: a
+            // report builder that could mint one would be a second
+            // reference implementation of the identity.
+            verification: None,
         }
     }
 }

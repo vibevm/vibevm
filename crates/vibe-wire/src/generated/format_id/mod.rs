@@ -72,6 +72,7 @@ pub enum FormatId {
     McpLifecycleTasks,
     McpTools,
     PackageSkillReceipt,
+    RequirementsReport,
     SlotRecord,
 }
 
@@ -143,6 +144,7 @@ impl FormatId {
         FormatId::McpLifecycleTasks,
         FormatId::McpTools,
         FormatId::PackageSkillReceipt,
+        FormatId::RequirementsReport,
         FormatId::SlotRecord,
     ];
 
@@ -202,6 +204,7 @@ impl FormatId {
             FormatId::McpLifecycleTasks => "mcp-lifecycle-tasks",
             FormatId::McpTools => "mcp-tools",
             FormatId::PackageSkillReceipt => "package-skill-receipt",
+            FormatId::RequirementsReport => "requirements-report",
             FormatId::SlotRecord => "slot-record",
         }
     }
@@ -262,6 +265,7 @@ impl FormatId {
             FormatId::McpLifecycleTasks => 1,
             FormatId::McpTools => 1,
             FormatId::PackageSkillReceipt => 1,
+            FormatId::RequirementsReport => 1,
             FormatId::SlotRecord => 1,
         }
     }
@@ -322,6 +326,7 @@ impl FormatId {
             FormatId::McpLifecycleTasks => true,
             FormatId::McpTools => true,
             FormatId::PackageSkillReceipt => false,
+            FormatId::RequirementsReport => true,
             FormatId::SlotRecord => true,
         }
     }
@@ -382,6 +387,7 @@ impl FormatId {
             FormatId::McpLifecycleTasks => ForeignParsers::Many,
             FormatId::McpTools => ForeignParsers::Many,
             FormatId::PackageSkillReceipt => ForeignParsers::None,
+            FormatId::RequirementsReport => ForeignParsers::Many,
             FormatId::SlotRecord => ForeignParsers::None,
         }
     }

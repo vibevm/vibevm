@@ -76,10 +76,22 @@ use super::vocabulary::Resolved;
 /// verdict for it exists only while NO consumer carries `none` (the
 /// role that stamps `#[serde(deny_unknown_fields)]` onto the structs —
 /// a stamp the permissive shared home does not carry, and cannot, or
-/// every other consumer's byte-identical copy would drift). Today no
-/// format with a built schema carries the role, so the guard is
-/// silent; it stands here because "silent today" is a fact about the
-/// registry, not a property of the mechanism.
+/// every other consumer's byte-identical copy would drift).
+///
+/// The guard is silent today, but NOT because no built schema carries
+/// the role — several do (`lifecycle-state`, `lifecycle-reply`,
+/// `compiler-ir`, `slot-record`, `package-skill-receipt`, the agent
+/// result). It is silent because none of THOSE pulls a shared
+/// fragment. The distinction stopped being academic in R7.5: the
+/// durable input measurement in `schemas/lifecycle_state.jtd.json`
+/// wanted the shared `input_measurement`/`digest_witness` fragments
+/// the evidence wire defines, and could not have them — the state
+/// reader is strict by computed policy (`.vibe/lifecycle.toml` is our
+/// own machine state, where an unknown key is a schema bump, not
+/// forward compatibility), so the schema carries its own
+/// `state_input_measurement` / `state_digest_witness` definitions and
+/// a wire test pins the two shapes member-for-member instead. This
+/// guard is what made that a decision rather than an accident.
 ///
 /// Fed by the run's schema → closure map and the registry; the roles
 /// are read through the one registry loader (`format_id`), the same

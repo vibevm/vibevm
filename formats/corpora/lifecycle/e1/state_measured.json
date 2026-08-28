@@ -1,0 +1,72 @@
+{
+  "schema": 1,
+  "run": {
+    "requested": "verify",
+    "chain": ["validate", "install", "generate", "build", "test", "create", "verify"],
+    "started": "2026-08-28T11:59:40Z",
+    "run_id": "00112233445566778899aabbccddeeff",
+    "selected": "."
+  },
+  "execution": {
+    "org.demo/provider#compile": {
+      "phase": "build",
+      "fingerprint": "sha256:0123456789abcdef",
+      "status": "ok",
+      "duration_ms": 812,
+      "artifacts": [
+        {
+          "id": "guide",
+          "path": "C:/work/demo/docs/guide.md",
+          "kind": "file",
+          "measured_run_id": "00112233445566778899aabbccddeeff",
+          "witness": {
+            "algorithm": "sha256:file-v1",
+            "digest": "sha256:beefbeefcafecafedeadbeef01234567feedfacef00dcafe89abcdef01234567"
+          }
+        }
+      ],
+      "input_measurement": {
+        "execution": "org.demo/provider#compile",
+        "phase": "build",
+        "declaration_fingerprint": "sha256:1111111122222222333333334444444455555555666666667777777788888888",
+        "patterns": ["src/**", "Cargo.toml"],
+        "measured_run_id": "00112233445566778899aabbccddeeff",
+        "witness": {
+          "algorithm": "sha256:vibe-input-manifest-v1",
+          "digest": "sha256:0a0a0a0a1b1b1b1b2c2c2c2c3d3d3d3d4e4e4e4e5f5f5f5f6060606071717171",
+          "files": 7,
+          "bytes": "1234"
+        }
+      }
+    },
+    "org.demo/provider#unit-tests": {
+      "phase": "test",
+      "fingerprint": "sha256:fedcba9876543210",
+      "status": "fresh",
+      "duration_ms": 1,
+      "artifacts": [],
+      "input_measurement": {
+        "execution": "org.demo/provider#unit-tests",
+        "phase": "test",
+        "declaration_fingerprint": "sha256:99999999aaaaaaaabbbbbbbbccccccccddddddddeeeeeeeeffffffff00000000",
+        "patterns": [],
+        "measured_run_id": "00112233445566778899aabbccddeeff",
+        "witness": {
+          "algorithm": "sha256:vibe-input-manifest-v1",
+          "digest": "sha256:1a1a1a1a2b2b2b2b3c3c3c3c4d4d4d4d5e5e5e5e6f6f6f6f7070707081818181",
+          "files": 0,
+          "bytes": "0"
+        }
+      }
+    },
+    "org.demo/provider#legacy-output": {
+      "phase": "build",
+      "fingerprint": "sha256:00000000deadbeef",
+      "status": "ok",
+      "duration_ms": 4,
+      "artifacts": [
+        { "id": "legacy", "path": "C:/work/demo/out/legacy.bin", "kind": "file" }
+      ]
+    }
+  }
+}

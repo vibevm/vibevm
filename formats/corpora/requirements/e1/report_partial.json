@@ -1,0 +1,85 @@
+{
+  "requirements": 1,
+  "observation": {
+    "observation_id": "sha256:4444444455555555666666667777777788888888999999990000000011111111",
+    "observed_at": "2026-08-28T12:07:30Z",
+    "selected": ".",
+    "source_digest": "sha256:8888888877777777666666665555555544444444333333332222222211111111"
+  },
+  "query": {
+    "limit": 100,
+    "relations": true
+  },
+  "sources": [
+    {
+      "source": { "kind": "host", "package": "org.demo/host" },
+      "state": "available",
+      "digest": "sha256:aaaa0000bbbb1111cccc2222dddd3333eeee4444ffff55550000666611117777"
+    },
+    {
+      "source": { "kind": "package", "package": "org.other/absent" },
+      "state": "orphaned",
+      "reason_code": "adoption-registry-entries-address-no-installed-source",
+      "adoption_entries": 2
+    },
+    {
+      "source": { "kind": "package", "package": "org.stale/unreadable" },
+      "state": "unavailable",
+      "reason_code": "package-slot-is-not-materialised"
+    },
+    {
+      "source": { "kind": "package", "package": "org.vendor/tool" },
+      "state": "invalid",
+      "digest": "sha256:bbbb1111cccc2222dddd3333eeee4444ffff55550000666611117777aaaa0000",
+      "reason_code": "authored-spec-document-does-not-parse"
+    }
+  ],
+  "relation_sources": [
+    {
+      "package": "org.demo/host",
+      "state": "stale",
+      "provenance": "fresh-project-map",
+      "reason_code": "project-map-content-witness-mismatch"
+    },
+    {
+      "package": "org.other/absent",
+      "state": "unavailable",
+      "provenance": "none",
+      "reason_code": "carried-package-map-not-installed"
+    },
+    {
+      "package": "org.vendor/tool",
+      "state": "invalid",
+      "provenance": "carried-package-map",
+      "reason_code": "carried-package-map-is-malformed"
+    }
+  ],
+  "rows": [
+    {
+      "address": "spec://org.demo/host/vibevm/common/PROP-001#req-one",
+      "source": { "kind": "host", "package": "org.demo/host" },
+      "authoring": {
+        "presence": "marked",
+        "status": { "stage": "idea", "state": "hold" }
+      },
+      "adoption": { "presence": "not-applicable" },
+      "relations": [
+        {
+          "verb": "implements",
+          "provenance": "authored",
+          "symbol": "demo::build::compile",
+          "file": "crates/demo/src/build.rs",
+          "line": 42
+        }
+      ]
+    },
+    {
+      "address": "spec://org.demo/host/vibevm/common/PROP-001#req-two",
+      "source": { "kind": "host", "package": "org.demo/host" },
+      "authoring": { "presence": "unmarked" },
+      "adoption": { "presence": "not-applicable" },
+      "relations": []
+    }
+  ],
+  "truncated": false
+}

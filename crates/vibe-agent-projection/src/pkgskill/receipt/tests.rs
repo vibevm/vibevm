@@ -251,6 +251,8 @@ fn returned_failure_never_rolls_back_neighbours_and_retry_converges() {
                 id: alpha.artifact_id(target.agent),
                 kind: "agent-skill".into(),
                 path: vibe_core::machine_json_path(&target.path),
+                witness: None,
+                measured_run_id: None,
             },
         )
         .collect::<Vec<_>>();

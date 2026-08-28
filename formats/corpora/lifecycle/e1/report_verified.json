@@ -1,0 +1,104 @@
+{
+  "ok": true,
+  "command": "lifecycle",
+  "requested": "verify",
+  "chain": [
+    "validate",
+    "install",
+    "generate",
+    "build",
+    "test",
+    "create",
+    "verify"
+  ],
+  "steps": [
+    { "phase": "validate", "status": "ok" },
+    { "phase": "install", "status": "fresh" },
+    { "phase": "generate", "status": "no-op" },
+    { "phase": "build", "status": "fresh" },
+    { "phase": "test", "status": "fresh" },
+    { "phase": "create", "status": "fresh" },
+    { "phase": "verify", "status": "ok" }
+  ],
+  "contributions": [
+    {
+      "key": "org.demo/provider#compile",
+      "phase": "build",
+      "point": "phase:build",
+      "handler": "builtin",
+      "provider": "org.demo/provider",
+      "tier": "dependency",
+      "status": "fresh"
+    },
+    {
+      "key": "org.demo/provider#check-guide",
+      "phase": "verify",
+      "point": "phase:verify",
+      "handler": "script",
+      "provider": "org.demo/provider",
+      "tier": "project",
+      "status": "ok"
+    }
+  ],
+  "notices": [],
+  "verification": {
+    "evidence": 1,
+    "evidence_id": "sha256:aaaaaaaabbbbbbbbccccccccddddddddeeeeeeeeffffffff0000000011111111",
+    "status": "matched",
+    "observed_at": "2026-08-28T12:00:05Z",
+    "run": {
+      "run_id": "00112233445566778899aabbccddeeff",
+      "selected": ".",
+      "requested": "verify",
+      "chain": [
+        "validate",
+        "install",
+        "generate",
+        "build",
+        "test",
+        "create",
+        "verify"
+      ],
+      "started": "2026-08-28T11:59:40Z"
+    },
+    "inputs": [
+      {
+        "execution": "org.demo/provider#compile",
+        "phase": "build",
+        "declaration_fingerprint": "sha256:1111111122222222333333334444444455555555666666667777777788888888",
+        "patterns": ["src/**", "Cargo.toml"],
+        "measured_run_id": "00112233445566778899aabbccddeeff",
+        "measured": {
+          "algorithm": "sha256:vibe-input-manifest-v1",
+          "digest": "sha256:0a0a0a0a1b1b1b1b2c2c2c2c3d3d3d3d4e4e4e4e5f5f5f5f6060606071717171",
+          "files": 7,
+          "bytes": "4294967296"
+        },
+        "observed": {
+          "algorithm": "sha256:vibe-input-manifest-v1",
+          "digest": "sha256:0a0a0a0a1b1b1b1b2c2c2c2c3d3d3d3d4e4e4e4e5f5f5f5f6060606071717171",
+          "files": 7,
+          "bytes": "4294967296"
+        },
+        "status": "matched"
+      }
+    ],
+    "artifacts": [
+      {
+        "id": "guide",
+        "kind": "file",
+        "path": "docs/guide.md",
+        "measured_run_id": "00112233445566778899aabbccddeeff",
+        "measured": {
+          "algorithm": "sha256:file-v1",
+          "digest": "sha256:beefbeefcafecafedeadbeef01234567feedfacef00dcafe89abcdef01234567"
+        },
+        "observed": {
+          "algorithm": "sha256:file-v1",
+          "digest": "sha256:beefbeefcafecafedeadbeef01234567feedfacef00dcafe89abcdef01234567"
+        },
+        "status": "matched"
+      }
+    ]
+  }
+}

@@ -59,6 +59,17 @@ pub struct ExecutionRecord {
 
     pub status: ExecutionRecordStatus,
 
+    /// The declared-input measurement this execution produced (PROP-054
+    /// `##EVIDENCE-SCOPE-IS-DECLARED`, R7.5): the durable half of a later
+    /// verification claim, checkpointed in the SAME state transaction as the
+    /// record it sits in — no second `.vibe/evidence.*` file, no second crash
+    /// window. Absent for every pre-R7.5 file, for an execution that declares
+    /// no `inputs` (which is typed `unavailable` at verify, never a digest of
+    /// the empty set), and for every row written before the measuring writer
+    /// lands.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub input_measurement: Option<StateInputMeasurement>,
+
     /// Which plan a delegated row belongs to, recorded by the engine rather
     /// than inferred by parsing the execution key or a task filename. `phase`
     /// rows are reconciled against the current phase plan, `slot` rows against
@@ -103,6 +114,93 @@ pub struct StateArtifact {
     pub kind: String,
 
     pub path: String,
+
+    /// The run that produced `witness` — 32 lowercase hex, the run header's
+    /// own id at the moment of measurement. Recorded beside the witness so a
+    /// resume under a new run id can still say WHICH run measured this artifact
+    /// instead of inheriting the claim silently.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub measured_run_id: Option<String>,
+
+    /// The content witness recorded when this artifact was produced or fresh-
+    /// probed (PROP-054 `##EVIDENCE-ARTIFACT-WITNESS`). Absent for every pre-
+    /// R7.5 row and for any output whose witness was refused — a non-regular,
+    /// linked, aliased, escaping or moving path — and such an artifact is
+    /// `unavailable` at verify rather than a silent pass.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub witness: Option<StateDigestWitness>,
+}
+
+/// One content witness in durable state — the strict-reader twin of the shared
+/// `digest_witness` fragment, separate for the same registry-strictness reason
+/// `state_input_measurement` records, and pinned equal to it member-for-member
+/// by the wire test.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct StateDigestWitness {
+    /// The domain-separated algorithm name (`sha256:vibe-input-manifest-v1`,
+    /// `sha256:file-v1`, `sha256:tree-v1`).
+    pub algorithm: String,
+
+    /// `sha256:` followed by 64 lowercase hex over the algorithm's declared
+    /// scope.
+    pub digest: String,
+
+    /// How many content bytes entered the manifest — a CANONICAL unsigned
+    /// decimal string, exactly as the shared `digest_witness` fragment spells
+    /// it. JTD has no `uint64` and a declared input set may exceed 4 GiB, so
+    /// the count is never narrowed on either side of this wire. Present exactly
+    /// where `files` is.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub bytes: Option<String>,
+
+    /// How many regular files entered the manifest — present for the manifest
+    /// form, absent for the artifact forms that count nothing.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub files: Option<u32>,
+}
+
+/// The durable declared-input measurement: the execution's identity, the
+/// declaration it was measured against, the patterns it declared, and ONE
+/// witness. This is the state twin of the shared `input_measurement` comparison
+/// row on the evidence wire — deliberately a separate shape, for two reasons
+/// that both bind. (1) SEMANTICS: state records a measurement, evidence records
+/// a comparison; a durable `status`/`observed` pair would be a verdict stored
+/// before there was anything to compare it with. (2) MECHANISM: `lifecycle-
+/// state` carries `foreign_parsers = "none"` in `formats/REGISTRY.toml`,
+/// so its generated structs are stamped `#[serde(deny_unknown_fields)]`,
+/// while the shared vocabulary home emits ONE permissive copy for every
+/// consumer — the codegen guard `guard_shared_strictness` refuses a strict
+/// schema that pulls a shared fragment, and it is right to: the bytes cannot
+/// be both. The two shapes are pinned member-for-member by `crates/vibe-
+/// wire/tests/verification_evidence_wire.rs`, so the duplication cannot drift
+/// into a disagreement.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct StateInputMeasurement {
+    /// `sha256:` followed by 64 lowercase hex over the execution's declaration
+    /// — the sibling of the manifest digest below, never its alias (R7.5
+    /// architecture §1.2).
+    pub declaration_fingerprint: String,
+
+    pub execution: String,
+
+    /// The run that took this measurement — 32 lowercase hex. Required: a
+    /// measurement that cannot name its run is not evidence, and every post-
+    /// R7.3 begin carries a run id for every invocation.
+    pub measured_run_id: String,
+
+    /// The declared project-relative glob patterns, verbatim and in declaration
+    /// order. Explicit even when empty: an authored empty list is a complete
+    /// empty declared scope, and it stays distinguishable from an ABSENT
+    /// declaration, which never produces a measurement at all.
+    pub patterns: Vec<String>,
+
+    pub phase: String,
+
+    /// The canonical manifest witness over exactly the files those patterns
+    /// selected.
+    pub witness: StateDigestWitness,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -123,8 +221,14 @@ pub struct StateRun {
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
     pub compile_trace: bool,
 
-    /// Durable identity of the run that wrote this state. Absent in pre-R7.3
-    /// files; present (32 lowercase hex) whenever any row is delegated.
+    /// Durable identity of the run that wrote this state — 32 lowercase hex.
+    /// Every post-R7.3 begin carries it, for EVERY invocation and not only a
+    /// delegated one; the old wording ("present whenever any row is delegated")
+    /// described a narrower writer than the one that shipped and would have
+    /// licensed a fresh run with no id at all. Absent only in pre-R7.3 files,
+    /// and such a file is readable exactly where no ownership claim depends on
+    /// the id — a delegated row, or an evidence measurement attributing itself
+    /// to a run, needs it and refuses without it.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub run_id: Option<String>,
 
