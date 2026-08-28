@@ -179,6 +179,12 @@ Add to `formats/vocabularies.json` (names exact):
 - `artifact_witness` — id/kind/path/run + digest witness;
 - `verification_evidence` — the exact PROP-054 §14.7 root/member.
 
+On both comparison rows, `measured_run_id` is present exactly when the
+`measured` witness is present. The two members are one attributable
+measurement: neither an unowned witness nor an id pointing at a measurement
+the row says does not exist is a valid intermediate state. The status matrix
+separately decides that only `unavailable` may omit the pair.
+
 This follows the existing `compile_trace_report` pattern: one vocabulary
 fragment becomes one shared generated Rust type and is imported by every
 owning schema. Do not create a duplicate standalone evidence schema containing
@@ -235,11 +241,16 @@ PROP-054 §14.7 vocabulary, generated as
 
 The root carries two source layers before rows:
 
-- `sources[]`: base authored-source results keyed by `(kind, package)`, state
+- `sources[]`: base authored-source results keyed by package coordinate, with
+  `kind` as a value and never a second identity component; state
   `available|unavailable|invalid|orphaned`, with the state-dependent digest,
   reason and adoption-entry count. Only `available` sources may own fact rows.
-- `relation_sources[]`: optional enrichment state/provenance; it never stands
-  in for a malformed/missing authored source.
+  One coordinate cannot occur once as `host` and once as `package`, because
+  the enrichment layer below keys by coordinate alone and must recover exactly
+  one kind to validate fresh-versus-carried provenance.
+- `relation_sources[]`: optional enrichment state/provenance; every entry
+  binds to exactly one base source result, and it never stands in for a
+  malformed/missing authored source.
 
 Corpora cover:
 
