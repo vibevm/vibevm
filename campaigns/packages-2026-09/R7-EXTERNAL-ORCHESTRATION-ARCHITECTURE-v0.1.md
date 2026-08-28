@@ -64,6 +64,49 @@ Refactor the one declared-input walk so it produces both:
 The evidence identity carries the execution/declaration fingerprint **and**
 the input measurement. Their difference is load-bearing.
 
+`declaration_fingerprint` has its own exact recipe; it is neither the
+execution fingerprint with a new label nor JSON pretty-printing. SHA-256 is
+seeded with `vibe-execution-declaration-v1\0epoch=1\0`, then fields use
+`be64(label_len) || label || be64(value_len) || value`. Option presence is the
+ASCII byte `0|1`; counts are canonical decimal UTF-8. Schema order is:
+
+1. `execution`, `phase`, `point`;
+2. `slot_present`, then, when present, `slot_group`, `slot_kind`, `slot_name`,
+   `slot_version` from the `HandlerExecution` descriptor. The absolute
+   machine `slot.root` is deliberately excluded;
+3. `handler_kind` and the exhaustive variant payload: `handler_name` for
+   builtin/binary; `handler_base` for script; native's explicit
+   `handler_crate_present`/`handler_crate` and
+   `handler_prebuilt_present`/`handler_prebuilt_count`, followed by sorted
+   `handler_platform`/`handler_prebuilt` pairs; `handler_prompt` for agent.
+   Declarant-relative paths use forward slashes;
+4. `effective_config`, always, as the same sorted-key canonical JSON delivered
+   in the lifecycle envelope; absent and explicitly empty effective config are
+   intentionally one executable value;
+5. `provider_kind`, `provider_id`, `provider_version`,
+   `provider_content_present` and optional `provider_content`;
+6. `inputs_present`, then, when present, `pattern_count` and every
+   declaration-order `pattern`; therefore absent and authored-empty inputs
+   cannot collide;
+7. `pass_present` and, when present, its closed lowercase `pass_kind`, then
+   explicit presence/value frames for `level`, `from`, `to`, `after`,
+   `before`, `replace`, `formats` (presence, count, declaration-order values)
+   and `artifact`;
+8. `compiler_internals_present` and optional `compiler_internals` byte `0|1`;
+9. `prompt_present` and, when agent preparation is present,
+   `prompt_address` plus the exact resolved `prompt_bytes`.
+
+The final spelling is `sha256:<64 lowerhex>`. Authored config, `auto`,
+`applies_to`, `when`, activation/disable bits, tiers and ordinals are excluded:
+they decide whether/where a row enters the plan; after selection, effective
+config and the descriptor above are the work actually delivered. Requested
+command/chain, offline and agent mode, project/world, accumulated artifacts,
+manifest/lock and current input bytes remain execution-freshness, run or
+independent-witness material. Implementation must destructure the complete
+`ExtensionDecl` without `..` and explicitly classify the excluded fields, so a
+future declaration member is a compile-time epoch decision rather than a
+silent identity omission. Handler matches are exhaustive for the same reason.
+
 ### 1.3 Five evidence words, one pass word
 
 The closed comparison vocabulary is:
@@ -320,6 +363,21 @@ never “the file could not have moved”. Hardlinked input bytes keep feeding t
 legacy execution fingerprint for byte compatibility, but their evidence
 measurement is refused: enabling evidence may not silently change freshness.
 
+The two-read law deliberately supersedes A4a's temporary physical-read count:
+the invariant is one `WalkDir` enumeration, one logical union row per selected
+regular path and one certified byte-set feeding both projections, not one OS
+read. A clean accepted file uses two bounded reads and no ambient/raw fallback.
+If an evidence-only safety/stability check refuses a path the legacy scanner
+classified as a regular file, one ordinary raw read still feeds the legacy
+fingerprint and the **whole** evidence manifest is refused; if that old read
+also fails, the existing fingerprint error remains. A selected symlink,
+junction, reparse point or other non-regular entry was ignored by the legacy
+scanner and stays unread/unfollowed by it, while its selection refuses the
+evidence manifest. Portable path-identity collisions likewise refuse the
+whole manifest after both legacy rows retain their old bytes. Evidence refusal
+never turns an otherwise executable contribution into an evidence-created
+handler veto and never stores a partial digest as the declared scope.
+
 `inputs = null` means unavailable. An explicitly authored empty list is a
 complete empty declared scope and remains distinguishable in the measurement.
 
@@ -352,6 +410,15 @@ home.
 
 The witness is checkpointed in the same state transaction as the execution
 record. No `.vibe/evidence.*` second state file is created.
+
+Input-measurement carriage is closed: ordinary `ok|skip` success, a current
+fresh skip and a hosted satisfied resume checkpoint the measurement produced
+by that invocation with its current run id. Dispatch failure, preparation or
+fingerprint failure, hosted park and state-blind clean carry none. Fresh never
+copies the prior measurement, and a refused current observation overwrites a
+reusable row with no measurement rather than preserving an old claim. The
+manifest and declaration fingerprint are produced before handler dispatch;
+they are never recomputed after a handler may have changed its own inputs.
 
 ### 4.2 Engine-owned verify reconciliation
 
