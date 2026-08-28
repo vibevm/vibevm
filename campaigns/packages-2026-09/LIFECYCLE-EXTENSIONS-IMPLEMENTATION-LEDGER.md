@@ -241,7 +241,7 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 | R7.1 real provider seam | done | `f42334ff`, `e2392893`; JTD wire, config, endpoint/redirect/proxy/body/timeout/redaction tests |
 | R7.2 CLI agent handler + output contract | done | `26929050`; strict AgentResult JTD, prepared prompt/world resolution, ResultPlan, optional provider path, create/install/reinstall/update e2e and shared safe filesystem cell |
 | R7.3 hosted outbox/delegated resume | done | `1dd5e1f5`, generated reports `eae4494e`; durable run/outbox, exact task ownership, candidate-state atomicity, phase/slot reconciliation, command-level progress, no-spend sequential resume and independent final freeze |
-| R7.4 MCP lifecycle surfaces | in progress | architecture `ee2bc67f`; first wave `94f30aa9`, `88600508`, `87c2bab8`, `daf6eb31`, `17d94f8f`; A4 `31ca1e7d` / `0225ce41` / `970520d4`; A5 `7e330974` / `93177db6`; A6 `7bd335e2` / `b3ff308c`, `e1121d9b`, `b4d91749`, `8debdf2e`, `c82012c3`; A7–A8 tasks cut `cf5ec17d`, `ee741f2e` / `d338e880`, `30534ff9` / `7b9732f0`, `df678d7b` / `c62177fe`; final A0–A8 full panel on `a4253de7` ran all 54 dynamic gates green; A9 ports `5506cf88` / `9732ba38` / `18a797b2`; A10 projection `53e84790`; A11 plan `2560ee57` / `78ea8cc5`; A12 application `053b7e37` / `ba874cdf`; A13 trace `3f01e2dc` / `afdd3adc`; A14 selected-world prompt resolver `cd793ca9` / `2b08c818`; A15a package source `5df76260` / `23044cfd`, selected-member repair `da2ff985`, B-109 `b615ebe5`; A15b two-stage lease-first default command `0ef2f8f5` / `a4336ea2`, 111 unit + 70 doctest + 4 privacy compile-fail, 588 CLI unit, exact golden/lease/member/lifecycle, clippy/conform/specmap green; scoped clean-composer debt B-110 `fc279fbe`; A15c hosted backend + MCP run + full panel next |
+| R7.4 MCP lifecycle surfaces | in progress | architecture `ee2bc67f`; first wave `94f30aa9`, `88600508`, `87c2bab8`, `daf6eb31`, `17d94f8f`; A4 `31ca1e7d` / `0225ce41` / `970520d4`; A5 `7e330974` / `93177db6`; A6 `7bd335e2` / `b3ff308c`, `e1121d9b`, `b4d91749`, `8debdf2e`, `c82012c3`; A7–A8 tasks cut `cf5ec17d`, `ee741f2e` / `d338e880`, `30534ff9` / `7b9732f0`, `df678d7b` / `c62177fe`; final A0–A8 full panel on `a4253de7` ran all 54 dynamic gates green; A9 ports `5506cf88` / `9732ba38` / `18a797b2`; A10 projection `53e84790`; A11 plan `2560ee57` / `78ea8cc5`; A12 application `053b7e37` / `ba874cdf`; A13 trace `3f01e2dc` / `afdd3adc`; A14 selected-world prompt resolver `cd793ca9` / `2b08c818`; A15a package source `5df76260` / `23044cfd`, selected-member repair `da2ff985`, B-109 `b615ebe5`; A15b two-stage lease-first default command `0ef2f8f5` / `a4336ea2`, 111 unit + 70 doctest + 4 privacy compile-fail, 588 CLI unit, exact golden/lease/member/lifecycle, clippy/conform/specmap green; scoped clean-composer debt B-110 `fc279fbe`; A15c hosted no-spend backend `1027ca5e`, strict MCP run + parity `9c340df8`, derived map `a0276a0d`: 51 MCP unit + 46 doctest, 12 hosted e2e, 588 CLI unit, stdio/parity/wire, clippy, conform 0 new, codegen/specmap and seven mutation REDs green; redundant selected-resolver authority classified as B-111; only the A15 full panel remains |
 | R7.5 external orchestration substrate | missing | owner ruling reaffirmed 2026-08-28: structured exact-tree/artifact/run evidence + optional read-only facts keyed by full `spec://…#fact`; status-bearing source is `vibe-specdoc` + consumer `vibe-facts`, current specmap relations are optional; external long-running agents may use separately typed observations to choose direction, while lifecycle contains no coding agent, task heuristic or automatic loop |
 
 R7 live Z.AI smoke is now conclusive (2026-08-27): central `vibe create`
@@ -581,6 +581,16 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
   applied two central correction rounds. Central acceptance then reran the
   exact gates and external E0451 probes. No new worktree/target clone exists;
   reports remain local under `cache/r74-a15b-command/`.
+- A15c ran directly on `main`. The primary `claudez` thread completed recon
+  and then returned the account's five-hour 429 before implementation; root
+  retained the packet and took over rather than retrying. Ordinary
+  `claude -c --model opus --effort max` supplied the independent architecture
+  review whose clock, Agent-mode parity, best-effort seed, test isolation,
+  capture-marker and source-fence corrections all landed. Central acceptance
+  read every product file, reran the exact gates and restored seven mutations.
+  The only non-product observation — the selected resolver's semantically
+  unused workspace-root authority — is B-111 in `BACKLOG.md`; quota/failover is
+  already the general PROP-055 law. No worktree/target clone was created.
 - `cache/` is untracked and unignored. It is not a product home. Important
   decisions from its R3.3, R4–R5 and R6–R8 reports are now represented in this
   ledger; future accepted decisions go directly here/spec-debt/code comments.

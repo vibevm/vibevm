@@ -190,9 +190,17 @@ fronts currently in flight. A worker report or old worktree is never completion.
                   strict clippy/conform/specmap are green. Deliberately excluded
                   clean-composer convergence is recorded as B-110 (`fc279fbe`),
                   before any second clean surface may exist.
-            - [ ] A15c hosted backend and strict MCP tool: shared real package
-                  source, no-spend agent canary, generated success/park/failure
-                  root, cross-surface parity and the full R7.4 panel.
+            - [x] A15c hosted backend and strict MCP tool (`1027ca5e`,
+                  `9c340df8`, `a0276a0d`): shared real package source,
+                  no-spend agent canary, strict one-member grammar, retained
+                  outer lease, capture-only child ports, generated
+                  success/park/failure root and CLI↔MCP parity. Central
+                  acceptance ran 51 MCP unit + 46 doctest, 12 hosted e2e,
+                  588 CLI unit, stdio/parity and wire corpus, strict clippy,
+                  conform 0 new, clean codegen/specmap and seven restored
+                  mutation REDs. The accepted resolver-authority observation
+                  is durably classified as B-111; only the full R7.4 boundary
+                  panel remains in A15.
 - [ ] **R7.5** — neutral external work-loop substrate (owner ruling reaffirmed
       2026-08-28): structured verification
       evidence bound to exact tree/artifact/run identity; optional read-only
