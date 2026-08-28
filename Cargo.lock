@@ -4460,6 +4460,10 @@ dependencies = [
  "serde_json",
  "tempfile",
  "vibe-core",
+ "vibe-requirements",
+ "vibe-safefs",
+ "vibe-wire",
+ "vibe-workspace",
 ]
 
 [[package]]

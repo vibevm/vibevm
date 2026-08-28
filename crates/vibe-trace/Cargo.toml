@@ -24,6 +24,19 @@ serde_json.workspace = true
 # of directory iteration order.
 vibe-core.workspace = true
 semver.workspace = true
+# The ONE provider seam this crate implements (R7.5 A3): the trait and
+# its request/outcome types live in the query library; wire
+# current/carried/provenance stay derived THERE, never chosen here.
+vibe-requirements.workspace = true
+# The generated `RequirementRelation` the seam's edges carry.
+vibe-wire.workspace = true
+# Capability-relative, no-follow one-file read for the carried map:
+# single-link identity + final-name recheck without a full slot walk.
+vibe-safefs.workspace = true
+# The carried-map trust ladder reads the slot record and the shared
+# file hasher (`vibedeps::read_slot_record` / `sha256_file`) — the
+# lock-selected slot's durable identity and footprint.
+vibe-workspace.workspace = true
 
 [dev-dependencies]
 tempfile.workspace = true

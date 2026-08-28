@@ -34,7 +34,7 @@ use crate::Explain;
 /// the artefact `vibe specmap` writes (the writer lives in `vibe-cli`'s
 /// `specmap` command, `MAP_FILENAME`) and this resolver reads. Both ends of
 /// the contract carry the same literal.
-const MAP_FILENAME: &str = "package.specmap.json";
+pub(crate) const MAP_FILENAME: &str = "package.specmap.json";
 
 /// The materialisation tree at the project root (PROP-009 §2.1; the
 /// PROP-052 layout): `vibevm/vibedeps/<group>.<name>/<version>/` holds
@@ -245,10 +245,18 @@ fn reduce(by_coordinate: BTreeMap<String, Vec<SlotRec>>) -> Resolver {
 /// Load a carried map from its slot. A present-but-unreadable map IS a hard
 /// error (unlike a missing slot): the artefact exists, so the package opted
 /// in, and a silent skip would read as "not found".
-fn load_map(slot: &Path) -> Result<Specmap> {
+pub(crate) fn load_map(slot: &Path) -> Result<Specmap> {
     let path = slot.join(MAP_FILENAME);
-    let text = fs::read_to_string(&path)?;
-    let map: Specmap = serde_json::from_str(&text)?;
+    let bytes = fs::read(&path)?;
+    parse_map(&bytes)
+}
+
+/// Parse a carried map from bytes ALREADY read — the byte-level twin of
+/// [`load_map`], so a caller can hash and parse the SAME bytes with no
+/// second read slipping different content between witness and use
+/// (R7.5 A3 follow-up C1).
+pub(crate) fn parse_map(bytes: &[u8]) -> Result<Specmap> {
+    let map: Specmap = serde_json::from_slice(bytes)?;
     Ok(map)
 }
 

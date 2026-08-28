@@ -189,6 +189,11 @@ fn record_to_wire(record: &SlotRecord) -> WireSlotRecord {
 }
 
 /// Return the SHA-256 of `path` as 64 lowercase hexadecimal digits.
+///
+/// Streams the file through a fixed 64 KiB buffer, preserving the
+/// existing bounded-memory path for large package payloads. Callers
+/// that already own exact bytes use [`sha256_bytes`] instead; the parity
+/// test below pins both entry points to one SHA-256 spelling.
 pub fn sha256_file(path: &Path) -> Result<String, String> {
     let mut file = fs::File::open(path)
         .map_err(|error| format!("cannot open `{}` for SHA-256: {error}", path.display()))?;
@@ -204,6 +209,16 @@ pub fn sha256_file(path: &Path) -> Result<String, String> {
         hasher.update(&buffer[..read]);
     }
     Ok(lower_hex(&hasher.finalize()))
+}
+
+/// Return the SHA-256 of exactly these bytes as 64 lowercase
+/// hexadecimal digits — the byte-level twin of [`sha256_file`]. A
+/// caller hashes the SAME bytes it will parse, so no second read can
+/// slip different content between witness and use.
+pub fn sha256_bytes(bytes: &[u8]) -> String {
+    let mut hasher = Sha256::new();
+    hasher.update(bytes);
+    lower_hex(&hasher.finalize())
 }
 
 /// Verify exactly the payload files named by `record`, ignoring every
@@ -466,3 +481,25 @@ fn format_validation_error(path: &Path, error: ValidationError) -> String {
 
 #[cfg(test)]
 mod tests;
+
+#[cfg(test)]
+mod sha256_bytes_tests {
+    use super::*;
+
+    /// C1 parity: the byte twin and the file twin agree — one SHA
+    /// grammar, never a copied lower-hex spelling elsewhere.
+    #[test]
+    fn sha256_bytes_and_sha256_file_agree() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("payload.bin");
+        let bytes: Vec<u8> = (0..=255_u8).cycle().take(100_000).collect();
+        std::fs::write(&path, &bytes).unwrap();
+        assert_eq!(sha256_bytes(&bytes), sha256_file(&path).unwrap());
+        assert_eq!(sha256_bytes(&bytes).len(), 64);
+        // The empty witness is stable and distinct from any content.
+        assert_eq!(
+            sha256_bytes(b""),
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        );
+    }
+}

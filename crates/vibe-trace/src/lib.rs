@@ -25,7 +25,13 @@ use serde_json::Value;
 
 mod foreign;
 mod fragment;
+
+/// The R7.5 relation-provider adapter (A3): `vibe-trace`'s
+/// implementation of the landed `vibe_requirements::RelationProvider`
+/// seam over fresh host maps and record-proven carried maps.
+pub mod relations;
 pub use fragment::{Fragment, fragment};
+pub use relations::SpecmapRelationProvider;
 
 /// The simple-level map search — independent filters, AND-joined, over a hard
 /// result ceiling (A5A-MAPSEARCH). A permanent grep-like floor over the
@@ -264,3 +270,15 @@ mod tests {
         assert!(format!("{err}").contains("no spec unit"), "{err}");
     }
 }
+
+#[cfg(test)]
+#[path = "relations_host_tests.rs"]
+mod relations_host_tests;
+
+#[cfg(test)]
+#[path = "relations_followup_tests.rs"]
+mod relations_followup_tests;
+
+#[cfg(test)]
+#[path = "relations_tests.rs"]
+mod relations_tests;

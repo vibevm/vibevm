@@ -47,8 +47,8 @@ pub(crate) use slot_cow::detach_recorded_hardlinks;
 pub(crate) use slot_diff::MaterialiseReport;
 pub use slot_record::{
     SLOT_RECORD_FILENAME, SLOT_RECORD_SCHEMA, SlotFile, SlotFileDisposition, SlotRecord,
-    compute_recorded_payload_hash, read_slot_record, sha256_file, verify_recorded_files,
-    write_slot_record,
+    compute_recorded_payload_hash, read_slot_record, sha256_bytes, sha256_file,
+    verify_recorded_files, write_slot_record,
 };
 
 /// Directory name of the materialisation tree's final component.
