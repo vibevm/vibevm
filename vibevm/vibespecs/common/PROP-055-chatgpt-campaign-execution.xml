@@ -240,6 +240,21 @@
       source it read; exact citations replace narrative. The 2026-08-26 probes
       showed that a good Opus review can consume 47k output tokens and a GLM
       review 30k when no report budget is stated.</REPORT-BUDGET>
+      <ACCEPTED-WISDOM-HARVEST fact="true" status="spec/done">An untracked
+      worker report is evidence, never the sole durable home of an accepted
+      fact. Before root accepts an atom or permits its report/worktree/cache to
+      become disposable, root reviews every non-obvious implementation,
+      architecture, mutation and operational finding and gives it a home by
+      genre: normative product law → PROP/FEAT or named spec-debt; accepted
+      campaign architecture/status → the implementation ledger and TASKS;
+      real but deliberately unowned gap → BACKLOG or the tracked retrospective
+      harvest; harness-only launcher/panel fact → this PROP-055; local invariant
+      → code contract/test plus specmap edge where applicable. Rejected,
+      duplicated or non-durable observations may remain report-only, but root
+      makes that disposition consciously rather than losing them by omission.
+      Later waves drain the tracked harvest/backlog, not untracked `cache/`
+      archaeology. This classification is part of acceptance, not a session-end
+      courtesy, and applies equally to findings made by root during review.</ACCEPTED-WISDOM-HARVEST>
       <SUBSCRIPTION-LANES fact="true" status="spec/done">`claude` and
       `claudez` run against subscription quotas and are cheap enough to use
       freely and concurrently. Provider JSON may expose a nominal `costUSD`;
