@@ -9146,10 +9146,10 @@
       "crate_name": "vibe-facts",
       "file": "crates/vibe-facts/src/lib.rs",
       "item_kind": "enum",
-      "line": 322,
+      "line": 327,
       "symbol": "vibe_facts::RegistryError",
-      "end_line": 430,
-      "fingerprint": "tok1:2d2e52850797fa37bdce84c20b4b9275e16559c4704a9fbc8b4c1900899c8295"
+      "end_line": 441,
+      "fingerprint": "tok1:c23ab9374e9f3a3662e14072d3601333a5fc9ffd1d2757fb14a461ed3526d206"
     },
     {
       "crate_name": "vibe-facts",
@@ -9175,6 +9175,24 @@
       "item_kind": "mod",
       "line": 3,
       "symbol": "vibe_facts::report",
+      "end_line": 3,
+      "fingerprint": "tok1:0abf65d3f6e1a4769ac4455015931a108063b1a0049ac9676694a584abe6dcb9"
+    },
+    {
+      "crate_name": "vibe-facts",
+      "file": "crates/vibe-facts/src/scan.rs",
+      "item_kind": "mod",
+      "line": 22,
+      "symbol": "vibe_facts::scan",
+      "end_line": 22,
+      "fingerprint": "tok1:0abf65d3f6e1a4769ac4455015931a108063b1a0049ac9676694a584abe6dcb9"
+    },
+    {
+      "crate_name": "vibe-facts",
+      "file": "crates/vibe-facts/src/scan_tests.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_facts::scan_tests",
       "end_line": 3,
       "fingerprint": "tok1:0abf65d3f6e1a4769ac4455015931a108063b1a0049ac9676694a584abe6dcb9"
     },
@@ -26117,7 +26135,7 @@
     {
       "file": "crates/vibe-facts/src/lib.rs",
       "from_symbol": "vibe_facts::RegistryError",
-      "line": 332,
+      "line": 337,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-046#model",
       "verb": "implements"
@@ -26141,6 +26159,22 @@
     {
       "file": "crates/vibe-facts/src/report.rs",
       "from_symbol": "vibe_facts::report",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-046#laws",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-facts/src/scan.rs",
+      "from_symbol": "vibe_facts::scan",
+      "line": 22,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-046#laws",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-facts/src/scan_tests.rs",
+      "from_symbol": "vibe_facts::scan_tests",
       "line": 3,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-046#laws",
