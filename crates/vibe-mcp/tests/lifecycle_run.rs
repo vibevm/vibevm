@@ -12,6 +12,8 @@ mod grammar;
 mod hosted;
 #[path = "lifecycle_run/outcomes.rs"]
 mod outcomes;
+#[path = "lifecycle_run/pdsa_reference.rs"]
+mod pdsa_reference;
 #[path = "lifecycle_run/support.rs"]
 mod support;
 #[path = "lifecycle_run/transport.rs"]
