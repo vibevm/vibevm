@@ -12,6 +12,8 @@ mod plan;
 #[cfg(test)]
 mod prior;
 #[cfg(test)]
+mod resolver;
+#[cfg(test)]
 pub(crate) mod support;
 
 use std::fs;

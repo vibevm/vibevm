@@ -26,6 +26,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-CLI");
 
 mod contract;
 mod prompt;
+mod resolver;
 mod result;
 
 use std::path::Path;
@@ -41,6 +42,7 @@ use crate::ExtensionRegistryRow;
 pub use contract::{OUTPUT_ACCEPT_NON_EMPTY, OUTPUT_KIND_FILE, OutputContract, OutputRow};
 pub use prompt::{PromptRequest, ResolvedPrompt};
 pub(crate) use prompt::{system_prose, user_prose};
+pub use resolver::SelectedWorldPromptResolver;
 pub use result::{ResultPlan, probe_outputs};
 
 /// Everything the backend is told about one agent execution. It carries prose
