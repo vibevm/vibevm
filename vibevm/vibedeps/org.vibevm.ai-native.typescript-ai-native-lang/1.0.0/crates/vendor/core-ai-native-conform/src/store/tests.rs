@@ -17,6 +17,22 @@ impl Frontend for NullFrontend {
     }
 }
 
+/// A content-addressed cache entry is one ordinary portable file. The former
+/// `sha256:<hex>.json` spelling became an NTFS alternate stream on Windows;
+/// enough sources therefore exhausted one base file's stream limit instead
+/// of creating independent cache files.
+#[test]
+fn cache_slots_never_use_the_windows_alternate_stream_separator() {
+    let tmp = tempfile::tempdir().unwrap();
+    let store = Store::for_rust(tmp.path(), &Config::default());
+    let slot = store.slot(&NullFrontend, "sha256:0123abcd");
+    assert_eq!(slot.file_name().unwrap(), "sha256-0123abcd.json");
+    assert!(
+        !slot.file_name().unwrap().to_string_lossy().contains(':'),
+        "a cache slot must be an ordinary file on Windows, never an ADS"
+    );
+}
+
 /// A `.` root attributes its files to the project directory's own
 /// basename — the scanner half of the single-crate fix (the validator
 /// half is pinned in `config.rs`). Before the shared `crate_dir_name`

@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:231125de3f3a467e5a257c0308defd74c51dd2ef664b1807f0ec489af31c9cc6"
+source_hash = "sha256:92747c5467be053e5bf496ab42dc50f7e6fda78d0b48a25a09654c5074d885ac"
 spec_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:2471a1086d34c09d3f67efbeed6d7479d3f8889ffa18753cab3c743a79a51975"
+derived_hash = "sha256:e69b6cfe2127eaa5507060337d2ef97f7d355a8a93cb5e6a747e3f4eac0c9d13"
 
 [[file]]
 path = "Cargo.lock"
@@ -408,13 +408,13 @@ source = "crates/vendor/core-ai-native-conform/src/sarif.rs"
 
 [[file]]
 path = "crates/vendor/core-ai-native-conform/src/store.rs"
-sha256 = "e37547daea228c100b49e494b1c10345a87f0acfc20465c4a9bbbcf40f49a1b4"
+sha256 = "bb65ef47500a419b86afee75317d01c571fe76894fec18909301d4dcaa3ae941"
 disposition = "copied"
 source = "crates/vendor/core-ai-native-conform/src/store.rs"
 
 [[file]]
 path = "crates/vendor/core-ai-native-conform/src/store/tests.rs"
-sha256 = "986f50c56a43d4125fdd5159a6fd4cfe2e3f7a851b0792b9af8eaf0c6eb5b5b5"
+sha256 = "1c4e08518b62d7ba3f278fc62dadb2eb97a819b923e0edfcffbf42f93412a206"
 disposition = "copied"
 source = "crates/vendor/core-ai-native-conform/src/store/tests.rs"
 
