@@ -10,6 +10,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-046#model");
 pub mod lifecycle;
 pub mod overlay;
 pub mod report;
+pub mod scan;
 mod store;
 pub mod sync;
 
@@ -24,6 +25,10 @@ use thiserror::Error;
 pub use lifecycle::{OrphanReport, orphans, package_file_path, remove_package_file};
 pub use overlay::{PackageOverlay, overlay_file_hash};
 pub use report::{AdoptionCounts, AuthoredFact, adoption_counts, authored_facts};
+pub use scan::{
+    AdoptionObservation, AdoptionRow, SourceKind, address_prefix, join_adoption,
+    scan_authored_facts,
+};
 pub use store::Registry;
 
 /// A validated progress-core stage/state pair as it appears on the TOML wire.
@@ -393,6 +398,12 @@ pub enum RegistryError {
     )]
     InvalidAddress { address: String, reason: String },
     #[error(
+        "invalid source coordinate `{coordinate}`: {reason} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-046#model; \
+          fix: pass a validated `<group>/<name>` coordinate, e.g. `org.example/demo`)"
+    )]
+    InvalidCoordinate { coordinate: String, reason: String },
+    #[error(
         "invalid fact entry `{address}`: {reason} \
          (violates spec://org.vibevm.core/vibevm/common/PROP-046#model; \
           fix: align `origin`/`package` with the address's source coordinate)"
@@ -429,5 +440,7 @@ pub enum RegistryError {
     Invariant(String),
 }
 
+#[cfg(test)]
+mod scan_tests;
 #[cfg(test)]
 mod tests;

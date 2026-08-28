@@ -3,7 +3,6 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-046#cli");
 
 use std::collections::BTreeSet;
-use std::fs;
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
@@ -11,10 +10,10 @@ use clap::{Args, Subcommand};
 use vibe_core::Group;
 use vibe_core::manifest::Lockfile;
 use vibe_facts::{
-    AuthoredFact, FactEntry, FactOrigin, FactStatus, Registry, adoption_counts, authored_facts,
-    host_package, orphans, remove_package_file, sync,
+    FactEntry, FactOrigin, FactStatus, Registry, SourceKind, adoption_counts, host_package,
+    orphans, remove_package_file, scan_authored_facts, sync,
 };
-use vibe_workspace::{Workspace, boot_artifacts, vibedeps};
+use vibe_workspace::{Workspace, vibedeps};
 
 use crate::{cli::ProgressCheckArgs, output};
 
@@ -191,7 +190,7 @@ fn rederive_or_defer(root: &Path, package: Option<&str>) -> Result<()> {
 
 fn adopt(root: &Path, package: &str, prefix: Option<&str>) -> Result<()> {
     let slot = installed_slot(root, package)?;
-    let authored = slot_authored_facts(&slot, package)?;
+    let authored = scan_authored_facts(&slot, package, SourceKind::Package)?;
 
     let mut registry = Registry::load(root)?;
     let mut added = 0usize;
@@ -280,7 +279,7 @@ fn report(root: &Path, selected: Option<&str>) -> Result<()> {
     for package in &packages {
         let authored = if installed.contains(package) {
             materialised_slot(root, package)?
-                .map(|slot| slot_authored_facts(&slot, package))
+                .map(|slot| scan_authored_facts(&slot, package, SourceKind::Package))
                 .transpose()?
         } else {
             None
@@ -331,11 +330,6 @@ fn project_relative(root: &Path, path: &Path) -> String {
         .replace('\\', "/")
 }
 
-struct SlotSpecInput {
-    source: String,
-    output: PathBuf,
-}
-
 fn installed_slot(root: &Path, package: &str) -> Result<PathBuf> {
     materialised_slot(root, package)?
         .with_context(|| format!("package `{package}` has no materialised installed slot"))
@@ -371,112 +365,6 @@ fn materialised_slot(root: &Path, package: &str) -> Result<Option<PathBuf>> {
         )
     };
     Ok(slot.is_dir().then_some(slot))
-}
-
-fn slot_spec_inputs(slot: &Path) -> Result<Vec<SlotSpecInput>> {
-    let record_path = slot.join(vibedeps::SLOT_RECORD_FILENAME);
-    match fs::symlink_metadata(&record_path) {
-        Ok(_) => {
-            let record = vibedeps::read_slot_record(slot)
-                .map_err(|reason| anyhow::anyhow!("invalid slot record: {reason}"))?;
-            return Ok(record
-                .files
-                .into_iter()
-                .filter_map(|file| {
-                    let source = file.source.unwrap_or_else(|| file.path.clone());
-                    is_spec_document(&source).then(|| SlotSpecInput {
-                        source,
-                        output: slot.join(file.path),
-                    })
-                })
-                .collect());
-        }
-        Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
-        Err(error) => {
-            return Err(error)
-                .with_context(|| format!("inspecting slot record `{}`", record_path.display()));
-        }
-    }
-    if let Ok(manifest) = vibedeps::read_derived_manifest(slot) {
-        return Ok(manifest
-            .files
-            .into_iter()
-            .filter(|file| is_spec_document(&file.source))
-            .map(|file| SlotSpecInput {
-                source: file.source,
-                output: slot.join(file.output),
-            })
-            .collect());
-    }
-    let mut inputs = Vec::new();
-    collect_slot_specs(slot, slot, &mut inputs)?;
-    inputs.sort_by(|a, b| a.source.cmp(&b.source));
-    Ok(inputs)
-}
-
-fn slot_authored_facts(slot: &Path, package: &str) -> Result<Vec<AuthoredFact>> {
-    let inputs = slot_spec_inputs(slot)?;
-    let mut authored = Vec::new();
-    for input in inputs {
-        let text = fs::read_to_string(&input.output)
-            .with_context(|| format!("reading `{}`", input.output.display()))?;
-        let doc = match input.output.extension().and_then(|ext| ext.to_str()) {
-            Some("md") => vibe_specdoc::from_markdown(&text),
-            Some("xml") => vibe_specdoc::from_xml(&text),
-            _ => continue,
-        }
-        .with_context(|| format!("parsing `{}` through vibe-specdoc", input.output.display()))?;
-        let address_prefix = format!(
-            "spec://{package}/{}#",
-            vibe_spec::canonical_doc_path(&input.source)
-        );
-        authored.extend(authored_facts(&doc, &address_prefix));
-    }
-    authored.sort_by(|a, b| a.address.cmp(&b.address));
-    Ok(authored)
-}
-
-fn collect_slot_specs(root: &Path, dir: &Path, out: &mut Vec<SlotSpecInput>) -> Result<()> {
-    for entry in fs::read_dir(dir).with_context(|| format!("walking `{}`", dir.display()))? {
-        let entry = entry.with_context(|| format!("walking `{}`", dir.display()))?;
-        let path = entry.path();
-        if path.is_dir() {
-            collect_slot_specs(root, &path, out)?;
-        } else if path.is_file() {
-            let rel = path.strip_prefix(root).map_err(|_| {
-                anyhow::anyhow!(
-                    "walked path `{}` escaped `{}`",
-                    path.display(),
-                    root.display()
-                )
-            })?;
-            let source = rel.to_string_lossy().replace('\\', "/");
-            if is_spec_document(&source)
-                && source != boot_artifacts::static_path(vibe_core::manifest::SpecFormat::Mixed)
-                && source != boot_artifacts::static_path(vibe_core::manifest::SpecFormat::Xml)
-                && source != vibe_core::machine_json_path(&vibe_core::layout::current_boot_index())
-            {
-                out.push(SlotSpecInput {
-                    source,
-                    output: path,
-                });
-            }
-        }
-    }
-    Ok(())
-}
-
-fn is_spec_document(rel: &str) -> bool {
-    let path = Path::new(rel);
-    let spec_extension = matches!(
-        path.extension().and_then(|ext| ext.to_str()),
-        Some("md" | "xml")
-    );
-    let under_specs_root = rel.starts_with(&format!(
-        "{}/",
-        vibe_core::machine_json_path(&vibe_core::layout::current_specs_root())
-    ));
-    spec_extension && (under_specs_root || matches!(rel, "README.md" | "README.xml"))
 }
 
 fn sync_command(root: &Path, write: bool) -> Result<()> {
