@@ -503,6 +503,14 @@ completed prefix (and before any later suffix). A project with zero verify
 contributions therefore still gets the member; a package/deploy request cannot
 skip it merely because verify has no user rows.
 
+That split is armed only for the **complete** default-phase epoch. The
+post-durability install callback runs a partial validate/install plan while
+carrying the outer command's full metadata chain, so deciding from the chain
+alone would reconcile before build/create. Dispatch therefore receives
+`Option<Timestamp>`: `Some(surface_injected_instant)` is the complete epoch's
+permission; `None` is every partial/state-blind epoch, whatever its chain says.
+This is also the clock boundary — lifecycle/orchestrator reads no clock.
+
 The external input row's `declaration_fingerprint` and `patterns` describe the
 **current** effective declaration reconstructed at verify. The durable state's
 fingerprint is the comparison operand. Equality is required for `matched`; a
@@ -524,6 +532,14 @@ carrier, so a stale stop and a later verify-handler failure retain the exact
 comparison that existed before dispatch — failure projection may not rebuild
 or drop it.
 
+Input rows use that completed phase prefix. Artifact rows deliberately use the
+invocation's complete accumulated registry instead: install-stage slot outputs
+are current artifacts even though no phase-plan row names them. Each successful
+ordinary/fresh/hosted checkpoint remembers its exact durable artifact rows
+only after publication; verify walks the session order and joins by id to those
+baselines, never by scanning stale state history. Park/failure/untracked paths
+remember none.
+
 `evidence_id` uses one writer recipe, never JSON pretty-printing: SHA-256 is
 seeded with `vibe-verification-evidence-id\0epoch=1\0`, then every member except
 `evidence_id` and `observed_at` is framed in schema order with the existing
@@ -535,6 +551,17 @@ the evidence epoch/status, complete run header, inputs and artifacts, every
 witness/count and every reason. Cross-language implementations can therefore
 reproduce the id without depending on Rust struct layout or JSON key order.
 
+The epoch-1 label schedule is frozen path-qualified: `evidence`, `status`;
+`run.run_id`, `run.selected`, `run.requested`, `run.chain.count`, repeated
+`run.chain.item`, `run.started`; `inputs.count`, then each row's
+`inputs.execution|phase|declaration_fingerprint|patterns.count`, repeated
+`patterns.item`, and `status`; `artifacts.count`, then each row's
+`artifacts.id|kind|path|status`. Each row's optionals follow vocabulary order
+`measured_run_id|measured|observed|reason_code`, with `<path>.present = 0|1`
+before a present value. Witnesses frame `<path>.algorithm|digest`, then optional
+`files` and `bytes` (each presence-framed, in that vocabulary order). A
+longhand golden recomputes the digest without the production writer.
+
 `unavailable` is visible but is not a universal policy failure: a project with
 no evidence-bearing contribution retains today's empty verify posture. A
 project that requires evidence declares an ordinary verify contribution which
@@ -542,6 +569,9 @@ judges that generated context; VibeVM does not invent the project's policy.
 
 If a later verify contribution fails, lifecycle `ok` is false while the
 identity member may remain matched. Do not rewrite one axis into the other.
+Likewise a stale/missing/unstable boundary is a measured command failure —
+`ok:false` and a failing process/tool result — whose generated member remains
+the observation explaining the stop; it is not rewritten into a sixth status.
 
 The five words also close filesystem-observation refusal without a sixth wire
 epoch. With a prior measurement, strict absence alone is `missing`; any other
