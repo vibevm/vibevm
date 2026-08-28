@@ -34,27 +34,25 @@ pub(crate) use package_skill::RECOVER_KEY as PACKAGE_SKILL_RECOVER_KEY;
 /// Effective contribution plan and non-fatal collection notices for one ritual.
 #[derive(Debug)]
 pub(crate) struct RitualPlan {
-    pub(crate) executions: ExecutablePlan,
-    pub(crate) notices: Vec<String>,
-    pub(crate) project: EnvelopeProject,
-    pub(crate) world: EnvelopeWorld,
-    pub(crate) workspace_root: PathBuf,
-    pub(crate) package_bindings: BTreeMap<String, ProjectSkillBinding>,
-    pub(crate) package_desired_keys: BTreeSet<String>,
-    pub(crate) package_phase_planned: bool,
+    /// The surface-neutral plan shared with the future MCP adapter.
+    pub(crate) shared: vibe_orchestrator::RitualPlan,
     /// Project `[llm]`. Read with the manifest, never resolved here: an
     /// endpoint or credential is touched only inside an actual agent call.
+    /// This CLI-only wrapper deliberately keeps provider/model configuration
+    /// out of `vibe-orchestrator`.
     pub(crate) llm: Option<LlmSection>,
 }
 
-impl RitualPlan {
-    pub(crate) fn count_for(&self, phase: Phase) -> usize {
-        self.executions.count_for(phase.as_str())
+impl std::ops::Deref for RitualPlan {
+    type Target = vibe_orchestrator::RitualPlan;
+
+    fn deref(&self) -> &Self::Target {
+        &self.shared
     }
 }
 
 /// One effective declaration retained for execution in canonical order.
-pub(crate) type PlannedExecution = vibe_lifecycle::ExecutableContribution;
+pub(crate) use vibe_orchestrator::PlannedExecution;
 
 /// Load the selected node's effective world and plan the requested default
 /// phases, from a workspace the caller ALREADY has.
@@ -87,19 +85,21 @@ pub(crate) fn plan_default_prepared(
         SelectorSubject::unscoped(),
     );
     Ok(RitualPlan {
-        executions,
-        notices: loaded
-            .registry
-            .notices()
-            .iter()
-            .map(ToString::to_string)
-            .collect(),
-        project: loaded.project,
-        world: loaded.world,
-        workspace_root: loaded.workspace_root,
-        package_bindings: loaded.package_bindings,
-        package_desired_keys: loaded.package_desired_keys,
-        package_phase_planned: phases.contains(&Phase::Package),
+        shared: vibe_orchestrator::RitualPlan {
+            executions,
+            notices: loaded
+                .registry
+                .notices()
+                .iter()
+                .map(ToString::to_string)
+                .collect(),
+            project: loaded.project,
+            world: loaded.world,
+            workspace_root: loaded.workspace_root,
+            package_bindings: loaded.package_bindings,
+            package_desired_keys: loaded.package_desired_keys,
+            package_phase_planned: phases.contains(&Phase::Package),
+        },
         llm: loaded.llm,
     })
 }
@@ -122,26 +122,28 @@ pub(crate) fn plan_default(path: &Path, phases: &[Phase]) -> Result<RitualPlan> 
 pub(crate) fn plan_clean(path: &Path) -> Result<RitualPlan> {
     let loaded = load_registry(path, WorldLoadMode::PreClean)?;
     Ok(RitualPlan {
-        executions: ExecutablePlan::from_points(
-            &loaded.registry,
-            [(
-                "clean".to_string(),
-                ExtensionPoint::Phase(PhasePoint::Clean),
-            )],
-            SelectorSubject::unscoped(),
-        ),
-        notices: loaded
-            .registry
-            .notices()
-            .iter()
-            .map(ToString::to_string)
-            .collect(),
-        project: loaded.project,
-        world: loaded.world,
-        workspace_root: loaded.workspace_root,
-        package_bindings: BTreeMap::new(),
-        package_desired_keys: BTreeSet::new(),
-        package_phase_planned: false,
+        shared: vibe_orchestrator::RitualPlan {
+            executions: ExecutablePlan::from_points(
+                &loaded.registry,
+                [(
+                    "clean".to_string(),
+                    ExtensionPoint::Phase(PhasePoint::Clean),
+                )],
+                SelectorSubject::unscoped(),
+            ),
+            notices: loaded
+                .registry
+                .notices()
+                .iter()
+                .map(ToString::to_string)
+                .collect(),
+            project: loaded.project,
+            world: loaded.world,
+            workspace_root: loaded.workspace_root,
+            package_bindings: BTreeMap::new(),
+            package_desired_keys: BTreeSet::new(),
+            package_phase_planned: false,
+        },
         llm: loaded.llm,
     })
 }

@@ -9,8 +9,6 @@ use vibe_wire::generated::lifecycle_report::LifecycleContributionReport;
 
 use crate::output;
 
-use super::world;
-
 /// The observation policy supplied by a lifecycle surface.
 ///
 /// Execution asks only for stream policy and typed plan/row observations. The
@@ -26,7 +24,7 @@ pub(crate) trait RunObserver: Send + Sync {
 
     fn observe_plan(
         &self,
-        plan: &world::RitualPlan,
+        plan: &vibe_orchestrator::RitualPlan,
         metadata: &RunMetadata,
         emit_empty: bool,
     ) -> Result<()>;
@@ -66,7 +64,7 @@ impl RunObserver for CliRunObserver<'_> {
 
     fn observe_plan(
         &self,
-        plan: &world::RitualPlan,
+        plan: &vibe_orchestrator::RitualPlan,
         metadata: &RunMetadata,
         emit_empty: bool,
     ) -> Result<()> {

@@ -1,0 +1,20 @@
+[package]
+name = "vibe-orchestrator"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license-file.workspace = true
+publish.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "Surface-neutral lifecycle orchestration values and application service for vibevm"
+
+[dependencies]
+specmark.workspace = true
+vibe-agent-projection.workspace = true
+vibe-lifecycle.workspace = true
+vibe-wire.workspace = true
+
+[dev-dependencies]
+toml.workspace = true

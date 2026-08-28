@@ -10,11 +10,11 @@ use vibe_wire::generated::lifecycle_plan::{LifecyclePlan, PlannedContribution};
 
 use crate::output;
 
-use super::{RunObserver, world};
+use super::RunObserver;
 
 pub(super) fn surface_plan(
     observer: &dyn RunObserver,
-    plan: &world::RitualPlan,
+    plan: &vibe_orchestrator::RitualPlan,
     metadata: &RunMetadata,
     emit_empty: bool,
 ) -> Result<()> {
@@ -23,7 +23,7 @@ pub(super) fn surface_plan(
 
 pub(super) fn surface_cli_plan(
     ctx: &output::Context,
-    plan: &world::RitualPlan,
+    plan: &vibe_orchestrator::RitualPlan,
     metadata: &RunMetadata,
     emit_empty: bool,
 ) -> Result<()> {
@@ -43,7 +43,9 @@ pub(super) fn surface_cli_plan(
     Ok(())
 }
 
-pub(super) fn planned_contribution(execution: &world::PlannedExecution) -> PlannedContribution {
+pub(super) fn planned_contribution(
+    execution: &vibe_orchestrator::PlannedExecution,
+) -> PlannedContribution {
     let row = &execution.row;
     let (provider, version) = provider_and_version(row.provider());
     PlannedContribution {
@@ -74,7 +76,7 @@ pub(super) fn provider_and_version(provider: &ExtensionProvider) -> (String, Opt
 pub(super) fn render_ritual(
     ctx: &output::Context,
     notices: &[String],
-    executions: &[world::PlannedExecution],
+    executions: &[vibe_orchestrator::PlannedExecution],
 ) {
     if ctx.is_json() || ctx.is_quiet() {
         return;

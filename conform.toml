@@ -65,6 +65,7 @@ gated = [
     "vibe-publish",
     "vibe-cli",
     "vibe-mcp",
+    "vibe-orchestrator",
     "vibe-trace",
 ]
 
@@ -79,6 +80,7 @@ gated_pub_doctest = [
     "vibe-llm",
     "vibe-agent-projection",
     "vibe-mcp",
+    "vibe-orchestrator",
 ]
 
 # Files where reading the ambient environment is sanctioned: the env-promotion

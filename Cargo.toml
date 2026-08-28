@@ -22,6 +22,7 @@ members = [
     "crates/vibe-safefs",
     "crates/vibe-llm",
     "crates/vibe-mcp",
+    "crates/vibe-orchestrator",
     "crates/vibe-check",
     "crates/vibe-publish",
     "crates/vibe-spec",
@@ -49,6 +50,7 @@ default-members = [
     "crates/vibe-safefs",
     "crates/vibe-llm",
     "crates/vibe-mcp",
+    "crates/vibe-orchestrator",
     "crates/vibe-check",
     "crates/vibe-publish",
     "crates/vibe-spec",
@@ -91,6 +93,8 @@ vibe-resolver = { path = "crates/vibe-resolver", version = "1.0.0" }
 vibe-llm = { path = "crates/vibe-llm", version = "1.0.0" }
 vibe-safefs = { path = "crates/vibe-safefs", version = "1.0.0" }
 vibe-mcp = { path = "crates/vibe-mcp", version = "1.0.0" }
+# The R7.4 surface-neutral application layer shared by CLI and MCP.
+vibe-orchestrator = { path = "crates/vibe-orchestrator", version = "1.0.0" }
 vibe-check = { path = "crates/vibe-check", version = "1.0.0" }
 vibe-publish = { path = "crates/vibe-publish", version = "1.0.0" }
 vibe-spec = { path = "crates/vibe-spec", version = "1.0.0" }

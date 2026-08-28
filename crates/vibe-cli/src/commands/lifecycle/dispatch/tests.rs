@@ -84,7 +84,7 @@ impl RunObserver for RecordingObserver {
 
     fn observe_plan(
         &self,
-        _plan: &world::RitualPlan,
+        _plan: &vibe_orchestrator::RitualPlan,
         _metadata: &RunMetadata,
         _emit_empty: bool,
     ) -> anyhow::Result<()> {
