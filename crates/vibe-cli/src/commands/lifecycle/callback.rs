@@ -16,7 +16,7 @@ use crate::commands::install::{
 use crate::output;
 
 use super::plan::surface_plan;
-use super::{LifecycleDraft, dispatch, slot, world};
+use super::{CliRunObserver, LifecycleDraft, dispatch, slot, world};
 
 #[cfg(test)]
 mod tests;
@@ -87,6 +87,7 @@ fn after_direct_install_stage(
     run: InstallRunContext,
     workspace: &vibe_workspace::Workspace,
 ) -> Result<WorldCallbackOutcome> {
+    let observer = CliRunObserver::new(ctx);
     let _ = disposition;
     let phases = [Phase::Validate, Phase::Install];
     // The install's OWN workspace — including a `--git` delta it just recorded
@@ -94,16 +95,16 @@ fn after_direct_install_stage(
     // command did not produce.
     let ritual = world::plan_default_prepared(path, workspace, &phases)?;
     let metadata = run.metadata.clone();
-    surface_plan(ctx, &ritual, &metadata, false)?;
+    surface_plan(&observer, &ritual, &metadata, false)?;
     let state_chain = metadata.chain.clone();
     let slot_reports = run.lifecycle_reports;
     // The callback's dispatch reuses the command's ONE lease — shared into
     // the context by Arc, never reacquired here.
     let lease = run.lease.clone();
     let outcome = if let Some(shared) = run.lifecycle_run {
-        dispatch::dispatch_plan_with_run(ctx, &ritual, &shared, &metadata)?
+        dispatch::dispatch_plan_with_run(&observer, &ritual, &shared, &metadata)?
     } else {
-        dispatch::dispatch_plan(ctx, &ritual, lease, metadata, state_chain)?
+        dispatch::dispatch_plan(&observer, &ritual, lease, metadata, state_chain)?
     };
     let parked = outcome.parked.map(|(_, delegation)| delegation);
     let contributions = outcome.reports;

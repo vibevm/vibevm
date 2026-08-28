@@ -18,10 +18,10 @@ use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
 use crate::cli::{CleanArgs, CleanChain, InstallArgs};
 use crate::output;
 
-use super::LifecycleDraft;
 use super::dispatch;
 use super::plan::surface_plan;
 use super::world;
+use super::{CliRunObserver, LifecycleDraft};
 use super::{StepStatus, execute, step_report};
 
 /// Compose clean with any default-lifecycle phase through the same step list.
@@ -93,7 +93,8 @@ pub(crate) fn run_clean_only(
         selected: ".".to_string(),
     };
     let notices = plan.notices.clone();
-    surface_plan(ctx, &plan, &metadata, true)?;
+    let observer = CliRunObserver::new(ctx);
+    surface_plan(&observer, &plan, &metadata, true)?;
     let wipe_plan = crate::commands::clean::plan_wipe(&args.path)?;
     crate::commands::clean::confirm_wipe(ctx, &wipe_plan, metadata.assume_yes)?;
     let contributions = dispatch::dispatch_plan_untracked(ctx, &plan, &lease, metadata)?;

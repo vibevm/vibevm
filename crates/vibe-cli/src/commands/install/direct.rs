@@ -209,6 +209,7 @@ fn execute_after_open(
     // is cloned rather than re-resolved: two canonicalisations are two answers
     // to "which node did this command act on".
     let failed_root = project_root.clone();
+    let confirm_gate = super::CliConfirmGate::new(ctx, args.assume_yes);
     let outcome = execute_prepared(
         ctx,
         InstallExecution {
@@ -221,6 +222,8 @@ fn execute_after_open(
             manifest,
             workspace,
             metadata,
+            resolver_factory: &super::CliResolverFactory,
+            confirm_gate: &confirm_gate,
             lifecycle_output: None,
             trace,
         },

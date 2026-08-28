@@ -30,7 +30,8 @@ use crate::output;
 
 use super::draft::LifecycleDraft;
 use super::{
-    InstallDisposition, StepStatus, dispatch, report, slot, step_report, surface_plan, world,
+    InstallDisposition, RunObserver, StepStatus, dispatch, report, slot, step_report, surface_plan,
+    world,
 };
 
 /// The prepared inputs one phase run owns, plus whatever the clean epoch
@@ -100,6 +101,7 @@ fn absorb_resume_failure(error: anyhow::Error, measured: &mut Measured) -> anyho
 pub(super) fn execute_after_open(
     ctx: &output::Context,
     child: &output::Context,
+    observer: &dyn RunObserver,
     inputs: PhaseInputs,
     prepare_install: impl FnOnce() -> Option<PathBuf>,
     trace: Option<&TraceRun>,
@@ -109,7 +111,15 @@ pub(super) fn execute_after_open(
     let mut measured = Measured {
         contributions: inputs.contributions.clone(),
     };
-    match run(ctx, child, inputs, prepare_install, trace, &mut measured) {
+    match run(
+        ctx,
+        child,
+        observer,
+        inputs,
+        prepare_install,
+        trace,
+        &mut measured,
+    ) {
         Ok(Outcome::Completed(draft)) => {
             CommandExit::Success(RegisteredReportDraft::Lifecycle(Box::new(draft)))
         }
@@ -144,6 +154,7 @@ enum Outcome {
 fn run(
     ctx: &output::Context,
     child: &output::Context,
+    observer: &dyn RunObserver,
     inputs: PhaseInputs,
     prepare_install: impl FnOnce() -> Option<PathBuf>,
     trace: Option<&TraceRun>,
@@ -235,10 +246,13 @@ fn run(
                 let (user_config, manifest, workspace) = install_inputs
                     .take()
                     .context("internal: the prepared install inputs were consumed twice")?;
+                let install_args = install_args.clone();
+                let confirm_gate =
+                    crate::commands::install::CliConfirmGate::new(child, install_args.assume_yes);
                 let install_run = crate::commands::install::execute_prepared(
                     child,
                     InstallExecution {
-                        args: install_args.clone(),
+                        args: install_args,
                         embedded_root: prepare(),
                         root_offline,
                         lease: lease.clone(),
@@ -249,6 +263,8 @@ fn run(
                         manifest: SelectedManifest::parsed(manifest),
                         workspace,
                         metadata: metadata.clone(),
+                        resolver_factory: &crate::commands::install::CliResolverFactory,
+                        confirm_gate: &confirm_gate,
                         lifecycle_output: Some(ctx),
                         // The command owner's recorder, borrowed: the
                         // prerequisite install's compiles belong to THIS run's
@@ -329,12 +345,12 @@ fn run(
         &phases,
     )?;
     notices.extend(ritual.notices.clone());
-    surface_plan(ctx, &ritual, &metadata, true)?;
+    surface_plan(observer, &ritual, &metadata, true)?;
     let state_chain = phases.iter().map(ToString::to_string).collect();
     let dispatched = if let Some(shared) = install_lifecycle_run {
-        dispatch::dispatch_plan_with_run(ctx, &ritual, &shared, &metadata)
+        dispatch::dispatch_plan_with_run(observer, &ritual, &shared, &metadata)
     } else {
-        dispatch::dispatch_plan(ctx, &ritual, lease, metadata, state_chain)
+        dispatch::dispatch_plan(observer, &ritual, lease, metadata, state_chain)
     };
     let outcome = match dispatched {
         Ok(outcome) => outcome,

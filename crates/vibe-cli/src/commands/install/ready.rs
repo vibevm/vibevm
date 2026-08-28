@@ -11,8 +11,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-
 
 use std::path::Path;
 
-use anyhow::{Context, Result, bail};
-use dialoguer::Confirm;
+use anyhow::Result;
 use vibe_core::manifest::{Lockfile, Manifest, SpecFormat};
 use vibe_core::user_config::SlotIntegrity;
 use vibe_install::PlannedInstall;
@@ -20,21 +19,18 @@ use vibe_lifecycle::process::StreamMode;
 use vibe_workspace::Workspace;
 use vibe_workspace::compile_trace::TraceRun;
 
-use crate::cli::InstallArgs;
 use crate::commands::compile_trace::{RegisteredReportDraft, carry};
-use crate::exit_code::InstallError;
 use crate::output;
 
 use super::report;
 use super::{
-    InstallDisposition, InstallDraft, InstallResolver, InstallRun, InstallRunContext,
+    ConfirmGate, InstallDisposition, InstallDraft, InstallResolver, InstallRun, InstallRunContext,
     LifecycleSlotObserver, ResumeOutcome, WorldCallbackOutcome, emit_closure_diff, lane_sizes,
     resume, resume_slot_continuation,
 };
 
 /// Everything the ready branch borrows from the command body.
 pub(super) struct ReadyApply<'a> {
-    pub(super) args: &'a InstallArgs,
     pub(super) project_root: &'a Path,
     pub(super) manifest: &'a Manifest,
     pub(super) workspace: &'a Workspace,
@@ -46,6 +42,7 @@ pub(super) struct ReadyApply<'a> {
     pub(super) lockfile_snapshot: &'a Lockfile,
     pub(super) lanes_before: &'a [(String, Option<u64>)],
     pub(super) run_metadata: &'a vibe_lifecycle::RunMetadata,
+    pub(super) confirm_gate: &'a dyn ConfirmGate,
     pub(super) lifecycle_output: Option<&'a output::Context>,
     pub(super) trace: Option<&'a TraceRun>,
 }
@@ -62,7 +59,6 @@ pub(super) fn apply(
     ) -> Result<WorldCallbackOutcome>,
 ) -> Result<InstallRun> {
     let ReadyApply {
-        args,
         project_root,
         manifest,
         workspace,
@@ -74,6 +70,7 @@ pub(super) fn apply(
         lockfile_snapshot,
         lanes_before,
         run_metadata,
+        confirm_gate,
         lifecycle_output,
         trace,
     } = inputs;
@@ -83,34 +80,7 @@ pub(super) fn apply(
     // consumed by the apply.
     let packages_resolved = planned.resolution.len();
 
-    // Confirm (unless --assume-yes or --json or not a TTY).
-    let approved = if args.assume_yes || ctx.is_unattended() || ctx.is_json() {
-        true
-    } else if !console::user_attended() {
-        // No TTY → refuse to apply without explicit --assume-yes.
-        // This matches the book's "ask a human" discipline for any
-        // destructive action.
-        bail!(
-            "no TTY available for confirmation; re-run with `--assume-yes` to apply this plan non-interactively"
-        );
-    } else {
-        Confirm::new()
-            .with_prompt(format!(
-                "Materialise {} package{} into vibedeps/ and regenerate boot artifacts?",
-                planned.resolution.len(),
-                if planned.resolution.len() == 1 {
-                    ""
-                } else {
-                    "s"
-                },
-            ))
-            .default(false)
-            .interact()
-            .context("reading user confirmation")?
-    };
-    if !approved {
-        return Err(InstallError::UserDeclined.into());
-    }
+    confirm_gate.confirm_install(planned.resolution.len())?;
 
     // PROP-054 ##INSTALL-IS-CONSENT: `[hooks]` is translated to
     // `slot:` contributions and runs through the lifecycle handler

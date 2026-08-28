@@ -64,6 +64,72 @@ fn lease_for(root: &Path) -> Arc<LifecycleLease> {
     Arc::new(LifecycleLease::acquire(root).expect("the fixture root is leasable"))
 }
 
+#[derive(Default)]
+struct RecordingObserver {
+    rows: std::sync::Mutex<Vec<LifecycleContributionReport>>,
+}
+
+impl RunObserver for RecordingObserver {
+    fn stream_mode(&self) -> vibe_lifecycle::process::StreamMode {
+        vibe_lifecycle::process::StreamMode::Null
+    }
+
+    fn binary_quiet(&self) -> bool {
+        true
+    }
+
+    fn emit_machine_failure(&self) -> bool {
+        false
+    }
+
+    fn observe_plan(
+        &self,
+        _plan: &world::RitualPlan,
+        _metadata: &RunMetadata,
+        _emit_empty: bool,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn observe_contribution(&self, report: &LifecycleContributionReport) {
+        self.rows
+            .lock()
+            .unwrap_or_else(|poisoned| poisoned.into_inner())
+            .push(report.clone());
+    }
+}
+
+#[test]
+fn dispatch_reports_the_real_row_through_the_supplied_observer() {
+    let project = project_with_one_row();
+    let plan = world::plan_default(project.path(), &[Phase::Build]).expect("the plan loads");
+    let observer = RecordingObserver::default();
+
+    let outcome = dispatch_plan(
+        &observer,
+        &plan,
+        lease_for(project.path()),
+        metadata(project.path()),
+        vec!["build".to_string()],
+    )
+    .expect("the row dispatches");
+
+    let observed = observer
+        .rows
+        .into_inner()
+        .unwrap_or_else(|poisoned| poisoned.into_inner());
+    assert_eq!(
+        observed, outcome.reports,
+        "the supplied observer sees the exact row"
+    );
+    assert_eq!(
+        observed.len(),
+        1,
+        "one planned row produces one observation"
+    );
+    assert_eq!(observed[0].phase, "build");
+}
+
 /// One real row runs; a GENERIC failure follows it; the row comes back.
 ///
 /// The failure is injected after the first report so it is exactly the shape
@@ -81,10 +147,11 @@ fn a_generic_failure_after_a_real_row_carries_that_row_outward() {
     );
 
     let ctx = quiet_ctx();
+    let observer = super::super::CliRunObserver::new(&ctx);
     let meta = metadata(project.path());
     let guard = inject::fail_after(1);
     let result = dispatch_plan(
-        &ctx,
+        &observer,
         &plan,
         lease_for(project.path()),
         meta,
@@ -139,10 +206,11 @@ fn the_injection_guard_disarms_on_unwind() {
     let project = project_with_one_row();
     let plan = world::plan_default(project.path(), &[Phase::Build]).expect("the plan loads");
     let ctx = quiet_ctx();
+    let observer = super::super::CliRunObserver::new(&ctx);
     let meta = metadata(project.path());
     assert!(
         dispatch_plan(
-            &ctx,
+            &observer,
             &plan,
             lease_for(project.path()),
             meta,

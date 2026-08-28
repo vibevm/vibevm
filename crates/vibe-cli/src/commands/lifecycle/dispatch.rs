@@ -3,7 +3,7 @@
 use anyhow::Result;
 use std::sync::Arc;
 use vibe_lifecycle::handlers::{HandlerRuntime, PackageBindingBackend};
-use vibe_lifecycle::process::{StreamMode, SystemProcessRunner};
+use vibe_lifecycle::process::SystemProcessRunner;
 
 use vibe_lifecycle::{
     Delegation, ExecutionReuse, HandlerExecution, LifecycleLease, LifecycleRun, LifecycleRunHandle,
@@ -22,7 +22,7 @@ use backends::{ProjectPackageBindingBackend, WorkspaceBinaryBackend};
 
 use super::agent::CliAgentBackend;
 use super::draft::LifecycleDraft;
-use super::world;
+use super::{CliRunObserver, RunObserver, world};
 
 #[path = "dispatch/backends.rs"]
 mod backends;
@@ -93,7 +93,8 @@ pub(super) fn dispatch_plan_untracked(
     let mut reports = Vec::with_capacity(plan.executions.len());
     let package_binding = ProjectPackageBindingBackend::new(plan);
     let agent = CliAgentBackend::for_plan(plan);
-    let runtime = runtime(ctx, &package_binding, &agent);
+    let observer = CliRunObserver::new(ctx);
+    let runtime = runtime(&observer, &package_binding, &agent);
     for execution in plan.executions.iter() {
         let handler = HandlerExecution::from_row(&execution.row);
         let outcome =
@@ -118,14 +119,14 @@ pub(super) fn dispatch_plan_untracked(
             outcome.message,
             Some(&outcome.streams),
         );
-        render_outcome(ctx, &report);
+        observer.observe_contribution(&report);
         reports.push(report);
     }
     Ok(reports)
 }
 
 pub(super) fn dispatch_plan(
-    ctx: &output::Context,
+    observer: &dyn RunObserver,
     plan: &world::RitualPlan,
     lease: Arc<LifecycleLease>,
     metadata: RunMetadata,
@@ -144,7 +145,7 @@ pub(super) fn dispatch_plan(
         state_chain,
     )?
     .shared();
-    dispatch_plan_with_run(ctx, plan, &run, &metadata)
+    dispatch_plan_with_run(observer, plan, &run, &metadata)
 }
 
 /// Dispatch one phase plan, carrying whatever rows were measured out with ANY
@@ -161,13 +162,13 @@ pub(super) fn dispatch_plan(
 /// error leaving the inner pass picks them up on the way out. The original
 /// error object is untouched — `carry_measured` moves it, never reformats it.
 pub(super) fn dispatch_plan_with_run(
-    ctx: &output::Context,
+    observer: &dyn RunObserver,
     plan: &world::RitualPlan,
     run: &LifecycleRunHandle,
     metadata: &RunMetadata,
 ) -> Result<DispatchOutcome> {
     let mut measured: Vec<LifecycleContributionReport> = Vec::new();
-    dispatch_measured(ctx, plan, run, metadata, &mut measured).map_err(|error| {
+    dispatch_measured(observer, plan, run, metadata, &mut measured).map_err(|error| {
         carry_measured(error, || {
             RegisteredReportDraft::Lifecycle(Box::new(LifecycleDraft::failed(
                 &metadata.requested,
@@ -180,7 +181,7 @@ pub(super) fn dispatch_plan_with_run(
 }
 
 fn dispatch_measured(
-    ctx: &output::Context,
+    observer: &dyn RunObserver,
     plan: &world::RitualPlan,
     run: &LifecycleRunHandle,
     metadata: &RunMetadata,
@@ -188,7 +189,7 @@ fn dispatch_measured(
 ) -> Result<DispatchOutcome> {
     let package_binding = ProjectPackageBindingBackend::new(plan);
     let agent = CliAgentBackend::for_plan(plan);
-    let runtime = runtime(ctx, &package_binding, &agent);
+    let runtime = runtime(observer, &package_binding, &agent);
     let mut outcome = DispatchOutcome {
         reports: Vec::with_capacity(plan.executions.len()),
         parked: None,
@@ -248,7 +249,7 @@ fn dispatch_measured(
                         // The policy this site has always had: the failed root
                         // is a machine document, emitted only in JSON mode and
                         // only by an unsuppressed context.
-                        ctx.is_json() && !ctx.suppresses_output(),
+                        observer.emit_machine_failure(),
                     ));
                 }
                 return Err(anyhow::Error::new(error).context(format!(
@@ -266,7 +267,7 @@ fn dispatch_measured(
             transition.message,
             (!fresh).then_some(&transition.streams),
         );
-        render_outcome(ctx, &report);
+        observer.observe_contribution(&report);
         outcome.reports.push(report);
         measured.clone_from(&outcome.reports);
         // A deterministic stand-in for the generic post-row failures this
@@ -407,7 +408,7 @@ fn contribution_status_report(
 }
 
 fn runtime<'a>(
-    ctx: &output::Context,
+    observer: &dyn RunObserver,
     package_binding: &'a dyn PackageBindingBackend,
     agent: &'a dyn vibe_lifecycle::AgentBackend,
 ) -> HandlerRuntime<'a> {
@@ -417,7 +418,7 @@ fn runtime<'a>(
     static PROBE: vibe_workspace::hooks::SystemProbe = vibe_workspace::hooks::SystemProbe;
     HandlerRuntime {
         process: &PROCESS,
-        binary: if ctx.is_json() || ctx.is_quiet() {
+        binary: if observer.binary_quiet() {
             &BINARY_QUIET
         } else {
             &BINARY_INHERIT
@@ -425,17 +426,11 @@ fn runtime<'a>(
         package_binding,
         agent,
         probe: &PROBE,
-        streams: if ctx.is_json() {
-            StreamMode::Capture
-        } else if ctx.is_quiet() {
-            StreamMode::Null
-        } else {
-            StreamMode::Inherit
-        },
+        streams: observer.stream_mode(),
     }
 }
 
-fn render_outcome(ctx: &output::Context, report: &LifecycleContributionReport) {
+pub(super) fn render_cli_outcome(ctx: &output::Context, report: &LifecycleContributionReport) {
     if ctx.is_json() || ctx.is_quiet() {
         return;
     }

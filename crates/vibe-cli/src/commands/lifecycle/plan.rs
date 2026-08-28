@@ -10,9 +10,18 @@ use vibe_wire::generated::lifecycle_plan::{LifecyclePlan, PlannedContribution};
 
 use crate::output;
 
-use super::world;
+use super::{RunObserver, world};
 
 pub(super) fn surface_plan(
+    observer: &dyn RunObserver,
+    plan: &world::RitualPlan,
+    metadata: &RunMetadata,
+    emit_empty: bool,
+) -> Result<()> {
+    observer.observe_plan(plan, metadata, emit_empty)
+}
+
+pub(super) fn surface_cli_plan(
     ctx: &output::Context,
     plan: &world::RitualPlan,
     metadata: &RunMetadata,

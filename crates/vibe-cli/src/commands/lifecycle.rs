@@ -25,6 +25,7 @@ mod callback;
 mod clean;
 mod dispatch;
 mod draft;
+mod observer;
 mod phase;
 mod plan;
 mod report;
@@ -36,6 +37,7 @@ use clean::refuse_untracked_agent_rows;
 pub use clean::run_clean;
 pub(crate) use clean::run_clean_only;
 pub(crate) use draft::LifecycleDraft;
+pub(crate) use observer::{CliRunObserver, RunObserver};
 use plan::{provider_and_version, surface_plan, tier_name};
 pub(crate) use report::{check_delegation, render_agent_task_fence};
 pub(crate) use slot::{
@@ -176,7 +178,8 @@ fn execute(
 
     if let Some(clean_plan) = clean_plan {
         notices.extend(clean_plan.notices.clone());
-        surface_plan(ctx, &clean_plan, &metadata, true)?;
+        let observer = CliRunObserver::new(ctx);
+        surface_plan(&observer, &clean_plan, &metadata, true)?;
         let wipe_plan = super::clean::plan_wipe(&install_args.path)?;
         super::clean::confirm_wipe(ctx, &wipe_plan, assume_yes)?;
         contribution_reports.extend(dispatch::dispatch_plan_untracked(
@@ -263,9 +266,11 @@ fn execute(
             LifecycleStep::Clean => None,
         })
         .collect::<Vec<_>>();
+    let observer = CliRunObserver::new(ctx);
     let exit = phase::execute_after_open(
         ctx,
         &child,
+        &observer,
         phase::PhaseInputs {
             requested,
             phases,

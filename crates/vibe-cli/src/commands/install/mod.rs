@@ -22,6 +22,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail");
 
 mod closure_diff;
+mod confirm;
 mod direct;
 mod draft;
 mod events;
@@ -35,11 +36,14 @@ mod resolver;
 mod resume;
 
 pub(crate) use closure_diff::{emit_closure_diff, lane_sizes};
+pub(crate) use confirm::{CliConfirmGate, ConfirmGate};
 pub(crate) use direct::run as run_direct;
 pub(crate) use draft::InstallDraft;
 pub(crate) use project_local::project_packages_root;
 pub(crate) use report::{HookReportPresentation, LifecycleHookView};
-pub(crate) use resolver::{InstallResolver, build_install_resolver};
+pub(crate) use resolver::{
+    CliResolverFactory, InstallResolver, ResolverBuild, ResolverFactory, build_install_resolver,
+};
 pub(crate) use vibe_install::exact_pinned_pkgref;
 
 use std::path::{Path, PathBuf};
@@ -217,6 +221,13 @@ pub(crate) struct InstallExecution<'a> {
     /// [`PreparedWorkspace`]. Consumed below; never retried.
     pub(crate) workspace: PreparedWorkspace,
     pub(crate) metadata: RunMetadata,
+    /// The caller-selected package resolver composition root. Borrowed, not
+    /// recreated inside the install kernel, so a hosted surface can supply a
+    /// credential-free policy without a CLI back-edge.
+    pub(crate) resolver_factory: &'a dyn ResolverFactory,
+    /// The surface's one confirmation policy. The core invokes it only for a
+    /// solved Ready plan, immediately before materialisation.
+    pub(crate) confirm_gate: &'a dyn ConfirmGate,
     /// Where slot-lifecycle narration goes when the install is a phase verb's
     /// prerequisite: the OUTER context, so its rows are still visible while
     /// the install's own summary stays suppressed.
@@ -255,6 +266,8 @@ pub(crate) fn execute_prepared(
         manifest,
         workspace,
         metadata,
+        resolver_factory,
+        confirm_gate,
         lifecycle_output,
         trace,
     } = execution;
@@ -386,15 +399,15 @@ pub(crate) fn execute_prepared(
     // snapshot, taken beside the lock snapshot so one read point feeds
     // the whole diff. Sampled again after a successful apply below.
     let lanes_before = lane_sizes(&workspace.root);
-    let resolver = build_install_resolver(
-        &args,
-        &manifest,
-        embedded_root.as_deref(),
-        &project_root,
-        &global,
+    let resolver = resolver_factory.build(ResolverBuild {
+        args: &args,
+        manifest: &manifest,
+        embedded_root: embedded_root.as_deref(),
+        project_root: &project_root,
+        global: &global,
         offline,
-        &lockfile_snapshot.packages,
-    )?;
+        locked: &lockfile_snapshot.packages,
+    })?;
 
     // Parse the CLI pkgrefs and qualify short names at the input
     // boundary (PROP-008 §2.6) — manifests only ever store the
@@ -502,7 +515,6 @@ pub(crate) fn execute_prepared(
         Plan::Ready(planned) => ready::apply(
             ctx,
             ready::ReadyApply {
-                args: &args,
                 project_root: &project_root,
                 manifest: &manifest,
                 workspace: &workspace,
@@ -514,6 +526,7 @@ pub(crate) fn execute_prepared(
                 lockfile_snapshot: &lockfile_snapshot,
                 lanes_before: &lanes_before,
                 run_metadata: &run_metadata,
+                confirm_gate,
                 lifecycle_output,
                 trace,
             },

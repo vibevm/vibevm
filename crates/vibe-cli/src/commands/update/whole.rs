@@ -124,13 +124,15 @@ fn run(
         metadata,
     } = execution;
     let identity = UpdateIdentity::from_args(&project_root, &args);
+    let install_args = install_args_from(&args);
+    let confirm_gate = install::CliConfirmGate::new(ctx, install_args.assume_yes);
     let run = install::execute_prepared(
         ctx,
         install::InstallExecution {
             // The delegated resolver arguments carry `trace_compile: false`:
             // this command already owns the one recorder, and a second request
             // at this depth could only ever mean a second owner.
-            args: install_args_from(&args),
+            args: install_args,
             embedded_root,
             // The owner's ALREADY-resolved posture, handed in at the delegate's
             // root rung. `install_args_from` sets the delegate's own
@@ -145,6 +147,8 @@ fn run(
             manifest,
             workspace,
             metadata,
+            resolver_factory: &install::CliResolverFactory,
+            confirm_gate: &confirm_gate,
             lifecycle_output: None,
             trace,
         },
