@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
-  <title id="root">WAL — checkpoint 2026-08-28: R7.5 stable inputs and streaming artifact substrate landed</title>
-  <status stage="impl" state="work" comment="lifecycle/extensions campaign active; R1/R2, R3.1-R3.4, R6.2a/b, R7.1-R7.4, R8.1 and R8.2a complete; R7.5 P0/P1/P2-A1-A3/A4a/A4b/A4c0 complete, P2-A4c1 next"/>
+  <title id="root">WAL — checkpoint 2026-08-29: R7.5 measurement complete; reconciliation next</title>
+  <status stage="impl" state="work" comment="lifecycle/extensions campaign active; R1/R2, R3.1-R3.4, R6.2a/b, R7.1-R7.4, R8.1 and R8.2a complete; R7.5 P0/P1/P2-A1-A4 complete, P2-A5 next"/>
 
   <current-phase title="Current phase">
     <p><WAL-PHASE fact="true" status="impl/work">The active epic is
@@ -42,8 +42,10 @@
     manifest. P2/A4b is landed at `5b01d71c`: the exact declaration sibling,
     stable two-read input observation and current-run state carriage are green.
     A4c0 is landed at `d24de1ff`: multi-gigabyte artifact content streams
-    through one held no-follow handle without a byte cap. A4c1 artifact
-    witness/carriage and hosted-output B3 are next.
+    through one held no-follow handle without a byte cap. A4c1 is landed at
+    `2cabc7a7`: produced/host-accepted artifact baselines, transient current
+    re-observations, exact file/tree witnesses and hosted-output B3 are green.
+    P2/A5 reconciliation and the report funnel are next.
     </WAL-PHASE></p>
   </current-phase>
 
@@ -57,7 +59,7 @@
       presets/query and owner scenario §10.1 are complete.</WAL-R2>
       <WAL-R3 fact="true" status="impl/done">R3 explicit six-carrier compiler
       IR, named pass schedule, verifier and command-owned compile trace are
-      complete. Post-R7.5-P2/A4b-A4c0 checkpoint specmap: 6819 units, 2241 tagged items, 2010 edges,
+      complete. Post-R7.5-P2/A4 checkpoint specmap: 6820 units, 2247 tagged items, 2016 edges,
       0 suspects, 0 gated orphans, 0 unresolved host edges, 24 standing
       warnings.</WAL-R3>
       <WAL-R7 fact="true" status="impl/done">R7.1 provider, R7.2 CLI agent
@@ -136,13 +138,14 @@
       Root passed 10 declaration + 11 observation + 7 carriage REDs, all 10
       A4a inputs, lifecycle 255+15, strict clippy, workspace check and conform
       0 new.</WAL-R75-INPUTS>
-      <WAL-R75-ARTIFACT-STREAM fact="true" status="impl/done">R7.5 A4c0
+      <WAL-R75-ARTIFACT-STREAM fact="true" status="impl/done">R7.5 A4c0/A4c1
       streaming substrate is complete: safefs produces a stable raw content
       digest using two passes over one held handle, final-name identity and
       bounded directory enumeration, without a byte cap or content-sized
-      allocation. Safefs 97+10, clippy/dependents/conform are green. A4c1 still
-      owns file/tree outer witnesses, per-artifact state carriage and the
-      identity-only hosted-output probe repair.</WAL-R75-ARTIFACT-STREAM>
+      allocation; lifecycle adds exact file/tree outer witnesses, per-artifact
+      baselines, invocation-local current observations and identity-only hosted
+      probing. Safefs 97+10 and lifecycle 292+15, strict clippy/workspace/
+      conform are green. A4 is complete.</WAL-R75-ARTIFACT-STREAM>
       <WAL-R75-CONFORM-CACHE fact="true" status="impl/done">The R7.5 gate
       found and repaired the conform Windows cache bug: colon-bearing content
       hashes created NTFS alternate streams until OS error 665. Portable
@@ -230,9 +233,9 @@
     `vibe-requirements` query and current/carried `vibe-trace` adapter are done
     through `ea031767` / `8a05d344`; A4a/A4b stable input measurement is
     landed through `5b01d71c`, and A4c0 streaming content identity through
-    `d24de1ff`. Now add independent file/tree artifact witnesses, current-run
-    carriage and the hosted identity-only probe repair, then verify
-    reconciliation against the landed P1 wire. Use
+    `d24de1ff`, with A4c1 artifact baselines/current observations at
+    `2cabc7a7`. Now implement verify reconciliation against the landed P1 wire,
+    stop-before-verify and the one report/failure funnel. Use
     exact affected gates per atom. P3 adds only the thin CLI/MCP surfaces and
     fake external PDSA scenario; R4 resumes after neutral R7.5 closes.</WAL-NEXT></p>
   </next>
