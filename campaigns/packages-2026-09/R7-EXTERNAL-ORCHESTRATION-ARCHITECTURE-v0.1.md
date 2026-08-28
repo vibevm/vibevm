@@ -286,6 +286,16 @@ measurement:
 5. sort canonical relative paths and frame patterns/path/bytes once;
 6. return execution fingerprint + optional `InputMeasurement`.
 
+Stability is an observed property, not a claim that Vibe took an atomic
+filesystem snapshot. A measured file is accepted only through no-follow,
+single-link handle identity, equal pre/post identity and length, and two
+consecutive bounded reads yielding identical bytes; any observed disagreement
+is `unstable`. Even that cannot prove that an adversarial writer never wrote
+the same bytes between observations, so diagnostics say what was detected,
+never “the file could not have moved”. Hardlinked input bytes keep feeding the
+legacy execution fingerprint for byte compatibility, but their evidence
+measurement is refused: enabling evidence may not silently change freshness.
+
 `inputs = null` means unavailable. An explicitly authored empty list is a
 complete empty declared scope and remains distinguishable in the measurement.
 
@@ -309,9 +319,10 @@ record. No `.vibe/evidence.*` second state file is created.
 
 When the phase runner reaches `verify`, before user verify contributions:
 
-1. select evidence-bearing prior rows: build/test (and any other prior row)
-   that explicitly declares inputs, plus every accumulated artifact carrying a
-   witness;
+1. select CURRENT-plan executions that explicitly declare inputs and look up
+   their durable rows, plus EVERY currently accumulated artifact — including
+   an unwitnessed legacy artifact, which must become an explicit `unavailable`
+   comparison rather than vanish;
 2. reconstruct the current declaration by the same provider-qualified key;
 3. recompute input and artifact witnesses under the current selected world;
 4. compare measured and observed values, preserving canonical row order;
@@ -319,6 +330,27 @@ When the phase runner reaches `verify`, before user verify contributions:
 6. attach the generated member to phase outcome/report;
 7. on `stale | missing | unstable`, stop verify before contribution dispatch;
    on `matched | unavailable`, continue to configured verify contributions.
+
+A durable success row whose declaration is no longer in the current plan is
+not selected: lifecycle state is a freshness cache, not an append-only audit
+log, and a removed contribution must not poison every future verify. A current
+declaration with no attributable measurement is selected and reported
+`unavailable`; a current declaration whose fingerprint/identity differs is
+`stale`. The generated member rides both success and the measured failure
+carrier, so a stale stop and a later verify-handler failure retain the exact
+comparison that existed before dispatch — failure projection may not rebuild
+or drop it.
+
+`evidence_id` uses one writer recipe, never JSON pretty-printing: SHA-256 is
+seeded with `vibe-verification-evidence-id\0epoch=1\0`, then every member except
+`evidence_id` and `observed_at` is framed in schema order with the existing
+`field = be64(label_len) || label || be64(value_len) || value` primitive.
+Unsigned values and array lengths use canonical decimal UTF-8; enums use their
+wire spelling; every optional member first frames an explicit `0|1` presence;
+arrays frame their count and then their already-canonical rows. This includes
+the evidence epoch/status, complete run header, inputs and artifacts, every
+witness/count and every reason. Cross-language implementations can therefore
+reproduce the id without depending on Rust struct layout or JSON key order.
 
 `unavailable` is visible but is not a universal policy failure: a project with
 no evidence-bearing contribution retains today's empty verify posture. A
@@ -328,18 +360,25 @@ judges that generated context; VibeVM does not invent the project's policy.
 If a later verify contribution fails, lifecycle `ok` is false while the
 identity member may remain matched. Do not rewrite one axis into the other.
 
-### 4.3 The two-invocation law
+### 4.3 Two invocations and hosted resume are distinct laws
 
-On `vibe verify` first run:
+The stale→recompute acceptance path is one uninterrupted first invocation:
 
-- build/test may measure the tree;
-- create may then change a measured input or park for a host;
-- resumed verify compares against the post-create tree and reports stale;
-- it does **not** jump back.
+- build/test measures the tree;
+- a non-hosted create contribution then changes a measured input;
+- verify compares the durable pre-create measurement with the post-create
+  tree, reports stale and does **not** jump back;
+- an external second `vibe verify` causes incremental build/test to recompute,
+  create to fresh-skip when appropriate, and verify to match.
 
-An external second `vibe verify` causes incremental build/test to recompute,
-create to fresh-skip when appropriate, and verify to match. This exact sequence
-is the acceptance scenario, not prose.
+A hosted park is different. The first invocation stops at create before verify.
+Calling the same phase to resume re-enters the inclusive chain from its prior
+phases; if the host's output changed a build/test input, that deterministic
+predecessor reruns and checkpoints a new measurement before the delegated
+create row is accepted. Verify may therefore match on the resume itself. This
+is the existing linear-resume law, not a hidden retry, and it must not be
+weakened merely to manufacture a stale example. P3 proves hosted park/resume
+and uninterrupted stale→external-second-invocation as two adjacent scenarios.
 
 ## 5. P2 — requirements query library
 
@@ -444,25 +483,25 @@ runs.
 
 The test process is the orchestrator; VibeVM never sees PDSA vocabulary.
 
-Fixture:
+Two fixtures share one addressed requirement fact with authoring status, no
+adoption row and no `[llm]`, token, provider or network transport.
 
-- one addressed requirement fact with authoring status and no adoption row;
-- one build/test contribution declaring an input that create will change;
-- one hosted agent contribution writing that input;
-- no `[llm]`, token, provider or network transport.
+**Hosted-control fixture:** earlier deterministic phases measure; an agent
+create row parks. The test reads `lifecycle_tasks`, writes the exact declared
+output and calls the same verify phase. Resume re-enters the inclusive chain,
+reruns any predecessor invalidated by that output, accepts the hosted row and
+returns matched evidence with zero provider calls. This proves park/resume and
+that no engine-owned agent loop exists.
 
-Sequence:
+**Stale/recompute fixture:** a local deterministic create test contribution
+changes a build/test input later in one uninterrupted invocation, but does not
+declare that file as its own freshness input. Verify returns stale before its
+sentinel contribution. The test, and only the test, calls verify again;
+build/test recompute, create fresh-skips and verification returns matched.
 
-1. Query requirements and inspect independent metadata; the test chooses the
-   work. No lifecycle invocation occurred.
-2. Call `lifecycle_run({phase:"verify"})`. Earlier phases measure, create parks.
-3. Read `lifecycle_tasks`, write the exact declared output, call the **same**
-   verify phase to resume. Verify reaches evidence reconciliation and returns
-   stale because create changed a measured input. No later phase/handler runs.
-4. The test, and only the test, decides to call verify again. Build/test
-   recompute, create fresh-skips, verification returns matched.
-5. Repeat with relations unavailable: requirement enrichment changes, every
-   lifecycle/evidence byte and provider-call counter stays identical.
+The test queries requirements before lifecycle work to choose the attempt, and
+repeats enrichment with relations unavailable: requirement metadata changes,
+while every lifecycle/evidence byte and provider-call counter stays identical.
 
 Assertions count external invocations and scan product vocabularies to prove no
 automatic back-edge or PDSA enum/phase/verb exists.
@@ -564,6 +603,16 @@ evidence commands are rejected as duplicate surfaces; its suggestion that the
 execution fingerprint vector *is* the measured tree is narrowed to the
 declaration fingerprint plus a separately typed input manifest, because
 requested chain/current artifacts are not source-tree identity.
+
+The P2 A4/A5 audit's call graph and failure-funnel finding are accepted with
+central corrections: current-plan declarations are the evidence universe;
+unwitnessed current artifacts remain visible as `unavailable`; removed success
+rows are not audit history; hardlinks preserve legacy fingerprint bytes while
+evidence refuses them; and the generated member must survive both stale-stop
+and later-handler-failure carriers. Its report correctly exposed that hosted
+resume reruns invalidated predecessors, so the former hosted-stale fixture is
+split into the two scenarios above. Its claim of an atomic/stable filesystem
+epoch is narrowed to the explicit detection-bound observation law in §4.1.
 
 All accepted facts now live here, in normative specs or in the forthcoming
 tests; the untracked reports are disposable after P0 acceptance.
