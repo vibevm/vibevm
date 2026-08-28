@@ -181,18 +181,21 @@ The adapter:
   may not ship;
 - accepts a carried map only when `.vibe-slot.toml.source_hash` equals the
   lock-selected content hash, the record owns a `package.specmap.json` row and
-  the file's SHA-256 equals that row. Missing record/map is unavailable,
-  source-hash or map-hash mismatch is stale, matching malformed JSON is
-  invalid. This certifies the exact published map byte, not a fictional
-  consumer rebuild of transformed/unshipped source;
+  one capability-relative no-follow/single-link read yields bytes whose
+  SHA-256 equals that row and which are parsed without a second read. Missing
+  record/map is unavailable, source-hash or map-hash mismatch is stale,
+  matching malformed JSON is invalid. This certifies the exact published map
+  byte, not a fictional consumer rebuild of transformed/unshipped source;
 - emits every edge `file` workspace-root-relative: a selected-member host edge
   is prefixed by `observation.selected`, and a package edge by its
   materialised slot's workspace-relative path;
 - never writes `specmap.json`.
 
-`vibe-trace` may depend on `vibe-workspace` for the shared slot-record reader
-and SHA helper. The edge is acyclic (`vibe-workspace` does not depend on
-`vibe-trace`) and is preferable to copying the slot-record/hash grammar.
+`vibe-trace` may depend on `vibe-workspace` for the shared slot-record/SHA
+helpers and on `vibe-safefs` for the identity-bound one-file read. Both edges
+are acyclic and preferable to copying either filesystem grammar. The existing
+streaming `sha256_file` remains streaming; the byte helper serves callers that
+already own exact bytes and parity tests keep one SHA spelling.
 
 ## 3. P1 — JTD and state evolution
 
