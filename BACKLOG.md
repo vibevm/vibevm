@@ -1273,3 +1273,17 @@ structure, and it goes when the file does.
 | @fact:B108-SEVERITY **severity** | P3 |
 | @fact:B108-DISPOSITION **disposition** | `open` — test-harness flake, не product-дефект. Сделать barrier без pre-release wall-clock бюджета либо передавать child exit-reason по каналу, который parent действительно читает; текущий stdout child направлен в null/libtest capture и скрывает причину exit 101 |
 | @fact:B108-FILED **filed by** | независимая приёмка R8.1 receipt portability, 2026-08-27 |
+
+### B-109 — Rust R-001 умеет охранять только один registry-файл одного crate {#b-109}
+
+| поле | значение |
+|---|---|
+| @fact:B109-ANCHOR **anchor** | `conform.toml` `[rust]` R-001 — «cell constructors appear only in the selection registry»; реализация `core-ai-native-conform/src/rules/structure.rs::FlagSites` |
+| @fact:B109-LOCATOR **locator** | `conform.toml:28-29` несёт ровно одну пару `registry_file` + `registry_gated_crate`; `core-ai-native-conform/src/config.rs:226-228` моделирует оба члена как `Option<String>`, а `rust-ai-native-conform/src/lib.rs` строит из них ровно один `FlagSites` |
+| @fact:B109-SEVERITY **severity** | P3 |
+| @fact:B109-DISPOSITION **disposition** | `open` — обобщить Rust-конфигурацию до списка пар registry-file/gated-crate (с громкой миграцией старой одиночной формы), затем перевести `vibe-package-source/src/cells.rs` с временного crate-local exact-set/source-fence RED на общий conform/SARIF-гейт. До этого A15a держит старый гейт на `vibe-cli/src/registry.rs` и отдельно механически охраняет новый registry внутри crate; продуктовая семантика покрыта, долг — в единстве инструмента |
+| @fact:B109-FILED **filed by** | R7.4 A15a extraction `vibe-package-source`, 2026-08-28 |
+
+- @fact:B109-ONE-PAIR-CANNOT-EXPRESS-TWO-HOMES **Почему это ограничение движка, а не неверный config.** После выноса install/source-ячеек существуют два законных дома: `vibe-cli/src/registry.rs` всё ещё строит publish-cell, а `vibe-package-source/src/cells.rs` строит resolver/provider cells. Переставить единственную пару на новый crate означает перестать охранять старый; оставить её на CLI означает, что новый дом общий движок не видит. Никакое значение двух строк TOML не выражает обе пары одновременно.
+- @fact:B109-INTERIM-IS-MECHANICAL-BUT-NOT-UNIFORM **Временная защита реальна, но не равна закрытию.** Новый crate проверяет точный набор зависимостей и сканирует production-source: каждый разрешённый cell-конструктор обязан жить в `cells.rs`, появление его в другом файле краснит тест. Мутация с конструктором в `source.rs` этот RED убила. Однако результат не входит в общий `conform` finding/SARIF и требует отдельного знания, поэтому долг остаётся открытым.
+- @fact:B109-FIX-SHAPE **Форма будущей починки.** Нужна коллекция типизированных пар, а не два параллельных массива: каждая запись атомарно связывает crate с единственным registry-файлом, валидатор отказывает на дубликате crate/пути и строит один `FlagSites` на запись. Старые scalar-ключи должны умереть громко с точным migration hint; молча принимать обе формы означало бы вернуть два источника истины.
