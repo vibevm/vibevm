@@ -153,6 +153,12 @@ ends are canonicalised before relativisation, so a Windows drive-case or 8.3
 entry alias reaches the same workspace node; the persisted value remains the
 portable forward-slashed node rel, never an inode/file-index key. A different
 stored spelling is a mismatch, not something the reader case-folds by guess.
+Persisted bytes are validated AS WRITTEN before any `RelPath` construction:
+the infallible `RelPath::new` normalises backslashes/trailing separators and
+maps the empty string to `"."`, so applying it to attacker-editable state could
+repair a foreign spelling into workspace-root ownership. The state validator
+accepts only raw `"."` or nonempty forward-slashed normal components and never
+normalises a stored identity.
 
 - A newly delegated row requires `run_id` and `selected` together.
 - A pre-R7.4 state with no delegated row remains readable and is refreshed on
@@ -162,9 +168,17 @@ stored spelling is a mismatch, not something the reader case-folds by guess.
 - A prior park owned by another selected node is a typed busy/ownership
   refusal even under CLI force: a member may not silently discard a sibling's
   live handoff. Same-node force/changed-chain displacement keeps the existing
-  supersession behavior.
+  supersession behavior. Foreign-node refusal deliberately does not
+  terminalise or supersede the owning node's trace.
 - `select_run_identity` adopts only when mode, force, requested, complete
   chain, selected node, valid run id and a delegated row all agree.
+- The CLI derives selected identity once from its already prepared workspace
+  snapshot and carries it beside the prelude; it never rediscovers merely to
+  answer ownership. A composed clean's mandatory post-wipe rediscovery is a
+  second topology epoch, so its selected node must still equal that carried
+  identity before the remaining phases may proceed. A mismatch is a typed
+  late-boundary refusal that does not erase already reported wipe/scratch
+  effects.
 - `lifecycle_tasks` discovers the workspace from the MCP server's selected
   root and refuses a state owned by another selected node before reading any
   task.
@@ -427,6 +441,12 @@ projection; no surface-conditional wire member or shell subprocess is added.
    even under force.
 3. Delegated legacy state without selected identity refuses; nondelegated
    legacy state remains readable and upgrades on begin.
+   - Invalid raw spellings — especially empty, backslashed, drive-like,
+     leading/trailing/doubled slash and dot-segment forms — refuse rather than
+     being normalised; empty can never become `"."`.
+   - A composed clean whose post-wipe workspace reload maps the selected root
+     to a different node refuses before any remaining phase uses the stale
+     pre-wipe identity.
 
 ### `lifecycle_tasks`
 
