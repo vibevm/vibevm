@@ -11636,8 +11636,8 @@
       "item_kind": "fn",
       "line": 58,
       "symbol": "vibe_lifecycle::state::io::read_prior",
-      "end_line": 80,
-      "fingerprint": "tok1:da4acbfccbce2e41216fcd4dfe19eb488820a95222bc8fa61436ec0fab48411f"
+      "end_line": 74,
+      "fingerprint": "tok1:a4ee8a25ea0b298bc266f49cdf3ac439b88ea8574c88cdd56a4d45b3af1d79f1"
     },
     {
       "crate_name": "vibe-lifecycle",
@@ -11665,6 +11665,33 @@
       "symbol": "vibe_lifecycle::state::store::LifecycleStateStore::record_slot_continuation",
       "end_line": 274,
       "fingerprint": "tok1:7d8bcb6eaa64a98a9c5366b095e6aeff7d64c5bbb82a7e373b4cf72aec695e50"
+    },
+    {
+      "crate_name": "vibe-lifecycle",
+      "file": "crates/vibe-lifecycle/src/state/tasks.rs",
+      "item_kind": "mod",
+      "line": 9,
+      "symbol": "vibe_lifecycle::state::tasks",
+      "end_line": 9,
+      "fingerprint": "tok1:c0e7c4a163054bb7c31e63987a146ca3b5a9d9e23ef96db31583140f5dc343eb"
+    },
+    {
+      "crate_name": "vibe-lifecycle",
+      "file": "crates/vibe-lifecycle/src/state/tasks.rs",
+      "item_kind": "enum",
+      "line": 39,
+      "symbol": "vibe_lifecycle::state::tasks::LifecycleTasksError",
+      "end_line": 122,
+      "fingerprint": "tok1:4df520fba43f7b28afdceaf710eeac703d9cc5bd064f4ee5a8c68d99325f1806"
+    },
+    {
+      "crate_name": "vibe-lifecycle",
+      "file": "crates/vibe-lifecycle/src/state/tasks.rs",
+      "item_kind": "fn",
+      "line": 136,
+      "symbol": "vibe_lifecycle::state::tasks::pending_hosted_tasks",
+      "end_line": 192,
+      "fingerprint": "tok1:787ad7518d852e3867c0fc344f3229a2836f0626e0292c31a27b3e4f066ac80e"
     },
     {
       "crate_name": "vibe-lifecycle",
@@ -27445,6 +27472,30 @@
       "line": 248,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-AGENT-RESUME",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-lifecycle/src/state/tasks.rs",
+      "from_symbol": "vibe_lifecycle::state::tasks",
+      "line": 9,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-HANDSHAKE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-lifecycle/src/state/tasks.rs",
+      "from_symbol": "vibe_lifecycle::state::tasks::LifecycleTasksError",
+      "line": 55,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-HANDSHAKE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-lifecycle/src/state/tasks.rs",
+      "from_symbol": "vibe_lifecycle::state::tasks::pending_hosted_tasks",
+      "line": 138,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-HANDSHAKE",
       "verb": "implements"
     },
     {
