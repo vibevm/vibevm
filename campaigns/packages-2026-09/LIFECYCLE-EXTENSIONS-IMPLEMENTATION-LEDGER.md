@@ -199,6 +199,17 @@ than depending on untracked `cache/` archaeology.
   The A4c design also exposed B3: agent output probes must compare only
   `(id,kind,path)` after witnesses become additive, or completed hosted rows
   re-park forever; A4c1 owns that repair with artifact carriage.
+- R7.5 P2/A4c1 artifact evidence: `2cabc7a7` lands exact file-v1 and
+  empty-directory-aware streaming tree-v1 witnesses, per-artifact refusal,
+  ordinary/hosted production baselines, and B3's identity-only hosted probe.
+  Fresh preserves the durable producing baseline while its current re-probe
+  lives in an invocation-local typed map for A5; the first implementation that
+  overwrote W1 by W2 was rejected despite green tests because it made external
+  mutation match itself. Corrected E5 proves W1 remains durable, W2/refusal is
+  current, legacy absence is not upgraded and a witnessed hosted row converges
+  on invocation three. Root passed 292 lifecycle tests / 3 ignored + 15
+  doctests, strict clippy, workspace check and conform 0 new. A4 measurement
+  is complete; A5 consumes the transient/current plus durable/baseline halves.
 - Gate repair `67ab9683` fixes the conform content store's Windows cache slot:
   `sha256:<hex>` had created 1,393 NTFS alternate streams on one base file and
   failed with OS error 665. Authored engine + six vendored copies now use one
@@ -305,7 +316,7 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 | R7.2 CLI agent handler + output contract | done | `26929050`; strict AgentResult JTD, prepared prompt/world resolution, ResultPlan, optional provider path, create/install/reinstall/update e2e and shared safe filesystem cell |
 | R7.3 hosted outbox/delegated resume | done | `1dd5e1f5`, generated reports `eae4494e`; durable run/outbox, exact task ownership, candidate-state atomicity, phase/slot reconciliation, command-level progress, no-spend sequential resume and independent final freeze |
 | R7.4 MCP lifecycle surfaces | done | architecture `ee2bc67f`; first wave `94f30aa9`, `88600508`, `87c2bab8`, `daf6eb31`, `17d94f8f`; A4 `31ca1e7d` / `0225ce41` / `970520d4`; A5 `7e330974` / `93177db6`; A6 `7bd335e2` / `b3ff308c`, `e1121d9b`, `b4d91749`, `8debdf2e`, `c82012c3`; A7–A8 tasks cut `cf5ec17d`, `ee741f2e` / `d338e880`, `30534ff9` / `7b9732f0`, `df678d7b` / `c62177fe`; A0–A8 panel `a4253de7` all green; A9 ports `5506cf88` / `9732ba38` / `18a797b2`; A10 projection `53e84790`; A11 plan `2560ee57` / `78ea8cc5`; A12 application `053b7e37` / `ba874cdf`; A13 trace `3f01e2dc` / `afdd3adc`; A14 selected-world prompt resolver `cd793ca9` / `2b08c818`; A15a package source `5df76260` / `23044cfd`, selected-member repair `da2ff985`, B-109 `b615ebe5`; A15b two-stage lease-first default command `0ef2f8f5` / `a4336ea2`, scoped clean debt B-110 `fc279fbe`; A15c hosted backend `1027ca5e`, strict MCP run/parity `9c340df8`, map `a0276a0d`, selected-resolver debt B-111 `65b145f0`; full-panel ratchet decision `602ef5e8`, Windows mandatory-lock repair `9fc6c2bb` / map `6f074e66`. Final panel on exact tree `6f074e66` ran 54 dynamic gates: workspace tests + clippy, host check 0 errors, conform 27 known / 0 new, clean codegen/specmap/wire, all package/MCP suites, both user-home tripwires and markup 508/0; ordered tail `self-check: all green` |
-| R7.5 external orchestration substrate | in progress | P0 `41abb4db`…`e8e67280`; P1 `6d843467`, `d3a9d59b`, `55937044`; P2/A1 `1dac7531` / `65b0cba6`; A2 one-read/query/authority `5fb4246d`, `6a300cf8`, `a1095d8e` with maps `ba9a38f5`, `0d1fa300`, `5b7231ee`; A3 adapter `ea031767` / `c33ddda2`, trust laws/maps `500f7b62`, `8ff9fdf7`, `8a05d344`; A4a inputs `c3e51139` / `172c854d`; A4b stable declaration/input state `5b01d71c`; A4c0 streaming artifact primitive `d24de1ff`; Windows conform-store repair `67ab9683`. Lifecycle 255+15, safefs 97+10, strict clippy/conform/workspace check green; specmap 6819/2241/2010 at zero suspects/orphans/unresolved. A4c1 artifact witnesses/B3 then A5 reconciliation next. No byte cap, whole-tree hashing, fingerprint relabelling, prose, `unmet`, duplicate evidence command, coding agent, heuristic or automatic loop |
+| R7.5 external orchestration substrate | in progress | P0 `41abb4db`…`e8e67280`; P1 `6d843467`, `d3a9d59b`, `55937044`; P2/A1 `1dac7531` / `65b0cba6`; A2 one-read/query/authority `5fb4246d`, `6a300cf8`, `a1095d8e` with maps `ba9a38f5`, `0d1fa300`, `5b7231ee`; A3 adapter `ea031767` / `c33ddda2`, trust laws/maps `500f7b62`, `8ff9fdf7`, `8a05d344`; A4a inputs `c3e51139` / `172c854d`; A4b stable declaration/input state `5b01d71c`; A4c0 streaming primitive `d24de1ff`; A4c1 artifact baselines/current map + B3 `2cabc7a7`; Windows conform-store repair `67ab9683`. Lifecycle 292+15, safefs 97+10, strict clippy/conform/workspace check green; specmap 6820/2247/2016 at zero suspects/orphans/unresolved. A4 complete; A5 reconciliation/report funnel next. No byte cap, whole-tree hashing, fingerprint relabelling, prose, `unmet`, duplicate evidence command, coding agent, heuristic or automatic loop |
 
 R7 live Z.AI smoke is now conclusive (2026-08-27): central `vibe create`
 called the official OpenAI-compatible coding endpoint with `glm-5-turbo`, read
@@ -825,8 +836,8 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
    may consume those facts to understand which requirements remain unmet and
    where to move; lifecycle supplies evidence, never that choice. **R7.5 P0
    and P1 complete; P2 query/relations, A4a/A4b input measurement and A4c0
-   streaming artifact substrate complete; A4c1 carriage and A5 reconciliation
-   next, then P3 surfaces/e2e.** No agent policy or auto-loop.
+   streaming artifact substrate and A4c1 baseline/current carriage complete;
+   A5 reconciliation next, then P3 surfaces/e2e.** No agent policy or auto-loop.
 
 ### Lane C — artifact/build/package/deploy (parallel, manifest edits serialized)
 
