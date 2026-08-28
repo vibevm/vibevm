@@ -343,7 +343,12 @@
       `os error 5` publication failure. Run the gate unpiped, or redirect its
       output, capture the child status immediately (`$?` / `$LASTEXITCODE` /
       `PIPESTATUS[0]` as appropriate), and inspect the saved output afterward.
-      A green-looking suffix with a masked parent failure is no verdict.
+      PowerShell cmdlet/conversion errors are non-terminating by default, so a
+      gate such as XML parsing first sets `$ErrorActionPreference = 'Stop'`
+      (or uses `-ErrorAction Stop`); otherwise it can print an error, continue
+      into a hand-written “clean” line and even commit invalid XML — observed
+      and repaired on 2026-08-28. A green-looking suffix with a masked parent
+      failure is no verdict.
       </PIPELINE-EXIT-GUARD>
       <NO-WORKER-FULL-PANEL fact="true" status="spec/done">A worker never runs
       the full panel. It runs the narrow self-verify named by its packet. The
