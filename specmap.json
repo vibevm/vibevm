@@ -19260,7 +19260,7 @@
       "line": 20,
       "symbol": "vibe_workspace::vibedeps::build_ignore::ensure_build_output_ignores",
       "end_line": 62,
-      "fingerprint": "tok1:948862fc132e39492cba329fec8574b334aecb604acc94fc349622524c72df23"
+      "fingerprint": "tok1:2126b06955f37325af3bee9c4f6c2d4725649e07d03417e3346b1abcbec8fd18"
     },
     {
       "crate_name": "vibe-workspace",
@@ -19275,9 +19275,9 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/vibedeps/build_ignore/tests.rs",
       "item_kind": "fn",
-      "line": 187,
+      "line": 209,
       "symbol": "vibe_workspace::vibedeps::build_ignore::tests::a_directory_at_the_file_path_is_refused",
-      "end_line": 194,
+      "end_line": 216,
       "fingerprint": "tok1:94b5778aa2b9c55c17fda8281efc4d4a5504fbef5a1228cf8b67eb8c0ca4706b"
     },
     {
@@ -19293,19 +19293,28 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/vibedeps/build_ignore/tests.rs",
       "item_kind": "fn",
-      "line": 196,
+      "line": 218,
       "symbol": "vibe_workspace::vibedeps::build_ignore::tests::a_hardlinked_file_is_refused_without_mutating_its_alias",
-      "end_line": 208,
+      "end_line": 230,
       "fingerprint": "tok1:f783500a82c5e6e1eedea50c741affbdc2e8e5087b121a0ac010eb379efc4fb8"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/vibedeps/build_ignore/tests.rs",
       "item_kind": "fn",
-      "line": 248,
+      "line": 270,
       "symbol": "vibe_workspace::vibedeps::build_ignore::tests::a_symbolic_link_at_the_file_path_is_refused",
-      "end_line": 264,
+      "end_line": 286,
       "fingerprint": "tok1:ab893798ec231d14fccd13fe642c0907d7fc56c9eec54a2edbacfc809ee1a27d"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/vibedeps/build_ignore/tests.rs",
+      "item_kind": "fn",
+      "line": 140,
+      "symbol": "vibe_workspace::vibedeps::build_ignore::tests::an_optimistic_read_defers_while_a_cooperating_writer_holds_the_file_lock",
+      "end_line": 160,
+      "fingerprint": "tok1:2db653a46e875cba00f52546d15a79d51b66268f1d7182a84b45fa2fb7a56993"
     },
     {
       "crate_name": "vibe-workspace",
@@ -19347,27 +19356,27 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/vibedeps/build_ignore/tests.rs",
       "item_kind": "fn",
-      "line": 266,
+      "line": 288,
       "symbol": "vibe_workspace::vibedeps::build_ignore::tests::git_ignores_nested_rust_and_node_build_outputs",
-      "end_line": 305,
+      "end_line": 327,
       "fingerprint": "tok1:620590b4ae37cfdd7342a05547077e85a795c97433b7991d197c6ea1163a76e1"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/vibedeps/build_ignore/tests.rs",
       "item_kind": "fn",
-      "line": 140,
+      "line": 162,
       "symbol": "vibe_workspace::vibedeps::build_ignore::tests::later_negation_forces_both_managed_rules_back_to_the_effective_suffix",
-      "end_line": 185,
+      "end_line": 207,
       "fingerprint": "tok1:93584c451b6951832ea5424f524b7724a18c467ff5eabe9b2f7dcb1f02a9c9fc"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/vibedeps/build_ignore/tests.rs",
       "item_kind": "fn",
-      "line": 307,
+      "line": 329,
       "symbol": "vibe_workspace::vibedeps::build_ignore::tests::managed_eof_suffix_reasserts_after_specific_operator_reinclusions",
-      "end_line": 366,
+      "end_line": 388,
       "fingerprint": "tok1:7b29e93ddb8b0cfe6e9878513456b094fa64a647057b98b8fb597c08aef15b9e"
     },
     {
@@ -35550,7 +35559,7 @@
     {
       "file": "crates/vibe-workspace/src/vibedeps/build_ignore/tests.rs",
       "from_symbol": "vibe_workspace::vibedeps::build_ignore::tests::a_directory_at_the_file_path_is_refused",
-      "line": 188,
+      "line": 210,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IN-SLOT-BUILD",
       "verb": "verifies"
@@ -35566,7 +35575,7 @@
     {
       "file": "crates/vibe-workspace/src/vibedeps/build_ignore/tests.rs",
       "from_symbol": "vibe_workspace::vibedeps::build_ignore::tests::a_hardlinked_file_is_refused_without_mutating_its_alias",
-      "line": 197,
+      "line": 219,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IN-SLOT-BUILD",
       "verb": "verifies"
@@ -35574,7 +35583,15 @@
     {
       "file": "crates/vibe-workspace/src/vibedeps/build_ignore/tests.rs",
       "from_symbol": "vibe_workspace::vibedeps::build_ignore::tests::a_symbolic_link_at_the_file_path_is_refused",
-      "line": 249,
+      "line": 271,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IN-SLOT-BUILD",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-workspace/src/vibedeps/build_ignore/tests.rs",
+      "from_symbol": "vibe_workspace::vibedeps::build_ignore::tests::an_optimistic_read_defers_while_a_cooperating_writer_holds_the_file_lock",
+      "line": 142,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IN-SLOT-BUILD",
       "verb": "verifies"
@@ -35614,7 +35631,7 @@
     {
       "file": "crates/vibe-workspace/src/vibedeps/build_ignore/tests.rs",
       "from_symbol": "vibe_workspace::vibedeps::build_ignore::tests::git_ignores_nested_rust_and_node_build_outputs",
-      "line": 267,
+      "line": 289,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IN-SLOT-BUILD",
       "verb": "verifies"
@@ -35622,7 +35639,7 @@
     {
       "file": "crates/vibe-workspace/src/vibedeps/build_ignore/tests.rs",
       "from_symbol": "vibe_workspace::vibedeps::build_ignore::tests::later_negation_forces_both_managed_rules_back_to_the_effective_suffix",
-      "line": 141,
+      "line": 163,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IN-SLOT-BUILD",
       "verb": "verifies"
@@ -35630,7 +35647,7 @@
     {
       "file": "crates/vibe-workspace/src/vibedeps/build_ignore/tests.rs",
       "from_symbol": "vibe_workspace::vibedeps::build_ignore::tests::managed_eof_suffix_reasserts_after_specific_operator_reinclusions",
-      "line": 308,
+      "line": 330,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IN-SLOT-BUILD",
       "verb": "verifies"
