@@ -128,9 +128,27 @@ fronts currently in flight. A worker report or old worktree is never completion.
                   codegen/specmap/wire-diff, every package/MCP gate and markup
                   508 files / 0 warnings green. Boundary repairs landed as
                   `4ecd2cc5`, `21567b6c`, `a4253de7` before the final rerun.
-      - [ ] A9–A15: ports-in-place, one `vibe-orchestrator` application
-            service, credential-free prompt resolution and hosted/no-spend
-            `lifecycle_run` parity.
+      - [x] A9 ports-in-place (`5506cf88`, `9732ba38`, `18a797b2`): the
+            distinct direct-install/lifecycle quiet stream policies are
+            characterised; `RunObserver`, per-decision `ConfirmGate` and lazy
+            package `ResolverFactory` preserve every byte/error boundary.
+      - [x] A10 projection dependency cut (`53e84790`): CLI lifecycle/skill
+            code consumes `vibe-agent-projection` directly; MCP retains only
+            compatibility re-exports.
+      - [x] A11 surface-neutral plan carrier (`2560ee57`, `78ea8cc5`): the
+            new conform-gated `vibe-orchestrator` owns exactly the eight
+            neutral plan fields behind an exact dependency RED; `[llm]`
+            remains in a temporary CLI wrapper and no provider/model/token
+            configuration crosses the lower boundary.
+      - [ ] A12 atomic move-and-rewire: prepared world, dispatch/phase/direct
+            callback and shared install execution behind neutral resolver,
+            observer, confirmation, agent and measured-failure ports; one
+            final planner, no CLI/MCP/LLM back-edge.
+      - [ ] A13 trace-funnel values move while CLI presentation remains.
+      - [ ] A14 credential-free prompt resolution moves into
+            `vibe-lifecycle::agent` with zero provider construction.
+      - [ ] A15 strict hosted/no-spend MCP `lifecycle_run`, executed-failure
+            structure and cross-surface parity; then the R7.4 full panel.
 - [ ] **R7.5** — neutral external work-loop substrate: structured verification
       evidence bound to exact tree/artifact/run identity; optional read-only
       spec-IR facts (`stable id + status + provenance + unmet/stale`); CLI/MCP

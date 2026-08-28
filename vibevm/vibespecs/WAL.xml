@@ -12,9 +12,12 @@
     passed three claudez audits plus an independent Opus/max adjudication.
     The disjoint characterization, bounded-read, JTD, typed-output and
     projection atoms are landed and exactly gated. Pinned transactional state
-    I/O plus bounded safefs post-publication verification are landed after
-    independent Opus review; lease/selected ownership and the read-only tasks adapter
-    follow before the shared orchestrator/run adapter.
+    I/O, lease/selected ownership and the read-only tasks adapter are green
+    under the first coherent panel. A9 execution ports, A10 lower projection
+    imports and A11's exact-four-dependency `vibe-orchestrator` plan carrier are
+    now landed; `[llm]` remains physically CLI-owned, so provider/model/token
+    configuration has not entered the shared layer. The atomic A12 core move
+    precedes trace/prompt/run adapters.
     The owner-approved neutral R7.5 external-work substrate follows R7.4.
     </WAL-PHASE></p>
   </current-phase>
@@ -126,10 +129,11 @@
 
   <next title="Next">
     <p><WAL-NEXT fact="true" status="impl/work">The accepted R7.4
-    architecture, first parallel wave, A4 state transaction, A5 outermost
-    lease, A6 selected-node ownership and A7–A8 `lifecycle_tasks` cut are
-    landed and green under their coherent full panel. Extract the shared
-    orchestrator and land `lifecycle_run`. Follow with R7.5 exact evidence,
+    architecture through A11 is landed: state/lease/selected/tasks, three
+    execution ports, the lower projection dependency and a surface-neutral
+    orchestrator plan value. Complete the single-planner A12 core move, A13
+    trace values, A14 credential-free prompt resolver and A15 hosted
+    `lifecycle_run`, then run the R7.4 boundary panel. Follow with R7.5 exact evidence,
     optional read-only spec-IR facts and a fake external PDSA orchestrator — no
     embedded agent policy. Resume R4 registry/transforms after those neutral
     adapters, per the implementation ledger.</WAL-NEXT></p>
