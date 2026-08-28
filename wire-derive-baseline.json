@@ -8,11 +8,11 @@
     "vibe-core": 31,
     "vibe-facts": 2,
     "vibe-index": 27,
-    "vibe-mcp": 6,
+    "vibe-mcp": 7,
     "vibe-publish": 3,
     "vibe-registry": 7,
     "vibe-trace": 3,
-    "vibe-wire": 1,
+    "vibe-wire": 2,
     "vibe-workspace": 3,
     "xtask": 12
   }
