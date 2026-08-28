@@ -135,6 +135,16 @@ Extract the third caller rather than copy CLI-private logic:
 
 No sync/reconcile/write API is called by R7.5.
 
+The scanner implements that frozen root-based signature directly. It uses the
+public `vibe-core` layout spellings to walk the host/package source root,
+excludes the generated boot INDEX/static lane, loads either Markdown or XML
+through `vibe_specdoc::load_spec_text`, and mints the address through
+`vibe_spec::canonical_doc_path`. It does not read a slot record or derived
+manifest: materialisation changes only a spec document's extension, while the
+canonical document path strips that extension, so source and materialised
+output have one address. This keeps `vibe-facts` independent of
+`vibe-workspace` and also covers in-place package slots that have no record.
+
 ### 2.2 `vibe-requirements` additions
 
 The new crate owns:

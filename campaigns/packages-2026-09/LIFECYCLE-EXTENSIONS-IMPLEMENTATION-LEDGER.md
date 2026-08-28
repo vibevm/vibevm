@@ -142,6 +142,17 @@ than depending on untracked `cache/` archaeology.
   clippy clean; 48-schema codegen idempotent; specmap has zero gated orphans;
   the sixth independent freeze ended in `PASS` after two root-owned truth-tail
   fixes.
+- R7.5 P1 wire evidence on the current tree: normative coherence amendment
+  `6d843467`, generated/schema/validator/corpus atom `d3a9d59b`, specmap
+  `55937044`. The root independently passed all 245 `vibe-wire` tests, strict
+  `vibe-wire`/xtask clippy, conform 27 known / 0 new, post-commit
+  `check-codegen`, `wire-diff`, host check 0 errors, markup 508/0 and specmap
+  6814 units / 2218 tagged items / 1987 edges with zero suspects, gated
+  orphans or unresolved host edges. The wire carries canonical-decimal byte
+  counts beyond u32, exact measured-witness attribution, portable artifact
+  paths, a four-state base source layer and optional relation enrichment; it
+  ships no source body, heuristic verdict, new evidence command or runtime
+  provider.
 - B-107 is closed by `f8f197cd`/`c195eae1`: all 502 judged records map
   one-to-one to live paths (98 retain their extension; 404 become XML), six new
   unjudged live documents bring the corpus to 508, and all 19,548 verdicts plus
@@ -242,7 +253,7 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 | R7.2 CLI agent handler + output contract | done | `26929050`; strict AgentResult JTD, prepared prompt/world resolution, ResultPlan, optional provider path, create/install/reinstall/update e2e and shared safe filesystem cell |
 | R7.3 hosted outbox/delegated resume | done | `1dd5e1f5`, generated reports `eae4494e`; durable run/outbox, exact task ownership, candidate-state atomicity, phase/slot reconciliation, command-level progress, no-spend sequential resume and independent final freeze |
 | R7.4 MCP lifecycle surfaces | done | architecture `ee2bc67f`; first wave `94f30aa9`, `88600508`, `87c2bab8`, `daf6eb31`, `17d94f8f`; A4 `31ca1e7d` / `0225ce41` / `970520d4`; A5 `7e330974` / `93177db6`; A6 `7bd335e2` / `b3ff308c`, `e1121d9b`, `b4d91749`, `8debdf2e`, `c82012c3`; A7–A8 tasks cut `cf5ec17d`, `ee741f2e` / `d338e880`, `30534ff9` / `7b9732f0`, `df678d7b` / `c62177fe`; A0–A8 panel `a4253de7` all green; A9 ports `5506cf88` / `9732ba38` / `18a797b2`; A10 projection `53e84790`; A11 plan `2560ee57` / `78ea8cc5`; A12 application `053b7e37` / `ba874cdf`; A13 trace `3f01e2dc` / `afdd3adc`; A14 selected-world prompt resolver `cd793ca9` / `2b08c818`; A15a package source `5df76260` / `23044cfd`, selected-member repair `da2ff985`, B-109 `b615ebe5`; A15b two-stage lease-first default command `0ef2f8f5` / `a4336ea2`, scoped clean debt B-110 `fc279fbe`; A15c hosted backend `1027ca5e`, strict MCP run/parity `9c340df8`, map `a0276a0d`, selected-resolver debt B-111 `65b145f0`; full-panel ratchet decision `602ef5e8`, Windows mandatory-lock repair `9fc6c2bb` / map `6f074e66`. Final panel on exact tree `6f074e66` ran 54 dynamic gates: workspace tests + clippy, host check 0 errors, conform 27 known / 0 new, clean codegen/specmap/wire, all package/MCP suites, both user-home tripwires and markup 508/0; ordered tail `self-check: all green` |
-| R7.5 external orchestration substrate | in progress | P0 laws `41abb4db`, foundational vocabulary/present truth `cd9999cc`, frozen dependency/wire/surface/e2e architecture `653a3c32`, map `e8e67280`: declared input manifests and independent artifact witnesses (never arbitrary tree hashing or execution-fingerprint relabelling), five evidence outcomes, four independent requirement axes, optional relations strictly above lifecycle, one future `vibe-requirements` library + CLI/MCP query, no `unmet`, duplicate evidence command, coding agent, task heuristic or automatic loop. XML/host/markup/specmap exact gates green; P1 JTD fragments/state/report + requirements root next |
+| R7.5 external orchestration substrate | in progress | P0 laws `41abb4db`, foundational vocabulary/present truth `cd9999cc`, frozen architecture `653a3c32`, map `e8e67280`; P1 coherence `6d843467`, JTD/state/report/requirements substrate `d3a9d59b`, map `55937044`. P1 freezes canonical declared-input/artifact witnesses, five outcomes, additive strict lifecycle state/report, metadata-only requirements sources/relations and ten closed vocabularies without widening execution status or shipping prose. Root gates: vibe-wire 245/245, check-codegen/wire-diff, conform 27/0, host 0 errors, markup 508/0, specmap 6814/2218/1987 with zero suspects/orphans/unresolved. P2 libraries next; no whole-tree hashing, fingerprint relabelling, `unmet`, duplicate evidence command, coding agent, heuristic or automatic loop |
 
 R7 live Z.AI smoke is now conclusive (2026-08-27): central `vibe create`
 called the official OpenAI-compatible coding endpoint with `glm-5-turbo`, read
@@ -577,6 +588,25 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
     compiler plugin or external ecosystem artifact, never persisted identity
     or a seventh kind. Machine nouns and the six-kind package register stay
     unchanged.
+44. Evidence measurement attribution is an indivisible pair:
+    `measured_run_id` is present exactly when `measured` is present. The status
+    matrix separately makes `unavailable` the only honest no-measurement row.
+    Byte counts use canonical unsigned-decimal strings and are never narrowed
+    through a machine integer; input witnesses carry the file/byte pair while
+    artifact witnesses carry neither.
+45. Requirements base-source identity is the package coordinate with one kind
+    value, not `(kind, package)`: the same coordinate cannot occur once as host
+    and once as package because `relation_sources` keys by coordinate alone
+    and its provenance law must recover exactly one kind. Every relation source
+    binds one enumerated base result; provenance validation never silently
+    skips an unknown source.
+46. The dependency-clean `vibe-facts` extraction keeps the frozen
+    `(source root, package coordinate, source kind)` scanner API. It walks the
+    public `vibe-core` layout, loads Markdown/XML through `vibe-specdoc` and
+    canonicalises the extension away; slot records/derived manifests stay a
+    materialisation optimisation, not an address dependency. This supports
+    in-place package slots without creating a `vibe-facts → vibe-workspace`
+    back-edge.
 
 ## 6. Physical state and loss prevention
 
@@ -698,21 +728,17 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
 2. Feature-level algorithmic enhancement policy (`off/assist/required`) and
    lazy provider/budget accounting where a real enhancement consumes it.
 3. Lifecycle run-id wire; outbox/delegated resume; invoked-by adapter.
-4. MCP run/tasks adapters and standalone/hosted e2e. **R7.4 in progress:**
-   bounded safefs read / wire / ToolOutput / projection / CLI-characterization
-   first wave is landed and exactly gated; pinned transactional state I/O and
-   the outermost cross-process lease, selected-node ownership and the complete
-   final-name-stable optimistic tasks/MCP cut are landed, independently reviewed
-   and green under their coherent full panel; application + trace orchestration
-   are now shared, with prompt resolver + run adapter last.
-   Full panels only at the two coherent boundaries.
+4. MCP run/tasks adapters and standalone/hosted e2e. **R7.4 complete** through
+   A15c and the all-green 54-gate boundary panel; application, trace, prompt,
+   package-source and hosted run composition are shared and exact-run owned.
 5. Neutral external-orchestration evidence/query substrate: exact tree/run
    identity, typed verify gaps/staleness, optional read-only `vibe-specdoc` +
    `vibe-facts` observations/current-specmap relations and
    a fake-orchestrator/PDSA reference scenario. An external long-running agent
    may consume those facts to understand which requirements remain unmet and
-   where to move; lifecycle supplies evidence, never that choice. **Then
-   R7.5.** No agent policy or auto-loop.
+   where to move; lifecycle supplies evidence, never that choice. **R7.5 P0
+   and P1 complete; P2 libraries next, then P3 surfaces/e2e.** No agent policy
+   or auto-loop.
 
 ### Lane C — artifact/build/package/deploy (parallel, manifest edits serialized)
 

@@ -224,9 +224,19 @@ fronts currently in flight. A worker report or old worktree is never completion.
             relabelling, `unmet` synthesis and duplicate evidence commands.
             XML/diff checks, host check 0 errors, markup 508/0 and specmap
             6814/2205/1986 with 0 suspects/orphans/unresolved are green.
-      - [ ] R7.5-P1 wire atom: JTD-first exact evidence identity and metadata-
-            only requirements query; no raw source bodies or heuristic
-            `unmet` boolean.
+      - [x] R7.5-P1 wire atom (`6d843467`, `d3a9d59b`, `55937044`):
+            JTD-first exact evidence identity plus the metadata-only
+            requirements root; canonical-decimal byte counts, additive strict
+            lifecycle state/report, five comparison outcomes, ten closed
+            requirement vocabularies and relational validators. Source
+            coordinates are unique across host/package kinds because relation
+            provenance keys by package alone; every relation source binds a
+            base result, and `measured_run_id` exists exactly with its witness.
+            The permissive report reader drops an injected source-body canary;
+            no raw prose, `unmet` verdict or `ExecutionRecordStatus` widening
+            exists. Root gates: vibe-wire 245/245, check-codegen/wire-diff,
+            conform 27 known/0 new, clippy, host check 0 errors, markup 508/0,
+            specmap 6814/2218/1987 with zero suspects/orphans/unresolved.
       - [ ] R7.5-P2 library atom: read-only `vibe-specdoc` + `vibe-facts`
             projection with optional current-specmap relations; absence is
             typed unavailability/enrichment loss, never lifecycle failure.
