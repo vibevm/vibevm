@@ -50698,7 +50698,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:3778a7cee7e9277cc10f9ddb6a31fdf642286489af4c6e292789f6c4fc66c2a5",
+      "content_hash": "sha256:89931bb8e6ab5af56a86909b3e3b042da1582a4c7b4d18c6b787b26fabe8d3e6",
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "PROP-054 — The vibe lifecycle and the extension machine",
@@ -51193,7 +51193,7 @@
     },
     {
       "anchor": "lifecycle",
-      "content_hash": "sha256:8ad7b4302529f1f0daadc84bcd9b13d121b6ec96753ec1041600c0119f1d84d8",
+      "content_hash": "sha256:eedc972f0b048f194b0700dd8326adb878b2b1733ddbde6acaf7b55b0acccc4d",
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "4. The vibe lifecycle",
@@ -51418,7 +51418,7 @@
     },
     {
       "anchor": "external-orchestration",
-      "content_hash": "sha256:e08de584f5174513d217e9a1aa135146da37e06888eccfb5caf371995407905f",
+      "content_hash": "sha256:2eecd06d1ca96cce6124e63d54984d9e41c71626b0cc67c84a1e56fd4e8ea55d",
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "4.6 The lifecycle is a framework; the development loop is external",
@@ -51436,10 +51436,10 @@
     },
     {
       "anchor": "EXTERNAL-WORK-LOOP",
-      "content_hash": "sha256:b82d5a784dcc840cc7bea6cb8c7b9ed252df4e7372b4529e6c1bebd653509d13",
+      "content_hash": "sha256:daa06847ddbaa6175226fb83b1581ee1ecbef9065b56345331672d2ab3e97184",
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
-      "heading": "**External orchestration is resumable and evidence-driven.** An orchestrator may version intent/specs, invoke one bounded create/verify command through the ordinary CLI or hosted `lifecycle_run`, inspect generated evidence and the optional R7.5 requirements query, then choose to accept, edit, replan, ask a human, invoke another phase or stop. A direct `vibe verify` still obeys `##INVOKE-RUNS-PRIORS` and therefore runs/skips every prior phase, including create; it is not a shortcut around the lifecycle. Every invocation re-reads the actual tree/state; human edits between invocations are ordinary inputs, never corruption of an imaginary uninterrupted agent process. Every query is physically read-only, creates no lifecycle state/lock/outbox, constructs no provider and spends no tokens. Package/deploy run the same linear prior-phase chain and stop on verify failure; they do not trigger an autonomous repair loop. @status:spec/done",
+      "heading": "**External orchestration is resumable and evidence-driven.** An orchestrator may version intent/specs, invoke one bounded create/verify command through the ordinary CLI or hosted `lifecycle_run`, inspect generated evidence and the optional R7.5 requirements query, then choose to accept, edit, replan, ask a human, invoke another phase or stop. A direct `vibe verify` still obeys `##INVOKE-RUNS-PRIORS` and therefore runs/skips every prior phase, including create; it is not a shortcut around the lifecycle. The same law applies to hosted resume: re-invoking the parked phase re-enters its inclusive chain, so a predecessor invalidated by host-written output reruns and remeasures before the delegated row is accepted — this is linear recomputation, not an automatic repair loop. Every invocation re-reads the actual tree/state; human edits between invocations are ordinary inputs, never corruption of an imaginary uninterrupted agent process. Every query is physically read-only, creates no lifecycle state/lock/outbox, constructs no provider and spends no tokens. Package/deploy run the same linear prior-phase chain and stop on verify failure; they do not trigger an autonomous repair loop. @status:spec/done",
       "line": 175,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#EXTERNAL-WORK-LOOP"
     },
@@ -51454,10 +51454,10 @@
     },
     {
       "anchor": "EVIDENCE-SCOPE-IS-DECLARED",
-      "content_hash": "sha256:6c121103eb6045901adb5e5897419aed11f2cd7ac3cf6eb70f7c76202fd57c42",
+      "content_hash": "sha256:7a6df56513354d9da9292b30655daa80d2738e1fc41619e5bf54efac47eb7213",
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
-      "heading": "**A tree witness certifies a declared byte set, not an imaginary atomic filesystem snapshot.** Evidence-bearing work names project-relative input patterns. Vibe hashes a stable, link-free, canonical manifest of the regular files those patterns select (path + bytes, deterministic order, domain-separated algorithm) and records pattern/file/byte counts; absent declaration is typed `unavailable`. The aggregate tree witness is a digest over these per-execution manifests. It never scans or hashes arbitrary build caches, dependency stores, `target/`, `node_modules/` or the whole machine merely to mint identity. A source file that changes while observed yields `unstable`, not a hybrid snapshot blessed as exact. @status:spec/done",
+      "heading": "**A tree witness certifies a declared byte set, not an imaginary atomic filesystem snapshot.** Evidence-bearing work names project-relative input patterns. Vibe hashes a no-follow, single-link, canonical manifest of the regular files those patterns select (path + bytes, deterministic order, domain-separated algorithm) and records pattern/file/byte counts; absent declaration is typed `unavailable`. A file is accepted only when handle identity/length stay equal around two identical bounded reads; any observed disagreement yields `unstable`. This is detection-bound evidence, never a claim that an adversarial writer could not have written the same bytes between observations, and files are not one atomic tree epoch. The aggregate tree witness is a digest over these per-execution manifests. It never scans or hashes arbitrary build caches, dependency stores, `target/`, `node_modules/` or the whole machine merely to mint identity. A detected source change yields `unstable`, not a hybrid read blessed as exact. @status:spec/done",
       "line": 177,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#EVIDENCE-SCOPE-IS-DECLARED"
     },
@@ -51481,10 +51481,10 @@
     },
     {
       "anchor": "EVIDENCE-WIRE-AND-SURFACES",
-      "content_hash": "sha256:f5d3fac1bb69e0d5880664137f1ec3f2cee55846902c5b00e8ea84b50e663941",
+      "content_hash": "sha256:2143e33b8d7e5cf86366b3d8ab5e5c073354777621171d4a2f2d62572a7f64bf",
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
-      "heading": "**JTD owns the evidence wire once.** One generated verification-evidence member is produced by the lifecycle library and attached to the existing generated `LifecycleReport` whenever verify actually reconciles evidence. CLI `vibe verify --json` and MCP `lifecycle_run({phase:\"verify\"})` return that same member; terminal text is a projection. Per-execution input measurements and artifact witnesses live in generated lifecycle state so a park/resume and a second invocation compare the same durable claims. Neither surface rebuilds, reinterprets or conditionally reshapes the member. @status:spec/done",
+      "heading": "**JTD owns the evidence wire once.** One generated verification-evidence member is produced by the lifecycle library and attached to the existing generated `LifecycleReport` whenever verify actually reconciles evidence. CLI `vibe verify --json` and MCP `lifecycle_run({phase:\"verify\"})` return that same member; terminal text is a projection. Per-execution input measurements and artifact witnesses live in generated lifecycle state so a park/resume and a second invocation compare the same durable claims. `evidence_id` is SHA-256 under the domain `vibe-verification-evidence-id\\0epoch=1\\0` over every member except itself and `observed_at`, using the existing length-framed field primitive in schema order, canonical-decimal numbers/counts, wire enum spellings and explicit optional-presence bits — never Rust layout or JSON key/pretty-print order. Neither surface rebuilds, reinterprets or conditionally reshapes the member. @status:spec/done",
       "line": 180,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#EVIDENCE-WIRE-AND-SURFACES"
     },
@@ -51517,10 +51517,10 @@
     },
     {
       "anchor": "REFERENCE-PDSA",
-      "content_hash": "sha256:c00464d9fd890c11ebcf3b711fbb3ec75af3756c4ccd5f9cc48d37c922208775",
+      "content_hash": "sha256:946a430bf9d76b5f6f3c8e8653f95cebd80e67957a1caff1c0be14026d824549",
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
-      "heading": "**Non-normative reference scenario — PDSA, not an engine state machine.** Plan = human/agent intent and specs; Do = one bounded create/edit attempt; Study = verify plus whatever deterministic tools the orchestrator selects; Act = the external decision to accept, revise, replan, ask or abandon. Non-normative is structural: none of these four names may become a phase, enum variant, state-machine member, wire field, CLI verb or automatic transition. R7.5 proves composition with a fake external process that invokes only normal lifecycle control and read-only requirements metadata, including the two-invocation stale→recompute scenario. This demonstrates a common AI-assisted workflow without privileging it over TDD, issue→PR, pair programming, research spikes or another plugin-defined process. @status:spec/done",
+      "heading": "**Non-normative reference scenario — PDSA, not an engine state machine.** Plan = human/agent intent and specs; Do = one bounded create/edit attempt; Study = verify plus whatever deterministic tools the orchestrator selects; Act = the external decision to accept, revise, replan, ask or abandon. Non-normative is structural: none of these four names may become a phase, enum variant, state-machine member, wire field, CLI verb or automatic transition. R7.5 proves composition with a fake external process that invokes only normal lifecycle control and read-only requirements metadata through two adjacent oracles: hosted park/resume may match after the inclusive chain reruns invalidated deterministic predecessors, while a local create that changes a previously measured input later in one uninterrupted invocation produces stale and only an external second invocation recomputes it. This demonstrates a common AI-assisted workflow without privileging it over TDD, issue→PR, pair programming, research spikes or another plugin-defined process. @status:spec/done",
       "line": 184,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REFERENCE-PDSA"
     },
