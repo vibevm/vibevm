@@ -213,9 +213,17 @@ fronts currently in flight. A worker report or old worktree is never completion.
       query/control surfaces; fake external PDSA orchestrator RED. Lifecycle
       contains no Plan/Act policy, automatic loop, task choice or LLM
       dependency; the reference long-running agent is a future campaign.
-      - [ ] R7.5-P0 spec atom: tighten PROP-054 evidence/optional-provider
-            laws and reconcile the older PROP-000/boot/VIBEVM-SPEC vocabulary
-            ban with the owner-approved lifecycle/phase/plugin vocabulary.
+      - [x] R7.5-P0 spec atom (`41abb4db`, `cd9999cc`, `653a3c32`,
+            `e8e67280`): PROP-054 now owns declared-input/artifact/run evidence,
+            the five-value comparison vocabulary, four independent requirement
+            observations, optional relations, external-only PDSA and explicit
+            LLM enhancement modes; foundational vocabulary admits lifecycle/
+            phase/plugin without widening the six package kinds. The frozen
+            P0–P3 architecture creates one `vibe-requirements` library and one
+            query, rejecting whole-tree hashing, execution-fingerprint
+            relabelling, `unmet` synthesis and duplicate evidence commands.
+            XML/diff checks, host check 0 errors, markup 508/0 and specmap
+            6814/2205/1986 with 0 suspects/orphans/unresolved are green.
       - [ ] R7.5-P1 wire atom: JTD-first exact evidence identity and metadata-
             only requirements query; no raw source bodies or heuristic
             `unmet` boolean.

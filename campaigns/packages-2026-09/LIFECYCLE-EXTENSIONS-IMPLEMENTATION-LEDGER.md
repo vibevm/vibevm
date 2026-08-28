@@ -242,7 +242,7 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 | R7.2 CLI agent handler + output contract | done | `26929050`; strict AgentResult JTD, prepared prompt/world resolution, ResultPlan, optional provider path, create/install/reinstall/update e2e and shared safe filesystem cell |
 | R7.3 hosted outbox/delegated resume | done | `1dd5e1f5`, generated reports `eae4494e`; durable run/outbox, exact task ownership, candidate-state atomicity, phase/slot reconciliation, command-level progress, no-spend sequential resume and independent final freeze |
 | R7.4 MCP lifecycle surfaces | done | architecture `ee2bc67f`; first wave `94f30aa9`, `88600508`, `87c2bab8`, `daf6eb31`, `17d94f8f`; A4 `31ca1e7d` / `0225ce41` / `970520d4`; A5 `7e330974` / `93177db6`; A6 `7bd335e2` / `b3ff308c`, `e1121d9b`, `b4d91749`, `8debdf2e`, `c82012c3`; A7–A8 tasks cut `cf5ec17d`, `ee741f2e` / `d338e880`, `30534ff9` / `7b9732f0`, `df678d7b` / `c62177fe`; A0–A8 panel `a4253de7` all green; A9 ports `5506cf88` / `9732ba38` / `18a797b2`; A10 projection `53e84790`; A11 plan `2560ee57` / `78ea8cc5`; A12 application `053b7e37` / `ba874cdf`; A13 trace `3f01e2dc` / `afdd3adc`; A14 selected-world prompt resolver `cd793ca9` / `2b08c818`; A15a package source `5df76260` / `23044cfd`, selected-member repair `da2ff985`, B-109 `b615ebe5`; A15b two-stage lease-first default command `0ef2f8f5` / `a4336ea2`, scoped clean debt B-110 `fc279fbe`; A15c hosted backend `1027ca5e`, strict MCP run/parity `9c340df8`, map `a0276a0d`, selected-resolver debt B-111 `65b145f0`; full-panel ratchet decision `602ef5e8`, Windows mandatory-lock repair `9fc6c2bb` / map `6f074e66`. Final panel on exact tree `6f074e66` ran 54 dynamic gates: workspace tests + clippy, host check 0 errors, conform 27 known / 0 new, clean codegen/specmap/wire, all package/MCP suites, both user-home tripwires and markup 508/0; ordered tail `self-check: all green` |
-| R7.5 external orchestration substrate | missing | owner ruling reaffirmed 2026-08-28: structured exact-tree/artifact/run evidence + optional read-only facts keyed by full `spec://…#fact`; status-bearing source is `vibe-specdoc` + consumer `vibe-facts`, current specmap relations are optional; external long-running agents may use separately typed observations to choose direction, while lifecycle contains no coding agent, task heuristic or automatic loop |
+| R7.5 external orchestration substrate | in progress | P0 laws `41abb4db`, foundational vocabulary/present truth `cd9999cc`, frozen dependency/wire/surface/e2e architecture `653a3c32`, map `e8e67280`: declared input manifests and independent artifact witnesses (never arbitrary tree hashing or execution-fingerprint relabelling), five evidence outcomes, four independent requirement axes, optional relations strictly above lifecycle, one future `vibe-requirements` library + CLI/MCP query, no `unmet`, duplicate evidence command, coding agent, task heuristic or automatic loop. XML/host/markup/specmap exact gates green; P1 JTD fragments/state/report + requirements root next |
 
 R7 live Z.AI smoke is now conclusive (2026-08-27): central `vibe create`
 called the official OpenAI-compatible coding endpoint with `glm-5-turbo`, read
@@ -543,6 +543,40 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
     neutral outcome into its generated lifecycle root in A15c. Clean itself is
     not exposed over MCP. Its pre-wipe/post-wipe composer remains a named,
     mechanically fenced debt B-110 rather than a forgeable generic setter.
+39. LLM enhancement mode and agent workload are different types of choice.
+    A core subsystem enhancement defaults `off`, offers explicit
+    `off|assist|required`, preserves its algorithmic implementation and binds a
+    provider only at the lazy paid step. An explicitly activated
+    `handler=agent` contribution has no algorithmic twin: it executes, parks or
+    fails honestly; provider presence still activates nothing.
+40. Verification identity is scoped exact, not a repository hash and not an
+    alias for the execution freshness fingerprint. The latter also includes
+    requested chain, mode, world and accumulated artifacts. R7.5 refactors one
+    declared-input walk to return both values: a canonical link-free input
+    manifest and the existing command-specific fingerprint. Artifacts carry
+    independent file/tree witnesses. Arbitrary caches/dependency stores are
+    never hashed merely to mint identity.
+41. Evidence comparison has exactly five words:
+    `matched|stale|missing|unavailable|unstable`; only matched passes. Command
+    success and verify-handler outcome stay separate. Authoring status,
+    consumer adoption, optional relation-provider state/provenance and exact
+    lifecycle evidence are also independent observations. No `unmet`,
+    `fulfilled`, `verified` or boolean equivalent exists; their join is
+    external orchestration policy.
+42. Requirements is one new library capability, not a CLI/MCP composition.
+    `vibe-requirements` sits above `vibe-workspace`/`vibe-facts`, owns the
+    generated report and accepts an optional relation-provider trait;
+    `vibe-trace` implements the current/carried specmap adapter without any
+    lifecycle/specmap Cargo edge. CLI `vibe requirements` and MCP
+    `requirements_query` are thin. Evidence remains on existing
+    `vibe verify --json` / `lifecycle_run(verify)`; separate evidence commands
+    are rejected as an identity/timing split.
+43. The prototype terminology ban is superseded narrowly. `lifecycle` and
+    `phase` are canonical VibeVM terms; `goal` remains prior-art. `plugin` is a
+    human umbrella for a package-supplied extension/mechanism implementation,
+    compiler plugin or external ecosystem artifact, never persisted identity
+    or a seventh kind. Machine nouns and the six-kind package register stay
+    unchanged.
 
 ## 6. Physical state and loss prevention
 
