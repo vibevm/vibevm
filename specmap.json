@@ -14363,6 +14363,78 @@
       "fingerprint": "tok1:668f2bac9cb28dee4db8ccb25acafc8096f2b5b2c40ff1604578c0db522e0c4a"
     },
     {
+      "crate_name": "vibe-requirements",
+      "file": "crates/vibe-requirements/src/lib.rs",
+      "item_kind": "mod",
+      "line": 57,
+      "symbol": "vibe_requirements",
+      "end_line": 57,
+      "fingerprint": "tok1:d1de19b63e0a8cdb6a2a5ff9def97b374762a6cf81b3031e96d12bbd453f1e48"
+    },
+    {
+      "crate_name": "vibe-requirements",
+      "file": "crates/vibe-requirements/src/digest.rs",
+      "item_kind": "mod",
+      "line": 18,
+      "symbol": "vibe_requirements::digest",
+      "end_line": 18,
+      "fingerprint": "tok1:d1de19b63e0a8cdb6a2a5ff9def97b374762a6cf81b3031e96d12bbd453f1e48"
+    },
+    {
+      "crate_name": "vibe-requirements",
+      "file": "crates/vibe-requirements/src/error.rs",
+      "item_kind": "enum",
+      "line": 10,
+      "symbol": "vibe_requirements::error::QueryError",
+      "end_line": 102,
+      "fingerprint": "tok1:50e975e67221518b8c4b8134004f04bc400dda8134c652c4b84467bfc4eab3c2"
+    },
+    {
+      "crate_name": "vibe-requirements",
+      "file": "crates/vibe-requirements/src/provider.rs",
+      "item_kind": "mod",
+      "line": 14,
+      "symbol": "vibe_requirements::provider",
+      "end_line": 14,
+      "fingerprint": "tok1:63feb12960cf10b19e8aecc081d03f7a5732d118583df545977b12dfec7b3704"
+    },
+    {
+      "crate_name": "vibe-requirements",
+      "file": "crates/vibe-requirements/src/query.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_requirements::query",
+      "end_line": 3,
+      "fingerprint": "tok1:d1de19b63e0a8cdb6a2a5ff9def97b374762a6cf81b3031e96d12bbd453f1e48"
+    },
+    {
+      "crate_name": "vibe-requirements",
+      "file": "crates/vibe-requirements/src/rows.rs",
+      "item_kind": "mod",
+      "line": 4,
+      "symbol": "vibe_requirements::rows",
+      "end_line": 4,
+      "fingerprint": "tok1:d1de19b63e0a8cdb6a2a5ff9def97b374762a6cf81b3031e96d12bbd453f1e48"
+    },
+    {
+      "crate_name": "vibe-requirements",
+      "file": "crates/vibe-requirements/src/sources.rs",
+      "item_kind": "mod",
+      "line": 4,
+      "symbol": "vibe_requirements::sources",
+      "end_line": 4,
+      "fingerprint": "tok1:d1de19b63e0a8cdb6a2a5ff9def97b374762a6cf81b3031e96d12bbd453f1e48"
+    },
+    {
+      "crate_name": "vibe-requirements",
+      "file": "crates/vibe-requirements/src/text.rs",
+      "item_kind": "mod",
+      "line": 9,
+      "symbol": "vibe_requirements::text",
+      "end_line": 9,
+      "fingerprint": "tok1:d1de19b63e0a8cdb6a2a5ff9def97b374762a6cf81b3031e96d12bbd453f1e48"
+    },
+    {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/lib.rs",
       "item_kind": "trait",
@@ -31003,6 +31075,70 @@
       "line": 34,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#mirror",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-requirements/src/lib.rs",
+      "from_symbol": "vibe_requirements",
+      "line": 57,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#FACT-QUERY-CONTRACT",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-requirements/src/digest.rs",
+      "from_symbol": "vibe_requirements::digest",
+      "line": 18,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#FACT-QUERY-CONTRACT",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-requirements/src/error.rs",
+      "from_symbol": "vibe_requirements::error::QueryError",
+      "line": 19,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#FACT-QUERY-CONTRACT",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-requirements/src/provider.rs",
+      "from_symbol": "vibe_requirements::provider",
+      "line": 14,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OPTIONAL-IR-FACT-EVIDENCE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-requirements/src/query.rs",
+      "from_symbol": "vibe_requirements::query",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#FACT-QUERY-CONTRACT",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-requirements/src/rows.rs",
+      "from_symbol": "vibe_requirements::rows",
+      "line": 4,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#FACT-QUERY-CONTRACT",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-requirements/src/sources.rs",
+      "from_symbol": "vibe_requirements::sources",
+      "line": 4,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#FACT-QUERY-CONTRACT",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-requirements/src/text.rs",
+      "from_symbol": "vibe_requirements::text",
+      "line": 9,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#FACT-QUERY-CONTRACT",
       "verb": "implements"
     },
     {
