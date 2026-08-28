@@ -248,8 +248,16 @@ fronts currently in flight. A worker report or old worktree is never completion.
                   deterministic duplicates/order and all adoption states are
                   RED-proven; 16 unit + 8 doctest + 6 CLI integrations green,
                   clippy/conform/specmap clean.
-            - [ ] P2-A2/A3: shared `vibe-requirements` query/provider and the
-                  current/carried `vibe-trace` adapter.
+            - [x] P2-A2/A3: one-read witness seam (`5fb4246d`, `ba9a38f5`),
+                  shared `vibe-requirements` query/provider (`6a300cf8`,
+                  `0d1fa300`), lock authority (`a1095d8e`, `5b7231ee`) and the
+                  current/carried `vibe-trace` adapter (`ea031767`,
+                  `c33ddda2`; trust laws `500f7b62`, `8ff9fdf7`, map
+                  `8a05d344`). Three length-framed digest recipes, four source
+                  states, one provider call, library-owned provenance,
+                  namespace/slot-record/source-hash/map-byte ladder and real
+                  query fact-edge are RED-proven; query 37+3, trace 57+8,
+                  workspace 449, strict clippy/conform/workspace check green.
             - [ ] P2-A4/A5: one-pass measurement/artifact witnesses and verify
                   reconciliation/report funnel under the corrected hosted-vs-
                   stale laws (`1898382d`, `7a5b6837`).

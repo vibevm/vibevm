@@ -162,6 +162,19 @@ than depending on untracked `cache/` archaeology.
   scanner uses the shared MD/XML projection and pair-collision law, excludes
   generated boot lanes, supports in-place slots without slot-record or
   `vibe-workspace` coupling and ships no source body.
+- R7.5 P2/A2-A3 evidence: one-read raw/projection/registry witnesses
+  `5fb4246d` / map `ba9a38f5`; shared query/provider and exact three-digest
+  recipes `6a300cf8` / map `0d1fa300`; lock content authority
+  `a1095d8e` / map `5b7231ee`; current/carried adapter `ea031767` / map
+  `c33ddda2`, with normative trust refinements `500f7b62`, `8ff9fdf7` /
+  `8a05d344`. Root gates passed 37 query lib + 3 doctests, 57 trace lib + 8
+  doctests, all 449 workspace tests, strict three-crate clippy, conform 27
+  known / 0 new and workspace all-target check. The current map is built once
+  under an exact namespace; carried bytes require lock hash → slot source hash
+  → owned map row → capability no-follow/single-link one-byte hash+parse.
+  Today's installed slots carry no map and therefore report honest
+  unavailable; `vibe specmap` is the existing producer for packages that ship
+  one.
 - B-107 is closed by `f8f197cd`/`c195eae1`: all 502 judged records map
   one-to-one to live paths (98 retain their extension; 404 become XML), six new
   unjudged live documents bring the corpus to 508, and all 19,548 verdicts plus
@@ -262,7 +275,7 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 | R7.2 CLI agent handler + output contract | done | `26929050`; strict AgentResult JTD, prepared prompt/world resolution, ResultPlan, optional provider path, create/install/reinstall/update e2e and shared safe filesystem cell |
 | R7.3 hosted outbox/delegated resume | done | `1dd5e1f5`, generated reports `eae4494e`; durable run/outbox, exact task ownership, candidate-state atomicity, phase/slot reconciliation, command-level progress, no-spend sequential resume and independent final freeze |
 | R7.4 MCP lifecycle surfaces | done | architecture `ee2bc67f`; first wave `94f30aa9`, `88600508`, `87c2bab8`, `daf6eb31`, `17d94f8f`; A4 `31ca1e7d` / `0225ce41` / `970520d4`; A5 `7e330974` / `93177db6`; A6 `7bd335e2` / `b3ff308c`, `e1121d9b`, `b4d91749`, `8debdf2e`, `c82012c3`; A7–A8 tasks cut `cf5ec17d`, `ee741f2e` / `d338e880`, `30534ff9` / `7b9732f0`, `df678d7b` / `c62177fe`; A0–A8 panel `a4253de7` all green; A9 ports `5506cf88` / `9732ba38` / `18a797b2`; A10 projection `53e84790`; A11 plan `2560ee57` / `78ea8cc5`; A12 application `053b7e37` / `ba874cdf`; A13 trace `3f01e2dc` / `afdd3adc`; A14 selected-world prompt resolver `cd793ca9` / `2b08c818`; A15a package source `5df76260` / `23044cfd`, selected-member repair `da2ff985`, B-109 `b615ebe5`; A15b two-stage lease-first default command `0ef2f8f5` / `a4336ea2`, scoped clean debt B-110 `fc279fbe`; A15c hosted backend `1027ca5e`, strict MCP run/parity `9c340df8`, map `a0276a0d`, selected-resolver debt B-111 `65b145f0`; full-panel ratchet decision `602ef5e8`, Windows mandatory-lock repair `9fc6c2bb` / map `6f074e66`. Final panel on exact tree `6f074e66` ran 54 dynamic gates: workspace tests + clippy, host check 0 errors, conform 27 known / 0 new, clean codegen/specmap/wire, all package/MCP suites, both user-home tripwires and markup 508/0; ordered tail `self-check: all green` |
-| R7.5 external orchestration substrate | in progress | P0 laws `41abb4db`, foundational vocabulary `cd9999cc`, architecture `653a3c32`, map `e8e67280`; P1 coherence `6d843467`, JTD/state/report/requirements `d3a9d59b`, map `55937044`; P2/A1 facts extraction `1dac7531`, map `65b0cba6`; hosted/stale and measurement/failure-funnel correction `1898382d`, map `7a5b6837`. P1 root gates: vibe-wire 245/245, check-codegen/wire-diff, conform 27/0, host 0 errors, markup 508/0. A1: 16 unit + 8 doctest + 6 CLI, strict clippy/conform, specmap 6814/2220/1989 with zero suspects/orphans/unresolved. A2 query/provider next; no whole-tree hashing, fingerprint relabelling, prose, `unmet`, duplicate evidence command, coding agent, heuristic or automatic loop |
+| R7.5 external orchestration substrate | in progress | P0 `41abb4db`…`e8e67280`; P1 `6d843467`, `d3a9d59b`, `55937044`; P2/A1 `1dac7531` / `65b0cba6`; A2 one-read/query/authority `5fb4246d`, `6a300cf8`, `a1095d8e` with maps `ba9a38f5`, `0d1fa300`, `5b7231ee`; A3 adapter `ea031767` / `c33ddda2`, trust laws/maps `500f7b62`, `8ff9fdf7`, `8a05d344`. Query 37+3, trace 57+8, workspace 449, strict clippy/conform/workspace check green; specmap 6814/2230/1999 with zero suspects/orphans/unresolved. A4 measurement then A5 reconciliation next. No whole-tree hashing, fingerprint relabelling, prose, `unmet`, duplicate evidence command, coding agent, heuristic or automatic loop |
 
 R7 live Z.AI smoke is now conclusive (2026-08-27): central `vibe create`
 called the official OpenAI-compatible coding endpoint with `glm-5-turbo`, read
@@ -632,6 +645,25 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
     the generated comparison must survive stale-stop and later-handler-failure
     carriers. `evidence_id` is one schema-order length-framed digest, never a
     JSON/Rust-layout hash.
+49. Requirements source bytes are read once below the query: the pivot projects
+    caller-owned raw text, facts returns only `{path,bytes,sha256}` witnesses,
+    and registry parses the same bytes it witnesses. Source/scope/observation
+    ids have distinct domains and labeled length frames; run-id moves the
+    observation, clock does not, registry bytes move source scope. Malformed
+    lock/registry abort, orphaned wins over missing slot when entries survive.
+50. RelationProvider returns only `Available|Stale|Unavailable|Invalid` and
+    address-associated edges. The query library derives current/carried and
+    provenance from source kind, validates provider shape through the wire
+    owner's edge grammar and emits explicit not-requested rows when disabled.
+    Surfaces inject the optional lifecycle run id; the metadata crate has no
+    lifecycle/specmap/LLM/network dependency.
+51. Carried relation authority is lock hash → slot-record source hash → exact
+    owned `package.specmap.json` row → one capability-relative no-follow,
+    single-link, identity-rechecked byte that is both hashed and parsed. This
+    proves the published map byte without rebuilding transformed/private
+    source. Host config namespace must equal its coordinate; all edge files are
+    workspace-root-relative. The legacy streaming payload hasher remains
+    streaming; an in-memory byte twin is parity-pinned.
 
 ## 6. Physical state and loss prevention
 
