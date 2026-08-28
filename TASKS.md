@@ -178,9 +178,18 @@ fronts currently in flight. A worker report or old worktree is never completion.
                   member-resume root regression is fixed independently in
                   `da2ff985`; multi-registry conform debt is B-109
                   (`b615ebe5`).
-            - [ ] A15b lease-first high-level command API: compute the
-                  inclusive chain below the surfaces, preserve one selected
-                  snapshot/identity/trace and rewire the CLI default path.
+            - [x] A15b lease-first high-level command API (`0ef2f8f5`,
+                  `a4336ea2`): opaque lease stage → surface policy load →
+                  prepared command; inclusive chain, selected snapshot,
+                  identity, metadata and `PhaseRun` are lower-owned and
+                  unforgeable. CLI default verbs are parse→call→classify→render
+                  with one family classifier and a retained lease through
+                  trace/render. Central review repaired false-positive
+                  zero-source/clean/privacy REDs; 111 unit + 70 doctest + 4
+                  compile-fail, 588 CLI unit, exact golden/lease/member/lifecycle,
+                  strict clippy/conform/specmap are green. Deliberately excluded
+                  clean-composer convergence is recorded as B-110 (`fc279fbe`),
+                  before any second clean surface may exist.
             - [ ] A15c hosted backend and strict MCP tool: shared real package
                   source, no-spend agent canary, generated success/park/failure
                   root, cross-surface parity and the full R7.4 panel.
