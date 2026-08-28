@@ -629,6 +629,11 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
   `main`, its nine unique reports/corrections were archived, and the last warm
   worktree returned **66,787,222,941 bytes**. The registry was pruned and only
   `main` remains.
+- The complete R7.4 checkpoint through `77752cd8` was then mirrored
+  fast-forward-only to GitVerse and GitHub (main + tags, both targets synced).
+  Only `main` is registered. After every A15c/panel finding was classified into
+  code/tests, B-111 and this ledger, the two exact untracked report caches were
+  reclaimed (52,638 bytes); no product or unique decision lived there.
 
 ## 7. Dependency plan and parallel lanes
 

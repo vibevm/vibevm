@@ -177,8 +177,10 @@
       correction and future commits resolve anchors before citing them.
       </WAL-I-CITATION>
       <WAL-I-PUBLICATION fact="true" status="impl/done">The complete R3.4
-      checkpoint `2bb53f95` plus tags is mirrored ff-only to GitVerse and
-      GitHub. The next batch repeats the same rollout after its green panel.
+      checkpoint `2bb53f95` and the complete R7.4 checkpoint through
+      `77752cd8`, plus tags, are mirrored ff-only to GitVerse and GitHub. Both
+      targets reported synced; the next coherent batch repeats the same
+      rollout after its green panel.
       </WAL-I-PUBLICATION>
     </facts>
   </known-issues>
