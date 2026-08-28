@@ -203,6 +203,11 @@ fn state_corpus_round_trips_generated_semantics_and_exact_build_chain() {
         state.run.run_id.as_deref(),
         Some("00112233445566778899aabbccddeeff"),
     );
+    assert_eq!(
+        state.run.selected.as_deref(),
+        Some("members/tool"),
+        "a delegated corpus is authored by a member node in the new epoch",
+    );
     let row = &state.execution["org.demo/provider#announce"];
     assert_eq!(row.status, ExecutionRecordStatus::Ok);
     assert_eq!(row.duration_ms, 12);
@@ -217,6 +222,10 @@ fn state_corpus_round_trips_generated_semantics_and_exact_build_chain() {
 /// phase is one the run header's requested chain actually contains, and its
 /// task lives under the header's own run id), and that a pre-R7.3 file (no
 /// `run_id`, no `tasks` anywhere) still parses through the strict reader.
+/// The legacy file is idle (no delegated row), so it is also the pre-A6
+/// compatibility proof: it carries no `selected` and reads it as `None`. A
+/// delegated legacy state is deliberately NOT blessed here — A6's semantic
+/// validator owns refusing that combination.
 #[test]
 fn state_carries_delegated_tasks_under_a_run_id_and_still_reads_pre_r73_files() {
     let state: LifecycleState = read("state.json");
@@ -253,5 +262,9 @@ fn state_carries_delegated_tasks_under_a_run_id_and_still_reads_pre_r73_files() 
     });
     let legacy: LifecycleState = serde_json::from_value(pre_r73).unwrap();
     assert_eq!(legacy.run.run_id, None);
+    assert_eq!(
+        legacy.run.selected, None,
+        "a legacy idle state parses without `selected` and yields None",
+    );
     assert!(legacy.execution.values().all(|row| row.tasks.is_empty()));
 }

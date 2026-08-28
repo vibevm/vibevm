@@ -118,6 +118,7 @@ impl LifecycleStateStore {
                     chain,
                     requested,
                     run_id: (!run_id.is_empty()).then_some(run_id),
+                    selected: None,
                     // An adopted run inherits the slot continuation it owes;
                     // a fresh one starts with none, exactly as it starts with
                     // no delegated rows.

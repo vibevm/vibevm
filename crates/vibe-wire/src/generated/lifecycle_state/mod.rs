@@ -128,6 +128,13 @@ pub struct StateRun {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub run_id: Option<String>,
 
+    /// Portable workspace-relative RelPath ("." or member rel) of the selected
+    /// node that authored the run. Written by every post-A6 begin; required
+    /// with any delegated row by the later semantic validator; absent only in
+    /// legacy/pre-A6 state with no delegated row.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub selected: Option<String>,
+
     /// The unfinished slot-lifecycle continuation this run owes, recorded
     /// BEFORE the first pre-install callback and cleared when the slot run
     /// completes. Present only while a slot-scoped row is delegated; absent in

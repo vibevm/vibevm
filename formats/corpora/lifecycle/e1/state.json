@@ -4,7 +4,8 @@
     "requested": "create",
     "chain": ["validate", "install", "generate", "build", "test", "create"],
     "started": "2026-08-25T12:00:00Z",
-    "run_id": "00112233445566778899aabbccddeeff"
+    "run_id": "00112233445566778899aabbccddeeff",
+    "selected": "members/tool"
   },
   "execution": {
     "org.demo/provider#announce": {
