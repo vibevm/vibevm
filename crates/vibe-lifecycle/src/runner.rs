@@ -1,6 +1,6 @@
 //! One canonical envelope/fingerprint/state/handler transition.
 
-use std::collections::BTreeSet;
+use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
 use std::sync::{Arc, Mutex};
 use std::time::Instant;
@@ -21,6 +21,8 @@ use crate::{
     ContributionOutcome, DispatchError, ExecutionSession, HandlerExecution, LifecycleStateStore,
     RunMetadata, preparation_error_fingerprint_for_identity,
 };
+
+mod observations;
 
 /// A shared run is passed through install's slot callbacks and rebound after
 /// the durable-world barrier before normal phase dispatch.
@@ -81,6 +83,10 @@ pub struct LifecycleRun {
     force: bool,
     run_id: String,
     parked: Option<Delegation>,
+    /// The CURRENT half of the artifact comparison, keyed by artifact id.
+    /// Transient by construction — see [`observations`] for why folding it
+    /// into the durable baseline would kill E5.
+    artifact_observations: BTreeMap<String, crate::artifacts::observe::WitnessOutcome>,
     /// The workspace's mutation lease, retained for the run's whole life on
     /// BOTH the tracked and the untracked path — the same `Arc` share of the
     /// ONE acquisition the command boundary made, never a reacquisition.
@@ -113,6 +119,7 @@ impl LifecycleRun {
             force: metadata.force,
             run_id,
             parked: None,
+            artifact_observations: BTreeMap::new(),
             session: Some(ExecutionSession::new(project, world, metadata)),
             state: Some(state),
             _lease: lease,
@@ -136,6 +143,7 @@ impl LifecycleRun {
             force: metadata.force,
             run_id,
             parked: None,
+            artifact_observations: BTreeMap::new(),
             session: Some(ExecutionSession::new(project, world, metadata)),
             state: None,
             _lease: lease,
@@ -288,17 +296,31 @@ impl LifecycleRun {
                     .unwrap_or(false)
         });
         if let Some(prior) = prior {
+            // A fresh skip is NOT a producer. It re-observes the current
+            // object into this invocation's transient map and checkpoints the
+            // prior rows byte-for-byte — witness, run id and absence alike.
+            //
+            // Overwriting the baseline with the current reading is exactly the
+            // defect E5 names: verify would then compare W2 against W2 and
+            // report `matched` after an external mutation. The mirror move is
+            // just as wrong — a current success may not upgrade a legacy
+            // unwitnessed row into a baseline nobody produced.
+            let observer = crate::artifacts::observe::ArtifactObserver::new(&envelope.project.root);
+            let artifacts = prior.artifacts.clone();
+            for artifact in &artifacts {
+                self.observe_artifact(&observer, &artifact.id, &artifact.path);
+            }
             self.session
                 .as_mut()
                 .ok_or(LifecycleRunError::Unbound)?
-                .hydrate_artifacts(phase, &prior.artifacts);
+                .hydrate_artifacts(phase, &artifacts);
             self.state
                 .as_mut()
                 .ok_or(LifecycleRunError::UntrackedCheckpoint)?
                 .checkpoint(
                     key,
                     ExecutionRecord {
-                        artifacts: prior.artifacts.clone(),
+                        artifacts: artifacts.clone(),
                         duration_ms: 0,
                         fingerprint,
                         phase: phase.into(),
@@ -318,7 +340,7 @@ impl LifecycleRun {
                 envelope,
                 status: ExecutionRecordStatus::Fresh,
                 message: None,
-                artifacts: prior.artifacts,
+                artifacts,
                 streams: HandlerStreams::default(),
                 delegation: None,
             });
@@ -404,19 +426,28 @@ impl LifecycleRun {
             ReplyStatus::Skip => ExecutionRecordStatus::Skip,
             ReplyStatus::Fail => unreachable!("dispatch rejects fail replies"),
         };
+        // The reply NAMES the artifact; the witness is what the filesystem
+        // says is actually there. Probed after the handler returned and before
+        // the one execution-record checkpoint below, so the witness rides that
+        // same transaction — no second file, no second crash window.
+        //
+        // This IS a production boundary, so the one observation becomes both
+        // the durable baseline and this invocation's current reading.
+        let observer =
+            crate::artifacts::observe::ArtifactObserver::new(&outcome.envelope.project.root);
         let artifacts = outcome
             .reply
             .artifacts
             .iter()
-            .map(|artifact| StateArtifact {
-                id: artifact.id.clone(),
-                kind: artifact.kind.clone(),
-                path: artifact.path.clone(),
-                // The reply names the artifact; witnessing it is the R7.5
-                // P2 measurement pass, which probes the path itself rather
-                // than trusting what the handler said about it.
-                witness: None,
-                measured_run_id: None,
+            .map(|artifact| {
+                let outcome = self.observe_artifact(&observer, &artifact.id, &artifact.path);
+                crate::artifacts::observe::state_row(
+                    &self.run_id,
+                    artifact.id.clone(),
+                    artifact.kind.clone(),
+                    artifact.path.clone(),
+                    &outcome,
+                )
             })
             .collect::<Vec<_>>();
         self.state

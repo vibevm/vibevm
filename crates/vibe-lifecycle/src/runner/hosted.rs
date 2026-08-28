@@ -70,7 +70,27 @@ impl LifecycleRun {
                 // `self` mutably, and the record this resume is judged against
                 // must not be a live borrow into the map being rewritten.
                 let prior = prior.clone();
-                let artifacts = prior.artifacts.clone();
+                // The host's bytes enter durable state ONLY here, so this IS
+                // the acceptance boundary: the witness taken now becomes the
+                // baseline, under the adopting run id, and never an inherited
+                // one (a parked row's planned rows carry none by construction).
+                let observer =
+                    crate::artifacts::observe::ArtifactObserver::new(&envelope.project.root);
+                let artifacts = prior
+                    .artifacts
+                    .iter()
+                    .map(|artifact| {
+                        let outcome =
+                            self.observe_artifact(&observer, &artifact.id, &artifact.path);
+                        crate::artifacts::observe::state_row(
+                            &self.run_id,
+                            artifact.id.clone(),
+                            artifact.kind.clone(),
+                            artifact.path.clone(),
+                            &outcome,
+                        )
+                    })
+                    .collect::<Vec<_>>();
                 self.session
                     .as_mut()
                     .ok_or(LifecycleRunError::Unbound)?

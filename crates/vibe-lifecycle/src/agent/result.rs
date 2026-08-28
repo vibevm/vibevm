@@ -190,10 +190,19 @@ impl ResultPlan {
 /// exactly the acceptance the contract promised.
 ///
 /// The recorded rows must equal the rows the contract *would* produce —
-/// ordered, and in every field. Comparing ids alone would let a tampered
-/// `path` (including one pointing outside the project) or a tampered `kind`
-/// survive into the hydrated envelope, where a later contribution would treat
-/// it as a real artifact this run produced.
+/// ordered, and in every field of their **stable identity**. Comparing ids
+/// alone would let a tampered `path` (including one pointing outside the
+/// project) or a tampered `kind` survive into the hydrated envelope, where a
+/// later contribution would treat it as a real artifact this run produced.
+///
+/// The comparison is `(id, kind, path)` and deliberately NOT the whole row.
+/// A `StateArtifact` also carries the additive evidence pair — the content
+/// witness and the run that took it — which a satisfied resume writes and a
+/// planned row, being a contract rather than an observation, never has. Whole-
+/// row equality would therefore make an execution reject its OWN recorded
+/// output the moment it was witnessed, re-parking a completed row forever:
+/// exactly the non-convergence the hosted branch exists to prevent. Evidence
+/// describes the output; it does not define which output was promised.
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-FINGERPRINT")]
 pub fn probe_outputs(
     project_root: &Path,
@@ -201,7 +210,12 @@ pub fn probe_outputs(
     recorded: &[StateArtifact],
 ) -> bool {
     let expected = contract.planned_state_rows(&machine_path(project_root));
-    if recorded != expected.as_slice() {
+    if recorded.len() != expected.len()
+        || !recorded
+            .iter()
+            .zip(&expected)
+            .all(|(recorded, expected)| identity(recorded) == identity(expected))
+    {
         return false;
     }
     let Ok(project) = vibe_safefs::Project::open(project_root) else {
@@ -210,6 +224,12 @@ pub fn probe_outputs(
     contract.rows().iter().all(|row| {
         project.probe_regular_nonempty(row.path()) == vibe_safefs::Presence::RegularNonEmpty
     })
+}
+
+/// The stable half of an artifact row: what it claims to be, not what some
+/// invocation observed about it.
+fn identity(artifact: &StateArtifact) -> (&str, &str, &str) {
+    (&artifact.id, &artifact.kind, &artifact.path)
 }
 
 /// Never hide partial state. Three separate facts, because they answer three

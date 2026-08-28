@@ -17,6 +17,8 @@
 use std::path::{Component, Path};
 
 use specmark::spec;
+
+pub(crate) mod observe;
 use vibe_wire::generated::lifecycle::e1::context::Artifact;
 use vibe_wire::generated::lifecycle::e1::reply::ReplyArtifact;
 
@@ -234,3 +236,11 @@ fn truncated(value: &str) -> String {
 #[cfg(test)]
 #[path = "artifacts/tests.rs"]
 mod tests;
+
+#[cfg(test)]
+#[path = "artifacts/observe_tests.rs"]
+mod observe_tests;
+
+#[cfg(test)]
+#[path = "artifacts/observe_refusal_tests.rs"]
+mod observe_refusal_tests;

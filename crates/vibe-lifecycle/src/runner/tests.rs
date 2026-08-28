@@ -41,6 +41,11 @@ mod selected_owner;
 #[path = "tests/measurement.rs"]
 mod measurement;
 
+/// The artifact-witness carriage and hosted-convergence reds (R7.5 P2/A4c1).
+#[cfg(test)]
+#[path = "tests/artifacts.rs"]
+mod artifacts;
+
 const RUN_ID: &str = "00112233445566778899aabbccddeeff";
 const KEY: &str = "org.demo/tools#produce";
 
@@ -174,6 +179,16 @@ fn world_fixture(root: &Path) -> World {
 
 fn state(root: &Path) -> LifecycleState {
     toml::from_str(&fs::read_to_string(root.join(".vibe/lifecycle.toml")).unwrap()).unwrap()
+}
+
+/// Put a hand-edited record back, so a test can stage a state shape only an
+/// OLDER writer could have produced — a pre-R7.5 row with no witness, say.
+fn write_state(root: &Path, state: &LifecycleState) {
+    fs::write(
+        root.join(".vibe/lifecycle.toml"),
+        toml::to_string(state).unwrap(),
+    )
+    .unwrap();
 }
 
 fn write_declared_outputs(root: &Path) {
