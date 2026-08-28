@@ -50868,7 +50868,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:c2aaaa4c87606a5370a9c0cf9e0a30adb19ae1c404f34f388697ac1dabb6490f",
+      "content_hash": "sha256:4d82ca90132429254742a4cbd94feb1151ac25462012b05f979b3dbff7d68b7d",
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "PROP-054 — The vibe lifecycle and the extension machine",
@@ -51363,7 +51363,7 @@
     },
     {
       "anchor": "lifecycle",
-      "content_hash": "sha256:3338cef47b49d54159327e46fe422f13d6fe829f24e06d36dc592ba6444e8681",
+      "content_hash": "sha256:a642620bb3f4c2ef0977538fe370e2cf2a03edc6be814647f758b62b155ce0c6",
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "4. The vibe lifecycle",
@@ -51588,7 +51588,7 @@
     },
     {
       "anchor": "external-orchestration",
-      "content_hash": "sha256:2a674d0e8a9cfb9d25eaea5b485189e8ed6684464efed4832a11a471a1ea5439",
+      "content_hash": "sha256:ff9cbdde9f4c75b649be2eb24f822526a80e1b90a89050a2df6d8cf2ed9c2d26",
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "4.6 The lifecycle is a framework; the development loop is external",
@@ -51660,10 +51660,10 @@
     },
     {
       "anchor": "OPTIONAL-IR-FACT-EVIDENCE",
-      "content_hash": "sha256:d92acf1667aa2ce96316e74d063e9565d563eb3f46c30495113e41925cab3d00",
+      "content_hash": "sha256:a3a2abba3f8fdde705b109d69479c1d3ab4f14f8a01a82e342739f6310f8ac86",
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
-      "heading": "**Requirements metadata is an optional read-only observation source for external agents.** Identity is always the full `spec://<group>/<package>/<path>#<fact>` address. Status-bearing sources are exactly `vibe-specdoc` authoring markers and the consumer-owned `vibe-facts` adoption overlay. Compiler IR and specmap do not author status. Current project specmap data and carried package maps may enrich rows with typed relations; their absence or inability to prove freshness is typed enrichment loss and never changes lifecycle execution or evidence. A current host map is built once in memory only when its configured namespace equals the selected host coordinate. A carried package map is never trusted by presence/mtime or rebuilt from possibly unshipped transformed source: the provider receives the lock-selected content hash/root, requires the slot record's source hash to match, requires that record to own `package.specmap.json`, hashes the file against that row, then parses it; absent record/map is unavailable, either hash mismatch is stale and matching malformed JSON is invalid. This proves the exact published carried-map byte. Relation-provider outcomes never choose wire provenance — the query library derives it from source kind — and all emitted edge files are workspace-root-relative (selected-node prefix for host, slot prefix for package). @status:spec/done",
+      "heading": "**Requirements metadata is an optional read-only observation source for external agents.** Identity is always the full `spec://<group>/<package>/<path>#<fact>` address. Status-bearing sources are exactly `vibe-specdoc` authoring markers and the consumer-owned `vibe-facts` adoption overlay. Compiler IR and specmap do not author status. Current project specmap data and carried package maps may enrich rows with typed relations; their absence or inability to prove freshness is typed enrichment loss and never changes lifecycle execution or evidence. A current host map is built once in memory only when its configured namespace equals the selected host coordinate. A carried package map is never trusted by presence/mtime or rebuilt from possibly unshipped transformed source: the provider receives the lock-selected content hash/root, requires the slot record's source hash to match, requires that record to own `package.specmap.json`, then performs one capability-relative no-follow/single-link read whose exact bytes are hashed against the row and parsed without reopening; absent record/map is unavailable, either hash mismatch is stale and matching malformed JSON is invalid. This proves the exact published carried-map byte. Relation-provider outcomes never choose wire provenance — the query library derives it from source kind — and all emitted edge files are workspace-root-relative (selected-node prefix for host, slot prefix for package). @status:spec/done",
       "line": 181,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OPTIONAL-IR-FACT-EVIDENCE"
     },
