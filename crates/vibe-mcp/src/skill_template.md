@@ -84,6 +84,13 @@ Tools:
   with its declaring package and the author's own description. Takes no
   arguments. A project with nothing installed returns an empty list, not
   an error.
+- **`lifecycle_tasks()`** — read the exact durable hosted-agent handoff for
+  this selected workspace node. It takes no arguments and returns generated
+  structured status `absent`, `idle`, or `parked`; a parked result carries
+  each exact bounded UTF-8 task document in lifecycle order. Complete the
+  task(s), then call `lifecycle_tasks()` again to observe the transition. The
+  tool is read-only, creates no lifecycle state/lock, enumerates no outbox and
+  never calls an LLM provider.
 - **`query_package(name)`** — returns the lockfile entry for an
   installed package: kind, name, version, content_hash, registry,
   source_url, source_ref, resolved_commit, files_written, features,

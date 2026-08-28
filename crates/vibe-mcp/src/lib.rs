@@ -9,11 +9,9 @@
 //!   for stdio servers).
 //! - MCP message shapes — `initialize` handshake, `tools/list`,
 //!   `tools/call` — modelled as plain Rust types serialised via serde.
-//! - Five tools (see [`tools::default_tools`]): `query_package` (lockfile
-//!   metadata), `read_subskill` and `materialise_subskill` (subskill
-//!   content for an activated package), `agentic_explain` (the
-//!   PROP-018 in-project inference transport), and `explain` (the
-//!   PROP-014 traceability lookup over this project's tree).
+//! - Built-in tools (see [`tools::default_tools`]) for lockfile/package
+//!   queries, subskills, installed runnable tools, traceability, agentic
+//!   instructions, and the exact durable `lifecycle_tasks` handoff.
 //!
 //! ## Architecture
 //!
@@ -195,12 +193,23 @@ pub enum ToolError {
     )]
     Core(#[from] vibe_core::Error),
 
+    /// The read-only lifecycle-task operation refused. Boxed so its rich
+    /// typed path/task variants do not inflate every MCP tool result.
+    #[error(transparent)]
+    LifecycleTasks(Box<vibe_lifecycle::LifecycleTasksError>),
+
     #[error(
         "internal error: {0} \
          (violates spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools; \
           fix: this is a server-side invariant break — report it)"
     )]
     Internal(String),
+}
+
+impl From<vibe_lifecycle::LifecycleTasksError> for ToolError {
+    fn from(error: vibe_lifecycle::LifecycleTasksError) -> Self {
+        Self::LifecycleTasks(Box::new(error))
+    }
 }
 
 /// The MCP server itself. Construct with a `ServerContext` and a

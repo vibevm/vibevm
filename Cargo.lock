@@ -4252,6 +4252,7 @@ dependencies = [
  "tracing",
  "vibe-agent-projection",
  "vibe-core",
+ "vibe-lifecycle",
  "vibe-safefs",
  "vibe-trace",
  "vibe-wire",

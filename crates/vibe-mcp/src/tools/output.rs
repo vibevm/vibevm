@@ -182,7 +182,7 @@ mod tests {
     #[test]
     fn ok_stores_the_pre_seam_text_at_construction() {
         let obj = ToolOutput::ok(serde_json::json!({ "a": 1 }));
-        assert_eq!(obj.is_error(), false);
+        assert!(!obj.is_error());
         assert_eq!(obj.text(), "{\n  \"a\": 1\n}");
         assert_eq!(obj.structured(), &serde_json::json!({ "a": 1 }));
 
@@ -196,7 +196,7 @@ mod tests {
     #[test]
     fn executed_failure_requires_and_keeps_its_text() {
         let failed = ToolOutput::executed_failure(serde_json::json!({ "a": 1 }), "typed chain");
-        assert_eq!(failed.is_error(), true);
+        assert!(failed.is_error());
         assert_eq!(failed.text(), "typed chain");
         assert_eq!(failed.structured(), &serde_json::json!({ "a": 1 }));
     }
@@ -208,7 +208,7 @@ mod tests {
         let (structured, text, is_error) = out.into_parts();
         assert_eq!(structured, serde_json::json!({ "a": 1 }));
         assert_eq!(text, "typed chain");
-        assert_eq!(is_error, true);
+        assert!(is_error);
     }
 
     // --- the executed-structured-failure dispatch arm ----------------------

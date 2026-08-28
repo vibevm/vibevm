@@ -20,6 +20,8 @@ vibe-workspace.workspace = true
 vibe-agent-projection.workspace = true
 # The shared capability-relative, no-follow project filesystem cell.
 vibe-safefs.workspace = true
+# Read-only lifecycle state/outbox projection for the MCP hosted-task surface.
+vibe-lifecycle.workspace = true
 vibe-wire.workspace = true
 # The `explain` MCP tool is a thin surface over the shared `vibe-trace`
 # capability, which both the MCP tool and the `vibe explain` CLI call.
