@@ -3840,37 +3840,37 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/lifecycle/agent.rs",
       "item_kind": "struct",
-      "line": 48,
+      "line": 40,
       "symbol": "vibe_cli::commands::lifecycle::agent::CliAgentBackend",
-      "end_line": 52,
-      "fingerprint": "tok1:4409da02eb3def4b7544a3f5c6fb069ea66c1426591009a4762330c4406ea18d"
+      "end_line": 44,
+      "fingerprint": "tok1:d6c9cdc94afe9b6e7a1935842c19db063adde5056849d34d38cdf19e89a3575e"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/lifecycle/agent.rs",
       "item_kind": "fn",
-      "line": 119,
+      "line": 83,
       "symbol": "vibe_cli::commands::lifecycle::agent::CliAgentBackend::complete",
-      "end_line": 138,
+      "end_line": 102,
       "fingerprint": "tok1:8b0cacb208f3827ff71bb316f0f34d549e7ffe9623853c299789ede68437ab8d"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/lifecycle/agent.rs",
       "item_kind": "fn",
-      "line": 62,
+      "line": 54,
       "symbol": "vibe_cli::commands::lifecycle::agent::CliAgentBackend::provider",
-      "end_line": 82,
+      "end_line": 74,
       "fingerprint": "tok1:6cdc9a7b83acab0907d9a5a5a18f247796979ac6bfefc21517f720970be67586"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/lifecycle/agent.rs",
       "item_kind": "fn",
-      "line": 86,
+      "line": 78,
       "symbol": "vibe_cli::commands::lifecycle::agent::CliAgentBackend::resolve_prompt",
-      "end_line": 117,
-      "fingerprint": "tok1:4c7408d276c166d0dbe9ade064b49b43254f541b2002082d7b58371f9871dfb5"
+      "end_line": 81,
+      "fingerprint": "tok1:8ea19cc88019a3442e2038a15c8eedff2c5735381a24fcf0dbbfa8e764e1dd0a"
     },
     {
       "crate_name": "vibe-cli",
@@ -10302,63 +10302,63 @@
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/agent/mod.rs",
       "item_kind": "trait",
-      "line": 80,
+      "line": 82,
       "symbol": "vibe_lifecycle::agent::AgentBackend",
-      "end_line": 125,
+      "end_line": 127,
       "fingerprint": "tok1:e3de67804ac11d339b26257b746382ba3692a86fdba4643b03e08de4fd145c79"
     },
     {
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/agent/mod.rs",
       "item_kind": "struct",
-      "line": 70,
+      "line": 72,
       "symbol": "vibe_lifecycle::agent::AgentCompletion",
-      "end_line": 78,
+      "end_line": 80,
       "fingerprint": "tok1:1d6d2918537f4d6c7387ab7e99db36da66259152a4a8376e825a21e569d7f952"
     },
     {
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/agent/mod.rs",
       "item_kind": "enum",
-      "line": 189,
+      "line": 191,
       "symbol": "vibe_lifecycle::agent::AgentError",
-      "end_line": 278,
+      "end_line": 280,
       "fingerprint": "tok1:e89ef70cbf54a1bb805491ede42b2edf8bb5b58857e710375eab28b18f7c4ce9"
     },
     {
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/agent/mod.rs",
       "item_kind": "struct",
-      "line": 46,
+      "line": 48,
       "symbol": "vibe_lifecycle::agent::AgentRequest",
-      "end_line": 59,
+      "end_line": 61,
       "fingerprint": "tok1:d8bf6dbe99249e46c32884ac2a0b4970d4cc76a893612db941c32df4b6915a6e"
     },
     {
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/agent/mod.rs",
       "item_kind": "struct",
-      "line": 61,
+      "line": 63,
       "symbol": "vibe_lifecycle::agent::AgentUsage",
-      "end_line": 68,
+      "end_line": 70,
       "fingerprint": "tok1:ecac4aecf8a1c840e9d9aa1916dc1b720adaf5530413b7b6eb2c31ae6ade0df3"
     },
     {
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/agent/mod.rs",
       "item_kind": "struct",
-      "line": 127,
+      "line": 129,
       "symbol": "vibe_lifecycle::agent::NoAgentBackend",
-      "end_line": 131,
+      "end_line": 133,
       "fingerprint": "tok1:197a0d98de6f508c2ec3c165577bc35c35ffedc21d38b517285474040f7bbc68"
     },
     {
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/agent/mod.rs",
       "item_kind": "struct",
-      "line": 146,
+      "line": 148,
       "symbol": "vibe_lifecycle::agent::PreparedAgent",
-      "end_line": 157,
+      "end_line": 159,
       "fingerprint": "tok1:1386024eab74c07904d6a2ebd71c713878b6a4a8293b026dd43f87af28b350ca"
     },
     {
@@ -10401,27 +10401,27 @@
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/agent/mod.rs",
       "item_kind": "fn",
-      "line": 433,
+      "line": 435,
       "symbol": "vibe_lifecycle::agent::execute",
-      "end_line": 464,
+      "end_line": 466,
       "fingerprint": "tok1:3945b4b977ee762ffc7e3cb6534ef4b5564c52ca7650b9788ce456acbba87f7d"
     },
     {
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/agent/mod.rs",
       "item_kind": "fn",
-      "line": 375,
+      "line": 377,
       "symbol": "vibe_lifecycle::agent::preflight_outputs",
-      "end_line": 431,
+      "end_line": 433,
       "fingerprint": "tok1:df2104d28311c74d70560e66020ac74784281c989454e79adb27b1e5bb12b5e3"
     },
     {
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/agent/mod.rs",
       "item_kind": "fn",
-      "line": 316,
+      "line": 318,
       "symbol": "vibe_lifecycle::agent::prepare",
-      "end_line": 373,
+      "end_line": 375,
       "fingerprint": "tok1:cf6919b34d6e41b979d230dea57f251dca9edf8a5f93dc12e82049c7cd306c3f"
     },
     {
@@ -10477,6 +10477,24 @@
       "symbol": "vibe_lifecycle::agent::prompt::user_prose",
       "end_line": 230,
       "fingerprint": "tok1:e76e9cd75c7accfc728e37448c7ae7fba66b1dc3747324b8fb17cd5d68e452e4"
+    },
+    {
+      "crate_name": "vibe-lifecycle",
+      "file": "crates/vibe-lifecycle/src/agent/resolver.rs",
+      "item_kind": "struct",
+      "line": 30,
+      "symbol": "vibe_lifecycle::agent::resolver::SelectedWorldPromptResolver",
+      "end_line": 80,
+      "fingerprint": "tok1:69572aeaa9512d3dba6d6b40e0fd67a3d7880d6728de26b69d0ef1996923de00"
+    },
+    {
+      "crate_name": "vibe-lifecycle",
+      "file": "crates/vibe-lifecycle/src/agent/resolver.rs",
+      "item_kind": "fn",
+      "line": 94,
+      "symbol": "vibe_lifecycle::agent::resolver::SelectedWorldPromptResolver::resolve",
+      "end_line": 133,
+      "fingerprint": "tok1:d307a6acbff420caac4dc4bd07544d95214a818f8ab2022a2cddb1face8a8a6c"
     },
     {
       "crate_name": "vibe-lifecycle",
@@ -20975,7 +20993,7 @@
     {
       "file": "crates/vibe-cli/src/commands/lifecycle/agent.rs",
       "from_symbol": "vibe_cli::commands::lifecycle::agent::CliAgentBackend",
-      "line": 48,
+      "line": 40,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-CLI",
       "verb": "implements"
@@ -20983,7 +21001,7 @@
     {
       "file": "crates/vibe-cli/src/commands/lifecycle/agent.rs",
       "from_symbol": "vibe_cli::commands::lifecycle::agent::CliAgentBackend::complete",
-      "line": 119,
+      "line": 83,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-CLI",
       "verb": "implements"
@@ -20991,7 +21009,7 @@
     {
       "file": "crates/vibe-cli/src/commands/lifecycle/agent.rs",
       "from_symbol": "vibe_cli::commands::lifecycle::agent::CliAgentBackend::provider",
-      "line": 64,
+      "line": 56,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-CLI",
       "verb": "implements"
@@ -20999,7 +21017,7 @@
     {
       "file": "crates/vibe-cli/src/commands/lifecycle/agent.rs",
       "from_symbol": "vibe_cli::commands::lifecycle::agent::CliAgentBackend::resolve_prompt",
-      "line": 86,
+      "line": 78,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#H-AGENT",
       "verb": "implements"
@@ -26893,7 +26911,7 @@
     {
       "file": "crates/vibe-lifecycle/src/agent/mod.rs",
       "from_symbol": "vibe_lifecycle::agent::AgentBackend",
-      "line": 115,
+      "line": 117,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-CLI",
       "verb": "documents"
@@ -26901,7 +26919,7 @@
     {
       "file": "crates/vibe-lifecycle/src/agent/mod.rs",
       "from_symbol": "vibe_lifecycle::agent::AgentCompletion",
-      "line": 72,
+      "line": 74,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#H-AGENT",
       "verb": "documents"
@@ -26909,7 +26927,7 @@
     {
       "file": "crates/vibe-lifecycle/src/agent/mod.rs",
       "from_symbol": "vibe_lifecycle::agent::AgentError",
-      "line": 192,
+      "line": 194,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#FAILURE-BY-PHASE",
       "verb": "implements"
@@ -26917,7 +26935,7 @@
     {
       "file": "crates/vibe-lifecycle/src/agent/mod.rs",
       "from_symbol": "vibe_lifecycle::agent::AgentError",
-      "line": 193,
+      "line": 195,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-CLI",
       "verb": "documents"
@@ -26925,7 +26943,7 @@
     {
       "file": "crates/vibe-lifecycle/src/agent/mod.rs",
       "from_symbol": "vibe_lifecycle::agent::AgentRequest",
-      "line": 49,
+      "line": 51,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#H-AGENT",
       "verb": "documents"
@@ -26933,7 +26951,7 @@
     {
       "file": "crates/vibe-lifecycle/src/agent/mod.rs",
       "from_symbol": "vibe_lifecycle::agent::AgentUsage",
-      "line": 63,
+      "line": 65,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-CREATE-BUDGET",
       "verb": "documents"
@@ -26941,7 +26959,7 @@
     {
       "file": "crates/vibe-lifecycle/src/agent/mod.rs",
       "from_symbol": "vibe_lifecycle::agent::NoAgentBackend",
-      "line": 130,
+      "line": 132,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-CLI",
       "verb": "documents"
@@ -26949,7 +26967,7 @@
     {
       "file": "crates/vibe-lifecycle/src/agent/mod.rs",
       "from_symbol": "vibe_lifecycle::agent::PreparedAgent",
-      "line": 149,
+      "line": 151,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-FINGERPRINT",
       "verb": "documents"
@@ -26997,7 +27015,7 @@
     {
       "file": "crates/vibe-lifecycle/src/agent/mod.rs",
       "from_symbol": "vibe_lifecycle::agent::execute",
-      "line": 435,
+      "line": 437,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-CLI",
       "verb": "implements"
@@ -27005,7 +27023,7 @@
     {
       "file": "crates/vibe-lifecycle/src/agent/mod.rs",
       "from_symbol": "vibe_lifecycle::agent::preflight_outputs",
-      "line": 387,
+      "line": 389,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE",
       "verb": "implements"
@@ -27013,7 +27031,7 @@
     {
       "file": "crates/vibe-lifecycle/src/agent/mod.rs",
       "from_symbol": "vibe_lifecycle::agent::prepare",
-      "line": 322,
+      "line": 324,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-FINGERPRINT",
       "verb": "implements"
@@ -27064,6 +27082,22 @@
       "line": 216,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENVELOPE-LAW",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-lifecycle/src/agent/resolver.rs",
+      "from_symbol": "vibe_lifecycle::agent::resolver::SelectedWorldPromptResolver",
+      "line": 74,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#H-AGENT",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-lifecycle/src/agent/resolver.rs",
+      "from_symbol": "vibe_lifecycle::agent::resolver::SelectedWorldPromptResolver::resolve",
+      "line": 102,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#H-AGENT",
       "verb": "implements"
     },
     {
