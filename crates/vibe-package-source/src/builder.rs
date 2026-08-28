@@ -4,6 +4,8 @@
 //! surface's argument grammar is already projected away: everything here
 //! reads [`PackageSourceOptions`].
 
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail");
+
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, anyhow, bail};

@@ -18,6 +18,8 @@
 //! through the chain) — what would destroy it is replacing or translating
 //! the typed error into some other error.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail");
+
 use std::collections::BTreeSet;
 use std::path::Path;
 

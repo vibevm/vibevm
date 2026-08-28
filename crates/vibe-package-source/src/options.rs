@@ -2,6 +2,8 @@
 //! package-source builder reads, projected by each surface from its own
 //! grammar with no normalisation and no validation reordering.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail");
+
 use std::path::PathBuf;
 
 /// The registry / solver / source-preference inputs of
