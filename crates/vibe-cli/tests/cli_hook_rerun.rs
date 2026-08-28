@@ -211,6 +211,56 @@ fn lifecycle_suppresses_hook_subprocess_streams_in_json_and_quiet_modes() {
     }
 }
 
+/// Direct install's quiet surface and a lifecycle prerequisite deliberately
+/// use different stream policies today: direct install inherits slot process
+/// stdout, while the composed lifecycle's quiet child nulls it. A later shared
+/// observer extraction must carry both policies rather than silently choosing
+/// one for both call sites.
+#[test]
+fn direct_install_quiet_keeps_the_existing_slot_stream_policy() {
+    if !git_available() {
+        eprintln!("skipping direct-install quiet stream e2e: git not on PATH");
+        return;
+    }
+
+    const MARKER: &str = "DIRECT-QUIET-HOOK-STDOUT";
+    let outer = tempfile::tempdir().unwrap();
+    let registry = make_hook_registry(
+        outer.path(),
+        "org.vibevm",
+        &[("0.1.0", "payload\n", HookFixture::CountPrint(MARKER))],
+    );
+    let user = UserScratch::new();
+    let project = tempfile::tempdir().unwrap();
+    user.init_project(project.path());
+    write_project_with_per_package_registry(project.path(), &registry_url(&registry));
+
+    let output = user
+        .vibe()
+        .arg("install")
+        .arg("org.vibevm/hooked@=0.1.0")
+        .arg("--path")
+        .arg(project.path())
+        .arg("--assume-yes")
+        .arg("--quiet")
+        .output()
+        .unwrap();
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    assert!(
+        stdout.lines().any(|line| line == MARKER),
+        "direct quiet install still inherits slot stdout: {stdout}"
+    );
+    let slot = project
+        .path()
+        .join(common::slot_dir("org.vibevm.hooked", "0.1.0"));
+    assert_eq!(read_counter(&slot), "1", "the hook ran exactly once");
+}
+
 #[test]
 fn install_is_consent_for_hooks_from_any_group() {
     if !git_available() {
