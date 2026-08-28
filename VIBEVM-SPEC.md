@@ -15,7 +15,7 @@ This is a complete, self-contained specification. It assumes you have not read a
 
 You will see references to materials in `refs/`. These are study materials, not specifications:
 - `refs/book/` contains the user's book chapters on AI-native development. These define the *philosophy* of the project. Read them before writing any code.
-- `refs/src/maven/` is Apache Maven's source tree. Study it for ideas about lifecycle management, plugin systems, and dependency resolution. Do not copy code; we are not building Maven and we never use Maven's terminology in our own output. If there's no sources of Maven in this directory, create the directory and clone the sources from the Internets.
+- `refs/src/maven/` is Apache Maven's source tree. Study it for ideas about lifecycle management, extension systems, and dependency resolution. Do not copy code and do not import Maven's vocabulary mechanically. The later owner-approved lifecycle admits exactly `lifecycle` and `phase` as VibeVM terms; the remaining boundary is [PROP-054 `##VOCABULARY-ADMITTED`](vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml#VOCABULARY-ADMITTED). If there are no Maven sources in this directory, create it and clone the sources from the Internets.
 - `refs/src/bazel/` is Bazel's source tree. Study it for the DAG execution model and typed task graphs. Do not copy code; our DAG model is similar but not identical. If there's no sources of Bazel in this directory, create the directory and clone the sources from the Internets.
 - You may `git clone` other public projects into `refs/src/` if you need to study them. Recommended candidates: `tessl` (Tessl framework), `github/spec-kit` (GitHub's Spec Kit), `astral-sh/uv` (a modern Python package manager — clean reference for fetch/resolve), `cargo` (the Rust package manager — clean reference for manifest format and lockfile design). Do not assume these projects are correct; study them as data.
 
@@ -141,11 +141,11 @@ Read what each of these does. Note their gaps.
 
 4. **CLI-first, agent-agnostic execution.** vibevm uses the user's API key to invoke whichever LLM is configured (Anthropic, OpenAI, OpenRouter, Ollama). It does not require any specific agent product to be installed. It can be run from a bare terminal in CI.
 
-5. **Separation of deterministic and probabilistic work.** vibevm's CLI does deterministic work (resolution, fetching, file management, validation) without LLM calls. The LLM is invoked only for steps that genuinely require reasoning (build, sync, review). This is cheaper, faster, more debuggable, and fits the book's philosophy of cognitive load distribution.
+5. **Separation of deterministic and probabilistic work.** vibevm's CLI performs resolution, fetching, file management, validation and algorithmic build/test without LLM calls. An LLM is an explicitly enabled advanced enhancement, or an explicitly declared agent workload at `create`; provider/credential presence activates nothing. Every enhanceable core subsystem retains an `off` algorithmic mode (PROP-054 `##LLM-IS-AN-ENHANCEMENT`). This is cheaper, faster, more debuggable, and fits the book's philosophy of cognitive load distribution.
 
 ### 3.3 What vibevm explicitly avoids {#what-vibevm-explicitly-avoids}
 
-- We never use Maven's terminology, even though we have studied it. No "lifecycle," "phase," "goal," or "plugin" in user-facing or internal code (except where context demands a known term — see Section 4 for what to use instead).
+- We do not import Maven's terminology merely because we studied it. The owner later admitted `lifecycle` and `phase` as exact VibeVM terms (PROP-054 §1.1/§4). `goal` remains absent; the machine uses contribution/execution. `Plugin` is a precise human umbrella for a package-supplied extension/mechanism implementation or an external ecosystem artifact, never a persisted identity or installable kind. See Section 4 and PROP-054 `##VOCABULARY-ADMITTED`.
 - We never use Bazel's terminology directly, but we adopt its DAG execution model.
 - We do not build a hosted registry in v1. The registry is a public git repository.
 - We do not build a censoring system in v1. We assume one will exist later (see Section 8.5).
@@ -154,7 +154,7 @@ Read what each of these does. Note their gaps.
 
 Before designing anything, the Reader should read or skim:
 - All chapters in `refs/book/` (mandatory, full read).
-- The Maven Lifecycle documentation (mandatory, conceptual understanding only — *do not adopt vocabulary*).
+- The Maven Lifecycle documentation (mandatory, conceptual understanding only — do not adopt vocabulary beyond the explicit PROP-054 admitted set).
 - The Bazel BUILD/Starlark model (mandatory, conceptual understanding for the DAG model).
 - Tessl's Spec Registry conventions (recommended, study what specs look like as installable artifacts).
 - GitHub Spec Kit's repository structure (recommended, study how it scaffolds projects).
@@ -294,18 +294,25 @@ Use these terms consistently:
 
 ### 4.6 Other key terms {#other-key-terms}
 
-- **Effective spec** — the layered corpus a workflow consumes: the node's authored `spec/` plus its materialised `vibedeps/` dependencies plus the current WAL, computed at the start of each workflow. A projection of the computed-view engine (Section 6). The effective spec is what the LLM "sees" during build. `vibe show effective` prints it.
+- **Effective spec** — the layered corpus a workflow consumes: the node's authored `spec/` plus its materialised `vibedeps/` dependencies plus the current WAL, computed at the start of each workflow. A projection of the computed-view engine (Section 6). It may be projected to an explicitly enabled LLM enhancement or agent workload; ordinary algorithmic work does not construct a provider. `vibe show effective` prints it.
 - **Active stack** — the stack currently selected for build operations. A project may have multiple stacks installed; one is active by default; per-command override via `--stack`.
 - **Boot snippet** — a boot file a package contributes. The package declares it in `[boot_snippet]` with a `category`; `vibe` composes every contribution into the consuming node's generated boot artifacts (Section 6).
 - **Inclusion type (`link`)** — how a dependency's boot snippet enters the consumer's boot sequence: `inline`, `static`, or `dynamic`. Declared per dependency in `[requires.packages]` (Section 6).
 - **REVIEW marker** — an inline marker (`<!-- REVIEW: ... -->`) in spec or code that indicates an unresolved decision the human should look at.
 - **`spec://` URI** — the addressing scheme for spec content. Format: `spec://<module>/<document>#<section>.<subsection>`. Used in code comments (`// Implements: spec://...`), in cross-references between specs, and in error messages.
+- **Lifecycle** — a named ordered phase table. VibeVM has the default nine-phase lifecycle and the separately composed clean lifecycle; PROP-054 §4 is authoritative.
+- **Phase** — one ordered slot in a lifecycle. Invoking a default phase runs/skips its inclusive prefix. A phase may have zero or more executions.
+- **Extension point** — a named moment such as `phase:build`, `slot:pre-install` or `compile:document` where contributions may bind.
+- **Contribution** — one `[[extension]]` declaration: a handler, configuration and selectors bound to an extension point.
+- **Execution** — one scheduled run of a contribution, identified by its provider-qualified key.
+- **Mechanism** — a provider selectable for a capability role such as build/package/deploy; lookup, not a second scheduler.
+- **Plugin** — a human umbrella for a package-supplied extension/mechanism implementation, compiler plugin or an external ecosystem artifact such as Agent Plugin. Machine state stores qualified packages/contributions/mechanisms/providers, never the word `plugin` as identity. It is not an installable kind.
 
 ---
 
 ## Section 5. The task graph in detail {#task-graph-in-detail}
 
-This section specifies the internal model. Most users never see it; plugin authors and `vibe show graph` users do.
+This section specifies the internal model. Most users never see it; extension/mechanism authors and `vibe show graph` users do.
 
 ### 5.1 The graph builder {#graph-builder}
 
@@ -315,7 +322,7 @@ When the user invokes any workflow, the CLI:
 3. Reads any user-overridden manifests in the project itself.
 4. Constructs a graph by:
    a. Instantiating built-in nodes (load:*, build:plan, etc.).
-   b. Instantiating each plugin's contributed nodes.
+   b. Instantiating each package's contributed nodes.
    c. Resolving edges by matching declared inputs to declared outputs.
    d. Inserting nodes against named barriers per their `contributes` declarations.
    e. Validating the result is acyclic and type-correct.
@@ -363,13 +370,13 @@ Edges carry typed values. v1 defines this minimal type set:
 
 These are TOML-defined schemas in the codebase. Type matching at graph-build time is a string comparison plus version-compatibility rules.
 
-### 5.4 Plugin contribution model {#plugin-contribution-model}
+### 5.4 Package extension contribution model {#plugin-contribution-model}
 
 A package's manifest may contribute nodes to the graph. v1 supports a *content-only* contribution model: a package materialises as a verbatim `vibedeps/` subtree and contributes a boot snippet, but does not contribute executable nodes. This keeps v1 small.
 
 v1.5 may extend this to allow packages to contribute LLM nodes (e.g., a flow that adds a `wal:checkpoint` node bound after `build:compile`). Document the extension point but do not implement it in v1.
 
-This means: in v1, all nodes in the graph are built-in. Plugins influence the graph only by changing what content the built-in nodes operate on.
+This means: in v1, all nodes in the graph are built-in. Packages influence the graph only by changing what content the built-in nodes operate on.
 
 ### 5.5 Workflows as graph queries {#workflows-as-graph-queries}
 
@@ -1254,7 +1261,7 @@ vibevm ships in staged milestones. Each milestone is *useful on its own* — if 
 
 **Adds.**
 - `install:review` becomes an LLM-driven censor.
-- Plugin contribution model extends to include LLM nodes (so flows can register goals like `wal:checkpoint`).
+- Package contribution model extends to agent executions (so flows can contribute a provider-qualified execution at a `phase:` point such as `wal:checkpoint`; VibeVM has no Maven-style goal identity).
 - Authentication for private registries (token-based).
 - Cross-platform build matrix (macOS, Linux, Windows binaries).
 - `vibe doctor` command for diagnosing project state.
@@ -1488,20 +1495,26 @@ Terms used throughout this document, in alphabetical order. When in doubt, refer
 - **CLAUDE.md / AGENTS.md / GEMINI.md.** Agent instruction files at project root. vibevm owns only a managed `<vibevm>` block inside each, redirecting a session into the computed boot sequence; the rest of every file belongs to the developer and any other tool.
 - **Code.** Source files outside `spec/`, generated or user-edited.
 - **Compile.** Synonym for `build` in user-facing contexts.
+- **Contribution.** One `[[extension]]` declaration bound to an extension point.
 - **Effective spec.** The layered corpus — a node's authored `spec/` plus its materialised `vibedeps/` dependencies — computed at the start of a workflow.
+- **Execution.** One scheduled run of a provider-qualified contribution.
+- **Extension point.** A named lifecycle/slot/compiler position at which contributions may run.
 - **Feat.** An installable kind: an abstract feature description, decoupled from any technology stack.
 - **Flow.** An installable kind: a process discipline that modifies how the human-AI development workflow operates.
 - **Head.** The human developer's memory; not vibevm's concern but acknowledged in design.
 - **Install.** The workflow that resolves, fetches, reviews, plans, confirms, and applies a package.
 - **Kind.** One of `flow`, `feat`, `stack`, `tool`, `mcp`, `lang`. The category of a package.
+- **Lifecycle.** An ordered phase table; VibeVM's exact default and clean lifecycles are defined by PROP-054.
 - **Lockfile.** `vibe.lock` at project root, the source of truth for what is installed at exact versions.
 - **LLM provider.** A configured backend that vibevm calls to invoke a language model (Anthropic, OpenAI, etc.).
 - **Manifest.** `vibe.toml` — one file per node, carrying `[project]` or `[package]` (and optionally `[workspace]`). The role is set by which sections are present.
+- **Mechanism.** A qualified provider selectable for a build/package/deploy/acquire capability role; not a scheduler.
 - **Milestone (M0/M1/...)** A release stage with a defined feature set. See Section 11.
 - **Node.** A unit of work in the task graph.
 - **Package.** A named, versioned installable artifact of one of the installable kinds (§4.1).
 - **PackageRef.** A package reference — `[<kind>:][<group>/]<name>[@<version-constraint>]`. Manifests store the qualified `<group>/<name>` form; the short `<name>` form is CLI-only sugar resolved via the package index. See §7.1.
-- **Plugin.** Synonym for "package" in some contexts; "package" is preferred in user-facing text.
+- **Phase.** One ordered slot in a lifecycle; invoking it runs/skips the inclusive prefix.
+- **Plugin.** A precise human umbrella for a package-supplied extension/mechanism implementation, compiler plugin or an external ecosystem artifact such as Agent Plugin. It is not a persisted identity, a contribution/handler synonym or an installable kind.
 - **Project manifest.** A `vibe.toml` in the `[project]` role — a non-publishable consumer node.
 - **Registry.** A git repository containing packages, structured per Section 8.
 - **REVIEW marker.** An inline marker indicating an unresolved decision the human should look at.
