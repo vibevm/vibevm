@@ -331,3 +331,65 @@ fn shared_pivot_counts_authored_adopted_and_indeterminate_facts() {
     assert_eq!(counts.indeterminate, 1);
     assert_eq!(counts.total_authored, 2);
 }
+
+// --- R7.5 A2a: the one-read registry snapshot ---
+
+#[test]
+fn registry_snapshot_parses_and_witnesses_the_same_bytes() {
+    let temp = tempdir().expect("tempdir");
+    let mut registry = Registry::default();
+    registry
+        .upsert(
+            temp.path(),
+            package_fact("spec://org.example/pkg/RULE#A", "impl/done"),
+        )
+        .expect("upsert");
+
+    let snapshot = Registry::load_with_witnesses(temp.path()).expect("snapshot");
+    let address = "spec://org.example/pkg/RULE#A";
+    assert_eq!(
+        snapshot.registry.get(address).expect("parsed entry").status,
+        Some(status("impl/done"))
+    );
+    assert_eq!(snapshot.witnesses.len(), 1);
+    let witness = &snapshot.witnesses[0];
+    assert_eq!(witness.path, facts_rel("org.example.pkg.toml"));
+    let raw = fs::read(temp.path().join(&witness.path)).expect("raw bytes");
+    assert_eq!(witness.bytes, raw.len() as u64);
+    assert!(witness.digest.starts_with("sha256:"));
+    assert_eq!(witness.digest.len(), "sha256:".len() + 64);
+
+    // `Registry::load` remains the plain wrapper over the snapshot.
+    let plain = Registry::load(temp.path()).expect("plain load");
+    assert_eq!(
+        plain.get(address).expect("entry").status,
+        Some(status("impl/done"))
+    );
+
+    // A comment-only raw edit moves the witness, not the parsed registry.
+    let file = temp.path().join(&witness.path);
+    let mut edited = raw.clone();
+    edited.extend_from_slice(
+        b"# CANARY-REG-9b1c comment-only edit
+",
+    );
+    fs::write(&file, &edited).expect("edit");
+    let after = Registry::load_with_witnesses(temp.path()).expect("second snapshot");
+    assert_eq!(after.witnesses.len(), 1);
+    assert_ne!(after.witnesses[0].digest, witness.digest);
+    assert!(after.witnesses[0].bytes > witness.bytes);
+    assert_eq!(
+        after.registry.get(address).expect("entry survives").status,
+        Some(status("impl/done"))
+    );
+    // No body text rides in the snapshot: the canary lives only in bytes.
+    assert!(!format!("{after:?}").contains("CANARY-REG-9b1c"));
+}
+
+#[test]
+fn registry_snapshot_for_an_absent_home_is_empty_but_typed() {
+    let temp = tempdir().expect("tempdir");
+    let snapshot = Registry::load_with_witnesses(temp.path()).expect("absent home");
+    assert!(snapshot.registry.is_empty());
+    assert!(snapshot.witnesses.is_empty());
+}

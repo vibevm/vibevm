@@ -23,8 +23,10 @@
 //! * [`load_spec_text`] — the consumers' one dispatch (PROP-045
 //!   ##PROJECTION-READ): `.md` verbatim, `.xml` as its canonical MD
 //!   projection, with the [`SourceKind`] that marks projection-relative
-//!   diagnostics; beside it, the one-document-one-form pair-collision
-//!   law ([`pair_collisions_in`], [`discover_pair_collision`]).
+//!   diagnostics; [`project_spec_text`] is its pure sibling for a caller
+//!   that already owns the raw text; beside them, the
+//!   one-document-one-form pair-collision law ([`pair_collisions_in`],
+//!   [`discover_pair_collision`]).
 //!
 //! The dialect is isomorphic to the Markdown-expressible structure — it
 //! cannot express what MD cannot, which is what makes the owner's
@@ -76,7 +78,7 @@ mod xml_in_tests;
 pub use convert::{Conversion, Direction, convert};
 pub use load::{
     LoadError, PROJECTION_NOTICE, PairCollision, SourceKind, discover_pair_collision,
-    is_spec_source, load_spec_text, pair_collisions_in,
+    is_spec_source, load_spec_text, pair_collisions_in, project_spec_text,
 };
 pub use md_in::from_markdown;
 pub use md_out::to_markdown;

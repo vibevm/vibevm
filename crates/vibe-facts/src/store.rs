@@ -8,6 +8,7 @@ use std::path::{Path, PathBuf};
 
 use serde::{Deserialize, Serialize};
 
+use crate::scan::SourceFileWitness;
 use crate::{FactEntry, RegistryError};
 
 const SCHEMA: u32 = 1;
@@ -30,10 +31,30 @@ pub struct Registry {
 impl Registry {
     /// Load every TOML source under `<project_root>/vibefacts/`.
     /// An absent directory is the valid empty registry.
+    ///
+    /// A thin wrapper over [`Registry::load_with_witnesses`]: the parsed
+    /// registry without the per-file witnesses.
     pub fn load(project_root: &Path) -> Result<Self, RegistryError> {
+        Ok(Self::load_with_witnesses(project_root)?.registry)
+    }
+
+    /// The R7.5 A2a one-read snapshot: the loaded registry plus one
+    /// [`SourceFileWitness`] for each actual `vibefacts/*.toml` file,
+    /// sorted and unique by project-relative path. Every file is read
+    /// exactly once as raw bytes; the parse consumes those SAME bytes
+    /// whose witness is returned, so a consumer can name the registry
+    /// bytes it observed without a second read and without any entry
+    /// text crossing the boundary. Malformed UTF-8/TOML/schema/entries
+    /// remain the existing typed errors — the central ruling is that a
+    /// malformed registry aborts the caller, so no partial snapshot is
+    /// owed.
+    pub fn load_with_witnesses(project_root: &Path) -> Result<RegistrySnapshot, RegistryError> {
         let home = project_root.join(vibe_core::layout::current_vibefacts_root());
         if !home.exists() {
-            return Ok(Self::default());
+            return Ok(RegistrySnapshot {
+                registry: Self::default(),
+                witnesses: Vec::new(),
+            });
         }
         if !home.is_dir() {
             return Err(RegistryError::InvalidRegistryHome { path: home });
@@ -57,8 +78,23 @@ impl Registry {
         paths.sort();
 
         let mut registry = Self::default();
+        let mut witnesses = Vec::with_capacity(paths.len());
         for path in paths {
-            for fact in read_file(&path)? {
+            // The ONE raw read: witness first, then parse the same bytes.
+            let raw = fs::read(&path).map_err(|source| RegistryError::Io {
+                path: path.clone(),
+                source,
+            })?;
+            let relative = path.strip_prefix(project_root).map_err(|_| {
+                RegistryError::Invariant(format!(
+                    "registry source `{}` escaped project root `{}`",
+                    path.display(),
+                    project_root.display()
+                ))
+            })?;
+            let relative = vibe_core::machine_json_path(relative);
+            witnesses.push(SourceFileWitness::of(relative, &raw));
+            for fact in parse_file_bytes(&path, &raw)? {
                 let expected = fact.registry_file_name()?;
                 if path
                     .file_name()
@@ -85,7 +121,10 @@ impl Registry {
                 registry.entries.insert(fact.address.clone(), fact);
             }
         }
-        Ok(registry)
+        Ok(RegistrySnapshot {
+            registry,
+            witnesses,
+        })
     }
 
     pub fn entries(&self) -> impl Iterator<Item = &FactEntry> {
@@ -163,12 +202,45 @@ impl Registry {
     }
 }
 
+/// The one-read registry snapshot returned by
+/// [`Registry::load_with_witnesses`]: the parsed registry beside the
+/// witnesses of the exact raw bytes it was parsed from. The witnesses
+/// are metadata only — no entry text rides along.
+#[derive(Debug)]
+pub struct RegistrySnapshot {
+    /// The parsed, validated registry — exactly what [`Registry::load`]
+    /// returns.
+    pub registry: Registry,
+    /// One witness per actual `vibefacts/*.toml` file read, sorted by
+    /// project-relative path.
+    pub witnesses: Vec<SourceFileWitness>,
+}
+
+/// The reading wrapper the store's own tests use: one raw read, then the
+/// shared one-read parse core.
+#[cfg(test)]
 pub(crate) fn read_file(path: &Path) -> Result<Vec<FactEntry>, RegistryError> {
-    let text = fs::read_to_string(path).map_err(|source| RegistryError::Io {
+    let raw = fs::read(path).map_err(|source| RegistryError::Io {
         path: path.to_path_buf(),
         source,
     })?;
-    let wire: RegistryFile = toml::from_str(&text).map_err(|source| RegistryError::TomlRead {
+    parse_file_bytes(path, &raw)
+}
+
+/// Parse registry entries from the SAME raw bytes a caller witnessed —
+/// the one-read core both [`read_file`] and
+/// [`Registry::load_with_witnesses`] feed. Invalid UTF-8 keeps the
+/// existing typed shape it had through `read_to_string`: an
+/// [`RegistryError::Io`] with an `InvalidData` source.
+fn parse_file_bytes(path: &Path, raw: &[u8]) -> Result<Vec<FactEntry>, RegistryError> {
+    let text = std::str::from_utf8(raw).map_err(|source| {
+        let io = std::io::Error::new(std::io::ErrorKind::InvalidData, source);
+        RegistryError::Io {
+            path: path.to_path_buf(),
+            source: io,
+        }
+    })?;
+    let wire: RegistryFile = toml::from_str(text).map_err(|source| RegistryError::TomlRead {
         path: path.to_path_buf(),
         source,
     })?;

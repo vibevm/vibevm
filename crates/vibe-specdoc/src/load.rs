@@ -89,19 +89,48 @@ pub fn is_spec_source(path: &Path) -> bool {
 ///   passthrough for non-spec text a caller enumerates beside the specs
 ///   (a licence, a README). Such a file is the caller's business; only the
 ///   two spec forms get semantics here.
+///
+/// One raw read, then the one dispatch in [`project_spec_text`]; the
+/// extension decision lives only there (R7.5 A2a).
 pub fn load_spec_text(path: &Path) -> Result<(String, SourceKind), LoadError> {
     let raw = std::fs::read_to_string(path).map_err(|e| LoadError {
         path: path.to_path_buf(),
         message: e.to_string(),
     })?;
+    project_spec_text(path, &raw)
+}
+
+/// Project caller-read raw text through the ONE extension dispatch — the
+/// pure sibling of [`load_spec_text`] (R7.5 A2a one-read law).
+///
+/// A caller that already owns the raw bytes (because it is witnessing them
+/// for a digest, or reading through a capability of its own) hands them
+/// here and never re-decides the `.md`/`.xml` branch itself. Pure: no
+/// filesystem access, no clock, nothing but `path`'s extension and `raw`.
+/// The dispatch law is unchanged — `.xml` projects `from_xml →
+/// to_markdown` with [`SourceKind::XmlProjected`] and a path-bearing
+/// dialect error; everything else passes through verbatim as
+/// [`SourceKind::Markdown`].
+///
+/// ```
+/// use vibe_specdoc::project_spec_text;
+/// use std::path::Path;
+///
+/// let md = "# T {#t}\n";
+/// assert_eq!(
+///     project_spec_text(Path::new("a.md"), md).unwrap(),
+///     (md.to_string(), vibe_specdoc::SourceKind::Markdown)
+/// );
+/// ```
+pub fn project_spec_text(path: &Path, raw: &str) -> Result<(String, SourceKind), LoadError> {
     if path.extension().and_then(|e| e.to_str()) == Some("xml") {
-        let doc = from_xml(&raw).map_err(|e| LoadError {
+        let doc = from_xml(raw).map_err(|e| LoadError {
             path: path.to_path_buf(),
             message: e.to_string(),
         })?;
         Ok((to_markdown(&doc), SourceKind::XmlProjected))
     } else {
-        Ok((raw, SourceKind::Markdown))
+        Ok((raw.to_string(), SourceKind::Markdown))
     }
 }
 
@@ -229,6 +258,48 @@ mod tests {
         // and the projection is deterministic: two loads are byte-equal
         let again = load_spec_text(&xml).unwrap().0;
         assert_eq!(text, again);
+    }
+
+    #[test]
+    fn pure_projection_equals_the_loader_for_both_forms() {
+        let dir = tempfile::tempdir().unwrap();
+        let md = dir.path().join("a.md");
+        let body = "# T {#t}\n\n@fact:A text @status:impl/done\n";
+        std::fs::write(&md, body).unwrap();
+        // RED 1: the pure sibling agrees with the reading loader byte-for-byte
+        // for the verbatim form…
+        let raw = std::fs::read_to_string(&md).unwrap();
+        assert_eq!(
+            project_spec_text(&md, &raw).unwrap(),
+            load_spec_text(&md).unwrap()
+        );
+        // …and for the projected form, where the extension decision matters.
+        let xml = dir.path().join("b.xml");
+        let xml_body = format!(
+            "<spec {NS}>\n  <p><fact id=\"ONLY\" status=\"impl/done\">one</fact></p>\n</spec>"
+        );
+        std::fs::write(&xml, &xml_body).unwrap();
+        let xml_raw = std::fs::read_to_string(&xml).unwrap();
+        assert_eq!(
+            project_spec_text(&xml, &xml_raw).unwrap(),
+            load_spec_text(&xml).unwrap()
+        );
+        // The pure sibling decides from the path ALONE — the same bytes
+        // named `.txt` do not project, so no caller-side extension test can
+        // hide behind content sniffing.
+        let misnamed = dir.path().join("b.txt");
+        assert_eq!(
+            project_spec_text(&misnamed, &xml_raw).unwrap().1,
+            SourceKind::Markdown
+        );
+        // Path-bearing dialect errors survive the pure path identically.
+        let bad = dir.path().join("bad.xml");
+        std::fs::write(&bad, "<spec><p>x</p></spec>").unwrap();
+        let bad_raw = std::fs::read_to_string(&bad).unwrap();
+        let pure = project_spec_text(&bad, &bad_raw).unwrap_err();
+        let loaded = load_spec_text(&bad).unwrap_err();
+        assert_eq!(pure.path, loaded.path);
+        assert_eq!(pure.message, loaded.message);
     }
 
     #[test]

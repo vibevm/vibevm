@@ -12,7 +12,7 @@ use crate::{
     SourceKind, join_adoption, scan_authored_facts,
 };
 
-const XML_NS: &str = "xmlns=\"https://vibevm.org/spec/1\"";
+pub(crate) const XML_NS: &str = "xmlns=\"https://vibevm.org/spec/1\"";
 
 fn status(value: &str) -> FactStatus {
     FactStatus::parse(value).expect("test status")
@@ -31,14 +31,14 @@ fn package_fact(address: &str, value: &str) -> FactEntry {
 /// A fixture path under the specs root, `/`-separated — routed through
 /// the layout seam (PROP-052 L2) so the scaffold names whichever layout
 /// is live.
-fn spec_rel(rel: &str) -> String {
+pub(crate) fn spec_rel(rel: &str) -> String {
     layout::current_specs_root()
         .join(rel)
         .to_string_lossy()
         .replace('\\', "/")
 }
 
-fn write_spec(root: &std::path::Path, rel: &str, body: &str) {
+pub(crate) fn write_spec(root: &std::path::Path, rel: &str, body: &str) {
     let path = root.join(rel);
     fs::create_dir_all(path.parent().expect("spec parent")).expect("spec dir");
     fs::write(path, body).expect("spec file");

@@ -14,7 +14,13 @@
 //! Reading goes through the PROP-045 pivot —
 //! [`vibe_specdoc::load_spec_text`] projects an XML source to its
 //! canonical Markdown before [`vibe_specdoc::from_markdown`] sees it —
-//! so no caller re-decides the extension test. The join side keeps the
+//! so no caller re-decides the extension test. The R7.5 A2a one-read
+//! seam sits here: [`observe_authored_source`] reads every document
+//! exactly once as raw bytes, witnesses each read as
+//! [`SourceFileWitness`] metadata (no prose crosses the boundary), and
+//! projects those same in-memory bytes through
+//! [`vibe_specdoc::project_spec_text`]; [`scan_authored_facts`] is its
+//! thin facts-only wrapper. The join side keeps the
 //! four adoption observations four (R7.5 PROP-054
 //! `##REQUIREMENT-OBSERVATION-AXES`): it reads the registry and nothing
 //! else, writes nothing, and never collapses presence into a boolean.
@@ -24,8 +30,9 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-046#laws");
 use std::collections::BTreeMap;
 use std::fmt;
 use std::fs;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
+use sha2::{Digest, Sha256};
 use vibe_core::layout;
 use vibe_core::{Group, PackageName};
 
@@ -133,25 +140,95 @@ fn split_coordinate(coordinate: &str) -> Result<(&str, &str), RegistryError> {
     Ok((group, name))
 }
 
-/// Scan one source root for every authored fact it addresses.
+/// A content witness for one file a scan or registry load actually read —
+/// R7.5 A2a's one-read law (PROP-054 `##FACT-QUERY-CONTRACT`, R7
+/// architecture §5.2).
 ///
-/// `source_root` is the root the layout resolves against — the project
-/// root for [`SourceKind::Host`], the slot root for
-/// [`SourceKind::Package`]. The coordinate is validated before anything
-/// is read. Documents are the `.md`/`.xml` files under the current specs
-/// root (a package adds a root `README.md`/`README.xml`), minus the
-/// generated boot lane (`INDEX.md`, `STATIC.md`, `STATIC.xml`); both
-/// forms load through [`vibe_specdoc::load_spec_text`], and an explicit
-/// symlink is never followed as a document. One logical document lives
-/// in one form: a same-stem Markdown/XML pair refuses through
-/// [`vibe_specdoc::pair_collisions_in`] before either form is parsed,
-/// whatever its anchors. The result is sorted by full address, and a
-/// duplicate full address refuses rather than choosing a document.
-pub fn scan_authored_facts(
+/// Metadata ONLY: the forward-slashed root-relative path, the exact byte
+/// count and `sha256:` + 64 lowercase hex over those same raw bytes. It is
+/// deliberately not a serde wire value and carries neither the raw nor the
+/// projected text — the digest binds the bytes that were read once, so a
+/// consumer can name what it observed without a second read and without
+/// exporting prose across the crate boundary.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct SourceFileWitness {
+    /// Forward-slashed path relative to the root the walk answered for.
+    pub path: String,
+    /// Exact raw byte count of the one read.
+    pub bytes: u64,
+    /// `sha256:` + 64 lowercase hex over the exact raw bytes.
+    pub digest: String,
+}
+
+impl SourceFileWitness {
+    /// Witness raw bytes already read — the one-read construction. The
+    /// digest spelling matches the crate's other content hashes
+    /// ([`crate::overlay_file_hash`]).
+    pub fn of(path: impl Into<String>, raw: &[u8]) -> Self {
+        let digest = Sha256::digest(raw);
+        Self {
+            path: path.into(),
+            bytes: raw.len() as u64,
+            digest: format!("sha256:{digest:x}"),
+        }
+    }
+}
+
+/// The diagnostic metadata of a source defect: which file, which source
+/// line (or the pivot's positionless zero), and a machine reason. No raw
+/// or projected body rides as a field.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct SourceIssue {
+    pub path: PathBuf,
+    pub line: usize,
+    pub message: String,
+}
+
+/// One authored source observed in a single read pass — the A2b seam.
+///
+/// Valid and invalid are mutually exclusive IN THE TYPE: an invalid
+/// source always emits zero fact rows, so no `Result` member can hold
+/// facts beside an issue. Both variants carry every sorted document
+/// witness for the enumerated source — including both raw documents of a
+/// same-stem pair — because the read/witness pass completes before any
+/// parse is attempted; a collision or parse defect therefore never mints
+/// a fake empty-set digest over files that were read.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum AuthoredSourceObservation {
+    /// The source read and parsed; its addressed facts, sorted by full
+    /// address, beside the witnesses of the documents they came from.
+    Available {
+        facts: Vec<AuthoredFact>,
+        documents: Vec<SourceFileWitness>,
+    },
+    /// Present bytes whose authored source cannot be trusted (invalid
+    /// UTF-8, a same-stem split brain, a Markdown/XML parse or dialect
+    /// failure, or a duplicate full address). Zero facts, all witnesses,
+    /// one bounded issue.
+    Invalid {
+        documents: Vec<SourceFileWitness>,
+        issue: SourceIssue,
+    },
+}
+
+/// Observe one authored source in ONE read pass: enumerate and sort the
+/// documents, read every document exactly once as raw bytes and witness
+/// it, then UTF-8/project/parse those same in-memory bytes through the
+/// [`vibe_specdoc::project_spec_text`] pivot and collect the addressed
+/// facts.
+///
+/// The outer [`Err`] is authority/I/O/unavailability — an invalid
+/// coordinate, an enumeration failure or a raw read failure (a file that
+/// could not be read at all). Everything present bytes say when they
+/// cannot be trusted as an authored source is the
+/// [`AuthoredSourceObservation::Invalid`] variant, never an [`Err`]: a
+/// malformed present source is named in its own observation, not turned
+/// into a lifecycle failure.
+pub fn observe_authored_source(
     source_root: &Path,
     package_coordinate: &str,
     source_kind: SourceKind,
-) -> Result<Vec<AuthoredFact>, RegistryError> {
+) -> Result<AuthoredSourceObservation, RegistryError> {
     split_coordinate(package_coordinate)?;
     let mut documents: Vec<String> = Vec::new();
     let specs_root = source_root.join(layout::current_specs_root());
@@ -165,53 +242,144 @@ pub fn scan_authored_facts(
     }
     documents.sort();
 
+    // The ONE raw read/witness pass — every enumerated document is read
+    // exactly once, before any interpretation, so an invalid outcome
+    // still carries the witnesses of the bytes that were there.
+    let invalid = |documents: Vec<SourceFileWitness>, issue: SourceIssue| {
+        AuthoredSourceObservation::Invalid { documents, issue }
+    };
+    let mut witnesses: Vec<SourceFileWitness> = Vec::with_capacity(documents.len());
+    let mut raws: Vec<(String, Vec<u8>)> = Vec::with_capacity(documents.len());
+    for document in &documents {
+        let path = source_root.join(document);
+        let raw = fs::read(&path).map_err(|source| RegistryError::Io {
+            path: path.clone(),
+            source,
+        })?;
+        witnesses.push(SourceFileWitness::of(document, &raw));
+        raws.push((document.clone(), raw));
+    }
+
     // PROP-045's one-document/one-form law, through the shared pivot's
-    // own collision finder: a split brain refuses even when the two
-    // forms carry disjoint anchors. The first sorted collision names
-    // both paths; no body text rides out.
+    // own collision finder — after the read pass, so both halves of the
+    // split brain are witnessed. The first sorted collision names both
+    // paths; no body text rides out.
     if let Some(collision) = vibe_specdoc::pair_collisions_in(&documents)
         .into_iter()
         .next()
     {
-        return Err(RegistryError::SpecParse {
-            path: source_root.join(&collision.markdown),
-            line: 1,
-            message: collision.message(),
-        });
+        return Ok(invalid(
+            witnesses,
+            SourceIssue {
+                path: source_root.join(&collision.markdown),
+                line: 1,
+                message: collision.message(),
+            },
+        ));
     }
 
     let mut authored = Vec::new();
     let mut minter_of: BTreeMap<String, String> = BTreeMap::new();
-    for document in &documents {
-        let prefix = address_prefix(package_coordinate, document)?;
-        let path = source_root.join(document);
-        let (text, _kind) =
-            vibe_specdoc::load_spec_text(&path).map_err(|error| RegistryError::SpecParse {
-                path: path.clone(),
-                line: 1,
-                message: error.message,
-            })?;
-        let doc = vibe_specdoc::from_markdown(&text).map_err(|error| RegistryError::SpecParse {
-            path: path.clone(),
-            line: error.line,
-            message: error.message,
-        })?;
+    for (document, raw) in raws {
+        let prefix = address_prefix(package_coordinate, &document)?;
+        let path = source_root.join(&document);
+        // UTF-8 first, then the pivot's one extension dispatch over the
+        // already-owned text — no second read, no caller-side md/xml
+        // branch. A UTF-8 failure names present-but-untrustworthy bytes.
+        let text = match String::from_utf8(raw) {
+            Ok(text) => text,
+            Err(error) => {
+                return Ok(invalid(
+                    witnesses,
+                    SourceIssue {
+                        path: path.clone(),
+                        line: 1,
+                        message: format!("invalid UTF-8: {error}"),
+                    },
+                ));
+            }
+        };
+        let (projected, _kind) = match vibe_specdoc::project_spec_text(&path, &text) {
+            Ok(projected) => projected,
+            Err(error) => {
+                return Ok(invalid(
+                    witnesses,
+                    SourceIssue {
+                        path: path.clone(),
+                        line: 1,
+                        message: error.message,
+                    },
+                ));
+            }
+        };
+        let doc = match vibe_specdoc::from_markdown(&projected) {
+            Ok(doc) => doc,
+            Err(error) => {
+                return Ok(invalid(
+                    witnesses,
+                    SourceIssue {
+                        path: path.clone(),
+                        line: error.line,
+                        message: error.message,
+                    },
+                ));
+            }
+        };
         for fact in authored_facts(&doc, &prefix) {
             if let Some(first) = minter_of.insert(fact.address.clone(), document.clone()) {
-                return Err(RegistryError::SpecParse {
-                    path,
-                    line: 1,
-                    message: format!(
-                        "duplicate full fact address `{}` (also minted by `{first}`)",
-                        fact.address
-                    ),
-                });
+                return Ok(invalid(
+                    witnesses,
+                    SourceIssue {
+                        path,
+                        line: 1,
+                        message: format!(
+                            "duplicate full fact address `{}` (also minted by `{first}`)",
+                            fact.address
+                        ),
+                    },
+                ));
             }
             authored.push(fact);
         }
     }
     authored.sort_by(|a, b| a.address.cmp(&b.address));
-    Ok(authored)
+    Ok(AuthoredSourceObservation::Available {
+        facts: authored,
+        documents: witnesses,
+    })
+}
+
+/// Scan one source root for every authored fact it addresses.
+///
+/// `source_root` is the root the layout resolves against — the project
+/// root for [`SourceKind::Host`], the slot root for
+/// [`SourceKind::Package`]. The coordinate is validated before anything
+/// else is read. Documents are the `.md`/`.xml` files under the current specs
+/// root (a package adds a root `README.md`/`README.xml`), minus the
+/// generated boot lane (`INDEX.md`, `STATIC.md`, `STATIC.xml`); both
+/// forms load through the [`vibe_specdoc::load_spec_text`] pivot, and an
+/// explicit symlink is never followed as a document. One logical document
+/// lives in one form: a same-stem Markdown/XML pair refuses through
+/// [`vibe_specdoc::pair_collisions_in`] before either form is parsed,
+/// whatever its anchors. The result is sorted by full address, and a
+/// duplicate full address refuses rather than choosing a document.
+///
+/// A thin wrapper over [`observe_authored_source`]: an invalid source
+/// converts back to the typed [`RegistryError::SpecParse`] this API has
+/// always returned, so the A1 CLI behavior is unchanged.
+pub fn scan_authored_facts(
+    source_root: &Path,
+    package_coordinate: &str,
+    source_kind: SourceKind,
+) -> Result<Vec<AuthoredFact>, RegistryError> {
+    match observe_authored_source(source_root, package_coordinate, source_kind)? {
+        AuthoredSourceObservation::Available { facts, .. } => Ok(facts),
+        AuthoredSourceObservation::Invalid { issue, .. } => Err(RegistryError::SpecParse {
+            path: issue.path,
+            line: issue.line,
+            message: issue.message,
+        }),
+    }
 }
 
 /// Walk the specs root, collecting spec documents relative to the source
