@@ -1158,39 +1158,39 @@
       "item_kind": "schema",
       "line": 1,
       "symbol": "lifecycle_report",
-      "end_line": 232
+      "end_line": 239
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/lifecycle_report.jtd.json",
       "item_kind": "schema-def",
-      "line": 82,
+      "line": 89,
       "symbol": "lifecycle_report::lifecycle_contribution_report",
-      "end_line": 173
+      "end_line": 180
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/lifecycle_report.jtd.json",
       "item_kind": "schema-def",
-      "line": 206,
+      "line": 213,
       "symbol": "lifecycle_report::lifecycle_delegation",
-      "end_line": 230
+      "end_line": 237
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/lifecycle_report.jtd.json",
       "item_kind": "schema-def",
-      "line": 193,
+      "line": 200,
       "symbol": "lifecycle_report::lifecycle_step_report",
-      "end_line": 205
+      "end_line": 212
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/lifecycle_report.jtd.json",
       "item_kind": "schema-def",
-      "line": 174,
+      "line": 181,
       "symbol": "lifecycle_report::slot_target",
-      "end_line": 192
+      "end_line": 199
     },
     {
       "crate_name": "<schema>",
@@ -1198,7 +1198,7 @@
       "item_kind": "schema",
       "line": 1,
       "symbol": "lifecycle_state",
-      "end_line": 121
+      "end_line": 213
     },
     {
       "crate_name": "<schema>",
@@ -1206,7 +1206,7 @@
       "item_kind": "schema-def",
       "line": 81,
       "symbol": "lifecycle_state::execution_record",
-      "end_line": 112
+      "end_line": 119
     },
     {
       "crate_name": "<schema>",
@@ -1228,9 +1228,25 @@
       "crate_name": "<schema>",
       "file": "schemas/lifecycle_state.jtd.json",
       "item_kind": "schema-def",
-      "line": 113,
+      "line": 120,
       "symbol": "lifecycle_state::state_artifact",
-      "end_line": 119
+      "end_line": 142
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/lifecycle_state.jtd.json",
+      "item_kind": "schema-def",
+      "line": 177,
+      "symbol": "lifecycle_state::state_digest_witness",
+      "end_line": 211
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/lifecycle_state.jtd.json",
+      "item_kind": "schema-def",
+      "line": 143,
+      "symbol": "lifecycle_state::state_input_measurement",
+      "end_line": 176
     },
     {
       "crate_name": "<schema>",
@@ -2002,6 +2018,94 @@
       "line": 45,
       "symbol": "repomd::repomd_file_entry",
       "end_line": 78
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/requirements_report.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "requirements_report",
+      "end_line": 402
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/requirements_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 307,
+      "symbol": "requirements_report::adoption_observation",
+      "end_line": 326
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/requirements_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 287,
+      "symbol": "requirements_report::authoring_observation",
+      "end_line": 306
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/requirements_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 327,
+      "symbol": "requirements_report::fact_status",
+      "end_line": 355
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/requirements_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 189,
+      "symbol": "requirements_report::relation_source",
+      "end_line": 231
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/requirements_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 356,
+      "symbol": "requirements_report::requirement_relation",
+      "end_line": 400
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/requirements_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 232,
+      "symbol": "requirements_report::requirement_row",
+      "end_line": 269
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/requirements_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 270,
+      "symbol": "requirements_report::requirement_source",
+      "end_line": 286
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/requirements_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 78,
+      "symbol": "requirements_report::requirements_observation",
+      "end_line": 117
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/requirements_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 118,
+      "symbol": "requirements_report::requirements_query",
+      "end_line": 145
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/requirements_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 146,
+      "symbol": "requirements_report::source_result",
+      "end_line": 188
     },
     {
       "crate_name": "<schema>",
@@ -11465,8 +11569,8 @@
       "item_kind": "fn",
       "line": 28,
       "symbol": "vibe_lifecycle::runner::hosted::LifecycleRun::delegated_transition",
-      "end_line": 173,
-      "fingerprint": "tok1:585a4226ae72cc747552ba86a463fe35515db3874a880dbb81f865a69b147215"
+      "end_line": 178,
+      "fingerprint": "tok1:f5de817fbffcc80c8d3335c9ec00b51989c36681c6099819144610f908df7bb4"
     },
     {
       "crate_name": "vibe-lifecycle",
@@ -13148,61 +13252,61 @@
       "item_kind": "fn",
       "line": 95,
       "symbol": "vibe_orchestrator::values::LifecycleValues::into_report",
-      "end_line": 138,
-      "fingerprint": "tok1:015e3937a0ba959c74d497465549178fd95d6ff153be0389913fd9ea35bcbe13"
+      "end_line": 143,
+      "fingerprint": "tok1:cfc343bac31993976994c524959db67aec03bb8e490e2d607c611553e10d6042"
     },
     {
       "crate_name": "vibe-orchestrator",
       "file": "crates/vibe-orchestrator/src/values.rs",
       "item_kind": "enum",
-      "line": 141,
+      "line": 146,
       "symbol": "vibe_orchestrator::values::StepStatus",
-      "end_line": 159,
+      "end_line": 164,
       "fingerprint": "tok1:6971dca7daeb0773c1d14a26ba74417f2f8763d43fce8b3247d6c3f79c1a94ee"
     },
     {
       "crate_name": "vibe-orchestrator",
       "file": "crates/vibe-orchestrator/src/values.rs",
       "item_kind": "fn",
-      "line": 162,
+      "line": 167,
       "symbol": "vibe_orchestrator::values::StepStatus::as_str",
-      "end_line": 172,
+      "end_line": 177,
       "fingerprint": "tok1:ed83a9182016ee5986757821552b09113b0f77d78f648609520f6f179f57b378"
     },
     {
       "crate_name": "vibe-orchestrator",
       "file": "crates/vibe-orchestrator/src/values.rs",
       "item_kind": "fn",
-      "line": 273,
+      "line": 278,
       "symbol": "vibe_orchestrator::values::check_delegation",
-      "end_line": 287,
+      "end_line": 292,
       "fingerprint": "tok1:f3b0e9eac56ba88862ee3f42c5ab735452167e6796fe0647f2516354733b4214"
     },
     {
       "crate_name": "vibe-orchestrator",
       "file": "crates/vibe-orchestrator/src/values.rs",
       "item_kind": "fn",
-      "line": 190,
+      "line": 195,
       "symbol": "vibe_orchestrator::values::contribution_report",
-      "end_line": 230,
+      "end_line": 235,
       "fingerprint": "tok1:a7e620b0675dd8227c547021893473e2b97e6167998d8beb0080ce4f45a6eb82"
     },
     {
       "crate_name": "vibe-orchestrator",
       "file": "crates/vibe-orchestrator/src/values.rs",
       "item_kind": "fn",
-      "line": 232,
+      "line": 237,
       "symbol": "vibe_orchestrator::values::delegation_member",
-      "end_line": 271,
+      "end_line": 276,
       "fingerprint": "tok1:344b59a7193b62d5b2f6c22b5c5ee4514542a0b980e4b7a77664eaecede3a98e"
     },
     {
       "crate_name": "vibe-orchestrator",
       "file": "crates/vibe-orchestrator/src/values.rs",
       "item_kind": "fn",
-      "line": 175,
+      "line": 180,
       "symbol": "vibe_orchestrator::values::step_report",
-      "end_line": 188,
+      "end_line": 193,
       "fingerprint": "tok1:4529271a3ac685795b2325183917875500ad211d909182cfdafac2ab40e045ba"
     },
     {
@@ -20176,6 +20280,14 @@
       "line": 1,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE",
+      "verb": "implements"
+    },
+    {
+      "file": "schemas/requirements_report.jtd.json",
+      "from_symbol": "requirements_report",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-REQUIREMENTS-WIRE",
       "verb": "implements"
     },
     {
@@ -29862,7 +29974,7 @@
     {
       "file": "crates/vibe-orchestrator/src/values.rs",
       "from_symbol": "vibe_orchestrator::values::StepStatus",
-      "line": 148,
+      "line": 153,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
       "verb": "documents"
@@ -29870,7 +29982,7 @@
     {
       "file": "crates/vibe-orchestrator/src/values.rs",
       "from_symbol": "vibe_orchestrator::values::StepStatus::as_str",
-      "line": 164,
+      "line": 169,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
       "verb": "documents"
@@ -29878,7 +29990,7 @@
     {
       "file": "crates/vibe-orchestrator/src/values.rs",
       "from_symbol": "vibe_orchestrator::values::check_delegation",
-      "line": 284,
+      "line": 289,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-HANDSHAKE",
       "verb": "implements"
@@ -29886,7 +29998,7 @@
     {
       "file": "crates/vibe-orchestrator/src/values.rs",
       "from_symbol": "vibe_orchestrator::values::contribution_report",
-      "line": 200,
+      "line": 205,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
       "verb": "documents"
@@ -29894,7 +30006,7 @@
     {
       "file": "crates/vibe-orchestrator/src/values.rs",
       "from_symbol": "vibe_orchestrator::values::delegation_member",
-      "line": 245,
+      "line": 250,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-HANDSHAKE",
       "verb": "implements"
@@ -29902,7 +30014,7 @@
     {
       "file": "crates/vibe-orchestrator/src/values.rs",
       "from_symbol": "vibe_orchestrator::values::step_report",
-      "line": 182,
+      "line": 187,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
       "verb": "documents"
@@ -37242,7 +37354,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:2e7665f18e38609b6171d8a3062ebb1bd45d20ec9da3edbda0d040c07bd57d87",
+      "content_hash": "sha256:7aeadfb2e410d59c236dae3e4f937195b31991490f1b66743d0cb6ab916e7765",
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "PROP-000: Foundational technical decisions",
@@ -39026,7 +39138,7 @@
     },
     {
       "anchor": "invariants",
-      "content_hash": "sha256:90ce0878f46aac77e983a82bb18fd4ff503b53813f452f7f1c2c59ff6a425a35",
+      "content_hash": "sha256:478d7286669420aaa64fa5d6bae1e5612167406b9a9bf1f53461e1e351cdc89d",
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "Invariants",
@@ -39044,10 +39156,10 @@
     },
     {
       "anchor": "INV-VOCABULARY",
-      "content_hash": "sha256:a8e9be14b1600a8e61cf6d776c07037d855e85b2e897accfe484dc47198b9854",
+      "content_hash": "sha256:7c56a2e070113dabbe7c806154e4b9b1477df2db126a530bcacec3efa2ab7039",
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
-      "heading": "**Vocabulary lock, amended by the owner-approved lifecycle.** `lifecycle` and `phase` are canonical VibeVM terms; their exact grammar is PROP-054 `##VOCABULARY-ADMITTED`. `goal` remains prior-art vocabulary, and `plugin` is only a precise human umbrella for a package-supplied extension/mechanism implementation or an external ecosystem artifact — never a stored identity or installable kind. The machine nouns are package, extension point/mechanism, contribution, execution and handler/provider. The installable kinds remain exactly `flow`, `feat`, `stack`, `tool`, `mcp`, `lang`; that register grows only by owner amendment to `VIBEVM-SPEC.md` §4.1 (`app` is anticipated). Bazel/Maven internals outside the admitted set are not imported blindly. @status:spec/done",
+      "heading": "**Vocabulary lock, amended by the owner-approved lifecycle.** `lifecycle` and `phase` are canonical VibeVM terms; their exact grammar is PROP-054 `##VOCABULARY-ADMITTED`. `goal` remains prior-art vocabulary, and `plugin` is only a precise human umbrella for a package-supplied extension/mechanism implementation or an external ecosystem artifact — never a stored identity or installable kind. The machine nouns are package, extension point/mechanism, contribution, execution and handler/provider. The installable kinds are `flow`, `feat`, `stack`, `tool`, `mcp`, `lang`; this set is exact and grows only by owner amendment to `VIBEVM-SPEC.md` §4.1 (`app` is anticipated). Bazel/Maven internals outside the admitted set are not imported blindly. @status:spec/done",
       "line": 317,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#INV-VOCABULARY"
     },
@@ -50552,7 +50664,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:5bc8bc529f25d36f04d432de2dac66c31dc3fff6f6a2d3d149b58e10cf9d4cba",
+      "content_hash": "sha256:3778a7cee7e9277cc10f9ddb6a31fdf642286489af4c6e292789f6c4fc66c2a5",
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "PROP-054 — The vibe lifecycle and the extension machine",
@@ -51047,7 +51159,7 @@
     },
     {
       "anchor": "lifecycle",
-      "content_hash": "sha256:426355696ae1a0a9ff13fac7e2865d03b449a26c714432fd0b7b25673927669a",
+      "content_hash": "sha256:8ad7b4302529f1f0daadc84bcd9b13d121b6ec96753ec1041600c0119f1d84d8",
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "4. The vibe lifecycle",
@@ -51272,7 +51384,7 @@
     },
     {
       "anchor": "external-orchestration",
-      "content_hash": "sha256:d08cd61f688d165d02cc22a1deaf7b82f8100b8defd8a3c2fd8258410189eb81",
+      "content_hash": "sha256:e08de584f5174513d217e9a1aa135146da37e06888eccfb5caf371995407905f",
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "4.6 The lifecycle is a framework; the development loop is external",
@@ -51299,10 +51411,10 @@
     },
     {
       "anchor": "VERIFY-EVIDENCE-IDENTITY",
-      "content_hash": "sha256:a15cc5f7ab465192a43fd92f90db5d5be83b6a07fa143adb794771fec0e2028b",
+      "content_hash": "sha256:ccd1c944834d2f3e558a1f81a555c0be2775926f425a9eeb6da9a125fe83b249",
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
-      "heading": "**Verification evidence is valid only for the exact identity it measured.** The identity is the tuple of the producing run id, selected workspace node, qualified execution reference, declaration fingerprint, declared input-set witness and consumed/produced artifact witnesses. Each witness names its digest algorithm and exact scope. An ordering fact such as “build ran earlier in this chain” proves no identity equality. Evidence for any other tuple is `stale`, `missing`, `unstable` or `unavailable` — never a pass and never the synthesized status `unmet`. Verify reports the comparison and stops on a real mismatch. An external orchestrator may invoke verify again: incremental generate/build/test recompute against current inputs, create skips when fresh, and verify can accept matching witnesses — two durable invocations, no hidden engine back-edge or unbounded loop. @status:spec/done",
+      "heading": "**Verification evidence is valid only for the exact identity it measured.** The identity is the tuple of the producing run id, selected workspace node, qualified execution reference, declaration fingerprint, declared input-set witness and consumed/produced artifact witnesses. Each witness names its digest algorithm and exact scope. A `measured_run_id` and its `measured` witness are one attributable measurement and are therefore present exactly together: neither an unowned witness nor a run id pointing at a measurement the row says does not exist is evidence; the outcome matrix separately permits only `unavailable` to omit the pair. An ordering fact such as “build ran earlier in this chain” proves no identity equality. Evidence for any other tuple is `stale`, `missing`, `unstable` or `unavailable` — never a pass and never the synthesized status `unmet`. Verify reports the comparison and stops on a real mismatch. An external orchestrator may invoke verify again: incremental generate/build/test recompute against current inputs, create skips when fresh, and verify can accept matching witnesses — two durable invocations, no hidden engine back-edge or unbounded loop. @status:spec/done",
       "line": 176,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#VERIFY-EVIDENCE-IDENTITY"
     },
@@ -51317,10 +51429,10 @@
     },
     {
       "anchor": "EVIDENCE-ARTIFACT-WITNESS",
-      "content_hash": "sha256:3fedf2c8292b30819571c224ed33e502e60f7a8178554535b70c29fb517b31e9",
+      "content_hash": "sha256:54004768b1e8ca9486745884d3b63ca2ed443eb73868e5fdce318af84531b826",
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
-      "heading": "**Artifacts carry independent content identity.** A regular file is witnessed by its bytes; a directory artifact by a canonical, link-free relative-path tree digest. The witness records id, kind, exact path, algorithm and digest when produced/fresh-probed, and verify recomputes it. Missing, physically aliased, changed or unwitnessed legacy output is named separately; output existence alone never proves freshness. Hashing an explicitly declared artifact is verification work, not permission to hash unrelated project or system trees. @status:spec/done",
+      "heading": "**Artifacts carry independent content identity.** A regular file is witnessed by its bytes; a directory artifact by a canonical, link-free relative-path tree digest. Durable lifecycle state may retain the existing absolute machine path needed to reopen it, but the external evidence row records the canonical project-relative path under `run.selected`; selected node + relative path is the exact portable identity and does not leak the operator's home. The witness records id, kind, path, algorithm and digest when produced/fresh-probed, and verify recomputes it. Missing, physically aliased, changed or unwitnessed legacy output is named separately; output existence alone never proves freshness. Hashing an explicitly declared artifact is verification work, not permission to hash unrelated project or system trees. @status:spec/done",
       "line": 178,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#EVIDENCE-ARTIFACT-WITNESS"
     },
@@ -51362,10 +51474,10 @@
     },
     {
       "anchor": "FACT-QUERY-CONTRACT",
-      "content_hash": "sha256:af76f3ddb6f5f7fc765e099ff9a447d55707726353a3f08f53e456f58189ff67",
+      "content_hash": "sha256:3d3fd57874c07e1f3212fd7be29d89e60a13a52b613d5ed19efc151a282a74e6",
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
-      "heading": "The R7.5 requirements query returns bounded metadata only: observation/source digests, selected-node and optional current lifecycle run identity, full fact address, source coordinate/kind, optional authoring status, separately-present consumer adoption, and optionally requested relation edges/provenance. It returns no fact prose, code body, prompt, recommendation, ranking or next task. It reads authored specs/materialised package documents and the existing adoption registry without sync or write; relation enrichment is injected as an optional provider. Missing registry/map/package participation produces a generated partial/unavailable value; a malformed present source is named in its own source result and never becomes lifecycle failure. @status:spec/done",
+      "heading": "The R7.5 requirements query returns bounded metadata only: observation/source digests, selected-node and optional current lifecycle run identity, full fact address, source coordinate/kind, optional authoring status, separately-present consumer adoption, and optionally requested relation edges/provenance. Base source identity is the package coordinate with exactly one `host|package` kind value — the same coordinate may not occur under both kinds — because relation-source enrichment keys by coordinate alone and must recover one unambiguous kind to validate fresh-versus-carried provenance; every relation-source result therefore binds to exactly one enumerated base source. It returns no fact prose, code body, prompt, recommendation, ranking or next task. It reads authored specs/materialised package documents and the existing adoption registry without sync or write; relation enrichment is injected as an optional provider. Missing registry/map/package participation produces a generated partial/unavailable value; a malformed present source is named in its own source result and never becomes lifecycle failure. @status:spec/done",
       "line": 183,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#FACT-QUERY-CONTRACT"
     },
@@ -52424,7 +52536,7 @@
     },
     {
       "anchor": "reference",
-      "content_hash": "sha256:04290defa3df44e1f221d52c796aaf2d3fecf0db6751ce9986fb50d5f901a329",
+      "content_hash": "sha256:7628eb54632073cb2264ef9be8a07f62990b9707ea4002fd29d74701d4a9a6f1",
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "14. Reference — the exact shapes (normative for the build)",
@@ -52568,7 +52680,7 @@
     },
     {
       "anchor": "external-orchestration-wire",
-      "content_hash": "sha256:ab6fd40c47c63b92dc6df57b622360805408d01c908d9c2f7f6f156fc4c17710",
+      "content_hash": "sha256:d1f4a7380a42d8d881a635d82f3503a370fd761e5aa7714b0115a46c9e68ddf5",
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "14.7 R7.5 evidence and requirements wires",
@@ -52599,7 +52711,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "The shared library query is projected as `vibe requirements [--address-prefix <spec://prefix>] [--limit <N>] [--relations] [--json] [--path <project>]` and MCP `requirements_query({address_prefix?, limit?, relations?})`. Default limit is 100, hard maximum 256; zero, overflow, wrong types and unknown members refuse before filesystem access. MCP has no path member because server context is authority. With `relations = false` no specmap engine/map is loaded. Existing `vibe verify --json` and `lifecycle_run({phase:\"verify\"})` are the control/evidence surfaces; R7.5 adds no second lifecycle executor and no `evidence` verb merely to duplicate their generated root. @status:spec/done",
-      "line": 518,
+      "line": 523,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-REQUIREMENTS-SURFACES"
     },
     {
@@ -52608,7 +52720,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "15. Glossary — the words this document leans on",
-      "line": 521,
+      "line": 526,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#glossary"
     },
     {
