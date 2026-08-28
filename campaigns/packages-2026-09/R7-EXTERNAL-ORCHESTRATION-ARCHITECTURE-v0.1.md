@@ -487,6 +487,28 @@ When the phase runner reaches `verify`, before user verify contributions:
 7. on `stale | missing | unstable`, stop verify before contribution dispatch;
    on `matched | unavailable`, continue to configured verify contributions.
 
+“CURRENT-plan executions” above means the strict execution prefix that has
+completed **before** the engine-owned verify boundary: validate/install/
+generate/build/test/create contributions in their plan order. Verify
+contributions themselves and future package/deploy rows are not evidence
+producers yet and are excluded. The orchestrator computes one split before the
+first execution whose phase is verify-or-later; if no such row exists but the
+requested chain contains `verify`, reconciliation still fires after the
+completed prefix (and before any later suffix). A project with zero verify
+contributions therefore still gets the member; a package/deploy request cannot
+skip it merely because verify has no user rows.
+
+The external input row's `declaration_fingerprint` and `patterns` describe the
+**current** effective declaration reconstructed at verify. The durable state's
+fingerprint is the comparison operand. Equality is required for `matched`; a
+difference is `stale` with `input-declaration-changed`. Carrying the current
+fingerprint makes `evidence_id` move for the new declaration even when its file
+witness happens to match; the measured witness/run pair remains visibly prior
+and the stale status makes no claim that it belongs to the current declaration.
+In the ordinary inclusive chain, a changed predecessor reruns and replaces its
+measurement before verify, so this arm principally protects corruption/race
+edges rather than manufacturing stale during normal recomputation.
+
 A durable success row whose declaration is no longer in the current plan is
 not selected: lifecycle state is a freshness cache, not an append-only audit
 log, and a removed contribution must not poison every future verify. A current
