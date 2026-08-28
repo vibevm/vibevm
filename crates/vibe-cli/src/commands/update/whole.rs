@@ -84,7 +84,7 @@ fn absorb_resume_failure(error: anyhow::Error, identity: &UpdateIdentity) -> any
     match install::take_measured_failure(error) {
         Ok(install::MeasuredFailure {
             original,
-            measurement:
+            evidence:
                 install::Measurement::Slot {
                     progress,
                     reports,
@@ -107,10 +107,7 @@ fn absorb_resume_failure(error: anyhow::Error, identity: &UpdateIdentity) -> any
         // barrier failure and stays install-shaped, and a LIFECYCLE
         // measurement is the post-durability stage's own failure.
         Ok(failure) => compile_trace::carry(
-            crate::commands::lifecycle::registered_family(
-                &identity.project_root,
-                failure.measurement,
-            ),
+            crate::commands::lifecycle::registered_family(&identity.project_root, failure.evidence),
             failure.original,
             failure.emit_machine_failure,
         ),
@@ -255,7 +252,7 @@ mod tests {
         let carried = absorb_resume_failure(
             vibe_orchestrator::failure::carry(MeasuredFailure {
                 original: anyhow::Error::new(Sentinel).context("finishing the parked slot run"),
-                measurement: Measurement::Slot {
+                evidence: Measurement::Slot {
                     progress: Box::new(vibe_install::InstallProgress {
                         complete: true,
                         fresh: false,
@@ -288,7 +285,9 @@ mod tests {
         );
         assert!(original_error.downcast_ref::<Sentinel>().is_some());
         assert!(
-            !vibe_orchestrator::failure::is_measured(&original_error),
+            !vibe_orchestrator::failure::is_carried::<vibe_orchestrator::failure::Measurement>(
+                &original_error
+            ),
             "the neutral wrapper never escapes to main",
         );
         let RegisteredReportDraft::Update(draft) = report else {

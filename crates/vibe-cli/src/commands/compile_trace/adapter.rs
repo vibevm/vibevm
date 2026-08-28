@@ -56,7 +56,8 @@ use vibe_wire::generated::shared::CompileTraceReport;
 
 use crate::output;
 
-use super::bounded::BoundedDiagnostic;
+use vibe_orchestrator::trace::BoundedDiagnostic;
+
 use super::draft::RegisteredReportDraft;
 use super::{FinalizedCommand, PlanDisposition, present, quiet};
 

@@ -86,7 +86,7 @@ fn resumed() -> ResumeOutcome {
 fn failed() -> ResumeOutcome {
     ResumeOutcome::Failed(MeasuredFailure {
         original: anyhow::Error::new(Sentinel).context("finishing the parked slot run"),
-        measurement: Measurement::Slot {
+        evidence: Measurement::Slot {
             progress: Box::new(vibe_install::InstallProgress::fresh(vec![".".into()])),
             reports: vec![row("resumed-in-failure")],
             packages_resolved: 5,
@@ -111,7 +111,7 @@ fn failure_of(outcome: ResumeOutcome) -> MeasuredFailure {
 
 /// The slot rows of a measurement, for the assertions below.
 fn failure_rows(failure: &MeasuredFailure) -> &[vibe_install::SlotLifecycleReport] {
-    match &failure.measurement {
+    match &failure.evidence {
         Measurement::Slot { reports, .. } | Measurement::InstallBarrier { reports, .. } => reports,
         Measurement::Lifecycle { .. } => panic!("an apply measures slot work"),
     }
@@ -200,7 +200,7 @@ fn a_failed_resume_receives_the_same_prefix_and_keeps_its_measurement() {
         progress,
         reports,
         packages_resolved,
-    } = &failure.measurement
+    } = &failure.evidence
     else {
         panic!("an apply measures slot work");
     };

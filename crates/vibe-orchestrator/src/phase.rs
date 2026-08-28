@@ -142,7 +142,7 @@ fn absorb_resume_failure(error: anyhow::Error, measured: &mut Measured) -> anyho
         // absorbed.
         Ok(MeasuredFailure {
             original,
-            measurement: Measurement::Slot { reports, .. },
+            evidence: Measurement::Slot { reports, .. },
             ..
         }) => {
             measured
@@ -183,10 +183,10 @@ pub fn run_phases(inputs: PhaseRun<'_>) -> PhaseOutcome {
         Err(error) => match take(error) {
             Ok(MeasuredFailure {
                 original,
-                measurement,
+                evidence,
                 emit_machine_failure,
             }) => PhaseOutcome::Failed {
-                measurement,
+                measurement: evidence,
                 original,
                 emit_machine_failure,
             },

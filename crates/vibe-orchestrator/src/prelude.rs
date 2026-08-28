@@ -9,6 +9,10 @@ use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
 
 use crate::install::PreparedSelection;
 
+#[cfg(test)]
+#[path = "prelude/tests.rs"]
+mod tests;
+
 /// This invocation's durable run identity, plus the ONE root its trace may be
 /// stored under.
 ///
@@ -62,6 +66,44 @@ pub struct RunPrelude {
     /// header, deliberately NOT a member of `RunIdentity`: the selector
     /// decides identity, it does not echo its inputs.
     pub selected: String,
+}
+
+impl RunPrelude {
+    /// Open this epoch's compile-trace owner — or stand down honestly, without
+    /// a lock and without a tree.
+    ///
+    /// This is the ONE join between "which root may hold a trace" and "which of
+    /// the funnel's two entry points opens it", and it belongs here because
+    /// both halves do: [`PreparedSelection::loaded_root`] is this epoch's own
+    /// answer, and [`crate::trace`] owns the funnel. Re-deriving the pair at a
+    /// surface would be a second answer to a question the epoch already
+    /// settled, and the cheapest wrong version of it — falling back to
+    /// [`PreparedSelection::root`] when discovery failed — is exactly the
+    /// member-locks-the-wrong-home bug the type-level note above exists to
+    /// prevent.
+    ///
+    /// The CLOCK stays injected. Nothing in this crate reads time for a trace:
+    /// the surface hands in the instant used to terminalise a displaced
+    /// predecessor, and hands in the finish instant again at
+    /// [`crate::trace::finalize`].
+    ///
+    /// ```no_run
+    /// use vibe_orchestrator::RunPrelude;
+    /// use vibe_orchestrator::trace::TracePreparation;
+    /// use vibe_wire::generated::shared::Timestamp;
+    ///
+    /// fn open(prelude: &RunPrelude) -> TracePreparation {
+    ///     let fixed = Timestamp::from_timestamp(0, 0).unwrap();
+    ///     prelude.prepare_trace(&|| fixed)
+    /// }
+    /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE")]
+    pub fn prepare_trace(&self, clock: crate::trace::Clock<'_>) -> crate::trace::TracePreparation {
+        match self.selection.loaded_root() {
+            Some(root) => crate::trace::prepare(root, &self.identity, clock),
+            None => crate::trace::without_workspace(&self.identity),
+        }
+    }
 }
 
 /// Choose this invocation's durable run identity through the one selector,

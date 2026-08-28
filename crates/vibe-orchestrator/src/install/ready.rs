@@ -136,7 +136,7 @@ pub(super) fn apply(
         }) => {
             return Err(carry(MeasuredFailure {
                 original: anyhow::Error::new(*source),
-                measurement: Measurement::InstallBarrier {
+                evidence: Measurement::InstallBarrier {
                     progress,
                     reports,
                     packages_resolved,
@@ -326,7 +326,7 @@ fn join_applied_rows(
         }
         ResumeOutcome::Failed(mut failure) => {
             if let Measurement::Slot { reports, .. } | Measurement::InstallBarrier { reports, .. } =
-                &mut failure.measurement
+                &mut failure.evidence
             {
                 *reports = super::prefixed(applied_rows.to_vec(), std::mem::take(reports));
             }

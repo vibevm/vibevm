@@ -36,7 +36,7 @@ pub(crate) use callback::DirectInstallWorld;
 use clean::refuse_untracked_agent_rows;
 pub use clean::run_clean;
 pub(crate) use clean::run_clean_only;
-pub(crate) use draft::LifecycleDraft;
+pub(crate) use draft::render_lifecycle;
 pub(crate) use observer::CliRunObserver;
 pub(crate) use report::render_agent_task_fence;
 pub(crate) use slot::{
@@ -371,10 +371,10 @@ fn execute_after_open(
 ) -> compile_trace::CommandExit<compile_trace::RegisteredReportDraft> {
     match vibe_orchestrator::run_phases(inputs) {
         vibe_orchestrator::PhaseOutcome::Completed(values) => compile_trace::CommandExit::Success(
-            compile_trace::RegisteredReportDraft::Lifecycle(Box::new(LifecycleDraft(values))),
+            compile_trace::RegisteredReportDraft::Lifecycle(Box::new(values)),
         ),
         vibe_orchestrator::PhaseOutcome::Parked(values) => compile_trace::CommandExit::Parked(
-            compile_trace::RegisteredReportDraft::Lifecycle(Box::new(LifecycleDraft(values))),
+            compile_trace::RegisteredReportDraft::Lifecycle(Box::new(values)),
         ),
         vibe_orchestrator::PhaseOutcome::Failed {
             measurement,
@@ -442,32 +442,18 @@ pub(crate) fn lifecycle_family(
             )
         }
     };
-    compile_trace::RegisteredReportDraft::Lifecycle(Box::new(LifecycleDraft(values)))
+    compile_trace::RegisteredReportDraft::Lifecycle(Box::new(values))
 }
 
-/// The prelude epoch's trace half, which stays here because the recorder does.
+/// The prelude epoch, whose OWN inherent `prepare_trace` opens this command's
+/// trace owner.
+///
+/// The join it performs — "a loaded tree names the one canonical trace home,
+/// and nothing else does" — used to be a surface trait here. It is not a
+/// surface fact: both halves are the epoch's (`selection.loaded_root()`) and
+/// the funnel's, and a second copy of the pairing is a second answer to which
+/// root a member's install may lock. The surface still injects the clock.
 pub(crate) use vibe_orchestrator::RunPrelude;
-
-pub(crate) trait PrepareTrace {
-    /// Open the owner against the canonical trace home — or stand down
-    /// honestly, without a lock and without a tree.
-    fn prepare_trace(
-        &self,
-        clock: &dyn Fn() -> vibe_wire::generated::shared::Timestamp,
-    ) -> compile_trace::TracePreparation;
-}
-
-impl PrepareTrace for RunPrelude {
-    fn prepare_trace(
-        &self,
-        clock: &dyn Fn() -> vibe_wire::generated::shared::Timestamp,
-    ) -> compile_trace::TracePreparation {
-        match self.selection.loaded_root() {
-            Some(root) => compile_trace::prepare(root, &self.identity, &clock),
-            None => compile_trace::without_workspace(&self.identity),
-        }
-    }
-}
 
 /// Choose this invocation's durable run identity through the one selector,
 /// before anything is allocated.

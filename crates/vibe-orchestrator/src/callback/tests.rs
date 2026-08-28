@@ -161,7 +161,7 @@ fn a_planning_refusal_after_slot_rows_carries_them_in_the_lifecycle_family() {
         rows,
         stopped_phase,
         ..
-    } = carried.measurement
+    } = carried.evidence
     else {
         panic!("a post-durability stage failure is LIFECYCLE-shaped, not slot-shaped");
     };
@@ -201,8 +201,9 @@ fn a_planning_refusal_with_no_rows_is_still_lifecycle_shaped() {
 
     let error = after_durable_world_stage(&SilentObserver, &path, run, &workspace, &agent())
         .expect_err("the world cannot be collected");
-    let carried = take(error).unwrap_or_else(|error| panic!("still measured: {error:#}"));
-    assert!(matches!(carried.measurement, Measurement::Lifecycle { .. }));
+    let carried =
+        take::<Measurement>(error).unwrap_or_else(|error| panic!("still measured: {error:#}"));
+    assert!(matches!(carried.evidence, Measurement::Lifecycle { .. }));
     assert!(
         format!("{:#}", carried.original).contains("absent from effective-world lock"),
         "with the same untouched original",
@@ -241,7 +242,8 @@ fn a_foreign_lease_refuses_the_post_durability_stage_before_planning() {
     let error = after_durable_world_stage(&SilentObserver, &path, run, &workspace, &agent())
         .expect_err("a foreign lease can never reach the world stage");
 
-    let carried = take(error).unwrap_or_else(|error| panic!("still measured: {error:#}"));
+    let carried =
+        take::<Measurement>(error).unwrap_or_else(|error| panic!("still measured: {error:#}"));
     let rendered = format!("{:#}", carried.original);
     assert!(
         carried
@@ -284,7 +286,8 @@ fn a_selected_node_mismatch_refuses_the_post_durability_stage() {
 
     let error = after_durable_world_stage(&SilentObserver, &path, run, &workspace, &agent())
         .expect_err("a selected-node mismatch can never reach the world stage");
-    let carried = take(error).unwrap_or_else(|error| panic!("still measured: {error:#}"));
+    let carried =
+        take::<Measurement>(error).unwrap_or_else(|error| panic!("still measured: {error:#}"));
     assert!(
         carried
             .original

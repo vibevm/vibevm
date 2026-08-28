@@ -277,7 +277,7 @@ fn capture(
             // MOVED, never formatted: the exit code is read by downcasting
             // through this object's chain.
             original,
-            measurement: Measurement::Slot {
+            evidence: Measurement::Slot {
                 progress: Box::new(progress),
                 reports: take(),
                 packages_resolved,
@@ -329,7 +329,7 @@ pub fn own_resume(
         }
         ResumeOutcome::Failed(mut failure) => {
             if let Measurement::Slot { reports, .. } | Measurement::InstallBarrier { reports, .. } =
-                &mut failure.measurement
+                &mut failure.evidence
             {
                 *reports = prefixed(take_current(), std::mem::take(reports));
             }

@@ -4,11 +4,12 @@
 //!
 //! It owns selected-world loading and plan construction, run-identity
 //! selection, the validate/install barrier and slot continuation, phase
-//! dispatch and removed-row reconciliation, package-binding composition, and
-//! the report-neutral success/park/failure values. Terminal and JSON
-//! rendering, interactive confirmation, argument grammar, registry cell
-//! composition and provider construction stay in the surfaces, behind
-//! [`ports`].
+//! dispatch and removed-row reconciliation, package-binding composition, the
+//! report-neutral success/park/failure values, and the command-level compile
+//! [`trace`] owner and its consuming funnel. Terminal and JSON rendering,
+//! interactive confirmation, argument grammar, registry cell composition,
+//! provider construction and the registered report families stay in the
+//! surfaces, behind [`ports`].
 //!
 //! Provider, model and credential configuration is not a planning fact and
 //! cannot cross this boundary: the surface injects an already-built
@@ -29,6 +30,7 @@ use vibe_wire::generated::lifecycle::e1::context::{Project, World};
 
 pub mod failure;
 pub mod ports;
+pub mod trace;
 pub mod values;
 
 mod callback;
@@ -161,15 +163,21 @@ pub type PlannedExecution = vibe_lifecycle::ExecutableContribution;
 mod tests {
     use std::collections::BTreeSet;
 
-    /// A12 widened the value-only atom into the shared application service.
-    /// The set is still EXACT, and still contains no surface, provider or
-    /// transport edge: the whole point of the extraction is that neither CLI
-    /// nor MCP can be reached from here.
+    /// A12 widened the value-only atom into the shared application service;
+    /// A13 added the trace funnel. The set is still EXACT, and still contains
+    /// no surface, provider or transport edge: the whole point of the
+    /// extraction is that neither CLI nor MCP can be reached from here.
     ///
-    /// `toml` is the one edge beyond the accepted nine, and it is accepted:
-    /// the moved package-skill preset builder constructs
-    /// `ExtensionConfig::from_table(toml::Table)`, a `vibe-core` public type
-    /// whose crate that crate does not re-export.
+    /// Two edges go beyond the accepted nine, and both are accepted for a
+    /// named, load-bearing reason:
+    ///
+    /// * `toml` — the moved package-skill preset builder constructs
+    ///   `ExtensionConfig::from_table(toml::Table)`, a `vibe-core` public type
+    ///   whose crate that crate does not re-export;
+    /// * `chrono` — the moved trace funnel parses the lifecycle's own recorded
+    ///   RFC 3339 start into the trace epoch's instant, and
+    ///   `vibe_wire ..shared::Timestamp` IS `chrono::DateTime<Utc>`. Nothing
+    ///   here reads a clock: every instant the funnel writes is injected.
     #[test]
     fn the_application_service_has_exactly_the_accepted_lower_dependencies() {
         let manifest: toml::Table = toml::from_str(include_str!("../Cargo.toml")).unwrap();
@@ -183,6 +191,7 @@ mod tests {
             .collect::<BTreeSet<_>>();
         let expected = BTreeSet::from([
             "anyhow",
+            "chrono",
             "specmark",
             "toml",
             "vibe-agent-projection",
@@ -195,7 +204,7 @@ mod tests {
         ]);
         assert_eq!(
             actual, expected,
-            "A12 carries the shared algorithm only: no CLI, MCP or LLM edge"
+            "A12/A13 carry the shared algorithm only: no CLI, MCP or LLM edge"
         );
         // The exactness above is the fence; this states the INTENT it exists
         // for, so a widening that happened to keep the set exact is still
@@ -243,12 +252,17 @@ mod tests {
 
     /// The dependency set is a necessary but not sufficient fence: a provider
     /// seam can also arrive as a stored type, a config field or a borrowed CLI
-    /// vocabulary. This reads the crate's own PRODUCTION sources.
+    /// vocabulary, and a RENDERING seam can arrive as a borrowed context, a
+    /// clap identity or a printing call. This reads the crate's own PRODUCTION
+    /// sources.
     ///
     /// It deliberately does NOT forbid `Manifest` outright — world collection
     /// and the install core legitimately parse manifests. What it forbids is
-    /// the named seams: the whole user config, the provider section, and the
-    /// surface's own source-mutation grammar.
+    /// the named seams: the whole user config, the provider section, the
+    /// surface's own source-mutation grammar, and — since A13 moved the trace
+    /// funnel down — every presentation symbol the funnel deliberately left
+    /// behind, so "the adapter followed the values down" is a red rather than a
+    /// review question.
     #[test]
     fn no_production_source_names_a_config_provider_or_surface_seam() {
         let root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("src");
@@ -270,6 +284,12 @@ mod tests {
                 if name == "tests.rs" || name.ends_with("_tests.rs") {
                     continue;
                 }
+                if path
+                    .components()
+                    .any(|part| part.as_os_str() == std::ffi::OsStr::new("tests"))
+                {
+                    continue;
+                }
                 let body = std::fs::read_to_string(&path).unwrap();
                 // Spelled in halves on purpose: this checker's own source must
                 // not contain the strings it forbids, or it would report
@@ -284,6 +304,23 @@ mod tests {
                     concat!("git", "_auth"),
                     concat!("git", "_token_env"),
                     concat!("credential", "_helper"),
+                    // A13: presentation stays in the surface. A borrowed
+                    // rendering context, a clap identity, a JSON emission or a
+                    // deferred-plan flush below this line would mean the
+                    // adapter followed the values down.
+                    // (`dialoguer` and `console` are fenced by NAME in the
+                    // dependency red above; they are deliberately not needles
+                    // here, because that red's own list spells them literally
+                    // and a source scan would report this file.)
+                    concat!("output", "::Context"),
+                    concat!("clap", "::"),
+                    concat!("emit", "_json"),
+                    concat!("flush", "_json_plans"),
+                    concat!("discard", "_json_plans"),
+                    concat!("is", "_quiet"),
+                    concat!("is", "_json"),
+                    concat!("quiet", "_suffix"),
+                    concat!("render", "_human"),
                 ] {
                     if body.contains(needle) {
                         offenders.push(format!("{} names `{needle}`", path.display()));

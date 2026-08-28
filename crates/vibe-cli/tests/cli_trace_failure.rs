@@ -183,7 +183,7 @@ fn the_suppressed_prerequisite_slot_failure_matrix_holds_both_ways() {
         "nor does the terminal error:\n off: {off_tail}\n on:  {on_tail}",
     );
     assert!(
-        !on_tail.contains("FailedDraft"),
+        !on_tail.contains("FailedDraft") && !on_tail.contains("Carried"),
         "and the transport carrier never reaches the operator: {on_tail}",
     );
 }
@@ -455,7 +455,7 @@ url = \"file:///{}\"
 
     let tail = String::from_utf8_lossy(&via_update.stderr).into_owned();
     assert!(
-        !tail.contains("FailedDraft"),
+        !tail.contains("FailedDraft") && !tail.contains("Carried"),
         "the carrier never reaches stderr: {tail}",
     );
     assert_eq!(

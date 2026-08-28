@@ -93,7 +93,7 @@ fn metadata() -> vibe_lifecycle::RunMetadata {
 fn failed(rows: Vec<vibe_install::SlotLifecycleReport>) -> ResumeOutcome {
     ResumeOutcome::Failed(crate::commands::install::MeasuredFailure {
         original: anyhow::Error::new(Sentinel).context("finishing the parked slot run"),
-        measurement: crate::commands::install::Measurement::Slot {
+        evidence: crate::commands::install::Measurement::Slot {
             progress: Box::new(vibe_install::InstallProgress::fresh(vec![".".into()])),
             reports: rows,
             packages_resolved: 3,
@@ -314,7 +314,7 @@ fn an_invalid_handoff_is_refused_before_the_current_rows_are_taken() {
         "and the exact validation error is returned: {error:#}",
     );
     assert!(
-        !vibe_orchestrator::failure::is_measured(&error),
+        !vibe_orchestrator::failure::is_carried::<vibe_orchestrator::failure::Measurement>(&error),
         "root-neutral: no draft was fabricated here",
     );
 }

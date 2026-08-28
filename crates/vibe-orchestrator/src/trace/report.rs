@@ -39,7 +39,7 @@ use super::BoundedDiagnostic;
 /// Zero counts, no path, no timings, and at least one nonblank reason: the
 /// epoch refuses a silent `unavailable`, because a record that says only
 /// "there is no trace" and not why is a record that reads like a bug.
-pub(super) fn unavailable(
+pub(crate) fn unavailable(
     run_id: &str,
     reasons: &[BoundedDiagnostic],
     notices: Vec<BoundedDiagnostic>,
@@ -62,7 +62,7 @@ pub(super) fn unavailable(
 
 /// The member for a trace that really opened, in whatever state the writer
 /// left it.
-pub(super) fn from_summary(
+pub(crate) fn from_summary(
     run_id: &str,
     summary: &TraceSummary,
     notices: Vec<BoundedDiagnostic>,

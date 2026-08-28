@@ -342,7 +342,7 @@ fn owned_continuation_values(
         // A resume builds its OWN lifecycle, so its rows exist nowhere else,
         // and the in-place prefix predates BOTH lifecycles — hence the join.
         ResumeOutcome::Failed(failure) => {
-            let (own_progress, rows) = match failure.measurement {
+            let (own_progress, rows) = match failure.evidence {
                 crate::commands::install::Measurement::Slot {
                     progress, reports, ..
                 }

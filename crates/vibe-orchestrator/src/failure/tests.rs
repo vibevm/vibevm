@@ -42,9 +42,9 @@ fn lifecycle(rows: Vec<LifecycleContributionReport>, stopped: &str) -> Measureme
 fn a_carried_failure_returns_its_exact_error_and_policy() {
     let original = anyhow::Error::new(Sentinel).context("phase `build` stopped");
     let rendered = format!("{original:#}");
-    let taken = take(carry(MeasuredFailure {
+    let taken = take::<Measurement>(carry(MeasuredFailure {
         original,
-        measurement: lifecycle(vec![row("@vibe/exact", "fail")], "build"),
+        evidence: lifecycle(vec![row("@vibe/exact", "fail")], "build"),
         emit_machine_failure: true,
     }))
     .expect("a carried failure is takeable");
@@ -57,9 +57,9 @@ fn a_carried_failure_returns_its_exact_error_and_policy() {
 /// consuming what it may have to pass on.
 #[test]
 fn an_uncarried_error_is_returned_untouched() {
-    let error = take(anyhow::anyhow!("planning blew up")).expect_err("not carried");
+    let error = take::<Measurement>(anyhow::anyhow!("planning blew up")).expect_err("not carried");
     assert_eq!(error.to_string(), "planning blew up");
-    assert!(!is_measured(&error));
+    assert!(!is_carried::<Measurement>(&error));
 }
 
 /// A GENERIC post-row failure keeps every row measured before it, and stays
@@ -67,12 +67,12 @@ fn an_uncarried_error_is_returned_untouched() {
 #[test]
 fn a_generic_post_row_error_carries_the_rows_measured_before_it() {
     let measured = vec![row("@vibe/a", "ok"), row("@vibe/b", "cancelled")];
-    let carried = carry_measured(
+    let carried = carry_once(
         anyhow::Error::new(Sentinel).context("writing the execution checkpoint"),
         || lifecycle(measured.clone(), "build"),
     );
-    let taken = take(carried).expect("carried");
-    let Measurement::Lifecycle { rows, .. } = &taken.measurement else {
+    let taken = take::<Measurement>(carried).expect("carried");
+    let Measurement::Lifecycle { rows, .. } = &taken.evidence else {
         panic!("this stage measures lifecycle rows");
     };
     assert_eq!(
@@ -98,11 +98,12 @@ fn a_generic_post_row_error_carries_the_rows_measured_before_it() {
 fn carrying_never_overwrites_a_measurement_its_own_site_froze() {
     let specific = carry(MeasuredFailure {
         original: anyhow::Error::new(Sentinel),
-        measurement: lifecycle(vec![row("@vibe/exact", "fail")], "build"),
+        evidence: lifecycle(vec![row("@vibe/exact", "fail")], "build"),
         emit_machine_failure: true,
     });
-    let taken = take(carry_measured(specific, || lifecycle(Vec::new(), "build"))).expect("carried");
-    let Measurement::Lifecycle { rows, .. } = &taken.measurement else {
+    let taken = take::<Measurement>(carry_once(specific, || lifecycle(Vec::new(), "build")))
+        .expect("carried");
+    let Measurement::Lifecycle { rows, .. } = &taken.evidence else {
         panic!("family");
     };
     assert_eq!(rows.len(), 1);
@@ -118,11 +119,12 @@ fn carrying_never_overwrites_a_measurement_its_own_site_froze() {
 fn prepend_puts_earlier_rows_in_front_of_a_lifecycle_measurement() {
     let carried = carry(MeasuredFailure {
         original: anyhow::Error::new(Sentinel),
-        measurement: lifecycle(vec![row("@vibe/own", "fail")], "build"),
+        evidence: lifecycle(vec![row("@vibe/own", "fail")], "build"),
         emit_machine_failure: true,
     });
-    let taken = take(prepend_rows(carried, vec![row("@vibe/earlier", "ok")])).expect("carried");
-    let Measurement::Lifecycle { rows, .. } = &taken.measurement else {
+    let taken = take::<Measurement>(prepend_rows(carried, vec![row("@vibe/earlier", "ok")]))
+        .expect("carried");
+    let Measurement::Lifecycle { rows, .. } = &taken.evidence else {
         panic!("family");
     };
     assert_eq!(
@@ -138,19 +140,20 @@ fn prepend_puts_earlier_rows_in_front_of_a_lifecycle_measurement() {
 fn prepend_leaves_a_slot_measurement_untouched() {
     let carried = carry(MeasuredFailure {
         original: anyhow::Error::new(Sentinel),
-        measurement: Measurement::Slot {
+        evidence: Measurement::Slot {
             progress: Box::default(),
             reports: Vec::new(),
             packages_resolved: 3,
         },
         emit_machine_failure: false,
     });
-    let taken = take(prepend_rows(carried, vec![row("@vibe/earlier", "ok")])).expect("carried");
+    let taken = take::<Measurement>(prepend_rows(carried, vec![row("@vibe/earlier", "ok")]))
+        .expect("carried");
     let Measurement::Slot {
         reports,
         packages_resolved,
         ..
-    } = &taken.measurement
+    } = &taken.evidence
     else {
         panic!("a slot measurement stays a slot measurement");
     };
@@ -189,12 +192,12 @@ fn the_frozen_install_barrier_is_a_different_shape_from_the_neutral_resume() {
     for measurement in [barrier, resume] {
         let carried = carry(MeasuredFailure {
             original: anyhow::Error::new(Sentinel),
-            measurement,
+            evidence: measurement,
             emit_machine_failure: false,
         });
-        let after =
-            take(prepend_rows(carried, vec![row("@vibe/earlier", "ok")])).expect("still carried");
-        match after.measurement {
+        let after = take::<Measurement>(prepend_rows(carried, vec![row("@vibe/earlier", "ok")]))
+            .expect("still carried");
+        match after.evidence {
             Measurement::Slot { reports, .. } | Measurement::InstallBarrier { reports, .. } => {
                 assert!(
                     reports.is_empty(),
@@ -218,7 +221,7 @@ fn the_emission_bit_crosses_the_carrier_in_both_directions() {
     for expected in [true, false] {
         let carried = carry(MeasuredFailure {
             original: anyhow::Error::new(Sentinel),
-            measurement: Measurement::InstallBarrier {
+            evidence: Measurement::InstallBarrier {
                 progress: Box::default(),
                 reports: Vec::new(),
                 packages_resolved: 0,
@@ -226,7 +229,9 @@ fn the_emission_bit_crosses_the_carrier_in_both_directions() {
             emit_machine_failure: expected,
         });
         assert_eq!(
-            take(carried).expect("carried").emit_machine_failure,
+            take::<Measurement>(carried)
+                .expect("carried")
+                .emit_machine_failure,
             expected,
             "the site's own answer, never a recomputed one",
         );

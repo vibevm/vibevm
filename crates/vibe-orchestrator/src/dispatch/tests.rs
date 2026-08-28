@@ -186,7 +186,7 @@ fn a_generic_failure_after_a_real_row_carries_that_row_outward() {
         "a generic stage failure was historically silent",
     );
 
-    let Measurement::Lifecycle { rows, .. } = carried.measurement else {
+    let Measurement::Lifecycle { rows, .. } = carried.evidence else {
         panic!("a dispatch failure measures lifecycle rows");
     };
     assert_eq!(

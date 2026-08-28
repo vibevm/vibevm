@@ -4266,6 +4266,7 @@ name = "vibe-orchestrator"
 version = "1.0.0"
 dependencies = [
  "anyhow",
+ "chrono",
  "core-ai-native-specmark",
  "serde_json",
  "tempfile",
@@ -4277,6 +4278,7 @@ dependencies = [
  "vibe-lifecycle",
  "vibe-registry",
  "vibe-resolver",
+ "vibe-spec",
  "vibe-test-support",
  "vibe-wire",
  "vibe-workspace",

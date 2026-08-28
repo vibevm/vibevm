@@ -75,7 +75,7 @@ fn a_neutral_resume_failure_joins_the_prefix_and_reports_one_lifecycle_root() {
     };
     let transported = carry(MeasuredFailure {
         original: anyhow::Error::new(Sentinel).context("finishing the parked slot run"),
-        measurement: Measurement::Slot {
+        evidence: Measurement::Slot {
             progress: Box::new(vibe_install::InstallProgress::fresh(vec![".".into()])),
             reports: vec![
                 slot_row("resumed:ok", "ok"),
@@ -93,7 +93,7 @@ fn a_neutral_resume_failure_joins_the_prefix_and_reports_one_lifecycle_root() {
         "the ORIGINAL object reaches the boundary",
     );
     assert!(
-        !crate::failure::is_measured(&error),
+        !crate::failure::is_carried::<crate::failure::Measurement>(&error),
         "and the neutral wrapper does not escape",
     );
     assert_eq!(

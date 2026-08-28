@@ -12,6 +12,11 @@ description = "Surface-neutral lifecycle orchestration values and application se
 
 [dependencies]
 anyhow.workspace = true
+# The trace funnel's ONE parser: a lifecycle run records its start as RFC 3339
+# text and the trace epoch is a `chrono::DateTime<Utc>` (`vibe_wire ..
+# shared::Timestamp` is literally that alias). Nothing else here reads a clock —
+# every instant the funnel writes is injected by the surface.
+chrono.workspace = true
 specmark.workspace = true
 vibe-agent-projection.workspace = true
 vibe-core.workspace = true
@@ -27,4 +32,8 @@ serde_json.workspace = true
 tempfile.workspace = true
 thiserror.workspace = true
 vibe-registry.workspace = true
+# The trace reds drive a REAL traced compilation into a declared scope, so a
+# produced member carries genuine events, snapshots and aggregate timing rows
+# instead of a synthetic zero. Test-only: the funnel itself never compiles.
+vibe-spec.workspace = true
 vibe-test-support.workspace = true

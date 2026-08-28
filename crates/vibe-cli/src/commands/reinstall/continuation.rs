@@ -204,7 +204,7 @@ fn owned_continuation(
 /// policy is the historical one — silence while tracing is off, observable the
 /// moment tracing is requested.
 fn carry_failure(identity: &ReinstallIdentity, failure: MeasuredFailure) -> anyhow::Error {
-    let (progress, reports) = match failure.measurement {
+    let (progress, reports) = match failure.evidence {
         Measurement::Slot {
             progress, reports, ..
         }

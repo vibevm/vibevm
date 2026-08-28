@@ -35,7 +35,7 @@ struct Sentinel;
 fn failed() -> ResumeOutcome {
     ResumeOutcome::Failed(MeasuredFailure {
         original: anyhow::Error::new(Sentinel).context("finishing the parked slot run"),
-        measurement: Measurement::Slot {
+        evidence: Measurement::Slot {
             progress: Box::new(vibe_install::InstallProgress::fresh(vec![".".into()])),
             reports: rows(),
             packages_resolved: 3,
@@ -52,7 +52,7 @@ fn slot_of(
     &[vibe_install::SlotLifecycleReport],
     usize,
 ) {
-    match &failure.measurement {
+    match &failure.evidence {
         Measurement::Slot {
             progress,
             reports,
@@ -136,8 +136,9 @@ fn the_neutral_transport_round_trips_every_measured_field() {
 /// so a consumer can branch without consuming what it may need to pass on.
 #[test]
 fn an_unrelated_error_is_returned_exactly_as_it_arrived() {
-    let error = crate::failure::take(anyhow::Error::new(Sentinel).context("planning"))
-        .expect_err("not a measured failure");
+    let error =
+        crate::failure::take::<Measurement>(anyhow::Error::new(Sentinel).context("planning"))
+            .expect_err("not a measured failure");
     assert_eq!(format!("{error:#}"), "planning: the resumed row refused");
     assert!(error.downcast_ref::<Sentinel>().is_some());
 }

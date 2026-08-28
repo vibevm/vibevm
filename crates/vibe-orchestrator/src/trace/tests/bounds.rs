@@ -296,6 +296,12 @@ fn summary_at(run_id: &str) -> TraceSummary {
     }
 }
 
+/// A typed, exit-code-shaped base error: the surface's `as_exit_code` reads
+/// its variant by downcast, so the funnel has to hand back the OBJECT.
+#[derive(Debug, thiserror::Error)]
+#[error("the operator declined the install")]
+struct UserDeclined;
+
 /// The security law: a command's error may carry captured stderr, a provider
 /// body or a secret. It is BORROWED for the close and returned unchanged —
 /// and nothing it says reaches the index, the member or the notices.
@@ -303,10 +309,13 @@ fn summary_at(run_id: &str) -> TraceSummary {
 fn a_failed_close_never_persists_the_command_error() {
     const SENTINEL: &str = "sk-live-2f9c-DO-NOT-PERSIST-9e41";
     let root = project();
-    // A REAL exit-bearing base error, not an ad-hoc string: the exit code the
-    // caller ends up with is downcast out of this object, so the round trip
-    // has to preserve the type and not merely the words.
-    let original = anyhow::Error::new(crate::exit_code::InstallError::UserDeclined)
+    // A TYPED base error, not an ad-hoc string: the surface's exit code is
+    // downcast out of this object, so the round trip has to preserve the type
+    // and not merely the words. This crate cannot name the CLI's own
+    // exit-code enum — that is the whole point of the boundary — so the
+    // stand-in is a local typed variant, and the CLI keeps its own red over
+    // the real one (`compile_trace/tests.rs`).
+    let original = anyhow::Error::new(UserDeclined)
         .context(format!("provider rejected the token {SENTINEL}"))
         .context(format!("captured stderr: {}", SENTINEL.repeat(400)));
     let preparation = prepare(
@@ -344,9 +353,7 @@ fn a_failed_close_never_persists_the_command_error() {
     let returned = finalized.original_error.expect("the error comes back");
     assert!(format!("{returned:#}").contains(SENTINEL));
     assert!(
-        returned
-            .downcast_ref::<crate::exit_code::InstallError>()
-            .is_some(),
+        returned.downcast_ref::<UserDeclined>().is_some(),
         "the typed base survives the funnel, so the exit code is unchanged",
     );
 }

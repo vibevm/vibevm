@@ -17,7 +17,7 @@ use vibe_lifecycle::{REMOVED_DECLARATION, UNKNOWN_PROVENANCE};
 use vibe_wire::generated::lifecycle_report::LifecycleContributionReport;
 use vibe_wire::generated::lifecycle_state::{ExecutionRecordScope, ExecutionRecordStatus};
 
-use crate::failure::{MeasuredFailure, Measurement, carry, carry_measured};
+use crate::failure::{MeasuredFailure, Measurement, carry, carry_once};
 use crate::ports::RunObserver;
 use crate::{PlannedExecution, RitualPlan, world};
 
@@ -178,7 +178,7 @@ pub(crate) fn dispatch_plan_with_run(
 ) -> Result<DispatchOutcome> {
     let mut measured: Vec<LifecycleContributionReport> = Vec::new();
     dispatch_measured(observer, plan, run, agent, metadata, &mut measured).map_err(|error| {
-        carry_measured(error, || Measurement::Lifecycle {
+        carry_once(error, || Measurement::Lifecycle {
             rows: measured,
             stopped_phase: metadata.requested.clone(),
             requested: metadata.requested.clone(),
@@ -247,7 +247,7 @@ fn dispatch_measured(
                     measured.clone_from(&outcome.reports);
                     return Err(carry(MeasuredFailure {
                         original,
-                        measurement: Measurement::Lifecycle {
+                        evidence: Measurement::Lifecycle {
                             rows: outcome.reports.clone(),
                             stopped_phase: execution.phase.clone(),
                             requested: metadata.requested.clone(),

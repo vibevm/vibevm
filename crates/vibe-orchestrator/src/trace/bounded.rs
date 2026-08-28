@@ -22,6 +22,7 @@
 
 use std::fmt;
 
+use specmark::spec;
 use vibe_workspace::compile_trace::bounded_diagnostic;
 
 /// Text that has already passed the writer's bounded formatter.
@@ -29,23 +30,38 @@ use vibe_workspace::compile_trace::bounded_diagnostic;
 /// Cloning is free of the "has this been clamped?" question by construction:
 /// the invariant travels with the value, so a bounded notice folded into a
 /// report is copied, never re-measured.
+///
+/// ```
+/// use vibe_orchestrator::trace::BoundedDiagnostic;
+/// let bounded = BoundedDiagnostic::new(format_args!("closing run `{}`", "a".repeat(4)));
+/// assert_eq!(bounded.as_str(), "closing run `aaaa`");
+/// assert_eq!(bounded.into_string(), "closing run `aaaa`");
+/// ```
 #[derive(Debug, Clone)]
-pub(super) struct BoundedDiagnostic(String);
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE")]
+pub struct BoundedDiagnostic(String);
 
 impl BoundedDiagnostic {
     /// The one clamp. Callers pass `format_args!`, so the unbounded
     /// intermediate never exists — the writer's sink streams into its own cap.
-    pub(super) fn new(args: fmt::Arguments<'_>) -> Self {
+    ///
+    /// See the type-level example.
+    #[must_use]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE")]
+    pub fn new(args: fmt::Arguments<'_>) -> Self {
         Self(bounded_diagnostic(args))
     }
 
-    pub(super) fn as_str(&self) -> &str {
+    /// The clamped text, borrowed. See the type-level example.
+    #[must_use]
+    pub fn as_str(&self) -> &str {
         &self.0
     }
 
     /// Drop the proof at the crate boundary, where the value becomes ordinary
-    /// presentation text.
-    pub(super) fn into_string(self) -> String {
+    /// presentation text. See the type-level example.
+    #[must_use]
+    pub fn into_string(self) -> String {
         self.0
     }
 }

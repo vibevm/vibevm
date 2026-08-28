@@ -12,7 +12,7 @@ use std::sync::Arc;
 use anyhow::Result;
 use vibe_lifecycle::{AgentBackend, Phase};
 
-use crate::failure::{MeasuredFailure, Measurement, carry, is_measured, prepend_rows};
+use crate::failure::{MeasuredFailure, Measurement, carry, is_carried, prepend_rows};
 use crate::install::{InstallRunContext, WorldCallbackOutcome, WorldCallbackSummary};
 use crate::plan::surface_plan;
 use crate::ports::RunObserver;
@@ -74,14 +74,14 @@ pub fn after_durable_world_stage(
     let requested = run.metadata.requested.clone();
     let chain = run.metadata.chain.clone();
     stage(observer, path, run, workspace, agent).map_err(|error| {
-        if is_measured(&error) {
+        if is_carried::<Measurement>(&error) {
             // Already a measured failure, frozen at its own site — it only
             // lacked the rows that preceded it.
             return prepend_rows(error, prefix);
         }
         carry(MeasuredFailure {
             original: error,
-            measurement: Measurement::Lifecycle {
+            evidence: Measurement::Lifecycle {
                 rows: prefix,
                 stopped_phase: Phase::Install.as_str().to_string(),
                 requested,

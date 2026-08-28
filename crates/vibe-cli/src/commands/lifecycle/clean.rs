@@ -20,7 +20,7 @@ use crate::output;
 
 use vibe_orchestrator::ports::RunObserver;
 
-use super::{CliRunObserver, LifecycleDraft};
+use super::{CliRunObserver, render_lifecycle};
 use super::{StepStatus, execute, step_report};
 
 /// The pre-wipe epoch's ONE snapshot: the plan the clean point runs, and the
@@ -192,7 +192,7 @@ pub(crate) fn run_clean_only(
     // Clean-only never creates a trace session — it compiles nothing, and its
     // wipe would destroy the very directory a session lives in — so it renders
     // its draft directly, with no member and no suffix.
-    let draft = LifecycleDraft::completed(
+    let values = vibe_orchestrator::values::LifecycleValues::completed(
         "clean",
         chain,
         vec![step_report("clean", StepStatus::Ok)],
@@ -203,7 +203,7 @@ pub(crate) fn run_clean_only(
         None,
     );
     ctx.flush_json_plans()?;
-    draft.render(ctx, None, "")
+    render_lifecycle(values, ctx, None, "")
 }
 
 /// The clean epoch runs UNTRACKED: it keeps no `.vibe/lifecycle.toml` record,

@@ -167,7 +167,7 @@ fn assert_same_failure_identity(
         "the terminal error is the ORIGINAL one, unchanged:\n off: {off_tail}\n on:  {on_tail}",
     );
     assert!(
-        !on_tail.contains("FailedDraft"),
+        !on_tail.contains("FailedDraft") && !on_tail.contains("Carried"),
         "the transport carrier never reaches the operator: {on_tail}",
     );
 }

@@ -104,7 +104,7 @@ fn completed(rows: Vec<SlotLifecycleReport>) -> ResumeOutcome {
 fn failed(rows: Vec<SlotLifecycleReport>) -> ResumeOutcome {
     ResumeOutcome::Failed(crate::commands::install::MeasuredFailure {
         original: anyhow::Error::new(Sentinel).context("finishing the parked slot run"),
-        measurement: crate::commands::install::Measurement::Slot {
+        evidence: crate::commands::install::Measurement::Slot {
             progress: Box::new(InstallProgress {
                 complete: true,
                 fresh: false,
@@ -471,7 +471,7 @@ fn an_invalid_handoff_is_refused_before_the_current_rows_are_taken() {
         "and the exact validation error is returned: {error:#}",
     );
     assert!(
-        !vibe_orchestrator::failure::is_measured(&error),
+        !vibe_orchestrator::failure::is_carried::<vibe_orchestrator::failure::Measurement>(&error),
         "root-neutral: no family was chosen here",
     );
 }

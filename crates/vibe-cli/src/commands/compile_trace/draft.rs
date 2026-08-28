@@ -29,34 +29,50 @@
 //! format from an error's Display text is how these two families drifted apart
 //! in the first place.
 //!
-//! ## Why the carrier owns the original error
+//! ## Why the carrier owns the original error, and why it is not ours
 //!
 //! The outer boundary must return the caller's error UNCHANGED — same downcast
 //! identity for the exit code, same context chain for stderr. A carrier that
 //! stored a formatted string could not do that, so it stores the object, and
 //! the boundary that downcasts it takes the object straight back out.
+//!
+//! That law is not specific to this surface: the lower layer transports a
+//! measurement it refuses to name a family for under exactly the same rules.
+//! So there is ONE carrier — [`vibe_orchestrator::failure::Carried`] — and the
+//! two functions below are call-shape adapters over it, holding no law of their
+//! own. `Carried<Measurement>` and `Carried<RegisteredReportDraft>` are
+//! different concrete types, so each boundary still probes for exactly the
+//! evidence it owns.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE");
 
-use std::fmt;
-
 use anyhow::Result;
+use vibe_orchestrator::failure::{Carried, carry_once};
+use vibe_orchestrator::values::LifecycleValues;
 use vibe_wire::generated::shared::CompileTraceReport;
 
 use crate::commands::install::InstallDraft;
-use crate::commands::lifecycle::LifecycleDraft;
+use crate::commands::lifecycle::render_lifecycle;
 use crate::commands::reinstall::ReinstallDraft;
 use crate::commands::update::UpdateDraft;
 use crate::output;
 
-use super::CommandExit;
+pub(crate) use vibe_orchestrator::trace::classify;
+
+#[cfg(test)]
+use vibe_orchestrator::trace::CommandExit;
 
 /// One command's owned, fully-measured report — in whichever registered root
 /// family that command's outcome really belongs to.
+///
+/// The lifecycle arm carries the shared [`LifecycleValues`] DIRECTLY. It used
+/// to be wrapped in a CLI newtype so this surface could own the rendering; the
+/// wrapper is gone, because rendering is a free function over the values and a
+/// newtype whose only job is to host one `impl` is a second name for one thing.
 #[derive(Debug)]
 pub(crate) enum RegisteredReportDraft {
     Install(Box<InstallDraft>),
-    Lifecycle(Box<LifecycleDraft>),
+    Lifecycle(Box<LifecycleValues>),
     Update(Box<UpdateDraft>),
     Reinstall(Box<ReinstallDraft>),
 }
@@ -115,52 +131,28 @@ impl RegisteredReportDraft {
     ) -> Result<()> {
         match self {
             Self::Install(draft) => draft.render(ctx, trace, quiet_suffix),
-            Self::Lifecycle(draft) => draft.render(ctx, trace, quiet_suffix),
+            Self::Lifecycle(values) => render_lifecycle(*values, ctx, trace, quiet_suffix),
             Self::Update(draft) => draft.render(ctx, trace, quiet_suffix),
             Self::Reinstall(draft) => draft.render(ctx, trace, quiet_suffix),
         }
     }
 }
 
-/// A measured failure travelling outward: the root its site chose, the exact
-/// error object to return, and the emission policy that site already had.
-#[derive(Debug)]
-pub(crate) struct FailedDraft {
-    pub(crate) draft: RegisteredReportDraft,
-    pub(crate) original: anyhow::Error,
-    /// Whether this failure emitted its root when tracing was OFF. A property
-    /// of the site — `vibe install` narrates its slot failure, the same
-    /// failure under a phase verb's suppressed child context does not — and
-    /// never something inferred later.
-    pub(crate) emit_when_trace_disabled: bool,
-}
-
-impl fmt::Display for FailedDraft {
-    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
-        fmt::Display::fmt(&self.original, formatter)
-    }
-}
-
-impl std::error::Error for FailedDraft {
-    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
-        self.original.source()
-    }
-}
-
 /// Hand a measured failure outward through the ordinary `Result` channel.
 ///
-/// The `anyhow` wrapper is TRANSPORT only: every boundary that can receive one
-/// calls [`classify`], which takes the owned value straight back out. Nothing
-/// formats it, and it never reaches `main`.
+/// A call-shape adapter over the ONE carrier, and nothing else: the `anyhow`
+/// wrapper is TRANSPORT only, every boundary that can receive one calls
+/// [`classify`], which takes the owned value straight back out. Nothing formats
+/// it, and it never reaches `main`.
 pub(crate) fn carry(
     draft: RegisteredReportDraft,
     original: anyhow::Error,
     emit_when_trace_disabled: bool,
 ) -> anyhow::Error {
-    anyhow::Error::new(FailedDraft {
-        draft,
+    vibe_orchestrator::failure::carry(Carried {
         original,
-        emit_when_trace_disabled,
+        evidence: draft,
+        emit_machine_failure: emit_when_trace_disabled,
     })
 }
 
@@ -174,45 +166,17 @@ pub(crate) fn carry(
 /// nothing when it had already done several things successfully.
 ///
 /// Idempotent: an error that already carries a draft keeps the one its own
-/// site froze, because that draft is more specific than this one.
+/// site froze, because that draft is more specific than this one. The
+/// idempotence itself is spelled ONCE, in the shared carrier; this is its
+/// evidence-typed instantiation, so a draft carrier never mistakes the lower
+/// `Measurement` carrier for one of its own.
 pub(crate) fn carry_measured(
     error: anyhow::Error,
     draft: impl FnOnce() -> RegisteredReportDraft,
 ) -> anyhow::Error {
-    if error.downcast_ref::<FailedDraft>().is_some() {
-        return error;
-    }
     // Historically silent: these failures never emitted a root with tracing
-    // off, and adding one now would be a new document on an old path.
-    carry(draft(), error, false)
-}
-
-/// Turn any error into the one typed failure exit.
-///
-/// A carried draft is unwrapped to exactly what its site measured. Anything
-/// else is a generic stage failure: it gets the draft `fallback` builds for
-/// the stage it happened in, and the historical emission policy for such
-/// failures, which is silence.
-pub(crate) fn classify(
-    error: anyhow::Error,
-    fallback: impl FnOnce() -> RegisteredReportDraft,
-) -> CommandExit<RegisteredReportDraft> {
-    match error.downcast::<FailedDraft>() {
-        Ok(FailedDraft {
-            draft,
-            original,
-            emit_when_trace_disabled,
-        }) => CommandExit::Failed {
-            report: draft,
-            original_error: original,
-            emit_when_trace_disabled,
-        },
-        Err(original) => CommandExit::Failed {
-            report: fallback(),
-            original_error: original,
-            emit_when_trace_disabled: false,
-        },
-    }
+    // off, and `carry_once` is exactly that policy.
+    carry_once(error, draft)
 }
 
 #[cfg(test)]
@@ -223,19 +187,15 @@ mod tests {
     #[error("the handler refused")]
     struct Sentinel;
 
-    /// The surviving surface wrapper over the shared failed values.
+    /// The shared failed values, carried DIRECTLY: there is no surface
+    /// wrapper left to build one through.
     fn lifecycle_values_failed(
         requested: &str,
         chain: Vec<String>,
         phase: &str,
         contributions: Vec<vibe_wire::generated::lifecycle_report::LifecycleContributionReport>,
-    ) -> LifecycleDraft {
-        LifecycleDraft(vibe_orchestrator::values::LifecycleValues::failed(
-            requested,
-            chain,
-            phase,
-            contributions,
-        ))
+    ) -> LifecycleValues {
+        LifecycleValues::failed(requested, chain, phase, contributions)
     }
 
     fn lifecycle_draft() -> RegisteredReportDraft {

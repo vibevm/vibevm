@@ -60,7 +60,7 @@ impl AfterDurableWorld for DirectInstallWorld<'_> {
             // The measurement travels neutral; the family is chosen HERE, and
             // the emission bit the failing site froze crosses unchanged.
             Ok(failure) => compile_trace::carry(
-                super::registered_family(path, failure.measurement),
+                super::registered_family(path, failure.evidence),
                 failure.original,
                 failure.emit_machine_failure,
             ),

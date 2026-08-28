@@ -177,7 +177,7 @@ fn whole_update_pre_install_failure_keeps_the_install_root_family_both_ways() {
         "nor does the terminal error:\n off: {off_tail}\n on:  {on_tail}",
     );
     assert!(
-        !on_tail.contains("FailedDraft"),
+        !on_tail.contains("FailedDraft") && !on_tail.contains("Carried"),
         "the transport carrier never reaches the operator: {on_tail}",
     );
 }

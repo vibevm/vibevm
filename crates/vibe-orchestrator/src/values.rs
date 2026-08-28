@@ -8,8 +8,9 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM
 
 use specmark::spec;
 use vibe_wire::generated::lifecycle_report::{
-    LifecycleContributionReport, LifecycleDelegation, LifecycleStepReport,
+    LifecycleContributionReport, LifecycleDelegation, LifecycleReport, LifecycleStepReport,
 };
+use vibe_wire::generated::shared::CompileTraceReport;
 
 /// Everything the one lifecycle document reports, owned and surface-neutral.
 ///
@@ -88,6 +89,51 @@ impl LifecycleValues {
             contributions,
             notices: Vec::new(),
             delegation: None,
+        }
+    }
+
+    /// The generated `cli-lifecycle-report` root, with the shared trace member
+    /// attached — total, infallible, and the ONLY place a lifecycle report is
+    /// built.
+    ///
+    /// It lives here rather than in a surface wrapper for the reason the whole
+    /// boundary exists: the document is the SAME document whichever surface
+    /// asked for the run, so a second constructor beside a second renderer is
+    /// how two surfaces come to disagree about one run. The `trace` member is a
+    /// parameter and never a field: the funnel decides it after the values are
+    /// frozen, and `None` really means "the key is absent from the wire", which
+    /// is the byte-for-byte law old corpora depend on.
+    ///
+    /// ```
+    /// use vibe_orchestrator::values::LifecycleValues;
+    /// let report = LifecycleValues::failed("build", vec!["build".into()], "build", Vec::new())
+    ///     .into_report(None);
+    /// assert_eq!(report.command, "lifecycle");
+    /// assert!(!report.ok);
+    /// assert!(report.trace.is_none(), "disabled omits the member entirely");
+    /// ```
+    #[must_use]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM")]
+    pub fn into_report(self, trace: Option<CompileTraceReport>) -> LifecycleReport {
+        let Self {
+            ok,
+            requested,
+            chain,
+            steps,
+            contributions,
+            notices,
+            delegation,
+        } = self;
+        LifecycleReport {
+            chain,
+            command: "lifecycle".to_string(),
+            contributions,
+            notices,
+            ok,
+            requested,
+            steps,
+            delegation,
+            trace,
         }
     }
 }

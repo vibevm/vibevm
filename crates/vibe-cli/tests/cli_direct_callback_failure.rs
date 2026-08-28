@@ -204,7 +204,7 @@ fn a_failing_post_durability_row_reports_a_lifecycle_root_after_its_slot_prefix(
  without: {bare_tail}",
     );
     assert!(
-        !tail.contains("FailedDraft"),
+        !tail.contains("FailedDraft") && !tail.contains("Carried"),
         "the transport carrier never surfaces: {tail}",
     );
     let trace = trace_support::trace_member(report).expect("the requested trace rides that root");

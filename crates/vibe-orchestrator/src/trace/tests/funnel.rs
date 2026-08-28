@@ -4,7 +4,7 @@
 use vibe_wire::generated::shared::{TimingRow, TraceReportStatus};
 use vibe_workspace::compile_trace::TraceRun;
 
-use super::super::{CommandExit, finalize, prepare};
+use super::super::{CommandExit, PlanDisposition, finalize, prepare, without_workspace};
 use super::support::{
     RUN_A, STARTED_A, Ticks, compile, identity, node_scope, project, run_dir, started,
 };
@@ -50,6 +50,48 @@ fn the_original_error_object_survives_a_failed_close() {
     assert_eq!(downcast.slot, "create");
     assert_eq!(returned.chain().count(), 3, "the context chain is intact");
     assert_eq!(returned.to_string(), "vibe lifecycle");
+}
+
+/// The deferred-plan disposition is read from the EXIT ARM, and only a park
+/// discards.
+///
+/// The whole point of the typed answer is that it does NOT come from the
+/// finished report: reading "does the draft carry a delegation member?" back
+/// off the document would be an inference, and a surface that disagreed with
+/// the funnel about whether a run parked would either drop a preview a
+/// completed run owes or print one beside a handoff that is supposed to stand
+/// alone. So the mapping is pinned here, on all three arms, with no filesystem
+/// in the way: the surface's own `--json` framing golden (a parked run emits
+/// ONE total document) is the other end of the same law.
+#[test]
+fn only_a_park_discards_the_deferred_plan_preview() {
+    let disabled = || without_workspace(&identity(RUN_A, false, false));
+    let clock = Ticks::new(10);
+
+    assert_eq!(
+        finalize(disabled(), CommandExit::Success(()), &clock.clock()).plan,
+        PlanDisposition::Flush,
+        "a completed run's preview records what it was doing",
+    );
+    assert_eq!(
+        finalize(
+            disabled(),
+            CommandExit::Failed {
+                report: (),
+                original_error: anyhow::anyhow!("refused"),
+                emit_when_trace_disabled: false,
+            },
+            &clock.clock(),
+        )
+        .plan,
+        PlanDisposition::Flush,
+        "a failure is an outcome too, and its preview still records it",
+    );
+    assert_eq!(
+        finalize(disabled(), CommandExit::Parked(()), &clock.clock()).plan,
+        PlanDisposition::Discard,
+        "a park emits ONE document in total",
+    );
 }
 
 /// The failure emission truth table, in one place.

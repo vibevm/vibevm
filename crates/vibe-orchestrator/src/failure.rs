@@ -1,13 +1,25 @@
-//! The one neutral carrier a measured failure travels outward on.
+//! The ONE carrier any measured failure travels outward on, whatever it
+//! measured.
 //!
-//! ## Why it is neutral
+//! ## Why it is neutral, and why it is generic
 //!
 //! The same execution core is `vibe install`'s body, a phase verb's
 //! prerequisite and `vibe update --all`'s delegate, and each of those three
 //! outer commands reports a DIFFERENT registered root family. Choosing one here
 //! would pick a family and be wrong for the other two, so this carrier names
-//! none: it transports the measurement, the surface's own emission policy, and
-//! the caller's error object, and the surface decides the family.
+//! none: it transports what the site measured, the site's own emission policy,
+//! and the caller's error object, and the surface decides the family.
+//!
+//! The surface then needs the SAME transport one layer up — its chosen
+//! registered draft, the same error object, the same site-frozen bit — and for
+//! a while it had a private copy of this law with different names. Two carriers
+//! with one law is one law that can drift: an idempotence rule fixed here and
+//! not there, an error re-wrapped on one side only. So the carrier is generic
+//! over its evidence ([`Carried<E>`]), a measurement is just `Carried<Measurement>`,
+//! and a surface's registered draft is `Carried<ItsOwnDraftSum>`. One
+//! implementation of `Display`, `Error::source`, the downcast and the
+//! idempotence — and, because `Carried<A>` and `Carried<B>` are different
+//! concrete types, a boundary still probes for exactly the evidence it owns.
 //!
 //! ## Why it owns the original error
 //!
@@ -15,9 +27,6 @@
 //! identity for the exit code, same context chain for stderr. A carrier that
 //! stored a formatted string could not do that, so it stores the object and the
 //! boundary that takes it apart gets the object straight back out.
-//!
-//! This is the same transport the install resume seam has always used; it is
-//! widened, not multiplied, so a boundary probes exactly once.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM");
 
@@ -90,26 +99,60 @@ pub enum Measurement {
 
 /// A measured failure travelling outward: what the site measured, the exact
 /// error object to return, and the emission policy that site already had.
+///
+/// Generic over the EVIDENCE, because the law is the same all the way up: the
+/// lower layer carries a [`Measurement`] it refuses to name a report family
+/// for, and the surface carries the registered draft it chose from that
+/// measurement. Same owned evidence, same untouched error, same site-frozen
+/// bit — so it is the same type, instantiated twice, rather than two structs
+/// whose invariants can drift apart.
+///
+/// ```
+/// use vibe_orchestrator::failure::{Carried, carry, take};
+///
+/// // Any owned evidence at all: the carrier never inspects it.
+/// let carried = carry(Carried {
+///     original: anyhow::Error::msg("the handler refused"),
+///     evidence: "a surface's own registered draft",
+///     emit_machine_failure: true,
+/// });
+/// let taken: Carried<&str> = take(carried).unwrap();
+/// assert_eq!(taken.evidence, "a surface's own registered draft");
+/// assert!(taken.emit_machine_failure);
+/// ```
 #[derive(Debug)]
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM")]
-pub struct MeasuredFailure {
+pub struct Carried<E> {
     /// The caller's error, unchanged — same downcast identity, same chain.
     pub original: anyhow::Error,
-    /// What had really run when it stopped.
-    pub measurement: Measurement,
+    /// What the failing site had really measured, in whatever shape that site
+    /// owns.
+    pub evidence: E,
     /// Whether this failure emitted its machine document when tracing was OFF.
     /// A property of the SITE and of the observer that owns it, never something
     /// inferred later from the error.
     pub emit_machine_failure: bool,
 }
 
-impl fmt::Display for MeasuredFailure {
+/// The lower instantiation: a measurement no layer below the surface may give a
+/// report family to.
+///
+/// ```
+/// use vibe_orchestrator::failure::{MeasuredFailure, Measurement};
+/// fn takes(failure: MeasuredFailure) -> bool {
+///     matches!(failure.evidence, Measurement::Lifecycle { .. })
+/// }
+/// ```
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM")]
+pub type MeasuredFailure = Carried<Measurement>;
+
+impl<E: fmt::Debug> fmt::Display for Carried<E> {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         fmt::Display::fmt(&self.original, formatter)
     }
 }
 
-impl std::error::Error for MeasuredFailure {
+impl<E: fmt::Debug> std::error::Error for Carried<E> {
     fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
         self.original.source()
     }
@@ -122,13 +165,13 @@ impl std::error::Error for MeasuredFailure {
 /// out. Nothing formats it, and it never reaches a process exit.
 ///
 /// ```
-/// use vibe_orchestrator::failure::{Measurement, MeasuredFailure, carry, take};
+/// use vibe_orchestrator::failure::{Carried, Measurement, carry, take};
 ///
 /// let original = anyhow::Error::msg("the handler refused").context("phase `build` stopped");
 /// let rendered = format!("{original:#}");
-/// let carried = carry(MeasuredFailure {
+/// let carried = carry(Carried {
 ///     original,
-///     measurement: Measurement::Lifecycle {
+///     evidence: Measurement::Lifecycle {
 ///         rows: Vec::new(),
 ///         stopped_phase: "build".into(),
 ///         requested: "build".into(),
@@ -136,13 +179,16 @@ impl std::error::Error for MeasuredFailure {
 ///     },
 ///     emit_machine_failure: true,
 /// });
-/// let taken = take(carried).unwrap();
+/// let taken = take::<Measurement>(carried).unwrap();
 /// assert!(taken.emit_machine_failure);
 /// assert_eq!(format!("{:#}", taken.original), rendered);
 /// ```
 #[must_use]
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM")]
-pub fn carry(failure: MeasuredFailure) -> anyhow::Error {
+pub fn carry<E>(failure: Carried<E>) -> anyhow::Error
+where
+    E: fmt::Debug + Send + Sync + 'static,
+{
     anyhow::Error::new(failure)
 }
 
@@ -150,29 +196,37 @@ pub fn carry(failure: MeasuredFailure) -> anyhow::Error {
 /// untouched.
 ///
 /// Total, so a caller can branch without consuming an error it may need to pass
-/// on unchanged. The struct-level example of [`carry`] demonstrates the round
-/// trip.
+/// on unchanged. Evidence-typed: an error carrying a surface's registered draft
+/// is NOT a `Measurement` carrier and is handed straight back, which is what
+/// lets both layers probe the same error in turn. The example on [`carry`]
+/// demonstrates the round trip.
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM")]
-pub fn take(error: anyhow::Error) -> Result<MeasuredFailure, anyhow::Error> {
-    error.downcast::<MeasuredFailure>()
+pub fn take<E>(error: anyhow::Error) -> Result<Carried<E>, anyhow::Error>
+where
+    E: fmt::Debug + Send + Sync + 'static,
+{
+    error.downcast::<Carried<E>>()
 }
 
-/// Whether this error already carries a measurement.
+/// Whether this error already carries evidence of the given shape.
 ///
 /// Asked, rather than discovered by a failed `downcast`, so a site can branch
 /// without consuming an error it may need to pass on untouched.
 ///
 /// ```
-/// use vibe_orchestrator::failure::is_measured;
-/// assert!(!is_measured(&anyhow::Error::msg("plain")));
+/// use vibe_orchestrator::failure::{Measurement, is_carried};
+/// assert!(!is_carried::<Measurement>(&anyhow::Error::msg("plain")));
 /// ```
 #[must_use]
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM")]
-pub fn is_measured(error: &anyhow::Error) -> bool {
-    error.is::<MeasuredFailure>()
+pub fn is_carried<E>(error: &anyhow::Error) -> bool
+where
+    E: fmt::Debug + Send + Sync + 'static,
+{
+    error.is::<Carried<E>>()
 }
 
-/// Attach a measurement to an error that is not carrying one yet.
+/// Attach evidence to an error that is not carrying any of this shape yet.
 ///
 /// The site that runs contributions accumulates rows as it goes, and only ONE
 /// of the ways it can fail (a handler that reported a failed transition) knows
@@ -181,13 +235,13 @@ pub fn is_measured(error: &anyhow::Error) -> bool {
 /// sitting in a local, and the report would claim the run did nothing when it
 /// had already done several things successfully.
 ///
-/// Idempotent: an error that already carries a measurement keeps the one its own
-/// site froze, because that one is more specific than this.
+/// Idempotent: an error that already carries this shape keeps the evidence its
+/// own site froze, because that one is more specific than this.
 ///
 /// ```
-/// use vibe_orchestrator::failure::{Measurement, carry_measured, take};
+/// use vibe_orchestrator::failure::{Measurement, carry_once, take};
 ///
-/// let carried = carry_measured(anyhow::Error::msg("writing the checkpoint"), || {
+/// let carried = carry_once(anyhow::Error::msg("writing the checkpoint"), || {
 ///     Measurement::Lifecycle {
 ///         rows: Vec::new(),
 ///         stopped_phase: "build".into(),
@@ -196,22 +250,22 @@ pub fn is_measured(error: &anyhow::Error) -> bool {
 ///     }
 /// });
 /// // A generic post-row failure was historically silent.
-/// assert!(!take(carried).unwrap().emit_machine_failure);
+/// assert!(!take::<Measurement>(carried).unwrap().emit_machine_failure);
 /// ```
 #[must_use]
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM")]
-pub fn carry_measured(
-    error: anyhow::Error,
-    measurement: impl FnOnce() -> Measurement,
-) -> anyhow::Error {
-    if is_measured(&error) {
+pub fn carry_once<E>(error: anyhow::Error, evidence: impl FnOnce() -> E) -> anyhow::Error
+where
+    E: fmt::Debug + Send + Sync + 'static,
+{
+    if is_carried::<E>(&error) {
         return error;
     }
     // Historically silent: these failures never emitted a machine root with
     // tracing off, and adding one now would be a new document on an old path.
-    carry(MeasuredFailure {
+    carry(Carried {
         original: error,
-        measurement: measurement(),
+        evidence: evidence(),
         emit_machine_failure: false,
     })
 }
@@ -245,10 +299,10 @@ pub fn prepend_rows(
     if prefix.is_empty() {
         return error;
     }
-    match take(error) {
+    match take::<Measurement>(error) {
         Ok(MeasuredFailure {
             original,
-            measurement:
+            evidence:
                 Measurement::Lifecycle {
                     rows,
                     stopped_phase,
@@ -261,7 +315,7 @@ pub fn prepend_rows(
             joined.extend(rows);
             carry(MeasuredFailure {
                 original,
-                measurement: Measurement::Lifecycle {
+                evidence: Measurement::Lifecycle {
                     rows: joined,
                     stopped_phase,
                     requested,

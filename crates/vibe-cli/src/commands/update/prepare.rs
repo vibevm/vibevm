@@ -28,7 +28,6 @@ use crate::commands::compile_trace::TracePreparation;
 use crate::commands::install::{
     PreparedSelection, SelectedManifest, acquire_lease, resolve_project_root,
 };
-use crate::commands::lifecycle::PrepareTrace as _;
 use crate::output;
 
 pub(super) struct PreparedUpdate {
