@@ -4351,6 +4351,23 @@ dependencies = [
 ]
 
 [[package]]
+name = "vibe-requirements"
+version = "1.0.0"
+dependencies = [
+ "core-ai-native-specmark",
+ "progress-core",
+ "serde_json",
+ "sha2",
+ "tempfile",
+ "thiserror 2.0.18",
+ "vibe-core",
+ "vibe-facts",
+ "vibe-lifecycle",
+ "vibe-wire",
+ "vibe-workspace",
+]
+
+[[package]]
 name = "vibe-resolver"
 version = "1.0.0"
 dependencies = [

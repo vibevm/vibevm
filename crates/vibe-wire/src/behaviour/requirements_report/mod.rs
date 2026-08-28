@@ -147,7 +147,30 @@ fn identity_gate(report: &RequirementsReport) -> Result<(), RequirementsError> {
 /// `query-bounds`: the answer restates the question, so the question
 /// it restates must be one the surfaces would have accepted.
 fn query_gate(report: &RequirementsReport) -> Result<(), RequirementsError> {
-    let query = &report.query;
+    validate_query(&report.query)
+}
+
+/// The pure `query-bounds` entry over ONE effective query — the exact
+/// grammar the full report validator applies to `report.query`, exposed
+/// so a query library can refuse an unacceptable question BEFORE any
+/// filesystem access, through the wire owner rather than a copy of the
+/// prefix/cap/limit grammar (R7.5 A2b).
+///
+/// ```
+/// use vibe_wire::behaviour::requirements_report::validate_query;
+/// use vibe_wire::generated::requirements_report::RequirementsQuery;
+///
+/// let mut query = RequirementsQuery { limit: 100, relations: false, address_prefix: None };
+/// assert!(validate_query(&query).is_ok());
+/// query.limit = 0;
+/// assert!(validate_query(&query).is_err());
+/// query.limit = 100;
+/// query.address_prefix = Some("req-one".to_string());
+/// assert!(validate_query(&query).is_err()); // never a bare fact id
+/// ```
+pub fn validate_query(
+    query: &crate::generated::requirements_report::RequirementsQuery,
+) -> Result<(), RequirementsError> {
     if !(LIMIT_MIN..=LIMIT_MAX).contains(&query.limit) {
         return Err(RequirementsError::LimitOutOfRange { limit: query.limit });
     }
@@ -275,10 +298,6 @@ fn row_text_gate(row: &RequirementRow) -> Result<(), RequirementsError> {
         });
     }
     bounded(&row.source.package, "source.package")?;
-    for edge in &row.relations {
-        bounded(&edge.symbol, "relations.symbol")?;
-        bounded(&edge.file, "relations.file")?;
-    }
     Ok(())
 }
 
@@ -328,22 +347,7 @@ fn edges_gate(index: usize, row: &RequirementRow) -> Result<(), RequirementsErro
             row: index,
             edge: edge_index,
         };
-        if edge.line == 0 {
-            return Err(RequirementsError::EdgeLine { at });
-        }
-        if edge.symbol.trim().is_empty() {
-            return Err(RequirementsError::EdgeBlank {
-                at,
-                field: "symbol",
-            });
-        }
-        if let Some(reason) = relative_path_defect(&edge.file) {
-            return Err(RequirementsError::EdgeFile {
-                at,
-                file: preview(&edge.file),
-                reason,
-            });
-        }
+        validate_edge(at, edge)?;
         let key = (
             verb_spelling(edge),
             edge.symbol.as_str(),
@@ -356,6 +360,59 @@ fn edges_gate(index: usize, row: &RequirementRow) -> Result<(), RequirementsErro
             return Err(RequirementsError::EdgeOrder { at });
         }
         previous = Some(key);
+    }
+    Ok(())
+}
+
+/// The pure per-edge shape law — 1-based line, nonblank symbol, safe
+/// repo-relative file — extracted from `edge-bounds` so a relation
+/// provider validates its edges through the ONE path grammar, never a
+/// second one (R7.5 A2b follow-up C6). `at` only names the error's
+/// position; the law itself is position-independent.
+///
+/// ```
+/// use vibe_wire::behaviour::requirements_report::{EdgeRef, validate_edge};
+/// use vibe_wire::generated::requirements_report::{
+///     RequirementRelation, RequirementRelationProvenance, RequirementRelationVerb,
+/// };
+///
+/// let at = EdgeRef { row: 0, edge: 0 };
+/// let edge = RequirementRelation {
+///     verb: RequirementRelationVerb::Verifies,
+///     provenance: RequirementRelationProvenance::Authored,
+///     symbol: "x::t".to_string(),
+///     file: "crates/x/src/lib.rs".to_string(),
+///     line: 1,
+/// };
+/// assert!(validate_edge(at, &edge).is_ok());
+/// let broken = RequirementRelation { line: 0, ..edge };
+/// assert!(validate_edge(at, &broken).is_err());
+/// ```
+pub fn validate_edge(
+    at: EdgeRef,
+    edge: &crate::generated::requirements_report::RequirementRelation,
+) -> Result<(), RequirementsError> {
+    // The complete per-edge scalar law lives here, including the
+    // bounded-text half. A provider calling this helper must not pass an
+    // over-cap/control-bearing edge only for the later full-report gate to
+    // reject it under a different path.
+    bounded(&edge.symbol, "relations.symbol")?;
+    bounded(&edge.file, "relations.file")?;
+    if edge.line == 0 {
+        return Err(RequirementsError::EdgeLine { at });
+    }
+    if edge.symbol.trim().is_empty() {
+        return Err(RequirementsError::EdgeBlank {
+            at,
+            field: "symbol",
+        });
+    }
+    if let Some(reason) = relative_path_defect(&edge.file) {
+        return Err(RequirementsError::EdgeFile {
+            at,
+            file: preview(&edge.file),
+            reason,
+        });
     }
     Ok(())
 }

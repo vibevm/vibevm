@@ -5,7 +5,8 @@
 //! the per-file budget.
 
 use super::{
-    ADDRESS_CAP_BYTES, AddressDefect, IMPLEMENTED_LAWS, PathUnsafety, RequirementsError, validate,
+    ADDRESS_CAP_BYTES, AddressDefect, EdgeRef, IMPLEMENTED_LAWS, PathUnsafety, RequirementsError,
+    validate, validate_edge,
 };
 use crate::behaviour::compiler_trace_index::DIAGNOSTIC_CAP_BYTES;
 use crate::generated::requirements_report::{
@@ -283,6 +284,98 @@ fn the_query_the_answer_restates_is_one_the_surfaces_would_have_accepted() {
     let mut long_prefix = base();
     long_prefix.query.address_prefix = Some(format!("spec://{}", "x".repeat(ADDRESS_CAP_BYTES)));
     assert_eq!(law_of(&long_prefix), "bounded-text");
+}
+
+#[test]
+fn the_shared_pure_edge_entry_agrees_with_the_edge_gate() {
+    // `validate_edge` is the exact per-edge shape law the full edge
+    // gate applies, exposed for a relation provider that must validate
+    // its edges through the ONE path grammar (A2b follow-up C6). Pin
+    // the agreement both ways on a sound row.
+    let mut report = base();
+    // Relations requested, both sources answered — the shape edges may
+    // exist in.
+    report.query = query(true);
+    report.relation_sources[0].state = RelationSourceState::Current;
+    report.relation_sources[0].provenance = RelationSourceProvenance::FreshProjectMap;
+    report.relation_sources[1].state = RelationSourceState::Carried;
+    report.relation_sources[1].provenance = RelationSourceProvenance::CarriedPackageMap;
+    report.rows[0].relations = vec![RequirementRelation {
+        verb: RequirementRelationVerb::Verifies,
+        provenance: RequirementRelationProvenance::Authored,
+        symbol: "demo::t".to_string(),
+        file: "crates/demo/src/lib.rs".to_string(),
+        line: 1,
+    }];
+    validate(&report).unwrap();
+    for (edge_index, edge) in report.rows[0].relations.iter().enumerate() {
+        validate_edge(
+            EdgeRef {
+                row: 0,
+                edge: edge_index,
+            },
+            edge,
+        )
+        .unwrap();
+    }
+    // Every shape failure the entry owns: 0 line, blank symbol, unsafe
+    // path, over-cap/control-bearing scalar — each moves both gates.
+    for broken in [
+        RequirementRelation {
+            line: 0,
+            ..report.rows[0].relations[0].clone()
+        },
+        RequirementRelation {
+            symbol: "  ".to_string(),
+            ..report.rows[0].relations[0].clone()
+        },
+        RequirementRelation {
+            file: "..\\escape.rs".to_string(),
+            ..report.rows[0].relations[0].clone()
+        },
+        RequirementRelation {
+            symbol: "x".repeat(DIAGNOSTIC_CAP_BYTES + 1),
+            ..report.rows[0].relations[0].clone()
+        },
+        RequirementRelation {
+            symbol: "demo::t\nrewritten".to_string(),
+            ..report.rows[0].relations[0].clone()
+        },
+        RequirementRelation {
+            file: "x".repeat(DIAGNOSTIC_CAP_BYTES + 1),
+            ..report.rows[0].relations[0].clone()
+        },
+    ] {
+        let mut report = report.clone();
+        report.rows[0].relations = vec![broken.clone()];
+        assert!(
+            validate_edge(EdgeRef { row: 0, edge: 0 }, &broken).is_err(),
+            "the pure entry must refuse: {broken:?}"
+        );
+        assert!(matches!(law_of(&report), "edge-bounds" | "bounded-text"));
+    }
+}
+
+#[test]
+fn the_shared_pure_query_entry_agrees_with_the_report_gate() {
+    // `validate_query` is the exact grammar the full validator applies
+    // to `report.query`, exposed for a query library that must refuse
+    // BEFORE filesystem access (R7.5 A2b). Pin the agreement both ways.
+    use super::validate_query;
+
+    let mut report = base();
+    validate(&report).unwrap();
+    assert!(validate_query(&report.query).is_ok());
+
+    for limit in [0, 257, u32::MAX] {
+        report.query.limit = limit;
+        assert_eq!(law_of(&report), "query-bounds", "limit {limit}");
+        assert!(validate_query(&report.query).is_err(), "limit {limit}");
+    }
+    report.query.limit = 100;
+    report.query.address_prefix = Some("req-one".to_string());
+    assert_eq!(law_of(&report), "query-bounds");
+    assert!(validate_query(&report.query).is_err());
 }
 
 #[test]

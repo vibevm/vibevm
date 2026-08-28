@@ -60,6 +60,7 @@ gated = [
     "vibe-resolver",
     "vibe-safefs",
     "vibe-registry",
+    "vibe-requirements",
     "vibe-workspace",
     "vibe-check",
     "vibe-publish",

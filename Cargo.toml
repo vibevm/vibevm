@@ -18,6 +18,7 @@ members = [
     "crates/vibe-install",
     "crates/vibe-lifecycle",
     "crates/vibe-registry",
+    "crates/vibe-requirements",
     "crates/vibe-resolver",
     "crates/vibe-safefs",
     "crates/vibe-llm",
@@ -47,6 +48,7 @@ default-members = [
     "crates/vibe-install",
     "crates/vibe-lifecycle",
     "crates/vibe-registry",
+    "crates/vibe-requirements",
     "crates/vibe-resolver",
     "crates/vibe-safefs",
     "crates/vibe-llm",
@@ -91,6 +93,7 @@ vibe-index = { path = "crates/vibe-index", version = "1.0.0" }
 vibe-install = { path = "crates/vibe-install", version = "1.0.0" }
 vibe-lifecycle = { path = "crates/vibe-lifecycle", version = "1.0.0" }
 vibe-registry = { path = "crates/vibe-registry", version = "1.0.0" }
+vibe-requirements = { path = "crates/vibe-requirements", version = "1.0.0" }
 vibe-resolver = { path = "crates/vibe-resolver", version = "1.0.0" }
 vibe-llm = { path = "crates/vibe-llm", version = "1.0.0" }
 vibe-safefs = { path = "crates/vibe-safefs", version = "1.0.0" }

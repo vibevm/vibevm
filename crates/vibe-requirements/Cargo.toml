@@ -1,0 +1,33 @@
+[package]
+name = "vibe-requirements"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license-file.workspace = true
+publish.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "The R7.5 read-only requirements metadata query library"
+
+[dependencies]
+progress-core.workspace = true
+specmark.workspace = true
+sha2.workspace = true
+thiserror.workspace = true
+# Slot/layout/lock grammars for the source universe — public APIs only.
+vibe-core.workspace = true
+# The A2a one-read seams: observe_authored_source, Registry::load_with_witnesses.
+vibe-facts.workspace = true
+# Workspace discovery + materialised slot location (never a reverse edge).
+vibe-workspace.workspace = true
+# The generated RequirementsReport root and its relational validator —
+# the wire owner; this crate never re-decides its grammar.
+vibe-wire.workspace = true
+
+[dev-dependencies]
+serde_json.workspace = true
+tempfile.workspace = true
+# Q1's lease oracle ONLY: a real outermost lifecycle lease must not block
+# the read-only query. Never a production dependency (architecture §2).
+vibe-lifecycle.workspace = true
