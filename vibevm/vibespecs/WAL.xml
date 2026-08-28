@@ -43,8 +43,11 @@
       `7bd335e2` / `b3ff308c`; A5 outermost lease is complete at `7e330974` /
       `93177db6`; A6 selected-node state ownership is complete at `e1121d9b`,
       `b4d91749`, `8debdf2e`, `c82012c3`, exact-gated and independently
-      reviewed. A7's final-name bounded-read prerequisite is active before the
-      optimistic tasks reader/MCP adapter. R7.5 neutral
+      reviewed. A7–A8 tasks query is complete at `cf5ec17d`, `ee741f2e` /
+      `d338e880`, `30534ff9` / `7b9732f0`, `df678d7b` / `c62177fe`: exact
+      state bytes, final-name-safe tasks, four-attempt optimism and strict MCP
+      projection are narrow-gated; the coherent A0–A8 full panel is next.
+      R7.5 neutral
       evidence/query substrate follows. Provider presence activates nothing
       by itself.</WAL-R7>
       <WAL-R8 fact="true" status="impl/work">R8.1 project-only package-skill
@@ -120,9 +123,8 @@
   <next title="Next">
     <p><WAL-NEXT fact="true" status="impl/work">The accepted R7.4
     architecture, first parallel wave, A4 state transaction, A5 outermost
-    lease and A6 selected-node ownership are landed. Complete the final-name
-    bounded-read prerequisite, one-epoch selected-workspace seam and
-    `lifecycle_tasks`; gate that coherent half once, then extract the shared
+    lease, A6 selected-node ownership and A7–A8 `lifecycle_tasks` cut are
+    landed. Run the one coherent A0–A8 full panel, then extract the shared
     orchestrator and land `lifecycle_run`. Follow with R7.5 exact evidence,
     optional read-only spec-IR facts and a fake external PDSA orchestrator — no
     embedded agent policy. Resume R4 registry/transforms after those neutral

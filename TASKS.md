@@ -117,10 +117,13 @@ fronts currently in flight. A worker report or old worktree is never completion.
                   threading, `8debdf2e` specmap, `c82012c3` real multi-member
                   CLI e2e; Opus-corrected raw-spelling/foreign-park/post-wipe
                   laws, mutation RED and exact gates green).
-            - [ ] A7–A8 tasks query/MCP adapter — first bind bounded reads to
-                  the final pathname identity, then add the one-epoch selected
-                  workspace seam, optimistic lower reader and strict
-                  `lifecycle_tasks`; run the first coherent boundary panel.
+            - [x] A7–A8 tasks query/MCP adapter (`cf5ec17d` final-name-safe
+                  bounded reads; `ee741f2e` / `d338e880` one-epoch selected
+                  workspace; `30534ff9` / `7b9732f0` exact-byte optimistic
+                  reader; `df678d7b` / `c62177fe` strict MCP adapter; Opus
+                  corrections, 429 fallback, mutation/limit/MCP gates green).
+            - [ ] First coherent A0–A8 full panel — next; one batch gate, not
+                  another per-atom panel.
       - [ ] A9–A15: ports-in-place, one `vibe-orchestrator` application
             service, credential-free prompt resolution and hosted/no-spend
             `lifecycle_run` parity.
