@@ -16,6 +16,10 @@ cap-std.workspace = true
 cap-fs-ext.workspace = true
 icu_normalizer.workspace = true
 unicode-casefold.workspace = true
+# The streamed content witness hashes through the handle this crate already
+# owns; moving the digest out to a caller would mean re-exporting the handle,
+# which is the one thing a capability crate must not do.
+sha2.workspace = true
 specmark.workspace = true
 # The single shared Windows device-name table lives with the manifest law;
 # this cell delegates to it rather than carrying a second, weaker copy.

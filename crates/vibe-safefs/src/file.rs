@@ -26,10 +26,12 @@ use crate::publish::{PublishError, Published};
 mod bounded;
 mod create_new;
 pub(crate) mod identity;
+mod stream;
 #[cfg(any(test, feature = "inject-failures"))]
 pub use create_new::{fail_before_publish, fail_before_stage_cleanup};
 pub(crate) use identity::is_not_empty;
 use identity::{FileIdentity, file_identity, number_of_links};
+pub use stream::ContentDigest;
 
 /// How many distinct staging names to try before refusing. Exceeding this
 /// means something is minting `.vibe-stage-*` faster than we can claim one.
@@ -538,6 +540,14 @@ pub(crate) fn verify_regular_single_link(file: &std::fs::File, display: &Path) -
 #[cfg(test)]
 #[path = "file/bounded_tests.rs"]
 mod bounded_tests;
+
+#[cfg(test)]
+#[path = "file/stream_tests.rs"]
+mod stream_tests;
+
+#[cfg(test)]
+#[path = "file/stream_shape_tests.rs"]
+mod stream_shape_tests;
 
 #[cfg(test)]
 #[path = "file/identity_tests.rs"]

@@ -36,7 +36,7 @@ pub use component::{
     ensure_no_follow_walk, ensure_safe_component, identity_key, judge_selection, path_identity_key,
     paths_overlap, split_relative,
 };
-pub use file::Presence;
+pub use file::{ContentDigest, Presence};
 #[cfg(any(test, feature = "inject-failures"))]
 pub use file::{fail_after_publish, fail_before_publish, fail_before_stage_cleanup};
 #[cfg(any(test, feature = "inject-failures"))]
@@ -48,5 +48,5 @@ pub use publish::{PublishError, PublishStage, Published};
 pub use race_hook::{
     arm_after_create_dir, arm_before_bounded_read, arm_before_create_dir, arm_before_link,
     arm_before_lock, arm_before_proved_removal, arm_before_publish_verify,
-    arm_bounded_read_identity_check, arm_lock_identity_check,
+    arm_between_stream_passes, arm_bounded_read_identity_check, arm_lock_identity_check,
 };

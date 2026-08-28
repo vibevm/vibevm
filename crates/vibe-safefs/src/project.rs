@@ -8,6 +8,8 @@ use specmark::spec;
 
 use crate::component::ensure_safe_component;
 
+mod enumerate;
+
 /// The pinned project-root capability every mutation goes through.
 ///
 /// ```no_run
@@ -260,25 +262,6 @@ impl Project {
                 directory.join(name).display()
             ))),
         }
-    }
-
-    /// List the direct child names of `directory` through the retained
-    /// capability; entry and non-UTF8-name errors propagate.
-    pub fn child_names(&self, directory: &Pinned) -> Result<Vec<String>> {
-        let mut names = Vec::new();
-        for entry in directory
-            .dir
-            .entries()
-            .with_context(|| format!("listing `{}`", directory.path.display()))?
-        {
-            let entry = entry.with_context(|| format!("listing `{}`", directory.path.display()))?;
-            let name = entry.file_name();
-            let Some(name) = name.to_str() else {
-                bail!("non-UTF8 name in `{}`", directory.path.display());
-            };
-            names.push(name.to_string());
-        }
-        Ok(names)
     }
 
     /// Open (creating when absent) `.vibe/<name>` through the capability,

@@ -28,6 +28,7 @@ mod armed {
         static BEFORE_PROVED_REMOVAL: RefCell<Option<Hook>> = const { RefCell::new(None) };
         static BEFORE_LOCK: RefCell<Option<Hook>> = const { RefCell::new(None) };
         static BEFORE_BOUNDED_READ: RefCell<Option<Hook>> = const { RefCell::new(None) };
+        static BETWEEN_STREAM_PASSES: RefCell<Option<Hook>> = const { RefCell::new(None) };
         static BEFORE_PUBLISH_VERIFY: RefCell<Option<Hook>> = const { RefCell::new(None) };
         static LOCK_IDENTITY_CHECK: RefCell<Option<IdentityCheckHook>> = const { RefCell::new(None) };
         static BOUNDED_READ_IDENTITY_CHECK: RefCell<Option<IdentityCheckHook>> = const {
@@ -105,6 +106,26 @@ mod armed {
         let hook = BEFORE_BOUNDED_READ.with(|slot| slot.borrow_mut().take());
         if let Some(hook) = hook {
             hook(holder, name);
+        }
+    }
+
+    /// Run `hook` on this thread in the exact window the second content pass
+    /// exists to close: **after** the first pass reached EOF and **before** the
+    /// held handle is rewound for the second. Pass `None` to disarm.
+    ///
+    /// This is where a concurrent writer's same-length in-place rewrite lands
+    /// — the one mutation neither the object's identity nor its length can
+    /// report, and which a single pass would bless as a content digest. The
+    /// hook fires **once** and disarms itself, so one armed mutation stays one
+    /// mutation and cannot poison a later test on the same thread.
+    pub fn arm_between_stream_passes(hook: Option<Hook>) {
+        BETWEEN_STREAM_PASSES.with(|slot| *slot.borrow_mut() = hook);
+    }
+
+    pub(crate) fn between_stream_passes(directory: &crate::Pinned, name: &str) {
+        let hook = BETWEEN_STREAM_PASSES.with(|slot| slot.borrow_mut().take());
+        if let Some(hook) = hook {
+            hook(directory, name);
         }
     }
 
@@ -207,14 +228,14 @@ mod armed {
 #[cfg(any(test, feature = "inject-failures"))]
 pub(crate) use armed::{
     after_create_dir, before_bounded_read, before_create_dir, before_link, before_lock,
-    before_proved_removal, before_publish_verify, bounded_read_identity_matches,
-    lock_identity_matches,
+    before_proved_removal, before_publish_verify, between_stream_passes,
+    bounded_read_identity_matches, lock_identity_matches,
 };
 #[cfg(any(test, feature = "inject-failures"))]
 pub use armed::{
     arm_after_create_dir, arm_before_bounded_read, arm_before_create_dir, arm_before_link,
     arm_before_lock, arm_before_proved_removal, arm_before_publish_verify,
-    arm_bounded_read_identity_check, arm_lock_identity_check,
+    arm_between_stream_passes, arm_bounded_read_identity_check, arm_lock_identity_check,
 };
 
 #[cfg(not(any(test, feature = "inject-failures")))]
@@ -239,6 +260,9 @@ pub(crate) fn before_lock(_directory: &crate::Pinned, _name: &str) {}
 
 #[cfg(not(any(test, feature = "inject-failures")))]
 pub(crate) fn before_bounded_read(_holder: &crate::Pinned, _name: &str) {}
+
+#[cfg(not(any(test, feature = "inject-failures")))]
+pub(crate) fn between_stream_passes(_directory: &crate::Pinned, _name: &str) {}
 
 #[cfg(not(any(test, feature = "inject-failures")))]
 pub(crate) fn before_publish_verify(_directory: &crate::Pinned, _name: &str) {}

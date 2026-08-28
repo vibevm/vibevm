@@ -22,10 +22,11 @@ use crate::Project;
 use crate::file::cap_options;
 use crate::file::verify_regular_single_link;
 
-/// How many bytes one bounded read asks the handle for at a time. A fixed
-/// stack window: the loop's exact reservations, not this size, shape the
-/// returned buffer.
-const READ_CHUNK: usize = 16 * 1024;
+/// How many bytes one read asks the handle for at a time. A fixed stack
+/// window: the loop's exact reservations, not this size, shape the returned
+/// buffer. Shared with the streamed content digest, which has no buffer at all
+/// and so is *only* this window.
+pub(crate) const READ_CHUNK: usize = 16 * 1024;
 
 impl Project {
     /// Read one file at a project-relative path, or `None` when absent.
@@ -157,7 +158,15 @@ impl Project {
                         // (still regular, still single-link) while a fresh
                         // regular single-link file takes the original name.
                         let held = fenced.into_inner();
-                        ensure_still_final_name(&holder, &name, &held, &display)?;
+                        let held_id = crate::file::identity::file_identity(&held, &display)
+                            .with_context(|| {
+                                format!(
+                                    "identifying the held object for `{}` after the bounded read \
+                                     (final-name race)",
+                                    display.display()
+                                )
+                            })?;
+                        ensure_still_final_name(&holder, &name, held_id, &display)?;
                         return Ok(Some(bytes));
                     }
                     // Loop invariant: `bytes.len() <= cap`, so the subtraction
@@ -190,7 +199,9 @@ impl Project {
 }
 
 /// Refuse unless the final `name` still denotes, through `holder`'s pinned
-/// capability, exactly the object `held` finished reading.
+/// capability, exactly the object identified by `held` — the handle the caller
+/// finished reading, taken as an identity rather than a borrowed handle so the
+/// bounded read and the streamed digest share ONE implementation of this law.
 ///
 /// The reopen answers through the same no-follow capability the read used —
 /// never ambient authority — and every answer short of "the same object" is a
@@ -198,10 +209,10 @@ impl Project {
 /// gone, occupied by a link/reparse point, shared as a hard link, a
 /// directory, or a different regular single-link file. There is deliberately
 /// no retry and no cache: a caller that wants certainty re-reads.
-fn ensure_still_final_name(
+pub(crate) fn ensure_still_final_name(
     holder: &Pinned,
     name: &str,
-    held: &std::fs::File,
+    held: crate::file::identity::FileIdentity,
     display: &Path,
 ) -> Result<()> {
     let mut options = cap_options();
@@ -214,12 +225,6 @@ fn ensure_still_final_name(
                     display.display()
                 )
             })?;
-            let held_id = crate::file::identity::file_identity(held, display).with_context(|| {
-                format!(
-                    "identifying the held object for `{}` after the bounded read (final-name race)",
-                    display.display()
-                )
-            })?;
             let named_id =
                 crate::file::identity::file_identity(&current, display).with_context(|| {
                     format!(
@@ -228,7 +233,7 @@ fn ensure_still_final_name(
                         display.display()
                     )
                 })?;
-            if crate::race_hook::bounded_read_identity_matches(held_id == named_id) {
+            if crate::race_hook::bounded_read_identity_matches(held == named_id) {
                 Ok(())
             } else {
                 bail!(
