@@ -97,10 +97,13 @@ fn after_direct_install_stage(
     surface_plan(ctx, &ritual, &metadata, false)?;
     let state_chain = metadata.chain.clone();
     let slot_reports = run.lifecycle_reports;
+    // The callback's dispatch reuses the command's ONE lease — shared into
+    // the context by Arc, never reacquired here.
+    let lease = run.lease.clone();
     let outcome = if let Some(shared) = run.lifecycle_run {
         dispatch::dispatch_plan_with_run(ctx, &ritual, &shared, &metadata)?
     } else {
-        dispatch::dispatch_plan(ctx, &ritual, metadata, state_chain)?
+        dispatch::dispatch_plan(ctx, &ritual, lease, metadata, state_chain)?
     };
     let parked = outcome.parked.map(|(_, delegation)| delegation);
     let contributions = outcome.reports;

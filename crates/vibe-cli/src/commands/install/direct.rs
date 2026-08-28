@@ -32,10 +32,11 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE");
 
 use std::path::PathBuf;
+use std::sync::Arc;
 
 use anyhow::{Context, Result};
 use vibe_core::user_config::UserConfig;
-use vibe_lifecycle::RunMetadata;
+use vibe_lifecycle::{LifecycleLease, RunMetadata};
 
 use crate::cli::InstallArgs;
 use crate::commands::compile_trace::{
@@ -45,7 +46,7 @@ use crate::output;
 
 use super::{
     InstallDisposition, InstallDraft, InstallExecution, InstallRun, InstallRunContext,
-    PreparedWorkspace, SelectedManifest, execute_prepared, resolve_project_root,
+    PreparedWorkspace, SelectedManifest, acquire_lease, execute_prepared, resolve_project_root,
 };
 
 /// Everything `vibe install` reads before it may compile.
@@ -55,6 +56,10 @@ use super::{
 /// was locked against is the tree the install works on.
 struct PreparedInstall {
     project_root: PathBuf,
+    /// The workspace mutation lease, acquired BEFORE the config/manifest/
+    /// workspace reads below: the locator epoch discovers the root, the
+    /// lease pins it, and only then may execution read the tree.
+    lease: Arc<LifecycleLease>,
     user_config: UserConfig,
     metadata: RunMetadata,
     manifest: SelectedManifest,
@@ -69,6 +74,11 @@ fn prepare_direct_install(
     root_offline: bool,
 ) -> Result<PreparedInstall> {
     let project_root = resolve_project_root(&args.path)?;
+    // The OUTERMOST lock, before the config, manifest, workspace and identity
+    // reads below: everything execution consumes is a post-acquisition
+    // snapshot. A contended workspace refuses here, typed, having allocated
+    // nothing but the infrastructure lock file itself.
+    let lease = acquire_lease(&project_root)?;
     // Before the identity, and before anything is allocated: a malformed user
     // config must still fail ahead of the run-directory allocation.
     let user_config = UserConfig::load().context("loading the user config")?;
@@ -85,6 +95,7 @@ fn prepare_direct_install(
         ctx,
         project_root,
         workspace,
+        lease.clone(),
         requested,
         &chain,
         args.force,
@@ -108,6 +119,7 @@ fn prepare_direct_install(
     let trace = prelude.prepare_trace(&now);
     Ok(PreparedInstall {
         project_root: prelude.project_root,
+        lease: prelude.lease,
         user_config,
         metadata,
         manifest,
@@ -125,18 +137,24 @@ pub(crate) fn run(
 ) -> Result<()> {
     let PreparedInstall {
         project_root,
+        lease,
         user_config,
         metadata,
         manifest,
         workspace,
         trace,
     } = prepare_direct_install(ctx, &args, root_offline)?;
+    // The boundary's OWNER share: the executed region consumes its own clones
+    // into the run and the callback, while this one lives to the end of the
+    // command — through the final report and the trace finalisation.
+    let lease_owner = lease.clone();
     let exit = execute_after_open(
         ctx,
         Execution {
             args,
             embedded_root,
             root_offline,
+            lease,
             user_config,
             manifest,
             workspace,
@@ -148,7 +166,9 @@ pub(crate) fn run(
     // Consumes the owner: finishes the index, drops the last handle (and with
     // it the cooperative lock), and returns the member to attach.
     let finalized = compile_trace::finalize(trace, exit, &now);
-    render_finalized(ctx, finalized)
+    let rendered = render_finalized(ctx, finalized);
+    drop(lease_owner);
+    rendered
 }
 
 /// The prepared inputs the executed region owns.
@@ -156,6 +176,7 @@ struct Execution {
     args: InstallArgs,
     embedded_root: Option<PathBuf>,
     root_offline: bool,
+    lease: Arc<LifecycleLease>,
     user_config: UserConfig,
     manifest: SelectedManifest,
     workspace: PreparedWorkspace,
@@ -176,6 +197,7 @@ fn execute_after_open(
         args,
         embedded_root,
         root_offline,
+        lease,
         user_config,
         manifest,
         workspace,
@@ -192,6 +214,7 @@ fn execute_after_open(
             args,
             embedded_root,
             root_offline,
+            lease,
             project_root,
             user_config,
             manifest,
@@ -271,6 +294,101 @@ mod tests {
     use super::*;
     use crate::commands::compile_trace::{CommandExit, classify};
     use crate::commands::install::{ResumeFailure, resume};
+
+    /// A fully-defaulted `InstallArgs` for the preparation-boundary red —
+    /// every flag off, exactly one field (the path) set by the caller.
+    fn args(path: std::path::PathBuf) -> InstallArgs {
+        InstallArgs {
+            packages: Vec::new(),
+            path,
+            registry: None,
+            assume_yes: true,
+            language: None,
+            features: Vec::new(),
+            no_default_features: false,
+            all_features: false,
+            exact: false,
+            auth_required: false,
+            solver: None,
+            git: None,
+            tag: None,
+            branch: None,
+            rev: None,
+            git_auth: None,
+            git_token_env: None,
+            force: false,
+            prefer_embedded: false,
+            no_prefer_embedded: false,
+            no_default_registry: false,
+            offline: true,
+            embedded_short_circuit: false,
+            prefer_local: false,
+            no_prefer_local: false,
+            trace_compile: false,
+        }
+    }
+
+    fn quiet_ctx() -> output::Context {
+        output::Context::from_flags(true, false, None, true, crate::cli::AgentModeArg::Cli)
+    }
+
+    /// The pre-lease-snapshot barrier, pinned for real (R7.4 §2.1): the
+    /// safefs `before_lock` race hook fires between `Project::open` and the
+    /// OS lock — exactly the window in which a concurrent editor rewrites
+    /// the selected manifest — and rewrites a valid manifest into a
+    /// SEMANTICALLY DIFFERENT one (a standing `[compile] trace` request).
+    ///
+    /// The correct order consumes the POST-hook file: the prepared identity
+    /// carries the post-hook activation. An order that read the manifest
+    /// before acquiring would freeze the pre-hook bytes and this test fails
+    /// — which is the discrimination the planted change buys: the file was
+    /// valid before AND after, so only the ORDER decides which semantics
+    /// the command runs with.
+    #[test]
+    fn the_selected_manifest_snapshot_is_taken_after_the_lease_acquisition() {
+        let dir = tempfile::tempdir().unwrap();
+        std::fs::write(
+            dir.path().join("vibe.toml"),
+            "[project]
+name = \"demo\"
+version = \"0.1.0\"
+",
+        )
+        .unwrap();
+        let manifest_path = dir.path().join("vibe.toml");
+        let rewritten = manifest_path.clone();
+        vibe_safefs::arm_before_lock(Some(Box::new(move |_, name| {
+            if name == "lifecycle.lock" {
+                std::fs::write(
+                    &rewritten,
+                    "[project]
+name = \"demo\"
+version = \"0.1.0\"
+
+[compile]
+trace = true
+",
+                )
+                .unwrap();
+            }
+        })));
+        // The hook is one-shot: the lifecycle acquisition consumes it, and
+        // the compile-trace lock `prepare_trace` may take below finds
+        // nothing armed.
+        let prepared = prepare_direct_install(&quiet_ctx(), &args(dir.path().to_path_buf()), true)
+            .expect("the preparation completes against the post-acquisition tree");
+        assert!(
+            prepared.metadata.trace_compile,
+            "the identity carries the POST-hook activation — the manifest snapshot was \
+             taken after the lease, not before it",
+        );
+        assert!(
+            std::fs::read_to_string(&manifest_path)
+                .unwrap()
+                .contains("trace = true"),
+            "the hook really fired inside the acquire window",
+        );
+    }
 
     #[derive(Debug, thiserror::Error)]
     #[error("the resumed row refused")]

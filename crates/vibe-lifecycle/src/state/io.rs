@@ -80,7 +80,10 @@ pub(crate) fn read_prior(
 }
 
 /// The same read for a caller that holds only the workspace root — the
-/// read-only surfaces (`peek`, identity selection) rather than a live store.
+/// lock-free read-only surfaces (`peek`, and any future reader that must not
+/// create lock state) rather than a live store. Identity selection and the
+/// leased `peek_with_lease` do NOT come through here: both hold a lease and
+/// read through its pinned capability, never a second `Project::open`.
 pub(crate) fn read_prior_state(root: &Path) -> Result<Option<LifecycleState>, LifecycleStateError> {
     let path = state_path(root);
     let project = open_project(root, &path)?;

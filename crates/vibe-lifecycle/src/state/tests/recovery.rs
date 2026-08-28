@@ -16,7 +16,7 @@ use std::path::Path;
 use vibe_wire::generated::lifecycle_state::{ExecutionRecordStatus, LifecycleState};
 
 use super::support::{KEY, OTHER, prior_store, targets, third_state_toml, vibe_names};
-use super::{RUN_ID, record_for};
+use super::{RUN_ID, lease, record_for};
 use crate::state::inject;
 use crate::{LifecycleStateError, LifecycleStateStore, PostPublicationRecovery};
 
@@ -142,7 +142,7 @@ fn a_possibly_published_initial_begin_over_absence_retains_the_absence() {
     let dir = tempfile::tempdir().unwrap();
     inject::fail_state_publication_possibly(Some("injected raced-away initial rename"));
     let error = LifecycleStateStore::begin(
-        dir.path(),
+        lease(dir.path()),
         "create".into(),
         vec!["create".into()],
         "2026-08-28T00:00:00Z".into(),
@@ -396,7 +396,7 @@ fn a_third_state_over_a_prior_absence_says_absence_not_zero_bytes() {
         }),
     );
     let error = LifecycleStateStore::begin(
-        dir.path(),
+        lease(dir.path()),
         "create".into(),
         vec!["create".into()],
         "2026-08-28T00:00:00Z".into(),
@@ -457,7 +457,7 @@ fn an_oddly_formatted_prior_survives_a_possibly_published_initial_begin_byte_exa
 
     inject::fail_state_publication_possibly(Some("injected raced-away initial rename"));
     let error = LifecycleStateStore::begin(
-        dir.path(),
+        lease(dir.path()),
         "create".into(),
         vec!["create".into()],
         "2026-08-28T00:00:00Z".into(),

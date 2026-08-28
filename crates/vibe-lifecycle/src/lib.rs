@@ -93,6 +93,7 @@ mod chain;
 mod delegation;
 mod execution;
 pub mod handlers;
+mod lease;
 mod legacy_hooks;
 pub use legacy_hooks::SyntheticHookIdentity;
 pub mod process;
@@ -115,6 +116,7 @@ pub use execution::{
 pub use handlers::{
     NoPackageBindingBackend, PackageBindingArtifact, PackageBindingBackend, PackageBindingOutcome,
 };
+pub use lease::{LifecycleLease, LifecycleLeaseError};
 pub use registry::{
     CollectionError, CollectionNotice, ContributionTier, DependencyExtensionSource,
     DependencyProvider, DependencyProviderId, EffectiveManifestKind, ExecutableContribution,

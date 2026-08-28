@@ -11,8 +11,8 @@ use std::path::Path;
 
 use anyhow::{Context, Result};
 use vibe_core::manifest::{Lockfile, Manifest, SpecFormat};
-use vibe_lifecycle::RunMetadata;
 use vibe_lifecycle::process::StreamMode;
+use vibe_lifecycle::{LifecycleLease, RunMetadata};
 use vibe_wire::generated::lifecycle_state::ExecutionRecordScope;
 use vibe_workspace::Workspace;
 
@@ -39,6 +39,9 @@ pub(crate) struct ResumeRequest<'a> {
     pub(crate) workspace: &'a Workspace,
     pub(crate) manifest: &'a Manifest,
     pub(crate) metadata: &'a RunMetadata,
+    /// The command's mutation lease: the resumed slot run is rebuilt on the
+    /// caller's ONE acquisition — a resume never reacquires.
+    pub(crate) lease: &'a std::sync::Arc<LifecycleLease>,
     /// The resolved-package count of the run being serviced, carried through
     /// unchanged: a continuation finishes that run, it does not resolve again.
     pub(crate) packages_resolved: usize,
@@ -153,6 +156,7 @@ pub(crate) fn resume_slot_continuation(
         workspace,
         manifest,
         metadata,
+        lease,
         spec_format,
         disposition,
         progress,
@@ -161,8 +165,11 @@ pub(crate) fn resume_slot_continuation(
     let _ = spec_format;
     // READ-ONLY: asking what this run owes must not rewrite the run header.
     // `begin` would replace the persisted chain with this caller's own, which
-    // silently rewrote a clean-composed run's recorded chain.
-    let Some(state) = vibe_lifecycle::LifecycleStateStore::peek(&workspace.root)? else {
+    // silently rewrote a clean-composed run's recorded chain. The read goes
+    // through the LEASE's pinned capability — this seam runs inside a leased
+    // command, and a second `Project::open` of the same root would be a
+    // second capability over a tree the lease already owns.
+    let Some(state) = vibe_lifecycle::LifecycleStateStore::peek_with_lease(lease)? else {
         return Ok(ResumeOutcome::Nothing);
     };
     // A slot continuation is a capability owned by the EXACT lifecycle run
@@ -240,6 +247,7 @@ pub(crate) fn resume_slot_continuation(
                 manifest,
             )),
         },
+        lease.clone(),
     )?;
     // ---- everything past this line owns rows ------------------------------
     //
@@ -254,6 +262,7 @@ pub(crate) fn resume_slot_continuation(
         targets: &targets,
         selected: &selected,
         metadata,
+        lease,
         project_root,
         disposition,
         packages_resolved,
@@ -371,6 +380,7 @@ struct Serviced<'a> {
     targets: &'a [(String, String, String)],
     selected: &'a [vibe_workspace::install::ResolvedDep],
     metadata: &'a RunMetadata,
+    lease: &'a std::sync::Arc<LifecycleLease>,
     project_root: &'a Path,
     disposition: InstallDisposition,
     packages_resolved: usize,
@@ -385,6 +395,7 @@ fn serviced(inputs: Serviced<'_>) -> Result<ResumeOutcome> {
         targets,
         selected,
         metadata,
+        lease,
         project_root,
         disposition,
         packages_resolved,
@@ -420,6 +431,7 @@ fn serviced(inputs: Serviced<'_>) -> Result<ResumeOutcome> {
     // reports so both halves below describe the same run.
     let mut context = InstallRunContext {
         metadata: metadata.clone(),
+        lease: lease.clone(),
         lifecycle_run: Some(lifecycle.run_handle()),
         lifecycle_reports: Vec::new(),
     };

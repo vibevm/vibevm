@@ -58,6 +58,9 @@ pub(super) struct ScopedApply<'a> {
     pub(super) metadata: &'a RunMetadata,
     pub(super) spec_format: SpecFormat,
     pub(super) trace: Option<&'a TraceRun>,
+    /// The command's mutation lease, threaded into the continuation this
+    /// apply may service — the ONE acquisition, never reacquired.
+    pub(super) lease: &'a std::sync::Arc<vibe_lifecycle::LifecycleLease>,
     pub(super) resolved: usize,
     pub(super) resolution: &'a [ResolvedDep],
     pub(super) source_hashes: &'a SourceHashes,
@@ -78,6 +81,7 @@ pub(super) fn apply(ctx: &output::Context, inputs: ScopedApply<'_>) -> Result<Up
         metadata,
         spec_format,
         trace,
+        lease,
         resolved,
         resolution,
         source_hashes,
@@ -205,6 +209,7 @@ pub(super) fn apply(ctx: &output::Context, inputs: ScopedApply<'_>) -> Result<Up
             metadata,
             spec_format,
             resolved,
+            lease,
         },
     )? {
         return Ok(done);
@@ -259,6 +264,9 @@ struct Continuation<'a> {
     metadata: &'a RunMetadata,
     spec_format: SpecFormat,
     resolved: usize,
+    /// The command's mutation lease: the resumed slot run is rebuilt on the
+    /// ONE acquisition the update boundary made — a resume never reacquires.
+    lease: &'a std::sync::Arc<vibe_lifecycle::LifecycleLease>,
 }
 
 /// Finish a slot run this project still owes, as a VALUE.
@@ -287,6 +295,7 @@ fn service_continuation(
         workspace: inputs.workspace,
         manifest: inputs.manifest,
         metadata: inputs.metadata,
+        lease: inputs.lease,
         spec_format: inputs.spec_format,
         disposition: crate::commands::install::InstallDisposition::Fresh,
         progress: lifecycle.progress(),

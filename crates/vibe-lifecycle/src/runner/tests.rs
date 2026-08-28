@@ -10,8 +10,11 @@ use std::path::Path;
 use vibe_wire::generated::lifecycle::e1::context::{Project, RunAgentMode, World};
 use vibe_wire::generated::lifecycle_state::{ExecutionRecordStatus, LifecycleState};
 
+use std::sync::Arc;
+
 use super::LifecycleRun;
 use crate::ExecutionReuse;
+use crate::LifecycleLease;
 use crate::agent::tests::support::{PROMPT, RecordingBackend, TWO_OUTPUTS, row};
 use crate::execution::HandlerExecution;
 use crate::handlers::{HandlerRuntime, NoPackageBindingBackend};
@@ -32,6 +35,14 @@ const KEY: &str = "org.demo/tools#produce";
 struct Scratch {
     _dir: tempfile::TempDir,
     root: std::path::PathBuf,
+}
+
+/// One real temp lease over the scratch root — the single-writer proof every
+/// tracked run construction in these tests must now carry. Sequential
+/// acquisitions (a run dropped, then another begun) release and re-acquire;
+/// two LIVE runs on one root were never a legal shape and now refuse.
+fn lease(root: &Path) -> Arc<LifecycleLease> {
+    Arc::new(LifecycleLease::acquire(root).expect("a temp root is leasable"))
 }
 
 fn scratch() -> Scratch {
@@ -109,7 +120,7 @@ fn transition(
 ) -> Result<super::ExecutionTransition, crate::LifecycleRunError> {
     let row = row(TWO_OUTPUTS, PROMPT);
     let mut run = LifecycleRun::begin(
-        root,
+        lease(root),
         project_fixture(root),
         world_fixture(root),
         metadata,
@@ -299,17 +310,22 @@ fn force_reparks_under_a_fresh_run_without_probing() {
     let parked = execute(scratch.root.as_path(), &backend, RUN_ID, false);
     write_declared_outputs(scratch.root.as_path());
 
-    let fresh = select_run_identity(
-        scratch.root.as_path(),
-        scratch.root.as_path(),
-        "create",
-        &["validate".into(), "install".into(), "create".into()],
-        RunAgentMode::Agent,
-        true,
-        false,
-        "2026-08-26T01:00:00Z".into(),
-    )
-    .unwrap();
+    // The lease scopes to the selection: the next `execute` below begins its
+    // own run, and one workspace admits one live writer.
+    let fresh = {
+        let lease = lease(scratch.root.as_path());
+        select_run_identity(
+            &lease,
+            scratch.root.as_path(),
+            "create",
+            &["validate".into(), "install".into(), "create".into()],
+            RunAgentMode::Agent,
+            true,
+            false,
+            "2026-08-26T01:00:00Z".into(),
+        )
+        .unwrap()
+    };
     assert!(!fresh.adopted, "force never inherits the parked identity");
     assert_ne!(fresh.run_id, RUN_ID);
 
@@ -399,7 +415,7 @@ fn cli_mode_keeps_paying_and_never_parks() {
     );
     let row = row(TWO_OUTPUTS, PROMPT);
     let mut run = LifecycleRun::begin(
-        scratch.root.as_path(),
+        lease(scratch.root.as_path()),
         project_fixture(scratch.root.as_path()),
         world_fixture(scratch.root.as_path()),
         {
@@ -436,7 +452,7 @@ fn a_failed_cancellation_write_leaves_the_row_and_its_task_intact() {
     let task = parked.delegation.take().unwrap().tasks.pop().unwrap();
 
     let mut run = LifecycleRun::begin(
-        scratch.root.as_path(),
+        lease(scratch.root.as_path()),
         project_fixture(scratch.root.as_path()),
         world_fixture(scratch.root.as_path()),
         metadata(RUN_ID, false),
@@ -509,7 +525,7 @@ fn a_successful_cancellation_with_a_failed_cleanup_names_a_named_orphan() {
     fs::write(owned.join("occupant"), "not a task\n").unwrap();
 
     let mut run = LifecycleRun::begin(
-        scratch.root.as_path(),
+        lease(scratch.root.as_path()),
         project_fixture(scratch.root.as_path()),
         world_fixture(scratch.root.as_path()),
         metadata(RUN_ID, false),

@@ -11,7 +11,7 @@ use vibe_wire::generated::lifecycle_state::{
     ExecutionRecordStatus, SlotContinuation, SlotTargetRecord,
 };
 
-use super::{RUN_ID, record_for};
+use super::{RUN_ID, lease, record_for};
 use crate::LifecycleStateStore;
 
 pub(super) const KEY: &str = "org.demo/tools#produce";
@@ -19,7 +19,7 @@ pub(super) const OTHER: &str = "org.demo/tools#consume";
 
 pub(super) fn open(root: &Path) -> LifecycleStateStore {
     LifecycleStateStore::begin(
-        root,
+        lease(root),
         "create".into(),
         vec!["validate".into(), "install".into(), "create".into()],
         "2026-08-28T00:00:00Z".into(),
@@ -60,12 +60,17 @@ pub(super) fn targets() -> SlotContinuation {
     }
 }
 
-/// Everything the `.vibe` directory holds: a refused or poisoned store must
-/// leave exactly the bytes that were already there, and no staging residue.
+/// Everything the `.vibe` directory holds BESIDES the mutation lease's own
+/// lock file: a refused or poisoned store must leave exactly the bytes that
+/// were already there, and no staging residue. `.vibe/lifecycle.lock` is
+/// infrastructure of the acquiring command (created by `try_lock` itself),
+/// not lifecycle state, so it is not part of the state inventory a refusal
+/// must account for.
 pub(super) fn vibe_names(root: &Path) -> Vec<String> {
     let mut names: Vec<String> = fs::read_dir(root.join(".vibe"))
         .unwrap()
         .map(|entry| entry.unwrap().file_name().to_string_lossy().into_owned())
+        .filter(|name| name != crate::lease::LOCK_NAME)
         .collect();
     names.sort();
     names

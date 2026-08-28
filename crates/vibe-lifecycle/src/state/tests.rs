@@ -53,6 +53,13 @@ mod trace_sticky;
 const RUN_ID: &str = "00112233445566778899aabbccddeeff";
 const OTHER_RUN: &str = "ffeeddccbbaa99887766554433221100";
 
+/// One real temp lease over `root` — the single-writer proof every store
+/// construction in these tests must now carry. Sequential acquisitions are
+/// fine (a dropped lease releases); two LIVE leases on one root refuse.
+fn lease(root: &std::path::Path) -> std::sync::Arc<crate::LifecycleLease> {
+    std::sync::Arc::new(crate::LifecycleLease::acquire(root).expect("a temp root is leasable"))
+}
+
 fn record(status: ExecutionRecordStatus, fingerprint: &str) -> ExecutionRecord {
     record_for("key", RUN_ID, status, fingerprint)
 }
@@ -92,7 +99,7 @@ fn missing_state_writes_initial_run_and_preserves_unselected_rows() {
         .map(str::to_string)
         .collect();
     let mut store = LifecycleStateStore::begin(
-        dir.path(),
+        lease(dir.path()),
         "build".into(),
         chain,
         "2026-08-25T12:00:00Z".into(),
@@ -108,9 +115,12 @@ fn missing_state_writes_initial_run_and_preserves_unselected_rows() {
             record(ExecutionRecordStatus::Ok, "sha256:a"),
         )
         .unwrap();
+    // One live writer per workspace: the first store's lease is released
+    // before the second epoch may acquire it.
+    drop(store);
 
     let store = LifecycleStateStore::begin(
-        dir.path(),
+        lease(dir.path()),
         "test".into(),
         vec![
             "validate".into(),
@@ -149,7 +159,7 @@ fn malformed_unknown_and_unsupported_state_name_path_and_remediation() {
         fs::create_dir_all(path.parent().unwrap()).unwrap();
         fs::write(&path, body).unwrap();
         let error = LifecycleStateStore::begin(
-            dir.path(),
+            lease(dir.path()),
             "x".into(),
             vec![],
             "t".into(),
@@ -168,7 +178,7 @@ fn malformed_unknown_and_unsupported_state_name_path_and_remediation() {
 fn only_ok_skip_and_fresh_are_reusable_and_fresh_artifacts_survive() {
     let dir = tempfile::tempdir().unwrap();
     let mut store = LifecycleStateStore::begin(
-        dir.path(),
+        lease(dir.path()),
         "build".into(),
         vec![],
         "t".into(),

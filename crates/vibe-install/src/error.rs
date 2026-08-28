@@ -133,4 +133,12 @@ pub enum Error {
 
     #[error(transparent)]
     Workspace(#[from] vibe_workspace::WorkspaceError),
+
+    /// The workspace mutation lease refused — pass-through BY VALUE, never
+    /// re-stringified: the lease's own typed vocabulary (Busy, an unpinnable
+    /// root, a root disagreement) already speaks the product grammar with
+    /// its spec citation and remedy, and a `String` here would flatten
+    /// exactly the fields a caller might need to match on.
+    #[error(transparent)]
+    Lease(#[from] vibe_lifecycle::LifecycleLeaseError),
 }

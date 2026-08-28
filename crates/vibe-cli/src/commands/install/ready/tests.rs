@@ -74,6 +74,7 @@ fn resumed() -> ResumeOutcome {
                 run_id: "fixed-run-id".to_string(),
                 started: "2026-08-27T00:00:00Z".to_string(),
             },
+            lease: super::super::test_lease(),
             lifecycle_run: None,
             lifecycle_reports: vec![row("resumed-in-context")],
         },

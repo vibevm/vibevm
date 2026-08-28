@@ -18,7 +18,7 @@ use std::path::Path;
 use vibe_core::manifest::{Lockfile, Manifest};
 use vibe_core::{ContentHash, Group, PackageRef};
 use vibe_install::{InstallSlotLifecycle, InstallSource};
-use vibe_lifecycle::RunMetadata;
+use vibe_lifecycle::{LifecycleLease, RunMetadata};
 use vibe_registry::{CachedPackage, ResolvedPackage};
 use vibe_workspace::Workspace;
 use vibe_workspace::install::ResolvedDep;
@@ -59,6 +59,9 @@ pub(super) struct Stage<'a> {
     pub(super) manifest: &'a Manifest,
     pub(super) lockfile: &'a Lockfile,
     pub(super) metadata: &'a RunMetadata,
+    /// The command's mutation lease: the slot run staged here is built on
+    /// the ONE acquisition the update boundary made.
+    pub(super) lease: &'a std::sync::Arc<LifecycleLease>,
     pub(super) updated: Vec<Resolved>,
     pub(super) pending_in_place: Vec<PendingInPlace>,
 }
@@ -80,6 +83,7 @@ pub(super) fn stage(
         manifest,
         lockfile,
         metadata,
+        lease,
         mut updated,
         pending_in_place,
     } = inputs;
@@ -190,6 +194,7 @@ pub(super) fn stage(
                 manifest,
             )),
         },
+        lease.clone(),
     )?;
     Ok(Staged {
         lifecycle: slot_lifecycle,

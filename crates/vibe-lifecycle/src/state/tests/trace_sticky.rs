@@ -12,7 +12,7 @@ use std::path::Path;
 use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
 use vibe_wire::generated::lifecycle_state::ExecutionRecordStatus;
 
-use super::{RUN_ID, record_for};
+use super::{RUN_ID, lease, record_for};
 use crate::{LifecycleStateStore, SupersededTrace, select_run_identity};
 
 const CHAIN: [&str; 3] = ["validate", "install", "create"];
@@ -28,7 +28,7 @@ fn chain(phases: &[&str]) -> Vec<String> {
 /// with the run header carrying the given sticky bit.
 fn parked(root: &Path, compile_trace: bool) {
     let mut store = LifecycleStateStore::begin(
-        root,
+        lease(root),
         "create".into(),
         chain(&CHAIN),
         STARTED.into(),
@@ -52,8 +52,9 @@ fn select(
     force: bool,
     current_request: bool,
 ) -> crate::RunIdentity {
+    let lease = lease(root);
     select_run_identity(
-        root,
+        &lease,
         root,
         requested,
         &chain(phases),
@@ -138,7 +139,7 @@ fn an_adopted_untraced_run_upgrades_and_state_begin_writes_it() {
     );
 
     let store = LifecycleStateStore::begin(
-        dir.path(),
+        lease(dir.path()),
         "create".into(),
         chain(&CHAIN),
         identity.started,
@@ -160,7 +161,7 @@ fn an_adopted_untraced_run_upgrades_and_state_begin_writes_it() {
     // stays byte-compatible with a pre-R3.4 file.
     let plain = tempfile::tempdir().unwrap();
     let store = LifecycleStateStore::begin(
-        plain.path(),
+        lease(plain.path()),
         "create".into(),
         chain(&CHAIN),
         STARTED.into(),
@@ -239,7 +240,7 @@ fn force_command_chain_or_mode_displacement_claims_the_prior_traced_park() {
 fn a_traced_prior_without_a_delegated_row_claims_no_superseded_trace() {
     let dir = tempfile::tempdir().unwrap();
     let mut store = LifecycleStateStore::begin(
-        dir.path(),
+        lease(dir.path()),
         "create".into(),
         chain(&CHAIN),
         STARTED.into(),
@@ -253,6 +254,7 @@ fn a_traced_prior_without_a_delegated_row_claims_no_superseded_trace() {
             record_for(KEY, RUN_ID, ExecutionRecordStatus::Ok, "sha256:x"),
         )
         .unwrap();
+    drop(store);
     let identity = select(
         dir.path(),
         "create",

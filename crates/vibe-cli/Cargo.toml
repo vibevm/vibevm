@@ -80,6 +80,10 @@ futures.workspace = true
 
 [dev-dependencies]
 assert_cmd.workspace = true
+# The lease-ordering red arms safefs' `before_lock` race hook to rewrite the
+# selected manifest between `Project::open` and the OS lock — the inject
+# surface exists only under this feature (R7.4 §10.4, authorised by root).
+vibe-safefs = { workspace = true, features = ["inject-failures"] }
 # Linking this isolates the test process's per-user settings home before the
 # first `#[test]` runs, so a bare `cargo_bin` child cannot reach `~/.vibe`.
 vibe-test-support.workspace = true

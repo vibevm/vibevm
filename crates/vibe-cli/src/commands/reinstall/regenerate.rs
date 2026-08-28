@@ -20,7 +20,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#cli-surface");
 use anyhow::{Result, bail};
 use vibe_core::manifest::{Lockfile, SpecFormat};
 use vibe_install::InstallProgress;
-use vibe_lifecycle::RunMetadata;
+use vibe_lifecycle::{LifecycleLease, RunMetadata};
 use vibe_workspace::Workspace;
 use vibe_workspace::compile_trace::TraceRun;
 use vibe_workspace::install::regenerate_boot_traced;
@@ -43,6 +43,9 @@ pub(super) struct Plain<'a> {
     pub(super) metadata: &'a RunMetadata,
     pub(super) spec_format: SpecFormat,
     pub(super) trace: Option<&'a TraceRun>,
+    /// The command's mutation lease, threaded into the continuation this
+    /// plain run may service — the ONE acquisition, never reacquired.
+    pub(super) lease: &'a std::sync::Arc<LifecycleLease>,
 }
 
 pub(super) fn run(ctx: &output::Context, inputs: Plain<'_>) -> Result<ReinstallDraft> {
@@ -54,6 +57,7 @@ pub(super) fn run(ctx: &output::Context, inputs: Plain<'_>) -> Result<ReinstallD
         metadata,
         spec_format,
         trace,
+        lease,
     } = inputs;
     // Without `--force` the materialised `vibedeps/` tree is the only content
     // source. Every locked package must have its slot on disk — a missing slot
@@ -93,6 +97,7 @@ pub(super) fn run(ctx: &output::Context, inputs: Plain<'_>) -> Result<ReinstallD
             metadata,
             spec_format,
             progress: InstallProgress::fresh(Vec::new()),
+            lease,
         },
     )?;
     let rows = match serviced {

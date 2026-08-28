@@ -168,6 +168,7 @@ pub fn run(
 ) -> Result<()> {
     let PreparedReinstall {
         project_root,
+        lease,
         user_config,
         offline,
         metadata,
@@ -175,12 +176,17 @@ pub fn run(
         workspace,
         trace,
     } = prepare::prepare(ctx, &args, root_offline)?;
+    // The boundary's OWNER share: the executed region below consumes its own
+    // clones, while this one lives to the end of the command — through the
+    // final report and the trace finalisation.
+    let lease_owner = lease.clone();
     let exit = execute_after_open(
         ctx,
         Execution {
             args,
             embedded_root,
             offline,
+            lease,
             project_root,
             user_config,
             manifest,
@@ -192,7 +198,9 @@ pub fn run(
     // Consumes the owner: finishes the index, drops the last handle (and with
     // it the cooperative lock), and returns the member to attach.
     let finalized = compile_trace::finalize(trace, exit, &now);
-    render_finalized(ctx, finalized)
+    let rendered = render_finalized(ctx, finalized);
+    drop(lease_owner);
+    rendered
 }
 
 /// The prepared inputs the executed region owns.
@@ -200,6 +208,9 @@ struct Execution {
     args: ReinstallArgs,
     embedded_root: Option<PathBuf>,
     offline: bool,
+    /// The workspace mutation lease from the prepare epoch — the ONE
+    /// acquisition, borrowed by both modes below.
+    lease: std::sync::Arc<vibe_lifecycle::LifecycleLease>,
     project_root: PathBuf,
     user_config: UserConfig,
     manifest: SelectedManifest,
@@ -249,6 +260,7 @@ fn run_inner(
         args,
         embedded_root,
         offline,
+        lease,
         project_root,
         user_config,
         manifest,
@@ -304,6 +316,7 @@ fn run_inner(
                 trace,
                 embedded_root: embedded_root.as_deref(),
                 offline,
+                lease: &lease,
             },
         )
     } else {
@@ -317,6 +330,7 @@ fn run_inner(
                 metadata: &metadata,
                 spec_format,
                 trace,
+                lease: &lease,
             },
         )
     }

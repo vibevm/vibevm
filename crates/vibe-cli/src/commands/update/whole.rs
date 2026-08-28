@@ -116,6 +116,7 @@ fn run(
         args,
         embedded_root,
         offline,
+        lease,
         project_root,
         user_config,
         manifest,
@@ -138,6 +139,7 @@ fn run(
             // so the substrate reaches exactly this boolean without loading a
             // second config.
             root_offline: offline,
+            lease,
             project_root,
             user_config,
             manifest,

@@ -89,13 +89,15 @@ pub struct SupersededTrace {
 /// adoption-eligible ones; a corrupt state still refuses upstream rather than
 /// being minted around.
 ///
-/// `state_root` is where `.vibe/lifecycle.toml` lives (the workspace root);
-/// `allocation_root` is where a fresh scratch run directory is created (the
-/// selected project root) — the two differ only in a multi-node workspace.
-/// BOTH must be existing ABSOLUTE paths: the state root is pinned into the
-/// capability cell, so a relative or missing root refuses as the typed
-/// [`LifecycleStateError::Root`] (a root problem, never a state-cache
-/// problem), and an unallocatable selected root refuses as
+/// `lease` is the workspace's outermost mutation lease: the proof that this
+/// invocation owns `.vibe/lifecycle.lock`, taken BEFORE this read, so the
+/// prior state the selector decides against is a POST-acquisition snapshot —
+/// never a pre-lease fact another process has since replaced. The read goes
+/// through the lease's pinned capability at `lease.root()`, so there is no
+/// second capability and no second root answer. `allocation_root` is where a
+/// fresh scratch run directory is created (the selected project root) — it
+/// differs from the lease root only in a multi-node workspace, and must be
+/// an existing ABSOLUTE path: an unallocatable selected root refuses as
 /// [`LifecycleStateError::Allocation`] naming that root.
 /// Selection completes BEFORE allocation, so an adopted run never mints and
 /// abandons a candidate scratch directory.
@@ -103,7 +105,7 @@ pub struct SupersededTrace {
 // the selector's fact set is one flat signature — a struct here would hide which facts are selection inputs
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#REF-AGENT-RESUME")]
 pub fn select_run_identity(
-    state_root: &Path,
+    lease: &crate::lease::LifecycleLease,
     allocation_root: &Path,
     requested: &str,
     chain: &[String],
@@ -112,7 +114,8 @@ pub fn select_run_identity(
     current_request: bool,
     fresh_started: String,
 ) -> Result<RunIdentity, LifecycleStateError> {
-    let prior = io::read_prior_state(state_root)?;
+    let prior =
+        io::read_prior(lease.project(), &io::state_path(lease.root()))?.map(|prior| prior.state);
     let parked = prior.as_ref().is_some_and(|state| {
         state
             .execution

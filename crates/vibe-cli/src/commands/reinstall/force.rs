@@ -25,7 +25,7 @@ use vibe_core::manifest::{Lockfile, SpecFormat};
 use vibe_core::user_config::SlotIntegrity;
 use vibe_core::{ContentHash, Group};
 use vibe_install::{InstallProgress, InstallSlotLifecycle, InstallSource};
-use vibe_lifecycle::RunMetadata;
+use vibe_lifecycle::{LifecycleLease, RunMetadata};
 use vibe_workspace::Workspace;
 use vibe_workspace::compile_trace::TraceRun;
 use vibe_workspace::install::{
@@ -68,6 +68,10 @@ pub(super) struct Forced<'a> {
     pub(super) embedded_root: Option<&'a Path>,
     /// The owner's ONE resolved offline posture.
     pub(super) offline: bool,
+    /// The command's mutation lease: the forced apply's slot run is built on
+    /// the ONE acquisition the reinstall boundary made, and the continuation
+    /// it may service reuses the same proof.
+    pub(super) lease: &'a std::sync::Arc<LifecycleLease>,
 }
 
 pub(super) fn run(ctx: &output::Context, inputs: Forced<'_>) -> Result<ReinstallDraft> {
@@ -84,6 +88,7 @@ pub(super) fn run(ctx: &output::Context, inputs: Forced<'_>) -> Result<Reinstall
         trace,
         embedded_root,
         offline,
+        lease,
     } = inputs;
 
     ctx.heading(&format!(
@@ -212,6 +217,7 @@ pub(super) fn run(ctx: &output::Context, inputs: Forced<'_>) -> Result<Reinstall
                 &workspace.root_manifest,
             )),
         },
+        lease.clone(),
     )?;
 
     // From here on the run is rewriting the tree. Every failure freezes it.
@@ -226,6 +232,7 @@ pub(super) fn run(ctx: &output::Context, inputs: Forced<'_>) -> Result<Reinstall
             trace,
             resolution: &resolution,
             source_hashes: SourceHashes(source_hashes),
+            lease,
         },
     );
     outcome.map_err(|error| {
@@ -252,6 +259,7 @@ struct Apply<'a> {
     trace: Option<&'a TraceRun>,
     resolution: &'a [ResolvedDep],
     source_hashes: SourceHashes,
+    lease: &'a std::sync::Arc<LifecycleLease>,
 }
 
 fn apply(ctx: &output::Context, inputs: Apply<'_>) -> Result<ReinstallDraft> {
@@ -264,6 +272,7 @@ fn apply(ctx: &output::Context, inputs: Apply<'_>) -> Result<ReinstallDraft> {
         trace,
         resolution,
         source_hashes,
+        lease,
     } = inputs;
     let applied = apply_resolution_with_spec_format_and_slot_lifecycle_traced(
         workspace,
@@ -315,6 +324,7 @@ fn apply(ctx: &output::Context, inputs: Apply<'_>) -> Result<ReinstallDraft> {
             // The COMPLETED record promoted above, so a resumed park reports
             // the boot this apply really regenerated.
             progress: lifecycle.progress(),
+            lease,
         },
     )? {
         return Ok(ReinstallDraft::completed(

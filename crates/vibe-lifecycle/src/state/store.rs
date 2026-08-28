@@ -12,24 +12,29 @@
 
 use std::collections::BTreeSet;
 use std::path::{Path, PathBuf};
+use std::sync::Arc;
 
 use specmark::spec;
-use vibe_safefs::Project;
 use vibe_wire::generated::lifecycle_state::{
     ExecutionRecord, ExecutionRecordScope, ExecutionRecordStatus, LifecycleState, SlotContinuation,
 };
 
 use super::error::LifecycleStateError;
 use super::io::{self, PublicationFailure};
+use crate::lease::LifecycleLease;
 
 /// Open current state, replace the whole-run header, preserve every old row,
 /// and immediately checkpoint the initial record (even for an empty plan).
 #[derive(Debug)]
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#REF-LIFECYCLE-TOML")]
 pub struct LifecycleStateStore {
-    /// The pinned workspace-root capability: every production read and write
-    /// of the state file goes through it, never through an ambient path.
-    pub(super) project: Project,
+    /// The workspace's outermost mutation lease, retained for the store's
+    /// whole life: every production read and write of the state file goes
+    /// through its pinned capability at its root, never through a second
+    /// capability opened from the same path. Retaining the Arc also keeps
+    /// the OS lock held for as long as the store might write — the command
+    /// boundary's own owner share is the same one acquisition.
+    pub(super) lease: Arc<LifecycleLease>,
     /// The absolute display path of the state file, for diagnostics only —
     /// never opened with ambient authority.
     pub(super) path: PathBuf,
@@ -63,22 +68,21 @@ impl LifecycleStateStore {
     /// row, and immediately checkpoint the initial record (even for an empty
     /// plan).
     ///
-    /// `workspace_root` must be an EXISTING ABSOLUTE path — the canonical
-    /// workspace root. It is pinned into the capability cell on entry, so a
-    /// relative, missing or unopenable root refuses as the typed
-    /// [`LifecycleStateError::Root`] with a remedy naming the root; that is a
-    /// root problem, never a state-cache problem.
+    /// `lease` is the workspace's outermost mutation lease — the PROOF this
+    /// store may write at all. Its pinned capability at its root is the one
+    /// capability every read and write below goes through, so a store can no
+    /// longer be constructed from a bare root path: root-only construction is
+    /// unrepresentable, and the caller that owns the command owns the lease.
     pub fn begin(
-        workspace_root: &Path,
+        lease: Arc<LifecycleLease>,
         requested: String,
         chain: Vec<String>,
         started: String,
         run_id: String,
         compile_trace: bool,
     ) -> Result<Self, LifecycleStateError> {
-        let path = io::state_path(workspace_root);
-        let project = io::open_project(workspace_root, &path)?;
-        let prior = io::read_prior(&project, &path)?;
+        let path = io::state_path(lease.root());
+        let prior = io::read_prior(lease.project(), &path)?;
         let (prior_bytes, prior) = match prior {
             Some(prior) => (Some(prior.bytes), Some(prior.state)),
             None => (None, None),
@@ -103,7 +107,7 @@ impl LifecycleStateStore {
             execution.retain(|_, record| record.status != ExecutionRecordStatus::Delegated);
         }
         let mut store = Self {
-            project,
+            lease,
             path,
             durable: prior_bytes,
             poisoned: None,
@@ -145,6 +149,23 @@ impl LifecycleStateStore {
     /// typed [`LifecycleStateError::Root`], never as a state-cache problem.
     pub fn peek(workspace_root: &Path) -> Result<Option<LifecycleState>, LifecycleStateError> {
         io::read_prior_state(workspace_root)
+    }
+
+    /// The leased sibling of [`peek`](Self::peek): the same lock-free,
+    /// header-preserving read, performed through the LEASE's pinned
+    /// capability at its root rather than a second `Project::open` of the
+    /// same path. A caller already holding the workspace lease — the resume
+    /// seam servicing a slot continuation — reads through the one capability
+    /// it owns, so the tree it inspects is the tree it pinned.
+    ///
+    /// Physically read-only: this method creates no directory or lock file and
+    /// never reacquires. The caller's already-held lease is the authority and
+    /// the capability.
+    pub fn peek_with_lease(
+        lease: &crate::lease::LifecycleLease,
+    ) -> Result<Option<LifecycleState>, LifecycleStateError> {
+        let path = io::state_path(lease.root());
+        io::read_prior(lease.project(), &path).map(|prior| prior.map(|prior| prior.state))
     }
 
     /// One row of the last PROVEN state — see [`state`](Self::state): this is
@@ -429,7 +450,8 @@ impl LifecycleStateStore {
         if let Some(reason) = inject::armed_possibly() {
             return Err(PublicationFailure::synthetic_possibly(reason));
         }
-        self.project
+        self.lease
+            .project()
             .write_atomic(Self::FILE, bytes)
             .map(|_| ())
             .map_err(PublicationFailure::from_publish)

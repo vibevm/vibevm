@@ -89,6 +89,10 @@ fn a_planning_refusal_after_slot_rows_carries_them_in_the_lifecycle_family() {
     let path = crate::commands::install::resolve_project_root(project.path()).unwrap();
     let workspace = Workspace::discover(&path).expect("the project loads");
     let run = InstallRunContext {
+        lease: std::sync::Arc::new(
+            vibe_lifecycle::LifecycleLease::acquire(&workspace.root)
+                .expect("the fixture workspace is leasable"),
+        ),
         metadata: metadata(&path),
         lifecycle_run: None,
         lifecycle_reports: vec![slot_row()],
@@ -148,6 +152,10 @@ fn a_planning_refusal_with_no_rows_is_still_lifecycle_shaped() {
     let path = crate::commands::install::resolve_project_root(project.path()).unwrap();
     let workspace = Workspace::discover(&path).expect("the project loads");
     let run = InstallRunContext {
+        lease: std::sync::Arc::new(
+            vibe_lifecycle::LifecycleLease::acquire(&workspace.root)
+                .expect("the fixture workspace is leasable"),
+        ),
         metadata: metadata(&path),
         lifecycle_run: None,
         lifecycle_reports: Vec::new(),

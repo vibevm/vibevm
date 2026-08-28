@@ -11,7 +11,7 @@ use vibe_core::PackageRef;
 use vibe_core::manifest::{Manifest, SpecFormat};
 use vibe_core::user_config::SlotIntegrity;
 use vibe_lifecycle::process::StreamMode;
-use vibe_lifecycle::{LifecycleRunHandle, RunMetadata};
+use vibe_lifecycle::{LifecycleLease, LifecycleRunHandle, RunMetadata};
 use vibe_resolver::{DepProviderError, ResolvedNode};
 use vibe_workspace::Workspace;
 use vibe_workspace::hooks::{HookOutput, HookPolicy, HookReport};
@@ -167,6 +167,7 @@ impl SlotLifecycleSeams {
     }
 }
 
+#[allow(clippy::too_many_arguments)]
 pub fn apply_with_spec_format_and_lifecycle_observed<S: InstallSource + ?Sized>(
     source: &S,
     planned: PlannedInstall,
@@ -175,6 +176,7 @@ pub fn apply_with_spec_format_and_lifecycle_observed<S: InstallSource + ?Sized>(
     run: RunMetadata,
     streams: StreamMode,
     seams: SlotLifecycleSeams,
+    lease: std::sync::Arc<LifecycleLease>,
 ) -> Result<ApplyReport> {
     apply_with_spec_format_and_lifecycle_observed_traced(
         source,
@@ -184,6 +186,7 @@ pub fn apply_with_spec_format_and_lifecycle_observed<S: InstallSource + ?Sized>(
         run,
         streams,
         seams,
+        lease,
         None,
     )
 }
@@ -204,6 +207,7 @@ pub fn apply_with_spec_format_and_lifecycle_observed_traced<S: InstallSource + ?
     run: RunMetadata,
     streams: StreamMode,
     seams: SlotLifecycleSeams,
+    lease: std::sync::Arc<LifecycleLease>,
     trace: Option<&vibe_workspace::compile_trace::TraceRun>,
 ) -> Result<ApplyReport> {
     apply_with_spec_format_and_lifecycle_observed_traced_prepared(
@@ -214,6 +218,7 @@ pub fn apply_with_spec_format_and_lifecycle_observed_traced<S: InstallSource + ?
         run,
         streams,
         seams,
+        lease,
         trace,
     )
     .map(|prepared| prepared.report)
@@ -236,9 +241,10 @@ pub fn apply_with_spec_format_and_lifecycle_observed_traced_prepared<S: InstallS
     run: RunMetadata,
     streams: StreamMode,
     seams: SlotLifecycleSeams,
+    lease: std::sync::Arc<LifecycleLease>,
     trace: Option<&vibe_workspace::compile_trace::TraceRun>,
 ) -> Result<PreparedApplyReport> {
-    let lifecycle = InstallSlotLifecycle::from_plan_observed(&planned, run, streams, seams)?;
+    let lifecycle = InstallSlotLifecycle::from_plan_observed(&planned, run, streams, seams, lease)?;
     let lifecycle_run = lifecycle.run_handle();
     let applied = apply_with_spec_format_and_slot_lifecycle(
         source,

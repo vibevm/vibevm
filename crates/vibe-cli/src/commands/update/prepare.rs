@@ -18,18 +18,24 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE");
 
 use std::path::PathBuf;
+use std::sync::Arc;
 
 use anyhow::{Context, Result};
 use vibe_core::user_config::UserConfig;
-use vibe_lifecycle::RunMetadata;
+use vibe_lifecycle::{LifecycleLease, RunMetadata};
 
 use crate::cli::UpdateArgs;
 use crate::commands::compile_trace::TracePreparation;
-use crate::commands::install::{PreparedWorkspace, SelectedManifest, resolve_project_root};
+use crate::commands::install::{
+    PreparedWorkspace, SelectedManifest, acquire_lease, resolve_project_root,
+};
 use crate::output;
 
 pub(super) struct PreparedUpdate {
     pub(super) project_root: PathBuf,
+    /// The workspace mutation lease, acquired BEFORE the config/manifest/
+    /// workspace reads below — the outermost lock of the whole command.
+    pub(super) lease: Arc<LifecycleLease>,
     pub(super) user_config: UserConfig,
     /// PROP-010 §2.5, resolved ONCE: root `--offline` > `VIBE_OFFLINE` >
     /// user-config `[net].offline`. `vibe update` carries no `--offline` of
@@ -54,6 +60,10 @@ pub(super) fn prepare(
     root_offline: bool,
 ) -> Result<PreparedUpdate> {
     let project_root = resolve_project_root(&args.path)?;
+    // The OUTERMOST lock, before anything execution-shaped is read: a
+    // contended workspace refuses here, typed, having allocated nothing but
+    // the infrastructure lock file itself.
+    let lease = acquire_lease(&project_root)?;
     // Before the identity, and before anything is allocated: a malformed user
     // config must still fail ahead of the run-directory allocation.
     let user_config = UserConfig::load().context("loading the user config")?;
@@ -73,6 +83,7 @@ pub(super) fn prepare(
         ctx,
         project_root,
         workspace,
+        lease.clone(),
         requested,
         &chain,
         // MATERIALISATION scope is what `--all` selects; there is no lifecycle
@@ -98,6 +109,7 @@ pub(super) fn prepare(
     let trace = prelude.prepare_trace(&super::now);
     Ok(PreparedUpdate {
         project_root: prelude.project_root,
+        lease: prelude.lease,
         user_config,
         offline,
         metadata,

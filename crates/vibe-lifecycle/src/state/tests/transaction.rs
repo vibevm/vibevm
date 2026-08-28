@@ -17,7 +17,7 @@ use vibe_wire::generated::lifecycle_state::{
     SlotTargetRecord, StateArtifact,
 };
 
-use super::RUN_ID;
+use super::{RUN_ID, lease};
 use crate::LifecycleStateStore;
 use crate::state::inject;
 
@@ -30,7 +30,7 @@ fn chain() -> Vec<String> {
 
 fn open(root: &Path) -> LifecycleStateStore {
     LifecycleStateStore::begin(
-        root,
+        lease(root),
         "create".into(),
         chain(),
         "2026-08-27T00:00:00Z".into(),

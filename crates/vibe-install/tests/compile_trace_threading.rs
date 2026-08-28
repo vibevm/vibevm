@@ -203,6 +203,7 @@ fn the_observed_apply_carries_one_borrowed_run_to_the_boot_compiles() {
         metadata,
         StreamMode::Capture,
         SlotLifecycleSeams::refusing(),
+        std::sync::Arc::new(vibe_lifecycle::LifecycleLease::acquire(&project).unwrap()),
         Some(&trace),
     )
     .expect("the traced apply succeeds");
@@ -259,6 +260,7 @@ fn the_untraced_wrapper_leaves_no_trace_state() {
         metadata,
         StreamMode::Capture,
         SlotLifecycleSeams::refusing(),
+        std::sync::Arc::new(vibe_lifecycle::LifecycleLease::acquire(&project).unwrap()),
     )
     .expect("the untraced apply succeeds");
     // The slot lifecycle's own `.vibe` state is not the trace's; the trace's

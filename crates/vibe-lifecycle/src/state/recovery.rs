@@ -54,7 +54,8 @@ impl LifecycleStateStore {
         // store is about to reason over cannot be proven to hold either byte
         // string, which is a third state by another name.
         let visible = self
-            .project
+            .lease
+            .project()
             .read_file_bounded(Self::FILE, STATE_CAP)
             .map_err(|error| format!("the bounded re-read refused: {error:#}"));
         let outcome = match visible {

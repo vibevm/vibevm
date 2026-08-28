@@ -67,6 +67,7 @@ fn resumed_run(rows: Vec<vibe_install::SlotLifecycleReport>) -> ResumeOutcome {
     ResumeOutcome::Completed(Box::new(crate::commands::install::ResumedInstall {
         run,
         context: crate::commands::install::InstallRunContext {
+            lease: crate::commands::install::test_lease(),
             metadata: metadata(),
             lifecycle_run: None,
             lifecycle_reports: Vec::new(),

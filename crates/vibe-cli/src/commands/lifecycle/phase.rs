@@ -15,7 +15,7 @@ use std::path::PathBuf;
 
 use anyhow::{Context, Result};
 use vibe_core::user_config::UserConfig;
-use vibe_lifecycle::{Phase, RunMetadata};
+use vibe_lifecycle::{LifecycleLease, Phase, RunMetadata};
 use vibe_wire::generated::lifecycle_report::{
     LifecycleContributionReport, LifecycleDelegation, LifecycleStepReport,
 };
@@ -42,6 +42,10 @@ pub(super) struct PhaseInputs {
     pub(super) metadata: RunMetadata,
     pub(super) install_args: InstallArgs,
     pub(super) root_offline: bool,
+    /// The command's mutation lease, from the prelude epoch. The prerequisite
+    /// install and the phase dispatch both consume this one acquisition; the
+    /// command boundary holds the owner through the finalised report.
+    pub(super) lease: std::sync::Arc<LifecycleLease>,
     /// The ONE canonical selection of this command's project root, from the
     /// prelude epoch (or the single post-clean epoch). Nothing below
     /// re-resolves a path.
@@ -152,6 +156,7 @@ fn run(
         metadata,
         mut install_args,
         root_offline,
+        lease,
         project_root,
         user_config,
         manifest,
@@ -236,6 +241,7 @@ fn run(
                         args: install_args.clone(),
                         embedded_root: prepare(),
                         root_offline,
+                        lease: lease.clone(),
                         project_root: project_root.clone(),
                         user_config,
                         // Already parsed above; rewrapped so the install's own
@@ -328,7 +334,7 @@ fn run(
     let dispatched = if let Some(shared) = install_lifecycle_run {
         dispatch::dispatch_plan_with_run(ctx, &ritual, &shared, &metadata)
     } else {
-        dispatch::dispatch_plan(ctx, &ritual, metadata, state_chain)
+        dispatch::dispatch_plan(ctx, &ritual, lease, metadata, state_chain)
     };
     let outcome = match dispatched {
         Ok(outcome) => outcome,

@@ -14,8 +14,10 @@
 //! real — `phase.rs` freezes an empty prefix before dispatch is even called.
 
 use std::fs;
+use std::path::Path;
+use std::sync::Arc;
 
-use vibe_lifecycle::{Phase, RunMetadata};
+use vibe_lifecycle::{LifecycleLease, Phase, RunMetadata};
 use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
 
 use super::*;
@@ -54,6 +56,13 @@ fn quiet_ctx() -> output::Context {
     output::Context::from_flags(true, false, None, true, AgentModeArg::Cli)
 }
 
+/// A real lease over the fixture's own root: `dispatch_plan` derives its
+/// state home from the lease, so the proof must name the same workspace the
+/// plan was built over.
+fn lease_for(root: &Path) -> Arc<LifecycleLease> {
+    Arc::new(LifecycleLease::acquire(root).expect("the fixture root is leasable"))
+}
+
 /// One real row runs; a GENERIC failure follows it; the row comes back.
 ///
 /// The failure is injected after the first report so it is exactly the shape
@@ -73,7 +82,13 @@ fn a_generic_failure_after_a_real_row_carries_that_row_outward() {
     let ctx = quiet_ctx();
     let meta = metadata(project.path());
     let guard = inject::fail_after(1);
-    let result = dispatch_plan(&ctx, &plan, meta, vec!["build".to_string()]);
+    let result = dispatch_plan(
+        &ctx,
+        &plan,
+        lease_for(project.path()),
+        meta,
+        vec!["build".to_string()],
+    );
     drop(guard);
 
     let error = result.expect_err("the injected fault fails the dispatch");
@@ -125,7 +140,14 @@ fn the_injection_guard_disarms_on_unwind() {
     let ctx = quiet_ctx();
     let meta = metadata(project.path());
     assert!(
-        dispatch_plan(&ctx, &plan, meta, vec!["build".to_string()]).is_ok(),
+        dispatch_plan(
+            &ctx,
+            &plan,
+            lease_for(project.path()),
+            meta,
+            vec!["build".to_string()],
+        )
+        .is_ok(),
         "the guard disarmed while unwinding",
     );
 }

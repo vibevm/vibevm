@@ -220,6 +220,7 @@ fn the_production_capture_never_takes_on_a_successful_region() {
             run,
             context: InstallRunContext {
                 metadata: completed_metadata(),
+                lease: crate::commands::install::test_lease(),
                 lifecycle_run: None,
                 lifecycle_reports: Vec::new(),
             },

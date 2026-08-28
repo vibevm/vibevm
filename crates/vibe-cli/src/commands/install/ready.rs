@@ -144,6 +144,9 @@ pub(super) fn apply(
                 manifest,
             )),
         },
+        // The command's ONE acquisition, shared by Arc — the apply builds
+        // its slot run on the caller's lease and never reacquires.
+        lifecycle_run.lease.clone(),
         trace,
     );
     // A parked slot row is a durable handoff, not an install failure:
@@ -235,6 +238,7 @@ pub(super) fn apply(
                 workspace: &post_workspace,
                 manifest: resumed_manifest,
                 metadata: run_metadata,
+                lease: &lifecycle_run.lease,
                 spec_format,
                 disposition: InstallDisposition::Applied,
                 progress: applied.progress.clone(),

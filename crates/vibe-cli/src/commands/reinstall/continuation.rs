@@ -29,7 +29,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#REF-AGENT-RESUME
 use anyhow::Result;
 use vibe_core::manifest::{Manifest, SpecFormat};
 use vibe_install::{InstallProgress, InstallSlotLifecycle, SlotLifecycleReport};
-use vibe_lifecycle::RunMetadata;
+use vibe_lifecycle::{LifecycleLease, RunMetadata};
 use vibe_workspace::Workspace;
 
 use crate::commands::compile_trace::{RegisteredReportDraft, carry_measured};
@@ -58,6 +58,9 @@ pub(super) struct Request<'a> {
     pub(super) manifest: &'a Manifest,
     pub(super) metadata: &'a RunMetadata,
     pub(super) spec_format: SpecFormat,
+    /// The command's mutation lease: the resumed slot run is rebuilt on the
+    /// caller's ONE acquisition — a resume never reacquires.
+    pub(super) lease: &'a std::sync::Arc<LifecycleLease>,
     /// What the CALLER's own pass did. A forced reinstall hands in the run's
     /// real completed progress; a plain one has nothing of its own yet.
     pub(super) progress: InstallProgress,
@@ -148,6 +151,7 @@ fn resume_request(request: Request<'_>) -> ResumeRequest<'_> {
         workspace: request.workspace,
         manifest: request.manifest,
         metadata: request.metadata,
+        lease: request.lease,
         spec_format: request.spec_format,
         disposition: InstallDisposition::Fresh,
         progress: request.progress,

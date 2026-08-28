@@ -10,7 +10,7 @@ use std::path::Path;
 
 use vibe_wire::generated::lifecycle_state::LifecycleState;
 
-use super::RUN_ID;
+use super::{RUN_ID, lease};
 use crate::state::io::STATE_CAP;
 use crate::{LifecycleStateError, LifecycleStateStore};
 
@@ -18,7 +18,7 @@ const KEY: &str = "org.demo/tools#produce";
 
 fn open(root: &Path) -> LifecycleStateStore {
     LifecycleStateStore::begin(
-        root,
+        lease(root),
         "create".into(),
         vec!["validate".into(), "install".into(), "create".into()],
         "2026-08-28T00:00:00Z".into(),
@@ -312,6 +312,9 @@ fn an_over_cap_candidate_is_refused_before_publication() {
     let mut names: Vec<String> = fs::read_dir(dir.path().join(".vibe"))
         .unwrap()
         .map(|entry| entry.unwrap().file_name().to_string_lossy().into_owned())
+        // The mutation lease's own lock file is infrastructure of the
+        // acquiring command, not state — see `support::vibe_names`.
+        .filter(|name| name != crate::lease::LOCK_NAME)
         .collect();
     names.sort();
     assert_eq!(

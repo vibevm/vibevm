@@ -61,6 +61,7 @@ pub fn run(
 ) -> Result<()> {
     let PreparedUpdate {
         project_root,
+        lease,
         user_config,
         offline,
         metadata,
@@ -68,6 +69,10 @@ pub fn run(
         workspace,
         trace,
     } = prepare::prepare(ctx, &args, root_offline)?;
+    // The boundary's OWNER share: the executed regions below consume their
+    // own clones, while this one lives to the end of the command — through
+    // the final report and the trace finalisation.
+    let lease_owner = lease.clone();
     // The ONE decision this boundary makes. `--all` (or no packages) re-resolves
     // the whole declared graph through the install substrate; anything else
     // moves exactly the named subtree. Both are `vibe update`, both report the
@@ -77,6 +82,7 @@ pub fn run(
         args,
         embedded_root,
         offline,
+        lease,
         project_root,
         user_config,
         manifest,
@@ -91,7 +97,9 @@ pub fn run(
     // Consumes the owner: finishes the index, drops the last handle (and with
     // it the cooperative lock), and returns the member to attach.
     let finalized = compile_trace::finalize(trace, exit, &now);
-    render_finalized(ctx, finalized)
+    let rendered = render_finalized(ctx, finalized);
+    drop(lease_owner);
+    rendered
 }
 
 /// The prepared inputs both executed regions own.
@@ -107,6 +115,9 @@ pub(super) struct Execution {
     /// [`prepare::PreparedUpdate::offline`]. Nothing below re-resolves it and
     /// nothing below reloads the config it was read from.
     pub(super) offline: bool,
+    /// The workspace mutation lease from the prepare epoch — the ONE
+    /// acquisition, borrowed by both executed regions below.
+    pub(super) lease: std::sync::Arc<vibe_lifecycle::LifecycleLease>,
     pub(super) project_root: PathBuf,
     pub(super) user_config: vibe_core::user_config::UserConfig,
     pub(super) manifest: crate::commands::install::SelectedManifest,

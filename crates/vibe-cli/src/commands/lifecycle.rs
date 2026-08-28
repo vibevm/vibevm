@@ -114,6 +114,13 @@ pub(crate) fn run_clean_only(
     root_offline: bool,
 ) -> Result<()> {
     let chain = vec!["clean".to_string()];
+    // The OUTERMOST lock first: resolve the selected root, locate the lease
+    // root read-only, acquire — and only then plan, refuse, mint and wipe. A
+    // contended workspace refuses here, typed, before a run id exists and
+    // before anything destructive is even planned. The owner is this local:
+    // the clean epoch is untracked, so no store carries it; it releases at
+    // the end of the command, after the draft renders.
+    let lease = super::install::acquire_lease(&super::install::resolve_project_root(&args.path)?)?;
     let plan = world::plan_clean(&args.path)?;
     // The refusal comes FIRST — before a run id is minted, before the plan is
     // narrated, before the wipe is confirmed. Allocating `.vibe/lifecycle/<id>`
@@ -135,7 +142,7 @@ pub(crate) fn run_clean_only(
     surface_plan(ctx, &plan, &metadata, true)?;
     let wipe_plan = super::clean::plan_wipe(&args.path)?;
     super::clean::confirm_wipe(ctx, &wipe_plan, metadata.assume_yes)?;
-    let contributions = dispatch::dispatch_plan_untracked(ctx, &plan, metadata)?;
+    let contributions = dispatch::dispatch_plan_untracked(ctx, &plan, &lease, metadata)?;
     let wipe_ctx = if ctx.is_json() || ctx.is_quiet() {
         ctx.quiet_child()
     } else {
@@ -220,6 +227,15 @@ fn execute(
     let child = ctx.quiet_child();
     let steps = request.steps();
     let chain = steps.iter().map(step_name).collect::<Vec<_>>();
+    // The OUTERMOST lock. The read-only locator epoch resolves the selected
+    // node and discovers the workspace root; the lease pins that root; and
+    // everything execution consumes below — config, manifest, workspace,
+    // state, run id — is loaded AFTER the acquisition, so no pre-lease
+    // snapshot can go stale under a concurrent mutator this lease just
+    // refused. A contended workspace refuses here, typed, before any run id,
+    // state row or outbox byte exists.
+    let project_root = super::install::resolve_project_root(&install_args.path)?;
+    let lease = super::install::acquire_lease(&project_root)?;
     // The ONE user-config load of this command. It decides the offline
     // posture below AND rides into the prerequisite install, which used to
     // load its own — two loads of a file an operator can edit mid-run being
@@ -250,7 +266,6 @@ fn execute(
     // activation here, and the prerequisite install consumes it at the
     // boundary that has always read `vibe.toml`. Two reads would be two
     // answers, and the second would race the first.
-    let project_root = super::install::resolve_project_root(&install_args.path)?;
     let manifest = super::install::SelectedManifest::read(&project_root);
     // Built FROM that snapshot — one read, one tree. `None` when the snapshot
     // itself did not parse: there is no sound workspace to build then, and the
@@ -260,6 +275,7 @@ fn execute(
         ctx,
         project_root,
         workspace,
+        lease.clone(),
         &requested.to_string(),
         &chain,
         install_args.force,
@@ -288,6 +304,7 @@ fn execute(
         identity,
         mut project_root,
         mut workspace,
+        lease,
     } = prelude;
 
     if let Some(clean_plan) = clean_plan {
@@ -298,6 +315,7 @@ fn execute(
         contribution_reports.extend(dispatch::dispatch_plan_untracked(
             ctx,
             &clean_plan,
+            &lease,
             metadata.clone(),
         )?);
         let root = super::clean::apply_wipe(&child, wipe_plan)?;
@@ -329,13 +347,29 @@ fn execute(
             // generic rediscovery error would report the wrong thing.
             None => PreparedWorkspace::SelectedManifestInvalid,
         };
+        // The post-wipe reload is a SECOND workspace load under the SAME
+        // lease, so it owes the same root agreement: a tree that rediscovered
+        // under a different root would run the remaining phases against a
+        // workspace this command never leased. The gate is the lease's one
+        // `ensure_root` — which is also why this refusal can never again
+        // carry the mangled spacing a hand-rolled string continuation did.
+        if let Some(loaded) = workspace.loaded_root() {
+            lease.ensure_root(loaded, "after the clean epoch's rediscovery")?;
+        }
     }
 
     let prelude = RunPrelude {
         identity,
         project_root,
         workspace,
+        lease,
     };
+    // The boundary's OWNER share. The executed region below consumes its own
+    // clones into the run and the callback; this one lives to the end of the
+    // command — through the final report and the trace finalisation — so the
+    // workspace stays owned until the last byte this invocation owes is
+    // written.
+    let lease_owner = prelude.lease.clone();
     let preparation = prelude.prepare_trace(&now);
     let phases = steps
         .iter()
@@ -354,6 +388,7 @@ fn execute(
             metadata,
             install_args,
             root_offline,
+            lease: prelude.lease,
             project_root: prelude.project_root,
             user_config,
             manifest,
@@ -369,7 +404,9 @@ fn execute(
     // the last handle (and with it the cooperative lock), and returns the
     // member the one root attaches.
     let finalized = compile_trace::finalize(preparation, exit, &now);
-    compile_trace::render_finalized(ctx, finalized)
+    let rendered = compile_trace::render_finalized(ctx, finalized);
+    drop(lease_owner);
+    rendered
 }
 
 /// The injected instant. Both the supersession pass and the finish read time
@@ -409,6 +446,9 @@ pub(crate) struct RunPrelude {
     pub(crate) identity: vibe_lifecycle::RunIdentity,
     pub(crate) project_root: PathBuf,
     pub(crate) workspace: PreparedWorkspace,
+    /// The workspace mutation lease this command holds — see
+    /// [`run_prelude`], which both receives and returns it.
+    pub(crate) lease: std::sync::Arc<vibe_lifecycle::LifecycleLease>,
 }
 
 impl RunPrelude {
@@ -433,24 +473,32 @@ impl RunPrelude {
 /// its own manifest snapshot. A second resolution here would be a second
 /// answer to "which node is this", and a second discovery a second answer to
 /// "what does its tree look like".
+#[allow(clippy::too_many_arguments)]
 pub(crate) fn run_prelude(
     ctx: &output::Context,
     project_root: PathBuf,
     workspace: PreparedWorkspace,
+    lease: std::sync::Arc<vibe_lifecycle::LifecycleLease>,
     requested: &str,
     chain: &[String],
     force: bool,
     compile_trace: bool,
 ) -> Result<RunPrelude> {
-    // The selected-root fallback is for IDENTITY ALLOCATION only: a project
-    // outside any loadable workspace still gets a run id and a
-    // `.vibe/lifecycle.toml`, exactly as it always has. It is never the trace
-    // home — see `prepare_trace`, which has no fallback at all.
-    let state_root = workspace
-        .loaded_root()
-        .map_or_else(|| project_root.clone(), Path::to_path_buf);
+    // The post-acquisition root law: a workspace loaded under a DIFFERENT
+    // root than the one this command leased would read and write state
+    // beside another process's lock, on a pre-lease snapshot this lease
+    // never authorised. The one gate — and the one refusal spelling — is
+    // the lease's own `ensure_root`; the locator's discovery-failed fallback
+    // is the one exception (the lease already pins the selected root under
+    // the same fallback law identity selection has always applied, and the
+    // execution boundary then surfaces the stored discovery error itself).
+    if let Some(loaded) = workspace.loaded_root() {
+        lease.ensure_root(loaded, "at the run prelude")?;
+    }
+    // The identity borrows the lease BEFORE its state read, so the prior
+    // state it decides adoption against is a post-acquisition snapshot.
     let identity = vibe_lifecycle::select_run_identity(
-        &state_root,
+        &lease,
         &project_root,
         requested,
         chain,
@@ -463,6 +511,7 @@ pub(crate) fn run_prelude(
         identity,
         project_root,
         workspace,
+        lease,
     })
 }
 

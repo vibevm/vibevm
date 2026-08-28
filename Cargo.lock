@@ -4095,6 +4095,7 @@ dependencies = [
  "vibe-publish",
  "vibe-registry",
  "vibe-resolver",
+ "vibe-safefs",
  "vibe-settings",
  "vibe-spec",
  "vibe-specdoc",

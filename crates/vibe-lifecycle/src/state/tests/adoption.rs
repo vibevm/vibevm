@@ -7,7 +7,7 @@ use std::path::Path;
 use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
 use vibe_wire::generated::lifecycle_state::{ExecutionRecordStatus, LifecycleState};
 
-use super::{OTHER_RUN, RUN_ID, record_for};
+use super::{OTHER_RUN, RUN_ID, lease, record_for};
 use crate::{LifecycleStateStore, select_run_identity};
 
 const CHAIN: [&str; 3] = ["validate", "install", "create"];
@@ -22,7 +22,7 @@ fn chain(phases: &[&str]) -> Vec<String> {
 /// Write a state file that parked `KEY` under `RUN_ID` for `vibe create`.
 fn parked(root: &Path) {
     let mut store = LifecycleStateStore::begin(
-        root,
+        lease(root),
         "create".into(),
         chain(&CHAIN),
         STARTED.into(),
@@ -45,8 +45,9 @@ fn select(
     mode: RunAgentMode,
     force: bool,
 ) -> crate::RunIdentity {
+    let lease = lease(root);
     select_run_identity(
-        root,
+        &lease,
         root,
         requested,
         &chain(phases),
@@ -150,7 +151,7 @@ fn a_different_command_chain_mode_force_or_missing_park_never_inherits() {
 fn a_prior_run_without_a_parked_row_is_not_resumable() {
     let dir = tempfile::tempdir().unwrap();
     let mut store = LifecycleStateStore::begin(
-        dir.path(),
+        lease(dir.path()),
         "create".into(),
         chain(&CHAIN),
         STARTED.into(),
@@ -164,6 +165,7 @@ fn a_prior_run_without_a_parked_row_is_not_resumable() {
             record_for(KEY, RUN_ID, ExecutionRecordStatus::Ok, "sha256:x"),
         )
         .unwrap();
+    drop(store);
     let identity = select(dir.path(), "create", &CHAIN, RunAgentMode::Agent, false);
     assert!(!identity.adopted);
 }
@@ -188,7 +190,7 @@ fn a_pre_r73_state_file_still_opens_and_keeps_its_rows() {
     let identity = select(dir.path(), "create", &CHAIN, RunAgentMode::Agent, false);
     assert!(!identity.adopted, "an identity-less run cannot be resumed");
     let store = LifecycleStateStore::begin(
-        dir.path(),
+        lease(dir.path()),
         "create".into(),
         chain(&CHAIN),
         FRESH.into(),
@@ -207,7 +209,7 @@ fn a_pre_r73_state_file_still_opens_and_keeps_its_rows() {
 fn a_fresh_run_prunes_prior_delegated_rows_but_keeps_reusable_ones() {
     let dir = tempfile::tempdir().unwrap();
     let mut store = LifecycleStateStore::begin(
-        dir.path(),
+        lease(dir.path()),
         "create".into(),
         chain(&CHAIN),
         STARTED.into(),
@@ -232,10 +234,11 @@ fn a_fresh_run_prunes_prior_delegated_rows_but_keeps_reusable_ones() {
             ),
         )
         .unwrap();
+    drop(store);
 
     // An UNRELATED run — different command, its own fresh identity.
     let store = LifecycleStateStore::begin(
-        dir.path(),
+        lease(dir.path()),
         "build".into(),
         chain(&["validate", "install", "build"]),
         FRESH.into(),
@@ -269,7 +272,7 @@ fn adopting_the_same_id_retains_the_delegated_row() {
     parked(dir.path());
     let identity = select(dir.path(), "create", &CHAIN, RunAgentMode::Agent, false);
     let store = LifecycleStateStore::begin(
-        dir.path(),
+        lease(dir.path()),
         "create".into(),
         chain(&CHAIN),
         identity.started,
@@ -343,7 +346,7 @@ fn corrupt_delegated_state_refuses_rather_than_minting_a_new_identity() {
         fs::create_dir_all(path.parent().unwrap()).unwrap();
         fs::write(&path, &body).unwrap();
         let error = select_run_identity(
-            dir.path(),
+            &lease(dir.path()),
             dir.path(),
             "create",
             &chain(&CHAIN),
@@ -372,7 +375,7 @@ fn corrupt_delegated_state_refuses_rather_than_minting_a_new_identity() {
 fn a_non_delegated_row_with_tasks_and_a_bad_header_id_are_both_refused() {
     let dir = tempfile::tempdir().unwrap();
     let mut store = LifecycleStateStore::begin(
-        dir.path(),
+        lease(dir.path()),
         "create".into(),
         chain(&CHAIN),
         STARTED.into(),
@@ -390,7 +393,7 @@ fn a_non_delegated_row_with_tasks_and_a_bad_header_id_are_both_refused() {
 
     let dir = tempfile::tempdir().unwrap();
     let error = LifecycleStateStore::begin(
-        dir.path(),
+        lease(dir.path()),
         "create".into(),
         chain(&CHAIN),
         STARTED.into(),
@@ -466,7 +469,7 @@ fn scope_and_continuation_violations_refuse_before_adoption() {
         fs::create_dir_all(path.parent().unwrap()).unwrap();
         fs::write(&path, &body).unwrap();
         let error = select_run_identity(
-            dir.path(),
+            &lease(dir.path()),
             dir.path(),
             "create",
             &chain(&CHAIN),

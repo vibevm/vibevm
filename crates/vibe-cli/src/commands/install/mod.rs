@@ -26,6 +26,7 @@ mod direct;
 mod draft;
 mod events;
 mod inputs;
+mod lease;
 mod observer;
 mod project_local;
 mod ready;
@@ -62,6 +63,10 @@ pub(crate) use inputs::{
     PreparedWorkspace, SelectedManifest, generated_by, resolve_project_root, resolve_spec_format,
     selected_node_manifest,
 };
+pub(crate) use lease::acquire_lease;
+/// The retained-process lease for hand-built unit-test fixtures.
+#[cfg(test)]
+pub(crate) use lease::test_lease;
 pub(crate) use observer::LifecycleSlotObserver;
 use resolver::apply_git_source_flag;
 /// The serviced-continuation value, for the cross-module reds that build one.
@@ -146,6 +151,12 @@ impl InstallRun {
 #[derive(Debug, Clone)]
 pub(crate) struct InstallRunContext {
     pub(crate) metadata: RunMetadata,
+    /// The command's mutation lease, shared by Arc into the callback: the
+    /// post-durability world dispatch reuses this proof and never
+    /// reacquires. Present on every path — the callback may run when no slot
+    /// lifecycle exists at all (the empty-world no-op, the fresh fast path),
+    /// and its `dispatch_plan` still needs the one owner.
+    pub(crate) lease: std::sync::Arc<vibe_lifecycle::LifecycleLease>,
     pub(crate) lifecycle_run: Option<LifecycleRunHandle>,
     pub(crate) lifecycle_reports: Vec<SlotLifecycleReport>,
 }
@@ -186,6 +197,11 @@ pub(crate) struct InstallExecution<'a> {
     pub(crate) args: InstallArgs,
     pub(crate) embedded_root: Option<PathBuf>,
     pub(crate) root_offline: bool,
+    /// The command's mutation lease — the outermost lock, acquired by the
+    /// owning boundary (direct install, a phase verb, update, reinstall)
+    /// before anything execution-shaped was read. The install substrate
+    /// never acquires; it consumes this proof and shares it onward by Arc.
+    pub(crate) lease: std::sync::Arc<vibe_lifecycle::LifecycleLease>,
     /// The ONE canonical selection of this command's project root. Resolved by
     /// the prelude epoch and carried; nothing below re-canonicalises a path.
     pub(crate) project_root: PathBuf,
@@ -233,6 +249,7 @@ pub(crate) fn execute_prepared(
         args,
         embedded_root,
         root_offline,
+        lease,
         project_root,
         user_config,
         manifest,
@@ -256,6 +273,9 @@ pub(crate) fn execute_prepared(
     let run_metadata = metadata.clone();
     let lifecycle_run = InstallRunContext {
         metadata,
+        // Shared, not moved: the resume seams below rebuild their slot runs
+        // on this same one acquisition.
+        lease: lease.clone(),
         lifecycle_run: None,
         lifecycle_reports: Vec::new(),
     };
@@ -443,6 +463,7 @@ pub(crate) fn execute_prepared(
                     workspace: &workspace,
                     manifest: &manifest,
                     metadata: &run_metadata,
+                    lease: &lease,
                     spec_format,
                     disposition: InstallDisposition::Fresh,
                     progress: vibe_install::InstallProgress::fresh(nodes.clone()),

@@ -151,6 +151,7 @@ fn an_injected_backend_executes_a_slot_scoped_agent_row() {
             observer: Arc::new(vibe_install::NoSlotLifecycleObserver),
             agent: backend.clone(),
         },
+        std::sync::Arc::new(vibe_lifecycle::LifecycleLease::acquire(project.path()).unwrap()),
     )
     .expect("the slot lifecycle constructs");
 
@@ -186,6 +187,7 @@ fn the_refusing_seams_fail_the_same_row_with_remediation() {
         metadata(project.path()),
         StreamMode::Capture,
         SlotLifecycleSeams::refusing(),
+        std::sync::Arc::new(vibe_lifecycle::LifecycleLease::acquire(project.path()).unwrap()),
     )
     .expect("the slot lifecycle constructs");
 

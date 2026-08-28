@@ -7,10 +7,11 @@
 //! does the run do".
 
 use std::path::Path;
+use std::sync::Arc;
 
 use vibe_core::manifest::Manifest;
 use vibe_lifecycle::process::StreamMode;
-use vibe_lifecycle::{LifecycleRun, Phase, RunMetadata, inclusive_chain};
+use vibe_lifecycle::{LifecycleLease, LifecycleRun, Phase, RunMetadata, inclusive_chain};
 use vibe_workspace::Workspace;
 use vibe_workspace::install::ResolvedDep;
 
@@ -30,6 +31,7 @@ impl InstallSlotLifecycle {
         run: RunMetadata,
         streams: StreamMode,
         seams: crate::SlotLifecycleSeams,
+        lease: Arc<LifecycleLease>,
     ) -> Result<Self> {
         // The plan's OWN workspace. This constructor runs inside apply, after
         // the plan already read the tree once; discovering again here would
@@ -43,6 +45,7 @@ impl InstallSlotLifecycle {
             run,
             streams,
             seams,
+            lease,
         )
     }
 
@@ -54,6 +57,7 @@ impl InstallSlotLifecycle {
         run: RunMetadata,
         streams: StreamMode,
         seams: crate::SlotLifecycleSeams,
+        lease: Arc<LifecycleLease>,
     ) -> Result<Self> {
         Self::from_projection_observed(
             project_root,
@@ -63,6 +67,7 @@ impl InstallSlotLifecycle {
             run,
             streams,
             seams,
+            lease,
         )
     }
 
@@ -71,6 +76,7 @@ impl InstallSlotLifecycle {
     /// could *forget* the caller's backend would silently degrade a selected
     /// contribution to a refusal. Requiring the argument turns "every CLI path
     /// injects it" from a habit into a compile error.
+    #[allow(clippy::too_many_arguments)]
     pub fn from_projection_observed(
         project_root: &Path,
         manifest: &Manifest,
@@ -79,6 +85,7 @@ impl InstallSlotLifecycle {
         run: RunMetadata,
         streams: StreamMode,
         seams: crate::SlotLifecycleSeams,
+        lease: Arc<LifecycleLease>,
     ) -> Result<Self> {
         let workspace = Workspace::discover(project_root)?;
         Self::from_projection_observed_prepared(
@@ -90,6 +97,7 @@ impl InstallSlotLifecycle {
             run,
             streams,
             seams,
+            lease,
         )
     }
 
@@ -111,7 +119,14 @@ impl InstallSlotLifecycle {
         run: RunMetadata,
         streams: StreamMode,
         seams: crate::SlotLifecycleSeams,
+        lease: Arc<LifecycleLease>,
     ) -> Result<Self> {
+        // The lease pins the workspace this constructor anchors state to. A
+        // tree discovered under a DIFFERENT root than the one the command
+        // leased would write state beside another process's lock — so a
+        // disagreement is the typed lease refusal (carried by value through
+        // `Error::Lease`, never re-stringified), never a second root answer.
+        lease.ensure_root(&workspace.root, "at slot-lifecycle construction")?;
         let installed = world_resolution
             .iter()
             .map(|dep| {
@@ -141,7 +156,7 @@ impl InstallSlotLifecycle {
                     .cloned()
                     .collect()
             });
-        let run = LifecycleRun::begin(&workspace.root, project, world, run, state_chain)
+        let run = LifecycleRun::begin(lease, project, world, run, state_chain)
             .map_err(|error| Error::Lifecycle(error.to_string()))?
             .shared();
         // The slot half of the same reconciliation the phase plan performs at

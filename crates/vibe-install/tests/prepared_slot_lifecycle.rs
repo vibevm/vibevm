@@ -9,11 +9,13 @@
 //! selected project — otherwise "used the prepared value" and "rediscovered
 //! from the project root" produce the same answer and nothing is being tested.
 
+use std::sync::Arc;
+
 use vibe_core::manifest::Manifest;
 use vibe_core::{ContentHash, Group, PackageKind};
 use vibe_install::{InstallSlotLifecycle, SlotLifecycleSeams};
-use vibe_lifecycle::RunMetadata;
 use vibe_lifecycle::process::StreamMode;
+use vibe_lifecycle::{LifecycleLease, RunMetadata};
 use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
 use vibe_workspace::Workspace;
 use vibe_workspace::install::ResolvedDep;
@@ -111,6 +113,10 @@ fn build_prepared(
     workspace: &Workspace,
 ) -> Result<InstallSlotLifecycle, vibe_install::Error> {
     let project_root = fixture.project_root();
+    // A real lease over the PREPARED value's own root: the constructor
+    // anchors state where the lease pins, and this test's whole point is
+    // that the prepared root — not a rediscovery — is the one that wins.
+    let lease = Arc::new(LifecycleLease::acquire(&workspace.root).unwrap());
     InstallSlotLifecycle::from_projection_observed_prepared(
         &project_root,
         &fixture.manifest,
@@ -120,6 +126,7 @@ fn build_prepared(
         metadata(&project_root),
         StreamMode::Capture,
         SlotLifecycleSeams::refusing(),
+        lease,
     )
 }
 
@@ -184,6 +191,10 @@ fn a_corrupt_selected_manifest_does_not_reach_the_prepared_constructor() {
         metadata(&project_root),
         StreamMode::Capture,
         SlotLifecycleSeams::refusing(),
+        // The wrapper refuses at its own discovery against the corrupt
+        // manifest before any lease agreement is judged, so the proof's
+        // root is irrelevant here — it only has to be a real lease.
+        Arc::new(LifecycleLease::acquire(&project_root).unwrap()),
     );
     assert!(
         refused.is_err(),

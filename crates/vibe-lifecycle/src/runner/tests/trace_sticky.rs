@@ -40,17 +40,21 @@ fn an_adopted_traced_run_keeps_its_effective_bit_through_the_state_rewrite() {
 
     // The resume asks for NOTHING — no flag, no manifest opt-in. The
     // selector alone carries the park's bit forward.
-    let identity = select_run_identity(
-        root,
-        root,
-        "create",
-        &["validate".into(), "install".into(), "create".into()],
-        RunAgentMode::Agent,
-        false,
-        false,
-        "2026-08-26T02:00:00Z".into(),
-    )
-    .unwrap();
+    // The lease scopes to the selection: the resume below begins its own run.
+    let identity = {
+        let lease = super::lease(root);
+        select_run_identity(
+            &lease,
+            root,
+            "create",
+            &["validate".into(), "install".into(), "create".into()],
+            RunAgentMode::Agent,
+            false,
+            false,
+            "2026-08-26T02:00:00Z".into(),
+        )
+        .unwrap()
+    };
     assert!(identity.adopted, "the park is resumable");
     assert_eq!(identity.run_id, RUN_ID);
     assert!(identity.compile_trace, "sticky across the resume");

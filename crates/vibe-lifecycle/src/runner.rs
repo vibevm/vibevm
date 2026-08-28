@@ -15,6 +15,7 @@ use vibe_wire::generated::lifecycle_state::{
 use crate::agent::PreparedAgent;
 use crate::delegation::Delegation;
 use crate::handlers::{HandlerRuntime, HandlerStreams};
+use crate::lease::LifecycleLease;
 use crate::{
     ContributionOutcome, DispatchError, ExecutionSession, HandlerExecution, LifecycleStateStore,
     RunMetadata, fingerprint_handler_execution_with, preparation_error_fingerprint_for_identity,
@@ -69,18 +70,26 @@ pub struct LifecycleRun {
     force: bool,
     run_id: String,
     parked: Option<Delegation>,
+    /// The workspace's mutation lease, retained for the run's whole life on
+    /// BOTH the tracked and the untracked path — the same `Arc` share of the
+    /// ONE acquisition the command boundary made, never a reacquisition.
+    /// Retention-only on purpose (hence the underscore): nothing reads it
+    /// through the run; holding it here is what keeps a parked or wiping run
+    /// from releasing workspace ownership while its rows are still being
+    /// written.
+    _lease: Arc<LifecycleLease>,
 }
 
 impl LifecycleRun {
     pub fn begin(
-        workspace_root: &Path,
+        lease: Arc<LifecycleLease>,
         project: Project,
         world: World,
         metadata: RunMetadata,
         state_chain: Vec<String>,
     ) -> Result<Self, LifecycleRunError> {
         let state = LifecycleStateStore::begin(
-            workspace_root,
+            lease.clone(),
             metadata.requested.clone(),
             state_chain,
             metadata.started.clone(),
@@ -94,13 +103,22 @@ impl LifecycleRun {
             parked: None,
             session: Some(ExecutionSession::new(project, world, metadata)),
             state: Some(state),
+            _lease: lease,
         })
     }
 
     /// Create the state-blind clean runner. It uses the same handler
-    /// transition but never reads or rewrites the erasable freshness cache.
+    /// transition but never reads or rewrites the erasable freshness cache —
+    /// but it RETAINS the lease proof exactly as the tracked runner does:
+    /// an untracked clean mutates the tree, so it owns the workspace for its
+    /// whole life too.
     #[must_use]
-    pub fn untracked(project: Project, world: World, metadata: RunMetadata) -> Self {
+    pub fn untracked(
+        lease: Arc<LifecycleLease>,
+        project: Project,
+        world: World,
+        metadata: RunMetadata,
+    ) -> Self {
         let run_id = metadata.run_id.clone();
         Self {
             force: metadata.force,
@@ -108,6 +126,7 @@ impl LifecycleRun {
             parked: None,
             session: Some(ExecutionSession::new(project, world, metadata)),
             state: None,
+            _lease: lease,
         }
     }
 

@@ -1,10 +1,13 @@
 //! One-contribution lifecycle execution with per-transition checkpoints.
 
 use anyhow::Result;
+use std::sync::Arc;
 use vibe_lifecycle::handlers::{HandlerRuntime, PackageBindingBackend};
 use vibe_lifecycle::process::{StreamMode, SystemProcessRunner};
+
 use vibe_lifecycle::{
-    Delegation, ExecutionReuse, HandlerExecution, LifecycleRun, LifecycleRunHandle, RunMetadata,
+    Delegation, ExecutionReuse, HandlerExecution, LifecycleLease, LifecycleRun, LifecycleRunHandle,
+    RunMetadata,
 };
 use vibe_lifecycle::{REMOVED_DECLARATION, UNKNOWN_PROVENANCE};
 use vibe_wire::generated::lifecycle_report::{
@@ -76,10 +79,17 @@ pub(super) struct DispatchOutcome {
 pub(super) fn dispatch_plan_untracked(
     ctx: &output::Context,
     plan: &world::RitualPlan,
+    lease: &Arc<LifecycleLease>,
     metadata: RunMetadata,
 ) -> Result<Vec<LifecycleContributionReport>> {
-    let mut run =
-        LifecycleRun::untracked(plan.project.clone(), plan.world.clone(), metadata.clone());
+    // The untracked clean epoch retains the same lease proof a tracked run
+    // does: it mutates the tree, so it owns the workspace for its life.
+    let mut run = LifecycleRun::untracked(
+        lease.clone(),
+        plan.project.clone(),
+        plan.world.clone(),
+        metadata.clone(),
+    );
     let mut reports = Vec::with_capacity(plan.executions.len());
     let package_binding = ProjectPackageBindingBackend::new(plan);
     let agent = CliAgentBackend::for_plan(plan);
@@ -117,11 +127,17 @@ pub(super) fn dispatch_plan_untracked(
 pub(super) fn dispatch_plan(
     ctx: &output::Context,
     plan: &world::RitualPlan,
+    lease: Arc<LifecycleLease>,
     metadata: RunMetadata,
     state_chain: Vec<String>,
 ) -> Result<DispatchOutcome> {
+    // The lease root IS the state root: `begin` derives its store path from
+    // the lease, and a plan whose workspace root disagrees refuses here
+    // rather than write state beside another process's lock — through the
+    // lease's one typed gate.
+    lease.ensure_root(&plan.workspace_root, "at phase dispatch")?;
     let run = LifecycleRun::begin(
-        &plan.workspace_root,
+        lease,
         plan.project.clone(),
         plan.world.clone(),
         metadata.clone(),
