@@ -86,8 +86,9 @@ file. It uses a bounded optimistic `state → exact task files → state` read:
 1. safe-read state bytes (or observe absence);
 2. parse/validate and safe-read every exact state-owned task;
 3. safe-read state again and require byte identity;
-4. retry exactly three times on change; only an unchanged snapshot may
-   return.
+4. retry exactly three times on change — `MAX_RETRIES = 3`, so the initial
+   attempt plus retries 1–3 are at most four complete
+   `state → tasks → state` attempts; only an unchanged snapshot may return.
 
 An absent first read may return `absent`: that result linearizes immediately
 before a concurrent writer creates state. A missing task is rechecked against
@@ -123,12 +124,20 @@ before an error was reported.
 
 The filesystem cell also gains one shared bounded safe-read primitive. It
 checks ordinary single-link metadata before allocation and reads at most
-`cap + 1` bytes through the pinned handle. Lifecycle state uses 8 MiB; task
-documents use the existing `TASK_CAP`. An after-the-fact `Vec::len()` check is
-not a bound.
+`cap + 1` bytes through the pinned handle. Before returning it reopens the
+same final name capability-relatively with no-follow, rechecks ordinary
+single-link metadata, and compares the two handles' OS file identities. A
+held handle's metadata is not enough: on POSIX the opened inode can be renamed
+away (still one link) while a new regular single-link inode takes its old
+name. The reopen is through the already pinned directory capability, never an
+ambient path. Lifecycle state uses 8 MiB; task documents use the existing
+`TASK_CAP`. An after-the-fact `Vec::len()` check is not a bound.
 
 REDs cover a `.vibe` link/reparse point, a state symlink, hardlink, directory,
-oversized file, replacement race and post-publication fault. A malformed or
+oversized file, final-name replacement/disappearance/rebinding race and
+post-publication fault. The replacement RED is a real rename-old/create-new
+race on Unix and a deterministic identity-comparison override on Windows,
+where sharing rules may make the physical race unreachable. A malformed or
 unsafe state remains erasable cache but is never followed, partially read or
 silently replaced.
 
@@ -196,6 +205,11 @@ pending_hosted_tasks(selected_root: &Path)
     -> Result<LifecycleTasksReport, LifecycleTasksError>
 ```
 
+The selected-root input first crosses one `vibe-workspace` seam that returns
+the canonical selected root, its discovered `Workspace`, and the authored
+`RelPath` together. This is one epoch, not a public canonicalizer plus a later
+rediscovery; `node_rel_of` continues to accept only an already canonical node.
+
 It performs, in this order:
 
 1. canonicalise the selected root and discover its workspace;
@@ -209,7 +223,8 @@ It performs, in this order:
    `outbox_task_path(run_id, execution_key)`, while the reader asserts that
    validated relation rather than inventing a second path law;
 7. read that exact project-relative file through `vibe-safefs::Project`
-   (capability-relative, no-follow, regular single-link);
+   (capability-relative, no-follow, regular single-link and final-name
+   identity-stable under the strengthened bounded read);
 8. decode UTF-8, re-read state for byte identity and return a generated report.
    Missing, linked, hardlinked, replaced, non-UTF8 or oversized state/task data
    refuses only against an unchanged owning state; no orphan scan is attempted.
@@ -219,6 +234,14 @@ deterministic tie-break. Directory enumeration and filename parsing are never
 ordering or ownership inputs. R7.3 parks at most one row per invocation, but
 the reader remains total over a validator-green state carrying more than one
 typed delegated scope.
+
+Task failures are provisional until the second state read. A missing/unsafe/
+non-UTF8/oversized task under changed owning state is discarded and retried;
+the same failure under byte-identical owning state is returned. If state
+changes on all four attempts the typed result is `UnstableSnapshot`. The hard
+ceilings remain 64 delegated rows, 8 MiB per state/task document and 16 MiB
+aggregate; the aggregate remaining budget is the cap passed into each bounded
+task read, so the reader never allocates beyond it.
 
 ### 3.2 JTD report
 
@@ -479,9 +502,11 @@ projection; no surface-conditional wire member or shell subprocess is added.
 19. Two mutating processes cannot both own lifecycle state; the loser is busy
     before run-id/outbox/state mutation, and the winner's park cannot be lost
     or resurrected.
-20. Optimistic `lifecycle_tasks` reads return one unchanged state/task
-    snapshot without creating `.vibe`/lock state; a concurrent completion
-    yields retry→idle rather than a false missing-task error.
+20. Optimistic `lifecycle_tasks` reads return one unchanged, final-name-stable
+    state/task snapshot without creating `.vibe`/lock state; a concurrent
+    completion yields retry→idle rather than a false missing-task error, the
+    fourth stable attempt succeeds after three changes, and a fourth change
+    refuses as unstable.
 21. A post-publication state fault adopts exact candidate bytes in memory,
     retains exact prior bytes, and poisons any third state; no report is built
     from memory that disagrees with disk.
@@ -506,8 +531,10 @@ projection; no surface-conditional wire member or shell subprocess is added.
 4. Add the outermost lifecycle lease to every existing mutating CLI surface;
    lock-order, nested-acquire, busy-zero-mutation and clean-survival REDs first.
 5. Add selected-node state identity + adoption/legacy/workspace-member REDs.
-6. Add the lower bounded optimistic pending-task reader, then the strict MCP
-   `lifecycle_tasks` adapter. Run the first coherent boundary panel here.
+6. First bind the bounded safefs read to the final pathname identity, then add
+   the one-epoch selected-workspace seam, lower bounded optimistic pending-task
+   reader and strict MCP `lifecycle_tasks` adapter. Run the first coherent
+   boundary panel here.
 7. Introduce `RunObserver`, `ConfirmGate` and `ResolverFactory` ports in place
    under the CLI characterization oracles; no behavior moves yet.
 8. Flip CLI package-skill imports to `vibe-agent-projection`, retaining MCP
