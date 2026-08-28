@@ -48,6 +48,25 @@ pub(crate) fn identity(file: &File) -> io::Result<FileIdentity> {
     imp::identity(file)
 }
 
+/// Whether an I/O operation was refused specifically because a peer owns a
+/// mandatory byte-range lock. Unix `flock` is advisory, so the same situation
+/// never turns an ordinary read into this error there.
+pub(crate) fn is_lock_violation(error: &io::Error) -> bool {
+    #[cfg(windows)]
+    {
+        // Win32 ERROR_LOCK_VIOLATION. Keep this raw-code check narrow:
+        // ERROR_SHARING_VIOLATION (32), access failures and every unrelated
+        // I/O error remain failures rather than contention signals.
+        const ERROR_LOCK_VIOLATION: i32 = 33;
+        error.raw_os_error() == Some(ERROR_LOCK_VIOLATION)
+    }
+    #[cfg(not(windows))]
+    {
+        let _ = error;
+        false
+    }
+}
+
 pub(crate) fn assert_path_identity(path: &Path, expected: FileIdentity) -> io::Result<()> {
     preflight_absent_or_regular(path)?;
     let file = open_existing_read(path)?;
@@ -194,3 +213,19 @@ mod imp {
 
 #[cfg(not(any(unix, windows)))]
 compile_error!("safe file identity supports Unix and Windows hosts only");
+
+#[cfg(test)]
+mod tests {
+    use super::is_lock_violation;
+
+    #[test]
+    fn only_windows_lock_violation_is_a_lock_contention_signal() {
+        for code in [2, 5, 32, 34] {
+            assert!(!is_lock_violation(&std::io::Error::from_raw_os_error(code)));
+        }
+        assert_eq!(
+            is_lock_violation(&std::io::Error::from_raw_os_error(33)),
+            cfg!(windows)
+        );
+    }
+}

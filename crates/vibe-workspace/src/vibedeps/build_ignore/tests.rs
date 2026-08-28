@@ -137,6 +137,28 @@ fn concurrent_creators_append_each_rule_once() {
     assert_eq!(count_line(&bytes, b"**/node_modules/"), 1);
 }
 
+#[cfg(windows)]
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#IN-SLOT-BUILD")]
+fn an_optimistic_read_defers_while_a_cooperating_writer_holds_the_file_lock() {
+    let (_project, root) = root();
+    fs::create_dir_all(&root).unwrap();
+    let path = root.join(".gitignore");
+    fs::write(&path, b"/operator/\n").unwrap();
+
+    let file = open_regular_for_append(&path).unwrap();
+    file.lock().unwrap();
+    let fast_read = read_existing(&path);
+    file.unlock().unwrap();
+
+    assert_eq!(
+        fast_read.unwrap(),
+        ReadSnapshot::Contended,
+        "a Windows byte-range lock makes the optional fast read unavailable; \
+         the caller must continue through the serialising path"
+    );
+}
+
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#IN-SLOT-BUILD")]
 fn later_negation_forces_both_managed_rules_back_to_the_effective_suffix() {

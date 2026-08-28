@@ -44,7 +44,7 @@ const MANAGED_HEADER: &str = "# Build output produced inside materialised depend
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#IN-SLOT-BUILD")]
 pub fn ensure_build_output_ignores(vibedeps_root: &Path) -> Result<bool, WorkspaceError> {
     let path = vibedeps_root.join(".gitignore");
-    if let Some(existing) = read_existing(&path)?
+    if let ReadSnapshot::Complete(existing) = read_existing(&path)?
         && rules_to_append(&existing).is_empty()
     {
         return Ok(false);
@@ -61,19 +61,39 @@ pub fn ensure_build_output_ignores(vibedeps_root: &Path) -> Result<bool, Workspa
     }
 }
 
-fn read_existing(path: &Path) -> Result<Option<Vec<u8>>, WorkspaceError> {
+#[derive(Debug, PartialEq, Eq)]
+enum ReadSnapshot {
+    Absent,
+    Contended,
+    Complete(Vec<u8>),
+}
+
+fn read_existing(path: &Path) -> Result<ReadSnapshot, WorkspaceError> {
     preflight_path_kind(path)?;
     let mut file = match safe_file::open_existing_read(path) {
         Ok(file) => file,
-        Err(error) if error.kind() == std::io::ErrorKind::NotFound => return Ok(None),
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => {
+            return Ok(ReadSnapshot::Absent);
+        }
         Err(error) => return Err(io_err(path, error)),
     };
     let identity = handle_identity(&file, path)?;
     let mut bytes = Vec::new();
-    file.read_to_end(&mut bytes)
-        .map_err(|error| io_err(path, error))?;
+    match file.read_to_end(&mut bytes) {
+        Ok(_) => {}
+        // `File::lock` is advisory on Unix but a mandatory byte-range lock on
+        // Windows. Another cooperating writer can acquire it between this
+        // optional handle open and its read, producing ERROR_LOCK_VIOLATION.
+        // The fast path has learned nothing in that case: discard any partial
+        // bytes and continue through the writable handle + blocking lock below,
+        // where the file is reread after the writer completes.
+        Err(error) if safe_file::is_lock_violation(&error) => {
+            return Ok(ReadSnapshot::Contended);
+        }
+        Err(error) => return Err(io_err(path, error)),
+    }
     assert_path_identity(path, identity)?;
-    Ok(Some(bytes))
+    Ok(ReadSnapshot::Complete(bytes))
 }
 
 fn open_regular_for_append(path: &Path) -> Result<File, WorkspaceError> {
