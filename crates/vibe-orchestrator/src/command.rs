@@ -33,6 +33,7 @@ use vibe_core::manifest::Manifest;
 use vibe_lifecycle::inclusive_chain;
 use vibe_lifecycle::{AgentBackend, LifecycleLease, Phase, RunMetadata};
 use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
+use vibe_wire::generated::shared::Timestamp;
 use vibe_workspace::compile_trace::TraceRun;
 
 use crate::install::{
@@ -425,6 +426,11 @@ impl PreparedDefaultLifecycle {
     /// borrowed owner. The neutral [`PhaseOutcome`] comes back — report
     /// family and [`crate::trace::finalize`] remain surface projections.
     ///
+    /// `observed_at` is the surface's injected verify instant — the same
+    /// clock that opened the trace and will finalise it. It is also the
+    /// COMPLETE epoch's permission for the engine-owned verify boundary; the
+    /// partial install callback withholds it deliberately.
+    ///
     /// ```no_run
     /// use vibe_orchestrator::{DefaultLifecyclePorts, PreparedDefaultLifecycle};
     /// use vibe_orchestrator::PhaseOutcome;
@@ -432,12 +438,18 @@ impl PreparedDefaultLifecycle {
     /// #     prepared: PreparedDefaultLifecycle,
     /// #     ports: DefaultLifecyclePorts<'_>,
     /// #     trace: Option<&vibe_workspace::compile_trace::TraceRun>,
+    /// #     observed_at: vibe_wire::generated::shared::Timestamp,
     /// # ) -> PhaseOutcome {
-    /// prepared.run(ports, trace)
+    /// prepared.run(ports, trace, observed_at)
     /// # }
     /// # let _ = go;
     /// ```
-    pub fn run(self, ports: DefaultLifecyclePorts<'_>, trace: Option<&TraceRun>) -> PhaseOutcome {
+    pub fn run(
+        self,
+        ports: DefaultLifecyclePorts<'_>,
+        trace: Option<&TraceRun>,
+        observed_at: Timestamp,
+    ) -> PhaseOutcome {
         let DefaultLifecyclePorts {
             observer,
             install_observer,
@@ -469,6 +481,7 @@ impl PreparedDefaultLifecycle {
             manifest_mutation,
             agent,
             trace,
+            observed_at,
         })
     }
 }

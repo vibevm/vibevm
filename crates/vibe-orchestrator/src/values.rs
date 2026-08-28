@@ -10,7 +10,7 @@ use specmark::spec;
 use vibe_wire::generated::lifecycle_report::{
     LifecycleContributionReport, LifecycleDelegation, LifecycleReport, LifecycleStepReport,
 };
-use vibe_wire::generated::shared::CompileTraceReport;
+use vibe_wire::generated::shared::{CompileTraceReport, VerificationEvidence};
 
 /// Everything the one lifecycle document reports, owned and surface-neutral.
 ///
@@ -37,10 +37,19 @@ pub struct LifecycleValues {
     pub notices: Vec<String>,
     /// The hosted handoff, already validated at the engine adapter.
     pub delegation: Option<LifecycleDelegation>,
+    /// The ONE verification-evidence member the lifecycle library produced,
+    /// carried verbatim.
+    ///
+    /// Present exactly when this run reached engine-owned verify
+    /// reconciliation — INCLUDING the `stale`, `missing` and `unstable`
+    /// outcomes, which is why it rides the failure carrier too. It is an
+    /// independent axis from [`Self::ok`]: a matched identity may sit beside a
+    /// failed verify contribution, and neither rewrites the other.
+    pub verification: Option<VerificationEvidence>,
 }
 
 impl LifecycleValues {
-    /// A completed or parked phase run.
+    /// A completed or parked phase run that reached no verify reconciliation.
     ///
     /// The struct-level example builds the failed twin; this constructor takes
     /// the measured steps and rows instead.
@@ -54,6 +63,41 @@ impl LifecycleValues {
         notices: Vec<String>,
         delegation: Option<LifecycleDelegation>,
     ) -> Self {
+        Self::completed_with_verification(
+            requested,
+            chain,
+            steps,
+            contributions,
+            notices,
+            delegation,
+            None,
+        )
+    }
+
+    /// The same completed or parked run, carrying whatever the verify boundary
+    /// reconciled.
+    ///
+    /// Deliberately not named `*_verified`: the member's status may be any of
+    /// the five evidence words, and `matched` is only one of them.
+    ///
+    /// ```
+    /// use vibe_orchestrator::values::LifecycleValues;
+    /// let values = LifecycleValues::completed_with_verification(
+    ///     "verify", vec!["verify".into()], Vec::new(), Vec::new(), Vec::new(), None, None,
+    /// );
+    /// assert!(values.ok && values.verification.is_none());
+    /// ```
+    #[must_use]
+    #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#EVIDENCE-WIRE-AND-SURFACES")]
+    pub fn completed_with_verification(
+        requested: &str,
+        chain: Vec<String>,
+        steps: Vec<LifecycleStepReport>,
+        contributions: Vec<LifecycleContributionReport>,
+        notices: Vec<String>,
+        delegation: Option<LifecycleDelegation>,
+        verification: Option<VerificationEvidence>,
+    ) -> Self {
         Self {
             ok: true,
             requested: requested.to_string(),
@@ -62,6 +106,7 @@ impl LifecycleValues {
             contributions,
             notices,
             delegation,
+            verification,
         }
     }
 
@@ -78,6 +123,29 @@ impl LifecycleValues {
         phase: &str,
         contributions: Vec<LifecycleContributionReport>,
     ) -> Self {
+        Self::failed_with_verification(requested, chain, phase, contributions, None)
+    }
+
+    /// The same failed run, carrying the member the failing site had already
+    /// measured — a stale/missing/unstable stop, or a matched identity a later
+    /// verify handler then failed beside.
+    ///
+    /// ```
+    /// use vibe_orchestrator::values::LifecycleValues;
+    /// let failed = LifecycleValues::failed_with_verification(
+    ///     "verify", vec!["verify".into()], "verify", Vec::new(), None,
+    /// );
+    /// assert!(!failed.ok && failed.verification.is_none());
+    /// ```
+    #[must_use]
+    #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#EVIDENCE-WIRE-AND-SURFACES")]
+    pub fn failed_with_verification(
+        requested: &str,
+        chain: Vec<String>,
+        phase: &str,
+        contributions: Vec<LifecycleContributionReport>,
+        verification: Option<VerificationEvidence>,
+    ) -> Self {
         Self {
             ok: false,
             requested: requested.to_string(),
@@ -89,6 +157,7 @@ impl LifecycleValues {
             contributions,
             notices: Vec::new(),
             delegation: None,
+            verification,
         }
     }
 
@@ -111,9 +180,11 @@ impl LifecycleValues {
     /// assert_eq!(report.command, "lifecycle");
     /// assert!(!report.ok);
     /// assert!(report.trace.is_none(), "disabled omits the member entirely");
+    /// assert!(report.verification.is_none(), "and so does an unreconciled run");
     /// ```
     #[must_use]
     #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM")]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#EVIDENCE-WIRE-AND-SURFACES")]
     pub fn into_report(self, trace: Option<CompileTraceReport>) -> LifecycleReport {
         let Self {
             ok,
@@ -123,6 +194,7 @@ impl LifecycleValues {
             contributions,
             notices,
             delegation,
+            verification,
         } = self;
         LifecycleReport {
             chain,
@@ -134,11 +206,12 @@ impl LifecycleValues {
             steps,
             delegation,
             trace,
-            // The R7.5 evidence member is attached by the verify
-            // reconciliation that owns it (P2), never assembled here: a
-            // report builder that could mint one would be a second
-            // reference implementation of the identity.
-            verification: None,
+            // ATTACHED, never assembled: the member arrives exactly as the
+            // lifecycle library minted it, and this builder neither mints,
+            // reinterprets nor reshapes one. A report builder that could
+            // build an identity would be a second reference implementation
+            // of it.
+            verification,
         }
     }
 }
@@ -289,4 +362,116 @@ pub fn delegation_member(
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-HANDSHAKE")]
 pub fn check_delegation(delegation: &vibe_lifecycle::Delegation) -> anyhow::Result<()> {
     delegation_member(delegation.clone()).map(|_| ())
+}
+
+#[cfg(test)]
+mod verification_tests {
+    use super::LifecycleValues;
+    use vibe_wire::behaviour::verification_evidence::validate;
+    use vibe_wire::generated::shared::{
+        DigestWitness, EvidenceRun, EvidenceStatus, InputMeasurement, VerificationEvidence,
+    };
+
+    fn witness(byte: char) -> DigestWitness {
+        DigestWitness {
+            algorithm: "sha256:vibe-input-manifest-v1".into(),
+            bytes: Some("3".into()),
+            digest: format!("sha256:{}", byte.to_string().repeat(64)),
+            files: Some(1),
+        }
+    }
+
+    /// A member whose ROW status carries the root's — the wire refuses a root
+    /// that speaks for itself, which is exactly the law that makes `matched`
+    /// mean "every row matched".
+    fn member(status: EvidenceStatus) -> VerificationEvidence {
+        let stale = status == EvidenceStatus::Stale;
+        VerificationEvidence {
+            artifacts: Vec::new(),
+            evidence: 1,
+            evidence_id: format!("sha256:{}", "b".repeat(64)),
+            inputs: vec![InputMeasurement {
+                declaration_fingerprint: format!("sha256:{}", "c".repeat(64)),
+                execution: "org.demo/tools#compile".into(),
+                patterns: vec!["data/**".into()],
+                phase: "build".into(),
+                status: status.clone(),
+                measured: Some(witness('1')),
+                measured_run_id: Some("0".repeat(32)),
+                observed: Some(witness(if stale { '2' } else { '1' })),
+                reason_code: None,
+            }],
+            observed_at: "2026-08-28T12:00:05Z".parse().expect("a fixture instant"),
+            run: EvidenceRun {
+                chain: vec!["build".into(), "verify".into()],
+                requested: "verify".into(),
+                run_id: "0".repeat(32),
+                selected: ".".into(),
+                started: "2026-08-28T11:59:40Z".into(),
+            },
+            status,
+        }
+    }
+
+    /// The ONE builder ATTACHES: what goes in comes out, byte for byte, on
+    /// both the success and the failure road. A builder that reshaped it would
+    /// be a second reference implementation of the identity.
+    #[test]
+    fn the_report_builder_attaches_the_member_it_was_handed() {
+        for (status, ok) in [
+            (EvidenceStatus::Matched, true),
+            (EvidenceStatus::Stale, false),
+        ] {
+            let expected = member(status.clone());
+            validate(&expected).expect("the fixture member is itself valid");
+            let report = if ok {
+                LifecycleValues::completed_with_verification(
+                    "verify",
+                    vec!["verify".into()],
+                    Vec::new(),
+                    Vec::new(),
+                    Vec::new(),
+                    None,
+                    Some(expected.clone()),
+                )
+            } else {
+                LifecycleValues::failed_with_verification(
+                    "verify",
+                    vec!["verify".into()],
+                    "verify",
+                    Vec::new(),
+                    Some(expected.clone()),
+                )
+            }
+            .into_report(None);
+
+            assert_eq!(report.ok, ok, "the command's own axis");
+            assert_eq!(
+                report.verification,
+                Some(expected),
+                "and the identity axis, untouched by it",
+            );
+        }
+    }
+
+    /// A run that reached no boundary omits the KEY, not merely its value:
+    /// every pre-R7.5 document stays byte-shape compatible.
+    #[test]
+    fn an_unreconciled_run_omits_the_member_from_the_wire() {
+        let report = LifecycleValues::completed(
+            "build",
+            vec!["build".into()],
+            Vec::new(),
+            Vec::new(),
+            Vec::new(),
+            None,
+        )
+        .into_report(None);
+        assert!(report.verification.is_none());
+        let json = serde_json::to_string(&report).expect("the root serialises");
+        assert!(
+            !json.contains("verification"),
+            "an absent member is an absent key: {json}",
+        );
+    }
 }

@@ -28,11 +28,20 @@ fn row(key: &str, status: &str) -> LifecycleContributionReport {
 }
 
 fn lifecycle(rows: Vec<LifecycleContributionReport>, stopped: &str) -> Measurement {
+    lifecycle_with(rows, stopped, None)
+}
+
+fn lifecycle_with(
+    rows: Vec<LifecycleContributionReport>,
+    stopped: &str,
+    verification: Option<Box<vibe_wire::generated::shared::VerificationEvidence>>,
+) -> Measurement {
     Measurement::Lifecycle {
         rows,
         stopped_phase: stopped.into(),
         requested: "build".into(),
         chain: vec!["validate".into(), "install".into(), "build".into()],
+        verification,
     }
 }
 
@@ -236,4 +245,93 @@ fn the_emission_bit_crosses_the_carrier_in_both_directions() {
             "the site's own answer, never a recomputed one",
         );
     }
+}
+
+/// A tiny, wholly synthetic member — the carrier never inspects one, so these
+/// projection reds only need a value `PartialEq` can compare.
+fn sentinel_member() -> vibe_wire::generated::shared::VerificationEvidence {
+    use vibe_wire::generated::shared::{EvidenceRun, EvidenceStatus, VerificationEvidence};
+    VerificationEvidence {
+        artifacts: Vec::new(),
+        evidence: 1,
+        evidence_id: format!("sha256:{}", "a".repeat(64)),
+        inputs: Vec::new(),
+        observed_at: "2026-08-28T12:00:05Z".parse().expect("a fixture instant"),
+        run: EvidenceRun {
+            chain: vec!["build".into(), "verify".into()],
+            requested: "verify".into(),
+            run_id: "0".repeat(32),
+            selected: ".".into(),
+            started: "2026-08-28T11:59:40Z".into(),
+        },
+        status: EvidenceStatus::Stale,
+    }
+}
+
+/// The one production site that takes a lifecycle measurement apart and builds
+/// another one moves the member WHOLE — id included.
+///
+/// This is the composed path a CLI verify failure really takes: the stale stop
+/// is frozen inside dispatch and then meets the prefix an outer stage measured.
+/// Dropping the field in the rebuild leaves every row assertion green and the
+/// comparison gone.
+#[test]
+fn prepending_rows_preserves_the_verification_member_whole() {
+    let member = sentinel_member();
+    let carried = carry(MeasuredFailure {
+        original: anyhow::Error::new(Sentinel),
+        evidence: lifecycle_with(
+            vec![row("@vibe/own", "ok")],
+            "verify",
+            Some(Box::new(member.clone())),
+        ),
+        emit_machine_failure: true,
+    });
+
+    let taken = take::<Measurement>(prepend_rows(carried, vec![row("@vibe/earlier", "ok")]))
+        .expect("carried");
+    let Measurement::Lifecycle {
+        rows, verification, ..
+    } = taken.evidence
+    else {
+        panic!("family");
+    };
+    assert_eq!(rows.len(), 2, "the prefix still joins in chronology");
+    assert_eq!(
+        verification.as_deref(),
+        Some(&member),
+        "and the member is the SAME value, not a rebuilt one",
+    );
+}
+
+/// A generic post-row failure picks up the member the accumulator holds, and
+/// a site that already froze one keeps its own.
+#[test]
+fn carrying_once_takes_the_accumulator_member_and_never_replaces_a_frozen_one() {
+    let member = sentinel_member();
+    let generic = carry_once(anyhow::anyhow!("writing the checkpoint"), || {
+        lifecycle_with(Vec::new(), "verify", Some(Box::new(member.clone())))
+    });
+    let taken = take::<Measurement>(generic).expect("carried");
+    let Measurement::Lifecycle { verification, .. } = &taken.evidence else {
+        panic!("family");
+    };
+    assert_eq!(verification.as_deref(), Some(&member));
+
+    let frozen = carry(MeasuredFailure {
+        original: anyhow::Error::new(Sentinel),
+        evidence: lifecycle_with(Vec::new(), "verify", Some(Box::new(member.clone()))),
+        emit_machine_failure: true,
+    });
+    let kept = take::<Measurement>(carry_once(frozen, || lifecycle(Vec::new(), "verify")))
+        .expect("carried");
+    let Measurement::Lifecycle { verification, .. } = &kept.evidence else {
+        panic!("family");
+    };
+    assert_eq!(
+        verification.as_deref(),
+        Some(&member),
+        "the outer wrapper never replaces a stop's own comparison",
+    );
+    assert!(kept.emit_machine_failure, "nor its own emission policy");
 }

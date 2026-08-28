@@ -156,6 +156,9 @@ pub fn run(
                 agent,
             },
             preparation.recorder(),
+            // The SAME injected clock the trace preparation and the finish
+            // read: nothing below this surface reads time.
+            now(),
         ),
     );
     // Consumes the owner: finishes the index against the real outcome, drops
@@ -404,6 +407,7 @@ fn execute(
             manifest_mutation: &super::install::NoManifestMutation,
             agent,
             trace: preparation.recorder(),
+            observed_at: now(),
         }),
     );
     // Consumes the owner: finishes the index against the real outcome, drops
@@ -485,12 +489,20 @@ pub(crate) fn lifecycle_family(
             stopped_phase,
             requested,
             chain,
-        } => vibe_orchestrator::values::LifecycleValues::failed(
+            verification,
+        } => vibe_orchestrator::values::LifecycleValues::failed_with_verification(
             &requested,
             chain,
             &stopped_phase,
             rows,
+            // Handed on EXACTLY as it was measured — the BOX is unwrapped,
+            // never the value. This projection chooses a report family; it
+            // never rebuilds, reinterprets or drops the comparison the engine
+            // already made.
+            verification.map(|boxed| *boxed),
         ),
+        // A prerequisite install's barrier stopped long before verify, so
+        // there is no comparison to carry — never an invented one.
         vibe_orchestrator::failure::Measurement::Slot { reports, .. }
         | vibe_orchestrator::failure::Measurement::InstallBarrier { reports, .. } => {
             vibe_orchestrator::values::LifecycleValues::failed(
@@ -571,3 +583,9 @@ fn step_name(step: &LifecycleStep) -> String {
 #[cfg(test)]
 #[path = "lifecycle_default_path_tests.rs"]
 mod default_path_tests;
+
+// The failure-projection reds for the R7.5 evidence member, in their own cell
+// for the same budget reason.
+#[cfg(test)]
+#[path = "lifecycle_verification_tests.rs"]
+mod verification_tests;

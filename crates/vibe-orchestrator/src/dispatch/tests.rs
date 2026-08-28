@@ -122,6 +122,7 @@ fn dispatch_reports_the_real_row_through_the_supplied_observer() {
         &agent(),
         metadata(project.path()),
         vec!["build".to_string()],
+        None,
     )
     .expect("the row dispatches");
 
@@ -167,6 +168,9 @@ fn a_generic_failure_after_a_real_row_carries_that_row_outward() {
         &agent(),
         meta,
         vec!["build".to_string()],
+        // The existing direct-dispatch reds are not the complete epoch: they
+        // withhold the boundary permission exactly as the install callback does.
+        None,
     );
     drop(guard);
 
@@ -225,6 +229,7 @@ fn the_injection_guard_disarms_on_unwind() {
             &agent(),
             meta,
             vec!["build".to_string()],
+            None,
         )
         .is_ok(),
         "the guard disarmed while unwinding",

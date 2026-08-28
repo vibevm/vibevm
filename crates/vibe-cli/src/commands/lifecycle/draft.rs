@@ -19,7 +19,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-HANDSHAKE"
 
 use anyhow::Result;
 use vibe_orchestrator::values::LifecycleValues;
-use vibe_wire::generated::shared::CompileTraceReport;
+use vibe_wire::generated::shared::{CompileTraceReport, EvidenceStatus};
 
 use crate::output;
 
@@ -73,6 +73,18 @@ pub(crate) fn render_lifecycle(
         for step in &report.steps {
             ctx.step(&format!("{}: {}", step.phase, step.status));
         }
+        // A PROJECTION of the typed member, never a second source: the words
+        // are read off the value JSON carries, and the member itself decides
+        // whether the line exists at all. A failed run never reaches here —
+        // its account on the terminal has always been its error alone.
+        if let Some(evidence) = report.verification.as_ref() {
+            ctx.step(&format!(
+                "verification: {} ({} input(s), {} artifact(s))",
+                evidence_status(&evidence.status),
+                evidence.inputs.len(),
+                evidence.artifacts.len(),
+            ));
+        }
     }
     render_handoff(ctx, report.delegation.as_ref());
     ctx.summary(&format!(
@@ -86,6 +98,18 @@ pub(crate) fn render_lifecycle(
 
 const fn completion(parked: bool) -> &'static str {
     if parked { "parked" } else { "completed" }
+}
+
+/// The evidence status in its exact wire spelling, so the terminal line and
+/// the JSON member cannot disagree about one comparison.
+const fn evidence_status(status: &EvidenceStatus) -> &'static str {
+    match status {
+        EvidenceStatus::Matched => "matched",
+        EvidenceStatus::Missing => "missing",
+        EvidenceStatus::Stale => "stale",
+        EvidenceStatus::Unavailable => "unavailable",
+        EvidenceStatus::Unstable => "unstable",
+    }
 }
 
 #[cfg(test)]

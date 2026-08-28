@@ -16,3 +16,5 @@ mod outcomes;
 mod support;
 #[path = "lifecycle_run/transport.rs"]
 mod transport;
+#[path = "lifecycle_run/verification.rs"]
+mod verification;

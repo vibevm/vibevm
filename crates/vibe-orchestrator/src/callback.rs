@@ -86,6 +86,10 @@ pub fn after_durable_world_stage(
                 stopped_phase: Phase::Install.as_str().to_string(),
                 requested,
                 chain,
+                // This stage plans `[validate, install]` only. It reaches no
+                // verify boundary even when its `chain` names one, so it has
+                // no comparison to report — see the `None` it passes below.
+                verification: None,
             },
             // The historical policy of these stages exactly: they never
             // emitted a document of their own when tracing was off.
@@ -136,11 +140,20 @@ fn stage(
     // The callback's dispatch reuses the command's ONE lease — shared into
     // the context by Arc, never reacquired here.
     let lease = run.lease.clone();
+    // `None`, ALWAYS. This is the partial epoch: the plan above is
+    // `[validate, install]`, while `metadata.chain` is the outer command's —
+    // for `vibe verify` it already names every phase through verify. Handing
+    // an instant down here would let the boundary fire before build and create
+    // had run and publish a member about a prefix that did not exist yet.
     let outcome = if let Some(shared) = run.lifecycle_run {
-        dispatch::dispatch_plan_with_run(observer, &ritual, &shared, agent, &metadata)?
+        dispatch::dispatch_plan_with_run(observer, &ritual, &shared, agent, &metadata, None)?
     } else {
-        dispatch::dispatch_plan(observer, &ritual, lease, agent, metadata, state_chain)?
+        dispatch::dispatch_plan(observer, &ritual, lease, agent, metadata, state_chain, None)?
     };
+    debug_assert!(
+        outcome.verification.is_none(),
+        "the post-durability stage reconciles no evidence",
+    );
     let parked = outcome.parked.map(|(_, delegation)| delegation);
     let contributions = outcome.reports;
     // NOTHING is rendered here. The outermost command is the one that emits a

@@ -16,6 +16,7 @@ use vibe_lifecycle::{
 use vibe_lifecycle::{REMOVED_DECLARATION, UNKNOWN_PROVENANCE};
 use vibe_wire::generated::lifecycle_report::LifecycleContributionReport;
 use vibe_wire::generated::lifecycle_state::{ExecutionRecordScope, ExecutionRecordStatus};
+use vibe_wire::generated::shared::{Timestamp, VerificationEvidence};
 
 use crate::failure::{MeasuredFailure, Measurement, carry, carry_once};
 use crate::ports::RunObserver;
@@ -24,6 +25,7 @@ use crate::{PlannedExecution, RitualPlan, world};
 use backends::{ProjectPackageBindingBackend, WorkspaceBinaryBackend};
 
 mod backends;
+mod verify;
 
 #[cfg(test)]
 #[path = "inject.rs"]
@@ -41,6 +43,24 @@ pub(crate) struct DispatchOutcome {
     /// The phase the chain stopped at and its typed handoff, when a hosted
     /// agent row parked.
     pub(crate) parked: Option<(String, Delegation)>,
+    /// The ONE verification-evidence member, present exactly when this pass
+    /// reached the engine-owned verify boundary — a `matched` or `unavailable`
+    /// comparison it then continued past. A stop travels on the failure
+    /// carrier instead, never here.
+    pub(crate) verification: Option<VerificationEvidence>,
+}
+
+/// What the dispatch had measured when it stopped: the rows, and the member
+/// the verify boundary had already reconciled.
+///
+/// One value rather than two out-parameters, because the two are refreshed at
+/// the same instants and a generic post-row failure must pick up BOTH. An
+/// accumulator that carried only rows is exactly how a stale comparison
+/// reaches the surface as a run that reconciled nothing.
+#[derive(Debug, Default)]
+struct MeasuredDispatch {
+    rows: Vec<LifecycleContributionReport>,
+    verification: Option<VerificationEvidence>,
 }
 
 /// Dispatch the UNTRACKED clean epoch.
@@ -49,6 +69,9 @@ pub(crate) struct DispatchOutcome {
 /// trace would live in, so it never opens a session and has no outer funnel to
 /// hand a measurement to. A failed transition therefore reports its rows to the
 /// observer and the ordinary error travels on.
+///
+/// It also owes no verify boundary: a clean epoch is state-blind, so there is
+/// no durable half to compare against and no member to publish.
 ///
 /// ```no_run
 /// use vibe_orchestrator::dispatch_plan_untracked;
@@ -129,6 +152,14 @@ pub fn dispatch_plan_untracked(
 /// lease and have already proven their world — `run_phases` and the
 /// post-durability stage. Exporting it let any caller with a plan and a lease
 /// start a run beside them.
+///
+/// `verification_observed_at` is the verify boundary's permission and its
+/// injected instant in one value — see [`verify`] for why the complete epoch
+/// has to say so explicitly rather than let this cell read `metadata.chain`.
+#[allow(
+    clippy::too_many_arguments,
+    reason = "one dispatch's named inputs, none of them bundleable"
+)]
 pub(crate) fn dispatch_plan(
     observer: &dyn RunObserver,
     plan: &RitualPlan,
@@ -136,6 +167,7 @@ pub(crate) fn dispatch_plan(
     agent: &Arc<dyn AgentBackend>,
     metadata: RunMetadata,
     state_chain: Vec<String>,
+    verification_observed_at: Option<Timestamp>,
 ) -> Result<DispatchOutcome> {
     // The lease root IS the state root: `begin` derives its store path from
     // the lease, and a plan whose workspace root disagrees refuses here
@@ -150,7 +182,14 @@ pub(crate) fn dispatch_plan(
         state_chain,
     )?
     .shared();
-    dispatch_plan_with_run(observer, plan, &run, agent, &metadata)
+    dispatch_plan_with_run(
+        observer,
+        plan,
+        &run,
+        agent,
+        &metadata,
+        verification_observed_at,
+    )
 }
 
 /// Dispatch one phase plan, carrying whatever rows were measured out with ANY
@@ -175,31 +214,62 @@ pub(crate) fn dispatch_plan_with_run(
     run: &LifecycleRunHandle,
     agent: &Arc<dyn AgentBackend>,
     metadata: &RunMetadata,
+    verification_observed_at: Option<Timestamp>,
 ) -> Result<DispatchOutcome> {
-    let mut measured: Vec<LifecycleContributionReport> = Vec::new();
-    dispatch_measured(observer, plan, run, agent, metadata, &mut measured).map_err(|error| {
+    let mut measured = MeasuredDispatch::default();
+    dispatch_measured(
+        observer,
+        plan,
+        run,
+        agent,
+        metadata,
+        &mut measured,
+        verification_observed_at,
+    )
+    .map_err(|error| {
+        // Idempotent: a stale stop and a failed handler already froze their
+        // own evidence AND their own emission policy, and this must not
+        // replace either with the generic stage's historical silence.
         carry_once(error, || Measurement::Lifecycle {
-            rows: measured,
+            rows: measured.rows,
             stopped_phase: metadata.requested.clone(),
             requested: metadata.requested.clone(),
             chain: metadata.chain.clone(),
+            verification: measured.verification.map(Box::new),
         })
     })
 }
 
+#[allow(
+    clippy::too_many_arguments,
+    reason = "one dispatch's named inputs, none of them bundleable"
+)]
 fn dispatch_measured(
     observer: &dyn RunObserver,
     plan: &RitualPlan,
     run: &LifecycleRunHandle,
     agent: &Arc<dyn AgentBackend>,
     metadata: &RunMetadata,
-    measured: &mut Vec<LifecycleContributionReport>,
+    measured: &mut MeasuredDispatch,
+    verification_observed_at: Option<Timestamp>,
 ) -> Result<DispatchOutcome> {
     let package_binding = ProjectPackageBindingBackend::new(plan);
     let runtime = runtime(observer, &package_binding, agent.as_ref());
     let mut outcome = DispatchOutcome {
         reports: Vec::with_capacity(plan.executions.len()),
         parked: None,
+        verification: None,
+    };
+    // The permission and the instant, resolved ONCE before the first row: a
+    // partial epoch (`None`) owes no boundary whatever its chain says, and a
+    // complete one owes it only when the chain really contains verify.
+    let mut boundary = verification_observed_at
+        .and_then(|at| verify::boundary(plan, &metadata.chain).map(|end| (end, at)));
+    let gate = verify::Gate {
+        plan,
+        agent,
+        metadata,
+        emit_machine_failure: observer.emit_machine_failure(),
     };
     let mut run = run
         .lock()
@@ -209,9 +279,17 @@ fn dispatch_measured(
     // is refreshed either way — a cancellation the operator needs to see must
     // not disappear because the next step went wrong.
     let reconciled = reconcile_removed_parks(&mut run, plan, &mut outcome.reports);
-    measured.clone_from(&outcome.reports);
+    measured.rows.clone_from(&outcome.reports);
     reconciled?;
-    for execution in plan.executions.iter() {
+    for (index, execution) in plan.executions.iter().enumerate() {
+        // BEFORE the first verify-or-later row, and therefore before any
+        // verify contribution is dispatched.
+        if let Some((end, at)) = boundary
+            && end == index
+        {
+            boundary = None;
+            gate.fire(&mut run, end, at, &mut outcome, measured)?;
+        }
         let handler = HandlerExecution::from_row(&execution.row);
         let transition = match run.execute_one(
             &handler,
@@ -244,7 +322,7 @@ fn dispatch_measured(
                         "phase `{}` stopped before any later lifecycle contribution",
                         execution.phase
                     ));
-                    measured.clone_from(&outcome.reports);
+                    measured.rows.clone_from(&outcome.reports);
                     return Err(carry(MeasuredFailure {
                         original,
                         evidence: Measurement::Lifecycle {
@@ -252,6 +330,11 @@ fn dispatch_measured(
                             stopped_phase: execution.phase.clone(),
                             requested: metadata.requested.clone(),
                             chain: metadata.chain.clone(),
+                            // A verify handler that fails AFTER a matched or
+                            // unavailable comparison keeps that comparison
+                            // exactly: the two are independent axes, and this
+                            // failure rewrites neither.
+                            verification: outcome.verification.clone().map(Box::new),
                         },
                         // The policy this site has always had: the failed root
                         // is a machine document, emitted only in JSON mode and
@@ -276,7 +359,7 @@ fn dispatch_measured(
         );
         observer.observe_contribution(&report);
         outcome.reports.push(report);
-        measured.clone_from(&outcome.reports);
+        measured.rows.clone_from(&outcome.reports);
         // A deterministic stand-in for the generic post-row failures this
         // boundary really has — a state write, a checkpoint, a reconciliation.
         // Compiled out entirely outside `cfg(test)`; see `inject`.
@@ -293,6 +376,13 @@ fn dispatch_measured(
             outcome.parked = Some((execution.phase.clone(), delegation));
             return Ok(outcome);
         }
+    }
+    // The plan held no verify-or-later row at all: the boundary is the end of
+    // the prefix, so it fires HERE — after everything that could contribute
+    // evidence and before the retention below. An empty verify phase therefore
+    // cannot bypass the gate.
+    if let Some((end, at)) = boundary {
+        gate.fire(&mut run, end, at, &mut outcome, measured)?;
     }
     if plan.package_phase_planned {
         let reconciled = outcome.reports.iter().any(|report| {
@@ -443,3 +533,10 @@ fn runtime<'a>(
 #[cfg(test)]
 #[path = "tests.rs"]
 mod tests;
+
+/// The verify-boundary reds live in their own cell: they need a declared-input
+/// fixture and a mutating observer the row-accumulator reds have no use for,
+/// and both files stay under the budget this way.
+#[cfg(test)]
+#[path = "verification_tests.rs"]
+mod verification_tests;

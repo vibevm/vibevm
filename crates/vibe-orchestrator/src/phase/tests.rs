@@ -72,6 +72,7 @@ fn a_neutral_resume_failure_joins_the_prefix_and_reports_one_lifecycle_root() {
     // Whatever this command had already measured before the prerequisite ran.
     let mut measured = Measured {
         contributions: vec![phase_row("clean:earlier")],
+        verification: None,
     };
     let transported = carry(MeasuredFailure {
         original: anyhow::Error::new(Sentinel).context("finishing the parked slot run"),
@@ -143,6 +144,7 @@ fn original_is(error: &anyhow::Error) -> bool {
 fn an_ordinary_error_passes_through_and_adds_no_rows() {
     let mut measured = Measured {
         contributions: vec![phase_row("clean:earlier")],
+        verification: None,
     };
     let error = absorb_resume_failure(anyhow::anyhow!("planning blew up"), &mut measured);
     assert_eq!(error.to_string(), "planning blew up");
@@ -321,6 +323,7 @@ mod validate_only_gate {
             manifest_mutation: &NoManifestMutation,
             agent,
             trace: None,
+            observed_at: "2026-08-28T12:00:05Z".parse().expect("a fixture instant"),
         });
 
         let PhaseOutcome::Failed { original, .. } = outcome else {

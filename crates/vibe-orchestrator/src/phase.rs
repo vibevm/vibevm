@@ -21,6 +21,7 @@ use vibe_lifecycle::{AgentBackend, LifecycleLease, Phase, RunMetadata};
 use vibe_wire::generated::lifecycle_report::{
     LifecycleContributionReport, LifecycleDelegation, LifecycleStepReport,
 };
+use vibe_wire::generated::shared::{Timestamp, VerificationEvidence};
 use vibe_workspace::compile_trace::TraceRun;
 
 use crate::failure::{MeasuredFailure, Measurement, prepend_rows, take};
@@ -93,6 +94,14 @@ pub struct PhaseRun<'a> {
     pub agent: Arc<dyn AgentBackend>,
     /// The surface's compile-trace recorder, borrowed.
     pub trace: Option<&'a TraceRun>,
+    /// The surface's injected instant for the verify comparison.
+    ///
+    /// This entry point owns the COMPLETE derived chain, so handing it down is
+    /// also the permission for the engine-owned verify boundary to fire at all
+    /// — the partial install callback deliberately withholds it. Nothing below
+    /// a surface reads a clock, so the instant a member records is the one the
+    /// command was given.
+    pub observed_at: Timestamp,
 }
 
 /// What one phase run produced.
@@ -114,10 +123,13 @@ pub enum PhaseOutcome {
     },
 }
 
-/// Rows measured so far, so a failure reports what really ran.
+/// Rows measured so far, so a failure reports what really ran — and the
+/// verification member the verify boundary had already reconciled, so a
+/// failure AFTER it reports the comparison rather than none.
 #[derive(Default)]
 struct Measured {
     contributions: Vec<LifecycleContributionReport>,
+    verification: Option<VerificationEvidence>,
 }
 
 /// Absorb a NEUTRAL resume failure from the prerequisite install into THIS
@@ -172,6 +184,7 @@ pub fn run_phases(inputs: PhaseRun<'_>) -> PhaseOutcome {
     let chain = inputs.chain.clone();
     let mut measured = Measured {
         contributions: inputs.contributions.clone(),
+        verification: None,
     };
     match run(inputs, &mut measured) {
         Ok(Outcome::Completed(values)) => PhaseOutcome::Completed(values),
@@ -196,6 +209,11 @@ pub fn run_phases(inputs: PhaseRun<'_>) -> PhaseOutcome {
                     stopped_phase: requested.as_str().to_string(),
                     requested: requested.as_str().to_string(),
                     chain,
+                    // A malformed handoff on a verify-phase agent row is the
+                    // real shape here: it arrives uncarried, AFTER the
+                    // boundary already reconciled, so the accumulator is the
+                    // only thing left holding that comparison.
+                    verification: measured.verification.map(Box::new),
                 },
                 original,
                 emit_machine_failure: false,
@@ -234,6 +252,7 @@ fn run(inputs: PhaseRun<'_>, measured: &mut Measured) -> Result<Outcome> {
         manifest_mutation,
         agent,
         trace,
+        observed_at,
     } = inputs;
     // The ONE proof of the bundle, before validate and before install.
     //
@@ -383,10 +402,28 @@ fn run(inputs: PhaseRun<'_>, measured: &mut Measured) -> Result<Outcome> {
     notices.extend(ritual.notices.clone());
     surface_plan(observer, &ritual, &metadata, true)?;
     let state_chain = phases.iter().map(ToString::to_string).collect();
+    // `Some(...)` here, and ONLY here on the tracked path: this is the
+    // complete derived chain, so the engine-owned verify boundary is allowed
+    // to fire — see `dispatch::verify` for the partial epoch it is not.
     let dispatched = if let Some(shared) = collector.into_lifecycle_run() {
-        dispatch::dispatch_plan_with_run(observer, &ritual, &shared, &agent, &metadata)
+        dispatch::dispatch_plan_with_run(
+            observer,
+            &ritual,
+            &shared,
+            &agent,
+            &metadata,
+            Some(observed_at),
+        )
     } else {
-        dispatch::dispatch_plan(observer, &ritual, lease, &agent, metadata, state_chain)
+        dispatch::dispatch_plan(
+            observer,
+            &ritual,
+            lease,
+            &agent,
+            metadata,
+            state_chain,
+            Some(observed_at),
+        )
     };
     let outcome = match dispatched {
         Ok(outcome) => outcome,
@@ -397,6 +434,11 @@ fn run(inputs: PhaseRun<'_>, measured: &mut Measured) -> Result<Outcome> {
         Err(error) => return Err(prepend_rows(error, prefix)),
     };
     let parked = outcome.parked;
+    // Frozen into the accumulator BEFORE the fallible handoff validation
+    // below: that refusal travels uncarried, and the fallback in `run_phases`
+    // is then the only carrier left for a comparison this run really made.
+    let verification = outcome.verification;
+    measured.verification.clone_from(&verification);
     // The one canonical order, reused: clean rows, then the prerequisite
     // install's slot rows, then this phase's own. The prerequisite rows belong
     // to THIS report in every mode — they used to be excluded from JSON
@@ -440,13 +482,14 @@ fn run(inputs: PhaseRun<'_>, measured: &mut Measured) -> Result<Outcome> {
         .map(|(_, delegation)| delegation_member(delegation))
         .transpose()?;
     let parked = member.is_some();
-    let draft = LifecycleValues::completed(
+    let draft = LifecycleValues::completed_with_verification(
         requested.as_str(),
         chain,
         steps,
         contributions,
         notices,
         member,
+        verification,
     );
     Ok(if parked {
         Outcome::Parked(draft)

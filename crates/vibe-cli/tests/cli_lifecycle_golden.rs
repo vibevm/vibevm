@@ -46,6 +46,8 @@ use serde_json::Value;
 
 const PROJECT_SENTINEL: &str = "<project>";
 const RUN_ID_SENTINEL: &str = "<run-id>";
+const EVIDENCE_ID_SENTINEL: &str = "<evidence-id>";
+const INSTANT_SENTINEL: &str = "<instant>";
 
 /// Two deterministic host builtin rows at `phase:generate` and `phase:build`.
 const GREET_EXTENSIONS: &str = r#"
@@ -95,10 +97,11 @@ fn golden(text: &str) -> Value {
 /// The shape every durable run identity has (32 lowercase hex) — the one
 /// predicate that proves a replaced value WAS entropy.
 fn is_run_id(text: &str) -> bool {
-    text.len() == 32
-        && text
-            .bytes()
-            .all(|byte| byte.is_ascii_digit() || matches!(byte, b'a'..=b'f'))
+    text.len() == 32 && text.bytes().all(hex_byte)
+}
+
+const fn hex_byte(byte: u8) -> bool {
+    byte.is_ascii_digit() || matches!(byte, b'a'..=b'f')
 }
 
 fn project_spellings(project: &Path) -> Vec<String> {
@@ -148,9 +151,44 @@ fn normalized(bytes: &[u8], project: &Path, run_id: Option<&str>) -> Vec<Value> 
     let spellings = project_spellings(project);
     let mut docs = documents(bytes);
     for doc in &mut docs {
+        scrub_verification(doc);
         scrub("", doc, &spellings, run_id);
     }
     docs
+}
+
+/// The R7.5 evidence member's four entropy fields, and ONLY those: the run id
+/// it names, its two instants, and `evidence_id`. The digest inherits the run
+/// identity/start entropy but deliberately excludes `observed_at`; that clock
+/// is independently variable. Each value is validated as well-formed BEFORE
+/// its sentinel stands in, so a malformed value cannot hide behind the
+/// normalisation; status, epoch, row counts, chain and selected node pass
+/// through verbatim — the member is pinned, not skipped.
+fn scrub_verification(doc: &mut Value) {
+    let Some(member) = doc.get_mut("verification") else {
+        return;
+    };
+    let id = member["evidence_id"].as_str().expect("an id is a string");
+    assert!(
+        id.strip_prefix("sha256:")
+            .is_some_and(|hex| hex.len() == 64 && hex.bytes().all(hex_byte)),
+        "evidence ids are `sha256:` + 64 lowercase hex: {id}",
+    );
+    member["evidence_id"] = Value::String(EVIDENCE_ID_SENTINEL.into());
+    let run_id = member["run"]["run_id"].as_str().expect("it names its run");
+    assert!(is_run_id(run_id), "run ids are 32-hex: {run_id}");
+    member["run"]["run_id"] = Value::String(RUN_ID_SENTINEL.into());
+    scrub_instant(&mut member["observed_at"]);
+    scrub_instant(&mut member["run"]["started"]);
+}
+
+fn scrub_instant(instant: &mut Value) {
+    let text = instant.as_str().expect("an instant is a string");
+    assert!(
+        text.ends_with('Z') && text.contains('T'),
+        "RFC 3339: {text}"
+    );
+    *instant = Value::String(INSTANT_SENTINEL.into());
 }
 
 /// The observed run id of a parked report — validated as entropy before any
@@ -217,7 +255,11 @@ fn completed_default_lifecycle_document_is_pinned_in_full() {
  "notices":[],"ok":true,"requested":"deploy","steps":[
   {"phase":"validate","status":"ok"},{"phase":"install","status":"fresh"},{"phase":"generate","status":"ok"},
   {"phase":"build","status":"ok"},{"phase":"test","status":"no-op"},{"phase":"create","status":"no-op"},
-  {"phase":"verify","status":"no-op"},{"phase":"package","status":"no-op"},{"phase":"deploy","status":"no-op"}]}]"#,
+  {"phase":"verify","status":"no-op"},{"phase":"package","status":"no-op"},{"phase":"deploy","status":"no-op"}],
+ "verification":{"artifacts":[],"evidence":1,"evidence_id":"<evidence-id>","inputs":[],
+  "observed_at":"<instant>","status":"unavailable","run":{
+   "chain":["validate","install","generate","build","test","create","verify","package","deploy"],
+   "requested":"deploy","run_id":"<run-id>","selected":".","started":"<instant>"}}}]"#,
     );
     assert_eq!(
         Value::Array(docs),
@@ -528,6 +570,7 @@ lifecycle `deploy`:
   → verify: no-op
   → package: no-op
   → deploy: no-op
+  → verification: unavailable (0 input(s), 0 artifact(s))
 vibe lifecycle: deploy completed (9 phases, 2 contribution(s) selected, 2 executed, 2 ok, 0 fresh, 0 notice(s))
 "#;
     assert_eq!(

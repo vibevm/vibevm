@@ -96,6 +96,7 @@ fn lifecycle_measurement_keeps_its_own_failure_identity_and_rows() {
             stopped_phase: "build".into(),
             requested: "build".into(),
             chain: vec!["validate".into(), "build".into()],
+            verification: None,
         },
         &metadata,
     );
@@ -167,4 +168,94 @@ fn lifecycle_run_source_and_dependencies_have_no_paid_or_surface_backedge() {
     ] {
         assert!(dependencies.contains_key(required), "missing `{required}`");
     }
+}
+
+/// The hosted failure projection hands on the EXACT member (R7.5 P2/A5b).
+///
+/// MCP and the CLI are two projections of one document, so a member either
+/// surface rebuilt would make them disagree about a comparison the engine made
+/// once. `PartialEq` over the whole value is the assertion, not a field spot
+/// check: `evidence_id` is what an external orchestrator joins claims by.
+#[test]
+fn the_hosted_failure_projection_carries_the_exact_verification_member() {
+    use vibe_wire::behaviour::verification_evidence::validate;
+    use vibe_wire::generated::shared::{
+        DigestWitness, EvidenceRun, EvidenceStatus, InputMeasurement, VerificationEvidence,
+    };
+
+    let witness = |byte: char| DigestWitness {
+        algorithm: "sha256:vibe-input-manifest-v1".into(),
+        bytes: Some("3".into()),
+        digest: format!("sha256:{}", byte.to_string().repeat(64)),
+        files: Some(1),
+    };
+    let expected = VerificationEvidence {
+        artifacts: Vec::new(),
+        evidence: 1,
+        evidence_id: format!("sha256:{}", "f".repeat(64)),
+        inputs: vec![InputMeasurement {
+            declaration_fingerprint: format!("sha256:{}", "a".repeat(64)),
+            execution: "org.demo/tools#compile".into(),
+            patterns: vec!["data/**".into()],
+            phase: "build".into(),
+            status: EvidenceStatus::Stale,
+            measured: Some(witness('1')),
+            measured_run_id: Some("0".repeat(32)),
+            observed: Some(witness('2')),
+            reason_code: None,
+        }],
+        observed_at: "2026-08-28T12:00:05Z".parse().expect("a fixture instant"),
+        run: EvidenceRun {
+            chain: vec!["build".into(), "verify".into()],
+            requested: "verify".into(),
+            run_id: "0".repeat(32),
+            selected: ".".into(),
+            started: "2026-08-28T11:59:40Z".into(),
+        },
+        status: EvidenceStatus::Stale,
+    };
+    validate(&expected).expect("the fixture member is itself valid");
+
+    let metadata = vibe_lifecycle::RunMetadata {
+        requested: "verify".into(),
+        chain: vec!["build".into(), "verify".into()],
+        offline: true,
+        assume_yes: true,
+        agent_mode: vibe_wire::generated::lifecycle::e1::context::RunAgentMode::Agent,
+        force: false,
+        trace_compile: false,
+        run_id: "0".repeat(32),
+        started: "2026-08-28T11:59:40Z".into(),
+        selected: ".".into(),
+    };
+    let report = failure_values(
+        Measurement::Lifecycle {
+            rows: Vec::new(),
+            stopped_phase: "verify".into(),
+            requested: "verify".into(),
+            chain: vec!["build".into(), "verify".into()],
+            verification: Some(Box::new(expected.clone())),
+        },
+        &metadata,
+    )
+    .into_report(None);
+
+    assert!(!report.ok, "a stale stop is a failed command");
+    assert_eq!(
+        report.verification,
+        Some(expected),
+        "and the structured output carries the same member the CLI does",
+    );
+
+    // A slot-shaped failure stopped at the install barrier: no comparison.
+    let slot = failure_values(
+        Measurement::Slot {
+            progress: Box::default(),
+            reports: Vec::new(),
+            packages_resolved: 1,
+        },
+        &metadata,
+    )
+    .into_report(None);
+    assert!(slot.verification.is_none());
 }

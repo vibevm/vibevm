@@ -149,6 +149,9 @@ impl McpTool for LifecycleRunMcpTool {
                 agent,
             },
             preparation.recorder(),
+            // The same injected clock the trace preparation and finish read:
+            // this surface owns time, the engine below it never does.
+            trace_clock(),
         );
         // The funnel: one exit, one finalize, one report. MCP IGNORES
         // `emit_report` — CLI historical silence does not travel — and
@@ -268,7 +271,18 @@ fn failure_values(
             stopped_phase,
             requested,
             chain,
-        } => LifecycleValues::failed(&requested, chain, &stopped_phase, rows),
+            verification,
+        } => LifecycleValues::failed_with_verification(
+            &requested,
+            chain,
+            &stopped_phase,
+            rows,
+            // Carried EXACTLY: this surface returns the same member the CLI
+            // does, and neither rebuilds nor reshapes it — only its box.
+            verification.map(|boxed| *boxed),
+        ),
+        // Slot/InstallBarrier stopped at the install barrier, long before any
+        // verify boundary — no comparison exists to carry.
         Measurement::Slot { reports, .. } | Measurement::InstallBarrier { reports, .. } => {
             LifecycleValues::failed(
                 &metadata.requested,

@@ -35,6 +35,7 @@ use std::fmt;
 use specmark::spec;
 use vibe_install::{InstallProgress, SlotLifecycleReport};
 use vibe_wire::generated::lifecycle_report::LifecycleContributionReport;
+use vibe_wire::generated::shared::VerificationEvidence;
 
 /// What a failing run had really measured when it stopped.
 ///
@@ -94,6 +95,21 @@ pub enum Measurement {
         requested: String,
         /// The complete requested chain.
         chain: Vec<String>,
+        /// The verification-evidence member the verify boundary had already
+        /// reconciled when the failure struck, carried verbatim.
+        ///
+        /// Present for a stale/missing/unstable stop — which IS this
+        /// failure — and equally for a matched identity a later verify
+        /// handler, state write or checkpoint then failed beside. A failure
+        /// projection may never rebuild or drop it: the comparison that
+        /// existed before dispatch is the one an external orchestrator reads.
+        ///
+        /// BOXED, and only for size: inline it is 200 bytes wider than the two
+        /// slot-shaped variants, so every `Result` in this crate would pay for
+        /// it on its success path too. The box is unwrapped at the projection,
+        /// never the value — what an external orchestrator reads is the member
+        /// the engine minted, byte for byte.
+        verification: Option<Box<VerificationEvidence>>,
     },
 }
 
@@ -176,6 +192,7 @@ impl<E: fmt::Debug> std::error::Error for Carried<E> {
 ///         stopped_phase: "build".into(),
 ///         requested: "build".into(),
 ///         chain: vec!["build".into()],
+///         verification: None,
 ///     },
 ///     emit_machine_failure: true,
 /// });
@@ -247,6 +264,7 @@ where
 ///         stopped_phase: "build".into(),
 ///         requested: "build".into(),
 ///         chain: vec!["build".into()],
+///         verification: None,
 ///     }
 /// });
 /// // A generic post-row failure was historically silent.
@@ -284,6 +302,11 @@ where
 /// is returned untouched too: its caller's fallback builds from the same
 /// accumulator, so prepending here would duplicate every row.
 ///
+/// The verification member is moved through UNCONDITIONALLY. This is the one
+/// production site that takes a lifecycle measurement apart and builds another
+/// one, so it is exactly where a stale stop's comparison could be silently
+/// dropped on its way past an outer stage that only knew about rows.
+///
 /// ```
 /// use vibe_orchestrator::failure::prepend_rows;
 /// // An empty prefix is a no-op, and an uncarried error is returned exactly.
@@ -308,6 +331,7 @@ pub fn prepend_rows(
                     stopped_phase,
                     requested,
                     chain,
+                    verification,
                 },
             emit_machine_failure,
         }) => {
@@ -320,6 +344,7 @@ pub fn prepend_rows(
                     stopped_phase,
                     requested,
                     chain,
+                    verification,
                 },
                 emit_machine_failure,
             })
