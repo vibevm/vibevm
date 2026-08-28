@@ -27,24 +27,41 @@ use specmark::spec;
 ///   That arm is unchanged by this type.
 /// - **Executed** — `Ok(ToolOutput)`. The operation ran and produced a
 ///   structured report plus its human text projection. Within this
-///   channel there are two shapes: [`ToolOutput::ok`] is ordinary
-///   success (`isError: false`), and [`ToolOutput::executed_failure`]
-///   is the **executed structured failure** — the operation ran,
-///   produced this report, and the MCP result must still say
-///   `isError: true`, but the report is retained as the single
-///   `structuredContent` instead of collapsing to text.
+///   channel there are three shapes, and the axis that separates them
+///   is NOT success-vs-failure — it is *who writes the text*:
+///   - [`ToolOutput::ok`] — ordinary success (`isError: false`) whose
+///     text is the deterministic projection of the report;
+///   - [`ToolOutput::executed`] — ordinary success (`isError: false`)
+///     whose text the tool states outright, because the surface has
+///     something to say that the report does not carry. A parked
+///     lifecycle run is the motivating case: the wire report is
+///     surface-identical and names the CLI resume command, while the
+///     MCP-native guidance ("call this tool again with the same
+///     phase") belongs only in the textual projection. Without this
+///     shape that guidance is unrepresentable, because `ok` fixes its
+///     own text and the only alternative says `isError: true`;
+///   - [`ToolOutput::executed_failure`] — the **executed structured
+///     failure**: the operation ran, produced this report, and the MCP
+///     result must still say `isError: true`, but the report is
+///     retained as the single `structuredContent` instead of
+///     collapsing to text.
+///
 ///   "I ran and here is what happened" is a different statement from
 ///   "I never ran", and collapsing the former into the latter would
-///   throw away exactly the report a caller asked for.
+///   throw away exactly the report a caller asked for. That distinction
+///   is unchanged by the middle shape: `executed` is still the executed
+///   channel, and a preflight refusal still has no `ToolOutput` at all.
 ///
-/// The text projection is **mandatory on both shapes**, and for a
-/// reason: an executed failure must never fall back to a pretty-JSON
-/// rendering of its report — that would bury the actionable typed
-/// error chain a reader of the text channel needs. [`ToolOutput::ok`]
-/// computes the text at construction with exactly the projection the
-/// dispatcher applied before this seam existed (the raw string for a
-/// JSON string value, pretty JSON for anything else), and
-/// [`ToolOutput::executed_failure`] requires the caller to state the
+/// The text projection is **mandatory on all three shapes**, and for a
+/// reason: an executed result must never silently fall back to a
+/// pretty-JSON rendering of its report where a surface had something
+/// better to say — for a failure that would bury the actionable typed
+/// error chain, and for a park it would bury the resume instruction.
+/// [`ToolOutput::ok`] computes the text at construction with exactly
+/// the projection the dispatcher applied before this seam existed (the
+/// raw string for a JSON string value, pretty JSON for anything else),
+/// while [`ToolOutput::executed`] and
+/// [`ToolOutput::executed_failure`] require the caller to state the
 /// text outright — there is no bare variant and no fallback.
 ///
 /// Fields are private on purpose: `is_error` and the text are
@@ -68,6 +85,20 @@ use specmark::spec;
 ///     serde_json::to_string_pretty(&json!({ "status": "materialised" })).unwrap()
 /// );
 /// assert_eq!(ok["status"], "materialised"); // Deref → read access
+///
+/// // Executed success with explicit text: the same `isError: false`
+/// // and the same structured report, but the surface writes the text
+/// // itself. Nothing else in this type can say that.
+/// let parked = ToolOutput::executed(
+///     json!({ "ok": true, "requested": "build" }),
+///     "parked for you — call `lifecycle_run` again with phase `build`",
+/// );
+/// assert!(!parked.is_error());
+/// assert_eq!(
+///     parked.text(),
+///     "parked for you — call `lifecycle_run` again with phase `build`"
+/// );
+/// assert_eq!(parked.structured()["requested"], "build");
 ///
 /// // Executed structured failure: the text is MANDATORY — an executed
 /// // failure must never fall back to pretty JSON and lose the
@@ -102,6 +133,35 @@ impl ToolOutput {
         ToolOutput {
             structured,
             text,
+            is_error: false,
+        }
+    }
+
+    /// Executed success with the text stated outright: the operation
+    /// ran, produced `structured`, the MCP result carries
+    /// `isError: false` and `structured` as its single
+    /// `structuredContent` — and the human `text` is the caller's own,
+    /// not a projection of the report.
+    ///
+    /// This is [`Self::ok`] in every respect except who writes the
+    /// text, and it exists because that difference was previously
+    /// unrepresentable. A tool whose report is deliberately
+    /// surface-identical — the lifecycle report is the same document
+    /// whichever surface asked for the run — still owes its own channel
+    /// an MCP-native sentence: which tool to call again, with which
+    /// argument. Reaching for [`Self::executed_failure`] to get an
+    /// explicit text would report a successful park as
+    /// `isError: true`; reaching for [`Self::ok`] would replace the
+    /// sentence with pretty JSON the caller can already read in
+    /// `structuredContent`.
+    ///
+    /// It is deliberately NOT a defaulting variant of [`Self::ok`]:
+    /// the text is required, so a caller cannot construct this shape
+    /// and then discover its text was silently derived.
+    pub fn executed(structured: impl Into<Value>, text: impl Into<String>) -> Self {
+        ToolOutput {
+            structured: structured.into(),
+            text: text.into(),
             is_error: false,
         }
     }
@@ -201,6 +261,30 @@ mod tests {
         assert_eq!(failed.structured(), &serde_json::json!({ "a": 1 }));
     }
 
+    /// The whole point of the third shape, stated at the constructor:
+    /// `is_error` is `false` like [`ToolOutput::ok`], while the text is
+    /// the caller's EXACT bytes and not the deterministic projection.
+    ///
+    /// Both halves are asserted against the same structured value, so a
+    /// mutation in either direction is red: deriving the text makes the
+    /// second assertion fail (the report pretty-prints to something
+    /// else entirely), and flipping the flag makes the first fail.
+    #[test]
+    fn executed_keeps_the_callers_exact_text_and_is_not_an_error() {
+        let structured = serde_json::json!({ "ok": true, "requested": "build" });
+        let guidance = "parked — call `lifecycle_run` again with phase `build`";
+        let parked = ToolOutput::executed(structured.clone(), guidance);
+
+        assert!(!parked.is_error(), "an executed park is a SUCCESS");
+        assert_eq!(parked.text(), guidance, "the caller's exact bytes");
+        assert_eq!(parked.structured(), &structured);
+        assert_ne!(
+            parked.text(),
+            deterministic_text(&structured),
+            "and NOT the projection `ok` would have computed",
+        );
+    }
+
     /// The dispatcher's path moves the parts, not a clone.
     #[test]
     fn into_parts_yields_the_triple() {
@@ -245,20 +329,28 @@ mod tests {
         }
     }
 
-    fn dispatch_probe() -> Value {
+    /// Drive one registered probe through the REAL dispatcher over a
+    /// `MemoryTransport` and return the parsed JSON-RPC response. The
+    /// rendering under test is `handle_tools_call`'s, not this cell's:
+    /// a probe asserting its own projection would prove nothing.
+    fn dispatch(name: &str, tool: Box<dyn McpTool>) -> Value {
         let request = serde_json::json!({
             "jsonrpc": "2.0",
             "id": 1,
             "method": "tools/call",
-            "params": { "name": "executed_failure_probe", "arguments": {} }
+            "params": { "name": name, "arguments": {} }
         })
         .to_string();
         let transport = MemoryTransport::with_input(request + "\n");
         let mut server = Server::new(transport, ServerContext::new("."));
-        server.register_tool(Box::new(ExecutedFailureProbe));
+        server.register_tool(tool);
         server.run().unwrap();
         let output = server.transport.take_output();
         serde_json::from_str(output.trim()).unwrap()
+    }
+
+    fn dispatch_probe() -> Value {
+        dispatch("executed_failure_probe", Box::new(ExecutedFailureProbe))
     }
 
     /// The RED this seam exists for: an executed structured failure keeps
@@ -283,6 +375,79 @@ mod tests {
         assert_eq!(
             v["result"]["content"][0]["text"],
             "executed, but reported failure"
+        );
+    }
+
+    // --- the executed-success-with-explicit-text dispatch arm --------------
+    //
+    // The third arm, driven through the same real dispatcher. Before
+    // `ToolOutput::executed` existed this answer was UNREPRESENTABLE:
+    // `ok` fixes its own text (the caller's sentence would have been
+    // replaced by pretty JSON of a report the caller can already read in
+    // `structuredContent`), and the only constructor that accepts a text
+    // renders `isError: true` — which would report a successful park as
+    // a failure.
+
+    /// The probe: a surface-identical report plus MCP-native guidance.
+    struct ExecutedSuccessProbe;
+
+    /// The exact report the probe returns — shared with the assertions so
+    /// the test compares against ONE value rather than a retyped copy.
+    fn parked_report() -> Value {
+        serde_json::json!({ "ok": true, "requested": "build", "command": "lifecycle" })
+    }
+
+    /// The MCP-native sentence the wire report deliberately does not
+    /// carry: the report's own `delegation.resume` is the CLI command,
+    /// because the document is surface-identical.
+    const PARKED_GUIDANCE: &str = "parked — call `lifecycle_run` again with phase `build`";
+
+    impl McpTool for ExecutedSuccessProbe {
+        fn descriptor(&self) -> ToolDescriptor {
+            ToolDescriptor {
+                name: "executed_success_probe".to_string(),
+                description: "test probe: returns an executed success with explicit text"
+                    .to_string(),
+                input_schema: serde_json::json!({
+                    "type": "object",
+                    "properties": {},
+                    "additionalProperties": false
+                }),
+            }
+        }
+
+        fn run(&self, _args: &Value, _ctx: &ServerContext) -> Result<ToolOutput, ToolError> {
+            Ok(ToolOutput::executed(parked_report(), PARKED_GUIDANCE))
+        }
+    }
+
+    /// The RED this constructor exists for: `isError: false`, the report
+    /// retained unchanged as the single `structuredContent`, and exactly
+    /// ONE text row carrying the surface's own sentence — never the
+    /// pretty-JSON projection of the report beside it.
+    #[test]
+    fn executed_success_renders_explicit_text_beside_the_same_structured_content() {
+        let v = dispatch("executed_success_probe", Box::new(ExecutedSuccessProbe));
+
+        assert!(
+            v["error"].is_null(),
+            "dispatched, not a transport error: {v}"
+        );
+        // A park is a SUCCESS with a handoff, not an error.
+        assert_eq!(v["result"]["isError"], false);
+        // The report crosses byte for byte — the same single root the
+        // `ok` shape would have carried.
+        assert_eq!(v["result"]["structuredContent"], parked_report());
+        // Exactly one text row, and it is the surface's sentence.
+        assert_eq!(v["result"]["content"].as_array().map(|a| a.len()), Some(1));
+        assert_eq!(v["result"]["content"][0]["type"], "text");
+        assert_eq!(v["result"]["content"][0]["text"], PARKED_GUIDANCE);
+        // …stated as the negative too, because THIS is the mutation the
+        // constructor exists to refuse: a text derived from the report.
+        assert_ne!(
+            v["result"]["content"][0]["text"],
+            Value::String(deterministic_text(&parked_report())),
+            "the dispatcher must not have re-derived the text from the report",
         );
     }
 }
