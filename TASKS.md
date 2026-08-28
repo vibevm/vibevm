@@ -112,9 +112,15 @@ fronts currently in flight. A worker report or old worktree is never completion.
                   final read-only audit + Opus adversarial review; exact
                   contention/order/process-death gates green; 10.87 GB
                   worker worktree reclaimed after patch-equivalence proof).
-            - [ ] A6 selected-node state identity — lower canonical
-                  node-to-`RelPath` mapping already landed at `7bd335e2` /
-                  `b3ff308c`; wire/header/adoption/foreign-park laws next.
+            - [x] A6 selected-node state identity (`7bd335e2` / `b3ff308c`
+                  lower mapping, `e1121d9b` wire, `b4d91749` semantic + CLI
+                  threading, `8debdf2e` specmap, `c82012c3` real multi-member
+                  CLI e2e; Opus-corrected raw-spelling/foreign-park/post-wipe
+                  laws, mutation RED and exact gates green).
+            - [ ] A7–A8 tasks query/MCP adapter — first bind bounded reads to
+                  the final pathname identity, then add the one-epoch selected
+                  workspace seam, optimistic lower reader and strict
+                  `lifecycle_tasks`; run the first coherent boundary panel.
       - [ ] A9–A15: ports-in-place, one `vibe-orchestrator` application
             service, credential-free prompt resolution and hosted/no-spend
             `lifecycle_run` parity.
