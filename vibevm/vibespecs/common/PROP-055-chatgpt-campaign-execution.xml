@@ -276,6 +276,15 @@
       wire/corpus tests). Root runs the real `check-codegen` after staging the
       atom in its human-authored commit/integrated tree. A worker's dirty-tree
       exit is not codegen drift evidence by itself.</DIRTY-CODEGEN-GATE>
+      <PIPELINE-EXIT-GUARD fact="true" status="spec/done">A gate transcript
+      is evidence only when it carries the exit status of the GATE process.
+      Never spell it as `command | tail; echo $?`: that status belongs to
+      `tail`, and an A6A codegen run on 2026-08-28 printed zero over an actual
+      `os error 5` publication failure. Run the gate unpiped, or redirect its
+      output, capture the child status immediately (`$?` / `$LASTEXITCODE` /
+      `PIPESTATUS[0]` as appropriate), and inspect the saved output afterward.
+      A green-looking suffix with a masked parent failure is no verdict.
+      </PIPELINE-EXIT-GUARD>
       <NO-WORKER-FULL-PANEL fact="true" status="spec/done">A worker never runs
       the full panel. It runs the narrow self-verify named by its packet. The
       central coordinator does not run the full panel merely because a worker
@@ -443,6 +452,12 @@ known positive control demonstrates the instrument can fire.
   `python campaigns/packages-2026-09/tasks/chatgpt-cargo.py -- cargo …`; the
   wrapper owns the two-slot ceiling and supplies `CARGO_BUILD_JOBS=4`. Do not
   replace it with a process census, which races across workers.
+- Preserve the actual exit of every gate. Do not pipe a gate into `tail`,
+  `head`, `grep` or a formatter and then report the pipeline's last process as
+  the gate result; redirect first and capture the gate child status directly.
+- For an intended generated-code diff, follow `##DIRTY-CODEGEN-GATE`: prove
+  two emissions identical in the worker and reserve `check-codegen`'s
+  HEAD-clean verdict for root after the generated atom is committed.
 - NO new `unsafe`, FFI, handwritten OS ABI or home-grown security/locking
   primitive unless the packet explicitly grants that architecture. Stop and
   report the missing primitive instead; do not invent a mini-runtime.
