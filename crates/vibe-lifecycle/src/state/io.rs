@@ -66,17 +66,30 @@ pub(crate) fn read_prior(
     project: &Project,
     path: &Path,
 ) -> Result<Option<PriorState>, LifecycleStateError> {
-    let Some(bytes) = project
-        .read_file_bounded(LifecycleStateStore::FILE, STATE_CAP)
-        .map_err(|error| LifecycleStateError::Read {
-            path: path.to_path_buf(),
-            source: std::io::Error::other(format!("{error:#}")),
-        })?
-    else {
+    let Some(bytes) = read_state_bytes(project, path)? else {
         return Ok(None);
     };
     let state = decode(&bytes, path)?;
     Ok(Some(PriorState { bytes, state }))
+}
+
+/// Read the exact bounded state bytes without decoding them.
+///
+/// The optimistic hosted-task reader must retain the first byte string even
+/// when semantic decoding fails, then compare it with a second safe read
+/// before surfacing that failure. The mutating store continues through
+/// [`read_prior`]; this split changes no store behavior and keeps the one
+/// state filename/cap/error mapping in this I/O cell.
+pub(crate) fn read_state_bytes(
+    project: &Project,
+    path: &Path,
+) -> Result<Option<Vec<u8>>, LifecycleStateError> {
+    project
+        .read_file_bounded(LifecycleStateStore::FILE, STATE_CAP)
+        .map_err(|error| LifecycleStateError::Read {
+            path: path.to_path_buf(),
+            source: std::io::Error::other(format!("{error:#}")),
+        })
 }
 
 /// The same read for a caller that holds only the workspace root — the

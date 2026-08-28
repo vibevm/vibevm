@@ -8,6 +8,7 @@ mod identity;
 mod io;
 mod recovery;
 mod store;
+mod tasks;
 mod validate;
 
 pub use error::{LifecycleStateError, PostPublicationRecovery};
@@ -18,6 +19,7 @@ pub use fingerprint::{
 };
 pub use identity::{RunIdentity, SupersededTrace, select_run_identity};
 pub use store::LifecycleStateStore;
+pub use tasks::{LifecycleTasksError, pending_hosted_tasks};
 
 /// The durable-write fault seams. Tests arm them to prove the ordering of a
 /// transaction; they do not exist in a release build.
