@@ -100,6 +100,11 @@ State and each task are capped at 8 MiB. The reader also enforces a 16 MiB
 aggregate across the state bytes and all task documents and refuses more than
 64 delegated rows. The current engine parks at most one row per invocation;
 these wider ceilings bound hostile state without imposing a workflow policy.
+The optimistic equality check retains both exact state byte strings while it
+compares them: the 16 MiB is the returned state+task payload budget, and the
+second verification read is one additional transient state buffer, so peak is
+bounded at 24 MiB. Exact byte identity is the law; it is never weakened to a
+hash comparison to save that bounded buffer.
 
 ### 2.2 Harden the lifecycle state file itself
 
@@ -189,8 +194,10 @@ normalises a stored identity.
   late-boundary refusal that does not erase already reported wipe/scratch
   effects.
 - `lifecycle_tasks` discovers the workspace from the MCP server's selected
-  root and refuses a state owned by another selected node before reading any
-  task.
+  root and, when state carries delegated rows, refuses a park owned by another
+  selected node before reading any task. A valid state with no delegated row
+  returns `idle` from every sibling too — no node-relative task exists to
+  misinterpret — while carrying the exact stored run header/selected spelling.
 
 These are R7.3 hardening atoms and land before either MCP tool.
 
@@ -242,6 +249,25 @@ changes on all four attempts the typed result is `UnstableSnapshot`. The hard
 ceilings remain 64 delegated rows, 8 MiB per state/task document and 16 MiB
 aggregate; the aggregate remaining budget is the cap passed into each bounded
 task read, so the reader never allocates beyond it.
+
+The immediate/provisional split is closed. Selected-workspace discovery,
+capability opens, a first/second state SAFE-READ failure and retry exhaustion
+are immediate: no trustworthy first byte string exists (or the current state
+cannot be safely observed). Absence on the first read returns `absent`
+immediately and linearizes before a concurrent creation. Everything derived
+from present first-state bytes — decode/invariant/foreign-park/count and every
+task outcome — is provisional until exact second-state byte identity. Both
+workspace-root and selected-node `Project` capabilities are pinned once before
+the retry loop and reused for all four attempts; `peek`/ambient reopen is not
+the substrate.
+
+Ordering stays total even over hostile but validator-green state: chain index
+uses the first matching phase, an unknown phase sorts at `usize::MAX`, and the
+execution key is the tie-break. Generated report relations are constructed
+only through private `absent` / `idle` / `parked` constructors, so status
+cannot drift from optional run/nonempty tasks at the operation site. The
+retry RED uses a tasks-cell test hook that can mutate before every second
+state read; a one-shot filesystem race hook is not evidence for four changes.
 
 ### 3.2 JTD report
 
@@ -474,12 +500,14 @@ projection; no surface-conditional wire member or shell subprocess is added.
 ### `lifecycle_tasks`
 
 4. Absent state → `absent`, no filesystem mutation.
-5. Complete valid state → `idle`, empty tasks.
+5. Complete valid state → `idle`, empty tasks, including when the exact stored
+   header names another selected sibling (there is no task path to misread).
 6. Parked phase and slot rows return exact state-owned path/document/scope.
 7. Missing, symlinked, hardlinked, non-UTF8, oversized or replaced task
    refuses without allocating beyond `TASK_CAP + 1`.
 8. An orphan outbox file not named by state is invisible.
-9. State for another selected workspace node refuses before task read.
+9. A delegated state for another selected workspace node refuses before task
+   read; a foreign nondelegated state is the `idle` case in row 5.
 10. Repeated calls reload state; completion becomes `idle` without server
     restart.
 
