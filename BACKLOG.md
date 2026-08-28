@@ -1326,3 +1326,16 @@ structure, and it goes when the file does.
 | @fact:B112-FILED **filed by** | R7.5-P0 independent spec audit + central wisdom harvest, 2026-08-28 |
 
 - @fact:B112-WHY-NOT-IN-P0 **Почему не исправлено вместе с R7.5.** P0 меняет evidence/optional-provider/vocabulary authority; layout-долг охватывает всю foundational spec и runtime documentation. Частичная замена четырёх путей сделала бы диаграмму правдоподобнее, но не истиннее, и спрятала бы blast radius, который аудит уже назвал.
+
+### B-113 — read-only facts scanner не различает Windows junction/reparse directory {#b-113}
+
+| поле | значение |
+|---|---|
+| @fact:B113-ANCHOR **anchor** | [PROP-054 `##FACT-QUERY-CONTRACT`](vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml#FACT-QUERY-CONTRACT) и R7 architecture §2.1 — requirements читает только выбранные host/package source roots и не превращает metadata query в произвольный filesystem crawl |
+| @fact:B113-LOCATOR **locator** | `crates/vibe-facts/src/scan.rs::collect_spec_documents`: `DirEntry::file_type().is_symlink()` честно пропускает обычную symlink, но Windows junction/reparse directory может выглядеть как `is_dir()` и рекурсия пойдёт наружу; общий детектор уже существует как `vibe_safefs::ensure_no_follow_walk` (`component.rs`) |
+| @fact:B113-SEVERITY **severity** | P2 |
+| @fact:B113-DISPOSITION **disposition** | `open` — закрыть до P3 requirements surface: провести каждую директорию/документ через единый no-follow/reparse preflight либо capability-relative reader, не копируя `FILE_ATTRIBUTE_REPARSE_POINT`; сохранить обычный moved-clone in-place slot и добавить Windows junction/injected-reparse RED. Корень, который caller объявляет trusted source root, остаётся отдельной authority и не должен случайно запрещать законный in-place slot |
+| @fact:B113-FILED **filed by** | центральная приёмка R7.5 P2/A1 `vibe-facts` scanner, 2026-08-28 |
+
+- @fact:B113-NOT-A-REGRESSION **Почему A1 принят, а долг всё равно P2.** Удалённый CLI-private scanner тоже рекурсировал через `path.is_dir()` и имел ту же junction-щель; A1 улучшил обычные symlink files/dirs и сделал split-brain/identity общими, но не заявлял новую Windows reparse механику. Новый public query расширяет число callers, поэтому известную щель нельзя переносить через P3 как «старое поведение».
+- @fact:B113-FIX-SHAPE **Почему не писать четвёртый OS helper.** `vibe-safefs` уже проверяет symlink + `FILE_ATTRIBUTE_REPARSE_POINT` на каждом компоненте и умеет инъекционные race REDы. Локальный `cfg(windows)` бит в `vibe-facts` снова создаст две containment-грамматики; допустим либо прямой lower dependency, либо маленький общий read-only capability API, но не копия константы.
