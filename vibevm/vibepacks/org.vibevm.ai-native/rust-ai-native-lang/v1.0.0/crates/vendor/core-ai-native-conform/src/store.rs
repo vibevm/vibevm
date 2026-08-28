@@ -94,9 +94,18 @@ impl Store {
     }
 
     fn slot(&self, frontend: &dyn Frontend, content_hash: &str) -> PathBuf {
+        // A raw `sha256:<hex>` filename is not portable: on Windows the
+        // colon names an NTFS alternate data stream. Thousands of cache
+        // entries then accumulate as streams on one zero-byte `sha256` file
+        // until the volume returns ERROR_FILE_SYSTEM_LIMITATION (665).
+        // The algorithm stays explicit while the ordinary filename uses the
+        // same portable separator every host can create.
+        let digest = content_hash
+            .strip_prefix("sha256:")
+            .unwrap_or(content_hash);
         self.root
             .join(format!("{}-{}", frontend.id(), frontend.version()))
-            .join(format!("{content_hash}.json"))
+            .join(format!("sha256-{digest}.json"))
     }
 
     /// Extract facts for every workspace source file (Rust layout:
