@@ -10,7 +10,9 @@
 //!
 //! - **Cell construction** — the R-001 registry. The caller builds its
 //!   registry/solver cells and hands them in behind [`InstallSource`];
-//!   construction sites stay at the CLI's composition root.
+//!   construction sites live in the shared `vibe-package-source`
+//!   composition (since R7.4 A15a) — no surface constructs a cell of its
+//!   own.
 //! - **Interaction** — confirmation prompts, TTY detection, and report
 //!   rendering. [`plan`] returns a [`Plan`] the caller presents and
 //!   confirms; [`apply`] runs only after the caller said yes. Progress

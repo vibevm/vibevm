@@ -30,6 +30,10 @@ vibe-agent-projection.workspace = true
 vibe-llm.workspace = true
 vibe-registry.workspace = true
 vibe-resolver.workspace = true
+# The shared package-source composition (R7.4 A15a): the CLI projects its
+# InstallArgs onto the crate's neutral options and injects its own
+# PROP-008 qualifier; the same crate later serves the hosted MCP adapter.
+vibe-package-source.workspace = true
 progress-core.workspace = true
 vibe-check.workspace = true
 # The PROP-045 projection dispatch (`load_spec_text`): every spec-text read

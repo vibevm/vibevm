@@ -6,10 +6,12 @@
 //! selection, the validate/install barrier and slot continuation, phase
 //! dispatch and removed-row reconciliation, package-binding composition, the
 //! report-neutral success/park/failure values, and the command-level compile
-//! [`trace`] owner and its consuming funnel. Terminal and JSON rendering,
-//! interactive confirmation, argument grammar, registry cell composition,
-//! provider construction and the registered report families stay in the
-//! surfaces, behind [`ports`].
+//! [`trace`] owner and its consuming funnel. The neutral package-source and
+//! registry-cell composition lives in the separate `vibe-package-source`
+//! crate, which implements this crate's package-source port; argument
+//! grammar, surface short-name qualification, provider construction,
+//! terminal and JSON rendering, and the registered report families stay in
+//! the surfaces, behind [`ports`].
 //!
 //! Provider, model and credential configuration is not a planning fact and
 //! cannot cross this boundary: the surface injects an already-built

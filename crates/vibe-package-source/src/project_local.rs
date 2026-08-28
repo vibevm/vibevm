@@ -14,6 +14,9 @@
 //! source install all discover the same `<project_root>/packages/` — every
 //! checkout of the project carries the same tree, so a lock entry resolved
 //! from here is reproducible across machines (PROP-030 §5).
+//!
+//! Moved verbatim from `vibe-cli/src/commands/install/project_local.rs`
+//! (R7.4 A15a) with the builder that reads it.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#project-local");
 
@@ -23,10 +26,8 @@ use std::path::{Path, PathBuf};
 /// directory exists. `None` otherwise (the project has no in-tree
 /// packages and the feature is inert for it).
 ///
-/// `project_root` is the directory carrying the project's `vibe.toml` — the
-/// caller resolves it via [`super::resolve_project_root`].
-///
-/// [`super::resolve_project_root`]: super::resolve_project_root
+/// `project_root` is the directory carrying the project's `vibe.toml`,
+/// resolved by the surface before construction begins.
 pub(crate) fn project_packages_root(project_root: &Path) -> Option<PathBuf> {
     let packages = project_root.join(vibe_core::layout::current_packages_root());
     packages.is_dir().then_some(packages)

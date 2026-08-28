@@ -1,23 +1,22 @@
 //! The package-source construction port's CLI adapter.
 //!
 //! The shared application service consumes an opaque
-//! [`vibe_orchestrator::ports::PackageSource`]; everything that makes one — the
-//! registry cells, the `--solver` / `--registry` / embedded-precedence flags,
-//! and the PROP-008 §2.7 ambiguity exit code — stays here at the CLI's
-//! composition root.
+//! [`vibe_orchestrator::ports::PackageSource`]; everything that makes one —
+//! the neutral options projected from this surface's `InstallArgs`, the
+//! `--git` source-flag grammar, and the PROP-008 §2.7 ambiguity exit code —
+//! stays here at the CLI's composition root.
 
 use anyhow::{Context, Result};
 use vibe_core::PackageRef;
 use vibe_core::manifest::{Lockfile, Manifest};
-use vibe_orchestrator::ports::{
-    InstallManifestMutation, PackageSource, PackageSourceBuild, PackageSourceFactory,
-};
+use vibe_orchestrator::ports::{InstallManifestMutation, PackageSourceBuild, PackageSourceFactory};
+use vibe_package_source::{InstallResolver, PackageQualifier, RegistryPackageSource};
 use vibe_workspace::Workspace;
 
 use crate::cli::InstallArgs;
 
 use super::git_source_flag::{apply_git_source_flag, selected_node_manifest_mut};
-use super::{InstallResolver, build_install_resolver};
+use super::package_source_options;
 
 /// The M1.15 `--git` source declaration, as this surface's own mutation.
 ///
@@ -71,15 +70,26 @@ impl InstallManifestMutation for CliGitSourceMutation<'_> {
     }
 }
 
-/// PROP-008 §2.6 qualification, at the CLI's own input boundary.
+/// The CLI's PROP-008 §2.6 qualification, injected into the shared
+/// [`RegistryPackageSource`].
 ///
-/// No context is added: the ambiguity refusal carries
-/// [`crate::exit_code::InstallError::AmbiguousPackage`] (exit 7) and the exit
-/// mapper reads it by downcasting, so wrapping it here would be invisible in
-/// the message and fatal to the code.
-impl PackageSource for InstallResolver {
-    fn qualify(&self, pkgref: &PackageRef, locked: &Lockfile) -> Result<PackageRef> {
-        crate::commands::short_name::qualify(self, pkgref, locked)
+/// No context is added: the refusal keeps its historical top-level wording
+/// (the PROP-008 §2.7 collision message the operator has always seen), and
+/// this adapter invents no second message beside it. The typed exit-7
+/// identity — [`crate::exit_code::InstallError::AmbiguousPackage`], read by
+/// the exit mapper through a chain-walking downcast — survives an ordinary
+/// context wrapper; replacing or translating the typed error would destroy
+/// it.
+pub(crate) struct CliQualifier;
+
+impl PackageQualifier for CliQualifier {
+    fn qualify(
+        &self,
+        resolver: &InstallResolver,
+        pkgref: &PackageRef,
+        locked: &Lockfile,
+    ) -> Result<PackageRef> {
+        crate::commands::short_name::qualify(resolver, pkgref, locked)
     }
 }
 
@@ -94,15 +104,23 @@ pub(crate) struct CliPackageSourceFactory<'a> {
 }
 
 impl PackageSourceFactory for CliPackageSourceFactory<'_> {
-    fn build(&self, input: PackageSourceBuild<'_>) -> Result<Box<dyn PackageSource>> {
-        Ok(Box::new(build_install_resolver(
-            self.args,
+    fn build(
+        &self,
+        input: PackageSourceBuild<'_>,
+    ) -> Result<Box<dyn vibe_orchestrator::ports::PackageSource>> {
+        let options = package_source_options(self.args);
+        let resolver = vibe_package_source::build_install_resolver(
+            &options,
             input.manifest,
             input.embedded_root,
             input.project_root,
             input.global,
             input.offline,
             input.locked,
-        )?))
+        )?;
+        Ok(Box::new(RegistryPackageSource::new(
+            resolver,
+            Box::new(CliQualifier),
+        )))
     }
 }

@@ -4094,6 +4094,7 @@ dependencies = [
  "vibe-llm",
  "vibe-mcp",
  "vibe-orchestrator",
+ "vibe-package-source",
  "vibe-publish",
  "vibe-registry",
  "vibe-resolver",
@@ -4282,6 +4283,22 @@ dependencies = [
  "vibe-test-support",
  "vibe-wire",
  "vibe-workspace",
+]
+
+[[package]]
+name = "vibe-package-source"
+version = "1.0.0"
+dependencies = [
+ "anyhow",
+ "core-ai-native-specmark",
+ "tempfile",
+ "toml 0.9.12+spec-1.1.0",
+ "vibe-core",
+ "vibe-install",
+ "vibe-orchestrator",
+ "vibe-registry",
+ "vibe-resolver",
+ "vibe-test-support",
 ]
 
 [[package]]

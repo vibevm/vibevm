@@ -1,0 +1,32 @@
+[package]
+name = "vibe-package-source"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license-file.workspace = true
+publish.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "The one production package-source composition - the InstallResolver dispatch, its R-001 cell-selection registry, and the qualified orchestrator source shared by every surface"
+
+[dependencies]
+anyhow.workspace = true
+specmark.workspace = true
+vibe-core.workspace = true
+vibe-install.workspace = true
+# The `ports::PackageSource` supertrait the qualified source implements; the
+# composition itself never calls back up into the orchestrator.
+vibe-orchestrator.workspace = true
+vibe-registry.workspace = true
+vibe-resolver.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true
+# The dependency exact-set RED parses this crate's own Cargo.toml.
+toml.workspace = true
+# Linking this isolates the test process's per-user settings home before the
+# first `#[test]` runs (DRIFT-020): the builder's offline bail and the
+# default-options fetch tests consult the machine store / settings paths and
+# must never reach the operator's real `~/.vibe`.
+vibe-test-support.workspace = true

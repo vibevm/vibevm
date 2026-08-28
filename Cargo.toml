@@ -23,6 +23,7 @@ members = [
     "crates/vibe-llm",
     "crates/vibe-mcp",
     "crates/vibe-orchestrator",
+    "crates/vibe-package-source",
     "crates/vibe-check",
     "crates/vibe-publish",
     "crates/vibe-spec",
@@ -51,6 +52,7 @@ default-members = [
     "crates/vibe-llm",
     "crates/vibe-mcp",
     "crates/vibe-orchestrator",
+    "crates/vibe-package-source",
     "crates/vibe-check",
     "crates/vibe-publish",
     "crates/vibe-spec",
@@ -95,6 +97,9 @@ vibe-safefs = { path = "crates/vibe-safefs", version = "1.0.0" }
 vibe-mcp = { path = "crates/vibe-mcp", version = "1.0.0" }
 # The R7.4 surface-neutral application layer shared by CLI and MCP.
 vibe-orchestrator = { path = "crates/vibe-orchestrator", version = "1.0.0" }
+# The R7.4 A15a shared package-source composition: the one production
+# InstallResolver + its R-001 cells, built identically by every surface.
+vibe-package-source = { path = "crates/vibe-package-source", version = "1.0.0" }
 vibe-check = { path = "crates/vibe-check", version = "1.0.0" }
 vibe-publish = { path = "crates/vibe-publish", version = "1.0.0" }
 vibe-spec = { path = "crates/vibe-spec", version = "1.0.0" }

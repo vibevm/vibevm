@@ -6,9 +6,10 @@
 //! the post-durability world — is the shared application service in
 //! `vibe-orchestrator`. What remains here is exactly the CLI's own share:
 //! argument grammar and input normalisation (pkgref parsing, PROP-008 §2.6
-//! short-name qualification), registry cell construction behind the
-//! [`vibe_install::InstallSource`] seam (R-001 — the registry module builds the
-//! cells), the interactive confirmation, terminal/JSON rendering, and the
+//! short-name qualification), the package-source composition behind the
+//! [`vibe_install::InstallSource`] seam (R-001 — built by the shared
+//! `vibe-package-source` crate from this surface's projected options), the
+//! interactive confirmation, terminal/JSON rendering, and the
 //! registered report family every failure is classified into.
 //!
 //! ## Where the compile trace enters
@@ -28,7 +29,6 @@ mod direct;
 mod draft;
 mod events;
 mod observer;
-mod project_local;
 mod report;
 mod resolver;
 
@@ -37,7 +37,6 @@ pub(crate) use confirm::CliConfirmGate;
 pub(crate) use direct::run as run_direct;
 pub(crate) use draft::InstallDraft;
 pub(crate) use observer::{CliInstallObserver, CliRegistryEnvironment, LifecycleSlotObserver};
-pub(crate) use project_local::project_packages_root;
 pub(crate) use report::{HookReportPresentation, LifecycleHookView};
 pub(crate) use resolver::{
     CliGitSourceMutation, CliPackageSourceFactory, InstallResolver, build_install_resolver,
