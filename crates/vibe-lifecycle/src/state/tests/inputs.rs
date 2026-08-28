@@ -1,10 +1,10 @@
-//! The one-walk declared-input REDs (R7.5 P2/A4a).
+//! The one-walk declared-input REDs (R7.5 P2/A4a, extended by A4b).
 //!
 //! The refactor replaced HEAD's one-walk-PER-PATTERN input collection with a
 //! single walk serving two projections: the legacy pattern-major fingerprint
 //! replay and the deduplicated `sha256:vibe-input-manifest-v1` witness. These
 //! cases pin BOTH halves — byte-compatibility against a test-only verbatim
-//! copy of the old algorithm, the one-walk/one-read observers, the
+//! copy of the old algorithm, the one-walk/zero-fallback observers, the
 //! overlap/duplicate semantics, the `None` vs `Some([])` boundary, the E1/E4
 //! mutation axes, order determinism, the frozen manifest framing against an
 //! independent longhand recompute plus pinned vectors, and the checked
@@ -17,9 +17,10 @@ use sha2::{Digest, Sha256};
 use vibe_core::manifest::ExtensionKey;
 use vibe_wire::generated::lifecycle::e1::context::SlotTarget;
 
-use super::{context, row};
+use super::support::{context, row};
 use crate::HandlerExecution;
-use crate::state::fingerprint::inputs::{checked_file_count, checked_total_bytes, legacy, observe};
+use crate::state::fingerprint::inputs::{checked_file_count, checked_total_bytes, observe};
+use crate::state::fingerprint::legacy;
 use crate::state::{
     fingerprint_execution, fingerprint_handler_execution_with, prepare_handler_execution_with,
 };
@@ -44,6 +45,14 @@ fn prepared(
     let subject = row(root, message, "0.1.0", inputs);
     let ctx = context(root, subject.effective_config().unwrap());
     prepare_handler_execution_with(&HandlerExecution::from_row(&subject), &ctx, None).unwrap()
+}
+
+/// The measured half of a prepared manifest — every case in this file
+/// measures a clean tree, so a refusal here is a bug, not an outcome.
+fn measured(
+    manifest: &crate::state::PreparedInputManifest,
+) -> &vibe_wire::generated::lifecycle_state::StateDigestWitness {
+    manifest.measured().unwrap()
 }
 
 /// The one-walk production fingerprint must be byte-identical to HEAD's
@@ -90,11 +99,15 @@ fn one_walk_fingerprints_match_the_legacy_per_pattern_reference_exactly() {
     );
 }
 
-/// The observers prove the physical law: ONE `WalkDir` construction for a
-/// multi-pattern call, one raw read per union file, and none at all for an
-/// absent or authored-empty declaration.
+/// The observers prove the physical law the two-read detection law leaves
+/// intact: ONE `WalkDir` construction for a multi-pattern call, ZERO raw
+/// fallback reads on a clean tree (the certified observation feeds both
+/// projections), and none at all for an absent or authored-empty
+/// declaration. The retired A4a "one raw read per union file" claim is
+/// deliberately NOT re-asserted: a clean accepted file now costs two
+/// bounded capability reads by normative design.
 #[test]
-fn one_walk_and_one_raw_read_per_union_file() {
+fn one_walk_and_zero_raw_fallbacks_on_a_clean_tree() {
     let dir = project();
     fs::write(dir.path().join("a.txt"), "one").unwrap();
     fs::write(dir.path().join("b.log"), "log").unwrap();
@@ -111,23 +124,25 @@ fn one_walk_and_one_raw_read_per_union_file() {
     observe::reset();
     fingerprint_execution(&subject, &ctx).unwrap();
     assert_eq!(observe::walks(), 1, "three patterns must share ONE walk");
-    // The union of the three patterns: a.txt, b.log, src/main.rs, vibe.lock,
-    // vibe.toml — `**` selects all five, the others re-select two of them.
-    assert_eq!(observe::reads(), 5, "each union file is read exactly once");
+    assert_eq!(
+        observe::raw_fallbacks(),
+        0,
+        "a clean stable file never needs its raw fallback"
+    );
 
     observe::reset();
     let absent = row(dir.path(), "absent", "0.1.0", None);
     let absent_ctx = context(dir.path(), absent.effective_config().unwrap());
     fingerprint_execution(&absent, &absent_ctx).unwrap();
     assert_eq!(observe::walks(), 0);
-    assert_eq!(observe::reads(), 0);
+    assert_eq!(observe::raw_fallbacks(), 0);
 
     observe::reset();
     let empty = row(dir.path(), "empty", "0.1.0", Some(vec![]));
     let empty_ctx = context(dir.path(), empty.effective_config().unwrap());
     fingerprint_execution(&empty, &empty_ctx).unwrap();
     assert_eq!(observe::walks(), 0, "an authored empty list walks nothing");
-    assert_eq!(observe::reads(), 0);
+    assert_eq!(observe::raw_fallbacks(), 0);
 }
 
 /// Overlap and duplication repeat bytes in the legacy fingerprint stream
@@ -149,27 +164,29 @@ fn overlap_repeats_legacy_bytes_but_the_manifest_counts_the_union_once() {
     let overlap_manifest = overlap.input_manifest.as_ref().unwrap();
     let duplicate_manifest = duplicate.input_manifest.as_ref().unwrap();
 
-    assert_eq!(single_manifest.witness.files, Some(1));
-    assert_eq!(single_manifest.witness.bytes, Some("3".to_string()));
+    assert_eq!(measured(single_manifest).files, Some(1));
+    assert_eq!(measured(single_manifest).bytes, Some("3".to_string()));
     assert_eq!(
-        overlap_manifest.witness.files,
+        measured(overlap_manifest).files,
         Some(1),
         "two patterns selecting one file witness ONE file",
     );
     assert_eq!(
-        overlap_manifest.witness.bytes,
+        measured(overlap_manifest).bytes,
         Some("3".to_string()),
         "overlapping patterns count the bytes once, not twice",
     );
-    assert_eq!(duplicate_manifest.witness.files, Some(1));
-    assert_eq!(duplicate_manifest.witness.bytes, Some("3".to_string()));
+    assert_eq!(measured(duplicate_manifest).files, Some(1));
+    assert_eq!(measured(duplicate_manifest).bytes, Some("3".to_string()));
     assert_ne!(
-        overlap_manifest.witness.digest, single_manifest.witness.digest,
+        measured(overlap_manifest).digest,
+        measured(single_manifest).digest,
         "the pattern list is part of the manifest's identity, so an added \
          pattern moves the digest even when the file union is unchanged",
     );
     assert_ne!(
-        duplicate_manifest.witness.digest, single_manifest.witness.digest,
+        measured(duplicate_manifest).digest,
+        measured(single_manifest).digest,
         "a duplicated pattern is retained in the pattern list",
     );
     assert_eq!(
@@ -190,23 +207,26 @@ fn absent_inputs_have_no_manifest_and_authored_empty_has_a_real_empty_one() {
     let empty = prepared(dir.path(), "empty", Some(vec![]));
     let manifest = empty.input_manifest.as_ref().unwrap();
     assert!(manifest.patterns.is_empty());
-    assert_eq!(manifest.witness.algorithm, "sha256:vibe-input-manifest-v1");
-    assert_eq!(manifest.witness.files, Some(0));
-    assert_eq!(manifest.witness.bytes, Some("0".to_string()));
+    assert_eq!(
+        measured(manifest).algorithm,
+        "sha256:vibe-input-manifest-v1"
+    );
+    assert_eq!(measured(manifest).files, Some(0));
+    assert_eq!(measured(manifest).bytes, Some("0".to_string()));
     // Pinned vector: seed + pattern_count "0" + file_count "0" + total "0".
     assert_eq!(
-        manifest.witness.digest,
+        measured(manifest).digest,
         "sha256:50124f0168f6b08e9c0ea72a080cbcdcb2295927a9acfa73381d4ffc20c4dda8",
     );
 
     fs::write(dir.path().join("a.txt"), "one").unwrap();
     let content = prepared(dir.path(), "content", Some(vec!["*.txt".into()]));
     let manifest = content.input_manifest.as_ref().unwrap();
-    assert_eq!(manifest.witness.files, Some(1));
-    assert_eq!(manifest.witness.bytes, Some("3".to_string()));
+    assert_eq!(measured(manifest).files, Some(1));
+    assert_eq!(measured(manifest).bytes, Some("3".to_string()));
     // Pinned vector: ["*.txt"] selecting a.txt = "one".
     assert_eq!(
-        manifest.witness.digest,
+        measured(manifest).digest,
         "sha256:b676f0a870baaf83ad39375642ef43fa0e328bba0d59712779e9570d3a284060",
     );
 }
@@ -288,9 +308,11 @@ fn the_union_and_order_are_stable_under_creation_order_permutation() {
     let digest_of = |root: &Path| {
         prepared(root, "one", Some(vec!["**/*.txt".into()]))
             .input_manifest
+            .as_ref()
+            .map(measured)
             .unwrap()
-            .witness
             .digest
+            .clone()
     };
     assert_eq!(digest_of(first.path()), digest_of(second.path()));
 
@@ -344,12 +366,12 @@ fn the_manifest_framing_matches_an_independent_longhand_recompute() {
     frame(&mut hash, "bytes", b"two\n");
     frame(&mut hash, "total_bytes", b"7");
     assert_eq!(
-        manifest.witness.digest,
+        measured(&manifest).digest,
         format!("sha256:{:x}", hash.finalize()),
         "the production framing must equal the frozen recipe",
     );
-    assert_eq!(manifest.witness.files, Some(2));
-    assert_eq!(manifest.witness.bytes, Some("7".to_string()));
+    assert_eq!(measured(&manifest).files, Some(2));
+    assert_eq!(measured(&manifest).bytes, Some("7".to_string()));
     assert_eq!(
         manifest.patterns,
         vec!["*.txt".to_string(), "sub/*.txt".to_string()],

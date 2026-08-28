@@ -9,16 +9,17 @@ use specmark::spec;
 use vibe_wire::generated::lifecycle::e1::context::{Context, Project, RunAgentMode, World};
 use vibe_wire::generated::lifecycle::e1::reply::ReplyStatus;
 use vibe_wire::generated::lifecycle_state::{
-    ExecutionRecord, ExecutionRecordStatus, StateArtifact,
+    ExecutionRecord, ExecutionRecordStatus, StateArtifact, StateInputMeasurement,
 };
 
 use crate::agent::PreparedAgent;
 use crate::delegation::Delegation;
 use crate::handlers::{HandlerRuntime, HandlerStreams};
 use crate::lease::LifecycleLease;
+use crate::state::prepare_handler_execution_with;
 use crate::{
     ContributionOutcome, DispatchError, ExecutionSession, HandlerExecution, LifecycleStateStore,
-    RunMetadata, fingerprint_handler_execution_with, preparation_error_fingerprint_for_identity,
+    RunMetadata, preparation_error_fingerprint_for_identity,
 };
 
 /// A shared run is passed through install's slot callbacks and rebound after
@@ -31,6 +32,16 @@ pub type LifecycleRunHandle = Arc<Mutex<LifecycleRun>>;
 pub enum ExecutionReuse {
     FreshnessAware,
     Always,
+}
+
+/// The two pre-dispatch state values the hosted branch either checkpoints on
+/// satisfaction or deliberately drops on park. One value keeps that private
+/// transition below the argument-count ceiling and makes their shared
+/// observation epoch explicit.
+#[derive(Debug)]
+pub(super) struct PreparedRecordEvidence {
+    fingerprint: String,
+    input_measurement: Option<StateInputMeasurement>,
 }
 
 #[derive(Debug, Clone)]
@@ -208,9 +219,13 @@ impl LifecycleRun {
         if self.state.is_none() {
             return self.dispatch_untracked(execution, envelope, runtime, prepared.as_ref());
         }
-        let fingerprint =
-            match fingerprint_handler_execution_with(execution, &envelope, prepared.as_ref()) {
-                Ok(fingerprint) => fingerprint,
+        // ONE preparation: the fingerprint, its declaration sibling and the
+        // input measurement below all come from this single pre-dispatch
+        // observation. Nothing here is recomputed after the handler may have
+        // changed its own inputs (PROP-054 `##EVIDENCE-MEASUREMENT-CARRIAGE`).
+        let prepared_inputs =
+            match prepare_handler_execution_with(execution, &envelope, prepared.as_ref()) {
+                Ok(prepared_inputs) => prepared_inputs,
                 Err(source) => {
                     let failure = LifecycleRunError::Fingerprint {
                         key: key.clone(),
@@ -221,6 +236,11 @@ impl LifecycleRun {
                     );
                 }
             };
+        // The durable measurement this invocation attributes to itself —
+        // present only when the declared scope was actually measured, never
+        // a partial digest and never a copy of a prior row's claim.
+        let measurement = prepared_inputs.state_measurement(&key, phase, &self.run_id);
+        let fingerprint = prepared_inputs.fingerprint;
         // A HOSTED agent row is freshness-aware whatever the caller asked for.
         //
         // `Always` exists so a slot contribution re-runs every time its slot is
@@ -285,11 +305,13 @@ impl LifecycleRun {
                         status: ExecutionRecordStatus::Fresh,
                         tasks: Vec::new(),
                         scope: None,
-                        // A fresh skip IS an observation the R7.5 P2 pass
-                        // will checkpoint; until that pass lands, this
-                        // runner records no witness rather than reusing
-                        // the prior row's as if it had been re-measured.
-                        input_measurement: None,
+                        // A fresh skip IS an observation: the fingerprint
+                        // pass above re-walked the declared inputs, so the
+                        // CURRENT invocation checkpoints its own measurement
+                        // under its own run id — never a copy of the prior
+                        // row's claim. A refused current observation writes
+                        // `None` here and drops the old claim honestly.
+                        input_measurement: measurement,
                     },
                 )?;
             return Ok(ExecutionTransition {
@@ -315,7 +337,10 @@ impl LifecycleRun {
                 envelope,
                 prepared,
                 phase,
-                fingerprint,
+                PreparedRecordEvidence {
+                    fingerprint,
+                    input_measurement: measurement,
+                },
                 started,
             );
         }
@@ -326,7 +351,9 @@ impl LifecycleRun {
             .ok_or(LifecycleRunError::Unbound)?
             .dispatch_execution(execution, envelope.clone(), runtime, prepared.as_ref());
         match dispatched {
-            Ok(outcome) => self.checkpoint_success(key, phase, fingerprint, started, outcome),
+            Ok(outcome) => {
+                self.checkpoint_success(key, phase, fingerprint, started, outcome, measurement)
+            }
             Err(source) => {
                 let record = ExecutionRecord {
                     artifacts: Vec::new(),
@@ -370,6 +397,7 @@ impl LifecycleRun {
         fingerprint: String,
         started: Instant,
         outcome: ContributionOutcome,
+        measurement: Option<StateInputMeasurement>,
     ) -> Result<ExecutionTransition, LifecycleRunError> {
         let status = match outcome.reply.status {
             ReplyStatus::Ok => ExecutionRecordStatus::Ok,
@@ -404,7 +432,9 @@ impl LifecycleRun {
                     status: status.clone(),
                     tasks: Vec::new(),
                     scope: None,
-                    input_measurement: None,
+                    // The pre-dispatch measurement of THIS invocation, under
+                    // its own run id (PROP-054 `##EVIDENCE-MEASUREMENT-CARRIAGE`).
+                    input_measurement: measurement,
                 },
             )?;
         Ok(ExecutionTransition {

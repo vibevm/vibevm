@@ -22,7 +22,7 @@ use crate::delegation::Delegation;
 use crate::handlers::HandlerStreams;
 use crate::{ExecutionTransition, HandlerExecution, LifecycleRun, LifecycleRunError};
 
-use super::elapsed_ms;
+use super::{PreparedRecordEvidence, elapsed_ms};
 
 impl LifecycleRun {
     /// The hosted handoff transition for one agent execution in resolved
@@ -44,9 +44,13 @@ impl LifecycleRun {
         envelope: Context,
         prepared: &PreparedAgent,
         phase: &str,
-        fingerprint: String,
+        evidence: PreparedRecordEvidence,
         started: Instant,
     ) -> Result<ExecutionTransition, LifecycleRunError> {
+        let PreparedRecordEvidence {
+            fingerprint,
+            input_measurement: measurement,
+        } = evidence;
         let key = execution.key();
         let root = std::path::PathBuf::from(&envelope.project.root);
         if !self.force {
@@ -86,10 +90,11 @@ impl LifecycleRun {
                             // A satisfied row is no longer delegated, so it
                             // carries no scope tag either.
                             scope: None,
-                            // Nor a measurement: the hosted resume adopts
-                            // the row, it does not re-walk the declared
-                            // inputs (that is the R7.5 P2 pass's work).
-                            input_measurement: None,
+                            // The resume invocation's own pre-probe
+                            // measurement — `execute_one` walked the declared
+                            // inputs before this branch — attributed to the
+                            // adopting run id, never a copied prior claim.
+                            input_measurement: measurement,
                         },
                     )?;
                 // The success checkpoint is durable; only now may the exact
@@ -154,6 +159,10 @@ impl LifecycleRun {
                     } else {
                         ExecutionRecordScope::Phase
                     }),
+                    // A parked row has executed nothing; the resume
+                    // re-measures before it accepts the row, so no
+                    // measurement is attributed to a run that produced no
+                    // work.
                     input_measurement: None,
                 },
             )?;

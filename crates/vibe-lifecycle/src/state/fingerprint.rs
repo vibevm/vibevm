@@ -1,6 +1,10 @@
 //! Epoch/domain-separated deterministic execution fingerprints.
 
+mod declaration;
 pub(crate) mod inputs;
+#[cfg(test)]
+pub(crate) mod legacy;
+pub(crate) mod stable;
 
 use std::path::{Component, Path};
 
@@ -289,8 +293,16 @@ struct FramedHash(Sha256);
 
 impl FramedHash {
     fn new() -> Self {
+        Self::seeded(b"vibe-lifecycle-fingerprint\0epoch=1\0")
+    }
+    /// The declaration fingerprint's own epoch domain — a second identity,
+    /// never a relabelling of the execution fingerprint above.
+    fn declaration() -> Self {
+        Self::seeded(b"vibe-execution-declaration-v1\0epoch=1\0")
+    }
+    fn seeded(seed: &[u8]) -> Self {
         let mut hash = Sha256::new();
-        hash.update(b"vibe-lifecycle-fingerprint\0epoch=1\0");
+        hash.update(seed);
         Self(hash)
     }
     fn field(&mut self, label: &str, bytes: &[u8]) {
@@ -298,6 +310,16 @@ impl FramedHash {
         self.0.update(label.as_bytes());
         self.0.update((bytes.len() as u64).to_be_bytes());
         self.0.update(bytes);
+    }
+    /// An ASCII `0|1` presence byte under `label` — the explicit
+    /// optional-member frame the declaration recipe freezes, so an absent
+    /// value can never collide with an authored empty one.
+    fn presence(&mut self, label: &str, present: bool) {
+        self.field(label, if present { b"1" } else { b"0" });
+    }
+    /// A canonical decimal UTF-8 count under `label`.
+    fn count(&mut self, label: &str, count: usize) {
+        self.field(label, count.to_string().as_bytes());
     }
     fn json<T: serde::Serialize>(
         &mut self,

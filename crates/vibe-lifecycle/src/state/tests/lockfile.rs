@@ -13,7 +13,7 @@ use std::fs;
 
 use vibe_core::manifest::Lockfile;
 
-use super::{context, row};
+use super::support::{context, row};
 use crate::fingerprint_execution;
 
 /// Write `lockfile` where the fixture context expects it, and return the

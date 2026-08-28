@@ -123,6 +123,21 @@ pub(crate) fn row(config_toml: &str, prompt: &str) -> ExtensionRegistryRow {
     row_at(config_toml, prompt, PathBuf::from(PROVIDER_ROOT))
 }
 
+/// The same planned agent contribution with a declared input scope — the
+/// seam the measurement-carriage reds need (A4b).
+pub(crate) fn row_with_inputs(
+    config_toml: &str,
+    prompt: &str,
+    inputs: Option<Vec<String>>,
+) -> ExtensionRegistryRow {
+    registry_with(config_toml, prompt, PathBuf::from(PROVIDER_ROOT), inputs)
+        .plan("phase:create".parse().unwrap(), SelectorSubject::unscoped())
+        .first()
+        .copied()
+        .expect("one planned agent contribution")
+        .clone()
+}
+
 /// The same planned agent contribution, but executing from an EXPLICIT
 /// provider root — the seam the hosted-backend reds need, because the real
 /// resolver reads the provider's prompt documents from disk and the shared
@@ -132,7 +147,7 @@ pub(crate) fn row_at(
     prompt: &str,
     provider_root: PathBuf,
 ) -> ExtensionRegistryRow {
-    registry(config_toml, prompt, provider_root)
+    registry_with(config_toml, prompt, provider_root, None)
         .plan("phase:create".parse().unwrap(), SelectorSubject::unscoped())
         .first()
         .copied()
@@ -140,7 +155,12 @@ pub(crate) fn row_at(
         .clone()
 }
 
-fn registry(config_toml: &str, prompt: &str, provider_root: PathBuf) -> ExtensionRegistry {
+fn registry_with(
+    config_toml: &str,
+    prompt: &str,
+    provider_root: PathBuf,
+    inputs: Option<Vec<String>>,
+) -> ExtensionRegistry {
     let config = (!config_toml.trim().is_empty()).then(|| {
         ExtensionConfig::from_table(
             toml::from_str::<toml::Table>(config_toml).expect("fixture config is valid TOML"),
@@ -154,7 +174,7 @@ fn registry(config_toml: &str, prompt: &str, provider_root: PathBuf) -> Extensio
         },
         config,
         auto: None,
-        inputs: None,
+        inputs,
         applies_to: None,
         compiler_internals: None,
         pass: None,

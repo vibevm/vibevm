@@ -7,12 +7,21 @@
 use std::fs;
 use std::path::Path;
 
+use vibe_core::manifest::{ExtensionConfig, ExtensionDecl, ExtensionHandler, ExtensionsControl};
+use vibe_core::{ContentHash, Group, PackageKind, PackageName};
+use vibe_wire::generated::lifecycle::e1::context::{
+    Context, Execution, Io, Project, Run, RunAgentMode, World,
+};
 use vibe_wire::generated::lifecycle_state::{
     ExecutionRecordStatus, SlotContinuation, SlotTargetRecord,
 };
 
 use super::{RUN_ID, lease, record_for};
 use crate::LifecycleStateStore;
+use crate::{
+    DependencyExtensionSource, DependencyProvider, DependencyProviderId, ExtensionWorld,
+    HostExtensionSource, HostIdentity, HostProvider, SelectorSubject, collect_extensions,
+};
 
 pub(super) const KEY: &str = "org.demo/tools#produce";
 pub(super) const OTHER: &str = "org.demo/tools#consume";
@@ -75,4 +84,146 @@ pub(super) fn vibe_names(root: &Path) -> Vec<String> {
         .collect();
     names.sort();
     names
+}
+
+/// The fingerprint-fixture builders, split from `tests.rs` when the cell
+/// crossed its line budget: one host row, one dependency row and the
+/// envelope context that delivers a row's effective config.
+pub(super) fn config(message: &str) -> ExtensionConfig {
+    ExtensionConfig::from_table(toml::from_str(&format!("message={message:?}")).unwrap())
+}
+
+pub(super) fn row(
+    root: &std::path::Path,
+    message: &str,
+    version: &str,
+    inputs: Option<Vec<String>>,
+) -> crate::ExtensionRegistryRow {
+    let declaration = ExtensionDecl {
+        id: "announce".into(),
+        point: "phase:build".parse().unwrap(),
+        handler: ExtensionHandler::Builtin { name: "log".into() },
+        config: Some(config(message)),
+        auto: None,
+        inputs,
+        applies_to: None,
+        compiler_internals: None,
+        pass: None,
+        when: None,
+    };
+    let registry = collect_extensions(ExtensionWorld {
+        installed: vec![],
+        host: HostExtensionSource {
+            provider: HostProvider {
+                identity: HostIdentity::ungrouped_project("demo"),
+                root: root.into(),
+                version: version.into(),
+                kind: None,
+                content_hash: None,
+            },
+            declarations: vec![declaration],
+            controls: ExtensionsControl::default(),
+        },
+        effective_stack: None,
+    })
+    .unwrap();
+    registry.plan("phase:build".parse().unwrap(), SelectorSubject::unscoped())[0].clone()
+}
+
+pub(super) fn dependency_row(
+    provider_root: &std::path::Path,
+    id: &str,
+    inputs: Option<Vec<String>>,
+    content_hash: &str,
+) -> crate::ExtensionRegistryRow {
+    let declaration = ExtensionDecl {
+        id: id.into(),
+        point: "phase:build".parse().unwrap(),
+        handler: ExtensionHandler::Builtin { name: "log".into() },
+        config: Some(config(id)),
+        auto: None,
+        inputs,
+        applies_to: None,
+        compiler_internals: None,
+        pass: None,
+        when: None,
+    };
+    let registry = collect_extensions(ExtensionWorld {
+        installed: vec![DependencyExtensionSource {
+            provider: DependencyProvider {
+                id: DependencyProviderId::new(
+                    Group::parse("org.demo").unwrap(),
+                    PackageName::parse("rust-stack").unwrap(),
+                ),
+                root: provider_root.into(),
+                version: "0.1.0".into(),
+                kind: PackageKind::Stack,
+                content_hash: ContentHash::parse(content_hash).unwrap(),
+            },
+            declarations: vec![declaration],
+        }],
+        host: HostExtensionSource {
+            provider: HostProvider {
+                identity: HostIdentity::ungrouped_project("demo"),
+                root: std::path::PathBuf::from("unused-host-root"),
+                version: "0.1.0".into(),
+                kind: None,
+                content_hash: None,
+            },
+            declarations: vec![],
+            controls: ExtensionsControl::default(),
+        },
+        effective_stack: None,
+    })
+    .unwrap();
+    registry.plan("phase:build".parse().unwrap(), SelectorSubject::unscoped())[0].clone()
+}
+
+pub(super) fn context(root: &std::path::Path, config: &ExtensionConfig) -> Context {
+    let root_text = root.to_string_lossy().replace('\\', "/");
+    Context {
+        slot_target: None,
+        artifacts: vec![],
+        envelope: 1,
+        execution: Execution {
+            config: config
+                .as_table()
+                .iter()
+                .map(|(key, value)| (key.clone(), Some(serde_json::to_value(value).unwrap())))
+                .collect(),
+            id: "announce".into(),
+            package: "__host__/demo".into(),
+        },
+        io: Io {
+            scratch: format!("{root_text}/.vibe/lifecycle/run/key/"),
+        },
+        point: "phase:build".into(),
+        project: Project {
+            kind: "project".into(),
+            manifest: format!("{root_text}/vibe.toml"),
+            name: "demo".into(),
+            root: root_text.clone(),
+            spec_roots: vec![],
+            version: "0.1.0".into(),
+        },
+        run: Run {
+            agent_mode: RunAgentMode::Cli,
+            assume_yes: false,
+            chain: vec![
+                "validate".into(),
+                "install".into(),
+                "generate".into(),
+                "build".into(),
+            ],
+            force: false,
+            offline: false,
+            phase: "build".into(),
+            requested: "build".into(),
+        },
+        world: World {
+            deps_root: format!("{root_text}/vibevm/vibedeps"),
+            lockfile: format!("{root_text}/vibe.lock"),
+            packages: vec![],
+        },
+    }
 }

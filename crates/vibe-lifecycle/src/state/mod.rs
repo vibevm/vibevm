@@ -17,9 +17,11 @@ pub use fingerprint::{
     fingerprint_handler_execution, fingerprint_handler_execution_with,
     preparation_error_fingerprint, preparation_error_fingerprint_for_identity,
 };
-/// The one-walk prepared-input surface A4b's runner consumes through `state`.
-/// Until that atom lands, only the tests read these names, so a non-test
-/// build would otherwise flag the re-export unused.
+/// The one-walk prepared-input surface the runner consumes through `state`:
+/// the execution fingerprint, its declaration sibling and the input
+/// measurement, all from ONE pre-dispatch observation. The two type names
+/// cross this path only in tests, so a non-test build would otherwise flag
+/// the re-export unused.
 #[allow(unused_imports)]
 pub(crate) use fingerprint::{
     PreparedFingerprint, PreparedInputManifest, prepare_handler_execution_with,

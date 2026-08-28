@@ -35,6 +35,12 @@ mod trace_sticky;
 #[path = "tests/selected_owner.rs"]
 mod selected_owner;
 
+/// The input-measurement carriage reds (R7.5 P2/A4b) — same cell-budget
+/// split, same reason.
+#[cfg(test)]
+#[path = "tests/measurement.rs"]
+mod measurement;
+
 const RUN_ID: &str = "00112233445566778899aabbccddeeff";
 const KEY: &str = "org.demo/tools#produce";
 
