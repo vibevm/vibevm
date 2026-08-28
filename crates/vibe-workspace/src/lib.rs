@@ -50,6 +50,7 @@ mod expand;
 mod layout_paths;
 mod safe_file;
 
+pub use discovery::SelectedWorkspace;
 pub use publish::{
     OriginInfo, PublishNode, Selection, SkippedNode, StagedNode, select_publishable_nodes,
     stage_node, topo_order,
@@ -152,6 +153,20 @@ pub enum WorkspaceError {
         .path.display()
     )]
     Io { path: PathBuf, reason: String },
+
+    /// Discovery succeeded, but the exact selected path is not the root of a
+    /// workspace node. Node ownership is never inferred from containment.
+    #[error(
+        "selected path `{}` is not a node of workspace `{}` \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#workspace-section; \
+         fix: select the workspace root or the exact root of a listed member)",
+        .selected.display(),
+        .workspace_root.display()
+    )]
+    SelectedPathNotNode {
+        selected: PathBuf,
+        workspace_root: PathBuf,
+    },
 
     /// A transformed spec-document slot could not be produced without
     /// violating the deterministic derived-tree contract.

@@ -479,3 +479,96 @@ fn node_rel_of_entry_alias_canonicalises_to_same_member() {
     assert_eq!(alias, member);
     assert_eq!(ws.node_rel_of(&alias).unwrap().as_str(), "members/tool");
 }
+
+#[cfg(test)]
+fn selected_workspace_fixture() -> TempDir {
+    let tmp = TempDir::new().unwrap();
+    write(
+        tmp.path(),
+        "vibe.toml",
+        &workspace_root("mono", &["members/tool", "sub"]),
+    );
+    write(
+        tmp.path(),
+        "members/tool/vibe.toml",
+        &package("tool", "flow"),
+    );
+    write(tmp.path(), "members/tool/src/lib.rs", "// ordinary subdir");
+    write(
+        tmp.path(),
+        "sub/vibe.toml",
+        &format!(
+            "{}\n[workspace]\nmembers = [\"leaf\"]\n",
+            package("sub", "stack")
+        ),
+    );
+    write(tmp.path(), "sub/leaf/vibe.toml", &package("leaf", "flow"));
+    tmp
+}
+
+#[test]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#nesting",
+    r = 1
+)]
+fn discover_selected_maps_workspace_root() {
+    let tmp = selected_workspace_fixture();
+    let expected = canonical(tmp.path()).unwrap();
+    let selected = Workspace::discover_selected(tmp.path()).unwrap();
+    assert_eq!(selected.workspace.root, expected);
+    assert_eq!(selected.selected_root, expected);
+    assert_eq!(selected.selected, RelPath::root());
+}
+
+#[test]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#workspace-section",
+    r = 1
+)]
+fn discover_selected_maps_canonical_direct_member_and_authored_rel() {
+    let tmp = selected_workspace_fixture();
+    let member = canonical(&tmp.path().join("members/tool")).unwrap();
+    let selected = Workspace::discover_selected(&member).unwrap();
+    assert_eq!(selected.workspace.root, canonical(tmp.path()).unwrap());
+    assert_eq!(selected.selected_root, member);
+    assert_eq!(selected.selected.as_str(), "members/tool");
+    assert!(!selected.selected.as_str().contains('\\'));
+}
+
+#[test]
+fn discover_selected_maps_transitively_nested_member() {
+    let tmp = selected_workspace_fixture();
+    let nested = canonical(&tmp.path().join("sub/leaf")).unwrap();
+    let selected = Workspace::discover_selected(&nested).unwrap();
+    assert_eq!(selected.selected_root, nested);
+    assert_eq!(selected.selected.as_str(), "sub/leaf");
+}
+
+#[test]
+fn discover_selected_refuses_existing_non_node_subdirectory() {
+    let tmp = selected_workspace_fixture();
+    let selected_path = canonical(&tmp.path().join("members/tool/src")).unwrap();
+    let workspace_root = canonical(tmp.path()).unwrap();
+    let err = Workspace::discover_selected(&selected_path).unwrap_err();
+    match err {
+        WorkspaceError::SelectedPathNotNode {
+            selected,
+            workspace_root: actual_root,
+        } => {
+            assert_eq!(selected, selected_path);
+            assert_eq!(actual_root, workspace_root);
+        }
+        other => panic!("unexpected error: {other}"),
+    }
+}
+
+#[cfg(windows)]
+#[test]
+fn discover_selected_entry_alias_returns_canonical_member_and_authored_rel() {
+    let tmp = selected_workspace_fixture();
+    let member = canonical(&tmp.path().join("members/tool")).unwrap();
+    let alias = member.to_string_lossy().to_ascii_uppercase();
+    let selected = Workspace::discover_selected(Path::new(&alias)).unwrap();
+    assert_eq!(selected.selected_root, member);
+    assert_eq!(selected.selected.as_str(), "members/tool");
+}

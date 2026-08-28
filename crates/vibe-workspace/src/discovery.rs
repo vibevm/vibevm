@@ -23,9 +23,27 @@ use std::collections::HashSet;
 use std::path::{Path, PathBuf};
 
 use specmark::spec;
-use vibe_core::manifest::Manifest;
+use vibe_core::{RelPath, manifest::Manifest};
 
 use crate::{Result, Workspace, WorkspaceError, WorkspaceMember, canonical, expand};
+
+/// One canonical selected-node discovery epoch.
+///
+/// `selected_root` is the exact canonical path used to discover `workspace`
+/// and to obtain its workspace-authored `selected` identity.
+#[derive(Debug, Clone)]
+#[spec(
+    documents = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#workspace-section"
+)]
+pub struct SelectedWorkspace {
+    /// The whole workspace discovered from the exact selected-root epoch.
+    pub workspace: Workspace,
+    /// The canonical, UNC-stripped node root supplied to discovery and
+    /// identity mapping; never reconstructed from `selected`.
+    pub selected_root: PathBuf,
+    /// The workspace-authored portable identity of `selected_root`.
+    pub selected: RelPath,
+}
 
 /// One node's manifest, supplied by the caller instead of read from disk.
 ///
@@ -84,6 +102,46 @@ impl Workspace {
     pub fn discover(start: impl AsRef<Path>) -> Result<Workspace> {
         let start = start.as_ref();
         discover_canonical(&canonical(start)?, start, None)
+    }
+
+    /// Discover `start` and its authored node identity in one canonical epoch.
+    ///
+    /// The exact canonical input is both the discovery input and the mapping
+    /// key. A directory merely inside a workspace node is rejected rather than
+    /// guessed to be that node.
+    ///
+    /// ```
+    /// use vibe_core::RelPath;
+    /// use vibe_workspace::Workspace;
+    ///
+    /// let tmp = tempfile::TempDir::new().unwrap();
+    /// std::fs::write(
+    ///     tmp.path().join("vibe.toml"),
+    ///     "[project]\nname = \"solo\"\nversion = \"0.0.1\"\n",
+    /// ).unwrap();
+    /// let selected = Workspace::discover_selected(tmp.path()).unwrap();
+    /// assert_eq!(selected.selected, RelPath::root());
+    /// assert_eq!(selected.selected_root, selected.workspace.root);
+    /// ```
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#nesting",
+        r = 1
+    )]
+    pub fn discover_selected(start: impl AsRef<Path>) -> Result<SelectedWorkspace> {
+        let requested = start.as_ref();
+        let selected_root = canonical(requested)?;
+        let workspace = discover_canonical(&selected_root, requested, None)?;
+        let selected = workspace.node_rel_of(&selected_root).ok_or_else(|| {
+            WorkspaceError::SelectedPathNotNode {
+                selected: selected_root.clone(),
+                workspace_root: workspace.root.clone(),
+            }
+        })?;
+        Ok(SelectedWorkspace {
+            workspace,
+            selected_root,
+            selected,
+        })
     }
 
     /// Discover from an exact selected node whose manifest the caller ALREADY
