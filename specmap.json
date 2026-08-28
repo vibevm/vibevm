@@ -12414,6 +12414,42 @@
       "fingerprint": "tok1:aa3e243e33bafe22c9f13b8b34af19ab204fb7eec01d0d68ea8c6051d8fe2ef7"
     },
     {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/lib.rs",
+      "item_kind": "mod",
+      "line": 9,
+      "symbol": "vibe_orchestrator",
+      "end_line": 9,
+      "fingerprint": "tok1:853b38218301cd0dc8554f533f5a602938fbf104ecc7a4cb623f02e471f01e35"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/lib.rs",
+      "item_kind": "type",
+      "line": 88,
+      "symbol": "vibe_orchestrator::PlannedExecution",
+      "end_line": 96,
+      "fingerprint": "tok1:191483bf11bbac73eba16de80a62f8766695782c1f8fbdbb8ca093e1d1a5993e"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/lib.rs",
+      "item_kind": "struct",
+      "line": 19,
+      "symbol": "vibe_orchestrator::RitualPlan",
+      "end_line": 74,
+      "fingerprint": "tok1:5c3d989433d12f05133e2c88bf6c0aad0af0850386bb047a8cdb5069086d0193"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/lib.rs",
+      "item_kind": "fn",
+      "line": 77,
+      "symbol": "vibe_orchestrator::RitualPlan::count_for",
+      "end_line": 85,
+      "fingerprint": "tok1:62bf1cb5d74477c07c79404d88e95d4dfa54bc77a3508cffb0a3c4d7f2de6619"
+    },
+    {
       "crate_name": "vibe-publish",
       "file": "crates/vibe-publish/src/lib.rs",
       "item_kind": "mod",
@@ -28241,6 +28277,38 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#server",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/lib.rs",
+      "from_symbol": "vibe_orchestrator",
+      "line": 9,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/lib.rs",
+      "from_symbol": "vibe_orchestrator::PlannedExecution",
+      "line": 95,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/lib.rs",
+      "from_symbol": "vibe_orchestrator::RitualPlan",
+      "line": 55,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/lib.rs",
+      "from_symbol": "vibe_orchestrator::RitualPlan::count_for",
+      "line": 82,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
+      "verb": "documents"
     },
     {
       "file": "crates/vibe-publish/src/lib.rs",
