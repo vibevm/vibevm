@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
-  <title id="root">WAL — checkpoint 2026-08-28: R7.5 P0 architecture landed; P1 wire next</title>
-  <status stage="impl" state="work" comment="lifecycle/extensions campaign active; R1/R2, R3.1-R3.4, R6.2a/b, R7.1-R7.4, R8.1 and R8.2a complete; R7.5 P0 complete, P1 next"/>
+  <title id="root">WAL — checkpoint 2026-08-28: R7.5 P1 wire landed; P2 libraries next</title>
+  <status stage="impl" state="work" comment="lifecycle/extensions campaign active; R1/R2, R3.1-R3.4, R6.2a/b, R7.1-R7.4, R8.1 and R8.2a complete; R7.5 P0/P1 complete, P2 next"/>
 
   <current-phase title="Current phase">
     <p><WAL-PHASE fact="true" status="impl/work">The active epic is
@@ -23,8 +23,12 @@
     fingerprint. Requirements exposes four independent observations through a
     future `vibe-requirements` library and one CLI/MCP query, with specmap only
     an optional provider above lifecycle. No `unmet` synthesis, duplicate
-    evidence command, coding agent or automatic loop exists. P1 now adds the
-    JTD fragments, requirements root and additive lifecycle state/report wire.
+    evidence command, coding agent or automatic loop exists. P1 is now landed
+    at `6d843467`, `d3a9d59b` / `55937044`: canonical evidence fragments,
+    additive strict lifecycle state/report, the metadata-only requirements
+    root, relational validators and corpora are generated and green. P2 now
+    extracts the read-only facts/query libraries, relation adapter and the
+    lifecycle measurement/reconciliation runtime without changing that wire.
     </WAL-PHASE></p>
   </current-phase>
 
@@ -38,7 +42,7 @@
       presets/query and owner scenario §10.1 are complete.</WAL-R2>
       <WAL-R3 fact="true" status="impl/done">R3 explicit six-carrier compiler
       IR, named pass schedule, verifier and command-owned compile trace are
-      complete. Post-R7.5-P0 checkpoint specmap: 6814 units, 2205 tagged items, 1986 edges,
+      complete. Post-R7.5-P1 checkpoint specmap: 6814 units, 2218 tagged items, 1987 edges,
       0 suspects, 0 gated orphans, 0 unresolved host edges, 24 standing
       warnings.</WAL-R3>
       <WAL-R7 fact="true" status="impl/done">R7.1 provider, R7.2 CLI agent
@@ -80,7 +84,7 @@
       and markup 508/0 through `self-check: all green`. Config, credentials,
       network transport and completion remain CLI-only; provider presence
       activates nothing by itself.</WAL-R7>
-      <WAL-R75 fact="true" status="impl/work">R7.5 P0 is complete: PROP-054
+      <WAL-R75 fact="true" status="impl/work">R7.5 P0 and P1 are complete: PROP-054
       owns the five evidence outcomes, exact scoped witness identity,
       read-only fact/query contract, independent authoring/adoption/relation/
       verification axes, external-only PDSA and LLM enhancement modes. The
@@ -88,9 +92,15 @@
       without widening package kinds. Architecture
       `R7-EXTERNAL-ORCHESTRATION-ARCHITECTURE-v0.1.md` fixes the cycle-safe
       crate graph, shared JTD fragments, one requirements root/query, fake
-      external stale→recompute scenario and mutation matrix. Host check 0
-      errors, markup 508/0 and specmap 6814/2205/1986 with no suspects,
-      gated orphans or unresolved host edges are green.</WAL-R75>
+      external stale→recompute scenario and mutation matrix. P1 lands
+      canonical-decimal witness counts, exact measured-run attribution,
+      portable artifact paths, additive strict state/report, one neutral
+      requirements root, base/enrichment source matrices and prose/verdict
+      fences without widening `ExecutionRecordStatus`. Root passed 245/245
+      vibe-wire tests, strict clippy, conform 27 known / 0 new,
+      check-codegen/wire-diff, host check 0 errors, markup 508/0 and specmap
+      6814/2218/1987 with no suspects, gated orphans or unresolved host edges.
+      P2 libraries/runtime are next.</WAL-R75>
       <WAL-R8 fact="true" status="impl/work">R8.1 project-only package-skill
       binding and R8.2a mechanism/artifact/deploy grammar are complete. Runtime
       mechanisms, build/package providers and deploy reconciliation remain.
@@ -120,10 +130,12 @@
       expose optional read-only requirements facts keyed by full
       `spec://…#fact` addresses. Authoring status, consumer adoption, edge
       provenance/provider freshness, lifecycle status and typed gap/staleness
-      observations stay distinct. An external long-running
-      agent may use them to understand remaining requirements and choose its
-      direction; VibeVM exposes facts, not that choice. Absence of that adapter
-      changes no lifecycle.
+      observations stay distinct. A measured witness and its run id are one
+      pair; requirements source identity is one package coordinate with one
+      host/package kind, and every relation result binds that base source. An
+      external long-running agent may use them to understand remaining
+      requirements and choose its direction; VibeVM exposes facts, not that
+      choice. Absence of that adapter changes no lifecycle.
       </WAL-C-EVIDENCE>
       <WAL-C-ALGORITHMIC fact="true" status="spec/done">VibeVM remains fully
       useful without an LLM. Paid enhancement is explicit per feature
@@ -166,14 +178,14 @@
   </constraints>
 
   <next title="Next">
-    <p><WAL-NEXT fact="true" status="impl/work">Execute R7.5 P1 from the
-    frozen architecture: add shared `evidence_status`/digest/input/artifact/
-    verification JTD fragments, the strict `requirements_report` root,
-    registry/corpora/generated types and semantic validators; then evolve
-    lifecycle state execution/artifact rows and lifecycle report by optional
-    members without widening `ExecutionRecordStatus`. No runtime consumer
-    lands before the schema atom is generated and green. P2/P3 follow in the
-    recorded dependency order; R4 resumes after neutral R7.5 closes.</WAL-NEXT></p>
+    <p><WAL-NEXT fact="true" status="impl/work">Execute R7.5 P2 in the
+    recorded dependency order: extract the dependency-clean root scanner and
+    adoption join into `vibe-facts`; add the one `vibe-requirements` query and
+    optional relation-provider trait; implement the current/carried adapter in
+    `vibe-trace`; then serialize lifecycle's one-pass input/artifact
+    measurement and verify reconciliation against the landed P1 wire. Use
+    exact affected gates per atom. P3 adds only the thin CLI/MCP surfaces and
+    fake external PDSA scenario; R4 resumes after neutral R7.5 closes.</WAL-NEXT></p>
   </next>
 
   <known-issues title="Known issues">
