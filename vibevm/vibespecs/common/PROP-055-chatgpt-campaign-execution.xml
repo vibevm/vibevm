@@ -213,6 +213,20 @@
       for a central coordinator's explicitly serialized command. The wrapper is
       campaign harness infrastructure, never a VibeVM product command or
       standing instruction for Claude.</ATOMIC-CARGO-SLOTS>
+      <OFFLINE-LOCAL-PACKAGE-REFRESH fact="true" status="spec/done">When this
+      campaign changes in-workspace `file://` package sources and the central
+      coordinator refreshes the local lock/materialisation, run
+      `vibe install --offline --assume-yes`. The required source bytes are
+      local and the selected dependency closure is already cached; an online
+      resolver adds latency and an unnecessary external failure mode. Drop
+      `--offline` only when the task explicitly needs a remote package version
+      not present locally. If this campaign has changed install/materialiser
+      code, drive that refresh through the **current workspace CLI**
+      (`chatgpt-cargo.py -- cargo run -p vibe-cli -- install --offline
+      --assume-yes`) or a separately verified current build, never an assumed
+      PATH binary: on 2026-08-28 the stale system launcher rewrote current
+      `.vibe-slot.toml` records back to legacy `.vibe-derived.toml`; the
+      workspace binary immediately restored the intended diff.</OFFLINE-LOCAL-PACKAGE-REFRESH>
       <ROLLING-WORKTREE-GC fact="true" status="spec/done">Campaign worktrees
       are reclaimed **continuously, not at campaign close** (owner ruling
       2026-08-26). As soon as an atom is accepted and integrated, root proves
@@ -233,6 +247,18 @@
       disclosed in the report (and is forbidden only when it would intersect a
       parallel writer). Screen prose is discarded; reports and visible diffs
       are the deliverable.</QUIET-ARTIFACT-CONTRACT>
+      <PLAIN-LAUNCHER-OUTPUT fact="true" status="spec/done">When the central
+      Codex harness drives a long `claudez`/`claude` process through unified
+      exec, use ordinary text output plus the durable worker report by
+      default. `--output-format stream-json --verbose` emits a JSON event for
+      each thinking-token update: the 2026-08-28 A4b read-only audit produced
+      more than 2.7 MiB of transport output for about 10.4k thinking tokens
+      while its complete report was about 12 KiB. Feeding that stream back
+      through the tool wastes context and can fill the process pipe. Stream
+      JSON remains legitimate for a short transport/model-metadata probe or
+      when redirected to a file the model does not ingest; long work is
+      observed through process liveness, the visible diff and the bounded
+      report.</PLAIN-LAUNCHER-OUTPUT>
       <REPORT-BUDGET fact="true" status="spec/done">Default a worker report to
       at most 150 lines: verdict, findings, changed-file set, decisive evidence,
       commands and deviations. A longer report is justified only by a large
