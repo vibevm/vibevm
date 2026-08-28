@@ -1,0 +1,40 @@
+{
+  "ok": true,
+  "command": "lifecycle",
+  "requested": "create",
+  "chain": [
+    "validate",
+    "install",
+    "generate",
+    "build",
+    "test",
+    "create"
+  ],
+  "steps": [
+    { "phase": "validate", "status": "ok" },
+    { "phase": "install", "status": "fresh" },
+    { "phase": "generate", "status": "no-op" },
+    { "phase": "build", "status": "no-op" },
+    { "phase": "test", "status": "no-op" },
+    { "phase": "create", "status": "delegated" }
+  ],
+  "contributions": [
+    {
+      "key": "org.demo/provider#draft-guide",
+      "phase": "create",
+      "point": "phase:create",
+      "handler": "agent",
+      "provider": "org.demo/provider",
+      "tier": "dependency",
+      "status": "delegated"
+    }
+  ],
+  "notices": [],
+  "delegation": {
+    "run_id": "00112233445566778899aabbccddeeff",
+    "tasks": [
+      ".vibe/agentic/outbox/00112233445566778899aabbccddeeff/task-org.demo%23provider.md"
+    ],
+    "resume": "vibe create"
+  }
+}

@@ -147,7 +147,15 @@ fn main() -> ExitCode {
             };
             commands::search::run(&ctx, args, search_env)
         }
-        Command::Mcp(args) => commands::mcp::run(&ctx, args),
+        Command::Mcp(args) => commands::mcp::run(
+            &ctx,
+            args,
+            commands::mcp::McpRuntime {
+                root_offline: cli.offline,
+                embedded_registry_root: discover_embedded_root(),
+                seed_default_registry: read_env_opt("VIBE_NO_DEFAULT_REGISTRY").is_none(),
+            },
+        ),
         Command::Aiui(args) => commands::aiui::run(&ctx, args),
         Command::Term(args) => commands::term::run(&ctx, args),
         Command::Frame(args) => commands::term::run_frame(&ctx, args),

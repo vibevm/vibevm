@@ -62,6 +62,7 @@ pub fn default_tools() -> Vec<Box<dyn McpTool>> {
         Box::new(SelectMcpTool),
         Box::new(ListToolsMcpTool),
         Box::new(LifecycleTasksMcpTool),
+        Box::new(LifecycleRunMcpTool),
     ]
 }
 
@@ -546,6 +547,8 @@ pub mod select;
 pub use select::SelectMcpTool;
 pub mod lifecycle_tasks;
 pub use lifecycle_tasks::LifecycleTasksMcpTool;
+pub mod lifecycle_run;
+pub use lifecycle_run::LifecycleRunMcpTool;
 // ---------------------------------------------------------------------------
 // shared helpers
 // ---------------------------------------------------------------------------

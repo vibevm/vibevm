@@ -11,7 +11,8 @@
 //!   `tools/call` — modelled as plain Rust types serialised via serde.
 //! - Built-in tools (see [`tools::default_tools`]) for lockfile/package
 //!   queries, subskills, installed runnable tools, traceability, agentic
-//!   instructions, and the exact durable `lifecycle_tasks` handoff.
+//!   instructions, hosted `lifecycle_run` execution, and the exact durable
+//!   `lifecycle_tasks` handoff.
 //!
 //! ## Architecture
 //!
@@ -34,17 +35,16 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#server");
 
 use std::collections::BTreeMap;
-use std::path::PathBuf;
 
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use specmark::spec;
 use thiserror::Error;
-use vibe_core::manifest::Lockfile;
 
 pub mod agent_config;
 pub mod agentic;
 pub mod agents;
+pub mod context;
 pub mod install;
 pub mod jsonrpc;
 pub mod pkg_servers;
@@ -53,6 +53,7 @@ pub mod tools;
 pub mod transport;
 
 pub use agents::{Agent, ConfigFormat, ConfigPayload, SKILL_NAME, Scope, What, detect_agents};
+pub use context::ServerContext;
 pub use jsonrpc::{JsonRpcError, JsonRpcMessage, JsonRpcRequest, JsonRpcResponse};
 pub use tools::{McpTool, ToolOutput, default_tools};
 pub use transport::{MemoryTransport, StdioTransport, Transport};
@@ -67,70 +68,6 @@ pub const PROTOCOL_VERSION: &str = "2024-11-05";
 /// `initialize` handshake.
 pub const SERVER_NAME: &str = "vibe-mcp";
 pub const SERVER_VERSION: &str = env!("CARGO_PKG_VERSION");
-
-/// Read-only snapshot of the project the server is exposing. Carried
-/// per request so every tool call sees the same lockfile state during
-/// its scope; reload happens at the start of each tool dispatch so
-/// concurrent `vibe install` runs surface their changes on the next
-/// invocation without a server restart.
-///
-/// ```
-/// use vibe_mcp::ServerContext;
-/// let ctx = ServerContext::new("/some/project");
-/// assert!(ctx.project_root.ends_with("project"));
-/// ```
-pub struct ServerContext {
-    /// Project root — the directory containing `vibe.toml` and
-    /// `vibe.lock`.
-    pub project_root: PathBuf,
-    /// Root of the machine-global package store (`~/.vibe/cache/`,
-    /// PROP-010 §2.7) the lazy-pull subskill readers read payload
-    /// from. Carried on the context rather than resolved per call so
-    /// tests inject a temp root and never touch the real `~/.vibe`;
-    /// production gets it from the one settings chokepoint. (This
-    /// crate does not depend on `vibe-registry`, so the entry path is
-    /// joined from the documented layout rather than
-    /// `store::entry_dir` — the layout is the index, there is no
-    /// second representation to drift.)
-    pub store_root: PathBuf,
-}
-
-impl ServerContext {
-    pub fn new(project_root: impl Into<PathBuf>) -> Self {
-        let store_root = vibe_core::settings::settings_dir()
-            .map(|home| home.join("cache"))
-            .unwrap_or_default();
-        ServerContext {
-            project_root: project_root.into(),
-            store_root,
-        }
-    }
-
-    /// A context whose store root is the caller's — the test seam for
-    /// the lazy-pull readers: a temp root keeps a test off the
-    /// operator's real `~/.vibe/cache/`.
-    pub fn with_store_root(
-        project_root: impl Into<PathBuf>,
-        store_root: impl Into<PathBuf>,
-    ) -> Self {
-        ServerContext {
-            project_root: project_root.into(),
-            store_root: store_root.into(),
-        }
-    }
-
-    /// Load the project's lockfile fresh on every call. Returns an
-    /// empty lockfile if `vibe.lock` does not exist yet — callers
-    /// surface the empty-state through their normal output rather
-    /// than aborting with `Lockfile not found`.
-    pub fn load_lockfile(&self) -> Result<Lockfile, vibe_core::Error> {
-        let path = self.project_root.join(Lockfile::FILENAME);
-        if !path.exists() {
-            return Ok(Lockfile::empty(SERVER_NAME, "0"));
-        }
-        Lockfile::read(&path)
-    }
-}
 
 /// Metadata for a registered tool — surfaces in `tools/list` responses.
 ///
@@ -197,6 +134,20 @@ pub enum ToolError {
     /// typed path/task variants do not inflate every MCP tool result.
     #[error(transparent)]
     LifecycleTasks(Box<vibe_lifecycle::LifecycleTasksError>),
+
+    /// A hosted lifecycle run refused BEFORE it executed — at the lease,
+    /// the identity selection or the manifest snapshot, so nothing ran
+    /// and no structured report exists. The caller composes the message
+    /// with the error's FULL `{error:#}` chain, which this variant
+    /// preserves verbatim (Busy, no-`vibe.toml`, foreign-park, topology
+    /// gates all keep their typed wording and spec citations).
+    #[error(
+        "lifecycle did not execute: {0} \
+         (governed by spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-HANDSHAKE; \
+          fix: act on the typed lease/project/state refusal, then call lifecycle_run again \
+          with the same phase)"
+    )]
+    PreExecution(String),
 
     #[error(
         "internal error: {0} \

@@ -111,38 +111,7 @@ fn reply_rejects_unknown_fields_at_every_object_boundary() {
 
 #[test]
 fn report_delegation_is_one_typed_member_and_steps_end_at_the_parked_phase() {
-    let authored = serde_json::json!({
-        "ok": true,
-        "command": "lifecycle",
-        "requested": "create",
-        "chain": ["validate", "install", "generate", "build", "test", "create"],
-        "steps": [
-            { "phase": "validate", "status": "ok" },
-            { "phase": "install", "status": "fresh" },
-            { "phase": "generate", "status": "no-op" },
-            { "phase": "build", "status": "no-op" },
-            { "phase": "test", "status": "no-op" },
-            { "phase": "create", "status": "delegated" }
-        ],
-        "contributions": [{
-            "key": "org.demo/provider#draft-guide",
-            "phase": "create",
-            "point": "phase:create",
-            "handler": "agent",
-            "provider": "org.demo/provider",
-            "tier": "dependency",
-            "status": "delegated"
-        }],
-        "notices": [],
-        "delegation": {
-            "run_id": "00112233445566778899aabbccddeeff",
-            "tasks": [".vibe/agentic/outbox/00112233445566778899aabbccddeeff/task-org.demo%23provider.md"],
-            "resume": "vibe create"
-        }
-    });
-    let report: LifecycleReport = serde_json::from_value(authored.clone()).unwrap();
-    let round_trip = serde_json::to_value(&report).unwrap();
-    assert_eq!(round_trip, authored, "the delegation member round-trips");
+    let report: LifecycleReport = read("report_parked.json");
     let delegation = report.delegation.as_ref().unwrap();
     assert_eq!(delegation.resume, "vibe create");
     assert_eq!(delegation.tasks.len(), 1);
@@ -151,6 +120,27 @@ fn report_delegation_is_one_typed_member_and_steps_end_at_the_parked_phase() {
         report.contributions[0].status, "delegated",
         "the parked contribution reports the delegated status itself"
     );
+}
+
+#[test]
+fn failed_report_corpus_has_one_fail_step_and_keeps_the_executed_contribution_prefix() {
+    let report: LifecycleReport = read("report_failed.json");
+    assert!(!report.ok);
+    assert_eq!(report.steps.len(), 1);
+    assert_eq!(report.steps[0].phase, "build");
+    assert_eq!(report.steps[0].status, "fail");
+    assert_eq!(
+        report
+            .contributions
+            .iter()
+            .map(|row| (row.key.as_str(), row.status.as_str()))
+            .collect::<Vec<_>>(),
+        [
+            ("org.demo/project#first", "ok"),
+            ("org.demo/project#stop", "fail")
+        ]
+    );
+    assert!(report.delegation.is_none());
 }
 
 #[test]

@@ -1,0 +1,37 @@
+{
+  "ok": false,
+  "command": "lifecycle",
+  "requested": "build",
+  "chain": [
+    "validate",
+    "install",
+    "generate",
+    "build"
+  ],
+  "steps": [
+    { "phase": "build", "status": "fail" }
+  ],
+  "contributions": [
+    {
+      "key": "org.demo/project#first",
+      "phase": "build",
+      "point": "phase:build",
+      "handler": "builtin",
+      "provider": "org.demo/project",
+      "tier": "host-declaration",
+      "status": "ok",
+      "message": "FIRST-RAN"
+    },
+    {
+      "key": "org.demo/project#stop",
+      "phase": "build",
+      "point": "phase:build",
+      "handler": "builtin",
+      "provider": "org.demo/project",
+      "tier": "host-declaration",
+      "status": "fail",
+      "message": "unknown builtin `unknown`"
+    }
+  ],
+  "notices": []
+}

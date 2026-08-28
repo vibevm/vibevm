@@ -58,6 +58,7 @@ use dialoguer::Confirm;
 use serde::Serialize;
 use vibe_core::machine_json_path;
 use vibe_core::manifest::Manifest;
+use vibe_core::user_config::UserConfig;
 use vibe_mcp::agent_config::{
     merge_json, merge_toml, read_json, read_toml, strip_json_entry, strip_toml_entry,
 };
@@ -81,9 +82,18 @@ fn stdin_is_tty() -> bool {
     std::io::stdin().is_terminal()
 }
 
-pub fn run(ctx: &output::Context, args: McpArgs) -> Result<()> {
+/// CLI-composed authority fixed for the lifetime of an MCP server. Environment
+/// and user configuration stay above `vibe-mcp`; tools receive only these
+/// decided values through `ServerContext`.
+pub(crate) struct McpRuntime {
+    pub(crate) root_offline: bool,
+    pub(crate) embedded_registry_root: Option<PathBuf>,
+    pub(crate) seed_default_registry: bool,
+}
+
+pub fn run(ctx: &output::Context, args: McpArgs, runtime: McpRuntime) -> Result<()> {
     match args.command {
-        McpSubcommand::Serve(sub) => run_serve(sub),
+        McpSubcommand::Serve(sub) => run_serve(sub, runtime),
         McpSubcommand::Install(sub) => install::run_install(ctx, sub),
         McpSubcommand::Status(sub) => run_status(ctx, sub),
         McpSubcommand::Upgrade(sub) => upgrade::run_upgrade(ctx, sub),
@@ -91,13 +101,23 @@ pub fn run(ctx: &output::Context, args: McpArgs) -> Result<()> {
     }
 }
 
-fn run_serve(args: McpServeArgs) -> Result<()> {
+fn run_serve(args: McpServeArgs, runtime: McpRuntime) -> Result<()> {
     // `vibe mcp serve` is the one place where path is *required*: the
     // server needs a project root to load the lockfile from. When
     // launched by a user-scope MCP entry that omits `--path`, the
     // server uses CWD (default value `.`).
     let project_root = resolve_project_root_required(&args.path)?;
-    let server_ctx = ServerContext::new(project_root);
+    let user = UserConfig::load().context("loading user config for MCP lifecycle execution")?;
+    let policy = vibe_orchestrator::InstallPolicy {
+        offline: output::resolve_offline(runtime.root_offline, user.net.offline),
+        slot_integrity: user.install.slot_integrity,
+        spec_format_default: user.install.spec_format,
+    };
+    let server_ctx = ServerContext::new(project_root).with_lifecycle_execution(
+        policy,
+        runtime.embedded_registry_root,
+        runtime.seed_default_registry,
+    );
     let mut server = Server::stdio(server_ctx);
     server.run().context("MCP server I/O error")?;
     Ok(())

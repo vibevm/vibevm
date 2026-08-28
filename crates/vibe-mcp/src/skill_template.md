@@ -84,6 +84,14 @@ Tools:
   with its declaring package and the author's own description. Takes no
   arguments. A project with nothing installed returns an empty list, not
   an error.
+- **`lifecycle_run(phase)`** — execute the canonical default lifecycle from
+  `validate` through the named phase using VibeVM's algorithmic engine. The
+  server fixes offline/install policy for its whole session; there is no
+  per-call path, force, provider, model, resume or clean override. Ordinary
+  algorithmic rows run locally. An agent row parks without an API/provider
+  call and returns a successful generated report with a durable delegation;
+  call `lifecycle_tasks()`, complete the exact task, then call
+  `lifecycle_run` again with the same phase.
 - **`lifecycle_tasks()`** — read the exact durable hosted-agent handoff for
   this selected workspace node. It takes no arguments and returns generated
   structured status `absent`, `idle`, or `parked`; a parked result carries

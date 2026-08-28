@@ -22,6 +22,15 @@ vibe-agent-projection.workspace = true
 vibe-safefs.workspace = true
 # Read-only lifecycle state/outbox projection for the MCP hosted-task surface.
 vibe-lifecycle.workspace = true
+# The hosted lifecycle_run tool (R7.4 A15c3): the two-stage command API,
+# the trace funnel and the values/failure projections it renders through.
+# No provider edge rides — hosted agent rows park before paid dispatch.
+vibe-orchestrator.workspace = true
+# The shared package-source composition the hosted install factory builds
+# (real manifest dependencies through the default hosted posture).
+vibe-package-source.workspace = true
+# `InstallSource`/`NullObserver` names the hosted ports adapt.
+vibe-install.workspace = true
 vibe-wire.workspace = true
 # The `explain` MCP tool is a thin surface over the shared `vibe-trace`
 # capability, which both the MCP tool and the `vibe explain` CLI call.
@@ -32,6 +41,7 @@ sha2.workspace = true
 toml.workspace = true
 dirs.workspace = true
 anyhow.workspace = true
+chrono.workspace = true
 thiserror.workspace = true
 tracing.workspace = true
 tempfile.workspace = true
@@ -40,3 +50,7 @@ tempfile.workspace = true
 # The staging-residue REDs need deterministic pre/post-publication failures;
 # the feature compiles the injection points out of every shipped build.
 vibe-safefs = { workspace = true, features = ["inject-failures"] }
+# The lifecycle_run integration reds execute real installs/parks, which
+# touch the machine store and settings home — linking this isolates the
+# test process's per-user home before the first #[test] runs (DRIFT-020).
+vibe-test-support.workspace = true

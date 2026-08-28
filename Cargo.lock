@@ -4244,6 +4244,7 @@ name = "vibe-mcp"
 version = "1.0.0"
 dependencies = [
  "anyhow",
+ "chrono",
  "core-ai-native-specmark",
  "dirs",
  "serde",
@@ -4255,8 +4256,12 @@ dependencies = [
  "tracing",
  "vibe-agent-projection",
  "vibe-core",
+ "vibe-install",
  "vibe-lifecycle",
+ "vibe-orchestrator",
+ "vibe-package-source",
  "vibe-safefs",
+ "vibe-test-support",
  "vibe-trace",
  "vibe-wire",
  "vibe-workspace",
