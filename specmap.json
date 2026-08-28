@@ -3921,9 +3921,9 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/lifecycle/clean.rs",
       "item_kind": "fn",
-      "line": 123,
+      "line": 124,
       "symbol": "vibe_cli::commands::lifecycle::clean::refuse_untracked_agent_rows",
-      "end_line": 158,
+      "end_line": 159,
       "fingerprint": "tok1:361e7dfbe329403106e331d4d0faa16de1b2b1af74994b695933102eaf22ae16"
     },
     {
@@ -3948,10 +3948,19 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/lifecycle.rs",
       "item_kind": "fn",
-      "line": 82,
+      "line": 84,
       "symbol": "vibe_cli::commands::lifecycle::execute",
-      "end_line": 295,
-      "fingerprint": "tok1:e9b0df25b62a4cfdadd7a472ef5165665b7543b7c0706a05a1fb3f8640018ebb"
+      "end_line": 300,
+      "fingerprint": "tok1:7b57cf7fbee3af5a5d298d5eefdd1f1613aa037f46586a5573a9f72fdcf03905"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/lifecycle/observer.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_cli::commands::lifecycle::observer",
+      "end_line": 3,
+      "fingerprint": "tok1:853b38218301cd0dc8554f533f5a602938fbf104ecc7a4cb623f02e471f01e35"
     },
     {
       "crate_name": "vibe-cli",
@@ -3984,9 +3993,9 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/lifecycle.rs",
       "item_kind": "fn",
-      "line": 62,
+      "line": 64,
       "symbol": "vibe_cli::commands::lifecycle::run",
-      "end_line": 80,
+      "end_line": 82,
       "fingerprint": "tok1:01038f11c7fb2a9e20422d4cf28d68cee406c9266b769f332e4b544864dd519b"
     },
     {
@@ -20336,7 +20345,7 @@
     {
       "file": "crates/vibe-cli/src/commands/lifecycle/clean.rs",
       "from_symbol": "vibe_cli::commands::lifecycle::clean::refuse_untracked_agent_rows",
-      "line": 133,
+      "line": 134,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-HANDSHAKE",
       "verb": "implements"
@@ -20360,7 +20369,15 @@
     {
       "file": "crates/vibe-cli/src/commands/lifecycle.rs",
       "from_symbol": "vibe_cli::commands::lifecycle::execute",
-      "line": 82,
+      "line": 84,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/lifecycle/observer.rs",
+      "from_symbol": "vibe_cli::commands::lifecycle::observer",
+      "line": 3,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
       "verb": "implements"
@@ -20392,7 +20409,7 @@
     {
       "file": "crates/vibe-cli/src/commands/lifecycle.rs",
       "from_symbol": "vibe_cli::commands::lifecycle::run",
-      "line": 63,
+      "line": 65,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#INVOKE-RUNS-PRIORS",
       "verb": "implements"
