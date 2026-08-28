@@ -387,6 +387,13 @@
       latency, transport/429 category and advertised reset time, and performs no
       retry or repository work. This observes five-hour quota recovery without
       burning a real implementation packet or spinning against a known wall.</CLAUDEZ-HOURLY-PROBE>
+      <CLAUDEZ-RECOVERED-2026-08-28 fact="true" status="spec/done">After the
+      account-wide wall advertised its 2026-08-28 reset, a fresh real A14 task
+      started through `claudez` without 429, implemented the shared prompt
+      resolver, wrote its report before long gates, mutation-proved the two
+      central guards and finished every exact gate. Availability is therefore
+      recovered for useful work, not merely for a ping; future routing still
+      treats the next five-hour wall as account-wide.</CLAUDEZ-RECOVERED-2026-08-28>
       <PANEL-DENOMINATOR-2026-08-28 fact="true" status="spec/done">`tools/self-check.sh` lexically counts `run_step` lines while seven calls execute dynamically, so final
       R3.4 printed `[54/47]` and still ended `all green` / exit 0. The denominator is an observability bug, never coverage evidence: trust the ordered gates + green tail.
       A later tooling atom derives the runtime total or removes the false denominator; this docs-only finding does not rewrite the green verdict.</PANEL-DENOMINATOR-2026-08-28>

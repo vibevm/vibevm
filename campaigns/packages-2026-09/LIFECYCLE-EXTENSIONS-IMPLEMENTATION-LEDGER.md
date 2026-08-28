@@ -23,7 +23,7 @@ writer, shared command wire/state, borrowed workspace/install plumbing,
 Install/Lifecycle/Update/Reinstall owners, exact displaced continuation and
 the final four-family parity matrix. The final quality tail repaired every
 panel-discovered stale oracle and discipline ratchet rather than baselining it.
-All accepted R3.4 and R7.4-through-A13 worktrees and fan-out worktrees were
+All accepted R3.4 and R7.4-through-A14 worktrees and fan-out worktrees were
 reviewed, archived and reclaimed under rolling GC; **only `main` remains**.
 Missing later waves were never implemented.
 
@@ -37,9 +37,10 @@ than depending on untracked `cache/` archaeology.
 
 ## 2. Evidence standard and current baseline
 
-- Integration checkpoint: `main` at `afdd3adc` contains the complete accepted
-  R3.4 chain and R7.4 through A13. A12's application service is `053b7e37` /
+- Integration checkpoint: `main` at `2b08c818` contains the complete accepted
+  R3.4 chain and R7.4 through A14. A12's application service is `053b7e37` /
   `ba874cdf`; A13's shared compile-trace funnel is `3f01e2dc` / `afdd3adc`.
+  A14's credential-free selected-world resolver is `cd793ca9` / `2b08c818`.
   The lower service owns one opaque selected-world bundle, install/resume,
   phase dispatch and non-rendering trace finalisation; CLI still owns registered
   report families, deferred-plan routing, presentation, credentials and
@@ -54,7 +55,7 @@ than depending on untracked `cache/` archaeology.
   conform: 27 visible acknowledged findings, 0 frozen and **0 new**. The
   panel's full workspace tests, clippy `-D warnings`, codegen, wire-diff,
   package/MCP suites, self-traces and markup validation all passed.
-- Post-A13 checkpoint `cargo xtask specmap`: 6789 units, 2176 tagged code items, 1957 edges,
+- Post-A14 checkpoint `cargo xtask specmap`: 6790 units, 2178 tagged code items, 1959 edges,
   0 suspects, 0 gated orphans, 0 unresolved host edges and 21 standing
   warnings. The 25 non-host edges are outside this map's jurisdiction.
 - R6.2b integration evidence on the current tree: `cargo xtask codegen`
@@ -239,7 +240,7 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 | R7.1 real provider seam | done | `f42334ff`, `e2392893`; JTD wire, config, endpoint/redirect/proxy/body/timeout/redaction tests |
 | R7.2 CLI agent handler + output contract | done | `26929050`; strict AgentResult JTD, prepared prompt/world resolution, ResultPlan, optional provider path, create/install/reinstall/update e2e and shared safe filesystem cell |
 | R7.3 hosted outbox/delegated resume | done | `1dd5e1f5`, generated reports `eae4494e`; durable run/outbox, exact task ownership, candidate-state atomicity, phase/slot reconciliation, command-level progress, no-spend sequential resume and independent final freeze |
-| R7.4 MCP lifecycle surfaces | in progress | architecture `ee2bc67f`; first wave `94f30aa9`, `88600508`, `87c2bab8`, `daf6eb31`, `17d94f8f`; A4 `31ca1e7d` / `0225ce41` / `970520d4`; A5 `7e330974` / `93177db6`; A6 `7bd335e2` / `b3ff308c`, `e1121d9b`, `b4d91749`, `8debdf2e`, `c82012c3`; A7–A8 tasks cut `cf5ec17d`, `ee741f2e` / `d338e880`, `30534ff9` / `7b9732f0`, `df678d7b` / `c62177fe`; final A0–A8 full panel on `a4253de7` ran all 54 dynamic gates green after explicit boundary repairs `4ecd2cc5`, `21567b6c`, `a4253de7`; A9 ports/stream REDs `5506cf88` / `9732ba38` / `18a797b2`; A10 lower projection imports `53e84790`; A11 neutral plan crate `2560ee57` / `78ea8cc5`; A12 shared application service `053b7e37` / `ba874cdf`; A13 shared trace funnel `3f01e2dc` / `afdd3adc` with inherent prelude trace-home join, one generic exact-error carrier, 101 unit + 63 doctest + compile-fail, 546 CLI command unit, lifecycle/trace golden/failure/resume matrix, clippy/conform/specmap all green; A14 credential-free prompt resolver next |
+| R7.4 MCP lifecycle surfaces | in progress | architecture `ee2bc67f`; first wave `94f30aa9`, `88600508`, `87c2bab8`, `daf6eb31`, `17d94f8f`; A4 `31ca1e7d` / `0225ce41` / `970520d4`; A5 `7e330974` / `93177db6`; A6 `7bd335e2` / `b3ff308c`, `e1121d9b`, `b4d91749`, `8debdf2e`, `c82012c3`; A7–A8 tasks cut `cf5ec17d`, `ee741f2e` / `d338e880`, `30534ff9` / `7b9732f0`, `df678d7b` / `c62177fe`; final A0–A8 full panel on `a4253de7` ran all 54 dynamic gates green; A9 ports `5506cf88` / `9732ba38` / `18a797b2`; A10 projection `53e84790`; A11 plan `2560ee57` / `78ea8cc5`; A12 application `053b7e37` / `ba874cdf`; A13 trace `3f01e2dc` / `afdd3adc`; A14 selected-world prompt resolver `cd793ca9` / `2b08c818`, 11 lower REDs including 9/11 scan-mutation failures, 213 unit + 14 doctest, 36 CLI integration, clippy/conform/specmap green; A15 MCP run + full panel next |
 | R7.5 external orchestration substrate | missing | owner ruling reaffirmed 2026-08-28: structured exact-tree/artifact/run evidence + optional read-only facts keyed by full `spec://…#fact`; status-bearing source is `vibe-specdoc` + consumer `vibe-facts`, current specmap relations are optional; external long-running agents may use separately typed observations to choose direction, while lifecycle contains no coding agent, task heuristic or automatic loop |
 
 R7 live Z.AI smoke is now conclusive (2026-08-27): central `vibe create`
@@ -504,6 +505,12 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
     status remain separate typed fields; gap/staleness are typed observations,
     not a heuristic next-task recommendation. Current specmap relations are an
     optional read-only enrichment; their absence changes no lifecycle result.
+34. Prompt resolution is one credential-free lower value. The executing
+    provider root is self; every other coordinate resolves only through the
+    carried lock-selected world. Recursive `#embed` is supported; live
+    `#use`/`#source` is reported unsupported after expansion. User config,
+    credential reading, transport construction and completion remain in the
+    CLI paid half; hosted surfaces reuse the resolver and cannot pay.
 
 ## 6. Physical state and loss prevention
 

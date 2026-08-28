@@ -157,8 +157,14 @@ fronts currently in flight. A worker report or old worktree is never completion.
             `RunPrelude` and a full measurement→registered-root double-hop RED;
             101 orchestrator unit, 63 doctest, compile-fail, 546 CLI command
             unit and the exact lifecycle/trace integration matrix are green.
-      - [ ] A14 credential-free prompt resolution moves into
-            `vibe-lifecycle::agent` with zero provider construction.
+      - [x] A14 credential-free prompt resolver (`cd793ca9`, `2b08c818`):
+            `SelectedWorldPromptResolver` now owns exact provider-self and
+            lock-selected cross-package `#embed` resolution below the CLI;
+            config/credentials/transport/completion stay CLI-only. Eleven
+            lower REDs include a scan mutation that failed 9/11, while 213
+            lifecycle unit + 14 doctest, 36 CLI integration, strict clippy,
+            conform 0 new and specmap are green. No-agent projects still
+            construct no provider and remain algorithmic.
       - [ ] A15 strict hosted/no-spend MCP `lifecycle_run`, executed-failure
             structure and cross-surface parity; then the R7.4 full panel.
 - [ ] **R7.5** — neutral external work-loop substrate (owner ruling reaffirmed

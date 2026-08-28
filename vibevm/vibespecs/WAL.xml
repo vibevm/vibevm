@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
-  <title id="root">WAL — checkpoint 2026-08-28: R7.4 A13 trace funnel landed; A14 next</title>
+  <title id="root">WAL — checkpoint 2026-08-28: R7.4 A14 prompt resolver landed; A15 next</title>
   <status stage="impl" state="work" comment="lifecycle/extensions campaign active; R1/R2, R3.1-R3.4, R6.2a/b, R7.1-R7.3, R8.1 and R8.2a complete; R7.4 implementation active"/>
 
   <current-phase title="Current phase">
@@ -15,11 +15,12 @@
     I/O, lease/selected ownership and the read-only tasks adapter are green
     under the first coherent panel. A9 execution ports, A10 lower projection
     imports, A11's neutral plan carrier, A12's application service and A13's
-    non-rendering trace funnel are landed through `3f01e2dc` / `afdd3adc`.
+    non-rendering trace funnel and A14 selected-world prompt resolver are landed
+    through `cd793ca9` / `2b08c818`.
     The lower service owns opaque selected-world provenance, install/resume,
     phase dispatch, trace-home selection and finalisation; `[llm]`, registered
     report families, deferred-plan routing, presentation and credentials remain
-    CLI-owned. A14 credential-free prompt resolution precedes the run adapter.
+    CLI-owned. A15 now adds the strict hosted/no-spend MCP run adapter.
     The owner-approved neutral R7.5 external-work substrate follows R7.4.
     </WAL-PHASE></p>
   </current-phase>
@@ -34,7 +35,7 @@
       presets/query and owner scenario §10.1 are complete.</WAL-R2>
       <WAL-R3 fact="true" status="impl/done">R3 explicit six-carrier compiler
       IR, named pass schedule, verifier and command-owned compile trace are
-      complete. Post-A13 checkpoint specmap: 6789 units, 2176 tagged items, 1957 edges,
+      complete. Post-A14 checkpoint specmap: 6790 units, 2178 tagged items, 1959 edges,
       0 suspects, 0 gated orphans, 0 unresolved host edges, 21 standing
       warnings.</WAL-R3>
       <WAL-R7 fact="true" status="impl/work">R7.1 provider, R7.2 CLI agent
@@ -66,6 +67,10 @@
       real measurement→registered-root double-hop RED. Central gates passed 101
       orchestrator unit, 63 doctest + compile-fail, 546 CLI command units, the
       focused lifecycle/trace matrix, strict clippy, conform 0 new and specmap.
+      A14 is complete at `cd793ca9` / `2b08c818`: one credential-free
+      `SelectedWorldPromptResolver`, exact self/lock-selected embed resolution,
+      eleven lower REDs, 213 unit + 14 doctest and 36 CLI integrations green.
+      Config, credentials, network transport and completion remain CLI-only.
       R7.5 neutral
       evidence/query substrate follows. Provider presence activates nothing
       by itself.</WAL-R7>
@@ -145,10 +150,10 @@
 
   <next title="Next">
     <p><WAL-NEXT fact="true" status="impl/work">The accepted R7.4
-    architecture through A13 is landed: state/lease/selected/tasks, three
+    architecture through A14 is landed: state/lease/selected/tasks, three
     execution ports, the lower projection dependency and a surface-neutral
-    orchestrator application + trace service. Complete A14 credential-free
-    prompt resolution and A15 hosted
+    orchestrator application + trace service and the credential-free prompt
+    resolver. Complete A15 hosted
     `lifecycle_run`, then run the R7.4 boundary panel. Follow with R7.5 exact evidence,
     optional read-only spec-IR facts and a fake external PDSA orchestrator — no
     embedded agent policy. Resume R4 registry/transforms after those neutral
