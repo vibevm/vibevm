@@ -12861,7 +12861,7 @@
       "line": 67,
       "symbol": "vibe_orchestrator::prelude::run_prelude",
       "end_line": 149,
-      "fingerprint": "tok1:535fd908a6dfd428f07aef0e684fcfb4bcebd102a174cbe072e318c0ed7d4d7d"
+      "fingerprint": "tok1:615eac07070e7100bccb02954e35cc602ae772b966fa43180fa9d1cf844d6413"
     },
     {
       "crate_name": "vibe-orchestrator",
@@ -17586,7 +17586,7 @@
       "line": 59,
       "symbol": "vibe_workspace::WorkspaceError",
       "end_line": 290,
-      "fingerprint": "tok1:8557994f08094a97718f92a446dd7f4f10ad11ceec5c2d367cab783e82cbd7ce"
+      "fingerprint": "tok1:099c088435dbf9da8e4df4bc5ff8f744fdef9b2ebfec38f6fcf61cedcbd65bed"
     },
     {
       "crate_name": "vibe-workspace",

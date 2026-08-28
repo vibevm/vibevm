@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
-  <title id="root">WAL — checkpoint 2026-08-28: R7.4 architecture accepted; implementation active</title>
+  <title id="root">WAL — checkpoint 2026-08-28: R7.4 A12 application service landed; A13 next</title>
   <status stage="impl" state="work" comment="lifecycle/extensions campaign active; R1/R2, R3.1-R3.4, R6.2a/b, R7.1-R7.3, R8.1 and R8.2a complete; R7.4 implementation active"/>
 
   <current-phase title="Current phase">
@@ -14,10 +14,11 @@
     projection atoms are landed and exactly gated. Pinned transactional state
     I/O, lease/selected ownership and the read-only tasks adapter are green
     under the first coherent panel. A9 execution ports, A10 lower projection
-    imports and A11's exact-four-dependency `vibe-orchestrator` plan carrier are
-    now landed; `[llm]` remains physically CLI-owned, so provider/model/token
-    configuration has not entered the shared layer. The atomic A12 core move
-    precedes trace/prompt/run adapters.
+    imports, A11's neutral plan carrier and A12's shared lifecycle application
+    service are now landed through `053b7e37` / `ba874cdf`. The service owns an
+    opaque selected-world bundle, install/resume and phase dispatch behind
+    typed ports; `[llm]`, trace finalisation, presentation and credentials
+    remain physically CLI-owned. A13 trace values precede prompt/run adapters.
     The owner-approved neutral R7.5 external-work substrate follows R7.4.
     </WAL-PHASE></p>
   </current-phase>
@@ -32,7 +33,7 @@
       presets/query and owner scenario §10.1 are complete.</WAL-R2>
       <WAL-R3 fact="true" status="impl/done">R3 explicit six-carrier compiler
       IR, named pass schedule, verifier and command-owned compile trace are
-      complete. Post-checkpoint specmap: 6786 units, 2073 tagged items, 1856 edges,
+      complete. Post-A12 specmap: 6787 units, 2160 tagged items, 1941 edges,
       0 suspects, 0 gated orphans, 0 unresolved host edges, 21 standing
       warnings.</WAL-R3>
       <WAL-R7 fact="true" status="impl/work">R7.1 provider, R7.2 CLI agent
@@ -54,6 +55,11 @@
       tests+clippy, conform 0 new, codegen/specmap/wire and markup 508/0 all
       ended `self-check: all green` after boundary repairs `4ecd2cc5`,
       `21567b6c`, `a4253de7`.
+      A9 execution ports, A10 lower projection and A11 neutral plan are landed;
+      A12 is complete at `053b7e37` / `ba874cdf`. Its opaque provenance and
+      sealed-plan gates, exact clean error chain, registry epoch, 74 unit + 50
+      doctest + compile-fail, 566 CLI unit and focused lifecycle family passed,
+      and the final independent review returned PASS.
       R7.5 neutral
       evidence/query substrate follows. Provider presence activates nothing
       by itself.</WAL-R7>
@@ -129,10 +135,10 @@
 
   <next title="Next">
     <p><WAL-NEXT fact="true" status="impl/work">The accepted R7.4
-    architecture through A11 is landed: state/lease/selected/tasks, three
+    architecture through A12 is landed: state/lease/selected/tasks, three
     execution ports, the lower projection dependency and a surface-neutral
-    orchestrator plan value. Complete the single-planner A12 core move, A13
-    trace values, A14 credential-free prompt resolver and A15 hosted
+    orchestrator application service. Complete A13 trace values, A14
+    credential-free prompt resolver and A15 hosted
     `lifecycle_run`, then run the R7.4 boundary panel. Follow with R7.5 exact evidence,
     optional read-only spec-IR facts and a fake external PDSA orchestrator — no
     embedded agent policy. Resume R4 registry/transforms after those neutral

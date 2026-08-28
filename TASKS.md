@@ -140,16 +140,22 @@ fronts currently in flight. A worker report or old worktree is never completion.
             neutral plan fields behind an exact dependency RED; `[llm]`
             remains in a temporary CLI wrapper and no provider/model/token
             configuration crosses the lower boundary.
-      - [ ] A12 atomic move-and-rewire: prepared world, dispatch/phase/direct
-            callback and shared install execution behind neutral resolver,
-            observer, confirmation, agent and measured-failure ports; one
-            final planner, no CLI/MCP/LLM back-edge.
+      - [x] A12 atomic move-and-rewire (`053b7e37`, `ba874cdf`): prepared
+            selected-world provenance, dispatch/phase/direct callback and
+            shared install execution now live behind neutral resolver,
+            observer, confirmation, agent and measured-failure ports. The
+            opaque bundle, sealed eight-field plan, early lease/selected
+            gates, seed-before-global registry epoch and exact clean error
+            chain passed independent final review plus 74 orchestrator unit,
+            50 doctest, compile-fail, 566 CLI unit and focused lifecycle
+            gates; no CLI/MCP/LLM back-edge entered the service.
       - [ ] A13 trace-funnel values move while CLI presentation remains.
       - [ ] A14 credential-free prompt resolution moves into
             `vibe-lifecycle::agent` with zero provider construction.
       - [ ] A15 strict hosted/no-spend MCP `lifecycle_run`, executed-failure
             structure and cross-surface parity; then the R7.4 full panel.
-- [ ] **R7.5** — neutral external work-loop substrate: structured verification
+- [ ] **R7.5** — neutral external work-loop substrate (owner ruling reaffirmed
+      2026-08-28): structured verification
       evidence bound to exact tree/artifact/run identity; optional read-only
       spec-IR facts (`stable id + status + provenance + unmet/stale`); CLI/MCP
       query/control surfaces; fake external PDSA orchestrator RED. Lifecycle

@@ -23,9 +23,9 @@ writer, shared command wire/state, borrowed workspace/install plumbing,
 Install/Lifecycle/Update/Reinstall owners, exact displaced continuation and
 the final four-family parity matrix. The final quality tail repaired every
 panel-discovered stale oracle and discipline ratchet rather than baselining it.
-All accepted R3.4 worktrees and fan-out worktrees were reviewed, archived and
-reclaimed under rolling GC; **only `main` remains**. Missing later waves were
-never implemented.
+All accepted R3.4 and R7.4-through-A12 worktrees and fan-out worktrees were
+reviewed, archived and reclaimed under rolling GC; **only `main` remains**.
+Missing later waves were never implemented.
 
 The reusable decisions from untracked architecture/review reports are
 synthesised below. Those reports are evidence inputs, not authority and not the
@@ -37,20 +37,23 @@ than depending on untracked `cache/` archaeology.
 
 ## 2. Evidence standard and current baseline
 
-- Integration checkpoint: `main` at `3656a889` contains the complete accepted
-  R3.4 chain, final command-root oracle migration, conform/document REDs and
-  derived retrieval map. `git cherry main wt/r34-update-reinstall` marked all
-  eleven branch commits patch-equivalent before that last worktree was removed.
-- The final unchanged tree passed the whole self-check through
-  `self-check: all green` and `SELF_CHECK_EXIT=0` on 2026-08-28. The script's
-  lexical denominator advertised 47 while dynamic loop calls executed 54
-  gates; the denominator defect is recorded in PROP-055, and every emitted
-  gate including the final whole-run user-home tripwire passed.
-- Final host `vibe check`: 0 errors, 5 warnings, 0 info. Final workspace
+- Integration checkpoint: `main` at `ba874cdf` contains the complete accepted
+  R3.4 chain and R7.4 through A12. A12's shared lifecycle application service
+  is `053b7e37`; its derived retrieval map is `ba874cdf`. The service owns one
+  opaque selected-world bundle, install/resume and phase dispatch behind typed
+  ports, while CLI still owns trace finalisation, presentation, credentials and
+  provider construction.
+- The last coherent whole-panel boundary is R7.4 A0–A8 at `a4253de7`:
+  `self-check: all green`, exit 0 on 2026-08-28. The script's lexical
+  denominator advertised 47 while dynamic loop calls executed 54 gates; the
+  denominator defect is recorded in PROP-055, and every emitted gate including
+  the final whole-run user-home tripwire passed. A12 deliberately used exact
+  affected gates; the next whole-panel boundary is A15.
+- That boundary's host `vibe check`: 0 errors, 5 warnings, 0 info. Workspace
   conform: 27 visible acknowledged findings, 0 frozen and **0 new**. The
   panel's full workspace tests, clippy `-D warnings`, codegen, wire-diff,
   package/MCP suites, self-traces and markup validation all passed.
-- Post-checkpoint `cargo xtask specmap`: 6786 units, 2073 tagged code items, 1856 edges,
+- Post-A12 `cargo xtask specmap`: 6787 units, 2160 tagged code items, 1941 edges,
   0 suspects, 0 gated orphans, 0 unresolved host edges and 21 standing
   warnings. The 25 non-host edges are outside this map's jurisdiction.
 - R6.2b integration evidence on the current tree: `cargo xtask codegen`
@@ -235,7 +238,7 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 | R7.1 real provider seam | done | `f42334ff`, `e2392893`; JTD wire, config, endpoint/redirect/proxy/body/timeout/redaction tests |
 | R7.2 CLI agent handler + output contract | done | `26929050`; strict AgentResult JTD, prepared prompt/world resolution, ResultPlan, optional provider path, create/install/reinstall/update e2e and shared safe filesystem cell |
 | R7.3 hosted outbox/delegated resume | done | `1dd5e1f5`, generated reports `eae4494e`; durable run/outbox, exact task ownership, candidate-state atomicity, phase/slot reconciliation, command-level progress, no-spend sequential resume and independent final freeze |
-| R7.4 MCP lifecycle surfaces | in progress | architecture `ee2bc67f`; first wave `94f30aa9`, `88600508`, `87c2bab8`, `daf6eb31`, `17d94f8f`; A4 `31ca1e7d` / `0225ce41` / `970520d4`; A5 `7e330974` / `93177db6`; A6 `7bd335e2` / `b3ff308c`, `e1121d9b`, `b4d91749`, `8debdf2e`, `c82012c3`; A7–A8 tasks cut `cf5ec17d`, `ee741f2e` / `d338e880`, `30534ff9` / `7b9732f0`, `df678d7b` / `c62177fe`; final A0–A8 full panel on `a4253de7` ran all 54 dynamic gates green after explicit boundary repairs `4ecd2cc5`, `21567b6c`, `a4253de7`; A9 ports/stream REDs `5506cf88` / `9732ba38` / `18a797b2`; A10 lower projection imports `53e84790`; A11 exact-four-dependency, conform-gated neutral plan crate `2560ee57` / `78ea8cc5`, with `[llm]` physically retained by CLI; A12 atomic core move next |
+| R7.4 MCP lifecycle surfaces | in progress | architecture `ee2bc67f`; first wave `94f30aa9`, `88600508`, `87c2bab8`, `daf6eb31`, `17d94f8f`; A4 `31ca1e7d` / `0225ce41` / `970520d4`; A5 `7e330974` / `93177db6`; A6 `7bd335e2` / `b3ff308c`, `e1121d9b`, `b4d91749`, `8debdf2e`, `c82012c3`; A7–A8 tasks cut `cf5ec17d`, `ee741f2e` / `d338e880`, `30534ff9` / `7b9732f0`, `df678d7b` / `c62177fe`; final A0–A8 full panel on `a4253de7` ran all 54 dynamic gates green after explicit boundary repairs `4ecd2cc5`, `21567b6c`, `a4253de7`; A9 ports/stream REDs `5506cf88` / `9732ba38` / `18a797b2`; A10 lower projection imports `53e84790`; A11 exact-four-dependency, conform-gated neutral plan crate `2560ee57` / `78ea8cc5`, with `[llm]` physically retained by CLI; A12 shared application service `053b7e37` / `ba874cdf`, independently reviewed PASS with opaque selection/plan invariants, 74 unit + 50 doctest + compile-fail, 566 CLI unit and focused lifecycle/golden/lease/resume/trace gates green; A13 trace values next |
 | R7.5 external orchestration substrate | missing | owner ruling reaffirmed 2026-08-28: structured lifecycle evidence + exact tree/run identity + optional read-only requirements/spec-IR facts which an external long-running agent may use to see unmet/stale requirements and choose direction; no coding agent or automatic loop inside lifecycle; reference agent is a future campaign |
 
 R7 live Z.AI smoke is now conclusive (2026-08-27): central `vibe create`
@@ -508,6 +511,12 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
   **17,706,580,701 bytes** immediately before removal; after integration,
   durable decision capture and merged-tree gates it was removed and
   `git worktree prune` left only `main`.
+- The accepted R7.4 A12 worktree was fast-forwarded through `ba874cdf`, its
+  unique design/review reports were archived under local `cache/r74-a12/`, and
+  the worktree plus its warm target were reclaimed immediately. Git removed
+  the registry entry first; the residual long-path tree was then removed by an
+  exact-path `git -c core.longpaths=true clean -ffdx` fallback. Only `main`
+  remains registered.
 - `cache/` is untracked and unignored. It is not a product home. Important
   decisions from its R3.3, R4–R5 and R6–R8 reports are now represented in this
   ledger; future accepted decisions go directly here/spec-debt/code comments.
