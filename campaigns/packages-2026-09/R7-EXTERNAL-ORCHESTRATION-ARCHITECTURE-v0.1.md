@@ -83,7 +83,7 @@ ASCII byte `0|1`; counts are canonical decimal UTF-8. Schema order is:
 4. `effective_config`, always, as the same sorted-key canonical JSON delivered
    in the lifecycle envelope; absent and explicitly empty effective config are
    intentionally one executable value;
-5. `provider_kind`, `provider_id`, `provider_version`,
+5. `provider_kind` (`dependency|host`), `provider_id`, `provider_version`,
    `provider_content_present` and optional `provider_content`;
 6. `inputs_present`, then, when present, `pattern_count` and every
    declaration-order `pattern`; therefore absent and authored-empty inputs
