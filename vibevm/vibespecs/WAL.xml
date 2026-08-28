@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
-  <title id="root">WAL — checkpoint 2026-08-28: R7.5 P2/A1 landed; query library next</title>
-  <status stage="impl" state="work" comment="lifecycle/extensions campaign active; R1/R2, R3.1-R3.4, R6.2a/b, R7.1-R7.4, R8.1 and R8.2a complete; R7.5 P0/P1/P2-A1 complete, P2-A2 next"/>
+  <title id="root">WAL — checkpoint 2026-08-28: R7.5 requirements query/relations landed; measurement next</title>
+  <status stage="impl" state="work" comment="lifecycle/extensions campaign active; R1/R2, R3.1-R3.4, R6.2a/b, R7.1-R7.4, R8.1 and R8.2a complete; R7.5 P0/P1/P2-A1-A3 complete, P2-A4 next"/>
 
   <current-phase title="Current phase">
     <p><WAL-PHASE fact="true" status="impl/work">The active epic is
@@ -34,6 +34,9 @@
     reuses it. Architecture correction `1898382d` / `7a5b6837` separates
     hosted inclusive-chain resume from uninterrupted stale→recompute and pins
     the failure-carried evidence/member identity laws before A4/A5 code.
+    A2/A3 are now landed through one-read witnesses `5fb4246d`, shared query
+    `6a300cf8`, lock authority `a1095d8e` and relation adapter `ea031767`, with
+    maps/trust refinements through `8a05d344`. P2/A4 measurement is next.
     </WAL-PHASE></p>
   </current-phase>
 
@@ -47,7 +50,7 @@
       presets/query and owner scenario §10.1 are complete.</WAL-R2>
       <WAL-R3 fact="true" status="impl/done">R3 explicit six-carrier compiler
       IR, named pass schedule, verifier and command-owned compile trace are
-      complete. Post-R7.5-P2/A1 checkpoint specmap: 6814 units, 2220 tagged items, 1989 edges,
+      complete. Post-R7.5-P2/A3 checkpoint specmap: 6814 units, 2230 tagged items, 1999 edges,
       0 suspects, 0 gated orphans, 0 unresolved host edges, 24 standing
       warnings.</WAL-R3>
       <WAL-R7 fact="true" status="impl/done">R7.1 provider, R7.2 CLI agent
@@ -109,6 +112,14 @@
       shared by the CLI, MD/XML split brains refuse, and all 16 unit + 8
       doctest + 6 CLI oracles are green. P2/A2 query/provider is next; the
       hosted/stale correction is frozen before measurement runtime.</WAL-R75>
+      <WAL-R75-QUERY fact="true" status="impl/done">R7.5 requirements
+      library and relation enrichment are complete: one read-only query,
+      one-read source/registry witnesses, three exact digest domains, explicit
+      partial source states, one provider call and current/carried adapter.
+      Carried maps are record/hash/capability proven and current namespace is
+      exact; root gates passed query 37+3, trace 57+8 and workspace 449 with
+      strict clippy/conform/workspace check and specmap 6814/2230/1999 at zero
+      suspects/orphans/unresolved.</WAL-R75-QUERY>
       <WAL-R8 fact="true" status="impl/work">R8.1 project-only package-skill
       binding and R8.2a mechanism/artifact/deploy grammar are complete. Runtime
       mechanisms, build/package providers and deploy reconciliation remain.
@@ -187,12 +198,11 @@
 
   <next title="Next">
     <p><WAL-NEXT fact="true" status="impl/work">Execute R7.5 P2 in the
-    recorded dependency order: extract the dependency-clean root scanner and
-    adoption join into `vibe-facts` (**done at `1dac7531`**); now add the one
-    `vibe-requirements` query and optional relation-provider trait, then
-    implement the current/carried adapter in `vibe-trace`; after that serialize
-    lifecycle's one-pass input/artifact measurement and verify reconciliation
-    against the landed P1 wire. Use
+    recorded dependency order: the `vibe-facts` scanner/join, one
+    `vibe-requirements` query and current/carried `vibe-trace` adapter are done
+    through `ea031767` / `8a05d344`. Now serialize lifecycle's one-pass
+    input/artifact measurement and then verify reconciliation against the
+    landed P1 wire. Use
     exact affected gates per atom. P3 adds only the thin CLI/MCP surfaces and
     fake external PDSA scenario; R4 resumes after neutral R7.5 closes.</WAL-NEXT></p>
   </next>
