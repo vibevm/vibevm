@@ -166,12 +166,33 @@ failure.
 
 The adapter:
 
-- builds the project map fresh in memory once when relations are requested;
+- implements `vibe-requirements::RelationProvider` and returns only
+  `Available | Stale | Unavailable | Invalid` outcomes plus
+  address-associated edges; the query library alone maps those outcomes to
+  `current|carried` and provenance from base source kind;
+- builds the selected host map fresh in memory once when relations are
+  requested, only when `specmap.toml.namespace` equals the selected host
+  coordinate; absent config is unavailable and a namespace mismatch is not a
+  successful zero-edge map;
 - exposes current host edges without raw source/code bodies;
-- reuses the existing carried `package.specmap.json` path for installed
-  packages rather than rebuilding private package source that may not ship;
-- reports `current | carried | stale | unavailable | invalid` with provenance;
+- consumes A2's already lock-selected materialised root and expected content
+  hash — never a second slot discovery — and reuses the carried
+  `package.specmap.json` rather than rebuilding private package source that
+  may not ship;
+- accepts a carried map only when `.vibe-slot.toml.source_hash` equals the
+  lock-selected content hash, the record owns a `package.specmap.json` row and
+  the file's SHA-256 equals that row. Missing record/map is unavailable,
+  source-hash or map-hash mismatch is stale, matching malformed JSON is
+  invalid. This certifies the exact published map byte, not a fictional
+  consumer rebuild of transformed/unshipped source;
+- emits every edge `file` workspace-root-relative: a selected-member host edge
+  is prefixed by `observation.selected`, and a package edge by its
+  materialised slot's workspace-relative path;
 - never writes `specmap.json`.
+
+`vibe-trace` may depend on `vibe-workspace` for the shared slot-record reader
+and SHA helper. The edge is acyclic (`vibe-workspace` does not depend on
+`vibe-trace`) and is preferable to copying the slot-record/hash grammar.
 
 ## 3. P1 — JTD and state evolution
 
@@ -465,14 +486,15 @@ still return.
 
 No relation provider may change authoring/adoption or lifecycle evidence.
 The provider is called once with the selected/workspace roots, every enumerated
-base source (including its optional materialised root) and the sorted limited
-addresses. It returns per-package `available|stale|unavailable|invalid` plus
-edges; it never chooses `current|carried` or provenance. The library derives
-those wire values from the base source kind, making host-carried and
-package-current combinations unrepresentable. A whole-provider failure maps
-every requested source to typed unavailable enrichment; base rows still
-return. Provider output for an unrequested address is a provider-invalid
-source result, never silently attached elsewhere.
+base source (including its optional materialised root and, for a lock-selected
+package, expected content hash) and the sorted limited addresses. It returns
+per-package `available|stale|unavailable|invalid` plus edges; it never chooses
+`current|carried` or provenance. The library derives those wire values from
+the base source kind, making host-carried and package-current combinations
+unrepresentable. A whole-provider failure maps every requested source to typed
+unavailable enrichment; base rows still return. Provider output for an
+unrequested address is a provider-invalid source result, never silently
+attached elsewhere.
 
 ## 6. P3 — surfaces
 
@@ -669,6 +691,18 @@ the reference writer emits explicit not-requested rows; provenance belongs to
 the library, not the provider. Raw bytes never cross into the report or public
 query result — only per-file witnesses do — and Q4 now agrees with the P1
 source-digest contract.
+
+The P2 A3 audit's carried-map witness gap is resolved without pretending the
+specmap schema carries a source-tree digest: A2 passes the lock content hash;
+A3 checks it against the slot record and checks the map byte against the
+recorded file row. A match means “this is the map byte published in the exact
+lock-selected package snapshot”, not “the consumer rebuilt private source”.
+The audit's namespace gate, no-second-discovery finding,
+workspace-root-relative edge rule and cycle-safe
+`vibe-trace → vibe-workspace` dependency are accepted. Its claim that no
+producer exists is narrowed: `vibe specmap` already produces
+`package.specmap.json`; today's installed slots merely carry none, so answers
+are honestly unavailable until a package ships one.
 
 All accepted facts now live here, in normative specs or in the forthcoming
 tests; the untracked reports are disposable after P0 acceptance.
