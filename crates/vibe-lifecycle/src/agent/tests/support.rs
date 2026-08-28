@@ -120,7 +120,19 @@ impl AgentBackend for RecordingBackend {
 /// `config_toml` is the authored `[extension.config]` body verbatim, so a
 /// contract red case declares exactly what a manifest would declare.
 pub(crate) fn row(config_toml: &str, prompt: &str) -> ExtensionRegistryRow {
-    registry(config_toml, prompt)
+    row_at(config_toml, prompt, PathBuf::from(PROVIDER_ROOT))
+}
+
+/// The same planned agent contribution, but executing from an EXPLICIT
+/// provider root — the seam the hosted-backend reds need, because the real
+/// resolver reads the provider's prompt documents from disk and the shared
+/// fixture's slot root is a relative spelling that never exists.
+pub(crate) fn row_at(
+    config_toml: &str,
+    prompt: &str,
+    provider_root: PathBuf,
+) -> ExtensionRegistryRow {
+    registry(config_toml, prompt, provider_root)
         .plan("phase:create".parse().unwrap(), SelectorSubject::unscoped())
         .first()
         .copied()
@@ -128,7 +140,7 @@ pub(crate) fn row(config_toml: &str, prompt: &str) -> ExtensionRegistryRow {
         .clone()
 }
 
-fn registry(config_toml: &str, prompt: &str) -> ExtensionRegistry {
+fn registry(config_toml: &str, prompt: &str, provider_root: PathBuf) -> ExtensionRegistry {
     let config = (!config_toml.trim().is_empty()).then(|| {
         ExtensionConfig::from_table(
             toml::from_str::<toml::Table>(config_toml).expect("fixture config is valid TOML"),
@@ -155,7 +167,7 @@ fn registry(config_toml: &str, prompt: &str) -> ExtensionRegistry {
                     Group::parse(PROVIDER_GROUP).unwrap(),
                     PackageName::parse(PROVIDER_NAME).unwrap(),
                 ),
-                root: PathBuf::from(PROVIDER_ROOT),
+                root: provider_root,
                 version: "1.0.0".into(),
                 kind: PackageKind::Tool,
                 content_hash: ContentHash::parse("sha256:aa").unwrap(),

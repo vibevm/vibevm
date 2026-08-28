@@ -8,6 +8,8 @@
 #[cfg(test)]
 mod contract;
 #[cfg(test)]
+mod hosted;
+#[cfg(test)]
 mod plan;
 #[cfg(test)]
 mod prior;

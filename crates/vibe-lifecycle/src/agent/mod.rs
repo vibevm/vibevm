@@ -25,6 +25,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-CLI");
 
 mod contract;
+mod hosted;
 mod prompt;
 mod resolver;
 mod result;
@@ -40,6 +41,7 @@ use vibe_wire::generated::lifecycle::e1::reply::{Reply, ReplyStatus};
 use crate::ExtensionRegistryRow;
 
 pub use contract::{OUTPUT_ACCEPT_NON_EMPTY, OUTPUT_KIND_FILE, OutputContract, OutputRow};
+pub use hosted::HostedAgentBackend;
 pub use prompt::{PromptRequest, ResolvedPrompt};
 pub(crate) use prompt::{system_prose, user_prose};
 pub use resolver::SelectedWorldPromptResolver;
