@@ -16953,36 +16953,36 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/lib.rs",
       "item_kind": "struct",
-      "line": 323,
+      "line": 338,
       "symbol": "vibe_workspace::Workspace",
-      "end_line": 365,
+      "end_line": 380,
       "fingerprint": "tok1:f11f238e760e70161733f73be4d7484718f476298a1076e53011eeaca8401432"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/lib.rs",
       "item_kind": "fn",
-      "line": 417,
+      "line": 432,
       "symbol": "vibe_workspace::Workspace::node_rel_of",
-      "end_line": 484,
+      "end_line": 499,
       "fingerprint": "tok1:efaecb95c92dc621d4b1357b2bc18580ec05ca2704aadabf9c397e7bb1ea4969"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/lib.rs",
       "item_kind": "enum",
-      "line": 58,
+      "line": 59,
       "symbol": "vibe_workspace::WorkspaceError",
-      "end_line": 275,
-      "fingerprint": "tok1:6d471dea20eb8cd095f4a05628601058d84e646361c1737f843b8ba4d997119f"
+      "end_line": 290,
+      "fingerprint": "tok1:099c088435dbf9da8e4df4bc5ff8f744fdef9b2ebfec38f6fcf61cedcbd65bed"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/lib.rs",
       "item_kind": "struct",
-      "line": 279,
+      "line": 294,
       "symbol": "vibe_workspace::WorkspaceMember",
-      "end_line": 321,
+      "end_line": 336,
       "fingerprint": "tok1:27e14926d8b3eee3a5f1ae2f6642e5506608113ff9f991cfe2f8b553110acb4e"
     },
     {
@@ -17474,11 +17474,29 @@
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/discovery.rs",
+      "item_kind": "struct",
+      "line": 30,
+      "symbol": "vibe_workspace::discovery::SelectedWorkspace",
+      "end_line": 46,
+      "fingerprint": "tok1:5be54f0677a332f655dcea7e380fc8b519b71b5d64ed0e25966b853c2deca83f"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/discovery.rs",
       "item_kind": "fn",
-      "line": 75,
+      "line": 93,
       "symbol": "vibe_workspace::discovery::Workspace::discover",
-      "end_line": 87,
+      "end_line": 105,
       "fingerprint": "tok1:e4c315b6133fb7ae73056a4f642e8c5c6205bfbe1419826d4e2386d2374d77d9"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/discovery.rs",
+      "item_kind": "fn",
+      "line": 107,
+      "symbol": "vibe_workspace::discovery::Workspace::discover_selected",
+      "end_line": 145,
+      "fingerprint": "tok1:e2973fdc24c0e000afd6a81e31385b04cadd62fe500f6c64218046ebb706349b"
     },
     {
       "crate_name": "vibe-workspace",
@@ -18010,6 +18028,24 @@
       "symbol": "vibe_workspace::lib::tests::discover_from_member_finds_absolute_root",
       "end_line": 201,
       "fingerprint": "tok1:b3b89995a15963456a19a4176745c16f201a5e0a78f3d33847300d0431b518bd"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/lib/tests.rs",
+      "item_kind": "fn",
+      "line": 523,
+      "symbol": "vibe_workspace::lib::tests::discover_selected_maps_canonical_direct_member_and_authored_rel",
+      "end_line": 536,
+      "fingerprint": "tok1:4dd0d9ef8ea7b50bb8f5f78f5138e3949b3078d6cea4009eb4d4fd4411078c31"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/lib/tests.rs",
+      "item_kind": "fn",
+      "line": 509,
+      "symbol": "vibe_workspace::lib::tests::discover_selected_maps_workspace_root",
+      "end_line": 521,
+      "fingerprint": "tok1:0b554bee00a41194c126ad2c3ea0a17607413d42ca509bf70df80169ff4baef4"
     },
     {
       "crate_name": "vibe-workspace",
@@ -32354,7 +32390,7 @@
     {
       "file": "crates/vibe-workspace/src/lib.rs",
       "from_symbol": "vibe_workspace::Workspace",
-      "line": 352,
+      "line": 367,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#workspace-section",
       "verb": "implements",
@@ -32363,7 +32399,7 @@
     {
       "file": "crates/vibe-workspace/src/lib.rs",
       "from_symbol": "vibe_workspace::Workspace::node_rel_of",
-      "line": 473,
+      "line": 488,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#workspace-section",
       "verb": "documents"
@@ -32371,7 +32407,7 @@
     {
       "file": "crates/vibe-workspace/src/lib.rs",
       "from_symbol": "vibe_workspace::WorkspaceError",
-      "line": 79,
+      "line": 80,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#nesting",
       "verb": "implements"
@@ -32379,7 +32415,7 @@
     {
       "file": "crates/vibe-workspace/src/lib.rs",
       "from_symbol": "vibe_workspace::WorkspaceMember",
-      "line": 302,
+      "line": 317,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#workspace-section",
       "verb": "implements",
@@ -32845,8 +32881,25 @@
     },
     {
       "file": "crates/vibe-workspace/src/discovery.rs",
+      "from_symbol": "vibe_workspace::discovery::SelectedWorkspace",
+      "line": 35,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#workspace-section",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-workspace/src/discovery.rs",
       "from_symbol": "vibe_workspace::discovery::Workspace::discover",
-      "line": 80,
+      "line": 98,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#nesting",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-workspace/src/discovery.rs",
+      "from_symbol": "vibe_workspace::discovery::Workspace::discover_selected",
+      "line": 126,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#nesting",
       "verb": "implements",
@@ -33356,6 +33409,24 @@
       "file": "crates/vibe-workspace/src/lib/tests.rs",
       "from_symbol": "vibe_workspace::lib::tests::discover_from_member_finds_absolute_root",
       "line": 179,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#nesting",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-workspace/src/lib/tests.rs",
+      "from_symbol": "vibe_workspace::lib::tests::discover_selected_maps_canonical_direct_member_and_authored_rel",
+      "line": 524,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#workspace-section",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-workspace/src/lib/tests.rs",
+      "from_symbol": "vibe_workspace::lib::tests::discover_selected_maps_workspace_root",
+      "line": 510,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#nesting",
       "verb": "verifies",
