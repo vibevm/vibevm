@@ -1,8 +1,12 @@
 # Lifecycle/extension campaign — R7/R8 amendment continuation
 
-_Draft only, 2026-08-26. Continuation of `SPEC-DEBT-LIFECYCLE.md`; this file is
-not authoritative and changes no PROP status. Exact architecture record:
-`BUILD-PACKAGE-DEPLOY-ARCHITECTURE-v0.1.md`._
+_Amendment queue, opened 2026-08-26. This file is not authoritative. R7
+present-truth/LLM laws from §§1–3 and the closed owner forks in §13 were applied
+at their owning PROP-000/PROP-054 anchors by R7.5-P0 on 2026-08-28; their draft
+text below is historical input, not a second live contract. Sections 4–12 remain
+the R8 queue. Exact R8 architecture record:
+`BUILD-PACKAGE-DEPLOY-ARCHITECTURE-v0.1.md`; exact R7.5 architecture record:
+`R7-EXTERNAL-ORCHESTRATION-ARCHITECTURE-v0.1.md`._
 
 ## 0. Evidence and ruling boundary
 
@@ -17,6 +21,7 @@ Landed evidence safe to cite now:
 | `9275f373`, `67886ea7` | project package-skill binding has strict JTD receipt, intent/recovery/CAS, exact ownership, lossless path handling and Unicode-9 physical-alias protection across Claude/Codex/OpenCode projections |
 | `2a3f3b44` | strict artifact/mechanism/deploy grammar, target DAGs, provider pins/routes and named profiles with parse/write symmetry |
 | `1dd5e1f5`, `eae4494e` | R7.3 durable hosted run/outbox, candidate-state atomicity, exact phase/slot reconciliation, same-command no-spend resume and generated install/update/reinstall report roots |
+| `9c340df8`, `6f074e66`, `77752cd8` | R7.4 strict hosted MCP lifecycle run/tasks, final all-green boundary and mirrored checkpoint |
 
 The production provider's mock, loopback, proxy, redirect, size, redaction and
 timeout gates are green. The earlier ordinary-process transport failure was
@@ -389,12 +394,12 @@ No movement is applied by this draft.
 
 | Anchor | Proposed when evidence lands |
 |---|---|
-| PROP-000 `##CRATE-LLM` | `impl/work` now (`e2392893`) |
-| PROP-054 `##AGENT-CLI` provider seam | add `impl/done` provider successor (`e2392893`) |
-| PROP-054 `##AGENT-CLI` CLI execution | add `impl/done` successor (`26929050`); hosted/MCP remain work |
-| PROP-054 `##AGENT-HANDSHAKE` hosted execution | add `impl/done` successor (`1dd5e1f5`, `eae4494e`); MCP remains work |
-| `##OPEN-CREATE-BUDGET` | close by §3 owner ruling after mode/budget implementation |
-| `##OPEN-DEPLOY-TARGETS` | close by §8 owner ruling; grammar/profiles landed at `2a3f3b44`, runtime statuses remain open |
+| PROP-000 `##CRATE-LLM` | applied `impl/done` in R7.5-P0 after R7.4 closure |
+| PROP-054 `##AGENT-CLI` provider seam | applied as `##AGENT-PROVIDER-SEAM`, `impl/done` |
+| PROP-054 `##AGENT-CLI` CLI execution | applied as `##AGENT-CLI-EXECUTION`, `impl/done` |
+| PROP-054 `##AGENT-HANDSHAKE` + MCP | hosted anchor already `impl/done`; `##AGENT-MCP-SURFACE` applied `impl/done` |
+| `##OPEN-CREATE-BUDGET` | closed `spec/done`; policy at `##LLM-BUDGET`, grammar/defaults remain consuming-feature implementation work |
+| `##OPEN-DEPLOY-TARGETS` | closed `spec/done` by §8 owner ruling; grammar/profiles landed at `2a3f3b44`, runtime statuses remain open |
 | project package-skill binding | record `impl/done` safety successor at `9275f373`/`67886ea7`; do not imply user deploy |
 | artifact/mechanism/deploy grammar | record `impl/done` grammar successor at `2a3f3b44`; records/routing/runtime remain open |
 | `##PHASE-BUILD`, `##PHASE-PACKAGE`, `##PHASE-DEPLOY` | move only per landed mechanism/target evidence |
