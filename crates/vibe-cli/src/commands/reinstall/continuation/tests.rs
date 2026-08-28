@@ -60,6 +60,56 @@ fn metadata() -> RunMetadata {
     }
 }
 
+/// The resume request keeps the two roots distinct: lifecycle state is owned
+/// by the absolute workspace, while handlers and the selected-node gate act on
+/// the exact member the command already canonicalised. Replacing the selected
+/// root with `workspace.root` reproduces the cross-surface regression in
+/// `cli_trace_update_reinstall` and turns this red before any handler runs.
+#[test]
+fn a_member_resume_request_carries_the_selected_node_not_the_workspace_root() {
+    let tree = tempfile::tempdir().unwrap();
+    std::fs::write(
+        tree.path().join("vibe.toml"),
+        "[project]\nname = \"root\"\nversion = \"0.0.1\"\n\n\
+         [workspace]\nmembers = [\"member\"]\n",
+    )
+    .unwrap();
+    let member = tree.path().join("member");
+    std::fs::create_dir(&member).unwrap();
+    std::fs::write(
+        member.join("vibe.toml"),
+        "[package]\ngroup = \"org.demo\"\nname = \"member\"\n\
+         kind = \"flow\"\nversion = \"0.1.0\"\n",
+    )
+    .unwrap();
+
+    let selected = Workspace::discover_selected(&member).unwrap();
+    let identity = ReinstallIdentity {
+        selected_project_root: selected.selected_root.clone(),
+        forced: false,
+    };
+    let mut metadata = metadata();
+    metadata.selected = selected.selected.as_str().to_string();
+    let lease = std::sync::Arc::new(LifecycleLease::acquire(&selected.workspace.root).unwrap());
+    let agent: std::sync::Arc<dyn vibe_lifecycle::AgentBackend> =
+        std::sync::Arc::new(vibe_lifecycle::NoAgentBackend);
+
+    let resumed = resume_request(Request {
+        identity: &identity,
+        workspace: &selected.workspace,
+        metadata: &metadata,
+        lease: &lease,
+        progress: InstallProgress::default(),
+        agent,
+    });
+
+    assert_eq!(resumed.project_root, identity.selected_project_root);
+    assert_ne!(
+        resumed.project_root, selected.workspace.root,
+        "a member resume must never collapse its selected node to the state root",
+    );
+}
+
 /// A NONDEFAULT completed progress — every list distinct and populated, so a
 /// replacement with `InstallProgress::default()` or with some other run's
 /// record is visible field by field.

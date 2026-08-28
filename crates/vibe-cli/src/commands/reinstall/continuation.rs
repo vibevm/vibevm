@@ -153,7 +153,14 @@ pub(super) fn service(ctx: &output::Context, request: Request<'_>) -> Result<Opt
 /// The one `ResumeRequest` both wrappers build, from the values handed in.
 fn resume_request(request: Request<'_>) -> ResumeRequest<'_> {
     ResumeRequest {
-        project_root: &request.workspace.root,
+        // Selection and state have different roots in a workspace member
+        // invocation. The lease/state stay at `workspace.root`; the resumed
+        // handlers and the selected-node agreement gate must receive the
+        // canonical node the command already carried. Reconstructing this
+        // from `metadata.selected` would parse a persisted spelling back into
+        // authority, while collapsing it to `workspace.root` would silently
+        // turn every member resume into a root invocation.
+        project_root: &request.identity.selected_project_root,
         workspace: request.workspace,
         metadata: request.metadata,
         lease: request.lease,
