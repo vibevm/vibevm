@@ -167,6 +167,23 @@ fronts currently in flight. A worker report or old worktree is never completion.
             construct no provider and remain algorithmic.
       - [ ] A15 strict hosted/no-spend MCP `lifecycle_run`, executed-failure
             structure and cross-surface parity; then the R7.4 full panel.
+            - [x] A15a shared package-source composition (`5df76260`,
+                  `23044cfd`): `vibe-package-source` owns the one resolver,
+                  project-local/embedded/declared precedence and R-001 cell
+                  registry behind neutral options; CLI keeps grammar and
+                  typed short-name qualification. Hosted defaults resolve real
+                  dependencies without any LLM/provider edge. Central review
+                  ran 22 unit + 6 doctest, exit-7, zero-source, strict clippy,
+                  conform/specmap and mutation REDs. The acceptance-discovered
+                  member-resume root regression is fixed independently in
+                  `da2ff985`; multi-registry conform debt is B-109
+                  (`b615ebe5`).
+            - [ ] A15b lease-first high-level command API: compute the
+                  inclusive chain below the surfaces, preserve one selected
+                  snapshot/identity/trace and rewire the CLI default path.
+            - [ ] A15c hosted backend and strict MCP tool: shared real package
+                  source, no-spend agent canary, generated success/park/failure
+                  root, cross-surface parity and the full R7.4 panel.
 - [ ] **R7.5** — neutral external work-loop substrate (owner ruling reaffirmed
       2026-08-28): structured verification
       evidence bound to exact tree/artifact/run identity; optional read-only

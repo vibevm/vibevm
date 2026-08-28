@@ -23,7 +23,7 @@ writer, shared command wire/state, borrowed workspace/install plumbing,
 Install/Lifecycle/Update/Reinstall owners, exact displaced continuation and
 the final four-family parity matrix. The final quality tail repaired every
 panel-discovered stale oracle and discipline ratchet rather than baselining it.
-All accepted R3.4 and R7.4-through-A14 worktrees and fan-out worktrees were
+All accepted R3.4 and R7.4-through-A15a worktrees and fan-out worktrees were
 reviewed, archived and reclaimed under rolling GC; **only `main` remains**.
 Missing later waves were never implemented.
 
@@ -43,8 +43,9 @@ than depending on untracked `cache/` archaeology.
   A14's credential-free selected-world resolver is `cd793ca9` / `2b08c818`.
   The lower service owns one opaque selected-world bundle, install/resume,
   phase dispatch and non-rendering trace finalisation; CLI still owns registered
-  report families, deferred-plan routing, presentation, credentials and
-  provider construction.
+  report families, deferred-plan routing, presentation, credentials and LLM
+  provider construction; registry/package-source composition is the separate
+  neutral A15a crate.
 - The last coherent whole-panel boundary is R7.4 A0–A8 at `a4253de7`:
   `self-check: all green`, exit 0 on 2026-08-28. The script's lexical
   denominator advertised 47 while dynamic loop calls executed 54 gates; the
@@ -240,7 +241,7 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 | R7.1 real provider seam | done | `f42334ff`, `e2392893`; JTD wire, config, endpoint/redirect/proxy/body/timeout/redaction tests |
 | R7.2 CLI agent handler + output contract | done | `26929050`; strict AgentResult JTD, prepared prompt/world resolution, ResultPlan, optional provider path, create/install/reinstall/update e2e and shared safe filesystem cell |
 | R7.3 hosted outbox/delegated resume | done | `1dd5e1f5`, generated reports `eae4494e`; durable run/outbox, exact task ownership, candidate-state atomicity, phase/slot reconciliation, command-level progress, no-spend sequential resume and independent final freeze |
-| R7.4 MCP lifecycle surfaces | in progress | architecture `ee2bc67f`; first wave `94f30aa9`, `88600508`, `87c2bab8`, `daf6eb31`, `17d94f8f`; A4 `31ca1e7d` / `0225ce41` / `970520d4`; A5 `7e330974` / `93177db6`; A6 `7bd335e2` / `b3ff308c`, `e1121d9b`, `b4d91749`, `8debdf2e`, `c82012c3`; A7–A8 tasks cut `cf5ec17d`, `ee741f2e` / `d338e880`, `30534ff9` / `7b9732f0`, `df678d7b` / `c62177fe`; final A0–A8 full panel on `a4253de7` ran all 54 dynamic gates green; A9 ports `5506cf88` / `9732ba38` / `18a797b2`; A10 projection `53e84790`; A11 plan `2560ee57` / `78ea8cc5`; A12 application `053b7e37` / `ba874cdf`; A13 trace `3f01e2dc` / `afdd3adc`; A14 selected-world prompt resolver `cd793ca9` / `2b08c818`, 11 lower REDs including 9/11 scan-mutation failures, 213 unit + 14 doctest, 36 CLI integration, clippy/conform/specmap green; A15 MCP run + full panel next |
+| R7.4 MCP lifecycle surfaces | in progress | architecture `ee2bc67f`; first wave `94f30aa9`, `88600508`, `87c2bab8`, `daf6eb31`, `17d94f8f`; A4 `31ca1e7d` / `0225ce41` / `970520d4`; A5 `7e330974` / `93177db6`; A6 `7bd335e2` / `b3ff308c`, `e1121d9b`, `b4d91749`, `8debdf2e`, `c82012c3`; A7–A8 tasks cut `cf5ec17d`, `ee741f2e` / `d338e880`, `30534ff9` / `7b9732f0`, `df678d7b` / `c62177fe`; final A0–A8 full panel on `a4253de7` ran all 54 dynamic gates green; A9 ports `5506cf88` / `9732ba38` / `18a797b2`; A10 projection `53e84790`; A11 plan `2560ee57` / `78ea8cc5`; A12 application `053b7e37` / `ba874cdf`; A13 trace `3f01e2dc` / `afdd3adc`; A14 selected-world prompt resolver `cd793ca9` / `2b08c818`; A15a one shared algorithmic package-source composition `5df76260` / `23044cfd`, with selected-member resume repair `da2ff985` and conform-engine debt B-109 `b615ebe5`; 22 unit + 6 doctest, exit-7, zero-source, member trace target, strict clippy, conform 0 new and specmap green; A15b command API then A15c MCP run + full panel next |
 | R7.5 external orchestration substrate | missing | owner ruling reaffirmed 2026-08-28: structured exact-tree/artifact/run evidence + optional read-only facts keyed by full `spec://…#fact`; status-bearing source is `vibe-specdoc` + consumer `vibe-facts`, current specmap relations are optional; external long-running agents may use separately typed observations to choose direction, while lifecycle contains no coding agent, task heuristic or automatic loop |
 
 R7 live Z.AI smoke is now conclusive (2026-08-27): central `vibe create`
@@ -511,6 +512,21 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
     `#use`/`#source` is reported unsupported after expansion. User config,
     credential reading, transport construction and completion remain in the
     CLI paid half; hosted surfaces reuse the resolver and cannot pay.
+35. Package-source construction is one algorithmic composition in
+    `vibe-package-source`: the same resolver/cell registry serves CLI and MCP,
+    while each surface projects its own grammar and injects its own short-name
+    policy. The hosted default admits no package arguments but still resolves
+    declared real dependencies through project-local, embedded and declared
+    registries; zero-dependency lifecycle runs construct no source at all.
+    Provider/model/token configuration has no dependency path into this crate.
+    Until conform accepts multiple `(crate, registry-file)` pairs, B-109's
+    exact-set/source-fence RED is the explicit interim protection.
+36. Workspace state root and selected operation root remain different typed
+    facts through a continuation. Reinstall slot resume reads/writes lifecycle
+    state under the lease's workspace root, but derives its selected manifest,
+    handler host and selected-node agreement from the canonical
+    `ReinstallIdentity.selected_project_root`; it never reparses the persisted
+    relative spelling and never collapses a member invocation to the root.
 
 ## 6. Physical state and loss prevention
 
@@ -537,6 +553,12 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
   correction loop, then reran every decisive gate before `3f01e2dc`. No new
   worktree or rebuildable target was created; the report remains local under
   `cache/r74-a13/` and only `main` is registered.
+- A14 and A15a also ran directly on the active `main` checkout. Primary
+  `claudez` completed the A15a extraction and two same-cwd review corrections;
+  a separate `claudez2` repair lane returned its own 429 before editing, so the
+  central Ultra context implemented and mutation-proved the selected-member
+  resume repair. No worktree/target clone was created; local reports remain
+  under `cache/r74-a15a-package-source/`, and only `main` is registered.
 - `cache/` is untracked and unignored. It is not a product home. Important
   decisions from its R3.3, R4–R5 and R6–R8 reports are now represented in this
   ledger; future accepted decisions go directly here/spec-debt/code comments.
