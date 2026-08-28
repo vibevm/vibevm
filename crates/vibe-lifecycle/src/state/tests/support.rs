@@ -24,6 +24,7 @@ pub(super) fn open(root: &Path) -> LifecycleStateStore {
         vec!["validate".into(), "install".into(), "create".into()],
         "2026-08-28T00:00:00Z".into(),
         RUN_ID.into(),
+        ".".into(),
         false,
     )
     .unwrap()

@@ -49,6 +49,7 @@ fn metadata(root: &std::path::Path) -> RunMetadata {
         trace_compile: false,
         run_id: vibe_lifecycle::process::allocate_run_id(root).unwrap(),
         started: crate::commands::init::current_timestamp_utc(),
+        selected: ".".into(),
     }
 }
 

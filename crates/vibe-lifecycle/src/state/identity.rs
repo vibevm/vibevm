@@ -70,6 +70,22 @@ pub struct SupersededTrace {
 /// state is refused upstream of here (`read_prior`); it never silently mints a
 /// new identity.
 ///
+/// OWNERSHIP precedes all of that: `selected` is the canonical
+/// workspace-relative identity of the node this invocation runs from (the
+/// caller's ONE derivation, from the prepared workspace), and a live park
+/// whose persisted `selected` differs belongs to a sibling node. That is the
+/// typed [`LifecycleStateError::ForeignPark`] — fired immediately after
+/// `parked` is computed, BEFORE adoption, displacement and allocation, and
+/// regardless of mode, `--force`, chain or trace posture: force and
+/// supersession are SAME-node rulings, so they are simply unreachable for a
+/// foreign park. The comparison is raw-string equality of the two spellings;
+/// the stored value never passes through `RelPath::new`, which would repair
+/// an attacker-editable cache (`""` becoming `"."`) and could forge
+/// ownership. A foreign park is also deliberately NOT superseded: this node
+/// has no right to terminalise a sibling's running trace, so the refusal
+/// returns no [`SupersededTrace`] and leaves the owner's trace index exactly
+/// as found.
+///
 /// The comparison is exact — no phase is stripped from either side. A
 /// clean-composed invocation therefore never adopts: `vibe clean create`
 /// carries a leading `clean` its predecessor's persisted chain does not, so it
@@ -109,6 +125,7 @@ pub fn select_run_identity(
     allocation_root: &Path,
     requested: &str,
     chain: &[String],
+    selected: &str,
     agent_mode: RunAgentMode,
     force: bool,
     current_request: bool,
@@ -122,6 +139,35 @@ pub fn select_run_identity(
             .values()
             .any(|record| record.status == ExecutionRecordStatus::Delegated)
     });
+    // The ownership gate — see the doc above. It fires before the adoption
+    // branch, before displacement and before `allocate_run_id`, so a foreign
+    // refusal performs no state, scratch or outbox mutation at all. The
+    // refusal carries EXACT strings: `read_prior` already validated this
+    // state, and validation pins both identities for a parked run, so an
+    // absent one is an internal invariant breach — reported as
+    // [`LifecycleStateError::Invariant`], never guessed around and never
+    // dressed as an ownership ruling.
+    if parked
+        && let Some(prior) = prior.as_ref()
+        && prior.run.selected.as_deref() != Some(selected)
+    {
+        let (Some(stored), Some(parked_run_id)) = (&prior.run.selected, &prior.run.run_id) else {
+            return Err(LifecycleStateError::Invariant {
+                path: io::state_path(lease.root()),
+                reason: format!(
+                    "a parked run reached identity selection without its validated exact \
+                     identities (selected = {:?}, run_id = {:?})",
+                    prior.run.selected, prior.run.run_id,
+                ),
+            });
+        };
+        return Err(LifecycleStateError::ForeignPark {
+            path: io::state_path(lease.root()),
+            stored: stored.clone(),
+            selected: selected.to_string(),
+            run_id: parked_run_id.clone(),
+        });
+    }
     if agent_mode == RunAgentMode::Agent
         && !force
         && let Some(prior) = prior.as_ref()

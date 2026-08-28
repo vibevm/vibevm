@@ -29,6 +29,14 @@ pub(super) fn validate_state(state: &LifecycleState) -> Result<(), String> {
             "the run header carries `{run_id}`, which is not a valid 32-hex run id",
         ));
     }
+    if let Some(selected) = state.run.selected.as_deref()
+        && !valid_selected_spelling(selected)
+    {
+        return Err(format!(
+            "the run header carries `selected = {selected:?}`, which is not the portable \
+             workspace-relative identity of a node (`\".\"` or forward-slash components)",
+        ));
+    }
     let mut slot_debt = false;
     for (key, record) in &state.execution {
         match record.status {
@@ -40,6 +48,18 @@ pub(super) fn validate_state(state: &LifecycleState) -> Result<(), String> {
                          32-hex run id",
                     ));
                 };
+                // A delegated row is a handoff a NODE owns: without the
+                // selected identity there is no honest way to tell whose
+                // outbox its task lives under, so a delegated legacy state
+                // is ambiguous and refuses rather than being adopted by
+                // guess. Presence alone is checked here — the spelling was
+                // judged above, before any row was read.
+                if state.run.selected.is_none() {
+                    return Err(format!(
+                        "execution `{key}` is delegated, but the run header carries no selected \
+                         node identity, so the park cannot honestly be owned by any node",
+                    ));
+                }
                 // The scope is the ENGINE's record of which plan owns this
                 // park. Reconciliation reads it rather than parsing the key or
                 // a task filename, so a delegated row without one is
@@ -123,4 +143,36 @@ fn status_name(status: &ExecutionRecordStatus) -> &'static str {
         ExecutionRecordStatus::Fresh => "fresh",
         ExecutionRecordStatus::Delegated => "delegated",
     }
+}
+
+/// The spelling law for `run.selected`, judged on the RAW string — never by
+/// constructing a [`vibe_core::RelPath`].
+///
+/// `RelPath::new` is infallible and normalising because every historical call
+/// site owns the value it wraps (a filesystem walk or a lockfile this tool
+/// wrote). `run.selected` breaks that premise: it is read back from
+/// `.vibe/lifecycle.toml`, an attacker-editable erasable cache, and `new`
+/// silently REPAIRS exactly the spellings this law exists to refuse — `""`
+/// becomes `"."` (forging workspace-root ownership), `"members\\tool"` and a
+/// trailing slash are folded into a clean rel. The selector compares stored
+/// spellings by raw equality, so a repaired spelling would forge adoption
+/// instead of refusing; the discipline lives here, stated, because nothing
+/// in the type system forces it.
+///
+/// Valid: exactly `"."`, or nonempty forward-slash-separated components with
+/// no empty, `.` or `..` component, no backslash, no drive colon, and no
+/// leading or trailing slash. Membership is NOT judged here — the validator
+/// is pure and holds no workspace; the selector decides it by equality
+/// against the prepared workspace's authored rel.
+fn valid_selected_spelling(selected: &str) -> bool {
+    if selected == "." {
+        return true;
+    }
+    !selected.is_empty()
+        && !selected.starts_with('/')
+        && !selected.ends_with('/')
+        && !selected.contains(['\\', ':'])
+        && selected
+            .split('/')
+            .all(|component| !component.is_empty() && component != "." && component != "..")
 }

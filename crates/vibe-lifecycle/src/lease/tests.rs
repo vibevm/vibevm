@@ -208,3 +208,55 @@ fn ensure_root_passes_agreement_and_types_the_mismatch() {
     );
     drop(lease);
 }
+
+/// The selected-node twin of the root gate: agreement passes silently, a
+/// changed mapping is the TYPED mismatch naming the carried identity, the
+/// observed mapping (`None`: the root is no longer a node of the reloaded
+/// workspace at all) and the boundary — with the honest after-effects
+/// remedy the post-wipe boundary requires, never a zero-effect claim.
+#[test]
+fn ensure_selected_passes_agreement_and_types_the_mismatch() {
+    let dir = tempfile::tempdir().unwrap();
+    let lease = LifecycleLease::acquire(dir.path()).unwrap();
+    lease
+        .ensure_selected("members/tool", Some("members/tool"), "post-wipe reload")
+        .expect("the same node rel agrees");
+    for (label, observed) in [
+        ("another node", Some("members/other")),
+        ("no node at all", None),
+    ] {
+        match lease.ensure_selected("members/tool", observed, "post-wipe reload") {
+            Err(LifecycleLeaseError::SelectedNodeMismatch {
+                root,
+                expected,
+                observed: named,
+                boundary,
+            }) => {
+                assert_eq!(
+                    root,
+                    dir.path(),
+                    "{label}: the refusal names the leased root"
+                );
+                assert_eq!(expected, "members/tool");
+                assert_eq!(named.as_deref(), observed);
+                assert_eq!(boundary, "post-wipe reload");
+            }
+            other => panic!("{label} must be the typed mismatch, not {other:?}"),
+        }
+        let rendered = lease
+            .ensure_selected("members/tool", observed, "post-wipe reload")
+            .expect_err("still refuses")
+            .to_string();
+        assert!(rendered.contains("PROP-054"), "{label}: {rendered}");
+        assert!(
+            rendered.contains("members/tool")
+                && rendered.contains(observed.unwrap_or("<not a workspace node>")),
+            "{label}: both spellings are named: {rendered}"
+        );
+        assert!(
+            rendered.contains("wipe/scratch effects may already have happened"),
+            "{label}: the remedy is honest about effects, not zero-effect: {rendered}"
+        );
+    }
+    drop(lease);
+}

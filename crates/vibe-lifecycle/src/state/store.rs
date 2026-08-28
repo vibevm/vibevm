@@ -73,12 +73,19 @@ impl LifecycleStateStore {
     /// capability every read and write below goes through, so a store can no
     /// longer be constructed from a bare root path: root-only construction is
     /// unrepresentable, and the caller that owns the command owns the lease.
+    ///
+    /// `selected` is the canonical workspace-relative identity of the node
+    /// this invocation runs from — the caller's ONE derivation from the
+    /// prepared workspace. Every begin rewrites it into the run header, which
+    /// is also how a legacy pre-A6 file upgrades: its next run from any node
+    /// names that node.
     pub fn begin(
         lease: Arc<LifecycleLease>,
         requested: String,
         chain: Vec<String>,
         started: String,
         run_id: String,
+        selected: String,
         compile_trace: bool,
     ) -> Result<Self, LifecycleStateError> {
         let path = io::state_path(lease.root());
@@ -118,7 +125,11 @@ impl LifecycleStateStore {
                     chain,
                     requested,
                     run_id: (!run_id.is_empty()).then_some(run_id),
-                    selected: None,
+                    // Written unconditionally by every begin: the header
+                    // always names the node that authored it, and a legacy
+                    // pre-A6 file upgrades to carry one on its next run —
+                    // the same header-refresh law `started` has always had.
+                    selected: Some(selected),
                     // An adopted run inherits the slot continuation it owes;
                     // a fresh one starts with none, exactly as it starts with
                     // no delegated rows.

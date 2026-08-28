@@ -95,6 +95,32 @@ pub enum LifecycleLeaseError {
         observed: PathBuf,
         boundary: &'static str,
     },
+    /// A re-read workspace topology that no longer maps the selected root to
+    /// the node this command's identity was minted under. The command
+    /// already CARRIES the pre-change identity; whether any state or outbox
+    /// bytes were written under it yet is the boundary's fact, not the
+    /// gate's — today's post-wipe boundary fires after identity/scratch
+    /// minting and the wipe but before `begin` writes any state, while a
+    /// future or reused reload boundary may sit after writes — so the
+    /// refusal claims neither way and the remedy treats the whole outcome
+    /// as indeterminate. Unlike [`Self::Busy`] this refusal is NOT
+    /// zero-effect: earlier phases' effects have already happened at the
+    /// boundary it fires on.
+    #[error(
+        "the workspace {boundary} maps the selected root under `{root}` to node `{observed}`, not \
+         the `{expected}` this command minted its identity under; the node topology changed under \
+         a run that already carries the pre-change identity \
+         (governed by spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-STATE-HOME; \
+          fix: treat this command's outcome as indeterminate — wipe/scratch effects may already \
+          have happened — inspect the tree, then rerun on a stable workspace)",
+        observed = observed.as_deref().unwrap_or("<not a workspace node>")
+    )]
+    SelectedNodeMismatch {
+        root: PathBuf,
+        expected: String,
+        observed: Option<String>,
+        boundary: &'static str,
+    },
 }
 
 /// One workspace's outermost mutation lease: the pinned root capability plus
@@ -168,6 +194,35 @@ impl LifecycleLease {
         Err(LifecycleLeaseError::RootMismatch {
             leased: self.root().to_path_buf(),
             observed: observed.to_path_buf(),
+            boundary,
+        })
+    }
+
+    /// The selected-node twin of [`Self::ensure_root`]: the ONE gate a
+    /// re-read workspace topology owes when the command already carries a
+    /// selected-node identity. `expected` is the spelling the command
+    /// derived ONCE from its prepared workspace and carries unchanged
+    /// (whether anything has been written under it yet is the boundary's
+    /// fact, not this gate's — today's post-wipe boundary precedes any
+    /// `begin` write); `observed` is what the re-discovered
+    /// workspace maps the canonical selected root to NOW — `None` when the
+    /// root is no longer a node of it at all. A disagreement is the typed
+    /// [`LifecycleLeaseError::SelectedNodeMismatch`] naming `boundary`, and
+    /// this is the only place that refusal is spelled, so no call site
+    /// hand-rolls its own.
+    pub fn ensure_selected(
+        &self,
+        expected: &str,
+        observed: Option<&str>,
+        boundary: &'static str,
+    ) -> Result<(), LifecycleLeaseError> {
+        if observed == Some(expected) {
+            return Ok(());
+        }
+        Err(LifecycleLeaseError::SelectedNodeMismatch {
+            root: self.root().to_path_buf(),
+            expected: expected.to_string(),
+            observed: observed.map(str::to_string),
             boundary,
         })
     }

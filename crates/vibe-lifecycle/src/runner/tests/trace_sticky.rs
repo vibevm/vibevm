@@ -48,6 +48,7 @@ fn an_adopted_traced_run_keeps_its_effective_bit_through_the_state_rewrite() {
             root,
             "create",
             &["validate".into(), "install".into(), "create".into()],
+            ".",
             RunAgentMode::Agent,
             false,
             false,

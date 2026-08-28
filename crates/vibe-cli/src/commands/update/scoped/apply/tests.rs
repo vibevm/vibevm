@@ -86,6 +86,7 @@ fn metadata() -> vibe_lifecycle::RunMetadata {
         trace_compile: false,
         run_id: "0".repeat(32),
         started: "2026-08-27T00:00:00Z".into(),
+        selected: ".".into(),
     }
 }
 

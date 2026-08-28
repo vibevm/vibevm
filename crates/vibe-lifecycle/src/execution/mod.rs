@@ -55,6 +55,15 @@ pub struct RunMetadata {
     pub run_id: String,
     /// Injected RFC3339 run-start clock value persisted in lifecycle state.
     pub started: String,
+    /// The canonical workspace-relative identity of the selected node this
+    /// run executes from — `"."` for the workspace root, else the member's
+    /// authored forward-slashed rel. Host observation, not handler input:
+    /// the generated envelope's `run` member never carries it and no
+    /// handler sees it. It exists so [`crate::LifecycleStateStore::begin`]
+    /// can write the state header's `selected` (the ownership key the
+    /// identity selector judges parks by) and the post-clean reload can
+    /// prove the identity survived the wipe.
+    pub selected: String,
 }
 
 /// Mutable state shared by contribution invocations in one world epoch.

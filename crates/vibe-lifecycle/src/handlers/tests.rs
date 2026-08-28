@@ -185,6 +185,7 @@ fn prepared(root: &Path, row: &crate::ExtensionRegistryRow) -> (ExecutionSession
             trace_compile: false,
             run_id,
             started: "2026-08-25T00:00:00Z".into(),
+            selected: ".".into(),
         },
     );
     let context = session.envelope_for("build", row).unwrap();

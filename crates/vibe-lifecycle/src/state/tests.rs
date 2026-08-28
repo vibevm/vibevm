@@ -39,6 +39,14 @@ mod recovery;
 mod safety;
 
 #[cfg(test)]
+#[path = "tests/selected.rs"]
+mod selected;
+
+#[cfg(test)]
+#[path = "tests/ownership.rs"]
+mod ownership;
+
+#[cfg(test)]
 #[path = "tests/support.rs"]
 mod support;
 
@@ -104,6 +112,7 @@ fn missing_state_writes_initial_run_and_preserves_unselected_rows() {
         chain,
         "2026-08-25T12:00:00Z".into(),
         "00112233445566778899aabbccddeeff".into(),
+        ".".into(),
         false,
     )
     .unwrap();
@@ -131,6 +140,7 @@ fn missing_state_writes_initial_run_and_preserves_unselected_rows() {
         ],
         "2026-08-25T13:00:00Z".into(),
         "00112233445566778899aabbccddeeff".into(),
+        ".".into(),
         false,
     )
     .unwrap();
@@ -164,6 +174,7 @@ fn malformed_unknown_and_unsupported_state_name_path_and_remediation() {
             vec![],
             "t".into(),
             String::new(),
+            ".".into(),
             false,
         )
         .unwrap_err()
@@ -183,6 +194,7 @@ fn only_ok_skip_and_fresh_are_reusable_and_fresh_artifacts_survive() {
         vec![],
         "t".into(),
         "00112233445566778899aabbccddeeff".into(),
+        ".".into(),
         false,
     )
     .unwrap();
@@ -558,6 +570,7 @@ fn fresh_artifact_hydration_enters_downstream_envelope_and_fingerprint() {
             trace_compile: false,
             run_id: "fixed".into(),
             started: "2026-08-25T12:00:00Z".into(),
+            selected: ".".into(),
         },
     );
     let before = session.envelope_for("build", &row).unwrap();

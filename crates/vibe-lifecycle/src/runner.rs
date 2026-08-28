@@ -94,6 +94,7 @@ impl LifecycleRun {
             state_chain,
             metadata.started.clone(),
             metadata.run_id.clone(),
+            metadata.selected.clone(),
             metadata.trace_compile,
         )?;
         let run_id = metadata.run_id.clone();

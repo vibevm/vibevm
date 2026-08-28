@@ -172,6 +172,19 @@ impl PreparedWorkspace {
             _ => None,
         }
     }
+
+    /// The prepared workspace itself, by borrow — `Loaded` alone.
+    ///
+    /// The prelude's selected-node identity is derived from THIS snapshot
+    /// (the one tree the command loaded), never from a second
+    /// `Workspace::discover`: that would be a third discovery epoch beside
+    /// the prelude's and the lease's, three answers to "which tree is this".
+    pub(crate) fn loaded_workspace(&self) -> Option<&Workspace> {
+        match self {
+            Self::Loaded(workspace) => Some(workspace),
+            _ => None,
+        }
+    }
 }
 
 /// The manifest of the node at `project_root` inside `workspace` — the root's

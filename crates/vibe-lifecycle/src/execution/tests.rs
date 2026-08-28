@@ -125,6 +125,7 @@ fn session() -> ExecutionSession {
             trace_compile: false,
             run_id: "00000000000000000000000000000000".to_string(),
             started: "2026-08-25T12:00:00Z".to_string(),
+            selected: ".".to_string(),
         },
     )
 }

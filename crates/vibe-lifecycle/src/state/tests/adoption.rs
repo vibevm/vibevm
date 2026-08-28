@@ -10,24 +10,35 @@ use vibe_wire::generated::lifecycle_state::{ExecutionRecordStatus, LifecycleStat
 use super::{OTHER_RUN, RUN_ID, lease, record_for};
 use crate::{LifecycleStateStore, select_run_identity};
 
-const CHAIN: [&str; 3] = ["validate", "install", "create"];
-const STARTED: &str = "2026-08-26T00:00:00Z";
-const FRESH: &str = "2026-08-26T09:00:00Z";
-const KEY: &str = "org.demo/tools#produce";
+// Shared with the `ownership` cell (same suite, split for the 600-line
+// budget): the matrix's fixtures are the ownership laws' fixtures too.
+pub(super) const CHAIN: [&str; 3] = ["validate", "install", "create"];
+pub(super) const STARTED: &str = "2026-08-26T00:00:00Z";
+pub(super) const FRESH: &str = "2026-08-26T09:00:00Z";
+pub(super) const KEY: &str = "org.demo/tools#produce";
 
-fn chain(phases: &[&str]) -> Vec<String> {
+pub(super) fn chain(phases: &[&str]) -> Vec<String> {
     phases.iter().map(|phase| (*phase).to_string()).collect()
 }
 
-/// Write a state file that parked `KEY` under `RUN_ID` for `vibe create`.
+/// Write a state file that parked `KEY` under `RUN_ID` for `vibe create`,
+/// authored by the workspace-root node (`"."` — the single-node spelling
+/// every earlier fixture here already was).
 fn parked(root: &Path) {
+    parked_at(root, ".", false)
+}
+
+/// The same park, authored by an arbitrary selected node and with an
+/// arbitrary sticky trace bit — the fixture the ownership REDs need.
+pub(super) fn parked_at(root: &Path, selected: &str, compile_trace: bool) {
     let mut store = LifecycleStateStore::begin(
         lease(root),
         "create".into(),
         chain(&CHAIN),
         STARTED.into(),
         RUN_ID.into(),
-        false,
+        selected.into(),
+        compile_trace,
     )
     .unwrap();
     store
@@ -45,21 +56,34 @@ fn select(
     mode: RunAgentMode,
     force: bool,
 ) -> crate::RunIdentity {
+    select_as(root, requested, phases, mode, force, ".").unwrap()
+}
+
+/// The same selection arriving from an arbitrary selected node — fallible,
+/// because the whole point of a foreign node is the typed refusal.
+pub(super) fn select_as(
+    root: &Path,
+    requested: &str,
+    phases: &[&str],
+    mode: RunAgentMode,
+    force: bool,
+    selected: &str,
+) -> Result<crate::RunIdentity, crate::LifecycleStateError> {
     let lease = lease(root);
     select_run_identity(
         &lease,
         root,
         requested,
         &chain(phases),
+        selected,
         mode,
         force,
         false,
         FRESH.into(),
     )
-    .unwrap()
 }
 
-fn candidate_dirs(root: &Path) -> Vec<String> {
+pub(super) fn candidate_dirs(root: &Path) -> Vec<String> {
     let base = root.join(".vibe/lifecycle");
     if !base.is_dir() {
         return Vec::new();
@@ -156,6 +180,7 @@ fn a_prior_run_without_a_parked_row_is_not_resumable() {
         chain(&CHAIN),
         STARTED.into(),
         RUN_ID.into(),
+        ".".into(),
         false,
     )
     .unwrap();
@@ -195,6 +220,7 @@ fn a_pre_r73_state_file_still_opens_and_keeps_its_rows() {
         chain(&CHAIN),
         FRESH.into(),
         identity.run_id.clone(),
+        ".".into(),
         false,
     )
     .unwrap();
@@ -214,6 +240,7 @@ fn a_fresh_run_prunes_prior_delegated_rows_but_keeps_reusable_ones() {
         chain(&CHAIN),
         STARTED.into(),
         RUN_ID.into(),
+        ".".into(),
         false,
     )
     .unwrap();
@@ -243,6 +270,7 @@ fn a_fresh_run_prunes_prior_delegated_rows_but_keeps_reusable_ones() {
         chain(&["validate", "install", "build"]),
         FRESH.into(),
         OTHER_RUN.into(),
+        ".".into(),
         false,
     )
     .unwrap();
@@ -277,6 +305,7 @@ fn adopting_the_same_id_retains_the_delegated_row() {
         chain(&CHAIN),
         identity.started,
         identity.run_id,
+        ".".into(),
         false,
     )
     .unwrap();
@@ -301,27 +330,27 @@ fn corrupt_delegated_state_refuses_rather_than_minting_a_new_identity() {
         )
     };
     let owned = crate::outbox_task_path(RUN_ID, KEY).unwrap();
+    // Every case except the last carries a sound selected identity, so each
+    // refusal is its OWN law firing, not the selected-presence one.
+    let identified = format!("run_id = '{RUN_ID}'\nselected = '.'\n");
     for (label, body) in [
         (
             "no run id at all",
-            format!("{}tasks = ['{owned}']\n", row("")),
+            format!("{}tasks = ['{owned}']\n", row("selected = '.'\n")),
         ),
         (
             "an invalid run id",
             format!(
                 "{}tasks = ['{owned}']\n",
-                row("run_id = 'not-32-lowercase-hex'\n")
+                row("run_id = 'not-32-lowercase-hex'\nselected = '.'\n")
             ),
         ),
-        (
-            "no task at all",
-            row(&format!("run_id = '{RUN_ID}'\n")).to_string(),
-        ),
+        ("no task at all", row(&identified)),
         (
             "another run's task",
             format!(
                 "{}tasks = ['{}']\n",
-                row(&format!("run_id = '{RUN_ID}'\n")),
+                row(&identified),
                 crate::outbox_task_path(OTHER_RUN, KEY).unwrap(),
             ),
         ),
@@ -329,15 +358,19 @@ fn corrupt_delegated_state_refuses_rather_than_minting_a_new_identity() {
             "another execution's task",
             format!(
                 "{}tasks = ['{}']\n",
-                row(&format!("run_id = '{RUN_ID}'\n")),
+                row(&identified),
                 crate::outbox_task_path(RUN_ID, "org.demo/tools#elsewhere").unwrap(),
             ),
         ),
         (
             "two tasks under one row",
+            format!("{}tasks = ['{owned}', '{owned}']\n", row(&identified)),
+        ),
+        (
+            "a delegated row with no selected identity",
             format!(
-                "{}tasks = ['{owned}', '{owned}']\n",
-                row(&format!("run_id = '{RUN_ID}'\n")),
+                "{}tasks = ['{owned}']\n",
+                row(&format!("run_id = '{RUN_ID}'\n"))
             ),
         ),
     ] {
@@ -350,6 +383,7 @@ fn corrupt_delegated_state_refuses_rather_than_minting_a_new_identity() {
             dir.path(),
             "create",
             &chain(&CHAIN),
+            ".",
             RunAgentMode::Agent,
             false,
             false,
@@ -380,6 +414,7 @@ fn a_non_delegated_row_with_tasks_and_a_bad_header_id_are_both_refused() {
         chain(&CHAIN),
         STARTED.into(),
         RUN_ID.into(),
+        ".".into(),
         false,
     )
     .unwrap();
@@ -398,6 +433,7 @@ fn a_non_delegated_row_with_tasks_and_a_bad_header_id_are_both_refused() {
         chain(&CHAIN),
         STARTED.into(),
         "NOT-HEX".into(),
+        ".".into(),
         false,
     )
     .unwrap_err()
@@ -414,7 +450,7 @@ fn scope_and_continuation_violations_refuse_before_adoption() {
         format!(
             "schema = 1\n[run]\nrequested = 'create'\n\
              chain = ['validate', 'install', 'create']\n\
-             started = '2026-08-26T00:00:00Z'\nrun_id = '{RUN_ID}'\n{extra}"
+             started = '2026-08-26T00:00:00Z'\nrun_id = '{RUN_ID}'\nselected = '.'\n{extra}"
         )
     };
     let delegated = |scope: &str| {
@@ -473,6 +509,7 @@ fn scope_and_continuation_violations_refuse_before_adoption() {
             dir.path(),
             "create",
             &chain(&CHAIN),
+            ".",
             RunAgentMode::Agent,
             false,
             false,

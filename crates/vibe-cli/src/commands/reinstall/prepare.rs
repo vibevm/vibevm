@@ -105,6 +105,7 @@ pub(super) fn prepare(
         trace_compile: prelude.identity.compile_trace,
         run_id: prelude.identity.run_id.clone(),
         started: prelude.identity.started.clone(),
+        selected: prelude.selected.clone(),
     };
     let trace = prelude.prepare_trace(&super::now);
     Ok(PreparedReinstall {

@@ -35,6 +35,7 @@ fn open(root: &Path) -> LifecycleStateStore {
         chain(),
         "2026-08-27T00:00:00Z".into(),
         RUN_ID.into(),
+        ".".into(),
         false,
     )
     .unwrap()

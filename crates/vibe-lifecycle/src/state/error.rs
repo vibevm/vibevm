@@ -118,6 +118,34 @@ pub enum LifecycleStateError {
           fix: remove this erasable cache and rerun the lifecycle)"
     )]
     Invariant { path: PathBuf, reason: String },
+    /// A live park owned by ANOTHER workspace node. This is an ownership
+    /// refusal, not a state problem: the parked handoff stays exactly as
+    /// found (no state, scratch, outbox or trace side effect belongs to
+    /// this invocation), and no mode, `--force`, chain or trace posture
+    /// pushes past it. Both identities are EXACT strings: `read_prior`
+    /// validated the parked state, which pins `run_id` and `selected`, so
+    /// there is no absent case to render around — a `None` that somehow
+    /// survives validation is [`Self::Invariant`] territory, never a
+    /// guess dressed as an ownership ruling.
+    #[error(
+        "lifecycle state `{path}` parks run `{run_id}` owned by workspace node `{stored}`, but \
+         this invocation runs from node `{selected}`; a member may not displace a sibling's live \
+         handoff — not even under --force \
+         (governed by spec://org.vibevm.core/vibevm/common/PROP-054#REF-AGENT-RESUME; \
+          fix: resume from the owning node `{stored}` — or, if that park is dead, deliberately \
+          remove this erasable state cache and rerun; never force through it)"
+    )]
+    ForeignPark {
+        /// The state file that carries the foreign park.
+        path: PathBuf,
+        /// The parked run's persisted `selected` identity, exactly as stored.
+        stored: String,
+        /// The selected-node identity of THIS invocation, from the prepared
+        /// workspace — never a re-derivation.
+        selected: String,
+        /// The parked run's exact 32-hex identity.
+        run_id: String,
+    },
     #[error(
         "lifecycle state publication `{path}` failed: {failure} \
          (governed by spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-STATE-HOME; \

@@ -33,6 +33,7 @@ fn parked(root: &Path, compile_trace: bool) {
         chain(&CHAIN),
         STARTED.into(),
         RUN_ID.into(),
+        ".".into(),
         compile_trace,
     )
     .unwrap();
@@ -58,6 +59,7 @@ fn select(
         root,
         requested,
         &chain(phases),
+        ".",
         mode,
         force,
         current_request,
@@ -144,6 +146,7 @@ fn an_adopted_untraced_run_upgrades_and_state_begin_writes_it() {
         chain(&CHAIN),
         identity.started,
         identity.run_id,
+        ".".into(),
         identity.compile_trace,
     )
     .unwrap();
@@ -166,6 +169,7 @@ fn an_adopted_untraced_run_upgrades_and_state_begin_writes_it() {
         chain(&CHAIN),
         STARTED.into(),
         RUN_ID.into(),
+        ".".into(),
         false,
     )
     .unwrap();
@@ -245,6 +249,7 @@ fn a_traced_prior_without_a_delegated_row_claims_no_superseded_trace() {
         chain(&CHAIN),
         STARTED.into(),
         RUN_ID.into(),
+        ".".into(),
         true,
     )
     .unwrap();

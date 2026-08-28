@@ -68,6 +68,7 @@ fn metadata(project_root: &std::path::Path) -> RunMetadata {
         trace_compile: false,
         run_id: vibe_lifecycle::process::allocate_run_id(project_root).unwrap(),
         started: "2026-08-26T00:00:00Z".into(),
+        selected: ".".into(),
     }
 }
 

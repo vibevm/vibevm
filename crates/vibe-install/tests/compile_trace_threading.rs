@@ -170,6 +170,7 @@ fn metadata(trace_compile: bool) -> RunMetadata {
         trace_compile,
         run_id: RUN.to_string(),
         started: "2026-08-27T00:00:00Z".into(),
+        selected: ".".into(),
     }
 }
 

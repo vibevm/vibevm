@@ -12,10 +12,9 @@ use anyhow::{Context, Result};
 use specmark::spec;
 use vibe_core::user_config::UserConfig;
 use vibe_lifecycle::{LifecycleRequest, LifecycleStep, Phase, RunMetadata};
-use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
 use vibe_wire::generated::lifecycle_report::LifecycleStepReport;
 
-use crate::cli::{CleanArgs, CleanChain, InstallArgs, LifecycleArgs};
+use crate::cli::{InstallArgs, LifecycleArgs};
 use crate::commands::compile_trace;
 use crate::output;
 
@@ -23,6 +22,7 @@ use super::install::{InstallDisposition, PreparedWorkspace};
 
 mod agent;
 mod callback;
+mod clean;
 mod dispatch;
 mod draft;
 mod phase;
@@ -32,6 +32,9 @@ mod slot;
 pub(crate) mod world;
 
 pub(crate) use callback::after_direct_install;
+use clean::refuse_untracked_agent_rows;
+pub use clean::run_clean;
+pub(crate) use clean::run_clean_only;
 pub(crate) use draft::LifecycleDraft;
 use plan::{provider_and_version, surface_plan, tier_name};
 pub(crate) use report::{check_delegation, render_agent_task_fence};
@@ -74,144 +77,6 @@ pub fn run(
         prepare_install,
         root_offline,
     )
-}
-
-/// Compose clean with any default-lifecycle phase through the same step list.
-#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#CHAIN-GENERAL")]
-pub fn run_clean(
-    ctx: &output::Context,
-    args: CleanArgs,
-    prepare_install: impl FnOnce() -> Option<std::path::PathBuf>,
-    root_offline: bool,
-) -> Result<()> {
-    let CleanArgs {
-        path,
-        assume_yes,
-        chain,
-    } = args;
-    let chain = chain.context("internal: chained clean lost its continuation")?;
-    let (requested, mut install_args) = clean_continuation(chain);
-    if path != Path::new(".") {
-        install_args.path = path;
-    }
-    execute(
-        ctx,
-        LifecycleRequest::Clean {
-            then: Some(requested),
-        },
-        requested,
-        install_args,
-        assume_yes,
-        prepare_install,
-        root_offline,
-    )
-}
-
-/// Run the independent clean lifecycle: dispatch once, then terminal wipe.
-pub(crate) fn run_clean_only(
-    ctx: &output::Context,
-    args: CleanArgs,
-    root_offline: bool,
-) -> Result<()> {
-    let chain = vec!["clean".to_string()];
-    // The OUTERMOST lock first: resolve the selected root, locate the lease
-    // root read-only, acquire — and only then plan, refuse, mint and wipe. A
-    // contended workspace refuses here, typed, before a run id exists and
-    // before anything destructive is even planned. The owner is this local:
-    // the clean epoch is untracked, so no store carries it; it releases at
-    // the end of the command, after the draft renders.
-    let lease = super::install::acquire_lease(&super::install::resolve_project_root(&args.path)?)?;
-    let plan = world::plan_clean(&args.path)?;
-    // The refusal comes FIRST — before a run id is minted, before the plan is
-    // narrated, before the wipe is confirmed. Allocating `.vibe/lifecycle/<id>`
-    // is itself a mutation, and an invocation this build cannot host must
-    // leave the tree byte-identical.
-    refuse_untracked_agent_rows(ctx, &plan)?;
-    let metadata = RunMetadata {
-        requested: "clean".to_string(),
-        chain: chain.clone(),
-        offline: effective_clean_offline(root_offline)?,
-        assume_yes: metadata_assume_yes(ctx, args.assume_yes),
-        agent_mode: ctx.agent_mode(),
-        force: false,
-        trace_compile: false,
-        run_id: new_run_id(Path::new(&plan.project.root))?,
-        started: crate::commands::init::current_timestamp_utc(),
-    };
-    let notices = plan.notices.clone();
-    surface_plan(ctx, &plan, &metadata, true)?;
-    let wipe_plan = super::clean::plan_wipe(&args.path)?;
-    super::clean::confirm_wipe(ctx, &wipe_plan, metadata.assume_yes)?;
-    let contributions = dispatch::dispatch_plan_untracked(ctx, &plan, &lease, metadata)?;
-    let wipe_ctx = if ctx.is_json() || ctx.is_quiet() {
-        ctx.quiet_child()
-    } else {
-        ctx.clone()
-    };
-    super::clean::apply_wipe(&wipe_ctx, wipe_plan)?;
-    // Clean-only never creates a trace session — it compiles nothing, and its
-    // wipe would destroy the very directory a session lives in — so it renders
-    // its draft directly, with no member and no suffix.
-    let draft = LifecycleDraft::completed(
-        "clean",
-        chain,
-        vec![step_report("clean", StepStatus::Ok)],
-        contributions,
-        notices,
-        // The clean epoch is untracked, so it can never park: an agent row
-        // here is refused above, before anything is wiped.
-        None,
-    );
-    ctx.flush_json_plans()?;
-    draft.render(ctx, None, "")
-}
-
-/// The clean epoch runs UNTRACKED: it keeps no `.vibe/lifecycle.toml` record,
-/// and its wipe destroys the very tree a parked task would have to live in.
-/// There is therefore no honest place in R7.3 to park a pre-wipe `agent` row —
-/// and paying the provider for one in resolved agent mode is exactly the
-/// accident this refusal exists to prevent. So: refuse explicitly, before the
-/// wipe confirmation, spending nothing and destroying nothing.
-///
-/// Remaining R7 debt, named rather than hidden: a safe pre-wipe park/resume
-/// for `phase:clean` agent rows through a tracked seam (a clean-epoch state
-/// home that survives its own wipe), tracked with R7.4's bounded outbox GC.
-#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-HANDSHAKE")]
-fn refuse_untracked_agent_rows(ctx: &output::Context, plan: &world::RitualPlan) -> Result<()> {
-    if ctx.agent_mode() != RunAgentMode::Agent {
-        return Ok(());
-    }
-    let hosted: Vec<String> = plan
-        .executions
-        .iter()
-        .filter(|execution| execution.row.declaration().handler.kind() == "agent")
-        .map(|execution| execution.row.key().to_string())
-        .collect();
-    if hosted.is_empty() {
-        return Ok(());
-    }
-    anyhow::bail!(
-        "the clean lifecycle cannot host agent contribution(s) {hosted:?} under \
-         `--agent-mode agent`: the clean epoch is untracked and its wipe would destroy the \
-         outbox a parked task lives in, so this invocation neither paid a provider nor removed \
-         anything (governed by spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-HANDSHAKE; \
-         fix: run the clean lifecycle with `--agent-mode cli`, or disable the named \
-         `phase:clean` agent contribution(s) for hosted runs)"
-    )
-}
-
-fn clean_continuation(chain: CleanChain) -> (Phase, InstallArgs) {
-    match chain {
-        CleanChain::Validate(args) => (Phase::Validate, args.install_args()),
-        CleanChain::Install(args) => (Phase::Install, args),
-        CleanChain::Generate(args) => (Phase::Generate, args.install_args()),
-        CleanChain::Build(args) => (Phase::Build, args.install_args()),
-        CleanChain::Test(args) => (Phase::Test, args.install_args()),
-        CleanChain::Create(args) => (Phase::Create, args.install_args()),
-        CleanChain::Verify(args) => (Phase::Verify, args.install_args()),
-        CleanChain::Package(args) => (Phase::Package, args.install_args()),
-        CleanChain::Deploy(args) => (Phase::Deploy, args.install_args()),
-    }
 }
 
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM")]
@@ -296,6 +161,7 @@ fn execute(
         trace_compile: prelude.identity.compile_trace,
         run_id: prelude.identity.run_id.clone(),
         started: prelude.identity.started.clone(),
+        selected: prelude.selected.clone(),
     };
     let mut reports = Vec::with_capacity(steps.len());
     let mut contribution_reports = Vec::new();
@@ -305,6 +171,7 @@ fn execute(
         mut project_root,
         mut workspace,
         lease,
+        selected,
     } = prelude;
 
     if let Some(clean_plan) = clean_plan {
@@ -356,6 +223,23 @@ fn execute(
         if let Some(loaded) = workspace.loaded_root() {
             lease.ensure_root(loaded, "after the clean epoch's rediscovery")?;
         }
+        // …and the selected-node twin of that gate. `selected` was derived
+        // ONCE, pre-wipe, and rides across this boundary (it is never
+        // re-derived); the rediscovered topology must still map this root to
+        // that node. This boundary precedes `begin` (no state header is
+        // written yet), so what is at stake is the carried identity itself —
+        // and, at any future or reused reload boundary that sits after
+        // writes, state/outbox bytes minted under it.
+        if let Some(loaded) = workspace.loaded_workspace() {
+            let observed = loaded
+                .node_rel_of(&project_root)
+                .map(|rel| rel.as_str().to_string());
+            lease.ensure_selected(
+                &metadata.selected,
+                observed.as_deref(),
+                "after the clean epoch's rediscovery",
+            )?;
+        }
     }
 
     let prelude = RunPrelude {
@@ -363,6 +247,7 @@ fn execute(
         project_root,
         workspace,
         lease,
+        selected,
     };
     // The boundary's OWNER share. The executed region below consumes its own
     // clones into the run and the callback; this one lives to the end of the
@@ -449,6 +334,14 @@ pub(crate) struct RunPrelude {
     /// The workspace mutation lease this command holds — see
     /// [`run_prelude`], which both receives and returns it.
     pub(crate) lease: std::sync::Arc<vibe_lifecycle::LifecycleLease>,
+    /// The canonical workspace-relative identity of the selected node this
+    /// command runs from — derived ONCE in [`run_prelude`] from the prepared
+    /// workspace (never re-derived, not even across the post-clean reload,
+    /// which instead PROVES it still holds). It is selector input (which
+    /// park this invocation may adopt) and the value the metadata carries
+    /// into the state header, deliberately NOT a member of `RunIdentity`:
+    /// the selector decides identity, it does not echo its inputs.
+    pub(crate) selected: String,
 }
 
 impl RunPrelude {
@@ -495,6 +388,26 @@ pub(crate) fn run_prelude(
     if let Some(loaded) = workspace.loaded_root() {
         lease.ensure_root(loaded, "at the run prelude")?;
     }
+    // The selected-node identity, derived from the ONE prepared snapshot: a
+    // `Loaded` tree maps the canonical selected root through the workspace's
+    // own authored rels — and a Loaded tree that cannot map it is an
+    // internal refusal, never a fallback guess. Every unavailable arm falls
+    // back to `"."` under the same fallback law the state root itself
+    // applies there: when discovery failed, the selected node IS the root.
+    let selected = match workspace.loaded_workspace() {
+        Some(workspace) => workspace
+            .node_rel_of(&project_root)
+            .with_context(|| {
+                format!(
+                    "internal: the canonical selected root `{}` is not a node of the \
+                     workspace loaded for this run",
+                    project_root.display()
+                )
+            })?
+            .as_str()
+            .to_string(),
+        None => ".".to_string(),
+    };
     // The identity borrows the lease BEFORE its state read, so the prior
     // state it decides adoption against is a post-acquisition snapshot.
     let identity = vibe_lifecycle::select_run_identity(
@@ -502,6 +415,7 @@ pub(crate) fn run_prelude(
         &project_root,
         requested,
         chain,
+        &selected,
         ctx.agent_mode(),
         force,
         compile_trace,
@@ -512,6 +426,7 @@ pub(crate) fn run_prelude(
         project_root,
         workspace,
         lease,
+        selected,
     })
 }
 
@@ -523,10 +438,6 @@ pub(crate) fn run_prelude(
 // its metadata and again for its slot lifecycle; reinstall selected a third
 // time inside its continuation helper). Both now own a prelude epoch and call
 // `run_prelude` exactly once, like every other command in the binary.
-
-fn new_run_id(project_root: &Path) -> Result<String> {
-    vibe_lifecycle::process::allocate_run_id(project_root).map_err(Into::into)
-}
 
 fn step_name(step: &LifecycleStep) -> String {
     match step {
@@ -561,13 +472,4 @@ impl StepStatus {
             Self::Delegated => "delegated",
         }
     }
-}
-
-fn effective_clean_offline(root_offline: bool) -> Result<bool> {
-    let user = UserConfig::load().context("loading user config for clean lifecycle envelope")?;
-    Ok(output::resolve_offline(root_offline, user.net.offline))
-}
-
-fn metadata_assume_yes(ctx: &output::Context, explicit: bool) -> bool {
-    explicit || ctx.is_unattended() || ctx.is_json()
 }

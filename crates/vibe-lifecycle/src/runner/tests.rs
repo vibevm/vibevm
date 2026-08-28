@@ -29,6 +29,12 @@ use vibe_workspace::hooks::SystemProbe;
 #[path = "tests/trace_sticky.rs"]
 mod trace_sticky;
 
+/// The selected-ownership proof across the real engine — same cell-budget
+/// split, same reason.
+#[cfg(test)]
+#[path = "tests/selected_owner.rs"]
+mod selected_owner;
+
 const RUN_ID: &str = "00112233445566778899aabbccddeeff";
 const KEY: &str = "org.demo/tools#produce";
 
@@ -59,6 +65,12 @@ fn scratch() -> Scratch {
 }
 
 fn metadata(run_id: &str, force: bool) -> RunMetadata {
+    metadata_for_node(run_id, force, ".")
+}
+
+/// The metadata builder that names WHICH workspace node runs — the seam the
+/// selected-ownership RED needs (single-node fixtures keep `"."`).
+fn metadata_for_node(run_id: &str, force: bool, selected: &str) -> RunMetadata {
     RunMetadata {
         requested: "create".into(),
         chain: vec!["validate".into(), "install".into(), "create".into()],
@@ -69,6 +81,7 @@ fn metadata(run_id: &str, force: bool) -> RunMetadata {
         trace_compile: false,
         run_id: run_id.into(),
         started: "2026-08-26T00:00:00Z".into(),
+        selected: selected.into(),
     }
 }
 
@@ -319,6 +332,7 @@ fn force_reparks_under_a_fresh_run_without_probing() {
             scratch.root.as_path(),
             "create",
             &["validate".into(), "install".into(), "create".into()],
+            ".",
             RunAgentMode::Agent,
             true,
             false,
