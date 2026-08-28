@@ -23,6 +23,10 @@ use crate::{
 mod adoption;
 
 #[cfg(test)]
+#[path = "tests/inputs.rs"]
+mod inputs;
+
+#[cfg(test)]
 #[path = "tests/lockfile.rs"]
 mod lockfile;
 

@@ -1,19 +1,25 @@
 //! Epoch/domain-separated deterministic execution fingerprints.
 
+pub(crate) mod inputs;
+
 use std::path::{Component, Path};
 
-use glob::{MatchOptions, Pattern};
 use serde_json::Value;
 use sha2::{Digest, Sha256};
 use specmark::spec;
 use thiserror::Error;
 use vibe_core::manifest::{ExtensionHandler, ExtensionKey};
 use vibe_wire::generated::lifecycle::e1::context::Context;
-use walkdir::{DirEntry, WalkDir};
+use walkdir::DirEntry;
 
 use crate::HandlerExecution;
 use crate::agent::PreparedAgent;
 use crate::{ExtensionProvider, ExtensionRegistryRow};
+
+pub(crate) use inputs::{
+    PreparedFingerprint, PreparedInputManifest, prepare_execution_with,
+    prepare_handler_execution_with,
+};
 
 #[derive(Debug, Error)]
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-FINGERPRINT")]
@@ -45,6 +51,12 @@ pub enum FingerprintError {
           fix: report this generated-envelope serialization failure)"
     )]
     Encode { key: ExtensionKey, reason: String },
+    #[error(
+        "extension `{key}` cannot witness its declared inputs: {reason} \
+         (governed by spec://org.vibevm.core/vibevm/common/PROP-054#EVIDENCE-SCOPE-IS-DECLARED; \
+          fix: narrow the declared inputs glob)"
+    )]
+    InputManifestOverflow { key: ExtensionKey, reason: String },
 }
 
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-FINGERPRINT")]
@@ -69,36 +81,7 @@ pub fn fingerprint_execution_with(
     context: &Context,
     prepared: Option<&PreparedAgent>,
 ) -> Result<String, FingerprintError> {
-    let mut hash = FramedHash::new();
-    hash.field("key", row.key().to_string().as_bytes());
-    hash.field("phase", context.run.phase.as_bytes());
-    hash.field("point", context.point.as_bytes());
-    hash.json("slot-target", &context.slot_target, row.key())?;
-    hash.field("handler-kind", row.declaration().handler.kind().as_bytes());
-    handler_coordinates(&mut hash, &row.declaration().handler);
-    hash.json("effective-config", &context.execution.config, row.key())?;
-    provider_material(&mut hash, row.provider());
-    hash.field("requested", context.run.requested.as_bytes());
-    hash.json("chain", &context.run.chain, row.key())?;
-    hash.field("offline", &[u8::from(context.run.offline)]);
-    hash.json("agent-mode", &context.run.agent_mode, row.key())?;
-    hash.json("project", &context.project, row.key())?;
-    hash.json("world", &context.world, row.key())?;
-    hash.json("artifacts", &context.artifacts, row.key())?;
-    file_or_missing(
-        &mut hash,
-        "manifest",
-        Path::new(&context.project.manifest),
-        row.key(),
-    )?;
-    lockfile_identity(&mut hash, Path::new(&context.world.lockfile), row.key())?;
-    declared_inputs(&mut hash, row, Path::new(&context.project.root))?;
-    if let Some(prepared) = prepared {
-        let (address, bytes) = prepared.fingerprint_material();
-        hash.field("agent-prompt-address", address.as_bytes());
-        hash.field("agent-prompt-bytes", bytes);
-    }
-    Ok(hash.finish())
+    prepare_execution_with(row, context, prepared).map(|prepared| prepared.fingerprint)
 }
 
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-FINGERPRINT")]
@@ -115,14 +98,8 @@ pub fn fingerprint_handler_execution_with(
     context: &Context,
     prepared: Option<&PreparedAgent>,
 ) -> Result<String, FingerprintError> {
-    let mut fingerprint = fingerprint_execution_with(execution.row(), context, prepared)?;
-    if execution.slot_target().is_some() {
-        let mut hash = FramedHash::new();
-        hash.field("base-fingerprint", fingerprint.as_bytes());
-        hash.field("execution-identity", execution.key().as_bytes());
-        fingerprint = hash.finish();
-    }
-    Ok(fingerprint)
+    prepare_handler_execution_with(execution, context, prepared)
+        .map(|prepared| prepared.fingerprint)
 }
 
 /// Stable non-reusable fingerprint for failures before the real fingerprint
@@ -271,79 +248,6 @@ fn file_or_missing(
                 path: machine_path(path),
                 source,
             });
-        }
-    }
-    Ok(())
-}
-
-fn declared_inputs(
-    hash: &mut FramedHash,
-    row: &ExtensionRegistryRow,
-    project_root: &Path,
-) -> Result<(), FingerprintError> {
-    let Some(patterns) = row.declaration().inputs.as_deref() else {
-        return Ok(());
-    };
-    for authored in patterns {
-        validate_input(row.key(), authored)?;
-        let pattern = Pattern::new(authored).map_err(|error| FingerprintError::InvalidInput {
-            key: row.key().clone(),
-            pattern: authored.clone(),
-            reason: error.to_string(),
-        })?;
-        hash.field("input-pattern", authored.as_bytes());
-        let mut matches = Vec::new();
-        for entry in WalkDir::new(project_root)
-            .into_iter()
-            .filter_entry(shippable_entry)
-        {
-            let entry = entry.map_err(|error| FingerprintError::Read {
-                key: row.key().clone(),
-                path: machine_path(project_root),
-                source: error
-                    .into_io_error()
-                    .unwrap_or_else(|| std::io::Error::other("walking input tree")),
-            })?;
-            if !entry.file_type().is_file() {
-                continue;
-            }
-            let relative =
-                entry
-                    .path()
-                    .strip_prefix(project_root)
-                    .map_err(|_| FingerprintError::Read {
-                        key: row.key().clone(),
-                        path: machine_path(entry.path()),
-                        source: std::io::Error::new(
-                            std::io::ErrorKind::InvalidData,
-                            "input walk escaped its project root",
-                        ),
-                    })?;
-            // Authored patterns are UTF-8. A non-UTF-8 filesystem name is
-            // outside that namespace and cannot be selected; skipping it
-            // avoids both false failures and lossy alias/order collisions.
-            let Some(relative) = relative.to_str() else {
-                continue;
-            };
-            let relative = relative.replace('\\', "/");
-            let options = MatchOptions {
-                case_sensitive: true,
-                require_literal_separator: true,
-                require_literal_leading_dot: false,
-            };
-            if pattern.matches_with(&relative, options) {
-                matches.push((relative, entry.into_path()));
-            }
-        }
-        matches.sort_by(|left, right| left.0.cmp(&right.0));
-        for (relative, path) in matches {
-            let bytes = std::fs::read(&path).map_err(|source| FingerprintError::Read {
-                key: row.key().clone(),
-                path: machine_path(&path),
-                source,
-            })?;
-            hash.field("input-path", relative.as_bytes());
-            hash.field("input-bytes", &bytes);
         }
     }
     Ok(())
