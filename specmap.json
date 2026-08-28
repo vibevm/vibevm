@@ -50698,7 +50698,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:89931bb8e6ab5af56a86909b3e3b042da1582a4c7b4d18c6b787b26fabe8d3e6",
+      "content_hash": "sha256:86a16e65dfb03ed05810f5c68db6322f3285661c729dc413087a05b9da94e76d",
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "PROP-054 — The vibe lifecycle and the extension machine",
@@ -51193,7 +51193,7 @@
     },
     {
       "anchor": "lifecycle",
-      "content_hash": "sha256:eedc972f0b048f194b0700dd8326adb878b2b1733ddbde6acaf7b55b0acccc4d",
+      "content_hash": "sha256:90d1829726db88b5c71e830a7f905b621fbd43a70683fbff9b3d051622b80d38",
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "4. The vibe lifecycle",
@@ -51418,7 +51418,7 @@
     },
     {
       "anchor": "external-orchestration",
-      "content_hash": "sha256:2eecd06d1ca96cce6124e63d54984d9e41c71626b0cc67c84a1e56fd4e8ea55d",
+      "content_hash": "sha256:6885dabc0c5f583b8a7f0f57ac75ec28da82673c13f2610d3b81d785e8028d31",
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "4.6 The lifecycle is a framework; the development loop is external",
@@ -51508,10 +51508,10 @@
     },
     {
       "anchor": "FACT-QUERY-CONTRACT",
-      "content_hash": "sha256:3d3fd57874c07e1f3212fd7be29d89e60a13a52b613d5ed19efc151a282a74e6",
+      "content_hash": "sha256:b42df1f80a794dca6fae1498d6d3e587fe0ac70e67983817b1d36321e0fc7609",
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
-      "heading": "The R7.5 requirements query returns bounded metadata only: observation/source digests, selected-node and optional current lifecycle run identity, full fact address, source coordinate/kind, optional authoring status, separately-present consumer adoption, and optionally requested relation edges/provenance. Base source identity is the package coordinate with exactly one `host|package` kind value — the same coordinate may not occur under both kinds — because relation-source enrichment keys by coordinate alone and must recover one unambiguous kind to validate fresh-versus-carried provenance; every relation-source result therefore binds to exactly one enumerated base source. It returns no fact prose, code body, prompt, recommendation, ranking or next task. It reads authored specs/materialised package documents and the existing adoption registry without sync or write; relation enrichment is injected as an optional provider. Missing registry/map/package participation produces a generated partial/unavailable value; a malformed present source is named in its own source result and never becomes lifecycle failure. @status:spec/done",
+      "heading": "The R7.5 requirements query returns bounded metadata only: observation/source digests, selected-node and optional current lifecycle run identity, full fact address, source coordinate/kind, optional authoring status, separately-present consumer adoption, and optionally requested relation edges/provenance. Base source identity is the package coordinate with exactly one `host|package` kind value — the same coordinate may not occur under both kinds — because relation-source enrichment keys by coordinate alone and must recover one unambiguous kind to validate fresh-versus-carried provenance; every relation-source result therefore binds to exactly one enumerated base source. Source readers parse the same one-read raw bytes they witness and expose only `{path,bytes,sha256}` below the query, never bodies. Per-source digest uses the domain `vibe-requirements-source-digest\\0epoch=1\\0` over kind/package and sorted document witnesses; `source_digest` uses `vibe-requirements-scope-digest\\0epoch=1\\0` over selected, sorted source digests and registry witnesses; `observation_id` uses `vibe-requirements-observation-id\\0epoch=1\\0` over every report member except itself and `observed_at`, including optional lifecycle run id. All three use the same schema-order length frames/canonical decimals/explicit optional bits as evidence identity, never JSON or Rust layout. It returns no fact prose, code body, prompt, recommendation, ranking or next task. It reads authored specs/materialised package documents and the existing adoption registry without sync or write; relation enrichment is injected once per requested query, while unrequested enrichment emits explicit `not-requested/none` per source and calls nothing. Provider availability is mapped per source and the library derives current/carried provenance from source kind. Missing registry/map/package participation produces a generated partial/unavailable value; a malformed present authored source is named in its own source result and never becomes lifecycle failure, while malformed registry or lock aborts because the query could not establish its scope. @status:spec/done",
       "line": 183,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#FACT-QUERY-CONTRACT"
     },
