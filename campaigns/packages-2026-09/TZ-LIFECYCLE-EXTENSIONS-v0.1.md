@@ -280,11 +280,16 @@ R8.2a завершены; остальные строки остаются от�
   Red-proof: невыполненный контракт再-паркуется, выполненный — закрывается.
 - **Ш7.4 — MCP-поверхность**: `lifecycle_run`/`lifecycle_tasks` над теми же файлами
   (жанр `vibe-mcp/src/tools.rs`, оракул-тесты как у `agentic_explain`).
-- **Ш7.5 — нейтральный внешний work-loop substrate (owner ruling 2026-08-27).**
+- **Ш7.5 — нейтральный внешний work-loop substrate (owner ruling 2026-08-27,
+  reaffirmed 2026-08-28).**
   Lifecycle остаётся пассивным framework, не кодинговым агентом: structured
   verification evidence, exact tree/run identity, CLI/MCP control/read surfaces и
-  опциональный read-only adapter требований/spec-IR (stable fact ids/status/provenance,
-  unmet/stale relations). Никаких встроенных Plan/Act policy, автоматического
+  опциональный read-only adapter требований: full `spec://…#fact` address;
+  authoring status, consumer adoption, edge provenance/provider freshness и
+  typed gap/staleness observations — отдельные поля, не heuristic `unmet`.
+  Status-bearing основа — `vibe-specdoc` + `vibe-facts`; current specmap лишь
+  optional relation provider, compiler IR не подменяет fact status. Никаких
+  встроенных Plan/Act policy, автоматического
   `create→verify→create`, выбора следующей задачи или LLM-зависимости. В PROP-054 —
   ненормативный PDSA reference scenario внешнего агента; референсная реализация самого
   агента — отдельная будущая кампания. Red-proof: fake external orchestrator использует
@@ -344,8 +349,9 @@ ledger'а. R1 → (R2, R3 core). R6.2a/b следуют за R3.3 и предш�
 порядок уже выполнен. R4.0 следует после коллектора R2 и typed compiler core;
 R4.1–R4.3 используют один его kernel. R5 phase-native требует R2+R4, а native
 compiler path также R6.2. R6.3–R6.5 требуют R3/R5/R6.2; R7.1–R7.4 требуют
-R2, не R5. R7.5 следует за нейтральными R7.4-адаптерами и может опционально
-читать landed R6.2/specmap facts, не превращая их в lifecycle dependency.
+R2, не R5. R7.5 следует за нейтральными R7.4-адаптерами, читает status-bearing
+`vibe-specdoc`/`vibe-facts` и может опционально обогащать ответ current-specmap
+relations, не превращая ни один provider в lifecycle dependency.
 R8 artifact records/DAG могут идти после R2 параллельно, но mechanism
 world/selection обязаны дождаться R4.0 и расширить тот же kernel — второй
 collector запрещён. Внутри каждого атома зависимости и конфликтные manifest /

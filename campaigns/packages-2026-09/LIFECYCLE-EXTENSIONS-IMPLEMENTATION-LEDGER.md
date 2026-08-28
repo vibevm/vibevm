@@ -23,7 +23,7 @@ writer, shared command wire/state, borrowed workspace/install plumbing,
 Install/Lifecycle/Update/Reinstall owners, exact displaced continuation and
 the final four-family parity matrix. The final quality tail repaired every
 panel-discovered stale oracle and discipline ratchet rather than baselining it.
-All accepted R3.4 and R7.4-through-A12 worktrees and fan-out worktrees were
+All accepted R3.4 and R7.4-through-A13 worktrees and fan-out worktrees were
 reviewed, archived and reclaimed under rolling GC; **only `main` remains**.
 Missing later waves were never implemented.
 
@@ -37,11 +37,12 @@ than depending on untracked `cache/` archaeology.
 
 ## 2. Evidence standard and current baseline
 
-- Integration checkpoint: `main` at `ba874cdf` contains the complete accepted
-  R3.4 chain and R7.4 through A12. A12's shared lifecycle application service
-  is `053b7e37`; its derived retrieval map is `ba874cdf`. The service owns one
-  opaque selected-world bundle, install/resume and phase dispatch behind typed
-  ports, while CLI still owns trace finalisation, presentation, credentials and
+- Integration checkpoint: `main` at `afdd3adc` contains the complete accepted
+  R3.4 chain and R7.4 through A13. A12's application service is `053b7e37` /
+  `ba874cdf`; A13's shared compile-trace funnel is `3f01e2dc` / `afdd3adc`.
+  The lower service owns one opaque selected-world bundle, install/resume,
+  phase dispatch and non-rendering trace finalisation; CLI still owns registered
+  report families, deferred-plan routing, presentation, credentials and
   provider construction.
 - The last coherent whole-panel boundary is R7.4 A0–A8 at `a4253de7`:
   `self-check: all green`, exit 0 on 2026-08-28. The script's lexical
@@ -53,7 +54,7 @@ than depending on untracked `cache/` archaeology.
   conform: 27 visible acknowledged findings, 0 frozen and **0 new**. The
   panel's full workspace tests, clippy `-D warnings`, codegen, wire-diff,
   package/MCP suites, self-traces and markup validation all passed.
-- Post-A12 `cargo xtask specmap`: 6787 units, 2160 tagged code items, 1941 edges,
+- Post-A13 checkpoint `cargo xtask specmap`: 6789 units, 2176 tagged code items, 1957 edges,
   0 suspects, 0 gated orphans, 0 unresolved host edges and 21 standing
   warnings. The 25 non-host edges are outside this map's jurisdiction.
 - R6.2b integration evidence on the current tree: `cargo xtask codegen`
@@ -238,8 +239,8 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 | R7.1 real provider seam | done | `f42334ff`, `e2392893`; JTD wire, config, endpoint/redirect/proxy/body/timeout/redaction tests |
 | R7.2 CLI agent handler + output contract | done | `26929050`; strict AgentResult JTD, prepared prompt/world resolution, ResultPlan, optional provider path, create/install/reinstall/update e2e and shared safe filesystem cell |
 | R7.3 hosted outbox/delegated resume | done | `1dd5e1f5`, generated reports `eae4494e`; durable run/outbox, exact task ownership, candidate-state atomicity, phase/slot reconciliation, command-level progress, no-spend sequential resume and independent final freeze |
-| R7.4 MCP lifecycle surfaces | in progress | architecture `ee2bc67f`; first wave `94f30aa9`, `88600508`, `87c2bab8`, `daf6eb31`, `17d94f8f`; A4 `31ca1e7d` / `0225ce41` / `970520d4`; A5 `7e330974` / `93177db6`; A6 `7bd335e2` / `b3ff308c`, `e1121d9b`, `b4d91749`, `8debdf2e`, `c82012c3`; A7–A8 tasks cut `cf5ec17d`, `ee741f2e` / `d338e880`, `30534ff9` / `7b9732f0`, `df678d7b` / `c62177fe`; final A0–A8 full panel on `a4253de7` ran all 54 dynamic gates green after explicit boundary repairs `4ecd2cc5`, `21567b6c`, `a4253de7`; A9 ports/stream REDs `5506cf88` / `9732ba38` / `18a797b2`; A10 lower projection imports `53e84790`; A11 exact-four-dependency, conform-gated neutral plan crate `2560ee57` / `78ea8cc5`, with `[llm]` physically retained by CLI; A12 shared application service `053b7e37` / `ba874cdf`, independently reviewed PASS with opaque selection/plan invariants, 74 unit + 50 doctest + compile-fail, 566 CLI unit and focused lifecycle/golden/lease/resume/trace gates green; A13 trace values next |
-| R7.5 external orchestration substrate | missing | owner ruling reaffirmed 2026-08-28: structured lifecycle evidence + exact tree/run identity + optional read-only requirements/spec-IR facts which an external long-running agent may use to see unmet/stale requirements and choose direction; no coding agent or automatic loop inside lifecycle; reference agent is a future campaign |
+| R7.4 MCP lifecycle surfaces | in progress | architecture `ee2bc67f`; first wave `94f30aa9`, `88600508`, `87c2bab8`, `daf6eb31`, `17d94f8f`; A4 `31ca1e7d` / `0225ce41` / `970520d4`; A5 `7e330974` / `93177db6`; A6 `7bd335e2` / `b3ff308c`, `e1121d9b`, `b4d91749`, `8debdf2e`, `c82012c3`; A7–A8 tasks cut `cf5ec17d`, `ee741f2e` / `d338e880`, `30534ff9` / `7b9732f0`, `df678d7b` / `c62177fe`; final A0–A8 full panel on `a4253de7` ran all 54 dynamic gates green after explicit boundary repairs `4ecd2cc5`, `21567b6c`, `a4253de7`; A9 ports/stream REDs `5506cf88` / `9732ba38` / `18a797b2`; A10 lower projection imports `53e84790`; A11 neutral plan crate `2560ee57` / `78ea8cc5`; A12 shared application service `053b7e37` / `ba874cdf`; A13 shared trace funnel `3f01e2dc` / `afdd3adc` with inherent prelude trace-home join, one generic exact-error carrier, 101 unit + 63 doctest + compile-fail, 546 CLI command unit, lifecycle/trace golden/failure/resume matrix, clippy/conform/specmap all green; A14 credential-free prompt resolver next |
+| R7.5 external orchestration substrate | missing | owner ruling reaffirmed 2026-08-28: structured exact-tree/artifact/run evidence + optional read-only facts keyed by full `spec://…#fact`; status-bearing source is `vibe-specdoc` + consumer `vibe-facts`, current specmap relations are optional; external long-running agents may use separately typed observations to choose direction, while lifecycle contains no coding agent, task heuristic or automatic loop |
 
 R7 live Z.AI smoke is now conclusive (2026-08-27): central `vibe create`
 called the official OpenAI-compatible coding endpoint with `glm-5-turbo`, read
@@ -496,6 +497,13 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
     as optional read-only evidence tied to exact tree/run identity, never as
     lifecycle's hidden planner. A reference agent is a separate future
     campaign.
+33. R7.5 fact guidance reads status-bearing `vibe-specdoc` facts plus the
+    consumer-owned `vibe-facts` overlay; compiler IR fact nodes are not a status
+    source. Identity is the full `spec://…#fact` address. Authoring status,
+    consumer adoption, specmap edge provenance/provider freshness and lifecycle
+    status remain separate typed fields; gap/staleness are typed observations,
+    not a heuristic next-task recommendation. Current specmap relations are an
+    optional read-only enrichment; their absence changes no lifecycle result.
 
 ## 6. Physical state and loss prevention
 
@@ -517,6 +525,11 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
   the registry entry first; the residual long-path tree was then removed by an
   exact-path `git -c core.longpaths=true clean -ffdx` fallback. Only `main`
   remains registered.
+- A13 ran directly on the already-active `main` checkout through plain
+  `claude --model opus --effort max`; central review used the same-cwd `-c`
+  correction loop, then reran every decisive gate before `3f01e2dc`. No new
+  worktree or rebuildable target was created; the report remains local under
+  `cache/r74-a13/` and only `main` is registered.
 - `cache/` is untracked and unignored. It is not a product home. Important
   decisions from its R3.3, R4–R5 and R6–R8 reports are now represented in this
   ledger; future accepted decisions go directly here/spec-debt/code comments.
@@ -578,10 +591,12 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
    first wave is landed and exactly gated; pinned transactional state I/O and
    the outermost cross-process lease, selected-node ownership and the complete
    final-name-stable optimistic tasks/MCP cut are landed, independently reviewed
-   and green under their coherent full panel; shared orchestrator + run adapter last.
+   and green under their coherent full panel; application + trace orchestration
+   are now shared, with prompt resolver + run adapter last.
    Full panels only at the two coherent boundaries.
 5. Neutral external-orchestration evidence/query substrate: exact tree/run
-   identity, stale/unmet verify evidence, optional read-only spec-IR facts and
+   identity, typed verify gaps/staleness, optional read-only `vibe-specdoc` +
+   `vibe-facts` observations/current-specmap relations and
    a fake-orchestrator/PDSA reference scenario. An external long-running agent
    may consume those facts to understand which requirements remain unmet and
    where to move; lifecycle supplies evidence, never that choice. **Then

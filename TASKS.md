@@ -149,7 +149,14 @@ fronts currently in flight. A worker report or old worktree is never completion.
             chain passed independent final review plus 74 orchestrator unit,
             50 doctest, compile-fail, 566 CLI unit and focused lifecycle
             gates; no CLI/MCP/LLM back-edge entered the service.
-      - [ ] A13 trace-funnel values move while CLI presentation remains.
+      - [x] A13 trace-funnel extraction (`3f01e2dc`, `afdd3adc`): the
+            non-rendering trace owner/finalizer, exact error carrier and
+            lifecycle report values are now in `vibe-orchestrator`; CLI keeps
+            registered families, deferred-plan routing and human/quiet/JSON
+            presentation. Central review forced the trace-home join onto
+            `RunPrelude` and a full measurement→registered-root double-hop RED;
+            101 orchestrator unit, 63 doctest, compile-fail, 546 CLI command
+            unit and the exact lifecycle/trace integration matrix are green.
       - [ ] A14 credential-free prompt resolution moves into
             `vibe-lifecycle::agent` with zero provider construction.
       - [ ] A15 strict hosted/no-spend MCP `lifecycle_run`, executed-failure
@@ -157,10 +164,23 @@ fronts currently in flight. A worker report or old worktree is never completion.
 - [ ] **R7.5** — neutral external work-loop substrate (owner ruling reaffirmed
       2026-08-28): structured verification
       evidence bound to exact tree/artifact/run identity; optional read-only
-      spec-IR facts (`stable id + status + provenance + unmet/stale`); CLI/MCP
+      spec-IR facts (full `spec://…#fact` address plus separately typed
+      authoring/adoption/provenance/gap observations); CLI/MCP
       query/control surfaces; fake external PDSA orchestrator RED. Lifecycle
       contains no Plan/Act policy, automatic loop, task choice or LLM
       dependency; the reference long-running agent is a future campaign.
+      - [ ] R7.5-P0 spec atom: tighten PROP-054 evidence/optional-provider
+            laws and reconcile the older PROP-000/boot/VIBEVM-SPEC vocabulary
+            ban with the owner-approved lifecycle/phase/plugin vocabulary.
+      - [ ] R7.5-P1 wire atom: JTD-first exact evidence identity and metadata-
+            only requirements query; no raw source bodies or heuristic
+            `unmet` boolean.
+      - [ ] R7.5-P2 library atom: read-only `vibe-specdoc` + `vibe-facts`
+            projection with optional current-specmap relations; absence is
+            typed unavailability/enrichment loss, never lifecycle failure.
+      - [ ] R7.5-P3 surfaces/e2e atom: strict CLI+MCP query/control projection
+            and fake external PDSA orchestrator; zero mutation/provider calls,
+            no phase enum/state-machine PDSA names and no automatic back-edge.
 - [x] **R8.1** — project-only package skill binding with strict ownership,
       recovery and Claude/Codex/OpenCode projections.
 - [x] **R8.2a** — strict mechanism/artifact/deploy-profile manifest grammar

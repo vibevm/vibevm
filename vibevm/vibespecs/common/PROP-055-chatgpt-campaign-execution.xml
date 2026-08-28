@@ -63,6 +63,16 @@
       re-commission or discard. Worker-written PASS/review/commit claims have
       zero authority; staging, commits, integration and final gates remain
       central.</CLAUDEZ-EXECUTES-ROOT-ACCEPTS>
+      <NO-NATIVE-SOL-ULTRA-ACCEPTANCE fact="true" status="spec/done">**Owner
+      ruling 2026-08-28: do not commission native collaboration subagents that
+      inherit Sol Ultra for acceptance or review.** Every such spawn pays the
+      repository's enormous boot-lane prefix again before it can inspect the
+      diff, making the review disproportionately expensive. Acceptance stays
+      in the already-booted central Ultra context; an independent second family
+      uses subscription `claudez`/Opus launchers (or an explicitly external
+      lower-cost lane), never a native Sol Ultra reviewer. This does not forbid
+      a narrowly justified native execution task; it removes native Sol Ultra
+      from the acceptance route.</NO-NATIVE-SOL-ULTRA-ACCEPTANCE>
     </facts>
   </roles>
 
@@ -72,10 +82,12 @@
     probed on live work; no lane is assumed healthy from an old ping.</POOL-IS-DYNAMIC></p>
     <facts ordered="false">
       <NATIVE-WORKERS fact="true" status="spec/done">**Native collaboration
-      workers** are the low-latency fallback for a narrow edit/review that
+      workers** are the low-latency fallback for a narrow execution/inventory task that
       specifically benefits from current conversation context. They are not the
       default execution lane while `claudez` is healthy. Use disjoint write
-      perimeters in parallel; retain packet/report/no-commit discipline.
+      perimeters in parallel; retain packet/report/no-commit discipline. A Sol
+      Ultra native worker is never used for acceptance, per
+      `NO-NATIVE-SOL-ULTRA-ACCEPTANCE`.
       </NATIVE-WORKERS>
       <SOL-XHIGH fact="true" status="spec/done">**`codexrunner` —
       `gpt-5.6-sol`, effort `xhigh`** — is the second external lane for hard,
@@ -112,9 +124,11 @@
         implement, but central/Opus/Sol independently reviews the judgment.
         </ROUTE-CODE>
         <ROUTE-REVIEW fact="true" status="spec/done">Security, wire,
-        transaction and lifecycle reviews: a fresh model family that did not
-        author the change. Read-only reviews may run beside one code
-        worker.</ROUTE-REVIEW>
+        transaction and lifecycle reviews: central Ultra in its already-paid
+        context and, when independence is valuable, a fresh external model
+        family that did not author the change. Never pay the whole boot lane to
+        a native Sol Ultra acceptance subagent. Read-only external reviews may
+        run beside one code worker.</ROUTE-REVIEW>
         <ROUTE-MECHANICAL fact="true" status="spec/done">Mechanical edits,
         fixtures, corpus additions and exact test matrices: `claudez` first,
         Sol/native on primary-lane limit or a genuine context advantage. The
@@ -608,6 +622,12 @@ claude -c -p $repair --model opus --effort max `
     panels; trust both launchers with normal machine tools; preserve their
     result as an unstaged, centrally reviewable worktree rather than a worker
     commit/stash/index; and never cap subscription runs by nominal dollar
-    budget.</HIST-OWNER-2026-08-26></p>
+      budget.</HIST-OWNER-2026-08-26></p>
+    <p><HIST-OWNER-2026-08-28-NATIVE-REVIEW fact="true" status="spec/done">The
+    owner removed native Sol Ultra subagents from the acceptance pool after
+    observing that every reviewer repays the enormous boot-lane prefix.
+    Central Ultra now accepts in its existing context; independent review is
+    routed through subscription launchers or another explicitly cheaper
+    external lane.</HIST-OWNER-2026-08-28-NATIVE-REVIEW></p>
   </history>
 </spec>
