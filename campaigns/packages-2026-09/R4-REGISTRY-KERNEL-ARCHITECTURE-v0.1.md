@@ -1,8 +1,9 @@
 # R4 registry kernel and staged transforms — implementation architecture v0.1
 
-Status: central implementation design, 2026-08-27. Semantic authority remains
-PROP-054 §§3 and 7 plus the accepted lifecycle spec debt. This document fixes
-the crate boundary and execution dataflow before R4.0 extraction starts.
+Status: central implementation design, 2026-08-27; R4.0 extraction implemented
+and accepted 2026-08-29 at `6af1b86f` with map `8531cf82`; R4.1 is current.
+Semantic authority remains PROP-054 §§3 and 7 plus the accepted lifecycle spec
+debt. This document fixes the crate boundary and execution dataflow.
 
 Execution status and dependency order live in
 [`LIFECYCLE-EXTENSIONS-IMPLEMENTATION-LEDGER.md`](LIFECYCLE-EXTENSIONS-IMPLEMENTATION-LEDGER.md).
@@ -15,9 +16,10 @@ pure collector. Workspace may adapt a lock/materialised world into its input;
 `vibe-spec` may execute a compiled transform plan; neither may collect the
 manifest rows again.
 
-The kernel is a new crate (working name `vibe-extension-registry`; final name is
-chosen once and then stable). `vibe-ext` is reserved for the R5 plugin SDK.
-`vibe-core` remains manifest grammar, not a world-aware registry.
+The kernel is the landed crate `vibe-extension-registry`; its exact runtime
+dependency and ambient-access fences are part of R4.0. `vibe-ext` is reserved
+for the R5 plugin SDK. `vibe-core` remains manifest grammar, not a world-aware
+registry.
 
 Required dependency DAG:
 
@@ -88,10 +90,12 @@ Effective order remains exactly:
 Activation replaces config as one complete value and records its ordinal.
 Disable/inactive rows stay in exhaustive views but do not enter execution plans.
 
-Standalone materialised-world reconstruction currently enumerates directories
-without lock ordering. That vector is never accepted as ordering authority.
-Workspace must read the absolute-root lock or consume the already lock-ordered
-install resolution.
+R4.1 will install one ordered-world adapter in `vibe-workspace`: durable
+`from_lock`, provisional `from_lock_and_resolution`, and one typed host-source
+projection. It iterates the absolute-root lock, substitutes resolved rows in
+place and appends genuinely new rows in resolver order. `fs::read_dir` may
+remain only to report orphan slots; an orphan is outside the extension world
+and never becomes ordering input.
 
 ## 4. Three honest world epochs
 
@@ -101,16 +105,27 @@ Adapters, not the kernel, own when the world is observed:
 2. post-install durable lock/materialised world for default phases and compile;
 3. pre-wipe old world for clean hooks.
 
-All three call the same collector. A post-barrier equality test feeds equivalent
-provisional/durable rows and requires one registry/order. Clean may retain only
-the already-specified old/future control intersection; it does not create a
-fourth collector.
+All three call the same collector. Each command states which lock value is its
+epoch authority: ready apply overlays its resolution on pre-apply lock order;
+post-install/default compilation reads the durable root lock; clean plans from
+the pre-wipe old-lock intersection. Post-removal uninstall regeneration is not
+clean: it compiles the remaining **future** world from the in-memory lock after
+the removed entry is dropped and before that lock is published. The adapter
+orders the epoch a command owns; it never chooses or invents one. A post-barrier
+equality test feeds equivalent provisional/durable owner views and requires one
+registry/order.
 
 ## 5. Compiler plan translation
 
-Workspace collects once per lifecycle/install run, then translates effective
-`compile:*` rows into a `vibe-spec`-native `TransformPlan`. The plan contains no
-manifest objects and no filesystem resolver:
+Workspace takes one filesystem-backed world snapshot per lifecycle/install run
+— every participating manifest parsed once, dependency order from the root
+lock — then invokes the one pure collector once per **lane owner** over an
+owner-scoped view and translates that owner's effective `compile:*` rows into a
+`vibe-spec`-native `TransformPlan`. One collector means one implementation and
+one snapshot, not one effective plan: the selected node, every member node and
+every package-owned unit may have distinct plans. An owner with no compile rows
+shares the empty plan. The plan contains no manifest objects and no filesystem
+resolver:
 
 - stable extension/provider key, version/content hash and effective order;
 - stage (`source|document|lane|emitted`);
@@ -122,7 +137,20 @@ manifest objects and no filesystem resolver:
 `Arc<dyn Pass>` across crate boundaries. `BackendRegistry` remains a behavior
 registry and is not a second declaration collector.
 
-### 5.1 Selector subject
+### 5.1 Owner-scoped activation
+
+PROP-054 `##COMPILE-ACTIVATION` is literal: activation authority follows the
+artifact being written. A node lane uses that node's manifest; a per-unit lane
+uses that package's own manifest. The world snapshot therefore retains every
+package's `ExtensionsControl`, but dependency controls remain inert in another
+owner's view. For package P's lane the collector sees, in the same four tiers:
+presets applicable to P; P's dependency closure in root-lock order; P's own
+declarations; P's own activations. Host controls cannot leak into P or a
+sibling, and P's controls cannot leak into host/sibling views. Package controls
+are data lost by today's `DependencyExtensionSource`; R4.1 adds them plus a
+pure dependency-seat→owner-seat projection before plan construction.
+
+### 5.2 Selector subject
 
 Source/document transforms require the provider plus forward-slashed declared
 path of the addressed document. That identity is carried into `SourceIr` /
@@ -173,8 +201,15 @@ The active ordered transform plan enters every artifact identity:
 - exact config digest and implementation digest.
 
 Inactive/disabled observable rows do not invalidate bytes. Per-unit and node
-lanes use the same plan digest. A changed plan cannot leave fresh untransformed
-unit lanes beside regenerated transformed node lanes.
+lanes use the same plan-digest **algorithm and carrier**, never necessarily the
+same value: every artifact binds its lane owner's plan. A per-unit lane hashes
+its owner-plan digest into the existing boot-graph fingerprint; the empty plan
+adds no plan frame, preserving historical bytes. A node lane deliberately has
+no freshness fingerprint and is always recompiled; its plan identity rides the
+header/provenance, and the crash-safe transaction preserves bytes/mtime when
+the recomputed artifact is equal. Thus a changed owner plan cannot leave that
+owner's skippable unit fresh, while distinct owners may legitimately transform
+the same authored document differently.
 
 The transforms header is emitted only for a nonempty active plan, after the
 reference oracle and by engine framing—not plugin bytes. Markdown/XML tape
@@ -219,8 +254,9 @@ reconstruct attribution already present in IR/provenance.
 
 ## 10. Extraction and landing sequence
 
-1. Add the kernel crate and move the pure registry/tests byte-for-byte.
-2. Make lifecycle consume/re-export it; all existing registry/e2e tests green.
+1. **Done `6af1b86f`:** add the kernel crate and move the pure registry/tests.
+2. **Done `6af1b86f`:** lifecycle consumes/re-exports it; boundary and caller
+   gates green; generated map `8531cf82`.
 3. Add workspace/spec dependencies and prove empty-registry byte identity.
 4. Build one strict durable-world adapter from selected manifest + root lock.
 5. Thread one collected registry/plan through unit and node compilation.
@@ -235,13 +271,16 @@ closes the integrated R4 batch, not each mechanical move.
 ## 11. Acceptance matrix
 
 1. Existing ordering/control/selector/view suite moves without behavior change.
-2. Provisional and durable equivalent worlds collect one identical registry.
+2. Provisional and durable equivalent owner views collect one identical
+   registry/order.
 3. Empty compile registry preserves schedule, bytes, errors and mtimes.
 4. Source/document run per address; lane/emitted once per artifact.
 5. Document selector receives typed provider/path, including host identities.
 6. Disabled/inactive rows remain queryable and never execute.
 7. Plan fingerprint changes with order/config/provider version/hash.
-8. Same plan preserves per-unit/node freshness; changed plan invalidates both.
+8. Same owner plan preserves per-unit freshness and equal node bytes/mtime;
+   changed owner plan invalidates that unit (and existing static parents), while
+   node lanes always recompute.
 9. Active header lists exact effective order; empty plan emits no header.
 10. Emitted transform cannot forge stale provenance/digest.
 11. Unit and node artifacts share crash-safe publication behavior.

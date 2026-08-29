@@ -84,6 +84,17 @@ fronts currently in flight. A worker report or old worktree is never completion.
       its warm 66,787,222,941-byte worktree was then reclaimed.
 - [ ] **R4.0–R4.3** — shared lower registry; four staged positions;
       transforms header/fingerprint/reference oracle; minify binding; analyzer.
+      - [x] R4.0 pure kernel (`6af1b86f`, map `8531cf82`): one collector
+            below lifecycle with type-identical compatibility re-exports;
+            exact dependency/AST-ambient/public-root fences. Root gates:
+            kernel 22, lifecycle 287/3 ignored, orchestrator 126 + doctests,
+            strict clippy, install/CLI check, conform 0 new and acyclic DAG.
+      - [ ] R4.1 owner-scoped world/plan: one lock-ordered snapshot, package
+            manifest for package-owned lane, node manifest for node lane;
+            four identity-transform positions, active-only header, per-unit
+            plan fingerprint, node recompute/no-op and transaction parity.
+      - [ ] R4.2 bind strict builtin XML minify with the full RED corpus.
+      - [ ] R4.3 JTD-first `vibe extensions analyze` report/CLI.
 - [ ] **R5.1–R5.5** — native schemas/SDK, loader, source/prebuilt build,
       pending convergence and native/builtin parity (§10.2).
 - [ ] **R6.1/R6.3–R6.5** — executable pass grammar, native pass placement,

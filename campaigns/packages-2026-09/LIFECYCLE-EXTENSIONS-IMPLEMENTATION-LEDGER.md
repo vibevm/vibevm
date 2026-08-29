@@ -238,6 +238,19 @@ than depending on untracked `cache/` archaeology.
   `self-check: all green`: workspace 978s, both user-home tripwires 184s/177s,
   sync-engines 51/51, generated wire/specmap/wire-diff clean, markup 508/0 and
   every package test/clippy/conform/self-trace green. R7.5 is complete.
+- R4.0 pure registry extraction: `6af1b86f` moves the one declaration,
+  activation, ordering, selector and view collector into
+  `vibe-extension-registry`; lifecycle keeps type-identical public re-exports
+  while `EffectiveManifestKind` and the execution-shaped plan remain above the
+  kernel. Runtime dependencies are exactly `glob`, `specmark`, `thiserror`,
+  `vibe-core`; dev-only AST/dependency fences also reject grouped/renamed/glob
+  ambient `std` access and any higher-crate edge. Root caught and repaired two
+  worker proof gaps (private-module rather than public-root identity; raw-text
+  rather than syntax-complete ambient scan), then independently passed kernel
+  22, lifecycle 287/3 ignored, orchestrator 126 plus doctests, strict clippy,
+  install/CLI check, conform 0 new and the cargo-metadata DAG. Map `8531cf82`
+  relocates the exact semantic edge multiset plus three intentional module
+  scopes: 6826/2284/2054, zero suspects/orphans/unresolved. R4.0 is complete.
 - Gate repair `67ab9683` fixes the conform content store's Windows cache slot:
   `sha256:<hex>` had created 1,393 NTFS alternate streams on one base file and
   failed with OS error 665. Authored engine + six vendored copies now use one
@@ -310,8 +323,8 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 
 | Step | State | Evidence |
 |---|---|---|
-| R4.0 one pure registry below lifecycle/workspace | missing | required to avoid a dependency cycle and a duplicate extension machine |
-| R4.1 four positions, host activation, header, fingerprint, reference oracle | missing | no transform descriptors/passes/header binding |
+| R4.0 one pure registry below lifecycle/workspace | done | kernel `6af1b86f`, map `8531cf82`; exact runtime-dependency/AST-ambient/public-reexport fences; kernel 22, lifecycle 287/3 ignored, orchestrator 126 + doctests, strict clippy/check/conform/DAG green |
+| R4.1 four positions, owner-scoped activation, header, per-unit fingerprint, reference oracle | in progress | architecture fixes one lock-ordered world snapshot, one collector per lane owner, package-own activation, future-world uninstall and node no-fingerprint law; no transform descriptors/passes/header binding yet |
 | R4.2 builtin XML minify | partial | pure strict kernel `016f0fab` and reversible comment codec `fbbd5140`; no activation/on-off e2e |
 | R4.3 lane analyzer | missing | no `vibe extensions analyze` or machine report |
 
@@ -464,16 +477,23 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
     higher crates consume it). Manifest grammar stays in `vibe-core`, execution
     stays in lifecycle, and behavior-bearing pass/backend registries stay in
     `vibe-spec`. The kernel owns provider/world rows, ordering, controls,
-    selectors and views. Workspace adapters supply the authoritative root lock
-    order; unsorted materialised-directory enumeration is never ordering input.
+    selectors and views. R4.1 adds one `vibe-workspace` ordered-world adapter:
+    root-lock iteration, substitution in place and resolver-order appends;
+    `read_dir` may report orphans but never orders or populates the extension
+    world. One filesystem snapshot feeds owner-scoped views: the node manifest
+    activates its node lane, and each package manifest activates that package's
+    own unit lane; dependency controls are retained but inert in other owners.
     Detailed extraction boundary:
     [`R4-REGISTRY-KERNEL-ARCHITECTURE-v0.1.md`](R4-REGISTRY-KERNEL-ARCHITECTURE-v0.1.md).
 16. R4's untransformed emitter remains the reference oracle. An emitted
     transform therefore needs a manager-owned constructor that recomputes
     provenance/digests after the oracle; mutating `EmittedArtifact.bytes` in
     place is forbidden. An active-plan-only transforms header must be accepted
-    by the emitted-tape validators and enter both node and per-unit
-    fingerprints. Per-unit lanes must join the crash-safe artifact transaction
+    by the emitted-tape validators. Per-unit lanes hash their own owner-plan
+    digest into the boot-graph fingerprint (empty plan = absent frame); node
+    lanes intentionally have no freshness fingerprint and always recompute,
+    carrying plan identity in header/provenance while equal transactional bytes
+    preserve mtime. Per-unit lanes must join the crash-safe artifact transaction
     before byte-changing transforms ship. XML-minify needs explicit REDs for
     hoisted top-level `#use`, all-elided streams, comment/CDATA boundaries,
     semantic `from_xml` parity and a strictly-smaller real lane; it may never
@@ -841,8 +861,8 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
 3. R3.4 trace/timings using that same wire: observer/pre-encode budget seam,
    atomic writer + newest-nine retention, one recorder through workspace/CLI,
    then presentation/e2e. **Done through final all-green panel and GC.**
-4. Pure registry extraction.
-5. R4.1 staged positions/header/oracle/fingerprint.
+4. Pure registry extraction. **Done `6af1b86f` / `8531cf82`.**
+5. R4.1 staged positions/owner views/header/oracle/fingerprint.
 6. R4.2 XML minify binding and full RED corpus.
 7. R4.3 analyzer wire/CLI.
 8. R5 native wire + SDK; loader; build/prebuilt; bootstrap; parity.
