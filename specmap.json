@@ -9369,10 +9369,19 @@
       "crate_name": "vibe-extension-registry",
       "file": "crates/vibe-extension-registry/src/model.rs",
       "item_kind": "fn",
-      "line": 442,
+      "line": 451,
       "symbol": "vibe_extension_registry::model::ExtensionRegistry::enabled_at",
-      "end_line": 455,
+      "end_line": 464,
       "fingerprint": "tok1:617bfc084a668d4d80afdcb5967fb23969ab2b39939d0575f06add4e6a24641b"
+    },
+    {
+      "crate_name": "vibe-extension-registry",
+      "file": "crates/vibe-extension-registry/src/model.rs",
+      "item_kind": "fn",
+      "line": 466,
+      "symbol": "vibe_extension_registry::model::ExtensionRegistry::enabled_compile_rows",
+      "end_line": 490,
+      "fingerprint": "tok1:2bb499c7b6ad9dc395b0b40703a7f7f55540014fd5812cd01962b04b9d38844d"
     },
     {
       "crate_name": "vibe-extension-registry",
@@ -9729,10 +9738,37 @@
       "crate_name": "vibe-extension-registry",
       "file": "crates/vibe-extension-registry/src/tests/view.rs",
       "item_kind": "fn",
-      "line": 78,
+      "line": 295,
+      "symbol": "vibe_extension_registry::tests::view::disabled_and_inactive_compile_rows_leave_the_view_and_stay_queryable",
+      "end_line": 337,
+      "fingerprint": "tok1:a227dc98e4546ced560a616dbc4ef4788450b5e7f55afde6fd0aca129b6e13c8"
+    },
+    {
+      "crate_name": "vibe-extension-registry",
+      "file": "crates/vibe-extension-registry/src/tests/view.rs",
+      "item_kind": "fn",
+      "line": 111,
       "symbol": "vibe_extension_registry::tests::view::enabled_at_keeps_selector_bearing_rows_that_an_unscoped_plan_drops",
-      "end_line": 138,
+      "end_line": 171,
       "fingerprint": "tok1:7f1394d734ce48b3c2a0312660f297c3c5e9733eca1ff53c1dc432c3f6bcaae0"
+    },
+    {
+      "crate_name": "vibe-extension-registry",
+      "file": "crates/vibe-extension-registry/src/tests/view.rs",
+      "item_kind": "fn",
+      "line": 173,
+      "symbol": "vibe_extension_registry::tests::view::enabled_compile_rows_is_one_global_order_no_per_point_concatenation_reproduces",
+      "end_line": 266,
+      "fingerprint": "tok1:52935277de5504536e876b3c755adf6112cea9aae79e0afeb49376e0cf5f8f8a"
+    },
+    {
+      "crate_name": "vibe-extension-registry",
+      "file": "crates/vibe-extension-registry/src/tests/view.rs",
+      "item_kind": "fn",
+      "line": 268,
+      "symbol": "vibe_extension_registry::tests::view::the_compile_view_carries_the_whole_compile_family_including_the_pass_tier",
+      "end_line": 293,
+      "fingerprint": "tok1:34ab54a1f63f4c0012405a085b766bfcffdd2df0ab121b8ebf8ffce8af0414c3"
     },
     {
       "crate_name": "vibe-extension-registry",
@@ -19818,36 +19854,36 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/lib.rs",
       "item_kind": "struct",
-      "line": 338,
+      "line": 339,
       "symbol": "vibe_workspace::Workspace",
-      "end_line": 380,
+      "end_line": 381,
       "fingerprint": "tok1:f11f238e760e70161733f73be4d7484718f476298a1076e53011eeaca8401432"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/lib.rs",
       "item_kind": "fn",
-      "line": 432,
+      "line": 433,
       "symbol": "vibe_workspace::Workspace::node_rel_of",
-      "end_line": 499,
+      "end_line": 500,
       "fingerprint": "tok1:efaecb95c92dc621d4b1357b2bc18580ec05ca2704aadabf9c397e7bb1ea4969"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/lib.rs",
       "item_kind": "enum",
-      "line": 59,
+      "line": 60,
       "symbol": "vibe_workspace::WorkspaceError",
-      "end_line": 290,
+      "end_line": 291,
       "fingerprint": "tok1:099c088435dbf9da8e4df4bc5ff8f744fdef9b2ebfec38f6fcf61cedcbd65bed"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/lib.rs",
       "item_kind": "struct",
-      "line": 294,
+      "line": 295,
       "symbol": "vibe_workspace::WorkspaceMember",
-      "end_line": 336,
+      "end_line": 337,
       "fingerprint": "tok1:27e14926d8b3eee3a5f1ae2f6642e5506608113ff9f991cfe2f8b553110acb4e"
     },
     {
@@ -20389,6 +20425,141 @@
       "symbol": "vibe_workspace::expand::finalize_versions",
       "end_line": 171,
       "fingerprint": "tok1:af6269acabbd85e84e131110acc85d5e069bcc2197ec0b1a5e1f6a676885f3ee"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/extension_world.rs",
+      "item_kind": "mod",
+      "line": 30,
+      "symbol": "vibe_workspace::extension_world",
+      "end_line": 30,
+      "fingerprint": "tok1:853b38218301cd0dc8554f533f5a602938fbf104ecc7a4cb623f02e471f01e35"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/extension_world.rs",
+      "item_kind": "struct",
+      "line": 66,
+      "symbol": "vibe_workspace::extension_world::DurableExtensionWorld",
+      "end_line": 81,
+      "fingerprint": "tok1:881b87fe40cebedaa98f00e73d95b5de28de447bdcbbcf3becbb392e80ce9a18"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/extension_world.rs",
+      "item_kind": "fn",
+      "line": 84,
+      "symbol": "vibe_workspace::extension_world::DurableExtensionWorld::from_lock",
+      "end_line": 141,
+      "fingerprint": "tok1:436fb820daf182d2ad55ac9f3dabe3f417f42f74bed09b439abd1c420cd6d5f2"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/extension_world.rs",
+      "item_kind": "fn",
+      "line": 161,
+      "symbol": "vibe_workspace::extension_world::DurableExtensionWorld::node_owner_view",
+      "end_line": 173,
+      "fingerprint": "tok1:805534cf3cff0ee4ae22f7c30fa014a428fde6a0070bcbcea06845cc5b974dfe"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/extension_world.rs",
+      "item_kind": "fn",
+      "line": 175,
+      "symbol": "vibe_workspace::extension_world::DurableExtensionWorld::package_owner_view",
+      "end_line": 201,
+      "fingerprint": "tok1:fbc242147aaf83093638a5715b2d429be2cdaf2f1bfc1d5c2dea0f005fdf3892"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/extension_world.rs",
+      "item_kind": "fn",
+      "line": 258,
+      "symbol": "vibe_workspace::extension_world::collect_owner_view",
+      "end_line": 269,
+      "fingerprint": "tok1:9a9a273b7fc93bb411cdc7e315a7cdcd2286dccac4de720e8aecd9ec90534194"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/extension_world/cycle_tests.rs",
+      "item_kind": "fn",
+      "line": 13,
+      "symbol": "vibe_workspace::extension_world::cycle_tests::a_lane_owner_never_sits_in_its_own_installed_vector_even_under_a_cyclic_lock",
+      "end_line": 104,
+      "fingerprint": "tok1:f2a9df095b6792b00c086b598c37f663b5d46c899523b4050ee51193dc9c5e06"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/extension_world/errors.rs",
+      "item_kind": "mod",
+      "line": 5,
+      "symbol": "vibe_workspace::extension_world::errors",
+      "end_line": 5,
+      "fingerprint": "tok1:853b38218301cd0dc8554f533f5a602938fbf104ecc7a4cb623f02e471f01e35"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/extension_world/errors.rs",
+      "item_kind": "enum",
+      "line": 13,
+      "symbol": "vibe_workspace::extension_world::errors::ExtensionWorldError",
+      "end_line": 134,
+      "fingerprint": "tok1:10863aa59ab9f46e8b91728e76195bc5bf123ab93eb195c1233e21e9b1b24ef2"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/extension_world/tests.rs",
+      "item_kind": "fn",
+      "line": 75,
+      "symbol": "vibe_workspace::extension_world::tests::a_dependency_carries_its_own_controls_and_they_stay_inert_in_the_node_view",
+      "end_line": 114,
+      "fingerprint": "tok1:d7a4a40dcd79a063f4ec4acb52f8589a44f4c96199acd9a0d98185a642c89a0e"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/extension_world/tests.rs",
+      "item_kind": "fn",
+      "line": 254,
+      "symbol": "vibe_workspace::extension_world::tests::a_slot_declaring_another_identity_refuses_by_name",
+      "end_line": 290,
+      "fingerprint": "tok1:ae8d850bec8d533b6fb6d22bd5a7c387fab8c967ab67643ea92e9e4e62391802"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/extension_world/tests.rs",
+      "item_kind": "fn",
+      "line": 292,
+      "symbol": "vibe_workspace::extension_world::tests::an_uninstalled_coordinate_owns_no_unit_lane",
+      "end_line": 308,
+      "fingerprint": "tok1:d3cf991f3fb3aec67658dbb58564533f55c8a7f7244d08d3148f73c7f3f6ebcb"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/extension_world/tests.rs",
+      "item_kind": "fn",
+      "line": 210,
+      "symbol": "vibe_workspace::extension_world::tests::an_untypable_package_name_component_is_a_typed_refusal_naming_it",
+      "end_line": 252,
+      "fingerprint": "tok1:a731e2fee09f9deb9e13bedd4b09a9a6802269259789a3605ebacbf289d9a5ec"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/extension_world/tests.rs",
+      "item_kind": "fn",
+      "line": 19,
+      "symbol": "vibe_workspace::extension_world::tests::lock_order_is_the_only_dependency_order_and_never_the_alphabetical_one",
+      "end_line": 73,
+      "fingerprint": "tok1:7c199d262a107e76fd4d9545bcc6491e76096d71948049f7d65ed0a7fc1a0dc4"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/extension_world/tests.rs",
+      "item_kind": "fn",
+      "line": 116,
+      "symbol": "vibe_workspace::extension_world::tests::owner_scoping_is_exact_in_both_directions_and_a_lane_sees_only_its_closure",
+      "end_line": 208,
+      "fingerprint": "tok1:3ba7461c6ca73f504d77e0b31ac89edfec48257948241dd444b669bbfe9032c9"
     },
     {
       "crate_name": "vibe-workspace",
@@ -28090,7 +28261,7 @@
     {
       "file": "crates/vibe-extension-registry/src/model.rs",
       "from_symbol": "vibe_extension_registry::model::ExtensionRegistry::enabled_at",
-      "line": 451,
+      "line": 460,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY",
       "verb": "implements"
@@ -28098,9 +28269,25 @@
     {
       "file": "crates/vibe-extension-registry/src/model.rs",
       "from_symbol": "vibe_extension_registry::model::ExtensionRegistry::enabled_at",
-      "line": 450,
+      "line": 459,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-SELECTOR",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-extension-registry/src/model.rs",
+      "from_symbol": "vibe_extension_registry::model::ExtensionRegistry::enabled_compile_rows",
+      "line": 485,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-extension-registry/src/model.rs",
+      "from_symbol": "vibe_extension_registry::model::ExtensionRegistry::enabled_compile_rows",
+      "line": 484,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-ACTIVATION",
       "verb": "documents"
     },
     {
@@ -28433,8 +28620,16 @@
     },
     {
       "file": "crates/vibe-extension-registry/src/tests/view.rs",
+      "from_symbol": "vibe_extension_registry::tests::view::disabled_and_inactive_compile_rows_leave_the_view_and_stay_queryable",
+      "line": 298,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-REGISTRY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-extension-registry/src/tests/view.rs",
       "from_symbol": "vibe_extension_registry::tests::view::enabled_at_keeps_selector_bearing_rows_that_an_unscoped_plan_drops",
-      "line": 79,
+      "line": 112,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-SELECTOR",
       "verb": "verifies"
@@ -28442,7 +28637,31 @@
     {
       "file": "crates/vibe-extension-registry/src/tests/view.rs",
       "from_symbol": "vibe_extension_registry::tests::view::enabled_at_keeps_selector_bearing_rows_that_an_unscoped_plan_drops",
-      "line": 80,
+      "line": 113,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-extension-registry/src/tests/view.rs",
+      "from_symbol": "vibe_extension_registry::tests::view::enabled_compile_rows_is_one_global_order_no_per_point_concatenation_reproduces",
+      "line": 185,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ORDER-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-extension-registry/src/tests/view.rs",
+      "from_symbol": "vibe_extension_registry::tests::view::enabled_compile_rows_is_one_global_order_no_per_point_concatenation_reproduces",
+      "line": 186,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-extension-registry/src/tests/view.rs",
+      "from_symbol": "vibe_extension_registry::tests::view::the_compile_view_carries_the_whole_compile_family_including_the_pass_tier",
+      "line": 274,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY",
       "verb": "verifies"
@@ -37800,7 +38019,7 @@
     {
       "file": "crates/vibe-workspace/src/lib.rs",
       "from_symbol": "vibe_workspace::Workspace",
-      "line": 367,
+      "line": 368,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#workspace-section",
       "verb": "implements",
@@ -37809,7 +38028,7 @@
     {
       "file": "crates/vibe-workspace/src/lib.rs",
       "from_symbol": "vibe_workspace::Workspace::node_rel_of",
-      "line": 488,
+      "line": 489,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#workspace-section",
       "verb": "documents"
@@ -37817,7 +38036,7 @@
     {
       "file": "crates/vibe-workspace/src/lib.rs",
       "from_symbol": "vibe_workspace::WorkspaceError",
-      "line": 80,
+      "line": 81,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#nesting",
       "verb": "implements"
@@ -37825,7 +38044,7 @@
     {
       "file": "crates/vibe-workspace/src/lib.rs",
       "from_symbol": "vibe_workspace::WorkspaceMember",
-      "line": 317,
+      "line": 318,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#workspace-section",
       "verb": "implements",
@@ -38339,6 +38558,134 @@
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#versions",
       "verb": "implements",
       "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-workspace/src/extension_world.rs",
+      "from_symbol": "vibe_workspace::extension_world",
+      "line": 30,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/extension_world.rs",
+      "from_symbol": "vibe_workspace::extension_world::DurableExtensionWorld",
+      "line": 71,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-workspace/src/extension_world.rs",
+      "from_symbol": "vibe_workspace::extension_world::DurableExtensionWorld::from_lock",
+      "line": 117,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ORDER-LAW",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/extension_world.rs",
+      "from_symbol": "vibe_workspace::extension_world::DurableExtensionWorld::node_owner_view",
+      "line": 165,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-ACTIVATION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/extension_world.rs",
+      "from_symbol": "vibe_workspace::extension_world::DurableExtensionWorld::package_owner_view",
+      "line": 183,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-ACTIVATION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/extension_world.rs",
+      "from_symbol": "vibe_workspace::extension_world::collect_owner_view",
+      "line": 263,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/extension_world/cycle_tests.rs",
+      "from_symbol": "vibe_workspace::extension_world::cycle_tests::a_lane_owner_never_sits_in_its_own_installed_vector_even_under_a_cyclic_lock",
+      "line": 25,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-ACTIVATION",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-workspace/src/extension_world/errors.rs",
+      "from_symbol": "vibe_workspace::extension_world::errors",
+      "line": 5,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/extension_world/errors.rs",
+      "from_symbol": "vibe_workspace::extension_world::errors::ExtensionWorldError",
+      "line": 17,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/extension_world/tests.rs",
+      "from_symbol": "vibe_workspace::extension_world::tests::a_dependency_carries_its_own_controls_and_they_stay_inert_in_the_node_view",
+      "line": 80,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-ACTIVATION",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-workspace/src/extension_world/tests.rs",
+      "from_symbol": "vibe_workspace::extension_world::tests::a_slot_declaring_another_identity_refuses_by_name",
+      "line": 258,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-workspace/src/extension_world/tests.rs",
+      "from_symbol": "vibe_workspace::extension_world::tests::an_uninstalled_coordinate_owns_no_unit_lane",
+      "line": 295,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-ACTIVATION",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-workspace/src/extension_world/tests.rs",
+      "from_symbol": "vibe_workspace::extension_world::tests::an_untypable_package_name_component_is_a_typed_refusal_naming_it",
+      "line": 217,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-workspace/src/extension_world/tests.rs",
+      "from_symbol": "vibe_workspace::extension_world::tests::lock_order_is_the_only_dependency_order_and_never_the_alphabetical_one",
+      "line": 23,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ORDER-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-workspace/src/extension_world/tests.rs",
+      "from_symbol": "vibe_workspace::extension_world::tests::owner_scoping_is_exact_in_both_directions_and_a_lane_sees_only_its_closure",
+      "line": 125,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-ACTIVATION",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-workspace/src/extension_world/tests.rs",
+      "from_symbol": "vibe_workspace::extension_world::tests::owner_scoping_is_exact_in_both_directions_and_a_lane_sees_only_its_closure",
+      "line": 126,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#HOST-ACTIVATION",
+      "verb": "verifies"
     },
     {
       "file": "crates/vibe-workspace/src/freshness.rs",
