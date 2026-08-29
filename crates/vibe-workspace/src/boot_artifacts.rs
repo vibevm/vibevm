@@ -59,6 +59,12 @@ use normal::{hoisted_seed, normal_seed};
 mod normal;
 mod transaction;
 
+/// Manager-owned per-unit publication — the compiled INDEX/STATIC triple's
+/// narrow seam onto the transaction manager (R4.1 atom B).
+mod publication;
+pub(crate) use publication::publish_unit_artifacts;
+use publication::stale_static_file;
+
 mod format;
 pub use format::{STATIC_FILE, STATIC_XML_FILE, resolve_static_path, static_file, static_path};
 
@@ -509,11 +515,7 @@ fn write_boot_artifacts_inner(
     // The selected STATIC artifact — only when there are static contributions.
     // The generator owns both spellings and always removes the unselected one.
     let static_path = boot_dir.join(static_file(spec_format));
-    let stale_path = boot_dir.join(if matches!(spec_format, SpecFormat::Xml) {
-        STATIC_FILE
-    } else {
-        STATIC_XML_FILE
-    });
+    let stale_path = boot_dir.join(stale_static_file(spec_format));
     let redirects = transaction::write_production_with_selectors(
         transaction::ArtifactWrite {
             index_path: &index,

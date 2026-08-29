@@ -1,6 +1,12 @@
 //! Hybrid-linking (PROP-038) install tests for [`super`], out-of-line per the
 //! file-length budget — the per-unit compilation, soft hoisting, and
-//! dirty-subgraph behaviour driven through `apply_resolution`.
+//! dirty-subgraph behaviour driven through `apply_resolution`. The R4.1
+//! transaction reds live one level down in [`transaction`].
+
+// This file is itself loaded through a `#[path]` module declaration, so its
+// children are spelled explicitly rather than inherited from a directory.
+#[path = "tests_hybrid/transaction.rs"]
+mod transaction;
 
 use super::test_helpers::*;
 use super::*;

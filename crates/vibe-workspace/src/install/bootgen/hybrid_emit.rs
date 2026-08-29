@@ -18,7 +18,7 @@ use crate::boot::{BootBand, BootEntry, EffectiveBoot};
 use crate::compile_trace::TraceRun;
 use crate::{WorkspaceError, boot_artifacts, path_to_slash, vibedeps};
 
-use super::super::{ResolvedDep, io_err};
+use super::super::ResolvedDep;
 
 /// One unit's trace occurrence and the fresh-output observation that decides
 /// whether it is declared at all — split out so the observe-then-declare law
@@ -402,6 +402,15 @@ fn dynamic_target_path(
 /// this writes **no** redirect blocks — a dependency package slot is not an
 /// agent entry point, so it carries no `CLAUDE.md` / `AGENTS.md` / `GEMINI.md`.
 ///
+/// Publication is transactional (R4.1 atom B; R4 architecture §7 — bare
+/// byte writes are not an R4 publication path): a dirty unit renders its
+/// INDEX and compiles its static lane IN FULL before the old artifact set is
+/// touched, then publishes the whole triple through
+/// [`boot_artifacts::publish_unit_artifacts`] — the same crash-recoverable
+/// manager the node path uses — so a compile or backend refusal leaves the
+/// unit's pre-existing INDEX/STATIC bytes byte-exact, and a crash
+/// mid-publication rolls forward or back to one consistent set.
+///
 /// The trace law (R3.4), per unit that has a static artifact:
 ///
 /// * exact fingerprint-fresh ⇒ the existing selected STATIC file is OBSERVED
@@ -412,14 +421,17 @@ fn dynamic_target_path(
 ///   boot freshness stands, one bounded warning names why, and the run carries
 ///   no occurrence for a compile that never happened, so it can still finalise
 ///   `ok`;
-/// * dirty ⇒ the directory and INDEX are written first, and the occurrence is
+/// * dirty ⇒ every fallible semantic byte is produced BEFORE the old artifact
+///   set is touched: the INDEX is rendered here, and the occurrence is
 ///   acquired at the COMPILE boundary inside [`boot_artifacts`], completing
 ///   with the emitted-output fingerprint or failing with the original error.
-///   No pre-compiler refusal here (a directory that cannot be created, an
-///   INDEX that cannot be rendered or written) can leave a pending scope.
+///   No pre-compiler refusal here (an INDEX that cannot be rendered) can
+///   leave a pending scope; a later transaction failure may legitimately
+///   leave the occurrence `compiled` (the command owner finalises the run).
 ///
-/// Nothing here changes the dirty-subgraph selection or any mtime: the
-/// freshness check is computed exactly as before the trace existed.
+/// Nothing here changes the dirty-subgraph selection: the freshness check is
+/// computed exactly as before, and an unchanged unit never enters the
+/// transaction at all.
 fn emit_effective(
     boot_dir: &Path,
     workspace_root: &Path,
@@ -452,36 +464,29 @@ fn emit_effective(
         }
         return Ok(());
     }
-    fs::create_dir_all(boot_dir).map_err(|e| io_err(boot_dir, e))?;
-    fs::write(
-        &index,
-        boot_artifacts::render_index_with_spec_format(effective, Some(fingerprint), spec_format)?,
-    )
-    .map_err(|e| io_err(&index, e))?;
-    match boot_artifacts::render_static_observed(
+    // Dirty (R4.1 atom B): render/compile every fallible semantic byte BEFORE
+    // touching the old artifact set. The INDEX render and the static compile
+    // both precede publication, so any refusal here leaves the unit's
+    // existing INDEX/STATIC bytes byte-exact — the pre-transaction code
+    // published the INDEX before compiling and could not promise that.
+    let index_text =
+        boot_artifacts::render_index_with_spec_format(effective, Some(fingerprint), spec_format)?;
+    let static_text = boot_artifacts::render_static_observed(
         effective,
         workspace_root,
         self_coord,
         spec_format,
         unit_trace.map(UnitTrace::acquisition),
-    )? {
-        Some(text) => {
-            fs::write(&static_path, text).map_err(|e| io_err(&static_path, e))?;
-            remove_if_exists(&stale_path)?;
-        }
-        None => {
-            remove_if_exists(&static_path)?;
-            remove_if_exists(&stale_path)?;
-        }
-    }
-    Ok(())
-}
-
-fn remove_if_exists(path: &Path) -> Result<(), WorkspaceError> {
-    if path.exists() {
-        fs::remove_file(path).map_err(|e| io_err(path, e))?;
-    }
-    Ok(())
+    )?;
+    // ONE crash-recoverable publication: INDEX, the selected STATIC's
+    // presence/bytes, and the stale spelling's absence land together — or
+    // not at all.
+    boot_artifacts::publish_unit_artifacts(
+        boot_dir,
+        &index_text,
+        static_text.as_deref(),
+        spec_format,
+    )
 }
 
 /// Append the hoisted shared packages (PROP-038 §2.4) to the global root's
