@@ -460,6 +460,19 @@
       the public path, and source-deny fences need syntax-aware negative
       fixtures rather than reassuring grep. No run used `--max-budget-usd`.
       </CLAUDEZ-R4-LIVE-2026-08-29>
+      <CANONICAL-IDENTITY-ACCEPTANCE-2026-08-29 fact="true" status="spec/done">A
+      later R4.1 T1/T3 pair passed its worker gates yet central review found four
+      identity-boundary defects: five-digit values entered a four-digit TOML
+      date, host provider plus document path was unconstructible, legacy plan
+      paid a temporary collection, and `CompiledSelector::Eq` treated OR-set
+      order/duplicates as semantic while the promised digest did not. Two
+      same-cwd claudez repairs plus an ordinary Opus/max byte-schedule audit
+      closed them before T2; conform also forced the enlarged selector RED into
+      a focused sub-600-line cell. Durable packet/acceptance rule: whenever a
+      canonical identity lands, pair its independent byte vector with Rust
+      equality, absent-versus-empty, typed constructor composition and legacy
+      allocation/order checks. A green digest golden alone does not prove one
+      semantic identity.</CANONICAL-IDENTITY-ACCEPTANCE-2026-08-29>
       <PARALLEL-WRITER-GATES-2026-08-29 fact="true" status="spec/done">Two
       disjoint R4.1 writers proved that write-perimeter independence does not
       make cross-crate gates temporally independent. The registry writer's
