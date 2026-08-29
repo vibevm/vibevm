@@ -20,7 +20,7 @@ pub(super) fn verify(ir: &AnyIr) -> Result<(), VerificationError> {
     IrVerifier.verify(ir)
 }
 
-fn lane(body: &str) -> LaneIr {
+pub(super) fn lane(body: &str) -> LaneIr {
     let address = spec_address("spec://org.demo/pkg/boot/entry#root");
     let marker = LinkMarkerKey::from_address(&address);
     LaneIr::assembled(

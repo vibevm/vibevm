@@ -138,6 +138,17 @@ impl CompilerPipeline {
         self.verifier = Some(IrVerifier);
     }
 
+    /// Whether this pipeline carries the verify-each seam at all.
+    ///
+    /// A test that claims to observe the PRODUCTION construction has to be
+    /// able to prove the seam really is absent; without this the claim is
+    /// unfalsifiable, because the field is private and the schedule builder
+    /// is the only writer.
+    #[cfg(test)]
+    pub(crate) fn verify_each_enabled_for_test(&self) -> bool {
+        self.verifier.is_some()
+    }
+
     /// Run the declared schedule with the accepted cardinality law.
     pub(crate) fn run(&self, sources: Vec<SourceIr>) -> Result<EmittedIr, CompilerPipelineError> {
         self.validate_boundaries()?;

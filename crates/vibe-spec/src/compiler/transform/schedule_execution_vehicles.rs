@@ -3,11 +3,14 @@
 //! REDs. They never enter `builtins()` and never alter the T5 golden.
 //! Causality vehicles append FENCED code blocks — real parsed content with
 //! no anchor or fact-id pressure across the shared/qualified lane.
+//!
+//! The lane-position vehicles live in `schedule_lane_vehicles`, beside the
+//! T6c admission tests they exist for.
 
 use std::sync::Arc;
 
 use crate::DocTree;
-use crate::compiler::ir::{DocumentAddress, DocumentIr, LaneIr, SourceIr};
+use crate::compiler::ir::{DocumentAddress, DocumentIr, SourceIr};
 
 use super::behavior::{TransformBehavior, TransformBehaviorError};
 use super::plan::{TransformConfig, TransformStage};
@@ -19,14 +22,12 @@ use super::registry_test_support::identity_registry;
 std::thread_local! {
     pub(super) static SOURCE_COUNT: std::cell::Cell<usize> = const { std::cell::Cell::new(0) };
     pub(super) static DOCUMENT_COUNT: std::cell::Cell<usize> = const { std::cell::Cell::new(0) };
-    pub(super) static LANE_COUNT: std::cell::Cell<usize> = const { std::cell::Cell::new(0) };
     pub(super) static EMITTED_COUNT: std::cell::Cell<usize> = const { std::cell::Cell::new(0) };
 }
 
 pub(super) fn reset_vehicle_counts() {
     SOURCE_COUNT.with(|count| count.set(0));
     DOCUMENT_COUNT.with(|count| count.set(0));
-    LANE_COUNT.with(|count| count.set(0));
     EMITTED_COUNT.with(|count| count.set(0));
 }
 
@@ -87,40 +88,6 @@ impl TransformBehavior for BlockTreeDocument {
         Ok(DocumentIr::new(
             input.source().clone(),
             DocTree::parse(&text),
-        ))
-    }
-}
-
-/// Reverses the lane's contributions: a real `LaneIr` change that preserves
-/// `source_node_count` — exactly the change a weaker detector would miss.
-pub(super) struct ReorderLane;
-
-impl TransformBehavior for ReorderLane {
-    fn name(&self) -> &str {
-        "test-lane-reorder"
-    }
-    fn epoch(&self) -> u32 {
-        1
-    }
-    fn stage(&self) -> TransformStage {
-        TransformStage::Lane
-    }
-    fn run_lane(
-        &self,
-        _config: Option<&TransformConfig>,
-        input: LaneIr,
-    ) -> Result<LaneIr, TransformBehaviorError> {
-        LANE_COUNT.with(|count| count.set(count.get() + 1));
-        let (context, source_node_count, source_link_digest, frame, contributions) =
-            input.parts_for_test();
-        let mut contributions = contributions.to_vec();
-        contributions.reverse();
-        Ok(LaneIr::assembled(
-            context.clone(),
-            source_node_count,
-            source_link_digest.clone(),
-            frame.clone(),
-            contributions,
         ))
     }
 }

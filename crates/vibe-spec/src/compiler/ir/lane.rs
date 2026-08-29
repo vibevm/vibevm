@@ -118,8 +118,12 @@ impl LaneIr {
     }
 
     /// Test-only full-parts view for same-crate lane fixtures: everything
-    /// [`Self::assembled`] consumes, lent read-only. T6c designs its real
-    /// production witness seam in T6c; production readers get nothing new.
+    /// [`Self::assembled`] consumes, lent read-only.
+    ///
+    /// T6c's production lane witness needed no new seam: every member it
+    /// copies is already `pub(crate)` or reachable through
+    /// [`Self::context`], so this view stays exactly what it was — a
+    /// convenience for building fixtures, never a production reader.
     #[cfg(test)]
     pub(crate) fn parts_for_test(
         &self,

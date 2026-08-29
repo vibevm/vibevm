@@ -28,7 +28,16 @@ use super::worklist::{DocumentKey, document_key};
 mod graph;
 mod transition;
 
-pub(crate) use transition::{TransitionError, VerificationWitness};
+/// The moved-field discriminant of a lane provenance refusal.
+///
+/// Production only ever renders it, through `TransitionError::LaneProvenance`;
+/// nothing in the compiler classifies on it, and a crate-wide re-export would
+/// therefore be dead in a non-test build. Tests match on it exactly.
+#[cfg(test)]
+pub(crate) use transition::LaneProvenanceField;
+pub(crate) use transition::{
+    LaneWitness, TransitionError, VerificationWitness, lane_witness, verify_lane_transition,
+};
 
 /// Why a carrier violates its level's semantic contract.
 ///

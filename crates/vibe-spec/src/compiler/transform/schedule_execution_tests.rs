@@ -9,6 +9,9 @@
 //! `builtins()` and never alter the T5 golden. Causality vehicles append a
 //! FENCED code block — real parsed content, no anchor or fact-id pressure
 //! across the shared/qualified lane.
+//!
+//! The lane position's own admission law is T6c's, and its tests live in
+//! `schedule_lane_tests`.
 
 use std::sync::{Arc, Mutex};
 
@@ -182,46 +185,10 @@ fn values_config() -> TransformConfig {
 
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY")]
-fn a_changed_lane_refuses_after_assemble_before_the_backend() {
-    reset_assemble_invocations();
-    reset_emit_invocations();
-    reset_vehicle_counts();
-    let world = fixture();
-    let registry = registry_with(&[Arc::new(ReorderLane)]);
-    let plan = plan_of(vec![vehicle_seed(
-        "org.demo/tools#lane",
-        TransformStage::Lane,
-        "test-lane-reorder",
-    )]);
-
-    let error = compile(plan, &world, &registry).unwrap_err();
-    let ArtifactCompileError::Transform(public) = &error else {
-        panic!("the lane refusal is the transform family: {error:?}")
-    };
-    assert!(
-        matches!(
-            public.inner(),
-            TransformError::Capability {
-                gap: TransformCapabilityGap::LaneChange,
-                ..
-            }
-        ),
-        "full-equality detection names the T6c gap: {public}"
-    );
-    assert_eq!(
-        LANE_COUNT.with(std::cell::Cell::get),
-        1,
-        "the behavior ran once"
-    );
-    assert_eq!(assemble_invocations(), 1, "the refusal is after assemble");
-    assert_eq!(emit_invocations("static-xml"), 0, "and before the backend");
-}
-
-#[test]
-#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY")]
-fn the_identity_lane_crosses_once_with_no_witness_claim() {
-    // Position and cardinality only: T6c owns equivalence, and this test
-    // deliberately asserts nothing about witnesses or transitions.
+fn the_identity_lane_crosses_once_and_returns_the_whole_baseline_value() {
+    // Position and cardinality: the lane admission gate T6c installs is
+    // exercised in `schedule_lane_tests`, and identity output remains the
+    // commissioning vector here.
     super::registry_test_support::reset_identity_invocations();
     let world = fixture();
     let plan = fixture().plan.with_transforms(identity_plan(&[(

@@ -7,8 +7,11 @@
 //! comparison evidence for one invocation — never a second IR store, never a
 //! repair, and never a wire field.
 
+use std::fmt;
+
 use super::super::ir::{
-    AbsorptionPlan, AbsorptionState, ClosureIr, DocumentAddress, QualificationState, SourceFormatId,
+    AbsorptionPlan, AbsorptionState, ArtifactContext, ClosureIr, DocumentAddress, LaneIr,
+    LinkInputDigest, OriginRename, QualificationState, SourceFormatId,
 };
 use super::super::pass::AnyIr;
 use super::super::qualify::analyze_absorption;
@@ -36,6 +39,51 @@ pub(crate) enum TransitionError {
     AbsorptionPlanMutated,
     #[error("qualification typestate regressed from applied to pending")]
     QualificationRegression,
+    #[error(
+        "a lane transform rewrote the immutable provenance field `{field}`: expected `{expected}`, got `{actual}`"
+    )]
+    LaneProvenance {
+        field: LaneProvenanceField,
+        expected: String,
+        actual: String,
+    },
+}
+
+/// Which immutable lane provenance field a lane transform moved.
+///
+/// The set is the executable spelling of the witness boundary: every member
+/// describes what the closure and link stages produced, and the one lane
+/// member deliberately absent from it — `contributions` — is the working
+/// surface a lane transform may rewrite.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(crate) enum LaneProvenanceField {
+    SourceNodeCount,
+    SourceLinkDigest,
+    FrameGeneratedPath,
+    FrameSourceRoot,
+    FrameRenames,
+    Context,
+}
+
+impl LaneProvenanceField {
+    /// The field's exact spelling in the lane value, so a refusal names the
+    /// thing a reader can go and look at.
+    pub(crate) fn as_str(self) -> &'static str {
+        match self {
+            Self::SourceNodeCount => "source_node_count",
+            Self::SourceLinkDigest => "source_link_digest",
+            Self::FrameGeneratedPath => "frame.generated_path",
+            Self::FrameSourceRoot => "frame.source_root",
+            Self::FrameRenames => "frame.renames",
+            Self::Context => "context",
+        }
+    }
+}
+
+impl fmt::Display for LaneProvenanceField {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str(self.as_str())
+    }
 }
 
 /// Ephemeral, private comparison evidence derived from one valid pass input.
@@ -51,8 +99,31 @@ pub(crate) enum VerificationWitness {
     },
     Documents,
     Closure(ClosureWitness),
-    Lane,
+    Lane(LaneWitness),
     Emitted,
+}
+
+/// The immutable provenance of one lane, copied from the pass INPUT.
+///
+/// Field by field rather than a whole [`LaneIr`] clone, because the witness IS
+/// the statement of what a lane transform may not touch: `context`,
+/// `source_node_count`, `source_link_digest` and the three parts of `frame`
+/// describe what the closure and link stages produced, while `contributions`
+/// is absent on purpose — it is the working surface. A future reader gets the
+/// boundary off the type instead of re-deriving the argument.
+///
+/// `frame` is carried as its three parts rather than as one `LaneFrame`
+/// because `frame.renames` flows onward into `EmissionProvenance.renames`: a
+/// transform that rewrote them would forge provenance the manager alone owns,
+/// so each part is named separately in the refusal.
+#[derive(Debug, Clone)]
+pub(crate) struct LaneWitness {
+    context: ArtifactContext,
+    source_node_count: usize,
+    source_link_digest: LinkInputDigest,
+    generated_path: Option<String>,
+    source_root: Option<String>,
+    renames: Vec<OriginRename>,
 }
 
 /// The pre-pass closure state: the absorption plan a pass may establish (for
@@ -122,8 +193,24 @@ pub(super) fn witness(ir: &AnyIr) -> Result<VerificationWitness, VerificationErr
                 AbsorptionState::Applied(plan) => AbsorptionWitness::Applied(plan.clone()),
             },
         })),
-        AnyIr::Lane(_) => Ok(VerificationWitness::Lane),
+        AnyIr::Lane(lane) => Ok(VerificationWitness::Lane(lane_witness(lane))),
         AnyIr::Emitted(_) => Ok(VerificationWitness::Emitted),
+    }
+}
+
+/// Derive the immutable lane evidence of one valid lane.
+///
+/// Infallible by construction: every field is copied and nothing is analysed,
+/// so the manager-side lane gate that consumes it has no impossible error arm
+/// to eliminate by panic.
+pub(crate) fn lane_witness(lane: &LaneIr) -> LaneWitness {
+    LaneWitness {
+        context: lane.context().clone(),
+        source_node_count: lane.source_node_count,
+        source_link_digest: lane.source_link_digest.clone(),
+        generated_path: lane.frame.generated_path.clone(),
+        source_root: lane.frame.source_root.clone(),
+        renames: lane.frame.renames.clone(),
     }
 }
 
@@ -151,8 +238,94 @@ pub(super) fn verify(before: &VerificationWitness, ir: &AnyIr) -> Result<(), Ver
         (VerificationWitness::Closure(witness), AnyIr::Closure(actual)) => {
             verify_closure_transition(witness, actual)
         }
+        (VerificationWitness::Lane(witness), AnyIr::Lane(actual)) => {
+            verify_lane_transition(witness, actual).map_err(VerificationError::from)
+        }
         _ => Ok(()),
     }
+}
+
+/// Authenticate one lane against the evidence of the value that produced it.
+///
+/// A lane transform owns `contributions` and nothing else. Every other member
+/// is provenance: the manager derived it from the closure and link stages, and
+/// `frame.renames` in particular flows onward into `EmissionProvenance`, so a
+/// rewrite there would forge a record the manager alone authors.
+///
+/// The order below is diagnostic, never permissive — any difference in any
+/// field refuses. The narrow fields come first so a transform that rewrote a
+/// frame part in BOTH halves (the only way such a rewrite survives the
+/// intrinsic frame/context agreement check) is named by the exact part it
+/// moved, and the whole-context comparison stays as the residual that still
+/// catches an artifact id, target or compile-mode rewrite.
+pub(crate) fn verify_lane_transition(
+    before: &LaneWitness,
+    actual: &LaneIr,
+) -> Result<(), TransitionError> {
+    immutable(
+        LaneProvenanceField::SourceNodeCount,
+        &before.source_node_count,
+        &actual.source_node_count,
+    )?;
+    if before.source_link_digest != actual.source_link_digest {
+        return Err(TransitionError::LaneProvenance {
+            field: LaneProvenanceField::SourceLinkDigest,
+            expected: digest_label(&before.source_link_digest),
+            actual: digest_label(&actual.source_link_digest),
+        });
+    }
+    immutable(
+        LaneProvenanceField::FrameGeneratedPath,
+        &before.generated_path,
+        &actual.frame.generated_path,
+    )?;
+    immutable(
+        LaneProvenanceField::FrameSourceRoot,
+        &before.source_root,
+        &actual.frame.source_root,
+    )?;
+    immutable(
+        LaneProvenanceField::FrameRenames,
+        &before.renames,
+        &actual.frame.renames,
+    )?;
+    immutable(
+        LaneProvenanceField::Context,
+        &before.context,
+        actual.context(),
+    )
+}
+
+/// One provenance field compared, with both values named in the refusal.
+fn immutable<T: PartialEq + fmt::Debug>(
+    field: LaneProvenanceField,
+    expected: &T,
+    actual: &T,
+) -> Result<(), TransitionError> {
+    if expected == actual {
+        Ok(())
+    } else {
+        Err(TransitionError::LaneProvenance {
+            field,
+            expected: format!("{expected:?}"),
+            actual: format!("{actual:?}"),
+        })
+    }
+}
+
+/// A link digest rendered as lowercase hex: a refusal names a digest, never a
+/// thirty-two element Rust array literal.
+fn digest_label(digest: &LinkInputDigest) -> String {
+    let mut label = String::with_capacity(digest.0.len() * 2);
+    for byte in digest.0 {
+        label.push(hex_digit(byte >> 4));
+        label.push(hex_digit(byte & 0x0f));
+    }
+    label
+}
+
+fn hex_digit(nibble: u8) -> char {
+    char::from_digit(u32::from(nibble), 16).unwrap_or('?')
 }
 
 /// A source-level transform may alter only text; a parse-position lowering may

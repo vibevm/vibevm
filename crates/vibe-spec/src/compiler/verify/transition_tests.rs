@@ -6,12 +6,13 @@ use specmark::verifies;
 
 use super::super::absorb::AbsorbPass;
 use super::super::ir::{
-    AbsorptionState, ClosureContribution, ClosureIr, ClosureOccurrence, ContributionAbsorption,
-    DocumentAddress, QualificationState, StaticCompileMode,
+    AbsorptionState, ArtifactContext, ClosureContribution, ClosureIr, ClosureOccurrence,
+    ContributionAbsorption, DocumentAddress, LaneFrame, LaneIr, LinkInputDigest, OriginRename,
+    QualificationState, StaticCompileMode,
 };
 use super::super::pass::Pass;
 use super::super::qualify::QualifyPass;
-use super::super::verify::TransitionError;
+use super::super::verify::{LaneProvenanceField, TransitionError};
 use super::closure_tests::{address, closure, node, occurrence, use_edge, verify};
 use super::{IrVerifier, VerificationError};
 use crate::DocTree;
@@ -244,4 +245,113 @@ fn a_source_transform_may_change_text_but_never_identity() {
             TransitionError::Identity { .. }
         ))
     ));
+}
+
+// --- the lane witness ----------------------------------------------------
+
+fn lane_transition(before: &LaneIr, after: &LaneIr) -> Result<(), VerificationError> {
+    let witness = IrVerifier.witness(&AnyIr::Lane(before.clone())).unwrap();
+    IrVerifier.verify_transition(&witness, &AnyIr::Lane(after.clone()))
+}
+
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#INTER-PASS-VERIFIER")]
+fn a_lane_transform_owns_contributions_and_nothing_else() {
+    // The witness variant used to be a UNIT carrying no evidence, so the
+    // `(Lane, Lane)` transition fell through to the catch-all and a lane pass
+    // was unchecked by construction. Every field named below is now real
+    // evidence, and the working surface is deliberately not.
+    let before = super::lane_tests::lane("# Title {#title}\nbody\n");
+    lane_transition(&before, &before).expect("an unchanged lane transitions");
+
+    let rewritten_body = super::lane_tests::lane("# Title {#title}\nrewritten\n");
+    lane_transition(&before, &rewritten_body)
+        .expect("contributions are the transform's working surface");
+
+    let (context, count, digest, frame, contributions) = before.parts_for_test();
+    let moved = |field: LaneProvenanceField, candidate: &LaneIr| {
+        let error = lane_transition(&before, candidate).unwrap_err();
+        let VerificationError::Transition(TransitionError::LaneProvenance {
+            field: named,
+            expected,
+            actual,
+        }) = error
+        else {
+            panic!("the lane arm owns its own variant, never `Identity`: {error:?}")
+        };
+        assert_eq!(named, field, "the moved field is named");
+        assert_ne!(expected, actual);
+    };
+
+    moved(
+        LaneProvenanceField::SourceNodeCount,
+        &LaneIr::assembled(
+            context.clone(),
+            count + 7,
+            digest.clone(),
+            frame.clone(),
+            contributions.to_vec(),
+        ),
+    );
+    moved(
+        LaneProvenanceField::SourceLinkDigest,
+        &LaneIr::assembled(
+            context.clone(),
+            count,
+            LinkInputDigest([7; 32]),
+            frame.clone(),
+            contributions.to_vec(),
+        ),
+    );
+    for (field, path, root, renames) in [
+        (
+            LaneProvenanceField::FrameGeneratedPath,
+            Some("boot/FORGED.md".to_string()),
+            frame.source_root.clone(),
+            frame.renames.clone(),
+        ),
+        (
+            LaneProvenanceField::FrameSourceRoot,
+            frame.generated_path.clone(),
+            Some("forged/root".to_string()),
+            frame.renames.clone(),
+        ),
+        (
+            LaneProvenanceField::FrameRenames,
+            frame.generated_path.clone(),
+            frame.source_root.clone(),
+            vec![OriginRename {
+                origin: "org.demo/forged".to_string(),
+                rename: crate::RenameEntry {
+                    original: "root".to_string(),
+                    qualified: "org-demo-forged--root".to_string(),
+                },
+            }],
+        ),
+    ] {
+        moved(
+            field,
+            &LaneIr::assembled(
+                context.clone(),
+                count,
+                digest.clone(),
+                LaneFrame {
+                    generated_path: path,
+                    source_root: root,
+                    renames,
+                },
+                contributions.to_vec(),
+            ),
+        );
+    }
+    moved(
+        LaneProvenanceField::Context,
+        &LaneIr::assembled(
+            ArtifactContext::compatibility(StaticCompileMode::QualifyPerNode),
+            count,
+            digest.clone(),
+            frame.clone(),
+            contributions.to_vec(),
+        ),
+    );
 }

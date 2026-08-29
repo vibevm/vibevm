@@ -16,6 +16,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-I
 
 pub(crate) mod behavior;
 pub(crate) mod config;
+pub(crate) mod lane_admission;
 pub(crate) mod plan;
 pub(crate) mod plan_digest;
 pub(crate) mod plan_validate;
@@ -48,5 +49,9 @@ mod schedule_execution_tests;
 mod schedule_execution_vehicles;
 #[cfg(test)]
 mod schedule_fence_tests;
+#[cfg(test)]
+mod schedule_lane_tests;
+#[cfg(test)]
+mod schedule_lane_vehicles;
 #[cfg(test)]
 mod schedule_tests;

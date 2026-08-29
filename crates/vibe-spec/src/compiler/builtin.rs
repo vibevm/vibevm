@@ -120,6 +120,42 @@ struct ParseError {
     format: String,
 }
 
+// Whether a newly constructed built-in schedule turns the R3.3 verify-each
+// seam on. It defaults to ON, so every existing unit test keeps crossing the
+// real verifier exactly as before; thread-local because the suite runs tests
+// in parallel and one scope must not disarm another test's verifier.
+#[cfg(test)]
+std::thread_local! {
+    static VERIFY_EACH: std::cell::Cell<bool> = const { std::cell::Cell::new(true) };
+}
+
+#[cfg(test)]
+fn verify_each_enabled() -> bool {
+    VERIFY_EACH.with(std::cell::Cell::get)
+}
+
+/// Build and run built-in schedules exactly as PRODUCTION builds them — with
+/// the inter-pass verifier hook absent — for the duration of `body`.
+///
+/// This exists so a guarantee that must not depend on the optional verifier
+/// can be tested against the construction production actually uses. The guard
+/// restores the previous state on drop, so a failing assertion inside `body`
+/// cannot leak the off state into the rest of the thread's work. It is
+/// `#[cfg(test)]` and deliberately not widened into `feature = "test-support"`.
+#[cfg(test)]
+pub(crate) fn without_verify_each<T>(body: impl FnOnce() -> T) -> T {
+    struct Restore(bool);
+
+    impl Drop for Restore {
+        fn drop(&mut self) {
+            VERIFY_EACH.with(|flag| flag.set(self.0));
+        }
+    }
+
+    let _restore = Restore(VERIFY_EACH.with(|flag| flag.replace(false)));
+    body()
+}
+
 /// The declared built-in schedule prefix currently used by production.
 ///
 /// Keeping construction in one function makes the list executable rather than
@@ -176,11 +212,15 @@ impl BuiltinSchedule {
         pipeline
             .push_artifact(LinkPass::new())
             .expect("the static built-in link schedule is valid");
-        #[cfg(test)]
         // The R3.3 test-only enabling seam: every built-in pass output crosses
         // the real verifier hook in unit tests. Production construction keeps
-        // the verifier off, byte- and error-identical to before.
-        pipeline.enable_verify_each_for_tests();
+        // the verifier off, byte- and error-identical to before. One scoped
+        // cfg-test switch ([`without_verify_each`]) turns it off so a test can
+        // observe exactly the schedule production builds.
+        #[cfg(test)]
+        if verify_each_enabled() {
+            pipeline.enable_verify_each_for_tests();
+        }
         let transform_names = transforms.pass_names();
         Ok(Self {
             pipeline,

@@ -1,9 +1,14 @@
-//! The T6b transform schedule cell (R4-TRANSFORM-PLAN-ABI §6.2–6.3): the
-//! one typed fault family for resolution, schedule, capability, behavior and
-//! transform-attributed verifier faults; the opaque public
+//! The T6b/T6c transform schedule cell (R4-TRANSFORM-PLAN-ABI §6.2–6.3): the
+//! one typed fault family for resolution, schedule, capability, behavior,
+//! lane-admission and transform-attributed verifier faults; the opaque public
 //! [`TransformCompileError`]; whole-plan resolution against one injected
 //! registry; and the four level-preserving pass wrappers the built-in
 //! schedule inserts at the frozen positions.
+//!
+//! The lane wrapper is the one position that already accepts a CHANGED
+//! carrier: T6c retired the temporary full-equality detector, and the
+//! manager-side [`lane_admission`] gate now decides admissibility. The
+//! source/document selector and emitted-bytes gaps remain.
 //!
 //! Construction is a two-step transaction: every entry resolves (frame
 //! refusal first, then name → epoch → stage, then the source/document
@@ -19,14 +24,16 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-I
 use std::fmt;
 use std::sync::Arc;
 
+use crate::compiler::assemble::LaneValidationError;
 use crate::compiler::ir::{
     ArtifactFrame, ArtifactPlan, DocumentIr, EmittedArtifact, LaneIr, SourceIr,
 };
 use crate::compiler::pass::{Pass, PassName, PassNameError};
 use crate::compiler::pipeline::{CompilerPipeline, CompilerPipelineError};
-use crate::compiler::verify::VerificationError;
+use crate::compiler::verify::{TransitionError, VerificationError};
 
 use super::behavior::{TransformBehavior, TransformBehaviorError};
+use super::lane_admission::{self, LaneAdmissionError};
 use super::plan::{TransformConfig, TransformStage};
 use super::plan_validate::BoundedPreview;
 use super::plan_validate::bounded;
@@ -84,6 +91,24 @@ pub(crate) enum TransformError {
         #[source]
         source: TransformBehaviorError,
     },
+    #[error(
+        "transform entry {order} (`{preview}` at {stage:?}) returned a lane violating its intrinsic contract: {source}"
+    )]
+    LaneIntrinsic {
+        preview: BoundedPreview,
+        order: u32,
+        stage: TransformStage,
+        #[source]
+        source: Box<LaneValidationError>,
+    },
+    #[error("transform entry {order} (`{preview}` at {stage:?}) refused: {source}")]
+    LaneTransition {
+        preview: BoundedPreview,
+        order: u32,
+        stage: TransformStage,
+        #[source]
+        source: Box<TransitionError>,
+    },
     #[error("inter-pass verification rejected transform pass `{pass}`: {source}")]
     Verification {
         pass: PassName,
@@ -100,10 +125,6 @@ pub(crate) enum TransformCapabilityGap {
         "the selector subject arrives with T7/T8; a still-present source/document selector cannot execute yet"
     )]
     SelectorSubject,
-    #[error(
-        "lane mutation awaits the T6c witness; the temporary full-equality detector refuses a changed LaneIr"
-    )]
-    LaneChange,
     #[error(
         "emitted reconstruction arrives with T9; byte-equal output returns the original artifact, changed bytes refuse"
     )]
@@ -431,11 +452,13 @@ impl Pass for DocumentTransformPass {
 /// The lane-position wrapper: the assembled lane, structured, once per
 /// artifact.
 ///
-/// T6b interim law: the full pre-value is retained and any `LaneIr`
-/// inequality refuses with the typed [`TransformCapabilityGap::LaneChange`].
-/// Full equality is only the temporary detector — T6c owns the immutable
-/// witness, intrinsic validation and transition/equivalence check, and an
-/// equal value crossing here proves the position, never equivalence.
+/// T6c law: a changed lane is legal, and the MANAGER decides whether the
+/// change is lawful. The immutable witness is taken from the input before the
+/// behavior runs, and the output must then pass both halves of
+/// [`lane_admission`] — the intrinsic lane contract and the provenance
+/// transition — before it is returned. Both run unconditionally: the
+/// inter-pass verifier hook is test-only, so routing this decision through it
+/// would leave production unguarded.
 struct LaneTransformPass {
     name: PassName,
     order: u32,
@@ -466,22 +489,39 @@ impl Pass for LaneTransformPass {
     }
 
     fn run(&self, input: LaneIr) -> Result<LaneIr, TransformError> {
-        let original = input.clone();
+        // Derived from the INPUT: evidence taken after the behavior ran would
+        // only ever agree with itself.
+        let witness = lane_admission::witness(&input);
         let output = self
             .behavior
             .run_lane(self.config.as_ref(), input)
             .map_err(|source| {
                 wrapper_fault(&self.preview, self.order, &TransformStage::Lane, source)
             })?;
-        if output != original {
-            return Err(TransformError::Capability {
+        lane_admission::admit(&witness, &output).map_err(|refusal| self.lane_fault(refusal))?;
+        Ok(output)
+    }
+}
+
+impl LaneTransformPass {
+    /// Project one admission refusal onto this entry's identity: the bounded
+    /// key preview, the dense plan order and the stage ride along, exactly as
+    /// every other entry fault carries them.
+    fn lane_fault(&self, refusal: LaneAdmissionError) -> TransformError {
+        match refusal {
+            LaneAdmissionError::Intrinsic(source) => TransformError::LaneIntrinsic {
                 preview: self.preview.clone(),
                 order: self.order,
                 stage: TransformStage::Lane,
-                gap: TransformCapabilityGap::LaneChange,
-            });
+                source,
+            },
+            LaneAdmissionError::Transition(source) => TransformError::LaneTransition {
+                preview: self.preview.clone(),
+                order: self.order,
+                stage: TransformStage::Lane,
+                source,
+            },
         }
-        Ok(output)
     }
 }
 

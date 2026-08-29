@@ -406,6 +406,7 @@ fn the_module_tree_declares_every_transform_cell_under_a_rule_family() {
         BTreeSet::from([
             "behavior".to_owned(),
             "config".to_owned(),
+            "lane_admission".to_owned(),
             "plan".to_owned(),
             "plan_digest".to_owned(),
             "plan_validate".to_owned(),
@@ -430,13 +431,20 @@ fn the_module_tree_declares_every_transform_cell_under_a_rule_family() {
             "schedule_execution_tests".to_owned(),
             "schedule_execution_vehicles".to_owned(),
             "schedule_fence_tests".to_owned(),
+            "schedule_lane_tests".to_owned(),
+            "schedule_lane_vehicles".to_owned(),
             "schedule_tests".to_owned(),
         ]),
         "a new test cell must be declared too — undeclared files do not compile"
     );
 
-    // The classification itself: the wrapper cell under wrapper rules, the
-    // plan cells under the stronger carrier rules.
+    // The classification itself: the wrapper cell and the T6c lane-admission
+    // gate under wrapper rules, the plan cells under the stronger carrier
+    // rules. The gate belongs to the wrapper family because it holds the
+    // wrapper's own posture — no manifest/collector/row/path/codec surface,
+    // no upward builtin spelling, and no fault eliminated by panic — while
+    // legitimately boxing CONCRETE error types.
     assert!(offenders(include_str!("schedule.rs"), &WRAPPER_RULES).is_empty());
+    assert!(offenders(include_str!("lane_admission.rs"), &WRAPPER_RULES).is_empty());
     assert!(offenders(include_str!("plan.rs"), &PLAN_CARRIER_RULES).is_empty());
 }
