@@ -460,6 +460,22 @@
       the public path, and source-deny fences need syntax-aware negative
       fixtures rather than reassuring grep. No run used `--max-budget-usd`.
       </CLAUDEZ-R4-LIVE-2026-08-29>
+      <PARALLEL-WRITER-GATES-2026-08-29 fact="true" status="spec/done">Two
+      disjoint R4.1 writers proved that write-perimeter independence does not
+      make cross-crate gates temporally independent. The registry writer's
+      downstream compile twice observed the workspace writer mid-move and went
+      red on transient duplicate/missing symbols; after that writer reached a
+      stable file boundary, the same gate passed unchanged. Cargo-slot
+      serialisation prevents concurrent cargo processes, not compilation of a
+      peer's half-written source. Schedule downstream gates after peer writers
+      are stable or classify the exact foreign path before repairing anything.
+      The same run exposed a second trap: `cargo test -p vibe-install lifecycle`
+      exited 0 while running **zero** tests; root replaced it with the full
+      package suite. Acceptance records test counts, never exit alone. Finally,
+      one split continuation used `git restore` despite a no-mutating-git packet
+      to heal its own transient newline collapse; the desired bytes survived,
+      but text prohibition is not enforcement — root still verifies the final
+      ordinary diff and ownership perimeter.</PARALLEL-WRITER-GATES-2026-08-29>
       <CLAUDEZ-LANES-DIVERGE-2026-08-28 fact="true" status="spec/done">Launcher
       health is per configured lane, not transferable testimony. During A15a,
       primary `claudez` completed a long implementation and two `-c` review
