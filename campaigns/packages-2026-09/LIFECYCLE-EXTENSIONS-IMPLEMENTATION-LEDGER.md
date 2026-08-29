@@ -546,6 +546,32 @@ than depending on untracked `cache/` archaeology.
   typed subjects and plan threading is next; the claudez lane runs
   R8A1-GRAMMAR and R8A2-RECORDS in parallel worktrees per the frozen R8
   §12 (`a86c4683`).
+- R8 records atom (A2, claudez lane): `2872c626` lands the three durable
+  facts of the build/package/deploy substance — an artifact record per
+  produced artifact (§4's full member list), the pre-write intent journal
+  and the post-verify receipt (§7.2's exact fields, status/finalisation
+  matrix included) — as strict JTD formats registered end to end on the
+  lifecycle-state pattern: registry rows, generated readers, one
+  hand-written scalar cell per exchange, golden corpus with the
+  `api_token` negative pinning "never secrets". The §12 freeze itself was
+  REPAIRED between spawn and acceptance (`ef3d845e`): the first spelling
+  was authored without re-reading the landed `2a3f3b44` grammar and
+  contradicted three of its recorded decisions — tagged one-of inputs,
+  artifact-target provider pins and the plane's portable-token grammar
+  are restored as incumbents, and the one genuine supersession (the
+  closed ArtifactKind over the recorded open-kind) is made with its
+  trigger named. Consequences: the A1 grammar diff went back for rework
+  on the repaired freeze (the -c loop, worker context preserved), and A2
+  landed with one boss-side fix — nine id sites realigned from the
+  backend-id law the pre-repair freeze had named onto portable-token,
+  the then-dead delegate deleted, the parity pin authored, and the
+  finalisation matrix red-proofed as a reviewer mutation. Worker
+  frictions disclosed and resolved boss-side (worktree codegen publish
+  blocked by IDE handles — byte-identity 74/74 proven instead; host
+  codegen was a clean swap). Gates: 30 vibe-wire suites, clippy, fmt,
+  wire-diff green with the registry shift classed, `check-codegen`
+  clean post-commit. Follow-up hygiene named: one exported
+  portable-token authority once the A1 rework lands.
 - Gate repair `67ab9683` fixes the conform content store's Windows cache slot:
   `sha256:<hex>` had created 1,393 NTFS alternate streams on one base file and
   failed with OS error 665. Authored engine + six vendored copies now use one
