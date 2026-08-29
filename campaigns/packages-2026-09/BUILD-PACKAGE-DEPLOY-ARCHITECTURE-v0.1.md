@@ -523,3 +523,80 @@ The following remain post-campaign design decisions, not blockers for the
 commissioning cut: signature policy and trust roots, remote server protocol,
 system privilege broker, system-package-manager mapping, SBOM format, global
 dependency solving and cross-machine receipt synchronization.
+
+## 12. Atom-1 spelling freeze — decision record (central, 2026-08-29)
+
+§4 says "exact serde spelling remains an authoritative-spec decision"; this
+section IS that decision for sequence item 1, split into two disjoint slices
+(A1 manifest grammar + pure validation; A2 record wire shapes). Everything
+here is the frozen minimum; widening is a later recorded decision.
+
+**Decision — identifiers and vocabulary.** Target ids, artifact ids and
+profile names obey the one frozen backend-id grammar
+`[a-z0-9][a-z0-9._-]{0,63}` (the compiler's existing spelling authority —
+`vibe-helper.exe` and `vibe-helper.zip` fit; a second id grammar would be a
+second thing to drift). `ArtifactKind` is the closed lowercase set
+`executable | archive | file | directory | skill | agent-plugin`; growing it
+is a spec amendment, not a serde default. Mechanism keys are role-qualified
+strings whose prefix must match their table family (`build:` in
+`[[artifacts.build]]`, `package:` in `[[artifacts.package]]`, `deploy:` in
+`[[deploy.target]]`); the tail obeys the backend-id grammar. An exact
+`provider` pin uses the ExtensionKey spelling (`group/name#id`).
+
+**Decision — A1 manifest grammar (vibe-core::manifest, serde over TOML,
+`deny_unknown_fields` everywhere).**
+`[[artifacts.build]]`: `id`, `mechanism`, optional `workdir` (default `"."`,
+forward-slashed, no `..` escape), `inputs` (nonempty list of forward-slashed
+glob patterns), `outputs` (nonempty list of `{ id, kind, select? }` where
+`select` is an opaque provider table), optional `config` (the one
+EqTomlTable-backed config newtype — reusing the existing type; renaming it to
+a mechanism-neutral name is follow-up hygiene, not this atom).
+`[[artifacts.package]]`: `id`, `mechanism`, `inputs` (nonempty list of
+ARTIFACT ids), `outputs`, optional `config`.
+`[[deploy.target]]`: `id`, `artifact` (one artifact id), `mechanism`,
+optional exact `provider` pin, optional `depends_on` (target ids), optional
+`config`. `[deploy.profiles.<name>]`: `targets` (nonempty ordered list).
+`[deploy]` gains optional `default_profile`. Pure validation (validate-phase,
+no filesystem, no provider): unique target ids per family and unique output
+ids globally; every package input and deploy `artifact` resolves to exactly
+one declared output id; mechanism-prefix/table-family agreement; profile
+members exist; `default_profile` names a declared profile; the build/package
+reference graph and deploy `depends_on` are acyclic (cycle refusals name the
+cycle); bare-`deploy` legality (`default_profile` or exactly one profile) is
+a law stated on the value, decided by the CLI later. "Duplicate physical
+destination" and artifact-kind/mechanism compatibility need provider
+knowledge and belong to the mechanism atom, not A1.
+
+**Decision — A2 record wire shapes (schemas/ + vibe-wire, JTD-first,
+mirrored end to end on the existing `lifecycle_state` format's registration,
+codegen, behaviour-cell and corpus pattern).** Three new formats:
+`artifact_record` (per §4: schema, id, kind, shape `file|directory`, optional
+media_type and platform triple, absolute path plus `{root: project|slot|store,
+path}` relative identity, digest `{algorithm: sha256|sha256-tree/1, value}`,
+producer `{target, mechanism, provider {key, version?, content_hash?}}`,
+three named freshness digests `{inputs?, config?, toolchain?}` — each
+optional because a provider-fresh target may honestly lack one — created_at,
+verification `{status: unverified|verified|failed, evidence?}`);
+`deploy_intent` (§7.2: plan hash, target identity, prior generation?,
+planned resources `[{resource, desired_digest, prior_digest?}]`, started_at);
+`deploy_receipt` (§7.2's exact list: identity, profile, target, generation,
+artifact digest, exact provider identity, desired-config digest, destination
+scope `workspace|user|remote|system`, owned resources `[{resource,
+post_digest}]`, evidence?, reversibility, prior-state handle?, timestamps,
+final status — and NEVER a secret-bearing member). Scalar laws ride the
+conversion exactly as compiler-IR members do (non-blank, digest hex forms,
+forward-slashed relative paths); every record is strict
+(`deny_unknown_fields`) and corpus-pinned valid+invalid.
+
+**Considered and rejected.** One combined "artifacts" JTD format — three
+lifecycles, three writers, one schema epoch would couple them for zero
+sharing. Free-form artifact kinds — the §4 registry law needs a closed
+vocabulary to validate against. Putting the grammar beside the records in
+vibe-wire — the manifest is vibe-core's one grammar home, and `[[extension]]`
+is the precedent. Validating destination collisions in A1 — needs provider
+descriptors that do not exist yet.
+
+**When to revisit.** When the mechanism atom lands provider descriptors, the
+deferred compatibility checks join validation; when acquire-role providers
+land, `ArtifactKind` and the digest algorithms are re-opened as recorded
+decisions.
