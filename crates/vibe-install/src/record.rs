@@ -92,6 +92,17 @@ pub fn merge_root_dependencies(lockfile: &mut Lockfile, roots: &[PackageRef]) {
     }
 }
 
+/// Replace the lock's root snapshot with the complete manifest-derived set.
+///
+/// A bare `vibe install` resolves the whole workspace union.  Unlike an
+/// explicit `vibe install <pkg>` (which merges the newly finalized request
+/// into the existing declarations), that union is authoritative: retaining a
+/// removed root makes the freshly written lock immediately stale and can leave
+/// a package named as a root even though it is absent from the resolved graph.
+pub(crate) fn replace_root_dependencies(lockfile: &mut Lockfile, roots: &[PackageRef]) {
+    lockfile.meta.root_dependencies = roots.to_vec();
+}
+
 /// Merge new root pkgrefs into `manifest.requires.packages`, same
 /// dedup discipline as [`merge_root_dependencies`]. Returns `true` if
 /// any entry was added or changed — caller writes the manifest only
@@ -216,5 +227,36 @@ pub(crate) fn locked_package_from_fetched(
         // Record the package's declared materialization so destructive ops
         // and the guard (PROP-022 §2.6) recognise an in-place slot.
         materialization: c.package_meta().materialization,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn manifest_root_snapshot_drops_removed_dependencies() {
+        let mut lockfile = Lockfile::empty("vibe test", "2026-08-29T00:00:00Z");
+        lockfile.meta.root_dependencies = vec![
+            "flow:org.example/kept@^1".parse().unwrap(),
+            "flow:org.example/removed@^1".parse().unwrap(),
+        ];
+        let current = vec!["flow:org.example/kept@^1".parse().unwrap()];
+
+        replace_root_dependencies(&mut lockfile, &current);
+
+        assert_eq!(lockfile.meta.root_dependencies, current);
+    }
+
+    #[test]
+    fn explicit_root_merge_preserves_other_declared_dependencies() {
+        let mut lockfile = Lockfile::empty("vibe test", "2026-08-29T00:00:00Z");
+        lockfile.meta.root_dependencies = vec!["flow:org.example/kept@^1".parse().unwrap()];
+        let added: PackageRef = "flow:org.example/added@^2".parse().unwrap();
+
+        merge_root_dependencies(&mut lockfile, std::slice::from_ref(&added));
+
+        assert_eq!(lockfile.meta.root_dependencies.len(), 2);
+        assert_eq!(lockfile.meta.root_dependencies[1], added);
     }
 }

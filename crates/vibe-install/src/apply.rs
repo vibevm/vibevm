@@ -31,7 +31,7 @@ use crate::lifecycle::{
 use crate::plan::PlannedInstall;
 use crate::record::{
     exact_pinned_pkgref, finalize_pkgref_for_manifest, locked_package_from_fetched,
-    merge_manifest_requires, merge_root_dependencies,
+    merge_manifest_requires, merge_root_dependencies, replace_root_dependencies,
 };
 use crate::slot_verify::RegistrySlotVerifier;
 
@@ -459,12 +459,17 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
     //     the lockfile stays a self-contained snapshot (PROP-002 §2.7).
     //     Install-from-manifest records the workspace-derived roots;
     //     an explicit install records the finalized request roots.
-    let lock_roots: &[PackageRef] = if finalized_roots.is_empty() {
-        &roots
+    if finalized_roots.is_empty() {
+        // Bare install: `roots` is the complete current workspace union, so
+        // mirror it exactly and drop declarations removed since the prior
+        // lock.  Merging here would write a lock that freshness rejects on the
+        // very next invocation.
+        replace_root_dependencies(&mut lockfile, &roots);
     } else {
-        &finalized_roots
-    };
-    merge_root_dependencies(&mut lockfile, lock_roots);
+        // Explicit install: only the requested refs were finalized; merge
+        // those into the existing full-root snapshot.
+        merge_root_dependencies(&mut lockfile, &finalized_roots);
+    }
 
     lockfile.write(workspace.lockfile_path())?;
 
