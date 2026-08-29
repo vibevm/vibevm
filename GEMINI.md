@@ -1,6 +1,6 @@
 # vibevm — read this first
 
-Every session in this repository begins by reading this file, then the boot lane in the order the generated block at the end of this file prescribes (the generated static lane `vibevm/vibespecs/boot/STATIC.xml` — or `STATIC.md` in a Markdown-lane project — first and in full, then every file `vibevm/vibespecs/boot/INDEX.md` names), then `vibevm/vibespecs/WAL.xml`, then any relevant PROP/FEAT documents under `vibevm/vibespecs/common/` and `vibevm/vibespecs/modules/` for the task at hand. Only after that, start work.
+Every session in this repository begins by reading this file, then the boot lane in the order the generated block at the end of this file prescribes (the generated static lane `vibevm/vibespecs/boot/STATIC.xml` — or `STATIC.md` in a Markdown-lane project — first and in full, then every file `vibevm/vibespecs/boot/INDEX.md` names), then any relevant PROP/FEAT documents under `vibevm/vibespecs/common/` and `vibevm/vibespecs/modules/` for the task at hand. An owner-facing central session additionally resolves its exact user-local context under `~/.vibe/steward/` as the installed multi-user-planning flow prescribes; a worker packet never claims that context. Only after that, start work.
 
 The repository's commit-and-push discipline — human-authored **attribution** (never mark any part of this repository as AI-authored), **Conventional Commits**, **atomicity**, and commit **autonomy** (routine proceeds; non-routine stops and asks) — is the `git-practices` family, a dependency of this project loaded first and verbatim from the generated static lane in `vibevm/vibespecs/boot/`. The rules live in that static lane, not restated here. Authoritative record: [spec://org.vibevm.core/vibevm/common/PROP-000#commits](vibevm/vibespecs/common/PROP-000.xml#commits).
 
@@ -136,22 +136,27 @@ Keep it current-state; prune stale lines.
   `VIBEVM-SPEC.md` + specs (owner-frozen / historical mentions). Dogfood spec:
   `…/fractality/v1.0.0/vibevm/vibespecs/manual-tests/MT-05-dogfood-relicense.xml`.
 
-## Режим взаимодействия — владельческий переключатель `AGENT-MODE.toml`
+## User-local central stewardship — `~/.vibe/steward/`
 
-У сессии есть **глобальный режим взаимодействия с человеком**, живущий в
-[`AGENT-MODE.toml`](AGENT-MODE.toml) в корне (владелец, 2026-08-20):
-`mode = "auto"` — полностью автоматический (центральный агент пишет минимум
-текста: телеграфный трекинг прогресса; output-токены дороже всего; несущее
-уже в долговечных домах) или `mode = "collab"` — совместная разработка
-(обычные объяснения и рассуждения). Переключает ТОЛЬКО владелец — словом в
-чате (агент немедленно обновляет файл) или правкой файла; состояние обязано
-переживать компактификацию (пост-компакт-хук печатает действующую строку).
-Несжимаемый пол «auto»-режима и точные определения — в самом файле; главное:
-блокеры, владельческие развилки и прямые вопросы владельца полным ответом —
-всегда, в любом режиме. Субагенты (claudez / codexrunner / будущие) от
-переключателя не зависят: они ВСЕГДА в субагентском режиме — экранный текст
-воркера не читается никем, каждый пакет несёт обязательную клаузу
-`##subagent-quiet-clause` из `campaigns/packages-2026-09/SUBAGENT-LAUNCHERS.md`.
+Personal execution state is not a project setting. An owner-facing central
+session resolves the exact repository/worktree/revision binding under
+`~/.vibe/steward/contexts/*/binding.toml`, then reads the context's
+`settings.toml`, `custody.toml`, complete `plan.toml`, and latest acknowledged
+handoff. Missing global defaults are created as `interaction_mode = "collab"`
+and `planning_profile = "standard"`; context overrides may differ by branch or
+worktree. The owner may switch either setting in chat and the central session
+updates the current context immediately. `auto` versus `collab` controls
+narration; `ultra` versus `standard` controls planning scaffolding. Neither
+axis changes correctness, authority or safety rules.
+
+`AGENT-MODE.toml` at the repository root is legacy migration input and is no
+longer authoritative. It remains temporarily only until the first multi-user
+handoff is receipted and its explicit owner value has been preserved locally.
+
+Workers and reviewers do not read, create or claim central custody. They always
+follow their explicit packet and `##subagent-quiet-clause`; worker reports are
+evidence, never acceptance. Canon:
+`spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/MULTI-USER-PLANNING-PROTOCOL#root`.
 
 ## Harness-scoped ChatGPT campaign runner
 
@@ -159,17 +164,30 @@ This selector is intentionally byte-identical in `CLAUDE.md`, `AGENTS.md` and
 `GEMINI.md`. **Only** an owner-facing central session running under OpenAI
 ChatGPT/Codex reads
 [`PROP-055`](vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml)
-after the common boot/WAL while the lifecycle/extensions campaign is active.
+after the common boot and local stewardship context while the
+lifecycle/extensions campaign is active.
 Claude Code, `claudez`, Gemini, every other non-OpenAI harness, and every task
 carrying `##subagent-quiet-clause` MUST NOT read or apply PROP-055; their common
 boot and explicit worker packet remain the whole instruction surface.
 
-## Specspaces — nested projects with their own WAL
+## Specspaces — stable topology, user-local continuity
 
-This repository can host **specspaces**: sub-projects registered in [`SPECSPACES.md`](SPECSPACES.md) that carry their own boot contract, WAL, and `CONTINUE.md`, worked on as independent projects. Canon (grammar, target resolution, the five laws) is the installed flow `flow:org.vibevm.world/wal-specspaces` — its snippet (`vibevm/vibespecs/boot/11-flow-wal-specspaces.xml` in that package) is compiled into the generated static boot lane in `vibevm/vibespecs/boot/`, and the full protocol is `vibevm/vibespecs/flows/wal-specspaces/SPECSPACES-PROTOCOL.xml` inside that package. This section is the signpost; two rules bind regardless:
+This repository can host **specspaces**: nested projects registered in
+[`SPECSPACES.md`](SPECSPACES.md) by stable name, root and boot contract. The
+registry is project topology, not a shared personal cursor. Its historical WAL,
+`CONTINUE.md`, default and live-status columns are legacy migration input; do
+not update them as central-session state.
 
-- **Target resolution.** A **bare** session phrase (`восстанови сессию` / `RESUME SESSION` with no name) targets the `default:` declared in `SPECSPACES.md` if one is set, and otherwise **this host project** — never a specspace by accident. Name a specspace (`восстанови сессию fractality` / `RESUME SESSION fractality`, `заверши сессию fractality` / `END SESSION fractality`) to target it; an explicit name or directory always overrides the default. Registered today: `fractality` (`vibevm/vibepacks/org.vibevm.fractality/`).
-- **Boot scoping.** A specspace session reads the host's Rules 1–4 above (repo-wide, they bind every commit) plus the specspace's own boot contract → its WAL → its `CONTINUE.md` → the active plan its WAL names. It does **not** read the host `vibevm/vibespecs/boot/`, `vibevm/vibespecs/WAL.xml`, or host specs, and does not scan the host tree — unless the task explicitly crosses into the host project, and then it says so first. A specspace wind-down refreshes that specspace's one-line status in `SPECSPACES.md`; the host WAL is updated only if host files changed in the same session.
+- **Target resolution.** Explicit owner name or directory wins; otherwise an
+  unambiguous task/cwd inside a registered root wins; otherwise the current
+  user-local context wins; otherwise target the host project. An unknown or
+  ambiguous target is surfaced, never guessed. Registered today: `fractality`
+  (`vibevm/vibepacks/org.vibevm.fractality/`).
+- **Boot scoping.** A specspace session reads the host's repo-wide commit and
+  safety rules plus the target's own boot contract and relevant specs. Its
+  plan/custody/handoff come from a context bound to that target under
+  `~/.vibe/steward/`; it does not load unrelated host/specspace plans. A task
+  crossing boundaries says so before touching the other project.
 
 ## Memory discipline: project facts stay in the project
 
@@ -177,50 +195,55 @@ Facts about *this project* — its design, conventions, decisions, milestones, o
 
 - `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` (kept identical; the four rules and the few directives that must hit every harness on session boot).
 - `MEMORY.md` at repo root (currently a pointer to [`vibevm/vibespecs/boot/90-user.xml`](vibevm/vibespecs/boot/90-user.xml), the user-owned boot snippet).
-- `TASKS.md` at repo root — the current work-slice's checklist, each item a
-  commit waiting to be made. **Present since 2026-04; the parenthetical here
-  that said otherwise stood for three months.**
+- `TASKS.md` at repo root — a legacy/integrator-owned shared projection of the
+  current project slice, never a contributor's personal adaptive plan.
 - `BACKLOG.md` at repo root — findings the work surfaced and deliberately did
   not act on, severity-triaged P1/P2/P3, drained by the next wave. The opposite
   genre to `TASKS.md`: nobody is working on these yet, and they are kept so the
   decision to start can be taken deliberately (owner directive 2026-07-26).
-- Authoritatively, the `vibevm/vibespecs/**` tree — PROP / FEAT documents, `vibevm/vibespecs/WAL.xml`, `vibevm/vibespecs/boot/*`.
+- Authoritatively, the `vibevm/vibespecs/**` tree — PROP / FEAT documents and
+  generated/user boot sources. The existing `vibevm/vibespecs/WAL.xml` is
+  legacy migration evidence, not the current central-session authority.
 
 Project facts do **not** belong in the running harness's global per-user auto-memory (whatever tool-specific path that happens to be). A teammate who clones the repo will never see global user-memory, and anything they need to know about the project must live in the repo.
 
-Global user-memory is reserved for facts about *this developer's machine* — shell quirks, SSH-agent setup on this box, installed-tool specifics that persist across sessions but are not universal.
+User-local stewardship is reserved for this developer's preferences, exact
+checkout/branch context, personal execution plan, central custody/handoffs and
+machine facts. **Classification test:** if another contributor needs the fact
+to build, review or understand the project, promote it into the repository; if
+it only resumes this developer's central session, keep it local. A worker
+report or handoff is never the sole home of an accepted project fact.
 
-**Default:** when uncertain whether a fact is project-scoped or machine-scoped, treat it as project-scoped and write it into the repo. Moving a fact from the project into user-memory later is cheap; the reverse has already silently cost a teammate context.
+## Local session checkpoint — `ЗАВЕРШИ СЕССИЮ` / `END SESSION`
 
-## Session-end checkpoint command — `ЗАВЕРШИ СЕССИЮ` / `END SESSION`
-
-When the user issues any of the trigger phrases below, treat it as a structured wind-down request — the user is about to close the conversation and may continue from a fresh context (different machine, new session, post-compaction). The job is to capture *everything a cold reader would need* into durable repository state.
+When the user issues any trigger phrase below, treat it as a structured local
+wind-down. It checkpoints the current user's exact context; it does not create
+or rewrite a repository-global personal WAL.
 
 **Trigger phrases** (case-insensitive; exact wording not required, recognise the intent):
 
 - Russian: `ЗАВЕРШИ СЕССИЮ КОДИРОВАНИЯ`, `ЗАВЕРШИ СЕССИЮ`, `КОНЕЦ СЕССИИ`, `ЗАКАНЧИВАЕМ СЕССИЮ`, `ЗАВЕРШАЕМ СЕССИЮ`, `СВОРАЧИВАЕМСЯ`, `ФИКСИРУЕМ И ЗАКАНЧИВАЕМ`.
 - English: `END SESSION`, `WRAP UP SESSION`, `WRAP UP`, `FINISH SESSION`, `CLOSING SESSION`, `CHECKPOINT AND CLOSE`.
 
-**Required behaviour** when a trigger phrase fires:
+**Required behaviour:** verify Git/tree state; update the complete local
+`plan.toml` and current atom; backscan mandate, candidates and unpromoted facts;
+write a uniquely named local session record with accepted boundary, blockers,
+next atom and evidence pointers; refresh custody heartbeat or release it only
+when the owner requested release; report the checkpoint and stop. Commit/push
+only product work already ready under the ordinary git rules—wind-down itself
+does not manufacture shared-state commits. A transfer to a different central
+agent uses the separate two-phase handoff below.
 
-1. **Overwrite `CONTINUE.md` at repo root** with a comprehensive cold-resume document. If the file exists, replace it wholesale (do not append — staleness compounds otherwise). The body must include, at minimum:
-   - A short TL;DR / executive summary at the top.
-   - The open health-audit findings: a pointer at `AUDIT.md`'s active subset (never a mirror — `AUDIT.md` is the durable home).
-   - Where work currently stands (branch, ahead/behind origin, working tree status).
-   - The active blocker (if any) and the exact human action that unblocks it.
-   - Exact next-steps recipe (commands, file paths, line numbers) for whoever picks up cold.
-   - Any non-obvious findings discovered this session (API quirks, config gotchas, vendor-specific surprises).
-   - A repository map (top-level layout + what each crate / directory holds).
-   - The list of important architectural / policy decisions still in force, in long form.
-   - The recent commit chain (last ~25 commits, oneline format) so cold reader sees velocity.
-   - Quick-start commands for the workspace.
-   - A pointer noting the WAL is the canonical *living* state and supersedes this snapshot if they diverge.
-2. **Rewrite `vibevm/vibespecs/WAL.xml` wholesale** to the current checkpoint — rewrite, not append and not a section-by-section refresh: the WAL reflects only the *current* state (date line, current phase, next, known issues, constraints, the session's new findings). History lives in `git log` and milestone commits, never accumulated in the checkpoint.
-3. **Commit the changes in topic-grouped commits** per Rule 3. Typical shape: one `docs(continue): cold-resume checkpoint` for `CONTINUE.md`, one `docs(wal): session-end checkpoint` for `vibevm/vibespecs/WAL.xml`. If the same session-end run also lands a code or boot-file change, that is a separate third commit.
-4. **Roll out via `cargo xtask mirror`** — the standard rollout ([`vibevm/vibespecs/boot/90-user.xml`](vibevm/vibespecs/boot/90-user.xml) `##CMD-MIRROR`, [PROP-016](vibevm/vibespecs/common/PROP-016-source-mirrors.xml) `##CMD-MIRROR`): pushes `main` + tags to every mirror, fast-forward-only, never `--force`; routine per Rule 4, since the user invoked the wind-down explicitly. A bare `git push origin main` reaches one host and leaves the other mirrors behind — use it only as the fallback when the fan-out itself is unavailable. (If the fan-out reports drift, would be non-fast-forward, or is otherwise risky, stop and ask first per Rule 4's escape hatch.)
-5. **Emit a TL;DR / executive summary in the chat response** describing what this command did: which files were written / updated, which commits were created, push status, what the next session should pick up first. Keep it short enough to scan in one screen, but include enough detail (file paths, commit subjects, blockers) that the user can verify nothing was missed without opening the files.
+## Central custody handoff — `HANDOFF CENTRAL TO <target>`
 
-The point of this command is to make session-boundary loss-of-context cheap: any session can be ended at any time and resumed from `CONTINUE.md` + `vibevm/vibespecs/WAL.xml` with no degradation. Treat it as a hard contract, not a courtesy.
+A planned model/harness change, session rollover or owner-authorized recovery
+uses `steward-handoff` and
+`spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/custody-and-handoff#root`.
+Outgoing: verify and backscan, write/hash an immutable offer plus comprehensive
+`HANDOFF.md`, set custody `offering`, then become repository/plan read-only.
+Incoming: read cold, verify hashes and tree, classify every candidate, write a
+receipt, advance epoch once, report restored state, and wait for owner
+direction. Custody transfers; unaccepted work never does.
 
 ## Session-resume command — `ВОССТАНОВИ СЕССИЮ` / `RESUME SESSION`
 
@@ -231,9 +254,17 @@ When the user issues a resume trigger phrase, the job is to **restore context an
 
 **Required behaviour** when a resume phrase fires:
 
-1. Run the full boot sequence (this file → `vibevm/vibespecs/boot/INDEX.md` and its files → `vibevm/vibespecs/WAL.xml`), read `CONTINUE.md`, and verify repository state empirically (branch, sync with origin, working tree, recent commits).
-2. **Emit a status report in the chat**: where work stands, gate-panel state as last recorded, active blockers, the **judging debt** while a campaign is live (`python campaigns/<zone>/tasks/judging-debt.py` — unjudged facts, orphaned verdicts, stale files; reporting it is not paying it, and its priority is the owner's), and the candidate next steps (typically the plan pointer from the WAL / `CONTINUE.md`).
-3. **Stop and wait for direction.** No code edits, no plan-phase execution, no commits, no pushes. The owner reads the report and decides what the session does. Any "resume work at …" pointer in `CONTINUE.md` or the WAL names the *candidate* next step for the report — it is not authorisation to start it.
+1. Run the full project boot, resolve the exact user-local context, and read its
+   settings, custody, complete plan and latest acknowledged handoff; verify
+   branch, sync, working tree, recent commits and named artifacts empirically.
+2. **Emit a status report in the chat**: context/profile, custody epoch/holder,
+   accepted boundary, candidates, full remaining epic route, expanded current
+   frontier, gate-panel state, blockers, and the **judging debt** while a
+   campaign is live (`python campaigns/<zone>/tasks/judging-debt.py` — reporting
+   is not paying it). Name the candidate next atom from the local plan.
+3. **Stop and wait for direction.** No code edits, plan-phase execution,
+   custody takeover, commits or pushes. A stored next atom is a candidate, not
+   authorization to choose the owner's priority.
 
 Rationale: the resume boundary exists so the owner can inspect the restored state and steer — possibly somewhere other than the recorded next step. A session that boots straight into execution takes that decision away (rule recorded 2026-06-12 after exactly that misfire).
 

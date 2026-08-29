@@ -1,16 +1,34 @@
-# precompact-snapshot.ps1 — PreCompact hook (matchers: auto, manual).
-# PreCompact output cannot reach the model, so this writes a durable
-# breadcrumb to disk instead: when compaction happened and what the working
-# tree looked like at that exact moment. The post-compact agent (and the
-# owner, tuning the 90% threshold) reads the log; the release plan's
-# prediction P5 is checked against it. ASCII only (PS 5.1 + BOM-less files).
+# precompact-snapshot.ps1 — PreCompact hook (auto/manual).
+# PreCompact output cannot reach the model, so write a uniquely named LOCAL
+# stewardship record. Never create a shared repository compact log.
 $ErrorActionPreference = 'SilentlyContinue'
 $repo = $env:CLAUDE_PROJECT_DIR
 if (-not $repo) { $repo = 'C:\Users\olegc\git\v\vibevm' }
-$log = Join-Path $repo '.claude\compact-log.txt'
-$stamp = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
+$repoSlash = ($repo -replace '\\', '/').TrimEnd('/')
+$selector = (git -C $repo symbolic-ref -q HEAD)
+if (-not $selector) { $selector = (git -C $repo rev-parse HEAD) }
+$steward = Join-Path ([Environment]::GetFolderPath('UserProfile')) '.vibe\steward'
+$recordDir = Join-Path $steward 'unbound-records'
+$contextRoot = Join-Path $steward 'contexts'
+if (Test-Path -LiteralPath $contextRoot) {
+  foreach ($candidate in Get-ChildItem -LiteralPath $contextRoot -Directory) {
+    $binding = Join-Path $candidate.FullName 'binding.toml'
+    if (-not (Test-Path -LiteralPath $binding)) { continue }
+    $bindingText = Get-Content -Raw -Encoding UTF8 -LiteralPath $binding
+    if ($bindingText.Contains('worktree_root = "' + $repoSlash + '"') -and
+        $bindingText.Contains('revision_selector = "' + $selector + '"')) {
+      $recordDir = Join-Path $candidate.FullName 'records'
+      break
+    }
+  }
+}
+New-Item -ItemType Directory -Force -Path $recordDir | Out-Null
+$stamp = (Get-Date).ToUniversalTime().ToString('yyyyMMddTHHmmssZ')
+$nonce = [guid]::NewGuid().ToString('N').Substring(0, 12)
+$record = Join-Path $recordDir ($stamp + '-' + $nonce + '-precompact.txt')
 $head = git -C $repo log --oneline -1
-$status = (git -C $repo status --short | Select-Object -First 25) -join "`n"
+$status = (git -C $repo status --short | Select-Object -First 80) -join "`n"
 if (-not $status) { $status = '(working tree clean)' }
-Add-Content -Path $log -Value "=== compaction at $stamp ===`nHEAD: $head`n$status`n"
+$body = "precompact_at=$stamp`nselector=$selector`nHEAD=$head`n$status`n"
+[System.IO.File]::WriteAllText($record, $body, (New-Object System.Text.UTF8Encoding($false)))
 exit 0
