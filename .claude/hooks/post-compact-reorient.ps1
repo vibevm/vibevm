@@ -40,17 +40,60 @@ if ($context) {
   $plan = Join-Path $context 'plan.toml'
   if (Test-Path -LiteralPath $settings) {
     Get-Content -Encoding UTF8 -LiteralPath $settings |
-      Where-Object { $_ -match '^(interaction_mode|planning_profile|updated_at)\s*=' }
+      Where-Object { $_ -match '^(interaction_mode|planning_profile|goal_node|updated_at)\s*=' }
   }
   if (Test-Path -LiteralPath $custody) {
     Get-Content -Encoding UTF8 -LiteralPath $custody |
       Where-Object { $_ -match '^(epoch|state|holder_id|session_id|heartbeat_at|offer_id)\s*=' }
   }
   if (Test-Path -LiteralPath $plan) {
-    Get-Content -Encoding UTF8 -LiteralPath $plan |
+    $planLines = Get-Content -Encoding UTF8 -LiteralPath $plan
+    $planLines |
       Where-Object { $_ -match '^(plan_id|revision|current_node|updated_at)\s*=' } |
       Select-Object -First 4
     Write-Output ('READ THE WHOLE PLAN: ' + $plan)
+
+    $goal = Join-Path $context 'GOAL.md'
+    $goalClaude = Join-Path $context 'GOAL-CLAUDE.txt'
+    $goalStatus = 'missing'
+    if (Test-Path -LiteralPath $goal) {
+      $marker = Get-Content -Encoding UTF8 -LiteralPath $goal | Select-Object -First 1
+      $revisionLine = $planLines | Where-Object { $_ -match '^revision\s*=' } | Select-Object -First 1
+      $revision = if ($revisionLine -match '^revision\s*=\s*(\d+)') { $Matches[1] } else { '' }
+      $settingsLines = Get-Content -Encoding UTF8 -LiteralPath $settings
+      $goalNodeLine = $settingsLines | Where-Object { $_ -match '^goal_node\s*=' } | Select-Object -First 1
+      $goalNode = if ($goalNodeLine -match '^goal_node\s*=\s*"([^"]+)"') { $Matches[1] } else { '' }
+      $profileLine = $settingsLines | Where-Object { $_ -match '^planning_profile\s*=' } | Select-Object -First 1
+      $profile = if ($profileLine -match '^planning_profile\s*=\s*"([^"]+)"') { $Matches[1] } else { 'standard' }
+      $planHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $plan).Hash.ToLowerInvariant()
+      $baseCurrent = $marker.Contains('plan_revision=' + $revision + ' ') -and
+        $marker.Contains('goal_node="' + $goalNode + '" ') -and
+        $marker.Contains('planning_profile="' + $profile + '" ') -and
+        $marker.Contains('plan_sha256="' + $planHash + '" ')
+      $adapterCurrent = $false
+      if ($marker.Contains('claude_condition_sha256="unavailable"')) {
+        $adapterCurrent = -not (Test-Path -LiteralPath $goalClaude)
+      } elseif ((Test-Path -LiteralPath $goalClaude) -and
+          $marker -match 'claude_condition_sha256="([0-9a-f]{64})"') {
+        $expectedConditionHash = $Matches[1]
+        $command = [System.IO.File]::ReadAllText($goalClaude).TrimEnd([char[]]@("`r", "`n"))
+        if ($command.StartsWith('/goal ')) {
+          $condition = $command.Substring(6)
+          $sha = [System.Security.Cryptography.SHA256]::Create()
+          try {
+            $actualBytes = $sha.ComputeHash([System.Text.Encoding]::UTF8.GetBytes($condition))
+            $actualConditionHash = [System.BitConverter]::ToString($actualBytes).Replace('-', '').ToLowerInvariant()
+            $adapterCurrent = $actualConditionHash -eq $expectedConditionHash
+          } finally {
+            $sha.Dispose()
+          }
+        }
+      }
+      $goalStatus = if ($baseCurrent -and $adapterCurrent) { 'current' } else { 'stale' }
+    }
+    Write-Output ('goal_status = "' + $goalStatus + '"')
+    Write-Output ('GOAL: ' + $goal)
+    Write-Output ('CLAUDE /goal COMMAND: ' + $goalClaude)
   }
 } else {
   Write-Output 'STEWARD WARNING: no exact local context binding; resolve/create one before central work.'

@@ -142,7 +142,9 @@ Personal execution state is not a project setting. An owner-facing central
 session resolves the exact repository/worktree/revision binding under
 `~/.vibe/steward/contexts/*/binding.toml`, then reads the context's
 `settings.toml`, `custody.toml`, complete `plan.toml`, and latest acknowledged
-handoff. Missing global defaults are created as `interaction_mode = "collab"`
+handoff. The selected campaign's derived `GOAL.md` and bounded
+`GOAL-CLAUDE.txt` live beside them. Missing global defaults are created as
+`interaction_mode = "collab"`
 and `planning_profile = "standard"`; context overrides may differ by branch or
 worktree. The owner may switch either setting in chat and the central session
 updates the current context immediately. `auto` versus `collab` controls
@@ -244,6 +246,15 @@ Outgoing: verify and backscan, write/hash an immutable offer plus comprehensive
 Incoming: read cold, verify hashes and tree, classify every candidate, write a
 receipt, advance epoch once, report restored state, and wait for owner
 direction. Custody transfers; unaccepted work never does.
+
+The owner never pastes a handoff body. In a new/resumed central session,
+`ACCEPT HANDOFF FROM <context-id>` / `ПРИМИ ХЭНДОФФ ИЗ <context-id>` resolves
+exactly one unreceipted offer stored under that local context (multiple offers
+require an explicit handoff id), reads its generated `HANDOFF.md`, and performs
+receipt. After claim, refresh the deterministic goal, print full `GOAL.md`, then
+print the exact single-line `GOAL-CLAUDE.txt` command. Claude Code slash commands
+are user-only: the human pastes that `/goal …` line; an agent never claims it
+set the client goal itself.
 
 ## Session-resume command — `ВОССТАНОВИ СЕССИЮ` / `RESUME SESSION`
 
