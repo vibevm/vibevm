@@ -375,6 +375,53 @@ gains their tokens under the same codec (PROP-054 `##COMPILER-INTERNALS-FLAG`
 already promises this); if any consumer ever needs to read the active list
 machine-side, it reads IR/provenance, and that stays the law.
 
+**Freeze repair, 2026-08-30 (T10C acceptance) — the codec's letter.** The
+parenthetical above was authored imprecisely: the shared codec
+(`vibe-specdoc`'s `encode_generated_xml_comment`, which turned out to already
+BE the "one shared cell" — public, with the kind-free decode entry exposed
+beside it at T10C) does not escape every `-`. Its one canonical rule is: `%`
+→ `%25` always; `-` → `%2D` only inside a `--` pair and at payload end; a
+single interior hyphen stays raw as the canonical spelling. The safety
+conclusion holds exactly as stated — an encoded payload contains no `--`
+and never ends in `-`, tokens are joined by single spaces so no `--` forms
+across a join, and the last token cannot touch `-->` — and the
+considered-and-rejected item stands unchanged: what it rejects is an ad-hoc
+neighbour-dependent escape invented HERE, i.e. a second spelling; the
+incumbent codec's context rule is the single canonical spelling one cell
+owns. Implementing the parenthetical literally would have created exactly
+the second spelling this section forbids, so the letter is repaired to the
+incumbent rather than the code bent to the letter.
+
+**Ratified at T10C acceptance (central, 2026-08-30).** Five rulings the
+landing surfaced, each pinned:
+
+1. **"After the reference oracle" is provenance, not a byte position.** The
+   header is engine output beside the reference bytes; its byte position —
+   the FOURTH line, after the three provenance lines and before the blank
+   separator, in both lanes — was decided at landing and is pinned byte-exact.
+2. **The wire tape gate admits the header as OPTIONAL and judges its
+   grammar.** The emitted carrier does not carry the plan and nothing parses
+   the header back, so the strongest honest wire law is: absent is lawful,
+   present must be well-formed (reserved prefix + codec-canonical tokens,
+   judged by the shared codec); a raw or re-spelled token refuses with the
+   codec's own error. Pinned on both halves at the wire gate itself.
+3. **Plans are lowered once per run, BEFORE the fingerprints**, for every
+   table unit (a plan digest is a freshness INPUT, and a static parent
+   hashes its child's fingerprint) — with the accepted consequence that an
+   owner whose declaration cannot be lowered refuses the run even when it
+   emits nothing itself. `verify_boot_graph` observes the same world and
+   frames the same digests, pinned by an occurrence-COUNTED fence after a
+   contains-only fence was proven blind to the check half framing nothing.
+4. **One new public name**: `TransformPlan::digest_hex` (scalar; `None` for
+   the empty plan IS the no-frame law, pinned in the owning crate);
+   `PlanDigest` itself stays crate-private with one hex rendering behind
+   two projections.
+5. **The static decompiler needs no change** — classification is per-kind
+   and `vibe:transforms` falls through as skippable non-provenance — pinned
+   from both sides: in-perimeter against the real emitted line, and at the
+   decompiler itself (a header-bearing tape decompiles to its header-free
+   twin's exact contribution set).
+
 Package-unit lanes must join the crash-safe whole-artifact transaction before
 any byte-changing transform ships; bare `fs::write` is not an R4 publication
 path.

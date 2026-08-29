@@ -654,6 +654,56 @@ than depending on untracked `cache/` archaeology.
   B-114 third body drained, `2a79bb0b`). Boot-lane byte identity
   proven live: a host `vibe install` over the OBSERVED 36-package world (lock in agreement, both owner-view paths live) regenerated the lane byte-identical (BOOT_BYTE_NOOP=True), complementing `cli_clean_and_world`'s unobservable half. Map `a4956c26`. T10C (fp frame +
   header per frozen kernel §7.1) is next.
+- R4.1 T10C fingerprint frame and active-only header: `855ac6ce` closes
+  R4.1's T10 split. The per-unit Merkle body gains `transforms:<hex>`
+  appended ONLY when the owner plan is nonempty — the pinned-literal
+  historical fingerprint (an oracle recomputed from an independent hand
+  model, not a snapshot) proves absence is absence, and propagation rides
+  the existing Merkle (static parents move, dynamic boundaries stop it,
+  siblings never cross-read — all pinned). The header is one engine-framed
+  comment line, `<!-- vibe:transforms <tok> … -->`, fourth line of both
+  lanes, tokens in dense effective order spelled by the ONE shared codec
+  (`vibe-specdoc`, whose kind-free payload-decode entry was exposed rather
+  than a second `%` table written); the emit validators judge GRAMMAR FIRST
+  then identity in both lanes with the codec's own error; the empty plan
+  writes zero bytes (two independent literal anchors + every historical
+  suite at its exact prior count). Producer disclosed six §0 items, all
+  ratified central: the packet's (and the FREEZE's) codec letter was wrong —
+  the real rule escapes only `--` and terminal `-` — and following the
+  operative one-codec instruction over the false parenthetical was correct
+  (freeze REPAIRED at §7.1 naming the resolution); "after the reference
+  oracle" read as provenance with the byte position decided and pinned;
+  `wire/framing.rs` (unnamed authority) learned the OPTIONAL well-formed
+  header; every-table-unit lowering widens the refusal surface honestly and
+  `verify_boot_graph` threads the same frames; the whitespace-run token
+  grammar recorded not "fixed". Plans now lower ONCE per run before the
+  fingerprints (canonical walk order), the emission loop lowers nothing,
+  and the node lane still has no fingerprint — its no-op parity through the
+  publication transaction gained its missing complement test. EIGHT
+  mutations: the packet's five (unconditional frame — the literal caught
+  it; empty-plan header — 13 red; raw tokens — 7 red incl. both validators;
+  wrong-unit frame; digest_hex Some-for-empty — GREEN in the owning crate,
+  gap closed with the plan_tests pin and re-proven red) plus three
+  reviewer-authored, ALL THREE exposing gaps closed in the same landing:
+  gutting the wire gate's token grammar left every suite green → the
+  wire-tests pin (admitted well-formed + refused non-canonical, both
+  lanes); dropping the canonical sort left all green → fenced by spelling
+  until R4.2's second behavior makes a two-refusers fixture expressible;
+  emptying `verify_boot_graph`'s frames left all green (the contains-only
+  fence was satisfied by the generate half) → the fence now COUNTS two
+  framing occurrences and names the check half's lowering. Boss also
+  closed the worker's perimeter-blocked §0.2 unblock: the vibe-cli
+  decompiler pin (header-bearing tape decompiles to its header-free twin's
+  exact contribution set) lands in `tree/artifacts.rs` beside the per-kind
+  law it rides. Gates reproduced: vibe-spec 832 (+wire pin), vibe-workspace
+  474 (fence extended in place), vibe-specdoc 80/7/3, vibe-cli 602 (+
+  decompiler pin), strict clippy over all four, downstream checks, conform
+  27-in-scope 0-new, fmt, live BOOT_BYTE_NOOP=True again over the observed
+  36-package world. Kernel §7.1 carries the freeze repair + five-ruling
+  T10C ratification block. Map `92a0b72e`. R4.1 is code-complete; R4.2
+  (minify binding + REDs + activation e2e over a post-install path with a
+  member-node case, closing the T1 config gap with the toml runtime edge)
+  and R4.3 (lane analyzer) are next, then the coherent R4 panel.
 - Gate repair `67ab9683` fixes the conform content store's Windows cache slot:
   `sha256:<hex>` had created 1,393 NTFS alternate streams on one base file and
   failed with OS error 665. Authored engine + six vendored copies now use one
@@ -727,7 +777,7 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 | Step | State | Evidence |
 |---|---|---|
 | R4.0 one pure registry below lifecycle/workspace | done | kernel `6af1b86f`, map `8531cf82`; exact runtime-dependency/AST-ambient/public-reexport fences; kernel 22, lifecycle 287/3 ignored, orchestrator 126 + doctests, strict clippy/check/conform/DAG green |
-| R4.1 four positions, owner-scoped activation, header, per-unit fingerprint, reference oracle | in progress | controls `52a59dcc`; transaction `91142777` / `ab68d145`; T1 `b65f9958`; T3 `48d7dc75`; T2 `49e944f0` + `87ef2df6`; T4 `a252fcc8`; T5 `0eb46c82`; T6a `01f1522e`; T6b `6ffedb03`; T6c `cb6006d4`; T7 `419e1aed`; T8 `99e52760`; T9 `513f3945`; T10A `35cd04d1`; T10B `3618ee2b` (lowering + typed subjects + threading; config value-tower refusal until R4.2); map `a4956c26`; T10C (header + fp frame per kernel §7.1) open |
+| R4.1 four positions, owner-scoped activation, header, per-unit fingerprint, reference oracle | in progress | controls `52a59dcc`; transaction `91142777` / `ab68d145`; T1 `b65f9958`; T3 `48d7dc75`; T2 `49e944f0` + `87ef2df6`; T4 `a252fcc8`; T5 `0eb46c82`; T6a `01f1522e`; T6b `6ffedb03`; T6c `cb6006d4`; T7 `419e1aed`; T8 `99e52760`; T9 `513f3945`; T10A `35cd04d1`; T10B `3618ee2b` (lowering + typed subjects + threading; config value-tower refusal until R4.2); T10C `855ac6ce` (fp frame + active-only header; §7.1 freeze repaired; wire-gate/verify/decompiler pins); map `92a0b72e`. **R4.1 code-complete**; remaining R4.1 debt rides R4.2 (toml edge, activation e2e) |
 | R4.2 builtin XML minify | partial | pure strict kernel `016f0fab` and reversible comment codec `fbbd5140`; no activation/on-off e2e |
 | R4.3 lane analyzer | missing | no `vibe extensions analyze` or machine report |
 
