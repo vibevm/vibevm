@@ -57,7 +57,8 @@ fn emit_xml(lane: &LaneIr, witness: &PreEmissionWitness) -> Result<String, Backe
             "prepared XML documents do not align with Lane contributions",
         ));
     }
-    let mut output = framing::static_header(syntax, generated_path);
+    let mut output =
+        framing::static_header(syntax, generated_path, witness.transforms_header.as_deref());
     output.push_str(&framing::resolution_preamble(syntax, source_root));
     if !lane.frame.renames.is_empty() {
         output.push_str(&framing::tombstone(syntax, &lane.frame.renames));

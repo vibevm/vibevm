@@ -57,18 +57,92 @@ pub(super) fn builtin(provenance: &EmissionProvenance, bytes: &[u8]) -> Result<(
         return marker_blocks_balanced(text);
     }
 
-    let prologue = expected_prologue(syntax, provenance);
-    if !text.starts_with(&prologue) {
-        return Err(gate_emit_identity(
-            "the tape does not open with the context-owned header/preamble prologue the context and renames declare",
-        ));
-    }
-    reconcile_markers(syntax, &text[prologue.len()..], provenance)?;
+    let prologue = prologue_length(syntax, provenance, text)?;
+    reconcile_markers(syntax, &text[prologue..], provenance)?;
 
     match syntax {
-        CommentSyntax::Markdown => marker_blocks_balanced(&text[prologue.len()..]),
+        CommentSyntax::Markdown => marker_blocks_balanced(&text[prologue..]),
         CommentSyntax::Xml => well_formed_xml(text),
     }
+}
+
+/// How many bytes of `text` the context-owned prologue occupies, or a refusal.
+///
+/// Three fixed parts and one optional one: the provenance header block, then
+/// — for an artifact whose owner plan was nonempty — the ONE active-transforms
+/// header (R4 architecture §7.1), then the blank separator, the resolution
+/// preamble and any tombstone.
+///
+/// The emitted carrier does NOT carry the active plan, and §7.1 is explicit
+/// that nothing ever parses the header back to recover one. So the strongest
+/// honest law computable here is: the header line is optional, and when
+/// present it must be a well-formed one — its reserved prefix and its
+/// codec-canonical tokens, judged by the shared codec itself. A tape that
+/// invents a header, or spells one raw, still refuses.
+fn prologue_length(
+    syntax: CommentSyntax,
+    provenance: &EmissionProvenance,
+    text: &str,
+) -> Result<usize, GateRefusal> {
+    let ArtifactFrame::StaticLane {
+        generated_path,
+        source_root,
+    } = provenance.context.frame()
+    else {
+        return Ok(0);
+    };
+    let head = engine::static_header_block(syntax, generated_path);
+    if !text.starts_with(&head) {
+        return Err(prologue_refusal());
+    }
+    let mut length = head.len();
+    length += observed_transforms_header(&text[length..])?;
+    let mut tail = String::from("\n");
+    tail.push_str(&engine::resolution_preamble(syntax, source_root));
+    if !provenance.renames.is_empty() {
+        tail.push_str(&engine::tombstone(syntax, &provenance.renames));
+    }
+    if !text[length..].starts_with(&tail) {
+        return Err(prologue_refusal());
+    }
+    Ok(length + tail.len())
+}
+
+/// The byte length of the optional active-transforms header at this cursor —
+/// `0` when none is written, a refusal when one is written malformed.
+fn observed_transforms_header(rest: &str) -> Result<usize, GateRefusal> {
+    let opening = format!(
+        "<!-- {} ",
+        crate::compiler::transform::header::TRANSFORMS_HEADER_PREFIX
+    );
+    if !rest.starts_with(&opening) {
+        return Ok(0);
+    }
+    let Some(end) = rest.find(" -->\n") else {
+        return Err(gate_emit_identity(
+            "the tape opens an active-transforms header it never terminates",
+        ));
+    };
+    let payload = &rest["<!-- ".len()..end];
+    let Some(tokens) = crate::compiler::transform::header::observed_header_tokens(payload) else {
+        return Err(gate_emit_identity(
+            "the tape's transforms header does not open with its reserved prefix",
+        ));
+    };
+    for token in tokens {
+        vibe_specdoc::decode_generated_xml_comment_payload(token).map_err(|error| {
+            gate_emit_identity(format!(
+                "the tape's transforms header carries a non-canonical token: {error}"
+            ))
+        })?;
+    }
+    Ok(end + " -->\n".len())
+}
+
+fn prologue_refusal() -> GateRefusal {
+    gate_emit_identity(
+        "the tape does not open with the context-owned header/preamble prologue the context and renames declare",
+    )
 }
 
 /// The backend's comment syntax, chosen exactly as the emitters choose it.
@@ -78,24 +152,6 @@ fn syntax_of(provenance: &EmissionProvenance) -> CommentSyntax {
     } else {
         CommentSyntax::Xml
     }
-}
-
-/// Header + resolution preamble + (when renames exist) the tombstone — the
-/// exact bytes the emitter writes before the first contribution marker.
-fn expected_prologue(syntax: CommentSyntax, provenance: &EmissionProvenance) -> String {
-    let ArtifactFrame::StaticLane {
-        generated_path,
-        source_root,
-    } = provenance.context.frame()
-    else {
-        return String::new();
-    };
-    let mut prologue = engine::static_header(syntax, generated_path);
-    prologue.push_str(&engine::resolution_preamble(syntax, source_root));
-    if !provenance.renames.is_empty() {
-        prologue.push_str(&engine::tombstone(syntax, &provenance.renames));
-    }
-    prologue
 }
 
 /// Every marker-prefixed line the scanner can read must be the NEXT expected
@@ -173,8 +229,10 @@ pub(super) fn is_contribution_marker(provenance: &EmissionProvenance, line: &str
 /// `vibe:c1` comment channel, so a whole-tape scan would count it.)
 #[cfg(test)]
 pub(super) fn tape_body<'a>(provenance: &EmissionProvenance, text: &'a str) -> &'a str {
-    let prologue = expected_prologue(syntax_of(provenance), provenance);
-    text.strip_prefix(&prologue).unwrap_or(text)
+    match prologue_length(syntax_of(provenance), provenance, text) {
+        Ok(prologue) => &text[prologue..],
+        Err(_) => text,
+    }
 }
 
 /// The reversible-marker grammar on a static-md tape: every `vibe:begin` the

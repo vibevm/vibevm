@@ -182,10 +182,23 @@ fn a_lowered_plan_from_a_collected_registry_runs_at_all_four_positions_and_moves
          and both positions see the same documents: got {source} / {document}"
     );
 
+    // The identity catalog is neutral: it ran, and it moved no byte OF THE
+    // ARTIFACT BODY. The one byte difference an active plan is entitled to is
+    // the header line R4 architecture §7.1 requires it to record — inserted
+    // after the three provenance lines, and nowhere else. Stating it as "the
+    // baseline plus exactly this line" keeps the neutrality claim exact
+    // rather than relaxing it to a containment check.
+    let baseline_text = String::from_utf8(baseline.bytes().to_vec()).expect("a UTF-8 tape");
+    let mut expected: Vec<&str> = baseline_text.split('\n').collect();
+    expected.insert(
+        3,
+        "<!-- vibe:transforms __host__/demo#src __host__/demo#doc \
+         __host__/demo#lane __host__/demo#emit -->",
+    );
     assert_eq!(
-        transformed.bytes(),
-        baseline.bytes(),
-        "the identity catalog is neutral: it ran, and it moved no byte"
+        String::from_utf8(transformed.bytes().to_vec()).expect("a UTF-8 tape"),
+        expected.join("\n"),
+        "the identity catalog moved no body byte; the active plan added exactly its header"
     );
 }
 

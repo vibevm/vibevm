@@ -51,6 +51,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-ACTIVATI
 use vibe_core::PackageName;
 use vibe_extension_registry::{DependencyProviderId, ExtensionRegistry, ExtensionWorld};
 
+use crate::boot::hybrid::UnitInput;
 use crate::extension_world::ExtensionWorldError;
 
 use super::*;
@@ -110,6 +111,55 @@ pub(super) fn node_owner_plan(
         return Ok(TransformPlan::empty());
     };
     lower_owner_view(world_registry(view)?, node_rel)
+}
+
+/// EVERY table unit's owner plan, lowered exactly ONCE per run.
+///
+/// This is the ordering the fingerprint frame forces (R4 architecture §7.1):
+/// a unit's owner-plan digest is an INPUT to its boot-graph fingerprint, and
+/// the fingerprint decides whether that unit is emitted at all — so the plans
+/// must exist before the fingerprints, not be lowered inside the emission
+/// loop. The same map is then handed to emission, so one declaration is
+/// lowered once and judged once. Two lowerings of one owner in one run would
+/// be two refusal surfaces for one declaration.
+///
+/// Every unit in the table is lowered, not only the emitted ones, because
+/// every unit in the table is FINGERPRINTED and a static parent hashes its
+/// child's fingerprint. Consequence, accepted: an owner whose compile
+/// declaration cannot be lowered now refuses the run even when that owner
+/// emits no artifact of its own — its plan is part of its parents' identity,
+/// so there is no honest reading under which it stays unjudged.
+///
+/// Units are walked in canonical `(group, name)` order so a refusal on a tree
+/// with several bad owners names the same one every run.
+pub(super) fn unit_owner_plans(
+    world: Option<&DurableExtensionWorld>,
+    table: &HashMap<UnitId, UnitInput>,
+) -> Result<HashMap<UnitId, TransformPlan>, WorkspaceError> {
+    let mut ordered: Vec<&UnitId> = table.keys().collect();
+    ordered.sort();
+    let mut plans = HashMap::with_capacity(ordered.len());
+    for id in ordered {
+        plans.insert(id.clone(), unit_owner_plan(world, id)?);
+    }
+    Ok(plans)
+}
+
+/// The boot-graph fingerprint's owner-plan frames: each unit's plan digest as
+/// lowercase sha256 hex, present ONLY for a nonempty plan.
+///
+/// The absence IS the law (R4 architecture §7.1): an owner that activates
+/// nothing contributes no frame, so its unit keeps the exact fingerprint it
+/// had before this frame existed. `TransformPlan::digest_hex` answers `None`
+/// for the empty plan, and that `None` is what this filter reads — the
+/// emptiness is never re-derived here from a length or a flag.
+pub(super) fn plan_digest_frames(
+    plans: &HashMap<UnitId, TransformPlan>,
+) -> HashMap<UnitId, String> {
+    plans
+        .iter()
+        .filter_map(|(id, plan)| plan.digest_hex().map(|digest| (id.clone(), digest)))
+        .collect()
 }
 
 /// Package P's unit-lane transform plan.

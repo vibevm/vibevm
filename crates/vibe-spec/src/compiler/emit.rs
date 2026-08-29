@@ -23,11 +23,19 @@ mod validate;
 
 pub(crate) struct EmitPass {
     backend: Arc<dyn EmitBackend>,
+    /// The artifact's active-transforms header payload (R4 architecture
+    /// §7.1), computed once by the schedule builder from the owner plan the
+    /// artifact carries. `None` is the empty plan — and the exact historical
+    /// bytes.
+    transforms_header: Option<String>,
 }
 
 impl EmitPass {
-    pub(crate) fn new(backend: Arc<dyn EmitBackend>) -> Self {
-        Self { backend }
+    pub(crate) fn new(backend: Arc<dyn EmitBackend>, transforms_header: Option<String>) -> Self {
+        Self {
+            backend,
+            transforms_header,
+        }
     }
 }
 
@@ -51,7 +59,8 @@ impl Pass for EmitPass {
                 actual: target,
             });
         }
-        let witness = capture_witness(&lane, self.backend.id()).map_err(EmitPassError::Backend)?;
+        let witness = capture_witness(&lane, self.backend.id(), self.transforms_header.clone())
+            .map_err(EmitPassError::Backend)?;
         #[cfg(test)]
         record_invocation(self.backend.id());
         let bytes = self
@@ -131,10 +140,14 @@ pub(crate) fn capture_witness_for_test(
     lane: &LaneIr,
     backend: &BackendId,
 ) -> Result<PreEmissionWitness, BackendError> {
-    capture_witness(lane, backend)
+    capture_witness(lane, backend, None)
 }
 
-fn capture_witness(lane: &LaneIr, backend: &BackendId) -> Result<PreEmissionWitness, BackendError> {
+fn capture_witness(
+    lane: &LaneIr,
+    backend: &BackendId,
+    transforms_header: Option<String>,
+) -> Result<PreEmissionWitness, BackendError> {
     Ok(PreEmissionWitness {
         context: lane.context().clone(),
         source_node_count: lane.source_node_count,
@@ -144,6 +157,7 @@ fn capture_witness(lane: &LaneIr, backend: &BackendId) -> Result<PreEmissionWitn
         lane_digest: digest::lane_digest(lane),
         emission_witnesses: contribution_witnesses(lane),
         prepared_target: prepare_target(lane, backend)?,
+        transforms_header,
     })
 }
 

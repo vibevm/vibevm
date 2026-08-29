@@ -226,3 +226,85 @@ fn the_unit_write_path_publishes_only_through_the_transaction_manager() {
         "the unit wrapper must route through the crash-recoverable transaction"
     );
 }
+
+/// R4 architecture §7/§7.1 — the NODE lane's no-op parity: a node has no
+/// freshness fingerprint by design and is recompiled on every run, so its
+/// bytes-and-mtime stability is owned entirely by the publication
+/// transaction's equal-bytes law ("the transaction replaces nothing it does
+/// not have to").
+///
+/// The unit-path sibling above proves a DIFFERENT law — the fingerprint-fresh
+/// early skip, which never enters the transaction at all. This one proves the
+/// complement: the node really does recompile (its INDEX and STATIC are
+/// rendered and compiled afresh), the plan it recompiles with is unchanged —
+/// empty, as every owner in this repository's shape is — and the published
+/// artifacts are byte-identical with their mtimes untouched.
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#UNIT-PUBLICATION-TRANSACTION")]
+fn an_unchanged_node_recompile_is_byte_and_mtime_identical_through_the_transaction() {
+    let ws_dir = TempDir::new().unwrap();
+    write(
+        ws_dir.path(),
+        "vibe.toml",
+        "[project]\nname = \"demo\"\nversion = \"0.1.0\"\n\n\
+         [requires.packages]\n\
+         \"org.vibevm/parent\" = { version = \"^1.0\", link = \"static\" }\n",
+    );
+    write(ws_dir.path(), boot_rel("00-core.md"), "# core");
+    let (parent, _p) = dep_with_requires(
+        "parent",
+        "1.0.0",
+        "[boot_snippet]\nsource = \"boot/parent.md\"\n\n\
+         [requires.packages]\n\"org.vibevm/child\" = { version = \"^1.0\", link = \"static\" }\n",
+        "boot/parent.md",
+        "# parent boot",
+        &["child"],
+    );
+    let (child, _c) = dep_with_boot(
+        "child",
+        "1.0.0",
+        "[boot_snippet]\nsource = \"boot/child.md\"\n",
+        "boot/child.md",
+        "# child boot",
+    );
+
+    let ws = Workspace::load(ws_dir.path()).unwrap();
+    apply_resolution(
+        &ws,
+        &[parent.clone(), child.clone()],
+        SlotIntegrity::TrustPresence,
+        None,
+    )
+    .unwrap();
+
+    let node_index = ws_dir.path().join(boot_rel("INDEX.md"));
+    let node_static = ws_dir.path().join(boot_rel("STATIC.md"));
+    let index_before = fs::read(&node_index).unwrap();
+    let static_before = fs::read(&node_static).unwrap();
+    let static_text = String::from_utf8(static_before.clone()).unwrap();
+    assert!(
+        static_text.contains("# parent boot"),
+        "the node lane really compiled its static zone: {static_text}"
+    );
+    assert!(
+        !static_text.contains("vibe:transforms"),
+        "an owner that activates nothing records no header"
+    );
+    let index_mtime = fs::metadata(&node_index).unwrap().modified().unwrap();
+    let static_mtime = fs::metadata(&node_static).unwrap().modified().unwrap();
+
+    apply_resolution(&ws, &[parent, child], SlotIntegrity::TrustPresence, None).unwrap();
+
+    assert_eq!(fs::read(&node_index).unwrap(), index_before);
+    assert_eq!(fs::read(&node_static).unwrap(), static_before);
+    assert_eq!(
+        fs::metadata(&node_index).unwrap().modified().unwrap(),
+        index_mtime,
+        "the recompiled node INDEX is byte-equal, so the transaction replaced nothing"
+    );
+    assert_eq!(
+        fs::metadata(&node_static).unwrap().modified().unwrap(),
+        static_mtime,
+        "the recompiled node STATIC is byte-equal, so the transaction replaced nothing"
+    );
+}

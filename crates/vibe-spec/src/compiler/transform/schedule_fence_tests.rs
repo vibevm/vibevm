@@ -249,6 +249,43 @@ pub(super) const LOWERING_RULES: CellRules = CellRules {
     forbids_boxed_trait_objects: true,
 };
 
+/// The T10C header cell's law: rendering the ACTIVE list is its reason to
+/// exist, so the shared generated-comment codec is the surface this family
+/// admits — and the OTHER percent codec in this workspace
+/// (`vibe_core::HostOwner`'s host-segment pair) is banned by name, because
+/// §7.1's rule is "one shared cell", not "some codec". Everything the wrapper
+/// is banned from stays banned; the cell owns no behavior channel of any
+/// spelling, reads no collector or row, and eliminates no fault by panic.
+const HEADER_SEGMENTS: &[&str] = &[
+    "serde",
+    "serde_json",
+    "toml",
+    "json",
+    "Path",
+    "PathBuf",
+    "fs",
+    "ExtensionRegistry",
+    "RegistryView",
+    "ExtensionRegistryRow",
+    "collect_extensions",
+    "vibe_extension_registry",
+    "ArtifactCompileError",
+    "builtin",
+    "Arc",
+    "Box",
+    "HostOwner",
+    "encode_host_segment",
+    "decode_host_segment",
+];
+
+pub(super) const HEADER_RULES: CellRules = CellRules {
+    forbidden_segments: HEADER_SEGMENTS,
+    forbidden_methods: &["unwrap", "expect"],
+    forbidden_macros: WRAPPER_MACROS,
+    allows_trait_objects: false,
+    forbids_boxed_trait_objects: true,
+};
+
 /// Classify one source under one cell's rules; an unparsable source reports
 /// itself as the offender so the fence names the file, never aborts.
 pub(super) fn offenders(source: &str, rules: &CellRules) -> Vec<String> {

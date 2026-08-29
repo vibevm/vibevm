@@ -25,6 +25,15 @@ fn uid(i: usize) -> UnitId {
     (org(), format!("u{i}"))
 }
 
+/// No owner-plan frames (R4 architecture §7.1): these properties fuzz the
+/// GRAPH, and every unit here activates nothing — the frame's own semantics
+/// are pinned in `fingerprint::tests`, on graphs whose shape the assertions
+/// name.
+#[cfg(test)]
+fn no_plans() -> HashMap<UnitId, String> {
+    HashMap::new()
+}
+
 /// A random link mode, or no edge (weighted toward sparser graphs).
 #[cfg(test)]
 fn arb_edge() -> impl Strategy<Value = Option<LinkType>> {
@@ -120,12 +129,12 @@ proptest! {
     /// declared — the compiler sorts them, so reversing changes nothing.
     #[test]
     fn fingerprints_are_edge_order_invariant((table, versions) in arb_table()) {
-        let base = fingerprints(&table, &versions);
+        let base = fingerprints(&table, &versions, &no_plans());
         let mut reversed = table.clone();
         for unit in reversed.values_mut() {
             unit.edges.reverse();
         }
-        prop_assert_eq!(base, fingerprints(&reversed, &versions));
+        prop_assert_eq!(base, fingerprints(&reversed, &versions, &no_plans()));
     }
 
     /// A change to a unit's own boot content flips the fingerprints of exactly
@@ -134,11 +143,11 @@ proptest! {
     /// owner's core invariant, fuzzed over random DAGs.
     #[test]
     fn a_content_change_flips_exactly_the_static_ancestors((table, versions) in arb_table()) {
-        let base = fingerprints(&table, &versions);
+        let base = fingerprints(&table, &versions, &no_plans());
         for target in table.keys() {
             let mut mutated = table.clone();
             mutated.get_mut(target).unwrap().own_boot_path = Some("MUTATED".to_string());
-            let after = fingerprints(&mutated, &versions);
+            let after = fingerprints(&mutated, &versions, &no_plans());
             let changed: HashSet<UnitId> = base
                 .keys()
                 .filter(|k| base[*k] != after[*k])

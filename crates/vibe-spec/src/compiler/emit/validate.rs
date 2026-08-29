@@ -177,6 +177,7 @@ fn markdown_observation(
                 generated_path,
                 source_root,
                 &witness.frame.renames,
+                witness.transforms_header.as_deref(),
             )?;
             for contribution in &witness.contributions {
                 observe_markdown_contribution(backend, &mut cursor, contribution)?;
@@ -192,10 +193,15 @@ fn observe_markdown_frame(
     generated_path: &str,
     source_root: &str,
     renames: &[super::super::ir::OriginRename],
+    transforms: Option<&str>,
 ) -> Result<(), BackendError> {
     for expected in framing::header_payloads(generated_path) {
         observe_markdown_comment(backend, cursor, &expected)?;
         cursor.expect(backend, "\n", "header line ending")?;
+    }
+    if let Some(expected) = transforms {
+        observe_transforms_header(backend, cursor, expected)?;
+        cursor.expect(backend, "\n", "transforms header line ending")?;
     }
     cursor.expect(backend, "\n", "header/frame separator")?;
     observe_markdown_comment(backend, cursor, &framing::resolution_payload(source_root))?;
@@ -237,6 +243,62 @@ fn observe_markdown_contribution(
             )
         }
     }
+}
+
+/// Observe the ONE active-transforms header line (R4 architecture §7.1),
+/// identically in both lanes.
+///
+/// The header is spelled the same bytes in Markdown and XML — its tokens are
+/// already codec-encoded, so it carries no `--` and no terminal `-` and needs
+/// neither the `vibe:c1` wrapper nor a lane-specific form. One observation
+/// therefore serves both validators.
+///
+/// GRAMMAR FIRST, then identity. The payload read off the TAPE is judged by
+/// the shared codec — the reserved prefix must open it, and every
+/// whitespace-separated token must decode canonically — so a tape whose
+/// tokens were spelled raw, lowercase-escaped or otherwise non-canonical is
+/// refused with the CODEC's own error rather than a generic mismatch. Only a
+/// well-formed payload is then compared to the one the engine's own plan
+/// produced. The order matters: an emitter that bypassed the codec would
+/// produce a tape that AGREES with its own witness, and only the grammar step
+/// can see that.
+pub(in crate::compiler::emit) fn observe_transforms_header(
+    backend: &BackendId,
+    cursor: &mut Cursor<'_>,
+    expected: &str,
+) -> Result<(), BackendError> {
+    let rest = cursor.remaining();
+    let Some(after_open) = rest.strip_prefix("<!-- ") else {
+        return Err(current_error(backend, "missing transforms header comment"));
+    };
+    let Some(end) = after_open.find("-->") else {
+        return Err(current_error(
+            backend,
+            "unterminated transforms header comment",
+        ));
+    };
+    let Some(payload) = after_open[..end].strip_suffix(' ') else {
+        return Err(current_error(
+            backend,
+            "malformed transforms header framing",
+        ));
+    };
+    let Some(tokens) = crate::compiler::transform::header::observed_header_tokens(payload) else {
+        return Err(current_error(
+            backend,
+            "transforms header does not open with its reserved prefix",
+        ));
+    };
+    for token in tokens {
+        vibe_specdoc::decode_generated_xml_comment_payload(token).map_err(|error| {
+            current_error(backend, format!("invalid transforms header token: {error}"))
+        })?;
+    }
+    if payload != expected {
+        return Err(current_error(backend, "transforms header mismatch"));
+    }
+    cursor.advance("<!-- ".len() + end + "-->".len());
+    Ok(())
 }
 
 fn observe_markdown_comment(
@@ -404,7 +466,7 @@ fn current_error(backend: &BackendId, reason: impl Into<String>) -> BackendError
     }
 }
 
-struct Cursor<'a> {
+pub(in crate::compiler::emit) struct Cursor<'a> {
     text: &'a str,
     offset: usize,
 }

@@ -27,15 +27,53 @@ fn generated_comment(syntax: CommentSyntax, payload: &str, layout: Layout) -> St
     }
 }
 
-pub(crate) fn static_header(syntax: CommentSyntax, generated_path: &str) -> String {
-    let payloads = header_payloads(generated_path);
-    let mut output = String::new();
-    for payload in payloads {
-        output.push_str(&generated_comment(syntax, &payload, Layout::Inline));
+/// The artifact's opening comment block: the three provenance lines, then —
+/// only for a nonempty active plan — the transforms header, then the blank
+/// line that closes the block.
+///
+/// `transforms` is the already-built header payload (R4 architecture §7.1),
+/// `None` for the empty plan. Passing `None` reproduces the exact historical
+/// bytes, which is why every owner that activates nothing keeps its committed
+/// artifact byte-identical.
+pub(crate) fn static_header(
+    syntax: CommentSyntax,
+    generated_path: &str,
+    transforms: Option<&str>,
+) -> String {
+    let mut output = static_header_block(syntax, generated_path);
+    if let Some(payload) = transforms {
+        output.push_str(&transforms_header(payload));
         output.push('\n');
     }
     output.push('\n');
     output
+}
+
+/// The three provenance header lines, each terminated — the block the
+/// optional transforms header extends and the blank separator closes.
+///
+/// Split out because a reader that cannot know whether a header was written
+/// (the wire tape gate reconstructs framing from provenance, which carries no
+/// plan) must consume the fixed part first and then decide.
+pub(crate) fn static_header_block(syntax: CommentSyntax, generated_path: &str) -> String {
+    let mut output = String::new();
+    for payload in header_payloads(generated_path) {
+        output.push_str(&generated_comment(syntax, &payload, Layout::Inline));
+        output.push('\n');
+    }
+    output
+}
+
+/// The active-transforms header comment (R4 architecture §7.1).
+///
+/// ONE spelling for both lanes, deliberately: the payload's tokens are
+/// already encoded by the shared codec, so the comment carries no `--` and no
+/// terminal `-` and is XML-comment-safe unconditionally — it needs neither
+/// the `vibe:c1` wrapper the XML lane puts around free-form payloads nor a
+/// second Markdown-only form. An HTML comment is lawful Markdown, so the same
+/// bytes serve both.
+pub(crate) fn transforms_header(payload: &str) -> String {
+    format!("<!-- {payload} -->")
 }
 
 pub(super) fn header_payloads(generated_path: &str) -> [String; 3] {

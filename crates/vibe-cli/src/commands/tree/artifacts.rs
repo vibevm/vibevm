@@ -389,6 +389,38 @@ body line
         assert!(decompile_static(text).unwrap().is_empty());
     }
 
+    /// R4 architecture §7.1 — the active-transforms header is SKIPPABLE
+    /// non-provenance to this decompiler: a header-bearing tape decompiles
+    /// to exactly the contribution set of its header-free twin.
+    ///
+    /// Classification here is per-kind (only `vibe:static ` payloads become
+    /// markers), so the header needs no code — but the codec-encoded token
+    /// (`%2D` for the `--` a package name may carry) means the line is also
+    /// not mistaken for anything else, and this pin is what keeps a future
+    /// marker-widening honest about that.
+    #[test]
+    fn a_transforms_header_is_skippable_and_never_a_contribution() {
+        let spec = slot_file("org.vibevm.world.x", "0.1.0", "b.md");
+        let contribution =
+            format!("<!-- vibe:static org.vibevm.world/x \u{2014} {spec} -->\n\nbody\n");
+        let plain = format!("<!-- header -->\n\n{contribution}");
+        let headered = format!(
+            "<!-- header -->\n<!-- vibe:transforms org.demo/tools#first org.demo/a-%2Db#second -->\n\n{contribution}"
+        );
+        let observed = |text: &str| -> Vec<(String, String, u64, usize)> {
+            decompile_static(text)
+                .unwrap()
+                .into_iter()
+                .map(|c| (c.origin, c.source_path, c.order, c.embeds.len()))
+                .collect()
+        };
+        assert_eq!(
+            observed(&headered),
+            observed(&plain),
+            "the header adds no contribution and drops none"
+        );
+    }
+
     #[test]
     fn attributes_a_nested_embed_span() {
         let spec = slot_file("org.vibevm.world.x", "0.1.0", "b.md");

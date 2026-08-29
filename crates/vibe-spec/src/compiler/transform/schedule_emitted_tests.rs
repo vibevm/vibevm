@@ -31,7 +31,9 @@ use super::plan::{TransformImplementation, TransformProvider, TransformSeed, Tra
 use super::plan_test_support::{build_or_panic, default_dependency};
 use super::registry::TransformRegistry;
 use super::registry_test_support::identity_registry;
-use super::schedule_execution_vehicles::{AppendEmitted, registry_with};
+use super::schedule_execution_vehicles::{
+    AppendEmitted, expected_artifact, expected_tape, registry_with,
+};
 
 /// The one changing vehicle every reconstruction test installs, and the exact
 /// byte it appends — spelled once so an expected tape is derived from the
@@ -96,11 +98,13 @@ fn chain_of(emitted: &EmittedArtifact) -> Vec<&str> {
         .collect()
 }
 
-/// The baseline tape plus one appended byte per changing entry.
-fn appended(baseline: &EmittedArtifact, times: usize) -> Vec<u8> {
-    let mut expected = baseline.bytes().to_vec();
-    expected.extend(std::iter::repeat_n(APPENDED_BYTE, times));
-    expected
+/// The baseline tape as the carried ACTIVE plan writes it — its header line
+/// (R4 architecture §7.1) plus one appended byte per changing entry.
+///
+/// The plan is passed in rather than the key list, so the expected header is
+/// derived by the production builders from the very plan the compile ran.
+fn appended(baseline: &EmittedArtifact, plan: &ArtifactPlan, times: usize) -> Vec<u8> {
+    expected_tape(baseline, plan, times, APPENDED_BYTE)
 }
 
 #[test]
@@ -112,14 +116,10 @@ fn changed_bytes_rebuild_the_artifact_around_the_new_tape() {
     // independent observation of the same bytes.
     let world = fixture();
     let baseline = untransformed(&world);
-    let carried = compile(
-        emitted_plan(&[("org.demo/tools#emit", APPEND)]),
-        &world,
-        &appending_registry(),
-    )
-    .unwrap();
+    let plan = emitted_plan(&[("org.demo/tools#emit", APPEND)]);
+    let carried = compile(plan.clone(), &world, &appending_registry()).unwrap();
 
-    assert_eq!(carried.bytes(), appended(&baseline, 1).as_slice());
+    assert_eq!(carried.bytes(), appended(&baseline, &plan, 1).as_slice());
     assert_eq!(
         carried.provenance().bytes_digest,
         emitted_bytes_digest(carried.bytes()),
@@ -188,14 +188,10 @@ fn byte_equal_output_returns_the_original_artifact_untouched() {
     // provenance whose members happened to be copied correctly.
     let world = fixture();
     let baseline = untransformed(&world);
-    let carried = compile(
-        emitted_plan(&[("org.demo/tools#emit", IDENTITY)]),
-        &world,
-        &identity_registry(),
-    )
-    .unwrap();
+    let plan = emitted_plan(&[("org.demo/tools#emit", IDENTITY)]);
+    let carried = compile(plan.clone(), &world, &identity_registry()).unwrap();
 
-    assert_eq!(carried, baseline);
+    assert_eq!(carried, expected_artifact(&baseline, &plan));
     assert!(
         carried.provenance().emitted_transforms.is_empty(),
         "a behavior that changed nothing rewrote nothing, so it records nothing"
@@ -210,15 +206,11 @@ fn a_chain_records_both_changers_in_plan_order_and_digests_the_final_tape() {
     // authored order is not the sorted one, so a sort would be visible.
     let world = fixture();
     let baseline = untransformed(&world);
-    let carried = compile(
-        emitted_plan(&[
-            ("org.demo/tools#emit-second", APPEND),
-            ("org.demo/tools#emit-first", APPEND),
-        ]),
-        &world,
-        &appending_registry(),
-    )
-    .unwrap();
+    let plan = emitted_plan(&[
+        ("org.demo/tools#emit-second", APPEND),
+        ("org.demo/tools#emit-first", APPEND),
+    ]);
+    let carried = compile(plan.clone(), &world, &appending_registry()).unwrap();
 
     assert_eq!(
         chain_of(&carried),
@@ -230,7 +222,7 @@ fn a_chain_records_both_changers_in_plan_order_and_digests_the_final_tape() {
     );
     assert_eq!(
         carried.bytes(),
-        appended(&baseline, 2).as_slice(),
+        appended(&baseline, &plan, 2).as_slice(),
         "both entries really ran"
     );
     assert_eq!(
@@ -240,7 +232,7 @@ fn a_chain_records_both_changers_in_plan_order_and_digests_the_final_tape() {
     );
     assert_ne!(
         carried.provenance().bytes_digest,
-        emitted_bytes_digest(&appended(&baseline, 1)),
+        emitted_bytes_digest(&appended(&baseline, &plan, 1)),
         "and the intermediate tape's digest is a different value"
     );
 }
@@ -269,7 +261,8 @@ fn a_mixed_chain_records_only_the_entries_that_changed_the_bytes() {
     ] {
         let world = fixture();
         let baseline = untransformed(&world);
-        let carried = compile(emitted_plan(&entries), &world, &appending_registry()).unwrap();
+        let plan = emitted_plan(&entries);
+        let carried = compile(plan.clone(), &world, &appending_registry()).unwrap();
 
         assert_eq!(
             chain_of(&carried),
@@ -278,7 +271,7 @@ fn a_mixed_chain_records_only_the_entries_that_changed_the_bytes() {
         );
         assert_eq!(
             carried.bytes(),
-            appended(&baseline, 1).as_slice(),
+            appended(&baseline, &plan, 1).as_slice(),
             "{label}: one append, whichever position it sat in"
         );
         assert_eq!(
@@ -300,13 +293,12 @@ fn reconstruction_holds_with_the_inter_pass_verifier_absent() {
         let world = fixture();
         let baseline = untransformed(&world);
 
-        let changed = compile(
-            emitted_plan(&[("org.demo/tools#emit", APPEND)]),
-            &world,
-            &appending_registry(),
-        )
-        .unwrap();
-        assert_eq!(changed.bytes(), appended(&baseline, 1).as_slice());
+        let changed_plan = emitted_plan(&[("org.demo/tools#emit", APPEND)]);
+        let changed = compile(changed_plan.clone(), &world, &appending_registry()).unwrap();
+        assert_eq!(
+            changed.bytes(),
+            appended(&baseline, &changed_plan, 1).as_slice()
+        );
         assert_eq!(
             changed.provenance().bytes_digest,
             emitted_bytes_digest(changed.bytes())
@@ -316,12 +308,8 @@ fn reconstruction_holds_with_the_inter_pass_verifier_absent() {
             ["transform:emitted:org.demo/tools#emit"]
         );
 
-        let identical = compile(
-            emitted_plan(&[("org.demo/tools#emit", IDENTITY)]),
-            &world,
-            &identity_registry(),
-        )
-        .unwrap();
-        assert_eq!(identical, baseline);
+        let identical_plan = emitted_plan(&[("org.demo/tools#emit", IDENTITY)]);
+        let identical = compile(identical_plan.clone(), &world, &identity_registry()).unwrap();
+        assert_eq!(identical, expected_artifact(&baseline, &identical_plan));
     });
 }

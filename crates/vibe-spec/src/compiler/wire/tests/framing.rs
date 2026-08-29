@@ -102,6 +102,44 @@ fn a_real_tape_missing_one_header_line_is_red() {
     }
 }
 
+/// R4 architecture §7.1 at the WIRE tape gate: the emitted carrier does not
+/// carry the plan and nothing ever parses the header back, so a transforms
+/// header is OPTIONAL here — but never lawless. A well-formed header line in
+/// the prologue is admitted in both lanes even though the carrier cannot
+/// prove a plan produced it; a token the shared codec calls non-canonical
+/// (here the raw `--` the codec exists to escape) is red with the codec's
+/// own words. Without this pin, the gate's whole grammar arm could be
+/// deleted and every wire suite would stay green — no corpus tape carries a
+/// header until R4.2 registers the first real behavior.
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY")]
+fn an_optional_transforms_header_is_admitted_well_formed_and_refused_non_canonical() {
+    for target in both_targets() {
+        let backend = target.backend_id().to_string();
+        let emitted = emit(plan_for(target));
+        let tape = String::from_utf8(emitted.bytes().to_vec()).unwrap();
+        let with = |line: &str| {
+            let mut lines: Vec<&str> = tape.split('\n').collect();
+            lines.insert(3, line);
+            lines.join("\n")
+        };
+
+        let well_formed = with("<!-- vibe:transforms org.demo/tools#x org.demo/a-%2Db#y -->");
+        decode(&retaped(&emitted, well_formed.as_bytes())).unwrap_or_else(|error| {
+            panic!("{backend}: a well-formed optional header must be admitted: {error}")
+        });
+
+        assert_emit_identity(
+            &backend,
+            &retaped(
+                &emitted,
+                with("<!-- vibe:transforms org.demo/a--b#y -->").as_bytes(),
+            ),
+            "non-canonical token",
+        );
+    }
+}
+
 /// The real tape with its two ordered contribution markers swapped: the
 /// marker sequence must reconcile with the carried emission witnesses, so a
 /// reorder that keeps every byte otherwise identical is red.

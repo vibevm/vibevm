@@ -20,6 +20,23 @@ enum Mutation {
     ReorderMarkdownContributions,
     ChangeMarkdownBody,
     WrongXmlTapeWithRightCount,
+    /// R4 §7.1 — the header's tokens spelled RAW, bypassing the shared codec.
+    /// The tape then AGREES with the engine's own payload only if the payload
+    /// were built the same wrong way, so this is the mutation only a grammar
+    /// check can see.
+    RawTransformsHeaderToken,
+    /// The same token escaped with lowercase hex — a second spelling of one
+    /// byte, which the codec refuses by definition.
+    LowercaseTransformsHeaderEscape,
+    /// A token carrying an escape the canonical spelling does not use: it
+    /// decodes, but re-encodes to something else.
+    UnnecessaryTransformsHeaderEscape,
+    /// A token RE-encoded once more: canonical for a DIFFERENT logical key,
+    /// so the grammar admits it and only the identity comparison can refuse
+    /// it — the half the grammar check cannot cover, pinned beside it.
+    ReEncodedTransformsHeaderToken,
+    /// The header line deleted outright.
+    DropTransformsHeader,
 }
 
 struct MutantBackend {
@@ -69,6 +86,17 @@ impl EmitBackend for MutantBackend {
                 .replace("org.demo/z — boot/z.md", "org.demo/b — boot/b.md"),
             Mutation::ChangeMarkdownBody => text.replacen("# A", "# MUTANT", 1),
             Mutation::WrongXmlTapeWithRightCount => swap_first_two_xml_documents(&text),
+            Mutation::RawTransformsHeaderToken => text.replacen("a-%2Db", "a--b", 1),
+            Mutation::LowercaseTransformsHeaderEscape => text.replacen("a-%2Db", "a-%2db", 1),
+            Mutation::UnnecessaryTransformsHeaderEscape => text.replacen("#second", "#%73econd", 1),
+            Mutation::ReEncodedTransformsHeaderToken => text.replacen("a-%2Db", "a-%252Db", 1),
+            Mutation::DropTransformsHeader => {
+                let start = text
+                    .find("<!-- vibe:transforms")
+                    .expect("the header is present");
+                let end = start + text[start..].find('\n').expect("the header line ends") + 1;
+                format!("{}{}", &text[..start], &text[end..])
+            }
         };
         Ok(mutated.into_bytes())
     }
@@ -135,6 +163,65 @@ fn engine_owned_xml_target_rejects_wrong_tape_with_the_right_payload_count() {
         error,
         crate::compiler::builtin::ArtifactCompileError::Backend { .. }
     ));
+}
+
+/// R4 §7.1 — the tape validators know the header's exact grammar: a
+/// well-formed one is admitted (proved by the unmutated compiles in
+/// `transform::header_e2e_tests`), and a malformed payload is refused with the
+/// CODEC's own error, in BOTH lanes.
+///
+/// Three payload mutations are the three ways a second spelling of one
+/// identity can appear — raw where the codec escapes, lowercase hex, and an
+/// escape the canonical spelling does not use. Each is invisible to a byte
+/// comparison against the engine's own payload when the EMITTER is the thing
+/// that went wrong, so the assertion reads the codec's message and not merely
+/// "some refusal happened". The fourth is the complement: a re-encoded token
+/// is perfectly canonical — for a DIFFERENT key — so the grammar admits it
+/// and only the identity comparison refuses it, which is why both halves must
+/// exist. The fifth deletes the line, which the cursor-exact observer catches
+/// as the missing frame it is.
+#[test]
+fn both_lanes_refuse_a_malformed_or_missing_transforms_header() {
+    use crate::compiler::builtin::compile_artifact_with_registries;
+    use crate::compiler::transform::plan::TransformStage;
+    use crate::compiler::transform::registry_test_support::{identity_plan, identity_registry};
+
+    for (target, backend) in [
+        (ArtifactTarget::StaticMarkdown, "static-md"),
+        (ArtifactTarget::StaticXml, "static-xml"),
+    ] {
+        for (mutation, expected) in [
+            (Mutation::RawTransformsHeaderToken, "not canonical"),
+            (Mutation::LowercaseTransformsHeaderEscape, "not uppercase"),
+            (Mutation::UnnecessaryTransformsHeaderEscape, "not canonical"),
+            (
+                Mutation::ReEncodedTransformsHeaderToken,
+                "transforms header mismatch",
+            ),
+            (Mutation::DropTransformsHeader, "transforms header"),
+        ] {
+            let mut registry = BackendRegistry::builtins();
+            registry
+                .replace(Arc::new(MutantBackend::new(backend, mutation)))
+                .unwrap();
+            let plan = two_simple_plan(target.clone()).with_transforms(identity_plan(&[
+                ("org.demo/tools#first", TransformStage::Lane),
+                ("org.demo/a--b#second", TransformStage::Emitted),
+            ]));
+            let error = compile_artifact_with_registries(
+                plan,
+                &EmptySource,
+                &registry,
+                &identity_registry(),
+            )
+            .unwrap_err();
+            let message = error.to_string();
+            assert!(
+                message.contains(expected),
+                "{backend}: expected {expected:?} in {message}"
+            );
+        }
+    }
 }
 
 fn swap_first_two_xml_documents(text: &str) -> String {

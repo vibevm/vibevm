@@ -199,10 +199,11 @@ fn the_identity_lane_crosses_once_and_returns_the_whole_baseline_value() {
         TransformStage::Lane,
     )]));
     let baseline = compile(fixture().plan.clone(), &world, &identity_registry()).unwrap();
-    let carried = compile(plan, &world, &identity_registry()).unwrap();
+    let carried = compile(plan.clone(), &world, &identity_registry()).unwrap();
     assert_eq!(
-        carried, baseline,
-        "identity lane output is the whole baseline value"
+        carried,
+        expected_artifact(&baseline, &plan),
+        "identity lane output is the whole baseline value, plus the ACTIVE header"
     );
     assert_eq!(
         super::registry_test_support::identity_invocations().2,
@@ -229,13 +230,11 @@ fn changed_emitted_bytes_are_reconstructed_after_the_backend_ran() {
     )]);
     let baseline = compile(fixture().plan.clone(), &world, &identity_registry()).unwrap();
 
-    let carried = compile(plan, &world, &registry).unwrap();
+    let carried = compile(plan.clone(), &world, &registry).unwrap();
 
-    let mut expected = baseline.bytes().to_vec();
-    expected.push(b'\n');
     assert_eq!(
         carried.bytes(),
-        expected.as_slice(),
+        expected_tape(&baseline, &plan, 1, b'\n').as_slice(),
         "the behavior's tape is the tape that came back"
     );
     assert_eq!(
@@ -262,11 +261,12 @@ fn equal_emitted_bytes_return_the_original_artifact_untouched() {
     )]));
 
     let baseline = compile(fixture().plan.clone(), &world, &identity_registry()).unwrap();
-    let carried = compile(plan, &world, &identity_registry()).unwrap();
+    let carried = compile(plan.clone(), &world, &identity_registry()).unwrap();
     // WHOLE-VALUE equality — bytes AND full provenance — is the observable of
     // "the ORIGINAL artifact came back"; selected-field comparisons would
-    // stay green through a rebuilt provenance.
-    assert_eq!(carried, baseline);
+    // stay green through a rebuilt provenance. The ACTIVE plan's own header
+    // line and the digest it moves are the two members it is entitled to.
+    assert_eq!(carried, expected_artifact(&baseline, &plan));
     assert!(
         carried.provenance().emitted_transforms.is_empty(),
         "a byte-equal behavior rewrote nothing, so it recorded nothing"

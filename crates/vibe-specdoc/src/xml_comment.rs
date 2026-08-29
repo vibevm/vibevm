@@ -124,6 +124,32 @@ pub fn encode_generated_xml_comment(payload: &str) -> String {
     encoded
 }
 
+/// Decode one already-unframed canonical payload — the KIND-FREE half of this
+/// codec, the exact inverse of [`encode_generated_xml_comment`].
+///
+/// [`decode_generated_xml_comment`] is bound to the `vibe:c1` comment KIND: it
+/// strips `<!--`/`-->`, demands the exact ` vibe:c1 ` wrapper, and reports any
+/// other complete comment as legacy/authored (`Ok(None)`). A generated comment
+/// of a different kind — one whose own framing carries its name and whose
+/// payload is nevertheless spelled by THIS codec — has no way to reach the
+/// percent rules through that entry without pretending to be c1.
+///
+/// So the rules are exposed once, here, at payload level. Offsets in a refusal
+/// are relative to the payload's own first byte, because this entry never sees
+/// the framing that would give them an absolute position.
+///
+/// ```
+/// use vibe_specdoc::{decode_generated_xml_comment_payload, encode_generated_xml_comment};
+///
+/// let encoded = encode_generated_xml_comment("org.demo/a--b#x");
+/// assert_eq!(decode_generated_xml_comment_payload(&encoded).unwrap(), "org.demo/a--b#x");
+/// // Lowercase hex is not a second spelling of the same byte.
+/// assert!(decode_generated_xml_comment_payload("%2d").is_err());
+/// ```
+pub fn decode_generated_xml_comment_payload(encoded: &str) -> Result<String, XmlCommentCodecError> {
+    decode_canonical_payload(encoded, 0)
+}
+
 /// Decode exactly one generated c1 XML comment.
 ///
 /// A complete non-c1 comment is legacy/authored input and returns `Ok(None)`.
@@ -171,6 +197,17 @@ pub fn decode_generated_xml_comment(comment: &str) -> Result<Option<String>, Xml
     };
 
     let payload_offset = COMMENT_OPEN.len() + C1_PREFIX.len();
+    decode_canonical_payload(encoded, payload_offset).map(Some)
+}
+
+/// The one payload law both entries share: one percent pass, UTF-8
+/// validation, then exact canonical re-encoding. `payload_offset` is where the
+/// payload starts inside whatever framing the caller stripped, so every
+/// refusal points at a byte the caller can actually name.
+fn decode_canonical_payload(
+    encoded: &str,
+    payload_offset: usize,
+) -> Result<String, XmlCommentCodecError> {
     let decoded = decode_percent_once(encoded, payload_offset)?;
     let canonical = encode_generated_xml_comment(&decoded);
     if canonical != encoded {
@@ -180,7 +217,7 @@ pub fn decode_generated_xml_comment(comment: &str) -> Result<Option<String>, Xml
             canonical,
         });
     }
-    Ok(Some(decoded))
+    Ok(decoded)
 }
 
 fn decode_percent_once(

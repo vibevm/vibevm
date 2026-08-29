@@ -60,9 +60,23 @@ impl PlanDigest {
     /// characters. Computed on demand — the rendered identity is an output
     /// projection and is never stored, and it never enters another digest.
     pub(crate) fn sha256_hex(&self) -> String {
-        const HEX: &[u8; 16] = b"0123456789abcdef";
         let mut text = String::with_capacity("sha256:".len() + 2 * self.0.len());
         text.push_str("sha256:");
+        text.push_str(&self.lowercase_hex());
+        text
+    }
+
+    /// The 64 lowercase hex characters alone, with no algorithm prefix.
+    ///
+    /// The ONE hex rendering of this digest; [`Self::sha256_hex`] is that
+    /// string behind its algorithm label, so the two projections cannot drift
+    /// into two spellings of one value. T10C's boot-graph fingerprint frame
+    /// takes this form because the frame's own label already says what the
+    /// bytes are (`transforms:<hex>`), and repeating `sha256:` inside it would
+    /// name the algorithm twice.
+    pub(crate) fn lowercase_hex(&self) -> String {
+        const HEX: &[u8; 16] = b"0123456789abcdef";
+        let mut text = String::with_capacity(2 * self.0.len());
         for byte in self.0 {
             text.push(HEX[(byte >> 4) as usize] as char);
             text.push(HEX[(byte & 0x0f) as usize] as char);

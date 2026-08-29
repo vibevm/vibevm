@@ -22,7 +22,9 @@ use super::{ResolvedDep, io_err};
 /// file keeps its length budget while the composition above stays readable.
 #[path = "bootgen/owner_plans.rs"]
 mod owner_plans;
-use owner_plans::{durable_world, node_owner_plan, read_durable_lock};
+use owner_plans::{
+    durable_world, node_owner_plan, plan_digest_frames, read_durable_lock, unit_owner_plans,
+};
 
 #[path = "bootgen/hybrid_emit.rs"]
 mod hybrid_emit;
@@ -108,14 +110,20 @@ pub fn regenerate_boot_from_traced(
     // just the snippet. For a tree with no intermediate static edge this is a
     // no-op, keeping the node artifacts byte-identical (PROP-038 §5).
     let table = build_unit_table(&workspace.root, resolution);
+    // ONE lowering per unit per run (R4 architecture §7.1), BEFORE the
+    // fingerprints: an owner plan's digest is an INPUT to its unit's
+    // freshness, so the plans must exist first, and the very same plans are
+    // handed to emission below rather than lowered a second time in the loop.
+    let unit_plans = unit_owner_plans(root_world.as_ref(), &table)?;
     // Boot-graph fingerprints (PROP-038 §2.7) drive the dirty-subgraph skip in
     // per-unit emission (§2.8) — a package whose fingerprint is unchanged is
-    // not recompiled. Keyed on each unit's resolved version.
+    // not recompiled. Keyed on each unit's resolved version, plus the owner
+    // plan frame of every unit whose owner activated something.
     let versions: HashMap<UnitId, String> = resolution
         .iter()
         .map(|d| ((d.group.clone(), d.name.clone()), d.version.to_string()))
         .collect();
-    let fps = fingerprint::fingerprints(&table, &versions);
+    let fps = fingerprint::fingerprints(&table, &versions, &plan_digest_frames(&unit_plans));
     // Soft hoisting (PROP-038 §2.4): a package soft-statically linked by two or
     // more units is `shared` — hoisted to the global root STATIC.md and linked
     // once, its local zones left a #use marker. `pulls` also feeds the
@@ -137,7 +145,7 @@ pub fn regenerate_boot_from_traced(
         &fps,
         spec_format,
         trace,
-        root_world.as_ref(),
+        &unit_plans,
     )?;
 
     // The absolute root's foundation boot — inherited by every member
@@ -272,7 +280,19 @@ pub fn verify_boot_graph(workspace: &Workspace) -> Result<Vec<UnitId>, Workspace
         .iter()
         .map(|d| ((d.group.clone(), d.name.clone()), d.version.to_string()))
         .collect();
-    let fps = fingerprint::fingerprints(&table, &versions);
+    // The check half observes the SAME world the generate half does, and
+    // frames the same owner-plan digests (R4 architecture §7.1). Recomputing
+    // without them would call every unit whose owner activates a transform
+    // stale on a tree the generator had just left fresh.
+    let lock = read_durable_lock(&workspace.root);
+    let world = durable_world(
+        &workspace.root,
+        &workspace.root,
+        &workspace.root_manifest,
+        lock.as_ref(),
+    );
+    let unit_plans = unit_owner_plans(world.as_ref(), &table)?;
+    let fps = fingerprint::fingerprints(&table, &versions, &plan_digest_frames(&unit_plans));
     Ok(verify_fingerprints(
         &workspace.root,
         &resolution,

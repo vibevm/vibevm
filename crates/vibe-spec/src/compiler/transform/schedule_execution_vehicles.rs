@@ -354,3 +354,48 @@ pub(super) fn registry_with(vehicles: &[Arc<dyn TransformBehavior>]) -> Transfor
     }
     registry
 }
+
+/// The untransformed tape as the given ACTIVE plan writes it: the plan's own
+/// header line inserted after the three provenance lines (R4 architecture
+/// §7.1), plus `appends` trailing bytes for the appending vehicles.
+///
+/// Derived through the PRODUCTION payload and comment builders, never a
+/// hand-copied spelling, so a test states only where the line lands and what
+/// its own vehicles did to the tape — and a change to either builder is
+/// caught by the byte-position pin in `header_e2e_tests`, not silently
+/// mirrored here.
+pub(super) fn expected_tape(
+    baseline: &crate::compiler::ir::EmittedArtifact,
+    plan: &crate::compiler::ir::ArtifactPlan,
+    appends: usize,
+    append_byte: u8,
+) -> Vec<u8> {
+    let text = std::str::from_utf8(baseline.bytes()).expect("the baseline tape is UTF-8");
+    let mut lines: Vec<&str> = text.split('\n').collect();
+    let header = super::header::transforms_header_payload(plan.transforms())
+        .map(|payload| crate::compiler::emit::framing::transforms_header(&payload));
+    if let Some(header) = &header {
+        lines.insert(3, header);
+    }
+    let mut bytes = lines.join("\n").into_bytes();
+    bytes.extend(std::iter::repeat_n(append_byte, appends));
+    bytes
+}
+
+/// The baseline ARTIFACT as the given ACTIVE plan writes it: every provenance
+/// member byte for byte, with the header line and the digest that follows
+/// from it.
+///
+/// This keeps the "the ORIGINAL artifact came back" assertions WHOLE-value: a
+/// rebuilt provenance still fails them, and only the two members an active
+/// header is entitled to move are moved.
+pub(super) fn expected_artifact(
+    baseline: &crate::compiler::ir::EmittedArtifact,
+    plan: &crate::compiler::ir::ArtifactPlan,
+) -> crate::compiler::ir::EmittedArtifact {
+    let bytes = expected_tape(baseline, plan, 0, b'\n');
+    let mut expected = baseline.clone();
+    expected.provenance.bytes_digest = crate::compiler::emit::emitted_bytes_digest(&bytes);
+    expected.bytes = bytes;
+    expected
+}

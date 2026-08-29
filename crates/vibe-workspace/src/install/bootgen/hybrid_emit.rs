@@ -17,11 +17,9 @@ use vibe_spec::TransformPlan;
 use crate::boot::hybrid::{self, UnitEdge, UnitId, UnitInput, ZoneMembership};
 use crate::boot::{BootBand, BootEntry, EffectiveBoot};
 use crate::compile_trace::TraceRun;
-use crate::extension_world::DurableExtensionWorld;
 use crate::{WorkspaceError, boot_artifacts, vibedeps};
 
 use super::super::ResolvedDep;
-use super::owner_plans::unit_owner_plan;
 
 /// One unit's trace occurrence and the fresh-output observation that decides
 /// whether it is declared at all — split out so the observe-then-declare law
@@ -161,7 +159,7 @@ pub(super) fn emit_package_units(
     fingerprints: &HashMap<UnitId, String>,
     spec_format: SpecFormat,
     trace: Option<&TraceRun>,
-    world: Option<&DurableExtensionWorld>,
+    plans: &HashMap<UnitId, TransformPlan>,
 ) -> Result<HashSet<UnitId>, WorkspaceError> {
     let slots: HashMap<UnitId, String> = resolution
         .iter()
@@ -246,11 +244,14 @@ pub(super) fn emit_package_units(
             fp,
             spec_format,
             unit_trace.as_ref(),
-            // THIS package's own view, never the node's (PROP-054
+            // THIS package's own plan, never the node's (PROP-054
             // ##COMPILE-ACTIVATION: activation authority follows the
             // artifact being written, and the artifact here is the
-            // package's unit lane).
-            unit_owner_plan(world, id)?,
+            // package's unit lane). It was lowered ONCE for this run,
+            // before the fingerprints its digest feeds, and is read here
+            // off the key it is filed under — never re-lowered, so one
+            // declaration keeps one refusal surface.
+            plans.get(id).cloned().unwrap_or_else(TransformPlan::empty),
         )
     };
 

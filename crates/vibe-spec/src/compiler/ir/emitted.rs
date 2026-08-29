@@ -60,6 +60,16 @@ pub(crate) struct PreEmissionWitness {
     pub(crate) lane_digest: LaneInputDigest,
     pub(crate) emission_witnesses: Vec<EmissionContributionWitness>,
     pub(crate) prepared_target: PreparedEmissionTarget,
+    /// The active-transforms header payload this artifact's owner plan
+    /// contributes (R4 architecture §7.1), `None` for the empty plan.
+    ///
+    /// It rides the witness because the header is FRAMING: the selected
+    /// backend writes it and the independent tape validator observes it, and
+    /// both already read exactly this value. The Lane cannot carry it — the
+    /// assemble lowering owns no artifact plan — so the manager computes it
+    /// once, at the emit boundary, from the plan the artifact was compiled
+    /// with, and hands the same string to both sides.
+    pub(crate) transforms_header: Option<String>,
 }
 
 /// Immutable evidence created by the manager at the selected backend boundary.

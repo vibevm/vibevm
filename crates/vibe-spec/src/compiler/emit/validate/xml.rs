@@ -2,7 +2,7 @@
 
 use quick_xml::events::Event;
 
-use super::{Cursor, current_error, hoisted_coordinate};
+use super::{Cursor, current_error, hoisted_coordinate, observe_transforms_header};
 use crate::compiler::backend::{BackendError, BackendId};
 use crate::compiler::emit::framing;
 use crate::compiler::ir::{ArtifactFrame, LaneContribution, PreEmissionWitness};
@@ -39,6 +39,7 @@ pub(super) fn observation(
         generated_path,
         source_root,
         &witness.frame.renames,
+        witness.transforms_header.as_deref(),
     )?;
     for (index, contribution) in witness.contributions.iter().enumerate() {
         observe_contribution(
@@ -57,10 +58,19 @@ fn observe_frame(
     generated_path: &str,
     source_root: &str,
     renames: &[crate::compiler::ir::OriginRename],
+    transforms: Option<&str>,
 ) -> Result<(), BackendError> {
     for expected in framing::header_payloads(generated_path) {
         observe_comment(backend, cursor, &expected)?;
         cursor.expect(backend, "\n", "c1 header line ending")?;
+    }
+    // NOT a c1 comment: the transforms header's tokens are already codec-
+    // encoded, so it is written — and read — as the same plain comment in
+    // both lanes. Routing it through `observe_comment` would demand a
+    // `vibe:c1` wrapper the emitter deliberately does not write.
+    if let Some(expected) = transforms {
+        observe_transforms_header(backend, cursor, expected)?;
+        cursor.expect(backend, "\n", "transforms header line ending")?;
     }
     cursor.expect(backend, "\n", "c1 header/frame separator")?;
     observe_comment(backend, cursor, &framing::resolution_payload(source_root))?;

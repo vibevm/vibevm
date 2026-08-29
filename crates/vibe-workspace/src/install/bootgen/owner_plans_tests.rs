@@ -131,6 +131,14 @@ fn unit() -> UnitId {
     )
 }
 
+/// The orphan-unit id the tests reuse: a package the world does not install.
+fn uninstalled_unit() -> UnitId {
+    (
+        Group::parse("org.pkgs").expect("a valid group"),
+        "not-installed".to_string(),
+    )
+}
+
 /// PROP-054 `##COMPILE-ACTIVATION`, at this seam: the node lane sees the
 /// NODE's declaration and not the package's; the package's unit lane sees the
 /// package's and not the node's.
@@ -178,10 +186,7 @@ fn the_node_lane_and_the_unit_lane_are_scoped_by_different_manifests() {
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-ACTIVATION")]
 fn an_uninstalled_unit_and_a_lockless_tree_both_take_the_empty_plan() {
     let (_workspace, world) = world();
-    let orphan = (
-        Group::parse("org.pkgs").expect("a valid group"),
-        "not-installed".to_string(),
-    );
+    let orphan = uninstalled_unit();
     assert!(
         unit_owner_plan(Some(&world), &orphan)
             .expect("an orphan is outside the extension world, not a fault")
@@ -275,23 +280,110 @@ ref = "org.pkgs/tools#package-only-transform"
     );
 }
 
-/// The per-unit emission path asks for the PACKAGE's plan.
+/// The per-unit emission path uses the PACKAGE's plan, and lowers nothing.
 ///
 /// The behavioural test above proves the two entries scope differently; this
-/// proves the emission cell calls the right one. Swapping the call is the one
-/// mutation that leaves every byte in this repository unchanged — every owner
-/// here declares no compile-point extension, so both plans are empty — and
-/// therefore the one a byte assertion cannot see.
+/// proves the emission cell reads the right one. Swapping the source is the
+/// one mutation that leaves every byte in this repository unchanged — every
+/// owner here declares no compile-point extension, so both plans are empty —
+/// and therefore the one a byte assertion cannot see.
+///
+/// T10C moved the lowering OUT of the emission loop (R4 architecture §7.1: a
+/// plan digest is an input to its unit's fingerprint, so plans must exist
+/// before fingerprints), so the fence now reads two things: the emission cell
+/// reads a per-unit plan off the key it is filed under, and it calls NEITHER
+/// lowering entry — one lowering per unit per run, never two.
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-ACTIVATION")]
 fn the_per_unit_emission_path_asks_for_the_packages_own_plan() {
     let emission = include_str!("hybrid_emit.rs");
     assert!(
-        emission.contains("unit_owner_plan(world, id)"),
-        "the per-unit path lowers THAT package's own view"
+        emission.contains("plans.get(id)"),
+        "the per-unit path reads THAT package's plan off its own key"
     );
     assert!(
-        !emission.contains("node_owner_plan"),
-        "the node's plan never reaches a package's unit lane"
+        !emission.contains("unit_owner_plan") && !emission.contains("node_owner_plan"),
+        "the emission cell lowers nothing: one lowering per unit per run"
     );
+    let composition = include_str!("../bootgen.rs");
+    assert!(
+        composition.contains("unit_owner_plans(root_world.as_ref(), &table)"),
+        "every table unit's plan is lowered once, from the run's ONE world snapshot"
+    );
+    // TWO occurrences, counted rather than merely found: the generate half
+    // AND `verify_boot_graph`'s check half must frame the same digests, or
+    // — the moment R4.2 registers a real behavior — `vibe check` would call
+    // every framed unit stale on a tree the generator had just left fresh.
+    // A `contains` alone was proven blind to exactly that mutation: the
+    // generate half satisfied it while the check half framed nothing.
+    assert_eq!(
+        composition
+            .matches("fingerprint::fingerprints(&table, &versions, &plan_digest_frames(")
+            .count(),
+        2,
+        "the fingerprints are computed FROM the lowered plans in BOTH the \
+         generate and the verify composition, never beside them"
+    );
+    assert!(
+        composition.contains("unit_owner_plans(world.as_ref(), &table)"),
+        "the check half lowers the same per-unit plans from its own observation"
+    );
+    // The canonical walk is load-bearing prose made mechanical: the module
+    // doc promises a refusal on a many-bad-owners tree names the SAME owner
+    // every run, and nothing behavioural can pin that until R4.2's second
+    // registered behavior makes a two-refusers fixture expressible — so the
+    // spelling is fenced until the behavioural twin exists.
+    assert!(
+        include_str!("owner_plans.rs").contains("ordered.sort()"),
+        "unit_owner_plans walks units in canonical order, so a refusal is \
+         deterministic across runs"
+    );
+}
+
+/// Every table unit is lowered, in canonical order, exactly once — and the
+/// frame map carries an entry only for a NONEMPTY plan.
+///
+/// The second half is the historical-identity law made mechanical at the seam
+/// that produces the map: every owner in this repository (and in this
+/// fixture) activates nothing, so the map is empty, so no fingerprint moves.
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-ACTIVATION")]
+fn every_table_unit_is_lowered_once_and_only_a_nonempty_plan_frames() {
+    let (_workspace, world) = world();
+    let table: HashMap<UnitId, UnitInput> = [unit(), uninstalled_unit()]
+        .into_iter()
+        .map(|id| (id, empty_unit_input()))
+        .collect();
+
+    // The installed unit declares a `compile:document` builtin the empty T5
+    // catalog cannot resolve, so lowering the whole table refuses — which is
+    // itself the proof that EVERY unit is lowered, not just the emitted ones.
+    let error = unit_owner_plans(Some(&world), &table).expect_err("the empty T5 catalog refuses");
+    assert!(
+        error.to_string().contains(PACKAGE_BEHAVIOR),
+        "the refusal names the unit's own declaration: {error}"
+    );
+
+    // With no world, every unit takes the empty plan — and an empty plan
+    // frames NOTHING, so no unit's fingerprint moves.
+    let plans = unit_owner_plans(None, &table).expect("no lock, no world");
+    assert_eq!(plans.len(), table.len(), "one plan per table unit");
+    assert!(plans.values().all(TransformPlan::is_empty));
+    assert!(
+        plan_digest_frames(&plans).is_empty(),
+        "an owner that activates nothing contributes no frame"
+    );
+}
+
+/// A boot-bearing unit input with no edges — the table shape these entries
+/// only need to be KEYED by.
+fn empty_unit_input() -> UnitInput {
+    UnitInput {
+        own_boot_path: Some("boot/snippet.md".to_string()),
+        fragments: Vec::new(),
+        origin: String::new(),
+        when: None,
+        edges: Vec::new(),
+        format: Default::default(),
+    }
 }

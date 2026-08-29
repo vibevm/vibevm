@@ -14,6 +14,11 @@
 //! owning the effective-configuration half. Only [`plan::TransformPlan`]
 //! itself widened to `pub`; every other member of the family, and every
 //! constructor, stayed exactly where T2 put it.
+//!
+//! T10C added `header`: the ACTIVE list a nonempty plan records into its
+//! artifact, spelled by the one shared generated-comment codec. It reads a
+//! built plan and returns a payload; the emit cell owns how that payload is
+//! framed as a comment, and nothing ever parses it back.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY");
 
@@ -22,6 +27,7 @@ pub(crate) mod config;
 pub(crate) mod config_lowering;
 pub(crate) mod emitted_reconstruction;
 pub(crate) mod fault;
+pub(crate) mod header;
 pub(crate) mod lane_admission;
 pub(crate) mod lowering;
 pub(crate) mod plan;
@@ -35,6 +41,10 @@ pub(crate) mod selector_admission;
 pub(crate) mod carriage;
 #[cfg(test)]
 mod config_tests;
+#[cfg(test)]
+mod header_e2e_tests;
+#[cfg(test)]
+mod header_tests;
 #[cfg(test)]
 mod lowering_e2e_tests;
 #[cfg(test)]

@@ -9,11 +9,11 @@
 use std::collections::BTreeSet;
 
 use super::schedule_fence_tests::{
-    LOWERING_RULES, PLAN_CARRIER_RULES, SELECTOR_RULES, WRAPPER_RULES, offenders,
+    HEADER_RULES, LOWERING_RULES, PLAN_CARRIER_RULES, SELECTOR_RULES, WRAPPER_RULES, offenders,
 };
 
 /// The rule families stay exhaustive over the module tree: the production
-/// transform cells are exactly the thirteen declared `pub(crate) mod`s, every
+/// transform cells are exactly the fourteen declared `pub(crate) mod`s, every
 /// cfg-test cell is declared too, and no undeclared `.rs` sibling can ship
 /// unclassified (a new production cell must be added to a family here).
 #[test]
@@ -47,6 +47,9 @@ fn the_module_tree_declares_every_transform_cell_under_a_rule_family() {
             "config_lowering".to_owned(),
             "emitted_reconstruction".to_owned(),
             "fault".to_owned(),
+            // T10C's one production cell: the ACTIVE list a nonempty plan
+            // records into its artifact.
+            "header".to_owned(),
             "lane_admission".to_owned(),
             "lowering".to_owned(),
             "plan".to_owned(),
@@ -63,6 +66,9 @@ fn the_module_tree_declares_every_transform_cell_under_a_rule_family() {
         BTreeSet::from([
             "carriage".to_owned(),
             "config_tests".to_owned(),
+            // T10C's test cells.
+            "header_e2e_tests".to_owned(),
+            "header_tests".to_owned(),
             // T10B's test cells.
             "lowering_e2e_tests".to_owned(),
             "lowering_tests".to_owned(),
@@ -113,6 +119,14 @@ fn the_module_tree_declares_every_transform_cell_under_a_rule_family() {
     // it takes the stronger plan-carrier family unchanged.
     assert!(offenders(include_str!("lowering.rs"), &LOWERING_RULES).is_empty());
     assert!(offenders(include_str!("config_lowering.rs"), &PLAN_CARRIER_RULES).is_empty());
+    // T10C: the header cell under its own family — the one production cell
+    // permitted to name the shared generated-comment codec, because spelling
+    // the ACTIVE list is exactly what it exists to do. It is held to more
+    // besides: a pure value builder over a built plan, owning no behavior
+    // channel and reading no collector, and — the rule §7.1 states by name —
+    // naming no OTHER percent codec, so one identity cannot acquire a second
+    // spelling here.
+    assert!(offenders(include_str!("header.rs"), &HEADER_RULES).is_empty());
     // The reconstruction cell is held to MORE than its family requires, and
     // the extra is asserted rather than trusted: it is a pure value builder,
     // so — exactly like the selector admission cell — it owns no behavior

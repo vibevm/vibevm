@@ -45,13 +45,13 @@ fn public_names(source: &str) -> BTreeSet<String> {
     names
 }
 
-/// The T10B visibility pin: EXACTLY what this atom widened, and nothing
-/// beside it.
+/// The T10B/T10C visibility pin: EXACTLY what these atoms widened, and
+/// nothing beside them.
 ///
 /// T2 promised "public crate-root construction waits for T10's real
 /// workspace consumer", and the R4 architecture §5.3 named the four names
 /// that may cross when it arrives. This test is that promise made
-/// mechanical: the plan cell exports the plan VALUE plus three accessors
+/// mechanical: the plan cell exports the plan VALUE plus the accessors
 /// that lend no crate-private type, and the lowering cell exports the entry
 /// and its refusal. A future atom that widens a seed, an entry, a provider,
 /// an implementation, a config table or a digest fails here and has to say
@@ -68,8 +68,15 @@ fn t10b_widened_exactly_the_plan_value_its_accessors_and_the_lowering_entry() {
             "empty".to_owned(),
             "len".to_owned(),
             "is_empty".to_owned(),
+            // T10C, under exactly that law and for exactly one reason: the
+            // boot-graph fingerprint frame (R4 architecture §7.1) needs a
+            // unit's owner-plan digest as a VALUE, so the plan lends the
+            // already-computed digest's hex STRING. `digest()` — which
+            // lends `PlanDigest` itself, and with it the power to frame a
+            // digest — deliberately stayed `pub(crate)`.
+            "digest_hex".to_owned(),
         ]),
-        "plan.rs widens the plan value and three scalar accessors — nothing else"
+        "plan.rs widens the plan value and four scalar accessors — nothing else"
     );
     assert_eq!(
         public_names(include_str!("lowering.rs")),

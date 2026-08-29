@@ -83,7 +83,8 @@ pub use load::{
 pub use md_in::from_markdown;
 pub use md_out::to_markdown;
 pub use xml_comment::{
-    XmlCommentCodecError, decode_generated_xml_comment, encode_generated_xml_comment,
+    XmlCommentCodecError, decode_generated_xml_comment, decode_generated_xml_comment_payload,
+    encode_generated_xml_comment,
 };
 pub use xml_in::from_xml;
 pub use xml_out::to_xml;

@@ -133,8 +133,10 @@ pub(super) fn full_lane() -> LaneIr {
 fn backend_transition_and_current_validators_reject_every_owned_witness_mutation() {
     let lane = full_lane();
     let backend = Arc::new(static_md::StaticMarkdownBackend::new());
-    let emitted = EmitPass::new(backend.clone()).run(lane.clone()).unwrap();
-    let witness = capture_witness(&lane, backend.id()).unwrap();
+    let emitted = EmitPass::new(backend.clone(), None)
+        .run(lane.clone())
+        .unwrap();
+    let witness = capture_witness(&lane, backend.id(), None).unwrap();
 
     let mut context = emitted.clone();
     context.provenance.context = ArtifactContext::new(
@@ -193,7 +195,7 @@ fn concrete_renderers_and_xml_pivots_execute_exactly_once() {
     let markdown_lane = full_lane();
     let markdown = Arc::new(static_md::StaticMarkdownBackend::new());
     static_md::reset_render_calls();
-    let _emitted = EmitPass::new(markdown.clone())
+    let _emitted = EmitPass::new(markdown.clone(), None)
         .run(markdown_lane.clone())
         .unwrap();
     assert_eq!(static_md::render_calls(), 1);
@@ -216,7 +218,9 @@ fn concrete_renderers_and_xml_pivots_execute_exactly_once() {
     let xml_lane = compile_artifact_lane(xml_plan, &Source("")).unwrap();
     let xml = Arc::new(static_xml::StaticXmlBackend::new());
     static_xml::reset_pivot_calls();
-    let _emitted = EmitPass::new(xml.clone()).run(xml_lane.clone()).unwrap();
+    let _emitted = EmitPass::new(xml.clone(), None)
+        .run(xml_lane.clone())
+        .unwrap();
     assert_eq!(static_xml::pivot_calls(), 2);
     assert_eq!(
         static_xml::pivot_calls(),
@@ -229,7 +233,7 @@ fn concrete_renderers_and_xml_pivots_execute_exactly_once() {
 fn shipping_backends_refuse_wrong_targets_before_render() {
     let markdown_lane = full_lane();
     static_xml::reset_pivot_calls();
-    let error = EmitPass::new(Arc::new(static_xml::StaticXmlBackend::new()))
+    let error = EmitPass::new(Arc::new(static_xml::StaticXmlBackend::new()), None)
         .run(markdown_lane)
         .unwrap_err();
     assert!(matches!(error, EmitPassError::TargetMismatch { .. }));
@@ -244,7 +248,7 @@ fn shipping_backends_refuse_wrong_targets_before_render() {
     .unwrap();
     let xml_lane = compile_artifact_lane(xml_plan, &Source("")).unwrap();
     static_md::reset_render_calls();
-    let error = EmitPass::new(Arc::new(static_md::StaticMarkdownBackend::new()))
+    let error = EmitPass::new(Arc::new(static_md::StaticMarkdownBackend::new()), None)
         .run(xml_lane)
         .unwrap_err();
     assert!(matches!(error, EmitPassError::TargetMismatch { .. }));

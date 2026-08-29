@@ -15,9 +15,9 @@ use crate::compiler::backend::BackendRegistry;
 use crate::compiler::builtin::{
     compile_artifact, compile_artifact_with_registries, parse_invocations, reset_parse_invocations,
 };
-use crate::compiler::emit::{emit_invocations, reset_emit_invocations};
-use crate::compiler::ir::ArtifactPlan;
+use crate::compiler::emit::{emit_invocations, emitted_bytes_digest, reset_emit_invocations};
 use crate::compiler::ir::emitted_output_fingerprint;
+use crate::compiler::ir::{ArtifactPlan, EmittedArtifact};
 use crate::compiler::transform::plan::TransformStage;
 use crate::compiler::transform::registry_test_support::{identity_plan, identity_registry};
 
@@ -63,9 +63,13 @@ fn identity_execution_emits_bytes_provenance_and_fingerprint_identical_to_no_tra
         "parity is CAUSED by execution at all four positions"
     );
     assert_eq!(parse_invocations(), parses_plain * 2);
-    // WHOLE-value parity: bytes AND full provenance — selected-field
-    // comparisons would stay green through a rebuilt provenance.
-    assert_eq!(carried_emitted, plain_emitted);
+    // WHOLE-value parity, against the plain artifact carrying the ONE honest
+    // difference an ACTIVE plan makes (R4 architecture §7.1): its header line
+    // and the byte digest that follows from it. Comparing whole values —
+    // rather than picking fields — is the point: a rebuilt provenance, a
+    // moved rename list or a changed contribution witness would still fail
+    // here, and only the header is allowed to move.
+    assert_eq!(carried_emitted, expected_with_header(&plain_emitted));
     // The equal-bytes emitted wrapper returned the ORIGINAL artifact: the
     // live fingerprint law holds on the returned value.
     assert_eq!(
@@ -73,14 +77,34 @@ fn identity_execution_emits_bytes_provenance_and_fingerprint_identical_to_no_tra
         emitted_output_fingerprint(carried_emitted.bytes())
     );
     assert_eq!(emit_invocations("static-xml"), 2);
-    // No plan frame or transform header spelling enters the bytes.
-    for bytes in [plain_emitted.bytes(), carried_emitted.bytes()] {
-        let text = std::str::from_utf8(bytes).unwrap();
-        assert!(
-            !text.contains("vibe:transforms"),
-            "no transforms header may be emitted: {text}"
-        );
-    }
+    // The plain compile — an owner that activates nothing — records nothing.
+    assert!(
+        !std::str::from_utf8(plain_emitted.bytes())
+            .unwrap()
+            .contains("vibe:transforms"),
+        "an empty plan emits no header at all"
+    );
+}
+
+/// The plain artifact as the four-stage ACTIVE plan would have written it:
+/// the header line inserted after the three provenance lines, and the byte
+/// digest recomputed over the result.
+///
+/// Written out longhand rather than asserted piecewise, so the comparison
+/// above stays a whole-value one.
+fn expected_with_header(plain: &crate::compiler::ir::EmittedArtifact) -> EmittedArtifact {
+    let text = std::str::from_utf8(plain.bytes()).expect("a UTF-8 tape");
+    let mut lines: Vec<&str> = text.split('\n').collect();
+    lines.insert(
+        3,
+        "<!-- vibe:transforms org.demo/tools#src org.demo/tools#doc \
+         org.demo/tools#lane org.demo/tools#emit -->",
+    );
+    let bytes = lines.join("\n").into_bytes();
+    let mut expected = plain.clone();
+    expected.provenance.bytes_digest = emitted_bytes_digest(&bytes);
+    expected.bytes = bytes;
+    expected
 }
 
 #[test]

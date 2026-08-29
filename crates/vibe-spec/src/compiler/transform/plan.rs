@@ -14,10 +14,11 @@
 //! exactly one member of this family widened: [`TransformPlan`] itself, plus
 //! the three accessors a caller needs that lend no crate-private type
 //! ([`TransformPlan::empty`], [`TransformPlan::len`],
-//! [`TransformPlan::is_empty`]). The seed, entry, provider, implementation
-//! and config values stay `pub(crate)` with private fields, and every
-//! constructor stays where it was — the widening lends a plan, it does not
-//! open plan authorship.
+//! [`TransformPlan::is_empty`]). T10C added the fourth accessor under the
+//! same law ([`TransformPlan::digest_hex`] — a scalar, never [`PlanDigest`]).
+//! The seed, entry, provider, implementation and config values stay
+//! `pub(crate)` with private fields, and every constructor stays where it was
+//! — the widening lends a plan, it does not open plan authorship.
 
 use vibe_core::manifest::ExtensionKey;
 use vibe_core::{ContentHash, PackageKind};
@@ -439,6 +440,24 @@ impl TransformPlan {
     /// The canonical plan digest; `None` exactly when the plan is empty.
     pub(crate) fn digest(&self) -> Option<PlanDigest> {
         self.digest
+    }
+
+    /// The already-computed plan digest as 64 lowercase hex characters;
+    /// `None` exactly when the plan is empty.
+    ///
+    /// `pub` since T10C, and shaped as a SCALAR on purpose: the boot-graph
+    /// fingerprint (R4 architecture §7.1) hashes a unit's owner-plan identity
+    /// into its Merkle body, so `vibe-workspace` needs the digest as a VALUE.
+    /// It never needs — and must never be lent — [`PlanDigest`] itself, which
+    /// would let a caller frame a digest of its own. Nothing is recomputed
+    /// here: `build` already digested the plan, and this is that value's one
+    /// hex projection ([`PlanDigest::lowercase_hex`]).
+    ///
+    /// `None` is the whole of the no-frame law: an owner that activates
+    /// nothing has no plan digest to contribute, so its unit's fingerprint —
+    /// and every historical fingerprint — keeps its exact current bytes.
+    pub fn digest_hex(&self) -> Option<String> {
+        self.digest.map(|digest| digest.lowercase_hex())
     }
 
     /// The number of planned transforms.

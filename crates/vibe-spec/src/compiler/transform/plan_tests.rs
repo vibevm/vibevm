@@ -39,6 +39,44 @@ fn the_empty_plan_has_no_digest_no_entries_and_no_allocation() {
     assert!(built.digest().is_none());
 }
 
+/// The T10C scalar accessor: `None` EXACTLY when the plan is empty, and
+/// otherwise the already-computed digest's one hex projection.
+///
+/// The `None` half is not a convenience — it IS the boot-graph frame's
+/// no-entry law (R4 architecture §7.1): the workspace builds its frame map by
+/// filtering on this `Some`, so an accessor that answered `Some` for the empty
+/// plan would frame every unit and break every historical fingerprint. Pinned
+/// here, in the crate that owns the accessor, rather than only at the seam
+/// that consumes it.
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY")]
+fn digest_hex_is_absent_for_the_empty_plan_and_the_one_hex_projection_otherwise() {
+    assert_eq!(TransformPlan::empty().digest_hex(), None);
+    assert_eq!(
+        TransformPlan::build(Vec::new())
+            .expect("empty input builds")
+            .digest_hex(),
+        None
+    );
+
+    let plan = build_or_panic(vec![dependency_seed("k", TransformStage::Document)]);
+    let hex = plan.digest_hex().expect("a nonempty plan has a digest");
+    assert_eq!(hex.len(), 64, "64 hex characters, no algorithm prefix");
+    assert!(
+        hex.bytes()
+            .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte)),
+        "lowercase hex only: {hex}"
+    );
+    // ONE hex rendering: the labelled external projection is this string
+    // behind its algorithm name, never a second spelling of the same bytes.
+    assert_eq!(
+        plan.digest()
+            .expect("a nonempty plan has a digest")
+            .sha256_hex(),
+        format!("sha256:{hex}")
+    );
+}
+
 /// Dense order is assigned from the input sequence: swapping entries
 /// reassigns 0/1 in the new input order and moves the digest; moving a
 /// stage moves it too.

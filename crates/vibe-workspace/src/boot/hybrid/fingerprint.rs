@@ -9,6 +9,29 @@
 //! edges (so a change *behind* a dynamic edge does not flip it — the dynamic
 //! boundary breaks propagation). A `when`-gated target is treated as dynamic
 //! for propagation, matching [`super::resolve_zone`].
+//!
+//! # The owner-plan frame (R4 architecture §7.1)
+//!
+//! A unit's lane is compiled with its OWNER's transform plan, so that plan is
+//! part of what the artifact is: a changed owner plan must leave the unit
+//! stale. The Merkle body therefore appends one frame, `transforms:<hex>`,
+//! carrying the owner plan's digest — **only when the digest map carries that
+//! unit**. No entry, no frame: every fingerprint recorded before this frame
+//! existed, and every unit whose owner activates nothing, keeps its exact
+//! current bytes. That absence is the whole of the historical-identity law,
+//! and framing an empty plan would break every recorded fingerprint for zero
+//! information.
+//!
+//! **Propagation needs no code of its own.** A static parent already hashes
+//! its child's FINGERPRINT, so a child's plan frame flips the static chain up
+//! to the first dynamic break — which is exactly right, because a static
+//! parent inlines the child's zone bytes and those bytes were produced under
+//! the child's plan. A dynamic parent hashes only the child's identity, so
+//! the plan stays behind that boundary, exactly as content does.
+//!
+//! A node lane has no fingerprint at all (it always recomputes); its plan
+//! identity rides the artifact header, and its equal-bytes no-op belongs to
+//! the publication transaction.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#change-detection");
 
@@ -23,6 +46,13 @@ use super::{UnitId, UnitInput};
 /// memoisation. `versions` gives each unit's resolved version — the content
 /// identity for an immutable package (a mutable in-workspace source is
 /// re-materialised regardless, PROP-011 §2.6, so the version key suffices).
+///
+/// `plan_digests` gives each unit's OWNER-plan digest as lowercase sha256 hex
+/// (R4 architecture §7.1), with an entry present ONLY for a nonempty plan. A
+/// unit absent from that map gets no plan frame and keeps its historical
+/// fingerprint bytes exactly; the caller derives the map from the same
+/// lowering the emission path is handed, so a unit is never fingerprinted
+/// against one plan and compiled with another.
 ///
 /// ```
 /// use std::collections::HashMap;
@@ -42,16 +72,31 @@ use super::{UnitId, UnitInput};
 ///     format: Default::default(),
 /// });
 /// let versions: HashMap<UnitId, String> = [(id.clone(), "1.0.0".to_string())].into_iter().collect();
-/// let fps = fingerprints(&table, &versions);
+/// // No plan digests: an owner that activates nothing frames nothing.
+/// let plans: HashMap<UnitId, String> = HashMap::new();
+/// let fps = fingerprints(&table, &versions, &plans);
 /// assert!(fps.contains_key(&id));
+///
+/// // A nonempty owner plan moves that unit's fingerprint, and nothing else.
+/// let with_plan: HashMap<UnitId, String> =
+///     [(id.clone(), "ab".repeat(32))].into_iter().collect();
+/// assert_ne!(fingerprints(&table, &versions, &with_plan)[&id], fps[&id]);
 /// ```
 pub fn fingerprints(
     table: &HashMap<UnitId, UnitInput>,
     versions: &HashMap<UnitId, String>,
+    plan_digests: &HashMap<UnitId, String>,
 ) -> HashMap<UnitId, String> {
     let mut memo: HashMap<UnitId, String> = HashMap::new();
     for id in table.keys() {
-        compute(id, table, versions, &mut memo, &mut HashSet::new());
+        compute(
+            id,
+            table,
+            versions,
+            plan_digests,
+            &mut memo,
+            &mut HashSet::new(),
+        );
     }
     memo
 }
@@ -63,6 +108,7 @@ fn compute(
     id: &UnitId,
     table: &HashMap<UnitId, UnitInput>,
     versions: &HashMap<UnitId, String>,
+    plan_digests: &HashMap<UnitId, String>,
     memo: &mut HashMap<UnitId, String>,
     on_stack: &mut HashSet<UnitId>,
 ) -> String {
@@ -117,7 +163,7 @@ fn compute(
                 LinkType::Static | LinkType::StaticTransitive | LinkType::StaticHard
             );
             if is_static {
-                let child = compute(&edge.target, table, versions, memo, on_stack);
+                let child = compute(&edge.target, table, versions, plan_digests, memo, on_stack);
                 hasher.update(b" static-fp:");
                 hasher.update(child.as_bytes());
             } else {
@@ -125,6 +171,15 @@ fn compute(
                 hasher.update(version_of(&edge.target, versions));
             }
         }
+    }
+    // The owner-plan frame (R4 architecture §7.1), appended ONLY when this
+    // unit's owner activated something. An absent entry writes nothing at
+    // all — not an empty frame, not a marker — which is what keeps every
+    // historical fingerprint byte-exact. Propagation up the static chain is
+    // the Merkle above and needs nothing here.
+    if let Some(digest) = plan_digests.get(id) {
+        hasher.update(b"\ntransforms:");
+        hasher.update(digest.as_bytes());
     }
     on_stack.remove(id);
     let fp = hex(&hasher.finalize());

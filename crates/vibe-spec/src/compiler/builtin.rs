@@ -34,6 +34,7 @@ use super::qualify::QUALIFY_PASS_NAME;
 use super::qualify::QualifyPass;
 use super::trace::CompileTraceSink;
 use super::transform::fault::TransformError;
+use super::transform::header as transform_header;
 use super::transform::registry::TransformRegistry;
 use super::transform::schedule::TransformSchedule;
 use super::worklist;
@@ -261,7 +262,7 @@ impl BuiltinSchedule {
             .map_err(|error| ArtifactCompileError::Registry {
                 reason: error.to_string(),
             })?;
-        Self::append_emit(schedule, backend)
+        Self::append_emit(schedule, backend, plan)
     }
 
     /// The custom-backend construction path of the test-support vehicles;
@@ -273,16 +274,26 @@ impl BuiltinSchedule {
         backend: std::sync::Arc<dyn EmitBackend>,
     ) -> Result<Self, ArtifactCompileError> {
         let schedule = Self::assembled(plan, registry)?;
-        Self::append_emit(schedule, backend)
+        Self::append_emit(schedule, backend, plan)
     }
 
+    /// Append the selected emit backend, and with it the artifact's ACTIVE
+    /// transforms header (R4 architecture §7.1).
+    ///
+    /// The header payload is derived here, from the plan the artifact was
+    /// compiled with, because this is the one place that holds both the
+    /// artifact plan and the emit pass. It is engine framing — never plugin
+    /// bytes — and an empty plan derives `None`, which is the exact
+    /// historical byte stream.
     fn append_emit(
         mut schedule: Self,
         backend: std::sync::Arc<dyn EmitBackend>,
+        plan: &ArtifactPlan,
     ) -> Result<Self, ArtifactCompileError> {
+        let header = transform_header::transforms_header_payload(plan.transforms());
         schedule
             .pipeline
-            .push_artifact(EmitPass::new(backend))
+            .push_artifact(EmitPass::new(backend, header))
             .expect("the selected emit backend continues the built-in schedule");
         schedule
             .transforms

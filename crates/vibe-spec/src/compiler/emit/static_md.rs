@@ -28,12 +28,12 @@ impl EmitBackend for StaticMarkdownBackend {
         &self.pass
     }
 
-    fn emit(&self, lane: &LaneIr, _witness: &PreEmissionWitness) -> Result<Vec<u8>, BackendError> {
-        emit_markdown(lane).map(String::into_bytes)
+    fn emit(&self, lane: &LaneIr, witness: &PreEmissionWitness) -> Result<Vec<u8>, BackendError> {
+        emit_markdown(lane, witness.transforms_header.as_deref()).map(String::into_bytes)
     }
 }
 
-fn emit_markdown(lane: &LaneIr) -> Result<String, BackendError> {
+fn emit_markdown(lane: &LaneIr, transforms: Option<&str>) -> Result<String, BackendError> {
     #[cfg(test)]
     RENDER_CALLS.with(|count| count.set(count.get() + 1));
     if matches!(lane.context().frame(), ArtifactFrame::CompatibilityFragment) {
@@ -56,7 +56,7 @@ fn emit_markdown(lane: &LaneIr) -> Result<String, BackendError> {
 
     let (generated_path, source_root) = lane_paths(lane)?;
     let syntax = CommentSyntax::Markdown;
-    let mut output = framing::static_header(syntax, generated_path);
+    let mut output = framing::static_header(syntax, generated_path, transforms);
     output.push_str(&framing::resolution_preamble(syntax, source_root));
     if !lane.frame.renames.is_empty() {
         output.push_str(&framing::tombstone(syntax, &lane.frame.renames));
