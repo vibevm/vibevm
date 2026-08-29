@@ -446,6 +446,20 @@
       central guards and finished every exact gate. Availability is therefore
       recovered for useful work, not merely for a ping; future routing still
       treats the next five-hour wall as account-wide.</CLAUDEZ-RECOVERED-2026-08-28>
+      <CLAUDEZ-R4-LIVE-2026-08-29 fact="true" status="spec/done">The next
+      advertised reset was observed rather than assumed: a fresh isolated
+      direct launcher probe completed in 9.5 seconds with exact `PONG` and
+      resolved `glm-5.3[1m]`; a real R4.0 extraction then completed 95 turns,
+      left an ordinary diff/report and passed its focused gates. Root review
+      still found two proof defects — the compatibility test pinned a private
+      module rather than the public crate root, and an ambient fence was a raw
+      substring scan — and same-cwd `claudez -c` corrected both with AST-based
+      REDs in 26 turns. Root then found and locally closed the residual
+      `use std::*` glob case. Durable lesson: a healthy/high-quality claudez run
+      is execution evidence, never acceptance; public-boundary tests must name
+      the public path, and source-deny fences need syntax-aware negative
+      fixtures rather than reassuring grep. No run used `--max-budget-usd`.
+      </CLAUDEZ-R4-LIVE-2026-08-29>
       <CLAUDEZ-LANES-DIVERGE-2026-08-28 fact="true" status="spec/done">Launcher
       health is per configured lane, not transferable testimony. During A15a,
       primary `claudez` completed a long implementation and two `-c` review
