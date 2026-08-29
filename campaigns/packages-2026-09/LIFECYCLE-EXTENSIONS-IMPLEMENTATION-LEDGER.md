@@ -468,6 +468,49 @@ than depending on untracked `cache/` archaeology.
   the first boundary a live reached subject meets. Map `3da9ccff` is
   6831/2410/2183 at zero suspects/orphans/unresolved. T9 emitted
   reconstruction is next.
+- R4.1 T9 emitted reconstruction: `513f3945` retires the changed-bytes
+  refusal and gives the manager both halves of the law ABI §6.5 froze
+  centrally before implementation (`8653dea4`). One new cell,
+  `emitted_reconstruction.rs`, is the single writer of a post-backend
+  artifact: byte-equal output returns the ORIGINAL value (whole-value Eq
+  against the untransformed compile, chain still empty), changed bytes are
+  CONSUMED into a wholly rebuilt artifact — digest recomputed through the one
+  existing `emitted_bytes_digest`, the new `EmissionProvenance.
+  emitted_transforms` extended with the entry's exact schedule pass name in
+  application order, every other member destructured across with no rest
+  pattern, so a future provenance member fails compilation until its author
+  rules which side owns it. No witness gate: unlike run_lane, an emitted
+  behavior receives bytes and returns bytes, so the cell is the single
+  provenance writer by construction — the inverse of the T6c argument,
+  recorded beside it. The member rides the compiler IR wire end to end
+  (schema + codegen + preflight sweep + decode through the producer's own
+  scalar law + PassName + a corpus authored out of sorted order, with a new
+  invalid case pinning the blank-element refusal); wire-diff classed
+  schema + corpus in one shift. The fence classifies the cell under BOTH
+  wrapper and plan-carrier families — together they state "no behavior
+  channel and no fault eliminated by panic", which neither says alone. The
+  producer worked from a packet against the frozen §6.5, hit two honest
+  frictions (the vibe-wire test perimeter path was wrong in the packet; the
+  600-line conform budget forbade growing the execution cell, resolved by the
+  T6c-precedent split into `schedule_emitted_tests.rs`) and disclosed two
+  en-route gate failures it fixed. Root read the complete diff, then
+  reproduced every gate: 801 + 5/2/7/4 vibe-spec, 28 vibe-wire suites,
+  strict clippy over both crates, downstream checks, conform 27-in-scope
+  0-new, wire-diff green with the three shifted paths named, fmt, diff
+  hygiene, and `check-codegen` closed clean POST-commit exactly as the T7
+  lesson prescribes. SEVEN mutations: the packet's five (stale digest — six
+  red, both byte-equal tests correctly green; skipped append — every chain
+  assertion; append on byte-equal — the identity law from both cells;
+  dropped renames — exactly the member-preservation test; blank decode
+  element — three red, requiring BOTH validation layers removed, proving the
+  defence in depth is real) plus two reviewer-authored — recording the
+  producer's name instead of the schedule identity reds exactly the four
+  chain tests, and sorting the chain at ENCODE reds both round-trip tests
+  plus both corpus sweeps, so the never-sorted law is pinned on the encode
+  side too, independent of the packet's decode-side mutation. Map `f421cc68`
+  is 6831/2417/2190 at zero suspects/orphans/unresolved. T10 workspace
+  adapter is next, in three slices per the frozen kernel §5.3/§7.1
+  (`4e41f9ed`).
 - Gate repair `67ab9683` fixes the conform content store's Windows cache slot:
   `sha256:<hex>` had created 1,393 NTFS alternate streams on one base file and
   failed with OS error 665. Authored engine + six vendored copies now use one
@@ -541,7 +584,7 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 | Step | State | Evidence |
 |---|---|---|
 | R4.0 one pure registry below lifecycle/workspace | done | kernel `6af1b86f`, map `8531cf82`; exact runtime-dependency/AST-ambient/public-reexport fences; kernel 22, lifecycle 287/3 ignored, orchestrator 126 + doctests, strict clippy/check/conform/DAG green |
-| R4.1 four positions, owner-scoped activation, header, per-unit fingerprint, reference oracle | in progress | controls `52a59dcc`; transaction `91142777` / `ab68d145`; T1 `b65f9958`; T3 `48d7dc75`; T2 `49e944f0` + `87ef2df6`; T4 `a252fcc8`; T5 `0eb46c82`; T6a `01f1522e`; T6b `6ffedb03`; T6c `cb6006d4`; T7 `419e1aed`; T8 `99e52760`; map `3da9ccff` = 6831/2410/2183; T9–T10 emitted/adapter open |
+| R4.1 four positions, owner-scoped activation, header, per-unit fingerprint, reference oracle | in progress | controls `52a59dcc`; transaction `91142777` / `ab68d145`; T1 `b65f9958`; T3 `48d7dc75`; T2 `49e944f0` + `87ef2df6`; T4 `a252fcc8`; T5 `0eb46c82`; T6a `01f1522e`; T6b `6ffedb03`; T6c `cb6006d4`; T7 `419e1aed`; T8 `99e52760`; T9 `513f3945`; map `f421cc68` = 6831/2417/2190; T10 adapter open (frozen `4e41f9ed`) |
 | R4.2 builtin XML minify | partial | pure strict kernel `016f0fab` and reversible comment codec `fbbd5140`; no activation/on-off e2e |
 | R4.3 lane analyzer | missing | no `vibe extensions analyze` or machine report |
 
