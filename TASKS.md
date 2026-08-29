@@ -118,9 +118,15 @@ fronts currently in flight. A worker report or old worktree is never completion.
                   three live mutations (post-dedup count, path-alias fence,
                   epoch-constructor opacity). Map `b768bcb8` is
                   6831/2318/2091 at zero suspects/orphans/unresolved.
-            - [ ] implement T4–T10: ArtifactPlan carriage, behavior registry,
-                  four positions, subject wire/verifier, emitted ownership,
-                  owner snapshot/adapter, header and fingerprint.
+            - [x] T4 private ArtifactPlan carriage (`a252fcc8`): all legacy
+                  constructors pin empty; nonempty carriage is schedule/byte/
+                  provenance/error-inert; opaque retarget forwards it. Root
+                  accepted vibe-spec 709, workspace 492, strict clippy/check/
+                  conform and a live retarget-drop mutation. Map `5aa44611` is
+                  6831/2324/2097 at zero suspects/orphans/unresolved.
+            - [ ] implement T5–T10: private behavior registry, four positions,
+                  subject wire/verifier, emitted ownership, owner snapshot/
+                  adapter, header and fingerprint.
       - [ ] R4.2 bind strict builtin XML minify with the full RED corpus.
       - [ ] R4.3 JTD-first `vibe extensions analyze` report/CLI.
 - [ ] **R5.1–R5.5** — native schemas/SDK, loader, source/prebuilt build,

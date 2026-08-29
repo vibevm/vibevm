@@ -299,6 +299,17 @@ than depending on untracked `cache/` archaeology.
   0 new and three live RED mutations (post-dedup count, `std::path` alias,
   epoch-constructor visibility). Map `b768bcb8` is 6831/2318/2091 at zero
   suspects/orphans/unresolved. T4 carriage is next.
+- R4.1 T4 carriage: `a252fcc8` moves the 593-line ArtifactPlan cell into a
+  462-line parent plus 176-line focused plan module, adds private whole-plan
+  carriage, pins all four legacy constructors to empty and forwards the plan
+  through opaque backend retargeting. Nonempty carriage is deliberately inert:
+  exact nine-item schedule, emitted bytes/provenance/fingerprint, typed failure
+  and no-header behavior equal the empty plan. Root accepted vibe-spec 691 +
+  5/2/7/4, workspace 452 + 5/7/27/1, strict clippy/downstream/conform and a
+  live retarget-drop mutation. Map `5aa44611` is 6831/2324/2097 at zero
+  suspects/orphans/unresolved. T5 behavior registry is next; central ruling
+  keeps its four identity behaviors cfg-test-only rather than reserving public
+  no-op builtin names.
 - Gate repair `67ab9683` fixes the conform content store's Windows cache slot:
   `sha256:<hex>` had created 1,393 NTFS alternate streams on one base file and
   failed with OS error 665. Authored engine + six vendored copies now use one
@@ -372,7 +383,7 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 | Step | State | Evidence |
 |---|---|---|
 | R4.0 one pure registry below lifecycle/workspace | done | kernel `6af1b86f`, map `8531cf82`; exact runtime-dependency/AST-ambient/public-reexport fences; kernel 22, lifecycle 287/3 ignored, orchestrator 126 + doctests, strict clippy/check/conform/DAG green |
-| R4.1 four positions, owner-scoped activation, header, per-unit fingerprint, reference oracle | in progress | package controls `52a59dcc`; unit transaction `91142777` / `ab68d145`; T1 `b65f9958`; T3 `48d7dc75`; T2 `49e944f0` + borrowed hash `87ef2df6`; map `b768bcb8` = 6831/2318/2091; T4–T10 carriage/world/pass/header/fingerprint wiring open |
+| R4.1 four positions, owner-scoped activation, header, per-unit fingerprint, reference oracle | in progress | controls `52a59dcc`; transaction `91142777` / `ab68d145`; T1 `b65f9958`; T3 `48d7dc75`; T2 `49e944f0` + `87ef2df6`; T4 carriage `a252fcc8`; map `5aa44611` = 6831/2324/2097; T5–T10 behavior/world/pass/header/fingerprint wiring open |
 | R4.2 builtin XML minify | partial | pure strict kernel `016f0fab` and reversible comment codec `fbbd5140`; no activation/on-off e2e |
 | R4.3 lane analyzer | missing | no `vibe extensions analyze` or machine report |
 

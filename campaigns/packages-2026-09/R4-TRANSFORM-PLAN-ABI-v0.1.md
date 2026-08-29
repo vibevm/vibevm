@@ -1,11 +1,11 @@
 # R4.1 TransformPlan ABI and digest — implementation design v0.1
 
-Status: accepted central design, 2026-08-29; T1 `b65f9958`, T2 `49e944f0` and
-T3 `48d7dc75` implemented, exact T2 construction authority/refusal precedence/
-byte schedule and T4 carriage law frozen after adversarial review. Borrowed
-hash validation is `87ef2df6`; combined current map is `b768bcb8`. Semantic
-authority remains PROP-054 §§3.4, 7.1–7.3 and the R4 architecture. Execution
-status stays in the implementation ledger.
+Status: accepted central design, 2026-08-29; T1 `b65f9958`, T2 `49e944f0`, T3
+`48d7dc75` and T4 `a252fcc8` implemented. Borrowed hash validation is
+`87ef2df6`; current map is `5aa44611`. Exact T2 construction/refusal/byte
+schedule, T4 carriage and T5 registry laws are frozen after adversarial review.
+Semantic authority remains PROP-054 §§3.4, 7.1–7.3 and the R4 architecture.
+Execution status stays in the implementation ledger.
 
 ## 1. Boundary
 
@@ -306,6 +306,33 @@ manager alone consumes the old `EmittedArtifact`, recomputes bytes digest and
 provenance and appends the transform identity. No `bytes_mut` or
 `provenance_mut` exists.
 
+### 6.1 T5 registry freeze
+
+T5 lands one private `TransformBehavior: Send + Sync` trait with four typed,
+level-preserving methods (`SourceIr`, `DocumentIr`, `LaneIr`, emitted bytes) and
+`Option<&TransformConfig>` delivered to each. A behavior declares one name,
+nonzero epoch and stage; calling another stage yields a typed wrong-stage
+refusal. `TransformRegistry` stores name → `{epoch, stage, Arc<dyn behavior>}`
+in deterministic order. Registration refuses collision; resolution of one T2
+implementation/stage refuses bounded unknown name, epoch mismatch or stage
+mismatch before returning a cloned behavior. `TransformPlan::build` remains
+grammar-only and never consults the registry.
+
+T5 deliberately reserves **no shipping no-op builtin names**. The four identity
+behaviors are cfg-test vehicles in a test-only registry, named
+`test-identity-source|document|lane|emitted`, epoch 1. Their exact sorted
+`[(name, epoch, stage)]` golden and one frozen input→identical-output vector per
+stage prove the registry and future T6 seams without silently making public
+manifest vocabulary out of test scaffolding. The production registry contains
+only behaviors that actually ship; R4.2 adds `xml-minify` with its own epoch and
+golden when its binding lands. Lifecycle `log`, T2's historical `minify` test
+spelling and package content hashes never enter this catalog.
+
+T5 adds no pass and reads no manifest/registry row. Behavior objects remain in
+their own cells; the existing syntax fence keeps `Arc`/`dyn` out of plan/config/
+digest/refusal cells. T6 alone wraps resolved behaviors into schedule passes and
+fixes pass-name/global-collision laws.
+
 ## 7. Empty plan law
 
 `TransformPlan::empty()` owns no entries/allocation and `digest() == None`.
@@ -339,9 +366,10 @@ plan is the one carriage regression T4 must make red.
    TransformPlan/seed/provider/implementation + digest/refusals.
 3. **Done `48d7dc75`:** T3 kernel selector public ABI, host subject and
    `enabled_at` view.
-4. **Current:** T4 ArtifactPlan carries plan; compatibility pins empty;
-   empty-plan byte/error/schedule REDs.
-5. T5 behavior registry/name/epoch golden with identity behaviors.
+4. **Done `a252fcc8`:** T4 ArtifactPlan carries plan; compatibility pins empty;
+   empty/nonempty schedule/byte/error/retarget REDs; map `5aa44611`.
+5. **Current:** T5 private behavior registry/name/epoch golden with test-only
+   identity behaviors.
 6. T6 four positions wired; per-document/per-artifact invocation REDs.
 7. T7 DocumentSubject carrier + compiler IR JTD/codegen/wire-diff.
 8. T8 selector evaluation and immutable-subject verifier.

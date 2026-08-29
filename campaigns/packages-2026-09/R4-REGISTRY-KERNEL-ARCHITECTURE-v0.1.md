@@ -6,7 +6,8 @@ and accepted 2026-08-29 at `6af1b86f` with map `8531cf82`; R4.1 owner controls
 TransformPlan T1 config/digest substrate `b65f9958`, T3 selector substrate
 `48d7dc75` and exact T2 frame freeze `d5fcd92d` are landed (combined map
 `5f6bca62`). T2 implementation `49e944f0`, borrowed hash validation
-`87ef2df6` and map `b768bcb8` are now landed; T4 ArtifactPlan carriage is
+`87ef2df6` and map `b768bcb8` are landed; T4 ArtifactPlan carriage
+`a252fcc8` / map `5aa44611` is now landed. T5 private behavior registry is
 current. Semantic authority remains PROP-054 §§3 and 7 plus the accepted
 lifecycle spec debt. This document fixes the crate boundary and execution
 dataflow.
