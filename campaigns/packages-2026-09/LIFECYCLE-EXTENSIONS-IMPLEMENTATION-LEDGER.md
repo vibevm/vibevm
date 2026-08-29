@@ -511,6 +511,41 @@ than depending on untracked `cache/` archaeology.
   is 6831/2417/2190 at zero suspects/orphans/unresolved. T10 workspace
   adapter is next, in three slices per the frozen kernel §5.3/§7.1
   (`4e41f9ed`).
+- R4.1 T10A durable world adapter: `35cd04d1` makes the frozen DAG edge real.
+  The kernel gains `enabled_compile_rows()` — every enabled compile-family
+  row in the ONE global effective order, built by generalising the single
+  private row-iteration seam rather than adding a second ordering, with the
+  rejected per-point concatenation computed inside the RED so the difference
+  is named, not asserted. `vibe-workspace::extension_world` owns the durable
+  epoch: one lock-ordered snapshot per run (slot manifests parsed once,
+  identity cross-checked against the lock row, `read_dir` absent so an
+  orphan slot cannot become ordering input), owner-scoped views per lane
+  owner through the kernel's own seat projection, package controls carried
+  verbatim-inert, typed identities at the two bare-string seams, Class-F
+  errors throughout. Producer disclosed five packet defects (the four-stage
+  gloss vs the five-variant `CompilePoint`; the unreachable Dependency-tier
+  acceptance fixture; two spec-silent rulings — per-owner `[active].stack`
+  and closure-not-whole-lock — and the missing `cargo fmt` step) and root
+  ratified the two rulings into kernel §5.3 at acceptance. SEVEN mutations:
+  the packet's five (per-point concatenation; dropped controls; node
+  disable leaking into P; name sort; disabled rows admitted) plus two
+  reviewer-authored — dependency controls made LIVE in the node view reds
+  exactly the inert and scoping tests, and the dropped self-exclusion
+  stayed GREEN, exposing a real coverage gap: the guard is reachable only
+  under a hand-edited cyclic lock, which the closure walk deliberately
+  survives, so root authored the pin (`cycle_tests.rs`) and proved it red
+  under the same mutation before accepting. The reviewer test pushed the
+  assertion cell over the 600-line budget; the fixture scaffolding split
+  into `test_support.rs` along the `plan_test_support` seam. Gates
+  reproduced by root: kernel 36+1, workspace 459 + 5/7/28/1 (including the
+  new pin), strict clippy both crates, downstream
+  lifecycle/install/orchestrator/cli checks, conform 27-in-scope 0-new,
+  fmt, diff hygiene. Lock-duplicate corruption stays loud through the
+  upstream debug-assert plus the kernel's own key collision. Map `4fb5cb0a`
+  is 6831/2436/2212 at zero suspects/orphans/unresolved. T10B lowering,
+  typed subjects and plan threading is next; the claudez lane runs
+  R8A1-GRAMMAR and R8A2-RECORDS in parallel worktrees per the frozen R8
+  §12 (`a86c4683`).
 - Gate repair `67ab9683` fixes the conform content store's Windows cache slot:
   `sha256:<hex>` had created 1,393 NTFS alternate streams on one base file and
   failed with OS error 665. Authored engine + six vendored copies now use one

@@ -235,6 +235,18 @@ instead (named follow-up, not T10).
 gains its second arm under the same registry authority; when R6 adds pass-tier
 rows the non-compile refusal splits into its own routing.
 
+**Ratified at T10A acceptance (central, 2026-08-29).** Two spec-silent calls
+the adapter surfaced are ruled as implemented: each lane owner's
+`[active].stack` resolves against that owner's OWN closure (the node's in the
+node's lane, a package's in the package's — a host fact must not cross the
+scoping seam, and dropping the preset tier would be invented silence), under
+the one durable-mode strictness (absent refuses, ambiguous refuses); and both
+owner views carry the owner's dependency CLOSURE — reachability walked over
+lock edges, order taken from projecting the reached set back onto the
+lock-ordered snapshot, so reachability is never an ordering input.
+`compile:pass` rows are inside `enabled_compile_rows()` (the whole compile
+family); the T10B lowering refuses them typed until R6 owns the pass tier.
+
 ## 6. Four positions in the declared schedule
 
 The accepted schedule stays one list:
