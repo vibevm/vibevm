@@ -16688,6 +16688,24 @@
       "crate_name": "vibe-spec",
       "file": "crates/vibe-spec/src/compiler/artifact_tests.rs",
       "item_kind": "fn",
+      "line": 462,
+      "symbol": "vibe_spec::compiler::artifact_tests::empty_and_nonempty_carriage_emit_identical_bytes_provenance_and_errors",
+      "end_line": 504,
+      "fingerprint": "tok1:969b727d5f0bcf74a77ef09411b551b9387af93d8abade01f3c32381daaabcce"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/artifact_tests.rs",
+      "item_kind": "fn",
+      "line": 506,
+      "symbol": "vibe_spec::compiler::artifact_tests::one_real_failure_fixture_keeps_its_typed_error_under_carriage",
+      "end_line": 530,
+      "fingerprint": "tok1:a061969031caa31de5249cd992e51e27b583d92cfc9f6f719bfbacf2340b83e3"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/artifact_tests.rs",
+      "item_kind": "fn",
       "line": 269,
       "symbol": "vibe_spec::compiler::artifact_tests::real_whole_artifact_path_invokes_assemble_once_and_ends_at_lane",
       "end_line": 316,
@@ -16755,6 +16773,24 @@
       "symbol": "vibe_spec::compiler::builtin",
       "end_line": 3,
       "fingerprint": "tok1:e07cfb85e6867ed3520a766132bad04898f13156b28185fb49603ac4f660d1e2"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/builtin/tests.rs",
+      "item_kind": "fn",
+      "line": 164,
+      "symbol": "vibe_spec::compiler::builtin::tests::empty_and_nonempty_carriage_keep_the_declared_nine_item_schedule",
+      "end_line": 207,
+      "fingerprint": "tok1:4870cb314198fdf72f37b6ccd353a987da3e70c65998fb9c19ddbdb3232c3d50"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/builtin/tests.rs",
+      "item_kind": "fn",
+      "line": 209,
+      "symbol": "vibe_spec::compiler::builtin::tests::opaque_retarget_forwards_the_whole_transform_plan",
+      "end_line": 235,
+      "fingerprint": "tok1:7dbb59c35e7b5b60d07c1c39299ccbf4e6ba559d317d70012c136ee2de707b07"
     },
     {
       "crate_name": "vibe-spec",
@@ -16971,6 +17007,24 @@
       "symbol": "vibe_spec::compiler::ir",
       "end_line": 8,
       "fingerprint": "tok1:e07cfb85e6867ed3520a766132bad04898f13156b28185fb49603ac4f660d1e2"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/ir/artifact/plan/carriage_tests.rs",
+      "item_kind": "fn",
+      "line": 26,
+      "symbol": "vibe_spec::compiler::ir::artifact::plan::carriage_tests::every_legacy_constructor_pins_the_empty_transform_plan",
+      "end_line": 46,
+      "fingerprint": "tok1:fed59a44bdc168809bd535d06deeaa1798f2694a76f969741026171043f73201"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/ir/artifact/plan/carriage_tests.rs",
+      "item_kind": "fn",
+      "line": 48,
+      "symbol": "vibe_spec::compiler::ir::artifact::plan::carriage_tests::whole_value_attachment_preserves_members_and_compares_by_carriage",
+      "end_line": 69,
+      "fingerprint": "tok1:1f426289626f66064cb8c52dc12e429774023b9fcf4ec93960bdcf4c55f15211"
     },
     {
       "crate_name": "vibe-spec",
@@ -34078,6 +34132,22 @@
     },
     {
       "file": "crates/vibe-spec/src/compiler/artifact_tests.rs",
+      "from_symbol": "vibe_spec::compiler::artifact_tests::empty_and_nonempty_carriage_emit_identical_bytes_provenance_and_errors",
+      "line": 463,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/artifact_tests.rs",
+      "from_symbol": "vibe_spec::compiler::artifact_tests::one_real_failure_fixture_keeps_its_typed_error_under_carriage",
+      "line": 507,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/artifact_tests.rs",
       "from_symbol": "vibe_spec::compiler::artifact_tests::real_whole_artifact_path_invokes_assemble_once_and_ends_at_lane",
       "line": 270,
       "provenance": "authored",
@@ -34147,6 +34217,22 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/builtin/tests.rs",
+      "from_symbol": "vibe_spec::compiler::builtin::tests::empty_and_nonempty_carriage_keep_the_declared_nine_item_schedule",
+      "line": 165,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/builtin/tests.rs",
+      "from_symbol": "vibe_spec::compiler::builtin::tests::opaque_retarget_forwards_the_whole_transform_plan",
+      "line": 210,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY",
+      "verb": "verifies"
     },
     {
       "file": "crates/vibe-spec/src/compiler/builtin/tests.rs",
@@ -34339,6 +34425,22 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/ir/artifact/plan/carriage_tests.rs",
+      "from_symbol": "vibe_spec::compiler::ir::artifact::plan::carriage_tests::every_legacy_constructor_pins_the_empty_transform_plan",
+      "line": 27,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/ir/artifact/plan/carriage_tests.rs",
+      "from_symbol": "vibe_spec::compiler::ir::artifact::plan::carriage_tests::whole_value_attachment_preserves_members_and_compares_by_carriage",
+      "line": 49,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY",
+      "verb": "verifies"
     },
     {
       "file": "crates/vibe-spec/src/compiler/ir/tests.rs",
