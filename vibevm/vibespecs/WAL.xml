@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
-  <title id="root">WAL — checkpoint 2026-08-29: R4.0 kernel complete; owner plans next</title>
-  <status stage="impl" state="work" comment="lifecycle/extensions campaign active; R1/R2, R3.1-R3.4, R4.0, R6.2a/b, R7.1-R7.5, R8.1 and R8.2a complete; R4.1 next"/>
+  <title id="root">WAL — checkpoint 2026-08-29: R4.1 controls and transactions complete; plan ABI next</title>
+  <status stage="impl" state="work" comment="lifecycle/extensions campaign active; R1/R2, R3.1-R3.4, R4.0 plus R4.1 owner-controls/unit-transaction substrate, R6.2a/b, R7.1-R7.5, R8.1 and R8.2a complete; TransformPlan next"/>
 
   <current-phase title="Current phase">
     <p><WAL-PHASE fact="true" status="impl/work">The active epic is
@@ -62,7 +62,11 @@
     one lock-ordered workspace snapshot produces owner-scoped plans; each
     manifest activates its own lane, uninstall regeneration uses the in-memory
     post-removal future lock, per-unit lanes fingerprint their owner plan and
-    node lanes always recompute transactionally.
+    node lanes always recompute transactionally. R4.1 has now landed package
+    control carriage/projection at `52a59dcc` and crash-safe per-unit
+    publication at `91142777` with governing law `ab68d145`; map `3883f15e`.
+    The exact TransformPlan/config/digest/selector/behavior ABI is frozen in
+    `R4-TRANSFORM-PLAN-ABI-v0.1.md` before implementation.
     </WAL-PHASE></p>
   </current-phase>
 
@@ -76,7 +80,7 @@
       presets/query and owner scenario §10.1 are complete.</WAL-R2>
       <WAL-R3 fact="true" status="impl/done">R3 explicit six-carrier compiler
       IR, named pass schedule, verifier and command-owned compile trace are
-      complete. Current post-R4.0 checkpoint specmap: 6827 units, 2284 tagged items, 2054 edges,
+      complete. Current R4.1 checkpoint specmap: 6829 units, 2293 tagged items, 2063 edges,
       0 suspects, 0 gated orphans, 0 unresolved host edges, 24 standing
       warnings.</WAL-R3>
       <WAL-R7 fact="true" status="impl/done">R7.1 provider, R7.2 CLI agent
@@ -188,10 +192,12 @@
       unresolved.</WAL-R75-SURFACES>
       <WAL-R4 fact="true" status="impl/work">R4.0 is complete: pure kernel
       `6af1b86f`, generated map `8531cf82`, public compatibility and
-      dependency/ambient fences accepted. R4.1 is now the active slice: one
-      root-lock/resolution `vibe-workspace` snapshot, owner-scoped controls and
-      plans, four identity-transform seams, honest lane witness, transaction
-      parity, active-only header and per-unit plan fingerprint.</WAL-R4>
+      dependency/ambient fences accepted. R4.1 owner-control carriage and
+      package-own projection are complete at `52a59dcc`; unit publication is
+      transactional at `91142777` / `ab68d145`; combined map `3883f15e`.
+      Remaining R4.1: frozen TransformPlan/config/digest ABI, one lock-ordered
+      snapshot, four transform seams, typed document subject/verifier,
+      active-only header and per-unit plan fingerprint.</WAL-R4>
       <WAL-R8 fact="true" status="impl/work">R8.1 project-only package-skill
       binding and R8.2a mechanism/artifact/deploy grammar are complete. Runtime
       mechanisms, build/package providers and deploy reconciliation remain.
@@ -270,15 +276,14 @@
   </constraints>
 
   <next title="Next">
-    <p><WAL-NEXT fact="true" status="impl/work">Execute R4.1 in the recorded
-    dependency order: add workspace/spec kernel edges and prove empty-plan byte
-    identity; land the one lock-ordered world snapshot/owner-view adapter;
-    retain package controls for package-own lanes; thread typed provider/path
-    identity and owner plans through unit/node compilation; make per-unit
-    publication transactional; then add four identity-transform positions,
-    lane witness, manager-owned emitted mutation, plan digest and active-only
-    header. Exact affected gates per atom; no full panel until coherent R4.
-    </WAL-NEXT></p>
+    <p><WAL-NEXT fact="true" status="impl/work">Implement
+    `R4-TRANSFORM-PLAN-ABI-v0.1.md` in its atomic order: T1 compiler digest +
+    semantic TOML config; T2 plan/provider/implementation digests; T3 kernel
+    enabled-without-subject selector ABI; T4 empty plan on ArtifactPlan; then
+    behavior registry/identity positions and the typed document-subject wire.
+    The world snapshot/owner adapter follows over the landed control carriage;
+    all byte-changing work rides the landed per-unit transaction. Exact affected
+    gates per atom; no full panel until coherent R4.</WAL-NEXT></p>
   </next>
 
   <known-issues title="Known issues">
