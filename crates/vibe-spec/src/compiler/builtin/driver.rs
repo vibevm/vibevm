@@ -165,12 +165,12 @@ fn run(
     schedule: BuiltinSchedule,
     trace: Option<&dyn CompileTraceSink>,
 ) -> Result<EmittedArtifact, ArtifactCompileError> {
-    let worklist = worklist::discover(
+    let worklist = super::infallible_worklist(worklist::discover(
         &plan,
         source,
-        |input| schedule.parse_source(input, trace),
+        |input| Ok(schedule.parse_source(input, trace)),
         |address, reason| schedule.record_failure(address, reason),
-    );
+    ));
     schedule.close_state.set_pending_sources(worklist.sources);
     schedule.close_state.set_pending_embeds(worklist.embeds);
     schedule.emit(worklist.documents, &plan, &worklist.owners, trace)

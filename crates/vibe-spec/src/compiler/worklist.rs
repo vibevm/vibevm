@@ -11,6 +11,7 @@ use super::ir::{
 };
 use super::source_snapshot::{DocumentObservation, ExpansionObservation, SourceResolutionSnapshot};
 
+#[derive(Debug)]
 pub(crate) struct Worklist {
     pub(crate) documents: Vec<DocumentIr>,
     pub(crate) sources: SourceResolutionSnapshot,
@@ -18,7 +19,7 @@ pub(crate) struct Worklist {
     pub(crate) owners: ErrorOwners,
 }
 
-#[derive(Debug, Clone, Default)]
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub(crate) struct ErrorOwners(BTreeMap<String, usize>);
 
 impl ErrorOwners {
@@ -47,12 +48,22 @@ enum ArtifactRoot {
     Simple { input: usize, key: DocumentKey },
 }
 
-pub(crate) fn discover(
+/// Discover the canonical pre-gather worklist, or propagate the caller's
+/// parse error unchanged.
+///
+/// `parse` runs once per newly discovered document — simple inputs, `#use`
+/// recursion, `#source` expansions and `#embed` targets alike — and may fail
+/// with any `E` the caller chooses; discovery then stops at the first
+/// failure and returns that exact value, exposing no partial [`Worklist`].
+/// A [`SectionSource`] lookup failure is NOT a callback failure: it keeps
+/// its historical observation/`record_use_failure` semantics and the
+/// discovery of everything else continues around it.
+pub(crate) fn discover<E>(
     plan: &ArtifactPlan,
     source: &impl SectionSource,
-    parse: impl Fn(SourceIr) -> DocumentIr,
+    parse: impl Fn(SourceIr) -> Result<DocumentIr, E>,
     record_use_failure: impl Fn(&SpecAddress, String),
-) -> Worklist {
+) -> Result<Worklist, E> {
     let mut resolved = BTreeMap::new();
     let mut simple = BTreeMap::new();
     let mut failures = BTreeMap::new();
@@ -79,7 +90,7 @@ pub(crate) fn discover(
                     &mut failures,
                     input_index,
                     &mut owners,
-                );
+                )?;
                 roots.push(ArtifactRoot::Normal {
                     input: input_index,
                     keys: membership,
@@ -94,7 +105,7 @@ pub(crate) fn discover(
                 if let std::collections::btree_map::Entry::Vacant(entry) = simple.entry(key.clone())
                 {
                     discovery_order.push(DiscoveryKey::Simple(key));
-                    entry.insert(parse(source.clone()));
+                    entry.insert(parse(source.clone())?);
                 }
             }
             ArtifactInputKind::Elided { .. } | ArtifactInputKind::Hoisted { .. } => {}
@@ -118,7 +129,7 @@ pub(crate) fn discover(
             &mut expansions,
             owners.owner(&key).unwrap_or(0),
             &mut owners,
-        );
+        )?;
         source_membership.insert(key, membership);
     }
 
@@ -146,7 +157,7 @@ pub(crate) fn discover(
                         &mut failures,
                         input,
                         &mut owners,
-                    );
+                    )?;
                     for source_key in source_membership.get(&key).into_iter().flatten() {
                         discover_embeds(
                             source_key,
@@ -159,7 +170,7 @@ pub(crate) fn discover(
                             &mut failures,
                             input,
                             &mut owners,
-                        );
+                        )?;
                     }
                 }
             }
@@ -184,7 +195,7 @@ pub(crate) fn discover(
                     &mut failures,
                     input,
                     &mut owners,
-                );
+                )?;
             }
         }
     }
@@ -201,12 +212,12 @@ pub(crate) fn discover(
             DiscoveryKey::Simple(key) => simple.remove(&key),
         })
         .collect();
-    Worklist {
+    Ok(Worklist {
         documents,
         sources,
         embeds,
         owners,
-    }
+    })
 }
 
 fn spec_order(order: &[DiscoveryKey]) -> Vec<String> {
@@ -275,10 +286,10 @@ fn observations(
 }
 
 #[allow(clippy::too_many_arguments)]
-fn discover_uses(
+fn discover_uses<E>(
     address: &SpecAddress,
     source: &impl SectionSource,
-    parse: &impl Fn(SourceIr) -> DocumentIr,
+    parse: &impl Fn(SourceIr) -> Result<DocumentIr, E>,
     record_failure: &impl Fn(&SpecAddress, String),
     seen: &mut HashSet<String>,
     membership: &mut Vec<String>,
@@ -288,16 +299,16 @@ fn discover_uses(
     failures: &mut BTreeMap<String, DocumentObservation>,
     input: usize,
     owners: &mut ErrorOwners,
-) {
+) -> Result<(), E> {
     owners.record(address, input);
     let key = address.without_pin();
     if !seen.insert(key.clone()) {
-        return;
+        return Ok(());
     }
     membership.push(key.clone());
     if let Some(DocumentObservation::Failed { reason, .. }) = failures.get(&key) {
         record_failure(address, reason.clone());
-        return;
+        return Ok(());
     }
     if !resolved.contains_key(&key) {
         let text = match source.section_text(address) {
@@ -308,14 +319,14 @@ fn discover_uses(
                     requested: address.clone(),
                     reason,
                 });
-                return;
+                return Ok(());
             }
         };
         let document = parse(SourceIr::new(
             DocumentAddress::Spec(address.clone()),
             SourceFormatId::canonical_markdown(),
             text,
-        ));
+        ))?;
         discovery_order.push(DiscoveryKey::Spec(key.clone()));
         resolved.insert(key.clone(), document);
     }
@@ -337,15 +348,16 @@ fn discover_uses(
             failures,
             input,
             owners,
-        );
+        )?;
     }
+    Ok(())
 }
 
 #[allow(clippy::too_many_arguments)]
-fn discover_sources(
+fn discover_sources<E>(
     key: &str,
     source: &impl SectionSource,
-    parse: &impl Fn(SourceIr) -> DocumentIr,
+    parse: &impl Fn(SourceIr) -> Result<DocumentIr, E>,
     seen: &mut HashSet<String>,
     membership: &mut Vec<String>,
     discovery_order: &mut Vec<DiscoveryKey>,
@@ -354,12 +366,12 @@ fn discover_sources(
     expansions: &mut BTreeMap<String, ExpansionObservation>,
     input: usize,
     owners: &mut ErrorOwners,
-) {
+) -> Result<(), E> {
     if !seen.insert(key.to_string()) {
-        return;
+        return Ok(());
     }
     let Some(document) = resolved.get(key) else {
-        return;
+        return Ok(());
     };
     let patterns: Vec<SpecAddress> = document
         .tree()
@@ -390,7 +402,7 @@ fn discover_sources(
         };
         for target in targets {
             owners.record(&target, input);
-            observe_document(&target, source, parse, discovery_order, resolved, failures);
+            observe_document(&target, source, parse, discovery_order, resolved, failures)?;
             let target_key = target.without_pin();
             if !membership.contains(&target_key) {
                 membership.push(target_key.clone());
@@ -408,17 +420,18 @@ fn discover_sources(
                     expansions,
                     input,
                     owners,
-                );
+                )?;
             }
         }
     }
+    Ok(())
 }
 
 #[allow(clippy::too_many_arguments)]
-fn discover_embeds(
+fn discover_embeds<E>(
     key: &str,
     source: &impl SectionSource,
-    parse: &impl Fn(SourceIr) -> DocumentIr,
+    parse: &impl Fn(SourceIr) -> Result<DocumentIr, E>,
     seen: &mut HashSet<String>,
     embed_order: &mut Vec<String>,
     discovery_order: &mut Vec<DiscoveryKey>,
@@ -426,12 +439,12 @@ fn discover_embeds(
     failures: &mut BTreeMap<String, DocumentObservation>,
     input: usize,
     owners: &mut ErrorOwners,
-) {
+) -> Result<(), E> {
     if !seen.insert(key.to_string()) {
-        return;
+        return Ok(());
     }
     let Some(document) = resolved.get(key) else {
-        return;
+        return Ok(());
     };
     let targets = document
         .tree()
@@ -452,14 +465,15 @@ fn discover_embeds(
         failures,
         input,
         owners,
-    );
+    )?;
+    Ok(())
 }
 
 #[allow(clippy::too_many_arguments)]
-fn discover_embed_targets(
+fn discover_embed_targets<E>(
     targets: impl IntoIterator<Item = SpecAddress>,
     source: &impl SectionSource,
-    parse: &impl Fn(SourceIr) -> DocumentIr,
+    parse: &impl Fn(SourceIr) -> Result<DocumentIr, E>,
     seen: &mut HashSet<String>,
     embed_order: &mut Vec<String>,
     discovery_order: &mut Vec<DiscoveryKey>,
@@ -467,14 +481,14 @@ fn discover_embed_targets(
     failures: &mut BTreeMap<String, DocumentObservation>,
     input: usize,
     owners: &mut ErrorOwners,
-) {
+) -> Result<(), E> {
     for target in targets {
         owners.record(&target, input);
         let target_key = target.without_pin();
         if !embed_order.contains(&target_key) {
             embed_order.push(target_key.clone());
         }
-        observe_document(&target, source, parse, discovery_order, resolved, failures);
+        observe_document(&target, source, parse, discovery_order, resolved, failures)?;
         if resolved.contains_key(&target_key) {
             discover_embeds(
                 &target_key,
@@ -487,22 +501,23 @@ fn discover_embed_targets(
                 failures,
                 input,
                 owners,
-            );
+            )?;
         }
     }
+    Ok(())
 }
 
-fn observe_document(
+fn observe_document<E>(
     address: &SpecAddress,
     source: &impl SectionSource,
-    parse: &impl Fn(SourceIr) -> DocumentIr,
+    parse: &impl Fn(SourceIr) -> Result<DocumentIr, E>,
     discovery_order: &mut Vec<DiscoveryKey>,
     resolved: &mut BTreeMap<String, DocumentIr>,
     failures: &mut BTreeMap<String, DocumentObservation>,
-) {
+) -> Result<(), E> {
     let key = address.without_pin();
     if resolved.contains_key(&key) || failures.contains_key(&key) {
-        return;
+        return Ok(());
     }
     match source.section_text(address) {
         Ok(text) => {
@@ -510,7 +525,7 @@ fn observe_document(
                 DocumentAddress::Spec(address.clone()),
                 SourceFormatId::canonical_markdown(),
                 text,
-            ));
+            ))?;
             discovery_order.push(DiscoveryKey::Spec(key.clone()));
             resolved.insert(key, document);
         }
@@ -524,4 +539,9 @@ fn observe_document(
             );
         }
     }
+    Ok(())
 }
+
+#[cfg(test)]
+#[path = "worklist/tests.rs"]
+mod tests;

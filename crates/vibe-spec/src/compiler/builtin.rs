@@ -427,6 +427,23 @@ fn unexpected_pass_error<T>(
     })
 }
 
+/// Eliminate the impossible discovery error of the infallible built-in
+/// parser (R4.1 T6a): `worklist::discover` is fallible so a later atom can
+/// thread a real parse error through it, while [`BuiltinSchedule::
+/// parse_source`] stays infallible and this adapter arrives with
+/// [`std::convert::Infallible`]. The exhaustive `match` — not `unwrap`,
+/// `expect` or a string mapping — is what keeps the impossibility a proof
+/// instead of a promise: if a later atom ever makes the parser fallible,
+/// this cell stops compiling until the error is handled honestly.
+fn infallible_worklist(
+    discovered: Result<worklist::Worklist, std::convert::Infallible>,
+) -> worklist::Worklist {
+    match discovered {
+        Ok(worklist) => worklist,
+        Err(impossible) => match impossible {},
+    }
+}
+
 /// Compile one validated whole artifact plan through the artifact prefix.
 ///
 /// Parse-dependent discovery invokes the document segment per honest document,
@@ -436,12 +453,12 @@ pub(crate) fn compile_artifact_prefix(
     source: &impl SectionSource,
 ) -> Result<ClosureIr, crate::pipeline::CompileError> {
     let schedule = BuiltinSchedule::linked(&plan);
-    let worklist = worklist::discover(
+    let worklist = infallible_worklist(worklist::discover(
         &plan,
         source,
-        |input| schedule.parse_source(input, None),
+        |input| Ok(schedule.parse_source(input, None)),
         |address, reason| schedule.record_failure(address, reason),
-    );
+    ));
     schedule.close_state.set_pending_sources(worklist.sources);
     schedule.close_state.set_pending_embeds(worklist.embeds);
     schedule.close(worklist.documents)
@@ -456,12 +473,12 @@ pub(crate) fn compile_artifact_lane(
     source: &impl SectionSource,
 ) -> Result<LaneIr, crate::pipeline::CompileError> {
     let schedule = BuiltinSchedule::assembled(&plan);
-    let worklist = worklist::discover(
+    let worklist = infallible_worklist(worklist::discover(
         &plan,
         source,
-        |input| schedule.parse_source(input, None),
+        |input| Ok(schedule.parse_source(input, None)),
         |address, reason| schedule.record_failure(address, reason),
-    );
+    ));
     schedule.close_state.set_pending_sources(worklist.sources);
     schedule.close_state.set_pending_embeds(worklist.embeds);
     schedule.assemble(worklist.documents)
