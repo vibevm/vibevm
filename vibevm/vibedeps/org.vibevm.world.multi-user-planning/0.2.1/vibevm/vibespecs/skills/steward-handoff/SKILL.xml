@@ -6,8 +6,9 @@
 not work to a subagent. It never delegates acceptance.</HANDOFF-CENTRAL-ONLY></p>
   <p><HANDOFF-CONTEXT-COMMAND fact="true" status="impl/done">Recognise `ACCEPT HANDOFF FROM
 &amp;lt;context-id&amp;gt;` / `ПРИМИ ХЭНДОФФ ИЗ &amp;lt;context-id&amp;gt;`. Resolve exactly one
-unreceipted offered bundle in that context; if several exist, require an exact
-handoff id. Read the stored `HANDOFF.md`—never ask the owner to paste it.</HANDOFF-CONTEXT-COMMAND></p>
+unreceipted, uncancelled offered bundle in that context; if several exist,
+require an exact handoff id. Read the stored `HANDOFF.md`—never ask the owner to
+paste it. An explicit cancelled id reports `HANDOFF_CANCELLED`.</HANDOFF-CONTEXT-COMMAND></p>
   <operation title="Select the operation">
     <facts ordered="false">
       <HANDOFF-PREPARE fact="true" status="impl/done">**Prepare** when the current session holds custody and
@@ -26,6 +27,10 @@ offer, comprehensive `HANDOFF.md`, and short receive-by-context pointer; refresh
 and hash handoff, plan and selected goal; set custody to `offering`; then become
 repository- and plan-read-only. A summary without the created file and fence is
 not a handoff.</HANDOFF-PREPARE-PROCEDURE></p>
+    <p><HANDOFF-PREPARE-OUTPUT fact="true" status="impl/done">After sealing, always print exactly:
+`HANDOFF CREATED`, `context-id: …`, `handoff-id: …`, and
+`receive-command: ПРИМИ ХЭНДОФФ ИЗ …`. Printing is allowed after the write
+fence; never make the owner search `~/.vibe` or paste `HANDOFF.md`.</HANDOFF-PREPARE-OUTPUT></p>
   </prepare>
   <receive title="Receive">
     <p><HANDOFF-RECEIVE-PROCEDURE fact="true" status="impl/done">Read all authorities and the complete bundle,

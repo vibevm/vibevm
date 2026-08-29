@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:dedd067809143a2dec5561024da9551249c667ba8c2cb5f95edeae380681d2a3"
+source_hash = "sha256:4e790f9bff4622870687309a79a72196b02bd55459e6ddafb26e1297b6924215"
 spec_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:1a2569742e1a0ccbd05ae095be85e5533eb648dca2d706dce4f2850a50b78605"
+derived_hash = "sha256:e1771d0aed2b84f7e493bfe3b371ec7f04cfca50acffa09dd8aa4879b53630b2"
 
 [[file]]
 path = "LICENSE.md"
@@ -12,19 +12,19 @@ source = "LICENSE.md"
 
 [[file]]
 path = "README.xml"
-sha256 = "225e5a0a1f7ff7c601ded4ef1951129dd655d2edd7c61309b1f1ecb283c2a97c"
+sha256 = "a9b7c90a2a61fbbf5eb5821e2e404b4e9cf831a544b049d99ee028e5392691c1"
 disposition = "converted"
 source = "README.md"
 
 [[file]]
 path = "vibe.toml"
-sha256 = "89c1c93df0f36466dd31948bc45caf411327d54ea09ba70a154dcc8fcdbea49b"
+sha256 = "60af968bfea3552ba8fb930a89490d67ad213d489f321aed8bdca5fa8d3651ed"
 disposition = "copied"
 source = "vibe.toml"
 
 [[file]]
 path = "vibevm/vibespecs/boot/12-flow-multi-user-planning.xml"
-sha256 = "a6b53e2b2ad5415d07cc020a9eb53c96ee24215ef2dc6848e0db7f3f0d5e33d6"
+sha256 = "a8a2d85d2ecb2fb3ddde13dbde949997a4c9a25bd486f6607058607d74698fb5"
 disposition = "copied"
 source = "vibevm/vibespecs/boot/12-flow-multi-user-planning.xml"
 
@@ -84,7 +84,7 @@ source = "vibevm/vibespecs/flows/multi-user-planning/collaboration-and-acceptanc
 
 [[file]]
 path = "vibevm/vibespecs/flows/multi-user-planning/custody-and-handoff.xml"
-sha256 = "d8594323934156479123937f654b64598f45db2e69d98bb496637427efe60dcb"
+sha256 = "c265082e25980b50ab2cbd2abe406dfded75ecd2a2741c1dcce2ce773f5eb74b"
 disposition = "copied"
 source = "vibevm/vibespecs/flows/multi-user-planning/custody-and-handoff.xml"
 
@@ -114,7 +114,7 @@ source = "vibevm/vibespecs/flows/multi-user-planning/user-local-state.xml"
 
 [[file]]
 path = "vibevm/vibespecs/manual-tests/MT-01-same-machine-central-handoff.xml"
-sha256 = "4653bb9e5dc4f1da854c77884405e8cf5239b95f0fd50f2fdcd24a6acaf7d7c1"
+sha256 = "e80b4c69ddfecade0bdfabfecf2fc39fd0426284dc5de0467fb8236c76920467"
 disposition = "copied"
 source = "vibevm/vibespecs/manual-tests/MT-01-same-machine-central-handoff.xml"
 
@@ -150,7 +150,7 @@ source = "vibevm/vibespecs/skills/steward-goal/scripts/test_render_goal.py"
 
 [[file]]
 path = "vibevm/vibespecs/skills/steward-handoff/SKILL.xml"
-sha256 = "2e40824d72d1c73203e69cff445df4b90a2de8127ad5651d3ad359394a9cdf90"
+sha256 = "b28748f83ad2e1710c861023c25c5d191452d02a610ccef4657bf18db6c03c0f"
 disposition = "converted"
 source = "vibevm/vibespecs/skills/steward-handoff/SKILL.md"
 

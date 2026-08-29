@@ -2,7 +2,7 @@
 name = "multi-user-planning"
 group = "org.vibevm.world"
 kind = "flow"
-version = "0.2.0"
+version = "0.2.1"
 epoch = 1
 format = "normal"
 authors = ["Oleg Chirukhin"]

@@ -69,6 +69,7 @@
   CONVENTIONAL-COMMITS-IS-THE-FORMAT-THIS-FLOW-IS-THE-ATOMICITY → org-vibevm-world-%2Dgit-atomic-commits-%2DCONVENTIONAL-COMMITS-IS-THE-FORMAT-THIS-FLOW-IS-THE-ATOMICITY (org.vibevm.world/git-atomic-commits)
   COPIES-ARE-KEPT-IN-STEP-UNDER-A-SINGLE-WRITER-MODEL → org-vibevm-world-%2Dsource-mirrors-%2DCOPIES-ARE-KEPT-IN-STEP-UNDER-A-SINGLE-WRITER-MODEL (org.vibevm.world/source-mirrors)
   CORRECTION-CITES-THE-VIOLATED-ANCHOR → org-vibevm-world-%2Daddressable-specs-%2DCORRECTION-CITES-THE-VIOLATED-ANCHOR (org.vibevm.world/addressable-specs)
+  CREATE-COMMAND-OUTPUT → org-vibevm-world-%2Dmulti-user-planning-%2DCREATE-COMMAND-OUTPUT (org.vibevm.world/multi-user-planning)
   CRITICAL-CONSTRAINTS-LIVE-AT-THE-START-OR-END → org-vibevm-world-%2Daddressable-specs-%2DCRITICAL-CONSTRAINTS-LIVE-AT-THE-START-OR-END (org.vibevm.world/addressable-specs)
   DEPLOYMENT-REPLACES-THE-HELPFUL-ASSISTANT-FRAME → org-vibevm-world-%2Ddiscovery-prompt-%2DDEPLOYMENT-REPLACES-THE-HELPFUL-ASSISTANT-FRAME (org.vibevm.world/discovery-prompt)
   DO-NOT-POSTPONE-IT-DRIFT-ACCUMULATES → org-vibevm-world-%2Dsync-from-code-%2DDO-NOT-POSTPONE-IT-DRIFT-ACCUMULATES (org.vibevm.world/sync-from-code)
@@ -1355,7 +1356,7 @@ pre-run; never record the pass.</org-vibevm-world--manual-tests--REPORT-THE-PRE-
   </org-vibevm-world--manual-tests--never>
 </spec>
 
-<!-- vibe:c1 vibe:static org.vibevm.world/multi-user-planning — vibevm/vibedeps/org.vibevm.world.multi-user-planning/0.2.0/vibevm/vibespecs/boot/12-flow-multi-user-planning.xml -->
+<!-- vibe:c1 vibe:static org.vibevm.world/multi-user-planning — vibevm/vibedeps/org.vibevm.world.multi-user-planning/0.2.1/vibevm/vibespecs/boot/12-flow-multi-user-planning.xml -->
 
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
@@ -1395,6 +1396,10 @@ open offered handoff (otherwise require its exact handoff id), then execute the
 receipt protocol. The human never pastes `HANDOFF.md`. After a successful claim,
 refresh the selected goal, print `GOAL.md` in full and print the exact
 `GOAL-CLAUDE.txt` `/goal …` line for manual submission.</org-vibevm-world--multi-user-planning--RECEIVE-COMMAND></p>
+    <p><org-vibevm-world--multi-user-planning--CREATE-COMMAND-OUTPUT fact="true" status="impl/done">After
+`HANDOFF CENTRAL TO &lt;target&gt;` seals its offer and write-fences the outgoing
+holder, print `context-id`, `handoff-id`, and the exact receive command. Chat
+output is allowed after the fence; further repository/plan mutation is not.</org-vibevm-world--multi-user-planning--CREATE-COMMAND-OUTPUT></p>
   </org-vibevm-world--multi-user-planning--handoff-command>
   <org-vibevm-world--multi-user-planning--planning title="Plan discipline">
     <facts ordered="false">

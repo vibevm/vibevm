@@ -36,6 +36,10 @@ open offered handoff (otherwise require its exact handoff id), then execute the
 receipt protocol. The human never pastes `HANDOFF.md`. After a successful claim,
 refresh the selected goal, print `GOAL.md` in full and print the exact
 `GOAL-CLAUDE.txt` `/goal …` line for manual submission.</RECEIVE-COMMAND></p>
+    <p><CREATE-COMMAND-OUTPUT fact="true" status="impl/done">After
+`HANDOFF CENTRAL TO &lt;target&gt;` seals its offer and write-fences the outgoing
+holder, print `context-id`, `handoff-id`, and the exact receive command. Chat
+output is allowed after the fence; further repository/plan mutation is not.</CREATE-COMMAND-OUTPUT></p>
   </handoff-command>
   <planning title="Plan discipline">
     <facts ordered="false">

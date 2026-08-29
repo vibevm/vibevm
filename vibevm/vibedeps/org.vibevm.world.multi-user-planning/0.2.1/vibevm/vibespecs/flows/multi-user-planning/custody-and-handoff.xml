@@ -53,8 +53,9 @@ latest valid handoff/record and repository evidence.</ATOMIC-CUSTODY-WRITE></p>
 intent rather than casing or exact inflection. `context-id` is the opaque UUID
 directory name; never parse user, repository, branch or model from it.</GRAMMAR></p>
     <p><OPEN-OFFER-RESOLUTION fact="true" status="spec/done">Scan only that
-context's `handoffs/*/offer.toml` and receipts. A context-only phrase succeeds
-when exactly one valid `status = "offered"` bundle has no receipt. Zero open
+context's `handoffs/*/offer.toml` and terminal sibling records. A context-only
+phrase succeeds when exactly one valid `status = "offered"` bundle has neither
+`receipt.toml` nor `cancellation.toml`. Zero open
 offers refuses `HANDOFF_NOT_FOUND`; more than one refuses
 `HANDOFF_AMBIGUOUS` and lists ids without reading a winner. The explicit form
 `ACCEPT HANDOFF &lt;handoff-id&gt; FROM &lt;context-id&gt;` selects one. Timestamp,
@@ -105,6 +106,18 @@ local bundle.</BUNDLE-HASHES></p>
   including a short resume pointer containing only the receive-by-context
   command; then set custody to `offering` with its `offer_id` and the same
   source epoch.</OFFER-WRITE>
+      <OFFER-PRINT fact="true" status="spec/done">After sealing, print the exact
+  locator shape below with literal ids and the target-language receive phrase.</OFFER-PRINT>
+    </facts>
+    <fence lang="text">HANDOFF CREATED
+context-id: &lt;context-id&gt;
+handoff-id: &lt;handoff-id&gt;
+receive-command: ПРИМИ ХЭНДОФФ ИЗ &lt;context-id&gt;</fence>
+    <p><PRINT-IS-NOT-A-WRITE fact="true" status="spec/done">This terminal/chat
+output is required even though the outgoing holder is now write-fenced. It does
+not mutate repository or stewardship state. Do not print the full handoff body;
+the command is its locator.</PRINT-IS-NOT-A-WRITE></p>
+    <facts ordered="true">
       <OFFER-FENCE fact="true" status="spec/done">After the offer is sealed, the
   outgoing session is read-only for the repository and plan. It may answer the
   incoming coordinator or inspect the receipt, but any substantive repair
@@ -159,6 +172,12 @@ accepted” from timestamps, staged state or a worker's PASS.</RECOVERY-ACCEPTAN
     <p><CANCEL fact="true" status="spec/done">A live outgoing holder may cancel
 an unreceipted offer only on owner direction, by writing a cancellation record
 and advancing epoch back to `held`. It never edits the sealed offer.</CANCEL></p>
+    <p><CANCEL-TERMINAL-RECORD fact="true" status="spec/done">Cancellation is an
+immutable sibling `cancellation.toml` naming offer/context ids, source and new
+epochs, authorizing owner instruction, reason, instant and whether a receipt
+existed (false for ordinary cancellation). Offer resolution treats the bundle
+as terminal. An explicit attempt to receive it returns `HANDOFF_CANCELLED`,
+never a claim.</CANCEL-TERMINAL-RECORD></p>
     <p><SPLIT-BRAIN fact="true" status="spec/done">Two valid receipts claiming
 the same proposed epoch or repository writes from the fenced outgoing session
 are split-brain evidence. Stop both central writers, preserve artifacts, compare

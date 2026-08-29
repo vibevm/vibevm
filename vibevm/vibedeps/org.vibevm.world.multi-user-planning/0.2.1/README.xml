@@ -17,6 +17,10 @@ session. The outgoing procedure creates `HANDOFF.md` inside the local context;
 the incoming command `ACCEPT HANDOFF FROM &amp;lt;context-id&amp;gt;` / `ПРИМИ ХЭНДОФФ ИЗ
 &amp;lt;context-id&amp;gt;` resolves and reads it. After receipt, the agent prints the
 refreshed detailed goal and the exact bounded `/goal …` command for the human.</HANDOFF-BY-CONTEXT></p>
+  <p><HANDOFF-CREATION-PRINTS-LOCATOR fact="true" status="impl/done">After sealing `HANDOFF CENTRAL TO
+&amp;lt;target&amp;gt;`, the outgoing agent always prints the context id, handoff id and
+exact receive command on screen. The user never has to discover a UUID in
+`~/.vibe` manually.</HANDOFF-CREATION-PRINTS-LOCATOR></p>
   <p><NOT-A-CODING-AGENT fact="true" status="spec/done">The flow does not implement a coding agent or prescribe
 one vendor's workflow.  It supplies lifecycle-neutral planning, custody and
 evidence mechanics that any capable agent or human coordinator can use.</NOT-A-CODING-AGENT></p>
