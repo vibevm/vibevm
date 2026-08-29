@@ -164,8 +164,26 @@ fronts currently in flight. A worker report or old worktree is never completion.
                   its own. Boundary recorded at ABI §6.4 (`4f2acb42`); map
                   `0191a2b3` is 6831/2379/2152 at zero suspects/orphans/
                   unresolved.
-            - [ ] implement T7–T10 subject wire/selector/verifier, emitted
-                  ownership, owner adapter, header and fingerprint.
+            - [x] T7 subject carrier (`419e1aed`): each addressed document now
+                  carries the subject a source/document selector judges it by —
+                  carried from the declaring row, required on the compiler IR
+                  wire, held immutable by the verifier. `DocumentProvider` is
+                  total: `Unclaimed` for a reached document, `Undetermined` for
+                  a declared one whose typed provider is not yet resolved. The
+                  first ruling fused those into one `Option`; an adversarial
+                  review root commissioned showed both of its justifications
+                  checkably false, and root verified every counter-claim before
+                  reworking it. A third defect surfaced with it — `paths` globs
+                  compile with a literal separator, so a backslashed path
+                  matched nothing silently; one predicate now guards every
+                  boundary. Gates: 773 + 5/2/7/4, 28 vibe-wire suites, strict
+                  clippy, downstream, conform 0-new, wire-diff green,
+                  check-codegen clean post-commit. Seven mutations, two of them
+                  root's own. ABI §5.1 (`1bdc71da`); gap `B-117`; map
+                  `73990510` is 6831/2395/2166.
+            - [ ] implement T8–T10 selector evaluation and the immutable-subject
+                  verifier, emitted ownership, owner adapter, header and
+                  fingerprint. T8 inherits `B-117`.
       - [ ] R4.2 bind strict builtin XML minify with the full RED corpus.
       - [ ] R4.3 JTD-first `vibe extensions analyze` report/CLI.
 - [ ] **R5.1–R5.5** — native schemas/SDK, loader, source/prebuilt build,

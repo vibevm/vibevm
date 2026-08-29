@@ -384,6 +384,44 @@ than depending on untracked `cache/` archaeology.
   (`4f2acb42`) instead of surviving only in a review note. Map `0191a2b3` is
   6831/2379/2152 at zero suspects/orphans/unresolved. T7 DocumentSubject
   carrier is next.
+- R4.1 T7 subject carrier: `419e1aed` gives each addressed document the subject
+  a source/document selector judges it by — carried from the declaring row,
+  never re-derived, since a row's declared path may legitimately differ from
+  its address' own. It rides `ArtifactInput` → `SourceIr`, reaches `DocumentIr`
+  through its source, enters the compiler IR JTD as a REQUIRED member so a
+  carrier that omits it is refused rather than defaulted, and the inter-pass
+  verifier holds it immutable across source/document transforms member by
+  member, in the shape T6c's lane witness established. The atom landed in two
+  passes and the second is the point: the first ruling made the provider an
+  `Option`, and an independent adversarial review — commissioned because root
+  had found its own ruling weaker than it thought — showed the `None` fused two
+  different claims and that BOTH stated justifications were checkably false.
+  Root verified every counter-claim itself before acting: the kernel already
+  answers an authored `packages` dimension with `false` for an absent value;
+  `validate_package_relation` does hold a typed coordinate cross-checked
+  against the parsed address; `vibe-workspace/src/boot.rs` formats that typed
+  identity away one frame up; and the "public surface" the ruling protected
+  does not exist, because the field is private and the type is not re-exported.
+  `DocumentProvider` is therefore TOTAL — `Unclaimed` for a reached document,
+  permanently correct, and `Undetermined` for a declared one, temporary — and
+  the self-contradicting `absent` arm never reached the frozen wire. The fix
+  paid immediately: it exposed a latent wrong fixture that the fused absence
+  had been hiding. A third defect neither root nor the producer had seen came
+  out of the same review — `paths` globs compile with a literal separator, so a
+  backslashed path matches nothing silently, and nothing checked it; one
+  predicate now guards every boundary that already refused a blank path, as a
+  refusal rather than a normalisation. Gates: 773 + 5/2/7/4 vibe-spec, 28
+  vibe-wire suites, strict clippy over both crates, downstream, conform 0-new,
+  `wire-diff` REPORTING green at schema 1 / corpus 14, and `check-codegen`
+  closed **after** the commit — it is `codegen` + `git diff --exit-code` against
+  HEAD, so it is structurally red for any uncommitted schema change, which is a
+  packet defect root owns. Seven mutations: the producer's five plus two of
+  root's own — flipping `reached` to the wrong arm reddens exactly the
+  per-document set, and disarming only the wire path gate reddens only the wire
+  test, so the three enforcement doors are proven independent. Boundary
+  recorded at ABI §5.1 (`1bdc71da`); the live-reached path gap is `B-117`. Map
+  `73990510` is 6831/2395/2166 at zero suspects/orphans/unresolved. T8 selector
+  evaluation is next, and inherits `B-117` as a precondition.
 - Gate repair `67ab9683` fixes the conform content store's Windows cache slot:
   `sha256:<hex>` had created 1,393 NTFS alternate streams on one base file and
   failed with OS error 665. Authored engine + six vendored copies now use one
@@ -457,7 +495,7 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 | Step | State | Evidence |
 |---|---|---|
 | R4.0 one pure registry below lifecycle/workspace | done | kernel `6af1b86f`, map `8531cf82`; exact runtime-dependency/AST-ambient/public-reexport fences; kernel 22, lifecycle 287/3 ignored, orchestrator 126 + doctests, strict clippy/check/conform/DAG green |
-| R4.1 four positions, owner-scoped activation, header, per-unit fingerprint, reference oracle | in progress | controls `52a59dcc`; transaction `91142777` / `ab68d145`; T1 `b65f9958`; T3 `48d7dc75`; T2 `49e944f0` + `87ef2df6`; T4 `a252fcc8`; T5 `0eb46c82`; T6a `01f1522e`; T6b `6ffedb03`; T6c `cb6006d4`; map `0191a2b3` = 6831/2379/2152; T7–T10 subject wire/world/header/fingerprint open |
+| R4.1 four positions, owner-scoped activation, header, per-unit fingerprint, reference oracle | in progress | controls `52a59dcc`; transaction `91142777` / `ab68d145`; T1 `b65f9958`; T3 `48d7dc75`; T2 `49e944f0` + `87ef2df6`; T4 `a252fcc8`; T5 `0eb46c82`; T6a `01f1522e`; T6b `6ffedb03`; T6c `cb6006d4`; T7 `419e1aed`; map `73990510` = 6831/2395/2166; T8–T10 selector/emitted/adapter open |
 | R4.2 builtin XML minify | partial | pure strict kernel `016f0fab` and reversible comment codec `fbbd5140`; no activation/on-off e2e |
 | R4.3 lane analyzer | missing | no `vibe extensions analyze` or machine report |
 
