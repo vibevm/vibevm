@@ -124,9 +124,17 @@ fronts currently in flight. A worker report or old worktree is never completion.
                   accepted vibe-spec 709, workspace 492, strict clippy/check/
                   conform and a live retarget-drop mutation. Map `5aa44611` is
                   6831/2324/2097 at zero suspects/orphans/unresolved.
-            - [ ] implement T5–T10: private behavior registry, four positions,
-                  subject wire/verifier, emitted ownership, owner snapshot/
-                  adapter, header and fingerprint.
+            - [x] T5 private behavior registry (`0eb46c82`): production catalog
+                  empty, one reusable cfg-test identity catalog, exact name/
+                  epoch/stage resolution, four owned identity vectors and
+                  bounded/AST fences. Root accepted vibe-spec 708, strict
+                  clippy/downstream/conform and epoch/Box mutations. Map
+                  `0f73cdfe` is 6831/2335/2108 at zero suspects/orphans/
+                  unresolved.
+            - [ ] implement T6a fallible discovery, T6b four identity
+                  positions and T6c lane witness, then T7–T10 subject wire/
+                  selector/verifier, emitted ownership, owner adapter, header
+                  and fingerprint.
       - [ ] R4.2 bind strict builtin XML minify with the full RED corpus.
       - [ ] R4.3 JTD-first `vibe extensions analyze` report/CLI.
 - [ ] **R5.1–R5.5** — native schemas/SDK, loader, source/prebuilt build,

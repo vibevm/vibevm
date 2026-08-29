@@ -1,11 +1,12 @@
 # R4.1 TransformPlan ABI and digest — implementation design v0.1
 
 Status: accepted central design, 2026-08-29; T1 `b65f9958`, T2 `49e944f0`, T3
-`48d7dc75` and T4 `a252fcc8` implemented. Borrowed hash validation is
-`87ef2df6`; current map is `5aa44611`. Exact T2 construction/refusal/byte
-schedule, T4 carriage and T5 registry laws are frozen after adversarial review.
-Semantic authority remains PROP-054 §§3.4, 7.1–7.3 and the R4 architecture.
-Execution status stays in the implementation ledger.
+`48d7dc75`, T4 `a252fcc8` and T5 `0eb46c82` implemented. Borrowed hash
+validation is `87ef2df6`; current map is `0f73cdfe`. Exact T2 construction/
+refusal/byte schedule, T4 carriage, T5 registry and T6 execution split are
+frozen after adversarial review. Semantic authority remains PROP-054 §§3.4,
+7.1–7.3 and the R4 architecture. Execution status stays in the implementation
+ledger.
 
 ## 1. Boundary
 
@@ -333,6 +334,42 @@ their own cells; the existing syntax fence keeps `Arc`/`dyn` out of plan/config/
 digest/refusal cells. T6 alone wraps resolved behaviors into schedule passes and
 fixes pass-name/global-collision laws.
 
+### 6.2 T6 execution split and interim safety
+
+T6 lands as three independently gated commits rather than one cross-cutting
+rewrite:
+
+1. **T6a — fallible discovery substrate.** `worklist::discover` accepts a
+   fallible `SourceIr -> Result<DocumentIr, E>` callback and returns
+   `Result<Worklist, E>` through every use/source/embed/simple recursion. All
+   existing callers wrap their current infallible parse and preserve exact
+   bytes/errors; no transform type, registry or pass enters this atom. A parse/
+   transform failure can then propagate without the current private `.expect`
+   or being mislabeled as a use-resolution failure.
+2. **T6b — identity positions.** Resolve every plan entry against one injected
+   private TransformRegistry before executing anything, preserve plan order
+   within each stage, and append wrappers to the one CompilerPipeline at source
+   before parse, document after parse, lane after assemble and emitted after
+   emit. Production uses the empty shipping registry; tests inject the one T5
+   cfg-test catalog. Pass name is `transform:<stage>:<ExtensionKey>`, with the
+   existing global name set as backstop. Config is cloned into the wrapper;
+   behavior objects never enter the plan. Registry/schedule/refusal errors stay
+   typed and precede the first parse.
+3. **T6c — lane witness.** Before any changed LaneIr is accepted, retain the
+   immutable pre-transform witness, run intrinsic lane validation and the
+   transition/equivalence check manager-side. Identity output remains the first
+   commissioning vector; T6 is not complete merely because a no-op crossed the
+   position.
+
+Three temporary states are explicit, never silently approximated. A nonempty
+compatibility-fragment plan refuses (compatibility constructors themselves stay
+empty forever). A selector-bearing source/document entry refuses until T7/T8
+provide the typed DocumentSubject — never execute unconditionally, use an
+unscoped subject or parse Display provenance. An emitted behavior returning
+different bytes refuses until T9 owns reconstruction of digest/provenance;
+byte-equal output returns the original EmittedArtifact untouched. These are
+typed capability gaps, not `todo!`, panic or skipped rows.
+
 ## 7. Empty plan law
 
 `TransformPlan::empty()` owns no entries/allocation and `digest() == None`.
@@ -368,9 +405,10 @@ plan is the one carriage regression T4 must make red.
    `enabled_at` view.
 4. **Done `a252fcc8`:** T4 ArtifactPlan carries plan; compatibility pins empty;
    empty/nonempty schedule/byte/error/retarget REDs; map `5aa44611`.
-5. **Current:** T5 private behavior registry/name/epoch golden with test-only
-   identity behaviors.
-6. T6 four positions wired; per-document/per-artifact invocation REDs.
+5. **Done `0eb46c82`:** T5 private behavior registry/name/epoch golden with
+   test-only identity behaviors; map `0f73cdfe`.
+6. **Current:** T6a fallible discovery, then T6b identity positions and T6c
+   lane witness; per-document/per-artifact invocation REDs.
 7. T7 DocumentSubject carrier + compiler IR JTD/codegen/wire-diff.
 8. T8 selector evaluation and immutable-subject verifier.
 9. T9 manager-owned emitted reconstruction/provenance.

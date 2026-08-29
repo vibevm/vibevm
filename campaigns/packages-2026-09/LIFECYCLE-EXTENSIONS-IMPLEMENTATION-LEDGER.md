@@ -310,6 +310,18 @@ than depending on untracked `cache/` archaeology.
   suspects/orphans/unresolved. T5 behavior registry is next; central ruling
   keeps its four identity behaviors cfg-test-only rather than reserving public
   no-op builtin names.
+- R4.1 T5 registry: `0eb46c82` lands one private four-method TransformBehavior,
+  deterministic name/epoch/stage registry and bounded collision/unknown/epoch/
+  stage refusals without adding any pass or shipping builtin. Production
+  catalog is empty; one cfg-test support module owns the exact four
+  `test-identity-*` epoch-1 vehicles for T5 and future T6. Four real IR vectors,
+  wrong-stage matrix, pointer identity, empty-catalog/drop, hostile name and
+  syntax-aware ownership/collector/public-surface fences are green. Root
+  rejected a private test-catalog copy and a fence that blessed Box/failed to
+  see path aliases, then accepted vibe-spec 708 + 5/2/7/4, strict clippy/
+  downstream/conform and live epoch-check/Box-fence mutations. Map `0f73cdfe`
+  is 6831/2335/2108 at zero suspects/orphans/unresolved. T6 is split into T6a
+  fallible discovery, T6b identity positions and T6c lane witness.
 - Gate repair `67ab9683` fixes the conform content store's Windows cache slot:
   `sha256:<hex>` had created 1,393 NTFS alternate streams on one base file and
   failed with OS error 665. Authored engine + six vendored copies now use one
@@ -383,7 +395,7 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 | Step | State | Evidence |
 |---|---|---|
 | R4.0 one pure registry below lifecycle/workspace | done | kernel `6af1b86f`, map `8531cf82`; exact runtime-dependency/AST-ambient/public-reexport fences; kernel 22, lifecycle 287/3 ignored, orchestrator 126 + doctests, strict clippy/check/conform/DAG green |
-| R4.1 four positions, owner-scoped activation, header, per-unit fingerprint, reference oracle | in progress | controls `52a59dcc`; transaction `91142777` / `ab68d145`; T1 `b65f9958`; T3 `48d7dc75`; T2 `49e944f0` + `87ef2df6`; T4 carriage `a252fcc8`; map `5aa44611` = 6831/2324/2097; T5–T10 behavior/world/pass/header/fingerprint wiring open |
+| R4.1 four positions, owner-scoped activation, header, per-unit fingerprint, reference oracle | in progress | controls `52a59dcc`; transaction `91142777` / `ab68d145`; T1 `b65f9958`; T3 `48d7dc75`; T2 `49e944f0` + `87ef2df6`; T4 `a252fcc8`; T5 `0eb46c82`; map `0f73cdfe` = 6831/2335/2108; T6–T10 execution/world/header/fingerprint open |
 | R4.2 builtin XML minify | partial | pure strict kernel `016f0fab` and reversible comment codec `fbbd5140`; no activation/on-off e2e |
 | R4.3 lane analyzer | missing | no `vibe extensions analyze` or machine report |
 
