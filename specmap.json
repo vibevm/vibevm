@@ -9344,10 +9344,19 @@
       "crate_name": "vibe-extension-registry",
       "file": "crates/vibe-extension-registry/src/model.rs",
       "item_kind": "struct",
-      "line": 385,
+      "line": 394,
       "symbol": "vibe_extension_registry::model::ExtensionRegistry",
-      "end_line": 392,
+      "end_line": 401,
       "fingerprint": "tok1:6b6339d2556f906a8cc9ac9390aa11fdfe3320e697d1d125788f0f658dec32c8"
+    },
+    {
+      "crate_name": "vibe-extension-registry",
+      "file": "crates/vibe-extension-registry/src/model.rs",
+      "item_kind": "fn",
+      "line": 442,
+      "symbol": "vibe_extension_registry::model::ExtensionRegistry::enabled_at",
+      "end_line": 455,
+      "fingerprint": "tok1:617bfc084a668d4d80afdcb5967fb23969ab2b39939d0575f06add4e6a24641b"
     },
     {
       "crate_name": "vibe-extension-registry",
@@ -9398,9 +9407,9 @@
       "crate_name": "vibe-extension-registry",
       "file": "crates/vibe-extension-registry/src/model.rs",
       "item_kind": "struct",
-      "line": 367,
+      "line": 376,
       "symbol": "vibe_extension_registry::model::RegistryView",
-      "end_line": 375,
+      "end_line": 384,
       "fingerprint": "tok1:c2c2d957e3319c8c8d192db4bfabc20bbae30d15ded72ebd060267178f8c7a65"
     },
     {
@@ -9434,10 +9443,28 @@
       "crate_name": "vibe-extension-registry",
       "file": "crates/vibe-extension-registry/src/selector.rs",
       "item_kind": "struct",
+      "line": 150,
+      "symbol": "vibe_extension_registry::selector::CompiledSelector",
+      "end_line": 161,
+      "fingerprint": "tok1:0b2616d95344c224a24f78bcc95d60b0427bef11d909d2b4386f84606dd3c819"
+    },
+    {
+      "crate_name": "vibe-extension-registry",
+      "file": "crates/vibe-extension-registry/src/selector.rs",
+      "item_kind": "enum",
       "line": 11,
+      "symbol": "vibe_extension_registry::selector::SelectorProvider",
+      "end_line": 23,
+      "fingerprint": "tok1:69b8f131e0ef59346a6aa2f7d4bae3addb6f7851df30999f5ad76b8215648da1"
+    },
+    {
+      "crate_name": "vibe-extension-registry",
+      "file": "crates/vibe-extension-registry/src/selector.rs",
+      "item_kind": "struct",
+      "line": 35,
       "symbol": "vibe_extension_registry::selector::SelectorSubject",
-      "end_line": 20,
-      "fingerprint": "tok1:8ca871de157eb2c654592b1088f65a8970a692fc777d4524e4de44d186047055"
+      "end_line": 45,
+      "fingerprint": "tok1:107ba6d4cf0cf90b421230239007175b4295ed71e931ef1cbcd5366200384afe"
     },
     {
       "crate_name": "vibe-extension-registry",
@@ -9594,12 +9621,57 @@
     },
     {
       "crate_name": "vibe-extension-registry",
+      "file": "crates/vibe-extension-registry/src/tests/selector_abi.rs",
+      "item_kind": "fn",
+      "line": 169,
+      "symbol": "vibe_extension_registry::tests::selector_abi::compatibility_constructors_and_provider_accessor_route_typed_providers",
+      "end_line": 203,
+      "fingerprint": "tok1:e4b197830426fb9688ade89e3a1e0f46bee565d068550b3559bde94261cc8a70"
+    },
+    {
+      "crate_name": "vibe-extension-registry",
+      "file": "crates/vibe-extension-registry/src/tests/selector_abi.rs",
+      "item_kind": "fn",
+      "line": 140,
+      "symbol": "vibe_extension_registry::tests::selector_abi::compiled_selector_is_a_public_value_type_with_private_compilation",
+      "end_line": 167,
+      "fingerprint": "tok1:37044afbb2db4f2ce99f3a326dd47b517153c7b3214a9e3fbe9a6751c84b0519"
+    },
+    {
+      "crate_name": "vibe-extension-registry",
+      "file": "crates/vibe-extension-registry/src/tests/selector_abi.rs",
+      "item_kind": "fn",
+      "line": 26,
+      "symbol": "vibe_extension_registry::tests::selector_abi::pattern_accessors_retain_authored_members_while_projection_is_canonical",
+      "end_line": 138,
+      "fingerprint": "tok1:d22ac5f02e490fe296b35e2a6a5d17b99f63b2a24c22d5862de3be2a4d56f811"
+    },
+    {
+      "crate_name": "vibe-extension-registry",
+      "file": "crates/vibe-extension-registry/src/tests/selectors.rs",
+      "item_kind": "fn",
+      "line": 204,
+      "symbol": "vibe_extension_registry::tests::selectors::host_coordinate_and_ungrouped_percent_coded_identity_match_distinctly",
+      "end_line": 284,
+      "fingerprint": "tok1:55f4f646c984a177d6827c7e07657784e6a05fbd7bfb07339bef07e705e858c9"
+    },
+    {
+      "crate_name": "vibe-extension-registry",
       "file": "crates/vibe-extension-registry/src/tests/selectors.rs",
       "item_kind": "fn",
       "line": 154,
       "symbol": "vibe_extension_registry::tests::selectors::malformed_glob_is_a_collection_error_naming_key_and_field",
       "end_line": 189,
       "fingerprint": "tok1:1eef0a8d3b86f71482a30581ff0fb88ea0e9bc345564d7790cb34226eecfabc4"
+    },
+    {
+      "crate_name": "vibe-extension-registry",
+      "file": "crates/vibe-extension-registry/src/tests/selectors.rs",
+      "item_kind": "fn",
+      "line": 286,
+      "symbol": "vibe_extension_registry::tests::selectors::provider_and_path_dimensions_stay_or_within_and_between",
+      "end_line": 371,
+      "fingerprint": "tok1:970eb52b7e073ea2817095044a43e000572b2f3f63e6ec01317659504766cd6f"
     },
     {
       "crate_name": "vibe-extension-registry",
@@ -9627,6 +9699,24 @@
       "symbol": "vibe_extension_registry::tests::selectors::selector_mismatch_stays_in_all_view_but_not_in_plan",
       "end_line": 152,
       "fingerprint": "tok1:6a155589add774f16ca2c8a4cf706af26a9ab79c1c4aaa14fa7ca95106719dfd"
+    },
+    {
+      "crate_name": "vibe-extension-registry",
+      "file": "crates/vibe-extension-registry/src/tests/selectors.rs",
+      "item_kind": "fn",
+      "line": 373,
+      "symbol": "vibe_extension_registry::tests::selectors::typed_provider_subjects_compose_with_a_path_dimension",
+      "end_line": 462,
+      "fingerprint": "tok1:4a5eb3a51787da94bcc958bcd1488efa4cba5b24c78c05e16167bf0be9fbe097"
+    },
+    {
+      "crate_name": "vibe-extension-registry",
+      "file": "crates/vibe-extension-registry/src/tests/view.rs",
+      "item_kind": "fn",
+      "line": 78,
+      "symbol": "vibe_extension_registry::tests::view::enabled_at_keeps_selector_bearing_rows_that_an_unscoped_plan_drops",
+      "end_line": 138,
+      "fingerprint": "tok1:7f1394d734ce48b3c2a0312660f297c3c5e9733eca1ff53c1dc432c3f6bcaae0"
     },
     {
       "crate_name": "vibe-extension-registry",
@@ -17313,6 +17403,42 @@
       "symbol": "vibe_spec::compiler::trace::tests::refusals::an_encoder_refusal_is_diagnostic_and_leaves_the_successful_output_alone",
       "end_line": 199,
       "fingerprint": "tok1:ea2bc09096bbaada2956739af4f21b35ef2e6a9739e0469490ceb1a6ae672b20"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/transform/mod.rs",
+      "item_kind": "mod",
+      "line": 12,
+      "symbol": "vibe_spec::compiler::transform",
+      "end_line": 12,
+      "fingerprint": "tok1:9dd819aaeeec30a5ba0876044d5d0376808b957ae4d383052307057767916e86"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/transform/config_tests.rs",
+      "item_kind": "fn",
+      "line": 187,
+      "symbol": "vibe_spec::compiler::transform::config_tests::a_longhand_vector_independent_of_the_production_writer_agrees",
+      "end_line": 289,
+      "fingerprint": "tok1:c377ce6e29b3435e546dc04b2944bb61e21237e7ad6448f817c90eb9ead9f4e8"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/transform/config_tests.rs",
+      "item_kind": "fn",
+      "line": 59,
+      "symbol": "vibe_spec::compiler::transform::config_tests::array_order_is_semantic_and_moves_the_digest",
+      "end_line": 72,
+      "fingerprint": "tok1:e4751d5d3a7ce712b1b0be1e87077e14be96ff8f49857edc09ed227f376e0abb"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/transform/config_tests.rs",
+      "item_kind": "fn",
+      "line": 38,
+      "symbol": "vibe_spec::compiler::transform::config_tests::table_key_insertion_order_is_not_semantic_at_any_depth",
+      "end_line": 57,
+      "fingerprint": "tok1:10b2595eb8fc227b1150153916c459f4834823b1413184e3d3b1a745461849fc"
     },
     {
       "crate_name": "vibe-spec",
@@ -26968,9 +27094,25 @@
     {
       "file": "crates/vibe-extension-registry/src/model.rs",
       "from_symbol": "vibe_extension_registry::model::ExtensionRegistry",
-      "line": 386,
+      "line": 395,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-REGISTRY",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-extension-registry/src/model.rs",
+      "from_symbol": "vibe_extension_registry::model::ExtensionRegistry::enabled_at",
+      "line": 451,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-extension-registry/src/model.rs",
+      "from_symbol": "vibe_extension_registry::model::ExtensionRegistry::enabled_at",
+      "line": 450,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-SELECTOR",
       "verb": "documents"
     },
     {
@@ -27016,7 +27158,7 @@
     {
       "file": "crates/vibe-extension-registry/src/model.rs",
       "from_symbol": "vibe_extension_registry::model::RegistryView",
-      "line": 368,
+      "line": 377,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-REGISTRY",
       "verb": "documents"
@@ -27047,8 +27189,24 @@
     },
     {
       "file": "crates/vibe-extension-registry/src/selector.rs",
+      "from_symbol": "vibe_extension_registry::selector::CompiledSelector",
+      "line": 156,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-SELECTOR",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-extension-registry/src/selector.rs",
+      "from_symbol": "vibe_extension_registry::selector::SelectorProvider",
+      "line": 16,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-SELECTOR",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-extension-registry/src/selector.rs",
       "from_symbol": "vibe_extension_registry::selector::SelectorSubject",
-      "line": 15,
+      "line": 40,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-SELECTOR",
       "verb": "documents"
@@ -27198,9 +27356,57 @@
       "verb": "verifies"
     },
     {
+      "file": "crates/vibe-extension-registry/src/tests/selector_abi.rs",
+      "from_symbol": "vibe_extension_registry::tests::selector_abi::compatibility_constructors_and_provider_accessor_route_typed_providers",
+      "line": 170,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-SELECTOR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-extension-registry/src/tests/selector_abi.rs",
+      "from_symbol": "vibe_extension_registry::tests::selector_abi::compiled_selector_is_a_public_value_type_with_private_compilation",
+      "line": 141,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-SELECTOR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-extension-registry/src/tests/selector_abi.rs",
+      "from_symbol": "vibe_extension_registry::tests::selector_abi::pattern_accessors_retain_authored_members_while_projection_is_canonical",
+      "line": 27,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-SELECTOR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-extension-registry/src/tests/selector_abi.rs",
+      "from_symbol": "vibe_extension_registry::tests::selector_abi::pattern_accessors_retain_authored_members_while_projection_is_canonical",
+      "line": 28,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-extension-registry/src/tests/selectors.rs",
+      "from_symbol": "vibe_extension_registry::tests::selectors::host_coordinate_and_ungrouped_percent_coded_identity_match_distinctly",
+      "line": 205,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-SELECTOR",
+      "verb": "verifies"
+    },
+    {
       "file": "crates/vibe-extension-registry/src/tests/selectors.rs",
       "from_symbol": "vibe_extension_registry::tests::selectors::malformed_glob_is_a_collection_error_naming_key_and_field",
       "line": 155,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-SELECTOR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-extension-registry/src/tests/selectors.rs",
+      "from_symbol": "vibe_extension_registry::tests::selectors::provider_and_path_dimensions_stay_or_within_and_between",
+      "line": 287,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-SELECTOR",
       "verb": "verifies"
@@ -27227,6 +27433,30 @@
       "line": 125,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-REGISTRY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-extension-registry/src/tests/selectors.rs",
+      "from_symbol": "vibe_extension_registry::tests::selectors::typed_provider_subjects_compose_with_a_path_dimension",
+      "line": 374,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-SELECTOR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-extension-registry/src/tests/view.rs",
+      "from_symbol": "vibe_extension_registry::tests::view::enabled_at_keeps_selector_bearing_rows_that_an_unscoped_plan_drops",
+      "line": 79,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-SELECTOR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-extension-registry/src/tests/view.rs",
+      "from_symbol": "vibe_extension_registry::tests::view::enabled_at_keeps_selector_bearing_rows_that_an_unscoped_plan_drops",
+      "line": 80,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY",
       "verb": "verifies"
     },
     {
@@ -34393,6 +34623,38 @@
       "line": 167,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/transform/mod.rs",
+      "from_symbol": "vibe_spec::compiler::transform",
+      "line": 12,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/transform/config_tests.rs",
+      "from_symbol": "vibe_spec::compiler::transform::config_tests::a_longhand_vector_independent_of_the_production_writer_agrees",
+      "line": 191,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/transform/config_tests.rs",
+      "from_symbol": "vibe_spec::compiler::transform::config_tests::array_order_is_semantic_and_moves_the_digest",
+      "line": 60,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/transform/config_tests.rs",
+      "from_symbol": "vibe_spec::compiler::transform::config_tests::table_key_insertion_order_is_not_semantic_at_any_depth",
+      "line": 39,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY",
       "verb": "verifies"
     },
     {
