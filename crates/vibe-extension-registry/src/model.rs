@@ -357,6 +357,15 @@ impl ExtensionRegistryRow {
         self.disabled
     }
 
+    /// The declaration's compiled positive selector, retained read-only.
+    ///
+    /// The value is already prevalidated by collection; reading its authored
+    /// members borrows them without exposing compiled glob internals.
+    #[must_use]
+    pub const fn compiled_selector(&self) -> &CompiledSelector {
+        &self.selector
+    }
+
     /// Whether controls leave the row active before subject selection.
     #[must_use]
     pub const fn is_enabled(&self) -> bool {
@@ -416,6 +425,35 @@ impl ExtensionRegistry {
             .collect()
     }
 
+    /// Enabled rows at one point in the closed four-tier order, the one
+    /// shared source of the subject-less view and subject-filtered planning:
+    /// each public query collects its own `Vec` exactly once over this
+    /// iterator, so the legacy plan never materialises an intermediate one.
+    fn enabled_rows_at<'registry>(
+        &'registry self,
+        point: ExtensionPoint,
+    ) -> impl Iterator<Item = &'registry ExtensionRegistryRow> + 'registry {
+        self.effective_order
+            .iter()
+            .map(|index| &self.rows[*index])
+            .filter(move |row| row.declaration.point == point && row.is_enabled())
+    }
+
+    /// Return enabled rows at one point in the closed four-tier order
+    /// without evaluating selectors.
+    ///
+    /// Selector-bearing rows are retained: no document subject exists while
+    /// a lane's effective rows are lowered into a plan, and filtering on an
+    /// unscoped subject there would silently drop them before any document
+    /// does. Disabled and inactive rows stay excluded, exactly as execution
+    /// planning excludes them. The returned references borrow this registry.
+    #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-SELECTOR")]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY")]
+    #[must_use]
+    pub fn enabled_at(&self, point: ExtensionPoint) -> Vec<&ExtensionRegistryRow> {
+        self.enabled_rows_at(point).collect()
+    }
+
     /// Return effective rows at one point in the closed four-tier order.
     ///
     /// The returned references borrow this registry; planning neither consumes
@@ -426,12 +464,8 @@ impl ExtensionRegistry {
         point: ExtensionPoint,
         subject: SelectorSubject<'_>,
     ) -> Vec<&ExtensionRegistryRow> {
-        self.effective_order
-            .iter()
-            .map(|index| &self.rows[*index])
-            .filter(|row| {
-                row.declaration.point == point && row.is_enabled() && row.selector.matches(subject)
-            })
+        self.enabled_rows_at(point)
+            .filter(|row| row.selector.matches(subject))
             .collect()
     }
 }

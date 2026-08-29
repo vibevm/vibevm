@@ -41,7 +41,7 @@ pub use model::{
     HostExtensionSource, HostIdentity, HostProvider, RegistryView, SyntheticPresetSource,
     lane_owner_host,
 };
-pub use selector::SelectorSubject;
+pub use selector::{CompiledSelector, SelectorProvider, SelectorSubject};
 pub use view::RegistryState;
 
 #[cfg(test)]

@@ -1,8 +1,9 @@
+use specmark::verifies;
 use vibe_core::manifest::{ExtensionAppliesTo, ExtensionKey, ExtensionUse, ExtensionsControl};
 
 use crate::{RegistryState, SelectorSubject, collect_extensions};
 
-use super::support::{declaration, dependency, host, world};
+use super::support::{declaration, dependency, host, package_key, selected_declaration, world};
 
 #[test]
 fn exhaustive_view_is_lossless_effective_order_with_closed_state_precedence() {
@@ -72,4 +73,66 @@ fn exhaustive_view_is_lossless_effective_order_with_closed_state_precedence() {
         ]
     );
     assert_eq!(rows.iter().filter(|view| view.is_effective()).count(), 2);
+}
+
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-SELECTOR")]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY")]
+fn enabled_at_keeps_selector_bearing_rows_that_an_unscoped_plan_drops() {
+    let registry = collect_extensions(world(
+        vec![dependency(
+            "org.zed",
+            "tools",
+            vec![
+                selected_declaration("inactive", Some(vec!["org.allowed/*"]), None),
+                selected_declaration("gated", Some(vec!["org.allowed/*"]), None),
+                declaration("off", "phase:test"),
+            ],
+        )],
+        host(
+            vec![selected_declaration("plain", None, None)],
+            ExtensionsControl {
+                uses: vec![ExtensionUse {
+                    reference: package_key("org.zed", "tools", "gated"),
+                    config: None,
+                }],
+                disable: vec![package_key("org.zed", "tools", "off")],
+            },
+        ),
+        None,
+    ))
+    .unwrap();
+
+    let compile = "compile:source".parse().unwrap();
+    // The unscoped execution plan drops the selector-bearing activated row
+    // before any document subject exists…
+    assert_eq!(
+        registry
+            .plan(compile, SelectorSubject::unscoped())
+            .iter()
+            .map(|row| row.key().as_str())
+            .collect::<Vec<_>>(),
+        ["__host__/demo#plain"]
+    );
+    // …while the enabled view retains it, in exact effective order.
+    assert_eq!(
+        registry
+            .enabled_at(compile)
+            .iter()
+            .map(|row| row.key().as_str())
+            .collect::<Vec<_>>(),
+        ["__host__/demo#plain", "org.zed/tools#gated"]
+    );
+    // Disabled rows are excluded at their point exactly as plans exclude
+    // them; the disabled `phase:test` row never leaks into the view.
+    assert!(
+        registry
+            .enabled_at("phase:test".parse().unwrap())
+            .is_empty()
+    );
+    // The exhaustive all-view still retains every declaration once.
+    assert_eq!(
+        registry.exhaustive(SelectorSubject::unscoped()).len(),
+        registry.rows().len()
+    );
 }
