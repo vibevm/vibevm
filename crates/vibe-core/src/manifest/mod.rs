@@ -51,7 +51,7 @@ pub use lockfile::{
 pub use mechanism::{
     HOST_OWNER, MechanismDecl, MechanismFreshness, MechanismFreshnessParseError, MechanismKey,
     MechanismKeyParseError, MechanismRole, MechanismRoleParseError, MechanismRoutes, ProviderOwner,
-    ProviderPin, ProviderPinParseError,
+    ProviderPin, ProviderPinParseError, is_portable_token,
 };
 pub use package::{
     AccessLevel, AllowFriendsOverride, BinaryDecl, BootCategory, BootSnippet, BootSnippetFragment,

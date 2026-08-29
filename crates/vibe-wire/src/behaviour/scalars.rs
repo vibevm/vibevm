@@ -239,30 +239,14 @@ pub fn canonical_decimal_at_most(left: &str, right: &str) -> bool {
 ///
 /// This is the MECHANISM PLANE's one id law — target ids, artifact ids,
 /// profile names and mechanism-key tails, exactly the vocabulary the R8A2
-/// record members cite — copied byte-for-byte from its manifest authority
-/// (`vibe-core`'s `manifest::mechanism::is_portable_token`, which is
-/// crate-private there). The compiler plane's backend-id grammar is a
-/// DIFFERENT law and stays on the trace-index members that cite it.
-/// Unifying the two copies behind one exported authority is named
-/// follow-up hygiene once the manifest side exports it; the parity test
-/// beside this function is what keeps the copies honest until then.
+/// record members cite. Since the A1/A2 follow-up it DELEGATES to the one
+/// exported manifest authority rather than carrying a byte-for-byte copy:
+/// one grammar, one home, and the wire cites it by name. The compiler
+/// plane's backend-id grammar is a DIFFERENT law and stays on the
+/// trace-index members that cite it.
 #[must_use]
 pub fn is_portable_token(value: &str) -> bool {
-    let bytes = value.as_bytes();
-    if bytes.is_empty() {
-        return false;
-    }
-    let edge_ok = |byte: u8| byte.is_ascii_lowercase() || byte.is_ascii_digit();
-    if !edge_ok(bytes[0]) || !edge_ok(bytes[bytes.len() - 1]) {
-        return false;
-    }
-    if !bytes
-        .iter()
-        .all(|byte| edge_ok(*byte) || *byte == b'-' || *byte == b'.')
-    {
-        return false;
-    }
-    !value.contains("..")
+    vibe_core::manifest::is_portable_token(value)
 }
 
 #[cfg(test)]

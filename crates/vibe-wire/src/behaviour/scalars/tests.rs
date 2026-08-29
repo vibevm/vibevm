@@ -146,10 +146,12 @@ fn the_extension_key_spellings_hold() {
     }
 }
 
-/// The mechanism plane's portable-token law, pinned case for case against
-/// its manifest authority (`vibe-core` `manifest::mechanism::
-/// is_portable_token`) — the parity that keeps the two copies honest until
-/// the manifest side exports one. Note the two laws deliberately differ:
+/// The mechanism plane's portable-token law, pinned case for case AT THE
+/// WIRE. The wire now delegates to the one exported manifest authority
+/// (`vibe_core::manifest::is_portable_token`), so this is no longer a
+/// two-copy parity check — it is the wire's own acceptance table of that
+/// grammar, kept so a change to the authority is visible from the exchange
+/// members that cite it. Note the neighbouring laws deliberately differ:
 /// `_` and a trailing `-`/`.` are backend-id-legal and portable-token
 /// ILLEGAL, and the portable token carries no length cap.
 #[test]

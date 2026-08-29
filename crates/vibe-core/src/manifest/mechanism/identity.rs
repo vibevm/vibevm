@@ -447,7 +447,13 @@ impl ProviderPinParseError {
 /// starting and ending alphanumeric, with no `..` run. The shared id/name
 /// vocabulary for mechanism keys, provider ids, artifact ids and kinds, and
 /// profile names — the ONE grammar of the whole mechanism plane.
-pub(crate) fn is_portable_token(value: &str) -> bool {
+///
+/// `pub` since the A1/A2 follow-up: `vibe-wire`'s record scalars cite this
+/// exact law for the members the R8 record formats carry, and a second
+/// byte-for-byte copy there was one drift away from two grammars of one
+/// identity. Exporting the predicate makes the wire a DELEGATE of this one
+/// authority; the function lends a `bool` and nothing else.
+pub fn is_portable_token(value: &str) -> bool {
     let bytes = value.as_bytes();
     if bytes.is_empty() {
         return false;

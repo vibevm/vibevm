@@ -28,10 +28,9 @@ use indexmap::IndexMap;
 use super::declarant_path::{declarant_path, declarant_path_error};
 use super::extension::{ExtensionHandler, validate_handler_shape};
 
-pub(crate) use identity::is_portable_token;
 pub use identity::{
     HOST_OWNER, MechanismKey, MechanismKeyParseError, MechanismRole, MechanismRoleParseError,
-    ProviderOwner, ProviderPin, ProviderPinParseError,
+    ProviderOwner, ProviderPin, ProviderPinParseError, is_portable_token,
 };
 pub(crate) use wire::{MechanismDeclWire, MechanismRoutesWire};
 
