@@ -287,6 +287,56 @@ The subject is part of compiler IR JTD so full-IR plugins see the same truth;
 the inter-pass verifier requires it unchanged across source/document transforms.
 Lane/emitted stages carry no selector by grammar.
 
+### 5.1 The two absences — decision record
+
+§5 requires an immutable `DocumentSubject { provider, declared_path }` but does
+not say what a document with no coordinate carries. Settled during T7
+acceptance, after an independent review found the first answer wrong.
+
+**Decision.** `DocumentProvider` is **total** — no `Option`. A document with no
+coordinate carries one of two named arms: `Unclaimed`, meaning no contribution
+row declared this document into this artifact, and `Undetermined`, meaning a
+row did declare it but the producer could not say which typed provider that row
+names. `DocumentSubject::reached` mints the first; every producer today mints
+the second.
+
+**Why.** They are different claims, and the kernel already answers an authored
+`packages` dimension with `false` for a subject carrying no provider. For
+`Unclaimed` that verdict is final and correct — the address' authority is the
+package that OWNS the document, which is not the question a `packages`
+dimension asks. For `Undetermined` the same verdict is silently wrong, and its
+symptom is a transform that quietly never applies. Fused into one `Option`,
+T8 must answer identically for both and cannot be right for either; it needs to
+refuse the second while matching-nothing on the first. The fusion would also
+have frozen onto the epoch-1 wire under a single arm whose description asserted
+both readings at once.
+
+**Considered and rejected.** `Option<DocumentProvider>` — the first ruling,
+rejected as above; it rested on two premises that proved false, namely that no
+typed coordinate exists where the subject is born (`validate_package_relation`
+already cross-checks one against the parsed address' authority) and that kernel
+types in that seat would leak into a public API (the field is private and the
+type is not re-exported). Dropping `provider` from T7 entirely — smaller, and
+everything it removes is dead in production today, but it deviates from a
+frozen §5 sentence, makes a later atom add a second required property to
+`source_doc`, and removes the immutability law that stops a transform
+rescoping itself. Populating a real coordinate now — the data is in scope, but
+deciding whether it names a dependency or a host is owner-view knowledge the
+adapter atom owns; `Undetermined` is the honest answer and is now sayable.
+
+**When to revisit.** When the owner-view adapter lands and can name a typed
+provider: `Undetermined` should then become unreachable for declared documents,
+and a test asserting that is the signal the state has served its purpose.
+`Unclaimed` is permanent.
+
+**Consequence recorded separately.** `declared_path` is matched by globs
+compiled with a literal separator, so separator spelling is semantic. Every
+boundary that refuses a blank path now refuses a backslashed one through one
+predicate — but a subject reached live through `#use`/`#source`/`#embed` passes
+none of those boundaries, and `SpecAddress::parse` does not refuse a backslash
+in a path segment. That gap is `BACKLOG.md` `B-117`, to be closed by the atom
+that first matches a selector against a path.
+
 ## 6. Behavior registry and emitted mutation
 
 `TransformRegistry` is a private `vibe-spec` sibling of `BackendRegistry`,
