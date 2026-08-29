@@ -174,6 +174,67 @@ not a fake document path. `applies_to` is currently legal only where the
 manifest grammar can express a real subject; adding artifact selectors is a
 separate grammar act.
 
+### 5.3 T10 adapter seam and lowering authority — decision record
+
+§5 says workspace translates owner-scoped rows into a plan but not which crate
+owns each half of the translation, how the registry-owned epoch reaches the
+seed, or where typed document providers are born. Settled centrally before T10
+implementation; T10 lands as three gated slices (T10a world adapter, T10b
+lowering + typed subjects, T10c fingerprint + header), each its own commit and
+exact affected-set gate.
+
+**Decision — the split of the translation.** `vibe-workspace` owns the WORLD:
+the durable `from_lock` ordered-world adapter (§3's shape), the owner-scoped
+collector invocation per lane owner (node manifest for a node lane, package
+manifest for that package's unit lane, via the kernel's existing
+dependency-seat→owner-seat projection), and the choice of epoch authority per
+§4. `vibe-spec` owns the LOWERING: one public entry
+(`TransformPlan::from_effective_rows` shape — final name free) that consumes
+borrowed kernel rows already filtered to compile points in effective order,
+and inside the crate maps stage from `CompilePoint`, provider through the
+existing `From<&ExtensionProvider>`, config through the one
+`toml::Table → ConfigTable` lowering, selector by clone, and implementation by
+resolving `ExtensionHandler::Builtin { name }` against
+`TransformRegistry::builtins()` for the registry-owned epoch — an off-catalog
+name is the existing bounded `UnknownBuiltin` refusal at lowering time, and
+workspace never sees an epoch. A non-compile row reaching the lowering is a
+typed caller error, never skipped. The kernel gains one view,
+`enabled_compile_rows()` — every enabled compile-point row in ONE global
+effective order — because concatenating four per-point views would fabricate
+an order §3.4 never authored. No manifest object, resolver or display string
+crosses into the plan; `TransformSeed`/`TransformPlan` construction stays
+crate-private to `vibe-spec`, and only the lowering entry, the plan value and
+`ArtifactPlan::with_transforms` widen to `pub`.
+
+**Decision — typed subjects at birth.** `ArtifactInput`'s constructors gain
+typed-provider forms; the boot adapter names each contribution's
+`DocumentProvider` from the same typed components the world adapter already
+holds (lock `Group`/`PackageName` for dependencies; the host arms from the
+node's own coordinate), so `Undetermined` becomes unreachable for every
+workspace-built input. A component the install model still carries as a bare
+`String` is parsed at the adapter seam through the one existing grammar with a
+typed refusal — never a panic and never a silent fallback to `Undetermined`;
+retyping the install model itself is named follow-up hygiene, not smuggled
+into T10. The `[shared by …]` display suffix stays display: the typed
+provider is threaded beside `origin`, never parsed out of it. The T8
+reached-verdict test upgrades to the whole-compile assertion the ABI §5.1
+revisit trigger promises, and a test pins `Undetermined` unreachable for
+declared documents.
+
+**Considered and rejected.** Workspace-side seed construction with a public
+epoch parameter — hands workspace an identity §2.1 of the ABI forbids it to
+author. Lowering in workspace over pub-widened `ConfigTable` — duplicates the
+TOML semantic tree at the boundary and makes two crates own one canonical
+form. Per-point view concatenation — deterministic but fabricates a cross-
+stage order; the digest would bless an order no manifest declared. Reusing
+`vibe-orchestrator`'s world builder from workspace — the dependency arrow
+points the other way; orchestrator migrates onto the workspace adapter later
+instead (named follow-up, not T10).
+
+**When to revisit.** When R5 adds `Native` implementations the lowering entry
+gains its second arm under the same registry authority; when R6 adds pass-tier
+rows the non-compile refusal splits into its own routing.
+
 ## 6. Four positions in the declared schedule
 
 The accepted schedule stays one list:
@@ -227,6 +288,44 @@ The transforms header is emitted only for a nonempty active plan, after the
 reference oracle and by engine framing—not plugin bytes. Markdown/XML tape
 validators and decompile know the header. Empty plans keep committed artifacts
 byte-identical.
+
+### 7.1 Header grammar and fingerprint frame — decision record
+
+**Decision — header.** One comment line, engine-framed after the reference
+oracle, only for a nonempty active plan:
+`<!-- vibe:transforms <entry> <entry> … -->` with one token per plan entry in
+dense effective order, each token the entry's canonical `ExtensionKey`
+spelling encoded by the boot lane's existing label codec (`%` → `%25`,
+`-` → `%2D`) — the payload then cannot contain `-` at all, so it is XML-
+comment-safe unconditionally, reversible by one rule, and spelled by the same
+codec the generated lane already uses for qualified anchors. The codec
+implementation is extracted to one shared cell if it is currently local to
+the label writer; a second spelling of it may not appear. The static
+decompiler already classifies such a comment as skippable non-provenance C1;
+tape validators learn the exact grammar. The header records the ACTIVE list —
+identity attribution beyond it stays in provenance/IR, and nothing ever
+parses the header back (the analyzer law in §9).
+
+**Decision — fingerprint.** The per-unit Merkle body (`fingerprint::compute`)
+gains one frame: the owner plan's `PlanDigest` as `transforms:<sha256 hex>`,
+appended only when the plan is nonempty, so every historical fingerprint —
+and every unit whose owner activates nothing — keeps its exact current value
+and bytes. A node lane gains no fingerprint (it recomputes always); its
+equal-bytes no-op stays owned by the publication transaction. Changed owner
+plan ⇒ changed unit fingerprint ⇒ stale unit, exactly §7's matrix row 8.
+
+**Considered and rejected.** Framing the plan digest even when empty — breaks
+every existing recorded fingerprint for zero information. A second header per
+stage — the schedule partition is execution detail; the authored order is the
+honest record. Raw key spelling in the comment — a key containing `--` (legal
+in package names) would corrupt or forbid the comment; encoding only the
+dangerous pair — two spellings for one identity depending on neighbours,
+irreversible in the corner.
+
+**When to revisit.** When R6's pass tier records pass entries the header
+gains their tokens under the same codec (PROP-054 `##COMPILER-INTERNALS-FLAG`
+already promises this); if any consumer ever needs to read the active list
+machine-side, it reads IR/provenance, and that stays the law.
 
 Package-unit lanes must join the crash-safe whole-artifact transaction before
 any byte-changing transform ships; bare `fs::write` is not an R4 publication
