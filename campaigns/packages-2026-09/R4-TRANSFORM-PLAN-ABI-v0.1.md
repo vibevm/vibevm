@@ -421,6 +421,41 @@ injected identity catalog adds the exact positions and preserves bytes/
 provenance because its behaviors actually ran. Tests must distinguish those
 causes rather than keep the old inert-carriage comparison green by accident.
 
+### 6.4 T6c witness boundary — decision record
+
+§6.2 item 3 requires an immutable pre-transform witness but does not say which
+members of `LaneIr` it holds. Settled centrally during T6c acceptance; recorded
+here because the argument, not the test, is what a later atom needs.
+
+**Decision.** `context`, `source_node_count`, `source_link_digest` and all
+three parts of `frame` (`generated_path`, `source_root`, `renames`) are
+provenance and immutable across a lane transform. `contributions` is the
+working surface a lane transform may rewrite. The witness is written field by
+field rather than as a whole `LaneIr` clone, so the type states the boundary
+and the absent member names the surface.
+
+**Why.** Every immutable member is something the closure and link stages
+produced, not the transform. `frame.renames` is the sharpest case: it flows
+onward into `EmissionProvenance.renames`, so an accepted rewrite there forges a
+record the manager alone authors — reproduced live during acceptance, where
+removing the gate let a forged `OriginRename` reach the emission provenance and
+the emitted bytes. `source_link_digest` describes what assemble consumed and no
+intrinsic rule inspects it at all, so nothing else would catch a rewrite.
+
+**Considered and rejected.** Letting `frame` be writable and witnessing only
+the three scalar members — rejected because it leaves exactly the renames
+forgery unguarded. Comparing whole `LaneIr` values — rejected: that is T6b's
+temporary detector, and it forbids the lawful contribution rewrite T6c exists
+to allow. Routing the checks through the inter-pass verifier hook — rejected
+because `enable_verify_each_for_tests` is `#[cfg(test)]`-gated, so production
+would run unguarded; the gate is manager-side and unconditional, and R6.4 still
+owns making the general verifier mandatory.
+
+**When to revisit.** When a real transform needs to write a member this
+boundary calls provenance. Widening the surface is backwards compatible;
+discovering after the fact that a transform forged provenance is not, which is
+why the initial line is the restrictive one.
+
 ## 7. Empty plan law
 
 `TransformPlan::empty()` owns no entries/allocation and `digest() == None`.
