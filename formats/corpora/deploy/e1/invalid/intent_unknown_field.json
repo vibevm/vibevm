@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "plan_hash": "00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff",
+  "target": {
+    "project": "demo",
+    "profile": "local",
+    "target": "local-helper",
+    "generation": 0
+  },
+  "resources": [
+    {
+      "resource": "~/.vibe/bin/vibe-helper",
+      "desired_digest": "00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff"
+    }
+  ],
+  "started_at": "2026-08-29T12:30:00Z",
+  "dry_run": true
+}

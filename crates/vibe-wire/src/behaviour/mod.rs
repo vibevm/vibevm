@@ -18,8 +18,10 @@
 //! Nothing here is generated, and nothing here edits the generated
 //! files.
 
+pub mod artifact_record;
 pub mod compile_trace_report;
 pub mod compiler_trace_index;
+pub mod deploy_records;
 pub mod projections;
 pub mod records;
 pub(crate) mod required_nullable;

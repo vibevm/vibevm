@@ -9,9 +9,12 @@
 // every other submodule re-exports its types (`pub use`) instead
 // of carrying its own copies — one type per name, emitted once.
 
+pub mod artifact_record;
 pub mod boot_artifact_transaction;
 pub mod compiler_ir;
 pub mod compiler_trace_index;
+pub mod deploy_intent;
+pub mod deploy_receipt;
 pub mod extensions_report;
 pub mod format_id;
 pub mod hello;

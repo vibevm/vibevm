@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "identity": {
+    "project": "demo"
+  },
+  "profile": "local",
+  "target": "local-helper",
+  "generation": 0,
+  "artifact_digest": "00112233445566778899AABBCCDDEEFF00112233445566778899aabbccddeeff",
+  "provider": {
+    "key": "org.vibevm/vibe#vibe-bin"
+  },
+  "desired_config_digest": "11223344556677889900aabbccddeeff11223344556677889900aabbccddeeff",
+  "scope": "user",
+  "resources": [
+    {
+      "resource": "~/.vibe/bin/vibe-helper",
+      "post_digest": "00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff"
+    }
+  ],
+  "reversible": true,
+  "applied_at": "2026-08-29T12:30:41Z",
+  "status": "applied"
+}

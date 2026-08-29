@@ -3,8 +3,8 @@
 //! the whole reason the predicates stopped being written twice.
 
 use super::{
-    RelativePathDefect, canonical_decimal_at_most, has_control_bytes, is_canonical_decimal,
-    is_sha256, relative_path_defect,
+    ProviderKeyDefect, RelativePathDefect, canonical_decimal_at_most, has_control_bytes,
+    is_canonical_decimal, is_portable_token, is_sha256, provider_key_defect, relative_path_defect,
 };
 
 #[test]
@@ -106,4 +106,80 @@ fn canonical_decimals_compare_by_length_then_lexicographically() {
         "18446744073709551617",
         "18446744073709551616"
     ));
+}
+
+#[test]
+fn every_provider_key_defect_is_independently_reachable() {
+    for (value, defect) in [
+        ("", ProviderKeyDefect::Blank),
+        ("   ", ProviderKeyDefect::Blank),
+        ("org.demo/tools\n", ProviderKeyDefect::Blank),
+        ("org.demo/tools", ProviderKeyDefect::NoHash),
+        ("org.demo/tools#x#y", ProviderKeyDefect::DuplicateHash),
+        ("tools#announce", ProviderKeyDefect::NoSlash),
+        ("org.demo/a/b#x", ProviderKeyDefect::DuplicateSlash),
+        ("org.demo#tools/x", ProviderKeyDefect::HashBeforeSlash),
+        ("/tools#x", ProviderKeyDefect::BlankComponent),
+        ("org.demo/#x", ProviderKeyDefect::BlankComponent),
+        ("org.demo/tools#", ProviderKeyDefect::BlankComponent),
+        ("org.demo/  #x", ProviderKeyDefect::BlankComponent),
+    ] {
+        assert_eq!(
+            provider_key_defect(value),
+            Some(defect),
+            "{value:?} must refuse as {defect:?}"
+        );
+        assert!(!defect.phrase().is_empty());
+    }
+}
+
+#[test]
+fn the_extension_key_spellings_hold() {
+    for value in [
+        "org.vibevm/vibe#cargo",
+        "org.demo/tools#announce",
+        "__host__/demo#x",
+        "org.example/build-tools#cargo-v2",
+        "org.acme/deploy#server",
+    ] {
+        assert_eq!(provider_key_defect(value), None, "{value:?} must hold");
+    }
+}
+
+/// The mechanism plane's portable-token law, pinned case for case against
+/// its manifest authority (`vibe-core` `manifest::mechanism::
+/// is_portable_token`) — the parity that keeps the two copies honest until
+/// the manifest side exports one. Note the two laws deliberately differ:
+/// `_` and a trailing `-`/`.` are backend-id-legal and portable-token
+/// ILLEGAL, and the portable token carries no length cap.
+#[test]
+fn the_portable_token_law_matches_its_manifest_authority() {
+    for value in [
+        "vibe-helper.exe",
+        "cargo",
+        "a",
+        "0",
+        "x.y-z",
+        "team-plugin",
+        &"x".repeat(65),
+    ] {
+        assert!(is_portable_token(value), "{value:?} is a portable token");
+    }
+    for value in [
+        "",
+        ".hidden",
+        "-leading",
+        "trailing-",
+        "trailing.",
+        "Upper",
+        "with space",
+        "with/slash",
+        "under_score",
+        "dot..run",
+    ] {
+        assert!(
+            !is_portable_token(value),
+            "{value:?} is not a portable token"
+        );
+    }
 }

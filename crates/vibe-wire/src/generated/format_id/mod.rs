@@ -19,6 +19,7 @@
 /// two stay in lockstep in both directions.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum FormatId {
+    ArtifactRecord,
     BootArtifactTransaction,
     CliExtensionsReport,
     CliInitReport,
@@ -36,6 +37,8 @@ pub enum FormatId {
     CompilerIr,
     CompilerTraceIndex,
     Config,
+    DeployIntent,
+    DeployReceipt,
     Handshake,
     IndexByCap,
     IndexByName,
@@ -91,6 +94,7 @@ pub enum ForeignParsers {
 impl FormatId {
     /// Every variant, in registry (sorted-id) order.
     pub const ALL: &[FormatId] = &[
+        FormatId::ArtifactRecord,
         FormatId::BootArtifactTransaction,
         FormatId::CliExtensionsReport,
         FormatId::CliInitReport,
@@ -108,6 +112,8 @@ impl FormatId {
         FormatId::CompilerIr,
         FormatId::CompilerTraceIndex,
         FormatId::Config,
+        FormatId::DeployIntent,
+        FormatId::DeployReceipt,
         FormatId::Handshake,
         FormatId::IndexByCap,
         FormatId::IndexByName,
@@ -151,6 +157,7 @@ impl FormatId {
     /// The registry id, verbatim (e.g. `cli-init-report`).
     pub fn id(self) -> &'static str {
         match self {
+            FormatId::ArtifactRecord => "artifact-record",
             FormatId::BootArtifactTransaction => "boot-artifact-transaction",
             FormatId::CliExtensionsReport => "cli-extensions-report",
             FormatId::CliInitReport => "cli-init-report",
@@ -168,6 +175,8 @@ impl FormatId {
             FormatId::CompilerIr => "compiler-ir",
             FormatId::CompilerTraceIndex => "compiler-trace-index",
             FormatId::Config => "config",
+            FormatId::DeployIntent => "deploy-intent",
+            FormatId::DeployReceipt => "deploy-receipt",
             FormatId::Handshake => "handshake",
             FormatId::IndexByCap => "index-by-cap",
             FormatId::IndexByName => "index-by-name",
@@ -212,6 +221,7 @@ impl FormatId {
     /// The epoch this format lives in (PROP-044 §4.6 `##M-EPOCHS`).
     pub fn epoch(self) -> u32 {
         match self {
+            FormatId::ArtifactRecord => 1,
             FormatId::BootArtifactTransaction => 1,
             FormatId::CliExtensionsReport => 1,
             FormatId::CliInitReport => 1,
@@ -229,6 +239,8 @@ impl FormatId {
             FormatId::CompilerIr => 1,
             FormatId::CompilerTraceIndex => 1,
             FormatId::Config => 1,
+            FormatId::DeployIntent => 1,
+            FormatId::DeployReceipt => 1,
             FormatId::Handshake => 1,
             FormatId::IndexByCap => 1,
             FormatId::IndexByName => 1,
@@ -273,6 +285,7 @@ impl FormatId {
     /// Whether the format is rebuildable without a human (PROP-044 §5).
     pub fn recoverable(self) -> bool {
         match self {
+            FormatId::ArtifactRecord => false,
             FormatId::BootArtifactTransaction => false,
             FormatId::CliExtensionsReport => true,
             FormatId::CliInitReport => true,
@@ -290,6 +303,8 @@ impl FormatId {
             FormatId::CompilerIr => true,
             FormatId::CompilerTraceIndex => true,
             FormatId::Config => false,
+            FormatId::DeployIntent => false,
+            FormatId::DeployReceipt => false,
             FormatId::Handshake => true,
             FormatId::IndexByCap => true,
             FormatId::IndexByName => true,
@@ -334,6 +349,7 @@ impl FormatId {
     /// How many independent parsers read this format (PROP-044 §5).
     pub fn foreign_parsers(self) -> ForeignParsers {
         match self {
+            FormatId::ArtifactRecord => ForeignParsers::None,
             FormatId::BootArtifactTransaction => ForeignParsers::None,
             FormatId::CliExtensionsReport => ForeignParsers::Many,
             FormatId::CliInitReport => ForeignParsers::Many,
@@ -351,6 +367,8 @@ impl FormatId {
             FormatId::CompilerIr => ForeignParsers::None,
             FormatId::CompilerTraceIndex => ForeignParsers::Many,
             FormatId::Config => ForeignParsers::None,
+            FormatId::DeployIntent => ForeignParsers::None,
+            FormatId::DeployReceipt => ForeignParsers::None,
             FormatId::Handshake => ForeignParsers::Many,
             FormatId::IndexByCap => ForeignParsers::Many,
             FormatId::IndexByName => ForeignParsers::Many,

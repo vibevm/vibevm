@@ -1,0 +1,205 @@
+{
+  "metadata": {
+    "description": "Epoch-1 deploy receipt (R8A2): the schema-versioned record written in the user VibeVM state home after an applied deploy target — identity, provider, digests, scope, every owned resource with its post-apply digest, evidence, reversibility, prior-state handle, timestamps and final status (campaigns/packages-2026-09 architecture §7.2's exact list). `undeploy` removes only receipt-owned state. The receipt NEVER carries secrets: no prompts, no responses, no credential-bearing members exist on this shape. Generated Rust is the runtime receipt type.",
+    "rustOptions": {
+      "package": "vibe_wire::deploy_receipt"
+    }
+  },
+  "properties": {
+    "schema": {
+      "type": "uint32",
+      "metadata": {
+        "description": "Record schema epoch; 1 in epoch 1. The behaviour cell refuses every other value, so a newer receipt fails loudly instead of parsing into a wrong meaning."
+      }
+    },
+    "identity": {
+      "ref": "deploy_identity",
+      "metadata": {
+        "description": "The project (and optional package) identity the deployment belongs to."
+      }
+    },
+    "profile": {
+      "type": "string",
+      "metadata": {
+        "description": "The profile name that selected the target — backend-id grammar `[a-z0-9][a-z0-9._-]{0,63}`; validated by the behaviour cell."
+      }
+    },
+    "target": {
+      "type": "string",
+      "metadata": {
+        "description": "The deploy target id — backend-id grammar; validated by the behaviour cell."
+      }
+    },
+    "generation": {
+      "type": "uint32",
+      "metadata": {
+        "description": "The generation of this target the receipt finalises; the prior generation lives in the intent journal."
+      }
+    },
+    "artifact_digest": {
+      "type": "string",
+      "metadata": {
+        "description": "The digest of the deployed artifact — exactly 64 lowercase hex, no `sha256:` prefix (one digest spelling across the three R8A2 records); validated by the behaviour cell."
+      }
+    },
+    "provider": {
+      "ref": "provider_identity",
+      "metadata": {
+        "description": "The exact mechanism provider identity that applied the deployment."
+      }
+    },
+    "desired_config_digest": {
+      "type": "string",
+      "metadata": {
+        "description": "The digest of the desired config the deployment reconciled to — exactly 64 lowercase hex; validated by the behaviour cell."
+      }
+    },
+    "scope": {
+      "ref": "destination_scope",
+      "metadata": {
+        "description": "The destination scope — explicit, never inferred: privilege and blast radius read from here."
+      }
+    },
+    "resources": {
+      "elements": { "ref": "owned_resource" },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Every path/resource this deployment owns and its post-apply digest — the exact set `undeploy` may remove. An empty list is an explicit statement (a deployment owning no files), never an omission."
+      }
+    },
+    "reversible": {
+      "type": "boolean",
+      "metadata": {
+        "description": "Whether the provider could undo this deployment. An installer that cannot roll back says so before apply; a receipt never implies a transaction its provider cannot provide."
+      }
+    },
+    "applied_at": {
+      "ref": "rfc3339_timestamp",
+      "metadata": {
+        "description": "When apply ran."
+      }
+    },
+    "status": {
+      "ref": "receipt_status",
+      "metadata": {
+        "description": "The final status. `applied` is mid-flight (written before independent verify); every terminal status finalises the receipt."
+      }
+    }
+  },
+  "optionalProperties": {
+    "evidence": {
+      "type": "string",
+      "metadata": {
+        "x-default": null,
+        "description": "The provider evidence summary; non-blank and control-free; validated by the behaviour cell. Typed evidence kinds are the mechanism atom's to define — this member carries the summary a reader prints."
+      }
+    },
+    "prior_state_handle": {
+      "type": "string",
+      "metadata": {
+        "x-default": null,
+        "description": "The handle under which the prior state survives for rollback; absent when there was none or the deployment is irreversible. Non-blank; validated by the behaviour cell."
+      }
+    },
+    "finalized_at": {
+      "ref": "rfc3339_timestamp",
+      "metadata": {
+        "x-default": null,
+        "description": "When the receipt was finalised. The behaviour cell pins the matrix: present exactly for the terminal statuses (`verified`, `failed`, `rolled-back`) and absent for `applied`, because receipt finalisation is last."
+      }
+    }
+  },
+  "definitions": {
+    "rfc3339_timestamp": {
+      "metadata": {
+        "description": "A record's timestamp — a JTD `timestamp`, i.e. RFC 3339 on the wire, bound to `chrono::DateTime<chrono::Utc>` in code (the same binding the shared `timestamp` fragment and `hello`'s `world_sunset` carry). Spelled `\"type\": \"timestamp\"` and not `\"type\": \"string\"` because a bare string would give a date a SECOND legal spelling in the system, and one thing is written one way. Local to this schema: the record family is its only consumer, and a strict (`foreign_parsers = \"none\"`) schema must not pull a shared fragment the permissive formats also read.",
+        "x-rust-type": "chrono::DateTime<chrono::Utc>"
+      },
+      "type": "timestamp"
+    },
+    "deploy_identity": {
+      "metadata": {
+        "description": "The project/package identity a deployment belongs to — the half `undeploy` and reconciliation join receipts by."
+      },
+      "properties": {
+        "project": {
+          "type": "string",
+          "metadata": {
+            "description": "The project identity; non-blank and control-free; validated by the behaviour cell."
+          }
+        }
+      },
+      "optionalProperties": {
+        "package": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "The package identity when the deploy comes from one package rather than the host project; non-blank; validated by the behaviour cell."
+          }
+        }
+      }
+    },
+    "provider_identity": {
+      "metadata": {
+        "description": "The exact provider behind the deploy mechanism: the group-qualified key plus the version and content hash that make the identity reproducible. The same shape `artifact_record`'s producer carries — one provider-identity spelling across the R8A2 records."
+      },
+      "properties": {
+        "key": {
+          "type": "string",
+          "metadata": {
+            "description": "The provider key in the ExtensionKey spelling `group/name#id`. Exactly one `/` before exactly one `#`, every component non-blank; validated by the behaviour cell."
+          }
+        }
+      },
+      "optionalProperties": {
+        "version": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "The provider's own version string; non-blank. Deliberately not parsed here — the provider registry owns its grammar."
+          }
+        },
+        "content_hash": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "The provider's content hash in the one identity spelling `sha256:` + 64 lowercase hex — the same form every lockfile row carries; validated by the behaviour cell."
+          }
+        }
+      }
+    },
+    "destination_scope": {
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "The four explicit destination scopes. `user` covers agent homes and `~/.vibe/bin`; `remote` a server; `system` an OS-level mutation behind a future privileged broker; `workspace` the project tree."
+      },
+      "enum": ["workspace", "user", "remote", "system"]
+    },
+    "owned_resource": {
+      "metadata": {
+        "description": "One resource this deployment owns after apply, at its post-apply digest."
+      },
+      "properties": {
+        "resource": {
+          "type": "string",
+          "metadata": {
+            "description": "The resource identity — an owned path or a named resource; non-blank and control-free; validated by the behaviour cell."
+          }
+        },
+        "post_digest": {
+          "type": "string",
+          "metadata": {
+            "description": "The digest observed after apply — exactly 64 lowercase hex; validated by the behaviour cell. `undeploy` refuses to erase a path whose digest moved away from this value."
+          }
+        }
+      }
+    },
+    "receipt_status": {
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "The minimal closed final-status set §7.2 needs: `applied` (apply done, verify pending — receipt not finalised), `verified` (independent verify passed), `failed` (apply or verify refused; a multi-target saga records already-applied reversible targets as `rolled-back`), `rolled-back` (an inverse deployment returned the destination to its prior state)."
+      },
+      "enum": ["applied", "verified", "failed", "rolled-back"]
+    }
+  }
+}

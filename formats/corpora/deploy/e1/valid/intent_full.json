@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "plan_hash": "ffeeddccbbaa99887766554433221100ffeeddccbbaa99887766554433221100",
+  "target": {
+    "project": "demo",
+    "package": "org.demo/tools",
+    "profile": "local",
+    "target": "team-plugin",
+    "generation": 3
+  },
+  "prior_generation": 2,
+  "resources": [
+    {
+      "resource": "~/.agents/skills/review/SKILL.md",
+      "desired_digest": "aa11bb22cc33dd44ee55ff6600112233aa11bb22cc33dd44ee55ff6600112233",
+      "prior_digest": "bb22cc33dd44ee55ff6600112233aa11bb22cc33dd44ee55ff6600112233aa11"
+    },
+    {
+      "resource": "~/.vibe/store/payloads/review-plugin-1.2.0",
+      "desired_digest": "cc33dd44ee55ff6600112233aa11bb22cc33dd44ee55ff6600112233aa11bb22"
+    }
+  ],
+  "started_at": "2026-08-29T13:41:17Z"
+}

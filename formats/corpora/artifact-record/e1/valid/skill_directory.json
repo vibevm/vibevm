@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "id": "review-plugin.codex",
+  "kind": "agent-plugin",
+  "shape": "directory",
+  "path_absolute": "C:/work/demo/target/package/review-plugin.codex",
+  "path_relative": {
+    "root": "slot",
+    "path": "org.demo/review-plugin/1.0.0/package/review-plugin.codex"
+  },
+  "digest": {
+    "algorithm": "sha256-tree/1",
+    "value": "aa11bb22cc33dd44ee55ff6600112233aa11bb22cc33dd44ee55ff6600112233"
+  },
+  "producer": {
+    "target": "team-plugin",
+    "mechanism": "package:agent-plugin",
+    "provider": {
+      "key": "org.vibevm/vibe#agent-plugin",
+      "version": "1.0.0"
+    }
+  },
+  "freshness": {
+    "config": "11223344556677889900aabbccddeeff11223344556677889900aabbccddeeff"
+  },
+  "created_at": "2026-08-29T12:07:02Z",
+  "verification": {
+    "status": "verified",
+    "evidence": "published 1.0.0 schemas validated locally; canonical tree digest recorded"
+  }
+}

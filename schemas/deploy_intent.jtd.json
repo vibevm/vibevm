@@ -1,0 +1,127 @@
+{
+  "metadata": {
+    "description": "Epoch-1 deploy intent journal (R8A2): the durable record written atomically BEFORE apply, carrying the plan hash, the prior receipt generation, and every planned resource with its desired digest (campaigns/packages-2026-09 architecture §7.2). Receipt-last alone cannot cover a crash after the first external write; this journal is what recovery reads. It plans state — it never carries secrets, commands or credentials. Generated Rust is the runtime journal type.",
+    "rustOptions": {
+      "package": "vibe_wire::deploy_intent"
+    }
+  },
+  "properties": {
+    "schema": {
+      "type": "uint32",
+      "metadata": {
+        "description": "Record schema epoch; 1 in epoch 1. The behaviour cell refuses every other value, so a newer journal fails loudly instead of parsing into a wrong meaning."
+      }
+    },
+    "plan_hash": {
+      "type": "string",
+      "metadata": {
+        "description": "The hash of the plan this intent executes — exactly 64 lowercase hex, no `sha256:` prefix; validated by the behaviour cell. Recovery joins an intent to its receipt through this hash."
+      }
+    },
+    "target": {
+      "ref": "deploy_target_identity",
+      "metadata": {
+        "description": "The full identity of the deploy target the plan selected: project, optional package, profile, target id and generation."
+      }
+    },
+    "resources": {
+      "elements": { "ref": "planned_resource" },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Every resource the plan intends to touch, with its desired digest — the exact set recovery compares against, so an empty list is an explicit statement (a plan that touches nothing), never an omission."
+      }
+    },
+    "started_at": {
+      "ref": "rfc3339_timestamp",
+      "metadata": {
+        "description": "When the intent was written."
+      }
+    }
+  },
+  "optionalProperties": {
+    "prior_generation": {
+      "type": "uint32",
+      "metadata": {
+        "x-default": null,
+        "description": "The generation of the prior receipt this deploy supersedes; absent for a first deployment with no prior receipt."
+      }
+    }
+  },
+  "definitions": {
+    "rfc3339_timestamp": {
+      "metadata": {
+        "description": "A record's timestamp — a JTD `timestamp`, i.e. RFC 3339 on the wire, bound to `chrono::DateTime<chrono::Utc>` in code (the same binding the shared `timestamp` fragment and `hello`'s `world_sunset` carry). Spelled `\"type\": \"timestamp\"` and not `\"type\": \"string\"` because a bare string would give a date a SECOND legal spelling in the system, and one thing is written one way. Local to this schema: the record family is its only consumer, and a strict (`foreign_parsers = \"none\"`) schema must not pull a shared fragment the permissive formats also read.",
+        "x-rust-type": "chrono::DateTime<chrono::Utc>"
+      },
+      "type": "timestamp"
+    },
+    "deploy_target_identity": {
+      "metadata": {
+        "description": "The identity of one deploy run: which project (and optional package), which profile selected it, which target id ran, and which generation of that target this is."
+      },
+      "properties": {
+        "project": {
+          "type": "string",
+          "metadata": {
+            "description": "The project identity; non-blank and control-free; validated by the behaviour cell."
+          }
+        },
+        "profile": {
+          "type": "string",
+          "metadata": {
+            "description": "The profile name that selected the target — backend-id grammar `[a-z0-9][a-z0-9._-]{0,63}`; validated by the behaviour cell."
+          }
+        },
+        "target": {
+          "type": "string",
+          "metadata": {
+            "description": "The deploy target id — backend-id grammar; validated by the behaviour cell."
+          }
+        },
+        "generation": {
+          "type": "uint32",
+          "metadata": {
+            "description": "The generation this intent deploys; 0 is a legal first generation."
+          }
+        }
+      },
+      "optionalProperties": {
+        "package": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "The package identity when the deploy comes from one package rather than the host project; non-blank; validated by the behaviour cell."
+          }
+        }
+      }
+    },
+    "planned_resource": {
+      "metadata": {
+        "description": "One planned resource: its identity, the digest the plan wants it at, and the digest the prior receipt recorded (absent when the resource is new)."
+      },
+      "properties": {
+        "resource": {
+          "type": "string",
+          "metadata": {
+            "description": "The resource identity — an owned path or a named resource; non-blank and control-free; validated by the behaviour cell."
+          }
+        },
+        "desired_digest": {
+          "type": "string",
+          "metadata": {
+            "description": "The digest the plan wants this resource at — exactly 64 lowercase hex; validated by the behaviour cell."
+          }
+        }
+      },
+      "optionalProperties": {
+        "prior_digest": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "The digest the prior receipt recorded for this resource — exactly 64 lowercase hex; validated by the behaviour cell. Recovery accepts a resource at either digest; a third digest means concurrent mutation and a refusal."
+          }
+        }
+      }
+    }
+  }
+}

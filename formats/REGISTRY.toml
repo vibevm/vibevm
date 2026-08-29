@@ -525,6 +525,44 @@ foreign_parsers = "many"
 corpus = "formats/corpora/lifecycle/e1"
 sunset = "none"
 
+# ── Build/package/deploy records (3 JTD), R8A2 / packages-2026-09 ───────────
+# The three record wires of the build/package/deploy architecture's atom 1,
+# slice A2 (frozen in §12 of the central design packet): `artifact_record`
+# states what a build/package target produced, `deploy_intent` journals what
+# an apply is about to touch, `deploy_receipt` records what an applied deploy
+# owns. All three are FACT records about runs that already happened — there
+# is no source to reproject them from (`recoverable = false`, the same
+# computed policy `package-skill-receipt` and `boot-artifact-transaction`
+# already carry), and all three are read only by our own engine, so the
+# generated readers are strict (`foreign_parsers = "none"` →
+# deny_unknown_fields): an unknown member is a wire bug, not forward
+# compatibility. Intent and receipt share the `deploy/e1` corpus home — the
+# same one-exchange pairing the `lifecycle/e1` home already records for five
+# lifecycle records.
+[format.artifact-record]
+epoch = 1
+schema = "schemas/artifact_record.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+corpus = "formats/corpora/artifact-record/e1"
+sunset = "none"
+
+[format.deploy-intent]
+epoch = 1
+schema = "schemas/deploy_intent.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+corpus = "formats/corpora/deploy/e1"
+sunset = "none"
+
+[format.deploy-receipt]
+epoch = 1
+schema = "schemas/deploy_receipt.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+corpus = "formats/corpora/deploy/e1"
+sunset = "none"
+
 # ── Uninventoried surfaces (PROP-044 §6.5) ──────────────────────────────────
 [format.mcp-tools]
 epoch = 1

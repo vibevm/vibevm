@@ -1,0 +1,279 @@
+{
+  "metadata": {
+    "description": "Epoch-1 artifact record (R8A2): the durable record of ONE artifact a build or package target produced — identity, kind, shape, placement, content digest, producer identity, freshness fingerprints, creation time and verification state (campaigns/packages-2026-09 architecture §4). A record states a fact about a run that already happened: it is not rebuildable from source, and it never carries credentials. Generated Rust is the runtime record type.",
+    "rustOptions": {
+      "package": "vibe_wire::artifact_record"
+    }
+  },
+  "properties": {
+    "schema": {
+      "type": "uint32",
+      "metadata": {
+        "description": "Record schema epoch; 1 in epoch 1. The behaviour cell refuses every other value, so a newer record fails loudly instead of parsing into a wrong meaning."
+      }
+    },
+    "id": {
+      "type": "string",
+      "metadata": {
+        "description": "The stable artifact id — `vibe-helper.exe`, `vibe-helper.zip`. Obeys the one frozen backend-id grammar `[a-z0-9][a-z0-9._-]{0,63}`; validated by the behaviour cell, never normalised: a second id grammar would be a second thing to drift."
+      }
+    },
+    "kind": {
+      "ref": "artifact_kind"
+    },
+    "shape": {
+      "ref": "artifact_shape"
+    },
+    "path_absolute": {
+      "type": "string",
+      "metadata": {
+        "description": "The absolute runtime placement, forward-slashed (`/…` or `X:/…`), control-free; validated by the behaviour cell in the same manner the trace report's run path is held. Paths are placement, never identity — `id` is the identity."
+      }
+    },
+    "path_relative": {
+      "ref": "relative_identity",
+      "metadata": {
+        "description": "The safe project/slot/store-relative identity a later phase joins records by; validated by the behaviour cell against the project-relative path grammar (forward slashes, no `..`, no drive, no backslash)."
+      }
+    },
+    "digest": {
+      "ref": "content_digest",
+      "metadata": {
+        "description": "The artifact's content witness: SHA-256 for a `file` shape, the canonical tree digest for a `directory` shape. A directory is a first-class artifact; it is not implicitly zipped."
+      }
+    },
+    "producer": {
+      "ref": "producer_identity",
+      "metadata": {
+        "description": "Exactly which target, mechanism and provider produced the artifact — the row a freshness probe or a reproduction has to name."
+      }
+    },
+    "freshness": {
+      "ref": "freshness_fingerprints",
+      "metadata": {
+        "description": "The freshness fingerprints the engine recorded beside the artifact. The object is always present; each member is optional because a provider-fresh target may honestly lack one (Cargo owns inputs the engine does not model)."
+      }
+    },
+    "created_at": {
+      "ref": "rfc3339_timestamp",
+      "metadata": {
+        "description": "When the producing run created the artifact."
+      }
+    },
+    "verification": {
+      "ref": "verification_state",
+      "metadata": {
+        "description": "The verification verdict over the produced artifact, with its optional evidence summary. `unverified` is a legal, honest state — an unrun gate is never silently reported as run."
+      }
+    }
+  },
+  "optionalProperties": {
+    "media_type": {
+      "type": "string",
+      "metadata": {
+        "x-default": null,
+        "description": "The media type of a `file`-shape artifact (`application/zip`, `text/markdown`); absent for a `directory` shape. Non-blank and control-free; validated by the behaviour cell."
+      }
+    },
+    "platform": {
+      "type": "string",
+      "metadata": {
+        "x-default": null,
+        "description": "The platform triple the artifact targets (`x86_64-pc-windows-msvc`); absent for a platform-independent artifact. Non-blank and control-free; validated by the behaviour cell."
+      }
+    }
+  },
+  "definitions": {
+    "rfc3339_timestamp": {
+      "metadata": {
+        "description": "A record's timestamp — a JTD `timestamp`, i.e. RFC 3339 on the wire, bound to `chrono::DateTime<chrono::Utc>` in code (the same binding the shared `timestamp` fragment and `hello`'s `world_sunset` carry). Spelled `\"type\": \"timestamp\"` and not `\"type\": \"string\"` because a bare string would give a date a SECOND legal spelling in the system, and one thing is written one way. Local to this schema: the record family is its only consumer, and a strict (`foreign_parsers = \"none\"`) schema must not pull a shared fragment the permissive formats also read.",
+        "x-rust-type": "chrono::DateTime<chrono::Utc>"
+      },
+      "type": "timestamp"
+    },
+    "artifact_kind": {
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "The closed artifact-kind vocabulary of the §4 registry law. Growing it is a spec amendment, not a serde default — free-form kinds are exactly what the closed set refuses."
+      },
+      "enum": [
+        "executable",
+        "archive",
+        "file",
+        "directory",
+        "skill",
+        "agent-plugin"
+      ]
+    },
+    "artifact_shape": {
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "The physical shape on disk. `directory` says the artifact IS the tree the tree digest covers; `file` says it is the bytes the SHA-256 covers."
+      },
+      "enum": ["file", "directory"]
+    },
+    "relative_root": {
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "Which root `path` hangs from: the project tree, a workspace slot, or the content-addressed store. One closed vocabulary, because a relative identity that does not say which root it is relative to names nothing."
+      },
+      "enum": ["project", "slot", "store"]
+    },
+    "relative_identity": {
+      "metadata": {
+        "description": "The safe relative identity: a named root plus a root-relative path. Later phases join records by this pair, never by rescanning a directory or guessing a filename."
+      },
+      "properties": {
+        "root": {
+          "ref": "relative_root",
+          "metadata": {
+            "description": "The root `path` is relative to."
+          }
+        },
+        "path": {
+          "type": "string",
+          "metadata": {
+            "description": "The root-relative path, forward-slashed, no `..`/`.`/empty segments, no drive prefix, no absolute root; validated by the behaviour cell through the shared project-relative path grammar."
+          }
+        }
+      }
+    },
+    "digest_algorithm": {
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "The digest algorithm, spelled exactly as the architecture freezes it. `sha256` covers one file's bytes; `sha256-tree/1` covers a directory's canonical tree. Reopened only when acquire-role providers land."
+      },
+      "enum": ["sha256", "sha256-tree/1"]
+    },
+    "content_digest": {
+      "metadata": {
+        "description": "One content witness: the algorithm plus its value."
+      },
+      "properties": {
+        "algorithm": {
+          "ref": "digest_algorithm",
+          "metadata": {
+            "description": "Which digest this value is."
+          }
+        },
+        "value": {
+          "type": "string",
+          "metadata": {
+            "description": "The digest itself — exactly 64 lowercase hex characters, no `sha256:` prefix (the algorithm member already names it); validated by the behaviour cell."
+          }
+        }
+      }
+    },
+    "provider_identity": {
+      "metadata": {
+        "description": "The exact provider behind a mechanism: the group-qualified key plus the version and content hash that make the identity reproducible."
+      },
+      "properties": {
+        "key": {
+          "type": "string",
+          "metadata": {
+            "description": "The provider key in the ExtensionKey spelling `group/name#id` (the reserved builtin is `org.vibevm/vibe#cargo`). Exactly one `/` before exactly one `#`, every component non-blank; validated by the behaviour cell."
+          }
+        }
+      },
+      "optionalProperties": {
+        "version": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "The provider's own version string; non-blank. Deliberately not parsed here — the provider registry owns its grammar."
+          }
+        },
+        "content_hash": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "The provider's content hash in the one identity spelling `sha256:` + 64 lowercase hex — the same form every lockfile row carries; validated by the behaviour cell."
+          }
+        }
+      }
+    },
+    "producer_identity": {
+      "metadata": {
+        "description": "What produced the artifact: the target that ran, the mechanism key it selected, and the exact provider identity that serviced it."
+      },
+      "properties": {
+        "target": {
+          "type": "string",
+          "metadata": {
+            "description": "The producing target id — backend-id grammar; validated by the behaviour cell."
+          }
+        },
+        "mechanism": {
+          "type": "string",
+          "metadata": {
+            "description": "The role-qualified mechanism key (`build:cargo`, `package:agent-plugin`). The prefix must be one of the two producing families `build:`/`package:` (a deploy mechanism produces no artifact record; `acquire:` reopens with acquire-role providers), and the tail obeys the backend-id grammar; validated by the behaviour cell."
+          }
+        },
+        "provider": {
+          "ref": "provider_identity",
+          "metadata": {
+            "description": "The exact provider identity — provider changes invalidate the target even when the logical mechanism name did not."
+          }
+        }
+      }
+    },
+    "freshness_fingerprints": {
+      "metadata": {
+        "description": "The three named freshness digests. Each is optional because a provider-fresh target may honestly lack one — an engine-side input census that Cargo does not own would be unsound, and absence is the honest record of that. All absent is the provider-fresh record."
+      },
+      "optionalProperties": {
+        "inputs": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "The declared-input fingerprint — exactly 64 lowercase hex; validated by the behaviour cell."
+          }
+        },
+        "config": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "The target-config fingerprint — exactly 64 lowercase hex; validated by the behaviour cell."
+          }
+        },
+        "toolchain": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "The toolchain fingerprint — exactly 64 lowercase hex; validated by the behaviour cell."
+          }
+        }
+      }
+    },
+    "verification_status": {
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "The verification verdict. `unverified` — the gate did not run; `verified` — it ran and passed; `failed` — it ran and refused."
+      },
+      "enum": ["unverified", "verified", "failed"]
+    },
+    "verification_state": {
+      "metadata": {
+        "description": "The verification verdict with its optional evidence summary."
+      },
+      "properties": {
+        "status": {
+          "ref": "verification_status",
+          "metadata": {
+            "description": "The verdict itself."
+          }
+        }
+      },
+      "optionalProperties": {
+        "evidence": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "The evidence summary naming what proved the verdict; non-blank and control-free; validated by the behaviour cell. Absent for `unverified` and optional rather than required for the others, because the evidence kinds are the mechanism atom's to define."
+          }
+        }
+      }
+    }
+  }
+}

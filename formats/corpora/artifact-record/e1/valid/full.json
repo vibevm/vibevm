@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "id": "vibe-helper-windows.zip",
+  "kind": "archive",
+  "shape": "file",
+  "media_type": "application/zip",
+  "platform": "x86_64-pc-windows-msvc",
+  "path_absolute": "C:/work/demo/target/package/vibe-helper-windows.zip",
+  "path_relative": {
+    "root": "project",
+    "path": "target/package/vibe-helper-windows.zip"
+  },
+  "digest": {
+    "algorithm": "sha256",
+    "value": "ffeeddccbbaa99887766554433221100ffeeddccbbaa99887766554433221100"
+  },
+  "producer": {
+    "target": "vibe-helper-windows",
+    "mechanism": "package:windows-zip",
+    "provider": {
+      "key": "org.vibevm/vibe#windows-zip",
+      "version": "0.3.0",
+      "content_hash": "sha256:00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff"
+    }
+  },
+  "freshness": {
+    "inputs": "1010101010101010101010101010101010101010101010101010101010101010",
+    "config": "1111111111111111111111111111111111111111111111111111111111111111",
+    "toolchain": "2121212121212121212121212121212121212121212121212121212121212121"
+  },
+  "created_at": "2026-08-29T12:04:31Z",
+  "verification": {
+    "status": "verified",
+    "evidence": "zip central directory re-hashed against the recorded digest"
+  }
+}

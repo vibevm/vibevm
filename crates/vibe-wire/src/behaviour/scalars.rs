@@ -107,6 +107,88 @@ pub fn has_control_bytes(value: &str) -> bool {
         .any(|byte| matches!(byte, b'\r' | b'\n' | b'\0'))
 }
 
+/// What is wrong with a provider key in the ExtensionKey spelling
+/// `group/name#id`, or `None` when the grammar holds. One enum, both
+/// R8A2 record cells: `artifact_record`'s producer and `deploy_receipt`'s
+/// provider answer to the same spelling rule, because they name the same
+/// thing — the exact provider a mechanism routed to. The check is a
+/// SHAPE, not a registry lookup: full key validation (does the group
+/// exist, is the provider installed) is the mechanism atom's, and a
+/// record may outlive the registry row that minted it.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ProviderKeyDefect {
+    /// Empty, whitespace-only, or carrying CR, LF or NUL.
+    Blank,
+    /// No `#` — the id component is missing.
+    NoHash,
+    /// More than one `#`.
+    DuplicateHash,
+    /// No `/` before the `#` — the group component is missing.
+    NoSlash,
+    /// More than one `/` before the `#`.
+    DuplicateSlash,
+    /// The `#` arrives before the `/`, so there is no group/name head.
+    HashBeforeSlash,
+    /// One of the three components is empty or whitespace-only.
+    BlankComponent,
+}
+
+impl ProviderKeyDefect {
+    /// The sentence a refusal reads as, after the offending value.
+    #[must_use]
+    pub fn phrase(self) -> &'static str {
+        match self {
+            ProviderKeyDefect::Blank => "is empty, whitespace-only or carries CR, LF or NUL",
+            ProviderKeyDefect::NoHash => "carries no `#`, so it names no provider id",
+            ProviderKeyDefect::DuplicateHash => "carries more than one `#`",
+            ProviderKeyDefect::NoSlash => "carries no `/` before the `#`, so it names no group",
+            ProviderKeyDefect::DuplicateSlash => "carries more than one `/` before the `#`",
+            ProviderKeyDefect::HashBeforeSlash => {
+                "carries its `#` before its `/`, so there is no group/name head"
+            }
+            ProviderKeyDefect::BlankComponent => "carries an empty group, name or id component",
+        }
+    }
+}
+
+/// The first thing wrong with a provider key in the ExtensionKey
+/// spelling `group/name#id` (`org.vibevm/vibe#cargo` is the reserved
+/// builtin; `__host__/<project>#<id>` is the host spelling). Order
+/// matters only for which refusal a reader sees first; every arm is
+/// independently reachable and each has its own RED.
+#[must_use]
+pub fn provider_key_defect(value: &str) -> Option<ProviderKeyDefect> {
+    if value.trim().is_empty() || has_control_bytes(value) {
+        return Some(ProviderKeyDefect::Blank);
+    }
+    if value.matches('#').count() != 1 {
+        return Some(if value.contains('#') {
+            ProviderKeyDefect::DuplicateHash
+        } else {
+            ProviderKeyDefect::NoHash
+        });
+    }
+    let (head, id) = value.split_once('#').unwrap_or((value, ""));
+    let slashes = head.matches('/').count();
+    if slashes > 1 {
+        return Some(ProviderKeyDefect::DuplicateSlash);
+    }
+    if slashes == 0 {
+        // A `/` sitting AFTER the `#` is in the id component, not the
+        // head — the key has its hash before its slash.
+        return Some(if value.contains('/') {
+            ProviderKeyDefect::HashBeforeSlash
+        } else {
+            ProviderKeyDefect::NoSlash
+        });
+    }
+    let (group, name) = head.split_once('/').unwrap_or(("", ""));
+    if group.trim().is_empty() || name.trim().is_empty() || id.trim().is_empty() {
+        return Some(ProviderKeyDefect::BlankComponent);
+    }
+    None
+}
+
 /// `sha256:` followed by exactly 64 lowercase hex characters — the one
 /// digest spelling every identity and witness on these wires carries.
 #[must_use]
@@ -150,6 +232,37 @@ pub fn canonical_decimal_at_most(left: &str, right: &str) -> bool {
         std::cmp::Ordering::Greater => false,
         std::cmp::Ordering::Equal => left <= right,
     }
+}
+
+/// A nonempty portable token: lowercase ASCII alphanumerics plus `-` and
+/// `.`, starting and ending alphanumeric, with no `..` run.
+///
+/// This is the MECHANISM PLANE's one id law — target ids, artifact ids,
+/// profile names and mechanism-key tails, exactly the vocabulary the R8A2
+/// record members cite — copied byte-for-byte from its manifest authority
+/// (`vibe-core`'s `manifest::mechanism::is_portable_token`, which is
+/// crate-private there). The compiler plane's backend-id grammar is a
+/// DIFFERENT law and stays on the trace-index members that cite it.
+/// Unifying the two copies behind one exported authority is named
+/// follow-up hygiene once the manifest side exports it; the parity test
+/// beside this function is what keeps the copies honest until then.
+#[must_use]
+pub fn is_portable_token(value: &str) -> bool {
+    let bytes = value.as_bytes();
+    if bytes.is_empty() {
+        return false;
+    }
+    let edge_ok = |byte: u8| byte.is_ascii_lowercase() || byte.is_ascii_digit();
+    if !edge_ok(bytes[0]) || !edge_ok(bytes[bytes.len() - 1]) {
+        return false;
+    }
+    if !bytes
+        .iter()
+        .all(|byte| edge_ok(*byte) || *byte == b'-' || *byte == b'.')
+    {
+        return false;
+    }
+    !value.contains("..")
 }
 
 #[cfg(test)]
