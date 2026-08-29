@@ -138,9 +138,22 @@ fronts currently in flight. A worker report or old worktree is never completion.
                   721 + 5/2/7/4 vibe-spec tests, strict clippy, downstream,
                   conform and live swallow/unwrap mutations. Map `ce3e62bf`
                   is 6831/2344/2117 at zero suspects/orphans/unresolved.
-            - [ ] implement T6b four identity positions and T6c lane witness,
-                  then T7–T10 subject wire/selector/verifier, emitted
-                  ownership, owner adapter, header and fingerprint.
+            - [x] T6b identity positions (`6ffedb03`): a whole carried plan
+                  resolves against one injected registry before anything
+                  executes, then runs at source-before-parse, document-after-
+                  parse, lane-after-assemble and emitted-after-emit. The frame,
+                  selector, lane and emitted refusals are typed capability gaps
+                  owed to T7/T8, T6c and T9; one shared classifier keeps every
+                  path's fault typed under the single new public variant. Root
+                  read the whole diff, deduplicated the fault conversion,
+                  documented the entry-count cast, then reproduced 747 +
+                  5/2/7/4 vibe-spec tests, post-`clean` strict clippy,
+                  downstream, conform 0-new and six independently authored
+                  mutations, each RED on its focused test. Map `1d2e3f2a` is
+                  6831/2368/2141 at zero suspects/orphans/unresolved.
+            - [ ] implement T6c lane witness, then T7–T10 subject wire/
+                  selector/verifier, emitted ownership, owner adapter, header
+                  and fingerprint.
       - [ ] R4.2 bind strict builtin XML minify with the full RED corpus.
       - [ ] R4.3 JTD-first `vibe extensions analyze` report/CLI.
 - [ ] **R5.1–R5.5** — native schemas/SDK, loader, source/prebuilt build,
