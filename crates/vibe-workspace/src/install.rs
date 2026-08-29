@@ -17,8 +17,6 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#install");
 
-use std::collections::HashSet;
-use std::fs;
 use std::path::Path;
 
 use vibe_core::ContentHash;
@@ -29,7 +27,7 @@ use crate::hooks::{
     HookContext, HookError, HookOutput, HookPhase, HookPolicy, HookReport, HookRunner,
     InterpreterProbe, Platform, SystemHookRunner, SystemProbe, run_package_hook,
 };
-use crate::{Workspace, WorkspaceError, layout_paths, vibedeps};
+use crate::{Workspace, WorkspaceError, vibedeps};
 
 /// Stale-slot pruning — removing every dependency slot the current
 /// resolution no longer names, out of line per the file-length budget.
