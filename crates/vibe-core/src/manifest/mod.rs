@@ -28,14 +28,17 @@ pub mod purl;
 mod redirect;
 mod subskill;
 
-pub use artifact::{ArtifactInput, ArtifactOutput, ArtifactTarget, ArtifactsSection};
+pub use artifact::{
+    ArtifactBuildTarget, ArtifactInput, ArtifactKind, ArtifactOutput, ArtifactPackageTarget,
+    ArtifactsError, ArtifactsSection,
+};
 pub use compile::CompileSection;
 pub use consumer::{ConsumerNode, NodeRole};
 pub use declarant_path::{
     DeclarantPathFault, DeclarantPathMode, declarant_path, declarant_path_component,
     declarant_path_pattern, is_windows_device_name, is_windows_unsafe_component,
 };
-pub use deploy::{DeployProfile, DeploySection, DeployTarget};
+pub use deploy::{DeployError, DeployProfile, DeploySection, DeployTarget};
 pub use document::{BootSection, Manifest, OriginSection, WorkspaceSection};
 pub use extension::{
     ExtensionAppliesTo, ExtensionConfig, ExtensionDecl, ExtensionHandler, ExtensionIrLevel,

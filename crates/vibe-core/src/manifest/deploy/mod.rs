@@ -1,5 +1,6 @@
 //! `[[deploy.target]]` and `[deploy.profiles]` — named destination
-//! selections.
+//! selections, in the amended A1 spelling (freeze of 2026-08-29, amended at
+//! A1 acceptance the same day).
 //!
 //! A deploy target reconciles exactly one produced artifact into a
 //! destination through a deploy-role mechanism. Profiles are named ordered
@@ -8,10 +9,13 @@
 //! environment and secrets never choose a profile.
 //!
 //! Pure grammar and validation: this cell plans nothing, installs nothing,
-//! and writes no destination state.
+//! and writes no destination state. Ids obey the mechanism plane's one
+//! grammar, the portable token; an exact `provider` pin uses the
+//! ExtensionKey spelling (`<group>/<package>#<id>`).
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS");
 
+mod error;
 mod wire;
 
 #[cfg(test)]
@@ -24,12 +28,10 @@ use indexmap::IndexMap;
 
 use super::extension::ExtensionConfig;
 use super::mechanism::{MechanismKey, MechanismRole, ProviderPin, is_portable_token};
-use super::plane::assert_acyclic;
+use super::plane::{assert_acyclic, bounded_value};
 
+pub use error::DeployError;
 pub(crate) use wire::DeploySectionWire;
-
-const DEPLOY_TARGETS: &str = "spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS";
-const KEY_GRAMMAR: &str = "spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE";
 
 /// One `[[deploy.target]]` row.
 ///
@@ -38,11 +40,12 @@ const KEY_GRAMMAR: &str = "spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MAC
 ///
 /// let manifest = Manifest::parse_str(concat!(
 ///     "[project]\nname = \"demo\"\nversion = \"0.1.0\"\n\n",
-///     "[[artifacts.build]]\nid = \"helper\"\nmechanism = \"build:cargo\"\n",
-///     "outputs = [{ id = \"helper.exe\", kind = \"executable\" }]\n\n",
-///     "[[deploy.target]]\nid = \"local-helper\"\nartifact = \"helper.exe\"\n",
+///     "[[artifacts.build]]\nid = \"vibe-helper\"\nmechanism = \"build:cargo\"\n",
+///     "inputs = [{ path = \"Cargo.toml\" }]\n",
+///     "outputs = [{ id = \"vibe-helper.exe\", kind = \"executable\" }]\n\n",
+///     "[[deploy.target]]\nid = \"local-helper\"\nartifact = \"vibe-helper.exe\"\n",
 ///     "mechanism = \"deploy:vibe-bin\"\ndepends_on = []\n",
-///     "config = { command = \"helper\" }\n",
+///     "config = { command = \"vibe-helper\" }\n",
 /// )).unwrap();
 /// assert_eq!(manifest.deploy.as_ref().unwrap().targets[0].id, "local-helper");
 /// ```
@@ -51,7 +54,8 @@ pub struct DeployTarget {
     pub id: String,
     pub artifact: String,
     pub mechanism: MechanismKey,
-    /// Optional exact provider pin; selection lands later.
+    /// Optional exact provider pin (`<group>/<package>#<id>`); selection
+    /// lands later.
     pub provider: Option<ProviderPin>,
     /// Authored presence is preserved: absent and `depends_on = []` both
     /// mean "no dependencies", but the distinction survives the round-trip.
@@ -61,20 +65,24 @@ pub struct DeployTarget {
 
 impl DeployTarget {
     /// Validate the row's own shape (no graph context).
-    pub fn validate(&self) -> Result<(), String> {
+    pub fn validate(&self) -> Result<(), DeployError> {
         if !is_portable_token(&self.id) {
-            return Err(format!(
-                "[[deploy.target]] field `id` value `{}` is not a portable token (nonempty lowercase alphanumerics, `-`, `.`) ({DEPLOY_TARGETS})",
-                self.id,
-            ));
+            return Err(DeployError::TargetIdNotPortable {
+                value: bounded_value(&self.id),
+            });
+        }
+        if !is_portable_token(&self.artifact) {
+            return Err(DeployError::ArtifactIdNotPortable {
+                target: self.id.clone(),
+                value: bounded_value(&self.artifact),
+            });
         }
         if self.mechanism.role() != MechanismRole::Deploy {
-            return Err(format!(
-                "[[deploy.target]] `{}` field `mechanism` value `{}` has role `{}`; deploy targets select the `deploy:` family only ({KEY_GRAMMAR})",
-                self.id,
-                self.mechanism,
-                self.mechanism.role(),
-            ));
+            return Err(DeployError::MechanismFamily {
+                target: self.id.clone(),
+                key: self.mechanism.to_string(),
+                actual: self.mechanism.role().to_string(),
+            });
         }
         Ok(())
     }
@@ -125,21 +133,20 @@ impl DeploySection {
 
     /// Validate targets, the depends_on graph, and the profiles against the
     /// artifact ids the `[artifacts]` section produces.
-    pub fn validate(&self, artifact_ids: &BTreeSet<String>) -> Result<(), String> {
+    pub fn validate(&self, artifact_ids: &BTreeSet<String>) -> Result<(), DeployError> {
         let mut target_ids: BTreeSet<&str> = BTreeSet::new();
         for target in &self.targets {
             target.validate()?;
             if !target_ids.insert(target.id.as_str()) {
-                return Err(format!(
-                    "duplicate [[deploy.target]] field `id` value `{}`; deploy target ids are unique within the manifest ({DEPLOY_TARGETS})",
-                    target.id,
-                ));
+                return Err(DeployError::DuplicateTargetId {
+                    value: bounded_value(&target.id),
+                });
             }
             if !artifact_ids.contains(&target.artifact) {
-                return Err(format!(
-                    "[[deploy.target]] `{}` field `artifact` value `{}` names no declared artifact output; a deploy target reconciles exactly one produced artifact ({DEPLOY_TARGETS})",
-                    target.id, target.artifact,
-                ));
+                return Err(DeployError::UnknownArtifact {
+                    target: target.id.clone(),
+                    artifact: bounded_value(&target.artifact),
+                });
             }
         }
         // Second pass: depends_on is judged against the complete id set, so
@@ -150,23 +157,28 @@ impl DeploySection {
             };
             let mut seen: BTreeSet<&str> = BTreeSet::new();
             for dependency in depends_on {
+                if !is_portable_token(dependency) {
+                    return Err(DeployError::DependencyIdNotPortable {
+                        target: target.id.clone(),
+                        value: bounded_value(dependency),
+                    });
+                }
                 if !seen.insert(dependency.as_str()) {
-                    return Err(format!(
-                        "[[deploy.target]] `{}` field `depends_on` lists `{}` more than once ({DEPLOY_TARGETS})",
-                        target.id, dependency,
-                    ));
+                    return Err(DeployError::DuplicateDependency {
+                        target: target.id.clone(),
+                        dependency: dependency.clone(),
+                    });
                 }
                 if dependency == &target.id {
-                    return Err(format!(
-                        "[[deploy.target]] `{}` field `depends_on` lists itself; the target graph must be acyclic ({DEPLOY_TARGETS})",
-                        target.id,
-                    ));
+                    return Err(DeployError::SelfDependency {
+                        target: target.id.clone(),
+                    });
                 }
                 if !target_ids.contains(dependency.as_str()) {
-                    return Err(format!(
-                        "[[deploy.target]] `{}` field `depends_on` references unknown target `{}` ({DEPLOY_TARGETS})",
-                        target.id, dependency,
-                    ));
+                    return Err(DeployError::UnknownDependency {
+                        target: target.id.clone(),
+                        dependency: dependency.clone(),
+                    });
                 }
             }
         }
@@ -175,7 +187,7 @@ impl DeploySection {
         Ok(())
     }
 
-    fn validate_target_graph_acyclic(&self) -> Result<(), String> {
+    fn validate_target_graph_acyclic(&self) -> Result<(), DeployError> {
         let mut edges: BTreeMap<&str, Vec<&str>> = BTreeMap::new();
         for target in &self.targets {
             if let Some(depends_on) = &target.depends_on {
@@ -185,37 +197,32 @@ impl DeploySection {
                 );
             }
         }
-        assert_acyclic(
-            &edges,
-            "deploy target graph",
-            DEPLOY_TARGETS,
-            "break the depends_on cycle",
-        )
+        assert_acyclic(&edges).map_err(|cycle| DeployError::DependsOnCycle {
+            cycle: cycle.join(" -> "),
+        })
     }
 
-    fn validate_profiles(&self, target_ids: &BTreeSet<&str>) -> Result<(), String> {
+    fn validate_profiles(&self, target_ids: &BTreeSet<&str>) -> Result<(), DeployError> {
         for (name, profile) in &self.profiles {
             if !is_portable_token(name) {
-                return Err(format!(
-                    "[deploy.profiles] key `{name}` is not a portable token (nonempty lowercase alphanumerics, `-`, `.`) ({DEPLOY_TARGETS})",
-                ));
+                return Err(DeployError::ProfileNameNotPortable { name: name.clone() });
             }
             if profile.targets.is_empty() {
-                return Err(format!(
-                    "[deploy.profiles.{name}] field `targets` is empty; a profile is a nonempty ordered selection ({DEPLOY_TARGETS})",
-                ));
+                return Err(DeployError::EmptyProfileTargets { name: name.clone() });
             }
             let mut seen: BTreeSet<&str> = BTreeSet::new();
             for target in &profile.targets {
                 if !seen.insert(target.as_str()) {
-                    return Err(format!(
-                        "[deploy.profiles.{name}] field `targets` lists `{target}` more than once ({DEPLOY_TARGETS})",
-                    ));
+                    return Err(DeployError::DuplicateProfileTarget {
+                        name: name.clone(),
+                        target: target.clone(),
+                    });
                 }
                 if !target_ids.contains(target.as_str()) {
-                    return Err(format!(
-                        "[deploy.profiles.{name}] field `targets` references unknown deploy target `{target}` ({DEPLOY_TARGETS})",
-                    ));
+                    return Err(DeployError::UnknownProfileTarget {
+                        name: name.clone(),
+                        target: target.clone(),
+                    });
                 }
             }
             // Every dependency of every selected target must be included in
@@ -236,9 +243,11 @@ impl DeploySection {
                 };
                 for dependency in depends_on {
                     if !selected.contains(dependency.as_str()) {
-                        return Err(format!(
-                            "[deploy.profiles.{name}] selects target `{target}` whose dependency `{dependency}` is not included in the profile ({DEPLOY_TARGETS})",
-                        ));
+                        return Err(DeployError::MissingDependencyInProfile {
+                            name: name.clone(),
+                            target: target.clone(),
+                            dependency: dependency.clone(),
+                        });
                     }
                 }
             }
@@ -246,9 +255,9 @@ impl DeploySection {
         if let Some(default) = &self.default_profile
             && !self.profiles.contains_key(default)
         {
-            return Err(format!(
-                "[deploy] field `default_profile` value `{default}` names no declared profile ({DEPLOY_TARGETS})",
-            ));
+            return Err(DeployError::UnknownDefaultProfile {
+                name: default.clone(),
+            });
         }
         Ok(())
     }

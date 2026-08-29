@@ -74,7 +74,7 @@ impl TryFrom<DeploySection> for DeploySectionWire {
 
     fn try_from(section: DeploySection) -> Result<Self, Self::Error> {
         for target in &section.targets {
-            target.validate()?;
+            target.validate().map_err(|error| error.to_string())?;
         }
         Ok(Self {
             default_profile: section.default_profile,

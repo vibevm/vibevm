@@ -7,14 +7,19 @@ use std::fs;
 use specmark::verifies;
 use tempfile::tempdir;
 
-use crate::manifest::{ArtifactInput, ArtifactOutput, ArtifactTarget, ArtifactsSection, Manifest};
+use crate::manifest::{
+    ArtifactBuildTarget, ArtifactInput, ArtifactKind, ArtifactOutput, ArtifactsSection, Manifest,
+};
 
 const PROJECT: &str = "[project]\nname = \"demo\"\nversion = \"0.1.0\"\n";
 const PACKAGE: &str =
     "[package]\ngroup = \"org.demo\"\nname = \"pkg\"\nkind = \"flow\"\nversion = \"0.1.0\"\n";
 const VIRTUAL: &str = "[workspace]\nmembers = []\n";
 
-/// The accepted fixed grammar, verbatim from the packet.
+/// The accepted fixed grammar in the amended A1 spelling: tagged one-of
+/// inputs in both families, the closed `kind`, optional `select`, `workdir`
+/// defaulting to `.`, and the exact `provider` pin on every mechanism
+/// target.
 const FULL_EXAMPLE: &str = concat!(
     "[[mechanism]]\n",
     "id = \"cargo-v2\"\n",
@@ -29,23 +34,24 @@ const FULL_EXAMPLE: &str = concat!(
     "\"build:cargo\" = \"org.example/build-tools#cargo-v2\"\n",
     "\n",
     "[[artifacts.build]]\n",
-    "id = \"helper\"\n",
+    "id = \"vibe-helper\"\n",
     "mechanism = \"build:cargo\"\n",
     "provider = \"org.example/build-tools#cargo-v2\"\n",
-    "inputs = [{ path = \"Cargo.toml\" }, { path = \"Cargo.lock\" }, { path = \"crates/helper/**\" }]\n",
-    "outputs = [{ id = \"helper.exe\", kind = \"executable\" }]\n",
-    "config = { package = \"helper\", bin = \"helper\", profile = \"release\", locked = true }\n",
+    "inputs = [{ path = \"Cargo.toml\" }, { path = \"Cargo.lock\" }, { path = \"crates/vibe-helper/**\" }]\n",
+    "outputs = [{ id = \"vibe-helper.exe\", kind = \"executable\",\n",
+    "  select = { package = \"vibe-helper\", bin = \"vibe-helper\" } }]\n",
+    "config = { profile = \"release\", locked = true }\n",
     "\n",
     "[[artifacts.package]]\n",
-    "id = \"helper-windows\"\n",
+    "id = \"vibe-helper-windows\"\n",
     "mechanism = \"package:windows-zip\"\n",
-    "inputs = [{ artifact = \"helper.exe\" }]\n",
-    "outputs = [{ id = \"helper.zip\", kind = \"archive\" }]\n",
+    "inputs = [{ artifact = \"vibe-helper.exe\" }]\n",
+    "outputs = [{ id = \"vibe-helper.zip\", kind = \"archive\" }]\n",
     "config = { layout = \"distribution/windows\" }\n",
     "\n",
     "[[deploy.target]]\n",
     "id = \"local-helper\"\n",
-    "artifact = \"helper.exe\"\n",
+    "artifact = \"vibe-helper.exe\"\n",
     "mechanism = \"deploy:vibe-bin\"\n",
     "provider = \"org.example/installers#vibe-bin-v2\"\n",
     "depends_on = []\n",
@@ -65,6 +71,17 @@ fn exact_full_example_parses_and_round_trips() {
     let artifacts = manifest.artifacts.as_ref().unwrap();
     assert_eq!(artifacts.build.len(), 1);
     assert_eq!(artifacts.package.len(), 1);
+    let build = &artifacts.build[0];
+    assert_eq!(build.workdir, ".");
+    assert_eq!(build.inputs.as_ref().map(Vec::len), Some(3));
+    assert_eq!(
+        build.provider.as_ref().map(|pin| pin.to_string()),
+        Some("org.example/build-tools#cargo-v2".to_string())
+    );
+    assert_eq!(
+        build.outputs[0].select.as_ref().unwrap().as_table()["bin"].as_str(),
+        Some("vibe-helper")
+    );
     let deploy = manifest.deploy.as_ref().unwrap();
     assert_eq!(deploy.targets.len(), 1);
     assert_eq!(deploy.profiles.len(), 1);
@@ -274,10 +291,10 @@ fn comments_survive_merge_rewrite_through_the_new_sections() {
     assert_eq!(reparsed.mechanism_decls.len(), 1);
 }
 
-/// The packet's accepted example is written with **inline** `inputs`,
-/// `outputs`, `config` and `handler` rows. The serializer canonicalises those
-/// into header tables — a spelling change the operator did not ask for — so
-/// the decoration seam has to carry each comment onto the row that inherited
+/// The accepted example is written with **inline** `inputs`, `outputs`,
+/// `config` and `handler` rows. The serializer canonicalises those into
+/// header tables — a spelling change the operator did not ask for — so the
+/// decoration seam has to carry each comment onto the row that inherited
 /// it. Losing a comment because the shape was rewritten underneath it is the
 /// exact failure this pins.
 #[test]
@@ -348,8 +365,8 @@ fn inline_authored_rows_keep_their_comments_through_write() {
 
 /// The note that followed the whole array — `inputs = [...] # KEEP` — has no
 /// bracket to sit after once the array becomes headers. It moves to the last
-/// header the array expanded into, exactly once, alongside the key-prefix and
-/// per-element notes.
+/// header the array expanded into, exactly once, alongside the key-prefix
+/// and per-element notes.
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#ARTIFACT-REGISTRY")]
 fn whole_array_trailing_notes_survive_canonicalisation() {
@@ -434,7 +451,7 @@ fn row_and_array_notes_both_survive_in_source_order() {
          outputs = [\n\
          \x20 # KEEP-OUTPUT-ELEMENT\n\
          \x20 {{ id = \"helper.exe\", kind = \"executable\" }},\n\
-         \x20 {{ id = \"helper.pdb\", kind = \"debug-info\" }}, # KEEP-LAST-OUTPUT-ROW\n\
+         \x20 {{ id = \"helper.pdb\", kind = \"file\" }}, # KEEP-LAST-OUTPUT-ROW\n\
          ] # KEEP-OUTPUTS-ARRAY\n"
     );
     fs::write(&path, &authored).unwrap();
@@ -474,6 +491,7 @@ fn row_and_array_notes_both_survive_in_source_order() {
     assert_eq!(build.inputs.as_ref().map(Vec::len), Some(1));
     assert_eq!(build.outputs.len(), 2);
     assert_eq!(build.outputs[1].id, "helper.pdb");
+    assert_eq!(build.outputs[1].kind, ArtifactKind::File);
     reparsed.write(&path).unwrap();
     assert_eq!(fs::read_to_string(&path).unwrap(), written);
 }
@@ -504,32 +522,36 @@ fn programmatic_documents_fail_the_same_validators() {
 
     // A document-level artifact cycle constructed in Rust.
     let mut cycle = ArtifactsSection::default();
-    cycle.build.push(ArtifactTarget {
+    cycle.build.push(ArtifactBuildTarget {
         id: "first".into(),
         mechanism: "build:cargo".parse().unwrap(),
         provider: None,
+        workdir: ".".into(),
         inputs: Some(vec![ArtifactInput::Artifact {
             artifact: "second.out".into(),
         }]),
         outputs: vec![ArtifactOutput {
             id: "first.out".into(),
-            kind: "executable".into(),
+            kind: ArtifactKind::Executable,
+            select: None,
         }],
         config: None,
     });
-    cycle.build.push(ArtifactTarget {
+    cycle.build.push(ArtifactBuildTarget {
         id: "second".into(),
         mechanism: "build:cargo".parse().unwrap(),
         provider: None,
+        workdir: ".".into(),
         inputs: Some(vec![ArtifactInput::Artifact {
             artifact: "first.out".into(),
         }]),
         outputs: vec![ArtifactOutput {
             id: "second.out".into(),
-            kind: "executable".into(),
+            kind: ArtifactKind::Executable,
+            select: None,
         }],
         config: None,
     });
-    let error = cycle.validate().unwrap_err();
+    let error = cycle.validate().unwrap_err().to_string();
     assert!(error.contains("cyclic"), "{error}");
 }

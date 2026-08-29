@@ -47,14 +47,17 @@ pub(crate) fn validate_plane(manifest: &Manifest) -> Result<(), String> {
         .artifacts
         .as_ref()
         .map(ArtifactsSection::validate)
-        .transpose()?;
+        .transpose()
+        .map_err(|error| error.to_string())?;
 
     if let Some(deploy) = &manifest.deploy {
         let artifact_ids = producers
             .as_ref()
             .map(|index| index.keys().cloned().collect::<BTreeSet<String>>())
             .unwrap_or_default();
-        deploy.validate(&artifact_ids)?;
+        deploy
+            .validate(&artifact_ids)
+            .map_err(|error| error.to_string())?;
     }
     Ok(())
 }
@@ -184,7 +187,7 @@ fn validate_local_pins(manifest: &Manifest, owner: Option<ProviderOwner>) -> Res
         )?;
     }
     if let Some(artifacts) = &manifest.artifacts {
-        for (role, target) in artifacts.all_targets() {
+        for target in &artifacts.build {
             let Some(pin) = &target.provider else {
                 continue;
             };
@@ -193,7 +196,19 @@ fn validate_local_pins(manifest: &Manifest, owner: Option<ProviderOwner>) -> Res
                 &declared,
                 &target.mechanism,
                 pin,
-                &format!("[[artifacts.{role}]] `{}` field `provider`", target.id),
+                &format!("[[artifacts.build]] `{}` field `provider`", target.id),
+            )?;
+        }
+        for target in &artifacts.package {
+            let Some(pin) = &target.provider else {
+                continue;
+            };
+            check_local_pin(
+                &owner,
+                &declared,
+                &target.mechanism,
+                pin,
+                &format!("[[artifacts.package]] `{}` field `provider`", target.id),
             )?;
         }
     }
@@ -256,12 +271,11 @@ fn check_local_pin(
 /// run and on every platform. Iterative rather than recursive so a deep
 /// dependency chain in an installed package's manifest reports a diagnostic
 /// instead of overflowing the stack.
-pub(crate) fn assert_acyclic(
-    edges: &BTreeMap<&str, Vec<&str>>,
-    subject: &str,
-    anchor: &str,
-    fix: &str,
-) -> Result<(), String> {
+///
+/// Returns the offending cycle as a closed sequence of ids (first id repeated
+/// last, e.g. `["a", "b", "a"]`); the caller renders it into its own typed
+/// diagnostic.
+pub(crate) fn assert_acyclic(edges: &BTreeMap<&str, Vec<&str>>) -> Result<(), Vec<String>> {
     #[derive(Clone, Copy, PartialEq)]
     enum Colour {
         Grey,
@@ -275,7 +289,7 @@ pub(crate) fn assert_acyclic(
         }
         colours.insert(root, Colour::Grey);
         // `frames` holds (node, index of the next neighbour to walk);
-        // `path` is the grey stack the cycle text is read off.
+        // `path` is the grey stack the cycle is read off.
         let mut frames: Vec<(&str, usize)> = vec![(root, 0)];
         let mut path: Vec<&str> = vec![root];
 
@@ -297,12 +311,10 @@ pub(crate) fn assert_acyclic(
                         .iter()
                         .position(|seen| *seen == next)
                         .unwrap_or_default();
-                    let mut cycle = path[from..].join(" -> ");
-                    cycle.push_str(" -> ");
-                    cycle.push_str(next);
-                    return Err(format!(
-                        "{subject} is cyclic: {cycle} (violates {anchor}; fix: {fix})"
-                    ));
+                    let mut cycle: Vec<String> =
+                        path[from..].iter().map(|id| (*id).to_string()).collect();
+                    cycle.push(next.to_string());
+                    return Err(cycle);
                 }
                 None => {
                     colours.insert(next, Colour::Grey);
@@ -313,6 +325,23 @@ pub(crate) fn assert_acyclic(
         }
     }
     Ok(())
+}
+
+/// Echo one authored value into a diagnostic without letting a hostile
+/// manifest balloon the message: values at or under 64 bytes are quoted
+/// verbatim, longer ones are cut on a character boundary with their full
+/// length recorded. Every typed refusal in the artifact/deploy plane renders
+/// field values through this one helper.
+pub(crate) fn bounded_value(value: &str) -> String {
+    const LIMIT: usize = 64;
+    if value.len() <= LIMIT {
+        return format!("`{value}`");
+    }
+    let mut cut = LIMIT;
+    while cut > 0 && !value.is_char_boundary(cut) {
+        cut -= 1;
+    }
+    format!("`{}…` ({} bytes long)", &value[..cut], value.len())
 }
 
 #[cfg(test)]

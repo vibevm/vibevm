@@ -12,6 +12,7 @@ const ARTIFACTS: &str = concat!(
     "[[artifacts.build]]\n",
     "id = \"helper\"\n",
     "mechanism = \"build:cargo\"\n",
+    "inputs = [{ path = \"Cargo.toml\" }]\n",
     "outputs = [{ id = \"helper.exe\", kind = \"executable\" }]\n",
 );
 const DEPLOY: &str = concat!(
@@ -156,6 +157,14 @@ fn empty_unsafe_and_mismatched_rows_refuse_with_remediation() {
             "field `id`",
         ),
         (
+            "[[deploy.target]]\nid = \"-lead\"\nartifact = \"helper.exe\"\nmechanism = \"deploy:vibe-bin\"\n",
+            "is not a portable token",
+        ),
+        (
+            "[[deploy.target]]\nid = \"x\"\nartifact = \"Bad Ref\"\nmechanism = \"deploy:vibe-bin\"\n",
+            "field `artifact` value `Bad Ref` is not a portable token",
+        ),
+        (
             "[[deploy.target]]\nid = \"x\"\nartifact = \"ghost.exe\"\nmechanism = \"deploy:vibe-bin\"\n",
             "names no declared artifact",
         ),
@@ -238,7 +247,11 @@ fn profiles_validate_names_empties_duplicates_and_unknowns() {
     for (profile, fragment) in [
         (
             "[deploy.profiles.\"Bad Name\"]\ntargets = [\"a\"]\n",
-            "not a portable token",
+            "is not a portable token",
+        ),
+        (
+            "[deploy.profiles.\"-lead\"]\ntargets = [\"a\"]\n",
+            "is not a portable token",
         ),
         ("[deploy.profiles.empty]\ntargets = []\n", "is empty"),
         (
@@ -418,6 +431,9 @@ fn programmatic_deploy_sections_fail_the_same_validator() {
             targets: vec!["x".into()],
         },
     );
-    let error = section.validate(&artifacts.output_ids()).unwrap_err();
+    let error = section
+        .validate(&artifacts.output_ids())
+        .unwrap_err()
+        .to_string();
     assert!(error.contains("lists itself"), "{error}");
 }

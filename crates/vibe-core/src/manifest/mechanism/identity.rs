@@ -446,7 +446,7 @@ impl ProviderPinParseError {
 /// A nonempty portable token: lowercase ASCII alphanumerics plus `-` and `.`,
 /// starting and ending alphanumeric, with no `..` run. The shared id/name
 /// vocabulary for mechanism keys, provider ids, artifact ids and kinds, and
-/// profile names.
+/// profile names — the ONE grammar of the whole mechanism plane.
 pub(crate) fn is_portable_token(value: &str) -> bool {
     let bytes = value.as_bytes();
     if bytes.is_empty() {

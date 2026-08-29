@@ -301,7 +301,7 @@ fn only_artifact_inputs_are_glob_capable() {
     };
     assert!(skill.validate().is_err(), "a skill path is never a glob");
 
-    // The artifact input row is the one place a wildcard is syntax.
+    // The artifact input path row is the one place a wildcard is syntax.
     let inputs = concat!(
         "[[artifacts.build]]\nid = \"helper\"\nmechanism = \"build:cargo\"\n",
         "inputs = [{ path = \"crates/*/Cargo.toml\" }, { path = \"crates/**/src/*.rs\" }]\n",

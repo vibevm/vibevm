@@ -6,8 +6,8 @@ use specmark::verifies;
 
 use super::local_provider_owner;
 use crate::manifest::{
-    ArtifactInput, ArtifactOutput, ArtifactTarget, ArtifactsSection, Manifest, ProviderOwner,
-    WorkspaceSection,
+    ArtifactBuildTarget, ArtifactInput, ArtifactKind, ArtifactOutput, ArtifactsSection, Manifest,
+    ProviderOwner, WorkspaceSection,
 };
 
 const PROJECT: &str = "[project]\nname = \"demo\"\nversion = \"0.1.0\"\n";
@@ -26,6 +26,7 @@ const PLANE: &str = concat!(
     "[[artifacts.build]]\n",
     "id = \"helper\"\n",
     "mechanism = \"build:cargo\"\n",
+    "inputs = [{ path = \"Cargo.toml\" }]\n",
     "outputs = [{ id = \"helper.exe\", kind = \"executable\" }]\n",
     "\n",
     "[[artifacts.package]]\n",
@@ -84,9 +85,9 @@ fn ghost_refs_refuse_through_both_paths() {
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#ARTIFACT-REGISTRY")]
 fn cycles_refuse_through_both_paths() {
+    // A build target consuming its own output is the shortest artifact cycle.
     let mut manifest = valid();
-    let artifacts = manifest.artifacts.as_mut().unwrap();
-    artifacts.build[0].inputs = Some(vec![ArtifactInput::Artifact {
+    manifest.artifacts.as_mut().unwrap().build[0].inputs = Some(vec![ArtifactInput::Artifact {
         artifact: "helper.exe".into(),
     }]);
     refuses_both_ways(
@@ -413,7 +414,7 @@ fn project_hosts_own_the_landed_identity_spelling() {
         .is_ok()
     );
 
-    // Target pins answer to the same owner law.
+    // Target pins answer to the same owner law — artifact targets included.
     let build = concat!(
         "[[artifacts.build]]\nid = \"helper\"\nmechanism = \"build:rustc\"\n",
         "provider = \"__host__/demo#cargo-v2\"\n",
@@ -432,6 +433,9 @@ fn project_hosts_own_the_landed_identity_spelling() {
     );
 }
 
+/// §3.1's resolution law rule 1 names target pins for EVERY mechanism
+/// target; the cross-check against a same-manifest declaration applies to
+/// build, package and deploy rows alike.
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE")]
 fn target_provider_pins_are_cross_checked_too() {
@@ -452,6 +456,19 @@ fn target_provider_pins_are_cross_checked_too() {
     );
     assert!(
         error.contains("the logical key is `build:rustc`"),
+        "{error}"
+    );
+
+    let package_pin = concat!(
+        "[[artifacts.package]]\nid = \"bundle\"\nmechanism = \"package:zip\"\n",
+        "provider = \"org.example/build-tools#cargo-v2\"\n",
+        "outputs = [{ id = \"bundle.zip\", kind = \"archive\" }]\n",
+    );
+    let error = Manifest::parse_str(&format!("{PACKAGE}\n{DECL}\n{package_pin}"))
+        .unwrap_err()
+        .to_string();
+    assert!(
+        error.contains("[[artifacts.package]] `bundle` field `provider`"),
         "{error}"
     );
 
@@ -479,7 +496,9 @@ fn target_provider_pins_are_cross_checked_too() {
 }
 
 /// A chain far deeper than any recursive walker survives. The point is that
-/// a deep authored graph produces a verdict, not a stack overflow.
+/// a deep authored graph produces a verdict, not a stack overflow. The chain
+/// is build-shaped — build→build artifact references are expressible again
+/// under the tagged inputs — each target consuming its predecessor's output.
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#ARTIFACT-REGISTRY")]
 fn deep_chains_are_walked_iteratively() {
@@ -492,10 +511,11 @@ fn deep_chains_are_walked_iteratively() {
             } else {
                 Some(index - 1)
             };
-            section.build.push(ArtifactTarget {
+            section.build.push(ArtifactBuildTarget {
                 id: format!("t{index}"),
                 mechanism: "build:cargo".parse().unwrap(),
                 provider: None,
+                workdir: ".".into(),
                 inputs: previous.map(|previous| {
                     vec![ArtifactInput::Artifact {
                         artifact: format!("o{previous}"),
@@ -503,7 +523,8 @@ fn deep_chains_are_walked_iteratively() {
                 }),
                 outputs: vec![ArtifactOutput {
                     id: format!("o{index}"),
-                    kind: "executable".into(),
+                    kind: ArtifactKind::Executable,
+                    select: None,
                 }],
                 config: None,
             });
@@ -511,6 +532,9 @@ fn deep_chains_are_walked_iteratively() {
         section
     };
     assert!(chain(false).validate().is_ok());
-    let error = chain(true).validate().expect_err("the loop must be caught");
+    let error = chain(true)
+        .validate()
+        .expect_err("the loop must be caught")
+        .to_string();
     assert!(error.contains("cyclic"), "deep cycle must report a cycle");
 }
