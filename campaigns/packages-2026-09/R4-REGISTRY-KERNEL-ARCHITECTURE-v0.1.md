@@ -445,6 +445,45 @@ engine-owned segmented emitted-tape adapter handles a hoisted line honestly,
 that active transform refuses the artifact by name rather than silently skips
 or corrupts it.
 
+**Ratified at R4.2 acceptance (central, 2026-08-30).** Five rulings the
+binding landing surfaced, each pinned:
+
+1. **EMITTED only.** The kernel's surface is `&str → Cow<str>`; a LANE
+   binding would be a new serializer, and a T5 behavior declares exactly one
+   stage. Every other stage refuses through the registry's own stage law.
+2. **The segmenter, not the kernel, owns "frame bytes survive".** The tape
+   is walked as engine-framed comment spans (LINE-START `<!-- ` — an
+   indented in-document comment is CONTENT, pinned after a reviewer
+   mutation showed the distinction unpinned and lawful lanes splittable)
+   and gaps whose whitespace runs are copied verbatim by the segmenter;
+   only a gap's core reaches the kernel. A frame-only/all-elided lane is
+   lawful (the kernel alone would refuse it); a hoisted marker refuses the
+   artifact typed with the origin and tape-absolute offset. The honest
+   blast radius of dropping segmentation is exactly those three properties
+   — on a document-bearing lane the bare kernel happens to leave frame
+   bytes alone, and the record says so rather than pretending the byte
+   assertions were the fence.
+3. **Byte-equal minify returns the caller's own bytes**, so T9's
+   reconstruction sees the identity case; the all-elided lane is the first
+   REAL compile through that arm.
+4. **The T1 config gap is closed**: `toml.workspace = true` (the one
+   authorised manifest line, carried with its file-convention rationale
+   block), the DAG fences updated in one home
+   (`dependency_dag_fence_tests`), and the lossless value walk landed —
+   `ConfigLoweringGap` renamed `ConfigLoweringError` because the checked
+   datetime constructors keep one genuine value refusal; a "Gap" name would
+   have lied about an implemented seam.
+5. **Activation is proven at both epochs**: the install pass observes no
+   world (asserted as the baseline), the post-install regeneration minifies
+   strictly-smaller with node sets and frame comments identical,
+   deactivation restores byte-exact history, `verify_boot_graph` calls the
+   activated tree clean (the behavioural twin of T10C's counted fence —
+   proven red under the frame-drop mutation), and a MEMBER node activates
+   its own lane while the root's stands — T10B's member re-seating
+   byte-visible at last. The two-refusers determinism pin replaced the
+   `ordered.sort()` spelling fence (32 fresh tables, lock order deliberately
+   disagreeing with canonical order).
+
 ## 9. Analyzer follows execution evidence
 
 R4.3 consumes Lane/Emission witnesses and transform trace events:
@@ -457,6 +496,32 @@ R4.3 consumes Lane/Emission witnesses and transform trace events:
 
 The JSON report is JTD-first. It never parses generated artifact comments to
 reconstruct attribution already present in IR/provenance.
+
+### 9.1 Where the evidence comes from — decision record (central, 2026-08-30)
+
+**Decision.** The analyzer is an IN-PROCESS observer over a real compile the
+CLI performs. `vibe extensions analyze` compiles the selected node's lanes
+exactly as `install`'s regeneration would (same owner plans, same durable
+observation rules), collects the Lane/Emission witnesses and transform trace
+events of THAT run in memory, and lowers them into one JTD report. Nothing
+new is persisted: witnesses are process-lifetime values by design, and the
+report is the command's output (stdout, or `--out <file>`).
+
+**Considered and rejected.** Reading the R3.4 trace files instead — the
+persisted trace is a timing/occurrence index and deliberately does not carry
+per-contribution byte witnesses; deriving bytes from it would either widen
+the trace wire for an analyzer-only need or re-parse artifacts, and the
+second is the §9 law's named ban. Persisting witnesses — a second durable
+wire for data one command consumes in the same process is cost without a
+consumer.
+
+**Consequences.** The analyzer's numbers reconcile to the artifacts of ITS
+OWN run (acceptance row 13); a tree changed since the last install is
+analyzed as it would compile NOW, which is the honest reading of "follows
+execution evidence". The report format is a registered JTD exchange
+(schema + REGISTRY.toml row + generated readers + one hand-written scalar
+cell + golden corpus) on the lifecycle-state pattern, so a future
+`--from-run` reader consumes the same shape.
 
 ## 10. Extraction and landing sequence
 

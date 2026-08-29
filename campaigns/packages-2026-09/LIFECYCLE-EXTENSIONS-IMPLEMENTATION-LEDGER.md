@@ -704,6 +704,43 @@ than depending on untracked `cache/` archaeology.
   (minify binding + REDs + activation e2e over a post-install path with a
   member-node case, closing the T1 config gap with the toml runtime edge)
   and R4.3 (lane analyzer) are next, then the coherent R4 panel.
+- R4.2 minify binding, RED corpus and activation e2e: `7a09ec2d` registers
+  `xml-minify` (epoch 1, EMITTED — the one stage the kernel serves without a
+  new serializer; every other stage refuses through the registry's own law)
+  over a segment-aware adapter: engine-framed comment spans found by the
+  emit cell's own constants (writer and reader share one spelling), frame
+  bytes and inter-segment whitespace copied verbatim BY THE SEGMENTER,
+  gap cores minified by the untouched strict kernel, a frame-only lane
+  lawful, a hoisted marker a typed refusal naming origin and tape-absolute
+  offset, byte-equal output returning the caller's own bytes into T9's
+  identity arm. The §8 RED list is fully mapped (kernel bullets named where
+  they already live, binding/e2e bullets new); the T1 config gap is CLOSED
+  (the one authorised `toml.workspace = true` line + one-home DAG fence +
+  the lossless value walk; `ConfigLoweringGap` renamed `ConfigLoweringError`
+  — the checked datetime constructors keep one genuine refusal); and
+  activation is proven at both epochs in vibe-workspace: install-pass
+  unobserved baseline, post-install strictly-smaller with node sets and
+  frame comments identical, byte-stable regeneration, deactivation
+  restoring exact history, `verify_boot_graph` clean on the activated tree,
+  and the MEMBER node activating its own lane while the root's stands.
+  Producer disclosed six 0-items, all ratified (EMITTED-only; the honest
+  mutation-1 blast radius; the Gap rename; two fence files split for the
+  600 budget; the rationale block on the manifest line; and my own 9.1
+  freeze landing mid-run, correctly flagged as not-theirs). Producer ran a
+  SIXTH unlisted mutation validating its own fence retirement (the
+  two-refusers behavioural pin red on attempt 0 of 32). Reviewer mutations:
+  M-A (verify frames emptied) now red BEHAVIOURALLY in
+  `verify_boot_graph_calls_a_freshly_generated_activated_tree_clean` — the
+  T10C counted fence has its live twin; M-B (segmenter line-start law
+  dropped) left all 26 minify tests GREEN — the distinction was unpinned
+  and a lawful annotated lane would split and refuse — closed with
+  `an_indented_in_document_comment_is_content_and_never_splits_its_document`,
+  proven red under the mutation. Gates: vibe-spec 848 (+pin), workspace
+  480, clippy both, downstream checks, conform 27-in-scope 0-new, fmt,
+  live BOOT_BYTE_NOOP=True a third time — now over a NONEMPTY production
+  catalog with the host activating nothing. Kernel §8 carries the
+  five-ruling ratification. Map `e2c6e393`. R4.3 (analyzer, claudez lane)
+  remains in flight; the coherent R4 panel follows its landing.
 - Gate repair `67ab9683` fixes the conform content store's Windows cache slot:
   `sha256:<hex>` had created 1,393 NTFS alternate streams on one base file and
   failed with OS error 665. Authored engine + six vendored copies now use one
@@ -778,7 +815,7 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 |---|---|---|
 | R4.0 one pure registry below lifecycle/workspace | done | kernel `6af1b86f`, map `8531cf82`; exact runtime-dependency/AST-ambient/public-reexport fences; kernel 22, lifecycle 287/3 ignored, orchestrator 126 + doctests, strict clippy/check/conform/DAG green |
 | R4.1 four positions, owner-scoped activation, header, per-unit fingerprint, reference oracle | in progress | controls `52a59dcc`; transaction `91142777` / `ab68d145`; T1 `b65f9958`; T3 `48d7dc75`; T2 `49e944f0` + `87ef2df6`; T4 `a252fcc8`; T5 `0eb46c82`; T6a `01f1522e`; T6b `6ffedb03`; T6c `cb6006d4`; T7 `419e1aed`; T8 `99e52760`; T9 `513f3945`; T10A `35cd04d1`; T10B `3618ee2b` (lowering + typed subjects + threading; config value-tower refusal until R4.2); T10C `855ac6ce` (fp frame + active-only header; §7.1 freeze repaired; wire-gate/verify/decompiler pins); map `92a0b72e`. **R4.1 code-complete**; remaining R4.1 debt rides R4.2 (toml edge, activation e2e) |
-| R4.2 builtin XML minify | partial | pure strict kernel `016f0fab` and reversible comment codec `fbbd5140`; no activation/on-off e2e |
+| R4.2 builtin XML minify | done | kernel `016f0fab`/`fbbd5140`; binding + segmenter + RED map + T1 config closure + two-epoch activation/member/deactivation e2e `7a09ec2d`; kernel §8 ratification |
 | R4.3 lane analyzer | missing | no `vibe extensions analyze` or machine report |
 
 ### R5 — native tier
