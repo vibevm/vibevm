@@ -5,6 +5,7 @@ use super::super::backend::BackendId;
 use super::super::backend::BackendRegistry;
 use super::super::ir::{ArtifactInputWitness, ArtifactPlan, EmittedArtifact, StaticCompileMode};
 use super::super::trace::CompileTraceSink;
+use super::super::transform::registry::TransformRegistry;
 use super::super::worklist::{self, ErrorOwners};
 use super::BuiltinSchedule;
 
@@ -26,13 +27,21 @@ pub enum ArtifactCompileError {
     Backend { pass: String, reason: String },
     #[error("compiler manager failed: {reason}")]
     Manager { reason: String },
+    #[error(transparent)]
+    Transform(#[from] super::TransformCompileError),
 }
 
 pub fn compile_artifact(
     plan: ArtifactPlan,
     source: &impl SectionSource,
 ) -> Result<EmittedArtifact, ArtifactCompileError> {
-    compile_artifact_with_registry(plan, source, &BackendRegistry::builtins())
+    run_with_registries(
+        plan,
+        source,
+        &BackendRegistry::builtins(),
+        &TransformRegistry::builtins(),
+        None,
+    )
 }
 
 /// [`compile_artifact`] under one diagnostic observer (PROP-054 `##OBS-TRACE`).
@@ -51,7 +60,13 @@ pub fn compile_artifact_traced(
     source: &impl SectionSource,
     sink: &dyn CompileTraceSink,
 ) -> Result<EmittedArtifact, ArtifactCompileError> {
-    compile_artifact_traced_with_registry(plan, source, &BackendRegistry::builtins(), Some(sink))
+    run_with_registries(
+        plan,
+        source,
+        &BackendRegistry::builtins(),
+        &TransformRegistry::builtins(),
+        Some(sink),
+    )
 }
 
 pub(crate) fn compile_artifact_with_registry(
@@ -59,21 +74,34 @@ pub(crate) fn compile_artifact_with_registry(
     source: &impl SectionSource,
     registry: &BackendRegistry,
 ) -> Result<EmittedArtifact, ArtifactCompileError> {
-    compile_artifact_traced_with_registry(plan, source, registry, None)
+    run_with_registries(plan, source, registry, &TransformRegistry::builtins(), None)
 }
 
-pub(crate) fn compile_artifact_traced_with_registry(
+/// The cfg-test dual-registry seam: the one way a test injects T5's identity
+/// catalog into a whole-artifact compile. Production always pins
+/// [`TransformRegistry::builtins`]; this never widens into
+/// `feature = "test-support"`.
+#[cfg(test)]
+pub(crate) fn compile_artifact_with_registries(
     plan: ArtifactPlan,
     source: &impl SectionSource,
-    registry: &BackendRegistry,
+    backends: &BackendRegistry,
+    transforms: &TransformRegistry,
+) -> Result<EmittedArtifact, ArtifactCompileError> {
+    run_with_registries(plan, source, backends, transforms, None)
+}
+
+/// The cfg-test traced dual-registry seam, so a transform pass name can be
+/// proven to survive trace identity end to end.
+#[cfg(test)]
+pub(crate) fn compile_artifact_traced_with_registries(
+    plan: ArtifactPlan,
+    source: &impl SectionSource,
+    backends: &BackendRegistry,
+    transforms: &TransformRegistry,
     trace: Option<&dyn CompileTraceSink>,
 ) -> Result<EmittedArtifact, ArtifactCompileError> {
-    let schedule = BuiltinSchedule::emitted(&plan, registry).map_err(|error| {
-        ArtifactCompileError::Registry {
-            reason: error.to_string(),
-        }
-    })?;
-    run(plan, source, schedule, trace)
+    run_with_registries(plan, source, backends, transforms, trace)
 }
 
 #[cfg(feature = "test-support")]
@@ -88,7 +116,8 @@ pub(crate) fn compile_artifact_with_backend_id(
         .map_err(|error| ArtifactCompileError::Registry {
             reason: error.to_string(),
         })?;
-    let schedule = BuiltinSchedule::with_backend(&plan, implementation);
+    let schedule =
+        BuiltinSchedule::with_backend(&plan, &TransformRegistry::builtins(), implementation)?;
     run(plan, source, schedule, None)
 }
 
@@ -159,18 +188,30 @@ pub fn compile_artifact_replacement_test_vehicle(
     compile_artifact_with_registry(plan, source, &registry)
 }
 
+fn run_with_registries(
+    plan: ArtifactPlan,
+    source: &impl SectionSource,
+    backends: &BackendRegistry,
+    transforms: &TransformRegistry,
+    trace: Option<&dyn CompileTraceSink>,
+) -> Result<EmittedArtifact, ArtifactCompileError> {
+    let schedule = BuiltinSchedule::emitted(&plan, transforms, backends)?;
+    run(plan, source, schedule, trace)
+}
+
 fn run(
     plan: ArtifactPlan,
     source: &impl SectionSource,
     schedule: BuiltinSchedule,
     trace: Option<&dyn CompileTraceSink>,
 ) -> Result<EmittedArtifact, ArtifactCompileError> {
-    let worklist = super::infallible_worklist(worklist::discover(
+    let worklist = worklist::discover(
         &plan,
         source,
-        |input| Ok(schedule.parse_source(input, trace)),
+        |input| schedule.parse_source(input, trace),
         |address, reason| schedule.record_failure(address, reason),
-    ));
+    )
+    .map_err(|error| schedule.document_error(error))?;
     schedule.close_state.set_pending_sources(worklist.sources);
     schedule.close_state.set_pending_embeds(worklist.embeds);
     schedule.emit(worklist.documents, &plan, &worklist.owners, trace)
@@ -187,7 +228,14 @@ pub(crate) fn compile_compatibility_artifact(
     }
 }
 
-fn into_compatibility_error(error: ArtifactCompileError) -> crate::pipeline::CompileError {
+/// Fold one artifact-level error into the legacy public compile error.
+///
+/// The compatibility path always compiles an EMPTY transform plan, so the
+/// transform family is unreachable here by construction — the panic arm
+/// keeps exactly the reachability it had before the family existed.
+pub(super) fn into_compatibility_error(
+    error: ArtifactCompileError,
+) -> crate::pipeline::CompileError {
     match error {
         ArtifactCompileError::Compile(error) => error,
         ArtifactCompileError::Input { source, .. } => into_compatibility_error(*source),

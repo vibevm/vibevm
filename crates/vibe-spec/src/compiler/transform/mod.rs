@@ -20,6 +20,7 @@ pub(crate) mod plan;
 pub(crate) mod plan_digest;
 pub(crate) mod plan_validate;
 pub(crate) mod registry;
+pub(crate) mod schedule;
 
 #[cfg(test)]
 pub(crate) mod carriage;
@@ -41,3 +42,11 @@ mod registry_fence_tests;
 pub(crate) mod registry_test_support;
 #[cfg(test)]
 mod registry_tests;
+#[cfg(test)]
+mod schedule_execution_tests;
+#[cfg(test)]
+mod schedule_execution_vehicles;
+#[cfg(test)]
+mod schedule_fence_tests;
+#[cfg(test)]
+mod schedule_tests;

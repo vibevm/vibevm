@@ -8,6 +8,7 @@ use super::super::*;
 use super::support::{DefaultingRecorder, Recorder, World, declared_artifact_passes, plan};
 use crate::compile_artifact;
 use crate::compiler::builtin::{BuiltinSchedule, compile_artifact_traced};
+use crate::compiler::transform::registry::TransformRegistry;
 use crate::compiler::wire;
 
 #[test]
@@ -49,7 +50,8 @@ fn an_untraced_compile_encodes_nothing_and_keeps_its_bytes_and_errors() {
     assert_eq!(refused.snapshot, None);
     assert!(refused.diagnostic.is_some());
     // The refusal names a pass the schedule really declares, not an invention.
-    let schedule = BuiltinSchedule::emitted_for_test(&plan());
+    let schedule = BuiltinSchedule::emitted_for_test(&plan(), &TransformRegistry::builtins())
+        .expect("the empty-plan schedule builds");
     assert!(declared_artifact_passes(schedule.pipeline_for_test()).contains(&refused.pass));
 }
 
@@ -59,7 +61,8 @@ fn the_observed_names_equal_the_declared_schedule_with_one_parse_per_document() 
     let recorder = Recorder::default();
     compile_artifact_traced(plan(), &World::two_documents(), &recorder).unwrap();
 
-    let schedule = BuiltinSchedule::emitted_for_test(&plan());
+    let schedule = BuiltinSchedule::emitted_for_test(&plan(), &TransformRegistry::builtins())
+        .expect("the empty-plan schedule builds");
     let declared = declared_artifact_passes(schedule.pipeline_for_test());
     let (parse, artifact) = declared
         .split_first()
@@ -143,7 +146,8 @@ fn a_sink_that_stands_down_on_budget_costs_the_compiler_no_encode_at_all() {
     // `snapshot-skipped-budget` row — pass and verify measured, NO encode
     // duration, no snapshot, and no diagnostic, because standing down is not
     // a failure.
-    let schedule = BuiltinSchedule::emitted_for_test(&plan());
+    let schedule = BuiltinSchedule::emitted_for_test(&plan(), &TransformRegistry::builtins())
+        .expect("the empty-plan schedule builds");
     let declared = declared_artifact_passes(schedule.pipeline_for_test());
     let events = recorder.events();
     assert_eq!(events.len(), declared.len() + 1, "two documents parse");

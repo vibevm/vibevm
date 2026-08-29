@@ -14,13 +14,15 @@ use crate::compiler::builtin::{BuiltinSchedule, compile_artifact_traced};
 use crate::compiler::ir::{DocumentAddress, DocumentIr, SourceFormatId, SourceIr};
 use crate::compiler::pass::{IdentityPass, PassSegment, PassSegmentError};
 use crate::compiler::pipeline::{CompilerPipeline, CompilerPipelineError};
+use crate::compiler::transform::registry::TransformRegistry;
 use crate::compiler::verify::IrVerifier;
 
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE")]
 fn a_real_pass_failure_records_one_event_and_keeps_the_error_identity() {
     // The real built-in `parse`, refused by a format it does not implement.
-    let schedule = BuiltinSchedule::linked_for_test(&plan());
+    let schedule = BuiltinSchedule::linked_for_test(&plan(), &TransformRegistry::builtins())
+        .expect("the empty-plan schedule builds");
     let bad = || {
         SourceIr::new(
             DocumentAddress::Spec(

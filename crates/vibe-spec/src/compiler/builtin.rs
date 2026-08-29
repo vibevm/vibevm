@@ -2,34 +2,48 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR");
 
-use crate::use_graph::UseGraphError;
 use crate::{DocTree, SectionSource, SpecAddress};
 
 #[cfg(test)]
 use super::absorb::ABSORB_PASS_NAME;
 use super::absorb::AbsorbPass;
-use super::assemble::{ASSEMBLE_PASS_NAME, AssemblePass, AssemblePassError};
-use super::backend::{BackendRegistry, BackendRegistryError, EmitBackend};
-use super::close::{CLOSE_PASS_NAME, ClosePass, CloseState};
-use super::embed::{EMBED_PASS_NAME, EmbedPass, EmbedPassError};
-use super::emit::{EmitPass, EmitPassError};
+#[cfg(test)]
+use super::assemble::ASSEMBLE_PASS_NAME;
+use super::assemble::AssemblePass;
+use super::backend::{BackendRegistry, EmitBackend};
+#[cfg(test)]
+use super::close::CLOSE_PASS_NAME;
+use super::close::{ClosePass, CloseState};
+#[cfg(test)]
+use super::embed::EMBED_PASS_NAME;
+use super::embed::EmbedPass;
+use super::emit::EmitPass;
 use super::ir::{
     ArtifactPlan, ClosureIr, DocumentIr, EmittedArtifact, LaneIr, SourceIr, StaticCompileMode,
 };
-use super::link::{LINK_PASS_NAME, LinkPass, LinkPassError};
-use super::merge::{MERGE_PASS_NAME, MergePass, MergePassError};
+#[cfg(test)]
+use super::link::LINK_PASS_NAME;
+use super::link::LinkPass;
+#[cfg(test)]
+use super::merge::MERGE_PASS_NAME;
+use super::merge::MergePass;
 use super::pass::{Pass, PassName, PassSegmentError};
 use super::pipeline::{CompilerPipeline, CompilerPipelineError};
 #[cfg(test)]
 use super::qualify::QUALIFY_PASS_NAME;
 use super::qualify::QualifyPass;
 use super::trace::CompileTraceSink;
+use super::transform::registry::TransformRegistry;
+use super::transform::schedule::{TransformError, TransformSchedule};
 use super::worklist;
 
-const PARSE_PASS_NAME: &str = "parse";
-const MARKDOWN_FORMAT: &str = "markdown";
-
+mod attribution;
 mod driver;
+pub use super::transform::schedule::TransformCompileError;
+#[cfg(test)]
+pub(crate) use driver::compile_artifact_traced_with_registries;
+#[cfg(test)]
+pub(crate) use driver::compile_artifact_with_registries;
 #[cfg(test)]
 pub(crate) use driver::compile_artifact_with_registry;
 pub(crate) use driver::compile_compatibility_artifact;
@@ -39,6 +53,9 @@ pub use driver::{
     compile_artifact_missing_backend_test_vehicle, compile_artifact_opaque_test_vehicle,
     compile_artifact_replacement_test_vehicle,
 };
+
+const PARSE_PASS_NAME: &str = "parse";
+const MARKDOWN_FORMAT: &str = "markdown";
 
 /// The built-in source-to-document lowering.
 ///
@@ -111,15 +128,36 @@ struct ParseError {
 pub(crate) struct BuiltinSchedule {
     pipeline: CompilerPipeline,
     close_state: CloseState,
+    transforms: TransformSchedule,
+    transform_names: Vec<PassName>,
+}
+
+/// Wrap one internal transform fault as the public opaque artifact error.
+/// The builtin cell owns this conversion (the transform cell names no
+/// builtin type, and the builtin cell names no transform construction), and
+/// it is the ONE conversion site: the attribution cell below reaches it
+/// through `super` rather than restating it.
+fn transform_public(inner: TransformError) -> ArtifactCompileError {
+    ArtifactCompileError::Transform(TransformCompileError::new(inner))
 }
 
 impl BuiltinSchedule {
-    fn linked(plan: &ArtifactPlan) -> Self {
+    fn linked(
+        plan: &ArtifactPlan,
+        registry: &TransformRegistry,
+    ) -> Result<Self, ArtifactCompileError> {
+        let transforms = TransformSchedule::resolve(plan, registry).map_err(transform_public)?;
         let close_state = CloseState::default();
         let mut pipeline = CompilerPipeline::default();
+        transforms
+            .push_source_before_parse(&mut pipeline)
+            .map_err(transform_public)?;
         pipeline
             .push_document(ParsePass::new())
             .expect("the static built-in parse schedule is valid");
+        transforms
+            .push_document_after_parse(&mut pipeline)
+            .map_err(transform_public)?;
         pipeline
             .push_artifact(ClosePass::new(plan.clone(), close_state.clone()))
             .expect("the static built-in close schedule is valid");
@@ -143,52 +181,88 @@ impl BuiltinSchedule {
         // the real verifier hook in unit tests. Production construction keeps
         // the verifier off, byte- and error-identical to before.
         pipeline.enable_verify_each_for_tests();
-        Self {
+        let transform_names = transforms.pass_names();
+        Ok(Self {
             pipeline,
             close_state,
-        }
+            transforms,
+            transform_names,
+        })
     }
 
-    fn assembled(plan: &ArtifactPlan) -> Self {
-        let mut schedule = Self::linked(plan);
+    fn assembled(
+        plan: &ArtifactPlan,
+        registry: &TransformRegistry,
+    ) -> Result<Self, ArtifactCompileError> {
+        let mut schedule = Self::linked(plan, registry)?;
         schedule
             .pipeline
             .push_artifact(AssemblePass::new())
             .expect("the static built-in assemble schedule is valid");
         schedule
+            .transforms
+            .push_lane_after_assemble(&mut schedule.pipeline)
+            .map_err(transform_public)?;
+        Ok(schedule)
     }
 
     fn emitted(
         plan: &ArtifactPlan,
+        transforms: &TransformRegistry,
         registry: &BackendRegistry,
-    ) -> Result<Self, BackendRegistryError> {
-        let backend = registry.selected(&plan.context().target())?;
-        Ok(Self::with_backend(plan, backend))
+    ) -> Result<Self, ArtifactCompileError> {
+        // Transform resolution — including the compatibility-fragment frame
+        // refusal — precedes the backend lookup, exactly as the frozen T6b
+        // construction order demands.
+        let schedule = Self::assembled(plan, transforms)?;
+        let backend = registry
+            .selected(&plan.context().target())
+            .map_err(|error| ArtifactCompileError::Registry {
+                reason: error.to_string(),
+            })?;
+        Self::append_emit(schedule, backend)
     }
 
-    fn with_backend(plan: &ArtifactPlan, backend: std::sync::Arc<dyn EmitBackend>) -> Self {
-        let mut schedule = Self::assembled(plan);
+    /// The custom-backend construction path of the test-support vehicles;
+    /// production always selects through [`Self::emitted`].
+    #[cfg(feature = "test-support")]
+    fn with_backend(
+        plan: &ArtifactPlan,
+        registry: &TransformRegistry,
+        backend: std::sync::Arc<dyn EmitBackend>,
+    ) -> Result<Self, ArtifactCompileError> {
+        let schedule = Self::assembled(plan, registry)?;
+        Self::append_emit(schedule, backend)
+    }
+
+    fn append_emit(
+        mut schedule: Self,
+        backend: std::sync::Arc<dyn EmitBackend>,
+    ) -> Result<Self, ArtifactCompileError> {
         schedule
             .pipeline
             .push_artifact(EmitPass::new(backend))
             .expect("the selected emit backend continues the built-in schedule");
         schedule
+            .transforms
+            .push_emitted_after_emit(&mut schedule.pipeline)
+            .map_err(transform_public)?;
+        Ok(schedule)
     }
 
-    fn parse_source(&self, source: SourceIr, trace: Option<&dyn CompileTraceSink>) -> DocumentIr {
-        self.pipeline
-            .run_document_traced(source, trace)
-            .expect("the private parse segment accepts canonical Markdown sources")
+    fn parse_source(
+        &self,
+        source: SourceIr,
+        trace: Option<&dyn CompileTraceSink>,
+    ) -> Result<DocumentIr, CompilerPipelineError> {
+        self.pipeline.run_document_traced(source, trace)
     }
 
     fn record_failure(&self, address: &SpecAddress, reason: String) {
         self.close_state.record_failure(address, reason);
     }
 
-    fn close(
-        &self,
-        documents: Vec<DocumentIr>,
-    ) -> Result<ClosureIr, crate::pipeline::CompileError> {
+    fn close(&self, documents: Vec<DocumentIr>) -> Result<ClosureIr, ArtifactCompileError> {
         let closure = self
             .pipeline
             .gather_documents(documents)
@@ -196,10 +270,7 @@ impl BuiltinSchedule {
         self.map_artifact_result(closure)
     }
 
-    fn assemble(
-        &self,
-        documents: Vec<DocumentIr>,
-    ) -> Result<LaneIr, crate::pipeline::CompileError> {
+    fn assemble(&self, documents: Vec<DocumentIr>) -> Result<LaneIr, ArtifactCompileError> {
         let lane = self
             .pipeline
             .gather_documents(documents)
@@ -224,176 +295,31 @@ impl BuiltinSchedule {
         };
         match self.pipeline.run_to_emitted(documents, trace) {
             Ok(emitted) => Ok(emitted),
-            Err(CompilerPipelineError::Segment(PassSegmentError::PassFailed { pass, source }))
-                if pass.as_str() == CLOSE_PASS_NAME =>
-            {
-                source
-                    .downcast::<UseGraphError>()
-                    .map(|error| {
-                        Err(driver::attribute_compile_error(
-                            crate::pipeline::CompileError::UseGraph(*error),
-                            plan,
-                            owners,
-                            None,
-                        ))
-                    })
-                    .unwrap_or_else(|source| unexpected_pass_error(&pass, source))
-            }
-            Err(CompilerPipelineError::Segment(PassSegmentError::PassFailed { pass, source }))
-                if pass.as_str() == MERGE_PASS_NAME =>
-            {
-                source
-                    .downcast::<MergePassError>()
-                    .map(|error| {
-                        Err(driver::attribute_compile_error(
-                            error.into_compile_error(),
-                            plan,
-                            owners,
-                            None,
-                        ))
-                    })
-                    .unwrap_or_else(|source| unexpected_pass_error(&pass, source))
-            }
-            Err(CompilerPipelineError::Segment(PassSegmentError::PassFailed { pass, source }))
-                if pass.as_str() == EMBED_PASS_NAME =>
-            {
-                source
-                    .downcast::<EmbedPassError>()
-                    .map(|error| {
-                        Err(driver::attribute_compile_error(
-                            error.into_compile_error(),
-                            plan,
-                            owners,
-                            None,
-                        ))
-                    })
-                    .unwrap_or_else(|source| unexpected_pass_error(&pass, source))
-            }
-            Err(CompilerPipelineError::Segment(PassSegmentError::PassFailed { pass, source }))
-                if pass.as_str() == LINK_PASS_NAME =>
-            {
-                source
-                    .downcast::<LinkPassError>()
-                    .map(|error| {
-                        let input = match error.as_ref() {
-                            LinkPassError::AmbiguousShortLink { contribution, .. } => {
-                                Some(*contribution)
-                            }
-                            _ => None,
-                        };
-                        Err(driver::attribute_compile_error(
-                            error.into_compile_error(),
-                            plan,
-                            owners,
-                            input,
-                        ))
-                    })
-                    .unwrap_or_else(|source| unexpected_pass_error(&pass, source))
-            }
-            Err(CompilerPipelineError::Segment(PassSegmentError::PassFailed { pass, source })) => {
-                match source.downcast::<EmitPassError>() {
-                    Ok(error) => Err(ArtifactCompileError::Backend {
-                        pass: pass.as_str().to_string(),
-                        reason: error.to_string(),
-                    }),
-                    Err(source) => Err(ArtifactCompileError::Pass {
-                        pass: pass.as_str().to_string(),
-                        reason: source.to_string(),
-                    }),
-                }
-            }
-            Err(CompilerPipelineError::Segment(PassSegmentError::VerificationFailed {
-                pass,
-                source,
-                ..
-            })) => Err(ArtifactCompileError::Pass {
-                pass: pass.as_str().to_string(),
-                reason: format!("inter-pass verification rejected the output: {source}"),
-            }),
-            Err(CompilerPipelineError::Segment(
-                error @ PassSegmentError::InputVerification { .. },
-            )) => Err(ArtifactCompileError::Manager {
-                reason: format!("inter-pass verification rejected the segment input: {error}"),
-            }),
-            Err(error) => Err(ArtifactCompileError::Manager {
-                reason: error.to_string(),
-            }),
-        }
-    }
-
-    fn map_artifact_result<T>(
-        &self,
-        result: Result<T, CompilerPipelineError>,
-    ) -> Result<T, crate::pipeline::CompileError> {
-        match result {
-            Ok(closure) => Ok(closure),
-            Err(CompilerPipelineError::Segment(PassSegmentError::PassFailed { pass, source }))
-                if pass.as_str() == CLOSE_PASS_NAME =>
-            {
-                source
-                    .downcast::<UseGraphError>()
-                    .map(|error| Err(crate::pipeline::CompileError::UseGraph(*error)))
-                    .unwrap_or_else(|source| {
-                        panic!("the close pass returned an unexpected error type: {source}")
-                    })
-            }
-            Err(CompilerPipelineError::Segment(PassSegmentError::PassFailed { pass, source }))
-                if pass.as_str() == MERGE_PASS_NAME =>
-            {
-                source
-                    .downcast::<MergePassError>()
-                    .map(|error| Err(error.into_compile_error()))
-                    .unwrap_or_else(|source| {
-                        panic!("the merge pass returned an unexpected error type: {source}")
-                    })
-            }
-            Err(CompilerPipelineError::Segment(PassSegmentError::PassFailed { pass, source }))
-                if pass.as_str() == EMBED_PASS_NAME =>
-            {
-                source
-                    .downcast::<EmbedPassError>()
-                    .map(|error| Err(error.into_compile_error()))
-                    .unwrap_or_else(|source| {
-                        panic!("the embed pass returned an unexpected error type: {source}")
-                    })
-            }
-            Err(CompilerPipelineError::Segment(PassSegmentError::PassFailed { pass, source }))
-                if pass.as_str() == LINK_PASS_NAME =>
-            {
-                source
-                    .downcast::<LinkPassError>()
-                    .map(|error| Err(error.into_compile_error()))
-                    .unwrap_or_else(|source| {
-                        panic!("the link pass returned an unexpected error type: {source}")
-                    })
-            }
-            Err(CompilerPipelineError::Segment(PassSegmentError::PassFailed { pass, source }))
-                if pass.as_str() == ASSEMBLE_PASS_NAME =>
-            {
-                let error = source
-                    .downcast::<AssemblePassError>()
-                    .unwrap_or_else(|source| {
-                        panic!("the assemble pass returned an unexpected error type: {source}")
-                    });
-                panic!("the built-in assemble pass rejected validated compiler state: {error}")
-            }
-            // Verification failures keep their honest pass attribution instead
-            // of dissolving into the generic schedule panic below. Reachable
-            // only under the test-only enabling seam; production construction
-            // never produces these variants.
-            Err(CompilerPipelineError::Segment(PassSegmentError::VerificationFailed {
-                pass,
-                source,
-                ..
-            })) => panic!("inter-pass verification rejected `{pass}` output: {source}"),
-            Err(CompilerPipelineError::Segment(PassSegmentError::InputVerification {
-                input,
-                source,
-            })) => panic!("inter-pass verification rejected the {input:?} segment input: {source}"),
-            Err(CompilerPipelineError::GatherVerification { source }) => {
-                panic!("inter-pass verification rejected the gather-documents boundary: {source}")
-            }
-            Err(error) => panic!("the private built-in artifact schedule is invalid: {error}"),
+            Err(error) => match self.transform_fault(error) {
+                Ok(transform) => Err(transform_public(transform)),
+                // The ONE shared classifier decided: not a transform fault.
+                // The emitted path keeps its historical mapping below.
+                Err(CompilerPipelineError::Segment(PassSegmentError::PassFailed {
+                    pass,
+                    source,
+                })) => self.attribute_emit_pass_failure(pass, source, plan, owners),
+                Err(CompilerPipelineError::Segment(PassSegmentError::VerificationFailed {
+                    pass,
+                    source,
+                    ..
+                })) => Err(ArtifactCompileError::Pass {
+                    pass: pass.to_string(),
+                    reason: format!("inter-pass verification rejected the output: {source}"),
+                }),
+                Err(CompilerPipelineError::Segment(
+                    error @ PassSegmentError::InputVerification { .. },
+                )) => Err(ArtifactCompileError::Manager {
+                    reason: format!("inter-pass verification rejected the segment input: {error}"),
+                }),
+                Err(error) => Err(ArtifactCompileError::Manager {
+                    reason: error.to_string(),
+                }),
+            },
         }
     }
 }
@@ -403,13 +329,18 @@ impl BuiltinSchedule {
 /// hand-built imitation of it.
 #[cfg(test)]
 impl BuiltinSchedule {
-    pub(crate) fn linked_for_test(plan: &ArtifactPlan) -> Self {
-        Self::linked(plan)
+    pub(crate) fn linked_for_test(
+        plan: &ArtifactPlan,
+        registry: &TransformRegistry,
+    ) -> Result<Self, ArtifactCompileError> {
+        Self::linked(plan, registry)
     }
 
-    pub(crate) fn emitted_for_test(plan: &ArtifactPlan) -> Self {
-        Self::emitted(plan, &BackendRegistry::builtins())
-            .expect("the built-in registry selects every built-in target")
+    pub(crate) fn emitted_for_test(
+        plan: &ArtifactPlan,
+        registry: &TransformRegistry,
+    ) -> Result<Self, ArtifactCompileError> {
+        Self::emitted(plan, registry, &BackendRegistry::builtins())
     }
 
     pub(crate) fn pipeline_for_test(&self) -> &CompilerPipeline {
@@ -417,48 +348,24 @@ impl BuiltinSchedule {
     }
 }
 
-fn unexpected_pass_error<T>(
-    pass: &PassName,
-    source: Box<dyn std::error::Error + Send + Sync>,
-) -> Result<T, ArtifactCompileError> {
-    Err(ArtifactCompileError::Pass {
-        pass: pass.as_str().to_string(),
-        reason: source.to_string(),
-    })
-}
-
-/// Eliminate the impossible discovery error of the infallible built-in
-/// parser (R4.1 T6a): `worklist::discover` is fallible so a later atom can
-/// thread a real parse error through it, while [`BuiltinSchedule::
-/// parse_source`] stays infallible and this adapter arrives with
-/// [`std::convert::Infallible`]. The exhaustive `match` — not `unwrap`,
-/// `expect` or a string mapping — is what keeps the impossibility a proof
-/// instead of a promise: if a later atom ever makes the parser fallible,
-/// this cell stops compiling until the error is handled honestly.
-fn infallible_worklist(
-    discovered: Result<worklist::Worklist, std::convert::Infallible>,
-) -> worklist::Worklist {
-    match discovered {
-        Ok(worklist) => worklist,
-        Err(impossible) => match impossible {},
-    }
-}
-
 /// Compile one validated whole artifact plan through the artifact prefix.
 ///
 /// Parse-dependent discovery invokes the document segment per honest document,
-/// crosses one gather barrier, then the whole artifact segment runs once.
+/// crosses one gather barrier, then the whole artifact segment runs once. A
+/// document-segment failure — transform or otherwise — propagates through
+/// T6a's fallible discovery with its typed fault intact.
 pub(crate) fn compile_artifact_prefix(
     plan: ArtifactPlan,
     source: &impl SectionSource,
-) -> Result<ClosureIr, crate::pipeline::CompileError> {
-    let schedule = BuiltinSchedule::linked(&plan);
-    let worklist = infallible_worklist(worklist::discover(
+) -> Result<ClosureIr, ArtifactCompileError> {
+    let schedule = BuiltinSchedule::linked(&plan, &TransformRegistry::builtins())?;
+    let worklist = worklist::discover(
         &plan,
         source,
-        |input| Ok(schedule.parse_source(input, None)),
+        |input| schedule.parse_source(input, None),
         |address, reason| schedule.record_failure(address, reason),
-    ));
+    )
+    .map_err(|error| schedule.document_error(error))?;
     schedule.close_state.set_pending_sources(worklist.sources);
     schedule.close_state.set_pending_embeds(worklist.embeds);
     schedule.close(worklist.documents)
@@ -471,14 +378,15 @@ pub(crate) fn compile_artifact_prefix(
 pub(crate) fn compile_artifact_lane(
     plan: ArtifactPlan,
     source: &impl SectionSource,
-) -> Result<LaneIr, crate::pipeline::CompileError> {
-    let schedule = BuiltinSchedule::assembled(&plan);
-    let worklist = infallible_worklist(worklist::discover(
+) -> Result<LaneIr, ArtifactCompileError> {
+    let schedule = BuiltinSchedule::assembled(&plan, &TransformRegistry::builtins())?;
+    let worklist = worklist::discover(
         &plan,
         source,
-        |input| Ok(schedule.parse_source(input, None)),
+        |input| schedule.parse_source(input, None),
         |address, reason| schedule.record_failure(address, reason),
-    ));
+    )
+    .map_err(|error| schedule.document_error(error))?;
     schedule.close_state.set_pending_sources(worklist.sources);
     schedule.close_state.set_pending_embeds(worklist.embeds);
     schedule.assemble(worklist.documents)
@@ -491,7 +399,10 @@ pub(crate) fn compile_linked_closure(
     source: &impl SectionSource,
     mode: StaticCompileMode,
 ) -> Result<ClosureIr, crate::pipeline::CompileError> {
-    compile_artifact_prefix(ArtifactPlan::compatibility(seed.clone(), mode), source)
+    match compile_artifact_prefix(ArtifactPlan::compatibility(seed.clone(), mode), source) {
+        Ok(closure) => Ok(closure),
+        Err(error) => Err(driver::into_compatibility_error(error)),
+    }
 }
 
 #[cfg(test)]

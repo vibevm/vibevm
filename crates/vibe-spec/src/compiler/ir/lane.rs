@@ -116,4 +116,26 @@ impl LaneIr {
     pub(crate) fn context(&self) -> &ArtifactContext {
         &self.context
     }
+
+    /// Test-only full-parts view for same-crate lane fixtures: everything
+    /// [`Self::assembled`] consumes, lent read-only. T6c designs its real
+    /// production witness seam in T6c; production readers get nothing new.
+    #[cfg(test)]
+    pub(crate) fn parts_for_test(
+        &self,
+    ) -> (
+        &ArtifactContext,
+        usize,
+        &LinkInputDigest,
+        &LaneFrame,
+        &[LaneContribution],
+    ) {
+        (
+            &self.context,
+            self.source_node_count,
+            &self.source_link_digest,
+            &self.frame,
+            &self.contributions,
+        )
+    }
 }

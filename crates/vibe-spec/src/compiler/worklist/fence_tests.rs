@@ -8,8 +8,9 @@
 //! transform/registry/behavior/pass vocabulary, no trait-object or boxed
 //! error erasure, no `unwrap`/`expect`/`panic` for `E`, and `Infallible`
 //! itself stays out (the seam is generic; caller adapters live elsewhere).
-//! Fence B: the three existing callers eliminate the impossible error by
-//! exhaustive match through `infallible_worklist`, never by `unwrap`.
+//! Fence B (T6b state): the three existing callers propagate the generic
+//! discovery error genuinely — no `Infallible` eliminator remains and no
+//! adapter body eliminates `E` by `unwrap`/`expect`/`panic`.
 
 use syn::visit::{self, Visit};
 use syn::{File, Item};
@@ -183,62 +184,68 @@ fn worklist_production_stays_behavior_neutral_and_generically_fallible() {
     );
 }
 
-/// Fence B: both adapter cells route every `discover` call through the one
-/// exhaustive-`Infallible` eliminator, and the eliminator itself contains
-/// no `unwrap`/`expect`/`panic`.
+/// Fence B (T6b state): the three `discover` adapters propagate the parse
+/// error GENUINELY — T6a's tripwire fired, `infallible_worklist` is gone,
+/// and no `Infallible`, `unwrap`, `expect` or panic spelling survives in the
+/// adapter bodies, which route `parse_source`'s `Result` straight through.
 #[test]
-fn caller_adapters_eliminate_the_impossible_error_exhaustively() {
+fn caller_adapters_propagate_the_discovery_error_genuinely() {
     let builtin = classify(include_str!("../builtin.rs"));
     let driver = classify(include_str!("../builtin/driver.rs"));
 
-    // Exactly the three historical call sites, all adapted.
+    // Exactly the three historical call sites remain; the eliminator is gone.
     assert_eq!(builtin.discover_calls, 2, "prefix and lane adapters");
     assert_eq!(driver.discover_calls, 1, "the driver `run` adapter");
-    assert_eq!(builtin.infallible_calls, 2);
-    assert_eq!(driver.infallible_calls, 1);
+    assert_eq!(
+        builtin.infallible_calls, 0,
+        "no eliminator remains in builtin.rs"
+    );
+    assert_eq!(
+        driver.infallible_calls, 0,
+        "no eliminator remains in driver.rs"
+    );
+    for (cell, classified) in [("builtin.rs", &builtin), ("builtin/driver.rs", &driver)] {
+        assert!(
+            !classified.segments.contains("Infallible"),
+            "{cell} names no impossible error type anymore"
+        );
+    }
 
-    // The eliminator's own body is the exhaustive match, proven structurally
-    // by the `match impossible` scrutinee, and its body contains no
-    // `unwrap`/`expect` — the adapter cells' pre-existing schedule-validity
-    // `expect`s are elsewhere and are not about `E`.
-    let eliminator = classify_fn_body(include_str!("../builtin.rs"), "infallible_worklist");
+    // The adapter bodies themselves: no elimination spelling, and the fallible
+    // `parse_source` result really flows through each closure.
+    for adapter in ["compile_artifact_prefix", "compile_artifact_lane"] {
+        let body = classify_fn_body(include_str!("../builtin.rs"), adapter);
+        assert!(
+            body.methods.contains("parse_source"),
+            "`{adapter}` routes the fallible parse result"
+        );
+        for &method in FORBIDDEN_METHODS {
+            assert!(
+                !body.methods.contains(method),
+                "`{adapter}` must not use `.{method}()`"
+            );
+        }
+        for &mac in FORBIDDEN_MACROS {
+            assert!(
+                !body.macros.contains(mac),
+                "`{adapter}` must not invoke `{mac}!`"
+            );
+        }
+    }
+    let run = classify_fn_body(include_str!("../builtin/driver.rs"), "run");
     assert!(
-        eliminator.exhaustive_elimination,
-        "`infallible_worklist` keeps its exhaustive elimination"
+        run.methods.contains("parse_source"),
+        "the driver `run` adapter routes the fallible parse result"
     );
     for &method in FORBIDDEN_METHODS {
         assert!(
-            !eliminator.methods.contains(method),
-            "the eliminator must not use `.{method}()`"
+            !run.methods.contains(method),
+            "`run` must not use `.{method}()`"
         );
     }
     for &mac in FORBIDDEN_MACROS {
-        assert!(
-            !eliminator.macros.contains(mac),
-            "the eliminator must not invoke `{mac}!`"
-        );
+        assert!(!run.macros.contains(mac), "`run` must not invoke `{mac}!`");
     }
-}
-
-/// The eliminator is a named private item of the schedule cell, so a future
-/// rename or visibility widening is a deliberate act, not silent drift.
-#[test]
-fn the_eliminator_is_one_named_private_function() {
-    let file: File =
-        syn::parse_file(include_str!("../builtin.rs")).expect("builtin.rs parses as Rust");
-    let mut found = 0;
-    for item in &file.items {
-        if let Item::Fn(function) = item
-            && function.sig.ident == "infallible_worklist"
-        {
-            assert!(
-                matches!(function.vis, syn::Visibility::Inherited),
-                "the eliminator stays private to the schedule cell"
-            );
-            found += 1;
-        }
-    }
-    assert_eq!(found, 1, "exactly one eliminator definition");
 }
 
 /// Mutation fixtures over synthetic Rust: every banned shape a future edit

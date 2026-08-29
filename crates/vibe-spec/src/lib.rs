@@ -41,7 +41,9 @@ mod transforms;
 mod use_graph;
 
 pub use address::{Authority, SpecAddress, SpecAddressError};
-pub use compiler::builtin::{ArtifactCompileError, compile_artifact, compile_artifact_traced};
+pub use compiler::builtin::{
+    ArtifactCompileError, TransformCompileError, compile_artifact, compile_artifact_traced,
+};
 #[cfg(feature = "test-support")]
 pub use compiler::builtin::{
     compile_artifact_missing_backend_test_vehicle, compile_artifact_opaque_test_vehicle,

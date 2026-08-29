@@ -1,5 +1,6 @@
 use super::*;
 use crate::EmbedError;
+use crate::compiler::builtin::ArtifactCompileError;
 use crate::compiler::ir::ClosureEdgeKind;
 
 fn static_context(target: ArtifactTarget) -> ArtifactContext {
@@ -258,7 +259,9 @@ fn embed_failure_precedence_follows_interleaved_plan_roots() {
     .unwrap();
     assert!(matches!(
         compile_artifact_prefix(plan, &source),
-        Err(CompileError::Embed(EmbedError::Unresolved { addr, .. })) if addr == simple_missing
+        Err(ArtifactCompileError::Compile(
+            CompileError::Embed(EmbedError::Unresolved { addr, .. })
+        )) if addr == simple_missing
     ));
 }
 
