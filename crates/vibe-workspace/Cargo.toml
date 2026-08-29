@@ -27,6 +27,12 @@ serde_json.workspace = true
 tempfile.workspace = true
 toml.workspace = true
 vibe-core.workspace = true
+# The R4.1 durable-world adapter (PROP-054 `#ENGINE-ALGORITHM`): workspace
+# owns the lock-ordered world and the owner-scoped views, the kernel owns
+# collection. The intended DAG is
+# `vibe-workspace -> vibe-extension-registry -> vibe-core`; the kernel never
+# gains a reverse edge back up.
+vibe-extension-registry.workspace = true
 vibe-facts.workspace = true
 # Capability-relative, no-follow publication: the trace writer publishes
 # snapshots create-new and replaces its index atomically through the one

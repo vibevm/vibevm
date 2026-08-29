@@ -37,6 +37,7 @@ pub mod bins;
 pub mod boot;
 pub mod boot_artifacts;
 pub mod compile_trace;
+pub mod extension_world;
 pub mod freshness;
 pub mod hooks;
 pub mod install;

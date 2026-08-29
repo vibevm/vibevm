@@ -425,18 +425,27 @@ impl ExtensionRegistry {
             .collect()
     }
 
-    /// Enabled rows at one point in the closed four-tier order, the one
-    /// shared source of the subject-less view and subject-filtered planning:
-    /// each public query collects its own `Vec` exactly once over this
-    /// iterator, so the legacy plan never materialises an intermediate one.
-    fn enabled_rows_at<'registry>(
+    /// Enabled rows whose point satisfies one predicate, in the closed
+    /// four-tier order: the ONE row-iteration seam every public view shares,
+    /// so no query can grow a second ordering. Each public query collects its
+    /// own `Vec` exactly once over this iterator, so the legacy plan never
+    /// materialises an intermediate one.
+    fn enabled_rows_where<'registry>(
         &'registry self,
-        point: ExtensionPoint,
+        accepts: impl Fn(ExtensionPoint) -> bool + 'registry,
     ) -> impl Iterator<Item = &'registry ExtensionRegistryRow> + 'registry {
         self.effective_order
             .iter()
             .map(|index| &self.rows[*index])
-            .filter(move |row| row.declaration.point == point && row.is_enabled())
+            .filter(move |row| accepts(row.declaration.point) && row.is_enabled())
+    }
+
+    /// Enabled rows at one point in the closed four-tier order.
+    fn enabled_rows_at<'registry>(
+        &'registry self,
+        point: ExtensionPoint,
+    ) -> impl Iterator<Item = &'registry ExtensionRegistryRow> + 'registry {
+        self.enabled_rows_where(move |candidate| candidate == point)
     }
 
     /// Return enabled rows at one point in the closed four-tier order
@@ -452,6 +461,32 @@ impl ExtensionRegistry {
     #[must_use]
     pub fn enabled_at(&self, point: ExtensionPoint) -> Vec<&ExtensionRegistryRow> {
         self.enabled_rows_at(point).collect()
+    }
+
+    /// Return every enabled `compile:*` row in ONE global effective order.
+    ///
+    /// The order is the registry's single effective order — the closed
+    /// four-tier sequence [`enabled_at`](Self::enabled_at) already reads —
+    /// restricted to the compile family and to nothing else. Concatenating
+    /// the per-point views instead would fabricate a cross-stage order no
+    /// manifest ever authored, and a plan digest over it would bless that
+    /// invention; there is exactly one authored order and this is it.
+    ///
+    /// Membership is the whole `compile` family, `compile:pass` included: a
+    /// pass-tier row is a compile-point row today, and routing it separately
+    /// is the R6 act that splits the pass tier out of the one lowering. Rows
+    /// at every other point stay out. Disabled and inactive rows stay
+    /// excluded exactly as `enabled_at` excludes them, while selector-bearing
+    /// rows are retained: no document subject exists while a lane's rows are
+    /// lowered into a plan, and filtering on an unscoped subject there would
+    /// silently drop them before any document does. The returned references
+    /// borrow this registry.
+    #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-ACTIVATION")]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY")]
+    #[must_use]
+    pub fn enabled_compile_rows(&self) -> Vec<&ExtensionRegistryRow> {
+        self.enabled_rows_where(|point| matches!(point, ExtensionPoint::Compile(_)))
+            .collect()
     }
 
     /// Return effective rows at one point in the closed four-tier order.
