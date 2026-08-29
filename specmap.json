@@ -9299,9 +9299,9 @@
       "crate_name": "vibe-extension-registry",
       "file": "crates/vibe-extension-registry/src/model.rs",
       "item_kind": "enum",
-      "line": 209,
+      "line": 245,
       "symbol": "vibe_extension_registry::model::ContributionTier",
-      "end_line": 221,
+      "end_line": 257,
       "fingerprint": "tok1:b78e07879d3e52bee5ccb3ad862887164833cb169d2f8e8b8d27a16f1141f6c2"
     },
     {
@@ -9310,8 +9310,8 @@
       "item_kind": "struct",
       "line": 134,
       "symbol": "vibe_extension_registry::model::DependencyExtensionSource",
-      "end_line": 145,
-      "fingerprint": "tok1:fc911c84aa0d339dd98b879073e3350eec3046372462b5664bbe8a3868666dbb"
+      "end_line": 150,
+      "fingerprint": "tok1:e6246b3d31337e81289eeb5e9fa6b8b3c064155e3db87f2f9d20e26a77456a93"
     },
     {
       "crate_name": "vibe-extension-registry",
@@ -9335,45 +9335,45 @@
       "crate_name": "vibe-extension-registry",
       "file": "crates/vibe-extension-registry/src/model.rs",
       "item_kind": "enum",
-      "line": 182,
+      "line": 218,
       "symbol": "vibe_extension_registry::model::ExtensionProvider",
-      "end_line": 190,
+      "end_line": 226,
       "fingerprint": "tok1:a30b54a6986a5e5e776c4bb5099d1588bdaaea1e2d5de9f5e59c1bb21cbc2aa8"
     },
     {
       "crate_name": "vibe-extension-registry",
       "file": "crates/vibe-extension-registry/src/model.rs",
       "item_kind": "struct",
-      "line": 349,
+      "line": 385,
       "symbol": "vibe_extension_registry::model::ExtensionRegistry",
-      "end_line": 356,
+      "end_line": 392,
       "fingerprint": "tok1:6b6339d2556f906a8cc9ac9390aa11fdfe3320e697d1d125788f0f658dec32c8"
     },
     {
       "crate_name": "vibe-extension-registry",
       "file": "crates/vibe-extension-registry/src/model.rs",
       "item_kind": "struct",
-      "line": 223,
+      "line": 259,
       "symbol": "vibe_extension_registry::model::ExtensionRegistryRow",
-      "end_line": 243,
+      "end_line": 279,
       "fingerprint": "tok1:1053ddbb95cfd923b5d419800d7017f6a797cac36a5753fec4ade23c5d0338b8"
     },
     {
       "crate_name": "vibe-extension-registry",
       "file": "crates/vibe-extension-registry/src/model.rs",
       "item_kind": "struct",
-      "line": 159,
+      "line": 195,
       "symbol": "vibe_extension_registry::model::ExtensionWorld",
-      "end_line": 169,
+      "end_line": 205,
       "fingerprint": "tok1:dec74a5a8d7ca4719c97e389d13b903ae613b4e0ae4bca20fb1920ded982eac1"
     },
     {
       "crate_name": "vibe-extension-registry",
       "file": "crates/vibe-extension-registry/src/model.rs",
       "item_kind": "struct",
-      "line": 147,
+      "line": 152,
       "symbol": "vibe_extension_registry::model::HostExtensionSource",
-      "end_line": 157,
+      "end_line": 162,
       "fingerprint": "tok1:503122bd31171c22fde49e741e05459cbd22d39cf7a8685b75de343a32ac86bd"
     },
     {
@@ -9398,19 +9398,28 @@
       "crate_name": "vibe-extension-registry",
       "file": "crates/vibe-extension-registry/src/model.rs",
       "item_kind": "struct",
-      "line": 331,
+      "line": 367,
       "symbol": "vibe_extension_registry::model::RegistryView",
-      "end_line": 339,
+      "end_line": 375,
       "fingerprint": "tok1:c2c2d957e3319c8c8d192db4bfabc20bbae30d15ded72ebd060267178f8c7a65"
     },
     {
       "crate_name": "vibe-extension-registry",
       "file": "crates/vibe-extension-registry/src/model.rs",
       "item_kind": "struct",
-      "line": 171,
+      "line": 207,
       "symbol": "vibe_extension_registry::model::SyntheticPresetSource",
-      "end_line": 180,
+      "end_line": 216,
       "fingerprint": "tok1:a336bf346862fea9fdb86ebe5d20346a2bb9c0ea57ea32268464b94a61fd9859"
+    },
+    {
+      "crate_name": "vibe-extension-registry",
+      "file": "crates/vibe-extension-registry/src/model.rs",
+      "item_kind": "fn",
+      "line": 164,
+      "symbol": "vibe_extension_registry::model::lane_owner_host",
+      "end_line": 193,
+      "fingerprint": "tok1:616cc721d07283d471e076904f56812816a49bf0e16a0f4b6700fdd05b740aff"
     },
     {
       "crate_name": "vibe-extension-registry",
@@ -9506,46 +9515,82 @@
       "crate_name": "vibe-extension-registry",
       "file": "crates/vibe-extension-registry/src/tests/ordering.rs",
       "item_kind": "fn",
-      "line": 121,
+      "line": 118,
       "symbol": "vibe_extension_registry::tests::ordering::host_declaration_precedes_activation_and_activation_never_duplicates",
-      "end_line": 173,
+      "end_line": 170,
       "fingerprint": "tok1:2114f0f49d4d9901cccd43b0956894c5eacce32f07c0ad4762e982ccd61bcb30"
     },
     {
       "crate_name": "vibe-extension-registry",
       "file": "crates/vibe-extension-registry/src/tests/ordering.rs",
       "item_kind": "fn",
-      "line": 202,
-      "symbol": "vibe_extension_registry::tests::ordering::installed_input_shape_has_no_consumer_controls",
-      "end_line": 212,
-      "fingerprint": "tok1:788779326cc8e1ce4388326f181019d65c6c6088c16eee37f984b40dcf4f10a5"
-    },
-    {
-      "crate_name": "vibe-extension-registry",
-      "file": "crates/vibe-extension-registry/src/tests/ordering.rs",
-      "item_kind": "fn",
-      "line": 175,
+      "line": 172,
       "symbol": "vibe_extension_registry::tests::ordering::provider_metadata_is_retained_separately_from_the_opaque_key",
-      "end_line": 200,
+      "end_line": 197,
       "fingerprint": "tok1:46ba028eaab338d6a3909722ca1d7a08558b83d73b7563f0ad39b5164f404d00"
     },
     {
       "crate_name": "vibe-extension-registry",
       "file": "crates/vibe-extension-registry/src/tests/ordering.rs",
       "item_kind": "fn",
-      "line": 13,
+      "line": 10,
       "symbol": "vibe_extension_registry::tests::ordering::reverse_lexical_lock_order_and_manifest_declaration_order_are_preserved",
-      "end_line": 53,
+      "end_line": 50,
       "fingerprint": "tok1:9b37b9af4c57b46210fa1e1dd3b3eed89a536ce71395e174493ed06f60288ff3"
     },
     {
       "crate_name": "vibe-extension-registry",
       "file": "crates/vibe-extension-registry/src/tests/ordering.rs",
       "item_kind": "fn",
-      "line": 55,
+      "line": 52,
       "symbol": "vibe_extension_registry::tests::ordering::selected_stack_phase_is_preset_while_nonselected_stack_stays_active_dependency",
-      "end_line": 119,
+      "end_line": 116,
       "fingerprint": "tok1:4280752e142e43e98c10783b1694e40a0447fd9792e8a739d380631832304a97"
+    },
+    {
+      "crate_name": "vibe-extension-registry",
+      "file": "crates/vibe-extension-registry/src/tests/owner_controls.rs",
+      "item_kind": "fn",
+      "line": 26,
+      "symbol": "vibe_extension_registry::tests::owner_controls::controls_survive_adapter_construction_and_projection_exactly",
+      "end_line": 62,
+      "fingerprint": "tok1:0928389e4d449279b156b6ca07542a96ca24b787aeb074aa2c8f96e57bc097ba"
+    },
+    {
+      "crate_name": "vibe-extension-registry",
+      "file": "crates/vibe-extension-registry/src/tests/owner_controls.rs",
+      "item_kind": "fn",
+      "line": 64,
+      "symbol": "vibe_extension_registry::tests::owner_controls::dependency_controls_are_inert_in_a_selected_host_world",
+      "end_line": 118,
+      "fingerprint": "tok1:d3f9ff5fe3c2f66fb26505e1aa53bd171c160f8afd1334d1493d9740c6d6b3c3"
+    },
+    {
+      "crate_name": "vibe-extension-registry",
+      "file": "crates/vibe-extension-registry/src/tests/owner_controls.rs",
+      "item_kind": "fn",
+      "line": 174,
+      "symbol": "vibe_extension_registry::tests::owner_controls::host_package_and_sibling_controls_do_not_leak_across_worlds",
+      "end_line": 245,
+      "fingerprint": "tok1:3f9236a241d277642eb25a85b7ce87f56390dea6b40b5988e814aed500cc2e84"
+    },
+    {
+      "crate_name": "vibe-extension-registry",
+      "file": "crates/vibe-extension-registry/src/tests/owner_controls.rs",
+      "item_kind": "fn",
+      "line": 120,
+      "symbol": "vibe_extension_registry::tests::owner_controls::projected_owner_controls_activate_and_disable_dependency_rows",
+      "end_line": 172,
+      "fingerprint": "tok1:4e68dbfc07329b34484bc71e38d718b589869d5649b876476be0c485738fba24"
+    },
+    {
+      "crate_name": "vibe-extension-registry",
+      "file": "crates/vibe-extension-registry/src/tests/owner_controls.rs",
+      "item_kind": "fn",
+      "line": 247,
+      "symbol": "vibe_extension_registry::tests::owner_controls::projected_package_cannot_activate_its_own_host_seat_declaration",
+      "end_line": 273,
+      "fingerprint": "tok1:f16000897bf00a57421d282ceb6fb363f3e913786dd6c54482e05b7d0a0f7518"
     },
     {
       "crate_name": "vibe-extension-registry",
@@ -10838,9 +10883,9 @@
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/lib.rs",
       "item_kind": "mod",
-      "line": 88,
+      "line": 89,
       "symbol": "vibe_lifecycle",
-      "end_line": 88,
+      "end_line": 89,
       "fingerprint": "tok1:853b38218301cd0dc8554f533f5a602938fbf104ecc7a4cb623f02e471f01e35"
     },
     {
@@ -11423,45 +11468,45 @@
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/execution/tests.rs",
       "item_kind": "fn",
-      "line": 141,
+      "line": 142,
       "symbol": "vibe_lifecycle::execution::tests::a_traced_run_metadata_leaves_the_handler_envelope_byte_identical",
-      "end_line": 182,
+      "end_line": 183,
       "fingerprint": "tok1:b8544a1b97a75702161b3f60bbe99b8517c3e753c3d730b60c6f6b8b232134df"
     },
     {
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/execution/tests.rs",
       "item_kind": "fn",
-      "line": 309,
+      "line": 310,
       "symbol": "vibe_lifecycle::execution::tests::first_failure_stops_before_a_later_valid_builtin",
-      "end_line": 325,
+      "end_line": 326,
       "fingerprint": "tok1:41e48b9bed87ff7a254505339731cfec32c9d042b64bf84849357726356e5173"
     },
     {
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/execution/tests.rs",
       "item_kind": "fn",
-      "line": 184,
+      "line": 185,
       "symbol": "vibe_lifecycle::execution::tests::generated_envelope_carries_the_complete_epoch_one_context_and_override",
-      "end_line": 223,
+      "end_line": 224,
       "fingerprint": "tok1:e7d1a2864b8ce5297a3e8d050dbd0233e2c5d22d921755b440136996df6c596c"
     },
     {
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/execution/tests.rs",
       "item_kind": "fn",
-      "line": 272,
+      "line": 273,
       "symbol": "vibe_lifecycle::execution::tests::log_renders_known_placeholders_and_preserves_unknown_braces",
-      "end_line": 286,
+      "end_line": 287,
       "fingerprint": "tok1:fec3a4472063eb36be165f8e51a60f6d53e44639ce27458c8ef1e2f7266a6732"
     },
     {
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/execution/tests.rs",
       "item_kind": "fn",
-      "line": 288,
+      "line": 289,
       "symbol": "vibe_lifecycle::execution::tests::unknown_builtin_and_wrong_or_missing_message_fail_with_the_exact_key",
-      "end_line": 307,
+      "end_line": 308,
       "fingerprint": "tok1:c2ee96d9ff6d87bcdd67b9cfcccb33a4ba8b91e65e0cb50dbee30e5960999633"
     },
     {
@@ -18927,6 +18972,15 @@
     },
     {
       "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/boot_artifacts/publication.rs",
+      "item_kind": "mod",
+      "line": 8,
+      "symbol": "vibe_workspace::boot_artifacts::publication",
+      "end_line": 8,
+      "fingerprint": "tok1:3a375541cf4e04ba5014a2167c3fce44a5aec8d7bd746840cb92ae88591834d9"
+    },
+    {
+      "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/boot_artifacts/redirect.rs",
       "item_kind": "mod",
       "line": 13,
@@ -19037,9 +19091,9 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/boot_artifacts.rs",
       "item_kind": "fn",
-      "line": 402,
+      "line": 408,
       "symbol": "vibe_workspace::boot_artifacts::write_boot_artifacts",
-      "end_line": 430,
+      "end_line": 436,
       "fingerprint": "tok1:3ae117637c16689c1be6edc2d782eaa5c12463ff73cc773cd72b24163a642c8d"
     },
     {
@@ -19415,9 +19469,9 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs",
       "item_kind": "fn",
-      "line": 487,
+      "line": 492,
       "symbol": "vibe_workspace::install::bootgen::hybrid_emit::append_hoisted",
-      "end_line": 533,
+      "end_line": 538,
       "fingerprint": "tok1:cbb33f3a2214687f1a5e3074be561c753e3c22f775ec25df5ca413d8971a840a"
     },
     {
@@ -19451,9 +19505,9 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs",
       "item_kind": "fn",
-      "line": 546,
+      "line": 551,
       "symbol": "vibe_workspace::install::bootgen::hybrid_emit::verify_fingerprints",
-      "end_line": 583,
+      "end_line": 588,
       "fingerprint": "tok1:bf477159e489563cc8fd5dbe09f33f77a91b371309627cb78614124a20ade27b"
     },
     {
@@ -19707,6 +19761,33 @@
       "symbol": "vibe_workspace::install::tests_hooks::untrusted_group_skips_the_hook_without_running_it",
       "end_line": 159,
       "fingerprint": "tok1:31f37eb6001313a1d4312efeb12ec35f8fb95e641c3bc528cf1b0c07d42f7c54"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/install/tests_hybrid/transaction.rs",
+      "item_kind": "fn",
+      "line": 12,
+      "symbol": "vibe_workspace::install::tests_hybrid::transaction::a_per_unit_backend_refusal_leaves_the_units_artifacts_byte_exact",
+      "end_line": 109,
+      "fingerprint": "tok1:934e4bce3ef0d580236478063ec61c7d901dfeb64c05dc26523269f372c85644"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/install/tests_hybrid/transaction.rs",
+      "item_kind": "fn",
+      "line": 111,
+      "symbol": "vibe_workspace::install::tests_hybrid::transaction::an_unchanged_reinstall_preserves_unit_bytes_and_mtimes",
+      "end_line": 189,
+      "fingerprint": "tok1:14dd1267b1b63479413587d430c9d23cffc5c2d1faddc1b27341c6ba84f2fac5"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/install/tests_hybrid/transaction.rs",
+      "item_kind": "fn",
+      "line": 191,
+      "symbol": "vibe_workspace::install::tests_hybrid::transaction::the_unit_write_path_publishes_only_through_the_transaction_manager",
+      "end_line": 228,
+      "fingerprint": "tok1:c6513e3f394c2408ea59bb2ada3bdc4e7060d9a8ee36ef7908d436c6849e036f"
     },
     {
       "crate_name": "vibe-workspace",
@@ -26847,7 +26928,7 @@
     {
       "file": "crates/vibe-extension-registry/src/model.rs",
       "from_symbol": "vibe_extension_registry::model::ContributionTier",
-      "line": 210,
+      "line": 246,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ORDER-LAW",
       "verb": "documents"
@@ -26855,7 +26936,7 @@
     {
       "file": "crates/vibe-extension-registry/src/model.rs",
       "from_symbol": "vibe_extension_registry::model::DependencyExtensionSource",
-      "line": 138,
+      "line": 141,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
       "verb": "documents"
@@ -26879,7 +26960,7 @@
     {
       "file": "crates/vibe-extension-registry/src/model.rs",
       "from_symbol": "vibe_extension_registry::model::ExtensionProvider",
-      "line": 183,
+      "line": 219,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-REGISTRY",
       "verb": "documents"
@@ -26887,7 +26968,7 @@
     {
       "file": "crates/vibe-extension-registry/src/model.rs",
       "from_symbol": "vibe_extension_registry::model::ExtensionRegistry",
-      "line": 350,
+      "line": 386,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-REGISTRY",
       "verb": "documents"
@@ -26895,7 +26976,7 @@
     {
       "file": "crates/vibe-extension-registry/src/model.rs",
       "from_symbol": "vibe_extension_registry::model::ExtensionRegistryRow",
-      "line": 227,
+      "line": 263,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-REGISTRY",
       "verb": "documents"
@@ -26903,7 +26984,7 @@
     {
       "file": "crates/vibe-extension-registry/src/model.rs",
       "from_symbol": "vibe_extension_registry::model::ExtensionWorld",
-      "line": 160,
+      "line": 196,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
       "verb": "documents"
@@ -26911,7 +26992,7 @@
     {
       "file": "crates/vibe-extension-registry/src/model.rs",
       "from_symbol": "vibe_extension_registry::model::HostExtensionSource",
-      "line": 148,
+      "line": 153,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
       "verb": "documents"
@@ -26935,7 +27016,7 @@
     {
       "file": "crates/vibe-extension-registry/src/model.rs",
       "from_symbol": "vibe_extension_registry::model::RegistryView",
-      "line": 332,
+      "line": 368,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-REGISTRY",
       "verb": "documents"
@@ -26943,10 +27024,18 @@
     {
       "file": "crates/vibe-extension-registry/src/model.rs",
       "from_symbol": "vibe_extension_registry::model::SyntheticPresetSource",
-      "line": 174,
+      "line": 210,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PRESET-LAW",
       "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-extension-registry/src/model.rs",
+      "from_symbol": "vibe_extension_registry::model::lane_owner_host",
+      "line": 174,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-ACTIVATION",
+      "verb": "implements"
     },
     {
       "file": "crates/vibe-extension-registry/src/selector.rs",
@@ -27031,15 +27120,7 @@
     {
       "file": "crates/vibe-extension-registry/src/tests/ordering.rs",
       "from_symbol": "vibe_extension_registry::tests::ordering::host_declaration_precedes_activation_and_activation_never_duplicates",
-      "line": 122,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#HOST-ACTIVATION",
-      "verb": "verifies"
-    },
-    {
-      "file": "crates/vibe-extension-registry/src/tests/ordering.rs",
-      "from_symbol": "vibe_extension_registry::tests::ordering::installed_input_shape_has_no_consumer_controls",
-      "line": 203,
+      "line": 119,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#HOST-ACTIVATION",
       "verb": "verifies"
@@ -27047,7 +27128,7 @@
     {
       "file": "crates/vibe-extension-registry/src/tests/ordering.rs",
       "from_symbol": "vibe_extension_registry::tests::ordering::provider_metadata_is_retained_separately_from_the_opaque_key",
-      "line": 176,
+      "line": 173,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-REGISTRY",
       "verb": "verifies"
@@ -27055,7 +27136,7 @@
     {
       "file": "crates/vibe-extension-registry/src/tests/ordering.rs",
       "from_symbol": "vibe_extension_registry::tests::ordering::reverse_lexical_lock_order_and_manifest_declaration_order_are_preserved",
-      "line": 14,
+      "line": 11,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ORDER-LAW",
       "verb": "verifies"
@@ -27063,7 +27144,7 @@
     {
       "file": "crates/vibe-extension-registry/src/tests/ordering.rs",
       "from_symbol": "vibe_extension_registry::tests::ordering::selected_stack_phase_is_preset_while_nonselected_stack_stays_active_dependency",
-      "line": 57,
+      "line": 54,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#AUTO-BY-FAMILY",
       "verb": "verifies"
@@ -27071,9 +27152,49 @@
     {
       "file": "crates/vibe-extension-registry/src/tests/ordering.rs",
       "from_symbol": "vibe_extension_registry::tests::ordering::selected_stack_phase_is_preset_while_nonselected_stack_stays_active_dependency",
-      "line": 56,
+      "line": 53,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ORDER-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-extension-registry/src/tests/owner_controls.rs",
+      "from_symbol": "vibe_extension_registry::tests::owner_controls::controls_survive_adapter_construction_and_projection_exactly",
+      "line": 30,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-ACTIVATION",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-extension-registry/src/tests/owner_controls.rs",
+      "from_symbol": "vibe_extension_registry::tests::owner_controls::dependency_controls_are_inert_in_a_selected_host_world",
+      "line": 68,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#HOST-ACTIVATION",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-extension-registry/src/tests/owner_controls.rs",
+      "from_symbol": "vibe_extension_registry::tests::owner_controls::host_package_and_sibling_controls_do_not_leak_across_worlds",
+      "line": 180,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#HOST-ACTIVATION",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-extension-registry/src/tests/owner_controls.rs",
+      "from_symbol": "vibe_extension_registry::tests::owner_controls::projected_owner_controls_activate_and_disable_dependency_rows",
+      "line": 124,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-ACTIVATION",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-extension-registry/src/tests/owner_controls.rs",
+      "from_symbol": "vibe_extension_registry::tests::owner_controls::projected_package_cannot_activate_its_own_host_seat_declaration",
+      "line": 251,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#HOST-ACTIVATION",
       "verb": "verifies"
     },
     {
@@ -28250,7 +28371,7 @@
     {
       "file": "crates/vibe-lifecycle/src/lib.rs",
       "from_symbol": "vibe_lifecycle",
-      "line": 88,
+      "line": 89,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
       "verb": "implements"
@@ -28802,7 +28923,7 @@
     {
       "file": "crates/vibe-lifecycle/src/execution/tests.rs",
       "from_symbol": "vibe_lifecycle::execution::tests::a_traced_run_metadata_leaves_the_handler_envelope_byte_identical",
-      "line": 142,
+      "line": 143,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENVELOPE-LAW",
       "verb": "verifies"
@@ -28810,7 +28931,7 @@
     {
       "file": "crates/vibe-lifecycle/src/execution/tests.rs",
       "from_symbol": "vibe_lifecycle::execution::tests::first_failure_stops_before_a_later_valid_builtin",
-      "line": 310,
+      "line": 311,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#FAILURE-BY-PHASE",
       "verb": "verifies"
@@ -28818,7 +28939,7 @@
     {
       "file": "crates/vibe-lifecycle/src/execution/tests.rs",
       "from_symbol": "vibe_lifecycle::execution::tests::generated_envelope_carries_the_complete_epoch_one_context_and_override",
-      "line": 185,
+      "line": 186,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENVELOPE-LAW",
       "verb": "verifies"
@@ -28826,7 +28947,7 @@
     {
       "file": "crates/vibe-lifecycle/src/execution/tests.rs",
       "from_symbol": "vibe_lifecycle::execution::tests::log_renders_known_placeholders_and_preserves_unknown_braces",
-      "line": 273,
+      "line": 274,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TEST-LOG-PLUGIN",
       "verb": "verifies"
@@ -28834,7 +28955,7 @@
     {
       "file": "crates/vibe-lifecycle/src/execution/tests.rs",
       "from_symbol": "vibe_lifecycle::execution::tests::unknown_builtin_and_wrong_or_missing_message_fail_with_the_exact_key",
-      "line": 289,
+      "line": 290,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#H-BUILTIN",
       "verb": "verifies"
@@ -35789,6 +35910,14 @@
       "verb": "verifies"
     },
     {
+      "file": "crates/vibe-workspace/src/boot_artifacts/publication.rs",
+      "from_symbol": "vibe_workspace::boot_artifacts::publication",
+      "line": 8,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#UNIT-PUBLICATION-TRANSACTION",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-workspace/src/boot_artifacts/redirect.rs",
       "from_symbol": "vibe_workspace::boot_artifacts::redirect",
       "line": 13,
@@ -35912,7 +36041,7 @@
     {
       "file": "crates/vibe-workspace/src/boot_artifacts.rs",
       "from_symbol": "vibe_workspace::boot_artifacts::write_boot_artifacts",
-      "line": 413,
+      "line": 419,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#co-tenant",
       "verb": "implements",
@@ -36264,7 +36393,7 @@
     {
       "file": "crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs",
       "from_symbol": "vibe_workspace::install::bootgen::hybrid_emit::append_hoisted",
-      "line": 493,
+      "line": 498,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#hoisting",
       "verb": "implements",
@@ -36299,7 +36428,7 @@
     {
       "file": "crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs",
       "from_symbol": "vibe_workspace::install::bootgen::hybrid_emit::verify_fingerprints",
-      "line": 552,
+      "line": 557,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#tests",
       "verb": "implements",
@@ -36547,6 +36676,30 @@
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#trust-gate",
       "verb": "verifies",
       "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-workspace/src/install/tests_hybrid/transaction.rs",
+      "from_symbol": "vibe_workspace::install::tests_hybrid::transaction::a_per_unit_backend_refusal_leaves_the_units_artifacts_byte_exact",
+      "line": 23,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#UNIT-PUBLICATION-TRANSACTION",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-workspace/src/install/tests_hybrid/transaction.rs",
+      "from_symbol": "vibe_workspace::install::tests_hybrid::transaction::an_unchanged_reinstall_preserves_unit_bytes_and_mtimes",
+      "line": 117,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#UNIT-PUBLICATION-TRANSACTION",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-workspace/src/install/tests_hybrid/transaction.rs",
+      "from_symbol": "vibe_workspace::install::tests_hybrid::transaction::the_unit_write_path_publishes_only_through_the_transaction_manager",
+      "line": 198,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#UNIT-PUBLICATION-TRANSACTION",
+      "verb": "verifies"
     },
     {
       "file": "crates/vibe-workspace/src/install/tests_installed_fragments.rs",
@@ -51794,7 +51947,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:a9015b92bbaaabee8bd74521f0fa6846f1d62d4104c8fbdeef84304b30effcc4",
+      "content_hash": "sha256:576ad131338e78350cf0797575f5bb530099d270790f8a47468e777738c5822b",
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "PROP-054 — The vibe lifecycle and the extension machine",
@@ -52919,7 +53072,7 @@
     },
     {
       "anchor": "compiler",
-      "content_hash": "sha256:d366a35aa449ea2451a170d5223f7f999cf75bd99ba9df8c1bf1354c7cfecb76",
+      "content_hash": "sha256:2bd8b66da5602238adf46ff2d14ce46e496e08ded8289693a8742be68d370f86",
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "7. The compiler extension points — two tiers: staged transforms and full passes",
@@ -53009,7 +53162,7 @@
     },
     {
       "anchor": "oracle",
-      "content_hash": "sha256:f66250d17312d43788f4e2f740585cfed91159fe32c8bdd61a4dcb64df2fb0ca",
+      "content_hash": "sha256:8e453c3b5b5ea89b373436c0d195516a90b5183c2e6babfc2be28d6776f4ba8c",
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "7.3 Transforms versus the oracles",
@@ -53026,12 +53179,21 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-VS-ORACLE"
     },
     {
+      "anchor": "UNIT-PUBLICATION-TRANSACTION",
+      "content_hash": "sha256:3934668dd5e5ac540ff5154c68d13750a0329edc7c139efbdcba597a42722521",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**Every generated boot artifact set publishes as one crash-recoverable unit.** Node and per-unit paths render the complete INDEX and compile the optional selected STATIC before touching the existing artifact set, then one transaction applies INDEX bytes, selected STATIC presence/bytes and stale STATIC absence; node-only redirect selectors join that same transaction, while package units create none. A render/compiler/backend refusal leaves every prior byte exact. Interruption rolls forward or back from durable intent to one consistent set. A fingerprint-fresh unit returns before compilation/publication, preserving bytes and mtimes; a byte-equal dirty recomputation is a transactional no-op at each unchanged target. @status:impl/done",
+      "line": 260,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#UNIT-PUBLICATION-TRANSACTION"
+    },
+    {
       "anchor": "pass-tier",
       "content_hash": "sha256:d99b289965027619b9283a3bf4a9d749d7da56c82ddf0f32be3772e690e0189b",
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "7.4 Tier 2 — the pass tier: full IR access behind compiler_internals",
-      "line": 261,
+      "line": 262,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#pass-tier"
     },
     {
@@ -53040,7 +53202,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "**Decision (owner ruling 2026-08-25).** A plugin may be a **full compiler extension** — a pass with complete access to the packages' IR, free to change it arbitrarily: new optimisations, new frontends, new backends, the LLVM posture verbatim. Users can build the compiler onward from here. The price of the power is explicitness: the pass tier exists only behind a dedicated manifest flag, only under host activation, only in-process (`builtin`/`native`), and always on the record (§7.4.3). @status:spec/plan",
-      "line": 262,
+      "line": 263,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PASS-TIER-LAW"
     },
     {
@@ -53049,7 +53211,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "7.4.1 The IR — five named levels, lowered progressively",
-      "line": 263,
+      "line": 264,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ir-levels"
     },
     {
@@ -53058,7 +53220,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "The compiler's IR is **multi-level** (the MLIR shape, because that is what our compilation already is — a progressive lowering): **`source`** — one document's raw text plus its spec address; **`document`** — one document's parsed tree (sections, facts, directives, anchors); **`closure`** — the whole compilation unit: every node reachable from the seed, topo-ordered, with the `#use`/`#source`/`#embed` graph, origins and rename state — *this is \"the packages' IR\" of the mandate: every package's contribution, visible and mutable at once*; **`lane`** — the assembled artifact as an ordered node list with marker/provenance metadata, ready to serialise; **`emitted`** — the serialised bytes per artifact. Today these representations exist implicitly inside `compile_static_inner`; §7.5 makes them explicit types with named transitions. @status:spec/plan",
-      "line": 264,
+      "line": 265,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-LEVELS"
     },
     {
@@ -53067,7 +53229,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "7.4.2 Pass kinds — transform, lowering, frontend, backend",
-      "line": 266,
+      "line": 267,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#pass-kinds"
     },
     {
@@ -53076,7 +53238,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "**Transform pass** — level N → level N (an optimisation): `pass = { kind = \"transform\", level = \"closure\", after = \"qualify\" }`. Position is by built-in pass name (`after` / `before`), exactly LLVM's pass ordering; tier 1's four stages are, mechanically, transform passes pinned to canonical positions — one machine, two doors. @status:spec/plan",
-      "line": 268,
+      "line": 269,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PASS-TRANSFORM"
     },
     {
@@ -53085,7 +53247,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "**Lowering pass** — level N → level N+1. The built-in chain IS a lowering sequence: `parse` (source→document), `close` (documents→closure, the topo/merge/embed complex), `assemble` (closure→lane), `emit` (lane→emitted). A plugin lowering **replaces or augments** a named built-in: `pass = { kind = \"lowering\", replace = \"emit\", artifact = \"static-xml\" }`. @status:spec/plan",
-      "line": 269,
+      "line": 270,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PASS-LOWERING"
     },
     {
@@ -53094,7 +53256,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "**Frontend** — a `parse`-position lowering registered for new source formats: `pass = { kind = \"frontend\", formats = [\"adoc\"] }` receives `source`, returns `document`. The address grammar treats a registered extension exactly as it treats `.md`/`.xml` (canonical doc paths strip it), so a new format's documents are first-class `spec://` citizens. @status:spec/plan",
-      "line": 270,
+      "line": 271,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PASS-FRONTEND"
     },
     {
@@ -53103,7 +53265,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "**Backend** — an `emit`-position lowering: receives `lane`, returns artifact bytes — a new lane serialisation (JSON lane, compact lane, HTML projection) or a replacement of a built-in emitter for one named artifact. Built-in emit passes carry stable names (`emit:static-xml`, `emit:static-md`, `emit:index`, `emit:inline`) so replacement is precise. @status:spec/plan",
-      "line": 271,
+      "line": 272,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PASS-BACKEND"
     },
     {
@@ -53112,7 +53274,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "7.4.3 The flag, and the trust posture of full access",
-      "line": 274,
+      "line": 275,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#the-flag"
     },
     {
@@ -53121,7 +53283,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "A contribution enters the pass tier by declaring **`compiler_internals = true`** on its `[[extension]]` table — the owner-mandated flag, a single conspicuous boolean whose presence means \"this plugin asked for the low-level API\". Without it, `pass = …` is a validation error. With it: **host activation is always required** (`auto` is ignored for this tier — stricter than tier 1's compile rule, same direction); the activated pass list, positions included, is recorded in the generated artifact's header (`<!-- vibe:transforms … -->` gains the pass entries); and the install/build narration names each internals-plugin before it runs. The flag rides the package manifest, so `vibe list`/`show` can surface \"this dependency contains compiler-internals extensions\" before anything activates. @status:spec/plan",
-      "line": 275,
+      "line": 276,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#COMPILER-INTERNALS-FLAG"
     },
     {
@@ -53130,7 +53292,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "The tier is `builtin`/`native` only (§8.5's reasons apply with more force). **The flag is a declaration, not a permission dialog** (owner ruling 2026-08-25, `##INSTALL-IS-CONSENT`): no consent prompt guards it — its job is to make the capability VISIBLE (to `vibe extensions`, to `vibe list`, to static scanners, to a human reading the manifest) before anything runs. Installation plus the host's activation line are the whole authorisation, the Clang-plugin posture; the safety spend goes into §3.5's observability instead of gates. @status:spec/done",
-      "line": 276,
+      "line": 277,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#INTERNALS-TRUST"
     },
     {
@@ -53139,7 +53301,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "7.4.4 The wire — whole IR in, whole IR out",
-      "line": 278,
+      "line": 279,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#the-wire"
     },
     {
@@ -53148,7 +53310,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "A pass crosses the C ABI as **one call per pass per compilation**: the request carries the full serialised IR of its level (`payload.ir`, schema-versioned JSON), the reply carries the rewritten IR (or bytes, for a backend). No handle API, no callbacks into vibe, no partial views — composability comes from the pass MANAGER (many small passes in sequence), not from an interactive surface. This keeps §8.1's ABI honest, makes a pass trivially testable (a pure JSON→JSON function), and postpones the LLVM-C-API tarpit until a real pass cannot be written this way (recorded as a deferral in §11). @status:spec/plan",
-      "line": 279,
+      "line": 280,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#WHOLE-IR-WIRE"
     },
     {
@@ -53157,7 +53319,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "7.4.5 The IR schema is a versioned contract, and the verifier runs between passes",
-      "line": 281,
+      "line": 282,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ir-contract"
     },
     {
@@ -53166,7 +53328,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "The IR wire schema carries `ir_schema` (starts at 1); additive growth within a version, a bump when a shape breaks; a plugin's `vibe_ext_manifest` declares the schema it speaks, and a mismatch refuses with remediation before any invoke — the anti-LLVM-churn stance `##ADOPT-FROM-LLVM` promises. @status:spec/plan",
-      "line": 283,
+      "line": 284,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-SCHEMA-VERSIONED"
     },
     {
@@ -53175,7 +53337,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "**The verifier is what makes arbitrary mutation survivable:** after every pass-tier pass, the level's invariants are re-checked (well-formed trees, anchor-namespace uniqueness — the existing `DuplicateId` gate — closure acyclicity, lane/marker integrity), so a pass that breaks the IR fails AT THAT PASS, by name, not three passes later as a mystery. This is LLVM's `-verify-each` practice adopted as a default that cannot be switched off from a manifest. @status:spec/plan",
-      "line": 284,
+      "line": 285,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#INTER-PASS-VERIFIER"
     },
     {
@@ -53184,7 +53346,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "§7.3's oracle rule extends unchanged: the reference semantics are the built-in pipeline with zero plugin passes, and the recorded transform/pass list is part of the artifact's identity. @status:spec/plan",
-      "line": 285,
+      "line": 286,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REFERENCE-STAYS-ORACLE"
     },
     {
@@ -53193,7 +53355,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "7.5 The IR refactor — the composability precondition",
-      "line": 289,
+      "line": 290,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ir-refactor"
     },
     {
@@ -53202,7 +53364,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "**The mandate's closing sentence is a work item:** today the transitions live as one monolithic phase loop (`compile_static_inner` — parse/topo, merge, embed, qualify, absorb, link, emit in fixed code order) over implicit representations. Before any pass-tier API exists, the compiler is refactored so that: **(1)** the five §7.4.1 levels are explicit types; **(2)** every built-in phase is a named first-class pass over them (`parse`, `close`, `merge`, `embed`, `qualify`, `absorb`, `link`, `assemble`, `emit:*`) registered in the same pass manager plugins will use — built-ins are not privileged, which is the composability test; **(3)** the default pipeline is a declared pass LIST, not control flow. **The refactor's gate is byte-identity:** the default pipeline over the whole existing corpus must emit byte-identical artifacts before and after — the compiler's own oracles (round-trip, byte-stable lanes) judge it, and no external API ships until they are green. @status:spec/plan",
-      "line": 290,
+      "line": 291,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR"
     },
     {
@@ -53211,7 +53373,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "**Where the compiler lives TODAY** (verified against the tree 2026-08-24/25; the refactor's raw material, so an implementer starts from addresses, not archaeology): the phase loop — `crates/vibe-spec/src/pipeline.rs` (`compile_static_inner`, with `compile_static` / `compile_static_qualified` as its two modes); the `#use` graph and topo order — `use_graph.rs` (`topo_order_from`, `source_fold_order`); the `#source` fold — `merge.rs` (`fold_sources`) plus `pipeline.rs`'s `fold` module; `#embed` — `embed.rs` (`expand_embeds`, the `SectionSource` trait every resolver implements); qualification and rename maps — `qualify.rs` (`qualify_contribution`, `origin_slug`); reversible markers — `markers.rs` (`open`/`close`/`decompile`); addresses and routing — `address.rs` / `resolver.rs`; the doc IR — `doctree.rs` (`DocTree`) with the format pivot in the separate `vibe-specdoc` crate (`from_markdown`/`from_xml`/`to_xml`/`to_markdown`). The lane is INVOKED from `vibe-workspace`'s boot_artifacts (`boot_artifacts.rs`, `boot_artifacts/normal.rs` — the normal-lane seed) during install's boot regeneration. @status:spec/done",
-      "line": 291,
+      "line": 292,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#COMPILER-CODE-MAP"
     },
     {
@@ -53220,7 +53382,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "**The refactor must leave the door open to per-level memoization** (the Webpack persistent-cache / Turbopack lesson, 2026-08-25 audit): once every pass is a pure function of typed IR, a level's output is cacheable by its input hashes — parse results keyed by source hash (one edited document re-parses one document, not ninety-eight), pass outputs keyed by (input IR hash, pass identity, config). Not built in R3 — today's corpus compiles fast enough — but the pass signatures are designed so that adding the cache later is a wrapper, not a rewrite; the day an expensive plugin pass (an LLM-driven compression) joins the pipeline, this is what keeps the ritual usable. @status:spec/plan",
-      "line": 292,
+      "line": 293,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-CACHE-READY"
     },
     {
@@ -53229,7 +53391,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "8. Native extensions — one ABI for both families",
-      "line": 295,
+      "line": 296,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#native"
     },
     {
@@ -53238,7 +53400,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "8.1 The ABI is C + JSON, never the Rust ABI",
-      "line": 296,
+      "line": 297,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#why-c-abi"
     },
     {
@@ -53247,7 +53409,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "A native handler is a **cdylib** exposing a four-symbol C ABI: `vibe_ext_abi() -> u32` (contract version, starts at 1); `vibe_ext_manifest() -> *const c_char` (JSON: the ids and points it implements); `vibe_ext_invoke(req_ptr, req_len, resp_ptr, resp_len) -> i32` (request = context envelope JSON bytes, response = reply envelope JSON bytes); `vibe_ext_free(ptr, len)`. **The Rust ABI is not a wire:** it is unstable across compiler versions, and a plugin built by yesterday's rustc against today's vibe would be undefined behaviour — the «compile it for every rustc in existence» hell the owner named (2026-08-25). C ABI + JSON costs one serialisation per call and buys total version independence — and §7.2's document-grained stages exist precisely so \"per call\" means \"per artifact\", making that cost invisible. **This is the VST posture the owner asked for:** a plugin compiles ONCE, with any toolchain that can emit a C-ABI cdylib (Rust, C, C++, Zig, Go — authorship is not Rust-bound), and keeps working across vibe releases; migrations happen when OUR plugin API moves (`vibe_ext_abi`, the envelope, `ir_schema` — all versioned, additive within a version, a break announced as a `formats/breaks/` note), never when a compiler does. @status:spec/plan",
-      "line": 297,
+      "line": 298,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#C-ABI-LAW"
     },
     {
@@ -53256,7 +53418,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "vibe ships a small **`vibe-ext` helper crate** (published with the rust stack) so a plugin author writes a safe `fn handle(ctx: Context) -> Reply` and a `vibe_extension!` macro emits the four symbols, the catch_unwind guard, and the (de)serialisation. Authors never touch `unsafe`. @status:spec/plan",
-      "line": 299,
+      "line": 300,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ABI-CRATE"
     },
     {
@@ -53265,7 +53427,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "The loader (libloading) checks `vibe_ext_abi` before any invoke — a mismatch refuses with remediation («rebuild: `vibe build`»), never a crash. Every invoke crosses a catch_unwind at the plugin's own boundary (the macro's job); a panicking plugin fails its execution, reported like any failing contribution — it does not take vibe down. @status:spec/plan",
-      "line": 300,
+      "line": 301,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PANIC-AND-VERSION"
     },
     {
@@ -53274,7 +53436,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "8.2 Where native extensions build — in place, amending PROP-024 §2.3",
-      "line": 303,
+      "line": 304,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#build-home"
     },
     {
@@ -53283,7 +53445,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "Per the mandate («собирать inplace прямо внутри vibedeps либо внутри packages»), and per the precedent PROP-025 already set (`build_binary` runs `cargo build --release` in the slot): **a dependency's native extension builds inside its own slot** (`<slot>/<crate_dir>` workspace, `target/` in the slot), and an authored package of ours builds inside its `vibevm/vibepacks/...` live slot with its own workspace. This AMENDS PROP-024 §2.3's «build output is directed to a gitignored location e.g. `.vibe/<pkg>-target/`, never the slot» — the amendment is recorded here and lands at that anchor at build time: build output in the slot was already reality for PROP-025 binaries, it stays outside the content hash and the shippable tree by the §2.2 denylist (`target/`, `node_modules/`), and what makes it SAFE is §9 (materialisation stops deleting what it did not write). vibe maintains the ignore entries (a generated `.gitignore` inside the vibedeps root covering `**/target/` and `**/node_modules/` — the vendored world stays clean in git without per-slot files). @status:spec/plan",
-      "line": 304,
+      "line": 305,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IN-SLOT-BUILD"
     },
     {
@@ -53292,7 +53454,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "The **build phase** builds native extensions (and `[[binary]]`s) — with cargo's own incrementality and `vibe bin build`'s narration genre (announced per artifact; PROP-025's build-consent prompt dies with the rest of the prompts, `##INSTALL-IS-CONSENT` — that amendment rides §9's plan too). Lazily building on first use stays available for `binary` handlers (as today); `native` handlers used by the COMPILER are never built lazily mid-compile — see the bootstrap order. @status:spec/plan",
-      "line": 305,
+      "line": 306,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#BUILD-PHASE-OWNS-IT"
     },
     {
@@ -53301,7 +53463,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "**Closed-source plugins ship prebuilt** (owner case 2026-08-25): a package may carry ready cdylib artifacts instead of (or beside) sources — `handler = { kind = \"native\", prebuilt = { \"windows-x86_64\" = \"ext/bin/squeeze.dll\", \"linux-x86_64\" = \"ext/bin/libsqueeze.so\", \"macos-aarch64\" = \"ext/bin/libsqueeze.dylib\" } }`, keyed by the PROP-000 platform trio's target names. A prebuilt artifact is ordinary package content: hashed into `content_hash`, materialised verbatim, integrity for free. Loading order: prebuilt for the current platform if declared, else build from `crate_dir` if sources ship, else refuse naming the missing platform — never a silent skip. The build phase skips prebuilt-only natives (nothing to build); `vibe_ext_abi`/`ir_schema` gates apply to a prebuilt exactly as to a built one, which is what makes closed-source distribution SAFE to version: the C-ABI wire (§8.1) is the whole contract, so one artifact per platform serves every vibe release the schema allows. @status:spec/plan",
-      "line": 306,
+      "line": 307,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PREBUILT-CLOSED"
     },
     {
@@ -53310,7 +53472,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "**The bootstrap order, stated because install precedes build:** if an activated `compile:` transform's cdylib artifact is absent when install compiles the lane, install compiles WITHOUT it, marks the lane `transforms-pending` in the artifact header, and says so; the build phase, having built the extension, re-runs the (cheap) lane compile so the chain `vibe build` converges in one invocation. A `vibe install` alone with a missing transform artifact is thus honest and usable, never wedged — and never silently different from what the manifest declares. @status:spec/plan",
-      "line": 307,
+      "line": 308,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#BOOTSTRAP-ORDER"
     },
     {
@@ -53319,7 +53481,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "8.3 The road not taken now",
-      "line": 309,
+      "line": 310,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#wasm"
     },
     {
@@ -53328,7 +53490,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "**WASM handlers — deferred, not rejected:** a wasm component would buy sandboxing (the PROP-020 §4 accepted-risk posture could tighten) and cross-platform artifacts, at the cost of a runtime dependency and awkward filesystem/process access — exactly the operations phase handlers exist to do. When the sandboxing need fires (third-party plugin ecosystems beyond the allow-list), this anchor is where the design resumes. Until then the trust gate is the boundary, exactly as PROP-020 records it. @status:spec/plan",
-      "line": 310,
+      "line": 311,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#WASM-DEFERRED"
     },
     {
@@ -53337,7 +53499,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "8.5 Why compile: takes only builtin and native",
-      "line": 312,
+      "line": 313,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#compile-native-only"
     },
     {
@@ -53346,7 +53508,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "A `compile:` transform runs on every lane regeneration — inside install, potentially per document. A process spawn per document (script/binary kinds) is a Windows-hostile cost multiplier and an interpreter-availability hazard inside the innermost loop the whole product depends on; and an agent in the compiler would make the boot lane non-deterministic, which PROP-009 forbids constitutionally. Hence: `builtin` and `native` only — the two in-process kinds. @status:spec/plan",
-      "line": 313,
+      "line": 314,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-NATIVE-ONLY"
     },
     {
@@ -53355,7 +53517,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "9. The incremental-install revision — materialise becomes a diff",
-      "line": 316,
+      "line": 317,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#incremental"
     },
     {
@@ -53364,7 +53526,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "9.1 The defect, named from the code",
-      "line": 317,
+      "line": 318,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#problem"
     },
     {
@@ -53373,7 +53535,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "Today `materialise_with` (vibe-workspace `vibedeps.rs`) clears the whole slot (`remove_dir_all`) and re-copies on every re-materialisation, and a **mutable local source is NEVER presence-trusted** (`install.rs`: `!dep.source_mutable` in the trust gate) — so every `vibe install` over an edited-in-workspace package wipes its slot, and with it the `target/` PROP-025 just built there. The owner's fear is already a live defect for package binaries; native compile («может идти очень долго») raises the stakes, it does not create them. @status:spec/done",
-      "line": 318,
+      "line": 319,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#WIPE-TODAY"
     },
     {
@@ -53382,7 +53544,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "**Where materialisation lives TODAY** (verified 2026-08-24/25): the copy machine — `crates/vibe-workspace/src/vibedeps.rs` (`materialise` / `materialise_with` — the `remove_dir_all` + `copy_tree` pair this section replaces with a diff; `slot_rel_path`/`slot_abs_path`; the returned footprint `Vec<PathBuf>` this section's record persists); the transformed-slot variant — `vibedeps/derived.rs` (`materialise_with_spec_format`, the `.vibe-derived.toml` manifest §9.2 absorbs, `LEGACY0_EXCLUDES`); the trust gate and per-dep loop — `install.rs` (`materialise_resolution_with_spec_format`: the `present`/`format_current`/`!dep.source_mutable`/`slot_integrity` decision, `SlotIntegrity::TrustPresence|Verify`, the `slot_verifier` seam); freshness — `freshness.rs` (`hold_pins` and the fresh-check the install verb consults); hooks that must re-run only on real change — `hooks.rs` + `install/hooks_run.rs`; the in-slot binary precedent — `bins.rs` (`build_binary`, `DeclaredBinary::artifact`). @status:spec/done",
-      "line": 319,
+      "line": 320,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#MATERIALISE-CODE-MAP"
     },
     {
@@ -53391,7 +53553,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "9.2 The slot record — the footprint becomes a file",
-      "line": 321,
+      "line": 322,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#record"
     },
     {
@@ -53400,7 +53562,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "Every materialised slot gains a **slot record** — `.vibe-slot.toml` at the slot root: schema, the source `content_hash`, the spec-format identity (absorbing PROP-045's `.vibe-derived.toml` fields for transformed slots — ONE record file, not two), and `[[file]]` rows `{path, sha256}` for every file the materialiser wrote. `materialise` already returns exactly this footprint («and, in a later phase, record» — its own docstring names this phase); the record is that promise kept. The record itself, like the derived manifest today, is outside the content hash. @status:spec/plan",
-      "line": 322,
+      "line": 323,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#SLOT-RECORD"
     },
     {
@@ -53409,7 +53571,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "9.3 The diff algorithm — write what changed, delete what was ours, touch nothing else",
-      "line": 324,
+      "line": 325,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#diff"
     },
     {
@@ -53418,7 +53580,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "Re-materialising a slot that carries a record: **(1)** compute the incoming footprint (path→hash) from the source; **(2)** for each incoming file — recorded hash equal ⇒ **leave the file untouched** (no write, no mtime change); differing or unrecorded ⇒ write it; **(3)** for each RECORDED file absent from the incoming footprint ⇒ delete it (and now-empty parent dirs, best-effort); **(4)** any on-disk path NOT in the record — `target/`, `node_modules/`, any build output — is **never touched**; **(5)** write the new record. A slot with no record (legacy) pays one last full wipe-and-copy and comes out recorded. `vibe clean` remains the only whole-slot wipe (PROP-053 unchanged). @status:spec/plan",
-      "line": 325,
+      "line": 326,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#DIFF-MATERIALISE"
     },
     {
@@ -53427,7 +53589,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "**Step 2's \"untouched\" is a law, not an optimisation:** unchanged files keep their bytes AND their mtimes, so cargo's fingerprinting sees an unchanged workspace and the native/binary rebuild inside the slot is a no-op. This single property is what makes «инкрементальность — супер важный кусок» hold end-to-end: edit one prompt file in a package → one file rewritten in the slot → cargo rebuilds nothing. @status:spec/plan",
-      "line": 327,
+      "line": 328,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#MTIME-LAW"
     },
     {
@@ -53436,7 +53598,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "**Mutable sources get a freshness gate instead of a wipe:** for a PROP-011 §2.6 `file://` working-tree source, install re-hashes the source's shippable tree (cheap — read-and-hash, no copy) and compares against the record's `content_hash`: equal ⇒ the slot is fresh, skip entirely (this is the missing half of «vibe.toml не поменялся — не инсталлировать»); differing ⇒ the §9.3 diff. The never-trust-presence rule stays true in spirit — presence alone is still not trusted; the record's hash is what earns the skip. @status:spec/plan",
-      "line": 328,
+      "line": 329,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#MUTABLE-GETS-A-GATE"
     },
     {
@@ -53445,7 +53607,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "**Drift repair gets cheaper, not weaker.** PROP-020's reset guarantee (hook edits never compound) is re-based: \"reset\" = the §9.3 diff restores every RECORDED file to footprint state, byte-exact, whenever the slot re-materialises; `verify`-integrity mode compares per-file against the record and heals only divergent files. Hooks re-run only when the diff actually changed something — re-running them over an untouched slot would compound effects, the exact disease PROP-020 §2.1 exists to prevent. @status:spec/plan",
-      "line": 329,
+      "line": 330,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#SELF-HEAL"
     },
     {
@@ -53454,7 +53616,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "**Amendments this section obligates at build time** (recorded here so the build session lands them at the owning anchors, statuses moved, nothing renamed): PROP-011 gains the diff-materialise ruling and the mutable-source freshness gate; PROP-020 §2.1 `##RESET-THEN-RERUN` gains the record-diff-restore successor note, and its §2.3 trust gate (allow-list, first-run consent, non-interactive abort, `--allow-hooks`) is superseded by `##INSTALL-IS-CONSENT` + §3.5 observability; PROP-022 §2.2's snapshot reset language likewise; PROP-045's manifest is absorbed into the slot record (its facts re-pointed, file format superseded); PROP-024 §2.3 per §8.2; PROP-025's build-consent prompt likewise yields to `##INSTALL-IS-CONSENT`. @status:spec/plan",
-      "line": 330,
+      "line": 331,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#AMENDMENT-PLAN"
     },
     {
@@ -53463,7 +53625,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "10. The two commissioning test scenarios",
-      "line": 334,
+      "line": 335,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#scenarios"
     },
     {
@@ -53472,7 +53634,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "10.1 Lifecycle: the phase-announcer plugin",
-      "line": 335,
+      "line": 336,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#lifecycle-test"
     },
     {
@@ -53481,7 +53643,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "A fixture package declares in its own manifest: `[[extension]] id=\"announce\" point=\"phase:build\" handler={kind=\"builtin\", name=\"log\"} config={message=\"hello from {phase} in {project}\"}` (plus a second execution at `phase:test` — the multi-execution property under test). E2E: install the fixture into a scratch project, run `vibe test`, assert stdout carries both rendered lines in phase order, each attributed to the providing package (§3.3 surface rule); run `vibe test` again and assert the executions report `fresh` (§4.3 under test); assert `vibe extensions --json` lists both executions with their provider (§3.5 under test), and that a host `[extensions] disable = [...]` line silences exactly one of them (§3.3 under test). The `log` builtin renders `{phase}`, `{project}`, `{package}` from the envelope — proving the envelope reaches handlers, which is the scenario's real point. @status:spec/plan",
-      "line": 336,
+      "line": 337,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TEST-LOG-PLUGIN"
     },
     {
@@ -53490,7 +53652,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "10.2 Compiler: the XML whitespace squeezer — a TEST vehicle, not a shipping practice",
-      "line": 338,
+      "line": 339,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#compiler-test"
     },
     {
@@ -53499,7 +53661,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "A `compile:emitted` transform (builtin first — proving the declaration/activation/ordering tract; then re-shipped as a `native` cdylib in a fixture package — proving the §8 build/load/invoke tract with byte-identical output, which is itself the assertion). **The algorithm, XML-aware and safe by parent-shape:** parse the emitted XML; delete every text node consisting solely of whitespace whose parent element has at least one ELEMENT child and no non-whitespace text child (pure element containers lose their pretty-printing; mixed-content elements — anything carrying prose — are untouched byte-for-byte); comments (the compiled lane's `vibe:` markers) and CDATA survive verbatim; serialise. Applies to `.xml` artifacts only. @status:spec/plan",
-      "line": 339,
+      "line": 340,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TEST-XML-MINIFY"
     },
     {
@@ -53508,7 +53670,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "**The owner's own caveat, recorded as a norm:** inter-tag whitespace stripping is a poor production idea — token savings are marginal and the readability/diffability of the lane (and its reversibility oracle, §7.3) suffer. The transform ships as a test fixture and a mechanics-proof, default-off everywhere; the real tenant of these stages is the future **Caveman compression** pass at `compile:lane`, which compresses prose content deliberately rather than shaving markup accidentally. @status:spec/done",
-      "line": 340,
+      "line": 341,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#MINIFY-NOT-FOR-PROD"
     },
     {
@@ -53517,7 +53679,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "11. Rejected and deferred alternatives",
-      "line": 343,
+      "line": 344,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#rejected"
     },
     {
@@ -53526,7 +53688,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "**Two separate extension grammars** (a `[hooks]`-style table for lifecycle, a Babel-style list for the compiler) — rejected: the mandate's core is one coherent machine; divergence here is the «разброд» the owner named as the failure mode. @status:spec/plan",
-      "line": 345,
+      "line": 346,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REJ-TWO-GRAMMARS"
     },
     {
@@ -53535,7 +53697,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "**Adopting Maven's full 23-phase table** — rejected: the hyphenated phases exist to sequence JVM build minutiae we do not have; nine phases cover the mandate, and the phase table is extensible behind a ruling when a real between-slot need arrives. @status:spec/plan",
-      "line": 346,
+      "line": 347,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REJ-FULL-MAVEN-PHASES"
     },
     {
@@ -53544,7 +53706,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "**`dylib` with Rust-native symbols** (handing `&mut DocTree` across the boundary) — rejected: no stable Rust ABI exists; every plugin would be pinned to the exact compiler and vibe build, which is undistributable. C ABI + JSON (§8.1) is the only honest wire. @status:spec/plan",
-      "line": 347,
+      "line": 348,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REJ-RUST-ABI"
     },
     {
@@ -53553,7 +53715,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "**Script/binary handlers for `compile:` stages** — rejected (§8.5): spawn-per-document inside install's innermost loop, interpreter availability as a compile dependency, and agent handlers there would break boot-lane determinism. @status:spec/plan",
-      "line": 348,
+      "line": 349,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REJ-SUBPROCESS-COMPILER"
     },
     {
@@ -53562,7 +53724,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "**Closure/graph access in the STAGED tier** (a tier-1 transform adding/removing `#use` edges) — rejected as a prompt-injection lever and an auditability break (§7.2 `##NO-CLOSURE-HOOK`). Full access moved tiers rather than dying: the 2026-08-25 ruling prices it into the pass tier behind `compiler_internals` + host activation + the header record (§7.4.3) — an explicit capability, never a silent one. @status:spec/plan",
-      "line": 349,
+      "line": 350,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REJ-CLOSURE-HOOKS"
     },
     {
@@ -53571,7 +53733,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "**Deferred: an interactive handle/callback C API for passes** (the LLVM-C-API genre — the plugin calls back into vibe to walk and mutate nodes piecemeal) — the pass wire is whole-IR-in/whole-IR-out (§7.4.4) until a real pass demonstrably cannot be written that way; the deferral lives behind this anchor. @status:spec/plan",
-      "line": 350,
+      "line": 351,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#DEFER-HANDLE-API"
     },
     {
@@ -53580,7 +53742,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "**Inline command strings in the manifest** — stays rejected exactly as PROP-020 §3 ruled; the `script` kind keeps the reviewable-file form, and `builtin`/`binary`/`native` are the structured alternatives. @status:spec/plan",
-      "line": 351,
+      "line": 352,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REJ-INLINE-COMMANDS-STAND"
     },
     {
@@ -53589,7 +53751,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "**Deferred:** direct-verb mixing in a chain (`##EXISTING-VERBS-STAY`); WASM handlers (`##WASM-DEFERRED`); a per-node visitor API for external transforms (`##NOT-FROM-BABEL`); pkgrefs scoping non-install phases (`##CHAIN-GENERAL`). @status:spec/plan",
-      "line": 352,
+      "line": 353,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#DEFER-GOAL-MIXING"
     },
     {
@@ -53598,7 +53760,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "12. The proposed build order — six self-standing waves",
-      "line": 355,
+      "line": 356,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#roadmap"
     },
     {
@@ -53607,7 +53769,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "**R1 — the materialise diff (§9).** Slot record, diff algorithm, mutable-source freshness gate, mtime law; amendments landed at PROP-011/020/022/024/045 anchors. Ships alone and pays immediately: `vibe install` stops killing slot `target/`s (a today-bug for PROP-025 binaries), and edit-one-prompt installs become near-instant. **First because everything after it builds artifacts the old wipe would destroy.** @status:impl/plan",
-      "line": 357,
+      "line": 358,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#R1-DIFF"
     },
     {
@@ -53616,7 +53778,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "**R2 — the lifecycle engine (§3–§6 minus agent).** The phase table, chain grammar (superseding PROP-053 `##CHAIN-ONLY-INSTALL` at its anchor), `[[extension]]` parsing, trust-gate extension, envelope, `builtin`/`script`/`binary` handlers, `.vibe/lifecycle.toml` freshness, the `log` builtin, and the §10.1 e2e. `vibe build`/`vibe test` become real (preset: binaries + stack commands). @status:impl/plan",
-      "line": 358,
+      "line": 359,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#R2-ENGINE"
     },
     {
@@ -53625,7 +53787,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "**R3 — the IR refactor (§7.5).** Explicit level types, built-in phases as named passes, the declared default pipeline, the inter-pass verifier skeleton — no external API yet. Gate: byte-identical artifacts over the whole corpus, judged by the existing oracles. Before both compiler tiers, so they are born on the pass manager instead of retrofitted onto the monolith. @status:impl/plan",
-      "line": 359,
+      "line": 360,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#R3-IR-REFACTOR"
     },
     {
@@ -53634,7 +53796,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "**R4 — tier 1, the staged transforms (§7.2).** The four canonical transform positions, host activation, the transforms header, the oracle rule, and the §10.2 builtin minifier e2e. @status:impl/plan",
-      "line": 360,
+      "line": 361,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#R4-STAGED"
     },
     {
@@ -53643,7 +53805,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "**R5 — the native tier (§8).** `vibe-ext` crate, the four-symbol ABI, loader + catch_unwind + version gate, build-phase integration, bootstrap order, and the §10.2 native-parity e2e. @status:impl/plan",
-      "line": 361,
+      "line": 362,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#R5-NATIVE"
     },
     {
@@ -53652,7 +53814,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "**R6 — tier 2, the pass tier (§7.4).** The `compiler_internals` flag, pass declarations (transform/lowering/frontend/backend), the whole-IR wire with `ir_schema`, the verifier turned on between plugin passes, `vibe list`/`show` surfacing. E2E: a fixture frontend for a trivial format whose documents resolve as `spec://` citizens, and a fixture JSON backend for the lane — both behind the flag, both refused without it. @status:impl/plan",
-      "line": 362,
+      "line": 363,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#R6-PASS-TIER"
     },
     {
@@ -53661,7 +53823,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "**R7 — create and the agent tier (§6.4–§6.5).** The real provider seam, selected-world agent execution, strict multi-output result, durable hosted outbox/fingerprint resume and shared CLI/MCP lifecycle surfaces are complete through the all-green R7.4 boundary. Provider presence activates nothing and hosted work spends nothing. @status:impl/done",
-      "line": 363,
+      "line": 364,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#R7-AGENT"
     },
     {
@@ -53670,7 +53832,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "**R7.5 — neutral external orchestration mechanics (§4.6).** P0 fixes the evidence/optional-provider/vocabulary laws; P1 adds JTD-first input/artifact/run evidence; P2 builds the read-only `vibe-specdoc` authoring + `vibe-facts` consumer projection with optional current/carried specmap relations; P3 exposes one thin requirements query over CLI/MCP and proves it beside existing lifecycle control with a fake external PDSA process. No coding agent, automatic repair loop, task-choice heuristic or Plan/Act policy is implemented; a reference agent remains a separate future campaign. @status:impl/done",
-      "line": 364,
+      "line": 365,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#R7-EXTERNAL-ORCHESTRATION"
     },
     {
@@ -53679,7 +53841,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "**R8 — package/deploy substance.** Skill/plugin/installer bindings for package; first deploy plugins. Shaped by what exists when its turn comes; deliberately last. @status:impl/plan",
-      "line": 365,
+      "line": 366,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#R8-PACKAGE-DEPLOY"
     },
     {
@@ -53688,7 +53850,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "13. Open questions — the owner's forks",
-      "line": 368,
+      "line": 369,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#open"
     },
     {
@@ -53697,7 +53859,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "**Naming — CLOSED (owner, 2026-08-25: «окей»):** the nine-phase table stands as drafted — `generate` separate from `build`, `verify` in the table from day one, the name `create` confirmed. @status:spec/done",
-      "line": 370,
+      "line": 371,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-PHASE-NAMES"
     },
     {
@@ -53706,7 +53868,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "**Native trust — CLOSED (owner, 2026-08-25):** no consent tier of any kind — installation is the consent (`##INSTALL-IS-CONSENT`), for in-process cdylibs exactly as for scripts, the Gradle/Webpack/Clang norm. The safety budget is spent on §3.5 observability. §8.3's wasm sandboxing note stays the eventual escape if a hostile-ecosystem era ever demands one. @status:spec/done",
-      "line": 371,
+      "line": 372,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-NATIVE-TRUST"
     },
     {
@@ -53715,7 +53877,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "**Create economics — CLOSED (owner, 2026-08-26):** there is no one global create budget. `##LLM-BUDGET` defines per-enhancement/per-workload call and token ceilings, lazy spend and mode-specific exhaustion. Exact defaults/manifest grammar remain implementation work at the first consuming enhancement; the policy fork is closed. @status:spec/done",
-      "line": 372,
+      "line": 373,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-CREATE-BUDGET"
     },
     {
@@ -53724,7 +53886,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "**Deploy first targets — CLOSED (owner, 2026-08-26):** selected genres are project/user agent projections for Claude Code, Codex and OpenCode; VibeVM-owned local tools under `~/.vibe/bin`; an explicit custom installer for ordinary applications; registry/marketplace/server/remote providers; and future system-scope package/config/service providers. The first commissioning cut is isolated local projection/`vibe-bin`, never a live publish/server mutation. Runtime target/provider statuses remain R8 work at their own anchors. @status:spec/done",
-      "line": 373,
+      "line": 374,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS"
     },
     {
@@ -53733,7 +53895,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "14. Reference — the exact shapes (normative for the build)",
-      "line": 376,
+      "line": 377,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#reference"
     },
     {
@@ -53742,7 +53904,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "This section exists so that an implementer — human or model — never has to guess a field name, a file layout, or a call sequence from the prose above. Where a shape is deliberately unfrozen it says so; everything else here is normative. @status:spec/done",
-      "line": 377,
+      "line": 378,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-PURPOSE"
     },
     {
@@ -53751,7 +53913,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "14.1 The [[extension]] table, field by field",
-      "line": 378,
+      "line": 379,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ext-grammar"
     },
     {
@@ -53760,7 +53922,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "Handler sub-shapes: `builtin` → `{ kind, name }`; `script` → `{ kind, base }` (base path without extension, PROP-020 §2.2 resolution); `binary` → `{ kind, name }` (a `[[binary]]` name); `native` → `{ kind, crate_dir? , prebuilt? }` (at least one of the two, §8.2); `agent` → `{ kind, prompt }` (a `spec://` address the package resolves). @status:spec/plan",
-      "line": 399,
+      "line": 400,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-HANDLER-TABLES"
     },
     {
@@ -53769,7 +53931,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "14.2 .vibe/lifecycle.toml — the run/freshness record",
-      "line": 401,
+      "line": 402,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#state-files"
     },
     {
@@ -53778,7 +53940,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "Machine state: inside `.vibe/` (shippable-tree denylist), never committed, never hashed, survives `vibe clean` (§4.3), erasable at will — losing it costs one full re-run, nothing else. Schema-versioned like every state file we own. @status:spec/plan",
-      "line": 414,
+      "line": 415,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-LIFECYCLE-TOML"
     },
     {
@@ -53787,7 +53949,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "14.3 .vibe-slot.toml — the materialised-slot record (§9.2)",
-      "line": 416,
+      "line": 417,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#slot-record"
     },
     {
@@ -53796,7 +53958,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "Lives at the slot root; excluded from the slot's content identity exactly as `.vibe-derived.toml` is today; unknown fields refuse (deny_unknown, schema bump to extend). The §9.3 diff reads the old record, computes the incoming footprint, and writes the new record LAST — a crash between steps leaves a slot the next run heals (recorded files re-diff; unrecorded paths were never touched). @status:spec/plan",
-      "line": 428,
+      "line": 429,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-SLOT-RECORD"
     },
     {
@@ -53805,7 +53967,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "14.4 Handler wires, end to end",
-      "line": 430,
+      "line": 431,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#wire-details"
     },
     {
@@ -53814,7 +53976,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "**script:** interpreter per PROP-020 §2.2 (`.sh` via bash first, `.ps1` via PowerShell on Windows fallback); cwd = slot for `slot:` points, project root for `phase:`; env = the `VIBE_*` set PROP-020 documents plus `VIBE_CONTEXT` (absolute path of the envelope JSON written into scratch) and `VIBE_REPLY` (absolute path where a reply JSON MAY be written); exit 0 + no reply file = `{\"status\":\"ok\"}`; non-zero exit = fail regardless of reply file; streams go to the user live. @status:spec/plan",
-      "line": 432,
+      "line": 433,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-SCRIPT"
     },
     {
@@ -53823,7 +53985,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "**binary:** the artifact is resolved via PROP-025 (`DeclaredBinary::artifact`, built if absent); envelope JSON on stdin (closed after write); reply JSON expected on stdout (whole stdout parsed as one JSON document; stderr streams to the user); non-zero exit = fail; a malformed reply = fail naming the execution. @status:spec/plan",
-      "line": 433,
+      "line": 434,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-BINARY"
     },
     {
@@ -53832,7 +53994,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "**native, one invocation, seven steps:** (1) resolve artifact — prebuilt-for-platform, else built cdylib, else refuse; (2) load (libloading), once per run, cached by path; (3) `vibe_ext_abi()` — must equal a supported ABI version or refuse with «rebuild: vibe build»; (4) `vibe_ext_manifest()` — parse, check the execution's id/point/`ir_schema` are declared; (5) `vibe_ext_invoke(req, req_len, &resp, &resp_len)` under `catch_unwind` at the plugin macro's boundary — request/response are UTF-8 JSON byte buffers, envelope in, reply out; non-zero return or panic = the execution fails, vibe survives; (6) parse reply; (7) `vibe_ext_free(resp, resp_len)`. The `vibe-ext` helper crate's `vibe_extension!` macro generates all four symbols from a safe `fn handle(Context) -> Reply`. @status:spec/plan",
-      "line": 434,
+      "line": 435,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE"
     },
     {
@@ -53841,7 +54003,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "14.5 The agent handshake, on the wire (§6.5)",
-      "line": 437,
+      "line": 438,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#agent-wire"
     },
     {
@@ -53850,7 +54012,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "Resume is the SAME phase command re-run: the engine adopts the exact `run_id` in `.vibe/lifecycle.toml` (engine status `delegated`), validates each task's declared outputs, marks satisfied executions done, re-parks unsatisfied ones (idempotent), and continues the chain. A fresh/displacing identity never services that run's continuation. No dedicated resume verb; the default-lifecycle command's lifecycle `--force` deliberately displaces/re-parks (not Reinstall's unrelated materialisation `--force`, which may adopt the same run). Repetition beyond that one state transition belongs to an external orchestrator, never a hidden coding-agent loop (§4.6). @status:impl/done",
-      "line": 456,
+      "line": 457,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-AGENT-RESUME"
     },
     {
@@ -53859,7 +54021,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "14.6 IR level skeletons (tier-2 wire; frozen at R6, sketched now)",
-      "line": 458,
+      "line": 459,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ir-skeletons"
     },
     {
@@ -53868,7 +54030,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "These skeletons fix the VOCABULARY (level names, the node/edge/entry framing); exact field sets freeze in R6 when the wire ships, derived from the R3 types — deliberately, so the refactor is not forced to mirror a JSON guess made before it ran. `ir_schema` starts at 1 the day the first external pass can load. @status:spec/plan",
-      "line": 472,
+      "line": 473,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-IR-UNFROZEN"
     },
     {
@@ -53877,7 +54039,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "14.7 R7.5 evidence and requirements wires",
-      "line": 474,
+      "line": 475,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#external-orchestration-wire"
     },
     {
@@ -53886,7 +54048,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "P1 freezes the following vocabulary as strict JTD and registers/corpora/code-generates it before runtime use. `observed_at` is excluded from `evidence_id`; the id is a domain-separated digest over every other canonical identity/comparison member. `measured` values come from durable execution state; `observed` values are recomputed at verify. Optional members are absent, never `null`. @status:spec/done",
-      "line": 475,
+      "line": 476,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-EVIDENCE-WIRE"
     },
     {
@@ -53895,7 +54057,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "P1 also freezes one strict metadata-only requirements report. It does not embed verification evidence into fact rows: the lifecycle evidence member and the fact/relation observations are independent roots an external orchestrator may join by full address/edge and exact observation identity. @status:spec/done",
-      "line": 504,
+      "line": 505,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-REQUIREMENTS-WIRE"
     },
     {
@@ -53904,7 +54066,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "The shared library query is projected as `vibe requirements [--address-prefix <spec://prefix>] [--limit <N>] [--relations] [--json] [--path <project>]` and MCP `requirements_query({address_prefix?, limit?, relations?})`. Default limit is 100, hard maximum 256; zero, overflow, wrong types and unknown members refuse before filesystem access. MCP has no path member because server context is authority. With `relations = false` no specmap engine/map is loaded. Existing `vibe verify --json` and `lifecycle_run({phase:\"verify\"})` are the control/evidence surfaces; R7.5 adds no second lifecycle executor and no `evidence` verb merely to duplicate their generated root. @status:spec/done",
-      "line": 530,
+      "line": 531,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-REQUIREMENTS-SURFACES"
     },
     {
@@ -53913,7 +54075,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "15. Glossary — the words this document leans on",
-      "line": 533,
+      "line": 534,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#glossary"
     },
     {
@@ -98897,13 +99059,13 @@
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs",
-      "line": 493,
+      "line": 498,
       "message": "edge `vibe_workspace::install::bootgen::hybrid_emit::append_hoisted` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#hoisting` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs",
-      "line": 552,
+      "line": 557,
       "message": "edge `vibe_workspace::install::bootgen::hybrid_emit::verify_fingerprints` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#tests` carries no kind/revision line yet"
     },
     {
