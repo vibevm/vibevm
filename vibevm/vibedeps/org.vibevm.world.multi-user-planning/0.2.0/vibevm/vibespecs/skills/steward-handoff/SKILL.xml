@@ -4,6 +4,10 @@
   <status stage="impl" state="done"/>
   <p><HANDOFF-CENTRAL-ONLY fact="true" status="impl/done">This skill transfers owner-facing central custody,
 not work to a subagent. It never delegates acceptance.</HANDOFF-CENTRAL-ONLY></p>
+  <p><HANDOFF-CONTEXT-COMMAND fact="true" status="impl/done">Recognise `ACCEPT HANDOFF FROM
+&amp;lt;context-id&amp;gt;` / `ПРИМИ ХЭНДОФФ ИЗ &amp;lt;context-id&amp;gt;`. Resolve exactly one
+unreceipted offered bundle in that context; if several exist, require an exact
+handoff id. Read the stored `HANDOFF.md`—never ask the owner to paste it.</HANDOFF-CONTEXT-COMMAND></p>
   <operation title="Select the operation">
     <facts ordered="false">
       <HANDOFF-PREPARE fact="true" status="impl/done">**Prepare** when the current session holds custody and
@@ -18,16 +22,19 @@ not work to a subagent. It never delegates acceptance.</HANDOFF-CENTRAL-ONLY></p
     <p><HANDOFF-PREPARE-PROCEDURE fact="true" status="impl/done">Follow
 `spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/custody-and-handoff#offer`:
 verify the tree; backscan mandate/plan/evidence/artifacts; write the immutable
-offer and comprehensive `HANDOFF.md`; hash both handoff and plan; set custody
-to `offering`; then become repository- and plan-read-only. A summary without
-that fence is not a handoff.</HANDOFF-PREPARE-PROCEDURE></p>
+offer, comprehensive `HANDOFF.md`, and short receive-by-context pointer; refresh
+and hash handoff, plan and selected goal; set custody to `offering`; then become
+repository- and plan-read-only. A summary without the created file and fence is
+not a handoff.</HANDOFF-PREPARE-PROCEDURE></p>
   </prepare>
   <receive title="Receive">
     <p><HANDOFF-RECEIVE-PROCEDURE fact="true" status="impl/done">Read all authorities and the complete bundle,
 verify hashes and repository state independently, enumerate discrepancies,
 write `accepted`, `accepted-with-exceptions`, or `rejected` receipt, and advance
 custody only for an accepted receipt. Preserve all dirty/worker work as
-candidate. Report restored state and wait for the owner before execution.</HANDOFF-RECEIVE-PROCEDURE></p>
+candidate. Once holder, refresh goal, print full `GOAL.md`, then print the exact
+`GOAL-CLAUDE.txt` `/goal …` line separately. Report restored state and wait for
+the owner before execution.</HANDOFF-RECEIVE-PROCEDURE></p>
   </receive>
   <recover title="Recover">
     <p><HANDOFF-RECOVER-PROCEDURE fact="true" status="impl/done">Preserve artifacts, verify holder

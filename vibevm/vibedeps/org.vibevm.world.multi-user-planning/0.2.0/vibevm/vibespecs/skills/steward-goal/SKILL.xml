@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Steward goal</title>
+  <status stage="impl" state="done"/>
+  <p><GOAL-SKILL-PURPOSE fact="true" status="impl/done">Produce the canonical local campaign goal specified by
+`spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/goal-projection#root`.
+The plan remains authority; do not paraphrase with an LLM.</GOAL-SKILL-PURPOSE></p>
+  <p><GOAL-SKILL-REFERENCE-RENDERER fact="true" status="impl/done">When Python 3.11+ is available, prefer the
+bundled deterministic `scripts/render_goal.py` and pass the exact context,
+holder and session ids. Its output is the protocol's reference implementation;
+inspect the protocol before modifying or replacing it. Without Python, follow
+the same byte rules directly and perform the double-render check.</GOAL-SKILL-REFERENCE-RENDERER></p>
+  <procedure title="Procedure">
+    <facts ordered="true">
+      <GOAL-SKILL-RESOLVE fact="true" status="impl/done">Resolve the exact stewardship context and read its
+   settings, custody and raw plan bytes once. Validate the plan graph before
+   deriving anything.</GOAL-SKILL-RESOLVE>
+      <GOAL-SKILL-SELECT fact="true" status="impl/done">Use valid `goal_node`; infer only a single
+   unambiguous top-level non-terminal campaign. On ambiguity or invalid id,
+   report the typed refusal and do not write.</GOAL-SKILL-SELECT>
+      <GOAL-SKILL-AUTH fact="true" status="impl/done">Compare the current session/holder with held custody.
+   A worker, non-holder, vacant context or `offering` holder may report whether
+   the goal is stale but must not create or replace `GOAL.md`.</GOAL-SKILL-AUTH>
+      <GOAL-SKILL-RENDER fact="true" status="impl/done">Follow the protocol's exact subtree, ordering,
+   frontier, candidate, route, closure, profile and fixed-text rules. Render
+   canonical `GOAL.md` plus the bounded one-line `GOAL-CLAUDE.txt` `/goal`
+   adapter. Emit UTF-8 without BOM, LF endings, no timestamp and one trailing
+   newline per file.</GOAL-SKILL-RENDER>
+      <GOAL-SKILL-PUBLISH fact="true" status="impl/done">Write a same-directory temporary file, recheck plan
+   hash, selection, profile and custody epoch/holder, then publish the Claude
+   command first and `GOAL.md` marker last. Retry one moved snapshot at most;
+   refuse the second.</GOAL-SKILL-PUBLISH>
+      <GOAL-SKILL-VERIFY fact="true" status="impl/done">Re-read the marker and both outputs, recompute raw
+   plan and Claude-condition SHA, count condition UTF-16 units, and render a
+   second time in memory. Accept only exact hashes, a condition at most 4000
+   units, and byte-identical second rendering.</GOAL-SKILL-VERIFY>
+    </facts>
+  </procedure>
+  <output title="Output">
+    <p><GOAL-SKILL-REPORT fact="true" status="impl/done">Report the selected node, plan revision/hash, profile,
+current/stale result, both output paths, condition length and whether bytes
+changed. Print the exact manual continuation recipe: copy trimmed
+`GOAL-CLAUDE.txt`, run `claude -c` in the bound worktree, paste, Enter. Do not
+start the campaign merely because the goal was refreshed.</GOAL-SKILL-REPORT></p>
+  </output>
+</spec>

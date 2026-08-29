@@ -17,8 +17,9 @@ the remaining route stays truthful.</ACTIVITY-NOT-PROGRESS></p>
   <loop title="2. The stewardship loop">
     <facts ordered="true">
       <LOOP-ORIENT fact="true" status="spec/done">**Orient:** read authority and
-  the full plan; verify tree, custody, candidates and the accepted boundary
-  empirically.</LOOP-ORIENT>
+  the full plan; verify tree, custody, selected campaign goal, candidates and
+  the accepted boundary empirically. Refresh a stale `GOAL.md` only when this
+  session holds custody.</LOOP-ORIENT>
       <LOOP-REFINE fact="true" status="spec/done">**Refine:** expand one coherent
   frontier region; state dependencies, write perimeter, acceptance, negative
   proof and safe stop before execution.</LOOP-REFINE>

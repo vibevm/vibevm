@@ -2,13 +2,13 @@
 name = "multi-user-planning"
 group = "org.vibevm.world"
 kind = "flow"
-version = "0.1.0"
+version = "0.2.0"
 epoch = 1
 format = "normal"
 authors = ["Oleg Chirukhin"]
 license = "UPL-1.0"
-description = "Multi-contributor campaign stewardship: user-local adaptive plans, capability profiles, same-machine central custody, and evidence-preserving handoffs"
-keywords = ["planning", "campaigns", "multi-user", "handoff", "custody", "agents"]
+description = "Multi-contributor campaign stewardship: user-local adaptive plans and deterministic goals, capability profiles, central custody, and evidence-preserving handoffs"
+keywords = ["planning", "campaigns", "multi-user", "goal", "handoff", "custody", "agents"]
 
 [compatibility]
 min_vibe_version = "0.1.0"
@@ -31,3 +31,8 @@ description = "Resolve the current user-local stewardship context, verify it aga
 name = "steward-handoff"
 path = "spec/skills/steward-handoff"
 description = "Prepare or receive a same-machine central-agent custody handoff while preserving acceptance boundaries and the complete campaign route"
+
+[[skill]]
+name = "steward-goal"
+path = "spec/skills/steward-goal"
+description = "Render or refresh the deterministic local campaign goal from the selected plan node when the current central session holds custody"

@@ -14,6 +14,8 @@ packaged, mirrored or treated as another contributor's authority.</STATE-HOME></
       binding.toml
       settings.toml
       plan.toml
+      GOAL.md
+      GOAL-CLAUDE.txt
       custody.toml
       sessions/
       handoffs/
@@ -63,13 +65,16 @@ within the same session; no `vibe` command or restart is required.</SETTING-PREC
     <fence lang="toml">schema = 1
 interaction_mode = "auto"
 planning_profile = "ultra"
+goal_node = "COMPILER-MODERNIZATION"
 updated_at = "2026-08-29T11:00:00Z"
 updated_by = "owner-chat"</fence>
     <p><SETTINGS-ORTHOGONAL fact="true" status="spec/done">`interaction_mode`
 (`auto | collab`) controls how much the central coordinator narrates and asks.
-`planning_profile` (`ultra | standard`) controls planning scaffolding. The axes
-are independent. Historic input aliases `normal` and `medium` normalize to
-`standard`; stored values are canonical.</SETTINGS-ORTHOGONAL></p>
+`planning_profile` (`ultra | standard`) controls planning scaffolding.
+`goal_node` selects the stable campaign/root node whose goal is projected; it
+is required whenever selection is not unique. The axes are independent.
+Historic input aliases `normal` and `medium` normalize to `standard`; stored
+values are canonical.</SETTINGS-ORTHOGONAL></p>
   </settings>
   <profiles title="5. Planning profiles">
     <table>

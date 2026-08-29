@@ -67,6 +67,10 @@ report`. Recency alone grants no authority.</AUTHORITY-ORDER></p>
   offer plus receipt.** Writing a summary does not transfer the baton. The
   outgoing session becomes write-fenced after sealing an offer; the incoming
   session verifies and receipts it before custody advances.</LAW-HANDOFF-IS-TWO-PHASE>
+      <LAW-GOAL-IS-A-PROJECTION fact="true" status="spec/done">**A campaign goal
+  is a deterministic projection, never a second plan.** It selects one stable
+  campaign node and renders its mandates, accepted boundary, candidates,
+  remaining route and exit proof. `plan.toml` always wins on divergence.</LAW-GOAL-IS-A-PROJECTION>
     </facts>
   </laws>
   <roles title="4. Roles">
@@ -102,6 +106,8 @@ product diff is integrated or intentionally rejected, then clean it.</NO-EARLY-C
   [`user-local-state.xml`](user-local-state.xml).</DOC-LOCAL>
       <DOC-PLAN fact="true" status="spec/done">Hierarchical planning:
   [`plan-hierarchy.xml`](plan-hierarchy.xml).</DOC-PLAN>
+      <DOC-GOAL fact="true" status="spec/done">Deterministic goal projection:
+  [`goal-projection.xml`](goal-projection.xml).</DOC-GOAL>
       <DOC-EXECUTION fact="true" status="spec/done">Central campaign execution:
   [`campaign-execution.xml`](campaign-execution.xml).</DOC-EXECUTION>
       <DOC-HANDOFF fact="true" status="spec/done">Central custody and handoff:

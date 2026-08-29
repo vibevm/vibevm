@@ -12,6 +12,11 @@ to another model or harness on the same machine.  Custody transfers; prior
 acceptance never does.  The incoming central agent verifies the tree, reads the
 whole route, receipts the transfer, and independently accepts every candidate
 it intends to land.</CENTRAL-HANDOFF-PURPOSE></p>
+  <p><HANDOFF-BY-CONTEXT fact="true" status="impl/done">A human never pastes the handoff body into a new
+session. The outgoing procedure creates `HANDOFF.md` inside the local context;
+the incoming command `ACCEPT HANDOFF FROM &amp;lt;context-id&amp;gt;` / `ПРИМИ ХЭНДОФФ ИЗ
+&amp;lt;context-id&amp;gt;` resolves and reads it. After receipt, the agent prints the
+refreshed detailed goal and the exact bounded `/goal …` command for the human.</HANDOFF-BY-CONTEXT></p>
   <p><NOT-A-CODING-AGENT fact="true" status="spec/done">The flow does not implement a coding agent or prescribe
 one vendor's workflow.  It supplies lifecycle-neutral planning, custody and
 evidence mechanics that any capable agent or human coordinator can use.</NOT-A-CODING-AGENT></p>
@@ -26,6 +31,12 @@ evidence mechanics that any capable agent or human coordinator can use.</NOT-A-C
   interaction mode in `user-local-state.xml`.</CONTENT-LOCAL-STORE>
       <CONTENT-PLAN fact="true" status="impl/done">The lossless hierarchical plan and receding-horizon
   planning discipline in `plan-hierarchy.xml`.</CONTENT-PLAN>
+      <CONTENT-GOAL fact="true" status="impl/done">The deterministic, user-local goal projection in
+  `goal-projection.xml`: one selected campaign node, its governing mandates,
+  accepted boundary, candidates, complete remaining route and closure proof;
+  no model memory or LLM call. The same snapshot emits a bounded
+  `GOAL-CLAUDE.txt` containing the exact `/goal …` command a human pastes into
+  Claude Code.</CONTENT-GOAL>
       <CONTENT-EXECUTION fact="true" status="impl/done">The central coordinator's long-campaign execution,
   review, gate-economy, recovery and wisdom-promotion discipline in
   `campaign-execution.xml`.</CONTENT-EXECUTION>
@@ -36,8 +47,9 @@ evidence mechanics that any capable agent or human coordinator can use.</NOT-A-C
       <CONTENT-MIGRATION fact="true" status="impl/done">The composition and migration rules for projects
   leaving `wal`/`wal-specspaces`, including the redbook exclusion recipe, in
   `migration-and-composition.xml`.</CONTENT-MIGRATION>
-      <CONTENT-SKILLS fact="true" status="impl/done">Two optional agent skills: status-only orientation and
-  same-machine central handoff.  They are not `vibe.exe` commands.</CONTENT-SKILLS>
+      <CONTENT-SKILLS fact="true" status="impl/done">Three optional agent skills: status-only orientation,
+  same-machine central handoff, and deterministic goal refresh. They are not
+  `vibe.exe` commands.</CONTENT-SKILLS>
     </facts>
   </contents>
   <authority title="Authority boundary">

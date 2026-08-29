@@ -27,11 +27,15 @@ take custody only after an empirical receipt.</PURPOSE></p>
   complete backscan, writes/seals offer, enters `offering`, and performs no
   later repository or plan write.</STEP-OFFER>
       <STEP-RECEIVE fact="true" status="test/work">Incoming central boots cold,
-  reads package/project authorities and local bundle, then independently
-  inspects Git/tree/artifacts.</STEP-RECEIVE>
+  receives by context id without pasted handoff prose, reads package/project
+  authorities and the stored local bundle, then independently inspects
+  Git/tree/artifacts.</STEP-RECEIVE>
       <STEP-RECEIPT fact="true" status="test/work">Incoming receipts with every
   discrepancy, advances epoch, reports state and waits without beginning the
   candidate atom.</STEP-RECEIPT>
+      <STEP-GOAL fact="true" status="test/work">After claim, incoming refreshes
+  goal, prints complete GOAL.md and the exact bounded `/goal …` command. The
+  owner needs no filesystem search or handoff paste.</STEP-GOAL>
       <STEP-ACCEPTANCE fact="true" status="test/work">After owner direction,
   incoming reruns the candidate atom's central review and gates rather than
   inheriting the outgoing verdict.</STEP-ACCEPTANCE>

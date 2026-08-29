@@ -1,10 +1,10 @@
 [meta]
 generated_by = "vibe 1.0.0"
-generated_at = "2026-08-29T10:46:06Z"
+generated_at = "2026-08-29T11:26:14Z"
 schema_version = 6
 root_dependencies = [
     "flow:org.vibevm.fractality/delegation-first@^1.0.0",
-    "flow:org.vibevm.world/multi-user-planning@^0.1.0",
+    "flow:org.vibevm.world/multi-user-planning@^0.2.0",
     "flow:org.vibevm.world/omnichannel@^1.0.0",
     "org.vibevm.world/redbook@^1.0.0",
     "stack:org.vibevm.ai-native/rust-ai-native@^1.0.0",
@@ -27,9 +27,9 @@ source_kind = "local"
 kind = "flow"
 name = "multi-user-planning"
 group = "org.vibevm.world"
-version = "0.1.0"
-source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.world/multi-user-planning/v0.1.0"
-content_hash = "sha256:f45ab4968d766e7eccf782fe205a652f25f0e7c393cc78ce637c67b68c31a88a"
+version = "0.2.0"
+source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.world/multi-user-planning/v0.2.0"
+content_hash = "sha256:dedd067809143a2dec5561024da9551249c667ba8c2cb5f95edeae380681d2a3"
 files_written = []
 admitted_by = "root-edge"
 source_kind = "local"

@@ -1,0 +1,6 @@
+schema = 1
+interaction_mode = "auto"
+planning_profile = "ultra"
+goal_node = "BUILD"
+updated_at = "2026-08-29T00:00:00Z"
+updated_by = "fixture"
