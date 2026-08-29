@@ -17,19 +17,17 @@
      candidates — never silently pick one. -->
 
 <!-- vibe:c1 RENAMED ANCHORS (short → qualified heirs):
-  A-BARE-PHRASE-NEVER-SILENTLY-SELECTS-A-SPECSPACE → org-vibevm-world-%2Dwal-specspaces-%2DA-BARE-PHRASE-NEVER-SILENTLY-SELECTS-A-SPECSPACE (org.vibevm.world/wal-specspaces)
   A-CODEWORD-WAIVES-THE-ROUTINE-HANDSHAKE-ONLY → org-vibevm-world-%2Doperating-modes-%2DA-CODEWORD-WAIVES-THE-ROUTINE-HANDSHAKE-ONLY (org.vibevm.world/operating-modes)
   A-COHERENT-FIFTEEN-FILE-CHANGE-IS-ONE-COMMIT → org-vibevm-world-%2Dgit-atomic-commits-%2DA-COHERENT-FIFTEEN-FILE-CHANGE-IS-ONE-COMMIT (org.vibevm.world/git-atomic-commits)
   A-MILESTONE-IS-NEVER-DECLARED-DONE-ON-AN-UN-AUDITED-BASE → org-vibevm-world-%2Dhealth-audit-%2DA-MILESTONE-IS-NEVER-DECLARED-DONE-ON-AN-UN-AUDITED-BASE (org.vibevm.world/health-audit)
   A-MIXED-SESSION-IS-THREE-COMMITS → org-vibevm-world-%2Dgit-atomic-commits-%2DA-MIXED-SESSION-IS-THREE-COMMITS (org.vibevm.world/git-atomic-commits)
-  A-PHRASE-RESOLVES-TO-EXACTLY-ONE-TARGET → org-vibevm-world-%2Dwal-specspaces-%2DA-PHRASE-RESOLVES-TO-EXACTLY-ONE-TARGET (org.vibevm.world/wal-specspaces)
   A-RESEARCH-DOCUMENT-IS-SELF-CONTAINED-AND-EVERGREEN → org-vibevm-world-%2Dcomparative-research-%2DA-RESEARCH-DOCUMENT-IS-SELF-CONTAINED-AND-EVERGREEN (org.vibevm.world/comparative-research)
   A-SECRET-HAS-NO-SAFE-MARGIN-ONE-ECHO-IS-A-LEAK → org-vibevm-world-%2Dsecrets-hygiene-%2DA-SECRET-HAS-NO-SAFE-MARGIN-ONE-ECHO-IS-A-LEAK (org.vibevm.world/secrets-hygiene)
-  A-SPECSPACE-SESSION-READS-IN-ORDER → org-vibevm-world-%2Dwal-specspaces-%2DA-SPECSPACE-SESSION-READS-IN-ORDER (org.vibevm.world/wal-specspaces)
   A-STRICTER-PRODUCT-LICENCE-MAKES-THE-RULE-MORE-IMPORTANT → org-vibevm-world-%2Dlicensing-%2DA-STRICTER-PRODUCT-LICENCE-MAKES-THE-RULE-MORE-IMPORTANT (org.vibevm.world/licensing)
   A-SURFACE-SECRET-IS-A-VALUE-THAT-MUST-NEVER-APPEAR → org-vibevm-world-%2Dsecrets-hygiene-%2DA-SURFACE-SECRET-IS-A-VALUE-THAT-MUST-NEVER-APPEAR (org.vibevm.world/secrets-hygiene)
   A-VALID-MESSAGE-CAN-STILL-VIOLATE-THE-ATOMIC-RULE → org-vibevm-world-%2Dgit-conventional-commits-%2DA-VALID-MESSAGE-CAN-STILL-VIOLATE-THE-ATOMIC-RULE (org.vibevm.world/git-conventional-commits)
   A-WEB-UI-MERGE-IS-NOT-INTEGRATED-UNTIL-BROUGHT-HOME → org-vibevm-world-%2Dsource-mirrors-%2DA-WEB-UI-MERGE-IS-NOT-INTEGRATED-UNTIL-BROUGHT-HOME (org.vibevm.world/source-mirrors)
+  ACCEPTANCE-NEVER-TRANSFERS → org-vibevm-world-%2Dmulti-user-planning-%2DACCEPTANCE-NEVER-TRANSFERS (org.vibevm.world/multi-user-planning)
   AGENT-CANNOT-ASK-VASYA → org-vibevm-world-%2Ddecision-records-%2DAGENT-CANNOT-ASK-VASYA (org.vibevm.world/decision-records)
   AGENT-READS-THE-TREE-COLD-EVERY-SESSION → org-vibevm-world-%2Dspec-genres-%2DAGENT-READS-THE-TREE-COLD-EVERY-SESSION (org.vibevm.world/spec-genres)
   AI-PROCESS-IS-OPTIMIZED-FOR → org-vibevm-world-%2Dtwo-process-model-%2DAI-PROCESS-IS-OPTIMIZED-FOR (org.vibevm.world/two-process-model)
@@ -40,11 +38,9 @@
   ARTIFACT-LIVES-UNDER-THE-FLOW-DIRECTORY → org-vibevm-world-%2Ddiscovery-prompt-%2DARTIFACT-LIVES-UNDER-THE-FLOW-DIRECTORY (org.vibevm.world/discovery-prompt)
   ASK-FIRST-FOR-ANYTHING-WHOSE-REVERSAL-COSTS-WORK → org-vibevm-world-%2Dgit-autonomy-%2DASK-FIRST-FOR-ANYTHING-WHOSE-REVERSAL-COSTS-WORK (org.vibevm.world/git-autonomy)
   ASK-RATHER-THAN-INVENT-DATA → org-vibevm-world-%2Ddecision-records-%2DASK-RATHER-THAN-INVENT-DATA (org.vibevm.world/decision-records)
-  AT-THE-HOST-ROOT-A-BARE-PHRASE-RESTORES-THE-HOST-WAL → org-vibevm-world-%2Dwal-specspaces-%2DAT-THE-HOST-ROOT-A-BARE-PHRASE-RESTORES-THE-HOST-WAL (org.vibevm.world/wal-specspaces)
   ATOMICITY-IS-THE-SEPARATE-FLOW-AND-THE-TWO-RUN-TOGETHER → org-vibevm-world-%2Dgit-conventional-commits-%2DATOMICITY-IS-THE-SEPARATE-FLOW-AND-THE-TWO-RUN-TOGETHER (org.vibevm.world/git-conventional-commits)
   AUDIT-IS-OWNER-TRIGGERED-WITH-A-ONCE-PER-MILESTONE-FLOOR → org-vibevm-world-%2Dhealth-audit-%2DAUDIT-IS-OWNER-TRIGGERED-WITH-A-ONCE-PER-MILESTONE-FLOOR (org.vibevm.world/health-audit)
   AUDIT-MD-IS-COMMITTED-AND-ITS-HISTORY-IS-THE-HEALTH-TREND → org-vibevm-world-%2Dhealth-audit-%2DAUDIT-MD-IS-COMMITTED-AND-ITS-HISTORY-IS-THE-HEALTH-TREND (org.vibevm.world/health-audit)
-  AUDIT-WAL-BINDING → org-vibevm-world-%2Dhealth-audit-%2DAUDIT-WAL-BINDING (org.vibevm.world/health-audit)
   BODY-A-BLANK-LINE-THEN-A-FREE-FORM-WHY → org-vibevm-world-%2Dgit-conventional-commits-%2DBODY-A-BLANK-LINE-THEN-A-FREE-FORM-WHY (org.vibevm.world/git-conventional-commits)
   BOUNDARY-ESCALATE-OWNER-ONLY-DECISIONS → org-vibevm-world-%2Dcampaign-plans-%2DBOUNDARY-ESCALATE-OWNER-ONLY-DECISIONS (org.vibevm.world/campaign-plans)
   BOUNDARY-REFRESH-THE-STATUS-LINE → org-vibevm-world-%2Dcampaign-plans-%2DBOUNDARY-REFRESH-THE-STATUS-LINE (org.vibevm.world/campaign-plans)
@@ -52,6 +48,7 @@
   BOUNDARY-WRITE-THE-COMMIT-MAP-ENTRY → org-vibevm-world-%2Dcampaign-plans-%2DBOUNDARY-WRITE-THE-COMMIT-MAP-ENTRY (org.vibevm.world/campaign-plans)
   CASE-THE-USER-EDITED-CODE-DIRECTLY → org-vibevm-world-%2Dsync-from-code-%2DCASE-THE-USER-EDITED-CODE-DIRECTLY (org.vibevm.world/sync-from-code)
   CASE-THE-USER-GAVE-AN-IMPERATIVE-CHAT-COMMAND → org-vibevm-world-%2Dsync-from-code-%2DCASE-THE-USER-GAVE-AN-IMPERATIVE-CHAT-COMMAND (org.vibevm.world/sync-from-code)
+  CENTRAL-ONLY → org-vibevm-world-%2Dmulti-user-planning-%2DCENTRAL-ONLY (org.vibevm.world/multi-user-planning)
   CITE-SPEC-URIS-WHERE-RELEVANT → org-vibevm-world-%2Dgit-conventional-commits-%2DCITE-SPEC-URIS-WHERE-RELEVANT (org.vibevm.world/git-conventional-commits)
   CLIMB-THE-LADDER-BEFORE-CHOOSING-A-CONSERVATIVE-DEFAULT → org-vibevm-world-%2Dconflict-protocol-%2DCLIMB-THE-LADDER-BEFORE-CHOOSING-A-CONSERVATIVE-DEFAULT (org.vibevm.world/conflict-protocol)
   CODE-MUST-CONFORM-TO-THE-SPEC → org-vibevm-world-%2Dconflict-protocol-%2DCODE-MUST-CONFORM-TO-THE-SPEC (org.vibevm.world/conflict-protocol)
@@ -63,7 +60,6 @@
   COLD-MANDATE-QUOTED-VERBATIM-AND-DATED → org-vibevm-world-%2Dcampaign-plans-%2DCOLD-MANDATE-QUOTED-VERBATIM-AND-DATED (org.vibevm.world/campaign-plans)
   COMMIT-MESSAGES-FOLLOW-THE-CONVENTIONAL-COMMITS-FLOW → org-vibevm-world-%2Dgit-atomic-commits-%2DCOMMIT-MESSAGES-FOLLOW-THE-CONVENTIONAL-COMMITS-FLOW (org.vibevm.world/git-atomic-commits)
   COMMIT-ON-MAINLINE-ROLLOUT-IS-A-SEPARATE-STEP → org-vibevm-world-%2Dsource-mirrors-%2DCOMMIT-ON-MAINLINE-ROLLOUT-IS-A-SEPARATE-STEP (org.vibevm.world/source-mirrors)
-  CONFLICT-WAL-BINDING → org-vibevm-world-%2Dconflict-protocol-%2DCONFLICT-WAL-BINDING (org.vibevm.world/conflict-protocol)
   CONSEQUENCE-FILES-ARE-THE-ONLY-SHARED-MEMORY → org-vibevm-world-%2Dtwo-process-model-%2DCONSEQUENCE-FILES-ARE-THE-ONLY-SHARED-MEMORY (org.vibevm.world/two-process-model)
   CONSEQUENCE-PRECISE-TASKS-BEAT-BROAD-ONES → org-vibevm-world-%2Dtwo-process-model-%2DCONSEQUENCE-PRECISE-TASKS-BEAT-BROAD-ONES (org.vibevm.world/two-process-model)
   CONSEQUENCE-THE-HUMAN-OWNS-COHERENCE → org-vibevm-world-%2Dtwo-process-model-%2DCONSEQUENCE-THE-HUMAN-OWNS-COHERENCE (org.vibevm.world/two-process-model)
@@ -88,22 +84,18 @@
   EVERY-NORMATIVE-STATEMENT-IS-ADDRESSABLE → org-vibevm-world-%2Daddressable-specs-%2DEVERY-NORMATIVE-STATEMENT-IS-ADDRESSABLE (org.vibevm.world/addressable-specs)
   EVERY-SETUP-TOUCHING-CHANGE-UPDATES-THE-DOC-IN-THE-SAME-COMMIT → org-vibevm-world-%2Ddev-runtime-docs-%2DEVERY-SETUP-TOUCHING-CHANGE-UPDATES-THE-DOC-IN-THE-SAME-COMMIT (org.vibevm.world/dev-runtime-docs)
   FACT-IS-RECOVERABLE-FROM-THE-CODE → org-vibevm-world-%2Ddecision-records-%2DFACT-IS-RECOVERABLE-FROM-THE-CODE (org.vibevm.world/decision-records)
-  FILE-CONTINUE-IS-THE-COLD-RESUME-SNAPSHOT → org-vibevm-world-%2Dwal-%2DFILE-CONTINUE-IS-THE-COLD-RESUME-SNAPSHOT (org.vibevm.world/wal)
-  FILE-WAL-IS-THE-CANONICAL-LIVING-CHECKPOINT → org-vibevm-world-%2Dwal-%2DFILE-WAL-IS-THE-CANONICAL-LIVING-CHECKPOINT (org.vibevm.world/wal)
-  FLOW-OWNS-ONLY-ITS-OWN-FILES → org-vibevm-world-%2Dwal-%2DFLOW-OWNS-ONLY-ITS-OWN-FILES (org.vibevm.world/wal)
   FORMAT-DOES-NOT-ENFORCE-ATOMICITY → org-vibevm-world-%2Dgit-conventional-commits-%2DFORMAT-DOES-NOT-ENFORCE-ATOMICITY (org.vibevm.world/git-conventional-commits)
+  FULL-PROTOCOL-POINTER → org-vibevm-world-%2Dmulti-user-planning-%2DFULL-PROTOCOL-POINTER (org.vibevm.world/multi-user-planning)
   GENRE-TYPING-ASSIGNS-AUTHORITY-WITHOUT-ASKING → org-vibevm-world-%2Dspec-genres-%2DGENRE-TYPING-ASSIGNS-AUTHORITY-WITHOUT-ASKING (org.vibevm.world/spec-genres)
   GOVERNING-SPEC-SECTION-IS-THE-RECORD → org-vibevm-world-%2Ddecision-records-%2DGOVERNING-SPEC-SECTION-IS-THE-RECORD (org.vibevm.world/decision-records)
   HEADER-SCOPE-IS-THE-NARROWEST-ACCURATE-SUBSYSTEM → org-vibevm-world-%2Dgit-conventional-commits-%2DHEADER-SCOPE-IS-THE-NARROWEST-ACCURATE-SUBSYSTEM (org.vibevm.world/git-conventional-commits)
   HEADER-SUBJECT-LENGTH-MOOD-AND-CASE → org-vibevm-world-%2Dgit-conventional-commits-%2DHEADER-SUBJECT-LENGTH-MOOD-AND-CASE (org.vibevm.world/git-conventional-commits)
   HEADER-THE-ALLOWED-TYPE-SET → org-vibevm-world-%2Dgit-conventional-commits-%2DHEADER-THE-ALLOWED-TYPE-SET (org.vibevm.world/git-conventional-commits)
   HISTORY-REACHES-A-HOST-ONLY-THROUGH-THE-FAN-OUT → org-vibevm-world-%2Dsource-mirrors-%2DHISTORY-REACHES-A-HOST-ONLY-THROUGH-THE-FAN-OUT (org.vibevm.world/source-mirrors)
-  HONOUR-EVERY-CONSTRAINT-VERBATIM → org-vibevm-world-%2Dwal-%2DHONOUR-EVERY-CONSTRAINT-VERBATIM (org.vibevm.world/wal)
   HUMAN-MAY-CHANGE-THE-SPEC-AND-NOBODY-ELSE-MAY-SILENTLY → org-vibevm-world-%2Dconflict-protocol-%2DHUMAN-MAY-CHANGE-THE-SPEC-AND-NOBODY-ELSE-MAY-SILENTLY (org.vibevm.world/conflict-protocol)
   HUMAN-PROCESS-IS-OPTIMIZED-FOR → org-vibevm-world-%2Dtwo-process-model-%2DHUMAN-PROCESS-IS-OPTIMIZED-FOR (org.vibevm.world/two-process-model)
   IF-YOU-BELIEVE-THE-SPEC-IS-WRONG-IMPLEMENT-IT-ANYWAY → org-vibevm-world-%2Dconflict-protocol-%2DIF-YOU-BELIEVE-THE-SPEC-IS-WRONG-IMPLEMENT-IT-ANYWAY (org.vibevm.world/conflict-protocol)
   INFORMATION-FLOWS-TOP-DOWN → org-vibevm-world-%2Dsync-from-code-%2DINFORMATION-FLOWS-TOP-DOWN (org.vibevm.world/sync-from-code)
-  IT-DOES-NOT-LOAD-THE-HOSTS-FULL-BOOT-OR-SPECS → org-vibevm-world-%2Dwal-specspaces-%2DIT-DOES-NOT-LOAD-THE-HOSTS-FULL-BOOT-OR-SPECS (org.vibevm.world/wal-specspaces)
   IT-IS-A-DESIGN-DISCIPLINE-NOT-A-RUNTIME-RULE → org-vibevm-world-%2Dqualified-naming-%2DIT-IS-A-DESIGN-DISCIPLINE-NOT-A-RUNTIME-RULE (org.vibevm.world/qualified-naming)
   KEEP-THE-TWO-WAY-LINKS → org-vibevm-world-%2Dspec-genres-%2DKEEP-THE-TWO-WAY-LINKS (org.vibevm.world/spec-genres)
   LARGE-CHANGES-ARE-EXECUTED-AS-CAMPAIGNS → org-vibevm-world-%2Dcampaign-plans-%2DLARGE-CHANGES-ARE-EXECUTED-AS-CAMPAIGNS (org.vibevm.world/campaign-plans)
@@ -119,6 +111,7 @@
   LAW-SHORT-NAMES-RESOLVE-ONLY-AT-THE-BOUNDARY → org-vibevm-world-%2Dqualified-naming-%2DLAW-SHORT-NAMES-RESOLVE-ONLY-AT-THE-BOUNDARY (org.vibevm.world/qualified-naming)
   LAW-THE-RE-FETCH-LIST → org-vibevm-world-%2Dcomparative-research-%2DLAW-THE-RE-FETCH-LIST (org.vibevm.world/comparative-research)
   LAW-TWO-WAY-GAPS → org-vibevm-world-%2Dcomparative-research-%2DLAW-TWO-WAY-GAPS (org.vibevm.world/comparative-research)
+  LOCAL-DOES-NOT-GRANT → org-vibevm-world-%2Dmulti-user-planning-%2DLOCAL-DOES-NOT-GRANT (org.vibevm.world/multi-user-planning)
   MEMBER-ADDRESSABLE-SPECS → org-vibevm-world-%2Dredbook-%2DMEMBER-ADDRESSABLE-SPECS (org.vibevm.world/redbook)
   MEMBER-ATOMIC-COMMITS → org-vibevm-world-%2Dredbook-%2DMEMBER-ATOMIC-COMMITS (org.vibevm.world/redbook)
   MEMBER-ATTRIBUTION-POLICY → org-vibevm-world-%2Dredbook-%2DMEMBER-ATTRIBUTION-POLICY (org.vibevm.world/redbook)
@@ -140,8 +133,6 @@
   MEMBER-SYNC-FROM-CODE → org-vibevm-world-%2Dredbook-%2DMEMBER-SYNC-FROM-CODE (org.vibevm.world/redbook)
   MEMBER-TOOL-DESIGN-LESSONS → org-vibevm-world-%2Dredbook-%2DMEMBER-TOOL-DESIGN-LESSONS (org.vibevm.world/redbook)
   MEMBER-TWO-PROCESS-MODEL → org-vibevm-world-%2Dredbook-%2DMEMBER-TWO-PROCESS-MODEL (org.vibevm.world/redbook)
-  MEMBER-WAL → org-vibevm-world-%2Dredbook-%2DMEMBER-WAL (org.vibevm.world/redbook)
-  MEMBER-WAL-SPECSPACES → org-vibevm-world-%2Dredbook-%2DMEMBER-WAL-SPECSPACES (org.vibevm.world/redbook)
   MEMBERS-MAY-MOVE-AHEAD-BETWEEN-EDITIONS → org-vibevm-world-%2Dredbook-%2DMEMBERS-MAY-MOVE-AHEAD-BETWEEN-EDITIONS (org.vibevm.world/redbook)
   MODES-CHANGE-CONFIRMATION-BEHAVIOUR-NOT-WHAT-IS-OFF-LIMITS → org-vibevm-world-%2Doperating-modes-%2DMODES-CHANGE-CONFIRMATION-BEHAVIOUR-NOT-WHAT-IS-OFF-LIMITS (org.vibevm.world/operating-modes)
   NAME-THE-GENRE-BEFORE-WRITING-ANY-DOCUMENT → org-vibevm-world-%2Dspec-genres-%2DNAME-THE-GENRE-BEFORE-WRITING-ANY-DOCUMENT (org.vibevm.world/spec-genres)
@@ -241,12 +232,14 @@
   NO-CODEWORD-CAN-BE-DEFINED-THAT-ERODES-THIS → org-vibevm-world-%2Doperating-modes-%2DNO-CODEWORD-CAN-BE-DEFINED-THAT-ERODES-THIS (org.vibevm.world/operating-modes)
   NO-HOST-IS-PRIMARY → org-vibevm-world-%2Dsource-mirrors-%2DNO-HOST-IS-PRIMARY (org.vibevm.world/source-mirrors)
   NO-SEPARATE-ADR-DIRECTORY → org-vibevm-world-%2Ddecision-records-%2DNO-SEPARATE-ADR-DIRECTORY (org.vibevm.world/decision-records)
+  NO-SILENT-LOSS → org-vibevm-world-%2Dmulti-user-planning-%2DNO-SILENT-LOSS (org.vibevm.world/multi-user-planning)
   NON-ROUTINE-WORK-STOPS-FOR-EXPLICIT-CONFIRMATION → org-vibevm-world-%2Doperating-modes-%2DNON-ROUTINE-WORK-STOPS-FOR-EXPLICIT-CONFIRMATION (org.vibevm.world/operating-modes)
   ON-EXPOSURE-STOP-AND-DO-NOT-PROPAGATE → org-vibevm-world-%2Dsecrets-hygiene-%2DON-EXPOSURE-STOP-AND-DO-NOT-PROPAGATE (org.vibevm.world/secrets-hygiene)
   ON-FIRING-ACKNOWLEDGE-THE-ACTIVE-MODE → org-vibevm-world-%2Doperating-modes-%2DON-FIRING-ACKNOWLEDGE-THE-ACTIVE-MODE (org.vibevm.world/operating-modes)
   ON-FIRING-APPLY-THE-OPERATIVE-RULES → org-vibevm-world-%2Doperating-modes-%2DON-FIRING-APPLY-THE-OPERATIVE-RULES (org.vibevm.world/operating-modes)
   ON-FIRING-DROP-BACK-WHEN-THE-CYCLE-ENDS → org-vibevm-world-%2Doperating-modes-%2DON-FIRING-DROP-BACK-WHEN-THE-CYCLE-ENDS (org.vibevm.world/operating-modes)
   ON-SUSPECTED-EXPOSURE-ROTATE-FIRST → org-vibevm-world-%2Dsecrets-hygiene-%2DON-SUSPECTED-EXPOSURE-ROTATE-FIRST (org.vibevm.world/secrets-hygiene)
+  ONE-CENTRAL-HOLDER → org-vibevm-world-%2Dmulti-user-planning-%2DONE-CENTRAL-HOLDER (org.vibevm.world/multi-user-planning)
   ONE-COMMIT-EQUALS-ONE-LOGICAL-CHANGE → org-vibevm-world-%2Dgit-atomic-commits-%2DONE-COMMIT-EQUALS-ONE-LOGICAL-CHANGE (org.vibevm.world/git-atomic-commits)
   ONE-COMMIT-ONE-IDEA-AND-THE-MESSAGE-EXPLAINS-WHY → org-vibevm-world-%2Dgit-atomic-commits-%2DONE-COMMIT-ONE-IDEA-AND-THE-MESSAGE-EXPLAINS-WHY (org.vibevm.world/git-atomic-commits)
   ONE-DATED-SECTION-PER-RUN-EACH-FINDING-CARRYING-FIVE-FIELDS → org-vibevm-world-%2Dhealth-audit-%2DONE-DATED-SECTION-PER-RUN-EACH-FINDING-CARRYING-FIVE-FIELDS (org.vibevm.world/health-audit)
@@ -255,12 +248,14 @@
   OPEN-A-CHAPTER-WHEN-A-PHILOSOPHY-QUESTION-ARISES → org-vibevm-world-%2Dredbook-%2DOPEN-A-CHAPTER-WHEN-A-PHILOSOPHY-QUESTION-ARISES (org.vibevm.world/redbook)
   OWNER-RE-RUNS-AT-WILL-AND-NO-CALENDAR-CRON-IS-FIXED → org-vibevm-world-%2Dhealth-audit-%2DOWNER-RE-RUNS-AT-WILL-AND-NO-CALENDAR-CRON-IS-FIXED (org.vibevm.world/health-audit)
   PHASE-ZERO-COMMITS-NOTHING-AND-GATES-EVERYTHING-AFTER → org-vibevm-world-%2Dcampaign-plans-%2DPHASE-ZERO-COMMITS-NOTHING-AND-GATES-EVERYTHING-AFTER (org.vibevm.world/campaign-plans)
+  PLAN-IS-HIERARCHICAL → org-vibevm-world-%2Dmulti-user-planning-%2DPLAN-IS-HIERARCHICAL (org.vibevm.world/multi-user-planning)
   POINTER-PACKAGING-LESSONS → org-vibevm-world-%2Dtool-design-lessons-%2DPOINTER-PACKAGING-LESSONS (org.vibevm.world/tool-design-lessons)
   POINTER-SELF-UPDATING-TOOLS → org-vibevm-world-%2Dtool-design-lessons-%2DPOINTER-SELF-UPDATING-TOOLS (org.vibevm.world/tool-design-lessons)
   POINTER-THE-AUTHORING-RULES → org-vibevm-world-%2Daddressable-specs-%2DPOINTER-THE-AUTHORING-RULES (org.vibevm.world/addressable-specs)
   POINTER-THE-PROTOCOL → org-vibevm-world-%2Daddressable-specs-%2DPOINTER-THE-PROTOCOL (org.vibevm.world/addressable-specs)
   POINTER-THE-SPEC-TREE-LAYOUT → org-vibevm-world-%2Daddressable-specs-%2DPOINTER-THE-SPEC-TREE-LAYOUT (org.vibevm.world/addressable-specs)
   PRINT-THE-SOURCE-NEVER-THE-VALUE → org-vibevm-world-%2Dsecrets-hygiene-%2DPRINT-THE-SOURCE-NEVER-THE-VALUE (org.vibevm.world/secrets-hygiene)
+  PROFILE-QUALITY-FLOOR → org-vibevm-world-%2Dmulti-user-planning-%2DPROFILE-QUALITY-FLOOR (org.vibevm.world/multi-user-planning)
   PROJECT-BUILDS-A-TOOL-THAT-MANAGES-ITSELF → org-vibevm-world-%2Dtool-design-lessons-%2DPROJECT-BUILDS-A-TOOL-THAT-MANAGES-ITSELF (org.vibevm.world/tool-design-lessons)
   PROJECT-DOCUMENTS-ARE-GENRE-TYPED → org-vibevm-world-%2Dspec-genres-%2DPROJECT-DOCUMENTS-ARE-GENRE-TYPED (org.vibevm.world/spec-genres)
   PROJECT-FOLLOWS-THE-REDBOOK → org-vibevm-world-%2Dredbook-%2DPROJECT-FOLLOWS-THE-REDBOOK (org.vibevm.world/redbook)
@@ -271,27 +266,15 @@
   PROJECT-SHIPS-THE-MANAGED-BLOCKS-PRACTICE → org-vibevm-world-%2Dmanaged-blocks-%2DPROJECT-SHIPS-THE-MANAGED-BLOCKS-PRACTICE (org.vibevm.world/managed-blocks)
   PROJECT-SHIPS-THE-QUALIFIED-NAMING-PRACTICE → org-vibevm-world-%2Dqualified-naming-%2DPROJECT-SHIPS-THE-QUALIFIED-NAMING-PRACTICE (org.vibevm.world/qualified-naming)
   PROJECT-SOURCE-IS-MULTI-HOMED → org-vibevm-world-%2Dsource-mirrors-%2DPROJECT-SOURCE-IS-MULTI-HOMED (org.vibevm.world/source-mirrors)
-  PROJECT-USES-WAL-DISCIPLINE-FOR-SESSION-CONTINUITY → org-vibevm-world-%2Dwal-%2DPROJECT-USES-WAL-DISCIPLINE-FOR-SESSION-CONTINUITY (org.vibevm.world/wal)
   PROPOSE-A-CAMPAIGN-BEFORE-TOUCHING-THE-TREE → org-vibevm-world-%2Dcampaign-plans-%2DPROPOSE-A-CAMPAIGN-BEFORE-TOUCHING-THE-TREE (org.vibevm.world/campaign-plans)
-  PROPOSE-ADDING-A-DURABLE-DECISION-TO-THE-WAL → org-vibevm-world-%2Dwal-%2DPROPOSE-ADDING-A-DURABLE-DECISION-TO-THE-WAL (org.vibevm.world/wal)
   PROPOSE-THE-RECORD-BEFORE-THE-SESSION-ENDS → org-vibevm-world-%2Ddecision-records-%2DPROPOSE-THE-RECORD-BEFORE-THE-SESSION-ENDS (org.vibevm.world/decision-records)
   REACH-FOR-THE-ARTIFACT-ON-A-RESEARCH-REQUEST → org-vibevm-world-%2Ddiscovery-prompt-%2DREACH-FOR-THE-ARTIFACT-ON-A-RESEARCH-REQUEST (org.vibevm.world/discovery-prompt)
   READ-THE-GOVERNING-LESSON-FIRST → org-vibevm-world-%2Dtool-design-lessons-%2DREAD-THE-GOVERNING-LESSON-FIRST (org.vibevm.world/tool-design-lessons)
   READ-THE-PROTOCOL-BEFORE-THE-FIRST-NAME-IS-MINTED → org-vibevm-world-%2Dqualified-naming-%2DREAD-THE-PROTOCOL-BEFORE-THE-FIRST-NAME-IS-MINTED (org.vibevm.world/qualified-naming)
   READ-THE-PROTOCOL-BEFORE-WRITING-INTO-A-SHARED-FILE → org-vibevm-world-%2Dmanaged-blocks-%2DREAD-THE-PROTOCOL-BEFORE-WRITING-INTO-A-SHARED-FILE (org.vibevm.world/managed-blocks)
   READ-THE-RECORD-BEFORE-CHANGING-THE-VALUE → org-vibevm-world-%2Ddecision-records-%2DREAD-THE-RECORD-BEFORE-CHANGING-THE-VALUE (org.vibevm.world/decision-records)
-  READ-THE-WAL-BEFORE-DOING-ANYTHING-ELSE → org-vibevm-world-%2Dwal-%2DREAD-THE-WAL-BEFORE-DOING-ANYTHING-ELSE (org.vibevm.world/wal)
-  READS-ANY-ACTIVE-PLAN-THE-WAL-NAMES → org-vibevm-world-%2Dwal-specspaces-%2DREADS-ANY-ACTIVE-PLAN-THE-WAL-NAMES (org.vibevm.world/wal-specspaces)
-  READS-THE-HOSTS-REPO-WIDE-RULES → org-vibevm-world-%2Dwal-specspaces-%2DREADS-THE-HOSTS-REPO-WIDE-RULES (org.vibevm.world/wal-specspaces)
-  READS-THE-SPECSPACE-COLD-RESUME-FILE → org-vibevm-world-%2Dwal-specspaces-%2DREADS-THE-SPECSPACE-COLD-RESUME-FILE (org.vibevm.world/wal-specspaces)
-  READS-THE-SPECSPACE-WAL → org-vibevm-world-%2Dwal-specspaces-%2DREADS-THE-SPECSPACE-WAL (org.vibevm.world/wal-specspaces)
-  READS-THE-SPECSPACES-OWN-BOOT-CONTRACT → org-vibevm-world-%2Dwal-specspaces-%2DREADS-THE-SPECSPACES-OWN-BOOT-CONTRACT (org.vibevm.world/wal-specspaces)
   REASON-IS-LOST-UNLESS-WRITTEN-DOWN → org-vibevm-world-%2Ddecision-records-%2DREASON-IS-LOST-UNLESS-WRITTEN-DOWN (org.vibevm.world/decision-records)
   RECOGNISE-A-CODEWORD-BY-INTENT-NOT-EXACT-WORDING → org-vibevm-world-%2Doperating-modes-%2DRECOGNISE-A-CODEWORD-BY-INTENT-NOT-EXACT-WORDING (org.vibevm.world/operating-modes)
-  RECOGNISE-A-PHRASE-CARRYING-A-SPECSPACE-NAME → org-vibevm-world-%2Dwal-specspaces-%2DRECOGNISE-A-PHRASE-CARRYING-A-SPECSPACE-NAME (org.vibevm.world/wal-specspaces)
-  RECOGNISE-A-TASK-INSIDE-A-REGISTERED-SPECSPACE-ROOT → org-vibevm-world-%2Dwal-specspaces-%2DRECOGNISE-A-TASK-INSIDE-A-REGISTERED-SPECSPACE-ROOT (org.vibevm.world/wal-specspaces)
-  RECOGNISE-THE-RESUME-PHRASES → org-vibevm-world-%2Dwal-%2DRECOGNISE-THE-RESUME-PHRASES (org.vibevm.world/wal)
-  RECOGNISE-THE-WIND-DOWN-PHRASES → org-vibevm-world-%2Dwal-%2DRECOGNISE-THE-WIND-DOWN-PHRASES (org.vibevm.world/wal)
   RECORD-IS-IMMUNITY-FROM-RE-LITIGATION → org-vibevm-world-%2Ddecision-records-%2DRECORD-IS-IMMUNITY-FROM-RE-LITIGATION (org.vibevm.world/decision-records)
   RED-LINE-ANY-OPERATION-WHOSE-REVERSAL-COSTS-WORK → org-vibevm-world-%2Doperating-modes-%2DRED-LINE-ANY-OPERATION-WHOSE-REVERSAL-COSTS-WORK (org.vibevm.world/operating-modes)
   RED-LINE-ANYTHING-WHOSE-REVERSAL-WOULD-COST-WORK → org-vibevm-world-%2Dgit-autonomy-%2DRED-LINE-ANYTHING-WHOSE-REVERSAL-WOULD-COST-WORK (org.vibevm.world/git-autonomy)
@@ -303,12 +286,12 @@
   RED-LINE-LARGE-BINARY-BLOBS → org-vibevm-world-%2Dgit-autonomy-%2DRED-LINE-LARGE-BINARY-BLOBS (org.vibevm.world/git-autonomy)
   RED-LINE-REWRITING-PUBLISHED-HISTORY → org-vibevm-world-%2Dgit-autonomy-%2DRED-LINE-REWRITING-PUBLISHED-HISTORY (org.vibevm.world/git-autonomy), org-vibevm-world-%2Doperating-modes-%2DRED-LINE-REWRITING-PUBLISHED-HISTORY (org.vibevm.world/operating-modes)
   REJECT-A-COPYLEFT-DEPENDENCY-ON-LICENCE-GROUNDS → org-vibevm-world-%2Dlicensing-%2DREJECT-A-COPYLEFT-DEPENDENCY-ON-LICENCE-GROUNDS (org.vibevm.world/licensing)
+  REPLAN-AND-BACKSCAN → org-vibevm-world-%2Dmulti-user-planning-%2DREPLAN-AND-BACKSCAN (org.vibevm.world/multi-user-planning)
   REPORT-STATUS-NOT-REQUESTS-UNDER-AN-ACCELERATED-MODE → org-vibevm-world-%2Doperating-modes-%2DREPORT-STATUS-NOT-REQUESTS-UNDER-AN-ACCELERATED-MODE (org.vibevm.world/operating-modes)
   REPORT-THE-PRE-RUN-NEVER-RECORD-THE-PASS → org-vibevm-world-%2Dmanual-tests-%2DREPORT-THE-PRE-RUN-NEVER-RECORD-THE-PASS (org.vibevm.world/manual-tests)
   REPORTED-DRIFT-IS-A-SIGNAL-TO-INVESTIGATE → org-vibevm-world-%2Dsource-mirrors-%2DREPORTED-DRIFT-IS-A-SIGNAL-TO-INVESTIGATE (org.vibevm.world/source-mirrors)
+  RESOLVE-LOCAL-CONTEXT-FIRST → org-vibevm-world-%2Dmulti-user-planning-%2DRESOLVE-LOCAL-CONTEXT-FIRST (org.vibevm.world/multi-user-planning)
   RESOLVE-READ-COMPARE-FIX → org-vibevm-world-%2Daddressable-specs-%2DRESOLVE-READ-COMPARE-FIX (org.vibevm.world/addressable-specs)
-  RESUME-REMAINS-REPORT-THEN-WAIT → org-vibevm-world-%2Dwal-specspaces-%2DRESUME-REMAINS-REPORT-THEN-WAIT (org.vibevm.world/wal-specspaces)
-  REWRITE-THE-WAL-NEVER-APPEND-TO-IT → org-vibevm-world-%2Dwal-%2DREWRITE-THE-WAL-NEVER-APPEND-TO-IT (org.vibevm.world/wal)
   ROLE-BASELINE → org-vibevm-world-%2Dcampaign-plans-%2DROLE-BASELINE (org.vibevm.world/campaign-plans)
   ROLE-LOG → org-vibevm-world-%2Dcampaign-plans-%2DROLE-LOG (org.vibevm.world/campaign-plans)
   ROLE-PLAN → org-vibevm-world-%2Dcampaign-plans-%2DROLE-PLAN (org.vibevm.world/campaign-plans)
@@ -351,7 +334,6 @@
   SCOPE-PRODUCT-IS-CARVED-OUT → org-vibevm-world-%2Dgit-attribution-policy-%2DSCOPE-PRODUCT-IS-CARVED-OUT (org.vibevm.world/git-attribution-policy)
   SCOPE-THE-ONLY-PLACES-THE-TOPIC-IS-DISCUSSED → org-vibevm-world-%2Dgit-attribution-policy-%2DSCOPE-THE-ONLY-PLACES-THE-TOPIC-IS-DISCUSSED (org.vibevm.world/git-attribution-policy)
   SCOPE-WORKFLOW-DOCUMENTS-REMAIN-LEGAL → org-vibevm-world-%2Dgit-attribution-policy-%2DSCOPE-WORKFLOW-DOCUMENTS-REMAIN-LEGAL (org.vibevm.world/git-attribution-policy)
-  SCOPED-PHRASES-OPERATE-ON-THE-SPECSPACES-OWN-FILES → org-vibevm-world-%2Dwal-specspaces-%2DSCOPED-PHRASES-OPERATE-ON-THE-SPECSPACES-OWN-FILES (org.vibevm.world/wal-specspaces)
   SECRET-FILES-ARE-EDITED-NEVER-READ → org-vibevm-world-%2Dsecrets-hygiene-%2DSECRET-FILES-ARE-EDITED-NEVER-READ (org.vibevm.world/secrets-hygiene)
   SETUP-AND-RUNTIME-DOCUMENTATION-IS-LOAD-BEARING → org-vibevm-world-%2Ddev-runtime-docs-%2DSETUP-AND-RUNTIME-DOCUMENTATION-IS-LOAD-BEARING (org.vibevm.world/dev-runtime-docs)
   SPIRIT-DECISIONS-RECORDED-WITH-THEIR-REASONS → org-vibevm-world-%2Dredbook-%2DSPIRIT-DECISIONS-RECORDED-WITH-THEIR-REASONS (org.vibevm.world/redbook)
@@ -367,14 +349,8 @@
   STEP-RUN-STATUS-AND-DIFF-AND-NAME-EVERY-CHANGE → org-vibevm-world-%2Dgit-atomic-commits-%2DSTEP-RUN-STATUS-AND-DIFF-AND-NAME-EVERY-CHANGE (org.vibevm.world/git-atomic-commits)
   STEP-STAGE-AND-COMMIT-EACH-GROUP-SEPARATELY → org-vibevm-world-%2Dgit-atomic-commits-%2DSTEP-STAGE-AND-COMMIT-EACH-GROUP-SEPARATELY (org.vibevm.world/git-atomic-commits)
   STEP-SURFACE-THE-DRAFT-AND-DO-NOT-APPLY → org-vibevm-world-%2Dsync-from-code-%2DSTEP-SURFACE-THE-DRAFT-AND-DO-NOT-APPLY (org.vibevm.world/sync-from-code)
-  STOP-AND-SURFACE-BEFORE-VIOLATING-A-CONSTRAINT → org-vibevm-world-%2Dwal-%2DSTOP-AND-SURFACE-BEFORE-VIOLATING-A-CONSTRAINT (org.vibevm.world/wal)
   SURFACE-THE-MARKER-IN-THE-END-OF-SESSION-REPORT → org-vibevm-world-%2Dconflict-protocol-%2DSURFACE-THE-MARKER-IN-THE-END-OF-SESSION-REPORT (org.vibevm.world/conflict-protocol)
   SYNC-FROM-CODE-DOES-NOT-FLIP-THAT-RULE → org-vibevm-world-%2Dsync-from-code-%2DSYNC-FROM-CODE-DOES-NOT-FLIP-THAT-RULE (org.vibevm.world/sync-from-code)
-  SYNC-WAL-BINDING → org-vibevm-world-%2Dsync-from-code-%2DSYNC-WAL-BINDING (org.vibevm.world/sync-from-code)
-  TARGET-DECLARED-DEFAULT → org-vibevm-world-%2Dwal-specspaces-%2DTARGET-DECLARED-DEFAULT (org.vibevm.world/wal-specspaces)
-  TARGET-EXPLICIT-WINS-ALWAYS → org-vibevm-world-%2Dwal-specspaces-%2DTARGET-EXPLICIT-WINS-ALWAYS (org.vibevm.world/wal-specspaces)
-  TARGET-HOST-FALLBACK → org-vibevm-world-%2Dwal-specspaces-%2DTARGET-HOST-FALLBACK (org.vibevm.world/wal-specspaces)
-  TARGETING-A-SPECSPACE-REQUIRES-NAMING-IT → org-vibevm-world-%2Dwal-specspaces-%2DTARGETING-A-SPECSPACE-REQUIRES-NAMING-IT (org.vibevm.world/wal-specspaces)
   TESTS-ARE-THE-SPEC-IN-EXECUTABLE-FORM → org-vibevm-world-%2Dconflict-protocol-%2DTESTS-ARE-THE-SPEC-IN-EXECUTABLE-FORM (org.vibevm.world/conflict-protocol)
   THE-ALTERNATIVE-IS-ADOPTED-BY-EDITING-THIS-SNIPPET → org-vibevm-world-%2Dgit-attribution-policy-%2DTHE-ALTERNATIVE-IS-ADOPTED-BY-EDITING-THIS-SNIPPET (org.vibevm.world/git-attribution-policy)
   THE-AUTOMATED-TIER-PROVES-THE-LOGIC-THE-MANUAL-TIER-PROVES-THE-WORLD → org-vibevm-world-%2Dmanual-tests-%2DTHE-AUTOMATED-TIER-PROVES-THE-LOGIC-THE-MANUAL-TIER-PROVES-THE-WORLD (org.vibevm.world/manual-tests)
@@ -384,7 +360,6 @@
   THE-FLOW-IS-THE-STANDING-RULE-FOR-CREDENTIALS → org-vibevm-world-%2Dsecrets-hygiene-%2DTHE-FLOW-IS-THE-STANDING-RULE-FOR-CREDENTIALS (org.vibevm.world/secrets-hygiene)
   THE-GATE-AND-THE-AUDIT-ANSWER-DIFFERENT-QUESTIONS → org-vibevm-world-%2Dhealth-audit-%2DTHE-GATE-AND-THE-AUDIT-ANSWER-DIFFERENT-QUESTIONS (org.vibevm.world/health-audit)
   THE-GATE-IS-THE-FLOOR-THE-AUDIT-IS-WHAT-IT-CANNOT-SEE → org-vibevm-world-%2Dhealth-audit-%2DTHE-GATE-IS-THE-FLOOR-THE-AUDIT-IS-WHAT-IT-CANNOT-SEE (org.vibevm.world/health-audit)
-  THE-HOST-WAL-IS-UPDATED-ONLY-WHEN-HOST-FILES-CHANGED → org-vibevm-world-%2Dwal-specspaces-%2DTHE-HOST-WAL-IS-UPDATED-ONLY-WHEN-HOST-FILES-CHANGED (org.vibevm.world/wal-specspaces)
   THE-HUMAN-DECIDES-IN-THE-NEXT-CYCLE → org-vibevm-world-%2Dconflict-protocol-%2DTHE-HUMAN-DECIDES-IN-THE-NEXT-CYCLE (org.vibevm.world/conflict-protocol)
   THE-LESSONS-CATALOG-IS-INSTALLED → org-vibevm-world-%2Dtool-design-lessons-%2DTHE-LESSONS-CATALOG-IS-INSTALLED (org.vibevm.world/tool-design-lessons)
   THE-MANUAL-TIER-COMPLEMENTS-AND-NEVER-REPLACES → org-vibevm-world-%2Dmanual-tests-%2DTHE-MANUAL-TIER-COMPLEMENTS-AND-NEVER-REPLACES (org.vibevm.world/manual-tests)
@@ -392,10 +367,8 @@
   THE-PROJECT-HAS-A-DELIBERATE-LICENSING-POSTURE → org-vibevm-world-%2Dlicensing-%2DTHE-PROJECT-HAS-A-DELIBERATE-LICENSING-POSTURE (org.vibevm.world/licensing)
   THE-PROJECT-HAS-A-GENRE-FOR-STUDYING-EXTERNAL-SYSTEMS → org-vibevm-world-%2Dcomparative-research-%2DTHE-PROJECT-HAS-A-GENRE-FOR-STUDYING-EXTERNAL-SYSTEMS (org.vibevm.world/comparative-research)
   THE-PROJECT-KEEPS-A-SECOND-TEST-TIER → org-vibevm-world-%2Dmanual-tests-%2DTHE-PROJECT-KEEPS-A-SECOND-TEST-TIER (org.vibevm.world/manual-tests)
-  THE-PROJECT-MAY-HOST-SPECSPACES → org-vibevm-world-%2Dwal-specspaces-%2DTHE-PROJECT-MAY-HOST-SPECSPACES (org.vibevm.world/wal-specspaces)
   THE-PROJECT-USES-SYNC-FROM-CODE → org-vibevm-world-%2Dsync-from-code-%2DTHE-PROJECT-USES-SYNC-FROM-CODE (org.vibevm.world/sync-from-code)
   THE-PROJECT-USES-THE-ATOMIC-COMMITS-DISCIPLINE → org-vibevm-world-%2Dgit-atomic-commits-%2DTHE-PROJECT-USES-THE-ATOMIC-COMMITS-DISCIPLINE (org.vibevm.world/git-atomic-commits)
-  THE-REGISTRY-IS-SPECSPACES-MD-AT-THE-HOST-ROOT → org-vibevm-world-%2Dwal-specspaces-%2DTHE-REGISTRY-IS-SPECSPACES-MD-AT-THE-HOST-ROOT (org.vibevm.world/wal-specspaces)
   THE-REPOSITORY-IS-HUMAN-AUTHORED-ON-EVERY-SURFACE → org-vibevm-world-%2Dgit-attribution-policy-%2DTHE-REPOSITORY-IS-HUMAN-AUTHORED-ON-EVERY-SURFACE (org.vibevm.world/git-attribution-policy)
   THE-RULE-APPLIES-REGARDLESS-OF-PROVIDER-OR-LOCATION → org-vibevm-world-%2Dgit-attribution-policy-%2DTHE-RULE-APPLIES-REGARDLESS-OF-PROVIDER-OR-LOCATION (org.vibevm.world/git-attribution-policy)
   THE-SAME-CONTRACT-BINDS-THE-AGENT → org-vibevm-world-%2Daddressable-specs-%2DTHE-SAME-CONTRACT-BINDS-THE-AGENT (org.vibevm.world/addressable-specs)
@@ -416,9 +389,6 @@
   UNDIFFERENTIATED-PILE-OF-MARKDOWN-ROTS → org-vibevm-world-%2Dspec-genres-%2DUNDIFFERENTIATED-PILE-OF-MARKDOWN-ROTS (org.vibevm.world/spec-genres)
   UNRESOLVED-FINDINGS-CARRY-FORWARD-AND-GET-RE-JUDGED → org-vibevm-world-%2Dhealth-audit-%2DUNRESOLVED-FINDINGS-CARRY-FORWARD-AND-GET-RE-JUDGED (org.vibevm.world/health-audit)
   USE-THE-HEALTH-AUDIT-SKILL-TO-RUN-ONE → org-vibevm-world-%2Dhealth-audit-%2DUSE-THE-HEALTH-AUDIT-SKILL-TO-RUN-ONE (org.vibevm.world/health-audit)
-  VERIFY-THE-UPDATED-LINE-IS-CURRENT → org-vibevm-world-%2Dwal-%2DVERIFY-THE-UPDATED-LINE-IS-CURRENT (org.vibevm.world/wal)
-  WAL-AND-CONTINUE-ARE-PROJECT-STATE-NOT-PACKAGE-STATE → org-vibevm-world-%2Dwal-%2DWAL-AND-CONTINUE-ARE-PROJECT-STATE-NOT-PACKAGE-STATE (org.vibevm.world/wal)
-  WAL-IS-THE-SINGLE-DEVELOPER-CONVENTION → org-vibevm-world-%2Dwal-%2DWAL-IS-THE-SINGLE-DEVELOPER-CONVENTION (org.vibevm.world/wal)
   WHAT-COUNTS-AS-A-SURFACE-SECRET → org-vibevm-world-%2Dsecrets-hygiene-%2DWHAT-COUNTS-AS-A-SURFACE-SECRET (org.vibevm.world/secrets-hygiene)
   WHAT-IS-FORBIDDEN-IS-RESOLVING-A-CONTRADICTION-SILENTLY → org-vibevm-world-%2Dconflict-protocol-%2DWHAT-IS-FORBIDDEN-IS-RESOLVING-A-CONTRADICTION-SILENTLY (org.vibevm.world/conflict-protocol)
   WHEN-A-CHANGE-TOUCHES-ANY-LICENCE-STATEMENT → org-vibevm-world-%2Dlicensing-%2DWHEN-A-CHANGE-TOUCHES-ANY-LICENCE-STATEMENT (org.vibevm.world/licensing)
@@ -435,25 +405,25 @@
   accidental → org-vibevm-world-%2Dsecrets-hygiene-%2Daccidental (org.vibevm.world/secrets-hygiene)
   adoption-guide-pointer → org-vibevm-world-%2Dmanaged-blocks-%2Dadoption-guide-pointer (org.vibevm.world/managed-blocks)
   architecture → org-vibevm-world-%2Dtwo-process-model-%2Darchitecture (org.vibevm.world/two-process-model)
+  authority → org-vibevm-world-%2Dmulti-user-planning-%2Dauthority (org.vibevm.world/multi-user-planning)
   before-closing-a-session-lead → org-vibevm-world-%2Dgit-atomic-commits-%2Dbefore-closing-a-session-lead (org.vibevm.world/git-atomic-commits)
   body → org-vibevm-world-%2Dgit-conventional-commits-%2Dbody (org.vibevm.world/git-conventional-commits)
   books-core-list-lead → org-vibevm-world-%2Dredbook-%2Dbooks-core-list-lead (org.vibevm.world/redbook)
   boundary → org-vibevm-world-%2Dcampaign-plans-%2Dboundary (org.vibevm.world/campaign-plans)
   cadence → org-vibevm-world-%2Doperating-modes-%2Dcadence (org.vibevm.world/operating-modes)
+  canon → org-vibevm-world-%2Dmulti-user-planning-%2Dcanon (org.vibevm.world/multi-user-planning)
   codeword-catalogue-pointer → org-vibevm-world-%2Doperating-modes-%2Dcodeword-catalogue-pointer (org.vibevm.world/operating-modes)
   codewords → org-vibevm-world-%2Doperating-modes-%2Dcodewords (org.vibevm.world/operating-modes)
   cold → org-vibevm-world-%2Dcampaign-plans-%2Dcold (org.vibevm.world/campaign-plans)
-  commands → org-vibevm-world-%2Dwal-%2Dcommands (org.vibevm.world/wal), org-vibevm-world-%2Dwal-specspaces-%2Dcommands (org.vibevm.world/wal-specspaces)
   consequences → org-vibevm-world-%2Dtwo-process-model-%2Dconsequences (org.vibevm.world/two-process-model)
   core-rule → org-vibevm-world-%2Ddecision-records-%2Dcore-rule (org.vibevm.world/decision-records), org-vibevm-world-%2Dgit-atomic-commits-%2Dcore-rule (org.vibevm.world/git-atomic-commits), org-vibevm-world-%2Dsource-mirrors-%2Dcore-rule (org.vibevm.world/source-mirrors), org-vibevm-world-%2Dspec-genres-%2Dcore-rule (org.vibevm.world/spec-genres)
   correction-contract → org-vibevm-world-%2Daddressable-specs-%2Dcorrection-contract (org.vibevm.world/addressable-specs)
   cultural-extraction-list-lead → org-vibevm-world-%2Dredbook-%2Dcultural-extraction-list-lead (org.vibevm.world/redbook)
-  default → org-vibevm-world-%2Doperating-modes-%2Ddefault (org.vibevm.world/operating-modes), org-vibevm-world-%2Dwal-specspaces-%2Ddefault (org.vibevm.world/wal-specspaces)
+  default → org-vibevm-world-%2Doperating-modes-%2Ddefault (org.vibevm.world/operating-modes)
   deployment-walkthrough-pointer → org-vibevm-world-%2Ddiscovery-prompt-%2Ddeployment-walkthrough-pointer (org.vibevm.world/discovery-prompt)
   deps → org-vibevm-world-%2Dlicensing-%2Ddeps (org.vibevm.world/licensing)
   design-docs-pointer → org-vibevm-world-%2Dspec-genres-%2Ddesign-docs-pointer (org.vibevm.world/spec-genres)
   direction → org-vibevm-world-%2Dsync-from-code-%2Ddirection (org.vibevm.world/sync-from-code)
-  during → org-vibevm-world-%2Dwal-%2Dduring (org.vibevm.world/wal)
   fanout-mechanics-pointer → org-vibevm-world-%2Dsource-mirrors-%2Dfanout-mechanics-pointer (org.vibevm.world/source-mirrors)
   file-channel-pointer → org-vibevm-world-%2Dtwo-process-model-%2Dfile-channel-pointer (org.vibevm.world/two-process-model)
   flow-document-pointers → org-vibevm-world-%2Dhealth-audit-%2Dflow-document-pointers (org.vibevm.world/health-audit)
@@ -463,7 +433,7 @@
   full-charters-pointer → org-vibevm-world-%2Dspec-genres-%2Dfull-charters-pointer (org.vibevm.world/spec-genres)
   full-ladder-pointer → org-vibevm-world-%2Dconflict-protocol-%2Dfull-ladder-pointer (org.vibevm.world/conflict-protocol)
   full-model-pointer → org-vibevm-world-%2Dtwo-process-model-%2Dfull-model-pointer (org.vibevm.world/two-process-model)
-  full-protocol-pointer → org-vibevm-world-%2Dconflict-protocol-%2Dfull-protocol-pointer (org.vibevm.world/conflict-protocol), org-vibevm-world-%2Ddecision-records-%2Dfull-protocol-pointer (org.vibevm.world/decision-records), org-vibevm-world-%2Dgit-atomic-commits-%2Dfull-protocol-pointer (org.vibevm.world/git-atomic-commits), org-vibevm-world-%2Dsource-mirrors-%2Dfull-protocol-pointer (org.vibevm.world/source-mirrors), org-vibevm-world-%2Dsync-from-code-%2Dfull-protocol-pointer (org.vibevm.world/sync-from-code), org-vibevm-world-%2Dwal-%2Dfull-protocol-pointer (org.vibevm.world/wal)
+  full-protocol-pointer → org-vibevm-world-%2Dconflict-protocol-%2Dfull-protocol-pointer (org.vibevm.world/conflict-protocol), org-vibevm-world-%2Ddecision-records-%2Dfull-protocol-pointer (org.vibevm.world/decision-records), org-vibevm-world-%2Dgit-atomic-commits-%2Dfull-protocol-pointer (org.vibevm.world/git-atomic-commits), org-vibevm-world-%2Dsource-mirrors-%2Dfull-protocol-pointer (org.vibevm.world/source-mirrors), org-vibevm-world-%2Dsync-from-code-%2Dfull-protocol-pointer (org.vibevm.world/sync-from-code)
   gates → org-vibevm-world-%2Dcampaign-plans-%2Dgates (org.vibevm.world/campaign-plans)
   genre-map → org-vibevm-world-%2Dspec-genres-%2Dgenre-map (org.vibevm.world/spec-genres)
   grammar-and-forms-pointer → org-vibevm-world-%2Dqualified-naming-%2Dgrammar-and-forms-pointer (org.vibevm.world/qualified-naming)
@@ -483,14 +453,15 @@
   neither-replaces-the-other → org-vibevm-world-%2Dhealth-audit-%2Dneither-replaces-the-other (org.vibevm.world/health-audit)
   never → org-vibevm-world-%2Daddressable-specs-%2Dnever (org.vibevm.world/addressable-specs), org-vibevm-world-%2Dcampaign-plans-%2Dnever (org.vibevm.world/campaign-plans), org-vibevm-world-%2Dcomparative-research-%2Dnever (org.vibevm.world/comparative-research), org-vibevm-world-%2Dconflict-protocol-%2Dnever (org.vibevm.world/conflict-protocol), org-vibevm-world-%2Ddecision-records-%2Dnever (org.vibevm.world/decision-records), org-vibevm-world-%2Ddev-runtime-docs-%2Dnever (org.vibevm.world/dev-runtime-docs), org-vibevm-world-%2Ddiscovery-prompt-%2Dnever (org.vibevm.world/discovery-prompt), org-vibevm-world-%2Dgit-atomic-commits-%2Dnever (org.vibevm.world/git-atomic-commits), org-vibevm-world-%2Dgit-attribution-policy-%2Dnever (org.vibevm.world/git-attribution-policy), org-vibevm-world-%2Dgit-conventional-commits-%2Dnever (org.vibevm.world/git-conventional-commits), org-vibevm-world-%2Dhealth-audit-%2Dnever (org.vibevm.world/health-audit), org-vibevm-world-%2Dlicensing-%2Dnever (org.vibevm.world/licensing), org-vibevm-world-%2Dmanaged-blocks-%2Dnever (org.vibevm.world/managed-blocks), org-vibevm-world-%2Dmanual-tests-%2Dnever (org.vibevm.world/manual-tests), org-vibevm-world-%2Doperating-modes-%2Dnever (org.vibevm.world/operating-modes), org-vibevm-world-%2Dqualified-naming-%2Dnever (org.vibevm.world/qualified-naming), org-vibevm-world-%2Dsecrets-hygiene-%2Dnever (org.vibevm.world/secrets-hygiene), org-vibevm-world-%2Dsource-mirrors-%2Dnever (org.vibevm.world/source-mirrors), org-vibevm-world-%2Dspec-genres-%2Dnever (org.vibevm.world/spec-genres), org-vibevm-world-%2Dsync-from-code-%2Dnever (org.vibevm.world/sync-from-code), org-vibevm-world-%2Dtool-design-lessons-%2Dnever (org.vibevm.world/tool-design-lessons), org-vibevm-world-%2Dtwo-process-model-%2Dnever (org.vibevm.world/two-process-model)
   placement → org-vibevm-world-%2Daddressable-specs-%2Dplacement (org.vibevm.world/addressable-specs)
+  planning → org-vibevm-world-%2Dmulti-user-planning-%2Dplanning (org.vibevm.world/multi-user-planning)
   pointers → org-vibevm-world-%2Daddressable-specs-%2Dpointers (org.vibevm.world/addressable-specs)
   practices-distilled-from-the-book → org-vibevm-world-%2Dredbook-%2Dpractices-distilled-from-the-book (org.vibevm.world/redbook)
   produces → org-vibevm-world-%2Dhealth-audit-%2Dproduces (org.vibevm.world/health-audit)
+  profiles → org-vibevm-world-%2Dmulti-user-planning-%2Dprofiles (org.vibevm.world/multi-user-planning)
   project-practice-list-lead → org-vibevm-world-%2Dredbook-%2Dproject-practice-list-lead (org.vibevm.world/redbook)
   propose-a-manual-test-lead → org-vibevm-world-%2Dmanual-tests-%2Dpropose-a-manual-test-lead (org.vibevm.world/manual-tests)
   re-derivation-ends-in-re-litigation → org-vibevm-world-%2Ddecision-records-%2Dre-derivation-ends-in-re-litigation (org.vibevm.world/decision-records)
   reach-for-the-skeleton-and-hold-the-laws-lead → org-vibevm-world-%2Dcomparative-research-%2Dreach-for-the-skeleton-and-hold-the-laws-lead (org.vibevm.world/comparative-research)
-  recognise → org-vibevm-world-%2Dwal-specspaces-%2Drecognise (org.vibevm.world/wal-specspaces)
   recovery-drills-pointer → org-vibevm-world-%2Dconflict-protocol-%2Drecovery-drills-pointer (org.vibevm.world/conflict-protocol)
   red-lines → org-vibevm-world-%2Dgit-autonomy-%2Dred-lines (org.vibevm.world/git-autonomy), org-vibevm-world-%2Doperating-modes-%2Dred-lines (org.vibevm.world/operating-modes)
   red-lines-survive-every-mode-lead → org-vibevm-world-%2Doperating-modes-%2Dred-lines-survive-every-mode-lead (org.vibevm.world/operating-modes)
@@ -498,17 +469,15 @@
   retrofitting-a-group-is-a-migration → org-vibevm-world-%2Dqualified-naming-%2Dretrofitting-a-group-is-a-migration (org.vibevm.world/qualified-naming)
   review → org-vibevm-world-%2Dconflict-protocol-%2Dreview (org.vibevm.world/conflict-protocol)
   roles → org-vibevm-world-%2Dmanual-tests-%2Droles (org.vibevm.world/manual-tests)
-  root → org-vibevm-world-%2Daddressable-specs-%2Droot (org.vibevm.world/addressable-specs), org-vibevm-world-%2Dcampaign-plans-%2Droot (org.vibevm.world/campaign-plans), org-vibevm-world-%2Dcomparative-research-%2Droot (org.vibevm.world/comparative-research), org-vibevm-world-%2Dconflict-protocol-%2Droot (org.vibevm.world/conflict-protocol), org-vibevm-world-%2Dconflict-protocol-%2Droot (org.vibevm.world/conflict-protocol), org-vibevm-world-%2Ddecision-records-%2Droot (org.vibevm.world/decision-records), org-vibevm-world-%2Ddev-runtime-docs-%2Droot (org.vibevm.world/dev-runtime-docs), org-vibevm-world-%2Ddiscovery-prompt-%2Droot (org.vibevm.world/discovery-prompt), org-vibevm-world-%2Dgit-atomic-commits-%2Droot (org.vibevm.world/git-atomic-commits), org-vibevm-world-%2Dgit-attribution-policy-%2Droot (org.vibevm.world/git-attribution-policy), org-vibevm-world-%2Dgit-autonomy-%2Droot (org.vibevm.world/git-autonomy), org-vibevm-world-%2Dgit-conventional-commits-%2Droot (org.vibevm.world/git-conventional-commits), org-vibevm-world-%2Dhealth-audit-%2Droot (org.vibevm.world/health-audit), org-vibevm-world-%2Dhealth-audit-%2Droot (org.vibevm.world/health-audit), org-vibevm-world-%2Dlicensing-%2Droot (org.vibevm.world/licensing), org-vibevm-world-%2Dmanaged-blocks-%2Droot (org.vibevm.world/managed-blocks), org-vibevm-world-%2Dmanual-tests-%2Droot (org.vibevm.world/manual-tests), org-vibevm-world-%2Doperating-modes-%2Droot (org.vibevm.world/operating-modes), org-vibevm-world-%2Dqualified-naming-%2Droot (org.vibevm.world/qualified-naming), org-vibevm-world-%2Dredbook-%2Droot (org.vibevm.world/redbook), org-vibevm-world-%2Dredbook-%2Droot (org.vibevm.world/redbook), org-vibevm-world-%2Dredbook-%2Droot (org.vibevm.world/redbook), org-vibevm-world-%2Dsecrets-hygiene-%2Droot (org.vibevm.world/secrets-hygiene), org-vibevm-world-%2Dsource-mirrors-%2Droot (org.vibevm.world/source-mirrors), org-vibevm-world-%2Dspec-genres-%2Droot (org.vibevm.world/spec-genres), org-vibevm-world-%2Dsync-from-code-%2Droot (org.vibevm.world/sync-from-code), org-vibevm-world-%2Dsync-from-code-%2Droot (org.vibevm.world/sync-from-code), org-vibevm-world-%2Dtool-design-lessons-%2Droot (org.vibevm.world/tool-design-lessons), org-vibevm-world-%2Dtwo-process-model-%2Droot (org.vibevm.world/two-process-model), org-vibevm-world-%2Dwal-%2Droot (org.vibevm.world/wal), org-vibevm-world-%2Dwal-specspaces-%2Droot (org.vibevm.world/wal-specspaces)
+  root → org-vibevm-world-%2Daddressable-specs-%2Droot (org.vibevm.world/addressable-specs), org-vibevm-world-%2Dcampaign-plans-%2Droot (org.vibevm.world/campaign-plans), org-vibevm-world-%2Dcomparative-research-%2Droot (org.vibevm.world/comparative-research), org-vibevm-world-%2Dconflict-protocol-%2Droot (org.vibevm.world/conflict-protocol), org-vibevm-world-%2Ddecision-records-%2Droot (org.vibevm.world/decision-records), org-vibevm-world-%2Ddev-runtime-docs-%2Droot (org.vibevm.world/dev-runtime-docs), org-vibevm-world-%2Ddiscovery-prompt-%2Droot (org.vibevm.world/discovery-prompt), org-vibevm-world-%2Dgit-atomic-commits-%2Droot (org.vibevm.world/git-atomic-commits), org-vibevm-world-%2Dgit-attribution-policy-%2Droot (org.vibevm.world/git-attribution-policy), org-vibevm-world-%2Dgit-autonomy-%2Droot (org.vibevm.world/git-autonomy), org-vibevm-world-%2Dgit-conventional-commits-%2Droot (org.vibevm.world/git-conventional-commits), org-vibevm-world-%2Dhealth-audit-%2Droot (org.vibevm.world/health-audit), org-vibevm-world-%2Dlicensing-%2Droot (org.vibevm.world/licensing), org-vibevm-world-%2Dmanaged-blocks-%2Droot (org.vibevm.world/managed-blocks), org-vibevm-world-%2Dmanual-tests-%2Droot (org.vibevm.world/manual-tests), org-vibevm-world-%2Dmulti-user-planning-%2Droot (org.vibevm.world/multi-user-planning), org-vibevm-world-%2Doperating-modes-%2Droot (org.vibevm.world/operating-modes), org-vibevm-world-%2Dqualified-naming-%2Droot (org.vibevm.world/qualified-naming), org-vibevm-world-%2Dredbook-%2Droot (org.vibevm.world/redbook), org-vibevm-world-%2Dsecrets-hygiene-%2Droot (org.vibevm.world/secrets-hygiene), org-vibevm-world-%2Dsource-mirrors-%2Droot (org.vibevm.world/source-mirrors), org-vibevm-world-%2Dspec-genres-%2Droot (org.vibevm.world/spec-genres), org-vibevm-world-%2Dsync-from-code-%2Droot (org.vibevm.world/sync-from-code), org-vibevm-world-%2Dtool-design-lessons-%2Droot (org.vibevm.world/tool-design-lessons), org-vibevm-world-%2Dtwo-process-model-%2Droot (org.vibevm.world/two-process-model)
   routine → org-vibevm-world-%2Dgit-autonomy-%2Droutine (org.vibevm.world/git-autonomy)
   routing-table-pointer → org-vibevm-world-%2Dspec-genres-%2Drouting-table-pointer (org.vibevm.world/spec-genres)
   rule → org-vibevm-world-%2Ddev-runtime-docs-%2Drule (org.vibevm.world/dev-runtime-docs), org-vibevm-world-%2Dgit-attribution-policy-%2Drule (org.vibevm.world/git-attribution-policy)
   run → org-vibevm-world-%2Dhealth-audit-%2Drun (org.vibevm.world/health-audit)
-  scope → org-vibevm-world-%2Dgit-attribution-policy-%2Dscope (org.vibevm.world/git-attribution-policy), org-vibevm-world-%2Dwal-%2Dscope (org.vibevm.world/wal)
-  scoping → org-vibevm-world-%2Dwal-specspaces-%2Dscoping (org.vibevm.world/wal-specspaces)
-  session-end → org-vibevm-world-%2Dgit-atomic-commits-%2Dsession-end (org.vibevm.world/git-atomic-commits), org-vibevm-world-%2Dwal-%2Dsession-end (org.vibevm.world/wal)
-  session-start → org-vibevm-world-%2Dwal-%2Dsession-start (org.vibevm.world/wal)
+  scope → org-vibevm-world-%2Dgit-attribution-policy-%2Dscope (org.vibevm.world/git-attribution-policy)
+  session-end → org-vibevm-world-%2Dgit-atomic-commits-%2Dsession-end (org.vibevm.world/git-atomic-commits)
   shortcuts-are-already-catalogued → org-vibevm-world-%2Dmanaged-blocks-%2Dshortcuts-are-already-catalogued (org.vibevm.world/managed-blocks)
-  sibling-document-pointers → org-vibevm-world-%2Dcampaign-plans-%2Dsibling-document-pointers (org.vibevm.world/campaign-plans), org-vibevm-world-%2Dcomparative-research-%2Dsibling-document-pointers (org.vibevm.world/comparative-research), org-vibevm-world-%2Ddev-runtime-docs-%2Dsibling-document-pointers (org.vibevm.world/dev-runtime-docs), org-vibevm-world-%2Dgit-attribution-policy-%2Dsibling-document-pointers (org.vibevm.world/git-attribution-policy), org-vibevm-world-%2Dgit-autonomy-%2Dsibling-document-pointers (org.vibevm.world/git-autonomy), org-vibevm-world-%2Dgit-conventional-commits-%2Dsibling-document-pointers (org.vibevm.world/git-conventional-commits), org-vibevm-world-%2Dlicensing-%2Dsibling-document-pointers (org.vibevm.world/licensing), org-vibevm-world-%2Dmanual-tests-%2Dsibling-document-pointers (org.vibevm.world/manual-tests), org-vibevm-world-%2Dsecrets-hygiene-%2Dsibling-document-pointers (org.vibevm.world/secrets-hygiene), org-vibevm-world-%2Dsync-from-code-%2Dsibling-document-pointers (org.vibevm.world/sync-from-code), org-vibevm-world-%2Dwal-specspaces-%2Dsibling-document-pointers (org.vibevm.world/wal-specspaces)
+  sibling-document-pointers → org-vibevm-world-%2Dcampaign-plans-%2Dsibling-document-pointers (org.vibevm.world/campaign-plans), org-vibevm-world-%2Dcomparative-research-%2Dsibling-document-pointers (org.vibevm.world/comparative-research), org-vibevm-world-%2Ddev-runtime-docs-%2Dsibling-document-pointers (org.vibevm.world/dev-runtime-docs), org-vibevm-world-%2Dgit-attribution-policy-%2Dsibling-document-pointers (org.vibevm.world/git-attribution-policy), org-vibevm-world-%2Dgit-autonomy-%2Dsibling-document-pointers (org.vibevm.world/git-autonomy), org-vibevm-world-%2Dgit-conventional-commits-%2Dsibling-document-pointers (org.vibevm.world/git-conventional-commits), org-vibevm-world-%2Dlicensing-%2Dsibling-document-pointers (org.vibevm.world/licensing), org-vibevm-world-%2Dmanual-tests-%2Dsibling-document-pointers (org.vibevm.world/manual-tests), org-vibevm-world-%2Dsecrets-hygiene-%2Dsibling-document-pointers (org.vibevm.world/secrets-hygiene), org-vibevm-world-%2Dsync-from-code-%2Dsibling-document-pointers (org.vibevm.world/sync-from-code)
   single-source → org-vibevm-world-%2Daddressable-specs-%2Dsingle-source (org.vibevm.world/addressable-specs)
   some-jurisdictions-regulate-machine-authorship → org-vibevm-world-%2Dgit-attribution-policy-%2Dsome-jurisdictions-regulate-machine-authorship (org.vibevm.world/git-attribution-policy)
   spirit-of-the-process-lead → org-vibevm-world-%2Dredbook-%2Dspirit-of-the-process-lead (org.vibevm.world/redbook)
@@ -529,7 +498,6 @@
   trigger-design-pointer → org-vibevm-world-%2Ddecision-records-%2Dtrigger-design-pointer (org.vibevm.world/decision-records)
   twenty-tokens-exact-hit → org-vibevm-world-%2Daddressable-specs-%2Dtwenty-tokens-exact-hit (org.vibevm.world/addressable-specs)
   two-copies-will-diverge → org-vibevm-world-%2Daddressable-specs-%2Dtwo-copies-will-diverge (org.vibevm.world/addressable-specs)
-  two-files-carry-it-lead → org-vibevm-world-%2Dwal-%2Dtwo-files-carry-it-lead (org.vibevm.world/wal)
   two-things-are-always-true-lead → org-vibevm-world-%2Dlicensing-%2Dtwo-things-are-always-true-lead (org.vibevm.world/licensing)
   uncertainty → org-vibevm-world-%2Dconflict-protocol-%2Duncertainty (org.vibevm.world/conflict-protocol)
   what → org-vibevm-world-%2Ddiscovery-prompt-%2Dwhat (org.vibevm.world/discovery-prompt)
@@ -797,16 +765,6 @@ silently invent semantic behavior.</org-vibevm-world--conflict-protocol--NEVER-S
     <p><org-vibevm-world--conflict-protocol--recovery-drills-pointer fact="true" status="impl/done">Recovery drills for when the protocol has already been broken:
 @spec://org.vibevm.world/conflict-protocol/flows/conflict-protocol/failure-modes#root.</org-vibevm-world--conflict-protocol--recovery-drills-pointer></p>
   </org-vibevm-world--conflict-protocol--never>
-</spec>
-
-<!-- vibe:c1 vibe:static org.vibevm.world/conflict-protocol — vibevm/vibedeps/org.vibevm.world.conflict-protocol/1.0.0/vibevm/vibespecs/boot/35a-wal-binding.xml -->
-
-<?xml version="1.0" encoding="UTF-8"?>
-<spec xmlns="https://vibevm.org/spec/1">
-  <title id="org-vibevm-world--conflict-protocol--root">Conflict protocol — the WAL binding</title>
-  <p><org-vibevm-world--conflict-protocol--CONFLICT-WAL-BINDING fact="true" status="impl/done">With `flow:wal` installed, the volatile state
-file of the priority ladder is `vibevm/vibespecs/WAL.xml`; the full ladder reads
-Human &gt; Spec &gt; Tests &gt; Code &gt; WAL.</org-vibevm-world--conflict-protocol--CONFLICT-WAL-BINDING></p>
 </spec>
 
 <!-- vibe:c1 vibe:static org.vibevm.world/decision-records — vibevm/vibedeps/org.vibevm.world.decision-records/1.0.0/vibevm/vibespecs/boot/25-flow-decision-records.xml -->
@@ -1236,16 +1194,6 @@ the run procedure:
   </org-vibevm-world--health-audit--never>
 </spec>
 
-<!-- vibe:c1 vibe:static org.vibevm.world/health-audit — vibevm/vibedeps/org.vibevm.world.health-audit/1.0.0/vibevm/vibespecs/boot/42a-wal-binding.xml -->
-
-<?xml version="1.0" encoding="UTF-8"?>
-<spec xmlns="https://vibevm.org/spec/1">
-  <title id="org-vibevm-world--health-audit--root">Health audit — the WAL binding</title>
-  <p><org-vibevm-world--health-audit--AUDIT-WAL-BINDING fact="true" status="impl/done">With `flow:wal` installed, the volatile session
-checkpoints of the finding rule are `vibevm/vibespecs/WAL.xml` and `CONTINUE.md` —
-reconciled against `AUDIT.md`, never its substitute.</org-vibevm-world--health-audit--AUDIT-WAL-BINDING></p>
-</spec>
-
 <!-- vibe:c1 vibe:static org.vibevm.world/licensing — vibevm/vibedeps/org.vibevm.world.licensing/1.0.0/vibevm/vibespecs/boot/60-flow-licensing.xml -->
 
 <?xml version="1.0" encoding="UTF-8"?>
@@ -1401,6 +1349,70 @@ pre-run; never record the pass.</org-vibevm-world--manual-tests--REPORT-THE-PRE-
   the product, not the test.</org-vibevm-world--manual-tests--NEVER-DELETE-A-FAILING-MANUAL-TEST-TO-MAKE-THE-PANEL-GREEN>
     </facts>
   </org-vibevm-world--manual-tests--never>
+</spec>
+
+<!-- vibe:c1 vibe:static org.vibevm.world/multi-user-planning — vibevm/vibedeps/org.vibevm.world.multi-user-planning/0.1.0/vibevm/vibespecs/boot/12-flow-multi-user-planning.xml -->
+
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="org-vibevm-world--multi-user-planning--root">Flow: Multi-user planning</title>
+  <status stage="impl" state="done"/>
+  <p><org-vibevm-world--multi-user-planning--CENTRAL-ONLY fact="true" status="impl/done">This flow governs an
+owner-facing **central campaign coordinator**. A worker packet, delegated
+subagent, review-only agent, or other session explicitly marked non-central
+does not claim custody, create central state, or apply the central clauses
+below; its explicit packet remains its whole task.</org-vibevm-world--multi-user-planning--CENTRAL-ONLY></p>
+  <p><org-vibevm-world--multi-user-planning--RESOLVE-LOCAL-CONTEXT-FIRST fact="true" status="impl/done">Before campaign
+work, resolve this repository/worktree/branch to one context under
+`~/.vibe/steward/contexts/`. Read its `settings.toml`, `custody.toml`, complete
+`plan.toml`, and latest acknowledged handoff. If global or context settings are
+absent, create the documented safe defaults. Never infer current state from a
+repository-level personal checkpoint.</org-vibevm-world--multi-user-planning--RESOLVE-LOCAL-CONTEXT-FIRST></p>
+  <org-vibevm-world--multi-user-planning--authority title="Authority and custody">
+    <facts ordered="false">
+      <org-vibevm-world--multi-user-planning--LOCAL-DOES-NOT-GRANT fact="true" status="impl/done">User-local state
+  coordinates this developer's sessions; it cannot grant project authority or
+  overrule human instructions, specs, tests or code.</org-vibevm-world--multi-user-planning--LOCAL-DOES-NOT-GRANT>
+      <org-vibevm-world--multi-user-planning--ONE-CENTRAL-HOLDER fact="true" status="impl/done">Exactly one central
+  session holds the write baton for a local context epoch. A handoff offer
+  fences the outgoing holder read-only; a receipt advances custody.</org-vibevm-world--multi-user-planning--ONE-CENTRAL-HOLDER>
+      <org-vibevm-world--multi-user-planning--ACCEPTANCE-NEVER-TRANSFERS fact="true" status="impl/done">Custody may
+  transfer. Acceptance does not: dirty changes and worker claims arrive as
+  candidates until the incoming central agent independently reviews and gates
+  them.</org-vibevm-world--multi-user-planning--ACCEPTANCE-NEVER-TRANSFERS>
+    </facts>
+  </org-vibevm-world--multi-user-planning--authority>
+  <org-vibevm-world--multi-user-planning--planning title="Plan discipline">
+    <facts ordered="false">
+      <org-vibevm-world--multi-user-planning--PLAN-IS-HIERARCHICAL fact="true" status="impl/done">Maintain the whole
+  mandate, dependency graph and epic route; expand the near frontier into
+  concrete atoms; expose only a linear projection to a UI. A three-item UI list
+  is never the authoritative plan.</org-vibevm-world--multi-user-planning--PLAN-IS-HIERARCHICAL>
+      <org-vibevm-world--multi-user-planning--NO-SILENT-LOSS fact="true" status="impl/done">Every owner requirement and
+  discovered obligation has a stable node or an explicit disposition. Never
+  stop merely because the visible projection ended; close parents bottom-up
+  only after their descendants and exit evidence close.</org-vibevm-world--multi-user-planning--NO-SILENT-LOSS>
+      <org-vibevm-world--multi-user-planning--REPLAN-AND-BACKSCAN fact="true" status="impl/done">Replan when evidence,
+  owner input, gates, architecture or resources change. At each milestone and
+  before handoff, backscan the original mandate, current tree, plan and accepted
+  evidence for omissions and contradictions.</org-vibevm-world--multi-user-planning--REPLAN-AND-BACKSCAN>
+    </facts>
+  </org-vibevm-world--multi-user-planning--planning>
+  <org-vibevm-world--multi-user-planning--profiles title="Persistent user profiles">
+    <p><org-vibevm-world--multi-user-planning--PROFILE-QUALITY-FLOOR fact="true" status="impl/done">The owner selects
+`ultra` or `standard` independently of the model name and may switch it during a
+session. Both profiles have the same correctness and completeness floor;
+`standard` uses smaller atoms and more explicit checkpoints, while `ultra`
+permits broader reasoning spans. `auto`/`collab` is a separate interaction
+setting. Canon:
+@spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/user-local-state#root.</org-vibevm-world--multi-user-planning--PROFILE-QUALITY-FLOOR></p>
+  </org-vibevm-world--multi-user-planning--profiles>
+  <org-vibevm-world--multi-user-planning--canon title="Full protocol">
+    <p><org-vibevm-world--multi-user-planning--FULL-PROTOCOL-POINTER fact="true" status="impl/done">Full protocol:
+@spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/MULTI-USER-PLANNING-PROTOCOL#root.
+Custody and handoff:
+@spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/custody-and-handoff#root.</org-vibevm-world--multi-user-planning--FULL-PROTOCOL-POINTER></p>
+  </org-vibevm-world--multi-user-planning--canon>
 </spec>
 
 <!-- vibe:c1 vibe:static org.vibevm.world/operating-modes — vibevm/vibedeps/org.vibevm.world.operating-modes/1.0.0/vibevm/vibespecs/boot/45-flow-operating-modes.xml -->
@@ -1807,16 +1819,6 @@ Human review checklist: @spec://org.vibevm.world/sync-from-code/flows/sync-from-
   </org-vibevm-world--sync-from-code--never>
 </spec>
 
-<!-- vibe:c1 vibe:static org.vibevm.world/sync-from-code — vibevm/vibedeps/org.vibevm.world.sync-from-code/1.0.0/vibevm/vibespecs/boot/20a-wal-binding.xml -->
-
-<?xml version="1.0" encoding="UTF-8"?>
-<spec xmlns="https://vibevm.org/spec/1">
-  <title id="org-vibevm-world--sync-from-code--root">Sync-from-Code — the WAL binding</title>
-  <p><org-vibevm-world--sync-from-code--SYNC-WAL-BINDING fact="true" status="impl/done">With `flow:wal` installed, the durable session state
-of this flow's rules is `vibevm/vibespecs/WAL.xml`: the top-down river reads
-head → WAL → spec → code, and a temporary hack is recorded in the WAL.</org-vibevm-world--sync-from-code--SYNC-WAL-BINDING></p>
-</spec>
-
 <!-- vibe:c1 vibe:static org.vibevm.world/tool-design-lessons — vibevm/vibedeps/org.vibevm.world.tool-design-lessons/1.0.0/vibevm/vibespecs/boot/70-flow-tool-design-lessons.xml -->
 
 <?xml version="1.0" encoding="UTF-8"?>
@@ -1927,156 +1929,6 @@ the work it is structurally good at.</org-vibevm-world--two-process-model--THE-S
   </org-vibevm-world--two-process-model--never>
 </spec>
 
-<!-- vibe:c1 vibe:static org.vibevm.world/wal — vibevm/vibedeps/org.vibevm.world.wal/1.0.0/vibevm/vibespecs/boot/10-flow-wal.xml -->
-
-<?xml version="1.0" encoding="UTF-8"?>
-<spec xmlns="https://vibevm.org/spec/1">
-  <title id="org-vibevm-world--wal--root">Flow: WAL (Write-Ahead Log)</title>
-  <status stage="impl" state="done"/>
-  <p><org-vibevm-world--wal--PROJECT-USES-WAL-DISCIPLINE-FOR-SESSION-CONTINUITY fact="true" status="impl/done">This project uses **WAL discipline** for session continuity.</org-vibevm-world--wal--PROJECT-USES-WAL-DISCIPLINE-FOR-SESSION-CONTINUITY></p>
-  <p><org-vibevm-world--wal--two-files-carry-it-lead fact="true" status="impl/done">Two files
-carry it:</org-vibevm-world--wal--two-files-carry-it-lead></p>
-  <facts ordered="false">
-    <org-vibevm-world--wal--FILE-WAL-IS-THE-CANONICAL-LIVING-CHECKPOINT fact="true" status="impl/done">`vibevm/vibespecs/WAL.xml` — the living checkpoint. **Canonical.**</org-vibevm-world--wal--FILE-WAL-IS-THE-CANONICAL-LIVING-CHECKPOINT>
-    <org-vibevm-world--wal--FILE-CONTINUE-IS-THE-COLD-RESUME-SNAPSHOT fact="true" status="impl/done">`CONTINUE.md` (repo root) — the cold-resume snapshot. The WAL
-  supersedes it wherever they diverge.</org-vibevm-world--wal--FILE-CONTINUE-IS-THE-COLD-RESUME-SNAPSHOT>
-  </facts>
-  <org-vibevm-world--wal--session-start title="At the start of every session">
-    <facts ordered="true">
-      <org-vibevm-world--wal--READ-THE-WAL-BEFORE-DOING-ANYTHING-ELSE fact="true" status="impl/done">Read `vibevm/vibespecs/WAL.xml` **before** doing anything else. The `wal-status`
-   skill, where installed, is the fast form of this read.</org-vibevm-world--wal--READ-THE-WAL-BEFORE-DOING-ANYTHING-ELSE>
-      <org-vibevm-world--wal--VERIFY-THE-UPDATED-LINE-IS-CURRENT fact="true" status="impl/done">Verify the `_Updated:` line is current. If it is older than 24
-   hours, ask the user to confirm state before acting on anything the
-   WAL claims — and before any destructive work.</org-vibevm-world--wal--VERIFY-THE-UPDATED-LINE-IS-CURRENT>
-      <org-vibevm-world--wal--HONOUR-EVERY-CONSTRAINT-VERBATIM fact="true" status="impl/done">Honour every constraint listed in the WAL's **Constraints** section
-   verbatim. These are the "do not touch" rules: violate them only
-   after an explicit, in-session confirmation from the user.</org-vibevm-world--wal--HONOUR-EVERY-CONSTRAINT-VERBATIM>
-    </facts>
-  </org-vibevm-world--wal--session-start>
-  <org-vibevm-world--wal--during title="During the session">
-    <facts ordered="true">
-      <org-vibevm-world--wal--PROPOSE-ADDING-A-DURABLE-DECISION-TO-THE-WAL fact="true" status="impl/done">If the user makes a decision that affects future sessions, propose
-   adding it to the WAL (or the spec, if it's architectural). Do not
-   silently file it as "remembered."</org-vibevm-world--wal--PROPOSE-ADDING-A-DURABLE-DECISION-TO-THE-WAL>
-      <org-vibevm-world--wal--STOP-AND-SURFACE-BEFORE-VIOLATING-A-CONSTRAINT fact="true" status="impl/done">If you find yourself about to violate a Constraint, stop and surface
-   the question explicitly. A violation snuck past in a diff is a
-   future bug.</org-vibevm-world--wal--STOP-AND-SURFACE-BEFORE-VIOLATING-A-CONSTRAINT>
-    </facts>
-  </org-vibevm-world--wal--during>
-  <org-vibevm-world--wal--session-end title="At the end of every session">
-    <facts ordered="true">
-      <org-vibevm-world--wal--REWRITE-THE-WAL-NEVER-APPEND-TO-IT fact="true" status="impl/done">Rewrite `vibevm/vibespecs/WAL.xml` per the protocol in
-   @spec://org.vibevm.world/wal/flows/wal/session-end-hook#root.
-   Rewrite, not append — the WAL must reflect the **current** state,
-   not the history. History lives in `git log` and in milestone commit
-   messages; the WAL is a checkpoint, not a journal.</org-vibevm-world--wal--REWRITE-THE-WAL-NEVER-APPEND-TO-IT>
-    </facts>
-  </org-vibevm-world--wal--session-end>
-  <org-vibevm-world--wal--commands title="Session commands">
-    <facts ordered="true">
-      <org-vibevm-world--wal--RECOGNISE-THE-WIND-DOWN-PHRASES fact="true" status="impl/done">Recognise the **wind-down** phrases — `END SESSION`, `WRAP UP`,
-   `CHECKPOINT AND CLOSE`, and any project-defined twins (recognise the
-   intent, not the exact wording). A wind-down invokes the full
-   session-end hook *plus* a wholesale overwrite of `CONTINUE.md`, per
-   @spec://org.vibevm.world/wal/flows/wal/cold-resume#root.</org-vibevm-world--wal--RECOGNISE-THE-WIND-DOWN-PHRASES>
-      <org-vibevm-world--wal--RECOGNISE-THE-RESUME-PHRASES fact="true" status="impl/done">Recognise the **resume** phrases — `RESUME SESSION`, `RESTORE
-   CONTEXT`. Restore context, verify the repository state empirically,
-   emit a status report — then **stop and wait for direction**. A
-   recorded "next step" is a candidate, not authorisation.</org-vibevm-world--wal--RECOGNISE-THE-RESUME-PHRASES>
-    </facts>
-  </org-vibevm-world--wal--commands>
-  <org-vibevm-world--wal--scope title="Scope of this flow">
-    <facts ordered="false">
-      <org-vibevm-world--wal--FLOW-OWNS-ONLY-ITS-OWN-FILES fact="true" status="impl/done">This flow owns only the protocol files under `spec/flows/wal/`, the
-  `wal-status` skill, and this boot snippet.</org-vibevm-world--wal--FLOW-OWNS-ONLY-ITS-OWN-FILES>
-      <org-vibevm-world--wal--WAL-AND-CONTINUE-ARE-PROJECT-STATE-NOT-PACKAGE-STATE fact="true" status="impl/done">`vibevm/vibespecs/WAL.xml` and `CONTINUE.md` are **project state**, not package
-  state — the package never creates, deletes, or overwrites them as
-  part of install or uninstall.</org-vibevm-world--wal--WAL-AND-CONTINUE-ARE-PROJECT-STATE-NOT-PACKAGE-STATE>
-    </facts>
-    <p><org-vibevm-world--wal--WAL-IS-THE-SINGLE-DEVELOPER-CONVENTION fact="true" status="impl/done">This flow is the
-**single-developer, central-WAL convention**. A multi-developer project
-chooses its own session-durability scheme — many WALs (the registered-
-subprojects form is `flow:wal-specspaces`), or none — by not installing
-this flow or by superseding it; nothing in VibeVM requires a WAL
-(PROP-049).</org-vibevm-world--wal--WAL-IS-THE-SINGLE-DEVELOPER-CONVENTION></p>
-    <p><org-vibevm-world--wal--full-protocol-pointer fact="true" status="impl/done">Full protocol: @spec://org.vibevm.world/wal/flows/wal/WAL-PROTOCOL#root.</org-vibevm-world--wal--full-protocol-pointer></p>
-  </org-vibevm-world--wal--scope>
-</spec>
-
-<!-- vibe:c1 vibe:static org.vibevm.world/wal-specspaces — vibevm/vibedeps/org.vibevm.world.wal-specspaces/1.0.0/vibevm/vibespecs/boot/11-flow-wal-specspaces.xml -->
-
-<?xml version="1.0" encoding="UTF-8"?>
-<spec xmlns="https://vibevm.org/spec/1">
-  <title id="org-vibevm-world--wal-specspaces--root">Flow: WAL Specspaces</title>
-  <status stage="impl" state="done"/>
-  <p><org-vibevm-world--wal-specspaces--THE-PROJECT-MAY-HOST-SPECSPACES fact="true" status="impl/done">This project may host **specspaces** — sub-projects nested in the
-repository that are worked on as independent projects, each with its
-own boot contract, WAL, and cold-resume file.</org-vibevm-world--wal-specspaces--THE-PROJECT-MAY-HOST-SPECSPACES></p>
-  <p><org-vibevm-world--wal-specspaces--THE-REGISTRY-IS-SPECSPACES-MD-AT-THE-HOST-ROOT fact="true" status="impl/done">The registry is
-`SPECSPACES.md` at the host root; if that file is absent, no
-specspaces exist and this snippet is inert.</org-vibevm-world--wal-specspaces--THE-REGISTRY-IS-SPECSPACES-MD-AT-THE-HOST-ROOT></p>
-  <org-vibevm-world--wal-specspaces--recognise title="Recognising a specspace session">
-    <facts ordered="true">
-      <org-vibevm-world--wal-specspaces--RECOGNISE-A-PHRASE-CARRYING-A-SPECSPACE-NAME fact="true" status="impl/done">A resume or wind-down phrase carrying a specspace name —
-   `RESUME SESSION &lt;name&gt;`, `END SESSION &lt;name&gt;`, or the project's
-   language twins — targets that specspace, not the host project.</org-vibevm-world--wal-specspaces--RECOGNISE-A-PHRASE-CARRYING-A-SPECSPACE-NAME>
-      <org-vibevm-world--wal-specspaces--RECOGNISE-A-TASK-INSIDE-A-REGISTERED-SPECSPACE-ROOT fact="true" status="impl/done">A session whose task clearly lives inside a registered specspace
-   root follows that specspace's boot contract, even without the
-   phrase. When in doubt, ask which project the session is for.</org-vibevm-world--wal-specspaces--RECOGNISE-A-TASK-INSIDE-A-REGISTERED-SPECSPACE-ROOT>
-    </facts>
-  </org-vibevm-world--wal-specspaces--recognise>
-  <org-vibevm-world--wal-specspaces--default title="Which project a bare phrase targets">
-    <p><org-vibevm-world--wal-specspaces--A-PHRASE-RESOLVES-TO-EXACTLY-ONE-TARGET fact="true" status="impl/done">A session phrase resolves to exactly **one** target — the host
-project or a single specspace — by this order:</org-vibevm-world--wal-specspaces--A-PHRASE-RESOLVES-TO-EXACTLY-ONE-TARGET></p>
-    <facts ordered="true">
-      <org-vibevm-world--wal-specspaces--TARGET-EXPLICIT-WINS-ALWAYS fact="true" status="impl/done">**Explicit target wins, always.** A phrase that names a specspace
-   (`RESUME SESSION &lt;name&gt;`), or that names an explicit directory,
-   targets that specspace or directory — regardless of any declared
-   default. This is how the user forces restoration from an arbitrary
-   specspace or directory. A name matching no registry row is
-   surfaced, not guessed.</org-vibevm-world--wal-specspaces--TARGET-EXPLICIT-WINS-ALWAYS>
-      <org-vibevm-world--wal-specspaces--TARGET-DECLARED-DEFAULT fact="true" status="impl/done">**Declared default.** A **bare** phrase (no name) uses the
-   specspace named by the `default:` line of `SPECSPACES.md`, if one
-   is declared.</org-vibevm-world--wal-specspaces--TARGET-DECLARED-DEFAULT>
-      <org-vibevm-world--wal-specspaces--TARGET-HOST-FALLBACK fact="true" status="impl/done">**Host fallback.** With no name and no declared default, a bare
-   phrase targets the **host project** — restore the host root's own
-   WAL and cold-resume file, per the host contract's session-command
-   sections.</org-vibevm-world--wal-specspaces--TARGET-HOST-FALLBACK>
-    </facts>
-    <p><org-vibevm-world--wal-specspaces--A-BARE-PHRASE-NEVER-SILENTLY-SELECTS-A-SPECSPACE fact="true" status="impl/done">A bare phrase therefore **never silently selects a specspace**.</org-vibevm-world--wal-specspaces--A-BARE-PHRASE-NEVER-SILENTLY-SELECTS-A-SPECSPACE></p>
-    <p><org-vibevm-world--wal-specspaces--AT-THE-HOST-ROOT-A-BARE-PHRASE-RESTORES-THE-HOST-WAL fact="true" status="impl/done">At the
-host root, a bare `восстанови сессию` / `RESUME SESSION` restores the
-**host** WAL — not a registered specspace such as `fractality`.</org-vibevm-world--wal-specspaces--AT-THE-HOST-ROOT-A-BARE-PHRASE-RESTORES-THE-HOST-WAL></p>
-    <p><org-vibevm-world--wal-specspaces--TARGETING-A-SPECSPACE-REQUIRES-NAMING-IT fact="true" status="impl/done">Targeting a specspace requires naming it (or declaring it the default).</org-vibevm-world--wal-specspaces--TARGETING-A-SPECSPACE-REQUIRES-NAMING-IT></p>
-  </org-vibevm-world--wal-specspaces--default>
-  <org-vibevm-world--wal-specspaces--scoping title="The boot-scoping law">
-    <p><org-vibevm-world--wal-specspaces--A-SPECSPACE-SESSION-READS-IN-ORDER fact="true" status="impl/done">A specspace session reads, in order:</org-vibevm-world--wal-specspaces--A-SPECSPACE-SESSION-READS-IN-ORDER></p>
-    <facts ordered="true">
-      <org-vibevm-world--wal-specspaces--READS-THE-HOSTS-REPO-WIDE-RULES fact="true" status="impl/done">the host's repo-wide non-negotiable rules (the section the host
-   contract marks as binding for every commit),</org-vibevm-world--wal-specspaces--READS-THE-HOSTS-REPO-WIDE-RULES>
-      <org-vibevm-world--wal-specspaces--READS-THE-SPECSPACES-OWN-BOOT-CONTRACT fact="true" status="impl/done">the specspace's own boot contract (`CLAUDE.md` at the specspace
-   root, or the equivalent boot contract living there),</org-vibevm-world--wal-specspaces--READS-THE-SPECSPACES-OWN-BOOT-CONTRACT>
-      <org-vibevm-world--wal-specspaces--READS-THE-SPECSPACE-WAL fact="true" status="impl/done">the specspace WAL,</org-vibevm-world--wal-specspaces--READS-THE-SPECSPACE-WAL>
-      <org-vibevm-world--wal-specspaces--READS-THE-SPECSPACE-COLD-RESUME-FILE fact="true" status="impl/done">the specspace cold-resume file (the WAL wins where they diverge),</org-vibevm-world--wal-specspaces--READS-THE-SPECSPACE-COLD-RESUME-FILE>
-      <org-vibevm-world--wal-specspaces--READS-ANY-ACTIVE-PLAN-THE-WAL-NAMES fact="true" status="impl/done">any active plan the specspace WAL names.</org-vibevm-world--wal-specspaces--READS-ANY-ACTIVE-PLAN-THE-WAL-NAMES>
-    </facts>
-    <p><org-vibevm-world--wal-specspaces--IT-DOES-NOT-LOAD-THE-HOSTS-FULL-BOOT-OR-SPECS fact="true" status="impl/done">It does **not** load the host's full boot sequence, the host WAL, or
-host specs — unless the task explicitly crosses into the host
-project, and then the session says so before touching host files.</org-vibevm-world--wal-specspaces--IT-DOES-NOT-LOAD-THE-HOSTS-FULL-BOOT-OR-SPECS></p>
-  </org-vibevm-world--wal-specspaces--scoping>
-  <org-vibevm-world--wal-specspaces--commands title="Session commands, scoped">
-    <p><org-vibevm-world--wal-specspaces--SCOPED-PHRASES-OPERATE-ON-THE-SPECSPACES-OWN-FILES fact="true" status="impl/done">Wind-down and resume phrases carrying a specspace name operate on
-that specspace's WAL and cold-resume file, and refresh the
-specspace's one-line status in `SPECSPACES.md`.</org-vibevm-world--wal-specspaces--SCOPED-PHRASES-OPERATE-ON-THE-SPECSPACES-OWN-FILES></p>
-    <p><org-vibevm-world--wal-specspaces--THE-HOST-WAL-IS-UPDATED-ONLY-WHEN-HOST-FILES-CHANGED fact="true" status="impl/done">The host WAL is
-updated only when host files actually changed in the session.</org-vibevm-world--wal-specspaces--THE-HOST-WAL-IS-UPDATED-ONLY-WHEN-HOST-FILES-CHANGED></p>
-    <p><org-vibevm-world--wal-specspaces--RESUME-REMAINS-REPORT-THEN-WAIT fact="true" status="impl/done">Resume remains report-then-wait: restore, verify state empirically,
-report, stop.</org-vibevm-world--wal-specspaces--RESUME-REMAINS-REPORT-THEN-WAIT></p>
-    <p><org-vibevm-world--wal-specspaces--sibling-document-pointers fact="true" status="impl/done">Full protocol:
-@spec://org.vibevm.world/wal-specspaces/flows/wal-specspaces/SPECSPACES-PROTOCOL#root.</org-vibevm-world--wal-specspaces--sibling-document-pointers></p>
-  </org-vibevm-world--wal-specspaces--commands>
-</spec>
-
 <!-- vibe:c1 vibe:static org.vibevm.world/redbook — vibevm/vibedeps/org.vibevm.world.redbook/1.0.0/vibevm/vibespecs/boot/03-flow-redbook.xml -->
 
 <?xml version="1.0" encoding="UTF-8"?>
@@ -2165,23 +2017,5 @@ exactly, and the umbrella's version is the edition number.</org-vibevm-world--re
     <p><org-vibevm-world--redbook--MEMBERS-MAY-MOVE-AHEAD-BETWEEN-EDITIONS fact="true" status="impl/done">Individual
 members may move ahead on their own lines between editions.</org-vibevm-world--redbook--MEMBERS-MAY-MOVE-AHEAD-BETWEEN-EDITIONS></p>
   </org-vibevm-world--redbook--member-list>
-</spec>
-
-<!-- vibe:c1 vibe:static org.vibevm.world/redbook — vibevm/vibedeps/org.vibevm.world.redbook/1.0.0/vibevm/vibespecs/boot/03a-member-wal.xml -->
-
-<?xml version="1.0" encoding="UTF-8"?>
-<spec xmlns="https://vibevm.org/spec/1">
-  <title id="org-vibevm-world--redbook--root">Redbook member — wal</title>
-  <p><org-vibevm-world--redbook--MEMBER-WAL fact="true" status="impl/done">`wal` — the checkpoint file and cold-resume snapshot; session
-wind-down and resume rituals.</org-vibevm-world--redbook--MEMBER-WAL></p>
-</spec>
-
-<!-- vibe:c1 vibe:static org.vibevm.world/redbook — vibevm/vibedeps/org.vibevm.world.redbook/1.0.0/vibevm/vibespecs/boot/03b-member-wal-specspaces.xml -->
-
-<?xml version="1.0" encoding="UTF-8"?>
-<spec xmlns="https://vibevm.org/spec/1">
-  <title id="org-vibevm-world--redbook--root">Redbook member — wal-specspaces</title>
-  <p><org-vibevm-world--redbook--MEMBER-WAL-SPECSPACES fact="true" status="impl/done">`wal-specspaces` — nested projects (specspaces), each carrying its
-own boot contract, checkpoint file, and cold-resume file.</org-vibevm-world--redbook--MEMBER-WAL-SPECSPACES></p>
 </spec>
 

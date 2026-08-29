@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">`flow:multi-user-planning` — campaign stewardship without a shared personal WAL</title>
+  <status stage="doc" state="done" audience="user"/>
+  <p><PACKAGE-PURPOSE fact="true" status="impl/done">This flow lets several contributors, branches and central
+coding-agent sessions work around one repository without treating one person's
+active plan as project truth.  Personal execution state lives under
+`~/.vibe/steward/`; the repository keeps only deliberately shared contracts,
+normative facts, evidence and collision-free records.</PACKAGE-PURPOSE></p>
+  <p><CENTRAL-HANDOFF-PURPOSE fact="true" status="impl/done">A central session may hand the same local context
+to another model or harness on the same machine.  Custody transfers; prior
+acceptance never does.  The incoming central agent verifies the tree, reads the
+whole route, receipts the transfer, and independently accepts every candidate
+it intends to land.</CENTRAL-HANDOFF-PURPOSE></p>
+  <p><NOT-A-CODING-AGENT fact="true" status="spec/done">The flow does not implement a coding agent or prescribe
+one vendor's workflow.  It supplies lifecycle-neutral planning, custody and
+evidence mechanics that any capable agent or human coordinator can use.</NOT-A-CODING-AGENT></p>
+  <contents title="What ships">
+    <facts ordered="false">
+      <CONTENT-BOOT fact="true" status="impl/done">A short central-session boot contract at
+  `vibevm/vibespecs/boot/12-flow-multi-user-planning.xml`.</CONTENT-BOOT>
+      <CONTENT-PROTOCOL fact="true" status="impl/done">The authority, roles and multi-contributor laws in
+  `MULTI-USER-PLANNING-PROTOCOL.xml`.</CONTENT-PROTOCOL>
+      <CONTENT-LOCAL-STORE fact="true" status="impl/done">The user-local layout, context selection, persistent
+  `ultra`/`standard` planning profile and independent `auto`/`collab`
+  interaction mode in `user-local-state.xml`.</CONTENT-LOCAL-STORE>
+      <CONTENT-PLAN fact="true" status="impl/done">The lossless hierarchical plan and receding-horizon
+  planning discipline in `plan-hierarchy.xml`.</CONTENT-PLAN>
+      <CONTENT-EXECUTION fact="true" status="impl/done">The central coordinator's long-campaign execution,
+  review, gate-economy, recovery and wisdom-promotion discipline in
+  `campaign-execution.xml`.</CONTENT-EXECUTION>
+      <CONTENT-HANDOFF fact="true" status="impl/done">The custody state machine and planned, rollover and
+  recovery handoffs in `custody-and-handoff.xml`.</CONTENT-HANDOFF>
+      <CONTENT-COLLAB fact="true" status="impl/done">The roles, contribution records, acceptance tiers and
+  project-fact promotion law in `collaboration-and-acceptance.xml`.</CONTENT-COLLAB>
+      <CONTENT-MIGRATION fact="true" status="impl/done">The composition and migration rules for projects
+  leaving `wal`/`wal-specspaces`, including the redbook exclusion recipe, in
+  `migration-and-composition.xml`.</CONTENT-MIGRATION>
+      <CONTENT-SKILLS fact="true" status="impl/done">Two optional agent skills: status-only orientation and
+  same-machine central handoff.  They are not `vibe.exe` commands.</CONTENT-SKILLS>
+    </facts>
+  </contents>
+  <authority title="Authority boundary">
+    <p><LOCAL-STATE-IS-NOT-PROJECT-TRUTH fact="true" status="spec/done">`~/.vibe/steward/` is authoritative only
+for this developer's central-session continuity.  It cannot grant repository
+permissions, redefine product behaviour or overrule the human, specifications,
+tests or code.</LOCAL-STATE-IS-NOT-PROJECT-TRUTH></p>
+    <p><REPO-FACTS-REMAIN-SHARED fact="true" status="spec/done">Stable project knowledge still belongs in the
+repository: product specifications, tests, code, accepted decision rationale,
+campaign mandates deliberately shared by an integrator, and immutable evidence
+records with unique names.</REPO-FACTS-REMAIN-SHARED></p>
+  </authority>
+  <composition title="Composition">
+    <p><WAL-FAMILY-INCOMPATIBLE fact="true" status="spec/done">`flow:org.vibevm.world/wal` and
+`flow:org.vibevm.world/wal-specspaces` are alternative single-writer continuity
+owners.  Do not load either with this flow.  Their useful freshness, cold-resume
+and target-scoping lessons are incorporated here without their shared mutable
+`WAL.xml`/`CONTINUE.md` storage model.</WAL-FAMILY-INCOMPATIBLE></p>
+    <p><CAMPAIGN-PLANS-COMPATIBLE fact="true" status="spec/done">`flow:org.vibevm.world/campaign-plans` remains
+compatible when its repository plan is treated as an integrator-owned shared
+campaign contract, never as every contributor's personal cursor.  Contributors'
+adaptive execution plans remain local.</CAMPAIGN-PLANS-COMPATIBLE></p>
+    <p><REDBOOK-ONE-IS-IMMUTABLE fact="true" status="spec/done">`redbook@1.0.0` is an immutable tested edition.
+A consumer that dogfoods this flow excludes `wal` and `wal-specspaces` on its
+redbook edge and requires this package directly.  A future redbook edition may
+make that replacement its tested default; edition 1 is not rewritten.</REDBOOK-ONE-IS-IMMUTABLE></p>
+  </composition>
+  <surface title="No product CLI pollution">
+    <p><NO-VIBE-SUBCOMMAND fact="true" status="spec/done">This package adds no `vibe` subcommand and no runtime
+dependency to products built with VibeVM.  A future optional companion may be
+installed as the separate tool `vibe-steward` under `~/.vibe/bin`; its job is to
+automate this protocol, not to change it.</NO-VIBE-SUBCOMMAND></p>
+  </surface>
+  <license title="License">
+    <p><license-line fact="true" status="impl/done">UPL-1.0. See [LICENSE.md](LICENSE.md).</license-line></p>
+  </license>
+</spec>

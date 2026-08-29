@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">User-local stewardship state and capability profiles</title>
+  <status stage="spec" state="done"/>
+  <home title="1. State home">
+    <p><STATE-HOME fact="true" status="spec/done">The state root is
+`~/.vibe/steward/`. It belongs to one operating-system user and may be shared by
+that user's successive central agents on the same machine. It is not committed,
+packaged, mirrored or treated as another contributor's authority.</STATE-HOME></p>
+    <fence lang="text">~/.vibe/steward/
+  config.toml
+  contexts/
+    &lt;opaque-context-id&gt;/
+      binding.toml
+      settings.toml
+      plan.toml
+      custody.toml
+      sessions/
+      handoffs/
+      records/</fence>
+    <p><OPAQUE-CONTEXT-ID fact="true" status="spec/done">`opaque-context-id` is a
+random UUID rendered as lowercase ASCII. It is an identity only; never parse
+meaning from it. Discovery scans `contexts/*/binding.toml`, so no mutable global
+context index is required.</OPAQUE-CONTEXT-ID></p>
+  </home>
+  <config title="2. Global defaults">
+    <p><CREATE-DEFAULTS fact="true" status="spec/done">An owner-facing central
+session that finds no `config.toml` creates it before campaign work with the
+safe defaults below. Package installation itself never writes user state.</CREATE-DEFAULTS></p>
+    <fence lang="toml">schema = 1
+interaction_mode = "collab"
+planning_profile = "standard"</fence>
+    <p><CONFIG-STRICT fact="true" status="spec/done">The file is strict
+human-authored TOML. Unknown top-level keys are rejected and surfaced; they are
+not silently ignored. It is operator configuration, so JTD is intentionally out
+of scope.</CONFIG-STRICT></p>
+  </config>
+  <binding title="3. Context binding">
+    <p><BINDING-TUPLE fact="true" status="spec/done">A context binds an exact
+tuple: canonical repository root, canonical worktree root, Git common directory,
+and branch ref (or detached commit). Absolute paths are allowed because the file
+is local. A different branch or worktree may therefore use a different profile
+and plan without affecting teammates or sibling worktrees.</BINDING-TUPLE></p>
+    <fence lang="toml">schema = 1
+context_id = "3d7a79bf-5f27-4b88-9eaa-c8323df5cb03"
+project_name = "example"
+repository_root = "C:/work/example"
+worktree_root = "C:/work/example"
+git_common_dir = "C:/work/example/.git"
+revision_selector = "refs/heads/main"</fence>
+    <p><CONTEXT-RESOLUTION fact="true" status="spec/done">Resolution order is:
+an explicit context id named by the owner; an exact binding match; otherwise a
+new context. Zero matches creates; more than one exact match is corruption and
+must be surfaced, never settled by newest timestamp. Moving a checkout creates
+a new binding unless the owner explicitly repairs the old one.</CONTEXT-RESOLUTION></p>
+  </binding>
+  <settings title="4. Settings and live switching">
+    <p><SETTING-PRECEDENCE fact="true" status="spec/done">Effective settings use
+this precedence: current owner instruction > current-context `settings.toml` >
+global `config.toml` > safe defaults. An owner instruction such as “switch the
+planning mode to ultra” updates the current context file immediately and applies
+within the same session; no `vibe` command or restart is required.</SETTING-PRECEDENCE></p>
+    <fence lang="toml">schema = 1
+interaction_mode = "auto"
+planning_profile = "ultra"
+updated_at = "2026-08-29T11:00:00Z"
+updated_by = "owner-chat"</fence>
+    <p><SETTINGS-ORTHOGONAL fact="true" status="spec/done">`interaction_mode`
+(`auto | collab`) controls how much the central coordinator narrates and asks.
+`planning_profile` (`ultra | standard`) controls planning scaffolding. The axes
+are independent. Historic input aliases `normal` and `medium` normalize to
+`standard`; stored values are canonical.</SETTINGS-ORTHOGONAL></p>
+  </settings>
+  <profiles title="5. Planning profiles">
+    <table>
+      <tr><td>Obligation</td><td>`ultra`</td><td>`standard`</td></tr>
+      <tr><td>Quality, scope and evidence</td><td>Identical mandatory floor</td><td>Identical mandatory floor</td></tr>
+      <tr><td>Atom size</td><td>May span a coherent high-context cell when acceptance stays reviewable</td><td>Prefer narrow independently gated atoms</td></tr>
+      <tr><td>Plan expansion</td><td>May retain more hierarchy in reasoning; still persists the full route and current frontier</td><td>Persist explicit substeps, dependencies and per-node acceptance before execution</td></tr>
+      <tr><td>Backscan cadence</td><td>Milestones, handoffs, architecture changes and closure</td><td>Those boundaries plus every completed parent node</td></tr>
+      <tr><td>Review</td><td>Independent review selected by risk and verifiability</td><td>Independent review preferred for broad judgment or public boundaries</td></tr>
+      <tr><td>Failure response</td><td>May replan a wider region at once</td><td>Stop the current atom, record evidence, refine the next small region</td></tr>
+    </table>
+    <p><PROFILE-CANNOT-WAIVE fact="true" status="spec/done">No profile may waive
+owner authority, destructive-action fences, lossless requirement coverage,
+central review, exact gates, fact promotion or handoff receipt.</PROFILE-CANNOT-WAIVE></p>
+  </profiles>
+  <sessions title="6. Session identity">
+    <p><SESSION-ID fact="true" status="spec/done">Every central session chooses a
+fresh opaque `session_id` and writes a uniquely named record under `sessions/`.
+The record names harness, model as observed metadata, effective profile, start
+time and custody epoch. Model identity informs forensics; it never selects the
+profile automatically.</SESSION-ID></p>
+    <p><NO-SECRETS fact="true" status="spec/done">Local records may carry
+absolute paths but never tokens, API keys, Authorization values, raw sensitive
+provider bodies or copied environment dumps. Record a secret source name or
+token-file path only when operationally necessary.</NO-SECRETS></p>
+  </sessions>
+</spec>

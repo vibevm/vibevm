@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Migration from single-writer WAL and redbook composition</title>
+  <status stage="spec" state="done"/>
+  <compatibility title="1. Compatibility audit">
+    <facts ordered="false">
+      <INCOMPAT-WAL fact="true" status="spec/done">`wal@1` requires one shared
+  repository `WAL.xml` plus root `CONTINUE.md` to own personal session
+  continuity. It is an alternative storage/authority model and must not be
+  active with this flow.</INCOMPAT-WAL>
+      <INCOMPAT-WAL-SPECSPACES fact="true" status="spec/done">`wal-specspaces@1`
+  multiplies that model by project root, not by contributor, branch or central
+  session. It therefore remains single-writer within each specspace and must
+  not be active with this flow.</INCOMPAT-WAL-SPECSPACES>
+      <COMPAT-CAMPAIGN fact="true" status="spec/done">`campaign-plans@1` is
+  compatible when a repository campaign plan is a deliberately shared,
+  integrator-owned contract. Its plan/ledger must not replace contributors'
+  local adaptive plans, and non-integrators submit uniquely named records.</COMPAT-CAMPAIGN>
+      <COMPAT-MODES fact="true" status="spec/done">`operating-modes@1` remains a
+  session-scoped codeword system. Persistent interaction/planning settings in
+  this flow are user preferences, not codewords and not permission to cross red
+  lines.</COMPAT-MODES>
+      <COMPAT-OTHER-REDBOOK fact="true" status="spec/done">The remaining
+  redbook@1 laws are compatible. Where an older document says “two writers” or
+  puts WAL last in an authority chain, read “two or more writers” and “volatile
+  local/shared projection” respectively; this flow supplies the N-writer
+  coordination layer.</COMPAT-OTHER-REDBOOK>
+    </facts>
+  </compatibility>
+  <redbook title="2. Editions, not same-version variants">
+    <p><EDITION-LAW fact="true" status="spec/done">A redbook version is an
+immutable tested roster. Do not mutate `redbook@1.0.0` and do not introduce
+environment-dependent variants under the same package version: identical
+coordinates must resolve to identical content. The eventual tested replacement
+is a later `redbook` edition (normally the next major if the continuity model is
+breaking), not a parallel `redbook-multiuser` brand.</EDITION-LAW></p>
+    <p><TUNING-NOW fact="true" status="spec/done">Before that edition exists, the
+existing resolver's per-edge deep `exclude` is the lawful consumer-side tuning
+mechanism. Exclusion narrows only the named dependency subtree and remains
+visible in the root manifest and lock/effective set.</TUNING-NOW></p>
+    <fence lang="toml">[requires.packages."org.vibevm.world/redbook"]
+version = "^1.0.0"
+link = "static-transitive"
+exclude = [
+  "org.vibevm.world/wal",
+  "org.vibevm.world/wal-specspaces",
+]
+
+[requires.packages."flow:org.vibevm.world/multi-user-planning"]
+version = "^0.1.0"
+link = "static-transitive"</fence>
+    <p><DIRECT-EDGES fact="true" status="spec/done">Remove any direct root edges
+to `wal` and `wal-specspaces`; an exclusion on the redbook edge cannot cancel an
+independent root path. After `vibe install --offline`, inspect `vibe.lock`, the
+effective package tree and generated boot lane: neither legacy boot snippet may
+remain.</DIRECT-EDGES></p>
+  </redbook>
+  <migration title="3. Safe migration">
+    <facts ordered="true">
+      <MIGRATE-INVENTORY fact="true" status="spec/done">Inventory current
+  `WAL.xml`, `CONTINUE.md`, root mode/planning files, specspace state, campaign
+  plans, branch/worktree state and any unique reports. Do not delete first.</MIGRATE-INVENTORY>
+      <MIGRATE-LOCAL fact="true" status="spec/done">Create the matching
+  `~/.vibe/steward` context. Preserve explicit owner settings (for example a
+  root `mode = "auto"`) as context settings, construct the complete local plan,
+  and mark unverified work candidate.</MIGRATE-LOCAL>
+      <MIGRATE-PROMOTE fact="true" status="spec/done">Promote stable project
+  facts and decisions out of volatile legacy files into their governing
+  repository homes. Keep a shared campaign contract only when an integrator is
+  named.</MIGRATE-PROMOTE>
+      <MIGRATE-BOOT fact="true" status="spec/done">Change manifest composition,
+  regenerate offline, and replace repo boot text that mandates a personal WAL
+  with the short multi-user-planning signpost. Keep harness entry files
+  byte-identical when the project requires mirrors.</MIGRATE-BOOT>
+      <MIGRATE-HANDOFF fact="true" status="spec/done">Prove the new state with a
+  real offer/receipt handoff to a fresh central session. The receiver must find
+  the full route and every candidate without relying on chat history.</MIGRATE-HANDOFF>
+      <MIGRATE-RETIRE fact="true" status="spec/done">Only after receipt and
+  project-fact promotion may legacy personal state be removed or archived.
+  Cleanup is its own reviewed change.</MIGRATE-RETIRE>
+    </facts>
+  </migration>
+  <specspaces title="4. Specspaces without per-project WALs">
+    <p><SPECSPACE-TOPOLOGY fact="true" status="spec/done">A repository may retain
+`SPECSPACES.md` as stable topology: name, root and boot contract. Remove personal
+defaults, current status and mutable session continuation from the shared
+registry. Each contributor's exact target/default and plan live in a local
+context.</SPECSPACE-TOPOLOGY></p>
+    <p><TARGET-RESOLUTION fact="true" status="spec/done">Resolve target by:
+explicit owner name or directory; unambiguous task/cwd inside a registered root;
+current local context; otherwise host project. Explicit always wins, unknown
+names are surfaced, and one session has one focus unless it announces a
+cross-project task.</TARGET-RESOLUTION></p>
+    <p><BOOT-SCOPING fact="true" status="spec/done">A targeted specspace session
+reads host-wide commit/safety rules plus the target's own boot and relevant
+specs; it does not load unrelated host/specspace plans. Continuity comes from
+the target-bound user-local context, not a specspace WAL.</BOOT-SCOPING></p>
+  </specspaces>
+  <refusal title="5. Mixed-mode refusal">
+    <p><MIXED-MODE-REFUSAL fact="true" status="spec/done">If generated boot still
+loads this flow together with `wal` or `wal-specspaces`, do not choose whichever
+text appears later. Stop central state mutation, report the two competing
+continuity owners, and repair dependency composition. This is a configuration
+error, not a precedence puzzle.</MIXED-MODE-REFUSAL></p>
+  </refusal>
+</spec>

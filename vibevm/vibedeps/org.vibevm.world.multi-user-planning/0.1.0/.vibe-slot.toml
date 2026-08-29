@@ -1,0 +1,89 @@
+schema = 1
+source_hash = "sha256:f45ab4968d766e7eccf782fe205a652f25f0e7c393cc78ce637c67b68c31a88a"
+spec_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:a34a83a4d2d5fe344c1c4fe6f115b19959917554ef3161baaa446a0673f6cb3a"
+
+[[file]]
+path = "LICENSE.md"
+sha256 = "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29"
+disposition = "copied"
+source = "LICENSE.md"
+
+[[file]]
+path = "README.xml"
+sha256 = "aa7d41c896bbe1ca634ad2005564ec8480e430005444356a8d60b6b6f43b7ce6"
+disposition = "converted"
+source = "README.md"
+
+[[file]]
+path = "vibe.toml"
+sha256 = "0aea5aa4a0815c925189f0a6d30f1d84e9dee030ef6f3ce0085bbcbf8bf19e1d"
+disposition = "copied"
+source = "vibe.toml"
+
+[[file]]
+path = "vibevm/vibespecs/boot/12-flow-multi-user-planning.xml"
+sha256 = "1a61350595d13a0b8d5df5d0ee8888c7dea545871de691aae18dd47dc658707c"
+disposition = "copied"
+source = "vibevm/vibespecs/boot/12-flow-multi-user-planning.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/multi-user-planning/MULTI-USER-PLANNING-PROTOCOL.xml"
+sha256 = "5c4b6bc99716e61eebc367a63e1e686a3f54543dc0f2ffacfec5b3f76958beee"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/multi-user-planning/MULTI-USER-PLANNING-PROTOCOL.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/multi-user-planning/campaign-execution.xml"
+sha256 = "75efab476ee996e7003a1f628cacf178ecac554921c6d1d27544c517e1560e50"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/multi-user-planning/campaign-execution.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/multi-user-planning/collaboration-and-acceptance.xml"
+sha256 = "6c88f46e2a8ac963ae235e17542a7d8e27ca9b105bae0d6f1b93833f55a357d3"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/multi-user-planning/collaboration-and-acceptance.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/multi-user-planning/custody-and-handoff.xml"
+sha256 = "7ebebcd880477c6f3c80d51443c428867468570f081c308094760a8804125ee3"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/multi-user-planning/custody-and-handoff.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/multi-user-planning/migration-and-composition.xml"
+sha256 = "21e2f2ed727f0c198514412884f65b3954d0d30cb659b336f465ffb6d630c402"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/multi-user-planning/migration-and-composition.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/multi-user-planning/plan-hierarchy.xml"
+sha256 = "db924fe9837d41211b8760f366516950276537a45b299891d48a0dfb872f49e7"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/multi-user-planning/plan-hierarchy.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/multi-user-planning/user-local-state.xml"
+sha256 = "ea900f14fd8ca541910cef6946f284dc4d2ad410d9bf132617f09f109cbf28b6"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/multi-user-planning/user-local-state.xml"
+
+[[file]]
+path = "vibevm/vibespecs/manual-tests/MT-01-same-machine-central-handoff.xml"
+sha256 = "a2818cfb8308b45c67e3b865023b3f8ebcde82843a317a6d71b8829b9d8a7e8a"
+disposition = "copied"
+source = "vibevm/vibespecs/manual-tests/MT-01-same-machine-central-handoff.xml"
+
+[[file]]
+path = "vibevm/vibespecs/skills/steward-handoff/SKILL.xml"
+sha256 = "38311734222129bafcbfa389e0a13e48f856d9ed0171b77e08fa6dab3353f397"
+disposition = "converted"
+source = "vibevm/vibespecs/skills/steward-handoff/SKILL.md"
+
+[[file]]
+path = "vibevm/vibespecs/skills/steward-status/SKILL.xml"
+sha256 = "55db2894a62af8110181737adca40be73d6156022778504e254cecfbc0844c08"
+disposition = "converted"
+source = "vibevm/vibespecs/skills/steward-status/SKILL.md"

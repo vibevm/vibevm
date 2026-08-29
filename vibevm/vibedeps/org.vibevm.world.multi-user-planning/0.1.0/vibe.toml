@@ -1,0 +1,33 @@
+[package]
+name = "multi-user-planning"
+group = "org.vibevm.world"
+kind = "flow"
+version = "0.1.0"
+epoch = 1
+format = "normal"
+authors = ["Oleg Chirukhin"]
+license = "UPL-1.0"
+description = "Multi-contributor campaign stewardship: user-local adaptive plans, capability profiles, same-machine central custody, and evidence-preserving handoffs"
+keywords = ["planning", "campaigns", "multi-user", "handoff", "custody", "agents"]
+
+[compatibility]
+min_vibe_version = "0.1.0"
+requires_kinds = []
+
+# This flow replaces wal/wal-specspaces as the session-continuity owner.  It
+# intentionally has no dependency on either package.  Compatible redbook laws
+# are cited from the protocol, while the package remains independently usable.
+[boot_snippet]
+source = "vibevm/vibespecs/boot/12-flow-multi-user-planning.xml"
+category = "flow"
+concepts = ["campaign stewardship", "central custody", "user-local plan", "handoff"]
+
+[[skill]]
+name = "steward-status"
+path = "spec/skills/steward-status"
+description = "Resolve the current user-local stewardship context, verify it against the repository, and report the active campaign frontier without starting work"
+
+[[skill]]
+name = "steward-handoff"
+path = "spec/skills/steward-handoff"
+description = "Prepare or receive a same-machine central-agent custody handoff while preserving acceptance boundaries and the complete campaign route"

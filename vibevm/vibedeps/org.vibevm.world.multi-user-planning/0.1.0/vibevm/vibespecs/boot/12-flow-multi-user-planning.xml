@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Flow: Multi-user planning</title>
+  <status stage="impl" state="done"/>
+  <p><CENTRAL-ONLY fact="true" status="impl/done">This flow governs an
+owner-facing **central campaign coordinator**. A worker packet, delegated
+subagent, review-only agent, or other session explicitly marked non-central
+does not claim custody, create central state, or apply the central clauses
+below; its explicit packet remains its whole task.</CENTRAL-ONLY></p>
+  <p><RESOLVE-LOCAL-CONTEXT-FIRST fact="true" status="impl/done">Before campaign
+work, resolve this repository/worktree/branch to one context under
+`~/.vibe/steward/contexts/`. Read its `settings.toml`, `custody.toml`, complete
+`plan.toml`, and latest acknowledged handoff. If global or context settings are
+absent, create the documented safe defaults. Never infer current state from a
+repository-level personal checkpoint.</RESOLVE-LOCAL-CONTEXT-FIRST></p>
+  <authority title="Authority and custody">
+    <facts ordered="false">
+      <LOCAL-DOES-NOT-GRANT fact="true" status="impl/done">User-local state
+  coordinates this developer's sessions; it cannot grant project authority or
+  overrule human instructions, specs, tests or code.</LOCAL-DOES-NOT-GRANT>
+      <ONE-CENTRAL-HOLDER fact="true" status="impl/done">Exactly one central
+  session holds the write baton for a local context epoch. A handoff offer
+  fences the outgoing holder read-only; a receipt advances custody.</ONE-CENTRAL-HOLDER>
+      <ACCEPTANCE-NEVER-TRANSFERS fact="true" status="impl/done">Custody may
+  transfer. Acceptance does not: dirty changes and worker claims arrive as
+  candidates until the incoming central agent independently reviews and gates
+  them.</ACCEPTANCE-NEVER-TRANSFERS>
+    </facts>
+  </authority>
+  <planning title="Plan discipline">
+    <facts ordered="false">
+      <PLAN-IS-HIERARCHICAL fact="true" status="impl/done">Maintain the whole
+  mandate, dependency graph and epic route; expand the near frontier into
+  concrete atoms; expose only a linear projection to a UI. A three-item UI list
+  is never the authoritative plan.</PLAN-IS-HIERARCHICAL>
+      <NO-SILENT-LOSS fact="true" status="impl/done">Every owner requirement and
+  discovered obligation has a stable node or an explicit disposition. Never
+  stop merely because the visible projection ended; close parents bottom-up
+  only after their descendants and exit evidence close.</NO-SILENT-LOSS>
+      <REPLAN-AND-BACKSCAN fact="true" status="impl/done">Replan when evidence,
+  owner input, gates, architecture or resources change. At each milestone and
+  before handoff, backscan the original mandate, current tree, plan and accepted
+  evidence for omissions and contradictions.</REPLAN-AND-BACKSCAN>
+    </facts>
+  </planning>
+  <profiles title="Persistent user profiles">
+    <p><PROFILE-QUALITY-FLOOR fact="true" status="impl/done">The owner selects
+`ultra` or `standard` independently of the model name and may switch it during a
+session. Both profiles have the same correctness and completeness floor;
+`standard` uses smaller atoms and more explicit checkpoints, while `ultra`
+permits broader reasoning spans. `auto`/`collab` is a separate interaction
+setting. Canon:
+@spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/user-local-state#root.</PROFILE-QUALITY-FLOOR></p>
+  </profiles>
+  <canon title="Full protocol">
+    <p><FULL-PROTOCOL-POINTER fact="true" status="impl/done">Full protocol:
+@spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/MULTI-USER-PLANNING-PROTOCOL#root.
+Custody and handoff:
+@spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/custody-and-handoff#root.</FULL-PROTOCOL-POINTER></p>
+  </canon>
+</spec>
