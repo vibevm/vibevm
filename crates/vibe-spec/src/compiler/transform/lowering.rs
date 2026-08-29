@@ -71,11 +71,11 @@ impl TransformPlan {
     /// catalog — the crate-internal seam the transform tests drive, mirroring
     /// `compile_artifact_with_registries`.
     ///
-    /// The production catalog is empty until R4.2 registers the first real
-    /// behavior, so a test that lowers a REAL collected registry needs the
-    /// same cfg-test identity catalog the execution tests already use. The
-    /// seam is `#[cfg(test)]`: the workspace still cannot reach a registry,
-    /// and therefore still cannot supply an epoch.
+    /// The production catalog ships exactly the behaviors that exist, so a
+    /// test wanting a plan of FOUR staged entries — one per tier — needs the
+    /// cfg-test identity catalog the execution tests already use. The seam is
+    /// `#[cfg(test)]`: the workspace still cannot reach a registry, and
+    /// therefore still cannot supply an epoch.
     #[cfg(test)]
     pub(crate) fn from_effective_rows_with(
         rows: &[&ExtensionRegistryRow],

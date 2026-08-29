@@ -2,20 +2,26 @@
 //! scoped by DIFFERENT manifests, and the two entries here prove it on one
 //! world rather than by inspection.
 //!
-//! **What the assertions read.** T5 ships an EMPTY production behavior
-//! catalog, so any `compile:*` builtin a manifest declares today lowers to
-//! the bounded `UnknownBuiltin` refusal — and that refusal names its lane
-//! OWNER in full plus a bounded preview of the offending row. That makes it a
-//! precise probe of which manifest scoped which lane: if the node's lane ever
-//! saw the package's declaration, or the package's lane the node's, the
-//! preview would move. It is the sharpest instrument available before R4.2
-//! registers a real behavior, and it reads the property a byte assertion
-//! would.
+//! **What the assertions read.** The production behavior catalog ships
+//! exactly `xml-minify`, so any OTHER `compile:*` builtin a manifest declares
+//! lowers to the bounded `UnknownBuiltin` refusal — and that refusal names its
+//! lane OWNER in full plus a bounded preview of the offending row. That makes
+//! it a precise probe of which manifest scoped which lane: if the node's lane
+//! ever saw the package's declaration, or the package's lane the node's, the
+//! preview would move. It reads the property a byte assertion would, without
+//! needing a lane to exist.
 //!
 //! The previews are capped at eight characters BY DESIGN (a declaration key
-//! can be attacker-sized), so this fixture picks two builtin names whose
-//! first eight characters differ — the assertion reads what the refusal law
+//! can be attacker-sized), so this fixture picks builtin names whose first
+//! eight characters differ — the assertions read what the refusal law
 //! actually shows, rather than asking it to show more.
+//!
+//! **Two installed packages, not one.** The second package exists so that a
+//! tree with SEVERAL refusing owners is expressible. `unit_owner_plans`
+//! promises a refusal that names the same owner every run; the walk order is
+//! what delivers that, and a `HashMap` iteration order is not stable between
+//! instances — so the promise is pinned behaviourally, over freshly built
+//! tables, rather than by asserting the source contains a `sort` call.
 
 use super::*;
 
@@ -28,9 +34,45 @@ use vibe_core::{ContentHash, PackageKind};
 
 use crate::vibedeps::slot_abs_path;
 
-/// The two builtin names, distinct within the bounded preview window.
+/// The three builtin names, distinct within the bounded preview window.
 const NODE_BEHAVIOR: &str = "nodeonly";
 const PACKAGE_BEHAVIOR: &str = "pkgonly";
+const SECOND_PACKAGE_BEHAVIOR: &str = "alphaonly";
+
+/// The second installed package's name — lexicographically BEFORE `tools`, so
+/// the canonical walk's answer is decidable and is not the insertion order of
+/// either fixture.
+const SECOND_PACKAGE: &str = "alpha";
+
+/// Materialise one installed package's slot, declaring one `compile:document`
+/// builtin of its own.
+fn write_package_slot(root: &Path, name: &str, behavior: &str) {
+    let slot = slot_abs_path(
+        root,
+        &Group::parse("org.pkgs").expect("a valid group"),
+        name,
+        &semver::Version::parse("1.0.0").expect("a valid version"),
+    );
+    fs::create_dir_all(&slot).expect("the slot directory");
+    fs::write(
+        slot.join(Manifest::FILENAME),
+        format!(
+            r#"
+[package]
+group = "org.pkgs"
+name = "{name}"
+kind = "tool"
+version = "1.0.0"
+
+[[extension]]
+id = "package-only-transform"
+point = "compile:document"
+handler = {{ kind = "builtin", name = "{behavior}" }}
+"#
+        ),
+    )
+    .expect("the slot manifest");
+}
 
 /// One workspace whose node and whose single installed package EACH declare
 /// their own `compile:document` extension, and nothing else.
@@ -44,31 +86,7 @@ fn world_with_host_controls(controls: &str) -> (TempDir, DurableExtensionWorld) 
     let workspace = TempDir::new().expect("a temp workspace");
     let root = workspace.path();
 
-    let slot = slot_abs_path(
-        root,
-        &Group::parse("org.pkgs").expect("a valid group"),
-        "tools",
-        &semver::Version::parse("1.0.0").expect("a valid version"),
-    );
-    fs::create_dir_all(&slot).expect("the slot directory");
-    fs::write(
-        slot.join(Manifest::FILENAME),
-        format!(
-            r#"
-[package]
-group = "org.pkgs"
-name = "tools"
-kind = "tool"
-version = "1.0.0"
-
-[[extension]]
-id = "package-only-transform"
-point = "compile:document"
-handler = {{ kind = "builtin", name = "{PACKAGE_BEHAVIOR}" }}
-"#
-        ),
-    )
-    .expect("the slot manifest");
+    write_package_slot(root, "tools", PACKAGE_BEHAVIOR);
 
     fs::write(
         root.join(Manifest::FILENAME),
@@ -93,9 +111,40 @@ handler = {{ kind = "builtin", name = "{NODE_BEHAVIOR}" }}
     let manifest = Manifest::read(root.join(Manifest::FILENAME)).expect("the node manifest parses");
 
     let mut lockfile = Lockfile::empty("fixture", "1970-01-01T00:00:00Z");
-    lockfile.packages = vec![LockedPackage {
+    lockfile.packages = vec![locked("tools")];
+
+    let world = durable_world(root, root, &manifest, Some(&lockfile))
+        .expect("the fixture lock and tree agree, so a world is observable");
+    (workspace, world)
+}
+
+/// [`world`], plus a SECOND installed package whose own declaration also
+/// refuses — the two-bad-owners tree.
+///
+/// The second package is deliberately NOT in the node's requires: it is
+/// installed and owns its own unit lane, which is all a lane owner needs, and
+/// leaving it outside the node's closure keeps every node-lane assertion in
+/// this cell reading exactly what it read before.
+fn world_with_two_refusing_owners() -> (TempDir, DurableExtensionWorld) {
+    let (workspace, _) = world();
+    let root = workspace.path();
+    write_package_slot(root, SECOND_PACKAGE, SECOND_PACKAGE_BEHAVIOR);
+    let manifest = Manifest::read(root.join(Manifest::FILENAME)).expect("the node manifest parses");
+    let mut lockfile = Lockfile::empty("fixture", "1970-01-01T00:00:00Z");
+    // Lock order deliberately puts the second package LAST, so a walk that
+    // followed lock order rather than canonical unit order would answer
+    // `tools` and the pin would be red.
+    lockfile.packages = vec![locked("tools"), locked(SECOND_PACKAGE)];
+    let world = durable_world(root, root, &manifest, Some(&lockfile))
+        .expect("the fixture lock and tree agree, so a world is observable");
+    (workspace, world)
+}
+
+/// One locked package in the shape the durable world adapter reads.
+fn locked(name: &str) -> LockedPackage {
+    LockedPackage {
         kind: PackageKind::Tool,
-        name: PackageName::parse("tools").expect("a valid name"),
+        name: PackageName::parse(name).expect("a valid name"),
         group: Group::parse("org.pkgs").expect("a valid group"),
         version: semver::Version::parse("1.0.0").expect("a valid version"),
         registry: None,
@@ -116,11 +165,7 @@ handler = {{ kind = "builtin", name = "{NODE_BEHAVIOR}" }}
         describes: None,
         language: None,
         materialization: Materialization::Copy,
-    }];
-
-    let world = durable_world(root, root, &manifest, Some(&lockfile))
-        .expect("the fixture lock and tree agree, so a world is observable");
-    (workspace, world)
+    }
 }
 
 /// The one installed unit's identity, in the shape the unit table keys by.
@@ -128,6 +173,14 @@ fn unit() -> UnitId {
     (
         Group::parse("org.pkgs").expect("a valid group"),
         "tools".to_string(),
+    )
+}
+
+/// The second installed unit's identity.
+fn second_unit() -> UnitId {
+    (
+        Group::parse("org.pkgs").expect("a valid group"),
+        SECOND_PACKAGE.to_string(),
     )
 }
 
@@ -147,7 +200,7 @@ fn uninstalled_unit() -> UnitId {
 fn the_node_lane_and_the_unit_lane_are_scoped_by_different_manifests() {
     let (_workspace, world) = world();
 
-    let node = node_owner_plan(Some(&world), ".").expect_err("the empty T5 catalog refuses");
+    let node = node_owner_plan(Some(&world), ".").expect_err("an off-catalog builtin name refuses");
     let node = node.to_string();
     assert!(
         node.contains("`.`"),
@@ -163,7 +216,8 @@ fn the_node_lane_and_the_unit_lane_are_scoped_by_different_manifests() {
          the node activates it: {node}"
     );
 
-    let package = unit_owner_plan(Some(&world), &unit()).expect_err("the empty T5 catalog refuses");
+    let package =
+        unit_owner_plan(Some(&world), &unit()).expect_err("an off-catalog builtin name refuses");
     let package = package.to_string();
     assert!(
         package.contains("`org.pkgs/tools`"),
@@ -312,8 +366,9 @@ fn the_per_unit_emission_path_asks_for_the_packages_own_plan() {
     );
     // TWO occurrences, counted rather than merely found: the generate half
     // AND `verify_boot_graph`'s check half must frame the same digests, or
-    // — the moment R4.2 registers a real behavior — `vibe check` would call
-    // every framed unit stale on a tree the generator had just left fresh.
+    // `vibe check` would call every framed unit stale on a tree the generator
+    // had just left fresh — pinned behaviourally, now that a real behavior
+    // exists, by `install::tests_minify_units`.
     // A `contains` alone was proven blind to exactly that mutation: the
     // generate half satisfied it while the check half framed nothing.
     assert_eq!(
@@ -328,16 +383,13 @@ fn the_per_unit_emission_path_asks_for_the_packages_own_plan() {
         composition.contains("unit_owner_plans(world.as_ref(), &table)"),
         "the check half lowers the same per-unit plans from its own observation"
     );
-    // The canonical walk is load-bearing prose made mechanical: the module
-    // doc promises a refusal on a many-bad-owners tree names the SAME owner
-    // every run, and nothing behavioural can pin that until R4.2's second
-    // registered behavior makes a two-refusers fixture expressible — so the
-    // spelling is fenced until the behavioural twin exists.
-    assert!(
-        include_str!("owner_plans.rs").contains("ordered.sort()"),
-        "unit_owner_plans walks units in canonical order, so a refusal is \
-         deterministic across runs"
-    );
+    // The canonical walk USED to be fenced here by spelling, because no
+    // two-refusers fixture existed to state it behaviourally. One does now —
+    // `a_two_refuser_tree_names_the_same_owner_over_freshly_built_tables` — so
+    // the spelling assertion is retired rather than kept beside its twin: a
+    // source-substring fence that a behavioural test already covers only adds
+    // a second thing to update, and it would stay green under a `sort_by` that
+    // ordered by something else.
 }
 
 /// Every table unit is lowered, in canonical order, exactly once — and the
@@ -358,7 +410,8 @@ fn every_table_unit_is_lowered_once_and_only_a_nonempty_plan_frames() {
     // The installed unit declares a `compile:document` builtin the empty T5
     // catalog cannot resolve, so lowering the whole table refuses — which is
     // itself the proof that EVERY unit is lowered, not just the emitted ones.
-    let error = unit_owner_plans(Some(&world), &table).expect_err("the empty T5 catalog refuses");
+    let error =
+        unit_owner_plans(Some(&world), &table).expect_err("an off-catalog builtin name refuses");
     assert!(
         error.to_string().contains(PACKAGE_BEHAVIOR),
         "the refusal names the unit's own declaration: {error}"
@@ -373,6 +426,43 @@ fn every_table_unit_is_lowered_once_and_only_a_nonempty_plan_frames() {
         plan_digest_frames(&plans).is_empty(),
         "an owner that activates nothing contributes no frame"
     );
+}
+
+/// The canonical-walk promise, stated behaviourally: on a tree with SEVERAL
+/// refusing owners, the refusal names the lexicographically first unit — and
+/// it names the same one over freshly built tables.
+///
+/// Freshly built, and many times, on purpose. `HashMap`'s iteration order is
+/// seeded per instance, so one table walked twice proves nothing about a
+/// second table; a mutation that dropped the canonical sort would pass such a
+/// test roughly half the time. Thirty-two independent tables make the same
+/// mutation red with probability `1 - 2^-32`.
+///
+/// The lock deliberately records the second package LAST, so the answer this
+/// pins is the CANONICAL unit order and not the lock's.
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-ACTIVATION")]
+fn a_two_refuser_tree_names_the_same_owner_over_freshly_built_tables() {
+    let (_workspace, world) = world_with_two_refusing_owners();
+    for attempt in 0..32 {
+        // A fresh table each round: a new `HashMap`, a new iteration order.
+        let table: HashMap<UnitId, UnitInput> = [unit(), second_unit()]
+            .into_iter()
+            .map(|id| (id, empty_unit_input()))
+            .collect();
+        let error = unit_owner_plans(Some(&world), &table)
+            .expect_err("both owners declare an off-catalog builtin")
+            .to_string();
+        assert!(
+            error.contains("org.pkgs/alpha") && error.contains("alphaonl"),
+            "attempt {attempt}: the refusal names the lexicographically FIRST \
+             unit and its own declaration: {error}"
+        );
+        assert!(
+            !error.contains("org.pkgs/tools") && !error.contains(PACKAGE_BEHAVIOR),
+            "attempt {attempt}: the later owner is never the one reported: {error}"
+        );
+    }
 }
 
 /// A boot-bearing unit input with no edges — the table shape these entries

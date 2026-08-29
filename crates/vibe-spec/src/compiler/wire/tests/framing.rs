@@ -110,7 +110,7 @@ fn a_real_tape_missing_one_header_line_is_red() {
 /// (here the raw `--` the codec exists to escape) is red with the codec's
 /// own words. Without this pin, the gate's whole grammar arm could be
 /// deleted and every wire suite would stay green — no corpus tape carries a
-/// header until R4.2 registers the first real behavior.
+/// header, because no corpus fixture activates a plan.
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY")]
 fn an_optional_transforms_header_is_admitted_well_formed_and_refused_non_canonical() {

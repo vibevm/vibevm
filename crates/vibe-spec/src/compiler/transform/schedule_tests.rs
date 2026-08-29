@@ -377,7 +377,7 @@ fn the_empty_production_registry_refuses_a_nonempty_plan_at_the_schedule() {
     ));
     assert!(matches!(error, ArtifactCompileError::Transform(_)));
     assert_eq!(crate::compiler::builtin::parse_invocations(), 0);
-    // The empty plan under the empty production registry still builds: the
+    // The empty plan under the PRODUCTION registry still builds: the
     // historical schedule is reachable in production.
     assert!(
         BuiltinSchedule::emitted_for_test(&lane_plan(), &TransformRegistry::builtins()).is_ok()

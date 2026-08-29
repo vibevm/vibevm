@@ -14,16 +14,30 @@ enum Layout {
     Block,
 }
 
+/// The opening of every engine-framed generated comment, in either syntax.
+///
+/// Spelled once so a READER of the framing — the emitted-tape segmenter the
+/// `xml-minify` binding drives — recognises exactly what the emitters below
+/// write, rather than carrying a second copy of the grammar.
+pub(crate) const GENERATED_COMMENT_OPEN: &str = "<!-- ";
+
+/// The closing of an INLINE generated comment. The block layout closes with
+/// `\n-->` instead, and is deliberately not spelled through this constant.
+pub(crate) const GENERATED_COMMENT_CLOSE: &str = " -->";
+
+/// The reserved channel every generated XML comment rides.
+pub(crate) const XML_GENERATED_CHANNEL: &str = "vibe:c1 ";
+
 fn generated_comment(syntax: CommentSyntax, payload: &str, layout: Layout) -> String {
     if matches!(syntax, CommentSyntax::Xml) {
         return format!(
-            "<!-- vibe:c1 {} -->",
+            "{GENERATED_COMMENT_OPEN}{XML_GENERATED_CHANNEL}{}{GENERATED_COMMENT_CLOSE}",
             vibe_specdoc::encode_generated_xml_comment(payload)
         );
     }
     match layout {
-        Layout::Inline => format!("<!-- {payload} -->"),
-        Layout::Block => format!("<!-- {payload}\n-->"),
+        Layout::Inline => format!("{GENERATED_COMMENT_OPEN}{payload}{GENERATED_COMMENT_CLOSE}"),
+        Layout::Block => format!("{GENERATED_COMMENT_OPEN}{payload}\n-->"),
     }
 }
 
@@ -73,7 +87,7 @@ pub(crate) fn static_header_block(syntax: CommentSyntax, generated_path: &str) -
 /// second Markdown-only form. An HTML comment is lawful Markdown, so the same
 /// bytes serve both.
 pub(crate) fn transforms_header(payload: &str) -> String {
-    format!("<!-- {payload} -->")
+    format!("{GENERATED_COMMENT_OPEN}{payload}{GENERATED_COMMENT_CLOSE}")
 }
 
 pub(super) fn header_payloads(generated_path: &str) -> [String; 3] {
@@ -163,6 +177,39 @@ pub(crate) fn hoisted_marker(syntax: CommentSyntax, origin: &str) -> String {
     generated_comment(syntax, &hoisted_marker_payload(origin), Layout::Inline)
 }
 
+/// The two halves of the hoisted contribution marker's payload, spelled once
+/// so [`hoisted_marker_payload`] and [`hoisted_marker_origin`] cannot drift.
+const HOISTED_MARKER_PREFIX: &str = "vibe:hoisted ";
+const HOISTED_MARKER_SUFFIX: &str = " — text in the root STATIC.md";
+
 pub(crate) fn hoisted_marker_payload(origin: &str) -> String {
-    format!("vibe:hoisted {origin} — text in the root STATIC.md")
+    format!("{HOISTED_MARKER_PREFIX}{origin}{HOISTED_MARKER_SUFFIX}")
+}
+
+/// The origin one hoisted marker payload names, or `None` for any other
+/// generated payload — the READER of the spelling directly above.
+fn hoisted_origin_in_payload(payload: &str) -> Option<&str> {
+    payload
+        .strip_prefix(HOISTED_MARKER_PREFIX)?
+        .strip_suffix(HOISTED_MARKER_SUFFIX)
+}
+
+/// The origin one GENERATED XML comment names as a hoisted contribution
+/// marker, or `None` for any other comment.
+///
+/// A hoisted contribution writes a bare top-level `#use` line into the lane
+/// rather than a document (`static_xml::emit_xml`), which is the one shape
+/// the segmented emitted-tape adapter cannot minify honestly (R4
+/// architecture §8). That adapter therefore has to recognise the marker —
+/// and it asks the emit cell, which owns both the payload spelling and the
+/// `vibe:c1` codec that carries it, rather than re-spelling either.
+///
+/// A non-`vibe:c1` comment (the §7.1 transforms header) carries no
+/// contribution identity, and a malformed one is the wire tape gate's fault
+/// to raise: answering `None` for both only ever preserves more bytes.
+pub(crate) fn hoisted_origin_in_comment(comment: &str) -> Option<String> {
+    let payload = vibe_specdoc::decode_generated_xml_comment(comment)
+        .ok()
+        .flatten()?;
+    hoisted_origin_in_payload(&payload).map(str::to_owned)
 }

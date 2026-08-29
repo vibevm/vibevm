@@ -2,16 +2,18 @@
 //! stage-declared, level-preserving behavior contract over the four compiler
 //! carriers, and its typed wrong-stage refusal.
 //!
-//! T5 lands the family with NO production builtin: the production catalog is
-//! empty until R4.2 registers `xml-minify` with a real binding, and the four
-//! identity behaviors that exercise this trait live only in the test cell as
-//! `test-identity-*` vehicles. Behavior objects stay inside the transform
-//! cells — nothing here crosses the crate boundary, and the plan, digest,
-//! refusal and config cells remain free of `Arc`/`dyn` by the syntax fence.
+//! T5 landed the family with NO production builtin, and the four identity
+//! behaviors that exercise this trait still live only in the test cell as
+//! `test-identity-*` vehicles. R4.2 registered the first REAL one —
+//! [`super::xml_minify_binding::XmlMinify`] — so the family's refusal enum
+//! now has a second arm carrying that binding's typed refusal. Behavior
+//! objects stay inside the transform cells — nothing here crosses the crate
+//! boundary, and the plan, digest, refusal and config cells remain free of
+//! `Arc`/`dyn` by the syntax fence.
 
-// The trait family has no production consumer until T6 wraps resolved
-// behaviors into the four schedule positions (R4-TRANSFORM-PLAN-ABI §8.6);
-// the registry cell and the transform tests are its only referents today.
+// Four of the trait's methods have only cfg-test referents (a behavior
+// declares ONE stage, so three of them are the typed wrong-stage default for
+// every implementation); the wrapper cell and the tests are their referents.
 #![allow(dead_code)]
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY");
@@ -20,6 +22,7 @@ use crate::compiler::ir::{DocumentIr, LaneIr, SourceIr};
 
 use super::plan::{TransformConfig, TransformStage};
 use super::plan_validate::BoundedPreview;
+use super::xml_minify_binding::XmlMinifyBindingError;
 
 /// One transform behavior: a catalog name, a nonzero behavior epoch, one
 /// declared stage, and four level-preserving invocations.
@@ -94,6 +97,14 @@ pub(crate) trait TransformBehavior: Send + Sync {
 }
 
 /// Why one behavior invocation refused.
+///
+/// Two arms, and they are different claims. [`TransformBehaviorError::WrongStage`]
+/// is the family's own law — a behavior was invoked at a stage it does not
+/// declare — and every implementation shares it. [`TransformBehaviorError::EmittedTape`]
+/// is a behavior refusing the CARRIER it was handed; it names the one
+/// production binding's typed refusal directly rather than a rendered string,
+/// because a typed source is what a caller downcasting this family needs, and
+/// the `Box<dyn …>` an open family would take is banned in these cells.
 #[derive(Debug, Clone, PartialEq, Eq, thiserror::Error)]
 pub(crate) enum TransformBehaviorError {
     #[error("transform behavior {preview} declares {declared:?}, refusing a {called:?} invocation")]
@@ -101,5 +112,11 @@ pub(crate) enum TransformBehaviorError {
         preview: BoundedPreview,
         declared: TransformStage,
         called: TransformStage,
+    },
+    #[error("transform behavior {preview} refused the emitted artifact it was handed: {source}")]
+    EmittedTape {
+        preview: BoundedPreview,
+        #[source]
+        source: XmlMinifyBindingError,
     },
 }

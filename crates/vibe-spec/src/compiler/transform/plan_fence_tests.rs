@@ -5,11 +5,12 @@
 //! string literal or comment containing a needle cannot hide real Rust
 //! from the fence, and a real use cannot be stripped away by prose.
 //!
-//! Three fences live here: the forbidden-use fence over the identity,
-//! digest, refusal and config cells; the opacity fence over the provider
-//! and implementation values (structs over private fields, no widened
-//! constructor — the regression a future T10 visibility change could
-//! bring); and the structural manifest DAG proof parsed with `toml`.
+//! Two fences live here: the forbidden-use fence over the identity, digest,
+//! refusal and config cells, and the opacity fence over the provider and
+//! implementation values (structs over private fields, no widened
+//! constructor — the regression a future visibility change could bring). The
+//! manifest DAG proof moved to `dependency_dag_fence_tests` at R4.2: it reads
+//! MANIFESTS rather than source, and it is the one home for that fact.
 
 use std::collections::BTreeSet;
 
@@ -262,6 +263,23 @@ const LOWERING_RULES: CellRules = CellRules {
     permitted_segments: &["ExtensionRegistryRow"],
 };
 
+/// The R4.2 effective-configuration cell. Its whole purpose IS reading the
+/// TOML value tower — ABI §3 forbids generic JSON and forbids a render/parse
+/// round trip, so a lossless lowering has to name `toml::Value`'s variants —
+/// which makes it the one cell admitted to the `toml` identifier. Everything
+/// else in the common set still binds it, and the permission is exactly one
+/// name: no serializer, no path, no registry row, no behavior pointer.
+///
+/// The permission is narrow in the other direction too: every OTHER plan cell
+/// is still checked under a family that bans `toml`, so the crate's new
+/// runtime edge cannot spread from here by being merely available.
+const CONFIG_LOWERING_RULES: CellRules = CellRules {
+    extra_segments: &[],
+    extra_macros: &[],
+    forbidden_methods: &[],
+    permitted_segments: &["toml"],
+};
+
 /// The forbidden-use fence over the production cells: identity and digest
 /// cells refuse the common set plus every rendered-identity surface; the
 /// refusal cell refuses the common set plus the borrowed-check law; the
@@ -284,13 +302,14 @@ fn the_plan_cells_admit_no_parser_renderer_path_row_or_trait_object() {
         ("config.rs", include_str!("config.rs"), &COMMON_RULES),
         // T10B's two new cells. The lowering names the borrowed kernel row
         // it consumes and nothing else the common set bans; the effective
-        // configuration lowering names nothing at all — including `toml`,
-        // which is why its non-empty arm is a refusal rather than a walk.
+        // configuration lowering names `toml` and NOTHING else the common set
+        // bans — R4.2 turned its interim refusal into the real value-tower
+        // walk, which is exactly what that one permitted identifier buys.
         ("lowering.rs", include_str!("lowering.rs"), &LOWERING_RULES),
         (
             "config_lowering.rs",
             include_str!("config_lowering.rs"),
-            &COMMON_RULES,
+            &CONFIG_LOWERING_RULES,
         ),
     ] {
         let found = offenders(source, rules);
@@ -520,74 +539,5 @@ fn provider_and_implementation_values_stay_opaque_and_constructors_stay_module_p
     assert!(
         found_test_only,
         "TransformPlan::capacity must carry #[cfg(test)]"
-    );
-}
-
-/// Parse one crate manifest structurally.
-fn manifest(source: &str) -> toml::Table {
-    toml::from_str(source).expect("crate manifest parses as TOML")
-}
-
-/// The dependency names of one section, structurally.
-fn section_names(table: &toml::Table, section: &str) -> BTreeSet<String> {
-    table
-        .get(section)
-        .and_then(toml::Value::as_table)
-        .map(|dependencies| dependencies.keys().cloned().collect())
-        .unwrap_or_default()
-}
-
-/// The DAG proof, parsed with `toml` rather than substring-scanned:
-/// `vibe-spec` gains exactly `vibe-core` and `vibe-extension-registry` as
-/// new runtime dependencies, the dev set is exactly `tempfile`, `syn`,
-/// `toml` (the fence's own dev-only tooling), the registry depends on
-/// core, and neither lower crate gains a reverse edge in any section.
-#[test]
-fn the_dependency_dag_gains_exactly_the_two_intended_lower_edges() {
-    let own = manifest(include_str!("../../../Cargo.toml"));
-    let dependencies = section_names(&own, "dependencies");
-    let expected = BTreeSet::from([
-        "base64".to_owned(),
-        "quick-xml".to_owned(),
-        "serde".to_owned(),
-        "serde_json".to_owned(),
-        "sha2".to_owned(),
-        "specmark".to_owned(),
-        "thiserror".to_owned(),
-        "vibe-core".to_owned(),
-        "vibe-extension-registry".to_owned(),
-        "vibe-specdoc".to_owned(),
-        "vibe-wire".to_owned(),
-    ]);
-    assert_eq!(
-        dependencies, expected,
-        "the runtime dependency set must be the frozen prior set plus \
-         exactly vibe-core and vibe-extension-registry"
-    );
-    let dev_dependencies = section_names(&own, "dev-dependencies");
-    assert_eq!(
-        dev_dependencies,
-        BTreeSet::from(["syn".to_owned(), "tempfile".to_owned(), "toml".to_owned(),]),
-        "the dev set is exactly the fence's dev-only tooling"
-    );
-
-    // No reverse edge: neither lower crate names vibe-spec in any section.
-    let core = manifest(include_str!("../../../../vibe-core/Cargo.toml"));
-    let registry = manifest(include_str!(
-        "../../../../vibe-extension-registry/Cargo.toml"
-    ));
-    for (name, lower) in [("vibe-core", &core), ("vibe-extension-registry", &registry)] {
-        for section in ["dependencies", "dev-dependencies", "build-dependencies"] {
-            let names = section_names(lower, section);
-            assert!(
-                !names.contains("vibe-spec"),
-                "{name} must never gain a reverse edge to vibe-spec ({section})"
-            );
-        }
-    }
-    // The chain: the registry's one workspace edge is vibe-core.
-    assert!(
-        section_names(&registry, "dependencies").contains("vibe-core"),
-        "vibe-extension-registry depends on vibe-core"
     );
 }

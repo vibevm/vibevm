@@ -19,6 +19,13 @@
 //! artifact, spelled by the one shared generated-comment codec. It reads a
 //! built plan and returns a payload; the emit cell owns how that payload is
 //! framed as a comment, and nothing ever parses it back.
+//!
+//! R4.2 added `xml_minify_binding`: the FIRST production behavior, binding
+//! the existing strict span-deletion kernel at the emitted stage through a
+//! segmented adapter that never touches engine framing. It is what turns
+//! `registry::builtins()` from an empty catalog into a real one, and what
+//! made `config_lowering`'s value tower — the T10B interim refusal — a real
+//! walk.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY");
 
@@ -36,11 +43,16 @@ pub(crate) mod plan_validate;
 pub(crate) mod registry;
 pub(crate) mod schedule;
 pub(crate) mod selector_admission;
+pub(crate) mod xml_minify_binding;
 
 #[cfg(test)]
 pub(crate) mod carriage;
 #[cfg(test)]
 mod config_tests;
+#[cfg(test)]
+mod dependency_dag_fence_tests;
+#[cfg(test)]
+mod fence_families;
 #[cfg(test)]
 mod header_e2e_tests;
 #[cfg(test)]
@@ -95,3 +107,7 @@ mod schedule_tests;
 mod selector_admission_tests;
 #[cfg(test)]
 mod transform_cells_fence_tests;
+#[cfg(test)]
+mod xml_minify_binding_e2e_tests;
+#[cfg(test)]
+mod xml_minify_binding_tests;

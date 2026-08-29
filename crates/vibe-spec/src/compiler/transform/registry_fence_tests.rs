@@ -4,14 +4,16 @@
 //! fully-qualified paths, type paths and macros are classified structurally —
 //! prose and string literals never reach the AST and never trip the fence.
 //!
-//! Five laws live here: the new cells admit no manifest/row/collector/
+//! Four laws live here: the new cells admit no manifest/row/collector/
 //! filesystem/codec/Display surface, no aliased/globbed/qualified `std::path`
 //! sequence, and no `Box` — `Arc<dyn …>` trait objects are the ONE legal
 //! behavior channel, exactly there; the existing plan cells stay
 //! `Arc`/`Box`/`dyn`-free; `plan.rs` carries no registry lookup; the crate
-//! root reexports nothing of the registry and the manifest dependency sets
-//! are unchanged; the reusable test catalog module is `#[cfg(test)]`-gated
-//! in the module tree.
+//! root reexports nothing of the registry; the reusable test catalog module
+//! is `#[cfg(test)]`-gated in the module tree.
+//!
+//! The manifest dependency sets were a FIFTH law here until R4.2 gave them a
+//! single home in `dependency_dag_fence_tests`.
 
 use std::collections::BTreeSet;
 
@@ -438,46 +440,9 @@ fn the_test_support_module_is_cfg_test_gated_in_the_module_tree() {
     );
 }
 
-/// Parse the crate manifest structurally (the DAG-proof idiom).
-fn manifest(source: &str) -> toml::Table {
-    toml::from_str(source).expect("crate manifest parses as TOML")
-}
-
-fn section_names(table: &toml::Table, section: &str) -> BTreeSet<String> {
-    table
-        .get(section)
-        .and_then(toml::Value::as_table)
-        .map(|dependencies| dependencies.keys().cloned().collect())
-        .unwrap_or_default()
-}
-
-/// T5 changes no dependency: the runtime set stays the frozen eleven and the
-/// dev set stays exactly the fence's own tooling.
-#[test]
-fn the_manifest_dependency_sets_are_unchanged() {
-    let own = manifest(include_str!("../../../Cargo.toml"));
-    let dependencies = section_names(&own, "dependencies");
-    let expected = BTreeSet::from([
-        "base64".to_owned(),
-        "quick-xml".to_owned(),
-        "serde".to_owned(),
-        "serde_json".to_owned(),
-        "sha2".to_owned(),
-        "specmark".to_owned(),
-        "thiserror".to_owned(),
-        "vibe-core".to_owned(),
-        "vibe-extension-registry".to_owned(),
-        "vibe-specdoc".to_owned(),
-        "vibe-wire".to_owned(),
-    ]);
-    assert_eq!(
-        dependencies, expected,
-        "the runtime dependency set is frozen"
-    );
-    let dev_dependencies = section_names(&own, "dev-dependencies");
-    assert_eq!(
-        dev_dependencies,
-        BTreeSet::from(["syn".to_owned(), "tempfile".to_owned(), "toml".to_owned(),]),
-        "the dev dependency set is the fence tooling only"
-    );
-}
+// The manifest dependency sets used to be re-asserted here as well. R4.2
+// moved that fact to `dependency_dag_fence_tests`, its one home: two copies of
+// one expected set is two places to update and one place to forget, and the
+// registry family's own claim — that registering the first production behavior
+// is a CODE change, never a dependency one — is exactly what that single
+// assertion says.

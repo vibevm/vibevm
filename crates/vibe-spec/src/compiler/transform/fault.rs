@@ -24,7 +24,7 @@ use crate::compiler::pipeline::CompilerPipelineError;
 use crate::compiler::verify::{TransitionError, VerificationError};
 
 use super::behavior::TransformBehaviorError;
-use super::config_lowering::ConfigLoweringGap;
+use super::config_lowering::ConfigLoweringError;
 use super::plan::TransformStage;
 use super::plan_validate::{BoundedPreview, TransformPlanError};
 use super::registry::TransformRegistryError;
@@ -238,7 +238,7 @@ pub(crate) enum LoweringFault {
         row: usize,
         preview: BoundedPreview,
         #[source]
-        source: ConfigLoweringGap,
+        source: ConfigLoweringError,
     },
     #[error("the lowered rows do not form a plan: {source}")]
     Plan {

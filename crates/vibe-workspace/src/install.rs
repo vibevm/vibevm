@@ -578,6 +578,14 @@ mod tests_hooks;
 mod tests_hybrid;
 
 #[cfg(test)]
+#[path = "install/tests_minify_activation.rs"]
+mod tests_minify_activation;
+
+#[cfg(test)]
+#[path = "install/tests_minify_units.rs"]
+mod tests_minify_units;
+
+#[cfg(test)]
 #[path = "install/tests_mutable.rs"]
 mod tests_mutable;
 

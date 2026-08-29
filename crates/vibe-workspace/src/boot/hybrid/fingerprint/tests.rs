@@ -18,10 +18,11 @@ fn no_plans() -> HashMap<UnitId, String> {
     HashMap::new()
 }
 
-/// One synthetic owner-plan digest for `name`. Synthetic on purpose: today's
-/// production behavior catalog is empty (R4.2 registers the first one), so no
-/// integration path in this repository can produce a nonempty plan, and a
-/// literal hex is the honest way to drive the frame this side of the seam.
+/// One synthetic owner-plan digest for `name`. Synthetic on purpose: this
+/// cell tests the FRAMING, so it drives the frame directly with a literal hex
+/// rather than standing up a world. The integration form — a real activated
+/// owner whose recorded fingerprint moves while a sibling's does not — lives
+/// in `install::tests_minify_units`.
 #[cfg(test)]
 fn plan_for(name: &str, digest: &str) -> HashMap<UnitId, String> {
     [(id(name), digest.to_string())].into_iter().collect()

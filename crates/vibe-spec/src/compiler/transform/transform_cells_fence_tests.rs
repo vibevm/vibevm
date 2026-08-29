@@ -8,12 +8,13 @@
 
 use std::collections::BTreeSet;
 
-use super::schedule_fence_tests::{
-    HEADER_RULES, LOWERING_RULES, PLAN_CARRIER_RULES, SELECTOR_RULES, WRAPPER_RULES, offenders,
+use super::fence_families::{
+    HEADER_RULES, LOWERING_RULES, MINIFY_RULES, PLAN_CARRIER_RULES, SELECTOR_RULES, WRAPPER_RULES,
+    offenders,
 };
 
 /// The rule families stay exhaustive over the module tree: the production
-/// transform cells are exactly the fourteen declared `pub(crate) mod`s, every
+/// transform cells are exactly the fifteen declared `pub(crate) mod`s, every
 /// cfg-test cell is declared too, and no undeclared `.rs` sibling can ship
 /// unclassified (a new production cell must be added to a family here).
 #[test]
@@ -58,6 +59,9 @@ fn the_module_tree_declares_every_transform_cell_under_a_rule_family() {
             "registry".to_owned(),
             "schedule".to_owned(),
             "selector_admission".to_owned(),
+            // R4.2's one production cell: the first real behavior and the
+            // segmented emitted-tape adapter it drives.
+            "xml_minify_binding".to_owned(),
         ]),
         "a new production transform cell must be declared AND classified"
     );
@@ -66,6 +70,12 @@ fn the_module_tree_declares_every_transform_cell_under_a_rule_family() {
         BTreeSet::from([
             "carriage".to_owned(),
             "config_tests".to_owned(),
+            // The manifest DAG proof, split out of `plan_fence_tests` at its
+            // file-budget seam and along its own responsibility line.
+            "dependency_dag_fence_tests".to_owned(),
+            // The fence families and their AST classifier, split out of
+            // `schedule_fence_tests` at its file-budget seam.
+            "fence_families".to_owned(),
             // T10C's test cells.
             "header_e2e_tests".to_owned(),
             "header_tests".to_owned(),
@@ -95,6 +105,9 @@ fn the_module_tree_declares_every_transform_cell_under_a_rule_family() {
             "schedule_tests".to_owned(),
             "selector_admission_tests".to_owned(),
             "transform_cells_fence_tests".to_owned(),
+            // R4.2's test cells.
+            "xml_minify_binding_e2e_tests".to_owned(),
+            "xml_minify_binding_tests".to_owned(),
         ]),
         "a new test cell must be declared too — undeclared files do not compile"
     );
@@ -115,8 +128,10 @@ fn the_module_tree_declares_every_transform_cell_under_a_rule_family() {
     assert!(offenders(include_str!("plan.rs"), &PLAN_CARRIER_RULES).is_empty());
     // T10B: the lowering cell under its own family — the one production cell
     // permitted to name a kernel ROW, and still forbidden every collector
-    // spelling. Its effective-configuration half is a pure value builder, so
-    // it takes the stronger plan-carrier family unchanged.
+    // spelling. Its effective-configuration half owns no behavior channel
+    // either, so the plan-carrier family binds it here; the `toml` permission
+    // R4.2 gave it is granted by name in `plan_fence_tests`, where the common
+    // parser/serializer set lives.
     assert!(offenders(include_str!("lowering.rs"), &LOWERING_RULES).is_empty());
     assert!(offenders(include_str!("config_lowering.rs"), &PLAN_CARRIER_RULES).is_empty());
     // T10C: the header cell under its own family — the one production cell
@@ -127,6 +142,12 @@ fn the_module_tree_declares_every_transform_cell_under_a_rule_family() {
     // naming no OTHER percent codec, so one identity cannot acquire a second
     // spelling here.
     assert!(offenders(include_str!("header.rs"), &HEADER_RULES).is_empty());
+    // R4.2: the binding cell under its own family — the one production cell
+    // permitted to name the EMIT cell's framing, because reading that framing
+    // back off a tape is exactly what it exists to do. The codec stays out:
+    // the binding asks `framing` for a hoisted origin rather than decoding a
+    // comment itself, so there is one framing grammar and one codec call site.
+    assert!(offenders(include_str!("xml_minify_binding.rs"), &MINIFY_RULES).is_empty());
     // The reconstruction cell is held to MORE than its family requires, and
     // the extra is asserted rather than trusted: it is a pure value builder,
     // so — exactly like the selector admission cell — it owns no behavior

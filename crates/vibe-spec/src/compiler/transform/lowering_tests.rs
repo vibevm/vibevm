@@ -10,7 +10,8 @@ use specmark::verifies;
 use vibe_core::manifest::ExtensionConfig;
 use vibe_extension_registry::ExtensionRegistry;
 
-use super::config_lowering::ConfigLoweringGap;
+use super::config::{ConfigDate, ConfigDatetime, ConfigOffset, ConfigTime, ConfigValue};
+use super::config_lowering::ConfigLoweringError;
 use super::fault::{LoweringFault, TransformLoweringError};
 use super::lowering_worlds::{Declared, collected, collected_host, dependency_key, host_key};
 use super::plan::{TransformPlan, TransformStage};
@@ -21,10 +22,10 @@ use super::registry_test_support::identity_registry;
 /// Lower one collected registry's compile family through the crate-internal
 /// seam, against the cfg-test identity catalog.
 ///
-/// The production catalog is empty until R4.2 registers the first real
-/// behavior, so a test that wants a plan with entries in it must inject the
-/// same catalog the execution tests use. The workspace still supplies only a
-/// name — the epoch comes off the catalog either way.
+/// The production catalog ships one emitted behavior, so a test that wants a
+/// plan with an entry at every staged tier must inject the same four-vehicle
+/// catalog the execution tests use. The workspace still supplies only a name —
+/// the epoch comes off the catalog either way.
 fn lower(registry: &ExtensionRegistry) -> Result<TransformPlan, TransformLoweringError> {
     TransformPlan::from_effective_rows_with(&registry.enabled_compile_rows(), &identity_registry())
 }
@@ -277,12 +278,12 @@ fn an_off_catalog_builtin_name_is_the_bounded_unknown_builtin_refusal_at_lowerin
         }
     );
 
-    // And the PRODUCTION entry says the same thing: T5 ships an empty
-    // catalog, so every builtin name is off-catalog until R4.2 registers the
-    // first real behavior — which is exactly why no host in this repository
-    // can declare a compile-point extension and quietly get one.
+    // And the PRODUCTION entry says the same thing: the shipping catalog is
+    // exactly the behaviors that exist, so this fixture's `test-identity-*`
+    // name is off-catalog there — which is why no host in this repository can
+    // declare an arbitrary compile-point builtin and quietly get one.
     let production = TransformPlan::from_effective_rows(&registry.enabled_compile_rows())
-        .expect_err("the production catalog is empty");
+        .expect_err("a cfg-test vehicle is not public manifest vocabulary");
     assert!(matches!(
         fault(&production),
         LoweringFault::Implementation { .. }
@@ -351,20 +352,167 @@ fn absent_config_and_authored_empty_config_stay_two_identities() {
     );
 }
 
-/// The named interim gap: a row carrying real configuration VALUES refuses,
-/// naming the row, rather than lowering into a plan whose digest would assert
-/// that no configuration was authored.
+/// The law T10B's interim refusal stood in for: a row carrying real
+/// configuration VALUES lowers LOSSLESSLY, and its digest differs from both
+/// the absent and the cleared identity.
+///
+/// Every `ConfigValue` arm is driven at once, through a REAL collected
+/// registry row rather than a hand-built tree — string, integer, float,
+/// boolean, all four datetime shapes, a nested array and a nested table —
+/// because §3's losslessness is a claim about the whole tower and a walk that
+/// dropped one arm would still pass an arm-by-arm test of the others.
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY")]
-fn a_row_with_non_empty_configuration_refuses_rather_than_claiming_none_was_authored() {
-    let table = "message = 'hello'"
-        .parse::<toml::Table>()
-        .expect("the fixture config parses");
+fn a_row_with_real_configuration_lowers_losslessly_and_digests_differently() {
+    let table = concat!(
+        "message = 'hello'\n",
+        "count = -7\n",
+        "ratio = 1.5\n",
+        "enabled = true\n",
+        "local_date = 1979-05-27\n",
+        "local_time = 07:32:00.999999999\n",
+        "local_datetime = 1979-05-27T07:32:00\n",
+        "zulu = 1979-05-27T07:32:00Z\n",
+        "shifted = 1979-05-27T00:32:00-07:00\n",
+        "list = [1, 3, 2]\n",
+        "[nested]\n",
+        "inner = 'deep'\n",
+    )
+    .parse::<toml::Table>()
+    .expect("the fixture config parses");
+    let configured = lower(&collected_host(vec![
+        Declared::builtin("doc", "compile:document", "test-identity-document")
+            .configured(ExtensionConfig::from_table(table)),
+    ]))
+    .expect("a non-empty effective configuration lowers");
+
+    let seed = configured.entries()[0].seed();
+    let lowered = seed.config().expect("the row authored configuration");
+    let value = |key: &str| lowered.as_table().get(key).cloned();
+
+    assert_eq!(
+        value("message"),
+        Some(ConfigValue::String("hello".to_owned()))
+    );
+    assert_eq!(value("count"), Some(ConfigValue::Integer(-7)));
+    assert_eq!(
+        value("ratio"),
+        Some(ConfigValue::Float(super::config::ConfigFloat::new(1.5)))
+    );
+    assert_eq!(value("enabled"), Some(ConfigValue::Boolean(true)));
+    // Array ORDER is semantic and retained; table order is not and sorts.
+    assert_eq!(
+        value("list"),
+        Some(ConfigValue::Array(vec![
+            ConfigValue::Integer(1),
+            ConfigValue::Integer(3),
+            ConfigValue::Integer(2),
+        ]))
+    );
+    let ConfigValue::Table(nested) = value("nested").expect("the nested table lowers") else {
+        panic!("a nested table stays a table")
+    };
+    assert_eq!(
+        nested.get("inner"),
+        Some(&ConfigValue::String("deep".to_owned()))
+    );
+
+    // Datetime, component for component: all four legal shapes, and the two
+    // offset spellings kept apart — `Z` is not `+00:00`.
+    let date = ConfigDate::new(1979, 5, 27).expect("a legal date");
+    let midnight_time = ConfigTime::new(7, 32, 0, 0).expect("a legal time");
+    assert_eq!(
+        value("local_date"),
+        Some(ConfigValue::Datetime(
+            ConfigDatetime::new(Some(date), None, None).expect("a legal local date")
+        ))
+    );
+    assert_eq!(
+        value("local_time"),
+        Some(ConfigValue::Datetime(
+            ConfigDatetime::new(
+                None,
+                Some(ConfigTime::new(7, 32, 0, 999_999_999).expect("a legal time")),
+                None
+            )
+            .expect("a legal local time")
+        ))
+    );
+    assert_eq!(
+        value("local_datetime"),
+        Some(ConfigValue::Datetime(
+            ConfigDatetime::new(Some(date), Some(midnight_time), None)
+                .expect("a legal local datetime")
+        ))
+    );
+    assert_eq!(
+        value("zulu"),
+        Some(ConfigValue::Datetime(
+            ConfigDatetime::new(Some(date), Some(midnight_time), Some(ConfigOffset::Z))
+                .expect("a legal offset datetime")
+        ))
+    );
+    let shifted = ConfigDatetime::new(
+        Some(date),
+        Some(ConfigTime::new(0, 32, 0, 0).expect("a legal time")),
+        Some(ConfigOffset::custom(-7 * 60).expect("a legal offset")),
+    )
+    .expect("a legal offset datetime");
+    assert_eq!(value("shifted"), Some(ConfigValue::Datetime(shifted)));
+    assert_ne!(
+        shifted.offset(),
+        Some(ConfigOffset::Z),
+        "offset identity survives the walk"
+    );
+
+    // The three config states are three plan identities.
+    let absent = lower(&collected_host(vec![Declared::builtin(
+        "doc",
+        "compile:document",
+        "test-identity-document",
+    )]))
+    .expect("an unconfigured row lowers");
+    let cleared = lower(&collected_host(vec![
+        Declared::builtin("doc", "compile:document", "test-identity-document")
+            .configured(ExtensionConfig::default()),
+    ]))
+    .expect("an authored empty configuration lowers");
+    assert_ne!(configured.digest(), absent.digest());
+    assert_ne!(configured.digest(), cleared.digest());
+    assert_ne!(absent.digest(), cleared.digest());
+}
+
+/// The value-tower walk's one remaining refusal: a datetime component the
+/// neutral tree's checked constructors reject refuses TYPED, naming the row,
+/// rather than panicking inside the lowering.
+///
+/// A parsed manifest cannot reach this arm — `toml_datetime`'s parser
+/// enforces the same laws — but `toml::value::Datetime` is a struct of public
+/// fields, so a value built around the parser is representable and must be
+/// refused rather than trusted.
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY")]
+fn an_illegal_datetime_component_refuses_typed_and_names_its_row() {
+    let mut table = toml::Table::new();
+    table.insert(
+        "when".to_owned(),
+        toml::Value::Datetime(toml::value::Datetime {
+            // Five digits: unrepresentable as a TOML `date-fullyear`, and so
+            // unrepresentable as a config identity.
+            date: Some(toml::value::Date {
+                year: 10_000,
+                month: 5,
+                day: 27,
+            }),
+            time: None,
+            offset: None,
+        }),
+    );
     let registry = collected_host(vec![
         Declared::builtin("doc", "compile:document", "test-identity-document")
             .configured(ExtensionConfig::from_table(table)),
     ]);
-    let error = lower(&registry).expect_err("a value tower is not lowerable yet");
+    let error = lower(&registry).expect_err("an illegal datetime component is not an identity");
     let LoweringFault::Config {
         row,
         preview,
@@ -375,7 +523,11 @@ fn a_row_with_non_empty_configuration_refuses_rather_than_claiming_none_was_auth
     };
     assert_eq!(*row, 0);
     assert_eq!(*preview, bounded(&host_key("doc")));
-    assert_eq!(*source, ConfigLoweringGap::ValueTower);
+    let ConfigLoweringError::Datetime { source } = source;
+    assert!(
+        source.to_string().contains("date.year"),
+        "the refusal names the offending component: {source}"
+    );
 }
 
 /// A plan-level refusal keeps its own typed source: the lowering does not

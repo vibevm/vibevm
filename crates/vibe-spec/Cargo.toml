@@ -45,6 +45,14 @@ base64.workspace = true
 # reverse edge back up.
 vibe-core.workspace = true
 vibe-extension-registry.workspace = true
+# The R4.2 lossless effective-configuration walk (R4-TRANSFORM-PLAN-ABI §3):
+# ABI §5.3 gives `vibe-spec` the lowering, and a lossless lowering must read
+# the TOML value tower by naming its variants — `toml_datetime::Offset`
+# distinguishes `Z` from a signed minute offset only that way, and §3 keeps
+# the two identities distinct. Runtime for exactly one cell
+# (`compiler/transform/config_lowering.rs`); every fence family still bans it
+# elsewhere.
+toml.workspace = true
 
 [dev-dependencies]
 tempfile.workspace = true

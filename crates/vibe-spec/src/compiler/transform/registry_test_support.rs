@@ -114,8 +114,14 @@ identity_vehicle!(
 
 /// The one test registry carrying the four identity vehicles, epoch 1 each,
 /// registered through the production registration path.
+///
+/// It starts EMPTY rather than from `TransformRegistry::builtins()`. Since
+/// R4.2 the production catalog really ships a behavior, and a test catalog
+/// that silently inherited it would make "an off-catalog name refuses"
+/// untestable for exactly the names that matter most — the shipping ones. A
+/// test that wants the production catalog asks for it by name.
 pub(crate) fn identity_registry() -> TransformRegistry {
-    let mut registry = TransformRegistry::builtins();
+    let mut registry = TransformRegistry::default();
     for (behavior, _, _) in identity_vehicles() {
         registry.register(behavior).expect("test vehicle registers");
     }

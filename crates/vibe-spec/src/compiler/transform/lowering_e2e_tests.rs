@@ -9,8 +9,8 @@
 //! `ArtifactPlan::with_transforms` → compile. Everything from the collector
 //! rightwards is exercised in this cell against a registry the kernel really
 //! collected. What cannot be exercised from `vibe-workspace` is the LAST
-//! link: the production catalog is empty until R4.2 registers the first real
-//! behavior, and the injectable catalog is `#[cfg(test)]` inside `vibe-spec`
+//! link at every stage: the production catalog ships one emitted behavior,
+//! and the four-tier identity catalog is `#[cfg(test)]` inside `vibe-spec`
 //! (`compile_artifact_with_registries`, deliberately never widened into
 //! `feature = "test-support"`). Widening it to reach a workspace test would
 //! put a test-only registry in the production surface — the exact thing the

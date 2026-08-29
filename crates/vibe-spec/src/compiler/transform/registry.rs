@@ -5,15 +5,15 @@
 //! The registry is a `vibe-spec` sibling of `BackendRegistry` and nothing
 //! like a second declaration collector: it reads no manifest, no registry
 //! row and no filesystem — callers hand it already-typed values only. T5
-//! ships an EMPTY production catalog; the four `test-identity-*` vehicles
-//! register only in the test cell, so no test scaffolding silently becomes
-//! public manifest vocabulary. `TransformPlan::build` never consults this
-//! registry: the plan stays grammar-only, and off-catalog T2 test candidates
-//! remain legal plan values resolved — or refused — here.
+//! shipped an EMPTY production catalog; R4.2 registers the first real
+//! behavior, `xml-minify` at epoch 1. The four `test-identity-*` vehicles
+//! still register only in the test cell, so no test scaffolding silently
+//! becomes public manifest vocabulary. `TransformPlan::build` never consults
+//! this registry: the plan stays grammar-only, and off-catalog T2 test
+//! candidates remain legal plan values resolved — or refused — here.
 
-// No production builtin ships in T5: `builtins()` is deliberately empty and
-// the only referents are the transform tests until T6 wraps resolved
-// behaviors into the four schedule positions (R4-TRANSFORM-PLAN-ABI §8.6).
+// `catalog()` is the golden view the registry tests read; production resolves
+// and never enumerates.
 #![allow(dead_code)]
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY");
@@ -27,6 +27,7 @@ use super::behavior::TransformBehavior;
 use super::plan::{TransformImplementation, TransformStage};
 use super::plan_validate::BoundedPreview;
 use super::plan_validate::bounded;
+use super::xml_minify_binding::XmlMinify;
 
 /// One registered catalog row: the behavior epoch, its declared stage and the
 /// behavior object itself, stored name-keyed and lent only as a clone.
@@ -44,11 +45,21 @@ pub(crate) struct TransformRegistry {
 }
 
 impl TransformRegistry {
-    /// The production catalog. Empty in T5: no shipping no-op builtin name is
-    /// reserved; R4.2 registers the first real behavior (`xml-minify`)
-    /// together with its epoch and golden.
+    /// The production catalog: exactly the behaviors that really ship.
+    ///
+    /// One row since R4.2 — `xml-minify` at epoch 1, declared for the emitted
+    /// stage (R4 architecture §8). Registration refuses an invalid name, a
+    /// zero epoch or a collision; none can hold for a const-spelled name at a
+    /// nonzero epoch entering an empty catalog, so a refusal here would be a
+    /// defect in THIS file rather than a runtime condition — the same reading
+    /// `BackendRegistry::builtins` already applies to its two built-in
+    /// backends. The exact `(name, epoch, stage)` golden is a test.
     pub(crate) fn builtins() -> Self {
-        Self::default()
+        let mut registry = Self::default();
+        registry
+            .register(Arc::new(XmlMinify))
+            .expect("xml-minify is the first valid production transform builtin");
+        registry
     }
 
     /// Register one behavior under its own name, or refuse it.

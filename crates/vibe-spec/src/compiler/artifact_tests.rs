@@ -537,8 +537,8 @@ fn public_one_seed_wrappers_keep_exact_bytes_renames_and_candidates() {
 
 // The T4 inert-carriage oracles moved to `artifact_tests/transforms.rs` and
 // were rewritten for T6b (ABI §6.3): a nonempty plan is no longer inert — it
-// either refuses under the empty production catalog or executes under the
-// injected identity catalog, and parity is caused by that execution.
+// either refuses under a catalog that does not know its name or executes
+// under one that does, and parity is caused by that execution.
 
 #[path = "artifact_tests/repair.rs"]
 mod repair;

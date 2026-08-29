@@ -1,5 +1,5 @@
-//! The T5 behavior-registry RED matrix (R4-TRANSFORM-PLAN-ABI §6.1): the
-//! empty production catalog, the exact sorted test golden, one frozen
+//! The T5 behavior-registry RED matrix (R4-TRANSFORM-PLAN-ABI §6.1): what the
+//! production catalog admits, the exact sorted test golden, one frozen
 //! input→identical-output vector per stage, and the bounded
 //! registration/resolution refusals.
 //!
@@ -96,23 +96,38 @@ fn emitted_vector() -> Vec<u8> {
     b"<?xml version=\"1.0\"?>\n<spec>\n  <a/>\n</spec>\n".to_vec()
 }
 
+/// The production catalog holds exactly what ships, and nothing else.
+///
+/// T5's form of this test asserted emptiness; R4.2 registered the one real
+/// behavior, so the claim it makes now is the one that survives every later
+/// atom: no lifecycle name, no test vehicle and no historical spelling is
+/// resolvable in production. The exact `(name, epoch, stage)` golden lives in
+/// `xml_minify_binding_tests`, beside the behavior it pins.
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY")]
-fn the_production_catalog_is_empty_and_resolves_nothing() {
+fn the_production_catalog_holds_only_shipping_behaviors() {
     let production = TransformRegistry::builtins();
-    assert!(
-        production.catalog().is_empty(),
-        "no shipping no-op builtin name is reserved"
+    assert_eq!(
+        production
+            .catalog()
+            .iter()
+            .map(|(name, ..)| (*name).to_owned())
+            .collect::<Vec<_>>(),
+        vec!["xml-minify".to_owned()],
+        "only behaviors that actually ship are cataloged"
     );
     for (name, stage) in [
+        // A cfg-test vehicle never becomes public manifest vocabulary.
         ("test-identity-source", TransformStage::Source),
-        ("xml-minify", TransformStage::Emitted),
+        // A lifecycle handler name is not a compiler behavior.
         ("log", TransformStage::Source),
+        // T2's historical test spelling stays off the catalog.
+        ("minify", TransformStage::Emitted),
     ] {
         let error = production
             .resolve(&TransformImplementation::builtin_candidate(name, 1), &stage)
             .err()
-            .expect("the empty production registry resolves nothing");
+            .expect("the production registry resolves only what it catalogs");
         assert!(
             matches!(error, TransformRegistryError::UnknownBuiltin { .. }),
             "{name}: {error:?}"
@@ -331,9 +346,16 @@ fn registration_refuses_invalid_name_zero_epoch_and_collision() {
     ));
     assert_eq!(
         registry.catalog().len(),
-        1,
-        "refused rows never enter the catalog"
+        2,
+        "refused rows never enter the catalog: the one production row plus \
+         the one vehicle that registered"
     );
+    // The collision law binds the production row too: a second behavior
+    // claiming `xml-minify` refuses rather than shadowing the shipping one.
+    assert!(matches!(
+        registry.register(Arc::new(super::xml_minify_binding::XmlMinify)),
+        Err(TransformRegistryError::Collision { .. })
+    ));
 }
 
 #[test]
