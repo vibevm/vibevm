@@ -303,6 +303,16 @@ fn generated(rel: &Path) -> bool {
         || path == common::index_rel()
         || path == DERIVED_MANIFEST_FILENAME
         || path == SLOT_RECORD_FILENAME
+        // The persistent boot-artifacts lock is engine-owned clean state in
+        // any boot dir the per-unit emission publishes into (vibe-check's
+        // `boot_dir_accepts_only_the_exact_persistent_lock`; the root
+        // gitignore template ships `**/.vibe-boot-*` for the same reason),
+        // so it is no part of a slot's package identity.
+        || path
+            == vibe_core::layout::current_boot_dir()
+                .join(vibe_core::layout::BOOT_ARTIFACTS_LOCK)
+                .to_string_lossy()
+                .replace('\\', "/")
 }
 
 fn collect_bytes(root: &Path) -> BTreeMap<String, Vec<u8>> {
