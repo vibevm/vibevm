@@ -422,6 +422,52 @@ than depending on untracked `cache/` archaeology.
   recorded at ABI §5.1 (`1bdc71da`); the live-reached path gap is `B-117`. Map
   `73990510` is 6831/2395/2166 at zero suspects/orphans/unresolved. T8 selector
   evaluation is next, and inherits `B-117` as a precondition.
+- R4.1 T8 selector evaluation: `99e52760` turns the construction-time selector
+  gap into a per-document verdict. The admission gate is its own fenced cell —
+  the ONE production cell allowed to name the kernel selector, held to more
+  everywhere else (no behavior channel of any spelling) — and the wrapper
+  stores an opaque gate, so the kernel type never reaches the wrapper cell even
+  by re-export. The verdict table reads off the total provider: coordinate arms
+  ask the kernel through typed identity rebuilt component by component;
+  `Unclaimed` is a CHOSEN final no-match (no row declared the document, so no
+  owner exists for a `packages` dimension to name — expressed by mapping onto
+  the kernel's absent-value rule so no second copy exists to drift);
+  `Undetermined` narrows the surviving capability gap to the one
+  still-undecidable case and refuses only when a `packages` dimension actually
+  asks. `B-117` closes at this gate: a backslashed declared path refuses
+  BEFORE matching, unconditionally in the authored dimensions, in its own
+  typed family — the fault family moved to `fault.rs` (the wrapper cell stood
+  at the 600-line seam) and gained the `Selector` variant so a violated
+  contract and a capability gap stay different claims. The construction
+  transaction is untouched: what construction still checks is registry
+  resolution, pass name, insertion and the lane/emitted grammar (enforced a
+  layer earlier by build validation); the selector verdict is a run-time
+  per-document fact in the same class as a behavior fault. The atom landed
+  from a producer stopped mid-task plus a completion packet; root read the
+  complete diff both times, verified the completion report's central claim
+  against `declared_subject` (a live world cannot carry `Unclaimed` without
+  also carrying `Undetermined` until the owner-view adapter lands, so the
+  packet's live-`Unclaimed` e2e was unimplementable as written), and resolved
+  the producer's REVIEW accordingly: the verdict half asserts the compiler's
+  own reached value, and T10's acceptance now owns upgrading it to a
+  whole-compile assertion — the ABI §5.1 revisit trigger firing is exactly
+  what makes that world buildable. A second unnamed RED — the stale T6b
+  construction-refusal test — was rewritten to the T8 law rather than
+  deleted. Root then re-reproduced every gate: 788 + 5/2/7/4 vibe-spec,
+  strict clippy, downstream workspace/lifecycle checks, conform 27-in-scope
+  0-new, fmt and diff hygiene. SEVEN mutations: the packet's five (adapter
+  always-match; `Unclaimed` refusing; `Undetermined` not refusing — those two
+  red DISJOINT live tests, proving the absences stayed distinct; `paths`
+  against the address; `B-117` check removed) plus two reviewer-authored —
+  the wrapper ignoring the verdict reds exactly the seven schedule-level
+  scope tests and no adapter unit test, and swapping the `Undetermined`
+  refusal into the `Selector` family reds exactly the `Capability`-pinned
+  acceptance — so the adapter's verdict, the wrapper's skip wire and the two
+  fault routes are independently covered guards. `B-117` is dispositioned
+  closed in `BACKLOG.md`; the `paths`-contract law now runs in production at
+  the first boundary a live reached subject meets. Map `3da9ccff` is
+  6831/2410/2183 at zero suspects/orphans/unresolved. T9 emitted
+  reconstruction is next.
 - Gate repair `67ab9683` fixes the conform content store's Windows cache slot:
   `sha256:<hex>` had created 1,393 NTFS alternate streams on one base file and
   failed with OS error 665. Authored engine + six vendored copies now use one
@@ -495,7 +541,7 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 | Step | State | Evidence |
 |---|---|---|
 | R4.0 one pure registry below lifecycle/workspace | done | kernel `6af1b86f`, map `8531cf82`; exact runtime-dependency/AST-ambient/public-reexport fences; kernel 22, lifecycle 287/3 ignored, orchestrator 126 + doctests, strict clippy/check/conform/DAG green |
-| R4.1 four positions, owner-scoped activation, header, per-unit fingerprint, reference oracle | in progress | controls `52a59dcc`; transaction `91142777` / `ab68d145`; T1 `b65f9958`; T3 `48d7dc75`; T2 `49e944f0` + `87ef2df6`; T4 `a252fcc8`; T5 `0eb46c82`; T6a `01f1522e`; T6b `6ffedb03`; T6c `cb6006d4`; T7 `419e1aed`; map `73990510` = 6831/2395/2166; T8–T10 selector/emitted/adapter open |
+| R4.1 four positions, owner-scoped activation, header, per-unit fingerprint, reference oracle | in progress | controls `52a59dcc`; transaction `91142777` / `ab68d145`; T1 `b65f9958`; T3 `48d7dc75`; T2 `49e944f0` + `87ef2df6`; T4 `a252fcc8`; T5 `0eb46c82`; T6a `01f1522e`; T6b `6ffedb03`; T6c `cb6006d4`; T7 `419e1aed`; T8 `99e52760`; map `3da9ccff` = 6831/2410/2183; T9–T10 emitted/adapter open |
 | R4.2 builtin XML minify | partial | pure strict kernel `016f0fab` and reversible comment codec `fbbd5140`; no activation/on-off e2e |
 | R4.3 lane analyzer | missing | no `vibe extensions analyze` or machine report |
 
