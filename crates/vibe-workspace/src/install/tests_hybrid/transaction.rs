@@ -7,6 +7,7 @@
 //! the parent (`use super::*`), never copied.
 
 use super::*;
+use specmark::verifies;
 
 /// R4.1 atom B — the per-unit lane renders/compiles every fallible semantic
 /// byte BEFORE touching the old artifact set, so a compile/backend refusal
@@ -19,6 +20,7 @@ use super::*;
 /// carried this law (`boot_artifacts::tests_ir_characterization`), and the
 /// unit path now joins it.
 #[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#UNIT-PUBLICATION-TRANSACTION")]
 fn a_per_unit_backend_refusal_leaves_the_units_artifacts_byte_exact() {
     let ws_dir = TempDir::new().unwrap();
     write(
@@ -112,6 +114,7 @@ fn a_per_unit_backend_refusal_leaves_the_units_artifacts_byte_exact() {
 /// the same resolution leaves BOTH files' bytes and mtimes untouched (the
 /// fingerprint-fresh early skip never enters the transaction).
 #[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#UNIT-PUBLICATION-TRANSACTION")]
 fn an_unchanged_reinstall_preserves_unit_bytes_and_mtimes() {
     let ws_dir = TempDir::new().unwrap();
     write(
@@ -192,6 +195,7 @@ fn an_unchanged_reinstall_preserves_unit_bytes_and_mtimes() {
 /// transaction's own fault/rollback suite stays the crash oracle; this pins
 /// only the binding.
 #[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#UNIT-PUBLICATION-TRANSACTION")]
 fn the_unit_write_path_publishes_only_through_the_transaction_manager() {
     let unit_lane = include_str!("../bootgen/hybrid_emit.rs");
     for forbidden in [

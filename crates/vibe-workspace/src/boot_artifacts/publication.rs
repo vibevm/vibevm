@@ -5,7 +5,7 @@
 //! caller can reach the transaction's internals through this cell; the one
 //! `pub(crate)` wrapper is the whole surface.
 
-specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#units");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#UNIT-PUBLICATION-TRANSACTION");
 
 use std::path::Path;
 
