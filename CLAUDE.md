@@ -256,6 +256,12 @@ print the exact single-line `GOAL-CLAUDE.txt` command. Claude Code slash command
 are user-only: the human pastes that `/goal …` line; an agent never claims it
 set the client goal itself.
 
+After creating and sealing `HANDOFF CENTRAL TO <target>`, the outgoing session
+must print `HANDOFF CREATED`, the literal `context-id`, the literal `handoff-id`,
+and the exact receive command. A cancelled offer has a sibling
+`cancellation.toml` and is not considered open; never make the owner search the
+local directory for an id.
+
 ## Session-resume command — `ВОССТАНОВИ СЕССИЮ` / `RESUME SESSION`
 
 When the user issues a resume trigger phrase, the job is to **restore context and report — nothing else**. Recognise the intent, not the exact wording:
