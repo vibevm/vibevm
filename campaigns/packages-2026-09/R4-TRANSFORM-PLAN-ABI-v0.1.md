@@ -165,6 +165,22 @@ config was authored; `Some(empty)` means an authored activation cleared the
 value. They remain distinct in plan identity even though the lifecycle handler
 fingerprint deliberately fuses them for its different delivered-envelope law.
 
+**Defect record + interim, 2026-08-29 (T10B).** Two corrections against the
+text above, found when the lowering landed. (1) "Workspace lowers" predates the
+kernel architecture §5.3 split and is superseded by it: `vibe-spec` owns the
+lowering; the workspace only filters rows. (2) The atom list's "T1 … +
+semantic config lowering/digest" was not what `b65f9958` delivered: T1 landed
+the neutral tree and its digest, and no `toml::Value` → `ConfigValue` walk
+exists — nor can one land while `toml` is a dev-only edge of `vibe-spec` (the
+dependency-DAG fence pins the runtime set). The landed interim
+(`config_lowering.rs`) is exact for the two decidable rows — absent → `None`,
+authored-empty → `Some(empty)` — and REFUSES a non-empty effective table
+(`ConfigLoweringGap::ValueTower`) rather than lowering it to a `None` whose
+digest would claim no config was authored. Closure belongs to R4.2 with the
+first real behavior: one `toml.workspace = true` line in `vibe-spec`, the
+DAG-fence runtime-set edit beside it, and the value-tower walk replacing the
+refusal arm.
+
 ## 4. Canonical digests
 
 Promote the existing `vibe-spec` `StableDigest` from the emit cell to one
@@ -328,6 +344,20 @@ adapter atom owns; `Undetermined` is the honest answer and is now sayable.
 provider: `Undetermined` should then become unreachable for declared documents,
 and a test asserting that is the signal the state has served its purpose.
 `Unclaimed` is permanent.
+
+**Ratified 2026-08-29 (T10B) — the trigger fired.** The adapter landed and the
+promised state exists: `ArtifactInput::normal_declared_by` /
+`simple_declared_by` carry the typed provider at input birth, the boot
+adapter's `inputs.rs` names a determinate provider for every reachable
+provenance × coordinate (pinned by `undetermined_is_unreachable_for_every_input_the_adapter_builds`
+plus a cell fence), and the T8 reached-verdict test was upgraded to the
+whole-compile form this section promised: a DECLARED root with a typed
+provider RUNS under an authored `packages` dimension naming it, the reached
+document is SKIPPED, nothing refuses, and a `paths`-scoped negative control
+proves the reached document was present
+(`an_unclaimed_reached_document_is_judged_and_never_claimed_by_a_packages_dimension`).
+`Undetermined` survives exactly where §5.1 said it honestly must: the
+display-only compatibility constructors and the wire rebuild.
 
 **Consequence recorded separately.** `declared_path` is matched by globs
 compiled with a literal separator, so separator spelling is semantic. Every

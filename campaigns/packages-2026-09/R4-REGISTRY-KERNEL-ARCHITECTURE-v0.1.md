@@ -247,6 +247,42 @@ lock-ordered snapshot, so reachability is never an ordering input.
 `compile:pass` rows are inside `enabled_compile_rows()` (the whole compile
 family); the T10B lowering refuses them typed until R6 owns the pass tier.
 
+**Ratified at T10B acceptance (central, 2026-08-29).** Three rulings the
+lowering landing surfaced, each now pinned in code:
+
+1. **Boot regeneration owns no epoch, so the durable lock it can read is
+   evidence, never authority.** §4's sentence — the adapter "orders the epoch
+   a command owns; it never chooses or invents one" — decides the seam:
+   during `vibe install` the boot lane is written before the resolution's
+   lock is published, so the on-disk lock is the PRE-install epoch and a
+   world observed against it never existed. Two rules follow
+   (`bootgen/owner_plans.rs`): a world that cannot be observed — no lock, an
+   unreadable lock, a lock that disagrees with the tree — is NOT a fault at
+   this seam and the lane takes `TransformPlan::empty()` (the exact
+   historical bytes); a world that IS observed is judged strictly — a
+   collection refusal or a lowering refusal propagates (pinned including the
+   collection half). Consequence, accepted: an install-time compile-point
+   extension is not observed on the install path itself until the
+   orchestrator migration (§5.3 follow-up 2) threads the in-memory lock
+   value; every post-install path observes. R4.2's activation e2e must
+   therefore drive a post-install regeneration, and should include a MEMBER
+   node (its own re-seating of the same lock is byte-invisible today).
+2. **Activation authority follows the artifact being written.** Two call
+   sites, not one: the node path lowers the node's own view; the per-unit
+   path lowers THAT package's view through the kernel's dependency-seat →
+   owner-seat projection; an uninstalled unit is outside the world (§3's
+   orphan rule) and takes the empty plan. Pinned behaviourally on one world
+   with two disjoint declarations, plus a call-site fence.
+3. **Exactly four names crossed the `vibe-spec` boundary** — `TransformPlan`
+   (+ `empty`/`len`/`is_empty`), `from_effective_rows`,
+   `TransformLoweringError`, `DocumentProvider` (re-exported;
+   `DocumentSubject` deliberately not) — and `ArtifactPlan::with_transforms`
+   went `pub` as T4 promised. A visibility fence pins each cell's public set
+   exactly. `BootEntry` carries `BootProvenance` beside its display
+   `origin`; `UnitInput` gained no second copy — the unit table's key
+   already IS the typed pair, and provenance is read off the key it is
+   filed under, never parsed from a rendering.
+
 ## 6. Four positions in the declared schedule
 
 The accepted schedule stays one list:

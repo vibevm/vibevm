@@ -598,6 +598,62 @@ than depending on untracked `cache/` archaeology.
   `cache/agents/sorted/R8A1-GRAMMAR/`. The A1+A2 pair closes the R8
   records-and-grammar slice; R8-MECHANISM is next in that lane and
   waits for coherent R4.
+- R4.1 T10B lowering, typed subjects and plan threading: `3618ee2b` closes
+  the T10 split — `TransformPlan::from_effective_rows` is the one public
+  lowering entry (stage from `CompilePoint` with `compile:pass` refusing on
+  its own arm until R6; provider through the one conversion; selector by
+  clone only when a dimension was authored, decided by the SHARED
+  `is_behaviorally_unscoped` so canonicalization and lowering have one home;
+  epoch from the new `TransformRegistry::epoch_of` so an off-catalog name is
+  the bounded `UnknownBuiltin` AT LOWERING), `DocumentProvider` is exported
+  and minted at input birth (`normal_declared_by`/`simple_declared_by`;
+  `BootProvenance` rides beside `BootEntry::origin`; the adapter cell
+  `boot_artifacts/inputs.rs` answers every reachable arm and refuses an
+  untypeable component), and `bootgen/owner_plans.rs` threads the two
+  lowerings — the node's own view on the node path, THAT package's view on
+  the per-unit path. Producer disclosed two packet defects, both ratified
+  central: T1's `toml`→`ConfigValue` walk never existed and cannot land
+  while `toml` is a dev-only edge, so a non-empty effective config REFUSES
+  typed (`ConfigLoweringGap::ValueTower`) rather than digesting a lie — the
+  ABI §3 defect record names the R4.2 closure; and the durable lock is NOT
+  in bootgen's scope — boot regeneration owns no epoch, so an unobservable
+  world (including the ordinary mid-install pre-lock state
+  `cli_clean_and_world` caught live) writes the historical empty-plan lane
+  while an OBSERVED world is judged strictly (kernel §5.3 T10B
+  ratification; the install-path observability gap is the named §5.3
+  orchestrator follow-up, and R4.2's e2e must drive a post-install
+  regeneration). The T8 reached-verdict test upgraded to whole-compile —
+  the ABI §5.1 trigger FIRED and its record says so. EIGHT mutations: the
+  packet's five (skip-instead-of-refuse; re-tier before build; adapter
+  `Undetermined` fallback; wrong `packages` coordinate; node plan into the
+  per-unit path — the last invisible to every byte suite because every
+  owner here declares no compile extension, so the producer added the
+  call-site fence plus the two-manifests scoping probe over the
+  empty-until-R4.2 catalog's own `UnknownBuiltin` previews) plus three
+  reviewer-authored: swallowing a COLLECTION refusal of an observed world
+  stayed green — rule 2's collection half was unpinned — so root authored
+  `an_observed_worlds_collection_refusal_propagates…` (duplicate
+  `[[extensions.use]]` fixture) and proved it red; halving the shared
+  unscoped-predicate redded 8 tests across BOTH consumers (lowering
+  row-for-row + seven selector laws), proving the one-home claim; and
+  identity-recovery from the display origin redded the new
+  `identity_comes_from_the_typed_pair_even_when_display_disagrees` pin plus
+  the refusal test. Perimeter ruling: the two `tests/` fixture edits
+  (mechanical `provenance` member, no assertion touched) are in-perimeter —
+  the alternative was a display-keyed side channel. Gates reproduced by
+  root: vibe-spec 819+5+2+7+4, vibe-workspace 469+5+7+28 (both new pins
+  in), clippy both, downstream checks, conform 27-in-scope 0-new, fmt. The
+  OWED workspace-wide panel ran at this landing and caught two A1-era
+  floor debts, fixed forward ahead of the atom: the wire-derive ratchet
+  (vibe-core 32 vs frozen 31 — the artifacts grammar's authored-manifest
+  serde is the config genre, baseline raised per the gate's own recipe,
+  `8cab762b`) and the polygon slot byte-map counting the engine's
+  persistent `.vibe-boot-artifacts.lock` as package identity
+  (`generated()` now admits exactly that file per vibe-check's own
+  clean-state law; residue lock cleaned from the git-practices slot;
+  B-114 third body drained, `2a79bb0b`). Boot-lane byte identity
+  proven live: a host `vibe install` over the OBSERVED 36-package world (lock in agreement, both owner-view paths live) regenerated the lane byte-identical (BOOT_BYTE_NOOP=True), complementing `cli_clean_and_world`'s unobservable half. Map `a4956c26`. T10C (fp frame +
+  header per frozen kernel §7.1) is next.
 - Gate repair `67ab9683` fixes the conform content store's Windows cache slot:
   `sha256:<hex>` had created 1,393 NTFS alternate streams on one base file and
   failed with OS error 665. Authored engine + six vendored copies now use one
@@ -671,7 +727,7 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 | Step | State | Evidence |
 |---|---|---|
 | R4.0 one pure registry below lifecycle/workspace | done | kernel `6af1b86f`, map `8531cf82`; exact runtime-dependency/AST-ambient/public-reexport fences; kernel 22, lifecycle 287/3 ignored, orchestrator 126 + doctests, strict clippy/check/conform/DAG green |
-| R4.1 four positions, owner-scoped activation, header, per-unit fingerprint, reference oracle | in progress | controls `52a59dcc`; transaction `91142777` / `ab68d145`; T1 `b65f9958`; T3 `48d7dc75`; T2 `49e944f0` + `87ef2df6`; T4 `a252fcc8`; T5 `0eb46c82`; T6a `01f1522e`; T6b `6ffedb03`; T6c `cb6006d4`; T7 `419e1aed`; T8 `99e52760`; T9 `513f3945`; map `f421cc68` = 6831/2417/2190; T10 adapter open (frozen `4e41f9ed`) |
+| R4.1 four positions, owner-scoped activation, header, per-unit fingerprint, reference oracle | in progress | controls `52a59dcc`; transaction `91142777` / `ab68d145`; T1 `b65f9958`; T3 `48d7dc75`; T2 `49e944f0` + `87ef2df6`; T4 `a252fcc8`; T5 `0eb46c82`; T6a `01f1522e`; T6b `6ffedb03`; T6c `cb6006d4`; T7 `419e1aed`; T8 `99e52760`; T9 `513f3945`; T10A `35cd04d1`; T10B `3618ee2b` (lowering + typed subjects + threading; config value-tower refusal until R4.2); map `a4956c26`; T10C (header + fp frame per kernel §7.1) open |
 | R4.2 builtin XML minify | partial | pure strict kernel `016f0fab` and reversible comment codec `fbbd5140`; no activation/on-off e2e |
 | R4.3 lane analyzer | missing | no `vibe extensions analyze` or machine report |
 
