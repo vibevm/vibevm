@@ -531,41 +531,59 @@ section IS that decision for sequence item 1, split into two disjoint slices
 (A1 manifest grammar + pure validation; A2 record wire shapes). Everything
 here is the frozen minimum; widening is a later recorded decision.
 
-**Decision — identifiers and vocabulary.** Target ids, artifact ids and
-profile names obey the one frozen backend-id grammar
-`[a-z0-9][a-z0-9._-]{0,63}` (the compiler's existing spelling authority —
-`vibe-helper.exe` and `vibe-helper.zip` fit; a second id grammar would be a
-second thing to drift). `ArtifactKind` is the closed lowercase set
-`executable | archive | file | directory | skill | agent-plugin`; growing it
-is a spec amendment, not a serde default. Mechanism keys are role-qualified
-strings whose prefix must match their table family (`build:` in
-`[[artifacts.build]]`, `package:` in `[[artifacts.package]]`, `deploy:` in
-`[[deploy.target]]`); the tail obeys the backend-id grammar. An exact
-`provider` pin uses the ExtensionKey spelling (`group/name#id`).
+**Amended at A1 acceptance (central, 2026-08-29).** The first spelling of
+this section was authored without re-reading the LANDED `2a3f3b44` grammar
+(R8.2A) and contradicted three of its recorded decisions. Wrong
+current-state facts are the most expensive class of plan bug, and this was
+one; the section below is the repaired freeze, each delta named against the
+incumbent it amends.
+
+**Decision — identifiers and vocabulary.** The mechanism plane keeps its ONE
+incumbent grammar: target ids, artifact ids, profile names, mechanism-key
+tails, mechanism declaration names and provider-pin ids all obey R8.2A's
+`is_portable_token` (nonempty lowercase alphanumerics, `-`, `.`). The first
+freeze's backend-id grammar is WITHDRAWN here: it was the compiler plane's
+authority, and importing it would have been the second grammar in this plane
+— the exact drift the argument claimed to prevent — while splitting one
+mechanism family across two grammars (a key tail its own declaration name
+could not spell). `ArtifactKind` becomes the closed lowercase set
+`executable | archive | file | directory | skill | agent-plugin`. This
+SUPERSEDES R8.2A's recorded open-kind decision, and the trigger is named:
+its why («future ecosystems need no phase-law change») is answered by growth
+being a one-line spec amendment, while §4's registry law — records validated
+against a vocabulary — became implementable only if the vocabulary is
+closed; an acquire-role provider reopens the set as a recorded decision.
+Mechanism-key prefix/table-family agreement stands (`build:` / `package:` /
+`deploy:`). An exact `provider` pin keeps R8.2A's `ProviderPin` spelling.
 
 **Decision — A1 manifest grammar (vibe-core::manifest, serde over TOML,
-`deny_unknown_fields` everywhere).**
-`[[artifacts.build]]`: `id`, `mechanism`, optional `workdir` (default `"."`,
-forward-slashed, no `..` escape), `inputs` (nonempty list of forward-slashed
-glob patterns), `outputs` (nonempty list of `{ id, kind, select? }` where
-`select` is an opaque provider table), optional `config` (the one
-EqTomlTable-backed config newtype — reusing the existing type; renaming it to
-a mechanism-neutral name is follow-up hygiene, not this atom).
-`[[artifacts.package]]`: `id`, `mechanism`, `inputs` (nonempty list of
-ARTIFACT ids), `outputs`, optional `config`.
-`[[deploy.target]]`: `id`, `artifact` (one artifact id), `mechanism`,
-optional exact `provider` pin, optional `depends_on` (target ids), optional
-`config`. `[deploy.profiles.<name>]`: `targets` (nonempty ordered list).
-`[deploy]` gains optional `default_profile`. Pure validation (validate-phase,
-no filesystem, no provider): unique target ids per family and unique output
-ids globally; every package input and deploy `artifact` resolves to exactly
-one declared output id; mechanism-prefix/table-family agreement; profile
-members exist; `default_profile` names a declared profile; the build/package
-reference graph and deploy `depends_on` are acyclic (cycle refusals name the
-cycle); bare-`deploy` legality (`default_profile` or exactly one profile) is
-a law stated on the value, decided by the CLI later. "Duplicate physical
-destination" and artifact-kind/mechanism compatibility need provider
-knowledge and belong to the mechanism atom, not A1.
+`deny_unknown_fields` on every structural table).**
+Inputs keep R8.2A's RECORDED shape — the strict tagged one-of
+`{ path = "…" }` | `{ artifact = "…" }`, in BOTH families: path-versus-id is
+never guessed from text, a package may carry raw files beside consumed
+artifacts, and build→build chaining stays expressible under the incumbent
+phase-forward law (package may consume build outputs; build never consumes
+package). The first freeze's bare strings are WITHDRAWN — they re-introduced
+the exact ambiguity `2a3f3b44` resolved structurally, and its split
+paths-for-build/ids-for-package semantics lost both mixed cases.
+`provider: Option<ProviderPin>` stays on BOTH artifact families and on
+`[[deploy.target]]` — §3.1's resolution law rule 1 names target pins for
+every mechanism target, and the first freeze's omission was an error, not a
+decision. What A1 ADDS to the incumbent: optional `workdir` on build targets
+only (default `"."`, forward-slashed, no `..` escape, the declarant-path
+law); `select` (an opaque provider table, the config newtype) on output
+rows; the closed `ArtifactKind` above; typed refusal enums (thiserror)
+replacing String errors, each message naming table, field and bounded value;
+`[deploy] default_profile`; and the named-cycle refusals. Pure validation
+(validate-phase, no filesystem, no provider): unique target ids and globally
+unique output ids (the incumbent's stronger cross-family law stands); every
+`{ artifact }` input and deploy `artifact` resolves to exactly one declared
+output id under phase-forward; mechanism-prefix/family agreement; profile
+members exist; `default_profile` names a declared profile; the reference
+graph and deploy `depends_on` are acyclic with the refusal naming the closed
+id sequence; bare-`deploy` legality stays a law on the value, decided by the
+CLI later. "Duplicate physical destination" and kind/mechanism compatibility
+need provider knowledge and belong to the mechanism atom, not A1.
 
 **Decision — A2 record wire shapes (schemas/ + vibe-wire, JTD-first,
 mirrored end to end on the existing `lifecycle_state` format's registration,
