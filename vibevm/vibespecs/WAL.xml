@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
-  <title id="root">WAL — checkpoint 2026-08-29: R7.5 reconciliation complete; surfaces next</title>
-  <status stage="impl" state="work" comment="lifecycle/extensions campaign active; R1/R2, R3.1-R3.4, R6.2a/b, R7.1-R7.4, R8.1 and R8.2a complete; R7.5 P0/P1/P2 complete, P3 next"/>
+  <title id="root">WAL — checkpoint 2026-08-29: R7.5 complete; R4 registry next</title>
+  <status stage="impl" state="work" comment="lifecycle/extensions campaign active; R1/R2, R3.1-R3.4, R6.2a/b, R7.1-R7.5, R8.1 and R8.2a complete; R4 next"/>
 
   <current-phase title="Current phase">
     <p><WAL-PHASE fact="true" status="impl/work">The active epic is
@@ -48,8 +48,13 @@
     P2/A5 is landed at `594734a3` / `63c35c85`: the lifecycle library now
     produces one validated verification member, the complete phase epoch gates
     verify before its suffix, and CLI/MCP carry the same value through success
-    and failure. P2 is complete; P3 requirements surfaces and the fake external
-    PDSA reference scenario are next.
+    and failure. P3 is landed at `1ff0ad64`, `e9301051`, `fdb1c465` /
+    `46f9321b`: thin requirements surfaces, installed-skill discovery and the
+    fake external PDSA reference are complete with no engine policy/back-edge
+    or provider call. Boundary repairs `5eeb4283`, `8b871fb1`, `b7515063`
+    closed the stale decoder/shape/sync ratchets. The final exact tree ran all
+    54 dynamic gates through `self-check: all green`; R7.5 is complete and R4.0
+    pure registry extraction is current.
     </WAL-PHASE></p>
   </current-phase>
 
@@ -63,7 +68,7 @@
       presets/query and owner scenario §10.1 are complete.</WAL-R2>
       <WAL-R3 fact="true" status="impl/done">R3 explicit six-carrier compiler
       IR, named pass schedule, verifier and command-owned compile trace are
-      complete. Current post-R7.5-P2/A5 checkpoint specmap: 6826 units, 2266 tagged items, 2037 edges,
+      complete. Current post-R7.5 checkpoint specmap: 6826 units, 2281 tagged items, 2051 edges,
       0 suspects, 0 gated orphans, 0 unresolved host edges, 24 standing
       warnings.</WAL-R3>
       <WAL-R7 fact="true" status="impl/done">R7.1 provider, R7.2 CLI agent
@@ -105,7 +110,7 @@
       and markup 508/0 through `self-check: all green`. Config, credentials,
       network transport and completion remain CLI-only; provider presence
       activates nothing by itself.</WAL-R7>
-      <WAL-R75 fact="true" status="impl/work">R7.5 P0 and P1 are complete: PROP-054
+      <WAL-R75 fact="true" status="impl/done">R7.5 P0 and P1 are complete: PROP-054
       owns the five evidence outcomes, exact scoped witness identity,
       read-only fact/query contract, independent authoring/adoption/relation/
       verification axes, external-only PDSA and LLM enhancement modes. The
@@ -123,8 +128,9 @@
       6814/2218/1987 with no suspects, gated orphans or unresolved host edges.
       P2/A1 is also complete: dependency-clean fact scanning/adoption joins are
       shared by the CLI, MD/XML split brains refuse, and all 16 unit + 8
-      doctest + 6 CLI oracles are green. P2/A2 query/provider is next; the
-      hosted/stale correction is frozen before measurement runtime.</WAL-R75>
+      doctest + 6 CLI oracles are green. P2/A2–A5 and P3 are complete through
+      the evidence/query/runtime/surface facts below and the all-green boundary
+      panel.</WAL-R75>
       <WAL-R75-QUERY fact="true" status="impl/done">R7.5 requirements
       library and relation enrichment are complete: one read-only query,
       one-read source/registry witnesses, three exact digest domains, explicit
@@ -165,6 +171,13 @@
       hashes created NTFS alternate streams until OS error 665. Portable
       cache filenames, exact RED, sync-engines 51/51 and a cold 1,404-file
       rebuild are green.</WAL-R75-CONFORM-CACHE>
+      <WAL-R75-SURFACES fact="true" status="impl/done">R7.5 P3 is complete:
+      CLI and MCP expose the same bounded read-only requirements root; the
+      installed skill names the tool; the fake external PDSA cells prove both
+      hosted remeasurement and stale→external-second-invocation with no paid
+      call or engine back-edge. Commits `1ff0ad64`, `e9301051`, `fdb1c465` and
+      `46f9321b`; final specmap 6826/2281/2051 at zero suspects/orphans/
+      unresolved.</WAL-R75-SURFACES>
       <WAL-R8 fact="true" status="impl/work">R8.1 project-only package-skill
       binding and R8.2a mechanism/artifact/deploy grammar are complete. Runtime
       mechanisms, build/package providers and deploy reconciliation remain.
@@ -242,17 +255,13 @@
   </constraints>
 
   <next title="Next">
-    <p><WAL-NEXT fact="true" status="impl/work">Execute R7.5 P2 in the
-    recorded dependency order: the `vibe-facts` scanner/join, one
-    `vibe-requirements` query and current/carried `vibe-trace` adapter are done
-    through `ea031767` / `8a05d344`; A4a/A4b stable input measurement is
-    landed through `5b01d71c`, and A4c0 streaming content identity through
-    `d24de1ff`, with A4c1 artifact baselines/current observations at
-    `2cabc7a7`; A5 reconciliation/report carriage is complete at `594734a3` /
-    `63c35c85`. Execute P3 only: add the thin `vibe requirements` and
-    `requirements_query` adapters over the existing shared library, then prove
-    hosted resume and stale→external-second-invocation with the fake external
-    PDSA scenario. R4 resumes after neutral R7.5 closes.</WAL-NEXT></p>
+    <p><WAL-NEXT fact="true" status="impl/work">Execute R4.0: extract the one
+    pure filesystem/env/CLI-free extension registry kernel below lifecycle,
+    workspace and compiler while keeping `EffectiveManifestKind` and
+    lifecycle `ExecutablePlan` above it. Preserve compatibility re-exports,
+    add exact dependency/ambient/identity fences, run affected registry /
+    lifecycle / orchestrator gates, then regenerate specmap. R4.1–R4.3 follow
+    only after that dependency boundary is green.</WAL-NEXT></p>
   </next>
 
   <known-issues title="Known issues">
@@ -263,7 +272,7 @@
       <WAL-I-SAFEFS-ANCHOR fact="true" status="spec/plan">`EntryProof` and
       proved-removal code currently cite PROP-054 `REPLY-SHAPE`, which does not
       semantically govern identity-bound filesystem ownership. The harvest
-      queues one safe-output ownership anchor for R7.5/R8, then repointing the
+      queues one safe-output ownership anchor for R8, then repointing the
       six existing code edges. Do not multiply the wrong citation.</WAL-I-SAFEFS-ANCHOR>
       <WAL-I-CITATION fact="true" status="impl/work">Commit `7fac07c8` cites a
       nonexistent guide anchor; the real fact id is `SWEEP-TESTS-OUT-SPLIT`.
