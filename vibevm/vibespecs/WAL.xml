@@ -80,7 +80,7 @@
       presets/query and owner scenario §10.1 are complete.</WAL-R2>
       <WAL-R3 fact="true" status="impl/done">R3 explicit six-carrier compiler
       IR, named pass schedule, verifier and command-owned compile trace are
-      complete. Current R4.1 checkpoint specmap: 6829 units, 2293 tagged items, 2063 edges,
+      complete. Current R4.1 checkpoint specmap: 6830 units, 2293 tagged items, 2063 edges,
       0 suspects, 0 gated orphans, 0 unresolved host edges, 24 standing
       warnings.</WAL-R3>
       <WAL-R7 fact="true" status="impl/done">R7.1 provider, R7.2 CLI agent
