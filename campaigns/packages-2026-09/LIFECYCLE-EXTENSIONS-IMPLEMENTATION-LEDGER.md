@@ -268,6 +268,22 @@ than depending on untracked `cache/` archaeology.
   rollback suite stay green. Root accepted workspace 452, strict clippy,
   dependent check and conform 0 new. Combined map `3883f15e` is
   6828/2293/2063 at zero suspects/orphans/unresolved.
+- R4.1 TransformPlan substrate: T1 `b65f9958` promotes the byte-identical
+  compiler digest primitive and lands the lossless semantic TOML config tree,
+  checked datetime and canonical config digest; T3 `48d7dc75` lands the typed
+  dependency/host selector subject (including host+path), public compiled
+  selector value, canonical OR-set equality and one subject-less enabled-row
+  view without adding a temporary plan allocation. Root rejected the first
+  worker pass for a five-digit TOML year, unspellable host+path subject,
+  double-collection plan and equality/digest disagreement; two same-cwd
+  claudez corrections fixed them and conform split the 638-line test cell.
+  The independent Opus/max T2 audit then exposed the still-ambiguous child
+  digest/provider/optional/epoch frames; central freeze `d5fcd92d` closes the
+  exact bytes, private epoch authority and refusal precedence before code.
+  Root gates: vibe-spec 664, registry 33 + doctest, lifecycle 287/3 ignored,
+  strict three-crate clippy, downstream workspace/install/orchestrator/CLI
+  check and conform 0 new. Map `5f6bca62` adds exactly 17 semantic edges and is
+  6830/2307/2080 at zero suspects/orphans/unresolved. T2 implementation is next.
 - Gate repair `67ab9683` fixes the conform content store's Windows cache slot:
   `sha256:<hex>` had created 1,393 NTFS alternate streams on one base file and
   failed with OS error 665. Authored engine + six vendored copies now use one
@@ -341,7 +357,7 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 | Step | State | Evidence |
 |---|---|---|
 | R4.0 one pure registry below lifecycle/workspace | done | kernel `6af1b86f`, map `8531cf82`; exact runtime-dependency/AST-ambient/public-reexport fences; kernel 22, lifecycle 287/3 ignored, orchestrator 126 + doctests, strict clippy/check/conform/DAG green |
-| R4.1 four positions, owner-scoped activation, header, per-unit fingerprint, reference oracle | in progress | package-control carriage/projection `52a59dcc`; unit transaction `91142777`, law `ab68d145`, map `3883f15e`; exact TransformPlan/config/digest ABI frozen in `R4-TRANSFORM-PLAN-ABI-v0.1.md`; world snapshot, plan/pass/header/fingerprint wiring still open |
+| R4.1 four positions, owner-scoped activation, header, per-unit fingerprint, reference oracle | in progress | package controls `52a59dcc`; unit transaction `91142777` / `ab68d145`; T1 config/digest `b65f9958`; T3 selector/enabled view `48d7dc75`; exact T2 frames `d5fcd92d`; map `5f6bca62` = 6830/2307/2080; T2 plan plus T4–T10 world/pass/header/fingerprint wiring open |
 | R4.2 builtin XML minify | partial | pure strict kernel `016f0fab` and reversible comment codec `fbbd5140`; no activation/on-off e2e |
 | R4.3 lane analyzer | missing | no `vibe extensions analyze` or machine report |
 

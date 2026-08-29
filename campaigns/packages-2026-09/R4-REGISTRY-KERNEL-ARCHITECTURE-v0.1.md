@@ -3,9 +3,11 @@
 Status: central implementation design, 2026-08-27; R4.0 extraction implemented
 and accepted 2026-08-29 at `6af1b86f` with map `8531cf82`; R4.1 owner controls
 `52a59dcc` and unit transaction `91142777` / `ab68d145` are landed, and the
-TransformPlan ABI is current. Semantic authority remains PROP-054 §§3 and 7
-plus the accepted lifecycle spec debt. This document fixes the crate boundary
-and execution dataflow.
+TransformPlan T1 config/digest substrate `b65f9958`, T3 selector substrate
+`48d7dc75` and exact T2 frame freeze `d5fcd92d` are landed (combined map
+`5f6bca62`). T2 implementation is current. Semantic authority remains PROP-054
+§§3 and 7 plus the accepted lifecycle spec debt. This document fixes the crate
+boundary and execution dataflow.
 
 Execution status and dependency order live in
 [`LIFECYCLE-EXTENSIONS-IMPLEMENTATION-LEDGER.md`](LIFECYCLE-EXTENSIONS-IMPLEMENTATION-LEDGER.md).

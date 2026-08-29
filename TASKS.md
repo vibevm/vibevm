@@ -99,8 +99,20 @@ fronts currently in flight. A worker report or old worktree is never completion.
             - [x] per-unit transaction parity (`91142777`, law `ab68d145`):
                   compile-before-mutation, atomic INDEX/selected/stale publish,
                   refusal byte exactness and fresh bytes/mtime preservation.
-            - [ ] implement the frozen TransformPlan/config/digest ABI in
-                  `R4-TRANSFORM-PLAN-ABI-v0.1.md`, then owner snapshot, four
+            - [x] T1 semantic TOML config/compiler digest substrate
+                  (`b65f9958`) and T3 typed provider/path selector plus
+                  subject-less enabled view (`48d7dc75`) are landed; root
+                  corrected four-digit datetime, host+path construction,
+                  single-collection planning and canonical OR-set equality.
+                  Exact central gates: vibe-spec 664, registry 33 + doctest,
+                  lifecycle 287/3 ignored, strict clippy/downstream/conform.
+            - [x] T2 construction authority/refusal precedence/exact byte
+                  schedule is frozen centrally in
+                  `R4-TRANSFORM-PLAN-ABI-v0.1.md` (`d5fcd92d`); combined map
+                  `5f6bca62` is 6830/2307/2080 at zero suspects/orphans/
+                  unresolved.
+            - [ ] implement T2 TransformPlan/seed/provider/implementation
+                  digests and refusals, then T4–T10 owner snapshot, four
                   positions, subject wire/verifier, header and fingerprint.
       - [ ] R4.2 bind strict builtin XML minify with the full RED corpus.
       - [ ] R4.3 JTD-first `vibe extensions analyze` report/CLI.
