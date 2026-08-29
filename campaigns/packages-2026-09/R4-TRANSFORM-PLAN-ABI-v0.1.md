@@ -1,9 +1,10 @@
 # R4.1 TransformPlan ABI and digest — implementation design v0.1
 
-Status: accepted central design, 2026-08-29. Semantic authority remains
-PROP-054 §§3.4, 7.1–7.3 and the R4 architecture. This document freezes the
-in-process ABI and digest before implementation; execution status stays in the
-implementation ledger.
+Status: accepted central design, 2026-08-29; exact T2 construction authority,
+refusal precedence and byte schedule frozen after adversarial review the same
+day. Semantic authority remains PROP-054 §§3.4, 7.1–7.3 and the R4
+architecture. This document freezes the in-process ABI and digest before
+implementation; execution status stays in the implementation ledger.
 
 ## 1. Boundary
 
@@ -81,10 +82,53 @@ pub struct ImplementationDigest([u8; 32]);
 ```
 
 `build(Vec<TransformSeed>)` refuses duplicate keys, more than `u32::MAX`
-entries, selector presence on lane/emitted, selector absence/presence that
-contradicts the stage grammar, blank/unbounded implementation identity and an
-invalid provider/version/hash. It enumerates order itself; a sparse/reordered
-caller ordinal is unrepresentable.
+entries, any selector supplied on lane/emitted, blank/unbounded implementation
+identity and an invalid provider/version/hash. Selector absence is legal at
+every stage. It enumerates order itself; a sparse/reordered caller ordinal is
+unrepresentable.
+
+### 2.1 Construction authority and refusals
+
+The Rust sketch above is semantic, not permission for arbitrary callers to
+author its fields. T2 lands the family `pub(crate)` behind private fields. A
+seed carries a typed `ExtensionKey`, not a reparsed key string, and a
+`TransformConfig(ConfigTable)` wrapper; the printable key enters the digest
+only through `ExtensionKey::as_str()`. Public crate-root construction waits for
+T10's real workspace consumer.
+
+`TransformImplementation` is opaque. Its builtin name/epoch constructor is
+private to the transform module: T2 tests can exercise it, T5's behavior
+registry becomes its production authority, and workspace never supplies an
+epoch. T2 does **not** advertise an empty or speculative builtin table. T5 adds
+the closed name→epoch lookup and its `UnknownBuiltin` refusal together with the
+behaviors it can actually return.
+
+T2 validation is deterministic: checked entry count first; then each seed in
+input order validates key scalar, duplicate key, provider/version/hash,
+implementation, and selector/stage. The scalar law for a key, exact version or
+ungrouped host name is nonempty and contains no ASCII control byte; it is not a
+new SemVer parser and it does not trim or normalize accepted spelling.
+Dependency group/name and coordinate hosts are already typed. Every required
+or present `ContentHash` is nevertheless rechecked with `ContentHash::parse`:
+the type intentionally exposes `from_validated` to trusted hash producers, so
+invalid Rust-constructed values remain reachable. Accepted hashes retain their
+full exact spelling, including `sha256:` versus `sha256-tree/1:`.
+
+A builtin implementation name obeys the compiler's already-frozen
+`BackendId` scalar grammar, `[a-z0-9][a-z0-9._-]{0,63}`, and its behavior epoch
+is nonzero. The private implementation constructor may create a candidate, but
+`TransformPlan::build` owns these refusals so an invalid candidate never enters
+identity. More than `u32::MAX` seeds is checked with conversion, never by
+allocating a test-sized vector; dense order is `0..len`. Config values need no
+second validator because T1's private fields and checked datetime constructors
+make the neutral tree the boundary.
+
+Source/document stages permit absent or present selectors. Lane/emitted refuse
+any supplied selector, even a behaviorally unscoped one, because manifest
+presence itself is illegal there. At source/document, a compiled selector whose
+two dimension accessors are both absent canonicalizes to outer absence;
+`applies_to` absent and `applies_to = {}` therefore have one behavioral
+identity. A present empty dimension remains present and matches nothing.
 
 `ArtifactPlan` gains a transform plan; `ArtifactPlan::compatibility` always
 pins `TransformPlan::empty()`, so compatibility fragment APIs run no tier-1
@@ -151,6 +195,60 @@ Selector package/path dimensions are OR-sets: digest strings byte-sort and
 deduplicate within each dimension, so reordering an equivalent selector does
 not make artifacts stale. Dimension absence remains distinct from present
 empty. Entry order remains semantic and is never sorted by key.
+
+### 4.1 Exact T2 frame schedule
+
+All tags below are epoch-1 bytes and cannot follow Rust enum layout. Every
+`field(x)` is exactly `u64_le(x.len()) || x`. A child SHA-256 is a 32-byte
+**field** (`field(digest32)`), not raw bytes; no second digest primitive is
+introduced. Display's `sha256:` prefix is an output projection and never enters
+another digest.
+
+Implementation digest, after its domain field:
+
+```text
+byte(0=builtin), field(name UTF-8), u32_le(behavior_epoch)
+```
+
+Byte `1` is reserved for R5 native implementation identity; R5 must freeze its
+payload before use. Plan digest is computed only for a nonempty plan. After its
+domain field:
+
+```text
+u64_le(entry_count)
+for each entry in effective input order:
+  field(canonical ExtensionKey spelling)
+  byte(stage: 0=source, 1=document, 2=lane, 3=emitted)
+  u32_le(dense assigned order)
+  provider:
+    byte(0=dependency)
+      field(group raw), field(name raw), field(version exact)
+      field(PackageKind::as_str()), field(ContentHash::as_str())
+    byte(1=host)
+      byte(host: 0=ungrouped, 1=coordinate, 2=virtual-workspace)
+      ungrouped: field(raw authored project name)
+      coordinate: field(group raw), field(name raw)
+      virtual-workspace: no component field
+      field(version exact)
+      byte(kind present); if 1, field(PackageKind::as_str())
+      byte(content_hash present); if 1, field(ContentHash::as_str())
+  field(implementation_digest32)
+  byte(config present); if 1, field(config_digest32)
+  byte(selector present); if 1:
+    byte(packages dimension present); if 1:
+      u64_le(post-dedup count), field(pattern UTF-8) for each canonical member
+    byte(paths dimension present); if 1:
+      u64_le(post-dedup count), field(pattern UTF-8) for each canonical member
+```
+
+Canonical dimension members are copied, UTF-8 byte-sorted and deduplicated;
+the count is taken **after** deduplication. `None` writes only presence byte 0;
+`Some(empty)` writes presence byte 1 plus zero count. Provider roots, registry
+all-view rows, wall clock, filesystem paths, rendered `Display` identities and
+Rust layout never enter. T3 makes `CompiledSelector::Eq` use the same canonical
+OR-set law while its raw accessors retain authored order/duplicates, so Rust
+semantic equality cannot disagree with plan identity merely because members
+were reordered.
 
 ## 5. Selector and document subject
 
