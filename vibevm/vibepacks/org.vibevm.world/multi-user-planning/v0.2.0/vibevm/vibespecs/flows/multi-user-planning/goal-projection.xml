@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Deterministic campaign goal projection</title>
+  <status stage="spec" state="done"/>
+  <p><SCOPE fact="true" status="spec/done">This document defines how one
+owner-facing central session derives a stable, resumable campaign goal from the
+authoritative user-local `plan.toml`. The output is local `GOAL.md`: useful to a
+harness goal field, a resumed session and a human, but never a second plan and
+never project authority. The same snapshot emits local `GOAL-CLAUDE.txt`, the
+exact bounded slash command a human can paste into Claude Code.</SCOPE></p>
+  <authority title="1. Authority and output home">
+    <facts ordered="false">
+      <GOAL-IS-DERIVED fact="true" status="spec/done">`plan.toml` is the source;
+  `GOAL.md` is a deterministic projection. On any mismatch, discard/regenerate
+  the goal rather than editing the plan to match it.</GOAL-IS-DERIVED>
+      <GOAL-IS-LOCAL fact="true" status="spec/done">The outputs live at
+  `~/.vibe/steward/contexts/&lt;context-id&gt;/{GOAL.md,GOAL-CLAUDE.txt}`. They are
+  never committed, mirrored, packaged, or used to grant another contributor
+  authority.</GOAL-IS-LOCAL>
+      <GOAL-HAS-NO-LLM fact="true" status="spec/done">Canonical bytes use no
+  model completion, paraphrase, chat history or provider call. An LLM may
+  explain the result separately; it never rewrites `GOAL.md`.</GOAL-HAS-NO-LLM>
+    </facts>
+  </authority>
+  <selection title="2. Selecting the campaign node">
+    <p><GOAL-NODE-SETTING fact="true" status="spec/done">Context
+`settings.toml` may name `goal_node = "&lt;stable-node-id&gt;"`. The id must exist,
+have kind `campaign` or `portfolio`, and not be `accepted`, `dropped`, or
+`superseded`. An explicit owner selection always wins.</GOAL-NODE-SETTING></p>
+    <p><UNIQUE-INFERENCE fact="true" status="spec/done">With no setting, infer
+only when exactly one non-terminal top-level `campaign` exists (a campaign with
+no campaign ancestor). Zero or several candidates is `GOAL_NODE_AMBIGUOUS` and
+produces no write. Never choose by recency, declaration order, current UI row,
+model preference or title similarity.</UNIQUE-INFERENCE></p>
+    <p><SELECTED-SUBTREE fact="true" status="spec/done">The selected node plus
+every transitive child by `parent` is the goal subtree. Dependencies may point
+outside it and remain visible as external prerequisites; they do not silently
+expand goal ownership.</SELECTED-SUBTREE></p>
+  </selection>
+  <snapshot title="3. One coherent input epoch">
+    <facts ordered="true">
+      <SNAPSHOT-READ fact="true" status="spec/done">Read `settings.toml`,
+  `custody.toml` and raw `plan.toml` bytes once. Parse and render from those
+  exact bytes. `plan_sha256` is lowercase SHA-256 of the raw plan bytes.</SNAPSHOT-READ>
+      <SNAPSHOT-AUTH fact="true" status="spec/done">Before rendering, require
+  `custody.state = "held"` and exact current session/holder identity. Workers,
+  non-holders, `vacant`, and `offering` may diagnose staleness but cannot write.</SNAPSHOT-AUTH>
+      <SNAPSHOT-RECHECK fact="true" status="spec/done">Render both outputs to
+  same-directory temporary files, then re-read the plan hash, selected setting,
+  profile and custody epoch/holder before publication. Rename the Claude command
+  first and `GOAL.md` last; the latter's marker certifies the former's hash. On
+  drift, discard and take at most one fresh snapshot; a second drift refuses as
+  `GOAL_INPUT_MOVED`.</SNAPSHOT-RECHECK>
+    </facts>
+  </snapshot>
+  <projection title="4. Projection algorithm">
+    <p><ORDER fact="true" status="spec/done">Hierarchy order is deterministic
+pre-order. Children sort by numeric `order`, then stable `id`; mandate rows keep
+their declaration order. No map/hash iteration order enters output.</ORDER></p>
+    <facts ordered="true">
+      <PROJECT-OUTCOME fact="true" status="spec/done">**Outcome:** selected node
+  id and title, followed by its own acceptance lines. Text is copied verbatim,
+  never summarized.</PROJECT-OUTCOME>
+      <PROJECT-MANDATES fact="true" status="spec/done">**Governing mandates:**
+  ordered union of mandate ids referenced by non-dropped/non-superseded nodes in
+  the subtree. Render id, disposition and exact text; accepted mandates remain
+  visible as laws already established.</PROJECT-MANDATES>
+      <PROJECT-BOUNDARY fact="true" status="spec/done">**Accepted boundary:**
+  every accepted node whose parent is outside the subtree or is not accepted.
+  This is the maximal accepted frontier: it compresses accepted descendants
+  without losing where non-terminal work begins.</PROJECT-BOUNDARY>
+      <PROJECT-CANDIDATES fact="true" status="spec/done">**Current candidates:**
+  every `candidate` node in pre-order, including its acceptance lines. A
+  candidate is never described as complete merely because bytes exist.</PROJECT-CANDIDATES>
+      <PROJECT-ROUTE fact="true" status="spec/done">**Remaining route:** every
+  subtree node not in `accepted | dropped | superseded | deferred`, in pre-order,
+  with id, title, state and explicit dependencies. Ancestors remain, so a short
+  UI frontier cannot erase distant stages.</PROJECT-ROUTE>
+      <PROJECT-DEFERRED fact="true" status="spec/done">**Deferred horizon:**
+  deferred subtree nodes, with their acceptance/revisit condition. Dropped and
+  superseded nodes are omitted from execution but their mandate dispositions
+  remain visible above.</PROJECT-DEFERRED>
+      <PROJECT-CLOSURE fact="true" status="spec/done">**Completion proof:** the
+  selected node's acceptance plus acceptance lines of every non-accepted
+  descendant whose kind is `gate`, in pre-order. Empty queues and completed UI
+  rows are explicitly insufficient.</PROJECT-CLOSURE>
+      <PROJECT-PROFILE fact="true" status="spec/done">**Execution profile:** one
+  fixed paragraph for canonical `ultra` or `standard`, copied from this
+  protocol. Both name the identical quality floor; only atom/checkpoint cadence
+  differs.</PROJECT-PROFILE>
+      <PROJECT-CONTINUITY fact="true" status="spec/done">**Continuation law:**
+  fixed text requires complete plan re-read after compact/resume, regeneration
+  on stale inputs, continued execution across intermediate atoms, and stopping
+  only for an owner-only decision, external blocker, or central handoff.</PROJECT-CONTINUITY>
+    </facts>
+  </projection>
+  <bytes title="5. Canonical bytes and marker">
+    <p><MARKER fact="true" status="spec/done">The first line is exactly one
+HTML comment with fields in this order:</MARKER></p>
+    <fence lang="markdown">&lt;!-- steward-goal schema=1 plan_id="example" plan_revision=7 goal_node="BUILD" planning_profile="ultra" plan_sha256="0123...cdef" claude_condition_sha256="fedc...3210" --&gt;</fence>
+    <p><BYTE-LAW fact="true" status="spec/done">UTF-8 without BOM, LF line
+endings, one trailing newline, exact heading order from §4, no timestamp,
+absolute path, session id, holder id, harness, model, token count or chat text.
+Markdown bullet text is copied from TOML without stylistic rewriting. Identical
+plan bytes + selected node + canonical profile produce byte-identical
+`GOAL.md`.</BYTE-LAW></p>
+    <p><PROFILE-TEXT fact="true" status="spec/done">Canonical profile paragraph:
+`ultra` — “Use extended reasoning across the full route; larger coherent atoms
+are allowed only while review and evidence remain bounded. The completeness,
+review and gate floor is unchanged.” `standard` — “Use smaller atoms, explicit
+per-claim evidence and a backscan after every completed parent. The
+completeness, review and gate floor is unchanged.”</PROFILE-TEXT></p>
+    <p><CONTINUITY-TEXT fact="true" status="spec/done">Canonical continuation
+paragraph: “After compact or resume, re-read the complete plan and refresh this
+goal if stale. Continue across accepted intermediate atoms; a short UI plan,
+context loss, difficulty, or worker termination is not completion. Stop only
+for an owner-only decision, an external blocker, or a central custody handoff.
+Declare completion only when every completion proof below is satisfied.”</CONTINUITY-TEXT></p>
+  </bytes>
+  <claude title="6. Claude Code goal-command adapter">
+    <p><CLAUDE-OBSERVED-SURFACE fact="true" status="spec/done">Claude Code
+2.1.220 exposes `/goal &lt;condition&gt;` and rejects a condition longer than 4000
+JavaScript string units. Adapter epoch 1 therefore caps the condition at **4000
+UTF-16 code units**. This observed client limit belongs only to the adapter; it
+does not constrain canonical `GOAL.md`.</CLAUDE-OBSERVED-SURFACE></p>
+    <p><CLAUDE-FILE fact="true" status="spec/done">`GOAL-CLAUDE.txt` is one
+logical line plus one LF: exact ASCII prefix `/goal ` followed by the condition.
+The condition contains no newline; every input whitespace run is collapsed to
+one ASCII space. A human copies the whole trimmed file and pastes it into the
+interactive prompt. Agents never invoke slash commands on the user's behalf.</CLAUDE-FILE></p>
+    <p><CLAUDE-CONDITION fact="true" status="spec/done">The condition is assembled
+in this fixed order: (1) “Complete campaign [id] title exactly as stewardship
+plan.toml revision N defines, including every non-terminal descendant and all
+completion proof in GOAL.md.”; (2) candidate ids/titles; (3) non-terminal direct
+child route ids/titles/states; (4) “After compact/resume re-read plan.toml and
+GOAL.md; do not stop at a short UI plan, an intermediate atom, difficulty or a
+worker/process ending; stop only for an owner-only decision, external blocker or
+central handoff; the goal is met only when the selected node is accepted with
+all required descendants/gates and owner inspection.”</CLAUDE-CONDITION></p>
+    <p><CLAUDE-BOUNDING fact="true" status="spec/done">Bounding never truncates
+the mandatory first/fourth clauses. Add candidate entries in pre-order, then
+direct-child route entries in order. If the next full `id + title + state` entry
+would exceed 4000 units, retry that section with ids only. If ids still exceed,
+keep the longest prefix that fits and append `+N more in GOAL.md`. The count is
+exact. If mandatory clauses alone exceed the cap, keep `GOAL.md` but refuse the
+adapter as `GOAL_CLAUDE_BASE_TOO_LONG`; never cut arbitrary characters.</CLAUDE-BOUNDING></p>
+    <p><CLAUDE-HASH fact="true" status="spec/done">`claude_condition_sha256` is
+lowercase SHA-256 of UTF-8 condition bytes without `/goal ` or trailing LF. A
+current GOAL marker and `GOAL-CLAUDE.txt` must agree on this hash. On
+`GOAL_CLAUDE_BASE_TOO_LONG`, the marker carries literal `unavailable` and no
+command file exists; canonical GOAL remains current while the adapter refusal
+is reported.</CLAUDE-HASH></p>
+  </claude>
+  <freshness title="7. Freshness and live switching">
+    <p><STALE-TEST fact="true" status="spec/done">A goal is current only when its
+marker schema, plan id, plan revision, goal node, canonical profile and raw
+plan SHA equal current inputs, and either the actual Claude condition hash
+matches or the current deterministic render repeats the marker's `unavailable`
+refusal. Missing/malformed required output is stale. A changed interaction mode
+alone is not stale because it changes narration, not goal semantics.</STALE-TEST></p>
+    <p><REFRESH-TRIGGERS fact="true" status="spec/done">Check at central-session
+start, after compaction/resume, after every accepted plan mutation, and after
+owner changes `goal_node` or planning profile. The current holder refreshes
+before further campaign execution; non-holders report only.</REFRESH-TRIGGERS></p>
+  </freshness>
+  <template title="8. Exact section skeleton">
+    <fence lang="markdown">&lt;!-- steward-goal ... --&gt;
+# Goal — [ID] Title
+
+## Outcome
+...
+
+## Governing mandates
+- [M-001] owned — exact mandate text
+
+## Accepted boundary
+- [R1] Accepted title
+
+## Current candidates
+- [R2-A] Candidate title
+  - Acceptance: exact acceptance line
+
+## Remaining route
+- [R2] active — Title; depends on: R1
+
+## Deferred horizon
+- [POST] Deferred title — revisit/acceptance line
+
+## Completion proof
+- exact selected/gate acceptance line
+
+## Execution profile
+canonical paragraph
+
+## Continuation law
+canonical paragraph</fence>
+  </template>
+  <refusals title="9. Refusals">
+    <facts ordered="false">
+      <REFUSE-AMBIGUOUS fact="true" status="spec/done">`GOAL_NODE_AMBIGUOUS`:
+  zero/multiple inferable campaigns and no valid explicit selection.</REFUSE-AMBIGUOUS>
+      <REFUSE-INVALID fact="true" status="spec/done">`GOAL_NODE_INVALID`: absent,
+  wrong kind, or already terminal selected id.</REFUSE-INVALID>
+      <REFUSE-NOT-HOLDER fact="true" status="spec/done">`GOAL_NOT_HOLDER`:
+  diagnosis allowed, write forbidden.</REFUSE-NOT-HOLDER>
+      <REFUSE-PLAN fact="true" status="spec/done">`GOAL_PLAN_INVALID`: duplicate
+  ids, missing parent/dependency/mandate, cycle, invalid current node or unknown
+  state/kind needed by the projection.</REFUSE-PLAN>
+      <REFUSE-MOVED fact="true" status="spec/done">`GOAL_INPUT_MOVED`: second
+  snapshot drift; no output replacement.</REFUSE-MOVED>
+      <REFUSE-CLAUDE-LIMIT fact="true" status="spec/done">`GOAL_CLAUDE_BASE_TOO_LONG`:
+  mandatory condition clauses alone exceed the observed client cap; canonical
+  GOAL remains available.</REFUSE-CLAUDE-LIMIT>
+    </facts>
+  </refusals>
+  <companion title="10. Automation boundary">
+    <p><SKILL-NOW-COMPANION-LATER fact="true" status="spec/done">v0.2 ships the
+`steward-goal` agent skill as the executable procedure. A future separate
+`vibe-steward goal render` companion may implement these exact bytes and
+refusals. It is never a `vibe.exe` subcommand, and adding it cannot change this
+format without a new schema/version.</SKILL-NOW-COMPANION-LATER></p>
+  </companion>
+</spec>

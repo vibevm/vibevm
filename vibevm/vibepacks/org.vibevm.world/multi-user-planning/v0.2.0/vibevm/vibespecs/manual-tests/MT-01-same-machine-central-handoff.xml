@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">MT-01 — same-machine central handoff dogfood</title>
+  <status stage="test" state="work"/>
+  <purpose title="Purpose">
+    <p><PURPOSE fact="true" status="test/work">Prove that a fresh central agent
+with no reliance on the outgoing chat can recover a long-running dirty campaign,
+distinguish accepted from candidate work, retain the entire distant route, and
+take custody only after an empirical receipt.</PURPOSE></p>
+  </purpose>
+  <setup title="Setup">
+    <facts ordered="true">
+      <SETUP-CAMPAIGN fact="true" status="test/work">Use a real multi-stage
+  campaign with accepted commits, at least one dirty candidate atom, later
+  stages not visible in the harness's short UI plan, and retained worker/cache
+  artifacts.</SETUP-CAMPAIGN>
+      <SETUP-AGENTS fact="true" status="test/work">Outgoing and incoming are
+  different owner-facing central sessions on the same machine, preferably
+  different model/harness families. Neither is a worker subagent.</SETUP-AGENTS>
+      <SETUP-STATE fact="true" status="test/work">Initialize one exact
+  `~/.vibe/steward` context with explicit profile and custody.</SETUP-STATE>
+    </facts>
+  </setup>
+  <procedure title="Procedure">
+    <facts ordered="true">
+      <STEP-OFFER fact="true" status="test/work">Outgoing central runs the
+  complete backscan, writes/seals offer, enters `offering`, and performs no
+  later repository or plan write.</STEP-OFFER>
+      <STEP-RECEIVE fact="true" status="test/work">Incoming central boots cold,
+  receives by context id without pasted handoff prose, reads package/project
+  authorities and the stored local bundle, then independently inspects
+  Git/tree/artifacts.</STEP-RECEIVE>
+      <STEP-RECEIPT fact="true" status="test/work">Incoming receipts with every
+  discrepancy, advances epoch, reports state and waits without beginning the
+  candidate atom.</STEP-RECEIPT>
+      <STEP-GOAL fact="true" status="test/work">After claim, incoming refreshes
+  goal, prints complete GOAL.md and the exact bounded `/goal …` command. The
+  owner needs no filesystem search or handoff paste.</STEP-GOAL>
+      <STEP-ACCEPTANCE fact="true" status="test/work">After owner direction,
+  incoming reruns the candidate atom's central review and gates rather than
+  inheriting the outgoing verdict.</STEP-ACCEPTANCE>
+    </facts>
+  </procedure>
+  <pass title="Pass criteria">
+    <facts ordered="false">
+      <PASS-NO-CHAT fact="true" status="test/work">Incoming needed no fact from
+  outgoing chat that was absent from durable local/project state.</PASS-NO-CHAT>
+      <PASS-ROUTE fact="true" status="test/work">Incoming named every remaining
+  top-level stage and the expanded current frontier; no three-step-plan
+  truncation occurred.</PASS-ROUTE>
+      <PASS-BOUNDARY fact="true" status="test/work">Accepted commits remained
+  evidence; dirty candidate work remained unaccepted until reproduced.</PASS-BOUNDARY>
+      <PASS-CUSTODY fact="true" status="test/work">Exactly one receipt advanced
+  epoch and the outgoing session stayed fenced.</PASS-CUSTODY>
+      <PASS-MULTIUSER fact="true" status="test/work">No personal state file was
+  added to the repository and no shared contributor hotspot was introduced.</PASS-MULTIUSER>
+    </facts>
+  </pass>
+</spec>

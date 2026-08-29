@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">MT-02 — deterministic campaign goal projection</title>
+  <status stage="test" state="done"/>
+  <purpose title="Purpose">
+    <p><PURPOSE fact="true" status="test/done">Prove that a central session can
+derive the same complete goal from files alone, reject ambiguity and stale
+authority, and carry candidates plus distant work without an LLM call.</PURPOSE></p>
+  </purpose>
+  <cases title="Cases">
+    <facts ordered="true">
+      <CASE-GOLDEN fact="true" status="test/done">Render the shipped one-campaign
+  fixture and compare exact GOAL.md bytes to its non-converted golden
+  `expected/GOAL.txt`.</CASE-GOLDEN>
+      <CASE-AMBIGUOUS fact="true" status="test/done">Remove `goal_node` while two
+  top-level campaigns are open: `GOAL_NODE_AMBIGUOUS`, no output mutation.</CASE-AMBIGUOUS>
+      <CASE-STALE fact="true" status="test/done">Change separately plan bytes,
+  revision, selected node and profile; each makes the old marker stale. Change
+  only interaction mode; it remains current.</CASE-STALE>
+      <CASE-STABLE fact="true" status="test/done">Render twice from identical
+  bytes: both outputs are byte-identical and contain no time/model/session data.
+  The Claude condition is one line and at most 4000 UTF-16 units.</CASE-STABLE>
+      <CASE-CANDIDATE fact="true" status="test/done">Candidate appears under
+  Current candidates and Remaining route, never Accepted boundary.</CASE-CANDIDATE>
+      <CASE-CUSTODY fact="true" status="test/done">Worker, different holder and
+  `offering` each diagnose but leave a sentinel GOAL.md byte-identical.</CASE-CUSTODY>
+      <CASE-MOVED fact="true" status="test/done">Move the plan between snapshot
+  and rename twice: `GOAL_INPUT_MOVED`, no partial/temporary output remains.</CASE-MOVED>
+      <CASE-CLAUDE-BOUND fact="true" status="test/done">Grow candidates and
+  direct children across the cap: deterministic full-entry → ids-only → exact
+  `+N more in GOAL.md` fallback, never arbitrary truncation; mandatory-base
+  overflow refuses only the adapter.</CASE-CLAUDE-BOUND>
+    </facts>
+  </cases>
+  <pass title="Pass criteria">
+    <p><PASS fact="true" status="test/done">All eight cases pass; package check
+is clean; a real long campaign goal includes its accepted frontier, candidate,
+complete distant route and final gates, and survives compact/resume without
+chat context.</PASS></p>
+  </pass>
+</spec>

@@ -1,0 +1,41 @@
+<!-- steward-goal schema=1 plan_id="fixture-plan" plan_revision=7 goal_node="BUILD" planning_profile="ultra" plan_sha256="75188644e28d9ff51e716a69667f815cf8c0bb36c22cac945b20c86ad4d4330e" claude_condition_sha256="c87cf37439e9f6cdc854183177bcd984380bfbbe28f524dbf972b599d7306b2e" -->
+# Goal — [BUILD] Build the deterministic fixture
+
+## Outcome
+Complete [BUILD] Build the deterministic fixture.
+- Acceptance: all build phases accepted
+- Acceptance: final gate green
+
+## Governing mandates
+- [M-001] owned — Build the complete feature and preserve every acceptance boundary.
+- [M-002] owned — Keep the deferred deployment horizon visible without implementing it now.
+
+## Accepted boundary
+- [R1] Accepted substrate
+
+## Current candidates
+- [R2] Candidate implementation
+  - Acceptance: review actual bytes
+  - Acceptance: mutation becomes red
+
+## Remaining route
+- [BUILD] active — Build the deterministic fixture; depends on: none
+- [R2] candidate — Candidate implementation; depends on: R1
+- [R3] planned — Distant integration; depends on: R2
+- [FINAL] planned — Final campaign proof; depends on: R3
+
+## Deferred horizon
+- [POST] Future deployment
+  - Revisit/acceptance: new campaign commissioned
+
+## Completion proof
+- all build phases accepted
+- final gate green
+- full final panel green
+- owner inspection
+
+## Execution profile
+Use extended reasoning across the full route; larger coherent atoms are allowed only while review and evidence remain bounded. The completeness, review and gate floor is unchanged.
+
+## Continuation law
+After compact or resume, re-read the complete plan and refresh this goal if stale. Continue across accepted intermediate atoms; a short UI plan, context loss, difficulty, or worker termination is not completion. Stop only for an owner-only decision, an external blocker, or a central custody handoff. Declare completion only when every completion proof below is satisfied.
