@@ -3,8 +3,9 @@
 Status: accepted central design, 2026-08-29; T1 `b65f9958`, T2 `49e944f0`, T3
 `48d7dc75`, T4 `a252fcc8`, T5 `0eb46c82` and T6a `01f1522e` implemented.
 Borrowed hash validation is `87ef2df6`; current map is `ce3e62bf`. Exact T2
-construction/refusal/byte schedule, T4 carriage, T5 registry and T6 execution
-split are frozen after adversarial review. Semantic authority remains PROP-054 §§3.4,
+construction/refusal/byte schedule, T4 carriage, T5 registry, T6 execution
+split and T6b construction/error surface are frozen after adversarial review.
+Semantic authority remains PROP-054 §§3.4,
 7.1–7.3 and the R4 architecture. Execution status stays in the implementation
 ledger.
 
@@ -361,14 +362,64 @@ rewrite:
    commissioning vector; T6 is not complete merely because a no-op crossed the
    position.
 
-Three temporary states are explicit, never silently approximated. A nonempty
+Four temporary states are explicit, never silently approximated. A nonempty
 compatibility-fragment plan refuses (compatibility constructors themselves stay
 empty forever). A selector-bearing source/document entry refuses until T7/T8
 provide the typed DocumentSubject — never execute unconditionally, use an
-unscoped subject or parse Display provenance. An emitted behavior returning
-different bytes refuses until T9 owns reconstruction of digest/provenance;
-byte-equal output returns the original EmittedArtifact untouched. These are
-typed capability gaps, not `todo!`, panic or skipped rows.
+unscoped subject or parse Display provenance. A lane behavior returning a
+different `LaneIr` refuses until T6c owns the immutable witness, intrinsic
+validation and transition/equivalence check; full `LaneIr` equality is the
+temporary detector, never a substitute for that witness. An emitted behavior
+returning different bytes refuses until T9 owns reconstruction of digest/
+provenance; byte-equal output returns the original EmittedArtifact untouched.
+These are typed capability gaps, not `todo!`, panic or skipped rows.
+
+### 6.3 T6b construction, refusal and error freeze
+
+Schedule construction is a two-step transaction. First, reject any nonempty
+plan whose `ArtifactFrame` is `CompatibilityFragment`; the rule covers custom
+test targets as well as the public `static-fragment` adapter, while the T4
+retarget oracle still proves that no plan was silently dropped. Then walk every
+entry in dense plan order. For each entry resolve exact builtin name → epoch →
+stage through the one injected registry, then reject a still-present source/
+document selector as the temporary subject capability gap. A selector whose
+two dimensions were both absent has already canonicalized to outer `None` and
+does not refuse; a present-empty dimension remains present and does. The first
+fault in this order wins. Only after the whole walk succeeds may the resolved
+rows be stably partitioned by stage and inserted; no name sort, registry order
+or `BTreeMap` iteration may reorder rows within a stage.
+
+Each wrapper owns one cloned `Arc<dyn TransformBehavior>`, exact cloned config,
+dense order/stage and a bounded key preview for faults. It owns the exact
+`transform:<stage>:<ExtensionKey>` `PassName` as schedule identity, but no
+failure reconstructs key/stage/order by parsing that rendered name. The wrapper
+cell may render this mandated name and hold the one `Arc<dyn …>` channel; it is
+still fenced from manifest/collector/row/path/codec access, `Box` behavior
+ownership, `SelectorSubject` and selector `matches`. Plan/config/digest cells
+remain behavior- and registry-free under their existing stronger fence.
+
+Production injects `TransformRegistry::builtins()` (empty until R4.2); cfg-test
+code alone may inject T5's one shared identity catalog. Resolution, capability
+and pipeline-insertion failures are typed and happen before the first source
+read/parse. Runtime behavior/capability failures remain typed through T6a's
+fallible discovery or the artifact segment; they must be downcast from the
+pass manager before the generic string-rendering pass/backend arms.
+`ArtifactCompileError` therefore gains one public transform-family variant
+holding an opaque public `TransformCompileError`; its private source retains
+the exact internal enum for crate tests. No TransformPlan/registry/behavior
+type becomes public. Legacy public `CompileError` gains no unreachable variant:
+the public compatibility path constructs an empty plan and keeps its exact old
+mapping, while crate-private prefix/lane helpers may use the artifact-level
+error family. Do not add `#[non_exhaustive]` or a public fault taxonomy merely
+to anticipate T7–T10; T10 freezes external inspection when a real consumer
+exists.
+
+T6b intentionally retires T4's claim that an attached nonempty plan is inert.
+The empty-plan half stays byte/error/schedule exact. A nonempty plan under the
+empty production catalog now refuses before parse; the same plan under the
+injected identity catalog adds the exact positions and preserves bytes/
+provenance because its behaviors actually ran. Tests must distinguish those
+causes rather than keep the old inert-carriage comparison green by accident.
 
 ## 7. Empty plan law
 
