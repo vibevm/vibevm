@@ -131,10 +131,16 @@ fronts currently in flight. A worker report or old worktree is never completion.
                   clippy/downstream/conform and epoch/Box mutations. Map
                   `0f73cdfe` is 6831/2335/2108 at zero suspects/orphans/
                   unresolved.
-            - [ ] implement T6a fallible discovery, T6b four identity
-                  positions and T6c lane witness, then T7–T10 subject wire/
-                  selector/verifier, emitted ownership, owner adapter, header
-                  and fingerprint.
+            - [x] T6a fallible discovery (`01f1522e`): the exact caller `E`
+                  now crosses every simple/use/source/embed recursion without
+                  becoming a source-resolution failure; all three historical
+                  callers eliminate `Infallible` exhaustively. Root accepted
+                  721 + 5/2/7/4 vibe-spec tests, strict clippy, downstream,
+                  conform and live swallow/unwrap mutations. Map `ce3e62bf`
+                  is 6831/2344/2117 at zero suspects/orphans/unresolved.
+            - [ ] implement T6b four identity positions and T6c lane witness,
+                  then T7–T10 subject wire/selector/verifier, emitted
+                  ownership, owner adapter, header and fingerprint.
       - [ ] R4.2 bind strict builtin XML minify with the full RED corpus.
       - [ ] R4.3 JTD-first `vibe extensions analyze` report/CLI.
 - [ ] **R5.1–R5.5** — native schemas/SDK, loader, source/prebuilt build,

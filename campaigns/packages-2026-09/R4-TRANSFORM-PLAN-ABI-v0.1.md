@@ -1,10 +1,10 @@
 # R4.1 TransformPlan ABI and digest — implementation design v0.1
 
 Status: accepted central design, 2026-08-29; T1 `b65f9958`, T2 `49e944f0`, T3
-`48d7dc75`, T4 `a252fcc8` and T5 `0eb46c82` implemented. Borrowed hash
-validation is `87ef2df6`; current map is `0f73cdfe`. Exact T2 construction/
-refusal/byte schedule, T4 carriage, T5 registry and T6 execution split are
-frozen after adversarial review. Semantic authority remains PROP-054 §§3.4,
+`48d7dc75`, T4 `a252fcc8`, T5 `0eb46c82` and T6a `01f1522e` implemented.
+Borrowed hash validation is `87ef2df6`; current map is `ce3e62bf`. Exact T2
+construction/refusal/byte schedule, T4 carriage, T5 registry and T6 execution
+split are frozen after adversarial review. Semantic authority remains PROP-054 §§3.4,
 7.1–7.3 and the R4 architecture. Execution status stays in the implementation
 ledger.
 
@@ -407,8 +407,11 @@ plan is the one carriage regression T4 must make red.
    empty/nonempty schedule/byte/error/retarget REDs; map `5aa44611`.
 5. **Done `0eb46c82`:** T5 private behavior registry/name/epoch golden with
    test-only identity behaviors; map `0f73cdfe`.
-6. **Current:** T6a fallible discovery, then T6b identity positions and T6c
-   lane witness; per-document/per-artifact invocation REDs.
+6. **Done `01f1522e`:** T6a fallible discovery propagates the exact generic
+   callback error through every recursion; existing callers use one exhaustive
+   `Infallible` adapter. Map `ce3e62bf`.
+   **Current:** T6b identity positions, then T6c lane witness;
+   per-document/per-artifact invocation REDs.
 7. T7 DocumentSubject carrier + compiler IR JTD/codegen/wire-diff.
 8. T8 selector evaluation and immutable-subject verifier.
 9. T9 manager-owned emitted reconstruction/provenance.

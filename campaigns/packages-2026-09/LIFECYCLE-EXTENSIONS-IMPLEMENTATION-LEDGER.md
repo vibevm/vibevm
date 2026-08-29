@@ -322,6 +322,16 @@ than depending on untracked `cache/` archaeology.
   downstream/conform and live epoch-check/Box-fence mutations. Map `0f73cdfe`
   is 6831/2335/2108 at zero suspects/orphans/unresolved. T6 is split into T6a
   fallible discovery, T6b identity positions and T6c lane witness.
+- R4.1 T6a fallible discovery: `01f1522e` makes the one worklist discovery
+  seam return the caller's exact generic error through simple input, `#use`,
+  `#source` expansion and `#embed` recursion. The three existing parse callers
+  remain infallible through one private exhaustive `Infallible` eliminator;
+  source lookup failures retain their separate recorded-observation semantics.
+  Root rejected a vacuous failure-recorder assertion and an unproved syntax
+  classifier, accepted the claudez correction, then reran 721 + 5/2/7/4
+  vibe-spec tests, strict clippy/downstream/conform and live swallow/unwrap
+  mutations. Map `ce3e62bf` is 6831/2344/2117 at zero suspects/orphans/
+  unresolved. T6b identity positions is next.
 - Gate repair `67ab9683` fixes the conform content store's Windows cache slot:
   `sha256:<hex>` had created 1,393 NTFS alternate streams on one base file and
   failed with OS error 665. Authored engine + six vendored copies now use one
@@ -395,7 +405,7 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 | Step | State | Evidence |
 |---|---|---|
 | R4.0 one pure registry below lifecycle/workspace | done | kernel `6af1b86f`, map `8531cf82`; exact runtime-dependency/AST-ambient/public-reexport fences; kernel 22, lifecycle 287/3 ignored, orchestrator 126 + doctests, strict clippy/check/conform/DAG green |
-| R4.1 four positions, owner-scoped activation, header, per-unit fingerprint, reference oracle | in progress | controls `52a59dcc`; transaction `91142777` / `ab68d145`; T1 `b65f9958`; T3 `48d7dc75`; T2 `49e944f0` + `87ef2df6`; T4 `a252fcc8`; T5 `0eb46c82`; map `0f73cdfe` = 6831/2335/2108; T6–T10 execution/world/header/fingerprint open |
+| R4.1 four positions, owner-scoped activation, header, per-unit fingerprint, reference oracle | in progress | controls `52a59dcc`; transaction `91142777` / `ab68d145`; T1 `b65f9958`; T3 `48d7dc75`; T2 `49e944f0` + `87ef2df6`; T4 `a252fcc8`; T5 `0eb46c82`; T6a `01f1522e`; map `ce3e62bf` = 6831/2344/2117; T6b–T10 execution/world/header/fingerprint open |
 | R4.2 builtin XML minify | partial | pure strict kernel `016f0fab` and reversible comment codec `fbbd5140`; no activation/on-off e2e |
 | R4.3 lane analyzer | missing | no `vibe extensions analyze` or machine report |
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
-  <title id="root">WAL — checkpoint 2026-08-29: R4.1 behavior registry T5 landed; fallible discovery T6a next</title>
-  <status stage="impl" state="work" comment="lifecycle/extensions campaign active; R1/R2, R3.1-R3.4, R4.0 plus R4.1 controls/transaction/config/selector/plan/carriage/behavior substrate, R6.2a/b, R7.1-R7.5, R8.1 and R8.2a complete; fallible discovery T6a next"/>
+  <title id="root">WAL — checkpoint 2026-08-29: R4.1 fallible discovery T6a landed; identity positions T6b next</title>
+  <status stage="impl" state="work" comment="lifecycle/extensions campaign active; R1/R2, R3.1-R3.4, R4.0 plus R4.1 controls/transaction/config/selector/plan/carriage/behavior/fallible-discovery substrate, R6.2a/b, R7.1-R7.5, R8.1 and R8.2a complete; identity positions T6b next"/>
 
   <current-phase title="Current phase">
     <p><WAL-PHASE fact="true" status="impl/work">The active epic is
@@ -77,8 +77,10 @@
     legacy constructors pin empty, nonempty is schedule/byte/error-inert and
     opaque retargeting forwards the whole plan. T5 is landed at `0eb46c82`:
     production catalog empty, one cfg-test identity catalog, exact bounded
-    name/epoch/stage resolution and no schedule change. Map `0f73cdfe` is
-    6831/2335/2108 at zero suspects/orphans/unresolved. T6a is current.
+    name/epoch/stage resolution and no schedule change. T6a is landed at
+    `01f1522e`: typed callback errors cross every discovery recursion and the
+    three legacy callers eliminate `Infallible` exhaustively. Map `ce3e62bf`
+    is 6831/2344/2117 at zero suspects/orphans/unresolved. T6b is current.
     </WAL-PHASE></p>
   </current-phase>
 
@@ -92,7 +94,7 @@
       presets/query and owner scenario §10.1 are complete.</WAL-R2>
       <WAL-R3 fact="true" status="impl/done">R3 explicit six-carrier compiler
       IR, named pass schedule, verifier and command-owned compile trace are
-      complete. Current R4.1 checkpoint specmap: 6831 units, 2335 tagged items, 2108 edges,
+      complete. Current R4.1 checkpoint specmap: 6831 units, 2344 tagged items, 2117 edges,
       0 suspects, 0 gated orphans, 0 unresolved host edges, 25 standing
       warnings.</WAL-R3>
       <WAL-R7 fact="true" status="impl/done">R7.1 provider, R7.2 CLI agent
@@ -209,9 +211,9 @@
       transactional at `91142777` / `ab68d145`. T1 config/digest `b65f9958`,
       T3 selector/enabled view `48d7dc75`, exact frame freeze `d5fcd92d` and T2
       plan identity `49e944f0` / borrowed hash `87ef2df6` and T4 carriage
-      `a252fcc8` and T5 registry `0eb46c82` are complete; map `0f73cdfe`.
-      Remaining R4.1: T6a fallible discovery, T6b four identity positions,
-      T6c lane witness, then typed document subject/selector/verifier, emitted
+      `a252fcc8`, T5 registry `0eb46c82` and T6a fallible discovery `01f1522e`
+      are complete; map `ce3e62bf`. Remaining R4.1: T6b four identity
+      positions, T6c lane witness, then typed document subject/selector/verifier, emitted
       ownership, owner adapter, active-only header and per-unit plan fingerprint.</WAL-R4>
       <WAL-R8 fact="true" status="impl/work">R8.1 project-only package-skill
       binding and R8.2a mechanism/artifact/deploy grammar are complete. Runtime
@@ -291,12 +293,12 @@
   </constraints>
 
   <next title="Next">
-    <p><WAL-NEXT fact="true" status="impl/work">Implement
-    T6a of `R4-TRANSFORM-PLAN-ABI-v0.1.md`: make worklist parsing fallible and
-    propagate its typed error through every use/source/embed/simple recursion,
-    while all existing infallible callers preserve exact schedule/bytes/errors.
-    No transform type or pass enters T6a. Then T6b wires the four identity
-    positions and T6c lands the lane witness.
+    <p><WAL-NEXT fact="true" status="impl/work">Implement T6b of
+    `R4-TRANSFORM-PLAN-ABI-v0.1.md`: resolve the whole plan against one injected
+    private registry before parsing, then wire stable plan-order identity
+    wrappers at source-before-parse, document-after-parse, lane-after-assemble
+    and emitted-after-emit. Preserve the explicit interim refusals. T6c then
+    lands the immutable lane witness and transition validation.
     The world snapshot/owner adapter follows over the landed control carriage;
     all byte-changing work rides the landed per-unit transaction. Exact affected
     gates per atom; no full panel until coherent R4.</WAL-NEXT></p>
