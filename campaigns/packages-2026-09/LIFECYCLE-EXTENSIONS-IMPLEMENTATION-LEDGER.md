@@ -224,6 +224,20 @@ than depending on untracked `cache/` archaeology.
   check, conform 0 new and facts 508/0. Specmap `97919def` is
   6825/2266/2037 at zero suspects/orphans/unresolved. P2 is complete; P3 owns
   only thin requirements surfaces and the fake external PDSA reference test.
+- R7.5 P3 surfaces/e2e: `1ff0ad64` exposes thin CLI `vibe requirements` and
+  MCP `requirements_query` adapters over the one shared library; `e9301051`
+  proves hosted park/resume remeasures invalidated predecessors while an
+  uninterrupted stale comparison needs the fake external process's second
+  invocation, with no provider call, PDSA product vocabulary or engine
+  back-edge. `fdb1c465` teaches the installed MCP skill the new query and
+  `46f9321b` records its 14 new code/spec edges. The boundary panel paid three
+  stale-ratchet debts rather than hiding them: local decoder classification
+  `5eeb4283`, the exact 20-scalar/13-structure optional-shape count
+  `8b871fb1`, and authored-to-vendor conform cache synchronisation `b7515063`.
+  The final exact-tree run executed all 54 dynamic gates through
+  `self-check: all green`: workspace 978s, both user-home tripwires 184s/177s,
+  sync-engines 51/51, generated wire/specmap/wire-diff clean, markup 508/0 and
+  every package test/clippy/conform/self-trace green. R7.5 is complete.
 - Gate repair `67ab9683` fixes the conform content store's Windows cache slot:
   `sha256:<hex>` had created 1,393 NTFS alternate streams on one base file and
   failed with OS error 665. Authored engine + six vendored copies now use one
@@ -330,7 +344,7 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 | R7.2 CLI agent handler + output contract | done | `26929050`; strict AgentResult JTD, prepared prompt/world resolution, ResultPlan, optional provider path, create/install/reinstall/update e2e and shared safe filesystem cell |
 | R7.3 hosted outbox/delegated resume | done | `1dd5e1f5`, generated reports `eae4494e`; durable run/outbox, exact task ownership, candidate-state atomicity, phase/slot reconciliation, command-level progress, no-spend sequential resume and independent final freeze |
 | R7.4 MCP lifecycle surfaces | done | architecture `ee2bc67f`; first wave `94f30aa9`, `88600508`, `87c2bab8`, `daf6eb31`, `17d94f8f`; A4 `31ca1e7d` / `0225ce41` / `970520d4`; A5 `7e330974` / `93177db6`; A6 `7bd335e2` / `b3ff308c`, `e1121d9b`, `b4d91749`, `8debdf2e`, `c82012c3`; A7–A8 tasks cut `cf5ec17d`, `ee741f2e` / `d338e880`, `30534ff9` / `7b9732f0`, `df678d7b` / `c62177fe`; A0–A8 panel `a4253de7` all green; A9 ports `5506cf88` / `9732ba38` / `18a797b2`; A10 projection `53e84790`; A11 plan `2560ee57` / `78ea8cc5`; A12 application `053b7e37` / `ba874cdf`; A13 trace `3f01e2dc` / `afdd3adc`; A14 selected-world prompt resolver `cd793ca9` / `2b08c818`; A15a package source `5df76260` / `23044cfd`, selected-member repair `da2ff985`, B-109 `b615ebe5`; A15b two-stage lease-first default command `0ef2f8f5` / `a4336ea2`, scoped clean debt B-110 `fc279fbe`; A15c hosted backend `1027ca5e`, strict MCP run/parity `9c340df8`, map `a0276a0d`, selected-resolver debt B-111 `65b145f0`; full-panel ratchet decision `602ef5e8`, Windows mandatory-lock repair `9fc6c2bb` / map `6f074e66`. Final panel on exact tree `6f074e66` ran 54 dynamic gates: workspace tests + clippy, host check 0 errors, conform 27 known / 0 new, clean codegen/specmap/wire, all package/MCP suites, both user-home tripwires and markup 508/0; ordered tail `self-check: all green` |
-| R7.5 external orchestration substrate | in progress | P0 `41abb4db`…`e8e67280`; P1 `6d843467`, `d3a9d59b`, `55937044`; P2/A1 `1dac7531` / `65b0cba6`; A2 one-read/query/authority `5fb4246d`, `6a300cf8`, `a1095d8e` with maps `ba9a38f5`, `0d1fa300`, `5b7231ee`; A3 adapter `ea031767` / maps through `8a05d344`; A4a–A4c1 through `2cabc7a7`; A5 writer/funnel `594734a3` / `63c35c85`, laws `38a5c8f1`, map `97919def`; ChatGPT 15% pause reserve `f20e1493` / map `5f7b63e7`; Windows conform-store repair `67ab9683`. P2 is complete: lifecycle 305+15, exact CLI/MCP/orchestrator e2e, strict clippy/conform/workspace check green; current specmap 6826/2266/2037 at zero suspects/orphans/unresolved. P3 thin requirements CLI/MCP surfaces + fake external PDSA next. No byte cap, whole-tree hashing, fingerprint relabelling, prose, `unmet`, duplicate evidence command, coding agent, heuristic or automatic loop |
+| R7.5 external orchestration substrate | done | P0 `41abb4db`…`e8e67280`; P1 `6d843467`, `d3a9d59b`, `55937044`; P2/A1 `1dac7531` / `65b0cba6`; A2 one-read/query/authority `5fb4246d`, `6a300cf8`, `a1095d8e` with maps `ba9a38f5`, `0d1fa300`, `5b7231ee`; A3 adapter `ea031767` / maps through `8a05d344`; A4a–A4c1 through `2cabc7a7`; A5 writer/funnel `594734a3` / `63c35c85`, laws `38a5c8f1`, map `97919def`; P3 surfaces `1ff0ad64`, fake external PDSA `e9301051`, skill projection `fdb1c465`, map `46f9321b`; boundary repairs `5eeb4283`, `8b871fb1`, `b7515063`. Final 54-gate panel all green; specmap 6826/2281/2051 at zero suspects/orphans/unresolved. No byte cap, whole-tree hashing, fingerprint relabelling, prose, `unmet`, duplicate evidence command, coding agent, heuristic or automatic loop |
 
 R7 live Z.AI smoke is now conclusive (2026-08-27): central `vibe create`
 called the official OpenAI-compatible coding endpoint with `glm-5-turbo`, read
@@ -848,10 +862,9 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
    `vibe-facts` observations/current-specmap relations and
    a fake-orchestrator/PDSA reference scenario. An external long-running agent
    may consume those facts to understand which requirements remain unmet and
-   where to move; lifecycle supplies evidence, never that choice. **R7.5 P0
-   and P1 complete; P2 query/relations, A4a/A4b input measurement and A4c0
-   streaming artifact substrate and A4c1 baseline/current carriage complete;
-   A5 reconciliation next, then P3 surfaces/e2e.** No agent policy or auto-loop.
+   where to move; lifecycle supplies evidence, never that choice. **R7.5 P0–P3
+   are complete through the all-green 54-gate boundary panel.** No agent policy
+   or auto-loop.
 
 ### Lane C — artifact/build/package/deploy (parallel, manifest edits serialized)
 

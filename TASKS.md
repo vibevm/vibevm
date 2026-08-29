@@ -205,7 +205,7 @@ fronts currently in flight. A worker report or old worktree is never completion.
                   lock repair `9fc6c2bb` / map `6f074e66`; workspace 448/448,
                   both user-home tripwires, markup 508/0 and the ordered tail
                   ended `self-check: all green`.
-- [ ] **R7.5** — neutral external work-loop substrate (owner ruling reaffirmed
+- [x] **R7.5** — neutral external work-loop substrate (owner ruling reaffirmed
       2026-08-28): structured verification
       evidence bound to exact tree/artifact/run identity; optional read-only
       spec-IR facts (full `spec://…#fact` address plus separately typed
@@ -237,7 +237,7 @@ fronts currently in flight. A worker report or old worktree is never completion.
             exists. Root gates: vibe-wire 245/245, check-codegen/wire-diff,
             conform 27 known/0 new, clippy, host check 0 errors, markup 508/0,
             specmap 6814/2218/1987 with zero suspects/orphans/unresolved.
-      - [ ] R7.5-P2 library atom: read-only `vibe-specdoc` + `vibe-facts`
+      - [x] R7.5-P2 library atom: read-only `vibe-specdoc` + `vibe-facts`
             projection with optional current-specmap relations; absence is
             typed unavailability/enrichment loss, never lifecycle failure.
             - [x] P2-A1 (`1dac7531`, `65b0cba6`): dependency-clean
@@ -258,12 +258,17 @@ fronts currently in flight. A worker report or old worktree is never completion.
                   namespace/slot-record/source-hash/map-byte ladder and real
                   query fact-edge are RED-proven; query 37+3, trace 57+8,
                   workspace 449, strict clippy/conform/workspace check green.
-            - [ ] P2-A4/A5: one-pass measurement/artifact witnesses and verify
-                  reconciliation/report funnel under the corrected hosted-vs-
-                  stale laws (`1898382d`, `7a5b6837`).
-      - [ ] R7.5-P3 surfaces/e2e atom: strict CLI+MCP query/control projection
-            and fake external PDSA orchestrator; zero mutation/provider calls,
-            no phase enum/state-machine PDSA names and no automatic back-edge.
+            - [x] P2-A4/A5: one-pass input/artifact witnesses through
+                  `2cabc7a7`, then verification reconciliation/report funnel
+                  `594734a3` / `63c35c85` under the corrected hosted-vs-stale
+                  laws (`1898382d`, `7a5b6837`).
+      - [x] R7.5-P3 surfaces/e2e atom: strict CLI+MCP query projection
+            `1ff0ad64`, fake external PDSA `e9301051`, installed skill
+            projection `fdb1c465` and map `46f9321b`; zero mutation/provider
+            calls, no product PDSA vocabulary and no automatic back-edge.
+            Boundary repairs `5eeb4283`, `8b871fb1`, `b7515063`; final 54-gate
+            panel all green, including workspace 978s, tripwires 184s/177s,
+            sync 51/51, markup 508/0 and specmap 6826/2281/2051.
 - [x] **R8.1** — project-only package skill binding with strict ownership,
       recovery and Claude/Codex/OpenCode projections.
 - [x] **R8.2a** — strict mechanism/artifact/deploy-profile manifest grammar

@@ -1,8 +1,10 @@
 # R7.5 — external orchestration evidence and requirements architecture
 
-_Status: accepted central design, 2026-08-28. Implementation authority remains
-PROP-054 §4.6/§14.7; this document freezes ownership, dependency direction,
-landing order and acceptance for R7.5 P0–P3._
+_Status: accepted central design, 2026-08-28; P0–P3 implemented and accepted
+2026-08-29 through `fdb1c465` / `e9301051`, with generated map `46f9321b` and
+the all-green 54-gate boundary panel after its named ratchet/sync repairs.
+Implementation authority remains PROP-054 §4.6/§14.7; this document freezes
+ownership, dependency direction, landing order and acceptance for R7.5 P0–P3._
 
 ## 0. Outcome and hard boundary
 
