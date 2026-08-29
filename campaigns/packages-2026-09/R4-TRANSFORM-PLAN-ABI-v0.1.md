@@ -250,4 +250,3 @@ No owner-choice blocker remains. Package-lane activation and uninstall future
 world are already ruled. Implementation prerequisites are ordered work: the
 landed owner-control carriage (`52a59dcc`), atomic unit publication
 (`91142777`/`ab68d145`), then T1–T10 above.
-
