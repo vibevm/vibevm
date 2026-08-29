@@ -1,5 +1,4 @@
-use sha2::{Digest, Sha256};
-
+use super::super::digest::StableDigest;
 use super::super::ir::{
     ArtifactFrame, ArtifactTarget, DocumentAddress, LaneChunk, LaneContribution, LaneInputDigest,
     LaneIr, LaneNode, LinkFenceSnapshot, StaticCompileMode,
@@ -226,36 +225,5 @@ fn mode_byte(mode: StaticCompileMode) -> u8 {
     match mode {
         StaticCompileMode::Plain => 0,
         StaticCompileMode::QualifyPerNode => 1,
-    }
-}
-
-struct StableDigest(Sha256);
-
-impl StableDigest {
-    fn new(domain: &[u8]) -> Self {
-        let mut value = Self(Sha256::new());
-        value.field(domain);
-        value
-    }
-
-    fn byte(&mut self, value: u8) {
-        self.0.update([value]);
-    }
-
-    fn u32(&mut self, value: u32) {
-        self.0.update(value.to_le_bytes());
-    }
-
-    fn usize(&mut self, value: usize) {
-        self.0.update((value as u64).to_le_bytes());
-    }
-
-    fn field(&mut self, value: &[u8]) {
-        self.0.update((value.len() as u64).to_le_bytes());
-        self.0.update(value);
-    }
-
-    fn finish(self) -> [u8; 32] {
-        self.0.finalize().into()
     }
 }
