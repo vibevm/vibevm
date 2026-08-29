@@ -6,6 +6,15 @@
 //! grouped/renamed imports, qualified paths and macros are classified
 //! structurally; prose never trips it.
 //!
+//! T8 added the one exception, and gave it its own family rather than
+//! widening the wrapper's. Selector evaluation genuinely needs the kernel
+//! crate and `.matches()`, so `selector_admission.rs` is permitted exactly
+//! those two surfaces under [`SELECTOR_RULES`] — and is held to MORE than the
+//! wrapper elsewhere, because it is a pure decision that owns no behavior
+//! channel at all: no `Arc`, no `Box`, no `dyn`. The wrapper cell's own ban
+//! is unchanged, so the law reads: exactly one named cell may touch the
+//! kernel selector, and the fence says which.
+//!
 //! The module-tree assertion keeps the rule families exhaustive: every
 //! production transform cell is declared in `mod.rs`, and a future cell
 //! cannot ship unclassified.
@@ -171,6 +180,39 @@ const PLAN_CARRIER_RULES: CellRules = CellRules {
     forbids_boxed_trait_objects: true,
 };
 
+/// The selector-admission cell's law: the kernel selector crate and
+/// `.matches()` are its REASON to exist, so they are the two surfaces this
+/// family — and only this family — admits. Everything else the wrapper cell
+/// is banned from stays banned here, and the cell is held to more besides:
+/// it is a pure decision over borrowed values, so it owns no behavior
+/// channel of any spelling (`Arc`, `Box`, `dyn`), and it eliminates no fault
+/// by panic.
+const SELECTOR_SEGMENTS: &[&str] = &[
+    "serde",
+    "serde_json",
+    "toml",
+    "json",
+    "Path",
+    "PathBuf",
+    "fs",
+    "ExtensionRegistry",
+    "RegistryView",
+    "ExtensionRegistryRow",
+    "collect_extensions",
+    "ArtifactCompileError",
+    "builtin",
+    "Arc",
+    "Box",
+];
+
+const SELECTOR_RULES: CellRules = CellRules {
+    forbidden_segments: SELECTOR_SEGMENTS,
+    forbidden_methods: &["unwrap", "expect"],
+    forbidden_macros: WRAPPER_MACROS,
+    allows_trait_objects: false,
+    forbids_boxed_trait_objects: true,
+};
+
 /// Classify one source under one cell's rules; an unparsable source reports
 /// itself as the offender so the fence names the file, never aborts.
 fn offenders(source: &str, rules: &CellRules) -> Vec<String> {
@@ -233,6 +275,84 @@ fn the_schedule_cell_renders_names_and_holds_one_behavior_channel() {
         found.is_empty(),
         "schedule.rs is fenced: {found:#?} — the wrapper cell renders pass names and holds Arc<dyn …>, nothing else"
     );
+}
+
+/// The selector-admission cell admits exactly its two mandated surfaces.
+#[test]
+fn the_selector_admission_cell_touches_the_kernel_selector_and_nothing_else() {
+    let found = offenders(include_str!("selector_admission.rs"), &SELECTOR_RULES);
+    assert!(
+        found.is_empty(),
+        "selector_admission.rs is fenced: {found:#?} — it evaluates the kernel selector and holds no behavior channel"
+    );
+    // And the permission is genuinely narrow: the SAME source refuses under
+    // the wrapper family, so the exception is a named cell's, not a general
+    // loosening of the wrapper law.
+    assert!(
+        !offenders(include_str!("selector_admission.rs"), &WRAPPER_RULES).is_empty(),
+        "the admission cell must be exactly what the wrapper cell may not be"
+    );
+}
+
+/// The two families disagree in both directions, on purpose: each admits
+/// exactly what the other forbids, and they agree on the surfaces neither
+/// cell may ever have.
+#[test]
+fn the_selector_family_and_the_wrapper_family_are_genuinely_different_laws() {
+    // Admitted by the selector family, refused by the wrapper family.
+    for source in [
+        "use vibe_extension_registry::{CompiledSelector, SelectorSubject};",
+        "use vibe_extension_registry::SelectorSubject as Subject;",
+        "use vibe_extension_registry::*;",
+        "fn f(s: &vibe_extension_registry::SelectorSubject) {}",
+        "fn f(c: &C, s: S) -> bool { c.matches(s) }",
+    ] {
+        assert!(
+            offenders(source, &SELECTOR_RULES).is_empty(),
+            "the admission cell exists to do this: `{source}`"
+        );
+        assert!(
+            !offenders(source, &WRAPPER_RULES).is_empty(),
+            "the wrapper cell's ban is unchanged: `{source}`"
+        );
+    }
+
+    // Refused by the selector family, admitted by the wrapper family: the
+    // admission cell is a pure decision and owns no behavior channel.
+    for source in [
+        "fn f(a: Arc<dyn TransformBehavior>) -> Arc<dyn TransformBehavior> { a }",
+        "fn f(e: Box<VerificationError>) -> Box<VerificationError> { e }",
+    ] {
+        assert!(
+            !offenders(source, &SELECTOR_RULES).is_empty(),
+            "the admission cell holds no behavior channel: `{source}`"
+        );
+        assert!(
+            offenders(source, &WRAPPER_RULES).is_empty(),
+            "the wrapper cell keeps its two mandated surfaces: `{source}`"
+        );
+    }
+
+    // Refused by BOTH: the surfaces no transform cell may ever acquire.
+    for source in [
+        "use vibe_extension_registry::collect_extensions;",
+        "use crate::compiler::builtin::ArtifactCompileError;",
+        "use std::path::{Path, PathBuf};",
+        "use serde_json::Value;",
+        "fn f(r: Result<u8, E>) { r.unwrap() }",
+        "fn f(r: Result<u8, E>) { r.expect(\"x\") }",
+        "fn f() { panic!(\"boom\"); }",
+        "fn f() { todo!() }",
+    ] {
+        assert!(
+            !offenders(source, &SELECTOR_RULES).is_empty(),
+            "no transform cell may carry `{source}`"
+        );
+        assert!(
+            !offenders(source, &WRAPPER_RULES).is_empty(),
+            "no transform cell may carry `{source}`"
+        );
+    }
 }
 
 /// The plan cells remain behavior- and registry-free under the stronger
@@ -377,7 +497,7 @@ fn the_wrapper_fence_detects_every_banned_spelling_and_admits_its_two_surfaces()
 }
 
 /// The rule families stay exhaustive over the module tree: the production
-/// transform cells are exactly the seven declared `pub(crate) mod`s, every
+/// transform cells are exactly the ten declared `pub(crate) mod`s, every
 /// cfg-test cell is declared too, and no undeclared `.rs` sibling can ship
 /// unclassified (a new production cell must be added to a family here).
 #[test]
@@ -406,12 +526,14 @@ fn the_module_tree_declares_every_transform_cell_under_a_rule_family() {
         BTreeSet::from([
             "behavior".to_owned(),
             "config".to_owned(),
+            "fault".to_owned(),
             "lane_admission".to_owned(),
             "plan".to_owned(),
             "plan_digest".to_owned(),
             "plan_validate".to_owned(),
             "registry".to_owned(),
             "schedule".to_owned(),
+            "selector_admission".to_owned(),
         ]),
         "a new production transform cell must be declared AND classified"
     );
@@ -433,18 +555,26 @@ fn the_module_tree_declares_every_transform_cell_under_a_rule_family() {
             "schedule_fence_tests".to_owned(),
             "schedule_lane_tests".to_owned(),
             "schedule_lane_vehicles".to_owned(),
+            "schedule_selector_tests".to_owned(),
+            "schedule_selector_vehicles".to_owned(),
+            "schedule_selector_worlds".to_owned(),
             "schedule_tests".to_owned(),
+            "selector_admission_tests".to_owned(),
         ]),
         "a new test cell must be declared too — undeclared files do not compile"
     );
 
-    // The classification itself: the wrapper cell and the T6c lane-admission
-    // gate under wrapper rules, the plan cells under the stronger carrier
-    // rules. The gate belongs to the wrapper family because it holds the
-    // wrapper's own posture — no manifest/collector/row/path/codec surface,
-    // no upward builtin spelling, and no fault eliminated by panic — while
-    // legitimately boxing CONCRETE error types.
+    // The classification itself: the wrapper cell, the T6c lane-admission
+    // gate and the T8 fault family under wrapper rules, the T8 admission
+    // cell under its own, the plan cells under the stronger carrier rules.
+    // The gate and the fault family belong to the wrapper family because
+    // they hold the wrapper's own posture — no manifest/collector/row/path/
+    // codec surface, no upward builtin spelling, no kernel selector, and no
+    // fault eliminated by panic — while legitimately boxing CONCRETE error
+    // types.
     assert!(offenders(include_str!("schedule.rs"), &WRAPPER_RULES).is_empty());
     assert!(offenders(include_str!("lane_admission.rs"), &WRAPPER_RULES).is_empty());
+    assert!(offenders(include_str!("fault.rs"), &WRAPPER_RULES).is_empty());
+    assert!(offenders(include_str!("selector_admission.rs"), &SELECTOR_RULES).is_empty());
     assert!(offenders(include_str!("plan.rs"), &PLAN_CARRIER_RULES).is_empty());
 }

@@ -265,7 +265,7 @@ fn a_nonempty_plan_on_a_compatibility_frame_refuses_before_any_lookup() {
             ArtifactCompileError::Transform(ref transform)
                 if matches!(
                     transform.inner(),
-                    super::super::transform::schedule::TransformError::CompatibilityFragmentPlan { entries: 1 }
+                    super::super::transform::fault::TransformError::CompatibilityFragmentPlan { entries: 1 }
                 )
         ),
         "the plan-wide frame fault is typed: {error:?}"
@@ -373,7 +373,7 @@ fn a_forwarded_custom_frame_with_a_resolvable_transform_still_refuses_before_any
             ArtifactCompileError::Transform(ref public)
                 if matches!(
                     public.inner(),
-                    crate::compiler::transform::schedule::TransformError::CompatibilityFragmentPlan { entries: 1 }
+                    crate::compiler::transform::fault::TransformError::CompatibilityFragmentPlan { entries: 1 }
                 )
         ),
         "the frame fault wins over backend selection: {error:?}"

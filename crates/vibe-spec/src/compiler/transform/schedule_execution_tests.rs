@@ -31,11 +31,11 @@ use crate::compiler::verify::DocumentIdentityField;
 
 use super::behavior::TransformBehaviorError;
 use super::config::{ConfigTable, ConfigValue};
+use super::fault::{TransformCapabilityGap, TransformError};
 use super::plan::{TransformConfig, TransformSeed, TransformStage};
 use super::plan_test_support::{build_or_panic, default_dependency, dependency_seed, empty_config};
 use super::registry::TransformRegistry;
 use super::registry_test_support::{identity_plan, identity_registry, identity_seed};
-use super::schedule::{TransformCapabilityGap, TransformError};
 use super::schedule_execution_vehicles::*;
 use crate::compiler::builtin::ArtifactCompileError;
 

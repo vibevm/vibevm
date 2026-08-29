@@ -33,13 +33,14 @@ use super::pipeline::{CompilerPipeline, CompilerPipelineError};
 use super::qualify::QUALIFY_PASS_NAME;
 use super::qualify::QualifyPass;
 use super::trace::CompileTraceSink;
+use super::transform::fault::TransformError;
 use super::transform::registry::TransformRegistry;
-use super::transform::schedule::{TransformError, TransformSchedule};
+use super::transform::schedule::TransformSchedule;
 use super::worklist;
 
 mod attribution;
 mod driver;
-pub use super::transform::schedule::TransformCompileError;
+pub use super::transform::fault::TransformCompileError;
 #[cfg(test)]
 pub(crate) use driver::compile_artifact_traced_with_registries;
 #[cfg(test)]

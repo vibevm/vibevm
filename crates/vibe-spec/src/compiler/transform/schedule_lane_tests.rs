@@ -27,13 +27,13 @@ use crate::compiler::ir::{ArtifactPlan, EmittedArtifact};
 use crate::compiler::verify::{LaneProvenanceField, TransitionError};
 
 use super::behavior::TransformBehavior;
+use super::fault::TransformError;
 use super::lane_admission::{lane_admission_counts, reset_lane_admission_counts};
 use super::plan::{TransformImplementation, TransformProvider, TransformSeed, TransformStage};
 use super::plan_test_support::{build_or_panic, default_dependency};
 use super::registry_test_support::{
     identity_invocations, identity_plan, identity_registry, reset_identity_invocations,
 };
-use super::schedule::TransformError;
 use super::schedule_execution_vehicles::registry_with;
 use super::schedule_lane_vehicles::*;
 

@@ -21,7 +21,7 @@ use super::super::link::{LINK_PASS_NAME, LinkPassError};
 use super::super::merge::{MERGE_PASS_NAME, MergePassError};
 use super::super::pass::{PassName, PassSegmentError};
 use super::super::pipeline::CompilerPipelineError;
-use super::super::transform::schedule::TransformError;
+use super::super::transform::fault::TransformError;
 use super::super::worklist::ErrorOwners;
 use super::{ArtifactCompileError, BuiltinSchedule, transform_public};
 

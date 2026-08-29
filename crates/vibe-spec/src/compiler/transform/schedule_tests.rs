@@ -13,12 +13,11 @@ use crate::compiler::ir::{
 };
 use crate::compiler::pipeline::ScheduleItem;
 
+use super::fault::TransformError;
 use super::plan::{TransformImplementation, TransformSeed, TransformStage};
 use super::plan_test_support::{SelectorShape, compiled_selector, dependency_seed};
 use super::registry::TransformRegistry;
 use super::registry_test_support::{identity_plan, identity_registry, identity_seed};
-use super::schedule::TransformCapabilityGap;
-use super::schedule::TransformError;
 use crate::compiler::builtin::ArtifactCompileError;
 
 const ALPHA: &str = "spec://org.demo/alpha/boot/entry#root";
@@ -254,78 +253,66 @@ fn registry_precedence_name_epoch_stage_stays_exact_through_the_schedule() {
     );
 }
 
+/// Canonical selector PRESENCE still splits at build — and T8 stopped it being
+/// a construction refusal.
+///
+/// The T6b law this replaces refused every selector-bearing source/document
+/// entry here, because judging one needed a document subject and no document
+/// exists while a plan is being resolved. T7 landed the subject and T8 moved the
+/// verdict to the wrappers, where a document does exist, so all three shapes now
+/// construct. What still splits at build is canonicalization alone: a real
+/// dimension and a present-EMPTY one stay present, a both-absent authored
+/// selector becomes outer absence. The match-time verdict each presence then
+/// earns — including the one surviving refusal — is asserted live in
+/// `schedule_selector_tests`.
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY")]
-fn selector_refusals_split_on_canonical_presence_exactly() {
-    // A real dimension refuses; a present-empty dimension refuses (build
-    // canonicalization keeps it present); the both-absent authored selector
-    // canonicalized to `None` at build and EXECUTES (the schedule builds).
-    let real = reseed(
-        "org.demo/tools#sel",
-        TransformStage::Source,
-        identity_impl(&TransformStage::Source),
-        Some(compiled_selector(SelectorShape::Dimensions {
-            packages: Some(vec!["org.demo/*"]),
-            paths: None,
-        })),
-    );
-    let empty_dimension = reseed(
-        "org.demo/tools#empty",
-        TransformStage::Source,
-        identity_impl(&TransformStage::Source),
-        Some(compiled_selector(SelectorShape::Dimensions {
-            packages: Some(vec![]),
-            paths: None,
-        })),
-    );
-    for (plan, label) in [
-        (plan_of(vec![real]), "real dimension"),
-        (plan_of(vec![empty_dimension]), "present-empty dimension"),
+fn canonical_selector_presence_splits_at_build_and_no_longer_refuses_construction() {
+    for (key, packages, retained, label) in [
+        (
+            "org.demo/tools#sel",
+            Some(vec!["org.demo/*"]),
+            true,
+            "real dimension",
+        ),
+        (
+            "org.demo/tools#empty",
+            Some(vec![]),
+            true,
+            "present-empty dimension",
+        ),
+        (
+            "org.demo/tools#none",
+            None,
+            false,
+            "both-absent authored selector",
+        ),
     ] {
         reset_parse_invocations();
-        let error = expect_refusal(BuiltinSchedule::linked_for_test(
-            &plan,
-            &identity_registry(),
-        ));
-        let ArtifactCompileError::Transform(public) = &error else {
-            panic!("{label}: transform family: {error:?}")
-        };
+        let plan = plan_of(vec![reseed(
+            key,
+            TransformStage::Source,
+            identity_impl(&TransformStage::Source),
+            Some(compiled_selector(SelectorShape::Dimensions {
+                packages,
+                paths: None,
+            })),
+        )]);
+        assert_eq!(
+            plan.transforms().entries()[0].seed().selector().is_some(),
+            retained,
+            "{label}: build canonicalization alone decides presence"
+        );
         assert!(
-            matches!(
-                public.inner(),
-                TransformError::Capability {
-                    gap: TransformCapabilityGap::SelectorSubject,
-                    ..
-                }
-            ),
-            "{label}: the typed T7/T8 gap: {public}"
+            BuiltinSchedule::linked_for_test(&plan, &identity_registry()).is_ok(),
+            "{label}: a selector is no longer a construction refusal"
         );
         assert_eq!(
             crate::compiler::builtin::parse_invocations(),
             0,
-            "{label}: refused before any parse"
+            "{label}: construction still touches no document"
         );
     }
-
-    let canonical_absent = reseed(
-        "org.demo/tools#none",
-        TransformStage::Source,
-        identity_impl(&TransformStage::Source),
-        Some(compiled_selector(SelectorShape::Dimensions {
-            packages: None,
-            paths: None,
-        })),
-    );
-    let plan = plan_of(vec![canonical_absent]);
-    let built = plan.transforms();
-    assert!(
-        built.entries()[0].seed().selector().is_none(),
-        "build canonicalized the both-absent selector away"
-    );
-    assert!(
-        BuiltinSchedule::linked_for_test(&plan, &identity_registry()).is_ok(),
-        "canonical absence executes"
-    );
 }
 
 #[test]
@@ -462,7 +449,7 @@ fn a_blank_rendered_pass_name_refuses_typed_not_by_panic() {
         stage: TransformStage::Source,
         source: crate::compiler::pass::PassNameError,
     };
-    let public = super::schedule::TransformCompileError::new(fault);
+    let public = super::fault::TransformCompileError::new(fault);
     assert!(
         public.to_string().contains("has no valid pass name"),
         "the typed name fault renders: {public}"

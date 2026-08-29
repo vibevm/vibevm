@@ -16,12 +16,14 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-I
 
 pub(crate) mod behavior;
 pub(crate) mod config;
+pub(crate) mod fault;
 pub(crate) mod lane_admission;
 pub(crate) mod plan;
 pub(crate) mod plan_digest;
 pub(crate) mod plan_validate;
 pub(crate) mod registry;
 pub(crate) mod schedule;
+pub(crate) mod selector_admission;
 
 #[cfg(test)]
 pub(crate) mod carriage;
@@ -54,4 +56,12 @@ mod schedule_lane_tests;
 #[cfg(test)]
 mod schedule_lane_vehicles;
 #[cfg(test)]
+mod schedule_selector_tests;
+#[cfg(test)]
+mod schedule_selector_vehicles;
+#[cfg(test)]
+mod schedule_selector_worlds;
+#[cfg(test)]
 mod schedule_tests;
+#[cfg(test)]
+mod selector_admission_tests;
