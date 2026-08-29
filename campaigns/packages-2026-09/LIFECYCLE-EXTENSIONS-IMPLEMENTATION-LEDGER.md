@@ -572,6 +572,32 @@ than depending on untracked `cache/` archaeology.
   wire-diff green with the registry shift classed, `check-codegen`
   clean post-commit. Follow-up hygiene named: one exported
   portable-token authority once the A1 rework lands.
+- R8 grammar atom (A1, claudez lane, two rounds): `3ceeb422` +
+  `baa0976c` reconcile the `[artifacts]`/`[deploy]` grammar to the
+  repaired §12. Round 1 faithfully implemented the defective freeze and
+  was rejected whole; the `-c` correction carried four dictated deltas
+  and round 2 applied them exactly — tagged one-of inputs restored in
+  both families with the phase-forward law and its original scenario
+  red-proofed, provider pins restored on both artifact families with
+  the plane cross-check, `is_frozen_id` fully removed so
+  `is_portable_token` is again the plane's one grammar — while keeping
+  what the freeze genuinely added: the closed `ArtifactKind` (recorded
+  supersession), `workdir` under the declarant-path law with `.` as the
+  one authored-root exception, `select` on output rows, typed refusal
+  enums, named cycle refusals with acyclicity checked BEFORE direction
+  so a build→package→build cycle is named as a cycle while a lone
+  backward edge keeps the incumbent phase-forward text. Root's two
+  reviewer mutations both bit: dropping the global output-id dedup
+  reds exactly one test, and disabling the plane local-pin cross-check
+  reds four including the restored artifact-family pins. One boss
+  process miss, recorded: the conform verdict was read AFTER the atom
+  commit, and its 32 new findings were the T10A const-interpolation
+  lesson repeated in the two new error families — forward-fixed in
+  `baa0976c` (literal citations + fix surfaces + the owed doctests),
+  conform back to 27-in-scope 0-new. Worker rounds archived under
+  `cache/agents/sorted/R8A1-GRAMMAR/`. The A1+A2 pair closes the R8
+  records-and-grammar slice; R8-MECHANISM is next in that lane and
+  waits for coherent R4.
 - Gate repair `67ab9683` fixes the conform content store's Windows cache slot:
   `sha256:<hex>` had created 1,393 NTFS alternate streams on one base file and
   failed with OS error 665. Authored engine + six vendored copies now use one
