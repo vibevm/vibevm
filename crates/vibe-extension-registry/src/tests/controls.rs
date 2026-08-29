@@ -1,7 +1,7 @@
 use specmark::verifies;
 use vibe_core::manifest::{ExtensionKey, ExtensionUse, ExtensionsControl};
 
-use crate::registry::{
+use crate::{
     CollectionError, CollectionNotice, ContributionTier, HostIdentity, SelectorSubject,
     collect_extensions,
 };
@@ -350,9 +350,9 @@ fn virtual_workspace_can_control_dependencies_but_cannot_declare() {
 }
 
 fn row<'registry>(
-    registry: &'registry crate::registry::ExtensionRegistry,
+    registry: &'registry crate::ExtensionRegistry,
     suffix: &str,
-) -> &'registry crate::registry::ExtensionRegistryRow {
+) -> &'registry crate::ExtensionRegistryRow {
     registry
         .rows()
         .iter()
@@ -365,9 +365,7 @@ fn row<'registry>(
 /// stale target never outlives its evidence.
 #[test]
 fn reserved_engine_rows_refuse_host_disable_and_activation() {
-    use crate::registry::{
-        ExtensionProvider, SyntheticPresetSource, collect_extensions_with_presets,
-    };
+    use crate::{ExtensionProvider, SyntheticPresetSource, collect_extensions_with_presets};
 
     let preset = SyntheticPresetSource {
         key: ExtensionKey::authored("@vibe/package/skill/reconcile"),

@@ -221,7 +221,7 @@ pub use crate::host_owner::HOST_OWNER;
 
 /// Who owns an exact provider — the structural half of a [`ProviderPin`], and
 /// the same two-kind split the landed R2 `HostIdentity` law already draws
-/// (`vibe-lifecycle` `registry::model::HostIdentity`):
+/// (`vibe-extension-registry`'s `HostIdentity`):
 ///
 /// - a `[package]`, and a **grouped** `[project]`, own a real coordinate
 ///   `<group>/<name>` — `HostIdentity::Coordinate`;

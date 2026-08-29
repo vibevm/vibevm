@@ -91,7 +91,7 @@ fn validate_section_roles(
 /// This manifest's own provider-owner identity, if it can declare providers.
 ///
 /// This is the already-landed R2 `HostIdentity` law, reused rather than
-/// reinterpreted (`vibe-lifecycle` `registry::model::HostIdentity`, built in
+/// reinterpreted (`vibe-extension-registry`'s `HostIdentity`, built in
 /// `vibe-cli` `lifecycle::world::host_source`):
 ///
 /// - `[package]` → the package coordinate `<group>/<package-name>`;

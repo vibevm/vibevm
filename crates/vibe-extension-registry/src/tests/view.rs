@@ -1,6 +1,6 @@
 use vibe_core::manifest::{ExtensionAppliesTo, ExtensionKey, ExtensionUse, ExtensionsControl};
 
-use crate::registry::{RegistryState, SelectorSubject, collect_extensions};
+use crate::{RegistryState, SelectorSubject, collect_extensions};
 
 use super::support::{declaration, dependency, host, world};
 

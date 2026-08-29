@@ -1,7 +1,7 @@
 use specmark::verifies;
 use vibe_core::manifest::{ExtensionKey, ExtensionUse, ExtensionsControl};
 
-use crate::registry::{
+use crate::{
     ContributionTier, DependencyExtensionSource, ExtensionProvider, SelectorSubject,
     collect_extensions,
 };

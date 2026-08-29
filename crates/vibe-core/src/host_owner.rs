@@ -16,8 +16,8 @@
 //! back to exactly one name.
 //!
 //! One codec, every consumer: [`crate::manifest::ExtensionKey::for_host`],
-//! the mechanism `ProviderOwner::Host` display and parser, and
-//! `vibe-lifecycle`'s `HostIdentity` display all route through here, so a
+//! the mechanism `ProviderOwner::Host` display and parser, and the
+//! `vibe-extension-registry` `HostIdentity` display all route through here, so a
 //! state key, an activation `ref` and a provider pin cannot disagree about
 //! what a project is called. The name is carried as typed data; this branch
 //! is never parsed as a `Group` or a `PackageRef`.

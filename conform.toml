@@ -49,6 +49,7 @@ audit_crates = ["vibe-test-support"]
 gated = [
     "progress-core",
     "vibe-core",
+    "vibe-extension-registry",
     "vibe-facts",
     "vibe-actions",
     "vibe-agent-projection",
@@ -77,6 +78,7 @@ gated = [
 # gating it would enforce uncompiled prose, the opposite of the rule.
 gated_pub_doctest = [
     "vibe-core",
+    "vibe-extension-registry",
     "vibe-lifecycle",
     "vibe-safefs",
     "vibe-llm",

@@ -8,7 +8,7 @@ use super::{ExtensionRegistry, RegistryView, SelectorSubject};
 /// subject. Precedence is part of the query contract.
 ///
 /// ```
-/// use vibe_lifecycle::RegistryState;
+/// use vibe_extension_registry::RegistryState;
 ///
 /// assert_ne!(RegistryState::Disabled, RegistryState::Effective);
 /// ```

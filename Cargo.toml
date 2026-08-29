@@ -12,6 +12,7 @@ members = [
     "crates/vibe-settings",
     "crates/vibe-cli",
     "crates/vibe-core",
+    "crates/vibe-extension-registry",
     "crates/vibe-facts",
     "crates/vibe-graph",
     "crates/vibe-index",
@@ -42,6 +43,7 @@ default-members = [
     "crates/vibe-settings",
     "crates/vibe-cli",
     "crates/vibe-core",
+    "crates/vibe-extension-registry",
     "crates/vibe-facts",
     "crates/vibe-graph",
     "crates/vibe-index",
@@ -87,6 +89,9 @@ vibe-actions = { path = "crates/vibe-actions", version = "1.0.0" }
 vibe-agent-projection = { path = "crates/vibe-agent-projection", version = "1.0.0" }
 vibe-settings = { path = "crates/vibe-settings", version = "1.0.0" }
 vibe-core = { path = "crates/vibe-core", version = "1.0.0" }
+# The R4.0 pure registry kernel: the one extension declaration/activation/
+# ordering/selector/view collector below lifecycle, workspace and spec.
+vibe-extension-registry = { path = "crates/vibe-extension-registry", version = "1.0.0" }
 vibe-facts = { path = "crates/vibe-facts", version = "1.0.0" }
 vibe-graph = { path = "crates/vibe-graph", version = "1.0.0" }
 vibe-index = { path = "crates/vibe-index", version = "1.0.0" }

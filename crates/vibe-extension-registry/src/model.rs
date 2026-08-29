@@ -3,7 +3,6 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#OBS-REGISTRY");
 
 use std::fmt;
-use std::ops::Deref;
 use std::path::PathBuf;
 
 use specmark::spec;
@@ -155,25 +154,6 @@ pub struct HostExtensionSource {
     pub declarations: Vec<ExtensionDecl>,
     /// Ordered activations plus exact disable keys authored by the host.
     pub controls: ExtensionsControl,
-}
-
-/// Effective role of the selected manifest for reporting and future preset
-/// metadata. This is derived from the existing role tables, never authored as
-/// another manifest field.
-///
-/// ```
-/// use vibe_lifecycle::EffectiveManifestKind;
-///
-/// assert_ne!(
-///     EffectiveManifestKind::Project,
-///     EffectiveManifestKind::VirtualWorkspace,
-/// );
-/// ```
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum EffectiveManifestKind {
-    Project,
-    Package(PackageKind),
-    VirtualWorkspace,
 }
 
 /// Complete owned input to pure extension collection.
@@ -417,62 +397,5 @@ impl ExtensionRegistry {
                 row.declaration.point == point && row.is_enabled() && row.selector.matches(subject)
             })
             .collect()
-    }
-}
-
-/// One owned effective contribution, labelled with its lifecycle phase.
-///
-/// Adapters retain this after the source registry has dropped; dispatch never
-/// re-collects or re-sorts it.
-#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM")]
-#[derive(Debug, Clone)]
-pub struct ExecutableContribution {
-    /// Canonical lifecycle phase spelling supplied with the planned point.
-    pub phase: String,
-    /// Complete retained declaration/provider/control row.
-    pub row: ExtensionRegistryRow,
-}
-
-/// Owned canonical execution plan shared by every future surface adapter.
-#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM")]
-#[derive(Debug, Clone, Default)]
-pub struct ExecutablePlan(Vec<ExecutableContribution>);
-
-impl ExecutablePlan {
-    /// Select points in caller-supplied phase order while preserving the
-    /// registry's closed tier order within each point.
-    #[must_use]
-    pub fn from_points<I>(
-        registry: &ExtensionRegistry,
-        points: I,
-        subject: SelectorSubject<'_>,
-    ) -> Self
-    where
-        I: IntoIterator<Item = (String, ExtensionPoint)>,
-    {
-        let mut rows = Vec::new();
-        for (phase, point) in points {
-            rows.extend(registry.plan(point, subject).into_iter().map(|row| {
-                ExecutableContribution {
-                    phase: phase.clone(),
-                    row: row.clone(),
-                }
-            }));
-        }
-        Self(rows)
-    }
-
-    /// Number of contributions selected for one phase spelling.
-    #[must_use]
-    pub fn count_for(&self, phase: &str) -> usize {
-        self.0.iter().filter(|row| row.phase == phase).count()
-    }
-}
-
-impl Deref for ExecutablePlan {
-    type Target = [ExecutableContribution];
-
-    fn deref(&self) -> &Self::Target {
-        &self.0
     }
 }

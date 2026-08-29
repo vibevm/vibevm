@@ -1,7 +1,7 @@
 use specmark::verifies;
 use vibe_core::manifest::ExtensionsControl;
 
-use crate::registry::{CollectionError, SelectorSubject, collect_extensions};
+use crate::{CollectionError, SelectorSubject, collect_extensions};
 
 use super::support::{host, provider_id, selected_declaration, world};
 
@@ -189,7 +189,7 @@ fn malformed_glob_is_a_collection_error_naming_key_and_field() {
 }
 
 fn matches(
-    registry: &crate::registry::ExtensionRegistry,
+    registry: &crate::ExtensionRegistry,
     suffix: &str,
     subject: SelectorSubject<'_>,
 ) -> bool {

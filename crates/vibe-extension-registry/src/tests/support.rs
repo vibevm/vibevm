@@ -7,7 +7,7 @@ use vibe_core::manifest::{
 };
 use vibe_core::{ContentHash, Group, PackageKind, PackageName};
 
-use crate::registry::{
+use crate::{
     DependencyExtensionSource, DependencyProvider, DependencyProviderId, ExtensionWorld,
     HostExtensionSource, HostIdentity, HostProvider,
 };

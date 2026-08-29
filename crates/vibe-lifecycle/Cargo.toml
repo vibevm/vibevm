@@ -21,6 +21,10 @@ specmark.workspace = true
 thiserror.workspace = true
 toml.workspace = true
 vibe-core.workspace = true
+# The R4.0 registry kernel: this crate re-exports its public surface for
+# compatibility (one transition, no flag day) and keeps only the
+# execution-shaped plan and report metadata above it.
+vibe-extension-registry.workspace = true
 # `spec://` address grammar for `handler.prompt`. One parser owns the address
 # form; the agent handler compares an already-parsed authority against the
 # contributing provider rather than re-deriving the grammar.

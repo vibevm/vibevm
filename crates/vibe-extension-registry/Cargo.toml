@@ -1,0 +1,30 @@
+[package]
+name = "vibe-extension-registry"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license-file.workspace = true
+publish.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "The one pure extension registry kernel — declaration, activation, ordering, selector and view collection below lifecycle, workspace and spec"
+
+[dependencies]
+# `applies_to` selector glob compilation and matching.
+glob.workspace = true
+specmark.workspace = true
+# `CollectionError` is a real error enum, not a string bag.
+thiserror.workspace = true
+# Manifest grammar and typed coordinates — the kernel's one workspace edge.
+vibe-core.workspace = true
+
+[dev-dependencies]
+# The ambient-freedom fence parses this crate's production sources as an
+# AST, so grouped imports, renames and fully-qualified ambient paths cannot
+# slip past a raw-text scan. Dev-only — the runtime exact-set stays the
+# accepted four above.
+syn.workspace = true
+# The dependency exact-set fence parses this crate's own manifest, and the
+# registry test cells build `ExtensionConfig` tables.
+toml.workspace = true
