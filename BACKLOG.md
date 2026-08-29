@@ -1339,3 +1339,37 @@ structure, and it goes when the file does.
 
 - @fact:B113-NOT-A-REGRESSION **Почему A1 принят, а долг всё равно P2.** Удалённый CLI-private scanner тоже рекурсировал через `path.is_dir()` и имел ту же junction-щель; A1 улучшил обычные symlink files/dirs и сделал split-brain/identity общими, но не заявлял новую Windows reparse механику. Новый public query расширяет число callers, поэтому известную щель нельзя переносить через P3 как «старое поведение».
 - @fact:B113-FIX-SHAPE **Почему не писать четвёртый OS helper.** `vibe-safefs` уже проверяет symlink + `FILE_ATTRIBUTE_REPARSE_POINT` на каждом компоненте и умеет инъекционные race REDы. Локальный `cfg(windows)` бит в `vibe-facts` снова создаст две containment-грамматики; допустим либо прямой lower dependency, либо маленький общий read-only capability API, но не копия константы.
+
+### B-114 — `vibe check` шумит двумя warning'ами на здоровом дереве {#b-114}
+
+| поле | значение |
+|---|---|
+| @fact:B114-ANCHOR **anchor** | [`tool-design-lessons` `##NEVER-LET-A-PACKAGES-IDENTITY-INCLUDE-BUILD-ARTIFACTS`](vibevm/vibedeps/org.vibevm.world.tool-design-lessons/1.0.0/vibevm/vibespecs/boot/70-flow-tool-design-lessons.xml) — идентичность пакета есть его источник, а не то, что рядом собралось |
+| @fact:B114-LOCATOR **locator** | (1) правило `local_source_freshness`: `content_hash` локального package source считает и git-ignored файлы. Запуск бандленного `test_render_goal.py` изнутри `vibevm/vibepacks/org.vibevm.world/multi-user-planning/v0.2.1/**/scripts/` создаёт `__pycache__/` (закрыт своим `.gitignore`), после чего host `vibe check` заявляет «its local source changed since install» и советует `vibe install --assume-yes`. (2) правило `boot_directory` помечает `vibevm/vibespecs/boot/.vibe-boot-artifacts.lock` как non-spec-source файл, хотя он генерируемый и закрыт `.gitignore:19 **/.vibe-boot-*` |
+| @fact:B114-SEVERITY **severity** | P3 |
+| @fact:B114-DISPOSITION **disposition** | `open` — оба правила должны считать периметр так же, как его считает git: исключать ignored пути из `content_hash` и из инвентаря boot-директории. Пока не закрыто, ложный freshness-warning ловится ровно тем, что его вызвало, — не запускать тесты пакета внутри его собственного source tree, либо чистить `__pycache__` после |
+| @fact:B114-FILED **filed by** | центральная приёмка R4.1 T6b, 2026-08-29 |
+
+- @fact:B114-WHY-IT-MATTERS **Почему это не косметика.** Warning советует конкретное действие — `vibe install --assume-yes`, — которое переустановит слот из-за байткода Python. Совет, срабатывающий от артефакта сборки, обучает игнорировать всю категорию; именно так настоящий дрейф источника однажды пройдёт незамеченным.
+
+### B-115 — центральные диспозиции T6b живут только в неотслеженном `cache/` {#b-115}
+
+| поле | значение |
+|---|---|
+| @fact:B115-ANCHOR **anchor** | [`decision-records` `##GOVERNING-SPEC-SECTION-IS-THE-RECORD`](vibevm/vibedeps/org.vibevm.world.decision-records/1.0.0/vibevm/vibespecs/boot/25-flow-decision-records.xml) и `##REASON-IS-LOST-UNLESS-WRITTEN-DOWN` |
+| @fact:B115-LOCATOR **locator** | `cache/r4-t6b-reds-claudez/REVIEW-NOTES-t6b-round1.md` — единственный носитель нескольких решённых развилок T6b. Самая нагруженная: `std::error::Error::source()` у непрозрачной `TransformCompileError` возвращает `Some(private fault)`, а не `None`; довод — приватный источник не публикует именуемую таксономию, а молчаливый обрыв стандартной цепочки противоречит замороженному typed-source дизайну. В отслеживаемых авторитетах (ABI-заморозка, PROP-054) этого рулинга нет |
+| @fact:B115-SEVERITY **severity** | P2 |
+| @fact:B115-DISPOSITION **disposition** | `open` — поднять решённые развилки в тот якорь, который управляет значением (ABI §6.3 или PROP-054), с четырьмя полями записи решения; до этого `cache/` нельзя чистить (M-012 и так это запрещает, но здесь запрет держит ещё и смысл) |
+| @fact:B115-FILED **filed by** | центральная приёмка R4.1 T6b, 2026-08-29 |
+
+- @fact:B115-THE-TRAP **В чём ловушка.** Мутация M1 делает `source() → None` и валит ровно один тест с сообщением «does not terminate the source chain». Тест защищает решение, но не объясняет его: следующая сессия, увидев RED, узнает *что* нельзя, но не *почему* — и первый же аргумент «непрозрачность лучше» переоткроет вопрос. Тест — это защёлка, запись решения — иммунитет.
+
+### B-116 — `TransformBehaviorError::WrongStage` рендерит неграмматичный артикль {#b-116}
+
+| поле | значение |
+|---|---|
+| @fact:B116-ANCHOR **anchor** | [PROP-054 `##TRANSFORM-PLAN-IDENTITY`](vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml#TRANSFORM-PLAN-IDENTITY) — типизированный отказ поведения виден пользователю через публичную цепочку ошибок |
+| @fact:B116-LOCATOR **locator** | `crates/vibe-spec/src/compiler/transform/behavior.rs`: шаблон сообщения даёт «refusing a Emitted invocation» для стадий с гласной. Рядом, но отдельно: тестовые машинки `FailingSource`/`FailingEmitted` в `schedule_execution_vehicles.rs` фабрикуют отказ через `self.wrong_stage(<своя же стадия>)`, отчего текст становится самопротиворечивым — «declares Emitted, refusing a Emitted invocation» |
+| @fact:B116-SEVERITY **severity** | P3 |
+| @fact:B116-DISPOSITION **disposition** | `open` — убрать артикль из шаблона (стадия и так в `{:?}`), а машинкам дать честный собственный вариант ошибки поведения вместо чужого `WrongStage`. Правка трогает production-строку, поэтому идёт со своим RED на рендер |
+| @fact:B116-FILED **filed by** | центральная приёмка R4.1 T6b, 2026-08-29 |
