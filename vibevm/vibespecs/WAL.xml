@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
-  <title id="root">WAL — checkpoint 2026-08-29: R4.1 T1/T3 landed; TransformPlan T2 next</title>
-  <status stage="impl" state="work" comment="lifecycle/extensions campaign active; R1/R2, R3.1-R3.4, R4.0 plus R4.1 controls/transaction/config/selector substrate, R6.2a/b, R7.1-R7.5, R8.1 and R8.2a complete; TransformPlan T2 next"/>
+  <title id="root">WAL — checkpoint 2026-08-29: R4.1 TransformPlan T2 landed; ArtifactPlan T4 next</title>
+  <status stage="impl" state="work" comment="lifecycle/extensions campaign active; R1/R2, R3.1-R3.4, R4.0 plus R4.1 controls/transaction/config/selector/plan substrate, R6.2a/b, R7.1-R7.5, R8.1 and R8.2a complete; ArtifactPlan T4 next"/>
 
   <current-phase title="Current phase">
     <p><WAL-PHASE fact="true" status="impl/work">The active epic is
@@ -70,8 +70,10 @@
     `48d7dc75`. Central review forced four-digit TOML dates, composable
     host+path subjects, one-collection plans and canonical OR-set equality.
     Exact T2 construction authority/refusals/byte frames are frozen at
-    `d5fcd92d`; combined map `5f6bca62` is 6830/2307/2080 with zero suspects,
-    gated orphans or unresolved host edges. T2 TransformPlan is current.
+    `d5fcd92d`; T2 implementation is landed at `49e944f0` over borrowed hash
+    validation `87ef2df6`. Root accepted exact frames/refusals after three
+    mutation REDs; map `b768bcb8` is 6831/2318/2091 with zero suspects, gated
+    orphans or unresolved host edges. T4 ArtifactPlan carriage is current.
     </WAL-PHASE></p>
   </current-phase>
 
@@ -85,8 +87,8 @@
       presets/query and owner scenario §10.1 are complete.</WAL-R2>
       <WAL-R3 fact="true" status="impl/done">R3 explicit six-carrier compiler
       IR, named pass schedule, verifier and command-owned compile trace are
-      complete. Current R4.1 checkpoint specmap: 6831 units, 2307 tagged items, 2080 edges,
-      0 suspects, 0 gated orphans, 0 unresolved host edges, 24 standing
+      complete. Current R4.1 checkpoint specmap: 6831 units, 2318 tagged items, 2091 edges,
+      0 suspects, 0 gated orphans, 0 unresolved host edges, 25 standing
       warnings.</WAL-R3>
       <WAL-R7 fact="true" status="impl/done">R7.1 provider, R7.2 CLI agent
       output contract, R7.3 hosted exact-run park/resume and R7.4 MCP lifecycle
@@ -200,10 +202,11 @@
       dependency/ambient fences accepted. R4.1 owner-control carriage and
       package-own projection are complete at `52a59dcc`; unit publication is
       transactional at `91142777` / `ab68d145`. T1 config/digest `b65f9958`,
-      T3 selector/enabled view `48d7dc75` and exact T2 frame freeze `d5fcd92d`
-      are complete; combined map `5f6bca62`. Remaining R4.1: T2 TransformPlan,
-      then one lock-ordered snapshot, four transform seams, typed document
-      subject/verifier, active-only header and per-unit plan fingerprint.</WAL-R4>
+      T3 selector/enabled view `48d7dc75`, exact frame freeze `d5fcd92d` and T2
+      plan identity `49e944f0` / borrowed hash `87ef2df6` are complete; map
+      `b768bcb8`. Remaining R4.1: T4 ArtifactPlan carriage, then behavior/four
+      transform seams, typed document subject/verifier, emitted ownership,
+      owner adapter, active-only header and per-unit plan fingerprint.</WAL-R4>
       <WAL-R8 fact="true" status="impl/work">R8.1 project-only package-skill
       binding and R8.2a mechanism/artifact/deploy grammar are complete. Runtime
       mechanisms, build/package providers and deploy reconciliation remain.
@@ -283,11 +286,11 @@
 
   <next title="Next">
     <p><WAL-NEXT fact="true" status="impl/work">Implement
-    T2 of `R4-TRANSFORM-PLAN-ABI-v0.1.md`: the now-exact
-    TransformPlan/seed/provider/implementation digests and refusals over landed
-    T1 config/digest and T3 selector APIs. Then T4 pins the empty plan on
-    ArtifactPlan, followed by behavior registry/identity positions and the
-    typed document-subject wire.
+    T4 of `R4-TRANSFORM-PLAN-ABI-v0.1.md`: add private TransformPlan carriage to
+    ArtifactPlan, pin every existing/compatibility constructor to empty,
+    preserve schedule/bytes/errors/mtimes and prove nonempty carriage is inert
+    and never dropped by backend test vehicles. Then behavior registry/identity
+    positions and the typed document-subject wire follow.
     The world snapshot/owner adapter follows over the landed control carriage;
     all byte-changing work rides the landed per-unit transaction. Exact affected
     gates per atom; no full panel until coherent R4.</WAL-NEXT></p>

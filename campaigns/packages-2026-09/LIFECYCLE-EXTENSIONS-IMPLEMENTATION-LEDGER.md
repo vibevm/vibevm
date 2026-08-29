@@ -284,6 +284,21 @@ than depending on untracked `cache/` archaeology.
   strict three-crate clippy, downstream workspace/install/orchestrator/CLI
   check and conform 0 new. Map `5f6bca62` adds exactly 17 semantic edges and is
   6830/2307/2080 at zero suspects/orphans/unresolved. T2 implementation is next.
+- R4.1 T2 plan identity: `49e944f0` lands the opaque typed plan/provider/
+  implementation/config family, dense builder, exact implementation/plan
+  frames, selector/config presence, bounded typed refusals and syntax-aware
+  dependency/ambient/opacity fences; `87ef2df6` exposes the shared borrowed
+  ContentHash grammar so hostile revalidation clones no parser error. Root
+  rejected three proof rounds: public enum fields leaked future epoch
+  authority, the first fence repeated the known raw-text failure, worker gate
+  pipelines masked Cargo exits, then the selector-count mutation hit entry
+  count and the hex assertion was vacuous. Same-cwd corrections made the
+  values opaque, introduced dev-only syn/toml structural gates and fixed the
+  independent vectors. Root reran core 7, vibe-spec 685 + 5/2/7/4, strict
+  core/spec clippy, workspace/lifecycle/install/orchestrator/CLI check, conform
+  0 new and three live RED mutations (post-dedup count, `std::path` alias,
+  epoch-constructor visibility). Map `b768bcb8` is 6831/2318/2091 at zero
+  suspects/orphans/unresolved. T4 carriage is next.
 - Gate repair `67ab9683` fixes the conform content store's Windows cache slot:
   `sha256:<hex>` had created 1,393 NTFS alternate streams on one base file and
   failed with OS error 665. Authored engine + six vendored copies now use one
@@ -357,7 +372,7 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 | Step | State | Evidence |
 |---|---|---|
 | R4.0 one pure registry below lifecycle/workspace | done | kernel `6af1b86f`, map `8531cf82`; exact runtime-dependency/AST-ambient/public-reexport fences; kernel 22, lifecycle 287/3 ignored, orchestrator 126 + doctests, strict clippy/check/conform/DAG green |
-| R4.1 four positions, owner-scoped activation, header, per-unit fingerprint, reference oracle | in progress | package controls `52a59dcc`; unit transaction `91142777` / `ab68d145`; T1 config/digest `b65f9958`; T3 selector/enabled view `48d7dc75`; exact T2 frames `d5fcd92d`; map `5f6bca62` = 6830/2307/2080; T2 plan plus T4–T10 world/pass/header/fingerprint wiring open |
+| R4.1 four positions, owner-scoped activation, header, per-unit fingerprint, reference oracle | in progress | package controls `52a59dcc`; unit transaction `91142777` / `ab68d145`; T1 `b65f9958`; T3 `48d7dc75`; T2 `49e944f0` + borrowed hash `87ef2df6`; map `b768bcb8` = 6831/2318/2091; T4–T10 carriage/world/pass/header/fingerprint wiring open |
 | R4.2 builtin XML minify | partial | pure strict kernel `016f0fab` and reversible comment codec `fbbd5140`; no activation/on-off e2e |
 | R4.3 lane analyzer | missing | no `vibe extensions analyze` or machine report |
 

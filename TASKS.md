@@ -111,9 +111,16 @@ fronts currently in flight. A worker report or old worktree is never completion.
                   `R4-TRANSFORM-PLAN-ABI-v0.1.md` (`d5fcd92d`); combined map
                   `5f6bca62` is 6830/2307/2080 at zero suspects/orphans/
                   unresolved.
-            - [ ] implement T2 TransformPlan/seed/provider/implementation
-                  digests and refusals, then T4–T10 owner snapshot, four
-                  positions, subject wire/verifier, header and fingerprint.
+            - [x] T2 typed TransformPlan/seed/provider/implementation,
+                  canonical frames and bounded refusals (`49e944f0`) plus the
+                  borrowed ContentHash law (`87ef2df6`) are landed. Root ran
+                  core 7, vibe-spec 703, strict clippy/downstream/conform and
+                  three live mutations (post-dedup count, path-alias fence,
+                  epoch-constructor opacity). Map `b768bcb8` is
+                  6831/2318/2091 at zero suspects/orphans/unresolved.
+            - [ ] implement T4–T10: ArtifactPlan carriage, behavior registry,
+                  four positions, subject wire/verifier, emitted ownership,
+                  owner snapshot/adapter, header and fingerprint.
       - [ ] R4.2 bind strict builtin XML minify with the full RED corpus.
       - [ ] R4.3 JTD-first `vibe extensions analyze` report/CLI.
 - [ ] **R5.1–R5.5** — native schemas/SDK, loader, source/prebuilt build,

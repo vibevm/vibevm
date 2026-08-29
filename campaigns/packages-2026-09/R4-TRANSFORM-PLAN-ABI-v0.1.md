@@ -1,10 +1,11 @@
 # R4.1 TransformPlan ABI and digest — implementation design v0.1
 
-Status: accepted central design, 2026-08-29; exact T2 construction authority,
-refusal precedence and byte schedule frozen after adversarial review the same
-day. Semantic authority remains PROP-054 §§3.4, 7.1–7.3 and the R4
-architecture. This document freezes the in-process ABI and digest before
-implementation; execution status stays in the implementation ledger.
+Status: accepted central design, 2026-08-29; T1 `b65f9958`, T2 `49e944f0` and
+T3 `48d7dc75` implemented, exact T2 construction authority/refusal precedence/
+byte schedule and T4 carriage law frozen after adversarial review. Borrowed
+hash validation is `87ef2df6`; combined current map is `b768bcb8`. Semantic
+authority remains PROP-054 §§3.4, 7.1–7.3 and the R4 architecture. Execution
+status stays in the implementation ledger.
 
 ## 1. Boundary
 
@@ -109,10 +110,13 @@ implementation, and selector/stage. The scalar law for a key, exact version or
 ungrouped host name is nonempty and contains no ASCII control byte; it is not a
 new SemVer parser and it does not trim or normalize accepted spelling.
 Dependency group/name and coordinate hosts are already typed. Every required
-or present `ContentHash` is nevertheless rechecked with `ContentHash::parse`:
-the type intentionally exposes `from_validated` to trusted hash producers, so
-invalid Rust-constructed values remain reachable. Accepted hashes retain their
-full exact spelling, including `sha256:` versus `sha256-tree/1:`.
+or present `ContentHash` is nevertheless rechecked under the same grammar as
+`ContentHash::parse`, through its borrowed `is_valid_spelling` predicate: the
+type intentionally exposes `from_validated` to trusted hash producers, so
+invalid Rust-constructed values remain reachable, while a multi-megabyte
+refusal must not clone a parser error merely to discard it. `parse` and the
+predicate share one grammar core. Accepted hashes retain their full exact
+spelling, including `sha256:` versus `sha256-tree/1:`.
 
 A builtin implementation name obeys the compiler's already-frozen
 `BackendId` scalar grammar, `[a-z0-9][a-z0-9._-]{0,63}`, and its behavior epoch
@@ -311,12 +315,32 @@ recompute and transactionally no-op on equal bytes. Equality/order are derived
 from semantic members; wall clock, filesystem path and registry all-view rows
 do not enter.
 
+### 7.1 T4 ArtifactPlan carriage law
+
+T4 adds one private `TransformPlan` field to `ArtifactPlan`. Every existing
+constructor (`new`, `compatibility`, `static_lane`, test custom target) pins
+`TransformPlan::empty()` without changing its signature. A crate-internal
+whole-value replacer attaches an already-built plan and a read-only accessor
+lends it; there is no mutable entry/order API. T10 widens only the minimum
+needed by the workspace adapter.
+
+Carriage is deliberately inert in T4: empty and nonempty plans add no pass,
+header, fingerprint frame, wire member, bytes, error or mtime change. Execution
+begins only with T5/T6; fingerprint/header wiring lands in its named later atom.
+Compatibility wrappers therefore remain empty-plan forever. Any test vehicle
+that rebuilds an `ArtifactPlan` for another backend must forward the whole plan
+rather than reconstructing only contributions — silently dropping a nonempty
+plan is the one carriage regression T4 must make red.
+
 ## 8. Implementation atoms and gates
 
-1. T1 compiler digest primitive + semantic config lowering/digest.
-2. T2 TransformPlan/seed/provider/implementation + digest/refusals.
-3. T3 kernel selector public ABI, host subject and `enabled_at` view.
-4. T4 ArtifactPlan carries plan; compatibility pins empty; empty-plan byte REDs.
+1. **Done `b65f9958`:** T1 compiler digest primitive + semantic config lowering/digest.
+2. **Done `49e944f0` (`87ef2df6` borrowed hash law):** T2
+   TransformPlan/seed/provider/implementation + digest/refusals.
+3. **Done `48d7dc75`:** T3 kernel selector public ABI, host subject and
+   `enabled_at` view.
+4. **Current:** T4 ArtifactPlan carries plan; compatibility pins empty;
+   empty-plan byte/error/schedule REDs.
 5. T5 behavior registry/name/epoch golden with identity behaviors.
 6. T6 four positions wired; per-document/per-artifact invocation REDs.
 7. T7 DocumentSubject carrier + compiler IR JTD/codegen/wire-diff.
