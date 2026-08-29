@@ -19,23 +19,38 @@ pub struct BackendIdError {
 impl BackendId {
     pub(crate) fn new(value: impl Into<String>) -> Result<Self, BackendIdError> {
         let value = value.into();
-        let bytes = value.as_bytes();
-        let valid = (1..=64).contains(&bytes.len())
-            && valid_id_byte(bytes[0])
-            && bytes
-                .iter()
-                .skip(1)
-                .all(|byte| valid_id_byte(*byte) || b"._-".contains(byte));
-        if valid {
+        if valid_id_spelling(&value) {
             Ok(Self(value))
         } else {
             Err(BackendIdError { value })
         }
     }
 
+    /// Whether one borrowed spelling satisfies the frozen grammar — the same
+    /// law [`BackendId::new`] enforces, shared through the one validator so
+    /// neither can drift. Revalidating callers that already hold a borrowed
+    /// candidate — the R4.1 transform-plan refusal path, where a builtin
+    /// name can be attacker-sized — call this and never clone the candidate
+    /// into an owned error or id just to check it.
+    pub(crate) fn is_valid_spelling(value: &str) -> bool {
+        valid_id_spelling(value)
+    }
+
     pub(crate) fn as_str(&self) -> &str {
         &self.0
     }
+}
+
+/// The one borrowed grammar core behind both `BackendId::new` and
+/// `BackendId::is_valid_spelling`: `[a-z0-9][a-z0-9._-]{0,63}`.
+fn valid_id_spelling(value: &str) -> bool {
+    let bytes = value.as_bytes();
+    (1..=64).contains(&bytes.len())
+        && valid_id_byte(bytes[0])
+        && bytes
+            .iter()
+            .skip(1)
+            .all(|byte| valid_id_byte(*byte) || b"._-".contains(byte))
 }
 
 fn valid_id_byte(byte: u8) -> bool {
@@ -111,5 +126,48 @@ impl std::fmt::Debug for ArtifactTarget {
                 f.debug_tuple("Custom").field(&backend.as_str()).finish()
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::BackendId;
+
+    /// The borrowed predicate and the owned constructor enforce one grammar:
+    /// they agree on every corpus spelling, and the corpus covers each way
+    /// the frozen `[a-z0-9][a-z0-9._-]{0,63}` law can fail.
+    #[test]
+    fn is_valid_spelling_agrees_with_new_on_every_corpus_spelling() {
+        let corpus = [
+            ("static-xml", true),
+            ("a", true),
+            (&"l".repeat(64), true),
+            ("", false),
+            ("Static", false),
+            ("1st", true),
+            ("-leading", false),
+            // A hyphen at the tail and an underscore mid-name are legal
+            // here: both edge rules belong to the group grammar, not the
+            // backend-id grammar.
+            ("trailing-", true),
+            ("under_score", true),
+            (&"l".repeat(65), false),
+        ];
+        for (spelling, legal) in corpus {
+            assert_eq!(
+                BackendId::is_valid_spelling(spelling),
+                legal,
+                "spelling {spelling:?} classified wrong"
+            );
+            assert_eq!(
+                BackendId::new(spelling).is_ok(),
+                legal,
+                "new disagrees with is_valid_spelling on {spelling:?}"
+            );
+        }
+        // An accepted spelling is stored verbatim — the predicate never
+        // normalises what the constructor would keep.
+        let id = BackendId::new("static-xml").unwrap();
+        assert_eq!(id.as_str(), "static-xml");
     }
 }

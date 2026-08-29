@@ -36,6 +36,24 @@ serde_json.workspace = true
 # workspace dependency of serde_json itself.
 serde.workspace = true
 base64.workspace = true
+# The R4.1 transform-plan identity seam (PROP-054 `#TRANSFORM-PLAN-IDENTITY`):
+# `vibe-spec` owns the typed plan, but its seed members are typed values that
+# live below it — the registry kernel's compiled selector and provider
+# metadata, `vibe-core`'s key/hash/group/name/kind scalars. The intended DAG
+# is `vibe-spec -> vibe-extension-registry -> vibe-core` plus this direct
+# `vibe-core` edge for typed-identity use; neither lower crate ever gains a
+# reverse edge back up.
+vibe-core.workspace = true
+vibe-extension-registry.workspace = true
 
 [dev-dependencies]
 tempfile.workspace = true
+# The syntax-aware source fence parses the plan production cells as an AST
+# (R4.1 round 1, C2): grouped/renamed imports, fully-qualified paths, type
+# paths, macros and trait objects are classified structurally, so a string
+# or comment containing a forbidden token can never hide real Rust from the
+# fence. Dev-only — the runtime dependency set is unchanged.
+syn.workspace = true
+# The same fence parses this crate's manifest (and the two lower crates'
+# manifests) structurally for the DAG proof instead of substring-scanning.
+toml.workspace = true

@@ -9,8 +9,10 @@
 //! means an authored activation cleared the value — that distinction lives in
 //! `TransformPlan` (T2), not here: this cell only ever digests a real table.
 
-// T2 (`TransformPlan::build`) is the first production consumer of this ABI
-// cell; until it lands, only the transform tests construct these values.
+// `TransformPlan::build` digests through this cell, but the plan family
+// stays crate-internal dead code until T4 carries it on `ArtifactPlan`;
+// T10's workspace adapter is its real first cross-crate consumer. Until
+// then only the transform cells and their tests construct these values.
 #![allow(dead_code)]
 
 use std::collections::BTreeMap;
