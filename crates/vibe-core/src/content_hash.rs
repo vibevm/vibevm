@@ -70,7 +70,7 @@ impl ContentHash {
     pub fn parse(input: &str) -> Result<Self, crate::Error> {
         for prefix in Self::ACCEPTED_PREFIXES {
             if let Some(hex) = input.strip_prefix(prefix) {
-                if hex.is_empty() || !hex.bytes().all(|b| b.is_ascii_hexdigit()) {
+                if !Self::hex_tail_is_valid(hex) {
                     return Err(crate::Error::BadContentHash {
                         input: input.to_owned(),
                         reason: "the digest after the prefix must be non-empty hexadecimal".into(),
@@ -86,6 +86,31 @@ impl ContentHash {
                 Self::ACCEPTED_PREFIXES.join(" / ")
             ),
         })
+    }
+
+    /// Whether one borrowed spelling is a legal `<algo-prefix><hex>` hash.
+    ///
+    /// The same grammar [`parse`](Self::parse) enforces, as a borrowed
+    /// predicate: it accepts exactly the spellings `parse` accepts (both
+    /// recipe prefixes, non-empty hexadecimal tail) and refuses exactly the
+    /// rest, sharing the law through [`Self::hex_tail_is_valid`] so the two
+    /// cannot drift. Revalidating callers that already hold a
+    /// `ContentHash`-shaped `&str` — the R4.1 plan refusal path, where the
+    /// spelling can be attacker-sized — call this instead of `parse` and
+    /// never allocate the error clone `parse` would build.
+    pub fn is_valid_spelling(input: &str) -> bool {
+        for prefix in Self::ACCEPTED_PREFIXES {
+            if let Some(hex) = input.strip_prefix(prefix) {
+                return Self::hex_tail_is_valid(hex);
+            }
+        }
+        false
+    }
+
+    /// The one grammar core shared by `parse` and `is_valid_spelling`: a
+    /// digest tail is legal when non-empty and fully hexadecimal.
+    fn hex_tail_is_valid(hex: &str) -> bool {
+        !hex.is_empty() && hex.bytes().all(|b| b.is_ascii_hexdigit())
     }
 
     /// Wrap a hash already produced by a trusted hasher
@@ -219,6 +244,36 @@ mod tests {
             let h = ContentHash::parse(input).unwrap();
             let wire: String = h.into();
             assert_eq!(wire, input);
+        }
+    }
+
+    #[test]
+    fn is_valid_spelling_agrees_with_parse_on_every_corpus_spelling() {
+        // The borrowed predicate accepts exactly what `parse` accepts and
+        // refuses exactly the rest — the shared grammar core cannot drift.
+        let corpus = [
+            ("sha256:abc", true),
+            ("sha256:", false),
+            ("sha256:nothex", false),
+            ("sha256:A0b1C2", true),
+            ("sha256-tree/1:abc", true),
+            ("sha256-tree/1:", false),
+            ("sha256-tree/1:zz", false),
+            ("md5:d41d8cd98f00b204", false),
+            ("e3b0c44298fc1c14", false),
+            ("", false),
+        ];
+        for (input, legal) in corpus {
+            assert_eq!(
+                ContentHash::is_valid_spelling(input),
+                legal,
+                "spelling {input:?} classified wrong"
+            );
+            assert_eq!(
+                ContentHash::parse(input).is_ok(),
+                legal,
+                "parse disagrees with is_valid_spelling on {input:?}"
+            );
         }
     }
 }
