@@ -610,7 +610,8 @@
         "source_lane_digest": { "type": "string", "metadata": { "description": "SHA-256, 64 lowercase hex chars; validated at conversion." } },
         "renames": { "elements": { "ref": "origin_rename" }, "metadata": { "x-empty": "emit" } },
         "contributions": { "elements": { "ref": "emission_contribution_witness" }, "metadata": { "x-empty": "emit" } },
-        "bytes_digest": { "type": "string", "metadata": { "description": "SHA-256 of the emitted bytes, 64 lowercase hex chars; validated at conversion." } }
+        "emitted_transforms": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit", "description": "Schedule pass names of the emitted-position transforms that rewrote these bytes, in application order (`transform:emitted:<key>`, a `PassName`); empty means no emitted transform changed the artifact. Conversion validates every element through the same non-blank scalar law `producer` obeys." } },
+        "bytes_digest": { "type": "string", "metadata": { "description": "SHA-256 of the emitted bytes, 64 lowercase hex chars; validated at conversion. Recomputed after an emitted transform, so it is always the digest of the bytes actually carried." } }
       }
     },
     "emitted_artifact": {

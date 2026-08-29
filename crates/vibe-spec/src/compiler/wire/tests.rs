@@ -2,6 +2,7 @@
 
 mod carriers;
 mod corpus;
+mod emitted_transforms;
 mod fixture;
 mod framing;
 mod gate_reds;

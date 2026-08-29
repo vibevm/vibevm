@@ -194,6 +194,23 @@ pub(super) fn decode_emitted(
     for witness in &provenance.contributions {
         contributions.push(decode_emission_witness(witness)?);
     }
+    let mut emitted_transforms = Vec::with_capacity(provenance.emitted_transforms.len());
+    for name in &provenance.emitted_transforms {
+        // Every element obeys exactly the law `producer` obeys — the same
+        // scalar gate, then the same domain constructor. A transform name is a
+        // `PassName` or it is not carried: nothing downstream may receive a
+        // blank or newline-bearing pass identity and try to attribute with it.
+        require_scalar("emitted transform name", name)?;
+        emitted_transforms.push(PassName::new(name.clone()).map_err(|_| {
+            gate(
+                G_SCALAR_IDS,
+                format!(
+                    "emitted transform name ({}) is not a valid pass name",
+                    bounded_preview(name)
+                ),
+            )
+        })?);
+    }
     let bytes = decode_base64(&value.bytes_b64)?;
     let provenance = EmissionProvenance {
         context,
@@ -202,6 +219,7 @@ pub(super) fn decode_emitted(
         source_lane_digest: LaneInputDigest(source_lane_digest),
         renames,
         contributions,
+        emitted_transforms,
         bytes_digest,
     };
     check_emit_identity(&provenance, &bytes)?;
@@ -371,6 +389,14 @@ pub(super) fn encode_emitted(
             source_lane_digest: digest_hex(&provenance.source_lane_digest.0),
             renames,
             contributions,
+            // Application order is the record; it is written out as authored,
+            // never sorted or deduplicated — two entries may legitimately
+            // apply the same implementation under different keys.
+            emitted_transforms: provenance
+                .emitted_transforms
+                .iter()
+                .map(|name| name.as_str().to_string())
+                .collect(),
             // The one digest independently computable from the value: the
             // manager's own digest of the bytes, recomputed rather than trusted.
             bytes_digest: digest_hex(&emitted_bytes_digest(value.bytes())),

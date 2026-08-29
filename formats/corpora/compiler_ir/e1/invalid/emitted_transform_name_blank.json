@@ -53,9 +53,12 @@
           }
         }
       ],
-      "emitted_transforms": [],
-      "bytes_digest": "b7f8278a784ffdd290fe40ad7615d0f7d577e72fdfe120d0aa529bfc93c7ef83"
+      "emitted_transforms": [
+        "transform:emitted:org.demo/tools#append",
+        "   "
+      ],
+      "bytes_digest": "2bb02e8dfa73b5436457f87c8a2665a12277abe065e963e0cec47b333d5cb274"
     },
-    "bytes_b64": "AP8K"
+    "bytes_b64": "AP8KCg=="
   }
 }

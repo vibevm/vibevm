@@ -63,6 +63,12 @@ pub(crate) struct PreEmissionWitness {
 }
 
 /// Immutable evidence created by the manager at the selected backend boundary.
+///
+/// Every member is written by the manager and by nothing else. `producer`
+/// names the backend pass that first produced bytes; `emitted_transforms`
+/// names the post-backend rewrites that changed them afterwards, in
+/// application order, so a later reader can answer "which pass explains these
+/// bytes" without diffing digests (R4-TRANSFORM-PLAN-ABI §6.5).
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct EmissionProvenance {
     pub(crate) context: ArtifactContext,
@@ -71,6 +77,15 @@ pub struct EmissionProvenance {
     pub(crate) source_lane_digest: LaneInputDigest,
     pub(crate) renames: Vec<OriginRename>,
     pub(crate) contributions: Vec<EmissionContributionWitness>,
+    /// The schedule pass name of every emitted-position transform that
+    /// returned CHANGED bytes, appended in application order. Empty at
+    /// emission and empty forever on an artifact no emitted transform
+    /// changed, so such an artifact is spelled exactly as it was before this
+    /// member existed. Written only by
+    /// [`crate::compiler::transform::emitted_reconstruction`]; a behavior
+    /// receives bytes and returns bytes, so it owns no channel that reaches
+    /// here.
+    pub(crate) emitted_transforms: Vec<PassName>,
     pub(crate) bytes_digest: [u8; 32],
 }
 
@@ -127,6 +142,7 @@ impl EmittedArtifact {
                 source_lane_digest: LaneInputDigest([0; 32]),
                 renames: Vec::new(),
                 contributions: Vec::new(),
+                emitted_transforms: Vec::new(),
                 bytes_digest: [0; 32],
             },
             bytes,

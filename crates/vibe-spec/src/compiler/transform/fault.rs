@@ -128,16 +128,20 @@ pub(crate) enum TransformError {
 /// cannot be judged — a document whose declaring provider is
 /// `Undetermined` met by an authored `packages` dimension. That is a
 /// per-document, match-time fact, so the refusal moved with it.
+///
+/// The family had a second arm until T9: an emitted behavior that returned
+/// different bytes refused, because no cell yet owned recomputing the digest
+/// and recording which pass had rewritten the tape.
+/// [`super::emitted_reconstruction`] now owns exactly that, so the arm was
+/// deleted rather than left as a dead spelling. A gap that has been closed is
+/// not a variant with no constructor — it is gone, and the tests that proved
+/// the refusal now state the law that replaced it.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, thiserror::Error)]
 pub(crate) enum TransformCapabilityGap {
     #[error(
         "this document's declaring provider is undetermined, so an authored `applies_to.packages` dimension cannot be judged; the owner-view adapter supplies the typed coordinate"
     )]
     SelectorSubject,
-    #[error(
-        "emitted reconstruction arrives with T9; byte-equal output returns the original artifact, changed bytes refuse"
-    )]
-    EmittedChange,
 }
 
 /// The public, opaque transform-fault value one artifact compile returns.

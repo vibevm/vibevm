@@ -16,6 +16,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-I
 
 pub(crate) mod behavior;
 pub(crate) mod config;
+pub(crate) mod emitted_reconstruction;
 pub(crate) mod fault;
 pub(crate) mod lane_admission;
 pub(crate) mod plan;
@@ -45,6 +46,8 @@ mod registry_fence_tests;
 pub(crate) mod registry_test_support;
 #[cfg(test)]
 mod registry_tests;
+#[cfg(test)]
+mod schedule_emitted_tests;
 #[cfg(test)]
 mod schedule_execution_tests;
 #[cfg(test)]

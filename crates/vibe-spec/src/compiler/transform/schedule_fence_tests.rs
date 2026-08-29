@@ -497,7 +497,7 @@ fn the_wrapper_fence_detects_every_banned_spelling_and_admits_its_two_surfaces()
 }
 
 /// The rule families stay exhaustive over the module tree: the production
-/// transform cells are exactly the ten declared `pub(crate) mod`s, every
+/// transform cells are exactly the eleven declared `pub(crate) mod`s, every
 /// cfg-test cell is declared too, and no undeclared `.rs` sibling can ship
 /// unclassified (a new production cell must be added to a family here).
 #[test]
@@ -526,6 +526,7 @@ fn the_module_tree_declares_every_transform_cell_under_a_rule_family() {
         BTreeSet::from([
             "behavior".to_owned(),
             "config".to_owned(),
+            "emitted_reconstruction".to_owned(),
             "fault".to_owned(),
             "lane_admission".to_owned(),
             "plan".to_owned(),
@@ -550,6 +551,7 @@ fn the_module_tree_declares_every_transform_cell_under_a_rule_family() {
             "registry_fence_tests".to_owned(),
             "registry_test_support".to_owned(),
             "registry_tests".to_owned(),
+            "schedule_emitted_tests".to_owned(),
             "schedule_execution_tests".to_owned(),
             "schedule_execution_vehicles".to_owned(),
             "schedule_fence_tests".to_owned(),
@@ -565,16 +567,30 @@ fn the_module_tree_declares_every_transform_cell_under_a_rule_family() {
     );
 
     // The classification itself: the wrapper cell, the T6c lane-admission
-    // gate and the T8 fault family under wrapper rules, the T8 admission
-    // cell under its own, the plan cells under the stronger carrier rules.
-    // The gate and the fault family belong to the wrapper family because
-    // they hold the wrapper's own posture — no manifest/collector/row/path/
-    // codec surface, no upward builtin spelling, no kernel selector, and no
-    // fault eliminated by panic — while legitimately boxing CONCRETE error
-    // types.
+    // gate, the T9 emitted-reconstruction cell and the T8 fault family under
+    // wrapper rules, the T8 admission cell under its own, the plan cells
+    // under the stronger carrier rules. The gates, the reconstruction cell
+    // and the fault family belong to the wrapper family because they hold the
+    // wrapper's own posture — no manifest/collector/row/path/codec surface,
+    // no upward builtin spelling, no kernel selector, and no fault eliminated
+    // by panic — while legitimately boxing CONCRETE error types.
     assert!(offenders(include_str!("schedule.rs"), &WRAPPER_RULES).is_empty());
     assert!(offenders(include_str!("lane_admission.rs"), &WRAPPER_RULES).is_empty());
+    assert!(offenders(include_str!("emitted_reconstruction.rs"), &WRAPPER_RULES).is_empty());
     assert!(offenders(include_str!("fault.rs"), &WRAPPER_RULES).is_empty());
     assert!(offenders(include_str!("selector_admission.rs"), &SELECTOR_RULES).is_empty());
     assert!(offenders(include_str!("plan.rs"), &PLAN_CARRIER_RULES).is_empty());
+    // The reconstruction cell is held to MORE than its family requires, and
+    // the extra is asserted rather than trusted: it is a pure value builder,
+    // so — exactly like the selector admission cell — it owns no behavior
+    // channel of any spelling. That ban belongs to the plan-carrier family,
+    // so both are checked; together they say "no behavior channel AND no
+    // fault eliminated by panic", which neither family says alone.
+    assert!(
+        offenders(
+            include_str!("emitted_reconstruction.rs"),
+            &PLAN_CARRIER_RULES
+        )
+        .is_empty()
+    );
 }

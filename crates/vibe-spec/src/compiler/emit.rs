@@ -112,6 +112,13 @@ fn build_provenance(
         source_lane_digest: witness.lane_digest.clone(),
         renames: witness.frame.renames.clone(),
         contributions: witness.emission_witnesses.clone(),
+        // Empty at emission: the backend produced these bytes and no
+        // post-backend transform has rewritten them yet. Only
+        // `transform::emitted_reconstruction` ever appends, and only when a
+        // behavior really returned different bytes — so an artifact nothing
+        // changed carries exactly the value this member had before it existed
+        // (R4-TRANSFORM-PLAN-ABI §6.5).
+        emitted_transforms: Vec::new(),
         bytes_digest: digest::bytes_digest(bytes),
     }
 }

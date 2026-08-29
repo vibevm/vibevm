@@ -907,12 +907,20 @@ pub struct EmissionProvenance {
     pub backend: String,
 
     /// SHA-256 of the emitted bytes, 64 lowercase hex chars; validated at
-    /// conversion.
+    /// conversion. Recomputed after an emitted transform, so it is always the
+    /// digest of the bytes actually carried.
     pub bytes_digest: String,
 
     pub context: ArtifactContext,
 
     pub contributions: Vec<EmissionContributionWitness>,
+
+    /// Schedule pass names of the emitted-position transforms that rewrote
+    /// these bytes, in application order (`transform:emitted:<key>`, a
+    /// `PassName`); empty means no emitted transform changed the artifact.
+    /// Conversion validates every element through the same non-blank scalar law
+    /// `producer` obeys.
+    pub emitted_transforms: Vec<String>,
 
     /// Stable name of the emit pass that produced the bytes (`PassName`), e.g.
     /// `emit:static-xml`.

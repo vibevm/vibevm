@@ -148,6 +148,13 @@ fn scalar_identities_of_every_family() {
                     serde_json::json!(BLANK);
             },
         ),
+        (
+            "emitted transform name",
+            "emitted_artifact_transformed.json",
+            |d| {
+                d["emitted"]["provenance"]["emitted_transforms"][0] = serde_json::json!(BLANK);
+            },
+        ),
         ("emit backend charset", "emitted_artifact.json", |d| {
             d["emitted"]["provenance"]["backend"] = serde_json::json!("Bad!");
             d["emitted"]["provenance"]["context"]["artifact"] = serde_json::json!("Bad!");

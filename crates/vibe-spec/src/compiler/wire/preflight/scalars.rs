@@ -375,6 +375,9 @@ fn emitted_cell(emitted: &wire::EmittedArtifact) -> Result<(), IrWireError> {
     require_scalar("emit backend id", provenance.backend.as_str())?;
     backend_id_charset(provenance.backend.as_str())?;
     require_scalar("emit producer pass", provenance.producer.as_str())?;
+    for name in &provenance.emitted_transforms {
+        require_scalar("emitted transform name", name.as_str())?;
+    }
     renames(&provenance.renames)?;
     for witness in &provenance.contributions {
         match witness {

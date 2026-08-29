@@ -5,13 +5,15 @@
 //! [`super::fault`]; this cell projects entry identity onto it and nothing
 //! more.
 //!
-//! Two positions accept more than a pass-through. The lane wrapper accepts a
-//! CHANGED carrier — T6c retired the temporary full-equality detector, and
+//! Three positions accept more than a pass-through. The lane wrapper accepts
+//! a CHANGED carrier — T6c retired the temporary full-equality detector, and
 //! the manager-side [`lane_admission`] gate decides admissibility. The
-//! source and document wrappers consult the [`super::selector_admission`]
-//! gate once per document and SKIP the behavior when the document is out of
-//! scope; a skipped behavior is not an error and not a fault. The
-//! emitted-bytes gap remains.
+//! emitted wrapper accepts CHANGED bytes — T9 retired the interim refusal,
+//! and the manager-side [`emitted_reconstruction`] cell rebuilds the artifact
+//! around them. The source and document wrappers consult the
+//! [`super::selector_admission`] gate once per document and SKIP the behavior
+//! when the document is out of scope; a skipped behavior is not an error and
+//! not a fault.
 //!
 //! Construction is a two-step transaction: every entry resolves (frame
 //! refusal first, then name → epoch → stage, in dense plan order, first fault
@@ -40,6 +42,7 @@ use crate::compiler::pass::{Pass, PassName};
 use crate::compiler::pipeline::{CompilerPipeline, CompilerPipelineError};
 
 use super::behavior::{TransformBehavior, TransformBehaviorError};
+use super::emitted_reconstruction;
 use super::fault::{TransformCapabilityGap, TransformError};
 use super::lane_admission::{self, LaneAdmissionError};
 use super::plan::{TransformConfig, TransformStage};
@@ -487,10 +490,14 @@ impl LaneTransformPass {
 /// The emitted-position wrapper: owned artifact bytes in, new bytes out —
 /// never a mutable artifact reference.
 ///
-/// T6b interim law: unequal bytes refuse with the typed
-/// [`TransformCapabilityGap::EmittedChange`] before any reconstruction;
-/// byte-equal output returns the ORIGINAL [`EmittedArtifact`] untouched —
-/// provenance, digest and fingerprint included. T9 owns reconstruction.
+/// T9 law: a changed tape is legal, and the MANAGER alone rebuilds the
+/// artifact around it. The wrapper hands the original artifact, the behavior's
+/// bytes and its own exact pass name to [`emitted_reconstruction`] and returns
+/// what that cell answers — the ORIGINAL value untouched when the bytes did
+/// not move, a wholly rebuilt one (recomputed digest, appended transform name,
+/// every other provenance member copied) when they did. The wrapper owns
+/// nothing else: it does not compare the tapes, recompute a digest or touch
+/// provenance, so there is exactly one writer of a post-backend artifact.
 struct EmittedTransformPass {
     name: PassName,
     order: u32,
@@ -528,14 +535,8 @@ impl Pass for EmittedTransformPass {
             .map_err(|source| {
                 wrapper_fault(&self.preview, self.order, &TransformStage::Emitted, source)
             })?;
-        if output.as_slice() != input.bytes() {
-            return Err(TransformError::Capability {
-                preview: self.preview.clone(),
-                order: self.order,
-                stage: TransformStage::Emitted,
-                gap: TransformCapabilityGap::EmittedChange,
-            });
-        }
-        Ok(input)
+        Ok(emitted_reconstruction::reconstruct(
+            input, output, &self.name,
+        ))
     }
 }

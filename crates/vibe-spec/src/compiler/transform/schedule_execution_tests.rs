@@ -1,6 +1,7 @@
 //! T6b execution tests (ABI §6.2–6.3): per-document versus per-artifact
 //! invocation, causal position proofs, config delivery, the lane/emitted
-//! interim refusals, typed error surfacing, and pass-name trace identity.
+//! positions' cardinality, typed error surfacing, and pass-name trace
+//! identity.
 //!
 //! The world is the shared `artifact_tests` fixture (five discovered
 //! documents: alpha, shared, the simple local entry, omega, the embedded
@@ -11,7 +12,8 @@
 //! across the shared/qualified lane.
 //!
 //! The lane position's own admission law is T6c's, and its tests live in
-//! `schedule_lane_tests`.
+//! `schedule_lane_tests`; the emitted position's reconstruction law is T9's,
+//! and its tests live in `schedule_emitted_tests`.
 
 use std::sync::{Arc, Mutex};
 
@@ -31,7 +33,7 @@ use crate::compiler::verify::DocumentIdentityField;
 
 use super::behavior::TransformBehaviorError;
 use super::config::{ConfigTable, ConfigValue};
-use super::fault::{TransformCapabilityGap, TransformError};
+use super::fault::TransformError;
 use super::plan::{TransformConfig, TransformSeed, TransformStage};
 use super::plan_test_support::{build_or_panic, default_dependency, dependency_seed, empty_config};
 use super::registry::TransformRegistry;
@@ -211,7 +213,11 @@ fn the_identity_lane_crosses_once_and_returns_the_whole_baseline_value() {
 
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY")]
-fn changed_emitted_bytes_refuse_after_the_backend_ran() {
+fn changed_emitted_bytes_are_reconstructed_after_the_backend_ran() {
+    // T9 retired the interim refusal: a changed tape is LAWFUL, and the
+    // manager rebuilds the artifact around it. What this cell owns is the
+    // POSITION — the rewrite happens once, after the backend really emitted;
+    // the reconstruction law itself lives in `schedule_emitted_tests`.
     reset_emit_invocations();
     reset_vehicle_counts();
     let world = fixture();
@@ -221,39 +227,27 @@ fn changed_emitted_bytes_refuse_after_the_backend_ran() {
         TransformStage::Emitted,
         "test-emit-append",
     )]);
+    let baseline = compile(fixture().plan.clone(), &world, &identity_registry()).unwrap();
 
-    let error = compile(plan, &world, &registry).unwrap_err();
-    let ArtifactCompileError::Transform(public) = &error else {
-        panic!("the emitted refusal is the transform family: {error:?}")
-    };
-    // The fault carries the bounded key preview, dense order and stage —
-    // never a reconstructed pass name (ABI 6.3).
-    assert!(
-        matches!(
-            public.inner(),
-            TransformError::Capability {
-                order: 0,
-                stage: TransformStage::Emitted,
-                ..
-            }
-        ),
-        "the entry identity is typed: {public}"
+    let carried = compile(plan, &world, &registry).unwrap();
+
+    let mut expected = baseline.bytes().to_vec();
+    expected.push(b'\n');
+    assert_eq!(
+        carried.bytes(),
+        expected.as_slice(),
+        "the behavior's tape is the tape that came back"
     );
-    assert!(
-        matches!(
-            public.inner(),
-            TransformError::Capability {
-                gap: TransformCapabilityGap::EmittedChange,
-                ..
-            }
-        ),
-        "the typed T9 gap: {public}"
+    assert_eq!(
+        carried.output_fingerprint(),
+        emitted_output_fingerprint(carried.bytes()),
+        "and the manager's recomputed digest describes exactly those bytes"
     );
     assert_eq!(EMITTED_COUNT.with(std::cell::Cell::get), 1);
     assert_eq!(
         emit_invocations("static-xml"),
-        1,
-        "the backend emitted once; the refusal is post-emit"
+        2,
+        "both worlds emitted once; the rewrite is post-emit, never instead of it"
     );
 }
 
@@ -273,6 +267,10 @@ fn equal_emitted_bytes_return_the_original_artifact_untouched() {
     // "the ORIGINAL artifact came back"; selected-field comparisons would
     // stay green through a rebuilt provenance.
     assert_eq!(carried, baseline);
+    assert!(
+        carried.provenance().emitted_transforms.is_empty(),
+        "a byte-equal behavior rewrote nothing, so it recorded nothing"
+    );
     // The identity emitted BEHAVIOR really ran once (the wrapper omitted
     // nothing), and the live digest law holds on the returned value.
     assert_eq!(

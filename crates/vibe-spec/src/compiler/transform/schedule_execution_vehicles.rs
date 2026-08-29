@@ -96,7 +96,13 @@ impl TransformBehavior for BlockTreeDocument {
     }
 }
 
-/// Returns the artifact bytes plus one newline: the T9 capability gap.
+/// Returns the artifact bytes plus one newline — the minimal CHANGING emitted
+/// behavior, and the vehicle every T9 reconstruction proof drives.
+///
+/// One newline is enough on purpose: the reconstruction law is about the
+/// artifact rebuilt around new bytes, not about how interesting the new bytes
+/// are, and a one-byte delta keeps a chained plan's expected tape trivially
+/// derivable from the baseline's.
 pub(super) struct AppendEmitted;
 
 impl TransformBehavior for AppendEmitted {
