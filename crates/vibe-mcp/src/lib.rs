@@ -11,8 +11,8 @@
 //!   `tools/call` — modelled as plain Rust types serialised via serde.
 //! - Built-in tools (see [`tools::default_tools`]) for lockfile/package
 //!   queries, subskills, installed runnable tools, traceability, agentic
-//!   instructions, hosted `lifecycle_run` execution, and the exact durable
-//!   `lifecycle_tasks` handoff.
+//!   instructions, hosted `lifecycle_run` execution, the exact durable
+//!   `lifecycle_tasks` handoff, and read-only `requirements_query` metadata.
 //!
 //! ## Architecture
 //!

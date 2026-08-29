@@ -99,6 +99,12 @@ Tools:
   task(s), then call `lifecycle_tasks()` again to observe the transition. The
   tool is read-only, creates no lifecycle state/lock, enumerates no outbox and
   never calls an LLM provider.
+- **`requirements_query(address_prefix?, limit?, relations?)`** — read bounded
+  requirement metadata for the selected workspace node: full `spec://…#fact`
+  addresses, authoring status, separately recorded consumer adoption, and —
+  only when `relations=true` — current/carried specmap relation provenance.
+  It returns no fact prose, recommendation, ranking or next task. The tool is
+  algorithmic and read-only: no sync, project write, provider or LLM call.
 - **`query_package(name)`** — returns the lockfile entry for an
   installed package: kind, name, version, content_hash, registry,
   source_url, source_ref, resolved_commit, files_written, features,
