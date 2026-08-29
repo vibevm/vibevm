@@ -357,6 +357,33 @@ than depending on untracked `cache/` archaeology.
   and reverted byte-exact against a pre-mutation hash. Map `1d2e3f2a` is
   6831/2368/2141 at zero suspects/orphans/unresolved. T6c lane witness is
   next.
+- R4.1 T6c lane witness: `cb6006d4` opens the lane position. The evidence was
+  missing rather than wrong — `VerificationWitness::Lane` was a unit variant
+  carrying nothing and the transition law ended in a catch-all, so a lane
+  transition was unchecked by construction. It now carries the lane's
+  provenance copied from the pass INPUT, because evidence taken after the
+  behavior ran only ever agrees with itself, and the manager-side gate runs the
+  intrinsic contract then the provenance transition UNCONDITIONALLY in the
+  wrapper rather than through the `#[cfg(test)]` inter-pass verifier hook,
+  which would have passed every test while shipping production unguarded. A
+  lane transform owns `contributions` and nothing else; `frame.renames` is the
+  sharpest immutable member because it flows onward into
+  `EmissionProvenance.renames`. T6b's full-equality detector and its
+  `LaneChange` gap are retired, and the reordering vehicle they left behind
+  became the real intrinsic fixture rather than being deleted. Root read the
+  complete diff, then reproduced 757 + 5/2/7/4 tests, a post-`clean` strict
+  clippy, downstream, conform 0-new, diff hygiene and SEVEN mutations — the
+  five the packet mandated plus two of its own: deleting one provenance
+  comparison reddens exactly that field's test and no other, and neutering the
+  inter-pass verifier's lane arm reddens exactly one test, proving the two
+  guard paths are independently covered instead of sharing a single proof.
+  Removing the gate reproduced the whole argument for the atom: a structurally
+  broken lane escapes to the backend as an untyped `Backend` error, and a
+  forged `OriginRename` reaches the emission provenance and the emitted bytes.
+  The witness boundary and its rejected alternatives are recorded at ABI §6.4
+  (`4f2acb42`) instead of surviving only in a review note. Map `0191a2b3` is
+  6831/2379/2152 at zero suspects/orphans/unresolved. T7 DocumentSubject
+  carrier is next.
 - Gate repair `67ab9683` fixes the conform content store's Windows cache slot:
   `sha256:<hex>` had created 1,393 NTFS alternate streams on one base file and
   failed with OS error 665. Authored engine + six vendored copies now use one
@@ -430,7 +457,7 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 | Step | State | Evidence |
 |---|---|---|
 | R4.0 one pure registry below lifecycle/workspace | done | kernel `6af1b86f`, map `8531cf82`; exact runtime-dependency/AST-ambient/public-reexport fences; kernel 22, lifecycle 287/3 ignored, orchestrator 126 + doctests, strict clippy/check/conform/DAG green |
-| R4.1 four positions, owner-scoped activation, header, per-unit fingerprint, reference oracle | in progress | controls `52a59dcc`; transaction `91142777` / `ab68d145`; T1 `b65f9958`; T3 `48d7dc75`; T2 `49e944f0` + `87ef2df6`; T4 `a252fcc8`; T5 `0eb46c82`; T6a `01f1522e`; T6b `6ffedb03`; map `1d2e3f2a` = 6831/2368/2141; T6c–T10 lane witness/world/header/fingerprint open |
+| R4.1 four positions, owner-scoped activation, header, per-unit fingerprint, reference oracle | in progress | controls `52a59dcc`; transaction `91142777` / `ab68d145`; T1 `b65f9958`; T3 `48d7dc75`; T2 `49e944f0` + `87ef2df6`; T4 `a252fcc8`; T5 `0eb46c82`; T6a `01f1522e`; T6b `6ffedb03`; T6c `cb6006d4`; map `0191a2b3` = 6831/2379/2152; T7–T10 subject wire/world/header/fingerprint open |
 | R4.2 builtin XML minify | partial | pure strict kernel `016f0fab` and reversible comment codec `fbbd5140`; no activation/on-off e2e |
 | R4.3 lane analyzer | missing | no `vibe extensions analyze` or machine report |
 

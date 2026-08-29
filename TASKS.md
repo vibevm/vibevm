@@ -151,9 +151,21 @@ fronts currently in flight. A worker report or old worktree is never completion.
                   downstream, conform 0-new and six independently authored
                   mutations, each RED on its focused test. Map `1d2e3f2a` is
                   6831/2368/2141 at zero suspects/orphans/unresolved.
-            - [ ] implement T6c lane witness, then T7–T10 subject wire/
-                  selector/verifier, emitted ownership, owner adapter, header
-                  and fingerprint.
+            - [x] T6c lane witness (`cb6006d4`): the witness variant carried no
+                  evidence and the transition law ended in a catch-all, so a
+                  lane transition was unchecked by construction. It now carries
+                  the lane's provenance taken from the pass INPUT, and the
+                  manager-side gate runs the intrinsic contract then the
+                  transition unconditionally — not through the `#[cfg(test)]`
+                  verifier hook, which would leave production unguarded. A lane
+                  transform owns `contributions` and nothing else. Root
+                  reproduced 757 + 5/2/7/4, post-`clean` strict clippy,
+                  downstream, conform 0-new and seven mutations, two of them
+                  its own. Boundary recorded at ABI §6.4 (`4f2acb42`); map
+                  `0191a2b3` is 6831/2379/2152 at zero suspects/orphans/
+                  unresolved.
+            - [ ] implement T7–T10 subject wire/selector/verifier, emitted
+                  ownership, owner adapter, header and fingerprint.
       - [ ] R4.2 bind strict builtin XML minify with the full RED corpus.
       - [ ] R4.3 JTD-first `vibe extensions analyze` report/CLI.
 - [ ] **R5.1–R5.5** — native schemas/SDK, loader, source/prebuilt build,
