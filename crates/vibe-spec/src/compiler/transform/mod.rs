@@ -14,10 +14,12 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY");
 
+pub(crate) mod behavior;
 pub(crate) mod config;
 pub(crate) mod plan;
 pub(crate) mod plan_digest;
 pub(crate) mod plan_validate;
+pub(crate) mod registry;
 
 #[cfg(test)]
 pub(crate) mod carriage;
@@ -33,3 +35,9 @@ mod plan_refusal_tests;
 mod plan_test_support;
 #[cfg(test)]
 mod plan_tests;
+#[cfg(test)]
+mod registry_fence_tests;
+#[cfg(test)]
+pub(crate) mod registry_test_support;
+#[cfg(test)]
+mod registry_tests;
