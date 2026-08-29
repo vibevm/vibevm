@@ -100,9 +100,7 @@ impl Store {
         // until the volume returns ERROR_FILE_SYSTEM_LIMITATION (665).
         // The algorithm stays explicit while the ordinary filename uses the
         // same portable separator every host can create.
-        let digest = content_hash
-            .strip_prefix("sha256:")
-            .unwrap_or(content_hash);
+        let digest = content_hash.strip_prefix("sha256:").unwrap_or(content_hash);
         self.root
             .join(format!("{}-{}", frontend.id(), frontend.version()))
             .join(format!("sha256-{digest}.json"))
