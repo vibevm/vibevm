@@ -7,14 +7,22 @@ use std::fs;
 use std::path::Path;
 
 use specmark::spec;
-use vibe_core::manifest::{BootCategory, LinkType, Manifest, SpecFormat};
+use vibe_core::manifest::{BootCategory, LinkType, Lockfile, Manifest, SpecFormat};
 use vibe_core::{Group, layout};
+use vibe_spec::TransformPlan;
 
 use crate::boot::hybrid::{UnitId, fingerprint, hoist};
 use crate::boot::{self, AuthoredBoot, DependencyBoot, NodeBootInputs};
+use crate::extension_world::{DurableExtensionWorld, collect_owner_view};
 use crate::{Workspace, WorkspaceError, boot_artifacts, layout_paths, path_to_slash, vibedeps};
 
 use super::{ResolvedDep, io_err};
+
+/// The durable world and the owner-scoped plan lowering, split out so this
+/// file keeps its length budget while the composition above stays readable.
+#[path = "bootgen/owner_plans.rs"]
+mod owner_plans;
+use owner_plans::{durable_world, node_owner_plan, read_durable_lock};
 
 #[path = "bootgen/hybrid_emit.rs"]
 mod hybrid_emit;
@@ -79,6 +87,20 @@ pub fn regenerate_boot_from_traced(
     // `group`) declares none.
     let self_coord = root_self_coordinate(&workspace.root_manifest);
 
+    // ONE durable-world observation per run (R4 architecture §4.2): the
+    // absolute root lock is read once here and never again below. The world
+    // seated at the ROOT node serves both the per-unit lanes (whose owners
+    // take the host seat through the kernel's own projection) and the root
+    // node's own lane; a MEMBER node needs its own seating, and takes it
+    // inside the loop.
+    let lock = read_durable_lock(&workspace.root);
+    let root_world = durable_world(
+        &workspace.root,
+        &workspace.root,
+        &workspace.root_manifest,
+        lock.as_ref(),
+    );
+
     // The per-unit compiler (PROP-038 §2.1): emit each materialised package's
     // own STATIC.md / INDEX.md from its own edges, and learn which packages
     // statically link a child (`with_static`) — a node's dynamic edge to such
@@ -115,6 +137,7 @@ pub fn regenerate_boot_from_traced(
         &fps,
         spec_format,
         trace,
+        root_world.as_ref(),
     )?;
 
     // The absolute root's foundation boot — inherited by every member
@@ -178,6 +201,17 @@ pub fn regenerate_boot_from_traced(
         // single-copies count as present, and before the artifact write so the
         // rendered lane is the once-each form.
         desubstitute_covered_units(&mut effective, &table);
+        // This node's OWN lane plan (PROP-054 ##COMPILE-ACTIVATION): the
+        // root reuses the run's one snapshot, whose host seat already IS the
+        // root node; a member is a different host and takes its own seating
+        // of the same lock.
+        let member_world;
+        let node_world = if rel == "." {
+            root_world.as_ref()
+        } else {
+            member_world = durable_world(&workspace.root, &node_dir, manifest, lock.as_ref());
+            member_world.as_ref()
+        };
         boot_artifacts::write_boot_artifacts_traced(
             &node_dir,
             rel,
@@ -186,6 +220,7 @@ pub fn regenerate_boot_from_traced(
             &effective,
             spec_format,
             trace,
+            node_owner_plan(node_world, rel)?,
         )?;
         nodes_regenerated.push(rel.to_string());
     }

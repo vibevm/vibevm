@@ -61,14 +61,13 @@ use super::schedule_selector_vehicles::{
     RecordingSelectorDocument, RecordingSelectorSource, Sighting, document_sightings,
     reset_selector_sightings, sighting, source_sightings,
 };
-use super::schedule_selector_worlds::use_world;
+use super::schedule_selector_worlds::typed_use_world;
 use super::selector_admission::{
-    SelectorAdmissionError, SelectorGate, SelectorVerdict, reset_selector_admission_counts,
-    selector_admission_counts,
+    SelectorGate, SelectorVerdict, reset_selector_admission_counts, selector_admission_counts,
 };
 
 /// What one compile of the shared world answers.
-type ArtifactResult = Result<EmittedArtifact, ArtifactCompileError>;
+pub(super) type ArtifactResult = Result<EmittedArtifact, ArtifactCompileError>;
 
 /// The five documents the world hands the selector positions: the address
 /// label beside the declared path its subject carries.
@@ -81,16 +80,23 @@ const LOCAL: (&str, &str) = (
 const SHARED: (&str, &str) = ("spec://org.demo/shared/boot/base#root", "boot/base");
 const PIECE: (&str, &str) = ("spec://org.demo/piece/boot/piece#root", "boot/piece");
 
+/// The two documents of the TYPED `#use` world (T10B): a declared root whose
+/// provider is `org.demo/back`, and the document it reaches, which nothing
+/// declared. Their declared paths are disjoint from each other's dimension,
+/// so a `packages` verdict and a `paths` verdict name different documents.
+const TYPED_ROOT: (&str, &str) = ("spec://org.demo/back/roots/main#root", "roots/main.md");
+const TYPED_REACHED: (&str, &str) = ("spec://org.demo/back/boot/entry#root", "boot/entry");
+
 /// One selector-legal wrapper position: the stage, the entry key a plan authors
 /// for it, the recording vehicle it resolves to, and that vehicle's own log.
-struct Position {
+pub(super) struct Position {
     stage: TransformStage,
     key: &'static str,
     behavior: &'static str,
     sightings: fn() -> Vec<Sighting>,
 }
 
-static AT_SOURCE: Position = Position {
+pub(super) static AT_SOURCE: Position = Position {
     stage: TransformStage::Source,
     key: "org.demo/tools#src",
     behavior: "test-selector-source",
@@ -121,7 +127,7 @@ fn seed(
 }
 
 /// One recording entry at `position`, carrying `selector`.
-fn entry(position: &Position, selector: Option<CompiledSelector>) -> TransformSeed {
+pub(super) fn entry(position: &Position, selector: Option<CompiledSelector>) -> TransformSeed {
     seed(
         position.key,
         position.stage.clone(),
@@ -132,7 +138,7 @@ fn entry(position: &Position, selector: Option<CompiledSelector>) -> TransformSe
 
 /// A `paths`-only selector, compiled by the real registry exactly as a
 /// collected row would be — there is no second selector compiler here.
-fn paths(members: Vec<&'static str>) -> Option<CompiledSelector> {
+pub(super) fn paths(members: Vec<&'static str>) -> Option<CompiledSelector> {
     Some(compiled_selector(SelectorShape::Dimensions {
         packages: None,
         paths: Some(members),
@@ -159,7 +165,7 @@ fn selector_registry() -> TransformRegistry {
 
 /// One compile against the selector registry, both sighting logs reset first
 /// so a set assertion means "exactly these, this compile".
-fn run(plan: ArtifactPlan, source: &impl SectionSource) -> ArtifactResult {
+pub(super) fn run(plan: ArtifactPlan, source: &impl SectionSource) -> ArtifactResult {
     reset_selector_sightings();
     compile_artifact_with_registries(
         plan,
@@ -185,7 +191,7 @@ fn plain() -> EmittedArtifact {
 }
 
 /// The expected sighting set, in the byte order the vehicles report.
-fn expected(rows: &[(&str, &str)]) -> Vec<Sighting> {
+pub(super) fn expected(rows: &[(&str, &str)]) -> Vec<Sighting> {
     let mut rows: Vec<Sighting> = rows
         .iter()
         .map(|(address, declared_path)| sighting(address, declared_path))
@@ -202,12 +208,12 @@ fn expected(rows: &[(&str, &str)]) -> Vec<Sighting> {
 /// produced. `#[track_caller]` keeps the panic pointing at the assertion's own
 /// line rather than at this helper.
 #[track_caller]
-fn expect_refusal(result: ArtifactResult, what: &str) -> ArtifactCompileError {
+pub(super) fn expect_refusal(result: ArtifactResult, what: &str) -> ArtifactCompileError {
     result.map(|_| ()).expect_err(what)
 }
 
 /// The typed transform fault one refusal carries, or a named panic.
-fn transform_fault(error: &ArtifactCompileError) -> &TransformError {
+pub(super) fn transform_fault(error: &ArtifactCompileError) -> &TransformError {
     let ArtifactCompileError::Transform(public) = error else {
         panic!("a selector refusal stays the typed transform family: {error:?}")
     };
@@ -336,15 +342,20 @@ fn both_positions_of_one_document_answer_to_the_same_subject() {
 /// dimension asks. The same answer would be silently wrong for `Undetermined`,
 /// which refuses instead (the test below).
 ///
-/// Until the owner-view adapter (T10) supplies typed providers, no live world
-/// can carry an `Unclaimed` document without also carrying an `Undetermined`
-/// one: every document-producing contribution mints `Undetermined`
-/// (`ir/artifact.rs::declared_subject`), a reached document exists only below
-/// a declared root, and the root is judged first — so an authored `packages`
-/// dimension always refuses before any reached document is seen. The verdict
-/// half is therefore asserted on the compiler's own reached value; T10's
-/// acceptance upgrades it to a whole-compile assertion (the ABI §5.1 revisit
-/// trigger firing is exactly what makes that world buildable).
+/// The whole-compile half is now live, and this is the history it replaced.
+/// Until the owner-view adapter landed, no live world could carry an
+/// `Unclaimed` document without also carrying an `Undetermined` one: every
+/// document-producing contribution minted `Undetermined`, a reached document
+/// exists only below a declared root, and the root is judged first — so an
+/// authored `packages` dimension always refused before any reached document
+/// was seen, and the verdict half could only be asserted on the compiler's
+/// own reached VALUE. **T10B fired the ABI §5.1 revisit trigger**: a
+/// contribution can now be declared BY a typed provider
+/// (`ArtifactInput::normal_declared_by`), so the world below is buildable and
+/// the verdict is asserted where it belongs — through a whole compile whose
+/// declared root RUNS under an authored `packages` dimension naming that
+/// root's provider, whose reached document is SKIPPED, and in which nothing
+/// refuses.
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-SELECTOR")]
 fn an_unclaimed_reached_document_is_judged_and_never_claimed_by_a_packages_dimension() {
@@ -372,6 +383,32 @@ fn an_unclaimed_reached_document_is_judged_and_never_claimed_by_a_packages_dimen
         permissive.admit(&piece),
         Ok(SelectorVerdict::Skipped),
         "an unclaimed document is out of scope, and that is a final verdict — never a refusal"
+    );
+
+    // The whole-compile half the doc above promises. One declared root
+    // carrying a TYPED provider, one document it reaches, one authored
+    // `packages` dimension naming that provider.
+    let (plan, world) = typed_use_world();
+    let scoped = build_or_panic(vec![entry(&AT_SOURCE, packages(vec!["org.demo/back"]))]);
+    run(plan.with_transforms(scoped), &world)
+        .expect("nothing refuses: every subject in this world is decidable");
+    assert_eq!(
+        source_sightings(),
+        expected(&[TYPED_ROOT]),
+        "the declared root MATCHED its own provider and ran; the reached document \
+         is `Unclaimed`, so the same dimension skipped it — and neither answer is a refusal"
+    );
+
+    // The negative control that makes the skip mean something: the reached
+    // document is in this world and a `paths` dimension does reach it, so its
+    // absence above is the `packages` verdict and not a missing document.
+    let by_path = build_or_panic(vec![entry(&AT_SOURCE, paths(vec!["boot/*"]))]);
+    let (plan, world) = typed_use_world();
+    run(plan.with_transforms(by_path), &world).expect("the path-scoped twin compiles");
+    assert_eq!(
+        source_sightings(),
+        expected(&[TYPED_REACHED]),
+        "the reached document is present and reachable — by `paths`, not by `packages`"
     );
 }
 
@@ -455,80 +492,6 @@ fn paths_is_matched_against_the_declared_path_and_never_against_the_address() {
     );
 }
 
-/// `BACKLOG.md` `B-117` at the wrapper (§6.6): a backslashed declared path
-/// meeting any selector refuses before any behavior runs.
-///
-/// The world is built rather than borrowed because the shared fixture cannot
-/// express this: the artifact plan already refuses a backslashed CONTRIBUTION
-/// path at its own boundary, so the only subject that can carry one is a
-/// REACHED document, whose declared path is its address' own `doc_path` — and
-/// `SpecAddress::parse` admits a backslash inside a path segment. The selector
-/// names `boot/*`, which the declared root's own path (`roots/main.md`) does not
-/// satisfy, so the root is skipped and the reached document is the first thing
-/// any behavior could have seen: an empty sighting log therefore means the
-/// refusal really did precede the behavior.
-///
-/// The test runs under production construction, and the first assertion says
-/// why. With the TEST-ONLY inter-pass verifier armed, T7's own entry check
-/// refuses this subject one layer earlier — a different law, in a different
-/// family, and not one production runs. A `#[cfg(test)]` seam cannot be what
-/// closes `B-117`, so the guarantee is asserted against the construction
-/// production actually builds.
-#[test]
-#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-SELECTOR")]
-#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY")]
-fn a_backslashed_declared_path_refuses_at_the_wrapper_before_any_behavior_runs() {
-    let armed = expect_refusal(
-        compile_use_world("boot\\entry"),
-        "armed, the inter-pass verifier refuses the subject first",
-    );
-    assert!(
-        !matches!(armed, ArtifactCompileError::Transform(_)),
-        "the armed verifier's refusal is a different family — so it cannot be what closes B-117"
-    );
-
-    without_verify_each(|| {
-        let error = expect_refusal(
-            compile_use_world("boot\\entry"),
-            "a path that cannot obey the `paths` contract refuses",
-        );
-        let fault = transform_fault(&error);
-        let TransformError::Selector {
-            preview,
-            order,
-            stage,
-            source,
-        } = fault
-        else {
-            panic!("a malformed path is a stated contract violated, not a capability gap: {fault}")
-        };
-        assert!(
-            matches!(
-                source,
-                SelectorAdmissionError::BackslashedDeclaredPath { .. }
-            ),
-            "the separator contract has its own typed arm: {source}"
-        );
-        assert_eq!(*order, 0, "the entry identity rides along");
-        assert_eq!(*stage, TransformStage::Source);
-        assert_eq!(*preview, bounded("org.demo/tools#src"));
-        assert!(
-            source_sightings().is_empty(),
-            "no behavior ran before the refusal"
-        );
-
-        // Only the separator differed: the forward-slashed twin compiles under
-        // the same construction, and the same selector then names the same
-        // reached document.
-        compile_use_world("boot/entry").expect("the forward-slashed twin compiles");
-        assert_eq!(
-            source_sightings(),
-            expected(&[("spec://org.demo/back/boot/entry#root", "boot/entry")]),
-            "the twin's reached document is in scope, so the red was the separator"
-        );
-    });
-}
-
 /// The absence law: an entry with no selector runs on every document, and the
 /// gate is not consulted at all. Absence answers `Matched` in the wrapper itself
 /// rather than being a third verdict the gate returns, so the counters must stay
@@ -564,12 +527,4 @@ fn a_selector_free_entry_runs_on_every_document_without_consulting_the_gate() {
         (5, 5),
         "one admission per document, each reaching the one glob authority"
     );
-}
-
-/// Compile the `#use` world whose reached document's `doc_path` is spelled
-/// `used`, under one `boot/*`-scoped source entry.
-fn compile_use_world(used: &str) -> ArtifactResult {
-    let (plan, world) = use_world(used);
-    let scoped = build_or_panic(vec![entry(&AT_SOURCE, paths(vec!["boot/*"]))]);
-    run(plan.with_transforms(scoped), &world)
 }

@@ -90,6 +90,27 @@ impl TransformRegistry {
         Ok(())
     }
 
+    /// The catalog's behavior epoch for one declared builtin name.
+    ///
+    /// The registry-owned half of implementation identity (ABI §2.1: a
+    /// caller supplies a name, never an epoch). T10B's lowering calls it so
+    /// an off-catalog name refuses AT LOWERING, through the same bounded
+    /// `UnknownBuiltin` arm resolution already raises — one refusal, one
+    /// spelling, two moments.
+    ///
+    /// Only the name is judged here. Stage agreement stays
+    /// [`TransformRegistry::resolve`]'s, where the behavior it would return
+    /// is the thing that disagrees; duplicating the check would be a second
+    /// home for one law.
+    pub(crate) fn epoch_of(&self, name: &str) -> Result<u32, TransformRegistryError> {
+        self.implementations
+            .get(name)
+            .map(|registered| registered.epoch)
+            .ok_or_else(|| TransformRegistryError::UnknownBuiltin {
+                preview: bounded(name),
+            })
+    }
+
     /// Resolve one T2 implementation identity at one stage to its registered
     /// behavior, refusing — bounded, before any clone — an unknown name, a
     /// stale epoch or the wrong stage.

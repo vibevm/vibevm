@@ -26,6 +26,7 @@ fn entry(path: impl Into<String>, link: LinkType, origin: &str) -> BootEntry {
         link,
         when: None,
         origin: origin.to_string(),
+        provenance: crate::boot::fixture_provenance(origin),
         use_ref: false,
         format: Default::default(),
         unit_substituted: false,

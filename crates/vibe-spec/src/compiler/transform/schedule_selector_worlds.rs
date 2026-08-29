@@ -19,9 +19,11 @@
 
 use std::collections::BTreeMap;
 
+use vibe_core::{Group, PackageName};
+
 use crate::compiler::ir::{
     ArtifactContext, ArtifactFrame, ArtifactId, ArtifactInput, ArtifactPlan, ArtifactTarget,
-    StaticCompileMode,
+    DocumentProvider, StaticCompileMode,
 };
 use crate::{SectionSource, SpecAddress};
 
@@ -42,6 +44,28 @@ impl SectionSource for UseWorld {
 /// One declared root plus the document it reaches through `#use`, whose
 /// `doc_path` is spelled exactly `used`.
 pub(super) fn use_world(used: &str) -> (ArtifactPlan, UseWorld) {
+    build(used, DocumentProvider::Undetermined)
+}
+
+/// The same two-document world, with the root declared BY a typed provider.
+///
+/// This is the world the T8 reached-verdict test could not build before T10B
+/// (`R4-TRANSFORM-PLAN-ABI` §5.1): with the root's provider `Undetermined`,
+/// an authored `packages` dimension refused at the root before any reached
+/// document was ever judged, so the two absences could never be observed in
+/// one live compile. With the root TYPED, they can — the root answers its own
+/// provider, and the document it reaches answers `Unclaimed`.
+pub(super) fn typed_use_world() -> (ArtifactPlan, UseWorld) {
+    build(
+        "boot/entry",
+        DocumentProvider::Dependency {
+            group: Group::parse("org.demo").expect("a valid test group"),
+            name: PackageName::parse("back").expect("a valid test package name"),
+        },
+    )
+}
+
+fn build(used: &str, provider: DocumentProvider) -> (ArtifactPlan, UseWorld) {
     let root = SpecAddress::parse("spec://org.demo/back/roots/main#root")
         .expect("the declared root address parses");
     let reached = SpecAddress::parse(&format!("spec://org.demo/back/{used}#root"))
@@ -69,7 +93,7 @@ pub(super) fn use_world(used: &str) -> (ArtifactPlan, UseWorld) {
     let plan = ArtifactPlan::new(
         context,
         vec![
-            ArtifactInput::normal("org.demo/back", "roots/main.md", root)
+            ArtifactInput::normal_declared_by("org.demo/back", "roots/main.md", root, provider)
                 .expect("a lawful contribution row"),
         ],
     )

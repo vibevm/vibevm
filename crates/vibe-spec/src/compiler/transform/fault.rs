@@ -24,8 +24,9 @@ use crate::compiler::pipeline::CompilerPipelineError;
 use crate::compiler::verify::{TransitionError, VerificationError};
 
 use super::behavior::TransformBehaviorError;
+use super::config_lowering::ConfigLoweringGap;
 use super::plan::TransformStage;
-use super::plan_validate::BoundedPreview;
+use super::plan_validate::{BoundedPreview, TransformPlanError};
 use super::registry::TransformRegistryError;
 use super::selector_admission::SelectorAdmissionError;
 
@@ -187,6 +188,98 @@ impl std::error::Error for TransformCompileError {
         // The standard chain continues through the private fault: an
         // unnamed `dyn Error` source is not a public taxonomy, and silently
         // terminating the chain would contradict the typed-source design.
+        Some(self.inner.as_ref())
+    }
+}
+
+/// Wrap one internal lowering fault as the public opaque lowering error.
+pub(super) fn lowering_fault(inner: LoweringFault) -> TransformLoweringError {
+    TransformLoweringError {
+        inner: Box::new(inner),
+    }
+}
+
+/// Why one owner's effective rows could not become a plan.
+///
+/// Typed by fault and by row, never echoing a payload: a declaration key can
+/// be attacker-sized, so every arm carries at most the fixed-size preview
+/// plus the true length, exactly as the plan refusal law does.
+#[derive(Debug, thiserror::Error)]
+pub(crate) enum LoweringFault {
+    #[error(
+        "compile row {row} (`{preview}`) is declared at `{point}`, which is not a compile point; the caller must supply the compile family in effective order"
+    )]
+    NonCompilePoint {
+        row: usize,
+        preview: BoundedPreview,
+        point: String,
+    },
+    #[error(
+        "compile row {row} (`{preview}`) is a `compile:pass` declaration; the pass tier declares its own placement and is not one of the four staged transform tiers"
+    )]
+    PassTier { row: usize, preview: BoundedPreview },
+    #[error(
+        "compile row {row} (`{preview}`) declares a `{kind}` handler; a staged compiler transform is a builtin handler"
+    )]
+    UnsupportedHandler {
+        row: usize,
+        preview: BoundedPreview,
+        kind: &'static str,
+    },
+    #[error("compile row {row} (`{preview}`) has no usable implementation: {source}")]
+    Implementation {
+        row: usize,
+        preview: BoundedPreview,
+        #[source]
+        source: TransformRegistryError,
+    },
+    #[error("compile row {row} (`{preview}`) has no usable configuration: {source}")]
+    Config {
+        row: usize,
+        preview: BoundedPreview,
+        #[source]
+        source: ConfigLoweringGap,
+    },
+    #[error("the lowered rows do not form a plan: {source}")]
+    Plan {
+        #[source]
+        source: TransformPlanError,
+    },
+}
+
+/// The public, opaque refusal one lowering returns.
+///
+/// It names the family, renders the exact internal message and keeps the
+/// standard source chain alive, but exposes no row, stage, registry or fault
+/// taxonomy — the same shape [`super::fault::TransformCompileError`] already
+/// established for the execution family, so the crate has one idiom for
+/// "typed inside, opaque outside". Crate tests read the exact fault through
+/// the crate-only accessor.
+#[derive(Debug)]
+pub struct TransformLoweringError {
+    inner: Box<LoweringFault>,
+}
+
+impl TransformLoweringError {
+    /// The exact internal fault, for crate tests only.
+    #[cfg(test)]
+    pub(crate) fn inner(&self) -> &LoweringFault {
+        &self.inner
+    }
+}
+
+impl fmt::Display for TransformLoweringError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        fmt::Display::fmt(&self.inner, formatter)
+    }
+}
+
+impl std::error::Error for TransformLoweringError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        // The standard chain continues through the private fault, exactly as
+        // the execution family's opaque error does: an unnamed `dyn Error`
+        // source is not a public taxonomy, and terminating the chain here
+        // would silently drop the registry/config/plan cause.
         Some(self.inner.as_ref())
     }
 }

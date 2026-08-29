@@ -49,7 +49,7 @@ use vibe_core::Group;
 use vibe_core::manifest::{LinkType, PackageFormat};
 use vibe_spec::SelfCoordinate;
 use vibe_workspace::boot::hybrid::{UnitEdge, UnitId, UnitInput};
-use vibe_workspace::boot::{BootBand, BootEntry, EffectiveBoot};
+use vibe_workspace::boot::{BootBand, BootEntry, BootProvenance, EffectiveBoot};
 use vibe_workspace::boot_artifacts::render_static;
 use vibe_workspace::install::desubstitute_covered_units;
 
@@ -75,6 +75,20 @@ fn uid(name: &str) -> UnitId {
 /// matches on.
 fn pkgref(name: &str) -> String {
     format!("org.demo/{name}")
+}
+
+/// The typed half of a fixture origin's provenance (T10B).
+///
+/// These fixtures author one `<group>/<name>` spelling and state BOTH halves
+/// of the provenance from it, exactly as `compute_effective_boot` states both
+/// from `dep.group` / `dep.name`. Production never recovers a typed pair from
+/// a display string; a fixture is choosing what to declare.
+fn dependency_provenance(origin: &str) -> BootProvenance {
+    let (group, name) = origin.split_once('/').expect("a fixture pkgref origin");
+    BootProvenance::Dependency {
+        group: Group::parse(group).expect("a fixture group"),
+        name: name.to_string(),
+    }
 }
 
 /// One static edge to `target`.
@@ -117,6 +131,7 @@ fn entry_sub(static_md: &str, origin: &str) -> BootEntry {
         link: LinkType::Static,
         when: None,
         origin: origin.to_string(),
+        provenance: dependency_provenance(origin),
         use_ref: false,
         format: PackageFormat::Simple,
         unit_substituted: true,
@@ -133,6 +148,7 @@ fn entry_static(snippet: &str, origin: &str) -> BootEntry {
         link: LinkType::Static,
         when: None,
         origin: origin.to_string(),
+        provenance: dependency_provenance(origin),
         use_ref: false,
         format: PackageFormat::Simple,
         unit_substituted: false,
@@ -150,6 +166,7 @@ fn entry_dyn(snippet: &str, origin: &str) -> BootEntry {
         link: LinkType::Dynamic,
         when: None,
         origin: origin.to_string(),
+        provenance: dependency_provenance(origin),
         use_ref: false,
         format: PackageFormat::Simple,
         unit_substituted: false,
@@ -167,6 +184,9 @@ fn hoisted_entry(snippet: &str, name: &str, shared: &[&str]) -> BootEntry {
         link: LinkType::Static,
         when: None,
         origin: format!("{} [shared by {}]", pkgref(name), shared.join(", ")),
+        // The `[shared by …]` suffix is display; hoisting never
+        // changes who DECLARED the contribution.
+        provenance: dependency_provenance(&pkgref(name)),
         use_ref: false,
         format: PackageFormat::Simple,
         unit_substituted: false,

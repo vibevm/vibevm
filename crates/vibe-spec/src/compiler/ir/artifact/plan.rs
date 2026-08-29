@@ -133,10 +133,14 @@ impl ArtifactPlan {
     /// refusal law and assigns the dense effective order itself, so a
     /// caller-authored or sparse order cannot cross this seam. Every
     /// constructor pins [`TransformPlan::empty`]; the compatibility wrappers
-    /// stay permanently empty-plan. Carriage is inert until the behavior
-    /// registry and the four positions land (T5/T6): neither schedule, bytes,
-    /// errors nor freshness move in T4.
-    pub(crate) fn with_transforms(self, transforms: TransformPlan) -> Self {
+    /// stay permanently empty-plan.
+    ///
+    /// `pub` since T10B, as T4 promised ("T10 widens only the minimum needed
+    /// by the workspace adapter"): the adapter lowers one lane owner's rows
+    /// and attaches the result here. It is still whole-value replacement of
+    /// a value only [`TransformPlan::build`] can have produced, so widening
+    /// it grants no entry, order or digest authority.
+    pub fn with_transforms(self, transforms: TransformPlan) -> Self {
         Self { transforms, ..self }
     }
 

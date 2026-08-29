@@ -141,6 +141,7 @@ fn entry_sub(static_md: impl Into<String>, origin: &str) -> BootEntry {
         link: LinkType::Static,
         when: None,
         origin: origin.to_string(),
+        provenance: crate::boot::fixture_provenance(origin),
         use_ref: false,
         format: PackageFormat::Simple,
         unit_substituted: true,

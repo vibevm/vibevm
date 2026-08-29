@@ -8,9 +8,16 @@
 //! T5 behavior registry (tests may mint candidates; the workspace adapter
 //! never supplies an epoch); a seed carries no order, because
 //! [`TransformPlan::build`] is the only authority that assigns dense
-//! zero-based order. The whole family stays `pub(crate)` with private
-//! fields until T10's workspace adapter becomes the first cross-crate
-//! consumer.
+//! zero-based order.
+//!
+//! T10B made the workspace adapter the first cross-crate consumer, so
+//! exactly one member of this family widened: [`TransformPlan`] itself, plus
+//! the three accessors a caller needs that lend no crate-private type
+//! ([`TransformPlan::empty`], [`TransformPlan::len`],
+//! [`TransformPlan::is_empty`]). The seed, entry, provider, implementation
+//! and config values stay `pub(crate)` with private fields, and every
+//! constructor stays where it was — the widening lends a plan, it does not
+//! open plan authorship.
 
 use vibe_core::manifest::ExtensionKey;
 use vibe_core::{ContentHash, PackageKind};
@@ -296,15 +303,25 @@ impl TransformSeed {
     /// reach here with a selector: the refusal law rejects them first.
     fn canonicalized(self) -> Self {
         let selector = match self.selector {
-            Some(selector)
-                if selector.package_patterns().is_none() && selector.path_patterns().is_none() =>
-            {
-                None
-            }
+            Some(selector) if is_behaviorally_unscoped(&selector) => None,
             other => other,
         };
         Self { selector, ..self }
     }
+}
+
+/// Whether a compiled selector authored no dimension at all — the one law
+/// that makes `applies_to` absent and `applies_to = {}` a single behavioral
+/// identity.
+///
+/// It lives here, beside the canonicalization that consumes it, because the
+/// T10B lowering needs the SAME judgment one step earlier: a collected
+/// kernel row always carries a compiled selector, so the lowering must
+/// decide whether that value represents an authored selector before it can
+/// tell a seed whether one was supplied. Two spellings of this predicate
+/// would be two homes for one rule.
+pub(super) fn is_behaviorally_unscoped(selector: &CompiledSelector) -> bool {
+    selector.package_patterns().is_none() && selector.path_patterns().is_none()
 }
 
 /// One planned transform: its seed, its assigned order, and the child
@@ -348,19 +365,30 @@ impl TransformEntry {
 /// One owner-scoped transform plan: the typed, canonically digested value a
 /// lane's effective registry rows lower into.
 ///
-/// Built only through [`TransformPlan::build`], which owns the refusal law
-/// and the dense order assignment. An empty plan owns no entries, no
-/// allocation and no digest — appending it to a schedule must reproduce the
-/// exact historical bytes.
+/// Built only through [`TransformPlan::build`] — or, across the crate
+/// boundary, through [`TransformPlan::from_effective_rows`] in the sibling
+/// lowering cell, which is the ONE public route and still ends in `build`.
+/// The plan owns the refusal law and the dense order assignment. An empty
+/// plan owns no entries, no allocation and no digest — appending it to a
+/// schedule must reproduce the exact historical bytes.
+///
+/// `pub` since T10B: the workspace adapter attaches an owner-scoped plan to
+/// an [`crate::ArtifactPlan`], so it must be able to name the value it is
+/// handed. Both fields stay private and no constructor widened with the
+/// type, so naming a plan still never means authoring one.
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub(crate) struct TransformPlan {
+pub struct TransformPlan {
     entries: Vec<TransformEntry>,
     digest: Option<PlanDigest>,
 }
 
 impl TransformPlan {
     /// The empty plan: no entries, no allocation, no digest.
-    pub(crate) const fn empty() -> Self {
+    ///
+    /// `pub` since T10B: it is the value a caller with no extension world —
+    /// a test-support vehicle, a compatibility path — pins, exactly as every
+    /// `ArtifactPlan` constructor already pins it internally.
+    pub const fn empty() -> Self {
         Self {
             entries: Vec::new(),
             digest: None,
@@ -414,12 +442,20 @@ impl TransformPlan {
     }
 
     /// The number of planned transforms.
-    pub(crate) fn len(&self) -> usize {
+    ///
+    /// `pub` since T10B: a caller reports how many transforms one lane owner
+    /// contributed. The count is a scalar — it lends no entry, seed, digest
+    /// or other crate-private value.
+    pub fn len(&self) -> usize {
         self.entries.len()
     }
 
     /// Whether no transform is planned.
-    pub(crate) fn is_empty(&self) -> bool {
+    ///
+    /// `pub` since T10B, for the same reason as [`TransformPlan::len`]: a
+    /// caller distinguishes the empty-plan law's subject from a real plan
+    /// without reading a single entry.
+    pub fn is_empty(&self) -> bool {
         self.entries.is_empty()
     }
 

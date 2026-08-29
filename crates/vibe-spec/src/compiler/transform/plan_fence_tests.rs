@@ -124,6 +124,14 @@ struct CellRules {
     extra_macros: &'static [&'static str],
     /// Method names forbidden outright in this cell.
     forbidden_methods: &'static [&'static str],
+    /// Identifiers REMOVED from the common set for this cell, each because
+    /// naming it is the cell's own declared job (T10B).
+    ///
+    /// A removal is a deliberate act with a reason, never a way to make a
+    /// new file pass: a cell is admitted to a permission only when its whole
+    /// purpose is the thing the common set bans, and every other member of
+    /// the set still binds it.
+    permitted_segments: &'static [&'static str],
 }
 
 /// The common forbidden set, every plan cell: parser/serializer identity
@@ -170,6 +178,9 @@ fn offenders(source: &str, rules: &CellRules) -> Vec<String> {
 
     let mut forbidden_segments: BTreeSet<&str> = COMMON_SEGMENTS.iter().copied().collect();
     forbidden_segments.extend(rules.extra_segments.iter().copied());
+    for permitted in rules.permitted_segments {
+        forbidden_segments.remove(permitted);
+    }
     for extern_crate in &classified.extern_crates {
         classified.segments.insert(extern_crate.clone());
     }
@@ -223,16 +234,32 @@ const IDENTITY_RULES: CellRules = CellRules {
     extra_segments: RENDERING_SEGMENTS,
     extra_macros: RENDERING_MACROS,
     forbidden_methods: RENDERING_METHODS,
+    permitted_segments: &[],
 };
 const COMMON_RULES: CellRules = CellRules {
     extra_segments: &[],
     extra_macros: &[],
     forbidden_methods: &[],
+    permitted_segments: &[],
 };
 const REFUSAL_RULES: CellRules = CellRules {
     extra_segments: &[],
     extra_macros: &[],
     forbidden_methods: REFUSAL_METHODS,
+    permitted_segments: &[],
+};
+
+/// The T10B lowering cell. Its input contract IS a borrowed kernel row, so
+/// `ExtensionRegistryRow` is the one identifier it may name — and the two
+/// identifiers that would make it a second COLLECTOR, `ExtensionRegistry`
+/// and `collect_extensions`, stay forbidden: the caller filters, this cell
+/// only refuses. Everything else in the common set still binds it, so no
+/// parser, path, serializer or behavior pointer can enter the lowering.
+const LOWERING_RULES: CellRules = CellRules {
+    extra_segments: &[],
+    extra_macros: &[],
+    forbidden_methods: &[],
+    permitted_segments: &["ExtensionRegistryRow"],
 };
 
 /// The forbidden-use fence over the production cells: identity and digest
@@ -255,6 +282,16 @@ fn the_plan_cells_admit_no_parser_renderer_path_row_or_trait_object() {
             &REFUSAL_RULES,
         ),
         ("config.rs", include_str!("config.rs"), &COMMON_RULES),
+        // T10B's two new cells. The lowering names the borrowed kernel row
+        // it consumes and nothing else the common set bans; the effective
+        // configuration lowering names nothing at all — including `toml`,
+        // which is why its non-empty arm is a refusal rather than a walk.
+        ("lowering.rs", include_str!("lowering.rs"), &LOWERING_RULES),
+        (
+            "config_lowering.rs",
+            include_str!("config_lowering.rs"),
+            &COMMON_RULES,
+        ),
     ] {
         let found = offenders(source, rules);
         assert!(

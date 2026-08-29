@@ -1,8 +1,17 @@
 //! Immutable identity and ordered input plan for one final compiler artifact.
 
-use crate::{Directives, SpecAddress};
+use crate::SpecAddress;
 
 use super::{ArtifactTarget, DocumentAddress, DocumentProvider, DocumentSubject, SourceIr};
+
+/// The validation laws and the refusal family they raise, out of line per
+/// the file-length budget. Every name a caller used before the split is
+/// re-exported here, so no path moved.
+mod validate;
+
+pub use validate::ArtifactPlanError;
+pub(crate) use validate::validate_package_relation;
+use validate::{simple_alias_machinery, validate_declared_path, validate_text};
 
 /// Open identity of one final compiler artifact.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -234,20 +243,69 @@ pub(crate) enum ArtifactInputKind {
 impl ArtifactInput {
     /// Add one normal root. Its root package must match provenance; nodes
     /// reached from that root may intentionally remain cross-origin.
+    ///
+    /// The subject's provider is [`DocumentProvider::Undetermined`]: this
+    /// form takes provenance as a display string only, so it cannot say
+    /// which typed provider declared the row. A caller that HAS the typed
+    /// components uses [`ArtifactInput::normal_declared_by`] instead.
     pub fn normal(
         origin: impl Into<String>,
         path: impl Into<String>,
         seed: SpecAddress,
     ) -> Result<Self, ArtifactPlanError> {
-        let meta = ContributionMeta::new(origin, path)?;
-        validate_package_relation("normal", &meta.origin, &seed, false)?;
-        Ok(Self::from_kind(ArtifactInputKind::Normal { meta, seed }))
+        Self::normal_declared_by(origin, path, seed, DocumentProvider::Undetermined)
     }
 
+    /// One normal root whose declaring provider is TYPED.
+    ///
+    /// Same arguments and same laws as [`ArtifactInput::normal`], plus the
+    /// provider the declaring row names. The provider is supplied rather
+    /// than derived: `origin` stays display/provenance (PROP-054 keeps it
+    /// so, and it may carry a `[shared by …]` suffix), and parsing a typed
+    /// identity back out of it is exactly what the carried subject exists to
+    /// avoid.
+    pub fn normal_declared_by(
+        origin: impl Into<String>,
+        path: impl Into<String>,
+        seed: SpecAddress,
+        provider: DocumentProvider,
+    ) -> Result<Self, ArtifactPlanError> {
+        let meta = ContributionMeta::new(origin, path)?;
+        validate_package_relation("normal", &meta.origin, &seed, false)?;
+        Ok(Self::from_kind_declared_by(
+            ArtifactInputKind::Normal { meta, seed },
+            provider,
+        ))
+    }
+
+    /// One simple contribution, carried verbatim.
+    ///
+    /// Its subject's provider is [`DocumentProvider::Undetermined`], for the
+    /// same reason [`ArtifactInput::normal`]'s is;
+    /// [`ArtifactInput::simple_declared_by`] is the typed form.
     pub fn simple(
         origin: impl Into<String>,
         path: impl Into<String>,
         canonical_markdown: impl Into<String>,
+    ) -> Result<Self, ArtifactPlanError> {
+        Self::simple_declared_by(
+            origin,
+            path,
+            canonical_markdown,
+            DocumentProvider::Undetermined,
+        )
+    }
+
+    /// One simple contribution whose declaring provider is TYPED.
+    ///
+    /// The subject is minted once and handed to the [`SourceIr`] this input
+    /// carries, so the document that already exists and the input that owns
+    /// it cannot disagree — `validate` re-checks exactly that.
+    pub fn simple_declared_by(
+        origin: impl Into<String>,
+        path: impl Into<String>,
+        canonical_markdown: impl Into<String>,
+        provider: DocumentProvider,
     ) -> Result<Self, ArtifactPlanError> {
         let meta = ContributionMeta::new(origin, path)?;
         let source = SourceIr::new(
@@ -256,10 +314,13 @@ impl ArtifactInput {
                 path: meta.path.clone(),
             },
             super::SourceFormatId::canonical_markdown(),
-            declared_subject(&meta),
+            declared_subject(&meta, provider.clone()),
             canonical_markdown,
         );
-        Ok(Self::from_kind(ArtifactInputKind::Simple { meta, source }))
+        Ok(Self::from_kind_declared_by(
+            ArtifactInputKind::Simple { meta, source },
+            provider,
+        ))
     }
 
     pub fn elided(
@@ -283,8 +344,22 @@ impl ArtifactInput {
     /// Rebuild one input from its kind, minting the subject the kind's own
     /// provenance declares — so a crate-internal caller cannot author an input
     /// whose subject disagrees with its contribution row.
+    ///
+    /// The provider is [`DocumentProvider::Undetermined`]: a caller that
+    /// reaches this entry has a kind and nothing else. The wire conversion
+    /// and the compatibility wrapper are exactly that caller.
     pub(crate) fn from_kind(kind: ArtifactInputKind) -> Self {
-        let subject = declared_subject(kind_meta(&kind));
+        Self::from_kind_declared_by(kind, DocumentProvider::Undetermined)
+    }
+
+    /// [`ArtifactInput::from_kind`] with the declaring provider named.
+    ///
+    /// The one place a subject is minted for an input: the path always comes
+    /// from the kind's own contribution row, never from the caller, so a
+    /// typed provider can be supplied without any caller ever authoring a
+    /// whole subject.
+    fn from_kind_declared_by(kind: ArtifactInputKind, provider: DocumentProvider) -> Self {
+        let subject = declared_subject(kind_meta(&kind), provider);
         Self { kind, subject }
     }
 
@@ -357,179 +432,17 @@ fn kind_meta(kind: &ArtifactInputKind) -> &ContributionMeta {
 /// The subject one contribution row declares.
 ///
 /// The path is the row's own already-validated non-blank, forward-slashed path
-/// — not the address', which may legitimately differ. The provider is
-/// [`DocumentProvider::Undetermined`], never `Unclaimed`: a row DID declare
-/// this document, so an owner exists; `origin` is a display string that
-/// PROP-054 keeps display/provenance, so no TYPED provider exists here to
-/// carry, and the owner-view adapter is what will supply one. Saying
-/// `Unclaimed` here would assert that nothing declared the document, which is
-/// false of every input in this file.
-fn declared_subject(meta: &ContributionMeta) -> DocumentSubject {
-    DocumentSubject::declared(DocumentProvider::Undetermined, meta.path.clone())
-}
-
-/// Crate-private so the wire conversion can re-run the same origin/target law
-/// on every normal/hoisted contribution a carrier carries, at every level.
-pub(crate) fn validate_package_relation(
-    kind: &'static str,
-    origin: &str,
-    target: &SpecAddress,
-    whole_unversioned: bool,
-) -> Result<(), ArtifactPlanError> {
-    let coordinate = origin.split_whitespace().next().unwrap_or_default();
-    let suffix = origin.strip_prefix(coordinate).unwrap_or_default();
-    let suffix_valid =
-        suffix.is_empty() || (suffix.starts_with(" [shared by ") && suffix.ends_with(']'));
-    if !suffix_valid {
-        return Err(identity_error(
-            kind,
-            origin,
-            target,
-            "origin carries an unsupported suffix",
-        ));
-    }
-    let Some((origin_group, origin_name)) = coordinate.split_once('/') else {
-        return Err(identity_error(
-            kind,
-            origin,
-            target,
-            "origin is not a package coordinate",
-        ));
-    };
-    let crate::Authority::Package {
-        group,
-        name,
-        version,
-    } = &target.authority
-    else {
-        return Err(identity_error(
-            kind,
-            origin,
-            target,
-            "target uses host authority",
-        ));
-    };
-    if group != origin_group || name != origin_name {
-        return Err(identity_error(
-            kind,
-            origin,
-            target,
-            "origin and target package coordinates differ",
-        ));
-    }
-    if whole_unversioned
-        && (version.is_some() || !target.anchor.is_empty() || target.pinned_r.is_some())
-    {
-        return Err(identity_error(
-            kind,
-            origin,
-            target,
-            "hoisted target must be an unversioned whole document",
-        ));
-    }
-    Ok(())
-}
-
-fn identity_error(
-    kind: &'static str,
-    origin: &str,
-    target: &SpecAddress,
-    reason: &'static str,
-) -> ArtifactPlanError {
-    ArtifactPlanError::InputIdentity {
-        kind,
-        origin: origin.to_string(),
-        target: target.to_string(),
-        reason,
-    }
-}
-
-fn validate_text(field: &'static str, value: &str) -> Result<(), ArtifactPlanError> {
-    if value.trim().is_empty() {
-        return Err(ArtifactPlanError::Blank { field });
-    }
-    if value.contains(['\n', '\r', '\0']) {
-        return Err(ArtifactPlanError::UnsafeText { field });
-    }
-    Ok(())
-}
-
-/// The separator law on a path that becomes a [`DocumentSubject`]'s
-/// `declared_path`.
+/// — not the address', which may legitimately differ.
 ///
-/// Applied to the contribution path specifically, never through
-/// [`validate_text`]: `validate_text` also judges origins, artifact ids and
-/// the static-lane roots, and widening it would hold values that are not
-/// selector paths to a selector path's contract. The rule itself lives once,
-/// on [`DocumentSubject`]; this is the artifact plan's vocabulary for it.
-fn validate_declared_path(field: &'static str, value: &str) -> Result<(), ArtifactPlanError> {
-    if DocumentSubject::path_is_forward_slashed(value) {
-        return Ok(());
-    }
-    Err(ArtifactPlanError::BackslashedPath {
-        field,
-        value: value.to_string(),
-    })
-}
-
-fn simple_alias_machinery(text: &str) -> bool {
-    let directives = Directives::parse(text);
-    !directives.aliases.is_empty()
-        || directives
-            .errors
-            .iter()
-            .any(|error| error.message.contains("undeclared alias"))
-}
-
-#[derive(Debug, thiserror::Error)]
-pub enum ArtifactPlanError {
-    #[error("compiler {field} must not be blank")]
-    Blank { field: &'static str },
-    #[error("compiler {field} must not contain a newline or NUL")]
-    UnsafeText { field: &'static str },
-    #[error(
-        "compiler {field} `{value}` must be forward-slashed: a `paths` selector dimension compiles its globs with a literal separator, so a backslashed path matches nothing at all"
-    )]
-    BackslashedPath { field: &'static str, value: String },
-    #[error("artifact input {index} is invalid: {source}")]
-    Input {
-        index: usize,
-        #[source]
-        source: Box<ArtifactPlanError>,
-    },
-    #[error("simple input identity must be {expected:?}, got {actual:?}")]
-    SimpleIdentity { expected: String, actual: String },
-    #[error("simple input subject must be {expected}, got {actual}")]
-    SimpleSubject { expected: String, actual: String },
-    #[error(
-        "invalid artifact context tuple: id `{artifact}`, target {target:?}, frame {frame}, mode {mode}"
-    )]
-    InvalidContextTuple {
-        artifact: String,
-        target: ArtifactTarget,
-        frame: String,
-        mode: String,
-    },
-    #[error("simple artifact inputs must use canonical Markdown, got `{actual}`")]
-    SimpleFormat { actual: String },
-    #[error(
-        "the simple package `{origin}` carries alias machinery (`#use … as` / `@!`) that is `normal`-format only (PROP-035 §7.2); convert the package to `format = \"normal\"` or drop the alias"
-    )]
-    SimpleAlias { index: usize, origin: String },
-    #[error(
-        "simple artifact inputs {first} and {second} claim `{origin}:{path}` with different source text"
-    )]
-    ConflictingSimpleIdentity {
-        first: usize,
-        second: usize,
-        origin: String,
-        path: String,
-    },
-    #[error("{kind} input `{origin}` contradicts target `{target}`: {reason}")]
-    InputIdentity {
-        kind: &'static str,
-        origin: String,
-        target: String,
-        reason: &'static str,
-    },
+/// The provider is the caller's, and it is never `Unclaimed`: a row DID
+/// declare this document, so an owner exists, and saying `Unclaimed` would
+/// assert that nothing declared it — false of every input in this file. Until
+/// T10B the only sayable answer was [`DocumentProvider::Undetermined`],
+/// because `origin` is a display string PROP-054 keeps display/provenance and
+/// no typed provider reached this seat. The boot adapter now carries the typed
+/// pair beside `origin`, so a workspace-built input names its real provider
+/// and `Undetermined` survives only for the compatibility forms and the wire
+/// rebuild.
+fn declared_subject(meta: &ContributionMeta, provider: DocumentProvider) -> DocumentSubject {
+    DocumentSubject::declared(provider, meta.path.clone())
 }

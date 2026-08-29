@@ -146,6 +146,35 @@ pub struct BootContribution {
     pub when: Option<WhenCondition>,
 }
 
+/// The typed half of one boot entry's provenance.
+///
+/// [`BootEntry::origin`] is a DISPLAY string and PROP-054 keeps it that way:
+/// it may carry a `[shared by …]` suffix, it is what a generated artifact
+/// prints, and nothing may recover identity by parsing it. The compiler's
+/// per-document selector subject nevertheless needs the typed provider that
+/// declared each contribution, so the typed components travel BESIDE
+/// `origin` — from the site that formats it, in the same expression — and
+/// are never reconstructed from it.
+///
+/// The name half of the dependency arm is still the install model's bare
+/// `String`; it is parsed through `PackageName`'s one grammar at the
+/// adapter seam that needs the typed identity, and refused there rather
+/// than being defaulted away. Retyping the install model itself is separate
+/// hygiene.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum BootProvenance {
+    /// The node's own authored boot — the node itself is the provider.
+    ///
+    /// A single entry cannot carry the node's typed identity, because the
+    /// same authored file is inherited into several nodes' lanes; the
+    /// adapter names it from the node's own coordinate, which is exactly the
+    /// authority `spec://` addressing already gives that lane.
+    Node,
+    /// A dependency package, by the `(group, name)` pair the resolution
+    /// records for it.
+    Dependency { group: Group, name: String },
+}
+
 /// One entry in a node's computed effective boot sequence.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BootEntry {
@@ -160,8 +189,12 @@ pub struct BootEntry {
     /// implies `link == LinkType::Dynamic` — the engine forces it.
     pub when: Option<WhenCondition>,
     /// Provenance — a node `rel_path` for authored boot, a `<group>/<name>`
-    /// pkgref for a dependency.
+    /// pkgref for a dependency. DISPLAY only: see [`BootProvenance`].
     pub origin: String,
+    /// The typed half of the same provenance, carried beside `origin` so the
+    /// compiler's document subject never parses identity out of a display
+    /// string.
+    pub provenance: BootProvenance,
     /// A soft-hoist reference (PROP-038 §2.5): a `static` entry hoisted out of
     /// this unit's zone into the global root `STATIC.md`. The renderer emits a
     /// `#use spec://<origin>` marker instead of the file's content, so the
@@ -186,6 +219,35 @@ pub struct BootEntry {
     /// copy. Set only by `desubstitute_covered_units`, for a contentless
     /// umbrella whose every boot-bearing member is present individually.
     pub elided: bool,
+}
+
+/// The typed provenance one authored `<group>/<name>` fixture spelling
+/// stands for — a TEST FIXTURE BUILDER, never an identity recovery.
+///
+/// The distinction matters and is the whole reason this is `#[cfg(test)]`.
+/// Production never reads a typed pair out of a display string: it authors
+/// both halves from the same two values, in one expression. A fixture has
+/// only one authored spelling to start from, so it states both halves from
+/// that — the fixture is CHOOSING what to declare, which is exactly what a
+/// manifest does. A spelling that is not a coordinate is a node's own boot,
+/// which is what a bare `rel_path` origin means in every fixture here.
+/// A fixture spelling may carry the `[shared by …]` display suffix, so the
+/// coordinate is the leading whitespace-free token — the same reading
+/// `ArtifactInput`'s own origin/target law already applies. Production
+/// carries the typed pair past that suffix instead of reading around it.
+#[cfg(test)]
+pub(crate) fn fixture_provenance(origin: &str) -> BootProvenance {
+    let coordinate = origin.split_whitespace().next().unwrap_or_default();
+    match coordinate.split_once('/') {
+        Some((group, name)) => match Group::parse(group) {
+            Ok(group) => BootProvenance::Dependency {
+                group,
+                name: name.to_owned(),
+            },
+            Err(_) => BootProvenance::Node,
+        },
+        None => BootProvenance::Node,
+    }
 }
 
 /// A node's computed effective boot sequence (PROP-009 §2.2) — every entry
@@ -252,6 +314,10 @@ pub fn compute_effective_boot(inputs: NodeBootInputs<'_>) -> Result<EffectiveBoo
             link: LinkType::Dynamic,
             when: None,
             origin: boot.origin.clone(),
+            // Inherited foundation is an ANCESTOR node's authored boot read
+            // into this node's lane: still a node's own file, never a
+            // package's, so the node arm is the honest one.
+            provenance: BootProvenance::Node,
             use_ref: false,
             // A node's own authored boot is always carried verbatim.
             format: PackageFormat::Simple,
@@ -269,6 +335,7 @@ pub fn compute_effective_boot(inputs: NodeBootInputs<'_>) -> Result<EffectiveBoo
             link: LinkType::Dynamic,
             when: None,
             origin: boot.origin.clone(),
+            provenance: BootProvenance::Node,
             use_ref: false,
             // A node's own authored boot is always carried verbatim.
             format: PackageFormat::Simple,
@@ -311,7 +378,14 @@ pub fn compute_effective_boot(inputs: NodeBootInputs<'_>) -> Result<EffectiveBoo
                 band: band_for(dep.category, BootBand::Dependency),
                 link: contribution_link,
                 when,
+                // The display spelling and its typed components, authored in
+                // one place from the same two values — the pairing is local
+                // and auditable rather than a later reconstruction.
                 origin: format!("{}/{}", dep.group, dep.name),
+                provenance: BootProvenance::Dependency {
+                    group: dep.group.clone(),
+                    name: dep.name.clone(),
+                },
                 use_ref: false,
                 format: dep.format,
                 unit_substituted: substituted,

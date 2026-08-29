@@ -18,6 +18,11 @@ mod artifact;
 pub use artifact::*;
 mod subject;
 pub(crate) use subject::*;
+// The one member of the subject cell that crosses the crate boundary (T10B):
+// the boot adapter names the provider it declares an input with. The glob
+// above still lends `DocumentSubject` crate-internally and no wider — an
+// explicit `use` shadows the glob for this one name only.
+pub use subject::DocumentProvider;
 mod target;
 pub use target::*;
 mod emitted;
@@ -518,5 +523,7 @@ impl ClosureIr {
     }
 }
 
+#[cfg(test)]
+mod subject_tests;
 #[cfg(test)]
 mod tests;

@@ -44,20 +44,23 @@ use serde::Serialize;
 use specmark::spec;
 use vibe_core::{layout, manifest::SpecFormat};
 use vibe_spec::{
-    ArtifactCompileError, ArtifactInput, ArtifactInputType, ArtifactPlan, ArtifactTarget,
-    EmittedArtifact, FileResolver, FsSectionSource, SelfCoordinate, compile_artifact,
+    ArtifactCompileError, ArtifactInputType, ArtifactPlan, ArtifactTarget, EmittedArtifact,
+    FileResolver, FsSectionSource, SelfCoordinate, TransformPlan, compile_artifact,
     compile_artifact_traced,
 };
 
 use crate::boot::EffectiveBoot;
 use crate::compile_trace::{ScopeAcquisition, TraceRun};
 use crate::{WorkspaceError, layout_paths};
-use normal::{hoisted_seed, normal_seed};
 
 /// `normal + static` compilation — the branch that compiles a `normal`
 /// package's closure rather than concatenating it (PROP-035 §8).
 mod normal;
 mod transaction;
+
+/// The artifact's ordered inputs and their TYPED declaring providers — the
+/// T10B seam, out of line per the file-length budget.
+mod inputs;
 
 /// Manager-owned per-unit publication — the compiled INDEX/STATIC triple's
 /// narrow seam onto the transaction manager (R4.1 atom B).
@@ -218,13 +221,25 @@ pub fn render_static(
 }
 
 /// Render the static lane in the project's effective target format.
+///
+/// This entry has no extension world to scope a plan by, so it pins the
+/// empty plan — the historical schedule, bytes and errors exactly
+/// (`R4-TRANSFORM-PLAN-ABI` §7). The install path, which does hold a world,
+/// goes through [`render_static_observed`].
 pub fn render_static_with_spec_format(
     boot: &EffectiveBoot,
     workspace_root: &Path,
     self_coord: &SelfCoordinate,
     spec_format: SpecFormat,
 ) -> Result<Option<String>, WorkspaceError> {
-    render_static_observed(boot, workspace_root, self_coord, spec_format, None)
+    render_static_observed(
+        boot,
+        workspace_root,
+        self_coord,
+        spec_format,
+        None,
+        TransformPlan::empty(),
+    )
 }
 
 /// [`render_static_with_spec_format`] through one not-yet-acquired trace
@@ -232,12 +247,19 @@ pub fn render_static_with_spec_format(
 /// traced caller minted for THIS artifact; the occurrence itself is acquired
 /// at the compile boundary inside. `None` is the historical untraced path,
 /// byte-for-byte.
+///
+/// `transforms` is the lane owner's own transform plan (R4 architecture §5.1:
+/// activation authority follows the artifact being written), already lowered
+/// by the caller that holds the world. The per-unit path passes THAT
+/// package's view; a caller with no world passes
+/// [`TransformPlan::empty`].
 pub(crate) fn render_static_observed(
     boot: &EffectiveBoot,
     workspace_root: &Path,
     self_coord: &SelfCoordinate,
     spec_format: SpecFormat,
     acquisition: Option<&ScopeAcquisition<'_>>,
+    transforms: TransformPlan,
 ) -> Result<Option<String>, WorkspaceError> {
     let artifact = compile_static_artifact_with(
         boot,
@@ -245,6 +267,7 @@ pub(crate) fn render_static_observed(
         self_coord,
         spec_format,
         acquisition,
+        transforms,
         compile_artifact,
     )?;
     artifact
@@ -287,6 +310,7 @@ fn compile_static_artifact_with(
     self_coord: &SelfCoordinate,
     spec_format: SpecFormat,
     acquisition: Option<&ScopeAcquisition<'_>>,
+    transforms: TransformPlan,
     compiler: impl FnOnce(
         ArtifactPlan,
         &FsSectionSource,
@@ -296,48 +320,7 @@ fn compile_static_artifact_with(
     if entries.is_empty() {
         return Ok(None);
     }
-    let mut inputs = Vec::with_capacity(entries.len());
-    for entry in entries {
-        let input = if entry.elided {
-            ArtifactInput::elided(&entry.origin, &entry.path)
-        } else if entry.use_ref {
-            let target = hoisted_seed(&entry.origin, &entry.path).ok_or_else(|| {
-                WorkspaceError::InlineCompile {
-                    reason: format!(
-                        "cannot derive the hoisted document target for `{}` at `{}`",
-                        entry.origin, entry.path
-                    ),
-                }
-            })?;
-            ArtifactInput::hoisted(&entry.origin, &entry.path, target)
-        } else if entry.format.is_normal() {
-            let seed = normal_seed(&entry.origin, &entry.path).ok_or_else(|| {
-                WorkspaceError::InlineCompile {
-                    reason: format!(
-                        "cannot derive a spec:// seed for the normal package `{}` at `{}` \
-                         (PROP-035 §8): expected a `<group>/<name>` origin and a path under a \
-                         package's `{}` root",
-                        entry.origin,
-                        entry.path,
-                        layout_paths::slot_specs("<slot>", "")
-                    ),
-                }
-            })?;
-            ArtifactInput::normal(&entry.origin, &entry.path, seed)
-        } else {
-            let absolute = workspace_root.join(&entry.path);
-            let (markdown, _) =
-                vibe_specdoc::load_spec_text(&absolute).map_err(|error| WorkspaceError::Io {
-                    path: absolute,
-                    reason: error.to_string(),
-                })?;
-            ArtifactInput::simple(&entry.origin, &entry.path, markdown)
-        }
-        .map_err(|error| WorkspaceError::InlineCompile {
-            reason: error.to_string(),
-        })?;
-        inputs.push(input);
-    }
+    let inputs = inputs::build(entries, workspace_root, self_coord)?;
     let target = if matches!(spec_format, SpecFormat::Xml) {
         ArtifactTarget::StaticXml
     } else {
@@ -351,7 +334,11 @@ fn compile_static_artifact_with(
     )
     .map_err(|error| WorkspaceError::InlineCompile {
         reason: error.to_string(),
-    })?;
+    })?
+    // The owner-scoped plan of the lane being written. An empty plan adds no
+    // pass, so this attachment is byte-inert for every owner that declares
+    // no compile-point extension — which is every owner in this repository.
+    .with_transforms(transforms);
     let source = FsSectionSource::new(FileResolver::new(workspace_root, self_coord.clone()));
     // THE COMPILE BOUNDARY. Every fallible preparation above has completed;
     // the next thing that happens is the compiler. Only now is the occurrence
@@ -436,6 +423,10 @@ pub fn write_boot_artifacts(
 }
 
 /// Generate boot artifacts with the static lane following `spec_format`.
+///
+/// No extension world reaches this entry, so the node lane it writes carries
+/// the empty plan — the historical schedule and bytes exactly. The install
+/// path goes through [`write_boot_artifacts_traced`], which does hold one.
 pub fn write_boot_artifacts_with_spec_format(
     node_dir: &Path,
     workspace_root: &Path,
@@ -450,6 +441,7 @@ pub fn write_boot_artifacts_with_spec_format(
         boot,
         spec_format,
         None,
+        TransformPlan::empty(),
     )
 }
 
@@ -460,6 +452,13 @@ pub fn write_boot_artifacts_with_spec_format(
 /// above; a recorder present mints the base identity here and the occurrence
 /// is acquired at the compile boundary below, completing from the compiler's
 /// own result. The run is borrowed: this layer never opens or finishes it.
+///
+/// `transforms` is this NODE's own owner-scoped plan (R4 architecture §5.1:
+/// a node manifest activates its node lane), lowered by the caller that
+/// holds the durable world.
+// The owner plan is one argument past the lint's threshold; the other seven
+// are the emission inputs this entry already took before T10B.
+#[allow(clippy::too_many_arguments)]
 pub(crate) fn write_boot_artifacts_traced(
     node_dir: &Path,
     node_rel: &str,
@@ -468,6 +467,7 @@ pub(crate) fn write_boot_artifacts_traced(
     boot: &EffectiveBoot,
     spec_format: SpecFormat,
     trace: Option<&TraceRun>,
+    transforms: TransformPlan,
 ) -> Result<WrittenArtifacts, WorkspaceError> {
     // A node with no static contributions declares no scope at all, and the
     // base identity is only minted when a recorder is present, so off mode
@@ -482,9 +482,12 @@ pub(crate) fn write_boot_artifacts_traced(
         boot,
         spec_format,
         acquisition.as_ref(),
+        transforms,
     )
 }
 
+// Same shape as its two wrappers: the owner plan is the one addition.
+#[allow(clippy::too_many_arguments)]
 fn write_boot_artifacts_inner(
     node_dir: &Path,
     workspace_root: &Path,
@@ -492,6 +495,7 @@ fn write_boot_artifacts_inner(
     boot: &EffectiveBoot,
     spec_format: SpecFormat,
     acquisition: Option<&ScopeAcquisition<'_>>,
+    transforms: TransformPlan,
 ) -> Result<WrittenArtifacts, WorkspaceError> {
     // Compile every fallible semantic artifact before touching existing files.
     // INDEX rendering precedes the compiler and may refuse — which is exactly
@@ -504,6 +508,7 @@ fn write_boot_artifacts_inner(
         self_coord,
         spec_format,
         acquisition,
+        transforms,
         compile_artifact,
     )?;
     let boot_dir = node_dir.join(layout::current_boot_dir());

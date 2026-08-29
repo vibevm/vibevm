@@ -17,12 +17,13 @@
 //! the selector atom lands reconstructs the typed identity component for
 //! component — never by parsing a rendered spelling.
 //!
-//! **Why `vibe-spec` owns the type, and why that is NOT a public-API
-//! argument.** [`DocumentSubject`] and [`DocumentProvider`] are `pub(crate)`,
-//! `ArtifactInput.subject` is a private field, `crate::lib` re-exports neither
-//! type, and a private field's type is not part of a Rust public API — so the
-//! kernel's `DependencyProviderId`/`HostIdentity` in this seat would have
-//! leaked nothing. Two arguments that do hold:
+//! **Why `vibe-spec` owns the type — an argument that SURVIVED the export.**
+//! When T7 landed, [`DocumentSubject`] and [`DocumentProvider`] were both
+//! `pub(crate)` and neither was re-exported, so "the kernel's types here
+//! would leak into a public API" was never the reason: a private field's type
+//! is not part of a Rust public API. T10B re-exported [`DocumentProvider`] —
+//! the boot adapter must NAME the provider it declares an input with — and
+//! the two arguments that actually held then still hold now, unchanged:
 //!
 //! 1. The subject is a JTD wire shape, and a wire shape is spelled from types
 //!    this crate owns. The kernel nests
@@ -68,8 +69,14 @@ use super::DocumentAddress;
 /// answers that are not a coordinate are named apart rather than fused into
 /// one absence. The coordinate arms hold validated components, so nothing here
 /// is a parsed display string and nothing renders one to decide identity.
+///
+/// `pub` and re-exported since T10B — [`DocumentSubject`] deliberately is
+/// NOT. The adapter that builds an artifact input must say which provider
+/// declared it, so this type crosses the crate boundary; the subject remains
+/// evidence the compiler mints from that provider plus the row's own path,
+/// which no caller may assemble by hand.
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub(crate) enum DocumentProvider {
+pub enum DocumentProvider {
     /// An installed dependency provider's versionless coordinate.
     Dependency { group: Group, name: PackageName },
     /// A host project with no group, named exactly as authored — the one

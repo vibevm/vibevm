@@ -51,9 +51,17 @@ pub use compiler::builtin::{
 };
 pub use compiler::ir::{
     ArtifactContext, ArtifactInput, ArtifactInputType, ArtifactInputWitness, ArtifactPlan,
-    ArtifactPlanError, ArtifactTarget, EmissionProvenance, EmittedArtifact,
+    ArtifactPlanError, ArtifactTarget, DocumentProvider, EmissionProvenance, EmittedArtifact,
     emitted_output_fingerprint,
 };
+// The R4.1 T10B adapter seam (PROP-054 `#TRANSFORM-PLAN-IDENTITY`): the
+// workspace lowers one lane owner's effective compile rows into an
+// owner-scoped plan and attaches it to an `ArtifactPlan`. Exactly three names
+// cross — the plan VALUE, its refusal, and nothing that can author either.
+// The seed, entry, provider, implementation and config values, and every
+// digest, stay inside the crate.
+pub use compiler::transform::fault::TransformLoweringError;
+pub use compiler::transform::plan::TransformPlan;
 // The observation vocabulary itself is NOT re-exported: status, level,
 // cardinality, shape and duration are the generated
 // `vibe_wire::generated::compiler_trace_index::e1::index` types, and a second

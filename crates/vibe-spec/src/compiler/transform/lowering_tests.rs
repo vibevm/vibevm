@@ -1,0 +1,402 @@
+//! T10B lowering acceptance: row for row, refusal for refusal.
+//!
+//! Every registry here is COLLECTED by the kernel from a real
+//! `ExtensionWorld` (`lowering_worlds`), and the lowering is handed exactly
+//! `enabled_compile_rows()` — the input contract the workspace supplies — so
+//! nothing in this cell can pass by shaping a slice the collector would never
+//! produce.
+
+use specmark::verifies;
+use vibe_core::manifest::ExtensionConfig;
+use vibe_extension_registry::ExtensionRegistry;
+
+use super::config_lowering::ConfigLoweringGap;
+use super::fault::{LoweringFault, TransformLoweringError};
+use super::lowering_worlds::{Declared, collected, collected_host, dependency_key, host_key};
+use super::plan::{TransformPlan, TransformStage};
+use super::plan_validate::bounded;
+use super::registry::TransformRegistryError;
+use super::registry_test_support::identity_registry;
+
+/// Lower one collected registry's compile family through the crate-internal
+/// seam, against the cfg-test identity catalog.
+///
+/// The production catalog is empty until R4.2 registers the first real
+/// behavior, so a test that wants a plan with entries in it must inject the
+/// same catalog the execution tests use. The workspace still supplies only a
+/// name — the epoch comes off the catalog either way.
+fn lower(registry: &ExtensionRegistry) -> Result<TransformPlan, TransformLoweringError> {
+    TransformPlan::from_effective_rows_with(&registry.enabled_compile_rows(), &identity_registry())
+}
+
+/// The four staged tiers, each named by its catalog behavior.
+fn staged_host() -> Vec<Declared> {
+    vec![
+        Declared::builtin("src", "compile:source", "test-identity-source"),
+        Declared::builtin("doc", "compile:document", "test-identity-document"),
+        Declared::builtin("lane", "compile:lane", "test-identity-lane"),
+        Declared::builtin("emit", "compile:emitted", "test-identity-emitted"),
+    ]
+}
+
+/// The typed fault one refusal carries, or a named panic.
+#[track_caller]
+fn fault(error: &TransformLoweringError) -> &LoweringFault {
+    error.inner()
+}
+
+/// §4.1: the plan is the rows, in the rows' own effective order, with each
+/// row's exact key, stage, provider, config and selector.
+///
+/// The order assertion is load-bearing rather than decorative: the world
+/// authors its four staged rows in the sequence document → emitted → source →
+/// lane, which is neither the stage ordinal order nor a key sort, so a
+/// lowering that re-tiered or sorted would move it.
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY")]
+fn a_collected_registry_lowers_row_for_row_in_the_registrys_own_effective_order() {
+    let registry = collected_host(vec![
+        Declared::builtin("doc", "compile:document", "test-identity-document"),
+        Declared::builtin("emit", "compile:emitted", "test-identity-emitted"),
+        Declared::builtin("src", "compile:source", "test-identity-source").scoped(&["boot/*.md"]),
+        Declared::builtin("lane", "compile:lane", "test-identity-lane"),
+    ]);
+    let rows = registry.enabled_compile_rows();
+    let plan = lower(&registry).expect("a lawful collected registry lowers");
+
+    assert_eq!(plan.len(), 4, "every enabled compile row became an entry");
+    let observed: Vec<(&str, TransformStage, u32)> = plan
+        .entries()
+        .iter()
+        .map(|entry| {
+            (
+                entry.seed().key().as_str(),
+                entry.seed().stage().clone(),
+                entry.order(),
+            )
+        })
+        .collect();
+    assert_eq!(
+        observed,
+        vec![
+            (host_key("doc").as_str(), TransformStage::Document, 0),
+            (host_key("emit").as_str(), TransformStage::Emitted, 1),
+            (host_key("src").as_str(), TransformStage::Source, 2),
+            (host_key("lane").as_str(), TransformStage::Lane, 3),
+        ],
+        "the authored order is the plan order, and each point maps to its own stage"
+    );
+
+    // Provider: the same typed identity the row carries, through the one
+    // root-dropping conversion.
+    for (entry, row) in plan.entries().iter().zip(&rows) {
+        assert_eq!(
+            entry.seed().provider(),
+            &super::plan::TransformProvider::from(row.provider()),
+            "entry {} carries its row's provider",
+            entry.order()
+        );
+        // Config: nothing was authored, so nothing is claimed.
+        assert!(entry.seed().config().is_none());
+        assert!(entry.config_digest().is_none());
+    }
+
+    // Selector: the scoped source row supplies its row's compiled selector;
+    // every unscoped row supplies none, at every stage.
+    let scoped = &plan.entries()[2];
+    assert_eq!(
+        scoped.seed().selector(),
+        Some(rows[2].compiled_selector()),
+        "the authored `paths` dimension rides along, cloned off the row"
+    );
+    for index in [0, 1, 3] {
+        assert!(
+            plan.entries()[index].seed().selector().is_none(),
+            "an unscoped row supplies no selector — including at lane/emitted, \
+             where manifest presence itself is illegal"
+        );
+    }
+}
+
+/// §4.1: the plan digest is stable across two lowerings of one registry, and
+/// it moves when the rows move.
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY")]
+fn one_registry_lowers_to_one_digest_twice_and_a_different_order_to_another() {
+    let registry = collected_host(staged_host());
+    let first = lower(&registry).expect("the first lowering succeeds");
+    let second = lower(&registry).expect("the second lowering succeeds");
+    assert_eq!(
+        first.digest(),
+        second.digest(),
+        "lowering is deterministic: the same rows, the same identity"
+    );
+    assert_eq!(first, second);
+    assert!(first.digest().is_some(), "a nonempty plan has a digest");
+
+    let mut reordered = staged_host();
+    reordered.swap(0, 3);
+    let other = lower(&collected_host(reordered)).expect("the reordered world lowers");
+    assert_ne!(
+        first.digest(),
+        other.digest(),
+        "entry order is semantic, so a different effective order is a different plan"
+    );
+}
+
+/// The empty case, and the empty-plan law it feeds: an owner with no compile
+/// rows shares the empty plan, digest and all.
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY")]
+fn an_owner_with_no_compile_rows_lowers_to_the_empty_plan() {
+    let registry = collected_host(vec![Declared::builtin("hook", "phase:build", "log")]);
+    assert!(
+        registry.enabled_compile_rows().is_empty(),
+        "the world's one row is not in the compile family"
+    );
+    let plan = lower(&registry).expect("an empty compile family lowers");
+    assert_eq!(plan, TransformPlan::empty());
+    assert!(plan.is_empty());
+    assert_eq!(plan.digest(), None);
+}
+
+/// The activation tier is inside the ONE effective order: host activation
+/// MOVES a dependency compile row into the last tier, behind the host's own
+/// declarations, and the lowering preserves exactly that.
+///
+/// This is what separates the registry's one authored order from any order
+/// the lowering could invent: the activated row is a `compile:source`
+/// declaration and the host's is `compile:document`, so a lowering that
+/// grouped by stage — or by provider, or by key — would put them the other
+/// way round.
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-ACTIVATION")]
+fn an_activated_dependency_row_keeps_its_place_in_the_one_effective_order() {
+    let registry = collected(
+        vec![Declared::builtin(
+            "doc",
+            "compile:document",
+            "test-identity-document",
+        )],
+        vec![Declared::builtin(
+            "src",
+            "compile:source",
+            "test-identity-source",
+        )],
+        &["src"],
+    );
+    let plan = lower(&registry).expect("the activated world lowers");
+    let keys: Vec<&str> = plan
+        .entries()
+        .iter()
+        .map(|entry| entry.seed().key().as_str())
+        .collect();
+    assert_eq!(
+        keys,
+        vec![host_key("doc").as_str(), dependency_key("src").as_str()],
+        "the host-declaration tier precedes the host-activation tier, and the plan says so"
+    );
+}
+
+/// §4.2, refusal 1: a `compile:pass` row refuses typed, naming the row.
+///
+/// It is INSIDE `enabled_compile_rows()` — the whole compile family — so this
+/// is the lowering's own judgment about a lawful input, not a caller-contract
+/// violation, and it has its own arm for exactly that reason.
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY")]
+fn a_compile_pass_row_refuses_typed_until_r6_owns_the_pass_tier() {
+    let registry = collected_host(vec![
+        Declared::builtin("doc", "compile:document", "test-identity-document"),
+        Declared::pass("pass", "test-identity-source"),
+    ]);
+    assert_eq!(
+        registry.enabled_compile_rows().len(),
+        2,
+        "the pass row really is inside the compile family view"
+    );
+    let error = lower(&registry).expect_err("the pass tier is not a staged transform");
+    let LoweringFault::PassTier { row, preview } = fault(&error) else {
+        panic!("the pass tier owns its own arm: {error}")
+    };
+    assert_eq!(*row, 1, "the fault names the offending row");
+    assert_eq!(*preview, bounded(&host_key("pass")));
+    assert!(error.to_string().contains("compile:pass"));
+}
+
+/// §4.2, refusal 2: a non-builtin handler at a compile point refuses typed
+/// and names the handler kind it saw.
+///
+/// `native` is the ONE such kind that can reach the lowering at all: the
+/// manifest grammar already refuses `script` / `binary` / `agent` at a
+/// compile point ("compile points accept `builtin` or `native` only"), so
+/// this is the exact arm R5 fills in — under the same registry authority,
+/// not by widening the caller's.
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY")]
+fn a_non_builtin_handler_at_a_compile_point_refuses_typed() {
+    let registry = collected_host(vec![Declared::native("compiled", "compile:document")]);
+    let error = lower(&registry).expect_err("a native handler is not a staged transform yet");
+    let LoweringFault::UnsupportedHandler { row, preview, kind } = fault(&error) else {
+        panic!("a non-builtin handler has its own arm: {error}")
+    };
+    assert_eq!(*row, 0);
+    assert_eq!(*kind, "native");
+    assert_eq!(*preview, bounded(&host_key("compiled")));
+}
+
+/// §4.2, refusal 3: an off-catalog builtin name is the existing bounded
+/// `UnknownBuiltin`, raised AT LOWERING rather than deferred.
+///
+/// Both halves matter. The refusal is the registry's own typed error, so
+/// there is one spelling of "no such builtin" in the crate; and it happens
+/// while the plan is being built, so a plan that exists is a plan whose every
+/// implementation was cataloged when it was built.
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY")]
+fn an_off_catalog_builtin_name_is_the_bounded_unknown_builtin_refusal_at_lowering() {
+    let registry = collected_host(vec![
+        Declared::builtin("doc", "compile:document", "test-identity-document"),
+        Declared::builtin("ghost", "compile:source", "no-such-builtin"),
+    ]);
+    let error = lower(&registry).expect_err("an off-catalog name has no epoch");
+    let LoweringFault::Implementation {
+        row,
+        preview,
+        source,
+    } = fault(&error)
+    else {
+        panic!("an unknown builtin refuses through the implementation arm: {error}")
+    };
+    assert_eq!(*row, 1);
+    assert_eq!(*preview, bounded(&host_key("ghost")));
+    assert_eq!(
+        *source,
+        TransformRegistryError::UnknownBuiltin {
+            preview: bounded("no-such-builtin"),
+        }
+    );
+
+    // And the PRODUCTION entry says the same thing: T5 ships an empty
+    // catalog, so every builtin name is off-catalog until R4.2 registers the
+    // first real behavior — which is exactly why no host in this repository
+    // can declare a compile-point extension and quietly get one.
+    let production = TransformPlan::from_effective_rows(&registry.enabled_compile_rows())
+        .expect_err("the production catalog is empty");
+    assert!(matches!(
+        fault(&production),
+        LoweringFault::Implementation { .. }
+    ));
+}
+
+/// The caller-contract refusal: a row at a NON-compile point is never
+/// skipped. `enabled_compile_rows()` cannot produce one, so reaching the
+/// lowering with it means the caller passed the wrong view — and a skip would
+/// let that wrong view produce a plausible plan.
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY")]
+fn a_row_at_a_non_compile_point_is_a_caller_error_and_never_a_skip() {
+    let registry = collected_host(vec![
+        Declared::builtin("doc", "compile:document", "test-identity-document"),
+        Declared::builtin("hook", "phase:build", "log"),
+    ]);
+    // The wrong view, deliberately: every enabled row, not the compile family.
+    let wrong: Vec<_> = registry
+        .rows()
+        .iter()
+        .filter(|row| row.is_enabled())
+        .collect();
+    assert_eq!(wrong.len(), 2);
+    let error = TransformPlan::from_effective_rows_with(&wrong, &identity_registry())
+        .expect_err("a phase row is not a staged transform");
+    let LoweringFault::NonCompilePoint {
+        row,
+        preview,
+        point,
+    } = fault(&error)
+    else {
+        panic!("the caller-contract violation has its own arm: {error}")
+    };
+    assert_eq!(*row, 1);
+    assert_eq!(*point, "phase:build");
+    assert_eq!(*preview, bounded(&host_key("hook")));
+}
+
+/// Config presence, the part that is decidable today: absence stays absence
+/// and an authored CLEARED table stays a present, digesting empty table. The
+/// two are different plan identities and the digest says so.
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY")]
+fn absent_config_and_authored_empty_config_stay_two_identities() {
+    let absent = lower(&collected_host(vec![Declared::builtin(
+        "doc",
+        "compile:document",
+        "test-identity-document",
+    )]))
+    .expect("an unconfigured row lowers");
+    let cleared = lower(&collected_host(vec![
+        Declared::builtin("doc", "compile:document", "test-identity-document")
+            .configured(ExtensionConfig::default()),
+    ]))
+    .expect("an authored empty configuration lowers");
+
+    assert!(absent.entries()[0].seed().config().is_none());
+    assert!(absent.entries()[0].config_digest().is_none());
+    assert!(cleared.entries()[0].seed().config().is_some());
+    assert!(cleared.entries()[0].config_digest().is_some());
+    assert_ne!(
+        absent.digest(),
+        cleared.digest(),
+        "`None` and `Some(empty)` are two claims, and plan identity keeps them apart"
+    );
+}
+
+/// The named interim gap: a row carrying real configuration VALUES refuses,
+/// naming the row, rather than lowering into a plan whose digest would assert
+/// that no configuration was authored.
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY")]
+fn a_row_with_non_empty_configuration_refuses_rather_than_claiming_none_was_authored() {
+    let table = "message = 'hello'"
+        .parse::<toml::Table>()
+        .expect("the fixture config parses");
+    let registry = collected_host(vec![
+        Declared::builtin("doc", "compile:document", "test-identity-document")
+            .configured(ExtensionConfig::from_table(table)),
+    ]);
+    let error = lower(&registry).expect_err("a value tower is not lowerable yet");
+    let LoweringFault::Config {
+        row,
+        preview,
+        source,
+    } = fault(&error)
+    else {
+        panic!("configuration has its own arm: {error}")
+    };
+    assert_eq!(*row, 0);
+    assert_eq!(*preview, bounded(&host_key("doc")));
+    assert_eq!(*source, ConfigLoweringGap::ValueTower);
+}
+
+/// A plan-level refusal keeps its own typed source: the lowering does not
+/// re-describe what `TransformPlan::build` already refuses.
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY")]
+fn a_plan_refusal_rides_through_the_lowering_as_itself() {
+    // Two rows, one key: the collector refuses a duplicate key inside one
+    // world, so the duplicate is built by handing the lowering the SAME row
+    // twice — the shape a caller error would produce.
+    let registry = collected_host(vec![Declared::builtin(
+        "doc",
+        "compile:document",
+        "test-identity-document",
+    )]);
+    let rows = registry.enabled_compile_rows();
+    let doubled = vec![rows[0], rows[0]];
+    let error = TransformPlan::from_effective_rows_with(&doubled, &identity_registry())
+        .expect_err("one key cannot be two entries");
+    let LoweringFault::Plan { source } = fault(&error) else {
+        panic!("the plan's own refusal rides through: {error}")
+    };
+    assert!(source.to_string().contains("duplicate transform key"));
+}

@@ -12,13 +12,16 @@ use std::path::Path;
 use specmark::spec;
 use vibe_core::manifest::{LinkType, SpecFormat};
 use vibe_core::{Group, layout};
+use vibe_spec::TransformPlan;
 
 use crate::boot::hybrid::{self, UnitEdge, UnitId, UnitInput, ZoneMembership};
 use crate::boot::{BootBand, BootEntry, EffectiveBoot};
 use crate::compile_trace::TraceRun;
-use crate::{WorkspaceError, boot_artifacts, path_to_slash, vibedeps};
+use crate::extension_world::DurableExtensionWorld;
+use crate::{WorkspaceError, boot_artifacts, vibedeps};
 
 use super::super::ResolvedDep;
+use super::owner_plans::unit_owner_plan;
 
 /// One unit's trace occurrence and the fresh-output observation that decides
 /// whether it is declared at all — split out so the observe-then-declare law
@@ -26,6 +29,12 @@ use super::super::ResolvedDep;
 #[path = "hybrid_emit/unit_trace.rs"]
 mod unit_trace;
 use unit_trace::UnitTrace;
+
+/// Projecting a resolved zone into an [`EffectiveBoot`] — the pure half,
+/// split out per the file-length budget.
+#[path = "hybrid_emit/zone_projection.rs"]
+mod zone_projection;
+use zone_projection::{unit_provenance, zone_to_effective};
 
 /// Build the per-unit table (PROP-038 §2.1) from the resolution: every
 /// materialised package becomes a [`UnitInput`] whose edges carry the link
@@ -152,6 +161,7 @@ pub(super) fn emit_package_units(
     fingerprints: &HashMap<UnitId, String>,
     spec_format: SpecFormat,
     trace: Option<&TraceRun>,
+    world: Option<&DurableExtensionWorld>,
 ) -> Result<HashSet<UnitId>, WorkspaceError> {
     let slots: HashMap<UnitId, String> = resolution
         .iter()
@@ -236,6 +246,11 @@ pub(super) fn emit_package_units(
             fp,
             spec_format,
             unit_trace.as_ref(),
+            // THIS package's own view, never the node's (PROP-054
+            // ##COMPILE-ACTIVATION: activation authority follows the
+            // artifact being written, and the artifact here is the
+            // package's unit lane).
+            unit_owner_plan(world, id)?,
         )
     };
 
@@ -282,121 +297,6 @@ fn has_static_children(
         .any(|m| m != id && table.get(m).is_some_and(|u| u.has_static_boot()))
 }
 
-/// Project a resolved zone into an [`EffectiveBoot`] the existing
-/// [`boot_artifacts`] renderers consume: static members in topological order
-/// as `static` entries, the surfaced dynamic edges as `dynamic` entries. A
-/// dynamic edge to a package that itself has a `STATIC.md` points at that
-/// `STATIC.md` (so the parent loads the whole zone); otherwise at the snippet.
-/// A `shared` (hoisted) static member becomes a `#use` marker (§2.5).
-fn zone_to_effective(
-    root_id: &UnitId,
-    zone: &ZoneMembership,
-    table: &HashMap<UnitId, UnitInput>,
-    with_static: &HashSet<UnitId>,
-    slots: &HashMap<UnitId, String>,
-    shared: &HashSet<UnitId>,
-    spec_format: SpecFormat,
-) -> EffectiveBoot {
-    let mut entries: Vec<BootEntry> = Vec::new();
-    for member in hybrid::topo_zone(&zone.static_members, table) {
-        let Some(unit) = table.get(&member) else {
-            continue;
-        };
-        // A shared member is hoisted to the global root STATIC.md; leave a
-        // #use marker in place of its content (PROP-038 §2.5). A unit is never
-        // hoisted out of its own zone (`root_id` owns the zone).
-        let hoisted = &member != root_id && shared.contains(&member);
-        let mut push = |path: &str, when: Option<vibe_core::manifest::WhenCondition>| {
-            let link = if when.is_some() {
-                LinkType::Dynamic
-            } else {
-                LinkType::Static
-            };
-            entries.push(BootEntry {
-                path: path.to_string(),
-                band: BootBand::Dependency,
-                link,
-                when,
-                origin: unit.origin.clone(),
-                use_ref: hoisted && link == LinkType::Static,
-                format: unit.format,
-                unit_substituted: false,
-                elided: false,
-            });
-        };
-        if let Some(path) = &unit.own_boot_path {
-            push(path, unit.when.clone());
-        }
-        for fragment in &unit.fragments {
-            push(&fragment.path, fragment.when.clone());
-        }
-    }
-    for (target, _) in &zone.dynamic_edges {
-        let Some(unit) = table.get(target) else {
-            continue;
-        };
-        let compiled = dynamic_target_path(target, with_static, slots, spec_format);
-        if let Some(path) = compiled.as_ref() {
-            entries.push(dynamic_entry(path, None, &unit.origin));
-        }
-        if let Some(path) = &unit.own_boot_path
-            && (compiled.is_none() || unit.when.is_some())
-        {
-            entries.push(dynamic_entry(path, unit.when.clone(), &unit.origin));
-        }
-        for fragment in &unit.fragments {
-            if compiled.is_none() || fragment.when.is_some() {
-                entries.push(dynamic_entry(
-                    &fragment.path,
-                    fragment.when.clone(),
-                    &unit.origin,
-                ));
-            }
-        }
-    }
-    EffectiveBoot { entries }
-}
-
-fn dynamic_entry(
-    path: &str,
-    when: Option<vibe_core::manifest::WhenCondition>,
-    origin: &str,
-) -> BootEntry {
-    BootEntry {
-        path: path.to_string(),
-        band: BootBand::Dependency,
-        link: LinkType::Dynamic,
-        when,
-        origin: origin.to_string(),
-        use_ref: false,
-        format: Default::default(),
-        unit_substituted: false,
-        elided: false,
-    }
-}
-
-/// Where a dynamic edge's target is read from: its compiled `STATIC.md` when
-/// the target statically links children (so reading it pulls the whole zone),
-/// else its raw boot snippet.
-fn dynamic_target_path(
-    target: &UnitId,
-    with_static: &HashSet<UnitId>,
-    slots: &HashMap<UnitId, String>,
-    spec_format: SpecFormat,
-) -> Option<String> {
-    if with_static.contains(target) {
-        slots.get(target).map(|slot| {
-            path_to_slash(
-                &Path::new(slot)
-                    .join(layout::current_boot_dir())
-                    .join(boot_artifacts::static_file(spec_format)),
-            )
-        })
-    } else {
-        None
-    }
-}
-
 /// Write a unit's `INDEX.md` (always) and `STATIC.md` (when the zone has
 /// static content) into `boot_dir`. Unlike [`boot_artifacts::write_boot_artifacts`]
 /// this writes **no** redirect blocks — a dependency package slot is not an
@@ -432,6 +332,9 @@ fn dynamic_target_path(
 /// Nothing here changes the dirty-subgraph selection: the freshness check is
 /// computed exactly as before, and an unchanged unit never enters the
 /// transaction at all.
+// The owner plan is one argument past the lint's threshold; the other seven
+// are the emission inputs this pass already took before T10B.
+#[allow(clippy::too_many_arguments)]
 fn emit_effective(
     boot_dir: &Path,
     workspace_root: &Path,
@@ -440,6 +343,7 @@ fn emit_effective(
     fingerprint: &str,
     spec_format: SpecFormat,
     unit_trace: Option<&UnitTrace<'_>>,
+    transforms: TransformPlan,
 ) -> Result<(), WorkspaceError> {
     let index = boot_dir.join(boot_artifacts::INDEX_FILE);
     let static_path = boot_dir.join(boot_artifacts::static_file(spec_format));
@@ -477,6 +381,7 @@ fn emit_effective(
         self_coord,
         spec_format,
         unit_trace.map(UnitTrace::acquisition),
+        transforms,
     )?;
     // ONE crash-recoverable publication: INDEX, the selected STATIC's
     // presence/bytes, and the stale spelling's absence land together — or
@@ -510,7 +415,11 @@ pub(super) fn append_hoisted(
     }
     for id in hybrid::topo_zone(shared, table) {
         let Some(unit) = table.get(&id) else { continue };
+        // The `[shared by …]` suffix is DISPLAY: it names who pulls the
+        // single copy, not who declared it. The typed provenance is the
+        // hoisted unit's own identity, unchanged by hoisting.
         let origin = format!("{} [shared by {}]", unit.origin, shared_by(&id, pulls));
+        let provenance = unit_provenance(&id);
         let mut push = |path: &str| {
             effective.entries.push(BootEntry {
                 path: path.to_string(),
@@ -518,6 +427,7 @@ pub(super) fn append_hoisted(
                 link: LinkType::Static,
                 when: None,
                 origin: origin.clone(),
+                provenance: provenance.clone(),
                 use_ref: false,
                 format: unit.format,
                 unit_substituted: false,
