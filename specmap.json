@@ -51743,7 +51743,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:4ad83a4942780ff7890f8dad59522ab36b29692201eaf2be85f2e873308c7317",
+      "content_hash": "sha256:a9015b92bbaaabee8bd74521f0fa6846f1d62d4104c8fbdeef84304b30effcc4",
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "PROP-054 — The vibe lifecycle and the extension machine",
@@ -53543,7 +53543,7 @@
     },
     {
       "anchor": "roadmap",
-      "content_hash": "sha256:02b916b1156b15dc0cbe6cf0682540a9dbb3d732edc68208cda31b3fba53a3b9",
+      "content_hash": "sha256:e2a70fa63d11d88cc248c45fce4aec4b8f521f070da3e4b7f9f0f3aa587200e2",
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "12. The proposed build order — six self-standing waves",
@@ -53615,10 +53615,10 @@
     },
     {
       "anchor": "R7-EXTERNAL-ORCHESTRATION",
-      "content_hash": "sha256:a6e372a16ebffe0fe0af6ff401f30ed1ac65cc9381c98a2d809cac9863b6e519",
+      "content_hash": "sha256:09c755444e810c40a5ed9a11d8a6e25b2db40cc15c79853ade0fc2c46dd7ba88",
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
-      "heading": "**R7.5 — neutral external orchestration mechanics (§4.6).** P0 fixes the evidence/optional-provider/vocabulary laws; P1 adds JTD-first input/artifact/run evidence; P2 builds the read-only `vibe-specdoc` authoring + `vibe-facts` consumer projection with optional current/carried specmap relations; P3 exposes one thin requirements query over CLI/MCP and proves it beside existing lifecycle control with a fake external PDSA process. No coding agent, automatic repair loop, task-choice heuristic or Plan/Act policy is implemented; a reference agent remains a separate future campaign. @status:impl/work",
+      "heading": "**R7.5 — neutral external orchestration mechanics (§4.6).** P0 fixes the evidence/optional-provider/vocabulary laws; P1 adds JTD-first input/artifact/run evidence; P2 builds the read-only `vibe-specdoc` authoring + `vibe-facts` consumer projection with optional current/carried specmap relations; P3 exposes one thin requirements query over CLI/MCP and proves it beside existing lifecycle control with a fake external PDSA process. No coding agent, automatic repair loop, task-choice heuristic or Plan/Act policy is implemented; a reference agent remains a separate future campaign. @status:impl/done",
       "line": 364,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#R7-EXTERNAL-ORCHESTRATION"
     },
