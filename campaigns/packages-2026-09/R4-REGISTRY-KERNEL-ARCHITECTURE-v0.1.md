@@ -1,9 +1,11 @@
 # R4 registry kernel and staged transforms — implementation architecture v0.1
 
 Status: central implementation design, 2026-08-27; R4.0 extraction implemented
-and accepted 2026-08-29 at `6af1b86f` with map `8531cf82`; R4.1 is current.
-Semantic authority remains PROP-054 §§3 and 7 plus the accepted lifecycle spec
-debt. This document fixes the crate boundary and execution dataflow.
+and accepted 2026-08-29 at `6af1b86f` with map `8531cf82`; R4.1 owner controls
+`52a59dcc` and unit transaction `91142777` / `ab68d145` are landed, and the
+TransformPlan ABI is current. Semantic authority remains PROP-054 §§3 and 7
+plus the accepted lifecycle spec debt. This document fixes the crate boundary
+and execution dataflow.
 
 Execution status and dependency order live in
 [`LIFECYCLE-EXTENSIONS-IMPLEMENTATION-LEDGER.md`](LIFECYCLE-EXTENSIONS-IMPLEMENTATION-LEDGER.md).
@@ -137,6 +139,11 @@ resolver:
 `Arc<dyn Pass>` across crate boundaries. `BackendRegistry` remains a behavior
 registry and is not a second declaration collector.
 
+Exact in-process types, semantic TOML lowering, digest framing, selector
+boundary and behavior-registry ABI are frozen in
+[`R4-TRANSFORM-PLAN-ABI-v0.1.md`](R4-TRANSFORM-PLAN-ABI-v0.1.md); implementation
+may not replace that contract with generic JSON or display-string identity.
+
 ### 5.1 Owner-scoped activation
 
 PROP-054 `##COMPILE-ACTIVATION` is literal: activation authority follows the
@@ -254,6 +261,10 @@ reconstruct attribution already present in IR/provenance.
 
 ## 10. Extraction and landing sequence
 
+Owner-control carriage is landed at `52a59dcc`; crash-safe per-unit publication
+at `91142777` with normative anchor `ab68d145`; their combined generated map is
+`3883f15e`.
+
 1. **Done `6af1b86f`:** add the kernel crate and move the pure registry/tests.
 2. **Done `6af1b86f`:** lifecycle consumes/re-exports it; boundary and caller
    gates green; generated map `8531cf82`.
@@ -261,7 +272,7 @@ reconstruct attribution already present in IR/provenance.
 4. Build one strict durable-world adapter from selected manifest + root lock.
 5. Thread one collected registry/plan through unit and node compilation.
 6. Add four positions with builtin identity transforms first.
-7. Add plan digest, active-only header and unit transaction parity.
+7. Add plan digest and active-only header; **unit transaction parity is done**.
 8. Bind `xml-minify` plus semantic/delta RED corpus.
 9. Add JTD analyzer/report CLI.
 
