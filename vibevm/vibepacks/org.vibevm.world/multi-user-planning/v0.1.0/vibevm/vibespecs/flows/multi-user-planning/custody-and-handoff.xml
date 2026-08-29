@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Central custody and same-machine handoff</title>
+  <status stage="spec" state="done"/>
+  <custody title="1. Custody is a local write baton">
+    <p><CUSTODY-SCOPE fact="true" status="spec/done">Custody coordinates
+owner-facing central sessions that share one user-local context on one machine.
+It gates central plan mutation, worker acceptance, central commits, pushes and
+campaign-status promotion. It does not prevent reading, diagnosis, tests or
+drafting isolated proposals.</CUSTODY-SCOPE></p>
+    <p><CUSTODY-NOT-PERMISSION fact="true" status="spec/done">Custody is neither
+repository permission nor a security lock. It makes the accountable writer and
+epoch explicit. Owner and project authority still govern every operation.</CUSTODY-NOT-PERMISSION></p>
+  </custody>
+  <format title="2. `custody.toml` reference format">
+    <fence lang="toml">schema = 1
+context_id = "3d7a79bf-5f27-4b88-9eaa-c8323df5cb03"
+epoch = 7
+state = "held"
+holder_id = "central-a-20260829"
+session_id = "d218b184-8d63-46d0-aed8-62dd47e6bd27"
+harness = "codex-desktop"
+planning_profile = "ultra"
+acquired_at = "2026-08-29T11:00:00Z"
+heartbeat_at = "2026-08-29T11:40:00Z"
+offer_id = ""</fence>
+    <p><CUSTODY-STATES fact="true" status="spec/done">State is `vacant | held |
+offering`. Epoch is monotonic and advances on every successful claim, explicit
+release or recovery takeover. A timestamp may reveal staleness but never
+self-authorizes a takeover.</CUSTODY-STATES></p>
+    <p><ATOMIC-CUSTODY-WRITE fact="true" status="spec/done">Replace custody
+atomically through a same-directory temporary file and rename. A partially
+written file is invalid and stops central mutation until repaired from the
+latest valid handoff/record and repository evidence.</ATOMIC-CUSTODY-WRITE></p>
+  </format>
+  <kinds title="3. Handoff kinds">
+    <facts ordered="false">
+      <HANDOFF-PLANNED fact="true" status="spec/done">**Planned transfer:** a
+  live central coordinator intentionally changes model or harness.</HANDOFF-PLANNED>
+      <HANDOFF-ROLLOVER fact="true" status="spec/done">**Session rollover:** the
+  same kind of coordinator starts a fresh context because the old one is large,
+  compacted or otherwise unhealthy. It still uses offer and receipt.</HANDOFF-ROLLOVER>
+      <HANDOFF-RECOVERY fact="true" status="spec/done">**Recovery takeover:** the
+  holder crashed or is unavailable. The incoming coordinator reconstructs from
+  disk and repository evidence, records why ordinary receipt was impossible,
+  and needs explicit owner authorization before claiming.</HANDOFF-RECOVERY>
+    </facts>
+  </kinds>
+  <bundle title="4. Immutable handoff bundle">
+    <p><BUNDLE-HOME fact="true" status="spec/done">One bundle lives at
+`handoffs/&lt;UTC&gt;-&lt;opaque-handoff-id&gt;/`. The outgoing coordinator creates
+`offer.toml` and `HANDOFF.md`; the incoming coordinator alone creates
+`receipt.toml`. Sealed files are immutable. Corrections create a new offer that
+supersedes the old id.</BUNDLE-HOME></p>
+    <p><HANDOFF-BODY fact="true" status="spec/done">`HANDOFF.md` contains at
+minimum: TL;DR; context and transfer reason; complete owner mandate and later
+rulings; architecture/policy decisions in force; full hierarchical route and
+expanded frontier; accepted boundary with evidence; every candidate/unaccepted
+artifact and exact acceptance recipe; branch, HEAD, ahead/behind and dirty-tree
+inventory; blockers/risks; relevant reports, cache, branches and worktrees;
+literal next-step recipe; current settings; cleanup prohibitions; and pointers
+to repository authorities. It contains no secret values.</HANDOFF-BODY></p>
+    <p><BUNDLE-HASHES fact="true" status="spec/done">`offer.toml` names source
+and intended receiver, context id, source epoch, proposed epoch, Git observations,
+plan revision, creation time, SHA-256 of `HANDOFF.md` and `plan.toml`, and
+`acceptance_transfers = false`. Paths into the repository are repository-relative;
+local-only evidence may use absolute paths inside the local bundle.</BUNDLE-HASHES></p>
+  </bundle>
+  <offer title="5. Outgoing procedure">
+    <facts ordered="true">
+      <OFFER-VERIFY fact="true" status="spec/done">Verify current context, Git
+  state, live processes and artifact locations empirically.</OFFER-VERIFY>
+      <OFFER-BACKSCAN fact="true" status="spec/done">Backscan the entire mandate,
+  plan, accepted evidence, candidates, worker reports, branches/worktrees and
+  unpromoted discoveries. Repair the plan before describing it.</OFFER-BACKSCAN>
+      <OFFER-WRITE fact="true" status="spec/done">Write and hash the bundle,
+  then set custody to `offering` with its `offer_id` and the same source epoch.</OFFER-WRITE>
+      <OFFER-FENCE fact="true" status="spec/done">After the offer is sealed, the
+  outgoing session is read-only for the repository and plan. It may answer the
+  incoming coordinator or inspect the receipt, but any substantive repair
+  requires owner-directed cancellation and a new epoch/offer.</OFFER-FENCE>
+    </facts>
+  </offer>
+  <receipt title="6. Incoming procedure">
+    <facts ordered="true">
+      <RECEIPT-READ fact="true" status="spec/done">Read the project boot contract,
+  this protocol, complete bundle and complete local plan before proposing work.</RECEIPT-READ>
+      <RECEIPT-VERIFY fact="true" status="spec/done">Verify hashes, context
+  binding, repository status, HEAD/ahead/behind, dirty files and named artifact
+  existence. Reproduce high-risk claims; do not trust the narrative where the
+  tree can answer.</RECEIPT-VERIFY>
+      <RECEIPT-CLASSIFY fact="true" status="spec/done">Classify discrepancies.
+  Project-accepted commits/specs remain project evidence; local acceptance
+  claims without durable evidence, dirty changes, worker reports and incomplete
+  gates remain `candidate`.</RECEIPT-CLASSIFY>
+      <RECEIPT-WRITE fact="true" status="spec/done">Write `receipt.toml` as
+  `accepted | accepted-with-exceptions | rejected`, list every exception and
+  observed mismatch, and hash the offer read.</RECEIPT-WRITE>
+      <RECEIPT-CLAIM fact="true" status="spec/done">For an accepted receipt,
+  atomically advance custody to the proposed epoch and incoming holder. A
+  rejected receipt leaves the offer unresolved; neither side silently writes.</RECEIPT-CLAIM>
+      <RECEIPT-REPORT-WAIT fact="true" status="spec/done">Report restored state,
+  candidates, blockers and proposed next atom to the owner, then wait. Receipt
+  grants continuity, not permission to guess the owner's next priority.</RECEIPT-REPORT-WAIT>
+    </facts>
+  </receipt>
+  <recovery title="7. Recovery takeover">
+    <p><RECOVERY-PRESERVE fact="true" status="spec/done">A dead session is not a
+verdict on its artifacts. Preserve dirty files, reports, caches and branches;
+inspect before restarting or deleting anything.</RECOVERY-PRESERVE></p>
+    <p><RECOVERY-AUTH fact="true" status="spec/done">Recovery requires explicit
+owner authorization naming the target context. The incoming coordinator records
+the missing holder, prior epoch/heartbeat, evidence of unavailability, observed
+Git/tree state and every unaccepted artifact; writes a `takeover` record; then
+advances epoch. Staleness alone is an alarm, not permission.</RECOVERY-AUTH></p>
+    <p><RECOVERY-ACCEPTANCE fact="true" status="spec/done">After takeover, the
+last repository-level accepted boundary is trusted as history. Work after that
+boundary is candidate until independently accepted. Never infer “probably
+accepted” from timestamps, staged state or a worker's PASS.</RECOVERY-ACCEPTANCE></p>
+  </recovery>
+  <cancel title="8. Cancellation and split brain">
+    <p><CANCEL fact="true" status="spec/done">A live outgoing holder may cancel
+an unreceipted offer only on owner direction, by writing a cancellation record
+and advancing epoch back to `held`. It never edits the sealed offer.</CANCEL></p>
+    <p><SPLIT-BRAIN fact="true" status="spec/done">Two valid receipts claiming
+the same proposed epoch or repository writes from the fenced outgoing session
+are split-brain evidence. Stop both central writers, preserve artifacts, compare
+against project authority, and let the owner select a new recovery epoch. Never
+settle split brain by newest timestamp.</SPLIT-BRAIN></p>
+  </cancel>
+</spec>

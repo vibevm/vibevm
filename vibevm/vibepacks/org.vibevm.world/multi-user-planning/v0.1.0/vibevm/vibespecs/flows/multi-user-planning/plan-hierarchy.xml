@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Lossless hierarchical campaign planning</title>
+  <status stage="spec" state="done"/>
+  <model title="1. The five simultaneous views">
+    <facts ordered="true">
+      <VIEW-MANDATE fact="true" status="spec/done">**Mandate ledger:** every
+  owner request, ruling, constraint and accepted discovered obligation, with a
+  stable id and source.</VIEW-MANDATE>
+      <VIEW-ROUTE fact="true" status="spec/done">**Epic route:** the complete
+  hierarchy and dependency graph from current state to closure, including all
+  distant stages at least as named summary nodes.</VIEW-ROUTE>
+      <VIEW-FRONTIER fact="true" status="spec/done">**Expanded frontier:** the
+  current branch of the hierarchy plus the next risk/dependency boundary,
+  decomposed into reviewable atoms.</VIEW-FRONTIER>
+      <VIEW-ATOM fact="true" status="spec/done">**Current atom contract:** input,
+  write perimeter, acceptance, red proof, evidence and safe-stop condition.</VIEW-ATOM>
+      <VIEW-PROJECTION fact="true" status="spec/done">**Linear projection:** the
+  small list shown by a harness UI. It is derived navigation, never storage and
+  never proof that omitted descendants do not exist.</VIEW-PROJECTION>
+    </facts>
+  </model>
+  <format title="2. `plan.toml` reference format">
+    <p><PLAN-FORMAT fact="true" status="spec/done">`plan.toml` is strict,
+human-authored local TOML, replaced atomically after each accepted plan mutation.
+`revision` increases monotonically. Stable ids are never reused.</PLAN-FORMAT></p>
+    <fence lang="toml">schema = 1
+plan_id = "compiler-modernization"
+revision = 42
+root_node = "ROOT"
+current_node = "COMPILER-4.1"
+updated_at = "2026-08-29T11:00:00Z"
+
+[[mandate]]
+id = "M-017"
+source = "owner-chat:2026-08-29"
+text = "A handoff must preserve unaccepted compiler work as candidate."
+disposition = "owned"
+nodes = ["COMPILER-4.1", "HANDOFF-1"]
+
+[[node]]
+id = "COMPILER-4.1"
+parent = "COMPILER-4"
+order = 60
+kind = "atom"
+title = "Execute the compiler transform schedule"
+state = "candidate"
+zoom = "expanded"
+depends_on = ["COMPILER-4.0"]
+mandates = ["M-017"]
+acceptance = ["review complete diff", "run focused tests", "run red mutation"]
+evidence = ["repo:reports/compiler-transform-candidate.md"]</fence>
+    <p><MANDATE-DISPOSITIONS fact="true" status="spec/done">Mandate disposition
+is one of `owned | accepted | deferred | duplicate | superseded | declined |
+out-of-scope`. Every value except `owned` and `accepted` carries a reason;
+`declined` and `out-of-scope` require owner authority. Deferral names its future
+home or trigger.</MANDATE-DISPOSITIONS></p>
+    <p><NODE-STATES fact="true" status="spec/done">Leaf state is one of `planned |
+ready | active | candidate | accepted | blocked | deferred | dropped |
+superseded`. `candidate` means implementation exists but central acceptance is
+open. Parents close bottom-up: a parent cannot be `accepted` while a required
+descendant is non-terminal or while its own exit evidence is absent.</NODE-STATES></p>
+  </format>
+  <coverage title="3. Coverage before execution">
+    <p><COVERAGE-SKELETON fact="true" status="spec/done">A campaign may begin
+before every distant atom is known, but never before every known obligation is
+represented. Unknown detail is a named refinement node with an explicit trigger
+and boundary, not an omitted region. The plan is complete in coverage and
+progressively precise in execution.</COVERAGE-SKELETON></p>
+    <p><DEPENDENCIES-EXPLICIT fact="true" status="spec/done">Every node that
+cannot start independently names `depends_on`; resource, owner-decision and
+external-state gates are first-class nodes. A linear ordering must not hide a
+dependency graph.</DEPENDENCIES-EXPLICIT></p>
+  </coverage>
+  <zoom title="4. Receding-horizon zoom">
+    <p><ZOOM-RULE fact="true" status="spec/done">Expand the current path, all
+candidate work awaiting acceptance, and enough successors to cross the next
+high-risk or irreversible boundary. Keep distant stages as summary nodes with
+exit criteria. Increase zoom when uncertainty, coupling, public surface or
+reversal cost rises; decrease it after evidence closes uncertainty.</ZOOM-RULE></p>
+    <p><ATOM-SHAPE fact="true" status="spec/done">A reviewable atom has one
+coherent purpose, an explicit write perimeter, named acceptance, a negative or
+mutation proof where false-green risk exists, and a safe stopping state. Atom
+size is determined by verification cost, not by a fixed line count.</ATOM-SHAPE></p>
+  </zoom>
+  <replan title="5. Replanning">
+    <p><REPLAN-TRIGGERS fact="true" status="spec/done">Replan immediately when:
+the owner changes scope or supplies a ruling; evidence falsifies an assumption;
+a test or review reveals an omitted obligation; dependencies or resources
+change; a worker discovers architecture outside its atom; a custody handoff
+occurs; or the current route conflicts with a governing specification.</REPLAN-TRIGGERS></p>
+    <p><REPLAN-PROCEDURE fact="true" status="spec/done">Record the new fact,
+trace affected mandate and nodes, preserve old node ids and dispositions, revise
+dependencies/zoom/acceptance, then regenerate the linear projection. Never
+rewrite history so the old route appears never to have existed; the changed
+decision and its reason remain reviewable.</REPLAN-PROCEDURE></p>
+  </replan>
+  <backscan title="6. Backward audits">
+    <p><BACKSCAN fact="true" status="spec/done">At every milestone, custody
+offer and campaign closure, compare: original mandate and later owner messages;
+current plan coverage; repository tree and Git history; candidates and reports;
+accepted evidence; deferrals and open decisions. Classify every mismatch as
+plan omission, stale state, unpromoted fact, unaccepted artifact or deliberate
+scope change. Repair it before proceeding.</BACKSCAN></p>
+    <p><PLAN-CANNOT-SELF-CLOSE fact="true" status="spec/done">An empty ready queue
+or completed UI list cannot close a campaign. Closure requires all mandate items
+disposed, all required nodes terminal, acceptance evidence present, durable
+knowledge promoted, cleanup safety proven, and the campaign's exit gate run.</PLAN-CANNOT-SELF-CLOSE></p>
+  </backscan>
+  <projection title="7. Linear UI projection">
+    <p><PROJECTION fact="true" status="spec/done">The projection prioritizes:
+candidates awaiting central verdict; active atom; ready dependencies; then the
+next ordered child on each expanded frontier. It includes ancestor labels and a
+count of collapsed descendants. Ties use `order`, then stable id. Changing UI
+capacity changes only how many projected rows appear, never the plan.</PROJECTION></p>
+    <p><NO-THREE-STEP-STOP fact="true" status="spec/done">A coordinator presented
+with a three-row projection must read the authoritative plan before declaring
+scope or completion. “I finished the plan shown by the UI” is not a closure
+argument.</NO-THREE-STEP-STOP></p>
+  </projection>
+</spec>
