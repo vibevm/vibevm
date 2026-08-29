@@ -13,7 +13,7 @@ fn pass_name(value: &str) -> PassName {
 }
 
 fn source(anchor: &str, text: &str) -> SourceIr {
-    SourceIr::new(
+    SourceIr::reached(
         DocumentAddress::Spec(
             SpecAddress::parse(&format!("spec://org.demo/pkg/common/shared#{anchor}")).unwrap(),
         ),
@@ -55,9 +55,12 @@ impl Pass for ParseOwned {
     }
 
     fn run(&self, input: SourceIr) -> Result<DocumentIr, Infallible> {
-        let (address, format, text) = input.into_parts();
+        let (address, format, subject, text) = input.into_parts();
         let tree = DocTree::parse(&text);
-        Ok(DocumentIr::new(SourceIr::new(address, format, text), tree))
+        Ok(DocumentIr::new(
+            SourceIr::new(address, format, subject, text),
+            tree,
+        ))
     }
 }
 
@@ -104,7 +107,7 @@ impl Pass for EmitDocuments {
         }
         let bytes = input
             .into_iter()
-            .flat_map(|document| document.into_parts().0.into_parts().2.into_bytes())
+            .flat_map(|document| document.into_parts().0.into_parts().3.into_bytes())
             .collect();
         Ok(EmittedIr::testing(
             ArtifactContext::compatibility(StaticCompileMode::Plain),

@@ -10,7 +10,10 @@
 use std::sync::Arc;
 
 use crate::DocTree;
-use crate::compiler::ir::{DocumentAddress, DocumentIr, SourceIr};
+use crate::compiler::ir::{
+    DocumentAddress, DocumentIr, DocumentProvider, DocumentSubject, SourceIr,
+};
+use crate::compiler::worklist::document_key;
 
 use super::behavior::{TransformBehavior, TransformBehaviorError};
 use super::plan::{TransformConfig, TransformStage};
@@ -55,6 +58,7 @@ impl TransformBehavior for AppendBlockSource {
         Ok(SourceIr::new(
             input.address().clone(),
             input.format().clone(),
+            input.subject().clone(),
             text,
         ))
     }
@@ -187,15 +191,122 @@ impl TransformBehavior for BlankOriginSource {
                 path: "boot/x.md".to_string(),
             },
             input.format().clone(),
+            // The subject rides through untouched: the fault under test is
+            // the blank origin, not a moved subject.
+            input.subject().clone(),
             input.text().to_string(),
         ))
     }
 }
 
+/// Returns a source whose subject claims a different declared path: the T7
+/// carrier is immutable, so the inter-pass verifier must refuse it and name
+/// `subject.declared_path`.
+pub(super) struct RetargetSubjectSource;
+
+impl TransformBehavior for RetargetSubjectSource {
+    fn name(&self) -> &str {
+        "test-source-retarget-subject"
+    }
+    fn epoch(&self) -> u32 {
+        1
+    }
+    fn stage(&self) -> TransformStage {
+        TransformStage::Source
+    }
+    fn run_source(
+        &self,
+        _config: Option<&TransformConfig>,
+        input: SourceIr,
+    ) -> Result<SourceIr, TransformBehaviorError> {
+        Ok(SourceIr::new(
+            input.address().clone(),
+            input.format().clone(),
+            DocumentSubject::declared(DocumentProvider::Undetermined, FORGED_PATH),
+            input.text().to_string(),
+        ))
+    }
+}
+
+/// The same forgery one position later: a document-position behavior may
+/// rewrite the tree, never the subject its source carries.
+pub(super) struct RetargetSubjectDocument;
+
+impl TransformBehavior for RetargetSubjectDocument {
+    fn name(&self) -> &str {
+        "test-document-retarget-subject"
+    }
+    fn epoch(&self) -> u32 {
+        1
+    }
+    fn stage(&self) -> TransformStage {
+        TransformStage::Document
+    }
+    fn run_document(
+        &self,
+        _config: Option<&TransformConfig>,
+        input: DocumentIr,
+    ) -> Result<DocumentIr, TransformBehaviorError> {
+        let (source, tree) = input.into_parts();
+        let (address, format, _subject, text) = source.into_parts();
+        Ok(DocumentIr::new(
+            SourceIr::new(
+                address,
+                format,
+                DocumentSubject::declared(DocumentProvider::Undetermined, FORGED_PATH),
+                text,
+            ),
+            tree,
+        ))
+    }
+}
+
+/// The one forged path both subject-rewriting vehicles claim.
+pub(super) const FORGED_PATH: &str = "boot/forged.md";
+
 thread_local! {
     pub(super) static DELIVERED_CONFIGS: std::cell::RefCell<Vec<&'static str>> = const {
         std::cell::RefCell::new(Vec::new())
     };
+    /// One `(address label, declared path, provider spelling)` row per
+    /// document the document position saw, in invocation order.
+    ///
+    /// The provider is recorded as its own rendering rather than as "is there
+    /// one": the two absences are DIFFERENT answers, and a boolean would fuse
+    /// exactly the distinction the carrier exists to keep.
+    pub(super) static OBSERVED_SUBJECTS: std::cell::RefCell<Vec<(String, String, String)>> = const {
+        std::cell::RefCell::new(Vec::new())
+    };
+}
+
+/// Records the subject every document arrives with, without touching it.
+pub(super) struct RecordingSubjects;
+
+impl TransformBehavior for RecordingSubjects {
+    fn name(&self) -> &str {
+        "test-record-subject"
+    }
+    fn epoch(&self) -> u32 {
+        1
+    }
+    fn stage(&self) -> TransformStage {
+        TransformStage::Document
+    }
+    fn run_document(
+        &self,
+        _config: Option<&TransformConfig>,
+        input: DocumentIr,
+    ) -> Result<DocumentIr, TransformBehaviorError> {
+        let source = input.source();
+        let subject = source.subject();
+        let row = (
+            document_key(source.address()).label(),
+            subject.declared_path().to_string(),
+            subject.provider().to_string(),
+        );
+        OBSERVED_SUBJECTS.with(|rows| rows.borrow_mut().push(row));
+        Ok(input)
+    }
 }
 
 /// Records the delivered config envelope word for each invocation.

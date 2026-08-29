@@ -7,7 +7,9 @@
 use super::super::bounded::preview;
 use super::inventory::{AddressVisitor, addresses};
 use super::{closure, documents, emitted, lane, source_docs};
-use crate::compiler::wire::{G_SCALAR_IDS, IrWireError, gate, require_scalar, wire};
+use crate::compiler::wire::{
+    G_SCALAR_IDS, IrWireError, gate, require_declared_path, require_scalar, wire,
+};
 
 pub(super) fn run(ir: &wire::Ir) -> Result<(), IrWireError> {
     // Every address PIECE is an identity, and it is judged here — before any
@@ -72,7 +74,38 @@ fn source_doc(doc: &wire::SourceDoc) -> Result<(), IrWireError> {
         require_scalar("static entry origin", &entry.origin)?;
         require_scalar("static entry path", &entry.path)?;
     }
-    Ok(())
+    subject(&doc.subject)
+}
+
+/// A document subject's identities: the declared path a `paths` selector
+/// dimension matches, and every coordinate component of a provider that names
+/// one. The provider's own grammar (a reverse-domain group, a kebab-case name)
+/// is the domain constructor's law and fires later, at construction — this
+/// phase owns the shared non-blank/no-newline rule, plus the declared path's
+/// separator law, which is a spelling question and therefore belongs to the
+/// spelling phase.
+///
+/// The three componentless arms are listed rather than swept by a wildcard: a
+/// seventh provider arm must come here and say whether it carries identities,
+/// instead of silently defaulting into "nothing to check".
+fn subject(value: &wire::DocumentSubject) -> Result<(), IrWireError> {
+    require_declared_path("subject declared path", &value.declared_path)?;
+    match &value.provider {
+        wire::DocumentProvider::Unclaimed(_)
+        | wire::DocumentProvider::Undetermined(_)
+        | wire::DocumentProvider::HostVirtualWorkspace(_) => Ok(()),
+        wire::DocumentProvider::Dependency(arm) => {
+            require_scalar("subject provider group", &arm.group)?;
+            require_scalar("subject provider name", &arm.name)
+        }
+        wire::DocumentProvider::HostCoordinate(arm) => {
+            require_scalar("subject provider group", &arm.group)?;
+            require_scalar("subject provider name", &arm.name)
+        }
+        wire::DocumentProvider::HostUngrouped(arm) => {
+            require_scalar("subject provider host name", &arm.name)
+        }
+    }
 }
 
 fn doc_tree(tree: &wire::DocTree) -> Result<(), IrWireError> {

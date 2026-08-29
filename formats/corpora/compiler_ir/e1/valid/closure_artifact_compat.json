@@ -253,6 +253,7 @@
                 }
               },
               "format": "markdown",
+              "subject": {"provider": {"kind": "host-ungrouped", "name": "demo"}, "declared_path": "manual/base.md"},
               "text": "# Base {#base}\n\nShared base body.\n"
             },
             "tree": {

@@ -18,7 +18,7 @@ fn spec_address(raw: &str) -> SpecAddress {
 }
 
 fn spec_source(anchor: &str, text: &str) -> SourceIr {
-    SourceIr::new(
+    SourceIr::reached(
         DocumentAddress::Spec(spec_address(&format!(
             "spec://org.demo/pkg/common/{anchor}#{anchor}"
         ))),
@@ -28,7 +28,7 @@ fn spec_source(anchor: &str, text: &str) -> SourceIr {
 }
 
 fn static_source(origin: &str, path: &str, text: &str) -> SourceIr {
-    SourceIr::new(
+    SourceIr::reached(
         DocumentAddress::StaticEntry {
             origin: origin.to_string(),
             path: path.to_string(),
@@ -58,7 +58,7 @@ fn a_source_carrier_with_identity_and_arbitrary_text_passes() {
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#INTER-PASS-VERIFIER")]
 fn a_blank_static_entry_identity_is_a_typed_error() {
-    let blank = SourceIr::new(
+    let blank = SourceIr::reached(
         DocumentAddress::StaticEntry {
             origin: "  ".to_string(),
             path: "boot/entry.md".to_string(),
@@ -76,6 +76,42 @@ fn a_blank_static_entry_identity_is_a_typed_error() {
         ),
         "{error:?}"
     );
+}
+
+/// The `paths` contract on a live value, at the one boundary a REACHED
+/// subject crosses: its declared path comes from the address rather than from
+/// a contribution row, so the artifact plan never judged it.
+///
+/// A `\` is not a separator to the kernel's `paths` globs, so a document
+/// carrying one would not match the wrong transforms — it would match none,
+/// silently. The verifier refuses the value instead of normalising it: a
+/// rewrite would invent an identity the producer did not state.
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#INTER-PASS-VERIFIER")]
+fn a_backslashed_declared_path_is_a_typed_error() {
+    let backslashed = SourceIr::reached(
+        DocumentAddress::StaticEntry {
+            origin: "host".to_string(),
+            path: "boot\\entry.md".to_string(),
+        },
+        SourceFormatId::new("markdown").unwrap(),
+        "text",
+    );
+    let error = verify(&AnyIr::Source(backslashed)).unwrap_err();
+    let VerificationError::BackslashedSourcePath { field, value } = &error else {
+        panic!("the separator law has its own typed arm: {error:?}")
+    };
+    assert_eq!(*field, "subject declared path");
+    assert_eq!(value, "boot\\entry.md");
+
+    // The forward-slashed twin passes the same call, so the red is the
+    // separator and not the static-entry shape.
+    verify(&AnyIr::Source(static_source(
+        "host",
+        "boot/entry.md",
+        "text",
+    )))
+    .unwrap();
 }
 
 // --- Document ----------------------------------------------------------
@@ -144,12 +180,12 @@ fn a_repeated_pinless_spec_key_is_refused_with_both_positions() {
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#INTER-PASS-VERIFIER")]
 fn revision_pins_collide_but_anchors_stay_distinct() {
-    let pinned = SourceIr::new(
+    let pinned = SourceIr::reached(
         DocumentAddress::Spec(spec_address("spec://org.demo/pkg/common/doc#root~r1")),
         SourceFormatId::new("markdown").unwrap(),
         "# Root {#root}\n",
     );
-    let repinned = SourceIr::new(
+    let repinned = SourceIr::reached(
         DocumentAddress::Spec(spec_address("spec://org.demo/pkg/common/doc#root~r2")),
         SourceFormatId::new("markdown").unwrap(),
         "# Root {#root}\n",
@@ -213,7 +249,7 @@ fn static_entry_keys_are_typed_so_a_joined_spelling_collision_stays_distinct() {
 
     let batch = Documents::new(vec![
         document(
-            SourceIr::new(
+            SourceIr::reached(
                 first,
                 SourceFormatId::new("markdown").unwrap(),
                 "# A {#a}\n",
@@ -221,7 +257,7 @@ fn static_entry_keys_are_typed_so_a_joined_spelling_collision_stays_distinct() {
             "# A {#a}\n",
         ),
         document(
-            SourceIr::new(
+            SourceIr::reached(
                 second,
                 SourceFormatId::new("markdown").unwrap(),
                 "# B {#b}\n",

@@ -15,6 +15,7 @@
         }
       },
       "format": "markdown",
+      "subject": {"provider": {"kind": "host-virtual-workspace"}, "declared_path": "boot/10-guide.md"},
       "text": "# Guide {#root}\n\n##FACT-A One exact fact.\n\n#use spec://org.demo/lib/manual/part.md\n#use spec://org.demo/lib/manual/part.md#api~r2 as Part\n#embed spec://org.demo/lib/manual/part.md#api as Part\n\nSee @spec://org.demo/lib/manual/part.md#api for details.\n\n## Install {#install}\nBody line.\n"
     },
     "tree": {

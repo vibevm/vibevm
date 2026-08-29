@@ -24,7 +24,7 @@ fn a_real_pass_failure_records_one_event_and_keeps_the_error_identity() {
     let schedule = BuiltinSchedule::linked_for_test(&plan(), &TransformRegistry::builtins())
         .expect("the empty-plan schedule builds");
     let bad = || {
-        SourceIr::new(
+        SourceIr::reached(
             DocumentAddress::Spec(
                 SpecAddress::parse("spec://org.demo/pkg/common/doc#root").unwrap(),
             ),

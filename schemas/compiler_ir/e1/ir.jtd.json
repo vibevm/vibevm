@@ -3,7 +3,7 @@
     "description": "Epoch-1 compiler IR wire: the six manager carriers of PROP-054 §7.4/§14.6, frozen from the landed R3 domain types. One whole value of the level being passed crosses per invocation (`##WHOLE-IR-WIRE`); source/document are one addressed document, documents is the explicit document batch, closure/lane/emitted are one complete final artifact (`##IR-LEVELS`, SPEC-DEBT §8.8). The same document is the R3.4 trace snapshot — no second trace-only IR shape exists. TWO metadata sets sit below and must not be confused: `x-conversion-gates` is what the strict domain decoder OWES on every carrier it is handed, including one a plugin transformed and returned; `x-corpus-producer-oracles` is characterization of what THIS corpus's builtin passes emitted. A plugin may legally return a verifier-valid closure whose anchors the builtin `qualify` would have spelled differently or whose order the builtin `close` would not have chosen — the decoder must accept it, and only the corpus tests hold it to the builtin spelling.",
     "x-conversion-gates": [
       "ir_schema == 1 at the manager gate before any invoke, and level/cardinality equal the variant they ride (belt: each is a single-value enum, so a mismatch is already reader-red)",
-      "every id is non-blank and free of newline/NUL (`ArtifactId`, `ContributionMeta`, `SourceFormatId`, origins, paths); `BackendId` also matches the id charset",
+      "every id is non-blank and free of newline/NUL (`ArtifactId`, `ContributionMeta`, `SourceFormatId`, origins, paths, and a `document_subject`'s `declared_path` plus every `document_provider` coordinate component); a `declared_path` is additionally forward-slashed, since `\\` is not a separator to a `paths` selector glob; `BackendId` also matches the id charset",
       "the artifact id/target/frame/mode tuple is one `ArtifactContext::new` row, and a `static-lane` generated_path carries the target's extension",
       "a normal/hoisted contribution's origin coordinate equals its target package coordinate; a hoisted target is an unversioned whole document (no version, no anchor, no pin)",
       "every digest is 64 lowercase hex characters; emitted bytes are canonical padded standard base64 — both validated BEFORE any allocation from them",
@@ -194,11 +194,40 @@
         "directives": { "ref": "directives" }
       }
     },
+    "document_provider": {
+      "metadata": { "description": "The typed provider identity a document subject carries (`DocumentProvider`, PROP-054 `##CONTRIB-SELECTOR`): the value a source/document selector's `packages` dimension is matched against, spelled as typed coordinate components rather than a rendered display string. The carrier is TOTAL — every document names one arm, and there is no missing-key spelling of absence. The four coordinate arms mirror the kernel's dependency-coordinate and host shapes exactly (`DependencyProviderId`; `HostIdentity`'s ungrouped / coordinate / virtual-workspace spellings), so a match-time adapter reconstructs the typed identity without parsing anything. The two remaining arms are the two DIFFERENT absences, and a full-IR plugin must be able to tell them apart: `unclaimed` says no owner exists to name, `undetermined` says an owner exists and was not resolved. Collapsing them would hand a selector adapter one input for two verdicts." },
+      "discriminator": "kind",
+      "mapping": {
+        "unclaimed": { "properties": {}, "metadata": { "description": "No contribution row declared this document into this artifact, so no provider is claimed. A PERMANENT and correct answer: the address' authority names the package that owns the document, which is not the question a `packages` dimension asks. An authored `packages` dimension matching nothing is the final verdict here, not a placeholder. Every document the compiler REACHED through `#use`, `#source` or `#embed` carries this arm." } },
+        "undetermined": { "properties": {}, "metadata": { "description": "A contribution row DID declare this document, and the producer could not determine which typed provider that row names. A TEMPORARY answer, and the one every document written by today's producers carries: they receive the declaring owner as a display string, and the typed identity reaches the subject only through the owner-view adapter. A selector adapter may not read it as `unclaimed`'s matches-nothing — the honest reading is that the answer is not yet known." } },
+        "dependency": {
+          "metadata": { "description": "An installed dependency provider's versionless coordinate." },
+          "properties": { "group": { "type": "string" }, "name": { "type": "string" } }
+        },
+        "host-ungrouped": {
+          "metadata": { "description": "A host project with no group, named exactly as authored." },
+          "properties": { "name": { "type": "string" } }
+        },
+        "host-coordinate": {
+          "metadata": { "description": "A grouped project or package-role host, carrying the same validated coordinate a dependency does." },
+          "properties": { "group": { "type": "string" }, "name": { "type": "string" } }
+        },
+        "host-virtual-workspace": { "properties": {}, "metadata": { "description": "A coordinator that may control dependencies but declares none; it has no coordinate components." } }
+      }
+    },
+    "document_subject": {
+      "metadata": { "description": "The immutable selector subject of ONE addressed document (`DocumentSubject`): the provider a source/document selector's `packages` dimension matches and the path its `paths` dimension matches. Per addressed document, never per artifact. It is CARRIED, not re-derived — a contribution's `declared_path` is the path the contributing row declared and may legitimately differ from its address' `doc_path` — and the inter-pass verifier refuses a source/document transform that rewrites either member. Required: a decoder refuses a carrier that omits it rather than inventing one, because an invented subject would silently change which transforms a document is in scope for." },
+      "properties": {
+        "provider": { "ref": "document_provider" },
+        "declared_path": { "type": "string", "metadata": { "description": "The document's declared path, forward-slashed and case-sensitive (the selector adapter contract). Conversion rejects a blank or newline-bearing value, and also a backslashed one: the kernel compiles a `paths` glob with a literal separator, so `\\` is not a separator to any pattern and a backslashed path silently matches nothing. The refusal is a refusal, never a normalisation — rewriting the separator would invent an identity the producer did not state." } }
+      }
+    },
     "source_doc": {
-      "metadata": { "description": "Source IR payload (`SourceIr`): typed address, frontend format, raw text." },
+      "metadata": { "description": "Source IR payload (`SourceIr`): typed address, frontend format, immutable document subject, raw text." },
       "properties": {
         "address": { "ref": "document_address" },
         "format": { "type": "string", "metadata": { "description": "Open frontend identity (`SourceFormatId`), e.g. `markdown`, `xml`, or a registered custom format. Deliberately not a closed vocabulary: frontends register without a schema bump. Conversion rejects a blank value." } },
+        "subject": { "ref": "document_subject" },
         "text": { "type": "string" }
       }
     },

@@ -16,6 +16,7 @@
           }
         },
         "format": "markdown",
+        "subject": {"provider": {"kind": "dependency", "group": "org.demo", "name": "lib"}, "declared_path": "boot/10-guide.md"},
         "text": "# Guide {#root}\n\n##FACT-A One exact fact.\n\n#use spec://org.demo/lib/manual/part.md\n#use spec://org.demo/lib/manual/part.md#api~r2 as Part\n#embed spec://org.demo/lib/manual/part.md#api as Part\n\nSee @spec://org.demo/lib/manual/part.md#api for details.\n\n## Install {#install}\nBody line.\n"
       },
       "tree": {
@@ -144,6 +145,7 @@
           }
         },
         "format": "markdown",
+        "subject": {"provider": {"kind": "host-coordinate", "group": "org.demo", "name": "app"}, "declared_path": "boot/20-part.md"},
         "text": "# Part {#api}\n\nReference body.\n\n```text\nunterminated sample\n"
       },
       "tree": {

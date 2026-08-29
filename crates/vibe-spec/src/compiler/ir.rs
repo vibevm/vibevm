@@ -16,6 +16,8 @@ use super::source_snapshot::SourceResolutionSnapshot;
 
 mod artifact;
 pub use artifact::*;
+mod subject;
+pub(crate) use subject::*;
 mod target;
 pub use target::*;
 mod emitted;
@@ -107,20 +109,42 @@ pub(crate) struct IrIdError {
 pub(crate) struct SourceIr {
     address: DocumentAddress,
     format: SourceFormatId,
+    subject: DocumentSubject,
     text: String,
 }
 
 impl SourceIr {
+    /// One document whose subject is CARRIED from whatever declared it.
+    ///
+    /// The subject is an explicit argument rather than something this
+    /// constructor derives: it is selector identity, and a constructor that
+    /// invented it would silently decide which transforms the document is in
+    /// scope for. A document nothing declared uses [`SourceIr::reached`],
+    /// which names that state instead of defaulting into it.
     pub(crate) fn new(
         address: DocumentAddress,
         format: SourceFormatId,
+        subject: DocumentSubject,
         text: impl Into<String>,
     ) -> Self {
         Self {
             address,
             format,
+            subject,
             text: text.into(),
         }
+    }
+
+    /// One document the compiler REACHED rather than one a contribution
+    /// declared: its subject is [`DocumentSubject::reached`] of its own
+    /// address.
+    pub(crate) fn reached(
+        address: DocumentAddress,
+        format: SourceFormatId,
+        text: impl Into<String>,
+    ) -> Self {
+        let subject = DocumentSubject::reached(&address);
+        Self::new(address, format, subject, text)
     }
 
     pub(crate) fn address(&self) -> &DocumentAddress {
@@ -131,25 +155,33 @@ impl SourceIr {
         &self.format
     }
 
+    /// The immutable selector subject of this document.
+    pub(crate) fn subject(&self) -> &DocumentSubject {
+        &self.subject
+    }
+
     pub(crate) fn text(&self) -> &str {
         &self.text
     }
 
-    /// The only field a source transform may rewrite in place. Address and
-    /// frontend identity remain stable across a source-level transform.
+    /// The only field a source transform may rewrite in place. Address,
+    /// frontend identity and subject remain stable across a source-level
+    /// transform.
     pub(crate) fn text_mut(&mut self) -> &mut String {
         &mut self.text
     }
 
-    pub(crate) fn into_parts(self) -> (DocumentAddress, SourceFormatId, String) {
-        (self.address, self.format, self.text)
+    pub(crate) fn into_parts(self) -> (DocumentAddress, SourceFormatId, DocumentSubject, String) {
+        (self.address, self.format, self.subject, self.text)
     }
 }
 
 /// Parsed document IR for exactly one addressed document.
 ///
 /// The source stays beside the tree so exact text/newline identity remains
-/// available while the current [`DocTree`] is still a source-span tree.
+/// available while the current [`DocTree`] is still a source-span tree. The
+/// document's [`DocumentSubject`] is reached the same way — through
+/// `source().subject()` — so parse mints no second subject to disagree with.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) struct DocumentIr {
     source: SourceIr,

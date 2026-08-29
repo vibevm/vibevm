@@ -15,7 +15,7 @@ fn spec(raw: &str) -> SpecAddress {
 }
 
 fn document(raw: &str, text: &str) -> DocumentIr {
-    let source = SourceIr::new(
+    let source = SourceIr::reached(
         DocumentAddress::Spec(spec(raw)),
         SourceFormatId::canonical_markdown(),
         text,
@@ -34,7 +34,7 @@ fn snapshot(documents: &[(&str, &str)], use_keys: &[&str]) -> EmbedResolutionSna
             .map(|(key, text)| {
                 (
                     (*key).to_string(),
-                    DocumentObservation::Resolved(document(key, text)),
+                    DocumentObservation::resolved(document(key, text)),
                 )
             })
             .collect::<BTreeMap<_, _>>(),

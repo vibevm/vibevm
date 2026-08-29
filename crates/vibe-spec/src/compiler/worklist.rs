@@ -7,7 +7,8 @@ use crate::{DirectiveKind, SectionSource, SpecAddress};
 
 use super::embed_snapshot::EmbedResolutionSnapshot;
 use super::ir::{
-    ArtifactInputKind, ArtifactPlan, DocumentAddress, DocumentIr, SourceFormatId, SourceIr,
+    ArtifactInputKind, ArtifactPlan, DocumentAddress, DocumentIr, DocumentSubject, SourceFormatId,
+    SourceIr,
 };
 use super::source_snapshot::{DocumentObservation, ExpansionObservation, SourceResolutionSnapshot};
 
@@ -79,6 +80,10 @@ pub(crate) fn discover<E>(
                 let mut membership = Vec::new();
                 discover_uses(
                     seed,
+                    // The seed document is the one this contribution DECLARED:
+                    // it carries the row's subject, path and all. Everything
+                    // reached from it declares nothing and carries its own.
+                    input.subject(),
                     source,
                     &parse,
                     &record_use_failure,
@@ -280,7 +285,7 @@ fn observations(
     out.extend(
         resolved
             .iter()
-            .map(|(key, document)| (key.clone(), DocumentObservation::Resolved(document.clone()))),
+            .map(|(key, document)| (key.clone(), DocumentObservation::resolved(document.clone()))),
     );
     out
 }
@@ -288,6 +293,7 @@ fn observations(
 #[allow(clippy::too_many_arguments)]
 fn discover_uses<E>(
     address: &SpecAddress,
+    subject: &DocumentSubject,
     source: &impl SectionSource,
     parse: &impl Fn(SourceIr) -> Result<DocumentIr, E>,
     record_failure: &impl Fn(&SpecAddress, String),
@@ -325,6 +331,7 @@ fn discover_uses<E>(
         let document = parse(SourceIr::new(
             DocumentAddress::Spec(address.clone()),
             SourceFormatId::canonical_markdown(),
+            subject.clone(),
             text,
         ))?;
         discovery_order.push(DiscoveryKey::Spec(key.clone()));
@@ -335,8 +342,10 @@ fn discover_uses<E>(
     }
     let targets = use_addresses(resolved[&key].tree().directives());
     for target in targets {
+        let reached = DocumentSubject::reached(&DocumentAddress::Spec(target.clone()));
         discover_uses(
             &target,
+            &reached,
             source,
             parse,
             record_failure,
@@ -521,7 +530,9 @@ fn observe_document<E>(
     }
     match source.section_text(address) {
         Ok(text) => {
-            let document = parse(SourceIr::new(
+            // A `#source` expansion or `#embed` target: reached, never
+            // declared, so it carries its own address identity as its subject.
+            let document = parse(SourceIr::reached(
                 DocumentAddress::Spec(address.clone()),
                 SourceFormatId::canonical_markdown(),
                 text,

@@ -25,7 +25,7 @@ fn name(value: &str) -> PassName {
 }
 
 fn spec_source(anchor: &str, text: &str) -> SourceIr {
-    SourceIr::new(
+    SourceIr::reached(
         DocumentAddress::Spec(
             crate::SpecAddress::parse(&format!("spec://org.demo/pkg/common/{anchor}#{anchor}"))
                 .unwrap(),
@@ -49,9 +49,9 @@ fn parse_like(name: PassName) -> impl Pass {
         }
 
         fn run(&self, input: SourceIr) -> Result<DocumentIr, Infallible> {
-            let (address, format, text) = input.into_parts();
+            let (address, format, subject, text) = input.into_parts();
             Ok(DocumentIr::new(
-                SourceIr::new(address, format, text.clone()),
+                SourceIr::new(address, format, subject, text.clone()),
                 crate::DocTree::parse(&text),
             ))
         }
@@ -140,7 +140,7 @@ impl DynPass for LyingOutput {
     }
 
     fn run_erased(&self, _input: AnyIr) -> Result<AnyIr, PassSegmentError> {
-        let damaged = SourceIr::new(
+        let damaged = SourceIr::reached(
             DocumentAddress::StaticEntry {
                 origin: " ".to_string(),
                 path: "boot/entry.md".to_string(),
@@ -363,7 +363,7 @@ fn an_invalid_segment_input_names_the_boundary_and_skips_every_pass() {
         .unwrap();
 
     let dirty = Documents::new(vec![DocumentIr::new(
-        SourceIr::new(
+        SourceIr::reached(
             DocumentAddress::StaticEntry {
                 origin: String::new(),
                 path: "boot/entry.md".to_string(),

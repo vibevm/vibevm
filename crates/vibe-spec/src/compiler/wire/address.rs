@@ -1,10 +1,17 @@
 //! Address conversion: `spec://` fields, authorities, and document identity.
 
+use vibe_core::{Group, PackageName};
+
 use crate::{Authority, SpecAddress};
 
-use super::super::ir::{DocumentAddress, SourceFormatId, SourceIr};
+use super::super::ir::{
+    DocumentAddress, DocumentProvider, DocumentSubject, SourceFormatId, SourceIr,
+};
 use super::bounded::{display, preview};
-use super::{G_ADDRESS_REPARSE, G_SCALAR_IDS, IrWireError, gate, require_scalar, wire};
+use super::{
+    G_ADDRESS_REPARSE, G_SCALAR_IDS, IrWireError, construction, gate, require_declared_path,
+    require_scalar, wire,
+};
 
 /// Decode one `spec://` address, re-parsing its raw spelling against the
 /// fields carried beside it (the address-reparse gate: raw drift is red).
@@ -109,13 +116,77 @@ pub(super) fn decode_document_address(
     }
 }
 
-/// The source-level payload: typed address, open frontend identity, raw text.
+/// The source-level payload: typed address, open frontend identity, immutable
+/// document subject, raw text.
 pub(super) fn decode_source_doc(value: &wire::SourceDoc) -> Result<SourceIr, IrWireError> {
     let address = decode_document_address(&value.address)?;
     require_scalar("source format", value.format.as_str())?;
     let format = SourceFormatId::new(value.format.clone())
         .map_err(|_| gate(G_SCALAR_IDS, "source format must not be blank"))?;
-    Ok(SourceIr::new(address, format, value.text.clone()))
+    let subject = decode_document_subject(&value.subject)?;
+    Ok(SourceIr::new(address, format, subject, value.text.clone()))
+}
+
+/// One document's selector subject.
+///
+/// The member is REQUIRED on the wire, so a carrier that omits it is already
+/// red at the strict reader: a decoder that defaulted it would silently decide
+/// which transforms the document is in scope for. The path obeys the full
+/// `paths` contract here, separator and all, because that is what a selector
+/// dimension will be matched against.
+pub(super) fn decode_document_subject(
+    value: &wire::DocumentSubject,
+) -> Result<DocumentSubject, IrWireError> {
+    require_declared_path("subject declared path", &value.declared_path)?;
+    let provider = decode_document_provider(&value.provider)?;
+    Ok(DocumentSubject::declared(provider, &value.declared_path))
+}
+
+/// The typed provider a `packages` selector dimension would be matched
+/// against.
+///
+/// The carrier is total: `unclaimed` and `undetermined` are modelled arms, not
+/// a missing key, and they stay APART across the wire — the whole point of the
+/// two spellings is that a plugin can tell "nothing declared this" from "the
+/// declaring owner was not resolved". Every coordinate arm rebuilds through the
+/// one validating constructor each component already has, so a carrier claiming
+/// an ill-formed coordinate is refused by the domain law, never quietly stored
+/// as a display string.
+fn decode_document_provider(
+    value: &wire::DocumentProvider,
+) -> Result<DocumentProvider, IrWireError> {
+    let provider = match value {
+        wire::DocumentProvider::Unclaimed(_) => DocumentProvider::Unclaimed,
+        wire::DocumentProvider::Undetermined(_) => DocumentProvider::Undetermined,
+        wire::DocumentProvider::Dependency(arm) => DocumentProvider::Dependency {
+            group: coordinate_group(&arm.group)?,
+            name: coordinate_name(&arm.name)?,
+        },
+        wire::DocumentProvider::HostUngrouped(arm) => {
+            require_scalar("subject provider host name", &arm.name)?;
+            DocumentProvider::HostUngrouped {
+                name: arm.name.clone(),
+            }
+        }
+        wire::DocumentProvider::HostCoordinate(arm) => DocumentProvider::HostCoordinate {
+            group: coordinate_group(&arm.group)?,
+            name: coordinate_name(&arm.name)?,
+        },
+        wire::DocumentProvider::HostVirtualWorkspace(_) => DocumentProvider::HostVirtualWorkspace,
+    };
+    Ok(provider)
+}
+
+fn coordinate_group(value: &str) -> Result<Group, IrWireError> {
+    require_scalar("subject provider group", value)?;
+    Group::parse(value)
+        .map_err(|source| construction(format!("subject provider group: {}", display(source))))
+}
+
+fn coordinate_name(value: &str) -> Result<PackageName, IrWireError> {
+    require_scalar("subject provider name", value)?;
+    PackageName::parse(value)
+        .map_err(|source| construction(format!("subject provider name: {}", display(source))))
 }
 
 pub(super) fn encode_spec_address(value: &SpecAddress) -> wire::SpecAddress {
@@ -165,6 +236,45 @@ pub(super) fn encode_source_doc(value: &SourceIr) -> wire::SourceDoc {
     wire::SourceDoc {
         address: encode_document_address(value.address()),
         format: value.format().as_str().to_string(),
+        subject: encode_document_subject(value.subject()),
         text: value.text().to_string(),
+    }
+}
+
+pub(super) fn encode_document_subject(value: &DocumentSubject) -> wire::DocumentSubject {
+    wire::DocumentSubject {
+        declared_path: value.declared_path().to_string(),
+        provider: encode_document_provider(value.provider()),
+    }
+}
+
+fn encode_document_provider(value: &DocumentProvider) -> wire::DocumentProvider {
+    match value {
+        DocumentProvider::Unclaimed => {
+            wire::DocumentProvider::Unclaimed(Box::new(wire::DocumentProviderUnclaimed {}))
+        }
+        DocumentProvider::Undetermined => {
+            wire::DocumentProvider::Undetermined(Box::new(wire::DocumentProviderUndetermined {}))
+        }
+        DocumentProvider::Dependency { group, name } => {
+            wire::DocumentProvider::Dependency(Box::new(wire::DocumentProviderDependency {
+                group: group.to_string(),
+                name: name.as_str().to_string(),
+            }))
+        }
+        DocumentProvider::HostUngrouped { name } => {
+            wire::DocumentProvider::HostUngrouped(Box::new(wire::DocumentProviderHostUngrouped {
+                name: name.clone(),
+            }))
+        }
+        DocumentProvider::HostCoordinate { group, name } => {
+            wire::DocumentProvider::HostCoordinate(Box::new(wire::DocumentProviderHostCoordinate {
+                group: group.to_string(),
+                name: name.as_str().to_string(),
+            }))
+        }
+        DocumentProvider::HostVirtualWorkspace => wire::DocumentProvider::HostVirtualWorkspace(
+            Box::new(wire::DocumentProviderHostVirtualWorkspace {}),
+        ),
     }
 }

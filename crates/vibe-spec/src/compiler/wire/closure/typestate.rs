@@ -238,7 +238,7 @@ fn decode_document_observation(
     value: &wire::DocumentObservation,
 ) -> Result<DocumentObservation, IrWireError> {
     match value {
-        wire::DocumentObservation::Resolved(resolved) => Ok(DocumentObservation::Resolved(
+        wire::DocumentObservation::Resolved(resolved) => Ok(DocumentObservation::resolved(
             decode_document_ir(&resolved.document)?,
         )),
         wire::DocumentObservation::Failed(failed) => Ok(DocumentObservation::Failed {

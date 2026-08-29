@@ -10,8 +10,8 @@
 use std::fmt;
 
 use super::super::ir::{
-    AbsorptionPlan, AbsorptionState, ArtifactContext, ClosureIr, DocumentAddress, LaneIr,
-    LinkInputDigest, OriginRename, QualificationState, SourceFormatId,
+    AbsorptionPlan, AbsorptionState, ArtifactContext, ClosureIr, DocumentAddress, DocumentSubject,
+    LaneIr, LinkInputDigest, OriginRename, QualificationState, SourceFormatId, SourceIr,
 };
 use super::super::pass::AnyIr;
 use super::super::qualify::analyze_absorption;
@@ -21,9 +21,13 @@ use super::{VerificationError, address_label};
 #[derive(Debug, thiserror::Error)]
 pub(crate) enum TransitionError {
     #[error(
-        "a source/document pass changed the carrier identity: expected `{expected}`, got `{actual}`"
+        "a source/document pass rewrote the immutable document identity field `{field}`: expected `{expected}`, got `{actual}`"
     )]
-    Identity { expected: String, actual: String },
+    DocumentIdentity {
+        field: DocumentIdentityField,
+        expected: String,
+        actual: String,
+    },
     #[error("absorption typestate regressed from {from} to {to}")]
     AbsorptionRegression {
         from: &'static str,
@@ -86,16 +90,76 @@ impl fmt::Display for LaneProvenanceField {
     }
 }
 
+/// Which immutable member of one addressed document a source/document
+/// transform moved.
+///
+/// The same idiom the lane arm uses — a named field beside expected/actual —
+/// rather than one fused string: a caller classifies on the member, and the
+/// two halves of the subject are named apart because they answer the two
+/// different selector dimensions. `text` and the parsed tree are deliberately
+/// absent: they are the working surface a source/document transform owns.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(crate) enum DocumentIdentityField {
+    Address,
+    Format,
+    SubjectProvider,
+    SubjectDeclaredPath,
+}
+
+impl DocumentIdentityField {
+    /// The member's exact spelling in the source value, so a refusal names
+    /// the thing a reader can go and look at.
+    pub(crate) fn as_str(self) -> &'static str {
+        match self {
+            Self::Address => "address",
+            Self::Format => "format",
+            Self::SubjectProvider => "subject.provider",
+            Self::SubjectDeclaredPath => "subject.declared_path",
+        }
+    }
+}
+
+impl fmt::Display for DocumentIdentityField {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str(self.as_str())
+    }
+}
+
+/// The immutable identity of one addressed document, borrowed for comparison.
+///
+/// Address, frontend format and subject travel together because they are the
+/// same statement: *which* document this invocation is about. A source
+/// transform may rewrite the text and a parse-position transform the tree;
+/// neither may change the answer to that question.
+#[derive(Debug, Clone, Copy)]
+struct DocumentIdentity<'ir> {
+    address: &'ir DocumentAddress,
+    format: &'ir SourceFormatId,
+    subject: &'ir DocumentSubject,
+}
+
+impl<'ir> DocumentIdentity<'ir> {
+    fn of(source: &'ir SourceIr) -> Self {
+        Self {
+            address: source.address(),
+            format: source.format(),
+            subject: source.subject(),
+        }
+    }
+}
+
 /// Ephemeral, private comparison evidence derived from one valid pass input.
 #[derive(Debug)]
 pub(crate) enum VerificationWitness {
     Source {
         address: DocumentAddress,
         format: SourceFormatId,
+        subject: DocumentSubject,
     },
     Document {
         address: DocumentAddress,
         format: SourceFormatId,
+        subject: DocumentSubject,
     },
     Documents,
     Closure(ClosureWitness),
@@ -173,10 +237,12 @@ pub(super) fn witness(ir: &AnyIr) -> Result<VerificationWitness, VerificationErr
         AnyIr::Source(source) => Ok(VerificationWitness::Source {
             address: source.address().clone(),
             format: source.format().clone(),
+            subject: source.subject().clone(),
         }),
         AnyIr::Document(document) => Ok(VerificationWitness::Document {
             address: document.source().address().clone(),
             format: document.source().format().clone(),
+            subject: document.source().subject().clone(),
         }),
         AnyIr::Documents(_) => Ok(VerificationWitness::Documents),
         AnyIr::Closure(closure) => Ok(VerificationWitness::Closure(ClosureWitness {
@@ -216,25 +282,41 @@ pub(crate) fn lane_witness(lane: &LaneIr) -> LaneWitness {
 
 pub(super) fn verify(before: &VerificationWitness, ir: &AnyIr) -> Result<(), VerificationError> {
     match (before, ir) {
-        (VerificationWitness::Source { address, format }, AnyIr::Source(actual)) => {
-            verify_identity(address, format, actual.address(), actual.format())
-        }
-        (VerificationWitness::Source { address, format }, AnyIr::Document(actual)) => {
-            verify_identity(
+        (
+            VerificationWitness::Source {
                 address,
                 format,
-                actual.source().address(),
-                actual.source().format(),
-            )
-        }
-        (VerificationWitness::Document { address, format }, AnyIr::Document(actual)) => {
-            verify_identity(
+                subject,
+            },
+            AnyIr::Source(actual),
+        ) => verify_identity(
+            DocumentIdentity {
                 address,
                 format,
-                actual.source().address(),
-                actual.source().format(),
-            )
-        }
+                subject,
+            },
+            DocumentIdentity::of(actual),
+        ),
+        (
+            VerificationWitness::Source {
+                address,
+                format,
+                subject,
+            }
+            | VerificationWitness::Document {
+                address,
+                format,
+                subject,
+            },
+            AnyIr::Document(actual),
+        ) => verify_identity(
+            DocumentIdentity {
+                address,
+                format,
+                subject,
+            },
+            DocumentIdentity::of(actual.source()),
+        ),
         (VerificationWitness::Closure(witness), AnyIr::Closure(actual)) => {
             verify_closure_transition(witness, actual)
         }
@@ -329,30 +411,57 @@ fn hex_digit(nibble: u8) -> char {
 }
 
 /// A source-level transform may alter only text; a parse-position lowering may
-/// not retarget the document it was handed.
+/// not retarget the document it was handed, and neither may move its subject.
+///
+/// The subject is checked here rather than beside the text because it is
+/// exactly the same kind of claim the address is: *which* document this is,
+/// and therefore which selectors scope a transform onto it. A transform that
+/// could rewrite it would decide its own scope — the one thing the plan owns.
+/// Each member renders in its own honest spelling, so a refusal names a
+/// document key, a format id or a path, never a Rust field dump for all three.
 fn verify_identity(
-    expected_address: &DocumentAddress,
-    expected_format: &SourceFormatId,
-    actual_address: &DocumentAddress,
-    actual_format: &SourceFormatId,
+    expected: DocumentIdentity<'_>,
+    actual: DocumentIdentity<'_>,
 ) -> Result<(), VerificationError> {
-    if expected_address == actual_address && expected_format == actual_format {
-        Ok(())
-    } else {
-        Err(TransitionError::Identity {
-            expected: format!(
-                "{} [{}]",
-                address_label(expected_address),
-                expected_format.as_str()
-            ),
-            actual: format!(
-                "{} [{}]",
-                address_label(actual_address),
-                actual_format.as_str()
-            ),
-        }
-        .into())
+    if expected.address != actual.address {
+        return Err(moved(
+            DocumentIdentityField::Address,
+            address_label(expected.address),
+            address_label(actual.address),
+        ));
     }
+    if expected.format != actual.format {
+        return Err(moved(
+            DocumentIdentityField::Format,
+            expected.format.as_str().to_string(),
+            actual.format.as_str().to_string(),
+        ));
+    }
+    if expected.subject.provider() != actual.subject.provider() {
+        return Err(moved(
+            DocumentIdentityField::SubjectProvider,
+            expected.subject.provider().to_string(),
+            actual.subject.provider().to_string(),
+        ));
+    }
+    if expected.subject.declared_path() != actual.subject.declared_path() {
+        return Err(moved(
+            DocumentIdentityField::SubjectDeclaredPath,
+            expected.subject.declared_path().to_string(),
+            actual.subject.declared_path().to_string(),
+        ));
+    }
+    Ok(())
+}
+
+/// One moved document-identity member, with both values named in the refusal.
+fn moved(field: DocumentIdentityField, expected: String, actual: String) -> VerificationError {
+    TransitionError::DocumentIdentity {
+        field,
+        expected,
+        actual,
+    }
+    .into()
 }
 
 fn verify_closure_transition(

@@ -27,6 +27,7 @@ use crate::compiler::builtin::{
 use crate::compiler::emit::{emit_invocations, reset_emit_invocations};
 use crate::compiler::ir::emitted_output_fingerprint;
 use crate::compiler::trace::{CompileTraceSink, PassTraceEvent};
+use crate::compiler::verify::DocumentIdentityField;
 
 use super::behavior::TransformBehaviorError;
 use super::config::{ConfigTable, ConfigValue};
@@ -374,6 +375,166 @@ fn an_emitted_path_behavior_failure_is_classified_through_the_same_shared_helper
         ),
         "the emitted path keeps the typed fault through the shared classifier: {public}"
     );
+}
+
+/// The T7 carrier at the position that will evaluate selectors: every
+/// discovered document arrives with its OWN subject, and the two ABSENCES are
+/// two different answers in one compile.
+///
+/// The exact set is asserted, not the count. Two of the five rows are the
+/// load-bearing ones for the path: the alpha and omega seeds carry the path
+/// their contribution row DECLARED (`boot/alpha.md`, `boot/omega.md`), which
+/// the addresses `…/boot/entry` do not spell — so the subject cannot have been
+/// re-derived — while `shared` and `piece`, which no row declared, carry their
+/// own document paths.
+///
+/// The provider column is the distinguishability property, and asserting the
+/// exact set IS the proof: the literal below names three `undetermined` rows
+/// (declared by a contribution row, so their owner exists and merely has no
+/// typed spelling yet) beside two `unclaimed` ones (reached through
+/// `#use`/`#embed`, so no row declared them and none ever will). A single
+/// fused absence cannot satisfy a literal that spells both, so collapsing the
+/// arms — in either direction — makes this red and names the documents that
+/// answered wrongly.
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY")]
+fn every_discovered_document_arrives_with_its_own_declared_subject() {
+    OBSERVED_SUBJECTS.with(|rows| rows.borrow_mut().clear());
+    let world = fixture();
+    let registry = registry_with(&[Arc::new(RecordingSubjects)]);
+    let plan = plan_of(vec![vehicle_seed(
+        "org.demo/tools#doc",
+        TransformStage::Document,
+        "test-record-subject",
+    )]);
+
+    compile(plan, &world, &registry).unwrap();
+
+    let mut observed = OBSERVED_SUBJECTS.with(|rows| rows.borrow().clone());
+    observed.sort();
+    let mut expected: Vec<(String, String, String)> = [
+        // Declared by a contribution row: the row's path, not the address',
+        // and an owner that exists but is not yet typed.
+        (
+            "spec://org.demo/alpha/boot/entry#root",
+            "boot/alpha.md",
+            "undetermined",
+        ),
+        (
+            "spec://org.demo/omega/boot/entry#root",
+            "boot/omega.md",
+            "undetermined",
+        ),
+        // The simple contribution's static entry: declared, path and all.
+        (
+            "static entry (origin \"host\", path \"boot/local.md\")",
+            "boot/local.md",
+            "undetermined",
+        ),
+        // Reached through `#use` and `#embed`: their own document paths, and
+        // no owner to name — permanently, not pending.
+        (
+            "spec://org.demo/shared/boot/base#root",
+            "boot/base",
+            "unclaimed",
+        ),
+        (
+            "spec://org.demo/piece/boot/piece#root",
+            "boot/piece",
+            "unclaimed",
+        ),
+    ]
+    .into_iter()
+    .map(|(address, path, provider)| (address.to_string(), path.to_string(), provider.to_string()))
+    .collect();
+    expected.sort();
+    assert_eq!(observed, expected);
+}
+
+/// The address is not the subject: the alpha row declares `boot/alpha.md`
+/// while its seed address' `doc_path` is `boot/entry`, and the carried value
+/// is the declared one.
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY")]
+fn a_declared_path_that_differs_from_the_address_survives_to_the_position() {
+    OBSERVED_SUBJECTS.with(|rows| rows.borrow_mut().clear());
+    let world = fixture();
+    let registry = registry_with(&[Arc::new(RecordingSubjects)]);
+    let plan = plan_of(vec![vehicle_seed(
+        "org.demo/tools#doc",
+        TransformStage::Document,
+        "test-record-subject",
+    )]);
+
+    compile(plan, &world, &registry).unwrap();
+
+    let observed = OBSERVED_SUBJECTS.with(|rows| rows.borrow().clone());
+    let alpha = observed
+        .iter()
+        .find(|(address, ..)| address == "spec://org.demo/alpha/boot/entry#root")
+        .expect("the alpha seed reached the document position");
+    assert_eq!(alpha.1, "boot/alpha.md");
+    assert_ne!(alpha.1, "boot/entry", "the address path is not the subject");
+}
+
+/// A source-position transform that returns a different subject is refused,
+/// and the fault names the moved member.
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#INTER-PASS-VERIFIER")]
+fn a_source_transform_that_rewrites_the_subject_is_refused() {
+    assert_subject_forgery_refused(
+        Arc::new(RetargetSubjectSource),
+        "org.demo/tools#src",
+        TransformStage::Source,
+        "test-source-retarget-subject",
+    );
+}
+
+/// The same law one position later: a document transform owns the tree, never
+/// the subject its source carries.
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#INTER-PASS-VERIFIER")]
+fn a_document_transform_that_rewrites_the_subject_is_refused() {
+    assert_subject_forgery_refused(
+        Arc::new(RetargetSubjectDocument),
+        "org.demo/tools#doc",
+        TransformStage::Document,
+        "test-document-retarget-subject",
+    );
+}
+
+/// One subject forgery, refused with the transform-attributed verifier fault
+/// that names `subject.declared_path` and both spellings.
+fn assert_subject_forgery_refused(
+    vehicle: Arc<dyn super::behavior::TransformBehavior>,
+    key: &str,
+    stage: TransformStage,
+    name: &str,
+) {
+    let world = fixture();
+    let registry = registry_with(&[vehicle]);
+    let plan = plan_of(vec![vehicle_seed(key, stage, name)]);
+
+    let error = compile(plan, &world, &registry).unwrap_err();
+    let ArtifactCompileError::Transform(public) = &error else {
+        panic!("a subject forgery stays the typed transform family: {error:?}")
+    };
+    let TransformError::Verification { source, .. } = public.inner() else {
+        panic!("the verifier owns the refusal: {public}")
+    };
+    let crate::compiler::verify::VerificationError::Transition(
+        crate::compiler::verify::TransitionError::DocumentIdentity {
+            field,
+            expected,
+            actual,
+        },
+    ) = source.as_ref()
+    else {
+        panic!("the moved member is typed, never a rendered string: {source:?}")
+    };
+    assert_eq!(*field, DocumentIdentityField::SubjectDeclaredPath);
+    assert_eq!(actual, FORGED_PATH);
+    assert_ne!(expected, actual);
 }
 
 #[derive(Default)]

@@ -44,6 +44,28 @@ fn scalar_identities_of_every_family() {
             d["doc"]["address"] =
                 serde_json::json!({"kind": "static-entry", "origin": "o", "path": BLANK});
         }),
+        ("subject declared path", "source_document.json", |d| {
+            d["doc"]["subject"]["declared_path"] = serde_json::json!(BLANK);
+        }),
+        ("subject provider group", "source_document.json", |d| {
+            d["doc"]["subject"]["provider"] =
+                serde_json::json!({"kind": "dependency", "group": BLANK, "name": "lib"});
+        }),
+        ("subject provider name", "source_document.json", |d| {
+            d["doc"]["subject"]["provider"] =
+                serde_json::json!({"kind": "host-coordinate", "group": "org.demo", "name": "\n"});
+        }),
+        ("subject provider host name", "source_document.json", |d| {
+            d["doc"]["subject"]["provider"] =
+                serde_json::json!({"kind": "host-ungrouped", "name": BLANK});
+        }),
+        (
+            "nested subject declared path",
+            "documents_artifact.json",
+            |d| {
+                d["documents"][1]["source"]["subject"]["declared_path"] = serde_json::json!("a\nb");
+            },
+        ),
         ("node anchor id", "document_document.json", |d| {
             d["doc"]["tree"]["nodes"][1]["id"] = serde_json::json!(BLANK);
         }),

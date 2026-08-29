@@ -12,5 +12,6 @@ mod phase_order;
 mod producer_chain;
 mod registry;
 mod strict_reader;
+mod subject;
 mod table;
 mod witness_law;

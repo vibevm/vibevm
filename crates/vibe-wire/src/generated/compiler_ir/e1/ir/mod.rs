@@ -717,6 +717,119 @@ pub struct DocumentObservationResolved {
     pub document: DocumentIr,
 }
 
+/// The typed provider identity a document subject carries (`DocumentProvider`,
+/// PROP-054 `##CONTRIB-SELECTOR`): the value a source/document selector's
+/// `packages` dimension is matched against, spelled as typed coordinate
+/// components rather than a rendered display string. The carrier is TOTAL
+/// — every document names one arm, and there is no missing-key spelling of
+/// absence. The four coordinate arms mirror the kernel's dependency-coordinate
+/// and host shapes exactly (`DependencyProviderId`; `HostIdentity`'s ungrouped
+/// / coordinate / virtual-workspace spellings), so a match-time adapter
+/// reconstructs the typed identity without parsing anything. The two remaining
+/// arms are the two DIFFERENT absences, and a full-IR plugin must be able to
+/// tell them apart: `unclaimed` says no owner exists to name, `undetermined`
+/// says an owner exists and was not resolved. Collapsing them would hand a
+/// selector adapter one input for two verdicts.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "kind")]
+pub enum DocumentProvider {
+    #[serde(rename = "dependency")]
+    Dependency(Box<DocumentProviderDependency>),
+
+    #[serde(rename = "host-coordinate")]
+    HostCoordinate(Box<DocumentProviderHostCoordinate>),
+
+    #[serde(rename = "host-ungrouped")]
+    HostUngrouped(Box<DocumentProviderHostUngrouped>),
+
+    #[serde(rename = "host-virtual-workspace")]
+    HostVirtualWorkspace(Box<DocumentProviderHostVirtualWorkspace>),
+
+    #[serde(rename = "unclaimed")]
+    Unclaimed(Box<DocumentProviderUnclaimed>),
+
+    #[serde(rename = "undetermined")]
+    Undetermined(Box<DocumentProviderUndetermined>),
+}
+
+/// An installed dependency provider's versionless coordinate.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct DocumentProviderDependency {
+    pub group: String,
+
+    pub name: String,
+}
+
+/// A grouped project or package-role host, carrying the same validated
+/// coordinate a dependency does.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct DocumentProviderHostCoordinate {
+    pub group: String,
+
+    pub name: String,
+}
+
+/// A host project with no group, named exactly as authored.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct DocumentProviderHostUngrouped {
+    pub name: String,
+}
+
+/// A coordinator that may control dependencies but declares none; it has no
+/// coordinate components.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct DocumentProviderHostVirtualWorkspace {}
+
+/// No contribution row declared this document into this artifact, so no
+/// provider is claimed. A PERMANENT and correct answer: the address' authority
+/// names the package that owns the document, which is not the question a
+/// `packages` dimension asks. An authored `packages` dimension matching nothing
+/// is the final verdict here, not a placeholder. Every document the compiler
+/// REACHED through `#use`, `#source` or `#embed` carries this arm.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct DocumentProviderUnclaimed {}
+
+/// A contribution row DID declare this document, and the producer could not
+/// determine which typed provider that row names. A TEMPORARY answer, and the
+/// one every document written by today's producers carries: they receive the
+/// declaring owner as a display string, and the typed identity reaches the
+/// subject only through the owner-view adapter. A selector adapter may not read
+/// it as `unclaimed`'s matches-nothing — the honest reading is that the answer
+/// is not yet known.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct DocumentProviderUndetermined {}
+
+/// The immutable selector subject of ONE addressed document
+/// (`DocumentSubject`): the provider a source/document selector's `packages`
+/// dimension matches and the path its `paths` dimension matches. Per
+/// addressed document, never per artifact. It is CARRIED, not re-derived — a
+/// contribution's `declared_path` is the path the contributing row declared and
+/// may legitimately differ from its address' `doc_path` — and the inter-pass
+/// verifier refuses a source/document transform that rewrites either member.
+/// Required: a decoder refuses a carrier that omits it rather than inventing
+/// one, because an invented subject would silently change which transforms a
+/// document is in scope for.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct DocumentSubject {
+    /// The document's declared path, forward-slashed and case-sensitive (the
+    /// selector adapter contract). Conversion rejects a blank or newline-
+    /// bearing value, and also a backslashed one: the kernel compiles a `paths`
+    /// glob with a literal separator, so `\` is not a separator to any pattern
+    /// and a backslashed path silently matches nothing. The refusal is a
+    /// refusal, never a normalisation — rewriting the separator would invent an
+    /// identity the producer did not state.
+    pub declared_path: String,
+
+    pub provider: DocumentProvider,
+}
+
 /// Artifact-wide immutable observation of every embed input
 /// (`EmbedResolutionSnapshot`).
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -1295,7 +1408,8 @@ pub struct RenameEntry {
     pub qualified: String,
 }
 
-/// Source IR payload (`SourceIr`): typed address, frontend format, raw text.
+/// Source IR payload (`SourceIr`): typed address, frontend format, immutable
+/// document subject, raw text.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct SourceDoc {
@@ -1306,6 +1420,8 @@ pub struct SourceDoc {
     /// frontends register without a schema bump. Conversion rejects a blank
     /// value.
     pub format: String,
+
+    pub subject: DocumentSubject,
 
     pub text: String,
 }

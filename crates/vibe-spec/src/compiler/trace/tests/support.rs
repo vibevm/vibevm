@@ -249,7 +249,7 @@ pub(super) fn pass_name(value: &str) -> PassName {
 }
 
 pub(super) fn markdown_source(anchor: &str, text: &str) -> SourceIr {
-    SourceIr::new(
+    SourceIr::reached(
         DocumentAddress::Spec(
             SpecAddress::parse(&format!("spec://org.demo/pkg/common/doc#{anchor}")).unwrap(),
         ),

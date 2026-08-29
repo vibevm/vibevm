@@ -2,7 +2,7 @@
 
 use crate::{Directives, SpecAddress};
 
-use super::{ArtifactTarget, DocumentAddress, SourceIr};
+use super::{ArtifactTarget, DocumentAddress, DocumentProvider, DocumentSubject, SourceIr};
 
 /// Open identity of one final compiler artifact.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -42,7 +42,8 @@ impl ContributionMeta {
 
     fn validate(&self) -> Result<(), ArtifactPlanError> {
         validate_text("contribution origin", &self.origin)?;
-        validate_text("contribution path", &self.path)
+        validate_text("contribution path", &self.path)?;
+        validate_declared_path("contribution path", &self.path)
     }
 }
 
@@ -198,9 +199,17 @@ pub struct ArtifactInputWitness {
 }
 
 /// One validated heterogeneous artifact input in effective-boot order.
+///
+/// The [`DocumentSubject`] sits beside the kind rather than inside it, so all
+/// four kinds answer the subject question the same way and none can be added
+/// later without one. `Normal` and `Simple` hand it on to the document they
+/// produce; `Elided` and `Hoisted` produce no document at all, so their
+/// subject is carried and never reaches a [`SourceIr`] — the honest answer,
+/// since no source/document transform is ever invoked for them.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ArtifactInput {
     kind: ArtifactInputKind,
+    subject: DocumentSubject,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -247,6 +256,7 @@ impl ArtifactInput {
                 path: meta.path.clone(),
             },
             super::SourceFormatId::canonical_markdown(),
+            declared_subject(&meta),
             canonical_markdown,
         );
         Ok(Self::from_kind(ArtifactInputKind::Simple { meta, source }))
@@ -270,8 +280,12 @@ impl ArtifactInput {
         Ok(Self::from_kind(ArtifactInputKind::Hoisted { meta, target }))
     }
 
+    /// Rebuild one input from its kind, minting the subject the kind's own
+    /// provenance declares — so a crate-internal caller cannot author an input
+    /// whose subject disagrees with its contribution row.
     pub(crate) fn from_kind(kind: ArtifactInputKind) -> Self {
-        Self { kind }
+        let subject = declared_subject(kind_meta(&kind));
+        Self { kind, subject }
     }
 
     pub(crate) fn kind(&self) -> &ArtifactInputKind {
@@ -279,12 +293,13 @@ impl ArtifactInput {
     }
 
     pub(crate) fn meta(&self) -> &ContributionMeta {
-        match self.kind() {
-            ArtifactInputKind::Normal { meta, .. }
-            | ArtifactInputKind::Simple { meta, .. }
-            | ArtifactInputKind::Elided { meta }
-            | ArtifactInputKind::Hoisted { meta, .. } => meta,
-        }
+        kind_meta(self.kind())
+    }
+
+    /// The immutable subject this contribution hands to the document it
+    /// produces.
+    pub(crate) fn subject(&self) -> &DocumentSubject {
+        &self.subject
     }
 
     fn validate(&self) -> Result<(), ArtifactPlanError> {
@@ -309,6 +324,17 @@ impl ArtifactInput {
                         actual: source.format().as_str().to_string(),
                     });
                 }
+                // The one kind whose document already exists, so the one place
+                // the carried subject can be observed disagreeing with the row
+                // that declared it: a crate-internal caller may assemble the
+                // meta/source pair by hand, and a subject that does not match
+                // would silently rescope the document's transforms.
+                if source.subject() != &self.subject {
+                    return Err(ArtifactPlanError::SimpleSubject {
+                        expected: self.subject.to_string(),
+                        actual: source.subject().to_string(),
+                    });
+                }
             }
             ArtifactInputKind::Hoisted { meta, target } => {
                 validate_package_relation("hoisted", &meta.origin, target, true)?;
@@ -317,6 +343,29 @@ impl ArtifactInput {
         }
         Ok(())
     }
+}
+
+fn kind_meta(kind: &ArtifactInputKind) -> &ContributionMeta {
+    match kind {
+        ArtifactInputKind::Normal { meta, .. }
+        | ArtifactInputKind::Simple { meta, .. }
+        | ArtifactInputKind::Elided { meta }
+        | ArtifactInputKind::Hoisted { meta, .. } => meta,
+    }
+}
+
+/// The subject one contribution row declares.
+///
+/// The path is the row's own already-validated non-blank, forward-slashed path
+/// — not the address', which may legitimately differ. The provider is
+/// [`DocumentProvider::Undetermined`], never `Unclaimed`: a row DID declare
+/// this document, so an owner exists; `origin` is a display string that
+/// PROP-054 keeps display/provenance, so no TYPED provider exists here to
+/// carry, and the owner-view adapter is what will supply one. Saying
+/// `Unclaimed` here would assert that nothing declared the document, which is
+/// false of every input in this file.
+fn declared_subject(meta: &ContributionMeta) -> DocumentSubject {
+    DocumentSubject::declared(DocumentProvider::Undetermined, meta.path.clone())
 }
 
 /// Crate-private so the wire conversion can re-run the same origin/target law
@@ -405,6 +454,24 @@ fn validate_text(field: &'static str, value: &str) -> Result<(), ArtifactPlanErr
     Ok(())
 }
 
+/// The separator law on a path that becomes a [`DocumentSubject`]'s
+/// `declared_path`.
+///
+/// Applied to the contribution path specifically, never through
+/// [`validate_text`]: `validate_text` also judges origins, artifact ids and
+/// the static-lane roots, and widening it would hold values that are not
+/// selector paths to a selector path's contract. The rule itself lives once,
+/// on [`DocumentSubject`]; this is the artifact plan's vocabulary for it.
+fn validate_declared_path(field: &'static str, value: &str) -> Result<(), ArtifactPlanError> {
+    if DocumentSubject::path_is_forward_slashed(value) {
+        return Ok(());
+    }
+    Err(ArtifactPlanError::BackslashedPath {
+        field,
+        value: value.to_string(),
+    })
+}
+
 fn simple_alias_machinery(text: &str) -> bool {
     let directives = Directives::parse(text);
     !directives.aliases.is_empty()
@@ -420,6 +487,10 @@ pub enum ArtifactPlanError {
     Blank { field: &'static str },
     #[error("compiler {field} must not contain a newline or NUL")]
     UnsafeText { field: &'static str },
+    #[error(
+        "compiler {field} `{value}` must be forward-slashed: a `paths` selector dimension compiles its globs with a literal separator, so a backslashed path matches nothing at all"
+    )]
+    BackslashedPath { field: &'static str, value: String },
     #[error("artifact input {index} is invalid: {source}")]
     Input {
         index: usize,
@@ -428,6 +499,8 @@ pub enum ArtifactPlanError {
     },
     #[error("simple input identity must be {expected:?}, got {actual:?}")]
     SimpleIdentity { expected: String, actual: String },
+    #[error("simple input subject must be {expected}, got {actual}")]
+    SimpleSubject { expected: String, actual: String },
     #[error(
         "invalid artifact context tuple: id `{artifact}`, target {target:?}, frame {frame}, mode {mode}"
     )]

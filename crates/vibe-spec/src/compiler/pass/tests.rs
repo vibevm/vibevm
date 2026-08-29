@@ -16,7 +16,7 @@ fn name(value: &str) -> PassName {
 }
 
 fn source(text: &str) -> SourceIr {
-    SourceIr::new(
+    SourceIr::reached(
         DocumentAddress::Spec(SpecAddress::parse("spec://org.demo/pkg/boot/entry#root").unwrap()),
         SourceFormatId::new("markdown").unwrap(),
         text,

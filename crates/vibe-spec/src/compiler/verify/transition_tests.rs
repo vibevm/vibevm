@@ -7,12 +7,12 @@ use specmark::verifies;
 use super::super::absorb::AbsorbPass;
 use super::super::ir::{
     AbsorptionState, ArtifactContext, ClosureContribution, ClosureIr, ClosureOccurrence,
-    ContributionAbsorption, DocumentAddress, LaneFrame, LaneIr, LinkInputDigest, OriginRename,
-    QualificationState, StaticCompileMode,
+    ContributionAbsorption, DocumentAddress, DocumentProvider, DocumentSubject, LaneFrame, LaneIr,
+    LinkInputDigest, OriginRename, QualificationState, StaticCompileMode,
 };
 use super::super::pass::Pass;
 use super::super::qualify::QualifyPass;
-use super::super::verify::{LaneProvenanceField, TransitionError};
+use super::super::verify::{DocumentIdentityField, LaneProvenanceField, TransitionError};
 use super::closure_tests::{address, closure, node, occurrence, use_edge, verify};
 use super::{IrVerifier, VerificationError};
 use crate::DocTree;
@@ -218,9 +218,14 @@ fn qualification_never_regresses_and_identity_survives_only_text_transforms() {
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#INTER-PASS-VERIFIER")]
 fn a_source_transform_may_change_text_but_never_identity() {
+    // The declared path deliberately differs from the address' `doc_path`:
+    // the subject is CARRIED, so the witness must compare what the document
+    // carries rather than anything it could re-derive from the address.
+    let subject = DocumentSubject::declared(DocumentProvider::Undetermined, "boot/declared.md");
     let before = crate::compiler::ir::SourceIr::new(
         DocumentAddress::Spec(address("spec://org.demo/pkg/boot/entry#root")),
         crate::compiler::ir::SourceFormatId::new("markdown").unwrap(),
+        subject.clone(),
         "original\n",
     );
     let witness = IrVerifier.witness(&AnyIr::Source(before.clone())).unwrap();
@@ -228,23 +233,71 @@ fn a_source_transform_may_change_text_but_never_identity() {
     let honest = crate::compiler::ir::SourceIr::new(
         before.address().clone(),
         before.format().clone(),
+        before.subject().clone(),
         "rewritten text\n",
     );
     IrVerifier
         .verify_transition(&witness, &AnyIr::Source(honest))
         .unwrap();
 
-    let retargeted = crate::compiler::ir::SourceIr::new(
-        DocumentAddress::Spec(address("spec://org.evil/pkg/boot/entry#root")),
-        before.format().clone(),
-        "rewritten text\n",
+    let moved = |field: DocumentIdentityField, candidate: crate::compiler::ir::SourceIr| {
+        let error = IrVerifier
+            .verify_transition(&witness, &AnyIr::Source(candidate))
+            .unwrap_err();
+        let VerificationError::Transition(TransitionError::DocumentIdentity {
+            field: named,
+            expected,
+            actual,
+        }) = error
+        else {
+            panic!("the source arm owns its own variant: {error:?}")
+        };
+        assert_eq!(named, field, "the moved member is named");
+        assert_ne!(expected, actual);
+    };
+
+    moved(
+        DocumentIdentityField::Address,
+        crate::compiler::ir::SourceIr::new(
+            DocumentAddress::Spec(address("spec://org.evil/pkg/boot/entry#root")),
+            before.format().clone(),
+            before.subject().clone(),
+            "rewritten text\n",
+        ),
     );
-    assert!(matches!(
-        IrVerifier.verify_transition(&witness, &AnyIr::Source(retargeted)),
-        Err(VerificationError::Transition(
-            TransitionError::Identity { .. }
-        ))
-    ));
+    moved(
+        DocumentIdentityField::Format,
+        crate::compiler::ir::SourceIr::new(
+            before.address().clone(),
+            crate::compiler::ir::SourceFormatId::new("xml").unwrap(),
+            before.subject().clone(),
+            "rewritten text\n",
+        ),
+    );
+    moved(
+        DocumentIdentityField::SubjectProvider,
+        crate::compiler::ir::SourceIr::new(
+            before.address().clone(),
+            before.format().clone(),
+            DocumentSubject::declared(
+                DocumentProvider::Dependency {
+                    group: vibe_core::Group::parse("org.evil").unwrap(),
+                    name: vibe_core::PackageName::parse("pkg").unwrap(),
+                },
+                "boot/declared.md",
+            ),
+            "rewritten text\n",
+        ),
+    );
+    moved(
+        DocumentIdentityField::SubjectDeclaredPath,
+        crate::compiler::ir::SourceIr::new(
+            before.address().clone(),
+            before.format().clone(),
+            DocumentSubject::declared(DocumentProvider::Undetermined, "boot/forged.md"),
+            "rewritten text\n",
+        ),
+    );
 }
 
 // --- the lane witness ----------------------------------------------------

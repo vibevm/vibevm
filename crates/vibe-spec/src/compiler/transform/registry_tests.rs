@@ -58,7 +58,7 @@ impl TransformBehavior for ZeroEpoch {
 
 /// The frozen source vector: one simple static entry's canonical Markdown.
 fn source_vector() -> SourceIr {
-    SourceIr::new(
+    SourceIr::reached(
         DocumentAddress::StaticEntry {
             origin: "demo".to_owned(),
             path: "docs/alpha.md".to_owned(),

@@ -40,6 +40,13 @@ fn real_builtin_carriers_round_trip_domain_wire_domain_at_every_level() {
             SpecAddress::parse("spec://org.demo/alpha/boot/entry#root").unwrap(),
         ),
         SourceFormatId::canonical_markdown(),
+        // The subject the fixture's own row declares: `boot/entry.md`, which
+        // the address' `doc_path` (`boot/entry`) does not spell, so the round
+        // trip carries a subject the wire cannot have re-derived.
+        crate::compiler::ir::DocumentSubject::declared(
+            crate::compiler::ir::DocumentProvider::Undetermined,
+            "boot/entry.md",
+        ),
         world
             .0
             .get("spec://org.demo/alpha/boot/entry#root")
@@ -94,7 +101,7 @@ fn the_real_gather_batch_round_trips_as_documents_artifact() {
         let crate::compiler::ir::DocumentAddress::Spec(_) = &node.address else {
             continue;
         };
-        let source = SourceIr::new(
+        let source = SourceIr::reached(
             node.address.clone(),
             SourceFormatId::canonical_markdown(),
             node.tree.parts().3.join("\n"),

@@ -15,7 +15,7 @@ fn spec(raw: &str) -> SpecAddress {
 
 fn document(raw: &str, raw_text: &str, parsed_text: &str) -> super::super::ir::DocumentIr {
     super::super::ir::DocumentIr::new(
-        SourceIr::new(
+        SourceIr::reached(
             DocumentAddress::Spec(spec(raw)),
             SourceFormatId::canonical_markdown(),
             raw_text,
@@ -36,7 +36,7 @@ fn snapshot(
             .collect(),
         documents: documents
             .into_iter()
-            .map(|(key, document)| (key.to_string(), DocumentObservation::Resolved(document)))
+            .map(|(key, document)| (key.to_string(), DocumentObservation::resolved(document)))
             .collect::<BTreeMap<_, _>>(),
         expansions: patterns
             .into_iter()

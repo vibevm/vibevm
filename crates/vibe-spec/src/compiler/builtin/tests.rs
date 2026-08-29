@@ -10,7 +10,7 @@ use crate::compiler::pipeline::{CompilerPipelineError, ScheduleItem};
 use crate::compiler::transform::registry_test_support::{identity_plan, identity_registry};
 
 fn source(format: &str, text: &str) -> SourceIr {
-    SourceIr::new(
+    SourceIr::reached(
         DocumentAddress::Spec(SpecAddress::parse("spec://org.demo/pkg/common/doc#root").unwrap()),
         SourceFormatId::new(format).unwrap(),
         text,
@@ -18,7 +18,7 @@ fn source(format: &str, text: &str) -> SourceIr {
 }
 
 fn source_at(anchor: &str, format: &str, text: &str) -> SourceIr {
-    SourceIr::new(
+    SourceIr::reached(
         DocumentAddress::Spec(
             SpecAddress::parse(&format!("spec://org.demo/pkg/common/doc#{anchor}")).unwrap(),
         ),

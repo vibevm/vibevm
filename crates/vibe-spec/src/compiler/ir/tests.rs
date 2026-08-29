@@ -32,12 +32,12 @@ fn node_spec_address(node: &ClosureDocument) -> SpecAddress {
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#IR-LEVELS")]
 fn two_addresses_into_one_physical_document_remain_two_document_values() {
-    let source_one = SourceIr::new(
+    let source_one = SourceIr::reached(
         DocumentAddress::Spec(spec("spec://org.demo/pkg/common/shared#one")),
         SourceFormatId::new("markdown").unwrap(),
         "## One {#one}\nONE\n",
     );
-    let source_two = SourceIr::new(
+    let source_two = SourceIr::reached(
         DocumentAddress::Spec(spec("spec://org.demo/pkg/common/shared#two")),
         SourceFormatId::new("markdown").unwrap(),
         "## Two {#two}\nTWO\n",
@@ -60,12 +60,19 @@ fn two_addresses_into_one_physical_document_remain_two_document_values() {
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR")]
 fn artifact_plan_keeps_normal_simple_normal_without_a_fake_simple_address() {
+    // A simple contribution's document was DECLARED by its row, so its subject
+    // is the declared one — `SourceIr::reached` would mint `Unclaimed` here and
+    // the plan refuses that pairing, which is the whole point of the two arms.
     let simple_source = SourceIr::new(
         DocumentAddress::StaticEntry {
             origin: "ungrouped-host".to_string(),
             path: "vibevm/vibespecs/boot/20-local.md".to_string(),
         },
         SourceFormatId::new("markdown").unwrap(),
+        DocumentSubject::declared(
+            DocumentProvider::Undetermined,
+            "vibevm/vibespecs/boot/20-local.md",
+        ),
         "# Local {#root}\n",
     );
     let context = ArtifactContext::new(
@@ -377,16 +384,17 @@ fn lane_has_one_frame_around_heterogeneous_contributions() {
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#IR-LEVELS")]
 fn owned_transform_apis_preserve_identity_and_make_mutation_deliberate() {
-    let mut source = SourceIr::new(
+    let mut source = SourceIr::reached(
         DocumentAddress::Spec(spec("spec://org.demo/pkg/boot/entry#root")),
         SourceFormatId::new("markdown").unwrap(),
         "# Entry {#root}\n",
     );
     source.text_mut().push_str("SOURCE-PASS\n");
-    let (address, format, text) = source.into_parts();
+    let (address, format, subject, text) = source.into_parts();
     assert_eq!(format.as_str(), "markdown");
+    assert_eq!(subject.declared_path(), "boot/entry");
 
-    let source = SourceIr::new(address, format, text);
+    let source = SourceIr::new(address, format, subject, text);
     let mut document = DocumentIr::new(source.clone(), DocTree::parse(source.text()));
     *document.tree_mut() = DocTree::parse("# Rewritten {#root}\n");
     let (source, tree) = document.into_parts();

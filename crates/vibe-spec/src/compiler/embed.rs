@@ -346,7 +346,7 @@ fn resolved_document<'a>(
     snapshot: &'a super::embed_snapshot::EmbedResolutionSnapshot,
 ) -> Result<&'a super::ir::DocumentIr, EmbedPassError> {
     match snapshot.document(address) {
-        Some(DocumentObservation::Resolved(document)) => Ok(document),
+        Some(DocumentObservation::Resolved(document)) => Ok(document.as_ref()),
         Some(DocumentObservation::Failed { reason, .. }) => {
             Err(EmbedPassError::Embed(EmbedError::Unresolved {
                 addr: address.to_string(),

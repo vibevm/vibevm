@@ -14,6 +14,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#WHOLE-IR-WIRE");
 
+use super::ir;
 use super::ir::{Documents, StaticCompileMode};
 use super::pass::AnyIr;
 use super::verify::{IrVerifier, VerificationError};
@@ -172,6 +173,29 @@ pub(super) fn require_scalar(field: &'static str, value: &str) -> Result<(), IrW
         return Err(gate(
             G_SCALAR_IDS,
             format!("{field} must not contain a newline or NUL"),
+        ));
+    }
+    Ok(())
+}
+
+/// The scalar id law PLUS the separator half of the `paths` selector contract:
+/// the whole law a `DocumentSubject::declared_path` owes.
+///
+/// It rides the same `scalar-ids` gate rather than a sixteenth one, because it
+/// is not a new PHASE — the gate order is an architecture, and this is one
+/// more identity law about one scalar, decided in exactly the phase that
+/// decides scalar identity before anything is allocated from it. Both wire
+/// entry points for a subject call THIS function, so the preflight sweep and
+/// the decoder cannot drift into judging the same member differently.
+pub(super) fn require_declared_path(field: &'static str, value: &str) -> Result<(), IrWireError> {
+    require_scalar(field, value)?;
+    if !ir::DocumentSubject::path_is_forward_slashed(value) {
+        return Err(gate(
+            G_SCALAR_IDS,
+            format!(
+                "{field} must be forward-slashed: a `paths` selector dimension compiles its globs \
+                 with a literal separator, so a backslashed path matches nothing at all"
+            ),
         ));
     }
     Ok(())

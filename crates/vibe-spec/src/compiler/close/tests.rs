@@ -12,7 +12,7 @@ fn spec(raw: &str) -> SpecAddress {
 }
 
 fn document(raw: &str, text: &str) -> DocumentIr {
-    let source = SourceIr::new(
+    let source = SourceIr::reached(
         DocumentAddress::Spec(spec(raw)),
         SourceFormatId::canonical_markdown(),
         text,
@@ -140,7 +140,7 @@ fn unresolved_load_is_replayed_at_its_declared_graph_position() {
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#IR-LEVELS")]
 fn close_is_one_artifact_and_its_parsed_tree_body_is_load_bearing() {
     let key = "spec://org.demo/pkg/boot/a#root";
-    let raw = SourceIr::new(
+    let raw = SourceIr::reached(
         DocumentAddress::Spec(spec(key)),
         SourceFormatId::canonical_markdown(),
         "# Raw {#raw}\nRAW\n",
@@ -175,7 +175,7 @@ fn close_is_one_artifact_and_its_parsed_tree_body_is_load_bearing() {
 fn close_transports_invalid_pending_sources_without_judging_membership() {
     let key = "spec://org.demo/pkg/contract/api#root";
     let pattern = spec("spec://org.demo/plugin-*/source/impl#root");
-    let source = SourceIr::new(
+    let source = SourceIr::reached(
         DocumentAddress::Spec(spec(key)),
         SourceFormatId::canonical_markdown(),
         format!("# API {{#root}}\n#source {}\n", pattern.without_pin()),

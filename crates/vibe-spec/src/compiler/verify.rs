@@ -18,8 +18,8 @@ use super::assemble::LaneValidationError;
 use super::assemble::{LaneShape, validate_shape};
 use super::emit::emitted_bytes_digest;
 use super::ir::{
-    ClosureEdgeKind, ClosureNodeId, DocumentAddress, DocumentIr, Documents, EmittedIr, LaneChunk,
-    LaneContribution, LaneIr, LaneNode, SourceIr,
+    ClosureEdgeKind, ClosureNodeId, DocumentAddress, DocumentIr, DocumentSubject, Documents,
+    EmittedIr, LaneChunk, LaneContribution, LaneIr, LaneNode, SourceIr,
 };
 use super::pass::AnyIr;
 use super::qualify::QualifyPassError;
@@ -28,13 +28,13 @@ use super::worklist::{DocumentKey, document_key};
 mod graph;
 mod transition;
 
-/// The moved-field discriminant of a lane provenance refusal.
+/// The moved-field discriminants of a provenance/identity refusal.
 ///
-/// Production only ever renders it, through `TransitionError::LaneProvenance`;
-/// nothing in the compiler classifies on it, and a crate-wide re-export would
-/// therefore be dead in a non-test build. Tests match on it exactly.
+/// Production only ever renders them, through `TransitionError`; nothing in
+/// the compiler classifies on them, and a crate-wide re-export would therefore
+/// be dead in a non-test build. Tests match on them exactly.
 #[cfg(test)]
-pub(crate) use transition::LaneProvenanceField;
+pub(crate) use transition::{DocumentIdentityField, LaneProvenanceField};
 pub(crate) use transition::{
     LaneWitness, TransitionError, VerificationWitness, lane_witness, verify_lane_transition,
 };
@@ -48,6 +48,10 @@ pub(crate) use transition::{
 pub(crate) enum VerificationError {
     #[error("source identity field `{field}` must not be blank")]
     BlankSourceIdentity { field: &'static str },
+    #[error(
+        "source identity field `{field}` is `{value}`, which is not forward-slashed: a `paths` selector dimension compiles its globs with a literal separator, so a backslashed path matches nothing at all"
+    )]
+    BackslashedSourcePath { field: &'static str, value: String },
     #[error("document {address} carries a malformed tree: {source}")]
     DocTree {
         address: String,
@@ -244,6 +248,25 @@ pub(super) fn verify_tree(address: String, tree: &crate::DocTree) -> Result<(), 
 fn verify_source(source: &SourceIr) -> Result<(), VerificationError> {
     if source.format().as_str().trim().is_empty() {
         return Err(VerificationError::BlankSourceIdentity { field: "format" });
+    }
+    // The subject is selector identity, so it obeys the same non-blank law
+    // every other identity does — and the wire's scalar gate spells exactly
+    // this rule, so a carrier and a live value are held to one contract.
+    let declared_path = source.subject().declared_path();
+    if declared_path.trim().is_empty() {
+        return Err(VerificationError::BlankSourceIdentity {
+            field: "subject declared path",
+        });
+    }
+    // The same parity, one law further: the wire refuses a backslashed
+    // declared path, so a live one is refused here. This is the boundary a
+    // REACHED subject crosses — its path comes from an address rather than
+    // from a contribution row, so the artifact plan never saw it.
+    if !DocumentSubject::path_is_forward_slashed(declared_path) {
+        return Err(VerificationError::BackslashedSourcePath {
+            field: "subject declared path",
+            value: declared_path.to_string(),
+        });
     }
     if let DocumentAddress::StaticEntry { origin, path } = source.address() {
         if origin.trim().is_empty() {

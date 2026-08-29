@@ -13,9 +13,9 @@ use super::embed::{embed_invocations, reset_embed_invocations};
 use super::emit::{emit_invocations, reset_emit_invocations};
 use super::ir::{
     ArtifactContext, ArtifactFrame, ArtifactId, ArtifactInput, ArtifactInputKind, ArtifactPlan,
-    ArtifactTarget, ClosureContribution, ContributionMeta, DocumentAddress, LaneContribution,
-    LaneNode, LinkContributionWitness, LinkOccurrence, LinkState, SourceFormatId, SourceIr,
-    StaticCompileMode,
+    ArtifactTarget, ClosureContribution, ContributionMeta, DocumentAddress, DocumentProvider,
+    DocumentSubject, LaneContribution, LaneNode, LinkContributionWitness, LinkOccurrence,
+    LinkState, SourceFormatId, SourceIr, StaticCompileMode,
 };
 use super::link::{link_invocations, reset_link_invocations, validate_linked};
 use super::merge::{merge_invocations, reset_merge_invocations};
@@ -375,7 +375,7 @@ fn plan_order_occurrence_multiplicity_and_identity_are_link_replay_inputs() {
 
 #[test]
 fn artifact_plan_rejects_mismatched_simple_identity_before_discovery() {
-    let source = SourceIr::new(
+    let source = SourceIr::reached(
         DocumentAddress::StaticEntry {
             origin: "wrong".to_string(),
             path: "boot/local.md".to_string(),
@@ -392,6 +392,80 @@ fn artifact_plan_rejects_mismatched_simple_identity_before_discovery() {
     )
     .unwrap_err();
     assert!(error.to_string().contains("simple input identity"));
+}
+
+/// A simple contribution's document carries the subject its own row declared.
+/// The address may agree while the subject does not — and a subject that
+/// disagreed would silently rescope which transforms the document is in.
+#[test]
+fn artifact_plan_rejects_a_simple_document_carrying_a_foreign_subject() {
+    let address = DocumentAddress::StaticEntry {
+        origin: "host".to_string(),
+        path: "boot/local.md".to_string(),
+    };
+    let source = SourceIr::new(
+        address,
+        SourceFormatId::canonical_markdown(),
+        DocumentSubject::declared(DocumentProvider::Undetermined, "boot/somebody-else.md"),
+        "LOCAL",
+    );
+    let error = ArtifactPlan::new(
+        ArtifactContext::compatibility(StaticCompileMode::Plain),
+        vec![ArtifactInput::from_kind(ArtifactInputKind::Simple {
+            meta: meta("host", "boot/local.md"),
+            source,
+        })],
+    )
+    .unwrap_err();
+    assert!(
+        error.to_string().contains("simple input subject"),
+        "{error}"
+    );
+    // The honest pair is accepted, so the red is the subject and nothing else.
+    ArtifactPlan::new(
+        ArtifactContext::compatibility(StaticCompileMode::Plain),
+        vec![simple("host", "boot/local.md", "LOCAL")],
+    )
+    .unwrap();
+}
+
+/// The `paths` contract at the plan boundary, on every input kind.
+///
+/// A contribution row's path becomes its document's `declared_path`, and a
+/// `paths` selector dimension compiles its globs with a literal separator — so
+/// a backslashed row would not scope a transform wrongly, it would scope it
+/// onto nothing, silently. The refusal is at the same boundary that already
+/// refuses a blank or newline-bearing path, so no constructor becomes fallible
+/// that was not fallible already.
+///
+/// All four kinds are exercised because the subject sits beside the kind: a
+/// fifth kind must answer this question too, and a per-kind check would let it
+/// arrive unjudged.
+#[test]
+fn a_backslashed_contribution_path_is_refused_by_every_input_kind() {
+    let target = spec("spec://org.demo/pkg/boot/entry");
+    let seed = spec("spec://org.demo/pkg/boot/entry#root");
+    let bad = "boot\\local.md";
+    let refusals = [
+        ArtifactInput::normal("org.demo/pkg", bad, seed.clone()).unwrap_err(),
+        ArtifactInput::simple("host", bad, "LOCAL").unwrap_err(),
+        ArtifactInput::elided("host", bad).unwrap_err(),
+        ArtifactInput::hoisted("org.demo/pkg", bad, target.clone()).unwrap_err(),
+    ];
+    for error in &refusals {
+        let super::ir::ArtifactPlanError::BackslashedPath { field, value } = error else {
+            panic!("the separator law has its own typed arm: {error:?}")
+        };
+        assert_eq!(*field, "contribution path");
+        assert_eq!(value, bad);
+    }
+
+    // The forward-slashed twins are accepted through the same constructors, so
+    // the red is the separator and nothing around it.
+    ArtifactInput::normal("org.demo/pkg", "boot/local.md", seed).unwrap();
+    ArtifactInput::simple("host", "boot/local.md", "LOCAL").unwrap();
+    ArtifactInput::elided("host", "boot/local.md").unwrap();
+    ArtifactInput::hoisted("org.demo/pkg", "boot/local.md", target).unwrap();
 }
 
 #[test]
