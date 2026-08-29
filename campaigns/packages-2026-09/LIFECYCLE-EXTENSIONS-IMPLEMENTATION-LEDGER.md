@@ -251,6 +251,23 @@ than depending on untracked `cache/` archaeology.
   install/CLI check, conform 0 new and the cargo-metadata DAG. Map `8531cf82`
   relocates the exact semantic edge multiset plus three intentional module
   scopes: 6826/2284/2054, zero suspects/orphans/unresolved. R4.0 is complete.
+- R4.1 owner controls: `52a59dcc` retains every package manifest's parsed
+  controls and adds the pure dependency-seat→lane-owner projection; selected
+  host behavior stays unchanged because installed controls are inert until
+  their package owns the view. Five REDs prove exact projection, host/package/
+  sibling isolation, live activation/disable in the package's own lane and
+  loud self-target refusal. Root replaced a vacuous worker filter (`0 tests`)
+  with the full vibe-install suite and accepted kernel 26, lifecycle 287/3
+  ignored, orchestrator world 17, full install + doctests, strict clippy and
+  conform 0 new.
+- R4.1 unit publication: `91142777` compiles the full per-unit INDEX/STATIC
+  before mutation and publishes selected/stale state through the existing
+  crash-recoverable transaction; `ab68d145` makes the law authoritative in
+  PROP-054. A true RED recreates the old half-published INDEX on backend
+  refusal; success/fresh bytes+mtimes, manager binding and the existing fault/
+  rollback suite stay green. Root accepted workspace 452, strict clippy,
+  dependent check and conform 0 new. Combined map `3883f15e` is
+  6828/2293/2063 at zero suspects/orphans/unresolved.
 - Gate repair `67ab9683` fixes the conform content store's Windows cache slot:
   `sha256:<hex>` had created 1,393 NTFS alternate streams on one base file and
   failed with OS error 665. Authored engine + six vendored copies now use one
@@ -324,7 +341,7 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 | Step | State | Evidence |
 |---|---|---|
 | R4.0 one pure registry below lifecycle/workspace | done | kernel `6af1b86f`, map `8531cf82`; exact runtime-dependency/AST-ambient/public-reexport fences; kernel 22, lifecycle 287/3 ignored, orchestrator 126 + doctests, strict clippy/check/conform/DAG green |
-| R4.1 four positions, owner-scoped activation, header, per-unit fingerprint, reference oracle | in progress | architecture fixes one lock-ordered world snapshot, one collector per lane owner, package-own activation, future-world uninstall and node no-fingerprint law; no transform descriptors/passes/header binding yet |
+| R4.1 four positions, owner-scoped activation, header, per-unit fingerprint, reference oracle | in progress | package-control carriage/projection `52a59dcc`; unit transaction `91142777`, law `ab68d145`, map `3883f15e`; exact TransformPlan/config/digest ABI frozen in `R4-TRANSFORM-PLAN-ABI-v0.1.md`; world snapshot, plan/pass/header/fingerprint wiring still open |
 | R4.2 builtin XML minify | partial | pure strict kernel `016f0fab` and reversible comment codec `fbbd5140`; no activation/on-off e2e |
 | R4.3 lane analyzer | missing | no `vibe extensions analyze` or machine report |
 
@@ -493,8 +510,9 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
     digest into the boot-graph fingerprint (empty plan = absent frame); node
     lanes intentionally have no freshness fingerprint and always recompute,
     carrying plan identity in header/provenance while equal transactional bytes
-    preserve mtime. Per-unit lanes must join the crash-safe artifact transaction
-    before byte-changing transforms ship. XML-minify needs explicit REDs for
+    preserve mtime. Per-unit lanes joined the crash-safe artifact transaction
+    at `91142777` / `ab68d145`; every byte-changing transform must ride that
+    same manager-owned publication. XML-minify needs explicit REDs for
     hoisted top-level `#use`, all-elided streams, comment/CDATA boundaries,
     semantic `from_xml` parity and a strictly-smaller real lane; it may never
     bless non-XML text by weakening the strict kernel. Document selector

@@ -93,6 +93,15 @@ fronts currently in flight. A worker report or old worktree is never completion.
             manifest for package-owned lane, node manifest for node lane;
             four identity-transform positions, active-only header, per-unit
             plan fingerprint, node recompute/no-op and transaction parity.
+            - [x] package controls + exact owner projection (`52a59dcc`), with
+                  five host/package/sibling isolation REDs and full downstream
+                  gates.
+            - [x] per-unit transaction parity (`91142777`, law `ab68d145`):
+                  compile-before-mutation, atomic INDEX/selected/stale publish,
+                  refusal byte exactness and fresh bytes/mtime preservation.
+            - [ ] implement the frozen TransformPlan/config/digest ABI in
+                  `R4-TRANSFORM-PLAN-ABI-v0.1.md`, then owner snapshot, four
+                  positions, subject wire/verifier, header and fingerprint.
       - [ ] R4.2 bind strict builtin XML minify with the full RED corpus.
       - [ ] R4.3 JTD-first `vibe extensions analyze` report/CLI.
 - [ ] **R5.1–R5.5** — native schemas/SDK, loader, source/prebuilt build,
