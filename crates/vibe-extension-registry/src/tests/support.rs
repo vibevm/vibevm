@@ -33,6 +33,22 @@ pub(super) fn dependency_with_kind(
     kind: PackageKind,
     declarations: Vec<ExtensionDecl>,
 ) -> DependencyExtensionSource {
+    dependency_with_controls(
+        group,
+        name,
+        kind,
+        declarations,
+        ExtensionsControl::default(),
+    )
+}
+
+pub(super) fn dependency_with_controls(
+    group: &str,
+    name: &str,
+    kind: PackageKind,
+    declarations: Vec<ExtensionDecl>,
+    controls: ExtensionsControl,
+) -> DependencyExtensionSource {
     DependencyExtensionSource {
         provider: DependencyProvider {
             id: provider_id(group, name),
@@ -43,6 +59,7 @@ pub(super) fn dependency_with_kind(
                 .unwrap_or_else(|error| panic!("valid test hash: {error}")),
         },
         declarations,
+        controls,
     }
 }
 

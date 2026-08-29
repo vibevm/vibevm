@@ -149,6 +149,7 @@ pub(super) fn dependency_source(
                 content_hash: package.content_hash.clone(),
             },
             declarations: manifest.extensions,
+            controls: manifest.extension_controls,
         },
     })
 }

@@ -193,6 +193,7 @@ fn registry_with(
                 content_hash: ContentHash::parse("sha256:aa").unwrap(),
             },
             declarations: vec![declaration],
+            controls: ExtensionsControl::default(),
         }],
         host: HostExtensionSource {
             provider: HostProvider {

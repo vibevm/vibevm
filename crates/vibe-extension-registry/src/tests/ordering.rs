@@ -1,10 +1,7 @@
 use specmark::verifies;
 use vibe_core::manifest::{ExtensionKey, ExtensionUse, ExtensionsControl};
 
-use crate::{
-    ContributionTier, DependencyExtensionSource, ExtensionProvider, SelectorSubject,
-    collect_extensions,
-};
+use crate::{ContributionTier, ExtensionProvider, SelectorSubject, collect_extensions};
 
 use super::support::{
     declaration, dependency, dependency_with_kind, host, package_key, provider_id, world,
@@ -197,16 +194,4 @@ fn provider_metadata_is_retained_separately_from_the_opaque_key() {
     assert_eq!(provider.root.to_string_lossy(), "vibedeps/tools");
     assert_eq!(provider.version, "1.2.3");
     assert_eq!(provider.content_hash.as_str(), "sha256:aa");
-}
-
-#[test]
-#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#HOST-ACTIVATION")]
-fn installed_input_shape_has_no_consumer_controls() {
-    let source = dependency("org.demo", "tools", Vec::new());
-    let DependencyExtensionSource {
-        provider,
-        declarations,
-    } = source;
-    assert_eq!(provider.id, provider_id("org.demo", "tools"));
-    assert!(declarations.is_empty());
 }

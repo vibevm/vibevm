@@ -68,6 +68,7 @@ fn dependency_registry(override_message: &str) -> crate::ExtensionRegistry {
                 content_hash: ContentHash::parse("sha256:aa").unwrap(),
             },
             declarations: vec![builtin("announce", "log", Some("authored"))],
+            controls: ExtensionsControl::default(),
         }],
         host: HostExtensionSource {
             provider: HostProvider {

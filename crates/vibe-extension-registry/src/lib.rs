@@ -39,6 +39,7 @@ pub use model::{
     ContributionTier, DependencyExtensionSource, DependencyProvider, DependencyProviderId,
     ExtensionProvider, ExtensionRegistry, ExtensionRegistryRow, ExtensionWorld,
     HostExtensionSource, HostIdentity, HostProvider, RegistryView, SyntheticPresetSource,
+    lane_owner_host,
 };
 pub use selector::SelectorSubject;
 pub use view::RegistryState;

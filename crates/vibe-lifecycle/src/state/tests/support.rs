@@ -161,6 +161,7 @@ pub(super) fn dependency_row(
                 content_hash: ContentHash::parse(content_hash).unwrap(),
             },
             declarations: vec![declaration],
+            controls: ExtensionsControl::default(),
         }],
         host: HostExtensionSource {
             provider: HostProvider {

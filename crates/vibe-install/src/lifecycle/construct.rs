@@ -133,6 +133,7 @@ impl InstallSlotLifecycle {
                 Ok(DependencyExtensionSource {
                     provider: dependency_provider(&workspace.root, dep)?,
                     declarations: dep.manifest.extensions.clone(),
+                    controls: dep.manifest.extension_controls.clone(),
                 })
             })
             .collect::<Result<Vec<_>>>()?;

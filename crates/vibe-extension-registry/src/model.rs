@@ -133,8 +133,11 @@ pub struct HostProvider {
 
 /// One lock-ordered dependency row supplied to the pure collector.
 ///
-/// Consumer controls are intentionally absent: installed packages cannot
-/// activate or disable contributions in the selected host's effective world.
+/// The row retains the package's own parsed consumer controls. They are
+/// inert data while the package sits in the installed vector of another
+/// owner's selected-host world — only `world.host.controls` act there — and
+/// become live controls exactly when [`lane_owner_host`] projects the row
+/// into the host seat of the package's own lane.
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM")]
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct DependencyExtensionSource {
@@ -142,6 +145,8 @@ pub struct DependencyExtensionSource {
     pub provider: DependencyProvider,
     /// Manifest declaration order, already parsed and validated upstream.
     pub declarations: Vec<ExtensionDecl>,
+    /// The package's own `[extensions]` controls, retained verbatim.
+    pub controls: ExtensionsControl,
 }
 
 /// The selected host's declarations and its sole consumer-control surface.
@@ -154,6 +159,37 @@ pub struct HostExtensionSource {
     pub declarations: Vec<ExtensionDecl>,
     /// Ordered activations plus exact disable keys authored by the host.
     pub controls: ExtensionsControl,
+}
+
+/// Project a dependency into the host seat of its own lane's world.
+///
+/// The projection retains the exact provider identity, root, version, kind
+/// and content hash: identity becomes [`HostIdentity::Coordinate`], and the
+/// kind and content hash that are exact for an installed package become
+/// `Some` on the host provider. Declarations and the package's retained
+/// [`ExtensionsControl`] carry over verbatim, so the one collector — fed this
+/// value as the host of a world whose installed rows are the package's
+/// dependency closure — applies those controls to that lane alone. Pure and
+/// infallible: no filesystem, parsing, or validation happens here.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-ACTIVATION")]
+#[must_use]
+pub fn lane_owner_host(source: &DependencyExtensionSource) -> HostExtensionSource {
+    let DependencyExtensionSource {
+        provider,
+        declarations,
+        controls,
+    } = source;
+    HostExtensionSource {
+        provider: HostProvider {
+            identity: HostIdentity::coordinate(provider.id.clone()),
+            root: provider.root.clone(),
+            version: provider.version.clone(),
+            kind: Some(provider.kind),
+            content_hash: Some(provider.content_hash.clone()),
+        },
+        declarations: declarations.clone(),
+        controls: controls.clone(),
+    }
 }
 
 /// Complete owned input to pure extension collection.

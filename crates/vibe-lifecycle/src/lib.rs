@@ -68,6 +68,7 @@
 //!             content_hash: ContentHash::parse("sha256:aa").unwrap(),
 //!         },
 //!         declarations: vec![declaration],
+//!         controls: ExtensionsControl::default(),
 //!     }],
 //!     host: HostExtensionSource {
 //!         provider: HostProvider {
@@ -122,7 +123,7 @@ pub use registry::{
     DependencyProvider, DependencyProviderId, EffectiveManifestKind, ExecutableContribution,
     ExecutablePlan, ExtensionProvider, ExtensionRegistry, ExtensionRegistryRow, ExtensionWorld,
     HostExtensionSource, HostIdentity, HostProvider, RegistryState, RegistryView, SelectorSubject,
-    SyntheticPresetSource, collect_extensions, collect_extensions_with_presets,
+    SyntheticPresetSource, collect_extensions, collect_extensions_with_presets, lane_owner_host,
 };
 pub use runner::{
     ExecutionReuse, ExecutionTransition, FailedExecutionTransition, LifecycleRun,
