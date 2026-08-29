@@ -506,6 +506,57 @@ boundary calls provenance. Widening the surface is backwards compatible;
 discovering after the fact that a transform forged provenance is not, which is
 why the initial line is the restrictive one.
 
+### 6.5 T9 emitted reconstruction — decision record
+
+§6 requires that the manager alone consumes the old `EmittedArtifact`,
+recomputes bytes digest and provenance and appends the transform identity, but
+does not say what "appends" writes, where reconstruction lives, or what the
+byte-equal case preserves. Settled centrally before T9 implementation.
+
+**Decision.** On CHANGED bytes the manager builds a whole new artifact:
+`bytes` are the behavior's output; `bytes_digest` is recomputed through the
+one existing `emitted_bytes_digest`; a new provenance member
+`emitted_transforms: Vec<PassName>` gains the entry's exact schedule pass name
+(`transform:emitted:<key>`) appended in application order; every other
+provenance member — `context`, `backend`, `producer`, `source_lane_digest`,
+`renames`, `contributions` — is copied unchanged. On BYTE-EQUAL output the
+ORIGINAL artifact is returned untouched: no recompute, no append, `Eq` to the
+untransformed compile. `emitted_transforms` is empty at emission, so an
+artifact no emitted transform changed is spelled exactly as before the member
+existed. Reconstruction is a pure manager-side cell
+(`transform/emitted_reconstruction.rs`, the `lane_admission` posture): the
+wrapper consults it and owns nothing else; the
+`TransformCapabilityGap::EmittedChange` arm retires with its tests rewritten
+to the reconstruction law. The member enters the compiler IR wire
+(`emission_provenance` gains the required array of pass-name strings; decode
+validates each through `PassName` and the scalar law; the golden corpus moves
+in the same commit, wire-diff's schema+corpus classes together).
+
+**Why.** The digest must be recomputed through the one digest cell so
+`output_fingerprint`, the compile trace and fresh-skip observe the
+post-transform truth with no second spelling. The append is the provenance
+question a later reader actually asks — which post-backend rewrite explains
+these bytes — and the schedule-owned pass name is already the display-genre
+identity `producer` established; it is recorded, never parsed back. No witness
+gate guards provenance because the emitted behavior receives bytes and returns
+bytes: unlike `run_lane`, which hands the behavior the whole carrier including
+`frame.renames`, there is no channel through which an emitted behavior could
+forge provenance, so the reconstruction cell is the single writer by
+construction.
+
+**Considered and rejected.** Recording nothing beyond the digest — a reader
+must diff digests to even suspect a rewrite, and the identity of the rewriter
+is unrecoverable. A per-transform digest chain — records intermediate states
+nothing consumes; the compile trace already snapshots per-pass outputs.
+A provenance witness gate — guards a channel that does not exist. Mutable
+accessors (`bytes_mut`/`provenance_mut`) — banned by §6; reconstruction stays
+a whole-value build.
+
+**When to revisit.** When R5's native emitted ABI returns anything richer than
+bytes, the reconstruction cell is the boundary that must refuse what it does
+not understand; and if any consumer ever needs the pre-transform digest, that
+is a new recorded decision, not a silent second member.
+
 ## 7. Empty plan law
 
 `TransformPlan::empty()` owns no entries/allocation and `digest() == None`.
