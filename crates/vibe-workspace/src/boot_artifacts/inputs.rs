@@ -22,20 +22,38 @@ use crate::{WorkspaceError, layout_paths};
 
 use super::normal::{hoisted_seed, normal_seed};
 
-/// Build one artifact's inputs from the lane's static entries, in order.
-pub(super) fn build(
+/// Build one artifact's inputs from the lane's static entries, in order,
+/// each with its TYPED declaring provider beside it — the attribution
+/// side the R4.3 analyzer lowers into its report (`bootgen/analyze.rs`)
+/// and the write path simply drops.
+///
+/// A document-producing entry (normal/simple) answers the provider
+/// question STRICTLY — the T10B law, refusal propagating. An elided or
+/// hoisted entry produces no document, so its input takes the legacy
+/// constructor and its provider is typed when the provenance parses and
+/// `None` when it does not: the write path never reads these (hostile
+/// marker-prose names are legal lane material it must keep emitting),
+/// and the analyzer refuses an unattributable seat rather than parking
+/// it in a pseudo-provider.
+pub(super) fn build_with_providers(
     entries: Vec<&BootEntry>,
     workspace_root: &Path,
     self_coord: &SelfCoordinate,
-) -> Result<Vec<ArtifactInput>, WorkspaceError> {
+) -> Result<(Vec<ArtifactInput>, Vec<Option<DocumentProvider>>), WorkspaceError> {
     let mut inputs = Vec::with_capacity(entries.len());
+    let mut providers = Vec::with_capacity(entries.len());
     for entry in entries {
-        let input = if entry.elided {
-            // Elided and hoisted contributions produce NO document, so no
-            // source/document transform is ever invoked for them and they
-            // carry no typed provider: the legacy constructors are the
-            // honest form here, not a gap.
-            ArtifactInput::elided(&entry.origin, &entry.path)
+        let provider = document_provider(entry, self_coord);
+        let (input, seat) = if entry.elided {
+            // An elided contribution produces NO document, so no
+            // source/document transform is ever invoked for it and the
+            // input takes the legacy constructor; the seat's provider is
+            // typed when the provenance parses and `None` when it does
+            // not (hostile marker-prose names are legal lane material).
+            (
+                ArtifactInput::elided(&entry.origin, &entry.path),
+                provider.ok(),
+            )
         } else if entry.use_ref {
             let target = hoisted_seed(&entry.origin, &entry.path).ok_or_else(|| {
                 WorkspaceError::InlineCompile {
@@ -45,46 +63,62 @@ pub(super) fn build(
                     ),
                 }
             })?;
-            ArtifactInput::hoisted(&entry.origin, &entry.path, target)
-        } else if entry.format.is_normal() {
-            let seed = normal_seed(&entry.origin, &entry.path).ok_or_else(|| {
-                WorkspaceError::InlineCompile {
-                    reason: format!(
-                        "cannot derive a spec:// seed for the normal package `{}` at `{}` \
-                         (PROP-035 §8): expected a `<group>/<name>` origin and a path under a \
-                         package's `{}` root",
-                        entry.origin,
-                        entry.path,
-                        layout_paths::slot_specs("<slot>", "")
-                    ),
-                }
-            })?;
-            ArtifactInput::normal_declared_by(
-                &entry.origin,
-                &entry.path,
-                seed,
-                document_provider(entry, self_coord)?,
+            (
+                ArtifactInput::hoisted(&entry.origin, &entry.path, target),
+                provider.ok(),
             )
         } else {
-            let absolute = workspace_root.join(&entry.path);
-            let (markdown, _) =
-                vibe_specdoc::load_spec_text(&absolute).map_err(|error| WorkspaceError::Io {
-                    path: absolute,
-                    reason: error.to_string(),
+            // A document-producing entry answers the provider question
+            // STRICTLY — the T10B law, refusal propagating.
+            let typed = provider?;
+            if entry.format.is_normal() {
+                let seed = normal_seed(&entry.origin, &entry.path).ok_or_else(|| {
+                    WorkspaceError::InlineCompile {
+                        reason: format!(
+                            "cannot derive a spec:// seed for the normal package `{}` at `{}` \
+                             (PROP-035 §8): expected a `<group>/<name>` origin and a path under a \
+                             package's `{}` root",
+                            entry.origin,
+                            entry.path,
+                            layout_paths::slot_specs("<slot>", "")
+                        ),
+                    }
                 })?;
-            ArtifactInput::simple_declared_by(
-                &entry.origin,
-                &entry.path,
-                markdown,
-                document_provider(entry, self_coord)?,
-            )
-        }
-        .map_err(|error| WorkspaceError::InlineCompile {
+                (
+                    ArtifactInput::normal_declared_by(
+                        &entry.origin,
+                        &entry.path,
+                        seed,
+                        typed.clone(),
+                    ),
+                    Some(typed),
+                )
+            } else {
+                let absolute = workspace_root.join(&entry.path);
+                let (markdown, _) = vibe_specdoc::load_spec_text(&absolute).map_err(|error| {
+                    WorkspaceError::Io {
+                        path: absolute,
+                        reason: error.to_string(),
+                    }
+                })?;
+                (
+                    ArtifactInput::simple_declared_by(
+                        &entry.origin,
+                        &entry.path,
+                        markdown,
+                        typed.clone(),
+                    ),
+                    Some(typed),
+                )
+            }
+        };
+        let input = input.map_err(|error| WorkspaceError::InlineCompile {
             reason: error.to_string(),
         })?;
         inputs.push(input);
+        providers.push(seat);
     }
-    Ok(inputs)
+    Ok((inputs, providers))
 }
 
 /// The typed provider that DECLARED one document-producing boot entry.

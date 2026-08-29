@@ -400,7 +400,7 @@ fn a_global_pass_name_collision_is_an_entry_fault_with_full_row_identity() {
         identity_seed("org.demo/tools#src", TransformStage::Source),
         identity_seed("org.demo/tools#later", TransformStage::Source),
     ]);
-    let schedule = super::schedule::TransformSchedule::resolve(&plan, &identity_registry())
+    let schedule = super::schedule::TransformSchedule::resolve(&plan, &identity_registry(), None)
         .expect("the identity plan resolves");
 
     let mut pipeline = CompilerPipeline::default();

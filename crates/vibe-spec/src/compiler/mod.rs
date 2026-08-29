@@ -16,6 +16,7 @@ pub(crate) mod emit;
 pub(crate) mod ir;
 pub(crate) mod link;
 pub(crate) mod merge;
+pub(crate) mod observer;
 pub(crate) mod pass;
 pub(crate) mod pipeline;
 pub(crate) mod qualify;

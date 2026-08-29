@@ -563,6 +563,28 @@ foreign_parsers = "none"
 corpus = "formats/corpora/deploy/e1"
 sunset = "none"
 
+# ── Lane analyzer report (1 JTD), R4.3 / packages-2026-09 ───────────────────
+# The `vibe extensions analyze --json` document: the attribution evidence of
+# one in-process compile of the selected node's lanes — per artifact, the
+# bytes each typed provider contributed, the frame bytes no contribution
+# owns, and every transform pass's byte effect labelled by stage (R4
+# architecture §9). Transient by the frozen §9.1 ruling: the observer is
+# process-lifetime, nothing is persisted, and re-running the same compile
+# rebuilds the report, so `recoverable = true`. Read by operators, scripts
+# and raw `curl | jq` (`foreign_parsers = "many"`), so — exactly like
+# `requirements-report`, and unlike the A2 fact records it otherwise copies
+# its shape discipline from — the generated reader stays permissive and the
+# strictness this format carries is its closed vocabularies, its exact
+# member set and the hand-written relational validator beside it (the
+# reconciliation, stage and estimator laws), never `deny_unknown_fields`.
+[format.extensions-analyze]
+epoch = 1
+schema = "schemas/extensions_analyze.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "formats/corpora/extensions-analyze/e1"
+sunset = "none"
+
 # ── Uninventoried surfaces (PROP-044 §6.5) ──────────────────────────────────
 [format.mcp-tools]
 epoch = 1

@@ -42,7 +42,8 @@ mod use_graph;
 
 pub use address::{Authority, SpecAddress, SpecAddressError};
 pub use compiler::builtin::{
-    ArtifactCompileError, TransformCompileError, compile_artifact, compile_artifact_traced,
+    ArtifactCompileError, TransformCompileError, compile_artifact, compile_artifact_observed,
+    compile_artifact_traced,
 };
 #[cfg(feature = "test-support")]
 pub use compiler::builtin::{
@@ -67,6 +68,15 @@ pub use compiler::transform::plan::TransformPlan;
 // `vibe_wire::generated::compiler_trace_index::e1::index` types, and a second
 // spelling of them here is exactly the drift the trace epoch exists to prevent.
 pub use compiler::trace::{CompileTraceSink, PassTraceEvent, SnapshotDecision};
+// The analyzer observer seam (R4.3): the evidence vocabulary this crate
+// owns — witness-derived contribution bytes, occurrence counts, frame
+// bytes and the two stage-labelled byte deltas. Every type here is
+// `vibe-spec`'s own (the T10 boundary law: no kernel manifest type
+// crosses), which is exactly why it MAY cross where the trace epoch's
+// generated vocabulary may not.
+pub use compiler::observer::{
+    CompileObserver, DeltaStage, EmissionContribution, EmissionEvent, EmissionKind, StageDeltaEvent,
+};
 pub use directives::{Directive, DirectiveError, DirectiveKind, Directives, InPlaceUse};
 pub use doctree::{DocTree, Node, NodeId, NodeKind};
 pub use embed::{EmbedError, FsSectionSource, SectionSource, expand_embeds};

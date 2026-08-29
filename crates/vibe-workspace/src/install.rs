@@ -31,6 +31,11 @@ use crate::hooks::{
 };
 use crate::{Workspace, WorkspaceError, layout_paths, vibedeps};
 
+/// Stale-slot pruning — removing every dependency slot the current
+/// resolution no longer names, out of line per the file-length budget.
+mod prune;
+use prune::prune_stale_slots;
+
 mod hook_output;
 mod hooks_run;
 pub mod model;
@@ -60,6 +65,10 @@ pub use slot_lifecycle::{
 };
 
 pub use bootgen::verify_boot_graph;
+/// The R4.3 lane analyzer's write-free entry (packages-2026-09 §9): one
+/// selected node's lane composed and compiled under the analyzer
+/// observer — the same composition regeneration runs, minus every write.
+pub use bootgen::{AnalyzedLane, analyze_node_lane};
 pub use bootgen::{
     regenerate_boot, regenerate_boot_from, regenerate_boot_from_traced,
     regenerate_boot_from_with_spec_format, regenerate_boot_traced,
@@ -497,58 +506,6 @@ fn is_in_place(dep: &ResolvedDep) -> bool {
         .is_some_and(|p| p.materialization.is_in_place())
 }
 
-/// Remove every dependency slot whose path is not in `kept`, returning
-/// the removed slot paths (sorted). A `<kind>-<name>` directory left with
-/// no surviving version is removed too, so the dependency tree holds exactly the
-/// current resolution and no empty husks.
-fn prune_stale_slots(
-    workspace_root: &Path,
-    kept: &[String],
-) -> Result<Vec<String>, WorkspaceError> {
-    let vibedeps_dir = workspace_root.join(vibe_core::layout::current_vibedeps_root());
-    if !vibedeps_dir.is_dir() {
-        return Ok(Vec::new());
-    }
-    let keep: HashSet<&str> = kept.iter().map(String::as_str).collect();
-    let mut pruned = Vec::new();
-    for kind_name in fs::read_dir(&vibedeps_dir).map_err(|e| io_err(&vibedeps_dir, e))? {
-        let kind_name = kind_name.map_err(|e| io_err(&vibedeps_dir, e))?;
-        let kind_name_dir = kind_name.path();
-        if !kind_name_dir.is_dir() {
-            continue;
-        }
-        // An in-place slot is the `<kind>-<name>` dir itself — a git working
-        // tree (PROP-022 §2.4), not a container of versioned slots. Skip it:
-        // its lifecycle is the move-into-slot / destructive-guard path, never
-        // version pruning.
-        if kind_name_dir.join(".git").exists() {
-            continue;
-        }
-        let kn = kind_name.file_name().to_string_lossy().into_owned();
-        let mut any_kept = false;
-        for version in fs::read_dir(&kind_name_dir).map_err(|e| io_err(&kind_name_dir, e))? {
-            let version = version.map_err(|e| io_err(&kind_name_dir, e))?;
-            let version_dir = version.path();
-            if !version_dir.is_dir() {
-                continue;
-            }
-            let ver = version.file_name().to_string_lossy().into_owned();
-            let rel = layout_paths::vibedeps(format!("{kn}/{ver}"));
-            if keep.contains(rel.as_str()) {
-                any_kept = true;
-            } else {
-                fs::remove_dir_all(&version_dir).map_err(|e| io_err(&version_dir, e))?;
-                pruned.push(rel);
-            }
-        }
-        if !any_kept {
-            let _ = fs::remove_dir(&kind_name_dir);
-        }
-    }
-    pruned.sort();
-    Ok(pruned)
-}
-
 /// Build a [`WorkspaceError::Io`] from a `std::io::Error` and its path.
 pub(super) fn io_err(path: &Path, e: std::io::Error) -> WorkspaceError {
     WorkspaceError::Io {
@@ -573,6 +530,9 @@ mod test_helpers;
 #[path = "install/tests_hooks.rs"]
 mod tests_hooks;
 
+#[cfg(test)]
+#[path = "install/tests_analyze_parity.rs"]
+mod tests_analyze_parity;
 #[cfg(test)]
 #[path = "install/tests_hybrid.rs"]
 mod tests_hybrid;

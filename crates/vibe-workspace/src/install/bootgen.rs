@@ -30,6 +30,12 @@ use owner_plans::{
 mod hybrid_emit;
 use hybrid_emit::{append_hoisted, build_unit_table, emit_package_units, verify_fingerprints};
 
+/// The R4.3 lane analyzer's write-free entry — one selected node's lane
+/// composed and compiled under the analyzer observer.
+#[path = "bootgen/analyze.rs"]
+mod analyze;
+pub use analyze::{AnalyzedLane, analyze_node_lane};
+
 /// The workspace root's B-031 `<group>/<name>` self coordinate, when declared.
 mod materialised_read;
 use materialised_read::read_materialised;

@@ -1,0 +1,331 @@
+{
+  "metadata": {
+    "description": "Epoch-1 lane analyzer report (R4.3): the attribution evidence of ONE in-process compile of the selected node's lanes — per artifact, the bytes each typed provider contributed, the frame bytes no contribution owns, and the byte effect of every transform pass that ran, labelled by stage (campaigns/packages-2026-09 architecture §9). Rebuildable by re-running the same compile (a transient observation, never durable state); read by operators, scripts and raw `curl | jq`, so the generated reader stays permissive and the strictness this format carries is its closed vocabularies, its exact member set and the hand-written relational validator beside it — the same computed-policy shape `requirements-report` already records.",
+    "x-laws": [
+      "byte-count law: every byte count is a CANONICAL unsigned decimal string — digits only, no sign, no leading zero except `0` itself — exactly as the `digest_witness` fragment spells its `bytes` member (`lifecycle_state.jtd.json`): JTD has no `uint64` and a lane may exceed 4 GiB, so the count is never narrowed on either side of this wire. A byte DELTA is spelled as a before/after pair of such counts, never as a signed difference: the pair keeps every member of this format inside the one unsigned spelling and lets a reader reconcile the chain without re-deriving cumulative sums",
+      "reconciliation law: per artifact, sum(contribution bytes) + frame_overhead_bytes == total_emitted_bytes, and the emitted-stage delta rows chain — each row's `before` equals the previous emitted row's `after`, and the last `after` equals the artifact's total. A report that does not reconcile is not a report of any compile",
+      "stage law: `lane_byte_delta` and `artifact_byte_delta` are DIFFERENT labelled members and never conflated (§9): a `lane`-stage row carries the lane member and a null artifact member (no artifact exists yet at that stage), an `emitted`-stage row carries the artifact member and a null lane member (the lane is frozen upstream). Exactly one is non-null per row",
+      "estimator law: `token_estimate` is present ONLY beside a non-null `estimator_id`. This atom ships NO estimator, so every row the CLI produces spells both members null — the absent form is a statement, not an omission",
+      "attribution law: contribution bytes come from the compile's Lane/Emission witnesses, never from parsing the artifact's generated comment markers (the frozen §9.1 evidence-source decision)"
+    ],
+    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE" },
+    "rustOptions": {
+      "package": "vibe_wire::extensions_analyze"
+    }
+  },
+  "properties": {
+    "schema": {
+      "type": "uint32",
+      "metadata": {
+        "description": "Report schema epoch; 1 in epoch 1. The behaviour cell refuses every other value, so a newer report fails loudly instead of parsing into a wrong meaning."
+      }
+    },
+    "command": {
+      "type": "string",
+      "metadata": {
+        "description": "The command identity that produced this report — `extensions-analyze`. Validated non-blank and control-free by the behaviour cell."
+      }
+    },
+    "artifacts": {
+      "elements": { "ref": "artifact_row" },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "One row per compiled artifact, in compile order. A node with no static-lane contributions compiles nothing and emits the empty list — the honest answer, not an error."
+      }
+    }
+  },
+  "definitions": {
+    "lane_identity": {
+      "metadata": {
+        "description": "Which lane owner the compiled artifact belongs to. The analyzer of this epoch compiles the selected node's own lane, so every row it produces carries the `node` arm; the `unit` arm — a package owner coordinate — is the seat a per-unit analyzer fills when that seam widens, and a row that cannot say which owner's artifact it describes names nothing. Mirrors the artifact-identity grammar of the R4 architecture §7 (every artifact binds its lane owner's plan) without importing the compiler IR wire's shape."
+      },
+      "discriminator": "kind",
+      "mapping": {
+        "node": {
+          "properties": {
+            "node_rel": {
+              "type": "string",
+              "metadata": {
+                "description": "The node's canonical workspace-relative path (`.` for the absolute root) — the portable identity regeneration records, never an absolute path. Forward-slashed, non-blank, control-free; validated by the behaviour cell."
+              }
+            }
+          }
+        },
+        "unit": {
+          "properties": {
+            "group": {
+              "type": "string",
+              "metadata": {
+                "description": "The owning package's group component."
+              }
+            },
+            "name": {
+              "type": "string",
+              "metadata": {
+                "description": "The owning package's name component."
+              }
+            }
+          }
+        }
+      }
+    },
+    "artifact_target": {
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "The compiled artifact's target. Closed at the two builtin static lanes this epoch compiles: the analyzer drives exactly the targets regeneration drives. A custom target reopens this vocabulary with its registration act."
+      },
+      "enum": ["static-md", "static-xml"]
+    },
+    "contribution_kind": {
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "The four lane-contribution kinds (`LaneContribution`). `normal` is a compiled closure; `simple` is carried verbatim; `elided` emits a marker only; `hoisted` emits a `#use` reference to text hoisted elsewhere."
+      },
+      "enum": ["normal", "simple", "elided", "hoisted"]
+    },
+    "provider_identity": {
+      "metadata": {
+        "description": "The typed provider a contribution's bytes are attributed to — the DECLARING row's identity, spelled as typed coordinate components rather than a rendered display string. Self-contained here but mirroring the compiler IR wire's `document_provider` coordinate arms exactly (`group`/`name` for a dependency, the three host seats), so a match-time reader reconstructs the typed identity without parsing anything. The two absences of the IR shape (`unclaimed`, `undetermined`) are deliberately NOT arms of this vocabulary: an attribution row names a provider that exists, and a contribution the analyzer cannot attribute is not silently parked in a pseudo-provider — the compile refuses it. Parsing a coordinate out of the display `origin` instead of carrying this typed value is exactly what this member exists to prevent."
+      },
+      "discriminator": "kind",
+      "mapping": {
+        "dependency": {
+          "metadata": {
+            "description": "An installed dependency provider's versionless coordinate."
+          },
+          "properties": {
+            "group": {
+              "type": "string",
+              "metadata": {
+                "description": "The dependency's validated group component."
+              }
+            },
+            "name": {
+              "type": "string",
+              "metadata": {
+                "description": "The dependency's validated name component."
+              }
+            }
+          }
+        },
+        "host-ungrouped": {
+          "metadata": {
+            "description": "A host project with no group, named exactly as authored."
+          },
+          "properties": {
+            "name": {
+              "type": "string",
+              "metadata": {
+                "description": "The host's authored project name."
+              }
+            }
+          }
+        },
+        "host-coordinate": {
+          "metadata": {
+            "description": "A grouped project or package-role host: the same validated coordinate a dependency carries, in the host seat."
+          },
+          "properties": {
+            "group": {
+              "type": "string",
+              "metadata": {
+                "description": "The host's validated group component."
+              }
+            },
+            "name": {
+              "type": "string",
+              "metadata": {
+                "description": "The host's validated name component."
+              }
+            }
+          }
+        },
+        "host-virtual-workspace": {
+          "metadata": {
+            "description": "A coordinator that may control dependencies but declares none; it has no coordinate components."
+          },
+          "properties": {}
+        }
+      }
+    },
+    "byte_count": {
+      "metadata": {
+        "description": "One byte count: a CANONICAL unsigned decimal string — digits only, no sign, no grouping, no leading zero except `0` itself. Validated by the behaviour cell. Strings, not numbers, because JTD has no `uint64` and a lane's bytes may exceed 4 GiB — the same law the shared `digest_witness` fragment spells for declared input bytes."
+      },
+      "type": "string"
+    },
+    "byte_pair": {
+      "metadata": {
+        "description": "A byte delta as the before/after pair of the pass's input and output — both canonical unsigned decimal strings. A pair, never a signed difference: every byte spelling in this format stays inside the one unsigned law, and the pair is what a reconciliation walks (each row's `before` is the previous row's `after`)."
+      },
+      "properties": {
+        "before": {
+          "ref": "byte_count",
+          "metadata": {
+            "description": "The byte count the pass received."
+          }
+        },
+        "after": {
+          "ref": "byte_count",
+          "metadata": {
+            "description": "The byte count the pass returned."
+          }
+        }
+      }
+    },
+    "contribution_row": {
+      "metadata": {
+        "description": "One lane contribution's attribution: who declared it, what kind it is, and how many emitted bytes its own material occupies. The bytes are the backend's rendering of the WITNESS's chunk stream (or prepared XML document) with trailing frame whitespace removed — the contribution's content between the framing separators, never a count reconstructed by reading the artifact's generated comment markers."
+      },
+      "properties": {
+        "provider": {
+          "ref": "provider_identity",
+          "metadata": {
+            "description": "The typed provider the bytes are attributed to."
+          }
+        },
+        "kind": {
+          "ref": "contribution_kind",
+          "metadata": {
+            "description": "Which of the four lane-contribution kinds this row is."
+          }
+        },
+        "origin": {
+          "type": "string",
+          "metadata": {
+            "description": "The contribution's display provenance (`ContributionMeta.origin`) — a node rel path or a `<group>/<name>` package coordinate, possibly with a `[shared by …]` suffix. DISPLAY only; identity lives in `provider`. Non-blank, control-free; validated by the behaviour cell."
+          }
+        },
+        "path": {
+          "type": "string",
+          "metadata": {
+            "description": "The contribution's declared path (`ContributionMeta.path`), workspace-relative and forward-slashed. The path the declaring row named, which may legitimately differ from any address' own path."
+          }
+        },
+        "bytes": {
+          "ref": "byte_count",
+          "metadata": {
+            "description": "The emitted bytes this contribution's own material occupies — its chunk-stream (or prepared-document) rendering, trailing separator whitespace excluded. `0` for an `elided` contribution (its marker is frame) and the `#use` reference text's length for a `hoisted` one."
+          }
+        },
+        "occurrences": {
+          "type": "uint32",
+          "metadata": {
+            "description": "How many occurrences of this contribution the lane brackets (`0` for `elided` and `hoisted`, `1` for `simple`, the occurrence count of the compiled closure for `normal`)."
+          }
+        }
+      }
+    },
+    "stage": {
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "The declared schedule stage a transform pass ran at. Closed at the two artifact-level stages: a byte delta is DEFINED only where whole-artifact byte content exists — the lane (its chunk stream) before the backend runs, the emitted artifact after it. A source/document transform's byte effect is per-document and this epoch names no byte measure for it; reopening that is an epoch bump, not a silent widening."
+      },
+      "enum": ["lane", "emitted"]
+    },
+    "delta_row": {
+      "metadata": {
+        "description": "One transform pass's byte effect, in application order. The two members are labelled apart because they measure different things and never substitute for each other (§9): lane bytes are the backend-neutral chunk-stream content, artifact bytes are the emitted tape — the framing the backend adds at emit is exactly the difference between them, so a stage's delta is not a projection of the other's."
+      },
+      "properties": {
+        "pass": {
+          "type": "string",
+          "metadata": {
+            "description": "The schedule pass name (`transform:lane:<key>`, `transform:emitted:<key>`). Non-blank, control-free; validated by the behaviour cell."
+          }
+        },
+        "stage": {
+          "ref": "stage",
+          "metadata": {
+            "description": "Which stage the pass ran at."
+          }
+        },
+        "lane_byte_delta": {
+          "ref": "byte_pair",
+          "nullable": true,
+          "metadata": {
+            "description": "The lane's chunk-stream byte count before and after a `lane`-stage pass. Null on every other stage."
+          }
+        },
+        "artifact_byte_delta": {
+          "ref": "byte_pair",
+          "nullable": true,
+          "metadata": {
+            "description": "The emitted artifact's byte count before and after an `emitted`-stage pass. Null on every other stage. The chain of these pairs reconciles: each `before` is the previous `after`, and the last `after` is the artifact's `total_emitted_bytes`."
+          }
+        }
+      }
+    },
+    "artifact_row": {
+      "metadata": {
+        "description": "One compiled artifact's full attribution: identity, totals, per-provider contributions, frame overhead, per-pass deltas — and the token estimate this atom never ships. Every number in the row derives from the compile's witnesses; nothing is reconstructed from the artifact's generated text."
+      },
+      "properties": {
+        "lane": {
+          "ref": "lane_identity",
+          "metadata": {
+            "description": "Which lane owner's artifact this row describes."
+          }
+        },
+        "artifact_id": {
+          "type": "string",
+          "metadata": {
+            "description": "The artifact id (`static-md`, `static-xml`) — for a builtin static lane, the same identity the target names. Validated against the artifact/target vocabulary by the behaviour cell: an id its target disclaims names nothing."
+          }
+        },
+        "target": {
+          "ref": "artifact_target",
+          "metadata": {
+            "description": "The artifact's compile target."
+          }
+        },
+        "total_emitted_bytes": {
+          "ref": "byte_count",
+          "metadata": {
+            "description": "The artifact's emitted byte count — the exact length of the tape the compile produced."
+          }
+        },
+        "occurrence_count": {
+          "type": "uint32",
+          "metadata": {
+            "description": "How many contribution occurrences the lane brackets — the sum of the row's contribution occurrences."
+          }
+        },
+        "frame_overhead_bytes": {
+          "ref": "byte_count",
+          "metadata": {
+            "description": "The bytes no contribution owns: the prologue (header, resolution preamble, renames tombstone), the per-contribution markers and every separator. The complement of the contributions inside the total — reconciliation is the law, not an aspiration."
+          }
+        },
+        "contributions": {
+          "elements": { "ref": "contribution_row" },
+          "metadata": {
+            "x-empty": "emit",
+            "description": "The attribution rows, in lane order (the effective-boot order the plan declared)."
+          }
+        },
+        "deltas": {
+          "elements": { "ref": "delta_row" },
+          "metadata": {
+            "x-empty": "emit",
+            "description": "The transform passes that ran for this artifact, in application order. Empty when the owner plan is empty — every owner in a tree that activates nothing compiles the exact historical schedule, and an empty list is that statement."
+          }
+        },
+        "token_estimate": {
+          "type": "uint32",
+          "nullable": true,
+          "metadata": {
+            "description": "The artifact's estimated token count. Present ONLY beside a non-null `estimator_id`; this epoch ships no estimator, so every row the CLI produces spells this member null. A report that carries an estimate without naming its estimator is refused by the behaviour cell — a number with no named method is not an estimate, it is a rumor."
+          }
+        },
+        "estimator_id": {
+          "type": "string",
+          "nullable": true,
+          "metadata": {
+            "description": "The estimator that produced `token_estimate` — an explicit identity, never an implicit heuristic. Null exactly when `token_estimate` is null."
+          }
+        }
+      }
+    }
+  }
+}

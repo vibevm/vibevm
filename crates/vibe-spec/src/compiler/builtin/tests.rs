@@ -75,6 +75,7 @@ fn production_lane_declares_parse_gather_close_merge_embed_qualify_absorb_link_a
     let pipeline = BuiltinSchedule::assembled(
         &plan(StaticCompileMode::Plain),
         &TransformRegistry::builtins(),
+        &None,
     )
     .expect("the empty-plan schedule builds")
     .pipeline;
@@ -125,6 +126,7 @@ fn parse_runs_once_for_each_addressed_document_then_gathers() {
     let schedule = BuiltinSchedule::linked(
         &plan(StaticCompileMode::Plain),
         &TransformRegistry::builtins(),
+        &None,
     )
     .expect("the empty-plan schedule builds");
     // Two distinct canonical addresses: the gather boundary refuses a
@@ -173,6 +175,7 @@ fn parse_failure_keeps_the_pass_name_and_concrete_source() {
     let error = BuiltinSchedule::linked(
         &plan(StaticCompileMode::Plain),
         &TransformRegistry::builtins(),
+        &None,
     )
     .expect("the empty-plan schedule builds")
     .pipeline
@@ -217,6 +220,7 @@ fn the_empty_plan_keeps_the_declared_nine_item_schedule() {
     let empty = BuiltinSchedule::assembled(
         &plan(StaticCompileMode::Plain),
         &TransformRegistry::builtins(),
+        &None,
     )
     .expect("the empty-plan schedule builds");
 
@@ -255,7 +259,7 @@ fn a_nonempty_plan_on_a_compatibility_frame_refuses_before_any_lookup() {
     // could resolve the entry never runs.
     let carried = plan(StaticCompileMode::Plain)
         .with_transforms(crate::compiler::transform::carriage::one_document_transform());
-    let error = match BuiltinSchedule::assembled(&carried, &identity_registry()) {
+    let error = match BuiltinSchedule::assembled(&carried, &identity_registry(), &None) {
         Ok(_) => panic!("a nonempty compatibility-fragment plan must refuse"),
         Err(error) => error,
     };
@@ -283,7 +287,7 @@ fn a_nonempty_identity_plan_adds_the_exact_document_position() {
         "org.demo/tools#doc",
         crate::compiler::transform::plan::TransformStage::Document,
     )]));
-    let schedule = BuiltinSchedule::assembled(&carried, &identity_registry())
+    let schedule = BuiltinSchedule::assembled(&carried, &identity_registry(), &None)
         .expect("the identity plan resolves and schedules");
     let items = schedule.pipeline_for_test().schedule();
 

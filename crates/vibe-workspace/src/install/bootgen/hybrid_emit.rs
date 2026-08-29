@@ -176,18 +176,11 @@ pub(super) fn emit_package_units(
             .map(|d| ((d.group.clone(), d.name.clone()), d.version.to_string()))
             .collect()
     });
-    let zones: HashMap<UnitId, ZoneMembership> = table
-        .keys()
-        .map(|id| (id.clone(), hybrid::resolve_zone(id, table)))
-        .collect();
-    // A package needs a STATIC.md when it statically links a child that is NOT
-    // hoisted away — a zone whose every non-self static member is shared
-    // (hoisted) reduces to #use markers, still worth emitting for the edges.
-    let with_static: HashSet<UnitId> = zones
-        .iter()
-        .filter(|(id, zone)| has_static_children(id, zone, table))
-        .map(|(id, _)| id.clone())
-        .collect();
+    // A package needs a STATIC.md when it statically links a child that is
+    // NOT hoisted away — the one computation the write path and the R4.3
+    // analyzer entry share, so a node lane's substituted entries are the
+    // same set whether the units are being emitted or only analyzed.
+    let with_static = with_static_set(table);
 
     // <!-- REVIEW: DRIFT-029 asked for this write to be suppressed, so a
     // materialised slot would carry no compiled boot artifacts. PROP-038 §2.1
@@ -211,7 +204,7 @@ pub(super) fn emit_package_units(
         };
         let effective = zone_to_effective(
             id,
-            &zones[id],
+            &hybrid::resolve_zone(id, table),
             table,
             &with_static,
             &slots,
@@ -282,6 +275,21 @@ pub(super) fn emit_package_units(
         }
     }
     Ok(with_static)
+}
+
+/// The units whose own zone statically links a boot-bearing child beyond
+/// the unit itself — the set every consumer's lane substitutes up to a
+/// compiled per-unit STATIC (PROP-038 §2.1). Extracted from
+/// [`emit_package_units`] so the write-free analyzer entry
+/// (`bootgen/analyze.rs`) composes the SAME substituted lane without
+/// emitting the units first.
+pub(super) fn with_static_set(table: &HashMap<UnitId, UnitInput>) -> HashSet<UnitId> {
+    table
+        .keys()
+        .map(|id| (id, hybrid::resolve_zone(id, table)))
+        .filter(|(id, zone)| has_static_children(id, zone, table))
+        .map(|(id, _)| id.clone())
+        .collect()
 }
 
 /// Whether a unit's static zone contains a compiled-in child beyond itself —

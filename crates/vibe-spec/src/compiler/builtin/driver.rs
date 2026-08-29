@@ -1,9 +1,10 @@
-use crate::{SectionSource, SpecAddress};
+use crate::{CompileObserver, SectionSource, SpecAddress};
 
 #[cfg(feature = "test-support")]
 use super::super::backend::BackendId;
 use super::super::backend::BackendRegistry;
 use super::super::ir::{ArtifactInputWitness, ArtifactPlan, EmittedArtifact, StaticCompileMode};
+use super::super::observer::Observing;
 use super::super::trace::CompileTraceSink;
 use super::super::transform::registry::TransformRegistry;
 use super::super::worklist::{self, ErrorOwners};
@@ -41,6 +42,37 @@ pub fn compile_artifact(
         &BackendRegistry::builtins(),
         &TransformRegistry::builtins(),
         None,
+        None,
+    )
+}
+
+/// [`compile_artifact`] under one analyzer observer (R4.3, the
+/// packages-2026-09 architecture §9): the observer receives one emission
+/// event per accepted artifact and one stage-delta event per lane- or
+/// emitted-position transform that ran.
+///
+/// The same law the traced sibling carries, transposed to this seam: the
+/// observer is a witness, never a veto — its evidence cannot alter the
+/// artifact or any error identity, and the bytes are the bytes
+/// [`compile_artifact`] would have produced with no observer at all.
+/// Nothing is persisted (the frozen §9.1 ruling): the events are values
+/// handed to one in-process observer for the process's lifetime.
+///
+/// The observer is deliberately NOT part of [`ArtifactPlan`], for the
+/// same reason the trace sink is not: a plan is a semantic, digested
+/// value, and an observer is neither.
+pub fn compile_artifact_observed(
+    plan: ArtifactPlan,
+    source: &impl SectionSource,
+    observer: std::sync::Arc<dyn CompileObserver>,
+) -> Result<EmittedArtifact, ArtifactCompileError> {
+    run_with_registries(
+        plan,
+        source,
+        &BackendRegistry::builtins(),
+        &TransformRegistry::builtins(),
+        None,
+        Some(observer),
     )
 }
 
@@ -66,6 +98,7 @@ pub fn compile_artifact_traced(
         &BackendRegistry::builtins(),
         &TransformRegistry::builtins(),
         Some(sink),
+        None,
     )
 }
 
@@ -74,7 +107,14 @@ pub(crate) fn compile_artifact_with_registry(
     source: &impl SectionSource,
     registry: &BackendRegistry,
 ) -> Result<EmittedArtifact, ArtifactCompileError> {
-    run_with_registries(plan, source, registry, &TransformRegistry::builtins(), None)
+    run_with_registries(
+        plan,
+        source,
+        registry,
+        &TransformRegistry::builtins(),
+        None,
+        None,
+    )
 }
 
 /// The cfg-test dual-registry seam: the one way a test injects T5's identity
@@ -88,7 +128,7 @@ pub(crate) fn compile_artifact_with_registries(
     backends: &BackendRegistry,
     transforms: &TransformRegistry,
 ) -> Result<EmittedArtifact, ArtifactCompileError> {
-    run_with_registries(plan, source, backends, transforms, None)
+    run_with_registries(plan, source, backends, transforms, None, None)
 }
 
 /// The cfg-test traced dual-registry seam, so a transform pass name can be
@@ -101,7 +141,22 @@ pub(crate) fn compile_artifact_traced_with_registries(
     transforms: &TransformRegistry,
     trace: Option<&dyn CompileTraceSink>,
 ) -> Result<EmittedArtifact, ArtifactCompileError> {
-    run_with_registries(plan, source, backends, transforms, trace)
+    run_with_registries(plan, source, backends, transforms, trace, None)
+}
+
+/// The cfg-test observed dual-registry seam, so the analyzer's evidence —
+/// attribution counts and stage deltas — can be exercised over the same
+/// injected identity/mutating catalogs the execution tests use, before
+/// any real behavior enters the production catalog.
+#[cfg(test)]
+pub(crate) fn compile_artifact_observed_with_registries(
+    plan: ArtifactPlan,
+    source: &impl SectionSource,
+    backends: &BackendRegistry,
+    transforms: &TransformRegistry,
+    observer: std::sync::Arc<dyn CompileObserver>,
+) -> Result<EmittedArtifact, ArtifactCompileError> {
+    run_with_registries(plan, source, backends, transforms, None, Some(observer))
 }
 
 #[cfg(feature = "test-support")]
@@ -194,8 +249,9 @@ fn run_with_registries(
     backends: &BackendRegistry,
     transforms: &TransformRegistry,
     trace: Option<&dyn CompileTraceSink>,
+    observer: Observing,
 ) -> Result<EmittedArtifact, ArtifactCompileError> {
-    let schedule = BuiltinSchedule::emitted(&plan, transforms, backends)?;
+    let schedule = BuiltinSchedule::emitted(&plan, transforms, backends, &observer)?;
     run(plan, source, schedule, trace)
 }
 

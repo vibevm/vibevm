@@ -1,0 +1,65 @@
+{
+  "schema": 1,
+  "command": "extensions-analyze",
+  "artifacts": [
+    {
+      "lane": {
+        "kind": "node",
+        "node_rel": "."
+      },
+      "artifact_id": "static-md",
+      "target": "static-md",
+      "total_emitted_bytes": "1000",
+      "occurrence_count": 4,
+      "frame_overhead_bytes": "400",
+      "contributions": [
+        {
+          "provider": {
+            "kind": "dependency",
+            "group": "org.vibevm.core",
+            "name": "vibe"
+          },
+          "kind": "normal",
+          "origin": "org.vibevm.core/vibe",
+          "path": "vibevm/vibedeps/org.vibevm.core/vibe/1.0.0/vibevm/vibespecs/boot/10-flow.md",
+          "bytes": "500",
+          "occurrences": 3
+        },
+        {
+          "provider": {
+            "kind": "host-coordinate",
+            "group": "org.demo",
+            "name": "demo"
+          },
+          "kind": "simple",
+          "origin": ".",
+          "path": "vibevm/vibespecs/boot/90-user.md",
+          "bytes": "100",
+          "occurrences": 1
+        }
+      ],
+      "deltas": [
+        {
+          "pass": "transform:lane:org.vibevm/vibe#xml-minify",
+          "stage": "lane",
+          "lane_byte_delta": {
+            "before": "640",
+            "after": "600"
+          },
+          "artifact_byte_delta": null
+        },
+        {
+          "pass": "transform:emitted:org.vibevm/vibe#xml-minify",
+          "stage": "emitted",
+          "lane_byte_delta": null,
+          "artifact_byte_delta": {
+            "before": "1040",
+            "after": "1000"
+          }
+        }
+      ],
+      "token_estimate": null,
+      "estimator_id": null
+    }
+  ]
+}

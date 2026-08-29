@@ -12,6 +12,7 @@ use super::ir::{
 };
 use super::pass::{Pass, PassName};
 
+pub(crate) mod attribution;
 mod digest;
 pub(crate) use digest::bytes_digest as emitted_bytes_digest;
 pub(crate) mod framing;
@@ -28,6 +29,9 @@ pub(crate) struct EmitPass {
     /// artifact carries. `None` is the empty plan — and the exact historical
     /// bytes.
     transforms_header: Option<String>,
+    /// The analyzer observer this artifact's evidence goes to, if any
+    /// (R4.3). `None` is the historical unobserved path.
+    observer: super::observer::Observing,
 }
 
 impl EmitPass {
@@ -35,6 +39,22 @@ impl EmitPass {
         Self {
             backend,
             transforms_header,
+            observer: None,
+        }
+    }
+
+    /// [`Self::new`] under one analyzer observer (R4.3): the accepted
+    /// emission's attribution evidence is delivered once, after every
+    /// post-emit validation has accepted the tape.
+    pub(crate) fn observed(
+        backend: Arc<dyn EmitBackend>,
+        transforms_header: Option<String>,
+        observer: super::observer::Observing,
+    ) -> Self {
+        Self {
+            backend,
+            transforms_header,
+            observer,
         }
     }
 }
@@ -90,6 +110,15 @@ impl Pass for EmitPass {
             emitted.provenance(),
         )
         .map_err(EmitPassError::Backend)?;
+        // The analyzer seam (R4.3): the tape is proven against the
+        // witness, so THIS is the first honest moment to report the
+        // attribution evidence — witness-derived counts over the exact
+        // bytes the compile accepted. A witness, never a veto; an
+        // observer defect cannot change the answer being returned.
+        if let Some(observer) = &self.observer {
+            let evidence = attribution::emission_evidence(&witness, emitted.bytes().len());
+            super::observer::deliver_emission(observer.as_ref(), &evidence);
+        }
         Ok(emitted)
     }
 }

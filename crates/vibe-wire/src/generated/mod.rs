@@ -15,6 +15,7 @@ pub mod compiler_ir;
 pub mod compiler_trace_index;
 pub mod deploy_intent;
 pub mod deploy_receipt;
+pub mod extensions_analyze;
 pub mod extensions_report;
 pub mod format_id;
 pub mod hello;

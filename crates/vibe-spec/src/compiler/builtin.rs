@@ -27,6 +27,7 @@ use super::link::LinkPass;
 #[cfg(test)]
 use super::merge::MERGE_PASS_NAME;
 use super::merge::MergePass;
+use super::observer::Observing;
 use super::pass::{Pass, PassName, PassSegmentError};
 use super::pipeline::{CompilerPipeline, CompilerPipelineError};
 #[cfg(test)]
@@ -43,13 +44,17 @@ mod attribution;
 mod driver;
 pub use super::transform::fault::TransformCompileError;
 #[cfg(test)]
+pub(crate) use driver::compile_artifact_observed_with_registries;
+#[cfg(test)]
 pub(crate) use driver::compile_artifact_traced_with_registries;
 #[cfg(test)]
 pub(crate) use driver::compile_artifact_with_registries;
 #[cfg(test)]
 pub(crate) use driver::compile_artifact_with_registry;
 pub(crate) use driver::compile_compatibility_artifact;
-pub use driver::{ArtifactCompileError, compile_artifact, compile_artifact_traced};
+pub use driver::{
+    ArtifactCompileError, compile_artifact, compile_artifact_observed, compile_artifact_traced,
+};
 #[cfg(feature = "test-support")]
 pub use driver::{
     compile_artifact_missing_backend_test_vehicle, compile_artifact_opaque_test_vehicle,
@@ -183,8 +188,10 @@ impl BuiltinSchedule {
     fn linked(
         plan: &ArtifactPlan,
         registry: &TransformRegistry,
+        observer: &Observing,
     ) -> Result<Self, ArtifactCompileError> {
-        let transforms = TransformSchedule::resolve(plan, registry).map_err(transform_public)?;
+        let transforms = TransformSchedule::resolve(plan, registry, observer.clone())
+            .map_err(transform_public)?;
         let close_state = CloseState::default();
         let mut pipeline = CompilerPipeline::default();
         transforms
@@ -235,8 +242,9 @@ impl BuiltinSchedule {
     fn assembled(
         plan: &ArtifactPlan,
         registry: &TransformRegistry,
+        observer: &Observing,
     ) -> Result<Self, ArtifactCompileError> {
-        let mut schedule = Self::linked(plan, registry)?;
+        let mut schedule = Self::linked(plan, registry, observer)?;
         schedule
             .pipeline
             .push_artifact(AssemblePass::new())
@@ -252,17 +260,18 @@ impl BuiltinSchedule {
         plan: &ArtifactPlan,
         transforms: &TransformRegistry,
         registry: &BackendRegistry,
+        observer: &Observing,
     ) -> Result<Self, ArtifactCompileError> {
         // Transform resolution — including the compatibility-fragment frame
         // refusal — precedes the backend lookup, exactly as the frozen T6b
         // construction order demands.
-        let schedule = Self::assembled(plan, transforms)?;
+        let schedule = Self::assembled(plan, transforms, observer)?;
         let backend = registry
             .selected(&plan.context().target())
             .map_err(|error| ArtifactCompileError::Registry {
                 reason: error.to_string(),
             })?;
-        Self::append_emit(schedule, backend, plan)
+        Self::append_emit(schedule, backend, plan, observer)
     }
 
     /// The custom-backend construction path of the test-support vehicles;
@@ -273,8 +282,8 @@ impl BuiltinSchedule {
         registry: &TransformRegistry,
         backend: std::sync::Arc<dyn EmitBackend>,
     ) -> Result<Self, ArtifactCompileError> {
-        let schedule = Self::assembled(plan, registry)?;
-        Self::append_emit(schedule, backend, plan)
+        let schedule = Self::assembled(plan, registry, &None)?;
+        Self::append_emit(schedule, backend, plan, &None)
     }
 
     /// Append the selected emit backend, and with it the artifact's ACTIVE
@@ -289,11 +298,12 @@ impl BuiltinSchedule {
         mut schedule: Self,
         backend: std::sync::Arc<dyn EmitBackend>,
         plan: &ArtifactPlan,
+        observer: &Observing,
     ) -> Result<Self, ArtifactCompileError> {
         let header = transform_header::transforms_header_payload(plan.transforms());
         schedule
             .pipeline
-            .push_artifact(EmitPass::new(backend, header))
+            .push_artifact(EmitPass::observed(backend, header, observer.clone()))
             .expect("the selected emit backend continues the built-in schedule");
         schedule
             .transforms
@@ -385,14 +395,14 @@ impl BuiltinSchedule {
         plan: &ArtifactPlan,
         registry: &TransformRegistry,
     ) -> Result<Self, ArtifactCompileError> {
-        Self::linked(plan, registry)
+        Self::linked(plan, registry, &None)
     }
 
     pub(crate) fn emitted_for_test(
         plan: &ArtifactPlan,
         registry: &TransformRegistry,
     ) -> Result<Self, ArtifactCompileError> {
-        Self::emitted(plan, registry, &BackendRegistry::builtins())
+        Self::emitted(plan, registry, &BackendRegistry::builtins(), &None)
     }
 
     pub(crate) fn pipeline_for_test(&self) -> &CompilerPipeline {
@@ -410,7 +420,7 @@ pub(crate) fn compile_artifact_prefix(
     plan: ArtifactPlan,
     source: &impl SectionSource,
 ) -> Result<ClosureIr, ArtifactCompileError> {
-    let schedule = BuiltinSchedule::linked(&plan, &TransformRegistry::builtins())?;
+    let schedule = BuiltinSchedule::linked(&plan, &TransformRegistry::builtins(), &None)?;
     let worklist = worklist::discover(
         &plan,
         source,
@@ -431,7 +441,7 @@ pub(crate) fn compile_artifact_lane(
     plan: ArtifactPlan,
     source: &impl SectionSource,
 ) -> Result<LaneIr, ArtifactCompileError> {
-    let schedule = BuiltinSchedule::assembled(&plan, &TransformRegistry::builtins())?;
+    let schedule = BuiltinSchedule::assembled(&plan, &TransformRegistry::builtins(), &None)?;
     let worklist = worklist::discover(
         &plan,
         source,

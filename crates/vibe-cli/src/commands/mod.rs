@@ -37,6 +37,7 @@ pub mod clean;
 pub(crate) mod compile_trace;
 pub mod explain;
 pub mod extensions;
+pub mod extensions_analyze;
 pub mod facts;
 pub(crate) mod facts_check;
 pub mod friends;

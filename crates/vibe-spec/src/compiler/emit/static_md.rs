@@ -113,7 +113,11 @@ pub(crate) fn render_calls() -> usize {
     RENDER_CALLS.with(std::cell::Cell::get)
 }
 
-fn flatten_markdown(chunks: &[LaneChunk]) -> String {
+/// Render one contribution's chunk stream to its Markdown body — the one
+/// spelling the backend writes and the analyzer's attribution accounting
+/// counts, so a contribution's content bytes and the backend's rendering
+/// of it cannot drift apart.
+pub(crate) fn flatten_markdown(chunks: &[LaneChunk]) -> String {
     let mut output = String::new();
     for chunk in chunks {
         match chunk {

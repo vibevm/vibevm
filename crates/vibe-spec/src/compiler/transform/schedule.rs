@@ -35,9 +35,11 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-I
 
 use std::sync::Arc;
 
+use crate::compiler::emit::attribution;
 use crate::compiler::ir::{
     ArtifactFrame, ArtifactPlan, DocumentIr, DocumentSubject, EmittedArtifact, LaneIr, SourceIr,
 };
+use crate::compiler::observer::{self as analyze_observer, DeltaStage, Observing, StageDeltaEvent};
 use crate::compiler::pass::{Pass, PassName};
 use crate::compiler::pipeline::{CompilerPipeline, CompilerPipelineError};
 
@@ -96,6 +98,10 @@ impl ResolvedTransform {
 /// order survives without any sort.
 pub(crate) struct TransformSchedule {
     rows: Vec<ResolvedTransform>,
+    /// The analyzer observer the lane/emitted wrappers report through
+    /// (R4.3). `None` is the unobserved path: no byte is counted, no
+    /// event is built.
+    observer: Observing,
 }
 
 impl TransformSchedule {
@@ -118,11 +124,15 @@ impl TransformSchedule {
     pub(crate) fn resolve(
         plan: &ArtifactPlan,
         registry: &TransformRegistry,
+        observer: Observing,
     ) -> Result<Self, TransformError> {
         let transforms = plan.transforms();
         let entries = transforms.entries();
         if entries.is_empty() {
-            return Ok(Self { rows: Vec::new() });
+            return Ok(Self {
+                rows: Vec::new(),
+                observer,
+            });
         }
         if matches!(plan.context().frame(), ArtifactFrame::CompatibilityFragment) {
             return Err(TransformError::CompatibilityFragmentPlan {
@@ -167,7 +177,7 @@ impl TransformSchedule {
                 selector: seed.selector().map(SelectorGate::new),
             });
         }
-        Ok(Self { rows })
+        Ok(Self { rows, observer })
     }
 
     /// The exact schedule-owned pass names, for verifier-fault attribution.
@@ -212,8 +222,10 @@ impl TransformSchedule {
         pipeline: &mut CompilerPipeline,
     ) -> Result<(), TransformError> {
         for row in self.rows_at(TransformStage::Lane) {
+            let mut pass = LaneTransformPass::from(row);
+            pass.observer = self.observer.clone();
             pipeline
-                .push_artifact(LaneTransformPass::from(row))
+                .push_artifact(pass)
                 .map_err(|source| row.schedule_fault(source))?;
         }
         Ok(())
@@ -225,8 +237,10 @@ impl TransformSchedule {
         pipeline: &mut CompilerPipeline,
     ) -> Result<(), TransformError> {
         for row in self.rows_at(TransformStage::Emitted) {
+            let mut pass = EmittedTransformPass::from(row);
+            pass.observer = self.observer.clone();
             pipeline
-                .push_artifact(EmittedTransformPass::from(row))
+                .push_artifact(pass)
                 .map_err(|source| row.schedule_fault(source))?;
         }
         Ok(())
@@ -421,12 +435,19 @@ impl Pass for DocumentTransformPass {
 /// transition — before it is returned. Both run unconditionally: the
 /// inter-pass verifier hook is test-only, so routing this decision through it
 /// would leave production unguarded.
+///
+/// R4.3: under an analyzer observer the wrapper also reports the lane's
+/// chunk-stream byte count before and after the behavior — the lane-byte
+/// delta §9 names apart from the artifact-byte delta. Measured on the
+/// INPUT before the behavior runs and on the ADMITTED output after, so
+/// the reported pair is exactly the transition the manager accepted.
 struct LaneTransformPass {
     name: PassName,
     order: u32,
     preview: BoundedPreview,
     behavior: Arc<dyn TransformBehavior>,
     config: Option<TransformConfig>,
+    observer: Observing,
 }
 
 impl From<&ResolvedTransform> for LaneTransformPass {
@@ -437,6 +458,7 @@ impl From<&ResolvedTransform> for LaneTransformPass {
             preview: row.preview.clone(),
             behavior: row.behavior.clone(),
             config: row.config.clone(),
+            observer: None,
         }
     }
 }
@@ -454,6 +476,10 @@ impl Pass for LaneTransformPass {
         // Derived from the INPUT: evidence taken after the behavior ran would
         // only ever agree with itself.
         let witness = lane_admission::witness(&input);
+        let before = self
+            .observer
+            .as_ref()
+            .map(|_| attribution::lane_content_bytes(&input));
         let output = self
             .behavior
             .run_lane(self.config.as_ref(), input)
@@ -461,6 +487,15 @@ impl Pass for LaneTransformPass {
                 wrapper_fault(&self.preview, self.order, &TransformStage::Lane, source)
             })?;
         lane_admission::admit(&witness, &output).map_err(|refusal| self.lane_fault(refusal))?;
+        if let (Some(observer), Some(before)) = (self.observer.as_deref(), before) {
+            let event = StageDeltaEvent::new(
+                self.name.as_str(),
+                DeltaStage::Lane,
+                before,
+                attribution::lane_content_bytes(&output),
+            );
+            analyze_observer::deliver_stage_delta(observer, &event);
+        }
         Ok(output)
     }
 }
@@ -498,12 +533,19 @@ impl LaneTransformPass {
 /// every other provenance member copied) when they did. The wrapper owns
 /// nothing else: it does not compare the tapes, recompute a digest or touch
 /// provenance, so there is exactly one writer of a post-backend artifact.
+///
+/// R4.3: under an analyzer observer the wrapper also reports the
+/// artifact's byte count before and after — the artifact-byte delta §9
+/// names apart from the lane-byte delta. The `after` side is the
+/// RECONSTRUCTED artifact's length, so a behavior whose bytes did not
+/// move reports an honest no-op pair.
 struct EmittedTransformPass {
     name: PassName,
     order: u32,
     preview: BoundedPreview,
     behavior: Arc<dyn TransformBehavior>,
     config: Option<TransformConfig>,
+    observer: Observing,
 }
 
 impl From<&ResolvedTransform> for EmittedTransformPass {
@@ -514,6 +556,7 @@ impl From<&ResolvedTransform> for EmittedTransformPass {
             preview: row.preview.clone(),
             behavior: row.behavior.clone(),
             config: row.config.clone(),
+            observer: None,
         }
     }
 }
@@ -528,6 +571,8 @@ impl Pass for EmittedTransformPass {
     }
 
     fn run(&self, input: EmittedArtifact) -> Result<EmittedArtifact, TransformError> {
+        let observer = self.observer.as_deref();
+        let before = observer.map(|_| input.bytes().len());
         let bytes = input.bytes().to_vec();
         let output = self
             .behavior
@@ -535,8 +580,16 @@ impl Pass for EmittedTransformPass {
             .map_err(|source| {
                 wrapper_fault(&self.preview, self.order, &TransformStage::Emitted, source)
             })?;
-        Ok(emitted_reconstruction::reconstruct(
-            input, output, &self.name,
-        ))
+        let reconstructed = emitted_reconstruction::reconstruct(input, output, &self.name);
+        if let (Some(observer), Some(before)) = (observer, before) {
+            let event = StageDeltaEvent::new(
+                self.name.as_str(),
+                DeltaStage::Emitted,
+                before,
+                reconstructed.bytes().len(),
+            );
+            analyze_observer::deliver_stage_delta(observer, &event);
+        }
+        Ok(reconstructed)
     }
 }

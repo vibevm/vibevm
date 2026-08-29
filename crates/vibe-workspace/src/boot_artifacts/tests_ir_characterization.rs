@@ -215,6 +215,7 @@ fn real_workspace_binder_missing_and_invalid_replacement_do_not_touch_files() {
         None,
         // A test-support vehicle holds no extension world: the empty plan.
         vibe_spec::TransformPlan::empty(),
+        None,
         vibe_spec::compile_artifact_missing_backend_test_vehicle,
     );
     assert!(missing.is_err());
@@ -229,6 +230,7 @@ fn real_workspace_binder_missing_and_invalid_replacement_do_not_touch_files() {
         None,
         // A test-support vehicle holds no extension world: the empty plan.
         vibe_spec::TransformPlan::empty(),
+        None,
         vibe_spec::compile_artifact_replacement_test_vehicle,
     );
     assert!(replacement.is_err());

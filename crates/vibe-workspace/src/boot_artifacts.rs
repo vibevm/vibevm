@@ -62,6 +62,12 @@ mod transaction;
 /// T10B seam, out of line per the file-length budget.
 mod inputs;
 
+/// The R4.3 analyzer's compile half — the observed spelling and the
+/// compile result's attribution side, out of line per the file-length
+/// budget.
+mod analyzed;
+pub(crate) use analyzed::{StaticCompile, compile_static_analyzed};
+
 /// Manager-owned per-unit publication — the compiled INDEX/STATIC triple's
 /// narrow seam onto the transaction manager (R4.1 atom B).
 mod publication;
@@ -261,18 +267,19 @@ pub(crate) fn render_static_observed(
     acquisition: Option<&ScopeAcquisition<'_>>,
     transforms: TransformPlan,
 ) -> Result<Option<String>, WorkspaceError> {
-    let artifact = compile_static_artifact_with(
+    let compiled = compile_static_artifact_with(
         boot,
         workspace_root,
         self_coord,
         spec_format,
         acquisition,
         transforms,
+        None,
         compile_artifact,
     )?;
-    artifact
-        .map(|artifact| {
-            String::from_utf8(artifact.into_bytes()).map_err(|error| {
+    compiled
+        .map(|compiled| {
+            String::from_utf8(compiled.artifact.into_bytes()).map_err(|error| {
                 WorkspaceError::InlineCompile {
                     reason: format!(
                         "the built-in STATIC backend returned non-UTF-8 bytes: {error}"
@@ -302,25 +309,38 @@ pub(crate) fn render_static_observed(
 /// work that was never attempted.
 ///
 /// The injected `compiler` is the seam the characterization tests use; it is
-/// consulted only on the untraced path — the traced path is always the real
-/// built-in schedule, because that is the schedule a trace certifies.
-fn compile_static_artifact_with(
+/// consulted only on the unobserved, untraced path — the traced and
+/// observed paths are always the real built-in schedule, because that is
+/// the schedule a trace certifies and the one whose evidence the analyzer
+/// reports.
+///
+/// The `observer` is the R4.3 analyzer seam, threaded beside the trace
+/// acquisition exactly as T10C threaded the owner plan: `None` is every
+/// write path's historical behavior, `Some` hands the same compile's
+/// attribution evidence to one in-process observer and changes no byte
+/// of the result.
+// The observer is one argument past the lint's threshold, same shape as
+// the two wrappers above: the other seven are the emission inputs this
+// entry already took before R4.3.
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn compile_static_artifact_with(
     boot: &EffectiveBoot,
     workspace_root: &Path,
     self_coord: &SelfCoordinate,
     spec_format: SpecFormat,
     acquisition: Option<&ScopeAcquisition<'_>>,
     transforms: TransformPlan,
+    observer: Option<std::sync::Arc<dyn vibe_spec::CompileObserver>>,
     compiler: impl FnOnce(
         ArtifactPlan,
         &FsSectionSource,
     ) -> Result<EmittedArtifact, ArtifactCompileError>,
-) -> Result<Option<EmittedArtifact>, WorkspaceError> {
+) -> Result<Option<StaticCompile>, WorkspaceError> {
     let entries: Vec<_> = boot.static_entries().collect();
     if entries.is_empty() {
         return Ok(None);
     }
-    let inputs = inputs::build(entries, workspace_root, self_coord)?;
+    let (inputs, providers) = inputs::build_with_providers(entries, workspace_root, self_coord)?;
     let target = if matches!(spec_format, SpecFormat::Xml) {
         ArtifactTarget::StaticXml
     } else {
@@ -344,19 +364,24 @@ fn compile_static_artifact_with(
     // the next thing that happens is the compiler. Only now is the occurrence
     // acquired — and a refusal to declare it simply compiles untraced.
     let scope = acquisition.and_then(ScopeAcquisition::acquire);
-    // The ONE compiler call: through the acquired sink when tracing, through
-    // the historical path when not. Its result — never a second compile —
-    // supplies both the scope's terminal word and the artifact.
-    let compiled = match &scope {
-        Some(scope) => compile_artifact_traced(plan, &source, scope),
-        None => compiler(plan, &source),
+    // The ONE compiler call: through the observer when analyzing, through
+    // the acquired sink when tracing, through the historical path when
+    // neither. Its result — never a second compile — supplies the scope's
+    // terminal word, the observer's evidence and the artifact.
+    let compiled = match (observer, &scope) {
+        (Some(observer), _) => vibe_spec::compile_artifact_observed(plan, &source, observer),
+        (None, Some(scope)) => compile_artifact_traced(plan, &source, scope),
+        (None, None) => compiler(plan, &source),
     };
     match compiled {
         Ok(artifact) => {
             if let Some(scope) = &scope {
                 scope.complete_lossy(&artifact.output_fingerprint());
             }
-            Ok(Some(artifact))
+            Ok(Some(StaticCompile {
+                artifact,
+                providers,
+            }))
         }
         Err(error) => {
             if let Some(scope) = &scope {
@@ -509,8 +534,10 @@ fn write_boot_artifacts_inner(
         spec_format,
         acquisition,
         transforms,
+        None,
         compile_artifact,
-    )?;
+    )?
+    .map(|compiled| compiled.artifact);
     let boot_dir = node_dir.join(layout::current_boot_dir());
 
     // INDEX.md — always. A node carries no fingerprint (byte-stable); the

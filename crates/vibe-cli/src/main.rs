@@ -117,7 +117,20 @@ fn main() -> ExitCode {
     let result = match cli.command {
         Command::Init(args) => commands::init::run(&ctx, args),
         Command::List(args) => commands::list::run(&ctx, args),
-        Command::Extensions(args) => commands::extensions::run(&ctx, args),
+        Command::Extensions(args) => match args.command {
+            // Bare `vibe extensions` keeps its exhaustive-registry report;
+            // `vibe extensions analyze` routes to the R4.3 lane analyzer.
+            None => commands::extensions::run(
+                &ctx,
+                cli::ExtensionsArgs {
+                    path: args.path,
+                    command: None,
+                },
+            ),
+            Some(cli::ExtensionsCommand::Analyze(analyze)) => {
+                commands::extensions_analyze::run(&ctx, analyze)
+            }
+        },
         Command::Validate(args) => run_lifecycle(vibe_lifecycle::Phase::Validate, args),
         // `vibe install` is the OUTERMOST command on this path: it owns the
         // one compile-trace session, prepares its own inputs (no config,
