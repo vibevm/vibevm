@@ -18486,6 +18486,87 @@
     },
     {
       "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/worklist/failure_tests.rs",
+      "item_kind": "fn",
+      "line": 218,
+      "symbol": "vibe_spec::compiler::worklist::failure_tests::embed_recursion_failure_returns_after_earlier_phases",
+      "end_line": 258,
+      "fingerprint": "tok1:e6ecdeaf3c635b37c1efbcf8694b41f63d944ed8104f2fd2a876e14d7b6f3076"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/worklist/failure_tests.rs",
+      "item_kind": "fn",
+      "line": 307,
+      "symbol": "vibe_spec::compiler::worklist::failure_tests::first_failure_precedence_follows_plan_order_deterministically",
+      "end_line": 371,
+      "fingerprint": "tok1:a72bf006a22ef0319f8060b228ac12e5d08bf0e8b0ccf2c92df155ac33a37460"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/worklist/failure_tests.rs",
+      "item_kind": "fn",
+      "line": 22,
+      "symbol": "vibe_spec::compiler::worklist::failure_tests::one_sentinel_callback_error_returns_unchanged",
+      "end_line": 64,
+      "fingerprint": "tok1:8bb3ffbf96c44858312381b93ad3c1f518df33a90703a30632a858775326d46b"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/worklist/failure_tests.rs",
+      "item_kind": "fn",
+      "line": 260,
+      "symbol": "vibe_spec::compiler::worklist::failure_tests::section_source_failure_keeps_its_observation_and_returns_ok",
+      "end_line": 305,
+      "fingerprint": "tok1:1c584b661027d231bdf302a41b5baac2c74da2c0a2bb8552b1a8c915c7e7a831"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/worklist/failure_tests.rs",
+      "item_kind": "fn",
+      "line": 94,
+      "symbol": "vibe_spec::compiler::worklist::failure_tests::simple_input_parse_failure_stops_discovery",
+      "end_line": 134,
+      "fingerprint": "tok1:ad67a8d0441746e21e63b0cd32dc466136814619f28e93cd83e87d01df62c24a"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/worklist/failure_tests.rs",
+      "item_kind": "fn",
+      "line": 173,
+      "symbol": "vibe_spec::compiler::worklist::failure_tests::source_recursion_failure_returns_after_the_expanded_targets",
+      "end_line": 216,
+      "fingerprint": "tok1:d3c17f8dd8672c1e455b80862251a58fdb7e11bcb99f8550f90281b6f8682cfc"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/worklist/failure_tests.rs",
+      "item_kind": "fn",
+      "line": 72,
+      "symbol": "vibe_spec::compiler::worklist::failure_tests::the_callback_error_needs_no_traits",
+      "end_line": 92,
+      "fingerprint": "tok1:e715438862971cd8854b35d5500041dd0fa911fb3ff8b8a4256683ecfe1943c5"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/worklist/failure_tests.rs",
+      "item_kind": "fn",
+      "line": 136,
+      "symbol": "vibe_spec::compiler::worklist::failure_tests::use_recursion_failure_stops_and_skips_unrelated_roots",
+      "end_line": 171,
+      "fingerprint": "tok1:a065a62fbdffe44a72ba413709008e313f7d094a2437b2766764429bba0ec6a3"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/worklist/tests.rs",
+      "item_kind": "fn",
+      "line": 177,
+      "symbol": "vibe_spec::compiler::worklist::tests::infallible_callback_yields_the_exact_historical_worklist",
+      "end_line": 257,
+      "fingerprint": "tok1:d621d0ef08b1f3453c8a26fc2ed14bb1c3fc227c27659759ed2905f05aa02d19"
+    },
+    {
+      "crate_name": "vibe-spec",
       "file": "crates/vibe-spec/src/pipeline/absorb_characterization_tests.rs",
       "item_kind": "fn",
       "line": 12,
@@ -35835,6 +35916,78 @@
       "line": 181,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#WHOLE-IR-WIRE",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/worklist/failure_tests.rs",
+      "from_symbol": "vibe_spec::compiler::worklist::failure_tests::embed_recursion_failure_returns_after_earlier_phases",
+      "line": 219,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/worklist/failure_tests.rs",
+      "from_symbol": "vibe_spec::compiler::worklist::failure_tests::first_failure_precedence_follows_plan_order_deterministically",
+      "line": 308,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/worklist/failure_tests.rs",
+      "from_symbol": "vibe_spec::compiler::worklist::failure_tests::one_sentinel_callback_error_returns_unchanged",
+      "line": 23,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/worklist/failure_tests.rs",
+      "from_symbol": "vibe_spec::compiler::worklist::failure_tests::section_source_failure_keeps_its_observation_and_returns_ok",
+      "line": 261,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/worklist/failure_tests.rs",
+      "from_symbol": "vibe_spec::compiler::worklist::failure_tests::simple_input_parse_failure_stops_discovery",
+      "line": 95,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/worklist/failure_tests.rs",
+      "from_symbol": "vibe_spec::compiler::worklist::failure_tests::source_recursion_failure_returns_after_the_expanded_targets",
+      "line": 174,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/worklist/failure_tests.rs",
+      "from_symbol": "vibe_spec::compiler::worklist::failure_tests::the_callback_error_needs_no_traits",
+      "line": 73,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/worklist/failure_tests.rs",
+      "from_symbol": "vibe_spec::compiler::worklist::failure_tests::use_recursion_failure_stops_and_skips_unrelated_roots",
+      "line": 137,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/worklist/tests.rs",
+      "from_symbol": "vibe_spec::compiler::worklist::tests::infallible_callback_yields_the_exact_historical_worklist",
+      "line": 178,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR",
       "verb": "verifies"
     },
     {
