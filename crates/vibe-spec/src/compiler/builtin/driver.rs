@@ -92,16 +92,31 @@ pub(crate) fn compile_artifact_with_backend_id(
     run(plan, source, schedule, None)
 }
 
+/// Retarget one plan onto a custom test backend, forwarding the COMPLETE
+/// artifact plan: the context is rebuilt for the custom target while the
+/// carried transform plan crosses intact. Rebuilding from contributions
+/// alone would silently drop a nonempty plan — the one carriage regression
+/// T4 must make red (ABI §7.1).
+#[cfg(any(test, feature = "test-support"))]
+pub(super) fn retarget_custom_for_test(
+    backend: &'static str,
+    plan: ArtifactPlan,
+) -> Result<ArtifactPlan, ArtifactCompileError> {
+    let carried = plan.transforms().clone();
+    ArtifactPlan::custom_for_test(backend, plan.contributions().to_vec())
+        .map(|retargeted| retargeted.with_transforms(carried))
+        .map_err(|error| ArtifactCompileError::Manager {
+            reason: error.to_string(),
+        })
+}
+
 #[cfg(feature = "test-support")]
 #[doc(hidden)]
 pub fn compile_artifact_opaque_test_vehicle(
     plan: ArtifactPlan,
     source: &impl SectionSource,
 ) -> Result<EmittedArtifact, ArtifactCompileError> {
-    let plan = ArtifactPlan::custom_for_test("opaque-test", plan.contributions().to_vec())
-        .map_err(|error| ArtifactCompileError::Manager {
-            reason: error.to_string(),
-        })?;
+    let plan = retarget_custom_for_test("opaque-test", plan)?;
     let mut registry = BackendRegistry::default();
     registry
         .register(std::sync::Arc::new(

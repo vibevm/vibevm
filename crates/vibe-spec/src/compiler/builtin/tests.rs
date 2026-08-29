@@ -160,3 +160,76 @@ fn removing_close_makes_the_gathered_schedule_unrunnable() {
         }
     ));
 }
+
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY")]
+fn empty_and_nonempty_carriage_keep_the_declared_nine_item_schedule() {
+    // T4 carriage is inert (ABI §7.1): neither an empty nor an attached
+    // nonempty transform plan adds any pass to the assembled built-in
+    // schedule; execution begins with T5/T6, not here.
+    let empty = BuiltinSchedule::assembled(&plan(StaticCompileMode::Plain));
+    let carried_plan = plan(StaticCompileMode::Plain)
+        .with_transforms(crate::compiler::transform::carriage::one_document_transform());
+    let nonempty = BuiltinSchedule::assembled(&carried_plan);
+
+    let expected = [
+        PARSE_PASS_NAME,
+        CLOSE_PASS_NAME,
+        MERGE_PASS_NAME,
+        EMBED_PASS_NAME,
+        QUALIFY_PASS_NAME,
+        ABSORB_PASS_NAME,
+        LINK_PASS_NAME,
+        ASSEMBLE_PASS_NAME,
+    ];
+    for schedule in [empty, nonempty] {
+        let items = schedule.pipeline_for_test().schedule();
+        assert_eq!(
+            items.len(),
+            9,
+            "eight passes plus the one gather slot: {items:?}"
+        );
+        let pass_names: Vec<&str> = items
+            .iter()
+            .filter_map(|item| match item {
+                ScheduleItem::Pass(pass) => Some(pass.name.as_str()),
+                ScheduleItem::GatherDocuments => None,
+            })
+            .collect();
+        assert_eq!(pass_names, expected, "the historical schedule is exact");
+        assert!(
+            pass_names
+                .iter()
+                .all(|name| !name.starts_with("transform:")),
+            "no transform pass exists in T4: {pass_names:?}"
+        );
+    }
+}
+
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY")]
+fn opaque_retarget_forwards_the_whole_transform_plan() {
+    // The test vehicle retarget helper must forward the COMPLETE plan, not
+    // rebuild from contributions alone: silently dropping a nonempty carried
+    // plan is the one carriage regression T4 must make red (ABI §7.1).
+    let base = plan(StaticCompileMode::Plain);
+    let transforms = crate::compiler::transform::carriage::one_document_transform();
+    let carried = base.clone().with_transforms(transforms.clone());
+
+    let retargeted = super::driver::retarget_custom_for_test("opaque-test", carried).unwrap();
+    assert_eq!(
+        retargeted.transforms(),
+        &transforms,
+        "the retarget must retain the attached nonempty plan"
+    );
+    assert_ne!(
+        retargeted.transforms(),
+        base.transforms(),
+        "a contributions-only rebuild would have pinned empty here"
+    );
+    assert_eq!(retargeted.contributions(), base.contributions());
+
+    // The empty plan retarget stays empty: compatibility pins empty forever.
+    let empty_retarget = super::driver::retarget_custom_for_test("opaque-test", base).unwrap();
+    assert!(empty_retarget.transforms().is_empty());
+}

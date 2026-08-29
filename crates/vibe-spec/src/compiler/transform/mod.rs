@@ -20,6 +20,8 @@ pub(crate) mod plan_digest;
 pub(crate) mod plan_validate;
 
 #[cfg(test)]
+pub(crate) mod carriage;
+#[cfg(test)]
 mod config_tests;
 #[cfg(test)]
 mod plan_digest_tests;

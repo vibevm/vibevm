@@ -459,6 +459,76 @@ fn public_one_seed_wrappers_keep_exact_bytes_renames_and_candidates() {
     assert_eq!(emit_invocations("static-md"), 2);
 }
 
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY")]
+fn empty_and_nonempty_carriage_emit_identical_bytes_provenance_and_errors() {
+    // T4 carriage is inert (ABI §7.1): attaching a nonempty transform plan
+    // changes neither bytes, provenance nor error behavior — execution is
+    // T5/T6. Two fresh fixtures keep the counting source's interior
+    // mutability out of the comparison.
+    let plain = fixture();
+    let carried = fixture();
+    reset_counters();
+    reset_emit_invocations();
+
+    let attached = carried
+        .plan
+        .with_transforms(crate::compiler::transform::carriage::one_document_transform());
+    let plain_emitted = compile_artifact(plain.plan, &plain.source).unwrap();
+    let carried_emitted = compile_artifact(attached, &carried.source).unwrap();
+
+    assert_eq!(plain_emitted.bytes(), carried_emitted.bytes());
+    assert_eq!(
+        plain_emitted.provenance().producer(),
+        carried_emitted.provenance().producer()
+    );
+    assert_eq!(
+        plain_emitted.provenance().backend_id(),
+        carried_emitted.provenance().backend_id()
+    );
+    assert_eq!(
+        plain_emitted.output_fingerprint(),
+        carried_emitted.output_fingerprint()
+    );
+    assert_eq!(emit_invocations("static-xml"), 2);
+    assert_eq!(assemble_invocations(), 2);
+
+    // The empty plan adds no transform-header spelling anywhere in the bytes.
+    for bytes in [plain_emitted.bytes(), carried_emitted.bytes()] {
+        let text = std::str::from_utf8(bytes).unwrap();
+        assert!(
+            !text.contains("vibe:transforms"),
+            "an empty/inert plan must not emit a transforms header: {text}"
+        );
+    }
+}
+
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY")]
+fn one_real_failure_fixture_keeps_its_typed_error_under_carriage() {
+    // The same dangling-#use world fails identically with and without a
+    // carried plan: same typed variant, same message, same attribution.
+    let plain = fixture();
+    let carried = fixture();
+    let transforms = crate::compiler::transform::carriage::one_document_transform();
+    let attached = carried.plan.with_transforms(transforms);
+
+    let mut dangling = CountingSource::default();
+    dangling.documents.insert(
+        spec("spec://org.demo/alpha/boot/entry#root").without_pin(),
+        "# Alpha {#root}\n#use spec://org.demo/missing/boot/base#root\nALPHA\n".to_string(),
+    );
+
+    let plain_error = compile_artifact(plain.plan, &dangling).unwrap_err();
+    let carried_error = compile_artifact(attached, &dangling).unwrap_err();
+    assert_eq!(plain_error.to_string(), carried_error.to_string());
+    assert_eq!(
+        std::mem::discriminant(&plain_error),
+        std::mem::discriminant(&carried_error),
+        "the typed variant must not move under carriage"
+    );
+}
+
 #[path = "artifact_tests/repair.rs"]
 mod repair;
 
