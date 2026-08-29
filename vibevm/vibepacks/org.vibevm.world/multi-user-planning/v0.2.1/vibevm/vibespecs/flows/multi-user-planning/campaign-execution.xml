@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Central stewardship of a long campaign</title>
+  <status stage="spec" state="done"/>
+  <role title="1. The central coordinator's irreducible job">
+    <p><CENTRAL-JOB fact="true" status="spec/done">The central coordinator owns
+the coherent idea: reconstructing the mandate, architecture, dependencies and
+risks; maintaining the lossless plan; choosing atoms; reviewing actual output;
+issuing acceptance; promoting knowledge; integrating commits; and proving
+closure. Tools and workers may execute bounded work, but these judgments remain
+central even when delegation is cheap.</CENTRAL-JOB></p>
+    <p><ACTIVITY-NOT-PROGRESS fact="true" status="spec/done">Tool calls, generated
+code, green producer tests, commits and completed UI rows are activity. Progress
+is an obligation moving to a justified disposition with durable evidence while
+the remaining route stays truthful.</ACTIVITY-NOT-PROGRESS></p>
+  </role>
+  <loop title="2. The stewardship loop">
+    <facts ordered="true">
+      <LOOP-ORIENT fact="true" status="spec/done">**Orient:** read authority and
+  the full plan; verify tree, custody, selected campaign goal, candidates and
+  the accepted boundary empirically. Refresh a stale `GOAL.md` only when this
+  session holds custody.</LOOP-ORIENT>
+      <LOOP-REFINE fact="true" status="spec/done">**Refine:** expand one coherent
+  frontier region; state dependencies, write perimeter, acceptance, negative
+  proof and safe stop before execution.</LOOP-REFINE>
+      <LOOP-EXECUTE fact="true" status="spec/done">**Execute:** work directly or
+  commission bounded workers according to the project's delegation policy.
+  Preserve ordinary inspectable artifacts.</LOOP-EXECUTE>
+      <LOOP-JUDGE fact="true" status="spec/done">**Judge:** inspect the real
+  diff/result against architecture and mandate, reproduce decisive gates, and
+  seek false-green mutations where a test could pass vacuously.</LOOP-JUDGE>
+      <LOOP-INTEGRATE fact="true" status="spec/done">**Integrate:** repair or
+  reject defects; promote stable discoveries; commit atomically; update
+  acceptance tier, dependencies and projection.</LOOP-INTEGRATE>
+      <LOOP-LOOK-BACK fact="true" status="spec/done">**Look back:** ask what the
+  result falsified, what new obligation appeared, what knowledge still lives
+  only in a report, and whether distant architecture still composes. Replan
+  before selecting the next atom.</LOOP-LOOK-BACK>
+    </facts>
+    <p><LOOP-NOT-AUTOMATION fact="true" status="spec/done">This is an operating
+discipline, not an automatic product loop. Human intervention, long-running
+creative work and indeterminate iteration are normal. Lifecycle systems may
+provide evidence and phase mechanics without choosing the next action.</LOOP-NOT-AUTOMATION></p>
+  </loop>
+  <reasoning title="3. Sustained reasoning">
+    <p><REASON-FROM-MODEL fact="true" status="spec/done">Do not reduce a large
+campaign to the number of rows a harness happens to display. Reconstruct the
+hierarchy from mandate and evidence, keep unresolved uncertainty explicit, and
+reason across phase boundaries before local optimization. When a change affects
+the core idea, update the route first, not retrospectively.</REASON-FROM-MODEL></p>
+    <p><ULTRA-DISCIPLINE fact="true" status="spec/done">Under `ultra`, use the
+available extended reasoning to keep architecture, distant dependencies and
+acceptance in one coherent model. Larger atoms are allowed only where their
+result remains reviewable. Deep reasoning is not permission to leave conclusions
+only in context or skip mechanical proof.</ULTRA-DISCIPLINE></p>
+    <p><STANDARD-DISCIPLINE fact="true" status="spec/done">Under `standard`,
+externalize more of the chain before acting: smaller atoms, explicit per-claim
+tables, frequent backscans and stronger preference for independent review.
+Never compensate for limited context by silently dropping distant stages or
+declaring a shallow plan complete.</STANDARD-DISCIPLINE></p>
+  </reasoning>
+  <workers title="4. Workers are producers, never custody shortcuts">
+    <p><WORKER-PACKET fact="true" status="spec/done">When workers are used, one
+packet has a bounded goal, closed write perimeter, supplied architecture,
+acceptance and exact self-checks, plus a durable report location. The worker
+returns ordinary inspectable files and evidence; it does not commit, hide state
+inside a private representation, claim central review or advance project
+status unless project policy explicitly makes it a central session instead.</WORKER-PACKET></p>
+    <p><WORKER-REVIEW fact="true" status="spec/done">Review a worker result like
+an untrusted but capable pull request: compare the actual artifact to the
+packet, verify every consequential claim, and test the tests. A worker's PASS,
+token count or confident narrative cannot substitute for acceptance.</WORKER-REVIEW></p>
+    <p><WORKER-FAILURE fact="true" status="spec/done">A transport error, timeout
+or killed final turn is not a code verdict. Inspect what survived, preserve it,
+then recalculate whether the remainder is cheaper to repair centrally, resume,
+recommission or reject. Never delete first or restart blindly.</WORKER-FAILURE></p>
+  </workers>
+  <gates title="5. Gate economy">
+    <p><EXACT-GATES fact="true" status="spec/done">Every atom runs formatting,
+diff hygiene and exact affected tests/checks/lints, plus negative proof for its
+highest false-green risk. A pipe or wrapper that discards the child exit status
+is telemetry, not a gate.</EXACT-GATES></p>
+    <p><FULL-PANEL-TRIGGERS fact="true" status="spec/done">An expensive full
+panel belongs at a coherent integration boundary, after broad shared-foundation
+change, before release/publication, or at final campaign acceptance. Do not run
+it reflexively after every small atom; do not omit it merely because every atom
+had local tests. The panel must run on the unchanged tree being accepted.</FULL-PANEL-TRIGGERS></p>
+    <p><TEST-THE-TEST fact="true" status="spec/done">For public boundaries,
+safety properties and easily vacuous assertions, deliberately mutate/remove the
+claimed behavior and prove the test turns red. A permanently green test is
+evidence of nothing.</TEST-THE-TEST></p>
+  </gates>
+  <wisdom title="6. Learning while executing">
+    <p><WISDOM-TRIGGER fact="true" status="spec/done">At review, milestone and
+handoff, ask which observations generalize beyond the current atom. Promote a
+verified product law into its spec, an executable invariant into a test, an
+operational campaign lesson into the governing flow, and unresolved future work
+into a named backlog/plan node. Do not wait for session end, when causal context
+has already decayed.</WISDOM-TRIGGER></p>
+    <p><REPORT-RETENTION fact="true" status="spec/done">A report may be removed
+only after its unique code is integrated/rejected and every accepted durable
+fact has another governing home. “The worker finished” and “its knowledge is
+preserved” are different claims.</REPORT-RETENTION></p>
+  </wisdom>
+  <stops title="7. Honest stopping conditions">
+    <p><SAFE-STOP fact="true" status="spec/done">A safe stop has an internally
+consistent tree, an explicit accepted boundary, every incomplete artifact
+classified candidate, a current complete plan, and a literal next recipe. It
+may occur between atoms even when the campaign is far from complete.</SAFE-STOP></p>
+    <p><NO-CREATIVE-STOP fact="true" status="spec/done">Do not transform “hard,”
+“long,” “resources low,” “worker stopped,” or “visible plan ended” into a
+creative claim of completion. Continue, preserve and hand off, or report the
+real blocker. Completion is reserved for proven exit criteria.</NO-CREATIVE-STOP></p>
+  </stops>
+</spec>

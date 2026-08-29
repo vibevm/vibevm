@@ -1,0 +1,111 @@
+schema = 1
+plan_id = "fixture-plan"
+revision = 7
+root_node = "ROOT"
+current_node = "R2"
+updated_at = "2026-08-29T00:00:00Z"
+
+[[mandate]]
+id = "M-001"
+source = "owner"
+text = "Build the complete feature and preserve every acceptance boundary."
+disposition = "owned"
+nodes = ["BUILD"]
+
+[[mandate]]
+id = "M-002"
+source = "owner"
+text = "Keep the deferred deployment horizon visible without implementing it now."
+disposition = "owned"
+nodes = ["POST"]
+
+[[node]]
+id = "ROOT"
+parent = ""
+order = 0
+kind = "portfolio"
+title = "Fixture portfolio"
+state = "active"
+zoom = "expanded"
+depends_on = []
+mandates = []
+acceptance = ["all campaigns disposed"]
+evidence = []
+
+[[node]]
+id = "BUILD"
+parent = "ROOT"
+order = 10
+kind = "campaign"
+title = "Build the deterministic fixture"
+state = "active"
+zoom = "expanded"
+depends_on = []
+mandates = ["M-001"]
+acceptance = ["all build phases accepted", "final gate green"]
+evidence = []
+
+[[node]]
+id = "R1"
+parent = "BUILD"
+order = 10
+kind = "phase"
+title = "Accepted substrate"
+state = "accepted"
+zoom = "summary"
+depends_on = []
+mandates = ["M-001"]
+acceptance = ["substrate tests green"]
+evidence = ["commit:fixture"]
+
+[[node]]
+id = "R2"
+parent = "BUILD"
+order = 20
+kind = "atom"
+title = "Candidate implementation"
+state = "candidate"
+zoom = "expanded"
+depends_on = ["R1"]
+mandates = ["M-001"]
+acceptance = ["review actual bytes", "mutation becomes red"]
+evidence = ["report:fixture"]
+
+[[node]]
+id = "R3"
+parent = "BUILD"
+order = 30
+kind = "phase"
+title = "Distant integration"
+state = "planned"
+zoom = "summary"
+depends_on = ["R2"]
+mandates = ["M-001"]
+acceptance = ["integration complete"]
+evidence = []
+
+[[node]]
+id = "FINAL"
+parent = "BUILD"
+order = 40
+kind = "gate"
+title = "Final campaign proof"
+state = "planned"
+zoom = "summary"
+depends_on = ["R3"]
+mandates = ["M-001"]
+acceptance = ["full final panel green", "owner inspection"]
+evidence = []
+
+[[node]]
+id = "POST"
+parent = "BUILD"
+order = 90
+kind = "horizon"
+title = "Future deployment"
+state = "deferred"
+zoom = "summary"
+depends_on = ["FINAL"]
+mandates = ["M-002"]
+acceptance = ["new campaign commissioned"]
+evidence = []

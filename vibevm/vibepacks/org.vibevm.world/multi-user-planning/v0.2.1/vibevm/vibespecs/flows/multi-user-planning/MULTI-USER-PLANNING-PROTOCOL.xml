@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Multi-user planning protocol</title>
+  <status stage="spec" state="done"/>
+  <scope title="1. Scope">
+    <p><SCOPE fact="true" status="spec/done">This protocol governs long-running,
+multi-step development campaigns executed by humans and interchangeable central
+agents across sessions, branches and contributors. It defines where personal
+execution state lives, how a complete plan stays complete while its visible
+frontier changes, who may accept work, and how central custody moves without
+laundering unreviewed work into accepted state.</SCOPE></p>
+    <p><FRAMEWORK-NOT-AGENT fact="true" status="spec/done">It is a framework for
+coordination. It does not implement a coding agent, choose an LLM provider,
+force an autonomous loop, or make LLM access mandatory. Any agent or human may
+drive it.</FRAMEWORK-NOT-AGENT></p>
+  </scope>
+  <authority title="2. The three authority planes">
+    <facts ordered="true">
+      <PLANE-PROJECT fact="true" status="spec/done">**Project authority** lives
+  in owner instructions and repository evidence: specifications, tests, code,
+  accepted decisions and maintainer/integrator policy. It is shareable across
+  contributors and machines.</PLANE-PROJECT>
+      <PLANE-CONTRIBUTOR fact="true" status="spec/done">**Contributor execution
+  state** lives under that developer's `~/.vibe/steward/`: personal settings,
+  branch/worktree context, adaptive plan, central custody and handoffs between
+  central sessions on the same machine.</PLANE-CONTRIBUTOR>
+      <PLANE-WORKER fact="true" status="spec/done">**Worker state** lives in the
+  worker's explicit task packet, ordinary worktree diff and report. A worker
+  cannot promote itself to central, accept itself or mutate the central plan by
+  implication.</PLANE-WORKER>
+    </facts>
+    <p><AUTHORITY-ORDER fact="true" status="spec/done">Where layers disagree:
+`Human > normative specification = executable specification > accepted code >
+shared project projection > user-local plan > handoff narrative > worker
+report`. Recency alone grants no authority.</AUTHORITY-ORDER></p>
+  </authority>
+  <laws title="3. Fundamental laws">
+    <facts ordered="true">
+      <LAW-LOCAL-EXECUTION-STATE fact="true" status="spec/done">**Personal
+  execution state is local.** One developer's cursor, interaction preference,
+  planning profile and central-session continuity never become a shared mutable
+  repository file by default.</LAW-LOCAL-EXECUTION-STATE>
+      <LAW-SHARED-FACTS-IN-REPO fact="true" status="spec/done">**Shared facts
+  stay in the repository.** Product intent, stable decisions, tests, code,
+  deliberately shared campaign contracts and accepted evidence cannot be hidden
+  in a local plan or a model's memory.</LAW-SHARED-FACTS-IN-REPO>
+      <LAW-LOSSLESS-PLAN fact="true" status="spec/done">**The plan is lossless,
+  not merely current.** Every mandate item has a stable identity and remains
+  owned by a node or carries an explicit disposition. Replanning changes the
+  route; it never silently erases the obligation.</LAW-LOSSLESS-PLAN>
+      <LAW-ONE-CENTRAL-HOLDER fact="true" status="spec/done">**One local context,
+  one central holder per epoch.** Parallel workers may execute disjoint atoms,
+  but architecture, central plan mutation and acceptance have one accountable
+  coordinator at a time.</LAW-ONE-CENTRAL-HOLDER>
+      <LAW-CUSTODY-NOT-ACCEPTANCE fact="true" status="spec/done">**Custody
+  transfers; acceptance does not.** The next coordinator inherits artifacts and
+  claims as evidence, never a predecessor's unrepeatable confidence.</LAW-CUSTODY-NOT-ACCEPTANCE>
+      <LAW-UNIQUE-RECORDS fact="true" status="spec/done">**Concurrent writers
+  create uniquely named records; shared views are derived or integrator-owned.**
+  A handwritten global counter, status line or `CONTINUE.md` is a conflict
+  magnet, not collaboration infrastructure.</LAW-UNIQUE-RECORDS>
+      <LAW-SAME-QUALITY-FLOOR fact="true" status="spec/done">**Profiles change
+  scaffolding, never the quality floor.** `ultra` may use larger reasoning
+  spans; `standard` compensates with smaller atoms and more checkpoints. Neither
+  may omit scope, evidence, review or closure proof.</LAW-SAME-QUALITY-FLOOR>
+      <LAW-HANDOFF-IS-TWO-PHASE fact="true" status="spec/done">**A handoff is
+  offer plus receipt.** Writing a summary does not transfer the baton. The
+  outgoing session becomes write-fenced after sealing an offer; the incoming
+  session verifies and receipts it before custody advances.</LAW-HANDOFF-IS-TWO-PHASE>
+      <LAW-GOAL-IS-A-PROJECTION fact="true" status="spec/done">**A campaign goal
+  is a deterministic projection, never a second plan.** It selects one stable
+  campaign node and renders its mandates, accepted boundary, candidates,
+  remaining route and exit proof. `plan.toml` always wins on divergence.</LAW-GOAL-IS-A-PROJECTION>
+    </facts>
+  </laws>
+  <roles title="4. Roles">
+    <table>
+      <tr><td>Role</td><td>Authority</td><td>Does not gain</td></tr>
+      <tr><td><ROLE-OWNER fact="true" status="spec/done">Owner</ROLE-OWNER></td><td>Mandate, product and policy rulings; may assign or revoke other roles.</td><td>No automatic proof that an implementation works.</td></tr>
+      <tr><td><ROLE-MAINTAINER fact="true" status="spec/done">Repository maintainer</ROLE-MAINTAINER></td><td>Repository integration policy, merge/release authority granted by the project.</td><td>Ownership of every contributor's local plan.</td></tr>
+      <tr><td><ROLE-INTEGRATOR fact="true" status="spec/done">Campaign integrator</ROLE-INTEGRATOR></td><td>Shared campaign contract, integration queue and project-acceptance verdict within the granted campaign.</td><td>Permission to rewrite contributor history or erase contrary evidence.</td></tr>
+      <tr><td><ROLE-CENTRAL fact="true" status="spec/done">Contributor-central</ROLE-CENTRAL></td><td>This developer context's adaptive plan, workers, local gates, commits and handoff.</td><td>Other contributors' branches or project-wide acceptance unless separately integrator.</td></tr>
+      <tr><td><ROLE-WORKER fact="true" status="spec/done">Worker/reviewer</ROLE-WORKER></td><td>Only the explicit packet and its file perimeter; reports evidence.</td><td>Central custody, acceptance, commits or status promotion.</td></tr>
+    </table>
+    <p><ROLES-COME-FROM-PROJECT fact="true" status="spec/done">A local file may
+record a role claim for coordination, but cannot grant the role. Actual authority
+comes from the owner and project policy. In a one-person project, one human may
+hold every role; the distinctions still protect handoffs and evidence.</ROLES-COME-FROM-PROJECT></p>
+  </roles>
+  <memory title="5. Memory and promotion">
+    <p><MEMORY-CLASSIFY fact="true" status="spec/done">A central coordinator
+classifies every durable discovery before accepting an atom: normative product
+law → specification; executable law → test; implementation fact → code or
+documentation; future work → issue/backlog record; project operating fact →
+repository policy; machine or personal preference → `~/.vibe/steward/`.
+Worker reports and local handoffs are evidence and archaeology, never the sole
+home of an accepted project fact.</MEMORY-CLASSIFY></p>
+    <p><NO-EARLY-CLEANUP fact="true" status="spec/done">Do not delete a worker
+report, cache artifact, branch or worktree that may contain unique work or
+unpromoted knowledge. First inventory it, promote accepted facts, prove the
+product diff is integrated or intentionally rejected, then clean it.</NO-EARLY-CLEANUP></p>
+  </memory>
+  <documents title="6. Normative siblings">
+    <facts ordered="false">
+      <DOC-LOCAL fact="true" status="spec/done">User-local storage and profiles:
+  [`user-local-state.xml`](user-local-state.xml).</DOC-LOCAL>
+      <DOC-PLAN fact="true" status="spec/done">Hierarchical planning:
+  [`plan-hierarchy.xml`](plan-hierarchy.xml).</DOC-PLAN>
+      <DOC-GOAL fact="true" status="spec/done">Deterministic goal projection:
+  [`goal-projection.xml`](goal-projection.xml).</DOC-GOAL>
+      <DOC-EXECUTION fact="true" status="spec/done">Central campaign execution:
+  [`campaign-execution.xml`](campaign-execution.xml).</DOC-EXECUTION>
+      <DOC-HANDOFF fact="true" status="spec/done">Central custody and handoff:
+  [`custody-and-handoff.xml`](custody-and-handoff.xml).</DOC-HANDOFF>
+      <DOC-COLLAB fact="true" status="spec/done">Collaboration and acceptance:
+  [`collaboration-and-acceptance.xml`](collaboration-and-acceptance.xml).</DOC-COLLAB>
+      <DOC-MIGRATION fact="true" status="spec/done">WAL/redbook migration:
+  [`migration-and-composition.xml`](migration-and-composition.xml).</DOC-MIGRATION>
+    </facts>
+  </documents>
+  <non-goals title="7. v0.1 boundaries">
+    <facts ordered="false">
+      <NO-DISTRIBUTED-LOCK fact="true" status="spec/done">No distributed lock or
+  cross-machine consensus. Cross-machine transfer requires an explicit exported
+  bundle and is deferred until a transport and identity model are specified.</NO-DISTRIBUTED-LOCK>
+      <NO-ENFORCEMENT-CLAIM fact="true" status="spec/done">No enforcement claim.
+  v0.1 makes custody and omissions reviewable; it cannot prevent a malicious or
+  broken process from editing files.</NO-ENFORCEMENT-CLAIM>
+      <NO-PRODUCT-COMMAND fact="true" status="spec/done">No `vibe.exe` command.
+  Product users do not inherit campaign-maintainer controls merely because their
+  project uses VibeVM.</NO-PRODUCT-COMMAND>
+      <NO-MODEL-PROFILE fact="true" status="spec/done">No model-name-specific
+  profile in v0.1. Capability profiles remain stable when vendors rename,
+  improve or regress models; model overlays may be added later.</NO-MODEL-PROFILE>
+    </facts>
+  </non-goals>
+</spec>
