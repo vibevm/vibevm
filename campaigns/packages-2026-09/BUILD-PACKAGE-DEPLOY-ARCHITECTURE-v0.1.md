@@ -771,6 +771,91 @@ Seven implementation rulings the landing made executable:
    (three privilege cases ignored), package/projection filters, strict clippy,
    check, fmt and conform with zero new findings.
 
+### 6.3.1 R8-CLIENTS-DEPLOY staging — decision record (central, 2026-08-30)
+
+**Decision.** The destination half is four serial children — engine state,
+standalone skills, client plugins, focused deploy gate — under these frozen
+contracts:
+
+1. **Prior ownership is injected engine evidence.** `DeployTargetRequest`
+   carries the prior receipt the engine read without creating the state home.
+   A provider may update a present destination only when that receipt owns the
+   exact physical/logical resource and the observed digest still matches it;
+   an absent receipt never authorises an identical foreign occupant. Apply
+   rechecks the same receipt under the deployment-state lock before writing.
+2. **The lock sidecar has committed and pending generations.** The strict-serde
+   epoch-1 `lock-resources.json` is engine-owned and outside the JTD intent and
+   receipt wires. Each binding carries generation, plan hash and exact physical
+   lock resources. A pending binding is durable before its matching intent and
+   therefore before the first external write; finalisation promotes it to
+   committed only after the receipt is durable. The old committed binding is
+   retained throughout an update, so no crash window loses the inverse lock.
+3. **One stable deployment lock serialises sidecar/state transitions.** Apply,
+   recovery, saga rollback and undeploy take the deployment-id lock, then the
+   union of current, committed and pending destination locks in canonical order.
+   The deploy plan hash binds `lock_resources` as well as owned resources.
+   Recovery requires the pending binding matching its intent; stale retirement
+   clears only that pending generation. Receipt finalisation and benign-intent
+   retirement promote the matching pending binding. Successful inverse clears
+   committed ownership after the rolled-back receipt is durable.
+4. **Legacy compatibility is one-way and safe.** An ordinary non-reference
+   receipt created before the sidecar may fall back to its owned resources
+   because its descriptor proves lock set equals owned set. A reference owner
+   never has that fallback and never reconstructs a physical lock by parsing a
+   logical resource string. The first reference-owning provider cannot reach an
+   external write until its pending sidecar reads back valid.
+5. **Read-only planning truly creates nothing.** Receipt/sidecar inspection uses
+   a no-create state view; `DeployState::open` remains apply-only. The same prior
+   receipt value reaches provider plan in both `--plan` and preapply.
+6. **Three standalone skill providers share one filesystem implementation.**
+   They accept only a file-shaped `skill` artifact and strict single-component
+   `config.name`, require frontmatter identity to match, then own exactly one
+   entry file at Claude `.claude/skills/<name>/SKILL.md`, Codex
+   `.agents/skills/<name>/SKILL.md`, or OpenCode
+   `.config/opencode/skills/<name>/SKILL.md`. Existing unowned occupants and
+   receipt-owned drift refuse; removal leaves every unrecorded neighbour and
+   prunes only proven-empty directories.
+7. **Pure client paths live in `vibe-agent-projection`.** New helpers accept the
+   injected home and never call ambient directory resolvers. The older public
+   ambient agent APIs remain compatibility surfaces; lifecycle providers call
+   only the pure helpers.
+8. **Claude/Codex plugin state is logical and marketplace bytes are immutable.**
+   Each provider validates its exact directory projection, rejects a client
+   plugin name outside the documented kebab-case grammar, fingerprints the
+   tested client minor and materialises a native local marketplace below
+   `settings_root/client-marketplaces/<client>/<target>/<artifact-digest>/`.
+   Marketplace bytes and registration are checkpointed CAS-like support, not
+   receipt-owned; the receipt owns one `plugin@marketplace` logical member and
+   locks that client's private plugin state. Artifact changes require
+   `undeploy, then deploy` in epoch 1.
+9. **Client processes receive a clean, injected environment.** The absolute
+   executable is spawned with no inherited token/PATH environment; HOME and
+   USERPROFILE come from `user_home`, Claude receives
+   `CLAUDE_CONFIG_DIR=<home>/.claude`, Codex receives
+   `CODEX_HOME=<home>/.codex`, and stdout/stderr are bounded. Missing or
+   unsupported versions refuse before writes: Claude `2.1.x`, Codex `0.148.x`,
+   OpenCode `1.17.x`.
+10. **Private CLI JSON and idempotence are measured, not guessed.** Isolated
+    live probes on 2026-08-30 pinned Claude's installed array
+    (`id/version/scope/enabled`) and Codex's `{installed,available}` object
+    (`pluginId/name/marketplaceName/version/installed/enabled`). Repeating local
+    marketplace add and install is a successful no-op in both clients. The
+    epoch-1 argv remains §6.3.0.7's exact add/install/list/uninstall or remove
+    sequence; post-command list is the independent state witness.
+11. **OpenCode owns entries, never the whole document.** Its plugin provider
+    validates the strict projection, publishes every selected skill file and
+    owns `home:.config/opencode/opencode.json#mcp/<name>` while locking the
+    physical JSON document. MCP names and skill components are validated before
+    becoming resource identities. Parse/merge/canonical-encode/atomic-replace
+    preserves every foreign value; remove drops only receipt-owned members and
+    exact skill files. No `opencode plugin` command exists in the adapter.
+12. **The focused proof uses real fake processes.** A small compiled fake client
+    executable implements the measured version/list/add/install/remove contracts
+    inside an injected temp home and records exact argv. Provider tests cover
+    plan/apply/verify/recover/remove, sidecar crash windows, unowned and drifted
+    destinations, reference sharing, marketplace idempotence and foreign JSON/
+    skill neighbours. No real home, token, network or installed client is used.
+
 ## 7. Deploy targets and profiles
 
 Profiles are named destination selections, not Maven-style arbitrary overlays
