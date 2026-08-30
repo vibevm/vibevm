@@ -1,0 +1,36 @@
+{
+  "metadata": {
+    "description": "Epoch-1 native extension manifest. ABI version remains solely authoritative through vibe_ext_abi and is not duplicated here.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::native::e1::manifest"
+    }
+  },
+  "properties": {
+    "extensions": {
+      "elements": { "ref": "manifest_extension" },
+      "metadata": { "x-empty": "emit" }
+    }
+  },
+  "definitions": {
+    "manifest_extension": {
+      "properties": {
+        "id": { "type": "string" },
+        "point": {
+          "type": "string",
+          "metadata": {
+            "description": "Open extension-point spelling, preserved byte-for-byte by generated wire code."
+          }
+        }
+      },
+      "optionalProperties": {
+        "ir_schema": {
+          "type": "uint32",
+          "metadata": { "x-default": null }
+        }
+      }
+    }
+  }
+}

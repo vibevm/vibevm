@@ -1,0 +1,6 @@
+{
+  "envelope": 1,
+  "status": "ok",
+  "artifacts": [],
+  "tasks": ["must-not-exist"]
+}

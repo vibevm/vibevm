@@ -161,6 +161,36 @@ foreign_parsers = "none"
 corpus = "formats/corpora/lifecycle/e1"
 sunset = "none"
 
+# ── Native extension ABI wire contracts (3 JTD), PROP-054 §8/§14.4 ────────
+# Context is authored by the host and read by foreign SDKs; manifests are
+# foreign-authored declarations. Both therefore retain forward-compatible
+# generated object readers. Replies are parsed only by the host and refuse an
+# unknown member. All three are transient and reproducible from invocation or
+# manifest inspection.
+[format.native-context]
+epoch = 1
+schema = "schemas/native/e1/context.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "formats/corpora/native/e1"
+sunset = "none"
+
+[format.native-reply]
+epoch = 1
+schema = "schemas/native/e1/reply.jtd.json"
+recoverable = true
+foreign_parsers = "none"
+corpus = "formats/corpora/native/e1"
+sunset = "none"
+
+[format.native-manifest]
+epoch = 1
+schema = "schemas/native/e1/manifest.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "formats/corpora/native/e1"
+sunset = "none"
+
 # ── Requirements metadata answer (1 JTD), PROP-054 §14.7 / R7.5 ─────────────
 # The R7.5 read-only requirements answer: one bounded document an external
 # orchestrator reads to learn what this project declares and recorded about

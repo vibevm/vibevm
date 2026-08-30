@@ -2,22 +2,22 @@
 
 use serde::{Deserialize, Serialize};
 
-/// Canonical epoch-1 lifecycle context envelope. This is the one wire shape
-/// presented to every extension handler; builtin handlers consume the generated
-/// Rust type directly.
+/// Epoch-1 native extension invocation context. Its root members exactly match
+/// the lifecycle context while every reusable nested record comes from the
+/// shared vocabulary module.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Context {
-    /// Artifacts accumulated from successful earlier contributions. Empty in
-    /// R2.4, but present on every envelope.
+    /// Accumulated earlier artifacts, including their engine-owned phase.
     pub artifacts: Vec<Artifact>,
 
-    /// Context-envelope epoch. Epoch 1 is the only supported value in R2.4.
     pub envelope: u32,
 
     pub execution: Execution,
 
     pub io: Io,
 
+    /// Open extension-point spelling. Generated wire code does not normalize or
+    /// close this string.
     pub point: String,
 
     pub project: Project,
@@ -26,8 +26,6 @@ pub struct Context {
 
     pub world: World,
 
-    /// Package slot whose pre/post-install timing event is executing. Absent
-    /// for phase contributions.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub slot_target: Option<SlotTarget>,
 }

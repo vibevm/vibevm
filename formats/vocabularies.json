@@ -45,6 +45,145 @@
     },
     "type": "timestamp"
   },
+  "execution": {
+    "metadata": {
+      "description": "One lifecycle contribution execution, shared by the generic lifecycle and native context roots."
+    },
+    "properties": {
+      "id": { "type": "string" },
+      "package": {
+        "type": "string",
+        "metadata": {
+          "description": "Actual dependency or host provider identity, without an invented package coordinate for an ungrouped host."
+        }
+      },
+      "config": {
+        "values": {},
+        "metadata": {
+          "x-empty": "emit",
+          "description": "Effective handler configuration after whole-value host activation override."
+        }
+      }
+    }
+  },
+  "project": {
+    "metadata": {
+      "description": "The selected project identity and source roots supplied to a lifecycle or native handler."
+    },
+    "properties": {
+      "root": { "type": "string" },
+      "name": { "type": "string" },
+      "version": { "type": "string" },
+      "kind": { "type": "string" },
+      "manifest": { "type": "string" },
+      "spec_roots": {
+        "elements": { "type": "string" },
+        "metadata": { "x-empty": "emit" }
+      }
+    }
+  },
+  "world_package": {
+    "metadata": {
+      "description": "One selected package in the resolved lifecycle world."
+    },
+    "properties": {
+      "group": { "type": "string" },
+      "name": { "type": "string" },
+      "version": { "type": "string" },
+      "kind": { "type": "string" },
+      "slot": { "type": "string" }
+    }
+  },
+  "world": {
+    "metadata": {
+      "x-vocabularies": ["world_package"],
+      "description": "The lockfile, dependency root and selected packages visible to a lifecycle or native handler."
+    },
+    "properties": {
+      "lockfile": { "type": "string" },
+      "deps_root": { "type": "string" },
+      "packages": {
+        "elements": { "ref": "world_package" },
+        "metadata": {
+          "x-empty": "emit",
+          "description": "Selected reachable packages in canonical lockfile order."
+        }
+      }
+    }
+  },
+  "run_agent_mode": {
+    "metadata": {
+      "x-vocabulary": "closed",
+      "description": "Closed invocation mode for a lifecycle/native handler run."
+    },
+    "enum": ["cli", "agent"]
+  },
+  "run": {
+    "metadata": {
+      "x-vocabularies": ["run_agent_mode"],
+      "description": "The requested lifecycle chain and execution controls supplied to a handler."
+    },
+    "properties": {
+      "requested": { "type": "string" },
+      "chain": {
+        "elements": { "type": "string" },
+        "metadata": { "x-empty": "emit" }
+      },
+      "phase": { "type": "string" },
+      "offline": { "type": "boolean" },
+      "assume_yes": { "type": "boolean" },
+      "agent_mode": { "ref": "run_agent_mode" },
+      "force": { "type": "boolean" }
+    }
+  },
+  "artifact": {
+    "metadata": {
+      "description": "One accumulated lifecycle artifact supplied as handler input. The engine-owned `phase` distinguishes it from a reply artifact."
+    },
+    "properties": {
+      "id": { "type": "string" },
+      "phase": { "type": "string" },
+      "path": { "type": "string" },
+      "kind": { "type": "string" }
+    }
+  },
+  "slot_target": {
+    "metadata": {
+      "description": "The package slot targeted by a pre/post-install contribution."
+    },
+    "properties": {
+      "group": { "type": "string" },
+      "name": { "type": "string" },
+      "version": { "type": "string" },
+      "kind": { "type": "string" },
+      "root": { "type": "string" }
+    }
+  },
+  "io": {
+    "metadata": {
+      "description": "Invocation-local IO paths supplied to a lifecycle or native handler."
+    },
+    "properties": {
+      "scratch": { "type": "string" }
+    }
+  },
+  "reply_artifact": {
+    "metadata": {
+      "description": "One artifact declared by a lifecycle or native reply. It deliberately omits the engine-owned accumulated `phase`."
+    },
+    "properties": {
+      "id": { "type": "string" },
+      "path": { "type": "string" },
+      "kind": { "type": "string" }
+    }
+  },
+  "reply_status": {
+    "metadata": {
+      "x-vocabulary": "closed",
+      "description": "Closed lifecycle/native handler reply outcome."
+    },
+    "enum": ["ok", "fail", "skip"]
+  },
   "duration": {
     "metadata": {
       "description": "One measured duration: microseconds plus an explicit saturation marker. `micros` saturates at u32::MAX rather than wrapping; `saturated` is true when the measurement hit that ceiling (or contributed to a total that did) — so the marker is legal ONLY at `micros = u32::MAX`, while an unsaturated `u32::MAX` stays legal because an exact measurement may land exactly there. Writer-side saturation policy lands with the recorder; the representable form is pinned here. Shared as a vocabulary because the trace index, the timing row and every command report's trace member carry the SAME record (JTD has no cross-file refs, G9)."

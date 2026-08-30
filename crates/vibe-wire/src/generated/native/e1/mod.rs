@@ -4,4 +4,6 @@
 // `*.jtd.json` schema under `schemas/` / `schemas/compiler_ir/e1/` / `schemas/compiler_trace_index/e1/` / `schemas/hello/e1/` / `schemas/index/e1/` / `schemas/index_cli/e1/` / `schemas/index_http/e1/` / `schemas/journal/e1/` / `schemas/lifecycle/e1/` / `schemas/llm/openai_compatible/e1/` / `schemas/native/e1/`. Editing
 // this file by hand will be overwritten on the next codegen run.
 
-pub mod index;
+pub mod context;
+pub mod manifest;
+pub mod reply;

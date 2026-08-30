@@ -4,6 +4,7 @@
     "spec": {
       "implements": "spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE"
     },
+    "x-vocabularies": ["reply_status", "reply_artifact"],
     "rustOptions": {
       "package": "vibe_wire::lifecycle::e1::reply"
     }
@@ -13,14 +14,7 @@
       "type": "uint32"
     },
     "status": {
-      "enum": [
-        "ok",
-        "fail",
-        "skip"
-      ],
-      "metadata": {
-        "x-vocabulary": "closed"
-      }
+      "ref": "reply_status"
     },
     "artifacts": {
       "elements": {
@@ -45,21 +39,6 @@
       "type": "string",
       "metadata": {
         "x-default": null
-      }
-    }
-  },
-  "definitions": {
-    "reply_artifact": {
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "path": {
-          "type": "string"
-        },
-        "kind": {
-          "type": "string"
-        }
       }
     }
   }

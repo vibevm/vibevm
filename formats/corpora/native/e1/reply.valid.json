@@ -1,0 +1,12 @@
+{
+  "envelope": 1,
+  "status": "ok",
+  "artifacts": [
+    {
+      "id": "native-output",
+      "path": "target/native-output.bin",
+      "kind": "file"
+    }
+  ],
+  "message": "complete"
+}

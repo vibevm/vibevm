@@ -2,9 +2,8 @@
 
 use serde::{Deserialize, Serialize};
 
-/// Canonical epoch-1 generic lifecycle handler reply. It remains distinct from
-/// the later native ABI manifest/reply contract: generic agent replies may
-/// carry tasks, while the R5 native surface will not.
+/// Epoch-1 native extension reply. Native handlers cannot return agent tasks,
+/// and the host-owned reader refuses unknown members.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Reply {
@@ -13,10 +12,6 @@ pub struct Reply {
     pub envelope: u32,
 
     pub status: ReplyStatus,
-
-    /// Generic agent-handler task references. Builtin/script/binary replies
-    /// leave this empty.
-    pub tasks: Vec<String>,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub message: Option<String>,

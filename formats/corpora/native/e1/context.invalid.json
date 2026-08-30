@@ -1,0 +1,8 @@
+{
+  "envelope": 1,
+  "execution": {
+    "id": "missing-point",
+    "package": "org.example/native",
+    "config": {}
+  }
+}

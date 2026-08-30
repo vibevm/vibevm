@@ -1,0 +1,15 @@
+{
+  "extensions": [
+    {
+      "id": "phase-example",
+      "point": "phase:build"
+    },
+    {
+      "id": "compiler-example",
+      "point": "future:compiler-point",
+      "ir_schema": 1,
+      "future_extension_member": true
+    }
+  ],
+  "future_manifest_member": "accepted"
+}

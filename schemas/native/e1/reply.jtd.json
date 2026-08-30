@@ -1,0 +1,26 @@
+{
+  "metadata": {
+    "description": "Epoch-1 native extension reply. Native handlers cannot return agent tasks, and the host-owned reader refuses unknown members.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE"
+    },
+    "x-vocabularies": ["reply_status", "reply_artifact"],
+    "rustOptions": {
+      "package": "vibe_wire::native::e1::reply"
+    }
+  },
+  "properties": {
+    "envelope": { "type": "uint32" },
+    "status": { "ref": "reply_status" },
+    "artifacts": {
+      "elements": { "ref": "reply_artifact" },
+      "metadata": { "x-empty": "emit" }
+    }
+  },
+  "optionalProperties": {
+    "message": {
+      "type": "string",
+      "metadata": { "x-default": null }
+    }
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "envelope": 1,
+  "point": "vendor:future-point",
+  "execution": {
+    "id": "example",
+    "package": "org.example/native",
+    "config": {},
+    "future_execution_member": true
+  },
+  "project": {
+    "root": "C:/work/demo",
+    "name": "demo",
+    "version": "0.1.0",
+    "kind": "tool",
+    "manifest": "vibe.toml",
+    "spec_roots": ["vibevm/vibespecs"]
+  },
+  "world": {
+    "lockfile": "vibe.lock",
+    "deps_root": "vibevm/vibedeps",
+    "packages": [
+      {
+        "group": "org.example",
+        "name": "native",
+        "version": "0.1.0",
+        "kind": "tool",
+        "slot": "vibevm/vibedeps/org.example.native/0.1.0"
+      }
+    ]
+  },
+  "run": {
+    "requested": "build",
+    "chain": ["validate", "install", "generate", "build"],
+    "phase": "build",
+    "offline": false,
+    "assume_yes": false,
+    "agent_mode": "cli",
+    "force": false
+  },
+  "artifacts": [
+    {
+      "id": "generated-source",
+      "phase": "generate",
+      "path": "generated/source.rs",
+      "kind": "file"
+    }
+  ],
+  "io": {
+    "scratch": ".vibe/lifecycle/run/example"
+  },
+  "slot_target": {
+    "group": "org.example",
+    "name": "native",
+    "version": "0.1.0",
+    "kind": "tool",
+    "root": "vibevm/vibedeps/org.example.native/0.1.0"
+  },
+  "future_context_member": { "accepted": true }
+}

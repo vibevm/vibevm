@@ -1,0 +1,47 @@
+{
+  "metadata": {
+    "description": "Epoch-1 native extension invocation context. Its root members exactly match the lifecycle context while every reusable nested record comes from the shared vocabulary module.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE"
+    },
+    "x-vocabularies": [
+      "execution",
+      "project",
+      "world",
+      "run",
+      "artifact",
+      "io",
+      "slot_target"
+    ],
+    "rustOptions": {
+      "package": "vibe_wire::native::e1::context"
+    }
+  },
+  "properties": {
+    "envelope": { "type": "uint32" },
+    "point": {
+      "type": "string",
+      "metadata": {
+        "description": "Open extension-point spelling. Generated wire code does not normalize or close this string."
+      }
+    },
+    "execution": { "ref": "execution" },
+    "project": { "ref": "project" },
+    "world": { "ref": "world" },
+    "run": { "ref": "run" },
+    "artifacts": {
+      "elements": { "ref": "artifact" },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Accumulated earlier artifacts, including their engine-owned phase."
+      }
+    },
+    "io": { "ref": "io" }
+  },
+  "optionalProperties": {
+    "slot_target": {
+      "ref": "slot_target",
+      "metadata": { "x-default": null }
+    }
+  }
+}
