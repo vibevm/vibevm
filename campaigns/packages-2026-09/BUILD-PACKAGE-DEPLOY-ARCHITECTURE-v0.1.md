@@ -617,6 +617,80 @@ unknown target, duplicate physical destination or incompatible artifact kind is
 a validate error. Two profiles can reuse a target without duplicating its
 definition.
 
+### 7.0 Deploy engine staging — decision record (central, 2026-08-30)
+
+**Decision.** R8-DEPLOY lands the deploy ENGINE — protocol, transaction,
+selection, commands, fence — and deliberately no real destination provider:
+
+1. **Scope.** In: the deploy member of §3.2's provider protocol (all six
+   verbs; descriptors carrying effect class, reversibility and
+   plan-support, with `plan` mandatory), profile selection, the §7.2
+   intent/receipt/recover/lock transaction, `vibe deploy [--plan]`,
+   `vibe undeploy`, `vibe deployments [--json]`, the third dispatch
+   fence, the `[[binary]]` lowering call site (R8-CARGO's named
+   follow-up), and the `package:windows-zip` builtin (rescoped into this
+   atom at R8-PACKAGE acceptance, plan revision 23). Out: `deploy:vibe-bin`
+   (R8-VIBE-BIN's), the three client adapters (R8-CLIENTS'), remote/server
+   providers, signature policy and the acquire role.
+2. **Protocol home.** The deploy provider is the third sibling in the ONE
+   mechanism home — an in-process trait beside Build and Package, its
+   executor's single selection path `resolve_mechanism`. The only
+   executing implementations this atom are hermetic fixtures at the unit
+   seam: a non-builtin selection refuses by the unlanded transport's
+   name (the R8-CARGO law), and the one deploy builtin row (`#vibe-bin`)
+   refuses as provider-not-landed — a typed refusal, never a stub.
+3. **State home.** Deployment intents and receipts are USER state:
+   `state/deployments/` under the `vibe_core::settings` directory (the
+   canonical `<home>/.vibe`; `$VIBE_SETTINGS` isolates every test) —
+   never the project `.vibe/` (R8.1's project-skill receipt is
+   project-scoped by design; a deployment's destination scope is
+   user/remote/system). Schema-versioned JTD-first wire; the layout
+   inside that home is engine-owned (§3.2: the engine owns state
+   persistence), disclosed by the implementation, never minted by a
+   provider.
+4. **Transaction law.** §7.2 binds verbatim: durable intent atomically
+   before the first external write; checkpoints; independent verify;
+   finalized receipt then retired intent; per-destination lock; staging
+   where the destination supports atomic replacement. Recover's
+   three-digest law, the benign receipt-plus-intent case, reverse-order
+   saga rollback and the undeploy refusal for post-deploy drift are each
+   a test, not prose.
+5. **Selection.** Profile resolution happens ONCE, in the command layer
+   that owns flags, and travels as data: explicit `--profile`, else the
+   manifest's `default_profile`, else the exactly-one rule, else a typed
+   refusal naming the defined profiles. Environment and secrets never
+   choose. The fence arms only when the dispatch carries a resolved
+   selection AND that epoch's plan reaches `deploy` — a partial epoch
+   arms nothing (§6.0's parameter law).
+6. **Plan mode.** `--plan` is a read-only planner, not a chain run:
+   resolve the profile, read records and receipts, compute staleness,
+   call provider `plan` verbs only, report — no token read, no network,
+   no build, no destination mutation (§10's sentinel gate is the proof).
+7. **Fence and lowering.** The deploy fence is the third member of
+   §6.0's `Fences`, armed at the deploy phase's own-contribution
+   boundary with the identical position and reason; build, verify's
+   gate, package and deploy fire exactly as the phase line orders. The
+   same assembly that arms the fences lowers legacy `[[binary]]` rows
+   through the R8-CARGO projection into the build target set; an id
+   collision between a lowered row and an authored `[[artifacts.build]]`
+   row is a typed refusal (two claimants for one identity), never a
+   silent merge.
+8. **windows-zip.** A fifth builtin row (`org.vibevm/vibe#windows-zip`,
+   role `package`, engine-fresh — its input set is closed and hashable)
+   whose provider writes a byte-identical archive on re-run: entries
+   sorted by archived name, forward-slash names, one fixed timestamp
+   constant, fixed compression parameters, no platform extra fields; a
+   directory input enters by its canonical walk. Determinism IS the
+   acceptance: two runs, one digest.
+
+**Considered and rejected.** A minimal real destination provider
+(`deploy:fs-copy`) to give this atom a live end-to-end — an unfrozen
+builtin surface invented for a test; the hermetic fixture seam plus
+R8-VIBE-BIN's immediate real e2e cover it. Project-scoped deployment
+receipts — a deployment mutates user/remote state and its record belongs
+beside that scope. Engine-side profile inference from environment — §7
+forbids it twice already.
+
 ### 7.1 `deploy:vibe-bin`
 
 The VibeVM-specific local-tool provider stores immutable payloads under a
