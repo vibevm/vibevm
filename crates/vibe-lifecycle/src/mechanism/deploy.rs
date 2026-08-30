@@ -530,3 +530,7 @@ mod sidecar_tests;
 #[cfg(test)]
 #[path = "deploy/inverse_tests.rs"]
 mod inverse_tests;
+
+#[cfg(test)]
+#[path = "deploy/client_gate_tests.rs"]
+mod client_gate_tests;

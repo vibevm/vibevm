@@ -585,7 +585,7 @@ mod tests;
 
 #[cfg(test)]
 #[path = "plugin/fixture.rs"]
-mod fixture;
+pub(crate) mod fixture;
 
 #[cfg(test)]
 #[path = "plugin/lifecycle_tests.rs"]
