@@ -302,71 +302,15 @@
       "item_kind": "schema",
       "line": 1,
       "symbol": "context",
-      "end_line": 220
+      "end_line": 64
     },
     {
       "crate_name": "<schema>",
-      "file": "schemas/lifecycle/e1/context.jtd.json",
-      "item_kind": "schema-def",
-      "line": 177,
-      "symbol": "context::artifact",
-      "end_line": 192
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/lifecycle/e1/context.jtd.json",
-      "item_kind": "schema-def",
-      "line": 56,
-      "symbol": "context::execution",
-      "end_line": 75
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/lifecycle/e1/context.jtd.json",
-      "item_kind": "schema-def",
-      "line": 212,
-      "symbol": "context::io",
-      "end_line": 218
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/lifecycle/e1/context.jtd.json",
-      "item_kind": "schema-def",
-      "line": 76,
-      "symbol": "context::project",
-      "end_line": 102
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/lifecycle/e1/context.jtd.json",
-      "item_kind": "schema-def",
-      "line": 141,
-      "symbol": "context::run",
-      "end_line": 176
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/lifecycle/e1/context.jtd.json",
-      "item_kind": "schema-def",
-      "line": 193,
-      "symbol": "context::slot_target",
-      "end_line": 211
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/lifecycle/e1/context.jtd.json",
-      "item_kind": "schema-def",
-      "line": 103,
-      "symbol": "context::world",
-      "end_line": 121
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/lifecycle/e1/context.jtd.json",
-      "item_kind": "schema-def",
-      "line": 122,
-      "symbol": "context::world_package",
-      "end_line": 140
+      "file": "schemas/native/e1/context.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "context",
+      "end_line": 47
     },
     {
       "crate_name": "<schema>",
@@ -1618,6 +1562,22 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/native/e1/manifest.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "manifest",
+      "end_line": 36
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/native/e1/manifest.jtd.json",
+      "item_kind": "schema-def",
+      "line": 18,
+      "symbol": "manifest::manifest_extension",
+      "end_line": 34
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/index_cli/e1/outdated_report.jtd.json",
       "item_kind": "schema",
       "line": 1,
@@ -2289,15 +2249,15 @@
       "item_kind": "schema",
       "line": 1,
       "symbol": "reply",
-      "end_line": 66
+      "end_line": 45
     },
     {
       "crate_name": "<schema>",
-      "file": "schemas/lifecycle/e1/reply.jtd.json",
-      "item_kind": "schema-def",
-      "line": 52,
-      "symbol": "reply::reply_artifact",
-      "end_line": 64
+      "file": "schemas/native/e1/reply.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "reply",
+      "end_line": 26
     },
     {
       "crate_name": "<schema>",
@@ -26905,6 +26865,14 @@
       "verb": "implements"
     },
     {
+      "file": "schemas/native/e1/context.jtd.json",
+      "from_symbol": "context",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE",
+      "verb": "implements"
+    },
+    {
       "file": "schemas/extensions_analyze.jtd.json",
       "from_symbol": "extensions_analyze",
       "line": 1,
@@ -26998,6 +26966,14 @@
       "line": 1,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#JTD-SSOT",
+      "verb": "implements"
+    },
+    {
+      "file": "schemas/native/e1/manifest.jtd.json",
+      "from_symbol": "manifest",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE",
       "verb": "implements"
     },
     {
@@ -27407,6 +27383,14 @@
       "line": 1,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#JTD-SSOT",
+      "verb": "implements"
+    },
+    {
+      "file": "schemas/native/e1/reply.jtd.json",
+      "from_symbol": "reply",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE",
       "verb": "implements"
     },
     {
