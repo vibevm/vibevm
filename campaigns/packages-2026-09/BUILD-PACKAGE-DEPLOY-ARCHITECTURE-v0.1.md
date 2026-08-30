@@ -296,6 +296,63 @@ invalidate the target even when its logical mechanism name did not change.
 `vibe bin` direct verbs remain usable. The lowering stops being the architecture:
 Cargo is the first provider of the general graph.
 
+### 5.0 Execution seam and the Cargo atom's staging — decision record (central, 2026-08-30)
+
+**Decision.** R8-CARGO brings the FIRST executing mechanism, staged
+honestly:
+
+1. **Execution home.** The mechanism execution seam lives in
+   `vibe-lifecycle`, beside the phase machine that owns ordering,
+   narration and state (§3.2's engine-owns list). Builtin providers are
+   IN-PROCESS implementations of one crate-internal trait mirroring the
+   §3.2 operations a build provider needs (`plan`, `fingerprint`,
+   `apply`, `verify`); the out-of-process provider protocol transport
+   (script/binary/native envelopes) is a LATER atom — at this atom a
+   resolved non-builtin mechanism at the build phase refuses typed,
+   naming the transport as not-yet-landed rather than pretending.
+2. **Wiring.** The build phase walks the landed `[[artifacts.build]]`
+   targets in the A1 DAG order; per target the logical key comes from
+   `target.mechanism`, the exact pin from the target's own `provider`
+   member, the routes from the host manifest, and selection is
+   R8-MECHANISM's `resolve_mechanism` — one law, no second resolver.
+3. **Cargo's message reader is a FOREIGN-format reader.** The
+   `--message-format=json-render-diagnostics` stream is Cargo's wire,
+   not ours: it is parsed with a minimal lenient serde shape carrying
+   exactly the members the laws read (`reason`, `package_id`,
+   `target.{name,kind}`, `executable`, `fresh`) — a lawful handwritten
+   derive under the wire-derive ratchet, named in the landing commit
+   per that gate's own recipe. No schema is authored for another tool's
+   format.
+4. **Records.** One `artifact_record` (the A2 exchange) per produced
+   output, written by the ENGINE to the engine-owned state home
+   `.vibe/state/artifacts/<output-id>.json` — a provider cannot mint an
+   output path (§3.2), and the record's byte-count/digest members follow
+   the A2 laws exactly.
+5. **Freshness at this atom is provider-fresh, as §4.1 rules for
+   Cargo**: the adapter always invokes Cargo and lets Cargo's own
+   incremental machinery answer; the `fingerprint` operation contributes
+   toolchain identity (`cargo -Vv`, `rustc -V`) into the evidence, and
+   the record notes Cargo's own `fresh` verdict. No Vibe-side source
+   census for Cargo targets.
+6. **`[[binary]]` lowers by projection, not by branch**: one pure
+   function projects a legacy `[[binary]]` entry into the equivalent
+   build target (mechanism `build:cargo`, one executable output selected
+   by package/bin), so the graph executor sees ONE target shape;
+   `vibe bin` direct verbs stay untouched.
+7. **Tests.** The selection/refusal/message laws are unit-proven over
+   recorded Cargo JSON fixtures; the acceptance's "Rust fixture built"
+   is ONE real end-to-end test compiling a dependency-free fixture crate
+   (offline-safe, temp target dir) and asserting the executable is taken
+   only from the compiler-artifact message — the real-build cost is
+   accepted for exactly one test per suite.
+
+**Considered and rejected.** Executing builtins through a synthetic
+in-process copy of the out-of-process envelope — serialization theater
+with no second process to justify it; the trait mirrors the operations,
+the envelope arrives with the transport atom. A public schema for
+Cargo's message stream — freezing another tool's wire as ours. Records
+under the provider's chosen paths — §3.2 forbids it by name.
+
 ## 5. Cargo commissioning backend
 
 The Cargo provider:
