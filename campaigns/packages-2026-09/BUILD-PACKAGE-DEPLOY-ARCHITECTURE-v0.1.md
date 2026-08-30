@@ -409,6 +409,54 @@ provider routes `build:cargo` to another installed provider.
 
 ## 6. Packaging targets
 
+### 6.0 Package staging and the phase wiring — decision record (central, 2026-08-30)
+
+**Decision.** R8-PACKAGE lands the two builtin package providers and the
+one phase wiring:
+
+1. **The provider family extends the R8-CARGO seam**: a crate-internal
+   `PackageProvider` trait beside `BuildProvider` in `vibe-lifecycle`,
+   same operations (`plan`/`fingerprint`/`apply`/`verify`), same
+   engine-owns list, same in-process staging (out-of-process transport
+   stays a later atom; a non-builtin selection refuses by its name).
+   Selection is the same `resolve_mechanism`, role `package`.
+2. **`run_phases` learns BOTH executors in one wiring** (the R8-CARGO
+   deferral discharged): the build phase calls
+   `execute_build_targets`, the package phase calls the new
+   `execute_package_targets`, both inside `vibe-orchestrator`'s
+   existing phase walk — no phase reordering, no new commands. A
+   `[[artifacts.package]]` input names a build output's id; the package
+   executor reads the A2 record the build executor wrote (engine-owned
+   state, never a guessed path) and refuses a missing or stale-digest
+   input by name.
+3. **`package:static-skill` is engine-fresh per §4.1** — the complete
+   input set is closed and hashable (the declared `SKILL.md` plus every
+   `vibe:include`-named textual resource); §6.1's laws verbatim: one
+   UTF-8 file out, frontmatter validated, every declared resource
+   consumed exactly once, executable/binary/traversal/sibling refusals,
+   origin/hash framing on every inclusion, exact input/output digests
+   recorded.
+4. **`package:agent-plugin` is engine-fresh likewise** — §6.2 verbatim:
+   a DIRECTORY distributable (plugin.json, `skills/<name>/SKILL.md`,
+   optional mcp.json, reverse-domain client-extension dirs only),
+   containment across links/junctions/reparse points, local schema
+   validation against the published 1.0.0 shapes, one canonical
+   directory digest recorded in the A2 record (`kind = directory`).
+5. **Client projections (§6.3) are OUT of this atom** — they are
+   `package`-phase adapters over the canonical plugin and land with the
+   deploy lane, where their install postures live; nothing here touches
+   a user home.
+6. **Distributables land under the engine-owned package root**
+   `target/vibe-package/<target-id>/…` — same containment law as the
+   build root, same verify pins, records beside the build records in
+   `.vibe/state/artifacts/`.
+
+**Considered and rejected.** A second provider trait shape for package —
+one seam, two roles. Wiring package before build in the same atom as a
+"while we're here" reorder — the phase line is frozen (§2). Client
+projection inside `package:agent-plugin` — §6.2 keeps the canonical
+plugin and the projections distinct artifacts.
+
 ### 6.1 Fully static skill
 
 `package:static-skill` produces exactly one UTF-8 `SKILL.md` file. It validates
