@@ -34,14 +34,21 @@ registry_gated_crate = "vibe-cli"
 # scanned here; the remaining vibevm unsafe sites carry fn-grain
 # #[spec(deviates)] testimony.
 #
-# vibe-test-support is the second audit home, and the narrowest one: a single
+# `vibe-ext` is the native ABI audit home: its public author surface is safe,
+# while the macro's one private FFI module and the raw ABI/link tests must
+# manipulate host pointers, exact boxed-slice ownership and `extern "C"`
+# symbols. Its own `#![deny(unsafe_code)]` plus the named module boundary and
+# mutation-backed tests are the narrower audit mechanism; no environment read
+# is present or sanctioned.
+#
+# vibe-test-support is the other audit home, and the narrowest one: a single
 # pre-`main` constructor that repoints $VIBE_SETTINGS at a temp dir so no test
 # can reach the operator's real `~/.vibe` (DRIFT-020). It cannot use
 # rust-ai-native-env-audit's EnvGuard — that guard RESTORES on drop and holds a
 # process-wide lock, both wrong for an isolation that must outlive the call and
 # never block a test. The mutation is sound for one reason only, recorded at the
 # call site: a platform constructor runs single-threaded before `main`.
-audit_crates = ["vibe-test-support"]
+audit_crates = ["vibe-ext", "vibe-test-support"]
 
 # Crates under the Class-F/G conform gates (the expand-as-you-conform list —
 # a crate enters when its seams are doctested and its error layer carries REQ
@@ -49,6 +56,7 @@ audit_crates = ["vibe-test-support"]
 gated = [
     "progress-core",
     "vibe-core",
+    "vibe-ext",
     "vibe-extension-registry",
     "vibe-facts",
     "vibe-actions",
@@ -78,6 +86,7 @@ gated = [
 # gating it would enforce uncompiled prose, the opposite of the rule.
 gated_pub_doctest = [
     "vibe-core",
+    "vibe-ext",
     "vibe-extension-registry",
     "vibe-lifecycle",
     "vibe-safefs",

@@ -4129,6 +4129,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "vibe-ext"
+version = "1.0.0"
+dependencies = [
+ "serde_json",
+ "vibe-wire",
+]
+
+[[package]]
 name = "vibe-extension-registry"
 version = "1.0.0"
 dependencies = [

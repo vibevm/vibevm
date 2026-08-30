@@ -1,0 +1,15 @@
+[package]
+name = "vibe-ext"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license-file.workspace = true
+publish.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "Safe Rust author SDK for VibeVM native extension ABI 1"
+
+[dependencies]
+serde_json.workspace = true
+vibe-wire.workspace = true
