@@ -1133,6 +1133,19 @@ than depending on untracked `cache/` archaeology.
   RAII free guard before strict reply parsing, so success and every malformed/
   failure exit free once. LOADER → real-fixture/cache/free GATE are serial;
   artifact resolution/build and lifecycle wiring remain R5.3.
+- R5.2 native loader: `9f7b8854` / map `36efa500` adds the separate gated
+  `vibe-native-loader` unsafe quarantine and no resolver/build/lifecycle path.
+  Canonical aliases and concurrent first use share one strong handle; four exact
+  symbols, ABI 1, bounded copied manifest and exact selected id/typed point/
+  optional schema all admit before invoke. Every published response is guarded
+  with its exact free pair and library owner before status/strict reply parsing.
+  Gates pass 11 fake/cache/free unit tests, 1 real SDK-produced Windows DLL,
+  3 public loader doctests, 1 compiled fixture doctest, strict clippy/check/fmt
+  and conform 0-new. Five worker plus three independent central mutations were
+  red and restored. Specmap is 6833 units / 3014 tagged items / 2763 edges,
+  0 suspects, gated orphans or unresolved host edges, 25 standing warnings.
+  R5.2-GATE is next; Linux/macOS real loading remains platform-CI evidence and
+  artifact resolution/build plus lifecycle wiring remain R5.3.
 - R4.2 minify binding, RED corpus and activation e2e: `7a09ec2d` registers
   `xml-minify` (epoch 1, EMITTED — the one stage the kernel serves without a
   new serializer; every other stage refuses through the registry's own law)
@@ -1252,7 +1265,7 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 | Step | State | Required result |
 |---|---|---|
 | R5.1 native JTD context/reply/manifest + `vibe-ext` macro | done | SHARED-STRICT `52edc577`; WIRE `fd81a003` / map `4c9378c9`; SDK `bfaea140`; integrated 17 + 7 + 7 gate, real abort refusal, 20 mutation proofs; schema first, unanimous shared-reader strictness, plugin-side unwind/memory boundary |
-| R5.2 loader | missing | separate unsafe-quarantine crate, libloading/cache/free-once tests |
+| R5.2 loader | in progress | LOADER `9f7b8854` / map `36efa500`: separate unsafe quarantine, canonical strong cache, exact ABI/manifest admission and free-once guard; 11 unit + 1 real DLL + 4 doctests, 8 mutation proofs; focused integrated GATE remains |
 | R5.3 source/prebuilt resolution and in-slot build | partial substrate | build ignores exist; no native artifact/provider build path |
 | R5.4 pending bootstrap convergence | missing | install may mark pending; build rebuilds and recompiles once |
 | R5.5 native/builtin minify parity | missing | owner scenario §10.2 |

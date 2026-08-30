@@ -360,3 +360,20 @@ a symbol name, each producing a selected RED before byte-exact restoration.
 
 R5.2 lands as LOADER then a focused real-fixture/cache/free gate. Only after both
 are accepted may R5.3 resolve source/prebuilt artifacts and connect lifecycle.
+
+**Ratified at R5.2-LOADER acceptance (central, 2026-08-31).** Commit
+`9f7b8854` / map `36efa500` lands the separate gated `vibe-native-loader`
+crate and no R5.3 concern. The caller-supplied absolute path is canonicalized
+into one strong process cache; four exact symbols and ABI 1 are admitted before
+the copied bounded manifest, and selected id/typed point/exact optional schema
+are admitted before invoke. Every published response enters an owner-carrying
+RAII guard before status or strict reply validation. The fake layer passes 11
+tests, the real SDK-produced Windows DLL passes 1 integration test, the public
+surface passes 3 doctests, and the fixture marker passes its compiled doctest.
+Strict clippy/check/fmt and scoped conform pass with zero findings. Five worker
+plus three independent central RED/restoration probes prove cache identity,
+ABI/manifest ordering, exact symbol lookup and free-on-malformed-reply. Specmap
+is clean at 6,833 units / 3,014 tagged items / 2,763 edges with 0 suspects,
+gated orphans or unresolved host edges and 25 standing warnings. The focused
+R5.2-GATE remains next; Linux/macOS real-library execution remains platform-CI
+evidence, and artifact resolution/build/lifecycle wiring remain R5.3.
