@@ -186,6 +186,8 @@ fn a_routed_away_deploy_target_refuses_by_the_unlanded_transport() {
         routes: &routes,
         state_home: &state_home,
         settings_root: fixture.settings.path(),
+        user_home: fixture.home.path(),
+        clients: &fixture.clients,
         project: "org.example/demo",
         package: None,
         created_at: "2026-08-30T12:00:00Z",
@@ -375,6 +377,8 @@ fn a_target_whose_artifact_is_unbuilt_is_planned_work_not_a_refusal() {
     let project = temp();
     let settings = temp();
     let destination = temp();
+    let home = temp();
+    let clients = crate::mechanism::vibebin::support::fake_clients(home.path());
     let plane = registry(&empty_world());
     let routes = MechanismRoutes::default();
     let targets = [target("local-helper", "helper.exe", &[])];
@@ -388,6 +392,8 @@ fn a_target_whose_artifact_is_unbuilt_is_planned_work_not_a_refusal() {
         routes: &routes,
         state_home: &state_home,
         settings_root: settings.path(),
+        user_home: home.path(),
+        clients: &clients,
         project: "org.example/demo",
         package: None,
         created_at: "2026-08-30T12:00:00Z",

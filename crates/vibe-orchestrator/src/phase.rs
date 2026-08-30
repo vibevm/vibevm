@@ -95,13 +95,14 @@ pub struct PhaseRun<'a> {
     pub agent: Arc<dyn AgentBackend>,
     /// The surface's compile-trace recorder, borrowed.
     pub trace: Option<&'a TraceRun>,
-    /// The deploy-profile selection the COMMAND LAYER resolved, when it
-    /// resolved one (§7.0.5: "Profile resolution happens ONCE, in the
-    /// command layer that owns flags, and travels as data"). `None` is a
-    /// run that carries no selection — a chain that never reaches deploy,
-    /// or a project that declares no deploy section — and the deploy fence
-    /// then arms nothing at all.
-    pub deploy: Option<vibe_lifecycle::DeploySelection>,
+    /// Everything the COMMAND LAYER resolved for this run's deploy half,
+    /// when it resolved any (§7.0.5: "Profile resolution happens ONCE, in
+    /// the command layer that owns flags, and travels as data"; §6.3.0.6:
+    /// "Home and executable authority are injected"). `None` is a run that
+    /// carries no deploy half — a chain that never reaches deploy, or a
+    /// project that declares no deploy section — and the deploy fence then
+    /// arms nothing at all.
+    pub deploy: Option<crate::DeployAuthority>,
     /// The surface's injected instant for the verify comparison.
     ///
     /// This entry point owns the COMPLETE derived chain, so handing it down is
@@ -297,7 +298,7 @@ fn run(inputs: PhaseRun<'_>, measured: &mut Measured) -> Result<Outcome> {
     // engine's own state home and identity. Assembled once, here, from the
     // proven manifest — never re-derived below.
     let deploy_carriage = match deploy {
-        Some(selection) => Some(DeployCarriage::assemble(selection, &manifest)?),
+        Some(authority) => Some(DeployCarriage::assemble(authority, &manifest)?),
         None => None,
     };
     // §7.0.7's lowering, at the assembly that arms the fences: a legacy

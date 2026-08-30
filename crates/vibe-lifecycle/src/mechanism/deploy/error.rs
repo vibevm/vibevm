@@ -302,6 +302,101 @@ pub enum DeployError {
         retained: String,
     },
 
+    /// §6.3.0.10's first pre-apply law: "Duplicate owned identity always
+    /// refuses."
+    ///
+    /// Raised while every destination is still byte-absent, and against the
+    /// shared Unicode-9 physical identity rather than the spelling — two
+    /// targets that name `SKILL.md` and `skill.md` are two claimants for
+    /// one file on the hosts this project supports, and there is no
+    /// capability that makes owning one file twice safe.
+    #[error(
+        "[[deploy.target]] `{first}` and `{second}` both own `{resource}` (spelled `{alias}` by \
+         the second), which is one physical resource; nothing was deployed \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS; fix: give \
+         one of the two targets a different destination — two deployments never own one resource, \
+         and case or Unicode composition does not make two of it)"
+    )]
+    DuplicateOwnedResource {
+        first: String,
+        second: String,
+        resource: String,
+        alias: String,
+    },
+
+    /// §6.3.0.10's second pre-apply law: "Duplicate physical lock identity
+    /// refuses unless every participant explicitly uses reference ownership
+    /// and owns a distinct logical member of that shared document/state."
+    ///
+    /// The refusal names the participants that did NOT declare it, because
+    /// that is the one thing an operator can act on: the fix is either a
+    /// different destination or a provider that can honestly claim the
+    /// capability.
+    #[error(
+        "[[deploy.target]] `{first}` and `{second}` both lock the physical destination \
+         `{resource}` (spelled `{alias}` by the second), but {unreferenced} did not declare \
+         reference ownership; nothing was deployed \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS; fix: deploy \
+         the two targets separately, or give one a different destination — one physical document \
+         is shared only by providers that all own a distinct logical member of it)"
+    )]
+    SharedLockNotReferenced {
+        first: String,
+        second: String,
+        resource: String,
+        alias: String,
+        unreferenced: String,
+    },
+
+    /// A provider that did not declare reference ownership handed back a
+    /// lock set that is not its owned set. §6.3.0.9: "A normal provider's
+    /// lock resources equal its owned resources."
+    ///
+    /// Always a defect in the provider, and it stops here rather than
+    /// reaching a destination: a wider lock set would silently serialise
+    /// unrelated deployments, and a narrower one would apply to a
+    /// destination nobody holds.
+    #[error(
+        "[[deploy.target]] `{target}` selected provider `{pin}`, which does not declare reference \
+         ownership but planned to lock {locked} while owning {owned} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS; fix: this is \
+         a defect in the provider — a provider locks exactly what it owns unless its descriptor \
+         declares that it owns a logical member of a shared physical destination)"
+    )]
+    LockSetNotDeclared {
+        target: String,
+        pin: String,
+        owned: String,
+        locked: String,
+    },
+
+    /// A reference-owning provider cannot be reversed yet, because the
+    /// engine keeps no durable record from a receipt to the PHYSICAL
+    /// destinations that deployment locked.
+    ///
+    /// §6.3.0.9 admits a provider that owns a logical member of a shared
+    /// document while locking the document itself. §7.2's record list is
+    /// the OWNED set, so the physical lock exists only inside the plan —
+    /// and a plan does not survive to undeploy time. Removing from the
+    /// logical member alone would take a lock a sibling entry's deployment
+    /// does not contend on, so two removals could edit one document at
+    /// once; re-deriving the document by parsing the resource string would
+    /// invent a second grammar for an identity nobody wrote down.
+    ///
+    /// The honest answer is to refuse and say what has to land first. Every
+    /// provider that exists today locks exactly what it owns and never
+    /// reaches this arm.
+    #[error(
+        "`undeploy` of [[deploy.target]] `{target}` refuses: its provider `{pin}` declares \
+         reference ownership, and this engine has no durable record of the physical destinations \
+         that deployment locked, so a removal could race a sibling entry of the same document \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS; fix: this \
+         needs the engine-owned durable lock ledger that R8-CLIENTS-DEPLOY must land before a \
+         reference-owned deployment can be reversed — until then, reverse the client's own state \
+         through that client)"
+    )]
+    ReferenceOwnedRemovalNotLandable { target: String, pin: String },
+
     /// §7.2's ownership collision: "A collision with state owned by another
     /// deployment is an error".
     #[error(

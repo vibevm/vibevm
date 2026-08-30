@@ -20,6 +20,7 @@ use vibe_core::manifest::{ArtifactKind, DeployTarget};
 use vibe_wire::generated::artifact_record::ArtifactShape;
 use vibe_wire::generated::deploy_receipt::DestinationScope;
 
+use super::model::ClientExecutables;
 use super::state::CheckpointLedger;
 use crate::mechanism::{EffectClass, MechanismError, ProviderDescriptor, ProviderOperation};
 
@@ -66,6 +67,29 @@ pub(crate) struct PlannedDeployResource {
 pub(crate) struct DeployPlan {
     /// Every resource this deployment would own, in a stable order.
     pub(crate) resources: Vec<PlannedDeployResource>,
+    /// Every PHYSICAL thing apply must hold a lock over, in a stable order
+    /// — §6.3.0.9's "`DeployPlan` gains engine-internal `lock_resources`".
+    ///
+    /// Separate from [`Self::resources`] because owning and locking are
+    /// different questions once a destination is a shared document or a
+    /// client's private state: "An OpenCode config entry owns
+    /// `home:.config/opencode/opencode.json#mcp/<name>` while locking the
+    /// physical document `home:.config/opencode/opencode.json`; CLI-owned
+    /// plugin state uses a logical plugin resource while locking that
+    /// client's private plugin state."
+    ///
+    /// A normal provider's lock set is exactly its owned set, and the
+    /// engine refuses any other answer from a provider that has not
+    /// declared [`DeployDescriptor::reference_ownership`] — a provider that
+    /// could widen its lock set without declaring reference ownership could
+    /// silently serialise unrelated deployments, and one that could narrow
+    /// it could apply to a document nobody holds.
+    ///
+    /// It carries identities only, with no desired digest: a lock is over a
+    /// destination, and the digest of a shared document is not this
+    /// deployment's to want. It never reaches a receipt or an intent
+    /// (§7.2's record list is the OWNED set).
+    pub(crate) lock_resources: Vec<String>,
     /// The digest of the desired CONFIG this deployment reconciles to —
     /// the receipt member of the same name.
     pub(crate) config_digest: String,
@@ -168,7 +192,13 @@ pub(crate) const fn destination_scope(effect: EffectClass) -> DestinationScope {
 ///   the same law the state home already holds to, for the same reason: a
 ///   test can then name the whole destination, and the operator's real
 ///   `~/.vibe` is unreachable by construction rather than by an
-///   environment variable a test could forget.
+///   environment variable a test could forget;
+/// - `user_home` and `clients` are §6.3.0.6's twin of that law, one step
+///   wider: a CLIENT destination is not under `~/.vibe` at all, and a
+///   client CLI is not a path this engine may go looking for. Both arrive
+///   borrowed from the execution the surface built, so a provider that
+///   wanted to resolve either would have to write the ambient call itself
+///   — which is what makes its absence checkable rather than promised.
 #[derive(Debug, Clone, Copy)]
 pub(crate) struct DeployTargetRequest<'a> {
     pub(crate) target: &'a DeployTarget,
@@ -184,6 +214,20 @@ pub(crate) struct DeployTargetRequest<'a> {
     /// The absolute vibevm settings directory this deployment's
     /// destination lives under.
     pub(crate) settings_root: &'a Path,
+    /// The invoking user's home, as the command surface resolved it. A
+    /// client-scope destination hangs off THIS root, never off
+    /// `settings_root` and never off an ambient read.
+    #[allow(
+        dead_code,
+        reason = "the provider-facing request; the client deploy providers are its first readers"
+    )]
+    pub(crate) user_home: &'a Path,
+    /// The client executables this run may invoke, injected whole.
+    #[allow(
+        dead_code,
+        reason = "the provider-facing request; the client deploy providers are its first readers"
+    )]
+    pub(crate) clients: &'a ClientExecutables,
     /// The artifact this target reconciles, proven from its record.
     pub(crate) artifact: Option<&'a ResolvedDeployArtifact>,
     /// The engine-owned staging directory, when the provider takes one.
@@ -204,6 +248,21 @@ pub(crate) struct DeployDescriptor {
     /// Whether the destination supports atomic replacement, and therefore
     /// whether the engine stages into a scratch directory first.
     pub(crate) atomic_replacement: bool,
+    /// Whether this provider owns a LOGICAL member of a physical resource
+    /// somebody else may also own — §6.3.0.9's "`DeployDescriptor` gains an
+    /// explicit reference-ownership capability", and §7.0's deferred
+    /// ratification-3 capability arriving with its first honest user.
+    ///
+    /// `false` is the ordinary answer and the one every incumbent provider
+    /// gives: its lock set is its owned set, and a second deployment
+    /// wanting the same physical destination is §7.2's flat collision.
+    /// `true` is a claim, not a convenience — the engine then admits a
+    /// SHARED physical lock, but only among participants that ALL declare
+    /// it and whose logical owned members are pairwise distinct. A single
+    /// `false` in the group refuses the whole group, because one
+    /// participant that believes it owns the document outright would erase
+    /// the others on removal.
+    pub(crate) reference_ownership: bool,
 }
 
 impl DeployDescriptor {

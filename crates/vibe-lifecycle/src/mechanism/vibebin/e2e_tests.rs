@@ -71,10 +71,16 @@ const UPDATED_SOURCE: &str = "fn main() {\n    println!(\"vibe-bin payload UPDAT
 const ORIGINAL_OUTPUT: &str = "vibe-bin payload ORIGINAL";
 const UPDATED_OUTPUT: &str = "vibe-bin payload UPDATED";
 
-/// The three temp roots this gate runs inside.
+/// The temp roots this gate runs inside, plus the injected client
+/// authority — a fake home that is NOT the settings root, and three client
+/// executables that do not exist. Nothing in this gate may reach an
+/// operator's home or a real client, and naming both as data is what makes
+/// that checkable rather than assumed.
 struct World {
     project: TempDir,
     settings: TempDir,
+    home: TempDir,
+    clients: crate::mechanism::ClientExecutables,
     state_home: PathBuf,
 }
 
@@ -112,6 +118,8 @@ fn deploy(world: &World, targets: &[DeployTarget]) -> Result<(), DeployError> {
         routes: &routes,
         state_home: &world.state_home,
         settings_root: world.settings.path(),
+        user_home: world.home.path(),
+        clients: &world.clients,
         project: "org.example/vibebin-e2e",
         package: None,
         created_at: "2026-08-30T12:00:00Z",
@@ -284,9 +292,13 @@ fn a_real_tool_deploys_runs_updates_rolls_back_lists_and_undeploys() {
         let project = temp();
         let settings = temp();
         let state_home = deploy_state_home(settings.path());
+        let home = temp();
+        let clients = super::support::fake_clients(home.path());
         World {
             project,
             settings,
+            home,
+            clients,
             state_home,
         }
     };
@@ -339,35 +351,47 @@ fn a_real_tool_deploys_runs_updates_rolls_back_lists_and_undeploys() {
         "a payload already at its own address is written once and never again",
     );
 
-    // ---- 4. the saga: a two-target profile whose second target fails ----
+    // ---- 4. the PRE-APPLY epoch: a two-target profile whose second
+    //         target refuses is refused before the first one applies ------
+    //
+    // This step used to prove the saga live, and §6.3.0.10 is what changed
+    // it: "Every selected plan is prepared before the first apply." Every
+    // refusal this provider can raise — artifact kind, config, launcher
+    // collision — is raised by `plan`, so a plan-detectable fault in ANY
+    // selected target is now caught while every destination is still
+    // untouched. There is nothing left to roll back, which is the stronger
+    // outcome and the reason the epoch exists. The saga's own laws (reverse
+    // order, the irreversible partial) stay proven at the hermetic unit
+    // seam, against APPLY-time faults, which is now the only way it fires.
     let failing = [updated.clone(), refuser()];
     let error = deploy(&world, &failing).expect_err("the second target refuses by artifact kind");
-    let DeployError::Saga {
-        target,
-        rolled_back,
-        retained,
-        ..
-    } = &error
-    else {
-        panic!("expected the saga refusal, got: {error}");
-    };
-    assert_eq!(target, "vibe-e2e-refuser");
-    assert_eq!(rolled_back, "vibe-e2e");
-    assert_eq!(retained, "none");
+    assert!(
+        matches!(error, DeployError::Provider(_)),
+        "the second target's own plan refusal, not a saga: {error}",
+    );
+    assert!(
+        error.to_string().contains("executable artifacts only"),
+        "and it is the provider's artifact-kind law: {error}",
+    );
     assert_eq!(
         run_launcher(&world.launcher()),
         (ORIGINAL_OUTPUT.to_owned(), 0),
-        "the rolled-back launcher runs the ORIGINAL payload again (§7.1.0 ruling 6)",
+        "the first target never applied, so the launcher still runs generation 3's payload",
     );
     assert_eq!(
-        std::fs::read(world.launcher()).expect("the launcher survived the rollback"),
+        std::fs::read(world.launcher()).expect("the launcher is untouched"),
         launcher_bytes,
-        "a rollback restores the pointer and leaves the version-free launcher",
+        "nothing was written: not the launcher, not the pointer",
+    );
+    assert_eq!(
+        std::fs::read(world.pointer()).expect("the pointer is untouched"),
+        first_pointer,
+        "the pointer still names the ORIGINAL payload generation 3 installed",
     );
     assert_eq!(
         count(&world.at("store")),
         2,
-        "and a rollback never touches a content-addressed payload",
+        "and no payload was written for a deployment that never began",
     );
 
     // ---- 5. a live generation again, and the listing --------------------
@@ -395,6 +419,8 @@ fn a_real_tool_deploys_runs_updates_rolls_back_lists_and_undeploys() {
         routes: &MechanismRoutes::default(),
         state_home: &world.state_home,
         settings_root: world.settings.path(),
+        user_home: world.home.path(),
+        clients: &world.clients,
         project: "org.example/vibebin-e2e",
         package: None,
         created_at: "2026-08-30T12:00:00Z",

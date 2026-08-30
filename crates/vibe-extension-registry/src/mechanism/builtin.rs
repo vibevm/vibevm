@@ -3,7 +3,7 @@
 //! §3 of the build/package/deploy architecture rejects a privileged branch for
 //! what vibe already implements: the built-in Cargo adapter "is represented by
 //! the reserved provider key `org.vibevm/vibe#cargo`, not by a privileged
-//! branch outside the registry". This cell is that representation — five
+//! branch outside the registry". This cell is that representation — fourteen
 //! ordinary declarations under one reserved identity, which the collector
 //! ALWAYS appends ahead of every collected manifest. Selection then has no
 //! builtin case to special-case: step 3 of §3.1 is a lookup in the same vector
@@ -35,19 +35,27 @@ pub(super) const RESERVED_OWNER: &str = "org.vibevm/vibe";
 
 /// One engine-minted provider, in the exact order collection appends it.
 ///
-/// The five shipped rows are the ones the architecture names by key: `#cargo`
+/// The first five shipped rows are the ones §§5–7 name by key: `#cargo`
 /// (§5, the Cargo commissioning backend), `#static-skill` (§6.1),
 /// `#agent-plugin` (§6.2), `#vibe-bin` (§7.1) and `#windows-zip` (§7.0.8).
-/// Each is `protocol = 1`, because the provider protocol starts at 1 and
-/// nothing has revised it.
+/// The nine that follow are §6.3.0.2's commissioning matrix. Each is
+/// `protocol = 1`, because the provider protocol starts at 1 and nothing has
+/// revised it.
 struct BuiltinDescriptor {
+    /// The reserved provider id — the `#…` half of this row's identity, and
+    /// the `handler = { kind = "builtin", name = … }` spelling an executor
+    /// dispatches on.
     id: &'static str,
     role: MechanismRole,
-    /// Always equal to `id` today: the engine ships exactly one provider per
-    /// logical key, so the reserved id IS the logical name it defaults for.
-    /// They stay separate fields because a second engine provider for one key
-    /// would need distinct spellings, and conflating them now would make that
-    /// a grammar change instead of a table row.
+    /// The LOGICAL capability this row defaults for — the `name` half of its
+    /// `<role>:<name>` key, which is a vocabulary word and never an identity.
+    ///
+    /// It is NOT `id`. §6.3.0.2 ships the three client-plugin projections
+    /// "deliberately to prove that provider id and logical name are separate
+    /// fields": `package:claude-plugin` is serviced by
+    /// `org.vibevm/vibe#claude-plugin-projection`, because the deploy row that
+    /// INSTALLS a projected plugin already owns the bare id `claude-plugin`,
+    /// and one reserved owner cannot key two rows under one `#id`.
     name: &'static str,
     freshness: MechanismFreshness,
     config_schema: &'static str,
@@ -63,12 +71,27 @@ struct BuiltinDescriptor {
 /// hashable by construction — §6.1 produces exactly one file from declared
 /// textual resources, §6.2 a directory of declared files, and §7.0.8's
 /// archive is exactly the declared inputs and nothing else.
+///
+/// §6.3.0.2 rules the nine client rows the same way and in the same words:
+/// "Projection rows are engine-fresh; destination rows are provider-fresh."
+/// A projection consumes one recorded `agent-plugin` directory and emits one
+/// recorded directory — a closed, hashable input set; a client destination
+/// reconciles a private install state (a marketplace, a client's own plugin
+/// registry, a shared config document) that no engine census can hash.
+///
+/// ORDER is part of the table: the first five rows keep their historical
+/// positions, so a reader of `vibe extensions`, a candidate list in a refusal
+/// and every selection result stay byte-compatible with the pre-R8-CLIENTS
+/// engine. New rows are appended, never interleaved.
 //
-// REVIEW: confirm each `config_schema` path below when R8-CARGO lands the
-// provider protocol, because it materialises the JTD files these names point
-// at. Nothing reads them at this atom — selection is pure — so the spelling is
-// an engine-owned schema identity and not yet a file on disk.
-const BUILTINS: [BuiltinDescriptor; 5] = [
+// REVIEW: confirm each `config_schema` path below when the provider protocol
+// materialises the JTD files these names point at. Nothing reads them yet —
+// selection is pure — so the spelling is an engine-owned schema identity and
+// not yet a file on disk. The family is `<role>_<provider id>.jtd.json` in
+// snake_case: the schema describes ONE PROVIDER's config, so it is keyed by
+// the provider's id and not by the logical capability it defaults for —
+// otherwise two providers of one key would have to share one schema identity.
+const BUILTINS: [BuiltinDescriptor; 14] = [
     BuiltinDescriptor {
         id: "cargo",
         role: MechanismRole::Build,
@@ -104,6 +127,73 @@ const BUILTINS: [BuiltinDescriptor; 5] = [
         freshness: MechanismFreshness::Engine,
         config_schema: "schemas/mechanism/package_windows_zip.jtd.json",
     },
+    // §6.3.0.2's three client-plugin PROJECTIONS. Package role, engine-fresh,
+    // and the rows whose `id` deliberately differs from their `name`.
+    BuiltinDescriptor {
+        id: "claude-plugin-projection",
+        role: MechanismRole::Package,
+        name: "claude-plugin",
+        freshness: MechanismFreshness::Engine,
+        config_schema: "schemas/mechanism/package_claude_plugin_projection.jtd.json",
+    },
+    BuiltinDescriptor {
+        id: "codex-plugin-projection",
+        role: MechanismRole::Package,
+        name: "codex-plugin",
+        freshness: MechanismFreshness::Engine,
+        config_schema: "schemas/mechanism/package_codex_plugin_projection.jtd.json",
+    },
+    BuiltinDescriptor {
+        id: "opencode-plugin-projection",
+        role: MechanismRole::Package,
+        name: "opencode-plugin",
+        freshness: MechanismFreshness::Engine,
+        config_schema: "schemas/mechanism/package_opencode_plugin_projection.jtd.json",
+    },
+    // §6.3.0.5's three standalone-skill destinations, then §6.3.0.7–8's three
+    // plugin destinations. Deploy role, provider-fresh.
+    BuiltinDescriptor {
+        id: "claude-skill",
+        role: MechanismRole::Deploy,
+        name: "claude-skill",
+        freshness: MechanismFreshness::Provider,
+        config_schema: "schemas/mechanism/deploy_claude_skill.jtd.json",
+    },
+    BuiltinDescriptor {
+        id: "codex-skill",
+        role: MechanismRole::Deploy,
+        name: "codex-skill",
+        freshness: MechanismFreshness::Provider,
+        config_schema: "schemas/mechanism/deploy_codex_skill.jtd.json",
+    },
+    BuiltinDescriptor {
+        id: "opencode-skill",
+        role: MechanismRole::Deploy,
+        name: "opencode-skill",
+        freshness: MechanismFreshness::Provider,
+        config_schema: "schemas/mechanism/deploy_opencode_skill.jtd.json",
+    },
+    BuiltinDescriptor {
+        id: "claude-plugin",
+        role: MechanismRole::Deploy,
+        name: "claude-plugin",
+        freshness: MechanismFreshness::Provider,
+        config_schema: "schemas/mechanism/deploy_claude_plugin.jtd.json",
+    },
+    BuiltinDescriptor {
+        id: "codex-plugin",
+        role: MechanismRole::Deploy,
+        name: "codex-plugin",
+        freshness: MechanismFreshness::Provider,
+        config_schema: "schemas/mechanism/deploy_codex_plugin.jtd.json",
+    },
+    BuiltinDescriptor {
+        id: "opencode-plugin",
+        role: MechanismRole::Deploy,
+        name: "opencode-plugin",
+        freshness: MechanismFreshness::Provider,
+        config_schema: "schemas/mechanism/deploy_opencode_plugin.jtd.json",
+    },
 ];
 
 /// The engine's own mechanism source — one owner and its declarations.
@@ -117,8 +207,13 @@ const BUILTINS: [BuiltinDescriptor; 5] = [
 ///
 /// let source = builtin_mechanism_source();
 /// assert_eq!(source.owner(), "org.vibevm/vibe");
-/// assert_eq!(source.declarations().len(), 5);
+/// assert_eq!(source.declarations().len(), 14);
 /// assert_eq!(source.declarations()[0].id, "cargo");
+///
+/// // A projection row's provider id is NOT its logical name.
+/// let projection = &source.declarations()[5];
+/// assert_eq!(projection.id, "claude-plugin-projection");
+/// assert_eq!(projection.name, "claude-plugin");
 /// ```
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE")]
 #[derive(Debug, Clone, PartialEq, Eq)]

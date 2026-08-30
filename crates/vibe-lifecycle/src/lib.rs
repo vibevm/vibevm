@@ -122,12 +122,13 @@ pub use handlers::{
 };
 pub use lease::{LifecycleLease, LifecycleLeaseError};
 pub use mechanism::{
-    ARTIFACT_RECORD_DIR, BuildError, BuildExecution, BuildOutcome, DEPLOY_STATE_DIR, DeployError,
-    DeployExecution, DeployOutcome, DeployPlanReport, DeployProviderError, DeployResourcePlan,
-    DeploySelection, DeployStatus, DeployedResource, DeploymentRow, MechanismError, PackageError,
-    PackageExecution, PackageOutcome, PackagedArtifact, ProducedArtifact, RecordError,
-    RemovalOutcome, deploy_state_home, execute_build_targets, execute_deploy_targets,
-    execute_package_targets, list_deployments, plan_deploy_targets, undeploy_targets,
+    ARTIFACT_RECORD_DIR, BuildError, BuildExecution, BuildOutcome, ClientExecutable,
+    ClientExecutables, DEPLOY_STATE_DIR, DeployError, DeployExecution, DeployOutcome,
+    DeployPlanReport, DeployProviderError, DeployResourcePlan, DeploySelection, DeployStatus,
+    DeployedResource, DeploymentRow, MechanismError, PackageError, PackageExecution,
+    PackageOutcome, PackagedArtifact, ProducedArtifact, RecordError, RemovalOutcome,
+    deploy_state_home, execute_build_targets, execute_deploy_targets, execute_package_targets,
+    list_deployments, plan_deploy_targets, undeploy_targets,
 };
 // The mechanism PLANE, through the same compatibility door the extension
 // plane already uses. The two executors above take a `MechanismRegistry`,

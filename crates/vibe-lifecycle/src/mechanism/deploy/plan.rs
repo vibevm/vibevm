@@ -19,6 +19,7 @@ use specmark::spec;
 use super::artifact::resolve_artifact;
 use super::error::DeployError;
 use super::model::{DeployExecution, DeployPlanReport, DeployResourcePlan};
+use super::preplan::{Participant, judge_resources, validate_lock_set};
 use super::protocol::{DeployPlan, ResolvedDeployArtifact};
 use super::state::DeployState;
 use super::{Selected, home_of, resolve_selection};
@@ -53,7 +54,13 @@ pub(crate) fn plan_resolved(
     // Which target ids are already known to be planned work, so a target
     // that depends on one is reported as planned too.
     let mut planned_ids: Vec<&str> = Vec::new();
-    for selected in resolved {
+    // Every plan this pass really produced, kept so §6.3.0.10's judgement
+    // runs over the whole set once the walk is done. A planner that
+    // reported a deployment its own apply would refuse is a planner that
+    // promises what the engine cannot perform — so it applies the SAME
+    // rules, from the same function, and refuses in the same words.
+    let mut judged: Vec<(usize, DeployPlan)> = Vec::new();
+    for (index, selected) in resolved.iter().enumerate() {
         let home = home_of(execution, &selected.target.id);
         let receipt = state.read_receipt(&home)?;
         let artifact = match resolve_artifact(execution.project_root, selected.target) {
@@ -95,6 +102,8 @@ pub(crate) fn plan_resolved(
             profile: &execution.selection.profile,
             project_root: execution.project_root,
             settings_root: execution.settings_root,
+            user_home: execution.user_home,
+            clients: execution.clients,
             artifact: Some(&artifact),
             // A plan never stages: staging is an apply-time scratch, and
             // offering one here would be a directory a pure operation
@@ -102,6 +111,11 @@ pub(crate) fn plan_resolved(
             staging: None,
         };
         let plan = selected.provider.plan(&request)?;
+        // The per-provider half of the law, at the same point the pre-apply
+        // epoch applies it: a provider that did not declare reference
+        // ownership may not shift its lock set, and reporting such a plan
+        // as deployable would be reporting a defect as work.
+        validate_lock_set(selected, &plan)?;
         let resources = planned_resources(&plan, receipt.as_ref());
         let stale = is_stale(&plan, &artifact, receipt.as_ref());
         let planned = stale || upstream_planned;
@@ -117,9 +131,23 @@ pub(crate) fn plan_resolved(
             planned,
             reason: reason(stale, upstream_planned),
             resources,
-            summary: plan.summary,
+            summary: plan.summary.clone(),
         });
+        judged.push((index, plan));
     }
+    // The SET half, over every target that really produced a plan. A
+    // target whose artifact is not built yet contributed no plan and is
+    // simply not a participant — the planner reports it as
+    // planned-without-detail and judges what it can see, which is exactly
+    // what a read-only pass is entitled to say.
+    let participants: Vec<Participant<'_, '_>> = judged
+        .iter()
+        .map(|(index, plan)| Participant {
+            selected: &resolved[*index],
+            plan,
+        })
+        .collect();
+    judge_resources(&participants)?;
     Ok(reports)
 }
 

@@ -54,11 +54,58 @@ use vibe_core::manifest::{
     Manifest, MechanismRoutes, build_target_for_binary,
 };
 use vibe_lifecycle::{
-    BuildExecution, DeployExecution, DeploySelection, MechanismRegistry, PackageExecution, Phase,
-    deploy_state_home, execute_build_targets, execute_deploy_targets, execute_package_targets,
+    BuildExecution, ClientExecutables, DeployExecution, DeploySelection, MechanismRegistry,
+    PackageExecution, Phase, deploy_state_home, execute_build_targets, execute_deploy_targets,
+    execute_package_targets,
 };
 
 use crate::RitualPlan;
+
+/// Everything one deploy dispatch's COMMAND SURFACE resolved, travelling as
+/// data — §7.0.5's "travels as data" and §6.3.0.6's "Home and executable
+/// authority are injected", which are one surface act and arrive together.
+///
+/// They are one value rather than three optional parameters because they
+/// are decided in one cell, at one moment, and a dispatch that carried a
+/// selection without a home (or the reverse) would be a run whose deploy
+/// half is half-resolved — exactly the ambiguity `Option<Option<_>>` at the
+/// flag boundary already taught this codebase to avoid.
+///
+/// ```
+/// use std::path::PathBuf;
+/// use vibe_orchestrator::DeployAuthority;
+/// use vibe_lifecycle::{ClientExecutable, ClientExecutables, DeploySelection};
+///
+/// let authority = DeployAuthority {
+///     selection: DeploySelection {
+///         profile: "local".into(),
+///         targets: vec!["local-helper".into()],
+///     },
+///     user_home: PathBuf::from("/home/u"),
+///     clients: ClientExecutables {
+///         claude: ClientExecutable::Resolved {
+///             command: "claude".into(),
+///             path: PathBuf::from("/opt/bin/claude"),
+///         },
+///         codex: ClientExecutable::Missing { command: "codex".into() },
+///         opencode: ClientExecutable::Missing { command: "opencode".into() },
+///     },
+/// };
+/// assert_eq!(authority.selection.profile, "local");
+/// assert!(authority.user_home.ends_with("u"));
+/// // Nothing below this value may search a path: a member is a resolved
+/// // absolute executable or a named absence, never a command word.
+/// assert!(authority.clients.claude.resolved_path().is_some());
+/// ```
+#[derive(Debug, Clone)]
+pub struct DeployAuthority {
+    /// The profile selection, resolved once by the layer that owns flags.
+    pub selection: DeploySelection,
+    /// The invoking user's home.
+    pub user_home: PathBuf,
+    /// The client executables this run may invoke.
+    pub clients: ClientExecutables,
+}
 
 /// Everything the mechanism half of one dispatch needs.
 ///
@@ -95,13 +142,21 @@ pub(crate) struct MechanismTargets<'a> {
 /// The deploy half of one dispatch's targets, assembled ONCE.
 ///
 /// §7.0.5 puts profile resolution in the command layer that owns flags and
-/// says the result "travels as data". [`DeployCarriage::selection`] is that
-/// data, arriving already resolved; the other three members are what the
-/// engine adds around it and could not be flags: where user deployment
-/// state lives (§7.0.3) and which project's receipts these are.
+/// says the result "travels as data". [`DeployAuthority`] is that data,
+/// arriving already resolved; the other members are what the engine adds
+/// around it and could not be flags: where user deployment state lives
+/// (§7.0.3) and which project's receipts these are.
 pub(crate) struct DeployCarriage {
     /// The resolved selection, as the command layer decided it.
     pub(crate) selection: DeploySelection,
+    /// The invoking user's home, as the command layer resolved it —
+    /// §6.3.0.6. It is NOT derived from `settings_root`: `$VIBE_SETTINGS`
+    /// relocates that root anywhere, while a client destination hangs off
+    /// the home itself.
+    pub(crate) user_home: PathBuf,
+    /// The client executables this run may invoke, injected whole by the
+    /// command layer. No cell below this one may look for a client.
+    pub(crate) clients: ClientExecutables,
     /// The absolute deployment state home — `state/deployments` under the
     /// vibevm settings directory.
     pub(crate) state_home: PathBuf,
@@ -122,12 +177,14 @@ pub(crate) struct DeployCarriage {
 }
 
 impl DeployCarriage {
-    /// Assemble the carriage around one already-resolved selection.
+    /// Assemble the carriage around one already-resolved authority.
     ///
     /// The settings directory is resolved HERE and nowhere below: the
     /// executor takes its state home as a parameter precisely so no engine
-    /// cell reads the operator's home.
-    pub(crate) fn assemble(selection: DeploySelection, manifest: &Manifest) -> Result<Self> {
+    /// cell reads the operator's home. The user home and the client
+    /// executables are not resolved here at all — §6.3.0.6 puts that in the
+    /// command surface, and they arrive inside [`DeployAuthority`].
+    pub(crate) fn assemble(authority: DeployAuthority, manifest: &Manifest) -> Result<Self> {
         let settings = vibe_core::settings::settings_dir().ok_or_else(|| {
             anyhow::anyhow!(
                 "the vibevm settings directory could not be resolved, so deployment intents and \
@@ -137,7 +194,9 @@ impl DeployCarriage {
             )
         })?;
         Ok(Self {
-            selection,
+            selection: authority.selection,
+            user_home: authority.user_home,
+            clients: authority.clients,
             state_home: deploy_state_home(&settings),
             settings_root: settings,
             project: project_identity(manifest),
@@ -325,6 +384,8 @@ impl<'targets> Fences<'targets> {
             routes: self.targets.routes,
             state_home: &carriage.state_home,
             settings_root: &carriage.settings_root,
+            user_home: &carriage.user_home,
+            clients: &carriage.clients,
             project: &carriage.project,
             package: carriage.package.as_deref(),
             created_at: self.targets.created_at,

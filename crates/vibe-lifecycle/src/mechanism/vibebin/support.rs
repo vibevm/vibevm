@@ -19,6 +19,7 @@ use vibe_wire::generated::artifact_record::ArtifactShape;
 use super::VibeBinProvider;
 use super::launcher::LauncherFlavour;
 use super::store;
+use crate::mechanism::deploy::model::{ClientExecutable, ClientExecutables};
 use crate::mechanism::deploy::protocol::{ApplyReport, DeployPlan, ResolvedDeployArtifact};
 use crate::mechanism::deploy::state::{CheckpointLedger, DeployState, DeploymentHome};
 use crate::mechanism::error::DeployProviderError;
@@ -43,21 +44,34 @@ pub(crate) fn launcher_name(command: &str) -> String {
 }
 
 /// One isolated world: a settings root, a project, an engine-owned staging
-/// directory and a deployment state home — four temp trees.
+/// directory, a deployment state home and the invoking user's home — five
+/// temp trees, plus three client executables that do not exist.
 pub(crate) struct World {
     pub(crate) settings: TempDir,
     pub(crate) project: TempDir,
     pub(crate) staging: TempDir,
     pub(crate) state: TempDir,
+    /// The injected user home — deliberately a DIFFERENT tree from
+    /// `settings`, so a cell that confused the two is caught rather than
+    /// accidentally right.
+    pub(crate) home: TempDir,
+    /// The injected client executables. Fake paths inside the fake home:
+    /// nothing in this suite may spawn a client, and naming a real one
+    /// would make that unprovable.
+    pub(crate) clients: ClientExecutables,
 }
 
 impl World {
     pub(crate) fn new() -> Self {
+        let home = temp();
+        let clients = fake_clients(home.path());
         Self {
             settings: temp(),
             project: temp(),
             staging: temp(),
             state: temp(),
+            home,
+            clients,
         }
     }
 
@@ -91,6 +105,25 @@ impl World {
     }
 }
 
+/// Three client executables that are absolute paths and not programs.
+///
+/// Shared by every suite that has to build a request: the injected value is
+/// mandatory, and a fixture that had to invent one per test would be three
+/// chances to name a real client by accident. Each is spelled as the SURFACE
+/// would spell a resolution — an absolute path under the fake home — so a
+/// cell that leaked a bare command word downward is visible against them.
+pub(crate) fn fake_clients(home: &Path) -> ClientExecutables {
+    let resolved = |command: &str| ClientExecutable::Resolved {
+        command: command.to_owned(),
+        path: home.join("fake-clients").join(command),
+    };
+    ClientExecutables {
+        claude: resolved("claude"),
+        codex: resolved("codex"),
+        opencode: resolved("opencode"),
+    }
+}
+
 /// One `[[deploy.target]]` row over an artifact id and a config table.
 pub(crate) fn target(id: &str, artifact: &str, config_text: Option<&str>) -> DeployTarget {
     DeployTarget {
@@ -104,6 +137,11 @@ pub(crate) fn target(id: &str, artifact: &str, config_text: Option<&str>) -> Dep
 }
 
 /// The request one verb receives, with staging offered as an apply would.
+///
+/// The injected client authority is a FIFTH temp tree and three paths that
+/// name nothing: this provider reads neither, and a fixture that handed it
+/// the operator's real home or a real client binary would make that fact
+/// unprovable.
 pub(crate) fn request<'a>(
     world: &'a World,
     row: &'a DeployTarget,
@@ -115,6 +153,8 @@ pub(crate) fn request<'a>(
         profile: "local",
         project_root: world.project.path(),
         settings_root: world.settings.path(),
+        user_home: world.home.path(),
+        clients: &world.clients,
         artifact,
         staging: staged.then(|| world.staging.path()),
     }

@@ -9,8 +9,111 @@
 use specmark::verifies;
 
 use super::apply_selection;
-use super::state::DeploymentHome;
+use super::state::{DeployState, DeploymentHome};
 use super::support::{Fixture, FixtureProvider, selected, selection, target};
+
+/// The engine's own lock-file name for one resource spelling — written
+/// once, so a test cannot accidentally pin a different rule than the one
+/// [`DeployState::lock_destinations`] applies.
+fn lock_name_of(resource: &str) -> String {
+    let mut digest = <sha2::Sha256 as sha2::Digest>::new();
+    sha2::Digest::update(
+        &mut digest,
+        vibe_safefs::path_identity_key(resource).as_bytes(),
+    );
+    format!("{:x}.lock", sha2::Digest::finalize(digest))
+}
+
+/// Every lock file this state home currently holds, sorted.
+fn lock_files(state_home: &std::path::Path) -> Vec<String> {
+    let mut names: Vec<String> = std::fs::read_dir(state_home.join(".vibe"))
+        .map(|entries| {
+            entries
+                .filter_map(Result::ok)
+                .filter_map(|entry| entry.file_name().into_string().ok())
+                .filter(|name| name.ends_with(".lock"))
+                .collect()
+        })
+        .unwrap_or_default();
+    names.sort_unstable();
+    names
+}
+
+/// One PHYSICAL destination takes exactly one lock, whatever spelling
+/// names it.
+///
+/// §6.3.0.10's pre-apply judgement already rules `Shared.json` and
+/// `shared.json` one destination and admits two reference owners of it. A
+/// lock keyed on the raw bytes would then hand those two participants two
+/// different lock files and let them edit one document at once — the very
+/// race the shared lock exists to prevent. So the lock name goes through
+/// the SAME `vibe_safefs::path_identity_key` the judgement uses: one
+/// identity law, one lock.
+///
+/// Both alias families are covered, because both are one file on the hosts
+/// this project supports: ASCII case, and Unicode composition (NFC `é`
+/// against NFD `e` + combining acute).
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS")]
+fn one_physical_destination_takes_one_lock_whatever_its_spelling() {
+    let home = crate::mechanism::package::support::temp();
+    let state = DeployState::open(home.path()).expect("the state home opens");
+
+    // Four spellings, two physical destinations.
+    let case_aliases = [
+        "config/Shared.json".to_owned(),
+        "config/shared.json".to_owned(),
+    ];
+    let composition_aliases = [
+        "config/caf\u{e9}.json".to_owned(),   // NFC:  é
+        "config/cafe\u{301}.json".to_owned(), // NFD:  e + combining acute
+    ];
+
+    let guards = state
+        .lock_destinations(&case_aliases)
+        .expect("the case aliases lock");
+    assert_eq!(
+        guards.len(),
+        1,
+        "`config/Shared.json` and `config/shared.json` are ONE destination",
+    );
+    assert_eq!(
+        lock_files(home.path()),
+        [lock_name_of("config/shared.json")]
+    );
+    drop(guards);
+
+    let guards = state
+        .lock_destinations(&composition_aliases)
+        .expect("the composition aliases lock");
+    assert_eq!(
+        guards.len(),
+        1,
+        "NFC and NFD spellings of one name are ONE destination",
+    );
+    drop(guards);
+
+    // Two spellings, two identities, two locks — the law does not merge
+    // destinations that really are different.
+    assert_eq!(
+        lock_files(home.path()),
+        {
+            let mut both = [
+                lock_name_of("config/shared.json"),
+                lock_name_of("config/caf\u{e9}.json"),
+            ];
+            both.sort_unstable();
+            both
+        },
+        "two genuinely different destinations keep two locks",
+    );
+
+    // And the whole mixed set still resolves to exactly those two.
+    let guards = state
+        .lock_destinations(&[case_aliases.as_slice(), composition_aliases.as_slice()].concat())
+        .expect("the mixed set locks");
+    assert_eq!(guards.len(), 2, "four spellings, two physical destinations");
+}
 
 /// § "Apply uses a per-destination lock" — as a HELD property, not a file
 /// that once existed: a lock file outlives its guard, so only a probe from
@@ -92,10 +195,9 @@ fn the_destination_lock_is_held_while_the_provider_applies() {
     let selection = selection("local", &["local-helper"]);
     let state_home = fixture.state_home();
     let execution = fixture.execution(&targets, &selection, &state_home);
-    // The engine's own lock-name spelling: `<sha256(resource)>.lock`.
-    let mut digest = <sha2::Sha256 as sha2::Digest>::new();
-    sha2::Digest::update(&mut digest, b"bin/helper");
-    let lock_name = format!("{:x}.lock", sha2::Digest::finalize(digest));
+    // The engine's own lock-name spelling:
+    // `<sha256(path_identity_key(resource))>.lock`.
+    let lock_name = lock_name_of("bin/helper");
     let probe = LockProbe {
         inner: FixtureProvider::new(fixture.destination.path(), &["bin/helper"]),
         state_home: state_home.clone(),

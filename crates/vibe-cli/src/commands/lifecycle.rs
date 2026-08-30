@@ -106,7 +106,7 @@ pub fn run(
     // snapshot. It happens exactly here — after the snapshot exists and
     // before the run starts — and what it produces travels as data.
     let deploy_selection = match deploy {
-        Some(request) => super::deploy::resolve_profile(
+        Some(request) => super::deploy::resolve_authority(
             prepared
                 .selected_manifest()
                 .and_then(|manifest| manifest.deploy.as_ref()),
@@ -377,7 +377,7 @@ fn execute(
     };
     let environment = CliRegistryEnvironment::new(prepare_install);
     let deploy_selection = match deploy {
-        Some(request) => super::deploy::resolve_profile(
+        Some(request) => super::deploy::resolve_authority(
             prelude
                 .selection
                 .parsed_ref()

@@ -40,13 +40,13 @@ fn run_phases_over(root: &std::path::Path, phases: Vec<Phase>) -> PhaseOutcome {
     run_deploying(root, phases, None)
 }
 
-/// The same drive again, carrying a resolved deploy-profile selection —
-/// §7.0.5's "travels as data", from the position a command layer would
-/// hand it in at.
+/// The same drive again, carrying the deploy half a command layer would
+/// have resolved — §7.0.5's "travels as data" and §6.3.0.6's injected home
+/// and client executables, from the position that surface hands them in at.
 fn run_deploying(
     root: &std::path::Path,
     phases: Vec<Phase>,
-    deploy: Option<vibe_lifecycle::DeploySelection>,
+    deploy: Option<crate::DeployAuthority>,
 ) -> PhaseOutcome {
     let root = match resolve_project_root(root) {
         Ok(root) => root,
@@ -408,10 +408,29 @@ targets = [\"local\"]
 );
 
 /// The resolved selection the command layer would hand down.
-fn local_profile() -> vibe_lifecycle::DeploySelection {
-    vibe_lifecycle::DeploySelection {
-        profile: "local".to_string(),
-        targets: vec!["local".to_string()],
+fn local_profile() -> crate::DeployAuthority {
+    crate::DeployAuthority {
+        selection: vibe_lifecycle::DeploySelection {
+            profile: "local".to_string(),
+            targets: vec!["local".to_string()],
+        },
+        // A fake home and three clients the surface did not find. No
+        // fixture in this cell may name the operator's home or a real
+        // client — the carriage is what is under test, not a client — and
+        // the typed absence is exactly what an uninstalled client looks
+        // like, so the carriage is proven to travel one.
+        user_home: std::path::PathBuf::from("/nonexistent/r8-wiring-home"),
+        clients: vibe_lifecycle::ClientExecutables {
+            claude: vibe_lifecycle::ClientExecutable::Missing {
+                command: "claude".to_string(),
+            },
+            codex: vibe_lifecycle::ClientExecutable::Missing {
+                command: "codex".to_string(),
+            },
+            opencode: vibe_lifecycle::ClientExecutable::Missing {
+                command: "opencode".to_string(),
+            },
+        },
     }
 }
 

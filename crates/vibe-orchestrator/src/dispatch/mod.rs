@@ -24,6 +24,7 @@ use crate::{PlannedExecution, RitualPlan, world};
 
 use backends::{ProjectPackageBindingBackend, WorkspaceBinaryBackend};
 
+pub use mechanism::DeployAuthority;
 pub(crate) use mechanism::{DeployCarriage, MechanismTargets, lower_binaries};
 
 mod backends;

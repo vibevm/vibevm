@@ -52,6 +52,135 @@ pub fn deploy_state_home(settings_dir: &Path) -> PathBuf {
     home
 }
 
+/// One client CLI, as the command SURFACE resolved it — §6.3.0.6's
+/// "explicit Claude/Codex/OpenCode executable paths".
+///
+/// The two variants are the total answer to one question, and neither is
+/// an absence: [`Resolved`](Self::Resolved) carries an ABSOLUTE path the
+/// surface really found, and [`Missing`](Self::Missing) carries the command
+/// word the surface looked for and did not find. It is deliberately not
+/// `Option<PathBuf>`: an option's `None` says only "no value", and a lower
+/// cell reading it would have to invent what to do — which is the ambient
+/// lookup §6.3.0.6 exists to abolish. `Missing` says *what was looked for*,
+/// so a selected client provider can refuse with remediation naming the
+/// exact command an operator must install.
+///
+/// A bare command word never appears in `Resolved`. That is the whole
+/// point: `Command::new("claude")` searches `PATH` at spawn time, in the
+/// provider, which is precisely the resolution the surface was supposed to
+/// have already done. Resolution happens once, above; below, there is
+/// either a path or an honest refusal.
+///
+/// ```
+/// use std::path::{Path, PathBuf};
+/// use vibe_lifecycle::ClientExecutable;
+///
+/// let found = ClientExecutable::Resolved {
+///     command: "claude".into(),
+///     path: PathBuf::from("/opt/bin/claude"),
+/// };
+/// assert_eq!(found.command(), "claude");
+/// // The path the surface found, never the word it searched for.
+/// assert_ne!(found.resolved_path(), Some(Path::new("claude")));
+///
+/// let absent = ClientExecutable::Missing { command: "codex".into() };
+/// assert!(absent.resolved_path().is_none());
+/// assert_eq!(absent.command(), "codex");
+/// ```
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS")]
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum ClientExecutable {
+    /// The surface found this client. `path` is absolute.
+    Resolved {
+        /// The command word the surface searched for, kept for refusals.
+        command: String,
+        /// The absolute executable the provider will spawn.
+        path: PathBuf,
+    },
+    /// The surface searched and did not find this client. A run that never
+    /// selects it stays perfectly legal; a target that selects it refuses
+    /// by name.
+    Missing {
+        /// The command word an operator must make reachable.
+        command: String,
+    },
+}
+
+impl ClientExecutable {
+    /// The command word this member is about, resolved or not.
+    #[must_use]
+    pub fn command(&self) -> &str {
+        match self {
+            Self::Resolved { command, .. } | Self::Missing { command } => command,
+        }
+    }
+
+    /// The absolute executable, when the surface found one.
+    ///
+    /// Returning an option here is not the ambiguity the type rejects: the
+    /// VALUE still says which case it is and why, and this accessor is the
+    /// narrow read a spawn site wants. A provider that gets `None` has the
+    /// `Missing` variant beside it and must refuse, never search.
+    #[must_use]
+    pub fn resolved_path(&self) -> Option<&Path> {
+        match self {
+            Self::Resolved { path, .. } => Some(path),
+            Self::Missing { .. } => None,
+        }
+    }
+}
+
+/// The client executables one deploy run may invoke, injected whole by the
+/// command surface — §6.3.0.6's "Home and executable authority are
+/// injected".
+///
+/// §6.3.0.6 in one type: "The CLI surface resolves them once; every lower
+/// cell and provider is forbidden from calling `dirs::home_dir`, reading
+/// `HOME`/`USERPROFILE`/`CODEX_HOME`/`CLAUDE_CONFIG_DIR`, searching `PATH`,
+/// or finding a real client."
+///
+/// Three NAMED members rather than a map keyed by a client id, and each a
+/// TOTAL [`ClientExecutable`] rather than an option: the surface answers
+/// for all three exactly once, and a client it could not find is a recorded
+/// fact rather than a hole a lower cell fills in. One missing client does
+/// not fail the run — an ordinary `deploy:vibe-bin` profile never looks at
+/// any of them.
+///
+/// ```
+/// use std::path::PathBuf;
+/// use vibe_lifecycle::{ClientExecutable, ClientExecutables};
+///
+/// let fake = ClientExecutables {
+///     claude: ClientExecutable::Resolved {
+///         command: "claude".into(),
+///         path: PathBuf::from("/tmp/fake/claude"),
+///     },
+///     codex: ClientExecutable::Missing { command: "codex".into() },
+///     opencode: ClientExecutable::Missing { command: "opencode".into() },
+/// };
+/// assert!(fake.claude.resolved_path().is_some());
+/// assert_eq!(fake.codex.command(), "codex");
+/// ```
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS")]
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ClientExecutables {
+    /// The Claude Code CLI this run invokes.
+    pub claude: ClientExecutable,
+    /// The Codex CLI this run invokes.
+    pub codex: ClientExecutable,
+    /// The OpenCode CLI this run invokes.
+    pub opencode: ClientExecutable,
+}
+
+impl ClientExecutables {
+    /// The three members, in one order, for a caller that judges all of
+    /// them — the arrival fence reads this rather than naming each field.
+    #[must_use]
+    pub fn all(&self) -> [&ClientExecutable; 3] {
+        [&self.claude, &self.codex, &self.opencode]
+    }
+}
+
 /// The resolved deploy-profile selection, as DATA.
 ///
 /// §7.0.5: "Profile resolution happens ONCE, in the command layer that
@@ -113,6 +242,20 @@ pub struct DeployExecution<'a> {
     /// command layer resolves the settings directory ONCE, and no cell
     /// below a surface calls `settings_dir()`.
     pub settings_root: &'a Path,
+    /// The invoking user's home directory, resolved ONCE at the command
+    /// surface — §6.3.0.6's "`DeployExecution` carries the exact user home
+    /// beside `settings_root`".
+    ///
+    /// It is NOT `settings_root`, and the two are not derivable from each
+    /// other: `$VIBE_SETTINGS` relocates the settings directory anywhere,
+    /// while a client destination (`~/.claude/…`, `~/.agents/…`,
+    /// `~/.config/opencode/…`) hangs off the home itself. A cell that took
+    /// the settings root for the home would write a user's skills inside
+    /// vibevm's own state directory, or — with the override unset — the
+    /// reverse.
+    pub user_home: &'a Path,
+    /// The client executables this run may invoke, injected whole.
+    pub clients: &'a ClientExecutables,
     /// The project identity every intent and receipt is keyed under.
     pub project: &'a str,
     /// The package identity, when the deploy comes from one package

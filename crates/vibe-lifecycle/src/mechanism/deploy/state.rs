@@ -170,18 +170,37 @@ impl DeployState {
     /// in a deterministic order.
     ///
     /// §7.2 asks for "a per-destination lock", and this is literally that:
-    /// one lock file per resource identity. The acquisition order is the
+    /// one lock file per PHYSICAL destination. The acquisition order is the
     /// sorted lock name, which is a TOTAL order over every destination this
     /// engine can name — so two concurrent deployments whose resource sets
     /// overlap can queue but can never deadlock, whatever order their
     /// plans were authored in.
+    ///
+    /// The lock name is taken over the shared
+    /// [`path_identity_key`](vibe_safefs::path_identity_key), never over the
+    /// raw spelling, and that is a correctness requirement rather than a
+    /// tidiness one. §6.3.0.10's pre-apply judgement already treats
+    /// `Shared.json` and `shared.json` as ONE physical destination and
+    /// admits two reference owners of it; a lock keyed on the raw bytes
+    /// would then hand those two participants two DIFFERENT lock files and
+    /// let them edit one document concurrently — the exact race the shared
+    /// lock exists to prevent. One identity law, one lock.
+    ///
+    /// The exact spelling is retained everywhere it is read by a human or
+    /// recorded: receipts, intents and refusals all quote what the provider
+    /// declared. Only this file NAME is normalised.
     pub(crate) fn lock_destinations(
         &self,
         resources: &[String],
     ) -> Result<Vec<LockGuard>, DeployError> {
         let mut names: Vec<String> = resources
             .iter()
-            .map(|resource| format!("{}.lock", digest_of(resource)))
+            .map(|resource| {
+                format!(
+                    "{}.lock",
+                    digest_of(&vibe_safefs::path_identity_key(resource))
+                )
+            })
             .collect();
         names.sort_unstable();
         names.dedup();

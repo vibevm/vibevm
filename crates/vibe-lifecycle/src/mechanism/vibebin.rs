@@ -335,6 +335,11 @@ impl crate::mechanism::DeployProvider for VibeBinProvider {
             // really does support atomic replacement and §7.2's staging
             // sentence applies.
             atomic_replacement: true,
+            // §6.3.0.9: "A normal provider's lock resources equal its owned
+            // resources." This one owns whole files under `~/.vibe` and
+            // shares no document with anybody, so it locks exactly what it
+            // owns and a second claimant is §7.2's flat collision.
+            reference_ownership: false,
         }
     }
 
@@ -354,6 +359,12 @@ impl crate::mechanism::DeployProvider for VibeBinProvider {
                 resource: destination.pointer.clone(),
             },
         ];
+        // The lock set IS the owned set: this provider declares no
+        // reference ownership, and the engine refuses any other answer.
+        let lock_resources = resources
+            .iter()
+            .map(|planned| planned.resource.clone())
+            .collect();
         Ok(DeployPlan {
             summary: format!(
                 "vibe-bin would install `{}` as {} with the active-payload pointer {}, resolving \
@@ -364,6 +375,7 @@ impl crate::mechanism::DeployProvider for VibeBinProvider {
                 store::payload_relative(destination.flavour, &artifact.digest),
             ),
             resources,
+            lock_resources,
             config_digest: destination.config_digest(),
             // §7.1.0 ruling 6: update and rollback are the same saga the
             // engine already owns, and this provider keeps what restoring

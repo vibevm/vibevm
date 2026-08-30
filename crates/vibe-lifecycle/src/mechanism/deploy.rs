@@ -8,16 +8,22 @@
 //! at the selected row's handler, so a host that routes `deploy:vibe-bin`
 //! to a plugin gets the plugin's refusal and demonstrably NOT a builtin.
 //!
-//! Three things are this phase's own:
+//! Four things are this phase's own:
 //!
 //! 1. **the profile selection is DATA.** §7.0.5 resolves it once, in the
 //!    command layer that owns flags, and this executor consumes it. There
 //!    is no environment read, no `default_profile` walk and no
 //!    exactly-one rule anywhere below this line — the engine cannot
 //!    re-derive what it was told;
-//! 2. **the destination is transacted, not written.** Every applied target
+//! 2. **every selected plan is made before the first apply.** §6.3.0.10's
+//!    pre-apply epoch is a transaction PREREQUISITE, not a preview: it
+//!    resolves every artifact, calls every provider's `plan`, judges the
+//!    whole owned/lock resource set through the shared physical identity,
+//!    and only then may target 0 touch anything. Apply reuses exactly what
+//!    it produced ([`preplan`]);
+//! 3. **the destination is transacted, not written.** Every applied target
 //!    goes through [`transaction`], whose order is §7.2's;
-//! 3. **a failed multi-target run is a saga.** Already-applied REVERSIBLE
+//! 4. **a failed multi-target run is a saga.** Already-applied REVERSIBLE
 //!    targets are rolled back in reverse order; an irreversible one stays
 //!    visible as partial, and the run reports both lists rather than a
 //!    success.
@@ -37,23 +43,26 @@ pub(crate) mod artifact;
 pub(crate) mod error;
 pub(crate) mod model;
 pub(crate) mod plan;
+pub(crate) mod preplan;
 pub(crate) mod protocol;
+pub(crate) mod saga;
 pub(crate) mod state;
 pub(crate) mod transaction;
 
 pub use error::DeployError;
 pub use model::{
-    DEPLOY_STATE_DIR, DeployExecution, DeployOutcome, DeployPlanReport, DeployResourcePlan,
-    DeploySelection, DeployStatus, DeployedResource, DeploymentRow, RemovalOutcome,
-    deploy_state_home,
+    ClientExecutable, ClientExecutables, DEPLOY_STATE_DIR, DeployExecution, DeployOutcome,
+    DeployPlanReport, DeployResourcePlan, DeploySelection, DeployStatus, DeployedResource,
+    DeploymentRow, RemovalOutcome, deploy_state_home,
 };
 pub use plan::plan_deploy_targets;
 
 use super::order::{GraphNode, OrderFault, Unresolved, dag_order};
 use super::vibebin::VibeBinProvider;
 use super::{BUILTIN_VIBE_BIN_NAME, DeployProvider, DeployTargetRequest};
-use artifact::resolve_artifact;
 use model::row;
+use preplan::{Preplanned, preplan};
+use saga::unwind;
 use state::{DeployState, DeploymentHome};
 use transaction::Transaction;
 
@@ -97,6 +106,29 @@ fn undeploy_resolved(
     let identity = identity_of(execution);
     let mut outcomes = Vec::with_capacity(resolved.len());
     for selected in resolved {
+        // §6.3.0.9's capability has no inverse yet, and this is where the
+        // gap would BITE rather than where it is convenient to mention.
+        //
+        // A reference owner's receipt records its logical owned member
+        // (`…/opencode.json#mcp/foo`); the PHYSICAL destination it locked
+        // while editing (`…/opencode.json`) lives only in the plan, which
+        // no longer exists at undeploy time. Locking the receipt's logical
+        // member would therefore take a lock nobody else takes, and a
+        // sibling entry's deployment could edit the same document at the
+        // same moment. Re-deriving the physical destination by parsing the
+        // resource string would be a second grammar for an identity the
+        // engine never wrote down.
+        //
+        // So this refuses, by name, until the engine has a DURABLE record
+        // from a receipt to its lock resources. An ordinary provider —
+        // every provider that exists today — locks exactly what it owns and
+        // is untouched by this arm.
+        if selected.provider.descriptor().reference_ownership {
+            return Err(DeployError::ReferenceOwnedRemovalNotLandable {
+                target: selected.target.id.clone(),
+                pin: selected.pin.clone(),
+            });
+        }
         let home = home_of(execution, &selected.target.id);
         let receipt = state
             .read_receipt(&home)?
@@ -114,6 +146,8 @@ fn undeploy_resolved(
             profile: &execution.selection.profile,
             project_root: execution.project_root,
             settings_root: execution.settings_root,
+            user_home: execution.user_home,
+            clients: execution.clients,
             artifact: None,
             staging: None,
         };
@@ -263,26 +297,35 @@ fn builtin_provider(
     }
 }
 
-/// Apply one already-resolved selection, as a §7.2 saga.
+/// Apply one already-resolved selection: §6.3.0.10's pre-apply epoch, then
+/// the §7.2 saga.
 ///
 /// Separated from [`resolve_selection`] so the saga's own laws — reverse
 /// rollback, the irreversible partial — are provable with hermetic
 /// providers. Selection still happens in exactly one place; this half
 /// receives its result and never re-derives it.
-fn apply_selection(
+///
+/// The [`preplan`] call is INSIDE this function rather than beside it
+/// because that is what makes its promise checkable: there is no order of
+/// calls a caller could choose in which target 0 applies before target 1
+/// has been planned and judged.
+pub(crate) fn apply_selection(
     execution: &DeployExecution<'_>,
     resolved: &[Selected<'_>],
 ) -> Result<Vec<DeployOutcome>, DeployError> {
     if resolved.is_empty() {
         return Ok(Vec::new());
     }
+    // Every artifact resolved, every provider planned and the whole
+    // owned/lock resource set judged — before a single destination byte.
+    let prepared = preplan(execution, resolved)?;
     let state = DeployState::open(execution.state_home)?;
     let identity = identity_of(execution);
     let mut outcomes: Vec<DeployOutcome> = Vec::with_capacity(resolved.len());
     // What has been applied so far, newest last — the saga's stack.
     let mut applied: Vec<(usize, DeployReceipt)> = Vec::new();
-    for (index, selected) in resolved.iter().enumerate() {
-        match apply_one(execution, &state, &identity, selected) {
+    for ((index, selected), planned) in resolved.iter().enumerate().zip(&prepared) {
+        match apply_one(execution, &state, &identity, selected, planned) {
             Ok((outcome, receipt)) => {
                 applied.push((index, receipt));
                 outcomes.push(outcome);
@@ -297,34 +340,33 @@ fn apply_selection(
     Ok(outcomes)
 }
 
-/// One target's whole apply: resolve the artifact, plan, lock, transact.
+/// One target's whole apply: lock the PREPLANNED destinations, transact.
+///
+/// The artifact and the plan arrive from the pre-apply epoch and are not
+/// recomputed (§6.3.0.10: "Reuse the resulting values during apply; do not
+/// resolve or plan a second time"). What is still this function's is the
+/// lock — taken over exactly the identities the judged plan named — and the
+/// staging directory, which is apply-time scratch by definition.
 fn apply_one(
     execution: &DeployExecution<'_>,
     state: &DeployState,
     identity: &DeployIdentity,
     selected: &Selected<'_>,
+    planned: &Preplanned,
 ) -> Result<(DeployOutcome, DeployReceipt), DeployError> {
     let home = home_of(execution, &selected.target.id);
-    let artifact = resolve_artifact(execution.project_root, selected.target)?;
+    let artifact = &planned.artifact;
+    let plan = &planned.plan;
     let descriptor = selected.provider.descriptor();
-    // The plan is made BEFORE the destination lock, and the lock is taken
-    // over exactly what it names — a lock chosen before the plan would be
-    // a lock over a destination nobody had computed yet.
-    let planning = DeployTargetRequest {
-        target: selected.target,
-        profile: &execution.selection.profile,
-        project_root: execution.project_root,
-        settings_root: execution.settings_root,
-        artifact: Some(&artifact),
-        staging: None,
-    };
-    let plan = selected.provider.plan(&planning)?;
+    // §6.3.0.9: the locks are the plan's PHYSICAL set, which for every
+    // ordinary provider is its owned set and for a reference owner is the
+    // shared document it holds while it edits its own member.
+    let _guards = state.lock_destinations(&plan.lock_resources)?;
     let resources: Vec<String> = plan
         .resources
         .iter()
-        .map(|planned| planned.resource.clone())
+        .map(|owned| owned.resource.clone())
         .collect();
-    let _guards = state.lock_destinations(&resources)?;
     refuse_foreign_ownership(state, &home, &selected.target.id, &resources)?;
     let staging = if descriptor.atomic_replacement {
         Some(state.prepare_staging(&home)?)
@@ -336,7 +378,9 @@ fn apply_one(
         profile: &execution.selection.profile,
         project_root: execution.project_root,
         settings_root: execution.settings_root,
-        artifact: Some(&artifact),
+        user_home: execution.user_home,
+        clients: execution.clients,
+        artifact: Some(artifact),
         staging: staging.as_deref(),
     };
     let transaction = Transaction {
@@ -347,7 +391,7 @@ fn apply_one(
         scope: descriptor.scope(),
         created_at: execution.created_at,
     };
-    let applied = transaction.apply(selected.provider.as_ref(), &request, &plan)?;
+    let applied = transaction.apply(selected.provider.as_ref(), &request, plan)?;
     let receipt = state
         .read_receipt(&home)?
         .ok_or_else(|| DeployError::NoReceipt {
@@ -376,75 +420,6 @@ fn apply_one(
     ))
 }
 
-/// §7.2's saga: roll the reversible prefix back in REVERSE order and
-/// report what survives as partial.
-///
-/// A rollback that itself fails does not replace the original failure —
-/// the run is already failing, and the reason it started failing is the
-/// one an operator needs. The target is simply not counted as reversed.
-fn unwind(
-    execution: &DeployExecution<'_>,
-    state: &DeployState,
-    identity: &DeployIdentity,
-    resolved: &[Selected<'_>],
-    applied: &[(usize, DeployReceipt)],
-    failure: DeployError,
-) -> DeployError {
-    if applied.is_empty() {
-        return failure;
-    }
-    let mut rolled_back: Vec<String> = Vec::new();
-    let mut retained: Vec<String> = Vec::new();
-    for (index, receipt) in applied.iter().rev() {
-        let Some(selected) = resolved.get(*index) else {
-            continue;
-        };
-        if !receipt.reversible {
-            retained.push(selected.target.id.clone());
-            continue;
-        }
-        let home = home_of(execution, &selected.target.id);
-        let request = DeployTargetRequest {
-            target: selected.target,
-            profile: &execution.selection.profile,
-            project_root: execution.project_root,
-            settings_root: execution.settings_root,
-            artifact: None,
-            staging: None,
-        };
-        let transaction = Transaction {
-            state,
-            home: &home,
-            identity,
-            provider_pin: &selected.pin,
-            scope: selected.provider.descriptor().scope(),
-            created_at: execution.created_at,
-        };
-        match transaction.remove(
-            selected.provider.as_ref(),
-            &request,
-            receipt,
-            // The saga RESTORES: the failed generation's handle is what
-            // the destination held before it, and rolling back means
-            // putting exactly that back.
-            receipt.prior_state_handle.as_deref(),
-            ReceiptStatus::RolledBack,
-        ) {
-            Ok(_) => rolled_back.push(selected.target.id.clone()),
-            Err(_) => retained.push(selected.target.id.clone()),
-        }
-    }
-    let failed = resolved
-        .get(applied.len())
-        .map_or_else(|| "<unknown>".to_owned(), |next| next.target.id.clone());
-    DeployError::Saga {
-        target: failed,
-        reason: failure.to_string(),
-        rolled_back: list(&rolled_back),
-        retained: list(&retained),
-    }
-}
-
 /// §7.2's ownership law: "A collision with state owned by another
 /// deployment is an error."
 ///
@@ -453,12 +428,29 @@ fn unwind(
 /// ownership — needs a descriptor member no provider declares at this
 /// atom, so the refusal here is unconditional and the exception arrives
 /// with the first provider that can honestly claim it.
+///
+/// The comparison goes through the SAME
+/// [`path_identity_key`](vibe_safefs::path_identity_key) §6.3.0.10's
+/// pre-apply judgement uses, and for the same reason: `bin/Helper` and
+/// `bin/helper` are one file on the hosts this project supports, so a
+/// byte-equality test would let a second deployment claim a path a
+/// recorded one already owns. This is the ACROSS-RUNS half of that law —
+/// the pre-apply judgement covers one selection, this covers everything the
+/// state home already remembers.
+///
+/// Both exact spellings survive into the evidence, because the two are what
+/// an operator has to reconcile: the one this target planned, and the one a
+/// prior receipt recorded.
 fn refuse_foreign_ownership(
     state: &DeployState,
     home: &DeploymentHome,
     target: &str,
     resources: &[String],
 ) -> Result<(), DeployError> {
+    let planned: std::collections::BTreeMap<String, &String> = resources
+        .iter()
+        .map(|resource| (vibe_safefs::path_identity_key(resource), resource))
+        .collect();
     for (deployment, receipt) in state.receipts()? {
         if deployment == home.id() || receipt.status == ReceiptStatus::RolledBack {
             continue;
@@ -466,8 +458,16 @@ fn refuse_foreign_ownership(
         let clashing: Vec<String> = receipt
             .resources
             .iter()
-            .filter(|owned| resources.contains(&owned.resource))
-            .map(|owned| owned.resource.clone())
+            .filter_map(|owned| {
+                let identity = vibe_safefs::path_identity_key(&owned.resource);
+                planned.get(&identity).map(|mine| {
+                    if **mine == owned.resource {
+                        (*mine).clone()
+                    } else {
+                        format!("`{mine}` (recorded as `{}`)", owned.resource)
+                    }
+                })
+            })
             .collect();
         if !clashing.is_empty() {
             return Err(DeployError::OwnershipCollision {
@@ -544,17 +544,12 @@ fn declared(targets: &[DeployTarget]) -> String {
         .join(", ")
 }
 
-/// One list, or the word that says it is empty.
-fn list(values: &[String]) -> String {
-    if values.is_empty() {
-        "none".to_owned()
-    } else {
-        values.join(", ")
-    }
-}
+// The hermetic provider every §7.2 law is proven against, and the world it
+// is proven inside — two cells, because they answer two questions.
+#[cfg(test)]
+#[path = "deploy/fixture.rs"]
+pub(crate) mod fixture;
 
-// The fixture home the whole deploy suite shares, including the hermetic
-// provider every §7.2 law is proven against.
 #[cfg(test)]
 #[path = "deploy/support.rs"]
 pub(crate) mod support;
@@ -562,6 +557,14 @@ pub(crate) mod support;
 #[cfg(test)]
 #[path = "deploy/tests.rs"]
 mod tests;
+
+#[cfg(test)]
+#[path = "deploy/authority_tests.rs"]
+mod authority_tests;
+
+#[cfg(test)]
+#[path = "deploy/preplan_tests.rs"]
+mod preplan_tests;
 
 #[cfg(test)]
 #[path = "deploy/transaction_tests.rs"]

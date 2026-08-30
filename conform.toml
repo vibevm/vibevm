@@ -105,6 +105,13 @@ env_roots = [
     # PATH …) and locates vibeterm ($VIBEVM_VIBETERM) — a launcher whose job is
     # to read the environment for the spawn (PROP-042 §5).
     "crates/vibe-cli/src/commands/term.rs",
+    # The deploy surface's client-executable resolver — the same standing
+    # `term.rs` has, for the same reason. §6.3.0.6 of the packages-2026-09
+    # architecture puts the Claude/Codex/OpenCode lookup in the CLI surface and
+    # forbids it in every cell below, so $PATH/$PATHEXT are read exactly here
+    # and the resolved value travels down as data. The resolution itself is a
+    # pure function over injected directories; only these two reads are ambient.
+    "crates/vibe-cli/src/commands/deploy/clients.rs",
     # `vibe aiui` reads the settings dir ($VIBE_SETTINGS / $HOME) to find `~/.vibe/aiui/` — vibeterm's
     # control-session discovery directory (PROP-042 §4).
     "crates/vibe-cli/src/commands/aiui/control.rs",

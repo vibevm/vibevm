@@ -57,10 +57,10 @@ pub use build::{
     BuildError, BuildExecution, BuildOutcome, ProducedArtifact, execute_build_targets,
 };
 pub use deploy::{
-    DEPLOY_STATE_DIR, DeployError, DeployExecution, DeployOutcome, DeployPlanReport,
-    DeployResourcePlan, DeploySelection, DeployStatus, DeployedResource, DeploymentRow,
-    RemovalOutcome, deploy_state_home, execute_deploy_targets, list_deployments,
-    plan_deploy_targets, undeploy_targets,
+    ClientExecutable, ClientExecutables, DEPLOY_STATE_DIR, DeployError, DeployExecution,
+    DeployOutcome, DeployPlanReport, DeployResourcePlan, DeploySelection, DeployStatus,
+    DeployedResource, DeploymentRow, RemovalOutcome, deploy_state_home, execute_deploy_targets,
+    list_deployments, plan_deploy_targets, undeploy_targets,
 };
 pub use error::{DeployProviderError, MechanismError};
 pub use package::{

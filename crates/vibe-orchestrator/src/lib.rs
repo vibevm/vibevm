@@ -49,7 +49,7 @@ pub use command::{
     DefaultLifecyclePorts, DefaultLifecycleRequest, LeasedDefaultLifecycle,
     PreparedDefaultLifecycle, lease_default_lifecycle, prepare_default_lifecycle,
 };
-pub use dispatch::dispatch_plan_untracked;
+pub use dispatch::{DeployAuthority, dispatch_plan_untracked};
 pub use install::{
     InstallDisposition, InstallExecution, InstallInputs, InstallPolicy, InstallRun,
     InstallRunContext, PreparedSelection, ProvenSelection, ResumeOutcome, ResumeRequest,
