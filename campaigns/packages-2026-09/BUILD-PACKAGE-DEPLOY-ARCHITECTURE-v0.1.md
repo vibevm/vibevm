@@ -563,6 +563,131 @@ containment and links immediately before mutation. Desired bindings are
 reconciled against the prior owned set, so agent shrink, rename or declaration
 removal cannot leave an orphan.
 
+### 6.3.0 R8-CLIENTS staging — decision record (central, 2026-08-30)
+
+**Decision.** R8-CLIENTS is five serial atoms — freeze, foundation,
+package projections, deploy adapters, three-client gate — and lands the
+commissioning matrix without turning any client into a special CLI branch:
+
+1. **Scope.** In: user-scope skill placement for Claude Code, Codex and
+   OpenCode; three client-native projections of one canonical Agent Plugin;
+   user-scope plugin installation through the general deploy transaction; and
+   the isolated §10 three-client gate. Out: project-scope automatic skill
+   projection (R8.1 already owns it), live operator-home mutation, public
+   marketplace publication, OpenCode's unrelated npm/TypeScript plugin API,
+   remote/system deployment and the still-unlanded foreign-provider transport.
+2. **Nine ordinary builtin rows extend the ONE mechanism registry.** Package:
+   `package:claude-plugin` → `org.vibevm/vibe#claude-plugin-projection`,
+   `package:codex-plugin` → `#codex-plugin-projection`, and
+   `package:opencode-plugin` → `#opencode-plugin-projection`. Deploy:
+   `deploy:{claude,codex,opencode}-skill` → the same-named `#*-skill` rows and
+   `deploy:{claude,codex,opencode}-plugin` → `#claude-plugin`,
+   `#codex-plugin`, `#opencode-plugin`. Projection rows are engine-fresh;
+   destination rows are provider-fresh. The first three rows deliberately
+   prove that provider id and logical name are separate fields.
+3. **Projection is package work.** Each client-plugin package target consumes
+   exactly one recorded `agent-plugin` directory artifact and emits one
+   recorded directory projection. Its strict config requires a nonempty unique
+   `components` subset of `skills|mcp`; only those explicitly requested
+   portable-v1 components may be emitted. A source component the selected
+   adapter cannot represent refuses with a capability report; no file is
+   silently dropped. Reverse-domain client-extension directories remain
+   unrequested unless a later client-specific ruling admits one.
+4. **The three projection shapes are exact.** Claude moves the canonical
+   manifest to `.claude-plugin/plugin.json`, Codex to
+   `.codex-plugin/plugin.json`; both retain selected `skills/` and map selected
+   `mcp.json` to `.mcp.json`. The Codex shape is the current OpenAI Docs plugin
+   contract: `.codex-plugin/plugin.json`, optional `skills/`, optional
+   `.mcp.json`, installed from a local marketplace. OpenCode emits selected
+   `skills/` plus one strict `opencode.json` fragment containing only the named
+   `mcp` entries its adapter will merge. Every projection preserves plugin
+   name/version and records adapter epoch 1 in its fingerprint/evidence.
+5. **Standalone skills remain artifacts, not plugins.** The three skill deploy
+   providers accept only a file-shaped `skill` artifact plus strict
+   `config={name="portable-token"}` and own exactly one entry file under
+   `.claude/skills/<name>/SKILL.md`, `.agents/skills/<name>/SKILL.md`, or
+   `.config/opencode/skills/<name>/SKILL.md`. They never own or remove an
+   unrecorded neighbour and never route a Codex/OpenCode selection through the
+   same shared physical path by convenience.
+6. **Home and executable authority are injected.** `DeployExecution` carries
+   the exact user home beside `settings_root`, plus explicit Claude/Codex/
+   OpenCode executable paths. The CLI surface resolves them once; every lower
+   cell and provider is forbidden from calling `dirs::home_dir`, reading
+   `HOME`/`USERPROFILE`/`CODEX_HOME`/`CLAUDE_CONFIG_DIR`, searching `PATH`, or
+   finding a real client. Tests pass temp homes and fake executables, making
+   the operator's home unreachable by construction.
+7. **VibeVM owns local marketplace bytes; clients own private install state.**
+   Claude and Codex deploy providers materialise an immutable local marketplace
+   below `settings_root/client-marketplaces/<client>/<target>/<artifact-digest>/`
+   with the client's native marketplace manifest, then use the injected CLI.
+   Claude's exact epoch-1 argv is `plugin marketplace add --scope user <root>`,
+   `plugin install --scope user <plugin>@<marketplace>`, `plugin list --json`,
+   and `plugin uninstall --scope user <plugin>@<marketplace>`; Codex uses
+   `plugin marketplace add --json <root>`, `plugin add --json
+   <plugin>@<marketplace>`, `plugin list --json`, and `plugin remove --json
+   <plugin>@<marketplace>`. Live probes reconfirmed Claude Code 2.1.220 and
+   Codex CLI 0.148.0. The provider fingerprints the parsed client version and
+   refuses outside its tested minor line with remediation rather than guessing
+   private state.
+8. **OpenCode is the documented different adapter.** It does not install the
+   Agent Plugin through `opencode plugin` (that command installs a different
+   npm/TypeScript plugin genre). It publishes selected skill files and merges
+   each projected MCP entry into
+   `.config/opencode/opencode.json` under `mcp`, preserving every foreign key,
+   through parse → merge → canonical encode → atomic replacement. Epoch 1 is
+   tested against OpenCode 1.17.x; an incompatible version refuses before the
+   first write.
+9. **Owned identity and physical locking are separate.** `DeployPlan` gains
+   engine-internal `lock_resources`; `DeployDescriptor` gains an explicit
+   reference-ownership capability. A normal provider's lock resources equal
+   its owned resources. An OpenCode config entry owns
+   `home:.config/opencode/opencode.json#mcp/<name>` while locking the physical
+   document `home:.config/opencode/opencode.json`; CLI-owned plugin state uses
+   a logical plugin resource while locking that client's private plugin state.
+   The exception is admitted only for a provider declaring reference ownership
+   and is the deferred §7.0 ratification-3 capability arriving with its first
+   honest user.
+10. **Every selected plan is prepared before the first apply.** The engine
+    compares all owned and lock resources through the shared Unicode-9
+    physical path identity. Duplicate owned identity always refuses. Duplicate
+    physical lock identity refuses unless every participant explicitly uses
+    reference ownership and owns a distinct logical member of that shared
+    document/state. Thus a Codex/OpenCode combination cannot reach apply while
+    competing for one skill or config member; the per-destination locks also
+    serialize separate deployments of one shared document.
+11. **Plan and verify use read-only probes only.** Skill/OpenCode providers
+    inspect the exact target/config bytes. Claude/Codex use only their local
+    marketplace/list JSON probes; no provider plan reads a token, reaches the
+    network, mutates a marketplace, or runs install. Apply is idempotent by
+    probing each completed CLI step before repeating it, so the existing intent
+    journal can recover. Epoch 1 refuses an in-place plugin update to different
+    artifact bytes with `undeploy, then deploy` remediation rather than claim a
+    rollback for private client state it cannot restore.
+12. **R8.1 is reused as a lower vocabulary, never as a second receipt.**
+    `vibe-agent-projection` owns client ids, pure path/config transformations
+    and the shared safe-filesystem identity helpers; `vibe-lifecycle` owns
+    mechanism protocols, intent/checkpoints/receipt/locks/saga; the
+    orchestrator and CLI only inject authority and render. A user deployment
+    writes no project package-skill receipt and automatic project projection
+    writes no user deployment receipt.
+13. **The commissioning proof touches no real client.** Fake Claude/Codex
+    executables implement the exact argv/list contract inside temp homes;
+    OpenCode uses a temp config with foreign neighbours. The gate packages one
+    static skill and one canonical Agent Plugin, produces all three native
+    projections, plans every target with write/network/token sentinels, deploys,
+    independently verifies, interrupts one apply and recovers it, then
+    undeploys. Every foreign neighbour remains byte-identical; target/physical
+    alias and config-entry mutations turn their named tests red.
+
+**Considered and rejected.** Adapting a canonical Agent Plugin during deploy —
+that makes installation non-reproducible and contradicts §6.2. Calling
+`opencode plugin` — a different extension format, not an Agent Plugin adapter.
+Letting each provider resolve the operator home or client binary — untestable
+ambient authority. Treating a shared JSON file as one deployment's owned file —
+it prevents unrelated plugins from coexisting; treating its entries as
+independent without one physical lock loses updates. Claiming private-CLI
+updates are reversible — the client, not VibeVM, owns their prior state.
+
 ## 7. Deploy targets and profiles
 
 Profiles are named destination selections, not Maven-style arbitrary overlays
