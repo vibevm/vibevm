@@ -805,6 +805,37 @@ than depending on untracked `cache/` archaeology.
   27-in-scope 0-new, fmt, diff hygiene. §3.0 gains the five-ruling
   ratification block. Map `237a2fdc`. R8-CARGO (the provider protocol
   and the first executing mechanism) is next in the lane.
+- R8-CARGO the first executing mechanism: `a22da2a3` lands the §5.0
+  staging — the in-process BuildProvider trait, the builtin cargo
+  adapter under §5's seven laws (metadata; argv only; the executable
+  solely from compiler-artifact messages; strict snake_case config with
+  four engine-owned members refusing by name; toolchain identity in
+  evidence; digest recorded; Cargo owns its incremental), the
+  dependency-ordered executor whose one selection path is
+  resolve_mechanism (non-builtin selections refuse by the unlanded
+  transport's name), engine-owned A2-validated records, and the
+  [[binary]] projection with the engine literal entering through the
+  new crate-internal MechanismKey::from_validated_parts (boss-side:
+  the worker's deviation-acknowledged expect designed away, conform
+  back at exactly 27). vibe-lifecycle enters the wire-derive baseline
+  at 1 for the lenient foreign-format Cargo message reader, per the
+  ratchet's own recipe. Worker §0: the orchestrator call site is
+  perimeter-blocked and deferred to R8-PACKAGE's wiring (the executor
+  landed complete, no stub); safefs's multi-name refusal rejects every
+  real Cargo artifact (release hard-links) — caught live, streamed
+  around with containment, filed as B-120. Worker mutations
+  five-of-five red (resolver bypass, plan purity, guessed path,
+  ambiguity, record validation). Reviewer mutation: the WHOLE
+  containment check was deletable with every suite green — a fully
+  foreign path also fails the later project-relative step, so only an
+  in-project-but-outside-target fixture isolates the build-root law —
+  closed with three verify-refusal pins (containment, link, absence),
+  the containment pin red under the mutation only in its final fixture
+  form (the first shape passed, recorded honestly). Gates: 982 tests
+  across vibe-core+lifecycle, clippy, whole-workspace check, conform
+  27/0-new, fmt, diff hygiene. §5.0 gains the six-ruling ratification.
+  Map `29f14732`. R8-PACKAGE (static-skill + agent-plugin providers +
+  the run_phases wiring) is next.
 - R4.2 minify binding, RED corpus and activation e2e: `7a09ec2d` registers
   `xml-minify` (epoch 1, EMITTED — the one stage the kernel serves without a
   new serializer; every other stage refuses through the registry's own law)

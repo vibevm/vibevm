@@ -353,6 +353,37 @@ the envelope arrives with the transport atom. A public schema for
 Cargo's message stream — freezing another tool's wire as ours. Records
 under the provider's chosen paths — §3.2 forbids it by name.
 
+**Ratified at R8-CARGO acceptance (central, 2026-08-30).** Six rulings the
+landing surfaced, each pinned:
+
+1. **The Cargo `config` member names are snake_case and strict**, with four
+   engine-owned members refusing BY NAME (`manifest-path` spellings that
+   would collide with the engine's own argv authority); the engine appends
+   `--target-dir <project_root>/target` itself and scrubs
+   `CARGO_TARGET_DIR` from the child environment — the flag outranks the
+   variable in Cargo's own precedence, and both defenses ride together.
+2. **`vibe_safefs`'s multi-name refusal is right for its domain and wrong
+   for Cargo artifacts** (release binaries carry a hard-linked second name
+   under `deps/`), so `verify` streams the bytes itself after containment
+   — filed as B-120 for the safefs owner to decide whether a
+   build-artifact read primitive belongs beside the publication one.
+3. **The verify refusals are laws, not incidents**: review proved the
+   whole containment check deletable with every suite green — the
+   in-project-but-outside-target fixture is what isolates the build-root
+   law from the project-relative step, and the three refusal pins
+   (containment, link, absence) now hold the seam.
+4. **The projection's engine literal enters through a crate-internal
+   validated-parts constructor** (`MechanismKey::from_validated_parts`,
+   debug-asserted against the one token grammar) — no excused `expect`,
+   no Result on an impossible parse, conform back at exactly its 27.
+5. **The orchestrator call site is the NEXT atom's wiring**: the complete
+   executor (`vibe_lifecycle::execute_build_targets`) landed with no stub,
+   and `run_phases` learns to call it when R8-PACKAGE wires build and
+   package together — one wiring, two consumers.
+6. **`vibe-lifecycle` enters the wire-derive baseline at 1** for exactly
+   the lenient Cargo message reader — a foreign-format file named per the
+   ratchet's own recipe.
+
 ## 5. Cargo commissioning backend
 
 The Cargo provider:
