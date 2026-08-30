@@ -1119,6 +1119,12 @@ than depending on untracked `cache/` archaeology.
   fmt, conform 0-new; the standalone real abort profile fails solely on the
   expected unwind-remediation message. R5.1-GATE is next; loader/build remain
   R5.2/R5.3.
+- R5.1 integrated gate adds no product/test duplicate: shared-codegen 17,
+  native wire 7, SDK/raw-link 7, post-commit check-codegen, exact real abort
+  refusal and clean specmap all pass on main. The three accepted children carry
+  20 RED/restoration proofs in total (4 + 8 + 8). R5.1-SHARED-STRICT, WIRE, SDK,
+  GATE and parent R5.1 are accepted; R5.2 now owns the first host-side unsafe,
+  libloading cache and free-once invocation.
 - R4.2 minify binding, RED corpus and activation e2e: `7a09ec2d` registers
   `xml-minify` (epoch 1, EMITTED — the one stage the kernel serves without a
   new serializer; every other stage refuses through the registry's own law)
@@ -1237,7 +1243,7 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 
 | Step | State | Required result |
 |---|---|---|
-| R5.1 native JTD context/reply/manifest + `vibe-ext` macro | in progress | SHARED-STRICT `52edc577`, WIRE `fd81a003` / map `4c9378c9`; SDK → GATE remain; schema first, unanimous shared-reader strictness, panic-abort compile refusal, plugin-side unwind/memory boundary |
+| R5.1 native JTD context/reply/manifest + `vibe-ext` macro | done | SHARED-STRICT `52edc577`; WIRE `fd81a003` / map `4c9378c9`; SDK `bfaea140`; integrated 17 + 7 + 7 gate, real abort refusal, 20 mutation proofs; schema first, unanimous shared-reader strictness, plugin-side unwind/memory boundary |
 | R5.2 loader | missing | separate unsafe-quarantine crate, libloading/cache/free-once tests |
 | R5.3 source/prebuilt resolution and in-slot build | partial substrate | build ignores exist; no native artifact/provider build path |
 | R5.4 pending bootstrap convergence | missing | install may mark pending; build rebuilds and recompiles once |

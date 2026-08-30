@@ -151,6 +151,18 @@ the SDK's unwind-remediation compile error; removing that error makes the gate
 unexpectedly green. No loader, artifact resolution, package-slot build or
 activation path landed.
 
+**Ratified at R5.1-GATE and R5.1 acceptance (central, 2026-08-31).** The gate
+adds no duplicate harness or product path. On exact main it composes the 17-test
+unanimous shared-reader mechanism, 7 native wire tests and 7 SDK/raw-link tests;
+post-commit check-codegen is clean, the real abort-profile fixture refuses only
+with the SDK's unwind remediation, and specmap remains clean at 6,833 units /
+3,009 tagged items / 2,758 edges with 0 suspects, gated orphans or unresolved
+host edges and 25 warnings. The three implementation children already carry 20
+accepted RED/restoration proofs (4 shared-strict, 8 wire, 8 SDK), so the gate
+does not invent a second mutation ceremony. R5.1 is accepted: the wire and safe
+plugin-side ABI exist; dynamic loading, library caching and host-side free-once
+remain exclusively R5.2.
+
 Wire acceptance requires authored valid/invalid corpus documents for all three
 roots; registry completeness; codegen/check-codegen; exact generated-module
 sharing assertions; native reply unknown-member refusal; native context and
