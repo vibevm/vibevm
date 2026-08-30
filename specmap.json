@@ -17571,6 +17571,51 @@
       "fingerprint": "tok1:aa3e243e33bafe22c9f13b8b34af19ab204fb7eec01d0d68ea8c6051d8fe2ef7"
     },
     {
+      "crate_name": "vibe-native-loader",
+      "file": "crates/vibe-native-loader/src/lib.rs",
+      "item_kind": "mod",
+      "line": 9,
+      "symbol": "vibe_native_loader",
+      "end_line": 9,
+      "fingerprint": "tok1:516341449994b968ccdf59082ca7d9142d86d14eb76333e44df8171b1bf740db"
+    },
+    {
+      "crate_name": "vibe-native-loader",
+      "file": "crates/vibe-native-loader/src/admission.rs",
+      "item_kind": "mod",
+      "line": 10,
+      "symbol": "vibe_native_loader::admission",
+      "end_line": 10,
+      "fingerprint": "tok1:c7969ecc199b2bce567e5370467db861e2a593154f6794384a4fddc6db525a19"
+    },
+    {
+      "crate_name": "vibe-native-loader",
+      "file": "crates/vibe-native-loader/src/error.rs",
+      "item_kind": "mod",
+      "line": 4,
+      "symbol": "vibe_native_loader::error",
+      "end_line": 4,
+      "fingerprint": "tok1:cc600576e56cc2091c107576e8d3fc260ac9b31caff115d406753c0cc6b24007"
+    },
+    {
+      "crate_name": "vibe-native-loader",
+      "file": "crates/vibe-native-loader/src/error.rs",
+      "item_kind": "enum",
+      "line": 6,
+      "symbol": "vibe_native_loader::error::NativeLoadError",
+      "end_line": 183,
+      "fingerprint": "tok1:75eccde1ce0bf5028e893d13acd42c0498fe21ad359b691cd282654cbf5781ae"
+    },
+    {
+      "crate_name": "vibe-native-loader",
+      "file": "crates/vibe-native-loader/src/ffi.rs",
+      "item_kind": "mod",
+      "line": 9,
+      "symbol": "vibe_native_loader::ffi",
+      "end_line": 9,
+      "fingerprint": "tok1:516341449994b968ccdf59082ca7d9142d86d14eb76333e44df8171b1bf740db"
+    },
+    {
       "crate_name": "vibe-orchestrator",
       "file": "crates/vibe-orchestrator/src/lib.rs",
       "item_kind": "mod",
@@ -40721,6 +40766,46 @@
       "line": 7,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#server",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-native-loader/src/lib.rs",
+      "from_symbol": "vibe_native_loader",
+      "line": 9,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#C-ABI-LAW",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-native-loader/src/admission.rs",
+      "from_symbol": "vibe_native_loader::admission",
+      "line": 10,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-SCHEMA-VERSIONED",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-native-loader/src/error.rs",
+      "from_symbol": "vibe_native_loader::error",
+      "line": 4,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-native-loader/src/error.rs",
+      "from_symbol": "vibe_native_loader::error::NativeLoadError",
+      "line": 19,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-native-loader/src/ffi.rs",
+      "from_symbol": "vibe_native_loader::ffi",
+      "line": 9,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#C-ABI-LAW",
       "verb": "implements"
     },
     {
