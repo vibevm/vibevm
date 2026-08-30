@@ -105,6 +105,18 @@ the all-strict attribute disappear and the mixed-role refusal disappear, then
 restore byte-exact. No schema, vocabulary or generated product wire changes in
 that prerequisite commit.
 
+**Ratified at R5.1-SHARED-STRICT acceptance (central, 2026-08-30).** Commit
+`52edc577` computes one `FragmentReaderPolicy` from the existing registry loader
+and resolved closure, threads it through the normal `rewrite_generated` pass
+slot and stamps only unanimous-strict shared structs. The first worker PASS was
+rejected because a central bypass of that match arm survived all helper tests;
+the correction added a full-pipeline fixture that makes the exact bypass RED.
+Two worker policy mutations and two independent central mutations failed and
+restored byte-exact. All 17 shared-module tests and 234 xtask tests pass;
+check-codegen is clean over 145 byte-identical generated files, strict clippy,
+fmt and xtask conform (0 findings / 0 new) pass. No schema, vocabulary, registry
+record, generated product or product crate changed.
+
 Wire acceptance requires authored valid/invalid corpus documents for all three
 roots; registry completeness; codegen/check-codegen; exact generated-module
 sharing assertions; native reply unknown-member refusal; native context and

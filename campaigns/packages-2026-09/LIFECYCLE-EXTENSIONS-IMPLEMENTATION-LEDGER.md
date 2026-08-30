@@ -1087,6 +1087,16 @@ than depending on untracked `cache/` archaeology.
   free, envelope-1 pre-handler gate and real abort-profile compile refusal are
   frozen. Loading, artifact resolution/build, bootstrap and compiler parity stay
   exclusively in R5.2–R5.5.
+- R5.1 unanimous shared strictness prerequisite: `52edc577` replaces the
+  over-broad any-`none` guard with one typed per-fragment policy computed from
+  the existing registry/closure inputs. All-none emits one strict shared struct,
+  all-permissive preserves prior bytes, and mixed roles still refuse with both
+  consumer sets named. Central rejected the first PASS after its postproc bypass
+  survived the helper tests; the corrected full-pipeline fixture makes that
+  exact mutation RED. Four accepted mutations restored byte-exact. Gates:
+  shared-module 17, xtask 234, check-codegen clean over 145 unchanged generated
+  files, strict clippy/fmt and conform 0/0. No wire product changed; R5.1-WIRE is
+  unblocked.
 - R4.2 minify binding, RED corpus and activation e2e: `7a09ec2d` registers
   `xml-minify` (epoch 1, EMITTED — the one stage the kernel serves without a
   new serializer; every other stage refuses through the registry's own law)
