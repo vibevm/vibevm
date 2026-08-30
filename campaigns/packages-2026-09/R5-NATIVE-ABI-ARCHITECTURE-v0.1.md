@@ -543,3 +543,22 @@ R5.4 alone owns `transforms-pending`, install-time absent-transform tolerance an
 one-invocation build→lane-recompile convergence. R5.5 alone owns compiler-native
 invocation and builtin/native minify byte parity. No R5.3 acceptance claim may
 use either as hidden evidence.
+
+**Ratified at R5.3-ARTIFACT acceptance (central, 2026-08-31).** Product commit
+`1baac652`, traceability `0ef041c7` and map `fd31533e` land the artifact half
+without lifecycle wiring. The exact three-platform resolver gives a declared
+current prebuilt terminal precedence; source fallback resolves the world's
+`build:cargo` route, runs release Cargo under the provider root and chooses one
+cdylib only from metadata/compiler-artifact filenames. The shared package-Cargo
+environment preserves the existing binary builder, and the shared artifact
+record carries `file` plus project/slot-relative path, labelled source/config/
+toolchain/platform witnesses and current bytes. The initial worker PASS was
+rejected for an unauthorised target pin, legacy/unlabelled host witness, a false
+SDK-fixture claim and 28 new conform findings; a native `gpt-5.6-sol`/`xhigh`
+correction removed all four defects. Gates pass native 9, Cargo wire 13, shared
+record 8, workspace environment 2, check/strict clippy/fmt, lifecycle conform
+2 standing/0 new and workspace conform 0/0. Six worker plus two independent
+central mutations were RED and restored byte-exact. Specmap is clean at 6,833
+units / 3,023 tagged items / 2,775 edges with 0 suspects, gated orphans or
+unresolved host edges and 25 warnings. R5.3-WIRING remains next; no loader,
+handler, fence or compiler connection landed in ARTIFACT.
