@@ -731,6 +731,46 @@ Seven rulings the landing surfaced, each pinned:
    cell. Existing public values and vibe-bin outputs remain compatible; only
    the new explicit authority/preplan refusal surface was added.
 
+**Ratified at R8-CLIENTS-PACKAGE acceptance (central, 2026-08-30).**
+Seven implementation rulings the landing made executable:
+
+1. **Artifact kind and physical shape answer different questions.** The
+   canonical provider now records `kind=agent-plugin, shape=directory`, matching
+   the frozen A2 corpus and its own contract. Package input provenance carries
+   the record's typed kind; a workspace path or recorded plain directory cannot
+   become a canonical plugin by resemblance, and a projection cannot feed a
+   second projection.
+2. **Three provider identities share one closed implementation.** The Claude,
+   Codex and OpenCode rows dispatch to one provider parameterised by a closed
+   client enum. Client choice never enters config, so provider id and logical
+   mechanism name remain visibly separate without three copied adapters.
+3. **`components` is a canonical set and capability checking is plan work.**
+   The only config member is a nonempty unique subset of `skills|mcp`, stored in
+   canonical order. A missing selected component or unrepresentable OpenCode
+   member refuses during the read-only plan, before the engine prepares output.
+4. **Projection reuses the canonical validator.** The recorded tree is
+   revalidated through the Agent Plugin shape/manifest cells; that one parse
+   returns name, version and the validated MCP map. Legal reverse-domain client
+   extensions remain outside the component vocabulary, are not emitted, and
+   are counted as withheld-by-contract in evidence rather than silently lost.
+5. **The client shapes are byte-exact and OpenCode remains a different genre.**
+   Claude/Codex move the full canonical manifest, retain selected skills and
+   copy selected `mcp.json` to `.mcp.json`. OpenCode emits selected skills plus
+   a deterministic `mcp` fragment: local argv/environment and remote
+   URL/headers, with unsupported cross-transport members refusing. The two
+   plugin placeholders remain unexpanded until deploy; no npm/TypeScript plugin
+   field or command is invented.
+6. **Adapter epoch 1 is durable freshness evidence.** The projection
+   fingerprint binds client, adapter epoch, canonical tree digest, parsed
+   name/version and canonical component set. All three outputs remain recorded
+   plain directory artifacts, so the record kind keeps canonical input and
+   client-native output distinct.
+7. **Acceptance is mutation-backed on the integrated tree.** Nine worker REDs
+   and three independent central REDs all failed one nonempty selected test and
+   restored byte-exact. Main gates passed 506 lifecycle tests plus 38 doctests
+   (three privilege cases ignored), package/projection filters, strict clippy,
+   check, fmt and conform with zero new findings.
+
 ## 7. Deploy targets and profiles
 
 Profiles are named destination selections, not Maven-style arbitrary overlays

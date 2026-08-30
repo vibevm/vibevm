@@ -982,6 +982,21 @@ than depending on untracked `cache/` archaeology.
   ships yet: the durable reference-lock sidecar is an explicit prerequisite
   of R8-CLIENTS-DEPLOY, and every new row still refuses honestly through
   `UnknownBuiltinProvider` until its owning child lands.
+- R8-CLIENTS package projections: `40c53f0a` / map `8192dba6` makes the
+  canonical Agent Plugin record truthful (`agent-plugin` kind, directory
+  shape), carries typed record kind through package provenance and implements
+  the three package projection rows through one epoch-1 provider. Claude and
+  Codex preserve full manifest/selected skill bytes and map MCP to `.mcp.json`;
+  OpenCode emits a deterministic local/remote `mcp` fragment while preserving
+  placeholders and refusing unsupported transport members. Strict canonical
+  component sets, shared canonical-tree validation, typed capability reports
+  and three different client fingerprints are proved through the real A2
+  chain. Nine worker plus three central mutations were red and restored.
+  Main-tree gates passed lifecycle 506 + 38 doctests (3 ignored privilege
+  cases), projection 28, package 16, check/clippy/fmt and conform 0-new.
+  Specmap is 6831 units / 2929 tagged items / 2670 edges, 0 suspects, gated
+  orphans or unresolved host edges, 25 standing warnings. Destination providers
+  and the durable reference-lock sidecar remain R8-CLIENTS-DEPLOY.
 - R4.2 minify binding, RED corpus and activation e2e: `7a09ec2d` registers
   `xml-minify` (epoch 1, EMITTED — the one stage the kernel serves without a
   new serializer; every other stage refuses through the registry's own law)
@@ -1144,8 +1159,8 @@ system remains fully usable with no selected agent contribution or provider.
 | `[[mechanism]]` provider runtime and host routing | done | declarations/routes/pins `2a3f3b44`; installed-world carriage, registry and pure §3.1 selection `9dd072d2`; plan/apply/verify dispatch `a22da2a3` + `a5dc3cbc` |
 | Cargo commissioning build provider | done | `a22da2a3`; metadata + compiler-artifact JSON selection under §5's seven laws; hard-link containment streamed (B-120) |
 | fully static one-file skill | done | `a5dc3cbc`; whole-line include consumption, binary-asset refusal, one `SKILL.md` distributable |
-| Agent Plugins 1.0 directory | done | `a5dc3cbc`; plugin schema, canonical directory digest, obligatory `place` map, reparse refusal; client-component install is the deploy lane's |
-| Claude/Codex/OpenCode client projections and local deploy | foundation done; providers missing | `3496fcc5` / `c7a2ea7b`: nine builtin rows, injected client authority, pre-apply physical ownership/locking; package projections and destination providers remain R8-CLIENTS-PACKAGE/DEPLOY |
+| Agent Plugins 1.0 directory | done | `a5dc3cbc`, corrected by `40c53f0a`; plugin schema, canonical directory digest, `agent-plugin` kind + directory shape, obligatory `place` map, reparse refusal; client-native adaptation is reproducible package work |
+| Claude/Codex/OpenCode client projections and local deploy | package done; deploy providers missing | foundation `3496fcc5` / `c7a2ea7b`; package projections `40c53f0a` / `8192dba6`: typed canonical provenance, three exact epoch-1 projections, strict capability reports; destination providers and durable reference-lock sidecar remain R8-CLIENTS-DEPLOY |
 | deploy targets/profiles/plan/undeploy | done (engine) | `0a42456e`; grammar `2a3f3b44`; once-only profile selection, third fence, read-only `--plan`, undeploy/deployments; executing destination providers arrive with their own atoms |
 | intent/receipt/recovery for general destinations | done | `0a42456e`; the general §7.2 protocol — atomic intent, checkpoints, verify-then-receipt, locks, three-digest recovery, saga, drift refusal — proven over hermetic crash windows |
 | `deploy:vibe-bin` under `~/.vibe/bin` | done | the real provider: CAS store, version-free marked launcher + pointer, update/rollback/undeploy proven by running the launcher in the §10 e2e |
