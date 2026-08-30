@@ -1146,6 +1146,13 @@ than depending on untracked `cache/` archaeology.
   0 suspects, gated orphans or unresolved host edges, 25 standing warnings.
   R5.2-GATE is next; Linux/macOS real loading remains platform-CI evidence and
   artifact resolution/build plus lifecycle wiring remain R5.3.
+- R5.2 integrated gate adds no product/test duplicate: loader 11 unit + 1 real
+  DLL + 3 doctests, SDK/link ABI 7, native wire 7, post-commit check-codegen,
+  full conform with 28 standing/0 new and clean specmap all pass on main. The
+  accepted LOADER carries five worker plus three independent central mutation
+  proofs; the gate does not repeat them. R5.2-LOADER, R5.2-GATE and parent R5.2
+  are accepted. R5.3 now owns source/prebuilt artifact resolution, in-slot
+  build and the first lifecycle connection.
 - R4.2 minify binding, RED corpus and activation e2e: `7a09ec2d` registers
   `xml-minify` (epoch 1, EMITTED — the one stage the kernel serves without a
   new serializer; every other stage refuses through the registry's own law)
@@ -1265,7 +1272,7 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 | Step | State | Required result |
 |---|---|---|
 | R5.1 native JTD context/reply/manifest + `vibe-ext` macro | done | SHARED-STRICT `52edc577`; WIRE `fd81a003` / map `4c9378c9`; SDK `bfaea140`; integrated 17 + 7 + 7 gate, real abort refusal, 20 mutation proofs; schema first, unanimous shared-reader strictness, plugin-side unwind/memory boundary |
-| R5.2 loader | in progress | LOADER `9f7b8854` / map `36efa500`: separate unsafe quarantine, canonical strong cache, exact ABI/manifest admission and free-once guard; 11 unit + 1 real DLL + 4 doctests, 8 mutation proofs; focused integrated GATE remains |
+| R5.2 loader | done | LOADER `9f7b8854` / map `36efa500`; integrated 15 loader + 7 SDK + 7 native-wire gate, clean check-codegen/conform/specmap, 8 mutation proofs; separate unsafe quarantine, canonical strong cache, exact ABI/manifest admission and free-once guard |
 | R5.3 source/prebuilt resolution and in-slot build | partial substrate | build ignores exist; no native artifact/provider build path |
 | R5.4 pending bootstrap convergence | missing | install may mark pending; build rebuilds and recompiles once |
 | R5.5 native/builtin minify parity | missing | owner scenario §10.2 |

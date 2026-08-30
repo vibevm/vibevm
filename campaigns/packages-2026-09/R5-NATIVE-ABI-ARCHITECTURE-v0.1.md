@@ -377,3 +377,15 @@ is clean at 6,833 units / 3,014 tagged items / 2,763 edges with 0 suspects,
 gated orphans or unresolved host edges and 25 standing warnings. The focused
 R5.2-GATE remains next; Linux/macOS real-library execution remains platform-CI
 evidence, and artifact resolution/build/lifecycle wiring remain R5.3.
+
+**Ratified at R5.2-GATE and R5.2 acceptance (central, 2026-08-31).** The gate
+adds no duplicate harness or product path. On exact main it composes the loader's
+11 unit + 1 real DLL + 3 doctests, the SDK's 7 link/ABI tests and the native
+wire's 7 schema/corpus/sharing tests. Post-commit check-codegen is clean; full
+conform carries its 28 standing findings with 0 new; specmap remains clean at
+6,833 units / 3,014 tagged items / 2,763 edges with 0 suspects, gated orphans
+or unresolved host edges and 25 warnings. The accepted LOADER already carries
+five worker plus three independent central RED/restoration proofs, so the gate
+does not invent a second mutation ceremony. R5.2-LOADER, R5.2-GATE and parent
+R5.2 are accepted. R5.3 now exclusively owns source/prebuilt artifact
+resolution, in-slot build and the first lifecycle connection.
