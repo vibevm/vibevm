@@ -13571,6 +13571,33 @@
     },
     {
       "crate_name": "vibe-lifecycle",
+      "file": "crates/vibe-lifecycle/src/mechanism/deploy/client_gate_tests.rs",
+      "item_kind": "fn",
+      "line": 252,
+      "symbol": "vibe_lifecycle::mechanism::deploy::client_gate_tests::opencode_skill_and_plugin_collision_refuses_in_preplan_without_mutation",
+      "end_line": 294,
+      "fingerprint": "tok1:1021305cc7182edc658d90bf89b47e7c23de5f6397b1c21f8918aea8d44d694a"
+    },
+    {
+      "crate_name": "vibe-lifecycle",
+      "file": "crates/vibe-lifecycle/src/mechanism/deploy/client_gate_tests.rs",
+      "item_kind": "fn",
+      "line": 184,
+      "symbol": "vibe_lifecycle::mechanism::deploy::client_gate_tests::packaged_skill_crash_after_write_recovers_under_the_interrupted_generation",
+      "end_line": 250,
+      "fingerprint": "tok1:a927353c320b4b0b7b94d3712f08f87b4640e5cc00cae3f8b018fd71281d499b"
+    },
+    {
+      "crate_name": "vibe-lifecycle",
+      "file": "crates/vibe-lifecycle/src/mechanism/deploy/client_gate_tests.rs",
+      "item_kind": "fn",
+      "line": 61,
+      "symbol": "vibe_lifecycle::mechanism::deploy::client_gate_tests::real_packages_project_and_commission_all_six_client_destinations",
+      "end_line": 182,
+      "fingerprint": "tok1:1902c8bcf815aae09354482586d8aea74d7d5231f6f96ea00bc24b60725da702"
+    },
+    {
+      "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/mechanism/deploy/error.rs",
       "item_kind": "mod",
       "line": 20,
@@ -36989,6 +37016,30 @@
       "file": "crates/vibe-lifecycle/src/mechanism/deploy/authority_tests.rs",
       "from_symbol": "vibe_lifecycle::mechanism::deploy::authority_tests::the_injected_home_and_client_paths_reach_the_provider_request",
       "line": 26,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-lifecycle/src/mechanism/deploy/client_gate_tests.rs",
+      "from_symbol": "vibe_lifecycle::mechanism::deploy::client_gate_tests::opencode_skill_and_plugin_collision_refuses_in_preplan_without_mutation",
+      "line": 253,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-lifecycle/src/mechanism/deploy/client_gate_tests.rs",
+      "from_symbol": "vibe_lifecycle::mechanism::deploy::client_gate_tests::packaged_skill_crash_after_write_recovers_under_the_interrupted_generation",
+      "line": 185,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-lifecycle/src/mechanism/deploy/client_gate_tests.rs",
+      "from_symbol": "vibe_lifecycle::mechanism::deploy::client_gate_tests::real_packages_project_and_commission_all_six_client_destinations",
+      "line": 62,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS",
       "verb": "verifies"
