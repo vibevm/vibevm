@@ -14,11 +14,13 @@
 //!    the implementation's to choose and to disclose):
 //!
 //!    ```text
-//!    <home>/<deployment-id>/intent.json       the §7.2 durable intent
-//!    <home>/<deployment-id>/checkpoints.json  the apply checkpoint ledger
-//!    <home>/<deployment-id>/receipt.json      the §7.2 finalized receipt
-//!    <home>/<deployment-id>/staging/          engine-owned staging scratch
-//!    <home>/.vibe/<destination-id>.lock       the per-destination locks
+//!    <home>/<deployment-id>/intent.json         the §7.2 durable intent
+//!    <home>/<deployment-id>/checkpoints.json    the apply checkpoint ledger
+//!    <home>/<deployment-id>/lock-resources.json the §6.3.1.2 lock sidecar
+//!    <home>/<deployment-id>/receipt.json        the §7.2 finalized receipt
+//!    <home>/<deployment-id>/staging/            engine-owned staging scratch
+//!    <home>/.vibe/deployment-<deployment-id>.lock the state lock
+//!    <home>/.vibe/<destination-id>.lock         the per-destination locks
 //!    ```
 //!
 //!    `<deployment-id>` is the SHA-256 of `project\0package\0target\0`, and
@@ -51,16 +53,28 @@ use vibe_wire::generated::deploy_intent::DeployIntent;
 use vibe_wire::generated::deploy_receipt::DeployReceipt;
 
 use super::error::DeployError;
-use crate::mechanism::MechanismError;
+use super::sidecar::{LOCK_RESOURCES_FILE, LockResources};
+
+// The provider-facing checkpoint sink lives in its own cell and is
+// re-exported here, so every existing `state::CheckpointLedger` use site
+// keeps one spelling: the split is a responsibility seam, not a rename.
+pub(crate) use super::ledger::CheckpointLedger;
 
 /// The intent journal's file name inside a deployment's own directory.
 const INTENT_FILE: &str = "intent.json";
 /// The checkpoint ledger's file name.
 const CHECKPOINT_FILE: &str = "checkpoints.json";
 /// The finalized receipt's file name.
-const RECEIPT_FILE: &str = "receipt.json";
+pub(super) const RECEIPT_FILE: &str = "receipt.json";
 /// The engine-owned staging directory's name.
 const STAGING_DIR: &str = "staging";
+/// The stable per-deployment state lock's file-name prefix.
+///
+/// Prefixed rather than bare so it cannot collide with a per-destination
+/// lock, whose name is a bare 64-hex digest of a resource identity — the
+/// deployment id is 64 hex too, and two different locks sharing one name
+/// would silently serialise a deployment against a destination.
+const DEPLOYMENT_LOCK_PREFIX: &str = "deployment-";
 
 /// The checkpoint ledger's schema epoch.
 pub(crate) const CHECKPOINT_EPOCH: u32 = 1;
@@ -131,7 +145,7 @@ impl DeploymentHome {
     }
 
     /// The home-relative, forward-slashed spelling of one member file.
-    fn member(&self, name: &str) -> String {
+    pub(super) fn member(&self, name: &str) -> String {
         format!("{}/{name}", self.id)
     }
 }
@@ -218,6 +232,70 @@ impl DeployState {
         Ok(held)
     }
 
+    /// Take the STABLE per-deployment state lock — §6.3.1.3's "One stable
+    /// deployment lock serialises sidecar/state transitions".
+    ///
+    /// > "Apply, recovery, saga rollback and undeploy take the
+    /// > deployment-id lock, then the union of current, committed and
+    /// > pending destination locks in canonical order."
+    ///
+    /// It is keyed on the deployment ID rather than on any resource, so it
+    /// is the same lock in every generation and for every plan: the
+    /// sidecar, the intent and the receipt are one deployment's records, and
+    /// a lock that moved with the plan would leave two runs of the same
+    /// deployment free to interleave their read-modify-write pairs over
+    /// them. Taken FIRST, always, so the acquisition order over the two
+    /// families is total and no pair of runs can deadlock.
+    pub(crate) fn lock_deployment(&self, home: &DeploymentHome) -> Result<LockGuard, DeployError> {
+        let name = format!("{DEPLOYMENT_LOCK_PREFIX}{}.lock", home.id());
+        self.project
+            .lock(&name)
+            .map_err(|error| DeployError::DeploymentLock {
+                path: rendered(&self.root.join(&name)),
+                reason: format!("{error:#}"),
+            })
+    }
+
+    /// Read one deployment's durable lock sidecar, or `None` when it has
+    /// none — §6.3.1.2's record, validated before a caller may act on it.
+    pub(crate) fn read_lock_resources(
+        &self,
+        home: &DeploymentHome,
+    ) -> Result<Option<LockResources>, DeployError> {
+        let Some(record) = self.read::<LockResources>(&home.member(LOCK_RESOURCES_FILE))? else {
+            return Ok(None);
+        };
+        record.validate()?;
+        Ok(Some(record))
+    }
+
+    /// Publish one deployment's lock sidecar atomically, then READ IT BACK
+    /// and validate what is really on disk.
+    ///
+    /// §6.3.1.2 makes the pending binding durable before the intent and
+    /// therefore before the first external write — which is a promise about
+    /// the bytes on the disk, not about the value in this process. So the
+    /// record is proven twice: once as a value, and once as whatever a later
+    /// run would actually read. A publication that encoded, wrote and
+    /// returned would be trusting exactly the step the law exists to cover.
+    pub(crate) fn write_lock_resources(
+        &self,
+        home: &DeploymentHome,
+        record: &LockResources,
+    ) -> Result<(), DeployError> {
+        record.validate()?;
+        self.publish(&home.member(LOCK_RESOURCES_FILE), record)?;
+        let read_back = self.read_lock_resources(home)?;
+        if read_back.as_ref() != Some(record) {
+            return Err(DeployError::RecordInvalid {
+                record: LOCK_RESOURCES_FILE,
+                reason: "the published record did not read back as the record that was written"
+                    .to_owned(),
+            });
+        }
+        Ok(())
+    }
+
     /// Publish one deployment's intent journal atomically.
     ///
     /// Validated through the A2 behaviour cell BEFORE any byte reaches the
@@ -281,11 +359,7 @@ impl DeployState {
         let Some(receipt) = self.read::<DeployReceipt>(&home.member(RECEIPT_FILE))? else {
             return Ok(None);
         };
-        validate_receipt(&receipt).map_err(|error| DeployError::RecordInvalid {
-            record: RECEIPT_FILE,
-            reason: error.to_string(),
-        })?;
-        Ok(Some(receipt))
+        checked_receipt(receipt).map(Some)
     }
 
     /// Read one deployment's checkpoint ledger for a given plan, or `None`
@@ -400,11 +474,7 @@ impl DeployState {
             let Some(receipt) = self.read::<DeployReceipt>(&relative)? else {
                 continue;
             };
-            validate_receipt(&receipt).map_err(|error| DeployError::RecordInvalid {
-                record: RECEIPT_FILE,
-                reason: error.to_string(),
-            })?;
-            rows.push((id, receipt));
+            rows.push((id, checked_receipt(receipt)?));
         }
         Ok(rows)
     }
@@ -426,21 +496,7 @@ impl DeployState {
 
     /// Read and decode one JSON record, or `None` when it is not there.
     fn read<T: for<'de> Deserialize<'de>>(&self, relative: &str) -> Result<Option<T>, DeployError> {
-        let Some(bytes) =
-            self.project
-                .read_file(relative)
-                .map_err(|error| DeployError::StateRead {
-                    path: relative.to_owned(),
-                    reason: format!("{error:#}"),
-                })?
-        else {
-            return Ok(None);
-        };
-        let value = serde_json::from_slice(&bytes).map_err(|error| DeployError::StateRead {
-            path: relative.to_owned(),
-            reason: error.to_string(),
-        })?;
-        Ok(Some(value))
+        read_record(&self.project, relative)
     }
 
     /// Remove one state file; absence is success.
@@ -462,62 +518,42 @@ impl DeployState {
     }
 }
 
-/// The engine's checkpoint sink, as a provider sees it.
+/// Read and decode one JSON record through a pinned capability, or `None`
+/// when it is not there.
 ///
-/// A provider can say "this operation completed" and can say nothing else:
-/// it cannot read the ledger back, cannot rewrite it, and cannot decide
-/// where it lives. Every call publishes the ledger atomically before it
-/// returns, because a checkpoint that is only in memory is not a
-/// checkpoint.
-#[derive(Debug)]
-pub(crate) struct CheckpointLedger<'a> {
-    state: &'a DeployState,
-    home: &'a DeploymentHome,
-    record: CheckpointRecord,
+/// A free function rather than a method because BOTH state capabilities read
+/// the same records: the creating [`DeployState`] and the no-create
+/// [`DeployStateView`](super::view::DeployStateView). One decoder, one
+/// refusal wording, no chance of a planner and an apply disagreeing about
+/// what a state home holds.
+pub(super) fn read_record<T: for<'de> Deserialize<'de>>(
+    project: &Project,
+    relative: &str,
+) -> Result<Option<T>, DeployError> {
+    let Some(bytes) = project
+        .read_file(relative)
+        .map_err(|error| DeployError::StateRead {
+            path: relative.to_owned(),
+            reason: format!("{error:#}"),
+        })?
+    else {
+        return Ok(None);
+    };
+    let value = serde_json::from_slice(&bytes).map_err(|error| DeployError::StateRead {
+        path: relative.to_owned(),
+        reason: error.to_string(),
+    })?;
+    Ok(Some(value))
 }
 
-impl<'a> CheckpointLedger<'a> {
-    /// Open a ledger for one plan, adopting whatever an interrupted apply
-    /// of the SAME plan already completed.
-    pub(crate) fn open(
-        state: &'a DeployState,
-        home: &'a DeploymentHome,
-        plan_hash: &str,
-    ) -> Result<Self, DeployError> {
-        let record = state
-            .read_checkpoints(home, plan_hash)?
-            .unwrap_or_else(|| CheckpointRecord {
-                schema: CHECKPOINT_EPOCH,
-                plan_hash: plan_hash.to_owned(),
-                completed: Vec::new(),
-            });
-        Ok(Self {
-            state,
-            home,
-            record,
-        })
-    }
-
-    /// Record that one completed operation completed.
-    ///
-    /// The provider-facing half of the ledger. Its callers name the
-    /// operation, not necessarily a receipted resource: the vibe-bin
-    /// provider checkpoints its content-addressed payload write under the
-    /// payload's own store identity even though §7.1.0 ruling 4 keeps the
-    /// payload out of the receipt's OWNED set. §7.2 asks apply to
-    /// "checkpoint completed operations", and the payload write is one.
-    pub(crate) fn completed(&mut self, resource: &str) -> Result<(), MechanismError> {
-        if self.record.completed.iter().any(|done| done == resource) {
-            return Ok(());
-        }
-        self.record.completed.push(resource.to_owned());
-        self.state
-            .write_checkpoints(self.home, &self.record)
-            .map_err(|error| MechanismError::DeployCheckpoint {
-                resource: resource.to_owned(),
-                reason: error.to_string(),
-            })
-    }
+/// One decoded receipt, held to the A2 behaviour cell's laws before any
+/// reader may act on it.
+pub(super) fn checked_receipt(receipt: DeployReceipt) -> Result<DeployReceipt, DeployError> {
+    validate_receipt(&receipt).map_err(|error| DeployError::RecordInvalid {
+        record: RECEIPT_FILE,
+        reason: error.to_string(),
+    })?;
+    Ok(receipt)
 }
 
 /// The stable id of one destination — the lock file's name stem.
@@ -528,6 +564,6 @@ fn digest_of(resource: &str) -> String {
 }
 
 /// One path in the forward-slashed spelling every refusal quotes.
-fn rendered(path: &Path) -> String {
+pub(super) fn rendered(path: &Path) -> String {
     path.display().to_string().replace('\\', "/")
 }

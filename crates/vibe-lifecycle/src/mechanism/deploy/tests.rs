@@ -90,11 +90,8 @@ fn the_deploy_builtin_row_now_plans_through_the_landed_provider() {
         "a plan mutates no destination",
     );
     assert!(
-        std::fs::read_dir(&state_home)
-            .expect("the planner opened its state home to read receipts")
-            .next()
-            .is_none(),
-        "and it recorded no deployment in it",
+        !state_home.exists(),
+        "and §6.3.1.5's no-create view left the state home absent entirely",
     );
 }
 
@@ -360,11 +357,8 @@ fn plan_mode_calls_only_the_plan_verb_and_mutates_nothing() {
         "a plan mutates no destination",
     );
     assert!(
-        std::fs::read_dir(&state_home)
-            .expect("the state home is readable")
-            .next()
-            .is_none(),
-        "and it writes no deployment state",
+        !state_home.exists(),
+        "and it writes no deployment state — not even the state home itself",
     );
 }
 

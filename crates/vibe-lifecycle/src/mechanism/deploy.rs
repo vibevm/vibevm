@@ -37,17 +37,23 @@ use std::path::Path;
 use specmark::spec;
 use vibe_core::manifest::{DeployTarget, ExtensionHandler};
 use vibe_extension_registry::{MechanismSelection, SelectionStep, resolve_mechanism};
-use vibe_wire::generated::deploy_receipt::{DeployIdentity, DeployReceipt, ReceiptStatus};
+use vibe_wire::generated::deploy_receipt::{DeployIdentity, DeployReceipt};
 
 pub(crate) mod artifact;
 pub(crate) mod error;
+pub(crate) mod inverse;
+pub(crate) mod ledger;
 pub(crate) mod model;
+pub(crate) mod observation;
+pub(crate) mod ownership;
 pub(crate) mod plan;
 pub(crate) mod preplan;
 pub(crate) mod protocol;
 pub(crate) mod saga;
+pub(crate) mod sidecar;
 pub(crate) mod state;
 pub(crate) mod transaction;
+pub(crate) mod view;
 
 pub use error::DeployError;
 pub use model::{
@@ -60,7 +66,11 @@ pub use plan::plan_deploy_targets;
 use super::order::{GraphNode, OrderFault, Unresolved, dag_order};
 use super::vibebin::VibeBinProvider;
 use super::{BUILTIN_VIBE_BIN_NAME, DeployProvider, DeployTargetRequest};
+// The inverse path lives in its own cell and is re-exported here, so
+// `undeploy_targets` and every test still spell it one way.
+pub(crate) use inverse::undeploy_resolved;
 use model::row;
+use ownership::{ownership_of, refuse_changed_ownership, refuse_foreign_ownership};
 use preplan::{Preplanned, preplan};
 use saga::unwind;
 use state::{DeployState, DeploymentHome};
@@ -92,89 +102,6 @@ pub fn undeploy_targets(
 ) -> Result<Vec<RemovalOutcome>, DeployError> {
     let resolved = resolve_selection(execution)?;
     undeploy_resolved(execution, &resolved)
-}
-
-/// Reverse one ALREADY-resolved selection.
-fn undeploy_resolved(
-    execution: &DeployExecution<'_>,
-    resolved: &[Selected<'_>],
-) -> Result<Vec<RemovalOutcome>, DeployError> {
-    // Reverse dependency order: a target is removed before the target it
-    // depends on, exactly as the saga's rollback runs.
-    let resolved: Vec<&Selected<'_>> = resolved.iter().rev().collect();
-    let state = DeployState::open(execution.state_home)?;
-    let identity = identity_of(execution);
-    let mut outcomes = Vec::with_capacity(resolved.len());
-    for selected in resolved {
-        // §6.3.0.9's capability has no inverse yet, and this is where the
-        // gap would BITE rather than where it is convenient to mention.
-        //
-        // A reference owner's receipt records its logical owned member
-        // (`…/opencode.json#mcp/foo`); the PHYSICAL destination it locked
-        // while editing (`…/opencode.json`) lives only in the plan, which
-        // no longer exists at undeploy time. Locking the receipt's logical
-        // member would therefore take a lock nobody else takes, and a
-        // sibling entry's deployment could edit the same document at the
-        // same moment. Re-deriving the physical destination by parsing the
-        // resource string would be a second grammar for an identity the
-        // engine never wrote down.
-        //
-        // So this refuses, by name, until the engine has a DURABLE record
-        // from a receipt to its lock resources. An ordinary provider —
-        // every provider that exists today — locks exactly what it owns and
-        // is untouched by this arm.
-        if selected.provider.descriptor().reference_ownership {
-            return Err(DeployError::ReferenceOwnedRemovalNotLandable {
-                target: selected.target.id.clone(),
-                pin: selected.pin.clone(),
-            });
-        }
-        let home = home_of(execution, &selected.target.id);
-        let receipt = state
-            .read_receipt(&home)?
-            .ok_or_else(|| DeployError::NoReceipt {
-                target: selected.target.id.clone(),
-            })?;
-        let resources: Vec<String> = receipt
-            .resources
-            .iter()
-            .map(|owned| owned.resource.clone())
-            .collect();
-        let _guards = state.lock_destinations(&resources)?;
-        let request = DeployTargetRequest {
-            target: selected.target,
-            profile: &execution.selection.profile,
-            project_root: execution.project_root,
-            settings_root: execution.settings_root,
-            user_home: execution.user_home,
-            clients: execution.clients,
-            artifact: None,
-            staging: None,
-        };
-        let transaction = Transaction {
-            state: &state,
-            home: &home,
-            identity: &identity,
-            provider_pin: &selected.pin,
-            scope: selected.provider.descriptor().scope(),
-            created_at: execution.created_at,
-        };
-        // `None`: this is UNDEPLOY, not the saga — the receipt-owned files
-        // are removed, never "restored" to a generation nobody asked for.
-        let removed = transaction.remove(
-            selected.provider.as_ref(),
-            &request,
-            &receipt,
-            None,
-            ReceiptStatus::RolledBack,
-        )?;
-        outcomes.push(RemovalOutcome {
-            target: selected.target.id.clone(),
-            provider: selected.pin.clone(),
-            removed,
-        });
-    }
-    Ok(outcomes)
 }
 
 /// Every deployment this machine's state home records, in deployment-id
@@ -316,15 +243,34 @@ pub(crate) fn apply_selection(
     if resolved.is_empty() {
         return Ok(Vec::new());
     }
-    // Every artifact resolved, every provider planned and the whole
-    // owned/lock resource set judged — before a single destination byte.
+    // Every artifact resolved, every provider planned, every prior receipt
+    // read and the whole owned/lock resource set judged — before a single
+    // destination byte, and before the state home is even created.
     let prepared = preplan(execution, resolved)?;
+    apply_prepared(execution, resolved, &prepared)
+}
+
+/// Apply what the pre-apply epoch already prepared.
+///
+/// Separated from [`apply_selection`] so §6.3.1.1's recheck is provable:
+/// the window it closes is *between* preplanning and applying, and a
+/// function that owns both ends has no such window a test can open. Every
+/// shipped caller still goes through [`apply_selection`], which composes the
+/// two in the only order the law admits.
+pub(crate) fn apply_prepared(
+    execution: &DeployExecution<'_>,
+    resolved: &[Selected<'_>],
+    prepared: &[Preplanned],
+) -> Result<Vec<DeployOutcome>, DeployError> {
+    if resolved.is_empty() {
+        return Ok(Vec::new());
+    }
     let state = DeployState::open(execution.state_home)?;
     let identity = identity_of(execution);
     let mut outcomes: Vec<DeployOutcome> = Vec::with_capacity(resolved.len());
     // What has been applied so far, newest last — the saga's stack.
     let mut applied: Vec<(usize, DeployReceipt)> = Vec::new();
-    for ((index, selected), planned) in resolved.iter().enumerate().zip(&prepared) {
+    for ((index, selected), planned) in resolved.iter().enumerate().zip(prepared) {
         match apply_one(execution, &state, &identity, selected, planned) {
             Ok((outcome, receipt)) => {
                 applied.push((index, receipt));
@@ -340,13 +286,16 @@ pub(crate) fn apply_selection(
     Ok(outcomes)
 }
 
-/// One target's whole apply: lock the PREPLANNED destinations, transact.
+/// One target's whole apply: lock the deployment, lock the PREPLANNED and
+/// recorded destinations, re-read prior ownership, transact.
 ///
 /// The artifact and the plan arrive from the pre-apply epoch and are not
 /// recomputed (§6.3.0.10: "Reuse the resulting values during apply; do not
 /// resolve or plan a second time"). What is still this function's is the
-/// lock — taken over exactly the identities the judged plan named — and the
-/// staging directory, which is apply-time scratch by definition.
+/// lock ORDER — §6.3.1.3's deployment-state lock, then the canonical union
+/// of the current plan's, the committed and the pending destinations — the
+/// §6.3.1.1 recheck those locks make meaningful, and the staging directory,
+/// which is apply-time scratch by definition.
 fn apply_one(
     execution: &DeployExecution<'_>,
     state: &DeployState,
@@ -358,10 +307,25 @@ fn apply_one(
     let artifact = &planned.artifact;
     let plan = &planned.plan;
     let descriptor = selected.provider.descriptor();
+    // §6.3.1.3, in the order it states: the stable deployment-state lock
+    // FIRST, so every sidecar, intent and receipt transition below is this
+    // run's alone.
+    let _deployment = state.lock_deployment(&home)?;
+    // Prior ownership is the first state judgement under that lock. In
+    // particular it precedes the legacy pending-binding repair below: a
+    // plan made against a receipt that changed may not write even an
+    // engine-owned sidecar before it refuses.
+    refuse_changed_ownership(state, &home, selected, planned)?;
+    // Then the durable bindings — including the typed fallback an
+    // interrupted ORDINARY deployment needs before its recovery may take
+    // the physical locks its journal implies.
+    let bindings = sidecar::settle_bindings(state, &home, ownership_of(selected))?;
     // §6.3.0.9: the locks are the plan's PHYSICAL set, which for every
     // ordinary provider is its owned set and for a reference owner is the
-    // shared document it holds while it edits its own member.
-    let _guards = state.lock_destinations(&plan.lock_resources)?;
+    // shared document it holds while it edits its own member — UNION the
+    // committed and pending bindings, because an update reconciles a new
+    // destination set while the previous one is still deployed.
+    let _guards = state.lock_destinations(&sidecar::union(plan, &bindings))?;
     let resources: Vec<String> = plan
         .resources
         .iter()
@@ -380,6 +344,7 @@ fn apply_one(
         settings_root: execution.settings_root,
         user_home: execution.user_home,
         clients: execution.clients,
+        prior_receipt: planned.prior_receipt.as_ref(),
         artifact: Some(artifact),
         staging: staging.as_deref(),
     };
@@ -418,66 +383,6 @@ fn apply_one(
         },
         receipt,
     ))
-}
-
-/// §7.2's ownership law: "A collision with state owned by another
-/// deployment is an error."
-///
-/// The exception §7.2 grants — two deployments sharing an identical
-/// content-addressed payload under a provider that supports reference
-/// ownership — needs a descriptor member no provider declares at this
-/// atom, so the refusal here is unconditional and the exception arrives
-/// with the first provider that can honestly claim it.
-///
-/// The comparison goes through the SAME
-/// [`path_identity_key`](vibe_safefs::path_identity_key) §6.3.0.10's
-/// pre-apply judgement uses, and for the same reason: `bin/Helper` and
-/// `bin/helper` are one file on the hosts this project supports, so a
-/// byte-equality test would let a second deployment claim a path a
-/// recorded one already owns. This is the ACROSS-RUNS half of that law —
-/// the pre-apply judgement covers one selection, this covers everything the
-/// state home already remembers.
-///
-/// Both exact spellings survive into the evidence, because the two are what
-/// an operator has to reconcile: the one this target planned, and the one a
-/// prior receipt recorded.
-fn refuse_foreign_ownership(
-    state: &DeployState,
-    home: &DeploymentHome,
-    target: &str,
-    resources: &[String],
-) -> Result<(), DeployError> {
-    let planned: std::collections::BTreeMap<String, &String> = resources
-        .iter()
-        .map(|resource| (vibe_safefs::path_identity_key(resource), resource))
-        .collect();
-    for (deployment, receipt) in state.receipts()? {
-        if deployment == home.id() || receipt.status == ReceiptStatus::RolledBack {
-            continue;
-        }
-        let clashing: Vec<String> = receipt
-            .resources
-            .iter()
-            .filter_map(|owned| {
-                let identity = vibe_safefs::path_identity_key(&owned.resource);
-                planned.get(&identity).map(|mine| {
-                    if **mine == owned.resource {
-                        (*mine).clone()
-                    } else {
-                        format!("`{mine}` (recorded as `{}`)", owned.resource)
-                    }
-                })
-            })
-            .collect();
-        if !clashing.is_empty() {
-            return Err(DeployError::OwnershipCollision {
-                target: target.to_owned(),
-                owner: format!("{} ({})", receipt.target, deployment),
-                resources: clashing.join(", "),
-            });
-        }
-    }
-    Ok(())
 }
 
 /// This deployment's own directory inside the state home.
@@ -577,3 +482,17 @@ mod lock_tests;
 #[cfg(test)]
 #[path = "deploy/saga_tests.rs"]
 mod saga_tests;
+
+// §6.3.1's own three laws, one cell each: the injected prior ownership, the
+// durable lock sidecar's crash windows, and the inverse that reads it.
+#[cfg(test)]
+#[path = "deploy/prior_receipt_tests.rs"]
+mod prior_receipt_tests;
+
+#[cfg(test)]
+#[path = "deploy/sidecar_tests.rs"]
+mod sidecar_tests;
+
+#[cfg(test)]
+#[path = "deploy/inverse_tests.rs"]
+mod inverse_tests;

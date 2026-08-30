@@ -31,11 +31,14 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARG
 
 use std::collections::BTreeMap;
 
-use super::Selected;
+use vibe_wire::generated::deploy_receipt::DeployReceipt;
+
 use super::artifact::resolve_artifact;
 use super::error::DeployError;
 use super::model::DeployExecution;
 use super::protocol::{DeployPlan, ResolvedDeployArtifact};
+use super::view::DeployStateView;
+use super::{Selected, home_of};
 use crate::mechanism::DeployTargetRequest;
 
 /// One selected target, planned — the value apply reuses instead of
@@ -50,6 +53,11 @@ pub(crate) struct Preplanned {
     pub(crate) artifact: ResolvedDeployArtifact,
     /// The plan its provider produced, already judged.
     pub(crate) plan: DeployPlan,
+    /// The prior receipt this plan was made against — §6.3.1.1's injected
+    /// ownership, OWNED here rather than borrowed because it has to outlive
+    /// the read view that produced it and be compared, byte for byte,
+    /// against whatever apply finds under the deployment-state lock.
+    pub(crate) prior_receipt: Option<DeployReceipt>,
 }
 
 /// Prepare every selected target, then judge the whole resource set.
@@ -60,9 +68,14 @@ pub(crate) fn preplan(
     execution: &DeployExecution<'_>,
     resolved: &[Selected<'_>],
 ) -> Result<Vec<Preplanned>, DeployError> {
+    // §6.3.1.5: the prior receipts are read through the NO-CREATE view, so
+    // a pre-apply epoch that refuses — or a `--plan` that never applies —
+    // leaves an absent state home absent.
+    let state = DeployStateView::open(execution.state_home)?;
     let mut prepared = Vec::with_capacity(resolved.len());
     for selected in resolved {
         let artifact = resolve_artifact(execution.project_root, selected.target)?;
+        let prior_receipt = state.read_receipt(&home_of(execution, &selected.target.id))?;
         // The planning request carries no staging directory: staging is an
         // apply-time scratch, and a pre-apply epoch that offered one would
         // be handing a pure operation somewhere to write.
@@ -73,12 +86,17 @@ pub(crate) fn preplan(
             settings_root: execution.settings_root,
             user_home: execution.user_home,
             clients: execution.clients,
+            prior_receipt: prior_receipt.as_ref(),
             artifact: Some(&artifact),
             staging: None,
         };
         let plan = selected.provider.plan(&request)?;
         validate_lock_set(selected, &plan)?;
-        prepared.push(Preplanned { artifact, plan });
+        prepared.push(Preplanned {
+            artifact,
+            plan,
+            prior_receipt,
+        });
     }
     let participants: Vec<Participant<'_, '_>> = resolved
         .iter()

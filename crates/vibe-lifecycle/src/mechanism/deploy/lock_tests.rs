@@ -24,14 +24,19 @@ fn lock_name_of(resource: &str) -> String {
     format!("{:x}.lock", sha2::Digest::finalize(digest))
 }
 
-/// Every lock file this state home currently holds, sorted.
+/// Every per-DESTINATION lock file this state home currently holds, sorted.
+///
+/// §6.3.1.3's stable deployment-state lock lives in the same directory under
+/// its own `deployment-` prefix and is a different family entirely — one per
+/// deployment rather than one per destination — so it is filtered out here
+/// and asserted where it belongs.
 fn lock_files(state_home: &std::path::Path) -> Vec<String> {
     let mut names: Vec<String> = std::fs::read_dir(state_home.join(".vibe"))
         .map(|entries| {
             entries
                 .filter_map(Result::ok)
                 .filter_map(|entry| entry.file_name().into_string().ok())
-                .filter(|name| name.ends_with(".lock"))
+                .filter(|name| name.ends_with(".lock") && !name.starts_with("deployment-"))
                 .collect()
         })
         .unwrap_or_default();
@@ -230,14 +235,21 @@ fn staging_is_offered_only_where_the_destination_supports_atomic_replacement() {
         home.staging().is_dir(),
         "the engine prepared the staging directory it offered",
     );
-    // One lock per destination, under the state home's own lock directory.
-    let locks: Vec<String> = std::fs::read_dir(state_home.join(".vibe"))
-        .expect("the lock directory exists")
-        .filter_map(|entry| entry.ok())
-        .filter_map(|entry| entry.file_name().into_string().ok())
-        .collect();
+    // One lock per destination, under the state home's own lock directory —
+    // beside the deployment's own state lock, which is a different family.
+    let locks = lock_files(&state_home);
     assert_eq!(locks.len(), 1, "one destination, one lock: {locks:?}");
-    assert!(locks[0].ends_with(".lock"), "{locks:?}");
+    assert_eq!(locks[0], lock_name_of("bin/helper"), "{locks:?}");
+    assert!(
+        std::fs::read_dir(state_home.join(".vibe"))
+            .expect("the lock directory exists")
+            .filter_map(Result::ok)
+            .any(|entry| entry
+                .file_name()
+                .to_string_lossy()
+                .starts_with(&format!("deployment-{}", home.id()))),
+        "and §6.3.1.3's stable deployment-state lock is beside it",
+    );
 
     // The other posture: a provider that never declared atomic
     // replacement is not handed a staging directory at all.

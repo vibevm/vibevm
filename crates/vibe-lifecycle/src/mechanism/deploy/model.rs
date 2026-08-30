@@ -412,7 +412,7 @@ impl DeployStatus {
         }
     }
 
-    const fn of(status: &ReceiptStatus) -> Self {
+    pub(crate) const fn of(status: &ReceiptStatus) -> Self {
         match status {
             ReceiptStatus::Applied => Self::Applied,
             ReceiptStatus::Verified => Self::Verified,

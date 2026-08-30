@@ -18,7 +18,7 @@ use std::path::{Path, PathBuf};
 
 use vibe_core::manifest::{ArtifactKind, DeployTarget};
 use vibe_wire::generated::artifact_record::ArtifactShape;
-use vibe_wire::generated::deploy_receipt::DestinationScope;
+use vibe_wire::generated::deploy_receipt::{DeployReceipt, DestinationScope};
 
 use super::model::ClientExecutables;
 use super::state::CheckpointLedger;
@@ -198,7 +198,11 @@ pub(crate) const fn destination_scope(effect: EffectClass) -> DestinationScope {
 ///   client CLI is not a path this engine may go looking for. Both arrive
 ///   borrowed from the execution the surface built, so a provider that
 ///   wanted to resolve either would have to write the ambient call itself
-///   — which is what makes its absence checkable rather than promised.
+///   — which is what makes its absence checkable rather than promised;
+/// - `prior_receipt` is §6.3.1.1's injected prior ownership, and it is the
+///   same law once more: the ENGINE reads its own state home and hands the
+///   answer DOWN. A provider that had to look would be reading engine
+///   state, which §3.2 gives to the engine alone.
 #[derive(Debug, Clone, Copy)]
 pub(crate) struct DeployTargetRequest<'a> {
     pub(crate) target: &'a DeployTarget,
@@ -228,6 +232,29 @@ pub(crate) struct DeployTargetRequest<'a> {
         reason = "the provider-facing request; the client deploy providers are its first readers"
     )]
     pub(crate) clients: &'a ClientExecutables,
+    /// The receipt this deployment's PRIOR generation left, as the engine
+    /// read it — §6.3.1.1's "Prior ownership is injected engine evidence".
+    ///
+    /// > "`DeployTargetRequest` carries the prior receipt the engine read
+    /// > without creating the state home. A provider may update a present
+    /// > destination only when that receipt owns the exact physical/logical
+    /// > resource and the observed digest still matches it; an absent
+    /// > receipt never authorises an identical foreign occupant."
+    ///
+    /// It is a BORROWED read, never state access: the provider cannot write
+    /// it, cannot ask for a different one, and cannot tell where it came
+    /// from. `None` is the honest "this deployment has no prior generation"
+    /// — including on a machine whose state home does not exist yet, which
+    /// the read-only view answers without creating one.
+    ///
+    /// The same value reaches `plan` in both `--plan` and preapply, and
+    /// apply re-reads it under the deployment-state lock before writing, so
+    /// no provider ever plans against ownership that changed underneath it.
+    #[allow(
+        dead_code,
+        reason = "the provider-facing request; the client deploy providers are its first readers"
+    )]
+    pub(crate) prior_receipt: Option<&'a DeployReceipt>,
     /// The artifact this target reconciles, proven from its record.
     pub(crate) artifact: Option<&'a ResolvedDeployArtifact>,
     /// The engine-owned staging directory, when the provider takes one.

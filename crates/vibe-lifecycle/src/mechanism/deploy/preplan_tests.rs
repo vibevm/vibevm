@@ -70,8 +70,9 @@ fn a_later_plan_refusal_leaves_the_first_target_byte_absent() {
         "the first target's destination is byte-absent",
     );
     assert!(
-        !state_home.exists() || is_empty(&state_home),
-        "no deployment state was written at all",
+        !state_home.exists(),
+        "no deployment state was written at all — §6.3.1.5's no-create view \
+         reads prior ownership without creating the home it reads from",
     );
 }
 
@@ -411,8 +412,8 @@ fn the_planner_refuses_an_alias_collision_it_would_otherwise_promise() {
     assert!(!fixture.destination.path().join("bin/Helper").exists());
     assert!(!fixture.destination.path().join("bin/helper").exists());
     assert!(
-        !state_home.exists() || is_empty(&state_home),
-        "a read-only planner writes no deployment state, including when it refuses",
+        !state_home.exists(),
+        "a read-only planner creates no deployment state home, including when it refuses",
     );
 }
 
@@ -482,18 +483,24 @@ fn a_prior_receipt_owns_a_path_under_every_alias_of_it() {
     );
 }
 
-/// §6.3.0.9's capability has no inverse yet, and `undeploy` says so rather
-/// than taking the wrong lock.
+/// §6.3.0.9's capability HAS an inverse now, and this pin is its successor.
 ///
-/// A reference owner's receipt records its logical member; the physical
-/// destination it held while editing lives only in the plan, which is gone
-/// by undeploy time. Locking the logical member would take a lock no
-/// sibling entry contends on, so two removals could edit one document at
-/// once. The engine refuses, names the atom that must land the durable lock
-/// ledger, and — provably — never reaches the provider's `remove`.
+/// The R8-CLIENTS-FOUNDATION landing recorded the gap as an interim refusal:
+/// a reference owner's receipt records its logical member, the physical
+/// destination it held while editing lived only in the plan, and locking the
+/// member would have taken a lock no sibling entry contends on. §6.3.1.2's
+/// durable sidecar is exactly what that refusal named as its prerequisite,
+/// and it is landed — so the same scenario now reaches the provider's
+/// `remove` and really reverses. What the old test guarded is what this one
+/// still guards: this engine never removes from a lock it did not record.
+///
+/// Which lock it takes is proven from INSIDE `remove` in
+/// [`inverse_tests`](super::inverse_tests), because a lock file outlives its
+/// guard and only a probe can tell a held one from a released one. The claim
+/// here is the end-to-end half: the verb is reached and the member is gone.
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS")]
-fn a_reference_owner_cannot_be_undeployed_until_the_lock_ledger_lands() {
+fn a_reference_owner_is_reversed_through_its_recorded_lock_binding() {
     let fixture = Fixture::new("helper-bytes");
     let targets = [target("codex-entry", "helper.exe", &[])];
     let chosen = selection("local", &["codex-entry"]);
@@ -510,36 +517,28 @@ fn a_reference_owner_cannot_be_undeployed_until_the_lock_ledger_lands() {
     )
     .expect("the reference owner deploys");
 
-    let error = super::undeploy_resolved(
+    let removals = super::undeploy_resolved(
         &execution,
         &[selected(
             &targets[0],
             Box::new(Witness(Rc::clone(&provider))),
         )],
     )
-    .expect_err("a reference-owned deployment cannot be reversed yet");
+    .expect("a sidecar-backed reference owner reverses");
 
-    let DeployError::ReferenceOwnedRemovalNotLandable { target, pin } = &error else {
-        panic!("expected the interim removal refusal, got: {error}");
-    };
-    assert_eq!(target, "codex-entry");
-    assert_eq!(pin, super::support::FIXTURE_PIN);
+    assert_eq!(removals[0].removed, ["shared.json#alpha"]);
     assert!(
-        error.to_string().contains("R8-CLIENTS-DEPLOY"),
-        "the refusal names the atom that must land the durable lock ledger: {error}",
-    );
-    assert!(
-        !provider.calls().contains(&"remove".to_owned()),
-        "the provider's `remove` was never reached: {:?}",
+        provider.calls().contains(&"remove".to_owned()),
+        "the provider's `remove` really ran: {:?}",
         provider.calls(),
     );
     assert!(
-        fixture
+        !fixture
             .destination
             .path()
             .join("shared.json#alpha")
             .exists(),
-        "and the deployed member is still there",
+        "and the deployed member is gone",
     );
 }
 
@@ -563,14 +562,4 @@ fn receipt_path(state_home: &std::path::Path) -> std::path::PathBuf {
         })
         .expect("one deployment directory");
     entry.path().join("receipt.json")
-}
-
-/// Whether a directory holds no deployment — the lock directory the
-/// safe-filesystem primitive creates is infrastructure, not state.
-fn is_empty(root: &std::path::Path) -> bool {
-    std::fs::read_dir(root).is_ok_and(|entries| {
-        entries
-            .flatten()
-            .all(|entry| entry.file_name().to_string_lossy().starts_with('.'))
-    })
 }

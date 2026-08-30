@@ -31,6 +31,13 @@
 //! this engine inventing an intent. The stale journal is retired, the fact
 //! is reported, and the new plan applies over a destination the digest law
 //! just proved is at either its prior or its old desired state.
+//!
+//! §6.3.1.2 adds ONE record to that order and does not otherwise disturb it:
+//! the durable lock sidecar's PENDING binding, published and read back
+//! before the intent — and therefore before any external write could have
+//! begun — and promoted to COMMITTED only after the receipt is durable. Each
+//! of the four settlements below moves exactly one slot of it, and every
+//! transition runs under the deployment-state lock this cell's caller holds.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS");
 
@@ -44,7 +51,9 @@ use vibe_wire::generated::deploy_receipt::{
 };
 
 use super::error::DeployError;
-use super::protocol::{DeployPlan, ObservedResource, destination_scope};
+use super::observation::{divergent, drifted, mismatched, prior_digest};
+use super::protocol::{DeployPlan, destination_scope};
+use super::sidecar;
 use super::state::{CheckpointLedger, DeployState, DeploymentHome};
 use crate::mechanism::record::sanitize;
 use crate::mechanism::{DeployProvider, DeployTargetRequest, EffectClass};
@@ -133,7 +142,22 @@ impl Transaction<'_> {
         let generation = prior
             .as_ref()
             .map_or(0, |receipt| receipt.generation.saturating_add(1));
-        // 1 — the durable intent, ATOMICALLY, before the first external
+        // 1 — the PENDING lock binding, published and read back BEFORE the
+        // intent. §6.3.1.2's ordering is what makes a crash between the two
+        // safe in one direction only: a pending binding with no intent
+        // proves no external write can have begun, so the next run may
+        // replace it — while an intent with no binding would leave a
+        // reference owner's physical destinations unrecorded. The COMMITTED
+        // binding is retained throughout, so the inverse lock of the
+        // generation still deployed survives the whole update.
+        sidecar::stage_pending(
+            self.state,
+            self.home,
+            generation,
+            &plan_hash,
+            &plan.lock_resources,
+        )?;
+        // 2 — the durable intent, ATOMICALLY, before the first external
         // write. Every planned resource carries the digest the plan wants
         // and the digest the prior receipt recorded, because recovery
         // compares against exactly those two and nothing else.
@@ -160,7 +184,7 @@ impl Transaction<'_> {
             prior_generation: prior.as_ref().map(|receipt| receipt.generation),
         };
         self.state.write_intent(self.home, &intent)?;
-        // 2 — apply, checkpointing each completed operation. The
+        // 3 — apply, checkpointing each completed operation. The
         // provider's own freshness fingerprint is taken first and rides
         // into the receipt's evidence: §3.2 lists `fingerprint` as one of
         // the six operations, and an operation nothing ever calls is a
@@ -168,13 +192,16 @@ impl Transaction<'_> {
         let fingerprint = provider.fingerprint(request, plan)?;
         let mut ledger = CheckpointLedger::open(self.state, self.home, &plan_hash)?;
         let report = provider.apply(request, plan, &mut ledger)?;
-        // 3 — INDEPENDENT verify, then the finalized receipt, then the
-        // intent retires.
+        // 4 — INDEPENDENT verify, the finalized receipt, the promotion of
+        // this generation's pending binding, then the intent retires.
         let mut applied = self.finalize(
             provider,
             request,
             plan,
-            generation,
+            Generation {
+                number: generation,
+                plan_hash: &plan_hash,
+            },
             report.prior_state_handle,
             &format!(
                 "{}; provider fingerprint {} over {}",
@@ -187,6 +214,19 @@ impl Transaction<'_> {
     }
 
     /// Settle an unretired intent journal, whatever it turns out to be.
+    ///
+    /// Each of the three outcomes moves exactly one sidecar slot, and which
+    /// one it moves is §6.3.1.3's own sentence: a benign window PROMOTES the
+    /// matching pending binding (the receipt is already durable, so the
+    /// crash was after finalisation), a stale journal CLEARS only its own
+    /// pending generation, and a real recovery finalises through
+    /// [`Self::finalize`], which promotes.
+    ///
+    /// The matching pending binding a recovery runs under is guaranteed by
+    /// the caller: [`settle_bindings`](super::sidecar::settle_bindings)
+    /// materialises the ordinary provider's typed fallback and refuses a
+    /// reference owner outright, BEFORE the physical locks this settlement
+    /// runs inside were taken.
     fn settle(
         &self,
         provider: &dyn DeployProvider,
@@ -203,6 +243,12 @@ impl Transaction<'_> {
         if let Some(receipt) = self.state.read_receipt(self.home)?
             && receipt.generation == intent.target.generation
         {
+            sidecar::promote(
+                self.state,
+                self.home,
+                intent.target.generation,
+                &intent.plan_hash,
+            )?;
             self.state.retire_intent(self.home)?;
             return Ok(Settled::Continue(Settlement::BenignRetire));
         }
@@ -223,6 +269,14 @@ impl Transaction<'_> {
             });
         }
         if intent.plan_hash != plan_hash {
+            // Only THIS journal's pending generation goes; the committed
+            // binding describes a deployment that is still deployed.
+            sidecar::clear_pending(
+                self.state,
+                self.home,
+                intent.target.generation,
+                &intent.plan_hash,
+            )?;
             self.state.retire_intent(self.home)?;
             return Ok(Settled::Continue(Settlement::StaleRetired));
         }
@@ -236,7 +290,10 @@ impl Transaction<'_> {
             provider,
             request,
             plan,
-            intent.target.generation,
+            Generation {
+                number: intent.target.generation,
+                plan_hash: &intent.plan_hash,
+            },
             report.prior_state_handle,
             &report.evidence,
             true,
@@ -244,14 +301,15 @@ impl Transaction<'_> {
         Ok(Settled::Completed(applied))
     }
 
-    /// Verify independently, finalise the receipt, retire the intent.
+    /// Verify independently, finalise the receipt, promote this
+    /// generation's pending lock binding, retire the intent.
     #[allow(clippy::too_many_arguments, reason = "one §7.2 step's named inputs")]
     fn finalize(
         &self,
         provider: &dyn DeployProvider,
         request: &DeployTargetRequest<'_>,
         plan: &DeployPlan,
-        generation: u32,
+        generation: Generation<'_>,
         prior_state_handle: Option<String>,
         evidence: &str,
         recovered: bool,
@@ -280,7 +338,7 @@ impl Transaction<'_> {
         let receipt = self.receipt(
             request,
             plan,
-            generation,
+            generation.number,
             &owned,
             prior_state_handle.clone(),
             evidence,
@@ -293,6 +351,18 @@ impl Transaction<'_> {
         // really did touch the destination, and a state home that stayed
         // silent about it would leave that mutation with no owner.
         self.state.write_receipt(self.home, &receipt)?;
+        // And for the same reason the promotion is unconditional: a failed
+        // receipt owns whatever independent verify observed, so the inverse
+        // that removes it must lock the physical destinations this
+        // generation held. Promotion follows the receipt and never precedes
+        // it — a committed binding without a receipt would claim a
+        // deployment nobody recorded.
+        sidecar::promote(
+            self.state,
+            self.home,
+            generation.number,
+            generation.plan_hash,
+        )?;
         self.state.retire_intent(self.home)?;
         if !mismatched.is_empty() {
             return Err(DeployError::VerifyMismatch {
@@ -301,7 +371,7 @@ impl Transaction<'_> {
             });
         }
         Ok(AppliedDeployment {
-            generation,
+            generation: generation.number,
             reversible: plan.reversible,
             resources: owned,
             prior_state_handle,
@@ -327,6 +397,13 @@ impl Transaction<'_> {
     /// rollback passes the receipt's handle (restore what the failed
     /// generation displaced); `undeploy` passes `None` (remove what the
     /// receipt owns, whatever an earlier generation once held).
+    ///
+    /// §6.3.1.3's last sentence is the order at the end: "Successful
+    /// inverse clears committed ownership after the rolled-back receipt is
+    /// durable." A failure — the drift refusal, the provider's own, or the
+    /// receipt write — returns before the clear, so the committed binding
+    /// survives and the destination it names is still locked by whoever
+    /// tries again.
     pub(crate) fn remove(
         &self,
         provider: &dyn DeployProvider,
@@ -369,6 +446,7 @@ impl Transaction<'_> {
             report.evidence,
         )));
         self.state.write_receipt(self.home, &reversed)?;
+        sidecar::clear_committed(self.state, self.home, receipt.generation)?;
         Ok(report.removed)
     }
 
@@ -445,6 +523,18 @@ enum Settled {
     Continue(Settlement),
 }
 
+/// The generation one finalisation belongs to, and the plan that opened it.
+///
+/// The two travel together because every finalisation does two things with
+/// them at once — stamps a receipt and promotes a lock binding — and a
+/// promotion keyed on a generation without its plan hash would adopt a
+/// pending binding some other plan left behind.
+#[derive(Debug, Clone, Copy)]
+struct Generation<'a> {
+    number: u32,
+    plan_hash: &'a str,
+}
+
 /// One plan's hash — the identity the intent journal and its checkpoint
 /// ledger join on.
 ///
@@ -452,6 +542,14 @@ enum Settled {
 /// changes invalidate the target even when its logical mechanism name did
 /// not change"), and the resources in their planned order, so a plan that
 /// touches the same set in a different order is a different plan.
+///
+/// §6.3.1.3: "The deploy plan hash binds `lock_resources` as well as owned
+/// resources." A LOCK-ONLY change is a different plan, and it has to be: the
+/// pending binding and the checkpoint ledger both join on this hash, so two
+/// plans that own the same resources while locking different physical
+/// destinations would otherwise share one binding — and a recovery would run
+/// under the wrong document's lock. The two lists get DISTINCT frames, so a
+/// resource moving between them changes the hash rather than cancelling out.
 pub(crate) fn plan_hash(
     request: &DeployTargetRequest<'_>,
     provider_pin: &str,
@@ -478,75 +576,9 @@ pub(crate) fn plan_hash(
         hash.update(b"\x00");
         hash.update(planned.desired_digest.as_bytes());
     }
+    for locked in &plan.lock_resources {
+        hash.update(b"\x00lock\x00");
+        hash.update(locked.as_bytes());
+    }
     format!("{:x}", hash.finalize())
-}
-
-/// The prior receipt's digest for one resource, when it owned it.
-fn prior_digest(prior: Option<&DeployReceipt>, resource: &str) -> Option<String> {
-    prior?
-        .resources
-        .iter()
-        .find(|owned| owned.resource == resource)
-        .map(|owned| owned.post_digest.clone())
-}
-
-/// §7.2's third-digest test, as a set.
-///
-/// A resource is acceptable when what is observed is the desired digest
-/// (already rolled forward) or the prior one (never touched). Absence
-/// counts as the prior state only when there WAS no prior digest — a
-/// resource the deployment was going to create. Everything else is the
-/// third digest, and every one of them is named.
-fn divergent(intent: &DeployIntent, observed: &[ObservedResource]) -> Vec<String> {
-    let mut diverged = Vec::new();
-    for planned in &intent.resources {
-        let found = observed
-            .iter()
-            .find(|resource| resource.resource == planned.resource)
-            .and_then(|resource| resource.digest.as_deref());
-        let acceptable = match found {
-            Some(digest) => {
-                digest == planned.desired_digest || planned.prior_digest.as_deref() == Some(digest)
-            }
-            None => planned.prior_digest.is_none(),
-        };
-        if !acceptable {
-            diverged.push(planned.resource.clone());
-        }
-    }
-    diverged
-}
-
-/// Which planned resources independent verify did NOT find at the digest
-/// the plan wanted.
-fn mismatched(plan: &DeployPlan, observed: &[ObservedResource]) -> Vec<String> {
-    let mut wrong = Vec::new();
-    for planned in &plan.resources {
-        let found = observed
-            .iter()
-            .find(|resource| resource.resource == planned.resource)
-            .and_then(|resource| resource.digest.as_deref());
-        if found != Some(planned.desired_digest.as_str()) {
-            wrong.push(planned.resource.clone());
-        }
-    }
-    wrong
-}
-
-/// Which receipt-owned resources changed after the deployment recorded
-/// them. Absence is not drift: the resource is already gone.
-fn drifted(receipt: &DeployReceipt, observed: &[ObservedResource]) -> Vec<String> {
-    let mut changed = Vec::new();
-    for owned in &receipt.resources {
-        let found = observed
-            .iter()
-            .find(|resource| resource.resource == owned.resource)
-            .and_then(|resource| resource.digest.as_deref());
-        if let Some(digest) = found
-            && digest != owned.post_digest
-        {
-            changed.push(owned.resource.clone());
-        }
-    }
-    changed
 }

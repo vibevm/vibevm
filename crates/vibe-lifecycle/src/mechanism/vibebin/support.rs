@@ -142,6 +142,14 @@ pub(crate) fn target(id: &str, artifact: &str, config_text: Option<&str>) -> Dep
 /// name nothing: this provider reads neither, and a fixture that handed it
 /// the operator's real home or a real client binary would make that fact
 /// unprovable.
+///
+/// `prior_receipt` is `None` for the same reason it is a request member at
+/// all: §6.3.1.1 makes prior ownership the ENGINE's read, and this suite
+/// drives the provider's own verbs directly, with no engine and therefore no
+/// state home to have read one from. `deploy:vibe-bin` owns whole files that
+/// no other deployment may hold, so it consults no prior receipt — the
+/// engine's `refuse_foreign_ownership` and the launcher collision law
+/// already answer the question the member exists for.
 pub(crate) fn request<'a>(
     world: &'a World,
     row: &'a DeployTarget,
@@ -155,6 +163,7 @@ pub(crate) fn request<'a>(
         settings_root: world.settings.path(),
         user_home: world.home.path(),
         clients: &world.clients,
+        prior_receipt: None,
         artifact,
         staging: staged.then(|| world.staging.path()),
     }

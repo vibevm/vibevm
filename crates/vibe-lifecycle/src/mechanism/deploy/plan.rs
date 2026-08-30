@@ -11,6 +11,16 @@
 //! destination at all. Staleness is computed from the ENGINE's own
 //! receipt and the provider's plan — never by observing the destination —
 //! so a plan cannot even accidentally become a probe.
+//!
+//! §6.3.1.5 closes the last hole in that claim: the receipts are read
+//! through the no-create [`DeployStateView`], never through
+//! `DeployState::open`. "Read-only" that created a directory tree under the
+//! operator's settings home was read-only about destinations and not about
+//! the engine's own state, and the difference is observable — a `--plan` on
+//! a machine that has never deployed anything now leaves it exactly as it
+//! found it.
+//!
+//! [`DeployStateView`]: super::view::DeployStateView
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS");
 
@@ -21,7 +31,7 @@ use super::error::DeployError;
 use super::model::{DeployExecution, DeployPlanReport, DeployResourcePlan};
 use super::preplan::{Participant, judge_resources, validate_lock_set};
 use super::protocol::{DeployPlan, ResolvedDeployArtifact};
-use super::state::DeployState;
+use super::view::DeployStateView;
 use super::{Selected, home_of, resolve_selection};
 use crate::mechanism::DeployTargetRequest;
 use vibe_wire::generated::deploy_receipt::{DeployReceipt, ReceiptStatus};
@@ -49,7 +59,7 @@ pub(crate) fn plan_resolved(
     execution: &DeployExecution<'_>,
     resolved: &[Selected<'_>],
 ) -> Result<Vec<DeployPlanReport>, DeployError> {
-    let state = DeployState::open(execution.state_home)?;
+    let state = DeployStateView::open(execution.state_home)?;
     let mut reports: Vec<DeployPlanReport> = Vec::with_capacity(resolved.len());
     // Which target ids are already known to be planned work, so a target
     // that depends on one is reported as planned too.
@@ -104,6 +114,11 @@ pub(crate) fn plan_resolved(
             settings_root: execution.settings_root,
             user_home: execution.user_home,
             clients: execution.clients,
+            // §6.3.1.5: "The same prior receipt value reaches provider plan
+            // in both `--plan` and preapply." One read, one value, two
+            // surfaces — so a provider cannot report one destination
+            // decision here and make another when it is applied.
+            prior_receipt: receipt.as_ref(),
             artifact: Some(&artifact),
             // A plan never stages: staging is an apply-time scratch, and
             // offering one here would be a directory a pure operation

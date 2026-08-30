@@ -18,6 +18,7 @@ use std::path::{Path, PathBuf};
 
 use sha2::{Digest, Sha256};
 use vibe_core::manifest::ArtifactKind;
+use vibe_wire::generated::deploy_receipt::DeployReceipt;
 
 use super::model::ClientExecutables;
 use super::protocol::{
@@ -90,6 +91,13 @@ pub(crate) struct FixtureProvider {
     /// value arrived instead. Recorded rather than asserted inline so a
     /// test can compare it against the temp roots it created.
     authority: RefCell<Vec<(PathBuf, ClientExecutables)>>,
+    /// The PRIOR RECEIPT this provider was handed, once per `plan`.
+    ///
+    /// §6.3.1.1's law is positive and the recording is the whole proof: an
+    /// engine that read its state home and then dropped the answer on the
+    /// floor is indistinguishable from one that never read it, unless the
+    /// value is observed where a provider would use it.
+    priors: RefCell<Vec<Option<DeployReceipt>>>,
 }
 
 impl FixtureProvider {
@@ -105,6 +113,7 @@ impl FixtureProvider {
             faults: Faults::default(),
             calls: RefCell::new(Vec::new()),
             authority: RefCell::new(Vec::new()),
+            priors: RefCell::new(Vec::new()),
         }
     }
 
@@ -151,6 +160,11 @@ impl FixtureProvider {
     /// The injected home and client executables this provider was handed.
     pub(crate) fn authority(&self) -> Vec<(PathBuf, ClientExecutables)> {
         self.authority.borrow().clone()
+    }
+
+    /// The prior receipts this provider was handed, one per `plan`.
+    pub(crate) fn priors(&self) -> Vec<Option<DeployReceipt>> {
+        self.priors.borrow().clone()
     }
 
     /// The absolute path one resource identity names.
@@ -277,6 +291,9 @@ impl DeployProvider for FixtureProvider {
         self.authority
             .borrow_mut()
             .push((request.user_home.to_path_buf(), request.clients.clone()));
+        self.priors
+            .borrow_mut()
+            .push(request.prior_receipt.cloned());
         if self.faults.fail_plan {
             return Err(MechanismError::PackageWrite {
                 target: request.target.id.clone(),

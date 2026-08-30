@@ -370,32 +370,87 @@ pub enum DeployError {
         locked: String,
     },
 
-    /// A reference-owning provider cannot be reversed yet, because the
-    /// engine keeps no durable record from a receipt to the PHYSICAL
-    /// destinations that deployment locked.
+    /// The stable per-deployment state lock could not be taken.
     ///
-    /// §6.3.0.9 admits a provider that owns a logical member of a shared
-    /// document while locking the document itself. §7.2's record list is
-    /// the OWNED set, so the physical lock exists only inside the plan —
-    /// and a plan does not survive to undeploy time. Removing from the
-    /// logical member alone would take a lock a sibling entry's deployment
-    /// does not contend on, so two removals could edit one document at
-    /// once; re-deriving the document by parsing the resource string would
-    /// invent a second grammar for an identity nobody wrote down.
-    ///
-    /// The honest answer is to refuse and say what has to land first. Every
-    /// provider that exists today locks exactly what it owns and never
-    /// reaches this arm.
+    /// Its own variant rather than [`Self::DestinationLock`] because the two
+    /// name different things and are repaired the same way only by
+    /// coincidence: one serialises a DEPLOYMENT's own records, the other a
+    /// destination two deployments may share.
     #[error(
-        "`undeploy` of [[deploy.target]] `{target}` refuses: its provider `{pin}` declares \
-         reference ownership, and this engine has no durable record of the physical destinations \
-         that deployment locked, so a removal could race a sibling entry of the same document \
-         (violates spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS; fix: this \
-         needs the engine-owned durable lock ledger that R8-CLIENTS-DEPLOY must land before a \
-         reference-owned deployment can be reversed — until then, reverse the client's own state \
-         through that client)"
+        "the deployment state lock `{path}` could not be taken: {reason} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS; fix: make \
+         the vibevm settings directory writable, then rerun — one lock per deployment serialises \
+         its intent, receipt and durable lock record, and the engine will not transition state it \
+         cannot hold)"
     )]
-    ReferenceOwnedRemovalNotLandable { target: String, pin: String },
+    DeploymentLock { path: String, reason: String },
+
+    /// §6.3.1.1: "Apply rechecks the same receipt under the
+    /// deployment-state lock before writing."
+    ///
+    /// A provider plans against the prior receipt the engine handed it. If
+    /// that receipt changed between the pre-apply epoch and the moment this
+    /// deployment could write, the plan describes ownership that no longer
+    /// exists — and applying it would reconcile a destination somebody else
+    /// just took, released or replaced.
+    #[error(
+        "[[deploy.target]] `{target}` was planned against {planned}, but under the deployment \
+         lock its provider `{pin}` found {found}; nothing was applied \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS; fix: rerun \
+         the deployment — another run of this same target finished, was reversed or first \
+         appeared while this one was being planned, and no provider applies against ownership \
+         that changed underneath it)"
+    )]
+    PriorReceiptChanged {
+        target: String,
+        pin: String,
+        planned: String,
+        found: String,
+    },
+
+    /// §6.3.1.4: "A reference owner never has that fallback and never
+    /// reconstructs a physical lock by parsing a logical resource string."
+    ///
+    /// An ordinary provider's receipt IS its physical set — its descriptor
+    /// proved lock set equals owned set — so a pre-sidecar deployment of one
+    /// stays removable and recoverable. A reference owner's does not, and
+    /// the only honest answer is to name the record that has to be there.
+    #[error(
+        "[[deploy.target]] `{target}` refuses {operation}: its provider `{pin}` declares \
+         reference ownership, and this deployment has no `{sidecar}` binding naming the physical \
+         destinations it locked \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS; fix: the \
+         durable lock record is written before the first external write, so a deployment without \
+         one never reached a destination — inspect the state home and remove the orphaned \
+         deployment directory, or reverse the client's own state through that client)"
+    )]
+    LockSidecarMissing {
+        target: String,
+        pin: String,
+        sidecar: &'static str,
+        operation: &'static str,
+    },
+
+    /// The durable binding is for a generation this receipt is not.
+    ///
+    /// Refused rather than used: a binding recorded for another generation
+    /// names another generation's destinations, and locking those while
+    /// removing these is the race the record exists to prevent.
+    #[error(
+        "[[deploy.target]] `{target}` refuses to reverse: its provider `{pin}` has `{sidecar}` \
+         physical destinations recorded for generation {recorded}, \
+         but the receipt being reversed is generation {wanted} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS; fix: the \
+         two records disagree about what this deployment owns — inspect the state home rather \
+         than removing from a lock set that describes a different generation)"
+    )]
+    LockSidecarMismatch {
+        target: String,
+        pin: String,
+        sidecar: &'static str,
+        recorded: u32,
+        wanted: u32,
+    },
 
     /// §7.2's ownership collision: "A collision with state owned by another
     /// deployment is an error".
