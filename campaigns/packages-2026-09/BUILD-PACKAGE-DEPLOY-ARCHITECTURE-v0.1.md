@@ -142,6 +142,37 @@ vocabulary and mechanisms are not scheduled moments. Letting the builtin
 defaults live as a match in the resolver — a privileged branch outside
 the registry, exactly what §3 rejects by name.
 
+**Ratified at R8-MECHANISM acceptance (central, 2026-08-30).** Five rulings
+the landing surfaced, each pinned:
+
+1. **One shared disable list governs both planes.** The host's single
+   `[extensions].disable` is the only disable surface, so a key naming a
+   mechanism row of the same world counts as known to the extension
+   collector — the narrowest widening that makes §3.0.3's sentence true in
+   practice; `UnknownDisable` still fires for a key in neither plane, and a
+   builtin disable refuses as the reserved-control twin. A provider sharing
+   one id across both planes silences both facets with one line, which is
+   the coherent reading of "one control list".
+2. **Constructor-site updates outside the atom's perimeter are
+   gate-forced, not scope creep**: a pub struct's new field breaks every
+   literal, and the sixteen one-line sites (four production, twelve
+   test/doctest) are the whole cost — an empty vector is the historical
+   world exactly.
+3. **The builtin descriptors' freshness values are read out of this
+   document, not invented**: cargo → provider (§4.1's own sentence),
+   static-skill and agent-plugin → engine (closed hashable input sets,
+   §§6.1–6.2), vibe-bin → provider (deploy reconciles state no engine
+   census can hash). The four `config_schema` spellings are engine-owned
+   identities under `schemas/mechanism/`; R8-CARGO materialises the files
+   when something first reads them (REVIEW marker at the table).
+4. **`resolve_mechanism` takes `&MechanismKey`**, not a `(role, name)`
+   pair — an unvalidated pair would be a second spelling of the one key
+   grammar, which §3.0's own ruling forbids.
+5. **A selection cannot displace itself**: the displaced default is
+   carried exactly when a replacement replaced something — a builtin
+   selected by its own pin or route displaces nothing (reviewer mutation
+   proved the filter unpinned; the pin now holds it as law).
+
 ### 3.1 Resolution and override law
 
 A target names a logical vocabulary key such as `build:cargo`,

@@ -776,6 +776,35 @@ than depending on untracked `cache/` archaeology.
   54 steps, zero red. R4 — positions, owner scoping, header,
   fingerprint, minify, analyzer — is ACCEPTED as a phase; R8-MECHANISM
   unblocks (it waited on coherent R4), R5 unblocks (needs R4).
+- R8-MECHANISM one mechanism plane: `9dd072d2` extends the ONE kernel per
+  the §3.0 freeze — carriage on both world source kinds from the same
+  parse, the four reserved builtins as an engine-owned third source
+  (unforgeable: the builtin handler kind is what the manifest grammar
+  refuses an authored declaration; owner impersonation a typed
+  collection refusal), a MechanismRegistry beside the extension rows in
+  collection order, one shared host disable list governing both planes
+  (the narrowest widening that made the freeze's sentence authorable;
+  builtin disables refuse as the reserved-control twin), no activation
+  tier, and pure §3.1 selection with typed candidate-listing refusals.
+  Worker disclosed seven §0 items, all ratified: sixteen gate-forced
+  one-line constructor sites outside the perimeter (the pub-struct field
+  law); freshness values read out of the architecture's own sections;
+  engine-owned config-schema spellings with the R8-CARGO REVIEW marker;
+  a local bounded-preview (the kernel had none); the disable-surface
+  decision; and `resolve_mechanism(&MechanismKey)` over a (role, name)
+  pair — an unvalidated pair is a second key spelling. Zero deviation
+  debt by design (the reserved owner is joined canonical bytes, not a
+  parsed-with-expect value). Worker mutations five-of-five red.
+  Reviewer mutations: dropping the displaced-default self-filter left
+  all 65 green — a builtin selected by its own pin/route would carry
+  ITSELF as displaced, fabricated evidence for the registry display —
+  closed with `a_builtin_selected_by_pin_or_route_displaces_nothing`,
+  red under the mutation; dropping slot carriage redded 4/4 adapter
+  tests (well-pinned, no gap). Gates: kernel 58 (+pin) + 8 doc,
+  workspace 485, lifecycle/spec suites, WORKSPACE-WIDE clippy, conform
+  27-in-scope 0-new, fmt, diff hygiene. §3.0 gains the five-ruling
+  ratification block. Map `237a2fdc`. R8-CARGO (the provider protocol
+  and the first executing mechanism) is next in the lane.
 - R4.2 minify binding, RED corpus and activation e2e: `7a09ec2d` registers
   `xml-minify` (epoch 1, EMITTED — the one stage the kernel serves without a
   new serializer; every other stage refuses through the registry's own law)
