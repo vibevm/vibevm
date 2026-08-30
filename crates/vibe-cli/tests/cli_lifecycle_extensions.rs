@@ -58,8 +58,8 @@ point = "phase:clean"
 handler = { kind = "script", base = "hooks/clean" }
 [[extension]]
 id = "compile-auto-ignored"
-point = "compile:document"
-handler = { kind = "builtin", name = "log" }
+point = "compile:emitted"
+handler = { kind = "builtin", name = "xml-minify" }
 config = { message = "compile {phase} {package}" }
 auto = true
 "#,
