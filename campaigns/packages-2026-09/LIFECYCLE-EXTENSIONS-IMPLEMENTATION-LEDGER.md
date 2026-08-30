@@ -1074,7 +1074,12 @@ than depending on untracked `cache/` archaeology.
   gated orphans or unresolved host edges, 25 standing warnings. R8-CLIENTS-GATE,
   R8-CLIENTS-DEPLOY and the five-atom R8-CLIENTS parent are accepted.
 - R5.1 native ABI freeze: `R5-NATIVE-ABI-ARCHITECTURE-v0.1.md` makes the
-  owner-ratified schema-first order executable as WIRE → SDK → GATE. Three
+  owner-ratified schema-first order executable as SHARED-STRICT → WIRE → SDK →
+  GATE. The first WIRE packet correctly stopped on an existing generator guard:
+  even unanimous `foreign_parsers = "none"` consumers could not share a
+  fragment. Central ruled the missing compatibility law: unanimous strict emits
+  one strict shared type, unanimous permissive keeps the current bytes, mixed
+  roles still refuse. Three
   registered epoch-1 roots share lifecycle nested records through the generated
   vocabulary module; `vibe-ext` re-exports those types and owns only the safe
   author macro plus plugin-side memory/unwind boundary. The four C symbols,
@@ -1200,7 +1205,7 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 
 | Step | State | Required result |
 |---|---|---|
-| R5.1 native JTD context/reply/manifest + `vibe-ext` macro | frozen | `R5-NATIVE-ABI-ARCHITECTURE-v0.1.md`; WIRE → SDK → GATE; schema first, panic-abort compile refusal, plugin-side unwind/memory boundary |
+| R5.1 native JTD context/reply/manifest + `vibe-ext` macro | frozen | `R5-NATIVE-ABI-ARCHITECTURE-v0.1.md`; SHARED-STRICT → WIRE → SDK → GATE; schema first, unanimous shared-reader strictness, panic-abort compile refusal, plugin-side unwind/memory boundary |
 | R5.2 loader | missing | separate unsafe-quarantine crate, libloading/cache/free-once tests |
 | R5.3 source/prebuilt resolution and in-slot build | partial substrate | build ignores exist; no native artifact/provider build path |
 | R5.4 pending bootstrap convergence | missing | install may mark pending; build rebuilds and recompiles once |

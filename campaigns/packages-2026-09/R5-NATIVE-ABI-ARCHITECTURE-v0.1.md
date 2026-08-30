@@ -4,12 +4,14 @@ Status: frozen for implementation by the central session, 2026-08-30.
 
 This record closes the implementation choices left between PROP-054 §8/§14.4,
 the accepted lifecycle spec-debt ruling §11.2, and ledger ruling 17. R5.1 is a
-schema-first workstream with three serial implementation children and one gate:
+schema-first workstream with four serial implementation children and one gate:
 
-1. R5.1-WIRE — register and generate the three epoch-1 native roots;
-2. R5.1-SDK — publish the safe `vibe-ext` author surface and four-symbol macro;
-3. R5.1-GATE — prove the generated wire, C boundary, unwind and abort refusal;
-4. accept R5.1 only after the integrated mutation-backed panel is green.
+1. R5.1-SHARED-STRICT — make one generated shared fragment honor a unanimous
+   strict-reader role without weakening or duplicating it;
+2. R5.1-WIRE — register and generate the three epoch-1 native roots;
+3. R5.1-SDK — publish the safe `vibe-ext` author surface and four-symbol macro;
+4. R5.1-GATE — prove the generated wire, C boundary, unwind and abort refusal;
+5. accept R5.1 only after the integrated mutation-backed panel is green.
 
 R5.2 alone owns loading a foreign library. R5.3 alone owns source/prebuilt
 resolution and building. R5.4 owns pending bootstrap convergence. R5.5 owns
@@ -72,6 +74,36 @@ reference those fragments and declare their vocabulary closure. Generated
 modules re-export the shared Rust types. Root `Context` and `Reply` values stay
 format-specific because the roots intentionally differ; their nested records
 are type-identical, not copied lookalikes.
+
+### 2.1 Shared strictness compatibility rule
+
+The first WIRE attempt stopped before editing because the existing generator
+rejects a shared fragment as soon as any consumer has
+`foreign_parsers = "none"`, even when every consumer is `none`. That guard was
+correct for mixed reader roles but over-broad for unanimous roles. R5.1 adds
+one bounded codegen prerequisite:
+
+- if every registered consumer of a fragment is `none`, emit the shared
+  fragment once with `#[serde(deny_unknown_fields)]` on each of its generated
+  structs;
+- if no consumer is `none`, emit it once with the existing permissive reader;
+- if strict and permissive consumers mix, keep refusing and name both sets;
+- enum/scalar fragments share the same role classification but receive only
+  attributes their generated form supports;
+- the role is computed from `formats/REGISTRY.toml` over the resolved schema
+  closure; no schema-local override or new hand-maintained policy list exists.
+
+This preserves one Rust type and the registry's computed reader policy. It does
+not create strict/permissive twin modules. The R7.5 state/evidence duplicated
+shapes are historical and remain untouched; this atom adds the missing
+mechanism for future unanimous-strict sharing and then R5.1 is its first user.
+
+The generator prerequisite is accepted only with focused unit tests proving an
+all-`none` fragment is emitted strict, an all-permissive fragment stays byte-
+compatible, and a mixed fragment still refuses. Independent mutations must make
+the all-strict attribute disappear and the mixed-role refusal disappear, then
+restore byte-exact. No schema, vocabulary or generated product wire changes in
+that prerequisite commit.
 
 Wire acceptance requires authored valid/invalid corpus documents for all three
 roots; registry completeness; codegen/check-codegen; exact generated-module
