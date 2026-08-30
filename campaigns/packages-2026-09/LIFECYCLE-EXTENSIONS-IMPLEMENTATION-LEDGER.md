@@ -703,7 +703,54 @@ than depending on untracked `cache/` archaeology.
   T10C ratification block. Map `92a0b72e`. R4.1 is code-complete; R4.2
   (minify binding + REDs + activation e2e over a post-install path with a
   member-node case, closing the T1 config gap with the toml runtime edge)
-  and R4.3 (lane analyzer) are next, then the coherent R4 panel.
+  remains in flight; the coherent R4 panel follows its landing.
+- R4.3 lane analyzer (claudez lane, two rounds): `f24c24f4` +
+  `3accd370`/`b3a2a415` (the prune-split import pair — committed red
+  twice before the verdicts were read; the boss miss is recorded, again)
+  land `vibe extensions analyze`. Round 1 delivered the full stack but
+  RESTATED the lane composition in the CLI (the original perimeter kept
+  vibe-workspace closed) with a known soft-hoist divergence; the boss
+  rejected the restatement as a second home of the composition law and
+  the `-c` correction moved it INTO vibe-workspace as ONE pub entry —
+  `analyze_node_lane` beside `verify_boot_graph`, running the
+  regeneration's own cells in place (hoisting included) under the
+  observer, writing nothing; the CLI restatement was deleted. The
+  observer seam is a SIBLING of the trace sink by that seam's own
+  boundary law: witness-never-veto, panic-contained, off-means-off,
+  nothing persisted, and no artifact comment parsed anywhere (the
+  adversarial marker-prose fence pins it, re-proven red after the
+  restructure). The exchange is a registered strict-vocabulary JTD on
+  the A2 pattern with the `requirements-report` computed policy
+  (foreign_parsers = many); byte counts ride the one unsigned-decimal
+  law; deltas are stage-labelled before/after pairs; a token estimate
+  exists only beside a named estimator (corpus negative + cell + wire
+  refusal). Worker disclosures: my §9.1 citation predated the worktree
+  base (correct flag); the corpus home was MY packet defect (root
+  `corpora/` — moved to `formats/corpora/`, and the worker corrected my
+  journal instruction too: artifact-record's corpus carries none);
+  check-codegen cannot run gitless (byte-identity fallback proven,
+  IDE-lock publish friction repeated). Worker mutations five-of-five
+  across the two rounds (the marker-scan and empty-report reds
+  re-proven against the corrected shape). Reviewer mutations: hoisted
+  bytes zeroed and the occurrence counter frozen at 1 BOTH left every
+  suite green — the sum law cannot see a row/frame reallocation and no
+  compiled fixture brackets twice — closed with the hoisted-row literal
+  pin inside the reconciliation oracle and the counter's own bracket
+  law; and the composition-parity pin the worker could not write
+  (`tests_analyze_parity`: analyze == written, byte for byte, root AND
+  member, on a hoisted tree) now stands as the §0.2 resolution's
+  permanent guard. That fixture surfaced B-119 (the shared body riding
+  the root lane twice — filed, deliberately not frozen into the pin).
+  Landing extras: install.rs crossed the 600 budget from three
+  landings' composition — the stale-slot pruning split into its own
+  cell (with the cfg-test import lesson paid forward in two fix
+  commits); both analyzer cells gained their specmap scopes (0
+  orphans); wire-diff classed the three shifts under the
+  pre-publication regime; check-codegen clean post-commit; the host
+  live smoke reconciles byte-exactly against the committed STATIC.xml
+  (243666, 26 rows, deltas empty until an owner activates). Map
+  `8de095bd`. R4 is CODE-COMPLETE; the coherent panel (#7) is next and
+  waits only on B-118.
 - R4.2 minify binding, RED corpus and activation e2e: `7a09ec2d` registers
   `xml-minify` (epoch 1, EMITTED — the one stage the kernel serves without a
   new serializer; every other stage refuses through the registry's own law)
@@ -816,7 +863,7 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 | R4.0 one pure registry below lifecycle/workspace | done | kernel `6af1b86f`, map `8531cf82`; exact runtime-dependency/AST-ambient/public-reexport fences; kernel 22, lifecycle 287/3 ignored, orchestrator 126 + doctests, strict clippy/check/conform/DAG green |
 | R4.1 four positions, owner-scoped activation, header, per-unit fingerprint, reference oracle | in progress | controls `52a59dcc`; transaction `91142777` / `ab68d145`; T1 `b65f9958`; T3 `48d7dc75`; T2 `49e944f0` + `87ef2df6`; T4 `a252fcc8`; T5 `0eb46c82`; T6a `01f1522e`; T6b `6ffedb03`; T6c `cb6006d4`; T7 `419e1aed`; T8 `99e52760`; T9 `513f3945`; T10A `35cd04d1`; T10B `3618ee2b` (lowering + typed subjects + threading; config value-tower refusal until R4.2); T10C `855ac6ce` (fp frame + active-only header; §7.1 freeze repaired; wire-gate/verify/decompiler pins); map `92a0b72e`. **R4.1 code-complete**; remaining R4.1 debt rides R4.2 (toml edge, activation e2e) |
 | R4.2 builtin XML minify | done | kernel `016f0fab`/`fbbd5140`; binding + segmenter + RED map + T1 config closure + two-epoch activation/member/deactivation e2e `7a09ec2d`; kernel §8 ratification |
-| R4.3 lane analyzer | missing | no `vibe extensions analyze` or machine report |
+| R4.3 lane analyzer | done | observer seam + witness accounting + `analyze_node_lane` one-home composition + strict JTD exchange + CLI; parity/hoisted/occurrence pins; `f24c24f4`, map `8de095bd` |
 
 ### R5 — native tier
 
