@@ -978,6 +978,24 @@ mutation ceremony at the gate would add no independent oracle. The whole
 R8-CLIENTS-DEPLOY child is therefore accepted and the remaining three-client
 commissioning gate owns the canonical-package-to-destination e2e.
 
+**Ratified at R8-CLIENTS-GATE and R8-CLIENTS acceptance (central, 2026-08-30).**
+The final gate composes the shipped surfaces instead of mocking their boundary:
+one real static-skill package, one canonical Agent Plugin and its three real
+client projections feed one profile containing all six client destinations.
+The hermetic world proves exact injected executables, clean environment, native
+Claude/Codex argv, OpenCode member merge, verified receipt listing, exact
+inverse and byte-identical foreign neighbours. Separate cells prove generation-0
+crash-after-publication recovery without a second write and preplan refusal of a
+standalone/plugin OpenCode skill collision with zero mutation. Three worker and
+three independent central REDs broke package-record composition, exact ownership
+judgement and already-desired recovery, then restored byte-exact. The accepted
+tree passes the 3-test commissioning cell, deploy 119, lifecycle 579 plus 38
+doctests (three privilege cases ignored), strict fmt/check/clippy and conform
+with zero new findings. Specmap is 6,833 units / 3,014 tagged items / 2,755
+edges, with 0 suspects, gated orphans or unresolved host edges and 25 standing
+warnings. All five serial R8-CLIENTS atoms are accepted; no client row remains a
+placeholder.
+
 ## 7. Deploy targets and profiles
 
 Profiles are named destination selections, not Maven-style arbitrary overlays

@@ -1062,6 +1062,17 @@ than depending on untracked `cache/` archaeology.
   independent branch oracles; no duplicate gate-only lifecycle was invented.
   R8-CLIENTS-DEPLOY is accepted. The final R8-CLIENTS commissioning gate now
   owns the canonical package → three projections → six destinations scenario.
+- R8-CLIENTS commissioning gate: `ae36ac48` / map `3808bc1d` composes a real
+  static-skill package and canonical Agent Plugin through all three projections
+  into one six-destination profile, then proves deploy/verify/list/undeploy with
+  exact foreign-state preservation and native fake-client argv. Separate cells
+  pin generation-0 crash recovery and zero-mutation OpenCode skill/plugin
+  collision refusal. Three worker plus three central mutations were red and
+  restored. Main gates passed commissioning 3, deploy 119, lifecycle 579 + 38
+  doctests (3 ignored privilege cases), strict fmt/check/clippy and conform
+  0-new. Specmap is 6833 units / 3014 tagged items / 2755 edges, 0 suspects,
+  gated orphans or unresolved host edges, 25 standing warnings. R8-CLIENTS-GATE,
+  R8-CLIENTS-DEPLOY and the five-atom R8-CLIENTS parent are accepted.
 - R4.2 minify binding, RED corpus and activation e2e: `7a09ec2d` registers
   `xml-minify` (epoch 1, EMITTED — the one stage the kernel serves without a
   new serializer; every other stage refuses through the registry's own law)
