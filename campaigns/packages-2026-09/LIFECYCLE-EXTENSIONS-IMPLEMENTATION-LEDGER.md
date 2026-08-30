@@ -1035,6 +1035,25 @@ than depending on untracked `cache/` archaeology.
   orphans or unresolved host edges, 25 standing warnings. Client plugin
   providers are the next serial child; no marketplace, CLI process or
   OpenCode JSON merge ships in this atom.
+- R8-CLIENTS client plugin destinations: `ce851287` / map `f21f3a39` lands
+  `deploy:{claude,codex,opencode}-plugin` through one six-verb provider family.
+  Directory projections are re-digested and exact-shape validated; Claude and
+  Codex use injected absolute clients, clean env-cleared homes, exact measured
+  argv/list JSON and pinned immutable native marketplaces, while OpenCode owns
+  exact skill files and logical MCP entries under one physical config lock.
+  Artifact changes refuse with `undeploy, then deploy`; unowned/drifted client
+  state refuses; recover is idempotent; inverse preserves marketplace support,
+  foreign files and foreign JSON values. Central rejected the first PASS until
+  fake traces/private state stopped mutating the plan home, portable projected
+  skill names were enforced in forward/inverse paths, inactive list witnesses
+  had an engine pin, marketplace parents used pinned safefs and every new cell
+  carried a trace edge. Twelve worker plus three correction plus three central
+  mutations were red and restored. Main gates passed lifecycle 576 + 38
+  doctests (3 ignored privilege cases), projection 67 + 12 doctests, plugin 22,
+  deploy 116, strict check/clippy/fmt and conform 0-new. Specmap is 6833 units /
+  3011 tagged items / 2752 edges, 0 suspects, gated orphans or unresolved host
+  edges, 25 standing warnings. The focused six-provider/client crash-window
+  gate is next; all three client plugin providers now ship.
 - R4.2 minify binding, RED corpus and activation e2e: `7a09ec2d` registers
   `xml-minify` (epoch 1, EMITTED — the one stage the kernel serves without a
   new serializer; every other stage refuses through the registry's own law)

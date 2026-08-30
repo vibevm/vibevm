@@ -930,6 +930,42 @@ the plugin surface:
    units / 2,987 tagged items / 2,728 edges, with 0 suspects, gated orphans or
    unresolved host edges and 25 standing warnings.
 
+**Ratified at R8-CLIENTS-DEPLOY-PLUGINS acceptance (central, 2026-08-30).**
+Five implementation rulings make decision items 8–12 executable:
+
+1. **A deploy consumes the recorded client projection, not a resemblance.**
+   Directory artifacts are re-proven by canonical tree digest. Each adapter
+   admits only its exact no-link closed shape, reuses the canonical manifest/MCP
+   parsers at fixed projected paths and applies the shared portable-name grammar
+   before any resource identity or destination write.
+2. **Client execution is absolute, clean and measured.** The selected injected
+   executable alone may run. A dedicated env-cleared process map excludes PATH,
+   tokens, proxies and ambient homes, installs injected HOME/USERPROFILE plus
+   the one client root, and keeps bounded output. Compiled fakes in a fourth
+   temp root prove Claude 2.1.x, Codex 0.148.x and OpenCode 1.17.x, exact argv,
+   both list JSON shapes and read-only plan home identity.
+3. **Claude/Codex own one logical coordinate over immutable support.** A
+   deterministic marketplace name and resource digest bind client, target,
+   plugin, artifact and version. VibeVM atomically publishes the exact
+   projection plus native marketplace below the settings-root CAS path, using a
+   pinned safefs parent; any present census/digest drift refuses. The client
+   list is the independent desired-state witness, private state has one shared
+   physical lock, artifact changes require `undeploy, then deploy`, and inverse
+   never removes marketplace support.
+4. **OpenCode owns members, never the shared document.** Exact projected skill
+   files are whole-file resources; canonical MCP entry digests are logical
+   resources sharing the one physical config lock. Plan/apply repeat strict
+   receipt ownership, recovery uses intent/three-digest settlement, equal
+   documents are not rewritten, and inverse removes only receipt-owned portable
+   members while preserving every foreign JSON value and file.
+5. **Acceptance is real-process, engine and mutation backed.** Twelve worker
+   REDs, three correction REDs and three independent central REDs all failed
+   decisively and restored exact hashes. Main gates passed 576 lifecycle tests
+   plus 38 doctests (three privilege cases ignored), 67 projection tests plus 12
+   doctests, plugin 22, deploy 116, strict check/clippy/fmt and conform with zero
+   new findings. Specmap is 6,833 units / 3,011 tagged items / 2,752 edges, with
+   0 suspects, gated orphans or unresolved host edges and 25 standing warnings.
+
 ## 7. Deploy targets and profiles
 
 Profiles are named destination selections, not Maven-style arbitrary overlays
