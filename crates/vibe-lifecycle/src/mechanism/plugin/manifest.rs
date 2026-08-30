@@ -43,11 +43,24 @@ const MANIFEST_CAP: u64 = 1024 * 1024;
 /// The two placeholders §6.2 defines, and the only ones admitted.
 const PLACEHOLDERS: [&str; 2] = ["${PLUGIN_ROOT}", "${PLUGIN_DATA}"];
 
-/// Validate `plugin.json` and return the plugin's declared name.
+/// One canonical plugin's declared identity, as `plugin.json` states it.
+///
+/// Both members are validated strings rather than one, because §6.3's
+/// projections bind "the parsed name/version" into their fingerprint and
+/// evidence: a version this cell read and then discarded would have to be
+/// re-parsed by every adapter, and three parsers of one member is three
+/// answers waiting to disagree.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) struct PluginIdentity {
+    pub(crate) name: String,
+    pub(crate) version: String,
+}
+
+/// Validate `plugin.json` and return the plugin's declared identity.
 pub(crate) fn validate_plugin_manifest(
     target: &str,
     root: &Path,
-) -> Result<String, MechanismError> {
+) -> Result<PluginIdentity, MechanismError> {
     let document = read_json(target, root, PLUGIN_MANIFEST)?;
     let object = object(target, PLUGIN_MANIFEST, &document, "<document>")?;
     let name = required_string(target, PLUGIN_MANIFEST, object, "name")?;
@@ -63,7 +76,7 @@ pub(crate) fn validate_plugin_manifest(
             ),
         ));
     }
-    let _version = required_string(target, PLUGIN_MANIFEST, object, "version")?;
+    let version = required_string(target, PLUGIN_MANIFEST, object, "version")?;
     if let Some(description) = object.get("description") {
         non_blank_string(target, PLUGIN_MANIFEST, "description", description)?;
     }
@@ -93,11 +106,22 @@ pub(crate) fn validate_plugin_manifest(
             ));
         }
     }
-    Ok(name)
+    Ok(PluginIdentity { name, version })
 }
 
-/// Validate `mcp.json`.
-pub(crate) fn validate_mcp_manifest(target: &str, root: &Path) -> Result<(), MechanismError> {
+/// The validated `mcpServers` map of one canonical `mcp.json`.
+///
+/// Returned rather than discarded so the §6.3 adapters translate the
+/// document this cell already judged: a second parse for the translation
+/// would be a second opinion about the same bytes, and the two could part
+/// on a file that changed between them.
+pub(crate) type McpServers = serde_json::Map<String, Value>;
+
+/// Validate `mcp.json` and return its declared servers.
+pub(crate) fn validate_mcp_manifest(
+    target: &str,
+    root: &Path,
+) -> Result<McpServers, MechanismError> {
     let document = read_json(target, root, MCP_MANIFEST)?;
     let root_members = object(target, MCP_MANIFEST, &document, "<document>")?;
     for member in root_members.keys() {
@@ -184,7 +208,7 @@ pub(crate) fn validate_mcp_manifest(target: &str, root: &Path) -> Result<(), Mec
             }
         }
     }
-    Ok(())
+    Ok(servers.clone())
 }
 
 /// Read and parse one manifest.

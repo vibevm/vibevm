@@ -17,9 +17,10 @@
 //! * the canonical directory digest, recorded in the A2 record with
 //!   `kind = "agent-plugin"` and `shape = "directory"`.
 //!
-//! Client projections (§6.3) are deliberately absent: §6.0.5 puts them in
-//! the deploy lane, and "the canonical Agent Plugin and a client-native
-//! projection are distinct package artifacts".
+//! Client projections (§6.3) remain distinct providers beside this one:
+//! this provider produces the canonical artifact; the three projection
+//! providers consume its record and produce reproducible client-native
+//! package artifacts; deploy only installs a selected projection.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE");
 
@@ -31,8 +32,13 @@ use vibe_core::manifest::ArtifactKind;
 use vibe_wire::generated::artifact_record::ArtifactShape;
 
 pub(crate) mod config;
-mod manifest;
-mod shape;
+// `pub(crate)` for the §6.3 projections, and for the reason §6.2 gives:
+// "The canonical Agent Plugin and a client-native projection are distinct
+// package artifacts" — distinct artifacts, ONE canonical source law. A
+// projection revalidates the tree it was handed through exactly these two
+// cells, so an adapter cannot admit a tree §6.2 would refuse.
+pub(crate) mod manifest;
+pub(crate) mod shape;
 
 use crate::mechanism::contain::{read_file_bounded, tree_digest};
 use crate::mechanism::error::preview;
@@ -48,15 +54,26 @@ use crate::mechanism::{
 };
 use config::AgentPluginConfig;
 
-/// The largest single file this provider will stage into a plugin.
+/// The largest single file a plugin-shaped provider will stage.
 ///
 /// A bound rather than a stream because the capability-relative writer
 /// takes bytes; a file past it refuses BY NAME rather than being packaged
-/// through a second, weaker write path.
-const STAGE_CAP: u64 = 64 * 1024 * 1024;
+/// through a second, weaker write path. `pub(crate)` because the §6.3
+/// client projections stage the SAME canonical tree through the same
+/// writer, and two caps over one tree would be two answers to one question.
+pub(crate) const STAGE_CAP: u64 = 64 * 1024 * 1024;
 
-/// The artifact kinds this provider produces — §6.2 produces a DIRECTORY.
-const PRODUCED_KINDS: [ArtifactKind; 1] = [ArtifactKind::Directory];
+/// The artifact kind this provider produces.
+///
+/// §6.2's package UNIT is a directory — that is the physical
+/// [`ArtifactShape`], and it is what every distributable of this provider
+/// is. The recorded KIND is `agent-plugin`, because §4's closed vocabulary
+/// carries that word and this module's own contract has always said so
+/// ("recorded in the A2 record with `kind = "agent-plugin"`"). The two are
+/// different questions: a canonical Agent Plugin and a client projection of
+/// one are both physically directories, and only the kind tells them apart
+/// — which is exactly what §6.3.0.3's admission law reads.
+const PRODUCED_KINDS: [ArtifactKind; 1] = [ArtifactKind::AgentPlugin];
 
 /// The §3.2 operations a package-role provider implements.
 const PACKAGE_OPERATIONS: [ProviderOperation; 4] = [
@@ -92,7 +109,8 @@ impl PackageProvider for AgentPluginProvider {
             return Err(MechanismError::OutputCount {
                 target: target.id.clone(),
                 provider: descriptor.key.to_owned(),
-                expected: "exactly one `directory` output — §6.2's package unit is the directory"
+                expected: "exactly one `agent-plugin` output — §6.2's package unit is the \
+                           directory, and its recorded kind is `agent-plugin`"
                     .to_owned(),
                 found: target.outputs.len(),
             });
@@ -274,11 +292,11 @@ impl PackageProvider for AgentPluginProvider {
 fn plugin_config(plan: &PackagePlan) -> Result<&AgentPluginConfig, MechanismError> {
     match &plan.config {
         PackageConfig::AgentPlugin(config) => Ok(config),
-        PackageConfig::StaticSkill(_) | PackageConfig::WindowsZip(_) => {
-            Err(MechanismError::PlanRoleMismatch {
-                provider: BUILTIN_AGENT_PLUGIN_PIN.to_owned(),
-            })
-        }
+        PackageConfig::StaticSkill(_)
+        | PackageConfig::WindowsZip(_)
+        | PackageConfig::ClientProjection(_) => Err(MechanismError::PlanRoleMismatch {
+            provider: BUILTIN_AGENT_PLUGIN_PIN.to_owned(),
+        }),
     }
 }
 

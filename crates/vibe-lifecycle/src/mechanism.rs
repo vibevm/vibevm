@@ -42,6 +42,7 @@ use vibe_core::manifest::{ArtifactBuildTarget, ArtifactKind, ArtifactPackageTarg
 
 pub(crate) mod build;
 pub(crate) mod cargo;
+pub(crate) mod client_projection;
 pub(crate) mod contain;
 pub(crate) mod deploy;
 pub(crate) mod error;
@@ -56,6 +57,7 @@ pub(crate) mod zip;
 pub use build::{
     BuildError, BuildExecution, BuildOutcome, ProducedArtifact, execute_build_targets,
 };
+pub use client_projection::ClientProjectionError;
 pub use deploy::{
     ClientExecutable, ClientExecutables, DEPLOY_STATE_DIR, DeployError, DeployExecution,
     DeployOutcome, DeployPlanReport, DeployResourcePlan, DeploySelection, DeployStatus,
@@ -397,8 +399,16 @@ pub(crate) trait PackageProvider {
     fn descriptor(&self) -> ProviderDescriptor;
 
     /// Validate the target's config, resolve its declared outputs, and
-    /// report what this provider WOULD produce. Pure: it opens nothing,
-    /// creates nothing and writes nothing.
+    /// report what this provider WOULD produce.
+    ///
+    /// READ-ONLY, which §6.3.0.11 states as the law for every plan on this
+    /// plane: "Plan and verify use read-only probes only." The three §6
+    /// producing providers need no probe at all and take none; a §6.3
+    /// client projection probes the canonical tree it was handed, because
+    /// its capability report — which requested component is missing, which
+    /// member this client cannot express — is a fact about that tree, and a
+    /// plan that could not state it would promise a projection apply would
+    /// then refuse. No operation here creates or writes anything.
     fn plan(&self, request: &PackageTargetRequest<'_>) -> Result<PackagePlan, MechanismError>;
 
     /// The freshness fingerprint over the target's COMPLETE closed input
@@ -452,6 +462,32 @@ pub(crate) const BUILTIN_WINDOWS_ZIP_PIN: &str = "org.vibevm/vibe#windows-zip";
 
 /// The `handler = { kind = "builtin", name = … }` spelling of the same row.
 pub(crate) const BUILTIN_WINDOWS_ZIP_NAME: &str = "windows-zip";
+
+/// The reserved identity of §6.3's Claude projection provider.
+///
+/// The three pins below carry §6.3.0.2's deliberate lesson: a provider id
+/// is not a logical name. `#claude-plugin-projection` services
+/// `package:claude-plugin`, because the reserved owner already keys a
+/// DEPLOY row `#claude-plugin` that installs what this one projects.
+pub(crate) const BUILTIN_CLAUDE_PLUGIN_PROJECTION_PIN: &str =
+    "org.vibevm/vibe#claude-plugin-projection";
+
+/// The `handler = { kind = "builtin", name = … }` spelling of the same row.
+pub(crate) const BUILTIN_CLAUDE_PLUGIN_PROJECTION_NAME: &str = "claude-plugin-projection";
+
+/// The reserved identity of §6.3's Codex projection provider.
+pub(crate) const BUILTIN_CODEX_PLUGIN_PROJECTION_PIN: &str =
+    "org.vibevm/vibe#codex-plugin-projection";
+
+/// The `handler = { kind = "builtin", name = … }` spelling of the same row.
+pub(crate) const BUILTIN_CODEX_PLUGIN_PROJECTION_NAME: &str = "codex-plugin-projection";
+
+/// The reserved identity of §6.3's OpenCode projection provider.
+pub(crate) const BUILTIN_OPENCODE_PLUGIN_PROJECTION_PIN: &str =
+    "org.vibevm/vibe#opencode-plugin-projection";
+
+/// The `handler = { kind = "builtin", name = … }` spelling of the same row.
+pub(crate) const BUILTIN_OPENCODE_PLUGIN_PROJECTION_NAME: &str = "opencode-plugin-projection";
 
 /// The reserved identity of the §7.1 deploy provider — the ONE deploy
 /// builtin, and since R8-VIBE-BIN a provider that really runs.

@@ -43,15 +43,31 @@ pub(crate) struct SourceFile {
 }
 
 /// One validated plugin source tree.
-#[derive(Debug, Clone, PartialEq, Eq)]
+///
+/// `Eq` is deliberately absent: the validated MCP servers are a JSON value,
+/// and JSON numbers have no total equality. `PartialEq` is what the tree
+/// really has, and claiming more would be a derive nobody could honour.
+#[derive(Debug, Clone, PartialEq)]
 pub(crate) struct PluginSource {
     pub(crate) files: Vec<SourceFile>,
-    /// The `name` member of `plugin.json`.
-    pub(crate) name: String,
+    /// The `name`/`version` members of `plugin.json`.
+    pub(crate) identity: super::manifest::PluginIdentity,
     /// The packaged skill names, in sorted order.
     pub(crate) skills: Vec<String>,
-    /// Whether the tree declares MCP servers.
-    pub(crate) mcp: bool,
+    /// The declared MCP servers, when the tree carries an `mcp.json` — the
+    /// document `validate_mcp_manifest` already judged.
+    pub(crate) mcp: Option<super::manifest::McpServers>,
+}
+
+impl PluginSource {
+    /// One tree-relative file of this source, when the tree carries it.
+    ///
+    /// The projections address the canonical tree by NAME (`plugin.json`,
+    /// `mcp.json`, everything under `skills/`) rather than re-walking it,
+    /// so the validated census stays the one census.
+    pub(crate) fn file(&self, relative: &str) -> Option<&SourceFile> {
+        self.files.iter().find(|file| file.relative == relative)
+    }
 }
 
 /// Read and validate one plugin source tree.
@@ -69,7 +85,7 @@ pub(crate) fn read_source(
     })?;
     let mut files: Vec<SourceFile> = Vec::new();
     let mut skills: Vec<String> = Vec::new();
-    let mut mcp = false;
+    let mut has_mcp = false;
     let mut has_manifest = false;
     for (name, entry) in listing(target, source, &root, "")? {
         match entry {
@@ -81,7 +97,7 @@ pub(crate) fn read_source(
                 });
             }
             Entry::File(path) if name == MCP_MANIFEST => {
-                mcp = true;
+                has_mcp = true;
                 files.push(SourceFile {
                     relative: name,
                     absolute: path,
@@ -118,14 +134,16 @@ pub(crate) fn read_source(
             "an Agent Plugin 1.0 directory declares itself in a root `plugin.json`",
         ));
     }
-    let name = super::manifest::validate_plugin_manifest(target, &root)?;
-    if mcp {
-        super::manifest::validate_mcp_manifest(target, &root)?;
-    }
+    let identity = super::manifest::validate_plugin_manifest(target, &root)?;
+    let mcp = if has_mcp {
+        Some(super::manifest::validate_mcp_manifest(target, &root)?)
+    } else {
+        None
+    };
     files.sort_by(|left, right| left.relative.cmp(&right.relative));
     Ok(PluginSource {
         files,
-        name,
+        identity,
         skills,
         mcp,
     })

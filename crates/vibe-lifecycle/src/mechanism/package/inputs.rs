@@ -35,7 +35,7 @@ use vibe_wire::generated::artifact_record::ArtifactShape;
 use crate::mechanism::contain::{
     checked_relative, digest_file, forward_slashed, join_relative, tree_digest,
 };
-use crate::mechanism::record::read_record;
+use crate::mechanism::record::{manifest_kind, read_record};
 
 /// Resolve and prove every declared input of one package target, in
 /// declaration order.
@@ -133,7 +133,14 @@ fn from_record(
         digest,
         bytes,
         shape: record.shape.clone(),
-        origin: InputOrigin::ArtifactRecord,
+        // The record's own declared kind travels with the resolved input.
+        // A provider whose law admits only one kind of artifact (§6.3.0.3's
+        // "exactly one recorded `agent-plugin` directory artifact") can then
+        // ask the ENGINE what this is, instead of inferring it from a shape
+        // every directory on disk shares.
+        origin: InputOrigin::ArtifactRecord {
+            kind: manifest_kind(&record.kind),
+        },
     })
 }
 

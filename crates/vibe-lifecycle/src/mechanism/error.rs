@@ -8,9 +8,9 @@
 //! `DispatchError` carries `InvalidLogConfig`: the builtin set is closed
 //! and engine-owned, so its members' refusals are the layer's refusals. A
 //! second builtin provider adds variants here; it does not get an enum of
-//! its own to drift — which is exactly what R8-PACKAGE's two packaging
-//! providers did. `Config`, `UnsupportedKind` and the containment/digest
-//! family are shared by all three; the rest name one provider's own law.
+//! its own to drift — which is exactly what the package-provider family
+//! does. `Config`, `UnsupportedKind` and the containment/digest family are
+//! shared; the rest name one provider's own law.
 //!
 //! Text that came from outside — a Cargo message, a package name, a path
 //! read off a foreign stream — is BOUNDED before it enters a message: a
@@ -531,6 +531,16 @@ pub enum MechanismError {
         path: String,
         build_root: String,
     },
+
+    /// The §6.3 client adapters' capability refusals.
+    ///
+    /// Transparent, and a section rather than a second enum, for the reason
+    /// this file's own header gives: the layer has ONE error type. It lives
+    /// beside its providers rather than under `error/` because it is one
+    /// provider FAMILY's law — an adapter's capability matrix — and not a
+    /// role's, which is the seam the deploy section below was split on.
+    #[error(transparent)]
+    Projection(#[from] crate::mechanism::client_projection::ClientProjectionError),
 
     /// The deploy role's provider refusals — §7.1's destination laws.
     ///

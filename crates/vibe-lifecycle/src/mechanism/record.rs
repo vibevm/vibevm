@@ -17,8 +17,8 @@
 //!   provider actually reported, never restated from a plan.
 //!
 //! ONE home, two roles. R8-CARGO wrote this cell against the Cargo
-//! adapter's own value types; R8-PACKAGE's two providers produce records
-//! beside the build records in the same directory, under the same laws, so
+//! adapter's own value types; every package provider produces records beside
+//! the build records in the same directory, under the same laws, so
 //! the inputs are the record's OWN vocabulary and the callers translate
 //! into it. A second record writer — even a faithful one — would be a
 //! second thing to drift.
@@ -117,8 +117,8 @@ pub enum RecordError {
 ///
 /// Every member is optional because §4.1 admits two honest postures: a
 /// provider-fresh target (Cargo) has no engine-side input census and says
-/// so by absence, while an engine-fresh target (both packaging providers)
-/// really did hash its complete closed input set and says so by presence.
+/// so by absence, while an engine-fresh package target really did hash its
+/// complete closed input set and says so by presence.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
 pub(crate) struct RecordFreshness<'a> {
     pub(crate) inputs: Option<&'a str>,
@@ -329,6 +329,24 @@ const fn record_kind(kind: ArtifactKind) -> RecordKind {
         ArtifactKind::Directory => RecordKind::Directory,
         ArtifactKind::Skill => RecordKind::Skill,
         ArtifactKind::AgentPlugin => RecordKind::AgentPlugin,
+    }
+}
+
+/// The manifest vocabulary's spelling of one RECORDED artifact kind — the
+/// exact inverse of [`record_kind`], and total for the same reason.
+///
+/// It is written as a match rather than derived, because that is what makes
+/// a future member of either vocabulary a COMPILE error here instead of a
+/// silent fallback: an input whose recorded kind this engine cannot name is
+/// exactly the input a provenance gate must not wave through.
+pub(crate) const fn manifest_kind(kind: &RecordKind) -> ArtifactKind {
+    match kind {
+        RecordKind::Executable => ArtifactKind::Executable,
+        RecordKind::Archive => ArtifactKind::Archive,
+        RecordKind::File => ArtifactKind::File,
+        RecordKind::Directory => ArtifactKind::Directory,
+        RecordKind::Skill => ArtifactKind::Skill,
+        RecordKind::AgentPlugin => ArtifactKind::AgentPlugin,
     }
 }
 

@@ -40,8 +40,8 @@ use crate::mechanism::contain::{digest_file, join_relative, read_file_bounded};
 use crate::mechanism::error::preview;
 use crate::mechanism::package::contained_identity;
 use crate::mechanism::package::protocol::{
-    InputOrigin, PackageConfig, PackageFingerprint, PackagePlan, PlannedPackageOutput,
-    StagedArtifact, VerifiedPackageArtifact,
+    PackageConfig, PackageFingerprint, PackagePlan, PlannedPackageOutput, StagedArtifact,
+    VerifiedPackageArtifact,
 };
 use crate::mechanism::{
     BUILTIN_STATIC_SKILL_PIN, EffectClass, MechanismError, NetworkUse, PackageProvider,
@@ -130,7 +130,7 @@ impl PackageProvider for StaticSkillProvider {
         // thing that would require one.
         let prefix = format!("{}/", config.source);
         for input in request.inputs {
-            if input.origin != InputOrigin::WorkspacePath {
+            if input.origin.recorded_kind().is_some() {
                 return Err(MechanismError::ArtifactInputRejected {
                     target: target.id.clone(),
                     provider: descriptor.key.to_owned(),
@@ -296,11 +296,11 @@ impl PackageProvider for StaticSkillProvider {
 fn skill_config(plan: &PackagePlan) -> Result<&StaticSkillConfig, MechanismError> {
     match &plan.config {
         PackageConfig::StaticSkill(config) => Ok(config),
-        PackageConfig::AgentPlugin(_) | PackageConfig::WindowsZip(_) => {
-            Err(MechanismError::PlanRoleMismatch {
-                provider: BUILTIN_STATIC_SKILL_PIN.to_owned(),
-            })
-        }
+        PackageConfig::AgentPlugin(_)
+        | PackageConfig::WindowsZip(_)
+        | PackageConfig::ClientProjection(_) => Err(MechanismError::PlanRoleMismatch {
+            provider: BUILTIN_STATIC_SKILL_PIN.to_owned(),
+        }),
     }
 }
 

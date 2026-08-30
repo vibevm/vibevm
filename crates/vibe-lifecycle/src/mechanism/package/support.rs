@@ -200,7 +200,10 @@ pub(crate) fn plugin_target(
         inputs: Some(inputs),
         outputs: vec![ArtifactOutput {
             id: format!("{id}.dir"),
-            kind: ArtifactKind::Directory,
+            // §6.2's package unit is a directory and its recorded KIND is
+            // `agent-plugin` — the two are different questions, and only
+            // the second tells a canonical plugin from a projection of one.
+            kind: ArtifactKind::AgentPlugin,
             select: None,
         }],
         config: Some(config(&table)),

@@ -1,7 +1,7 @@
 //! The mechanism layer's ONE containment and content-witness cell.
 //!
-//! Every builtin provider — the Cargo build adapter, both packaging
-//! adapters — asks the same three questions of a path before it trusts it:
+//! Every builtin build/package provider asks the same three questions of a
+//! path before it trusts it:
 //! is it inside the root the engine owns, is it a real regular file rather
 //! than a link into somewhere else, and what are its exact bytes? R8-CARGO
 //! answered them inside the Cargo cell because it was the only asker.

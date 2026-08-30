@@ -7,8 +7,8 @@
 //! per provider would make the trait a shape rather than a protocol, and
 //! the only genuinely provider-specific thing — the validated `config`
 //! table — is carried as one closed variant set rather than smeared across
-//! the cells. §7.0.8's windows-zip joined it as a third variant and needed
-//! nothing else.
+//! the cells. §7.0.8's windows-zip and §6.3's shared client projection
+//! config joined as further variants without creating another protocol.
 //!
 //! [`PackageProvider`]: crate::mechanism::PackageProvider
 
@@ -19,30 +19,54 @@ use std::path::PathBuf;
 use vibe_core::manifest::ArtifactKind;
 use vibe_wire::generated::artifact_record::ArtifactShape;
 
+use crate::mechanism::client_projection::config::ClientProjectionConfig;
 use crate::mechanism::plugin::config::AgentPluginConfig;
 use crate::mechanism::skill::config::StaticSkillConfig;
 use crate::mechanism::zip::config::WindowsZipConfig;
 
-/// Where one resolved input came from.
+/// Where one resolved input came from, and — when it came through the
+/// engine's own record — WHAT the record says it is.
 ///
 /// The distinction is recorded rather than derived, because it is exactly
 /// the sentence §6.0.2 makes law: an input naming a build output "reads
 /// the A2 record the build executor wrote (engine-owned state, never a
 /// guessed path)", while a workspace source path "stays a plain contained
 /// read". A reader of the evidence can tell which happened.
+///
+/// The recorded KIND travels with the first arm and only with it, which is
+/// the whole of §6.3.0.3's admission law: a client projection "consumes
+/// exactly one recorded `agent-plugin` directory artifact", and the only
+/// thing entitled to say an artifact is an Agent Plugin is the record its
+/// producer wrote. A workspace path carries no recorded kind — there is
+/// nobody to have said so — and treating every directory on disk as a
+/// canonical plugin is precisely the confusion the typed member removes.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub(crate) enum InputOrigin {
-    /// Found through `.vibe/state/artifacts/<id>.json` and re-proven.
-    ArtifactRecord,
-    /// Read directly out of the workspace, under containment.
+    /// Found through `.vibe/state/artifacts/<id>.json` and re-proven,
+    /// carrying the kind that record declares.
+    ArtifactRecord { kind: ArtifactKind },
+    /// Read directly out of the workspace, under containment. It has no
+    /// recorded kind, because nothing recorded it.
     WorkspacePath,
 }
 
 impl InputOrigin {
-    pub(crate) const fn as_str(self) -> &'static str {
+    /// The two evidence spellings, unchanged by the typed kind: the
+    /// evidence census counts ORIGINS, and a reader of an existing record
+    /// must keep reading the same two words.
+    ///
+    /// They are constants rather than a method on the value because the
+    /// census HEADER names both origins while holding neither, and the one
+    /// caller that does hold a value asks it for its KIND. A method with no
+    /// caller would be a second spelling waiting to part from these.
+    pub(crate) const RECORD_SPELLING: &'static str = "artifact-record";
+    pub(crate) const WORKSPACE_SPELLING: &'static str = "workspace-path";
+
+    /// The kind the engine's own record declares, when there is a record.
+    pub(crate) const fn recorded_kind(self) -> Option<ArtifactKind> {
         match self {
-            Self::ArtifactRecord => "artifact-record",
-            Self::WorkspacePath => "workspace-path",
+            Self::ArtifactRecord { kind } => Some(kind),
+            Self::WorkspacePath => None,
         }
     }
 }
@@ -66,8 +90,8 @@ pub(crate) struct ResolvedInput {
     pub(crate) digest: String,
     pub(crate) bytes: u64,
     /// The physical shape on disk. A directory input is legal only where
-    /// a provider's own law admits one; the two §6 packaging providers
-    /// read text and refuse it by name at the point they try to.
+    /// a provider's own law admits one; text providers refuse a directory
+    /// by name, while §6.3 admits one only with recorded AgentPlugin kind.
     pub(crate) shape: ArtifactShape,
     pub(crate) origin: InputOrigin,
 }
@@ -79,6 +103,10 @@ pub(crate) enum PackageConfig {
     StaticSkill(StaticSkillConfig),
     AgentPlugin(AgentPluginConfig),
     WindowsZip(WindowsZipConfig),
+    /// The three §6.3 client projections share ONE validated table, because
+    /// §6.3.0.3 gives them one: a component subset. Which client is asked
+    /// for is the SELECTED PROVIDER's identity, never a config member.
+    ClientProjection(ClientProjectionConfig),
 }
 
 /// One declared output, resolved against the provider's own grammar.

@@ -542,7 +542,7 @@ fn an_output_kind_this_provider_does_not_produce_refuses() {
             kind, supported, ..
         } => {
             assert_eq!(kind, "archive");
-            assert_eq!(supported, "directory");
+            assert_eq!(supported, "agent-plugin");
         }
         other => panic!("expected the kind refusal, got {other}"),
     }

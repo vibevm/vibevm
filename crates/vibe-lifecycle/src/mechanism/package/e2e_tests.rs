@@ -141,7 +141,11 @@ fn an_agent_plugin_becomes_a_directory_with_a_canonical_tree_digest() {
     assert_eq!(produced.files, 3);
 
     let record = record(root.path(), produced);
-    assert_eq!(record.kind, RecordKind::Directory);
+    assert_eq!(
+        record.kind,
+        RecordKind::AgentPlugin,
+        "§6.2 records the canonical plugin under the kind its own vocabulary carries",
+    );
     assert_eq!(record.shape, ArtifactShape::Directory);
     assert_eq!(
         record.digest.algorithm,

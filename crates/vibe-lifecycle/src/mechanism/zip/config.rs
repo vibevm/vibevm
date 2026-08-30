@@ -2,7 +2,7 @@
 //! validated at `plan`.
 //!
 //! The table is OURS, so it is STRICT: an unknown member refuses naming
-//! itself, exactly as the two §6 packaging configs next door do. Four
+//! itself, exactly as the §6 packaging configs next door do. Four
 //! members are deliberately absent and refuse BY NAME rather than as
 //! "unknown", because a reader who reaches for them is reaching for the
 //! very properties determinism is made of: the archive's placement (§3.2 —

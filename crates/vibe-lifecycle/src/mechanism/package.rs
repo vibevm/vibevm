@@ -38,6 +38,8 @@ pub(crate) mod protocol;
 
 pub use error::PackageError;
 
+use super::client_projection::ClientProjectionProvider;
+use super::client_projection::client::ProjectionClient;
 use super::contain::{forward_slashed, relative_to};
 use super::order::{GraphNode, OrderFault, Unresolved, dag_order};
 use super::plugin::AgentPluginProvider;
@@ -47,8 +49,10 @@ use super::record::{
 use super::skill::StaticSkillProvider;
 use super::zip::WindowsZipProvider;
 use super::{
-    BUILTIN_AGENT_PLUGIN_NAME, BUILTIN_STATIC_SKILL_NAME, BUILTIN_WINDOWS_ZIP_NAME,
-    DEFAULT_PACKAGE_ROOT, PackageProvider, PackageTargetRequest,
+    BUILTIN_AGENT_PLUGIN_NAME, BUILTIN_CLAUDE_PLUGIN_PROJECTION_NAME,
+    BUILTIN_CODEX_PLUGIN_PROJECTION_NAME, BUILTIN_OPENCODE_PLUGIN_PROJECTION_NAME,
+    BUILTIN_STATIC_SKILL_NAME, BUILTIN_WINDOWS_ZIP_NAME, DEFAULT_PACKAGE_ROOT, PackageProvider,
+    PackageTargetRequest,
 };
 use inputs::resolve_inputs;
 use protocol::{PackagePlan, StagedArtifact};
@@ -232,6 +236,19 @@ fn execute_one(
         ExtensionHandler::Builtin { name } if name == BUILTIN_WINDOWS_ZIP_NAME => {
             Builtin::WindowsZip(WindowsZipProvider)
         }
+        // §6.3's three projections: three distinct rows, three distinct
+        // pins, ONE implementation parameterised by the client. The arms
+        // stay separate because the registry rows are separate — a table
+        // lookup here would hide which row selected what.
+        ExtensionHandler::Builtin { name } if name == BUILTIN_CLAUDE_PLUGIN_PROJECTION_NAME => {
+            Builtin::ClientProjection(ClientProjectionProvider::new(ProjectionClient::Claude))
+        }
+        ExtensionHandler::Builtin { name } if name == BUILTIN_CODEX_PLUGIN_PROJECTION_NAME => {
+            Builtin::ClientProjection(ClientProjectionProvider::new(ProjectionClient::Codex))
+        }
+        ExtensionHandler::Builtin { name } if name == BUILTIN_OPENCODE_PLUGIN_PROJECTION_NAME => {
+            Builtin::ClientProjection(ClientProjectionProvider::new(ProjectionClient::OpenCode))
+        }
         ExtensionHandler::Builtin { name } => {
             return Err(PackageError::UnknownBuiltinProvider {
                 key,
@@ -288,6 +305,7 @@ enum Builtin {
     StaticSkill(StaticSkillProvider),
     AgentPlugin(AgentPluginProvider),
     WindowsZip(WindowsZipProvider),
+    ClientProjection(ClientProjectionProvider),
 }
 
 impl PackageProvider for Builtin {
@@ -296,6 +314,7 @@ impl PackageProvider for Builtin {
             Self::StaticSkill(provider) => provider.descriptor(),
             Self::AgentPlugin(provider) => provider.descriptor(),
             Self::WindowsZip(provider) => provider.descriptor(),
+            Self::ClientProjection(provider) => provider.descriptor(),
         }
     }
 
@@ -307,6 +326,7 @@ impl PackageProvider for Builtin {
             Self::StaticSkill(provider) => provider.plan(request),
             Self::AgentPlugin(provider) => provider.plan(request),
             Self::WindowsZip(provider) => provider.plan(request),
+            Self::ClientProjection(provider) => provider.plan(request),
         }
     }
 
@@ -319,6 +339,7 @@ impl PackageProvider for Builtin {
             Self::StaticSkill(provider) => provider.fingerprint(request, plan),
             Self::AgentPlugin(provider) => provider.fingerprint(request, plan),
             Self::WindowsZip(provider) => provider.fingerprint(request, plan),
+            Self::ClientProjection(provider) => provider.fingerprint(request, plan),
         }
     }
 
@@ -331,6 +352,7 @@ impl PackageProvider for Builtin {
             Self::StaticSkill(provider) => provider.apply(request, plan),
             Self::AgentPlugin(provider) => provider.apply(request, plan),
             Self::WindowsZip(provider) => provider.apply(request, plan),
+            Self::ClientProjection(provider) => provider.apply(request, plan),
         }
     }
 
@@ -343,6 +365,7 @@ impl PackageProvider for Builtin {
             Self::StaticSkill(provider) => provider.verify(request, staged),
             Self::AgentPlugin(provider) => provider.verify(request, staged),
             Self::WindowsZip(provider) => provider.verify(request, staged),
+            Self::ClientProjection(provider) => provider.verify(request, staged),
         }
     }
 }
@@ -424,8 +447,8 @@ fn record_all(
         ));
         // Engine-fresh, and the record says so by PRESENCE: §4.1 admits
         // it "only when the complete input set is closed and hashable",
-        // and both packaging providers' input sets are exactly that
-        // (§6.0.3, §6.0.4). `toolchain` is absent because no toolchain
+        // and every engine-fresh package provider's input set is exactly
+        // that (§§6.1–6.3, §7.0.8). `toolchain` is absent because no toolchain
         // took part — the transformation is this engine's own.
         let record = build_record(&RecordInputs {
             target: &request.target.id,
@@ -469,13 +492,13 @@ fn origins(request: &PackageTargetRequest<'_>) -> String {
     let recorded = request
         .inputs
         .iter()
-        .filter(|input| input.origin == protocol::InputOrigin::ArtifactRecord)
+        .filter(|input| input.origin.recorded_kind().is_some())
         .count();
     let workspace = request.inputs.len() - recorded;
     format!(
         "{}={recorded} {}={workspace}",
-        protocol::InputOrigin::ArtifactRecord.as_str(),
-        protocol::InputOrigin::WorkspacePath.as_str(),
+        protocol::InputOrigin::RECORD_SPELLING,
+        protocol::InputOrigin::WORKSPACE_SPELLING,
     )
 }
 
