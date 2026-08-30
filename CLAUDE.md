@@ -58,6 +58,19 @@ Keep it current-state; prune stale lines.
   use is stated out loud. Reaching for the frictionless native tool because it
   "is delegation" satisfies the word and defeats the purpose — that is the
   default failure mode. Launcher verified live 2026-07-15.
+- **Post-clean v1 build workaround (verified 2026-08-30):** the repository-root
+  `fractality.ps1` is stale despite the v1 ledger below — it still hardcodes
+  `fractality/v0.1.0/target/debug/fractality.exe`, so it cannot launch the
+  current slot after a clean. Build v1 directly from `fractality/v1.0.0/`,
+  temporarily junctioning that slot's root `vibedeps` to its tracked
+  `vibevm/vibedeps` because the Cargo path dependencies still name the old
+  root layout; build `fractality-cli`, `fractality-mission-control` and
+  `fractality-pod`, remove the junction, then invoke
+  `v1.0.0/target/debug/fractality.exe` directly. **Do not use the current
+  `vibe install` as this repair:** against the old slot it migrates the tracked
+  dependency/boot projection to the new coordinate layout and creates a large
+  unrelated diff without satisfying Cargo's old root path. This failed route
+  was restored and its generated `org.*`/`STATIC.md` residue removed exactly.
 - **Build / run:** `cargo build -p fractality-cli` (also
   `-p fractality-mission-control -p fractality-pod`) from
   `vibevm/vibepacks/org.vibevm.fractality/fractality/v1.0.0/`; drive via the launcher;
