@@ -160,6 +160,15 @@ exclude = [
     # -lang re-mint was called off rather than executed.
     "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.7.0/**",
     "vibevm/vibepacks/org.vibevm.world/redbook/v0.1.0/**",
+    # Same owner policy, applied to the steward package's frozen slots
+    # (B-118 drain, 2026-08-30): multi-user-planning shipped v0.2.1 and its
+    # two superseded slots stayed in the corpus because this list is
+    # enumerated by hand — the T10B-era end-to-end panel then went red on
+    # 102 unmarked facts, most of them paragraphs of frozen history nothing
+    # resolves to. The LIVE slot (v0.2.1) stays observed and its unmarked
+    # facts were marked, not excluded.
+    "vibevm/vibepacks/org.vibevm.world/multi-user-planning/v0.1.0/**",
+    "vibevm/vibepacks/org.vibevm.world/multi-user-planning/v0.2.0/**",
     # LEGACY LANGUAGE PROJECTIONS — frozen history, same category as a
     # superseded version slot and excluded for the same reason: §3.3 rules them
     # "marked, never verified", and `--exhaustive` cannot express that (it

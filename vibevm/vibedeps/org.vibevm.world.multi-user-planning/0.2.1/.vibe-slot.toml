@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:4e790f9bff4622870687309a79a72196b02bd55459e6ddafb26e1297b6924215"
+source_hash = "sha256:7b55220f5abe34a9e3705914a7f4068b98c5be56ccf80ad33643f65a901ea587"
 spec_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:e1771d0aed2b84f7e493bfe3b371ec7f04cfca50acffa09dd8aa4879b53630b2"
+derived_hash = "sha256:3ef9309ed32058bbb0bde5453f99003dd1fd11e144fdd1a718de95fd5547a164"
 
 [[file]]
 path = "LICENSE.md"
@@ -66,7 +66,7 @@ source = "vibevm/vibespecs/examples/steward-goal/home/contexts/00000000-0000-400
 
 [[file]]
 path = "vibevm/vibespecs/flows/multi-user-planning/MULTI-USER-PLANNING-PROTOCOL.xml"
-sha256 = "20589cad8742602f5cd2e37d7baa7b9fd4563fe7f6c7169eda31f9aac63e8fa7"
+sha256 = "ae4bb42c58cd9136228926df1e789c96d9c1202a8a5d3d910ab30bc815583579"
 disposition = "copied"
 source = "vibevm/vibespecs/flows/multi-user-planning/MULTI-USER-PLANNING-PROTOCOL.xml"
 
@@ -78,7 +78,7 @@ source = "vibevm/vibespecs/flows/multi-user-planning/campaign-execution.xml"
 
 [[file]]
 path = "vibevm/vibespecs/flows/multi-user-planning/collaboration-and-acceptance.xml"
-sha256 = "6c88f46e2a8ac963ae235e17542a7d8e27ca9b105bae0d6f1b93833f55a357d3"
+sha256 = "de8d0fbc0a7a3e168a888e4606b2493efc9daf87ea17e6b3f1098f35458840d2"
 disposition = "copied"
 source = "vibevm/vibespecs/flows/multi-user-planning/collaboration-and-acceptance.xml"
 
@@ -108,7 +108,7 @@ source = "vibevm/vibespecs/flows/multi-user-planning/plan-hierarchy.xml"
 
 [[file]]
 path = "vibevm/vibespecs/flows/multi-user-planning/user-local-state.xml"
-sha256 = "ba186af7aeade573d05d5aa86ec87ad803b61c77868c8d722e3979d46592309f"
+sha256 = "72b86ff02f348f5a640f6c273e01d83d7b1241c2bbeda829132a954eafa260f8"
 disposition = "copied"
 source = "vibevm/vibespecs/flows/multi-user-planning/user-local-state.xml"
 

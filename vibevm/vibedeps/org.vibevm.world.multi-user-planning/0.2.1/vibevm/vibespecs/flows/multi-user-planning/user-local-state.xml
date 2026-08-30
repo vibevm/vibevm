@@ -79,12 +79,12 @@ values are canonical.</SETTINGS-ORTHOGONAL></p>
   <profiles title="5. Planning profiles">
     <table>
       <tr><td>Obligation</td><td>`ultra`</td><td>`standard`</td></tr>
-      <tr><td>Quality, scope and evidence</td><td>Identical mandatory floor</td><td>Identical mandatory floor</td></tr>
-      <tr><td>Atom size</td><td>May span a coherent high-context cell when acceptance stays reviewable</td><td>Prefer narrow independently gated atoms</td></tr>
-      <tr><td>Plan expansion</td><td>May retain more hierarchy in reasoning; still persists the full route and current frontier</td><td>Persist explicit substeps, dependencies and per-node acceptance before execution</td></tr>
-      <tr><td>Backscan cadence</td><td>Milestones, handoffs, architecture changes and closure</td><td>Those boundaries plus every completed parent node</td></tr>
-      <tr><td>Review</td><td>Independent review selected by risk and verifiability</td><td>Independent review preferred for broad judgment or public boundaries</td></tr>
-      <tr><td>Failure response</td><td>May replan a wider region at once</td><td>Stop the current atom, record evidence, refine the next small region</td></tr>
+      <tr><td><PROFILE-FLOOR fact="true" status="spec/done">Quality, scope and evidence</PROFILE-FLOOR></td><td><PROFILE-FLOOR-ULTRA fact="true" status="spec/done">Identical mandatory floor</PROFILE-FLOOR-ULTRA></td><td><PROFILE-FLOOR-STANDARD fact="true" status="spec/done">Identical mandatory floor</PROFILE-FLOOR-STANDARD></td></tr>
+      <tr><td><PROFILE-ATOM fact="true" status="spec/done">Atom size</PROFILE-ATOM></td><td><PROFILE-ATOM-ULTRA fact="true" status="spec/done">May span a coherent high-context cell when acceptance stays reviewable</PROFILE-ATOM-ULTRA></td><td><PROFILE-ATOM-STANDARD fact="true" status="spec/done">Prefer narrow independently gated atoms</PROFILE-ATOM-STANDARD></td></tr>
+      <tr><td><PROFILE-EXPANSION fact="true" status="spec/done">Plan expansion</PROFILE-EXPANSION></td><td><PROFILE-EXPANSION-ULTRA fact="true" status="spec/done">May retain more hierarchy in reasoning; still persists the full route and current frontier</PROFILE-EXPANSION-ULTRA></td><td><PROFILE-EXPANSION-STANDARD fact="true" status="spec/done">Persist explicit substeps, dependencies and per-node acceptance before execution</PROFILE-EXPANSION-STANDARD></td></tr>
+      <tr><td><PROFILE-BACKSCAN fact="true" status="spec/done">Backscan cadence</PROFILE-BACKSCAN></td><td><PROFILE-BACKSCAN-ULTRA fact="true" status="spec/done">Milestones, handoffs, architecture changes and closure</PROFILE-BACKSCAN-ULTRA></td><td><PROFILE-BACKSCAN-STANDARD fact="true" status="spec/done">Those boundaries plus every completed parent node</PROFILE-BACKSCAN-STANDARD></td></tr>
+      <tr><td><PROFILE-REVIEW fact="true" status="spec/done">Review</PROFILE-REVIEW></td><td><PROFILE-REVIEW-ULTRA fact="true" status="spec/done">Independent review selected by risk and verifiability</PROFILE-REVIEW-ULTRA></td><td><PROFILE-REVIEW-STANDARD fact="true" status="spec/done">Independent review preferred for broad judgment or public boundaries</PROFILE-REVIEW-STANDARD></td></tr>
+      <tr><td><PROFILE-FAILURE fact="true" status="spec/done">Failure response</PROFILE-FAILURE></td><td><PROFILE-FAILURE-ULTRA fact="true" status="spec/done">May replan a wider region at once</PROFILE-FAILURE-ULTRA></td><td><PROFILE-FAILURE-STANDARD fact="true" status="spec/done">Stop the current atom, record evidence, refine the next small region</PROFILE-FAILURE-STANDARD></td></tr>
     </table>
     <p><PROFILE-CANNOT-WAIVE fact="true" status="spec/done">No profile may waive
 owner authority, destructive-action fences, lossless requirement coverage,

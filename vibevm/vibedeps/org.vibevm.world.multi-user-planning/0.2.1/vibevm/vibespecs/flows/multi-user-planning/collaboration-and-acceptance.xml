@@ -32,12 +32,12 @@ owns it as a shared projection.</NO-REPO-PERSONAL-CONTINUE></p>
   <tiers title="3. Acceptance tiers">
     <table>
       <tr><td>Tier</td><td>Meaning</td></tr>
-      <tr><td><TIER-WORKER fact="true" status="spec/done">worker-reported</TIER-WORKER></td><td>The producer says its packet passed. Evidence only.</td></tr>
-      <tr><td><TIER-CENTRAL-REVIEW fact="true" status="spec/done">central-reviewed</TIER-CENTRAL-REVIEW></td><td>The contributor-central read the diff/artifact against mandate and architecture.</td></tr>
-      <tr><td><TIER-LOCAL-GATED fact="true" status="spec/done">local-gated</TIER-LOCAL-GATED></td><td>Required exact tests, negative proofs and hygiene gates reproduced in the contributor's integration tree.</td></tr>
-      <tr><td><TIER-PR fact="true" status="spec/done">PR-reviewed</TIER-PR></td><td>A repository reviewer assessed the proposed shared change and evidence.</td></tr>
-      <tr><td><TIER-MERGED fact="true" status="spec/done">merged</TIER-MERGED></td><td>The change is present in the integration branch; merge is location, not automatically semantic closure.</td></tr>
-      <tr><td><TIER-PROJECT fact="true" status="spec/done">project-accepted</TIER-PROJECT></td><td>The owner/integrator's declared campaign gates passed and shared status may advance.</td></tr>
+      <tr><td><TIER-WORKER fact="true" status="spec/done">worker-reported</TIER-WORKER></td><td><TIER-WORKER-MEANING fact="true" status="spec/done">The producer says its packet passed. Evidence only.</TIER-WORKER-MEANING></td></tr>
+      <tr><td><TIER-CENTRAL-REVIEW fact="true" status="spec/done">central-reviewed</TIER-CENTRAL-REVIEW></td><td><TIER-CENTRAL-REVIEW-MEANING fact="true" status="spec/done">The contributor-central read the diff/artifact against mandate and architecture.</TIER-CENTRAL-REVIEW-MEANING></td></tr>
+      <tr><td><TIER-LOCAL-GATED fact="true" status="spec/done">local-gated</TIER-LOCAL-GATED></td><td><TIER-LOCAL-GATED-MEANING fact="true" status="spec/done">Required exact tests, negative proofs and hygiene gates reproduced in the contributor's integration tree.</TIER-LOCAL-GATED-MEANING></td></tr>
+      <tr><td><TIER-PR fact="true" status="spec/done">PR-reviewed</TIER-PR></td><td><TIER-PR-MEANING fact="true" status="spec/done">A repository reviewer assessed the proposed shared change and evidence.</TIER-PR-MEANING></td></tr>
+      <tr><td><TIER-MERGED fact="true" status="spec/done">merged</TIER-MERGED></td><td><TIER-MERGED-MEANING fact="true" status="spec/done">The change is present in the integration branch; merge is location, not automatically semantic closure.</TIER-MERGED-MEANING></td></tr>
+      <tr><td><TIER-PROJECT fact="true" status="spec/done">project-accepted</TIER-PROJECT></td><td><TIER-PROJECT-MEANING fact="true" status="spec/done">The owner/integrator's declared campaign gates passed and shared status may advance.</TIER-PROJECT-MEANING></td></tr>
     </table>
     <p><TIER-NO-INFERENCE fact="true" status="spec/done">Never infer a higher
 tier from a lower one. A green worker report is not central review; a commit is
