@@ -751,6 +751,31 @@ than depending on untracked `cache/` archaeology.
   (243666, 26 rows, deltas empty until an owner activates). Map
   `8de095bd`. R4 is CODE-COMPLETE; the coherent panel (#7) is next and
   waits only on B-118.
+- R4 COHERENT PANEL — ALL GREEN, 54/54 end to end (`cd069e7b` tip,
+  2026-08-30). The gate did exactly what it exists for, twice over.
+  B-118 drained by the rules already on the books (`03968fac`): the
+  steward package's frozen slots joined the enumerated superseded-slot
+  exclude under the owner's recorded 2026-07-26 policy, and the live
+  slot's 34 table cells took their markers in the corpus's own
+  PROP-038 per-cell style — `facts check --exhaustive` clean over 523
+  files, the package re-materialised, the lock hash following the
+  marked source, boot bytes untouched. Then the panel's first
+  end-to-end run caught a REAL law-evolution regression nothing
+  narrower could see: the lifecycle fixtures' placeholder
+  `compile:document`+`log` declaration — inert for its whole life —
+  became a declaration defect the moment T10B's observation and T10C's
+  every-owner lowering landed, and four installs went red exactly as
+  PROP-054's refusal text promises. The fixture grew up with the law
+  (`cd069e7b`): the one real catalog behavior at its own stage on a
+  leaf package, the ignored-by-lifecycle claim intact, ten of ten
+  green. Final run: every workspace suite (polygon and lifecycle
+  included), strict clippy, vibe check, conform 27/0-new,
+  sync-engines, check-codegen, host specmap --check, wire-diff, all
+  seven package workspaces with their self-traces and per-slot
+  conform, the markup exhaustive gate, and both user-home tripwires —
+  54 steps, zero red. R4 — positions, owner scoping, header,
+  fingerprint, minify, analyzer — is ACCEPTED as a phase; R8-MECHANISM
+  unblocks (it waited on coherent R4), R5 unblocks (needs R4).
 - R4.2 minify binding, RED corpus and activation e2e: `7a09ec2d` registers
   `xml-minify` (epoch 1, EMITTED — the one stage the kernel serves without a
   new serializer; every other stage refuses through the registry's own law)
