@@ -30,7 +30,7 @@ mod subskill;
 
 pub use artifact::{
     ArtifactBuildTarget, ArtifactInput, ArtifactKind, ArtifactOutput, ArtifactPackageTarget,
-    ArtifactsError, ArtifactsSection,
+    ArtifactsError, ArtifactsSection, build_target_for_binary,
 };
 pub use compile::CompileSection;
 pub use consumer::{ConsumerNode, NodeRole};

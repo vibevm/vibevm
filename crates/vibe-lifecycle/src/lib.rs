@@ -98,6 +98,7 @@ mod execution;
 pub mod handlers;
 mod lease;
 mod legacy_hooks;
+mod mechanism;
 pub use legacy_hooks::SyntheticHookIdentity;
 pub mod process;
 mod registry;
@@ -120,6 +121,10 @@ pub use handlers::{
     NoPackageBindingBackend, PackageBindingArtifact, PackageBindingBackend, PackageBindingOutcome,
 };
 pub use lease::{LifecycleLease, LifecycleLeaseError};
+pub use mechanism::{
+    ARTIFACT_RECORD_DIR, BuildError, BuildExecution, BuildOutcome, MechanismError,
+    ProducedArtifact, execute_build_targets,
+};
 pub use registry::{
     CollectionError, CollectionNotice, ContributionTier, DependencyExtensionSource,
     DependencyProvider, DependencyProviderId, EffectiveManifestKind, ExecutableContribution,

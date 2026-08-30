@@ -135,6 +135,24 @@ pub struct MechanismKey {
 }
 
 impl MechanismKey {
+    /// Assemble a key from an already-validated role and name — the
+    /// crate-internal seam for the engine's OWN literals (the `[[binary]]`
+    /// projection's `build:cargo`), so a total projection needs neither a
+    /// `Result` on an impossible parse nor an `expect` the unwrap gate must
+    /// excuse. The name is asserted against the one portable-token grammar
+    /// in debug builds; every authored spelling still enters through
+    /// [`FromStr`] alone.
+    pub(crate) fn from_validated_parts(role: MechanismRole, name: &str) -> Self {
+        debug_assert!(
+            is_portable_token(name),
+            "an engine literal must satisfy the portable-token grammar: {name:?}"
+        );
+        Self {
+            role,
+            name: name.to_owned(),
+        }
+    }
+
     /// The key's role family.
     pub fn role(&self) -> MechanismRole {
         self.role
