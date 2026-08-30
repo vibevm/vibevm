@@ -99,6 +99,7 @@ pub mod handlers;
 mod lease;
 mod legacy_hooks;
 mod mechanism;
+pub mod native;
 pub use legacy_hooks::SyntheticHookIdentity;
 pub mod process;
 mod registry;

@@ -35,6 +35,7 @@ use vibe_core::{RelPath, manifest::Manifest};
 pub mod bins;
 pub mod boot;
 pub mod boot_artifacts;
+pub mod cargo_build;
 pub mod compile_trace;
 pub mod extension_world;
 pub mod freshness;

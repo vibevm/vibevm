@@ -161,6 +161,17 @@ pub(crate) struct RecordInputs<'a> {
 /// Build one epoch-1 artifact record.
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#ARTIFACT-REGISTRY")]
 pub(crate) fn build_record(inputs: &RecordInputs<'_>) -> Result<ArtifactRecord, RecordError> {
+    build_record_with_root(inputs, RelativeRoot::Project)
+}
+
+/// Build an epoch-1 record whose portable path is relative to an explicit
+/// owner root. Native source builds use `slot` for dependency providers and
+/// `project` for authored hosts; existing project-owned producers keep the
+/// historical [`build_record`] convenience above.
+pub(crate) fn build_record_with_root(
+    inputs: &RecordInputs<'_>,
+    relative_root: RelativeRoot,
+) -> Result<ArtifactRecord, RecordError> {
     let created_at = inputs
         .created_at
         .parse::<Rfc3339Timestamp>()
@@ -180,7 +191,7 @@ pub(crate) fn build_record(inputs: &RecordInputs<'_>) -> Result<ArtifactRecord, 
         shape: inputs.shape.clone(),
         path_absolute: inputs.path_absolute.to_owned(),
         path_relative: RelativeIdentity {
-            root: RelativeRoot::Project,
+            root: relative_root,
             path: inputs.path_relative.to_owned(),
         },
         digest: ContentDigest {

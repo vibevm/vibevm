@@ -12,7 +12,8 @@
 //! without telling us.
 //!
 //! So the shapes below are deliberately **minimal and lenient**: exactly
-//! `reason`, `package_id`, `target.{name,kind}`, `executable` and `fresh`,
+//! `reason`, `package_id`, `target.{name,kind,crate_types}`, `executable`,
+//! `filenames` and `fresh`,
 //! with every other field ignored BY DESIGN. Leniency stops at the shape:
 //! a line that is not a `reason`-tagged Cargo message refuses, because
 //! that is the signal the format moved, and the alternative — falling back
@@ -28,7 +29,7 @@ use crate::mechanism::MechanismError;
 use crate::mechanism::error::preview;
 
 /// The `reason` of the one message kind that names a produced artifact.
-const COMPILER_ARTIFACT: &str = "compiler-artifact";
+pub(crate) const COMPILER_ARTIFACT: &str = "compiler-artifact";
 
 /// The Cargo target kind an executable artifact comes from.
 const BIN_KIND: &str = "bin";
@@ -52,6 +53,10 @@ pub(crate) struct CargoMessage {
     /// and the one honest source of an executable path there is.
     #[serde(default)]
     pub(crate) executable: Option<String>,
+    /// Every artifact path Cargo associates with the target. Native cdylib
+    /// selection uses this list and never derives a filename from a crate name.
+    #[serde(default)]
+    pub(crate) filenames: Vec<String>,
     /// Cargo's own freshness verdict for this artifact.
     #[serde(default)]
     pub(crate) fresh: Option<bool>,
@@ -63,6 +68,8 @@ pub(crate) struct CargoMessageTarget {
     pub(crate) name: String,
     #[serde(default)]
     pub(crate) kind: Vec<String>,
+    #[serde(default)]
+    pub(crate) crate_types: Vec<String>,
 }
 
 /// `cargo metadata --format-version 1 --no-deps`, in the same posture.
@@ -75,7 +82,11 @@ pub(crate) struct CargoMetadata {
 /// One workspace package as `cargo metadata` reports it.
 #[derive(Debug, Clone, Deserialize)]
 pub(crate) struct MetadataPackage {
+    #[serde(default)]
+    pub(crate) id: String,
     pub(crate) name: String,
+    #[serde(default)]
+    pub(crate) manifest_path: String,
     #[serde(default)]
     pub(crate) targets: Vec<MetadataTarget>,
 }
@@ -86,6 +97,8 @@ pub(crate) struct MetadataTarget {
     pub(crate) name: String,
     #[serde(default)]
     pub(crate) kind: Vec<String>,
+    #[serde(default)]
+    pub(crate) crate_types: Vec<String>,
 }
 
 impl CargoMessage {

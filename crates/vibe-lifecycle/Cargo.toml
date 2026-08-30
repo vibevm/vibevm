@@ -29,6 +29,7 @@ vibe-core.workspace = true
 # compatibility (one transition, no flag day) and keeps only the
 # execution-shaped plan and report metadata above it.
 vibe-extension-registry.workspace = true
+vibe-registry.workspace = true
 # `spec://` address grammar for `handler.prompt`. One parser owns the address
 # form; the agent handler compares an already-parsed authority against the
 # contributing provider rather than re-deriving the grammar.
@@ -42,6 +43,7 @@ walkdir.workspace = true
 
 [dev-dependencies]
 tempfile.workspace = true
+vibe-ext.workspace = true
 # The publish-stage REDs need a deterministic post-rename failure; the feature
 # compiles the injection point out of every shipped build.
 vibe-safefs = { workspace = true, features = ["inject-failures"] }
