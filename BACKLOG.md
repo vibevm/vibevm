@@ -1416,3 +1416,24 @@ structure, and it goes when the file does.
 | @fact:B120-SEVERITY **severity** | P3 — обход корректен для своего домена доверия (build.rs — и так произвольный код; корень engine-owned); вопрос — нужен ли safefs отдельный build-artifact-примитив рядом с публикационным |
 | @fact:B120-DISPOSITION **disposition** | `open` — решить владельцу safefs-закона: (а) примитив `digest_build_artifact_in` с ослабленным именным законом для engine-owned корней, либо (б) обход остаётся локальной нормой механизменных провайдеров и фиксируется правилом |
 | @fact:B120-FILED **filed by** | центральная приёмка R8-CARGO, 2026-08-30 |
+
+## B-121 — третий жанр лаунчеров (PROP-019 VVM-шимы) не несёт маркера
+
+| поле | значение |
+|---|---|
+| @fact:B121-WHAT **what** | §7.1 называет два жанра лаунчеров (deploy:vibe-bin и PROP-025 project-shim), и оба теперь имеют точные маркеры-константы в `vibebin/launcher.rs`. Но репозиторий РЕАЛЬНО пишет третий жанр — PROP-019 VVM-шимы (`commands/vvm/env.rs`, `posix_shim()`/`cmd_shim()`): POSIX-тело несёт только комментарий `# vibevm (VVM) shim — …`, `.cmd`-тело — вообще ничего |
+| @fact:B121-EFFECT **effect** | закон коллизии vibe-bin видит VVM-шим как «unmarked user file» — отказывает (ничего не перезаписывается, безопасно), но отказ не может НАЗВАТЬ происхождение файла; человек у отказа не узнаёт, что файл — VibeVM-ов |
+| @fact:B121-SEVERITY **severity** | P3 — поведение безопасно-консервативное; страдает только диагностика |
+| @fact:B121-DISPOSITION **disposition** | `open` — дать VVM-шимам маркер жанра `vibevm-launcher genre=vvm-shim owner=spec://…PROP-019#…` тем же трафаретом; атом, трогающий `vvm/env.rs`, добавляет и распознавание в `classify()` |
+| @fact:B121-FILED **filed by** | центральная приёмка R8-VIBE-BIN, 2026-08-30 |
+
+## B-122 — legacy `[[binary]]` нельзя назвать в `[[deploy.target]]`: validate_plane не видит lowering
+
+| поле | значение |
+|---|---|
+| @fact:B122-WHAT **what** | `vibe_core::manifest::plane::validate_plane` строит множество artifact-id только из `[artifacts]` (build+package outputs); §7.0.7-lowering legacy `[[binary]]` происходит ПОЗЖЕ, в `vibe_orchestrator::dispatch::mechanism::lower_binaries`. Манифест с `[[binary]] name="helper"` + `[[deploy.target]] artifact="helper"` падает на валидации («names no declared artifact output»), хотя lowering произвёл бы ровно этот артефакт |
+| @fact:B122-EFFECT **effect** | legacy-путь не может задеплоить свой бинарь через новый деплой-план без переписывания в `[[artifacts.build]]`; обход — авторская `[[artifacts.build]]`-строка (что и есть миграционная рекомендация) |
+| @fact:B122-SEVERITY **severity** | P3 — legacy-совместимость сужена, но прямой (новый) путь полноценен; сообщение об ошибке корректно называет чинящий шаг |
+| @fact:B122-DISPOSITION **disposition** | `open` — либо validate_plane учитывает lowering-проекцию (vibe-core узнаёт о ней — расширение периметра ядра), либо PROP-054-преемник фиксирует «[[binary]] не сочетается с [[deploy.target]]; мигрируйте на [[artifacts.build]]» как правило |
+| @fact:B122-FILED **filed by** | отчёт воркера R8-VIBE-BIN §0.9, зафиксировано центральной приёмкой 2026-08-30 |
+

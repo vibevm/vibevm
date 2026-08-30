@@ -929,6 +929,39 @@ than depending on untracked `cache/` archaeology.
   chosen over R8-CLIENTS deliberately: the simplest real provider
   proves the fresh engine end-to-end before the three-client matrix
   rides it.
+- R8-VIBE-BIN the first executing deploy provider: the worker atom lands
+  the real `VibeBinProvider` behind the landed six-verb trait per §7.1.0 —
+  the CAS payload store (write-once, staged-verified before publish, a
+  corrupted entry refuses by name rather than being repaired), the
+  version-free marked launcher (fixed CRLF `.cmd` / LF `#!/bin/sh`
+  templates whose ONLY variable is the validated command token; no
+  version, no digest, no absolute path — pinned by construction and by
+  test) with the one-line active-payload pointer beside it as the two
+  owned resources, pointer-last apply order (an interrupted apply leaves
+  the previous generation running), the two-genre collision law with
+  both exact marker spellings as refusal DATA, the settings-root
+  threading (`DeployCarriage`/`DeployExecution`; no cell below a surface
+  resolves a home), the populated `--plan` body ending R8-DEPLOY
+  ratification 8's fiction, and §10's e2e — a REAL Cargo build feeding
+  deploy → RUN the launcher → update (pointer moves, launcher bytes
+  byte-identical) → re-deploy (CAS no-op) → saga rollback (ORIGINAL
+  output again) → list → undeploy, in ~1.6s. Worker §0 disclosed eleven
+  items; worker mutations nine-of-nine red with every site re-verified.
+  Reviewer acceptance REPAIRED the one residual defect instead of
+  ratifying it: the engine handed `remove` identical inputs for rollback
+  and undeploy, so undeploy-after-update restored a generation nobody
+  asked for — `Transaction::remove` now takes the handle from its caller
+  (saga: the receipt's; undeploy: none), proven red-first through the
+  engine path, with the drift-composition pin added beside it
+  (hand-edited pointer refuses through the real provider's verify). The
+  two launcher.rs REVIEW markers were resolved into ratified rulings at
+  acceptance (the `.exe` payload suffix; the forward-declared PROP-025
+  spelling), the third launcher genre and the `[[binary]]`/deploy-target
+  validation gap filed as B-121/B-122. Gates: full battery green,
+  clippy, host check 0 errors, conform exactly 27/0-new, fmt. §7.1.0
+  gains the thirteen-ruling ratification. R8-CLIENTS is the lane's next
+  atom; the owner's safe-point stop lands here, with `cargo clean` run
+  after the landing per the standing directive.
 - R4.2 minify binding, RED corpus and activation e2e: `7a09ec2d` registers
   `xml-minify` (epoch 1, EMITTED — the one stage the kernel serves without a
   new serializer; every other stage refuses through the registry's own law)
@@ -1095,7 +1128,7 @@ system remains fully usable with no selected agent contribution or provider.
 | Claude/Codex/OpenCode client projections and local deploy | partial only | project skill writer is not a portable plugin artifact or user deployment |
 | deploy targets/profiles/plan/undeploy | done (engine) | `0a42456e`; grammar `2a3f3b44`; once-only profile selection, third fence, read-only `--plan`, undeploy/deployments; executing destination providers arrive with their own atoms |
 | intent/receipt/recovery for general destinations | done | `0a42456e`; the general §7.2 protocol — atomic intent, checkpoints, verify-then-receipt, locks, three-digest recovery, saga, drift refusal — proven over hermetic crash windows |
-| `deploy:vibe-bin` under `~/.vibe/bin` | missing | the registry row refuses as provider-not-landed; R8-VIBE-BIN is next |
+| `deploy:vibe-bin` under `~/.vibe/bin` | done | the real provider: CAS store, version-free marked launcher + pointer, update/rollback/undeploy proven by running the launcher in the §10 e2e |
 | deterministic Windows zip lifecycle binding | done | `0a42456e`; STORED-only writer, fixed 1980 timestamp, refusing census, independent-extractor oracle green live |
 | plugin-overridable builder/installer/deployer fixture | partial | the replacement law is proven at the registry (`9dd072d2`: a foreign row displaces the builtin in routing; the builtin stays queryable and demonstrably unselected); a non-builtin selection refuses by the unlanded transport's name, so the executing e2e waits on the plugin transport |
 
@@ -1618,7 +1651,8 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
    R8-CLIENTS'.**
 6. `vibe-bin`, profiles/plan/undeploy, plugin replacement fixture and Windows
    zip provider. **Profiles/plan/undeploy and the zip are done `0a42456e`;
-   `vibe-bin` and the replacement fixture remain.**
+   `vibe-bin` is done (R8-VIBE-BIN); the replacement fixture waits on the
+   plugin transport.**
 
 ### Final serialization
 

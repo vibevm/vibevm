@@ -835,6 +835,76 @@ receipt's projection, one line, atomic). Receipt-owned payloads (undeploy
 would erase shared state). A new rollback verb (the saga and
 `prior_state_handle` already spell it).
 
+**Ratified at R8-VIBE-BIN acceptance (central, 2026-08-30).** Thirteen
+rulings the landing surfaced, each recorded:
+
+1. **The Windows CAS payload carries `.exe`** — a ratified deviation from
+   ruling 2's literal `store/<sha256>`: `cmd.exe` cannot execute a file
+   with no PATHEXT extension (verified live — exit 9009 extension-less,
+   the same bytes as `.exe` run with argv and exit code preserved), so
+   the literal spelling is unimplementable where §10's RUN gate must
+   hold. The suffix is the platform's, exactly as the launcher's own
+   `.cmd` one clause earlier; the pointer still names the bare digest.
+   The content-addressed-directory alternative was declined.
+2. **The PROP-025 shim marker is a forward declaration living beside
+   ours**: that genre is `spec/done` and unimplemented, so no writer
+   mints it yet; the `vibe bin sync` atom imports this constant rather
+   than minting a second spelling. The PROP-019 VVM shims are a THIRD
+   genre §7.1 never mentions, today safely refused as unmarked but not
+   nameable by the refusal — B-121.
+3. **The remove seam was REPAIRED at acceptance** (boss-authored): the
+   worker proved the engine handed `remove` identical inputs for a saga
+   rollback and an `undeploy`, leaving one residual defect — undeploy
+   after a pointer-moving update restored instead of removing.
+   `Transaction::remove` now takes the prior-state handle from its
+   CALLER: the saga passes the receipt's handle (restore what the failed
+   generation displaced), `undeploy` passes none (remove what the
+   receipt owns). Proven red-first through the engine's own path
+   (`undeploy_after_a_pointer_moving_update_removes_both_owned_files`).
+   The provider keeps its own only-when-the-pointer-moved handle law —
+   independently honest under §7.2.
+4. **A rolled-back launcher SURVIVES**: its bytes are version-free and
+   therefore the prior generation's too; rollback restores the pointer
+   and deletes nothing the restored generation still needs.
+5. **`ProviderNotLanded` and `VIBE_BIN_ATOM` are deleted**, not kept as
+   reachable-looking dead surface; a future deploy builtin collected
+   before its adapter refuses through `UnknownBuiltinProvider`.
+6. **The deploy-role refusals moved to a `DeployProviderError` section**
+   carried transparently by the ONE layer enum — the landed "no second
+   enum" rationale evolved with its reason recorded (a destination, two
+   extra verbs, laws no producing provider can raise), and the rendered
+   error surface is unchanged.
+7. **`plan` reads the destination, read-only, for the collision law**:
+   the operative half of the landed purity sentence is "mutates no
+   destination", and a plan that promised a write apply would refuse is
+   a lying plan. §3.2's "report external effects" asks for exactly this
+   consultation.
+8. **Two invented `command` laws stand**: the reserved `.current` suffix
+   refuses (two commands would claim one file on POSIX), and reserved
+   Windows device names refuse on every platform (a portable manifest
+   must not install `nul`).
+9. **The payload write is checkpointed, never receipted** — a completed
+   operation under §7.2's ledger, not an ownership; undeploy leaves
+   payloads as disclosed store garbage until the deferred GC atom.
+10. **The e2e's order is deploy → update → re-deploy → saga → undeploy**:
+    the saga rolls back the generation the FAILING run applied, so the
+    failing run must be the one that moved the pointer off the original;
+    the re-deploy doubles as the CAS write-once proof. Every clause of
+    §10's gate is asserted; only the order differs.
+11. **Review added the drift composition pin**: a hand-edited pointer
+    refuses `undeploy` through the REAL provider's `verify`
+    (`undeploy_refuses_a_hand_edited_pointer_through_the_real_provider`),
+    binding the engine's §7.2 drift law to vibe-bin's own observation.
+12. **A landed CLI assertion was corrected, not weakened**: `--plan` has
+    always created the empty state home directory (`DeployState::open`
+    is `create_dir_all`); the old absence assertion held only because
+    the run refused before planning. The realigned assertions pin "no
+    deployment recorded", which is the engine's own unit law.
+13. **A legacy `[[binary]]` cannot be named by a `[[deploy.target]]`**
+    (validate_plane's artifact-id set predates the orchestrator's
+    lowering) — found, not acted on, filed as B-122 with the migration
+    spelling in the refusal.
+
 ### 7.2 Receipts, ownership and inverse operations
 
 Every applied target writes a schema-versioned receipt in the user VibeVM state
