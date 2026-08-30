@@ -1016,6 +1016,25 @@ than depending on untracked `cache/` archaeology.
   2695 edges, 0 suspects, gated orphans or unresolved host edges, 25 standing
   warnings. The three standalone skill providers are the next serial child;
   no client destination provider ships in this foundation commit.
+- R8-CLIENTS standalone skill destinations: `63d74ea6` / trace
+  `d5c96480` / map `a65de187` corrects the canonical static-skill record to
+  `kind=skill, shape=file`, adds pure injected-home Agent helpers and lands
+  `deploy:{claude,codex,opencode}-skill` through one closed provider. Strict
+  config/frontmatter identity and exact artifact bytes feed one owned/locked
+  entry per client. Central rejected the initial pre-write recovery shortcut,
+  then made a validated intent plan-only reachability witness: both a first
+  deployment and an update crashed after publication recover idempotently,
+  while apply remains receipt-only and stale/mismatched evidence grants no
+  write authority. Review also closed arbitrary receipt-string removal and
+  helper/resource path divergence: inverse accepts exactly the configured
+  entry and publication proves the pure helper names the recorded lock path.
+  Ten worker plus three central mutations were red and restored. Main-tree
+  gates passed lifecycle 553 + 38 doctests (3 ignored privilege cases),
+  projection 67 + 12 doctests, strict check/clippy/fmt and conform 0-new.
+  Specmap is 6831 units / 2987 tagged items / 2728 edges, 0 suspects, gated
+  orphans or unresolved host edges, 25 standing warnings. Client plugin
+  providers are the next serial child; no marketplace, CLI process or
+  OpenCode JSON merge ships in this atom.
 - R4.2 minify binding, RED corpus and activation e2e: `7a09ec2d` registers
   `xml-minify` (epoch 1, EMITTED — the one stage the kernel serves without a
   new serializer; every other stage refuses through the registry's own law)

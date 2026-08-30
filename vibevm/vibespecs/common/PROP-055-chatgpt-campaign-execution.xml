@@ -499,6 +499,18 @@
       on-disk report/edit, make no retry loop against that lane, and route the
       bounded task to the already-booted central context or ordinary Opus as
       verification economics warrant.</CLAUDEZ-LANES-DIVERGE-2026-08-28>
+      <CLAUDEZ-INITIAL-STALL-2026-08-30 fact="true" status="spec/done">A fresh
+      real R8 containment correction launched through primary `claudez -p`
+      with explicit non-interactive permissions created its same-cwd session
+      but emitted no assistant/tool event for ten minutes: the session JSONL
+      remained at the initial user event and the assigned product files stayed
+      byte-unchanged. Root stopped only that unified-exec session, classified
+      the result as a transport stall rather than a code verdict, made no
+      claudez retry, and completed the deterministic micro-fix centrally under
+      `ROUTE-MICRO-LOCAL`. Initial-turn silence is therefore observed like a
+      stalled final turn: inspect session growth and the visible diff, preserve
+      both, stop only the exact process/session after a bounded window, then
+      fail over without regenerating or spinning the lane.</CLAUDEZ-INITIAL-STALL-2026-08-30>
       <PANEL-DENOMINATOR-2026-08-28 fact="true" status="spec/done">`tools/self-check.sh` lexically counts `run_step` lines while seven calls execute dynamically, so final
       R3.4 printed `[54/47]` and still ended `all green` / exit 0. The denominator is an observability bug, never coverage evidence: trust the ordered gates + green tail.
       A later tooling atom derives the runtime total or removes the false denominator; this docs-only finding does not rewrite the green verdict.</PANEL-DENOMINATOR-2026-08-28>

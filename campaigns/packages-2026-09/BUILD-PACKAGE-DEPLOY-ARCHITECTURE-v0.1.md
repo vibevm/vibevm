@@ -894,6 +894,42 @@ provider is admitted:
    ignored), the 66-test deploy and 19-test vibe-bin filters, strict clippy,
    check, fmt, conform with zero new findings, and a clean specmap gate.
 
+**Ratified at R8-CLIENTS-DEPLOY-SKILLS acceptance (central, 2026-08-30).**
+Five implementation rulings make decision items 6–7 executable without opening
+the plugin surface:
+
+1. **The producer and destination share one typed artifact.**
+   `package:static-skill` now records `kind=skill, shape=file` without changing
+   its exact bytes, freshness, frontmatter/include behavior or one-output shape.
+   The lifecycle admits that proven pair only and reuses the producer's one
+   frontmatter parser.
+2. **Three destinations are data over one provider.** Claude, Codex and OpenCode
+   select one closed `SkillClient` implementation, strict `{name}` config and
+   the shared portable skill-name grammar. Public pure Agent helpers derive the
+   three user roots from injected home; the lifecycle proves the helper-relative
+   path equals the resource identity before it may plan or publish exact bytes.
+3. **Intent evidence makes recovery reachable but never authorises apply.** A
+   validated unretired intent reaches provider plan through the no-create state
+   view only. Exact resource, independently observed desired digest and
+   `prior_generation` agreement distinguish an interrupted first deployment or
+   update from an unowned occupant/drift. Apply receives no intent and rechecks
+   receipt ownership under locks; only matching plan hash plus the engine's
+   three-digest law may call idempotent `recover`.
+4. **Inverse containment is exact.** Remove accepts exactly the configured one
+   `home:.../<name>/SKILL.md`, requires the receipt to own that member, mutates
+   only the precomputed contained relative path and prunes no farther than the
+   proven-empty named skill directory. Receipt/caller agreement on any foreign
+   string cannot widen the provider perimeter.
+5. **Acceptance is engine-driven and mutation-backed.** Ten worker REDs plus
+   three independent central REDs restored byte-exact. Engine tests cover all
+   three clients, crash-after-publication recovery for generation 0 and an
+   update generation, stale intent, unowned/drifted occupants and foreign
+   inverse requests. Main gates passed 553 lifecycle tests plus 38 doctests
+   (three privilege cases ignored), 67 projection tests plus 12 doctests,
+   strict check/clippy/fmt and conform with zero new findings. Specmap is 6,831
+   units / 2,987 tagged items / 2,728 edges, with 0 suspects, gated orphans or
+   unresolved host edges and 25 standing warnings.
+
 ## 7. Deploy targets and profiles
 
 Profiles are named destination selections, not Maven-style arbitrary overlays
