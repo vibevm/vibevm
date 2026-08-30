@@ -19,6 +19,12 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#
 
 use std::path::Path;
 
+// The child test cells reach this through `use super::*`; the lib itself
+// stopped needing it when the prune split moved its last production users
+// out of this file.
+#[cfg(test)]
+use std::fs;
+
 use vibe_core::ContentHash;
 use vibe_core::manifest::{Manifest, Materialization, SpecFormat};
 use vibe_core::user_config::SlotIntegrity;
