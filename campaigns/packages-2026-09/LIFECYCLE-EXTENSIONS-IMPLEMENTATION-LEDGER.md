@@ -1108,6 +1108,17 @@ than depending on untracked `cache/` archaeology.
   pre-publication wire-diff over 5 schema / 6 corpus / 2 format paths. Specmap:
   6833 units / 3009 tagged items / 2758 edges, 0 suspects, gated orphans or
   unresolved host edges, 25 warnings. SDK/FFI remains the next serial child.
+- R5.1 safe author SDK: `bfaea140` adds `vibe-ext` as a gated public crate and
+  narrow native-ABI audit home. It re-exports only generated native wire types;
+  one macro emits exact link-proved ABI/manifest/invoke/free names, stable
+  manifest storage, null/zero failure settlement, envelope-1 pre-handler gate,
+  one plugin-side unwind boundary and exact `Box<[u8]>` response ownership/free.
+  Five worker plus three central mutations were red and restored, including a
+  missing-`no_mangle` LNK2019 and an unexpectedly-green abort build when the
+  compile refusal was removed. Gates: 7 integration tests, check, strict clippy/
+  fmt, conform 0-new; the standalone real abort profile fails solely on the
+  expected unwind-remediation message. R5.1-GATE is next; loader/build remain
+  R5.2/R5.3.
 - R4.2 minify binding, RED corpus and activation e2e: `7a09ec2d` registers
   `xml-minify` (epoch 1, EMITTED — the one stage the kernel serves without a
   new serializer; every other stage refuses through the registry's own law)

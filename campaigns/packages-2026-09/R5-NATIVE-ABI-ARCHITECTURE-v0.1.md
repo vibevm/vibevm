@@ -133,6 +133,24 @@ units / 3,009 tagged items / 2,758 edges, with 0 suspects, gated orphans or
 unresolved host edges and 25 standing warnings. R5.1-SDK is now the only next
 consumer; no loader/build/activation behavior landed here.
 
+**Ratified at R5.1-SDK acceptance (central, 2026-08-31).** Commit `bfaea140`
+adds `vibe-ext` as a gated public workspace crate and the deliberate native-ABI
+audit home. The author surface re-exports generated wire types and one macro;
+authored code contains no unsafe, while the expansion confines raw pointers,
+unsafe export attributes and exact boxed-slice reconstruction to one private
+FFI module. ABI/manifest/invoke/free use the four exact unmangled C names,
+proved through explicit `link_name` declarations rather than Rust re-exports.
+Manifest storage is stable `OnceLock<CString>`; invoke initializes output slots,
+borrows request bytes, validates envelope 1 and contains decode→handler→encode
+inside `catch_unwind`; successful ownership is one `Box<[u8]>` reclaimed by the
+exact pointer/length pair. Five worker plus three independent central mutations
+failed and restored byte-exact, including a link-time LNK2019 when one
+`no_mangle` was removed. Seven integration tests, check, strict clippy/fmt and
+conform 0-new pass. The standalone real `panic=abort` profile fails solely with
+the SDK's unwind-remediation compile error; removing that error makes the gate
+unexpectedly green. No loader, artifact resolution, package-slot build or
+activation path landed.
+
 Wire acceptance requires authored valid/invalid corpus documents for all three
 roots; registry completeness; codegen/check-codegen; exact generated-module
 sharing assertions; native reply unknown-member refusal; native context and
