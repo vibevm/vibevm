@@ -528,6 +528,15 @@ pub enum MechanismError {
         build_root: String,
     },
 
+    /// A deploy provider reported one completed operation and the engine
+    /// could not make that checkpoint durable. §7.2 requires apply to
+    /// checkpoint, so a checkpoint that only ever existed in memory is a
+    /// broken transaction, not a slow one — the apply stops here.
+    #[error(
+        "the deploy checkpoint for resource `{resource}` could not be recorded: {reason}          (violates spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS; fix: make          the vibevm settings directory writable, then rerun — an apply that cannot checkpoint          cannot be recovered from)"
+    )]
+    DeployCheckpoint { resource: String, reason: String },
+
     /// The produced bytes could not be read for digesting.
     #[error(
         "[[artifacts.build]] `{target}` output `{output}` could not be digested at `{path}`: \

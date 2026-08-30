@@ -24,7 +24,7 @@ use vibe_wire::generated::lifecycle_report::{
 use vibe_wire::generated::shared::{Timestamp, VerificationEvidence};
 use vibe_workspace::compile_trace::TraceRun;
 
-use crate::dispatch::MechanismTargets;
+use crate::dispatch::{DeployCarriage, MechanismTargets, lower_binaries};
 use crate::failure::{MeasuredFailure, Measurement, prepend_rows, take};
 use crate::install::{
     InstallDisposition, InstallExecution, InstallInputs, InstallPolicy, PreparedSelection,
@@ -95,6 +95,13 @@ pub struct PhaseRun<'a> {
     pub agent: Arc<dyn AgentBackend>,
     /// The surface's compile-trace recorder, borrowed.
     pub trace: Option<&'a TraceRun>,
+    /// The deploy-profile selection the COMMAND LAYER resolved, when it
+    /// resolved one (§7.0.5: "Profile resolution happens ONCE, in the
+    /// command layer that owns flags, and travels as data"). `None` is a
+    /// run that carries no selection — a chain that never reaches deploy,
+    /// or a project that declares no deploy section — and the deploy fence
+    /// then arms nothing at all.
+    pub deploy: Option<vibe_lifecycle::DeploySelection>,
     /// The surface's injected instant for the verify comparison.
     ///
     /// This entry point owns the COMPLETE derived chain, so handing it down is
@@ -253,6 +260,7 @@ fn run(inputs: PhaseRun<'_>, measured: &mut Measured) -> Result<Outcome> {
         manifest_mutation,
         agent,
         trace,
+        deploy,
         observed_at,
     } = inputs;
     // The ONE proof of the bundle, before validate and before install.
@@ -274,6 +282,28 @@ fn run(inputs: PhaseRun<'_>, measured: &mut Measured) -> Result<Outcome> {
     // exactly as it was.
     let artifacts = manifest.artifacts.clone();
     let routes = manifest.mechanism_routes.clone();
+    // The legacy `[[binary]]` rows and the declared deploy targets, taken
+    // off the SAME proven manifest and in the same breath as the artifact
+    // graph — §7.0.7's lowering call site and the deploy fence's target
+    // set both read them, and a second manifest read would be a second
+    // answer.
+    let binaries = manifest.binaries.clone();
+    let deploy_targets = manifest
+        .deploy
+        .as_ref()
+        .map(|section| section.targets.clone())
+        .unwrap_or_default();
+    // The deploy carriage: the command layer's resolved selection plus the
+    // engine's own state home and identity. Assembled once, here, from the
+    // proven manifest — never re-derived below.
+    let deploy_carriage = match deploy {
+        Some(selection) => Some(DeployCarriage::assemble(selection, &manifest)?),
+        None => None,
+    };
+    // §7.0.7's lowering, at the assembly that arms the fences: a legacy
+    // `[[binary]]` IS a build target after this call, so the executor has
+    // no legacy case.
+    let build_targets = lower_binaries(artifacts.as_ref(), &binaries)?;
     // ---- the agreement gate, before validate and before any state work ---
     //
     // `run_phases` is a PUBLIC entry point, and a validate-only chain reaches
@@ -422,11 +452,17 @@ fn run(inputs: PhaseRun<'_>, measured: &mut Measured) -> Result<Outcome> {
     let created_at = observed_at.to_rfc3339();
     let targets = MechanismTargets {
         project_root: &project_root,
-        artifacts: artifacts.as_ref(),
+        build: &build_targets,
+        package: artifacts.as_ref().map_or(
+            &[] as &[vibe_core::manifest::ArtifactPackageTarget],
+            |section| &section.package,
+        ),
+        deploy_targets: &deploy_targets,
         registry: &ritual.mechanisms,
         routes: &routes,
         offline: metadata.offline,
         created_at: &created_at,
+        deploy: deploy_carriage.as_ref(),
     };
     let state_chain = phases.iter().map(ToString::to_string).collect();
     // `Some(...)` here, and ONLY here on the tracked path: this is the

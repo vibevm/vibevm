@@ -115,7 +115,7 @@ pub fn run_clean(
         chain,
     } = args;
     let chain = chain.context("internal: chained clean lost its continuation")?;
-    let (requested, mut install_args) = clean_continuation(chain);
+    let (requested, mut install_args, deploy) = clean_continuation(chain)?;
     if path != Path::new(".") {
         install_args.path = path;
     }
@@ -127,6 +127,7 @@ pub fn run_clean(
         requested,
         install_args,
         assume_yes,
+        deploy,
         prepare_install,
         root_offline,
     )
@@ -243,18 +244,39 @@ pub(super) fn refuse_untracked_agent_rows(
     )
 }
 
-fn clean_continuation(chain: CleanChain) -> (Phase, InstallArgs) {
-    match chain {
-        CleanChain::Validate(args) => (Phase::Validate, args.install_args()),
-        CleanChain::Install(args) => (Phase::Install, args),
-        CleanChain::Generate(args) => (Phase::Generate, args.install_args()),
-        CleanChain::Build(args) => (Phase::Build, args.install_args()),
-        CleanChain::Test(args) => (Phase::Test, args.install_args()),
-        CleanChain::Create(args) => (Phase::Create, args.install_args()),
-        CleanChain::Verify(args) => (Phase::Verify, args.install_args()),
-        CleanChain::Package(args) => (Phase::Package, args.install_args()),
-        CleanChain::Deploy(args) => (Phase::Deploy, args.install_args()),
-    }
+/// The continuation phase, its install inputs, and — for the ninth verb
+/// only — the deploy-profile request it carries.
+///
+/// `--plan` refuses here rather than silently meaning something else: a
+/// plan is read-only by definition, and a clean prefix has already wiped
+/// derived state by the time the continuation runs, so the two cannot be
+/// composed into one honest invocation.
+fn clean_continuation(
+    chain: CleanChain,
+) -> Result<(Phase, InstallArgs, Option<super::DeployRequest>)> {
+    Ok(match chain {
+        CleanChain::Validate(args) => (Phase::Validate, args.install_args(), None),
+        CleanChain::Install(args) => (Phase::Install, args, None),
+        CleanChain::Generate(args) => (Phase::Generate, args.install_args(), None),
+        CleanChain::Build(args) => (Phase::Build, args.install_args(), None),
+        CleanChain::Test(args) => (Phase::Test, args.install_args(), None),
+        CleanChain::Create(args) => (Phase::Create, args.install_args(), None),
+        CleanChain::Verify(args) => (Phase::Verify, args.install_args(), None),
+        CleanChain::Package(args) => (Phase::Package, args.install_args(), None),
+        CleanChain::Deploy(args) => {
+            if args.plan {
+                anyhow::bail!(
+                    "`vibe clean deploy --plan` is not an invocation: a plan is read-only and                      reports what a deploy WOULD do, while a clean prefix wipes derived state                      before the continuation runs                      (violates spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS;                      fix: run `vibe deploy --plan` on its own, or drop `--plan` to clean and                      deploy)"
+                );
+            }
+            let profile = args.profile;
+            (
+                Phase::Deploy,
+                args.lifecycle.install_args(),
+                Some(super::DeployRequest { profile }),
+            )
+        }
+    })
 }
 
 fn new_run_id(project_root: &Path) -> Result<String> {

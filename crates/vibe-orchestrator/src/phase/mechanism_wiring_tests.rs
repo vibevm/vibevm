@@ -35,8 +35,19 @@ fn run(root: &std::path::Path) -> PhaseOutcome {
     run_phases_over(root, vec![Phase::Build, Phase::Package])
 }
 
-/// The same drive, over an explicit phase slice.
+/// The same drive, over an explicit phase slice and no deploy selection.
 fn run_phases_over(root: &std::path::Path, phases: Vec<Phase>) -> PhaseOutcome {
+    run_deploying(root, phases, None)
+}
+
+/// The same drive again, carrying a resolved deploy-profile selection —
+/// §7.0.5's "travels as data", from the position a command layer would
+/// hand it in at.
+fn run_deploying(
+    root: &std::path::Path,
+    phases: Vec<Phase>,
+    deploy: Option<vibe_lifecycle::DeploySelection>,
+) -> PhaseOutcome {
     let root = match resolve_project_root(root) {
         Ok(root) => root,
         Err(error) => panic!("the fixture root resolves: {error}"),
@@ -92,6 +103,7 @@ fn run_phases_over(root: &std::path::Path, phases: Vec<Phase>) -> PhaseOutcome {
         manifest_mutation: &NoManifestMutation,
         agent,
         trace: None,
+        deploy,
         observed_at: match "2026-08-30T12:00:05Z".parse() {
             Ok(instant) => instant,
             Err(error) => panic!("the fixture instant parses: {error}"),
@@ -337,5 +349,217 @@ fn a_declared_package_target_really_runs_through_the_wiring() {
             .join(".vibe/state/artifacts/demo.md.json")
             .is_file(),
         "and the engine wrote its A2 record beside the build records",
+    );
+}
+
+/// The same shape one phase further: a deploy target that always refuses,
+/// bracketed by a `phase:package` and a `phase:deploy` contribution.
+///
+/// The refusal is the ENGINE's own — §7.0.2's provider-not-landed, since
+/// `deploy:vibe-bin` is collected, routable and deliberately unimplemented
+/// — so reaching it proves the deploy executor really ran.
+const PACKAGE_THEN_DEPLOY: &str = concat!(
+    "[project]
+name = \"demo\"
+version = \"0.1.0\"
+
+",
+    "[[extension]]
+id = \"pkg\"
+point = \"phase:package\"
+",
+    "handler = { kind = \"builtin\", name = \"log\" }
+",
+    "config = { message = \"PACKAGED\" }
+
+",
+    "[[extension]]
+id = \"dep\"
+point = \"phase:deploy\"
+",
+    "handler = { kind = \"builtin\", name = \"log\" }
+",
+    "config = { message = \"DEPLOYED\" }
+
+",
+    "[[artifacts.build]]
+id = \"tool\"
+mechanism = \"build:cargo\"
+",
+    "outputs = [{ id = \"tool.exe\", kind = \"executable\" }]
+
+",
+    "[[deploy.target]]
+id = \"local\"
+artifact = \"tool.exe\"
+",
+    "mechanism = \"deploy:vibe-bin\"
+
+",
+    "[deploy.profiles.local]
+targets = [\"local\"]
+",
+);
+
+/// The resolved selection the command layer would hand down.
+fn local_profile() -> vibe_lifecycle::DeploySelection {
+    vibe_lifecycle::DeploySelection {
+        profile: "local".to_string(),
+        targets: vec!["local".to_string()],
+    }
+}
+
+/// The phases whose contributions a DEPLOY-refusing run had really
+/// dispatched, plus the rendered refusal.
+fn measured_deploy(outcome: PhaseOutcome) -> Vec<String> {
+    let PhaseOutcome::Failed {
+        measurement,
+        original,
+        ..
+    } = outcome
+    else {
+        panic!("a refusing deploy target stops the run");
+    };
+    let rendered = format!("{original:#}");
+    assert!(
+        rendered.contains("PROP-054#OPEN-DEPLOY-TARGETS"),
+        "the deploy engine refused: {rendered}",
+    );
+    assert!(
+        rendered.contains("R8-VIBE-BIN"),
+        "and it named the atom that lands the provider: {rendered}",
+    );
+    match measurement {
+        Measurement::Lifecycle { rows, .. } => rows.into_iter().map(|row| row.phase).collect(),
+        other => panic!("a dispatch failure is lifecycle-shaped, got {other:?}"),
+    }
+}
+
+#[test]
+fn the_deploy_fence_fires_after_package_contributions_and_before_deploy_ones() {
+    let dir = manifested(PACKAGE_THEN_DEPLOY);
+
+    let phases = measured_deploy(run_deploying(
+        dir.path(),
+        vec![Phase::Package, Phase::Deploy],
+        Some(local_profile()),
+    ));
+
+    assert!(
+        phases.iter().any(|phase| phase == "package"),
+        "every earlier phase's contributions ran first: {phases:?}",
+    );
+    assert!(
+        !phases.iter().any(|phase| phase == "deploy"),
+        "the deploy fence fired before the deploy contributions: {phases:?}",
+    );
+}
+
+/// The verify edge of the same walk: a `phase:verify` contribution is
+/// dispatched BEFORE the deploy fence, exactly as §2's phase line orders
+/// build → verify → package → deploy.
+#[test]
+fn every_verify_contribution_is_dispatched_before_the_mechanism_deploy() {
+    let dir = manifested(
+        &PACKAGE_THEN_DEPLOY.replace("point = \"phase:package\"", "point = \"phase:verify\""),
+    );
+
+    let phases = measured_deploy(run_deploying(
+        dir.path(),
+        vec![Phase::Verify, Phase::Package, Phase::Deploy],
+        Some(local_profile()),
+    ));
+
+    assert!(
+        phases.iter().any(|phase| phase == "verify"),
+        "the verify contribution ran before the deploy fence: {phases:?}",
+    );
+    assert!(
+        !phases.iter().any(|phase| phase == "deploy"),
+        "and the deploy fence still fired before the deploy contributions: {phases:?}",
+    );
+}
+
+/// §7.0.5's arming law, in the direction that keeps every existing
+/// `vibe deploy` working: a dispatch that carries NO resolved selection
+/// arms no deploy fence, whatever the chain says.
+#[test]
+fn a_dispatch_with_no_resolved_selection_arms_no_deploy_fence() {
+    let dir = manifested(PACKAGE_THEN_DEPLOY);
+
+    let outcome = run_deploying(dir.path(), vec![Phase::Package, Phase::Deploy], None);
+
+    let PhaseOutcome::Completed(values) = outcome else {
+        panic!("without a selection the deploy fence arms nothing and the run completes");
+    };
+    assert!(values.ok);
+    assert!(
+        values.contributions.iter().any(|row| row.phase == "deploy"),
+        "and the ordinary `phase:deploy` contributions still ran: {:?}",
+        values.contributions,
+    );
+}
+
+/// The deployment state home the carriage resolves is the ISOLATED one —
+/// the operator's real `~/.vibe` is unreachable from this suite, and the
+/// assertion says so rather than assuming it.
+#[test]
+fn the_deployment_state_home_resolves_inside_the_isolated_settings_dir() {
+    let home = vibe_test_support::isolated_home().expect("the test process is isolated");
+    let settings = vibe_core::settings::settings_dir().expect("an isolated settings dir");
+    assert!(
+        settings.starts_with(home),
+        "`{}` must sit inside the isolated home `{}`",
+        settings.display(),
+        home.display(),
+    );
+    let state = vibe_lifecycle::deploy_state_home(&settings);
+    assert!(state.starts_with(home));
+    assert!(state.ends_with("deployments"));
+}
+
+/// §7.0.7's LOWERING CALL SITE, the one R8-PACKAGE named so it could not
+/// be forgotten: a package that declares only a legacy `[[binary]]` and no
+/// `[[artifacts.build]]` reaches the build executor anyway.
+///
+/// `crate` names a directory that does not exist, so the builtin Cargo
+/// adapter refuses deterministically and at no compile cost — and the
+/// refusal is the BUILTIN's own, which is what proves the lowered row
+/// really became a live build target rather than being ignored.
+const BINARY_ONLY: &str = concat!(
+    "[package]
+group = \"org.example\"
+name = \"legacy-tools\"
+kind = \"tool\"
+version = \"0.1.0\"
+authors = [\"Fixture\"]
+license = \"EULA\"
+description = \"fixture\"
+keywords = [\"fixture\"]
+
+",
+    "[[binary]]
+name = \"tool\"
+crate = \"never-generated\"
+",
+);
+
+#[test]
+fn a_legacy_binary_row_reaches_the_build_executor_through_the_lowering() {
+    let dir = manifested(BINARY_ONLY);
+
+    let outcome = run_phases_over(dir.path(), vec![Phase::Build]);
+
+    let PhaseOutcome::Failed { original, .. } = outcome else {
+        panic!("the lowered target really runs, and the builtin refuses it");
+    };
+    let rendered = format!("{original:#}");
+    assert!(
+        rendered.contains("[[artifacts.build]] `tool`"),
+        "the legacy row IS a build target after lowering: {rendered}",
+    );
+    assert!(
+        rendered.contains("PROP-054#ONE-MACHINE"),
+        "and the refusal is the builtin provider's own: {rendered}",
     );
 }

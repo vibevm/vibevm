@@ -124,6 +124,48 @@ impl LifecycleArgs {
     }
 }
 
+/// Arguments for `vibe deploy [--profile X] [--plan]`.
+///
+/// The lifecycle flags are FLATTENED rather than restated: `vibe deploy`
+/// is the ninth phase verb and admits everything its eight siblings do,
+/// plus the two members §7 gives it.
+#[derive(Debug, Clone, clap::Args)]
+pub struct DeployArgs {
+    #[command(flatten)]
+    pub lifecycle: LifecycleArgs,
+
+    /// The deploy profile to reconcile. Legal to omit only when the
+    /// manifest names an explicit `default_profile` or defines exactly
+    /// one profile (PROP-054 ##OPEN-DEPLOY-TARGETS). Environment
+    /// variables and the presence of secrets never choose a profile.
+    #[arg(long)]
+    pub profile: Option<String>,
+
+    /// Report what would be deployed and stop. A plan reads records and
+    /// receipts, calls each provider's `plan` verb and nothing else, and
+    /// never reads a token, opens a socket, builds or mutates a
+    /// destination.
+    #[arg(long)]
+    pub plan: bool,
+}
+
+/// Arguments for `vibe undeploy --profile X`.
+///
+/// `--profile` is REQUIRED here and optional on `vibe deploy`, which is
+/// the architecture's own two spellings: a deployment may be defaulted,
+/// an inverse deployment is named. The RESOLUTION behind both flags is
+/// the one law.
+#[derive(Debug, Clone, clap::Args)]
+pub struct UndeployArgs {
+    /// Directory of the project (defaults to current).
+    #[arg(long, default_value = ".")]
+    pub path: PathBuf,
+
+    /// The deploy profile whose targets are removed, in reverse order.
+    #[arg(long)]
+    pub profile: String,
+}
+
 /// Arguments for `vibe clean [<phase> …]`.
 #[derive(Debug, clap::Args)]
 pub struct CleanArgs {
@@ -152,7 +194,11 @@ pub enum CleanChain {
     Create(LifecycleArgs),
     Verify(LifecycleArgs),
     Package(LifecycleArgs),
-    Deploy(LifecycleArgs),
+    /// The clean-prefixed ninth verb carries the SAME arguments the bare
+    /// one does: a clean prefix changes what a run starts from, never
+    /// what the run means, so `vibe clean deploy --profile X` reconciles
+    /// exactly what `vibe deploy --profile X` would.
+    Deploy(DeployArgs),
 }
 
 /// The authored spelling of `--agent-mode`. `auto` is an INSTRUCTION to

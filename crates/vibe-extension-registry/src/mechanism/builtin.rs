@@ -3,7 +3,7 @@
 //! §3 of the build/package/deploy architecture rejects a privileged branch for
 //! what vibe already implements: the built-in Cargo adapter "is represented by
 //! the reserved provider key `org.vibevm/vibe#cargo`, not by a privileged
-//! branch outside the registry". This cell is that representation — four
+//! branch outside the registry". This cell is that representation — five
 //! ordinary declarations under one reserved identity, which the collector
 //! ALWAYS appends ahead of every collected manifest. Selection then has no
 //! builtin case to special-case: step 3 of §3.1 is a lookup in the same vector
@@ -35,10 +35,11 @@ pub(super) const RESERVED_OWNER: &str = "org.vibevm/vibe";
 
 /// One engine-minted provider, in the exact order collection appends it.
 ///
-/// The four shipped rows are the ones the architecture names by key: `#cargo`
+/// The five shipped rows are the ones the architecture names by key: `#cargo`
 /// (§5, the Cargo commissioning backend), `#static-skill` (§6.1),
-/// `#agent-plugin` (§6.2) and `#vibe-bin` (§7.1). Each is `protocol = 1`,
-/// because the provider protocol starts at 1 and nothing has revised it.
+/// `#agent-plugin` (§6.2), `#vibe-bin` (§7.1) and `#windows-zip` (§7.0.8).
+/// Each is `protocol = 1`, because the provider protocol starts at 1 and
+/// nothing has revised it.
 struct BuiltinDescriptor {
     id: &'static str,
     role: MechanismRole,
@@ -57,16 +58,17 @@ struct BuiltinDescriptor {
 /// `freshness` is read from the architecture, not chosen here: §4.1 states
 /// outright that "Cargo is provider-fresh", and a deploy target reconciles
 /// state outside the workspace that no engine-side census can hash, so
-/// `deploy:vibe-bin` is provider-fresh for the same reason. The two packaging
-/// rows are engine-fresh because their input set is closed and hashable by
-/// construction — §6.1 produces exactly one file from declared textual
-/// resources, §6.2 a directory of declared files.
+/// `deploy:vibe-bin` is provider-fresh for the same reason. The three
+/// packaging rows are engine-fresh because their input set is closed and
+/// hashable by construction — §6.1 produces exactly one file from declared
+/// textual resources, §6.2 a directory of declared files, and §7.0.8's
+/// archive is exactly the declared inputs and nothing else.
 //
 // REVIEW: confirm each `config_schema` path below when R8-CARGO lands the
 // provider protocol, because it materialises the JTD files these names point
 // at. Nothing reads them at this atom — selection is pure — so the spelling is
 // an engine-owned schema identity and not yet a file on disk.
-const BUILTINS: [BuiltinDescriptor; 4] = [
+const BUILTINS: [BuiltinDescriptor; 5] = [
     BuiltinDescriptor {
         id: "cargo",
         role: MechanismRole::Build,
@@ -95,6 +97,13 @@ const BUILTINS: [BuiltinDescriptor; 4] = [
         freshness: MechanismFreshness::Provider,
         config_schema: "schemas/mechanism/deploy_vibe_bin.jtd.json",
     },
+    BuiltinDescriptor {
+        id: "windows-zip",
+        role: MechanismRole::Package,
+        name: "windows-zip",
+        freshness: MechanismFreshness::Engine,
+        config_schema: "schemas/mechanism/package_windows_zip.jtd.json",
+    },
 ];
 
 /// The engine's own mechanism source — one owner and its declarations.
@@ -108,7 +117,7 @@ const BUILTINS: [BuiltinDescriptor; 4] = [
 ///
 /// let source = builtin_mechanism_source();
 /// assert_eq!(source.owner(), "org.vibevm/vibe");
-/// assert_eq!(source.declarations().len(), 4);
+/// assert_eq!(source.declarations().len(), 5);
 /// assert_eq!(source.declarations()[0].id, "cargo");
 /// ```
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE")]

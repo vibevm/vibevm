@@ -30,7 +30,11 @@ use vibe_core::manifest::{ArtifactInput, ArtifactPackageTarget};
 
 use super::error::PackageError;
 use super::protocol::{InputOrigin, ResolvedInput};
-use crate::mechanism::contain::{checked_relative, digest_file, forward_slashed, join_relative};
+use vibe_wire::generated::artifact_record::ArtifactShape;
+
+use crate::mechanism::contain::{
+    checked_relative, digest_file, forward_slashed, join_relative, tree_digest,
+};
 use crate::mechanism::record::read_record;
 
 /// Resolve and prove every declared input of one package target, in
@@ -88,13 +92,30 @@ fn from_record(
         }
     })?;
     let absolute = join_relative(project_root, &relative);
-    let (digest, bytes) =
-        digest_file(&absolute).map_err(|fault| PackageError::InputArtifactMissing {
-            target: target.to_owned(),
-            input: artifact.to_owned(),
-            path: relative.clone(),
-            reason: fault.reason(),
-        })?;
+    // The recorded SHAPE decides how the bytes are witnessed: §4 gives a
+    // file its SHA-256 and a directory its canonical tree digest, and
+    // reading a directory through the file primitive would refuse every
+    // directory artifact this plane can legitimately consume.
+    let (digest, bytes) = match record.shape {
+        ArtifactShape::File => {
+            digest_file(&absolute).map_err(|fault| PackageError::InputArtifactMissing {
+                target: target.to_owned(),
+                input: artifact.to_owned(),
+                path: relative.clone(),
+                reason: fault.reason(),
+            })?
+        }
+        ArtifactShape::Directory => {
+            let witness =
+                tree_digest(&absolute).map_err(|fault| PackageError::InputArtifactMissing {
+                    target: target.to_owned(),
+                    input: artifact.to_owned(),
+                    path: relative.clone(),
+                    reason: format!("{}: {}", fault.path, fault.reason),
+                })?;
+            (witness.digest, witness.bytes)
+        }
+    };
     if digest != record.digest.value {
         return Err(PackageError::InputStale {
             target: target.to_owned(),
@@ -111,6 +132,7 @@ fn from_record(
         relative,
         digest,
         bytes,
+        shape: record.shape.clone(),
         origin: InputOrigin::ArtifactRecord,
     })
 }
@@ -140,6 +162,10 @@ fn from_workspace(
         relative,
         digest,
         bytes,
+        // A `{ path }` input stays a single file: the workspace half of
+        // this resolver reads a declared resource, and a directory named
+        // there would be a second, unstated way to enumerate a tree.
+        shape: ArtifactShape::File,
         origin: InputOrigin::WorkspacePath,
     })
 }

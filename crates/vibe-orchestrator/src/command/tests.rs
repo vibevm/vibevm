@@ -454,6 +454,7 @@ fn a_package_free_command_builds_zero_package_sources() {
         },
         None,
         "2026-08-28T12:00:05Z".parse().expect("a fixture instant"),
+        None,
     );
 
     assert!(

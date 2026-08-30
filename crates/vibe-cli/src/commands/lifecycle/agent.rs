@@ -16,12 +16,17 @@
 //! [`CliAgentBackend::complete`] is the first line that reads user config,
 //! resolves a credential or builds a transport.
 
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::sync::Arc;
 
 use specmark::spec;
 use vibe_core::manifest::LlmSection;
 use vibe_core::user_config::UserConfig;
+
+use anyhow::Result;
+
+use crate::commands::install::PreparedSelection;
+use crate::output;
 use vibe_lifecycle::agent::{
     AgentBackend, AgentCompletion, AgentRequest, AgentUsage, PromptRequest, ResolvedPrompt,
     SelectedWorldPromptResolver,
@@ -30,6 +35,7 @@ use vibe_llm::{
     ChatInput, ChatMessage, ChatRole, LLMProvider, ReqwestChatTransport, SystemCredentialReader,
     resolve_effective_config,
 };
+use vibe_orchestrator::RunPrelude;
 
 /// The remediation PROP-054 `##AGENT-CLI` requires: a selected agent
 /// contribution never degrades to a silent skip.
@@ -100,6 +106,79 @@ impl AgentBackend for CliAgentBackend {
             }),
         })
     }
+}
+
+/// The agent backend the install barrier injects.
+///
+/// Built from values the caller ALREADY has: the workspace root it discovered
+/// and the selected node's `[llm]` table from the manifest that discovery
+/// produced. It reads nothing — no credential, no endpoint, and no provider
+/// construction happens until an actual agent execution runs.
+///
+/// It used to discover the workspace and re-read the manifest itself, which
+/// made it a second (and third) read of a tree the install is mutating: a
+/// backend built from a different snapshot than the run it serves.
+pub(crate) fn install_agent_backend(
+    workspace_root: &Path,
+    manifest: &vibe_core::manifest::Manifest,
+) -> CliAgentBackend {
+    CliAgentBackend::new(workspace_root.to_path_buf(), manifest.llm.clone())
+}
+
+/// The ONE agent backend a command injects, built from values it ALREADY holds
+/// — the STORED snapshot before it has been consumed, and a root the caller
+/// carried. An unreadable manifest carries no `[llm]`, and the stored parse
+/// error is still owed to the boundary that proves the bundle.
+///
+/// `workspace_root` is the caller's own — `lease.root()`, or the bundle's loaded
+/// root. It is deliberately not a path this function locates: the previous
+/// shape called `lease_root(project_root)`, which ran a whole extra
+/// `Workspace::discover` and, when that discovery failed, silently swallowed
+/// the error and fell back to the selected root. So a command that had already
+/// leased a workspace root could hand its agent a DIFFERENT root, and nothing
+/// said so. The snapshot contributes exactly one thing — a clone of `[llm]` —
+/// and nothing else about it crosses into the backend.
+pub(crate) fn install_agent_backend_from(
+    workspace_root: &Path,
+    llm: Option<&vibe_core::manifest::Manifest>,
+) -> CliAgentBackend {
+    CliAgentBackend::new(
+        workspace_root.to_path_buf(),
+        llm.and_then(|parsed| parsed.llm.clone()),
+    )
+}
+
+/// Choose this invocation's durable run identity through the one selector,
+/// before anything is allocated.
+///
+/// It RESOLVES and DISCOVERS nothing: the caller has already canonicalised the
+/// project root once and already built (or failed to build) the workspace from
+/// its own manifest snapshot. A second resolution here would be a second
+/// answer to "which node is this", and a second discovery a second answer to
+/// "what does its tree look like".
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn run_prelude(
+    ctx: &output::Context,
+    selection: PreparedSelection,
+    lease: std::sync::Arc<vibe_lifecycle::LifecycleLease>,
+    requested: &str,
+    chain: &[String],
+    force: bool,
+    compile_trace: bool,
+) -> Result<RunPrelude> {
+    // The whole epoch — the post-acquisition root law, the selected-node
+    // derivation and the one identity selection — is the shared service's.
+    // This surface contributes exactly one fact it owns: its resolved agent
+    // mode.
+    vibe_orchestrator::run_prelude(
+        selection,
+        lease,
+        requested,
+        chain,
+        ctx.agent_mode(),
+        force,
+        compile_trace,
+    )
 }
 
 #[cfg(test)]

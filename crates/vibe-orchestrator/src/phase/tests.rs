@@ -327,6 +327,7 @@ mod validate_only_gate {
             manifest_mutation: &NoManifestMutation,
             agent,
             trace: None,
+            deploy: None,
             observed_at: "2026-08-28T12:00:05Z".parse().expect("a fixture instant"),
         });
 

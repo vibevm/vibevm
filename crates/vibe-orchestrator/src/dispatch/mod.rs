@@ -24,7 +24,7 @@ use crate::{PlannedExecution, RitualPlan, world};
 
 use backends::{ProjectPackageBindingBackend, WorkspaceBinaryBackend};
 
-pub(crate) use mechanism::MechanismTargets;
+pub(crate) use mechanism::{DeployCarriage, MechanismTargets, lower_binaries};
 
 mod backends;
 mod mechanism;
@@ -273,9 +273,10 @@ fn dispatch_measured(
     // complete one owes it only when the chain really contains verify.
     let mut boundary = verification_observed_at
         .and_then(|at| verify::boundary(plan, &metadata.chain).map(|end| (end, at)));
-    // The two mechanism fences, armed from the same plan and the same chain
-    // the verify boundary reads. They straddle that boundary exactly as §2's
-    // phase line does — build, then verify, then package.
+    // The three mechanism fences, armed from the same plan and the same
+    // chain the verify boundary reads. They straddle that boundary exactly
+    // as §2's phase line does — build, then verify, then package, then
+    // deploy.
     let mut fences = mechanism::Fences::arm(targets, plan, &metadata.chain);
     let gate = verify::Gate {
         plan,
@@ -311,6 +312,11 @@ fn dispatch_measured(
         // phase line puts between them.
         if let Some(fences) = fences.as_mut() {
             fences.fire_package(index)?;
+        }
+        // And BEFORE the first deploy row — the last member of the phase
+        // line, so the last fence.
+        if let Some(fences) = fences.as_mut() {
+            fences.fire_deploy(index)?;
         }
         let handler = HandlerExecution::from_row(&execution.row);
         let transition = match run.execute_one(
@@ -413,6 +419,9 @@ fn dispatch_measured(
     }
     if let Some(fences) = fences.as_mut() {
         fences.fire_package(end_of_plan)?;
+    }
+    if let Some(fences) = fences.as_mut() {
+        fences.fire_deploy(end_of_plan)?;
     }
     if plan.package_phase_planned {
         let reconciled = outcome.reports.iter().any(|report| {
@@ -563,6 +572,12 @@ fn runtime<'a>(
 #[cfg(test)]
 #[path = "tests.rs"]
 mod tests;
+
+/// The `[[binary]]` lowering's reds — §7.0.7's law at the assembly that
+/// arms the fences, in their own cell for the same budget reason.
+#[cfg(test)]
+#[path = "mechanism_tests.rs"]
+mod mechanism_tests;
 
 /// The verify-boundary reds live in their own cell: they need a declared-input
 /// fixture and a mutating observer the row-accumulator reds have no use for,

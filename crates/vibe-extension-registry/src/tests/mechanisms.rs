@@ -3,7 +3,7 @@
 //! disable controls one host list drives across both planes.
 
 use specmark::verifies;
-use vibe_core::manifest::{ExtensionKey, ExtensionsControl, MechanismDecl};
+use vibe_core::manifest::{ExtensionKey, ExtensionsControl, MechanismDecl, MechanismFreshness};
 use vibe_core::{PackageKind, PackageName};
 
 use crate::{
@@ -53,8 +53,9 @@ fn the_reserved_identity_is_spellable_and_stable() {
             "org.vibevm/vibe#static-skill",
             "org.vibevm/vibe#agent-plugin",
             "org.vibevm/vibe#vibe-bin",
+            "org.vibevm/vibe#windows-zip",
         ],
-        "the four shipped rows, in the order the collector appends them"
+        "the five shipped rows, in the order the collector appends them"
     );
     assert_eq!(
         registry
@@ -67,6 +68,7 @@ fn the_reserved_identity_is_spellable_and_stable() {
             "package:static-skill",
             "package:agent-plugin",
             "deploy:vibe-bin",
+            "package:windows-zip",
         ],
     );
     for row in registry.rows() {
@@ -77,6 +79,65 @@ fn the_reserved_identity_is_spellable_and_stable() {
         assert!(row.provider_ordinal().is_none());
         assert!(row.is_enabled());
     }
+}
+
+/// Every shipped row's DESCRIPTOR is read out of the architecture, not
+/// chosen at the table: §4.1 rules Cargo provider-fresh, §§6.1–6.2 rule
+/// the two §6 packaging rows engine-fresh because their input sets are
+/// closed and hashable, §7.0.8 rules the archive row engine-fresh for the
+/// same reason, and a deploy target reconciles state no engine census can
+/// hash. The config-schema spellings are engine-owned identities under
+/// `schemas/mechanism/`, in one snake_case shape.
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE")]
+fn every_shipped_row_declares_the_freshness_and_schema_the_architecture_gives_it() {
+    let source = builtin_mechanism_source();
+    let rows: Vec<(&str, MechanismFreshness, String)> = source
+        .declarations()
+        .iter()
+        .map(|declaration| {
+            (
+                declaration.id.as_str(),
+                declaration.freshness,
+                declaration
+                    .config_schema
+                    .display()
+                    .to_string()
+                    .replace('\\', "/"),
+            )
+        })
+        .collect();
+
+    assert_eq!(
+        rows,
+        vec![
+            (
+                "cargo",
+                MechanismFreshness::Provider,
+                "schemas/mechanism/build_cargo.jtd.json".to_string(),
+            ),
+            (
+                "static-skill",
+                MechanismFreshness::Engine,
+                "schemas/mechanism/package_static_skill.jtd.json".to_string(),
+            ),
+            (
+                "agent-plugin",
+                MechanismFreshness::Engine,
+                "schemas/mechanism/package_agent_plugin.jtd.json".to_string(),
+            ),
+            (
+                "vibe-bin",
+                MechanismFreshness::Provider,
+                "schemas/mechanism/deploy_vibe_bin.jtd.json".to_string(),
+            ),
+            (
+                "windows-zip",
+                MechanismFreshness::Engine,
+                "schemas/mechanism/package_windows_zip.jtd.json".to_string(),
+            ),
+        ],
+    );
 }
 
 /// Collection order is builtins, then the installed world in LOCK order, then
@@ -108,7 +169,7 @@ fn collection_order_is_builtins_then_lock_order_then_host() {
     .expect("a world of ordinary providers collects");
 
     assert_eq!(
-        pins(&registry)[4..],
+        pins(&registry)[5..],
         [
             "org.zed/z-tools#z-build",
             "org.aaa/a-tools#a-build",
@@ -162,7 +223,7 @@ fn a_collected_manifest_claiming_the_reserved_owner_refuses_collection() {
         None,
     ))
     .expect("a package that declares no provider impersonates nothing");
-    assert_eq!(registry.rows().len(), 4);
+    assert_eq!(registry.rows().len(), 5);
 }
 
 /// Mutation 5's RED. One provider identity, one row: a second declaration of

@@ -431,6 +431,11 @@ impl PreparedDefaultLifecycle {
     /// COMPLETE epoch's permission for the engine-owned verify boundary; the
     /// partial install callback withholds it deliberately.
     ///
+    /// `deploy` is the profile selection the SURFACE resolved from its own
+    /// flags and this cell's own manifest snapshot (§7.0.5). It travels as
+    /// data and nothing below re-derives it; `None` is a run that selects
+    /// no profile.
+    ///
     /// ```no_run
     /// use vibe_orchestrator::{DefaultLifecyclePorts, PreparedDefaultLifecycle};
     /// use vibe_orchestrator::PhaseOutcome;
@@ -440,7 +445,7 @@ impl PreparedDefaultLifecycle {
     /// #     trace: Option<&vibe_workspace::compile_trace::TraceRun>,
     /// #     observed_at: vibe_wire::generated::shared::Timestamp,
     /// # ) -> PhaseOutcome {
-    /// prepared.run(ports, trace, observed_at)
+    /// prepared.run(ports, trace, observed_at, None)
     /// # }
     /// # let _ = go;
     /// ```
@@ -449,6 +454,7 @@ impl PreparedDefaultLifecycle {
         ports: DefaultLifecyclePorts<'_>,
         trace: Option<&TraceRun>,
         observed_at: Timestamp,
+        deploy: Option<vibe_lifecycle::DeploySelection>,
     ) -> PhaseOutcome {
         let DefaultLifecyclePorts {
             observer,
@@ -481,6 +487,7 @@ impl PreparedDefaultLifecycle {
             manifest_mutation,
             agent,
             trace,
+            deploy,
             observed_at,
         })
     }

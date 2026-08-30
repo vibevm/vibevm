@@ -19,9 +19,9 @@ use vibe_orchestrator::ports::RunObserver;
 use crate::commands::compile_trace;
 use crate::output;
 
-use super::install::{
-    CliInstallObserver, CliPackageSourceFactory, CliRegistryEnvironment, PreparedSelection,
-};
+use super::install::{CliInstallObserver, CliPackageSourceFactory, CliRegistryEnvironment};
+
+pub(crate) use agent::{install_agent_backend, install_agent_backend_from, run_prelude};
 
 mod agent;
 mod callback;
@@ -44,44 +44,17 @@ pub(crate) use slot::{
 };
 pub(crate) use vibe_orchestrator::values::{StepStatus, check_delegation, step_report};
 
-/// The agent backend the install barrier injects.
+/// The deploy verb's own request: this run reaches `deploy`, and the
+/// profile flag it carries (`None` = the manifest decides).
 ///
-/// Built from values the caller ALREADY has: the workspace root it discovered
-/// and the selected node's `[llm]` table from the manifest that discovery
-/// produced. It reads nothing — no credential, no endpoint, and no provider
-/// construction happens until an actual agent execution runs.
-///
-/// It used to discover the workspace and re-read the manifest itself, which
-/// made it a second (and third) read of a tree the install is mutating: a
-/// backend built from a different snapshot than the run it serves.
-pub(crate) fn install_agent_backend(
-    workspace_root: &Path,
-    manifest: &vibe_core::manifest::Manifest,
-) -> agent::CliAgentBackend {
-    agent::CliAgentBackend::new(workspace_root.to_path_buf(), manifest.llm.clone())
-}
-
-/// The ONE agent backend a command injects, built from values it ALREADY holds
-/// — the STORED snapshot before it has been consumed, and a root the caller
-/// carried. An unreadable manifest carries no `[llm]`, and the stored parse
-/// error is still owed to the boundary that proves the bundle.
-///
-/// `workspace_root` is the caller's own — `lease.root()`, or the bundle's loaded
-/// root. It is deliberately not a path this function locates: the previous
-/// shape called `lease_root(project_root)`, which ran a whole extra
-/// `Workspace::discover` and, when that discovery failed, silently swallowed
-/// the error and fell back to the selected root. So a command that had already
-/// leased a workspace root could hand its agent a DIFFERENT root, and nothing
-/// said so. The snapshot contributes exactly one thing — a clone of `[llm]` —
-/// and nothing else about it crosses into the backend.
-pub(crate) fn install_agent_backend_from(
-    workspace_root: &Path,
-    llm: Option<&vibe_core::manifest::Manifest>,
-) -> agent::CliAgentBackend {
-    agent::CliAgentBackend::new(
-        workspace_root.to_path_buf(),
-        llm.and_then(|parsed| parsed.llm.clone()),
-    )
+/// A named value rather than a bare `Option<Option<String>>`, because the
+/// outer and inner absences mean two different things — "not a deploy
+/// run" and "no `--profile` was passed" — and a reader must not have to
+/// count parentheses to tell them apart.
+#[derive(Debug, Clone)]
+pub struct DeployRequest {
+    /// The `--profile` flag, verbatim.
+    pub profile: Option<String>,
 }
 
 // DEFAULT-PATH-START (the shared command cell owns this composition; the
@@ -97,6 +70,7 @@ pub fn run(
     args: LifecycleArgs,
     prepare_install: impl FnOnce() -> Option<std::path::PathBuf>,
     root_offline: bool,
+    deploy: Option<DeployRequest>,
 ) -> Result<()> {
     let install_args = args.install_args();
     // Stage one: resolve + lease, nothing else — a contended workspace
@@ -127,6 +101,19 @@ pub fn run(
     let agent: std::sync::Arc<dyn vibe_lifecycle::AgentBackend> = std::sync::Arc::new(
         install_agent_backend_from(prepared.workspace_root(), prepared.selected_manifest()),
     );
+    // §7.0.5's ONE profile resolution, at the only place that owns both
+    // halves: the flag this surface parsed and the cell's own manifest
+    // snapshot. It happens exactly here — after the snapshot exists and
+    // before the run starts — and what it produces travels as data.
+    let deploy_selection = match deploy {
+        Some(request) => super::deploy::resolve_profile(
+            prepared
+                .selected_manifest()
+                .and_then(|manifest| manifest.deploy.as_ref()),
+            request.profile.as_deref(),
+        )?,
+        None => None,
+    };
     // The boundary's OWNER share: held through the finalised report and the
     // trace finalisation, so the workspace stays owned until the last byte
     // this invocation owes is written.
@@ -159,6 +146,7 @@ pub fn run(
             // The SAME injected clock the trace preparation and the finish
             // read: nothing below this surface reads time.
             now(),
+            deploy_selection,
         ),
     );
     // Consumes the owner: finishes the index against the real outcome, drops
@@ -177,12 +165,17 @@ pub fn run(
 /// this: it is `run` above, through the shared command cell, and the fence
 /// test at the bottom of this file keeps the two apart.
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM")]
+#[allow(
+    clippy::too_many_arguments,
+    reason = "one clean-composed invocation's named inputs, none of them bundleable"
+)]
 fn execute(
     ctx: &output::Context,
     request: LifecycleRequest,
     requested: Phase,
     mut install_args: InstallArgs,
     clean_assume_yes: bool,
+    deploy: Option<DeployRequest>,
     prepare_install: impl FnOnce() -> Option<std::path::PathBuf>,
     root_offline: bool,
 ) -> Result<()> {
@@ -383,6 +376,16 @@ fn execute(
         args: &install_args,
     };
     let environment = CliRegistryEnvironment::new(prepare_install);
+    let deploy_selection = match deploy {
+        Some(request) => super::deploy::resolve_profile(
+            prelude
+                .selection
+                .parsed_ref()
+                .and_then(|manifest| manifest.deploy.as_ref()),
+            request.profile.as_deref(),
+        )?,
+        None => None,
+    };
     let exit = classify_outcome(
         &failed_root,
         vibe_orchestrator::run_phases(vibe_orchestrator::PhaseRun {
@@ -407,6 +410,11 @@ fn execute(
             manifest_mutation: &super::install::NoManifestMutation,
             agent,
             trace: preparation.recorder(),
+            // §7.0.5's ONE resolution, from this epoch's own re-proven
+            // snapshot: a clean-prefixed deploy resolves its profile
+            // exactly as the bare verb does, and against the manifest the
+            // post-wipe reload produced.
+            deploy: deploy_selection,
             observed_at: now(),
         }),
     );
@@ -528,39 +536,6 @@ pub(crate) fn lifecycle_family(
 /// the funnel's, and a second copy of the pairing is a second answer to which
 /// root a member's install may lock. The surface still injects the clock.
 pub(crate) use vibe_orchestrator::RunPrelude;
-
-/// Choose this invocation's durable run identity through the one selector,
-/// before anything is allocated.
-///
-/// It RESOLVES and DISCOVERS nothing: the caller has already canonicalised the
-/// project root once and already built (or failed to build) the workspace from
-/// its own manifest snapshot. A second resolution here would be a second
-/// answer to "which node is this", and a second discovery a second answer to
-/// "what does its tree look like".
-#[allow(clippy::too_many_arguments)]
-pub(crate) fn run_prelude(
-    ctx: &output::Context,
-    selection: PreparedSelection,
-    lease: std::sync::Arc<vibe_lifecycle::LifecycleLease>,
-    requested: &str,
-    chain: &[String],
-    force: bool,
-    compile_trace: bool,
-) -> Result<RunPrelude> {
-    // The whole epoch — the post-acquisition root law, the selected-node
-    // derivation and the one identity selection — is the shared service's.
-    // This surface contributes exactly one fact it owns: its resolved agent
-    // mode.
-    vibe_orchestrator::run_prelude(
-        selection,
-        lease,
-        requested,
-        chain,
-        ctx.agent_mode(),
-        force,
-        compile_trace,
-    )
-}
 
 // The identity-only selector that `vibe update` and `vibe reinstall` used to
 // call is gone. It existed because those two commands owned no trace session:

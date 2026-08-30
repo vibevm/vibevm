@@ -152,6 +152,10 @@ impl McpTool for LifecycleRunMcpTool {
             // The same injected clock the trace preparation and finish read:
             // this surface owns time, the engine below it never does.
             trace_clock(),
+            // No deploy-profile selection: this surface exposes no
+            // `--profile` flag, so it resolves none, and the deploy fence
+            // arms nothing (PROP-054 ##OPEN-DEPLOY-TARGETS).
+            None,
         );
         // The funnel: one exit, one finalize, one report. MCP IGNORES
         // `emit_report` — CLI historical silence does not travel — and

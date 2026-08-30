@@ -1,13 +1,14 @@
 //! The package role's provider-protocol value types — what the four
 //! §3.2 operations of a [`PackageProvider`] hand back.
 //!
-//! They are shared by both builtin packaging providers on purpose. §6.0.1
+//! They are shared by every builtin packaging provider on purpose. §6.0.1
 //! rules "a crate-internal `PackageProvider` trait beside `BuildProvider`
-//! … same operations, same engine-owns list"; two value vocabularies for
-//! one trait would make the trait a shape rather than a protocol, and the
-//! only genuinely role-specific thing — the validated `config` table — is
-//! carried as a closed two-variant value rather than smeared across both
-//! cells.
+//! … same operations, same engine-owns list"; a second value vocabulary
+//! per provider would make the trait a shape rather than a protocol, and
+//! the only genuinely provider-specific thing — the validated `config`
+//! table — is carried as one closed variant set rather than smeared across
+//! the cells. §7.0.8's windows-zip joined it as a third variant and needed
+//! nothing else.
 //!
 //! [`PackageProvider`]: crate::mechanism::PackageProvider
 
@@ -20,6 +21,7 @@ use vibe_wire::generated::artifact_record::ArtifactShape;
 
 use crate::mechanism::plugin::config::AgentPluginConfig;
 use crate::mechanism::skill::config::StaticSkillConfig;
+use crate::mechanism::zip::config::WindowsZipConfig;
 
 /// Where one resolved input came from.
 ///
@@ -59,9 +61,14 @@ pub(crate) struct ResolvedInput {
     pub(crate) absolute: PathBuf,
     /// Project-relative, forward-slashed.
     pub(crate) relative: String,
-    /// 64 lowercase hex over the bytes that are really there NOW.
+    /// 64 lowercase hex over the bytes that are really there NOW — the
+    /// file's SHA-256, or the canonical tree digest of a directory.
     pub(crate) digest: String,
     pub(crate) bytes: u64,
+    /// The physical shape on disk. A directory input is legal only where
+    /// a provider's own law admits one; the two §6 packaging providers
+    /// read text and refuse it by name at the point they try to.
+    pub(crate) shape: ArtifactShape,
     pub(crate) origin: InputOrigin,
 }
 
@@ -71,6 +78,7 @@ pub(crate) struct ResolvedInput {
 pub(crate) enum PackageConfig {
     StaticSkill(StaticSkillConfig),
     AgentPlugin(AgentPluginConfig),
+    WindowsZip(WindowsZipConfig),
 }
 
 /// One declared output, resolved against the provider's own grammar.

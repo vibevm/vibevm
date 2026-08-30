@@ -1,8 +1,15 @@
 //! The mechanism layer's ONE dependency-order walk.
 //!
-//! Both executors walk the same graph shape — targets that declare
-//! outputs and consume artifact ids — so they walk it with the same code.
-//! What genuinely differs between them is ONE decision, and it is a
+//! All three executors walk the same graph shape — nodes that CLAIM some
+//! identities and CONSUME others — so they walk it with the same code. The
+//! two artifact families claim their declared output ids and consume the
+//! artifact ids their inputs name; a deploy target claims its own id and
+//! consumes its `depends_on` list. Stating the trait in those two words
+//! rather than in `outputs`/`inputs` is what let the deploy role join
+//! without a second copy of the walk: the edge set was always the abstract
+//! thing, and the artifact vocabulary was one instance of it.
+//!
+//! What genuinely differs between the roles is ONE decision, and it is a
 //! parameter rather than a second copy of the walk: a build input naming
 //! an artifact no build target produces is an error (the build graph is
 //! closed under itself), while a package input naming one is ordinary
@@ -19,13 +26,28 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#ARTIFACT-REGISTR
 
 use std::collections::BTreeMap;
 
-use vibe_core::manifest::{ArtifactInput, ArtifactOutput};
-
-/// One node of a producer graph, as the walk needs to see it.
+/// One node of a dependency graph, as the walk needs to see it.
 pub(crate) trait GraphNode {
     fn id(&self) -> &str;
-    fn outputs(&self) -> &[ArtifactOutput];
-    fn inputs(&self) -> Option<&[ArtifactInput]>;
+    /// The identities this node claims — the ones another node's
+    /// `consumes` may name to depend on it.
+    fn produces(&self) -> Vec<&str>;
+    /// The identities this node depends on.
+    fn consumes(&self) -> Vec<&str>;
+}
+
+impl<T: GraphNode> GraphNode for &T {
+    fn id(&self) -> &str {
+        (*self).id()
+    }
+
+    fn produces(&self) -> Vec<&str> {
+        (*self).produces()
+    }
+
+    fn consumes(&self) -> Vec<&str> {
+        (*self).consumes()
+    }
 }
 
 /// What the walk does with a consumed artifact no node in the set
@@ -52,8 +74,8 @@ pub(crate) fn dag_order<N: GraphNode>(
 ) -> Result<Vec<usize>, OrderFault> {
     let mut producer: BTreeMap<&str, usize> = BTreeMap::new();
     for (index, node) in nodes.iter().enumerate() {
-        for output in node.outputs() {
-            producer.insert(output.id.as_str(), index);
+        for claimed in node.produces() {
+            producer.insert(claimed, index);
         }
     }
     let mut state = vec![Visit::Unseen; nodes.len()];
@@ -113,10 +135,7 @@ fn visit<N: GraphNode>(
     };
     state[index] = Visit::OnStack;
     stack.push(index);
-    for input in node.inputs().into_iter().flatten() {
-        let Some(consumed) = input.artifact_ref() else {
-            continue;
-        };
+    for consumed in node.consumes() {
         let Some(upstream) = producer.get(consumed) else {
             match unresolved {
                 Unresolved::Refuse => {

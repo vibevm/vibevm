@@ -43,15 +43,23 @@ use vibe_core::manifest::{ArtifactBuildTarget, ArtifactKind, ArtifactPackageTarg
 pub(crate) mod build;
 pub(crate) mod cargo;
 pub(crate) mod contain;
+pub(crate) mod deploy;
 pub(crate) mod error;
 pub(crate) mod order;
 pub(crate) mod package;
 pub(crate) mod plugin;
 pub(crate) mod record;
 pub(crate) mod skill;
+pub(crate) mod zip;
 
 pub use build::{
     BuildError, BuildExecution, BuildOutcome, ProducedArtifact, execute_build_targets,
+};
+pub use deploy::{
+    DEPLOY_STATE_DIR, DeployError, DeployExecution, DeployOutcome, DeployPlanReport,
+    DeployResourcePlan, DeploySelection, DeployStatus, DeployedResource, DeploymentRow,
+    RemovalOutcome, deploy_state_home, execute_deploy_targets, list_deployments,
+    plan_deploy_targets, undeploy_targets,
 };
 pub use error::MechanismError;
 pub use package::{
@@ -59,6 +67,9 @@ pub use package::{
 };
 pub use record::{ARTIFACT_RECORD_DIR, RecordError};
 
+// The deploy role's protocol lives beside its value types; it is named
+// here so every use site keeps spelling it `crate::mechanism::…`.
+pub(crate) use deploy::protocol::{DeployProvider, DeployTargetRequest};
 use package::protocol::{
     PackageFingerprint, PackagePlan, ResolvedInput, StagedArtifact, VerifiedPackageArtifact,
 };
@@ -434,3 +445,29 @@ pub(crate) const BUILTIN_AGENT_PLUGIN_PIN: &str = "org.vibevm/vibe#agent-plugin"
 
 /// The `handler = { kind = "builtin", name = … }` spelling of the same row.
 pub(crate) const BUILTIN_AGENT_PLUGIN_NAME: &str = "agent-plugin";
+
+/// The reserved identity of the §7.0.8 packaging provider.
+pub(crate) const BUILTIN_WINDOWS_ZIP_PIN: &str = "org.vibevm/vibe#windows-zip";
+
+/// The `handler = { kind = "builtin", name = … }` spelling of the same row.
+pub(crate) const BUILTIN_WINDOWS_ZIP_NAME: &str = "windows-zip";
+
+/// The reserved identity of the §7.1 deploy provider — collected, routable
+/// and deliberately NOT implemented at this atom.
+///
+/// The executor matches on the handler NAME (the row's own spelling), so
+/// the pin is read only by the tests that hold the registry row and the
+/// refusal to one identity. It stays here rather than in a test, because
+/// it is the engine's constant and the refusal quotes it.
+#[allow(
+    dead_code,
+    reason = "the reserved deploy identity; R8-VIBE-BIN lands the provider that answers to it"
+)]
+pub(crate) const BUILTIN_VIBE_BIN_PIN: &str = "org.vibevm/vibe#vibe-bin";
+
+/// The `handler = { kind = "builtin", name = … }` spelling of the same row.
+pub(crate) const BUILTIN_VIBE_BIN_NAME: &str = "vibe-bin";
+
+/// The atom that lands the `#vibe-bin` provider, named in its refusal so a
+/// reader learns what is missing rather than that something broke.
+pub(crate) const VIBE_BIN_ATOM: &str = "R8-VIBE-BIN";

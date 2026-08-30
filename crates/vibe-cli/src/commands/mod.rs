@@ -35,6 +35,7 @@ pub mod clean;
 /// `pub`: nothing outside the CLI may hold a recorder, and the four report
 /// consumers that will use it are all in this crate.
 pub(crate) mod compile_trace;
+pub mod deploy;
 pub mod explain;
 pub mod extensions;
 pub mod extensions_analyze;

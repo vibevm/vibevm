@@ -117,11 +117,14 @@ fn an_unroutable_key_refuses_through_the_one_resolver() {
     let registry = registry(&world);
     let routes = MechanismRoutes::default();
     let mut declared = skill_target("demo", "skills/demo", &[]);
-    declared.mechanism = key("package:windows-zip");
+    // A logical key the engine ships no default for: `package:windows-zip`
+    // used to be one and stopped being one when §7.0.8 landed its row, so
+    // the fixture names a capability nothing implements instead.
+    declared.mechanism = key("package:tarball");
     let targets = vec![declared];
 
     let refusal = execute_package_targets(&execution(root.path(), &targets, &registry, &routes))
-        .expect_err("this world ships no `package:windows-zip` provider");
+        .expect_err("this world ships no `package:tarball` provider");
 
     assert!(matches!(refusal, PackageError::Resolution(_)));
     assert!(refusal.to_string().contains("no shipped builtin default"));

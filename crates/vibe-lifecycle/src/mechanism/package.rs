@@ -45,9 +45,10 @@ use super::record::{
     RecordFreshness, RecordInputs, build_record, config_digest, sanitize, write_record,
 };
 use super::skill::StaticSkillProvider;
+use super::zip::WindowsZipProvider;
 use super::{
-    BUILTIN_AGENT_PLUGIN_NAME, BUILTIN_STATIC_SKILL_NAME, DEFAULT_PACKAGE_ROOT, PackageProvider,
-    PackageTargetRequest,
+    BUILTIN_AGENT_PLUGIN_NAME, BUILTIN_STATIC_SKILL_NAME, BUILTIN_WINDOWS_ZIP_NAME,
+    DEFAULT_PACKAGE_ROOT, PackageProvider, PackageTargetRequest,
 };
 use inputs::resolve_inputs;
 use protocol::{PackagePlan, StagedArtifact};
@@ -228,6 +229,9 @@ fn execute_one(
         ExtensionHandler::Builtin { name } if name == BUILTIN_AGENT_PLUGIN_NAME => {
             Builtin::AgentPlugin(AgentPluginProvider)
         }
+        ExtensionHandler::Builtin { name } if name == BUILTIN_WINDOWS_ZIP_NAME => {
+            Builtin::WindowsZip(WindowsZipProvider)
+        }
         ExtensionHandler::Builtin { name } => {
             return Err(PackageError::UnknownBuiltinProvider {
                 key,
@@ -274,7 +278,7 @@ fn execute_one(
     })
 }
 
-/// The two builtin package-role adapters, behind one dispatch.
+/// The builtin package-role adapters, behind one dispatch.
 ///
 /// An enum rather than a boxed trait object: the builtin set is closed and
 /// engine-owned, so the exhaustive match IS the registry of what this
@@ -283,6 +287,7 @@ fn execute_one(
 enum Builtin {
     StaticSkill(StaticSkillProvider),
     AgentPlugin(AgentPluginProvider),
+    WindowsZip(WindowsZipProvider),
 }
 
 impl PackageProvider for Builtin {
@@ -290,6 +295,7 @@ impl PackageProvider for Builtin {
         match self {
             Self::StaticSkill(provider) => provider.descriptor(),
             Self::AgentPlugin(provider) => provider.descriptor(),
+            Self::WindowsZip(provider) => provider.descriptor(),
         }
     }
 
@@ -300,6 +306,7 @@ impl PackageProvider for Builtin {
         match self {
             Self::StaticSkill(provider) => provider.plan(request),
             Self::AgentPlugin(provider) => provider.plan(request),
+            Self::WindowsZip(provider) => provider.plan(request),
         }
     }
 
@@ -311,6 +318,7 @@ impl PackageProvider for Builtin {
         match self {
             Self::StaticSkill(provider) => provider.fingerprint(request, plan),
             Self::AgentPlugin(provider) => provider.fingerprint(request, plan),
+            Self::WindowsZip(provider) => provider.fingerprint(request, plan),
         }
     }
 
@@ -322,6 +330,7 @@ impl PackageProvider for Builtin {
         match self {
             Self::StaticSkill(provider) => provider.apply(request, plan),
             Self::AgentPlugin(provider) => provider.apply(request, plan),
+            Self::WindowsZip(provider) => provider.apply(request, plan),
         }
     }
 
@@ -333,6 +342,7 @@ impl PackageProvider for Builtin {
         match self {
             Self::StaticSkill(provider) => provider.verify(request, staged),
             Self::AgentPlugin(provider) => provider.verify(request, staged),
+            Self::WindowsZip(provider) => provider.verify(request, staged),
         }
     }
 }
@@ -502,12 +512,19 @@ impl GraphNode for ArtifactPackageTarget {
         &self.id
     }
 
-    fn outputs(&self) -> &[vibe_core::manifest::ArtifactOutput] {
-        &self.outputs
+    fn produces(&self) -> Vec<&str> {
+        self.outputs
+            .iter()
+            .map(|output| output.id.as_str())
+            .collect()
     }
 
-    fn inputs(&self) -> Option<&[vibe_core::manifest::ArtifactInput]> {
-        self.inputs.as_deref()
+    fn consumes(&self) -> Vec<&str> {
+        self.inputs
+            .iter()
+            .flatten()
+            .filter_map(vibe_core::manifest::ArtifactInput::artifact_ref)
+            .collect()
     }
 }
 

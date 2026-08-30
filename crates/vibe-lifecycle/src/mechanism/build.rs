@@ -353,12 +353,19 @@ impl GraphNode for ArtifactBuildTarget {
         &self.id
     }
 
-    fn outputs(&self) -> &[vibe_core::manifest::ArtifactOutput] {
-        &self.outputs
+    fn produces(&self) -> Vec<&str> {
+        self.outputs
+            .iter()
+            .map(|output| output.id.as_str())
+            .collect()
     }
 
-    fn inputs(&self) -> Option<&[vibe_core::manifest::ArtifactInput]> {
-        self.inputs.as_deref()
+    fn consumes(&self) -> Vec<&str> {
+        self.inputs
+            .iter()
+            .flatten()
+            .filter_map(vibe_core::manifest::ArtifactInput::artifact_ref)
+            .collect()
     }
 }
 

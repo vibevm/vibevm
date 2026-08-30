@@ -296,9 +296,11 @@ impl PackageProvider for StaticSkillProvider {
 fn skill_config(plan: &PackagePlan) -> Result<&StaticSkillConfig, MechanismError> {
     match &plan.config {
         PackageConfig::StaticSkill(config) => Ok(config),
-        PackageConfig::AgentPlugin(_) => Err(MechanismError::PlanRoleMismatch {
-            provider: BUILTIN_STATIC_SKILL_PIN.to_owned(),
-        }),
+        PackageConfig::AgentPlugin(_) | PackageConfig::WindowsZip(_) => {
+            Err(MechanismError::PlanRoleMismatch {
+                provider: BUILTIN_STATIC_SKILL_PIN.to_owned(),
+            })
+        }
     }
 }
 

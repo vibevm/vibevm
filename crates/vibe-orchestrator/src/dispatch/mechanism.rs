@@ -44,30 +44,39 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM");
 
-use std::path::Path;
+use std::collections::BTreeSet;
+use std::path::{Path, PathBuf};
 
-use anyhow::{Context, Result};
+use anyhow::{Context, Result, bail};
 use specmark::spec;
 use vibe_core::manifest::{
-    ArtifactBuildTarget, ArtifactPackageTarget, ArtifactsSection, MechanismRoutes,
+    ArtifactBuildTarget, ArtifactPackageTarget, ArtifactsSection, BinaryDecl, DeployTarget,
+    Manifest, MechanismRoutes, build_target_for_binary,
 };
 use vibe_lifecycle::{
-    BuildExecution, MechanismRegistry, PackageExecution, Phase, execute_build_targets,
-    execute_package_targets,
+    BuildExecution, DeployExecution, DeploySelection, MechanismRegistry, PackageExecution, Phase,
+    deploy_state_home, execute_build_targets, execute_deploy_targets, execute_package_targets,
 };
 
 use crate::RitualPlan;
 
 /// Everything the mechanism half of one dispatch needs.
 ///
-/// A named value rather than six arguments, because five of the six are
-/// borrowed from three different places and a positional call would let two
-/// of them be swapped without the compiler noticing.
+/// A named value rather than a positional call, because most of it is
+/// borrowed from three different places and two members of the same type
+/// could otherwise be swapped without the compiler noticing.
 pub(crate) struct MechanismTargets<'a> {
     /// The selected project's absolute root.
     pub(crate) project_root: &'a Path,
-    /// The selected manifest's declared artifact graph, when it declares one.
-    pub(crate) artifacts: Option<&'a ArtifactsSection>,
+    /// The build target set, ALREADY lowered — authored
+    /// `[[artifacts.build]]` rows plus every legacy `[[binary]]` row
+    /// projected into one ([`lower_binaries`]). The executor therefore has
+    /// no legacy case: it walks build targets.
+    pub(crate) build: &'a [ArtifactBuildTarget],
+    /// The declared `[[artifacts.package]]` rows.
+    pub(crate) package: &'a [ArtifactPackageTarget],
+    /// The declared `[[deploy.target]]` rows.
+    pub(crate) deploy_targets: &'a [DeployTarget],
     /// The mechanism plane of the world this plan was collected from.
     pub(crate) registry: &'a MechanismRegistry,
     /// The host's `[mechanisms]` routes.
@@ -77,20 +86,132 @@ pub(crate) struct MechanismTargets<'a> {
     /// The run's injected instant, in the RFC 3339 spelling every record
     /// carries. Nothing below a surface reads a clock.
     pub(crate) created_at: &'a str,
+    /// The deploy half, present exactly when the command layer resolved a
+    /// profile selection (§7.0.5). `None` is a dispatch that carries no
+    /// selection, and the deploy fence then arms nothing at all.
+    pub(crate) deploy: Option<&'a DeployCarriage>,
 }
 
-impl MechanismTargets<'_> {
-    /// The declared build rows, or none.
-    fn build(&self) -> &[ArtifactBuildTarget] {
-        self.artifacts
-            .map_or(&[] as &[ArtifactBuildTarget], |section| &section.build)
-    }
+/// The deploy half of one dispatch's targets, assembled ONCE.
+///
+/// §7.0.5 puts profile resolution in the command layer that owns flags and
+/// says the result "travels as data". [`DeployCarriage::selection`] is that
+/// data, arriving already resolved; the other three members are what the
+/// engine adds around it and could not be flags: where user deployment
+/// state lives (§7.0.3) and which project's receipts these are.
+pub(crate) struct DeployCarriage {
+    /// The resolved selection, as the command layer decided it.
+    pub(crate) selection: DeploySelection,
+    /// The absolute deployment state home — `state/deployments` under the
+    /// vibevm settings directory.
+    pub(crate) state_home: PathBuf,
+    /// The project identity every intent and receipt is keyed under.
+    pub(crate) project: String,
+    /// The package identity, when a deployment comes from one package
+    /// rather than the selected node. No atom produces one yet — a
+    /// dependency-declared deploy target is the case the member exists
+    /// for — so it is honestly absent rather than a second spelling of the
+    /// project.
+    pub(crate) package: Option<String>,
+}
 
-    /// The declared package rows, or none.
-    fn package(&self) -> &[ArtifactPackageTarget] {
-        self.artifacts
-            .map_or(&[] as &[ArtifactPackageTarget], |section| &section.package)
+impl DeployCarriage {
+    /// Assemble the carriage around one already-resolved selection.
+    ///
+    /// The settings directory is resolved HERE and nowhere below: the
+    /// executor takes its state home as a parameter precisely so no engine
+    /// cell reads the operator's home.
+    pub(crate) fn assemble(selection: DeploySelection, manifest: &Manifest) -> Result<Self> {
+        let settings = vibe_core::settings::settings_dir().ok_or_else(|| {
+            anyhow::anyhow!(
+                "the vibevm settings directory could not be resolved, so deployment intents and \
+                 receipts have nowhere to live (violates \
+                 spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS; fix: set \
+                 `$VIBE_SETTINGS`, or make a home directory resolvable, then rerun)"
+            )
+        })?;
+        Ok(Self {
+            selection,
+            state_home: deploy_state_home(&settings),
+            project: project_identity(manifest),
+            package: None,
+        })
     }
+}
+
+/// The selected node's own identity, in the one spelling the extension
+/// plane already renders hosts by.
+fn project_identity(manifest: &Manifest) -> String {
+    if let Some(package) = &manifest.package {
+        return format!("{}/{}", package.group, package.name);
+    }
+    if let Some(project) = &manifest.project {
+        return match &project.group {
+            Some(group) => format!("{group}/{}", project.name),
+            None => project.name.clone(),
+        };
+    }
+    // A pure virtual workspace declares no deploy target (it declares no
+    // provider identity at all), so this is the honest placeholder rather
+    // than a name it does not have.
+    "<workspace>".to_owned()
+}
+
+/// The build target set one dispatch executes: the authored
+/// `[[artifacts.build]]` rows, then every legacy `[[binary]]` row lowered
+/// through the R8-CARGO projection.
+///
+/// §7.0.7: "The same assembly that arms the fences lowers legacy
+/// `[[binary]]` rows through the R8-CARGO projection into the build target
+/// set; an id collision between a lowered row and an authored
+/// `[[artifacts.build]]` row is a typed refusal (two claimants for one
+/// identity), never a silent merge."
+///
+/// The collision check is over BOTH identities a target owns — its own id
+/// and every output id it declares — because either one being claimed
+/// twice makes the artifact graph ambiguous, and the projection mints both
+/// from the binary's `name`.
+///
+/// Each lowered row JOINS the claimed set as it is added, so the law holds
+/// among the lowered rows too. A manifest cannot reach that case (names
+/// are unique within a package), but this function is handed a slice, and
+/// a law that only held against authored rows would be a law about where
+/// the duplicate came from rather than about the identity.
+pub(crate) fn lower_binaries(
+    artifacts: Option<&ArtifactsSection>,
+    binaries: &[BinaryDecl],
+) -> Result<Vec<ArtifactBuildTarget>> {
+    let authored = artifacts.map_or(&[] as &[ArtifactBuildTarget], |section| &section.build);
+    if binaries.is_empty() {
+        return Ok(authored.to_vec());
+    }
+    let mut claimed: BTreeSet<&str> = BTreeSet::new();
+    for target in authored {
+        claimed.insert(target.id.as_str());
+        for output in &target.outputs {
+            claimed.insert(output.id.as_str());
+        }
+    }
+    let mut lowered = authored.to_vec();
+    for binary in binaries {
+        if claimed.contains(binary.name.as_str()) {
+            bail!(
+                "the legacy `[[binary]]` row `{}` lowers into a build target whose identity an \
+                 authored `[[artifacts.build]]` row already claims; two claimants for one \
+                 identity are never merged \
+                 (violates spec://org.vibevm.core/vibevm/common/PROP-054#ARTIFACT-REGISTRY; fix: \
+                 rename the `[[binary]]`, or drop the authored row that duplicates it — a \
+                 `[[binary]]` IS a build target after lowering, so declaring both is declaring \
+                 the same producer twice)",
+                binary.name,
+            );
+        }
+        // The projection mints the target id AND its one output id from
+        // `name`, so claiming the name claims both.
+        claimed.insert(binary.name.as_str());
+        lowered.push(build_target_for_binary(binary));
+    }
+    Ok(lowered)
 }
 
 /// The two fences of one dispatch, each armed at the execution index its
@@ -104,10 +225,11 @@ pub(super) struct Fences<'targets> {
     targets: &'targets MechanismTargets<'targets>,
     build: Option<usize>,
     package: Option<usize>,
+    deploy: Option<usize>,
 }
 
 impl<'targets> Fences<'targets> {
-    /// Arm both fences for one plan, or nothing at all for a partial epoch.
+    /// Arm every fence for one plan, or nothing at all for a partial epoch.
     #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM")]
     pub(super) fn arm(
         targets: Option<&'targets MechanismTargets<'targets>>,
@@ -119,6 +241,15 @@ impl<'targets> Fences<'targets> {
             targets,
             build: fence(plan, chain, Phase::Build),
             package: fence(plan, chain, Phase::Package),
+            // §7.0.5: "The fence arms only when the dispatch carries a
+            // resolved selection AND that epoch's plan reaches `deploy`."
+            // The two conditions are separate for a reason — a chain that
+            // reaches deploy without a selection is `vibe deploy` on a
+            // project that declares no deploy section, which must stay the
+            // historical no-op rather than become a refusal.
+            deploy: targets
+                .deploy
+                .and_then(|_| fence(plan, chain, Phase::Deploy)),
         })
     }
 
@@ -134,7 +265,7 @@ impl<'targets> Fences<'targets> {
         self.build = None;
         execute_build_targets(&BuildExecution {
             project_root: self.targets.project_root,
-            targets: self.targets.build(),
+            targets: self.targets.build,
             registry: self.targets.registry,
             routes: self.targets.routes,
             build_root: BuildExecution::default_build_root(),
@@ -153,13 +284,44 @@ impl<'targets> Fences<'targets> {
         self.package = None;
         execute_package_targets(&PackageExecution {
             project_root: self.targets.project_root,
-            targets: self.targets.package(),
+            targets: self.targets.package,
             registry: self.targets.registry,
             routes: self.targets.routes,
             package_root: PackageExecution::default_package_root(),
             created_at: self.targets.created_at,
         })
         .context("executing the declared [[artifacts.package]] targets")?;
+        Ok(())
+    }
+
+    /// Fire the deploy fence if this index is where it is armed.
+    ///
+    /// The third member of §6.0's fence family, armed at the deploy
+    /// phase's own-contribution boundary with the identical position and
+    /// the identical reason: a `phase:deploy` contribution that wants to
+    /// observe what the deployment did runs after it, and the phase line
+    /// puts deploy last, so this fires after the package fence and after
+    /// the verify gate between them.
+    pub(super) fn fire_deploy(&mut self, index: usize) -> Result<()> {
+        if self.deploy != Some(index) {
+            return Ok(());
+        }
+        self.deploy = None;
+        let Some(carriage) = self.targets.deploy else {
+            return Ok(());
+        };
+        execute_deploy_targets(&DeployExecution {
+            project_root: self.targets.project_root,
+            targets: self.targets.deploy_targets,
+            selection: &carriage.selection,
+            registry: self.targets.registry,
+            routes: self.targets.routes,
+            state_home: &carriage.state_home,
+            project: &carriage.project,
+            package: carriage.package.as_deref(),
+            created_at: self.targets.created_at,
+        })
+        .context("executing the selected [[deploy.target]] rows")?;
         Ok(())
     }
 }

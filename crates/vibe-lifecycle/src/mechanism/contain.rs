@@ -240,6 +240,152 @@ pub(crate) fn read_file_bounded(path: &Path, cap: u64) -> Result<Vec<u8>, FileFa
     std::fs::read(path).map_err(|error| FileFault::Read(error.to_string()))
 }
 
+/// One tree's canonical witness.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) struct TreeDigest {
+    /// 64 lowercase hex over the canonical manifest.
+    pub(crate) digest: String,
+    /// How many regular files the digest covers — the census that makes a
+    /// silently skipped file visible.
+    pub(crate) files: usize,
+    /// The total bytes those files hold.
+    pub(crate) bytes: u64,
+}
+
+/// One entry a tree walk refused, and why.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) struct TreeFault {
+    /// The tree-relative path, forward-slashed.
+    pub(crate) path: String,
+    pub(crate) reason: String,
+}
+
+/// The canonical directory digest, `sha256-tree/1`, in full.
+///
+/// 1. Walk the tree ([`walk_tree`]). Every entry is proved NOT to be a
+///    link (symlink, junction or reparse point) before it is looked at, so
+///    nothing outside the tree can be reached, and every entry is either a
+///    directory or a regular file — anything else refuses.
+/// 2. For each regular file, take its forward-slashed path relative to the
+///    tree root and the SHA-256 of its exact bytes.
+/// 3. Those pairs arrive SORTED by relative path, as bytes. That is the
+///    step that makes the value independent of the walk: a filesystem is
+///    free to hand entries back in any order, and two machines that
+///    disagree about it must still agree about the digest.
+/// 4. Hash one manifest over the sorted pairs — the literal algorithm
+///    name, then `path\0digest\0` for each pair. NUL is the separator
+///    because a path cannot contain one, so no two different trees can
+///    render to the same manifest bytes.
+/// 5. The digest of that manifest is the directory's digest.
+///
+/// **What it deliberately does not cover.** An empty directory contributes
+/// nothing, because it carries no content; two trees that differ only by
+/// an empty directory have one digest. That is the same choice every
+/// content-addressed tree format makes, and it is stated rather than
+/// discovered.
+pub(crate) fn tree_digest(root: &Path) -> Result<TreeDigest, TreeFault> {
+    let entries = walk_tree(root)?;
+    let mut hash = Sha256::new();
+    hash.update(TREE_ALGORITHM.as_bytes());
+    hash.update(b"\x00");
+    let mut bytes: u64 = 0;
+    let mut counted = 0_usize;
+    for (relative, absolute) in &entries {
+        let (digest, length) = digest_file(absolute).map_err(|fault| TreeFault {
+            path: relative.clone(),
+            reason: fault.reason(),
+        })?;
+        bytes += length;
+        counted += 1;
+        hash.update(relative.as_bytes());
+        hash.update(b"\x00");
+        hash.update(digest.as_bytes());
+        hash.update(b"\x00");
+    }
+    Ok(TreeDigest {
+        digest: format!("{:x}", hash.finalize()),
+        files: counted,
+        bytes,
+    })
+}
+
+/// The algorithm identity, hashed in so a future revision cannot collide
+/// with this one.
+const TREE_ALGORITHM: &str = "sha256-tree/1";
+
+/// The canonical file census of one tree: every regular file's
+/// forward-slashed tree-relative path and its absolute path, SORTED by the
+/// relative path as bytes.
+///
+/// One walk, three readers: the canonical directory digest above, the
+/// engine's deploy input resolution, and the deterministic archive writer —
+/// which is exactly why the sort lives here and not in any of them. An
+/// archive whose entry order came from `read_dir` would be byte-identical
+/// only on one machine, and a digest computed over a different order than
+/// the archive was written in would describe a different tree.
+pub(crate) fn walk_tree(root: &Path) -> Result<Vec<(String, PathBuf)>, TreeFault> {
+    prove_directory(root).map_err(|fault| TreeFault {
+        path: ".".to_owned(),
+        reason: fault.reason(),
+    })?;
+    let mut entries: Vec<(String, PathBuf)> = Vec::new();
+    collect_tree(root, root, &mut entries)?;
+    entries.sort_unstable();
+    Ok(entries)
+}
+
+/// The recursive half: one directory's own entries, then its children.
+fn collect_tree(
+    root: &Path,
+    directory: &Path,
+    entries: &mut Vec<(String, PathBuf)>,
+) -> Result<(), TreeFault> {
+    let relative_of =
+        |path: &Path| relative_to(path, root).unwrap_or_else(|| forward_slashed(path));
+    let listing = std::fs::read_dir(directory).map_err(|error| TreeFault {
+        path: relative_of(directory),
+        reason: error.to_string(),
+    })?;
+    // Read the whole listing first, then walk it in name order: a
+    // recursion driven by the filesystem's own order would make the walk —
+    // though not the result — vary between machines, and a refusal should
+    // name the same entry twice in a row.
+    let mut children: Vec<PathBuf> = Vec::new();
+    for entry in listing {
+        let entry = entry.map_err(|error| TreeFault {
+            path: relative_of(directory),
+            reason: error.to_string(),
+        })?;
+        children.push(entry.path());
+    }
+    children.sort();
+    for child in children {
+        let relative = relative_of(&child);
+        let metadata = std::fs::symlink_metadata(&child).map_err(|error| TreeFault {
+            path: relative.clone(),
+            reason: error.to_string(),
+        })?;
+        if metadata.file_type().is_symlink() {
+            return Err(TreeFault {
+                path: relative,
+                reason: FileFault::Link.reason(),
+            });
+        }
+        if metadata.is_dir() {
+            collect_tree(root, &child, entries)?;
+            continue;
+        }
+        if !metadata.is_file() {
+            return Err(TreeFault {
+                path: relative,
+                reason: FileFault::NotRegular.reason(),
+            });
+        }
+        entries.push((relative, child));
+    }
+    Ok(())
+}
+
 #[cfg(test)]
 #[path = "contain_tests.rs"]
 mod tests;

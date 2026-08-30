@@ -31,11 +31,10 @@ use vibe_core::manifest::ArtifactKind;
 use vibe_wire::generated::artifact_record::ArtifactShape;
 
 pub(crate) mod config;
-mod digest;
 mod manifest;
 mod shape;
 
-use crate::mechanism::contain::read_file_bounded;
+use crate::mechanism::contain::{read_file_bounded, tree_digest};
 use crate::mechanism::error::preview;
 use crate::mechanism::package::contained_identity;
 use crate::mechanism::package::protocol::{
@@ -254,13 +253,12 @@ impl PackageProvider for AgentPluginProvider {
     ) -> Result<VerifiedPackageArtifact, MechanismError> {
         let (path_absolute, path_relative) =
             contained_identity(request, &staged.output_id, &staged.absolute)?;
-        let tree =
-            digest::tree_digest(&staged.absolute).map_err(|fault| MechanismError::PackageTree {
-                target: request.target.id.clone(),
-                output: staged.output_id.clone(),
-                entry: preview(&fault.path),
-                reason: fault.reason,
-            })?;
+        let tree = tree_digest(&staged.absolute).map_err(|fault| MechanismError::PackageTree {
+            target: request.target.id.clone(),
+            output: staged.output_id.clone(),
+            entry: preview(&fault.path),
+            reason: fault.reason,
+        })?;
         Ok(VerifiedPackageArtifact {
             output_id: staged.output_id.clone(),
             path_absolute,
@@ -276,9 +274,11 @@ impl PackageProvider for AgentPluginProvider {
 fn plugin_config(plan: &PackagePlan) -> Result<&AgentPluginConfig, MechanismError> {
     match &plan.config {
         PackageConfig::AgentPlugin(config) => Ok(config),
-        PackageConfig::StaticSkill(_) => Err(MechanismError::PlanRoleMismatch {
-            provider: BUILTIN_AGENT_PLUGIN_PIN.to_owned(),
-        }),
+        PackageConfig::StaticSkill(_) | PackageConfig::WindowsZip(_) => {
+            Err(MechanismError::PlanRoleMismatch {
+                provider: BUILTIN_AGENT_PLUGIN_PIN.to_owned(),
+            })
+        }
     }
 }
 
