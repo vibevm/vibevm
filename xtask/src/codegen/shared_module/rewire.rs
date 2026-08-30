@@ -269,7 +269,7 @@ impl SharedModule {
 /// name, and every replacement is stitched on content afterwards, so
 /// a day the fold and the generator disagree lands in the "block not
 /// found" refusal rather than in a silently wrong merge.
-fn emitted_name(fragment: &str) -> String {
+pub(super) fn emitted_name(fragment: &str) -> String {
     let mut out = String::with_capacity(fragment.len());
     for segment in fragment.split('_') {
         let mut characters = segment.chars();

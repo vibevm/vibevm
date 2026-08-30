@@ -238,8 +238,9 @@ fn generate_into(
     // once and KEEPS the closure each resolution places (the engine
     // home shares the phase, taking only the resolved copies from it).
     // Phase 2 — host home only, and only when anything is shared —
-    // emits the shared module every re-export points at, guarded
-    // against a strictness divergence among the fragments' consumers.
+    // emits the shared module every re-export points at, with each
+    // fragment's reader policy computed from all registered consumers
+    // and a strict/permissive mixture refused.
     // Phase 3 emits each schema's module as always, then replaces its
     // copies of the closure's blocks with re-exports of the shared
     // types (the engine home gets none of this: our wire policy has no
@@ -255,13 +256,14 @@ fn generate_into(
     let mut rewire_stats: Vec<shared_module::RewireStats> = Vec::new();
     if group.owner == FormatOwner::Ours && resolved.iter().any(|(_, r)| !r.vocabularies.is_empty())
     {
-        shared_module::guard_shared_strictness(root, &resolved)?;
+        let shared_strictness = shared_module::guard_shared_strictness(root, &resolved)?;
         let shared_doc = vocabularies.shared_schema()?;
         let shared_file = shared_module::emit_shared_module(
             binary,
             out_dir,
             &shared_doc,
             &vocabularies_path(root),
+            &shared_strictness,
         )?;
         shared = Some(shared_module::SharedModule::load(&shared_file)?);
     }

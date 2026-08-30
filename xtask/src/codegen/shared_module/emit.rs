@@ -18,11 +18,11 @@
 //! cannot answer: strictness rules through `formats/REGISTRY.toml` by
 //! the schema's own path, and no record claims this document. That is
 //! why the entry takes `StrictnessSource`: the shared module's verdict
-//! is decided one storey up, before any emission, by
-//! `guard_shared_strictness` — a fragment any consumer reads under the
-//! `none` role is refused outright, which leaves the permissive reading
-//! as the only one this pipeline can produce, and therefore identical to
-//! every schema module's copy of the same blocks.
+//! is decided one storey up, before emission, from every registered
+//! consumer in the resolved schema closure. A unanimous `none` fragment
+//! is stamped strict, a fragment with no `none` consumer remains byte-
+//! identical to the former permissive emission, and a mixture has
+//! already refused.
 
 use std::path::{Path, PathBuf};
 use std::process::Command;
@@ -30,7 +30,7 @@ use std::process::Command;
 use anyhow::{Context, Result, bail};
 
 use super::super::postproc::{StrictnessSource, rewrite_generated};
-use super::prune_orphan_imports;
+use super::{SharedStrictness, prune_orphan_imports};
 
 /// The shared module's directory name under the generated tree — and,
 /// through the synthetic document's stem, the name of the parasitic
@@ -61,6 +61,7 @@ pub(crate) fn emit_shared_module(
     out_dir: &Path,
     shared_doc: &Path,
     vocab_home: &Path,
+    strictness: &SharedStrictness,
 ) -> Result<PathBuf> {
     let sub_out = out_dir.join(SHARED_MODULE);
     std::fs::create_dir_all(&sub_out)
@@ -81,10 +82,15 @@ pub(crate) fn emit_shared_module(
         );
     }
     let file = sub_out.join("mod.rs");
-    // The one entry, with the one slot pre-ruled — see this file's
-    // header. Refusals inside the passes name `vocab_home`, the
+    // The one entry, with the one slot ruled per fragment — see this
+    // file's header. Refusals inside the passes name `vocab_home`, the
     // document's authored side, because that is the file a human edits.
-    rewrite_generated(&file, shared_doc, vocab_home, StrictnessSource::PreRuled)?;
+    rewrite_generated(
+        &file,
+        shared_doc,
+        vocab_home,
+        StrictnessSource::Shared(strictness),
+    )?;
     // The parasitic root is not a pass: it is the one emission a
     // definitions-only document adds, so it is stripped after the shared
     // pipeline rather than inside it — no schema module ever carries it,

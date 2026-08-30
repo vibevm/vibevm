@@ -47,12 +47,11 @@
 //! file): a closure name with no block in the shared home; a block
 //! that is not byte-identical; a fragment whose consumers disagree on
 //! reader strictness (the strictness pass rules through the registry
-//! per schema, while a fragment is shared across schemas — one
-//! consumer under the `none` role would need its copies stamped
-//! `deny_unknown_fields` while the shared home carries them
-//! permissive, an impossibility the run refuses up front); and the
-//! counter — the declarations a module loses must equal the closure
-//! its schema pulled, and the tree's unique names must not move.
+//! per schema, while a fragment is shared across schemas — unanimous
+//! `none` consumers make the shared block strict, no `none` consumer
+//! leaves it permissive, and a mixture refuses); and the counter — the
+//! declarations a module loses must equal the closure its schema
+//! pulled, and the tree's unique names must not move.
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::{Path, PathBuf};
@@ -68,37 +67,50 @@ pub(super) use rewire::{RewireStats, SharedModule};
 use super::format_id::load_format_registry;
 use super::vocabulary::Resolved;
 
-/// Refuse a fragment whose consumers disagree on reader strictness —
-/// the guard that stands in for the strictness pass the shared module
-/// cannot take. The pass rules a schema's output through
-/// `formats/REGISTRY.toml` by the schema's own path; a fragment is one
-/// block shared by several schemas, so a single `foreign_parsers`
-/// verdict for it exists only while NO consumer carries `none` (the
-/// role that stamps `#[serde(deny_unknown_fields)]` onto the structs —
-/// a stamp the permissive shared home does not carry, and cannot, or
-/// every other consumer's byte-identical copy would drift).
+/// The one reader policy a resolved shared fragment can carry.
 ///
-/// The guard is silent today, but NOT because no built schema carries
-/// the role — several do (`lifecycle-state`, `lifecycle-reply`,
-/// `compiler-ir`, `slot-record`, `package-skill-receipt`, the agent
-/// result). It is silent because none of THOSE pulls a shared
-/// fragment. The distinction stopped being academic in R7.5: the
-/// durable input measurement in `schemas/lifecycle_state.jtd.json`
-/// wanted the shared `input_measurement`/`digest_witness` fragments
-/// the evidence wire defines, and could not have them — the state
-/// reader is strict by computed policy (`.vibe/lifecycle.toml` is our
-/// own machine state, where an unknown key is a schema bump, not
-/// forward compatibility), so the schema carries its own
-/// `state_input_measurement` / `state_digest_witness` definitions and
-/// a wire test pins the two shapes member-for-member instead. This
-/// guard is what made that a decision rather than an accident.
+/// This is deliberately not a pair of booleans: a fragment is emitted
+/// under exactly one policy after all of its registered consumers have
+/// been considered. Enums and aliases carry the same classification,
+/// although only a generated struct has fields for serde to deny.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(super) enum FragmentReaderPolicy {
+    Permissive,
+    Strict,
+}
+
+/// The computed policy of every shared fragment with at least one
+/// registered consumer. A fragment seen only from an unregistered
+/// schema is absent and therefore retains the old permissive shared
+/// emission; the schema-local strictness pass later issues the existing
+/// unregistered-format refusal.
+#[derive(Debug)]
+pub(super) struct SharedStrictness {
+    fragments: BTreeMap<String, FragmentReaderPolicy>,
+}
+
+impl SharedStrictness {
+    fn has_strict_fragment(&self) -> bool {
+        self.fragments
+            .values()
+            .any(|policy| *policy == FragmentReaderPolicy::Strict)
+    }
+}
+
+/// Compute one policy per fragment from the registry roles of every
+/// schema in the resolved-closure map. A unanimous `none` set is
+/// strict, a set with no `none` member is permissive, and a mixture is
+/// refused with both consumer sets named.
 ///
 /// Fed by the run's schema → closure map and the registry; the roles
 /// are read through the one registry loader (`format_id`), the same
 /// loader `Strictness` builds its map from, so the two can never
 /// disagree. A schema no record claims is not refused here — its own
 /// strictness pass refuses it when its module is processed.
-pub(super) fn guard_shared_strictness(root: &Path, resolved: &[(PathBuf, Resolved)]) -> Result<()> {
+pub(super) fn guard_shared_strictness(
+    root: &Path,
+    resolved: &[(PathBuf, Resolved)],
+) -> Result<SharedStrictness> {
     let entries = load_format_registry(root)?;
     // Registry spelling of a schema path — repo-relative, forward
     // slashes — the same normalisation `Strictness` keys its map by.
@@ -110,82 +122,163 @@ pub(super) fn guard_shared_strictness(root: &Path, resolved: &[(PathBuf, Resolve
             .find(|entry| entry.schema == key)
             .map(|entry| entry.foreign_parsers.clone())
     };
-    // fragment → (schema, role) for every consumer, in walk order;
-    // a divergence between records sharing one schema was already
-    // refused by `Strictness::load`, which runs before this guard.
+    policies_from_resolutions(
+        resolved
+            .iter()
+            .map(|(schema, resolution)| (schema.as_path(), &resolution.vocabularies)),
+        role_of,
+    )
+}
+
+/// Pure join of the two inputs production already owns: resolved
+/// schema closures and the registry's role lookup. Keeping it separate
+/// makes the unanimous and mixed laws testable without a second
+/// registry parser or a hand-maintained fragment list.
+fn policies_from_resolutions<'a, I, F>(resolved: I, mut role_of: F) -> Result<SharedStrictness>
+where
+    I: IntoIterator<Item = (&'a Path, &'a BTreeSet<String>)>,
+    F: FnMut(&Path) -> Option<String>,
+{
+    // fragment → (schema, role) for every registered consumer, in walk
+    // order; a divergence between records sharing one schema was
+    // already refused by `Strictness::load`, which runs before this
+    // guard in production.
     let mut consumers: BTreeMap<String, Vec<(String, String)>> = BTreeMap::new();
-    for (schema, resolution) in resolved {
+    for (schema, closure) in resolved {
         let Some(role) = role_of(schema) else {
             continue;
         };
-        for fragment in &resolution.vocabularies {
+        for fragment in closure {
             consumers
                 .entry(fragment.clone())
                 .or_default()
                 .push((schema.display().to_string(), role.clone()));
         }
     }
+    let mut fragments = BTreeMap::new();
     for (fragment, schemas) in &consumers {
-        refuse_strictness_divergence(fragment, schemas)?;
+        fragments.insert(fragment.clone(), classify_fragment(fragment, schemas)?);
     }
-    Ok(())
+    Ok(SharedStrictness { fragments })
 }
 
-/// The pure half of the strictness guard, over data the tests can
-/// assemble without a registry: refuse the moment any consumer of the
-/// fragment carries the `none` role, naming the fragment, the role,
-/// the schema that carries it and the co-consumers its shared block
-/// would bind to the same bytes.
-fn refuse_strictness_divergence(fragment: &str, consumers: &[(String, String)]) -> Result<()> {
+/// Classify one fragment's registered consumers, refusing exactly the
+/// strict/permissive mixture that has no single set of shared bytes.
+fn classify_fragment(
+    fragment: &str,
+    consumers: &[(String, String)],
+) -> Result<FragmentReaderPolicy> {
     let strict: Vec<&str> = consumers
         .iter()
         .filter(|(_, role)| role == "none")
         .map(|(schema, _)| schema.as_str())
         .collect();
-    if strict.is_empty() {
-        return Ok(());
-    }
-    let others: Vec<&str> = consumers
+    let permissive: Vec<&str> = consumers
         .iter()
         .filter(|(_, role)| role != "none")
         .map(|(schema, _)| schema.as_str())
         .collect();
+    if strict.is_empty() {
+        return Ok(FragmentReaderPolicy::Permissive);
+    }
+    if permissive.is_empty() {
+        return Ok(FragmentReaderPolicy::Strict);
+    }
     bail!(
-        "vocabulary `{fragment}` is shared, but its consumer{} {} \
-         carr{} the `foreign_parsers = \"none\"` role: the strictness \
-         pass would stamp `#[serde(deny_unknown_fields)]` onto that \
-         schema's copies of `{fragment}`'s structs, while the shared \
-         home emits them once for every consumer — the bytes cannot be \
-         both{}.\n\
-         The refusing schema{}: {}{}\n\
-         Fix: give the record{} the same role the shared vocabulary \
-         serves (`ours` or `many`), or stop pulling `{fragment}` into \
-         the refusing schema{} — then run `cargo xtask codegen`.",
-        if strict.len() == 1 { "" } else { "s" },
+        "vocabulary `{fragment}` has mixed registered reader policy, so \
+         its one shared block cannot be both strict and permissive.\n\
+         Strict consumers (`foreign_parsers = \"none\"`): {}\n\
+         Permissive consumers (`foreign_parsers = \"ours\"` or \
+         `\"many\"`): {}\n\
+         Fix: give every registered consumer of `{fragment}` the same \
+         strictness class, or stop sharing the fragment across those \
+         formats, then run `cargo xtask codegen`.",
         strict.join(", "),
-        if strict.len() == 1 { "ies" } else { "y" },
-        if others.is_empty() {
-            " stamped and unstamped".to_string()
-        } else {
-            format!(
-                " stamped (for {}) and unstamped (for {})",
-                strict.join(", "),
-                others.join(", ")
-            )
-        },
-        if strict.len() == 1 { "" } else { "s" },
-        strict.join(", "),
-        if others.is_empty() {
-            String::new()
-        } else {
-            format!(
-                "\nThe co-consumers bound to the same shared bytes: {}",
-                others.join(", ")
-            )
-        },
-        if strict.len() == 1 { "" } else { "s" },
-        if strict.len() == 1 { "" } else { "s" },
+        permissive.join(", "),
     )
+}
+
+/// Apply the computed per-fragment policy at the strictness slot of
+/// the shared module's normal post-processing pipeline. The routing
+/// fold is the same one the replacement uses; policy itself was
+/// computed solely from registry roles and resolved closures. A strict
+/// enum or alias is recognised but copied, because the serde container
+/// attribute is valid only on generated structs.
+pub(super) fn apply_shared_strictness(
+    src: &str,
+    file: &str,
+    strictness: &SharedStrictness,
+) -> Result<String> {
+    if !strictness.has_strict_fragment() {
+        return Ok(src.to_string());
+    }
+
+    let mut strict_types: BTreeMap<String, &str> = BTreeMap::new();
+    for (fragment, policy) in &strictness.fragments {
+        if *policy != FragmentReaderPolicy::Strict {
+            continue;
+        }
+        let emitted = rewire::emitted_name(fragment);
+        if let Some(first) = strict_types.insert(emitted.clone(), fragment) {
+            bail!(
+                "the strict shared vocabularies `{first}` and `{fragment}` \
+                 both fold to the emitted type `{emitted}` — the generator \
+                 naming route is ambiguous.\n\
+                 Fix: rename the colliding entries in \
+                 `formats/vocabularies.json`, then run `cargo xtask codegen`."
+            );
+        }
+    }
+
+    const DERIVE_LINE: &str = "#[derive(Serialize, Deserialize)]";
+    const DENY_LINE: &str = "#[serde(deny_unknown_fields)]";
+    let mut out = String::with_capacity(src.len() + strict_types.len() * (DENY_LINE.len() + 1));
+    let mut previous: Option<(&str, &str, &str)> = None;
+    for (index, chunk) in src.split_inclusive('\n').enumerate() {
+        let body = chunk.trim_end_matches(['\r', '\n']);
+        let text = body.trim();
+        if let Some(name) = struct_name(text)
+            && let Some(fragment) = strict_types.get(name)
+        {
+            let Some((previous_text, indent, ending)) = previous else {
+                bail!(
+                    "{file}:{}: strict shared vocabulary `{fragment}` emits \
+                     struct `{name}` with no `{DERIVE_LINE}` line directly \
+                     above — the pinned jtd-codegen shape moved, so the \
+                     shared strictness pass refuses to guess.",
+                    index + 1
+                );
+            };
+            if previous_text != DERIVE_LINE && previous_text != DENY_LINE {
+                bail!(
+                    "{file}:{}: strict shared vocabulary `{fragment}` emits \
+                     struct `{name}` with no `{DERIVE_LINE}` line directly \
+                     above — the pinned jtd-codegen shape moved, so the \
+                     shared strictness pass refuses to guess.",
+                    index + 1
+                );
+            }
+            if previous_text == DERIVE_LINE {
+                out.push_str(indent);
+                out.push_str(DENY_LINE);
+                out.push_str(ending);
+            }
+        }
+        out.push_str(chunk);
+        let indent = &body[..body.len() - body.trim_start().len()];
+        let ending = &chunk[body.len()..];
+        previous = Some((text, indent, ending));
+    }
+    Ok(out)
+}
+
+/// The emitted struct name on a declaration line of the pinned shape.
+fn struct_name(text: &str) -> Option<&str> {
+    let name = text
+        .strip_prefix("pub struct ")?
+        .strip_suffix('{')?
+        .trim_end();
+    is_ident(name).then_some(name)
 }
 
 /// The run-level counter — the fourth guard. The per-module half

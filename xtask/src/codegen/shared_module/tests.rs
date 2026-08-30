@@ -9,9 +9,13 @@
 use std::collections::BTreeSet;
 use std::path::PathBuf;
 
+use super::super::postproc::{StrictnessSource, rewrite_generated};
 use super::emit::strip_parasitic_root;
 use super::rewire::SharedModule;
-use super::{RewireStats, check_counter, prune_orphan_imports, refuse_strictness_divergence};
+use super::{
+    FragmentReaderPolicy, RewireStats, SharedStrictness, apply_shared_strictness, check_counter,
+    policies_from_resolutions, prune_orphan_imports,
+};
 use anyhow::Result;
 
 /// The `PackageKind` block as both files carry it — an opened
@@ -107,6 +111,27 @@ fn fixtures(
 /// The closure every happy-path test pulls.
 fn closure(names: &[&str]) -> BTreeSet<String> {
     names.iter().map(|name| name.to_string()).collect()
+}
+
+/// Build the two production inputs as fixtures: registry roles keyed by
+/// schema, and resolved vocabulary closures keyed by the same schemas.
+fn strictness_fixture(rows: &[(&str, &str, &str)]) -> Result<SharedStrictness> {
+    let mut roles = std::collections::BTreeMap::new();
+    let mut resolved: std::collections::BTreeMap<PathBuf, BTreeSet<String>> =
+        std::collections::BTreeMap::new();
+    for (schema, role, fragment) in rows {
+        roles.insert(PathBuf::from(schema), role.to_string());
+        resolved
+            .entry(PathBuf::from(schema))
+            .or_default()
+            .insert(fragment.to_string());
+    }
+    policies_from_resolutions(
+        resolved
+            .iter()
+            .map(|(schema, fragments)| (schema.as_path(), fragments)),
+        |schema| roles.get(schema).cloned(),
+    )
 }
 
 #[test]
@@ -235,44 +260,137 @@ fn rewire_refuses_a_closure_name_with_no_block() -> Result<()> {
 }
 
 #[test]
-fn the_strictness_guard_refuses_a_none_consumer() -> Result<()> {
-    let err = refuse_strictness_divergence(
-        "package_kind",
-        &[
-            (
-                "schemas/list_report.jtd.json".to_string(),
-                "many".to_string(),
-            ),
-            ("schemas/config.jtd.json".to_string(), "none".to_string()),
-        ],
-    )
-    .expect_err("one consumer under `none` is a divergence the run refuses");
-    let msg = err.to_string();
-    assert!(msg.contains("package_kind"), "names the fragment: {msg}");
-    assert!(msg.contains("none"), "names the role: {msg}");
+fn unanimous_none_consumers_emit_one_strict_shared_struct() -> Result<()> {
+    let strictness = strictness_fixture(&[
+        ("schemas/first.jtd.json", "none", "shared_row"),
+        ("schemas/second.jtd.json", "none", "shared_row"),
+    ])?;
+    assert_eq!(
+        strictness.fragments.get("shared_row"),
+        Some(&FragmentReaderPolicy::Strict)
+    );
+    let before = "#[derive(Serialize, Deserialize)]\n\
+pub struct SharedRow {\n    \
+pub value: String,\n\
+}\n";
+    let after = apply_shared_strictness(before, "shared/mod.rs", &strictness)?;
+    assert_eq!(after.matches("pub struct SharedRow").count(), 1);
+    assert_eq!(after.matches("#[serde(deny_unknown_fields)]").count(), 1);
     assert!(
-        msg.contains("list_report") && msg.contains("config"),
-        "names both schemas: {msg}"
+        after.contains(
+            "#[derive(Serialize, Deserialize)]\n#[serde(deny_unknown_fields)]\npub struct SharedRow"
+        ),
+        "the strict attribute belongs to the one shared struct: {after}"
     );
     Ok(())
 }
 
 #[test]
-fn the_strictness_guard_accepts_uniform_roles() -> Result<()> {
-    refuse_strictness_divergence(
-        "package_kind",
-        &[
-            (
-                "schemas/list_report.jtd.json".to_string(),
-                "many".to_string(),
-            ),
-            ("schemas/by_cap.jtd.json".to_string(), "ours".to_string()),
-        ],
+fn rewrite_generated_runs_the_shared_strictness_slot() -> Result<()> {
+    let strictness = strictness_fixture(&[
+        ("schemas/first.jtd.json", "none", "shared_row"),
+        ("schemas/second.jtd.json", "none", "shared_row"),
+    ])?;
+    let dir = tempfile::tempdir()?;
+    let file = dir.path().join("mod.rs");
+    std::fs::write(
+        &file,
+        "use serde::{Deserialize, Serialize};\n\
+\n\
+#[derive(Serialize, Deserialize)]\n\
+pub struct SharedRow {\n    \
+#[serde(rename = \"value\")]\n    \
+pub value: String,\n\
+}\n",
     )?;
-    refuse_strictness_divergence(
-        "package_kind",
-        &[("one.jtd.json".to_string(), "many".to_string())],
+    let resolved = dir.path().join("shared.jtd.json");
+    let schema = dir.path().join("vocabularies.json");
+    let document = "{\"properties\":{\"value\":{\"type\":\"string\"}}}";
+    std::fs::write(&resolved, document)?;
+    std::fs::write(&schema, document)?;
+
+    rewrite_generated(
+        &file,
+        &resolved,
+        &schema,
+        StrictnessSource::Shared(&strictness),
     )?;
+
+    let after = std::fs::read_to_string(&file)?;
+    assert_eq!(
+        after.matches("#[serde(deny_unknown_fields)]").count(),
+        1,
+        "the shared policy must pass through rewrite_generated: {after}"
+    );
+    Ok(())
+}
+
+#[test]
+fn all_permissive_consumers_preserve_shared_bytes() -> Result<()> {
+    let strictness = strictness_fixture(&[
+        ("schemas/first.jtd.json", "many", "shared_row"),
+        ("schemas/second.jtd.json", "ours", "shared_row"),
+    ])?;
+    assert_eq!(
+        strictness.fragments.get("shared_row"),
+        Some(&FragmentReaderPolicy::Permissive)
+    );
+    let before = "#[derive(Serialize, Deserialize)]\n\
+pub struct SharedRow {\n    \
+pub value: String,\n\
+}\n";
+    assert_eq!(
+        apply_shared_strictness(before, "shared/mod.rs", &strictness)?,
+        before,
+        "the pre-change permissive shared bytes stay exact"
+    );
+    Ok(())
+}
+
+#[test]
+fn mixed_consumers_refuse_with_both_sets_named() {
+    let err = strictness_fixture(&[
+        ("schemas/strict_first.jtd.json", "none", "shared_row"),
+        ("schemas/strict_second.jtd.json", "none", "shared_row"),
+        ("schemas/many.jtd.json", "many", "shared_row"),
+        ("schemas/ours.jtd.json", "ours", "shared_row"),
+    ])
+    .expect_err("strict and permissive consumers cannot share one block");
+    let msg = err.to_string();
+    assert!(msg.contains("shared_row"), "names the fragment: {msg}");
+    assert!(
+        msg.contains("Strict consumers"),
+        "labels the strict set: {msg}"
+    );
+    assert!(
+        msg.contains("Permissive consumers"),
+        "labels the permissive set: {msg}"
+    );
+    for schema in ["strict_first", "strict_second", "many", "ours"] {
+        assert!(msg.contains(schema), "names consumer {schema}: {msg}");
+    }
+}
+
+#[test]
+fn unanimous_strict_enum_and_scalar_keep_valid_generated_shape() -> Result<()> {
+    let strictness = strictness_fixture(&[
+        ("schemas/first.jtd.json", "none", "reply_status"),
+        ("schemas/second.jtd.json", "none", "reply_status"),
+        ("schemas/first.jtd.json", "none", "envelope"),
+        ("schemas/second.jtd.json", "none", "envelope"),
+    ])?;
+    let before = "#[derive(Serialize, Deserialize)]\n\
+pub enum ReplyStatus {\n    \
+Ok,\n\
+}\n\
+\n\
+pub type Envelope = u32;\n";
+    let after = apply_shared_strictness(before, "shared/mod.rs", &strictness)?;
+    assert_eq!(after, before, "enum and scalar emission stays byte-exact");
+    assert!(
+        !after.contains("deny_unknown_fields"),
+        "no struct-only attribute is attached: {after}"
+    );
     Ok(())
 }
 

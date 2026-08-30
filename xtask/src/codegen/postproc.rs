@@ -103,10 +103,9 @@ use super::strictness::{Strictness, apply_strictness};
 /// there (PROP-044 §4.1: an unregistered format is inexpressible by
 /// design). The shared vocabulary module has no authored schema at all —
 /// it is emitted from a synthetic all-fragments document — so its
-/// verdict is decided one storey up, before any emission, by
-/// `shared_module::guard_shared_strictness`: a fragment any consumer
-/// reads under the `none` role is refused outright, which leaves the
-/// permissive reading as the only one this pipeline can produce.
+/// per-fragment verdicts are decided one storey up, before emission, by
+/// `shared_module::guard_shared_strictness` from every registered
+/// consumer in the resolved schema closure.
 ///
 /// It is a named pair rather than an `Option<&Strictness>` because
 /// `None` at a call site says nothing about WHY the registry is not
@@ -115,8 +114,8 @@ use super::strictness::{Strictness, apply_strictness};
 pub(crate) enum StrictnessSource<'a> {
     /// Ruled by the registry, through the schema's own path.
     Registry(&'a Strictness),
-    /// Pre-ruled one storey up; the slot copies its input unchanged.
-    PreRuled,
+    /// Ruled per shared fragment one storey up from all consumers.
+    Shared(&'a super::shared_module::SharedStrictness),
 }
 
 /// Read `file`, run all nine post-processing passes over it, write the
@@ -124,7 +123,7 @@ pub(crate) enum StrictnessSource<'a> {
 /// succeeds — before the leaf is registered or anything compiles against
 /// it, so no consumer — compiler, clippy, oracle — ever sees the
 /// unprocessed form. The shared vocabulary module goes through this same
-/// entry with `StrictnessSource::PreRuled`: the pass order is a
+/// entry with `StrictnessSource::Shared`: the pass order is a
 /// normative value, so a second runner repeating it would be a second
 /// copy of it, and two copies of a normative value diverge
 /// (`spec://org.vibevm.world/addressable-specs/…#single-source`).
@@ -164,7 +163,9 @@ pub(crate) fn rewrite_generated(
         StrictnessSource::Registry(registry) => {
             apply_strictness(&unboxed, &name, schema, registry)?
         }
-        StrictnessSource::PreRuled => unboxed,
+        StrictnessSource::Shared(shared) => {
+            super::shared_module::apply_shared_strictness(&unboxed, &name, shared)?
+        }
     };
     let bound = apply_domain_types(&strict, &name, resolved, schema)?;
     let floored = apply_derive_floor(&bound, &name)?;
