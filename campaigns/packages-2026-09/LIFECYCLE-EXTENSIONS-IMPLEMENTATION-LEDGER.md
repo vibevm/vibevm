@@ -1073,6 +1073,15 @@ than depending on untracked `cache/` archaeology.
   0-new. Specmap is 6833 units / 3014 tagged items / 2755 edges, 0 suspects,
   gated orphans or unresolved host edges, 25 standing warnings. R8-CLIENTS-GATE,
   R8-CLIENTS-DEPLOY and the five-atom R8-CLIENTS parent are accepted.
+- R5.1 native ABI freeze: `R5-NATIVE-ABI-ARCHITECTURE-v0.1.md` makes the
+  owner-ratified schema-first order executable as WIRE → SDK → GATE. Three
+  registered epoch-1 roots share lifecycle nested records through the generated
+  vocabulary module; `vibe-ext` re-exports those types and owns only the safe
+  author macro plus plugin-side memory/unwind boundary. The four C symbols,
+  null/zero failure settlement, static manifest lifetime, exact-once response
+  free, envelope-1 pre-handler gate and real abort-profile compile refusal are
+  frozen. Loading, artifact resolution/build, bootstrap and compiler parity stay
+  exclusively in R5.2–R5.5.
 - R4.2 minify binding, RED corpus and activation e2e: `7a09ec2d` registers
   `xml-minify` (epoch 1, EMITTED — the one stage the kernel serves without a
   new serializer; every other stage refuses through the registry's own law)
@@ -1191,7 +1200,7 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 
 | Step | State | Required result |
 |---|---|---|
-| R5.1 native JTD context/reply/manifest + `vibe-ext` macro | missing | schema first; panic-abort compile refusal; unwind catch boundary |
+| R5.1 native JTD context/reply/manifest + `vibe-ext` macro | frozen | `R5-NATIVE-ABI-ARCHITECTURE-v0.1.md`; WIRE → SDK → GATE; schema first, panic-abort compile refusal, plugin-side unwind/memory boundary |
 | R5.2 loader | missing | separate unsafe-quarantine crate, libloading/cache/free-once tests |
 | R5.3 source/prebuilt resolution and in-slot build | partial substrate | build ignores exist; no native artifact/provider build path |
 | R5.4 pending bootstrap convergence | missing | install may mark pending; build rebuilds and recompiles once |
