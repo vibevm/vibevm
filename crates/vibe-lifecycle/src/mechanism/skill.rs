@@ -3,8 +3,12 @@
 //! §6.1 in full, as laws this cell implements:
 //!
 //! 1. it "produces exactly one UTF-8 `SKILL.md` file" — one declared
-//!    output, `kind = "file"`, always at `SKILL.md` inside the target's own
-//!    engine-owned package directory;
+//!    output, recorded `kind = "skill"` with the PHYSICAL `file` shape,
+//!    always at `SKILL.md` inside the target's own engine-owned package
+//!    directory. The two are different questions — §6.3.0.5's "The three
+//!    skill deploy providers accept only a file-shaped `skill`
+//!    artifact" reads the pair — which is why the record says `skill`
+//!    while the bytes stay exactly one file;
 //! 2. it "validates Agent Skills frontmatter" — locally and structurally;
 //!    the exact member list is on [`frontmatter::parse`];
 //! 3. it "aligns directory/name identity" — the `name` member must equal
@@ -33,7 +37,12 @@ use vibe_safefs::Project;
 use vibe_wire::generated::artifact_record::ArtifactShape;
 
 pub(crate) mod config;
-mod frontmatter;
+// Narrowly re-homed `pub(crate)`: the deploy lane's standalone-skill
+// providers reuse THIS one Agent Skills frontmatter reader (§6.3.1.6's
+// "require frontmatter identity to match" reads the same parser the
+// producer validated through), so a second YAML subset cannot appear
+// beside it. Nothing about the module itself changes.
+pub(crate) mod frontmatter;
 mod include;
 
 use crate::mechanism::contain::{digest_file, join_relative, read_file_bounded};
@@ -59,8 +68,15 @@ const OUTPUT_MEDIA_TYPE: &str = "text/markdown";
 /// The largest document or resource this provider will inline.
 const TEXT_CAP: u64 = 4 * 1024 * 1024;
 
-/// The artifact kinds this provider produces — §6.1 produces one FILE.
-const PRODUCED_KINDS: [ArtifactKind; 1] = [ArtifactKind::File];
+/// The artifact kinds this provider produces — §6.1 produces one FILE,
+/// recorded under the typed `skill` kind.
+///
+/// `ArtifactKind::Skill` with `ArtifactShape::File`: the record's KIND
+/// says what the distributable IS (an Agent Skills document, the thing
+/// §6.3.0.5's deploy rows admit by provenance), while the SHAPE stays the
+/// physical one-file fact. A recorded plain `file` is not a skill by
+/// resemblance, and a `skill`-kind directory is not a static skill at all.
+const PRODUCED_KINDS: [ArtifactKind; 1] = [ArtifactKind::Skill];
 
 /// The §3.2 operations a package-role provider implements.
 const PACKAGE_OPERATIONS: [ProviderOperation; 4] = [

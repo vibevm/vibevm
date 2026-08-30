@@ -84,8 +84,16 @@ fn a_static_skill_becomes_one_framed_document_with_recorded_digests() {
     // The record half.
     let record = record(root.path(), produced);
     assert_eq!(record.id, "demo.md");
-    assert_eq!(record.kind, RecordKind::File);
-    assert_eq!(record.shape, ArtifactShape::File);
+    assert_eq!(
+        record.kind,
+        RecordKind::Skill,
+        "the static-skill distributable is recorded under the typed `skill` kind",
+    );
+    assert_eq!(
+        record.shape,
+        ArtifactShape::File,
+        "while its physical shape stays exactly one file",
+    );
     assert_eq!(record.digest.algorithm, DigestAlgorithm::Sha256);
     assert_eq!(record.digest.value, produced.digest);
     assert_eq!(record.path_relative.root, RelativeRoot::Project);

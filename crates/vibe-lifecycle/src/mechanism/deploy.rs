@@ -51,6 +51,7 @@ pub(crate) mod preplan;
 pub(crate) mod protocol;
 pub(crate) mod saga;
 pub(crate) mod sidecar;
+pub(crate) mod skill;
 pub(crate) mod state;
 pub(crate) mod transaction;
 pub(crate) mod view;
@@ -66,6 +67,7 @@ pub use plan::plan_deploy_targets;
 use super::order::{GraphNode, OrderFault, Unresolved, dag_order};
 use super::vibebin::VibeBinProvider;
 use super::{BUILTIN_VIBE_BIN_NAME, DeployProvider, DeployTargetRequest};
+use skill::SkillDeployProvider;
 // The inverse path lives in its own cell and is re-exported here, so
 // `undeploy_targets` and every test still spell it one way.
 pub(crate) use inverse::undeploy_resolved;
@@ -199,17 +201,31 @@ fn resolve_selection<'a>(
 /// The closed builtin dispatch of the deploy role.
 ///
 /// §7.0.2 in one function: a non-builtin handler refuses by the unlanded
-/// transport's name, and the one deploy builtin row constructs the §7.1
-/// provider. The refusal arm is not a stub — nothing is deployed by it,
-/// which is the whole point of a typed refusal.
+/// transport's name, the `#vibe-bin` row constructs the §7.1 provider, and
+/// the three §6.3.0.5 skill rows construct ONE closed provider
+/// parameterised by its client — the same lesson the three projection
+/// rows landed: what differs between the three is DATA, not behaviour, so
+/// it lives in [`SkillClient`] and the adapter is written once. The
+/// refusal arms are not stubs — nothing is deployed by them, which is the
+/// whole point of a typed refusal.
 fn builtin_provider(
     handler: &ExtensionHandler,
     key: &str,
     pin: &str,
 ) -> Result<Box<dyn DeployProvider>, DeployError> {
+    use skill::SkillClient;
     match handler {
         ExtensionHandler::Builtin { name } if name == BUILTIN_VIBE_BIN_NAME => {
             Ok(Box::new(VibeBinProvider))
+        }
+        ExtensionHandler::Builtin { name } if name == super::BUILTIN_CLAUDE_SKILL_NAME => {
+            Ok(Box::new(SkillDeployProvider::new(SkillClient::Claude)))
+        }
+        ExtensionHandler::Builtin { name } if name == super::BUILTIN_CODEX_SKILL_NAME => {
+            Ok(Box::new(SkillDeployProvider::new(SkillClient::Codex)))
+        }
+        ExtensionHandler::Builtin { name } if name == super::BUILTIN_OPENCODE_SKILL_NAME => {
+            Ok(Box::new(SkillDeployProvider::new(SkillClient::OpenCode)))
         }
         ExtensionHandler::Builtin { name } => Err(DeployError::UnknownBuiltinProvider {
             key: key.to_owned(),
@@ -345,6 +361,13 @@ fn apply_one(
         user_home: execution.user_home,
         clients: execution.clients,
         prior_receipt: planned.prior_receipt.as_ref(),
+        // Deliberately `None`: the recovery intent is settlement-
+        // reachability EVIDENCE for a plan, and this is the apply-time
+        // request. The locked occupant recheck inside `apply` stays
+        // receipt-only; the transaction settles whatever journal is
+        // unretired under its own plan-hash law before this request is
+        // ever built into a write.
+        recovery_intent: None,
         artifact: Some(artifact),
         staging: staging.as_deref(),
     };

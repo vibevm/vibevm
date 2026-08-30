@@ -515,7 +515,7 @@ fn an_output_kind_this_provider_does_not_produce_refuses() {
             kind, supported, ..
         } => {
             assert_eq!(kind, "directory");
-            assert_eq!(supported, "file");
+            assert_eq!(supported, "skill");
         }
         other => panic!("expected the kind refusal, got {other}"),
     }

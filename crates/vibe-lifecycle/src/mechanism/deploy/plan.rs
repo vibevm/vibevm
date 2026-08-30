@@ -73,6 +73,12 @@ pub(crate) fn plan_resolved(
     for (index, selected) in resolved.iter().enumerate() {
         let home = home_of(execution, &selected.target.id);
         let receipt = state.read_receipt(&home)?;
+        // §7.2's crash window, read at the same no-create seam the receipt
+        // one line above uses: an unretired intent lets a plan-time
+        // occupancy judgement recognise THIS deployment's interrupted
+        // occupant as reachable settlement — evidence only, never write
+        // authority, which the apply-time request does not carry.
+        let recovery_intent = state.read_intent(&home)?;
         let artifact = match resolve_artifact(execution.project_root, selected.target) {
             Ok(artifact) => Some(artifact),
             // A read-only planner never builds, so an artifact that has
@@ -117,8 +123,10 @@ pub(crate) fn plan_resolved(
             // §6.3.1.5: "The same prior receipt value reaches provider plan
             // in both `--plan` and preapply." One read, one value, two
             // surfaces — so a provider cannot report one destination
-            // decision here and make another when it is applied.
+            // decision here and make another when it is applied. The
+            // recovery intent obeys the same law for the same reason.
             prior_receipt: receipt.as_ref(),
+            recovery_intent: recovery_intent.as_ref(),
             artifact: Some(&artifact),
             // A plan never stages: staging is an apply-time scratch, and
             // offering one here would be a directory a pure operation

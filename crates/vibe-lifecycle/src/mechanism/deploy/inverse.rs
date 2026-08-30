@@ -78,8 +78,10 @@ pub(crate) fn undeploy_resolved(
             clients: execution.clients,
             // The engine's read of prior ownership is the receipt being
             // reversed: a provider that has to recognise its own occupant
-            // before removing it is looking at exactly this value.
+            // before removing it is looking at exactly this value. No
+            // recovery intent here — an inverse settles nothing.
             prior_receipt: Some(&receipt),
+            recovery_intent: None,
             artifact: None,
             staging: None,
         };

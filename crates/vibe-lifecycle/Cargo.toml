@@ -20,6 +20,10 @@ sha2.workspace = true
 specmark.workspace = true
 thiserror.workspace = true
 toml.workspace = true
+# The pure injected-home client-skill path helpers (§6.3.1.7): the three
+# standalone-skill deploy providers call ONLY those, never the ambient
+# directory resolvers the older compatibility APIs carry.
+vibe-agent-projection.workspace = true
 vibe-core.workspace = true
 # The R4.0 registry kernel: this crate re-exports its public surface for
 # compatibility (one transition, no flag day) and keeps only the

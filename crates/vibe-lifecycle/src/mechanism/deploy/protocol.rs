@@ -18,6 +18,7 @@ use std::path::{Path, PathBuf};
 
 use vibe_core::manifest::{ArtifactKind, DeployTarget};
 use vibe_wire::generated::artifact_record::ArtifactShape;
+use vibe_wire::generated::deploy_intent::DeployIntent;
 use vibe_wire::generated::deploy_receipt::{DeployReceipt, DestinationScope};
 
 use super::model::ClientExecutables;
@@ -255,6 +256,38 @@ pub(crate) struct DeployTargetRequest<'a> {
         reason = "the provider-facing request; the client deploy providers are its first readers"
     )]
     pub(crate) prior_receipt: Option<&'a DeployReceipt>,
+    /// This deployment's unretired durable intent, as the engine read it
+    /// through the no-create view — §7.2 settlement-REACHABILITY evidence
+    /// for `plan`, never prior ownership.
+    ///
+    /// A crash after atomic publication leaves desired bytes at the
+    /// destination and an unretired intent beside them. The next ordinary
+    /// run's plan sees an occupant no receipt owns — and the frozen
+    /// no-receipt law is right to refuse it — unless something proves the
+    /// occupant is THIS deployment's own interrupted write. The intent
+    /// journal is exactly that proof: it names what the interrupted plan
+    /// intended at which digest, so a provider's plan-time occupancy
+    /// judgement may treat a present entry as INTERRUPTED (recovery
+    /// occupancy, not ownership) solely when the injected intent names the
+    /// exact resource and its recorded desired digest equals the
+    /// independently observed one.
+    ///
+    /// Three laws keep this evidence from becoming authority:
+    ///
+    /// - it reaches `plan` only, and only through the read-only planner and
+    ///   the pre-apply epoch; the APPLY-time request injects `None`, so the
+    ///   locked occupant recheck stays receipt-only;
+    /// - settlement remains the transaction's: only a matching plan hash
+    ///   calls `recover`, a stale intent retires, and an ordinary `apply`
+    ///   still refuses the unowned occupant afterwards;
+    /// - it is a borrowed read of engine state, exactly as the prior
+    ///   receipt is — a provider cannot write it, re-read it, or ask for a
+    ///   different one.
+    #[allow(
+        dead_code,
+        reason = "the provider-facing request; the skill provider's plan judgement is its reader"
+    )]
+    pub(crate) recovery_intent: Option<&'a DeployIntent>,
     /// The artifact this target reconciles, proven from its record.
     pub(crate) artifact: Option<&'a ResolvedDeployArtifact>,
     /// The engine-owned staging directory, when the provider takes one.

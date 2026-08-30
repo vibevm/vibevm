@@ -164,6 +164,7 @@ pub(crate) fn request<'a>(
         user_home: world.home.path(),
         clients: &world.clients,
         prior_receipt: None,
+        recovery_intent: None,
         artifact,
         staging: staged.then(|| world.staging.path()),
     }

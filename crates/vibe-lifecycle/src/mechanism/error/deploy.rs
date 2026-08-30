@@ -192,4 +192,105 @@ pub enum DeployProviderError {
         recorded: String,
         found: String,
     },
+
+    /// §6.3.1.6's artifact admission for a standalone skill: a
+    /// `skill`-kind record whose physical shape is not one file. A
+    /// directory is a different package kind entirely, and a skill
+    /// directory is §6.1's own "separate package kind".
+    #[error(
+        "[[deploy.target]] `{target}` deploys artifact `{artifact}`, which is not a single file, \
+         through the builtin provider `{provider}`, which installs exactly one `SKILL.md` entry \
+         document \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS; fix: name \
+         the `package:static-skill` output — a directory-shaped skill is a different package \
+         kind, not a standalone skill)"
+    )]
+    SkillShape {
+        target: String,
+        artifact: String,
+        provider: &'static str,
+    },
+
+    /// §6.3.1.6's identity law: the config names one skill, the frontmatter
+    /// names another, and a skill has exactly one identity.
+    #[error(
+        "[[deploy.target]] `{target}` deploys artifact `{artifact}` whose frontmatter names \
+         `{declared}` while the target's config names `{config}`; the destination directory and \
+         the skill's own name are one identity, not two \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS; fix: make \
+         the config's `name` and the artifact's `name` frontmatter member agree — the one \
+         existing Agent Skills frontmatter parser reads the artifact, and neither side is \
+         silently preferred)"
+    )]
+    SkillName {
+        target: String,
+        artifact: String,
+        declared: String,
+        config: String,
+    },
+
+    /// A `skill`-kind artifact whose bytes cannot be read as the bounded
+    /// UTF-8 document every Agent Skills entry is. The static-skill
+    /// producer writes and verifies exactly that, so reaching this refusal
+    /// means the record and the bytes disagree about what was produced.
+    #[error(
+        "[[deploy.target]] `{target}` deploys artifact `{artifact}`, which cannot be read as a \
+         bounded UTF-8 `SKILL.md` document: {reason} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS; fix: rerun \
+         `package:static-skill` for this artifact — a standalone skill is one UTF-8 entry \
+         document, and the deploy lane never repairs produced bytes)"
+    )]
+    SkillUnreadable {
+        target: String,
+        artifact: String,
+        reason: String,
+    },
+
+    /// §6.3.1.1's prior-ownership law at a skill entry: something occupies
+    /// the destination and no injected receipt owns it. Identical bytes are
+    /// NOT authorization — "an absent receipt never authorises an
+    /// identical foreign occupant".
+    #[error(
+        "[[deploy.target]] `{target}` would place `{resource}`, but an occupant is already there \
+         (digest `{observed}`) that this deployment's prior receipt does not own \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS; fix: remove \
+         the occupant deliberately or undeploy the deployment that owns it — identical-looking \
+         bytes are not ownership, and this provider never overwrites a name it cannot prove it \
+         holds)"
+    )]
+    OccupantUnowned {
+        target: String,
+        resource: String,
+        observed: String,
+    },
+
+    /// The receipt owns the entry, but the bytes on disk are not the bytes
+    /// it recorded — §6.3.1.6's "receipt-owned drift refuses" and §7.2's
+    /// drift law at a skill entry. Overwriting would erase a change made
+    /// after deployment by somebody else.
+    #[error(
+        "[[deploy.target]] `{target}` would update `{resource}`, which its prior receipt owns at \
+         digest `{recorded}` but which now holds `{observed}` \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS; fix: inspect \
+         the entry and decide explicitly — a drifted destination is never silently overwritten, \
+         and an update runs only over bytes the receipt still describes)"
+    )]
+    OccupantDrifted {
+        target: String,
+        resource: String,
+        recorded: String,
+        observed: String,
+    },
+
+    /// §6.3.1.6's remove law: an inverse removes only entries the injected
+    /// current receipt owns. A requested entry the receipt does not name is
+    /// somebody else's file, whatever it looks like.
+    #[error(
+        "[[deploy.target]] `{target}` was asked to remove `{resource}`, which its current \
+         receipt does not own \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS; fix: this is \
+         a defect in the calling engine — a provider removes only receipt-owned entries, and an \
+         entry the receipt does not name is never the provider's to delete)"
+    )]
+    RemoveNotOwned { target: String, resource: String },
 }

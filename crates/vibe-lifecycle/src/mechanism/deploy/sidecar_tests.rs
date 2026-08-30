@@ -97,6 +97,7 @@ fn the_plan_hash_changes_when_only_the_lock_resources_change() {
         user_home: execution.user_home,
         clients: execution.clients,
         prior_receipt: None,
+        recovery_intent: None,
         artifact: None,
         staging: None,
     };

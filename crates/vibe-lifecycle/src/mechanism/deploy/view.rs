@@ -29,11 +29,15 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARG
 use std::path::Path;
 
 use vibe_safefs::Project;
+use vibe_wire::behaviour::deploy_records::validate_intent;
+use vibe_wire::generated::deploy_intent::DeployIntent;
 use vibe_wire::generated::deploy_receipt::DeployReceipt;
 
 use super::error::DeployError;
 use super::sidecar::LockResources;
-use super::state::{DeploymentHome, RECEIPT_FILE, checked_receipt, read_record, rendered};
+use super::state::{
+    DeploymentHome, INTENT_FILE, RECEIPT_FILE, checked_receipt, read_record, rendered,
+};
 
 /// A read-only capability over a deployment state home that may not exist.
 ///
@@ -126,5 +130,33 @@ impl DeployStateView {
         };
         record.validate()?;
         Ok(Some(record))
+    }
+
+    /// One deployment's unretired durable intent, or `None` when it retired
+    /// — including when the whole state home is absent.
+    ///
+    /// Validated through the SAME wire validator and the SAME error
+    /// mapping [`DeployState::read_intent`](super::state::DeployState::read_intent)
+    /// uses, so a planner and an apply can never disagree about what a
+    /// state home holds: the value a provider's `plan` consults as
+    /// settlement-reachability evidence is byte-for-byte the journal the
+    /// transaction later settles. This read is still the no-create half —
+    /// an intent is only ever WRITTEN by an apply, and reading one here
+    /// creates nothing.
+    pub(crate) fn read_intent(
+        &self,
+        home: &DeploymentHome,
+    ) -> Result<Option<DeployIntent>, DeployError> {
+        let Some(project) = self.project.as_ref() else {
+            return Ok(None);
+        };
+        let Some(intent) = read_record::<DeployIntent>(project, &home.member(INTENT_FILE))? else {
+            return Ok(None);
+        };
+        validate_intent(&intent).map_err(|error| DeployError::RecordInvalid {
+            record: INTENT_FILE,
+            reason: error.to_string(),
+        })?;
+        Ok(Some(intent))
     }
 }

@@ -499,3 +499,27 @@ pub(crate) const BUILTIN_VIBE_BIN_PIN: &str = "org.vibevm/vibe#vibe-bin";
 
 /// The `handler = { kind = "builtin", name = … }` spelling of the same row.
 pub(crate) const BUILTIN_VIBE_BIN_NAME: &str = "vibe-bin";
+
+/// The reserved identity of §6.3.0.5's Claude standalone-skill deploy row.
+///
+/// The three skill rows share ONE closed provider parameterised by
+/// [`SkillClient`](deploy::skill::SkillClient); their ids and names are
+/// the registry's own spellings, restated here so the dispatch and the
+/// descriptor answer under one constant each.
+pub(crate) const BUILTIN_CLAUDE_SKILL_PIN: &str = "org.vibevm/vibe#claude-skill";
+
+/// The `handler = { kind = "builtin", name = … }` spelling of the same row.
+pub(crate) const BUILTIN_CLAUDE_SKILL_NAME: &str = "claude-skill";
+
+/// The reserved identity of §6.3.0.5's Codex standalone-skill deploy row.
+pub(crate) const BUILTIN_CODEX_SKILL_PIN: &str = "org.vibevm/vibe#codex-skill";
+
+/// The `handler = { kind = "builtin", name = … }` spelling of the same row.
+pub(crate) const BUILTIN_CODEX_SKILL_NAME: &str = "codex-skill";
+
+/// The reserved identity of §6.3.0.5's OpenCode standalone-skill deploy
+/// row.
+pub(crate) const BUILTIN_OPENCODE_SKILL_PIN: &str = "org.vibevm/vibe#opencode-skill";
+
+/// The `handler = { kind = "builtin", name = … }` spelling of the same row.
+pub(crate) const BUILTIN_OPENCODE_SKILL_NAME: &str = "opencode-skill";

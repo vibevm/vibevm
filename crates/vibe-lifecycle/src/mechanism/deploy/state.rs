@@ -61,7 +61,7 @@ use super::sidecar::{LOCK_RESOURCES_FILE, LockResources};
 pub(crate) use super::ledger::CheckpointLedger;
 
 /// The intent journal's file name inside a deployment's own directory.
-const INTENT_FILE: &str = "intent.json";
+pub(super) const INTENT_FILE: &str = "intent.json";
 /// The checkpoint ledger's file name.
 const CHECKPOINT_FILE: &str = "checkpoints.json";
 /// The finalized receipt's file name.

@@ -79,6 +79,7 @@ pub(crate) fn unwind(
             user_home: execution.user_home,
             clients: execution.clients,
             prior_receipt: Some(receipt),
+            recovery_intent: None,
             artifact: None,
             staging: None,
         };

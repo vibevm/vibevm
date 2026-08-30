@@ -387,6 +387,14 @@ impl Agent {
     /// Claude Desktop). Generalises [`Agent::skill_path`] (which bakes in
     /// the single `vibevm` skill + `SKILL.md`) for arbitrary package
     /// skills (PROP-018 §2.5).
+    ///
+    /// AMBIENT compatibility surface: it resolves the home through
+    /// `dirs::home_dir()` and is retained for the pre-R8 callers
+    /// (`vibe skill install` and friends). A lifecycle deploy provider
+    /// calls only the pure [`Agent::user_skills_root_from_home`] twin in
+    /// [`home_paths`] — never this one.
+    ///
+    /// [`home_paths`]: self::home_paths
     pub fn skills_root(self, scope: Scope, project_root: Option<&Path>) -> Result<Option<PathBuf>> {
         if !self.supports_skill() {
             return Ok(None);
@@ -554,3 +562,9 @@ pub fn detect_agents(project_root: Option<&Path>) -> Vec<Agent> {
         .filter(|a| a.is_present(project_root))
         .collect()
 }
+
+// The INJECTED-HOME pure path helpers — the deploy lane's half of this
+// module's surface, in its own file because its callers (and its
+// no-ambient-reads law) are a different audience from the compatibility
+// surfaces above.
+mod home_paths;

@@ -171,7 +171,10 @@ pub(crate) fn skill_target(id: &str, source: &str, resources: &[&str]) -> Artifa
         ),
         outputs: vec![ArtifactOutput {
             id: format!("{id}.md"),
-            kind: ArtifactKind::File,
+            // The typed `skill` kind with the physical `file` shape: the
+            // producer records what the distributable IS, and §6.3.0.5's
+            // deploy rows admit exactly this pair by provenance.
+            kind: ArtifactKind::Skill,
             select: None,
         }],
         config: Some(config(&format!("source = \"{source}\""))),

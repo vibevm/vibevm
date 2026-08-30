@@ -75,7 +75,13 @@ pub(crate) fn preplan(
     let mut prepared = Vec::with_capacity(resolved.len());
     for selected in resolved {
         let artifact = resolve_artifact(execution.project_root, selected.target)?;
-        let prior_receipt = state.read_receipt(&home_of(execution, &selected.target.id))?;
+        let home = home_of(execution, &selected.target.id);
+        let prior_receipt = state.read_receipt(&home)?;
+        // §7.2's crash window, read at the same no-create seam: an
+        // unretired intent is settlement-reachability evidence for the plan
+        // that follows — OWNED here so it outlives the request that borrows
+        // it, exactly as the prior receipt one field over does.
+        let recovery_intent = state.read_intent(&home)?;
         // The planning request carries no staging directory: staging is an
         // apply-time scratch, and a pre-apply epoch that offered one would
         // be handing a pure operation somewhere to write.
@@ -87,6 +93,7 @@ pub(crate) fn preplan(
             user_home: execution.user_home,
             clients: execution.clients,
             prior_receipt: prior_receipt.as_ref(),
+            recovery_intent: recovery_intent.as_ref(),
             artifact: Some(&artifact),
             staging: None,
         };
