@@ -79,7 +79,7 @@ fn plan(ctx: &output::Context, args: &DeployArgs) -> Result<()> {
         return report_nothing(ctx, "plan");
     };
     let loaded = vibe_orchestrator::inspect(&root)?;
-    let state_home = state_home()?;
+    let roots = state_roots()?;
     let targets = deploy_targets(&manifest);
     let reports = plan_deploy_targets(&DeployExecution {
         project_root: &root,
@@ -87,7 +87,8 @@ fn plan(ctx: &output::Context, args: &DeployArgs) -> Result<()> {
         selection: &selection,
         registry: &loaded.mechanisms,
         routes: &manifest.mechanism_routes,
-        state_home: &state_home,
+        state_home: &roots.deployments,
+        settings_root: &roots.settings,
         project: &identity(&manifest),
         package: None,
         created_at: &now(),
@@ -109,7 +110,7 @@ pub fn run_undeploy(ctx: &output::Context, args: UndeployArgs) -> Result<()> {
         );
     };
     let loaded = vibe_orchestrator::inspect(&root)?;
-    let state_home = state_home()?;
+    let roots = state_roots()?;
     let targets = deploy_targets(&manifest);
     let removals = undeploy_targets(&DeployExecution {
         project_root: &root,
@@ -117,7 +118,8 @@ pub fn run_undeploy(ctx: &output::Context, args: UndeployArgs) -> Result<()> {
         selection: &selection,
         registry: &loaded.mechanisms,
         routes: &manifest.mechanism_routes,
-        state_home: &state_home,
+        state_home: &roots.deployments,
+        settings_root: &roots.settings,
         project: &identity(&manifest),
         package: None,
         created_at: &now(),
@@ -128,7 +130,7 @@ pub fn run_undeploy(ctx: &output::Context, args: UndeployArgs) -> Result<()> {
 /// `vibe deployments [--json]` — the machine's receipts, and nothing else.
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS")]
 pub fn run_deployments(ctx: &output::Context) -> Result<()> {
-    let rows = list_deployments(&state_home()?)?;
+    let rows = list_deployments(&state_roots()?.deployments)?;
     if ctx.is_json() {
         return ctx.emit_json(&json_rows(&rows));
     }
@@ -307,8 +309,22 @@ fn deploy_targets(manifest: &Manifest) -> Vec<vibe_core::manifest::DeployTarget>
         .unwrap_or_default()
 }
 
-/// The absolute deployment state home under this user's settings dir.
-fn state_home() -> Result<std::path::PathBuf> {
+/// The two user-state roots one deploy surface hands down: the settings
+/// directory itself and the deployment state home inside it.
+///
+/// §7.1.0 ruling 2 puts BOTH on the execution — a user-scope provider
+/// reconciles a destination under the settings root, and the engine keeps
+/// its intents and receipts under the state home — and this is the ONE
+/// place either is resolved. Nothing below a command surface calls
+/// `settings_dir()`, so a test that relocates `$VIBE_SETTINGS` relocates
+/// the whole deployment, destination included.
+struct StateRoots {
+    settings: std::path::PathBuf,
+    deployments: std::path::PathBuf,
+}
+
+/// Resolve them, once.
+fn state_roots() -> Result<StateRoots> {
     let settings = vibe_core::settings::settings_dir().ok_or_else(|| {
         anyhow::anyhow!(
             "the vibevm settings directory could not be resolved, so deployment receipts have \
@@ -317,7 +333,10 @@ fn state_home() -> Result<std::path::PathBuf> {
              `$VIBE_SETTINGS`, or make a home directory resolvable, then rerun)"
         )
     })?;
-    Ok(deploy_state_home(&settings))
+    Ok(StateRoots {
+        deployments: deploy_state_home(&settings),
+        settings,
+    })
 }
 
 /// The selected node's identity — the same rendering the dispatch

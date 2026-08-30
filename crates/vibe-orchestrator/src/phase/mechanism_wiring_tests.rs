@@ -355,9 +355,15 @@ fn a_declared_package_target_really_runs_through_the_wiring() {
 /// The same shape one phase further: a deploy target that always refuses,
 /// bracketed by a `phase:package` and a `phase:deploy` contribution.
 ///
-/// The refusal is the ENGINE's own — §7.0.2's provider-not-landed, since
-/// `deploy:vibe-bin` is collected, routable and deliberately unimplemented
-/// — so reaching it proves the deploy executor really ran.
+/// The refusal is the ENGINE's own, so reaching it proves the deploy
+/// executor really ran. R8-DEPLOY got it from §7.0.2's provider-not-landed
+/// arm; since R8-VIBE-BIN that arm constructs the real provider, so the
+/// refusal these pins reach is the deploy executor's ARTIFACT law instead:
+/// the chain slice under test stops before `build`, so `tool.exe` has no
+/// A2 record and the deploy engine refuses to guess a path. Nothing else in
+/// this engine reads a `[[deploy.target]]`, so it is still exactly the
+/// deploy fence's own voice — and it is now a refusal the run can never
+/// outgrow, rather than one an atom retires.
 const PACKAGE_THEN_DEPLOY: &str = concat!(
     "[project]
 name = \"demo\"
@@ -422,12 +428,12 @@ fn measured_deploy(outcome: PhaseOutcome) -> Vec<String> {
     };
     let rendered = format!("{original:#}");
     assert!(
-        rendered.contains("PROP-054#OPEN-DEPLOY-TARGETS"),
-        "the deploy engine refused: {rendered}",
+        rendered.contains("executing the selected [[deploy.target]] rows"),
+        "the deploy fence really fired: {rendered}",
     );
     assert!(
-        rendered.contains("R8-VIBE-BIN"),
-        "and it named the atom that lands the provider: {rendered}",
+        rendered.contains("has no artifact record for"),
+        "and the refusal is the deploy executor's own artifact law: {rendered}",
     );
     match measurement {
         Measurement::Lifecycle { rows, .. } => rows.into_iter().map(|row| row.phase).collect(),

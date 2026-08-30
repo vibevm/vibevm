@@ -22,6 +22,10 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE");
 use specmark::spec;
 use thiserror::Error;
 
+pub(crate) mod deploy;
+
+pub use deploy::DeployProviderError;
+
 /// How much foreign text a refusal quotes before it truncates.
 const PREVIEW: usize = 200;
 
@@ -527,6 +531,19 @@ pub enum MechanismError {
         path: String,
         build_root: String,
     },
+
+    /// The deploy role's provider refusals — §7.1's destination laws.
+    ///
+    /// Transparent, and a section rather than a second enum: this layer
+    /// still has ONE error type, and a caller that renders a
+    /// `MechanismError` renders the deploy refusal verbatim. It lives in
+    /// its own cell for the reason the file budget exists — three roles'
+    /// refusals in one file stopped being one readable surface — and the
+    /// seam is the architecture's own: the deploy role is the one with a
+    /// DESTINATION, two extra §3.2 verbs and laws no producing provider
+    /// has.
+    #[error(transparent)]
+    Deploy(#[from] DeployProviderError),
 
     /// A deploy provider reported one completed operation and the engine
     /// could not make that checkpoint durable. §7.2 requires apply to

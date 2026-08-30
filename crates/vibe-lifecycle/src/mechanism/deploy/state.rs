@@ -479,17 +479,14 @@ impl<'a> CheckpointLedger<'a> {
         })
     }
 
-    /// Record that one planned resource's operation completed.
+    /// Record that one completed operation completed.
     ///
-    /// The provider-facing half of the ledger, and therefore unreached by
-    /// the shipped library until a real deploy provider lands
-    /// (R8-VIBE-BIN's): §7.0.2 deliberately ships the protocol with no
-    /// executing implementation, and the hermetic fixture is the only
-    /// caller today.
-    #[allow(
-        dead_code,
-        reason = "the provider-facing checkpoint sink; R8-VIBE-BIN lands its first caller"
-    )]
+    /// The provider-facing half of the ledger. Its callers name the
+    /// operation, not necessarily a receipted resource: the vibe-bin
+    /// provider checkpoints its content-addressed payload write under the
+    /// payload's own store identity even though §7.1.0 ruling 4 keeps the
+    /// payload out of the receipt's OWNED set. §7.2 asks apply to
+    /// "checkpoint completed operations", and the payload write is one.
     pub(crate) fn completed(&mut self, resource: &str) -> Result<(), MechanismError> {
         if self.record.completed.iter().any(|done| done == resource) {
             return Ok(());

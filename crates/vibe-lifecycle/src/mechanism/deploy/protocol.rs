@@ -160,7 +160,15 @@ pub(crate) const fn destination_scope(effect: EffectClass) -> DestinationScope {
 ///   the provider declared that its destination supports atomic
 ///   replacement (§7.2's "staging where the destination supports atomic
 ///   replacement"). A provider that declared otherwise is handed `None`
-///   rather than a directory it would have to promise not to use.
+///   rather than a directory it would have to promise not to use;
+/// - `settings_root` is §7.1.0 ruling 2's "`DeployExecution` carries the
+///   settings root beside the state home; a provider never resolves a
+///   home". A user-scope destination lives under it, and handing it down
+///   is what keeps `settings_dir()` out of every cell below a surface —
+///   the same law the state home already holds to, for the same reason: a
+///   test can then name the whole destination, and the operator's real
+///   `~/.vibe` is unreachable by construction rather than by an
+///   environment variable a test could forget.
 #[derive(Debug, Clone, Copy)]
 pub(crate) struct DeployTargetRequest<'a> {
     pub(crate) target: &'a DeployTarget,
@@ -170,16 +178,15 @@ pub(crate) struct DeployTargetRequest<'a> {
     /// The selected project's absolute root.
     #[allow(
         dead_code,
-        reason = "the provider-facing request; R8-VIBE-BIN lands the first shipped reader"
+        reason = "the provider-facing request; a project-scope deploy provider is its first reader"
     )]
     pub(crate) project_root: &'a Path,
+    /// The absolute vibevm settings directory this deployment's
+    /// destination lives under.
+    pub(crate) settings_root: &'a Path,
     /// The artifact this target reconciles, proven from its record.
     pub(crate) artifact: Option<&'a ResolvedDeployArtifact>,
     /// The engine-owned staging directory, when the provider takes one.
-    #[allow(
-        dead_code,
-        reason = "the provider-facing request; R8-VIBE-BIN lands the first shipped reader"
-    )]
     pub(crate) staging: Option<&'a Path>,
 }
 

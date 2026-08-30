@@ -50,6 +50,7 @@ pub(crate) mod package;
 pub(crate) mod plugin;
 pub(crate) mod record;
 pub(crate) mod skill;
+pub(crate) mod vibebin;
 pub(crate) mod zip;
 
 pub use build::{
@@ -61,7 +62,7 @@ pub use deploy::{
     RemovalOutcome, deploy_state_home, execute_deploy_targets, list_deployments,
     plan_deploy_targets, undeploy_targets,
 };
-pub use error::MechanismError;
+pub use error::{DeployProviderError, MechanismError};
 pub use package::{
     PackageError, PackageExecution, PackageOutcome, PackagedArtifact, execute_package_targets,
 };
@@ -452,22 +453,13 @@ pub(crate) const BUILTIN_WINDOWS_ZIP_PIN: &str = "org.vibevm/vibe#windows-zip";
 /// The `handler = { kind = "builtin", name = … }` spelling of the same row.
 pub(crate) const BUILTIN_WINDOWS_ZIP_NAME: &str = "windows-zip";
 
-/// The reserved identity of the §7.1 deploy provider — collected, routable
-/// and deliberately NOT implemented at this atom.
+/// The reserved identity of the §7.1 deploy provider — the ONE deploy
+/// builtin, and since R8-VIBE-BIN a provider that really runs.
 ///
-/// The executor matches on the handler NAME (the row's own spelling), so
-/// the pin is read only by the tests that hold the registry row and the
-/// refusal to one identity. It stays here rather than in a test, because
-/// it is the engine's constant and the refusal quotes it.
-#[allow(
-    dead_code,
-    reason = "the reserved deploy identity; R8-VIBE-BIN lands the provider that answers to it"
-)]
+/// The executor matches on the handler NAME (the row's own spelling); the
+/// pin is what the provider's own descriptor answers under, so a receipt
+/// records the exact identity that reconciled the destination.
 pub(crate) const BUILTIN_VIBE_BIN_PIN: &str = "org.vibevm/vibe#vibe-bin";
 
 /// The `handler = { kind = "builtin", name = … }` spelling of the same row.
 pub(crate) const BUILTIN_VIBE_BIN_NAME: &str = "vibe-bin";
-
-/// The atom that lands the `#vibe-bin` provider, named in its refusal so a
-/// reader learns what is missing rather than that something broke.
-pub(crate) const VIBE_BIN_ATOM: &str = "R8-VIBE-BIN";

@@ -105,6 +105,12 @@ pub(crate) struct DeployCarriage {
     /// The absolute deployment state home — `state/deployments` under the
     /// vibevm settings directory.
     pub(crate) state_home: PathBuf,
+    /// The absolute vibevm settings directory that state home hangs off,
+    /// carried beside it — §7.1.0 ruling 2. A user-scope deploy provider
+    /// reconciles a destination inside this root (`bin/`, `store/`), and
+    /// it is resolved in exactly the one place the state home already is,
+    /// so no cell below this surface ever calls `settings_dir()`.
+    pub(crate) settings_root: PathBuf,
     /// The project identity every intent and receipt is keyed under.
     pub(crate) project: String,
     /// The package identity, when a deployment comes from one package
@@ -133,6 +139,7 @@ impl DeployCarriage {
         Ok(Self {
             selection,
             state_home: deploy_state_home(&settings),
+            settings_root: settings,
             project: project_identity(manifest),
             package: None,
         })
@@ -317,6 +324,7 @@ impl<'targets> Fences<'targets> {
             registry: self.targets.registry,
             routes: self.targets.routes,
             state_home: &carriage.state_home,
+            settings_root: &carriage.settings_root,
             project: &carriage.project,
             package: carriage.package.as_deref(),
             created_at: self.targets.created_at,

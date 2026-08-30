@@ -320,11 +320,19 @@ impl Transaction<'_> {
     /// provider is asked to remove anything: a resource that is absent is
     /// already gone (benign), a resource at its recorded post-digest is
     /// this deployment's to remove, and anything else is §7.2's refusal.
+    ///
+    /// `prior_state_handle` is how the CALLER says which of the two
+    /// inverse operations this is — the provider's inputs are otherwise
+    /// identical, and a provider cannot be asked to guess. The saga's
+    /// rollback passes the receipt's handle (restore what the failed
+    /// generation displaced); `undeploy` passes `None` (remove what the
+    /// receipt owns, whatever an earlier generation once held).
     pub(crate) fn remove(
         &self,
         provider: &dyn DeployProvider,
         request: &DeployTargetRequest<'_>,
         receipt: &DeployReceipt,
+        prior_state_handle: Option<&str>,
         status: ReceiptStatus,
     ) -> Result<Vec<String>, DeployError> {
         let resources: Vec<String> = receipt
@@ -345,7 +353,7 @@ impl Transaction<'_> {
             .filter(|resource| resource.digest.is_some())
             .map(|resource| resource.resource.clone())
             .collect();
-        let report = provider.remove(request, &present, receipt.prior_state_handle.as_deref())?;
+        let report = provider.remove(request, &present, prior_state_handle)?;
         let mut reversed = receipt.clone();
         reversed.status = status;
         reversed.finalized_at = Some(self.timestamp(request)?);

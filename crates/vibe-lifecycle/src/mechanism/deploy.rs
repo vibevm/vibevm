@@ -50,7 +50,8 @@ pub use model::{
 pub use plan::plan_deploy_targets;
 
 use super::order::{GraphNode, OrderFault, Unresolved, dag_order};
-use super::{BUILTIN_VIBE_BIN_NAME, DeployProvider, DeployTargetRequest, VIBE_BIN_ATOM};
+use super::vibebin::VibeBinProvider;
+use super::{BUILTIN_VIBE_BIN_NAME, DeployProvider, DeployTargetRequest};
 use artifact::resolve_artifact;
 use model::row;
 use state::{DeployState, DeploymentHome};
@@ -112,6 +113,7 @@ fn undeploy_resolved(
             target: selected.target,
             profile: &execution.selection.profile,
             project_root: execution.project_root,
+            settings_root: execution.settings_root,
             artifact: None,
             staging: None,
         };
@@ -123,10 +125,13 @@ fn undeploy_resolved(
             scope: selected.provider.descriptor().scope(),
             created_at: execution.created_at,
         };
+        // `None`: this is UNDEPLOY, not the saga — the receipt-owned files
+        // are removed, never "restored" to a generation nobody asked for.
         let removed = transaction.remove(
             selected.provider.as_ref(),
             &request,
             &receipt,
+            None,
             ReceiptStatus::RolledBack,
         )?;
         outcomes.push(RemovalOutcome {
@@ -233,9 +238,9 @@ fn resolve_selection<'a>(
 /// The closed builtin dispatch of the deploy role.
 ///
 /// §7.0.2 in one function: a non-builtin handler refuses by the unlanded
-/// transport's name, and the one reserved deploy row refuses as
-/// provider-not-landed. Neither is a stub — nothing is deployed either
-/// way, which is the whole point of a typed refusal.
+/// transport's name, and the one deploy builtin row constructs the §7.1
+/// provider. The refusal arm is not a stub — nothing is deployed by it,
+/// which is the whole point of a typed refusal.
 fn builtin_provider(
     handler: &ExtensionHandler,
     key: &str,
@@ -243,11 +248,7 @@ fn builtin_provider(
 ) -> Result<Box<dyn DeployProvider>, DeployError> {
     match handler {
         ExtensionHandler::Builtin { name } if name == BUILTIN_VIBE_BIN_NAME => {
-            Err(DeployError::ProviderNotLanded {
-                key: key.to_owned(),
-                pin: pin.to_owned(),
-                atom: VIBE_BIN_ATOM,
-            })
+            Ok(Box::new(VibeBinProvider))
         }
         ExtensionHandler::Builtin { name } => Err(DeployError::UnknownBuiltinProvider {
             key: key.to_owned(),
@@ -313,6 +314,7 @@ fn apply_one(
         target: selected.target,
         profile: &execution.selection.profile,
         project_root: execution.project_root,
+        settings_root: execution.settings_root,
         artifact: Some(&artifact),
         staging: None,
     };
@@ -333,6 +335,7 @@ fn apply_one(
         target: selected.target,
         profile: &execution.selection.profile,
         project_root: execution.project_root,
+        settings_root: execution.settings_root,
         artifact: Some(&artifact),
         staging: staging.as_deref(),
     };
@@ -405,6 +408,7 @@ fn unwind(
             target: selected.target,
             profile: &execution.selection.profile,
             project_root: execution.project_root,
+            settings_root: execution.settings_root,
             artifact: None,
             staging: None,
         };
@@ -420,6 +424,10 @@ fn unwind(
             selected.provider.as_ref(),
             &request,
             receipt,
+            // The saga RESTORES: the failed generation's handle is what
+            // the destination held before it, and rolling back means
+            // putting exactly that back.
+            receipt.prior_state_handle.as_deref(),
             ReceiptStatus::RolledBack,
         ) {
             Ok(_) => rolled_back.push(selected.target.id.clone()),

@@ -68,25 +68,18 @@ pub enum DeployError {
         kind: String,
     },
 
-    /// Selection landed on a reserved builtin row whose provider this atom
-    /// deliberately does not implement — §7.0.2's "the one deploy builtin
-    /// row (`#vibe-bin`) refuses as provider-not-landed — a typed refusal,
-    /// never a stub".
-    #[error(
-        "`{key}` selected the reserved builtin provider `{pin}`, whose implementation lands with \
-         atom {atom}; this engine deploys nothing rather than pretend \
-         (violates spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS; fix: route \
-         `{key}` to an installed provider that implements it, or wait for {atom})"
-    )]
-    ProviderNotLanded {
-        key: String,
-        pin: String,
-        atom: &'static str,
-    },
-
     /// Selection landed on an engine-owned row this deploy phase does not
     /// know at all. Reachable only if the builtin table grows a deploy-role
     /// row before this phase learns it.
+    ///
+    /// R8-DEPLOY's sibling `ProviderNotLanded` — "the one deploy builtin
+    /// row (`#vibe-bin`) refuses as provider-not-landed" — is gone with
+    /// R8-VIBE-BIN: that row's provider now runs, so the variant had no
+    /// construction site left, and a public refusal nothing can raise
+    /// tells a reader this engine can produce a state it cannot. A future
+    /// deploy builtin that is collected before its adapter lands refuses
+    /// through THIS variant, which is the one that already means exactly
+    /// that.
     #[error(
         "`{key}` selected builtin provider `{pin}` (`{name}`), which this deploy phase does not \
          implement \

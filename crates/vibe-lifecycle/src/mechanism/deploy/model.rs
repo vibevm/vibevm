@@ -102,6 +102,17 @@ pub struct DeployExecution<'a> {
     pub routes: &'a MechanismRoutes,
     /// The absolute deployment state home — [`deploy_state_home`].
     pub state_home: &'a Path,
+    /// The absolute vibevm settings directory the state home hangs off,
+    /// carried beside it — §7.1.0 ruling 2's "`DeployExecution` carries the
+    /// settings root beside the state home; a provider never resolves a
+    /// home".
+    ///
+    /// A user-scope deploy provider reconciles a destination *inside* this
+    /// root, so it has to be told where the root is. It is the same
+    /// parameter the state home already is, and for the same reason: the
+    /// command layer resolves the settings directory ONCE, and no cell
+    /// below a surface calls `settings_dir()`.
+    pub settings_root: &'a Path,
     /// The project identity every intent and receipt is keyed under.
     pub project: &'a str,
     /// The package identity, when the deploy comes from one package

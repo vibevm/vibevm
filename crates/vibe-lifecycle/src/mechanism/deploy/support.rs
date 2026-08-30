@@ -421,6 +421,40 @@ impl Fixture {
         }
     }
 
+    /// Rebuild the fixture's `helper.exe` with new bytes and re-record it —
+    /// the manifest shape of "the artifact this target deploys was rebuilt",
+    /// which is what makes a second `execute_deploy_targets` a new
+    /// GENERATION of the same deployment rather than a no-op.
+    pub(crate) fn rebuild(&self, body: &str) {
+        write(self.project.path(), "target/debug/helper.exe", body);
+        let mut hash = Sha256::new();
+        hash.update(body.as_bytes());
+        let digest = format!("{:x}", hash.finalize());
+        let absolute = crate::mechanism::contain::forward_slashed(
+            &self.project.path().join("target/debug/helper.exe"),
+        );
+        let record = build_record(&RecordInputs {
+            target: "helper",
+            mechanism: &key("build:cargo"),
+            provider_key: "org.vibevm/vibe#cargo",
+            provider_version: None,
+            provider_hash: None,
+            output_id: "helper.exe",
+            kind: ArtifactKind::Executable,
+            shape: ArtifactShape::File,
+            digest: &digest,
+            path_absolute: &absolute,
+            path_relative: "target/debug/helper.exe",
+            freshness: RecordFreshness::default(),
+            platform: None,
+            media_type: None,
+            created_at: "2026-08-30T00:00:00Z",
+            evidence: "fixture artifact, rebuilt".to_owned(),
+        })
+        .expect("the rebuilt record builds");
+        write_record(self.project.path(), &record).expect("the rebuilt record writes");
+    }
+
     /// The deployment state home of this fixture — a temp root, named as
     /// data exactly as the command layer would name the settings dir.
     pub(crate) fn state_home(&self) -> PathBuf {
@@ -441,6 +475,7 @@ impl Fixture {
             registry: &self.registry,
             routes: &self.routes,
             state_home,
+            settings_root: self.settings.path(),
             project: "org.example/demo",
             package: None,
             created_at: "2026-08-30T12:00:00Z",

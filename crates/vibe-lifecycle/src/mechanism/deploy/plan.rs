@@ -94,6 +94,7 @@ pub(crate) fn plan_resolved(
             target: selected.target,
             profile: &execution.selection.profile,
             project_root: execution.project_root,
+            settings_root: execution.settings_root,
             artifact: Some(&artifact),
             // A plan never stages: staging is an apply-time scratch, and
             // offering one here would be a directory a pure operation
