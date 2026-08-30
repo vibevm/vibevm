@@ -97,6 +97,51 @@ The built-in Cargo adapter is represented by the reserved provider key
 `org.vibevm/vibe#cargo`, not by a privileged branch outside the registry.
 Claude/Codex/OpenCode adapters and `vibe-bin` follow the same rule.
 
+### 3.0 Mechanism carriage and registry shape — decision record (central, 2026-08-30)
+
+**Decision.** The mechanism plane extends the ONE existing kernel
+(`vibe-extension-registry`), never a second crate or a Lane-C registry:
+
+1. **Carriage.** `ExtensionWorld`'s two source kinds each gain
+   `mechanisms: Vec<MechanismDecl>` beside `declarations` — the same
+   provider identity, the same collection walk, one world snapshot. The
+   durable adapter (`DurableExtensionWorld`) reads `[[mechanism]]` out of
+   the same manifests it already parses; no second parse, no second epoch
+   rule.
+2. **Builtins are a third, engine-owned source.** The reserved keys
+   (`org.vibevm/vibe#cargo`, `#static-skill`, `#agent-plugin`,
+   `#vibe-bin`, …) enter collection as rows from one
+   `builtin_mechanism_source()` the collector ALWAYS appends — ordinary
+   rows under the reserved provider identity, never a privileged branch.
+   The reserved `org.vibevm/vibe` owner is refused to any collected
+   manifest (impersonation is a collection error, same genre as the
+   reserved-id-prefix law).
+3. **Registry.** Collection yields a `MechanismRegistry` beside the
+   extension rows: one row per collected `[[mechanism]]`, keyed by the
+   provider-qualified mechanism key, carrying role, logical name,
+   handler, protocol, config-schema path and its provider identity.
+   Disable controls apply exactly as extension disables do.
+4. **Selection is a pure kernel function.** `resolve_mechanism(role,
+   logical_name, target_pin, host_routes)` applies §3.1's four steps
+   verbatim and returns the selected row or a typed refusal listing the
+   installed candidates. No filesystem, no version ordering, no
+   short-name discovery — an unpinned foreign row is INERT, which is the
+   replacement fixture's whole proof: a plugin that overrides a logical
+   key displaces the builtin in the ROUTING result, and the builtin row
+   is still present, still queryable, and demonstrably NOT selected.
+5. **Execution is out of scope for this atom.** The provider protocol
+   (§3.2 plan/fingerprint/apply/verify/remove/recover) is R8-CARGO's and
+   later; R8-MECHANISM lands the plane, the routes and the selection law
+   only — a mechanism is inert until a target selects it, and no target
+   selects one yet.
+
+**Considered and rejected.** A second registry crate — two homes for one
+provider machine (the Lane C plan note already forbids it). Widening
+`ExtensionPoint` with mechanism roles — §3 keeps the closed time
+vocabulary and mechanisms are not scheduled moments. Letting the builtin
+defaults live as a match in the resolver — a privileged branch outside
+the registry, exactly what §3 rejects by name.
+
 ### 3.1 Resolution and override law
 
 A target names a logical vocabulary key such as `build:cargo`,
