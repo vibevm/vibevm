@@ -1097,6 +1097,17 @@ than depending on untracked `cache/` archaeology.
   shared-module 17, xtask 234, check-codegen clean over 145 unchanged generated
   files, strict clippy/fmt and conform 0/0. No wire product changed; R5.1-WIRE is
   unblocked.
+- R5.1 native wire: `fd81a003` / map `4c9378c9` registers the three epoch-1
+  native roots and generates them from one schema truth. Eleven nested
+  lifecycle/reply types now live once in the shared module; context/manifest
+  preserve foreign-reader forward members, native reply is strict, point stays
+  open, manifest has no ABI field, reply has no tasks and only input artifacts
+  carry phase. Five worker plus three central mutations were red and restored.
+  Gates: native 7, full vibe-wire (132 library + integration + 2 doctests),
+  post-commit check-codegen, check/strict-clippy/fmt, conform 0-new and green
+  pre-publication wire-diff over 5 schema / 6 corpus / 2 format paths. Specmap:
+  6833 units / 3009 tagged items / 2758 edges, 0 suspects, gated orphans or
+  unresolved host edges, 25 warnings. SDK/FFI remains the next serial child.
 - R4.2 minify binding, RED corpus and activation e2e: `7a09ec2d` registers
   `xml-minify` (epoch 1, EMITTED — the one stage the kernel serves without a
   new serializer; every other stage refuses through the registry's own law)
@@ -1215,7 +1226,7 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 
 | Step | State | Required result |
 |---|---|---|
-| R5.1 native JTD context/reply/manifest + `vibe-ext` macro | frozen | `R5-NATIVE-ABI-ARCHITECTURE-v0.1.md`; SHARED-STRICT → WIRE → SDK → GATE; schema first, unanimous shared-reader strictness, panic-abort compile refusal, plugin-side unwind/memory boundary |
+| R5.1 native JTD context/reply/manifest + `vibe-ext` macro | in progress | SHARED-STRICT `52edc577`, WIRE `fd81a003` / map `4c9378c9`; SDK → GATE remain; schema first, unanimous shared-reader strictness, panic-abort compile refusal, plugin-side unwind/memory boundary |
 | R5.2 loader | missing | separate unsafe-quarantine crate, libloading/cache/free-once tests |
 | R5.3 source/prebuilt resolution and in-slot build | partial substrate | build ignores exist; no native artifact/provider build path |
 | R5.4 pending bootstrap convergence | missing | install may mark pending; build rebuilds and recompiles once |

@@ -117,6 +117,22 @@ check-codegen is clean over 145 byte-identical generated files, strict clippy,
 fmt and xtask conform (0 findings / 0 new) pass. No schema, vocabulary, registry
 record, generated product or product crate changed.
 
+**Ratified at R5.1-WIRE acceptance (central, 2026-08-30).** Commit `fd81a003`
+registers `native-context`, `native-reply` and `native-manifest`, moves eleven
+reusable lifecycle/reply types into the one generated shared module and emits
+the three format-specific roots plus authored valid/invalid corpus. Context and
+manifest remain permissive at root and nested foreign-reader boundaries; native
+reply and its shared artifact row are strict. Point stays an open string,
+manifest carries no ABI field, native reply carries no tasks, and accumulated
+artifacts alone retain engine-owned phase. Five worker and three independent
+central source mutations failed and restored byte-exact. Gates passed: focused
+native wire 7, the complete `vibe-wire` test/doc suite (132 library tests),
+check/check-codegen, strict clippy/fmt, conform 0-new and pre-publication
+wire-diff over all 5 schema + 6 corpus + 2 format paths. Map `4c9378c9` is 6,833
+units / 3,009 tagged items / 2,758 edges, with 0 suspects, gated orphans or
+unresolved host edges and 25 standing warnings. R5.1-SDK is now the only next
+consumer; no loader/build/activation behavior landed here.
+
 Wire acceptance requires authored valid/invalid corpus documents for all three
 roots; registry completeness; codegen/check-codegen; exact generated-module
 sharing assertions; native reply unknown-member refusal; native context and
