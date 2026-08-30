@@ -1125,6 +1125,14 @@ than depending on untracked `cache/` archaeology.
   20 RED/restoration proofs in total (4 + 8 + 8). R5.1-SHARED-STRICT, WIRE, SDK,
   GATE and parent R5.1 are accepted; R5.2 now owns the first host-side unsafe,
   libloading cache and free-once invocation.
+- R5.2 loader freeze: `R5-NATIVE-ABI-ARCHITECTURE-v0.1.md` §7 assigns one safe
+  `NativeLoader` to a separate `vibe-native-loader` unsafe audit crate. Caller
+  supplies an absolute library plus expected id/typed point/ir_schema; canonical
+  path keys a strong process cache. Four symbols, ABI 1 and a bounded copied
+  manifest are admitted before invoke. Every non-null response enters an exact
+  RAII free guard before strict reply parsing, so success and every malformed/
+  failure exit free once. LOADER → real-fixture/cache/free GATE are serial;
+  artifact resolution/build and lifecycle wiring remain R5.3.
 - R4.2 minify binding, RED corpus and activation e2e: `7a09ec2d` registers
   `xml-minify` (epoch 1, EMITTED — the one stage the kernel serves without a
   new serializer; every other stage refuses through the registry's own law)
