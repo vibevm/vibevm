@@ -47,17 +47,22 @@ this sensitive file: it authorises *appending and curating verified
 operational facts in this subsection only*, never rewriting the rules above.
 Keep it current-state; prune stale lines.
 
-- **Harness delegation surface (verified 2026-07-15):** on Claude Code the
-  native `Agent` / `Task` / `Workflow` tools spawn **Claude** workers, not GLM —
-  they offload the boss's context window but do **not** reach the cheap `big`
-  GLM slot. GLM is reachable only through the fractality launcher
-  (`fractality.ps1 run` / `spawn --packet …`, or the interim
-  `opencode run -m zai-coding-plan/glm-5.2`). So **delegable *execution* routes
-  through fractality by default**; a native Claude subagent is justified only by
-  the delegation-rules verifiability test (review-cost ≥ regen-cost), and its
-  use is stated out loud. Reaching for the frictionless native tool because it
-  "is delegation" satisfies the word and defeats the purpose — that is the
-  default failure mode. Launcher verified live 2026-07-15.
+- **Harness delegation surface (verified 2026-08-30):** native
+  `Agent` / `Task` / `Workflow` tools inherit their harness family; they
+  offload context but do not select the machine's external GLM lane. General
+  non-campaign GLM execution still routes through fractality, with bare
+  `opencode run` only as the last-resort fallback below. **During the active
+  OpenAI ChatGPT lifecycle campaign, PROP-055 is the scoped override:** healthy
+  `claudez` is the first execution lane, root accepts, and a correction
+  continues with `claudez -c` in the exact same dedicated cwd. The installed
+  `C:/Users/olegc/opt/bin/claudez.ps1` is a thin Claude Code launcher over the
+  z.ai Anthropic-compatible gateway; it currently maps the large aliases to
+  `glm-5.3[1m]`, keeps state in `~/.claude-glm`, and loads its bearer from
+  the token file without exposing it. Launch fresh bounded work with
+  `claudez -p <pointer> --permission-mode bypassPermissions`; use ordinary
+  text output plus the durable report for long work, never `claudez2` unless
+  the owner explicitly re-enables it. PROP-055 and launcher re-verified
+  2026-08-30 after an incorrect `opencode` fallback was caught in review.
 - **Post-clean v1 build workaround (verified 2026-08-30):** the repository-root
   `fractality.ps1` is stale despite the v1 ledger below — it still hardcodes
   `fractality/v0.1.0/target/debug/fractality.exe`, so it cannot launch the
@@ -94,10 +99,10 @@ Keep it current-state; prune stale lines.
 - **Interim route (no packet):** `opencode run -m zai-coding-plan/glm-5.2 "<task>"`
   — opencode 1.17.14, z.ai creds in its auth store (2026-07-12); use **only**
   `zai-coding-plan/*` (the `opencode/*` Zen gateway is unpaid here and errors).
-  **Owner ruling (2026-07-15): `opencode` works POORLY vs fractality — prefer the
-  fractality launcher (`run` / `spawn --packet`) even over opencode's warm-build
-  convenience; treat bare `opencode run` only as a last-resort fallback when the
-  launcher is genuinely unavailable.**
+  **Last resort only:** outside the PROP-055 campaign prefer the fractality
+  launcher; inside the active ChatGPT campaign prefer healthy `claudez`.
+  Bare `opencode run` is used only when the applicable primary launcher is
+  genuinely unavailable, never merely because it is convenient.**
 - **Packets** (TOML, schema 1): `[task]` goal/acceptance,
   `[workspace] mode = "worktree" | "dir"` (worktree default → `repo`/`base`,
   deliverable branch), `[output]`, `[budget]`, `[routing]` profile/model.
