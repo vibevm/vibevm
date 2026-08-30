@@ -5,6 +5,8 @@
 //! provider removes exactly its configured `<skills>/<name>/SKILL.md` and
 //! nothing else.
 
+use specmark::verifies;
+
 use super::SkillDeployProvider;
 use super::client::SkillClient;
 use super::support::{World, receipt_owning, request, target, write_home};
@@ -12,6 +14,7 @@ use crate::mechanism::DeployProvider;
 use crate::mechanism::error::DeployProviderError;
 
 #[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS")]
 fn a_receipt_owned_foreign_request_is_not_this_provider_entry_to_remove() {
     let world = World::new();
     let client = SkillClient::Claude;

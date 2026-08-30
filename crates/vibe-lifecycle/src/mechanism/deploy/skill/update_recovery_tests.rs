@@ -16,6 +16,8 @@
 //! after-write crash-point provider) is the shared suite cell's, so the
 //! two windows are proven over ONE implementation.
 
+use specmark::verifies;
+
 use vibe_extension_registry::SelectionStep;
 
 use super::client::SkillClient;
@@ -25,6 +27,7 @@ use super::support::{
 use crate::mechanism::deploy::{Selected, apply_selection, execute_deploy_targets};
 
 #[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS")]
 fn an_interrupted_update_after_its_write_is_recovered_by_the_next_normal_run() {
     let world = EngineWorld::new();
     let client = SkillClient::Codex;

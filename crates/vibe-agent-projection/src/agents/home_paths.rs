@@ -20,6 +20,8 @@
 //! pure pair answer different questions for different callers — and the
 //! deploy lane reads only this one.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS");
+
 use std::path::{Path, PathBuf};
 
 use super::Agent;

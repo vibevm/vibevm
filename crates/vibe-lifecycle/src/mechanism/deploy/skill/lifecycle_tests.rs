@@ -13,6 +13,8 @@
 //! live in the suite's shared cell, beside this file — the update
 //! recovery cell next door drives the same machinery.
 
+use specmark::verifies;
+
 use vibe_extension_registry::SelectionStep;
 
 use super::client::SkillClient;
@@ -25,6 +27,7 @@ use crate::mechanism::deploy::{
 };
 
 #[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS")]
 fn all_three_clients_deploy_verify_list_and_undeploy_through_the_engine() {
     for (client, root) in [
         (SkillClient::Claude, ".claude/skills"),
@@ -103,6 +106,7 @@ fn all_three_clients_deploy_verify_list_and_undeploy_through_the_engine() {
 }
 
 #[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS")]
 fn an_engine_update_refuses_a_hand_edited_destination_and_leaves_it_intact() {
     let world = EngineWorld::new();
     world.record_skill("demo.md", DEMO_ENTRY);
@@ -130,6 +134,7 @@ fn an_engine_update_refuses_a_hand_edited_destination_and_leaves_it_intact() {
 }
 
 #[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS")]
 fn an_unowned_identical_occupant_refuses_through_the_engine_before_any_write() {
     let world = EngineWorld::new();
     world.record_skill("demo.md", DEMO_ENTRY);
@@ -158,6 +163,7 @@ fn an_unowned_identical_occupant_refuses_through_the_engine_before_any_write() {
 }
 
 #[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS")]
 fn an_interrupted_apply_after_its_write_is_recovered_by_the_next_normal_run() {
     let world = EngineWorld::new();
     world.record_skill("demo.md", DEMO_ENTRY);
@@ -288,6 +294,7 @@ fn an_interrupted_apply_after_its_write_is_recovered_by_the_next_normal_run() {
 }
 
 #[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS")]
 fn a_stale_intent_retires_and_the_ordinary_apply_still_refuses_the_unowned_occupant() {
     let world = EngineWorld::new();
     world.record_skill("demo.md", DEMO_ENTRY);
