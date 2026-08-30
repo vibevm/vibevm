@@ -15,6 +15,13 @@
 //!   refusal — not a later reader's;
 //! - the digest is of the produced bytes, streamed off the artifact the
 //!   provider actually reported, never restated from a plan.
+//!
+//! ONE home, two roles. R8-CARGO wrote this cell against the Cargo
+//! adapter's own value types; R8-PACKAGE's two providers produce records
+//! beside the build records in the same directory, under the same laws, so
+//! the inputs are the record's OWN vocabulary and the callers translate
+//! into it. A second record writer — even a faithful one — would be a
+//! second thing to drift.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#ARTIFACT-REGISTRY");
 
@@ -22,6 +29,7 @@ use std::path::Path;
 
 use sha2::{Digest, Sha256};
 use specmark::spec;
+use thiserror::Error;
 use vibe_core::manifest::{ArtifactKind, MechanismKey};
 use vibe_safefs::Project;
 use vibe_wire::behaviour::artifact_record::validate;
@@ -30,9 +38,6 @@ use vibe_wire::generated::artifact_record::{
     FreshnessFingerprints, ProducerIdentity, ProviderIdentity, RelativeIdentity, RelativeRoot,
     Rfc3339Timestamp, VerificationState, VerificationStatus,
 };
-
-use super::build::BuildError;
-use super::cargo::{SelectedArtifact, ToolchainIdentity, VerifiedArtifact};
 
 /// The engine-owned state home for artifact records, project-relative.
 ///
@@ -44,19 +49,107 @@ pub const ARTIFACT_RECORD_DIR: &str = ".vibe/state/artifacts";
 /// The record epoch this engine writes.
 const RECORD_SCHEMA: u32 = 1;
 
+/// Why the engine could not stamp, validate, encode or publish one
+/// artifact record.
+///
+/// Its own enum rather than a set of variants on either phase's error: the
+/// record cell is shared by the build and package executors, so a refusal
+/// it raises belongs to neither, and both carry it transparently.
+///
+/// ```
+/// use vibe_lifecycle::RecordError;
+///
+/// let refusal = RecordError::Clock {
+///     output: "demo.zip".into(),
+///     value: "yesterday".into(),
+///     reason: "input contains invalid characters".into(),
+/// };
+/// assert!(refusal.to_string().contains("RFC 3339"));
+/// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#ARTIFACT-REGISTRY")]
+#[derive(Debug, Clone, PartialEq, Eq, Error)]
+pub enum RecordError {
+    /// The injected clock value is not an RFC 3339 timestamp.
+    #[error(
+        "artifact `{output}` cannot be stamped: `{value}` is not an RFC 3339 timestamp ({reason}) \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#ARTIFACT-REGISTRY; fix: \
+         pass the run's own RFC 3339 clock value)"
+    )]
+    Clock {
+        output: String,
+        value: String,
+        reason: String,
+    },
+
+    /// The engine built a record its own A2 cell refuses. Always a bug in
+    /// this engine, and it stops here rather than reaching a reader.
+    #[error(
+        "the artifact record for `{output}` does not satisfy the record laws: {reason} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#ARTIFACT-REGISTRY; fix: this is a \
+         defect in the producing engine — a record \
+         that does not validate is never written)"
+    )]
+    Invalid { output: String, reason: String },
+
+    /// The validated record could not be serialised.
+    #[error(
+        "the artifact record for `{output}` could not be encoded: {reason} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#ARTIFACT-REGISTRY; fix: \
+         this is a defect in the producing engine)"
+    )]
+    Encode { output: String, reason: String },
+
+    /// The record could not be published to the engine-owned state home.
+    #[error(
+        "the artifact record for `{output}` could not be written to `{path}`: {reason} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#ARTIFACT-REGISTRY; fix: make the \
+         selected project's `.vibe/` writable, then \
+         rerun the producing phase)"
+    )]
+    Write {
+        output: String,
+        path: String,
+        reason: String,
+    },
+}
+
+/// The three freshness digests, as the producing executor computed them.
+///
+/// Every member is optional because §4.1 admits two honest postures: a
+/// provider-fresh target (Cargo) has no engine-side input census and says
+/// so by absence, while an engine-fresh target (both packaging providers)
+/// really did hash its complete closed input set and says so by presence.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub(crate) struct RecordFreshness<'a> {
+    pub(crate) inputs: Option<&'a str>,
+    pub(crate) config: Option<&'a str>,
+    pub(crate) toolchain: Option<&'a str>,
+}
+
 /// Everything the engine knows about one produced artifact at the moment
-/// it decides to record it.
+/// it decides to record it — the record's own vocabulary, not any one
+/// provider's.
 pub(crate) struct RecordInputs<'a> {
     pub(crate) target: &'a str,
     pub(crate) mechanism: &'a MechanismKey,
     pub(crate) provider_key: &'a str,
     pub(crate) provider_version: Option<&'a str>,
     pub(crate) provider_hash: Option<&'a str>,
-    pub(crate) selected: &'a SelectedArtifact,
-    pub(crate) verified: &'a VerifiedArtifact,
-    pub(crate) toolchain: &'a ToolchainIdentity,
-    /// The target-config fingerprint the engine computed.
-    pub(crate) config_digest: &'a str,
+    pub(crate) output_id: &'a str,
+    pub(crate) kind: ArtifactKind,
+    /// The physical shape on disk. It also decides the digest algorithm:
+    /// §4 gives a file its SHA-256 and a directory its canonical tree
+    /// digest, and deriving one from the other keeps a record from
+    /// claiming a tree digest over a file's bytes.
+    pub(crate) shape: ArtifactShape,
+    /// 64 lowercase hex — over the file's bytes, or over the canonical
+    /// directory manifest.
+    pub(crate) digest: &'a str,
+    pub(crate) path_absolute: &'a str,
+    pub(crate) path_relative: &'a str,
+    pub(crate) freshness: RecordFreshness<'a>,
+    pub(crate) platform: Option<&'a str>,
+    pub(crate) media_type: Option<&'a str>,
     /// The injected RFC 3339 clock value — the same discipline the
     /// lifecycle state header follows, so a stamped record is
     /// reproducible.
@@ -66,36 +159,33 @@ pub(crate) struct RecordInputs<'a> {
 }
 
 /// Build one epoch-1 artifact record.
-///
-/// The freshness triple is the honest one for a provider-fresh target
-/// (§4.1, §5.0.5): `inputs` is ABSENT, because Cargo owns inputs the
-/// engine does not model and a fabricated input digest would be a claim
-/// the engine cannot support; `config` and `toolchain` are present,
-/// because the engine really did hash the target's config and the
-/// provider really did report its toolchain identity.
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#ARTIFACT-REGISTRY")]
-pub(crate) fn build_record(inputs: &RecordInputs<'_>) -> Result<ArtifactRecord, BuildError> {
+pub(crate) fn build_record(inputs: &RecordInputs<'_>) -> Result<ArtifactRecord, RecordError> {
     let created_at = inputs
         .created_at
         .parse::<Rfc3339Timestamp>()
-        .map_err(|error| BuildError::RecordClock {
-            output: inputs.verified.output_id.clone(),
+        .map_err(|error| RecordError::Clock {
+            output: inputs.output_id.to_owned(),
             value: inputs.created_at.to_owned(),
             reason: error.to_string(),
         })?;
+    let algorithm = match inputs.shape {
+        ArtifactShape::File => DigestAlgorithm::Sha256,
+        ArtifactShape::Directory => DigestAlgorithm::Sha256Tree,
+    };
     Ok(ArtifactRecord {
         schema: RECORD_SCHEMA,
-        id: inputs.verified.output_id.clone(),
-        kind: record_kind(inputs.selected.kind),
-        shape: ArtifactShape::File,
-        path_absolute: inputs.verified.path_absolute.clone(),
+        id: inputs.output_id.to_owned(),
+        kind: record_kind(inputs.kind),
+        shape: inputs.shape.clone(),
+        path_absolute: inputs.path_absolute.to_owned(),
         path_relative: RelativeIdentity {
             root: RelativeRoot::Project,
-            path: inputs.verified.path_relative.clone(),
+            path: inputs.path_relative.to_owned(),
         },
         digest: ContentDigest {
-            algorithm: DigestAlgorithm::Sha256,
-            value: inputs.verified.digest.clone(),
+            algorithm,
+            value: inputs.digest.to_owned(),
         },
         producer: ProducerIdentity {
             target: inputs.target.to_owned(),
@@ -107,17 +197,17 @@ pub(crate) fn build_record(inputs: &RecordInputs<'_>) -> Result<ArtifactRecord, 
             },
         },
         freshness: FreshnessFingerprints {
-            inputs: None,
-            config: Some(inputs.config_digest.to_owned()),
-            toolchain: Some(inputs.toolchain.digest.clone()),
+            inputs: inputs.freshness.inputs.map(str::to_owned),
+            config: inputs.freshness.config.map(str::to_owned),
+            toolchain: inputs.freshness.toolchain.map(str::to_owned),
         },
         created_at,
         verification: VerificationState {
             status: VerificationStatus::Verified,
             evidence: Some(inputs.evidence.clone()),
         },
-        media_type: None,
-        platform: inputs.toolchain.host.clone(),
+        media_type: inputs.media_type.map(str::to_owned),
+        platform: inputs.platform.map(str::to_owned),
     })
 }
 
@@ -132,29 +222,56 @@ pub(crate) fn build_record(inputs: &RecordInputs<'_>) -> Result<ArtifactRecord, 
 pub(crate) fn write_record(
     project_root: &Path,
     record: &ArtifactRecord,
-) -> Result<String, BuildError> {
-    validate(record).map_err(|error| BuildError::RecordInvalid {
+) -> Result<String, RecordError> {
+    validate(record).map_err(|error| RecordError::Invalid {
         output: record.id.clone(),
         reason: error.to_string(),
     })?;
-    let bytes = serde_json::to_vec_pretty(record).map_err(|error| BuildError::RecordEncode {
+    let bytes = serde_json::to_vec_pretty(record).map_err(|error| RecordError::Encode {
         output: record.id.clone(),
         reason: error.to_string(),
     })?;
     let relative = format!("{ARTIFACT_RECORD_DIR}/{}.json", record.id);
-    let project = Project::open(project_root).map_err(|error| BuildError::RecordWrite {
+    let project = Project::open(project_root).map_err(|error| RecordError::Write {
         output: record.id.clone(),
         path: relative.clone(),
         reason: format!("{error:#}"),
     })?;
     project
         .write_atomic(&relative, &bytes)
-        .map_err(|error| BuildError::RecordWrite {
+        .map_err(|error| RecordError::Write {
             output: record.id.clone(),
             path: relative.clone(),
             reason: format!("{:#}", error.into_report()),
         })?;
     Ok(relative)
+}
+
+/// Read back one previously written artifact record, or `None` when the
+/// engine never recorded that id.
+///
+/// The package executor's input resolution is the only caller: §6.0.2
+/// gives it the engine's own state as the ONE place a consumed build
+/// output may be found ("never a guessed path"). Absence is a value here
+/// rather than a refusal, because the caller — which knows the consuming
+/// target and the declared input — is the one that can name it usefully.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#ARTIFACT-REGISTRY")]
+pub(crate) fn read_record(
+    project_root: &Path,
+    output_id: &str,
+) -> Result<Option<ArtifactRecord>, String> {
+    let relative = format!("{ARTIFACT_RECORD_DIR}/{output_id}.json");
+    let project = Project::open(project_root).map_err(|error| format!("{error:#}"))?;
+    let Some(bytes) = project
+        .read_file(&relative)
+        .map_err(|error| format!("{error:#}"))?
+    else {
+        return Ok(None);
+    };
+    let record: ArtifactRecord =
+        serde_json::from_slice(&bytes).map_err(|error| error.to_string())?;
+    validate(&record).map_err(|error| error.to_string())?;
+    Ok(Some(record))
 }
 
 /// One target-config fingerprint over everything the engine chose for a
@@ -183,6 +300,22 @@ pub(crate) fn config_digest(
         hash.update(declared.as_bytes());
     }
     format!("{:x}", hash.finalize())
+}
+
+/// Strip the bytes that break a log line or a C string from text that came
+/// out of a foreign process or an authored file, so a record's free-text
+/// law cannot be violated by a toolchain banner or a resource name.
+pub(crate) fn sanitize(value: &str) -> String {
+    let cleaned: String = value
+        .chars()
+        .map(|byte| if byte.is_control() { ' ' } else { byte })
+        .collect();
+    let trimmed = cleaned.trim();
+    if trimmed.is_empty() {
+        "no evidence recorded".to_owned()
+    } else {
+        trimmed.to_owned()
+    }
 }
 
 /// The record vocabulary's spelling of one manifest artifact kind. Both

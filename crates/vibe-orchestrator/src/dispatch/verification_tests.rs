@@ -159,6 +159,7 @@ fn dispatch(
         meta,
         state_chain,
         permission,
+        None,
     )
 }
 
@@ -424,6 +425,7 @@ fn a_partial_epoch_publishes_no_member_however_full_its_chain_is() {
         &agent(),
         meta,
         vec!["validate".into(), "build".into()],
+        None,
         None,
     )
     .expect("the partial epoch completes");

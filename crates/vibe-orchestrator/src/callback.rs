@@ -146,9 +146,22 @@ fn stage(
     // an instant down here would let the boundary fire before build and create
     // had run and publish a member about a prefix that did not exist yet.
     let outcome = if let Some(shared) = run.lifecycle_run {
-        dispatch::dispatch_plan_with_run(observer, &ritual, &shared, agent, &metadata, None)?
+        // `None` twice, and for one reason: this is the PARTIAL epoch. The
+        // plan above is `[validate, install]`, so neither the verify boundary
+        // nor either mechanism fence belongs here — firing one would build a
+        // project's artifacts during its own prerequisite install.
+        dispatch::dispatch_plan_with_run(observer, &ritual, &shared, agent, &metadata, None, None)?
     } else {
-        dispatch::dispatch_plan(observer, &ritual, lease, agent, metadata, state_chain, None)?
+        dispatch::dispatch_plan(
+            observer,
+            &ritual,
+            lease,
+            agent,
+            metadata,
+            state_chain,
+            None,
+            None,
+        )?
     };
     debug_assert!(
         outcome.verification.is_none(),

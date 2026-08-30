@@ -5,10 +5,17 @@
 //! producer that would emit an invalid record fails at its own boundary
 //! instead of leaving a bad file for a later reader to find. Removing that
 //! gate — or recording a digest of something other than the produced bytes
-//! — is the packet's fifth mutation, and this cell is where it goes red.
+//! — is a packet mutation, and this cell is where it goes red.
+//!
+//! Since R8-PACKAGE the cell serves BOTH producing phases, so the shape
+//! law has its own pin: a `file` record carries `sha256`, a `directory`
+//! record carries `sha256-tree/1`, and neither can claim the other's
+//! algorithm because the algorithm is derived from the shape here.
 
 use specmark::verifies;
 use tempfile::TempDir;
+use vibe_core::manifest::ArtifactKind;
+use vibe_wire::generated::artifact_record::{ArtifactShape, DigestAlgorithm};
 
 use super::super::cargo::plan_tests::key;
 use super::*;
@@ -27,42 +34,14 @@ fn digest_of(byte: u8) -> String {
     std::iter::repeat_n(format!("{byte:02x}"), 32).collect()
 }
 
-fn selected() -> SelectedArtifact {
-    SelectedArtifact {
-        output_id: "vibe-helper.exe".to_owned(),
-        kind: ArtifactKind::Executable,
-        executable: std::path::PathBuf::from(format!("{}/target/debug/vibe-helper.exe", root())),
-        fresh: false,
-        package_id: "path+file:///w/demo#vibe-helper@0.1.0".to_owned(),
-        bin: "vibe-helper".to_owned(),
-    }
-}
-
-fn verified() -> VerifiedArtifact {
-    VerifiedArtifact {
-        output_id: "vibe-helper.exe".to_owned(),
-        path_absolute: format!("{}/target/debug/vibe-helper.exe", root()),
-        path_relative: "target/debug/vibe-helper.exe".to_owned(),
-        digest: digest_of(0xab),
-        bytes: 4096,
-    }
-}
-
-fn toolchain() -> ToolchainIdentity {
-    ToolchainIdentity {
-        cargo: "cargo 1.90.0 (abcdef 2026-01-01)".to_owned(),
-        rustc: "rustc 1.90.0 (abcdef 2026-01-01)".to_owned(),
-        host: Some("x86_64-pc-windows-msvc".to_owned()),
-        digest: digest_of(0xcd),
-    }
-}
-
+/// One canonical executable record's inputs, in the record's own
+/// vocabulary — exactly what the build executor hands this cell.
 fn inputs<'a>(
     mechanism: &'a MechanismKey,
-    selected: &'a SelectedArtifact,
-    verified: &'a VerifiedArtifact,
-    toolchain: &'a ToolchainIdentity,
+    absolute: &'a str,
+    digest: &'a str,
     config: &'a str,
+    toolchain: &'a str,
     created_at: &'a str,
 ) -> RecordInputs<'a> {
     RecordInputs {
@@ -71,13 +50,26 @@ fn inputs<'a>(
         provider_key: "org.vibevm/vibe#cargo",
         provider_version: None,
         provider_hash: None,
-        selected,
-        verified,
-        toolchain,
-        config_digest: config,
+        output_id: "vibe-helper.exe",
+        kind: ArtifactKind::Executable,
+        shape: ArtifactShape::File,
+        digest,
+        path_absolute: absolute,
+        path_relative: "target/debug/vibe-helper.exe",
+        freshness: RecordFreshness {
+            inputs: None,
+            config: Some(config),
+            toolchain: Some(toolchain),
+        },
+        platform: Some("x86_64-pc-windows-msvc"),
+        media_type: None,
         created_at,
         evidence: "sha256 verified over 4096 byte(s)".to_owned(),
     }
+}
+
+fn absolute() -> String {
+    format!("{}/target/debug/vibe-helper.exe", root())
 }
 
 fn temp() -> TempDir {
@@ -90,15 +82,19 @@ fn temp() -> TempDir {
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#ARTIFACT-REGISTRY")]
 fn a_valid_record_publishes_and_reads_back_through_the_a2_cell() {
-    let (selected, verified, toolchain) = (selected(), verified(), toolchain());
-    let config = digest_of(0x01);
+    let (absolute, produced, config, toolchain) = (
+        absolute(),
+        digest_of(0xab),
+        digest_of(0x01),
+        digest_of(0xcd),
+    );
     let mechanism = key("build:cargo");
     let record = match build_record(&inputs(
         &mechanism,
-        &selected,
-        &verified,
-        &toolchain,
+        &absolute,
+        &produced,
         &config,
+        &toolchain,
         "2026-08-30T12:34:56Z",
     )) {
         Ok(record) => record,
@@ -127,7 +123,8 @@ fn a_valid_record_publishes_and_reads_back_through_the_a2_cell() {
         };
     assert_eq!(reread, record);
     assert!(vibe_wire::behaviour::artifact_record::validate(&reread).is_ok());
-    assert_eq!(reread.digest.value, digest_of(0xab));
+    assert_eq!(reread.digest.value, produced);
+    assert_eq!(reread.digest.algorithm, DigestAlgorithm::Sha256);
     assert_eq!(reread.producer.mechanism, "build:cargo");
     assert_eq!(reread.producer.provider.key, "org.vibevm/vibe#cargo");
     assert_eq!(reread.path_relative.path, "target/debug/vibe-helper.exe");
@@ -135,16 +132,58 @@ fn a_valid_record_publishes_and_reads_back_through_the_a2_cell() {
 
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#ARTIFACT-REGISTRY")]
+fn the_reader_finds_a_written_record_and_reports_absence_as_absence() {
+    let (absolute, produced, config, toolchain) = (
+        absolute(),
+        digest_of(0xab),
+        digest_of(0x01),
+        digest_of(0xcd),
+    );
+    let mechanism = key("build:cargo");
+    let record = match build_record(&inputs(
+        &mechanism,
+        &absolute,
+        &produced,
+        &config,
+        &toolchain,
+        "2026-08-30T12:34:56Z",
+    )) {
+        Ok(record) => record,
+        Err(error) => panic!("the record builds: {error}"),
+    };
+    let project = temp();
+    if let Err(error) = write_record(project.path(), &record) {
+        panic!("the record publishes: {error}");
+    }
+
+    match read_record(project.path(), "vibe-helper.exe") {
+        Ok(Some(found)) => assert_eq!(found, record),
+        Ok(None) => panic!("the record the engine just wrote is readable"),
+        Err(error) => panic!("the record reads: {error}"),
+    }
+    match read_record(project.path(), "never-produced.exe") {
+        Ok(None) => {}
+        Ok(Some(_)) => panic!("nothing produced `never-produced.exe`"),
+        Err(error) => panic!("an absent record is absence, not a failure: {error}"),
+    }
+}
+
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#ARTIFACT-REGISTRY")]
 fn a_record_that_does_not_validate_is_never_written() {
-    let (selected, verified, toolchain) = (selected(), verified(), toolchain());
-    let config = digest_of(0x01);
+    let (absolute, produced, config, toolchain) = (
+        absolute(),
+        digest_of(0xab),
+        digest_of(0x01),
+        digest_of(0xcd),
+    );
     let mechanism = key("build:cargo");
     let mut record = match build_record(&inputs(
         &mechanism,
-        &selected,
-        &verified,
-        &toolchain,
+        &absolute,
+        &produced,
         &config,
+        &toolchain,
         "2026-08-30T12:34:56Z",
     )) {
         Ok(record) => record,
@@ -160,7 +199,7 @@ fn a_record_that_does_not_validate_is_never_written() {
         write_record(project.path(), &record).expect_err("an invalid record is never published");
 
     match &refusal {
-        BuildError::RecordInvalid { output, .. } => assert_eq!(output, "vibe-helper.exe"),
+        RecordError::Invalid { output, .. } => assert_eq!(output, "vibe-helper.exe"),
         other => panic!("expected a record-validation refusal, got {other}"),
     }
     assert!(
@@ -172,18 +211,23 @@ fn a_record_that_does_not_validate_is_never_written() {
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#ARTIFACT-REGISTRY")]
 fn an_unspellable_artifact_id_refuses_before_it_becomes_a_path() {
-    let (selected, mut verified, toolchain) = (selected(), verified(), toolchain());
-    verified.output_id = "../escape".to_owned();
-    let config = digest_of(0x01);
+    let (absolute, produced, config, toolchain) = (
+        absolute(),
+        digest_of(0xab),
+        digest_of(0x01),
+        digest_of(0xcd),
+    );
     let mechanism = key("build:cargo");
-    let record = match build_record(&inputs(
+    let mut declared = inputs(
         &mechanism,
-        &selected,
-        &verified,
-        &toolchain,
+        &absolute,
+        &produced,
         &config,
+        &toolchain,
         "2026-08-30T12:34:56Z",
-    )) {
+    );
+    declared.output_id = "../escape";
+    let record = match build_record(&declared) {
         Ok(record) => record,
         Err(error) => panic!("the record builds: {error}"),
     };
@@ -192,23 +236,27 @@ fn an_unspellable_artifact_id_refuses_before_it_becomes_a_path() {
     let refusal = write_record(project.path(), &record)
         .expect_err("the id grammar is what keeps the id a single path component");
 
-    assert!(matches!(refusal, BuildError::RecordInvalid { .. }));
+    assert!(matches!(refusal, RecordError::Invalid { .. }));
     assert!(!project.path().join(".vibe").exists());
 }
 
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#ARTIFACT-REGISTRY")]
 fn the_freshness_triple_is_the_honest_provider_fresh_one() {
-    let (selected, verified, toolchain) = (selected(), verified(), toolchain());
-    let config = digest_of(0x01);
+    let (absolute, produced, config, toolchain) = (
+        absolute(),
+        digest_of(0xab),
+        digest_of(0x01),
+        digest_of(0xcd),
+    );
     let mechanism = key("build:cargo");
 
     let record = match build_record(&inputs(
         &mechanism,
-        &selected,
-        &verified,
-        &toolchain,
+        &absolute,
+        &produced,
         &config,
+        &toolchain,
         "2026-08-30T12:34:56Z",
     )) {
         Ok(record) => record,
@@ -222,30 +270,70 @@ fn the_freshness_triple_is_the_honest_provider_fresh_one() {
     assert_eq!(record.freshness.config.as_deref(), Some(config.as_str()));
     assert_eq!(
         record.freshness.toolchain.as_deref(),
-        Some(toolchain.digest.as_str())
+        Some(toolchain.as_str())
     );
     assert_eq!(record.platform.as_deref(), Some("x86_64-pc-windows-msvc"));
 }
 
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#ARTIFACT-REGISTRY")]
-fn a_clock_that_is_not_rfc3339_refuses() {
-    let (selected, verified, toolchain) = (selected(), verified(), toolchain());
-    let config = digest_of(0x01);
+fn a_directory_record_carries_the_tree_algorithm_and_a_file_record_does_not() {
+    let (absolute, produced, config, toolchain) = (
+        absolute(),
+        digest_of(0xab),
+        digest_of(0x01),
+        digest_of(0xcd),
+    );
+    let mechanism = key("package:agent-plugin");
+    let mut declared = inputs(
+        &mechanism,
+        &absolute,
+        &produced,
+        &config,
+        &toolchain,
+        "2026-08-30T12:34:56Z",
+    );
+    declared.shape = ArtifactShape::Directory;
+    declared.kind = ArtifactKind::AgentPlugin;
 
+    let directory = match build_record(&declared) {
+        Ok(record) => record,
+        Err(error) => panic!("the record builds: {error}"),
+    };
+    declared.shape = ArtifactShape::File;
+    declared.kind = ArtifactKind::File;
+    let file = match build_record(&declared) {
+        Ok(record) => record,
+        Err(error) => panic!("the record builds: {error}"),
+    };
+
+    assert_eq!(directory.digest.algorithm, DigestAlgorithm::Sha256Tree);
+    assert_eq!(file.digest.algorithm, DigestAlgorithm::Sha256);
+}
+
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#ARTIFACT-REGISTRY")]
+fn a_clock_that_is_not_rfc3339_refuses() {
+    let (absolute, produced, config, toolchain) = (
+        absolute(),
+        digest_of(0xab),
+        digest_of(0x01),
+        digest_of(0xcd),
+    );
     let mechanism = key("build:cargo");
+
     let refusal = build_record(&inputs(
         &mechanism,
-        &selected,
-        &verified,
-        &toolchain,
+        &absolute,
+        &produced,
         &config,
+        &toolchain,
         "yesterday",
     ))
     .expect_err("a record's timestamp is RFC 3339");
 
     match &refusal {
-        BuildError::RecordClock { value, .. } => assert_eq!(value, "yesterday"),
+        RecordError::Clock { value, .. } => assert_eq!(value, "yesterday"),
         other => panic!("expected a clock refusal, got {other}"),
     }
 }

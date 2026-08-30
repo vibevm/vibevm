@@ -24,6 +24,7 @@ use vibe_wire::generated::lifecycle_report::{
 use vibe_wire::generated::shared::{Timestamp, VerificationEvidence};
 use vibe_workspace::compile_trace::TraceRun;
 
+use crate::dispatch::MechanismTargets;
 use crate::failure::{MeasuredFailure, Measurement, prepend_rows, take};
 use crate::install::{
     InstallDisposition, InstallExecution, InstallInputs, InstallPolicy, PreparedSelection,
@@ -265,6 +266,14 @@ fn run(inputs: PhaseRun<'_>, measured: &mut Measured) -> Result<Outcome> {
     // would turn the first failure into a success — the exact retry the bundle
     // exists to forbid. So it is proven here, before any phase runs.
     let (project_root, manifest, workspace) = selection.prove()?.into_parts();
+    // The declared artifact graph and the host's mechanism routes, taken off
+    // the ONE proven manifest before it is rebound into the prerequisite
+    // install's bundle below. They are the whole manifest surface the mechanism
+    // executors need — target rows and provider pins, never configuration — so
+    // reading them here keeps the boundary's no-manifest-below-the-surface rule
+    // exactly as it was.
+    let artifacts = manifest.artifacts.clone();
+    let routes = manifest.mechanism_routes.clone();
     // ---- the agreement gate, before validate and before any state work ---
     //
     // `run_phases` is a PUBLIC entry point, and a validate-only chain reaches
@@ -401,6 +410,24 @@ fn run(inputs: PhaseRun<'_>, measured: &mut Measured) -> Result<Outcome> {
     let ritual = world::plan_default_prepared(&project_root, planning_workspace, &phases)?;
     notices.extend(ritual.notices.clone());
     surface_plan(observer, &ritual, &metadata, true)?;
+    // ---- the ONE mechanism wiring (§6.0.2) ---------------------------
+    //
+    // The declared artifact graph travels INTO the contribution dispatch, which
+    // is the only walk in this engine that visits phases in the requested
+    // chain's order. That is what makes §2's phase line hold: every
+    // `phase:generate` contribution is dispatched before the build fence fires,
+    // and the package fence fires after the verify boundary. A manifest that
+    // declares neither family reaches an empty executor, and the run is
+    // byte-identical to the historical one.
+    let created_at = observed_at.to_rfc3339();
+    let targets = MechanismTargets {
+        project_root: &project_root,
+        artifacts: artifacts.as_ref(),
+        registry: &ritual.mechanisms,
+        routes: &routes,
+        offline: metadata.offline,
+        created_at: &created_at,
+    };
     let state_chain = phases.iter().map(ToString::to_string).collect();
     // `Some(...)` here, and ONLY here on the tracked path: this is the
     // complete derived chain, so the engine-owned verify boundary is allowed
@@ -413,6 +440,7 @@ fn run(inputs: PhaseRun<'_>, measured: &mut Measured) -> Result<Outcome> {
             &agent,
             &metadata,
             Some(observed_at),
+            Some(&targets),
         )
     } else {
         dispatch::dispatch_plan(
@@ -423,6 +451,7 @@ fn run(inputs: PhaseRun<'_>, measured: &mut Measured) -> Result<Outcome> {
             metadata,
             state_chain,
             Some(observed_at),
+            Some(&targets),
         )
     };
     let outcome = match dispatched {

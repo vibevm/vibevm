@@ -38,18 +38,30 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE");
 
 use std::path::{Path, PathBuf};
 
-use vibe_core::manifest::{ArtifactBuildTarget, ArtifactKind};
+use vibe_core::manifest::{ArtifactBuildTarget, ArtifactKind, ArtifactPackageTarget};
 
 pub(crate) mod build;
 pub(crate) mod cargo;
+pub(crate) mod contain;
 pub(crate) mod error;
+pub(crate) mod order;
+pub(crate) mod package;
+pub(crate) mod plugin;
 pub(crate) mod record;
+pub(crate) mod skill;
 
 pub use build::{
     BuildError, BuildExecution, BuildOutcome, ProducedArtifact, execute_build_targets,
 };
 pub use error::MechanismError;
-pub use record::ARTIFACT_RECORD_DIR;
+pub use package::{
+    PackageError, PackageExecution, PackageOutcome, PackagedArtifact, execute_package_targets,
+};
+pub use record::{ARTIFACT_RECORD_DIR, RecordError};
+
+use package::protocol::{
+    PackageFingerprint, PackagePlan, ResolvedInput, StagedArtifact, VerifiedPackageArtifact,
+};
 
 /// The engine-owned build output root, project-relative.
 ///
@@ -59,6 +71,16 @@ pub use record::ARTIFACT_RECORD_DIR;
 /// identity. Cargo still owns everything *inside* that directory — its
 /// incremental machinery is untouched.
 pub(crate) const DEFAULT_BUILD_ROOT: &str = "target";
+
+/// The engine-owned package output root, project-relative — §6.0.6's
+/// "distributables land under the engine-owned package root
+/// `target/vibe-package/<target-id>/…`".
+///
+/// The same law as the build root and for the same sentence of §3.2: a
+/// packaging provider is TOLD where its distributable goes and proves
+/// afterwards that what it produced is really there, so no provider can
+/// mint an identity the engine then has to trust.
+pub(crate) const DEFAULT_PACKAGE_ROOT: &str = "target/vibe-package";
 
 /// §3.2's effect classes — what scope an operation can touch.
 ///
@@ -312,6 +334,87 @@ pub(crate) trait BuildProvider {
     ) -> Result<cargo::VerifiedArtifact, MechanismError>;
 }
 
+/// One package target as the engine hands it to a provider.
+///
+/// The difference from its build sibling is the one §6.0.2 names: a
+/// package target's inputs are already RESOLVED when the provider sees
+/// them. An input naming a build output was found through the engine's own
+/// `.vibe/state/artifacts/` record and re-proven against the file; an
+/// input naming a workspace path was contained and digested. A provider
+/// therefore never reads the engine's state, never guesses an artifact
+/// path, and cannot be handed a stale one.
+#[derive(Debug, Clone, Copy)]
+pub(crate) struct PackageTargetRequest<'a> {
+    pub(crate) target: &'a ArtifactPackageTarget,
+    /// The selected project's absolute root.
+    pub(crate) project_root: &'a Path,
+    /// The engine-owned package output root, relative to `project_root`.
+    pub(crate) package_root: &'a str,
+    /// This target's declared inputs, already resolved and proven.
+    pub(crate) inputs: &'a [ResolvedInput],
+}
+
+impl PackageTargetRequest<'_> {
+    /// The absolute engine-owned output directory of THIS target —
+    /// `<project>/<package root>/<target id>`.
+    pub(crate) fn output_dir(&self) -> PathBuf {
+        let mut path = self.project_root.to_path_buf();
+        for segment in self.package_root.split('/') {
+            path.push(segment);
+        }
+        path.push(&self.target.id);
+        path
+    }
+
+    /// The same directory's project-relative, forward-slashed identity.
+    pub(crate) fn output_dir_relative(&self) -> String {
+        format!("{}/{}", self.package_root, self.target.id)
+    }
+}
+
+/// The in-process builtin provider protocol for the package role.
+///
+/// The SAME four §3.2 operations as [`BuildProvider`], and deliberately
+/// not a second protocol shape: §6.0.1 rules "one seam, two roles". What
+/// differs is only what an operation is given — a package provider is
+/// handed resolved inputs and an output directory instead of a workdir and
+/// a build root — because that is a difference between the two ROLES, not
+/// between two protocols.
+pub(crate) trait PackageProvider {
+    /// What this provider declares about itself.
+    fn descriptor(&self) -> ProviderDescriptor;
+
+    /// Validate the target's config, resolve its declared outputs, and
+    /// report what this provider WOULD produce. Pure: it opens nothing,
+    /// creates nothing and writes nothing.
+    fn plan(&self, request: &PackageTargetRequest<'_>) -> Result<PackagePlan, MechanismError>;
+
+    /// The freshness fingerprint over the target's COMPLETE closed input
+    /// set — §4.1's engine freshness, which both packaging providers are
+    /// entitled to because their inputs really are closed and hashable
+    /// (§6.0.3, §6.0.4). It reads the declared entry documents, so it is
+    /// not pure; it writes nothing.
+    fn fingerprint(
+        &self,
+        request: &PackageTargetRequest<'_>,
+        plan: &PackagePlan,
+    ) -> Result<PackageFingerprint, MechanismError>;
+
+    /// Produce the distributable inside the engine-owned output directory.
+    fn apply(
+        &self,
+        request: &PackageTargetRequest<'_>,
+        plan: &PackagePlan,
+    ) -> Result<Vec<StagedArtifact>, MechanismError>;
+
+    /// Independently prove one produced distributable and digest it.
+    fn verify(
+        &self,
+        request: &PackageTargetRequest<'_>,
+        staged: &StagedArtifact,
+    ) -> Result<VerifiedPackageArtifact, MechanismError>;
+}
+
 /// The reserved identity of the one builtin build provider — §3's
 /// `org.vibevm/vibe#cargo`, "not a privileged branch outside the
 /// registry".
@@ -319,3 +422,15 @@ pub(crate) const BUILTIN_CARGO_PIN: &str = "org.vibevm/vibe#cargo";
 
 /// The `handler = { kind = "builtin", name = … }` spelling of the same row.
 pub(crate) const BUILTIN_CARGO_NAME: &str = "cargo";
+
+/// The reserved identity of the §6.1 packaging provider.
+pub(crate) const BUILTIN_STATIC_SKILL_PIN: &str = "org.vibevm/vibe#static-skill";
+
+/// The `handler = { kind = "builtin", name = … }` spelling of the same row.
+pub(crate) const BUILTIN_STATIC_SKILL_NAME: &str = "static-skill";
+
+/// The reserved identity of the §6.2 packaging provider.
+pub(crate) const BUILTIN_AGENT_PLUGIN_PIN: &str = "org.vibevm/vibe#agent-plugin";
+
+/// The `handler = { kind = "builtin", name = … }` spelling of the same row.
+pub(crate) const BUILTIN_AGENT_PLUGIN_NAME: &str = "agent-plugin";

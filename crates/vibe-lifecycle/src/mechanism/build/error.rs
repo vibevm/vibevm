@@ -15,6 +15,7 @@ use thiserror::Error;
 use vibe_extension_registry::MechanismResolutionError;
 
 use crate::mechanism::MechanismError;
+use crate::mechanism::record::RecordError;
 
 /// Why the build phase could not execute one declared target.
 ///
@@ -97,46 +98,10 @@ pub enum BuildError {
     )]
     Cycle { cycle: String },
 
-    /// The injected clock value is not an RFC 3339 timestamp.
-    #[error(
-        "artifact `{output}` cannot be stamped: `{value}` is not an RFC 3339 timestamp ({reason}) \
-         (violates spec://org.vibevm.core/vibevm/common/PROP-054#ARTIFACT-REGISTRY; fix: \
-         pass the run's own RFC 3339 clock value)"
-    )]
-    RecordClock {
-        output: String,
-        value: String,
-        reason: String,
-    },
-
-    /// The engine built a record its own A2 cell refuses. Always a bug in
-    /// this engine, and it stops here rather than reaching a reader.
-    #[error(
-        "the artifact record for `{output}` does not satisfy the record laws: {reason} \
-         (violates spec://org.vibevm.core/vibevm/common/PROP-054#ARTIFACT-REGISTRY; fix: this is a \
-         defect in the producing engine — a record \
-         that does not validate is never written)"
-    )]
-    RecordInvalid { output: String, reason: String },
-
-    /// The validated record could not be serialised.
-    #[error(
-        "the artifact record for `{output}` could not be encoded: {reason} \
-         (violates spec://org.vibevm.core/vibevm/common/PROP-054#ARTIFACT-REGISTRY; fix: \
-         this is a defect in the producing engine)"
-    )]
-    RecordEncode { output: String, reason: String },
-
-    /// The record could not be published to the engine-owned state home.
-    #[error(
-        "the artifact record for `{output}` could not be written to `{path}`: {reason} \
-         (violates spec://org.vibevm.core/vibevm/common/PROP-054#ARTIFACT-REGISTRY; fix: make the \
-         selected project's `.vibe/` writable, then \
-         rerun the build)"
-    )]
-    RecordWrite {
-        output: String,
-        path: String,
-        reason: String,
-    },
+    /// The engine's own record keeping refused — the SHARED cell's error,
+    /// carried transparently. Both producing phases publish through one
+    /// record writer, so its refusals are its own rather than a set of
+    /// variants each phase would have to keep in step.
+    #[error(transparent)]
+    Record(#[from] RecordError),
 }

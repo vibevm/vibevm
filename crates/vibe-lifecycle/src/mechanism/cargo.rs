@@ -21,7 +21,6 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE");
 
-use std::io::Read;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
@@ -32,6 +31,7 @@ use vibe_core::manifest::{ArtifactInput, ArtifactKind};
 pub(crate) mod config;
 pub(crate) mod message;
 
+use crate::mechanism::contain::{FileFault, digest_file, forward_slashed, relative_to};
 use crate::mechanism::error::preview;
 use crate::mechanism::{
     BUILTIN_CARGO_PIN, BuildProvider, BuildTargetRequest, EffectClass, MechanismError, NetworkUse,
@@ -41,10 +41,6 @@ use config::{CargoBuildConfig, OutputSelect};
 
 /// How much of a failed command's stderr a refusal carries.
 const STDERR_TAIL: usize = 2000;
-
-/// The fixed window a produced artifact is digested through, so a release
-/// binary never lands in memory whole.
-const DIGEST_WINDOW: usize = 64 * 1024;
 
 /// The artifact kinds this provider produces. A Cargo build target
 /// produces an executable; every other kind of the closed §12 vocabulary
@@ -147,6 +143,7 @@ impl BuildProvider for CargoProvider {
             if !descriptor.supports(output.kind) {
                 return Err(MechanismError::UnsupportedKind {
                     target: target.id.clone(),
+                    provider: BUILTIN_CARGO_PIN.to_owned(),
                     output: output.id.clone(),
                     kind: output.kind.to_string(),
                     supported: PRODUCED_KINDS
@@ -280,62 +277,34 @@ impl BuildProvider for CargoProvider {
     }
 }
 
-/// Stream one produced artifact and digest its exact bytes.
+/// Stream one produced artifact and digest its exact bytes, through the
+/// mechanism layer's ONE containment cell.
 ///
-/// Deliberately NOT the `vibe-safefs` publication reader, and the reason
-/// is a real property of Cargo's output layout rather than convenience:
-/// every safefs read primitive refuses a file with more than one name,
-/// because for a file this project *publishes* a second name means a
-/// second owner. Cargo's own release layout hard-links
-/// `target/<profile>/<bin>` to `target/<profile>/deps/<bin>-<hash>`, so
-/// the produced executable legitimately has two names and that primitive
-/// refuses every real Cargo artifact. What still holds here: the path was
-/// already proved to sit inside the ENGINE-owned build root, and the final
-/// component is rejected if it is a link, so nothing outside that root can
-/// be read through this path. The bytes are streamed, never buffered
-/// whole — a release binary is not a value to hold in memory.
+/// The containment/link/absence laws and the streaming digest itself live
+/// in [`crate::mechanism::contain`] because the packaging providers assert
+/// exactly the same three things; what stays here is the translation into
+/// THIS provider's named refusals, which is the part a human repairing a
+/// build target reads.
 fn digest_produced_file(
     request: &BuildTargetRequest<'_>,
     selected: &SelectedArtifact,
     absolute: &Path,
     relative: &str,
 ) -> Result<(String, u64), MechanismError> {
-    let missing = |reason: String| MechanismError::OutputMissing {
-        target: request.target.id.clone(),
-        output: selected.output_id.clone(),
-        path: preview(relative),
-        reason,
-    };
-    let symlink =
-        std::fs::symlink_metadata(absolute).map_err(|error| missing(error.to_string()))?;
-    if symlink.file_type().is_symlink() {
-        return Err(missing(
-            "the reported artifact is a link, not the produced file".to_owned(),
-        ));
-    }
-    if !symlink.file_type().is_file() {
-        return Err(missing("not a regular file".to_owned()));
-    }
-    let mut file = std::fs::File::open(absolute).map_err(|error| missing(error.to_string()))?;
-    let mut hash = Sha256::new();
-    let mut buffer = vec![0_u8; DIGEST_WINDOW];
-    let mut bytes: u64 = 0;
-    loop {
-        let read = file
-            .read(&mut buffer)
-            .map_err(|error| MechanismError::Digest {
-                target: request.target.id.clone(),
-                output: selected.output_id.clone(),
-                path: preview(relative),
-                reason: error.to_string(),
-            })?;
-        if read == 0 {
-            break;
-        }
-        bytes += read as u64;
-        hash.update(&buffer[..read]);
-    }
-    Ok((format!("{:x}", hash.finalize()), bytes))
+    digest_file(absolute).map_err(|fault| match fault {
+        FileFault::Read(reason) => MechanismError::Digest {
+            target: request.target.id.clone(),
+            output: selected.output_id.clone(),
+            path: preview(relative),
+            reason,
+        },
+        other => MechanismError::OutputMissing {
+            target: request.target.id.clone(),
+            output: selected.output_id.clone(),
+            path: preview(relative),
+            reason: other.reason(),
+        },
+    })
 }
 
 /// `cargo metadata` argv — §5's law 1, as an argv and never a shell string.
@@ -434,25 +403,6 @@ fn run(
 /// The first line of a version banner, trimmed.
 fn first_line(value: &str) -> String {
     value.lines().next().unwrap_or("").trim().to_owned()
-}
-
-/// The forward-slashed spelling every recorded path uses.
-fn forward_slashed(path: &Path) -> String {
-    path.display().to_string().replace('\\', "/")
-}
-
-/// One path's forward-slashed identity relative to a root, or `None` when
-/// it is not below it. Comparison is over the forward-slashed spellings so
-/// a Windows message path and a Windows root agree.
-fn relative_to(path: &Path, root: &Path) -> Option<String> {
-    let path = forward_slashed(path);
-    let root = forward_slashed(root);
-    let root = root.trim_end_matches('/');
-    let rest = path.strip_prefix(root)?.strip_prefix('/')?;
-    if rest.is_empty() || rest.split('/').any(|part| part.is_empty() || part == "..") {
-        return None;
-    }
-    Some(rest.to_owned())
 }
 
 // `pub(crate)` under cfg(test) only: the build executor's own tests reuse

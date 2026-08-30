@@ -180,7 +180,10 @@ mod validate_only_gate {
     };
     use crate::{PhaseOutcome, PhaseRun, RitualPlan, run_phases};
 
-    struct Silent;
+    // `pub(super)` so the mechanism-wiring pins next door drive the SAME
+    // executed region through the same silent harness. A second copy of a
+    // `run_phases` harness would be a second thing to drift.
+    pub(super) struct Silent;
 
     impl RunObserver for Silent {
         fn stream_mode(&self) -> StreamMode {
@@ -268,12 +271,13 @@ mod validate_only_gate {
     }
 
     fn project() -> tempfile::TempDir {
+        manifested("[project]\nname = \"demo\"\nversion = \"0.1.0\"\n")
+    }
+
+    /// One temp project carrying exactly the given manifest.
+    pub(super) fn manifested(manifest: &str) -> tempfile::TempDir {
         let dir = tempfile::tempdir().unwrap();
-        std::fs::write(
-            dir.path().join("vibe.toml"),
-            "[project]\nname = \"demo\"\nversion = \"0.1.0\"\n",
-        )
-        .unwrap();
+        std::fs::write(dir.path().join("vibe.toml"), manifest).unwrap();
         dir
     }
 
@@ -348,3 +352,27 @@ mod validate_only_gate {
         );
     }
 }
+
+/// The §6.0.2 wiring pins — the mechanism fences inside the ONE contribution
+/// walk.
+///
+/// Four laws, each pinned, and each the others' control:
+///
+/// * the no-op pair proves that a manifest declaring no target reaches the
+///   executors and moves NO bytes — no engine-owned build root, no package
+///   root, no artifact record: the historical ritual, byte for byte;
+/// * the live pin proves the call is not dead code — a manifest that DOES
+///   declare a package target really produces its distributable and its
+///   record through the same wiring;
+/// * the ORDERING pins prove §2's phase line holds through the interleave: a
+///   `phase:generate` contribution is dispatched BEFORE the mechanism build,
+///   and each mechanism fence fires BEFORE its own phase's contributions.
+///
+/// The ordering pins observe through the ROWS a failing fence leaves behind.
+/// A fence that refuses stops the dispatch, so the rows the run measured are
+/// exactly the contributions dispatched before it: a phase whose rows are
+/// present ran first, a phase whose rows are absent had not started. That
+/// observation needs no file-writing handler, no real compile and no clock —
+/// only the `log` builtin and a target whose own refusal is deterministic.
+#[path = "mechanism_wiring_tests.rs"]
+mod mechanism_wiring;

@@ -7,8 +7,10 @@
 //! Cargo-shaped variants sit in a provider-layer enum for the same reason
 //! `DispatchError` carries `InvalidLogConfig`: the builtin set is closed
 //! and engine-owned, so its members' refusals are the layer's refusals. A
-//! second builtin build provider adds variants here; it does not get an
-//! enum of its own to drift.
+//! second builtin provider adds variants here; it does not get an enum of
+//! its own to drift — which is exactly what R8-PACKAGE's two packaging
+//! providers did. `Config`, `UnsupportedKind` and the containment/digest
+//! family are shared by all three; the rest name one provider's own law.
 //!
 //! Text that came from outside — a Cargo message, a package name, a path
 //! read off a foreign stream — is BOUNDED before it enters a message: a
@@ -34,8 +36,8 @@ pub(crate) fn preview(value: &str) -> String {
     )
 }
 
-/// Why a builtin build provider could not plan, fingerprint, apply or
-/// verify one target.
+/// Why a builtin build or package provider could not plan, fingerprint,
+/// apply or verify one target.
 ///
 /// ```
 /// use vibe_lifecycle::MechanismError;
@@ -53,18 +55,275 @@ pub(crate) fn preview(value: &str) -> String {
 pub enum MechanismError {
     /// A declared output names a kind this provider cannot produce.
     #[error(
-        "[[artifacts.build]] `{target}` output `{output}` declares kind `{kind}`, which the \
-         builtin Cargo provider does not produce; it produces: {supported} \
-         (violates spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE; fix: declare `kind = \
-         \"executable\"`, or route the target to a \
+        "target `{target}` output `{output}` declares kind `{kind}`, which the builtin provider \
+         `{provider}` does not produce; it produces: {supported} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE; fix: declare one of \
+         the kinds the selected provider produces, or route the target to a \
          provider that produces `{kind}`)"
     )]
     UnsupportedKind {
         target: String,
+        provider: String,
         output: String,
         kind: String,
         supported: String,
     },
+
+    /// A target declares a number of outputs the provider's own law does
+    /// not admit — §6.1 produces exactly one file, §6.2 exactly one
+    /// directory.
+    #[error(
+        "target `{target}` declares {found} output(s), but the builtin provider `{provider}` \
+         produces {expected} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE; fix: declare the one \
+         output the provider produces)"
+    )]
+    OutputCount {
+        target: String,
+        provider: String,
+        expected: String,
+        found: usize,
+    },
+
+    /// A declared source document or directory is not readable.
+    #[error(
+        "target `{target}` names source `{path}`, which the builtin provider `{provider}` cannot \
+         read: {reason} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE; fix: point the \
+         target's `source` at the directory that really holds the packaged sources)"
+    )]
+    SourceMissing {
+        target: String,
+        provider: String,
+        path: String,
+        reason: String,
+    },
+
+    /// The Agent Skills frontmatter block is missing or one member is not
+    /// what §6.1 requires.
+    #[error(
+        "[[artifacts.package]] `{target}` frontmatter member `{member}` is invalid: {reason} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE; fix: correct the \
+         `SKILL.md` frontmatter block — a static skill is built only from a document whose \
+         frontmatter this engine fully understands)"
+    )]
+    Frontmatter {
+        target: String,
+        member: String,
+        reason: String,
+    },
+
+    /// §6.1's "aligns directory/name identity".
+    #[error(
+        "[[artifacts.package]] `{target}` declares frontmatter name `{declared}` in a skill \
+         directory named `{directory}` \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE; fix: make the `name` \
+         member and the source directory's own name the same word — a skill has one identity)"
+    )]
+    SkillIdentity {
+        target: String,
+        declared: String,
+        directory: String,
+    },
+
+    /// A line mentions the include token in a shape that is not a
+    /// directive, so it would survive into the output as text.
+    #[error(
+        "[[artifacts.package]] `{target}` line {line} mentions `vibe:include` but is not a \
+         directive: `{value}` \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE; fix: write the whole \
+         line as `<!-- vibe:include <name> -->` — a malformed directive is never left in place, \
+         because that is how a skill claims to be static while dropping a resource)"
+    )]
+    IncludeMalformed {
+        target: String,
+        line: usize,
+        value: String,
+    },
+
+    /// §6.1's "unresolved sibling references".
+    #[error(
+        "[[artifacts.package]] `{target}` includes `{name}`, which is not a declared resource of \
+         this target; declared: {declared} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE; fix: declare the \
+         resource as an `inputs` row, or correct the directive)"
+    )]
+    IncludeUnknown {
+        target: String,
+        name: String,
+        declared: String,
+    },
+
+    /// §6.1's exactly-once law, in the "more than once" direction.
+    #[error(
+        "[[artifacts.package]] `{target}` includes `{name}` a second time at line {line} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE; fix: include each \
+         declared resource exactly once — a resource inlined twice is two copies claiming one \
+         origin)"
+    )]
+    IncludeDuplicate {
+        target: String,
+        name: String,
+        line: usize,
+    },
+
+    /// §6.1's exactly-once law, in the "never" direction — the refusal
+    /// that keeps a static build from silently dropping resources.
+    #[error(
+        "[[artifacts.package]] `{target}` declares resource(s) no `vibe:include` directive \
+         consumes: {names} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE; fix: include each \
+         declared resource exactly once, or stop declaring it — a static skill never claims to \
+         have absorbed a resource it dropped)"
+    )]
+    ResourceUnconsumed { target: String, names: String },
+
+    /// §6.1's "rejects executable scripts, shebang-bearing program files,
+    /// binary assets".
+    #[error(
+        "[[artifacts.package]] `{target}` cannot inline resource `{name}`: {reason} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE; fix: a static skill \
+         inlines textual resources only; ship a program or a binary asset through a directory \
+         skill or a plugin instead)"
+    )]
+    ResourceRejected {
+        target: String,
+        name: String,
+        reason: String,
+    },
+
+    /// §6.1's "unsafe traversal" — a declared resource outside the skill's
+    /// own source directory.
+    #[error(
+        "[[artifacts.package]] `{target}` declares resource `{name}`, which is not inside the \
+         skill source directory `{source_dir}` \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE; fix: keep a static \
+         skill's resources inside its own directory — and its entry document is `SKILL.md`, never \
+         a declared resource)"
+    )]
+    ResourceOutsideSource {
+        target: String,
+        name: String,
+        /// Spelled `source_dir` rather than `source`: `thiserror` reads a
+        /// field literally named `source` as the error's CAUSE, and a
+        /// directory name is not one.
+        source_dir: String,
+    },
+
+    /// A consumed artifact was handed to a provider that reads text.
+    #[error(
+        "[[artifacts.package]] `{target}` consumes artifact `{input}`, which the builtin provider \
+         `{provider}` does not accept \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE; fix: a static skill \
+         is built from declared textual resources of its own source directory — §6.1 requires \
+         exact digests and origin framing, and explicitly not a decompiler)"
+    )]
+    ArtifactInputRejected {
+        target: String,
+        provider: String,
+        input: String,
+    },
+
+    /// §6.2's fixed directory shape refused one entry.
+    #[error(
+        "[[artifacts.package]] `{target}` plugin source entry `{entry}` is not admissible: \
+         {reason} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE; fix: an Agent \
+         Plugin 1.0 directory holds `plugin.json`, `skills/<name>/SKILL.md`, an optional \
+         `mcp.json` and reverse-domain client-extension directories — and no links)"
+    )]
+    PluginShape {
+        target: String,
+        entry: String,
+        reason: String,
+    },
+
+    /// §6.2's local 1.0.0 manifest validation refused a member.
+    #[error(
+        "[[artifacts.package]] `{target}` manifest `{file}` member `{member}` is invalid: \
+         {reason} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE; fix: correct the \
+         member in the plugin source tree — the published 1.0.0 shapes are validated locally, \
+         and an unreadable manifest is never packaged)"
+    )]
+    PluginManifest {
+        target: String,
+        file: String,
+        member: String,
+        reason: String,
+    },
+
+    /// A distributable could not be written into the engine-owned output
+    /// directory.
+    #[error(
+        "[[artifacts.package]] `{target}` could not write `{path}`: {reason} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE; fix: make the \
+         project's `target/` writable, then rerun the package phase)"
+    )]
+    PackageWrite {
+        target: String,
+        path: String,
+        reason: String,
+    },
+
+    /// A produced distributable is not inside the engine-owned package
+    /// directory, so the engine has no project-relative identity to mint.
+    #[error(
+        "[[artifacts.package]] `{target}` output `{output}` was produced at `{path}`, which is \
+         outside the engine-owned package directory `{package_root}` \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE; fix: this is a \
+         defect in the producing provider — the engine owns artifact paths and a provider may \
+         not mint one)"
+    )]
+    PackageOutsideRoot {
+        target: String,
+        output: String,
+        path: String,
+        package_root: String,
+    },
+
+    /// A produced distributable is not there when verify looks.
+    #[error(
+        "[[artifacts.package]] `{target}` output `{output}` was produced at `{path}`, but verify \
+         found no readable regular file there: {reason} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE; fix: rerun the \
+         package phase; a distributable that vanished between apply and verify is never recorded \
+         as produced)"
+    )]
+    PackageOutputMissing {
+        target: String,
+        output: String,
+        path: String,
+        reason: String,
+    },
+
+    /// The canonical directory digest refused one entry of the produced
+    /// tree.
+    #[error(
+        "[[artifacts.package]] `{target}` output `{output}` could not be digested at entry \
+         `{entry}`: {reason} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#ARTIFACT-REGISTRY; fix: rerun \
+         the package phase; a directory digest covers every regular file of the tree and follows \
+         no link)"
+    )]
+    PackageTree {
+        target: String,
+        output: String,
+        entry: String,
+        reason: String,
+    },
+
+    /// A provider was handed a plan validated for the other package role.
+    /// Unreachable through the executor, which builds each plan with the
+    /// provider that will consume it, and a refusal rather than a panic
+    /// for exactly that reason.
+    #[error(
+        "the builtin provider `{provider}` was handed a plan validated for a different package \
+         role \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE; fix: this is a \
+         defect in the package executor — one provider plans and applies one target)"
+    )]
+    PlanRoleMismatch { provider: String },
 
     /// One `config` member is missing, mistyped or unknown.
     #[error(

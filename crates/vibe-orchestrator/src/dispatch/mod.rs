@@ -24,7 +24,10 @@ use crate::{PlannedExecution, RitualPlan, world};
 
 use backends::{ProjectPackageBindingBackend, WorkspaceBinaryBackend};
 
+pub(crate) use mechanism::MechanismTargets;
+
 mod backends;
+mod mechanism;
 mod verify;
 
 #[cfg(test)]
@@ -168,6 +171,7 @@ pub(crate) fn dispatch_plan(
     metadata: RunMetadata,
     state_chain: Vec<String>,
     verification_observed_at: Option<Timestamp>,
+    targets: Option<&MechanismTargets<'_>>,
 ) -> Result<DispatchOutcome> {
     // The lease root IS the state root: `begin` derives its store path from
     // the lease, and a plan whose workspace root disagrees refuses here
@@ -189,6 +193,7 @@ pub(crate) fn dispatch_plan(
         agent,
         &metadata,
         verification_observed_at,
+        targets,
     )
 }
 
@@ -215,6 +220,7 @@ pub(crate) fn dispatch_plan_with_run(
     agent: &Arc<dyn AgentBackend>,
     metadata: &RunMetadata,
     verification_observed_at: Option<Timestamp>,
+    targets: Option<&MechanismTargets<'_>>,
 ) -> Result<DispatchOutcome> {
     let mut measured = MeasuredDispatch::default();
     dispatch_measured(
@@ -225,6 +231,7 @@ pub(crate) fn dispatch_plan_with_run(
         metadata,
         &mut measured,
         verification_observed_at,
+        targets,
     )
     .map_err(|error| {
         // Idempotent: a stale stop and a failed handler already froze their
@@ -252,6 +259,7 @@ fn dispatch_measured(
     metadata: &RunMetadata,
     measured: &mut MeasuredDispatch,
     verification_observed_at: Option<Timestamp>,
+    targets: Option<&MechanismTargets<'_>>,
 ) -> Result<DispatchOutcome> {
     let package_binding = ProjectPackageBindingBackend::new(plan);
     let runtime = runtime(observer, &package_binding, agent.as_ref());
@@ -265,6 +273,10 @@ fn dispatch_measured(
     // complete one owes it only when the chain really contains verify.
     let mut boundary = verification_observed_at
         .and_then(|at| verify::boundary(plan, &metadata.chain).map(|end| (end, at)));
+    // The two mechanism fences, armed from the same plan and the same chain
+    // the verify boundary reads. They straddle that boundary exactly as §2's
+    // phase line does — build, then verify, then package.
+    let mut fences = mechanism::Fences::arm(targets, plan, &metadata.chain);
     let gate = verify::Gate {
         plan,
         agent,
@@ -282,6 +294,11 @@ fn dispatch_measured(
     measured.rows.clone_from(&outcome.reports);
     reconciled?;
     for (index, execution) in plan.executions.iter().enumerate() {
+        // BEFORE the first build-or-later row, and therefore before any
+        // build contribution is dispatched.
+        if let Some(fences) = fences.as_mut() {
+            fences.fire_build(index)?;
+        }
         // BEFORE the first verify-or-later row, and therefore before any
         // verify contribution is dispatched.
         if let Some((end, at)) = boundary
@@ -289,6 +306,11 @@ fn dispatch_measured(
         {
             boundary = None;
             gate.fire(&mut run, end, at, &mut outcome, measured)?;
+        }
+        // BEFORE the first package-or-later row, and after the boundary the
+        // phase line puts between them.
+        if let Some(fences) = fences.as_mut() {
+            fences.fire_package(index)?;
         }
         let handler = HandlerExecution::from_row(&execution.row);
         let transition = match run.execute_one(
@@ -377,12 +399,20 @@ fn dispatch_measured(
             return Ok(outcome);
         }
     }
-    // The plan held no verify-or-later row at all: the boundary is the end of
-    // the prefix, so it fires HERE — after everything that could contribute
-    // evidence and before the retention below. An empty verify phase therefore
-    // cannot bypass the gate.
+    // The plan held no row at or after one of these phases: each fence and the
+    // boundary are then armed at the end of the prefix, so they fire HERE —
+    // after everything that could contribute, and still in phase-line order.
+    // An empty build, verify or package phase therefore cannot bypass its own
+    // engine-owned work.
+    let end_of_plan = plan.executions.len();
+    if let Some(fences) = fences.as_mut() {
+        fences.fire_build(end_of_plan)?;
+    }
     if let Some((end, at)) = boundary {
         gate.fire(&mut run, end, at, &mut outcome, measured)?;
+    }
+    if let Some(fences) = fences.as_mut() {
+        fences.fire_package(end_of_plan)?;
     }
     if plan.package_phase_planned {
         let reconciled = outcome.reports.iter().any(|report| {

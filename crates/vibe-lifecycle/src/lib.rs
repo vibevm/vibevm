@@ -122,15 +122,22 @@ pub use handlers::{
 };
 pub use lease::{LifecycleLease, LifecycleLeaseError};
 pub use mechanism::{
-    ARTIFACT_RECORD_DIR, BuildError, BuildExecution, BuildOutcome, MechanismError,
-    ProducedArtifact, execute_build_targets,
+    ARTIFACT_RECORD_DIR, BuildError, BuildExecution, BuildOutcome, MechanismError, PackageError,
+    PackageExecution, PackageOutcome, PackagedArtifact, ProducedArtifact, RecordError,
+    execute_build_targets, execute_package_targets,
 };
+// The mechanism PLANE, through the same compatibility door the extension
+// plane already uses. The two executors above take a `MechanismRegistry`,
+// so the orchestrator that calls them has to be able to collect and name
+// one; the kernel type itself is `vibe-extension-registry`'s and is
+// re-exported, never copied.
 pub use registry::{
     CollectionError, CollectionNotice, ContributionTier, DependencyExtensionSource,
     DependencyProvider, DependencyProviderId, EffectiveManifestKind, ExecutableContribution,
     ExecutablePlan, ExtensionProvider, ExtensionRegistry, ExtensionRegistryRow, ExtensionWorld,
-    HostExtensionSource, HostIdentity, HostProvider, RegistryState, RegistryView, SelectorSubject,
-    SyntheticPresetSource, collect_extensions, collect_extensions_with_presets, lane_owner_host,
+    HostExtensionSource, HostIdentity, HostProvider, MechanismRegistry, MechanismRegistryRow,
+    MechanismResolutionError, RegistryState, RegistryView, SelectorSubject, SyntheticPresetSource,
+    collect_extensions, collect_extensions_with_presets, collect_mechanisms, lane_owner_host,
 };
 pub use runner::{
     ExecutionReuse, ExecutionTransition, FailedExecutionTransition, LifecycleRun,

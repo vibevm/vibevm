@@ -258,12 +258,12 @@ fn dependency_order_runs_producers_first_whatever_the_declaration_order() {
     // Declared consumer-first; executed producer-first.
     let targets = vec![consumer("late", "early.exe"), target("early")];
 
-    let order = match dag_order(&targets) {
-        Ok(order) => order,
+    let sequence = match order(&targets) {
+        Ok(sequence) => sequence,
         Err(error) => panic!("the graph orders: {error}"),
     };
 
-    assert_eq!(order, vec![1, 0]);
+    assert_eq!(sequence, vec![1, 0]);
 }
 
 #[test]
@@ -271,12 +271,12 @@ fn dependency_order_runs_producers_first_whatever_the_declaration_order() {
 fn independent_targets_keep_declaration_order() {
     let targets = vec![target("a"), target("b"), target("c")];
 
-    let order = match dag_order(&targets) {
-        Ok(order) => order,
+    let sequence = match order(&targets) {
+        Ok(sequence) => sequence,
         Err(error) => panic!("the graph orders: {error}"),
     };
 
-    assert_eq!(order, vec![0, 1, 2]);
+    assert_eq!(sequence, vec![0, 1, 2]);
 }
 
 #[test]
@@ -284,7 +284,7 @@ fn independent_targets_keep_declaration_order() {
 fn a_cycle_refuses_and_names_it() {
     let targets = vec![consumer("a", "b.exe"), consumer("b", "a.exe")];
 
-    let refusal = dag_order(&targets).expect_err("a cycle has no dependency order");
+    let refusal = order(&targets).expect_err("a cycle has no dependency order");
 
     match &refusal {
         BuildError::Cycle { cycle } => assert_eq!(cycle, "a -> b -> a"),
@@ -297,7 +297,7 @@ fn a_cycle_refuses_and_names_it() {
 fn an_input_no_build_target_produces_refuses() {
     let targets = vec![consumer("late", "absent.exe")];
 
-    let refusal = dag_order(&targets).expect_err("the consumed artifact has no producer here");
+    let refusal = order(&targets).expect_err("the consumed artifact has no producer here");
 
     match &refusal {
         BuildError::UnknownInput { target, input } => {
@@ -316,10 +316,10 @@ fn a_target_that_consumes_its_own_output_is_not_a_cycle() {
         artifact: "self.exe".to_owned(),
     }]);
 
-    let order = match dag_order(std::slice::from_ref(&declared)) {
-        Ok(order) => order,
+    let sequence = match order(std::slice::from_ref(&declared)) {
+        Ok(sequence) => sequence,
         Err(error) => panic!("a self-edge is not a dependency: {error}"),
     };
 
-    assert_eq!(order, vec![0]);
+    assert_eq!(sequence, vec![0]);
 }

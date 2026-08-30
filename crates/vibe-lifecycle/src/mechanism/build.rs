@@ -18,7 +18,6 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE");
 
-use std::collections::BTreeMap;
 use std::path::Path;
 
 use specmark::spec;
@@ -26,13 +25,17 @@ use vibe_core::manifest::{ArtifactBuildTarget, ExtensionHandler, MechanismRoutes
 use vibe_extension_registry::{
     MechanismRegistry, MechanismSelection, SelectionStep, resolve_mechanism,
 };
+use vibe_wire::generated::artifact_record::ArtifactShape;
 
 mod error;
 
 pub use error::BuildError;
 
 use super::cargo::{BuildPlan, CargoProvider, SelectedArtifact, ToolchainIdentity};
-use super::record::{RecordInputs, build_record, config_digest, write_record};
+use super::order::{GraphNode, OrderFault, Unresolved, dag_order};
+use super::record::{
+    RecordFreshness, RecordInputs, build_record, config_digest, sanitize, write_record,
+};
 use super::{BUILTIN_CARGO_NAME, BuildProvider, BuildTargetRequest, DEFAULT_BUILD_ROOT};
 
 /// Everything one build-phase execution needs, and nothing more.
@@ -184,7 +187,7 @@ pub fn execute_build_targets(
     execution: &BuildExecution<'_>,
 ) -> Result<Vec<BuildOutcome>, BuildError> {
     let mut outcomes = Vec::with_capacity(execution.targets.len());
-    for index in dag_order(execution.targets)? {
+    for index in order(execution.targets)? {
         let Some(target) = execution.targets.get(index) else {
             continue;
         };
@@ -278,16 +281,32 @@ fn record_all(
             verified.bytes,
             verified.path_relative,
         ));
+        // The freshness triple is the honest one for a provider-fresh
+        // target (§4.1, §5.0.5): `inputs` is ABSENT, because Cargo owns
+        // inputs the engine does not model and a fabricated input digest
+        // would be a claim the engine cannot support; `config` and
+        // `toolchain` are present, because the engine really did hash the
+        // target's config and the provider really did report its
+        // toolchain identity.
         let record = build_record(&RecordInputs {
             target: &request.target.id,
             mechanism: &request.target.mechanism,
             provider_key: pin,
             provider_version: None,
             provider_hash: None,
-            selected: artifact,
-            verified: &verified,
-            toolchain,
-            config_digest: &fingerprint,
+            output_id: &verified.output_id,
+            kind: artifact.kind,
+            shape: ArtifactShape::File,
+            digest: &verified.digest,
+            path_absolute: &verified.path_absolute,
+            path_relative: &verified.path_relative,
+            freshness: RecordFreshness {
+                inputs: None,
+                config: Some(&fingerprint),
+                toolchain: Some(&toolchain.digest),
+            },
+            platform: toolchain.host.as_deref(),
+            media_type: None,
             created_at: execution.created_at,
             evidence,
         })?;
@@ -315,106 +334,31 @@ fn displaced(selection: &MechanismSelection<'_>) -> Option<String> {
     }
 }
 
-/// Dependency order over the declared build targets.
+/// The build graph, in dependency order.
 ///
-/// A depth-first walk in declaration order: deterministic, and it names
-/// the cycle it refuses. A manifest that parsed is already acyclic — this
-/// is the executor refusing to be the place where a programmatically
-/// built target set turns into an infinite loop.
-fn dag_order(targets: &[ArtifactBuildTarget]) -> Result<Vec<usize>, BuildError> {
-    let mut producer: BTreeMap<&str, usize> = BTreeMap::new();
-    for (index, target) in targets.iter().enumerate() {
-        for output in &target.outputs {
-            producer.insert(output.id.as_str(), index);
-        }
-    }
-    let mut state = vec![Visit::Unseen; targets.len()];
-    let mut order = Vec::with_capacity(targets.len());
-    for root in 0..targets.len() {
-        visit(
-            root,
-            targets,
-            &producer,
-            &mut state,
-            &mut order,
-            &mut Vec::new(),
-        )?;
-    }
-    Ok(order)
+/// The walk itself is the shared one; what is stated here is the build
+/// role's own decision about an unresolved input. A build input naming an
+/// artifact no build target produces is an ERROR: the build graph is
+/// closed under itself, and the phase-forward law gives it no other
+/// producer to have come from.
+fn order(targets: &[ArtifactBuildTarget]) -> Result<Vec<usize>, BuildError> {
+    dag_order(targets, Unresolved::Refuse).map_err(|fault| match fault {
+        OrderFault::Cycle { cycle } => BuildError::Cycle { cycle },
+        OrderFault::UnknownInput { target, input } => BuildError::UnknownInput { target, input },
+    })
 }
 
-/// Colour of one node in the depth-first walk.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-enum Visit {
-    Unseen,
-    OnStack,
-    Done,
-}
-
-fn visit(
-    index: usize,
-    targets: &[ArtifactBuildTarget],
-    producer: &BTreeMap<&str, usize>,
-    state: &mut [Visit],
-    order: &mut Vec<usize>,
-    stack: &mut Vec<usize>,
-) -> Result<(), BuildError> {
-    match state.get(index) {
-        Some(Visit::Done) => return Ok(()),
-        Some(Visit::OnStack) => {
-            let mut cycle: Vec<String> = stack
-                .iter()
-                .skip_while(|entry| **entry != index)
-                .filter_map(|entry| targets.get(*entry).map(|target| target.id.clone()))
-                .collect();
-            if let Some(target) = targets.get(index) {
-                cycle.push(target.id.clone());
-            }
-            return Err(BuildError::Cycle {
-                cycle: cycle.join(" -> "),
-            });
-        }
-        Some(Visit::Unseen) => {}
-        None => return Ok(()),
+impl GraphNode for ArtifactBuildTarget {
+    fn id(&self) -> &str {
+        &self.id
     }
-    let Some(target) = targets.get(index) else {
-        return Ok(());
-    };
-    state[index] = Visit::OnStack;
-    stack.push(index);
-    for input in target.inputs.iter().flatten() {
-        let Some(consumed) = input.artifact_ref() else {
-            continue;
-        };
-        let Some(upstream) = producer.get(consumed) else {
-            return Err(BuildError::UnknownInput {
-                target: target.id.clone(),
-                input: consumed.to_owned(),
-            });
-        };
-        if *upstream != index {
-            visit(*upstream, targets, producer, state, order, stack)?;
-        }
-    }
-    stack.pop();
-    state[index] = Visit::Done;
-    order.push(index);
-    Ok(())
-}
 
-/// Strip the bytes that break a log line or a C string from text that
-/// came out of a foreign process, so a record's free-text law cannot be
-/// violated by a toolchain banner.
-fn sanitize(value: &str) -> String {
-    let cleaned: String = value
-        .chars()
-        .map(|byte| if byte.is_control() { ' ' } else { byte })
-        .collect();
-    let trimmed = cleaned.trim();
-    if trimmed.is_empty() {
-        "no evidence recorded".to_owned()
-    } else {
-        trimmed.to_owned()
+    fn outputs(&self) -> &[vibe_core::manifest::ArtifactOutput] {
+        &self.outputs
+    }
+
+    fn inputs(&self) -> Option<&[vibe_core::manifest::ArtifactInput]> {
+        self.inputs.as_deref()
     }
 }
 

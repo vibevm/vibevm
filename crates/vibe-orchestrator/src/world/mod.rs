@@ -18,7 +18,8 @@ use vibe_core::{Group, PackageKind, PackageName};
 use vibe_lifecycle::{
     DependencyExtensionSource, DependencyProvider, DependencyProviderId, EffectiveManifestKind,
     ExecutablePlan, ExtensionRegistry, ExtensionWorld, HostExtensionSource, HostIdentity,
-    HostProvider, SelectorSubject, collect_extensions_with_presets,
+    HostProvider, MechanismRegistry, SelectorSubject, collect_extensions_with_presets,
+    collect_mechanisms,
 };
 use vibe_wire::generated::lifecycle::e1::context::{
     Project as EnvelopeProject, World as EnvelopeWorld, WorldPackage,
@@ -72,6 +73,7 @@ pub fn plan_default_prepared(
             .collect(),
         project: loaded.project,
         world: loaded.world,
+        mechanisms: loaded.mechanisms,
         workspace_root: loaded.workspace_root,
         package_bindings: loaded.package_bindings,
         package_desired_keys: loaded.package_desired_keys,
@@ -132,6 +134,7 @@ pub fn plan_clean_prepared(selected: &Path, workspace: &Workspace) -> Result<Rit
             .collect(),
         project: loaded.project,
         world: loaded.world,
+        mechanisms: loaded.mechanisms,
         workspace_root: loaded.workspace_root,
         package_bindings: BTreeMap::new(),
         package_desired_keys: BTreeSet::new(),
@@ -149,6 +152,9 @@ enum WorldLoadMode {
 pub struct LoadedRegistry {
     /// The ordered, typed contribution registry of the selected world.
     pub registry: ExtensionRegistry,
+    /// The mechanism plane of the SAME world — the provider rows the
+    /// build and package executors resolve their targets against.
+    pub mechanisms: MechanismRegistry,
     /// Selected-project facts for the handler envelope.
     pub project: EnvelopeProject,
     world: EnvelopeWorld,
@@ -261,17 +267,22 @@ fn load_registry_prepared(
     } else {
         (Vec::new(), BTreeMap::new(), BTreeSet::new())
     };
-    let registry = collect_extensions_with_presets(
-        ExtensionWorld {
-            installed,
-            host,
-            effective_stack: effective_stack.clone(),
-        },
-        presets,
-    )
-    .context("collecting lifecycle extensions from the effective world")?;
+    let effective_world = ExtensionWorld {
+        installed,
+        host,
+        effective_stack: effective_stack.clone(),
+    };
+    // Both planes come off the SAME world snapshot, in one pass: the
+    // mechanism plane is collected by reference first, then the extension
+    // collector consumes the value. A second read to answer "which
+    // providers does this world install" would be a second world.
+    let mechanisms = collect_mechanisms(&effective_world)
+        .context("collecting the mechanism plane from the effective world")?;
+    let registry = collect_extensions_with_presets(effective_world, presets)
+        .context("collecting lifecycle extensions from the effective world")?;
     Ok(LoadedRegistry {
         registry,
+        mechanisms,
         project,
         world,
         workspace_root: workspace.root.clone(),

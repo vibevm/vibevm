@@ -27,7 +27,7 @@ use std::path::PathBuf;
 
 use specmark::spec;
 use vibe_agent_projection::pkgskill::ProjectSkillBinding;
-use vibe_lifecycle::{ExecutablePlan, Phase};
+use vibe_lifecycle::{ExecutablePlan, MechanismRegistry, Phase};
 use vibe_wire::generated::lifecycle::e1::context::{Project, World};
 
 pub mod failure;
@@ -67,13 +67,19 @@ pub use world::{
 
 /// One owned, surface-neutral lifecycle plan.
 ///
-/// It contains only selected execution and world facts — eight fields, and no
-/// ninth. In particular NO manifest rides here: a complete `Manifest` carries
+/// It contains only selected execution and world facts — nine fields, and no
+/// tenth. In particular NO manifest rides here: a complete `Manifest` carries
 /// `[llm]` provider/model/credential configuration, so storing one would smuggle
 /// exactly the seam this boundary exists to keep out. A surface reads its own
 /// snapshot, derives its own configuration from it, and injects an already-built
 /// backend. The structural RED below destructures every field with no `..`, so a
-/// hidden ninth carrier is a compile error rather than a review question.
+/// hidden tenth carrier is a compile error rather than a review question.
+///
+/// The ninth field is R8-PACKAGE's, and it is the same genre as the eight: the
+/// mechanism plane is a collected fact of the selected world, taken off the one
+/// snapshot the extension registry came from. It carries provider identities and
+/// handler kinds — never configuration, never credentials — so the fence the
+/// count enforces is unchanged in meaning.
 ///
 /// The fields are PRIVATE. Every one of them is an invariant this crate
 /// establishes at collection time and every dispatch entry point then trusts —
@@ -102,6 +108,9 @@ pub struct RitualPlan {
     pub(crate) project: Project,
     /// Effective installed-world facts carried into handler envelopes.
     pub(crate) world: World,
+    /// The mechanism plane of the same world — the provider rows the build
+    /// and package executors resolve their declared targets against.
+    pub(crate) mechanisms: MechanismRegistry,
     /// Canonical workspace root which owns lifecycle state.
     pub(crate) workspace_root: PathBuf,
     /// Planned project-skill bindings keyed by execution identity.
@@ -224,20 +233,28 @@ mod tests {
         }
     }
 
-    /// The plan carries EIGHT fields, and the compiler proves it.
+    /// The plan carries NINE fields, and the compiler proves it.
     ///
-    /// Destructured with no `..`, so a ninth field — a manifest, a config, any
+    /// Destructured with no `..`, so a tenth field — a manifest, a config, any
     /// carrier that could smuggle provider settings below the surface — is a
     /// compile error here rather than a review question. This is the structural
     /// half of the fence; the source scan below is the textual half.
+    ///
+    /// The count moved from eight to nine at R8-PACKAGE, deliberately and once:
+    /// `run_phases` executes the declared `[[artifacts.build]]` and
+    /// `[[artifacts.package]]` targets, and selection needs the mechanism plane
+    /// of the same world snapshot the executions were planned from. Collecting
+    /// it a second time inside the phase run would be a second world — the
+    /// exact retry the prepared-selection bundle exists to forbid.
     #[test]
-    fn the_shared_plan_carries_exactly_its_eight_neutral_fields() {
+    fn the_shared_plan_carries_exactly_its_nine_neutral_fields() {
         fn destructure(plan: super::RitualPlan) {
             let super::RitualPlan {
                 executions,
                 notices,
                 project,
                 world,
+                mechanisms,
                 workspace_root,
                 package_bindings,
                 package_desired_keys,
@@ -248,6 +265,7 @@ mod tests {
                 notices,
                 project,
                 world,
+                mechanisms,
                 workspace_root,
                 package_bindings,
                 package_desired_keys,
