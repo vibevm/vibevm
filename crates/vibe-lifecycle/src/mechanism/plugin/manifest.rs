@@ -61,13 +61,23 @@ pub(crate) fn validate_plugin_manifest(
     target: &str,
     root: &Path,
 ) -> Result<PluginIdentity, MechanismError> {
-    let document = read_json(target, root, PLUGIN_MANIFEST)?;
-    let object = object(target, PLUGIN_MANIFEST, &document, "<document>")?;
-    let name = required_string(target, PLUGIN_MANIFEST, object, "name")?;
+    validate_plugin_manifest_at(target, root, PLUGIN_MANIFEST)
+}
+
+/// Validate a client projection's plugin manifest at its fixed relative
+/// location, through the same parser as the canonical root manifest.
+pub(crate) fn validate_plugin_manifest_at(
+    target: &str,
+    root: &Path,
+    file: &str,
+) -> Result<PluginIdentity, MechanismError> {
+    let document = read_json(target, root, file)?;
+    let object = object(target, file, &document, "<document>")?;
+    let name = required_string(target, file, object, "name")?;
     if !is_plugin_name(&name) {
         return Err(refuse(
             target,
-            PLUGIN_MANIFEST,
+            file,
             "name",
             format!(
                 "`{}` is not a plugin name; use lowercase letters, digits and inner `-`, `_` or \
@@ -76,31 +86,31 @@ pub(crate) fn validate_plugin_manifest(
             ),
         ));
     }
-    let version = required_string(target, PLUGIN_MANIFEST, object, "version")?;
+    let version = required_string(target, file, object, "version")?;
     if let Some(description) = object.get("description") {
-        non_blank_string(target, PLUGIN_MANIFEST, "description", description)?;
+        non_blank_string(target, file, "description", description)?;
     }
     match object.get("author") {
         None | Some(Value::String(_)) => {
             if let Some(author) = object.get("author") {
-                non_blank_string(target, PLUGIN_MANIFEST, "author", author)?;
+                non_blank_string(target, file, "author", author)?;
             }
         }
         Some(Value::Object(author)) => {
             let Some(inner) = author.get("name") else {
                 return Err(refuse(
                     target,
-                    PLUGIN_MANIFEST,
+                    file,
                     "author.name",
                     "an object author names itself".to_owned(),
                 ));
             };
-            non_blank_string(target, PLUGIN_MANIFEST, "author.name", inner)?;
+            non_blank_string(target, file, "author.name", inner)?;
         }
         Some(other) => {
             return Err(refuse(
                 target,
-                PLUGIN_MANIFEST,
+                file,
                 "author",
                 format!("expected a string or an object, found {}", kind(other)),
             ));
@@ -122,13 +132,22 @@ pub(crate) fn validate_mcp_manifest(
     target: &str,
     root: &Path,
 ) -> Result<McpServers, MechanismError> {
-    let document = read_json(target, root, MCP_MANIFEST)?;
-    let root_members = object(target, MCP_MANIFEST, &document, "<document>")?;
+    validate_mcp_manifest_at(target, root, MCP_MANIFEST)
+}
+
+/// Validate a projected canonical MCP document at its fixed relative path.
+pub(crate) fn validate_mcp_manifest_at(
+    target: &str,
+    root: &Path,
+    file: &str,
+) -> Result<McpServers, MechanismError> {
+    let document = read_json(target, root, file)?;
+    let root_members = object(target, file, &document, "<document>")?;
     for member in root_members.keys() {
         if member != "mcpServers" {
             return Err(refuse(
                 target,
-                MCP_MANIFEST,
+                file,
                 member,
                 "the portable v1 MCP declaration carries `mcpServers` and nothing else".to_owned(),
             ));
@@ -137,15 +156,15 @@ pub(crate) fn validate_mcp_manifest(
     let declared = root_members.get("mcpServers").ok_or_else(|| {
         refuse(
             target,
-            MCP_MANIFEST,
+            file,
             "mcpServers",
             "required; a present `mcp.json` declares at least the member".to_owned(),
         )
     })?;
-    let servers = object(target, MCP_MANIFEST, declared, "mcpServers")?;
+    let servers = object(target, file, declared, "mcpServers")?;
     for (name, declared_entry) in servers {
         let member = format!("mcpServers.{}", preview(name));
-        let entry = object(target, MCP_MANIFEST, declared_entry, &member)?;
+        let entry = object(target, file, declared_entry, &member)?;
         let transports = ["command", "url"]
             .into_iter()
             .filter(|key| entry.contains_key(*key))
@@ -153,7 +172,7 @@ pub(crate) fn validate_mcp_manifest(
         if transports != 1 {
             return Err(refuse(
                 target,
-                MCP_MANIFEST,
+                file,
                 &member,
                 "declares exactly one of `command` or `url`".to_owned(),
             ));
@@ -163,42 +182,42 @@ pub(crate) fn validate_mcp_manifest(
             let key: &str = key;
             match key {
                 "command" | "url" => {
-                    let text = non_blank_string(target, MCP_MANIFEST, &inner, value)?;
-                    placeholders(target, MCP_MANIFEST, &inner, &text)?;
+                    let text = non_blank_string(target, file, &inner, value)?;
+                    placeholders(target, file, &inner, &text)?;
                 }
                 "args" => {
                     let Value::Array(items) = value else {
                         return Err(refuse(
                             target,
-                            MCP_MANIFEST,
+                            file,
                             &inner,
                             format!("expected an array of strings, found {}", kind(value)),
                         ));
                     };
                     for item in items {
-                        let text = non_blank_string(target, MCP_MANIFEST, &inner, item)?;
-                        placeholders(target, MCP_MANIFEST, &inner, &text)?;
+                        let text = non_blank_string(target, file, &inner, item)?;
+                        placeholders(target, file, &inner, &text)?;
                     }
                 }
                 "env" | "headers" => {
                     let Value::Object(map) = value else {
                         return Err(refuse(
                             target,
-                            MCP_MANIFEST,
+                            file,
                             &inner,
                             format!("expected an object of strings, found {}", kind(value)),
                         ));
                     };
                     for (entry_key, entry_value) in map {
                         let leaf = format!("{inner}.{}", preview(entry_key));
-                        let text = non_blank_string(target, MCP_MANIFEST, &leaf, entry_value)?;
-                        placeholders(target, MCP_MANIFEST, &leaf, &text)?;
+                        let text = non_blank_string(target, file, &leaf, entry_value)?;
+                        placeholders(target, file, &leaf, &text)?;
                     }
                 }
                 _ => {
                     return Err(refuse(
                         target,
-                        MCP_MANIFEST,
+                        file,
                         &inner,
                         "unknown member; a portable v1 server declares `command`/`url`, `args`, \
                          `env` and `headers`"

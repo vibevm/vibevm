@@ -242,5 +242,36 @@ pub fn minimal_environment(
     env
 }
 
+/// Build the clean environment used for an injected client executable.
+///
+/// Unlike [`minimal_environment`], this boundary deliberately excludes
+/// ambient `PATH`, home variables, client config roots, credentials and
+/// proxy settings. The exact injected home is then installed under both
+/// conventional names, with at most one client-specific config override.
+#[spec(
+    deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
+    reason = "the system-process adapter is the recorded composition boundary that snapshots only the fixed OS bootstrap/locale allowlist before env_clear; injected home and client roots never come from ambient values"
+)]
+pub(crate) fn client_environment(
+    user_home: &std::path::Path,
+    client_override: Option<(&str, &std::path::Path)>,
+) -> BTreeMap<OsString, OsString> {
+    let mut env = BTreeMap::new();
+    for key in ["SystemRoot", "WINDIR", "TEMP", "TMP", "LANG", "LC_ALL"] {
+        if let Some(value) = std::env::var_os(key) {
+            env.insert(OsString::from(key), value);
+        }
+    }
+    env.insert(OsString::from("HOME"), user_home.as_os_str().to_owned());
+    env.insert(
+        OsString::from("USERPROFILE"),
+        user_home.as_os_str().to_owned(),
+    );
+    if let Some((key, value)) = client_override {
+        env.insert(OsString::from(key), value.as_os_str().to_owned());
+    }
+    env
+}
+
 #[cfg(test)]
 mod tests;

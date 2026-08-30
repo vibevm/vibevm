@@ -19,7 +19,7 @@ use vibe_core::manifest::DeployTarget;
 
 use super::error::DeployError;
 use super::protocol::ResolvedDeployArtifact;
-use crate::mechanism::contain::{checked_relative, digest_file, join_relative};
+use crate::mechanism::contain::{checked_relative, digest_file, join_relative, tree_digest};
 use crate::mechanism::record::read_record;
 
 /// Resolve and prove the artifact one deploy target reconciles.
@@ -53,12 +53,23 @@ pub(crate) fn resolve_artifact(
         }
     })?;
     let absolute = join_relative(project_root, &relative);
-    let (digest, bytes) = digest_file(&absolute).map_err(|fault| DeployError::ArtifactMissing {
-        target: target.id.clone(),
-        artifact: target.artifact.clone(),
-        path: relative.clone(),
-        reason: fault.reason(),
-    })?;
+    let (digest, bytes) =
+        if record.shape == vibe_wire::generated::artifact_record::ArtifactShape::Directory {
+            let tree = tree_digest(&absolute).map_err(|fault| DeployError::ArtifactMissing {
+                target: target.id.clone(),
+                artifact: target.artifact.clone(),
+                path: format!("{relative}/{}", fault.path),
+                reason: fault.reason,
+            })?;
+            (tree.digest, tree.bytes)
+        } else {
+            digest_file(&absolute).map_err(|fault| DeployError::ArtifactMissing {
+                target: target.id.clone(),
+                artifact: target.artifact.clone(),
+                path: relative.clone(),
+                reason: fault.reason(),
+            })?
+        };
     if digest != record.digest.value {
         return Err(DeployError::ArtifactStale {
             target: target.id.clone(),

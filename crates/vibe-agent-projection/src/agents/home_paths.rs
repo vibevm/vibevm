@@ -64,7 +64,7 @@ impl Agent {
             Agent::Codex => Some(home.join(".agents").join("skills")),
             // Same XDG-on-every-OS contract as the ambient sibling — see
             // `Agent::config_path`'s comment for the empirical record.
-            Agent::OpenCode => Some(home.join(".config").join("opencode").join("skills")),
+            Agent::OpenCode => Some(Self::opencode_user_skills_root_from_home(home)),
             Agent::ClaudeCodeDesktop | Agent::Cursor => None,
         }
     }
@@ -101,6 +101,27 @@ impl Agent {
                 .join(name)
                 .join("SKILL.md"),
         )
+    }
+
+    /// OpenCode's user-scope plugin skill root for an injected home.
+    ///
+    /// This client-specific spelling is shared by the plugin deployment
+    /// provider and the generic skill projection above. Keeping the XDG
+    /// components here prevents either lifecycle lane from resolving an
+    /// ambient home or independently spelling the destination.
+    #[must_use]
+    pub fn opencode_user_skills_root_from_home(home: &Path) -> PathBuf {
+        home.join(".config").join("opencode").join("skills")
+    }
+
+    /// OpenCode's user-scope JSON config for an injected home.
+    ///
+    /// OpenCode uses this XDG-shaped path on every supported host. The
+    /// caller supplies the home, so this helper cannot reach the operator's
+    /// real config tree during an isolated deployment test.
+    #[must_use]
+    pub fn opencode_user_config_from_home(home: &Path) -> PathBuf {
+        home.join(".config").join("opencode").join("opencode.json")
     }
 }
 
@@ -148,5 +169,16 @@ mod tests {
                     .is_none()
             );
         }
+        assert_eq!(
+            Agent::opencode_user_skills_root_from_home(injected),
+            injected.join(".config").join("opencode").join("skills"),
+        );
+        assert_eq!(
+            Agent::opencode_user_config_from_home(injected),
+            injected
+                .join(".config")
+                .join("opencode")
+                .join("opencode.json"),
+        );
     }
 }

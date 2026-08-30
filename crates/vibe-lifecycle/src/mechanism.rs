@@ -523,3 +523,12 @@ pub(crate) const BUILTIN_OPENCODE_SKILL_PIN: &str = "org.vibevm/vibe#opencode-sk
 
 /// The `handler = { kind = "builtin", name = … }` spelling of the same row.
 pub(crate) const BUILTIN_OPENCODE_SKILL_NAME: &str = "opencode-skill";
+
+/// The reserved identities and handler names of §6.3's client-plugin
+/// destination providers.
+pub(crate) const BUILTIN_CLAUDE_PLUGIN_PIN: &str = "org.vibevm/vibe#claude-plugin";
+pub(crate) const BUILTIN_CLAUDE_PLUGIN_NAME: &str = "claude-plugin";
+pub(crate) const BUILTIN_CODEX_PLUGIN_PIN: &str = "org.vibevm/vibe#codex-plugin";
+pub(crate) const BUILTIN_CODEX_PLUGIN_NAME: &str = "codex-plugin";
+pub(crate) const BUILTIN_OPENCODE_PLUGIN_PIN: &str = "org.vibevm/vibe#opencode-plugin";
+pub(crate) const BUILTIN_OPENCODE_PLUGIN_NAME: &str = "opencode-plugin";

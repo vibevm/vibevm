@@ -293,4 +293,99 @@ pub enum DeployProviderError {
          entry the receipt does not name is never the provider's to delete)"
     )]
     RemoveNotOwned { target: String, resource: String },
+
+    /// A recorded client projection is the wrong provenance, physical
+    /// shape, digest or closed client-native tree.
+    #[error(
+        "[[deploy.target]] `{target}` cannot admit artifact `{artifact}` through `{provider}`: {reason} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS; fix: rerun the selected client projection and deploy its recorded directory output)"
+    )]
+    PluginArtifact {
+        target: String,
+        artifact: String,
+        provider: &'static str,
+        reason: String,
+    },
+
+    /// The selected client executable was not injected as an absolute path.
+    #[error(
+        "[[deploy.target]] `{target}` selected the `{client}` client, but its injected executable `{command}` is unavailable: {reason} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS; fix: install the named client and let the command surface resolve its absolute executable path)"
+    )]
+    ClientExecutable {
+        target: String,
+        client: &'static str,
+        command: String,
+        reason: String,
+    },
+
+    /// A bounded client command failed or returned an unreadable response.
+    #[error(
+        "[[deploy.target]] `{target}` could not use `{client}` for `{operation}`: {reason} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS; fix: repair the isolated client installation/state and rerun; VibeVM never falls back to PATH or an ambient home)"
+    )]
+    ClientCommand {
+        target: String,
+        client: &'static str,
+        operation: &'static str,
+        reason: String,
+    },
+
+    /// The injected executable is not the tested client minor line.
+    #[error(
+        "[[deploy.target]] `{target}` requires `{client}` {supported}, but `--version` returned `{found}` \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS; fix: install the tested minor line; an untested client contract is refused before any marketplace or destination write)"
+    )]
+    ClientVersion {
+        target: String,
+        client: &'static str,
+        found: String,
+        supported: &'static str,
+    },
+
+    /// A prior generation names another immutable artifact.
+    #[error(
+        "[[deploy.target]] `{target}` previously deployed artifact digest `{recorded}` and now selects `{selected}`; private client state and overwritten bytes are not update-reversible \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS; fix: undeploy, then deploy)"
+    )]
+    PluginArtifactUpdate {
+        target: String,
+        recorded: String,
+        selected: String,
+    },
+
+    /// A logical client/plugin or OpenCode member failed the receipt-owned
+    /// occupancy law.
+    #[error(
+        "[[deploy.target]] `{target}` cannot reconcile `{resource}`: {reason} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS; fix: remove the foreign occupant deliberately or undeploy its owner; identical content is not ownership and drift is never overwritten)"
+    )]
+    PluginOccupancy {
+        target: String,
+        resource: String,
+        reason: String,
+    },
+
+    /// Immutable marketplace support exists but is not byte/tree equal, or
+    /// could not be materialised without following a link.
+    #[error(
+        "[[deploy.target]] `{target}` cannot use immutable marketplace support `{path}`: {reason} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS; fix: inspect the named support root; present support is never repaired or removed automatically)"
+    )]
+    MarketplaceSupport {
+        target: String,
+        path: String,
+        reason: String,
+    },
+
+    /// The shared OpenCode document is malformed or could not be replaced.
+    #[error(
+        "[[deploy.target]] `{target}` cannot reconcile OpenCode document `{path}`: {reason} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS; fix: correct the bounded JSON object without discarding foreign members, then rerun)"
+    )]
+    OpenCodeDocument {
+        target: String,
+        path: String,
+        reason: String,
+    },
 }

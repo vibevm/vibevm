@@ -37,6 +37,53 @@ fn minimal_environment_excludes_token_genre() {
 }
 
 #[test]
+fn client_environment_is_clean_and_uses_only_the_injected_home() {
+    let home = std::path::Path::new("/isolated/client-home");
+    let claude = home.join(".claude");
+    let env = client_environment(home, Some(("CLAUDE_CONFIG_DIR", &claude)));
+
+    assert_eq!(
+        env.get(&OsString::from("HOME")).map(OsString::as_os_str),
+        Some(home.as_os_str())
+    );
+    assert_eq!(
+        env.get(&OsString::from("USERPROFILE"))
+            .map(OsString::as_os_str),
+        Some(home.as_os_str())
+    );
+    assert_eq!(
+        env.get(&OsString::from("CLAUDE_CONFIG_DIR"))
+            .map(OsString::as_os_str),
+        Some(claude.as_os_str())
+    );
+    for forbidden in [
+        "PATH",
+        "CODEX_HOME",
+        "OPENAI_API_KEY",
+        "ANTHROPIC_API_KEY",
+        "HTTP_PROXY",
+        "HTTPS_PROXY",
+        "ALL_PROXY",
+    ] {
+        assert!(!env.contains_key(&OsString::from(forbidden)), "{forbidden}");
+    }
+    assert!(env.keys().all(|key| {
+        matches!(
+            key.to_string_lossy().as_ref(),
+            "SystemRoot"
+                | "WINDIR"
+                | "TEMP"
+                | "TMP"
+                | "LANG"
+                | "LC_ALL"
+                | "HOME"
+                | "USERPROFILE"
+                | "CLAUDE_CONFIG_DIR"
+        )
+    }));
+}
+
+#[test]
 fn atomic_json_uses_a_unique_create_new_file_and_ignores_a_planted_name() {
     let dir = tempfile::tempdir().unwrap();
     let run = allocate_run_id(dir.path()).unwrap();

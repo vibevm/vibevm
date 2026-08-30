@@ -47,6 +47,7 @@ pub(crate) mod model;
 pub(crate) mod observation;
 pub(crate) mod ownership;
 pub(crate) mod plan;
+pub(crate) mod plugin;
 pub(crate) mod preplan;
 pub(crate) mod protocol;
 pub(crate) mod saga;
@@ -67,6 +68,7 @@ pub use plan::plan_deploy_targets;
 use super::order::{GraphNode, OrderFault, Unresolved, dag_order};
 use super::vibebin::VibeBinProvider;
 use super::{BUILTIN_VIBE_BIN_NAME, DeployProvider, DeployTargetRequest};
+use plugin::{ClientPluginProvider, PluginClient};
 use skill::SkillDeployProvider;
 // The inverse path lives in its own cell and is re-exported here, so
 // `undeploy_targets` and every test still spell it one way.
@@ -226,6 +228,15 @@ fn builtin_provider(
         }
         ExtensionHandler::Builtin { name } if name == super::BUILTIN_OPENCODE_SKILL_NAME => {
             Ok(Box::new(SkillDeployProvider::new(SkillClient::OpenCode)))
+        }
+        ExtensionHandler::Builtin { name } if name == super::BUILTIN_CLAUDE_PLUGIN_NAME => {
+            Ok(Box::new(ClientPluginProvider::new(PluginClient::Claude)))
+        }
+        ExtensionHandler::Builtin { name } if name == super::BUILTIN_CODEX_PLUGIN_NAME => {
+            Ok(Box::new(ClientPluginProvider::new(PluginClient::Codex)))
+        }
+        ExtensionHandler::Builtin { name } if name == super::BUILTIN_OPENCODE_PLUGIN_NAME => {
+            Ok(Box::new(ClientPluginProvider::new(PluginClient::OpenCode)))
         }
         ExtensionHandler::Builtin { name } => Err(DeployError::UnknownBuiltinProvider {
             key: key.to_owned(),
