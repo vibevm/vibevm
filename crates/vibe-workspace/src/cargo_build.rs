@@ -10,6 +10,8 @@ use std::ffi::{OsStr, OsString};
 use std::path::PathBuf;
 use std::process::Command;
 
+use specmark::spec;
+
 /// The complete ambient environment admitted to package-supplied Cargo.
 pub(crate) const CARGO_BUILD_ENV_KEYS: &[&str] = &[
     "PATH",
@@ -37,6 +39,8 @@ pub(crate) struct CargoToolchainEnvironment {
 /// The program remains an argv executable, never a shell string. Callers add
 /// arguments, cwd and stdio after construction.
 #[must_use]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#IN-SLOT-BUILD")]
+#[spec(documents = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#build")]
 pub fn package_cargo_command(program: impl AsRef<OsStr>) -> Command {
     let parent = std::env::vars_os().collect::<Vec<_>>();
     let toolchain = system_cargo_toolchain(&parent);

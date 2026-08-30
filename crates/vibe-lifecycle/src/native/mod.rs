@@ -99,6 +99,8 @@ struct SourceGroup<'a> {
 
 /// Validate all current-platform prebuilts and build every source fallback
 /// once per exact `(provider identity, crate_dir)` group.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#BUILD-PHASE-OWNS-IT")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#IN-SLOT-BUILD")]
 pub fn build_native_sources(
     execution: &NativeBuildExecution<'_>,
 ) -> Result<Vec<NativeBuildOutcome>, NativeArtifactError> {
@@ -162,6 +164,8 @@ pub fn build_native_sources(
 /// A declared current-platform prebuilt is verified directly. A source
 /// fallback never scans `target/`: it revalidates the stable artifact record,
 /// including current source/config/toolchain/platform and file bytes.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#PREBUILT-CLOSED")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE")]
 pub fn resolve_native_artifact(
     execution: &NativeBuildExecution<'_>,
     row: &ExtensionRegistryRow,
