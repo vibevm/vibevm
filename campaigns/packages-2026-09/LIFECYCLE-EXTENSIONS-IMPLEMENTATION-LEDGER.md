@@ -836,6 +836,45 @@ than depending on untracked `cache/` archaeology.
   27/0-new, fmt, diff hygiene. §5.0 gains the six-ruling ratification.
   Map `29f14732`. R8-PACKAGE (static-skill + agent-plugin providers +
   the run_phases wiring) is next.
+- R8-PACKAGE the two distributables and the one phase wiring: `a5dc3cbc`
+  lands the §6.0 staging — the PackageProvider sibling protocol in the
+  same mechanism home; the §6.1 static-skill provider
+  (sentence-for-sentence: one `SKILL.md` distributable, `vibe:include`
+  as a WHOLE-LINE directive with every other token-mentioning spelling
+  refusing, UTF-8 text law with a typed binary-asset refusal); the §6.2
+  agent-plugin provider (an Agent Plugins 1.0 directory under a
+  canonical directory digest, the obligatory `place` map placing every
+  declared input exactly once into a reverse-domain client-extension
+  path, and the reparse-point sentence enforced); the shared homes the
+  two providers forced out (`contain.rs`, `order.rs`, the record cell);
+  and the wiring. The frozen §6.0.2 call site was REJECTED in review as
+  unimplementable — a pre-dispatch executor runs before every
+  `phase:generate` contribution, inverting §2's primary edge — and the
+  corrected shape landed: two engine fences INSIDE dispatch's one
+  contribution walk, armed per plan, each firing BEFORE its own phase's
+  contributions (the verify boundary's position and reason, so an
+  in-phase contribution can consume the artifact its phase just
+  produced), straddling the verify gate as the phase line orders, with
+  a partial epoch arming nothing by parameter (`None`) — the
+  post-durability `[validate, install]` dispatch carries the outer
+  chain and must not build. `RitualPlan`'s structural fence moved 8 → 9
+  fields; the plane reaches the orchestrator through vibe-lifecycle's
+  R4.0 compatibility door (dependency-exactness forbids a direct kernel
+  edge). Worker §0: the `[[binary]]` runtime projection call site
+  remains unwired — landed and tested, named for the deploy lane's
+  wiring atom. Worker mutations six-of-six red after correction (the
+  hermetic ordering pins hold both edges, red under the
+  executor-above-the-walk mutation). Reviewer mutations: the junction
+  containment claim had no test on the one platform §6.2's reparse
+  sentence exists for — closed with a REAL `mklink /J` junction pin,
+  green live; a lossy-read mutation of the skill binary gate left 22/22
+  green — closed with the sharpest-edge pin (non-UTF-8 bytes, no NUL,
+  no shebang), red under the mutation, mutation reverted. Gates: full
+  battery green (631 passed; polygon and lifecycle suites, strict
+  clippy, whole-workspace check, conform 27-in-scope 0-new, fmt, diff
+  hygiene). §6.0 gains the six-ruling ratification. Map `18023c7f`.
+  R8-DEPLOY (§7 staging — deploy receipts/intents/recovery, `vibe-bin`,
+  profiles) is next in the lane.
 - R4.2 minify binding, RED corpus and activation e2e: `7a09ec2d` registers
   `xml-minify` (epoch 1, EMITTED — the one stage the kernel serves without a
   new serializer; every other stage refuses through the registry's own law)
@@ -994,17 +1033,17 @@ system remains fully usable with no selected agent contribution or provider.
 |---|---|---|
 | R8.1 project package-skill binding | done | `c0fa49be`, `9275f373`, `67886ea7`; strict JTD receipt, intent/recovery/CAS, exact ownership, Unicode-9 physical aliases, lossless paths, Claude/Codex/OpenCode project projections |
 | R8.2a mechanism/artifact/deploy grammar | done | `2a3f3b44`; typed package/host provider pins, literal-vs-pattern path law, artifact/deploy DAGs and profiles, parse/write symmetry |
-| artifact records and target DAG runtime | partial | strict `[[artifacts.build]]`/`[[artifacts.package]]` grammar/DAG in `2a3f3b44`; no persisted `ArtifactRecord`, freshness or executor registry |
-| `[[mechanism]]` provider runtime and host routing | partial | strict declarations/routes/pins in `2a3f3b44`; no installed-world selection or plan/apply/verify dispatch yet |
-| Cargo commissioning build provider | missing | no metadata/compiler-artifact JSON selection through lifecycle |
-| fully static one-file skill | missing | no include-consumption/static safety builder |
-| Agent Plugins 1.0 directory | missing | no plugin schema/package provider |
+| artifact records and target DAG runtime | done | grammar/DAG `2a3f3b44`; persisted A2-validated `ArtifactRecord`, freshness and the dependency-ordered executor `a22da2a3`; the dispatch fences run both DAGs in their own phases `a5dc3cbc` |
+| `[[mechanism]]` provider runtime and host routing | done | declarations/routes/pins `2a3f3b44`; installed-world carriage, registry and pure §3.1 selection `9dd072d2`; plan/apply/verify dispatch `a22da2a3` + `a5dc3cbc` |
+| Cargo commissioning build provider | done | `a22da2a3`; metadata + compiler-artifact JSON selection under §5's seven laws; hard-link containment streamed (B-120) |
+| fully static one-file skill | done | `a5dc3cbc`; whole-line include consumption, binary-asset refusal, one `SKILL.md` distributable |
+| Agent Plugins 1.0 directory | done | `a5dc3cbc`; plugin schema, canonical directory digest, obligatory `place` map, reparse refusal; client-component install is the deploy lane's |
 | Claude/Codex/OpenCode client projections and local deploy | partial only | project skill writer is not a portable plugin artifact or user deployment |
 | deploy targets/profiles/plan/undeploy | missing | draft grammar/rulings only |
 | intent/receipt/recovery for general destinations | partial precedent | package-skill receipt is safe but not the general deploy protocol |
 | `deploy:vibe-bin` under `~/.vibe/bin` | missing | existing `vibe bin` is a different project-pinned launcher genre |
 | deterministic Windows zip lifecycle binding | missing | pre-campaign scripts/archive recipe exist outside lifecycle |
-| plugin-overridable builder/installer/deployer fixture | missing | no mechanism selection or replacement e2e |
+| plugin-overridable builder/installer/deployer fixture | partial | the replacement law is proven at the registry (`9dd072d2`: a foreign row displaces the builtin in routing; the builtin stays queryable and demonstrably unselected); a non-builtin selection refuses by the unlanded transport's name, so the executing e2e waits on the plugin transport |
 
 ## 4. Owner additions — preservation and implementation status
 
@@ -1515,8 +1554,11 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
 2. Mechanism world/selection does **not** create a Lane-C registry: after Lane
    A lands R4.0, extend that same `vibe-extension-registry` kernel with the
    already-landed `[[mechanism]]` declarations, host routes and exact pins.
-3. Cargo provider and `[[binary]]` compatibility lowering.
-4. Static-skill and Agent Plugin package providers in parallel.
+   **Done `9dd072d2`.**
+3. Cargo provider and `[[binary]]` compatibility lowering. **Done `a22da2a3`
+   (the projection's runtime call site is the deploy lane's wiring atom).**
+4. Static-skill and Agent Plugin package providers in parallel. **Done
+   `a5dc3cbc`, with the dispatch fences wiring both mechanism phases.**
 5. Client projections and general deploy planner/intent/receipt/recovery.
 6. `vibe-bin`, profiles/plan/undeploy, plugin replacement fixture and Windows
    zip provider.

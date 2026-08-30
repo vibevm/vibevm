@@ -457,6 +457,41 @@ one seam, two roles. Wiring package before build in the same atom as a
 projection inside `package:agent-plugin` — §6.2 keeps the canonical
 plugin and the projections distinct artifacts.
 
+**Ratified at R8-PACKAGE acceptance (central, 2026-08-30).** Six rulings
+the landing surfaced, each pinned:
+
+1. **The §6.0.2 call site as first frozen was unimplementable**: the
+   pre-dispatch phase walk runs before the prepared world exists, and
+   placing the executors there inverted the generate edge of §2's primary
+   law. REJECTED in review; the landed shape is the correct one — the two
+   mechanism fences fire inside dispatch's own phase-ordered contribution
+   walk, BEFORE their own phase's contributions (the verify boundary's
+   position and reason), straddling the verify gate as the phase line
+   orders; a partial epoch (a prerequisite install) arms nothing by
+   parameter. Hermetic ordering pins hold both edges, red under the
+   executor-before-the-walk mutation.
+2. **`vibe:include` is a WHOLE-LINE directive** — `<!-- vibe:include
+   NAME -->` alone on its line; any other spelling that mentions the
+   token refuses rather than surviving as text.
+3. **A plugin target carries an obligatory `place` map**: every declared
+   input placed exactly once, destination inside a reverse-domain
+   client-extension directory — the member §6.2 needed for a consumed
+   artifact to enter the directory at all; grammar promotion into
+   vibe-core is the deploy lane's candidate.
+4. **The plane reaches the orchestrator through vibe-lifecycle's R4.0
+   compatibility door** (its dependency-exactness fence forbids a direct
+   kernel edge), and `RitualPlan`'s structural fence moved 8 → 9 fields
+   with the reason inline.
+5. **Reviewer pins at the platform edges**: the junction containment law
+   proven with a REAL Windows junction (the one platform §6.2's reparse
+   sentence exists for), and the binary-asset refusal pinned at its
+   sharpest edge — non-UTF-8 bytes with no NUL and no shebang, invisible
+   to every sibling law under a lossy read.
+6. **The `[[binary]]` runtime projection call site remains unwired** —
+   the projection function is landed and tested; the call site that turns
+   a legacy entry into a live build target belongs to the deploy-lane
+   wiring atom, named here so it cannot be forgotten.
+
 ### 6.1 Fully static skill
 
 `package:static-skill` produces exactly one UTF-8 `SKILL.md` file. It validates
