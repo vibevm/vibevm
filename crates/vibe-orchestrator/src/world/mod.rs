@@ -433,6 +433,7 @@ fn host_source(manifest: Manifest, root: PathBuf) -> Result<HostExtensionSource>
         },
         declarations: manifest.extensions,
         controls: manifest.extension_controls,
+        mechanisms: manifest.mechanism_decls,
     })
 }
 

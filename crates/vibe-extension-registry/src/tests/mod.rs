@@ -1,4 +1,6 @@
 mod controls;
+mod mechanism_resolution;
+mod mechanisms;
 mod ordering;
 mod owner_controls;
 mod selector_abi;

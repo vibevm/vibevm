@@ -69,6 +69,7 @@
 //!         },
 //!         declarations: vec![declaration],
 //!         controls: ExtensionsControl::default(),
+//!         mechanisms: Vec::new(),
 //!     }],
 //!     host: HostExtensionSource {
 //!         provider: HostProvider {
@@ -76,6 +77,7 @@
 //!             version: "0.1.0".into(), kind: None, content_hash: None,
 //!         },
 //!         declarations: Vec::new(), controls: ExtensionsControl::default(),
+//!         mechanisms: Vec::new(),
 //!     },
 //!     effective_stack: None,
 //! };

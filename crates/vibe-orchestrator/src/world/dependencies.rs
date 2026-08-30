@@ -150,6 +150,7 @@ pub(super) fn dependency_source(
             },
             declarations: manifest.extensions,
             controls: manifest.extension_controls,
+            mechanisms: manifest.mechanism_decls,
         },
     })
 }

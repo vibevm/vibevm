@@ -110,6 +110,7 @@ pub(super) fn host_source(root: &Path, manifest: &Manifest) -> Result<HostExtens
         },
         declarations: manifest.extensions.clone(),
         controls: manifest.extension_controls.clone(),
+        mechanisms: manifest.mechanism_decls.clone(),
     })
 }
 

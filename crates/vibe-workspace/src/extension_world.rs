@@ -14,7 +14,9 @@
 //! The adapter owns the WORLD, never the collection semantics. It hands the
 //! kernel already-typed identities, retains every package's own
 //! [`ExtensionsControl`](vibe_core::manifest::ExtensionsControl) inert beside
-//! its declarations, and then projects ONE owner-scoped view per lane owner:
+//! its declarations — and, from that same single parse, its `[[mechanism]]`
+//! provider declarations, so the mechanism plane never becomes a second read of
+//! the same file — and then projects ONE owner-scoped view per lane owner:
 //! the selected node for the node lane, and package P — through the kernel's
 //! own dependency-seat→owner-seat projection — for P's unit lane. Collection
 //! itself always goes through the single kernel entry
@@ -37,8 +39,8 @@ use vibe_core::manifest::{LockedPackage, Lockfile, Manifest, Materialization};
 use vibe_core::{PackageKind, PackageName};
 use vibe_extension_registry::{
     DependencyExtensionSource, DependencyProvider, DependencyProviderId, ExtensionRegistry,
-    ExtensionWorld, HostExtensionSource, HostIdentity, HostProvider, SyntheticPresetSource,
-    collect_extensions_with_presets, lane_owner_host,
+    ExtensionWorld, HostExtensionSource, HostIdentity, HostProvider, MechanismRegistry,
+    SyntheticPresetSource, collect_extensions_with_presets, collect_mechanisms, lane_owner_host,
 };
 
 use crate::vibedeps::{in_place_slot_abs_path, slot_abs_path};
@@ -268,6 +270,21 @@ pub fn collect_owner_view(
     Ok(collect_extensions_with_presets(view, presets)?)
 }
 
+/// Collect one owner-scoped view's MECHANISM plane through the ONE kernel
+/// entry.
+///
+/// The sibling of [`collect_owner_view`], and a wrapper for the same reason:
+/// every workspace-side collection is spelled once and is findable by name.
+/// It borrows the view, so a caller that wants both planes of one snapshot
+/// collects mechanisms first and then hands the same value to
+/// [`collect_owner_view`] — one world, two registries, no second parse.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM")]
+pub fn collect_owner_mechanisms(
+    view: &ExtensionWorld,
+) -> Result<MechanismRegistry, ExtensionWorldError> {
+    Ok(collect_mechanisms(view)?)
+}
+
 /// Parse one locked package's slot into the world's retained row.
 fn installed_package(
     workspace_root: &Path,
@@ -323,6 +340,11 @@ fn installed_package(
             // when this package takes its own lane's host seat.
             controls: manifest.extension_controls,
             declarations: manifest.extensions,
+            // The mechanism plane rides the SAME parse: `[[mechanism]]` is a
+            // sibling table of `[[extension]]` in the manifest this snapshot
+            // already read, so carrying it costs no second read and can never
+            // observe a different epoch.
+            mechanisms: manifest.mechanism_decls,
         },
     })
 }
@@ -455,6 +477,10 @@ fn host_source(
         },
         declarations: manifest.extensions.clone(),
         controls: manifest.extension_controls.clone(),
+        // The selected node's own providers, from the same parse. Its
+        // `[mechanisms]` ROUTES stay on the manifest: a route is an argument
+        // to selection, not a property of the world.
+        mechanisms: manifest.mechanism_decls.clone(),
     })
 }
 
@@ -475,6 +501,10 @@ mod test_support;
 #[cfg(test)]
 #[path = "extension_world/cycle_tests.rs"]
 mod cycle_tests;
+
+#[cfg(test)]
+#[path = "extension_world/mechanism_tests.rs"]
+mod mechanism_tests;
 
 #[cfg(test)]
 #[path = "extension_world/tests.rs"]

@@ -8,8 +8,9 @@ use std::fmt;
 use specmark::spec;
 use thiserror::Error;
 use vibe_core::lifecycle::ExtensionPoint;
-use vibe_core::manifest::{ExtensionKey, ExtensionUse};
+use vibe_core::manifest::{ExtensionKey, ExtensionUse, ProviderPin};
 
+use super::mechanism::mechanism_disable_targets;
 use super::model::{
     ContributionTier, DependencyProvider, ExtensionProvider, ExtensionRegistry,
     ExtensionRegistryRow, ExtensionWorld, HostIdentity, HostProvider, SyntheticPresetSource,
@@ -117,6 +118,48 @@ pub enum CollectionError {
         "host control `{key}` targets a reserved engine contribution; synthetic package-skill rows cannot be activated, disabled, or re-tiered (spec://org.vibevm.core/vibevm/common/PROP-054#PRESET-LAW)"
     )]
     ReservedControl { key: ExtensionKey },
+
+    /// A caller-constructed `[[mechanism]]` declaration violated the manifest
+    /// grammar, or is otherwise unusable as an addressable provider.
+    #[error(
+        "mechanism declaration `{owner}#{id}` is invalid: {reason}; fix the provider manifest (spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE)"
+    )]
+    InvalidMechanism {
+        owner: String,
+        id: String,
+        reason: String,
+    },
+
+    /// A collected manifest declared a mechanism under the engine's own
+    /// reserved provider identity.
+    #[error(
+        "`{owner}` declares mechanism `{id}` under the reserved engine provider identity; the builtin providers are engine-minted and a collected manifest may never claim that owner; rename the declaring package's coordinate (spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE)"
+    )]
+    ReservedMechanismOwner { owner: String, id: String },
+
+    /// Two mechanism declaration sites claimed the same provider-qualified
+    /// identity.
+    #[error(
+        "mechanism identity collision for `{pin}`: {first} and {second} are distinct declaration sites; rename one provider id (spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE)"
+    )]
+    DuplicateMechanismKey {
+        pin: ProviderPin,
+        first: String,
+        second: String,
+    },
+
+    /// A pure virtual workspace attempted to declare a provider. It may route
+    /// `[mechanisms]` and select, but it owns no coordinate to declare under.
+    #[error(
+        "pure virtual workspace cannot declare mechanism `{id}`; move it to a project/package manifest (spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE)"
+    )]
+    VirtualHostMechanism { id: String },
+
+    /// A host disable targeted an engine-minted mechanism row.
+    #[error(
+        "host control `{pin}` targets a reserved engine provider; a shipped builtin default cannot be disabled — route its logical key to another installed provider instead (spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE)"
+    )]
+    ReservedMechanismControl { pin: ProviderPin },
 }
 
 /// Collect every declaration, apply host controls, and freeze effective order.
@@ -135,6 +178,12 @@ pub fn collect_extensions_with_presets(
     world: ExtensionWorld,
     presets: Vec<SyntheticPresetSource>,
 ) -> Result<ExtensionRegistry, CollectionError> {
+    // One disable list governs BOTH planes, so what counts as a known key is
+    // the union of this world's extension rows and its mechanism rows. The
+    // mechanism identities are read off the same snapshot before it is
+    // consumed; the mechanism plane's own laws stay in its own collector.
+    let mechanism_targets: BTreeSet<String> =
+        mechanism_disable_targets(&world).into_iter().collect();
     let ExtensionWorld {
         installed,
         host,
@@ -230,7 +279,12 @@ pub fn collect_extensions_with_presets(
         &mut rows,
         &mut activation_indices,
     )?;
-    apply_disables(host.controls.disable, &row_by_key, &mut rows)?;
+    apply_disables(
+        host.controls.disable,
+        &row_by_key,
+        &mechanism_targets,
+        &mut rows,
+    )?;
 
     let mut effective_order = Vec::with_capacity(rows.len());
     for tier in [
@@ -388,6 +442,7 @@ fn apply_activations(
 fn apply_disables(
     disables: Vec<ExtensionKey>,
     row_by_key: &BTreeMap<ExtensionKey, usize>,
+    mechanism_targets: &BTreeSet<String>,
     rows: &mut [ExtensionRegistryRow],
 ) -> Result<(), CollectionError> {
     let mut seen = BTreeSet::new();
@@ -399,6 +454,13 @@ fn apply_disables(
             continue;
         }
         let Some(row_index) = row_by_key.get(&key).copied() else {
+            // A key that names a mechanism row of this same world is KNOWN —
+            // the mechanism collector applies it there. Refusing it here would
+            // make a legal mechanism disable unauthorable, which would make
+            // "disables apply as extension disables do" false in practice.
+            if mechanism_targets.contains(key.as_str()) {
+                continue;
+            }
             return Err(CollectionError::UnknownDisable { key });
         };
         rows[row_index].disabled = true;

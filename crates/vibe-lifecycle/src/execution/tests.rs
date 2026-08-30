@@ -46,6 +46,7 @@ fn host_registry(declarations: Vec<ExtensionDecl>) -> crate::ExtensionRegistry {
             },
             declarations,
             controls: ExtensionsControl::default(),
+            mechanisms: Vec::new(),
         },
         effective_stack: None,
     })
@@ -69,6 +70,7 @@ fn dependency_registry(override_message: &str) -> crate::ExtensionRegistry {
             },
             declarations: vec![builtin("announce", "log", Some("authored"))],
             controls: ExtensionsControl::default(),
+            mechanisms: Vec::new(),
         }],
         host: HostExtensionSource {
             provider: HostProvider {
@@ -86,6 +88,7 @@ fn dependency_registry(override_message: &str) -> crate::ExtensionRegistry {
                     config: Some(config(&format!("message = {override_message:?}"))),
                 }],
             },
+            mechanisms: Vec::new(),
         },
         effective_stack: None,
     })

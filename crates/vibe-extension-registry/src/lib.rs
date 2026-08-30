@@ -8,6 +8,14 @@
 //! materialised world into the owned [`ExtensionWorld`] input and later
 //! crates may execute plans over its rows, but no second collector exists.
 //!
+//! It is also the ONE home of the *mechanism* plane — the `[[mechanism]]`
+//! providers of the build/package/deploy capabilities, collected from the same
+//! world into a [`MechanismRegistry`] beside the extension rows and selected by
+//! the pure [`resolve_mechanism`] law. A mechanism is a different noun from a
+//! contribution (it answers *how* one declared target is serviced, not *when*
+//! work runs), but it is emphatically not a second machine: same identities,
+//! same collection walk, same disable controls.
+//!
 //! Collection is pure. The kernel performs no filesystem, environment,
 //! resolver, workspace or process access: provider roots arrive as
 //! already-resolved path data it never reads, installed rows arrive in the
@@ -28,12 +36,18 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#ORDER-LAW");
 
 mod collect;
+mod mechanism;
 mod model;
 mod selector;
 mod view;
 
 pub use collect::{
     CollectionError, CollectionNotice, collect_extensions, collect_extensions_with_presets,
+};
+pub use mechanism::{
+    BuiltinMechanismSource, MechanismProvider, MechanismRegistry, MechanismRegistryRow,
+    MechanismResolutionError, MechanismSelection, SelectionStep, builtin_mechanism_source,
+    collect_mechanisms, resolve_mechanism,
 };
 pub use model::{
     ContributionTier, DependencyExtensionSource, DependencyProvider, DependencyProviderId,

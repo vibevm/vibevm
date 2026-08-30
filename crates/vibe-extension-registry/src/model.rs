@@ -7,7 +7,7 @@ use std::path::PathBuf;
 
 use specmark::spec;
 use vibe_core::lifecycle::ExtensionPoint;
-use vibe_core::manifest::{ExtensionConfig, ExtensionDecl, ExtensionsControl};
+use vibe_core::manifest::{ExtensionConfig, ExtensionDecl, ExtensionsControl, MechanismDecl};
 use vibe_core::{ContentHash, Group, PackageKind, PackageName};
 
 use super::collect::CollectionNotice;
@@ -147,6 +147,11 @@ pub struct DependencyExtensionSource {
     pub declarations: Vec<ExtensionDecl>,
     /// The package's own `[extensions]` controls, retained verbatim.
     pub controls: ExtensionsControl,
+    /// The package's `[[mechanism]]` provider declarations, in manifest array
+    /// order — the sibling plane on the one machine (§3.0 carriage). An empty
+    /// vector is the historical world exactly: a package that declares no
+    /// provider contributes no mechanism row.
+    pub mechanisms: Vec<MechanismDecl>,
 }
 
 /// The selected host's declarations and its sole consumer-control surface.
@@ -159,6 +164,11 @@ pub struct HostExtensionSource {
     pub declarations: Vec<ExtensionDecl>,
     /// Ordered activations plus exact disable keys authored by the host.
     pub controls: ExtensionsControl,
+    /// The host's own `[[mechanism]]` provider declarations, in manifest array
+    /// order. The host's `[mechanisms]` ROUTES are not carried here: a route
+    /// is an argument to selection ([`resolve_mechanism`](crate::resolve_mechanism)),
+    /// not a property of the world the collector walks.
+    pub mechanisms: Vec<MechanismDecl>,
 }
 
 /// Project a dependency into the host seat of its own lane's world.
@@ -169,7 +179,9 @@ pub struct HostExtensionSource {
 /// `Some` on the host provider. Declarations and the package's retained
 /// [`ExtensionsControl`] carry over verbatim, so the one collector — fed this
 /// value as the host of a world whose installed rows are the package's
-/// dependency closure — applies those controls to that lane alone. Pure and
+/// dependency closure — applies those controls to that lane alone. The
+/// package's `[[mechanism]]` declarations ride along under the same rule: one
+/// coordinate declares one provider set, whichever seat it occupies. Pure and
 /// infallible: no filesystem, parsing, or validation happens here.
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-ACTIVATION")]
 #[must_use]
@@ -178,6 +190,7 @@ pub fn lane_owner_host(source: &DependencyExtensionSource) -> HostExtensionSourc
         provider,
         declarations,
         controls,
+        mechanisms,
     } = source;
     HostExtensionSource {
         provider: HostProvider {
@@ -189,6 +202,7 @@ pub fn lane_owner_host(source: &DependencyExtensionSource) -> HostExtensionSourc
         },
         declarations: declarations.clone(),
         controls: controls.clone(),
+        mechanisms: mechanisms.clone(),
     }
 }
 

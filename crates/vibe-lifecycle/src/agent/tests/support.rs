@@ -194,6 +194,7 @@ fn registry_with(
             },
             declarations: vec![declaration],
             controls: ExtensionsControl::default(),
+            mechanisms: Vec::new(),
         }],
         host: HostExtensionSource {
             provider: HostProvider {
@@ -205,6 +206,7 @@ fn registry_with(
             },
             declarations: Vec::new(),
             controls: ExtensionsControl::default(),
+            mechanisms: Vec::new(),
         },
         effective_stack: None,
     })

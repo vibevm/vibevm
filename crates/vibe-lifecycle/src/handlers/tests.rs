@@ -80,6 +80,7 @@ fn row_at(root: &Path, handler: ExtensionHandler, point: &str) -> crate::Extensi
                 when: None,
             }],
             controls: ExtensionsControl::default(),
+            mechanisms: Vec::new(),
         },
         effective_stack: None,
     })

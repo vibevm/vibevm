@@ -132,6 +132,7 @@ pub(super) fn compiled_selectors(shapes: &[SelectorShape]) -> Vec<CompiledSelect
             },
             declarations,
             controls: ExtensionsControl::default(),
+            mechanisms: Vec::new(),
         },
         effective_stack: None,
     };

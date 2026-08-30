@@ -158,6 +158,7 @@ pub(super) fn collected(
             provider: dependency_provider(),
             declarations: installed.into_iter().map(Declared::decl).collect(),
             controls: ExtensionsControl::default(),
+            mechanisms: Vec::new(),
         }],
         host: HostExtensionSource {
             provider: host_provider(),
@@ -172,6 +173,7 @@ pub(super) fn collected(
                     .collect(),
                 disable: Vec::new(),
             },
+            mechanisms: Vec::new(),
         },
         effective_stack: None,
     };

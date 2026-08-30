@@ -3,7 +3,7 @@ use std::path::PathBuf;
 use vibe_core::lifecycle::ExtensionPoint;
 use vibe_core::manifest::{
     ExtensionAppliesTo, ExtensionConfig, ExtensionDecl, ExtensionHandler, ExtensionKey,
-    ExtensionsControl,
+    ExtensionsControl, MechanismDecl, MechanismFreshness, MechanismKey,
 };
 use vibe_core::{ContentHash, Group, PackageKind, PackageName};
 
@@ -49,6 +49,18 @@ pub(super) fn dependency_with_controls(
     declarations: Vec<ExtensionDecl>,
     controls: ExtensionsControl,
 ) -> DependencyExtensionSource {
+    dependency_source(group, name, kind, declarations, controls, Vec::new())
+}
+
+/// The one dependency-source constructor every wrapper above funnels into.
+pub(super) fn dependency_source(
+    group: &str,
+    name: &str,
+    kind: PackageKind,
+    declarations: Vec<ExtensionDecl>,
+    controls: ExtensionsControl,
+    mechanisms: Vec<MechanismDecl>,
+) -> DependencyExtensionSource {
     DependencyExtensionSource {
         provider: DependencyProvider {
             id: provider_id(group, name),
@@ -60,12 +72,38 @@ pub(super) fn dependency_with_controls(
         },
         declarations,
         controls,
+        mechanisms,
     }
+}
+
+/// An installed package that declares providers and nothing else.
+pub(super) fn provider_package(
+    group: &str,
+    name: &str,
+    mechanisms: Vec<MechanismDecl>,
+) -> DependencyExtensionSource {
+    dependency_source(
+        group,
+        name,
+        PackageKind::Tool,
+        Vec::new(),
+        ExtensionsControl::default(),
+        mechanisms,
+    )
 }
 
 pub(super) fn host(
     declarations: Vec<ExtensionDecl>,
     controls: ExtensionsControl,
+) -> HostExtensionSource {
+    host_source(declarations, controls, Vec::new())
+}
+
+/// The one host-source constructor, with the node's own provider declarations.
+pub(super) fn host_source(
+    declarations: Vec<ExtensionDecl>,
+    controls: ExtensionsControl,
+    mechanisms: Vec<MechanismDecl>,
 ) -> HostExtensionSource {
     HostExtensionSource {
         provider: HostProvider {
@@ -77,7 +115,39 @@ pub(super) fn host(
         },
         declarations,
         controls,
+        mechanisms,
     }
+}
+
+/// One authorable `[[mechanism]]` declaration servicing the logical `key`.
+pub(super) fn mechanism(id: &str, key: &str) -> MechanismDecl {
+    let key = key
+        .parse::<MechanismKey>()
+        .unwrap_or_else(|error| panic!("valid test mechanism key: {error}"));
+    MechanismDecl {
+        id: id.into(),
+        role: key.role(),
+        name: key.name().to_owned(),
+        handler: ExtensionHandler::Native {
+            crate_dir: Some(PathBuf::from(format!("crates/{id}"))),
+            prebuilt: None,
+        },
+        protocol: 1,
+        config_schema: PathBuf::from(format!("schemas/{id}-v1.jtd.json")),
+        freshness: MechanismFreshness::Provider,
+    }
+}
+
+pub(super) fn mechanism_key(spelling: &str) -> MechanismKey {
+    spelling
+        .parse::<MechanismKey>()
+        .unwrap_or_else(|error| panic!("valid test mechanism key: {error}"))
+}
+
+pub(super) fn provider_pin(spelling: &str) -> vibe_core::manifest::ProviderPin {
+    spelling
+        .parse::<vibe_core::manifest::ProviderPin>()
+        .unwrap_or_else(|error| panic!("valid test provider pin: {error}"))
 }
 
 pub(super) fn world(

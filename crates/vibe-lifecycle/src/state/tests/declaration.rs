@@ -79,6 +79,7 @@ fn host_row_with_content(
             },
             declarations: vec![declaration],
             controls: ExtensionsControl::default(),
+            mechanisms: Vec::new(),
         },
         effective_stack: None,
     })

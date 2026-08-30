@@ -123,6 +123,7 @@ pub(super) fn row(
             },
             declarations: vec![declaration],
             controls: ExtensionsControl::default(),
+            mechanisms: Vec::new(),
         },
         effective_stack: None,
     })
@@ -162,6 +163,7 @@ pub(super) fn dependency_row(
             },
             declarations: vec![declaration],
             controls: ExtensionsControl::default(),
+            mechanisms: Vec::new(),
         }],
         host: HostExtensionSource {
             provider: HostProvider {
@@ -173,6 +175,7 @@ pub(super) fn dependency_row(
             },
             declarations: vec![],
             controls: ExtensionsControl::default(),
+            mechanisms: Vec::new(),
         },
         effective_stack: None,
     })
