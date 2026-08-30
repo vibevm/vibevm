@@ -34,12 +34,12 @@ registry_gated_crate = "vibe-cli"
 # scanned here; the remaining vibevm unsafe sites carry fn-grain
 # #[spec(deviates)] testimony.
 #
-# `vibe-ext` is the native ABI audit home: its public author surface is safe,
-# while the macro's one private FFI module and the raw ABI/link tests must
-# manipulate host pointers, exact boxed-slice ownership and `extern "C"`
-# symbols. Its own `#![deny(unsafe_code)]` plus the named module boundary and
-# mutation-backed tests are the narrower audit mechanism; no environment read
-# is present or sanctioned.
+# `vibe-ext` and `vibe-native-loader` are the two narrow native ABI audit
+# homes. Their public author/host surfaces are safe; only their named private
+# FFI modules and raw ABI/link tests may manipulate pointers, dynamic-library
+# handles, exact response ownership and `extern "C"` symbols. Each crate's own
+# `#![deny(unsafe_code)]`, named module boundary and mutation-backed tests are
+# the narrower audit mechanism; no environment read is present or sanctioned.
 #
 # vibe-test-support is the other audit home, and the narrowest one: a single
 # pre-`main` constructor that repoints $VIBE_SETTINGS at a temp dir so no test
@@ -48,7 +48,7 @@ registry_gated_crate = "vibe-cli"
 # process-wide lock, both wrong for an isolation that must outlive the call and
 # never block a test. The mutation is sound for one reason only, recorded at the
 # call site: a platform constructor runs single-threaded before `main`.
-audit_crates = ["vibe-ext", "vibe-test-support"]
+audit_crates = ["vibe-ext", "vibe-native-loader", "vibe-test-support"]
 
 # Crates under the Class-F/G conform gates (the expand-as-you-conform list —
 # a crate enters when its seams are doctested and its error layer carries REQ
@@ -65,6 +65,7 @@ gated = [
     "vibe-index",
     "vibe-install",
     "vibe-lifecycle",
+    "vibe-native-loader",
     "vibe-llm",
     "vibe-resolver",
     "vibe-safefs",
@@ -89,6 +90,7 @@ gated_pub_doctest = [
     "vibe-ext",
     "vibe-extension-registry",
     "vibe-lifecycle",
+    "vibe-native-loader",
     "vibe-safefs",
     "vibe-llm",
     "vibe-agent-projection",

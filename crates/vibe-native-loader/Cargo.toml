@@ -1,0 +1,24 @@
+[package]
+name = "vibe-native-loader"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license-file.workspace = true
+publish.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "Cached safe host loader for VibeVM native extension ABI 1"
+
+[dependencies]
+libloading.workspace = true
+serde_json.workspace = true
+specmark.workspace = true
+thiserror.workspace = true
+vibe-core.workspace = true
+vibe-wire.workspace = true
+
+[dev-dependencies]
+serde_json.workspace = true
+tempfile.workspace = true
+vibe-native-loader-fixture = { path = "tests/fixtures/native-plugin" }

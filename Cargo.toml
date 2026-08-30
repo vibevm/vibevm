@@ -19,6 +19,7 @@ members = [
     "crates/vibe-index",
     "crates/vibe-install",
     "crates/vibe-lifecycle",
+    "crates/vibe-native-loader",
     "crates/vibe-registry",
     "crates/vibe-requirements",
     "crates/vibe-resolver",
@@ -51,6 +52,7 @@ default-members = [
     "crates/vibe-index",
     "crates/vibe-install",
     "crates/vibe-lifecycle",
+    "crates/vibe-native-loader",
     "crates/vibe-registry",
     "crates/vibe-requirements",
     "crates/vibe-resolver",
@@ -100,6 +102,7 @@ vibe-graph = { path = "crates/vibe-graph", version = "1.0.0" }
 vibe-index = { path = "crates/vibe-index", version = "1.0.0" }
 vibe-install = { path = "crates/vibe-install", version = "1.0.0" }
 vibe-lifecycle = { path = "crates/vibe-lifecycle", version = "1.0.0" }
+vibe-native-loader = { path = "crates/vibe-native-loader", version = "1.0.0" }
 vibe-registry = { path = "crates/vibe-registry", version = "1.0.0" }
 vibe-requirements = { path = "crates/vibe-requirements", version = "1.0.0" }
 vibe-resolver = { path = "crates/vibe-resolver", version = "1.0.0" }
@@ -163,6 +166,7 @@ syn = { version = "2", features = ["full", "visit"] }
 quote = "1"
 proc-macro2 = { version = "1", features = ["span-locations"] }
 libc = "0.2"
+libloading = "0.9"
 winapi-util = "0.1.11"
 # Capability-relative filesystem access for the package-skill receipt
 # transaction (no-follow directory handles, capability-pinned mutation).

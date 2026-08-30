@@ -1827,6 +1827,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "52ff2c0fe9bc6cb6b14a0592c2ff4fa9ceb83eea9db979b0487cd054946a2b8f"
 
 [[package]]
+name = "libloading"
+version = "0.9.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "754ca22de805bb5744484a5b151a9e1a8e837d5dc232c2d7d8c2e3492edc8b60"
+dependencies = [
+ "cfg-if",
+ "windows-link",
+]
+
+[[package]]
 name = "libm"
 version = "0.2.16"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4289,6 +4299,27 @@ dependencies = [
  "vibe-trace",
  "vibe-wire",
  "vibe-workspace",
+]
+
+[[package]]
+name = "vibe-native-loader"
+version = "1.0.0"
+dependencies = [
+ "core-ai-native-specmark",
+ "libloading",
+ "serde_json",
+ "tempfile",
+ "thiserror 2.0.18",
+ "vibe-core",
+ "vibe-native-loader-fixture",
+ "vibe-wire",
+]
+
+[[package]]
+name = "vibe-native-loader-fixture"
+version = "1.0.0"
+dependencies = [
+ "vibe-ext",
 ]
 
 [[package]]
