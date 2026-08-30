@@ -966,6 +966,18 @@ Five implementation rulings make decision items 8–12 executable:
    new findings. Specmap is 6,833 units / 3,011 tagged items / 2,752 edges, with
    0 suspects, gated orphans or unresolved host edges and 25 standing warnings.
 
+**Ratified at R8-CLIENTS-DEPLOY-GATE acceptance (central, 2026-08-30).**
+The focused gate adds no second test harness or product path. The integrated
+`mechanism::deploy` filter is the executable matrix: all three standalone-skill
+and all three client-plugin rows, compiled Claude/Codex fakes, OpenCode
+file/member merge, preplan reference sharing, committed/pending sidecar crash
+windows, stable deployment/destination locks, recovery, saga and inverse. It
+passes 116/116 on the exact accepted tree. The provider atoms' accepted
+mutations already name the load-bearing branches; rerunning a duplicate
+mutation ceremony at the gate would add no independent oracle. The whole
+R8-CLIENTS-DEPLOY child is therefore accepted and the remaining three-client
+commissioning gate owns the canonical-package-to-destination e2e.
+
 ## 7. Deploy targets and profiles
 
 Profiles are named destination selections, not Maven-style arbitrary overlays

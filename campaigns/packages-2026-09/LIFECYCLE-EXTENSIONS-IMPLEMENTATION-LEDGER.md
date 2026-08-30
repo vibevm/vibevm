@@ -1054,6 +1054,14 @@ than depending on untracked `cache/` archaeology.
   3011 tagged items / 2752 edges, 0 suspects, gated orphans or unresolved host
   edges, 25 standing warnings. The focused six-provider/client crash-window
   gate is next; all three client plugin providers now ship.
+- R8-CLIENTS focused deploy gate closes the four-child destination workstream
+  without new product code: the exact integrated `mechanism::deploy` filter is
+  116/116 green across six providers, compiled CLI fakes, OpenCode reference
+  members, preplan collision/reference sharing, sidecar generations, recovery,
+  saga and inverse. The provider/foundation mutation records remain the
+  independent branch oracles; no duplicate gate-only lifecycle was invented.
+  R8-CLIENTS-DEPLOY is accepted. The final R8-CLIENTS commissioning gate now
+  owns the canonical package → three projections → six destinations scenario.
 - R4.2 minify binding, RED corpus and activation e2e: `7a09ec2d` registers
   `xml-minify` (epoch 1, EMITTED — the one stage the kernel serves without a
   new serializer; every other stage refuses through the registry's own law)
