@@ -389,3 +389,157 @@ five worker plus three independent central RED/restoration proofs, so the gate
 does not invent a second mutation ceremony. R5.2-LOADER, R5.2-GATE and parent
 R5.2 are accepted. R5.3 now exclusively owns source/prebuilt artifact
 resolution, in-slot build and the first lifecycle connection.
+
+## 8. R5.3 source/prebuilt build and lifecycle connection — frozen boundary
+
+R5.3 joins three already-landed owners without moving their boundaries. The
+extension registry remains the one declaration/control/order authority;
+`vibe-workspace` remains the provider-root, slot and generated-ignore authority;
+the lifecycle mechanism layer remains the build-phase/Cargo/artifact-record
+authority; and `vibe-native-loader` continues to accept only an already-resolved
+absolute library path. R5.3 adds the adapter between them. It does not reparse a
+manifest, enumerate `vibedeps`, guess an artifact filename, or add resolution to
+the loader.
+
+### 8.1 Candidate and platform law
+
+The build set is every **enabled** native registry row in the registry's one
+effective order. Disabled and inactive rows do not build. Selector-bearing
+compile rows remain in the set because there is no document subject at build
+time; dropping them then would make a later matching document unable to execute.
+Rows are grouped by exact provider identity plus `crate_dir`, so one cdylib that
+declares several extension ids builds once. Prebuilt rows do not enter a Cargo
+group.
+
+The closed platform value has exactly three keys from PROP-000:
+`windows-x86_64`, `linux-x86_64`, and `macos-aarch64`. A testable constructor
+maps exact OS/architecture pairs; the production constructor reads
+`std::env::consts::{OS, ARCH}` once. Unsupported pairs refuse naming the three
+supported keys. There is no alias, case folding, host-target inference or silent
+nearest match. Each key owns one suffix: `.dll`, `.so`, `.dylib` respectively.
+
+For one row the resolution order is exact:
+
+1. a declared entry for the current platform wins, even when `crate_dir` is
+   also present;
+2. that declared path must exist as a regular suffix-matching file whose
+   canonical path stays inside the provider root — a missing/corrupt
+   current-platform prebuilt refuses and never falls back to source;
+3. when the current key is absent, `crate_dir` is the source fallback;
+4. without either, refuse naming the missing key and the bounded declared set.
+
+All authored paths have already passed the declarant-path grammar. The runtime
+still joins them component-by-component, canonicalizes the provider root and
+candidate, requires containment and rejects a directory/link escape. Prebuilt
+bytes are ordinary shippable package content: their provider `content_hash` and
+an exact artifact SHA-256 are evidence; no build receipt chooses them.
+
+### 8.2 One build plane, provider-root execution
+
+Source native build uses the existing logical `build:cargo` mechanism key and
+the same mechanism registry/host routes as authored artifact targets. A route
+or explicit provider that displaces the builtin is therefore honoured; until
+the non-builtin transport lands it refuses through the existing typed transport
+boundary. Native code does not create `build:native` or a private provider
+registry. `native` is the artifact/handler genre; Cargo is the build mechanism.
+
+Inside the build fence, native source groups execute before authored/lowered
+`[[artifacts.build]]` targets and before every `phase:build` contribution. This
+lets the remainder of the build phase observe a complete extension machine and
+leaves R5.4 one unambiguous point from which to recompile pending lanes. A
+partial install epoch still arms no build fence.
+
+The Cargo adapter is split below its manifest-facing R8 executable projection.
+Both consumers reuse argv-only invocation, metadata preflight, lenient Cargo
+JSON parsing, exact artifact selection, toolchain evidence, containment and
+streamed digest. They do not share a false root model: R8 builds a project-owned
+declared executable under the project build root; R5.3 builds a provider-owned
+cdylib under that provider root.
+
+For a native source group the command is a release library build from
+`<provider-root>/<crate_dir>/Cargo.toml`, with `--lib`,
+`--message-format=json-render-diagnostics` and the engine-fixed
+`--target-dir <provider-root>/target`. The run's offline posture is preserved.
+Package-supplied Cargo uses the existing positive toolchain environment genre
+from the PROP-025 binary builder (including Windows linker discovery), not the
+selected-project R8 provider's broader environment. This is a real trust/root
+difference, not duplicate policy. Dependency builds first call the existing
+race-safe `ensure_build_output_ignores`; authored host roots keep their own
+repository ignore policy.
+
+Metadata must identify exactly one selected package library target whose crate
+types include `cdylib`. The build stream must then contain exactly one matching
+`compiler-artifact`, and its `filenames` must contain exactly one regular file
+with the current platform suffix under `<provider-root>/target`. `.pdb`, `.rlib`,
+Windows import libraries, zero matches and multiple matches are never resolved
+by order. The verified outcome retains Cargo's `fresh` bit. Every scheduled
+build still calls Cargo: R1's preserved mtimes and the stable target directory
+make the second invocation Cargo's genuine no-op; VibeVM invents no competing
+source-freshness algorithm to skip it.
+
+### 8.3 Durable hand-off without a second state plane
+
+A verified source cdylib is recorded atomically through the landed artifact
+record writer in the selected project's state. No `native-library` wire kind is
+added: a cdylib is the existing `file` artifact kind. The record's relative
+root is `slot` for an installed dependency and `project` for an authored host;
+the recorded path is relative to that exact provider root, never an unchecked
+absolute authority. The stable record id is the full 64-hex SHA-256 of provider
+identity, exact `crate_dir` and platform under a native-build domain. The record
+binds the selected build provider, provider version/hash when present, exact
+handler/config fingerprint, toolchain, platform, artifact digest and injected
+run time.
+
+Dependency source identity is the lock-selected `content_hash`. An authored
+host source has no lock hash, so R5.3 computes the existing shippable-tree
+recipe over its provider root (which excludes `target/`/`node_modules`) and
+binds that witness into the same record. A later process may reuse a source
+artifact only when record identity, platform, source/config witness, relative
+containment and current artifact bytes all revalidate. Missing/stale/corrupt
+state is an unavailable source artifact with `vibe build` remediation, never a
+guessed target path. The next build overwrites the stable record only after a
+successful verified Cargo result.
+
+### 8.4 First lifecycle connection
+
+`HandlerRuntime` gains one injected native backend beside its binary, package
+binding and agent backends. Production composition owns one process-lifetime
+`NativeLoader`; tests inject a fake backend. Every lifecycle-executed native row
+— both `phase:` and `slot:` — resolves prebuilt or a validated source record and
+then invokes that loader with the declaration id, typed point,
+`ir_schema = None` and the generated native context. It never builds lazily. A source native
+needed before the build fence therefore requires a valid earlier build record;
+prebuilt works directly.
+
+Lifecycle and native context roots are converted field-for-field while their
+shared nested generated types retain identity. Native reply status, artifacts
+and message become the ordinary lifecycle reply with an empty tasks list.
+Loader/resolver/build failures enter one typed native handler refusal and obey
+the existing phase/slot failure law; `skip` remains bookkeeping, and the SDK /
+loader panic boundary keeps the process alive. Compiler-native payloads,
+`ir_schema = 1`, pending tolerance and lane invocation are deliberately absent.
+
+### 8.5 Serial atoms and acceptance
+
+R5.3 lands as three serial children plus a gate:
+
+1. **ARTIFACT** — platform/prebuilt/source resolution; factored Cargo cdylib
+   selection; provider-root build; shared artifact-record hand-off;
+2. **WIRING** — retain enabled native candidates in the ritual, run them first
+   at the build fence, and connect phase/slot dispatch through the process-owned
+   loader;
+3. **GATE** — compose source and prebuilt on Windows, non-host platform units,
+   Cargo no-op/mtime evidence, artifact-record revalidation and lifecycle
+   failure/skip/panic behavior; then accept parent R5.3.
+
+Required mutation REDs include: map Windows to another key; reverse prebuilt
+precedence; remove canonical containment; choose the first Cargo filename;
+move target output to the selected project; omit the source/config witness;
+trust an absolute record path; build a disabled row; place authored targets
+before native builds; bypass resolver admission; recreate the loader per call;
+and dispatch a compile-native row in R5.3. Every mutation is restored byte-exact.
+
+R5.4 alone owns `transforms-pending`, install-time absent-transform tolerance and
+one-invocation build→lane-recompile convergence. R5.5 alone owns compiler-native
+invocation and builtin/native minify byte parity. No R5.3 acceptance claim may
+use either as hidden evidence.

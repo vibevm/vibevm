@@ -1153,6 +1153,16 @@ than depending on untracked `cache/` archaeology.
   proofs; the gate does not repeat them. R5.2-LOADER, R5.2-GATE and parent R5.2
   are accepted. R5.3 now owns source/prebuilt artifact resolution, in-slot
   build and the first lifecycle connection.
+- R5.3 native build freeze: `R5-NATIVE-ABI-ARCHITECTURE-v0.1.md` §8 resolves
+  the live R8/R5 ownership mismatch rather than lowering a provider-slot cdylib
+  into a fake project executable. Enabled native rows build in effective order;
+  current-platform prebuilt wins exactly, else source builds through the one
+  `build:cargo` mechanism route under `<provider>/target`. Cargo JSON alone
+  selects one cdylib; the existing artifact-record plane persists a verified
+  project/slot-relative file with source/config/platform evidence. Native builds
+  precede authored artifact targets at the existing build fence; phase and slot
+  rows resolve then use one process-owned loader without lazy build. ARTIFACT →
+  WIRING → GATE are serial. Pending bootstrap and compiler parity stay R5.4/R5.5.
 - R4.2 minify binding, RED corpus and activation e2e: `7a09ec2d` registers
   `xml-minify` (epoch 1, EMITTED — the one stage the kernel serves without a
   new serializer; every other stage refuses through the registry's own law)
