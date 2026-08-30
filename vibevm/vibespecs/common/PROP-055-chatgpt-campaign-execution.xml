@@ -511,6 +511,17 @@
       stalled final turn: inspect session growth and the visible diff, preserve
       both, stop only the exact process/session after a bounded window, then
       fail over without regenerating or spinning the lane.</CLAUDEZ-INITIAL-STALL-2026-08-30>
+      <CODEXRUNNER-QUIET-GUARD-2026-08-30 fact="true" status="spec/done">A
+      plain fresh `codexrunner exec` loaded repository `AGENTS.md` before its
+      named worker packet and began the forbidden full boot despite that
+      packet's `##subagent-quiet-clause`; root stopped it before product edits.
+      The strict live repair is `--strict-config --ignore-user-config -c
+      project_doc_max_bytes=0`, with `model_reasoning_effort="xhigh"` repeated
+      in the later exec layer and shared `CARGO_TARGET_DIR` set before launch.
+      A no-tool probe returned exact `QUIET_OK`; the real retry resolved
+      `gpt-5.6-sol` / `xhigh`, read the packet first and loaded only its six
+      named standing files. A packet's quiet clause controls reading only when
+      the harness has not already injected project documentation ahead of it.</CODEXRUNNER-QUIET-GUARD-2026-08-30>
       <PANEL-DENOMINATOR-2026-08-28 fact="true" status="spec/done">`tools/self-check.sh` lexically counts `run_step` lines while seven calls execute dynamically, so final
       R3.4 printed `[54/47]` and still ended `all green` / exit 0. The denominator is an observability bug, never coverage evidence: trust the ordered gates + green tail.
       A later tooling atom derives the runtime total or removes the false denominator; this docs-only finding does not rewrite the green verdict.</PANEL-DENOMINATOR-2026-08-28>

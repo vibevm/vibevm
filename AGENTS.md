@@ -63,6 +63,18 @@ Keep it current-state; prune stale lines.
   text output plus the durable report for long work, never `claudez2` unless
   the owner explicitly re-enables it. PROP-055 and launcher re-verified
   2026-08-30 after an incorrect `opencode` fallback was caught in review.
+- **Codexrunner quiet-packet guard (verified 2026-08-30):** a plain
+  `codexrunner exec <pointer>` auto-loaded the repository `AGENTS.md` before
+  reading the named packet, then began the forbidden full 145k boot despite the
+  packet's `##subagent-quiet-clause`. Launch a boot-limited worker as
+  `codexrunner exec --strict-config --ignore-user-config -c
+  project_doc_max_bytes=0 -c model_reasoning_effort='"xhigh"' <pointer>`;
+  set the shared `CARGO_TARGET_DIR` in that process environment before launch.
+  The strict-config probe returned exact `QUIET_OK` without a tool call, and
+  the real retry read the packet first, loaded only its six named standing
+  files, resolved `gpt-5.6-sol` / `xhigh`, and left product work unstaged.
+  Without the late effort override this machine's user layer reported `ultra`
+  despite the launcher's earlier xhigh default.
 - **Post-clean v1 build workaround (verified 2026-08-30):** the repository-root
   `fractality.ps1` is stale despite the v1 ledger below — it still hardcodes
   `fractality/v0.1.0/target/debug/fractality.exe`, so it cannot launch the

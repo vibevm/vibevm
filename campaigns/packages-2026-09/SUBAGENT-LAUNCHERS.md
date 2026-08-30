@@ -125,6 +125,16 @@ worktree-cwd — правило (config dir, cwd) выше это уже доп�
 | `claudez -c -p "…"` | `codexrunner exec resume --last "…"` — **ОСТОРОЖНО: cwd-скоуп resume НЕ проверен** (возможно, `--last` берёт последнюю сессию глобально, а не этого worktree; до верификации при двух+ живых codex-тредах предпочитать свежий `exec` с перечтением пакета — состояние на диске воркер дочитает сам) |
 | `--output-format stream-json --verbose` | `--json` (JSONL-события на stdout) |
 | `--allowedTools …` (позитивный список) | **YOLO ПО УМОЛЧАНИЮ (владелец, 2026-08-20):** запускалка сама инжектирует `--dangerously-bypass-approvals-and-sandbox` — песочницы и одобрений НЕТ; причина: workspace-write глушил Windows Known-Folder API (`home_dir()=None`, 12 ложно-красных home-тестов). Возврат песочницы: `CODEXRUNNER_SANDBOXED=1` + свои `--sandbox`-флаги (с инжектом они конфликтуют) |
+
+**Boot-limited packet guard (live 2026-08-30).** A fresh writing worker uses
+`codexrunner exec --strict-config --ignore-user-config -c
+project_doc_max_bytes=0 -c model_reasoning_effort='"xhigh"' "<pointer>"` with
+the shared `CARGO_TARGET_DIR` set before launch. Without
+`project_doc_max_bytes=0`, Codex loads repository `AGENTS.md` before the
+named packet and can begin the full boot despite `##subagent-quiet-clause`;
+without the late effort override, a later user layer may replace the launcher's
+default. Strict-config probe: exact `QUIET_OK`, no tool call; real packet:
+`gpt-5.6-sol` / `xhigh`, packet first, only its six standing files.
 | запреты инструментами | запреты ТОЛЬКО ТЕКСТОМ пакета: под yolo воркер может git/сеть/любую fs — принятая владельцем цена; боссово ревью диффа и перечень Deviations — единственный забор, приёмка соответственно строже |
 
 Проверено 2026-08-20: exec под дефолтной read-only песочницей честно
