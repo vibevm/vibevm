@@ -778,6 +778,63 @@ ordinary application that wants MSI, dpkg, Homebrew, a custom prefix or another
 installer chooses a different deploy mechanism. Merely producing an executable
 does not grant installation into `~/.vibe/bin`.
 
+### 7.1.0 `vibe-bin` staging — decision record (central, 2026-08-30)
+
+**Decision.** R8-VIBE-BIN lands the FIRST executing deploy provider, and
+only it:
+
+1. **Scope.** In: the builtin `deploy:vibe-bin` provider (the
+   provider-not-landed arm becomes the real one), its store and launcher
+   layout, the update/rollback semantics below, and the §10 end-to-end
+   gate (deploy into an isolated bin home, RUN the version-free
+   launcher, update it, roll it back). Out: any store GC (deferred and
+   named — an undeployed payload is disclosed garbage until a GC atom),
+   client adapters (R8-CLIENTS), the plugin-supplied replacement fixture
+   (it needs the unlanded plugin transport), remote/system scopes.
+2. **Layout under the ONE settings dir** (the engine already resolves
+   it): immutable content-addressed payloads in `store/<sha256>`, the
+   launcher in `bin/<command>` (`.cmd` on Windows, `#!/bin/sh` else),
+   and beside it the ACTIVE-PAYLOAD POINTER `bin/<command>.current` —
+   one line naming the payload digest. `DeployExecution` carries the
+   settings root beside the state home; a provider never resolves a
+   home.
+3. **The launcher is version-free by construction**: its body is a fixed
+   marked template embedding ONLY the command name, the genre/owner
+   marker and the pointer indirection — never a version, never a digest,
+   never a copied binary. Update rewrites the POINTER (atomically), not
+   the launcher; rollback rewrites it back. §7.1's sentence "resolves
+   only its active deployment" is the pointer, and the pointer is an
+   owned, receipted resource.
+4. **Owned resources are the launcher and the pointer — NOT the
+   payload.** A CAS payload is write-once, idempotent to re-write
+   (which is what makes apply §7.2-recoverable for free) and may be
+   shared by generations, so receipt-owning it would make undeploy
+   delete what a prior generation still names. Undeploy removes the two
+   owned files; the payload stays as disclosed store garbage.
+5. **Collision law verbatim**: an existing `bin/<command>` that does not
+   carry OUR genre marker — the PROP-025 project-pinned shim or an
+   unmarked user file — is a hard refusal naming both origins and the
+   fix (another `command` alias). Same-genre is an update, not a
+   collision.
+6. **Update and rollback are engine words, not new verbs**: update is a
+   new generation of the same deployment (new payload written, pointer
+   swapped, `prior_state_handle` carrying what restoration needs);
+   rollback is the landed saga/remove path restoring the prior pointer
+   through that handle. The e2e proves both — the rolled-back launcher
+   RUNS the original payload again.
+7. **Only an explicit executable artifact may use this provider**: an
+   `executable`-kind file artifact named by an explicit
+   `[[deploy.target]]`; every other kind refuses by name. An ordinary
+   application that wants MSI/dpkg/Homebrew names a different mechanism
+   (§7.1's own sentence), and nothing infers installation from the mere
+   existence of an executable.
+
+**Considered and rejected.** Launcher-reads-receipt-JSON (a shell shim
+parsing JSON is a second parser nobody audits; the pointer file is the
+receipt's projection, one line, atomic). Receipt-owned payloads (undeploy
+would erase shared state). A new rollback verb (the saga and
+`prior_state_handle` already spell it).
+
 ### 7.2 Receipts, ownership and inverse operations
 
 Every applied target writes a schema-versioned receipt in the user VibeVM state
