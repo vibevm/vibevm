@@ -875,6 +875,60 @@ than depending on untracked `cache/` archaeology.
   hygiene). §6.0 gains the six-ruling ratification. Map `18023c7f`.
   R8-DEPLOY (§7 staging — deploy receipts/intents/recovery, `vibe-bin`,
   profiles) is next in the lane.
+- R8-DEPLOY the deploy engine and its transaction: `0a42456e` lands the
+  §7.0 staging — the six-verb in-process deploy protocol (typed
+  provider-not-landed and transport-not-landed refusals; `plan`
+  mandatory by descriptor), the §7.2 transaction cell under
+  `state/deployments/` in the settings dir (atomic intent before the
+  first external write; checkpoints in an engine-owned plan-hash-tied
+  sidecar; independent verify, then the finalized receipt — written for
+  BOTH verdicts so a failed verification stays owned — then retirement;
+  per-destination sorted-total-order locks through the audited safefs
+  primitive; staging by descriptor; three-digest recovery with the
+  stale-intent settlement recorded as an added semantic; reverse-order
+  saga preserving the original failure; drift-refusing undeploy),
+  once-only profile selection in the command layer travelling as data
+  (`DeployCarriage`; the resolver has no parameter an environment
+  variable can reach, pinned by a source-reading test), the third
+  dispatch fence at the deploy phase's own-contribution boundary (a
+  partial epoch or an absent selection arms nothing), the `[[binary]]`
+  lowering at the same assembly (both identities join the claimed set;
+  collision refuses — closing R8-CARGO's named follow-up), read-only
+  `--plan` proven by an OS-unreadable sentinel token, the three command
+  surfaces, and the deterministic STORED `windows-zip` fifth builtin
+  (fixed 1980 timestamp, sorted census the writer refuses to repair,
+  no extra fields, hand-rolled CRC-32 with the standard check value).
+  Worker §0 disclosed sixteen items, all ratified into §7.0 (twelve
+  rulings): the engine-sidecar checkpoint ledger; the stale-intent
+  settlement; the deferred reference-ownership exception; STORED over
+  DEFLATE (compressor-version determinism); the MCP surface's
+  deliberate inability to deploy (one gate-forced `None`); the CLI plan
+  pinned around the provider-not-landed refusal; the deploy/undeploy
+  arity asymmetry; `vibe clean deploy` carrying deploy args and
+  refusing `--plan`; shape-aware package inputs (directory artifacts by
+  canonical tree digest); the disclosed state-home layout with safefs
+  locks; four gate-forced file splits and the recorded env_roots
+  constraint (env-reading code cannot leave main.rs). Worker mutations
+  twelve red — three of them initially SURVIVED (unsorted zip census,
+  [[binary]] collision, builtin freshness) and each earned the pin that
+  kills it, recorded honestly. Reviewer mutations: three more survived
+  and exposed unpinned laws, each closed red-under-mutation-first — a
+  FAILED deployment still owns its resources (ownership skipped every
+  non-verified receipt with all green); the destination lock HELD
+  during apply (a dropped guard left every test green; the pin probes
+  the lock non-blocking from inside `apply`); recovery over a DELETED
+  updated resource (absence rolled forward with all green). Boss
+  tightenings: the census past 65535 entries refuses (EOCD 0xFFFF is
+  the ZIP64 sentinel), size/offset ceilings refuse at exactly
+  0xFFFF_FFFF, and the archive is proven against an INDEPENDENT
+  extractor — `Expand-Archive` verified every CRC live. Gates: 230
+  workspace suites green, workspace clippy, host check 0 errors,
+  conform exactly 27/0-new (one transient file-length finding split
+  away along the §7.2 lock-sentence seam), fmt. §7.0 gains the
+  twelve-ruling ratification. Map `3c523571`. R8-VIBE-BIN is next —
+  chosen over R8-CLIENTS deliberately: the simplest real provider
+  proves the fresh engine end-to-end before the three-client matrix
+  rides it.
 - R4.2 minify binding, RED corpus and activation e2e: `7a09ec2d` registers
   `xml-minify` (epoch 1, EMITTED — the one stage the kernel serves without a
   new serializer; every other stage refuses through the registry's own law)
@@ -1039,10 +1093,10 @@ system remains fully usable with no selected agent contribution or provider.
 | fully static one-file skill | done | `a5dc3cbc`; whole-line include consumption, binary-asset refusal, one `SKILL.md` distributable |
 | Agent Plugins 1.0 directory | done | `a5dc3cbc`; plugin schema, canonical directory digest, obligatory `place` map, reparse refusal; client-component install is the deploy lane's |
 | Claude/Codex/OpenCode client projections and local deploy | partial only | project skill writer is not a portable plugin artifact or user deployment |
-| deploy targets/profiles/plan/undeploy | missing | draft grammar/rulings only |
-| intent/receipt/recovery for general destinations | partial precedent | package-skill receipt is safe but not the general deploy protocol |
-| `deploy:vibe-bin` under `~/.vibe/bin` | missing | existing `vibe bin` is a different project-pinned launcher genre |
-| deterministic Windows zip lifecycle binding | missing | pre-campaign scripts/archive recipe exist outside lifecycle |
+| deploy targets/profiles/plan/undeploy | done (engine) | `0a42456e`; grammar `2a3f3b44`; once-only profile selection, third fence, read-only `--plan`, undeploy/deployments; executing destination providers arrive with their own atoms |
+| intent/receipt/recovery for general destinations | done | `0a42456e`; the general §7.2 protocol — atomic intent, checkpoints, verify-then-receipt, locks, three-digest recovery, saga, drift refusal — proven over hermetic crash windows |
+| `deploy:vibe-bin` under `~/.vibe/bin` | missing | the registry row refuses as provider-not-landed; R8-VIBE-BIN is next |
+| deterministic Windows zip lifecycle binding | done | `0a42456e`; STORED-only writer, fixed 1980 timestamp, refusing census, independent-extractor oracle green live |
 | plugin-overridable builder/installer/deployer fixture | partial | the replacement law is proven at the registry (`9dd072d2`: a foreign row displaces the builtin in routing; the builtin stays queryable and demonstrably unselected); a non-builtin selection refuses by the unlanded transport's name, so the executing e2e waits on the plugin transport |
 
 ## 4. Owner additions — preservation and implementation status
@@ -1560,8 +1614,11 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
 4. Static-skill and Agent Plugin package providers in parallel. **Done
    `a5dc3cbc`, with the dispatch fences wiring both mechanism phases.**
 5. Client projections and general deploy planner/intent/receipt/recovery.
+   **The deploy half is done `0a42456e`; client projections are
+   R8-CLIENTS'.**
 6. `vibe-bin`, profiles/plan/undeploy, plugin replacement fixture and Windows
-   zip provider.
+   zip provider. **Profiles/plan/undeploy and the zip are done `0a42456e`;
+   `vibe-bin` and the replacement fixture remain.**
 
 ### Final serialization
 

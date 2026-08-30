@@ -691,6 +691,74 @@ receipts — a deployment mutates user/remote state and its record belongs
 beside that scope. Engine-side profile inference from environment — §7
 forbids it twice already.
 
+**Ratified at R8-DEPLOY acceptance (central, 2026-08-30).** Twelve
+rulings the landing surfaced, each recorded:
+
+1. **The checkpoint ledger is an engine-owned strict-serde sidecar with
+   its own schema epoch, not a JTD wire format.** The §12 freeze spelled
+   exactly two §7.2 records, both `deny_unknown_fields`, so a checkpoint
+   cannot ride the intent without destroying the planned set recovery
+   compares against — and the ledger never crosses a process boundary,
+   which is what JTD-first is for. Its `plan_hash` ties it to its
+   intent; retirement removes both.
+2. **A stale unretired intent (a plan nobody wants any more) settles
+   conservatively**: the three-digest law still runs in full, the
+   roll-forward does not (the engine must not invent an intent), the
+   journal retires, and the fact reports as `stale-intent-retired`. An
+   added semantic §7.2 leaves open, recorded in the transaction cell's
+   own module doc.
+3. **§7.2's reference-ownership exception is deferred** to the first
+   provider that can honestly declare it; the collision refusal is
+   unconditional until then.
+4. **The zip is STORED for every entry.** DEFLATE output is a property
+   of the compressor's version and heuristics, so "fixed compression
+   parameters" in the byte-identical sense admits exactly one method.
+   Larger archives are the acknowledged price; a pinned-compressor
+   DEFLATE is a recorded future decision, not a default.
+5. **Review closed three unpinned laws, each proven red-under-mutation
+   first**: a deployment that applied and then FAILED verification still
+   owns its resources (ownership skips only rolled-back receipts); the
+   per-destination lock is HELD while the provider applies (a
+   non-blocking probe from inside `apply`, not a file that once
+   existed); and recovery refuses a resource the intent was UPDATING
+   that is observed absent — deletion is the third digest's silent
+   spelling.
+6. **The archive is proven against an independent consumer**:
+   `Expand-Archive` (System.IO.Compression) extracts the hand-rolled
+   writer's bytes and verifies every CRC live — the one oracle a
+   self-read cannot provide. The census past 65535 entries now refuses
+   (0xFFFF is the ZIP64 sentinel in the EOCD count), and the size/offset
+   ceiling refuses at exactly `0xFFFF_FFFF` for the same reason.
+7. **The MCP lifecycle surface deliberately cannot deploy**: it exposes
+   no profile flag, resolves no selection, and its one constructor site
+   passes `None` — R8-MECHANISM ratification 2's gate-forced-site case.
+8. **`--plan` at the CLI pins the read-only property around the
+   provider-not-landed refusal** (nothing built, nothing recorded, no
+   state written, no token read); a populated plan body arrives with the
+   first landed deploy provider, and asserting one today would assert a
+   fiction.
+9. **`--profile` arity differs on purpose**: optional on `deploy` (the
+   manifest may answer), required on `undeploy` (the destructive verb is
+   named) — the architecture's own two spellings, one resolver behind
+   both.
+10. **`vibe clean deploy` carries the deploy arguments** so the
+    clean-prefixed verb reconciles exactly what `vibe deploy` would, and
+    refuses `--plan` by name (a clean prefix has already wiped derived
+    state; a read-only planner cannot follow it). A small surface
+    addition beyond §7's literal list, accepted for symmetry.
+11. **Package inputs are shape-aware**: a `directory` artifact input
+    resolves by the canonical tree digest (§7.0.8 requires it),
+    `{ path }` inputs stay file-only, and the two §6 providers still
+    refuse a directory where they cannot use one.
+12. **The deployment state home layout is disclosed** (intent /
+    checkpoints / receipt / staging per deployment id, locks under the
+    home's own `.vibe/`): the odd-looking lock path is the price of
+    reusing the audited `vibe_safefs` lock primitive with its post-lock
+    identity recheck, and a second lock implementation would have been
+    the wrong purchase. Env-reading code cannot leave `main.rs` until
+    `conform.toml`'s `env_roots` is deliberately widened — a live
+    constraint future CLI splits inherit.
+
 ### 7.1 `deploy:vibe-bin`
 
 The VibeVM-specific local-tool provider stores immutable payloads under a
