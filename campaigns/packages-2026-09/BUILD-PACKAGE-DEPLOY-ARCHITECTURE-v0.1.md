@@ -856,6 +856,44 @@ contracts:
     destinations, reference sharing, marketplace idempotence and foreign JSON/
     skill neighbours. No real home, token, network or installed client is used.
 
+**Ratified at R8-CLIENTS-DEPLOY-FOUNDATION acceptance (central, 2026-08-30).**
+Six implementation rulings make decision items 1–5 executable before any client
+provider is admitted:
+
+1. **Prior ownership is one borrowed engine read on both planning surfaces.**
+   `DeployTargetRequest` receives the exact prior receipt from a no-create view;
+   preplan owns that value beside the plan, and apply compares the whole receipt
+   again as its first state judgement under the deployment lock. A changed
+   receipt refuses before intent, external apply or even a legacy sidecar repair.
+2. **The sidecar is a strict two-slot engine record, not wire growth.** Every new
+   plan stages an epoch-1 `{generation,plan_hash,resources}` pending binding and
+   reads it back before intent. Finalisation requires the matching binding after
+   the receipt is durable; update leaves old committed beside new pending until
+   that promotion. Intent and receipt JTD shapes remain unchanged.
+3. **Lock order is total across forward and inverse paths.** Apply/recovery take
+   the stable deployment lock and the current+committed+pending destination
+   union. Undeploy and saga take the same deployment lock and the committed+
+   pending union, so an interrupted update's physical destination is never left
+   open while the older receipt is reversed. Lock resources use their own plan-
+   hash frame and preserve declared spelling while lock files use shared physical
+   identity.
+4. **Legacy compatibility is absence-only.** An ordinary record with no sidecar
+   may derive its physical set from typed owned resources and materialise a
+   pending binding for interrupted or benign settlement. Once a sidecar exists,
+   an absent or mismatched committed generation is corruption, never permission
+   to fall back. Reference ownership has no missing-sidecar fallback at all.
+5. **Each crash window moves one attributable slot.** Matching recovery and a
+   benign receipt+intent promote the exact pending generation; stale retirement
+   clears only its own pending binding; failed verification still commits the
+   lock set of the failed receipt; a successful inverse clears committed only
+   after the rolled-back receipt is durable. Malformed state refuses before any
+   provider verb that could mutate a destination.
+6. **Acceptance is behavioural and mutation-backed.** Ten worker REDs plus three
+   independent central REDs each failed one selected test and restored exactly.
+   Main gates passed 525 lifecycle tests plus 38 doctests (three privilege cases
+   ignored), the 66-test deploy and 19-test vibe-bin filters, strict clippy,
+   check, fmt, conform with zero new findings, and a clean specmap gate.
+
 ## 7. Deploy targets and profiles
 
 Profiles are named destination selections, not Maven-style arbitrary overlays

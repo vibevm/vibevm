@@ -997,6 +997,25 @@ than depending on untracked `cache/` archaeology.
   Specmap is 6831 units / 2929 tagged items / 2670 edges, 0 suspects, gated
   orphans or unresolved host edges, 25 standing warnings. Destination providers
   and the durable reference-lock sidecar remain R8-CLIENTS-DEPLOY.
+- R8-CLIENTS deploy foundation: `ce056058` / map `d6d32db6` makes prior
+  ownership injected engine evidence, moves read-only planning onto a no-create
+  state view and persists every plan's physical locks in the strict epoch-1
+  committed/pending sidecar. Apply, recovery, undeploy and saga rollback now
+  take one stable deployment lock followed by the canonical current/committed/
+  pending destination union; receipt finalisation promotes pending only after
+  the receipt is durable, and inverse clears committed only after its rolled-
+  back receipt. Ordinary pre-sidecar records retain their one-way typed
+  fallback, while reference owners and any present mismatched sidecar refuse
+  instead of parsing or guessing a physical identity. Central review corrected
+  three advisory-PASS tails — prior recheck after a repair write, inverse
+  omission of pending locks, and ordinary fallback across a present mismatch —
+  then added four behavioural pins and three independent REDs. Thirteen
+  mutations total were red and restored. Main-tree gates passed lifecycle 525
+  + 38 doctests (3 ignored privilege cases), deploy 66, vibe-bin 19, check/
+  clippy/fmt and conform 0-new. Specmap is 6831 units / 2954 tagged items /
+  2695 edges, 0 suspects, gated orphans or unresolved host edges, 25 standing
+  warnings. The three standalone skill providers are the next serial child;
+  no client destination provider ships in this foundation commit.
 - R4.2 minify binding, RED corpus and activation e2e: `7a09ec2d` registers
   `xml-minify` (epoch 1, EMITTED — the one stage the kernel serves without a
   new serializer; every other stage refuses through the registry's own law)
@@ -1160,7 +1179,7 @@ system remains fully usable with no selected agent contribution or provider.
 | Cargo commissioning build provider | done | `a22da2a3`; metadata + compiler-artifact JSON selection under §5's seven laws; hard-link containment streamed (B-120) |
 | fully static one-file skill | done | `a5dc3cbc`; whole-line include consumption, binary-asset refusal, one `SKILL.md` distributable |
 | Agent Plugins 1.0 directory | done | `a5dc3cbc`, corrected by `40c53f0a`; plugin schema, canonical directory digest, `agent-plugin` kind + directory shape, obligatory `place` map, reparse refusal; client-native adaptation is reproducible package work |
-| Claude/Codex/OpenCode client projections and local deploy | package done; deploy providers missing | foundation `3496fcc5` / `c7a2ea7b`; package projections `40c53f0a` / `8192dba6`: typed canonical provenance, three exact epoch-1 projections, strict capability reports; destination providers and durable reference-lock sidecar remain R8-CLIENTS-DEPLOY |
+| Claude/Codex/OpenCode client projections and local deploy | package + deploy engine foundation done; client providers missing | client foundation `3496fcc5` / `c7a2ea7b`; package projections `40c53f0a` / `8192dba6`; deploy foundation `ce056058` / `d6d32db6`: typed canonical provenance, three exact epoch-1 projections, strict capability reports, injected prior ownership and durable committed/pending physical locks; standalone skill and client-plugin providers remain |
 | deploy targets/profiles/plan/undeploy | done (engine) | `0a42456e`; grammar `2a3f3b44`; once-only profile selection, third fence, read-only `--plan`, undeploy/deployments; executing destination providers arrive with their own atoms |
 | intent/receipt/recovery for general destinations | done | `0a42456e`; the general §7.2 protocol — atomic intent, checkpoints, verify-then-receipt, locks, three-digest recovery, saga, drift refusal — proven over hermetic crash windows |
 | `deploy:vibe-bin` under `~/.vibe/bin` | done | the real provider: CAS store, version-free marked launcher + pointer, update/rollback/undeploy proven by running the launcher in the §10 e2e |
