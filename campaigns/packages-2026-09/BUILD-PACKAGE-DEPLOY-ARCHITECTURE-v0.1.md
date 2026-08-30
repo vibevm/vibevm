@@ -688,6 +688,49 @@ it prevents unrelated plugins from coexisting; treating its entries as
 independent without one physical lock loses updates. Claiming private-CLI
 updates are reversible — the client, not VibeVM, owns their prior state.
 
+**Ratified at R8-CLIENTS-FOUNDATION acceptance (central, 2026-08-30).**
+Seven rulings the landing surfaced, each pinned:
+
+1. **Executable authority is a total value, not `Option<PathBuf>` and not a
+   bare command word.** `ClientExecutable` is `Resolved { command,
+   absolute_path } | Missing { command }`; the CLI surface alone reads
+   PATH/PATHEXT and passes one total three-client value down. Missing clients do
+   not veto an unrelated `deploy:vibe-bin` run. The sanctioned ambient read is
+   one explicit `conform.toml` `env_roots` entry; removing it is red.
+2. **The physical lock filename uses the same Unicode-9 identity as
+   preplanning.** Case/NFC aliases produce one lock file across runs, while
+   exact provider/receipt spellings remain unchanged. The read-only planner and
+   prior-receipt collision gate call the same selected-set/identity laws as
+   apply, so `--plan` cannot promise a deployment apply later refuses.
+3. **Preplanning strengthens the old live saga scenario honestly.** Every
+   artifact and every provider plan now succeeds before apply 0, so a
+   plan-detectable second-target refusal leaves the first destination absent
+   rather than exercising rollback. Saga rollback remains proved through
+   apply-time faults at the hermetic seam; the owner scenario did not lose a
+   failure class, it moved one refusal to the earlier transaction boundary.
+4. **Reference ownership is admitted for plan/apply but not yet for inverse
+   operations.** A receipt stores the logical owned member, not the physical
+   lock resource, so undeploy and saga reversal refuse/retain a reference owner
+   instead of locking the wrong identity. R8-CLIENTS-DEPLOY must land an
+   engine-owned strict-serde durable lock sidecar before its first shipped
+   reference-owning provider: persisted before the first external write,
+   retained beside the receipt, read by recovery/undeploy, never added to the
+   JTD owned-resource wire. No resource-string parser is permitted.
+5. **The all-participants rule is genuinely n-ary.** An already-admitted pair
+   of reference owners does not erase the shared-lock claim: a third
+   participant still must declare the capability, and duplicate logical
+   ownership remains unconditionally refused.
+6. **PATH resolution follows executability, not mere file existence.** On Unix
+   a non-executable earlier file cannot shadow a later real client; the pure
+   resolver takes its executability predicate as test input, while the shipped
+   predicate enforces file + execute bits. Windows keeps PATHEXT order and
+   npm-style `.cmd` discovery.
+7. **The 600-line floor produced responsibility seams, not cosmetic shards.**
+   Builtin-table assertions, injected-authority assertions, the hermetic
+   provider, preplan laws and saga failure handling each live in their own
+   cell. Existing public values and vibe-bin outputs remain compatible; only
+   the new explicit authority/preplan refusal surface was added.
+
 ## 7. Deploy targets and profiles
 
 Profiles are named destination selections, not Maven-style arbitrary overlays

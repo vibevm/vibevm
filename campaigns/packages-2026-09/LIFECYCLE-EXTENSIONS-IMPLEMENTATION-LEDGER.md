@@ -962,6 +962,26 @@ than depending on untracked `cache/` archaeology.
   gains the thirteen-ruling ratification. R8-CLIENTS is the lane's next
   atom; the owner's safe-point stop lands here, with `cargo clean` run
   after the landing per the standing directive.
+- R8-CLIENTS foundation: `3496fcc5` / map `c7a2ea7b` lands the nine client
+  builtin rows in the ONE mechanism table, total injected home/executable
+  authority, logical ownership versus physical lock resources and one
+  pre-apply epoch shared by apply and `--plan`. Central review rejected the
+  first PASS on four grounds: bare command words still searched PATH below
+  the surface; lock files hashed exact alias spellings; planner/prior receipts
+  used weaker identity comparisons; and reference-owned undeploy had no
+  durable physical-lock reconstruction. The same-cwd correction totalised
+  client resolution, canonicalised locks, unified the judgement and added a
+  typed inverse refusal; root then added three independent REDs for Unix
+  executability, a third shared-lock participant and all clients missing on an
+  unrelated deployment. Sixteen mutations total were red and reverted.
+  Main-tree gates passed registry 60 + 8 doctests, lifecycle 478 + 37
+  doctests (3 ignored privilege cases), orchestrator mechanism 16, CLI deploy
+  16, strict clippy/check/fmt/diff hygiene and four conform scopes at 0 new.
+  Specmap is 6831 units / 2890 tagged items / 2631 edges, 0 suspects, gated
+  orphans or unresolved host edges, 25 standing warnings. No client provider
+  ships yet: the durable reference-lock sidecar is an explicit prerequisite
+  of R8-CLIENTS-DEPLOY, and every new row still refuses honestly through
+  `UnknownBuiltinProvider` until its owning child lands.
 - R4.2 minify binding, RED corpus and activation e2e: `7a09ec2d` registers
   `xml-minify` (epoch 1, EMITTED — the one stage the kernel serves without a
   new serializer; every other stage refuses through the registry's own law)
@@ -1125,7 +1145,7 @@ system remains fully usable with no selected agent contribution or provider.
 | Cargo commissioning build provider | done | `a22da2a3`; metadata + compiler-artifact JSON selection under §5's seven laws; hard-link containment streamed (B-120) |
 | fully static one-file skill | done | `a5dc3cbc`; whole-line include consumption, binary-asset refusal, one `SKILL.md` distributable |
 | Agent Plugins 1.0 directory | done | `a5dc3cbc`; plugin schema, canonical directory digest, obligatory `place` map, reparse refusal; client-component install is the deploy lane's |
-| Claude/Codex/OpenCode client projections and local deploy | partial only | project skill writer is not a portable plugin artifact or user deployment |
+| Claude/Codex/OpenCode client projections and local deploy | foundation done; providers missing | `3496fcc5` / `c7a2ea7b`: nine builtin rows, injected client authority, pre-apply physical ownership/locking; package projections and destination providers remain R8-CLIENTS-PACKAGE/DEPLOY |
 | deploy targets/profiles/plan/undeploy | done (engine) | `0a42456e`; grammar `2a3f3b44`; once-only profile selection, third fence, read-only `--plan`, undeploy/deployments; executing destination providers arrive with their own atoms |
 | intent/receipt/recovery for general destinations | done | `0a42456e`; the general §7.2 protocol — atomic intent, checkpoints, verify-then-receipt, locks, three-digest recovery, saga, drift refusal — proven over hermetic crash windows |
 | `deploy:vibe-bin` under `~/.vibe/bin` | done | the real provider: CAS store, version-free marked launcher + pointer, update/rollback/undeploy proven by running the launcher in the §10 e2e |
