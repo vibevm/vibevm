@@ -5,8 +5,8 @@ use std::collections::BTreeSet;
 use std::path::PathBuf;
 
 use vibe_wire::behaviour::native_compile::{
-    IrCardinality, IrCarrier, IrLevel, IrShape, NativeCompileError, validate_exchange,
-    validate_reply, validate_request,
+    IrCardinality, IrCarrier, IrLevel, IrShape, NativeCompileError, NativeCompilePoint,
+    validate_exchange, validate_reply, validate_request,
 };
 use vibe_wire::generated::format_id::{ForeignParsers, FormatId};
 use vibe_wire::generated::native::e1::{compile_reply, compile_request};
@@ -70,6 +70,61 @@ fn ok(payload: serde_json::Value) -> compile_reply::CompileReply {
         "payload": payload,
     }))
     .expect("ok reply structurally decodes")
+}
+
+#[derive(Clone, Copy)]
+struct CarrierCase {
+    file: &'static str,
+    shape: IrShape,
+}
+
+const fn carrier_case(
+    file: &'static str,
+    carrier: IrCarrier,
+    level: IrLevel,
+    cardinality: IrCardinality,
+) -> CarrierCase {
+    CarrierCase {
+        file,
+        shape: IrShape {
+            carrier,
+            level,
+            cardinality,
+        },
+    }
+}
+
+fn carriers() -> [CarrierCase; 6] {
+    use IrCardinality::{Artifact, Document};
+    use IrCarrier::{
+        ClosureArtifact, DocumentDocument, DocumentsArtifact, EmittedArtifact, LaneArtifact,
+        SourceDocument,
+    };
+    use IrLevel::{Closure, Document as DocumentLevel, Emitted, Lane, Source};
+    [
+        carrier_case("source_document", SourceDocument, Source, Document),
+        carrier_case(
+            "document_document",
+            DocumentDocument,
+            DocumentLevel,
+            Document,
+        ),
+        carrier_case(
+            "documents_artifact",
+            DocumentsArtifact,
+            DocumentLevel,
+            Artifact,
+        ),
+        carrier_case("closure_artifact", ClosureArtifact, Closure, Artifact),
+        carrier_case("lane_artifact", LaneArtifact, Lane, Artifact),
+        carrier_case("emitted_artifact", EmittedArtifact, Emitted, Artifact),
+    ]
+}
+
+fn duplicate_member(raw: &str, member: &str) -> String {
+    let duplicate = raw.replacen(member, &format!("{member},{member}"), 1);
+    assert_ne!(duplicate, raw, "selected duplicate member exists");
+    duplicate
 }
 
 #[test]
@@ -178,73 +233,81 @@ fn request_projection_accepts_forward_members_and_refuses_duplicate_known_keys()
     assert_ne!(nested_duplicate, raw);
     serde_json::from_str::<compile_request::CompileRequest>(&nested_duplicate)
         .expect_err("the projected adapter refuses duplicates recursively");
+
+    let compact = serde_json::to_string(&json(
+        "formats/corpora/native/e1/compile_request.valid.json",
+    ))
+    .unwrap();
+    let root_duplicate = duplicate_member(&compact, r#""envelope":1"#);
+    serde_json::from_str::<compile_request::CompileRequest>(&root_duplicate)
+        .expect_err("the request root refuses a duplicate known member");
 }
 
 #[test]
-fn all_landed_stage_carriers_and_pass_are_admitted_without_rewrite() {
-    let cases = [
+fn point_carrier_matrix_is_exhaustive_and_exact() {
+    let points = [
+        (NativeCompilePoint::Source, Some(IrCarrier::SourceDocument)),
         (
-            "compile:source",
-            "source_document",
-            IrShape {
-                carrier: IrCarrier::SourceDocument,
-                level: IrLevel::Source,
-                cardinality: IrCardinality::Document,
-            },
+            NativeCompilePoint::Document,
+            Some(IrCarrier::DocumentDocument),
         ),
+        (NativeCompilePoint::Lane, Some(IrCarrier::LaneArtifact)),
         (
-            "compile:document",
-            "document_document",
-            IrShape {
-                carrier: IrCarrier::DocumentDocument,
-                level: IrLevel::Document,
-                cardinality: IrCardinality::Document,
-            },
+            NativeCompilePoint::Emitted,
+            Some(IrCarrier::EmittedArtifact),
         ),
-        (
-            "compile:lane",
-            "lane_artifact",
-            IrShape {
-                carrier: IrCarrier::LaneArtifact,
-                level: IrLevel::Lane,
-                cardinality: IrCardinality::Artifact,
-            },
-        ),
-        (
-            "compile:emitted",
-            "emitted_artifact",
-            IrShape {
-                carrier: IrCarrier::EmittedArtifact,
-                level: IrLevel::Emitted,
-                cardinality: IrCardinality::Artifact,
-            },
-        ),
+        (NativeCompilePoint::Pass, None),
     ];
-    for (point, file, expected) in cases {
-        let admitted = request(point, payload(file));
-        assert_eq!(validate_request(&admitted), Ok(expected));
-        assert_eq!(
-            admitted.point, point,
-            "admission never normalizes the point"
-        );
-
-        let pass = request("compile:pass", payload(file));
-        assert_eq!(validate_request(&pass), Ok(expected));
+    for (point, admitted_carrier) in points {
+        for case in carriers() {
+            let admitted = request(point.as_str(), payload(case.file));
+            let expected =
+                if admitted_carrier.is_none() || admitted_carrier == Some(case.shape.carrier) {
+                    Ok(case.shape)
+                } else {
+                    Err(NativeCompileError::StageCarrier {
+                        point,
+                        carrier: case.shape.carrier,
+                    })
+                };
+            assert_eq!(validate_request(&admitted), expected);
+            assert_eq!(admitted.point, point.as_str(), "admission never normalizes");
+        }
     }
-    let batch = request(
-        "compile:pass",
-        serde_json::json!({
-            "shape": "documents-artifact",
-            "ir_schema": 1,
-            "level": "document",
-            "cardinality": "artifact",
-            "documents": [],
-        }),
-    );
-    assert_eq!(
-        validate_request(&batch).unwrap().carrier,
-        IrCarrier::DocumentsArtifact
-    );
+}
+
+#[test]
+fn every_carrier_refuses_other_known_level_and_cardinality_spellings() {
+    for case in carriers() {
+        let original = payload(case.file);
+        for (field, substitute) in [
+            (
+                "level",
+                if case.shape.level == IrLevel::Source {
+                    "document"
+                } else {
+                    "source"
+                },
+            ),
+            (
+                "cardinality",
+                if case.shape.cardinality == IrCardinality::Document {
+                    "artifact"
+                } else {
+                    "document"
+                },
+            ),
+        ] {
+            let mut changed = original.clone();
+            changed[field] = substitute.into();
+            let raw = serde_json::to_string(&changed).unwrap();
+            assert!(
+                serde_json::from_str::<compile_request::Ir>(&raw).is_err(),
+                "{} structurally refuses known {field} spelling {substitute}",
+                case.shape.carrier
+            );
+        }
+    }
 }
 
 #[test]
@@ -399,6 +462,22 @@ fn reply_discriminator_is_strict_and_behavior_gates_epochs() {
     unknown_nested["payload"]["doc"]["future"] = true.into();
     assert!(serde_json::from_value::<compile_reply::CompileReply>(unknown_nested).is_err());
 
+    let compact =
+        serde_json::to_string(&json("formats/corpora/native/e1/compile_reply.valid.json")).unwrap();
+    for (member, boundary) in [
+        (r#""envelope":1"#, "reply root"),
+        (
+            r#""declared_path":"boot/10-guide.md""#,
+            "reply payload nested object",
+        ),
+    ] {
+        let duplicate = duplicate_member(&compact, member);
+        assert!(
+            serde_json::from_str::<compile_reply::CompileReply>(&duplicate).is_err(),
+            "{boundary} refuses a duplicate known member"
+        );
+    }
+
     let mut wrong_envelope: compile_reply::CompileReply = ok(payload("source_document"));
     let compile_reply::CompileReply::Ok(value) = &mut wrong_envelope else {
         unreachable!()
@@ -418,33 +497,29 @@ fn reply_discriminator_is_strict_and_behavior_gates_epochs() {
 }
 
 #[test]
-fn exchange_requires_exact_shape_preservation() {
-    let request = request("compile:source", payload("source_document"));
-    let matching = ok(payload("source_document"));
-    assert_eq!(validate_exchange(&request, &matching), Ok(()));
-
-    let mismatched = ok(payload("document_document"));
-    assert!(matches!(
-        validate_exchange(&request, &mismatched),
-        Err(NativeCompileError::ExchangeShape {
-            request: IrShape {
-                carrier: IrCarrier::SourceDocument,
-                ..
-            },
-            reply: IrShape {
-                carrier: IrCarrier::DocumentDocument,
-                ..
-            },
-        })
-    ));
-
-    for status in ["skip", "fail"] {
-        let reply: compile_reply::CompileReply = serde_json::from_value(serde_json::json!({
-            "status": status,
-            "envelope": 1,
-        }))
-        .unwrap();
-        assert_eq!(validate_exchange(&request, &reply), Ok(()));
+fn exchange_matrix_is_exhaustive_and_preserves_status_only_replies() {
+    for request_case in carriers() {
+        let request = request("compile:pass", payload(request_case.file));
+        for reply_case in carriers() {
+            let result = validate_exchange(&request, &ok(payload(reply_case.file)));
+            let expected = if request_case.shape == reply_case.shape {
+                Ok(())
+            } else {
+                Err(NativeCompileError::ExchangeShape {
+                    request: request_case.shape,
+                    reply: reply_case.shape,
+                })
+            };
+            assert_eq!(result, expected);
+        }
+        for status in ["skip", "fail"] {
+            let reply = serde_json::from_value(serde_json::json!({
+                "status": status,
+                "envelope": 1,
+            }))
+            .unwrap();
+            assert_eq!(validate_exchange(&request, &reply), Ok(()));
+        }
     }
 }
 
