@@ -71,6 +71,10 @@ pub use compiler::transform::native_manager::{
     CompilerNativeCall, CompilerNativeInvoker, CompilerNativeInvokerError,
     CompilerNativeInvokerErrorKind,
 };
+pub use compiler::transform::native_policy::{
+    CompilerInvocationReceipts, CompilerNativePolicy, CompilerNativePolicyError,
+    CompilerPendingRef, CompilerPendingSet,
+};
 pub use compiler::transform::plan::TransformPlan;
 // The observation vocabulary itself is NOT re-exported: status, level,
 // cardinality, shape and duration are the generated

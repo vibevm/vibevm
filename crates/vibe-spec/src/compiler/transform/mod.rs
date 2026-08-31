@@ -39,6 +39,7 @@ pub(crate) mod lane_admission;
 pub(crate) mod lowering;
 pub(crate) mod native_identity;
 pub(crate) mod native_manager;
+pub(crate) mod native_policy;
 pub(crate) mod native_schedule;
 pub(crate) mod plan;
 pub(crate) mod plan_digest;
@@ -76,6 +77,8 @@ mod native_manager_hostile_tests;
 mod native_manager_matrix_tests;
 #[cfg(test)]
 mod native_manager_test_support;
+#[cfg(test)]
+mod native_policy_tests;
 #[cfg(test)]
 mod plan_digest_tests;
 #[cfg(test)]
