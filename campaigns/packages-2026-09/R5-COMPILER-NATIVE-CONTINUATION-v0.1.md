@@ -687,3 +687,50 @@ Final gates: `vibe-workspace --lib` 494/494, workspace check and all-target
 clippy with warnings denied, fmt, conform 48 standing/0 new, and specmap 6,833
 units / 3,048 tagged / 2,799 edges with zero suspects, gated orphans or
 unresolved host edges and 25 warnings. R5.4-EPOCH-LOWER is next.
+
+## 17. R5.4-EPOCH-LOWER implementation freeze
+
+**Frozen 2026-08-31 after two native `gpt-5.6-sol`/`xhigh` boundary
+reviews.** Neutral owner runtimes live in `vibe-workspace`: that crate already
+depends on the registry, compiler plan and wire types, while adding
+`vibe-lifecycle` would create a dependency cycle. `vibe-extension-registry`
+adds an opaque stable row index and effective-order index views; it never
+exports storage positions as compiler dense order and never clones candidate
+rows.
+
+One `LoweredOwnerRuntimes` owns exactly one runtime per workspace-relative
+node and one per installed package coordinate. Each `OwnerRuntime` owns its
+single `ExtensionRegistry`, compile-order indices, native-candidate indices,
+`TransformPlan`, `MechanismRegistry`, exact owner routes and portable owner
+identity. Compile and native borrowed slices are projected only after borrowing
+the immutable runtime, and therefore point into the same registry allocation;
+no self-reference, `Arc` invoker or cloned candidate epoch exists. Manager
+dense order is the position in the complete compile sequence, never a registry
+storage index or native-only renumbering.
+
+For each owner, request facts are observed while the one `ExtensionWorld` is
+still borrowable; mechanisms are collected by reference first; the same view is
+then consumed once by extension collection with explicitly injected node
+presets; row indices and the plan are lowered once. Nodes keep distinct
+controls/routes. Package units use their retained package controls/routes and
+are lowered once globally even when several nodes reference them. Selected
+`Project`/`World` are physically common values built once from the selected
+node view; owner runtime views borrow them rather than cloning competing
+authorities.
+
+The runtime has two stages. EPOCH-LOWER produces neutral
+`LoweredOwnerRuntimes` with explicit selected node and preset inputs. INSTALL
+later binds the real run id, state/selected root, native platform, offline
+posture and timestamp into `OwnerRuntimeEpoch`, transports that exact value
+through prerequisite install and makes `RitualPlan` consume it. Production
+`phase.rs` is not switched in EPOCH-LOWER: today's workspace regeneration
+returns only node names and discards its epoch, so switching phase now would
+either recollect or prematurely absorb the workspace→install carriage. Hidden
+defaults, a global cache and disk side channels are forbidden.
+
+EPOCH-LOWER lands in three internal serial slices: registry indices; workspace
+runtime construction plus boot consumption of retained plans; then focused
+proof that common selected facts and preset injection survive without I/O.
+It does not invoke a native artifact, classify pending, build source, run Cargo,
+replay a lane, change the install result or alter the build fence. INSTALL owns
+the production transfer and removal of the final phase recollection.

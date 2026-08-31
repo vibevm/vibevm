@@ -1366,6 +1366,19 @@ than depending on untracked `cache/` archaeology.
   conform 48 standing/0 new; specmap 6833/3048/2799 with zero suspects,
   orphans or unresolved host edges and 25 warnings. EPOCH-WORLD accepted;
   EPOCH-LOWER next.
+- R5.4-EPOCH-LOWER implementation freeze: two native
+  `gpt-5.6-sol`/`xhigh` boundary reviews place neutral runtime ownership in
+  `vibe-workspace`, opaque effective row indices in the registry and later
+  borrowed ARTIFACT execution above workspace. One owned registry backs exact
+  compile order, native candidate indices and `TransformPlan`; temporary
+  compile/native reference vectors must be pointer-identical, never stored
+  self-references or clones. One runtime is lowered per node and per global
+  package unit from one owner view, mechanisms before consuming extension
+  collection, with distinct routes/controls and explicit node presets.
+  `LoweredOwnerRuntimes` is the current child; INSTALL later binds run/platform/
+  time facts, transports the epoch and replaces production phase recollection.
+  No hidden default or premature `phase.rs` switch is allowed. Internal route:
+  registry indices → runtime/boot consumption → common-fact/preset proof.
 - R4.2 minify binding, RED corpus and activation e2e: `7a09ec2d` registers
   `xml-minify` (epoch 1, EMITTED — the one stage the kernel serves without a
   new serializer; every other stage refuses through the registry's own law)
