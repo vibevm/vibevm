@@ -1204,6 +1204,18 @@ than depending on untracked `cache/` archaeology.
   mutations were red and restored. Specmap is 6833/3036/2789 with zero
   suspects/orphans/unresolved and 25 warnings. ARTIFACT, WIRING and GATE are all
   accepted; parent R5.3 is done.
+- R5.4/R5.5 route amendment (central freeze, 2026-08-31): two native
+  `gpt-5.6-sol`/`xhigh` read-only reviews proved that pending cannot disappear
+  truthfully before compiler-native invocation, and invocation cannot land on
+  the lifecycle-only native Context/Reply. The serial route is now
+  R5.5-WIRE-PROJECTION → R5.5-WIRE → R5.5-WIRE-GATE → R5.5-INVOKE → R5.4 →
+  R5.5-PARITY. The wire keeps phase/slot roots and ABI symbols unchanged, adds
+  separate permissive compile-request and strict compile-reply roots, and
+  projects one canonical strict compiler-IR family through a schema-declared
+  permissive request-field adapter. Generic invocation remains a sibling of
+  builtin TransformBehavior at the four existing stages; pending/convergence
+  and minify parity stay separate later atoms. Authority:
+  `R5-COMPILER-NATIVE-CONTINUATION-v0.1.md`.
 - R4.2 minify binding, RED corpus and activation e2e: `7a09ec2d` registers
   `xml-minify` (epoch 1, EMITTED — the one stage the kernel serves without a
   new serializer; every other stage refuses through the registry's own law)
@@ -1325,8 +1337,8 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 | R5.1 native JTD context/reply/manifest + `vibe-ext` macro | done | SHARED-STRICT `52edc577`; WIRE `fd81a003` / map `4c9378c9`; SDK `bfaea140`; integrated 17 + 7 + 7 gate, real abort refusal, 20 mutation proofs; schema first, unanimous shared-reader strictness, plugin-side unwind/memory boundary |
 | R5.2 loader | done | LOADER `9f7b8854` / map `36efa500`; integrated 15 loader + 7 SDK + 7 native-wire gate, clean check-codegen/conform/specmap, 8 mutation proofs; separate unsafe quarantine, canonical strong cache, exact ABI/manifest admission and free-once guard |
 | R5.3 source/prebuilt resolution and in-slot build | done | ARTIFACT `1baac652` / trace `0ef041c7` / map `fd31533e`; WIRING `332f8e28` / map `48fcb39e`; GATE `be037d77` / trace `c2fe99fc` / map `ee3f4b49`; source/prebuilt production composition, immutable process-loader images, process-free resolver, stale-before-cache and lifecycle law all mutation-backed |
-| R5.4 pending bootstrap convergence | missing | install may mark pending; build rebuilds and recompiles once |
-| R5.5 native/builtin minify parity | missing | owner scenario §10.2 |
+| R5.4 pending bootstrap convergence | planned after R5.5-INVOKE | exact incoming world emits ordered pending without Cargo; native build then recompiles once before authored targets and removes pending only after the transform really executes |
+| R5.5 compiler-native wire, invocation and minify parity | planned serial workstream | WIRE-PROJECTION → WIRE → WIRE-GATE → INVOKE → R5.4 → PARITY; separate compile roots, one canonical compiler IR, four-stage process-free invocation, then owner scenario §10.2 |
 
 ### R6 — full compiler pass tier
 
