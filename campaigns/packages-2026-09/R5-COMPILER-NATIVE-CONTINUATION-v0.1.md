@@ -923,3 +923,32 @@ postcommit cleanup failure, and claims no global rollback.
 INSTALL later chooses Empty/Fresh/Ready, supplies Collect binding and carries
 runtime+replay values. FENCE later orders native build → one workspace replay →
 authored targets → phase rows. Neither sequence lands in WORKSPACE.
+
+## 22. R5.4-WORKSPACE-FINALIZE ratification
+
+**Accepted 2026-09-01.** Commit `b82ce151` lands the compiler-owned boundary
+that converts an opaque non-publishable pending artifact into truthful
+publishable bytes plus the still-owned pending set.
+
+The finalizer consumes the pending artifact, validates the retained plan and
+raw pending fingerprint, and supports only static Markdown and static XML. It
+derives the exact complete original opening, accepts it only at byte offset
+zero, rejects any surviving reserved transform framing in the preserved
+suffix, filters pending orders out of the active header, and emits the pending
+header through the shared codec-owned spelling. The document body and every
+provenance member stay byte-exact; no executed transform is appended. The
+canonical byte digest and output fingerprint are recomputed from the finalized
+bytes before a publishable artifact is returned with the non-Clone set.
+
+The RED corpus covers first, middle, last and all-pending Markdown/XML plans;
+body, provenance and digest preservation; plan, order, key and fingerprint
+tampering; moved, corrupted, duplicate and non-static framing; and ownership
+and Debug boundaries. An independent review found one duplicate-framing
+survivor in the preserved suffix; the bounded survivor fence and RED landed
+before final PASS.
+
+Final gates: focused FINALIZE 5/5, `vibe-spec` 904/904 plus integration and
+doctests, `vibe-workspace` 499/499 plus integrations and 28 doctests, workspace
+check, all-target clippy with warnings denied, fmt, conform 48 standing/0 new,
+and `git diff --check`. FACTS is next; compile threading, freshness,
+publication and replay remain unimplemented by this slice.

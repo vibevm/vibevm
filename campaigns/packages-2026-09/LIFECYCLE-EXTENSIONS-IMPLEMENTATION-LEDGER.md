@@ -1426,6 +1426,15 @@ than depending on untracked `cache/` archaeology.
   lanes before any write, then reuses per-owner recovery sequentially with no
   global rollback claim. INSTALL transports values; FENCE sequences build and
   the single replay call.
+- R5.4-WORKSPACE-FINALIZE: `b82ce151` consumes the opaque pending artifact,
+  validates the exact plan/set/fingerprint, replaces only the exact offset-zero
+  static Markdown/XML opening, rejects reserved framing survivors, filters
+  active orders and emits the codec-owned pending header, preserves body and
+  provenance, recomputes digest/output fingerprint and returns publishable
+  bytes plus the owned non-Clone set. Independent review caught and closed one
+  duplicate-framing survivor before final PASS. Gates pass FINALIZE 5,
+  vibe-spec 904, workspace 499, check/clippy/fmt, conform 48/0 new and diff
+  check. FINALIZE accepted; FACTS next.
 - R4.2 minify binding, RED corpus and activation e2e: `7a09ec2d` registers
   `xml-minify` (epoch 1, EMITTED — the one stage the kernel serves without a
   new serializer; every other stage refuses through the registry's own law)
