@@ -11,8 +11,25 @@ use anyhow::Result;
 use vibe_lifecycle::handlers::{
     BinaryBackend, PackageBindingArtifact, PackageBindingBackend, PackageBindingOutcome,
 };
+use vibe_lifecycle::native::{ArtifactNativeBackend, NativeBuildExecution, NativePlatform};
 
 use crate::{RitualPlan, world};
+
+pub(super) fn native_backend<'a>(
+    plan: &'a RitualPlan,
+    metadata: &'a vibe_lifecycle::RunMetadata,
+    candidates: &'a [&'a vibe_lifecycle::ExtensionRegistryRow],
+) -> Result<ArtifactNativeBackend<'a>> {
+    Ok(ArtifactNativeBackend::new(NativeBuildExecution {
+        candidates,
+        selected_project_root: std::path::Path::new(&plan.project.root),
+        registry: &plan.mechanisms,
+        routes: &plan.mechanism_routes,
+        platform: NativePlatform::current()?,
+        offline: metadata.offline,
+        created_at: &metadata.started,
+    }))
+}
 
 pub(super) struct ProjectPackageBindingBackend<'a> {
     project_root: &'a std::path::Path,

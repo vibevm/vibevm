@@ -6,7 +6,7 @@ use specmark::spec;
 
 use anyhow::Result;
 use std::sync::Arc;
-use vibe_lifecycle::handlers::{HandlerRuntime, PackageBindingBackend};
+use vibe_lifecycle::handlers::{HandlerRuntime, NativeBackend, PackageBindingBackend};
 use vibe_lifecycle::process::SystemProcessRunner;
 
 use vibe_lifecycle::{
@@ -22,7 +22,7 @@ use crate::failure::{MeasuredFailure, Measurement, carry, carry_once};
 use crate::ports::RunObserver;
 use crate::{PlannedExecution, RitualPlan, world};
 
-use backends::{ProjectPackageBindingBackend, WorkspaceBinaryBackend};
+use backends::{ProjectPackageBindingBackend, WorkspaceBinaryBackend, native_backend};
 
 pub use mechanism::DeployAuthority;
 pub(crate) use mechanism::{DeployCarriage, MechanismTargets, lower_binaries};
@@ -114,7 +114,9 @@ pub fn dispatch_plan_untracked(
     );
     let mut reports = Vec::with_capacity(plan.executions.len());
     let package_binding = ProjectPackageBindingBackend::new(plan);
-    let runtime = runtime(observer, &package_binding, agent.as_ref());
+    let native_candidates = plan.native_candidates.iter().collect::<Vec<_>>();
+    let native = native_backend(plan, &metadata, &native_candidates)?;
+    let runtime = runtime(observer, &package_binding, &native, agent.as_ref());
     for execution in plan.executions.iter() {
         let handler = HandlerExecution::from_row(&execution.row);
         let outcome =
@@ -263,7 +265,9 @@ fn dispatch_measured(
     targets: Option<&MechanismTargets<'_>>,
 ) -> Result<DispatchOutcome> {
     let package_binding = ProjectPackageBindingBackend::new(plan);
-    let runtime = runtime(observer, &package_binding, agent.as_ref());
+    let native_candidates = plan.native_candidates.iter().collect::<Vec<_>>();
+    let native = native_backend(plan, metadata, &native_candidates)?;
+    let runtime = runtime(observer, &package_binding, &native, agent.as_ref());
     let mut outcome = DispatchOutcome {
         reports: Vec::with_capacity(plan.executions.len()),
         parked: None,
@@ -550,6 +554,7 @@ fn contribution_status_report(
 fn runtime<'a>(
     observer: &dyn RunObserver,
     package_binding: &'a dyn PackageBindingBackend,
+    native: &'a dyn NativeBackend,
     agent: &'a dyn AgentBackend,
 ) -> HandlerRuntime<'a> {
     static PROCESS: SystemProcessRunner = SystemProcessRunner;
@@ -563,6 +568,7 @@ fn runtime<'a>(
         } else {
             &BINARY_INHERIT
         },
+        native,
         package_binding,
         agent,
         probe: &PROBE,

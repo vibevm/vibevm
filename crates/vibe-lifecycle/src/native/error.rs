@@ -154,6 +154,11 @@ pub enum NativeArtifactError {
     },
 
     #[error(
+        "native load image `{path}` is invalid: {reason} (spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE); fix: restore writable selected-project `.vibe` state and retry the admitted artifact"
+    )]
+    LoadImage { path: String, reason: String },
+
+    #[error(
         "native source witness for provider `{provider}` cannot be computed: {reason} (spec://org.vibevm.core/vibevm/common/PROP-054#ARTIFACT-REGISTRY); fix: restore a valid labelled content hash or readable shippable host tree"
     )]
     SourceWitness { provider: String, reason: String },

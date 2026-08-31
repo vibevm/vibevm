@@ -1,6 +1,8 @@
 //! Canonical provider-root containment for native source and prebuilt paths.
 
+use std::io::{Read, Write};
 use std::path::{Component, Path, PathBuf};
+use std::sync::atomic::{AtomicU64, Ordering};
 
 use crate::mechanism::contain::{digest_file, forward_slashed, prove_regular_file, relative_to};
 use crate::mechanism::error::preview;
@@ -15,6 +17,9 @@ pub(super) struct VerifiedFile {
     pub(super) digest: String,
     pub(super) bytes: u64,
 }
+
+const LOAD_IMAGE_DIR: [&str; 3] = [".vibe", "native-load", "e1"];
+static LOAD_IMAGE_SEQUENCE: AtomicU64 = AtomicU64::new(0);
 
 pub(super) fn canonical_provider_root(
     provider: &ProviderFacts,
@@ -154,6 +159,193 @@ pub(super) fn cargo_reported_file(
             reason,
         }
     })
+}
+
+/// Publish one admitted source/prebuilt artifact as an immutable load image.
+///
+/// Images are derived cache, never ARTIFACT authority. Each lives below the
+/// selected project's `.vibe/native-load/e1/<sha256>/` and is created without
+/// replacement, so a process-global path-keyed loader can keep old handles
+/// while rebuilt/replaced bytes receive a new canonical name.
+pub(super) fn publish_load_image(
+    selected_project_root: &Path,
+    source: &Path,
+    expected_digest: &str,
+    expected_bytes: u64,
+) -> Result<PathBuf, NativeArtifactError> {
+    if !valid_lower_hex_64(expected_digest) {
+        return Err(load_image_error(
+            source,
+            "artifact digest is not exactly 64 lowercase hex characters".to_owned(),
+        ));
+    }
+    let source = source.canonicalize().map_err(|error| {
+        load_image_error(source, format!("canonicalizing admitted artifact: {error}"))
+    })?;
+    let (actual_digest, actual_bytes) =
+        digest_file(&source).map_err(|fault| load_image_error(&source, fault.reason()))?;
+    if actual_digest != expected_digest || actual_bytes != expected_bytes {
+        return Err(load_image_error(
+            &source,
+            "admitted artifact bytes changed before load-image publication".to_owned(),
+        ));
+    }
+    let basename = source
+        .file_name()
+        .and_then(|name| name.to_str())
+        .filter(|name| !name.is_empty())
+        .ok_or_else(|| {
+            load_image_error(&source, "artifact basename is not valid UTF-8".to_owned())
+        })?;
+    let root = selected_project_root.canonicalize().map_err(|error| {
+        load_image_error(
+            selected_project_root,
+            format!("canonicalizing selected project root: {error}"),
+        )
+    })?;
+    if !root.is_dir() {
+        return Err(load_image_error(
+            &root,
+            "selected project root is not a directory".to_owned(),
+        ));
+    }
+    let mut directory = root.clone();
+    for component in LOAD_IMAGE_DIR.into_iter().chain([expected_digest]) {
+        directory = ensure_load_directory(&root, &directory, component)?;
+    }
+    let destination = directory.join(basename);
+    if std::fs::symlink_metadata(&destination).is_ok() {
+        return verify_load_image(&root, &destination, expected_digest, expected_bytes);
+    }
+
+    let sequence = LOAD_IMAGE_SEQUENCE.fetch_add(1, Ordering::Relaxed);
+    let temporary = directory.join(format!(".pending-{}-{sequence}", std::process::id()));
+    let published = publish_new_load_image(
+        &source,
+        &temporary,
+        &destination,
+        expected_digest,
+        expected_bytes,
+    );
+    if let Err(error) = published {
+        let _ = std::fs::remove_file(&temporary);
+        if error.kind() != std::io::ErrorKind::AlreadyExists {
+            return Err(load_image_error(
+                &destination,
+                format!("publishing immutable load image: {error}"),
+            ));
+        }
+    }
+    let _ = std::fs::remove_file(&temporary);
+    verify_load_image(&root, &destination, expected_digest, expected_bytes)
+}
+
+fn ensure_load_directory(
+    root: &Path,
+    parent: &Path,
+    component: &str,
+) -> Result<PathBuf, NativeArtifactError> {
+    let candidate = parent.join(component);
+    match std::fs::create_dir(&candidate) {
+        Ok(()) => {}
+        Err(error) if error.kind() == std::io::ErrorKind::AlreadyExists => {}
+        Err(error) => {
+            return Err(load_image_error(
+                &candidate,
+                format!("creating cache directory: {error}"),
+            ));
+        }
+    }
+    let metadata = std::fs::symlink_metadata(&candidate)
+        .map_err(|error| load_image_error(&candidate, error.to_string()))?;
+    if metadata.file_type().is_symlink() || !metadata.file_type().is_dir() {
+        return Err(load_image_error(
+            &candidate,
+            "cache component is a link or not a directory".to_owned(),
+        ));
+    }
+    let canonical = candidate
+        .canonicalize()
+        .map_err(|error| load_image_error(&candidate, error.to_string()))?;
+    if canonical.strip_prefix(root).is_err() {
+        return Err(load_image_error(
+            &candidate,
+            "cache component escapes the selected project root".to_owned(),
+        ));
+    }
+    Ok(canonical)
+}
+
+fn publish_new_load_image(
+    source: &Path,
+    temporary: &Path,
+    destination: &Path,
+    expected_digest: &str,
+    expected_bytes: u64,
+) -> std::io::Result<()> {
+    let mut input = std::fs::File::open(source)?;
+    let mut output = std::fs::OpenOptions::new()
+        .write(true)
+        .create_new(true)
+        .open(temporary)?;
+    let mut buffer = [0_u8; 64 * 1024];
+    loop {
+        let read = input.read(&mut buffer)?;
+        if read == 0 {
+            break;
+        }
+        output.write_all(&buffer[..read])?;
+    }
+    output.sync_all()?;
+    let (digest, bytes) =
+        digest_file(temporary).map_err(|fault| std::io::Error::other(fault.reason()))?;
+    if digest != expected_digest || bytes != expected_bytes {
+        return Err(std::io::Error::other(
+            "copied bytes do not match the admitted artifact",
+        ));
+    }
+    std::fs::hard_link(temporary, destination)
+}
+
+fn verify_load_image(
+    root: &Path,
+    destination: &Path,
+    expected_digest: &str,
+    expected_bytes: u64,
+) -> Result<PathBuf, NativeArtifactError> {
+    let metadata = std::fs::symlink_metadata(destination)
+        .map_err(|error| load_image_error(destination, error.to_string()))?;
+    if metadata.file_type().is_symlink() || !metadata.file_type().is_file() {
+        return Err(load_image_error(
+            destination,
+            "load image is a link or not a regular file".to_owned(),
+        ));
+    }
+    let canonical = contained_regular(destination, root)
+        .map_err(|reason| load_image_error(destination, reason))?;
+    let (digest, bytes) =
+        digest_file(&canonical).map_err(|fault| load_image_error(destination, fault.reason()))?;
+    if digest != expected_digest || bytes != expected_bytes {
+        return Err(load_image_error(
+            destination,
+            "existing load image bytes do not match the digest-addressed identity".to_owned(),
+        ));
+    }
+    Ok(canonical)
+}
+
+fn load_image_error(path: &Path, reason: String) -> NativeArtifactError {
+    NativeArtifactError::LoadImage {
+        path: preview(&forward_slashed(path)),
+        reason,
+    }
+}
+
+fn valid_lower_hex_64(value: &str) -> bool {
+    value.len() == 64
+        && value
+            .bytes()
+            .all(|byte| byte.is_ascii_digit() || matches!(byte, b'a'..=b'f'))
 }
 
 pub(super) fn recorded_file(

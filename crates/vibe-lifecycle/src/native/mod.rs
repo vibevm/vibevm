@@ -13,17 +13,22 @@ mod record;
 mod witness;
 
 use std::path::{Path, PathBuf};
+use std::sync::OnceLock;
 
 use specmark::spec;
 use vibe_core::manifest::{ExtensionHandler, MechanismKey, MechanismRoutes};
-use vibe_extension_registry::{MechanismRegistry, resolve_mechanism};
+use vibe_extension_registry::{
+    ExtensionRegistry, MechanismRegistry, SelectorSubject, resolve_mechanism,
+};
+use vibe_native_loader::{NativeInvocation, NativeLoader};
 
+use crate::handlers::{NativeBackend, NativeBackendRequest};
 use crate::{ExtensionRegistryRow, MechanismRegistryRow};
 
 pub use error::NativeArtifactError;
 pub use platform::NativePlatform;
 
-use cargo::{build_cdylib, toolchain};
+use cargo::build_cdylib;
 use path::{VerifiedFile, prebuilt_file, relative_spelling, source_crate};
 use provider::{ProviderFacts, ProviderHome, facts};
 use record::{
@@ -87,6 +92,81 @@ pub struct ResolvedNativeArtifact {
     pub bytes: u64,
     pub origin: NativeArtifactOrigin,
     pub record: Option<String>,
+}
+
+/// Retain every enabled native row in the registry's one effective order.
+///
+/// Selectors are deliberately not evaluated: compile candidates must exist at
+/// the build fence before a document subject exists. Disabled and inactive
+/// rows remain absent because [`ExtensionRegistryRow::is_enabled`] is the
+/// control boundary this projection reads.
+#[must_use]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#BUILD-PHASE-OWNS-IT")]
+pub fn enabled_native_candidates(registry: &ExtensionRegistry) -> Vec<ExtensionRegistryRow> {
+    registry
+        .exhaustive(SelectorSubject::unscoped())
+        .into_iter()
+        .filter(|view| {
+            view.row.is_enabled()
+                && matches!(
+                    view.row.declaration().handler,
+                    ExtensionHandler::Native { .. }
+                )
+        })
+        .map(|view| view.row.clone())
+        .collect()
+}
+
+/// Production native backend over the accepted ARTIFACT resolver.
+///
+/// Every instance borrows one owned candidate/mechanism/routes epoch, while
+/// all instances invoke through the same process-lifetime loader cache.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE")]
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE")]
+pub struct ArtifactNativeBackend<'a> {
+    execution: NativeBuildExecution<'a>,
+    loader: &'static NativeLoader,
+}
+
+impl<'a> ArtifactNativeBackend<'a> {
+    #[must_use]
+    pub fn new(execution: NativeBuildExecution<'a>) -> Self {
+        Self {
+            execution,
+            loader: process_loader(),
+        }
+    }
+}
+
+impl NativeBackend for ArtifactNativeBackend<'_> {
+    fn invoke(
+        &self,
+        request: NativeBackendRequest<'_>,
+    ) -> Result<vibe_wire::generated::native::e1::reply::Reply, String> {
+        let artifact = resolve_native_artifact(&self.execution, request.row)
+            .map_err(|error| error.to_string())?;
+        let image = path::publish_load_image(
+            self.execution.selected_project_root,
+            Path::new(&artifact.path_absolute),
+            &artifact.digest,
+            artifact.bytes,
+        )
+        .map_err(|error| error.to_string())?;
+        self.loader
+            .invoke(NativeInvocation {
+                library: &image,
+                extension_id: request.extension_id,
+                point: request.point,
+                ir_schema: request.ir_schema,
+                context: request.context,
+            })
+            .map_err(|error| error.to_string())
+    }
+}
+
+fn process_loader() -> &'static NativeLoader {
+    static LOADER: OnceLock<NativeLoader> = OnceLock::new();
+    LOADER.get_or_init(NativeLoader::new)
 }
 
 #[derive(Debug)]
@@ -214,8 +294,7 @@ pub fn resolve_native_artifact(
     let config = config_witness(&rows);
     let id = record_id(&provider.identity, &crate_wire, execution.platform);
     let build_provider = select_build_provider(execution)?;
-    let (provider_root, _) = source_crate(&provider, crate_dir)?;
-    let current_toolchain = toolchain(&provider, &provider_root)?;
+    source_crate(&provider, crate_dir)?;
     let file = revalidate_source_record(&SourceRecordExpectation {
         selected_project_root: execution.selected_project_root,
         provider: &provider,
@@ -224,7 +303,6 @@ pub fn resolve_native_artifact(
         build_provider: &build_provider,
         source_witness: &source,
         config_witness: &config,
-        toolchain: &current_toolchain,
     })?;
     Ok(resolved(
         row,

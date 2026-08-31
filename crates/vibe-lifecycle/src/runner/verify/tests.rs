@@ -111,6 +111,7 @@ fn runtime(backend: &RecordingBackend) -> HandlerRuntime<'_> {
     HandlerRuntime {
         process: &PROCESS,
         binary: &crate::handlers::NoBinaryBackend,
+        native: &crate::handlers::NoNativeBackend,
         package_binding: &NoPackageBindingBackend,
         agent: backend,
         probe: &SystemProbe,

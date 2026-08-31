@@ -12,7 +12,7 @@ use crate::mechanism::record::{
     sanitize, write_record,
 };
 
-use super::cargo::{BuiltCdylib, NativeToolchain};
+use super::cargo::BuiltCdylib;
 use super::path::{VerifiedFile, recorded_file};
 use super::provider::{ProviderFacts, ProviderHome};
 use super::{NativeArtifactError, NativePlatform};
@@ -94,7 +94,6 @@ pub(super) struct SourceRecordExpectation<'a> {
     pub(super) build_provider: &'a str,
     pub(super) source_witness: &'a str,
     pub(super) config_witness: &'a str,
-    pub(super) toolchain: &'a NativeToolchain,
 }
 
 pub(super) fn revalidate_source_record(
@@ -149,8 +148,12 @@ pub(super) fn revalidate_source_record(
     )?;
     require(
         &path,
-        record.freshness.toolchain.as_deref() == Some(expected.toolchain.digest.as_str()),
-        "toolchain witness changed",
+        record
+            .freshness
+            .toolchain
+            .as_deref()
+            .is_some_and(valid_lower_hex_64),
+        "toolchain witness is not exactly 64 lowercase hex characters",
     )?;
     require(
         &path,
@@ -193,6 +196,13 @@ fn unavailable(record: &str, reason: String) -> NativeArtifactError {
         record: record.to_owned(),
         reason,
     }
+}
+
+fn valid_lower_hex_64(value: &str) -> bool {
+    value.len() == 64
+        && value
+            .bytes()
+            .all(|byte| byte.is_ascii_digit() || matches!(byte, b'a'..=b'f'))
 }
 
 fn cargo_key() -> Result<MechanismKey, NativeArtifactError> {

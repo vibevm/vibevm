@@ -119,7 +119,8 @@ pub use execution::{
     HandlerExecution, RunMetadata, SlotTarget,
 };
 pub use handlers::{
-    NoPackageBindingBackend, PackageBindingArtifact, PackageBindingBackend, PackageBindingOutcome,
+    NativeBackend, NativeBackendRequest, NoNativeBackend, NoPackageBindingBackend,
+    PackageBindingArtifact, PackageBindingBackend, PackageBindingOutcome,
 };
 pub use lease::{LifecycleLease, LifecycleLeaseError};
 pub use mechanism::{

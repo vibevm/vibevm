@@ -10,9 +10,60 @@
 use std::path::PathBuf;
 
 use specmark::spec;
+use vibe_core::lifecycle::ExtensionPoint;
 use vibe_wire::generated::lifecycle_state::StateArtifact;
+use vibe_wire::generated::native::e1::context::Context as NativeContext;
+use vibe_wire::generated::native::e1::reply::Reply as NativeReply;
 
 use crate::ExtensionRegistryRow;
+
+/// One exact native invocation at the lifecycle/backend boundary.
+///
+/// The row is retained for accepted ARTIFACT resolution; the remaining
+/// members are the values admitted by the native manifest before invoke.
+#[derive(Debug, Clone, Copy)]
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE")]
+pub struct NativeBackendRequest<'a> {
+    pub row: &'a ExtensionRegistryRow,
+    pub extension_id: &'a str,
+    pub point: ExtensionPoint,
+    pub ir_schema: Option<u32>,
+    pub context: &'a NativeContext,
+}
+
+/// Injected native ABI backend.
+///
+/// Tests may implement this trait without loading a library. Production uses
+/// the ARTIFACT-backed adapter and its process-lifetime loader.
+///
+/// ```
+/// use vibe_lifecycle::handlers::{NativeBackend, NativeBackendRequest};
+/// use vibe_wire::generated::native::e1::reply::Reply;
+///
+/// struct Refusing;
+/// impl NativeBackend for Refusing {
+///     fn invoke(&self, request: NativeBackendRequest<'_>) -> Result<Reply, String> {
+///         Err(format!("refused {}", request.extension_id))
+///     }
+/// }
+/// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE")]
+pub trait NativeBackend: Send + Sync {
+    fn invoke(&self, request: NativeBackendRequest<'_>) -> Result<NativeReply, String>;
+}
+
+/// Refusing default for callers that do not compose native execution.
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE")]
+pub struct NoNativeBackend;
+
+impl NativeBackend for NoNativeBackend {
+    fn invoke(&self, request: NativeBackendRequest<'_>) -> Result<NativeReply, String> {
+        Err(format!(
+            "no native backend configured for `{}`",
+            request.extension_id
+        ))
+    }
+}
 
 /// Injectable provider-scoped binary resolution/build seam.
 ///

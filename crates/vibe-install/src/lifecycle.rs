@@ -7,11 +7,14 @@ use std::sync::{Arc, Mutex};
 
 use vibe_core::PackageName;
 use vibe_core::lifecycle::{ExtensionPoint, SlotPoint};
+use vibe_core::manifest::MechanismRoutes;
 use vibe_lifecycle::handlers::{BinaryBackend, HandlerRuntime, HandlerStreams};
+use vibe_lifecycle::native::{ArtifactNativeBackend, NativeBuildExecution, NativePlatform};
 use vibe_lifecycle::process::{StreamMode, SystemProcessRunner};
 use vibe_lifecycle::{
     Delegation, DependencyExtensionSource, DependencyProviderId, DispatchError, ExecutionReuse,
-    ExtensionProvider, HandlerExecution, HostIdentity, LifecycleRunError, LifecycleRunHandle,
+    ExtensionProvider, ExtensionRegistryRow, HandlerExecution, HostIdentity, LifecycleRunError,
+    LifecycleRunHandle, MechanismRegistry,
 };
 use vibe_wire::generated::lifecycle_state::{ExecutionRecordStatus, SlotTargetRecord};
 use vibe_workspace::hooks::SystemProbe;
@@ -63,6 +66,13 @@ pub(crate) const PARKED_SENTINEL: &str = "@vibe/lifecycle/parked";
 pub struct InstallSlotLifecycle {
     installed: Vec<DependencyExtensionSource>,
     plan: SlotLifecyclePlan,
+    native_candidates: Vec<ExtensionRegistryRow>,
+    mechanisms: MechanismRegistry,
+    routes: MechanismRoutes,
+    selected_project_root: PathBuf,
+    native_platform: NativePlatform,
+    offline: bool,
+    created_at: String,
     streams: StreamMode,
     run: LifecycleRunHandle,
     reports: Mutex<Vec<SlotLifecycleReport>>,
@@ -242,9 +252,20 @@ impl InstallSlotLifecycle {
         let binary = WorkspaceBinaryBackend {
             output: self.streams,
         };
+        let candidates = self.native_candidates.iter().collect::<Vec<_>>();
+        let native = ArtifactNativeBackend::new(NativeBuildExecution {
+            candidates: &candidates,
+            selected_project_root: &self.selected_project_root,
+            registry: &self.mechanisms,
+            routes: &self.routes,
+            platform: self.native_platform,
+            offline: self.offline,
+            created_at: &self.created_at,
+        });
         let runtime = HandlerRuntime {
             process: &SystemProcessRunner,
             binary: &binary,
+            native: &native,
             package_binding: &vibe_lifecycle::NoPackageBindingBackend,
             agent: self.agent.as_ref(),
             probe: &SystemProbe,

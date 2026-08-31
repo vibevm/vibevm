@@ -460,6 +460,19 @@ fn real_provider_cdylib_build_is_grouped_fresh_and_revalidated() {
     fs::write(&record_path, &original_record).unwrap();
 
     let mut record_json: serde_json::Value = serde_json::from_slice(&original_record).unwrap();
+    *record_json.pointer_mut("/freshness/toolchain").unwrap() = serde_json::json!("NOT-A-DIGEST");
+    fs::write(
+        &record_path,
+        serde_json::to_vec_pretty(&record_json).unwrap(),
+    )
+    .unwrap();
+    assert!(matches!(
+        resolve_native_artifact(&execution, candidates[0]),
+        Err(NativeArtifactError::SourceState { .. })
+    ));
+    fs::write(&record_path, &original_record).unwrap();
+
+    let mut record_json: serde_json::Value = serde_json::from_slice(&original_record).unwrap();
     *record_json.pointer_mut("/path_relative/path").unwrap() =
         serde_json::json!("native/Cargo.toml");
     fs::write(
@@ -501,3 +514,9 @@ fn real_provider_cdylib_build_is_grouped_fresh_and_revalidated() {
         Err(NativeArtifactError::SourceState { .. })
     ));
 }
+
+#[path = "tests/wiring.rs"]
+mod wiring;
+
+#[path = "tests/snapshot.rs"]
+mod snapshot;

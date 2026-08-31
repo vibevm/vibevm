@@ -20,7 +20,7 @@ use crate::{PhaseOutcome, PhaseRun, run_phases};
 const WITH_PACKAGE_TARGET: &str = concat!(
     "[project]\nname = \"demo\"\nversion = \"0.1.0\"\n\n",
     "[[artifacts.package]]\nid = \"demo\"\nmechanism = \"package:static-skill\"\n",
-    "outputs = [{ id = \"demo.md\", kind = \"file\" }]\n",
+    "outputs = [{ id = \"demo.md\", kind = \"skill\" }]\n",
     "config = { source = \"skills/demo\" }\n",
 );
 
@@ -337,7 +337,7 @@ fn a_declared_package_target_really_runs_through_the_wiring() {
     let outcome = run(dir.path());
 
     let PhaseOutcome::Completed(values) = outcome else {
-        panic!("the declared package target executes");
+        panic!("the declared package target executes: {outcome:?}");
     };
     assert!(values.ok);
     let distributable = dir.path().join("target/vibe-package/demo/SKILL.md");
@@ -588,3 +588,6 @@ fn a_legacy_binary_row_reaches_the_build_executor_through_the_lowering() {
         "and the refusal is the builtin provider's own: {rendered}",
     );
 }
+
+#[path = "native_wiring_tests.rs"]
+mod native_wiring;

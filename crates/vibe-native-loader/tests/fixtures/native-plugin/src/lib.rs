@@ -16,11 +16,23 @@ pub fn fixture_marker() -> &'static str {
 
 fn manifest() -> Manifest {
     Manifest {
-        extensions: vec![ManifestExtension {
-            id: "fixture".to_owned(),
-            point: "phase:build".to_owned(),
-            ir_schema: None,
-        }],
+        extensions: vec![
+            ManifestExtension {
+                id: "fixture".to_owned(),
+                point: "phase:build".to_owned(),
+                ir_schema: None,
+            },
+            ManifestExtension {
+                id: "slot-pre-fixture".to_owned(),
+                point: "slot:pre-install".to_owned(),
+                ir_schema: None,
+            },
+            ManifestExtension {
+                id: "slot-post-fixture".to_owned(),
+                point: "slot:post-install".to_owned(),
+                ir_schema: None,
+            },
+        ],
     }
 }
 

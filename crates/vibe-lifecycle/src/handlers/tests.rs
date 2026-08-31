@@ -123,6 +123,7 @@ fn slot_execution_uses_target_cwd_and_compatibility_package_environment() {
     let runtime = HandlerRuntime {
         process: &runner,
         binary: &NoBinaryBackend,
+        native: &NoNativeBackend,
         package_binding: &super::NoPackageBindingBackend,
         agent: &crate::NoAgentBackend,
         probe: &BashProbe,
@@ -219,6 +220,7 @@ fn script_exit_zero_without_reply_defaults_ok_and_carries_exact_wire_env() {
     let runtime = HandlerRuntime {
         process: &runner,
         binary: &NoBinaryBackend,
+        native: &NoNativeBackend,
         package_binding: &super::NoPackageBindingBackend,
         agent: &crate::NoAgentBackend,
         probe: &BashProbe,
@@ -269,6 +271,7 @@ fn script_nonzero_wins_over_valid_reply() {
     let runtime = HandlerRuntime {
         process: &runner,
         binary: &NoBinaryBackend,
+        native: &NoNativeBackend,
         package_binding: &super::NoPackageBindingBackend,
         agent: &crate::NoAgentBackend,
         probe: &BashProbe,
@@ -304,6 +307,7 @@ fn successful_script_reply_is_canonicalized_and_pending_file_is_consumed() {
     let runtime = HandlerRuntime {
         process: &runner,
         binary: &NoBinaryBackend,
+        native: &NoNativeBackend,
         package_binding: &super::NoPackageBindingBackend,
         agent: &crate::NoAgentBackend,
         probe: &BashProbe,
@@ -357,6 +361,7 @@ fn binary_stdin_is_exact_context_and_contaminated_stdout_fails() {
     let runtime = HandlerRuntime {
         process: &runner,
         binary: &binary,
+        native: &NoNativeBackend,
         package_binding: &super::NoPackageBindingBackend,
         agent: &crate::NoAgentBackend,
         probe: &BashProbe,
@@ -404,6 +409,7 @@ fn binary_nonzero_wins_over_a_valid_reply_and_empty_stdout_is_refused() {
         let runtime = HandlerRuntime {
             process: &runner,
             binary: &binary,
+            native: &NoNativeBackend,
             package_binding: &super::NoPackageBindingBackend,
             agent: &crate::NoAgentBackend,
             probe: &BashProbe,
@@ -446,6 +452,7 @@ fn binary_nonzero_never_exposes_protocol_stdout_as_a_report_stream() {
     let runtime = HandlerRuntime {
         process: &runner,
         binary: &binary,
+        native: &NoNativeBackend,
         package_binding: &super::NoPackageBindingBackend,
         agent: &crate::NoAgentBackend,
         probe: &BashProbe,
@@ -518,6 +525,7 @@ fn process_reply_refuses_tasks_unknown_fields_and_artifact_id_collisions() {
         let runtime = HandlerRuntime {
             process: &runner,
             binary: &binary,
+            native: &NoNativeBackend,
             package_binding: &super::NoPackageBindingBackend,
             agent: &crate::NoAgentBackend,
             probe: &BashProbe,
@@ -567,3 +575,6 @@ fn artifact_path_cannot_exit_and_reenter_with_parent_components() {
         "{error}"
     );
 }
+
+#[path = "native_tests.rs"]
+mod native;

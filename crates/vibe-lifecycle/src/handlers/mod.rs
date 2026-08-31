@@ -20,11 +20,13 @@ use crate::{ExtensionProvider, ExtensionRegistryRow, HandlerExecution, SlotTarge
 const REPLY_CAP: usize = 1024 * 1024;
 
 mod backends;
+mod native;
 mod reply;
 pub use backends::{
-    BinaryBackend, NoBinaryBackend, NoPackageBindingBackend, PackageBindingArtifact,
-    PackageBindingBackend, PackageBindingOutcome,
+    BinaryBackend, NativeBackend, NativeBackendRequest, NoBinaryBackend, NoNativeBackend,
+    NoPackageBindingBackend, PackageBindingArtifact, PackageBindingBackend, PackageBindingOutcome,
 };
+use native::{lifecycle_reply, native_context};
 use reply::parse_reply;
 pub(crate) use reply::validate_reply;
 
@@ -97,6 +99,12 @@ pub enum HandlerError {
     )]
     Binary { key: String, reason: String },
     #[error(
+        "extension `{key}` native execution failed: {reason} \
+         (governed by spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE; \
+          fix: run `vibe build`, restore the admitted artifact, or correct the native extension)"
+    )]
+    Native { key: String, reason: String },
+    #[error(
         "extension `{key}` agent execution failed: {error} \
          (governed by spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-CLI; \
           fix: apply the inner failure's remediation and rerun the stopped lifecycle)"
@@ -158,6 +166,9 @@ impl HandlerError {
 pub struct HandlerRuntime<'a> {
     pub process: &'a dyn ProcessRunner,
     pub binary: &'a dyn BinaryBackend,
+    /// Native ARTIFACT resolution plus ABI invocation. Production injects the
+    /// one process-lifetime loader; tests may inject a fake.
+    pub native: &'a dyn NativeBackend,
     pub package_binding: &'a dyn PackageBindingBackend,
     /// The transport-neutral owner of every paid agent execution. It is
     /// consulted only from the `agent` handler branch, so a project with no
@@ -209,6 +220,35 @@ impl HandlerRuntime<'_> {
             }
             ExtensionHandler::Binary { name } => {
                 self.binary(row, target, execution_key, context, name)
+            }
+            ExtensionHandler::Native { .. } => {
+                if !matches!(
+                    row.declaration().point,
+                    ExtensionPoint::Phase(_) | ExtensionPoint::Slot(_)
+                ) {
+                    return Err(HandlerError::Native {
+                        key: execution_key.to_string(),
+                        reason: format!(
+                            "point `{}` is compiler-native and cannot enter lifecycle dispatch in R5.3",
+                            row.declaration().point
+                        ),
+                    });
+                }
+                let native_context = native_context(context);
+                let reply = self
+                    .native
+                    .invoke(NativeBackendRequest {
+                        row,
+                        extension_id: &row.declaration().id,
+                        point: row.declaration().point,
+                        ir_schema: None,
+                        context: &native_context,
+                    })
+                    .map_err(|reason| HandlerError::Native {
+                        key: execution_key.to_string(),
+                        reason,
+                    })?;
+                Ok((lifecycle_reply(reply), HandlerStreams::default()))
             }
             ExtensionHandler::Agent { .. } => {
                 let agent_error = |error: AgentError| HandlerError::Agent {

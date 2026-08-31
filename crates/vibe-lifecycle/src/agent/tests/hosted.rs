@@ -228,6 +228,7 @@ fn a_hosted_row_parks_through_the_real_engine_without_spend_or_writes() {
     let rt = HandlerRuntime {
         process: &PROCESS,
         binary: &NoBinaryBackend,
+        native: &crate::handlers::NoNativeBackend,
         package_binding: &NoPackageBindingBackend,
         agent: &backend,
         probe: &SystemProbe,

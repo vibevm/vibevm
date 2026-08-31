@@ -282,7 +282,6 @@ fn run(inputs: PhaseRun<'_>, measured: &mut Measured) -> Result<Outcome> {
     // reading them here keeps the boundary's no-manifest-below-the-surface rule
     // exactly as it was.
     let artifacts = manifest.artifacts.clone();
-    let routes = manifest.mechanism_routes.clone();
     // The legacy `[[binary]]` rows and the declared deploy targets, taken
     // off the SAME proven manifest and in the same breath as the artifact
     // graph — §7.0.7's lowering call site and the deploy fence's target
@@ -460,7 +459,8 @@ fn run(inputs: PhaseRun<'_>, measured: &mut Measured) -> Result<Outcome> {
         ),
         deploy_targets: &deploy_targets,
         registry: &ritual.mechanisms,
-        routes: &routes,
+        routes: &ritual.mechanism_routes,
+        native_candidates: &ritual.native_candidates,
         offline: metadata.offline,
         created_at: &created_at,
         deploy: deploy_carriage.as_ref(),

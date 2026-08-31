@@ -29,6 +29,9 @@ vibe-core.workspace = true
 # compatibility (one transition, no flag day) and keeps only the
 # execution-shaped plan and report metadata above it.
 vibe-extension-registry.workspace = true
+# The accepted R5.2 host boundary. Lifecycle supplies an already-resolved
+# absolute ARTIFACT path and shares one process-lifetime loader.
+vibe-native-loader.workspace = true
 vibe-registry.workspace = true
 # `spec://` address grammar for `handler.prompt`. One parser owns the address
 # form; the agent handler compares an already-parsed authority against the

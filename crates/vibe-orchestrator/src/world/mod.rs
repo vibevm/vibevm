@@ -53,6 +53,7 @@ pub fn plan_default_prepared(
     phases: &[Phase],
 ) -> Result<RitualPlan> {
     let loaded = load_registry_prepared(selected_project_root, workspace, WorldLoadMode::Default)?;
+    let native_candidates = vibe_lifecycle::native::enabled_native_candidates(&loaded.registry);
     let executions = ExecutablePlan::from_points(
         &loaded.registry,
         phases.iter().map(|phase| {
@@ -74,6 +75,8 @@ pub fn plan_default_prepared(
         project: loaded.project,
         world: loaded.world,
         mechanisms: loaded.mechanisms,
+        mechanism_routes: loaded.mechanism_routes,
+        native_candidates,
         workspace_root: loaded.workspace_root,
         package_bindings: loaded.package_bindings,
         package_desired_keys: loaded.package_desired_keys,
@@ -117,6 +120,7 @@ pub(crate) fn plan_default(path: &Path, phases: &[Phase]) -> Result<RitualPlan> 
 /// ```
 pub fn plan_clean_prepared(selected: &Path, workspace: &Workspace) -> Result<RitualPlan> {
     let loaded = load_registry_prepared(selected, workspace, WorldLoadMode::PreClean)?;
+    let native_candidates = vibe_lifecycle::native::enabled_native_candidates(&loaded.registry);
     Ok(RitualPlan {
         executions: ExecutablePlan::from_points(
             &loaded.registry,
@@ -135,6 +139,8 @@ pub fn plan_clean_prepared(selected: &Path, workspace: &Workspace) -> Result<Rit
         project: loaded.project,
         world: loaded.world,
         mechanisms: loaded.mechanisms,
+        mechanism_routes: loaded.mechanism_routes,
+        native_candidates,
         workspace_root: loaded.workspace_root,
         package_bindings: BTreeMap::new(),
         package_desired_keys: BTreeSet::new(),
@@ -155,6 +161,8 @@ pub struct LoadedRegistry {
     /// The mechanism plane of the SAME world — the provider rows the
     /// build and package executors resolve their targets against.
     pub mechanisms: MechanismRegistry,
+    /// Host routes from the exact manifest snapshot this world used.
+    pub mechanism_routes: vibe_core::manifest::MechanismRoutes,
     /// Selected-project facts for the handler envelope.
     pub project: EnvelopeProject,
     world: EnvelopeWorld,
@@ -249,6 +257,7 @@ fn load_registry_prepared(
         .collect::<Vec<_>>();
     let effective_stack = effective_stack(&host_manifest, &installed, mode)?;
     let host_skills = host_manifest.skills.clone();
+    let mechanism_routes = host_manifest.mechanism_routes.clone();
     let mut host = host_source(host_manifest, selected.clone())?;
     let host_identity = host.provider.identity.clone();
     if mode == WorldLoadMode::PreClean {
@@ -283,6 +292,7 @@ fn load_registry_prepared(
     Ok(LoadedRegistry {
         registry,
         mechanisms,
+        mechanism_routes,
         project,
         world,
         workspace_root: workspace.root.clone(),

@@ -11,7 +11,10 @@ use std::sync::Arc;
 
 use vibe_core::manifest::Manifest;
 use vibe_lifecycle::process::StreamMode;
-use vibe_lifecycle::{LifecycleLease, LifecycleRun, Phase, RunMetadata, inclusive_chain};
+use vibe_lifecycle::{
+    ExtensionWorld, LifecycleLease, LifecycleRun, Phase, RunMetadata, collect_extensions,
+    collect_mechanisms, inclusive_chain,
+};
 use vibe_workspace::Workspace;
 use vibe_workspace::install::ResolvedDep;
 
@@ -140,6 +143,22 @@ impl InstallSlotLifecycle {
             .collect::<Result<Vec<_>>>()?;
         let host = host_source(project_root, manifest)?;
         let plan = build_slot_plan(&installed, &host, event_targets)?;
+        let effective_world = ExtensionWorld {
+            installed: installed.clone(),
+            host: host.clone(),
+            effective_stack: None,
+        };
+        let mechanisms = collect_mechanisms(&effective_world)
+            .map_err(|error| Error::Lifecycle(error.to_string()))?;
+        let registry = collect_extensions(effective_world)
+            .map_err(|error| Error::Lifecycle(error.to_string()))?;
+        let native_candidates = vibe_lifecycle::native::enabled_native_candidates(&registry);
+        let native_platform = vibe_lifecycle::native::NativePlatform::current()
+            .map_err(|error| Error::Lifecycle(error.to_string()))?;
+        let routes = manifest.mechanism_routes.clone();
+        let selected_project_root = project_root.to_path_buf();
+        let offline = run.offline;
+        let created_at = run.started.clone();
         let project = project_envelope(project_root, manifest);
         let world = world_envelope(workspace, world_resolution);
         let state_chain = run
@@ -169,6 +188,13 @@ impl InstallSlotLifecycle {
         Ok(Self {
             installed,
             plan,
+            native_candidates,
+            mechanisms,
+            routes,
+            selected_project_root,
+            native_platform,
+            offline,
+            created_at,
             streams,
             run,
             reports: Mutex::new(cancelled),

@@ -53,6 +53,7 @@ use vibe_core::manifest::{
     ArtifactBuildTarget, ArtifactPackageTarget, ArtifactsSection, BinaryDecl, DeployTarget,
     Manifest, MechanismRoutes, build_target_for_binary,
 };
+use vibe_lifecycle::native::{NativeBuildExecution, NativePlatform, build_native_sources};
 use vibe_lifecycle::{
     BuildExecution, ClientExecutables, DeployExecution, DeploySelection, MechanismRegistry,
     PackageExecution, Phase, deploy_state_home, execute_build_targets, execute_deploy_targets,
@@ -128,6 +129,8 @@ pub(crate) struct MechanismTargets<'a> {
     pub(crate) registry: &'a MechanismRegistry,
     /// The host's `[mechanisms]` routes.
     pub(crate) routes: &'a MechanismRoutes,
+    /// Enabled native rows from the exact registry epoch, in its one order.
+    pub(crate) native_candidates: &'a [vibe_lifecycle::ExtensionRegistryRow],
     /// The run's effective offline posture.
     pub(crate) offline: bool,
     /// The run's injected instant, in the RFC 3339 spelling every record
@@ -329,6 +332,18 @@ impl<'targets> Fences<'targets> {
             return Ok(());
         }
         self.build = None;
+        let candidates = self.targets.native_candidates.iter().collect::<Vec<_>>();
+        let platform = NativePlatform::current().context("selecting the native build platform")?;
+        build_native_sources(&NativeBuildExecution {
+            candidates: &candidates,
+            selected_project_root: self.targets.project_root,
+            registry: self.targets.registry,
+            routes: self.targets.routes,
+            platform,
+            offline: self.targets.offline,
+            created_at: self.targets.created_at,
+        })
+        .context("building enabled native source extensions at the build fence")?;
         execute_build_targets(&BuildExecution {
             project_root: self.targets.project_root,
             targets: self.targets.build,
