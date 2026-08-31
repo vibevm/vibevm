@@ -44,9 +44,15 @@ use crate::vibedeps::{in_place_slot_abs_path, slot_abs_path};
 
 mod epoch;
 mod errors;
+mod pending;
 mod runtime;
 
 pub use errors::ExtensionWorldError;
+pub use pending::{
+    PendingArtifactEvidence, PendingArtifactTarget, PendingBuildFact, PendingBuildProviderDigest,
+    PendingEvidenceError, PendingFingerprint, PendingHandlerConfigWitness, PendingPlatformKey,
+    PendingSourceWitness, build_pending_artifact_evidence,
+};
 pub use runtime::{
     LoweredOwnerRuntimes, OwnerRuntime, OwnerRuntimeEpoch, OwnerRuntimeId, OwnerRuntimeLowering,
     OwnerRuntimeRows, OwnerRuntimeRunFacts, OwnerRuntimeView, lower_owner_runtimes,
@@ -561,3 +567,7 @@ mod tests;
 #[cfg(test)]
 #[path = "extension_world/runtime_tests.rs"]
 mod runtime_tests;
+
+#[cfg(test)]
+#[path = "extension_world/pending_tests.rs"]
+mod pending_tests;

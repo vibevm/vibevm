@@ -136,6 +136,17 @@ impl CompilerPendingSet {
     pub fn is_empty(&self) -> bool {
         self.entries.is_empty()
     }
+
+    /// Test-support construction from genuine native plan entries. The key
+    /// override exists solely to exercise downstream opaque-key evidence.
+    #[cfg(any(test, feature = "test-support"))]
+    #[doc(hidden)]
+    pub fn from_plan_entries_for_test(
+        plan: &crate::TransformPlan,
+        entries: Vec<(u32, ExtensionKey)>,
+    ) -> Result<Self, CompilerNativePolicyError> {
+        session::pending_set_for_test(plan, entries)
+    }
 }
 
 /// Ordered successful replay references with positive invocation counts.

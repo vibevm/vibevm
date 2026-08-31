@@ -383,6 +383,48 @@ pub(crate) fn validate_pending_set(
     validate_expected(plan, pending)
 }
 
+#[cfg(any(test, feature = "test-support"))]
+pub(crate) fn pending_set_for_test(
+    plan: &TransformPlan,
+    mut entries: Vec<(u32, ExtensionKey)>,
+) -> Result<CompilerPendingSet, CompilerNativePolicyError> {
+    let digest = plan
+        .digest()
+        .map(|value| *value.as_bytes())
+        .ok_or_else(|| error(PolicyFault::PlanIdentityMissing))?;
+    entries.sort_by_key(|(order, _)| *order);
+    let entries = entries
+        .into_iter()
+        .map(|(order, key)| {
+            let entry = plan
+                .entries()
+                .get(order as usize)
+                .ok_or_else(|| error(PolicyFault::ExpectedOrderMissing { order }))?;
+            let ImplementationComponents::Native {
+                digest: implementation,
+            } = entry.seed().implementation().components()
+            else {
+                return Err(error(PolicyFault::ExpectedNotNative { order }));
+            };
+            Ok(PendingCapture {
+                reference: CompilerPendingRef {
+                    plan_digest: digest,
+                    order,
+                    key,
+                },
+                point: point(entry.seed().stage()),
+                config: entry.config_digest().map(|value| *value.as_bytes()),
+                implementation,
+            })
+        })
+        .collect::<Result<Vec<_>, CompilerNativePolicyError>>()?
+        .into_boxed_slice();
+    Ok(CompilerPendingSet {
+        plan_digest: Some(digest),
+        entries,
+    })
+}
+
 fn capture(
     plan_digest: Option<[u8; 32]>,
     order: u32,
