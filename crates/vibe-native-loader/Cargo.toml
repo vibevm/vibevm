@@ -22,3 +22,4 @@ vibe-wire.workspace = true
 serde_json.workspace = true
 tempfile.workspace = true
 vibe-native-loader-fixture = { path = "tests/fixtures/native-plugin" }
+vibe-native-loader-compiler-fixture = { path = "tests/fixtures/native-compiler-plugin" }

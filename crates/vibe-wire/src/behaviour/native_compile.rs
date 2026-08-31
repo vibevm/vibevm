@@ -323,6 +323,18 @@ pub fn validate_exchange(
     reply: &compile_reply::CompileReply,
 ) -> Result<(), NativeCompileError> {
     let request_shape = validate_request(request)?;
+    validate_reply_for_shape(request_shape, reply)
+}
+
+/// Admit one reply against the retained shape of an already-admitted request.
+///
+/// This lets a typed transport move the request into an author handler while
+/// preserving the relational exchange check without cloning the request or
+/// its compiler-IR payload.
+pub fn validate_reply_for_shape(
+    request_shape: IrShape,
+    reply: &compile_reply::CompileReply,
+) -> Result<(), NativeCompileError> {
     if let Some(reply_shape) = validate_reply(reply)?
         && request_shape != reply_shape
     {

@@ -1,0 +1,12 @@
+[package]
+name = "vibe-native-loader-compiler-fixture"
+version = "1.0.0"
+edition = "2024"
+publish = false
+
+[lib]
+name = "vibe_native_loader_compiler_fixture"
+crate-type = ["rlib", "cdylib"]
+
+[dependencies]
+vibe-ext = { path = "../../../../vibe-ext" }

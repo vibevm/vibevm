@@ -4315,8 +4315,16 @@ dependencies = [
  "tempfile",
  "thiserror 2.0.18",
  "vibe-core",
+ "vibe-native-loader-compiler-fixture",
  "vibe-native-loader-fixture",
  "vibe-wire",
+]
+
+[[package]]
+name = "vibe-native-loader-compiler-fixture"
+version = "1.0.0"
+dependencies = [
+ "vibe-ext",
 ]
 
 [[package]]

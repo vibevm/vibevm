@@ -1,10 +1,18 @@
 #![deny(unsafe_code)]
 //! Safe author surface for VibeVM native extension ABI 1.
 //!
-//! Authors implement `fn(Context) -> Reply` and invoke [`vibe_extension!`].
-//! The generated C boundary owns JSON conversion, panic containment, and the
-//! exact response allocation/free pairing.
+//! Authors implement either a lifecycle `fn(Context) -> Reply` with
+//! [`vibe_extension!`] or a compiler `fn(CompileRequest) -> CompileReply` with
+//! [`vibe_compile_extension!`]. The generated C boundary owns JSON conversion,
+//! panic containment, and the exact response allocation/free pairing.
 
+pub use vibe_wire::generated::native::e1::compile_reply::{
+    CompileReply, CompileReplyFail, CompileReplyOk, CompileReplySkip,
+};
+pub use vibe_wire::generated::native::e1::compile_request::{
+    CompileRequest, Ir, IrClosureArtifact, IrDocumentDocument, IrDocumentsArtifact,
+    IrEmittedArtifact, IrLaneArtifact, IrSourceDocument,
+};
 pub use vibe_wire::generated::native::e1::context::{
     Artifact, Context, Execution, Io, Project, Run, RunAgentMode, SlotTarget, World, WorldPackage,
 };
@@ -13,29 +21,20 @@ pub use vibe_wire::generated::native::e1::reply::{Reply, ReplyArtifact, ReplySta
 
 #[doc(hidden)]
 pub use serde_json as __serde_json;
+#[doc(hidden)]
+pub use vibe_wire::behaviour::native_compile as __native_compile;
 
-/// Exports one VibeVM native extension through the four-symbol ABI 1 surface.
+/// Emit the one raw four-symbol ABI used by every safe author macro.
 ///
-/// The manifest is serialized once and remains valid for the library's
-/// lifetime. Each successful invocation transfers one exact-length boxed byte
-/// slice to the host, which must return it once through `vibe_ext_free`.
+/// Public macros prepare typed manifest and dispatch functions named
+/// `__vibe_ext_manifest_value` and `__vibe_ext_dispatch`; this emitter alone
+/// owns raw pointers, panic containment, response allocation, and freeing.
+#[doc(hidden)]
 #[macro_export]
-macro_rules! vibe_extension {
-    (manifest = $manifest:expr, handler = $handler:path $(,)?) => {
+macro_rules! __vibe_ext_emit_abi {
+    (panic_message = $panic_message:literal $(,)?) => {
         #[cfg(panic = "abort")]
-        compile_error!(
-            "vibe_extension! requires panic = \"unwind\"; remove panic = \"abort\" from the extension's active Cargo profile"
-        );
-
-        #[doc(hidden)]
-        fn __vibe_ext_manifest_value() -> $crate::Manifest {
-            $manifest
-        }
-
-        #[doc(hidden)]
-        fn __vibe_ext_handle(context: $crate::Context) -> $crate::Reply {
-            $handler(context)
-        }
+        compile_error!($panic_message);
 
         #[doc(hidden)]
         #[allow(unsafe_code)]
@@ -47,10 +46,7 @@ macro_rules! vibe_extension {
 
             static MANIFEST: OnceLock<CString> = OnceLock::new();
 
-            fn initialize_outputs(
-                response_ptr: *mut *mut u8,
-                response_len: *mut usize,
-            ) -> bool {
+            fn initialize_outputs(response_ptr: *mut *mut u8, response_len: *mut usize) -> bool {
                 if !response_ptr.is_null() {
                     // SAFETY: A non-null response slot is host-provided writable
                     // storage for one pointer under the C ABI contract.
@@ -78,14 +74,7 @@ macro_rules! vibe_extension {
                     // SAFETY: The host retains a readable request allocation of
                     // exactly request_len bytes for the duration of this call.
                     let request = unsafe { std::slice::from_raw_parts(request_ptr, request_len) };
-                    let context: $crate::Context =
-                        $crate::__serde_json::from_slice(request).ok()?;
-                    if context.envelope != 1 {
-                        return None;
-                    }
-                    let reply = super::__vibe_ext_handle(context);
-                    let bytes = $crate::__serde_json::to_vec(&reply).ok()?;
-                    Some(bytes.into_boxed_slice())
+                    super::__vibe_ext_dispatch(request).map(Vec::into_boxed_slice)
                 }));
 
                 let Ok(Some(response)) = result else {
@@ -121,8 +110,9 @@ macro_rules! vibe_extension {
             pub extern "C" fn vibe_ext_manifest() -> *const c_char {
                 MANIFEST
                     .get_or_init(|| {
-                        let json = $crate::__serde_json::to_vec(&super::__vibe_ext_manifest_value())
-                            .expect("generated Manifest serializes to JSON");
+                        let json =
+                            $crate::__serde_json::to_vec(&super::__vibe_ext_manifest_value())
+                                .expect("generated Manifest serializes to JSON");
                         CString::new(json).expect("serialized manifest JSON contains no NUL byte")
                     })
                     .as_ptr()
@@ -145,8 +135,74 @@ macro_rules! vibe_extension {
         }
 
         #[doc(hidden)]
-        pub use __vibe_ext_ffi::{
-            vibe_ext_abi, vibe_ext_free, vibe_ext_invoke, vibe_ext_manifest,
-        };
+        pub use __vibe_ext_ffi::{vibe_ext_abi, vibe_ext_free, vibe_ext_invoke, vibe_ext_manifest};
+    };
+}
+
+/// Exports one lifecycle extension through the four-symbol ABI 1 surface.
+///
+/// The manifest is serialized once and remains valid for the library's
+/// lifetime. Each successful invocation transfers one exact-length boxed byte
+/// slice to the host, which must return it once through `vibe_ext_free`.
+#[macro_export]
+macro_rules! vibe_extension {
+    (manifest = $manifest:expr, handler = $handler:path $(,)?) => {
+        #[doc(hidden)]
+        fn __vibe_ext_manifest_value() -> $crate::Manifest {
+            $manifest
+        }
+
+        #[doc(hidden)]
+        fn __vibe_ext_handle(context: $crate::Context) -> $crate::Reply {
+            $handler(context)
+        }
+
+        #[doc(hidden)]
+        fn __vibe_ext_dispatch(request: &[u8]) -> Option<Vec<u8>> {
+            let context: $crate::Context = $crate::__serde_json::from_slice(request).ok()?;
+            if context.envelope != 1 {
+                return None;
+            }
+            let reply = __vibe_ext_handle(context);
+            $crate::__serde_json::to_vec(&reply).ok()
+        }
+
+        $crate::__vibe_ext_emit_abi!(
+            panic_message = "vibe_extension! requires panic = \"unwind\"; remove panic = \"abort\" from the extension's active Cargo profile",
+        );
+    };
+}
+
+/// Exports one compiler extension through the four-symbol ABI 1 surface.
+///
+/// Requests use the generated permissive compiler reader. Behavioral request
+/// admission occurs before the typed handler is called, and only a reply that
+/// preserves the admitted IR shape is serialized.
+#[macro_export]
+macro_rules! vibe_compile_extension {
+    (manifest = $manifest:expr, handler = $handler:path $(,)?) => {
+        #[doc(hidden)]
+        fn __vibe_ext_manifest_value() -> $crate::Manifest {
+            $manifest
+        }
+
+        #[doc(hidden)]
+        fn __vibe_ext_handle(request: $crate::CompileRequest) -> $crate::CompileReply {
+            $handler(request)
+        }
+
+        #[doc(hidden)]
+        fn __vibe_ext_dispatch(request: &[u8]) -> Option<Vec<u8>> {
+            let request: $crate::CompileRequest =
+                $crate::__serde_json::from_slice(request).ok()?;
+            let request_shape = $crate::__native_compile::validate_request(&request).ok()?;
+            let reply = __vibe_ext_handle(request);
+            $crate::__native_compile::validate_reply_for_shape(request_shape, &reply).ok()?;
+            $crate::__serde_json::to_vec(&reply).ok()
+        }
+
+        $crate::__vibe_ext_emit_abi!(
+            panic_message = "vibe_compile_extension! requires panic = \"unwind\"; remove panic = \"abort\" from the extension's active Cargo profile",
+        );
     };
 }
