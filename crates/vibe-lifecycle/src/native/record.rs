@@ -102,7 +102,9 @@ pub(super) fn revalidate_source_record(
     let path = record_path(expected.record_id);
     let record = read_record(expected.selected_project_root, expected.record_id)
         .map_err(|reason| unavailable(&path, reason))?
-        .ok_or_else(|| unavailable(&path, "record is missing".to_owned()))?;
+        .ok_or_else(|| NativeArtifactError::SourceRecordMissing {
+            record: path.clone(),
+        })?;
     let expected_root = match expected.provider.home {
         ProviderHome::Dependency => RelativeRoot::Slot,
         ProviderHome::Host => RelativeRoot::Project,

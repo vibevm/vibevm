@@ -486,7 +486,7 @@ impl DispatchError {
     }
 }
 
-fn effective_config(
+pub(crate) fn effective_config(
     row: &ExtensionRegistryRow,
 ) -> Result<BTreeMap<String, Option<serde_json::Value>>, DispatchError> {
     row.effective_config()

@@ -35,6 +35,26 @@ pub struct CompilerNativeCall<'call> {
 }
 
 impl<'call> CompilerNativeCall<'call> {
+    #[cfg(any(test, feature = "test-support"))]
+    #[doc(hidden)]
+    pub fn new_for_test(
+        key: &'call ExtensionKey,
+        point: CompilePoint,
+        order: u32,
+        config: &'call BTreeMap<String, Option<Value>>,
+        implementation: CompilerNativeImplementationDigest,
+        payload: Ir,
+    ) -> Self {
+        Self {
+            key,
+            point,
+            order,
+            config,
+            implementation,
+            payload,
+        }
+    }
+
     pub fn key(&self) -> &ExtensionKey {
         self.key
     }
@@ -57,6 +77,11 @@ impl<'call> CompilerNativeCall<'call> {
 
     pub fn payload(&self) -> &Ir {
         &self.payload
+    }
+
+    /// Move the manager-owned compiler IR into the generated transport root.
+    pub fn into_payload(self) -> Ir {
+        self.payload
     }
 }
 

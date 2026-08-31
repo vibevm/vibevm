@@ -47,6 +47,8 @@ walkdir.workspace = true
 [dev-dependencies]
 tempfile.workspace = true
 vibe-ext.workspace = true
+vibe-spec = { workspace = true, features = ["test-support"] }
+vibe-native-loader-compiler-fixture = { path = "../vibe-native-loader/tests/fixtures/native-compiler-plugin" }
 # The publish-stage REDs need a deterministic post-rename failure; the feature
 # compiles the injection point out of every shipped build.
 vibe-safefs = { workspace = true, features = ["inject-failures"] }

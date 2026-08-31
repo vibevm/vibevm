@@ -169,6 +169,11 @@ pub enum NativeArtifactError {
     RecordWrite { record: String, reason: String },
 
     #[error(
+        "native source artifact record `{record}` is missing (spec://org.vibevm.core/vibevm/common/PROP-054#ARTIFACT-REGISTRY); fix: run `vibe build`"
+    )]
+    SourceRecordMissing { record: String },
+
+    #[error(
         "native source artifact `{record}` is unavailable: {reason} (spec://org.vibevm.core/vibevm/common/PROP-054#ARTIFACT-REGISTRY); fix: run `vibe build`"
     )]
     SourceState { record: String, reason: String },

@@ -4255,6 +4255,7 @@ dependencies = [
  "vibe-ext",
  "vibe-extension-registry",
  "vibe-native-loader",
+ "vibe-native-loader-compiler-fixture",
  "vibe-registry",
  "vibe-safefs",
  "vibe-spec",

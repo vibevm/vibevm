@@ -5,6 +5,7 @@
 //! registry, or build lazily during invocation.
 
 mod cargo;
+mod compiler;
 mod error;
 mod path;
 mod platform;
@@ -25,6 +26,7 @@ use vibe_native_loader::{NativeInvocation, NativeLoader};
 use crate::handlers::{NativeBackend, NativeBackendRequest};
 use crate::{ExtensionRegistryRow, MechanismRegistryRow};
 
+pub use compiler::ArtifactCompilerNativeInvoker;
 pub use error::NativeArtifactError;
 pub use platform::NativePlatform;
 
@@ -499,3 +501,11 @@ fn slash(path: &Path) -> String {
 #[cfg(test)]
 #[path = "tests.rs"]
 mod tests;
+
+#[cfg(test)]
+#[path = "compiler_tests.rs"]
+mod compiler_tests;
+
+#[cfg(test)]
+#[path = "compiler_disabled_tests.rs"]
+mod compiler_disabled_tests;
