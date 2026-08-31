@@ -6,6 +6,7 @@
 
 mod cargo;
 mod compiler;
+mod compiler_facts;
 mod error;
 mod path;
 mod platform;
@@ -31,13 +32,16 @@ pub use error::NativeArtifactError;
 pub use platform::NativePlatform;
 
 use cargo::build_cdylib;
+use compiler_facts::{CompilerArtifactResolutionError, pending_source_capture};
 use path::{VerifiedFile, prebuilt_file, relative_spelling, source_crate};
 use provider::{ProviderFacts, ProviderHome, facts};
 use record::{
     SourceRecordExpectation, SourceRecordInputs, record_path, revalidate_source_record,
     write_source_record,
 };
-use witness::{config_witness, record_id, source_witness};
+use witness::{
+    config_witness, config_witness_digest, record_id, source_witness, source_witness_digest,
+};
 
 /// Inputs supplied by the future build-fence wiring.
 ///
@@ -191,6 +195,7 @@ pub fn build_native_sources(
         return Ok(Vec::new());
     }
     let build_provider = select_build_provider(execution)?;
+    let build_provider_pin = build_provider.pin();
     let mut outcomes = Vec::with_capacity(groups.len());
     for group in groups {
         prepare_dependency_ignore(&group.provider)?;
@@ -219,7 +224,7 @@ pub fn build_native_sources(
                 crate_dir: &group.crate_wire,
                 platform: execution.platform,
                 record_id: &id,
-                build_provider: &build_provider,
+                build_provider: &build_provider_pin,
                 source_witness: &source,
                 config_witness: &config,
                 created_at: execution.created_at,
@@ -252,23 +257,43 @@ pub fn resolve_native_artifact(
     execution: &NativeBuildExecution<'_>,
     row: &ExtensionRegistryRow,
 ) -> Result<ResolvedNativeArtifact, NativeArtifactError> {
+    resolve_native_artifact_inner(execution, row, None)
+        .map_err(CompilerArtifactResolutionError::into_artifact_error)
+}
+
+fn resolve_native_artifact_for_compiler(
+    execution: &NativeBuildExecution<'_>,
+    row: &ExtensionRegistryRow,
+    order: u32,
+) -> Result<ResolvedNativeArtifact, CompilerArtifactResolutionError> {
+    resolve_native_artifact_inner(execution, row, Some(order))
+}
+
+fn resolve_native_artifact_inner(
+    execution: &NativeBuildExecution<'_>,
+    row: &ExtensionRegistryRow,
+    pending_order: Option<u32>,
+) -> Result<ResolvedNativeArtifact, CompilerArtifactResolutionError> {
     let ExtensionHandler::Native {
         crate_dir,
         prebuilt,
     } = &row.declaration().handler
     else {
-        return Err(NativeArtifactError::NoCurrentArtifact {
-            extension: row.key().to_string(),
-            platform: execution.platform.key().to_owned(),
-            declared: "row is not a native handler".to_owned(),
-        });
+        return Err(CompilerArtifactResolutionError::Artifact(
+            NativeArtifactError::NoCurrentArtifact {
+                extension: row.key().to_string(),
+                platform: execution.platform.key().to_owned(),
+                declared: "row is not a native handler".to_owned(),
+            },
+        ));
     };
     let provider = facts(row);
     if let Some(path) = prebuilt
         .as_ref()
         .and_then(|entries| entries.get(execution.platform.key()))
     {
-        let file = prebuilt_file(&row.key().to_string(), &provider, path, execution.platform)?;
+        let file = prebuilt_file(&row.key().to_string(), &provider, path, execution.platform)
+            .map_err(CompilerArtifactResolutionError::Artifact)?;
         return Ok(resolved(
             row,
             provider.identity,
@@ -278,34 +303,71 @@ pub fn resolve_native_artifact(
         ));
     }
     let Some(crate_dir) = crate_dir else {
-        return Err(no_current(row, prebuilt.as_ref(), execution.platform));
+        return Err(CompilerArtifactResolutionError::Artifact(no_current(
+            row,
+            prebuilt.as_ref(),
+            execution.platform,
+        )));
     };
-    let crate_wire =
-        relative_spelling(crate_dir).map_err(|reason| NativeArtifactError::CrateDirectory {
+    let crate_wire = relative_spelling(crate_dir)
+        .map_err(|reason| NativeArtifactError::CrateDirectory {
             provider: provider.identity.clone(),
             crate_dir: slash(crate_dir),
             reason,
-        })?;
+        })
+        .map_err(CompilerArtifactResolutionError::Artifact)?;
     let rows = source_group_rows(
         execution.candidates,
         &provider.identity,
         &crate_wire,
         execution.platform,
-    )?;
-    let source = source_witness(&provider)?;
-    let config = config_witness(&rows);
+    )
+    .map_err(CompilerArtifactResolutionError::Artifact)?;
+    // One raw digest instance per witness. The artifact-record wire projects
+    // these same values to lowercase hex; FACTS retains the raw bytes only on
+    // the exact typed missing-record branch below.
+    let source_digest =
+        source_witness_digest(&provider).map_err(CompilerArtifactResolutionError::Artifact)?;
+    let source = source_digest.hex();
+    let config_digest = config_witness_digest(&rows);
+    let config = config_digest.hex();
     let id = record_id(&provider.identity, &crate_wire, execution.platform);
-    let build_provider = select_build_provider(execution)?;
-    source_crate(&provider, crate_dir)?;
-    let file = revalidate_source_record(&SourceRecordExpectation {
+    let build_provider =
+        select_build_provider(execution).map_err(CompilerArtifactResolutionError::Artifact)?;
+    let build_provider_pin = build_provider.pin();
+    source_crate(&provider, crate_dir).map_err(CompilerArtifactResolutionError::Artifact)?;
+    let file = match revalidate_source_record(&SourceRecordExpectation {
         selected_project_root: execution.selected_project_root,
         provider: &provider,
         platform: execution.platform,
         record_id: &id,
-        build_provider: &build_provider,
+        build_provider: &build_provider_pin,
         source_witness: &source,
         config_witness: &config,
-    })?;
+    }) {
+        Ok(file) => file,
+        Err(NativeArtifactError::SourceRecordMissing { record }) => {
+            let Some(order) = pending_order else {
+                return Err(CompilerArtifactResolutionError::Artifact(
+                    NativeArtifactError::SourceRecordMissing { record },
+                ));
+            };
+            let fact = pending_source_capture(
+                row,
+                order,
+                execution.platform,
+                source_digest,
+                config_digest,
+                &build_provider,
+            )
+            .map_err(CompilerArtifactResolutionError::Fact)?;
+            return Err(CompilerArtifactResolutionError::Missing {
+                record,
+                fact: Box::new(fact),
+            });
+        }
+        Err(error) => return Err(CompilerArtifactResolutionError::Artifact(error)),
+    };
     Ok(resolved(
         row,
         provider.identity,
@@ -381,9 +443,20 @@ fn source_group_rows<'a>(
         })
 }
 
-fn select_build_provider(
-    execution: &NativeBuildExecution<'_>,
-) -> Result<String, NativeArtifactError> {
+pub(super) struct SelectedBuildProvider<'registry> {
+    pub(super) key: MechanismKey,
+    pub(super) row: &'registry MechanismRegistryRow,
+}
+
+impl SelectedBuildProvider<'_> {
+    fn pin(&self) -> String {
+        self.row.pin().to_string()
+    }
+}
+
+fn select_build_provider<'registry>(
+    execution: &NativeBuildExecution<'registry>,
+) -> Result<SelectedBuildProvider<'registry>, NativeArtifactError> {
     let key = "build:cargo".parse::<MechanismKey>().map_err(|error| {
         NativeArtifactError::MechanismSelection {
             reason: format!("engine-owned key is invalid: {error}"),
@@ -395,10 +468,14 @@ fn select_build_provider(
                 reason: error.to_string(),
             }
         })?;
-    admit_builtin(selection.row())
+    admit_builtin(selection.row())?;
+    Ok(SelectedBuildProvider {
+        key,
+        row: selection.row(),
+    })
 }
 
-fn admit_builtin(row: &MechanismRegistryRow) -> Result<String, NativeArtifactError> {
+fn admit_builtin(row: &MechanismRegistryRow) -> Result<(), NativeArtifactError> {
     let provider = row.pin().to_string();
     if !row.is_builtin() {
         return Err(NativeArtifactError::TransportNotLanded {
@@ -407,7 +484,7 @@ fn admit_builtin(row: &MechanismRegistryRow) -> Result<String, NativeArtifactErr
         });
     }
     match row.handler() {
-        ExtensionHandler::Builtin { name } if name == "cargo" => Ok(provider),
+        ExtensionHandler::Builtin { name } if name == "cargo" => Ok(()),
         ExtensionHandler::Builtin { name } => Err(NativeArtifactError::UnknownBuiltin {
             provider,
             name: name.clone(),

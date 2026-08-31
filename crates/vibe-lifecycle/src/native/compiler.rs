@@ -13,14 +13,19 @@ use vibe_spec::{
 use vibe_wire::behaviour::native_compile;
 use vibe_wire::generated::native::e1::compile_request::CompileRequest;
 use vibe_wire::generated::shared::{Execution, Io, Project, World};
+use vibe_workspace::extension_world::{
+    CompilerNativeFactBinding, CompilerNativeFactError, PendingBuildFact,
+};
 
 use crate::ExtensionRegistryRow;
 use crate::execution::effective_config;
 use crate::process::execution_scratch;
 
 use super::{
-    NativeArtifactError, NativeBuildExecution, path::publish_load_image, process_loader,
-    resolve_native_artifact,
+    NativeArtifactError, NativeBuildExecution,
+    compiler_facts::{CompilerArtifactResolutionError, PendingFactRecorder},
+    path::publish_load_image,
+    process_loader, resolve_native_artifact_for_compiler,
 };
 
 /// One borrowed compiler-native execution epoch backed by retained ARTIFACTs.
@@ -32,6 +37,7 @@ pub struct ArtifactCompilerNativeInvoker<'a> {
     world: &'a World,
     run_id: &'a str,
     loader: &'static NativeLoader,
+    facts: PendingFactRecorder,
 }
 
 impl<'a> ArtifactCompilerNativeInvoker<'a> {
@@ -50,6 +56,7 @@ impl<'a> ArtifactCompilerNativeInvoker<'a> {
             world,
             run_id,
             loader: process_loader(),
+            facts: PendingFactRecorder::new(),
         }
     }
 
@@ -70,7 +77,8 @@ impl<'a> ArtifactCompilerNativeInvoker<'a> {
         &'row self,
         call: CompilerNativeCall<'_>,
     ) -> Result<PreparedCall<'row>, CompilerNativeInvokerError> {
-        let order = usize::try_from(call.order()).map_err(|_| {
+        let manager_order = call.order();
+        let order = usize::try_from(manager_order).map_err(|_| {
             failed(format!(
                 "compile row order {} is not an index",
                 call.order()
@@ -187,6 +195,7 @@ impl<'a> ArtifactCompilerNativeInvoker<'a> {
         })?;
         Ok(PreparedCall {
             row,
+            order: manager_order,
             point,
             qualified_key,
             request,
@@ -203,8 +212,37 @@ impl CompilerNativeInvoker for ArtifactCompilerNativeInvoker<'_> {
                 prepared.qualified_key
             ))
         })?;
-        let artifact = resolve_native_artifact(&self.execution, prepared.row)
-            .map_err(|error| artifact_failure(&prepared.qualified_key, error))?;
+        let artifact = match resolve_native_artifact_for_compiler(
+            &self.execution,
+            prepared.row,
+            prepared.order,
+        ) {
+            Ok(artifact) => artifact,
+            Err(CompilerArtifactResolutionError::Missing { record, fact }) => {
+                self.facts.record(*fact).map_err(|error| {
+                    failed(format!(
+                        "compile row `{}` pending fact recorder: {error}",
+                        prepared.qualified_key
+                    ))
+                })?;
+                return Err(CompilerNativeInvokerError::new(
+                    CompilerNativeInvokerErrorKind::BuildableSourceUnavailable,
+                    format!(
+                        "compile row `{}` source record `{record}` is missing",
+                        prepared.qualified_key
+                    ),
+                ));
+            }
+            Err(CompilerArtifactResolutionError::Artifact(error)) => {
+                return Err(artifact_failure(&prepared.qualified_key, error));
+            }
+            Err(CompilerArtifactResolutionError::Fact(reason)) => {
+                return Err(failed(format!(
+                    "compile row `{}` pending facts: {reason}",
+                    prepared.qualified_key
+                )));
+            }
+        };
         let image = publish_load_image(
             self.execution.selected_project_root,
             Path::new(&artifact.path_absolute),
@@ -233,21 +271,29 @@ impl CompilerNativeInvoker for ArtifactCompilerNativeInvoker<'_> {
     }
 }
 
+impl CompilerNativeFactBinding for ArtifactCompilerNativeInvoker<'_> {
+    fn invoker(&self) -> &dyn CompilerNativeInvoker {
+        self
+    }
+
+    fn take_pending_build_facts(
+        &self,
+        pending: &vibe_spec::CompilerPendingSet,
+    ) -> Result<Vec<PendingBuildFact>, CompilerNativeFactError> {
+        self.facts.take(pending)
+    }
+}
+
 struct PreparedCall<'row> {
     row: &'row ExtensionRegistryRow,
+    order: u32,
     point: vibe_core::lifecycle::CompilePoint,
     qualified_key: String,
     request: CompileRequest,
 }
 
 fn artifact_failure(key: &str, error: NativeArtifactError) -> CompilerNativeInvokerError {
-    match error {
-        NativeArtifactError::SourceRecordMissing { record } => CompilerNativeInvokerError::new(
-            CompilerNativeInvokerErrorKind::BuildableSourceUnavailable,
-            format!("compile row `{key}` source record `{record}` is missing"),
-        ),
-        other => failed(format!("compile row `{key}` artifact: {other}")),
-    }
+    failed(format!("compile row `{key}` artifact: {error}"))
 }
 
 fn failed(detail: impl AsRef<str>) -> CompilerNativeInvokerError {

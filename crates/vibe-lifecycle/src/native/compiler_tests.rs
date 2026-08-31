@@ -585,3 +585,9 @@ mod fixture_tests;
 
 #[path = "compiler_coherence_tests.rs"]
 mod coherence_tests;
+
+#[path = "compiler_facts_tests.rs"]
+mod facts_tests;
+
+#[path = "compiler_facts_semantic_tests.rs"]
+mod facts_semantic_tests;

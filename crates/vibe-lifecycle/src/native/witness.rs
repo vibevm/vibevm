@@ -20,13 +20,17 @@ pub(super) fn record_id(provider: &str, crate_dir: &str, platform: NativePlatfor
     hash.field("provider", provider.as_bytes());
     hash.field("crate_dir", crate_dir.as_bytes());
     hash.field("platform", platform.key().as_bytes());
-    hash.finish()
+    hash.finish().hex()
 }
 
 /// Bind every declaration sharing one provider/crate build, in candidate
 /// order. A later process receives the same retained slice and can therefore
 /// reject a changed handler or effective config before trusting the record.
 pub(super) fn config_witness(rows: &[&ExtensionRegistryRow]) -> String {
+    config_witness_digest(rows).hex()
+}
+
+pub(super) fn config_witness_digest(rows: &[&ExtensionRegistryRow]) -> WitnessDigest {
     let mut hash = Frame::new(CONFIG_DOMAIN);
     hash.field("row_count", rows.len().to_string().as_bytes());
     for row in rows {
@@ -63,6 +67,12 @@ pub(super) fn config_witness(rows: &[&ExtensionRegistryRow]) -> String {
 }
 
 pub(super) fn source_witness(provider: &ProviderFacts) -> Result<String, NativeArtifactError> {
+    source_witness_digest(provider).map(|digest| digest.hex())
+}
+
+pub(super) fn source_witness_digest(
+    provider: &ProviderFacts,
+) -> Result<WitnessDigest, NativeArtifactError> {
     let content_hash = match provider.home {
         ProviderHome::Dependency => {
             provider
@@ -159,23 +169,42 @@ fn slash(path: &Path) -> String {
     path.display().to_string().replace('\\', "/")
 }
 
-struct Frame(Sha256);
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(super) struct WitnessDigest([u8; 32]);
+
+impl WitnessDigest {
+    pub(super) const fn as_bytes(&self) -> &[u8; 32] {
+        &self.0
+    }
+
+    pub(super) fn hex(&self) -> String {
+        const HEX: &[u8; 16] = b"0123456789abcdef";
+        let mut text = String::with_capacity(64);
+        for byte in self.0 {
+            text.push(HEX[(byte >> 4) as usize] as char);
+            text.push(HEX[(byte & 0x0f) as usize] as char);
+        }
+        text
+    }
+}
+
+pub(super) struct Frame(Sha256);
 
 impl Frame {
-    fn new(domain: &[u8]) -> Self {
+    pub(super) fn new(domain: &[u8]) -> Self {
         let mut hash = Sha256::new();
         hash.update(domain);
         Self(hash)
     }
 
-    fn field(&mut self, label: &str, value: &[u8]) {
+    pub(super) fn field(&mut self, label: &str, value: &[u8]) {
         self.0.update((label.len() as u64).to_be_bytes());
         self.0.update(label.as_bytes());
         self.0.update((value.len() as u64).to_be_bytes());
         self.0.update(value);
     }
 
-    fn finish(self) -> String {
-        format!("{:x}", self.0.finalize())
+    pub(super) fn finish(self) -> WitnessDigest {
+        WitnessDigest(self.0.finalize().into())
     }
 }

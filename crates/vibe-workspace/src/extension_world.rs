@@ -44,10 +44,12 @@ use crate::vibedeps::{in_place_slot_abs_path, slot_abs_path};
 
 mod epoch;
 mod errors;
+mod native_facts;
 mod pending;
 mod runtime;
 
 pub use errors::ExtensionWorldError;
+pub use native_facts::{CompilerNativeFactBinding, CompilerNativeFactError};
 pub use pending::{
     PendingArtifactEvidence, PendingArtifactTarget, PendingBuildFact, PendingBuildProviderDigest,
     PendingEvidenceError, PendingFingerprint, PendingHandlerConfigWitness, PendingPlatformKey,
@@ -57,6 +59,10 @@ pub use runtime::{
     LoweredOwnerRuntimes, OwnerRuntime, OwnerRuntimeEpoch, OwnerRuntimeId, OwnerRuntimeLowering,
     OwnerRuntimeRows, OwnerRuntimeRunFacts, OwnerRuntimeView, lower_owner_runtimes,
 };
+
+#[cfg(test)]
+#[path = "extension_world/native_facts_tests.rs"]
+mod native_facts_tests;
 
 /// One installed package as the durable world retains it.
 ///
