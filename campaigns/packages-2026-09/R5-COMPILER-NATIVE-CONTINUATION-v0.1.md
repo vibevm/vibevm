@@ -734,3 +734,49 @@ proof that common selected facts and preset injection survive without I/O.
 It does not invoke a native artifact, classify pending, build source, run Cargo,
 replay a lane, change the install result or alter the build fence. INSTALL owns
 the production transfer and removal of the final phase recollection.
+
+## 18. R5.4-EPOCH-LOWER ratification
+
+**Accepted 2026-08-31.** Registry product `ab0ab90f`, workspace product
+`d2b06561` and trace/map `55595f1f` implement the two-stage neutral runtime
+authority frozen above. `RegistryRowIndex` is origin-token-bound rather than a
+row address: moving a registry preserves indices, cloning mints a fresh token,
+and a stale index remains inert after origin drop. Public foreign projection is
+optional and non-panicking; internal same-registry projection is infallible.
+Complete compile and all-family native index sequences share the registry's one
+effective-order authority, retain selectors, exclude inactive/disabled rows and
+never clone candidates or confuse registry position with manager dense order.
+
+`LoweredOwnerRuntimes` owns one `OwnerRuntime` for every workspace node and
+installed package coordinate. Each runtime owns one registry, plan, mechanism
+registry, exact routes and opaque row subsets. Mechanisms are collected from
+the owner view before that same value is consumed by extension collection;
+plan lowering occurs at the single authority and package units are sorted and
+lowered once globally. Temporary compile/native slices borrow pointer-identical
+rows. Selected member `Project`/`World` facts are built once from its distinct
+closure and borrowed by node/unit views; run facts bind by move without adding
+a second selected-root authority.
+
+Boot regeneration now has a prepared result carrying nodes plus the neutral
+runtime set. The complete set is lowered before publication; unit fingerprints,
+unit emission, node writes, verification and analysis consume its retained
+plans. Compatibility wrappers explicitly select root/no-presets and discard the
+runtime. Production install carriage, native invocation, pending policy,
+source builds, replay and phase rewiring remain absent and owned by later R5.4
+children.
+
+Reviews rejected the first index witness for allocator ABA and silent
+`filter_map` loss, then required direct plan spec edges and a real slot-native
+all-family RED. Runtime review rejected weak owner-seat/routes/exact-once and
+circular parity evidence, then required unwind-safe observation and structural
+single-authority counts. The accepted panel proves exact Host/Dependency seats,
+three exact route authorities, preset isolation, canonical first refusal,
+publication-free lowering failure, selected-member closure, common-fact pointer
+sharing and an in-memory Ready overlay that disagrees with stale lock before a
+matching-lock Fresh runtime and byte comparison. Final independent verdict is
+PASS.
+
+Final gates: registry 61/61, workspace 495/495, workspace/registry check and
+all-target clippy with warnings denied, fmt, conform 48 standing/0 new, and
+specmap 6,833 units / 3,049 tagged / 2,804 edges with zero suspects, gated
+orphans or unresolved host edges and 26 warnings. R5.4-PENDING is next.
