@@ -1416,6 +1416,16 @@ than depending on untracked `cache/` archaeology.
   Gates pass vibe-spec 899, workspace 499, check/clippy/fmt, conform 48/0 new;
   specmap 6833/3052/2807 with zero suspects/orphans/unresolved and 26 warnings.
   PENDING accepted; WORKSPACE next owns finalization/publication/replay.
+- R5.4-WORKSPACE implementation freeze: two native `gpt-5.6-sol`/`xhigh`
+  reviews split the path into FINALIZE → FACTS → COMPILE → FRESHNESS →
+  REPLAY-PREPARE → REPLAY-PUBLISH. Spec consumes opaque pending artifacts and
+  truthfully rebuilds framing/digest; lifecycle implements a workspace-defined
+  typed fact port without error-text parsing; one node/unit core finalizes
+  before trace completion/publication; native lanes cannot hide behind
+  plan-only freshness. Replay owns only affected semantic inputs, prepares all
+  lanes before any write, then reuses per-owner recovery sequentially with no
+  global rollback claim. INSTALL transports values; FENCE sequences build and
+  the single replay call.
 - R4.2 minify binding, RED corpus and activation e2e: `7a09ec2d` registers
   `xml-minify` (epoch 1, EMITTED — the one stage the kernel serves without a
   new serializer; every other stage refuses through the registry's own law)

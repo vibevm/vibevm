@@ -870,3 +870,56 @@ with zero suspects, gated orphans or unresolved host edges and 26 warnings.
 Final artifact header rewrite/digest, trace completion, node/unit threading,
 publication and replay remain R5.4-WORKSPACE. R5.4-PENDING is accepted;
 WORKSPACE is next.
+
+## 21. R5.4-WORKSPACE implementation freeze
+
+**Frozen 2026-09-01 after two native `gpt-5.6-sol`/`xhigh` design
+reviews.** WORKSPACE owns the complete path from opaque compiler-pending output
+to truthful per-owner publication plus a non-Clone replay continuation. It is a
+six-slice serial workstream: FINALIZE → FACTS → COMPILE → FRESHNESS →
+REPLAY-PREPARE → REPLAY-PUBLISH.
+
+FINALIZE lives in `vibe-spec`. It consumes `CompilerPendingArtifact`, validates
+the exact retained plan/set, derives the filtered active header and generates
+the pending header from a raw workspace fingerprint. It replaces only the
+expected fixed opening framing in Markdown/XML, preserves the body and every
+provenance member, appends no executed transform, recomputes byte digest/output
+fingerprint, and returns publishable artifact plus the still-owned pending set.
+Tampered/moved/missing original framing refuses.
+
+FACTS uses a workspace-defined structured binding port implemented by
+`ArtifactCompilerNativeInvoker` in `vibe-lifecycle`—the dependency direction
+already runs lifecycle → workspace. It joins manager order/key to the same
+retained row and returns closed platform, raw source/config/provider semantic
+witnesses and exact `build:cargo`, never parsing error text. Missing/duplicate/
+conflicting recorder state converts the call to a hard typed failure. No Cargo
+call is made.
+
+COMPILE is one plain/traced/observed node+unit core over retained owner
+runtimes. No static input returns before compiler/scope/facts/replay allocation.
+Ready joins successful structured facts. Pending joins one-to-one facts, builds
+workspace evidence, consumes FINALIZE, and only then completes trace with the
+final output fingerprint. Pending analyzer deltas remain absent. The same core
+produces identical final bytes/evidence in all observation modes.
+
+FRESHNESS preserves historical builtin-only fingerprints. A unit containing
+native compile rows cannot use the plan-only early skip: it compiles once so
+selector/runtime/artifact truth is observed, then byte-equal transactional
+publication preserves mtime. Pending adds its fingerprint to runtime/boot
+freshness and is always rediscovered on the next prerequisite install; Resolve
+removes that frame.
+
+The owned replay set contains only affected node/unit lane descriptors, exact
+pending sets and retained semantic compile/publication inputs—never a trace
+borrow, invoker, provisional bytes, header-parsed state or journal.
+REPLAY-PREPARE consumes every expected set under Resolve, forces each affected
+lane exactly once, requires complete receipts/Ready, and prepares every owner’s
+INDEX/STATIC bytes before any write. REPLAY-PUBLISH then walks deterministic
+owners through the existing per-owner crash-recoverable transaction. It stops
+later owners on failure, preserves prior committed owners, restores caught
+precommit current-owner failure, permits committed-new plus recovery intent on
+postcommit cleanup failure, and claims no global rollback.
+
+INSTALL later chooses Empty/Fresh/Ready, supplies Collect binding and carries
+runtime+replay values. FENCE later orders native build → one workspace replay →
+authored targets → phase rows. Neither sequence lands in WORKSPACE.
