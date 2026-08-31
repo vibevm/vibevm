@@ -432,3 +432,35 @@ standing/0 new. Fourteen worker and one central duplicate-precedence mutation
 were RED and restored. Specmap remains 6,833 units / 3,041 tagged / 2,792
 edges, 0 suspects, gated orphans or unresolved host edges, 25 warnings.
 R5.5-INVOKE-ARTIFACT is next.
+
+## 13. R5.5-INVOKE-ARTIFACT ratification
+
+**Accepted 2026-08-31.** Product `6b5ab9e9` and map `a5a69a0c` add one
+lifecycle-owned borrowed `ArtifactCompilerNativeInvoker` without production
+workspace/install threading. It indexes the complete all-compile-row epoch by
+manager dense order, then requires exact qualified key, enabled native handler,
+typed point, shared effective config, opaque handler digest and pointer-identical
+membership in the captured native candidate epoch. Injected `Project.root` must
+canonically equal the selected project root before scratch.
+
+After admission, contained scratch is keyed by the qualified row, the generated
+schema-1 request receives declaration id, exact provider, manager-owned config,
+Project/World and move-only canonical IR, then only a verified prebuilt or
+stable source record reaches immutable image publication and the process-shared
+raw loader. Compiler reply bytes return untouched. Missing source records alone
+retain `BuildableSourceUnavailable`; stale/malformed/corrupt records, prebuilt,
+image, loader, manifest and panic failures stay hard invocation errors.
+
+Independent review rejected the initial PASS because an all-row from one epoch
+could be resolved against another native candidate slice, and injected project
+identity could disagree with the root owning scratch/artifact state. Pointer
+membership and canonical root equality closed both before scratch; review then
+passed.
+
+Final gates: focused artifact adapter 14, complete lifecycle 607 passed / 3
+privilege ignores + 39 doctests, manager 875 + 5/2/7 + 4 docs, SDK 1+1+6+8,
+loader 20+3+4, downstream workspace/orchestrator, `check-codegen`, strict
+workspace check/clippy/fmt and conform 48 standing/0 new. Eighteen worker and
+one central provider-authority mutation were RED and restored. Specmap is 6,833
+units / 3,042 tagged / 2,793 edges, 0 suspects, gated orphans or unresolved
+host edges, 25 warnings. R5.5-INVOKE-GATE is next.
