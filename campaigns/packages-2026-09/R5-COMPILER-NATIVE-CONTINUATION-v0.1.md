@@ -98,3 +98,47 @@ mandatory verification, no lazy build and real SDK→loader identity execution.
 R5.4 proves pending framing/fingerprint, install without Cargo, one build-fence
 retry and transaction-preserving failure. PARITY proves native and builtin XML
 minify byte identity and the complete commissioning scenario.
+
+## 6. R5.5-WIRE-PROJECTION ratification
+
+**Accepted 2026-08-31.** Product `9051aade`, trace engine/sync `dc9cff48` and
+map `5adea048` land the projection prerequisite without native compile roots or
+runtime invocation. Compiler IR is now one strict shared family; the legacy
+compiler module contains 118 exact re-exports and no declarations. The thin
+schema names the canonical `ir` vocabulary root and its 55-member closure.
+
+The new `x-reader-projection = "permissive"` marker is admitted only on one
+object-member ref in a registry-permissive consumer with an unprojected strict
+owner. Projected-only consumption does not enter the ordinary shared-policy
+join, so unmarked strict/permissive mixtures still refuse. A generated local
+serde visitor rejects duplicate object members at every depth, prunes unknown
+members according to the resolved JTD closure, then decodes into the canonical
+strict type. Required members, types, discriminator tags and closed vocabularies
+remain strict; empty objects clear unknown members. Recursive marker census and
+generated-field accounting make every marker exactly-once.
+
+Independent native review rejected the initial PASS for three defects:
+`serde_json::Value` duplicate collapse, consumer-marker census blind spots and
+empty-object invalid Rust. The correction added duplicate root/nested/arm
+refusals, arbitrary misplaced-marker refusals and an empty-object runtime pin.
+Nine worker plus two central projection mutations were RED and restored.
+
+Moving schema definitions exposed a traceability loss: the old scanner saw
+only inline `definitions`, dropping 55 items and one root edge. The first repair
+packet incorrectly targeted frozen core-ai-native v0.8 and was discarded. The
+current authored v1.0 engine now reads one explicitly configured, canonically
+contained vocabulary file and projects only same-named thin shared roots;
+ordinary and alias schemas never duplicate units. Vocabulary member spans and
+edge provenance come from authored vocabulary bytes. Review then rejected
+absolute/traversal/symlink authority; the correction added bounded typed
+refusals and a real Windows symlink-escape pin before official vendor sync.
+Five worker plus two central trace mutations were RED and restored.
+
+Final gates: xtask codegen 156, complete vibe-wire 321, compiler IR 7/6/5/8 +
+sharing 2, whole generated tree 82-file hash-idempotent, staged
+`check-codegen` clean, wire-diff one schema + one vocabulary / zero corpus,
+strict check/clippy/fmt and conform zero-new. The authored specmap engine passes
+153 unit + 7 doctests; six current vendor copies are hash-identical and
+`sync-engines --check` is 51/51. Specmap remains 6,833 units / 3,036 tagged /
+2,789 edges, 0 suspects, gated orphans or unresolved host edges, 25 warnings.
+R5.5-WIRE is the next consumer.
