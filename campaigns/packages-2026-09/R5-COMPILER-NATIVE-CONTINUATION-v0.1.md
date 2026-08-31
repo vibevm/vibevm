@@ -340,3 +340,38 @@ No `Arc` invoker, lifecycle Context/Reply reuse, loader-side compile decode,
 `serde_json::Value` reply collapse, adapter selector evaluation, second DTO,
 lazy Cargo/probe, second ritual/runtime epoch or production workspace/install
 threading is permitted in R5.5-INVOKE.
+
+## 10. R5.5-INVOKE-MANAGER ratification
+
+**Accepted 2026-08-31.** Product `846979f9` and map `150f0866` land the
+manager-only child without SDK, loader, lifecycle artifact or production
+install changes. The opaque transform implementation family now has byte-
+compatible builtin and frozen native arms. Native digesting uses reserved tag
+1, ABI/schema epoch 1 and exact fallible UTF-8 portable `crate_dir`/`prebuilt`
+identity; invalid OS strings refuse typed and cannot collide through lossy
+replacement. One public opaque digest function is shared by plan lowering and
+the later ARTIFACT adapter.
+
+The compiler accepts one stack-borrowed `CompilerNativeInvoker`. Calls carry
+qualified key, typed point, dense order, effective config, opaque implementation
+digest and the canonical generated IR. Pass/pipeline/schedule lifetimes borrow
+that invoker without `Arc`; old plain/traced/observed entries refuse native
+plans explicitly, while native-aware siblings share the same manager schedule.
+Replies cross the raw duplicate-key walker, strict generated reply reader,
+epoch/status/carrier checks and canonical conversion before native-local
+intrinsic/transition verification. Source/document identities, lane admission
+and emitted reconstruction remain manager-owned; native presence never enables
+global verification for adjacent builtins.
+
+The first native review rejected the initial PASS for lossy path digesting,
+missing hostile/order/config/status/stage coverage and incomplete no-go fences.
+The correction made path projection fallible, split test support/matrix/hostile
+cells, and added per-cell plus exact import/DAG fences. A second review found
+only one stale typed-Result doc sentence; after correction it returned PASS.
+
+Final gates: focused native manager 22, complete vibe-spec 875 unit + 5/2/7
+integration + 4 doctests, downstream workspace/orchestrator check,
+`check-codegen`, strict workspace check/clippy/fmt and conform 48 standing/0
+new. Ten worker and one different central carrier mutation were RED and
+restored. Specmap is 6,833 units / 3,041 tagged / 2,792 edges, 0 suspects,
+gated orphans or unresolved host edges, 25 warnings. R5.5-INVOKE-SDK is next.
