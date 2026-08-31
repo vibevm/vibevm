@@ -1,5 +1,7 @@
 //! Neutral owner-runtime lowering over one [`ExtensionWorldEpoch`].
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM");
+
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
