@@ -298,6 +298,22 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/native/e1/compile_reply.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "compile_reply",
+      "end_line": 46
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/native/e1/compile_request.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "compile_request",
+      "end_line": 35
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/lifecycle/e1/context.jtd.json",
       "item_kind": "schema",
       "line": 1,
