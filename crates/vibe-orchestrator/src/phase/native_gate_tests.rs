@@ -34,7 +34,7 @@ fn fixture_name() -> String {
 }
 
 #[spec(
-    deviates = "spec://org.vibevm.ai-native/rust-ai-native-lang/guide#bans-and-escape-hatches",
+    deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
     reason = "test fixture setup uses immediate assertions to keep failures local"
 )]
 fn fixture_library() -> PathBuf {
@@ -63,7 +63,7 @@ fn fixture_library() -> PathBuf {
 }
 
 #[spec(
-    deviates = "spec://org.vibevm.ai-native/rust-ai-native-lang/guide#bans-and-escape-hatches",
+    deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
     reason = "test fixture enumeration treats malformed target entries as assertion failures"
 )]
 fn collect_exact(directory: &Path, exact_name: &str, candidates: &mut Vec<PathBuf>) {
@@ -79,7 +79,7 @@ fn collect_exact(directory: &Path, exact_name: &str, candidates: &mut Vec<PathBu
 }
 
 #[spec(
-    deviates = "spec://org.vibevm.ai-native/rust-ai-native-lang/guide#bans-and-escape-hatches",
+    deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
     reason = "test fixture construction is intentionally fail-fast"
 )]
 fn copy_fixture(root: &Path) -> String {
@@ -90,7 +90,7 @@ fn copy_fixture(root: &Path) -> String {
 }
 
 #[spec(
-    deviates = "spec://org.vibevm.ai-native/rust-ai-native-lang/guide#bans-and-escape-hatches",
+    deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
     reason = "test-only source fixture construction is intentionally fail-fast"
 )]
 fn write_source_crate(root: &Path, extensions: &[(&str, &str)], message: &str) {
@@ -155,7 +155,7 @@ fn prebuilt_rows(ids: &[&str], point: &str, relative: &str) -> String {
 }
 
 #[spec(
-    deviates = "spec://org.vibevm.ai-native/rust-ai-native-lang/guide#bans-and-escape-hatches",
+    deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
     reason = "test project construction is intentionally fail-fast"
 )]
 fn prebuilt_project(ids: &[&str]) -> tempfile::TempDir {
@@ -170,7 +170,7 @@ fn prebuilt_project(ids: &[&str]) -> tempfile::TempDir {
 }
 
 #[spec(
-    deviates = "spec://org.vibevm.ai-native/rust-ai-native-lang/guide#bans-and-escape-hatches",
+    deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
     reason = "qualified report keys are an asserted fixture invariant"
 )]
 fn report_ids(values: &LifecycleValues) -> Vec<(&str, &str)> {
@@ -212,7 +212,7 @@ struct SlotFixture {
 
 impl SlotFixture {
     #[spec(
-        deviates = "spec://org.vibevm.ai-native/rust-ai-native-lang/guide#bans-and-escape-hatches",
+        deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
         reason = "test slot construction is intentionally fail-fast"
     )]
     fn new(root: &Path, rows: &[(&str, &str)]) -> Self {
@@ -267,7 +267,7 @@ impl SlotFixture {
 }
 
 #[spec(
-    deviates = "spec://org.vibevm.ai-native/rust-ai-native-lang/guide#bans-and-escape-hatches",
+    deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
     reason = "test lifecycle composition is intentionally fail-fast"
 )]
 fn slot_lifecycle(root: &Path, fixture: &SlotFixture) -> InstallSlotLifecycle {
