@@ -219,3 +219,266 @@ fn scans_only_jtd_json_and_walks_recursively() {
     assert_eq!(edges.len(), 1, "only a's root edge; b.json ignored");
     assert_eq!(edges[0].uri, URI);
 }
+
+fn write_fixture(root: &Path, rel: &str, body: &str) {
+    let path = root.join(rel);
+    std::fs::create_dir_all(path.parent().unwrap()).unwrap();
+    std::fs::write(path, body).unwrap();
+}
+
+/// A generic, non-product-named two-hop shared vocabulary proves the scanner
+/// follows declared metadata rather than recognising a compiler filename.
+/// Every projected position and edge is anchored in the vocabulary member.
+#[test]
+fn thin_shared_root_projects_transitive_closure_with_measured_positions_and_edges() {
+    let tmp = tempfile::tempdir().unwrap();
+    let root = tmp.path();
+    let schema = r#"{
+  "metadata": {
+    "x-vocabularies": ["shared"]
+  },
+  "ref": "shared"
+}
+"#;
+    let vocabulary = format!(
+        r#"{{
+  "shared": {{
+    "metadata": {{
+      "x-vocabularies": ["branch"],
+      "spec": {{"implements": "{URI}"}}
+    }},
+    "ref": "branch"
+  }},
+  "branch": {{
+    "metadata": {{
+      "x-vocabularies": ["leaf"],
+      "spec": {{"verifies": "{URI}"}}
+    }},
+    "ref": "leaf"
+  }},
+  "leaf": {{
+    "metadata": {{"spec": {{"documents": "{URI}"}}}},
+    "type": "string"
+  }}
+}}
+"#
+    );
+    write_fixture(root, "schemas/shared.jtd.json", schema);
+    write_fixture(root, "formats/vocabulary.json", &vocabulary);
+    let cfg = Config {
+        schema_roots: vec!["schemas".into()],
+        schema_vocabulary: Some("formats/vocabulary.json".into()),
+        ..Config::default()
+    };
+    let (items, edges, warnings) = JtdScanner.scan(root, &cfg);
+    assert!(warnings.is_empty(), "{}", warn_lines(&warnings));
+    assert_eq!(items.len(), 3, "thin root + two projected fragments");
+    let root_item = items.iter().find(|item| item.symbol == "shared").unwrap();
+    assert_eq!(root_item.file, "schemas/shared.jtd.json");
+    assert_eq!(
+        (root_item.line, *root_item.endLine.as_deref().unwrap()),
+        (1, 6)
+    );
+    let branch = items
+        .iter()
+        .find(|item| item.symbol == "shared::branch")
+        .unwrap();
+    assert_eq!(branch.file, "formats/vocabulary.json");
+    assert_eq!((branch.line, *branch.endLine.as_deref().unwrap()), (9, 15));
+    let leaf = items
+        .iter()
+        .find(|item| item.symbol == "shared::leaf")
+        .unwrap();
+    assert_eq!(leaf.file, "formats/vocabulary.json");
+    assert_eq!((leaf.line, *leaf.endLine.as_deref().unwrap()), (16, 19));
+    assert_eq!(edges.len(), 3);
+    let roots: Vec<(&str, &str, u32)> = edges
+        .iter()
+        .map(|edge| (edge.fromSymbol.as_str(), edge.file.as_str(), edge.line))
+        .collect();
+    assert!(roots.contains(&("shared", "formats/vocabulary.json", 2)));
+    assert!(roots.contains(&("shared::branch", "formats/vocabulary.json", 9)));
+    assert!(roots.contains(&("shared::leaf", "formats/vocabulary.json", 16)));
+}
+
+/// Inline definitions and alias roots are ordinary schemas. Even when their
+/// metadata mentions the shared vocabulary, neither may duplicate its units.
+#[test]
+fn ordinary_and_alias_schemas_do_not_project_shared_units() {
+    let tmp = tempfile::tempdir().unwrap();
+    let root = tmp.path();
+    write_fixture(
+        root,
+        "formats/vocabulary.json",
+        r#"{"shared":{"metadata":{"x-vocabularies":["tail"]}},"tail":{"type":"string"},"version_entry":{"type":"string"}}"#,
+    );
+    write_fixture(
+        root,
+        "schemas/shared.jtd.json",
+        r#"{"metadata":{"x-vocabularies":["shared"]},"ref":"shared","definitions":{"local":{"type":"string"}}}"#,
+    );
+    write_fixture(
+        root,
+        "schemas/entry.jtd.json",
+        r#"{"metadata":{"x-vocabularies":["version_entry"]},"ref":"version_entry"}"#,
+    );
+    let cfg = Config {
+        schema_roots: vec!["schemas".into()],
+        schema_vocabulary: Some("formats/vocabulary.json".into()),
+        ..Config::default()
+    };
+    let (items, edges, warnings) = JtdScanner.scan(root, &cfg);
+    assert!(warnings.is_empty(), "{}", warn_lines(&warnings));
+    assert!(edges.is_empty());
+    let symbols: Vec<&str> = items.iter().map(|item| item.symbol.as_str()).collect();
+    assert_eq!(symbols.len(), 3);
+    assert!(symbols.contains(&"entry"));
+    assert!(symbols.contains(&"shared"));
+    assert!(symbols.contains(&"shared::local"));
+    assert!(
+        items
+            .iter()
+            .all(|item| item.file != "formats/vocabulary.json")
+    );
+}
+
+/// Merely placing a vocabulary beside a configured schema root changes
+/// nothing when its explicit config path is absent: the scanner output is
+/// byte-for-byte the string-level pre-vocabulary result.
+#[test]
+fn absent_vocabulary_config_preserves_inline_scanner_bytes() {
+    let tmp = tempfile::tempdir().unwrap();
+    let root = tmp.path();
+    let schema = r#"{"metadata":{"x-vocabularies":["shared"]},"ref":"shared"}"#;
+    write_fixture(root, "schemas/shared.jtd.json", schema);
+    write_fixture(
+        root,
+        "formats/vocabulary.json",
+        r#"{"shared":{"metadata":{"spec":{"implements":"spec://project/ghost"}}}}"#,
+    );
+    let cfg = Config {
+        schema_roots: vec!["schemas".into()],
+        ..Config::default()
+    };
+    let scanned = JtdScanner.scan(root, &cfg);
+    let direct = scan_schema_text("schemas/shared.jtd.json", "shared", schema);
+    assert_eq!(
+        serde_json::to_vec(&scanned.0).unwrap(),
+        serde_json::to_vec(&direct.0).unwrap()
+    );
+    assert_eq!(
+        serde_json::to_vec(&scanned.1).unwrap(),
+        serde_json::to_vec(&direct.1).unwrap()
+    );
+    assert_eq!(
+        serde_json::to_vec(&scanned.2).unwrap(),
+        serde_json::to_vec(&direct.2).unwrap()
+    );
+}
+
+/// Missing, cyclic, and ill-typed vocabulary structure degrades into named
+/// warnings while retaining every valid unit the traversal can measure.
+#[test]
+fn malformed_vocabulary_structure_is_typed_warnings_not_panics() {
+    let tmp = tempfile::tempdir().unwrap();
+    let root = tmp.path();
+    write_fixture(
+        root,
+        "schemas/shared.jtd.json",
+        r#"{"metadata":{"x-vocabularies":["shared"]},"ref":"shared"}"#,
+    );
+    write_fixture(
+        root,
+        "formats/vocabulary.json",
+        r#"{
+  "shared": {"metadata":{"x-vocabularies":["branch","missing",7,"bad","typed"]}},
+  "branch": {"metadata":{"x-vocabularies":["shared"]}},
+  "bad": 7,
+  "typed": {"metadata":{"x-vocabularies":"tail"}}
+}"#,
+    );
+    let cfg = Config {
+        schema_roots: vec!["schemas".into()],
+        schema_vocabulary: Some("formats/vocabulary.json".into()),
+        ..Config::default()
+    };
+    let (items, _, warnings) = JtdScanner.scan(root, &cfg);
+    assert!(items.iter().any(|item| item.symbol == "shared"));
+    let codes: Vec<&str> = warnings
+        .iter()
+        .map(|warning| warning.code.as_str())
+        .collect();
+    for expected in [
+        "schema-vocabulary-cycle",
+        "missing-schema-vocabulary-member",
+        "schema-vocabulary-dependency-not-string",
+        "schema-vocabulary-member-not-object",
+        "schema-vocabulary-dependencies-not-array",
+    ] {
+        assert!(codes.contains(&expected), "missing {expected}: {codes:?}");
+    }
+}
+
+#[test]
+fn malformed_vocabulary_json_is_one_typed_warning() {
+    let tmp = tempfile::tempdir().unwrap();
+    let root = tmp.path();
+    write_fixture(root, "schemas/shared.jtd.json", r#"{"type":"string"}"#);
+    write_fixture(root, "formats/vocabulary.json", "{ broken");
+    let cfg = Config {
+        schema_roots: vec!["schemas".into()],
+        schema_vocabulary: Some("formats/vocabulary.json".into()),
+        ..Config::default()
+    };
+    let (items, edges, warnings) = JtdScanner.scan(root, &cfg);
+    assert_eq!(items.len(), 1, "ordinary schema still scans");
+    assert!(edges.is_empty());
+    assert_eq!(warnings.len(), 1, "{}", warn_lines(&warnings));
+    assert_eq!(warnings[0].code, "invalid-schema-vocabulary-json");
+}
+
+/// The live thin compiler root projects its exact former logical inventory:
+/// one measured schema, 55 measured vocabulary definitions, and the root tag.
+#[test]
+fn live_thin_root_projects_exact_shared_inventory() {
+    let manifest = Path::new(env!("CARGO_MANIFEST_DIR"));
+    let root = manifest
+        .ancestors()
+        .find(|candidate| {
+            candidate.join("formats/vocabularies.json").is_file()
+                && candidate
+                    .join("schemas/compiler_ir/e1/ir.jtd.json")
+                    .is_file()
+        })
+        .expect("repository root containing the live wire inputs");
+    let cfg = Config {
+        schema_roots: vec!["schemas/compiler_ir/e1".into()],
+        schema_vocabulary: Some("formats/vocabularies.json".into()),
+        ..Config::default()
+    };
+    let (items, edges, warnings) = JtdScanner.scan(root, &cfg);
+    assert!(warnings.is_empty(), "{}", warn_lines(&warnings));
+    assert_eq!(items.len(), 56, "thin schema + 55 shared fragments");
+    assert_eq!(
+        items
+            .iter()
+            .filter(|item| item.itemKind == "schema-def")
+            .count(),
+        55
+    );
+    let schema = items.iter().find(|item| item.itemKind == "schema").unwrap();
+    assert_eq!(schema.symbol, "ir");
+    assert_eq!(schema.file, "schemas/compiler_ir/e1/ir.jtd.json");
+    assert_eq!((schema.line, *schema.endLine.as_deref().unwrap()), (1, 11));
+    assert!(
+        items
+            .iter()
+            .filter(|item| item.itemKind == "schema-def")
+            .all(|item| item.file == "formats/vocabularies.json"
+                && item.line == *item.endLine.as_deref().unwrap())
+    );
+    assert_eq!(edges.len(), 1);
+    assert_eq!(edges[0].fromSymbol, "ir");
+    assert_eq!(edges[0].file, "formats/vocabularies.json");
+    assert_eq!(edges[0].line, 41);
+}

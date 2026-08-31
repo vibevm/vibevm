@@ -32,6 +32,10 @@ spec_roots = ["vibevm/vibespecs"]
 # is what points it at anything.
 schema_roots = ["schemas"]
 
+# Shared JTD definitions moved out of thin schema roots live here. The path is
+# explicit: the scanner never guesses a vocabulary home from repository shape.
+schema_vocabulary = "formats/vocabularies.json"
+
 # Enumerated exclusions, applied after both include halves above. The include
 # side is enumerated so nothing is indexed by accident, and an enumerated
 # exclude serves that purpose exactly as well — not a wildcard escape hatch.

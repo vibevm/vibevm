@@ -174,6 +174,48 @@ pub(crate) fn schema_spans(text: &str) -> (Option<Span>, Vec<(String, Span)>) {
     (Some(root_span), defs)
 }
 
+/// Measure every member of a valid top-level JSON object. Each span starts at
+/// the member key and ends at the final byte of its value. Shared vocabulary
+/// projections use these positions so their units point at the authored
+/// vocabulary member rather than inventing a line in the thin schema.
+pub(crate) fn top_level_member_spans(text: &str) -> Vec<(String, Span)> {
+    let bytes = text.as_bytes();
+    let starts = line_starts(text);
+    let mut out = Vec::new();
+    let mut i = skip_ws(bytes, 0);
+    if bytes.get(i) != Some(&b'{') {
+        return out;
+    }
+    i = skip_ws(bytes, i + 1);
+    while i < bytes.len() && bytes.get(i) != Some(&b'}') {
+        let Some(key_span) = string_span(bytes, i) else {
+            break;
+        };
+        let Some(name) = decode_key(text, key_span) else {
+            break;
+        };
+        let key_byte = key_span.0;
+        i = skip_ws(bytes, key_span.1);
+        if bytes.get(i) != Some(&b':') {
+            break;
+        }
+        let value_start = skip_ws(bytes, i + 1);
+        let value_end = skip_value(bytes, value_start);
+        out.push((
+            name,
+            Span {
+                line: line_of(&starts, key_byte),
+                end_line: line_of(&starts, value_end.saturating_sub(1)),
+            },
+        ));
+        i = skip_ws(bytes, value_end);
+        if bytes.get(i) == Some(&b',') {
+            i = skip_ws(bytes, i + 1);
+        }
+    }
+    out
+}
+
 /// Walk one `definitions` object (opening brace at `obj_open`), recording
 /// each child key (decoded name), the key's opening-quote byte offset, and
 /// its value's last byte — the span a `schema-def` unit occupies. The value
