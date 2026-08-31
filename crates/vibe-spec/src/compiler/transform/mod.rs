@@ -37,6 +37,8 @@ pub(crate) mod fault;
 pub(crate) mod header;
 pub(crate) mod lane_admission;
 pub(crate) mod lowering;
+#[path = "native_policy/finalize.rs"]
+pub(crate) mod native_finalize;
 pub(crate) mod native_identity;
 pub(crate) mod native_manager;
 pub(crate) mod native_policy;
@@ -81,6 +83,8 @@ mod native_manager_test_support;
 mod native_policy_driver_refusal_tests;
 #[cfg(test)]
 mod native_policy_driver_tests;
+#[cfg(test)]
+mod native_policy_finalize_tests;
 #[cfg(test)]
 mod native_policy_tests;
 #[cfg(test)]

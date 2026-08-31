@@ -54,6 +54,7 @@ fn the_module_tree_declares_every_transform_cell_under_a_rule_family() {
             "lane_admission".to_owned(),
             "lowering".to_owned(),
             "native_identity".to_owned(),
+            "native_finalize".to_owned(),
             "native_manager".to_owned(),
             // R5.4 PENDING-STATE: pure policy state beside the native manager;
             // no invocation, artifact or build behavior enters this cell.
@@ -97,6 +98,7 @@ fn the_module_tree_declares_every_transform_cell_under_a_rule_family() {
             "native_policy_tests".to_owned(),
             "native_policy_driver_tests".to_owned(),
             "native_policy_driver_refusal_tests".to_owned(),
+            "native_policy_finalize_tests".to_owned(),
             "plan_digest_tests".to_owned(),
             "plan_fence_tests".to_owned(),
             "plan_refusal_tests".to_owned(),
@@ -158,6 +160,12 @@ fn the_module_tree_declares_every_transform_cell_under_a_rule_family() {
     assert!(
         native_policy_outcome_offenders.is_empty(),
         "native policy outcome left the native-manager state family: {native_policy_outcome_offenders:?}"
+    );
+    let native_policy_finalize_offenders =
+        offenders(include_str!("native_policy/finalize.rs"), &HEADER_RULES);
+    assert!(
+        native_policy_finalize_offenders.is_empty(),
+        "native pending finalizer left the header value family: {native_policy_finalize_offenders:?}"
     );
     let native_pass_offenders = offenders(
         include_str!("schedule/native_passes.rs"),

@@ -65,6 +65,10 @@ pub use compiler::ir::{
 // digest, stay inside the crate.
 pub use compiler::transform::fault::TransformLoweringError;
 pub use compiler::transform::header::transforms_header_payload_excluding;
+pub use compiler::transform::native_finalize::{
+    CompilerFinalizedPendingArtifact, CompilerPendingFinalizeError,
+    compiler_pending_header_payload, finalize_compiler_pending_artifact,
+};
 pub use compiler::transform::native_identity::{
     CompilerNativeImplementationDigest, CompilerNativeImplementationDigestError,
     compiler_native_implementation_digest,

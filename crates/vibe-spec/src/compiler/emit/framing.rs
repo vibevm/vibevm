@@ -63,6 +63,26 @@ pub(crate) fn static_header(
     output
 }
 
+/// The truthful opening of a compiled static lane that skipped one or more
+/// unavailable compiler-native transforms. The pending payload is framed by
+/// the same generated-comment authority as the active payload; its contents
+/// are owned by the compiler pending-header builder, not interpreted here.
+pub(crate) fn static_header_with_pending(
+    syntax: CommentSyntax,
+    generated_path: &str,
+    active_transforms: Option<&str>,
+    pending_transforms: &str,
+) -> String {
+    let mut output = static_header_block(syntax, generated_path);
+    if let Some(payload) = active_transforms {
+        output.push_str(&transforms_header(payload));
+        output.push('\n');
+    }
+    output.push_str(&transforms_header(pending_transforms));
+    output.push_str("\n\n");
+    output
+}
+
 /// The three provenance header lines, each terminated — the block the
 /// optional transforms header extends and the blank separator closes.
 ///

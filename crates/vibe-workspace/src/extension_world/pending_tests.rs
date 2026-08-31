@@ -140,6 +140,11 @@ fn node_and_unit_goldens_use_dense_order_and_shared_comment_codec() {
             vibe_specdoc::encode_generated_xml_comment("org.demo/demo#three"),
         )
     );
+    assert_eq!(
+        node.header_payload(),
+        vibe_spec::compiler_pending_header_payload(&set, node.fingerprint().as_bytes())
+            .expect("the workspace and finalizer share one pending-header authority")
+    );
 
     let unit = evidence(
         &set,
@@ -489,7 +494,9 @@ fn debug_and_source_surface_leak_no_semantic_or_environment_inputs() {
         assert!(!production.contains(forbidden), "forbidden `{forbidden}`");
     }
     assert!(production.contains("PendingArtifactTarget::BootStatic => 0"));
-    assert!(production.contains("encode_generated_xml_comment"));
+    assert!(production.contains("compiler_pending_header_payload"));
+    assert!(!production.contains("encode_generated_xml_comment"));
+    assert!(!production.contains("vibe:transforms-pending"));
 
     let seam = include_str!("../../../vibe-spec/src/compiler/transform/native_policy.rs");
     assert!(seam.contains("#[cfg(any(test, feature = \"test-support\"))]"));

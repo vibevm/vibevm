@@ -96,3 +96,37 @@ pub(crate) fn reconstruct(
         bytes,
     }
 }
+
+/// Rebuild one artifact after manager-owned framing changed, preserving every
+/// provenance member and appending no executed transform. This is distinct
+/// from [`reconstruct`]: pending-header finalization records evidence about a
+/// transform that did not run, so only bytes and their digest may move.
+pub(super) fn reframe(original: EmittedArtifact, bytes: Vec<u8>) -> EmittedArtifact {
+    let EmittedArtifact {
+        provenance,
+        bytes: _superseded_bytes,
+    } = original;
+    let EmissionProvenance {
+        context,
+        backend,
+        producer,
+        source_lane_digest,
+        renames,
+        contributions,
+        emitted_transforms,
+        bytes_digest: _superseded_digest,
+    } = provenance;
+    EmittedArtifact {
+        provenance: EmissionProvenance {
+            context,
+            backend,
+            producer,
+            source_lane_digest,
+            renames,
+            contributions,
+            emitted_transforms,
+            bytes_digest: emitted_bytes_digest(&bytes),
+        },
+        bytes,
+    }
+}

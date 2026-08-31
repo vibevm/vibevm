@@ -137,6 +137,10 @@ impl CompilerPendingSet {
         self.entries.is_empty()
     }
 
+    pub(crate) const fn retained_plan_digest(&self) -> Option<&[u8; 32]> {
+        self.plan_digest.as_ref()
+    }
+
     /// Test-support construction from genuine native plan entries. The key
     /// override exists solely to exercise downstream opaque-key evidence.
     #[cfg(any(test, feature = "test-support"))]

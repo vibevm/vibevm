@@ -8,7 +8,7 @@ use std::fmt;
 use sha2::{Digest, Sha256};
 use specmark::spec;
 use vibe_core::manifest::{ExtensionKey, MechanismKey, SpecFormat};
-use vibe_spec::{CompilerPendingRef, CompilerPendingSet};
+use vibe_spec::{CompilerPendingRef, CompilerPendingSet, compiler_pending_header_payload};
 
 use super::OwnerRuntimeId;
 
@@ -281,15 +281,8 @@ pub fn build_pending_artifact_evidence(
         &plan_digest,
         &ordered,
     )?);
-    let mut header_payload = format!("vibe:transforms-pending {}", fingerprint.sha256());
-    for (reference, _) in &ordered {
-        header_payload.push(' ');
-        header_payload.push_str(&reference.order().to_string());
-        header_payload.push('=');
-        header_payload.push_str(&vibe_specdoc::encode_generated_xml_comment(
-            reference.key().as_str(),
-        ));
-    }
+    let header_payload = compiler_pending_header_payload(pending, fingerprint.as_bytes())
+        .map_err(|_| fault(PendingEvidenceFault::PendingHeader))?;
     Ok(Some(PendingArtifactEvidence {
         fingerprint,
         header_payload,
@@ -466,6 +459,12 @@ enum PendingEvidenceFault {
          fix: reduce the bounded pending evidence input)"
     )]
     LengthOverflow,
+    #[error(
+        "compiler pending-header construction refused validated pending evidence \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#BOOTSTRAP-ORDER; \
+         fix: rebuild the pending set from one exact retained compiler result)"
+    )]
+    PendingHeader,
 }
 
 fn fault(fault: PendingEvidenceFault) -> PendingEvidenceError {
