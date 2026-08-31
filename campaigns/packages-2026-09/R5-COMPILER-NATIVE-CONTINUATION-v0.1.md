@@ -780,3 +780,49 @@ Final gates: registry 61/61, workspace 495/495, workspace/registry check and
 all-target clippy with warnings denied, fmt, conform 48 standing/0 new, and
 specmap 6,833 units / 3,049 tagged / 2,804 edges with zero suspects, gated
 orphans or unresolved host edges and 26 warnings. R5.4-PENDING is next.
+
+## 19. R5.4-PENDING implementation freeze
+
+**Frozen 2026-08-31 after two native `gpt-5.6-sol`/`xhigh` boundary
+reviews.** `TransformPlan` remains unchanged. `vibe-spec` owns a shared
+compiler-native policy/session with three modes: existing hard `Fail`,
+install-time `Collect`, and replay-time `Resolve(expected)`. Policy is applied
+inside the manager after selector admission, while the manager still owns the
+original carrier. Only the exact typed `BuildableSourceUnavailable` result may
+Collect; source/document/lane/emitted then continue with that original value.
+Every other invoker, reply, carrier, handler, verification or configuration
+fault remains on the existing hard path.
+
+The public pending reference is only `(raw plan digest, manager dense order,
+qualified key)`. A private capture also binds point, semantic configuration and
+native implementation digest for conflict checking. Repeated document calls
+coalesce by order; mixed success/unavailability or any capture disagreement
+refuses rather than publishing a partially transformed lane. Resolve consumes
+the expected set, records successful actual invocations (including handler
+skip), permits ordinary nonexpected successful rows, refuses residual or
+unexpected unavailability, and requires every expected order to have a receipt.
+No third compile path exists.
+
+Existing native APIs remain Fail wrappers with byte/error/trace/observer
+compatibility. Additive managed plain/traced/observed entries return either a
+Ready artifact with receipts or an opaque non-publishable `PendingArtifact`.
+Pending analyzer deltas do not masquerade as executed transform deltas. The
+plan digest and executed-transform semantics never absorb pending state. A pure
+active-header projection can exclude validated pending orders, but no schedule-
+time integration is allowed: `compile:emitted` may discover pending only after
+the current backend already inserted the active header.
+
+Workspace owns the pure `vibe-transform-pending-v1` fingerprint and separate
+`vibe:transforms-pending` payload. Typed inputs bind portable node/unit owner,
+artifact target/format, raw plan digest and ordered refs, platform, source
+witness, handler/config witness, `build:cargo` key and selected provider
+semantic digest. Absolute roots, target/image paths, run id, clock, Cargo fresh
+bit and traversal order are unrepresentable. Empty pending returns no evidence;
+keys use only the shared generated-comment codec; no parser or journal exists.
+
+This child does not choose node/unit lanes, associate real artifact-invoker
+build facts, rewrite final artifact bytes, complete trace, publish, replay,
+resolve source records or run Cargo. WORKSPACE joins the pure manager result to
+runtime/artifact facts, consumes `PendingArtifact` through a finalizer that
+rebuilds executed and pending headers/digests, and performs publication.
+Internal serial route: PENDING-STATE → PENDING-DRIVER → PENDING-FRAME.

@@ -1392,6 +1392,17 @@ than depending on untracked `cache/` archaeology.
   registry 61, workspace 495, check/clippy/fmt, conform 48/0 new; specmap
   6833/3049/2804 with zero suspects/orphans/unresolved and 26 warnings.
   EPOCH-LOWER accepted; PENDING next.
+- R5.4-PENDING implementation freeze: two native `gpt-5.6-sol`/`xhigh`
+  reviews keep `TransformPlan` unchanged and split the child into compiler
+  policy/session, additive managed driver and pure workspace evidence framing.
+  Only typed post-selector buildable-source absence Collects and returns the
+  original carrier; conflicts and mixed success/pending refuse. Resolve
+  consumes expected refs and requires actual successful receipts with zero
+  residual/unexpected pending. Managed pending artifacts are non-publishable.
+  Workspace may compute the complete typed owner/target/platform/source/route/
+  provider fingerprint and pending-header payload now, but final header rewrite,
+  trace completion, publication and replay remain WORKSPACE. No journal,
+  artifact resolution or Cargo enters PENDING.
 - R4.2 minify binding, RED corpus and activation e2e: `7a09ec2d` registers
   `xml-minify` (epoch 1, EMITTED — the one stage the kernel serves without a
   new serializer; every other stage refuses through the registry's own law)
