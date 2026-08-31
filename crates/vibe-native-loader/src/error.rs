@@ -97,6 +97,16 @@ pub enum NativeLoadError {
         id: String,
         point: String,
     },
+    /// A manifest row belonged to the other homogeneous root family.
+    #[error(
+        "native manifest extension `{id}` belongs to the {actual} family, expected a homogeneous {expected} image, for `{path}` (violates spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE; fix: ship lifecycle and compiler extensions in separate native images)"
+    )]
+    ManifestFamilyMismatch {
+        path: String,
+        id: String,
+        actual: &'static str,
+        expected: &'static str,
+    },
     /// The selected manifest point differed from the typed expectation.
     #[error(
         "native manifest extension `{id}` declares point `{actual}`, expected `{expected}`, for `{path}` (violates spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE; fix: align the invocation point with the selected manifest row)"
