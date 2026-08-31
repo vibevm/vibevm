@@ -826,3 +826,47 @@ resolve source records or run Cargo. WORKSPACE joins the pure manager result to
 runtime/artifact facts, consumes `PendingArtifact` through a finalizer that
 rebuilds executed and pending headers/digests, and performs publication.
 Internal serial route: PENDING-STATE → PENDING-DRIVER → PENDING-FRAME.
+
+## 20. R5.4-PENDING ratification
+
+**Accepted 2026-09-01.** STATE `36bdfab8`, DRIVER `e851c82b`, FRAME
+`828e10df` and map `5257658b` implement the pure pending policy and evidence
+boundary without changing `TransformPlan`.
+
+The compiler owns non-authorable, non-Clone ordered pending sets and consuming
+Fail/Collect/Resolve policy. Private captures bind raw plan digest, dense order,
+key, point, semantic config and native implementation. Repeated identical calls
+coalesce; capture conflicts and mixed success/unavailability refuse. Resolve
+consumes the expected set, counts actual strict successes and skips, permits
+ordinary nonexpected success, refuses residual/unexpected unavailability and
+requires every expected receipt. Fail is a stateless no-session compatibility
+path.
+
+Managed plain/traced/observed entries share one stack session. Only exact typed
+post-selector buildable-source absence continues the original source/document/
+lane/emitted carrier. Strict success is receipted only after reply admission and
+local verification. Pending lane/emitted calls emit no analyzer transform delta
+while trace attempts remain. Ready results expose publishable bytes and
+receipts; Pending results hide provisional bytes and expose only read-only refs
+or a consuming set-only extraction. The pure active-header projection excludes
+validated pending orders but remains deliberately unwired to artifact bytes.
+
+Workspace evidence uses one frozen domain-separated length frame over portable
+node/unit owner, closed BootStatic target, SpecFormat, raw plan digest, dense
+refs, the exact three native platforms, source/config/provider digests and
+`build:cargo`. Facts are one-to-one and full-semantic duplicate/conflict checked.
+Node paths reject absolute, backslash, colon and traversal forms. Empty pending
+produces no evidence. The header payload records exact digest and codec-owned
+`order=key` tokens; no parser, journal, environment or publication API exists.
+
+Reviews rejected STATE for private Debug leakage and stateful Fail, DRIVER for
+having no public consuming route to Resolve's owned set, and FRAME for an open
+platform vocabulary plus partial duplicate comparison. All were corrected
+before final PASS. Final gates: `vibe-spec` 899/899 plus integration/doctests,
+`vibe-workspace` 499/499, check, all-target clippy with warnings denied, fmt,
+conform 48 standing/0 new, and specmap 6,833 units / 3,052 tagged / 2,807 edges
+with zero suspects, gated orphans or unresolved host edges and 26 warnings.
+
+Final artifact header rewrite/digest, trace completion, node/unit threading,
+publication and replay remain R5.4-WORKSPACE. R5.4-PENDING is accepted;
+WORKSPACE is next.

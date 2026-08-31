@@ -1403,6 +1403,19 @@ than depending on untracked `cache/` archaeology.
   provider fingerprint and pending-header payload now, but final header rewrite,
   trace completion, publication and replay remain WORKSPACE. No journal,
   artifact resolution or Cargo enters PENDING.
+- R5.4-PENDING: STATE `36bdfab8`, DRIVER `e851c82b`, FRAME `828e10df`, map
+  `5257658b` add stateless Fail plus post-selector Collect/consuming Resolve,
+  opaque nonpublishable pending artifacts, actual invocation receipts and pure
+  portable pending evidence. Original carriers continue only for exact typed
+  buildable-source absence; conflicts, mixed calls, residual/unexpected/missing
+  receipts and every hostile nonbuildable failure stay hard. Workspace framing
+  binds closed owner/target/format/platform and source/config/route/provider
+  facts, emits an exact codec payload and has no parser/journal/I/O. Reviews
+  rejected private Debug/stateful Fail, missing owned-set extraction, open
+  platform vocabulary and partial duplicate comparison; corrected final PASS.
+  Gates pass vibe-spec 899, workspace 499, check/clippy/fmt, conform 48/0 new;
+  specmap 6833/3052/2807 with zero suspects/orphans/unresolved and 26 warnings.
+  PENDING accepted; WORKSPACE next owns finalization/publication/replay.
 - R4.2 minify binding, RED corpus and activation e2e: `7a09ec2d` registers
   `xml-minify` (epoch 1, EMITTED — the one stage the kernel serves without a
   new serializer; every other stage refuses through the registry's own law)
@@ -1524,7 +1537,7 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 | R5.1 native JTD context/reply/manifest + `vibe-ext` macro | done | SHARED-STRICT `52edc577`; WIRE `fd81a003` / map `4c9378c9`; SDK `bfaea140`; integrated 17 + 7 + 7 gate, real abort refusal, 20 mutation proofs; schema first, unanimous shared-reader strictness, plugin-side unwind/memory boundary |
 | R5.2 loader | done | LOADER `9f7b8854` / map `36efa500`; integrated 15 loader + 7 SDK + 7 native-wire gate, clean check-codegen/conform/specmap, 8 mutation proofs; separate unsafe quarantine, canonical strong cache, exact ABI/manifest admission and free-once guard |
 | R5.3 source/prebuilt resolution and in-slot build | done | ARTIFACT `1baac652` / trace `0ef041c7` / map `fd31533e`; WIRING `332f8e28` / map `48fcb39e`; GATE `be037d77` / trace `c2fe99fc` / map `ee3f4b49`; source/prebuilt production composition, immutable process-loader images, process-free resolver, stale-before-cache and lifecycle law all mutation-backed |
-| R5.4 pending bootstrap convergence | in progress | EPOCH-WORLD `c559916b` / map `492ed834` and EPOCH-LOWER registry `ab0ab90f` / runtime `d2b06561` / map `55595f1f` accepted; frozen remainder PENDING → WORKSPACE → INSTALL → FENCE → GATE; exact incoming world emits ordered pending without Cargo; native build then recompiles once before authored targets and removes pending only after the transform really executes |
+| R5.4 pending bootstrap convergence | in progress | EPOCH-WORLD `c559916b` / map `492ed834`, EPOCH-LOWER registry `ab0ab90f` / runtime `d2b06561` / map `55595f1f`, and PENDING state `36bdfab8` / driver `e851c82b` / frame `828e10df` / map `5257658b` accepted; frozen remainder WORKSPACE → INSTALL → FENCE → GATE; exact incoming world emits ordered pending without Cargo; native build then recompiles once before authored targets and removes pending only after the transform really executes |
 | R5.5 compiler-native wire, invocation and minify parity | in progress | WIRE-PROJECTION `9051aade` / trace `dc9cff48` / map `5adea048`; WIRE `ed6e7c2a` / map `f0dfaf33`; WIRE-GATE `36b7f1e2`; INVOKE-MANAGER `846979f9` / map `150f0866`; SDK `777dbb5e`; LOADER `126dfc0b` / trace `feb98591`; ARTIFACT `6b5ab9e9` / map `a5a69a0c`; GATE `9b1e4525`; INVOKE parent accepted; R5.4 → PARITY remain |
 
 ### R6 — full compiler pass tier
