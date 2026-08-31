@@ -176,3 +176,33 @@ exactly two schemas, four corpus files and one registry edit; strict workspace
 check/clippy/fmt and conform zero-new. Specmap is 6,833 units / 3,038 tagged /
 2,789 edges, 0 suspects, gated orphans or unresolved host edges, 25 warnings.
 R5.5-WIRE-GATE is the next consumer.
+
+## 8. R5.5-WIRE-GATE ratification
+
+**Accepted 2026-08-31.** Test gate `36b7f1e2` closes the relational mutation
+surface without a product, schema, registry, corpus, generated-wire or specmap
+change. One six-carrier table now proves all 30 point/carrier combinations:
+the four stage points each admit exactly one carrier, `compile:pass` admits all
+six, and every rejection equals the complete typed `StageCarrier` value. A
+second table proves all 36 request/`ok` reply combinations, including exact
+`documents-artifact` and `closure-artifact` shapes; all six equal pairs succeed,
+all 30 unequal pairs equal the complete `ExchangeShape`, and skip/fail preserve
+every request shape.
+
+Raw duplicate-known-member pins now cover request root, an ordinary projected
+payload object, reply root and a strict reply payload object. Twelve raw
+known-level/cardinality substitutions prove the carrier-specific generated
+single-value enums refuse structurally. This also resolved a review
+disagreement: `validate_ir` does not need to duplicate those generated enum
+checks, but the previously unpinned stage/exchange matrix did permit real
+surviving mutations and therefore justified the separate test-only gate.
+
+Three worker mutations and one different central stage/carrier mutation were
+RED and restored: broaden source admission, narrow pass admission, bypass
+unequal exchange, and admit lane at emitted. Final gates: native compile wire
+11, reader projection 8, complete vibe-wire 332 and xtask 242; `check-codegen`
+clean; post-publication `wire-diff` clean with the historical accepted delta
+still exactly two schemas, four corpus files and one registry edit; all 12
+legacy native paths unchanged; strict workspace check/clippy/fmt and conform
+zero-new. Specmap remains 6,833 units / 3,038 tagged / 2,789 edges, 0 suspects,
+gated orphans or unresolved host edges, 25 warnings. R5.5-INVOKE is next.

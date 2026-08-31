@@ -1247,6 +1247,21 @@ than depending on untracked `cache/` archaeology.
   check/clippy/fmt and conform zero-new. Twelve legacy native hashes are exact;
   specmap is 6833/3038/2789 with zero suspects/orphans/unresolved and 25
   warnings. WIRE is accepted; R5.5-WIRE-GATE is next.
+- R5.5-WIRE-GATE: test `36b7f1e2` adds a reusable six-carrier oracle and
+  proves all 30 point/carrier plus all 36 request/ok-reply combinations,
+  complete typed refusals, skip/fail preservation, four duplicate-known-member
+  boundaries and 12 carrier-specific known level/cardinality substitutions.
+  Two native reviews disagreed on whether the gate could be accepted without a
+  new atom. Central confirmed that generated single-value enums already own
+  level/cardinality strictness, but accepted the other review's concrete
+  surviving stage/exchange mutations. The resulting atom is test-only. Three
+  worker plus one different central mutation were red and restored. Gates pass
+  native wire 11, reader projection 8, vibe-wire 332, xtask 242,
+  check-codegen, post-publication wire-diff, strict check/clippy/fmt and conform
+  zero-new. Historical wire delta remains 2 schema/4 corpus/1 registry, all 12
+  legacy native paths are exact, and specmap remains 6833/3038/2789 with zero
+  suspects/orphans/unresolved and 25 warnings. WIRE-GATE is accepted;
+  R5.5-INVOKE is next.
 - R4.2 minify binding, RED corpus and activation e2e: `7a09ec2d` registers
   `xml-minify` (epoch 1, EMITTED — the one stage the kernel serves without a
   new serializer; every other stage refuses through the registry's own law)
@@ -1369,7 +1384,7 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 | R5.2 loader | done | LOADER `9f7b8854` / map `36efa500`; integrated 15 loader + 7 SDK + 7 native-wire gate, clean check-codegen/conform/specmap, 8 mutation proofs; separate unsafe quarantine, canonical strong cache, exact ABI/manifest admission and free-once guard |
 | R5.3 source/prebuilt resolution and in-slot build | done | ARTIFACT `1baac652` / trace `0ef041c7` / map `fd31533e`; WIRING `332f8e28` / map `48fcb39e`; GATE `be037d77` / trace `c2fe99fc` / map `ee3f4b49`; source/prebuilt production composition, immutable process-loader images, process-free resolver, stale-before-cache and lifecycle law all mutation-backed |
 | R5.4 pending bootstrap convergence | planned after R5.5-INVOKE | exact incoming world emits ordered pending without Cargo; native build then recompiles once before authored targets and removes pending only after the transform really executes |
-| R5.5 compiler-native wire, invocation and minify parity | in progress | WIRE-PROJECTION `9051aade` / trace `dc9cff48` / map `5adea048`; WIRE `ed6e7c2a` / map `f0dfaf33` accepted; WIRE-GATE → INVOKE → R5.4 → PARITY remain; separate compile request/reply roots over one shared strict compiler IR, 158+331 gates and exact 3038/2789 trace inventory |
+| R5.5 compiler-native wire, invocation and minify parity | in progress | WIRE-PROJECTION `9051aade` / trace `dc9cff48` / map `5adea048`; WIRE `ed6e7c2a` / map `f0dfaf33`; WIRE-GATE `36b7f1e2` accepted; INVOKE → R5.4 → PARITY remain; exhaustive 30-point/carrier and 36-exchange matrices over one shared strict compiler IR, 11+8+332+242 gates and exact 3038/2789 trace inventory |
 
 ### R6 — full compiler pass tier
 
