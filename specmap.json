@@ -910,447 +910,447 @@
       "item_kind": "schema",
       "line": 1,
       "symbol": "ir",
-      "end_line": 625
+      "end_line": 11
     },
     {
       "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
+      "file": "formats/vocabularies.json",
       "item_kind": "schema-def",
-      "line": 267,
+      "line": 70,
       "symbol": "ir::absorption_occurrence",
-      "end_line": 270
+      "end_line": 70
     },
     {
       "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
+      "file": "formats/vocabularies.json",
       "item_kind": "schema-def",
-      "line": 337,
+      "line": 76,
       "symbol": "ir::absorption_plan",
-      "end_line": 343
+      "end_line": 76
     },
     {
       "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
+      "file": "formats/vocabularies.json",
       "item_kind": "schema-def",
-      "line": 344,
+      "line": 77,
       "symbol": "ir::absorption_state",
-      "end_line": 352
+      "end_line": 77
     },
     {
       "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
-      "item_kind": "schema-def",
-      "line": 468,
-      "symbol": "ir::artifact_context",
-      "end_line": 476
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
-      "item_kind": "schema-def",
-      "line": 455,
-      "symbol": "ir::artifact_frame",
-      "end_line": 467
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
-      "item_kind": "schema-def",
-      "line": 98,
-      "symbol": "ir::artifact_target",
-      "end_line": 101
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
-      "item_kind": "schema-def",
-      "line": 102,
-      "symbol": "ir::authority",
-      "end_line": 117
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
-      "item_kind": "schema-def",
-      "line": 93,
-      "symbol": "ir::cardinality_artifact",
-      "end_line": 93
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
-      "item_kind": "schema-def",
-      "line": 92,
-      "symbol": "ir::cardinality_document",
-      "end_line": 92
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
-      "item_kind": "schema-def",
-      "line": 289,
-      "symbol": "ir::closure_contribution",
-      "end_line": 311
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
-      "item_kind": "schema-def",
-      "line": 271,
-      "symbol": "ir::closure_document",
-      "end_line": 279
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
-      "item_kind": "schema-def",
-      "line": 280,
-      "symbol": "ir::closure_edge",
-      "end_line": 288
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
-      "item_kind": "schema-def",
-      "line": 477,
-      "symbol": "ir::closure_ir",
-      "end_line": 493
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
-      "item_kind": "schema-def",
-      "line": 263,
-      "symbol": "ir::closure_occurrence",
-      "end_line": 266
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
-      "item_kind": "schema-def",
-      "line": 94,
-      "symbol": "ir::compile_mode",
-      "end_line": 97
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
-      "item_kind": "schema-def",
-      "line": 320,
-      "symbol": "ir::contribution_absorption",
-      "end_line": 336
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
-      "item_kind": "schema-def",
-      "line": 259,
-      "symbol": "ir::contribution_meta",
-      "end_line": 262
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
-      "item_kind": "schema-def",
-      "line": 161,
-      "symbol": "ir::directive",
-      "end_line": 169
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
-      "item_kind": "schema-def",
-      "line": 174,
-      "symbol": "ir::directive_error",
-      "end_line": 177
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
-      "item_kind": "schema-def",
-      "line": 178,
-      "symbol": "ir::directives",
-      "end_line": 186
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
-      "item_kind": "schema-def",
-      "line": 145,
-      "symbol": "ir::doc_node",
-      "end_line": 160
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
-      "item_kind": "schema-def",
-      "line": 187,
-      "symbol": "ir::doc_tree",
-      "end_line": 196
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
-      "item_kind": "schema-def",
-      "line": 130,
-      "symbol": "ir::document_address",
-      "end_line": 140
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
-      "item_kind": "schema-def",
-      "line": 234,
-      "symbol": "ir::document_ir",
-      "end_line": 237
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
-      "item_kind": "schema-def",
-      "line": 417,
-      "symbol": "ir::document_observation",
-      "end_line": 424
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
-      "item_kind": "schema-def",
-      "line": 197,
-      "symbol": "ir::document_provider",
-      "end_line": 217
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
-      "item_kind": "schema-def",
-      "line": 218,
-      "symbol": "ir::document_subject",
-      "end_line": 224
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
-      "item_kind": "schema-def",
-      "line": 447,
-      "symbol": "ir::embed_resolution_snapshot",
-      "end_line": 454
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
-      "item_kind": "schema-def",
-      "line": 581,
-      "symbol": "ir::emission_contribution_witness",
-      "end_line": 603
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
-      "item_kind": "schema-def",
-      "line": 604,
-      "symbol": "ir::emission_provenance",
-      "end_line": 616
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
-      "item_kind": "schema-def",
-      "line": 617,
-      "symbol": "ir::emitted_artifact",
-      "end_line": 623
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
-      "item_kind": "schema-def",
-      "line": 425,
-      "symbol": "ir::expansion_observation",
-      "end_line": 437
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
-      "item_kind": "schema-def",
-      "line": 238,
-      "symbol": "ir::fence_snapshot",
-      "end_line": 250
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
-      "item_kind": "schema-def",
-      "line": 170,
-      "symbol": "ir::in_place_use",
-      "end_line": 173
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
-      "item_kind": "schema-def",
-      "line": 534,
-      "symbol": "ir::lane_chunk",
-      "end_line": 547
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
-      "item_kind": "schema-def",
-      "line": 548,
-      "symbol": "ir::lane_contribution",
-      "end_line": 570
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
-      "item_kind": "schema-def",
-      "line": 494,
-      "symbol": "ir::lane_frame",
-      "end_line": 503
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
-      "item_kind": "schema-def",
-      "line": 571,
-      "symbol": "ir::lane_ir",
-      "end_line": 580
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
-      "item_kind": "schema-def",
-      "line": 504,
-      "symbol": "ir::lane_node",
-      "end_line": 533
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
-      "item_kind": "schema-def",
-      "line": 89,
-      "symbol": "ir::level_closure",
-      "end_line": 89
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
-      "item_kind": "schema-def",
-      "line": 88,
-      "symbol": "ir::level_document",
-      "end_line": 88
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
-      "item_kind": "schema-def",
-      "line": 91,
-      "symbol": "ir::level_emitted",
-      "end_line": 91
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
-      "item_kind": "schema-def",
-      "line": 90,
-      "symbol": "ir::level_lane",
-      "end_line": 90
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
+      "file": "formats/vocabularies.json",
       "item_kind": "schema-def",
       "line": 87,
-      "symbol": "ir::level_source",
+      "symbol": "ir::artifact_context",
       "end_line": 87
     },
     {
       "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
+      "file": "formats/vocabularies.json",
       "item_kind": "schema-def",
-      "line": 353,
+      "line": 86,
+      "symbol": "ir::artifact_frame",
+      "end_line": 86
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 50,
+      "symbol": "ir::artifact_target",
+      "end_line": 50
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 51,
+      "symbol": "ir::authority",
+      "end_line": 51
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 48,
+      "symbol": "ir::cardinality_artifact",
+      "end_line": 48
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 47,
+      "symbol": "ir::cardinality_document",
+      "end_line": 47
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 73,
+      "symbol": "ir::closure_contribution",
+      "end_line": 73
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 71,
+      "symbol": "ir::closure_document",
+      "end_line": 71
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 72,
+      "symbol": "ir::closure_edge",
+      "end_line": 72
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 88,
+      "symbol": "ir::closure_ir",
+      "end_line": 88
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 69,
+      "symbol": "ir::closure_occurrence",
+      "end_line": 69
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 49,
+      "symbol": "ir::compile_mode",
+      "end_line": 49
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 75,
+      "symbol": "ir::contribution_absorption",
+      "end_line": 75
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 68,
+      "symbol": "ir::contribution_meta",
+      "end_line": 68
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 56,
+      "symbol": "ir::directive",
+      "end_line": 56
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 58,
+      "symbol": "ir::directive_error",
+      "end_line": 58
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 59,
+      "symbol": "ir::directives",
+      "end_line": 59
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 55,
+      "symbol": "ir::doc_node",
+      "end_line": 55
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 60,
+      "symbol": "ir::doc_tree",
+      "end_line": 60
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 53,
+      "symbol": "ir::document_address",
+      "end_line": 53
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 64,
+      "symbol": "ir::document_ir",
+      "end_line": 64
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 82,
+      "symbol": "ir::document_observation",
+      "end_line": 82
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 61,
+      "symbol": "ir::document_provider",
+      "end_line": 61
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 62,
+      "symbol": "ir::document_subject",
+      "end_line": 62
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 85,
+      "symbol": "ir::embed_resolution_snapshot",
+      "end_line": 85
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 94,
+      "symbol": "ir::emission_contribution_witness",
+      "end_line": 94
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 95,
+      "symbol": "ir::emission_provenance",
+      "end_line": 95
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 96,
+      "symbol": "ir::emitted_artifact",
+      "end_line": 96
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 83,
+      "symbol": "ir::expansion_observation",
+      "end_line": 83
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 65,
+      "symbol": "ir::fence_snapshot",
+      "end_line": 65
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 57,
+      "symbol": "ir::in_place_use",
+      "end_line": 57
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 91,
+      "symbol": "ir::lane_chunk",
+      "end_line": 91
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 92,
+      "symbol": "ir::lane_contribution",
+      "end_line": 92
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 89,
+      "symbol": "ir::lane_frame",
+      "end_line": 89
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 93,
+      "symbol": "ir::lane_ir",
+      "end_line": 93
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 90,
+      "symbol": "ir::lane_node",
+      "end_line": 90
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 44,
+      "symbol": "ir::level_closure",
+      "end_line": 44
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 43,
+      "symbol": "ir::level_document",
+      "end_line": 43
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 46,
+      "symbol": "ir::level_emitted",
+      "end_line": 46
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 45,
+      "symbol": "ir::level_lane",
+      "end_line": 45
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 42,
+      "symbol": "ir::level_source",
+      "end_line": 42
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 78,
       "symbol": "ir::link_contribution_witness",
-      "end_line": 369
+      "end_line": 78
     },
     {
       "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
+      "file": "formats/vocabularies.json",
       "item_kind": "schema-def",
-      "line": 370,
+      "line": 79,
       "symbol": "ir::link_occurrence",
-      "end_line": 399
+      "end_line": 79
     },
     {
       "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
+      "file": "formats/vocabularies.json",
       "item_kind": "schema-def",
-      "line": 400,
+      "line": 80,
       "symbol": "ir::link_result",
-      "end_line": 408
+      "end_line": 80
     },
     {
       "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
+      "file": "formats/vocabularies.json",
       "item_kind": "schema-def",
-      "line": 409,
+      "line": 81,
       "symbol": "ir::link_state",
-      "end_line": 416
+      "end_line": 81
     },
     {
       "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
+      "file": "formats/vocabularies.json",
       "item_kind": "schema-def",
-      "line": 255,
+      "line": 67,
       "symbol": "ir::origin_rename",
-      "end_line": 258
+      "end_line": 67
     },
     {
       "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
+      "file": "formats/vocabularies.json",
       "item_kind": "schema-def",
-      "line": 312,
+      "line": 74,
       "symbol": "ir::qualification_state",
-      "end_line": 319
+      "end_line": 74
     },
     {
       "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
+      "file": "formats/vocabularies.json",
       "item_kind": "schema-def",
-      "line": 251,
+      "line": 66,
       "symbol": "ir::rename_entry",
-      "end_line": 254
+      "end_line": 66
     },
     {
       "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
+      "file": "formats/vocabularies.json",
       "item_kind": "schema-def",
-      "line": 225,
+      "line": 63,
       "symbol": "ir::source_doc",
-      "end_line": 233
+      "end_line": 63
     },
     {
       "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
+      "file": "formats/vocabularies.json",
       "item_kind": "schema-def",
-      "line": 438,
+      "line": 84,
       "symbol": "ir::source_resolution_snapshot",
-      "end_line": 446
+      "end_line": 84
     },
     {
       "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
+      "file": "formats/vocabularies.json",
       "item_kind": "schema-def",
-      "line": 141,
+      "line": 54,
       "symbol": "ir::span",
-      "end_line": 144
+      "end_line": 54
     },
     {
       "crate_name": "<schema>",
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
+      "file": "formats/vocabularies.json",
       "item_kind": "schema-def",
-      "line": 118,
+      "line": 52,
       "symbol": "ir::spec_address",
-      "end_line": 129
+      "end_line": 52
     },
     {
       "crate_name": "<schema>",
@@ -27164,9 +27164,9 @@
       "verb": "implements"
     },
     {
-      "file": "schemas/compiler_ir/e1/ir.jtd.json",
+      "file": "formats/vocabularies.json",
       "from_symbol": "ir",
-      "line": 1,
+      "line": 41,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#WHOLE-IR-WIRE",
       "verb": "implements"
