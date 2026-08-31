@@ -1337,6 +1337,21 @@ than depending on untracked `cache/` archaeology.
   repository gates and conform 48 standing/0 new. Specmap remains
   6833/3042/2793 with zero suspects/orphans/unresolved and 25 warnings. All five
   INVOKE children are accepted; parent INVOKE done; R5.4 next.
+- R5.4 pending convergence implementation freeze: three native
+  `gpt-5.6-sol`/`xhigh` design reviews plus arbitration fix one serial route:
+  EPOCH-WORLD → EPOCH-LOWER → PENDING → WORKSPACE → INSTALL →
+  FENCE → GATE. One `ExtensionWorldEpoch` owns exact ordered resolution and
+  per-node/unit runtimes; boot generation never rereads ambient lock or falls
+  back to an empty plan. Only typed buildable-source absence after selector
+  admission may Collect as runtime pending state. Install publishes usable,
+  truthfully marked pending artifacts without Cargo; build performs native
+  source work, exactly one strict replay, authored targets and phase rows in
+  that order. Pending identity binds portable owner/target, platform, source,
+  handler/config and route/provider facts; convergence additionally binds the
+  artifact/toolchain and actual owner/order receipts. Publication preserves the
+  existing per-owner crash-recoverable transaction law and makes no unsupported
+  global rollback claim. Canonical freeze is section 15 of
+  `R5-COMPILER-NATIVE-CONTINUATION-v0.1.md`; EPOCH-WORLD is next.
 - R4.2 minify binding, RED corpus and activation e2e: `7a09ec2d` registers
   `xml-minify` (epoch 1, EMITTED — the one stage the kernel serves without a
   new serializer; every other stage refuses through the registry's own law)
@@ -1458,7 +1473,7 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 | R5.1 native JTD context/reply/manifest + `vibe-ext` macro | done | SHARED-STRICT `52edc577`; WIRE `fd81a003` / map `4c9378c9`; SDK `bfaea140`; integrated 17 + 7 + 7 gate, real abort refusal, 20 mutation proofs; schema first, unanimous shared-reader strictness, plugin-side unwind/memory boundary |
 | R5.2 loader | done | LOADER `9f7b8854` / map `36efa500`; integrated 15 loader + 7 SDK + 7 native-wire gate, clean check-codegen/conform/specmap, 8 mutation proofs; separate unsafe quarantine, canonical strong cache, exact ABI/manifest admission and free-once guard |
 | R5.3 source/prebuilt resolution and in-slot build | done | ARTIFACT `1baac652` / trace `0ef041c7` / map `fd31533e`; WIRING `332f8e28` / map `48fcb39e`; GATE `be037d77` / trace `c2fe99fc` / map `ee3f4b49`; source/prebuilt production composition, immutable process-loader images, process-free resolver, stale-before-cache and lifecycle law all mutation-backed |
-| R5.4 pending bootstrap convergence | in progress | INVOKE parent accepted; exact incoming world emits ordered pending without Cargo; native build then recompiles once before authored targets and removes pending only after the transform really executes |
+| R5.4 pending bootstrap convergence | in progress | INVOKE parent accepted; frozen route EPOCH-WORLD → EPOCH-LOWER → PENDING → WORKSPACE → INSTALL → FENCE → GATE; exact incoming world emits ordered pending without Cargo; native build then recompiles once before authored targets and removes pending only after the transform really executes |
 | R5.5 compiler-native wire, invocation and minify parity | in progress | WIRE-PROJECTION `9051aade` / trace `dc9cff48` / map `5adea048`; WIRE `ed6e7c2a` / map `f0dfaf33`; WIRE-GATE `36b7f1e2`; INVOKE-MANAGER `846979f9` / map `150f0866`; SDK `777dbb5e`; LOADER `126dfc0b` / trace `feb98591`; ARTIFACT `6b5ab9e9` / map `a5a69a0c`; GATE `9b1e4525`; INVOKE parent accepted; R5.4 → PARITY remain |
 
 ### R6 — full compiler pass tier

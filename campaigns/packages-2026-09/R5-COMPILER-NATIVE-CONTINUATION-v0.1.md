@@ -494,3 +494,160 @@ R5.5-INVOKE-MANAGER, SDK, LOADER, ARTIFACT and GATE are all accepted; parent
 R5.5-INVOKE is done. R5.4 pending bootstrap convergence is next and alone owns
 production owner-runtime epoch composition, source builds and the one native-
 aware recompilation.
+
+## 15. R5.4 pending convergence implementation freeze
+
+**Frozen 2026-08-31 after three native `gpt-5.6-sol`/`xhigh` design reviews
+and one arbitration.** R5.4 is a seven-child serial workstream:
+
+1. **EPOCH-WORLD** — one ordered-resolution installed-world snapshot with
+   retained package manifests/routes, no ambient lock reread;
+2. **EPOCH-LOWER** — one node/unit owner runtime lowering over that snapshot;
+3. **PENDING** — manager Collect/Resolve policy, ordered pending identity and
+   truthful header/fingerprint;
+4. **WORKSPACE** — native-aware plain/traced/observed node+unit compilation and
+   one replay preparation/publication core;
+5. **INSTALL** — exact Empty/Fresh/Ready epoch construction and transfer;
+6. **FENCE** — native build → one strict replay → authored targets → phase rows;
+7. **GATE** — multi-node, no-Cargo, failure, trace, freshness and mutation panel.
+
+Children are serial. Parallel versions would create temporary duplicate world,
+runtime, pending or replay authorities at the boundaries this work exists to
+make singular.
+
+### 15.1 One world and owner-runtime epoch
+
+`regenerate_boot_from_traced` already receives the exact ordered resolution;
+it must stop rereading ambient `vibe.lock`. Missing, malformed or disagreeing
+worlds, owner closure failures and unknown owners are typed failures, never
+`TransformPlan::empty()`. An explicit `ExtensionWorldEpoch` is built once from
+the supplied ordered resolution and retained parsed manifests/materialised slot
+roots. Fresh uses the durable lock snapshot; Empty uses an explicit empty
+package sequence; Ready uses the in-memory post-install overlay after manifest
+and deferred in-place updates, before boot generation and lock write.
+
+The epoch projects exactly one `OwnerRuntime` per workspace-relative node and
+one per package `UnitId`. Each runtime owns the one collected owner view and
+retains its complete compile-row order, TransformPlan, mechanism registry and
+routes, native candidate indices, request Project/World and stable runtime
+identity. Candidate indices refer to the same owned row storage; no
+self-referential borrowed vectors or native-only reorder exists. Root/member
+node controls may differ; one package-unit runtime is shared globally wherever
+that unit is referenced.
+
+Run id, selected state root, platform, offline posture and timestamp live once
+in epoch-common facts. A borrowed owner-runtime view constructs the accepted
+ARTIFACT invoker. The selected node's retained runtime is the source of normal
+phase planning after install; `phase::run` does not recollect a second ritual,
+registry, route or compile epoch.
+
+### 15.2 Pending is runtime state, not plan identity
+
+`TransformPlan` and its frozen digest remain unchanged. A native-aware compiler
+policy has three modes: ordinary hard **Fail**, install-time **Collect**, and
+build-replay **Resolve(expected)**. Only typed
+`BuildableSourceUnavailable`, observed after selector admission, may Collect:
+the original carrier continues and one pending reference is recorded. Every
+other artifact/prebuilt/platform/declaration/loader/protocol/panic error remains
+hard. Repeated document calls coalesce by original dense order; conflicting
+captures refuse.
+
+One pending reference is `(plan digest, original dense order, qualified key)`;
+the plan digest already binds provider, stage, native implementation/config,
+selector and effective order. Workspace frames it beneath a portable owner and
+artifact target/format, then additionally binds current platform, source
+witness, handler/config witness, `build:cargo` route and selected build-provider
+semantic identity under domain `vibe-transform-pending-v1\0epoch=1\0`.
+Absolute roots, mutable target/image paths, run id, wall clock, Cargo fresh bit
+and traversal order never enter.
+
+After build, convergence evidence binds the original pending fingerprint,
+immutable built-artifact digest, toolchain witness and actual `(owner, order)`
+invocation receipts from replay. Resolve requires every expected order to be
+invoked, no unexpected pending, and an empty resulting pending set. No third
+compile is possible.
+
+### 15.3 Truthful published pending artifacts
+
+PROP-054 `BOOTSTRAP-ORDER` is literal: install with a missing buildable compiler
+native publishes an honest usable artifact compiled without that transform and
+marks it `transforms-pending`. Pending rows are excluded from the executed
+`vibe:transforms` header; selector misses and ordinary handler skip keep their
+existing active-header semantics. A separate generated comment payload is:
+
+`vibe:transforms-pending sha256:<pending-fingerprint> <order>=<encoded-key> ...`
+
+in dense order using the one generated-comment key codec. It may also project
+the plan digest in its fingerprint input. The header is evidence only and is
+never parsed to recover runtime state; direct install may drop its in-memory
+continuation. A later build's prerequisite install rediscovers pending from the
+same exact world and republishes the same bytes/fingerprint. No second durable
+pending journal or declaration DTO is introduced.
+
+Pending header/fingerprint bytes participate in artifact/output freshness, but
+never in executed-transform provenance. A pending output is a successful
+ordinary per-owner artifact transaction, not an unpublishable provisional
+result. Install runs no Cargo.
+
+### 15.4 Workspace replay and publication law
+
+Plain, traced and observed native-aware compiler entries share one policy/result
+core. Both package-unit and node lanes use the same owner-runtime view; a fresh
+skip includes the runtime/pending fingerprint so a missing or changed native
+cannot hide behind a plan-only fingerprint. No static entries means no compile,
+trace occurrence, pending item or replay lane. Selector miss means no invoker,
+scratch, pending or build request.
+
+Initial install compilation publishes pending artifacts normally. During the
+same `vibe build`, prerequisite install returns an owned replay set and the same
+runtime epoch to the build fence. After source build, one workspace replay
+prepares every affected lane's bytes before touching its published artifact,
+forces those lanes through their full retained plans under Resolve, and requires
+complete invocation receipts plus zero pending. Empty pending causes zero replay
+calls. Only recorded affected lanes recompile once; freshness cannot skip them.
+
+Build or replay failure leaves the already-published pending artifact set
+untouched. Publication uses the existing crash-recoverable per-owner
+INDEX/selected-STATIC/stale-STATIC transaction: caught pre-commit failures
+restore that owner's pending artifact; post-commit/cleanup failures may retain
+committed-new state plus that transaction's durable recovery intent and converge
+later. No global cross-owner atomic rollback is claimed without a new explicit
+coordinator. All replay bytes are nevertheless prepared before the first
+publication, and a caught publication error stops later owners and runs the
+available per-owner recovery.
+
+### 15.5 Install and build-fence sequence
+
+Ready splits materialisation from boot generation: apply manifest/deferred
+in-place updates, materialise/prune and pre-install lifecycle, finalize the
+in-memory lock/resolution, compose the post-install epoch, run pending-aware
+boot generation, then write the lock and run post-install lifecycle. The apply
+report returns the exact workspace plus epoch; Empty and Fresh return equivalent
+epochs from their exact inputs. Direct `vibe install` may discard the runtime
+after publishing pending output. Prerequisite install for phase execution moves
+the exact epoch into the ritual and dispatch.
+
+At the complete build fence the order is exactly:
+
+`build native sources (same epoch) → if pending, one strict workspace replay →
+authored/lowered artifact targets → ordinary phase:build rows`.
+
+Native build failure stops before replay/targets/rows. Successfully written
+source records may remain and a later Cargo call may report fresh. Replay
+failure/residual pending stops before targets/rows and preserves pending output.
+Authored-target failure occurs after converged boot publication and suppresses
+phase rows under the existing law. A chain without the build fence never builds
+or replays.
+
+### 15.6 Gate
+
+Acceptance proves Ready sees newly installed natives before disk lock changes;
+Empty host and Fresh dependency natives use one epoch; root/member/package
+owners keep distinct controls/routes with shared unit runtimes; install Cargo
+count is zero; valid prebuilt runs immediately; only missing buildable source
+becomes pending; corrupt terminal prebuilt and every invalid state fail hard;
+pending order/fingerprint/header are exact; native build/replay/target/row order
+is exact; empty pending has no replay; one replay invokes every expected row and
+returns empty; build/replay failure preserves pending bytes; plain/traced/
+observed node+unit paths agree; and builtin-only/empty fingerprints remain byte-
+compatible.
