@@ -18310,6 +18310,78 @@
     },
     {
       "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/phase/native_gate_tests.rs",
+      "item_kind": "fn",
+      "line": 214,
+      "symbol": "vibe_orchestrator::phase::native_gate_tests::SlotFixture::new",
+      "end_line": 254,
+      "fingerprint": "tok1:87c65cf1dfbee958fb65940596688c3910bb763b7f7f00ba0284b400b20aca39"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/phase/native_gate_tests.rs",
+      "item_kind": "fn",
+      "line": 65,
+      "symbol": "vibe_orchestrator::phase::native_gate_tests::collect_exact",
+      "end_line": 79,
+      "fingerprint": "tok1:bb7d7f4483b41668a09c98faa7b6bcc397f5fa9dab45b10e62907d5752d8b89c"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/phase/native_gate_tests.rs",
+      "item_kind": "fn",
+      "line": 81,
+      "symbol": "vibe_orchestrator::phase::native_gate_tests::copy_fixture",
+      "end_line": 90,
+      "fingerprint": "tok1:47a980b263c7b34ebad18b99900815e46abf39f5c61019ef6e9aded8cb3bdd94"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/phase/native_gate_tests.rs",
+      "item_kind": "fn",
+      "line": 36,
+      "symbol": "vibe_orchestrator::phase::native_gate_tests::fixture_library",
+      "end_line": 63,
+      "fingerprint": "tok1:f401450fe9f5c78e404ebe4a9cf81006d81b158373d93e675f65a06d8ab99af0"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/phase/native_gate_tests.rs",
+      "item_kind": "fn",
+      "line": 157,
+      "symbol": "vibe_orchestrator::phase::native_gate_tests::prebuilt_project",
+      "end_line": 170,
+      "fingerprint": "tok1:66a4355a9dd334a064b629cb7ef62a744daea75263045e4aeb7cc1e0bebe1f22"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/phase/native_gate_tests.rs",
+      "item_kind": "fn",
+      "line": 172,
+      "symbol": "vibe_orchestrator::phase::native_gate_tests::report_ids",
+      "end_line": 187,
+      "fingerprint": "tok1:a32133263dc300a2ea9d42b7f87513053fba7d10a0024ebcd596814573c219b2"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/phase/native_gate_tests.rs",
+      "item_kind": "fn",
+      "line": 269,
+      "symbol": "vibe_orchestrator::phase::native_gate_tests::slot_lifecycle",
+      "end_line": 296,
+      "fingerprint": "tok1:2f9a127dda39a06b0ee5435f4864db284d0414603edd8e71401fcb7c5141201f"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/phase/native_gate_tests.rs",
+      "item_kind": "fn",
+      "line": 92,
+      "symbol": "vibe_orchestrator::phase::native_gate_tests::write_source_crate",
+      "end_line": 143,
+      "fingerprint": "tok1:241f67c77664cee85056d2ef6f26a93247b5702169095e6610e39380c0fb1827"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
       "file": "crates/vibe-orchestrator/src/plan.rs",
       "item_kind": "mod",
       "line": 5,
@@ -41573,6 +41645,78 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
       "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/phase/native_gate_tests.rs",
+      "from_symbol": "vibe_orchestrator::phase::native_gate_tests::SlotFixture::new",
+      "line": 214,
+      "provenance": "authored",
+      "uri": "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
+      "verb": "deviates",
+      "reason": "test slot construction is intentionally fail-fast"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/phase/native_gate_tests.rs",
+      "from_symbol": "vibe_orchestrator::phase::native_gate_tests::collect_exact",
+      "line": 65,
+      "provenance": "authored",
+      "uri": "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
+      "verb": "deviates",
+      "reason": "test fixture enumeration treats malformed target entries as assertion failures"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/phase/native_gate_tests.rs",
+      "from_symbol": "vibe_orchestrator::phase::native_gate_tests::copy_fixture",
+      "line": 81,
+      "provenance": "authored",
+      "uri": "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
+      "verb": "deviates",
+      "reason": "test fixture construction is intentionally fail-fast"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/phase/native_gate_tests.rs",
+      "from_symbol": "vibe_orchestrator::phase::native_gate_tests::fixture_library",
+      "line": 36,
+      "provenance": "authored",
+      "uri": "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
+      "verb": "deviates",
+      "reason": "test fixture setup uses immediate assertions to keep failures local"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/phase/native_gate_tests.rs",
+      "from_symbol": "vibe_orchestrator::phase::native_gate_tests::prebuilt_project",
+      "line": 157,
+      "provenance": "authored",
+      "uri": "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
+      "verb": "deviates",
+      "reason": "test project construction is intentionally fail-fast"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/phase/native_gate_tests.rs",
+      "from_symbol": "vibe_orchestrator::phase::native_gate_tests::report_ids",
+      "line": 172,
+      "provenance": "authored",
+      "uri": "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
+      "verb": "deviates",
+      "reason": "qualified report keys are an asserted fixture invariant"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/phase/native_gate_tests.rs",
+      "from_symbol": "vibe_orchestrator::phase::native_gate_tests::slot_lifecycle",
+      "line": 269,
+      "provenance": "authored",
+      "uri": "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
+      "verb": "deviates",
+      "reason": "test lifecycle composition is intentionally fail-fast"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/phase/native_gate_tests.rs",
+      "from_symbol": "vibe_orchestrator::phase::native_gate_tests::write_source_crate",
+      "line": 92,
+      "provenance": "authored",
+      "uri": "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
+      "verb": "deviates",
+      "reason": "test-only source fixture construction is intentionally fail-fast"
     },
     {
       "file": "crates/vibe-orchestrator/src/plan.rs",
