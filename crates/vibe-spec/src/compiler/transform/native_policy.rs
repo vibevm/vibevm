@@ -9,13 +9,14 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#BOOTSTRAP-ORDER"
 use std::fmt;
 use vibe_core::manifest::ExtensionKey;
 
+#[path = "native_policy/outcome.rs"]
+mod outcome;
 #[path = "native_policy/session.rs"]
 pub(crate) mod session;
-#[cfg(test)]
-pub(super) use session::Availability;
+pub use outcome::{
+    CompilerNativeOutcome, CompilerNativeStatus, CompilerPendingArtifact, CompilerReadyArtifact,
+};
 pub use session::CompilerNativePolicyError;
-#[cfg(test)]
-pub(crate) use session::{NativePolicyResult, NativePolicySession, UnavailableDisposition};
 use session::{PendingCapture, Receipt};
 
 /// Closed native-manager policy. Resolve consumes a genuine collected set.
@@ -152,6 +153,12 @@ impl fmt::Debug for CompilerInvocationReceipts {
 }
 
 impl CompilerInvocationReceipts {
+    pub(crate) fn empty() -> Self {
+        Self {
+            entries: Box::new([]),
+        }
+    }
+
     pub fn iter(&self) -> impl ExactSizeIterator<Item = (&CompilerPendingRef, u64)> {
         self.entries
             .iter()

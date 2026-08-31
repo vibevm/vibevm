@@ -35,6 +35,8 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY");
 
+use super::native_policy::session::validate_pending_set;
+use super::native_policy::{CompilerNativePolicyError, CompilerPendingSet};
 use super::plan::TransformPlan;
 
 /// The reserved payload prefix of the active-transforms header. The framing
@@ -61,6 +63,38 @@ pub(crate) fn transforms_header_payload(plan: &TransformPlan) -> Option<String> 
         ));
     }
     Some(payload)
+}
+
+/// Active-transform payload with validated pending orders omitted.
+///
+/// Pending state never changes the plan. This is a pure projection for the
+/// later WORKSPACE finalizer; schedule-time emission deliberately keeps using
+/// [`transforms_header_payload`] because an emitted-stage pending call is not
+/// known until after the backend has run.
+pub fn transforms_header_payload_excluding(
+    plan: &TransformPlan,
+    pending: &CompilerPendingSet,
+) -> Result<Option<String>, CompilerNativePolicyError> {
+    validate_pending_set(plan, pending)?;
+    if pending.is_empty() {
+        return Ok(transforms_header_payload(plan));
+    }
+    let mut omitted = pending.iter().peekable();
+    let mut payload = String::from(TRANSFORMS_HEADER_PREFIX);
+    for entry in plan.entries() {
+        if omitted
+            .peek()
+            .is_some_and(|pending| pending.order() == entry.order())
+        {
+            omitted.next();
+            continue;
+        }
+        payload.push(' ');
+        payload.push_str(&vibe_specdoc::encode_generated_xml_comment(
+            entry.seed().key().as_str(),
+        ));
+    }
+    Ok((payload != TRANSFORMS_HEADER_PREFIX).then_some(payload))
 }
 
 /// The encoded tokens of one OBSERVED header payload, in emitted order —

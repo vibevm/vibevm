@@ -20,6 +20,8 @@ use super::config::{ConfigDatetime, ConfigOffset, ConfigTable, ConfigValue};
 use super::emitted_reconstruction;
 use super::lane_admission;
 use super::native_identity::CompilerNativeImplementationDigest;
+use super::native_policy::CompilerNativePolicyError;
+use super::native_policy::session::{NativePolicySession, UnavailableDisposition};
 use super::plan::TransformConfig;
 
 const DIAGNOSTIC_BYTES: usize = 256;
@@ -125,9 +127,25 @@ pub trait CompilerNativeInvoker: Send + Sync {
     fn invoke(&self, call: CompilerNativeCall<'_>) -> Result<Vec<u8>, CompilerNativeInvokerError>;
 }
 
+/// Borrowed invocation authority shared by one resolved native row.
+#[derive(Clone, Copy)]
+pub(crate) struct NativeRuntime<'entry> {
+    invoker: &'entry dyn CompilerNativeInvoker,
+    policy: Option<&'entry NativePolicySession>,
+}
+
+impl<'entry> NativeRuntime<'entry> {
+    pub(crate) const fn new(
+        invoker: &'entry dyn CompilerNativeInvoker,
+        policy: Option<&'entry NativePolicySession>,
+    ) -> Self {
+        Self { invoker, policy }
+    }
+}
+
 /// One resolved native schedule row, borrowed for exactly one invocation.
 pub(crate) struct NativeEntry<'entry> {
-    invoker: &'entry dyn CompilerNativeInvoker,
+    runtime: NativeRuntime<'entry>,
     key: &'entry ExtensionKey,
     point: CompilePoint,
     order: u32,
@@ -138,7 +156,7 @@ pub(crate) struct NativeEntry<'entry> {
 
 impl<'entry> NativeEntry<'entry> {
     pub(crate) fn new(
-        invoker: &'entry dyn CompilerNativeInvoker,
+        runtime: NativeRuntime<'entry>,
         key: &'entry ExtensionKey,
         point: CompilePoint,
         order: u32,
@@ -147,7 +165,7 @@ impl<'entry> NativeEntry<'entry> {
         pass: &'entry PassName,
     ) -> Self {
         Self {
-            invoker,
+            runtime,
             key,
             point,
             order,
@@ -168,6 +186,8 @@ pub(crate) enum NativeManagerError {
     Request { detail: String },
     #[error("the native invoker refused: {0}")]
     Invoker(#[from] CompilerNativeInvokerError),
+    #[error("the compiler-native pending policy refused: {0}")]
+    Policy(#[from] CompilerNativePolicyError),
     #[error("the strict native reply reader refused: {detail}")]
     ReplyReader { detail: String },
     #[error("the native reply exchange refused: {0}")]
@@ -185,6 +205,18 @@ pub(crate) enum NativeManagerError {
     Transition { detail: String },
     #[error("the native manager received an impossible carrier for {point:?}")]
     InternalCarrier { point: CompilePoint },
+}
+
+/// One manager-admitted carrier and whether the native handler executed.
+pub(crate) struct NativeManagerOutput {
+    carrier: AnyIr,
+    executed: bool,
+}
+
+impl NativeManagerOutput {
+    pub(crate) fn into_parts(self) -> (AnyIr, bool) {
+        (self.carrier, self.executed)
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -205,9 +237,12 @@ impl BoundedMessage {
     }
 }
 
-pub(crate) fn execute(entry: NativeEntry<'_>, input: AnyIr) -> Result<AnyIr, NativeManagerError> {
+pub(crate) fn execute(
+    entry: NativeEntry<'_>,
+    input: AnyIr,
+) -> Result<NativeManagerOutput, NativeManagerError> {
     let NativeEntry {
-        invoker,
+        runtime,
         key,
         point,
         order,
@@ -215,25 +250,46 @@ pub(crate) fn execute(entry: NativeEntry<'_>, input: AnyIr) -> Result<AnyIr, Nat
         implementation,
         pass,
     } = entry;
+    let NativeRuntime { invoker, policy } = runtime;
     let projected = execution_config(config.map(TransformConfig::as_table))?;
     let verifier = IrVerifier;
     let witness = verifier.witness(&input).map_err(transition)?;
     let payload = wire::encode_generated(&input).map_err(returned_request)?;
-    let raw = invoker.invoke(CompilerNativeCall {
+    let raw = match invoker.invoke(CompilerNativeCall {
         key,
         point,
         order,
         config: &projected,
         implementation,
         payload,
-    })?;
+    }) {
+        Ok(raw) => raw,
+        Err(error)
+            if error.kind() == CompilerNativeInvokerErrorKind::BuildableSourceUnavailable
+                && policy.is_some() =>
+        {
+            let Some(policy) = policy else {
+                return Err(NativeManagerError::Invoker(error));
+            };
+            match policy.unavailable(order, key, point, config, implementation)? {
+                UnavailableDisposition::Hard => return Err(NativeManagerError::Invoker(error)),
+                UnavailableDisposition::ContinueOriginal => {
+                    return Ok(NativeManagerOutput {
+                        carrier: input,
+                        executed: false,
+                    });
+                }
+            }
+        }
+        Err(error) => return Err(NativeManagerError::Invoker(error)),
+    };
     let reply: CompileReply = wire::json::from_strict_slice(&raw).map_err(reply_reader)?;
     let shape = validate_reply(&reply)?;
-    match reply {
-        CompileReply::Skip(_) => Ok(input),
+    let output = match reply {
+        CompileReply::Skip(_) => input,
         CompileReply::Fail(reply) => Err(NativeManagerError::Fail {
             message: BoundedMessage::new(reply.message.as_deref()),
-        }),
+        })?,
         CompileReply::Ok(reply) => {
             let Some(shape) = shape else {
                 return Err(NativeManagerError::InternalCarrier { point });
@@ -249,9 +305,16 @@ pub(crate) fn execute(entry: NativeEntry<'_>, input: AnyIr) -> Result<AnyIr, Nat
             verifier
                 .verify_transition(&witness, &final_value)
                 .map_err(transition)?;
-            Ok(final_value)
+            final_value
         }
+    };
+    if let Some(policy) = policy {
+        policy.success(order, key, point, config, implementation)?;
     }
+    Ok(NativeManagerOutput {
+        carrier: output,
+        executed: true,
+    })
 }
 
 fn expected_carrier(point: CompilePoint) -> IrCarrier {

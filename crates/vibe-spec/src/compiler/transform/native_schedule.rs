@@ -20,7 +20,10 @@ use super::emitted_reconstruction;
 use super::fault::TransformError;
 use super::lane_admission::{self, LaneAdmissionError};
 use super::native_identity::CompilerNativeImplementationDigest;
-use super::native_manager::{self, CompilerNativeInvoker, NativeEntry, NativeManagerError};
+use super::native_manager::{
+    self, CompilerNativeInvoker, NativeEntry, NativeManagerError, NativeRuntime,
+};
+use super::native_policy::session::NativePolicySession;
 use super::plan::{TransformConfig, TransformStage};
 use super::plan_validate::BoundedPreview;
 
@@ -31,6 +34,7 @@ pub(super) enum TransformExecution<'invoke> {
         key: ExtensionKey,
         invoker: &'invoke dyn CompilerNativeInvoker,
         digest: CompilerNativeImplementationDigest,
+        policy: Option<&'invoke NativePolicySession>,
     },
 }
 
@@ -43,11 +47,13 @@ impl<'invoke> TransformExecution<'invoke> {
         key: ExtensionKey,
         invoker: &'invoke dyn CompilerNativeInvoker,
         digest: CompilerNativeImplementationDigest,
+        policy: Option<&'invoke NativePolicySession>,
     ) -> Self {
         Self::Native {
             key,
             invoker,
             digest,
+            policy,
         }
     }
 
@@ -58,26 +64,26 @@ impl<'invoke> TransformExecution<'invoke> {
         order: u32,
         config: Option<&TransformConfig>,
         input: SourceIr,
-    ) -> Result<SourceIr, TransformError> {
+    ) -> Result<TransformRun<SourceIr>, TransformError> {
         match self {
-            Self::Builtin(behavior) => {
-                behavior
-                    .run_source(config, input)
-                    .map_err(|source| TransformError::Behavior {
-                        preview: preview.clone(),
-                        order,
-                        stage: TransformStage::Source,
-                        source,
-                    })
-            }
+            Self::Builtin(behavior) => behavior
+                .run_source(config, input)
+                .map_err(|source| TransformError::Behavior {
+                    preview: preview.clone(),
+                    order,
+                    stage: TransformStage::Source,
+                    source,
+                })
+                .map(TransformRun::executed),
             Self::Native {
                 key,
                 invoker,
                 digest,
+                policy,
             } => {
                 let output = native_manager::execute(
                     NativeEntry::new(
-                        *invoker,
+                        NativeRuntime::new(*invoker, *policy),
                         key,
                         CompilePoint::Source,
                         order,
@@ -88,8 +94,9 @@ impl<'invoke> TransformExecution<'invoke> {
                     AnyIr::Source(input),
                 )
                 .map_err(|source| native_fault(preview, order, TransformStage::Source, source))?;
+                let (output, executed) = output.into_parts();
                 match output {
-                    AnyIr::Source(output) => Ok(output),
+                    AnyIr::Source(output) => Ok(TransformRun { output, executed }),
                     _ => Err(internal(preview, order, CompilePoint::Source)),
                 }
             }
@@ -103,26 +110,26 @@ impl<'invoke> TransformExecution<'invoke> {
         order: u32,
         config: Option<&TransformConfig>,
         input: DocumentIr,
-    ) -> Result<DocumentIr, TransformError> {
+    ) -> Result<TransformRun<DocumentIr>, TransformError> {
         match self {
-            Self::Builtin(behavior) => {
-                behavior
-                    .run_document(config, input)
-                    .map_err(|source| TransformError::Behavior {
-                        preview: preview.clone(),
-                        order,
-                        stage: TransformStage::Document,
-                        source,
-                    })
-            }
+            Self::Builtin(behavior) => behavior
+                .run_document(config, input)
+                .map_err(|source| TransformError::Behavior {
+                    preview: preview.clone(),
+                    order,
+                    stage: TransformStage::Document,
+                    source,
+                })
+                .map(TransformRun::executed),
             Self::Native {
                 key,
                 invoker,
                 digest,
+                policy,
             } => {
                 let output = native_manager::execute(
                     NativeEntry::new(
-                        *invoker,
+                        NativeRuntime::new(*invoker, *policy),
                         key,
                         CompilePoint::Document,
                         order,
@@ -133,8 +140,9 @@ impl<'invoke> TransformExecution<'invoke> {
                     AnyIr::Document(input),
                 )
                 .map_err(|source| native_fault(preview, order, TransformStage::Document, source))?;
+                let (output, executed) = output.into_parts();
                 match output {
-                    AnyIr::Document(output) => Ok(output),
+                    AnyIr::Document(output) => Ok(TransformRun { output, executed }),
                     _ => Err(internal(preview, order, CompilePoint::Document)),
                 }
             }
@@ -148,7 +156,7 @@ impl<'invoke> TransformExecution<'invoke> {
         order: u32,
         config: Option<&TransformConfig>,
         input: LaneIr,
-    ) -> Result<LaneIr, TransformError> {
+    ) -> Result<TransformRun<LaneIr>, TransformError> {
         match self {
             Self::Builtin(behavior) => {
                 let witness = lane_admission::witness(&input);
@@ -162,16 +170,17 @@ impl<'invoke> TransformExecution<'invoke> {
                 })?;
                 lane_admission::admit(&witness, &output)
                     .map_err(|source| lane_fault(preview, order, source))?;
-                Ok(output)
+                Ok(TransformRun::executed(output))
             }
             Self::Native {
                 key,
                 invoker,
                 digest,
+                policy,
             } => {
                 let output = native_manager::execute(
                     NativeEntry::new(
-                        *invoker,
+                        NativeRuntime::new(*invoker, *policy),
                         key,
                         CompilePoint::Lane,
                         order,
@@ -182,8 +191,9 @@ impl<'invoke> TransformExecution<'invoke> {
                     AnyIr::Lane(input),
                 )
                 .map_err(|source| native_fault(preview, order, TransformStage::Lane, source))?;
+                let (output, executed) = output.into_parts();
                 match output {
-                    AnyIr::Lane(output) => Ok(output),
+                    AnyIr::Lane(output) => Ok(TransformRun { output, executed }),
                     _ => Err(internal(preview, order, CompilePoint::Lane)),
                 }
             }
@@ -197,7 +207,7 @@ impl<'invoke> TransformExecution<'invoke> {
         order: u32,
         config: Option<&TransformConfig>,
         input: EmittedArtifact,
-    ) -> Result<EmittedArtifact, TransformError> {
+    ) -> Result<TransformRun<EmittedArtifact>, TransformError> {
         match self {
             Self::Builtin(behavior) => {
                 let bytes = input.bytes().to_vec();
@@ -209,16 +219,19 @@ impl<'invoke> TransformExecution<'invoke> {
                         source,
                     }
                 })?;
-                Ok(emitted_reconstruction::reconstruct(input, output, name))
+                Ok(TransformRun::executed(emitted_reconstruction::reconstruct(
+                    input, output, name,
+                )))
             }
             Self::Native {
                 key,
                 invoker,
                 digest,
+                policy,
             } => {
                 let output = native_manager::execute(
                     NativeEntry::new(
-                        *invoker,
+                        NativeRuntime::new(*invoker, *policy),
                         key,
                         CompilePoint::Emitted,
                         order,
@@ -229,11 +242,26 @@ impl<'invoke> TransformExecution<'invoke> {
                     AnyIr::Emitted(input),
                 )
                 .map_err(|source| native_fault(preview, order, TransformStage::Emitted, source))?;
+                let (output, executed) = output.into_parts();
                 match output {
-                    AnyIr::Emitted(output) => Ok(output),
+                    AnyIr::Emitted(output) => Ok(TransformRun { output, executed }),
                     _ => Err(internal(preview, order, CompilePoint::Emitted)),
                 }
             }
+        }
+    }
+}
+
+pub(super) struct TransformRun<T> {
+    pub(super) output: T,
+    pub(super) executed: bool,
+}
+
+impl<T> TransformRun<T> {
+    fn executed(output: T) -> Self {
+        Self {
+            output,
+            executed: true,
         }
     }
 }

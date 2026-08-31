@@ -37,6 +37,7 @@ use super::trace::CompileTraceSink;
 use super::transform::fault::TransformError;
 use super::transform::header as transform_header;
 use super::transform::native_manager::CompilerNativeInvoker;
+use super::transform::native_policy::session::NativePolicySession;
 use super::transform::registry::TransformRegistry;
 use super::transform::schedule::TransformSchedule;
 use super::worklist;
@@ -57,8 +58,9 @@ pub(crate) use driver::compile_artifact_with_registry;
 pub(crate) use driver::compile_compatibility_artifact;
 pub use driver::{
     ArtifactCompileError, compile_artifact, compile_artifact_native,
-    compile_artifact_native_observed, compile_artifact_native_traced, compile_artifact_observed,
-    compile_artifact_traced,
+    compile_artifact_native_managed, compile_artifact_native_managed_observed,
+    compile_artifact_native_managed_traced, compile_artifact_native_observed,
+    compile_artifact_native_traced, compile_artifact_observed, compile_artifact_traced,
 };
 #[cfg(feature = "test-support")]
 pub use driver::{
@@ -195,10 +197,16 @@ impl<'invoke> BuiltinSchedule<'invoke> {
         registry: &TransformRegistry,
         observer: &Observing,
         invoker: Option<&'invoke dyn CompilerNativeInvoker>,
+        policy: Option<&'invoke NativePolicySession>,
     ) -> Result<Self, ArtifactCompileError> {
-        let transforms =
-            TransformSchedule::resolve_with_invoker(plan, registry, observer.clone(), invoker)
-                .map_err(transform_public)?;
+        let transforms = TransformSchedule::resolve_with_invoker(
+            plan,
+            registry,
+            observer.clone(),
+            invoker,
+            policy,
+        )
+        .map_err(transform_public)?;
         let close_state = CloseState::default();
         let mut pipeline = CompilerPipeline::default();
         transforms
@@ -251,8 +259,9 @@ impl<'invoke> BuiltinSchedule<'invoke> {
         registry: &TransformRegistry,
         observer: &Observing,
         invoker: Option<&'invoke dyn CompilerNativeInvoker>,
+        policy: Option<&'invoke NativePolicySession>,
     ) -> Result<Self, ArtifactCompileError> {
-        let mut schedule = Self::linked_with_invoker(plan, registry, observer, invoker)?;
+        let mut schedule = Self::linked_with_invoker(plan, registry, observer, invoker, policy)?;
         schedule
             .pipeline
             .push_artifact(AssemblePass::new())
@@ -270,11 +279,12 @@ impl<'invoke> BuiltinSchedule<'invoke> {
         registry: &BackendRegistry,
         observer: &Observing,
         invoker: Option<&'invoke dyn CompilerNativeInvoker>,
+        policy: Option<&'invoke NativePolicySession>,
     ) -> Result<Self, ArtifactCompileError> {
         // Transform resolution — including the compatibility-fragment frame
         // refusal — precedes the backend lookup, exactly as the frozen T6b
         // construction order demands.
-        let schedule = Self::assembled_with_invoker(plan, transforms, observer, invoker)?;
+        let schedule = Self::assembled_with_invoker(plan, transforms, observer, invoker, policy)?;
         let backend = registry
             .selected(&plan.context().target())
             .map_err(|error| ArtifactCompileError::Registry {
@@ -291,7 +301,7 @@ impl<'invoke> BuiltinSchedule<'invoke> {
         registry: &TransformRegistry,
         backend: std::sync::Arc<dyn EmitBackend>,
     ) -> Result<Self, ArtifactCompileError> {
-        let schedule = Self::assembled_with_invoker(plan, registry, &None, None)?;
+        let schedule = Self::assembled_with_invoker(plan, registry, &None, None, None)?;
         Self::append_emit(schedule, backend, plan, &None)
     }
 
@@ -401,7 +411,7 @@ impl BuiltinSchedule<'static> {
         registry: &TransformRegistry,
         observer: &Observing,
     ) -> Result<Self, ArtifactCompileError> {
-        Self::linked_with_invoker(plan, registry, observer, None)
+        Self::linked_with_invoker(plan, registry, observer, None, None)
     }
 
     fn assembled(
@@ -409,7 +419,7 @@ impl BuiltinSchedule<'static> {
         registry: &TransformRegistry,
         observer: &Observing,
     ) -> Result<Self, ArtifactCompileError> {
-        Self::assembled_with_invoker(plan, registry, observer, None)
+        Self::assembled_with_invoker(plan, registry, observer, None, None)
     }
 
     fn emitted(
@@ -418,7 +428,7 @@ impl BuiltinSchedule<'static> {
         registry: &BackendRegistry,
         observer: &Observing,
     ) -> Result<Self, ArtifactCompileError> {
-        Self::emitted_with_invoker(plan, transforms, registry, observer, None)
+        Self::emitted_with_invoker(plan, transforms, registry, observer, None, None)
     }
 }
 

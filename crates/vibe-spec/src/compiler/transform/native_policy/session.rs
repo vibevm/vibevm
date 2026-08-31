@@ -376,6 +376,13 @@ fn validate_expected(
     Ok(())
 }
 
+pub(crate) fn validate_pending_set(
+    plan: &TransformPlan,
+    pending: &CompilerPendingSet,
+) -> Result<(), CompilerNativePolicyError> {
+    validate_expected(plan, pending)
+}
+
 fn capture(
     plan_digest: Option<[u8; 32]>,
     order: u32,

@@ -42,6 +42,7 @@ pub(super) struct CallRecord {
 pub(super) enum ReplyMode {
     Ok,
     SkipOrder(u32),
+    SkipAll,
     FailOrder(u32),
     DuplicateRoot,
     DuplicateIr,
@@ -55,6 +56,10 @@ pub(super) enum ReplyMode {
     MalformedJson,
     InvalidUtf8,
     BuildableSourceUnavailable,
+    BuildableOrder(u32),
+    BuildableFirstCall(u32),
+    BuildableAfterFirstCall(u32),
+    InvocationFailed,
     ForgedSourceIdentity,
     ForgedDocumentIdentity,
     ForgedLaneProvenance,
@@ -105,14 +110,33 @@ impl CompilerNativeInvoker for FakeInvoker {
             ir_schema,
             payload: call.payload().clone(),
         };
-        self.calls.lock().unwrap().push(record);
+        let calls_for_order = {
+            let mut calls = self.calls.lock().unwrap();
+            calls.push(record);
+            calls
+                .iter()
+                .filter(|record| record.order == call.order())
+                .count()
+        };
         if let Some(log) = &self.ordered {
             log.lock().unwrap().push(format!("native:{}", call.order()));
         }
-        if matches!(self.mode, ReplyMode::BuildableSourceUnavailable) {
+        let buildable = matches!(self.mode, ReplyMode::BuildableSourceUnavailable)
+            || matches!(self.mode, ReplyMode::BuildableOrder(order) if order == call.order())
+            || matches!(self.mode, ReplyMode::BuildableFirstCall(order)
+                if order == call.order() && calls_for_order == 1)
+            || matches!(self.mode, ReplyMode::BuildableAfterFirstCall(order)
+                if order == call.order() && calls_for_order > 1);
+        if buildable {
             return Err(CompilerNativeInvokerError::new(
                 CompilerNativeInvokerErrorKind::BuildableSourceUnavailable,
                 "source exists but has not been built",
+            ));
+        }
+        if matches!(self.mode, ReplyMode::InvocationFailed) {
+            return Err(CompilerNativeInvokerError::new(
+                CompilerNativeInvokerErrorKind::InvocationFailed,
+                "ordinary invocation failure",
             ));
         }
         if matches!(self.mode, ReplyMode::MalformedJson) {
@@ -136,6 +160,10 @@ impl CompilerNativeInvoker for FakeInvoker {
         }
 
         let mut reply = match self.mode {
+            ReplyMode::SkipAll => CompileReply::Skip(Box::new(CompileReplySkip {
+                envelope: 1,
+                message: Some("not applicable".to_string()),
+            })),
             ReplyMode::SkipOrder(order) if call.order() == order => {
                 CompileReply::Skip(Box::new(CompileReplySkip {
                     envelope: 1,

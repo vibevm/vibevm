@@ -95,6 +95,8 @@ fn the_module_tree_declares_every_transform_cell_under_a_rule_family() {
             "native_manager_matrix_tests".to_owned(),
             "native_manager_test_support".to_owned(),
             "native_policy_tests".to_owned(),
+            "native_policy_driver_tests".to_owned(),
+            "native_policy_driver_refusal_tests".to_owned(),
             "plan_digest_tests".to_owned(),
             "plan_fence_tests".to_owned(),
             "plan_refusal_tests".to_owned(),
@@ -148,6 +150,22 @@ fn the_module_tree_declares_every_transform_cell_under_a_rule_family() {
     assert!(
         native_policy_session_offenders.is_empty(),
         "native policy session left the native-manager state family: {native_policy_session_offenders:?}"
+    );
+    let native_policy_outcome_offenders = offenders(
+        include_str!("native_policy/outcome.rs"),
+        &NATIVE_MANAGER_RULES,
+    );
+    assert!(
+        native_policy_outcome_offenders.is_empty(),
+        "native policy outcome left the native-manager state family: {native_policy_outcome_offenders:?}"
+    );
+    let native_pass_offenders = offenders(
+        include_str!("schedule/native_passes.rs"),
+        &NATIVE_SCHEDULE_RULES,
+    );
+    assert!(
+        native_pass_offenders.is_empty(),
+        "native pass wrappers left the native schedule family: {native_pass_offenders:?}"
     );
     assert!(offenders(include_str!("native_identity.rs"), &NATIVE_IDENTITY_RULES).is_empty());
     assert!(offenders(include_str!("lane_admission.rs"), &WRAPPER_RULES).is_empty());

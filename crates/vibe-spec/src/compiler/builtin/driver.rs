@@ -7,6 +7,11 @@ use super::super::ir::{ArtifactInputWitness, ArtifactPlan, EmittedArtifact, Stat
 use super::super::observer::Observing;
 use super::super::trace::CompileTraceSink;
 use super::super::transform::native_manager::CompilerNativeInvoker;
+use super::super::transform::native_policy::session::{NativePolicyResult, NativePolicySession};
+use super::super::transform::native_policy::{
+    CompilerInvocationReceipts, CompilerNativeOutcome, CompilerNativePolicy,
+    CompilerNativePolicyError,
+};
 use super::super::transform::registry::TransformRegistry;
 use super::super::worklist::{self, ErrorOwners};
 use super::BuiltinSchedule;
@@ -31,6 +36,8 @@ pub enum ArtifactCompileError {
     Manager { reason: String },
     #[error(transparent)]
     Transform(#[from] super::TransformCompileError),
+    #[error(transparent)]
+    NativePolicy(#[from] CompilerNativePolicyError),
 }
 
 pub fn compile_artifact(
@@ -157,6 +164,62 @@ pub fn compile_artifact_native_observed(
         None,
         Some(observer),
         Some(invoker),
+    )
+}
+
+/// Native-aware compile under an explicit pending-state policy.
+pub fn compile_artifact_native_managed(
+    plan: ArtifactPlan,
+    source: &impl SectionSource,
+    invoker: &dyn CompilerNativeInvoker,
+    policy: CompilerNativePolicy,
+) -> Result<CompilerNativeOutcome, ArtifactCompileError> {
+    run_managed_with_registries(
+        plan,
+        source,
+        &BackendRegistry::builtins(),
+        &TransformRegistry::builtins(),
+        None,
+        None,
+        ManagedNative { invoker, policy },
+    )
+}
+
+/// Managed native compile under the existing diagnostic trace observer.
+pub fn compile_artifact_native_managed_traced(
+    plan: ArtifactPlan,
+    source: &impl SectionSource,
+    invoker: &dyn CompilerNativeInvoker,
+    policy: CompilerNativePolicy,
+    sink: &dyn CompileTraceSink,
+) -> Result<CompilerNativeOutcome, ArtifactCompileError> {
+    run_managed_with_registries(
+        plan,
+        source,
+        &BackendRegistry::builtins(),
+        &TransformRegistry::builtins(),
+        Some(sink),
+        None,
+        ManagedNative { invoker, policy },
+    )
+}
+
+/// Managed native compile under the existing analyzer observer.
+pub fn compile_artifact_native_managed_observed(
+    plan: ArtifactPlan,
+    source: &impl SectionSource,
+    invoker: &dyn CompilerNativeInvoker,
+    policy: CompilerNativePolicy,
+    observer: std::sync::Arc<dyn CompileObserver>,
+) -> Result<CompilerNativeOutcome, ArtifactCompileError> {
+    run_managed_with_registries(
+        plan,
+        source,
+        &BackendRegistry::builtins(),
+        &TransformRegistry::builtins(),
+        None,
+        Some(observer),
+        ManagedNative { invoker, policy },
     )
 }
 
@@ -341,9 +404,51 @@ fn run_with_registries(
     observer: Observing,
     invoker: Option<&dyn CompilerNativeInvoker>,
 ) -> Result<EmittedArtifact, ArtifactCompileError> {
-    let schedule =
-        BuiltinSchedule::emitted_with_invoker(&plan, transforms, backends, &observer, invoker)?;
+    let schedule = BuiltinSchedule::emitted_with_invoker(
+        &plan, transforms, backends, &observer, invoker, None,
+    )?;
     run(plan, source, schedule, trace)
+}
+
+struct ManagedNative<'invoke> {
+    invoker: &'invoke dyn CompilerNativeInvoker,
+    policy: CompilerNativePolicy,
+}
+
+fn run_managed_with_registries(
+    plan: ArtifactPlan,
+    source: &impl SectionSource,
+    backends: &BackendRegistry,
+    transforms: &TransformRegistry,
+    trace: Option<&dyn CompileTraceSink>,
+    observer: Observing,
+    managed: ManagedNative<'_>,
+) -> Result<CompilerNativeOutcome, ArtifactCompileError> {
+    let session = NativePolicySession::new(plan.transforms(), managed.policy)?;
+    let schedule = BuiltinSchedule::emitted_with_invoker(
+        &plan,
+        transforms,
+        backends,
+        &observer,
+        Some(managed.invoker),
+        Some(&session),
+    )?;
+    let artifact = run(plan, source, schedule, trace)?;
+    match session.finish()? {
+        NativePolicyResult::Fail => Ok(CompilerNativeOutcome::ready(
+            artifact,
+            CompilerInvocationReceipts::empty(),
+        )),
+        NativePolicyResult::Collected(pending) if pending.is_empty() => Ok(
+            CompilerNativeOutcome::ready(artifact, CompilerInvocationReceipts::empty()),
+        ),
+        NativePolicyResult::Collected(pending) => {
+            Ok(CompilerNativeOutcome::pending(artifact, pending))
+        }
+        NativePolicyResult::Resolved(receipts) => {
+            Ok(CompilerNativeOutcome::ready(artifact, receipts))
+        }
+    }
 }
 
 fn run(

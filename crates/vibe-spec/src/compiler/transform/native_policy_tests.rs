@@ -3,11 +3,10 @@ use vibe_core::manifest::ExtensionKey;
 use super::lowering_worlds::Declared;
 use super::native_identity::NativeHandlerIdentity;
 use super::native_manager_test_support::plan as artifact_plan;
-use super::native_policy::session::PendingCapture;
-use super::native_policy::{
-    Availability, CompilerNativePolicy, CompilerNativePolicyError, CompilerPendingRef,
-    NativePolicyResult, NativePolicySession, UnavailableDisposition,
+use super::native_policy::session::{
+    Availability, NativePolicyResult, NativePolicySession, PendingCapture, UnavailableDisposition,
 };
+use super::native_policy::{CompilerNativePolicy, CompilerNativePolicyError, CompilerPendingRef};
 use super::plan::{ImplementationComponents, TransformPlan, TransformStage};
 
 fn native_plan(ids: &[&'static str]) -> TransformPlan {
