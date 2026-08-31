@@ -375,3 +375,30 @@ integration + 4 doctests, downstream workspace/orchestrator check,
 new. Ten worker and one different central carrier mutation were RED and
 restored. Specmap is 6,833 units / 3,041 tagged / 2,792 edges, 0 suspects,
 gated orphans or unresolved host edges, 25 warnings. R5.5-INVOKE-SDK is next.
+
+## 11. R5.5-INVOKE-SDK ratification
+
+**Accepted 2026-08-31.** Product `777dbb5e` adds a backward-compatible safe
+compiler author surface without loader product changes. One hidden emitter now
+owns the four ABI-1 symbols, stable manifest cache, output-slot initialization,
+panic containment and exact boxed-slice publication/free for both public
+macros. Existing `vibe_extension!` syntax and lifecycle behavior remain exact;
+`vibe_compile_extension!` admits a generated `CompileRequest`, retains its
+shape, moves the request into the handler without cloning IR, validates the
+typed `CompileReply` against that shape and serializes only an admissible reply.
+
+The wire behavior gained one shape-based reply helper, and the existing
+exchange validator delegates to it without changing the 36-pair law. A separate
+compiler-only `rlib`/`cdylib` fixture is registered through the loader's normal
+dev-dependency graph; every fixture entry is compile-family/schema 1 and the
+lifecycle fixture is byte-unchanged. Root-family enforcement remains correctly
+owned by INVOKE-LOADER.
+
+Final gates: compiler SDK author/raw ABI 1+8, unchanged lifecycle author/raw
+ABI 1+6, complete vibe-ext 16 integration assertions, complete vibe-wire 132
+unit plus all integrations and 2 doctests, fixture registration 1 plus 2
+doctests, loader all-targets check, `check-codegen`, strict workspace
+check/clippy/fmt and conform 48 standing/0 new. Eleven worker and one central
+exchange-refactor mutation were RED and restored. Specmap remains 6,833 units /
+3,041 tagged / 2,792 edges, 0 suspects, gated orphans or unresolved host edges,
+25 warnings. R5.5-INVOKE-LOADER is next.

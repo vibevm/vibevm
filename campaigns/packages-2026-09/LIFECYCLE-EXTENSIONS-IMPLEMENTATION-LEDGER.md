@@ -1289,6 +1289,18 @@ than depending on untracked `cache/` archaeology.
   workspace check/clippy/fmt and conform 48 standing/0 new. Ten worker plus one
   central mutation were red and restored. Specmap is 6833/3041/2792 with zero
   suspects/orphans/unresolved and 25 warnings. MANAGER is accepted; SDK next.
+- R5.5-INVOKE-SDK: product `777dbb5e` factors one hidden four-symbol ABI
+  emitter shared by the byte-compatible lifecycle macro and new typed compiler
+  macro. Compiler request/reply relational admission occurs without cloning IR;
+  a shape helper preserves the existing exchange law. A separate compiler-only
+  rlib/cdylib fixture is built through the loader dev graph with compile-family
+  schema-1 entries; loader product and lifecycle fixture remain untouched.
+  Gates pass compiler/lifecycle SDK 9+7, vibe-wire 132 plus integrations/docs,
+  fixture registration/docs, loader all-targets, check-codegen, strict
+  workspace check/clippy/fmt and conform 48 standing/0 new. Eleven worker plus
+  one central mutation were red and restored; native review passed. Specmap
+  remains 6833/3041/2792 with zero suspects/orphans/unresolved and 25 warnings.
+  SDK is accepted; LOADER next.
 - R4.2 minify binding, RED corpus and activation e2e: `7a09ec2d` registers
   `xml-minify` (epoch 1, EMITTED — the one stage the kernel serves without a
   new serializer; every other stage refuses through the registry's own law)
@@ -1411,7 +1423,7 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 | R5.2 loader | done | LOADER `9f7b8854` / map `36efa500`; integrated 15 loader + 7 SDK + 7 native-wire gate, clean check-codegen/conform/specmap, 8 mutation proofs; separate unsafe quarantine, canonical strong cache, exact ABI/manifest admission and free-once guard |
 | R5.3 source/prebuilt resolution and in-slot build | done | ARTIFACT `1baac652` / trace `0ef041c7` / map `fd31533e`; WIRING `332f8e28` / map `48fcb39e`; GATE `be037d77` / trace `c2fe99fc` / map `ee3f4b49`; source/prebuilt production composition, immutable process-loader images, process-free resolver, stale-before-cache and lifecycle law all mutation-backed |
 | R5.4 pending bootstrap convergence | planned after R5.5-INVOKE | exact incoming world emits ordered pending without Cargo; native build then recompiles once before authored targets and removes pending only after the transform really executes |
-| R5.5 compiler-native wire, invocation and minify parity | in progress | WIRE-PROJECTION `9051aade` / trace `dc9cff48` / map `5adea048`; WIRE `ed6e7c2a` / map `f0dfaf33`; WIRE-GATE `36b7f1e2`; INVOKE-MANAGER `846979f9` / map `150f0866` accepted; SDK → LOADER → ARTIFACT → GATE → R5.4 → PARITY remain; borrowed manager matrix 22, full vibe-spec 875 + 5/2/7 + 4, exact 3041/2792 trace inventory |
+| R5.5 compiler-native wire, invocation and minify parity | in progress | WIRE-PROJECTION `9051aade` / trace `dc9cff48` / map `5adea048`; WIRE `ed6e7c2a` / map `f0dfaf33`; WIRE-GATE `36b7f1e2`; INVOKE-MANAGER `846979f9` / map `150f0866`; INVOKE-SDK `777dbb5e` accepted; LOADER → ARTIFACT → GATE → R5.4 → PARITY remain; one shared ABI emitter, compiler SDK 9 and unchanged lifecycle SDK 7 |
 
 ### R6 — full compiler pass tier
 
