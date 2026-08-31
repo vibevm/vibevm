@@ -499,6 +499,7 @@ fn stats(before: &[&str], after: &[&str], replaced: usize) -> RewireStats {
         replaced,
         names_before: closure(before),
         names_after: closure(after),
+        copies_after: BTreeSet::new(),
     }
 }
 

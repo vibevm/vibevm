@@ -387,16 +387,18 @@ fn labels_of(entries: &[serde_json::Value]) -> Vec<String> {
     labels
 }
 
-fn schema_path() -> PathBuf {
-    PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .join("../..")
-        .join("schemas/compiler_ir/e1/ir.jtd.json")
-}
-
 #[test]
 fn schema_pins_one_root_six_carriers_and_named_conversion_gates() {
-    let text = std::fs::read_to_string(schema_path()).unwrap();
-    let doc: serde_json::Value = serde_json::from_str(&text).unwrap();
+    let vocabulary_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("../..")
+        .join("formats/vocabularies.json");
+    let vocabularies: serde_json::Value =
+        serde_json::from_slice(&std::fs::read(vocabulary_path).unwrap()).unwrap();
+    let doc = &vocabularies["ir"];
+
+    let closure = doc["metadata"]["x-vocabularies"]
+        .as_array()
+        .expect("the canonical root declares its complete fragment closure");
 
     assert_eq!(doc["discriminator"], "shape", "one root discriminator");
     let mut keys: Vec<&str> = doc["mapping"]
@@ -410,11 +412,15 @@ fn schema_pins_one_root_six_carriers_and_named_conversion_gates() {
     expected.sort_unstable();
     assert_eq!(keys, expected, "exactly the six carrier mappings");
 
-    assert!(!text.contains("additionalProperties"), "not a JTD key");
-    assert!(!text.contains("\"values\": {}"), "no untyped catch-all map");
-    assert!(!text.contains("\"type\": {}"), "no anything scalar");
+    let canonical = serde_json::to_string(doc).unwrap();
+    assert!(!canonical.contains("additionalProperties"), "not a JTD key");
     assert!(
-        !text.contains("nullable"),
+        !canonical.contains("\"values\":{}"),
+        "no untyped catch-all map"
+    );
+    assert!(!canonical.contains("\"type\":{}"), "no anything scalar");
+    assert!(
+        !canonical.contains("nullable"),
         "absence is optionalProperties, never null"
     );
 
@@ -496,7 +502,7 @@ fn schema_pins_one_root_six_carriers_and_named_conversion_gates() {
         "the root says why the two metadata sets are separate"
     );
     assert_eq!(
-        doc["definitions"]["span"]["metadata"]["x-conversion"]
+        vocabularies["span"]["metadata"]["x-conversion"]
             .as_str()
             .map(|note| note.contains("panics")),
         Some(true),
@@ -526,7 +532,14 @@ fn schema_pins_one_root_six_carriers_and_named_conversion_gates() {
     }
     let mut enums = 0;
     let mut open_sites = 0;
-    walk(&doc, &mut enums, &mut open_sites);
+    walk(doc, &mut enums, &mut open_sites);
+    for name in closure {
+        walk(
+            &vocabularies[name.as_str().unwrap()],
+            &mut enums,
+            &mut open_sites,
+        );
+    }
     // 5 level + 2 cardinality definitions, compile_mode, artifact_target,
     // and the three inline kind vocabularies (doc node, directive, edge).
     assert_eq!(
@@ -537,7 +550,7 @@ fn schema_pins_one_root_six_carriers_and_named_conversion_gates() {
         open_sites, 1,
         "exactly one open vocabulary: artifact_target"
     );
-    let target_contract = doc["definitions"]["artifact_target"]["metadata"]["description"]
+    let target_contract = vocabularies["artifact_target"]["metadata"]["description"]
         .as_str()
         .unwrap();
     assert!(
@@ -569,31 +582,10 @@ fn schema_pins_one_root_six_carriers_and_named_conversion_gates() {
             walk_collections(child);
         }
     }
-    walk_collections(&doc);
-}
-
-#[test]
-fn generated_reader_is_strict_with_no_open_catch_all() {
-    let path =
-        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("src/generated/compiler_ir/e1/ir/mod.rs");
-    let text = std::fs::read_to_string(&path).unwrap();
-    assert!(
-        text.contains("#[serde(tag = \"shape\")]"),
-        "the root is the tagged union"
-    );
-    assert!(
-        text.contains("#[serde(deny_unknown_fields)]"),
-        "the reader is strict"
-    );
-    assert!(
-        !text.contains("serde_json"),
-        "no JSON-value parsing in generated types"
-    );
-    assert!(!text.contains("Value"), "no open catch-all field");
-    assert!(
-        text.contains("pub enum ArtifactTarget") && text.contains("Unknown(String)"),
-        "the one open vocabulary is the typed structural opening"
-    );
+    walk_collections(doc);
+    for name in closure {
+        walk_collections(&vocabularies[name.as_str().unwrap()]);
+    }
 }
 
 // ── Small kind projections, so the assertions above read as tables ──────────

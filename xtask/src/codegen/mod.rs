@@ -27,6 +27,7 @@ mod optional_shapes;
 mod ordered_maps;
 mod output_tree;
 mod postproc;
+mod reader_projection;
 mod shared_module;
 mod snake_case;
 mod strictness;
@@ -251,6 +252,9 @@ fn generate_into(
         let resolution = vocabularies.resolve(schema)?;
         resolved.push((schema.clone(), resolution));
     }
+    if group.owner == FormatOwner::Ours {
+        reader_projection::validate_policies(root, &resolved)?;
+    }
 
     let mut shared: Option<shared_module::SharedModule> = None;
     let mut rewire_stats: Vec<shared_module::RewireStats> = Vec::new();
@@ -310,15 +314,25 @@ fn generate_into(
         // the shared module's types — byte-checked, in place.
         if group.owner == FormatOwner::Ours {
             let module_file = sub_out.join("mod.rs");
+            reader_projection::strip_reflexive_root_alias(&module_file, &resolution.doc, schema)?;
             rewrite_generated(
                 &module_file,
                 &resolution.doc,
                 schema,
-                StrictnessSource::Registry(strictness),
+                StrictnessSource::Registry {
+                    registry: strictness,
+                    projections: &resolution.projections,
+                },
             )?;
             if let Some(module) = &shared {
                 rewire_stats.push(module.rewire(&module_file, schema, &resolution.vocabularies)?);
             }
+            reader_projection::rewrite_consumer(
+                &module_file,
+                &resolution.doc,
+                schema,
+                &resolution.projections,
+            )?;
         }
         leaves.push(sub_out);
     }

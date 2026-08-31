@@ -85,6 +85,13 @@ pub(crate) struct Resolved {
     /// Every fragment placed into the document — named by the schema's
     /// `metadata.x-vocabularies` or arriving with one it named.
     pub(crate) vocabularies: BTreeSet<String>,
+    /// Fragments consumed through ordinary, unprojected references. Shared
+    /// reader policy is computed from this set; projected-only consumption is
+    /// validated separately and must not manufacture an ordinary mixed role.
+    pub(crate) ordinary_vocabularies: BTreeSet<String>,
+    /// Every consumer-site permissive projection, including the transitive
+    /// fragment closure its generated adapter derives from.
+    pub(crate) projections: Vec<super::reader_projection::ProjectionUse>,
 }
 
 impl Vocabularies {
@@ -107,6 +114,7 @@ impl Vocabularies {
                 json_kind(&parsed)
             ),
         };
+        super::reader_projection::reject_vocabulary_markers(&fragments, home)?;
         Ok(Self {
             home: home.to_path_buf(),
             fragments,
@@ -135,6 +143,8 @@ impl Vocabularies {
             .with_context(|| format!("reading schema {}", schema.display()))?;
         let mut doc: Value =
             serde_json::from_str(&text).with_context(|| format!("parsing {}", schema.display()))?;
+        let fragment_names: BTreeSet<String> = self.fragments.keys().cloned().collect();
+        let mut projection = super::reader_projection::scan_schema(&doc, schema, &fragment_names)?;
 
         let Some(annotation) = doc
             .get("metadata")
@@ -145,6 +155,8 @@ impl Vocabularies {
             return Ok(Resolved {
                 doc: schema.to_path_buf(),
                 vocabularies: BTreeSet::new(),
+                ordinary_vocabularies: BTreeSet::new(),
+                projections: Vec::new(),
             });
         };
         let names = expect_name_array(&annotation, &format!("schema {}", schema.display()))?;
@@ -152,6 +164,36 @@ impl Vocabularies {
         // dependencies too. The cycle, chain and missing-name refusals
         // fire in there, before anything is placed.
         let closed = self.closure(&names, schema)?;
+        let mut projected = BTreeSet::new();
+        for usage in &mut projection.uses {
+            if !closed.contains(&usage.target) {
+                bail!(
+                    "schema {} at {} projects `{}`, but that fragment is not in the closure declared by `metadata.x-vocabularies`.\nFix: add `{}` to the schema's vocabulary closure, then run `cargo xtask codegen`.",
+                    schema.display(),
+                    usage.location,
+                    usage.target,
+                    usage.target
+                );
+            }
+            usage.closure = self.closure(std::slice::from_ref(&usage.target), schema)?;
+            projected.extend(usage.closure.iter().cloned());
+        }
+        let mut ordinary_vocabularies = closed
+            .difference(&projected)
+            .cloned()
+            .collect::<BTreeSet<_>>();
+        for root in &projection.ordinary_roots {
+            if !closed.contains(root) {
+                // A schema-local definition may have the same name as an
+                // unrelated global fragment. Only names this schema actually
+                // pulled from the vocabulary home participate in shared policy.
+                continue;
+            }
+            ordinary_vocabularies.extend(
+                self.closure(std::slice::from_ref(root), schema)?
+                    .into_iter(),
+            );
+        }
         // The schema's own definitions, snapshotted before placement: the
         // collision refusal below must fire on what the author wrote, not
         // on a fragment an earlier iteration placed (the closure may
@@ -229,6 +271,8 @@ impl Vocabularies {
         Ok(Resolved {
             doc: copy,
             vocabularies: closed,
+            ordinary_vocabularies,
+            projections: projection.uses,
         })
     }
 

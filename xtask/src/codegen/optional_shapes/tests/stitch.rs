@@ -209,10 +209,8 @@ fn the_same_key_with_different_decisions_refuses() -> Result<()> {
 
 /// The real data, walked: the vocabulary home — wrapped as
 /// `definitions`, exactly where `Vocabularies::resolve` places every
-/// fragment — carries 33 sites this pass rules on (20 optional scalars,
-/// including `compile_trace_report.run_path` and the six scalar witness/
-/// measurement members added by R7.5, and 13 optional structures, including
-/// its four optional measured/observed witness records) and two legal
+/// fragment — carries 41 sites this pass rules on (the prior 33 plus the eight
+/// optional scalar/structure sites in the promoted compiler-IR closure) and two legal
 /// diamonds (`describes` and
 /// `description` each live in both `subskill_entry` and `version_entry`
 /// with the same decision), so the map holds one key per pair while the
@@ -226,8 +224,8 @@ fn the_real_vocabulary_home_walks_to_its_sites() -> Result<()> {
             .expect("the vocabulary home parses");
     let doc_shapes = shapes(json!({ "definitions": home }))?;
     assert_eq!(
-        doc_shapes.sites, 33,
-        "20 optional scalars + 13 optional structures"
+        doc_shapes.sites, 41,
+        "the real shared home includes the promoted compiler-IR optional sites"
     );
     Ok(())
 }

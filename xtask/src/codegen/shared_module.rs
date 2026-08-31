@@ -62,7 +62,7 @@ mod emit;
 mod rewire;
 
 pub(super) use emit::{SHARED_MODULE, emit_shared_module};
-pub(super) use rewire::{RewireStats, SharedModule};
+pub(super) use rewire::{RewireStats, SharedModule, emitted_name};
 
 use super::format_id::load_format_registry;
 use super::vocabulary::Resolved;
@@ -125,7 +125,7 @@ pub(super) fn guard_shared_strictness(
     policies_from_resolutions(
         resolved
             .iter()
-            .map(|(schema, resolution)| (schema.as_path(), &resolution.vocabularies)),
+            .map(|(schema, resolution)| (schema.as_path(), &resolution.ordinary_vocabularies)),
         role_of,
     )
 }
@@ -213,15 +213,12 @@ pub(super) fn apply_shared_strictness(
         return Ok(src.to_string());
     }
 
-    let mut strict_types: BTreeMap<String, &str> = BTreeMap::new();
+    let mut type_owners: BTreeMap<String, (&str, FragmentReaderPolicy)> = BTreeMap::new();
     for (fragment, policy) in &strictness.fragments {
-        if *policy != FragmentReaderPolicy::Strict {
-            continue;
-        }
         let emitted = rewire::emitted_name(fragment);
-        if let Some(first) = strict_types.insert(emitted.clone(), fragment) {
+        if let Some((first, _)) = type_owners.insert(emitted.clone(), (fragment, *policy)) {
             bail!(
-                "the strict shared vocabularies `{first}` and `{fragment}` \
+                "the shared vocabularies `{first}` and `{fragment}` \
                  both fold to the emitted type `{emitted}` — the generator \
                  naming route is ambiguous.\n\
                  Fix: rename the colliding entries in \
@@ -232,13 +229,14 @@ pub(super) fn apply_shared_strictness(
 
     const DERIVE_LINE: &str = "#[derive(Serialize, Deserialize)]";
     const DENY_LINE: &str = "#[serde(deny_unknown_fields)]";
-    let mut out = String::with_capacity(src.len() + strict_types.len() * (DENY_LINE.len() + 1));
+    let mut out = String::with_capacity(src.len() + type_owners.len() * (DENY_LINE.len() + 1));
     let mut previous: Option<(&str, &str, &str)> = None;
     for (index, chunk) in src.split_inclusive('\n').enumerate() {
         let body = chunk.trim_end_matches(['\r', '\n']);
         let text = body.trim();
         if let Some(name) = struct_name(text)
-            && let Some(fragment) = strict_types.get(name)
+            && let Some((fragment, policy)) = owner_for_type(name, &type_owners)
+            && policy == FragmentReaderPolicy::Strict
         {
             let Some((previous_text, indent, ending)) = previous else {
                 bail!(
@@ -272,11 +270,43 @@ pub(super) fn apply_shared_strictness(
     Ok(out)
 }
 
+/// Attribute a subsidiary to its longest vocabulary type prefix, so
+/// `Artifact` cannot steal `ArtifactFrameStaticLane` from `ArtifactFrame`.
+fn owner_for_type<'a>(
+    name: &str,
+    owners: &'a BTreeMap<String, (&'a str, FragmentReaderPolicy)>,
+) -> Option<(&'a str, FragmentReaderPolicy)> {
+    owners
+        .iter()
+        .filter(|(main, _)| name == main.as_str() || name.starts_with(main.as_str()))
+        .max_by_key(|(main, _)| main.len())
+        .map(|(_, owner)| *owner)
+}
+
+/// Stamp projected local copies strict; only the consumer root is permissive.
+pub(super) fn apply_projected_copy_strictness(
+    src: &str,
+    file: &str,
+    fragments: &BTreeSet<String>,
+) -> Result<String> {
+    if fragments.is_empty() {
+        return Ok(src.to_string());
+    }
+    let strictness = SharedStrictness {
+        fragments: fragments
+            .iter()
+            .map(|fragment| (fragment.clone(), FragmentReaderPolicy::Strict))
+            .collect(),
+    };
+    apply_shared_strictness(src, file, &strictness)
+}
+
 /// The emitted struct name on a declaration line of the pinned shape.
 fn struct_name(text: &str) -> Option<&str> {
-    let name = text
-        .strip_prefix("pub struct ")?
-        .strip_suffix('{')?
+    let tail = text.strip_prefix("pub struct ")?;
+    let name = tail
+        .strip_suffix("{}")
+        .or_else(|| tail.strip_suffix('{'))?
         .trim_end();
     is_ident(name).then_some(name)
 }
@@ -314,9 +344,24 @@ pub(super) fn check_counter(
     }
     let mut names_before: BTreeSet<String> = BTreeSet::new();
     let mut names_after: BTreeSet<String> = shared_names.clone();
+    let mut copied_after: BTreeSet<String> = BTreeSet::new();
     for stats in per_module {
         names_before.extend(stats.names_before.iter().cloned());
         names_after.extend(stats.names_after.iter().cloned());
+        copied_after.extend(stats.copies_after.iter().cloned());
+    }
+    let duplicated: Vec<String> = copied_after.into_iter().collect();
+    if !duplicated.is_empty() {
+        bail!(
+            "the shared-module replacement left canonical type declarations \
+             copied in schema modules: [{}]. A shared name must have exactly \
+             one physical declaration, in `generated::shared`; every schema \
+             path is a re-export.\n\
+             Fix: restore the missing fragment(s) to the schema's resolved \
+             shared closure or repair `shared_module/rewire.rs`, then run \
+             `cargo xtask codegen`.",
+            duplicated.join(", ")
+        );
     }
     let appeared: Vec<String> = names_after.difference(&names_before).cloned().collect();
     let vanished: Vec<String> = names_before.difference(&names_after).cloned().collect();

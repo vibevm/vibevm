@@ -64,6 +64,8 @@ pub(crate) struct RewireStats {
     /// The type names the module declared before / after.
     pub(super) names_before: BTreeSet<String>,
     pub(super) names_after: BTreeSet<String>,
+    /// Byte-identical shared declarations that remained local after rewiring.
+    pub(super) copies_after: BTreeSet<String>,
 }
 
 /// The shared module parsed into blocks — the one home every re-export
@@ -134,9 +136,20 @@ impl SharedModule {
         // Guard 1 and 2, in declaration order, so the re-exports land
         // where the declarations stood without a second pass.
         let mut targets: Vec<(usize, usize, &str)> = Vec::new();
-        let mut claimed: BTreeSet<&str> = BTreeSet::new();
+        let mut claimed_mains: BTreeSet<&str> = BTreeSet::new();
         for block in &blocks {
-            let Some(fragment) = folds.get(&block.name) else {
+            // A fragment owns its main declaration plus every generator-
+            // minted subsidiary declaration sharing that main prefix. Only a
+            // name the shared home also carries is eligible, so an unrelated
+            // consumer root such as `IrRequest` is never stolen by `ir`.
+            let Some((main, fragment)) = folds
+                .iter()
+                .filter(|(main, _)| {
+                    self.blocks.contains_key(&block.name)
+                        && (block.name == **main || block.name.starts_with(main.as_str()))
+                })
+                .max_by_key(|(main, _)| main.len())
+            else {
                 continue;
             };
             let Some(shared) = self.blocks.get(&block.name) else {
@@ -178,13 +191,15 @@ impl SharedModule {
                 );
             }
             targets.push((block.span.0, block.span.1, block.name.as_str()));
-            claimed.insert(*fragment);
+            if block.name == *main {
+                claimed_mains.insert(*fragment);
+            }
         }
         // The flip side of guard 1: a fragment whose block the module
         // does not declare at all. The generator emits every definition
         // it is handed, so an absent block means the emission moved.
         for fragment in closure {
-            if !claimed.contains(fragment.as_str()) {
+            if !claimed_mains.contains(fragment.as_str()) {
                 let emitted = emitted_name(fragment);
                 bail!(
                     "schema {}: the closure pulls the vocabulary `{fragment}` \
@@ -233,18 +248,30 @@ impl SharedModule {
             .map(|b| b.name.clone())
             .filter(|name| !targets.iter().any(|t| t.2 == name.as_str()))
             .collect();
+        let copies_after: BTreeSet<String> = blocks
+            .iter()
+            .filter(|block| !targets.iter().any(|target| target.2 == block.name))
+            .filter(|block| {
+                self.blocks
+                    .get(&block.name)
+                    .is_some_and(|shared| shared.text == block.text)
+            })
+            .map(|block| block.name.clone())
+            .collect();
         let stats = RewireStats {
             before: blocks.len(),
             after: blocks.len() - replaced,
             replaced,
             names_before,
             names_after,
+            copies_after,
         };
-        if stats.after != blocks.len() - closure.len() || replaced != closure.len() {
+        if stats.after != blocks.len() - replaced || replaced < closure.len() {
             bail!(
-                "schema {}: the replacement wrote {} re-export{} where the \
-                 closure pulls {} vocabular{}, leaving {} declarations of \
-                 {} — the drop and the closure must agree exactly.\n\
+                "schema {}: the replacement wrote {} declaration re-export{} \
+                 for {} vocabular{}, leaving {} declarations of {} — every \
+                 fragment must lose its main declaration and every generated \
+                 subsidiary declaration it owns.\n\
                  Fix: this is a defect in the replacement pass \
                  (`xtask/src/codegen/shared_module/rewire.rs`), not in the \
                  schema; the run refuses to write a half-replaced module.",
@@ -269,7 +296,7 @@ impl SharedModule {
 /// name, and every replacement is stitched on content afterwards, so
 /// a day the fold and the generator disagree lands in the "block not
 /// found" refusal rather than in a silently wrong merge.
-pub(super) fn emitted_name(fragment: &str) -> String {
+pub(crate) fn emitted_name(fragment: &str) -> String {
     let mut out = String::with_capacity(fragment.len());
     for segment in fragment.split('_') {
         let mut characters = segment.chars();
@@ -360,7 +387,7 @@ fn parse_blocks(src: &str, file: &str) -> Result<Vec<Block>> {
             }
         }
         let mut end = match keyword {
-            Keyword::Alias => index + 1,
+            Keyword::Alias | Keyword::EmptyStruct => index + 1,
             Keyword::Struct | Keyword::Enum => close_of(&lines, index, file)? + 1,
         };
         // The impl blocks the emission attached to this type follow it,
@@ -413,6 +440,13 @@ fn close_of(lines: &[&str], open: usize, file: &str) -> Result<usize> {
 fn split_decl(text: &str) -> Option<(&str, Keyword)> {
     if let Some(rest) = text
         .strip_prefix("pub struct ")
+        .and_then(|rest| rest.strip_suffix("{}"))
+    {
+        let name = rest.trim_end();
+        return is_ident(name).then_some((name, Keyword::EmptyStruct));
+    }
+    if let Some(rest) = text
+        .strip_prefix("pub struct ")
         .and_then(|rest| rest.strip_suffix('{'))
     {
         let name = rest.trim_end();
@@ -437,6 +471,7 @@ fn split_decl(text: &str) -> Option<(&str, Keyword)> {
 }
 
 enum Keyword {
+    EmptyStruct,
     Struct,
     Enum,
     Alias,

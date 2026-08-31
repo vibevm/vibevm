@@ -113,7 +113,10 @@ use super::strictness::{Strictness, apply_strictness};
 /// literally — the same argument that made `FormatOwner` a named pair.
 pub(crate) enum StrictnessSource<'a> {
     /// Ruled by the registry, through the schema's own path.
-    Registry(&'a Strictness),
+    Registry {
+        registry: &'a Strictness,
+        projections: &'a [super::reader_projection::ProjectionUse],
+    },
     /// Ruled per shared fragment one storey up from all consumers.
     Shared(&'a super::shared_module::SharedStrictness),
 }
@@ -160,8 +163,12 @@ pub(crate) fn rewrite_generated(
     let emptied = apply_empty_policies(&ordered, &name, resolved, schema)?;
     let unboxed = apply_optional_shapes(&emptied, &name, resolved, schema)?;
     let strict = match strictness {
-        StrictnessSource::Registry(registry) => {
-            apply_strictness(&unboxed, &name, schema, registry)?
+        StrictnessSource::Registry {
+            registry,
+            projections,
+        } => {
+            let ruled = apply_strictness(&unboxed, &name, schema, registry)?;
+            super::reader_projection::apply_projected_copy_strictness(&ruled, &name, projections)?
         }
         StrictnessSource::Shared(shared) => {
             super::shared_module::apply_shared_strictness(&unboxed, &name, shared)?

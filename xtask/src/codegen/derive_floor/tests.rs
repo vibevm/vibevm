@@ -36,7 +36,10 @@ fn through_pipeline(src: &str, doc: Value, root_stem: &str) -> Result<String> {
         &file,
         &resolved,
         &schema,
-        StrictnessSource::Registry(&strictness),
+        StrictnessSource::Registry {
+            registry: &strictness,
+            projections: &[],
+        },
     )?;
     Ok(std::fs::read_to_string(&file)?)
 }

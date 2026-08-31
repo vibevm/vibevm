@@ -46,7 +46,10 @@ pub(crate) fn through_pipeline(src: &str, doc: Value, root_stem: &str) -> Result
         &file,
         &resolved,
         &schema,
-        StrictnessSource::Registry(&strictness),
+        StrictnessSource::Registry {
+            registry: &strictness,
+            projections: &[],
+        },
     )?;
     let out = std::fs::read_to_string(&file)?;
     // The trait floor is a LATER pass's subject, and `derive_floor`'s own
