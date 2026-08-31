@@ -1,0 +1,69 @@
+{
+  "envelope": 1,
+  "point": "compile:source",
+  "execution": {
+    "id": "source-transform",
+    "package": "org.example/native-compiler",
+    "config": {},
+    "future_execution_member": true
+  },
+  "project": {
+    "root": "C:/work/demo",
+    "name": "demo",
+    "version": "0.1.0",
+    "kind": "tool",
+    "manifest": "vibe.toml",
+    "spec_roots": ["vibevm/vibespecs"],
+    "future_project_member": true
+  },
+  "world": {
+    "lockfile": "vibe.lock",
+    "deps_root": "vibevm/vibedeps",
+    "packages": [
+      {
+        "group": "org.example",
+        "name": "native-compiler",
+        "version": "0.1.0",
+        "kind": "tool",
+        "slot": "vibevm/vibedeps/org.example.native-compiler/0.1.0",
+        "future_package_member": true
+      }
+    ],
+    "future_world_member": true
+  },
+  "io": {
+    "scratch": ".vibe/native-compile/example",
+    "future_io_member": true
+  },
+  "payload": {
+    "shape": "source-document",
+    "ir_schema": 1,
+    "level": "source",
+    "cardinality": "document",
+    "doc": {
+      "address": {
+        "kind": "spec",
+        "address": {
+          "raw": "spec://org.demo/lib/manual/guide.md#root",
+          "authority": {
+            "kind": "package",
+            "group": "org.demo",
+            "name": "lib",
+            "future_authority_member": "ignored"
+          },
+          "doc_path": "manual/guide.md",
+          "anchor": ["root"]
+        }
+      },
+      "format": "markdown",
+      "subject": {
+        "provider": {"kind": "undetermined"},
+        "declared_path": "boot/10-guide.md"
+      },
+      "text": "# Guide {#root}\n",
+      "future_doc_member": true
+    },
+    "future_payload_member": {"accepted": true}
+  },
+  "future_request_member": "accepted"
+}

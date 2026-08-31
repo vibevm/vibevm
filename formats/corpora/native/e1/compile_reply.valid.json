@@ -1,0 +1,28 @@
+{
+  "status": "ok",
+  "envelope": 1,
+  "payload": {
+    "shape": "source-document",
+    "ir_schema": 1,
+    "level": "source",
+    "cardinality": "document",
+    "doc": {
+      "address": {
+        "kind": "spec",
+        "address": {
+          "raw": "spec://org.demo/lib/manual/guide.md#root",
+          "authority": {"kind": "package", "group": "org.demo", "name": "lib"},
+          "doc_path": "manual/guide.md",
+          "anchor": ["root"]
+        }
+      },
+      "format": "markdown",
+      "subject": {
+        "provider": {"kind": "undetermined"},
+        "declared_path": "boot/10-guide.md"
+      },
+      "text": "# Guide {#root}\n"
+    }
+  },
+  "message": "complete"
+}

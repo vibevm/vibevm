@@ -10,6 +10,7 @@
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::{Path, PathBuf};
+use std::process::Command;
 
 use anyhow::{Context, Result, bail};
 use serde_json::{Map, Value};
@@ -19,7 +20,7 @@ use super::shared_module::emitted_name;
 use super::vocabulary::Resolved;
 
 mod emit;
-pub(crate) use emit::rewrite_consumer;
+pub(crate) use emit::{append_consumer_adapter, rewrite_consumer};
 
 const MARKER: &str = "x-reader-projection";
 const PERMISSIVE: &str = "permissive";
@@ -399,6 +400,84 @@ pub(crate) fn apply_projected_copy_strictness(
         .flat_map(|projection| projection.closure.iter().cloned())
         .collect::<BTreeSet<_>>();
     super::shared_module::apply_projected_copy_strictness(source, file, &fragments)
+}
+
+/// Format only a generated consumer that actually owns reader projections.
+///
+/// This runs after shared-module rewiring: the rewire compares the generated
+/// local declarations byte-for-byte with the canonical shared declarations,
+/// so formatting either side first would destroy the proof it stitches. The
+/// file and working directory must both remain inside the fresh staged output;
+/// live or authored files are refused before rustfmt is spawned.
+pub(crate) fn format_consumer(
+    file: &Path,
+    staged_output: &Path,
+    projections: &[ProjectionUse],
+) -> Result<()> {
+    if projections.is_empty() {
+        return Ok(());
+    }
+    if !file.starts_with(staged_output)
+        || file.file_name().and_then(|name| name.to_str()) != Some("mod.rs")
+    {
+        bail!(
+            "projection formatter target {} is not one generated `mod.rs` inside staged output {}",
+            file.display(),
+            staged_output.display()
+        );
+    }
+    let staged_name = staged_output
+        .file_name()
+        .and_then(|name| name.to_str())
+        .unwrap_or_default();
+    if !staged_name.contains(".new-") {
+        bail!(
+            "projection formatter refuses non-staged output {} (expected a `.new-*` generated tree)",
+            staged_output.display()
+        );
+    }
+    let rustfmt = if cfg!(windows) {
+        Path::new("rustfmt.exe")
+    } else {
+        Path::new("rustfmt")
+    };
+    format_consumer_with(rustfmt, file, staged_output)
+}
+
+fn format_consumer_with(rustfmt: &Path, file: &Path, staged_output: &Path) -> Result<()> {
+    let status = match Command::new(rustfmt)
+        .arg("--edition")
+        .arg("2024")
+        .arg(file)
+        .current_dir(staged_output)
+        .status()
+    {
+        Ok(status) => status,
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => {
+            bail!(
+                "pinned workspace rustfmt not found while formatting projected generated module {} (looked for `{}`)",
+                file.display(),
+                rustfmt.display()
+            );
+        }
+        Err(error) => {
+            return Err(error).with_context(|| {
+                format!(
+                    "spawning pinned workspace rustfmt `{}` for projected generated module {}",
+                    rustfmt.display(),
+                    file.display()
+                )
+            });
+        }
+    };
+    if !status.success() {
+        bail!(
+            "pinned workspace rustfmt failed for projected generated module {} (exit code {:?})",
+            file.display(),
+            status.code()
+        );
+    }
+    Ok(())
 }
 
 /// Add one `deserialize_with` attribute per marker and append the adapter code

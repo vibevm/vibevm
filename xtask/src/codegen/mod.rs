@@ -324,15 +324,22 @@ fn generate_into(
                     projections: &resolution.projections,
                 },
             )?;
-            if let Some(module) = &shared {
-                rewire_stats.push(module.rewire(&module_file, schema, &resolution.vocabularies)?);
-            }
             reader_projection::rewrite_consumer(
                 &module_file,
                 &resolution.doc,
                 schema,
                 &resolution.projections,
             )?;
+            if let Some(module) = &shared {
+                rewire_stats.push(module.rewire(&module_file, schema, &resolution.vocabularies)?);
+            }
+            reader_projection::append_consumer_adapter(
+                &module_file,
+                &resolution.doc,
+                schema,
+                &resolution.projections,
+            )?;
+            reader_projection::format_consumer(&module_file, out_dir, &resolution.projections)?;
         }
         leaves.push(sub_out);
     }

@@ -267,6 +267,22 @@ fn main() {{
     Ok(())
 }
 
+fn rustfmt_check(path: &Path) -> Result<bool> {
+    let rustfmt = if cfg!(windows) {
+        "rustfmt.exe"
+    } else {
+        "rustfmt"
+    };
+    let status = Command::new(rustfmt)
+        .arg("--edition")
+        .arg("2024")
+        .arg("--check")
+        .arg(path)
+        .status()
+        .with_context(|| format!("checking rustfmt for {}", path.display()))?;
+    Ok(status.success())
+}
+
 #[test]
 fn full_pipeline_emits_strict_canonical_types_and_a_permissive_field_adapter() -> Result<()> {
     let fixture = generate_fixture("none", false)?;
@@ -279,10 +295,95 @@ fn full_pipeline_emits_strict_canonical_types_and_a_permissive_field_adapter() -
     assert!(strict.contains("pub use crate::generated::shared::Payload;"));
     assert!(!strict.contains("pub struct Payload"));
     assert!(projected.contains("__reader_projection::deserialize_payload_0"));
+    assert!(
+        projected.contains(
+            "#[allow(clippy::collapsible_if, unused_variables)]\nmod __reader_projection"
+        )
+    );
+    assert!(!shared.contains("allow(clippy::collapsible_if, unused_variables)"));
+    assert!(!strict.contains("allow(clippy::collapsible_if, unused_variables)"));
     assert!(projected.contains("object.retain"));
     assert!(projected.contains("object.clear();"));
     assert!(!projected.contains("pub struct Payload"));
+    assert!(
+        rustfmt_check(&fixture.generated.join("projected_request/mod.rs"))?,
+        "the installed projected module is already rustfmt-clean"
+    );
     compile_and_run_generated(&fixture)
+}
+
+#[test]
+fn skipping_the_post_rewire_formatter_is_red_and_the_selected_step_restores_green() -> Result<()> {
+    let fixture = generate_fixture("none", false)?;
+    let selected = fixture.generated.join("projected_request/mod.rs");
+    let clean = std::fs::read_to_string(&selected)?;
+    assert!(rustfmt_check(&selected)?);
+
+    let staged = fixture
+        .root
+        .join("crates/vibe-wire/src/generated.new-format-test");
+    let staged_file = staged.join("projected_request/mod.rs");
+    std::fs::create_dir_all(staged_file.parent().unwrap())?;
+    let raw = clean.replacen("#[doc(hidden)]\n", "#[doc(hidden)]   \n", 1);
+    anyhow::ensure!(raw != clean, "test selected one formatter-owned byte");
+    std::fs::write(&staged_file, raw)?;
+    assert!(
+        !rustfmt_check(&staged_file)?,
+        "skipping the post-rewire formatter must be RED"
+    );
+
+    format_consumer_with(
+        Path::new(if cfg!(windows) {
+            "rustfmt.exe"
+        } else {
+            "rustfmt"
+        }),
+        &staged_file,
+        &staged,
+    )?;
+    assert!(rustfmt_check(&staged_file)?);
+    assert_eq!(std::fs::read_to_string(staged_file)?, clean);
+    Ok(())
+}
+
+#[test]
+fn projection_formatter_refuses_missing_and_failed_rustfmt() -> Result<()> {
+    let temp = tempfile::tempdir()?;
+    let live = temp.path().join("generated");
+    let live_file = live.join("projected/mod.rs");
+    std::fs::create_dir_all(live_file.parent().unwrap())?;
+    std::fs::write(&live_file, "pub struct Live;\n")?;
+    let projection = ProjectionUse {
+        target: "payload".to_string(),
+        owner_type: "Projected".to_string(),
+        rust_field: "payload".to_string(),
+        location: "$.properties.payload".to_string(),
+        closure: BTreeSet::new(),
+    };
+    let error = format_consumer(&live_file, &live, &[projection])
+        .expect_err("a live generated tree must never be formatted");
+    assert!(error.to_string().contains("non-staged output"), "{error:#}");
+
+    let staged = temp.path().join("generated.new-format-refusal");
+    let file = staged.join("projected/mod.rs");
+    std::fs::create_dir_all(file.parent().unwrap())?;
+    std::fs::write(&file, "pub struct Valid;\n")?;
+
+    let missing = staged.join("definitely-missing-rustfmt");
+    let error = format_consumer_with(&missing, &file, &staged)
+        .expect_err("an absent pinned formatter must refuse");
+    assert!(error.to_string().contains("rustfmt not found"), "{error:#}");
+
+    std::fs::write(&file, "this is not Rust\n")?;
+    let rustfmt = Path::new(if cfg!(windows) {
+        "rustfmt.exe"
+    } else {
+        "rustfmt"
+    });
+    let error = format_consumer_with(rustfmt, &file, &staged)
+        .expect_err("a failed pinned formatter must refuse");
+    assert!(error.to_string().contains("rustfmt failed"), "{error:#}");
+    Ok(())
 }
 
 #[test]

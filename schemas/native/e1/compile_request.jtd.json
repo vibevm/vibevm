@@ -1,0 +1,35 @@
+{
+  "metadata": {
+    "description": "Epoch-1 compiler-native request. The root carries invocation identity plus one canonical compiler-IR payload; only that payload is projected for a foreign reader.",
+    "x-vocabularies": [
+      "execution",
+      "project",
+      "world",
+      "io",
+      "ir"
+    ],
+    "rustOptions": {
+      "package": "vibe_wire::native::e1::compile_request"
+    }
+  },
+  "properties": {
+    "envelope": { "type": "uint32" },
+    "point": {
+      "type": "string",
+      "metadata": {
+        "description": "Open compiler extension-point spelling. Structural decoding preserves unknown values; behavior admission decides whether a point is supported."
+      }
+    },
+    "execution": { "ref": "execution" },
+    "project": { "ref": "project" },
+    "world": { "ref": "world" },
+    "io": { "ref": "io" },
+    "payload": {
+      "ref": "ir",
+      "metadata": {
+        "x-reader-projection": "permissive",
+        "description": "The one canonical compiler-IR family, decoded through the generated duplicate-preserving permissive projection for foreign readers."
+      }
+    }
+  }
+}

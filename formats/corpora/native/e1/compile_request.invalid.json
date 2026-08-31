@@ -1,0 +1,47 @@
+{
+  "envelope": 1,
+  "point": "compile:source",
+  "execution": {
+    "id": "duplicate-payload-key",
+    "package": "org.example/native-compiler",
+    "config": {}
+  },
+  "project": {
+    "root": "C:/work/demo",
+    "name": "demo",
+    "version": "0.1.0",
+    "kind": "tool",
+    "manifest": "vibe.toml",
+    "spec_roots": []
+  },
+  "world": {
+    "lockfile": "vibe.lock",
+    "deps_root": "vibevm/vibedeps",
+    "packages": []
+  },
+  "io": {"scratch": ".vibe/native-compile/example"},
+  "payload": {
+    "shape": "source-document",
+    "ir_schema": 1,
+    "ir_schema": 1,
+    "level": "source",
+    "cardinality": "document",
+    "doc": {
+      "address": {
+        "kind": "spec",
+        "address": {
+          "raw": "spec://org.demo/lib/manual/guide.md#root",
+          "authority": {"kind": "package", "group": "org.demo", "name": "lib"},
+          "doc_path": "manual/guide.md",
+          "anchor": ["root"]
+        }
+      },
+      "format": "markdown",
+      "subject": {
+        "provider": {"kind": "undetermined"},
+        "declared_path": "boot/10-guide.md"
+      },
+      "text": "# Guide {#root}\n"
+    }
+  }
+}

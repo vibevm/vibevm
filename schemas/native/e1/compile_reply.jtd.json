@@ -1,0 +1,46 @@
+{
+  "metadata": {
+    "description": "Epoch-1 compiler-native reply. The host reader is strict: ok requires one canonical compiler-IR payload while skip and fail cannot carry one.",
+    "x-vocabularies": ["ir"],
+    "rustOptions": {
+      "package": "vibe_wire::native::e1::compile_reply"
+    }
+  },
+  "discriminator": "status",
+  "mapping": {
+    "ok": {
+      "properties": {
+        "envelope": { "type": "uint32" },
+        "payload": { "ref": "ir" }
+      },
+      "optionalProperties": {
+        "message": {
+          "type": "string",
+          "metadata": { "x-default": null }
+        }
+      }
+    },
+    "skip": {
+      "properties": {
+        "envelope": { "type": "uint32" }
+      },
+      "optionalProperties": {
+        "message": {
+          "type": "string",
+          "metadata": { "x-default": null }
+        }
+      }
+    },
+    "fail": {
+      "properties": {
+        "envelope": { "type": "uint32" }
+      },
+      "optionalProperties": {
+        "message": {
+          "type": "string",
+          "metadata": { "x-default": null }
+        }
+      }
+    }
+  }
+}

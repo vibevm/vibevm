@@ -116,8 +116,8 @@ const DUPLICATE_SAFE_VALUE: &str = r#"    #[derive(Clone, Copy)]
 
 pub(crate) fn rewrite_consumer(
     file: &Path,
-    resolved_doc: &Path,
-    schema: &Path,
+    _resolved_doc: &Path,
+    _schema: &Path,
     projections: &[ProjectionUse],
 ) -> Result<()> {
     if projections.is_empty() {
@@ -125,6 +125,20 @@ pub(crate) fn rewrite_consumer(
     }
     let source = std::fs::read_to_string(file)
         .with_context(|| format!("reading generated projection consumer {}", file.display()))?;
+    let functions = projection_functions(projections);
+    let injected = inject_attributes(&source, file, projections, &functions)?;
+    super::super::write::write_generated(file, &injected)
+}
+
+pub(crate) fn append_consumer_adapter(
+    file: &Path,
+    resolved_doc: &Path,
+    schema: &Path,
+    projections: &[ProjectionUse],
+) -> Result<()> {
+    if projections.is_empty() {
+        return Ok(());
+    }
     let document: Value = serde_json::from_str(
         &std::fs::read_to_string(resolved_doc)
             .with_context(|| format!("reading resolved schema {}", resolved_doc.display()))?,
@@ -139,24 +153,26 @@ pub(crate) fn rewrite_consumer(
                 schema.display()
             )
         })?;
-
-    let mut functions = Vec::with_capacity(projections.len());
-    for (index, projection) in projections.iter().enumerate() {
-        functions.push(format!(
-            "deserialize_{}_{}",
-            rust_field(&projection.target),
-            index
-        ));
-    }
-    let injected = inject_attributes(&source, file, projections, &functions)?;
+    let functions = projection_functions(projections);
     let adapter = emit_adapter(definitions, projections, &functions, schema)?;
-    let mut output = injected;
+    let mut output = std::fs::read_to_string(file)
+        .with_context(|| format!("reading rewired projection consumer {}", file.display()))?;
     if !output.ends_with('\n') {
         output.push('\n');
     }
     output.push('\n');
     output.push_str(&adapter);
     super::super::write::write_generated(file, &output)
+}
+
+fn projection_functions(projections: &[ProjectionUse]) -> Vec<String> {
+    projections
+        .iter()
+        .enumerate()
+        .map(|(index, projection)| {
+            format!("deserialize_{}_{}", rust_field(&projection.target), index)
+        })
+        .collect()
 }
 
 fn inject_attributes(
@@ -231,7 +247,9 @@ fn emit_adapter(
     for projection in projections {
         closure.extend(projection.closure.iter().cloned());
     }
-    let mut output = String::from("#[doc(hidden)]\nmod __reader_projection {\n");
+    let mut output = String::from(
+        "#[doc(hidden)]\n#[allow(clippy::collapsible_if, unused_variables)]\nmod __reader_projection {\n",
+    );
     output.push_str(DUPLICATE_SAFE_VALUE);
     for (index, projection) in projections.iter().enumerate() {
         let rust_type = emitted_name(&projection.target);

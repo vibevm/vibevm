@@ -191,6 +191,26 @@ foreign_parsers = "many"
 corpus = "formats/corpora/native/e1"
 sunset = "none"
 
+# Compiler-native invocation is a separate transport-neutral exchange from the
+# phase/slot lifecycle ABI above. Requests are read by foreign plugins and use
+# one schema-declared permissive projection for the canonical compiler payload;
+# replies are parsed only by the host and remain strict.
+[format.native-compile-request]
+epoch = 1
+schema = "schemas/native/e1/compile_request.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "formats/corpora/native/e1"
+sunset = "none"
+
+[format.native-compile-reply]
+epoch = 1
+schema = "schemas/native/e1/compile_reply.jtd.json"
+recoverable = true
+foreign_parsers = "none"
+corpus = "formats/corpora/native/e1"
+sunset = "none"
+
 # ── Requirements metadata answer (1 JTD), PROP-054 §14.7 / R7.5 ─────────────
 # The R7.5 read-only requirements answer: one bounded document an external
 # orchestrator reads to learn what this project declares and recorded about
