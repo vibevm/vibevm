@@ -464,3 +464,33 @@ workspace check/clippy/fmt and conform 48 standing/0 new. Eighteen worker and
 one central provider-authority mutation were RED and restored. Specmap is 6,833
 units / 3,042 tagged / 2,793 edges, 0 suspects, gated orphans or unresolved
 host edges, 25 warnings. R5.5-INVOKE-GATE is next.
+
+## 14. R5.5-INVOKE-GATE and parent acceptance
+
+**Accepted 2026-08-31.** Test gate `9b1e4525` closes the one junction left
+between the complementary accepted panels without changing product. The
+compiler fixture adds one schema-1 `compile:source` id whose safe handler moves
+and lawfully marks Source IR. One composed test lowers that exact retained row,
+attaches it to a real artifact plan and executes public
+`compile_artifact_native` through the exact-row ARTIFACT adapter, immutable
+image, real four-symbol SDK/loader, raw reply, strict manager decode/conversion
+and local transition verification. The marker reaches final emitted bytes.
+
+Two native gate reviews initially split: the evidence review accepted the
+complementary panels, while the adversarial review showed their positive paths
+met only at `compile:pass`, which the manager never authors. The literal source
+junction closes that survivor. Six worker mutations plus one central empty-plan
+mutation were RED and restored: source→pass at fixture/adapter, marker removal,
+request-as-reply, ignored Ok payload, digest admission and missing TransformPlan.
+
+Final panels: composed junction 1, manager 22, artifact adapter 15, loader
+20+3+4 docs, SDK 1+1+6+8, complete vibe-spec 875 + 5/2/7 + 4 docs, complete
+lifecycle 608 passed / 3 privilege ignores + 39 docs, `check-codegen`, strict
+workspace check/clippy/fmt and conform 48 standing/0 new. Specmap remains 6,833
+units / 3,042 tagged / 2,793 edges, 0 suspects, gated orphans or unresolved
+host edges, 25 warnings.
+
+R5.5-INVOKE-MANAGER, SDK, LOADER, ARTIFACT and GATE are all accepted; parent
+R5.5-INVOKE is done. R5.4 pending bootstrap convergence is next and alone owns
+production owner-runtime epoch composition, source builds and the one native-
+aware recompilation.
