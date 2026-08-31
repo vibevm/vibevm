@@ -36,6 +36,7 @@ use super::qualify::QualifyPass;
 use super::trace::CompileTraceSink;
 use super::transform::fault::TransformError;
 use super::transform::header as transform_header;
+use super::transform::native_manager::CompilerNativeInvoker;
 use super::transform::registry::TransformRegistry;
 use super::transform::schedule::TransformSchedule;
 use super::worklist;
@@ -43,6 +44,8 @@ use super::worklist;
 mod attribution;
 mod driver;
 pub use super::transform::fault::TransformCompileError;
+#[cfg(test)]
+pub(crate) use driver::compile_artifact_native_with_registries;
 #[cfg(test)]
 pub(crate) use driver::compile_artifact_observed_with_registries;
 #[cfg(test)]
@@ -53,7 +56,9 @@ pub(crate) use driver::compile_artifact_with_registries;
 pub(crate) use driver::compile_artifact_with_registry;
 pub(crate) use driver::compile_compatibility_artifact;
 pub use driver::{
-    ArtifactCompileError, compile_artifact, compile_artifact_observed, compile_artifact_traced,
+    ArtifactCompileError, compile_artifact, compile_artifact_native,
+    compile_artifact_native_observed, compile_artifact_native_traced, compile_artifact_observed,
+    compile_artifact_traced,
 };
 #[cfg(feature = "test-support")]
 pub use driver::{
@@ -168,10 +173,10 @@ pub(crate) fn without_verify_each<T>(body: impl FnOnce() -> T) -> T {
 /// Keeping construction in one function makes the list executable rather than
 /// a registry beside a separate call path. R3.2 appends later built-ins here as
 /// each phase migrates.
-pub(crate) struct BuiltinSchedule {
-    pipeline: CompilerPipeline,
+pub(crate) struct BuiltinSchedule<'invoke> {
+    pipeline: CompilerPipeline<'invoke>,
     close_state: CloseState,
-    transforms: TransformSchedule,
+    transforms: TransformSchedule<'invoke>,
     transform_names: Vec<PassName>,
 }
 
@@ -184,14 +189,16 @@ fn transform_public(inner: TransformError) -> ArtifactCompileError {
     ArtifactCompileError::Transform(TransformCompileError::new(inner))
 }
 
-impl BuiltinSchedule {
-    fn linked(
+impl<'invoke> BuiltinSchedule<'invoke> {
+    fn linked_with_invoker(
         plan: &ArtifactPlan,
         registry: &TransformRegistry,
         observer: &Observing,
+        invoker: Option<&'invoke dyn CompilerNativeInvoker>,
     ) -> Result<Self, ArtifactCompileError> {
-        let transforms = TransformSchedule::resolve(plan, registry, observer.clone())
-            .map_err(transform_public)?;
+        let transforms =
+            TransformSchedule::resolve_with_invoker(plan, registry, observer.clone(), invoker)
+                .map_err(transform_public)?;
         let close_state = CloseState::default();
         let mut pipeline = CompilerPipeline::default();
         transforms
@@ -239,12 +246,13 @@ impl BuiltinSchedule {
         })
     }
 
-    fn assembled(
+    fn assembled_with_invoker(
         plan: &ArtifactPlan,
         registry: &TransformRegistry,
         observer: &Observing,
+        invoker: Option<&'invoke dyn CompilerNativeInvoker>,
     ) -> Result<Self, ArtifactCompileError> {
-        let mut schedule = Self::linked(plan, registry, observer)?;
+        let mut schedule = Self::linked_with_invoker(plan, registry, observer, invoker)?;
         schedule
             .pipeline
             .push_artifact(AssemblePass::new())
@@ -256,16 +264,17 @@ impl BuiltinSchedule {
         Ok(schedule)
     }
 
-    fn emitted(
+    fn emitted_with_invoker(
         plan: &ArtifactPlan,
         transforms: &TransformRegistry,
         registry: &BackendRegistry,
         observer: &Observing,
+        invoker: Option<&'invoke dyn CompilerNativeInvoker>,
     ) -> Result<Self, ArtifactCompileError> {
         // Transform resolution — including the compatibility-fragment frame
         // refusal — precedes the backend lookup, exactly as the frozen T6b
         // construction order demands.
-        let schedule = Self::assembled(plan, transforms, observer)?;
+        let schedule = Self::assembled_with_invoker(plan, transforms, observer, invoker)?;
         let backend = registry
             .selected(&plan.context().target())
             .map_err(|error| ArtifactCompileError::Registry {
@@ -282,7 +291,7 @@ impl BuiltinSchedule {
         registry: &TransformRegistry,
         backend: std::sync::Arc<dyn EmitBackend>,
     ) -> Result<Self, ArtifactCompileError> {
-        let schedule = Self::assembled(plan, registry, &None)?;
+        let schedule = Self::assembled_with_invoker(plan, registry, &None, None)?;
         Self::append_emit(schedule, backend, plan, &None)
     }
 
@@ -386,11 +395,38 @@ impl BuiltinSchedule {
     }
 }
 
+impl BuiltinSchedule<'static> {
+    fn linked(
+        plan: &ArtifactPlan,
+        registry: &TransformRegistry,
+        observer: &Observing,
+    ) -> Result<Self, ArtifactCompileError> {
+        Self::linked_with_invoker(plan, registry, observer, None)
+    }
+
+    fn assembled(
+        plan: &ArtifactPlan,
+        registry: &TransformRegistry,
+        observer: &Observing,
+    ) -> Result<Self, ArtifactCompileError> {
+        Self::assembled_with_invoker(plan, registry, observer, None)
+    }
+
+    fn emitted(
+        plan: &ArtifactPlan,
+        transforms: &TransformRegistry,
+        registry: &BackendRegistry,
+        observer: &Observing,
+    ) -> Result<Self, ArtifactCompileError> {
+        Self::emitted_with_invoker(plan, transforms, registry, observer, None)
+    }
+}
+
 /// Test-only construction of the REAL declared schedules, so a focused test
 /// outside this module can observe the production pass list rather than a
 /// hand-built imitation of it.
 #[cfg(test)]
-impl BuiltinSchedule {
+impl BuiltinSchedule<'static> {
     pub(crate) fn linked_for_test(
         plan: &ArtifactPlan,
         registry: &TransformRegistry,
@@ -405,7 +441,7 @@ impl BuiltinSchedule {
         Self::emitted(plan, registry, &BackendRegistry::builtins(), &None)
     }
 
-    pub(crate) fn pipeline_for_test(&self) -> &CompilerPipeline {
+    pub(crate) fn pipeline_for_test(&self) -> &CompilerPipeline<'static> {
         &self.pipeline
     }
 }

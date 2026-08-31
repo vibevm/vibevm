@@ -37,6 +37,9 @@ pub(crate) mod fault;
 pub(crate) mod header;
 pub(crate) mod lane_admission;
 pub(crate) mod lowering;
+pub(crate) mod native_identity;
+pub(crate) mod native_manager;
+pub(crate) mod native_schedule;
 pub(crate) mod plan;
 pub(crate) mod plan_digest;
 pub(crate) mod plan_validate;
@@ -63,6 +66,16 @@ mod lowering_e2e_tests;
 mod lowering_tests;
 #[cfg(test)]
 mod lowering_worlds;
+#[cfg(test)]
+mod native_fence_tests;
+#[cfg(test)]
+mod native_identity_tests;
+#[cfg(test)]
+mod native_manager_hostile_tests;
+#[cfg(test)]
+mod native_manager_matrix_tests;
+#[cfg(test)]
+mod native_manager_test_support;
 #[cfg(test)]
 mod plan_digest_tests;
 #[cfg(test)]

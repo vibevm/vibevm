@@ -144,6 +144,7 @@ const WRAPPER_SEGMENTS: &[&str] = &[
     "Path",
     "PathBuf",
     "fs",
+    "process",
     "ExtensionRegistry",
     "RegistryView",
     "ExtensionRegistryRow",
@@ -239,6 +240,97 @@ pub(super) const LOWERING_RULES: CellRules = CellRules {
     forbidden_methods: &["unwrap", "expect"],
     forbidden_macros: WRAPPER_MACROS,
     allows_trait_objects: false,
+    forbids_boxed_trait_objects: true,
+};
+
+/// The R5.5 compiler-native manager cell may name the strict generated JSON
+/// wire and one borrowed invoker trait object. It still cannot acquire a
+/// registry/collector, filesystem, loader, process/Cargo, or upward builtin
+/// dependency: those belong to the later artifact/loader children.
+const NATIVE_MANAGER_SEGMENTS: &[&str] = &[
+    "toml",
+    "Path",
+    "PathBuf",
+    "fs",
+    "process",
+    "ExtensionRegistry",
+    "RegistryView",
+    "ExtensionRegistryRow",
+    "collect_extensions",
+    "ArtifactCompileError",
+    "builtin",
+    "NativeLoader",
+    "Command",
+    "Cargo",
+];
+
+pub(super) const NATIVE_MANAGER_RULES: CellRules = CellRules {
+    forbidden_segments: NATIVE_MANAGER_SEGMENTS,
+    forbidden_methods: &["unwrap", "expect"],
+    forbidden_macros: &["panic", "todo", "unimplemented"],
+    allows_trait_objects: true,
+    forbids_boxed_trait_objects: true,
+};
+
+/// Native identity is the one selected cell allowed to read an exact registry
+/// row and name `Path` for its fallible UTF-8 projection. It still cannot
+/// acquire codec, loader, process/Cargo or filesystem-I/O authority.
+const NATIVE_IDENTITY_SEGMENTS: &[&str] = &[
+    "serde",
+    "serde_json",
+    "toml",
+    "json",
+    "fs",
+    "process",
+    "ExtensionRegistry",
+    "RegistryView",
+    "collect_extensions",
+    "ArtifactCompileError",
+    "builtin",
+    "NativeLoader",
+    "Command",
+    "Cargo",
+    "Arc",
+    "Box",
+];
+
+pub(super) const NATIVE_IDENTITY_RULES: CellRules = CellRules {
+    forbidden_segments: NATIVE_IDENTITY_SEGMENTS,
+    forbidden_methods: &["unwrap", "expect"],
+    forbidden_macros: WRAPPER_MACROS,
+    allows_trait_objects: false,
+    forbids_boxed_trait_objects: true,
+};
+
+/// Native scheduling keeps the wrapper cell's one `Arc<dyn behavior>` channel
+/// and borrowed invoker, but gains no loader, process/Cargo or filesystem
+/// authority.
+const NATIVE_SCHEDULE_SEGMENTS: &[&str] = &[
+    "serde",
+    "serde_json",
+    "toml",
+    "json",
+    "Path",
+    "PathBuf",
+    "fs",
+    "process",
+    "ExtensionRegistry",
+    "RegistryView",
+    "ExtensionRegistryRow",
+    "collect_extensions",
+    "vibe_extension_registry",
+    "ArtifactCompileError",
+    "builtin",
+    "NativeLoader",
+    "Command",
+    "Cargo",
+];
+
+pub(super) const NATIVE_SCHEDULE_RULES: CellRules = CellRules {
+    forbidden_segments: NATIVE_SCHEDULE_SEGMENTS,
+    forbidden_methods: WRAPPER_METHODS,
+    forbidden_macros: WRAPPER_MACROS,
+    allows_trait_objects: true,
     forbids_boxed_trait_objects: true,
 };
 

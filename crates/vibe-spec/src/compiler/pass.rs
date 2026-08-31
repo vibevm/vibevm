@@ -131,7 +131,7 @@ payload!(EmittedIr, Emitted, Emitted, Artifact);
 
 /// One typed compiler pass. Wrong output carrier types are unrepresentable at
 /// this surface; the erased segment still verifies the runtime shape.
-pub(crate) trait Pass: Send + Sync + 'static {
+pub(crate) trait Pass: Send + Sync {
     type Input: IrPayload;
     type Output: IrPayload;
     type Error: Error + Send + Sync + 'static;
@@ -175,16 +175,16 @@ impl<P: Pass> DynPass for ErasedPass<P> {
 
 /// A validated heterogeneous linear segment of the declared schedule.
 #[derive(Default)]
-pub(crate) struct PassSegment {
-    passes: Vec<Box<dyn DynPass>>,
+pub(crate) struct PassSegment<'pass> {
+    passes: Vec<Box<dyn DynPass + 'pass>>,
 }
 
-impl PassSegment {
-    pub(crate) fn push<P: Pass>(&mut self, pass: P) -> Result<(), PassSegmentError> {
+impl<'pass> PassSegment<'pass> {
+    pub(crate) fn push<P: Pass + 'pass>(&mut self, pass: P) -> Result<(), PassSegmentError> {
         self.push_dyn(Box::new(ErasedPass(pass)))
     }
 
-    fn push_dyn(&mut self, pass: Box<dyn DynPass>) -> Result<(), PassSegmentError> {
+    fn push_dyn(&mut self, pass: Box<dyn DynPass + 'pass>) -> Result<(), PassSegmentError> {
         let descriptor = pass.descriptor();
         if self
             .passes
@@ -215,7 +215,7 @@ impl PassSegment {
     #[cfg(test)]
     pub(crate) fn push_erased_for_test(
         &mut self,
-        pass: Box<dyn DynPass>,
+        pass: Box<dyn DynPass + 'pass>,
     ) -> Result<(), PassSegmentError> {
         self.push_dyn(pass)
     }

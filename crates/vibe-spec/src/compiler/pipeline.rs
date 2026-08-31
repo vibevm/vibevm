@@ -63,16 +63,19 @@ pub(crate) enum ScheduleItem {
 
 /// One complete schedule: document segment → gather → artifact segment.
 #[derive(Default)]
-pub(crate) struct CompilerPipeline {
-    document: PassSegment,
+pub(crate) struct CompilerPipeline<'pass> {
+    document: PassSegment<'pass>,
     gather: GatherDocuments,
-    artifact: PassSegment,
+    artifact: PassSegment<'pass>,
     pass_names: BTreeSet<PassName>,
     verifier: Option<IrVerifier>,
 }
 
-impl CompilerPipeline {
-    pub(crate) fn push_document<P: Pass>(&mut self, pass: P) -> Result<(), CompilerPipelineError> {
+impl<'pass> CompilerPipeline<'pass> {
+    pub(crate) fn push_document<P: Pass + 'pass>(
+        &mut self,
+        pass: P,
+    ) -> Result<(), CompilerPipelineError> {
         let name = pass.name().clone();
         Self::ensure_segment_cardinality::<P>("document", IrCardinality::Document, &name)?;
         self.ensure_name_free(&name)?;
@@ -81,7 +84,10 @@ impl CompilerPipeline {
         Ok(())
     }
 
-    pub(crate) fn push_artifact<P: Pass>(&mut self, pass: P) -> Result<(), CompilerPipelineError> {
+    pub(crate) fn push_artifact<P: Pass + 'pass>(
+        &mut self,
+        pass: P,
+    ) -> Result<(), CompilerPipelineError> {
         let name = pass.name().clone();
         Self::ensure_segment_cardinality::<P>("artifact", IrCardinality::Artifact, &name)?;
         self.ensure_name_free(&name)?;

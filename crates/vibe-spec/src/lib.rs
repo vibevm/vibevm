@@ -42,7 +42,8 @@ mod use_graph;
 
 pub use address::{Authority, SpecAddress, SpecAddressError};
 pub use compiler::builtin::{
-    ArtifactCompileError, TransformCompileError, compile_artifact, compile_artifact_observed,
+    ArtifactCompileError, TransformCompileError, compile_artifact, compile_artifact_native,
+    compile_artifact_native_observed, compile_artifact_native_traced, compile_artifact_observed,
     compile_artifact_traced,
 };
 #[cfg(feature = "test-support")]
@@ -62,6 +63,14 @@ pub use compiler::ir::{
 // The seed, entry, provider, implementation and config values, and every
 // digest, stay inside the crate.
 pub use compiler::transform::fault::TransformLoweringError;
+pub use compiler::transform::native_identity::{
+    CompilerNativeImplementationDigest, CompilerNativeImplementationDigestError,
+    compiler_native_implementation_digest,
+};
+pub use compiler::transform::native_manager::{
+    CompilerNativeCall, CompilerNativeInvoker, CompilerNativeInvokerError,
+    CompilerNativeInvokerErrorKind,
+};
 pub use compiler::transform::plan::TransformPlan;
 // The observation vocabulary itself is NOT re-exported: status, level,
 // cardinality, shape and duration are the generated

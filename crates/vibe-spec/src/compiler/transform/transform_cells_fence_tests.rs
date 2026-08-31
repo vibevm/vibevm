@@ -9,8 +9,8 @@
 use std::collections::BTreeSet;
 
 use super::fence_families::{
-    HEADER_RULES, LOWERING_RULES, MINIFY_RULES, PLAN_CARRIER_RULES, SELECTOR_RULES, WRAPPER_RULES,
-    offenders,
+    HEADER_RULES, LOWERING_RULES, MINIFY_RULES, NATIVE_IDENTITY_RULES, NATIVE_MANAGER_RULES,
+    NATIVE_SCHEDULE_RULES, PLAN_CARRIER_RULES, SELECTOR_RULES, WRAPPER_RULES, offenders,
 };
 
 /// The rule families stay exhaustive over the module tree: the production
@@ -53,6 +53,9 @@ fn the_module_tree_declares_every_transform_cell_under_a_rule_family() {
             "header".to_owned(),
             "lane_admission".to_owned(),
             "lowering".to_owned(),
+            "native_identity".to_owned(),
+            "native_manager".to_owned(),
+            "native_schedule".to_owned(),
             "plan".to_owned(),
             "plan_digest".to_owned(),
             "plan_validate".to_owned(),
@@ -83,6 +86,11 @@ fn the_module_tree_declares_every_transform_cell_under_a_rule_family() {
             "lowering_e2e_tests".to_owned(),
             "lowering_tests".to_owned(),
             "lowering_worlds".to_owned(),
+            "native_identity_tests".to_owned(),
+            "native_fence_tests".to_owned(),
+            "native_manager_hostile_tests".to_owned(),
+            "native_manager_matrix_tests".to_owned(),
+            "native_manager_test_support".to_owned(),
             "plan_digest_tests".to_owned(),
             "plan_fence_tests".to_owned(),
             "plan_refusal_tests".to_owned(),
@@ -121,6 +129,9 @@ fn the_module_tree_declares_every_transform_cell_under_a_rule_family() {
     // no upward builtin spelling, no kernel selector, and no fault eliminated
     // by panic — while legitimately boxing CONCRETE error types.
     assert!(offenders(include_str!("schedule.rs"), &WRAPPER_RULES).is_empty());
+    assert!(offenders(include_str!("native_schedule.rs"), &NATIVE_SCHEDULE_RULES).is_empty());
+    assert!(offenders(include_str!("native_manager.rs"), &NATIVE_MANAGER_RULES).is_empty());
+    assert!(offenders(include_str!("native_identity.rs"), &NATIVE_IDENTITY_RULES).is_empty());
     assert!(offenders(include_str!("lane_admission.rs"), &WRAPPER_RULES).is_empty());
     assert!(offenders(include_str!("emitted_reconstruction.rs"), &WRAPPER_RULES).is_empty());
     assert!(offenders(include_str!("fault.rs"), &WRAPPER_RULES).is_empty());

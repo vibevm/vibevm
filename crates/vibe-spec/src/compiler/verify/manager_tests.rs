@@ -175,7 +175,7 @@ impl Pass for CountingClose {
     }
 }
 
-fn verified_document_pipeline() -> CompilerPipeline {
+fn verified_document_pipeline() -> CompilerPipeline<'static> {
     let mut pipeline = CompilerPipeline::default();
     pipeline
         .push_document(parse_like(name("parse-like")))

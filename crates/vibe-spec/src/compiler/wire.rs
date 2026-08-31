@@ -27,7 +27,7 @@ pub(super) mod bounded;
 mod closure;
 mod emitted;
 mod framing;
-mod json;
+pub(crate) mod json;
 mod lane;
 mod preflight;
 mod staged;
@@ -230,11 +230,7 @@ pub(super) fn widen(field: &'static str, value: usize) -> Result<u32, IrWireErro
 
 /// Decode wire bytes into one verified domain carrier.
 pub(crate) fn decode(bytes: &[u8]) -> Result<AnyIr, IrWireError> {
-    let ir = convert(bytes)?;
-    IrVerifier
-        .verify(&ir)
-        .map_err(|source| verification(&source))?;
-    Ok(ir)
+    convert(bytes)
 }
 
 /// The typed conversion without the post-construction verifier pass, so tests
@@ -242,7 +238,8 @@ pub(crate) fn decode(bytes: &[u8]) -> Result<AnyIr, IrWireError> {
 /// verifier-valid" (the byte API always runs both).
 #[cfg(test)]
 pub(crate) fn decode_unverified(bytes: &[u8]) -> Result<AnyIr, IrWireError> {
-    convert(bytes)
+    let value: wire::Ir = json::from_strict_slice(bytes)?;
+    decode_generated_unverified(&value)
 }
 
 /// Every named conversion gate, in schema order, and nothing else: the strict
@@ -250,21 +247,35 @@ pub(crate) fn decode_unverified(bytes: &[u8]) -> Result<AnyIr, IrWireError> {
 /// the emitted arm), then the staged replays (12, 13, 14).
 fn convert(bytes: &[u8]) -> Result<AnyIr, IrWireError> {
     let value: wire::Ir = json::from_strict_slice(bytes)?;
-    preflight::run(&value)?;
-    let ir = decode_carrier(&value)?;
-    staged::run(&value, &ir)?;
+    decode_generated(&value)
+}
+
+/// Convert one already strict-generated carrier through the exact ordered
+/// preflight, staged replay, construction and verifier gates.
+pub(crate) fn decode_generated(value: &wire::Ir) -> Result<AnyIr, IrWireError> {
+    let ir = decode_generated_unverified(value)?;
+    IrVerifier
+        .verify(&ir)
+        .map_err(|source| verification(&source))?;
+    Ok(ir)
+}
+
+fn decode_generated_unverified(value: &wire::Ir) -> Result<AnyIr, IrWireError> {
+    preflight::run(value)?;
+    let ir = decode_carrier(value)?;
+    staged::run(value, &ir)?;
     Ok(ir)
 }
 
 /// Encode one domain carrier as compact wire JSON (the native ABI spelling).
 pub(crate) fn encode_compact(ir: &AnyIr) -> Result<Vec<u8>, IrWireError> {
-    let value = encode_carrier(ir)?;
+    let value = encode_generated(ir)?;
     serde_json::to_vec(&value).map_err(|source| IrWireError::Encode(source.to_string()))
 }
 
 /// Encode the same generated value as pretty wire JSON (the trace spelling).
 pub(crate) fn encode_pretty(ir: &AnyIr) -> Result<Vec<u8>, IrWireError> {
-    let value = encode_carrier(ir)?;
+    let value = encode_generated(ir)?;
     serde_json::to_vec_pretty(&value).map_err(|source| IrWireError::Encode(source.to_string()))
 }
 
@@ -354,7 +365,8 @@ fn belt(level: bool, cardinality: bool) {
     );
 }
 
-fn encode_carrier(ir: &AnyIr) -> Result<wire::Ir, IrWireError> {
+/// Project one domain carrier onto the one canonical generated IR value.
+pub(crate) fn encode_generated(ir: &AnyIr) -> Result<wire::Ir, IrWireError> {
     let value = match ir {
         AnyIr::Source(source) => wire::Ir::SourceDocument(Box::new(wire::IrSourceDocument {
             ir_schema: 1,

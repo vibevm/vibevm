@@ -25,6 +25,8 @@ use crate::compiler::verify::{TransitionError, VerificationError};
 
 use super::behavior::TransformBehaviorError;
 use super::config_lowering::ConfigLoweringError;
+use super::native_identity::CompilerNativeImplementationDigestError;
+use super::native_manager::NativeManagerError;
 use super::plan::TransformStage;
 use super::plan_validate::{BoundedPreview, TransformPlanError};
 use super::registry::TransformRegistryError;
@@ -49,6 +51,24 @@ pub(crate) enum TransformError {
         stage: TransformStage,
         #[source]
         source: TransformRegistryError,
+    },
+    #[error(
+        "transform entry {order} (`{preview}` at {stage:?}) is native, but this compile entry has no native invoker"
+    )]
+    NativeInvokerUnavailable {
+        preview: BoundedPreview,
+        order: u32,
+        stage: TransformStage,
+    },
+    #[error(
+        "transform entry {order} (`{preview}` at {stage:?}) native invocation failed: {source}"
+    )]
+    Native {
+        preview: BoundedPreview,
+        order: u32,
+        stage: TransformStage,
+        #[source]
+        source: NativeManagerError,
     },
     #[error("transform entry {order} (`{preview}` at {stage:?}) refused: {gap}")]
     Capability {
@@ -232,6 +252,13 @@ pub(crate) enum LoweringFault {
         preview: BoundedPreview,
         #[source]
         source: TransformRegistryError,
+    },
+    #[error("compile row {row} (`{preview}`) has no canonical native identity: {source}")]
+    NativeIdentity {
+        row: usize,
+        preview: BoundedPreview,
+        #[source]
+        source: CompilerNativeImplementationDigestError,
     },
     #[error("compile row {row} (`{preview}`) has no usable configuration: {source}")]
     Config {

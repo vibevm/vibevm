@@ -20,7 +20,8 @@ use vibe_extension_registry::{CompiledSelector, HostIdentity};
 use crate::compiler::ir::BackendId;
 
 use super::plan::{
-    ProviderComponents, TransformImplementation, TransformProvider, TransformSeed, TransformStage,
+    ImplementationComponents, ProviderComponents, TransformImplementation, TransformProvider,
+    TransformSeed, TransformStage,
 };
 
 /// The maximum characters a diagnostic preview ever shows.
@@ -113,15 +114,16 @@ fn validate_implementation(
     index: usize,
     implementation: &TransformImplementation,
 ) -> Result<(), TransformPlanError> {
-    let name = implementation.builtin_name();
-    if !BackendId::is_valid_spelling(name) {
-        return Err(TransformPlanError::ImplementationName {
-            seed: index,
-            preview: bounded(name),
-        });
-    }
-    if implementation.builtin_epoch() == 0 {
-        return Err(TransformPlanError::ImplementationEpoch { seed: index });
+    if let ImplementationComponents::Builtin { name, epoch } = implementation.components() {
+        if !BackendId::is_valid_spelling(name) {
+            return Err(TransformPlanError::ImplementationName {
+                seed: index,
+                preview: bounded(name),
+            });
+        }
+        if epoch == 0 {
+            return Err(TransformPlanError::ImplementationEpoch { seed: index });
+        }
     }
     Ok(())
 }

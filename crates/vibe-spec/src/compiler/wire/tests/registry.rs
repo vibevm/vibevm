@@ -9,7 +9,11 @@ use super::super::CONVERSION_GATES;
 fn schema() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .join("../..")
-        .join("schemas/compiler_ir/e1/ir.jtd.json")
+        .join("formats/vocabularies.json")
+}
+
+fn ir_vocabulary(doc: &serde_json::Value) -> &serde_json::Value {
+    &doc["ir"]
 }
 
 #[test]
@@ -17,7 +21,7 @@ fn schema() -> PathBuf {
 fn the_gate_registry_is_the_schema_gate_set_in_order() {
     let text = std::fs::read_to_string(schema()).unwrap();
     let doc: serde_json::Value = serde_json::from_str(&text).unwrap();
-    let gates = doc["metadata"]["x-conversion-gates"]
+    let gates = ir_vocabulary(&doc)["metadata"]["x-conversion-gates"]
         .as_array()
         .expect("the schema names its conversion gates");
     assert_eq!(
@@ -50,7 +54,7 @@ fn the_gate_registry_is_the_schema_gate_set_in_order() {
 fn no_producer_oracle_leaked_into_the_gate_registry() {
     let text = std::fs::read_to_string(schema()).unwrap();
     let doc: serde_json::Value = serde_json::from_str(&text).unwrap();
-    let oracles = doc["metadata"]["x-corpus-producer-oracles"]
+    let oracles = ir_vocabulary(&doc)["metadata"]["x-corpus-producer-oracles"]
         .as_array()
         .unwrap();
     let labels: Vec<String> = CONVERSION_GATES

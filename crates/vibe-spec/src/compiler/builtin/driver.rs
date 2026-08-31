@@ -6,6 +6,7 @@ use super::super::backend::BackendRegistry;
 use super::super::ir::{ArtifactInputWitness, ArtifactPlan, EmittedArtifact, StaticCompileMode};
 use super::super::observer::Observing;
 use super::super::trace::CompileTraceSink;
+use super::super::transform::native_manager::CompilerNativeInvoker;
 use super::super::transform::registry::TransformRegistry;
 use super::super::worklist::{self, ErrorOwners};
 use super::BuiltinSchedule;
@@ -43,6 +44,7 @@ pub fn compile_artifact(
         &TransformRegistry::builtins(),
         None,
         None,
+        None,
     )
 }
 
@@ -73,6 +75,7 @@ pub fn compile_artifact_observed(
         &TransformRegistry::builtins(),
         None,
         Some(observer),
+        None,
     )
 }
 
@@ -99,6 +102,61 @@ pub fn compile_artifact_traced(
         &TransformRegistry::builtins(),
         Some(sink),
         None,
+        None,
+    )
+}
+
+/// Compile through the same plain schedule with a stack-borrowed native
+/// invoker available to native plan rows.
+pub fn compile_artifact_native(
+    plan: ArtifactPlan,
+    source: &impl SectionSource,
+    invoker: &dyn CompilerNativeInvoker,
+) -> Result<EmittedArtifact, ArtifactCompileError> {
+    run_with_registries(
+        plan,
+        source,
+        &BackendRegistry::builtins(),
+        &TransformRegistry::builtins(),
+        None,
+        None,
+        Some(invoker),
+    )
+}
+
+/// Native-aware compile under the existing diagnostic trace observer.
+pub fn compile_artifact_native_traced(
+    plan: ArtifactPlan,
+    source: &impl SectionSource,
+    invoker: &dyn CompilerNativeInvoker,
+    sink: &dyn CompileTraceSink,
+) -> Result<EmittedArtifact, ArtifactCompileError> {
+    run_with_registries(
+        plan,
+        source,
+        &BackendRegistry::builtins(),
+        &TransformRegistry::builtins(),
+        Some(sink),
+        None,
+        Some(invoker),
+    )
+}
+
+/// Native-aware compile under the existing analyzer observer.
+pub fn compile_artifact_native_observed(
+    plan: ArtifactPlan,
+    source: &impl SectionSource,
+    invoker: &dyn CompilerNativeInvoker,
+    observer: std::sync::Arc<dyn CompileObserver>,
+) -> Result<EmittedArtifact, ArtifactCompileError> {
+    run_with_registries(
+        plan,
+        source,
+        &BackendRegistry::builtins(),
+        &TransformRegistry::builtins(),
+        None,
+        Some(observer),
+        Some(invoker),
     )
 }
 
@@ -112,6 +170,7 @@ pub(crate) fn compile_artifact_with_registry(
         source,
         registry,
         &TransformRegistry::builtins(),
+        None,
         None,
         None,
     )
@@ -128,7 +187,7 @@ pub(crate) fn compile_artifact_with_registries(
     backends: &BackendRegistry,
     transforms: &TransformRegistry,
 ) -> Result<EmittedArtifact, ArtifactCompileError> {
-    run_with_registries(plan, source, backends, transforms, None, None)
+    run_with_registries(plan, source, backends, transforms, None, None, None)
 }
 
 /// The cfg-test traced dual-registry seam, so a transform pass name can be
@@ -141,7 +200,7 @@ pub(crate) fn compile_artifact_traced_with_registries(
     transforms: &TransformRegistry,
     trace: Option<&dyn CompileTraceSink>,
 ) -> Result<EmittedArtifact, ArtifactCompileError> {
-    run_with_registries(plan, source, backends, transforms, trace, None)
+    run_with_registries(plan, source, backends, transforms, trace, None, None)
 }
 
 /// The cfg-test observed dual-registry seam, so the analyzer's evidence —
@@ -156,7 +215,37 @@ pub(crate) fn compile_artifact_observed_with_registries(
     transforms: &TransformRegistry,
     observer: std::sync::Arc<dyn CompileObserver>,
 ) -> Result<EmittedArtifact, ArtifactCompileError> {
-    run_with_registries(plan, source, backends, transforms, None, Some(observer))
+    run_with_registries(
+        plan,
+        source,
+        backends,
+        transforms,
+        None,
+        Some(observer),
+        None,
+    )
+}
+
+/// The cfg-test native-aware dual-registry seam: mixed builtin/native plans
+/// execute against one borrowed invoker without widening registry injection
+/// into the production API.
+#[cfg(test)]
+pub(crate) fn compile_artifact_native_with_registries(
+    plan: ArtifactPlan,
+    source: &impl SectionSource,
+    backends: &BackendRegistry,
+    transforms: &TransformRegistry,
+    invoker: &dyn CompilerNativeInvoker,
+) -> Result<EmittedArtifact, ArtifactCompileError> {
+    run_with_registries(
+        plan,
+        source,
+        backends,
+        transforms,
+        None,
+        None,
+        Some(invoker),
+    )
 }
 
 #[cfg(feature = "test-support")]
@@ -250,15 +339,17 @@ fn run_with_registries(
     transforms: &TransformRegistry,
     trace: Option<&dyn CompileTraceSink>,
     observer: Observing,
+    invoker: Option<&dyn CompilerNativeInvoker>,
 ) -> Result<EmittedArtifact, ArtifactCompileError> {
-    let schedule = BuiltinSchedule::emitted(&plan, transforms, backends, &observer)?;
+    let schedule =
+        BuiltinSchedule::emitted_with_invoker(&plan, transforms, backends, &observer, invoker)?;
     run(plan, source, schedule, trace)
 }
 
 fn run(
     plan: ArtifactPlan,
     source: &impl SectionSource,
-    schedule: BuiltinSchedule,
+    schedule: BuiltinSchedule<'_>,
     trace: Option<&dyn CompileTraceSink>,
 ) -> Result<EmittedArtifact, ArtifactCompileError> {
     let worklist = worklist::discover(

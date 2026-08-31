@@ -25,7 +25,7 @@ use super::super::transform::fault::TransformError;
 use super::super::worklist::ErrorOwners;
 use super::{ArtifactCompileError, BuiltinSchedule, transform_public};
 
-impl BuiltinSchedule {
+impl BuiltinSchedule<'_> {
     /// Whether one pass name belongs to this schedule's transform wrappers.
     ///
     /// The empty plan owns an empty set — no allocation, no match.

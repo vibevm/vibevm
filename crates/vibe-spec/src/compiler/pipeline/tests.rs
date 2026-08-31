@@ -116,7 +116,7 @@ impl Pass for EmitDocuments {
     }
 }
 
-fn runnable_pipeline() -> CompilerPipeline {
+fn runnable_pipeline() -> CompilerPipeline<'static> {
     let mut pipeline = CompilerPipeline::default();
     pipeline
         .push_document(AppendSource {

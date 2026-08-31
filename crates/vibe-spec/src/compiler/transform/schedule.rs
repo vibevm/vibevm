@@ -33,8 +33,6 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY");
 
-use std::sync::Arc;
-
 use crate::compiler::emit::attribution;
 use crate::compiler::ir::{
     ArtifactFrame, ArtifactPlan, DocumentIr, DocumentSubject, EmittedArtifact, LaneIr, SourceIr,
@@ -43,11 +41,10 @@ use crate::compiler::observer::{self as analyze_observer, DeltaStage, Observing,
 use crate::compiler::pass::{Pass, PassName};
 use crate::compiler::pipeline::{CompilerPipeline, CompilerPipelineError};
 
-use super::behavior::{TransformBehavior, TransformBehaviorError};
-use super::emitted_reconstruction;
 use super::fault::{TransformCapabilityGap, TransformError};
-use super::lane_admission::{self, LaneAdmissionError};
-use super::plan::{TransformConfig, TransformStage};
+use super::native_manager::CompilerNativeInvoker;
+use super::native_schedule::TransformExecution;
+use super::plan::{ImplementationComponents, TransformConfig, TransformStage};
 use super::plan_validate::BoundedPreview;
 use super::plan_validate::bounded;
 use super::registry::TransformRegistry;
@@ -69,17 +66,17 @@ fn stage_token(stage: &TransformStage) -> &'static str {
 /// The selector is cloned here exactly once, as an opaque
 /// [`SelectorGate`], so matching never reaches back into the plan and the
 /// kernel selector type never has to be named at this level.
-struct ResolvedTransform {
+struct ResolvedTransform<'invoke> {
     name: PassName,
     stage: TransformStage,
     order: u32,
     preview: BoundedPreview,
-    behavior: Arc<dyn TransformBehavior>,
+    execution: TransformExecution<'invoke>,
     config: Option<TransformConfig>,
     selector: Option<SelectorGate>,
 }
 
-impl ResolvedTransform {
+impl ResolvedTransform<'_> {
     /// The per-row entry fault for a pipeline-insertion refusal: the row's
     /// bounded preview, dense order and exact stage ride along.
     fn schedule_fault(&self, source: CompilerPipelineError) -> TransformError {
@@ -96,15 +93,15 @@ impl ResolvedTransform {
 ///
 /// Pushing filters by stage — a stable partition — so within-stage authored
 /// order survives without any sort.
-pub(crate) struct TransformSchedule {
-    rows: Vec<ResolvedTransform>,
+pub(crate) struct TransformSchedule<'invoke> {
+    rows: Vec<ResolvedTransform<'invoke>>,
     /// The analyzer observer the lane/emitted wrappers report through
     /// (R4.3). `None` is the unobserved path: no byte is counted, no
     /// event is built.
     observer: Observing,
 }
 
-impl TransformSchedule {
+impl<'invoke> TransformSchedule<'invoke> {
     /// Resolve a whole plan against one registry, or refuse it.
     ///
     /// The frozen precedence: a nonempty plan on a compatibility-fragment
@@ -121,10 +118,11 @@ impl TransformSchedule {
     /// grammar law that lane/emitted carry no selector at all is enforced a
     /// layer earlier, by `plan_validate::validate_selector_stage`, so a
     /// selector reaching this walk is always a source/document one.
-    pub(crate) fn resolve(
+    pub(crate) fn resolve_with_invoker(
         plan: &ArtifactPlan,
         registry: &TransformRegistry,
         observer: Observing,
+        invoker: Option<&'invoke dyn CompilerNativeInvoker>,
     ) -> Result<Self, TransformError> {
         let transforms = plan.transforms();
         let entries = transforms.entries();
@@ -148,14 +146,27 @@ impl TransformSchedule {
         for entry in entries {
             let seed = entry.seed();
             let stage = seed.stage().clone();
-            let behavior = registry
-                .resolve(seed.implementation(), &stage)
-                .map_err(|source| TransformError::Resolution {
-                    preview: bounded(seed.key().as_str()),
-                    order: entry.order(),
-                    stage: stage.clone(),
-                    source,
-                })?;
+            let execution = match seed.implementation().components() {
+                ImplementationComponents::Builtin { .. } => TransformExecution::from_behavior(
+                    registry
+                        .resolve(seed.implementation(), &stage)
+                        .map_err(|source| TransformError::Resolution {
+                            preview: bounded(seed.key().as_str()),
+                            order: entry.order(),
+                            stage: stage.clone(),
+                            source,
+                        })?,
+                ),
+                ImplementationComponents::Native { digest, .. } => TransformExecution::native(
+                    seed.key().clone(),
+                    invoker.ok_or_else(|| TransformError::NativeInvokerUnavailable {
+                        preview: bounded(seed.key().as_str()),
+                        order: entry.order(),
+                        stage: stage.clone(),
+                    })?,
+                    digest,
+                ),
+            };
             let name = PassName::new(format!(
                 "transform:{}:{}",
                 stage_token(&stage),
@@ -172,7 +183,7 @@ impl TransformSchedule {
                 stage,
                 order: entry.order(),
                 preview: bounded(seed.key().as_str()),
-                behavior,
+                execution,
                 config: seed.config().cloned(),
                 selector: seed.selector().map(SelectorGate::new),
             });
@@ -186,14 +197,14 @@ impl TransformSchedule {
         self.rows.iter().map(|row| row.name.clone()).collect()
     }
 
-    fn rows_at(&self, stage: TransformStage) -> impl Iterator<Item = &ResolvedTransform> {
+    fn rows_at(&self, stage: TransformStage) -> impl Iterator<Item = &ResolvedTransform<'invoke>> {
         self.rows.iter().filter(move |row| row.stage == stage)
     }
 
     /// Insert the source wrappers before the built-in parse pass.
     pub(crate) fn push_source_before_parse(
         &self,
-        pipeline: &mut CompilerPipeline,
+        pipeline: &mut CompilerPipeline<'invoke>,
     ) -> Result<(), TransformError> {
         for row in self.rows_at(TransformStage::Source) {
             pipeline
@@ -206,7 +217,7 @@ impl TransformSchedule {
     /// Insert the document wrappers after the built-in parse pass.
     pub(crate) fn push_document_after_parse(
         &self,
-        pipeline: &mut CompilerPipeline,
+        pipeline: &mut CompilerPipeline<'invoke>,
     ) -> Result<(), TransformError> {
         for row in self.rows_at(TransformStage::Document) {
             pipeline
@@ -219,7 +230,7 @@ impl TransformSchedule {
     /// Insert the lane wrappers after the built-in assemble pass.
     pub(crate) fn push_lane_after_assemble(
         &self,
-        pipeline: &mut CompilerPipeline,
+        pipeline: &mut CompilerPipeline<'invoke>,
     ) -> Result<(), TransformError> {
         for row in self.rows_at(TransformStage::Lane) {
             let mut pass = LaneTransformPass::from(row);
@@ -234,7 +245,7 @@ impl TransformSchedule {
     /// Insert the emitted wrappers after the selected backend's emit pass.
     pub(crate) fn push_emitted_after_emit(
         &self,
-        pipeline: &mut CompilerPipeline,
+        pipeline: &mut CompilerPipeline<'invoke>,
     ) -> Result<(), TransformError> {
         for row in self.rows_at(TransformStage::Emitted) {
             let mut pass = EmittedTransformPass::from(row);
@@ -247,18 +258,13 @@ impl TransformSchedule {
     }
 }
 
-/// The shared wrapper fault projection: entry identity plus the typed source.
-fn wrapper_fault(
-    preview: &BoundedPreview,
-    order: u32,
-    stage: &TransformStage,
-    source: TransformBehaviorError,
-) -> TransformError {
-    TransformError::Behavior {
-        preview: preview.clone(),
-        order,
-        stage: stage.clone(),
-        source,
+impl TransformSchedule<'static> {
+    pub(crate) fn resolve(
+        plan: &ArtifactPlan,
+        registry: &TransformRegistry,
+        observer: Observing,
+    ) -> Result<Self, TransformError> {
+        Self::resolve_with_invoker(plan, registry, observer, None)
     }
 }
 
@@ -320,29 +326,29 @@ fn selector_fault(
 /// The selector is consulted against the document's own carried subject
 /// before the behavior is invoked, so a document out of scope is returned
 /// untouched and the behavior never observes it.
-struct SourceTransformPass {
+struct SourceTransformPass<'invoke> {
     name: PassName,
     order: u32,
     preview: BoundedPreview,
-    behavior: Arc<dyn TransformBehavior>,
+    execution: TransformExecution<'invoke>,
     config: Option<TransformConfig>,
     selector: Option<SelectorGate>,
 }
 
-impl From<&ResolvedTransform> for SourceTransformPass {
-    fn from(row: &ResolvedTransform) -> Self {
+impl<'invoke> From<&ResolvedTransform<'invoke>> for SourceTransformPass<'invoke> {
+    fn from(row: &ResolvedTransform<'invoke>) -> Self {
         Self {
             name: row.name.clone(),
             order: row.order,
             preview: row.preview.clone(),
-            behavior: row.behavior.clone(),
+            execution: row.execution.clone(),
             config: row.config.clone(),
             selector: row.selector.clone(),
         }
     }
 }
 
-impl Pass for SourceTransformPass {
+impl Pass for SourceTransformPass<'_> {
     type Input = SourceIr;
     type Output = SourceIr;
     type Error = TransformError;
@@ -362,11 +368,13 @@ impl Pass for SourceTransformPass {
         if verdict == SelectorVerdict::Skipped {
             return Ok(input);
         }
-        self.behavior
-            .run_source(self.config.as_ref(), input)
-            .map_err(|source| {
-                wrapper_fault(&self.preview, self.order, &TransformStage::Source, source)
-            })
+        self.execution.run_source(
+            &self.name,
+            &self.preview,
+            self.order,
+            self.config.as_ref(),
+            input,
+        )
     }
 }
 
@@ -375,29 +383,29 @@ impl Pass for SourceTransformPass {
 /// The subject is reached through the paired source, which is the same value
 /// the source position judged, so both positions of one document answer to
 /// one subject and parse mints no second one.
-struct DocumentTransformPass {
+struct DocumentTransformPass<'invoke> {
     name: PassName,
     order: u32,
     preview: BoundedPreview,
-    behavior: Arc<dyn TransformBehavior>,
+    execution: TransformExecution<'invoke>,
     config: Option<TransformConfig>,
     selector: Option<SelectorGate>,
 }
 
-impl From<&ResolvedTransform> for DocumentTransformPass {
-    fn from(row: &ResolvedTransform) -> Self {
+impl<'invoke> From<&ResolvedTransform<'invoke>> for DocumentTransformPass<'invoke> {
+    fn from(row: &ResolvedTransform<'invoke>) -> Self {
         Self {
             name: row.name.clone(),
             order: row.order,
             preview: row.preview.clone(),
-            behavior: row.behavior.clone(),
+            execution: row.execution.clone(),
             config: row.config.clone(),
             selector: row.selector.clone(),
         }
     }
 }
 
-impl Pass for DocumentTransformPass {
+impl Pass for DocumentTransformPass<'_> {
     type Input = DocumentIr;
     type Output = DocumentIr;
     type Error = TransformError;
@@ -417,11 +425,13 @@ impl Pass for DocumentTransformPass {
         if verdict == SelectorVerdict::Skipped {
             return Ok(input);
         }
-        self.behavior
-            .run_document(self.config.as_ref(), input)
-            .map_err(|source| {
-                wrapper_fault(&self.preview, self.order, &TransformStage::Document, source)
-            })
+        self.execution.run_document(
+            &self.name,
+            &self.preview,
+            self.order,
+            self.config.as_ref(),
+            input,
+        )
     }
 }
 
@@ -441,29 +451,29 @@ impl Pass for DocumentTransformPass {
 /// delta §9 names apart from the artifact-byte delta. Measured on the
 /// INPUT before the behavior runs and on the ADMITTED output after, so
 /// the reported pair is exactly the transition the manager accepted.
-struct LaneTransformPass {
+struct LaneTransformPass<'invoke> {
     name: PassName,
     order: u32,
     preview: BoundedPreview,
-    behavior: Arc<dyn TransformBehavior>,
+    execution: TransformExecution<'invoke>,
     config: Option<TransformConfig>,
     observer: Observing,
 }
 
-impl From<&ResolvedTransform> for LaneTransformPass {
-    fn from(row: &ResolvedTransform) -> Self {
+impl<'invoke> From<&ResolvedTransform<'invoke>> for LaneTransformPass<'invoke> {
+    fn from(row: &ResolvedTransform<'invoke>) -> Self {
         Self {
             name: row.name.clone(),
             order: row.order,
             preview: row.preview.clone(),
-            behavior: row.behavior.clone(),
+            execution: row.execution.clone(),
             config: row.config.clone(),
             observer: None,
         }
     }
 }
 
-impl Pass for LaneTransformPass {
+impl Pass for LaneTransformPass<'_> {
     type Input = LaneIr;
     type Output = LaneIr;
     type Error = TransformError;
@@ -473,20 +483,17 @@ impl Pass for LaneTransformPass {
     }
 
     fn run(&self, input: LaneIr) -> Result<LaneIr, TransformError> {
-        // Derived from the INPUT: evidence taken after the behavior ran would
-        // only ever agree with itself.
-        let witness = lane_admission::witness(&input);
         let before = self
             .observer
             .as_ref()
             .map(|_| attribution::lane_content_bytes(&input));
-        let output = self
-            .behavior
-            .run_lane(self.config.as_ref(), input)
-            .map_err(|source| {
-                wrapper_fault(&self.preview, self.order, &TransformStage::Lane, source)
-            })?;
-        lane_admission::admit(&witness, &output).map_err(|refusal| self.lane_fault(refusal))?;
+        let output = self.execution.run_lane(
+            &self.name,
+            &self.preview,
+            self.order,
+            self.config.as_ref(),
+            input,
+        )?;
         if let (Some(observer), Some(before)) = (self.observer.as_deref(), before) {
             let event = StageDeltaEvent::new(
                 self.name.as_str(),
@@ -497,28 +504,6 @@ impl Pass for LaneTransformPass {
             analyze_observer::deliver_stage_delta(observer, &event);
         }
         Ok(output)
-    }
-}
-
-impl LaneTransformPass {
-    /// Project one admission refusal onto this entry's identity: the bounded
-    /// key preview, the dense plan order and the stage ride along, exactly as
-    /// every other entry fault carries them.
-    fn lane_fault(&self, refusal: LaneAdmissionError) -> TransformError {
-        match refusal {
-            LaneAdmissionError::Intrinsic(source) => TransformError::LaneIntrinsic {
-                preview: self.preview.clone(),
-                order: self.order,
-                stage: TransformStage::Lane,
-                source,
-            },
-            LaneAdmissionError::Transition(source) => TransformError::LaneTransition {
-                preview: self.preview.clone(),
-                order: self.order,
-                stage: TransformStage::Lane,
-                source,
-            },
-        }
     }
 }
 
@@ -539,29 +524,29 @@ impl LaneTransformPass {
 /// names apart from the lane-byte delta. The `after` side is the
 /// RECONSTRUCTED artifact's length, so a behavior whose bytes did not
 /// move reports an honest no-op pair.
-struct EmittedTransformPass {
+struct EmittedTransformPass<'invoke> {
     name: PassName,
     order: u32,
     preview: BoundedPreview,
-    behavior: Arc<dyn TransformBehavior>,
+    execution: TransformExecution<'invoke>,
     config: Option<TransformConfig>,
     observer: Observing,
 }
 
-impl From<&ResolvedTransform> for EmittedTransformPass {
-    fn from(row: &ResolvedTransform) -> Self {
+impl<'invoke> From<&ResolvedTransform<'invoke>> for EmittedTransformPass<'invoke> {
+    fn from(row: &ResolvedTransform<'invoke>) -> Self {
         Self {
             name: row.name.clone(),
             order: row.order,
             preview: row.preview.clone(),
-            behavior: row.behavior.clone(),
+            execution: row.execution.clone(),
             config: row.config.clone(),
             observer: None,
         }
     }
 }
 
-impl Pass for EmittedTransformPass {
+impl Pass for EmittedTransformPass<'_> {
     type Input = EmittedArtifact;
     type Output = EmittedArtifact;
     type Error = TransformError;
@@ -573,14 +558,13 @@ impl Pass for EmittedTransformPass {
     fn run(&self, input: EmittedArtifact) -> Result<EmittedArtifact, TransformError> {
         let observer = self.observer.as_deref();
         let before = observer.map(|_| input.bytes().len());
-        let bytes = input.bytes().to_vec();
-        let output = self
-            .behavior
-            .run_emitted(self.config.as_ref(), bytes)
-            .map_err(|source| {
-                wrapper_fault(&self.preview, self.order, &TransformStage::Emitted, source)
-            })?;
-        let reconstructed = emitted_reconstruction::reconstruct(input, output, &self.name);
+        let reconstructed = self.execution.run_emitted(
+            &self.name,
+            &self.preview,
+            self.order,
+            self.config.as_ref(),
+            input,
+        )?;
         if let (Some(observer), Some(before)) = (observer, before) {
             let event = StageDeltaEvent::new(
                 self.name.as_str(),

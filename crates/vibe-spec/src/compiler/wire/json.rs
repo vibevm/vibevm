@@ -10,13 +10,13 @@
 use std::collections::HashSet;
 use std::fmt;
 
-use serde::de::{self, DeserializeSeed, MapAccess, SeqAccess, Visitor};
+use serde::de::{self, DeserializeOwned, DeserializeSeed, MapAccess, SeqAccess, Visitor};
 
 use super::{IrWireError, bounded};
 
 /// Parse wire bytes into the generated strict type, refusing a repeated key
 /// in ANY object on the way. Reader strictness, not a semantic gate.
-pub(super) fn from_strict_slice(bytes: &[u8]) -> Result<super::wire::Ir, IrWireError> {
+pub(crate) fn from_strict_slice<T: DeserializeOwned>(bytes: &[u8]) -> Result<T, IrWireError> {
     // Pass 1 walks the token stream for repeated keys only (no value is
     // built); pass 2 is the generated strict parse of the same bytes. Two
     // passes over one buffer, never a materialized JSON value.
@@ -32,7 +32,7 @@ pub(super) fn from_strict_slice(bytes: &[u8]) -> Result<super::wire::Ir, IrWireE
     // serde builds its own `unknown field …` message eagerly; the bounded
     // sink is where that text stops, and the unbounded source is dropped
     // rather than carried into every rendering of our refusal.
-    serde_json::from_slice::<super::wire::Ir>(bytes).map_err(|source| IrWireError::Reader {
+    serde_json::from_slice::<T>(bytes).map_err(|source| IrWireError::Reader {
         detail: bounded::display(source),
     })
 }

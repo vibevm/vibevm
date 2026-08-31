@@ -204,7 +204,7 @@ fn valid_closure() -> crate::compiler::ir::ClosureIr {
 /// carrier crosses a real manager boundary as a pass **output** — which is what
 /// makes the failure nameable by its producing pass — with and without the
 /// verifier and nothing else about it changed.
-fn producing_segment(lane: &LaneIr) -> crate::compiler::pass::PassSegment {
+fn producing_segment(lane: &LaneIr) -> crate::compiler::pass::PassSegment<'_> {
     struct Producer {
         name: crate::compiler::pass::PassName,
         lane: LaneIr,

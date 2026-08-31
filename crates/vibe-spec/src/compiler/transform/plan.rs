@@ -27,6 +27,7 @@ use vibe_extension_registry::{
 };
 
 use super::config::{ConfigDigest, ConfigTable};
+use super::native_identity::{CompilerNativeImplementationDigest, NativeHandlerIdentity};
 use super::plan_digest::{ImplementationDigest, PlanDigest};
 
 /// The effective configuration of one transform, wrapped as plan identity.
@@ -195,8 +196,30 @@ impl From<&ExtensionProvider> for TransformProvider {
 /// `builtin` as another private field or kind, not a public variant.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) struct TransformImplementation {
-    name: String,
-    epoch: u32,
+    kind: TransformImplementationKind,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+enum TransformImplementationKind {
+    Builtin {
+        name: String,
+        epoch: u32,
+    },
+    Native {
+        _handler: NativeHandlerIdentity,
+        digest: CompilerNativeImplementationDigest,
+    },
+}
+
+#[derive(Debug, Clone, Copy)]
+pub(crate) enum ImplementationComponents<'implementation> {
+    Builtin {
+        name: &'implementation str,
+        epoch: u32,
+    },
+    Native {
+        digest: CompilerNativeImplementationDigest,
+    },
 }
 
 impl TransformImplementation {
@@ -209,19 +232,53 @@ impl TransformImplementation {
     /// visibility would let the workspace author an epoch directly.
     pub(super) fn builtin_candidate(name: impl Into<String>, epoch: u32) -> Self {
         Self {
-            name: name.into(),
-            epoch,
+            kind: TransformImplementationKind::Builtin {
+                name: name.into(),
+                epoch,
+            },
+        }
+    }
+
+    pub(super) fn native_candidate(
+        handler: NativeHandlerIdentity,
+        digest: CompilerNativeImplementationDigest,
+    ) -> Self {
+        Self {
+            kind: TransformImplementationKind::Native {
+                _handler: handler,
+                digest,
+            },
+        }
+    }
+
+    pub(crate) fn components(&self) -> ImplementationComponents<'_> {
+        match &self.kind {
+            TransformImplementationKind::Builtin { name, epoch } => {
+                ImplementationComponents::Builtin {
+                    name,
+                    epoch: *epoch,
+                }
+            }
+            TransformImplementationKind::Native { digest, .. } => {
+                ImplementationComponents::Native { digest: *digest }
+            }
         }
     }
 
     /// The builtin's exact candidate name.
     pub(crate) fn builtin_name(&self) -> &str {
-        &self.name
+        match &self.kind {
+            TransformImplementationKind::Builtin { name, .. } => name,
+            TransformImplementationKind::Native { .. } => "native",
+        }
     }
 
     /// The builtin's registry-owned behavior epoch.
     pub(crate) fn builtin_epoch(&self) -> u32 {
-        self.epoch
+        match &self.kind {
+            TransformImplementationKind::Builtin { epoch, .. } => *epoch,
+            TransformImplementationKind::Native { .. } => 0,
+        }
     }
 }
 

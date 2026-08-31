@@ -43,6 +43,7 @@ use vibe_extension_registry::{CompiledSelector, ExtensionRegistryRow};
 
 use super::config_lowering::lower_effective_config;
 use super::fault::{LoweringFault, TransformLoweringError, lowering_fault as fault};
+use super::native_identity::{NativeHandlerIdentity, compiler_native_implementation_digest};
 use super::plan::{
     TransformImplementation, TransformPlan, TransformProvider, TransformSeed, TransformStage,
     is_behaviorally_unscoped,
@@ -192,21 +193,45 @@ fn implementation(
     registry: &TransformRegistry,
 ) -> Result<TransformImplementation, TransformLoweringError> {
     let handler = &source.declaration().handler;
-    let ExtensionHandler::Builtin { name } = handler else {
-        return Err(fault(LoweringFault::UnsupportedHandler {
+    match handler {
+        ExtensionHandler::Builtin { name } => registry
+            .epoch_of(name)
+            .map(|epoch| TransformImplementation::builtin_candidate(name, epoch))
+            .map_err(|error| {
+                fault(LoweringFault::Implementation {
+                    row,
+                    preview: preview(),
+                    source: error,
+                })
+            }),
+        ExtensionHandler::Native { .. } => {
+            let digest = compiler_native_implementation_digest(source).map_err(|source| {
+                fault(LoweringFault::NativeIdentity {
+                    row,
+                    preview: preview(),
+                    source,
+                })
+            })?;
+            let Some(handler) = NativeHandlerIdentity::from_handler(handler).map_err(|source| {
+                fault(LoweringFault::NativeIdentity {
+                    row,
+                    preview: preview(),
+                    source,
+                })
+            })?
+            else {
+                return Err(fault(LoweringFault::UnsupportedHandler {
+                    row,
+                    preview: preview(),
+                    kind: source.declaration().handler.kind(),
+                }));
+            };
+            Ok(TransformImplementation::native_candidate(handler, digest))
+        }
+        _ => Err(fault(LoweringFault::UnsupportedHandler {
             row,
             preview: preview(),
             kind: handler.kind(),
-        }));
-    };
-    registry
-        .epoch_of(name)
-        .map(|epoch| TransformImplementation::builtin_candidate(name, epoch))
-        .map_err(|error| {
-            fault(LoweringFault::Implementation {
-                row,
-                preview: preview(),
-                source: error,
-            })
-        })
+        })),
+    }
 }

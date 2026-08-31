@@ -20,7 +20,8 @@ use super::plan::{
 };
 
 /// The canonical digest domain of one implementation identity (epoch 1).
-const IMPLEMENTATION_DIGEST_DOMAIN: &[u8] = b"vibe-transform-implementation-v1\0epoch=1\0";
+pub(super) const IMPLEMENTATION_DIGEST_DOMAIN: &[u8] =
+    b"vibe-transform-implementation-v1\0epoch=1\0";
 /// The canonical digest domain of one whole plan (epoch 1).
 const PLAN_DIGEST_DOMAIN: &[u8] = b"vibe-transform-plan-v1\0epoch=1\0";
 
@@ -90,11 +91,18 @@ impl PlanDigest {
 pub(super) fn implementation_digest(
     implementation: &TransformImplementation,
 ) -> ImplementationDigest {
-    let mut digest = StableDigest::new(IMPLEMENTATION_DIGEST_DOMAIN);
-    digest.byte(TAG_IMPLEMENTATION_BUILTIN);
-    digest.field(implementation.builtin_name().as_bytes());
-    digest.u32(implementation.builtin_epoch());
-    ImplementationDigest(digest.finish())
+    match implementation.components() {
+        super::plan::ImplementationComponents::Builtin { name, epoch } => {
+            let mut digest = StableDigest::new(IMPLEMENTATION_DIGEST_DOMAIN);
+            digest.byte(TAG_IMPLEMENTATION_BUILTIN);
+            digest.field(name.as_bytes());
+            digest.u32(epoch);
+            ImplementationDigest(digest.finish())
+        }
+        super::plan::ImplementationComponents::Native { digest, .. } => {
+            ImplementationDigest(*digest.as_bytes())
+        }
+    }
 }
 
 /// Digest one whole plan: domain, entry count, then every entry in

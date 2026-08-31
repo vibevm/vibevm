@@ -235,15 +235,23 @@ fn a_compile_pass_row_refuses_typed_until_r6_owns_the_pass_tier() {
 /// not by widening the caller's.
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY")]
-fn a_non_builtin_handler_at_a_compile_point_refuses_typed() {
+fn a_native_handler_at_a_compile_point_lowers_to_native_identity() {
     let registry = collected_host(vec![Declared::native("compiled", "compile:document")]);
-    let error = lower(&registry).expect_err("a native handler is not a staged transform yet");
-    let LoweringFault::UnsupportedHandler { row, preview, kind } = fault(&error) else {
-        panic!("a non-builtin handler has its own arm: {error}")
+    let rows = registry.enabled_compile_rows();
+    let plan = lower(&registry).expect("native is the second staged implementation kind");
+    assert_eq!(plan.len(), 1);
+    assert_eq!(plan.entries()[0].order(), 0);
+    assert_eq!(plan.entries()[0].seed().stage(), &TransformStage::Document);
+    let super::plan::ImplementationComponents::Native { digest } =
+        plan.entries()[0].seed().implementation().components()
+    else {
+        panic!("the native row lowered to a builtin")
     };
-    assert_eq!(*row, 0);
-    assert_eq!(*kind, "native");
-    assert_eq!(*preview, bounded(&host_key("compiled")));
+    assert_eq!(
+        digest,
+        super::native_identity::compiler_native_implementation_digest(rows[0]).unwrap(),
+        "lowering uses the one row-owned native digest function"
+    );
 }
 
 /// §4.2, refusal 3: an off-catalog builtin name is the existing bounded

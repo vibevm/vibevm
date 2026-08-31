@@ -32,7 +32,7 @@ impl Pass for CloseStub {
     }
 }
 
-fn prefix() -> CompilerPipeline {
+fn prefix() -> CompilerPipeline<'static> {
     let mut pipeline = CompilerPipeline::default();
     pipeline
         .push_artifact(CloseStub {
