@@ -12,8 +12,10 @@ use tempfile::TempDir;
 use vibe_core::manifest::{Manifest, MechanismKey, ProviderPin};
 use vibe_extension_registry::{MechanismProvider, SelectionStep, resolve_mechanism};
 
-use super::test_support::{id, lock, locked, node, slot};
-use super::{DurableExtensionWorld, collect_owner_mechanisms, collect_owner_view};
+use super::test_support::{id, lock, locked, node, resolved, slot};
+use super::{
+    DurableExtensionWorld, ExtensionWorldEpoch, collect_owner_mechanisms, collect_owner_view,
+};
 
 const PROVIDER_SLOT: &str = r#"
 [package]
@@ -35,6 +37,9 @@ handler = { kind = "native", crate_dir = "crates/cargo-provider" }
 protocol = 1
 config_schema = "schemas/cargo-build-v1.jtd.json"
 freshness = "provider"
+
+[mechanisms]
+"build:cargo" = "org.example/build-tools#cargo-v2"
 "#;
 
 const ROUTED_NODE: &str = r#"
@@ -108,6 +113,39 @@ fn the_durable_world_carries_mechanisms_from_the_same_parse_as_extensions() {
     let (_bare_workspace, _bare_manifest, bare) =
         fixture("[project]\nname = \"demo\"\nversion = \"0.1.0\"\n");
     assert!(bare.host().mechanisms.is_empty());
+}
+
+/// The ordered-resolution epoch retains the already-parsed package manifest,
+/// including routes that become live when this package owns its unit lane.
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM")]
+fn the_resolution_epoch_retains_package_routes_and_materialised_root() {
+    let (workspace, _manifest, _world) = fixture(ROUTED_NODE);
+    let root = workspace.path();
+    let owner = id("org.example", "build-tools");
+    let epoch = ExtensionWorldEpoch::from_resolution(
+        root,
+        &[resolved(root, "org.example", "build-tools", &[])],
+    )
+    .unwrap();
+
+    assert_eq!(
+        epoch
+            .package_manifest(&owner)
+            .unwrap()
+            .mechanism_routes
+            .get("build:cargo"),
+        Some(&pin("org.example/build-tools#cargo-v2"))
+    );
+    assert_eq!(
+        epoch.package_root(&owner).unwrap(),
+        crate::vibedeps::slot_abs_path(
+            root,
+            &vibe_core::Group::parse("org.example").unwrap(),
+            "build-tools",
+            &"1.0.0".parse().unwrap(),
+        )
+    );
 }
 
 /// The plan node's acceptance, end to end through the adapter: the host routes

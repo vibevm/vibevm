@@ -1,45 +1,11 @@
-//! The durable extension world of one boot regeneration, and the
-//! owner-scoped transform plan each lane owner is compiled with (R4
-//! architecture §§4–5, `R4-TRANSFORM-PLAN-ABI` §1).
+//! Owner-scoped transform plans lowered from one explicit extension-world
+//! epoch (R5.4 `EPOCH-WORLD`).
 //!
-//! **This seam OWNS NO EPOCH, and that decides everything below.** R4
-//! architecture §4 is explicit: an adapter "orders the epoch a command owns;
-//! it never chooses or invents one". Boot regeneration is not a command — it
-//! runs inside `install`, `check`, `reinstall`, `uninstall` and `init`, and
-//! no caller tells it which lock value is its authority. So the absolute
-//! root `vibe.lock` it can read here is EVIDENCE about the installed world,
-//! never authority over it.
-//!
-//! The distinction is not academic; it is observable. During `vibe install`
-//! the boot lane is written BEFORE the resolution's lock is published, so
-//! the file on disk is the PRE-install epoch: it does not yet list the
-//! package the node now requires, and observing a world against it produces
-//! a world that never existed. Post-install paths (`check`, `reinstall`,
-//! `uninstall`, and every regeneration from the materialised tree) read a
-//! lock that does agree with the tree, and there the observation is real.
-//!
-//! Two rules follow, and they are different rules:
-//!
-//! 1. **A world that cannot be observed is not a fault here.** No lock, an
-//!    unreadable lock, or a lock that disagrees with the tree all mean the
-//!    same thing at a seam with no epoch: nothing to scope by. The lane is
-//!    then written with [`TransformPlan::empty`] — the exact historical
-//!    schedule, bytes and errors (`R4-TRANSFORM-PLAN-ABI` §7). The durable
-//!    adapter's own strictness is untouched: it still refuses a malformed
-//!    world, and its tests still prove it. What is relaxed is this seam's
-//!    right to call a disagreement malformed.
-//! 2. **A world that IS observed is judged strictly.** Once a view exists,
-//!    a collection refusal or a lowering refusal is a real declaration
-//!    defect — independent of which lock produced the view — and refuses.
-//!
-//! <!-- REVIEW: rule 1 should narrow to "no lock at all" once the commands
-//! that DO own an epoch thread their lock value in (R4 architecture §4: ready
-//! apply overlays its resolution on the pre-apply lock order; uninstall
-//! compiles the remaining future world from the in-memory lock). Until then
-//! an install-time compile-point extension is not observed at all. Doing it
-//! needs a signature change on `regenerate_boot_from_traced`, whose callers
-//! are `vibe-cli` and `vibe-orchestrator` — outside T10B's write perimeter,
-//! and the same migration §5.3 already names as follow-up. -->
+//! Boot regeneration receives the command's exact ordered resolution and
+//! builds its [`ExtensionWorldEpoch`] before lowering anything. This seam does
+//! not read a lock and has no optional-world state: an empty package sequence
+//! is explicit and lawful; every malformed closure or unknown package owner is
+//! a typed refusal.
 //!
 //! **Activation authority follows the artifact being written** (PROP-054
 //! `##COMPILE-ACTIVATION`): a node lane is scoped by that node's own
@@ -52,44 +18,9 @@ use vibe_core::PackageName;
 use vibe_extension_registry::{DependencyProviderId, ExtensionRegistry, ExtensionWorld};
 
 use crate::boot::hybrid::UnitInput;
-use crate::extension_world::ExtensionWorldError;
+use crate::extension_world::{ExtensionWorldEpoch, ExtensionWorldError};
 
 use super::*;
-
-/// The durable root lock, when this tree has one that reads.
-///
-/// A missing file is the ordinary pre-install state. A file that does not
-/// read — an unsupported schema, a truncated write — is deliberately treated
-/// the same way rather than propagated: boot regeneration must still produce
-/// a lane for a tree whose lock this binary cannot interpret, and the lane it
-/// produces is byte-identical to the historical one because an owner with no
-/// world contributes no transform.
-pub(super) fn read_durable_lock(workspace_root: &Path) -> Option<Lockfile> {
-    let path = workspace_root.join(Lockfile::FILENAME);
-    if !path.is_file() {
-        return None;
-    }
-    Lockfile::read(&path).ok()
-}
-
-/// Snapshot the durable world of one selected node, when one is observable.
-///
-/// One snapshot per lane owner group: every participating manifest is parsed
-/// once inside it, and dependency order comes from the root lock and nothing
-/// else. A snapshot that does not come out — a locked package with no slot, a
-/// slot contradicting the lock — means the lock and the tree disagree, which
-/// at a seam that owns no epoch is "nothing observable", not "malformed"
-/// (module doc, rule 1). The adapter's own refusal law is untouched and
-/// still tested; this is only about who may call a disagreement a fault.
-pub(super) fn durable_world(
-    workspace_root: &Path,
-    node_root: &Path,
-    node_manifest: &Manifest,
-    lock: Option<&Lockfile>,
-) -> Option<DurableExtensionWorld> {
-    let lock = lock?;
-    DurableExtensionWorld::from_lock(workspace_root, node_root, node_manifest, lock).ok()
-}
 
 /// The NODE lane's own transform plan.
 ///
@@ -99,17 +30,14 @@ pub(super) fn durable_world(
 /// belong to the orchestrator's migration onto this adapter, and inventing a
 /// preset tier for boot would activate contributions no boot path declares.
 pub(super) fn node_owner_plan(
-    world: Option<&DurableExtensionWorld>,
+    epoch: &ExtensionWorldEpoch,
+    node_root: &Path,
+    node_manifest: &Manifest,
     node_rel: &str,
 ) -> Result<TransformPlan, WorkspaceError> {
-    let Some(world) = world else {
-        return Ok(TransformPlan::empty());
-    };
-    // A closure the lock cannot resolve is the same disagreement `from_lock`
-    // reports, one step later: not observable here (module doc, rule 1).
-    let Ok(view) = world.node_owner_view() else {
-        return Ok(TransformPlan::empty());
-    };
+    let view = epoch
+        .node_owner_view(node_root, node_manifest)
+        .map_err(world_error)?;
     lower_owner_view(world_registry(view)?, node_rel)
 }
 
@@ -133,14 +61,14 @@ pub(super) fn node_owner_plan(
 /// Units are walked in canonical `(group, name)` order so a refusal on a tree
 /// with several bad owners names the same one every run.
 pub(super) fn unit_owner_plans(
-    world: Option<&DurableExtensionWorld>,
+    epoch: &ExtensionWorldEpoch,
     table: &HashMap<UnitId, UnitInput>,
 ) -> Result<HashMap<UnitId, TransformPlan>, WorkspaceError> {
     let mut ordered: Vec<&UnitId> = table.keys().collect();
     ordered.sort();
     let mut plans = HashMap::with_capacity(ordered.len());
     for id in ordered {
-        plans.insert(id.clone(), unit_owner_plan(world, id)?);
+        plans.insert(id.clone(), unit_owner_plan(epoch, id)?);
     }
     Ok(plans)
 }
@@ -166,16 +94,11 @@ pub(super) fn plan_digest_frames(
 ///
 /// P takes the host seat through the kernel's own dependency-seat→owner-seat
 /// projection, so P's own controls become that lane's live controls. A unit
-/// the durable world does not install is outside the extension world
-/// entirely (R4 architecture §3's orphan rule) and compiles with the empty
-/// plan — the same answer an unobservable world gets, for the same reason.
+/// absent from the supplied epoch is a caller/world disagreement and refuses.
 pub(super) fn unit_owner_plan(
-    world: Option<&DurableExtensionWorld>,
+    epoch: &ExtensionWorldEpoch,
     unit: &UnitId,
 ) -> Result<TransformPlan, WorkspaceError> {
-    let Some(world) = world else {
-        return Ok(TransformPlan::empty());
-    };
     let owner = DependencyProviderId::new(
         unit.0.clone(),
         // The unit table's name half is the install model's bare string; it
@@ -188,12 +111,7 @@ pub(super) fn unit_owner_plan(
             reason: error.to_string(),
         })?,
     );
-    if !world.lane_owners().any(|installed| installed == &owner) {
-        return Ok(TransformPlan::empty());
-    }
-    let Ok(view) = world.package_owner_view(&owner) else {
-        return Ok(TransformPlan::empty());
-    };
+    let view = epoch.package_owner_view(&owner).map_err(world_error)?;
     lower_owner_view(world_registry(view)?, &owner.to_string())
 }
 
@@ -226,7 +144,7 @@ fn lower_owner_view(
     })
 }
 
-fn world_error(source: ExtensionWorldError) -> WorkspaceError {
+pub(super) fn world_error(source: ExtensionWorldError) -> WorkspaceError {
     WorkspaceError::ExtensionWorld {
         source: Box::new(source),
     }

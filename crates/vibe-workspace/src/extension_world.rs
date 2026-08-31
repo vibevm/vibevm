@@ -1,15 +1,13 @@
-//! The durable extension-world adapter — one lock-ordered snapshot of the
-//! selected node's world, and the owner-scoped views the one kernel collector
-//! runs over.
+//! The extension-world adapters — one caller-ordered installed-package epoch,
+//! and the owner-scoped views the one kernel collector runs over.
 //!
-//! This is the *durable* world epoch (R4 architecture §4.2): the post-install
-//! state the install just wrote — the absolute root `vibe.lock`, the slot each
-//! locked package materialised into, and the manifest each of those slots
-//! carries. The snapshot is taken once per run: every participating manifest is
-//! parsed exactly once, and dependency order comes from the root lock and from
-//! nothing else. Neither a name sort nor a directory listing may become
-//! ordering input — an orphan slot is outside the extension world entirely
-//! (§3), which is why no reader here enumerates the dependency root.
+//! [`ExtensionWorldEpoch`] is the install/compiler authority: its caller
+//! supplies the exact ordered resolution, including each already-parsed
+//! manifest, and the epoch retains the corresponding materialised slot root.
+//! [`DurableExtensionWorld`] remains the strict lock-backed compatibility view
+//! for callers whose command authority really is a durable lock. Neither path
+//! sorts by name or enumerates the dependency root; an orphan slot is outside
+//! the extension world entirely.
 //!
 //! The adapter owns the WORLD, never the collection semantics. It hands the
 //! kernel already-typed identities, retains every package's own
@@ -23,11 +21,10 @@
 //! ([`collect_owner_view`]); this crate never re-reads a manifest row the
 //! world already carries and never grows a second collector.
 //!
-//! The PROVISIONAL epoch (`from_lock_and_resolution`, §4.1: the pre-install
-//! resolution a slot hook observes) is deliberately absent. It is a named
-//! follow-up belonging to the orchestrator's migration onto this adapter, not
-//! a stub: writing one here before its caller exists would fix an epoch
-//! contract with no command to state which lock value is its authority.
+//! Root and member nodes take distinct host seats over the same installed
+//! package epoch, while package units take the kernel's package-owner seat.
+//! Thus one resolution parse serves every owner without changing activation
+//! authority.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM");
 
@@ -40,11 +37,12 @@ use vibe_core::{PackageKind, PackageName};
 use vibe_extension_registry::{
     DependencyExtensionSource, DependencyProvider, DependencyProviderId, ExtensionRegistry,
     ExtensionWorld, HostExtensionSource, HostIdentity, HostProvider, MechanismRegistry,
-    SyntheticPresetSource, collect_extensions_with_presets, collect_mechanisms, lane_owner_host,
+    SyntheticPresetSource, collect_extensions_with_presets, collect_mechanisms,
 };
 
 use crate::vibedeps::{in_place_slot_abs_path, slot_abs_path};
 
+mod epoch;
 mod errors;
 
 pub use errors::ExtensionWorldError;
@@ -58,11 +56,29 @@ pub use errors::ExtensionWorldError;
 #[derive(Debug, Clone)]
 struct InstalledPackage {
     source: DependencyExtensionSource,
-    /// This package's own locked dependency edges, in the order the lock
-    /// records them.
+    /// This package's effective dependency edges, in the exact order the
+    /// epoch authority supplies them.
     edges: Vec<DependencyProviderId>,
     /// This package's own `[active].stack` short name, if it declares one.
     active_stack: Option<String>,
+    /// The exact parsed package manifest supplied by this epoch's authority.
+    /// Later owner-runtime lowering reads its mechanism routes from here; it
+    /// never reparses the materialised slot and can therefore never observe a
+    /// different world from the extension/mechanism rows above.
+    manifest: Manifest,
+}
+
+/// One exact ordered-resolution snapshot of the installed extension world.
+///
+/// The caller owns the epoch and supplies its complete package sequence.
+/// Resolution order is retained byte-for-byte as semantic order; package
+/// manifests are retained from that same supplied value, while provider roots
+/// name the materialised slots those rows occupy. No lockfile or directory is
+/// enumerated by this constructor.
+#[derive(Debug, Clone)]
+pub struct ExtensionWorldEpoch {
+    installed: Vec<InstalledPackage>,
+    index: BTreeMap<DependencyProviderId, usize>,
 }
 
 /// One durable, lock-ordered snapshot of a selected node's extension world.
@@ -73,13 +89,71 @@ struct InstalledPackage {
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM")]
 #[derive(Debug, Clone)]
 pub struct DurableExtensionWorld {
-    /// Every locked package, in ROOT LOCK ORDER and in no other.
-    installed: Vec<InstalledPackage>,
-    /// Coordinate → position in `installed`, so a closure walk never scans.
-    index: BTreeMap<DependencyProviderId, usize>,
+    epoch: ExtensionWorldEpoch,
     host: HostExtensionSource,
     host_edges: Vec<DependencyProviderId>,
     host_active_stack: Option<String>,
+}
+
+fn package<'epoch>(
+    epoch: &'epoch ExtensionWorldEpoch,
+    owner: &DependencyProviderId,
+) -> Result<&'epoch InstalledPackage, ExtensionWorldError> {
+    epoch
+        .index
+        .get(owner)
+        .map(|position| &epoch.installed[*position])
+        .ok_or_else(|| ExtensionWorldError::UnknownOwner {
+            owner: owner.to_string(),
+        })
+}
+
+fn owner_view(
+    epoch: &ExtensionWorldEpoch,
+    host: HostExtensionSource,
+    roots: &[DependencyProviderId],
+    exclude: Option<&DependencyProviderId>,
+    active_stack: Option<&str>,
+) -> Result<ExtensionWorld, ExtensionWorldError> {
+    let owner = host.provider.identity.to_string();
+    let installed = closure(epoch, &owner, roots, exclude)?;
+    let effective_stack = effective_stack(&owner, active_stack, &installed)?;
+    Ok(ExtensionWorld {
+        installed,
+        host,
+        effective_stack,
+    })
+}
+
+fn closure(
+    epoch: &ExtensionWorldEpoch,
+    owner: &str,
+    roots: &[DependencyProviderId],
+    exclude: Option<&DependencyProviderId>,
+) -> Result<Vec<DependencyExtensionSource>, ExtensionWorldError> {
+    let mut queue: VecDeque<DependencyProviderId> = roots.iter().cloned().collect();
+    let mut reached = BTreeSet::new();
+    while let Some(id) = queue.pop_front() {
+        let Some(position) = epoch.index.get(&id).copied() else {
+            return Err(ExtensionWorldError::UnlockedRequirement {
+                owner: owner.to_owned(),
+                requirement: id.to_string(),
+            });
+        };
+        if !reached.insert(id) {
+            continue;
+        }
+        queue.extend(epoch.installed[position].edges.iter().cloned());
+    }
+    Ok(epoch
+        .installed
+        .iter()
+        .map(|entry| &entry.source)
+        .filter(|source| {
+            reached.contains(&source.provider.id) && Some(&source.provider.id) != exclude
+        })
+        .cloned()
+        .collect())
 }
 
 impl DurableExtensionWorld {
@@ -125,20 +199,16 @@ impl DurableExtensionWorld {
     ) -> Result<Self, ExtensionWorldError> {
         let host = host_source(node_root, node_manifest)?;
         let owner = host.provider.identity.to_string();
-        let mut installed = Vec::with_capacity(lock.packages.len());
-        let mut index = BTreeMap::new();
-        // ROOT LOCK ORDER, and nothing else: no sort, no directory listing.
-        for package in &lock.packages {
-            let entry = installed_package(workspace_root, package)?;
-            index.insert(entry.source.provider.id.clone(), installed.len());
-            installed.push(entry);
-        }
+        let installed = lock
+            .packages
+            .iter()
+            .map(|package| installed_package(workspace_root, package))
+            .collect::<Result<Vec<_>, _>>()?;
         Ok(Self {
             host_edges: declared_edges(&owner, node_manifest)?,
             host_active_stack: active_stack(node_manifest),
             host,
-            installed,
-            index,
+            epoch: ExtensionWorldEpoch::from_installed(installed)?,
         })
     }
 
@@ -151,13 +221,13 @@ impl DurableExtensionWorld {
 
     /// Every installed package's kernel row, in ROOT LOCK ORDER.
     pub fn installed(&self) -> impl Iterator<Item = &DependencyExtensionSource> {
-        self.installed.iter().map(|entry| &entry.source)
+        self.epoch.installed()
     }
 
     /// Every installed coordinate that may own a unit lane, in ROOT LOCK
     /// ORDER.
     pub fn lane_owners(&self) -> impl Iterator<Item = &DependencyProviderId> {
-        self.installed.iter().map(|entry| &entry.source.provider.id)
+        self.epoch.lane_owners()
     }
 
     /// The NODE lane's owner-scoped view: the selected node IS the host, so
@@ -166,7 +236,8 @@ impl DurableExtensionWorld {
     /// retained inert.
     #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-ACTIVATION")]
     pub fn node_owner_view(&self) -> Result<ExtensionWorld, ExtensionWorldError> {
-        self.owner_view(
+        owner_view(
+            &self.epoch,
             self.host.clone(),
             &self.host_edges,
             None,
@@ -187,73 +258,7 @@ impl DurableExtensionWorld {
         &self,
         owner: &DependencyProviderId,
     ) -> Result<ExtensionWorld, ExtensionWorldError> {
-        let entry = self
-            .index
-            .get(owner)
-            .map(|position| &self.installed[*position])
-            .ok_or_else(|| ExtensionWorldError::UnknownOwner {
-                owner: owner.to_string(),
-            })?;
-        self.owner_view(
-            lane_owner_host(&entry.source),
-            &entry.edges,
-            Some(owner),
-            entry.active_stack.as_deref(),
-        )
-    }
-
-    /// The one shape both owner views are: a host seat, that owner's closure
-    /// in root lock order, and that owner's own effective stack.
-    fn owner_view(
-        &self,
-        host: HostExtensionSource,
-        roots: &[DependencyProviderId],
-        exclude: Option<&DependencyProviderId>,
-        active_stack: Option<&str>,
-    ) -> Result<ExtensionWorld, ExtensionWorldError> {
-        let owner = host.provider.identity.to_string();
-        let installed = self.closure(&owner, roots, exclude)?;
-        let effective_stack = effective_stack(&owner, active_stack, &installed)?;
-        Ok(ExtensionWorld {
-            installed,
-            host,
-            effective_stack,
-        })
-    }
-
-    /// Every package reachable from `roots` through the lock's own dependency
-    /// edges, projected back onto the snapshot in ROOT LOCK ORDER — the
-    /// projection, not the walk, decides order, so reachability can never
-    /// become an ordering input.
-    fn closure(
-        &self,
-        owner: &str,
-        roots: &[DependencyProviderId],
-        exclude: Option<&DependencyProviderId>,
-    ) -> Result<Vec<DependencyExtensionSource>, ExtensionWorldError> {
-        let mut queue: VecDeque<DependencyProviderId> = roots.iter().cloned().collect();
-        let mut reached = BTreeSet::new();
-        while let Some(id) = queue.pop_front() {
-            let Some(position) = self.index.get(&id).copied() else {
-                return Err(ExtensionWorldError::UnlockedRequirement {
-                    owner: owner.to_owned(),
-                    requirement: id.to_string(),
-                });
-            };
-            if !reached.insert(id) {
-                continue;
-            }
-            queue.extend(self.installed[position].edges.iter().cloned());
-        }
-        Ok(self
-            .installed
-            .iter()
-            .map(|entry| &entry.source)
-            .filter(|source| {
-                reached.contains(&source.provider.id) && Some(&source.provider.id) != exclude
-            })
-            .cloned()
-            .collect())
+        self.epoch.package_owner_view(owner)
     }
 }
 
@@ -323,9 +328,23 @@ fn installed_package(
             locked,
         });
     }
+    if declared.materialization != package.materialization {
+        return Err(ExtensionWorldError::SlotMaterializationMismatch {
+            slot: root,
+            declared: materialization_name(declared.materialization),
+            locked: materialization_name(package.materialization),
+        });
+    }
 
     Ok(InstalledPackage {
-        edges: declared_edges(&id.to_string(), &manifest)?,
+        edges: checked_edges(
+            &id.to_string(),
+            package
+                .dependencies
+                .iter()
+                .map(|edge| (edge.group.as_ref(), edge.name.as_str())),
+            "locked dependency name",
+        )?,
         active_stack: active_stack(&manifest),
         source: DependencyExtensionSource {
             provider: DependencyProvider {
@@ -338,14 +357,15 @@ fn installed_package(
             // The package's own consumer controls, retained verbatim. They
             // are inert in every other owner's view and become live exactly
             // when this package takes its own lane's host seat.
-            controls: manifest.extension_controls,
-            declarations: manifest.extensions,
+            controls: manifest.extension_controls.clone(),
+            declarations: manifest.extensions.clone(),
             // The mechanism plane rides the SAME parse: `[[mechanism]]` is a
             // sibling table of `[[extension]]` in the manifest this snapshot
             // already read, so carrying it costs no second read and can never
             // observe a different epoch.
-            mechanisms: manifest.mechanism_decls,
+            mechanisms: manifest.mechanism_decls.clone(),
         },
+        manifest,
     })
 }
 
@@ -365,6 +385,14 @@ fn slot_root(workspace_root: &Path, package: &LockedPackage) -> PathBuf {
     }
 }
 
+pub(super) const fn materialization_name(materialization: Materialization) -> &'static str {
+    match materialization {
+        Materialization::Copy => "copy",
+        Materialization::Hardlink => "hardlink",
+        Materialization::InPlace => "in-place",
+    }
+}
+
 /// One manifest's declared package requirements as typed coordinates, in
 /// authored order. The name arrives as a bare string, so it is parsed here
 /// through the one existing grammar and refused typed on failure.
@@ -372,22 +400,37 @@ fn declared_edges(
     owner: &str,
     manifest: &Manifest,
 ) -> Result<Vec<DependencyProviderId>, ExtensionWorldError> {
-    manifest
-        .requires
-        .iter_pkgrefs()
-        .map(|(group, name)| {
-            let group = group
-                .cloned()
-                .ok_or_else(|| ExtensionWorldError::UngroupedEdge {
-                    owner: owner.to_owned(),
-                    edge: name.to_owned(),
-                })?;
-            Ok(DependencyProviderId::new(
-                group,
-                typed_name("[requires.packages] name", name)?,
-            ))
-        })
-        .collect()
+    checked_edges(
+        owner,
+        manifest.requires.iter_pkgrefs(),
+        "[requires.packages] name",
+    )
+}
+
+fn checked_edges<'edge>(
+    owner: &str,
+    edges: impl IntoIterator<Item = (Option<&'edge vibe_core::Group>, &'edge str)>,
+    name_component: &'static str,
+) -> Result<Vec<DependencyProviderId>, ExtensionWorldError> {
+    let mut seen = BTreeSet::new();
+    let mut resolved = Vec::new();
+    for (group, name) in edges {
+        let group = group
+            .cloned()
+            .ok_or_else(|| ExtensionWorldError::UngroupedEdge {
+                owner: owner.to_owned(),
+                edge: name.to_owned(),
+            })?;
+        let edge = DependencyProviderId::new(group, typed_name(name_component, name)?);
+        if !seen.insert(edge.clone()) {
+            return Err(ExtensionWorldError::DuplicateEdge {
+                owner: owner.to_owned(),
+                requirement: edge.to_string(),
+            });
+        }
+        resolved.push(edge);
+    }
+    Ok(resolved)
 }
 
 /// One manifest's `[active].stack` short name, if it declares one.

@@ -537,6 +537,11 @@ mod tests_hooks;
 #[cfg(test)]
 #[path = "install/tests_analyze_parity.rs"]
 mod tests_analyze_parity;
+
+#[cfg(test)]
+#[path = "install/tests_epoch_world.rs"]
+mod tests_epoch_world;
+
 #[cfg(test)]
 #[path = "install/tests_hybrid.rs"]
 mod tests_hybrid;

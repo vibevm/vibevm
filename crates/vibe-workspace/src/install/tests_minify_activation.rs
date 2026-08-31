@@ -1,16 +1,12 @@
 //! `xml-minify` activation END TO END (R4 architecture §2.5 of the R4.2
 //! packet; §11 rows 3, 8, 9 and 12).
 //!
-//! **Why every test here drives a SECOND regeneration.** T10B's ratification
-//! is explicit: during `vibe install` the boot lane is written BEFORE the
-//! resolution's lock is published, so the on-disk lock is the PRE-install
-//! epoch and a world observed against it never existed. Boot regeneration owns
-//! no epoch, so it treats "the lock and the tree disagree" as *nothing
-//! observable* and writes the exact historical bytes. Every test therefore
-//! installs, publishes the lock the install's resolution implies, and asserts
-//! on the regeneration AFTER that — which is the first moment the declaration
-//! is observable at all. The install pass's own lane is asserted too, as the
-//! unobserved baseline, so the two epochs are told apart rather than assumed.
+//! **The install's supplied resolution is the epoch.** Boot generation no
+//! longer rereads the still-pre-install disk lock: the initial
+//! `apply_resolution_with_spec_format` pass observes and applies every owner
+//! declaration from its exact ordered resolution. Publishing a fixture lock is
+//! needed only by later materialised-tree regeneration, whose output must be
+//! byte-stable with that initial install.
 //!
 //! What is proved: the owner's lane carries the §7.1 header naming exactly the
 //! active list; its bytes are strictly smaller than the unminified twin while
@@ -66,12 +62,12 @@ fn static_dependency() -> (ResolvedDep, TempDir) {
     )
 }
 
-/// Publish the lock the install's resolution implies — the POST-install epoch.
+/// Publish the lock the install's resolution implies for a later regeneration.
 ///
 /// Written by the test rather than by `apply_resolution`, because publishing
 /// the lock is the command owner's job (`vibe-cli`), and this cell exercises
 /// the workspace half. Its contents agree with the materialised tree, which is
-/// exactly the condition under which the world becomes observable.
+/// Activation already came from the supplied resolution during install.
 fn publish_lock(root: &Path) {
     let mut lockfile = Lockfile::empty("fixture", "1970-01-01T00:00:00Z");
     lockfile.packages = vec![LockedPackage {
@@ -116,9 +112,9 @@ fn root_manifest(activated: bool) -> String {
     manifest
 }
 
-/// Install a single-node fixture in the XML lane, publish its lock, and hand
-/// back the workspace directory. The lane on disk at this point is the
-/// install pass's — the UNOBSERVED one.
+/// Install a single-node fixture in the XML lane, publish its lock for later
+/// materialised-tree regeneration, and hand back the workspace directory. The
+/// lane on disk already reflects `activated`.
 fn installed(activated: bool) -> (TempDir, TempDir) {
     let ws_dir = TempDir::new().expect("a temp workspace");
     write(ws_dir.path(), "vibe.toml", &root_manifest(activated));
@@ -137,8 +133,7 @@ fn installed(activated: bool) -> (TempDir, TempDir) {
     (ws_dir, package)
 }
 
-/// Regenerate one workspace's boot artifacts from the materialised tree — the
-/// POST-install pass, which does observe the world.
+/// Regenerate one workspace's boot artifacts from the materialised tree.
 fn regenerate(root: &Path) {
     let ws = Workspace::load(root).expect("the workspace reloads");
     regenerate_boot_with_spec_format(&ws, SpecFormat::Xml).expect("the regeneration succeeds");
@@ -219,38 +214,24 @@ fn assert_minified_twin(baseline: &str, minified: &str, header: &str) {
     }
 }
 
-/// The whole activation law on a node lane, in one run: the install pass does
-/// NOT observe, the post-install regeneration does, the result is the
-/// baseline minified, and a further regeneration is byte-stable.
+/// The whole activation law on a node lane: the install pass observes the
+/// supplied-resolution epoch immediately, and later regeneration is stable.
 #[test]
-fn a_node_lanes_activation_is_observed_only_after_install_and_is_byte_stable() {
+fn a_node_lanes_activation_is_observed_during_install_and_is_byte_stable() {
     let (activated, _package) = installed(true);
     let install_pass = lane(activated.path(), ".");
-    assert!(
-        !install_pass.contains("vibe:transforms"),
-        "the install pass writes the lane before the lock is published, so it \
-         observes no world and takes the empty plan"
-    );
-
-    regenerate(activated.path());
-    let observed = lane(activated.path(), ".");
 
     // The unactivated twin: the same world, the same install, no declaration.
     let (plain, _plain_package) = installed(false);
-    regenerate(plain.path());
     let baseline = lane(plain.path(), ".");
-    assert_eq!(
-        baseline, install_pass,
-        "an owner that activates nothing writes the exact historical bytes at \
-         both epochs"
-    );
+    assert_minified_twin(&baseline, &install_pass, &header_line("host"));
 
-    assert_minified_twin(&baseline, &observed, &header_line("host"));
-
-    // Idempotent: a further regeneration recompiles from source and lands on
-    // the same bytes, which is what makes a fingerprint-fresh skip honest.
+    // Idempotent: materialised-tree regeneration lands on the exact bytes the
+    // supplied-resolution install already published.
     regenerate(activated.path());
-    assert_eq!(lane(activated.path(), "."), observed);
+    assert_eq!(lane(activated.path(), "."), install_pass);
+    regenerate(plain.path());
+    assert_eq!(lane(plain.path(), "."), baseline);
 }
 
 /// Deactivating restores the EXACT historical bytes.
@@ -260,11 +241,13 @@ fn a_node_lanes_activation_is_observed_only_after_install_and_is_byte_stable() {
 /// fixtures that merely look alike.
 #[test]
 fn removing_the_declaration_restores_the_exact_historical_bytes() {
-    let (workspace, _package) = installed(true);
+    let (workspace, _package) = installed(false);
     let historical = lane(workspace.path(), ".");
+
+    write(workspace.path(), "vibe.toml", &root_manifest(true));
     regenerate(workspace.path());
     let minified = lane(workspace.path(), ".");
-    assert_ne!(minified, historical);
+    assert_minified_twin(&historical, &minified, &header_line("host"));
 
     write(workspace.path(), "vibe.toml", &root_manifest(false));
     regenerate(workspace.path());
@@ -275,30 +258,25 @@ fn removing_the_declaration_restores_the_exact_historical_bytes() {
     );
 }
 
-/// Activation authority follows the artifact being written: a MEMBER node's
-/// own manifest activates the member's lane and leaves the root's untouched.
-///
-/// This is the first place T10B's member re-seating becomes byte-visible. Both
-/// nodes are compiled in one run, from one lock, by one snapshot — and the two
-/// lanes disagree, which they could only do if each was scoped by its own
-/// manifest.
-#[test]
-fn a_member_activates_its_own_lane_and_the_roots_lane_is_untouched() {
+/// Install the root/member fixture with the member declaration selected by
+/// `activated`. The initial lanes already reflect that manifest.
+fn installed_member(activated: bool) -> (TempDir, TempDir) {
     let ws_dir = TempDir::new().expect("a temp workspace");
     let root_toml = format!(
         "{}\n[workspace]\nmembers = [\"members/alpha\"]\n",
         root_manifest(false)
     );
     write(ws_dir.path(), "vibe.toml", &root_toml);
+    let declaration = if activated { MINIFY_DECL } else { "" };
     write(
         ws_dir.path(),
         "members/alpha/vibe.toml",
         &format!(
             "[project]\ngroup = \"org.demo\"\nname = \"alpha\"\nversion = \"0.1.0\"\n\n\
-             [requires.packages]\n\"org.vibevm/tools\" = {{ version = \"^1.0\", link = \"static\" }}\n{MINIFY_DECL}"
+             [requires.packages]\n\"org.vibevm/tools\" = {{ version = \"^1.0\", link = \"static\" }}\n{declaration}"
         ),
     );
-    let (dependency, _package) = static_dependency();
+    let (dependency, package) = static_dependency();
     let ws = Workspace::load(ws_dir.path()).expect("the fixture workspace loads");
     apply_resolution_with_spec_format(
         &ws,
@@ -310,19 +288,35 @@ fn a_member_activates_its_own_lane_and_the_roots_lane_is_untouched() {
     )
     .expect("the install applies");
     publish_lock(ws_dir.path());
+    (ws_dir, package)
+}
 
-    let root_before = lane(ws_dir.path(), ".");
-    let member_before = lane(ws_dir.path(), "members/alpha");
-    regenerate(ws_dir.path());
+/// Activation authority follows the artifact being written: a MEMBER node's
+/// own manifest activates the member's lane and leaves the root's untouched.
+///
+/// This is the first place T10B's member re-seating becomes byte-visible. Both
+/// nodes are compiled in one run, from one lock, by one snapshot — and the two
+/// lanes disagree, which they could only do if each was scoped by its own
+/// manifest.
+#[test]
+fn a_member_activates_its_own_lane_and_the_roots_lane_is_untouched() {
+    let (activated, _package) = installed_member(true);
+    let (plain, _plain_package) = installed_member(false);
+    let root_install = lane(activated.path(), ".");
+    let member_install = lane(activated.path(), "members/alpha");
 
     assert_eq!(
-        lane(ws_dir.path(), "."),
-        root_before,
-        "the root activates nothing, so its lane is byte-identical"
+        root_install,
+        lane(plain.path(), "."),
+        "the member declaration does not change the root's install lane"
     );
     assert_minified_twin(
-        &member_before,
-        &lane(ws_dir.path(), "members/alpha"),
+        &lane(plain.path(), "members/alpha"),
+        &member_install,
         &header_line("alpha"),
     );
+
+    regenerate(activated.path());
+    assert_eq!(lane(activated.path(), "."), root_install);
+    assert_eq!(lane(activated.path(), "members/alpha"), member_install);
 }

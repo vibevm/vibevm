@@ -28,14 +28,15 @@ use vibe_spec::{CompileObserver, DocumentProvider, EmittedArtifact};
 use crate::boot;
 use crate::boot::hybrid::hoist;
 use crate::errors::WorkspaceError;
+use crate::extension_world::ExtensionWorldEpoch;
 use crate::{Workspace, boot_artifacts};
 
 use super::ResolvedDep;
 use super::hybrid_emit::{append_hoisted, with_static_set};
-use super::owner_plans::{durable_world, node_owner_plan, read_durable_lock};
+use super::owner_plans::{node_owner_plan, world_error};
 use super::{
     build_unit_table, desubstitute_covered_units, node_dependency_boot, node_own_boot,
-    read_materialised,
+    read_durable_resolution,
 };
 
 /// One analyzed lane: the compile's result beside its attribution side.
@@ -65,9 +66,10 @@ pub struct AnalyzedLane {
 /// emission per accepted artifact, one stage delta per lane/emitted
 /// transform); a `None` observer compiles the plain historical schedule.
 ///
-/// The owner-plan rules are the boot seam's own (`owner_plans.rs`): a
-/// world that cannot be observed takes the empty plan — no fault — and
-/// an observed world is judged strictly, refusal propagating.
+/// The owner-plan rules are the boot seam's own (`owner_plans.rs`): the exact
+/// durable lock snapshot is the explicit epoch authority, and every world,
+/// closure or owner refusal propagates. Only a missing durable lock is the
+/// explicit empty sequence; malformed lock/slot state refuses.
 pub fn analyze_node_lane(
     workspace: &Workspace,
     node_rel: &str,
@@ -81,15 +83,11 @@ pub fn analyze_node_lane(
     let root = workspace.root.clone();
     let self_coord = super::root_self_coordinate(&workspace.root_manifest);
 
-    // The durable world of the run — ONE lock read, one root snapshot,
-    // one member seating — exactly as regeneration observes it.
-    let lock = read_durable_lock(&root);
-    let root_world = durable_world(&root, &root, &workspace.root_manifest, lock.as_ref());
-
     // The per-unit table and the two sets the node lane's composition
     // reads from it: which units carry a compiled STATIC (the
     // substitution set) and which shared packages hoist to the root.
-    let resolution: Vec<ResolvedDep> = read_materialised(&root)?;
+    let resolution: Vec<ResolvedDep> = read_durable_resolution(&root)?;
+    let world = ExtensionWorldEpoch::from_resolution(&root, &resolution).map_err(world_error)?;
     let table = build_unit_table(&root, &resolution);
     let with_static = with_static_set(&table);
     let pulls = hoist::soft_static_pulls(&table);
@@ -145,16 +143,9 @@ pub fn analyze_node_lane(
         .map(|entry| (entry.origin.clone(), entry.path.clone()))
         .collect();
 
-    // The node lane's own owner-scoped plan — the root reuses the run's
-    // one snapshot; a member takes its own seating of the same lock.
-    let member_world;
-    let node_world = if node_rel == "." {
-        root_world.as_ref()
-    } else {
-        member_world = durable_world(&root, &node_dir, &node_manifest, lock.as_ref());
-        member_world.as_ref()
-    };
-    let transforms = node_owner_plan(node_world, node_rel)?;
+    // The node lane's own owner-scoped plan. Root and members take distinct
+    // host seats over this same exact parsed package epoch.
+    let transforms = node_owner_plan(&world, &node_dir, &node_manifest, node_rel)?;
 
     let compiled = boot_artifacts::compile_static_analyzed(
         &effective,

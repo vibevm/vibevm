@@ -269,7 +269,7 @@ fn apply_resolution_places_an_in_place_package_in_an_unversioned_slot() {
     write(clone.path(), "boot/giant.md", "# giant boot");
     let manifest = Manifest::read(clone.path().join("vibe.toml")).unwrap();
     let dep = ResolvedDep {
-        kind: PackageKind::Flow,
+        kind: PackageKind::Feat,
         group: Group::parse("org.vibevm").unwrap(),
         name: "giant".to_string(),
         version: ver("1.0.0"),
@@ -383,7 +383,7 @@ fn dep_in_place_with_pre_hook(name: &str, version: &str) -> (ResolvedDep, TempDi
     );
     let manifest = Manifest::read(pkg.path().join("vibe.toml")).unwrap();
     let dep = ResolvedDep {
-        kind: PackageKind::Flow,
+        kind: PackageKind::Feat,
         group: Group::parse("org.vibevm").unwrap(),
         name: name.to_string(),
         version: ver(version),

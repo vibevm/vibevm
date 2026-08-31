@@ -12,6 +12,8 @@ use super::test_helpers::*;
 use super::*;
 use std::path::Path;
 use tempfile::TempDir;
+use vibe_core::PackageName;
+use vibe_core::manifest::{LockedPackage, Lockfile};
 
 struct SourceHash;
 
@@ -23,6 +25,50 @@ impl SlotVerifier for SourceHash {
     fn verify_slot(&self, _dep: &ResolvedDep, _slot_abs: &Path) -> SlotCheck {
         SlotCheck::Unverifiable
     }
+}
+
+fn publish_resolution_lock(root: &Path, resolution: &[ResolvedDep]) {
+    let mut lock = Lockfile::empty("fixture", "1970-01-01T00:00:00Z");
+    lock.packages = resolution
+        .iter()
+        .map(|dep| LockedPackage {
+            kind: dep.kind,
+            name: PackageName::parse(&dep.name).unwrap(),
+            group: dep.group.clone(),
+            version: dep.version.clone(),
+            registry: None,
+            source_url: "file:///fixture".into(),
+            source_ref: None,
+            resolved_commit: None,
+            content_hash: dep.source_hash.clone().unwrap(),
+            boot_snippet: None,
+            files_written: Vec::new(),
+            dependencies: dep
+                .requires
+                .iter()
+                .map(|(group, name)| {
+                    let version = resolution
+                        .iter()
+                        .find(|target| &target.group == group && &target.name == name)
+                        .unwrap()
+                        .version
+                        .clone();
+                    vibe_core::PackageRef::parse(&format!("{group}/{name}@={version}")).unwrap()
+                })
+                .collect(),
+            admitted_by: dep.admitted_by.clone(),
+            via_override: dep.via_override.clone(),
+            overridden: false,
+            source_kind: None,
+            via_redirect: None,
+            features: Vec::new(),
+            subskills_active: Vec::new(),
+            describes: None,
+            language: None,
+            materialization: dep.manifest.package.as_ref().unwrap().materialization,
+        })
+        .collect();
+    lock.write(root.join(Lockfile::FILENAME)).unwrap();
 }
 
 #[test]
@@ -438,7 +484,9 @@ fn verify_boot_graph_detects_a_stale_artifact() {
     );
 
     let ws = Workspace::load(ws_dir.path()).unwrap();
-    apply_resolution(&ws, &[parent, child], SlotIntegrity::TrustPresence, None).unwrap();
+    let resolution = vec![parent, child];
+    apply_resolution(&ws, &resolution, SlotIntegrity::TrustPresence, None).unwrap();
+    publish_resolution_lock(ws_dir.path(), &resolution);
 
     // A freshly generated graph is consistent.
     let clean = super::bootgen::verify_boot_graph(&ws).unwrap();

@@ -7,13 +7,13 @@ use std::fs;
 use std::path::Path;
 
 use specmark::spec;
-use vibe_core::manifest::{BootCategory, LinkType, Lockfile, Manifest, SpecFormat};
+use vibe_core::manifest::{BootCategory, LinkType, Manifest, SpecFormat};
 use vibe_core::{Group, layout};
 use vibe_spec::TransformPlan;
 
 use crate::boot::hybrid::{UnitId, fingerprint, hoist};
 use crate::boot::{self, AuthoredBoot, DependencyBoot, NodeBootInputs};
-use crate::extension_world::{DurableExtensionWorld, collect_owner_view};
+use crate::extension_world::{ExtensionWorldEpoch, collect_owner_view};
 use crate::{Workspace, WorkspaceError, boot_artifacts, layout_paths, path_to_slash, vibedeps};
 
 use super::{ResolvedDep, io_err};
@@ -22,9 +22,7 @@ use super::{ResolvedDep, io_err};
 /// file keeps its length budget while the composition above stays readable.
 #[path = "bootgen/owner_plans.rs"]
 mod owner_plans;
-use owner_plans::{
-    durable_world, node_owner_plan, plan_digest_frames, read_durable_lock, unit_owner_plans,
-};
+use owner_plans::{node_owner_plan, plan_digest_frames, unit_owner_plans};
 
 #[path = "bootgen/hybrid_emit.rs"]
 mod hybrid_emit;
@@ -38,7 +36,7 @@ pub use analyze::{AnalyzedLane, analyze_node_lane};
 
 /// The workspace root's B-031 `<group>/<name>` self coordinate, when declared.
 mod materialised_read;
-use materialised_read::read_materialised;
+pub(super) use materialised_read::read_durable_resolution;
 mod conditions;
 mod snippet_source;
 mod transitive;
@@ -95,19 +93,12 @@ pub fn regenerate_boot_from_traced(
     // `group`) declares none.
     let self_coord = root_self_coordinate(&workspace.root_manifest);
 
-    // ONE durable-world observation per run (R4 architecture §4.2): the
-    // absolute root lock is read once here and never again below. The world
-    // seated at the ROOT node serves both the per-unit lanes (whose owners
-    // take the host seat through the kernel's own projection) and the root
-    // node's own lane; a MEMBER node needs its own seating, and takes it
-    // inside the loop.
-    let lock = read_durable_lock(&workspace.root);
-    let root_world = durable_world(
-        &workspace.root,
-        &workspace.root,
-        &workspace.root_manifest,
-        lock.as_ref(),
-    );
+    // ONE explicit command-owned world per run (R5.4 EPOCH-WORLD). The exact
+    // supplied resolution is the authority for package order, manifests and
+    // materialised roots. Ambient `vibe.lock` is deliberately not observed:
+    // during Ready install it still describes the pre-install world.
+    let world = ExtensionWorldEpoch::from_resolution(&workspace.root, resolution)
+        .map_err(owner_plans::world_error)?;
 
     // The per-unit compiler (PROP-038 §2.1): emit each materialised package's
     // own STATIC.md / INDEX.md from its own edges, and learn which packages
@@ -120,7 +111,7 @@ pub fn regenerate_boot_from_traced(
     // fingerprints: an owner plan's digest is an INPUT to its unit's
     // freshness, so the plans must exist first, and the very same plans are
     // handed to emission below rather than lowered a second time in the loop.
-    let unit_plans = unit_owner_plans(root_world.as_ref(), &table)?;
+    let unit_plans = unit_owner_plans(&world, &table)?;
     // Boot-graph fingerprints (PROP-038 §2.7) drive the dirty-subgraph skip in
     // per-unit emission (§2.8) — a package whose fingerprint is unchanged is
     // not recompiled. Keyed on each unit's resolved version, plus the owner
@@ -215,17 +206,9 @@ pub fn regenerate_boot_from_traced(
         // single-copies count as present, and before the artifact write so the
         // rendered lane is the once-each form.
         desubstitute_covered_units(&mut effective, &table);
-        // This node's OWN lane plan (PROP-054 ##COMPILE-ACTIVATION): the
-        // root reuses the run's one snapshot, whose host seat already IS the
-        // root node; a member is a different host and takes its own seating
-        // of the same lock.
-        let member_world;
-        let node_world = if rel == "." {
-            root_world.as_ref()
-        } else {
-            member_world = durable_world(&workspace.root, &node_dir, manifest, lock.as_ref());
-            member_world.as_ref()
-        };
+        // This node's OWN lane plan (PROP-054 ##COMPILE-ACTIVATION). Root and
+        // members take distinct host seats over the same parsed package epoch;
+        // no member reparses or reorders the installed world.
         boot_artifacts::write_boot_artifacts_traced(
             &node_dir,
             rel,
@@ -234,7 +217,7 @@ pub fn regenerate_boot_from_traced(
             &effective,
             spec_format,
             trace,
-            node_owner_plan(node_world, rel)?,
+            node_owner_plan(&world, &node_dir, manifest, rel)?,
         )?;
         nodes_regenerated.push(rel.to_string());
     }
@@ -246,7 +229,7 @@ pub fn regenerate_boot(workspace: &Workspace) -> Result<Vec<String>, WorkspaceEr
     regenerate_boot_with_spec_format(workspace, SpecFormat::Mixed)
 }
 
-/// Regenerate the materialised dependency tree in the selected format.
+/// Regenerate the durable lock-named dependency tree in the selected format.
 pub fn regenerate_boot_with_spec_format(
     workspace: &Workspace,
     spec_format: SpecFormat,
@@ -265,7 +248,7 @@ pub fn regenerate_boot_traced(
     // PROP-012 §2.4 — reject a malformed instruction-file block before
     // any boot-artifact write.
     validate_redirect_blocks(workspace)?;
-    let resolution = read_materialised(&workspace.root)?;
+    let resolution = read_durable_resolution(&workspace.root)?;
     regenerate_boot_from_traced(workspace, &resolution, spec_format, trace)
 }
 
@@ -280,24 +263,20 @@ pub fn regenerate_boot_traced(
     r = 1
 )]
 pub fn verify_boot_graph(workspace: &Workspace) -> Result<Vec<UnitId>, WorkspaceError> {
-    let resolution = read_materialised(&workspace.root)?;
+    let resolution = read_durable_resolution(&workspace.root)?;
+    let world = ExtensionWorldEpoch::from_resolution(&workspace.root, &resolution)
+        .map_err(owner_plans::world_error)?;
     let table = build_unit_table(&workspace.root, &resolution);
     let versions: HashMap<UnitId, String> = resolution
         .iter()
         .map(|d| ((d.group.clone(), d.name.clone()), d.version.to_string()))
         .collect();
-    // The check half observes the SAME world the generate half does, and
+    // The check half constructs the SAME explicit world the generate half
+    // does from the exact materialised resolution, and
     // frames the same owner-plan digests (R4 architecture §7.1). Recomputing
     // without them would call every unit whose owner activates a transform
     // stale on a tree the generator had just left fresh.
-    let lock = read_durable_lock(&workspace.root);
-    let world = durable_world(
-        &workspace.root,
-        &workspace.root,
-        &workspace.root_manifest,
-        lock.as_ref(),
-    );
-    let unit_plans = unit_owner_plans(world.as_ref(), &table)?;
+    let unit_plans = unit_owner_plans(&world, &table)?;
     let fps = fingerprint::fingerprints(&table, &versions, &plan_digest_frames(&unit_plans));
     Ok(verify_fingerprints(
         &workspace.root,

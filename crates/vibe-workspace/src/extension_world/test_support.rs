@@ -12,6 +12,7 @@ use vibe_core::{ContentHash, Group, PackageKind, PackageName, PackageRef};
 use vibe_extension_registry::{DependencyProviderId, ExtensionRegistry, ExtensionRegistryRow};
 
 use super::DurableExtensionWorld;
+use crate::install::ResolvedDep;
 use crate::vibedeps::slot_abs_path;
 
 pub(super) fn group(spelling: &str) -> Group {
@@ -81,6 +82,43 @@ pub(super) fn lock(packages: Vec<LockedPackage>) -> Lockfile {
     let mut lockfile = Lockfile::empty("fixture", "1970-01-01T00:00:00Z");
     lockfile.packages = packages;
     lockfile
+}
+
+/// One exact installed-world row built from the manifest already parsed from
+/// its materialised slot. The product epoch consumes this value without a
+/// second manifest or lock read.
+pub(super) fn resolved(
+    root: &Path,
+    group_spelling: &str,
+    name_spelling: &str,
+    edges: &[&str],
+) -> ResolvedDep {
+    let group = group(group_spelling);
+    let version = version("1.0.0");
+    let slot = slot_abs_path(root, &group, name_spelling, &version);
+    ResolvedDep {
+        kind: PackageKind::Tool,
+        group,
+        name: name_spelling.to_owned(),
+        version,
+        content_dir: slot.clone(),
+        source_hash: Some(ContentHash::parse("sha256:aa").unwrap()),
+        manifest: Manifest::read(slot.join(Manifest::FILENAME)).unwrap(),
+        requires: edges
+            .iter()
+            .map(|edge| {
+                let reference = PackageRef::parse(edge).unwrap();
+                (
+                    reference.group.expect("fixture edges are qualified"),
+                    reference.name.as_str().to_owned(),
+                )
+            })
+            .collect(),
+        admitted_by: None,
+        via_override: None,
+        source_mutable: false,
+        in_place_changed: None,
+    }
 }
 
 /// Write the selected node's own manifest and parse it back, so the fixture

@@ -5,16 +5,225 @@
 //! sibling assertion cells along the `transform/plan_test_support.rs` seam.
 
 use specmark::verifies;
+use std::fs;
 use tempfile::TempDir;
-use vibe_core::manifest::{Manifest, ProjectSection};
+
+use vibe_core::manifest::{Lockfile, Manifest, ProjectSection};
 use vibe_extension_registry::{ContributionTier, ExtensionProvider};
 
 use super::test_support::{
-    fixture, found, group, id, key, keys, lock, locked, node, row, slot, world,
+    fixture, found, group, id, key, keys, lock, locked, node, resolved, row, slot, world,
 };
-use super::{DurableExtensionWorld, ExtensionWorldError, collect_owner_view};
+use super::{DurableExtensionWorld, ExtensionWorldEpoch, ExtensionWorldError, collect_owner_view};
 
 // --- the REDs -----------------------------------------------------------
+
+/// The supplied resolution is the epoch authority even while disk lock state
+/// is stale or malformed. Package order is exactly the supplied order, never
+/// a name sort or ambient reconstruction.
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#ORDER-LAW")]
+fn ordered_resolution_wins_over_ambient_lock_state() {
+    let (workspace, manifest, _lockfile) = fixture();
+    let root = workspace.path();
+    let resolution = vec![
+        resolved(root, "org.mid", "m-tools", &[]),
+        resolved(root, "org.aaa", "a-tools", &[]),
+        resolved(root, "org.zed", "z-tools", &["org.aaa/a-tools@=1.0.0"]),
+    ];
+
+    // A stale but parseable lock names no packages.
+    Lockfile::empty("stale", "1970-01-01T00:00:00Z")
+        .write(root.join(Lockfile::FILENAME))
+        .unwrap();
+    let epoch = ExtensionWorldEpoch::from_resolution(root, &resolution)
+        .expect("the supplied resolution, not the stale lock, is authoritative");
+    assert_eq!(
+        keys(
+            epoch
+                .installed()
+                .map(|source| source.provider.id.to_string())
+        ),
+        ["org.mid/m-tools", "org.aaa/a-tools", "org.zed/z-tools"]
+    );
+    assert_eq!(
+        epoch
+            .node_owner_view(root, &manifest)
+            .expect("the supplied world resolves the node closure")
+            .installed
+            .len(),
+        3
+    );
+
+    // Malformed ambient bytes are equally irrelevant to the same epoch.
+    fs::write(root.join(Lockfile::FILENAME), "not a lockfile").unwrap();
+    assert!(ExtensionWorldEpoch::from_resolution(root, &resolution).is_ok());
+}
+
+/// Package closure follows the effective edges supplied by resolution/lock,
+/// not every raw manifest requirement. The omitted row models an optional or
+/// feature-excluded dependency that remains declared but is not in this graph.
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#ORDER-LAW")]
+fn package_owner_closure_uses_only_effective_supplied_edges() {
+    let workspace = TempDir::new().unwrap();
+    let root = workspace.path();
+    slot(
+        root,
+        "org.edge",
+        "owner",
+        r#"
+[package]
+group = "org.edge"
+name = "owner"
+kind = "tool"
+version = "1.0.0"
+
+[requires.packages]
+"org.edge/active" = "=1.0.0"
+"org.edge/feature-excluded" = "=1.0.0"
+"#,
+    );
+    for name in ["active", "feature-excluded"] {
+        slot(
+            root,
+            "org.edge",
+            name,
+            &format!(
+                "[package]\ngroup = \"org.edge\"\nname = \"{name}\"\nkind = \"tool\"\nversion = \"1.0.0\"\n"
+            ),
+        );
+    }
+    let manifest = node(root, "[project]\nname = \"host\"\nversion = \"0.1.0\"\n");
+    let resolution = vec![
+        resolved(root, "org.edge", "owner", &["org.edge/active@=1.0.0"]),
+        resolved(root, "org.edge", "active", &[]),
+        resolved(root, "org.edge", "feature-excluded", &[]),
+    ];
+    let owner = id("org.edge", "owner");
+    let epoch = ExtensionWorldEpoch::from_resolution(root, &resolution).unwrap();
+    assert_eq!(
+        keys(
+            epoch
+                .package_owner_view(&owner)
+                .unwrap()
+                .installed
+                .iter()
+                .map(|source| source.provider.id.to_string())
+        ),
+        ["org.edge/active"],
+    );
+    assert_eq!(
+        epoch
+            .package_manifest(&owner)
+            .unwrap()
+            .requires
+            .packages
+            .len(),
+        2,
+        "the raw excluded declaration is retained, but it is not a graph edge"
+    );
+
+    let durable = DurableExtensionWorld::from_lock(
+        root,
+        root,
+        &manifest,
+        &lock(vec![
+            locked("org.edge", "owner", &["org.edge/active@=1.0.0"]),
+            locked("org.edge", "active", &[]),
+            locked("org.edge", "feature-excluded", &[]),
+        ]),
+    )
+    .unwrap();
+    assert_eq!(
+        keys(
+            durable
+                .package_owner_view(&owner)
+                .unwrap()
+                .installed
+                .iter()
+                .map(|source| source.provider.id.to_string())
+        ),
+        ["org.edge/active"],
+        "the strict lock adapter follows the same effective-edge law"
+    );
+}
+
+/// Resolution shape errors are typed at the epoch boundary rather than
+/// coalesced, defaulted or recovered from ambient state.
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM")]
+fn malformed_resolution_rows_refuse_by_exact_shape() {
+    let (workspace, _manifest, _lockfile) = fixture();
+    let root = workspace.path();
+    let dep = resolved(root, "org.mid", "m-tools", &[]);
+
+    let error = ExtensionWorldEpoch::from_resolution(root, &[dep.clone(), dep.clone()])
+        .expect_err("duplicate package rows refuse");
+    assert!(matches!(
+        error,
+        ExtensionWorldError::DuplicatePackage { .. }
+    ));
+
+    let mut duplicate_edge = resolved(
+        root,
+        "org.zed",
+        "z-tools",
+        &["org.aaa/a-tools@=1.0.0", "org.aaa/a-tools@=1.0.0"],
+    );
+    let error = ExtensionWorldEpoch::from_resolution(root, &[duplicate_edge.clone()])
+        .expect_err("duplicate effective edges refuse");
+    assert!(matches!(error, ExtensionWorldError::DuplicateEdge { .. }));
+    duplicate_edge.requires.pop();
+
+    let mut mismatch = dep.clone();
+    mismatch.name = "another-name".to_owned();
+    let error = ExtensionWorldEpoch::from_resolution(root, &[mismatch])
+        .expect_err("resolution/manifest identity disagreement refuses");
+    assert!(matches!(
+        error,
+        ExtensionWorldError::ResolutionIdentityMismatch { .. }
+    ));
+
+    let mut missing_hash = dep.clone();
+    missing_hash.source_hash = None;
+    let error = ExtensionWorldEpoch::from_resolution(root, &[missing_hash])
+        .expect_err("a provider without its content witness refuses");
+    assert!(matches!(
+        error,
+        ExtensionWorldError::ResolutionWithoutContentHash { .. }
+    ));
+
+    fs::remove_dir_all(&dep.content_dir).unwrap();
+    let error = ExtensionWorldEpoch::from_resolution(root, &[dep])
+        .expect_err("a named materialised root must exist");
+    assert!(matches!(error, ExtensionWorldError::MissingSlot { .. }));
+}
+
+/// Empty is a first-class epoch value. It serves a truly empty host while a
+/// package owner outside it still refuses with the typed unknown-owner arm.
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-ACTIVATION")]
+fn empty_epoch_is_explicit_and_unknown_package_owner_refuses() {
+    let workspace = TempDir::new().unwrap();
+    let manifest = node(
+        workspace.path(),
+        "[project]\nname = \"empty\"\nversion = \"0.1.0\"\n",
+    );
+    let epoch = ExtensionWorldEpoch::empty();
+    assert_eq!(epoch.installed().count(), 0);
+    assert!(
+        epoch
+            .node_owner_view(workspace.path(), &manifest)
+            .unwrap()
+            .installed
+            .is_empty()
+    );
+    let error = epoch
+        .package_owner_view(&id("org.ghost", "missing"))
+        .expect_err("an explicit empty epoch installs no package owner");
+    assert!(matches!(error, ExtensionWorldError::UnknownOwner { .. }));
+}
 
 /// Root lock order is the only dependency order the world knows. The fixture
 /// lock is deliberately the reverse of alphabetical, so a name sort anywhere
@@ -287,6 +496,44 @@ version = "1.0.0"
     let message = error.to_string();
     assert!(message.contains("flow:org.aaa/a-tools@1.0.0"), "{message}");
     assert!(message.contains("tool:org.aaa/a-tools@1.0.0"), "{message}");
+}
+
+/// Lock materialisation selects the physical slot genre independently of the
+/// identity tuple. A manifest cannot redirect a locked copy row to in-place.
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM")]
+fn a_slot_materialization_disagreement_refuses_typed() {
+    let workspace = TempDir::new().unwrap();
+    let root = workspace.path();
+    slot(
+        root,
+        "org.aaa",
+        "a-tools",
+        r#"
+[package]
+group = "org.aaa"
+name = "a-tools"
+kind = "tool"
+version = "1.0.0"
+materialization = "in-place"
+"#,
+    );
+    let manifest = node(root, "[project]\nname = \"demo\"\nversion = \"0.1.0\"\n");
+    let error = DurableExtensionWorld::from_lock(
+        root,
+        root,
+        &manifest,
+        &lock(vec![locked("org.aaa", "a-tools", &[])]),
+    )
+    .expect_err("the lock says copy while the retained manifest says in-place");
+    assert!(matches!(
+        error,
+        ExtensionWorldError::SlotMaterializationMismatch {
+            declared: "in-place",
+            locked: "copy",
+            ..
+        }
+    ));
 }
 
 /// A coordinate the root lock does not install owns no unit lane in this

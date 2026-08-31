@@ -29,9 +29,10 @@ use std::fs;
 
 use specmark::verifies;
 use tempfile::TempDir;
-use vibe_core::manifest::{LockedPackage, Materialization};
+use vibe_core::manifest::Manifest;
 use vibe_core::{ContentHash, PackageKind};
 
+use crate::install::ResolvedDep;
 use crate::vibedeps::slot_abs_path;
 
 /// The three builtin names, distinct within the bounded preview window.
@@ -76,13 +77,13 @@ handler = {{ kind = "builtin", name = "{behavior}" }}
 
 /// One workspace whose node and whose single installed package EACH declare
 /// their own `compile:document` extension, and nothing else.
-fn world() -> (TempDir, DurableExtensionWorld) {
+fn world() -> (TempDir, Manifest, ExtensionWorldEpoch) {
     world_with_host_controls("")
 }
 
 /// [`world`], with extra host-manifest `[extensions]` controls appended —
 /// the seam the collection-refusal pin drives.
-fn world_with_host_controls(controls: &str) -> (TempDir, DurableExtensionWorld) {
+fn world_with_host_controls(controls: &str) -> (TempDir, Manifest, ExtensionWorldEpoch) {
     let workspace = TempDir::new().expect("a temp workspace");
     let root = workspace.path();
 
@@ -110,12 +111,9 @@ handler = {{ kind = "builtin", name = "{NODE_BEHAVIOR}" }}
     .expect("the node manifest");
     let manifest = Manifest::read(root.join(Manifest::FILENAME)).expect("the node manifest parses");
 
-    let mut lockfile = Lockfile::empty("fixture", "1970-01-01T00:00:00Z");
-    lockfile.packages = vec![locked("tools")];
-
-    let world = durable_world(root, root, &manifest, Some(&lockfile))
-        .expect("the fixture lock and tree agree, so a world is observable");
-    (workspace, world)
+    let world = ExtensionWorldEpoch::from_resolution(root, &[resolved(root, "tools")])
+        .expect("the supplied installed world is exact");
+    (workspace, manifest, world)
 }
 
 /// [`world`], plus a SECOND installed package whose own declaration also
@@ -125,46 +123,36 @@ handler = {{ kind = "builtin", name = "{NODE_BEHAVIOR}" }}
 /// installed and owns its own unit lane, which is all a lane owner needs, and
 /// leaving it outside the node's closure keeps every node-lane assertion in
 /// this cell reading exactly what it read before.
-fn world_with_two_refusing_owners() -> (TempDir, DurableExtensionWorld) {
-    let (workspace, _) = world();
+fn world_with_two_refusing_owners() -> (TempDir, Manifest, ExtensionWorldEpoch) {
+    let (workspace, manifest, _) = world();
     let root = workspace.path();
     write_package_slot(root, SECOND_PACKAGE, SECOND_PACKAGE_BEHAVIOR);
-    let manifest = Manifest::read(root.join(Manifest::FILENAME)).expect("the node manifest parses");
-    let mut lockfile = Lockfile::empty("fixture", "1970-01-01T00:00:00Z");
-    // Lock order deliberately puts the second package LAST, so a walk that
-    // followed lock order rather than canonical unit order would answer
-    // `tools` and the pin would be red.
-    lockfile.packages = vec![locked("tools"), locked(SECOND_PACKAGE)];
-    let world = durable_world(root, root, &manifest, Some(&lockfile))
-        .expect("the fixture lock and tree agree, so a world is observable");
-    (workspace, world)
+    let world = ExtensionWorldEpoch::from_resolution(
+        root,
+        &[resolved(root, "tools"), resolved(root, SECOND_PACKAGE)],
+    )
+    .expect("the supplied installed world is exact");
+    (workspace, manifest, world)
 }
 
-/// One locked package in the shape the durable world adapter reads.
-fn locked(name: &str) -> LockedPackage {
-    LockedPackage {
+/// One supplied ordered-resolution row in the shape the epoch reads.
+fn resolved(root: &Path, name: &str) -> ResolvedDep {
+    let group = Group::parse("org.pkgs").expect("a valid group");
+    let version = semver::Version::parse("1.0.0").expect("a valid version");
+    let slot = slot_abs_path(root, &group, name, &version);
+    ResolvedDep {
         kind: PackageKind::Tool,
-        name: PackageName::parse(name).expect("a valid name"),
-        group: Group::parse("org.pkgs").expect("a valid group"),
-        version: semver::Version::parse("1.0.0").expect("a valid version"),
-        registry: None,
-        source_url: "file:///fixture".into(),
-        source_ref: None,
-        resolved_commit: None,
-        content_hash: ContentHash::parse("sha256:aa").expect("a valid hash"),
-        boot_snippet: None,
-        files_written: Vec::new(),
-        dependencies: Vec::new(),
+        group,
+        name: name.to_owned(),
+        version,
+        content_dir: slot.clone(),
+        source_hash: Some(ContentHash::parse("sha256:aa").expect("a valid hash")),
+        manifest: Manifest::read(slot.join(Manifest::FILENAME)).expect("the package manifest"),
+        requires: Vec::new(),
         admitted_by: None,
         via_override: None,
-        overridden: false,
-        source_kind: None,
-        via_redirect: None,
-        features: Vec::new(),
-        subskills_active: Vec::new(),
-        describes: None,
-        language: None,
-        materialization: Materialization::Copy,
+        source_mutable: false,
+        in_place_changed: None,
     }
 }
 
@@ -198,9 +186,10 @@ fn uninstalled_unit() -> UnitId {
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-ACTIVATION")]
 fn the_node_lane_and_the_unit_lane_are_scoped_by_different_manifests() {
-    let (_workspace, world) = world();
+    let (workspace, manifest, world) = world();
 
-    let node = node_owner_plan(Some(&world), ".").expect_err("an off-catalog builtin name refuses");
+    let node = node_owner_plan(&world, workspace.path(), &manifest, ".")
+        .expect_err("an off-catalog builtin name refuses");
     let node = node.to_string();
     assert!(
         node.contains("`.`"),
@@ -217,7 +206,7 @@ fn the_node_lane_and_the_unit_lane_are_scoped_by_different_manifests() {
     );
 
     let package =
-        unit_owner_plan(Some(&world), &unit()).expect_err("an off-catalog builtin name refuses");
+        unit_owner_plan(&world, &unit()).expect_err("an off-catalog builtin name refuses");
     let package = package.to_string();
     assert!(
         package.contains("`org.pkgs/tools`"),
@@ -233,72 +222,50 @@ fn the_node_lane_and_the_unit_lane_are_scoped_by_different_manifests() {
     );
 }
 
-/// A world the adapter does not install owns no lane in it, so it compiles
-/// with the empty plan — the same answer a tree with no lock gets, and for
-/// the same reason (R4 architecture §3's orphan rule).
+/// A package absent from the explicit epoch is a caller/world disagreement,
+/// never an empty plan. The empty package epoch remains lawful for an empty
+/// NODE because that host still has an explicit owner view.
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-ACTIVATION")]
-fn an_uninstalled_unit_and_a_lockless_tree_both_take_the_empty_plan() {
-    let (_workspace, world) = world();
+fn an_uninstalled_unit_refuses_while_an_explicit_empty_node_epoch_is_lawful() {
+    let (_workspace, _manifest, world) = world();
     let orphan = uninstalled_unit();
+    let error = unit_owner_plan(&world, &orphan)
+        .expect_err("a package outside the supplied epoch owns no unit lane");
+    assert!(error.to_string().contains("not-installed"), "{error}");
+
+    let empty_root = TempDir::new().expect("an empty workspace");
+    let empty_manifest = Manifest::default();
     assert!(
-        unit_owner_plan(Some(&world), &orphan)
-            .expect("an orphan is outside the extension world, not a fault")
-            .is_empty()
-    );
-    assert!(
-        node_owner_plan(None, ".")
-            .expect("no lock, no world")
-            .is_empty()
-    );
-    assert!(
-        unit_owner_plan(None, &unit())
-            .expect("no lock, no world")
-            .is_empty()
+        node_owner_plan(
+            &ExtensionWorldEpoch::empty(),
+            empty_root.path(),
+            &empty_manifest,
+            ".",
+        )
+        .expect("an explicitly empty host world is lawful")
+        .is_empty()
     );
 }
 
-/// A lock that DISAGREES with the tree yields no observable world, and that
-/// is not a fault at this seam (module doc, rule 1).
-///
-/// This is the ordinary mid-`vibe install` state, not a corner case: the
-/// boot lane is written before the resolution's lock is published, so the
-/// file on disk still lacks the package the node now requires. Refusing
-/// there would fail every install that adds a dependency — which is exactly
-/// what the first threading of this atom did, and what `cli_clean_and_world`
-/// caught.
+/// A node whose explicit epoch cannot resolve its authored closure refuses.
+/// There is no optional observation seam left to turn this disagreement into
+/// an empty plan.
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-ACTIVATION")]
-fn a_lock_that_disagrees_with_the_tree_is_unobservable_rather_than_malformed() {
-    let (workspace, _) = world();
-    let root = workspace.path();
-    let manifest = Manifest::read(root.join(Manifest::FILENAME)).expect("the node manifest");
-
-    // The PRE-install epoch: a lock that does not yet know the package the
-    // node requires. The world adapter itself refuses this — that strictness
-    // is its own, and is asserted here so the tolerance below cannot be
-    // mistaken for the adapter having gone soft.
-    let stale = Lockfile::empty("fixture", "1970-01-01T00:00:00Z");
-    assert!(
-        DurableExtensionWorld::from_lock(root, root, &manifest, &stale)
-            .expect("the snapshot itself succeeds: an empty lock materialises no slot")
-            .node_owner_view()
-            .is_err(),
-        "the adapter refuses a closure its lock cannot resolve"
-    );
-
-    // The seam observes nothing and writes the historical lane.
-    let world = durable_world(root, root, &manifest, Some(&stale));
-    assert!(
-        node_owner_plan(world.as_ref(), ".")
-            .expect("a disagreement is not a fault at a seam that owns no epoch")
-            .is_empty()
-    );
-    assert!(
-        unit_owner_plan(world.as_ref(), &unit())
-            .expect("same for a unit lane")
-            .is_empty()
-    );
+fn an_explicit_epoch_closure_failure_propagates() {
+    let (workspace, manifest, _world) = world();
+    let error = node_owner_plan(
+        &ExtensionWorldEpoch::empty(),
+        workspace.path(),
+        &manifest,
+        ".",
+    )
+    .expect_err("the host requires a package the supplied epoch does not install");
+    let WorkspaceError::ExtensionWorld { source } = &error else {
+        panic!("a closure refusal keeps its typed world arm: {error}")
+    };
+    assert!(source.to_string().contains("org.pkgs/tools"), "{source}");
 }
 
 /// Rule 2's COLLECTION half: once a world is observed, a refusal of the one
@@ -314,7 +281,7 @@ fn a_lock_that_disagrees_with_the_tree_is_unobservable_rather_than_malformed() {
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-ACTIVATION")]
 fn an_observed_worlds_collection_refusal_propagates_rather_than_emptying() {
-    let (_workspace, world) = world_with_host_controls(
+    let (workspace, manifest, world) = world_with_host_controls(
         r#"
 [[extensions.use]]
 ref = "org.pkgs/tools#package-only-transform"
@@ -323,7 +290,7 @@ ref = "org.pkgs/tools#package-only-transform"
 ref = "org.pkgs/tools#package-only-transform"
 "#,
     );
-    let error = node_owner_plan(Some(&world), ".")
+    let error = node_owner_plan(&world, workspace.path(), &manifest, ".")
         .expect_err("a duplicate activation is a declaration defect, not an unobservable world");
     let WorkspaceError::ExtensionWorld { source } = &error else {
         panic!("a collection refusal keeps its own typed arm: {error}")
@@ -361,8 +328,8 @@ fn the_per_unit_emission_path_asks_for_the_packages_own_plan() {
     );
     let composition = include_str!("../bootgen.rs");
     assert!(
-        composition.contains("unit_owner_plans(root_world.as_ref(), &table)"),
-        "every table unit's plan is lowered once, from the run's ONE world snapshot"
+        composition.contains("unit_owner_plans(&world, &table)"),
+        "every table unit's plan is lowered once, from the run's ONE explicit epoch"
     );
     // TWO occurrences, counted rather than merely found: the generate half
     // AND `verify_boot_graph`'s check half must frame the same digests, or
@@ -380,7 +347,7 @@ fn the_per_unit_emission_path_asks_for_the_packages_own_plan() {
          generate and the verify composition, never beside them"
     );
     assert!(
-        composition.contains("unit_owner_plans(world.as_ref(), &table)"),
+        composition.contains("unit_owner_plans(&world, &table)"),
         "the check half lowers the same per-unit plans from its own observation"
     );
     // The canonical walk USED to be fenced here by spelling, because no
@@ -401,8 +368,8 @@ fn the_per_unit_emission_path_asks_for_the_packages_own_plan() {
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-ACTIVATION")]
 fn every_table_unit_is_lowered_once_and_only_a_nonempty_plan_frames() {
-    let (_workspace, world) = world();
-    let table: HashMap<UnitId, UnitInput> = [unit(), uninstalled_unit()]
+    let (_workspace, _manifest, world) = world();
+    let table: HashMap<UnitId, UnitInput> = [unit()]
         .into_iter()
         .map(|id| (id, empty_unit_input()))
         .collect();
@@ -410,18 +377,16 @@ fn every_table_unit_is_lowered_once_and_only_a_nonempty_plan_frames() {
     // The installed unit declares a `compile:document` builtin the empty T5
     // catalog cannot resolve, so lowering the whole table refuses — which is
     // itself the proof that EVERY unit is lowered, not just the emitted ones.
-    let error =
-        unit_owner_plans(Some(&world), &table).expect_err("an off-catalog builtin name refuses");
+    let error = unit_owner_plans(&world, &table)
+        .expect_err("an off-catalog builtin name refuses before the later unknown owner");
     assert!(
         error.to_string().contains(PACKAGE_BEHAVIOR),
         "the refusal names the unit's own declaration: {error}"
     );
 
-    // With no world, every unit takes the empty plan — and an empty plan
-    // frames NOTHING, so no unit's fingerprint moves.
-    let plans = unit_owner_plans(None, &table).expect("no lock, no world");
-    assert_eq!(plans.len(), table.len(), "one plan per table unit");
-    assert!(plans.values().all(TransformPlan::is_empty));
+    // An explicitly empty map of empty plans frames NOTHING. World absence is
+    // no longer a way to manufacture these entries.
+    let plans = HashMap::from([(unit(), TransformPlan::empty())]);
     assert!(
         plan_digest_frames(&plans).is_empty(),
         "an owner that activates nothing contributes no frame"
@@ -443,14 +408,14 @@ fn every_table_unit_is_lowered_once_and_only_a_nonempty_plan_frames() {
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-ACTIVATION")]
 fn a_two_refuser_tree_names_the_same_owner_over_freshly_built_tables() {
-    let (_workspace, world) = world_with_two_refusing_owners();
+    let (_workspace, _manifest, world) = world_with_two_refusing_owners();
     for attempt in 0..32 {
         // A fresh table each round: a new `HashMap`, a new iteration order.
         let table: HashMap<UnitId, UnitInput> = [unit(), second_unit()]
             .into_iter()
             .map(|id| (id, empty_unit_input()))
             .collect();
-        let error = unit_owner_plans(Some(&world), &table)
+        let error = unit_owner_plans(&world, &table)
             .expect_err("both owners declare an off-catalog builtin")
             .to_string();
         assert!(

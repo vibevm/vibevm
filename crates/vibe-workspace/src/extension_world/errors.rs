@@ -40,19 +40,39 @@ pub enum ExtensionWorldError {
     )]
     UngroupedEdge { owner: String, edge: String },
 
-    /// A reachable coordinate is absent from the root lock. After the install
-    /// barrier this is a malformed durable world, never a tolerable omission:
-    /// hiding the provider would silently drop its contributions.
+    /// One ordered world contains the same package coordinate twice. Keeping
+    /// the last row would make order and provider authority depend on an
+    /// implementation detail of the index rather than the supplied epoch.
     #[error(
-        "`{owner}` reaches `{requirement}`, which is absent from the root lock \
+        "package `{package}` occurs more than once in the supplied extension-world epoch \
          (violates spec://org.vibevm.core/vibevm/common/PROP-054#ORDER-LAW; \
-         fix: run `vibe install` to relock the world)"
+         fix: supply one resolved row per package coordinate)"
+    )]
+    DuplicatePackage { package: String },
+
+    /// One owner reaches the same effective coordinate more than once in the
+    /// supplied graph. Coalescing would erase authored/resolved order and hide
+    /// a malformed authority.
+    #[error(
+        "`{owner}` carries duplicate dependency edge `{requirement}` in the supplied world \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#ORDER-LAW; \
+         fix: retain one effective edge to that package)"
+    )]
+    DuplicateEdge { owner: String, requirement: String },
+
+    /// A reachable coordinate is absent from the supplied installed world.
+    /// This is malformed, never a tolerable omission: hiding the provider
+    /// would silently drop its contributions.
+    #[error(
+        "`{owner}` reaches `{requirement}`, which is absent from the supplied installed world \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#ORDER-LAW; \
+         fix: supply a complete resolved world, or run `vibe install` to relock it)"
     )]
     UnlockedRequirement { owner: String, requirement: String },
 
-    /// A locked package has no materialised slot.
+    /// An installed-world package has no materialised slot.
     #[error(
-        "locked package `{package}` has no materialised slot `{}` \
+        "extension-world package `{package}` has no materialised slot `{}` \
          (violates spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM; \
          fix: run `vibe install` to materialise the slot)",
         .slot.display()
@@ -99,6 +119,57 @@ pub enum ExtensionWorldError {
         locked: String,
     },
 
+    /// The lock chooses which physical slot spelling is authoritative. A
+    /// manifest cannot redirect that locked row to a different materialisation
+    /// genre after the slot has been selected.
+    #[error(
+        "slot `{}` declares materialization `{declared}` but the root lock requires `{locked}` \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM; \
+         fix: rematerialise the locked package with matching copy, hardlink or in-place metadata)",
+        .slot.display()
+    )]
+    SlotMaterializationMismatch {
+        slot: PathBuf,
+        declared: &'static str,
+        locked: &'static str,
+    },
+
+    /// A present durable lock is not a regular file.
+    #[error(
+        "durable lock `{}` is not a regular file \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM; \
+         fix: replace it with one regular vibe.lock file, then retry)",
+        .path.display()
+    )]
+    NonRegularLock { path: PathBuf },
+
+    /// A present regular durable lock could not be parsed or validated.
+    #[error(
+        "durable lock `{}` is invalid: {reason} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM; \
+         fix: repair or regenerate vibe.lock, then retry)",
+        .path.display()
+    )]
+    InvalidLock { path: PathBuf, reason: String },
+
+    /// A supplied resolved row and its already-parsed package manifest do not
+    /// name the same provider.
+    #[error(
+        "resolved package `{package}` carries manifest identity `{declared}` \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM; \
+         fix: repair the resolution/manifest mismatch before boot generation)"
+    )]
+    ResolutionIdentityMismatch { package: String, declared: String },
+
+    /// Provider identity includes the package content witness. A resolution
+    /// without one cannot become an extension-world row by guesswork.
+    #[error(
+        "resolved package `{package}` carries no content hash for the extension-world epoch \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM; \
+         fix: finalize the resolved package content hash before boot generation)"
+    )]
+    ResolutionWithoutContentHash { package: String },
+
     /// `[active].stack` names no installed stack in this owner's closure.
     #[error(
         "`{owner}` declares `[active].stack = \"{stack}\"`, which names no installed stack in its \
@@ -124,7 +195,7 @@ pub enum ExtensionWorldError {
     #[error(
         "`{owner}` is not an installed package of this world, so it owns no unit lane in it \
          (violates spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-ACTIVATION; \
-         fix: ask for a coordinate the root lock installs)"
+         fix: ask for a coordinate the supplied installed world contains)"
     )]
     UnknownOwner { owner: String },
 
