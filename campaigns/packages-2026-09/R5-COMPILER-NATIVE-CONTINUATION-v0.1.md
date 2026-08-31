@@ -402,3 +402,33 @@ check/clippy/fmt and conform 48 standing/0 new. Eleven worker and one central
 exchange-refactor mutation were RED and restored. Specmap remains 6,833 units /
 3,041 tagged / 2,792 edges, 0 suspects, gated orphans or unresolved host edges,
 25 warnings. R5.5-INVOKE-LOADER is next.
+
+## 12. R5.5-INVOKE-LOADER ratification
+
+**Accepted 2026-08-31.** Product `126dfc0b` and trace refresh `feb98591`
+extend the one process-safe loader without changing SDK, fixtures, lifecycle or
+artifact composition. `NativeCompileInvocation` carries an absolute resolved
+library, exact extension id, typed `CompilePoint` and borrowed encoded request;
+the loader fixes schema 1, passes request bytes through untouched and returns an
+owned raw reply without decoding compiler JSON.
+
+Lifecycle and compiler methods now share canonical path/cache/ABI/manifest and
+one admitted-response RAII path. Lifecycle still strictly decodes generated
+`Reply` while the guard lives; compiler copies raw bytes while the same guard
+lives, then frees exactly once. Whole-manifest admission preserves duplicate-id
+precedence, parses every point before a verdict, requires homogeneous typed
+lifecycle or compiler family, then checks exact selected id/point/schema.
+
+Independent review rejected the initial PASS because an early family mismatch
+could hide a later invalid point and the response matrix compared two paths
+without independently proving free counts. The correction collects all typed
+points first and asserts 0/1 frees per lifecycle and compiler case; review then
+passed.
+
+Final gates: focused compile loader 9, complete loader 20 unit + 3 integration
++ 4 doctests, SDK compatibility 1+1+6+8, real compiler ok/skip/fail/panic/after
+on one loader, `check-codegen`, strict workspace check/clippy/fmt and conform 48
+standing/0 new. Fourteen worker and one central duplicate-precedence mutation
+were RED and restored. Specmap remains 6,833 units / 3,041 tagged / 2,792
+edges, 0 suspects, gated orphans or unresolved host edges, 25 warnings.
+R5.5-INVOKE-ARTIFACT is next.
