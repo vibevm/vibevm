@@ -88,3 +88,67 @@ fn native_dispatch_converts_exact_context_and_reply_without_tasks() {
     assert_eq!(seen[0].3.world, context.world);
     assert_eq!(seen[0].3.point, context.point);
 }
+
+#[test]
+fn compiler_native_is_refused_before_the_lifecycle_backend() {
+    let dir = tempfile::tempdir().unwrap();
+    let declaration = vibe_core::manifest::ExtensionDecl {
+        id: "compile-native".into(),
+        point: "compile:source".parse().unwrap(),
+        handler: ExtensionHandler::Native {
+            crate_dir: Some("native".into()),
+            prebuilt: None,
+        },
+        config: None,
+        auto: None,
+        inputs: None,
+        applies_to: None,
+        compiler_internals: None,
+        pass: None,
+        when: None,
+    };
+    let world = crate::ExtensionWorld {
+        installed: Vec::new(),
+        host: crate::HostExtensionSource {
+            provider: crate::HostProvider {
+                identity: crate::HostIdentity::ungrouped_project("native-fixture"),
+                root: dir.path().to_path_buf(),
+                version: "0.1.0".into(),
+                kind: None,
+                content_hash: None,
+            },
+            declarations: vec![declaration],
+            controls: vibe_core::manifest::ExtensionsControl::default(),
+            mechanisms: Vec::new(),
+        },
+        effective_stack: None,
+    };
+    let registry = crate::collect_extensions(world).unwrap();
+    let row = &registry.rows()[0];
+    let (_, context) = prepared(dir.path(), row);
+    let backend = FakeNative {
+        seen: Mutex::new(Vec::new()),
+    };
+    let runner = FakeRunner {
+        output: ProcessOutput::default(),
+        reply: None,
+        seen: Mutex::new(Vec::new()),
+    };
+    let runtime = HandlerRuntime {
+        process: &runner,
+        binary: &NoBinaryBackend,
+        native: &backend,
+        package_binding: &super::NoPackageBindingBackend,
+        agent: &crate::NoAgentBackend,
+        probe: &BashProbe,
+        streams: StreamMode::Capture,
+    };
+
+    let error = runtime
+        .dispatch(row, &context)
+        .expect_err("compile-native cannot enter lifecycle dispatch");
+    assert!(
+        matches!(error, HandlerError::Native { reason, .. } if reason.contains("compiler-native"))
+    );
+    assert!(backend.seen.lock().unwrap().is_empty());
+}

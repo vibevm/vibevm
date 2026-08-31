@@ -32,6 +32,7 @@ serde_json.workspace = true
 tempfile.workspace = true
 thiserror.workspace = true
 vibe-registry.workspace = true
+vibe-native-loader-fixture = { path = "../vibe-native-loader/tests/fixtures/native-plugin" }
 # The trace reds drive a REAL traced compilation into a declared scope, so a
 # produced member carries genuine events, snapshots and aggregate timing rows
 # instead of a synthetic zero. Test-only: the funnel itself never compiles.

@@ -132,3 +132,6 @@ fn main() {
         "the authored target ran after observing the native record",
     );
 }
+
+#[path = "native_gate_tests.rs"]
+mod gate;
