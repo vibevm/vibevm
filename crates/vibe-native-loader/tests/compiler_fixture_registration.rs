@@ -18,6 +18,7 @@ fn compiler_fixture_is_registered_as_one_homogeneous_schema_one_image() {
             "compiler-fail",
             "compiler-panic",
             "compiler-after",
+            "compiler-manager-source",
         ]
     );
     assert!(

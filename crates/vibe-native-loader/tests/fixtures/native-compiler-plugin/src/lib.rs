@@ -1,7 +1,7 @@
 #![deny(unsafe_code)]
 
 use vibe_ext::{
-    CompileReply, CompileReplyFail, CompileReplyOk, CompileReplySkip, CompileRequest, Manifest,
+    CompileReply, CompileReplyFail, CompileReplyOk, CompileReplySkip, CompileRequest, Ir, Manifest,
     ManifestExtension,
 };
 
@@ -29,16 +29,17 @@ pub fn fixture_marker() -> &'static str {
 pub fn fixture_manifest() -> Manifest {
     Manifest {
         extensions: [
-            "compiler-ok",
-            "compiler-skip",
-            "compiler-fail",
-            "compiler-panic",
-            "compiler-after",
+            ("compiler-ok", "compile:pass"),
+            ("compiler-skip", "compile:pass"),
+            ("compiler-fail", "compile:pass"),
+            ("compiler-panic", "compile:pass"),
+            ("compiler-after", "compile:pass"),
+            ("compiler-manager-source", "compile:source"),
         ]
         .into_iter()
-        .map(|id| ManifestExtension {
+        .map(|(id, point)| ManifestExtension {
             id: id.to_owned(),
-            point: "compile:pass".to_owned(),
+            point: point.to_owned(),
             ir_schema: Some(1),
         })
         .collect(),
@@ -56,6 +57,23 @@ fn handle(request: CompileRequest) -> CompileReply {
             message: Some("deterministic compiler failure".to_owned()),
         })),
         "compiler-panic" => panic!("deterministic compiler fixture panic"),
+        "compiler-manager-source" => match request.payload {
+            Ir::SourceDocument(mut payload) => {
+                payload
+                    .doc
+                    .text
+                    .push_str("\nR5.5 real native source marker\n");
+                CompileReply::Ok(Box::new(CompileReplyOk {
+                    envelope: 1,
+                    payload: Ir::SourceDocument(payload),
+                    message: Some("handled compiler-manager-source".to_owned()),
+                }))
+            }
+            _ => CompileReply::Fail(Box::new(CompileReplyFail {
+                envelope: 1,
+                message: Some("compiler-manager-source requires source IR".to_owned()),
+            })),
+        },
         _ => CompileReply::Ok(Box::new(CompileReplyOk {
             envelope: 1,
             payload: request.payload,

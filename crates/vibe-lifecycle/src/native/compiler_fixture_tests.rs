@@ -1,7 +1,85 @@
 use sha2::{Digest, Sha256};
+use vibe_spec::{
+    ArtifactInput, ArtifactPlan, ArtifactTarget, SectionSource, SpecAddress, TransformPlan,
+};
 use vibe_wire::generated::native::e1::compile_reply::CompileReply;
 
 use super::*;
+
+struct NoSections;
+
+impl SectionSource for NoSections {
+    fn section_text(&self, address: &SpecAddress) -> Result<String, String> {
+        Err(format!("unexpected section lookup: {address}"))
+    }
+}
+
+#[test]
+fn real_source_row_composes_manager_artifact_sdk_and_loader() {
+    let root = tempdir().unwrap();
+    let relative = fixture(root.path());
+    let mut declaration = declaration(
+        "compiler-manager-source",
+        ExtensionHandler::Native {
+            crate_dir: None,
+            prebuilt: Some(BTreeMap::from([(
+                current_platform().key().to_owned(),
+                relative,
+            )])),
+        },
+        "compile:source",
+        None,
+    );
+    declaration.compiler_internals = None;
+    let (registry, mechanisms) = registries(root.path(), vec![declaration]);
+    let all = registry.enabled_compile_rows();
+    let native = all
+        .iter()
+        .copied()
+        .filter(|row| matches!(row.declaration().handler, ExtensionHandler::Native { .. }))
+        .collect::<Vec<_>>();
+    assert_eq!(all.len(), 1);
+    assert!(std::ptr::eq(native[0], all[0]));
+    assert_eq!(native[0].declaration().id, "compiler-manager-source");
+    assert_eq!(native[0].declaration().point.to_string(), "compile:source");
+
+    let transforms = TransformPlan::from_effective_rows(&native).unwrap();
+    let plan = ArtifactPlan::static_lane(
+        ArtifactTarget::StaticMarkdown,
+        "vibevm/vibespecs/boot/STATIC.md",
+        "vibevm/vibedeps",
+        vec![
+            ArtifactInput::simple(
+                "compiler-host",
+                "boot/fixture.md",
+                "# Fixture {#root}\n\nOriginal fixture source.\n",
+            )
+            .unwrap(),
+        ],
+    )
+    .unwrap()
+    .with_transforms(transforms);
+    let routes = MechanismRoutes::default();
+    let project = project(root.path());
+    let world = world();
+    let invoker = make_invoker(
+        &all,
+        &native,
+        root.path(),
+        &mechanisms,
+        &routes,
+        &project,
+        &world,
+        RUN_ID,
+    );
+
+    let emitted = vibe_spec::compile_artifact_native(plan, &NoSections, &invoker).unwrap();
+    assert!(
+        std::str::from_utf8(emitted.bytes())
+            .unwrap()
+            .contains("R5.5 real native source marker")
+    );
+}
 
 #[test]
 fn real_fixture_returns_raw_statuses_and_survives_panic() {
