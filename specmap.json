@@ -22568,44 +22568,44 @@
       "file": "crates/vibe-spec/src/compiler/transform/lowering_tests.rs",
       "item_kind": "fn",
       "line": 228,
-      "symbol": "vibe_spec::compiler::transform::lowering_tests::a_non_builtin_handler_at_a_compile_point_refuses_typed",
-      "end_line": 247,
-      "fingerprint": "tok1:39d31588390e7e4bad67b2a27105bbc9770c9b7a1aaa7ca33367c2c9bbc3afc1"
+      "symbol": "vibe_spec::compiler::transform::lowering_tests::a_native_handler_at_a_compile_point_lowers_to_native_identity",
+      "end_line": 255,
+      "fingerprint": "tok1:79329f169641c51b630f39e8b779d12c2214e0405a0eff7e667def3a8beb7b58"
     },
     {
       "crate_name": "vibe-spec",
       "file": "crates/vibe-spec/src/compiler/transform/lowering_tests.rs",
       "item_kind": "fn",
-      "line": 533,
+      "line": 541,
       "symbol": "vibe_spec::compiler::transform::lowering_tests::a_plan_refusal_rides_through_the_lowering_as_itself",
-      "end_line": 554,
+      "end_line": 562,
       "fingerprint": "tok1:4f87479624e807e4ccba42057b7280b3e0d34943040212c22ece5ce42ebd176f"
     },
     {
       "crate_name": "vibe-spec",
       "file": "crates/vibe-spec/src/compiler/transform/lowering_tests.rs",
       "item_kind": "fn",
-      "line": 293,
+      "line": 301,
       "symbol": "vibe_spec::compiler::transform::lowering_tests::a_row_at_a_non_compile_point_is_a_caller_error_and_never_a_skip",
-      "end_line": 324,
+      "end_line": 332,
       "fingerprint": "tok1:c54ec4bf450174a69baa8581e081c70e4c6b73ab51f29bcc446f19560ceab928"
     },
     {
       "crate_name": "vibe-spec",
       "file": "crates/vibe-spec/src/compiler/transform/lowering_tests.rs",
       "item_kind": "fn",
-      "line": 355,
+      "line": 363,
       "symbol": "vibe_spec::compiler::transform::lowering_tests::a_row_with_real_configuration_lowers_losslessly_and_digests_differently",
-      "end_line": 483,
+      "end_line": 491,
       "fingerprint": "tok1:beca70df9dff4063dbaab87f2d5bc5ef5c7531f4f5d960acf0983f0a1a85030c"
     },
     {
       "crate_name": "vibe-spec",
       "file": "crates/vibe-spec/src/compiler/transform/lowering_tests.rs",
       "item_kind": "fn",
-      "line": 326,
+      "line": 334,
       "symbol": "vibe_spec::compiler::transform::lowering_tests::absent_config_and_authored_empty_config_stay_two_identities",
-      "end_line": 353,
+      "end_line": 361,
       "fingerprint": "tok1:600f3ecf5aca03a659ffb2a5eb8c39eab1625e21137af4d074976f6ff2c2c991"
     },
     {
@@ -22621,18 +22621,18 @@
       "crate_name": "vibe-spec",
       "file": "crates/vibe-spec/src/compiler/transform/lowering_tests.rs",
       "item_kind": "fn",
-      "line": 485,
+      "line": 493,
       "symbol": "vibe_spec::compiler::transform::lowering_tests::an_illegal_datetime_component_refuses_typed_and_names_its_row",
-      "end_line": 531,
+      "end_line": 539,
       "fingerprint": "tok1:55dd89036d18f09dcacad9c7512c9cdb1121a2f74083ce186cd404d3c705a1ac"
     },
     {
       "crate_name": "vibe-spec",
       "file": "crates/vibe-spec/src/compiler/transform/lowering_tests.rs",
       "item_kind": "fn",
-      "line": 249,
+      "line": 257,
       "symbol": "vibe_spec::compiler::transform::lowering_tests::an_off_catalog_builtin_name_is_the_bounded_unknown_builtin_refusal_at_lowering",
-      "end_line": 291,
+      "end_line": 299,
       "fingerprint": "tok1:e2eb0366b224a0478f521f92af239a1ed8d2462e55f32ce725ee7faaeeb7f0d5"
     },
     {
@@ -22652,6 +22652,33 @@
       "symbol": "vibe_spec::compiler::transform::lowering_tests::one_registry_lowers_to_one_digest_twice_and_a_different_order_to_another",
       "end_line": 146,
       "fingerprint": "tok1:7279ab3382427f903b9a61f5eaf8b1cf6aa64326705ae6fc3cfc4e02ee5be225"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/transform/native_identity.rs",
+      "item_kind": "mod",
+      "line": 7,
+      "symbol": "vibe_spec::compiler::transform::native_identity",
+      "end_line": 7,
+      "fingerprint": "tok1:9dd819aaeeec30a5ba0876044d5d0376808b957ae4d383052307057767916e86"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/transform/native_manager.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_spec::compiler::transform::native_manager",
+      "end_line": 3,
+      "fingerprint": "tok1:8e685c18e3a876d01d8b10213c68afec6aca2fd469e82461812dd0986d328926"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/transform/native_schedule.rs",
+      "item_kind": "mod",
+      "line": 8,
+      "symbol": "vibe_spec::compiler::transform::native_schedule",
+      "end_line": 8,
+      "fingerprint": "tok1:8e685c18e3a876d01d8b10213c68afec6aca2fd469e82461812dd0986d328926"
     },
     {
       "crate_name": "vibe-spec",
@@ -24241,10 +24268,10 @@
       "crate_name": "vibe-spec",
       "file": "crates/vibe-spec/src/compiler/wire/tests/registry.rs",
       "item_kind": "fn",
-      "line": 15,
+      "line": 19,
       "symbol": "vibe_spec::compiler::wire::tests::registry::the_gate_registry_is_the_schema_gate_set_in_order",
-      "end_line": 45,
-      "fingerprint": "tok1:fb13d97716ffafcb27b8222d82ac5b698fc5908a1072494a58ff1106ae55759b"
+      "end_line": 49,
+      "fingerprint": "tok1:8252a746c4ae0e8016fefcd58e2310240989daed81aa7cf12412b96c4adfc0f7"
     },
     {
       "crate_name": "vibe-spec",
@@ -45589,7 +45616,7 @@
     },
     {
       "file": "crates/vibe-spec/src/compiler/transform/lowering_tests.rs",
-      "from_symbol": "vibe_spec::compiler::transform::lowering_tests::a_non_builtin_handler_at_a_compile_point_refuses_typed",
+      "from_symbol": "vibe_spec::compiler::transform::lowering_tests::a_native_handler_at_a_compile_point_lowers_to_native_identity",
       "line": 237,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY",
@@ -45598,7 +45625,7 @@
     {
       "file": "crates/vibe-spec/src/compiler/transform/lowering_tests.rs",
       "from_symbol": "vibe_spec::compiler::transform::lowering_tests::a_plan_refusal_rides_through_the_lowering_as_itself",
-      "line": 536,
+      "line": 544,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY",
       "verb": "verifies"
@@ -45606,7 +45633,7 @@
     {
       "file": "crates/vibe-spec/src/compiler/transform/lowering_tests.rs",
       "from_symbol": "vibe_spec::compiler::transform::lowering_tests::a_row_at_a_non_compile_point_is_a_caller_error_and_never_a_skip",
-      "line": 298,
+      "line": 306,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY",
       "verb": "verifies"
@@ -45614,7 +45641,7 @@
     {
       "file": "crates/vibe-spec/src/compiler/transform/lowering_tests.rs",
       "from_symbol": "vibe_spec::compiler::transform::lowering_tests::a_row_with_real_configuration_lowers_losslessly_and_digests_differently",
-      "line": 365,
+      "line": 373,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY",
       "verb": "verifies"
@@ -45622,7 +45649,7 @@
     {
       "file": "crates/vibe-spec/src/compiler/transform/lowering_tests.rs",
       "from_symbol": "vibe_spec::compiler::transform::lowering_tests::absent_config_and_authored_empty_config_stay_two_identities",
-      "line": 330,
+      "line": 338,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY",
       "verb": "verifies"
@@ -45638,7 +45665,7 @@
     {
       "file": "crates/vibe-spec/src/compiler/transform/lowering_tests.rs",
       "from_symbol": "vibe_spec::compiler::transform::lowering_tests::an_illegal_datetime_component_refuses_typed_and_names_its_row",
-      "line": 494,
+      "line": 502,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY",
       "verb": "verifies"
@@ -45646,7 +45673,7 @@
     {
       "file": "crates/vibe-spec/src/compiler/transform/lowering_tests.rs",
       "from_symbol": "vibe_spec::compiler::transform::lowering_tests::an_off_catalog_builtin_name_is_the_bounded_unknown_builtin_refusal_at_lowering",
-      "line": 257,
+      "line": 265,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY",
       "verb": "verifies"
@@ -45666,6 +45693,30 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY",
       "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/transform/native_identity.rs",
+      "from_symbol": "vibe_spec::compiler::transform::native_identity",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/transform/native_manager.rs",
+      "from_symbol": "vibe_spec::compiler::transform::native_manager",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-NATIVE-ONLY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/transform/native_schedule.rs",
+      "from_symbol": "vibe_spec::compiler::transform::native_schedule",
+      "line": 8,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-NATIVE-ONLY",
+      "verb": "implements"
     },
     {
       "file": "crates/vibe-spec/src/compiler/transform/plan_digest_tests.rs",
@@ -47094,7 +47145,7 @@
     {
       "file": "crates/vibe-spec/src/compiler/wire/tests/registry.rs",
       "from_symbol": "vibe_spec::compiler::wire::tests::registry::the_gate_registry_is_the_schema_gate_set_in_order",
-      "line": 16,
+      "line": 20,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#WHOLE-IR-WIRE",
       "verb": "verifies"
