@@ -651,3 +651,39 @@ is exact; empty pending has no replay; one replay invokes every expected row and
 returns empty; build/replay failure preserves pending bytes; plain/traced/
 observed node+unit paths agree; and builtin-only/empty fingerprints remain byte-
 compatible.
+
+## 16. R5.4-EPOCH-WORLD ratification
+
+**Accepted 2026-08-31.** Product `c559916b` and map `492ed834` establish one
+public `ExtensionWorldEpoch` from the exact ordered `ResolvedDep` sequence.
+The epoch retains each supplied parsed package manifest, its materialised root,
+content witness, effective resolved edges, extension/mechanism declarations and
+routes. Root and member nodes take distinct host seats over that one package
+snapshot; package units use the package-owner projection. Exact empty is a
+first-class epoch. Duplicate packages/edges, missing hashes/slots, identity or
+materialization disagreement, unknown owners and closure defects refuse typed;
+none can become `TransformPlan::empty()`.
+
+Ready-style `regenerate_boot_from_traced` trusts only its supplied resolution
+and ignores stale or malformed ambient lock bytes. Fresh regeneration, check
+and analysis instead read one strict durable lock at their command boundary,
+project only its named slots in lock order, use the lock's hashes and effective
+dependency edges, ignore orphan slots and treat a missing lock as the explicit
+empty world. A present malformed/nonregular lock or a missing/disagreeing named
+slot fails through the extension-world error family. Lock-selected
+materialization is cross-checked before the epoch can derive a provider root.
+
+Two independent native reviews rejected earlier versions: first, unordered
+slot enumeration and raw manifest requirements could replace lock order/hash
+and effective graph; second, unchecked materialization could redirect a locked
+row to an opposite-layout orphan and the initial composed RED confounded lock
+order with host activation order. The accepted tests separate those
+authorities: exhaustive registry rows preserve reverse lock order, authored
+activations preserve their own reversed order, dependency-first XML follows the
+lock's effective edge rather than the raw orphan edge, written and analyzed
+bytes agree, and fresh verification is clean without slot records.
+
+Final gates: `vibe-workspace --lib` 494/494, workspace check and all-target
+clippy with warnings denied, fmt, conform 48 standing/0 new, and specmap 6,833
+units / 3,048 tagged / 2,799 edges with zero suspects, gated orphans or
+unresolved host edges and 25 warnings. R5.4-EPOCH-LOWER is next.
