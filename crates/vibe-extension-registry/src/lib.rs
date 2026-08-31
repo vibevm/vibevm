@@ -52,8 +52,8 @@ pub use mechanism::{
 pub use model::{
     ContributionTier, DependencyExtensionSource, DependencyProvider, DependencyProviderId,
     ExtensionProvider, ExtensionRegistry, ExtensionRegistryRow, ExtensionWorld,
-    HostExtensionSource, HostIdentity, HostProvider, RegistryView, SyntheticPresetSource,
-    lane_owner_host,
+    HostExtensionSource, HostIdentity, HostProvider, RegistryRowIndex, RegistryView,
+    SyntheticPresetSource, lane_owner_host,
 };
 pub use selector::{CompiledSelector, SelectorProvider, SelectorSubject};
 pub use view::RegistryState;

@@ -7,7 +7,9 @@ use crate::{
     collect_extensions, collect_extensions_with_presets,
 };
 
-use super::support::{declaration, dependency, host, package_key, selected_declaration, world};
+use super::support::{
+    declaration, dependency, host, native_declaration, package_key, selected_declaration, world,
+};
 
 /// The four compile stages, in the exact order a per-point concatenation
 /// would visit them — the rejected alternative §5.3 of the R4 architecture
@@ -334,4 +336,199 @@ fn disabled_and_inactive_compile_rows_leave_the_view_and_stay_queryable() {
     assert_eq!(state("#off-host"), RegistryState::Disabled);
     assert_eq!(state("#never-used"), RegistryState::Inactive);
     assert_eq!(state("#on-host"), RegistryState::Effective);
+}
+
+/// Owner-runtime indices are views over ONE retained allocation and ONE
+/// effective order. Compile dense order is the enumeration of the complete
+/// compile subset; native candidates retain native rows from every family and
+/// never become a second ordering authority.
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#ORDER-LAW")]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-ACTIVATION")]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY")]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#BUILD-PHASE-OWNS-IT")]
+fn opaque_indices_preserve_compile_dense_order_native_order_and_row_identity() {
+    let build_registry = || {
+        let mut selector_native = native_declaration("selector-native", "compile:document");
+        selector_native.applies_to = Some(ExtensionAppliesTo {
+            packages: Some(vec!["org.selected/*".into()]),
+            paths: None,
+        });
+        collect_extensions(world(
+            vec![dependency(
+                "org.dep",
+                "tools",
+                vec![
+                    native_declaration("phase-native-dep", "phase:build"),
+                    native_declaration("slot-native-dep", "slot:pre-install"),
+                    native_declaration("compile-native-activated", "compile:document"),
+                    native_declaration("compile-native-inactive", "compile:source"),
+                ],
+            )],
+            host(
+                vec![
+                    declaration("compile-builtin-host", "compile:emitted"),
+                    native_declaration("phase-native-host", "phase:test"),
+                    native_declaration("compile-native-host", "compile:source"),
+                    selector_native,
+                    native_declaration("compile-native-disabled", "compile:document"),
+                ],
+                ExtensionsControl {
+                    uses: vec![ExtensionUse {
+                        reference: package_key("org.dep", "tools", "compile-native-activated"),
+                        config: None,
+                    }],
+                    disable: vec![ExtensionKey::authored(
+                        "__host__/demo#compile-native-disabled",
+                    )],
+                },
+            ),
+            None,
+        ))
+        .expect("the interleaved registry collects")
+    };
+
+    let registry = build_registry();
+    let compile_indices = registry.enabled_compile_indices();
+    let compile_rows = compile_indices
+        .iter()
+        .map(|index| registry.row_at(index).expect("origin index projects"))
+        .collect::<Vec<_>>();
+    assert_eq!(
+        keys(&compile_rows),
+        [
+            "__host__/demo#compile-builtin-host",
+            "__host__/demo#compile-native-host",
+            "__host__/demo#selector-native",
+            "org.dep/tools#compile-native-activated",
+        ],
+        "compile rows retain global effective order, including selectors"
+    );
+    assert_eq!(
+        keys(&registry.enabled_compile_rows()),
+        keys(&compile_rows),
+        "the borrowed compatibility view delegates to the index authority"
+    );
+    for (from_index, from_view) in compile_rows
+        .iter()
+        .copied()
+        .zip(registry.enabled_compile_rows())
+    {
+        assert!(
+            std::ptr::eq(from_index, from_view),
+            "both projections borrow the same retained row allocation"
+        );
+    }
+
+    let dense = compile_rows
+        .iter()
+        .enumerate()
+        .map(|(order, row)| (order, row.key().as_str()))
+        .collect::<Vec<_>>();
+    assert_eq!(
+        dense,
+        [
+            (0, "__host__/demo#compile-builtin-host"),
+            (1, "__host__/demo#compile-native-host"),
+            (2, "__host__/demo#selector-native"),
+            (3, "org.dep/tools#compile-native-activated"),
+        ],
+        "manager dense order is enumeration of the complete compile subset"
+    );
+    let storage_positions = compile_rows
+        .iter()
+        .map(|candidate| {
+            registry
+                .rows()
+                .iter()
+                .position(|row| std::ptr::eq(row, *candidate))
+                .expect("projected row belongs to storage")
+        })
+        .collect::<Vec<_>>();
+    assert_ne!(
+        storage_positions,
+        (0..compile_rows.len()).collect::<Vec<_>>(),
+        "dense compile order is not exported registry storage position"
+    );
+
+    let native_rows = registry
+        .enabled_native_indices()
+        .into_iter()
+        .map(|index| registry.row_at(&index).expect("origin index projects"))
+        .collect::<Vec<_>>();
+    assert_eq!(
+        keys(&native_rows),
+        [
+            "org.dep/tools#phase-native-dep",
+            "org.dep/tools#slot-native-dep",
+            "__host__/demo#phase-native-host",
+            "__host__/demo#compile-native-host",
+            "__host__/demo#selector-native",
+            "org.dep/tools#compile-native-activated",
+        ],
+        "the native subset retains phase and compile rows in effective order"
+    );
+    assert!(
+        native_rows.iter().all(|candidate| registry
+            .rows()
+            .iter()
+            .any(|row| std::ptr::eq(row, *candidate))),
+        "native indices project borrowed rows, never clones"
+    );
+    assert!(
+        native_rows.iter().all(
+            |row| !row.key().as_str().ends_with("#compile-native-inactive")
+                && !row.key().as_str().ends_with("#compile-native-disabled")
+        ),
+        "inactive and disabled native rows stay absent"
+    );
+    let compile_native = compile_rows
+        .iter()
+        .find(|row| row.key().as_str().ends_with("#compile-native-host"))
+        .expect("compile projection retains the host native row");
+    let candidate_native = native_rows
+        .iter()
+        .find(|row| row.key().as_str().ends_with("#compile-native-host"))
+        .expect("native projection retains the same host native row");
+    assert!(
+        std::ptr::eq(*compile_native, *candidate_native),
+        "compile and native projections meet at the same row allocation"
+    );
+
+    let other = build_registry();
+    assert!(
+        other.row_at(&compile_indices[0]).is_none(),
+        "an index from another live registry allocation is rejected safely"
+    );
+    assert!(registry.row_at(&compile_indices[0]).is_some());
+
+    fn assert_send_sync<T: Send + Sync>() {}
+    assert_send_sync::<crate::RegistryRowIndex>();
+
+    let moved_index = compile_indices[0].clone();
+    let moved_registry = registry;
+    assert!(
+        moved_registry.row_at(&moved_index).is_some(),
+        "moving the owner preserves its allocation identity"
+    );
+    let cloned_registry = moved_registry.clone();
+    assert!(
+        cloned_registry.row_at(&moved_index).is_none(),
+        "a registry clone owns new rows and a fresh identity"
+    );
+    let clone_index = cloned_registry.enabled_compile_indices()[0].clone();
+    assert!(
+        moved_registry.row_at(&clone_index).is_none(),
+        "clone indices are equally foreign to the origin"
+    );
+
+    let stale_index = {
+        let origin = build_registry();
+        origin.enabled_compile_indices().remove(0)
+    };
+    let replacement = build_registry();
+    assert!(
+        replacement.row_at(&stale_index).is_none(),
+        "the old Arc token survives origin drop and defeats allocator ABA"
+    );
 }

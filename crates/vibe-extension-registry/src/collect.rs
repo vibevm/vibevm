@@ -305,6 +305,7 @@ pub fn collect_extensions_with_presets(
         rows,
         effective_order,
         notices,
+        identity: super::model::index::new_registry_identity(),
     })
 }
 

@@ -179,6 +179,15 @@ pub(super) fn declaration(id: &str, point: &str) -> ExtensionDecl {
     }
 }
 
+pub(super) fn native_declaration(id: &str, point: &str) -> ExtensionDecl {
+    let mut declaration = declaration(id, point);
+    declaration.handler = ExtensionHandler::Native {
+        crate_dir: Some(PathBuf::from(format!("crates/{id}"))),
+        prebuilt: None,
+    };
+    declaration
+}
+
 pub(super) fn selected_declaration(
     id: &str,
     packages: Option<Vec<&str>>,
