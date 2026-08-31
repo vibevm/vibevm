@@ -1190,6 +1190,20 @@ than depending on untracked `cache/` archaeology.
   worker plus four central mutations were red and restored. Specmap is
   6833/3028/2781 with zero suspects/orphans/unresolved and 25 warnings. WIRING
   is accepted; the integrated R5.3-GATE remains.
+- R5.3 integrated gate and parent acceptance: test/oracle commit `be037d77`,
+  trace correction `c2fe99fc` and map `ee3f4b49` compose real SDK source and
+  prebuilt natives through production phase/slot paths in one Windows process;
+  prove same-loader rebuild, Cargo fresh/mtime, non-host platform selection,
+  stale-before-cache refusal, compile-row exclusion, and phase/slot
+  skip/fail/panic law. No product correction was required. The first generated
+  map exposed eight test deviations aimed at an absent external anchor; central
+  rejected those dangling edges, retargeted the existing ENGINE-CONFORM rules
+  unit and restored warnings 33→25. Gates pass native 15, handlers 11, loader
+  11+1+3 docs, SDK 7, mechanism wiring 15, install native 1, strict
+  check/clippy/fmt and conform zero-new. Five worker plus two central gate
+  mutations were red and restored. Specmap is 6833/3036/2789 with zero
+  suspects/orphans/unresolved and 25 warnings. ARTIFACT, WIRING and GATE are all
+  accepted; parent R5.3 is done.
 - R4.2 minify binding, RED corpus and activation e2e: `7a09ec2d` registers
   `xml-minify` (epoch 1, EMITTED — the one stage the kernel serves without a
   new serializer; every other stage refuses through the registry's own law)
@@ -1310,7 +1324,7 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 |---|---|---|
 | R5.1 native JTD context/reply/manifest + `vibe-ext` macro | done | SHARED-STRICT `52edc577`; WIRE `fd81a003` / map `4c9378c9`; SDK `bfaea140`; integrated 17 + 7 + 7 gate, real abort refusal, 20 mutation proofs; schema first, unanimous shared-reader strictness, plugin-side unwind/memory boundary |
 | R5.2 loader | done | LOADER `9f7b8854` / map `36efa500`; integrated 15 loader + 7 SDK + 7 native-wire gate, clean check-codegen/conform/specmap, 8 mutation proofs; separate unsafe quarantine, canonical strong cache, exact ABI/manifest admission and free-once guard |
-| R5.3 source/prebuilt resolution and in-slot build | in progress | ARTIFACT `1baac652` / trace `0ef041c7` / map `fd31533e`; WIRING `332f8e28` / map `48fcb39e`: native-first fence, exact phase/slot backend, process loader over immutable digest images, no resolver Cargo; integrated GATE remains |
+| R5.3 source/prebuilt resolution and in-slot build | done | ARTIFACT `1baac652` / trace `0ef041c7` / map `fd31533e`; WIRING `332f8e28` / map `48fcb39e`; GATE `be037d77` / trace `c2fe99fc` / map `ee3f4b49`; source/prebuilt production composition, immutable process-loader images, process-free resolver, stale-before-cache and lifecycle law all mutation-backed |
 | R5.4 pending bootstrap convergence | missing | install may mark pending; build rebuilds and recompiles once |
 | R5.5 native/builtin minify parity | missing | owner scenario §10.2 |
 
