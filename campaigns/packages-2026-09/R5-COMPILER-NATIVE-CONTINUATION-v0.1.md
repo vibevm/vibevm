@@ -206,3 +206,137 @@ still exactly two schemas, four corpus files and one registry edit; all 12
 legacy native paths unchanged; strict workspace check/clippy/fmt and conform
 zero-new. Specmap remains 6,833 units / 3,038 tagged / 2,789 edges, 0 suspects,
 gated orphans or unresolved host edges, 25 warnings. R5.5-INVOKE is next.
+
+## 9. R5.5-INVOKE implementation freeze
+
+**Frozen 2026-08-31 after five native `gpt-5.6-sol`/`xhigh` reviews.** The
+current install compiler and the production native epoch are not yet one
+transaction: node/unit static compilation happens inside prerequisite install,
+while `phase::run` creates the `RitualPlan`, mechanism routes and native
+candidates only afterwards. INVOKE therefore lands and proves the generic
+manager, SDK, loader and artifact-backed execution boundary directly. It does
+not thread a recomputed or selected-root-only epoch through production install.
+R5.4 alone creates the one incoming/post-install owner runtime, builds pending
+sources and performs the one native-aware recompilation through plain, traced
+and observed node/unit paths.
+
+### 9.1 Serial children
+
+R5.5-INVOKE is a workstream with five serial children:
+
+1. **INVOKE-MANAGER** — native plan identity, borrowed manager seam, strict
+   reply conversion and four-stage execution;
+2. **INVOKE-SDK** — safe compiler author macro and separate fixture;
+3. **INVOKE-LOADER** — compile-specific raw exchange over the existing ABI;
+4. **INVOKE-ARTIFACT** — exact-row artifact/image/shared-loader adapter;
+5. **INVOKE-GATE** — fake-manager matrix plus real SDK→artifact→loader proof.
+
+No child may absorb R5.4's pending interpretation, source build, production
+workspace/install threading or epoch reordering.
+
+### 9.2 Native plan identity
+
+`TransformImplementation` becomes a private kind with `Builtin { name, epoch
+}` and `Native { handler }`. Existing builtin digests remain byte-exact. Under
+the already-reserved implementation tag `1`, native implementation digest
+frames, in order: the existing implementation domain; tag `1`; ABI epoch `1`;
+compiler IR schema `1`; `crate_dir` presence plus its canonical portable
+authored spelling; `prebuilt` presence, count, then platform-key/path pairs in
+key order. Extension key, provider, stage, dense order, config digest and
+selector remain in their existing outer plan frames. Resolved roots, selected
+platform artifact, image path, Cargo state, wall clock and run context never
+enter this digest. Artifact bytes and source witness belong to R5.4's runtime
+and build fingerprint.
+
+### 9.3 Borrowed manager seam
+
+`vibe-spec` owns a public `CompilerNativeInvoker`, borrowed as `&dyn` and never
+wrapped in `Arc`. Its call carries the exact qualified `ExtensionKey`, typed
+compile point, manager-assigned dense order, manager-projected handler-visible
+effective config, the opaque manager-owned native implementation digest and
+canonical generated `Ir`; it returns owned raw reply bytes through a typed
+bounded error that preserves a distinct buildable-source-unavailable class for
+R5.4. `Pass` loses only its pass-object `'static` bound;
+`PassSegment`, `CompilerPipeline` and `BuiltinSchedule` carry the borrow
+lifetime. IR payload and pass-error types remain `'static`.
+
+The selector verdict precedes the invoker call. `ok` processing is exactly:
+duplicate-preserving strict reply-root decode → reply/request exchange
+validation against the manager-authored point/payload → canonical generated-
+to-domain conversion → stage admission/reconstruction → intrinsic and
+transition verification of the final manager-owned carrier. `skip` returns the
+original carrier; `fail`, malformed bytes, epoch/shape/conversion failure or an
+invoker error stops compilation with bounded entry attribution. Each native
+wrapper applies the existing intrinsic and transition verifier locally to its
+own reconstructed result and immutable input witness. Native presence does not
+enable pipeline-wide verification for adjacent builtins or change their
+behavior; R6 retains ownership of general mandatory verify-each.
+
+Source/document preserve manager identity and accept only their mutable body;
+lane uses the existing witness plus intrinsic/transition admission. An emitted
+plugin must return a wire value whose temporary provenance/digest is internally
+self-consistent so strict conversion can read it, but the manager discards
+those members and reconstructs from the original artifact plus returned bytes.
+Only that reconstruction authors the authoritative digest and pass provenance.
+
+### 9.4 SDK, loader and root-family law
+
+`vibe_compile_extension!` is a backward-compatible sibling of
+`vibe_extension!`: typed `CompileRequest -> CompileReply`, panic containment and
+the same four ABI-1 symbols/boxed-slice ownership. One cdylib is root-family
+homogeneous: lifecycle images declare only phase/slot entries; compiler images
+declare only compile entries. Loader manifest admission rejects a mixed image
+before invoke. A package needing both families ships two images. No ambiguous
+double macro or implicit parse fallback exists.
+
+`NativeLoader::invoke_compile` is compile-specific, accepts already encoded
+request bytes and returns an owned raw response `Vec<u8>`. It shares the
+canonical path cache, four-symbol/ABI/manifest admission, reply cap and exact-
+once RAII free path with lifecycle invocation. It is not a generic serde/FFI
+escape hatch and does not decode the compile reply; `vibe-spec` remains the
+strict reader. Existing lifecycle `invoke` and its typed reply are unchanged.
+
+### 9.5 Artifact adapter and request authority
+
+The artifact invoker captures one ordered all-compile-row epoch plus its native
+candidate/mechanism/routes epoch, injected shared `Project`/`World`, run id,
+platform/offline/timestamp and selected root. It indexes the all-row sequence by
+the manager's dense order, then requires exact qualified key, native handler,
+point and effective-config agreement. It recomputes the frozen native
+implementation digest from that retained row and requires equality with the
+opaque manager value before artifact resolution; a changed `crate_dir` or
+`prebuilt` map can never execute under an older plan identity. It never
+recomputes order from the native-only subset. The retained row supplies
+declaration id, provider identity and artifact authority; `execution.id` keeps
+the shared lifecycle meaning (the declaration id), while the qualified key
+remains the manager lookup identity.
+
+The adapter builds the full request with envelope/schema 1, manager point and
+payload, row provider and effective config, injected project/world and a
+contained scratch path allocated only after selector admission. The plan keeps
+absent and authored-empty config as different identities, while the existing
+mandatory `Execution.config` map deliberately projects both to `{}`; every
+handler-visible value otherwise stays exact. A selector miss performs no
+scratch allocation, artifact resolution, image publication or loader call.
+
+Artifact resolution revalidates a prebuilt or stable source record, publishes
+the immutable digest image and calls the process-shared loader. Missing, stale,
+corrupt, load, panic and reply-fail conditions are hard errors here, never skip;
+no Cargo/rustc process, lazy build, mutable-artifact load or `target/` guess is
+reachable. Only the typed buildable-source-unavailable class may later become
+pending, and only R5.4 makes that decision.
+
+### 9.6 Gate and no-go rules
+
+The manager gate proves exact 5/5/1/1 source/document/lane/emitted calls,
+selector zero-call, builtin/native authored order, dense order/config delivery,
+schema 1, ok/skip/fail, hostile reply bounds, all stage reconstructions and
+mandatory verification. SDK/loader/artifact gates prove the homogeneous-family
+manifest law, legacy lifecycle byte behavior, exact response free, no lazy
+build, same process loader and a real compiler fixture through
+row→ARTIFACT→immutable image→four-symbol ABI.
+
+No `Arc` invoker, lifecycle Context/Reply reuse, loader-side compile decode,
+`serde_json::Value` reply collapse, adapter selector evaluation, second DTO,
+lazy Cargo/probe, second ritual/runtime epoch or production workspace/install
+threading is permitted in R5.5-INVOKE.

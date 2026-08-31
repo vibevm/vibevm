@@ -1262,6 +1262,21 @@ than depending on untracked `cache/` archaeology.
   legacy native paths are exact, and specmap remains 6833/3038/2789 with zero
   suspects/orphans/unresolved and 25 warnings. WIRE-GATE is accepted;
   R5.5-INVOKE is next.
+- R5.5-INVOKE implementation freeze: five native `gpt-5.6-sol`/`xhigh`
+  reviews found that prerequisite-install static compilation currently
+  precedes construction of the production `RitualPlan`/native epoch. INVOKE is
+  therefore split MANAGER → SDK → LOADER → ARTIFACT → GATE and proves generic
+  borrowed invocation plus direct artifact-backed identity without inventing a
+  second production epoch. Native plan identity uses reserved implementation
+  tag 1 and exactly frames ABI/schema plus portable native handler paths;
+  manager calls carry qualified key, dense order, effective config, point and
+  canonical IR plus the opaque implementation digest the adapter recomputes
+  from its retained row. Each native wrapper verifies locally without changing
+  adjacent builtin behavior. The compile-specific loader keeps raw reply bytes
+  for the manager's duplicate-preserving strict reader. SDK images are
+  root-family homogeneous. R5.4 alone creates/threads the one incoming/post-
+  install owner runtime, builds pending sources and recompiles once. Authority:
+  `R5-COMPILER-NATIVE-CONTINUATION-v0.1.md` §9.
 - R4.2 minify binding, RED corpus and activation e2e: `7a09ec2d` registers
   `xml-minify` (epoch 1, EMITTED — the one stage the kernel serves without a
   new serializer; every other stage refuses through the registry's own law)
@@ -1384,7 +1399,7 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 | R5.2 loader | done | LOADER `9f7b8854` / map `36efa500`; integrated 15 loader + 7 SDK + 7 native-wire gate, clean check-codegen/conform/specmap, 8 mutation proofs; separate unsafe quarantine, canonical strong cache, exact ABI/manifest admission and free-once guard |
 | R5.3 source/prebuilt resolution and in-slot build | done | ARTIFACT `1baac652` / trace `0ef041c7` / map `fd31533e`; WIRING `332f8e28` / map `48fcb39e`; GATE `be037d77` / trace `c2fe99fc` / map `ee3f4b49`; source/prebuilt production composition, immutable process-loader images, process-free resolver, stale-before-cache and lifecycle law all mutation-backed |
 | R5.4 pending bootstrap convergence | planned after R5.5-INVOKE | exact incoming world emits ordered pending without Cargo; native build then recompiles once before authored targets and removes pending only after the transform really executes |
-| R5.5 compiler-native wire, invocation and minify parity | in progress | WIRE-PROJECTION `9051aade` / trace `dc9cff48` / map `5adea048`; WIRE `ed6e7c2a` / map `f0dfaf33`; WIRE-GATE `36b7f1e2` accepted; INVOKE → R5.4 → PARITY remain; exhaustive 30-point/carrier and 36-exchange matrices over one shared strict compiler IR, 11+8+332+242 gates and exact 3038/2789 trace inventory |
+| R5.5 compiler-native wire, invocation and minify parity | in progress | WIRE-PROJECTION `9051aade` / trace `dc9cff48` / map `5adea048`; WIRE `ed6e7c2a` / map `f0dfaf33`; WIRE-GATE `36b7f1e2` accepted; INVOKE-MANAGER → SDK → LOADER → ARTIFACT → GATE → R5.4 → PARITY remain; borrowed raw-reply manager seam and homogeneous SDK roots frozen in continuation §9 |
 
 ### R6 — full compiler pass tier
 
