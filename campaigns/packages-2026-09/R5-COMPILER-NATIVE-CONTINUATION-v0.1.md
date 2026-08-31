@@ -952,3 +952,51 @@ doctests, `vibe-workspace` 499/499 plus integrations and 28 doctests, workspace
 check, all-target clippy with warnings denied, fmt, conform 48 standing/0 new,
 and `git diff --check`. FACTS is next; compile threading, freshness,
 publication and replay remain unimplemented by this slice.
+
+## 23. R5.4-WORKSPACE-FACTS ratification
+
+**Accepted 2026-09-01.** Commit `8de4151e` adds the workspace-owned,
+object-safe compiler-native fact binding and implements it directly on
+`ArtifactCompilerNativeInvoker`. The compiler and structured fact drain
+therefore borrow the same object; lifecycle remains above workspace in the
+dependency direction and no diagnostic text is parsed.
+
+Each binding owns one terminal mutex recorder. Exact repeated observations at
+one manager order coalesce, semantic drift at the same order terminally
+conflicts, and extraction is one-shot. A drain borrows the pending set, emits
+facts in its exact order, and refuses missing, extra, conflicting, poisoned or
+already-taken state. Only the exact typed missing-source-record result records
+a fact, after retained row, key, point, config, implementation and candidate
+identity have passed. Prebuilt success or failure, a valid source record, a
+later loader failure, selector absence and every other hard artifact failure
+record nothing.
+
+Source and handler/config identities now retain raw 32-byte digests from the
+same frame instance whose lowercase hex enters the existing artifact record.
+The missing-record branch carries those same raw values and the already
+selected `build:cargo` mechanism row; it never repeats the host tree hash or
+configuration projection. Frozen pre-refactor source and empty-config literal
+goldens prove the persistent wire did not change.
+
+The provider digest frames the selected typed row rather than its display
+coordinate alone: stable provider variant/identity/version/kind/content hash,
+pin, logical key, complete reachable handler shape, protocol, portable config
+schema, freshness and admitted enabled state. Roots, ordinals, clocks,
+toolchain and resolved artifact paths stay outside it. The durable artifact
+record continues to store the exact `org.vibevm/vibe#cargo` pin.
+
+The first independent review was NOT PASS: the raw/hex test was tautological
+and an alleged duplicate-recorder state was reachable only through a test
+hook. Both claims were corrected before final PASS. Independent old-wire
+literals now break on framing drift; the artificial production state/API was
+removed; real scoped concurrency proves shared-invoker coalescence and
+terminal conflict. The freeze's earlier “duplicate recorder state” phrase is
+therefore narrowed honestly: exact repeats coalesce, no independent recorder
+seat exists, and duplicate fact vectors remain a hard refusal in the existing
+workspace evidence join.
+
+Final gates: focused FACTS 9/9, workspace port 2/2, `vibe-lifecycle` 617 passed
+and 3 ignored plus 39 doctests, `vibe-workspace` 501/501 plus integrations and
+29 doctests, workspace check, all-target clippy with warnings denied, fmt,
+conform 48 standing/0 new and `git diff --check`. COMPILE is next; no Cargo
+build call, compile threading, freshness, publication or replay landed here.

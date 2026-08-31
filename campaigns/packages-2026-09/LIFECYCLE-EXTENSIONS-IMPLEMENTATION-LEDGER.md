@@ -1435,6 +1435,17 @@ than depending on untracked `cache/` archaeology.
   duplicate-framing survivor before final PASS. Gates pass FINALIZE 5,
   vibe-spec 904, workspace 499, check/clippy/fmt, conform 48/0 new and diff
   check. FINALIZE accepted; FACTS next.
+- R5.4-WORKSPACE-FACTS: `8de4151e` adds one object-safe workspace binding
+  implemented by the artifact invoker itself, a terminal recorder for typed
+  missing-source facts, single-instance raw source/config witnesses and a
+  complete semantic digest of the selected `build:cargo` row. Exact repeats
+  coalesce; missing/extra/conflict/poison/taken refuse; every non-missing
+  artifact path records zero facts. Initial review rejected a tautological
+  wire test and unreachable duplicate-seat claim; frozen legacy literals,
+  real concurrency REDs and removal of the artificial state earned final
+  PASS. Gates pass FACTS 9, port 2, lifecycle 617+39 doctests, workspace 501
+  plus integrations/29 doctests, check/clippy/fmt and conform 48/0. FACTS
+  accepted; COMPILE next.
 - R4.2 minify binding, RED corpus and activation e2e: `7a09ec2d` registers
   `xml-minify` (epoch 1, EMITTED — the one stage the kernel serves without a
   new serializer; every other stage refuses through the registry's own law)
