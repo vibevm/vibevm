@@ -17736,8 +17736,8 @@
       "item_kind": "enum",
       "line": 6,
       "symbol": "vibe_native_loader::error::NativeLoadError",
-      "end_line": 183,
-      "fingerprint": "tok1:75eccde1ce0bf5028e893d13acd42c0498fe21ad359b691cd282654cbf5781ae"
+      "end_line": 193,
+      "fingerprint": "tok1:4a2c34c02a5e463914358304b7935878920bd4c07f26e29b76b1b00eeb5581ee"
     },
     {
       "crate_name": "vibe-native-loader",
