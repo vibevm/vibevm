@@ -1446,6 +1446,15 @@ than depending on untracked `cache/` archaeology.
   PASS. Gates pass FACTS 9, port 2, lifecycle 617+39 doctests, workspace 501
   plus integrations/29 doctests, check/clippy/fmt and conform 48/0. FACTS
   accepted; COMPILE next.
+- R5.4-WORKSPACE-COMPILE implementation freeze: native
+  `gpt-5.6-sol`/`xhigh` reviews require one lazy, bound-owner static compile
+  core for node/unit and plain/traced/observed modes. No-static and builtin-only
+  paths allocate no binding/facts; Ready terminally proves an empty recorder;
+  Pending drains facts, builds owner/format evidence and FINALIZEs before scope
+  completion or publication. Observed emission is buffered and reframed to
+  final bytes without parsing or a finalizer delta. New bound-epoch siblings
+  preserve exact node/unit runtimes; freshness/replay/INSTALL/FENCE and Cargo
+  remain outside COMPILE.
 - R4.2 minify binding, RED corpus and activation e2e: `7a09ec2d` registers
   `xml-minify` (epoch 1, EMITTED — the one stage the kernel serves without a
   new serializer; every other stage refuses through the registry's own law)

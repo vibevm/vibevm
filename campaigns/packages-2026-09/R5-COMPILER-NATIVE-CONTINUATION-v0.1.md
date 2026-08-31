@@ -1000,3 +1000,53 @@ and 3 ignored plus 39 doctests, `vibe-workspace` 501/501 plus integrations and
 29 doctests, workspace check, all-target clippy with warnings denied, fmt,
 conform 48 standing/0 new and `git diff --check`. COMPILE is next; no Cargo
 build call, compile threading, freshness, publication or replay landed here.
+
+## 24. R5.4-WORKSPACE-COMPILE implementation freeze
+
+**Frozen 2026-09-01 after two independent native
+`gpt-5.6-sol`/`xhigh` architecture reviews and a bounded observer follow-up.**
+COMPILE owns one node/unit static-artifact core and one post-compiler outcome
+funnel. Plain, traced and observed are a closed mode enum, never competing
+optional parameters, and every mode reaches the same Ready/Pending join.
+
+The core returns before plan cloning, binding creation, scope acquisition,
+compiler invocation, fact drain, evidence or continuation allocation when the
+owner has no static entry. After fallible input/plan preparation it inspects
+the retained runtime's compile/native intersection. A builtin-only plan uses
+the exact historical compiler path and never asks for a binding. A native plan
+uses a lazy workspace-defined GAT provider; lifecycle can return its concrete
+owner-borrowing `ArtifactCompilerNativeInvoker` plus Collect/Resolve policy
+without reversing the dependency DAG. Native work without a provider refuses;
+it never falls back to unmanaged compilation.
+
+The managed result retains manager receipts for Ready, or finalized pending
+evidence plus the exact non-Clone pending set for Pending. Ready terminally
+drains the same binding and requires an empty fact recorder. Pending borrows
+its set, drains one-to-one facts from that binding, builds evidence from the
+exact `OwnerRuntimeId`, `BootStatic` and `SpecFormat`, and consumes the opaque
+artifact through FINALIZE. Provisional bytes and their fingerprint never leave
+the funnel.
+
+Scope acquisition remains immediately before the one compiler call. Every
+compiler, fact, evidence or finalization result passes through one terminal
+branch: failure marks the acquired scope failed; success completes it only
+with the final publishable output fingerprint. No post-acquisition `?` may
+leave an occurrence pending. Transaction publication remains after this
+funnel, so a finalization refusal preserves existing node/unit artifacts.
+
+Observed managed compilation buffers the compiler's one emission event in a
+vibe-spec one-shot proxy. Stage deltas still use the existing panic-contained
+delivery immediately; pending lane/emitted calls remain absent and FINALIZE
+adds no delta. After Ready or FINALIZE produces the publishable artifact, the
+proxy reframes the retained witness-derived contribution rows to the final
+total byte length and frame complement, then delivers exactly once through the
+existing panic boundary. A failed join drops provisional emission evidence;
+no tape or generated comment is parsed.
+
+New bound-epoch regeneration and analyzer siblings consume exact retained
+node/package runtimes and the lazy provider. Unit compilation cannot borrow a
+selected-node runtime; root and member ids remain distinct. Existing wrappers
+and no-native byte/error/trace behavior remain compatibility paths. COMPILE
+may carry the finalized pending continuation, but does not change freshness,
+publish replay, construct durable replay descriptors, thread production
+INSTALL, sequence FENCE or call Cargo.
