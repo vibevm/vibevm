@@ -44,8 +44,13 @@ use crate::vibedeps::{in_place_slot_abs_path, slot_abs_path};
 
 mod epoch;
 mod errors;
+mod runtime;
 
 pub use errors::ExtensionWorldError;
+pub use runtime::{
+    LoweredOwnerRuntimes, OwnerRuntime, OwnerRuntimeEpoch, OwnerRuntimeId, OwnerRuntimeLowering,
+    OwnerRuntimeRows, OwnerRuntimeRunFacts, OwnerRuntimeView, lower_owner_runtimes,
+};
 
 /// One installed package as the durable world retains it.
 ///
@@ -552,3 +557,7 @@ mod mechanism_tests;
 #[cfg(test)]
 #[path = "extension_world/tests.rs"]
 mod tests;
+
+#[cfg(test)]
+#[path = "extension_world/runtime_tests.rs"]
+mod runtime_tests;

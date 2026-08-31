@@ -19,7 +19,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#install");
 
-use std::collections::HashSet;
+use std::collections::{BTreeMap, HashSet};
 use std::sync::Arc;
 
 use vibe_core::manifest::SpecFormat;
@@ -28,12 +28,12 @@ use vibe_spec::{CompileObserver, DocumentProvider, EmittedArtifact};
 use crate::boot;
 use crate::boot::hybrid::hoist;
 use crate::errors::WorkspaceError;
-use crate::extension_world::ExtensionWorldEpoch;
+use crate::extension_world::{ExtensionWorldEpoch, OwnerRuntimeLowering, lower_owner_runtimes};
 use crate::{Workspace, boot_artifacts};
 
 use super::ResolvedDep;
 use super::hybrid_emit::{append_hoisted, with_static_set};
-use super::owner_plans::{node_owner_plan, world_error};
+use super::owner_plans::world_error;
 use super::{
     build_unit_table, desubstitute_covered_units, node_dependency_boot, node_own_boot,
     read_durable_resolution,
@@ -88,6 +88,11 @@ pub fn analyze_node_lane(
     // substitution set) and which shared packages hoist to the root.
     let resolution: Vec<ResolvedDep> = read_durable_resolution(&root)?;
     let world = ExtensionWorldEpoch::from_resolution(&root, &resolution).map_err(world_error)?;
+    let runtimes = lower_owner_runtimes(
+        workspace,
+        &world,
+        OwnerRuntimeLowering::new(node_rel, BTreeMap::new()),
+    )?;
     let table = build_unit_table(&root, &resolution);
     let with_static = with_static_set(&table);
     let pulls = hoist::soft_static_pulls(&table);
@@ -145,7 +150,7 @@ pub fn analyze_node_lane(
 
     // The node lane's own owner-scoped plan. Root and members take distinct
     // host seats over this same exact parsed package epoch.
-    let transforms = node_owner_plan(&world, &node_dir, &node_manifest, node_rel)?;
+    let transforms = runtimes.node(node_rel)?.transform_plan().clone();
 
     let compiled = boot_artifacts::compile_static_analyzed(
         &effective,

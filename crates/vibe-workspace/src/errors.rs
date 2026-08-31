@@ -240,6 +240,31 @@ pub enum WorkspaceError {
         source: vibe_spec::TransformLoweringError,
     },
 
+    /// Runtime lowering named no node in the supplied workspace.
+    #[error(
+        "owner-runtime {role} node `{rel}` is not a node of this workspace \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM; \
+         fix: pass `.` or one exact workspace-relative member path)"
+    )]
+    UnknownRuntimeNode { rel: String, role: &'static str },
+
+    /// A well-typed package coordinate is absent from the lowered unit map.
+    #[error(
+        "owner-runtime unit `{provider}` is absent from this lowered world \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-ACTIVATION; \
+         fix: request one installed package coordinate retained by the runtime epoch)"
+    )]
+    UnknownRuntimeUnit { provider: String },
+
+    /// An opaque registry index failed to project through the registry that
+    /// the same owner runtime retained.
+    #[error(
+        "owner-runtime `{owner}` cannot project its retained {family} row index \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#ORDER-LAW; \
+         fix: keep opaque row indices co-owned with their immutable originating registry)"
+    )]
+    OwnerRuntimeIndex { owner: String, family: &'static str },
+
     /// A publish operation referenced a node `rel_path` that names no
     /// node of this workspace — the selection and the loaded workspace
     /// fell out of sync.

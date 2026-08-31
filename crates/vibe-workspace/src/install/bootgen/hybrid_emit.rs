@@ -11,12 +11,14 @@ use std::path::Path;
 
 use specmark::spec;
 use vibe_core::manifest::{LinkType, SpecFormat};
-use vibe_core::{Group, layout};
+use vibe_core::{Group, PackageName, layout};
+use vibe_extension_registry::DependencyProviderId;
 use vibe_spec::TransformPlan;
 
 use crate::boot::hybrid::{self, UnitEdge, UnitId, UnitInput, ZoneMembership};
 use crate::boot::{BootBand, BootEntry, EffectiveBoot};
 use crate::compile_trace::TraceRun;
+use crate::extension_world::LoweredOwnerRuntimes;
 use crate::{WorkspaceError, boot_artifacts, vibedeps};
 
 use super::super::ResolvedDep;
@@ -159,7 +161,7 @@ pub(super) fn emit_package_units(
     fingerprints: &HashMap<UnitId, String>,
     spec_format: SpecFormat,
     trace: Option<&TraceRun>,
-    plans: &HashMap<UnitId, TransformPlan>,
+    runtimes: &LoweredOwnerRuntimes,
 ) -> Result<HashSet<UnitId>, WorkspaceError> {
     let slots: HashMap<UnitId, String> = resolution
         .iter()
@@ -229,6 +231,15 @@ pub(super) fn emit_package_units(
                     slot,
                 )
             });
+        let owner = DependencyProviderId::new(
+            id.0.clone(),
+            PackageName::parse(&id.1).map_err(|error| WorkspaceError::UntypedBootProvenance {
+                origin: format!("{}/{}", id.0, id.1),
+                component: "unit package name",
+                spelling: id.1.clone(),
+                reason: error.to_string(),
+            })?,
+        );
         emit_effective(
             &boot_dir,
             workspace_root,
@@ -244,7 +255,7 @@ pub(super) fn emit_package_units(
             // before the fingerprints its digest feeds, and is read here
             // off the key it is filed under — never re-lowered, so one
             // declaration keeps one refusal surface.
-            plans.get(id).cloned().unwrap_or_else(TransformPlan::empty),
+            runtimes.unit(&owner)?.transform_plan().clone(),
         )
     };
 

@@ -10,7 +10,81 @@ use tempfile::TempDir;
 use vibe_core::manifest::{LockedPackage, Lockfile, Materialization, SpecFormat};
 use vibe_core::{ContentHash, Group, PackageKind, PackageName, PackageRef};
 
-use crate::extension_world::{ExtensionWorldEpoch, collect_owner_view};
+use crate::extension_world::{
+    ExtensionWorldEpoch, LoweredOwnerRuntimes, OwnerRuntimeLowering, collect_owner_view,
+};
+use vibe_extension_registry::ExtensionProvider;
+
+#[derive(Debug, PartialEq, Eq)]
+struct RuntimeAuthority {
+    registry_keys: Vec<String>,
+    provider_hashes: Vec<String>,
+    compile_keys: Vec<String>,
+    plan_digest: Option<String>,
+    build_route: String,
+    project: (String, String),
+    world: Vec<(String, String, String, String)>,
+    deps_root: String,
+    lockfile: String,
+    unit_plans: Vec<(String, Option<String>)>,
+}
+
+fn runtime_authority(runtimes: &LoweredOwnerRuntimes) -> RuntimeAuthority {
+    let root = runtimes.node(".").expect("root runtime");
+    let rows = root.rows().expect("runtime rows");
+    RuntimeAuthority {
+        registry_keys: root
+            .registry()
+            .rows()
+            .iter()
+            .map(|row| row.key().to_string())
+            .collect(),
+        provider_hashes: root
+            .registry()
+            .rows()
+            .iter()
+            .filter_map(|row| match row.provider() {
+                ExtensionProvider::Dependency(provider) => Some(provider.content_hash.to_string()),
+                ExtensionProvider::Host(_) => None,
+            })
+            .collect(),
+        compile_keys: rows
+            .compile()
+            .iter()
+            .map(|row| row.key().to_string())
+            .collect(),
+        plan_digest: root.transform_plan().digest_hex(),
+        build_route: root
+            .routes()
+            .get("build:cargo")
+            .expect("build route")
+            .to_string(),
+        project: (
+            runtimes.project().name.clone(),
+            runtimes.project().root.clone(),
+        ),
+        world: runtimes
+            .world()
+            .packages
+            .iter()
+            .map(|package| {
+                (
+                    package.group.clone(),
+                    package.name.clone(),
+                    package.slot.clone(),
+                    package.version.clone(),
+                )
+            })
+            .collect(),
+        deps_root: runtimes.world().deps_root.clone(),
+        lockfile: runtimes.world().lockfile.clone(),
+        unit_plans: runtimes
+            .units()
+            .iter()
+            .map(|(owner, runtime)| (owner.to_string(), runtime.transform_plan().digest_hex()))
+            .collect(),
+    }
+}
 
 fn group() -> Group {
     Group::parse("org.lock").unwrap()
@@ -66,6 +140,30 @@ fn write_lock(root: &Path, packages: Vec<LockedPackage>) {
     lock.write(root.join(Lockfile::FILENAME)).unwrap();
 }
 
+fn resolved(root: &Path, name: &str, hash: &str, dependencies: &[&str]) -> ResolvedDep {
+    let slot = crate::vibedeps::slot_abs_path(root, &group(), name, &version());
+    ResolvedDep {
+        kind: PackageKind::Tool,
+        group: group(),
+        name: name.to_owned(),
+        version: version(),
+        content_dir: slot.clone(),
+        source_hash: Some(ContentHash::parse(hash).unwrap()),
+        manifest: Manifest::read(slot.join(Manifest::FILENAME)).unwrap(),
+        requires: dependencies
+            .iter()
+            .map(|edge| {
+                let edge = PackageRef::parse(edge).unwrap();
+                (edge.group.expect("grouped"), edge.name.to_string())
+            })
+            .collect(),
+        admitted_by: None,
+        via_override: None,
+        source_mutable: false,
+        in_place_changed: None,
+    }
+}
+
 #[test]
 fn durable_projection_keeps_lock_order_hash_and_graph_without_slot_records() {
     let workspace = TempDir::new().unwrap();
@@ -75,7 +173,8 @@ fn durable_projection_keeps_lock_order_hash_and_graph_without_slot_records() {
         "[project]\ngroup = \"org.demo\"\nname = \"host\"\nversion = \"0.1.0\"\n\n\
          [requires.packages]\n\"org.lock/z-tools\" = { version = \"=1.0.0\", link = \"static\" }\n\"org.lock/a-tools\" = { version = \"=1.0.0\", link = \"static\" }\n\n\
          [[extensions.use]]\nref = \"org.lock/a-tools#a-row\"\n\n\
-         [[extensions.use]]\nref = \"org.lock/z-tools#z-row\"\n",
+         [[extensions.use]]\nref = \"org.lock/z-tools#z-row\"\n\n\
+         [mechanisms]\n\"build:cargo\" = \"org.vibevm/vibe#cargo\"\n",
     );
     slot(
         root,
@@ -139,22 +238,41 @@ handler = { kind = "builtin", name = "xml-minify" }
         &crate::vibedeps::slot_abs_path(root, &group(), "m-orphan", &version()).join("boot/m.md"),
         "# m orphan\n",
     );
+    // Stale ambient authority deliberately disagrees with the Ready overlay.
     write_lock(
         root,
         vec![
-            locked("z-tools", "sha256:aa", &["org.lock/a-tools@=1.0.0"]),
-            locked("a-tools", "sha256:bb", &[]),
+            locked("a-tools", "sha256:cc", &[]),
+            locked("z-tools", "sha256:dd", &[]),
         ],
     );
+    let stale_resolution = read_durable_resolution(root).unwrap();
+    assert_eq!(
+        stale_resolution
+            .iter()
+            .map(|dep| dep.name.as_str())
+            .collect::<Vec<_>>(),
+        ["a-tools", "z-tools"]
+    );
+    assert_eq!(
+        stale_resolution
+            .iter()
+            .map(|dep| dep.source_hash.as_ref().unwrap().to_string())
+            .collect::<Vec<_>>(),
+        ["sha256:cc", "sha256:dd"]
+    );
 
-    let resolution = read_durable_resolution(root).unwrap();
+    let resolution = vec![
+        resolved(root, "z-tools", "sha256:aa", &["org.lock/a-tools@=1.0.0"]),
+        resolved(root, "a-tools", "sha256:bb", &[]),
+    ];
     assert_eq!(
         resolution
             .iter()
             .map(|dep| dep.name.as_str())
             .collect::<Vec<_>>(),
         ["z-tools", "a-tools"],
-        "lock order is authority and the orphan is absent"
+        "supplied Ready order is authority and the orphan is absent"
     );
     assert_eq!(
         resolution
@@ -162,7 +280,7 @@ handler = { kind = "builtin", name = "xml-minify" }
             .map(|dep| dep.source_hash.as_ref().unwrap().to_string())
             .collect::<Vec<_>>(),
         ["sha256:aa", "sha256:bb"],
-        "provider hashes come from the lock without any slot record"
+        "Ready provider hashes come from the supplied overlay"
     );
 
     let workspace = Workspace::load(root).unwrap();
@@ -184,12 +302,66 @@ handler = { kind = "builtin", name = "xml-minify" }
         ["org.lock/z-tools#z-row", "org.lock/a-tools#a-row"],
     );
 
-    regenerate_boot_with_spec_format(&workspace, SpecFormat::Xml).unwrap();
+    let prepared = regenerate_boot_from_traced_prepared(
+        &workspace,
+        &resolution,
+        SpecFormat::Xml,
+        None,
+        OwnerRuntimeLowering::compatibility_root_without_presets(),
+    )
+    .unwrap();
+    assert_eq!(prepared.nodes, ["."]);
+    assert_eq!(prepared.runtimes.units().len(), 2);
+    let ready_authority = runtime_authority(&prepared.runtimes);
+    assert_eq!(
+        ready_authority.registry_keys,
+        ["org.lock/z-tools#z-row", "org.lock/a-tools#a-row"]
+    );
+    assert_eq!(ready_authority.provider_hashes, ["sha256:aa", "sha256:bb"]);
+    assert_eq!(
+        ready_authority.compile_keys,
+        ["org.lock/a-tools#a-row", "org.lock/z-tools#z-row"]
+    );
+    assert_eq!(ready_authority.build_route, "org.vibevm/vibe#cargo");
+    assert_eq!(
+        ready_authority
+            .world
+            .iter()
+            .map(|(_, name, _, _)| name.as_str())
+            .collect::<Vec<_>>(),
+        ["z-tools", "a-tools"]
+    );
+    let ready_bytes = fs::read(
+        root.join(vibe_core::layout::current_boot_dir())
+            .join(crate::boot_artifacts::static_file(SpecFormat::Xml)),
+    )
+    .unwrap();
+    write_lock(
+        root,
+        vec![
+            locked("z-tools", "sha256:aa", &["org.lock/a-tools@=1.0.0"]),
+            locked("a-tools", "sha256:bb", &[]),
+        ],
+    );
+    let fresh_resolution = read_durable_resolution(root).unwrap();
+    let fresh = regenerate_boot_from_traced_prepared(
+        &workspace,
+        &fresh_resolution,
+        SpecFormat::Xml,
+        None,
+        OwnerRuntimeLowering::compatibility_root_without_presets(),
+    )
+    .unwrap();
+    assert_eq!(runtime_authority(&fresh.runtimes), ready_authority);
     let written = fs::read(
         root.join(vibe_core::layout::current_boot_dir())
             .join(crate::boot_artifacts::static_file(SpecFormat::Xml)),
     )
     .unwrap();
+    assert_eq!(
+        written, ready_bytes,
+        "Fresh and supplied Ready inputs agree"
+    );
     let header = "<!-- vibe:transforms org.lock/a-tools#a-row org.lock/z-tools#z-row -->";
     assert!(
         String::from_utf8_lossy(&written).contains(header),

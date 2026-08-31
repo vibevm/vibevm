@@ -9,11 +9,12 @@ use std::path::Path;
 use specmark::spec;
 use vibe_core::manifest::{BootCategory, LinkType, Manifest, SpecFormat};
 use vibe_core::{Group, layout};
-use vibe_spec::TransformPlan;
 
 use crate::boot::hybrid::{UnitId, fingerprint, hoist};
 use crate::boot::{self, AuthoredBoot, DependencyBoot, NodeBootInputs};
-use crate::extension_world::{ExtensionWorldEpoch, collect_owner_view};
+use crate::extension_world::{
+    ExtensionWorldEpoch, LoweredOwnerRuntimes, OwnerRuntimeLowering, lower_owner_runtimes,
+};
 use crate::{Workspace, WorkspaceError, boot_artifacts, layout_paths, path_to_slash, vibedeps};
 
 use super::{ResolvedDep, io_err};
@@ -22,7 +23,7 @@ use super::{ResolvedDep, io_err};
 /// file keeps its length budget while the composition above stays readable.
 #[path = "bootgen/owner_plans.rs"]
 mod owner_plans;
-use owner_plans::{node_owner_plan, plan_digest_frames, unit_owner_plans};
+use owner_plans::plan_digest_frames;
 
 #[path = "bootgen/hybrid_emit.rs"]
 mod hybrid_emit;
@@ -86,17 +87,35 @@ pub fn regenerate_boot_from_traced(
     spec_format: SpecFormat,
     trace: Option<&crate::compile_trace::TraceRun>,
 ) -> Result<Vec<String>, WorkspaceError> {
-    // The workspace root's self coordinate (B-031): `<group>/<name>` from its
-    // `[project]` table — what a `spec://` address names to reach the authored
-    // specs tree. Always the root's coordinate (self = workspace root),
-    // threaded into every artifact write. A root with no `[project]` (or no
-    // `group`) declares none.
+    regenerate_boot_from_traced_prepared(
+        workspace,
+        resolution,
+        spec_format,
+        trace,
+        OwnerRuntimeLowering::compatibility_root_without_presets(),
+    )
+    .map(|prepared| prepared.nodes)
+}
+
+/// One prepared regeneration and the exact neutral runtime set it lowered.
+#[derive(Debug)]
+pub struct BootRegeneration {
+    pub nodes: Vec<String>,
+    pub runtimes: LoweredOwnerRuntimes,
+}
+
+/// Lower every owner once, regenerate, and return the retained runtime set.
+pub fn regenerate_boot_from_traced_prepared(
+    workspace: &Workspace,
+    resolution: &[ResolvedDep],
+    spec_format: SpecFormat,
+    trace: Option<&crate::compile_trace::TraceRun>,
+    lowering: OwnerRuntimeLowering,
+) -> Result<BootRegeneration, WorkspaceError> {
+    // B-031 self is always the workspace root coordinate.
     let self_coord = root_self_coordinate(&workspace.root_manifest);
 
-    // ONE explicit command-owned world per run (R5.4 EPOCH-WORLD). The exact
-    // supplied resolution is the authority for package order, manifests and
-    // materialised roots. Ambient `vibe.lock` is deliberately not observed:
-    // during Ready install it still describes the pre-install world.
+    // Exact supplied world; Ready never consults the still-old ambient lock.
     let world = ExtensionWorldEpoch::from_resolution(&workspace.root, resolution)
         .map_err(owner_plans::world_error)?;
 
@@ -107,11 +126,8 @@ pub fn regenerate_boot_from_traced(
     // just the snippet. For a tree with no intermediate static edge this is a
     // no-op, keeping the node artifacts byte-identical (PROP-038 §5).
     let table = build_unit_table(&workspace.root, resolution);
-    // ONE lowering per unit per run (R4 architecture §7.1), BEFORE the
-    // fingerprints: an owner plan's digest is an INPUT to its unit's
-    // freshness, so the plans must exist first, and the very same plans are
-    // handed to emission below rather than lowered a second time in the loop.
-    let unit_plans = unit_owner_plans(&world, &table)?;
+    // Lower every owner before plan digests feed unit fingerprints.
+    let runtimes = lower_owner_runtimes(workspace, &world, lowering)?;
     // Boot-graph fingerprints (PROP-038 §2.7) drive the dirty-subgraph skip in
     // per-unit emission (§2.8) — a package whose fingerprint is unchanged is
     // not recompiled. Keyed on each unit's resolved version, plus the owner
@@ -120,7 +136,7 @@ pub fn regenerate_boot_from_traced(
         .iter()
         .map(|d| ((d.group.clone(), d.name.clone()), d.version.to_string()))
         .collect();
-    let fps = fingerprint::fingerprints(&table, &versions, &plan_digest_frames(&unit_plans));
+    let fps = fingerprint::fingerprints(&table, &versions, &plan_digest_frames(&runtimes));
     // Soft hoisting (PROP-038 §2.4): a package soft-statically linked by two or
     // more units is `shared` — hoisted to the global root STATIC.md and linked
     // once, its local zones left a #use marker. `pulls` also feeds the
@@ -142,7 +158,7 @@ pub fn regenerate_boot_from_traced(
         &fps,
         spec_format,
         trace,
-        &unit_plans,
+        &runtimes,
     )?;
 
     // The absolute root's foundation boot — inherited by every member
@@ -217,11 +233,14 @@ pub fn regenerate_boot_from_traced(
             &effective,
             spec_format,
             trace,
-            node_owner_plan(&world, &node_dir, manifest, rel)?,
+            runtimes.node(rel)?.transform_plan().clone(),
         )?;
         nodes_regenerated.push(rel.to_string());
     }
-    Ok(nodes_regenerated)
+    Ok(BootRegeneration {
+        nodes: nodes_regenerated,
+        runtimes,
+    })
 }
 
 /// Regenerate from materialised dependency slots, without resolving or copying.
@@ -276,8 +295,12 @@ pub fn verify_boot_graph(workspace: &Workspace) -> Result<Vec<UnitId>, Workspace
     // frames the same owner-plan digests (R4 architecture §7.1). Recomputing
     // without them would call every unit whose owner activates a transform
     // stale on a tree the generator had just left fresh.
-    let unit_plans = unit_owner_plans(&world, &table)?;
-    let fps = fingerprint::fingerprints(&table, &versions, &plan_digest_frames(&unit_plans));
+    let runtimes = lower_owner_runtimes(
+        workspace,
+        &world,
+        OwnerRuntimeLowering::compatibility_root_without_presets(),
+    )?;
+    let fps = fingerprint::fingerprints(&table, &versions, &plan_digest_frames(&runtimes));
     Ok(verify_fingerprints(
         &workspace.root,
         &resolution,

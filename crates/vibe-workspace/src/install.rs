@@ -74,9 +74,9 @@ pub use bootgen::verify_boot_graph;
 /// observer — the same composition regeneration runs, minus every write.
 pub use bootgen::{AnalyzedLane, analyze_node_lane};
 pub use bootgen::{
-    regenerate_boot, regenerate_boot_from, regenerate_boot_from_traced,
-    regenerate_boot_from_with_spec_format, regenerate_boot_traced,
-    regenerate_boot_with_spec_format,
+    BootRegeneration, regenerate_boot, regenerate_boot_from, regenerate_boot_from_traced,
+    regenerate_boot_from_traced_prepared, regenerate_boot_from_with_spec_format,
+    regenerate_boot_traced, regenerate_boot_with_spec_format,
 };
 
 /// Materialise a resolution into the workspace and regenerate every node's
