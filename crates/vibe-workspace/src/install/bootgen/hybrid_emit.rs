@@ -496,27 +496,74 @@ pub(super) fn verify_fingerprints(
     workspace_root: &Path,
     resolution: &[ResolvedDep],
     table: &HashMap<UnitId, UnitInput>,
-    fingerprints: &HashMap<UnitId, String>,
-) -> Vec<UnitId> {
+    versions: &HashMap<UnitId, String>,
+    plan_digests: &HashMap<UnitId, String>,
+    runtimes: &LoweredOwnerRuntimes,
+) -> Result<Vec<UnitId>, WorkspaceError> {
     let slots: HashMap<UnitId, String> = resolution
         .iter()
         .map(|d| ((d.group.clone(), d.name.clone()), slot_rel_path(d)))
         .collect();
-    let mut stale: Vec<UnitId> = Vec::new();
-    for id in table.keys() {
-        let zone = hybrid::resolve_zone(id, table);
-        if !has_static_children(id, &zone, table) {
-            continue; // no per-unit STATIC.md is expected for this unit
-        }
-        let Some(slot) = slots.get(id) else { continue };
-        let index = workspace_root.join(slot).join(layout::current_boot_index());
-        let stored = fs::read_to_string(&index)
-            .ok()
-            .and_then(|t| boot_artifacts::read_fingerprint(&t));
-        if stored.as_deref() != fingerprints.get(id).map(String::as_str) {
-            stale.push(id.clone());
+    let emitted = table
+        .keys()
+        .filter(|id| has_static_children(id, &hybrid::resolve_zone(id, table), table))
+        .cloned()
+        .collect::<HashSet<_>>();
+    let mut native_ids = HashSet::new();
+    for (owner, runtime) in runtimes.units() {
+        let id = (owner.group().clone(), owner.name().to_string());
+        if emitted.contains(&id) && runtime.has_compiler_native_intersection()? {
+            native_ids.insert(id);
         }
     }
+    let mut stale = HashSet::new();
+    let mut recorded = HashMap::new();
+    let mut pending = HashMap::new();
+    for id in &emitted {
+        let Some(slot) = slots.get(id) else { continue };
+        let index = workspace_root.join(slot).join(layout::current_boot_index());
+        let parsed = fs::read_to_string(&index)
+            .ok()
+            .and_then(|text| boot_artifacts::publication::read_unit_index_freshness(&text).ok());
+        let Some(parsed) = parsed else {
+            stale.insert(id.clone());
+            continue;
+        };
+        recorded.insert(id.clone(), parsed.fingerprint);
+        if let Some(frame) = parsed.pending {
+            pending.insert(id.clone(), frame);
+            if !native_ids.contains(id) {
+                stale.insert(id.clone());
+            }
+        }
+    }
+    let effective =
+        hybrid::fingerprint::fingerprints_with_pending(table, versions, plan_digests, &pending);
+    for id in &emitted {
+        if recorded.get(id) != effective.get(id) {
+            stale.insert(id.clone());
+        }
+    }
+    loop {
+        let parents = table
+            .iter()
+            .filter(|(id, unit)| {
+                !stale.contains(*id)
+                    && unit.edges.iter().any(|edge| {
+                        matches!(
+                            edge.link,
+                            LinkType::Static | LinkType::StaticTransitive | LinkType::StaticHard
+                        ) && stale.contains(&edge.target)
+                    })
+            })
+            .map(|(id, _)| id.clone())
+            .collect::<Vec<_>>();
+        if parents.is_empty() {
+            break;
+        }
+        stale.extend(parents);
+    }
+    let mut stale = stale.into_iter().collect::<Vec<_>>();
     stale.sort();
-    stale
+    Ok(stale)
 }

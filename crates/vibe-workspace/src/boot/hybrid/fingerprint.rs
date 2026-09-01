@@ -42,6 +42,22 @@ use vibe_core::manifest::LinkType;
 
 use super::{UnitId, UnitInput};
 
+/// Typed raw evidence frame for one currently Pending native unit.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(crate) struct NativePendingFrame([u8; 32]);
+
+impl NativePendingFrame {
+    #[must_use]
+    pub(crate) const fn new(bytes: [u8; 32]) -> Self {
+        Self(bytes)
+    }
+
+    #[must_use]
+    pub(crate) const fn as_bytes(&self) -> &[u8; 32] {
+        &self.0
+    }
+}
+
 /// Compute the fingerprint of every unit (PROP-038 §2.7), bottom-up with
 /// memoisation. `versions` gives each unit's resolved version — the content
 /// identity for an immutable package (a mutable in-workspace source is
@@ -87,6 +103,15 @@ pub fn fingerprints(
     versions: &HashMap<UnitId, String>,
     plan_digests: &HashMap<UnitId, String>,
 ) -> HashMap<UnitId, String> {
+    fingerprints_with_pending(table, versions, plan_digests, &HashMap::new())
+}
+
+pub(crate) fn fingerprints_with_pending(
+    table: &HashMap<UnitId, UnitInput>,
+    versions: &HashMap<UnitId, String>,
+    plan_digests: &HashMap<UnitId, String>,
+    pending: &HashMap<UnitId, NativePendingFrame>,
+) -> HashMap<UnitId, String> {
     let mut memo: HashMap<UnitId, String> = HashMap::new();
     for id in table.keys() {
         compute(
@@ -94,6 +119,7 @@ pub fn fingerprints(
             table,
             versions,
             plan_digests,
+            pending,
             &mut memo,
             &mut HashSet::new(),
         );
@@ -109,6 +135,7 @@ fn compute(
     table: &HashMap<UnitId, UnitInput>,
     versions: &HashMap<UnitId, String>,
     plan_digests: &HashMap<UnitId, String>,
+    pending: &HashMap<UnitId, NativePendingFrame>,
     memo: &mut HashMap<UnitId, String>,
     on_stack: &mut HashSet<UnitId>,
 ) -> String {
@@ -163,7 +190,15 @@ fn compute(
                 LinkType::Static | LinkType::StaticTransitive | LinkType::StaticHard
             );
             if is_static {
-                let child = compute(&edge.target, table, versions, plan_digests, memo, on_stack);
+                let child = compute(
+                    &edge.target,
+                    table,
+                    versions,
+                    plan_digests,
+                    pending,
+                    memo,
+                    on_stack,
+                );
                 hasher.update(b" static-fp:");
                 hasher.update(child.as_bytes());
             } else {
@@ -180,6 +215,10 @@ fn compute(
     if let Some(digest) = plan_digests.get(id) {
         hasher.update(b"\ntransforms:");
         hasher.update(digest.as_bytes());
+    }
+    if let Some(pending) = pending.get(id) {
+        hasher.update(b"\nnative-pending:v1:");
+        hasher.update(pending.as_bytes());
     }
     on_stack.remove(id);
     let fp = hex(&hasher.finalize());

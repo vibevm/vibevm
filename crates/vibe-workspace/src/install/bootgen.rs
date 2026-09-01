@@ -304,13 +304,14 @@ pub fn verify_boot_graph(workspace: &Workspace) -> Result<Vec<UnitId>, Workspace
         &world,
         OwnerRuntimeLowering::compatibility_root_without_presets(),
     )?;
-    let fps = fingerprint::fingerprints(&table, &versions, &plan_digest_frames(&runtimes));
-    Ok(verify_fingerprints(
+    verify_fingerprints(
         &workspace.root,
         &resolution,
         &table,
-        &fps,
-    ))
+        &versions,
+        &plan_digest_frames(&runtimes),
+        &runtimes,
+    )
 }
 
 /// Discover a node's own authored boot files — every spec source in its

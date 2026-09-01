@@ -239,3 +239,27 @@ fn a_units_frame_reads_its_own_entry_and_never_another_units() {
         "a sibling's plan never enters this unit's frame"
     );
 }
+
+#[test]
+fn pending_raw_frame_propagates_only_through_static_edges_and_removal_restores_base() {
+    let t = table(vec![
+        unit("root", &[("a", LinkType::Static), ("b", LinkType::Dynamic)]),
+        unit("a", &[]),
+        unit("b", &[]),
+    ]);
+    let v = vers(&["root", "a", "b"]);
+    let base = fingerprints(&t, &v, &no_plans());
+    let pending_a = HashMap::from([(id("a"), NativePendingFrame::new([0xab; 32]))]);
+    let framed_a = fingerprints_with_pending(&t, &v, &no_plans(), &pending_a);
+    assert_ne!(framed_a[&id("a")], base[&id("a")]);
+    assert_ne!(framed_a[&id("root")], base[&id("root")]);
+
+    let pending_b = HashMap::from([(id("b"), NativePendingFrame::new([0xcd; 32]))]);
+    let framed_b = fingerprints_with_pending(&t, &v, &no_plans(), &pending_b);
+    assert_ne!(framed_b[&id("b")], base[&id("b")]);
+    assert_eq!(framed_b[&id("root")], base[&id("root")]);
+    assert_eq!(
+        fingerprints_with_pending(&t, &v, &no_plans(), &HashMap::new()),
+        base
+    );
+}

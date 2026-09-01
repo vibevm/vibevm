@@ -72,7 +72,7 @@ pub(crate) use analyzed::{StaticCompile, compile_static_analyzed};
 
 /// Manager-owned per-unit publication — the compiled INDEX/STATIC triple's
 /// narrow seam onto the transaction manager (R4.1 atom B).
-mod publication;
+pub(crate) mod publication;
 pub(crate) use publication::publish_unit_artifacts;
 use publication::stale_static_file;
 
@@ -171,6 +171,14 @@ pub fn render_index_with_spec_format(
     fingerprint: Option<&str>,
     spec_format: SpecFormat,
 ) -> Result<String, WorkspaceError> {
+    let prepared = publication::prepare_index(boot, spec_format)?;
+    Ok(publication::finish_index(prepared, fingerprint, None))
+}
+
+pub(super) fn prepare_index_body(
+    boot: &EffectiveBoot,
+    spec_format: SpecFormat,
+) -> Result<String, WorkspaceError> {
     let has_static = boot.static_entries().next().is_some();
     let manifest = IndexManifest {
         schema: INDEX_SCHEMA,
@@ -195,14 +203,7 @@ pub fn render_index_with_spec_format(
     let body = toml::to_string_pretty(&manifest).map_err(|e| WorkspaceError::IndexRender {
         reason: e.to_string(),
     })?;
-    // The fingerprint header (PROP-038 §2.7) — a TOML comment, so the manifest
-    // stays parseable. Omitted (`None`) on a node so its INDEX.md is
-    // byte-stable; carried on a per-unit INDEX to drive the dirty-subgraph.
-    let fp_line = match fingerprint {
-        Some(fp) => format!("{FP_MARKER}{fp}\n\n"),
-        None => String::new(),
-    };
-    Ok(format!("{}{fp_line}{body}", index_header()))
+    Ok(body)
 }
 
 /// Render `STATIC.md` — the concatenation of the `static`-linked

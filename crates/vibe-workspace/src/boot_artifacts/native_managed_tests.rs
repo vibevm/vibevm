@@ -5,22 +5,16 @@ use std::sync::{Arc, Mutex};
 use tempfile::TempDir;
 use vibe_core::manifest::{LinkType, SpecFormat};
 use vibe_spec::{
-    CompileObserver, CompilerNativeCall, CompilerNativeInvoker, CompilerNativeInvokerError,
-    CompilerNativeInvokerErrorKind, CompilerNativePolicy, CompilerPendingArtifact,
-    CompilerPendingFinalizeError, EmissionEvent, StageDeltaEvent, TransformPlan,
-    finalize_compiler_pending_artifact,
+    CompileObserver, CompilerPendingArtifact, CompilerPendingFinalizeError, EmissionEvent,
+    StageDeltaEvent, TransformPlan, finalize_compiler_pending_artifact,
 };
-use vibe_wire::generated::native::e1::compile_reply::{CompileReply, CompileReplySkip};
 use vibe_wire::generated::shared::Timestamp;
 
 use crate::boot::{BootBand, BootEntry, BootProvenance, EffectiveBoot};
 use crate::compile_trace::{ScopeAcquisition, TraceLimits, TraceRun};
 use crate::extension_world::{
-    CompilerNativeFactBinding, CompilerNativeFactError, ExtensionWorldEpoch, LoweredOwnerRuntimes,
-    OwnerNativeCompileBinding, OwnerNativeCompileProvider, OwnerRuntimeEpoch, OwnerRuntimeId,
-    OwnerRuntimeLowering, OwnerRuntimeRunFacts, OwnerRuntimeView, PendingBuildFact,
-    PendingBuildProviderDigest, PendingHandlerConfigWitness, PendingPlatformKey,
-    PendingSourceWitness, lower_owner_runtimes,
+    ExtensionWorldEpoch, LoweredOwnerRuntimes, OwnerRuntimeEpoch, OwnerRuntimeLowering,
+    OwnerRuntimeRunFacts, lower_owner_runtimes,
 };
 use crate::{Workspace, WorkspaceError};
 
@@ -30,128 +24,9 @@ use super::native_managed::{
     write_boot_artifacts_owner_managed,
 };
 
-#[derive(Clone, Copy)]
-pub(crate) enum Reply {
-    Skip,
-    Missing,
-    Hard,
-}
-
-pub(crate) struct FakeBinding {
-    reply: Reply,
-    fail_facts: bool,
-    fail_ready: bool,
-    ready_finishes: Arc<Mutex<usize>>,
-}
-
-impl CompilerNativeInvoker for FakeBinding {
-    fn invoke(&self, _call: CompilerNativeCall<'_>) -> Result<Vec<u8>, CompilerNativeInvokerError> {
-        match self.reply {
-            Reply::Skip => serde_json::to_vec(&CompileReply::Skip(Box::new(CompileReplySkip {
-                envelope: 1,
-                message: Some("fixture skip".to_owned()),
-            })))
-            .map_err(|error| {
-                CompilerNativeInvokerError::new(
-                    CompilerNativeInvokerErrorKind::InvocationFailed,
-                    error.to_string(),
-                )
-            }),
-            Reply::Missing => Err(CompilerNativeInvokerError::new(
-                CompilerNativeInvokerErrorKind::BuildableSourceUnavailable,
-                "fixture source record missing",
-            )),
-            Reply::Hard => Err(CompilerNativeInvokerError::new(
-                CompilerNativeInvokerErrorKind::InvocationFailed,
-                "fixture hard failure",
-            )),
-        }
-    }
-}
-
-impl CompilerNativeFactBinding for FakeBinding {
-    fn invoker(&self) -> &dyn CompilerNativeInvoker {
-        self
-    }
-
-    fn take_pending_build_facts(
-        &self,
-        pending: &vibe_spec::CompilerPendingSet,
-    ) -> Result<Vec<PendingBuildFact>, CompilerNativeFactError> {
-        if self.fail_facts {
-            return Err(CompilerNativeFactError::missing(0));
-        }
-        pending
-            .iter()
-            .map(|reference| {
-                PendingBuildFact::from_pending(
-                    reference,
-                    PendingPlatformKey::new("linux-x86_64")
-                        .map_err(|_| CompilerNativeFactError::construction(reference.order()))?,
-                    PendingSourceWitness::new([1; 32]),
-                    PendingHandlerConfigWitness::new([2; 32]),
-                    "build:cargo"
-                        .parse()
-                        .map_err(|_| CompilerNativeFactError::construction(reference.order()))?,
-                    PendingBuildProviderDigest::new([3; 32]),
-                )
-                .map_err(|_| CompilerNativeFactError::construction(reference.order()))
-            })
-            .collect()
-    }
-
-    fn finish_ready(&self) -> Result<(), CompilerNativeFactError> {
-        if self.fail_ready {
-            return Err(CompilerNativeFactError::extra(0));
-        }
-        let mut count = self
-            .ready_finishes
-            .lock()
-            .map_err(|_| CompilerNativeFactError::poisoned())?;
-        *count += 1;
-        Ok(())
-    }
-}
-
-pub(crate) struct FakeProvider {
-    reply: Reply,
-    fail_facts: bool,
-    fail_ready: bool,
-    pub(crate) owners: Vec<OwnerRuntimeId>,
-    ready_finishes: Arc<Mutex<usize>>,
-}
-
-impl FakeProvider {
-    pub(crate) fn new(reply: Reply) -> Self {
-        Self {
-            reply,
-            fail_facts: false,
-            fail_ready: false,
-            owners: Vec::new(),
-            ready_finishes: Arc::new(Mutex::new(0)),
-        }
-    }
-}
-
-impl OwnerNativeCompileProvider for FakeProvider {
-    type Binding<'owner> = FakeBinding;
-
-    fn bind<'owner>(
-        &mut self,
-        owner: OwnerRuntimeView<'owner>,
-    ) -> Result<OwnerNativeCompileBinding<Self::Binding<'owner>>, WorkspaceError> {
-        self.owners.push(owner.runtime().id().clone());
-        Ok(OwnerNativeCompileBinding::new(
-            FakeBinding {
-                reply: self.reply,
-                fail_facts: self.fail_facts,
-                fail_ready: self.fail_ready,
-                ready_finishes: Arc::clone(&self.ready_finishes),
-            },
-            CompilerNativePolicy::collect(),
-        ))
-    }
-}
+#[path = "native_managed_test_support.rs"]
+mod support;
+pub(crate) use support::{FakeProvider, Reply};
 
 #[derive(Default)]
 struct Observer {
@@ -556,10 +431,21 @@ fn node_unit_and_analyzer_adapters_use_one_core_and_exact_owner_views() {
     let core = include_str!("native_managed.rs");
     let unit = include_str!("../install/bootgen/hybrid_emit/native_managed.rs");
     let bound = include_str!("../install/bootgen/native_managed.rs");
+    let verify = include_str!("../install/bootgen/hybrid_emit.rs");
+    let runtime = include_str!("../extension_world/runtime.rs");
     let seam = "fn compile_static_owner_managed_using<";
     assert_eq!(core.matches(seam).count(), 1);
     assert!(unit.contains("epoch.unit(&owner)"));
     assert!(bound.contains("BTreeMap<OwnerRuntimeId"));
+    assert_eq!(
+        runtime
+            .matches("fn has_compiler_native_intersection")
+            .count(),
+        1
+    );
+    for consumer in [core, unit, bound, verify] {
+        assert!(consumer.contains("has_compiler_native_intersection"));
+    }
 }
 
 #[test]

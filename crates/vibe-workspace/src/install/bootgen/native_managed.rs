@@ -9,7 +9,9 @@ use crate::boot::hybrid::{UnitId, fingerprint, hoist};
 use crate::extension_world::{OwnerNativeCompileProvider, OwnerRuntimeEpoch, OwnerRuntimeId};
 use crate::{Workspace, WorkspaceError, boot_artifacts};
 
-use super::hybrid_emit::{append_hoisted, emit_package_units_bound};
+use super::hybrid_emit::{
+    append_hoisted, emit_package_units, emit_package_units_bound, with_static_set,
+};
 use super::owner_plans::plan_digest_frames;
 use super::{
     ResolvedDep, build_unit_table, desubstitute_covered_units, node_dependency_boot, node_own_boot,
@@ -20,7 +22,7 @@ use super::{
     not(test),
     expect(
         dead_code,
-        reason = "remove when R5.4-WORKSPACE-FRESHNESS wires regeneration carriage"
+        reason = "remove when R5.4-INSTALL wires regeneration carriage"
     )
 )]
 pub(crate) struct BoundBootRegeneration {
@@ -32,7 +34,7 @@ pub(crate) struct BoundBootRegeneration {
     not(test),
     expect(
         dead_code,
-        reason = "remove when R5.4-WORKSPACE-FRESHNESS wires bound regeneration"
+        reason = "remove when R5.4-INSTALL wires bound regeneration"
     )
 )]
 pub(crate) fn regenerate_boot_from_bound_native<P: OwnerNativeCompileProvider>(
@@ -61,7 +63,8 @@ pub(crate) fn regenerate_boot_from_bound_native<P: OwnerNativeCompileProvider>(
             )
         })
         .collect();
-    let fps = fingerprint::fingerprints(&table, &versions, &plan_digest_frames(epoch.lowered()));
+    let plan_digests = plan_digest_frames(epoch.lowered());
+    let fps = fingerprint::fingerprints(&table, &versions, &plan_digests);
     let pulls = hoist::soft_static_pulls(&table);
     let shared: HashSet<UnitId> = pulls
         .iter()
@@ -73,18 +76,44 @@ pub(crate) fn regenerate_boot_from_bound_native<P: OwnerNativeCompileProvider>(
         })
         .map(|(package, _)| package.clone())
         .collect();
-    let (with_static, unit_native) = emit_package_units_bound(
-        &workspace.root,
-        &self_coord,
-        resolution,
-        &table,
-        &shared,
-        &fps,
-        spec_format,
-        trace,
-        epoch,
-        provider.as_deref_mut(),
-    )?;
+    let emitted_units = with_static_set(&table);
+    let mut has_native_units = false;
+    for (owner, runtime) in epoch.lowered().units() {
+        if emitted_units.contains(&(owner.group().clone(), owner.name().to_string()))
+            && runtime.has_compiler_native_intersection()?
+        {
+            has_native_units = true;
+            break;
+        }
+    }
+    let (with_static, unit_native) = if has_native_units {
+        emit_package_units_bound(
+            &workspace.root,
+            &self_coord,
+            resolution,
+            &table,
+            &shared,
+            &versions,
+            &plan_digests,
+            spec_format,
+            trace,
+            epoch,
+            provider.as_deref_mut(),
+        )?
+    } else {
+        let with_static = emit_package_units(
+            &workspace.root,
+            &self_coord,
+            resolution,
+            &table,
+            &shared,
+            &fps,
+            spec_format,
+            trace,
+            epoch.lowered(),
+        )?;
+        (with_static, Vec::new())
+    };
     let mut native = unit_native.into_iter().collect::<BTreeMap<_, _>>();
 
     let root_foundation = node_own_boot(&workspace.root, ".")?
@@ -137,4 +166,32 @@ pub(crate) fn regenerate_boot_from_bound_native<P: OwnerNativeCompileProvider>(
         nodes.push(rel.to_owned());
     }
     Ok(BoundBootRegeneration { nodes, native })
+}
+
+#[cfg(test)]
+pub(crate) fn fingerprint_with_pending_for_test(
+    workspace: &Workspace,
+    resolution: &[ResolvedDep],
+    epoch: &OwnerRuntimeEpoch,
+    id: &UnitId,
+    frame: [u8; 32],
+) -> Option<String> {
+    let table = build_unit_table(&workspace.root, resolution);
+    let versions = resolution
+        .iter()
+        .map(|dependency| {
+            (
+                (dependency.group.clone(), dependency.name.clone()),
+                dependency.version.to_string(),
+            )
+        })
+        .collect::<HashMap<_, _>>();
+    let pending = HashMap::from([(id.clone(), fingerprint::NativePendingFrame::new(frame))]);
+    fingerprint::fingerprints_with_pending(
+        &table,
+        &versions,
+        &plan_digest_frames(epoch.lowered()),
+        &pending,
+    )
+    .remove(id)
 }

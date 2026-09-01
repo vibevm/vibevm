@@ -8,6 +8,7 @@ use vibe_core::manifest::SpecFormat;
 use vibe_core::{PackageName, layout};
 use vibe_extension_registry::DependencyProviderId;
 
+use crate::boot::hybrid::fingerprint::{NativePendingFrame, fingerprints_with_pending};
 use crate::boot::hybrid::{self, UnitId, UnitInput};
 use crate::compile_trace::TraceRun;
 use crate::extension_world::{OwnerNativeCompileProvider, OwnerRuntimeEpoch, OwnerRuntimeId};
@@ -29,7 +30,8 @@ pub(in crate::install::bootgen) fn emit_package_units_bound<P: OwnerNativeCompil
     resolution: &[ResolvedDep],
     table: &HashMap<UnitId, UnitInput>,
     shared: &HashSet<UnitId>,
-    fingerprints: &HashMap<UnitId, String>,
+    versions: &HashMap<UnitId, String>,
+    plan_digests: &HashMap<UnitId, String>,
     spec_format: SpecFormat,
     trace: Option<&TraceRun>,
     epoch: &OwnerRuntimeEpoch,
@@ -44,7 +46,7 @@ pub(in crate::install::bootgen) fn emit_package_units_bound<P: OwnerNativeCompil
             )
         })
         .collect();
-    let versions: Option<HashMap<UnitId, String>> = trace.map(|_| {
+    let trace_versions: Option<HashMap<UnitId, String>> = trace.map(|_| {
         resolution
             .iter()
             .map(|dependency| {
@@ -57,18 +59,23 @@ pub(in crate::install::bootgen) fn emit_package_units_bound<P: OwnerNativeCompil
     });
     let with_static = with_static_set(table);
     let mut continuations = Vec::new();
-    let mut ordered = with_static.iter().collect::<Vec<_>>();
-    if trace.is_some() {
-        ordered.sort();
+    let ordered = hybrid::topo_zone(&with_static, table);
+    let mut native_ids = HashSet::new();
+    for (owner, runtime) in epoch.lowered().units() {
+        let id = (owner.group().clone(), owner.name().to_string());
+        if with_static.contains(&id) && runtime.has_compiler_native_intersection()? {
+            native_ids.insert(id);
+        }
     }
+    let mut pending = HashMap::new();
 
     for id in ordered {
-        let Some(slot) = slots.get(id) else {
+        let Some(slot) = slots.get(&id) else {
             continue;
         };
         let effective = zone_to_effective(
-            id,
-            &hybrid::resolve_zone(id, table),
+            &id,
+            &hybrid::resolve_zone(&id, table),
             table,
             &with_static,
             &slots,
@@ -76,16 +83,17 @@ pub(in crate::install::bootgen) fn emit_package_units_bound<P: OwnerNativeCompil
             spec_format,
         );
         let boot_dir = workspace_root.join(slot).join(layout::current_boot_dir());
-        let fingerprint = fingerprints.get(id).map(String::as_str).unwrap_or("");
+        let fingerprints = fingerprints_with_pending(table, versions, plan_digests, &pending);
+        let fingerprint = fingerprints.get(&id).map(String::as_str).unwrap_or("");
         let unit_trace = trace
             .filter(|_| effective.static_entries().next().is_some())
             .map(|run| {
                 UnitTrace::new(
                     run,
-                    id,
-                    versions
+                    &id,
+                    trace_versions
                         .as_ref()
-                        .and_then(|versions| versions.get(id))
+                        .and_then(|versions| versions.get(&id))
                         .map_or("", String::as_str),
                     spec_format,
                     slot,
@@ -98,13 +106,18 @@ pub(in crate::install::bootgen) fn emit_package_units_bound<P: OwnerNativeCompil
         } else {
             boot_artifacts::STATIC_XML_FILE
         });
-        let unchanged = static_path.is_file()
+        let has_native = native_ids.contains(&id);
+        let unchanged = !has_native
+            && static_path.is_file()
             && !stale_path.exists()
             && fs::read_to_string(&index)
                 .ok()
-                .and_then(|existing| boot_artifacts::read_fingerprint(&existing))
-                .as_deref()
-                == Some(fingerprint);
+                .and_then(|existing| {
+                    boot_artifacts::publication::read_unit_index_freshness(&existing).ok()
+                })
+                .is_some_and(|recorded| {
+                    recorded.pending.is_none() && recorded.fingerprint == fingerprint
+                });
         if unchanged {
             if let Some(unit_trace) = &unit_trace {
                 unit_trace.record_fresh_skip(workspace_root);
@@ -130,11 +143,7 @@ pub(in crate::install::bootgen) fn emit_package_units_bound<P: OwnerNativeCompil
             ),
             None => boot_artifacts::native_managed::OwnerNativeCompileMode::Plain,
         };
-        let index_text = boot_artifacts::render_index_with_spec_format(
-            &effective,
-            Some(fingerprint),
-            spec_format,
-        )?;
+        let prepared_index = boot_artifacts::publication::prepare_index(&effective, spec_format)?;
         let compiled = boot_artifacts::native_managed::compile_static_owner_managed(
             &effective,
             workspace_root,
@@ -144,6 +153,26 @@ pub(in crate::install::bootgen) fn emit_package_units_bound<P: OwnerNativeCompil
             mode,
             provider.as_deref_mut(),
         )?;
+        let pending_frame = compiled
+            .as_ref()
+            .and_then(|compiled| compiled.native())
+            .and_then(|outcome| outcome.pending())
+            .map(|(evidence, _)| NativePendingFrame::new(*evidence.fingerprint().as_bytes()));
+        if let Some(frame) = pending_frame {
+            pending.insert(id.clone(), frame);
+        } else {
+            pending.remove(&id);
+        }
+        let final_fingerprints = fingerprints_with_pending(table, versions, plan_digests, &pending);
+        let final_fingerprint = final_fingerprints
+            .get(&id)
+            .map(String::as_str)
+            .unwrap_or("");
+        let index_text = boot_artifacts::publication::finish_index(
+            prepared_index,
+            Some(final_fingerprint),
+            pending_frame,
+        );
         let static_bytes = compiled
             .as_ref()
             .map(|compiled| compiled.artifact().bytes());

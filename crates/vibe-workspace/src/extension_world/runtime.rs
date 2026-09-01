@@ -91,6 +91,18 @@ impl OwnerRuntime {
         &self.native_candidates
     }
 
+    /// Whether this exact owner plan can execute through the native compiler
+    /// manager. Native rows outside the compile order (for example phase-only
+    /// handlers) do not count.
+    pub(crate) fn has_compiler_native_intersection(&self) -> Result<bool, WorkspaceError> {
+        let rows = self.rows()?;
+        Ok(rows.compile().iter().any(|compile| {
+            rows.native()
+                .iter()
+                .any(|native| std::ptr::eq(*compile, *native))
+        }))
+    }
+
     /// Project temporary borrowed slices from the same immutable registry.
     pub fn rows(&self) -> Result<OwnerRuntimeRows<'_>, WorkspaceError> {
         Ok(OwnerRuntimeRows {

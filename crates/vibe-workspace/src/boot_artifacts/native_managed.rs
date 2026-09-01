@@ -74,13 +74,6 @@ impl OwnerNativeCompileOutcome {
     }
 
     #[must_use]
-    #[cfg_attr(
-        not(test),
-        expect(
-            dead_code,
-            reason = "remove when R5.4-WORKSPACE-FRESHNESS wires pending inspection"
-        )
-    )]
     pub fn pending(&self) -> Option<(&PendingArtifactEvidence, &CompilerPendingSet)> {
         match &self.continuation {
             OwnerNativeCompileContinuation::Pending { evidence, pending } => {
@@ -223,13 +216,7 @@ fn compile_static_owner_managed_using<P: OwnerNativeCompileProvider>(
     .with_transforms(transforms.clone());
     let source = FsSectionSource::new(FileResolver::new(workspace_root, self_coord.clone()));
     let owner_id = owner.runtime().id().clone();
-    let rows = owner.runtime().rows()?;
-    let has_native = rows.compile().iter().any(|compile| {
-        rows.native()
-            .iter()
-            .any(|native| std::ptr::eq(*compile, *native))
-    });
-    drop(rows);
+    let has_native = owner.runtime().has_compiler_native_intersection()?;
 
     if !has_native {
         let scope = acquire(&mode);
