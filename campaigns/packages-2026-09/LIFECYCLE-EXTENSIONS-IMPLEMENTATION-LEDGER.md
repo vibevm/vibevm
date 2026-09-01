@@ -1455,6 +1455,18 @@ than depending on untracked `cache/` archaeology.
   final bytes without parsing or a finalizer delta. New bound-epoch siblings
   preserve exact node/unit runtimes; freshness/replay/INSTALL/FENCE and Cargo
   remain outside COMPILE.
+- R5.4-WORKSPACE-COMPILE: `fcb6d657` lands one no-static/builtin/native core
+  for node/unit Plain/Traced/Observed compilation, terminal Ready fact drain,
+  Pending fact/evidence/FINALIZE join, final-only trace completion and deferred
+  final-byte analyzer emission. Lifecycle consumes exact retained owner policy
+  and runtime authority; an opaque ordered-resolution identity prevents
+  same-root composition drift. Unit publication is raw-byte and bound unit
+  regeneration remains private until FRESHNESS. Two independent NOT PASS
+  rounds closed epoch/resolution separation, premature fresh-skip exposure,
+  post-trace UTF-8, structural-only proof, broad lint suppression, missing
+  manifest mutation and tautological ordering. Final PASS gates: core 8, epoch
+  1, real provider 1, workspace 509, lifecycle 619/3 ignored, spec 908,
+  check/clippy/fmt and conform 48/0. COMPILE accepted; FRESHNESS next.
 - R4.2 minify binding, RED corpus and activation e2e: `7a09ec2d` registers
   `xml-minify` (epoch 1, EMITTED — the one stage the kernel serves without a
   new serializer; every other stage refuses through the registry's own law)

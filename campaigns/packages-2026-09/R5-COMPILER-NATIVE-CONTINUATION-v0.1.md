@@ -1050,3 +1050,64 @@ and no-native byte/error/trace behavior remain compatibility paths. COMPILE
 may carry the finalized pending continuation, but does not change freshness,
 publish replay, construct durable replay descriptors, thread production
 INSTALL, sequence FENCE or call Cargo.
+
+## 25. R5.4-WORKSPACE-COMPILE ratification
+
+**Accepted 2026-09-01.** Commit `fcb6d657` lands one managed static compiler
+for node and package-unit lanes. No-static returns before plan, provider,
+scope, fact or continuation work. Builtin-only plans retain the exact legacy
+plain/traced/observed paths and carry no native continuation. Native plans ask
+one mutable owner-policy provider only after fallible plan preparation, then
+all three modes enter one managed driver and one terminal outcome funnel.
+
+Ready consumes artifact plus receipts and terminally proves the same fact
+recorder empty. Pending drains one-to-one facts from that binding, builds exact
+owner/BootStatic/format evidence, FINALIZEs the opaque artifact, and retains
+only the final artifact, evidence and non-Clone pending set. Every compiler,
+fact, evidence and finalizer refusal after scope acquisition fails that scope;
+success completes it only with the final output fingerprint. Unit and node
+publication receive raw finalized bytes, so no fallible UTF-8 conversion or
+other semantic work follows trace completion.
+
+Observed native compilation uses the new one-shot vibe-spec deferred emission
+proxy. Stage deltas keep the original panic-contained delivery; pending calls
+remain absent and FINALIZE creates no delta. The sole emission event is held
+until Ready/FINALIZE, then its witness-derived contribution rows are reframed
+to the final total/frame byte counts and delivered through the existing panic
+boundary. Provisional evidence is dropped on a failed join and no generated
+tape is parsed.
+
+The lifecycle provider consumes one explicitly injected non-Clone policy per
+exact runtime and constructs its invoker from retained row references,
+selected root, mechanisms, routes, project/world and run facts. It neither
+reconstructs authority from request wire nor chooses Collect for INSTALL. A
+canonical opaque ordered-resolution identity—ordered typed package fields,
+content hashes, effective edges and canonical manifest semantics, excluding
+roots—travels from ExtensionWorldEpoch through the bound runtime. Bound
+composition refuses a same-root order/hash/edge/manifest mismatch before
+provider use or publication.
+
+The unit-regeneration carrier stays crate-private until FRESHNESS removes the
+known native plan-only skip; only the write-free bound analyzer is public.
+Exactly three dormant items carry checked non-test `expect(dead_code)` markers,
+each naming removal by R5.4-WORKSPACE-FRESHNESS. Existing fresh-skip behavior
+is otherwise untouched. Continuations are stored in deterministic exact-owner
+order and behavioral REDs prove the root-node/package-unit association.
+
+Independent review required two NOT PASS correction rounds. The first found
+separable epoch/resolution authority, a premature public fresh-skip surface,
+post-trace unit UTF-8 work, insufficient behavioral composition evidence and
+unnecessary public result types. The second rejected broad dead-code
+suppression, a missing manifest-only identity mutation and a tautological map
+sort assertion. All were corrected before final PASS: real bound node/unit and
+analyzer paths, real lifecycle missing-source recorder/fact drain, final-byte
+observer/trace parity, actual FINALIZE refusal with failed scope and preserved
+bytes, order/hash/edge/manifest identity drift, independent reparse parity and
+exact owner-to-continuation association are now RED.
+
+Final gates: managed core 8/8, composed epoch 1/1, real lifecycle pending
+provider 1/1, `vibe-workspace` 509/509, `vibe-lifecycle` 619 passed/3 platform
+ignored, `vibe-spec` 908/908, workspace check, all-target clippy with warnings
+denied, fmt, conform 48 standing/0 new and `git diff --check`. FRESHNESS is
+next; COMPILE adds no freshness fix, replay executor/publication coordinator,
+INSTALL selection, FENCE sequencing or Cargo/process build call.
