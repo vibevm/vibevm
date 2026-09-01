@@ -1399,3 +1399,57 @@ REPLAY-PUBLISH completes only the workspace replay path. INSTALL still owns
 the first production call and epoch/factory carriage; FENCE still owns native
 build → one prepare/publish replay → authored targets → phase sequencing. No
 Cargo/process call belongs here.
+
+## 31. R5.4-WORKSPACE-REPLAY-PUBLISH and WORKSPACE ratification
+
+**Accepted 2026-09-01.** Commit `d9c72115` completes the workspace-owned replay
+path as a consume-only walk over `PreparedBootReplay`. PREPARE now seals exact
+owner/kind, INDEX/selected-STATIC/stale paths and final bytes; PUBLISH consumes
+the boxed order directly, calls the existing per-owner transaction once per
+attempted owner and drops all later prepared bytes on first failure. It never
+sorts, reconstructs targets, rerenders, recompiles, retries or returns a replay
+carrier.
+
+Unit and node publish the same raw triple with a no-op selector closure. Node
+redirects are not touched; tests pin AGENTS/GEMINI deliberately old bytes and
+mtimes plus absent CLAUDE. Byte-equal INDEX/STATIC also keep mtimes. Exact
+Markdown/XML selected/stale roles remain defensively revalidated by the
+existing transaction.
+
+The transaction engine now has a detailed sibling over the same lock, journal,
+stage, roll-forward and rollback code. Legacy callers erase only the typed
+disposition and retain exact WorkspaceError behavior. Replay distinguishes
+Uncommitted, RestoredBefore, CommitRecoveryIntent, RollbackRecoveryIntent,
+EntryRecoveryFailed and Indeterminate at real control points; no error text or
+journal filename is parsed.
+
+Success reports the exact committed prefix, including no-ops. Failure owns the
+original error, committed-before owners, failed owner/disposition and untouched
+suffix—never bytes or a retry handle. Middle-owner precommit failure preserves
+the earlier commit, restores current and leaves later untouched. Postcommit
+failure leaves current new bytes plus durable intent without calling it
+committed. Rollback and entry-recovery failures are typed. Publisher adds no
+recovery: the existing transaction performs its one entry recovery and
+internal caught rollback, while a returned failure stops the walk.
+
+Independent review returned NOT PASS only for three missing real-engine fault
+proofs: after intent persistence, after restored rollback before cleanup, and
+selector closure failure; it also caught an untested redirect mtime. New
+WritePoints at the exact engine boundaries prove Indeterminate and
+RollbackRecoveryIntent, selector refusal proves CommitRecoveryIntent with the
+original source/new bytes/intent, and old redirect mtimes are exact. Final
+re-review passed.
+
+Final gates: detailed transaction 4/4, complete transaction 32/32, publisher
+4/4, replay prepare 8/8, `vibe-workspace` 534/534, workspace check, all-target
+clippy with warnings denied, fmt, conform 48 standing/0 new and
+`git diff --check`. Parent-level map `d9619e2c` passes generation/check at 6,833
+spec units / 3,061 tagged code items / 2,816 edges, with zero suspects, gated
+orphans or unresolved host edges and 26 standing warnings.
+
+All six WORKSPACE slices—FINALIZE, FACTS, COMPILE, FRESHNESS, REPLAY-PREPARE
+and REPLAY-PUBLISH—are accepted. The retained finalizer/facts/core/freshness/
+prepare/publish machine now produces truthful Pending artifacts and a complete
+per-owner Ready replay without Cargo or production sequencing. R5.4-INSTALL is
+next: it owns Empty/Fresh/Ready epoch choice, real run/provider/factory
+carriage and the first private replay invocation.

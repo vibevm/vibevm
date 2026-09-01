@@ -1513,6 +1513,19 @@ than depending on untracked `cache/` archaeology.
   callers erase labels. Partial reports distinguish earlier committed,
   current and untouched later owners. Existing entry recovery runs once;
   post-error retry is forbidden. INSTALL/FENCE/Cargo remain outside PUBLISH.
+- R5.4-WORKSPACE-REPLAY-PUBLISH: `d9c72115` consumes sealed paths/bytes in
+  exact order through one detailed existing transaction per attempted owner;
+  reports committed/current/untouched partial truth and never retries, sorts,
+  rerenders redirects or globally rolls back. Real intent-persist,
+  rollback-precleanup, selector, entry-recovery and middle-owner faults pin all
+  dispositions; review-added redirect mtime proof earns final PASS. Gates:
+  detailed 4, transaction 32, publisher 4, prepare 8, workspace 534,
+  check/clippy/fmt and conform 48/0.
+- R5.4-WORKSPACE accepted: FINALIZE `b82ce151`, FACTS `8de4151e`, COMPILE
+  `fcb6d657`, FRESHNESS `bbbb50fa`, PREPARE `a4b1e8b0`, PUBLISH `d9c72115`,
+  parent map `d9619e2c`. Specmap 6833/3061/2816, zero suspects/gated orphans/
+  unresolved host edges, 26 standing warnings. INSTALL next owns production
+  epoch/provider/replay carriage and first invocation.
 - R4.2 minify binding, RED corpus and activation e2e: `7a09ec2d` registers
   `xml-minify` (epoch 1, EMITTED — the one stage the kernel serves without a
   new serializer; every other stage refuses through the registry's own law)
