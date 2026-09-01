@@ -8,6 +8,8 @@ use tempfile::{NamedTempFile, TempPath};
 
 mod durable_io;
 use durable_io::*;
+mod detailed;
+pub(crate) use detailed::{DetailedTransactionFailure, TransactionFailureDisposition};
 mod journal;
 use journal::*;
 mod lock;
@@ -24,9 +26,11 @@ const ROLLBACK_JOURNAL_NAME: &str = ".vibe-boot-artifacts.rollback.toml";
 const JOURNAL_SCHEMA: u32 = 1;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub(super) enum WritePoint {
+pub(crate) enum WritePoint {
+    EntryRecovery,
     IndexWrite,
     StaticWrite,
+    PostIntentPreRollForward,
     PostStagePreReplace,
     StaticReplace,
     PostStaticPreIndex,
@@ -36,9 +40,10 @@ pub(super) enum WritePoint {
     RollbackStart,
     RollbackRestore,
     PostRollbackRestore,
+    PostRollbackPreCleanup,
 }
 
-pub(super) trait FaultInjector {
+pub(crate) trait FaultInjector {
     fn check(&self, point: WritePoint, path: &Path) -> Result<(), WorkspaceError>;
 }
 
@@ -51,12 +56,12 @@ impl FaultInjector for NoFault {
 }
 
 #[derive(Clone, Copy)]
-pub(super) struct ArtifactWrite<'a> {
-    pub(super) index_path: &'a Path,
-    pub(super) index_bytes: &'a [u8],
-    pub(super) static_path: &'a Path,
-    pub(super) static_bytes: Option<&'a [u8]>,
-    pub(super) stale_path: &'a Path,
+pub(crate) struct ArtifactWrite<'a> {
+    pub(crate) index_path: &'a Path,
+    pub(crate) index_bytes: &'a [u8],
+    pub(crate) static_path: &'a Path,
+    pub(crate) static_bytes: Option<&'a [u8]>,
+    pub(crate) stale_path: &'a Path,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -89,7 +94,14 @@ pub(super) fn write_production_with_selectors<T>(
     write: ArtifactWrite<'_>,
     selectors: impl FnOnce(&str) -> Result<T, WorkspaceError>,
 ) -> Result<T, WorkspaceError> {
-    write_with_faults_and_selectors(write, &NoFault, selectors)
+    write_with_faults_and_selectors_detailed(write, &NoFault, selectors)
+        .map_err(DetailedTransactionFailure::into_source)
+}
+
+pub(crate) fn write_production_detailed(
+    write: ArtifactWrite<'_>,
+) -> Result<(), DetailedTransactionFailure> {
+    write_with_faults_and_selectors_detailed(write, &NoFault, |_| Ok(()))
 }
 
 pub(super) fn preflight_artifact_roles(write: ArtifactWrite<'_>) -> Result<(), WorkspaceError> {
@@ -112,19 +124,34 @@ pub(super) fn write_with_faults(
     write: ArtifactWrite<'_>,
     faults: &impl FaultInjector,
 ) -> Result<(), WorkspaceError> {
-    write_with_faults_and_selectors(write, faults, |_| Ok(()))
+    write_with_faults_and_selectors_detailed(write, faults, |_| Ok(()))
+        .map_err(DetailedTransactionFailure::into_source)
 }
 
-fn write_with_faults_and_selectors<T>(
+#[cfg(test)]
+pub(crate) fn write_with_faults_detailed(
+    write: ArtifactWrite<'_>,
+    faults: &impl FaultInjector,
+) -> Result<(), DetailedTransactionFailure> {
+    write_with_faults_and_selectors_detailed(write, faults, |_| Ok(()))
+}
+
+fn write_with_faults_and_selectors_detailed<T>(
     write: ArtifactWrite<'_>,
     faults: &impl FaultInjector,
     selectors: impl FnOnce(&str) -> Result<T, WorkspaceError>,
-) -> Result<T, WorkspaceError> {
-    let parent = common_parent(&write)?;
-    validate_artifact_roles(write.index_path, write.static_path, write.stale_path)?;
-    fs::create_dir_all(parent).map_err(|error| io_error(write.index_path, error))?;
-    let lock = BootArtifactLock::acquire(parent)?;
-    lock.assert_current()?;
+) -> Result<T, DetailedTransactionFailure> {
+    let uncommitted = |source| {
+        DetailedTransactionFailure::new(source, TransactionFailureDisposition::Uncommitted)
+    };
+    let parent = common_parent(&write).map_err(uncommitted)?;
+    validate_artifact_roles(write.index_path, write.static_path, write.stale_path)
+        .map_err(uncommitted)?;
+    fs::create_dir_all(parent)
+        .map_err(|error| io_error(write.index_path, error))
+        .map_err(uncommitted)?;
+    let lock = BootArtifactLock::acquire(parent).map_err(uncommitted)?;
+    lock.assert_current().map_err(uncommitted)?;
     write_with_faults_locked(write, parent, faults, &lock, selectors)
 }
 
@@ -134,62 +161,88 @@ fn write_with_faults_locked<T>(
     faults: &impl FaultInjector,
     lock: &BootArtifactLock,
     selectors: impl FnOnce(&str) -> Result<T, WorkspaceError>,
-) -> Result<T, WorkspaceError> {
-    recover_pending_locked(parent, lock)?;
-    let mut journal = prepare_journal(write, parent, faults)?;
-    preflight_journal_paths(parent, &journal)?;
+) -> Result<T, DetailedTransactionFailure> {
+    let failure = DetailedTransactionFailure::new;
+    faults
+        .check(WritePoint::EntryRecovery, parent)
+        .map_err(|error| failure(error, TransactionFailureDisposition::EntryRecoveryFailed))?;
+    recover_pending_locked(parent, lock)
+        .map_err(|error| failure(error, TransactionFailureDisposition::EntryRecoveryFailed))?;
+    let mut journal = prepare_journal(write, parent, faults)
+        .map_err(|error| failure(error, TransactionFailureDisposition::Uncommitted))?;
+    preflight_journal_paths(parent, &journal)
+        .map_err(|error| failure(error, TransactionFailureDisposition::Uncommitted))?;
     if let Err(primary) = persist_new_journal(parent, &journal) {
         let cleanup = discard_assets(parent, &journal);
-        return if cleanup.is_empty() {
-            Err(primary)
+        let source = if cleanup.is_empty() {
+            primary
         } else {
-            Err(aggregate_error(
-                parent,
-                primary,
-                cleanup,
-                "unpublished-stage cleanup",
-            ))
+            aggregate_error(parent, primary, cleanup, "unpublished-stage cleanup")
         };
+        return Err(failure(
+            source,
+            TransactionFailureDisposition::Indeterminate,
+        ));
     }
+    faults
+        .check(WritePoint::PostIntentPreRollForward, &journal_path(parent))
+        .map_err(|error| failure(error, TransactionFailureDisposition::Indeterminate))?;
 
     if let Err(primary) = roll_forward_core(parent, &journal, faults) {
         let commit = journal.clone();
         journal.mode = JournalMode::Rollback;
         if let Err(update) = arm_rollback(parent, &commit, &journal) {
-            return Err(aggregate_error(
-                parent,
-                primary,
-                vec![update],
-                "arming rollback",
+            return Err(failure(
+                aggregate_error(parent, primary, vec![update], "arming rollback"),
+                TransactionFailureDisposition::Indeterminate,
             ));
         }
         if let Err(start) = faults.check(WritePoint::RollbackStart, &journal_path(parent)) {
-            return Err(aggregate_error(
-                parent,
-                primary,
-                vec![start],
-                "starting rollback",
+            return Err(failure(
+                aggregate_error(parent, primary, vec![start], "starting rollback"),
+                TransactionFailureDisposition::RollbackRecoveryIntent,
             ));
         }
         let rollback = rollback_all(parent, &journal, faults);
         if rollback.is_empty() {
-            cleanup(parent, &journal)?;
-            return Err(primary);
+            if let Err(post_restore) = faults.check(
+                WritePoint::PostRollbackPreCleanup,
+                &rollback_journal_path(parent),
+            ) {
+                return Err(failure(
+                    aggregate_error(parent, primary, vec![post_restore], "post-rollback cleanup"),
+                    TransactionFailureDisposition::RollbackRecoveryIntent,
+                ));
+            }
+            return match cleanup(parent, &journal) {
+                Ok(()) => Err(failure(
+                    primary,
+                    TransactionFailureDisposition::RestoredBefore,
+                )),
+                Err(error) => Err(failure(
+                    error,
+                    TransactionFailureDisposition::RollbackRecoveryIntent,
+                )),
+            };
         } else {
-            return Err(aggregate_error(parent, primary, rollback, "rollback"));
+            return Err(failure(
+                aggregate_error(parent, primary, rollback, "rollback"),
+                TransactionFailureDisposition::RollbackRecoveryIntent,
+            ));
         }
     }
-    let output = selectors(&journal.transaction)?;
-    faults.check(
-        WritePoint::PostIndexPreStaleCleanup,
-        &target_path(parent, &journal.index)?,
-    )?;
-    faults.check(
-        WritePoint::StaleRemove,
-        &target_path(parent, &journal.stale)?,
-    )?;
-    apply_forward(parent, &journal.stale)?;
-    cleanup(parent, &journal)?;
+    let committed = |source| failure(source, TransactionFailureDisposition::CommitRecoveryIntent);
+    let output = selectors(&journal.transaction).map_err(committed)?;
+    let index_target = target_path(parent, &journal.index).map_err(committed)?;
+    faults
+        .check(WritePoint::PostIndexPreStaleCleanup, &index_target)
+        .map_err(committed)?;
+    let stale_target = target_path(parent, &journal.stale).map_err(committed)?;
+    faults
+        .check(WritePoint::StaleRemove, &stale_target)
+        .map_err(committed)?;
+    apply_forward(parent, &journal.stale).map_err(committed)?;
+    cleanup(parent, &journal).map_err(committed)?;
     Ok(output)
 }
 
@@ -496,3 +549,7 @@ mod safety_tests;
 #[cfg(test)]
 #[path = "transaction/lock_tests.rs"]
 mod lock_tests;
+
+#[cfg(test)]
+#[path = "transaction/detailed_tests.rs"]
+mod detailed_tests;

@@ -7,7 +7,7 @@ use tempfile::TempDir;
 use vibe_core::manifest::SpecFormat;
 use vibe_spec::CompilerNativePolicy;
 
-use super::{BootReplaySet, prepare_boot_replay};
+use super::{BootReplaySet, PreparedOwnerKind, prepare_boot_replay};
 use crate::Workspace;
 use crate::boot_artifacts::native_managed_tests::{
     FakePolicyKind, FakeProvider, FakeReplayFactory, Reply,
@@ -301,10 +301,12 @@ fn direct_unit_static_closure_and_node_prepare_from_overlay_without_writes() {
                 .contains("vibe:transforms-pending")
     }));
     assert!(prepared.publications().iter().all(|publication| {
-        publication.target_root().is_absolute()
+        publication.index_path().is_absolute()
+            && publication.static_path().is_absolute()
+            && publication.stale_path().is_absolute()
             && match publication.owner() {
-                OwnerRuntimeId::Node { rel } => publication.node_rel() == Some(rel.as_str()),
-                OwnerRuntimeId::Unit { .. } => publication.node_rel().is_none(),
+                OwnerRuntimeId::Node { .. } => publication.kind() == PreparedOwnerKind::Node,
+                OwnerRuntimeId::Unit { .. } => publication.kind() == PreparedOwnerKind::Unit,
             }
     }));
     assert_eq!(artifact_state(&graph, &expected_order), pending_state);
@@ -535,12 +537,11 @@ fn markdown_and_xml_replay_targets_are_deterministic() {
             prepare_boot_replay(replay, &graph.epoch, &mut factory),
             "format replay"
         );
-        assert!(
-            prepared
-                .publications()
-                .iter()
-                .all(|owner| owner.spec_format() == format)
-        );
+        assert!(prepared.publications().iter().all(|owner| {
+            owner
+                .static_path()
+                .ends_with(crate::boot_artifacts::static_file(format))
+        }));
         let first = prepared_map(&prepared);
 
         let second_graph = node_only_graph();

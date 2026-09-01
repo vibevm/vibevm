@@ -47,10 +47,10 @@ mod transitive;
 use conditions::{active_snippet, installed_identities};
 use transitive::static_transitive_closure;
 
-/// B-006's once-each pass, split out with the traced siblings.
 mod desubstitute;
 pub(crate) mod native_managed;
 pub(crate) mod replay_prepare;
+pub(crate) mod replay_publish;
 pub use desubstitute::desubstitute_covered_units;
 
 fn root_self_coordinate(root_manifest: &Manifest) -> vibe_spec::SelfCoordinate {

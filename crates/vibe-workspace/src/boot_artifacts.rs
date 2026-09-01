@@ -56,7 +56,7 @@ use crate::{WorkspaceError, layout_paths};
 /// `normal + static` compilation — the branch that compiles a `normal`
 /// package's closure rather than concatenating it (PROP-035 §8).
 mod normal;
-mod transaction;
+pub(crate) mod transaction;
 
 pub(crate) mod native_managed;
 pub use native_managed::OwnerNativeCompileContinuation;

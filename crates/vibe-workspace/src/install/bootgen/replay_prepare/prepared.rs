@@ -1,6 +1,6 @@
+#[cfg(test)]
+use std::path::Path;
 use std::path::PathBuf;
-
-use vibe_core::manifest::SpecFormat;
 
 use crate::extension_world::OwnerRuntimeId;
 
@@ -10,118 +10,117 @@ pub(crate) struct PreparedBootReplay {
     pub(super) publications: Box<[PreparedOwnerPublication]>,
 }
 
-pub(crate) enum PreparedOwnerPublication {
-    Unit {
-        owner: OwnerRuntimeId,
-        boot_dir: PathBuf,
-        spec_format: SpecFormat,
-        index: Box<[u8]>,
-        static_lane: Option<Box<[u8]>>,
-    },
-    Node {
-        owner: OwnerRuntimeId,
-        node_dir: PathBuf,
-        node_rel: String,
-        spec_format: SpecFormat,
-        index: Box<[u8]>,
-        static_lane: Option<Box<[u8]>>,
-    },
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(crate) enum PreparedOwnerKind {
+    Unit,
+    Node,
 }
 
-impl PreparedOwnerPublication {
-    #[cfg_attr(
-        not(test),
-        expect(
-            dead_code,
-            reason = "remove when R5.4-REPLAY-PUBLISH consumes prepared owner identity"
-        )
-    )]
-    pub(crate) fn owner(&self) -> &OwnerRuntimeId {
-        match self {
-            Self::Unit { owner, .. } | Self::Node { owner, .. } => owner,
-        }
-    }
+pub(crate) struct PreparedOwnerPublication {
+    owner: OwnerRuntimeId,
+    kind: PreparedOwnerKind,
+    index_path: PathBuf,
+    static_path: PathBuf,
+    stale_path: PathBuf,
+    index: Box<[u8]>,
+    static_lane: Option<Box<[u8]>>,
+}
 
-    #[cfg_attr(
-        not(test),
-        expect(
-            dead_code,
-            reason = "remove when R5.4-REPLAY-PUBLISH consumes prepared INDEX bytes"
-        )
-    )]
-    pub(crate) fn index(&self) -> &[u8] {
-        match self {
-            Self::Unit { index, .. } | Self::Node { index, .. } => index,
-        }
-    }
-
-    #[cfg_attr(
-        not(test),
-        expect(
-            dead_code,
-            reason = "remove when R5.4-REPLAY-PUBLISH consumes prepared STATIC bytes"
-        )
-    )]
-    pub(crate) fn static_lane(&self) -> Option<&[u8]> {
-        match self {
-            Self::Unit { static_lane, .. } | Self::Node { static_lane, .. } => {
-                static_lane.as_deref()
-            }
-        }
-    }
-
-    #[cfg_attr(
-        not(test),
-        expect(
-            dead_code,
-            reason = "remove when R5.4-REPLAY-PUBLISH consumes prepared format"
-        )
-    )]
-    pub(crate) fn spec_format(&self) -> SpecFormat {
-        match self {
-            Self::Unit { spec_format, .. } | Self::Node { spec_format, .. } => *spec_format,
-        }
-    }
-
-    #[cfg_attr(
-        not(test),
-        expect(
-            dead_code,
-            reason = "remove when R5.4-REPLAY-PUBLISH consumes prepared target root"
-        )
-    )]
-    pub(crate) fn target_root(&self) -> &std::path::Path {
-        match self {
-            Self::Unit { boot_dir, .. } => boot_dir,
-            Self::Node { node_dir, .. } => node_dir,
-        }
-    }
-
-    #[cfg_attr(
-        not(test),
-        expect(
-            dead_code,
-            reason = "remove when R5.4-REPLAY-PUBLISH consumes prepared node relation"
-        )
-    )]
-    pub(crate) fn node_rel(&self) -> Option<&str> {
-        match self {
-            Self::Unit { .. } => None,
-            Self::Node { node_rel, .. } => Some(node_rel),
-        }
-    }
+pub(crate) struct PreparedOwnerParts {
+    pub(crate) owner: OwnerRuntimeId,
+    pub(crate) kind: PreparedOwnerKind,
+    pub(crate) index_path: PathBuf,
+    pub(crate) static_path: PathBuf,
+    pub(crate) stale_path: PathBuf,
+    pub(crate) index: Box<[u8]>,
+    pub(crate) static_lane: Option<Box<[u8]>>,
 }
 
 impl PreparedBootReplay {
-    #[cfg_attr(
-        not(test),
-        expect(
-            dead_code,
-            reason = "remove when R5.4-REPLAY-PUBLISH consumes prepared owners"
-        )
-    )]
+    pub(crate) fn into_publications(self) -> Box<[PreparedOwnerPublication]> {
+        self.publications
+    }
+
+    #[cfg(test)]
     pub(crate) fn publications(&self) -> &[PreparedOwnerPublication] {
         &self.publications
+    }
+
+    #[cfg(test)]
+    pub(crate) fn from_test(publications: Vec<PreparedOwnerPublication>) -> Self {
+        Self {
+            publications: publications.into_boxed_slice(),
+        }
+    }
+}
+
+impl PreparedOwnerPublication {
+    pub(crate) fn into_parts(self) -> PreparedOwnerParts {
+        PreparedOwnerParts {
+            owner: self.owner,
+            kind: self.kind,
+            index_path: self.index_path,
+            static_path: self.static_path,
+            stale_path: self.stale_path,
+            index: self.index,
+            static_lane: self.static_lane,
+        }
+    }
+
+    #[cfg(test)]
+    pub(crate) fn for_test(
+        owner: OwnerRuntimeId,
+        kind: PreparedOwnerKind,
+        index_path: PathBuf,
+        static_path: PathBuf,
+        stale_path: PathBuf,
+        index: impl Into<Box<[u8]>>,
+        static_lane: Option<Box<[u8]>>,
+    ) -> Self {
+        Self {
+            owner,
+            kind,
+            index_path,
+            static_path,
+            stale_path,
+            index: index.into(),
+            static_lane,
+        }
+    }
+
+    #[cfg(test)]
+    pub(crate) const fn owner(&self) -> &OwnerRuntimeId {
+        &self.owner
+    }
+
+    #[cfg(test)]
+    pub(crate) const fn kind(&self) -> PreparedOwnerKind {
+        self.kind
+    }
+
+    #[cfg(test)]
+    pub(crate) fn index_path(&self) -> &Path {
+        &self.index_path
+    }
+
+    #[cfg(test)]
+    pub(crate) fn static_path(&self) -> &Path {
+        &self.static_path
+    }
+
+    #[cfg(test)]
+    pub(crate) fn stale_path(&self) -> &Path {
+        &self.stale_path
+    }
+
+    #[cfg(test)]
+    pub(crate) fn index(&self) -> &[u8] {
+        &self.index
+    }
+
+    #[cfg(test)]
+    pub(crate) fn static_lane(&self) -> Option<&[u8]> {
+        self.static_lane.as_deref()
     }
 }
 
@@ -131,22 +130,30 @@ impl ReplayLane {
         index: Box<[u8]>,
         static_lane: Option<Box<[u8]>>,
     ) -> PreparedOwnerPublication {
-        match self.candidate {
-            ReplayCandidate::Unit(candidate) => PreparedOwnerPublication::Unit {
-                owner: candidate.owner,
-                boot_dir: candidate.boot_dir,
-                spec_format: candidate.spec_format,
-                index,
-                static_lane,
-            },
-            ReplayCandidate::Node(candidate) => PreparedOwnerPublication::Node {
-                owner: candidate.owner,
-                node_dir: candidate.node_dir,
-                node_rel: candidate.rel,
-                spec_format: candidate.spec_format,
-                index,
-                static_lane,
-            },
+        let (owner, kind, index_path, static_path, stale_path) = match self.candidate {
+            ReplayCandidate::Unit(candidate) => (
+                candidate.owner,
+                PreparedOwnerKind::Unit,
+                candidate.index_path,
+                candidate.static_path,
+                candidate.stale_path,
+            ),
+            ReplayCandidate::Node(candidate) => (
+                candidate.owner,
+                PreparedOwnerKind::Node,
+                candidate.index_path,
+                candidate.static_path,
+                candidate.stale_path,
+            ),
+        };
+        PreparedOwnerPublication {
+            owner,
+            kind,
+            index_path,
+            static_path,
+            stale_path,
+            index,
+            static_lane,
         }
     }
 }

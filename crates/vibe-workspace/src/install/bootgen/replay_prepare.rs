@@ -19,7 +19,9 @@ use crate::{WorkspaceError, boot_artifacts};
 
 #[path = "replay_prepare/prepared.rs"]
 mod prepared;
-pub(crate) use prepared::PreparedBootReplay;
+pub(crate) use prepared::{
+    PreparedBootReplay, PreparedOwnerKind, PreparedOwnerParts, PreparedOwnerPublication,
+};
 #[path = "replay_prepare/validate.rs"]
 mod validate;
 use validate::validate_ready;
@@ -30,7 +32,6 @@ pub(super) struct UnitReplayCandidate {
     effective: EffectiveBoot,
     spec_format: SpecFormat,
     base_fingerprint: String,
-    boot_dir: PathBuf,
     index_path: PathBuf,
     static_path: PathBuf,
     stale_path: PathBuf,
@@ -43,7 +44,6 @@ pub(super) struct NodeReplayCandidate {
     rel: String,
     effective: EffectiveBoot,
     spec_format: SpecFormat,
-    node_dir: PathBuf,
     index_path: PathBuf,
     static_path: PathBuf,
     stale_path: PathBuf,
@@ -102,7 +102,6 @@ impl UnitReplayCandidate {
             effective,
             spec_format,
             base_fingerprint,
-            boot_dir,
             index_path,
             static_path,
             stale_path,
@@ -128,7 +127,6 @@ impl NodeReplayCandidate {
             rel,
             effective,
             spec_format,
-            node_dir,
             index_path: boot_dir.join(boot_artifacts::INDEX_FILE),
             static_path: boot_dir.join(boot_artifacts::static_file(spec_format)),
             stale_path: boot_dir.join(boot_artifacts::publication::stale_static_file(spec_format)),
