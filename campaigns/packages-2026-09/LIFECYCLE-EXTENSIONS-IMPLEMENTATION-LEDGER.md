@@ -1495,6 +1495,16 @@ than depending on untracked `cache/` archaeology.
   Pending. Exact Ready receipts and provider exhaustion are mandatory. The
   result owns final bytes/targets only; no writer, trace, header parser,
   journal, replay publication or Cargo enters PREPARE.
+- R5.4-WORKSPACE-REPLAY-PREPARE: `a4b1e8b0` seals exact-epoch non-Clone
+  Pending sets, typed static closure and deterministic unit/node recipes;
+  routes Resolve/Fail/builtin-none policies; preflights all lanes; and prepares
+  final Ready bytes through an exact-path MD/XML overlay while disk remains
+  Pending. Receipts and provider exhaustion are exact; result carries final
+  paths/bytes only. Review corrected Clone token, early evidence drop,
+  nondiscriminating Fail policy proof and broad lint suppression before PASS.
+  Gates: replay 8, workspace 526, lifecycle 620/3 ignored, overlay 6/spec 914,
+  doctests 31, check/clippy/fmt and conform 48/0. PREPARE accepted;
+  REPLAY-PUBLISH next.
 - R4.2 minify binding, RED corpus and activation e2e: `7a09ec2d` registers
   `xml-minify` (epoch 1, EMITTED — the one stage the kernel serves without a
   new serializer; every other stage refuses through the registry's own law)

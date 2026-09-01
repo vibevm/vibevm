@@ -1294,3 +1294,58 @@ at the last lane leaves every original Pending byte/mtime and transaction path
 untouched. REPLAY-PUBLISH alone will consume these bytes through the existing
 per-owner recovery manager and may partially commit owners without claiming a
 global rollback.
+
+## 29. R5.4-WORKSPACE-REPLAY-PREPARE ratification
+
+**Accepted 2026-09-01.** Commit `a4b1e8b0` adds the non-Clone exact-epoch
+replay carrier, affected-closure extraction during Collect and a write-free
+prepare-all driver. The replay token is privately minted, non-Clone and checked
+by pointer identity; a separately lowered equivalent epoch refuses before the
+provider factory.
+
+Collect retains every emitted unit/node recipe, including fresh-skipped
+ancestors. Direct Pending continuations validate their exact set/evidence
+header/fingerprint coherence and retain a public receipt snapshot. The sealed
+closure contains direct units, static-only emitted ancestors, typed dependent
+nodes and direct Pending nodes; dynamic consumers and raw/desubstituted inputs
+stay outside. Duplicate/omitted recipes, cycles and parent-before-child order
+hard-refuse. Deterministic order is units dependency-first then nodes by rel.
+
+Workspace moves direct sets into Resolve, assigns Fail to affected nonpending
+native lanes and assigns no policy to builtin lanes. The lifecycle replay
+factory builds one owner provider and terminally refuses leftovers. Evidence
+remains owned by its direct lane through compilation and is consumed only
+after exact Ready receipt identity/length/positive-count validation. Fail lanes
+must return Ready with empty receipts; builtin lanes must carry no native
+continuation; Collect is absent.
+
+All target roles and fallible INDEX bodies preflight before factory creation or
+compilation. The shared compiler accepts an exact-path owned byte overlay:
+vibe-spec resolves through the same FileResolver, projects MD/XML through the
+same specdoc dispatcher and shares the original anchor/candidate logic;
+workspace simple inputs use that same overlay authority. Each Ready child
+enters final selected-STATIC bytes, so affected parents and nodes prepare from
+memory while every published artifact remains Pending. Ordinary Fs behavior,
+pattern expansion and errors remain exact outside overlay hits.
+
+The sealed prepared result owns only deterministic owner/target metadata and
+final INDEX/STATIC bytes. It contains no epoch token, set, evidence, receipt,
+provider, binding, invoker, overlay, trace, observer, provisional artifact,
+header parser, transaction/journal or Cargo descriptor. No writer is reachable
+from preparation; a final-node refusal preserves all original Pending bytes,
+old mtimes and absence of transaction/rollback journals.
+
+Independent review returned NOT PASS for four bounded ownership/proof issues:
+the epoch token was Clone; evidence was dropped before receipt validation; the
+Fail→Collect ancestor RED did not distinguish policy kinds; and dead-code
+suppression was too broad. The token is now non-Clone, evidence is consumed
+only with validated direct state, the factory records exact pre-mutation
+middle=Resolve/top=Fail policy kinds, and only item-level future-owner
+expectations remain. Final re-review passed.
+
+Final gates: replay 8/8, `vibe-workspace` 526/526, `vibe-lifecycle` 620 passed/3
+platform ignored, workspace doctests 31/31, vibe-spec overlay 6/6 and full
+vibe-spec 914/914, workspace check, all-target clippy with warnings denied,
+fmt, conform 48 standing/0 new and `git diff --check`. REPLAY-PUBLISH is next;
+PREPARE adds no publication walk, recovery policy, public INSTALL wiring,
+FENCE sequencing or Cargo build.
