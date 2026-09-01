@@ -1486,6 +1486,15 @@ than depending on untracked `cache/` archaeology.
   behavioral REDs earned final PASS. Gates: fingerprint 9, codec 2, freshness
   6, workspace 518, real provider 1, check/clippy/fmt and conform 48/0.
   FRESHNESS accepted; REPLAY-PREPARE next.
+- R5.4-WORKSPACE-REPLAY-PREPARE implementation freeze: Collect retains exact
+  lane recipes, filters direct Pending plus static unit ancestors and typed
+  dependent nodes, and seals child-first/unit-then-node order. Direct owners
+  move non-Clone sets into Resolve; native ancestors use Fail; builtin owners
+  do not bind. All INDEX semantics preflight, then one in-memory selected-
+  STATIC overlay feeds prepared child bytes to parents/nodes while disk remains
+  Pending. Exact Ready receipts and provider exhaustion are mandatory. The
+  result owns final bytes/targets only; no writer, trace, header parser,
+  journal, replay publication or Cargo enters PREPARE.
 - R4.2 minify binding, RED corpus and activation e2e: `7a09ec2d` registers
   `xml-minify` (epoch 1, EMITTED — the one stage the kernel serves without a
   new serializer; every other stage refuses through the registry's own law)

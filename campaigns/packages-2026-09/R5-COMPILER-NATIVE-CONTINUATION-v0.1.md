@@ -1232,3 +1232,65 @@ standing/0 new and `git diff --check`. Only the private bound regeneration
 carrier/root retain checked dead-code expectations, both owned by INSTALL.
 REPLAY-PREPARE is next; no replay, FENCE, public INSTALL wiring or Cargo call
 landed here.
+
+## 28. R5.4-WORKSPACE-REPLAY-PREPARE implementation freeze
+
+**Frozen 2026-09-01 after two native `gpt-5.6-sol`/`xhigh` architecture
+reviews.** REPLAY-PREPARE is a new one-shot, all-memory path over the exact
+retained runtime epoch and Collect composition. It never calls regeneration,
+re-reads the lock, re-lowers a world, publishes, stages a temporary file or
+creates transaction/recovery state.
+
+Collect retains a candidate recipe for every emitted unit and node, including
+a fresh-skipped ancestor: exact owner/format, final `EffectiveBoot`, typed
+generated-unit dependencies, base fingerprint and publication target. After
+all Collect outcomes are known, direct Pending owners move their unique
+non-Clone sets plus typed evidence into the replay carrier, after first saving
+the public plan-digest/order/key receipt shape.
+
+The affected unit set is direct Pending units plus emitted ancestors reached
+backwards only across Static/StaticTransitive/StaticHard edges. Dynamic edges
+stop. An affected node is directly Pending or its retained final static
+composition consumes an affected generated unit-STATIC after the actual
+hoist/substitute/desubstitute decisions; dependency is recorded as typed
+`UnitId`, never inferred from display text or a parsed path. Direct Pending
+nodes are independent of the unit closure. Only this exact closure survives in
+the replay set.
+
+Replay order is sealed: affected units dependency-before-dependent with typed
+identity tie-break, then nodes by canonical relative path. The set is bound to
+the exact OwnerRuntimeEpoch that produced it; a newly lowered equivalent epoch
+does not substitute. Empty returns before provider factory, source resolution,
+binding, compiler, INDEX preparation or prepared-publication allocation.
+
+Workspace consumes the pending sets into one policy map. A direct Pending
+owner receives Resolve(exact set); an affected native owner with no genuine
+set receives Fail; an affected builtin owner receives no binding. Collect and
+fabricated empty Resolve are forbidden. Lifecycle supplies a factory for the
+complete map and terminally refuses leftover policies. Each binding/invoker is
+local to one forced Plain compile and is dropped before the prepared result.
+
+All fallible INDEX bodies and target roles preflight before compilation. Units
+then prepare child-first through a source-injected sibling of the single
+managed core. One ephemeral selected-STATIC overlay checks exact engine-owned
+prepared paths before delegating every other address/pattern to the existing
+safe filesystem resolver. A Ready child enters final bytes into the overlay;
+static ancestors and then nodes compile against those bytes while every disk
+artifact remains Pending. No temp file is an overlay substitute.
+
+Direct Resolve lanes must return native Ready with exact ordered expected
+receipt identities and positive counts. Affected native Fail lanes must return
+Ready with empty receipts. Builtin lanes carry no native continuation. Pending,
+wrong/missing/extra receipts, unused policy, second visit, omitted descriptor
+or incomplete topological order is hard. Successful unit INDEX output is the
+retained base fingerprint with no pending marker; node INDEX remains
+fingerprintless.
+
+The sealed PreparedBootReplay owns only deterministic per-owner target paths
+and final INDEX/STATIC bytes (plus validated receipts if retained). It contains
+no trace, observer, provider, binding, invoker, pending set, provisional
+artifact, overlay, header parser, journal or Cargo/process descriptor. Failure
+at the last lane leaves every original Pending byte/mtime and transaction path
+untouched. REPLAY-PUBLISH alone will consume these bytes through the existing
+per-owner recovery manager and may partially commit owners without claiming a
+global rollback.
