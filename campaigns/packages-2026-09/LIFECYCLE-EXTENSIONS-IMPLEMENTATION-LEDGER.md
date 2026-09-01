@@ -1467,6 +1467,15 @@ than depending on untracked `cache/` archaeology.
   manifest mutation and tautological ordering. Final PASS gates: core 8, epoch
   1, real provider 1, workspace 509, lifecycle 619/3 ignored, spec 908,
   check/clippy/fmt and conform 48/0. COMPILE accepted; FRESHNESS next.
+- R5.4-WORKSPACE-FRESHNESS implementation freeze: preserve the exact legacy
+  Merkle path when no pending frame exists; Pending adds one raw typed frame
+  plus canonical `# vibe:native-pending` INDEX evidence, propagated through
+  static children. Exact compile/native units never plan-skip and compile
+  dependency-first; final outcome precedes infallible INDEX framing and one
+  transaction. Public verify strictly authorizes/reads INDEX markers and
+  recomputes the complete overlay without STATIC parsing or lifecycle work.
+  Resolve restores base, identical Pending preserves mtime. Bound regeneration
+  remains private for INSTALL; replay/FENCE/Cargo remain outside FRESHNESS.
 - R4.2 minify binding, RED corpus and activation e2e: `7a09ec2d` registers
   `xml-minify` (epoch 1, EMITTED — the one stage the kernel serves without a
   new serializer; every other stage refuses through the registry's own law)

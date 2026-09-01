@@ -1111,3 +1111,64 @@ ignored, `vibe-spec` 908/908, workspace check, all-target clippy with warnings
 denied, fmt, conform 48 standing/0 new and `git diff --check`. FRESHNESS is
 next; COMPILE adds no freshness fix, replay executor/publication coordinator,
 INSTALL selection, FENCE sequencing or Cargo/process build call.
+
+## 26. R5.4-WORKSPACE-FRESHNESS implementation freeze
+
+**Frozen 2026-09-01 after two independent native
+`gpt-5.6-sol`/`xhigh` design reviews and an explicit public-verifier
+adjudication.** FRESHNESS remains a unit protocol; node lanes still recompile
+and carry no unit fingerprint or pending marker.
+
+The existing Merkle fingerprint is the base and remains byte-exact whenever no
+pending frame exists. One pending-aware sibling appends a versioned,
+domain-separated raw 32-byte `PendingFingerprint` frame only for a unit with a
+managed Pending outcome. Because static parents already hash child
+fingerprints, the composite propagates through static edges and stops at
+dynamic edges. The historical hasher delegates with an empty overlay and all
+legacy fingerprint goldens remain literal.
+
+The unit INDEX keeps `# vibe:fp <effective-composite>`. A Pending unit adds one
+canonical engine-owned sibling immediately after it:
+`# vibe:native-pending <64-lowercase-hex>`. Absence writes zero bytes and
+Ready/builtin INDEX output is exactly historical. The strict reader admits one
+fingerprint plus at most one canonical pending marker; duplicate, malformed,
+uppercase, short, orphan or conflicting state is invalid. No STATIC generated
+header is parsed.
+
+`verify_boot_graph` reconstructs exact owner runtimes, authorizes a marker only
+for an emitted unit whose retained owner has a true compile/native row
+intersection, collects the complete typed overlay in a first pass, recomputes
+the whole Merkle graph in a second pass and compares effective fingerprints.
+Invalid or unauthorized state makes that unit stale and propagates to static
+ancestors. Verification performs no lifecycle invocation, replay, artifact
+probe or Cargo call.
+
+Managed generation processes emitted units dependency-first. It prepares all
+fallible INDEX semantics before the compiler. A non-native unit retains the
+exact selected-STATIC/stale-absence/fingerprint fresh skip. A unit with the
+exact compile/native intersection never trusts that plan-only skip: it binds
+and compiles, so the current selector/source/Ready/Pending result is observed.
+After the final managed outcome, Pending adds its typed evidence frame and
+Ready/selector miss removes it; the unit fingerprint is recomputed from
+already-finalized children, INDEX fingerprint/marker insertion is infallible,
+and finalized INDEX/STATIC publish through the existing transaction.
+
+Selector miss therefore means zero native-handler invocation, artifact probe,
+build fact, pending evidence, replay and Cargo—not zero boot compilation. It
+returns Ready with no marker. Repeated identical Pending runs still compile,
+but identical INDEX/STATIC publication is a transaction no-op and preserves
+deliberately old mtimes. Resolve Ready removes the pending marker/header/frame,
+restores the exact base fingerprint and dirties only the static ancestor
+closure reached by the Merkle change.
+
+The canonical native-intersection predicate lives on retained OwnerRuntime and
+is shared by COMPILE, generation and verification. A phase-native-only row
+does not disable the legacy skip. When the bound world contains no native unit
+intersection, the historical emitter/order/error path remains whole.
+
+Bound regeneration and its carrier stay crate-private: FRESHNESS makes them
+sound but INSTALL still owns their first production caller, run facts and
+policy selection. FRESHNESS removes only the dormant pending-inspection lint
+marker; the private regeneration root/carrier markers remain explicitly owned
+by INSTALL. No replay descriptor/execution, global prepare, FENCE sequencing,
+STATIC-header parser or Cargo/process call lands here.
