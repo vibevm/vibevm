@@ -1476,6 +1476,16 @@ than depending on untracked `cache/` archaeology.
   recomputes the complete overlay without STATIC parsing or lifecycle work.
   Resolve restores base, identical Pending preserves mtime. Bound regeneration
   remains private for INSTALL; replay/FENCE/Cargo remain outside FRESHNESS.
+- R5.4-WORKSPACE-FRESHNESS: `bbbb50fa` adds exact compile/native forced
+  observation, typed Pending Merkle propagation, canonical unit-INDEX evidence
+  and two-pass authorized verification. Child-before-parent current outcomes
+  drive final INDEX/STATIC transactions; repeat Pending preserves aged mtimes,
+  Resolve restores base, selector miss drains/invokes nothing native, and
+  phase/no-static lanes retain legacy skip. Review rejected self-inconsistent
+  builtin forgery, pure-only dynamic break and uncounted fact drains; corrected
+  behavioral REDs earned final PASS. Gates: fingerprint 9, codec 2, freshness
+  6, workspace 518, real provider 1, check/clippy/fmt and conform 48/0.
+  FRESHNESS accepted; REPLAY-PREPARE next.
 - R4.2 minify binding, RED corpus and activation e2e: `7a09ec2d` registers
   `xml-minify` (epoch 1, EMITTED — the one stage the kernel serves without a
   new serializer; every other stage refuses through the registry's own law)

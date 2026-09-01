@@ -1172,3 +1172,63 @@ policy selection. FRESHNESS removes only the dormant pending-inspection lint
 marker; the private regeneration root/carrier markers remain explicitly owned
 by INSTALL. No replay descriptor/execution, global prepare, FENCE sequencing,
 STATIC-header parser or Cargo/process call lands here.
+
+## 27. R5.4-WORKSPACE-FRESHNESS ratification
+
+**Accepted 2026-09-01.** Commit `bbbb50fa` makes unit freshness truthful for
+managed compiler-native Pending/Ready outcomes while preserving the complete
+legacy path when no emitted unit has an exact compile/native intersection.
+
+The shared retained-runtime predicate is fallible and pointer-exact; stale row
+indices keep their typed refusal and phase-native-only rows do not count. The
+historical Merkle function is now the empty-overlay wrapper and retains its
+literal digest. Pending appends one versioned raw typed evidence frame, which
+changes the unit and static ancestors but stops at dynamic edges.
+
+Unit INDEX publication retains the effective `# vibe:fp` and adds exactly one
+adjacent canonical `# vibe:native-pending <64-lowercase-hex>` only for Pending.
+No marker preserves the exact historical bytes. Public `read_fingerprint`
+stays permissive and compatible; the managed codec separately rejects missing,
+duplicate, malformed, uppercase, short, moved, orphan or conflicting state.
+Fallible TOML/index preparation precedes compilation and final fingerprint/
+marker insertion is infallible.
+
+Managed units run dependency-first. Non-native units retain the exact legacy
+selected-STATIC/stale-absence/fingerprint skip. Native-intersecting units
+always compile and establish current selector/source/Ready/Pending truth; they
+never seed generation from an old marker. Finalized child evidence updates the
+current-run overlay before the parent fingerprint is computed. Final INDEX and
+STATIC publish in one per-owner transaction, and the continuation is retained
+only after successful publication.
+
+Public verification reads every expected INDEX in two passes, reconstructs
+syntactically valid overlays, separately refuses markers unauthorized by the
+exact runtime, recomputes the whole Merkle graph and propagates invalidity only
+through static ancestors. A valid Pending tree verifies without lifecycle,
+replay, Cargo or STATIC-header parsing. Hostile missing/mutated/duplicate/
+orphan marker and self-consistent builtin-forgery cases are stale; an emitted
+dynamic consumer remains clean.
+
+Repeated identical Pending still invokes the provider and records a compiled
+trace attempt, but byte-equal INDEX/STATIC transactions preserve deliberately
+aged mtimes. Consuming Resolve Ready removes the marker, pending STATIC frame
+and composite and restores the exact four base artifacts for child and static
+parent. Selector miss produces Ready with zero handler invocation, fact drain,
+pending marker, target output or Cargo; no-static and phase-native-only owners
+retain zero-provider legacy behavior. Failures preserve prior unit/ancestor
+artifacts and leave a failed, never pending, trace scope.
+
+Independent review returned NOT PASS only for three mutation-proof gaps: a
+builtin forgery did not replace its composite, verifier dynamic-break behavior
+was tested only in the pure hasher, and selector miss did not count fact drains.
+The final REDs now forge a self-consistent unauthorized composite+marker,
+exercise an emitted dynamic/static-support consumer, and assert zero drains;
+final re-review passed.
+
+Final gates: fingerprint 9/9, INDEX codec 2/2, native freshness 6/6,
+`vibe-workspace` 518/518, affected lifecycle real provider/analyzer 1/1,
+workspace checks, all-target clippy with warnings denied, fmt, conform 48
+standing/0 new and `git diff --check`. Only the private bound regeneration
+carrier/root retain checked dead-code expectations, both owned by INSTALL.
+REPLAY-PREPARE is next; no replay, FENCE, public INSTALL wiring or Cargo call
+landed here.
