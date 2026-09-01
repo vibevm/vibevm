@@ -10,10 +10,25 @@ use tempfile::TempDir;
 use vibe_core::manifest::{LockedPackage, Lockfile, Materialization, SpecFormat};
 use vibe_core::{ContentHash, Group, PackageKind, PackageName, PackageRef};
 
+use crate::boot_artifacts::native_managed_tests::{FakeProvider, Reply};
 use crate::extension_world::{
-    ExtensionWorldEpoch, LoweredOwnerRuntimes, OwnerRuntimeLowering, collect_owner_view,
+    ExtensionWorldEpoch, LoweredOwnerRuntimes, OwnerRuntimeId, OwnerRuntimeLowering,
+    OwnerRuntimeRunFacts, collect_owner_view, lower_owner_runtimes,
 };
 use vibe_extension_registry::ExtensionProvider;
+
+fn bind_epoch(
+    lowered: LoweredOwnerRuntimes,
+    root: &Path,
+) -> crate::extension_world::OwnerRuntimeEpoch {
+    lowered.bind_run(OwnerRuntimeRunFacts {
+        run_id: "0123456789abcdef0123456789abcdef".to_owned(),
+        state_root: root.join(".vibe"),
+        platform: "linux-x86_64".to_owned(),
+        offline: true,
+        created_at: "2026-09-01T00:00:00Z".to_owned(),
+    })
+}
 
 #[derive(Debug, PartialEq, Eq)]
 struct RuntimeAuthority {
@@ -196,7 +211,7 @@ link = "static"
 [[extension]]
 id = "z-row"
 point = "compile:emitted"
-handler = { kind = "builtin", name = "xml-minify" }
+handler = { kind = "native", crate_dir = "native" }
 "#,
     );
     write(
@@ -302,17 +317,86 @@ handler = { kind = "builtin", name = "xml-minify" }
         ["org.lock/z-tools#z-row", "org.lock/a-tools#a-row"],
     );
 
-    let prepared = regenerate_boot_from_traced_prepared(
+    let ready_world = ExtensionWorldEpoch::from_resolution(root, &resolution).unwrap();
+    let ready_epoch = bind_epoch(
+        lower_owner_runtimes(
+            &workspace,
+            &ready_world,
+            OwnerRuntimeLowering::compatibility_root_without_presets(),
+        )
+        .unwrap(),
+        root,
+    );
+    for mismatched in [
+        vec![resolution[1].clone(), resolution[0].clone()],
+        {
+            let mut changed = resolution.clone();
+            changed[0].source_hash = Some(ContentHash::parse("sha256:ee").unwrap());
+            changed
+        },
+        {
+            let mut changed = resolution.clone();
+            changed[0].requires.clear();
+            changed
+        },
+        {
+            let mut changed = resolution.clone();
+            changed[0].manifest.extensions[0].auto = Some(false);
+            changed
+        },
+    ] {
+        let mut unused = FakeProvider::new(Reply::Skip);
+        assert!(matches!(
+            bootgen::native_managed::regenerate_boot_from_bound_native(
+                &workspace,
+                &mismatched,
+                SpecFormat::Xml,
+                None,
+                &ready_epoch,
+                Some(&mut unused),
+            ),
+            Err(WorkspaceError::OwnerRuntimeResolutionMismatch)
+        ));
+        assert!(unused.owners.is_empty());
+    }
+    let mut ready_provider = FakeProvider::new(Reply::Skip);
+    let prepared = bootgen::native_managed::regenerate_boot_from_bound_native(
         &workspace,
         &resolution,
         SpecFormat::Xml,
         None,
-        OwnerRuntimeLowering::compatibility_root_without_presets(),
+        &ready_epoch,
+        Some(&mut ready_provider),
     )
     .unwrap();
     assert_eq!(prepared.nodes, ["."]);
-    assert_eq!(prepared.runtimes.units().len(), 2);
-    let ready_authority = runtime_authority(&prepared.runtimes);
+    assert_eq!(ready_epoch.lowered().units().len(), 2);
+    let node_owner = OwnerRuntimeId::Node {
+        rel: ".".to_owned(),
+    };
+    let unit_owner = OwnerRuntimeId::Unit {
+        provider: vibe_extension_registry::DependencyProviderId::new(
+            group(),
+            PackageName::parse("z-tools").unwrap(),
+        ),
+    };
+    assert_eq!(
+        ready_provider.owners,
+        [unit_owner.clone(), node_owner.clone()]
+    );
+    assert_eq!(
+        prepared.native.keys().collect::<Vec<_>>(),
+        [&node_owner, &unit_owner]
+    );
+    assert!(matches!(
+        prepared.native.get(&node_owner),
+        Some(crate::boot_artifacts::OwnerNativeCompileContinuation::Ready { .. })
+    ));
+    assert!(matches!(
+        prepared.native.get(&unit_owner),
+        Some(crate::boot_artifacts::OwnerNativeCompileContinuation::Ready { .. })
+    ));
+    let ready_authority = runtime_authority(ready_epoch.lowered());
     assert_eq!(
         ready_authority.registry_keys,
         ["org.lock/z-tools#z-row", "org.lock/a-tools#a-row"]
@@ -344,15 +428,38 @@ handler = { kind = "builtin", name = "xml-minify" }
         ],
     );
     let fresh_resolution = read_durable_resolution(root).unwrap();
-    let fresh = regenerate_boot_from_traced_prepared(
+    let mut reparsed_provider = FakeProvider::new(Reply::Skip);
+    let reparsed = bootgen::native_managed::regenerate_boot_from_bound_native(
         &workspace,
         &fresh_resolution,
         SpecFormat::Xml,
         None,
-        OwnerRuntimeLowering::compatibility_root_without_presets(),
+        &ready_epoch,
+        Some(&mut reparsed_provider),
+    )
+    .expect("independently reparsed matching resolution");
+    assert_eq!(reparsed.nodes, ["."]);
+    let fresh_world = ExtensionWorldEpoch::from_resolution(root, &fresh_resolution).unwrap();
+    let fresh_epoch = bind_epoch(
+        lower_owner_runtimes(
+            &workspace,
+            &fresh_world,
+            OwnerRuntimeLowering::compatibility_root_without_presets(),
+        )
+        .unwrap(),
+        root,
+    );
+    let mut fresh_provider = FakeProvider::new(Reply::Skip);
+    bootgen::native_managed::regenerate_boot_from_bound_native(
+        &workspace,
+        &fresh_resolution,
+        SpecFormat::Xml,
+        None,
+        &fresh_epoch,
+        Some(&mut fresh_provider),
     )
     .unwrap();
-    assert_eq!(runtime_authority(&fresh.runtimes), ready_authority);
+    assert_eq!(runtime_authority(fresh_epoch.lowered()), ready_authority);
     let written = fs::read(
         root.join(vibe_core::layout::current_boot_dir())
             .join(crate::boot_artifacts::static_file(SpecFormat::Xml)),
@@ -385,9 +492,16 @@ handler = { kind = "builtin", name = "xml-minify" }
         "public bodies follow the same dependency-first graph"
     );
     assert!(!written_text.contains("org.lock/m-orphan"));
-    let analyzed = analyze_node_lane(&workspace, ".", None)
-        .unwrap()
-        .expect("the locked lane has static content");
+    let analyzed = analyze_node_lane_bound_native(
+        &workspace,
+        ".",
+        &fresh_resolution,
+        &fresh_epoch,
+        Some(&mut fresh_provider),
+        None,
+    )
+    .unwrap()
+    .expect("the locked lane has static content");
     assert_eq!(analyzed.artifact.bytes(), written);
     assert!(
         String::from_utf8_lossy(analyzed.artifact.bytes()).contains(header),

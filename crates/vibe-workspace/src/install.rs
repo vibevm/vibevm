@@ -68,11 +68,15 @@ pub use slot_lifecycle::{
     SlotLifecycle, SlotLifecycleContext, SlotLifecycleMode, SlotLifecycleTarget,
 };
 
+#[cfg(test)]
+pub(crate) use bootgen::analyze_effective_bound_native;
 pub use bootgen::verify_boot_graph;
 /// The R4.3 lane analyzer's write-free entry (packages-2026-09 §9): one
 /// selected node's lane composed and compiled under the analyzer
 /// observer — the same composition regeneration runs, minus every write.
-pub use bootgen::{AnalyzedLane, analyze_node_lane};
+pub use bootgen::{
+    AnalyzedBoundLane, AnalyzedLane, analyze_node_lane, analyze_node_lane_bound_native,
+};
 pub use bootgen::{
     BootRegeneration, regenerate_boot, regenerate_boot_from, regenerate_boot_from_traced,
     regenerate_boot_from_traced_prepared, regenerate_boot_from_with_spec_format,

@@ -21,6 +21,10 @@ impl CompilerNativeFactBinding for EmptyBinding {
     ) -> Result<Vec<super::PendingBuildFact>, CompilerNativeFactError> {
         Err(CompilerNativeFactError::already_taken())
     }
+
+    fn finish_ready(&self) -> Result<(), CompilerNativeFactError> {
+        Err(CompilerNativeFactError::already_taken())
+    }
 }
 
 #[test]

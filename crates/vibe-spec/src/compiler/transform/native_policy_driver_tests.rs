@@ -231,7 +231,12 @@ fn resolve_counts_expected_calls_allows_nonexpected_and_skip() {
         CompilerNativePolicy::resolve(expected),
     )
     .unwrap();
-    let receipts = resolved.as_ready().unwrap().receipts();
+    let ready = match resolved {
+        CompilerNativeOutcome::Ready(ready) => ready,
+        CompilerNativeOutcome::Pending(_) => panic!("Resolve must be Ready"),
+    };
+    let (artifact, receipts) = ready.into_parts();
+    assert!(!artifact.bytes().is_empty());
     assert_eq!(
         receipts.iter().map(|(_, count)| count).collect::<Vec<_>>(),
         [5]

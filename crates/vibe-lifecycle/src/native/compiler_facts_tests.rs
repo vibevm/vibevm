@@ -157,7 +157,6 @@ fn recorder_distinguishes_repeat_missing_extra_conflict_poison_and_taken() {
     let execution = execution(&rows, root.path(), &mechanisms, &routes);
     let capture = capture_fixture(&execution, rows[0]);
     let expected = pending_set(rows[0], vec![(0, rows[0].key().clone())]);
-    let empty = pending_set(rows[0], Vec::new());
 
     let repeated = PendingFactRecorder::new();
     repeated.record(capture.clone()).expect("FACTS fixture");
@@ -177,7 +176,7 @@ fn recorder_distinguishes_repeat_missing_extra_conflict_poison_and_taken() {
     extra.record(capture.clone()).expect("FACTS fixture");
     assert!(
         extra
-            .take(&empty)
+            .finish_ready()
             .unwrap_err()
             .to_string()
             .contains("extra")
@@ -198,17 +197,17 @@ fn recorder_distinguishes_repeat_missing_extra_conflict_poison_and_taken() {
     assert_eq!(results.iter().filter(|result| result.is_err()).count(), 1);
     assert!(
         conflict
-            .take(&expected)
+            .finish_ready()
             .unwrap_err()
             .to_string()
             .contains("conflicts")
     );
 
     let taken = PendingFactRecorder::new();
-    assert!(taken.take(&empty).expect("FACTS fixture").is_empty());
+    taken.finish_ready().expect("FACTS fixture");
     assert!(
         taken
-            .take(&empty)
+            .finish_ready()
             .unwrap_err()
             .to_string()
             .contains("already taken")
@@ -220,7 +219,7 @@ fn recorder_distinguishes_repeat_missing_extra_conflict_poison_and_taken() {
     }));
     assert!(
         poisoned
-            .take(&empty)
+            .finish_ready()
             .unwrap_err()
             .to_string()
             .contains("poisoned")
@@ -229,13 +228,6 @@ fn recorder_distinguishes_repeat_missing_extra_conflict_poison_and_taken() {
 
 #[test]
 fn prebuilt_success_and_hard_failure_record_no_pending_fact() {
-    let source_root = tempdir().expect("FACTS fixture");
-    let (source_registry, _) = registries(
-        source_root.path(),
-        vec![source_stage_native("expected", None)],
-    );
-    let empty = pending_set(&source_registry.rows()[0], Vec::new());
-
     let root = tempdir().expect("FACTS fixture");
     let relative = fixture(root.path());
     let (registry, mechanisms) = registries(
@@ -262,12 +254,7 @@ fn prebuilt_success_and_hard_failure_record_no_pending_fact() {
             .invoke(call(rows[0], 0, &config, CompilePoint::Pass, rows[0]))
             .is_ok()
     );
-    assert!(
-        invoker
-            .take_pending_build_facts(&empty)
-            .expect("FACTS fixture")
-            .is_empty()
-    );
+    invoker.finish_ready().expect("FACTS fixture");
 
     let missing_root = tempdir().expect("FACTS fixture");
     let missing_path = PathBuf::from(format!("missing{}", current_platform().suffix()));
@@ -302,12 +289,7 @@ fn prebuilt_success_and_hard_failure_record_no_pending_fact() {
             .kind(),
         CompilerNativeInvokerErrorKind::InvocationFailed
     );
-    assert!(
-        missing_invoker
-            .take_pending_build_facts(&empty)
-            .expect("FACTS fixture")
-            .is_empty()
-    );
+    missing_invoker.finish_ready().expect("FACTS fixture");
 }
 
 #[test]
@@ -340,11 +322,99 @@ fn valid_source_record_and_later_loader_failure_record_no_pending_fact() {
         error.kind(),
         CompilerNativeInvokerErrorKind::InvocationFailed
     );
-    let empty = pending_set(rows[0], Vec::new());
+    invoker.finish_ready().expect("FACTS fixture");
+}
+
+#[test]
+fn lifecycle_provider_drives_real_pending_fact_join_through_bound_analyzer() {
+    let root = tempdir().expect("bound analyzer fixture");
+    write_source_tree(root.path());
+    fs::write(
+        root.path().join("vibe.toml"),
+        "[project]\ngroup='org.demo'\nname='compiler-host'\nversion='0.1.0'\n\n\
+         [requires.packages]\n'org.fixture/content'={version='=1.0.0',link='static'}\n\n\
+         [[extension]]\nid='source'\npoint='compile:source'\n\
+         handler={kind='native',crate_dir='native'}\n",
+    )
+    .expect("workspace manifest");
+    let group = vibe_core::Group::parse("org.fixture").expect("group");
+    let version = "1.0.0".parse().expect("version");
+    let slot = vibe_workspace::vibedeps::slot_abs_path(root.path(), &group, "content", &version);
+    fs::create_dir_all(slot.join("boot")).expect("package boot directory");
+    fs::write(
+        slot.join("vibe.toml"),
+        "[package]\ngroup='org.fixture'\nname='content'\nkind='tool'\nversion='1.0.0'\n\n\
+         [boot_snippet]\nsource='boot/content.md'\nlink='static'\n",
+    )
+    .expect("package manifest");
+    fs::write(slot.join("boot/content.md"), "# Input\n\nbody\n").expect("package boot input");
+    let workspace = vibe_workspace::Workspace::load(root.path()).expect("workspace");
+    let resolution = [vibe_workspace::install::ResolvedDep {
+        kind: vibe_core::PackageKind::Tool,
+        group,
+        name: "content".to_owned(),
+        version,
+        content_dir: slot.clone(),
+        source_hash: Some(vibe_core::ContentHash::parse("sha256:aa").expect("content hash")),
+        manifest: vibe_core::manifest::Manifest::read(slot.join("vibe.toml"))
+            .expect("package manifest"),
+        requires: Vec::new(),
+        admitted_by: None,
+        via_override: None,
+        source_mutable: false,
+        in_place_changed: None,
+    }];
+    let lowered = vibe_workspace::extension_world::lower_owner_runtimes(
+        &workspace,
+        &vibe_workspace::extension_world::ExtensionWorldEpoch::from_resolution(
+            root.path(),
+            &resolution,
+        )
+        .expect("extension world"),
+        vibe_workspace::extension_world::OwnerRuntimeLowering::compatibility_root_without_presets(),
+    )
+    .expect("owner runtimes");
+    let owner = vibe_workspace::extension_world::OwnerRuntimeId::Node {
+        rel: ".".to_owned(),
+    };
+    let epoch = lowered.bind_run(vibe_workspace::extension_world::OwnerRuntimeRunFacts {
+        run_id: RUN_ID.to_owned(),
+        state_root: root.path().join(".vibe"),
+        platform: current_platform().key().to_owned(),
+        offline: true,
+        created_at: "2026-09-01T00:00:00Z".to_owned(),
+    });
+    let mut provider = ArtifactCompilerNativeProvider::new(
+        current_platform(),
+        BTreeMap::from([(owner, vibe_spec::CompilerNativePolicy::collect())]),
+    );
+    let generated = root
+        .path()
+        .join(vibe_core::layout::current_boot_dir())
+        .join(vibe_workspace::boot_artifacts::STATIC_FILE);
+    assert!(!generated.exists());
+    let analyzed = vibe_workspace::install::analyze_node_lane_bound_native(
+        &workspace,
+        ".",
+        &resolution,
+        &epoch,
+        Some(&mut provider),
+        None,
+    )
+    .expect("bound analyzer")
+    .expect("static artifact");
+    let text = std::str::from_utf8(analyzed.artifact.bytes()).expect("static utf8");
+    assert!(text.contains("vibe:transforms-pending"));
+    assert!(matches!(
+        analyzed.native,
+        Some(vibe_workspace::boot_artifacts::OwnerNativeCompileContinuation::Pending { .. })
+    ));
     assert!(
-        invoker
-            .take_pending_build_facts(&empty)
-            .expect("FACTS fixture")
-            .is_empty()
+        !generated.exists(),
+        "the real analyzer publishes no boot bytes"
+    );
+    assert!(
+        !root.path().join("target").exists(),
+        "the analyzer performs no Cargo build"
     );
 }

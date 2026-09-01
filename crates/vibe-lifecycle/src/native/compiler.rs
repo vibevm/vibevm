@@ -1,28 +1,31 @@
 //! Artifact-backed compiler-native invocation over one retained registry epoch.
 
+use std::collections::BTreeMap;
 use std::path::Path;
 
 use specmark::spec;
 use vibe_core::lifecycle::ExtensionPoint;
-use vibe_core::manifest::ExtensionHandler;
+use vibe_core::manifest::{ExtensionHandler, MechanismRoutes};
 use vibe_native_loader::{NativeCompileInvocation, NativeLoader};
 use vibe_spec::{
     CompilerNativeCall, CompilerNativeInvoker, CompilerNativeInvokerError,
-    CompilerNativeInvokerErrorKind, compiler_native_implementation_digest,
+    CompilerNativeInvokerErrorKind, CompilerNativePolicy, compiler_native_implementation_digest,
 };
 use vibe_wire::behaviour::native_compile;
 use vibe_wire::generated::native::e1::compile_request::CompileRequest;
 use vibe_wire::generated::shared::{Execution, Io, Project, World};
+use vibe_workspace::WorkspaceError;
 use vibe_workspace::extension_world::{
-    CompilerNativeFactBinding, CompilerNativeFactError, PendingBuildFact,
+    CompilerNativeFactBinding, CompilerNativeFactError, OwnerNativeCompileBinding,
+    OwnerNativeCompileProvider, OwnerRuntimeId, OwnerRuntimeView, PendingBuildFact,
 };
 
-use crate::ExtensionRegistryRow;
 use crate::execution::effective_config;
 use crate::process::execution_scratch;
+use crate::{ExtensionRegistryRow, MechanismRegistry};
 
 use super::{
-    NativeArtifactError, NativeBuildExecution,
+    NativeArtifactError, NativeBuildExecution, NativePlatform,
     compiler_facts::{CompilerArtifactResolutionError, PendingFactRecorder},
     path::publish_load_image,
     process_loader, resolve_native_artifact_for_compiler,
@@ -31,8 +34,14 @@ use super::{
 /// One borrowed compiler-native execution epoch backed by retained ARTIFACTs.
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-NATIVE-ONLY")]
 pub struct ArtifactCompilerNativeInvoker<'a> {
-    all_compile_rows: &'a [&'a ExtensionRegistryRow],
-    execution: NativeBuildExecution<'a>,
+    all_compile_rows: Box<[&'a ExtensionRegistryRow]>,
+    native_candidates: Box<[&'a ExtensionRegistryRow]>,
+    selected_project_root: &'a Path,
+    mechanisms: &'a MechanismRegistry,
+    routes: &'a MechanismRoutes,
+    platform: NativePlatform,
+    offline: bool,
+    created_at: &'a str,
     project: &'a Project,
     world: &'a World,
     run_id: &'a str,
@@ -43,20 +52,67 @@ pub struct ArtifactCompilerNativeInvoker<'a> {
 impl<'a> ArtifactCompilerNativeInvoker<'a> {
     #[must_use]
     pub fn new(
-        all_compile_rows: &'a [&'a ExtensionRegistryRow],
+        all_compile_rows: &[&'a ExtensionRegistryRow],
         execution: NativeBuildExecution<'a>,
         project: &'a Project,
         world: &'a World,
         run_id: &'a str,
     ) -> Self {
-        Self {
+        Self::from_parts(
             all_compile_rows,
-            execution,
+            execution.candidates,
+            execution.selected_project_root,
+            execution.registry,
+            execution.routes,
+            execution.platform,
+            execution.offline,
+            execution.created_at,
+            project,
+            world,
+            run_id,
+        )
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    fn from_parts(
+        all_compile_rows: &[&'a ExtensionRegistryRow],
+        native_candidates: &[&'a ExtensionRegistryRow],
+        selected_project_root: &'a Path,
+        mechanisms: &'a MechanismRegistry,
+        routes: &'a MechanismRoutes,
+        platform: NativePlatform,
+        offline: bool,
+        created_at: &'a str,
+        project: &'a Project,
+        world: &'a World,
+        run_id: &'a str,
+    ) -> Self {
+        Self {
+            all_compile_rows: all_compile_rows.to_vec().into_boxed_slice(),
+            native_candidates: native_candidates.to_vec().into_boxed_slice(),
+            selected_project_root,
+            mechanisms,
+            routes,
+            platform,
+            offline,
+            created_at,
             project,
             world,
             run_id,
             loader: process_loader(),
             facts: PendingFactRecorder::new(),
+        }
+    }
+
+    fn execution(&self) -> NativeBuildExecution<'_> {
+        NativeBuildExecution {
+            candidates: &self.native_candidates,
+            selected_project_root: self.selected_project_root,
+            registry: self.mechanisms,
+            routes: self.routes,
+            platform: self.platform,
+            offline: self.offline,
+            created_at: self.created_at,
         }
     }
 
@@ -140,8 +196,7 @@ impl<'a> ArtifactCompilerNativeInvoker<'a> {
             )));
         }
         if !self
-            .execution
-            .candidates
+            .native_candidates
             .iter()
             .any(|candidate| std::ptr::eq(*candidate, row))
         {
@@ -151,7 +206,6 @@ impl<'a> ArtifactCompilerNativeInvoker<'a> {
             )));
         }
         let selected_root = self
-            .execution
             .selected_project_root
             .canonicalize()
             .map_err(|_| failed("selected project root cannot be canonicalized"))?;
@@ -167,12 +221,8 @@ impl<'a> ArtifactCompilerNativeInvoker<'a> {
         let qualified_key = call.key().to_string();
         let point = call.point();
         let manager_config = call.config().clone();
-        let scratch = execution_scratch(
-            self.execution.selected_project_root,
-            self.run_id,
-            &qualified_key,
-        )
-        .map_err(|error| failed(format!("compile row `{qualified_key}` scratch: {error}")))?;
+        let scratch = execution_scratch(self.selected_project_root, self.run_id, &qualified_key)
+            .map_err(|error| failed(format!("compile row `{qualified_key}` scratch: {error}")))?;
         let request = CompileRequest {
             envelope: 1,
             execution: Execution {
@@ -212,39 +262,37 @@ impl CompilerNativeInvoker for ArtifactCompilerNativeInvoker<'_> {
                 prepared.qualified_key
             ))
         })?;
-        let artifact = match resolve_native_artifact_for_compiler(
-            &self.execution,
-            prepared.row,
-            prepared.order,
-        ) {
-            Ok(artifact) => artifact,
-            Err(CompilerArtifactResolutionError::Missing { record, fact }) => {
-                self.facts.record(*fact).map_err(|error| {
-                    failed(format!(
-                        "compile row `{}` pending fact recorder: {error}",
+        let execution = self.execution();
+        let artifact =
+            match resolve_native_artifact_for_compiler(&execution, prepared.row, prepared.order) {
+                Ok(artifact) => artifact,
+                Err(CompilerArtifactResolutionError::Missing { record, fact }) => {
+                    self.facts.record(*fact).map_err(|error| {
+                        failed(format!(
+                            "compile row `{}` pending fact recorder: {error}",
+                            prepared.qualified_key
+                        ))
+                    })?;
+                    return Err(CompilerNativeInvokerError::new(
+                        CompilerNativeInvokerErrorKind::BuildableSourceUnavailable,
+                        format!(
+                            "compile row `{}` source record `{record}` is missing",
+                            prepared.qualified_key
+                        ),
+                    ));
+                }
+                Err(CompilerArtifactResolutionError::Artifact(error)) => {
+                    return Err(artifact_failure(&prepared.qualified_key, error));
+                }
+                Err(CompilerArtifactResolutionError::Fact(reason)) => {
+                    return Err(failed(format!(
+                        "compile row `{}` pending facts: {reason}",
                         prepared.qualified_key
-                    ))
-                })?;
-                return Err(CompilerNativeInvokerError::new(
-                    CompilerNativeInvokerErrorKind::BuildableSourceUnavailable,
-                    format!(
-                        "compile row `{}` source record `{record}` is missing",
-                        prepared.qualified_key
-                    ),
-                ));
-            }
-            Err(CompilerArtifactResolutionError::Artifact(error)) => {
-                return Err(artifact_failure(&prepared.qualified_key, error));
-            }
-            Err(CompilerArtifactResolutionError::Fact(reason)) => {
-                return Err(failed(format!(
-                    "compile row `{}` pending facts: {reason}",
-                    prepared.qualified_key
-                )));
-            }
-        };
+                    )));
+                }
+            };
         let image = publish_load_image(
-            self.execution.selected_project_root,
+            self.selected_project_root,
             Path::new(&artifact.path_absolute),
             &artifact.digest,
             artifact.bytes,
@@ -281,6 +329,70 @@ impl CompilerNativeFactBinding for ArtifactCompilerNativeInvoker<'_> {
         pending: &vibe_spec::CompilerPendingSet,
     ) -> Result<Vec<PendingBuildFact>, CompilerNativeFactError> {
         self.facts.take(pending)
+    }
+
+    fn finish_ready(&self) -> Result<(), CompilerNativeFactError> {
+        self.facts.finish_ready()
+    }
+}
+
+/// Lifecycle implementation of workspace's lazy owner-binding port.
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#BOOTSTRAP-ORDER")]
+pub struct ArtifactCompilerNativeProvider {
+    platform: NativePlatform,
+    policies: BTreeMap<OwnerRuntimeId, CompilerNativePolicy>,
+}
+
+impl ArtifactCompilerNativeProvider {
+    #[must_use]
+    pub fn new(
+        platform: NativePlatform,
+        policies: BTreeMap<OwnerRuntimeId, CompilerNativePolicy>,
+    ) -> Self {
+        Self { platform, policies }
+    }
+}
+
+impl OwnerNativeCompileProvider for ArtifactCompilerNativeProvider {
+    type Binding<'owner> = ArtifactCompilerNativeInvoker<'owner>;
+
+    fn bind<'owner>(
+        &mut self,
+        owner: OwnerRuntimeView<'owner>,
+    ) -> Result<OwnerNativeCompileBinding<Self::Binding<'owner>>, WorkspaceError> {
+        let runtime = owner.runtime();
+        let run = owner.run();
+        if run.platform != self.platform.key() {
+            return Err(WorkspaceError::NativeCompileProvider {
+                owner: runtime.id().to_string(),
+                reason: format!(
+                    "run platform `{}` differs from selected native platform `{}`",
+                    run.platform,
+                    self.platform.key()
+                ),
+            });
+        }
+        let rows = runtime.rows()?;
+        let policy = self.policies.remove(runtime.id()).ok_or_else(|| {
+            WorkspaceError::NativeCompileProvider {
+                owner: runtime.id().to_string(),
+                reason: "no injected compiler-native policy exists for this owner".to_owned(),
+            }
+        })?;
+        let invoker = ArtifactCompilerNativeInvoker::from_parts(
+            rows.compile(),
+            rows.native(),
+            owner.selected_root(),
+            runtime.mechanisms(),
+            runtime.routes(),
+            self.platform,
+            run.offline,
+            &run.created_at,
+            owner.project(),
+            owner.world(),
+            &run.run_id,
+        );
+        Ok(OwnerNativeCompileBinding::new(invoker, policy))
     }
 }
 

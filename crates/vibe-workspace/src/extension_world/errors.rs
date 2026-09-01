@@ -170,6 +170,15 @@ pub enum ExtensionWorldError {
     )]
     ResolutionWithoutContentHash { package: String },
 
+    /// The canonical semantic manifest frame could not be encoded. Falling
+    /// back to a partial identity would allow a stale bound epoch through.
+    #[error(
+        "resolved package `{package}` cannot enter the ordered-resolution identity: {reason} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#BOOTSTRAP-ORDER; \
+         fix: repair the typed manifest value before owner-runtime lowering)"
+    )]
+    ResolutionIdentityEncoding { package: String, reason: String },
+
     /// `[active].stack` names no installed stack in this owner's closure.
     #[error(
         "`{owner}` declares `[active].stack = \"{stack}\"`, which names no installed stack in its \

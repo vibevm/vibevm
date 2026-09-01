@@ -1,13 +1,18 @@
 //! REDs for truthful compiler-pending artifact finalization.
 
+use std::sync::{Arc, Mutex};
+
 use vibe_core::manifest::ExtensionKey;
 
-use crate::compiler::builtin::compile_artifact_native_managed;
+use crate::compiler::builtin::{
+    compile_artifact_native_managed, compile_artifact_native_managed_observed,
+};
 use crate::compiler::emit::{emitted_bytes_digest, framing};
 use crate::compiler::ir::{
     ArtifactContext, ArtifactFrame, ArtifactId, ArtifactInput, ArtifactPlan, ArtifactTarget,
     EmittedArtifact, StaticCompileMode, emitted_output_fingerprint,
 };
+use crate::compiler::observer::{CompileObserver, EmissionEvent, StageDeltaEvent, defer_emission};
 use crate::compiler::pass::PassName;
 use crate::{SectionSource, SpecAddress};
 
@@ -132,6 +137,63 @@ fn expected_opening(target: &ArtifactTarget, pending_orders: &[u32]) -> String {
         "11".repeat(32)
     ));
     lines.join("\n")
+}
+
+#[derive(Default)]
+struct EmissionCollector {
+    emissions: Mutex<Vec<EmissionEvent>>,
+}
+
+impl CompileObserver for EmissionCollector {
+    fn emission(&self, event: &EmissionEvent) {
+        self.emissions.lock().unwrap().push(event.clone());
+    }
+
+    fn stage_delta(&self, _event: &StageDeltaEvent) {}
+}
+
+#[test]
+fn pending_finalization_delivers_only_final_byte_consistent_emission_evidence() {
+    let transforms = transforms(false);
+    let downstream = Arc::new(EmissionCollector::default());
+    let (observer, completion) = defer_emission(downstream.clone());
+    let outcome = compile_artifact_native_managed_observed(
+        artifact_plan(ArtifactTarget::StaticMarkdown, transforms.clone()),
+        &EmptySource,
+        &FakeInvoker::new(ReplyMode::BuildableOrder(1)),
+        CompilerNativePolicy::collect(),
+        observer,
+    )
+    .unwrap();
+    let pending = match outcome {
+        CompilerNativeOutcome::Pending(pending) => pending,
+        CompilerNativeOutcome::Ready(_) => panic!("fixture must remain pending"),
+    };
+    let provisional_len = pending.artifact_for_test().bytes().len();
+    assert!(downstream.emissions.lock().unwrap().is_empty());
+
+    let finalized = finalize_compiler_pending_artifact(pending, &transforms, &FINGERPRINT).unwrap();
+    let final_len = finalized.artifact().bytes().len();
+    assert_ne!(
+        final_len, provisional_len,
+        "pending framing moves total bytes"
+    );
+    completion.deliver(finalized.artifact());
+
+    let emissions = downstream.emissions.lock().unwrap();
+    assert_eq!(emissions.len(), 1);
+    let event = &emissions[0];
+    assert_eq!(event.total_bytes(), final_len);
+    assert_ne!(event.total_bytes(), provisional_len);
+    let contribution_bytes = event
+        .contributions()
+        .iter()
+        .map(|row| row.bytes())
+        .fold(0usize, usize::saturating_add);
+    assert_eq!(
+        event.frame_bytes(),
+        final_len.saturating_sub(contribution_bytes)
+    );
 }
 
 #[test]

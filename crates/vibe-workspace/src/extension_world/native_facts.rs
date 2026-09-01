@@ -5,9 +5,10 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#BOOTSTRAP-ORDER"
 use std::fmt;
 
 use specmark::spec;
-use vibe_spec::{CompilerNativeInvoker, CompilerPendingSet};
+use vibe_spec::{CompilerNativeInvoker, CompilerNativePolicy, CompilerPendingSet};
 
-use super::PendingBuildFact;
+use super::{OwnerRuntimeView, PendingBuildFact};
+use crate::WorkspaceError;
 
 /// One invocation authority and the one-shot structured facts recorded by
 /// that same object. The compiler borrows the pending set during the drain;
@@ -42,6 +43,9 @@ use super::PendingBuildFact;
 ///     ) -> Result<Vec<PendingBuildFact>, CompilerNativeFactError> {
 ///         Err(CompilerNativeFactError::already_taken())
 ///     }
+///     fn finish_ready(&self) -> Result<(), CompilerNativeFactError> {
+///         Err(CompilerNativeFactError::already_taken())
+///     }
 /// }
 /// let binding: &dyn CompilerNativeFactBinding = &Binding;
 /// let _: &dyn CompilerNativeInvoker = binding.invoker();
@@ -53,6 +57,49 @@ pub trait CompilerNativeFactBinding: Send + Sync {
         &self,
         pending: &CompilerPendingSet,
     ) -> Result<Vec<PendingBuildFact>, CompilerNativeFactError>;
+
+    /// Terminally drain a Ready compile's recorder, which must be empty.
+    fn finish_ready(&self) -> Result<(), CompilerNativeFactError>;
+}
+
+/// One exact owner-borrowing binding plus its consumed manager policy.
+pub struct OwnerNativeCompileBinding<B> {
+    binding: B,
+    policy: CompilerNativePolicy,
+}
+
+impl<B> OwnerNativeCompileBinding<B> {
+    #[doc(hidden)]
+    #[must_use]
+    pub fn new(binding: B, policy: CompilerNativePolicy) -> Self {
+        Self { binding, policy }
+    }
+
+    #[must_use]
+    pub fn into_parts(self) -> (B, CompilerNativePolicy) {
+        (self.binding, self.policy)
+    }
+}
+
+/// Lazy provider of one concrete binding for the exact retained lane owner.
+///
+/// ```no_run
+/// use vibe_workspace::extension_world::{OwnerNativeCompileProvider, OwnerRuntimeView};
+///
+/// fn bind<'a, P: OwnerNativeCompileProvider>(
+///     provider: &mut P,
+///     owner: OwnerRuntimeView<'a>,
+/// ) {
+///     let _binding = provider.bind(owner);
+/// }
+/// ```
+pub trait OwnerNativeCompileProvider {
+    type Binding<'owner>: CompilerNativeFactBinding + 'owner;
+
+    fn bind<'owner>(
+        &mut self,
+        owner: OwnerRuntimeView<'owner>,
+    ) -> Result<OwnerNativeCompileBinding<Self::Binding<'owner>>, WorkspaceError>;
 }
 
 /// Opaque bounded refusal from the one-shot compiler-native fact recorder.

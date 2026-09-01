@@ -125,6 +125,26 @@ impl PendingFactRecorder {
         Ok(facts)
     }
 
+    pub(super) fn finish_ready(&self) -> Result<(), CompilerNativeFactError> {
+        let recorded = {
+            let mut state = self
+                .state
+                .lock()
+                .map_err(|_| CompilerNativeFactError::poisoned())?;
+            match std::mem::replace(&mut *state, RecorderState::Taken) {
+                RecorderState::Open { facts } => facts,
+                RecorderState::Conflict(order) => {
+                    return Err(CompilerNativeFactError::conflict(order));
+                }
+                RecorderState::Taken => return Err(CompilerNativeFactError::already_taken()),
+            }
+        };
+        match recorded.keys().next().copied() {
+            Some(order) => Err(CompilerNativeFactError::extra(order)),
+            None => Ok(()),
+        }
+    }
+
     #[cfg(test)]
     pub(super) fn poison_for_test(&self, action: impl FnOnce()) {
         let _guard = match self.state.lock() {

@@ -265,6 +265,65 @@ pub enum WorkspaceError {
     )]
     OwnerRuntimeIndex { owner: String, family: &'static str },
 
+    #[error(
+        "compiler-native binding for owner `{owner}` is unavailable: {reason} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#BOOTSTRAP-ORDER; \
+         fix: supply one binding from this exact retained owner runtime)"
+    )]
+    NativeCompileProvider { owner: String, reason: String },
+
+    #[error(
+        "the explicit boot resolution differs from the ordered resolution retained by the \
+         owner-runtime epoch (violates \
+         spec://org.vibevm.core/vibevm/common/PROP-054#BOOTSTRAP-ORDER; \
+         fix: compose with the exact resolution that was lowered into this epoch)"
+    )]
+    OwnerRuntimeResolutionMismatch,
+
+    #[error(
+        "compiler-native execution for owner `{owner}` failed: {source} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#BOOTSTRAP-ORDER; \
+         fix: repair the compiler-native refusal named by the underlying error)"
+    )]
+    NativeCompile {
+        owner: String,
+        #[source]
+        source: Box<vibe_spec::ArtifactCompileError>,
+    },
+
+    #[error(
+        "compiler-native fact join for owner `{owner}` failed: {source} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#BOOTSTRAP-ORDER; \
+         fix: keep one terminal fact recorder on the exact compiler binding)"
+    )]
+    NativeCompileFacts {
+        owner: String,
+        #[source]
+        source: crate::extension_world::CompilerNativeFactError,
+    },
+
+    #[error(
+        "pending compiler-native evidence for owner `{owner}` failed: {source} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#BOOTSTRAP-ORDER; \
+         fix: join the exact owner, format and build facts from this compile)"
+    )]
+    NativePendingEvidence {
+        owner: String,
+        #[source]
+        source: crate::extension_world::PendingEvidenceError,
+    },
+
+    #[error(
+        "pending compiler-native finalization for owner `{owner}` failed: {source} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#BOOTSTRAP-ORDER; \
+         fix: finalize the untouched provisional artifact with its exact plan and fingerprint)"
+    )]
+    NativePendingFinalize {
+        owner: String,
+        #[source]
+        source: vibe_spec::CompilerPendingFinalizeError,
+    },
+
     /// A publish operation referenced a node `rel_path` that names no
     /// node of this workspace — the selection and the loaded workspace
     /// fell out of sync.

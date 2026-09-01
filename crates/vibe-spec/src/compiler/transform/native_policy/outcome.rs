@@ -84,6 +84,12 @@ impl CompilerReadyArtifact {
     pub fn into_artifact(self) -> EmittedArtifact {
         self.artifact
     }
+
+    /// Consume the Ready result without discarding replay receipts.
+    #[must_use]
+    pub fn into_parts(self) -> (EmittedArtifact, CompilerInvocationReceipts) {
+        (self.artifact, self.receipts)
+    }
 }
 
 impl fmt::Debug for CompilerReadyArtifact {

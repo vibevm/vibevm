@@ -19,8 +19,7 @@ use crate::{Workspace, WorkspaceError, boot_artifacts, layout_paths, path_to_sla
 
 use super::{ResolvedDep, io_err};
 
-/// The durable world and the owner-scoped plan lowering, split out so this
-/// file keeps its length budget while the composition above stays readable.
+/// Durable-world owner-plan lowering, split out along its own responsibility.
 #[path = "bootgen/owner_plans.rs"]
 mod owner_plans;
 use owner_plans::plan_digest_frames;
@@ -33,7 +32,11 @@ use hybrid_emit::{append_hoisted, build_unit_table, emit_package_units, verify_f
 /// composed and compiled under the analyzer observer.
 #[path = "bootgen/analyze.rs"]
 mod analyze;
-pub use analyze::{AnalyzedLane, analyze_node_lane};
+#[cfg(test)]
+pub(crate) use analyze::analyze_effective_bound_native;
+pub use analyze::{
+    AnalyzedBoundLane, AnalyzedLane, analyze_node_lane, analyze_node_lane_bound_native,
+};
 
 /// The workspace root's B-031 `<group>/<name>` self coordinate, when declared.
 mod materialised_read;
@@ -47,6 +50,7 @@ use transitive::static_transitive_closure;
 /// B-006's once-each pass, moved to its own cell so this file keeps its
 /// length budget while the traced siblings live here.
 mod desubstitute;
+pub(crate) mod native_managed;
 pub use desubstitute::desubstitute_covered_units;
 
 fn root_self_coordinate(root_manifest: &Manifest) -> vibe_spec::SelfCoordinate {

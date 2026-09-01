@@ -58,6 +58,8 @@ use crate::{WorkspaceError, layout_paths};
 mod normal;
 mod transaction;
 
+pub(crate) mod native_managed;
+pub use native_managed::OwnerNativeCompileContinuation;
 /// The artifact's ordered inputs and their TYPED declaring providers — the
 /// T10B seam, out of line per the file-length budget.
 mod inputs;
@@ -591,3 +593,7 @@ mod tests_ir_characterization;
 #[cfg(test)]
 #[path = "boot_artifacts/tests_qualify.rs"]
 mod tests_qualify;
+
+#[cfg(test)]
+#[path = "boot_artifacts/native_managed_tests.rs"]
+pub(crate) mod native_managed_tests;

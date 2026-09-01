@@ -16,7 +16,9 @@ use vibe_wire::generated::lifecycle::e1::context::{Project, World, WorldPackage}
 
 use crate::{Workspace, WorkspaceError};
 
-use super::{ExtensionWorldEpoch, collect_owner_mechanisms, collect_owner_view};
+use super::{
+    ExtensionWorldEpoch, OrderedResolutionIdentity, collect_owner_mechanisms, collect_owner_view,
+};
 
 #[cfg(test)]
 thread_local! {
@@ -171,6 +173,7 @@ pub struct LoweredOwnerRuntimes {
     world: World,
     nodes: BTreeMap<String, OwnerRuntime>,
     units: BTreeMap<DependencyProviderId, OwnerRuntime>,
+    resolution_identity: OrderedResolutionIdentity,
 }
 
 impl LoweredOwnerRuntimes {
@@ -261,6 +264,21 @@ impl OwnerRuntimeEpoch {
         &self.run
     }
 
+    /// Refuse an explicit composition resolution that is not the exact world
+    /// from which these retained owner runtimes were lowered.
+    pub(crate) fn assert_resolution(
+        &self,
+        workspace_root: &Path,
+        resolution: &[crate::install::ResolvedDep],
+    ) -> Result<(), WorkspaceError> {
+        let supplied = ExtensionWorldEpoch::from_resolution(workspace_root, resolution)
+            .map_err(world_error)?;
+        if supplied.resolution_identity() != &self.lowered.resolution_identity {
+            return Err(WorkspaceError::OwnerRuntimeResolutionMismatch);
+        }
+        Ok(())
+    }
+
     pub fn selected(&self) -> Result<OwnerRuntimeView<'_>, WorkspaceError> {
         self.node(&self.lowered.selected_node)
     }
@@ -310,6 +328,16 @@ impl<'epoch> OwnerRuntimeView<'epoch> {
     #[must_use]
     pub const fn run(&self) -> &'epoch OwnerRuntimeRunFacts {
         &self.epoch.run
+    }
+
+    #[must_use]
+    pub fn selected_root(&self) -> &'epoch Path {
+        &self.epoch.lowered.selected_root
+    }
+
+    #[must_use]
+    pub fn workspace_root(&self) -> &'epoch Path {
+        &self.epoch.lowered.workspace_root
     }
 }
 
@@ -389,6 +417,7 @@ pub fn lower_owner_runtimes(
         world,
         nodes,
         units,
+        resolution_identity: epoch.resolution_identity().clone(),
     })
 }
 

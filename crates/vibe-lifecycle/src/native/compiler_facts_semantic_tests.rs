@@ -405,3 +405,12 @@ fn builtin_cargo_admission_keeps_the_existing_record_pin() {
         );
     }
 }
+
+#[test]
+fn owner_provider_uses_retained_root_and_consumes_one_injected_policy() {
+    let source = include_str!("compiler.rs");
+    assert!(source.contains("owner.selected_root()"));
+    assert!(!source.contains("Path::new(&owner.project().root)"));
+    assert!(source.contains("self.policies.remove(runtime.id())"));
+    assert!(!source.contains("CompilerNativePolicy::collect()"));
+}

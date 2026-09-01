@@ -31,7 +31,7 @@ pub(super) fn stale_static_file(spec_format: SpecFormat) -> &'static str {
 /// all (a partially applied set rolls back to the recorded before-state).
 ///
 /// `index_text` is the fully rendered `INDEX.md` (fingerprint header
-/// included); `static_text` is the compiled static lane, `None` meaning the
+/// included); `static_bytes` is the compiled static lane, `None` meaning the
 /// unit publishes no static artifact (both spellings end absent). Unlike the
 /// node path this writes **no** redirect blocks — a dependency package slot
 /// is not an agent entry point. Callers hand over compiled bytes only:
@@ -41,7 +41,7 @@ pub(super) fn stale_static_file(spec_format: SpecFormat) -> &'static str {
 pub(crate) fn publish_unit_artifacts(
     boot_dir: &Path,
     index_text: &str,
-    static_text: Option<&str>,
+    static_bytes: Option<&[u8]>,
     spec_format: SpecFormat,
 ) -> Result<(), WorkspaceError> {
     transaction::write_production_with_selectors(
@@ -49,7 +49,7 @@ pub(crate) fn publish_unit_artifacts(
             index_path: &boot_dir.join(INDEX_FILE),
             index_bytes: index_text.as_bytes(),
             static_path: &boot_dir.join(static_file(spec_format)),
-            static_bytes: static_text.map(str::as_bytes),
+            static_bytes,
             stale_path: &boot_dir.join(stale_static_file(spec_format)),
         },
         // No selector work: a package slot writes no redirect blocks.

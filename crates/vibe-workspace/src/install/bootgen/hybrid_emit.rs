@@ -30,6 +30,10 @@ use super::super::ResolvedDep;
 mod unit_trace;
 use unit_trace::UnitTrace;
 
+#[path = "hybrid_emit/native_managed.rs"]
+mod native_managed;
+pub(super) use native_managed::emit_package_units_bound;
+
 /// Projecting a resolved zone into an [`EffectiveBoot`] — the pure half,
 /// split out per the file-length budget.
 #[path = "hybrid_emit/zone_projection.rs"]
@@ -409,7 +413,7 @@ fn emit_effective(
     boot_artifacts::publish_unit_artifacts(
         boot_dir,
         &index_text,
-        static_text.as_deref(),
+        static_text.as_deref().map(str::as_bytes),
         spec_format,
     )
 }

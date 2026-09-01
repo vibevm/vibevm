@@ -27,7 +27,7 @@ use vibe_native_loader::{NativeInvocation, NativeLoader};
 use crate::handlers::{NativeBackend, NativeBackendRequest};
 use crate::{ExtensionRegistryRow, MechanismRegistryRow};
 
-pub use compiler::ArtifactCompilerNativeInvoker;
+pub use compiler::{ArtifactCompilerNativeInvoker, ArtifactCompilerNativeProvider};
 pub use error::NativeArtifactError;
 pub use platform::NativePlatform;
 

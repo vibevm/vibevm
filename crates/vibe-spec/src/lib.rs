@@ -95,7 +95,8 @@ pub use compiler::trace::{CompileTraceSink, PassTraceEvent, SnapshotDecision};
 // crosses), which is exactly why it MAY cross where the trace epoch's
 // generated vocabulary may not.
 pub use compiler::observer::{
-    CompileObserver, DeltaStage, EmissionContribution, EmissionEvent, EmissionKind, StageDeltaEvent,
+    CompileObserver, DeferredEmission, DeltaStage, EmissionContribution, EmissionEvent,
+    EmissionKind, StageDeltaEvent, defer_emission,
 };
 pub use directives::{Directive, DirectiveError, DirectiveKind, Directives, InPlaceUse};
 pub use doctree::{DocTree, Node, NodeId, NodeKind};

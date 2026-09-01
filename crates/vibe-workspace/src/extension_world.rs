@@ -48,8 +48,13 @@ mod native_facts;
 mod pending;
 mod runtime;
 
+pub(crate) use epoch::OrderedResolutionIdentity;
+
 pub use errors::ExtensionWorldError;
-pub use native_facts::{CompilerNativeFactBinding, CompilerNativeFactError};
+pub use native_facts::{
+    CompilerNativeFactBinding, CompilerNativeFactError, OwnerNativeCompileBinding,
+    OwnerNativeCompileProvider,
+};
 pub use pending::{
     PendingArtifactEvidence, PendingArtifactTarget, PendingBuildFact, PendingBuildProviderDigest,
     PendingEvidenceError, PendingFingerprint, PendingHandlerConfigWitness, PendingPlatformKey,
@@ -96,6 +101,7 @@ struct InstalledPackage {
 pub struct ExtensionWorldEpoch {
     installed: Vec<InstalledPackage>,
     index: BTreeMap<DependencyProviderId, usize>,
+    resolution_identity: OrderedResolutionIdentity,
 }
 
 /// One durable, lock-ordered snapshot of a selected node's extension world.

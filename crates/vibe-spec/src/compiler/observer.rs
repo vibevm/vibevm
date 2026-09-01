@@ -53,9 +53,11 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE");
 
 use std::panic::{self, AssertUnwindSafe};
-use std::sync::Arc;
+use std::sync::{Arc, Mutex};
 
-use super::ir::ArtifactContext;
+use specmark::spec;
+
+use super::ir::{ArtifactContext, EmittedArtifact};
 
 /// Where a compile's analyzer evidence goes.
 ///
@@ -89,6 +91,89 @@ pub trait CompileObserver: Send + Sync {
 /// unobserved path — the historical instructions, bytes and errors
 /// exactly.
 pub(crate) type Observing = Option<Arc<dyn CompileObserver>>;
+
+/// One-shot completion handle for a deferred analyzer emission event.
+///
+/// Managed workspace compilation buffers the backend's emission evidence until
+/// pending-header finalization has produced the publishable artifact. Dropping
+/// this handle delivers nothing; [`Self::deliver`] consumes it, so a caller
+/// cannot report one artifact twice.
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE")]
+pub struct DeferredEmission {
+    state: Arc<DeferredEmissionState>,
+}
+
+struct DeferredEmissionObserver {
+    state: Arc<DeferredEmissionState>,
+}
+
+struct DeferredEmissionState {
+    downstream: Arc<dyn CompileObserver>,
+    slot: Mutex<DeferredEmissionSlot>,
+}
+
+enum DeferredEmissionSlot {
+    Open(Option<EmissionEvent>),
+    Closed,
+}
+
+/// Buffer one managed compile's emission event while forwarding stage deltas.
+///
+/// Both returned values share one state: pass the observer to the managed
+/// compiler, then consume the completion handle only after Ready or pending
+/// finalization has produced the final artifact.
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE")]
+pub fn defer_emission(
+    downstream: Arc<dyn CompileObserver>,
+) -> (Arc<dyn CompileObserver>, DeferredEmission) {
+    let state = Arc::new(DeferredEmissionState {
+        downstream,
+        slot: Mutex::new(DeferredEmissionSlot::Open(None)),
+    });
+    let observer: Arc<dyn CompileObserver> = Arc::new(DeferredEmissionObserver {
+        state: Arc::clone(&state),
+    });
+    (observer, DeferredEmission { state })
+}
+
+impl DeferredEmission {
+    /// Deliver the buffered event once, reframed to the final artifact bytes.
+    ///
+    /// Missing, poisoned, already-closed or context-mismatched state loses the
+    /// observation silently. Observer delivery uses the existing panic
+    /// boundary and cannot affect the artifact.
+    pub fn deliver(self, artifact: &EmittedArtifact) {
+        let event = self.state.slot.lock().ok().and_then(|mut slot| {
+            match std::mem::replace(&mut *slot, DeferredEmissionSlot::Closed) {
+                DeferredEmissionSlot::Open(event) => event,
+                DeferredEmissionSlot::Closed => None,
+            }
+        });
+        let Some(event) = event else {
+            return;
+        };
+        if event.context() != artifact.provenance().context() {
+            return;
+        }
+        let event = event.reframed_total(artifact.bytes().len());
+        deliver_emission(self.state.downstream.as_ref(), &event);
+    }
+}
+
+impl CompileObserver for DeferredEmissionObserver {
+    fn emission(&self, event: &EmissionEvent) {
+        if let Ok(mut slot) = self.state.slot.lock()
+            && let DeferredEmissionSlot::Open(buffered) = &mut *slot
+            && buffered.is_none()
+        {
+            *buffered = Some(event.clone());
+        }
+    }
+
+    fn stage_delta(&self, event: &StageDeltaEvent) {
+        deliver_stage_delta(self.state.downstream.as_ref(), event);
+    }
+}
 
 /// One contribution's attribution evidence, as the emit boundary holds
 /// it.
@@ -224,6 +309,17 @@ impl EmissionEvent {
     pub fn frame_bytes(&self) -> usize {
         self.frame_bytes
     }
+
+    fn reframed_total(mut self, total_bytes: usize) -> Self {
+        let contribution_bytes = self
+            .contributions
+            .iter()
+            .map(EmissionContribution::bytes)
+            .fold(0usize, usize::saturating_add);
+        self.total_bytes = total_bytes;
+        self.frame_bytes = total_bytes.saturating_sub(contribution_bytes);
+        self
+    }
 }
 
 /// Which schedule stage a transform pass ran at — the two stages a byte
@@ -301,4 +397,146 @@ pub(crate) fn deliver_emission(observer: &dyn CompileObserver, event: &EmissionE
 /// One stage delta, delivered through the panic boundary.
 pub(crate) fn deliver_stage_delta(observer: &dyn CompileObserver, event: &StageDeltaEvent) {
     let _ = panic::catch_unwind(AssertUnwindSafe(|| observer.stage_delta(event)));
+}
+
+#[cfg(test)]
+mod deferred_tests {
+    use super::*;
+    use crate::compiler::ir::{
+        ArtifactContext, ArtifactFrame, ArtifactId, ArtifactTarget, EmittedArtifact,
+        StaticCompileMode,
+    };
+
+    #[derive(Default)]
+    struct Collector {
+        emissions: Mutex<Vec<EmissionEvent>>,
+        deltas: Mutex<Vec<StageDeltaEvent>>,
+    }
+
+    impl CompileObserver for Collector {
+        fn emission(&self, event: &EmissionEvent) {
+            self.emissions.lock().unwrap().push(event.clone());
+        }
+
+        fn stage_delta(&self, event: &StageDeltaEvent) {
+            self.deltas.lock().unwrap().push(event.clone());
+        }
+    }
+
+    struct Panics;
+
+    impl CompileObserver for Panics {
+        fn emission(&self, _event: &EmissionEvent) {
+            panic!("observer emission panic");
+        }
+
+        fn stage_delta(&self, _event: &StageDeltaEvent) {
+            panic!("observer delta panic");
+        }
+    }
+
+    fn static_context(name: &str) -> ArtifactContext {
+        ArtifactContext::new(
+            ArtifactId::new("static-md").unwrap(),
+            ArtifactTarget::StaticMarkdown,
+            ArtifactFrame::StaticLane {
+                generated_path: format!("{name}.md"),
+                source_root: "sources".to_owned(),
+            },
+            StaticCompileMode::QualifyPerNode,
+        )
+        .unwrap()
+    }
+
+    fn event(context: ArtifactContext, total: usize) -> EmissionEvent {
+        EmissionEvent::new(
+            context,
+            vec![EmissionContribution::new(
+                EmissionKind::Simple,
+                "host".to_owned(),
+                "boot/body.md".to_owned(),
+                7,
+                1,
+            )],
+            total,
+            total.saturating_sub(7),
+        )
+    }
+
+    #[test]
+    fn delivery_is_deferred_reframed_and_stage_delta_is_immediate() {
+        let context = static_context("STATIC");
+        let downstream = Arc::new(Collector::default());
+        let (observer, completion) = defer_emission(downstream.clone());
+        observer.emission(&event(context.clone(), 10));
+        assert!(downstream.emissions.lock().unwrap().is_empty());
+
+        observer.stage_delta(&StageDeltaEvent::new(
+            "transform:lane:test",
+            DeltaStage::Lane,
+            4,
+            5,
+        ));
+        assert_eq!(downstream.deltas.lock().unwrap().len(), 1);
+
+        let artifact = EmittedArtifact::testing(context, vec![0; 19]);
+        completion.deliver(&artifact);
+        let emissions = downstream.emissions.lock().unwrap();
+        assert_eq!(emissions.len(), 1);
+        assert_eq!(emissions[0].total_bytes(), 19);
+        assert_eq!(emissions[0].frame_bytes(), 12);
+        assert_eq!(emissions[0].contributions()[0].bytes(), 7);
+    }
+
+    #[test]
+    fn ready_total_drop_and_context_mismatch_are_exact() {
+        let context = static_context("STATIC");
+        let ready = Arc::new(Collector::default());
+        let (observer, completion) = defer_emission(ready.clone());
+        observer.emission(&event(context.clone(), 13));
+        completion.deliver(&EmittedArtifact::testing(context.clone(), vec![0; 13]));
+        assert_eq!(ready.emissions.lock().unwrap()[0].total_bytes(), 13);
+
+        let dropped = Arc::new(Collector::default());
+        let (observer, completion) = defer_emission(dropped.clone());
+        observer.emission(&event(context.clone(), 10));
+        drop(completion);
+        assert!(dropped.emissions.lock().unwrap().is_empty());
+
+        let mismatched = Arc::new(Collector::default());
+        let (observer, completion) = defer_emission(mismatched.clone());
+        observer.emission(&event(context, 10));
+        completion.deliver(&EmittedArtifact::testing(
+            static_context("OTHER"),
+            vec![0; 15],
+        ));
+        assert!(mismatched.emissions.lock().unwrap().is_empty());
+    }
+
+    #[test]
+    fn downstream_panics_are_contained_and_accounting_never_parses_tape() {
+        let context = static_context("STATIC");
+        let (observer, completion) = defer_emission(Arc::new(Panics));
+        observer.emission(&event(context.clone(), 10));
+        observer.stage_delta(&StageDeltaEvent::new(
+            "transform:emitted:test",
+            DeltaStage::Emitted,
+            10,
+            11,
+        ));
+        completion.deliver(&EmittedArtifact::testing(context, vec![0; 12]));
+
+        let source = include_str!("observer.rs");
+        for forbidden in [
+            concat!("vibe:", "transforms"),
+            concat!("<!", "--"),
+            concat!("vibe_", "specdoc"),
+        ] {
+            assert!(
+                !source.contains(forbidden),
+                "forbidden tape parser `{forbidden}`"
+            );
+        }
+        assert!(!source.contains(concat!("impl Clone for ", "DeferredEmission")));
+    }
 }

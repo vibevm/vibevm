@@ -5,8 +5,10 @@
 //! shared closure/scoping rules and collectors stay in the parent module.
 
 use std::collections::BTreeMap;
+use std::fmt;
 use std::path::{Path, PathBuf};
 
+use sha2::{Digest, Sha256};
 use vibe_core::manifest::Manifest;
 use vibe_extension_registry::{
     DependencyExtensionSource, DependencyProvider, DependencyProviderId, ExtensionWorld,
@@ -20,6 +22,61 @@ use super::{
     ExtensionWorldEpoch, ExtensionWorldError, InstalledPackage, active_stack, checked_edges,
     declared_edges, host_source, owner_view, package,
 };
+
+/// Opaque identity of one exact ordered resolution and all composition facts
+/// retained from it. Absolute materialisation roots never enter this value.
+#[derive(Clone, PartialEq, Eq)]
+pub(crate) struct OrderedResolutionIdentity([u8; 32]);
+
+impl fmt::Debug for OrderedResolutionIdentity {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("OrderedResolutionIdentity(..)")
+    }
+}
+
+fn ordered_resolution_identity(
+    installed: &[InstalledPackage],
+) -> Result<OrderedResolutionIdentity, ExtensionWorldError> {
+    fn frame(hasher: &mut Sha256, bytes: &[u8]) {
+        hasher.update((bytes.len() as u64).to_be_bytes());
+        hasher.update(bytes);
+    }
+
+    let mut hasher = ordered_resolution_hasher(installed.len());
+    for entry in installed {
+        let provider = &entry.source.provider;
+        frame(&mut hasher, provider.id.group().as_str().as_bytes());
+        frame(&mut hasher, provider.id.name().as_str().as_bytes());
+        frame(&mut hasher, provider.version.as_bytes());
+        frame(&mut hasher, provider.kind.as_str().as_bytes());
+        frame(&mut hasher, provider.content_hash.to_string().as_bytes());
+        hasher.update((entry.edges.len() as u64).to_be_bytes());
+        for edge in &entry.edges {
+            frame(&mut hasher, edge.group().as_str().as_bytes());
+            frame(&mut hasher, edge.name().as_str().as_bytes());
+        }
+        let manifest = serde_json::to_vec(&entry.manifest).map_err(|source| {
+            ExtensionWorldError::ResolutionIdentityEncoding {
+                package: provider.id.to_string(),
+                reason: source.to_string(),
+            }
+        })?;
+        frame(&mut hasher, &manifest);
+    }
+    Ok(OrderedResolutionIdentity(hasher.finalize().into()))
+}
+
+fn ordered_resolution_hasher(rows: usize) -> Sha256 {
+    const DOMAIN: &[u8] = b"vibe:extension-world:ordered-resolution:v1\0";
+    let mut hasher = Sha256::new();
+    hasher.update(DOMAIN);
+    hasher.update((rows as u64).to_be_bytes());
+    hasher
+}
+
+fn empty_ordered_resolution_identity() -> OrderedResolutionIdentity {
+    OrderedResolutionIdentity(ordered_resolution_hasher(0).finalize().into())
+}
 
 impl ExtensionWorldEpoch {
     /// Build the command-owned world from its exact ordered resolution.
@@ -45,6 +102,7 @@ impl ExtensionWorldEpoch {
         Self {
             installed: Vec::new(),
             index: BTreeMap::new(),
+            resolution_identity: empty_ordered_resolution_identity(),
         }
     }
 
@@ -60,7 +118,17 @@ impl ExtensionWorldEpoch {
                 });
             }
         }
-        Ok(Self { installed, index })
+        let resolution_identity = ordered_resolution_identity(&installed)?;
+        Ok(Self {
+            installed,
+            index,
+            resolution_identity,
+        })
+    }
+
+    #[must_use]
+    pub(crate) const fn resolution_identity(&self) -> &super::OrderedResolutionIdentity {
+        &self.resolution_identity
     }
 
     /// Every installed package's kernel row, in supplied resolution order.
