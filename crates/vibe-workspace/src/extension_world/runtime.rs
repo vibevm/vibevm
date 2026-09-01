@@ -4,6 +4,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM
 
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
+use std::sync::Arc;
 
 use specmark::spec;
 use vibe_core::manifest::{Manifest, MechanismRoutes};
@@ -244,7 +245,11 @@ impl LoweredOwnerRuntimes {
     /// Bind injected run facts by move. No world is reread or recollected.
     #[must_use]
     pub fn bind_run(self, run: OwnerRuntimeRunFacts) -> OwnerRuntimeEpoch {
-        OwnerRuntimeEpoch { lowered: self, run }
+        OwnerRuntimeEpoch {
+            lowered: self,
+            run,
+            replay_identity: Arc::new(()),
+        }
     }
 }
 
@@ -263,7 +268,10 @@ pub struct OwnerRuntimeRunFacts {
 pub struct OwnerRuntimeEpoch {
     lowered: LoweredOwnerRuntimes,
     run: OwnerRuntimeRunFacts,
+    replay_identity: Arc<()>,
 }
+
+pub(crate) struct OwnerRuntimeEpochToken(Arc<()>);
 
 impl OwnerRuntimeEpoch {
     #[must_use]
@@ -274,6 +282,14 @@ impl OwnerRuntimeEpoch {
     #[must_use]
     pub const fn run(&self) -> &OwnerRuntimeRunFacts {
         &self.run
+    }
+
+    pub(crate) fn replay_token(&self) -> OwnerRuntimeEpochToken {
+        OwnerRuntimeEpochToken(Arc::clone(&self.replay_identity))
+    }
+
+    pub(crate) fn matches_replay_token(&self, token: &OwnerRuntimeEpochToken) -> bool {
+        Arc::ptr_eq(&self.replay_identity, &token.0)
     }
 
     /// Refuse an explicit composition resolution that is not the exact world

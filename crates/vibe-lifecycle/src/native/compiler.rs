@@ -16,8 +16,9 @@ use vibe_wire::generated::native::e1::compile_request::CompileRequest;
 use vibe_wire::generated::shared::{Execution, Io, Project, World};
 use vibe_workspace::WorkspaceError;
 use vibe_workspace::extension_world::{
-    CompilerNativeFactBinding, CompilerNativeFactError, OwnerNativeCompileBinding,
-    OwnerNativeCompileProvider, OwnerRuntimeId, OwnerRuntimeView, PendingBuildFact,
+    CompilerNativeFactBinding, CompilerNativeFactError, CompilerNativeReplayFactory,
+    OwnerNativeCompileBinding, OwnerNativeCompileProvider, OwnerRuntimeId, OwnerRuntimeView,
+    PendingBuildFact,
 };
 
 use crate::execution::effective_config;
@@ -350,6 +351,53 @@ impl ArtifactCompilerNativeProvider {
         policies: BTreeMap<OwnerRuntimeId, CompilerNativePolicy>,
     ) -> Self {
         Self { platform, policies }
+    }
+
+    fn finish(self) -> Result<(), WorkspaceError> {
+        if self.policies.is_empty() {
+            return Ok(());
+        }
+        Err(WorkspaceError::NativeCompileProvider {
+            owner: "<replay-provider>".to_owned(),
+            reason: format!(
+                "{} compiler-native replay policies were not consumed",
+                self.policies.len()
+            ),
+        })
+    }
+}
+
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#BOOTSTRAP-ORDER")]
+pub struct ArtifactCompilerNativeReplayFactory {
+    platform: NativePlatform,
+}
+
+impl ArtifactCompilerNativeReplayFactory {
+    #[must_use]
+    #[cfg_attr(
+        not(test),
+        expect(
+            dead_code,
+            reason = "remove when R5.4-INSTALL constructs the lifecycle replay factory"
+        )
+    )]
+    pub const fn new(platform: NativePlatform) -> Self {
+        Self { platform }
+    }
+}
+
+impl CompilerNativeReplayFactory for ArtifactCompilerNativeReplayFactory {
+    type Provider = ArtifactCompilerNativeProvider;
+
+    fn create(
+        &mut self,
+        policies: BTreeMap<OwnerRuntimeId, CompilerNativePolicy>,
+    ) -> Result<Self::Provider, WorkspaceError> {
+        Ok(ArtifactCompilerNativeProvider::new(self.platform, policies))
+    }
+
+    fn finish(&mut self, provider: Self::Provider) -> Result<(), WorkspaceError> {
+        provider.finish()
     }
 }
 

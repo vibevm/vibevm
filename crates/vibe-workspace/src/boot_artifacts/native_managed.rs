@@ -2,8 +2,9 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#BOOTSTRAP-ORDER");
 
+use std::collections::BTreeMap;
 use std::fmt;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::sync::Arc;
 
 use vibe_core::{layout, manifest::SpecFormat};
@@ -37,6 +38,10 @@ use super::{
     INDEX_FILE, WrittenArtifacts, inputs, redirect, render_index_with_spec_format,
     stale_static_file, static_file, static_path, transaction,
 };
+
+#[path = "native_managed/replay.rs"]
+mod replay;
+pub(crate) use replay::compile_static_owner_managed_with_source;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub(crate) enum OwnerNativeCompileStatus {
@@ -178,6 +183,8 @@ pub(crate) fn compile_static_owner_managed<P: OwnerNativeCompileProvider>(
         owner,
         mode,
         provider,
+        None,
+        None,
         finalize_compiler_pending_artifact,
     )
 }
@@ -191,13 +198,23 @@ fn compile_static_owner_managed_using<P: OwnerNativeCompileProvider>(
     owner: OwnerRuntimeView<'_>,
     mode: OwnerNativeCompileMode<'_>,
     provider: Option<&mut P>,
+    injected_source: Option<&FsSectionSource>,
+    injected_overlay: Option<&BTreeMap<PathBuf, Arc<[u8]>>>,
     finalizer: PendingFinalizer,
 ) -> Result<Option<OwnerManagedStaticCompile>, WorkspaceError> {
     let entries = boot.static_entries().collect::<Vec<_>>();
     if entries.is_empty() {
         return Ok(None);
     }
-    let (inputs, providers) = inputs::build_with_providers(entries, workspace_root, self_coord)?;
+    let (inputs, providers) = match injected_overlay {
+        Some(overlay) => inputs::build_with_providers_overlay(
+            entries,
+            workspace_root,
+            self_coord,
+            Some(overlay),
+        )?,
+        None => inputs::build_with_providers(entries, workspace_root, self_coord)?,
+    };
     let target = if matches!(spec_format, SpecFormat::Xml) {
         ArtifactTarget::StaticXml
     } else {
@@ -214,13 +231,21 @@ fn compile_static_owner_managed_using<P: OwnerNativeCompileProvider>(
         reason: error.to_string(),
     })?
     .with_transforms(transforms.clone());
-    let source = FsSectionSource::new(FileResolver::new(workspace_root, self_coord.clone()));
+    let owned_source;
+    let source = match injected_source {
+        Some(source) => source,
+        None => {
+            owned_source =
+                FsSectionSource::new(FileResolver::new(workspace_root, self_coord.clone()));
+            &owned_source
+        }
+    };
     let owner_id = owner.runtime().id().clone();
     let has_native = owner.runtime().has_compiler_native_intersection()?;
 
     if !has_native {
         let scope = acquire(&mode);
-        let result = compile_builtin(plan, &source, mode, scope.as_ref());
+        let result = compile_builtin(plan, source, mode, scope.as_ref());
         finish_artifact_scope(scope.as_ref(), &result);
         return result.map(|artifact| {
             Some(OwnerManagedStaticCompile {
@@ -244,7 +269,7 @@ fn compile_static_owner_managed_using<P: OwnerNativeCompileProvider>(
         mode => (mode, None),
     };
     let scope = acquire(&mode);
-    let compiled = compile_native(plan, &source, &binding, policy, &mode, scope.as_ref())
+    let compiled = compile_native(plan, source, &binding, policy, &mode, scope.as_ref())
         .map_err(|source| native_compile_error(&owner_id, source));
     let result = compiled.and_then(|outcome| {
         join_managed(
@@ -522,6 +547,8 @@ fn write_boot_artifacts_owner_managed_using<P: OwnerNativeCompileProvider>(
         owner,
         mode,
         provider,
+        None,
+        None,
         finalizer,
     )?;
     let boot_dir = node_dir.join(layout::current_boot_dir());

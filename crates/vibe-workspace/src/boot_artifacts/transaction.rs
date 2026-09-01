@@ -92,6 +92,11 @@ pub(super) fn write_production_with_selectors<T>(
     write_with_faults_and_selectors(write, &NoFault, selectors)
 }
 
+pub(super) fn preflight_artifact_roles(write: ArtifactWrite<'_>) -> Result<(), WorkspaceError> {
+    let _ = common_parent(&write)?;
+    validate_artifact_roles(write.index_path, write.static_path, write.stale_path)
+}
+
 pub(super) fn with_boot_lock<T>(
     parent: &Path,
     action: impl FnOnce() -> Result<T, WorkspaceError>,

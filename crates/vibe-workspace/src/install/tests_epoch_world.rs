@@ -101,25 +101,25 @@ fn runtime_authority(runtimes: &LoweredOwnerRuntimes) -> RuntimeAuthority {
     }
 }
 
-fn group() -> Group {
+pub(crate) fn group() -> Group {
     Group::parse("org.lock").unwrap()
 }
 
-fn version() -> semver::Version {
+pub(crate) fn version() -> semver::Version {
     semver::Version::parse("1.0.0").unwrap()
 }
 
-fn write(path: &Path, body: &str) {
+pub(crate) fn write(path: &Path, body: &str) {
     fs::create_dir_all(path.parent().unwrap()).unwrap();
     fs::write(path, body).unwrap();
 }
 
-fn slot(root: &Path, name: &str, body: &str) {
+pub(crate) fn slot(root: &Path, name: &str, body: &str) {
     let slot = crate::vibedeps::slot_abs_path(root, &group(), name, &version());
     write(&slot.join(Manifest::FILENAME), body);
 }
 
-fn locked(name: &str, hash: &str, dependencies: &[&str]) -> LockedPackage {
+pub(crate) fn locked(name: &str, hash: &str, dependencies: &[&str]) -> LockedPackage {
     LockedPackage {
         kind: PackageKind::Tool,
         name: PackageName::parse(name).unwrap(),
@@ -149,13 +149,13 @@ fn locked(name: &str, hash: &str, dependencies: &[&str]) -> LockedPackage {
     }
 }
 
-fn write_lock(root: &Path, packages: Vec<LockedPackage>) {
+pub(crate) fn write_lock(root: &Path, packages: Vec<LockedPackage>) {
     let mut lock = Lockfile::empty("fixture", "1970-01-01T00:00:00Z");
     lock.packages = packages;
     lock.write(root.join(Lockfile::FILENAME)).unwrap();
 }
 
-fn resolved(root: &Path, name: &str, hash: &str, dependencies: &[&str]) -> ResolvedDep {
+pub(crate) fn resolved(root: &Path, name: &str, hash: &str, dependencies: &[&str]) -> ResolvedDep {
     let slot = crate::vibedeps::slot_abs_path(root, &group(), name, &version());
     ResolvedDep {
         kind: PackageKind::Tool,
@@ -595,4 +595,4 @@ fn durable_projection_distinguishes_empty_from_malformed_or_missing_named_state(
 }
 
 #[path = "tests_native_freshness.rs"]
-mod native_freshness;
+pub(crate) mod native_freshness;

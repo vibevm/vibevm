@@ -131,7 +131,7 @@ fn hex(bytes: &[u8; 32]) -> String {
 
 /// The generated STATIC spelling a target format does NOT select — the file
 /// every publication must leave absent so a lane never carries both.
-pub(super) fn stale_static_file(spec_format: SpecFormat) -> &'static str {
+pub(crate) fn stale_static_file(spec_format: SpecFormat) -> &'static str {
     if matches!(spec_format, SpecFormat::Xml) {
         STATIC_FILE
     } else {
@@ -170,6 +170,20 @@ pub(crate) fn publish_unit_artifacts(
         // No selector work: a package slot writes no redirect blocks.
         |_| Ok(()),
     )
+}
+
+pub(crate) fn preflight_artifact_targets(
+    index_path: &Path,
+    static_path: &Path,
+    stale_path: &Path,
+) -> Result<(), WorkspaceError> {
+    transaction::preflight_artifact_roles(transaction::ArtifactWrite {
+        index_path,
+        index_bytes: &[],
+        static_path,
+        static_bytes: None,
+        stale_path,
+    })
 }
 
 #[cfg(test)]

@@ -418,3 +418,27 @@ fn lifecycle_provider_drives_real_pending_fact_join_through_bound_analyzer() {
         "the analyzer performs no Cargo build"
     );
 }
+
+#[test]
+fn lifecycle_replay_factory_terminally_refuses_leftover_policies() {
+    use vibe_workspace::extension_world::CompilerNativeReplayFactory;
+
+    let mut factory =
+        crate::native::compiler::ArtifactCompilerNativeReplayFactory::new(current_platform());
+    let empty = factory
+        .create(BTreeMap::new())
+        .expect("empty replay provider");
+    factory.finish(empty).expect("empty provider finishes");
+
+    let owner = vibe_workspace::extension_world::OwnerRuntimeId::Node {
+        rel: ".".to_owned(),
+    };
+    let leftover = factory
+        .create(BTreeMap::from([(
+            owner,
+            vibe_spec::CompilerNativePolicy::fail(),
+        )]))
+        .expect("leftover provider");
+    let error = factory.finish(leftover).expect_err("leftover must refuse");
+    assert!(error.to_string().contains("not consumed"));
+}

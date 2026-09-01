@@ -12,7 +12,9 @@
 //! [`BootProvenance`], the pair the composition authored beside that string.
 //! Nothing in this file parses a coordinate out of a rendered spelling.
 
-use std::path::Path;
+use std::collections::BTreeMap;
+use std::path::{Path, PathBuf};
+use std::sync::Arc;
 
 use vibe_core::{Group, PackageName};
 use vibe_spec::{ArtifactInput, DocumentProvider, SelfCoordinate};
@@ -39,6 +41,15 @@ pub(super) fn build_with_providers(
     entries: Vec<&BootEntry>,
     workspace_root: &Path,
     self_coord: &SelfCoordinate,
+) -> Result<(Vec<ArtifactInput>, Vec<Option<DocumentProvider>>), WorkspaceError> {
+    build_with_providers_overlay(entries, workspace_root, self_coord, None)
+}
+
+pub(super) fn build_with_providers_overlay(
+    entries: Vec<&BootEntry>,
+    workspace_root: &Path,
+    self_coord: &SelfCoordinate,
+    overlay: Option<&BTreeMap<PathBuf, Arc<[u8]>>>,
 ) -> Result<(Vec<ArtifactInput>, Vec<Option<DocumentProvider>>), WorkspaceError> {
     let mut inputs = Vec::with_capacity(entries.len());
     let mut providers = Vec::with_capacity(entries.len());
@@ -95,12 +106,27 @@ pub(super) fn build_with_providers(
                 )
             } else {
                 let absolute = workspace_root.join(&entry.path);
-                let (markdown, _) = vibe_specdoc::load_spec_text(&absolute).map_err(|error| {
-                    WorkspaceError::Io {
-                        path: absolute,
-                        reason: error.to_string(),
+                let markdown = match overlay.and_then(|overlay| overlay.get(&absolute)) {
+                    Some(bytes) => {
+                        let raw =
+                            std::str::from_utf8(bytes).map_err(|error| WorkspaceError::Io {
+                                path: absolute.clone(),
+                                reason: format!("overlay is not UTF-8: {error}"),
+                            })?;
+                        vibe_specdoc::project_spec_text(&absolute, raw)
+                            .map(|(markdown, _)| markdown)
+                            .map_err(|error| WorkspaceError::Io {
+                                path: absolute.clone(),
+                                reason: error.to_string(),
+                            })?
                     }
-                })?;
+                    None => vibe_specdoc::load_spec_text(&absolute)
+                        .map(|(markdown, _)| markdown)
+                        .map_err(|error| WorkspaceError::Io {
+                            path: absolute.clone(),
+                            reason: error.to_string(),
+                        })?,
+                };
                 (
                     ArtifactInput::simple_declared_by(
                         &entry.origin,

@@ -15,13 +15,18 @@ use crate::extension_world::{OwnerNativeCompileProvider, OwnerRuntimeEpoch, Owne
 use crate::{WorkspaceError, boot_artifacts};
 
 use super::super::ResolvedDep;
+use super::super::replay_prepare::{UnitReplayCandidate, static_dependencies};
 use super::{UnitTrace, slot_rel_path, with_static_set, zone_projection::zone_to_effective};
 
 type UnitNativeContinuations = Vec<(
     OwnerRuntimeId,
     boot_artifacts::OwnerNativeCompileContinuation,
 )>;
-type BoundUnitEmission = (HashSet<UnitId>, UnitNativeContinuations);
+type BoundUnitEmission = (
+    HashSet<UnitId>,
+    UnitNativeContinuations,
+    Vec<UnitReplayCandidate>,
+);
 
 #[allow(clippy::too_many_arguments)]
 pub(in crate::install::bootgen) fn emit_package_units_bound<P: OwnerNativeCompileProvider>(
@@ -58,7 +63,10 @@ pub(in crate::install::bootgen) fn emit_package_units_bound<P: OwnerNativeCompil
             .collect()
     });
     let with_static = with_static_set(table);
+    let base_fingerprints =
+        crate::boot::hybrid::fingerprint::fingerprints(table, versions, plan_digests);
     let mut continuations = Vec::new();
+    let mut replay_candidates = Vec::new();
     let ordered = hybrid::topo_zone(&with_static, table);
     let mut native_ids = HashSet::new();
     for (owner, runtime) in epoch.lowered().units() {
@@ -107,6 +115,20 @@ pub(in crate::install::bootgen) fn emit_package_units_bound<P: OwnerNativeCompil
             boot_artifacts::STATIC_XML_FILE
         });
         let has_native = native_ids.contains(&id);
+        let owner = DependencyProviderId::new(
+            id.0.clone(),
+            PackageName::parse(&id.1).map_err(|error| WorkspaceError::UntypedBootProvenance {
+                origin: format!("{}/{}", id.0, id.1),
+                component: "unit package name",
+                spelling: id.1.clone(),
+                reason: error.to_string(),
+            })?,
+        );
+        let owner_id = OwnerRuntimeId::Unit {
+            provider: owner.clone(),
+        };
+        let base_fingerprint = base_fingerprints.get(&id).cloned().unwrap_or_default();
+        let replay_dependencies = static_dependencies(&id, table, &with_static);
         let unchanged = !has_native
             && static_path.is_file()
             && !stale_path.exists()
@@ -122,21 +144,19 @@ pub(in crate::install::bootgen) fn emit_package_units_bound<P: OwnerNativeCompil
             if let Some(unit_trace) = &unit_trace {
                 unit_trace.record_fresh_skip(workspace_root);
             }
+            replay_candidates.push(UnitReplayCandidate::new(
+                workspace_root,
+                slot,
+                owner_id,
+                id,
+                effective,
+                spec_format,
+                base_fingerprint,
+                replay_dependencies,
+                has_native,
+            ));
             continue;
         }
-
-        let owner = DependencyProviderId::new(
-            id.0.clone(),
-            PackageName::parse(&id.1).map_err(|error| WorkspaceError::UntypedBootProvenance {
-                origin: format!("{}/{}", id.0, id.1),
-                component: "unit package name",
-                spelling: id.1.clone(),
-                reason: error.to_string(),
-            })?,
-        );
-        let owner_id = OwnerRuntimeId::Unit {
-            provider: owner.clone(),
-        };
         let mode = match unit_trace.as_ref() {
             Some(unit_trace) => boot_artifacts::native_managed::OwnerNativeCompileMode::Traced(
                 unit_trace.acquisition(),
@@ -183,6 +203,17 @@ pub(in crate::install::bootgen) fn emit_package_units_bound<P: OwnerNativeCompil
                 continuations.push((owner_id, native));
             }
         }
+        replay_candidates.push(UnitReplayCandidate::new(
+            workspace_root,
+            slot,
+            OwnerRuntimeId::Unit { provider: owner },
+            id,
+            effective,
+            spec_format,
+            base_fingerprint,
+            replay_dependencies,
+            has_native,
+        ));
     }
-    Ok((with_static, continuations))
+    Ok((with_static, continuations, replay_candidates))
 }

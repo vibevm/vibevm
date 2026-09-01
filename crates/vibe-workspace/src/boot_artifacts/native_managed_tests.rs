@@ -26,7 +26,7 @@ use super::native_managed::{
 
 #[path = "native_managed_test_support.rs"]
 mod support;
-pub(crate) use support::{FakeProvider, Reply};
+pub(crate) use support::{FakePolicyKind, FakeProvider, FakeReplayFactory, Reply};
 
 #[derive(Default)]
 struct Observer {

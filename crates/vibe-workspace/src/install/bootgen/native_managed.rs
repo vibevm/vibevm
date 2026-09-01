@@ -13,6 +13,10 @@ use super::hybrid_emit::{
     append_hoisted, emit_package_units, emit_package_units_bound, with_static_set,
 };
 use super::owner_plans::plan_digest_frames;
+use super::replay_prepare::{
+    BootReplayCandidates, BootReplaySet, NodeReplayCandidate, node_generated_dependencies,
+    seal_replay_set,
+};
 use super::{
     ResolvedDep, build_unit_table, desubstitute_covered_units, node_dependency_boot, node_own_boot,
     root_self_coordinate,
@@ -28,6 +32,23 @@ use super::{
 pub(crate) struct BoundBootRegeneration {
     pub nodes: Vec<String>,
     pub native: BTreeMap<OwnerRuntimeId, boot_artifacts::OwnerNativeCompileContinuation>,
+    replay_candidates: BootReplayCandidates,
+}
+
+impl BoundBootRegeneration {
+    #[cfg_attr(
+        not(test),
+        expect(
+            dead_code,
+            reason = "remove when R5.4-INSTALL consumes Collect replay candidates"
+        )
+    )]
+    pub(crate) fn into_replay_set(
+        self,
+        epoch: &OwnerRuntimeEpoch,
+    ) -> Result<BootReplaySet, WorkspaceError> {
+        seal_replay_set(self.replay_candidates, self.native, epoch)
+    }
 }
 
 #[cfg_attr(
@@ -53,6 +74,8 @@ pub(crate) fn regenerate_boot_from_bound_native<P: OwnerNativeCompileProvider>(
     }
     epoch.assert_resolution(&workspace.root, resolution)?;
     let self_coord = root_self_coordinate(&workspace.root_manifest);
+    let mut replay_candidates =
+        BootReplayCandidates::new(workspace.root.clone(), self_coord.clone());
     let table = build_unit_table(&workspace.root, resolution);
     let versions: HashMap<UnitId, String> = resolution
         .iter()
@@ -86,7 +109,7 @@ pub(crate) fn regenerate_boot_from_bound_native<P: OwnerNativeCompileProvider>(
             break;
         }
     }
-    let (with_static, unit_native) = if has_native_units {
+    let (with_static, unit_native, unit_candidates) = if has_native_units {
         emit_package_units_bound(
             &workspace.root,
             &self_coord,
@@ -112,8 +135,11 @@ pub(crate) fn regenerate_boot_from_bound_native<P: OwnerNativeCompileProvider>(
             trace,
             epoch.lowered(),
         )?;
-        (with_static, Vec::new())
+        (with_static, Vec::new(), Vec::new())
     };
+    for candidate in unit_candidates {
+        replay_candidates.push_unit(candidate);
+    }
     let mut native = unit_native.into_iter().collect::<BTreeMap<_, _>>();
 
     let root_foundation = node_own_boot(&workspace.root, ".")?
@@ -149,6 +175,9 @@ pub(crate) fn regenerate_boot_from_bound_native<P: OwnerNativeCompileProvider>(
         let owner = OwnerRuntimeId::Node {
             rel: rel.to_owned(),
         };
+        let node_runtime = epoch.node(rel)?;
+        let native_intersection = node_runtime.runtime().has_compiler_native_intersection()?;
+        let replay_dependencies = node_generated_dependencies(&effective, &emitted_units);
         let (_, continuation) = boot_artifacts::native_managed::write_boot_artifacts_owner_managed(
             &node_dir,
             rel,
@@ -157,15 +186,27 @@ pub(crate) fn regenerate_boot_from_bound_native<P: OwnerNativeCompileProvider>(
             &effective,
             spec_format,
             trace,
-            epoch.node(rel)?,
+            node_runtime,
             provider.as_deref_mut(),
         )?;
         if let Some(continuation) = continuation {
             native.insert(owner, continuation);
         }
+        replay_candidates.push_node(NodeReplayCandidate::new(
+            node_dir,
+            rel.to_owned(),
+            effective,
+            spec_format,
+            replay_dependencies,
+            native_intersection,
+        ));
         nodes.push(rel.to_owned());
     }
-    Ok(BoundBootRegeneration { nodes, native })
+    Ok(BoundBootRegeneration {
+        nodes,
+        native,
+        replay_candidates,
+    })
 }
 
 #[cfg(test)]

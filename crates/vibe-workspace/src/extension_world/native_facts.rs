@@ -2,6 +2,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#BOOTSTRAP-ORDER");
 
+use std::collections::BTreeMap;
 use std::fmt;
 
 use specmark::spec;
@@ -100,6 +101,31 @@ pub trait OwnerNativeCompileProvider {
         &mut self,
         owner: OwnerRuntimeView<'owner>,
     ) -> Result<OwnerNativeCompileBinding<Self::Binding<'owner>>, WorkspaceError>;
+}
+
+/// Cross-crate factory for one replay's complete, workspace-owned policy map.
+///
+/// ```no_run
+/// use std::collections::BTreeMap;
+/// use vibe_workspace::extension_world::CompilerNativeReplayFactory;
+///
+/// fn replay_once<F: CompilerNativeReplayFactory>(factory: &mut F) {
+///     if let Ok(provider) = factory.create(BTreeMap::new()) {
+///         let _ = factory.finish(provider);
+///     }
+/// }
+/// ```
+#[doc(hidden)]
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#BOOTSTRAP-ORDER")]
+pub trait CompilerNativeReplayFactory {
+    type Provider: OwnerNativeCompileProvider;
+
+    fn create(
+        &mut self,
+        policies: BTreeMap<super::OwnerRuntimeId, CompilerNativePolicy>,
+    ) -> Result<Self::Provider, WorkspaceError>;
+
+    fn finish(&mut self, provider: Self::Provider) -> Result<(), WorkspaceError>;
 }
 
 /// Opaque bounded refusal from the one-shot compiler-native fact recorder.

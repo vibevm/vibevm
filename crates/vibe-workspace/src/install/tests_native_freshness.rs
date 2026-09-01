@@ -36,34 +36,46 @@ use crate::extension_world::{
     OwnerRuntimeRunFacts, lower_owner_runtimes,
 };
 
-struct NativeGraph {
-    _root: TempDir,
-    workspace: Workspace,
-    resolution: Vec<ResolvedDep>,
-    epoch: OwnerRuntimeEpoch,
-    middle: OwnerRuntimeId,
+pub(crate) struct NativeGraph {
+    pub(crate) _root: TempDir,
+    pub(crate) workspace: Workspace,
+    pub(crate) resolution: Vec<ResolvedDep>,
+    pub(crate) epoch: OwnerRuntimeEpoch,
+    pub(crate) middle: OwnerRuntimeId,
 }
 
-const COMPILE_NATIVE: &str = "[[extension]]\nid='native'\npoint='compile:emitted'\n\
+pub(crate) const COMPILE_NATIVE: &str = "[[extension]]\nid='native'\npoint='compile:emitted'\n\
 handler={kind='native',crate_dir='native'}\n";
 
-fn native_graph() -> NativeGraph {
+pub(crate) fn native_graph() -> NativeGraph {
     native_graph_with(COMPILE_NATIVE, "")
 }
-
 fn native_graph_with(middle_extension: &str, leaf_extension: &str) -> NativeGraph {
+    native_graph_full("", "", middle_extension, leaf_extension)
+}
+
+pub(crate) fn native_graph_full(
+    root_extension: &str,
+    top_extension: &str,
+    middle_extension: &str,
+    leaf_extension: &str,
+) -> NativeGraph {
     let root = test_ok!(TempDir::new(), "native freshness workspace");
     write(
         &root.path().join("vibe.toml"),
-        "[project]\ngroup='org.demo'\nname='host'\nversion='0.1.0'\n\n\
-         [requires.packages]\n'org.lock/top'={version='=1.0.0',link='static'}\n",
+        &format!(
+            "[project]\ngroup='org.demo'\nname='host'\nversion='0.1.0'\n\n\
+         [requires.packages]\n'org.lock/top'={{version='=1.0.0',link='static'}}\n\n{root_extension}"
+        ),
     );
     slot(
         root.path(),
         "top",
-        "[package]\ngroup='org.lock'\nname='top'\nkind='tool'\nversion='1.0.0'\n\n\
-         [requires.packages]\n'org.lock/middle'={version='=1.0.0',link='static'}\n\n\
-         [boot_snippet]\nsource='boot/top.md'\nlink='static'\n",
+        &format!(
+            "[package]\ngroup='org.lock'\nname='top'\nkind='tool'\nversion='1.0.0'\n\n\
+         [requires.packages]\n'org.lock/middle'={{version='=1.0.0',link='static'}}\n\n\
+         [boot_snippet]\nsource='boot/top.md'\nlink='static'\n\n{top_extension}"
+        ),
     );
     slot(
         root.path(),
@@ -173,7 +185,7 @@ fn native_graph_with(middle_extension: &str, leaf_extension: &str) -> NativeGrap
     }
 }
 
-fn regenerate(
+pub(crate) fn regenerate(
     graph: &NativeGraph,
     provider: &mut FakeProvider,
 ) -> bootgen::native_managed::BoundBootRegeneration {
@@ -216,7 +228,7 @@ fn trace_index(graph: &NativeGraph, run: &str) -> CompilerTraceIndex {
     test_ok!(serde_json::from_slice(&bytes), "trace wire")
 }
 
-fn unit_file(graph: &NativeGraph, name: &str, file: &str) -> PathBuf {
+pub(crate) fn unit_file(graph: &NativeGraph, name: &str, file: &str) -> PathBuf {
     crate::vibedeps::slot_abs_path(&graph.workspace.root, &group(), name, &version())
         .join(vibe_core::layout::current_boot_dir())
         .join(file)

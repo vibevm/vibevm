@@ -52,14 +52,15 @@ pub(crate) use epoch::OrderedResolutionIdentity;
 
 pub use errors::ExtensionWorldError;
 pub use native_facts::{
-    CompilerNativeFactBinding, CompilerNativeFactError, OwnerNativeCompileBinding,
-    OwnerNativeCompileProvider,
+    CompilerNativeFactBinding, CompilerNativeFactError, CompilerNativeReplayFactory,
+    OwnerNativeCompileBinding, OwnerNativeCompileProvider,
 };
 pub use pending::{
     PendingArtifactEvidence, PendingArtifactTarget, PendingBuildFact, PendingBuildProviderDigest,
     PendingEvidenceError, PendingFingerprint, PendingHandlerConfigWitness, PendingPlatformKey,
     PendingSourceWitness, build_pending_artifact_evidence,
 };
+pub(crate) use runtime::OwnerRuntimeEpochToken;
 pub use runtime::{
     LoweredOwnerRuntimes, OwnerRuntime, OwnerRuntimeEpoch, OwnerRuntimeId, OwnerRuntimeLowering,
     OwnerRuntimeRows, OwnerRuntimeRunFacts, OwnerRuntimeView, lower_owner_runtimes,

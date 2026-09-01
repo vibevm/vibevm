@@ -15,8 +15,10 @@
 //! Spliced text is wrapped in open/close markers (PROP-035 §11) so the result
 //! stays reversible.
 
-use std::collections::HashMap;
+use std::collections::{BTreeMap, HashMap};
 use std::fmt::Write as _;
+use std::path::{Path, PathBuf};
+use std::sync::Arc;
 
 use crate::address::SpecAddress;
 use crate::directives::{DirectiveKind, Directives};
@@ -139,11 +141,27 @@ fn expand_rec(
 /// XML source's.
 pub struct FsSectionSource {
     resolver: FileResolver,
+    overlay: BTreeMap<PathBuf, Arc<[u8]>>,
 }
 
 impl FsSectionSource {
     pub fn new(resolver: FileResolver) -> Self {
-        Self { resolver }
+        Self {
+            resolver,
+            overlay: BTreeMap::new(),
+        }
+    }
+
+    /// Resolve through `resolver` exactly as [`Self::new`] does, replacing
+    /// only files whose exact resolved path is present in `overlay`.
+    ///
+    /// Overlay bytes remain owned by this source. They are projected through
+    /// the same Markdown/XML dispatch as filesystem bytes before anchor
+    /// lookup; addresses absent from the map retain the ordinary filesystem
+    /// path and diagnostics.
+    #[must_use]
+    pub fn with_overlay(resolver: FileResolver, overlay: BTreeMap<PathBuf, Arc<[u8]>>) -> Self {
+        Self { resolver, overlay }
     }
 }
 
@@ -164,36 +182,57 @@ impl SectionSource for FsSectionSource {
             .resolver
             .resolve_file(addr)
             .map_err(|e| e.to_string())?;
-        let (src, _kind) = vibe_specdoc::load_spec_text(&file).map_err(|e| e.to_string())?;
-        let tree = DocTree::parse(&src);
-        let node = match tree.resolve_path(&addr.anchor) {
-            Some(node) => node,
-            None => {
-                // B-011 §6.1 layer 3: a missed short anchor answers with its
-                // qualified heirs, never emptiness. The flat segment being
-                // resolved is the lookup's short name; the tree's
-                // `<origin-slug>--<short>` tails are the rename's heirs.
-                let candidates = addr
-                    .anchor
-                    .first()
-                    .map(|short| tree.qualified_candidates(short.as_str()))
-                    .filter(|c| !c.is_empty())
-                    .map(|c| {
-                        format!(
-                            " (qualified candidates for `{}`: {})",
-                            addr.anchor.first().map(String::as_str).unwrap_or(""),
-                            c.join(", ")
-                        )
-                    })
-                    .unwrap_or_default();
-                return Err(format!(
-                    "anchor not found in {}{candidates}",
-                    file.display()
-                ));
-            }
+        let src = match self.overlay.get(&file) {
+            Some(bytes) => project_overlay(&file, bytes)?,
+            None => vibe_specdoc::load_spec_text(&file)
+                .map(|(src, _kind)| src)
+                .map_err(|e| e.to_string())?,
         };
-        Ok(tree.text(node))
+        resolve_section(&src, &file, addr)
     }
+}
+
+fn project_overlay(file: &Path, bytes: &[u8]) -> Result<String, String> {
+    let raw = std::str::from_utf8(bytes).map_err(|error| {
+        format!(
+            "overlay spec source `{}` is not UTF-8: {error}",
+            file.display()
+        )
+    })?;
+    vibe_specdoc::project_spec_text(file, raw)
+        .map(|(src, _kind)| src)
+        .map_err(|error| error.to_string())
+}
+
+fn resolve_section(src: &str, file: &Path, addr: &SpecAddress) -> Result<String, String> {
+    let tree = DocTree::parse(src);
+    let node = match tree.resolve_path(&addr.anchor) {
+        Some(node) => node,
+        None => {
+            // B-011 §6.1 layer 3: a missed short anchor answers with its
+            // qualified heirs, never emptiness. The flat segment being
+            // resolved is the lookup's short name; the tree's
+            // `<origin-slug>--<short>` tails are the rename's heirs.
+            let candidates = addr
+                .anchor
+                .first()
+                .map(|short| tree.qualified_candidates(short.as_str()))
+                .filter(|c| !c.is_empty())
+                .map(|c| {
+                    format!(
+                        " (qualified candidates for `{}`: {})",
+                        addr.anchor.first().map(String::as_str).unwrap_or(""),
+                        c.join(", ")
+                    )
+                })
+                .unwrap_or_default();
+            return Err(format!(
+                "anchor not found in {}{candidates}",
+                file.display()
+            ));
+        }
+    };
+    Ok(tree.text(node))
 }
 
 #[cfg(test)]
@@ -430,3 +469,7 @@ mod tests {
         );
     }
 }
+
+#[cfg(test)]
+#[path = "embed/overlay_tests.rs"]
+mod overlay_tests;
