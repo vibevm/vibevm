@@ -1505,6 +1505,14 @@ than depending on untracked `cache/` archaeology.
   Gates: replay 8, workspace 526, lifecycle 620/3 ignored, overlay 6/spec 914,
   doctests 31, check/clippy/fmt and conform 48/0. PREPARE accepted;
   REPLAY-PUBLISH next.
+- R5.4-WORKSPACE-REPLAY-PUBLISH implementation freeze: consume prepared owner
+  order once; publish exact raw INDEX/STATIC/stale paths through one existing
+  per-owner transaction call; never rerender node redirects or add global
+  recovery/rollback. A detailed sibling classifies uncommitted/restored,
+  commit-intent, rollback-intent, entry-recovery or indeterminate while legacy
+  callers erase labels. Partial reports distinguish earlier committed,
+  current and untouched later owners. Existing entry recovery runs once;
+  post-error retry is forbidden. INSTALL/FENCE/Cargo remain outside PUBLISH.
 - R4.2 minify binding, RED corpus and activation e2e: `7a09ec2d` registers
   `xml-minify` (epoch 1, EMITTED — the one stage the kernel serves without a
   new serializer; every other stage refuses through the registry's own law)

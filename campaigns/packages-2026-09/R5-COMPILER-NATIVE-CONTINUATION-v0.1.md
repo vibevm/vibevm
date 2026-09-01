@@ -1349,3 +1349,53 @@ vibe-spec 914/914, workspace check, all-target clippy with warnings denied,
 fmt, conform 48 standing/0 new and `git diff --check`. REPLAY-PUBLISH is next;
 PREPARE adds no publication walk, recovery policy, public INSTALL wiring,
 FENCE sequencing or Cargo build.
+
+## 30. R5.4-WORKSPACE-REPLAY-PUBLISH implementation freeze
+
+**Frozen 2026-09-01 after two native `gpt-5.6-sol`/`xhigh` architecture
+reviews and explicit recovery adjudication.** REPLAY-PUBLISH is a small
+consume-only loop over PreparedBootReplay. It cannot borrow/reuse the carrier,
+return unattempted prepared bytes, reorder owners, compile, render, resolve,
+bind, inspect a runtime, or construct another semantic value.
+
+PREPARE seals exact INDEX/selected-STATIC/stale paths, final bytes and owner
+metadata. For each owner in that exact order PUBLISH invokes the existing
+per-owner crash-recoverable artifact transaction once with the raw triple.
+Unit and node differ only in report identity. Node redirects remain untouched:
+Collect already converged the retained format/path, PREPARE carries no redirect
+bytes, and replaying the redirect renderer would re-enter semantic work.
+
+The transaction keeps its per-owner lock and state machine. Publisher adds no
+workspace-global lock/journal, recovery call, retry or reverse rollback. The
+existing transaction performs one `recover_pending_locked` at current-owner
+entry and internally rolls back caught precommit failure. A postcommit stale/
+cleanup failure may intentionally return with new INDEX/STATIC plus durable
+recovery intent; publisher reports and stops without a second recovery. Earlier
+successful owners are never revisited, and later owners are untouched.
+
+The existing transaction gains a detailed sibling over the same engine, not a
+second state machine. It classifies failure where state is known as
+Uncommitted, RestoredBefore, CommitRecoveryIntent, RollbackRecoveryIntent,
+EntryRecoveryFailed or Indeterminate. Ordinary callers erase the label and
+retain their exact WorkspaceError API; replay uses typed disposition and never
+parses error text, paths or journal files to guess commit state.
+
+Success reports the exact committed owner sequence, including byte-equal
+no-ops. Failure owns the original WorkspaceError plus typed partial evidence:
+owners committed before, failed owner, current disposition, and remaining
+untouched owner identities. Postcommit current is not called converged;
+precommit current is not confused with an earlier committed owner. No result
+contains reusable prepared bytes.
+
+Fault REDs route PUBLISH through the existing FaultInjector/WritePoint engine.
+A middle-owner precommit fault restores/preserves current, retains earlier new
+bytes and leaves later untouched. A middle postcommit failure leaves current
+new bytes plus intent but not convergence. Rollback/recovery failure reports
+the exact intent/unknown state; seeded current intent is recovered by its one
+ordinary entry. Node redirects and byte-equal mtimes remain exact. No
+publisher-specific recovery simulator is allowed.
+
+REPLAY-PUBLISH completes only the workspace replay path. INSTALL still owns
+the first production call and epoch/factory carriage; FENCE still owns native
+build → one prepare/publish replay → authored targets → phase sequencing. No
+Cargo/process call belongs here.
