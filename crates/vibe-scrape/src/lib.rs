@@ -2,6 +2,8 @@
 
 #![forbid(unsafe_code)]
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-056#IMPL-A");
+
 use std::path::{Component, Path, PathBuf};
 
 pub mod contract;
@@ -11,6 +13,7 @@ mod inventory;
 pub mod model;
 mod plan;
 pub mod rewrite;
+pub mod transaction;
 
 pub use model::{PreparedScrape, ScrapeError, ScrapeMode, ScrapeRequest};
 
@@ -32,19 +35,22 @@ pub fn prepare(request: ScrapeRequest) -> Result<PreparedScrape, ScrapeError> {
         .map_err(|error| ScrapeError::blocked(error.to_string()))?;
     let platform = health::LocalProcessBackend::new();
     let capabilities = health::HealthBackend::capabilities(&platform);
-    let same_path_required = matches!(&request.mode, ScrapeMode::Export { .. });
+    // Epoch-1 execution uses an isolated before copy and transaction-owned
+    // final-path execution guarded by complete pre/post tree reproof.
+    let same_path_required = false;
     let capability_blockers =
         health::capability_blockers(&health, capabilities, same_path_required);
     health::add_blockers(&mut health, capability_blockers)
         .map_err(|error| ScrapeError::blocked(error.to_string()))?;
     let rewrite_preparation = rewrite::prepare_rewrites(&project, &contract.value, &inventory)?;
+    let preparation_blockers = platform_blockers(rewrite_preparation.blockers);
     let plan = plan::build(
         &project,
         &request,
         &contract,
         &inventory,
         &rewrite_preparation.rewrites,
-        rewrite_preparation.blockers,
+        preparation_blockers,
         &health,
         output_identity.as_deref(),
     )?;
@@ -54,7 +60,22 @@ pub fn prepare(request: ScrapeRequest) -> Result<PreparedScrape, ScrapeError> {
         rewrites: rewrite_preparation.rewrites,
         health,
         plan,
+        mode: request.mode,
     })
+}
+
+#[cfg(windows)]
+fn platform_blockers(blockers: Vec<model::Blocker>) -> Vec<model::Blocker> {
+    blockers
+}
+
+#[cfg(not(windows))]
+fn platform_blockers(mut blockers: Vec<model::Blocker>) -> Vec<model::Blocker> {
+    blockers.push(model::Blocker::new(
+        "scrape-platform-unsupported",
+        "scrape mutation and recovery are unsupported outside Windows in epoch 1",
+    ));
+    blockers
 }
 
 /// Parse and plan the selected contract read-only.
@@ -117,6 +138,7 @@ fn load_contract(
     request: &ScrapeRequest,
     project: &vibe_safefs::Project,
 ) -> Result<model::ContractSnapshot, ScrapeError> {
+    let selected_default = request.contract.is_none();
     let selected = request
         .contract
         .clone()
@@ -147,7 +169,15 @@ fn load_contract(
             .map_err(|error| {
                 ScrapeError::contract(format!("reading contract `{portable}` stably: {error:#}"))
             })?
-            .ok_or_else(|| ScrapeError::contract(format!("contract `{portable}` is absent")))?;
+            .ok_or_else(|| {
+                if selected_default {
+                    ScrapeError::contract(format!(
+                        "not a Vibe project: default scrape contract `{portable}` is absent"
+                    ))
+                } else {
+                    ScrapeError::contract(format!("contract `{portable}` is absent"))
+                }
+            })?;
         let absolute = request
             .root
             .join(portable.replace('/', std::path::MAIN_SEPARATOR_STR));
@@ -311,13 +341,19 @@ mod tests {
             prepared.health.plan_id,
             prepared.plan.prepared_health.plan_id
         );
-        assert!(prepared.health.checks.is_empty());
+        assert_eq!(prepared.health.checks.len(), 1);
         assert!(
-            prepared
+            !prepared
                 .health
                 .blockers
                 .iter()
                 .any(|blocker| blocker.message.contains("version probe"))
+        );
+        assert!(
+            prepared.health.checks[0]
+                .assets
+                .iter()
+                .all(|asset| asset.version.starts_with("content:sha256:"))
         );
         assert!(
             !prepared
@@ -373,10 +409,13 @@ timeout_seconds = 1
                 && blocker.rule_id.as_deref() == Some("missing-interpreter")
         }));
         let wire = prepared.plan.to_wire().unwrap();
-        assert!(
-            wire.healthchecks.is_empty(),
-            "failed rows emit no placeholders"
+        assert_eq!(
+            wire.healthchecks.len(),
+            1,
+            "only the valid Cargo row survives"
         );
+        let json = serde_json::to_string(&wire.healthchecks).unwrap();
+        assert!(!json.contains("missing-interpreter"));
     }
 
     #[test]

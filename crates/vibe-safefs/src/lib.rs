@@ -59,9 +59,11 @@ pub use race_hook::{
 pub use transaction::{
     CleanupCompletion, CleanupIntent, CleanupPreparation, DirectoryDurability, DirectorySync,
     DurableWrite, EntryIdentity, EntryState, EntryStateKind, ExistingTreeEntryLease,
-    ExternalProjectLock, ExternalStore, OwnedDirectory, OwnedDirectoryCreateError,
-    OwnedDirectoryIdentity, OwnedTreeCleanupError, OwnedTreeCleanupProgress, OwnedTreeObservation,
-    OwnedTreePublishError, PublishedPendingVerification, RenameError, TreeEntry, TreeManifest,
+    ExternalDirectory, ExternalProjectLock, ExternalStore, OwnedDirectory,
+    OwnedDirectoryCreateError, OwnedDirectoryIdentity, OwnedTreeCleanupError,
+    OwnedTreeCleanupProgress, OwnedTreeObservation, OwnedTreePublishError,
+    PublishedPendingVerification, RenameError, ReopenOwnedDirectoryError, ReopenedOwnedDirectory,
+    TreeEntry, TreeManifest,
 };
 #[cfg(any(test, feature = "inject-failures"))]
 pub use transaction::{

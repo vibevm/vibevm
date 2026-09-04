@@ -1,5 +1,7 @@
 //! Deterministic no-follow project inventory.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-056#IMPL-A");
+
 use sha2::{Digest, Sha256};
 use vibe_safefs::{Pinned, Project};
 

@@ -1,5 +1,7 @@
 //! Contract-to-health-plan preparation. No child process is started here.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-056#IMPL-C");
+
 use sha2::{Digest, Sha256};
 use vibe_safefs::Project;
 
@@ -92,8 +94,76 @@ pub fn prepare<R: HealthResolver>(
         checks,
         blockers,
     };
+    if let Some(blocker) = persistence_capacity_blocker(&prepared, inventory)? {
+        prepared.blockers.push(blocker);
+        prepared.blockers.sort_by(|left, right| {
+            (&left.code, &left.check_id, &left.message).cmp(&(
+                &right.code,
+                &right.check_id,
+                &right.message,
+            ))
+        });
+    }
     prepared.plan_id = health_identity(&prepared)?;
     Ok(prepared)
+}
+
+pub(crate) fn persistence_capacity_blocker(
+    prepared: &PreparedHealth,
+    inventory: &Inventory,
+) -> Result<Option<HealthBlocker>, HealthError> {
+    const JSON_EXPANSION: u128 = 6;
+    const FIXED_ENVELOPE: u128 = 4 * 1024 * 1024;
+
+    let commands = prepared
+        .checks
+        .iter()
+        .map(|check| check.commands.len() as u128)
+        .sum::<u128>();
+    let structured = prepared
+        .checks
+        .iter()
+        .filter(|check| check.protocol == ResultProtocol::VibeHealthJsonV1)
+        .count() as u128;
+    let streams_per_command = u128::from(prepared.max_stdout_bytes)
+        .checked_add(u128::from(prepared.max_stderr_bytes))
+        .ok_or_else(|| HealthError::Preparation("health evidence size overflow".to_owned()))?;
+    let retained = commands
+        .checked_mul(2)
+        .and_then(|value| value.checked_mul(streams_per_command))
+        .and_then(|value| {
+            structured
+                .checked_mul(2)
+                .and_then(|count| count.checked_mul(u128::from(prepared.max_result_bytes)))
+                .and_then(|results| value.checked_add(results))
+        })
+        .ok_or_else(|| HealthError::Preparation("health evidence size overflow".to_owned()))?;
+    let health_plan_bytes = serde_json::to_vec(prepared)
+        .map_err(|error| HealthError::Preparation(format!("sizing health plan: {error}")))?
+        .len() as u128;
+    let tree_overhead = inventory.entries.iter().try_fold(0u128, |total, entry| {
+        total
+            .checked_add(2048)
+            .and_then(|value| value.checked_add((entry.path.len() as u128).saturating_mul(12)))
+            .ok_or_else(|| HealthError::Preparation("project evidence size overflow".to_owned()))
+    })?;
+    let worst_case = retained
+        .checked_mul(JSON_EXPANSION)
+        .and_then(|value| value.checked_add(health_plan_bytes.saturating_mul(4)))
+        .and_then(|value| value.checked_add(tree_overhead))
+        .and_then(|value| value.checked_add(FIXED_ENVELOPE))
+        .ok_or_else(|| HealthError::Preparation("transaction evidence size overflow".to_owned()))?;
+    let capacity = u128::from(
+        crate::transaction::MAX_CANONICAL_REPORT_BYTES
+            .min(crate::transaction::MAX_TRANSACTION_JOURNAL_BYTES) as u64,
+    );
+    Ok((worst_case > capacity).then(|| HealthBlocker {
+        code: "health-evidence-store-capacity".to_owned(),
+        check_id: None,
+        message: format!(
+            "declared health panel can require {worst_case} encoded bytes, exceeding the {capacity}-byte transaction/report capacity"
+        ),
+    }))
 }
 
 pub fn add_blockers(
@@ -182,6 +252,26 @@ fn prepare_check<R: HealthResolver>(
         ),
     };
     let network = network_mode(override_network.unwrap_or(contract.health.network));
+    #[cfg(windows)]
+    if let Healthcheck::Custom {
+        protocol,
+        reads,
+        writes,
+        spawn,
+        network: custom_network,
+        ..
+    } = row
+        && (*protocol != CustomProtocol::ExitCode
+            || *custom_network != NetworkPolicy::Inherit
+            || reads.as_slice() != ["**"]
+            || !writes.is_empty()
+            || !*spawn)
+    {
+        return Err(HealthError::Unsupported(
+            "Windows epoch-1 custom health supports only protocol=exit-code, network=inherit, reads=[\"**\"], writes=[], spawn=true"
+                .to_owned(),
+        ));
+    }
     let applicability = applicability(root, when.as_ref(), inventory);
     let custom_effects = matches!(row, Healthcheck::Custom { .. });
     let (mut reads, mut writes, spawn) = match row {
@@ -195,12 +285,17 @@ fn prepare_check<R: HealthResolver>(
     };
     reads.sort_by(|left, right| left.as_bytes().cmp(right.as_bytes()));
     writes.sort_by(|left, right| left.as_bytes().cmp(right.as_bytes()));
+    let unrestricted_reads = reads == ["**"];
     let effects = EffectPlan {
         reads,
         writes,
         spawn,
     };
     let mut sandbox = SandboxRequirement::for_check(network, custom_effects, spawn);
+    if custom_effects && unrestricted_reads {
+        // A complete read universe needs no narrower read-policy sandbox.
+        sandbox.read_policy_enforcement = false;
+    }
     if let Applicability::SkippedWhenMissing { .. } = &applicability {
         return Ok(PreparedHealthcheck {
             id: row.id().to_owned(),
@@ -247,7 +342,7 @@ fn prepare_check<R: HealthResolver>(
                 *all_targets,
                 features.clone(),
             )?;
-            let asset = resolve(
+            let cargo = resolve(
                 resolver,
                 ResolveAssetRequest {
                     id: format!("{id}/cargo"),
@@ -255,8 +350,26 @@ fn prepare_check<R: HealthResolver>(
                     selector: "cargo".to_owned(),
                 },
             )?;
+            let rustc = resolve(
+                resolver,
+                ResolveAssetRequest {
+                    id: format!("{id}/rustc"),
+                    role: AssetRole::Rustc,
+                    selector: "rustc".to_owned(),
+                },
+            )?;
+            let rustdoc = resolve(
+                resolver,
+                ResolveAssetRequest {
+                    id: format!("{id}/rustdoc"),
+                    role: AssetRole::Rustdoc,
+                    selector: "rustdoc".to_owned(),
+                },
+            )?;
             let commands = cargo_commands(
-                &asset.id,
+                &cargo.id,
+                &rustc.id,
+                &rustdoc.id,
                 *build,
                 *workspace,
                 *locked,
@@ -268,7 +381,7 @@ fn prepare_check<R: HealthResolver>(
             );
             (
                 Some(tests),
-                vec![asset],
+                vec![cargo, rustc, rustdoc],
                 commands,
                 ResultProtocol::BuiltIn,
                 None,
@@ -468,6 +581,12 @@ fn prepare_check<R: HealthResolver>(
         } => {
             let bundle = prepare_bundle(project, inventory, source, snapshot)?;
             let launch = resolver.resolve_custom_launch(id, interpreter, source)?;
+            if launch.style == CustomLaunchStyle::Direct {
+                return Err(HealthError::Unsupported(
+                    "direct bundled custom executables are not supported by the epoch-1 local backend"
+                        .to_owned(),
+                ));
+            }
             validate_asset(&launch.asset)?;
             let expected_id = format!("{id}/custom-launch");
             let expected_role = match launch.style {
@@ -865,10 +984,19 @@ fn blocker_for(check_id: &str, error: HealthError) -> HealthBlocker {
     let code = match error {
         HealthError::Preparation(_) => "health-preparation-failed",
         HealthError::Protocol(_) => "health-protocol-preparation-failed",
+        HealthError::CheckProtocolFailed { .. } => "health-protocol-preparation-failed",
         HealthError::Execution(_) => "health-execution-preparation-failed",
+        HealthError::CommandFailed { .. } => "health-command-preparation-failed",
+        HealthError::CommandChangedTree { .. } => "health-tree-changed-during-preparation",
+        HealthError::Unsupported(ref message)
+            if message.starts_with("Windows epoch-1 custom health") =>
+        {
+            "health-custom-profile-unsupported"
+        }
         HealthError::Unsupported(_) => "health-unsupported",
         HealthError::Tree(_) => "health-tree-preparation-failed",
         HealthError::Cancelled { .. } => "health-cancelled-during-preparation",
+        HealthError::TimedOut { .. } => "health-timed-out-during-preparation",
     };
     HealthBlocker {
         code: code.to_owned(),

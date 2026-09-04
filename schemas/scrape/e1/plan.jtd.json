@@ -120,7 +120,7 @@
         "termination_grace_seconds": { "type": "uint32" }
       }
     },
-    "asset_role": { "enum": ["cargo", "node", "npm-cli", "maven-launcher", "python", "custom-interpreter", "custom-native"], "metadata": { "x-vocabulary": "closed" } },
+    "asset_role": { "enum": ["cargo", "rustc", "rustdoc", "node", "npm-cli", "maven-launcher", "python", "custom-interpreter", "custom-native"], "metadata": { "x-vocabulary": "closed" } },
     "asset_source": {
       "discriminator": "kind",
       "mapping": {
@@ -134,6 +134,7 @@
         "display_path": { "type": "string" }, "sha256": { "type": "string" },
         "bytes": { "type": "string" }, "mode": { "type": "uint32", "nullable": true },
         "platform_identity": { "type": "string" }, "version": { "type": "string" },
+        "version_kind": { "enum": ["content", "probe"], "metadata": { "x-vocabulary": "closed" } },
         "source": { "ref": "asset_source" }
       }
     },
@@ -186,6 +187,7 @@
         "read_policy_enforcement": { "type": "boolean" },
         "process_tree_containment": { "type": "boolean" },
         "graceful_termination": { "type": "boolean" },
+        "termination_mode": { "enum": ["forced-tree", "graceful-then-forced"], "metadata": { "x-vocabulary": "closed" } },
         "spawn_prevention": { "type": "boolean" },
         "network_deny": { "type": "boolean" },
         "bounded_output": { "type": "boolean" },

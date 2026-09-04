@@ -5,6 +5,8 @@
 //! capabilities cover the prepared check; an unsupported platform therefore
 //! refuses before executing anything.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-056#IMPL-C");
+
 mod backend;
 mod baseline;
 mod discovery;

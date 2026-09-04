@@ -1,5 +1,7 @@
 //! The schema-1 portable path and glob grammar.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-056#IMPL-A");
+
 use crate::model::ScrapeError;
 
 #[derive(Debug, Clone, PartialEq, Eq)]

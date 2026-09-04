@@ -1,5 +1,7 @@
 //! Phase execution over an already prepared plan.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-056#IMPL-C");
+
 use std::collections::BTreeMap;
 use std::path::Path;
 
@@ -32,7 +34,10 @@ pub fn run_phase<B: HealthBackend>(
         }
     }
     let mut results = Vec::with_capacity(prepared.checks.len());
-    let mut reduced = false;
+    // Final-path execution guarded by complete tree reproof is honest and
+    // transaction-safe, but it is a narrower assurance than an enforced COW
+    // view and must never be reported as full isolation.
+    let mut reduced = context.transactional_tree_reproof;
     for check in &prepared.checks {
         if let Applicability::SkippedWhenMissing { path } = &check.applicability {
             reduced = true;
@@ -69,38 +74,46 @@ pub fn run_phase<B: HealthBackend>(
             let expanded = expand_command(
                 command,
                 executable,
+                &assets,
                 context.phase,
                 &root,
                 &scratch,
                 &result_path,
-            );
-            let execution = backend.execute(BackendCommandRequest {
-                check_id: check.id.clone(),
-                phase: context.phase,
-                root: root.clone(),
-                protected_root: context.protected_root.clone(),
-                scratch: scratch.clone(),
-                result: result_path.clone(),
-                command: expanded,
-                assets: &check.assets,
-                effects: check.effects.clone(),
-                network: check.network,
-                custom_bundle: check.custom_bundle.as_ref(),
-                expected_tree: &context.expected_tree,
-                cancellation: context.cancellation.clone(),
-                timeout_seconds: check.timeout_seconds,
-                termination_grace_seconds: prepared.termination_grace_seconds,
-                max_result_bytes: prepared.max_result_bytes,
-                max_stdout_bytes: prepared.max_stdout_bytes,
-                max_stderr_bytes: prepared.max_stderr_bytes,
-            })?;
+            )?;
+            let execution = backend
+                .execute(BackendCommandRequest {
+                    check_id: check.id.clone(),
+                    phase: context.phase,
+                    phase_root: context.root.clone(),
+                    root: root.clone(),
+                    protected_root: context.protected_root.clone(),
+                    scratch: scratch.clone(),
+                    result: result_path.clone(),
+                    command: expanded,
+                    assets: &check.assets,
+                    effects: check.effects.clone(),
+                    network: check.network,
+                    custom_bundle: check.custom_bundle.as_ref(),
+                    expected_tree: &context.expected_tree,
+                    transactional_tree_reproof: context.transactional_tree_reproof,
+                    cancellation: context.cancellation.clone(),
+                    timeout_seconds: check.timeout_seconds,
+                    termination_grace_seconds: prepared.termination_grace_seconds,
+                    max_result_bytes: prepared.max_result_bytes,
+                    max_stdout_bytes: prepared.max_stdout_bytes,
+                    max_stderr_bytes: prepared.max_stderr_bytes,
+                })
+                .map_err(|error| attach_prior_evidence(error, &results, &executions))?;
             validate_stream_bound(&execution.stdout, prepared.max_stdout_bytes, "stdout")?;
             validate_stream_bound(&execution.stderr, prepared.max_stderr_bytes, "stderr")?;
             if !command.accepted_exit_codes.contains(&execution.exit_code) {
-                return Err(HealthError::Execution(format!(
-                    "healthcheck `{}` {:?} exited {}",
-                    check.id, command.step, execution.exit_code
-                )));
+                return Err(HealthError::CommandFailed {
+                    check_id: check.id.clone(),
+                    exit_code: execution.exit_code,
+                    prior_checks: results,
+                    prior_executions: executions,
+                    execution: Box::new(execution),
+                });
             }
             executions.push(execution);
         }
@@ -110,18 +123,23 @@ pub fn run_phase<B: HealthBackend>(
                 let result = executions
                     .last()
                     .and_then(|execution| execution.result.as_deref())
-                    .ok_or_else(|| {
-                        HealthError::Protocol(format!(
-                            "healthcheck `{}` produced no atomic JSON result",
-                            check.id
-                        ))
-                    })?;
-                let cap = usize::try_from(prepared.max_result_bytes).map_err(|_| {
-                    HealthError::Preparation(
-                        "prepared health result cap exceeds this platform's usize".to_owned(),
-                    )
-                })?;
-                HealthVerdict::Structured(parse_health_result(result, cap)?)
+                    .ok_or_else(|| "command produced no atomic JSON result".to_owned());
+                let parsed = result.and_then(|result| {
+                    let cap = usize::try_from(prepared.max_result_bytes)
+                        .map_err(|_| "prepared result cap exceeds platform usize".to_owned())?;
+                    parse_health_result(result, cap).map_err(|error| error.to_string())
+                });
+                match parsed {
+                    Ok(verdict) => HealthVerdict::Structured(verdict),
+                    Err(detail) => {
+                        return Err(HealthError::CheckProtocolFailed {
+                            check_id: check.id.clone(),
+                            detail,
+                            prior_checks: results,
+                            executions,
+                        });
+                    }
+                }
             }
         };
         results.push(CheckResult {
@@ -146,14 +164,86 @@ pub fn run_phase<B: HealthBackend>(
     })
 }
 
+fn attach_prior_evidence(
+    error: HealthError,
+    completed_checks: &[CheckResult],
+    completed: &[CommandExecution],
+) -> HealthError {
+    match error {
+        HealthError::CommandChangedTree {
+            check_id,
+            detail,
+            mut prior_checks,
+            mut prior_executions,
+            execution,
+        } => {
+            let mut prior = completed.to_vec();
+            prior.append(&mut prior_executions);
+            let mut checks = completed_checks.to_vec();
+            checks.append(&mut prior_checks);
+            HealthError::CommandChangedTree {
+                check_id,
+                detail,
+                prior_checks: checks,
+                prior_executions: prior,
+                execution,
+            }
+        }
+        HealthError::Cancelled {
+            phase,
+            check_id,
+            disposition,
+            mut prior_checks,
+            mut prior_executions,
+            execution,
+        } => {
+            let mut prior = completed.to_vec();
+            prior.append(&mut prior_executions);
+            let mut checks = completed_checks.to_vec();
+            checks.append(&mut prior_checks);
+            HealthError::Cancelled {
+                phase,
+                check_id,
+                disposition,
+                prior_checks: checks,
+                prior_executions: prior,
+                execution,
+            }
+        }
+        HealthError::TimedOut {
+            phase,
+            check_id,
+            timeout_seconds,
+            mut prior_checks,
+            mut prior_executions,
+            execution,
+        } => {
+            let mut prior = completed.to_vec();
+            prior.append(&mut prior_executions);
+            let mut checks = completed_checks.to_vec();
+            checks.append(&mut prior_checks);
+            HealthError::TimedOut {
+                phase,
+                check_id,
+                timeout_seconds,
+                prior_checks: checks,
+                prior_executions: prior,
+                execution,
+            }
+        }
+        other => other,
+    }
+}
+
 fn expand_command(
     command: &PreparedCommand,
     executable: &AssetIdentity,
+    assets: &BTreeMap<&str, &AssetIdentity>,
     phase: HealthPhase,
     root: &str,
     scratch: &str,
     result: &str,
-) -> ExpandedCommand {
+) -> Result<ExpandedCommand, HealthError> {
     let argv = command
         .argv
         .iter()
@@ -174,16 +264,24 @@ fn expand_command(
             let value = match value {
                 EnvironmentValue::Literal(value) => value.clone(),
                 EnvironmentValue::ScratchPath(suffix) => check_root(scratch, suffix),
+                EnvironmentValue::AssetPath(id) => assets
+                    .get(id.as_str())
+                    .map(|asset| asset.display_path.clone())
+                    .ok_or_else(|| {
+                        HealthError::Preparation(format!(
+                            "command environment names absent asset `{id}`"
+                        ))
+                    })?,
             };
-            (name.clone(), value)
+            Ok((name.clone(), value))
         })
-        .collect();
-    ExpandedCommand {
+        .collect::<Result<_, HealthError>>()?;
+    Ok(ExpandedCommand {
         step: command.step,
         executable: executable.clone(),
         argv,
         environment,
-    }
+    })
 }
 
 fn validate_stream_bound(

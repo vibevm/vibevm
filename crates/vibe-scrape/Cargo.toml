@@ -20,6 +20,7 @@ command-group = "=5.0.1"
 serde.workspace = true
 serde_json.workspace = true
 sha2.workspace = true
+specmark.workspace = true
 syn.workspace = true
 thiserror.workspace = true
 toml.workspace = true

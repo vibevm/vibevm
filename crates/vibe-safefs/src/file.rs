@@ -12,6 +12,8 @@
 //! walk cannot redirect any of it: every step goes through the capability, not
 //! through a path re-resolved with ambient authority.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-056#SEC-NO-FOLLOW");
+
 use std::io::Write;
 use std::path::Path;
 
@@ -126,6 +128,38 @@ impl Project {
         bytes: &[u8],
         unix_mode: Option<u32>,
     ) -> Result<crate::DurableWrite, PublishError> {
+        self.write_atomic_durable_in_with_mode_stage(directory, relative, bytes, unix_mode, None)
+    }
+
+    /// Transaction-only deterministic staging. `stage_name` must be derived
+    /// from an already-durable transaction/step intent. A restart may reuse
+    /// only an exact regular single-link stage with the requested bytes/mode;
+    /// every other occupant is a third state and is never removed.
+    pub fn write_atomic_transactional_in_with_mode(
+        &self,
+        directory: &Pinned,
+        relative: &str,
+        bytes: &[u8],
+        unix_mode: Option<u32>,
+        stage_name: &str,
+    ) -> Result<crate::DurableWrite, PublishError> {
+        self.write_atomic_durable_in_with_mode_stage(
+            directory,
+            relative,
+            bytes,
+            unix_mode,
+            Some(stage_name),
+        )
+    }
+
+    fn write_atomic_durable_in_with_mode_stage(
+        &self,
+        directory: &Pinned,
+        relative: &str,
+        bytes: &[u8],
+        unix_mode: Option<u32>,
+        deterministic_stage: Option<&str>,
+    ) -> Result<crate::DurableWrite, PublishError> {
         let mut created: Vec<std::path::PathBuf> = Vec::new();
         let mut directory_syncs = Vec::new();
         let before = |created: &[std::path::PathBuf], error: anyhow::Error| {
@@ -148,7 +182,9 @@ impl Project {
                     created.push(child.path().to_path_buf());
                     directory_syncs.push(crate::DirectorySync {
                         directory: current.path().to_path_buf(),
-                        durability: crate::transaction::sync_directory(&current),
+                        durability: crate::transaction::journal_recoverable_checkpoint(
+                            crate::transaction::sync_directory(&current),
+                        ),
                     });
                 }
                 current = child;
@@ -159,27 +195,76 @@ impl Project {
         // directory before staging anything beside it.
         refuse_unpublishable_destination(&destination, &name)
             .map_err(|error| before(&created, error))?;
-        let (staged_name, staged_file) =
-            create_unique_stage(&destination).map_err(|error| before(&created, error))?;
-        let mut std_file = staged_file.into_std();
-        let written = std_file
-            .write_all(bytes)
-            .and_then(|()| std_file.flush())
-            .and_then(|()| stable::set_unix_mode(&std_file, unix_mode))
-            .and_then(|()| std_file.sync_all());
-        drop(std_file);
-        if let Err(error) = written {
-            let _ = destination.dir.remove_file(&staged_name);
-            return Err(before(
-                &created,
-                anyhow::Error::new(error).context(format!(
-                    "writing staged `{}`",
-                    destination.join(&staged_name).display()
-                )),
-            ));
+        let (staged_name, staged_file, created_stage) = match deterministic_stage {
+            Some(stage_name) => {
+                validate_transaction_stage_name(stage_name)
+                    .map_err(|error| before(&created, error))?;
+                let mut options = cap_options();
+                match destination
+                    .dir
+                    .open_with(stage_name, options.read(true).write(true).create_new(true))
+                {
+                    Ok(file) => (stage_name.to_owned(), Some(file), true),
+                    Err(error) if error.kind() == std::io::ErrorKind::AlreadyExists => {
+                        let wanted = format!("{:x}", sha2::Sha256::digest(bytes));
+                        let observed = destination
+                            .inspect_transaction_stage_state(stage_name)
+                            .map_err(|error| before(&created, error))?
+                            .ok_or_else(|| {
+                                before(
+                                    &created,
+                                    anyhow::anyhow!(
+                                        "transaction stage disappeared during recovery"
+                                    ),
+                                )
+                            })?;
+                        if observed.sha256.as_deref() != Some(wanted.as_str())
+                            || observed.bytes != Some(bytes.len() as u64)
+                            || !stable::mode_matches(observed.unix_mode, unix_mode)
+                        {
+                            return Err(before(
+                                &created,
+                                anyhow::anyhow!(
+                                    "transaction stage differs from its durable intent"
+                                ),
+                            ));
+                        }
+                        (stage_name.to_owned(), None, false)
+                    }
+                    Err(error) => return Err(before(&created, anyhow::Error::new(error))),
+                }
+            }
+            None => {
+                let (name, file) =
+                    create_unique_stage(&destination).map_err(|error| before(&created, error))?;
+                (name, Some(file), true)
+            }
+        };
+        if let Some(staged_file) = staged_file {
+            let mut std_file = staged_file.into_std();
+            let written = std_file
+                .write_all(bytes)
+                .and_then(|()| std_file.flush())
+                .and_then(|()| stable::set_unix_mode(&std_file, unix_mode))
+                .and_then(|()| std_file.sync_all());
+            drop(std_file);
+            if let Err(error) = written {
+                if created_stage {
+                    let _ = destination.dir.remove_file(&staged_name);
+                }
+                return Err(before(
+                    &created,
+                    anyhow::Error::new(error).context(format!(
+                        "writing staged `{}`",
+                        destination.join(&staged_name).display()
+                    )),
+                ));
+            }
         }
         if let Some(injected) = create_new::injected_pre_publication_failure(relative) {
-            let _ = destination.dir.remove_file(&staged_name);
+            if created_stage {
+                let _ = destination.dir.remove_file(&staged_name);
+            }
             return Err(before(&created, injected));
         }
         if let Err(error) = destination
@@ -189,7 +274,9 @@ impl Project {
             // Our own stage, created with `create_new`: removing it removes
             // nothing anyone else owns. A failed rename leaves the destination
             // untouched, so this stays `BeforePublication`.
-            let _ = destination.dir.remove_file(&staged_name);
+            if created_stage {
+                let _ = destination.dir.remove_file(&staged_name);
+            }
             return Err(before(
                 &created,
                 anyhow::Error::new(error).context(format!(
@@ -229,7 +316,9 @@ impl Project {
                 )));
             }
         }
-        let parent = crate::transaction::sync_directory(&destination);
+        let parent = crate::transaction::journal_recoverable_checkpoint(
+            crate::transaction::sync_directory(&destination),
+        );
         directory_syncs.push(crate::DirectorySync {
             directory: destination.path().to_path_buf(),
             durability: parent,
@@ -546,6 +635,20 @@ fn create_unique_stage(destination: &Pinned) -> Result<(String, cap_std::fs::Fil
         "could not claim an unowned staging name in `{}` after {STAGE_ATTEMPTS} attempts",
         destination.path().display()
     )
+}
+
+fn validate_transaction_stage_name(name: &str) -> Result<()> {
+    let Some(suffix) = name.strip_prefix(".vibe-stage-tx-") else {
+        anyhow::bail!("transaction stage must use the reserved .vibe-stage-tx- prefix");
+    };
+    if suffix.len() != 32
+        || !suffix
+            .bytes()
+            .all(|byte| byte.is_ascii_hexdigit() && !byte.is_ascii_uppercase())
+    {
+        anyhow::bail!("transaction stage suffix must be 32 lowercase hex characters");
+    }
+    Ok(())
 }
 
 /// Injection point for a failure that happens **after** a successful rename,

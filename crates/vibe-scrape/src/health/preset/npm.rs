@@ -1,3 +1,5 @@
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-056#IMPL-C");
+
 use crate::contract::InstallMode;
 
 use super::{hermetic_environment, literal};

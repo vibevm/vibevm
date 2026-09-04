@@ -13,6 +13,8 @@
   "relocations": [],
   "dependency_graphs": [],
   "health": [],
+  "events": [],
+  "apply": [],
   "residuals": [],
   "rollback": [],
   "recovery": [],

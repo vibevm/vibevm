@@ -1,5 +1,7 @@
 //! No-follow pinning for explicit absolute file names and absent destinations.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-056#SEC-NO-FOLLOW");
+
 use std::path::{Component, Path, PathBuf};
 
 use anyhow::{Context, Result, bail};

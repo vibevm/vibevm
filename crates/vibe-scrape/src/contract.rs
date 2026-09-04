@@ -1,5 +1,7 @@
 //! Strict schema-1 scrape contract and semantic validation.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-056#IMPL-A");
+
 use std::collections::{BTreeMap, BTreeSet};
 
 use serde::{Deserialize, Serialize};

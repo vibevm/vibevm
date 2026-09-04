@@ -4,6 +4,8 @@
 //! identity rather than an unconfined `--version` child; an enforcing backend
 //! may later replace it with a bounded, journaled probe.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-056#IMPL-C");
+
 use std::path::{Path, PathBuf};
 
 use vibe_safefs::Project;
@@ -17,6 +19,7 @@ const MANIFEST_CAP: usize = 4 * 1024 * 1024;
 pub struct SystemHealthResolver {
     root: PathBuf,
     node_parent: Option<PathBuf>,
+    cargo_parent: Option<PathBuf>,
 }
 
 impl SystemHealthResolver {
@@ -25,6 +28,7 @@ impl SystemHealthResolver {
         Self {
             root: project.root_path().to_path_buf(),
             node_parent: None,
+            cargo_parent: None,
         }
     }
 
@@ -112,15 +116,13 @@ impl SystemHealthResolver {
             // token. Security comparison uses `live_identity`; no Debug/raw
             // platform layout is recreated for JSON.
             platform_identity: "opaque-live-only".to_owned(),
-            version: String::new(),
+            version: format!("content:{}", sha256),
+            version_kind: VersionKind::Content,
             sha256,
             source,
             live_identity: Some(snapshot.identity),
         };
-        Err(HealthError::Unsupported(format!(
-            "bounded journaled version probe is unavailable for `{}` ({})",
-            identity.display_path, identity.sha256
-        )))
+        Ok(identity)
     }
 
     fn npm_cli(&self) -> Result<PathBuf, HealthError> {
@@ -179,6 +181,18 @@ impl HealthResolver for SystemHealthResolver {
             }
         }
         let selector = request.selector.clone();
+        if matches!(request.role, AssetRole::Rustc | AssetRole::Rustdoc) {
+            let parent = self.cargo_parent.as_ref().ok_or_else(|| {
+                HealthError::Preparation(
+                    "Cargo companion tool resolution requires sealed Cargo first".to_owned(),
+                )
+            })?;
+            let path =
+                parent.join(command_names(&selector).into_iter().next().ok_or_else(|| {
+                    HealthError::Preparation("Cargo companion selector is empty".to_owned())
+                })?);
+            return self.resolve_at(request, path, AssetSource::Resolved);
+        }
         let (asset, path) = match request.role {
             AssetRole::NpmCli => {
                 let path = self.npm_cli()?;
@@ -190,6 +204,9 @@ impl HealthResolver for SystemHealthResolver {
         };
         if asset.role == AssetRole::Node {
             self.node_parent = path.parent().map(Path::to_path_buf);
+        }
+        if asset.role == AssetRole::Cargo {
+            self.cargo_parent = path.parent().map(Path::to_path_buf);
         }
         Ok(asset)
     }

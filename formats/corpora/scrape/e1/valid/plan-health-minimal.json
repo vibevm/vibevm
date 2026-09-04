@@ -43,6 +43,7 @@
           "mode": null,
           "platform_identity": "volume:1/file:5",
           "version": "content:sha256:5555555555555555555555555555555555555555555555555555555555555555",
+          "version_kind": "content",
           "source": { "kind": "resolved" }
         }
       ],
@@ -74,6 +75,7 @@
         "read_policy_enforcement": false,
         "process_tree_containment": true,
         "graceful_termination": true,
+        "termination_mode": "forced-tree",
         "spawn_prevention": false,
         "network_deny": false,
         "bounded_output": true,

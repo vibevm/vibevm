@@ -6,6 +6,8 @@
 //! differently they are spelled — a hard link, a case-folding volume, a
 //! junction one level up, an 8.3 short spelling, a bind mount.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-056#SEC-NO-FOLLOW");
+
 use std::path::Path;
 
 use anyhow::{Context, Result};

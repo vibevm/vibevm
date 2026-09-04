@@ -1,5 +1,7 @@
 //! Sealed OS-enforcement boundary. The portable core never calls `Command`.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-056#IMPL-C");
+
 use super::model::{
     Applicability, BackendCapabilities, BackendCommandRequest, CommandExecution, HealthBlocker,
     HealthError, PhaseContext, PreparedHealth,

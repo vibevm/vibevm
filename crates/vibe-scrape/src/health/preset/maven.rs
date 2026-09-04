@@ -1,3 +1,5 @@
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-056#IMPL-C");
+
 use super::{hermetic_environment, literal};
 use crate::health::model::{CommandStep, NetworkMode, PreparedCommand, TestDisposition};
 

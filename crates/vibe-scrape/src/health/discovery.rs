@@ -1,5 +1,7 @@
 //! One manifest/model discovery implementation shared by before and projected-after trees.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-056#IMPL-C");
+
 use std::collections::BTreeMap;
 
 use quick_xml::events::Event;

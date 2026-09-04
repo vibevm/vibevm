@@ -1,6 +1,8 @@
 //! Explicit platform selection. These constructors stay fail-closed until an
 //! adversarially proven backend replaces the corresponding stub.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-056#IMPL-C");
+
 #[cfg(target_os = "linux")]
 mod linux;
 #[cfg(target_os = "macos")]

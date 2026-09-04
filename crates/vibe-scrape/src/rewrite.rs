@@ -4,6 +4,8 @@
 //! after-bytes and the caller later applies them under the transaction's
 //! before-digest precondition.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-056#IMPL-B");
+
 use std::collections::{BTreeMap, BTreeSet};
 
 use sha2::{Digest, Sha256};
@@ -15,7 +17,8 @@ use crate::contract::{
 };
 use crate::glob::Glob;
 use crate::model::{
-    Blocker, ByteSpan, EntryKind, Inventory, InventoryEntry, PreparedRewrite, ScrapeError,
+    Blocker, ByteSpan, EntryKind, Inventory, InventoryEntry, NativeLockChange, PreparedRewrite,
+    ScrapeError,
 };
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -38,6 +41,15 @@ struct Candidate {
     after: Vec<u8>,
     matches: usize,
     spans: Vec<ByteSpan>,
+    native_lock_evidence: Option<NativeLockEvidence>,
+}
+
+#[derive(Debug)]
+struct NativeLockEvidence {
+    manager: &'static str,
+    before_graph: Vec<String>,
+    after_graph: Vec<String>,
+    removed: Vec<String>,
 }
 
 type RewriteOutput = (Vec<u8>, usize, Vec<String>, Vec<ByteSpan>);
@@ -947,37 +959,817 @@ fn cargo_workspace_alias_map<'a>(
     Ok(aliases)
 }
 
-fn cargo_lock_dependency_name(value: &str) -> &str {
-    value.split_ascii_whitespace().next().unwrap_or(value)
+#[derive(Debug)]
+struct CargoManifestNode {
+    path: String,
+    dir: String,
+    bytes: Vec<u8>,
+    has_package: bool,
+    has_workspace: bool,
+    workspace_members: Vec<String>,
+    workspace_exclude: Vec<String>,
 }
 
-fn prepare_cargo_lock(before: &[u8], package: &str) -> Result<RewriteOutput, ScrapeError> {
-    let source = std::str::from_utf8(before).map_err(|_| fail("Cargo.lock is not UTF-8"))?;
-    let document = source
-        .parse::<toml_edit::DocumentMut>()
-        .map_err(|error| fail(format!("cannot parse Cargo.lock: {error}")))?;
+#[derive(Debug)]
+struct CargoTopology {
+    manifests: BTreeMap<String, CargoManifestNode>,
+    locks: BTreeSet<String>,
+}
+
+impl CargoTopology {
+    fn build<'a>(
+        manifests: impl IntoIterator<Item = (&'a str, &'a [u8])>,
+        locks: impl IntoIterator<Item = &'a str>,
+    ) -> Result<Self, ScrapeError> {
+        let mut nodes = BTreeMap::new();
+        for (path, bytes) in manifests {
+            let text = std::str::from_utf8(bytes)
+                .map_err(|_| fail(format!("Cargo manifest `{path}` is not UTF-8")))?;
+            let document = text
+                .parse::<toml_edit::DocumentMut>()
+                .map_err(|error| fail(format!("cannot parse Cargo manifest `{path}`: {error}")))?;
+            let dir = cargo_parent(path, "Cargo.toml")?;
+            let has_package = document
+                .get("package")
+                .and_then(toml_edit::Item::as_table)
+                .is_some();
+            let workspace = document
+                .get("workspace")
+                .and_then(toml_edit::Item::as_table);
+            let has_workspace = workspace.is_some();
+            let workspace_members = cargo_workspace_paths(
+                workspace.and_then(|table| table.get("members")),
+                path,
+                &dir,
+                "members",
+            )?;
+            let workspace_exclude = cargo_workspace_paths(
+                workspace.and_then(|table| table.get("exclude")),
+                path,
+                &dir,
+                "exclude",
+            )?;
+            let node = CargoManifestNode {
+                path: path.to_owned(),
+                dir,
+                bytes: bytes.to_vec(),
+                has_package,
+                has_workspace,
+                workspace_members,
+                workspace_exclude,
+            };
+            if nodes.insert(path.to_owned(), node).is_some() {
+                return Err(fail(format!("duplicate Cargo manifest `{path}`")));
+            }
+        }
+        Ok(Self {
+            manifests: nodes,
+            locks: locks.into_iter().map(str::to_owned).collect(),
+        })
+    }
+
+    fn workspace_root_for(
+        &self,
+        manifest: &str,
+    ) -> Result<Option<&CargoManifestNode>, ScrapeError> {
+        let node = self.manifests.get(manifest).ok_or_else(|| {
+            fail(format!(
+                "Cargo manifest `{manifest}` is absent from topology"
+            ))
+        })?;
+        if node.has_workspace {
+            return Ok(Some(node));
+        }
+        let roots = self
+            .manifests
+            .values()
+            .filter(|candidate| candidate.has_workspace)
+            .filter_map(
+                |candidate| match cargo_workspace_contains(candidate, manifest) {
+                    Ok(true) => Some(Ok(candidate)),
+                    Ok(false) => None,
+                    Err(error) => Some(Err(error)),
+                },
+            )
+            .collect::<Result<Vec<_>, ScrapeError>>()?;
+        match roots.as_slice() {
+            [] => Ok(None),
+            [root] => Ok(Some(*root)),
+            _ => Err(ScrapeError::blocked(format!(
+                "Cargo manifest `{manifest}` is selected by multiple workspace roots"
+            ))),
+        }
+    }
+
+    fn workspace_aliases_for(
+        &self,
+        manifest: &str,
+    ) -> Result<BTreeMap<String, String>, ScrapeError> {
+        let Some(root) = self.workspace_root_for(manifest)? else {
+            return Ok(BTreeMap::new());
+        };
+        cargo_workspace_alias_map(std::iter::once((root.path.as_str(), root.bytes.as_slice())))
+    }
+
+    fn owned_lock_for(&self, manifest: &str) -> Result<Option<String>, ScrapeError> {
+        let node = self.manifests.get(manifest).ok_or_else(|| {
+            fail(format!(
+                "Cargo manifest `{manifest}` is absent from topology"
+            ))
+        })?;
+        let owner = self.workspace_root_for(manifest)?.unwrap_or(node);
+        let lock = cargo_child(&owner.dir, "Cargo.lock");
+        Ok(self.locks.contains(&lock).then_some(lock))
+    }
+
+    fn owned_locks<'a>(
+        &self,
+        manifests: impl IntoIterator<Item = &'a str>,
+    ) -> Result<BTreeSet<String>, ScrapeError> {
+        let mut result = BTreeSet::new();
+        for manifest in manifests {
+            if let Some(lock) = self.owned_lock_for(manifest)? {
+                result.insert(lock);
+            }
+        }
+        Ok(result)
+    }
+
+    fn source_manifest(&self, source: &str) -> Result<&CargoManifestNode, ScrapeError> {
+        let owners = self
+            .manifests
+            .values()
+            .filter(|manifest| manifest.has_package && cargo_dir_contains(&manifest.dir, source))
+            .collect::<Vec<_>>();
+        let Some(longest) = owners.iter().map(|owner| owner.dir.len()).max() else {
+            return Err(ScrapeError::blocked(format!(
+                "Rust source `{source}` has no owning package Cargo.toml"
+            )));
+        };
+        let nearest = owners
+            .into_iter()
+            .filter(|owner| owner.dir.len() == longest)
+            .collect::<Vec<_>>();
+        match nearest.as_slice() {
+            [owner] => Ok(*owner),
+            _ => Err(ScrapeError::blocked(format!(
+                "Rust source `{source}` has ambiguous owning Cargo manifests"
+            ))),
+        }
+    }
+}
+
+fn cargo_parent(path: &str, leaf: &str) -> Result<String, ScrapeError> {
+    if path == leaf {
+        return Ok(String::new());
+    }
+    path.strip_suffix(&format!("/{leaf}"))
+        .map(str::to_owned)
+        .ok_or_else(|| fail(format!("Cargo path `{path}` is not a `{leaf}` path")))
+}
+
+fn cargo_child(dir: &str, leaf: &str) -> String {
+    if dir.is_empty() {
+        leaf.to_owned()
+    } else {
+        format!("{dir}/{leaf}")
+    }
+}
+
+fn cargo_dir_contains(dir: &str, path: &str) -> bool {
+    dir.is_empty() || path.starts_with(&(dir.to_owned() + "/"))
+}
+
+fn cargo_workspace_paths(
+    item: Option<&toml_edit::Item>,
+    manifest: &str,
+    root: &str,
+    field: &str,
+) -> Result<Vec<String>, ScrapeError> {
+    let Some(item) = item else {
+        return Ok(Vec::new());
+    };
+    let values = item.as_array().ok_or_else(|| {
+        ScrapeError::blocked(format!(
+            "Cargo workspace `{manifest}` has non-array `{field}`"
+        ))
+    })?;
+    let mut result = Vec::new();
+    for value in values {
+        let relative = value.as_str().ok_or_else(|| {
+            ScrapeError::blocked(format!(
+                "Cargo workspace `{manifest}` has non-string `{field}` member"
+            ))
+        })?;
+        if relative.is_empty()
+            || relative.starts_with('/')
+            || relative.contains('\\')
+            || relative.split('/').any(|part| part == "." || part == "..")
+        {
+            return Err(ScrapeError::blocked(format!(
+                "Cargo workspace `{manifest}` has unsupported `{field}` path `{relative}`"
+            )));
+        }
+        let joined = cargo_child(root, relative.trim_end_matches('/'));
+        let pattern = cargo_child(&joined, "Cargo.toml");
+        Glob::parse(&pattern).map_err(|error| {
+            ScrapeError::blocked(format!(
+                "Cargo workspace `{manifest}` has unsupported `{field}` pattern `{relative}`: {error}"
+            ))
+        })?;
+        result.push(pattern);
+    }
+    result.sort_by(|left, right| left.as_bytes().cmp(right.as_bytes()));
+    result.dedup();
+    Ok(result)
+}
+
+fn cargo_workspace_contains(
+    workspace: &CargoManifestNode,
+    manifest: &str,
+) -> Result<bool, ScrapeError> {
+    let included = workspace
+        .workspace_members
+        .iter()
+        .map(|pattern| Glob::parse(pattern))
+        .collect::<Result<Vec<_>, _>>()?
+        .iter()
+        .any(|pattern| pattern.matches(manifest));
+    let excluded = workspace
+        .workspace_exclude
+        .iter()
+        .map(|pattern| Glob::parse(pattern))
+        .collect::<Result<Vec<_>, _>>()?
+        .iter()
+        .any(|pattern| pattern.matches(manifest));
+    Ok(included && !excluded)
+}
+
+fn cargo_rule_selects_manifest(manifests: &[String], manifest: &str) -> Result<bool, ScrapeError> {
+    manifests
+        .iter()
+        .map(|pattern| Glob::parse(pattern))
+        .collect::<Result<Vec<_>, _>>()
+        .map(|patterns| patterns.iter().any(|pattern| pattern.matches(manifest)))
+}
+
+fn cargo_topology_from_current(
+    current: &BTreeMap<String, Vec<u8>>,
+    files: &BTreeSet<String>,
+) -> Result<CargoTopology, ScrapeError> {
+    CargoTopology::build(
+        current.iter().filter_map(|(path, bytes)| {
+            path.ends_with("Cargo.toml")
+                .then_some((path.as_str(), bytes.as_slice()))
+        }),
+        files
+            .iter()
+            .filter(|path| path.ends_with("Cargo.lock"))
+            .map(String::as_str),
+    )
+}
+
+fn observed_specmark_aliases_for_source(
+    contract: &Contract,
+    topology: &CargoTopology,
+    source: &str,
+) -> Result<BTreeSet<String>, ScrapeError> {
+    let owner = topology.source_manifest(source)?;
+    let matching = contract
+        .rewrite
+        .iter()
+        .filter_map(|rule| {
+            let RewriteRule::CargoPackageRemoveV1 {
+                id,
+                manifests,
+                package,
+                aliases,
+                ..
+            } = rule
+            else {
+                return None;
+            };
+            (package == "core-ai-native-specmark").then_some((id, manifests, package, aliases))
+        })
+        .filter_map(
+            |row| match cargo_rule_selects_manifest(row.1, &owner.path) {
+                Ok(true) => Some(Ok(row)),
+                Ok(false) => None,
+                Err(error) => Some(Err(error)),
+            },
+        )
+        .collect::<Result<Vec<_>, ScrapeError>>()?;
+    let (rule_id, _, package, aliases) = match matching.as_slice() {
+        [only] => *only,
+        [] => return Ok(BTreeSet::new()),
+        _ => {
+            return Err(ScrapeError::blocked(format!(
+                "Rust source `{source}` is owned by `{}` but multiple Specmark Cargo removal rules claim it",
+                owner.path
+            )));
+        }
+    };
+    let workspace_aliases = topology.workspace_aliases_for(&owner.path)?;
+    let (_, _, _, observed, _) =
+        prepare_cargo_resolved(&owner.bytes, package, aliases, &workspace_aliases).map_err(
+            |error| {
+                ScrapeError::blocked(format!(
+                    "Cargo rule `{rule_id}` cannot prove Specmark ownership for Rust source `{source}` through `{}`: {error}",
+                    owner.path
+                ))
+            },
+        )?;
+    Ok(observed
+        .into_iter()
+        .map(|alias| alias.replace('-', "_"))
+        .collect())
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
+struct CargoLockPackageId {
+    name: String,
+    version: String,
+    source: Option<String>,
+}
+
+#[derive(Debug)]
+struct CargoLockDependency {
+    array_index: usize,
+    target: usize,
+}
+
+#[derive(Debug)]
+struct CargoLockNode {
+    id: CargoLockPackageId,
+    dependencies: Vec<CargoLockDependency>,
+}
+
+#[derive(Debug)]
+struct CargoLockGraph {
+    nodes: Vec<CargoLockNode>,
+    roots: Vec<usize>,
+}
+
+type CargoLockOutput = (RewriteOutput, Option<NativeLockEvidence>);
+
+fn cargo_lock_blocked(message: impl Into<String>) -> ScrapeError {
+    ScrapeError::blocked(message)
+}
+
+fn cargo_lock_package_id(
+    table: &toml_edit::Table,
+    index: usize,
+) -> Result<CargoLockPackageId, ScrapeError> {
+    let field = |name: &str| {
+        table
+            .get(name)
+            .and_then(toml_edit::Item::as_str)
+            .ok_or_else(|| {
+                cargo_lock_blocked(format!(
+                    "Cargo.lock [[package]] #{index} has no string `{name}`"
+                ))
+            })
+    };
+    let source = match table.get("source") {
+        None => None,
+        Some(item) => {
+            let value = item.as_str().ok_or_else(|| {
+                cargo_lock_blocked(format!(
+                    "Cargo.lock [[package]] #{index} has a non-string `source`"
+                ))
+            })?;
+            if value.is_empty() {
+                return Err(cargo_lock_blocked(format!(
+                    "Cargo.lock [[package]] #{index} has an empty `source`"
+                )));
+            }
+            Some(value.to_owned())
+        }
+    };
+    Ok(CargoLockPackageId {
+        name: field("name")?.to_owned(),
+        version: field("version")?.to_owned(),
+        source,
+    })
+}
+
+fn cargo_lock_dependency_selector(
+    value: &str,
+) -> Result<(&str, Option<&str>, Option<&str>), ScrapeError> {
+    let mut fields = value.split_ascii_whitespace();
+    let name = fields
+        .next()
+        .filter(|name| !name.is_empty())
+        .ok_or_else(|| cargo_lock_blocked("Cargo.lock contains an empty dependency selector"))?;
+    let Some(version) = fields.next() else {
+        return Ok((name, None, None));
+    };
+    let rest = fields.collect::<Vec<_>>();
+    if rest.is_empty() {
+        return Ok((name, Some(version), None));
+    }
+    if rest.len() != 1 {
+        return Err(cargo_lock_blocked(format!(
+            "Cargo.lock dependency selector `{value}` has an unsupported shape"
+        )));
+    }
+    let source = rest[0]
+        .strip_prefix('(')
+        .and_then(|source| source.strip_suffix(')'))
+        .filter(|source| !source.is_empty())
+        .ok_or_else(|| {
+            cargo_lock_blocked(format!(
+                "Cargo.lock dependency selector `{value}` has an invalid source"
+            ))
+        })?;
+    Ok((name, Some(version), Some(source)))
+}
+
+fn resolve_cargo_lock_dependency(
+    value: &str,
+    identities: &[CargoLockPackageId],
+) -> Result<usize, ScrapeError> {
+    let (name, version, source) = cargo_lock_dependency_selector(value)?;
+    let candidates = identities
+        .iter()
+        .enumerate()
+        .filter(|(_, identity)| {
+            identity.name == name
+                && version.is_none_or(|version| identity.version == version)
+                && source.is_none_or(|source| identity.source.as_deref() == Some(source))
+        })
+        .map(|(index, _)| index)
+        .collect::<Vec<_>>();
+    match candidates.as_slice() {
+        [only] => Ok(*only),
+        [] => Err(cargo_lock_blocked(format!(
+            "Cargo.lock dependency selector `{value}` resolves to no [[package]]"
+        ))),
+        _ => Err(cargo_lock_blocked(format!(
+            "Cargo.lock dependency selector `{value}` is ambiguous"
+        ))),
+    }
+}
+
+fn parse_cargo_lock_graph(
+    document: &toml_edit::DocumentMut,
+) -> Result<CargoLockGraph, ScrapeError> {
+    match document
+        .get("version")
+        .and_then(toml_edit::Item::as_integer)
+    {
+        Some(3 | 4) => {}
+        Some(version) => {
+            return Err(cargo_lock_blocked(format!(
+                "Cargo.lock format version {version} is unsupported by schema-1 reconciliation"
+            )));
+        }
+        None => {
+            return Err(cargo_lock_blocked(
+                "Cargo.lock has no supported integer format version",
+            ));
+        }
+    }
     let packages = document
         .get("package")
         .and_then(toml_edit::Item::as_array_of_tables)
-        .ok_or_else(|| fail("Cargo.lock has no [[package]] graph"))?;
-    let graph_mentions = packages.iter().any(|entry| {
-        entry.get("name").and_then(toml_edit::Item::as_str) == Some(package)
-            || entry
-                .get("dependencies")
-                .and_then(toml_edit::Item::as_array)
-                .is_some_and(|dependencies| {
-                    dependencies
-                        .iter()
-                        .filter_map(toml_edit::Value::as_str)
-                        .any(|dependency| cargo_lock_dependency_name(dependency) == package)
-                })
-    });
-    if graph_mentions {
-        return Err(ScrapeError::blocked(format!(
-            "Cargo.lock graph reconciliation for `{package}` requires the sealed manager-native Cargo resolver; syntax-only lock deletion is forbidden"
+        .ok_or_else(|| cargo_lock_blocked("Cargo.lock has no [[package]] graph"))?;
+    if packages.is_empty() {
+        return Err(cargo_lock_blocked(
+            "Cargo.lock has an empty [[package]] graph",
+        ));
+    }
+    let identities = packages
+        .iter()
+        .enumerate()
+        .map(|(index, table)| cargo_lock_package_id(table, index))
+        .collect::<Result<Vec<_>, _>>()?;
+    let mut unique = BTreeSet::new();
+    if let Some(duplicate) = identities
+        .iter()
+        .find(|identity| !unique.insert((*identity).clone()))
+    {
+        return Err(cargo_lock_blocked(format!(
+            "Cargo.lock repeats package identity `{}`",
+            cargo_lock_identity(duplicate)
         )));
     }
-    Ok((before.to_vec(), 0, Vec::new(), Vec::new()))
+    let mut indegree = vec![0_usize; identities.len()];
+    let mut nodes = Vec::with_capacity(identities.len());
+    for (index, table) in packages.iter().enumerate() {
+        let mut dependencies = Vec::new();
+        let mut dependency_targets = BTreeSet::new();
+        if let Some(item) = table.get("dependencies") {
+            let array = item.as_array().ok_or_else(|| {
+                cargo_lock_blocked(format!(
+                    "Cargo.lock package `{}` has non-array `dependencies`",
+                    cargo_lock_identity(&identities[index])
+                ))
+            })?;
+            for (array_index, value) in array.iter().enumerate() {
+                let selector = value.as_str().ok_or_else(|| {
+                    cargo_lock_blocked(format!(
+                        "Cargo.lock package `{}` has a non-string dependency",
+                        cargo_lock_identity(&identities[index])
+                    ))
+                })?;
+                let target = resolve_cargo_lock_dependency(selector, &identities)?;
+                if !dependency_targets.insert(target) {
+                    return Err(cargo_lock_blocked(format!(
+                        "Cargo.lock package `{}` repeats dependency target `{selector}`",
+                        cargo_lock_identity(&identities[index])
+                    )));
+                }
+                indegree[target] = indegree[target].checked_add(1).ok_or_else(|| {
+                    cargo_lock_blocked("Cargo.lock dependency indegree overflows usize")
+                })?;
+                dependencies.push(CargoLockDependency {
+                    array_index,
+                    target,
+                });
+            }
+        }
+        nodes.push(CargoLockNode {
+            id: identities[index].clone(),
+            dependencies,
+        });
+    }
+    let roots = indegree
+        .iter()
+        .enumerate()
+        .filter_map(|(index, count)| (*count == 0).then_some(index))
+        .collect();
+    Ok(CargoLockGraph { nodes, roots })
+}
+
+fn cargo_lock_identity(identity: &CargoLockPackageId) -> String {
+    let source = identity.source.as_deref().unwrap_or("");
+    format!(
+        "n{}:{}|v{}:{}|s{}:{}",
+        identity.name.len(),
+        identity.name,
+        identity.version.len(),
+        identity.version,
+        source.len(),
+        source
+    )
+}
+
+fn cargo_lock_graph_evidence(graph: &CargoLockGraph) -> Vec<String> {
+    let mut evidence = graph
+        .nodes
+        .iter()
+        .map(|node| format!("node|{}", cargo_lock_identity(&node.id)))
+        .collect::<Vec<_>>();
+    evidence.extend(graph.nodes.iter().flat_map(|node| {
+        node.dependencies.iter().map(|dependency| {
+            format!(
+                "edge|{}|{}",
+                cargo_lock_identity(&node.id),
+                cargo_lock_identity(&graph.nodes[dependency.target].id)
+            )
+        })
+    }));
+    evidence.sort_by(|left, right| left.as_bytes().cmp(right.as_bytes()));
+    evidence
+}
+
+fn cargo_lock_package_spans(
+    source: &[u8],
+    expected_packages: usize,
+) -> Result<Vec<std::ops::Range<usize>>, ScrapeError> {
+    let starts = line_spans(source)
+        .into_iter()
+        .filter_map(|(line_start, content_end, _)| {
+            (source[line_start..content_end].trim_ascii() == b"[[package]]").then_some(line_start)
+        })
+        .collect::<Vec<_>>();
+    if starts.len() != expected_packages {
+        return Err(cargo_lock_blocked(format!(
+            "Cargo.lock has {expected_packages} parsed packages but {} canonical [[package]] headers; annotated or noncanonical headers are unsupported",
+            starts.len()
+        )));
+    }
+    Ok(starts
+        .iter()
+        .enumerate()
+        .map(|(index, start)| *start..starts.get(index + 1).copied().unwrap_or(source.len()))
+        .collect())
+}
+
+fn cargo_lock_value_span(
+    source: &[u8],
+    package_span: &std::ops::Range<usize>,
+    value: &toml_edit::Value,
+    label: &str,
+) -> Result<ByteSpan, ScrapeError> {
+    let span = value.span().or_else(|| {
+        let rendered = value.to_string();
+        unique_subslice_span(&source[package_span.clone()], rendered.as_bytes())
+            .map(|span| package_span.start + span.start..package_span.start + span.end)
+    });
+    let span = span.filter(|span| {
+        span.start >= package_span.start && span.end <= package_span.end && span.start <= span.end
+    });
+    let span = span.ok_or_else(|| {
+        cargo_lock_blocked(format!(
+            "{label} has no unambiguous source span inside its package table"
+        ))
+    })?;
+    Ok(ByteSpan {
+        start: u64::try_from(span.start)
+            .map_err(|_| cargo_lock_blocked("Cargo.lock span exceeds u64"))?,
+        end: u64::try_from(span.end)
+            .map_err(|_| cargo_lock_blocked("Cargo.lock span exceeds u64"))?,
+        node: label.to_owned(),
+    })
+}
+
+fn cargo_lock_reachable(
+    graph: &CargoLockGraph,
+    root: usize,
+    cut_root_edges: &BTreeSet<usize>,
+) -> BTreeSet<usize> {
+    let mut reachable = BTreeSet::from([root]);
+    let mut pending = vec![root];
+    while let Some(node) = pending.pop() {
+        for dependency in &graph.nodes[node].dependencies {
+            if node == root && cut_root_edges.contains(&dependency.array_index) {
+                continue;
+            }
+            if reachable.insert(dependency.target) {
+                pending.push(dependency.target);
+            }
+        }
+    }
+    reachable
+}
+
+fn prepare_cargo_lock(before: &[u8], package: &str) -> Result<CargoLockOutput, ScrapeError> {
+    let source =
+        std::str::from_utf8(before).map_err(|_| cargo_lock_blocked("Cargo.lock is not UTF-8"))?;
+    let mut document = source
+        .parse::<toml_edit::DocumentMut>()
+        .map_err(|error| cargo_lock_blocked(format!("cannot parse Cargo.lock: {error}")))?;
+    let before_graph = parse_cargo_lock_graph(&document)?;
+    let targets = before_graph
+        .nodes
+        .iter()
+        .enumerate()
+        .filter_map(|(index, node)| (node.id.name == package).then_some(index))
+        .collect::<BTreeSet<_>>();
+    if targets.is_empty() {
+        return Ok(((before.to_vec(), 0, Vec::new(), Vec::new()), None));
+    }
+    let root = match before_graph.roots.as_slice() {
+        [root] => *root,
+        [] => {
+            return Err(cargo_lock_blocked(
+                "Cargo.lock graph has no unique root package",
+            ));
+        }
+        roots => {
+            return Err(cargo_lock_blocked(format!(
+                "Cargo.lock graph has {} root packages; schema-1 reconciliation supports exactly one",
+                roots.len()
+            )));
+        }
+    };
+    if before_graph.nodes[root].id.source.is_some() {
+        return Err(cargo_lock_blocked(
+            "Cargo.lock unique graph root is registry/source-backed rather than a local project package",
+        ));
+    }
+    if targets.contains(&root) {
+        return Err(cargo_lock_blocked(format!(
+            "Cargo.lock root package is the requested removal identity `{package}`"
+        )));
+    }
+    let cut_root_edges = before_graph.nodes[root]
+        .dependencies
+        .iter()
+        .filter_map(|dependency| {
+            targets
+                .contains(&dependency.target)
+                .then_some(dependency.array_index)
+        })
+        .collect::<BTreeSet<_>>();
+    if cut_root_edges.is_empty() {
+        return Err(cargo_lock_blocked(format!(
+            "Cargo.lock package `{package}` is not a direct dependency of the unique root; manifest-to-lock authorization is ambiguous"
+        )));
+    }
+    let reachable = cargo_lock_reachable(&before_graph, root, &cut_root_edges);
+    if targets.iter().any(|target| reachable.contains(target)) {
+        return Err(cargo_lock_blocked(format!(
+            "Cargo.lock package `{package}` remains reachable through a retained dependency"
+        )));
+    }
+    let removed_indices = (0..before_graph.nodes.len())
+        .filter(|index| !reachable.contains(index))
+        .collect::<BTreeSet<_>>();
+    let mut removed = removed_indices
+        .iter()
+        .map(|index| cargo_lock_identity(&before_graph.nodes[*index].id))
+        .collect::<Vec<_>>();
+    removed.sort_by(|left, right| left.as_bytes().cmp(right.as_bytes()));
+
+    let packages = document
+        .get("package")
+        .and_then(toml_edit::Item::as_array_of_tables)
+        .expect("graph parser established [[package]]");
+    let package_spans = cargo_lock_package_spans(before, packages.len())?;
+    let root_dependencies = packages
+        .get(root)
+        .expect("root index came from the parsed graph")
+        .get("dependencies")
+        .and_then(toml_edit::Item::as_array)
+        .expect("cut edges establish a root dependency array");
+    let mut spans = cut_root_edges
+        .iter()
+        .map(|index| {
+            cargo_lock_value_span(
+                before,
+                &package_spans[root],
+                root_dependencies
+                    .get(*index)
+                    .expect("cut dependency index came from the parsed graph"),
+                "Cargo.lock root dependency removal",
+            )
+        })
+        .collect::<Result<Vec<_>, _>>()?;
+    for index in &removed_indices {
+        let span = package_spans
+            .get(*index)
+            .expect("removed index came from the parsed graph");
+        spans.push(ByteSpan {
+            start: u64::try_from(span.start)
+                .map_err(|_| cargo_lock_blocked("Cargo.lock span exceeds u64"))?,
+            end: u64::try_from(span.end)
+                .map_err(|_| cargo_lock_blocked("Cargo.lock span exceeds u64"))?,
+            node: format!(
+                "Cargo.lock package `{}`",
+                cargo_lock_identity(&before_graph.nodes[*index].id)
+            ),
+        });
+    }
+    spans.sort_by_key(|span| (span.start, span.end));
+    for pair in spans.windows(2) {
+        if pair[0].end > pair[1].start {
+            return Err(cargo_lock_blocked(
+                "Cargo.lock graph evidence spans overlap",
+            ));
+        }
+    }
+
+    let packages = document
+        .get_mut("package")
+        .and_then(toml_edit::Item::as_array_of_tables_mut)
+        .expect("graph parser established mutable [[package]]");
+    let root_table = packages
+        .get_mut(root)
+        .expect("root index came from the parsed graph");
+    let dependencies_empty = {
+        let dependencies = root_table
+            .get_mut("dependencies")
+            .and_then(toml_edit::Item::as_array_mut)
+            .expect("cut edges establish a mutable root dependency array");
+        for index in cut_root_edges.iter().rev() {
+            dependencies.remove(*index);
+        }
+        dependencies.is_empty()
+    };
+    if dependencies_empty {
+        root_table.remove("dependencies");
+    }
+    for index in removed_indices.iter().rev() {
+        packages.remove(*index);
+    }
+    let after = document.to_string().into_bytes();
+    let after_document = std::str::from_utf8(&after)
+        .expect("toml_edit emits UTF-8")
+        .parse::<toml_edit::DocumentMut>()
+        .map_err(|error| cargo_lock_blocked(format!("rewritten Cargo.lock is invalid: {error}")))?;
+    let after_graph = parse_cargo_lock_graph(&after_document)?;
+    if after_graph.nodes.iter().any(|node| node.id.name == package) {
+        return Err(cargo_lock_blocked(format!(
+            "rewritten Cargo.lock still contains package `{package}`"
+        )));
+    }
+    let nodes = removed
+        .iter()
+        .map(|identity| format!("cargo-lock:removed:{identity}"))
+        .collect::<Vec<_>>();
+    let matches = cut_root_edges.len() + removed_indices.len();
+    Ok((
+        (after, matches, nodes, spans),
+        Some(NativeLockEvidence {
+            manager: "cargo",
+            before_graph: cargo_lock_graph_evidence(&before_graph),
+            after_graph: cargo_lock_graph_evidence(&after_graph),
+            removed,
+        }),
+    ))
 }
 
 fn cargo_contains_identity(
@@ -3040,12 +3832,43 @@ fn candidate(
         after,
         matches,
         spans,
+        native_lock_evidence: None,
+    }
+}
+
+fn cargo_lock_candidate(
+    path: String,
+    before: Vec<u8>,
+    after: Vec<u8>,
+    matches: usize,
+    spans: Vec<ByteSpan>,
+    evidence: NativeLockEvidence,
+) -> Candidate {
+    Candidate {
+        path,
+        before,
+        after,
+        matches,
+        spans,
+        native_lock_evidence: Some(evidence),
     }
 }
 
 fn prepare_record(id: &str, kind: &str, candidate: Candidate) -> PreparedRewrite {
     let before_sha256 = digest(&candidate.before);
     let after_sha256 = digest(&candidate.after);
+    let native_lock_change = candidate
+        .native_lock_evidence
+        .map(|evidence| NativeLockChange {
+            manager: evidence.manager.to_owned(),
+            path: candidate.path.clone(),
+            before_sha256: before_sha256.clone(),
+            after_sha256: after_sha256.clone(),
+            before_graph: evidence.before_graph,
+            after_graph: evidence.after_graph,
+            removed: evidence.removed,
+            authorizing_rewrite_id: id.to_owned(),
+        });
     PreparedRewrite {
         id: id.to_owned(),
         kind: kind.to_owned(),
@@ -3058,6 +3881,7 @@ fn prepare_record(id: &str, kind: &str, candidate: Candidate) -> PreparedRewrite
         after_sha256,
         matches: candidate.matches as u64,
         reason: format!("schema-1 `{kind}` registered metadata/dependency removal"),
+        native_lock_change,
     }
 }
 
@@ -3315,7 +4139,24 @@ pub fn validate_projected_final(
         .filter(|entry| entry.kind == EntryKind::File)
         .map(|entry| entry.path.clone())
         .collect::<BTreeSet<_>>();
-    let rust_aliases = resolved_cargo_aliases(contract, projected_entries)?;
+    let cargo_topology = CargoTopology::build(
+        projected_entries
+            .iter()
+            .filter(|entry| entry.kind == EntryKind::File && entry.path.ends_with("Cargo.toml"))
+            .map(|entry| {
+                (
+                    entry.path.as_str(),
+                    entry
+                        .bytes
+                        .as_deref()
+                        .expect("file-kind projected entry has bytes"),
+                )
+            }),
+        files
+            .iter()
+            .filter(|path| path.ends_with("Cargo.lock"))
+            .map(String::as_str),
+    )?;
     for assertion in &contract.assertions {
         match assertion {
             Assertion::PathsAbsentV1 { id, patterns } => {
@@ -3371,10 +4212,20 @@ pub fn validate_projected_final(
             } => {
                 for path in selected_paths(&files, patterns, &[])? {
                     let bytes = projected_bytes(&by_path, &path)?;
+                    let empty_aliases = BTreeSet::new();
+                    let rust_aliases = if *language == Language::Rust {
+                        contracted_specmark_aliases_for_source(contract, &cargo_topology, &path)?
+                    } else {
+                        BTreeSet::new()
+                    };
                     if !assert_language_absent(
                         bytes,
                         *language,
-                        &rust_aliases,
+                        if *language == Language::Rust {
+                            &rust_aliases
+                        } else {
+                            &empty_aliases
+                        },
                         path.ends_with(".tsx"),
                     )? {
                         return Err(fail(format!(
@@ -3441,7 +4292,7 @@ pub fn validate_projected_final(
             }
         }
     }
-    validate_registered_rewrite_residue(contract, &by_path, &files, &rust_aliases)
+    validate_registered_rewrite_residue(contract, &by_path, &files, &cargo_topology)
 }
 
 fn projected_bytes<'a>(
@@ -3470,53 +4321,56 @@ fn cargo_document_contains_identity(bytes: &[u8], package: &str) -> Result<bool,
     ))
 }
 
-fn resolved_cargo_aliases(
+fn contracted_specmark_aliases_for_source(
     contract: &Contract,
-    entries: &[ProjectedEntry],
+    topology: &CargoTopology,
+    source: &str,
 ) -> Result<BTreeSet<String>, ScrapeError> {
-    let mut result = BTreeSet::new();
-    let cargo_manifests = entries
+    let owner = topology.source_manifest(source)?;
+    let matching = contract
+        .rewrite
         .iter()
-        .filter(|entry| entry.kind == EntryKind::File && entry.path.ends_with("Cargo.toml"))
-        .map(|entry| {
-            Ok((
-                entry.path.as_str(),
-                entry.bytes.as_deref().ok_or_else(|| {
-                    fail(format!(
-                        "projected Cargo manifest `{}` has no bytes",
-                        entry.path
-                    ))
-                })?,
-            ))
+        .filter_map(|rule| {
+            let RewriteRule::CargoPackageRemoveV1 {
+                manifests,
+                package,
+                aliases,
+                ..
+            } = rule
+            else {
+                return None;
+            };
+            (package == "core-ai-native-specmark").then_some((manifests, package, aliases))
         })
+        .filter_map(
+            |row| match cargo_rule_selects_manifest(row.0, &owner.path) {
+                Ok(true) => Some(Ok(row)),
+                Ok(false) => None,
+                Err(error) => Some(Err(error)),
+            },
+        )
         .collect::<Result<Vec<_>, ScrapeError>>()?;
-    let workspace_aliases = cargo_workspace_alias_map(cargo_manifests.iter().copied())?;
-    for rule in &contract.rewrite {
-        let RewriteRule::CargoPackageRemoveV1 {
-            package, aliases, ..
-        } = rule
-        else {
-            continue;
-        };
-        if package != "core-ai-native-specmark" {
-            continue;
+    let (_, package, aliases) = match matching.as_slice() {
+        [only] => *only,
+        [] => return Ok(BTreeSet::new()),
+        _ => {
+            return Err(fail(format!(
+                "Rust source `{source}` has multiple owning Specmark Cargo removal rules"
+            )));
         }
-        for (path, bytes) in &cargo_manifests {
-            let (_, _, _, observed, _) =
-                prepare_cargo_resolved(bytes, package, aliases, &workspace_aliases).map_err(
-                    |error| fail(format!("Cargo alias resolution in `{path}`: {error}")),
-                )?;
-            result.extend(observed.into_iter().map(|alias| alias.replace('-', "_")));
-        }
-    }
-    Ok(result)
+    };
+    Ok(aliases
+        .iter()
+        .map(|alias| alias.replace('-', "_"))
+        .chain(std::iter::once(package.replace('-', "_")))
+        .collect())
 }
 
 fn validate_registered_rewrite_residue(
     contract: &Contract,
     entries: &BTreeMap<&str, &ProjectedEntry>,
     files: &BTreeSet<String>,
-    rust_aliases: &BTreeSet<String>,
+    cargo_topology: &CargoTopology,
 ) -> Result<(), ScrapeError> {
     for rule in &contract.rewrite {
         match rule {
@@ -3564,7 +4418,9 @@ fn validate_registered_rewrite_residue(
                         continue;
                     }
                     let bytes = projected_bytes(entries, &path)?;
-                    if prepare_rust(bytes, rust_aliases, &forms)?.1 != 0 {
+                    let rust_aliases =
+                        contracted_specmark_aliases_for_source(contract, cargo_topology, &path)?;
+                    if prepare_rust(bytes, &rust_aliases, &forms)?.1 != 0 {
                         return Err(fail(format!(
                             "rewrite `{id}` leaves registered Rust metadata in `{path}`"
                         )));
@@ -3577,16 +4433,18 @@ fn validate_registered_rewrite_residue(
                 package,
                 ..
             } => {
-                for path in selected_paths(files, manifests, &[])? {
-                    if cargo_document_contains_identity(projected_bytes(entries, &path)?, package)?
-                    {
+                let selected_manifests = selected_paths(files, manifests, &[])?;
+                for path in &selected_manifests {
+                    if cargo_document_contains_identity(projected_bytes(entries, path)?, package)? {
                         return Err(fail(format!(
                             "rewrite `{id}` leaves Cargo package `{package}` in `{path}`"
                         )));
                     }
                 }
-                for lockfile in files.iter().filter(|path| path.ends_with("Cargo.lock")) {
-                    match prepare_cargo_lock(projected_bytes(entries, lockfile)?, package) {
+                for lockfile in
+                    cargo_topology.owned_locks(selected_manifests.iter().map(String::as_str))?
+                {
+                    match prepare_cargo_lock(projected_bytes(entries, &lockfile)?, package) {
                         Ok(_) => {}
                         Err(ScrapeError::Blocked(message)) => {
                             return Err(fail(format!(
@@ -3796,12 +4654,6 @@ pub fn prepare_rewrites<I: InventoryView + ?Sized>(
         }
         current.insert(entry.path.clone(), bytes);
     }
-    let workspace_aliases =
-        cargo_workspace_alias_map(current.iter().filter_map(|(path, bytes)| {
-            path.ends_with("Cargo.toml")
-                .then_some((path.as_str(), bytes.as_slice()))
-        }))?;
-
     let mut rules = contract.rewrite.iter().collect::<Vec<_>>();
     rules.sort_by_key(|rule| {
         let priority = match rule {
@@ -3817,25 +4669,6 @@ pub fn prepare_rewrites<I: InventoryView + ?Sized>(
         };
         (priority, rule.id())
     });
-
-    let mut specmark_aliases = BTreeSet::new();
-    for rule in &contract.rewrite {
-        let RewriteRule::CargoPackageRemoveV1 {
-            package, aliases, ..
-        } = rule
-        else {
-            continue;
-        };
-        if package != "core-ai-native-specmark" {
-            continue;
-        }
-        for manifest in files.iter().filter(|path| path.ends_with("Cargo.toml")) {
-            let before = virtual_bytes(project, manifest, &inventory_by_path, &current)?;
-            let (_, _, _, observed, _) =
-                prepare_cargo_resolved(&before, package, aliases, &workspace_aliases)?;
-            specmark_aliases.extend(observed.into_iter().map(|alias| alias.replace('-', "_")));
-        }
-    }
 
     for rule in rules {
         let mut candidates = Vec::new();
@@ -3887,11 +4720,7 @@ pub fn prepare_rewrites<I: InventoryView + ?Sized>(
                 forms,
                 matches,
             } => {
-                if specmark_aliases.is_empty() {
-                    return Err(fail(format!(
-                        "rewrite `{id}` cannot prove a Cargo alias for core-ai-native-specmark"
-                    )));
-                }
+                let topology = cargo_topology_from_current(&current, &files)?;
                 let forms = forms
                     .iter()
                     .map(|form| {
@@ -3906,14 +4735,31 @@ pub fn prepare_rewrites<I: InventoryView + ?Sized>(
                     .collect::<BTreeSet<_>>();
                 let paths = selected_paths(&files, patterns, exclude)?;
                 let mut total = 0;
+                let mut authority_blocked = false;
                 for path in paths {
+                    let specmark_aliases =
+                        match observed_specmark_aliases_for_source(contract, &topology, &path) {
+                            Ok(aliases) => aliases,
+                            Err(ScrapeError::Blocked(message)) => {
+                                blockers.push(
+                                    Blocker::new("rust-cargo-ownership-unresolved", message)
+                                        .at(&path)
+                                        .rule(id),
+                                );
+                                authority_blocked = true;
+                                continue;
+                            }
+                            Err(error) => return Err(error),
+                        };
                     let before = virtual_bytes(project, &path, &inventory_by_path, &current)?;
                     let (after, count, nodes, spans) =
                         prepare_rust(&before, &specmark_aliases, &forms)?;
                     total += count;
                     candidates.push(candidate(path, before, after, count, nodes, spans));
                 }
-                check_set_cardinality(id, *matches, total)?;
+                if !authority_blocked {
+                    check_set_cardinality(id, *matches, total)?;
+                }
             }
             RewriteRule::CargoPackageRemoveV1 {
                 id,
@@ -3922,30 +4768,63 @@ pub fn prepare_rewrites<I: InventoryView + ?Sized>(
                 aliases,
                 matches,
             } => {
+                let topology = cargo_topology_from_current(&current, &files)?;
                 let paths = selected_paths(&files, manifests, &[])?;
+                let mut owned_locks = BTreeSet::new();
                 let mut total = 0;
-                for path in paths {
-                    let before = virtual_bytes(project, &path, &inventory_by_path, &current)?;
+                let mut authority_blocked = false;
+                for path in &paths {
+                    let before = virtual_bytes(project, path, &inventory_by_path, &current)?;
+                    let workspace_aliases = match topology.workspace_aliases_for(path) {
+                        Ok(aliases) => aliases,
+                        Err(ScrapeError::Blocked(message)) => {
+                            blockers.push(
+                                Blocker::new("cargo-ownership-ambiguous", message)
+                                    .at(path)
+                                    .rule(id),
+                            );
+                            authority_blocked = true;
+                            continue;
+                        }
+                        Err(error) => return Err(error),
+                    };
+                    if let Some(lock) = topology.owned_lock_for(path)? {
+                        owned_locks.insert(lock);
+                    }
                     let (after, count, nodes, _, spans) =
                         prepare_cargo_resolved(&before, package, aliases, &workspace_aliases)?;
                     total += count;
-                    candidates.push(candidate(path, before.clone(), after, count, nodes, spans));
+                    candidates.push(candidate(
+                        path.clone(),
+                        before.clone(),
+                        after,
+                        count,
+                        nodes,
+                        spans,
+                    ));
                 }
-                check_set_cardinality(id, *matches, total)?;
-                for lockfile in files.iter().filter(|path| path.ends_with("Cargo.lock")) {
-                    let before = virtual_bytes(project, lockfile, &inventory_by_path, &current)?;
+                if !authority_blocked {
+                    check_set_cardinality(id, *matches, total)?;
+                }
+                for lockfile in owned_locks {
+                    let before = virtual_bytes(project, &lockfile, &inventory_by_path, &current)?;
                     match prepare_cargo_lock(&before, package) {
-                        Ok((after, lock_count, nodes, spans)) => candidates.push(candidate(
-                            lockfile.clone(),
-                            before,
-                            after,
-                            lock_count,
-                            nodes,
-                            spans,
-                        )),
+                        Ok(((after, lock_count, _nodes, spans), Some(evidence))) => {
+                            candidates.push(cargo_lock_candidate(
+                                lockfile.clone(),
+                                before,
+                                after,
+                                lock_count,
+                                spans,
+                                evidence,
+                            ));
+                        }
+                        Ok(((after, lock_count, nodes, spans), None)) => candidates.push(
+                            candidate(lockfile.clone(), before, after, lock_count, nodes, spans),
+                        ),
                         Err(ScrapeError::Blocked(message)) => blockers.push(
                             Blocker::new("native-lock-reconciliation-required", message)
-                                .at(lockfile)
+                                .at(&lockfile)
                                 .rule(id),
                         ),
                         Err(error) => return Err(error),

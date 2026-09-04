@@ -1,5 +1,7 @@
 //! `vibe scrape` argument grammar (PROP-056).
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-056#root");
+
 use std::path::PathBuf;
 
 use clap::{Args, Subcommand};
@@ -36,11 +38,7 @@ pub struct ScrapeArgs {
     pub path: Option<PathBuf>,
 
     /// Explicitly authorize the destructive in-place transaction.
-    #[arg(
-        long,
-        requires = "in_place",
-        conflicts_with_all = ["plan", "recover"]
-    )]
+    #[arg(long, conflicts_with_all = ["plan", "recover"])]
     pub assume_yes: bool,
 
     #[command(subcommand)]

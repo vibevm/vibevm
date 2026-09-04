@@ -147,6 +147,15 @@ pub struct AssertionTextLiteralAbsentV1 {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum AssetIdentityVersionKind {
+    #[serde(rename = "content")]
+    Content,
+
+    #[serde(rename = "probe")]
+    Probe,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct AssetIdentity {
     pub bytes: String,
@@ -167,6 +176,8 @@ pub struct AssetIdentity {
     pub source: AssetSource,
 
     pub version: String,
+
+    pub version_kind: AssetIdentityVersionKind,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -191,6 +202,12 @@ pub enum AssetRole {
 
     #[serde(rename = "python")]
     Python,
+
+    #[serde(rename = "rustc")]
+    Rustc,
+
+    #[serde(rename = "rustdoc")]
+    Rustdoc,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -1223,6 +1240,15 @@ pub enum RustForm {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum SandboxRequirementTerminationMode {
+    #[serde(rename = "forced-tree")]
+    ForcedTree,
+
+    #[serde(rename = "graceful-then-forced")]
+    GracefulThenForced,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct SandboxRequirement {
     pub atomic_result: bool,
@@ -1244,6 +1270,8 @@ pub struct SandboxRequirement {
     pub read_policy_enforcement: bool,
 
     pub spawn_prevention: bool,
+
+    pub termination_mode: SandboxRequirementTerminationMode,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

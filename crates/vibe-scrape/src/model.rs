@@ -1,5 +1,7 @@
 //! Domain model shared by planning and typed rewrite adapters.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-056#IMPL-A");
+
 use std::path::PathBuf;
 
 use serde::{Deserialize, Serialize};
@@ -70,6 +72,22 @@ pub struct PreparedRewrite {
     pub after_sha256: String,
     pub matches: u64,
     pub reason: String,
+    /// Manager-native dependency-graph proof carried by a lockfile rewrite.
+    /// It is projected separately from the rewrite tagged union on the wire.
+    #[serde(skip)]
+    pub native_lock_change: Option<NativeLockChange>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+pub struct NativeLockChange {
+    pub manager: String,
+    pub path: String,
+    pub before_sha256: String,
+    pub after_sha256: String,
+    pub before_graph: Vec<String>,
+    pub after_graph: Vec<String>,
+    pub removed: Vec<String>,
+    pub authorizing_rewrite_id: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
@@ -117,6 +135,7 @@ pub struct ScrapePlan {
     pub items: Vec<PlanItem>,
     pub rewrites: Vec<PreparedRewrite>,
     pub relocations: Vec<PlannedRelocation>,
+    pub native_lock_changes: Vec<NativeLockChange>,
     pub assertions: Vec<String>,
     pub healthchecks: Vec<String>,
     pub contract_boundary: ContractBoundary,
@@ -230,6 +249,7 @@ pub struct PreparedScrape {
     pub rewrites: Vec<PreparedRewrite>,
     pub health: crate::health::PreparedHealth,
     pub plan: ScrapePlan,
+    pub mode: ScrapeMode,
 }
 
 #[derive(Debug, thiserror::Error)]
@@ -307,25 +327,34 @@ impl ScrapePlan {
                 })
             })
             .collect::<Result<Vec<_>, ScrapeError>>()?;
-        let selected_lock_rewrite = self.rewrites.iter().any(|rewrite| {
-            rewrite.path.ends_with("Cargo.lock")
-                || rewrite.path.ends_with("package-lock.json")
-                || rewrite.path.ends_with("pnpm-lock.yaml")
-                || rewrite.path.ends_with("yarn.lock")
-                || rewrite.path.ends_with("go.sum")
-        });
-        let native_lock_changes = if selected_lock_rewrite
-            && !self
-                .blockers
-                .iter()
-                .any(|blocker| blocker.code == "native-lock-evidence-required")
-        {
-            return Err(ScrapeError::blocked(
-                "native lock rewrite exists without prepared dependency-graph evidence",
-            ));
-        } else {
-            Vec::new()
-        };
+        let native_lock_changes = self
+            .native_lock_changes
+            .iter()
+            .map(|change| {
+                let manager = match change.manager.as_str() {
+                    "cargo" => w::LockManager::Cargo,
+                    "npm" => w::LockManager::Npm,
+                    "pnpm" => w::LockManager::Pnpm,
+                    "yarn" => w::LockManager::Yarn,
+                    "go" => w::LockManager::Go,
+                    other => {
+                        return Err(ScrapeError::blocked(format!(
+                            "unknown prepared native lock manager `{other}`"
+                        )));
+                    }
+                };
+                Ok(w::NativeLockChange {
+                    after_graph: change.after_graph.clone(),
+                    after_sha256: change.after_sha256.clone(),
+                    authorizing_rewrite_id: change.authorizing_rewrite_id.clone(),
+                    before_graph: change.before_graph.clone(),
+                    before_sha256: change.before_sha256.clone(),
+                    manager,
+                    path: change.path.clone(),
+                    removed: change.removed.clone(),
+                })
+            })
+            .collect::<Result<Vec<_>, ScrapeError>>()?;
         Ok(w::Plan {
             assertions,
             blockers: self

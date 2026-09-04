@@ -1,5 +1,7 @@
 //! Classification lattice and canonical plan construction.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-056#IMPL-A");
+
 use std::collections::{BTreeMap, BTreeSet};
 
 use serde::Serialize;
@@ -166,11 +168,17 @@ pub fn build(
         }
         blockers.push(projected);
     }
-    if rewrites.iter().any(|rewrite| is_native_lock(&rewrite.path)) {
-        blockers.push(Blocker::new(
-            "native-lock-evidence-required",
-            "a selected rewrite changes a native lockfile but graph evidence is not prepared yet",
-        ));
+    for rewrite in rewrites {
+        if is_native_lock(&rewrite.path) && rewrite.native_lock_change.is_none() {
+            blockers.push(
+                Blocker::new(
+                    "native-lock-evidence-required",
+                    "a selected rewrite changes a native lockfile but carries no exact dependency-graph evidence",
+                )
+                .at(&rewrite.path)
+                .rule(&rewrite.id),
+            );
+        }
     }
 
     let projected = build_projected_final(project, inventory, &items, rewrites, contract)?;
@@ -232,6 +240,37 @@ pub fn build(
                 .collect(),
         })
         .collect();
+    let mut native_lock_changes = rewrites
+        .iter()
+        .filter_map(|rewrite| rewrite.native_lock_change.clone())
+        .collect::<Vec<_>>();
+    native_lock_changes.sort_by(|left, right| {
+        (&left.manager, &left.path, &left.authorizing_rewrite_id).cmp(&(
+            &right.manager,
+            &right.path,
+            &right.authorizing_rewrite_id,
+        ))
+    });
+    for pair in native_lock_changes.windows(2) {
+        if pair[0].manager == pair[1].manager && pair[0].path == pair[1].path {
+            blockers.push(
+                Blocker::new(
+                    "native-lock-authorization-ambiguous",
+                    "one native lockfile is changed by more than one authorizing rewrite",
+                )
+                .at(&pair[0].path),
+            );
+        }
+    }
+    blockers.sort_by(|left, right| {
+        (&left.code, &left.path, &left.rule_id, &left.message).cmp(&(
+            &right.code,
+            &right.path,
+            &right.rule_id,
+            &right.message,
+        ))
+    });
+    blockers.dedup();
     let mut plan = ScrapePlan {
         schema: 1,
         command: "scrape".to_owned(),
@@ -242,6 +281,7 @@ pub fn build(
         items,
         rewrites: rewrites.to_vec(),
         relocations,
+        native_lock_changes,
         assertions: contract
             .assertions
             .iter()
@@ -872,6 +912,7 @@ fn plan_identity(
         items: &'a [PlanItem],
         rewrites: &'a [PreparedRewrite],
         relocations: &'a [PlannedRelocation],
+        native_lock_changes: &'a [crate::model::NativeLockChange],
         assertions: &'a [String],
         healthchecks: &'a [String],
         contract_boundary: &'a ContractBoundary,
@@ -891,6 +932,7 @@ fn plan_identity(
         items: &plan.items,
         rewrites: &plan.rewrites,
         relocations: &plan.relocations,
+        native_lock_changes: &plan.native_lock_changes,
         assertions: &plan.assertions,
         healthchecks: &plan.healthchecks,
         contract_boundary: &plan.contract_boundary,

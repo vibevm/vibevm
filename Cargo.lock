@@ -4545,6 +4545,7 @@ dependencies = [
  "cap-fs-ext",
  "cap-std",
  "command-group",
+ "core-ai-native-specmark",
  "proc-macro2",
  "quick-xml",
  "quote",

@@ -1,5 +1,7 @@
 //! Health-operand validation against the exact projected after tree.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-056#IMPL-C");
+
 use std::collections::BTreeMap;
 
 use crate::contract::Healthcheck;

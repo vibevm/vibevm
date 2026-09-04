@@ -59,6 +59,8 @@ pub struct Report {
     #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
     pub after_tree_digest: Option<String>,
 
+    pub apply: Vec<RecoveryStep>,
+
     pub assurance: ReportAssurance,
 
     pub before_tree_digest: String,
@@ -70,6 +72,8 @@ pub struct Report {
     pub deleted_artifacts: Vec<DeletedArtifact>,
 
     pub dependency_graphs: Vec<DependencyGraphResult>,
+
+    pub events: Vec<String>,
 
     pub health: Vec<HealthResult>,
 
@@ -203,6 +207,24 @@ pub struct Finding {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum HealthResultStep {
+    #[serde(rename = "build")]
+    Build,
+
+    #[serde(rename = "install")]
+    Install,
+
+    #[serde(rename = "none")]
+    None,
+
+    #[serde(rename = "test")]
+    Test,
+
+    #[serde(rename = "verify")]
+    Verify,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct HealthResult {
     pub argv: Vec<String>,
@@ -218,6 +240,8 @@ pub struct HealthResult {
     pub stderr: StreamWitness,
 
     pub stdout: StreamWitness,
+
+    pub step: HealthResultStep,
 
     pub terminal: TerminalState,
 
@@ -253,7 +277,7 @@ pub enum RecoveryStepResult {
 pub struct RecoveryStep {
     pub action: String,
 
-    pub path: String,
+    pub operation_id: String,
 
     pub result: RecoveryStepResult,
 
@@ -356,6 +380,8 @@ pub struct StreamWitness {
     pub bytes: String,
 
     pub head: String,
+
+    pub redacted: bool,
 
     pub sha256: String,
 

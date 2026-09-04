@@ -1,5 +1,7 @@
 //! Pure argv construction for built-in health presets.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-056#IMPL-C");
+
 mod cargo;
 mod maven;
 mod npm;

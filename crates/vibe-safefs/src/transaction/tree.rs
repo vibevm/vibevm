@@ -1,5 +1,7 @@
 //! Complete no-follow manifests and identity-bound owned-tree cleanup.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-056#SEC-NO-FOLLOW");
+
 use anyhow::{Result, bail};
 use sha2::{Digest as _, Sha256};
 
@@ -83,6 +85,81 @@ pub struct TreeEntry {
 pub struct TreeManifest {
     pub digest: String,
     pub entries: Vec<TreeEntry>,
+}
+
+impl TreeManifest {
+    /// Reconstruct journaled manifest evidence only when its complete shape,
+    /// opaque identity tokens, canonical order and aggregate digest agree.
+    pub fn from_persisted(digest: String, entries: Vec<TreeEntry>) -> Result<Self> {
+        let manifest = Self { digest, entries };
+        manifest.validate_persisted_mode(None)?;
+        Ok(manifest)
+    }
+
+    /// Reconstruct a journaled manifest containing exactly one deterministic
+    /// transaction stage selected by its full relative path. Generic persisted
+    /// manifests continue to reject the reserved stage namespace.
+    pub fn from_persisted_with_transaction_stage(
+        digest: String,
+        entries: Vec<TreeEntry>,
+        authorized_stage_path: &str,
+    ) -> Result<Self> {
+        validate_authorized_transaction_stage_path(authorized_stage_path)?;
+        let manifest = Self { digest, entries };
+        manifest.validate_persisted_mode(Some(authorized_stage_path))?;
+        Ok(manifest)
+    }
+
+    pub fn validate_persisted(&self) -> Result<()> {
+        self.validate_persisted_mode(None)
+    }
+
+    fn validate_persisted_mode(&self, authorized_stage_path: Option<&str>) -> Result<()> {
+        validate_identity_token(&self.digest)?;
+        let mut previous: Option<&str> = None;
+        let mut authorized_stage_found = false;
+        for entry in &self.entries {
+            if authorized_stage_path == Some(entry.path.as_str()) {
+                if authorized_stage_found {
+                    bail!("persisted manifest repeats its journal-authorized transaction stage");
+                }
+                validate_authorized_transaction_stage_path(&entry.path)?;
+                authorized_stage_found = true;
+            } else {
+                crate::split_relative(&entry.path)?;
+            }
+            if previous.is_some_and(|prior| prior.as_bytes() >= entry.path.as_bytes()) {
+                bail!("persisted manifest paths are not unique and byte-sorted");
+            }
+            previous = Some(&entry.path);
+            validate_identity_token(entry.state.identity.as_str())?;
+            if entry.state.unix_mode.is_some_and(|mode| mode > 0o7777) {
+                bail!("persisted manifest contains an invalid Unix mode");
+            }
+            match entry.state.kind {
+                EntryStateKind::File => {
+                    let Some(digest) = entry.state.sha256.as_deref() else {
+                        bail!("persisted manifest file lacks SHA-256");
+                    };
+                    if entry.state.bytes.is_none() || !is_raw_sha256(digest) {
+                        bail!("persisted manifest file has invalid size or SHA-256");
+                    }
+                }
+                EntryStateKind::Directory => {
+                    if entry.state.sha256.is_some() || entry.state.bytes.is_some() {
+                        bail!("persisted manifest directory carries file evidence");
+                    }
+                }
+            }
+        }
+        if self.digest != manifest_digest(&self.entries) {
+            bail!("persisted manifest aggregate digest does not match its entries");
+        }
+        if authorized_stage_path.is_some() && !authorized_stage_found {
+            bail!("persisted manifest lacks its journal-authorized transaction stage");
+        }
+        Ok(())
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -213,6 +290,29 @@ impl std::fmt::Display for OwnedDirectoryCreateError {
 
 impl std::error::Error for OwnedDirectoryCreateError {}
 
+#[derive(Debug)]
+pub enum ReopenOwnedDirectoryError {
+    InvalidPersisted(anyhow::Error),
+    Third { detail: String },
+    Io(anyhow::Error),
+    Unsupported,
+}
+
+impl std::fmt::Display for ReopenOwnedDirectoryError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::InvalidPersisted(error) => {
+                write!(f, "invalid persisted ownership evidence: {error:#}")
+            }
+            Self::Third { detail } => write!(f, "owned directory is a third state: {detail}"),
+            Self::Io(error) => write!(f, "reopening owned directory failed: {error:#}"),
+            Self::Unsupported => f.write_str("owned-directory recovery rebind is Windows-only"),
+        }
+    }
+}
+
+impl std::error::Error for ReopenOwnedDirectoryError {}
+
 /// A just-created sibling directory whose handle and namespace identity have
 /// both been pinned.
 #[derive(Debug)]
@@ -222,6 +322,33 @@ pub struct OwnedDirectory {
     directory: Pinned,
     identity: OwnedDirectoryIdentity,
     parent_durability: DirectoryDurability,
+}
+
+#[derive(Debug)]
+pub struct ReopenedOwnedDirectory {
+    owned: OwnedDirectory,
+    pub entry_lease: ExistingTreeEntryLease,
+}
+
+impl ReopenedOwnedDirectory {
+    #[must_use]
+    pub fn identity(&self) -> &OwnedDirectoryIdentity {
+        self.owned.identity()
+    }
+
+    #[must_use]
+    pub fn manifest(&self) -> &TreeManifest {
+        self.entry_lease.manifest()
+    }
+
+    pub fn directory(&self) -> Result<Pinned> {
+        self.owned.directory()
+    }
+
+    #[must_use]
+    pub fn into_parts(self) -> (OwnedDirectory, ExistingTreeEntryLease) {
+        (self.owned, self.entry_lease)
+    }
 }
 
 #[derive(Debug)]
@@ -379,7 +506,46 @@ impl OwnedDirectory {
     /// membership is deliberately not claimed immutable: Windows directory
     /// handles cannot prevent creation of a new child.
     pub fn lease_existing_entries(&self) -> Result<ExistingTreeEntryLease> {
-        let first = manifest(&self.directory)?;
+        self.lease_existing_entries_mode(false)
+    }
+
+    /// Hold a complete owned-tree manifest that contains exactly the one
+    /// deterministic transaction stage authorized by the caller's durable
+    /// journal.  No other reserved stage spelling is admitted.
+    pub fn lease_existing_entries_with_transaction_stage(
+        &self,
+        authorized_stage_path: &str,
+    ) -> Result<ExistingTreeEntryLease> {
+        validate_authorized_transaction_stage_path(authorized_stage_path)?;
+        let lease = self.lease_existing_entries_mode(true)?;
+        let mut found = false;
+        for entry in &lease.manifest.entries {
+            let name = entry
+                .path
+                .rsplit_once('/')
+                .map_or(entry.path.as_str(), |(_, name)| name);
+            if is_transaction_stage_name(name) {
+                if found || entry.path != authorized_stage_path {
+                    bail!(
+                        "owned tree contains a transaction stage other than the journal-authorized `{authorized_stage_path}`"
+                    );
+                }
+                found = true;
+            }
+        }
+        if !found {
+            bail!(
+                "journal-authorized transaction stage `{authorized_stage_path}` is absent from the owned tree"
+            );
+        }
+        Ok(lease)
+    }
+
+    fn lease_existing_entries_mode(
+        &self,
+        allow_transaction_stage: bool,
+    ) -> Result<ExistingTreeEntryLease> {
+        let first = manifest_mode(&self.directory, allow_transaction_stage)?;
         let root_state = directory_state(&self.directory)?;
         let mut handles = vec![super::platform::lease_entry(
             &self.parent,
@@ -392,7 +558,7 @@ impl OwnedDirectory {
             handles.push(super::platform::lease_entry(&parent, &name, &entry.state)?);
         }
         lease_hook::during(&self.directory);
-        let second = manifest(&self.directory)?;
+        let second = manifest_mode(&self.directory, allow_transaction_stage)?;
         if first != second {
             bail!("tree changed while acquiring its manifest lease");
         }
@@ -440,13 +606,13 @@ impl OwnedDirectory {
         drop(source_lease);
         drop(self.directory);
         publish_hook::before_move(&source_parent, &source_name);
-        match source_parent.rename_child_noreplace_to(
+        let rename_durability = match source_parent.rename_child_noreplace_to_durable(
             destination,
             &source_name,
             destination_name,
             &root_state,
         ) {
-            Ok(()) => {}
+            Ok(durability) => durability,
             Err(crate::RenameError::Occupied { path }) => {
                 return Err(OwnedTreePublishError::Occupied { path });
             }
@@ -466,7 +632,7 @@ impl OwnedDirectory {
                     detail: error.to_string(),
                 });
             }
-        }
+        };
         publish_hook::after_move(destination, destination_name);
         let published_dir = match destination.open_child(destination_name) {
             Ok(directory) => directory,
@@ -510,7 +676,7 @@ impl OwnedDirectory {
             name: destination_name.to_owned(),
             directory: published_dir,
             identity: destination_identity.clone(),
-            parent_durability: sync_directory(destination),
+            parent_durability: rename_durability,
         };
         let lease = published.lease_existing_entries().map_err(|error| {
             OwnedTreePublishError::PossiblyMoved {
@@ -539,13 +705,122 @@ impl OwnedDirectory {
                 }
             })?,
             destination_name: destination_name.to_owned(),
-            source_parent: sync_directory(&source_parent),
-            destination_parent: sync_directory(destination),
+            source_parent: rename_durability,
+            destination_parent: rename_durability,
         })
     }
 }
 
 impl Pinned {
+    /// Rebind an owned root after restart using only the identity that was
+    /// durable before the interrupted mutation. The returned lease contains a
+    /// fresh complete manifest; callers must accept it only as one of the
+    /// finite before/after states authorized by their durable intent.
+    pub fn reopen_owned_child_by_identity(
+        &self,
+        name: &str,
+        ownership_token: &str,
+        persisted_identity: &OwnedDirectoryIdentity,
+    ) -> std::result::Result<ReopenedOwnedDirectory, ReopenOwnedDirectoryError> {
+        #[cfg(not(windows))]
+        {
+            let _ = (name, ownership_token, persisted_identity);
+            return Err(ReopenOwnedDirectoryError::Unsupported);
+        }
+        #[cfg(windows)]
+        {
+            crate::ensure_safe_component(name)
+                .map_err(ReopenOwnedDirectoryError::InvalidPersisted)?;
+            if ownership_token.is_empty() {
+                return Err(ReopenOwnedDirectoryError::InvalidPersisted(
+                    anyhow::anyhow!("ownership token is empty"),
+                ));
+            }
+            validate_identity_token(persisted_identity.as_str())
+                .map_err(ReopenOwnedDirectoryError::InvalidPersisted)?;
+            let metadata = match self.dir.symlink_metadata(name) {
+                Ok(metadata) => metadata,
+                Err(error) if error.kind() == std::io::ErrorKind::NotFound => {
+                    return Err(ReopenOwnedDirectoryError::Third {
+                        detail: "journaled owned directory is absent".to_owned(),
+                    });
+                }
+                Err(error) => {
+                    return Err(ReopenOwnedDirectoryError::Io(anyhow::Error::new(error)));
+                }
+            };
+            if metadata.file_type().is_symlink() || !metadata.is_dir() {
+                return Err(ReopenOwnedDirectoryError::Third {
+                    detail: "journaled owned name is now a link, file, or special entry".to_owned(),
+                });
+            }
+            let parent = self
+                .shallow_clone()
+                .map_err(ReopenOwnedDirectoryError::Io)?;
+            let directory = self
+                .open_child(name)
+                .map_err(ReopenOwnedDirectoryError::Io)?;
+            let actual_identity = owned_identity(
+                ownership_token,
+                directory
+                    .identity()
+                    .map_err(ReopenOwnedDirectoryError::Io)?,
+            );
+            if actual_identity != *persisted_identity {
+                return Err(ReopenOwnedDirectoryError::Third {
+                    detail: "current root identity differs from the journaled owned root"
+                        .to_owned(),
+                });
+            }
+            let owned = OwnedDirectory {
+                parent,
+                name: name.to_owned(),
+                directory,
+                identity: actual_identity,
+                parent_durability: sync_directory(self),
+            };
+            let entry_lease = owned.lease_existing_entries_mode(true).map_err(|error| {
+                if error
+                    .chain()
+                    .any(|cause| cause.downcast_ref::<std::io::Error>().is_some())
+                {
+                    ReopenOwnedDirectoryError::Io(error)
+                } else {
+                    ReopenOwnedDirectoryError::Third {
+                        detail: format!(
+                            "current owned tree cannot be completely sealed: {error:#}"
+                        ),
+                    }
+                }
+            })?;
+            Ok(ReopenedOwnedDirectory { owned, entry_lease })
+        }
+    }
+
+    /// Rebind a journaled candidate/quarantine after process restart without
+    /// adopting whatever merely occupies its old spelling. The current root
+    /// identity and complete descendant observation must equal the persisted
+    /// opaque evidence before handles are returned.
+    pub fn reopen_owned_child(
+        &self,
+        name: &str,
+        ownership_token: &str,
+        persisted_identity: &OwnedDirectoryIdentity,
+        persisted_manifest: &TreeManifest,
+    ) -> std::result::Result<ReopenedOwnedDirectory, ReopenOwnedDirectoryError> {
+        persisted_manifest
+            .validate_persisted()
+            .map_err(ReopenOwnedDirectoryError::InvalidPersisted)?;
+        let reopened =
+            self.reopen_owned_child_by_identity(name, ownership_token, persisted_identity)?;
+        if reopened.manifest() != persisted_manifest {
+            return Err(ReopenOwnedDirectoryError::Third {
+                detail: manifest_difference(persisted_manifest, reopened.manifest()),
+            });
+        }
+        Ok(reopened)
+    }
+
     /// Exclusively create one direct child and seal its identity with the
     /// caller's already-durable ownership token.
     pub fn create_owned_child_exclusive(
@@ -563,21 +838,22 @@ impl Pinned {
             .shallow_clone()
             .map_err(OwnedDirectoryCreateError::NotCreated)?;
         let path = self.join(name);
-        let dir = super::platform::create_directory(self, name).map_err(|error| match error {
-            super::platform::NativeCreateError::NotCreated(error) => {
-                OwnedDirectoryCreateError::NotCreated(anyhow::Error::new(error))
-            }
-            super::platform::NativeCreateError::CreatedButUnsealed(error) => {
-                OwnedDirectoryCreateError::CreatedButUnsealed {
-                    path: path.clone(),
-                    source: anyhow::Error::new(error),
+        let (dir, parent_durability) =
+            super::platform::create_directory(self, name).map_err(|error| match error {
+                super::platform::NativeCreateError::NotCreated(error) => {
+                    OwnedDirectoryCreateError::NotCreated(anyhow::Error::new(error))
                 }
-            }
-            #[cfg(not(windows))]
-            super::platform::NativeCreateError::Unsupported => {
-                OwnedDirectoryCreateError::Unsupported
-            }
-        })?;
+                super::platform::NativeCreateError::CreatedButUnsealed(error) => {
+                    OwnedDirectoryCreateError::CreatedButUnsealed {
+                        path: path.clone(),
+                        source: anyhow::Error::new(error),
+                    }
+                }
+                #[cfg(not(windows))]
+                super::platform::NativeCreateError::Unsupported => {
+                    OwnedDirectoryCreateError::Unsupported
+                }
+            })?;
         let directory = Pinned { dir, path };
         let raw = directory.identity().map_err(|source| {
             OwnedDirectoryCreateError::CreatedButUnsealed {
@@ -591,7 +867,7 @@ impl Pinned {
             name: name.to_owned(),
             directory,
             identity,
-            parent_durability: sync_directory(self),
+            parent_durability,
         })
     }
 
@@ -636,7 +912,10 @@ impl Pinned {
                 detail: "owned root name now denotes a different directory".to_owned(),
             });
         }
-        let actual = match manifest(&directory) {
+        let actual = match manifest_mode(
+            &directory,
+            manifest_has_transaction_stage(expected_manifest),
+        ) {
             Ok(actual) => actual,
             Err(error) => {
                 return Ok(OwnedTreeObservation::Third {
@@ -713,7 +992,8 @@ impl Pinned {
         if owned_identity(ownership_token, root_raw) != *expected_identity {
             return Err(third_error("owned root identity changed".to_owned()));
         }
-        let actual = manifest(&root).map_err(classify_manifest_cleanup_error)?;
+        let actual = manifest_mode(&root, manifest_has_transaction_stage(expected_manifest))
+            .map_err(classify_manifest_cleanup_error)?;
         let completed = progress
             .completed
             .iter()
@@ -836,7 +1116,8 @@ impl Pinned {
         {
             return Err(third_error("owned root identity changed".to_owned()));
         }
-        let actual = manifest(&root).map_err(classify_manifest_cleanup_error)?;
+        let actual = manifest_mode(&root, manifest_has_transaction_stage(expected_manifest))
+            .map_err(classify_manifest_cleanup_error)?;
         let completed = progress
             .completed
             .iter()
@@ -868,34 +1149,48 @@ impl Pinned {
 
         let parent = if intent.root {
             drop(root);
-            if !recovered {
-                remove_native(self, name, &intent.expected)?;
+            if recovered {
+                super::DirectoryDurability::JournalRecoverable
+            } else {
+                remove_native(self, name, &intent.expected)?
             }
-            self
         } else {
             let view = project_view(&root).map_err(OwnedTreeCleanupError::Io)?;
             let (parent, child) = holder(&view, &intent.path).map_err(OwnedTreeCleanupError::Io)?;
-            if !recovered {
-                remove_native(&parent, &child, &intent.expected)?;
-            }
+            let durability = if recovered {
+                super::DirectoryDurability::JournalRecoverable
+            } else {
+                remove_native(&parent, &child, &intent.expected)?
+            };
             return Ok(CleanupCompletion {
                 progress_key: intent.progress_key.clone(),
                 path: intent.path.clone(),
-                parent: sync_directory(&parent),
+                parent: durability,
                 recovered_after_syscall: recovered,
             });
         };
         Ok(CleanupCompletion {
             progress_key: intent.progress_key.clone(),
             path: intent.path.clone(),
-            parent: sync_directory(parent),
+            parent,
             recovered_after_syscall: recovered,
         })
     }
 }
 
 pub(super) fn inspect_child_state(parent: &Pinned, name: &str) -> Result<Option<EntryState>> {
-    crate::ensure_safe_component(name)?;
+    inspect_child_state_mode(parent, name, false)
+}
+
+fn inspect_child_state_mode(
+    parent: &Pinned,
+    name: &str,
+    allow_transaction_stage: bool,
+) -> Result<Option<EntryState>> {
+    ensure_tree_component(name, allow_transaction_stage)?;
+    if allow_transaction_stage && is_transaction_stage_name(name) {
+        return inspect_transaction_stage_state(parent, name);
+    }
     let metadata = match parent.dir.symlink_metadata(name) {
         Ok(metadata) => metadata,
         Err(error) if error.kind() == std::io::ErrorKind::NotFound => return Ok(None),
@@ -949,6 +1244,98 @@ fn directory_state(directory: &Pinned) -> Result<EntryState> {
     })
 }
 
+fn ensure_tree_component(name: &str, allow_transaction_stage: bool) -> Result<()> {
+    if allow_transaction_stage && is_transaction_stage_name(name) {
+        Ok(())
+    } else {
+        crate::ensure_safe_component(name)
+    }
+}
+
+fn is_transaction_stage_name(name: &str) -> bool {
+    name.strip_prefix(".vibe-stage-tx-").is_some_and(|suffix| {
+        suffix.len() == 32
+            && suffix
+                .bytes()
+                .all(|byte| byte.is_ascii_hexdigit() && !byte.is_ascii_uppercase())
+    })
+}
+
+fn validate_authorized_transaction_stage_path(path: &str) -> Result<()> {
+    if path.is_empty() || path.starts_with('/') || path.ends_with('/') {
+        bail!("unsafe journal-authorized transaction-stage path");
+    }
+    let mut components = path.split('/').collect::<Vec<_>>();
+    let name = components
+        .pop()
+        .ok_or_else(|| anyhow::anyhow!("transaction-stage path has no final component"))?;
+    for parent in components {
+        crate::ensure_safe_component(parent)?;
+    }
+    if !is_transaction_stage_name(name) {
+        bail!("journal-authorized transaction-stage path has invalid grammar");
+    }
+    Ok(())
+}
+
+fn manifest_has_transaction_stage(manifest: &TreeManifest) -> bool {
+    manifest.entries.iter().any(|entry| {
+        let name = entry
+            .path
+            .rsplit_once('/')
+            .map_or(entry.path.as_str(), |(_, name)| name);
+        is_transaction_stage_name(name)
+    })
+}
+
+pub(super) fn inspect_transaction_stage_state(
+    parent: &Pinned,
+    name: &str,
+) -> Result<Option<EntryState>> {
+    use std::io::{Read, Seek, SeekFrom};
+
+    let mut options = crate::file::cap_options();
+    let file = match parent.dir.open_with(name, options.read(true)) {
+        Ok(file) => file,
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => return Ok(None),
+        Err(error) => return Err(anyhow::Error::new(error)),
+    };
+    let mut file = file.into_std();
+    let display = parent.join(name);
+    crate::file::verify_regular_single_link(&file, &display)?;
+    let opening = file.metadata()?;
+    let mut read_pass = || -> Result<(u64, String)> {
+        file.seek(SeekFrom::Start(0))?;
+        let mut hash = Sha256::new();
+        let mut bytes = 0_u64;
+        let mut buffer = [0_u8; 64 * 1024];
+        loop {
+            let used = file.read(&mut buffer)?;
+            if used == 0 {
+                return Ok((bytes, format!("{:x}", hash.finalize())));
+            }
+            bytes = bytes
+                .checked_add(used as u64)
+                .ok_or_else(|| anyhow::anyhow!("transaction stage exceeds u64"))?;
+            hash.update(&buffer[..used]);
+        }
+    };
+    let first = read_pass()?;
+    let second = read_pass()?;
+    let closing = file.metadata()?;
+    if first != second || first.0 != opening.len() || first.0 != closing.len() {
+        bail!("transaction stage changed during stable inspection");
+    }
+    let identity = crate::file::identity::file_identity(&file, &display)?;
+    Ok(Some(EntryState {
+        kind: EntryStateKind::File,
+        sha256: Some(first.1),
+        bytes: Some(first.0),
+        unix_mode: crate::file::unix_mode(&closing),
+        identity: entry_identity(identity),
+    }))
+}
+
 pub(super) fn entry_identity(identity: FileIdentity) -> EntryIdentity {
     EntryIdentity(identity_token(
         b"vibe-safefs-tree-entry-identity-e1\0",
@@ -966,12 +1353,16 @@ fn owned_identity(owner: &str, identity: FileIdentity) -> OwnedDirectoryIdentity
 }
 
 fn manifest(root: &Pinned) -> Result<TreeManifest> {
+    manifest_mode(root, false)
+}
+
+fn manifest_mode(root: &Pinned, allow_transaction_stage: bool) -> Result<TreeManifest> {
     let mut first = Vec::new();
-    walk(root, "", &mut first)?;
+    walk(root, "", &mut first, allow_transaction_stage)?;
     first.sort_by(|left, right| left.path.as_bytes().cmp(right.path.as_bytes()));
     manifest_hook::between(root);
     let mut entries = Vec::new();
-    walk(root, "", &mut entries)?;
+    walk(root, "", &mut entries, allow_transaction_stage)?;
     entries.sort_by(|left, right| left.path.as_bytes().cmp(right.path.as_bytes()));
     if entries != first {
         bail!(
@@ -979,9 +1370,14 @@ fn manifest(root: &Pinned) -> Result<TreeManifest> {
             root.path().display()
         );
     }
+    let digest = manifest_digest(&entries);
+    Ok(TreeManifest { digest, entries })
+}
+
+fn manifest_digest(entries: &[TreeEntry]) -> String {
     let mut hash = Sha256::new();
     hash.update(b"vibe-safefs-tree-manifest-e1\0");
-    for entry in &entries {
+    for entry in entries {
         hash.update(entry.path.as_bytes());
         hash.update(b"\0");
         hash.update(match entry.state.kind {
@@ -1003,24 +1399,26 @@ fn manifest(root: &Pinned) -> Result<TreeManifest> {
         }
         hash.update(b"\n");
     }
-    Ok(TreeManifest {
-        digest: format!("sha256:{:x}", hash.finalize()),
-        entries,
-    })
+    format!("sha256:{:x}", hash.finalize())
 }
 
-fn walk(directory: &Pinned, prefix: &str, entries: &mut Vec<TreeEntry>) -> Result<()> {
+fn walk(
+    directory: &Pinned,
+    prefix: &str,
+    entries: &mut Vec<TreeEntry>,
+    allow_transaction_stage: bool,
+) -> Result<()> {
     let view = project_view(directory)?;
     let mut names = view.child_names(directory)?;
     names.sort_by(|left, right| left.as_bytes().cmp(right.as_bytes()));
     for name in &names {
-        crate::ensure_safe_component(name)?;
+        ensure_tree_component(name, allow_transaction_stage)?;
         let path = if prefix.is_empty() {
             name.clone()
         } else {
             format!("{prefix}/{name}")
         };
-        let state = inspect_child_state(directory, name)?
+        let state = inspect_child_state_mode(directory, name, allow_transaction_stage)?
             .ok_or_else(|| anyhow::anyhow!("`{path}` vanished during manifest walk"))?;
         entries.push(TreeEntry {
             path: path.clone(),
@@ -1031,7 +1429,7 @@ fn walk(directory: &Pinned, prefix: &str, entries: &mut Vec<TreeEntry>) -> Resul
             if directory_state(&child)? != state {
                 bail!("directory `{path}` was swapped during manifest walk");
             }
-            walk(&child, &path, entries)?;
+            walk(&child, &path, entries, allow_transaction_stage)?;
             if directory_state(&child)? != state {
                 bail!("directory `{path}` changed identity or mode during manifest walk");
             }
@@ -1049,7 +1447,18 @@ fn walk(directory: &Pinned, prefix: &str, entries: &mut Vec<TreeEntry>) -> Resul
 }
 
 fn holder(project: &Project, relative: &str) -> Result<(Pinned, String)> {
-    let (parents, name) = crate::split_relative(relative)?;
+    if relative.is_empty() || relative.starts_with('/') || relative.ends_with('/') {
+        bail!("unsafe owned-tree relative path");
+    }
+    let mut components = relative.split('/').map(str::to_owned).collect::<Vec<_>>();
+    let name = components
+        .pop()
+        .ok_or_else(|| anyhow::anyhow!("owned-tree path has no final component"))?;
+    for parent in &components {
+        crate::ensure_safe_component(parent)?;
+    }
+    ensure_tree_component(&name, true)?;
+    let parents = components;
     if parents.is_empty() {
         return Ok((project.root_dir()?, name));
     }
@@ -1141,7 +1550,7 @@ fn remove_native(
     parent: &Pinned,
     name: &str,
     expected: &EntryState,
-) -> std::result::Result<(), OwnedTreeCleanupError> {
+) -> std::result::Result<DirectoryDurability, OwnedTreeCleanupError> {
     super::platform::remove_expected(parent, name, expected).map_err(|error| match error {
         super::platform::NativeRemoveError::Changed(detail) => third_error(detail),
         super::platform::NativeRemoveError::Io(error) => {
@@ -1181,6 +1590,13 @@ fn validate_identity_token(token: &str) -> Result<()> {
         bail!("identity token must use sha256:<64-lowercase-hex>");
     }
     Ok(())
+}
+
+fn is_raw_sha256(value: &str) -> bool {
+    value.len() == 64
+        && value
+            .bytes()
+            .all(|byte| byte.is_ascii_hexdigit() && !byte.is_ascii_uppercase())
 }
 
 #[cfg(any(test, feature = "inject-failures"))]

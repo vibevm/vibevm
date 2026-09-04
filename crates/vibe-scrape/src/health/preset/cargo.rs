@@ -1,3 +1,5 @@
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-056#IMPL-C");
+
 use crate::contract::{CargoBuild, CargoProfile};
 
 use super::{hermetic_environment, literal};
@@ -8,6 +10,8 @@ use crate::health::model::{
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn cargo_commands(
     executable_asset_id: &str,
+    rustc_asset_id: &str,
+    rustdoc_asset_id: &str,
     build: CargoBuild,
     workspace: bool,
     locked: bool,
@@ -47,7 +51,15 @@ pub(crate) fn cargo_commands(
     let mut environment = hermetic_environment();
     environment.insert(
         "CARGO_TARGET_DIR".to_owned(),
-        EnvironmentValue::ScratchPath("cargo-target".to_owned()),
+        EnvironmentValue::ScratchPath("t".to_owned()),
+    );
+    environment.insert(
+        "RUSTC".to_owned(),
+        EnvironmentValue::AssetPath(rustc_asset_id.to_owned()),
+    );
+    environment.insert(
+        "RUSTDOC".to_owned(),
+        EnvironmentValue::AssetPath(rustdoc_asset_id.to_owned()),
     );
     environment.insert(
         "CARGO_INCREMENTAL".to_owned(),

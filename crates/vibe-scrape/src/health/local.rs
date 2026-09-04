@@ -1,12 +1,16 @@
 //! Local process-group backend for already materialized isolated phase views.
 //!
-//! This backend deliberately does not advertise network denial, custom read
-//! policy, spawn prevention, atomic JSON-result publication, or same-path COW.
+//! This backend deliberately does not advertise network denial, restricted
+//! custom-read policy, spawn prevention, atomic JSON-result publication, or
+//! same-path COW. It does materialize sealed bundles and supports the explicit
+//! transaction-owned final-path reproof mode.
+
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-056#IMPL-C");
 
 use std::fs::File;
 use std::io::Read as _;
 use std::path::{Path, PathBuf};
-use std::process::{Command, Stdio};
+use std::process::{Command, ExitStatus, Stdio};
 use std::time::{Duration, Instant};
 
 use command_group::CommandGroup as _;
@@ -42,12 +46,16 @@ impl HealthBackend for LocalProcessBackend {
             filesystem_isolation: true,
             read_policy_enforcement: false,
             process_tree_containment: cfg!(windows),
+            // Windows Job Objects provide forced whole-tree termination. The
+            // plan records this as transactional forced-tree behavior rather
+            // than claiming a graceful signal phase.
             graceful_termination: cfg!(unix),
+            forced_tree_termination: cfg!(windows),
             spawn_prevention: false,
             network_deny: false,
             bounded_output: true,
             atomic_result: false,
-            bundle_materialization: false,
+            bundle_materialization: true,
             same_display_path_view: false,
         }
     }
@@ -56,8 +64,19 @@ impl HealthBackend for LocalProcessBackend {
         &mut self,
         request: BackendCommandRequest<'_>,
     ) -> Result<CommandExecution, HealthError> {
-        validate_isolated_roots(&request.root, &request.protected_root)?;
-        prove_tree(&request.protected_root, request.expected_tree)?;
+        if !request.transactional_tree_reproof {
+            validate_isolated_roots(&request.phase_root, &request.protected_root)?;
+        } else if request.phase_root != request.protected_root {
+            return Err(HealthError::Preparation(
+                "transactional-tree-reproof requires root == protected_root".to_owned(),
+            ));
+        }
+        validate_command_cwd(&request.phase_root, &request.root)?;
+        prove_phase_trees(
+            &request.phase_root,
+            &request.protected_root,
+            request.expected_tree,
+        )?;
         std::fs::create_dir_all(&request.scratch).map_err(|error| {
             HealthError::Execution(format!(
                 "creating health scratch `{}`: {error}",
@@ -83,6 +102,9 @@ impl HealthBackend for LocalProcessBackend {
                     .to_owned(),
             ));
         }
+        if let Some(bundle) = request.custom_bundle {
+            materialize_bundle(bundle, &request.scratch)?;
+        }
         let argv = request
             .command
             .argv
@@ -91,6 +113,9 @@ impl HealthBackend for LocalProcessBackend {
                 materialize_arg(arg, request.assets, request.custom_bundle, &request.scratch)
             })
             .collect::<Result<Vec<_>, _>>()?;
+        let actual_argv = std::iter::once(executable.display().to_string())
+            .chain(argv.clone())
+            .collect::<Vec<_>>();
 
         let mut command = Command::new(&executable);
         command
@@ -139,7 +164,29 @@ impl HealthBackend for LocalProcessBackend {
                 break status;
             }
             if request.cancellation.is_cancelled() {
-                terminate_group(&mut child, drain, request.termination_grace_seconds)?;
+                let (status, stdout, stderr) =
+                    terminate_group(&mut child, drain, request.termination_grace_seconds)?;
+                let execution = CommandExecution {
+                    step: request.command.step,
+                    actual_argv,
+                    exit_code: status.code().unwrap_or(-1),
+                    stdout,
+                    stderr,
+                    result: None,
+                };
+                if let Err(error) = prove_phase_trees(
+                    &request.phase_root,
+                    &request.protected_root,
+                    request.expected_tree,
+                ) {
+                    return Err(HealthError::CommandChangedTree {
+                        check_id: request.check_id,
+                        detail: error.to_string(),
+                        prior_checks: Vec::new(),
+                        prior_executions: Vec::new(),
+                        execution: Box::new(execution),
+                    });
+                }
                 return Err(HealthError::Cancelled {
                     phase: request.phase,
                     check_id: request.check_id,
@@ -147,14 +194,43 @@ impl HealthBackend for LocalProcessBackend {
                         HealthPhase::Before => CancellationDisposition::RefuseBefore,
                         HealthPhase::After => CancellationDisposition::RollbackAfter,
                     },
+                    prior_checks: Vec::new(),
+                    prior_executions: Vec::new(),
+                    execution: Box::new(execution),
                 });
             }
             if Instant::now() >= deadline {
-                terminate_group(&mut child, drain, request.termination_grace_seconds)?;
-                return Err(HealthError::Execution(format!(
-                    "healthcheck `{}` timed out after {} seconds; process group was terminated after a {}-second graceful phase where supported",
-                    request.check_id, request.timeout_seconds, request.termination_grace_seconds
-                )));
+                let (status, stdout, stderr) =
+                    terminate_group(&mut child, drain, request.termination_grace_seconds)?;
+                let execution = CommandExecution {
+                    step: request.command.step,
+                    actual_argv,
+                    exit_code: status.code().unwrap_or(-1),
+                    stdout,
+                    stderr,
+                    result: None,
+                };
+                if let Err(error) = prove_phase_trees(
+                    &request.phase_root,
+                    &request.protected_root,
+                    request.expected_tree,
+                ) {
+                    return Err(HealthError::CommandChangedTree {
+                        check_id: request.check_id,
+                        detail: error.to_string(),
+                        prior_checks: Vec::new(),
+                        prior_executions: Vec::new(),
+                        execution: Box::new(execution),
+                    });
+                }
+                return Err(HealthError::TimedOut {
+                    phase: request.phase,
+                    check_id: request.check_id,
+                    timeout_seconds: request.timeout_seconds,
+                    prior_checks: Vec::new(),
+                    prior_executions: Vec::new(),
+                    execution: Box::new(execution),
+                });
             }
             std::thread::sleep(Duration::from_millis(10));
         };
@@ -162,15 +238,30 @@ impl HealthBackend for LocalProcessBackend {
             .join()
             .map_err(|_| HealthError::Execution("health output drain panicked".to_owned()))??;
         drop(held_assets);
-        prove_tree(&request.protected_root, request.expected_tree)?;
-        Ok(CommandExecution {
+        let execution = CommandExecution {
+            step: request.command.step,
+            actual_argv,
             exit_code: status.code().unwrap_or(-1),
             stdout,
             stderr,
             // The backend does not advertise atomic_result, so a structured
             // protocol can never reach execution through capability preflight.
             result: None,
-        })
+        };
+        if let Err(error) = prove_phase_trees(
+            &request.phase_root,
+            &request.protected_root,
+            request.expected_tree,
+        ) {
+            return Err(HealthError::CommandChangedTree {
+                check_id: request.check_id,
+                detail: error.to_string(),
+                prior_checks: Vec::new(),
+                prior_executions: Vec::new(),
+                execution: Box::new(execution),
+            });
+        }
+        Ok(execution)
     }
 
     fn reprove_tree(&mut self, context: &PhaseContext) -> Result<TreeSeal, HealthError> {
@@ -184,7 +275,7 @@ fn terminate_group(
     child: &mut command_group::GroupChild,
     drain: DrainJoin,
     grace_seconds: u64,
-) -> Result<(), HealthError> {
+) -> Result<(ExitStatus, StreamEvidence, StreamEvidence), HealthError> {
     #[cfg(not(unix))]
     let _ = grace_seconds;
     #[cfg(unix)]
@@ -200,16 +291,16 @@ fn terminate_group(
     child.kill().map_err(|error| {
         HealthError::Execution(format!("forcing health process group termination: {error}"))
     })?;
-    child.wait().map_err(|error| {
+    let status = child.wait().map_err(|error| {
         HealthError::Execution(format!("reaping terminated health process group: {error}"))
     })?;
     // Job/process-group termination is the ownership guarantee that makes this
     // join bounded. Returning while the reader lives would leak a descendant-
     // held pipe and is forbidden.
-    drain
+    let (stdout, stderr) = drain
         .join()
         .map_err(|_| HealthError::Execution("health output drain panicked".to_owned()))??;
-    Ok(())
+    Ok((status, stdout, stderr))
 }
 
 #[cfg(unix)]
@@ -335,13 +426,114 @@ fn materialize_arg(
                 HealthError::Execution(format!("argv refers to absent sealed asset `{id}`"))
             }),
         ExpandedArg::BundlePath(path) => {
-            let _ = (path, bundle, scratch);
-            Err(HealthError::Unsupported(
-                "capability-relative atomic verifier-bundle materialization is unavailable"
-                    .to_owned(),
-            ))
+            let bundle = bundle.ok_or_else(|| {
+                HealthError::Execution("bundle argv has no sealed custom bundle".to_owned())
+            })?;
+            let entry = bundle
+                .entries
+                .iter()
+                .find(|entry| entry.path == *path)
+                .ok_or_else(|| {
+                    HealthError::Execution(format!("bundle member `{path}` is absent"))
+                })?;
+            if entry.kind != BundleEntryKind::File {
+                return Err(HealthError::Execution(format!(
+                    "bundle argv member `{path}` is not a regular file"
+                )));
+            }
+            Ok(bundle_target(scratch, path).display().to_string())
         }
     }
+}
+
+fn materialize_bundle(bundle: &CustomBundle, scratch: &str) -> Result<(), HealthError> {
+    let root = Path::new(scratch).join("verifier-bundle");
+    std::fs::create_dir_all(&root).map_err(|error| {
+        HealthError::Execution(format!("creating verifier bundle root: {error}"))
+    })?;
+    for entry in &bundle.entries {
+        let target = bundle_target(scratch, &entry.path);
+        match entry.kind {
+            BundleEntryKind::Directory => {
+                std::fs::create_dir_all(&target).map_err(|error| {
+                    HealthError::Execution(format!(
+                        "materializing verifier bundle directory `{}`: {error}",
+                        entry.path
+                    ))
+                })?;
+            }
+            BundleEntryKind::File => {
+                let bytes = entry.content.as_ref().ok_or_else(|| {
+                    HealthError::Execution(format!(
+                        "bundle file `{}` has no sealed bytes",
+                        entry.path
+                    ))
+                })?;
+                if entry.bytes != Some(bytes.len() as u64)
+                    || entry.sha256.as_deref()
+                        != Some(format!("sha256:{:x}", Sha256::digest(bytes)).as_str())
+                {
+                    return Err(HealthError::Execution(format!(
+                        "bundle file `{}` differs from its sealed size/digest",
+                        entry.path
+                    )));
+                }
+                let parent = target.parent().ok_or_else(|| {
+                    HealthError::Execution("bundle target has no parent".to_owned())
+                })?;
+                std::fs::create_dir_all(parent).map_err(|error| {
+                    HealthError::Execution(format!(
+                        "creating verifier bundle parent for `{}`: {error}",
+                        entry.path
+                    ))
+                })?;
+                match std::fs::OpenOptions::new()
+                    .write(true)
+                    .create_new(true)
+                    .open(&target)
+                {
+                    Ok(mut file) => {
+                        use std::io::Write as _;
+                        file.write_all(bytes)
+                            .and_then(|()| file.sync_all())
+                            .map_err(|error| {
+                                HealthError::Execution(format!(
+                                    "materializing verifier bundle `{}`: {error}",
+                                    entry.path
+                                ))
+                            })?;
+                    }
+                    Err(error) if error.kind() == std::io::ErrorKind::AlreadyExists => {
+                        let existing = std::fs::read(&target).map_err(|read| {
+                            HealthError::Execution(format!(
+                                "re-reading verifier bundle `{}`: {read}",
+                                entry.path
+                            ))
+                        })?;
+                        if existing != *bytes {
+                            return Err(HealthError::Execution(format!(
+                                "verifier bundle `{}` already exists with different bytes",
+                                entry.path
+                            )));
+                        }
+                    }
+                    Err(error) => {
+                        return Err(HealthError::Execution(format!(
+                            "creating verifier bundle `{}`: {error}",
+                            entry.path
+                        )));
+                    }
+                }
+            }
+        }
+    }
+    Ok(())
+}
+
+fn bundle_target(scratch: &str, path: &str) -> PathBuf {
+    Path::new(scratch)
+        .join("verifier-bundle")
+        .join(path.replace('/', std::path::MAIN_SEPARATOR_STR))
 }
 
 fn validate_isolated_roots(root: &str, protected: &str) -> Result<(), HealthError> {
@@ -360,6 +552,45 @@ fn validate_isolated_roots(root: &str, protected: &str) -> Result<(), HealthErro
     Ok(())
 }
 
+fn validate_command_cwd(phase_root: &str, cwd: &str) -> Result<(), HealthError> {
+    let phase_root = Path::new(phase_root);
+    let cwd = Path::new(cwd);
+    if !phase_root.is_absolute() || !cwd.is_absolute() || !cwd.starts_with(phase_root) {
+        return Err(HealthError::Preparation(
+            "health command cwd is not contained by the exact phase root".to_owned(),
+        ));
+    }
+    let relative = cwd.strip_prefix(phase_root).map_err(|error| {
+        HealthError::Preparation(format!("deriving health cwd from phase root: {error}"))
+    })?;
+    if relative.components().any(|component| {
+        !matches!(
+            component,
+            std::path::Component::Normal(_) | std::path::Component::CurDir
+        )
+    }) {
+        return Err(HealthError::Preparation(
+            "health command cwd contains a non-portable component".to_owned(),
+        ));
+    }
+    let project = Project::open(phase_root).map_err(|error| {
+        HealthError::Preparation(format!("opening exact phase root for cwd proof: {error:#}"))
+    })?;
+    let portable = relative
+        .components()
+        .filter_map(|component| match component {
+            std::path::Component::Normal(value) => value.to_str(),
+            _ => None,
+        })
+        .collect::<Vec<_>>();
+    if !portable.is_empty() {
+        project.dir(&portable, false).map_err(|error| {
+            HealthError::Preparation(format!("proving nested health cwd no-follow: {error:#}"))
+        })?;
+    }
+    Ok(())
+}
+
 fn prove_tree(root: &str, expected: &TreeSeal) -> Result<(), HealthError> {
     let observed = observe_tree(root)?;
     let differences = expected.compare(&observed);
@@ -370,6 +601,14 @@ fn prove_tree(root: &str, expected: &TreeSeal) -> Result<(), HealthError> {
             "protected tree differs from its seal: {differences:?}"
         )))
     }
+}
+
+fn prove_phase_trees(root: &str, protected: &str, expected: &TreeSeal) -> Result<(), HealthError> {
+    prove_tree(protected, expected)?;
+    if root != protected {
+        prove_tree(root, expected)?;
+    }
+    Ok(())
 }
 
 fn observe_tree(root: &str) -> Result<TreeSeal, HealthError> {

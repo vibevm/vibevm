@@ -1,5 +1,7 @@
 //! The one OS-specific operation scrape needs: atomic rename without replace.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-056#SEC-NO-FOLLOW");
+
 use super::tree::EntryState;
 use crate::Pinned;
 
@@ -127,7 +129,7 @@ pub(super) fn remove_expected(
     parent: &Pinned,
     name: &str,
     expected: &EntryState,
-) -> Result<(), NativeRemoveError> {
+) -> Result<super::DirectoryDurability, NativeRemoveError> {
     use std::os::windows::io::{AsRawHandle, FromRawHandle};
     use std::os::windows::prelude::OsStrExt;
 
@@ -231,7 +233,9 @@ pub(super) fn remove_expected(
     } else {
         drop(held);
         match parent.dir.symlink_metadata(name) {
-            Err(error) if error.kind() == std::io::ErrorKind::NotFound => Ok(()),
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => {
+                Ok(super::DirectoryDurability::JournalRecoverable)
+            }
             Ok(_) => Err(NativeRemoveError::Changed(
                 "removed name was concurrently recreated".to_owned(),
             )),
@@ -245,7 +249,7 @@ pub(super) fn remove_expected(
     _parent: &Pinned,
     _name: &str,
     _expected: &EntryState,
-) -> Result<(), NativeRemoveError> {
+) -> Result<super::DirectoryDurability, NativeRemoveError> {
     Err(NativeRemoveError::Unsupported)
 }
 
@@ -254,7 +258,7 @@ pub(super) fn remove_expected(
 pub(super) fn create_directory(
     parent: &Pinned,
     name: &str,
-) -> Result<cap_std::fs::Dir, NativeCreateError> {
+) -> Result<(cap_std::fs::Dir, super::DirectoryDurability), NativeCreateError> {
     use std::os::windows::io::{AsRawHandle, FromRawHandle};
     use std::os::windows::prelude::OsStrExt;
 
@@ -313,14 +317,17 @@ pub(super) fn create_directory(
     if let Some(error) = crate::race_hook::after_create_dir(parent, name) {
         return Err(NativeCreateError::CreatedButUnsealed(error));
     }
-    Ok(cap_std::fs::Dir::from_std_file(file))
+    Ok((
+        cap_std::fs::Dir::from_std_file(file),
+        super::DirectoryDurability::JournalRecoverable,
+    ))
 }
 
 #[cfg(not(windows))]
 pub(super) fn create_directory(
     _parent: &Pinned,
     _name: &str,
-) -> Result<cap_std::fs::Dir, NativeCreateError> {
+) -> Result<(cap_std::fs::Dir, super::DirectoryDurability), NativeCreateError> {
     Err(NativeCreateError::Unsupported)
 }
 
@@ -332,7 +339,7 @@ pub(super) fn rename_noreplace(
     old: &str,
     new: &str,
     expected: &EntryState,
-) -> Result<(), NoReplaceError> {
+) -> Result<super::DirectoryDurability, NoReplaceError> {
     use std::os::windows::io::{AsRawHandle, FromRawHandle};
     use std::os::windows::prelude::OsStrExt;
 
@@ -464,7 +471,9 @@ pub(super) fn rename_noreplace(
     if status >= 0 {
         drop(held);
         match source.dir.symlink_metadata(old) {
-            Err(error) if error.kind() == std::io::ErrorKind::NotFound => Ok(()),
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => {
+                Ok(super::DirectoryDurability::JournalRecoverable)
+            }
             Ok(_) => Err(NoReplaceError::SourceReappeared),
             Err(error) => Err(NoReplaceError::Io(error)),
         }
@@ -671,7 +680,7 @@ pub(super) fn rename_noreplace_partial(
     old: &str,
     new: &str,
     _expected: &EntryState,
-) -> Result<(), NoReplaceError> {
+) -> Result<super::DirectoryDurability, NoReplaceError> {
     use std::ffi::CString;
     use std::os::fd::AsRawFd;
 
@@ -701,7 +710,9 @@ pub(super) fn rename_noreplace_partial(
         )
     };
     if result == 0 {
-        return Ok(());
+        return Ok(super::DirectoryDurability::Unsupported(
+            std::io::ErrorKind::Unsupported,
+        ));
     }
     let error = std::io::Error::last_os_error();
     match error.raw_os_error() {
@@ -719,6 +730,6 @@ pub(super) fn rename_noreplace(
     _old: &str,
     _new: &str,
     _expected: &EntryState,
-) -> Result<(), NoReplaceError> {
+) -> Result<super::DirectoryDurability, NoReplaceError> {
     Err(NoReplaceError::Unsupported)
 }

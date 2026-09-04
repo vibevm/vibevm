@@ -1,5 +1,7 @@
 //! Concurrent, bounded stdout/stderr evidence.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-056#IMPL-C");
+
 use std::io::Read;
 
 use sha2::{Digest, Sha256};
@@ -42,6 +44,7 @@ impl StreamAccumulator {
             total_bytes: self.total,
             sha256: format!("sha256:{:x}", self.digest.finalize()),
             truncated: self.total > self.cap as u64,
+            redacted: true,
             utf8: if self.utf8.finish() {
                 Utf8State::Valid
             } else {

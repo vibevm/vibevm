@@ -12,6 +12,8 @@
 //! still denote the very object that supplied the bytes, so a read can never
 //! answer for an object the path has already swapped out from under it.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-056#SEC-NO-FOLLOW");
+
 use std::io::{Read, Seek, SeekFrom};
 use std::path::Path;
 

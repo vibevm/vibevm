@@ -1,5 +1,7 @@
 //! Strict and structured no-regression judgment.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-056#IMPL-C");
+
 use std::collections::BTreeMap;
 
 use super::model::*;

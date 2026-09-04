@@ -1,5 +1,7 @@
 //! Generated epoch-1 wire projection for a fully prepared health plan.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-056#IMPL-C");
+
 use sha2::{Digest, Sha256};
 use vibe_wire::generated::scrape::e1::plan as w;
 
@@ -152,6 +154,8 @@ fn asset(value: &d::AssetIdentity) -> w::AssetIdentity {
         id: value.id.clone(),
         role: match value.role {
             d::AssetRole::Cargo => w::AssetRole::Cargo,
+            d::AssetRole::Rustc => w::AssetRole::Rustc,
+            d::AssetRole::Rustdoc => w::AssetRole::Rustdoc,
             d::AssetRole::Node => w::AssetRole::Node,
             d::AssetRole::NpmCli => w::AssetRole::NpmCli,
             d::AssetRole::MavenLauncher => w::AssetRole::MavenLauncher,
@@ -165,6 +169,10 @@ fn asset(value: &d::AssetIdentity) -> w::AssetIdentity {
         mode: value.mode,
         platform_identity: value.platform_identity.clone(),
         version: value.version.clone(),
+        version_kind: match value.version_kind {
+            d::VersionKind::Content => w::AssetIdentityVersionKind::Content,
+            d::VersionKind::Probe => w::AssetIdentityVersionKind::Probe,
+        },
         source: match &value.source {
             d::AssetSource::Resolved => {
                 w::AssetSource::Resolved(Box::new(w::AssetSourceResolved {}))
@@ -264,6 +272,12 @@ fn sandbox(value: d::SandboxRequirement) -> w::SandboxRequirement {
         read_policy_enforcement: value.read_policy_enforcement,
         process_tree_containment: value.process_tree_containment,
         graceful_termination: value.graceful_termination,
+        termination_mode: match value.termination_mode {
+            d::TerminationMode::ForcedTree => w::SandboxRequirementTerminationMode::ForcedTree,
+            d::TerminationMode::GracefulThenForced => {
+                w::SandboxRequirementTerminationMode::GracefulThenForced
+            }
+        },
         spawn_prevention: value.spawn_prevention,
         network_deny: value.network_deny,
         bounded_output: value.bounded_output,
@@ -284,6 +298,7 @@ fn environment_template(value: &d::EnvironmentValue) -> String {
     match value {
         d::EnvironmentValue::Literal(value) => value.clone(),
         d::EnvironmentValue::ScratchPath(value) => format!("{{scratch}}/{value}"),
+        d::EnvironmentValue::AssetPath(value) => format!("{{asset:{value}}}"),
     }
 }
 

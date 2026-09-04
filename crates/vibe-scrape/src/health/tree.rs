@@ -1,10 +1,13 @@
 //! Exact logical tree seal and before/after equality judgment.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-056#IMPL-C");
+
 use std::collections::{BTreeMap, BTreeSet};
 
 use serde::Serialize;
 
 use crate::model::{EntryKind, Inventory};
+use std::path::Path;
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
 pub struct TreeSeal {
@@ -89,6 +92,15 @@ impl TreeSeal {
         }
         differences
     }
+}
+
+pub fn observe(root: &Path) -> Result<TreeSeal, super::HealthError> {
+    let project = vibe_safefs::Project::open(root).map_err(|error| {
+        super::HealthError::Tree(format!("opening tree `{}`: {error:#}", root.display()))
+    })?;
+    let inventory = crate::inventory::collect(&project)
+        .map_err(|error| super::HealthError::Tree(error.to_string()))?;
+    Ok(TreeSeal::from_inventory(&inventory))
 }
 
 fn index<'a>(

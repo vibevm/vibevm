@@ -159,6 +159,7 @@
           "mode": null,
           "platform_identity": "volume:1/file:2",
           "version": "Python 3.13.7",
+          "version_kind": "probe",
           "source": { "kind": "resolved" }
         }
       ],
@@ -203,6 +204,7 @@
         "read_policy_enforcement": true,
         "process_tree_containment": true,
         "graceful_termination": true,
+        "termination_mode": "graceful-then-forced",
         "spawn_prevention": true,
         "network_deny": true,
         "bounded_output": true,

@@ -19,6 +19,8 @@
     "relocations": { "elements": { "ref": "relocation_result" }, "metadata": { "x-empty": "emit" } },
     "dependency_graphs": { "elements": { "ref": "dependency_graph_result" }, "metadata": { "x-empty": "emit" } },
     "health": { "elements": { "ref": "health_result" }, "metadata": { "x-empty": "emit" } },
+    "events": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } },
+    "apply": { "elements": { "ref": "recovery_step" }, "metadata": { "x-empty": "emit" } },
     "residuals": { "elements": { "ref": "residual_count" }, "metadata": { "x-empty": "emit" } },
     "rollback": { "elements": { "ref": "recovery_step" }, "metadata": { "x-empty": "emit" } },
     "recovery": { "elements": { "ref": "recovery_step" }, "metadata": { "x-empty": "emit" } },
@@ -54,11 +56,11 @@
       "optionalProperties": { "evidence": { "type": "string", "metadata": { "x-default": null } } }
     },
     "stream_witness": {
-      "properties": { "bytes": { "type": "string" }, "sha256": { "type": "string" }, "truncated": { "type": "boolean" }, "utf8": { "type": "boolean" }, "head": { "type": "string" }, "tail": { "type": "string" } }
+      "properties": { "bytes": { "type": "string" }, "sha256": { "type": "string" }, "truncated": { "type": "boolean" }, "redacted": { "type": "boolean" }, "utf8": { "type": "boolean" }, "head": { "type": "string" }, "tail": { "type": "string" } }
     },
     "health_result": {
       "properties": {
-        "id": { "type": "string" }, "phase": { "ref": "phase" }, "terminal": { "ref": "terminal_state" },
+        "id": { "type": "string" }, "phase": { "ref": "phase" }, "step": { "enum": ["none", "install", "build", "test", "verify"], "metadata": { "x-vocabulary": "closed" } }, "terminal": { "ref": "terminal_state" },
         "argv": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } },
         "stdout": { "ref": "stream_witness" }, "stderr": { "ref": "stream_witness" },
         "findings": { "elements": { "ref": "finding" }, "metadata": { "x-empty": "emit" } },
@@ -69,7 +71,7 @@
       "properties": { "class": { "enum": ["source-metadata", "dependency-identity", "manifest-path", "managed-marker", "generated-artifact", "tool-config", "tool-script", "selected-spec-uri", "environment-reference", "lock-entry", "link-escape"], "metadata": { "x-vocabulary": "closed" } }, "count": { "type": "uint32" } }
     },
     "recovery_step": {
-      "properties": { "sequence": { "type": "uint32" }, "action": { "type": "string" }, "path": { "type": "string" }, "result": { "enum": ["complete", "pending", "refused", "failed"], "metadata": { "x-vocabulary": "closed" } } }
+      "properties": { "sequence": { "type": "uint32" }, "action": { "type": "string" }, "operation_id": { "type": "string" }, "result": { "enum": ["complete", "pending", "refused", "failed"], "metadata": { "x-vocabulary": "closed" } } }
     }
   }
 }

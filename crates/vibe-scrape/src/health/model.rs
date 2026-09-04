@@ -1,14 +1,16 @@
 //! Typed, serializable health plan and evidence values.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-056#IMPL-C");
+
 use std::collections::BTreeMap;
 use std::sync::{
     Arc,
     atomic::{AtomicBool, Ordering},
 };
 
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct PreparedHealth {
     pub plan_id: String,
     pub baseline: BaselinePolicy,
@@ -20,21 +22,21 @@ pub struct PreparedHealth {
     pub blockers: Vec<HealthBlocker>,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct HealthBlocker {
     pub code: String,
     pub check_id: Option<String>,
     pub message: String,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub enum BaselinePolicy {
     Strict,
     NoRegression,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct PreparedHealthcheck {
     pub id: String,
     pub kind: HealthcheckKind,
@@ -52,7 +54,7 @@ pub struct PreparedHealthcheck {
     pub timeout_seconds: u64,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub enum HealthcheckKind {
     Cargo,
@@ -62,14 +64,14 @@ pub enum HealthcheckKind {
     Custom,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "kebab-case")]
 pub enum Applicability {
     Applicable,
     SkippedWhenMissing { path: String },
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub enum TestDisposition {
     SkippedByContract,
@@ -108,7 +110,7 @@ pub struct TestDiscoveryRequest {
     pub features: Vec<String>,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct AssetIdentity {
     pub id: String,
     pub role: AssetRole,
@@ -118,15 +120,25 @@ pub struct AssetIdentity {
     pub mode: Option<u32>,
     pub platform_identity: String,
     pub version: String,
+    pub version_kind: VersionKind,
     pub source: AssetSource,
     #[serde(skip)]
     pub live_identity: Option<vibe_safefs::FileIdentity>,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum VersionKind {
+    Content,
+    Probe,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub enum AssetRole {
     Cargo,
+    Rustc,
+    Rustdoc,
     Node,
     NpmCli,
     MavenLauncher,
@@ -135,7 +147,7 @@ pub enum AssetRole {
     CustomNative,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "kebab-case")]
 pub enum AssetSource {
     Resolved,
@@ -163,7 +175,7 @@ pub struct ResolvedCustomLaunch {
     pub style: CustomLaunchStyle,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct PreparedCommand {
     pub step: CommandStep,
     pub executable_asset_id: String,
@@ -172,7 +184,7 @@ pub struct PreparedCommand {
     pub accepted_exit_codes: Vec<i32>,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub enum CommandStep {
     Install,
@@ -181,7 +193,7 @@ pub enum CommandStep {
     Verify,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "kind", content = "value", rename_all = "kebab-case")]
 pub enum PreparedArg {
     Literal(String),
@@ -193,21 +205,22 @@ pub enum PreparedArg {
     BundlePath(String),
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "kind", content = "value", rename_all = "kebab-case")]
 pub enum EnvironmentValue {
     Literal(String),
     ScratchPath(String),
+    AssetPath(String),
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct EffectPlan {
     pub reads: Vec<String>,
     pub writes: Vec<String>,
     pub spawn: bool,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub enum NetworkMode {
     Deny,
@@ -215,18 +228,26 @@ pub enum NetworkMode {
     Inherit,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub struct SandboxRequirement {
     pub exact_executable_identity: bool,
     pub filesystem_isolation: bool,
     pub read_policy_enforcement: bool,
     pub process_tree_containment: bool,
     pub graceful_termination: bool,
+    pub termination_mode: TerminationMode,
     pub spawn_prevention: bool,
     pub network_deny: bool,
     pub bounded_output: bool,
     pub atomic_result: bool,
     pub bundle_materialization: bool,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum TerminationMode {
+    ForcedTree,
+    GracefulThenForced,
 }
 
 impl SandboxRequirement {
@@ -237,7 +258,12 @@ impl SandboxRequirement {
             filesystem_isolation: true,
             read_policy_enforcement: custom,
             process_tree_containment: true,
-            graceful_termination: true,
+            graceful_termination: !cfg!(windows),
+            termination_mode: if cfg!(windows) {
+                TerminationMode::ForcedTree
+            } else {
+                TerminationMode::GracefulThenForced
+            },
             spawn_prevention: custom && !spawn,
             network_deny: matches!(network, NetworkMode::Deny),
             bounded_output: true,
@@ -247,13 +273,14 @@ impl SandboxRequirement {
     }
 }
 
-#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub struct BackendCapabilities {
     pub exact_executable_identity: bool,
     pub filesystem_isolation: bool,
     pub read_policy_enforcement: bool,
     pub process_tree_containment: bool,
     pub graceful_termination: bool,
+    pub forced_tree_termination: bool,
     pub spawn_prevention: bool,
     pub network_deny: bool,
     pub bounded_output: bool,
@@ -270,6 +297,12 @@ impl BackendCapabilities {
             && (!required.read_policy_enforcement || self.read_policy_enforcement)
             && (!required.process_tree_containment || self.process_tree_containment)
             && (!required.graceful_termination || self.graceful_termination)
+            && (!matches!(required.termination_mode, TerminationMode::ForcedTree)
+                || self.forced_tree_termination)
+            && (!matches!(
+                required.termination_mode,
+                TerminationMode::GracefulThenForced
+            ) || self.graceful_termination)
             && (!required.spawn_prevention || self.spawn_prevention)
             && (!required.network_deny || self.network_deny)
             && (!required.bounded_output || self.bounded_output)
@@ -279,21 +312,21 @@ impl BackendCapabilities {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum ResultProtocol {
     BuiltIn,
     ExitCode,
     VibeHealthJsonV1,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct CustomBundle {
     pub sha256: String,
     pub source: String,
     pub entries: Vec<BundleEntry>,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct BundleEntry {
     pub path: String,
     pub kind: BundleEntryKind,
@@ -304,14 +337,14 @@ pub struct BundleEntry {
     pub content: Option<Vec<u8>>,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub enum BundleEntryKind {
     File,
     Directory,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub enum HealthPhase {
     Before,
@@ -336,6 +369,9 @@ pub struct PhaseContext {
     pub scratch: String,
     pub result: String,
     pub same_display_path_required: bool,
+    /// The command runs at the protected final path under transaction
+    /// ownership; pre/post complete tree reproof replaces COW isolation.
+    pub transactional_tree_reproof: bool,
     pub expected_tree: crate::health::tree::TreeSeal,
     pub cancellation: CancellationToken,
 }
@@ -383,25 +419,29 @@ pub enum ExpandedArg {
     BundlePath(String),
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct StreamEvidence {
     pub total_bytes: u64,
     pub sha256: String,
     pub truncated: bool,
+    pub redacted: bool,
     pub utf8: Utf8State,
     pub head: Vec<u8>,
     pub tail: Vec<u8>,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub enum Utf8State {
     Valid,
     Invalid,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct CommandExecution {
+    pub step: CommandStep,
+    /// Exact launched executable followed by the already-expanded argv.
+    pub actual_argv: Vec<String>,
     pub exit_code: i32,
     pub stdout: StreamEvidence,
     pub stderr: StreamEvidence,
@@ -414,6 +454,9 @@ pub struct CommandExecution {
 pub struct BackendCommandRequest<'a> {
     pub check_id: String,
     pub phase: HealthPhase,
+    /// Full exact-copy root whose complete manifest is sealed.
+    pub phase_root: String,
+    /// Declared check cwd (`phase_root` plus the portable check root).
     pub root: String,
     pub protected_root: String,
     pub scratch: String,
@@ -424,6 +467,7 @@ pub struct BackendCommandRequest<'a> {
     pub network: NetworkMode,
     pub custom_bundle: Option<&'a CustomBundle>,
     pub expected_tree: &'a crate::health::tree::TreeSeal,
+    pub transactional_tree_reproof: bool,
     pub cancellation: CancellationToken,
     pub timeout_seconds: u64,
     pub termination_grace_seconds: u64,
@@ -432,13 +476,13 @@ pub struct BackendCommandRequest<'a> {
     pub max_stderr_bytes: u64,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum HealthVerdict {
     Pass,
     Structured(StructuredVerdict),
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct StructuredVerdict {
     pub status: HealthStatus,
     pub summary: String,
@@ -446,14 +490,14 @@ pub struct StructuredVerdict {
     pub metrics: BTreeMap<String, u32>,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 pub enum HealthStatus {
     Pass,
     Warn,
     Fail,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Finding {
     pub id: String,
     pub severity: Severity,
@@ -461,27 +505,27 @@ pub struct Finding {
     pub evidence: Option<String>,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 pub enum Severity {
     Info,
     Warning,
     Error,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum CheckState {
     Skipped { reason: String },
     Completed(HealthVerdict),
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct CheckResult {
     pub id: String,
     pub state: CheckState,
     pub commands: Vec<CommandExecution>,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct PhaseHealthResult {
     pub phase: HealthPhase,
     pub plan_id: String,
@@ -503,8 +547,31 @@ pub enum HealthError {
     Preparation(String),
     #[error("health protocol failed: {0}")]
     Protocol(String),
+    #[error("healthcheck `{check_id}` protocol failed: {detail}")]
+    CheckProtocolFailed {
+        check_id: String,
+        detail: String,
+        prior_checks: Vec<CheckResult>,
+        executions: Vec<CommandExecution>,
+    },
     #[error("health execution failed: {0}")]
     Execution(String),
+    #[error("healthcheck `{check_id}` exited {exit_code}")]
+    CommandFailed {
+        check_id: String,
+        exit_code: i32,
+        prior_checks: Vec<CheckResult>,
+        prior_executions: Vec<CommandExecution>,
+        execution: Box<CommandExecution>,
+    },
+    #[error("healthcheck `{check_id}` changed the protected tree: {detail}")]
+    CommandChangedTree {
+        check_id: String,
+        detail: String,
+        prior_checks: Vec<CheckResult>,
+        prior_executions: Vec<CommandExecution>,
+        execution: Box<CommandExecution>,
+    },
     #[error("health backend is unsupported: {0}")]
     Unsupported(String),
     #[error("health tree proof failed: {0}")]
@@ -516,5 +583,17 @@ pub enum HealthError {
         phase: HealthPhase,
         check_id: String,
         disposition: CancellationDisposition,
+        prior_checks: Vec<CheckResult>,
+        prior_executions: Vec<CommandExecution>,
+        execution: Box<CommandExecution>,
+    },
+    #[error("healthcheck `{check_id}` timed out after {timeout_seconds} seconds during {phase:?}")]
+    TimedOut {
+        phase: HealthPhase,
+        check_id: String,
+        timeout_seconds: u64,
+        prior_checks: Vec<CheckResult>,
+        prior_executions: Vec<CommandExecution>,
+        execution: Box<CommandExecution>,
     },
 }
