@@ -9913,18 +9913,18 @@
       "crate_name": "vibe-extension-registry",
       "file": "crates/vibe-extension-registry/src/mechanism/builtin.rs",
       "item_kind": "struct",
-      "line": 199,
+      "line": 218,
       "symbol": "vibe_extension_registry::mechanism::builtin::BuiltinMechanismSource",
-      "end_line": 222,
-      "fingerprint": "tok1:ca7c6e8e7b6e4bc7d0e223239849ffae5ac98afba04fb0fa21ffb6d91f544a78"
+      "end_line": 241,
+      "fingerprint": "tok1:15d348c5bfcb6400aa77ece17b148d5c6a8b9899c1aafccdb996da72921b9729"
     },
     {
       "crate_name": "vibe-extension-registry",
       "file": "crates/vibe-extension-registry/src/mechanism/builtin.rs",
       "item_kind": "fn",
-      "line": 239,
+      "line": 258,
       "symbol": "vibe_extension_registry::mechanism::builtin::builtin_mechanism_source",
-      "end_line": 263,
+      "end_line": 282,
       "fingerprint": "tok1:c5c439faa9e8ac7faf592a2a15c82eb7adc881a77e6b898864fc83b125a8de70"
     },
     {
@@ -10291,19 +10291,19 @@
       "crate_name": "vibe-extension-registry",
       "file": "crates/vibe-extension-registry/src/tests/mechanism_builtins.rs",
       "item_kind": "fn",
-      "line": 202,
+      "line": 218,
       "symbol": "vibe_extension_registry::tests::mechanism_builtins::a_client_projection_row_proves_provider_id_and_logical_name_are_separate",
-      "end_line": 253,
+      "end_line": 269,
       "fingerprint": "tok1:16312f1a06f0486f235cb6ff9c94565ebce516e1dd7ee59f538ccb0d5267829d"
     },
     {
       "crate_name": "vibe-extension-registry",
       "file": "crates/vibe-extension-registry/src/tests/mechanism_builtins.rs",
       "item_kind": "fn",
-      "line": 96,
+      "line": 101,
       "symbol": "vibe_extension_registry::tests::mechanism_builtins::every_shipped_row_declares_the_freshness_and_schema_the_architecture_gives_it",
-      "end_line": 200,
-      "fingerprint": "tok1:f3e73868fc459232d57326e89f382168c8f23075555acef25169a185fae08a66"
+      "end_line": 216,
+      "fingerprint": "tok1:ea7dae465b70ae82ba504ebd986ca524e1a3b1807b05ff2bfd3199f5e70e97d7"
     },
     {
       "crate_name": "vibe-extension-registry",
@@ -10311,8 +10311,8 @@
       "item_kind": "fn",
       "line": 26,
       "symbol": "vibe_extension_registry::tests::mechanism_builtins::the_reserved_identity_is_spellable_and_stable",
-      "end_line": 94,
-      "fingerprint": "tok1:a86910c95b8908d08df75120e47a528edafc9e2008a1488efce1cdf5490389ba"
+      "end_line": 99,
+      "fingerprint": "tok1:46e84118a84fb035d6cf1b8bf4427b3541193b9aaadd96a642bd5963a93550f1"
     },
     {
       "crate_name": "vibe-extension-registry",
@@ -13666,18 +13666,18 @@
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/mechanism/deploy.rs",
       "item_kind": "fn",
-      "line": 83,
+      "line": 89,
       "symbol": "vibe_lifecycle::mechanism::deploy::execute_deploy_targets",
-      "end_line": 95,
+      "end_line": 101,
       "fingerprint": "tok1:c1bb7687055129588bad4116735a77d12ab2d3b2ada3f0d6a009b34afe51cb82"
     },
     {
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/mechanism/deploy/inverse.rs",
       "item_kind": "mod",
-      "line": 24,
+      "line": 28,
       "symbol": "vibe_lifecycle::mechanism::deploy::inverse",
-      "end_line": 24,
+      "end_line": 28,
       "fingerprint": "tok1:ed6b368de55e70858f3799c0166b99f8597dd64cc951a79ccf302148c4bca9ad"
     },
     {
@@ -13747,9 +13747,9 @@
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/mechanism/deploy.rs",
       "item_kind": "fn",
-      "line": 111,
+      "line": 117,
       "symbol": "vibe_lifecycle::mechanism::deploy::list_deployments",
-      "end_line": 124,
+      "end_line": 130,
       "fingerprint": "tok1:a2a2c5496ee7621676784ed192edc285db14dd46a65b5956a465edd7fd8d7aa4"
     },
     {
@@ -13868,6 +13868,168 @@
       "symbol": "vibe_lifecycle::mechanism::deploy::observation",
       "end_line": 21,
       "fingerprint": "tok1:ed6b368de55e70858f3799c0166b99f8597dd64cc951a79ccf302148c4bca9ad"
+    },
+    {
+      "crate_name": "vibe-lifecycle",
+      "file": "crates/vibe-lifecycle/src/mechanism/deploy/opt_launcher.rs",
+      "item_kind": "mod",
+      "line": 7,
+      "symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher",
+      "end_line": 7,
+      "fingerprint": "tok1:6aa68b927e7eb8a972280eed28587d177c5c8dac8beb0caa9a39498082e97bd9"
+    },
+    {
+      "crate_name": "vibe-lifecycle",
+      "file": "crates/vibe-lifecycle/src/mechanism/deploy/opt_launcher/tests.rs",
+      "item_kind": "fn",
+      "line": 456,
+      "symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::a_later_target_failure_restores_the_exact_prior_launcher",
+      "end_line": 495,
+      "fingerprint": "tok1:134b0a54325d9131f75ca8a514e98ef32f5e003ade5d5b00ec9eee2a15492946"
+    },
+    {
+      "crate_name": "vibe-lifecycle",
+      "file": "crates/vibe-lifecycle/src/mechanism/deploy/opt_launcher/tests.rs",
+      "item_kind": "fn",
+      "line": 532,
+      "symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::a_posix_launcher_is_executable_and_mode_drift_is_not_content_only_success",
+      "end_line": 561,
+      "fingerprint": "tok1:e7baf930c878df5c647041340d6728cf078f9748c490411dcbb6fd636955336b"
+    },
+    {
+      "crate_name": "vibe-lifecycle",
+      "file": "crates/vibe-lifecycle/src/mechanism/deploy/opt_launcher/tests.rs",
+      "item_kind": "fn",
+      "line": 497,
+      "symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::an_interrupted_update_keeps_rollback_state_and_recovers_its_generation",
+      "end_line": 530,
+      "fingerprint": "tok1:b8075cd7b114908eacf43c247ea4be5ea7ae880e9e05d851ebbae7daca7fc705"
+    },
+    {
+      "crate_name": "vibe-lifecycle",
+      "file": "crates/vibe-lifecycle/src/mechanism/deploy/opt_launcher/tests.rs",
+      "item_kind": "fn",
+      "line": 199,
+      "symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::an_unsafe_artifact_filename_refuses_before_the_destination_exists",
+      "end_line": 238,
+      "fingerprint": "tok1:ea78839845fb2d62fbf0b6cd971ed5bd8f6309330824b24db9be907cc6f32c8a"
+    },
+    {
+      "crate_name": "vibe-lifecycle",
+      "file": "crates/vibe-lifecycle/src/mechanism/deploy/opt_launcher/tests.rs",
+      "item_kind": "fn",
+      "line": 132,
+      "symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::first_apply_refuses_an_unowned_occupant_without_mutating_it",
+      "end_line": 158,
+      "fingerprint": "tok1:f25b1f77d1eac9f3b8beb0d8ffaf149a2cd9ae5caa7c93c788a75bb75823622f"
+    },
+    {
+      "crate_name": "vibe-lifecycle",
+      "file": "crates/vibe-lifecycle/src/mechanism/deploy/opt_launcher/tests/inverse_drift.rs",
+      "item_kind": "fn",
+      "line": 106,
+      "symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::inverse_drift::drift_before_rollback_leaves_no_marker_and_retry_never_overwrites",
+      "end_line": 153,
+      "fingerprint": "tok1:15a1ace1909f4e46b01ebecf01bac822556976c9794d547b901abbe22e9a54b6"
+    },
+    {
+      "crate_name": "vibe-lifecycle",
+      "file": "crates/vibe-lifecycle/src/mechanism/deploy/opt_launcher/tests/inverse_drift.rs",
+      "item_kind": "fn",
+      "line": 155,
+      "symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::inverse_drift::post_restore_drift_is_not_laundered_into_rolled_back_ownership",
+      "end_line": 217,
+      "fingerprint": "tok1:962864ed3a69546499616e1f75d3801c8645fa66f97a8fc75381edc75b6ad7c3"
+    },
+    {
+      "crate_name": "vibe-lifecycle",
+      "file": "crates/vibe-lifecycle/src/mechanism/deploy/opt_launcher/tests.rs",
+      "item_kind": "fn",
+      "line": 160,
+      "symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::owned_update_is_verified_and_undeploy_removes_only_the_launcher",
+      "end_line": 197,
+      "fingerprint": "tok1:31981966baf64ca850a38cad60e6214fcd8dd484fcc61cd2971eb6e718907926"
+    },
+    {
+      "crate_name": "vibe-lifecycle",
+      "file": "crates/vibe-lifecycle/src/mechanism/deploy/opt_launcher/tests/swap.rs",
+      "item_kind": "fn",
+      "line": 171,
+      "symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::swap::artifact_swap_after_resolution_leaves_owned_destination_byte_and_mode_exact",
+      "end_line": 212,
+      "fingerprint": "tok1:66d7ddd77962f71b64fb0470f816094a2d1893ece3a3efac0f36e92b5bd3aad7"
+    },
+    {
+      "crate_name": "vibe-lifecycle",
+      "file": "crates/vibe-lifecycle/src/mechanism/deploy/opt_launcher/tests/swap.rs",
+      "item_kind": "fn",
+      "line": 503,
+      "symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::swap::backup_swap_after_handle_load_refuses_before_destination_mutation",
+      "end_line": 585,
+      "fingerprint": "tok1:9f5a7127bfaea0b2994e1c72dd63ea7de80f350da9c3a53e8d01a65e84776dbd"
+    },
+    {
+      "crate_name": "vibe-lifecycle",
+      "file": "crates/vibe-lifecycle/src/mechanism/deploy/opt_launcher/tests/swap.rs",
+      "item_kind": "fn",
+      "line": 375,
+      "symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::swap::manual_reversion_to_prior_bytes_without_inverse_marker_still_refuses",
+      "end_line": 398,
+      "fingerprint": "tok1:fc86182267d8366d75e2d3ca23e26aff040ca4b4229c2f11df7603870bd0cdc2"
+    },
+    {
+      "crate_name": "vibe-lifecycle",
+      "file": "crates/vibe-lifecycle/src/mechanism/deploy/opt_launcher/tests/swap.rs",
+      "item_kind": "fn",
+      "line": 241,
+      "symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::swap::modified_after_crash_backup_refuses_recovery",
+      "end_line": 274,
+      "fingerprint": "tok1:27e55221f0f2e4c3b894915fac4e67ffd1c4329adba1768126950cb0ddf7eaf9"
+    },
+    {
+      "crate_name": "vibe-lifecycle",
+      "file": "crates/vibe-lifecycle/src/mechanism/deploy/opt_launcher/tests/swap.rs",
+      "item_kind": "fn",
+      "line": 454,
+      "symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::swap::raced_destination_is_not_trusted_as_the_receipt_prior_backup",
+      "end_line": 501,
+      "fingerprint": "tok1:2d91c2aff7440380e109e2916e82d2985c14ee43daf9533394670602e47ac166"
+    },
+    {
+      "crate_name": "vibe-lifecycle",
+      "file": "crates/vibe-lifecycle/src/mechanism/deploy/opt_launcher/tests/swap.rs",
+      "item_kind": "fn",
+      "line": 400,
+      "symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::swap::recovery_before_prior_save_remains_reversible_for_a_later_saga_failure",
+      "end_line": 452,
+      "fingerprint": "tok1:38e3d014f7b447e2d0d035be27eeb75dba1b4031876f22b3cc2cb1d796f6d5ef"
+    },
+    {
+      "crate_name": "vibe-lifecycle",
+      "file": "crates/vibe-lifecycle/src/mechanism/deploy/opt_launcher/tests/swap.rs",
+      "item_kind": "fn",
+      "line": 300,
+      "symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::swap::retry_after_restore_before_receipt_publication_is_idempotent",
+      "end_line": 373,
+      "fingerprint": "tok1:54ba953cd9ba0a186419ea4a9bb3ff7ec6d61fe7c1ffc5254c32c6ecf8d7253a"
+    },
+    {
+      "crate_name": "vibe-lifecycle",
+      "file": "crates/vibe-lifecycle/src/mechanism/deploy/opt_launcher/tests/swap.rs",
+      "item_kind": "fn",
+      "line": 276,
+      "symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::swap::stale_prior_generation_backup_refuses_recovery",
+      "end_line": 298,
+      "fingerprint": "tok1:9e877ca9acd48cbc15f23078162d0d5e60de2473e878d5b9d9e738a03cf1961c"
+    },
+    {
+      "crate_name": "vibe-lifecycle",
+      "file": "crates/vibe-lifecycle/src/mechanism/deploy/opt_launcher/tests.rs",
+      "item_kind": "fn",
+      "line": 240,
+      "symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::the_adapter_epoch_is_part_of_config_and_therefore_the_plan_hash",
+      "end_line": 287,
+      "fingerprint": "tok1:33de0c97769a75e2a7d80f55b6031503b4ebb6e59c660ac8e9a66b13d0d908f9"
     },
     {
       "crate_name": "vibe-lifecycle",
@@ -14692,9 +14854,9 @@
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
       "item_kind": "mod",
-      "line": 44,
+      "line": 45,
       "symbol": "vibe_lifecycle::mechanism::deploy::state",
-      "end_line": 44,
+      "end_line": 45,
       "fingerprint": "tok1:ed6b368de55e70858f3799c0166b99f8597dd64cc951a79ccf302148c4bca9ad"
     },
     {
@@ -14827,9 +14989,9 @@
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/mechanism/deploy/transaction.rs",
       "item_kind": "mod",
-      "line": 42,
+      "line": 33,
       "symbol": "vibe_lifecycle::mechanism::deploy::transaction",
-      "end_line": 42,
+      "end_line": 33,
       "fingerprint": "tok1:ed6b368de55e70858f3799c0166b99f8597dd64cc951a79ccf302148c4bca9ad"
     },
     {
@@ -14935,9 +15097,9 @@
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/mechanism/deploy.rs",
       "item_kind": "fn",
-      "line": 97,
+      "line": 103,
       "symbol": "vibe_lifecycle::mechanism::deploy::undeploy_targets",
-      "end_line": 109,
+      "end_line": 115,
       "fingerprint": "tok1:19309fcd77a4a6eb84fca84a381e7c8fad0d1d836741c7faf918346553c03c92"
     },
     {
@@ -15007,27 +15169,27 @@
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/mechanism/package.rs",
       "item_kind": "struct",
-      "line": 60,
+      "line": 63,
       "symbol": "vibe_lifecycle::mechanism::package::PackageExecution",
-      "end_line": 119,
+      "end_line": 122,
       "fingerprint": "tok1:b8ddb4e4d6868644c08a88563bbad92a893da2401db0e76b3f75ea995e136a70"
     },
     {
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/mechanism/package.rs",
       "item_kind": "struct",
-      "line": 168,
+      "line": 171,
       "symbol": "vibe_lifecycle::mechanism::package::PackageOutcome",
-      "end_line": 194,
+      "end_line": 197,
       "fingerprint": "tok1:79526f15e32939a3ea7c4530b92f08b69c1d6db3465ebd252a3afdd8a141b2da"
     },
     {
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/mechanism/package.rs",
       "item_kind": "struct",
-      "line": 136,
+      "line": 139,
       "symbol": "vibe_lifecycle::mechanism::package::PackagedArtifact",
-      "end_line": 166,
+      "end_line": 169,
       "fingerprint": "tok1:a2c3de6ed88741a1494218cf34e4e6ca11e5bd3b137a5654a9c7a67e07ca85a1"
     },
     {
@@ -15088,9 +15250,9 @@
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/mechanism/package.rs",
       "item_kind": "fn",
-      "line": 196,
+      "line": 199,
       "symbol": "vibe_lifecycle::mechanism::package::execute_package_targets",
-      "end_line": 213,
+      "end_line": 216,
       "fingerprint": "tok1:896b418aff2981cb5030681416edeeaaa007507f9b45d93f97683464e96897ba"
     },
     {
@@ -15119,6 +15281,69 @@
       "symbol": "vibe_lifecycle::mechanism::package::protocol",
       "end_line": 15,
       "fingerprint": "tok1:a48cfef79193898f1c7855b4f3bfc41c1a9f7bd2cf7bea0ccc950c0f48a8b10d"
+    },
+    {
+      "crate_name": "vibe-lifecycle",
+      "file": "crates/vibe-lifecycle/src/mechanism/package/static_file.rs",
+      "item_kind": "mod",
+      "line": 8,
+      "symbol": "vibe_lifecycle::mechanism::package::static_file",
+      "end_line": 8,
+      "fingerprint": "tok1:6aa68b927e7eb8a972280eed28587d177c5c8dac8beb0caa9a39498082e97bd9"
+    },
+    {
+      "crate_name": "vibe-lifecycle",
+      "file": "crates/vibe-lifecycle/src/mechanism/package/static_file.rs",
+      "item_kind": "fn",
+      "line": 74,
+      "symbol": "vibe_lifecycle::mechanism::package::static_file::StaticFileProvider::plan",
+      "end_line": 159,
+      "fingerprint": "tok1:0525fd854b4bd2ee419e120a461c40536add5cf0f630989a94984b81d2c9d66a"
+    },
+    {
+      "crate_name": "vibe-lifecycle",
+      "file": "crates/vibe-lifecycle/src/mechanism/package/static_file/tests.rs",
+      "item_kind": "fn",
+      "line": 128,
+      "symbol": "vibe_lifecycle::mechanism::package::static_file::tests::a_hard_link_source_refuses_before_the_existing_output_is_reset",
+      "end_line": 151,
+      "fingerprint": "tok1:45da07a9a5abeda55a12f6f4214617cebcf2eeb400fb3a0ac69564aae0472749"
+    },
+    {
+      "crate_name": "vibe-lifecycle",
+      "file": "crates/vibe-lifecycle/src/mechanism/package/static_file/tests.rs",
+      "item_kind": "fn",
+      "line": 153,
+      "symbol": "vibe_lifecycle::mechanism::package::static_file::tests::a_source_changed_after_resolution_refuses_without_resetting_prior_output",
+      "end_line": 191,
+      "fingerprint": "tok1:ec46d0468d20e3ba4269e19bca191d3a7157b7ce0766da9f5fdae49227edd10a"
+    },
+    {
+      "crate_name": "vibe-lifecycle",
+      "file": "crates/vibe-lifecycle/src/mechanism/package/static_file/tests.rs",
+      "item_kind": "fn",
+      "line": 29,
+      "symbol": "vibe_lifecycle::mechanism::package::static_file::tests::an_opaque_workspace_file_is_copied_exactly_and_recorded",
+      "end_line": 53,
+      "fingerprint": "tok1:8c52a194dfcb42509d9e629cd71a63b442877c757227e2ca41eaf5511ad4e314"
+    },
+    {
+      "crate_name": "vibe-lifecycle",
+      "file": "crates/vibe-lifecycle/src/mechanism/package/static_file/tests.rs",
+      "item_kind": "fn",
+      "line": 78,
+      "symbol": "vibe_lifecycle::mechanism::package::static_file::tests::invalid_input_and_output_shapes_refuse_before_a_write",
+      "end_line": 126,
+      "fingerprint": "tok1:5a29fdbca438686885e66b687358fc245cc7aa06e76b445074d615901bda2d0e"
+    },
+    {
+      "crate_name": "vibe-lifecycle",
+      "file": "crates/vibe-lifecycle/src/mechanism/package/static_file/tests.rs",
+      "item_kind": "fn",
+      "line": 55,
+      "symbol": "vibe_lifecycle::mechanism::package::static_file::tests::unsafe_filename_and_nonempty_config_refuse_before_the_output_root_exists",
+      "end_line": 76,
+      "fingerprint": "tok1:ca215e87e907ebe941205c8449421a5e22450b6c5073c96b8fe9b0925d5cf70b"
     },
     {
       "crate_name": "vibe-lifecycle",
@@ -20830,55 +21055,64 @@
       "crate_name": "vibe-safefs",
       "file": "crates/vibe-safefs/src/file.rs",
       "item_kind": "enum",
-      "line": 40,
+      "line": 43,
       "symbol": "vibe_safefs::file::Presence",
-      "end_line": 52,
+      "end_line": 55,
       "fingerprint": "tok1:4b753670f3588e7bfc7942d6b920f6077b6ea195d6dd26607ff71d9c5c7b520d"
     },
     {
       "crate_name": "vibe-safefs",
       "file": "crates/vibe-safefs/src/file.rs",
       "item_kind": "fn",
-      "line": 285,
+      "line": 315,
       "symbol": "vibe_safefs::file::Project::preflight",
-      "end_line": 321,
+      "end_line": 351,
       "fingerprint": "tok1:2fed38a4e1398cb1633e57f48985dee983e44940e96c28c0174ea26e3a76d101"
     },
     {
       "crate_name": "vibe-safefs",
       "file": "crates/vibe-safefs/src/file.rs",
       "item_kind": "fn",
-      "line": 177,
+      "line": 207,
       "symbol": "vibe_safefs::file::Project::preflight_set",
-      "end_line": 188,
+      "end_line": 218,
       "fingerprint": "tok1:95a4abadfbfffff5184905be7cfcd30ba8267376624f33a067ceabce35ce326d"
     },
     {
       "crate_name": "vibe-safefs",
       "file": "crates/vibe-safefs/src/file.rs",
       "item_kind": "fn",
-      "line": 190,
+      "line": 220,
       "symbol": "vibe_safefs::file::Project::preflight_set_against",
-      "end_line": 236,
+      "end_line": 266,
       "fingerprint": "tok1:3d436c74c8cccd0eeddbfa1a5e6f95e69f659eeeb3a34dc39b083649106cda1a"
     },
     {
       "crate_name": "vibe-safefs",
       "file": "crates/vibe-safefs/src/file.rs",
       "item_kind": "fn",
-      "line": 351,
+      "line": 387,
       "symbol": "vibe_safefs::file::Project::probe_regular_nonempty",
-      "end_line": 379,
+      "end_line": 415,
       "fingerprint": "tok1:ecdf841d67491327751ea1257be4c4e85180f16ec32c23937c7a383b65ebad28"
     },
     {
       "crate_name": "vibe-safefs",
       "file": "crates/vibe-safefs/src/file.rs",
       "item_kind": "fn",
-      "line": 64,
+      "line": 79,
       "symbol": "vibe_safefs::file::Project::write_atomic_in",
-      "end_line": 175,
-      "fingerprint": "tok1:65d82971dbede5c2421a5021fe1f037a901ee5188c8ad0628bf26991401f057f"
+      "end_line": 92,
+      "fingerprint": "tok1:664395fda91f27b8363a886d782f93e8a6ab0aafc9d20f5b0ebb6324cd3e795e"
+    },
+    {
+      "crate_name": "vibe-safefs",
+      "file": "crates/vibe-safefs/src/file/stable.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_safefs::file::stable",
+      "end_line": 3,
+      "fingerprint": "tok1:6aa68b927e7eb8a972280eed28587d177c5c8dac8beb0caa9a39498082e97bd9"
     },
     {
       "crate_name": "vibe-safefs",
@@ -20911,54 +21145,54 @@
       "crate_name": "vibe-safefs",
       "file": "crates/vibe-safefs/src/project.rs",
       "item_kind": "enum",
-      "line": 40,
+      "line": 41,
       "symbol": "vibe_safefs::project::ExclusiveChildError",
-      "end_line": 73,
+      "end_line": 74,
       "fingerprint": "tok1:e6f8c3d989ff6be5ac03eaf6e56e43abd6db32645222c032a47630a2906eb361"
     },
     {
       "crate_name": "vibe-safefs",
       "file": "crates/vibe-safefs/src/project.rs",
       "item_kind": "struct",
-      "line": 369,
+      "line": 370,
       "symbol": "vibe_safefs::project::LockGuard",
-      "end_line": 375,
+      "end_line": 376,
       "fingerprint": "tok1:d998f099203ed6426c36959f9499bdac87a06d0f6dbb483bf0a1c28eb71d942a"
     },
     {
       "crate_name": "vibe-safefs",
       "file": "crates/vibe-safefs/src/project.rs",
       "item_kind": "struct",
-      "line": 26,
+      "line": 27,
       "symbol": "vibe_safefs::project::Pinned",
-      "end_line": 38,
+      "end_line": 39,
       "fingerprint": "tok1:3b8baaac026234ffe1911a9386d18f8e69c1b8ecd895e3409daf6c4a401858fd"
     },
     {
       "crate_name": "vibe-safefs",
       "file": "crates/vibe-safefs/src/project.rs",
       "item_kind": "fn",
-      "line": 470,
+      "line": 471,
       "symbol": "vibe_safefs::project::Pinned::create_child_exclusive",
-      "end_line": 510,
+      "end_line": 511,
       "fingerprint": "tok1:b5a322c0bb0a92f4fb3f3d4780be994a364c2f9d101cffe99690e7917470ffe7"
     },
     {
       "crate_name": "vibe-safefs",
       "file": "crates/vibe-safefs/src/project.rs",
       "item_kind": "fn",
-      "line": 403,
+      "line": 404,
       "symbol": "vibe_safefs::project::Pinned::ensure_child_recording",
-      "end_line": 435,
+      "end_line": 436,
       "fingerprint": "tok1:1224f111ea394b10b35b0f9d223bb11209276b6db112a05c01f5f9e621435153"
     },
     {
       "crate_name": "vibe-safefs",
       "file": "crates/vibe-safefs/src/project.rs",
       "item_kind": "struct",
-      "line": 13,
+      "line": 14,
       "symbol": "vibe_safefs::project::Project",
-      "end_line": 24,
+      "end_line": 25,
       "fingerprint": "tok1:7b433524d841763adb62a3c994f5e3a3268920cf2ebf9f3d056c8ea83bee62ff"
     },
     {
@@ -34126,7 +34360,7 @@
     {
       "file": "crates/vibe-extension-registry/src/mechanism/builtin.rs",
       "from_symbol": "vibe_extension_registry::mechanism::builtin::BuiltinMechanismSource",
-      "line": 218,
+      "line": 237,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE",
       "verb": "documents"
@@ -34134,7 +34368,7 @@
     {
       "file": "crates/vibe-extension-registry/src/mechanism/builtin.rs",
       "from_symbol": "vibe_extension_registry::mechanism::builtin::builtin_mechanism_source",
-      "line": 244,
+      "line": 263,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE",
       "verb": "implements"
@@ -34486,7 +34720,7 @@
     {
       "file": "crates/vibe-extension-registry/src/tests/mechanism_builtins.rs",
       "from_symbol": "vibe_extension_registry::tests::mechanism_builtins::a_client_projection_row_proves_provider_id_and_logical_name_are_separate",
-      "line": 212,
+      "line": 228,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE",
       "verb": "verifies"
@@ -34494,7 +34728,7 @@
     {
       "file": "crates/vibe-extension-registry/src/tests/mechanism_builtins.rs",
       "from_symbol": "vibe_extension_registry::tests::mechanism_builtins::every_shipped_row_declares_the_freshness_and_schema_the_architecture_gives_it",
-      "line": 106,
+      "line": 112,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE",
       "verb": "verifies"
@@ -37609,7 +37843,7 @@
     {
       "file": "crates/vibe-lifecycle/src/mechanism/deploy.rs",
       "from_symbol": "vibe_lifecycle::mechanism::deploy::execute_deploy_targets",
-      "line": 89,
+      "line": 95,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS",
       "verb": "implements"
@@ -37617,7 +37851,7 @@
     {
       "file": "crates/vibe-lifecycle/src/mechanism/deploy/inverse.rs",
       "from_symbol": "vibe_lifecycle::mechanism::deploy::inverse",
-      "line": 24,
+      "line": 28,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS",
       "verb": "implements"
@@ -37681,7 +37915,7 @@
     {
       "file": "crates/vibe-lifecycle/src/mechanism/deploy.rs",
       "from_symbol": "vibe_lifecycle::mechanism::deploy::list_deployments",
-      "line": 116,
+      "line": 122,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS",
       "verb": "implements"
@@ -37789,6 +38023,150 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-lifecycle/src/mechanism/deploy/opt_launcher.rs",
+      "from_symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-LAUNCHER-DELIVERY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-lifecycle/src/mechanism/deploy/opt_launcher/tests.rs",
+      "from_symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::a_later_target_failure_restores_the_exact_prior_launcher",
+      "line": 457,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-LAUNCHER-DELIVERY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-lifecycle/src/mechanism/deploy/opt_launcher/tests.rs",
+      "from_symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::a_posix_launcher_is_executable_and_mode_drift_is_not_content_only_success",
+      "line": 534,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-LAUNCHER-DELIVERY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-lifecycle/src/mechanism/deploy/opt_launcher/tests.rs",
+      "from_symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::an_interrupted_update_keeps_rollback_state_and_recovers_its_generation",
+      "line": 498,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-LAUNCHER-DELIVERY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-lifecycle/src/mechanism/deploy/opt_launcher/tests.rs",
+      "from_symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::an_unsafe_artifact_filename_refuses_before_the_destination_exists",
+      "line": 200,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-LAUNCHER-DELIVERY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-lifecycle/src/mechanism/deploy/opt_launcher/tests.rs",
+      "from_symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::first_apply_refuses_an_unowned_occupant_without_mutating_it",
+      "line": 133,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-LAUNCHER-DELIVERY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-lifecycle/src/mechanism/deploy/opt_launcher/tests/inverse_drift.rs",
+      "from_symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::inverse_drift::drift_before_rollback_leaves_no_marker_and_retry_never_overwrites",
+      "line": 107,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-LAUNCHER-DELIVERY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-lifecycle/src/mechanism/deploy/opt_launcher/tests/inverse_drift.rs",
+      "from_symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::inverse_drift::post_restore_drift_is_not_laundered_into_rolled_back_ownership",
+      "line": 156,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-LAUNCHER-DELIVERY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-lifecycle/src/mechanism/deploy/opt_launcher/tests.rs",
+      "from_symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::owned_update_is_verified_and_undeploy_removes_only_the_launcher",
+      "line": 161,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-LAUNCHER-DELIVERY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-lifecycle/src/mechanism/deploy/opt_launcher/tests/swap.rs",
+      "from_symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::swap::artifact_swap_after_resolution_leaves_owned_destination_byte_and_mode_exact",
+      "line": 172,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-LAUNCHER-DELIVERY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-lifecycle/src/mechanism/deploy/opt_launcher/tests/swap.rs",
+      "from_symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::swap::backup_swap_after_handle_load_refuses_before_destination_mutation",
+      "line": 504,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-LAUNCHER-DELIVERY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-lifecycle/src/mechanism/deploy/opt_launcher/tests/swap.rs",
+      "from_symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::swap::manual_reversion_to_prior_bytes_without_inverse_marker_still_refuses",
+      "line": 376,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-LAUNCHER-DELIVERY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-lifecycle/src/mechanism/deploy/opt_launcher/tests/swap.rs",
+      "from_symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::swap::modified_after_crash_backup_refuses_recovery",
+      "line": 242,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-LAUNCHER-DELIVERY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-lifecycle/src/mechanism/deploy/opt_launcher/tests/swap.rs",
+      "from_symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::swap::raced_destination_is_not_trusted_as_the_receipt_prior_backup",
+      "line": 455,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-LAUNCHER-DELIVERY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-lifecycle/src/mechanism/deploy/opt_launcher/tests/swap.rs",
+      "from_symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::swap::recovery_before_prior_save_remains_reversible_for_a_later_saga_failure",
+      "line": 401,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-LAUNCHER-DELIVERY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-lifecycle/src/mechanism/deploy/opt_launcher/tests/swap.rs",
+      "from_symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::swap::retry_after_restore_before_receipt_publication_is_idempotent",
+      "line": 301,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-LAUNCHER-DELIVERY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-lifecycle/src/mechanism/deploy/opt_launcher/tests/swap.rs",
+      "from_symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::swap::stale_prior_generation_backup_refuses_recovery",
+      "line": 277,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-LAUNCHER-DELIVERY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-lifecycle/src/mechanism/deploy/opt_launcher/tests.rs",
+      "from_symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::the_adapter_epoch_is_part_of_config_and_therefore_the_plan_hash",
+      "line": 241,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-LAUNCHER-DELIVERY",
+      "verb": "verifies"
     },
     {
       "file": "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
@@ -38521,7 +38899,7 @@
     {
       "file": "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
       "from_symbol": "vibe_lifecycle::mechanism::deploy::state",
-      "line": 44,
+      "line": 45,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS",
       "verb": "implements"
@@ -38641,7 +39019,7 @@
     {
       "file": "crates/vibe-lifecycle/src/mechanism/deploy/transaction.rs",
       "from_symbol": "vibe_lifecycle::mechanism::deploy::transaction",
-      "line": 42,
+      "line": 33,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS",
       "verb": "implements"
@@ -38737,7 +39115,7 @@
     {
       "file": "crates/vibe-lifecycle/src/mechanism/deploy.rs",
       "from_symbol": "vibe_lifecycle::mechanism::deploy::undeploy_targets",
-      "line": 103,
+      "line": 109,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS",
       "verb": "implements"
@@ -38801,7 +39179,7 @@
     {
       "file": "crates/vibe-lifecycle/src/mechanism/package.rs",
       "from_symbol": "vibe_lifecycle::mechanism::package::PackageExecution",
-      "line": 103,
+      "line": 106,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE",
       "verb": "documents"
@@ -38809,7 +39187,7 @@
     {
       "file": "crates/vibe-lifecycle/src/mechanism/package.rs",
       "from_symbol": "vibe_lifecycle::mechanism::package::PackageOutcome",
-      "line": 183,
+      "line": 186,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE",
       "verb": "documents"
@@ -38817,7 +39195,7 @@
     {
       "file": "crates/vibe-lifecycle/src/mechanism/package.rs",
       "from_symbol": "vibe_lifecycle::mechanism::package::PackagedArtifact",
-      "line": 152,
+      "line": 155,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ARTIFACT-REGISTRY",
       "verb": "documents"
@@ -38873,7 +39251,7 @@
     {
       "file": "crates/vibe-lifecycle/src/mechanism/package.rs",
       "from_symbol": "vibe_lifecycle::mechanism::package::execute_package_targets",
-      "line": 201,
+      "line": 204,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE",
       "verb": "implements"
@@ -38901,6 +39279,62 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-lifecycle/src/mechanism/package/static_file.rs",
+      "from_symbol": "vibe_lifecycle::mechanism::package::static_file",
+      "line": 8,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-LAUNCHER-DELIVERY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-lifecycle/src/mechanism/package/static_file.rs",
+      "from_symbol": "vibe_lifecycle::mechanism::package::static_file::StaticFileProvider::plan",
+      "line": 74,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-LAUNCHER-DELIVERY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-lifecycle/src/mechanism/package/static_file/tests.rs",
+      "from_symbol": "vibe_lifecycle::mechanism::package::static_file::tests::a_hard_link_source_refuses_before_the_existing_output_is_reset",
+      "line": 129,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-LAUNCHER-DELIVERY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-lifecycle/src/mechanism/package/static_file/tests.rs",
+      "from_symbol": "vibe_lifecycle::mechanism::package::static_file::tests::a_source_changed_after_resolution_refuses_without_resetting_prior_output",
+      "line": 154,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-LAUNCHER-DELIVERY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-lifecycle/src/mechanism/package/static_file/tests.rs",
+      "from_symbol": "vibe_lifecycle::mechanism::package::static_file::tests::an_opaque_workspace_file_is_copied_exactly_and_recorded",
+      "line": 30,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-LAUNCHER-DELIVERY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-lifecycle/src/mechanism/package/static_file/tests.rs",
+      "from_symbol": "vibe_lifecycle::mechanism::package::static_file::tests::invalid_input_and_output_shapes_refuse_before_a_write",
+      "line": 79,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-LAUNCHER-DELIVERY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-lifecycle/src/mechanism/package/static_file/tests.rs",
+      "from_symbol": "vibe_lifecycle::mechanism::package::static_file::tests::unsafe_filename_and_nonempty_config_refuse_before_the_output_root_exists",
+      "line": 56,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-LAUNCHER-DELIVERY",
+      "verb": "verifies"
     },
     {
       "file": "crates/vibe-lifecycle/src/mechanism/package/tests.rs",
@@ -44260,7 +44694,7 @@
     {
       "file": "crates/vibe-safefs/src/file.rs",
       "from_symbol": "vibe_safefs::file::Presence",
-      "line": 42,
+      "line": 45,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE",
       "verb": "documents"
@@ -44268,7 +44702,7 @@
     {
       "file": "crates/vibe-safefs/src/file.rs",
       "from_symbol": "vibe_safefs::file::Project::preflight",
-      "line": 292,
+      "line": 322,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE",
       "verb": "implements"
@@ -44276,7 +44710,7 @@
     {
       "file": "crates/vibe-safefs/src/file.rs",
       "from_symbol": "vibe_safefs::file::Project::preflight_set",
-      "line": 185,
+      "line": 215,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE",
       "verb": "implements"
@@ -44284,7 +44718,7 @@
     {
       "file": "crates/vibe-safefs/src/file.rs",
       "from_symbol": "vibe_safefs::file::Project::preflight_set_against",
-      "line": 205,
+      "line": 235,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE",
       "verb": "implements"
@@ -44292,7 +44726,7 @@
     {
       "file": "crates/vibe-safefs/src/file.rs",
       "from_symbol": "vibe_safefs::file::Project::probe_regular_nonempty",
-      "line": 355,
+      "line": 391,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-FINGERPRINT",
       "verb": "implements"
@@ -44300,9 +44734,17 @@
     {
       "file": "crates/vibe-safefs/src/file.rs",
       "from_symbol": "vibe_safefs::file::Project::write_atomic_in",
-      "line": 69,
+      "line": 84,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-safefs/src/file/stable.rs",
+      "from_symbol": "vibe_safefs::file::stable",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-LAUNCHER-DELIVERY",
       "verb": "implements"
     },
     {
@@ -44332,7 +44774,7 @@
     {
       "file": "crates/vibe-safefs/src/project.rs",
       "from_symbol": "vibe_safefs::project::ExclusiveChildError",
-      "line": 55,
+      "line": 56,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE",
       "verb": "documents"
@@ -44340,7 +44782,7 @@
     {
       "file": "crates/vibe-safefs/src/project.rs",
       "from_symbol": "vibe_safefs::project::LockGuard",
-      "line": 371,
+      "line": 372,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE",
       "verb": "documents"
@@ -44348,7 +44790,7 @@
     {
       "file": "crates/vibe-safefs/src/project.rs",
       "from_symbol": "vibe_safefs::project::Pinned",
-      "line": 34,
+      "line": 35,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE",
       "verb": "documents"
@@ -44356,7 +44798,7 @@
     {
       "file": "crates/vibe-safefs/src/project.rs",
       "from_symbol": "vibe_safefs::project::Pinned::create_child_exclusive",
-      "line": 480,
+      "line": 481,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE",
       "verb": "implements"
@@ -44364,7 +44806,7 @@
     {
       "file": "crates/vibe-safefs/src/project.rs",
       "from_symbol": "vibe_safefs::project::Pinned::ensure_child_recording",
-      "line": 411,
+      "line": 412,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE",
       "verb": "implements"
@@ -44372,7 +44814,7 @@
     {
       "file": "crates/vibe-safefs/src/project.rs",
       "from_symbol": "vibe_safefs::project::Project",
-      "line": 20,
+      "line": 21,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE",
       "verb": "implements"
@@ -51485,10 +51927,10 @@
     },
     {
       "anchor": "QUIRK-VVM-STORE-MOVED-UNDER-DOT-VIBE",
-      "content_hash": "sha256:f9471f993c366d152c36a482a8ef93ceb2b5163b27c9b6b4e1ccb143d1acebf0",
+      "content_hash": "sha256:8262d048434810d2f37ad16c243777966cd116d6b61bcd4dd8cb3e456b77c0e2",
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
-      "heading": "**The vibevm version store lives at\n  `~/.vibe/opt` on this box since 2026-08-20** (owner's instruction): `~/.vibe/opt/bin/`\n  holds the `vibe` shims, `~/.vibe/opt/vibevm/` the versions and the `current`\n  pointer. **`~/opt/bin` is NOT retired** — three sibling products (`vibeframe`,\n  `vibeterm`, `launcher`) still keep their stores under `~/opt/` and their shims\n  there, and the delegation launchers `claudez` / `claudez2` are still\n  `~/opt/bin/claudez*` (they belong to no store). The user `PATH` therefore\n  carries **both** directories, `~/.vibe/opt/bin` first. Verified live: `vibe\n  --version` answers from the new location. @status:impl/done",
+      "heading": "**The vibevm version store lives at\n  `~/.vibe/opt` on this box since 2026-08-20** (owner's instruction): `~/.vibe/opt/bin/`\n  holds the `vibe` shims, `~/.vibe/opt/vibevm/` the versions and the `current`\n  pointer. **`~/opt/bin` is NOT retired** — three sibling products (`vibeframe`,\n  `vibeterm`, `launcher`) still keep their stores under `~/opt/` and their shims\n  there. The canonical `claudez.ps1` / `claudez.cmd` are now receipt-deployed by\n  `tool:org.vibevm.world/zai-glm-claude` under `~/.vibe/opt/bin`; old\n  `~/opt/bin/claudez*` copies are legacy, and `claudez2` remains disabled unless\n  the owner explicitly re-enables it. The user `PATH` therefore carries **both**\n  directories, `~/.vibe/opt/bin` first. Verified live: `vibe --version` and the\n  canonical GLM launchers resolve from the new location. @status:impl/done",
       "line": 88,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#QUIRK-VVM-STORE-MOVED-UNDER-DOT-VIBE"
     },
@@ -51498,7 +51940,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "**The last path component `opt` is\n  load-bearing and that is why the new home is `~/.vibe/opt` rather than\n  `~/.vibe`.** The version manager recognises a managed install by the shape\n  `…/opt/<product>/versions/<kind>/<id>/<n>/`, matching the literal names\n  `opt`, the product, and `versions`. Keeping `opt` as the final component made\n  the move a pure file operation with **no code change**. Renaming it is a\n  product-wide decision, not a machine one — the sibling products key on the\n  same shape. @status:impl/done",
-      "line": 97,
+      "line": 99,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#QUIRK-THE-OPT-NAME-IS-LORE-BEARING"
     },
     {
@@ -51507,7 +51949,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "**A `vibe` shim finds its\n  version relative to its own directory** (`<shim dir>/../<product>/current`), so\n  moving the shims without moving the store beside them silently breaks the\n  command — the shim is found on `PATH`, runs, and reports no active version.\n  Met and reverted during the 2026-08-20 move; the working order is: move the\n  store and the shims together, rewrite the absolute path inside `current`, then\n  touch `PATH`. @status:impl/done",
-      "line": 105,
+      "line": 107,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#QUIRK-A-SHIM-RESOLVES-RELATIVE-TO-ITSELF"
     },
     {
@@ -51516,7 +51958,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "**The user `PATH` in\n  `HKCU\\Environment` is `REG_EXPAND_SZ` and contains `%USERPROFILE%`.** Reading it\n  through the ordinary accessor returns the EXPANDED string; writing that back\n  destroys the variable reference (here, `%USERPROFILE%\\go\\bin` would have become\n  a literal path). Read it unexpanded, edit the raw string, and write it back with\n  the value kind preserved. @status:impl/done",
-      "line": 112,
+      "line": 114,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#QUIRK-USER-PATH-IS-EXPANDABLE-AND-MUST-BE-READ-RAW"
     },
     {
@@ -51525,7 +51967,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "Trigger phrases that switch the session into an alternate working posture are catalogued in [PROP-006](../common/PROP-006-operating-modes.xml). Recognise a codeword when the owner invokes it; otherwise treat the session as default posture (the four rules from `CLAUDE.md` in their plain reading). @status:impl/done",
-      "line": 121,
+      "line": 123,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#operating-modes-intro"
     },
     {
@@ -51534,7 +51976,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "Codewords currently in force: @status:impl/done",
-      "line": 122,
+      "line": 124,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#codewords-lead"
     },
     {
@@ -51543,7 +51985,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "**«move fast and break things»** ([PROP-006 §2](../common/PROP-006-operating-modes.xml#mfbt)) — pre-authorised heads-down execution. Maximum scope, testable phases, no mid-work confirmations, full reasoning depth. The four `CLAUDE.md` rules survive unchanged; only Rule 4's \"ask before routine large changes\" is suspended. Non-routine red lines (force-push, history rewrite, large blobs, CI / signing / secrets, irreversible ops) STILL require explicit owner confirmation when active. @status:impl/done",
-      "line": 124,
+      "line": 126,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#CODEWORD-MFBT"
     },
     {
@@ -64858,7 +65300,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:5727d7d365714de08c4dc4740d5211e12bddb956b90bbf24ab846a618ca522c9",
+      "content_hash": "sha256:c214c9ec81cfef4121f18553cb6626ef8f6b14a277d10611f994158828ec0f4d",
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "PROP-054 — The vibe lifecycle and the extension machine",
@@ -66766,7 +67208,7 @@
     },
     {
       "anchor": "open",
-      "content_hash": "sha256:59fc1e8d52cf30c8802b82ffe8c212274bae86ec290224da12fa2010219538ac",
+      "content_hash": "sha256:c730d82ea68473927a9fe6164e877153fd6b713ea0820394120599bc15c50bef",
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "13. Open questions — the owner's forks",
@@ -66802,12 +67244,66 @@
     },
     {
       "anchor": "OPEN-DEPLOY-TARGETS",
-      "content_hash": "sha256:d1f42e506ddb5d8a4439d3962a69cae9322ced59e23b70e4c930446e14a30ace",
+      "content_hash": "sha256:061e3b717a24b54bf6834a6e41aaad6eac20651060fddd2e449cbdfcd48c41e8",
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
-      "heading": "**Deploy first targets — CLOSED (owner, 2026-08-26):** selected genres are project/user agent projections for Claude Code, Codex and OpenCode; VibeVM-owned local tools under `~/.vibe/bin`; an explicit custom installer for ordinary applications; registry/marketplace/server/remote providers; and future system-scope package/config/service providers. The first commissioning cut is isolated local projection/`vibe-bin`, never a live publish/server mutation. Runtime target/provider statuses remain R8 work at their own anchors. @status:spec/done",
+      "heading": "**Deploy first targets — CLOSED (owner, 2026-08-26; extended 2026-09-04):** selected genres are project/user agent projections for Claude Code, Codex and OpenCode; VibeVM-owned local tools under `~/.vibe/bin`; receipt-owned operator launchers under the VibeVM-controlled `~/.vibe/opt/bin`; an explicit custom installer for ordinary applications; registry/marketplace/server/remote providers; and future system-scope package/config/service providers. The first commissioning cut is isolated local projection/`vibe-bin`/`vibe-opt-launcher`, never a live publish/server mutation. Runtime target/provider statuses remain R8 work at their own anchors. @status:spec/done",
       "line": 375,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS"
+    },
+    {
+      "anchor": "zai-glm-launcher-delivery",
+      "content_hash": "sha256:67e2f20d89b76e2659d21f72f8b2444839187cd1adccad77d375d58b2e8668dc",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "13.1 Static files and VibeVM opt launchers",
+      "line": 377,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#zai-glm-launcher-delivery"
+    },
+    {
+      "anchor": "ZAI-GLM-LAUNCHER-DELIVERY",
+      "content_hash": "sha256:3ae97d151f512cdbdaf7091b497c44c85ac47fd609cd704b4f9a608710a35f07",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**Owner ruling, 2026-09-04.** The package `tool:org.vibevm.world/zai-glm-claude` preserves the direct z.ai GLM-through-Claude-Code worker contract and installs its Windows launchers into `~/.vibe/opt/bin`. Bare `vibe install` still owns only package materialisation and boot composition; the package's installation procedure completes through its explicit deploy profile. No install hook, manual copy or extension of `deploy:vibe-bin` may blur that phase boundary. @status:impl/done",
+      "line": 378,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-LAUNCHER-DELIVERY"
+    },
+    {
+      "anchor": "PACKAGE-STATIC-FILE",
+      "content_hash": "sha256:571fe06fb4568051884b24033d3e39e921cbb46099b9ac90252d129e0e2099a8",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**`package:static-file`.** The engine-fresh builtin accepts exactly one contained workspace `{ path }` file and exactly one `file` output whose artifact id is a portable single filename. Config is absent or empty. It opens the source once through the project's capability-relative no-follow/single-link filesystem seam, copies from that held handle into an engine-owned capability-relative staged output, records and independently verifies the ordinary artifact digest, and never interprets or executes the content. It never reopens an already-proven pathname or recursively removes through an unproved ancestor. Directories, links/hardlinks, recorded-artifact inputs, multiple inputs/outputs, non-file output kinds, unsafe filenames and nonempty config refuse before a write. @status:impl/done",
+      "line": 380,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PACKAGE-STATIC-FILE"
+    },
+    {
+      "anchor": "DEPLOY-VIBE-OPT-LAUNCHER",
+      "content_hash": "sha256:db510bd740c0532038986bfbbd35c21768968f6f0db6fa332555191cda8e42f5",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**`deploy:vibe-opt-launcher`.** The provider-fresh builtin accepts one recorded `file` artifact, an empty config, and no inferred destination. Its artifact id is the destination filename and must satisfy the repository's one canonical portable-component law. The only physical resource is `<settings-root>/opt/bin/<artifact-id>`; with the default settings root this is `~/.vibe/opt/bin`. Plan may observe but never mutate it. Source and destination I/O use held capability-relative no-follow/single-link handles, never raw path reopens or symlinkable ancestor walks. Apply publishes atomically; an owned update preserves prior bytes plus mode in engine-owned rollback state and returns a validated handle so a later-target failure restores the earlier launcher. Before that saga inverse mutates the destination, the engine durably binds generation, provider, resource, receipt digest and handle in `inverse.json`; after an exact independent restore check, the rolled-back receipt owns the restored prior state and only then may the marker retire. A manual byte reversion without that marker remains drift, and forward or inverse recovery preserves the marker and backup across crashes. On Unix, desired/observed/receipt identity binds content plus exact mode `0755`; verify requires that full state and recover can restore it rather than failing before recovery. Windows binds content and makes no POSIX-mode claim. Remove touches the file only through receipt ownership and refuses drift. The provider's adapter epoch is part of `plan.config_digest`, hence the durable plan hash. An unowned occupant is a collision. The provider never edits PATH, reads credentials, parses the launcher, writes a long-lived content store or owns a neighbouring file. @status:impl/done",
+      "line": 381,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#DEPLOY-VIBE-OPT-LAUNCHER"
+    },
+    {
+      "anchor": "ZAI-GLM-INSTALL-SEQUENCE",
+      "content_hash": "sha256:77e04ddcd9baf4921a24aa8b4c46ca36366f3b17788900e163a8d80eb312eb6b",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "The package declares one `package:static-file` row and one `deploy:vibe-opt-launcher` row for each launcher file, an explicit `windows` profile for PowerShell/CMD, and a `posix` profile for the Bash launcher on Linux/macOS. A consumer first installs the package so its boot and protocol become part of the project, then runs the host profile against the resolved package slot. Only the second phase creates the launcher. Documentation may call the pair the package installation procedure, but must never claim bare materialisation mutated user state. @status:impl/done",
+      "line": 382,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-INSTALL-SEQUENCE"
+    },
+    {
+      "anchor": "ZAI-GLM-TEST-REDUCTION",
+      "content_hash": "sha256:661bf65dc93a0b2d3939df17195811f8997fb388b37c2fa1176fc6da430dae7d",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "For this time-limited preservation slice, the owner explicitly waives the usual broad mutation campaign. Acceptance still requires parser/provider focused tests, package check, isolated install/deploy/verify evidence and one real bounded GLM worker task; at most one same-cwd correction may follow that live task. A reduced gate is reported as reduced and never relabelled a full panel. @status:impl/done",
+      "line": 383,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-TEST-REDUCTION"
     },
     {
       "anchor": "reference",
@@ -66815,7 +67311,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "14. Reference — the exact shapes (normative for the build)",
-      "line": 378,
+      "line": 387,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#reference"
     },
     {
@@ -66824,7 +67320,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "This section exists so that an implementer — human or model — never has to guess a field name, a file layout, or a call sequence from the prose above. Where a shape is deliberately unfrozen it says so; everything else here is normative. @status:spec/done",
-      "line": 379,
+      "line": 388,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-PURPOSE"
     },
     {
@@ -66833,7 +67329,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "14.1 The [[extension]] table, field by field",
-      "line": 380,
+      "line": 389,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ext-grammar"
     },
     {
@@ -66842,7 +67338,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "Handler sub-shapes: `builtin` → `{ kind, name }`; `script` → `{ kind, base }` (base path without extension, PROP-020 §2.2 resolution); `binary` → `{ kind, name }` (a `[[binary]]` name); `native` → `{ kind, crate_dir? , prebuilt? }` (at least one of the two, §8.2); `agent` → `{ kind, prompt }` (a `spec://` address the package resolves). @status:spec/plan",
-      "line": 401,
+      "line": 410,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-HANDLER-TABLES"
     },
     {
@@ -66851,7 +67347,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "14.2 .vibe/lifecycle.toml — the run/freshness record",
-      "line": 403,
+      "line": 412,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#state-files"
     },
     {
@@ -66860,7 +67356,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "Machine state: inside `.vibe/` (shippable-tree denylist), never committed, never hashed, survives `vibe clean` (§4.3), erasable at will — losing it costs one full re-run, nothing else. Schema-versioned like every state file we own. @status:spec/plan",
-      "line": 416,
+      "line": 425,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-LIFECYCLE-TOML"
     },
     {
@@ -66869,7 +67365,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "14.3 .vibe-slot.toml — the materialised-slot record (§9.2)",
-      "line": 418,
+      "line": 427,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#slot-record"
     },
     {
@@ -66878,7 +67374,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "Lives at the slot root; excluded from the slot's content identity exactly as `.vibe-derived.toml` is today; unknown fields refuse (deny_unknown, schema bump to extend). The §9.3 diff reads the old record, computes the incoming footprint, and writes the new record LAST — a crash between steps leaves a slot the next run heals (recorded files re-diff; unrecorded paths were never touched). @status:spec/plan",
-      "line": 430,
+      "line": 439,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-SLOT-RECORD"
     },
     {
@@ -66887,7 +67383,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "14.4 Handler wires, end to end",
-      "line": 432,
+      "line": 441,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#wire-details"
     },
     {
@@ -66896,7 +67392,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "**script:** interpreter per PROP-020 §2.2 (`.sh` via bash first, `.ps1` via PowerShell on Windows fallback); cwd = slot for `slot:` points, project root for `phase:`; env = the `VIBE_*` set PROP-020 documents plus `VIBE_CONTEXT` (absolute path of the envelope JSON written into scratch) and `VIBE_REPLY` (absolute path where a reply JSON MAY be written); exit 0 + no reply file = `{\"status\":\"ok\"}`; non-zero exit = fail regardless of reply file; streams go to the user live. @status:spec/plan",
-      "line": 434,
+      "line": 443,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-SCRIPT"
     },
     {
@@ -66905,7 +67401,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "**binary:** the artifact is resolved via PROP-025 (`DeclaredBinary::artifact`, built if absent); envelope JSON on stdin (closed after write); reply JSON expected on stdout (whole stdout parsed as one JSON document; stderr streams to the user); non-zero exit = fail; a malformed reply = fail naming the execution. @status:spec/plan",
-      "line": 435,
+      "line": 444,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-BINARY"
     },
     {
@@ -66914,7 +67410,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "**native, one invocation, seven steps:** (1) resolve artifact — prebuilt-for-platform, else built cdylib, else refuse; (2) load (libloading), once per run, cached by path; (3) `vibe_ext_abi()` — must equal a supported ABI version or refuse with «rebuild: vibe build»; (4) `vibe_ext_manifest()` — parse, check the execution's id/point/`ir_schema` are declared; (5) `vibe_ext_invoke(req, req_len, &resp, &resp_len)` under `catch_unwind` at the plugin macro's boundary — request/response are UTF-8 JSON byte buffers, envelope in, reply out; non-zero return or panic = the execution fails, vibe survives; (6) parse reply; (7) `vibe_ext_free(resp, resp_len)`. The `vibe-ext` helper crate's `vibe_extension!` macro generates all four symbols from a safe `fn handle(Context) -> Reply`. @status:spec/plan",
-      "line": 436,
+      "line": 445,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE"
     },
     {
@@ -66923,7 +67419,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "14.5 The agent handshake, on the wire (§6.5)",
-      "line": 439,
+      "line": 448,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#agent-wire"
     },
     {
@@ -66932,7 +67428,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "Resume is the SAME phase command re-run: the engine adopts the exact `run_id` in `.vibe/lifecycle.toml` (engine status `delegated`), validates each task's declared outputs, marks satisfied executions done, re-parks unsatisfied ones (idempotent), and continues the chain. A fresh/displacing identity never services that run's continuation. No dedicated resume verb; the default-lifecycle command's lifecycle `--force` deliberately displaces/re-parks (not Reinstall's unrelated materialisation `--force`, which may adopt the same run). Repetition beyond that one state transition belongs to an external orchestrator, never a hidden coding-agent loop (§4.6). @status:impl/done",
-      "line": 458,
+      "line": 467,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-AGENT-RESUME"
     },
     {
@@ -66941,7 +67437,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "14.6 IR level skeletons (tier-2 wire; frozen at R6, sketched now)",
-      "line": 460,
+      "line": 469,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ir-skeletons"
     },
     {
@@ -66950,7 +67446,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "These skeletons fix the VOCABULARY (level names, the node/edge/entry framing); exact field sets freeze in R6 when the wire ships, derived from the R3 types — deliberately, so the refactor is not forced to mirror a JSON guess made before it ran. `ir_schema` starts at 1 the day the first external pass can load. @status:spec/plan",
-      "line": 474,
+      "line": 483,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-IR-UNFROZEN"
     },
     {
@@ -66959,7 +67455,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "14.7 R7.5 evidence and requirements wires",
-      "line": 476,
+      "line": 485,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#external-orchestration-wire"
     },
     {
@@ -66968,7 +67464,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "P1 freezes the following vocabulary as strict JTD and registers/corpora/code-generates it before runtime use. `observed_at` is excluded from `evidence_id`; the id is a domain-separated digest over every other canonical identity/comparison member. `measured` values come from durable execution state; `observed` values are recomputed at verify. Optional members are absent, never `null`. @status:spec/done",
-      "line": 477,
+      "line": 486,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-EVIDENCE-WIRE"
     },
     {
@@ -66977,7 +67473,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "P1 also freezes one strict metadata-only requirements report. It does not embed verification evidence into fact rows: the lifecycle evidence member and the fact/relation observations are independent roots an external orchestrator may join by full address/edge and exact observation identity. @status:spec/done",
-      "line": 506,
+      "line": 515,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-REQUIREMENTS-WIRE"
     },
     {
@@ -66986,7 +67482,7 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "The shared library query is projected as `vibe requirements [--address-prefix <spec://prefix>] [--limit <N>] [--relations] [--json] [--path <project>]` and MCP `requirements_query({address_prefix?, limit?, relations?})`. Default limit is 100, hard maximum 256; zero, overflow, wrong types and unknown members refuse before filesystem access. MCP has no path member because server context is authority. With `relations = false` no specmap engine/map is loaded. Existing `vibe verify --json` and `lifecycle_run({phase:\"verify\"})` are the control/evidence surfaces; R7.5 adds no second lifecycle executor and no `evidence` verb merely to duplicate their generated root. @status:spec/done",
-      "line": 532,
+      "line": 541,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-REQUIREMENTS-SURFACES"
     },
     {
@@ -66995,12 +67491,12 @@
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "15. Glossary — the words this document leans on",
-      "line": 535,
+      "line": 544,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#glossary"
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:7b31968c24c7ad0abbf79f6b6ec0a502a1f45ac3572bca29b33301cf758d45ea",
+      "content_hash": "sha256:d72aa892b5450217a9c447826549381d1cf486b4bd8d6eeafd98d5233527b230",
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "PROP-055 — ChatGPT-only campaign execution pool",
@@ -67017,12 +67513,21 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#STATUS-LINE"
     },
     {
+      "anchor": "ZAI-GLM-PACKAGE-CANON",
+      "content_hash": "sha256:cffff1b6e325cbb337426c6de76df1df02f0b0923abab713b56545af8ca81416",
+      "doc_path": "common/PROP-055",
+      "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
+      "heading": "**The portable direct-GLM\n  contract now lives in `tool:org.vibevm.world/zai-glm-claude`.** Its boot,\n  protocol, packet template, capability playbooks, terminal taxonomy and\n  launchers apply equally to Claude and Codex parents. This PROP retains only\n  the active ChatGPT campaign's routing choices, host resource controls, usage\n  reserve, exact gates and dated observations. Historical overlap below is\n  evidence for the extraction, not a second generic authority. @status:impl/done",
+      "line": 10,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#ZAI-GLM-PACKAGE-CANON"
+    },
+    {
       "anchor": "scope",
       "content_hash": "sha256:534b983f81056836b79d1fab73e0756a89ee12c73a23a6320cd8a36a02045352",
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "1. Applicability — a harness gate, not a repository-wide mode",
-      "line": 11,
+      "line": 18,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#scope"
     },
     {
@@ -67031,7 +67536,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "This document applies\n      only when the current owner-facing **central coordinator** runs under an\n      OpenAI ChatGPT/Codex harness and is executing\n      `campaigns/packages-2026-09/TZ-LIFECYCLE-EXTENSIONS-v0.1.md` (or the owner\n      explicitly reactivates this contract by name). All conditions are\n      required. @status:spec/done",
-      "line": 13,
+      "line": 20,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#OPENAI-CENTRAL-ONLY"
     },
     {
@@ -67040,7 +67545,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Claude Code, a\n      `claudez` process, Gemini and every other non-OpenAI harness MUST NOT read\n      or apply this document. It is deliberately absent from the shared\n      `STATIC.xml` / `INDEX.md` boot lane. The byte-identical\n      `CLAUDE.md`/`AGENTS.md`/`GEMINI.md` triplet carries one conditional\n      pointer: an applicable OpenAI coordinator follows it; every other harness\n      skips it. @status:spec/done",
-      "line": 19,
+      "line": 26,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#NON-OPENAI-MUST-SKIP"
     },
     {
@@ -67049,7 +67554,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "A task carrying\n      `##subagent-quiet-clause`, a worker packet or an explicit reviewer packet\n      is a subagent even when its executable is Codex. It follows that packet\n      and MUST NOT promote itself to this central contract. Native workers,\n      `codexrunner`, `claudez` and plain `claude` workers are all excluded by\n      this rule. @status:spec/done",
-      "line": 26,
+      "line": 33,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#SUBAGENTS-MUST-SKIP"
     },
     {
@@ -67058,7 +67563,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "When the lifecycle\n      campaign completes, pauses, or the owner selects another campaign, this\n      contract becomes inactive without changing global project practice. A\n      successor campaign needs an explicit owner ruling before it inherits any\n      item. @status:spec/done",
-      "line": 32,
+      "line": 39,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#END-OF-CAMPAIGN"
     },
     {
@@ -67067,7 +67572,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "2. The central coordinator keeps judgment",
-      "line": 40,
+      "line": 47,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#roles"
     },
     {
@@ -67076,7 +67581,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "The central\n      ChatGPT/Codex session owns architecture, cross-wave planning, owner\n      rulings, destructive-action decisions, review verdicts, integration,\n      staging allow-lists, commits, mirrors and final gates. A worker may\n      propose or implement; it never self-accepts, moves authoritative status,\n      commits, pushes or declares the campaign complete. @status:spec/done",
-      "line": 42,
+      "line": 49,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#CENTRAL-OWNS-JUDGMENT"
     },
     {
@@ -67085,7 +67590,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Delegate\n      a bounded task when independent verification is cheaper than generating\n      it centrally. Keep a cross-cutting edit in one thread when its write\n      perimeter intersects live atoms or correctness depends on an unresolved\n      architectural choice. @status:spec/done",
-      "line": 48,
+      "line": 55,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#DELEGATE-WHEN-CHEAPER-TO-VERIFY"
     },
     {
@@ -67094,7 +67599,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "For a\n      substantive implementation, prefer review by a different model family or\n      fresh independent thread. Diversity counts only with exact file/line\n      evidence, a root rerun of the decisive test and a mutation or negative\n      oracle; another model's confidence is not evidence. @status:spec/done",
-      "line": 53,
+      "line": 60,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#MODEL-DIVERSITY-IS-A-GATE"
     },
     {
@@ -67103,7 +67608,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "The owner\n      assigns `claudez` execution priority, never acceptance authority. The\n      central coordinator authors the architecture and packet, closes the write\n      perimeter, names acceptance and red proofs, then reviews the result as a\n      PR, reruns decisive tests/mutations and issues accept, same-cwd repair,\n      re-commission or discard. Worker-written PASS/review/commit claims have\n      zero authority; staging, commits, integration and final gates remain\n      central. @status:spec/done",
-      "line": 58,
+      "line": 65,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#CLAUDEZ-EXECUTES-ROOT-ACCEPTS"
     },
     {
@@ -67112,7 +67617,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "**Owner\n      ruling 2026-08-28: do not commission native collaboration subagents that\n      inherit Sol Ultra for acceptance or review.** Every such spawn pays the\n      repository's enormous boot-lane prefix again before it can inspect the\n      diff, making the review disproportionately expensive. Acceptance stays\n      in the already-booted central Ultra context; an independent second family\n      uses subscription `claudez`/Opus launchers (or an explicitly external\n      lower-cost lane), never a native Sol Ultra reviewer. This does not forbid\n      a narrowly justified native execution task; it removes native Sol Ultra\n      from the acceptance route. @status:spec/done",
-      "line": 66,
+      "line": 73,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#NO-NATIVE-SOL-ULTRA-ACCEPTANCE"
     },
     {
@@ -67121,7 +67626,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "3. Worker pool and routing",
-      "line": 79,
+      "line": 86,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#pool"
     },
     {
@@ -67130,7 +67635,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "The pool is a set of\n    interchangeable execution lanes with separate limits. Availability is\n    probed on live work; no lane is assumed healthy from an old ping. @status:spec/done",
-      "line": 80,
+      "line": 87,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#POOL-IS-DYNAMIC"
     },
     {
@@ -67139,7 +67644,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "**Native collaboration\n      workers** are the low-latency fallback for a narrow execution/inventory task that\n      specifically benefits from current conversation context. They are not the\n      default execution lane while `claudez` is healthy. Use disjoint write\n      perimeters in parallel; retain packet/report/no-commit discipline. A Sol\n      Ultra native worker is never used for acceptance, per\n      `NO-NATIVE-SOL-ULTRA-ACCEPTANCE`. @status:spec/done",
-      "line": 84,
+      "line": 91,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#NATIVE-WORKERS"
     },
     {
@@ -67148,7 +67653,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "**`codexrunner` —\n      `gpt-5.6-sol`, effort `xhigh`** — is the second external lane for hard,\n      well-specified coding, broad code reading and mutation-backed repair when\n      `claudez` is busy/limited or model diversity is useful. It runs in a\n      dedicated worktree. Its yolo transport makes root diff review and a\n      closed write allow-list mandatory; worker claims about review, commits or\n      panels have no authority. @status:spec/done",
-      "line": 92,
+      "line": 99,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#SOL-XHIGH"
     },
     {
@@ -67157,7 +67662,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "**`claudez`** is a strong\n      implementation and review lane with an independent quota pool and is the\n      **default first choice** for every new delegable packet while its live\n      probe is healthy (owner priority ruling 2026-08-26). Its gateway may hit a\n      five-hour account limit: probe with a real bounded task before fan-out,\n      preserve the worktree/report/log and fail over to Sol/native instead of\n      repeatedly paying a known 429 wall. `claudez2` remains disabled until the\n      owner explicitly re-enables it. @status:spec/done",
-      "line": 99,
+      "line": 106,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#CLAUDEZ-LANE"
     },
     {
@@ -67166,7 +67671,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "**Plain Claude Code with\n      Opus and max effort** is invoked explicitly as\n      `claude --model opus --effort max`; follow-up repair uses `claude -c` in\n      the exact same dedicated cwd. Use it for ambiguous code, adversarial\n      architecture/code review, or difficult correction. Read run metadata to\n      learn the resolved model; the alias is not proof of a version. @status:spec/done",
-      "line": 107,
+      "line": 114,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#OPUS-MAX-LANE"
     },
     {
@@ -67175,7 +67680,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "**Never select Fable.** Do\n      not name it, configure it as fallback, or accept automatic fallback to\n      it. If Opus is unavailable, route to Sol, `claudez`, a native worker or\n      the central coordinator. @status:spec/done",
-      "line": 113,
+      "line": 120,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#NEVER-FABLE"
     },
     {
@@ -67184,7 +67689,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "3.1 Default routing calculus",
-      "line": 118,
+      "line": 125,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#routing"
     },
     {
@@ -67193,7 +67698,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Hard but explicit code with\n        a cheap oracle: `claudez` first; Sol xhigh next when the primary lane is\n        unavailable or a second family is worth the spend. Use both concurrently\n        only for disjoint writes. Ambiguous high-impact code: `claudez` may\n        implement, but central/Opus/Sol independently reviews the judgment. @status:spec/done",
-      "line": 120,
+      "line": 127,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#ROUTE-CODE"
     },
     {
@@ -67202,7 +67707,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Security, wire,\n        transaction and lifecycle reviews: central Ultra in its already-paid\n        context and, when independence is valuable, a fresh external model\n        family that did not author the change. Never pay the whole boot lane to\n        a native Sol Ultra acceptance subagent. Read-only external reviews may\n        run beside one code worker. @status:spec/done",
-      "line": 126,
+      "line": 133,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#ROUTE-REVIEW"
     },
     {
@@ -67211,7 +67716,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Mechanical edits,\n        fixtures, corpus additions and exact test matrices: `claudez` first,\n        Sol/native on primary-lane limit or a genuine context advantage. The\n        packet supplies the skeleton; the worker fills named refinement points\n        rather than redrawing the architecture. @status:spec/done",
-      "line": 132,
+      "line": 139,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#ROUTE-MECHANICAL"
     },
     {
@@ -67220,7 +67725,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "A deterministic\n        micro-edit remains central when its complete implementation and oracle\n        are cheaper than provisioning, reporting and reviewing an external\n        worker. Measured 2026-08-26: one prescribed `specmark::scope!` line took\n        `claudez` about 150 seconds plus packet/report review. Such a run is\n        useful as an intentional transport/template probe, not the routine\n        execution path. This is the verification-cheaper-than-generation law,\n        not an exception to `claudez` priority for genuinely delegable work. @status:spec/done",
-      "line": 137,
+      "line": 144,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#ROUTE-MICRO-LOCAL"
     },
     {
@@ -67229,7 +67734,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Architecture, provider\n        boundaries, public grammar, final trade-offs, commit grouping and\n        integration stay central. External architecture work is adversarial\n        review of a central draft, not delegation of the final decision. @status:spec/done",
-      "line": 146,
+      "line": 153,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#ROUTE-CENTRAL"
     },
     {
@@ -67238,7 +67743,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "4. Worker transport and resource limits",
-      "line": 154,
+      "line": 161,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#transport"
     },
     {
@@ -67247,7 +67752,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Every writing worker\n      gets a dedicated worktree/cwd and packet file. Continuation (`-c`) is used\n      only from that exact cwd. Large context travels in the packet file, never\n      a command-line argument. @status:spec/done",
-      "line": 156,
+      "line": 163,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#ONE-CWD-ONE-THREAD"
     },
     {
@@ -67256,7 +67761,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "**Owner\n      ruling 2026-08-26: `claudez` and Opus are trusted to operate the\n      computer.** Do not spend orchestration effort protecting the machine\n      from these workers or starve them of PowerShell/Bash, Read/Glob/Grep,\n      repository history, formatters, generators and exact tests. Launch an\n      autonomous worker with an explicit non-interactive permission mode and\n      a normal task-capable tool surface; a restricted `--tools` experiment is\n      justified only when the restriction itself is being measured. Claude\n      Code 2.1.220 distinguishes `--tools` (the actual universe) from\n      `--allowedTools` (auto-approval), but this is an observability fact, not\n      a mandate to micromanage a strong worker. A resumed thread still gets an\n      explicit mode so stale session permissions are not accidental. @status:spec/done",
-      "line": 160,
+      "line": 167,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#WORKER-PERMISSION-POSTURE"
     },
     {
@@ -67265,7 +67770,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "The protected\n      boundary is the **handoff representation**, not the worker's access to\n      the machine. A writing worker leaves its result as ordinary unstaged\n      working-tree files plus the durable report in its dedicated cwd. It MUST\n      NOT package or hide the state in the index, a commit/branch, stash,\n      private worktree, patch-only deliverable, ignored/cache-only product\n      copy, reset/checkout state or an external service. Read-only git history,\n      blame, status and diffs are encouraged. Root can then inspect one visible\n      diff, rerun the oracles, stage, commit and integrate without decoding a\n      worker-private state machine. @status:spec/done",
-      "line": 173,
+      "line": 180,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#REVIEWABLE-WORKTREE-LAW"
     },
     {
@@ -67274,7 +67779,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Parallelism is routed on\n      write intersections, not read intersections. Read-only reviewers may\n      overlap. Intersecting or many-place writes are serialized under one\n      worker or the central coordinator. @status:spec/done",
-      "line": 183,
+      "line": 190,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#DISJOINT-WRITES"
     },
     {
@@ -67283,7 +67788,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "The box ceiling is two\n      simultaneous cold Cargo workers. Prefer one cargo-heavy implementation\n      plus one cargo-heavy review/test at most; text/read-only workers may use\n      otherwise free lanes. Cargo runs use `CARGO_BUILD_JOBS=4` where the\n      repository rule requires it. @status:spec/done",
-      "line": 187,
+      "line": 194,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#TWO-COLD-CARGO"
     },
     {
@@ -67292,7 +67797,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "A packet-level “do not run\n      Cargo” rule does **not** prevent Claude Code's Rust language server from\n      starting `rust-analyzer`/flycheck after the first Rust edit. Measured on\n      2026-08-27: one patch-only worktree grew a 2,225,158,486-byte local\n      `target/`; a second had already grown 297,254,505 bytes when its process was restarted. Root\n      therefore sets `CARGO_TARGET_DIR` to the one active warm integration\n      target **before launching** every patch-only Rust worker. The sibling\n      launched with that environment before its first edit created no local\n      target. Setting it only on a continuation is too late because an LSP\n      spawned by the original process may outlive that process. Orphaned\n      rust-analyzer processes are stopped only after their worker terminates;\n      the exact worktree is then reclaimed by `##ROLLING-WORKTREE-GC`. @status:spec/done",
-      "line": 192,
+      "line": 199,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#LSP-COLD-CACHE"
     },
     {
@@ -67301,7 +67806,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "A process census is\n      observation, not exclusion: on 2026-08-26 three independent workers all\n      observed zero Cargo processes and then started three cold builds in the\n      same race window. Every ChatGPT-commissioned worker therefore runs each\n      repository Cargo command through\n      `python campaigns/packages-2026-09/tasks/chatgpt-cargo.py -- cargo …`.\n      The wrapper holds one of two OS file locks for the complete child lifetime,\n      emits a waiting heartbeat, sets `CARGO_BUILD_JOBS=4` unless already set,\n      and releases on normal exit or process death. A packet may bypass it only\n      for a central coordinator's explicitly serialized command. The wrapper is\n      campaign harness infrastructure, never a VibeVM product command or\n      standing instruction for Claude. @status:spec/done",
-      "line": 204,
+      "line": 211,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#ATOMIC-CARGO-SLOTS"
     },
     {
@@ -67310,7 +67815,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "When this\n      campaign changes in-workspace `file://` package sources and the central\n      coordinator refreshes the local lock/materialisation, run\n      `vibe install --offline --assume-yes`. The required source bytes are\n      local and the selected dependency closure is already cached; an online\n      resolver adds latency and an unnecessary external failure mode. Drop\n      `--offline` only when the task explicitly needs a remote package version\n      not present locally. If this campaign has changed install/materialiser\n      code, drive that refresh through the **current workspace CLI**\n      (`chatgpt-cargo.py -- cargo run -p vibe-cli -- install --offline\n      --assume-yes`) or a separately verified current build, never an assumed\n      PATH binary: on 2026-08-28 the stale system launcher rewrote current\n      `.vibe-slot.toml` records back to legacy `.vibe-derived.toml`; the\n      workspace binary immediately restored the intended diff. @status:spec/done",
-      "line": 216,
+      "line": 223,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#OFFLINE-LOCAL-PACKAGE-REFRESH"
     },
     {
@@ -67319,7 +67824,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Campaign worktrees\n      are reclaimed **continuously, not at campaign close** (owner ruling\n      2026-08-26). As soon as an atom is accepted and integrated, root proves\n      that its product diff is landed, its report/decisions have a durable home,\n      its worker process is closed, and no unique untracked artifact remains;\n      then it immediately removes that exact worktree with `git worktree remove`\n      and runs `git worktree prune`. A clean obsolete worktree already proved\n      superseded is treated the same way. `--force` is used only after the same\n      evidence proves every remaining untracked file disposable; a live or\n      unintegrated dirty worktree is never reclaimed for space. Root measures\n      and reports reclaimed bytes. Retaining hundreds of gigabytes of rebuildable\n      `target/` trees until the epic ends is itself a process defect. @status:spec/done",
-      "line": 230,
+      "line": 237,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#ROLLING-WORKTREE-GC"
     },
     {
@@ -67328,7 +67833,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Every packet\n      carries `##subagent-quiet-clause`, an expected write perimeter, exact\n      acceptance, narrow self-verify commands, a durable\n      `WORKER-REPORT-<id>.md`, the reviewable-worktree law, a worker-side\n      full-panel ban and final `TASK-DONE`. A reasoned perimeter expansion is\n      disclosed in the report (and is forbidden only when it would intersect a\n      parallel writer). Screen prose is discarded; reports and visible diffs\n      are the deliverable. @status:spec/done",
-      "line": 242,
+      "line": 249,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#QUIET-ARTIFACT-CONTRACT"
     },
     {
@@ -67337,7 +67842,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "When the central\n      Codex harness drives a long `claudez`/`claude` process through unified\n      exec, use ordinary text output plus the durable worker report by\n      default. `--output-format stream-json --verbose` emits a JSON event for\n      each thinking-token update: the 2026-08-28 A4b read-only audit produced\n      more than 2.7 MiB of transport output for about 10.4k thinking tokens\n      while its complete report was about 12 KiB. Feeding that stream back\n      through the tool wastes context and can fill the process pipe. Stream\n      JSON remains legitimate for a short transport/model-metadata probe or\n      when redirected to a file the model does not ingest; long work is\n      observed through process liveness, the visible diff and the bounded\n      report. @status:spec/done",
-      "line": 250,
+      "line": 257,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#PLAIN-LAUNCHER-OUTPUT"
     },
     {
@@ -67346,7 +67851,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Default a worker report to\n      at most 150 lines: verdict, findings, changed-file set, decisive evidence,\n      commands and deviations. A longer report is justified only by a large\n      finding matrix or protocol review. Do not ask the worker to restate every\n      source it read; exact citations replace narrative. The 2026-08-26 probes\n      showed that a good Opus review can consume 47k output tokens and a GLM\n      review 30k when no report budget is stated. @status:spec/done",
-      "line": 262,
+      "line": 269,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#REPORT-BUDGET"
     },
     {
@@ -67355,7 +67860,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "4.1. Accepted evidence and terminal lane state",
-      "line": 272,
+      "line": 279,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#handoff"
     },
     {
@@ -67364,7 +67869,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "An untracked\n      worker report is evidence, never the sole durable home of an accepted\n      fact. Before root accepts an atom or permits its report/worktree/cache to\n      become disposable, root reviews every non-obvious implementation,\n      architecture, mutation and operational finding and gives it a home by\n      genre: normative product law → PROP/FEAT or named spec-debt; accepted\n      campaign architecture/status → the implementation ledger and TASKS;\n      real but deliberately unowned gap → BACKLOG or the tracked retrospective\n      harvest; harness-only launcher/panel fact → this PROP-055; local invariant\n      → code contract/test plus specmap edge where applicable. Rejected,\n      duplicated or non-durable observations may remain report-only, but root\n      makes that disposition consciously rather than losing them by omission.\n      Later waves drain the tracked harvest/backlog, not untracked `cache/`\n      archaeology. This classification is part of acceptance, not a session-end\n      courtesy, and applies equally to findings made by root during review. @status:spec/done",
-      "line": 274,
+      "line": 281,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#ACCEPTED-WISDOM-HARVEST"
     },
     {
@@ -67373,7 +67878,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "`claude` and\n      `claudez` run against subscription quotas and are cheap enough to use\n      freely and concurrently. Provider JSON may expose a nominal `costUSD`;\n      record it as comparative telemetry, never treat it as the owner's\n      marginal bill or set `--max-budget-usd`. Five-hour quota availability and\n      review throughput are the practical limits. **Deep-research agents are a\n      separate, genuinely expensive class** and are commissioned deliberately;\n      they are not implied by ordinary Opus/GLM delegation. @status:spec/done",
-      "line": 289,
+      "line": 296,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#SUBSCRIPTION-LANES"
     },
     {
@@ -67382,7 +67887,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "**The central ChatGPT/Codex lane preserves a 15% pause reserve (owner ruling).** Before each major campaign atom, after a long gate and at least once per working hour, root runs `python campaigns/packages-2026-09/tasks/chatgpt-usage.py --pause-at-remaining 15`. The helper speaks the signed-in local Codex app-server's read-only `account/rateLimits/read`, selects the main `limit_id = codex` bucket (Spark's separate bucket is irrelevant unless root actually switches to it), and takes the minimum remaining percentage across primary, secondary and individual windows. It prints only safe plan/window metadata; no auth, account id, prompt or response content. Exit 75 / remaining ≤15 is a **temporary resource pause, never campaign completion, cancellation or blockage**: start no new work or worker, preserve every working-tree/report/cache/handoff artifact, finish only the current non-destructive safe checkpoint tail when needed to avoid ambiguity, and yield to the owner. Do not delete or compact away campaign state and do not mark the plan blocked/complete. The owner then either obtains more usage and resumes this same session, or requests a durable handoff to continue with a new model/resource set. A read failure gets one bounded retry; if it remains unavailable, do not guess enough reserve exists before another large atom. Live commissioning measured 65% used / 35% remaining in the main 10,080-minute Pro window; a threshold-equal negative probe exited 75. @status:spec/done",
-      "line": 297,
+      "line": 304,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#CENTRAL-USAGE-RESERVE-2026-08-29"
     },
     {
@@ -67391,7 +67896,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Workers never\n      receive token contents or a task that reads a token file. Secret-bearing\n      live smoke stays central and prints only a safe verdict. Launchers load\n      their own credentials without exposing them in packet, argv, log or\n      report. @status:spec/done",
-      "line": 298,
+      "line": 305,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#NO-SECRETS-TO-WORKERS"
     },
     {
@@ -67400,7 +67905,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "A quota/429/limit failure\n      is transport state, not a code verdict. Confirm it once, keep partial\n      artifacts, then re-route a fresh packet with durable context. Do not spin\n      retries, kill by broad process name, or discard a useful diff because the\n      runner exited non-zero. @status:spec/done",
-      "line": 303,
+      "line": 310,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#LIMIT-FAILOVER"
     },
     {
@@ -67409,7 +67914,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Root acceptance compares\n      actual changed files with the report, reads the diff as a PR, re-runs the\n      decisive narrow command, executes the red mutation/negative oracle, and\n      issues PASS, repair, re-commission or discard. Cosmetic tails are fixed\n      centrally; wrong judgment or behavior uses same-cwd continuation when\n      economical. @status:spec/done",
-      "line": 308,
+      "line": 315,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#ROOT-ACCEPTANCE"
     },
     {
@@ -67418,7 +67923,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "5. Fast development gates and the full-panel cadence",
-      "line": 317,
+      "line": 324,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#gates"
     },
     {
@@ -67427,7 +67932,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "**Owner ruling,\n    2026-08-26:** the approximately twenty-minute full repository panel must not\n    run after every small atom. During this ChatGPT campaign, exact tests are\n    the development gate; the full panel is an integration/batch gate. This is\n    the scoped successor to older campaign-TZ wording and changes no other\n    project or harness. @status:spec/done",
-      "line": 318,
+      "line": 325,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#OWNER-PANEL-RULING"
     },
     {
@@ -67436,7 +67941,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Before accepting an atom, run formatting for each touched workspace, `git diff --check`, exact\n      unit/integration tests, checks/clippy for touched crates, and the task oracle: codegen+wire corpus for schemas; compiler byte identity; isolated homes;\n      and a red mutation/negative fixture per load-bearing branch. A Rust edit in a `conform.toml`-gated crate also runs `cargo xtask conform check --scope\n      <crate-path>`; split test-support carries truthful per-item `#[cfg(test)]` because the syntax frontend reads it without its parent. New/moved\n      `specmark::scope!` or `#[specmark::spec(...)]` edges run `cargo xtask specmap` and review the derived map in the same atom. Expand only for another\n      named consumer. This closes the 2026-08-28 R3.4 findings: exact tests/clippy missed 52 conform findings; four later lawful edges stopped on a stale map. @status:spec/done",
-      "line": 325,
+      "line": 332,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#EXACT-GATES-PER-ATOM"
     },
     {
@@ -67445,7 +67950,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "`cargo xtask\n      check-codegen` finishes by comparing the worktree against `HEAD`; in the\n      mandated ordinary-unstaged worker handoff, an intended generated product\n      diff therefore makes it fail by construction. A schema/codegen worker\n      runs the generator, captures a stable hash of the relevant visible diff,\n      runs the generator again and proves the hash unchanged (plus focused\n      wire/corpus tests). Root runs the real `check-codegen` after staging the\n      atom in its human-authored commit/integrated tree. A worker's dirty-tree\n      exit is not codegen drift evidence by itself. @status:spec/done",
-      "line": 331,
+      "line": 338,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#DIRTY-CODEGEN-GATE"
     },
     {
@@ -67454,7 +67959,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "A gate transcript\n      is evidence only when it carries the exit status of the GATE process.\n      Never spell it as `command | tail; echo $?`: that status belongs to\n      `tail`, and an A6A codegen run on 2026-08-28 printed zero over an actual\n      `os error 5` publication failure. Run the gate unpiped, or redirect its\n      output, capture the child status immediately (`$?` / `$LASTEXITCODE` /\n      `PIPESTATUS[0]` as appropriate), and inspect the saved output afterward.\n      PowerShell cmdlet/conversion errors are non-terminating by default, so a\n      gate such as XML parsing first sets `$ErrorActionPreference = 'Stop'`\n      (or uses `-ErrorAction Stop`); otherwise it can print an error, continue\n      into a hand-written “clean” line and even commit invalid XML — observed\n      and repaired on 2026-08-28. A green-looking suffix with a masked parent\n      failure is no verdict. @status:spec/done",
-      "line": 340,
+      "line": 347,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#PIPELINE-EXIT-GUARD"
     },
     {
@@ -67463,7 +67968,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "A worker never runs\n      the full panel. It runs the narrow self-verify named by its packet. The\n      central coordinator does not run the full panel merely because a worker\n      finished. @status:spec/done",
-      "line": 354,
+      "line": 361,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#NO-WORKER-FULL-PANEL"
     },
     {
@@ -67472,7 +67977,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "A coherent batch may\n      contain several atomic local Conventional Commits, each accepted by its\n      exact gate. They remain unmirrored until the batch integration panel is\n      green. If that panel finds a defect, repair forward in the same batch and\n      rerun newly relevant narrow tests before the next panel. @status:spec/done",
-      "line": 358,
+      "line": 365,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#ATOMIC-LOCAL-COMMITS"
     },
     {
@@ -67481,7 +67986,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Run the full\n      `CARGO_BUILD_JOBS=4 tools/self-check.sh` panel when: **(1)** a cross-crate\n      integration batch is ready to leave local state; **(2)** a lifecycle wave\n      or owner scenario is declared green; **(3)** before mirror/push of\n      accumulated code; **(4)** before final epic acceptance; **(5)** a\n      high-risk change has no cheaper complete affected set. One panel may\n      satisfy several triggers for the same unchanged tree. @status:spec/done",
-      "line": 363,
+      "line": 370,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#FULL-PANEL-TRIGGERS"
     },
     {
@@ -67490,7 +67995,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "A panel result\n      belongs to the exact tree measured. A later product change invalidates\n      it. A report/docs-only change runs its document gates and may ride the\n      next integration panel, but cannot rewrite an earlier code verdict. @status:spec/done",
-      "line": 370,
+      "line": 377,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#PANEL-IS-FOR-EXACT-TREE"
     },
     {
@@ -67499,7 +68004,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Mirror only\n      after the accumulated batch panel is green and the staging allow-list is\n      reviewed. This preserves atomic human-authored commits while amortising\n      the slow panel over useful integration work. @status:spec/done",
-      "line": 374,
+      "line": 381,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#MIRROR-AFTER-GREEN-BATCH"
     },
     {
@@ -67508,7 +68013,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "6. Live lane observations",
-      "line": 381,
+      "line": 388,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#observability"
     },
     {
@@ -67517,7 +68022,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Record only a live\n      task's exit, durable report, resolved-model metadata and reviewed quality.\n      A ping proves transport, not coding quality; an old successful run does\n      not prove a five-hour quota remains open. @status:spec/done",
-      "line": 383,
+      "line": 390,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#OBSERVE-NOT-ASSUME"
     },
     {
@@ -67526,7 +68031,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Live work, not a ping,\n      measured both extra lanes. `claudez` resolved to `glm-5.3[1m]`, completed\n      an independent R7.1 review, found the missing blocking-HTTP timeouts, then\n      used same-cwd `-c` to implement and gate the repair; root additionally\n      repeated the Windows proxy canary 20 times. Plain Claude resolved to\n      `claude-opus-5`, produced an adversarial build/package/deploy review and\n      used same-cwd `-c` for nine central objections; it explicitly withdrew or\n      narrowed four earlier claims and strengthened crash/ownership design.\n      Both are high-quality usable lanes. Opus/max is reserved for ambiguous,\n      high-impact judgment because the two passes were materially more costly;\n      `claudez` is a parallel peer for bounded code/review but may hit its\n      separate five-hour wall. Both exceeded the desired prose budget, so\n      `##REPORT-BUDGET` is mandatory on future packets. After a later multi-hour\n      network outage killed every live worker process, their worktrees and\n      reports remained intact; a fresh isolated `claudez -p` returned exact\n      `CLAUDEZ_OK` through `glm-5.3[1m]` in about nine seconds. Recovery is\n      therefore census-first: retain completed artifacts and restart only\n      unfinished packets, never regenerate the batch wholesale. @status:spec/done",
-      "line": 387,
+      "line": 394,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#PROBE-2026-08-26"
     },
     {
@@ -67535,7 +68040,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "A 140-turn R8\n      continuation reached turn 141 and transport-failed **before writing its\n      report**, despite useful code and focused-test progress; it emitted about\n      95k output tokens and repeatedly reran broad filters. Conversely, two\n      independent R3.4 cold implementation packets each consumed all 50 turns\n      in diligent required-input archaeology and reached at most their first\n      product edit; neither hit quota or transport failure. Therefore there is\n      no universal 30–50-turn implementation cap. Use 30–50 turns for a narrow\n      edit/repair or for an explicitly separate archaeology pass. A broad cold\n      implementation is either (a) two-stage — bounded archaeology with a\n      durable handoff, then same-cwd/session `-c` implementation — or (b)\n      uncapped when root has already supplied a sufficiently closed packet.\n      Split child-process tests/review when that prevents scope accretion, and\n      draft the durable report early rather than gambling on the final two\n      turns. Same-cwd `-c` preserves the subscription-paid context and is the\n      default recovery from a turn-cap boundary. `max_turns` exhaustion\n      preserves the worktree but is never PASS. @status:spec/done",
-      "line": 405,
+      "line": 412,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#CLAUDEZ-TURN-BUDGET"
     },
     {
@@ -67544,7 +68049,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Two\n      concurrent broad R3.4 continuations (147 and 111 turns) reached green\n      focused/parent gates and then both received 429 with the **same**\n      advertised reset instant before either wrote its mandated report. They\n      resolved to `glm-5.3[1m]`; the worktrees/logs remained complete. This\n      proves the five-hour allowance is account-wide, not per process:\n      parallel claudez jobs increase throughput but consume one shared window\n      concurrently. An uncapped run therefore does not license report-last\n      execution. Create the report skeleton after the first product slice,\n      update evidence incrementally before long parent gates, and treat quota\n      exhaustion as a preserved handoff to root/Opus rather than retrying\n      against the published reset. The hourly probe observes recovery; it does\n      not estimate remaining quota. @status:spec/done",
-      "line": 422,
+      "line": 429,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#CLAUDEZ-QUOTA-BOUNDARY-2026-08-27"
     },
     {
@@ -67553,7 +68058,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "While this campaign\n      is active, the ChatGPT thread owns an hourly heartbeat named «Проверка\n      доступности claudez». It starts one fresh isolated `claudez -p` elementary\n      task whose only valid answer is `CLAUDEZ_OK`, records resolved model,\n      latency, transport/429 category and advertised reset time, and performs no\n      retry or repository work. This observes five-hour quota recovery without\n      burning a real implementation packet or spinning against a known wall. @status:spec/done",
-      "line": 435,
+      "line": 442,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#CLAUDEZ-HOURLY-PROBE"
     },
     {
@@ -67562,7 +68067,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "After the\n      account-wide wall advertised its 2026-08-28 reset, a fresh real A14 task\n      started through `claudez` without 429, implemented the shared prompt\n      resolver, wrote its report before long gates, mutation-proved the two\n      central guards and finished every exact gate. Availability is therefore\n      recovered for useful work, not merely for a ping; future routing still\n      treats the next five-hour wall as account-wide. @status:spec/done",
-      "line": 442,
+      "line": 449,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#CLAUDEZ-RECOVERED-2026-08-28"
     },
     {
@@ -67571,7 +68076,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "The next\n      advertised reset was observed rather than assumed: a fresh isolated\n      direct launcher probe completed in 9.5 seconds with exact `PONG` and\n      resolved `glm-5.3[1m]`; a real R4.0 extraction then completed 95 turns,\n      left an ordinary diff/report and passed its focused gates. Root review\n      still found two proof defects — the compatibility test pinned a private\n      module rather than the public crate root, and an ambient fence was a raw\n      substring scan — and same-cwd `claudez -c` corrected both with AST-based\n      REDs in 26 turns. Root then found and locally closed the residual\n      `use std::*` glob case. Durable lesson: a healthy/high-quality claudez run\n      is execution evidence, never acceptance; public-boundary tests must name\n      the public path, and source-deny fences need syntax-aware negative\n      fixtures rather than reassuring grep. No run used `--max-budget-usd`. @status:spec/done",
-      "line": 449,
+      "line": 456,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#CLAUDEZ-R4-LIVE-2026-08-29"
     },
     {
@@ -67580,7 +68085,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "A\n      later R4.1 T1/T3 pair passed its worker gates yet central review found four\n      identity-boundary defects: five-digit values entered a four-digit TOML\n      date, host provider plus document path was unconstructible, legacy plan\n      paid a temporary collection, and `CompiledSelector::Eq` treated OR-set\n      order/duplicates as semantic while the promised digest did not. Two\n      same-cwd claudez repairs plus an ordinary Opus/max byte-schedule audit\n      closed them before T2; conform also forced the enlarged selector RED into\n      a focused sub-600-line cell. Durable packet/acceptance rule: whenever a\n      canonical identity lands, pair its independent byte vector with Rust\n      equality, absent-versus-empty, typed constructor composition and legacy\n      allocation/order checks. A green digest golden alone does not prove one\n      semantic identity. @status:spec/done",
-      "line": 463,
+      "line": 470,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#CANONICAL-IDENTITY-ACCEPTANCE-2026-08-29"
     },
     {
@@ -67589,7 +68094,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Two\n      disjoint R4.1 writers proved that write-perimeter independence does not\n      make cross-crate gates temporally independent. The registry writer's\n      downstream compile twice observed the workspace writer mid-move and went\n      red on transient duplicate/missing symbols; after that writer reached a\n      stable file boundary, the same gate passed unchanged. Cargo-slot\n      serialisation prevents concurrent cargo processes, not compilation of a\n      peer's half-written source. Schedule downstream gates after peer writers\n      are stable or classify the exact foreign path before repairing anything.\n      The same run exposed a second trap: `cargo test -p vibe-install lifecycle`\n      exited 0 while running **zero** tests; root replaced it with the full\n      package suite. Acceptance records test counts, never exit alone. Finally,\n      one split continuation used `git restore` despite a no-mutating-git packet\n      to heal its own transient newline collapse; the desired bytes survived,\n      but text prohibition is not enforcement — root still verifies the final\n      ordinary diff and ownership perimeter. @status:spec/done",
-      "line": 476,
+      "line": 483,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#PARALLEL-WRITER-GATES-2026-08-29"
     },
     {
@@ -67598,7 +68103,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Launcher\n      health is per configured lane, not transferable testimony. During A15a,\n      primary `claudez` completed a long implementation and two `-c` review\n      repairs while a concurrent fresh `claudez2` task was rejected before any\n      edit with 429 `Insufficient balance or no resource package`. Therefore a\n      green primary probe does not license assuming `claudez2` is available,\n      and a secondary-lane 429 does not stop primary work. Preserve any\n      on-disk report/edit, make no retry loop against that lane, and route the\n      bounded task to the already-booted central context or ordinary Opus as\n      verification economics warrant. @status:spec/done",
-      "line": 492,
+      "line": 499,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#CLAUDEZ-LANES-DIVERGE-2026-08-28"
     },
     {
@@ -67607,7 +68112,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "A fresh\n      real R8 containment correction launched through primary `claudez -p`\n      with explicit non-interactive permissions created its same-cwd session\n      but emitted no assistant/tool event for ten minutes: the session JSONL\n      remained at the initial user event and the assigned product files stayed\n      byte-unchanged. Root stopped only that unified-exec session, classified\n      the result as a transport stall rather than a code verdict, made no\n      claudez retry, and completed the deterministic micro-fix centrally under\n      `ROUTE-MICRO-LOCAL`. Initial-turn silence is therefore observed like a\n      stalled final turn: inspect session growth and the visible diff, preserve\n      both, stop only the exact process/session after a bounded window, then\n      fail over without regenerating or spinning the lane. @status:spec/done",
-      "line": 502,
+      "line": 509,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#CLAUDEZ-INITIAL-STALL-2026-08-30"
     },
     {
@@ -67616,7 +68121,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "A\n      plain fresh `codexrunner exec` loaded repository `AGENTS.md` before its\n      named worker packet and began the forbidden full boot despite that\n      packet's `##subagent-quiet-clause`; root stopped it before product edits.\n      The strict live repair is `--strict-config --ignore-user-config -c\n      project_doc_max_bytes=0`, with `model_reasoning_effort=\"xhigh\"` repeated\n      in the later exec layer and shared `CARGO_TARGET_DIR` set before launch.\n      A no-tool probe returned exact `QUIET_OK`; the real retry resolved\n      `gpt-5.6-sol` / `xhigh`, read the packet first and loaded only its six\n      named standing files. A packet's quiet clause controls reading only when\n      the harness has not already injected project documentation ahead of it. @status:spec/done",
-      "line": 514,
+      "line": 521,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#CODEXRUNNER-QUIET-GUARD-2026-08-30"
     },
     {
@@ -67625,7 +68130,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "`tools/self-check.sh` lexically counts `run_step` lines while seven calls execute dynamically, so final\n      R3.4 printed `[54/47]` and still ended `all green` / exit 0. The denominator is an observability bug, never coverage evidence: trust the ordered gates + green tail.\n      A later tooling atom derives the runtime total or removes the false denominator; this docs-only finding does not rewrite the green verdict. @status:spec/done",
-      "line": 525,
+      "line": 532,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#PANEL-DENOMINATOR-2026-08-28"
     },
     {
@@ -67634,7 +68139,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "7. Canonical claudez packet template",
-      "line": 531,
+      "line": 538,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#claudez-template"
     },
     {
@@ -67643,7 +68148,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "The central\n    coordinator copies this skeleton into every new `claudez` packet and fills\n    every bracketed field. Do not point a worker at PROP-055 itself: this spec\n    is ChatGPT-only. Task-specific instructions override a template default\n    only when the packet says so explicitly. @status:spec/done",
-      "line": 532,
+      "line": 539,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#TEMPLATE-IS-COPIED"
     },
     {
@@ -67652,7 +68157,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Launch with an\n      explicit autonomous non-interactive permission mode and the normal tool\n      surface; do not construct a tiny deny-list as a substitute for review.\n      `Read Glob Grep`, PowerShell/Bash, read-only git history, formatters and\n      exact tests are legitimate worker instruments. The short pointer prompt\n      repeats only the handoff invariants: keep product work as an unstaged\n      visible diff, do not add/commit/stash/branch/reset/push, do not run the\n      full panel, and write the report before finishing. Root review, not tool\n      starvation, is the safety and acceptance mechanism. Do not set a maximum\n      dollar budget for Opus/Claude runs (owner ruling 2026-08-26); record cost\n      post-facto when JSON telemetry is available. @status:spec/done",
-      "line": 661,
+      "line": 668,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#TEMPLATE-LAUNCH-GUARD"
     },
     {
@@ -67661,7 +68166,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "After `TASK-DONE`,\n      root mechanically compares actual changed files to the report, reads the\n      diff, checks Decisions/Deviations, reruns decisive commands and red proofs,\n      then accepts, sends exact `-c` repair notes, re-commissions or discards.\n      The packet/template reduces review cost; it never replaces review. @status:spec/done",
-      "line": 673,
+      "line": 680,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#TEMPLATE-ROOT-CLOSE"
     },
     {
@@ -67670,7 +68175,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "8. Opus 5 max — CLI lane and accumulated lessons",
-      "line": 682,
+      "line": 689,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#opus-lane"
     },
     {
@@ -67679,7 +68184,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Opus/max uses\n    the canonical packet above with `claudez` replaced by Opus where named.\n    Root still supplies the idea, accepted architecture, task boundaries and\n    red proofs; Opus implements or independently audits, leaves a reviewable\n    worktree, and receives exact acceptance repairs from root. @status:spec/done",
-      "line": 683,
+      "line": 690,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#OPUS-USES-SAME-PACKET"
     },
     {
@@ -67688,7 +68193,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "8.1 Fresh run and continuation",
-      "line": 688,
+      "line": 695,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#invocation"
     },
     {
@@ -67697,7 +68202,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Run the installed\n      Claude Code launcher, never a hand-written direct API client. A first\n      turn is fresh `claude -p`; `-c` means continue the most recent session in\n      that cwd and is therefore used only for root's repair/acceptance follow-up.\n      Every concurrent Opus thread gets its own cwd so `-c` cannot resume a\n      neighbour. Do not use `--no-session-persistence` when a repair loop may\n      be needed. @status:spec/done",
-      "line": 689,
+      "line": 696,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#OPUS-CLI-ONLY"
     },
     {
@@ -67706,7 +68211,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Omit a fallback\n      model and inspect the JSON result's `canonicalModel`; never accept Fable.\n      The 2026-08-26 probes resolved `--model opus` to\n      `claude-opus-5` with a 1,000,000-token context. Omit\n      `--max-budget-usd` by owner ruling: subscription quota, not nominal API\n      accounting, is this lane's resource model. @status:spec/done",
-      "line": 703,
+      "line": 710,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#OPUS-NO-FALLBACK"
     },
     {
@@ -67715,7 +68220,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "8.2 Task shape and parallelism",
-      "line": 710,
+      "line": 717,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#opus-routing"
     },
     {
@@ -67724,7 +68229,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Prefer Opus/max\n        for wide code archaeology, adversarial architecture/transaction review,\n        ambiguous repairs and implementation whose verification needs sustained\n        cross-file judgment. It may code as freely as `claudez`; root retains\n        architecture and acceptance. Deterministic micro-edits still fail the\n        verification-cheaper-than-generation test. @status:spec/done",
-      "line": 712,
+      "line": 719,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#OPUS-JUDGMENT-LANE"
     },
     {
@@ -67733,7 +68238,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Multiple Opus processes\n        may run concurrently in separate cwd/session pairs. Parallel readers\n        may overlap; writers are separated by intersecting product paths. Their\n        subscription quota is independent of `claudez`, so using both families\n        at once expands throughput and supplies review diversity. @status:spec/done",
-      "line": 718,
+      "line": 725,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#OPUS-PARALLEL"
     },
     {
@@ -67742,7 +68247,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Give Opus the normal\n        machine toolset. The first two audits were unnecessarily launched with\n        a read-only tool profile; one sensible PowerShell line-count command\n        was denied. Both still completed, but the owner corrected the policy:\n        PowerShell/Bash, Grep/Glob/Read, read-only git history and exact tests\n        are ordinary reasoning instruments. Protect only the reviewable\n        worktree handoff. @status:spec/done",
-      "line": 723,
+      "line": 730,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#OPUS-TOOLS"
     },
     {
@@ -67751,7 +68256,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "8.3 Live measurements — 2026-08-26",
-      "line": 732,
+      "line": 739,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#measurements"
     },
     {
@@ -67760,7 +68265,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Two Opus/max\n      read-only audits ran concurrently through Claude Code 2.1.220. R3\n      verifier/trace: terminal success, 91 turns, about 9.2 minutes wall,\n      37,491 output tokens, nominal telemetry `$6.57`, 215-line report. R4\n      staged transforms: terminal success, 94 turns, about 9.8 minutes wall,\n      41,137 output tokens, nominal telemetry `$11.01`, 236-line report. Both\n      wrote only their report and produced concrete file/line matrices, red\n      proofs and commit slices. The nominal dollar fields do not change the\n      subscription-lane ruling. @status:spec/done",
-      "line": 733,
+      "line": 740,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#OPUS-FIRST-LIVE-BATCH"
     },
     {
@@ -67769,7 +68274,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "A broad Opus audit\n      genuinely benefits from a 200–240-line cap; implementation reports stay\n      near the canonical 140-line target. Require the report before final\n      completion because screen output is not the handoff. JSON telemetry is\n      kept for model/turn/time observation; it does not replace the durable\n      report. @status:spec/done",
-      "line": 742,
+      "line": 749,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#OPUS-REPORT-SHAPE"
     },
     {
@@ -67778,7 +68283,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "An A5a Opus/max implementation reached a green exact test, wrote the complete product diff, then produced no non-telemetry session event for about fifteen minutes while its final max-reasoning turn remained open. Root verified liveness from the Claude session JSONL, stopped only that exact marked `claude.exe` PID (never by name or tree), and resumed with `claude -c` in the same cwd. The session retained the diff and prior tool result; the continuation applied the acceptance repair and finished 13 focused + 42 parent tests. Therefore a killed/stalled final turn is not a code verdict and does not require regeneration: inspect the durable diff/report and last non-telemetry event, preserve them, then prefer same-cwd continuation. The exact-PID/no-tree rule applies to ordinary Opus too, even though its process family is not Codex's GUI family. @status:spec/done",
-      "line": 748,
+      "line": 755,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#OPUS-TAIL-RECOVERY-2026-08-29"
     },
     {
@@ -67787,7 +68292,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "The A5b implementation ignored its exact-gate budget at the tail and ran full `vibe-cli` sweeps through `cargo test | grep/head/awk`; the first spent roughly nine minutes inside unrelated `cli_spec_format` local install/submodule work. The rerun eventually printed 635/0, but the pipeline had discarded Cargo's exit status, so that number remained telemetry rather than root acceptance. Root used only unpiped, terminating exact e2e/golden/unit commands plus strict touched-crate clippy/workspace check/conform for the verdict. A worker package sweep is neither a substitute for the central full-panel trigger nor permission to mask the child status; when an overbroad sweep enters an unrelated slow test, stop its exact process chain and return to the packet's named tests. @status:spec/done",
-      "line": 749,
+      "line": 756,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#OPUS-BROAD-GATE-INCIDENT-2026-08-29"
     },
     {
@@ -67796,7 +68301,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "9. History",
-      "line": 753,
+      "line": 760,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#history"
     },
     {
@@ -67805,7 +68310,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Authored from the\n    owner's 2026-08-26 rulings: use `claudez` and Opus/max alongside Sol/native\n    workers because quotas are separate; never select Fable; consolidate the\n    strategy in one ChatGPT-only document; keep the agent-instruction triplet\n    byte-identical; replace per-atom full panels with exact gates and batch\n    panels; trust both launchers with normal machine tools; preserve their\n    result as an unstaged, centrally reviewable worktree rather than a worker\n    commit/stash/index; and never cap subscription runs by nominal dollar\n      budget. @status:spec/done",
-      "line": 754,
+      "line": 761,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#HIST-OWNER-2026-08-26"
     },
     {
@@ -67814,7 +68319,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "The\n    owner removed native Sol Ultra subagents from the acceptance pool after\n    observing that every reviewer repays the enormous boot-lane prefix.\n    Central Ultra now accepts in its existing context; independent review is\n    routed through subscription launchers or another explicitly cheaper\n    external lane. @status:spec/done",
-      "line": 763,
+      "line": 770,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#HIST-OWNER-2026-08-28-NATIVE-REVIEW"
     },
     {
@@ -112057,13 +112562,13 @@
     {
       "code": "long-section",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
-      "line": 381,
+      "line": 388,
       "message": "section `6. Live lane observations` spans 149 lines (threshold 120) — long sections read poorly and churn often; split into smaller leaves"
     },
     {
       "code": "long-section",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
-      "line": 531,
+      "line": 538,
       "message": "section `7. Canonical claudez packet template` spans 150 lines (threshold 120) — long sections read poorly and churn often; split into smaller leaves"
     },
     {
