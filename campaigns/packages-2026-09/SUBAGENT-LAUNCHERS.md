@@ -1,5 +1,12 @@
 # Subagent launchers — claudez/claudez2/codexrunner as the worker transport {#root}
 
+> Canonical installed successor (2026-09-04):
+> `tool:org.vibevm.world/zai-glm-claude` owns the portable direct z.ai
+> GLM-through-Claude-Code launcher and parent/worker contract for both Claude
+> and Codex. This document remains the global-refactoring campaign's detailed
+> observation/source record; where an early rule below conflicts with its own
+> later incident, the package's resolved protocol is the current generic law.
+
 <status stage="impl" state="done" comment="owner directive 2026-08-03; launchers reworked and verified the same day (the ALPHA/BRAVO matrix below); codexrunner added by owner directive 2026-08-20; the mode switch and the lane priority are the owner's levers"/>
 
 @fact:the-directive **The owner's directive (2026-08-03, chat, near-verbatim):**

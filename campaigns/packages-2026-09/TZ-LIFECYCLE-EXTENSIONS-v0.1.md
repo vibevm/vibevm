@@ -309,7 +309,17 @@ R8.2a завершены; остальные строки остаются от�
 `SPEC-DEBT-LIFECYCLE-R7-R8.md`: artifact records/DAG, один общий mechanism
 registry, Cargo commissioning, полностью статический skill, Agent Plugin 1.0,
 Claude/Codex/OpenCode projections, profiles/intent/receipt/recovery,
-`deploy:vibe-bin`, plugin replacement и Windows zip. Будущий VibeVM OS остаётся
+`deploy:vibe-bin`, plugin replacement и Windows zip. Отдельный обязательный
+atom `R8-PLATFORM-APPLICABILITY` добавляет first-class `when`/`os` к
+`[[artifacts.package]]` и `[[deploy.target]]`: vocabulary ровно
+`windows | linux | macos` переиспользует loading-model OS probe; неактивные
+package targets ничего не производят, неактивные deploy targets не входят в
+profile closure/collision checks, а active→inactive dependency отказывает с
+именем обоих рядов. Parse/write, human/JSON plan и skip evidence входят в тот
+же atom. Сегодняшняя подробная схема в successor-дизайне — подготовленная
+hypothesis, не implementation freeze: когда atom станет current, обязательны
+cold re-read актуальной grammar/engine, повторный design review и улучшенная
+freeze до первого code edit. Будущий VibeVM OS остаётся
 compatibility horizon, не текущей системной мутацией.
 
 ## §4. Сквозные гейты (каждый коммит, каждая волна)
@@ -354,7 +364,10 @@ R2, не R5. R7.5 следует за нейтральными R7.4-адапте
 relations, не превращая ни один provider в lifecycle dependency.
 R8 artifact records/DAG могут идти после R2 параллельно, но mechanism
 world/selection обязаны дождаться R4.0 и расширить тот же kernel — второй
-collector запрещён. Внутри каждого атома зависимости и конфликтные manifest /
+collector запрещён. `R8-PLATFORM-APPLICABILITY` зависит от artifact DAG и
+deploy engine, но не от provider replacement; он обязан использовать ту же
+OS-probe semantics, что boot loading, без environment-selected profile.
+Внутри каждого атома зависимости и конфликтные manifest /
 install / compiler периметры сверяются с ledger перед fan-out.
 
 ## §7. Definition of Done эпика

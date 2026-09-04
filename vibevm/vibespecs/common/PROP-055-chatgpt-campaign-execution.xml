@@ -7,6 +7,13 @@
   lifecycle/extensions campaign is active.** It consolidates worker routing,
   launcher use and test-panel cadence. It does not change VibeVM product
   semantics, Claude Code behavior, or a delegated packet.</STATUS-LINE></p>
+  <p><ZAI-GLM-PACKAGE-CANON fact="true" status="impl/done">**The portable direct-GLM
+  contract now lives in `tool:org.vibevm.world/zai-glm-claude`.** Its boot,
+  protocol, packet template, capability playbooks, terminal taxonomy and
+  launchers apply equally to Claude and Codex parents. This PROP retains only
+  the active ChatGPT campaign's routing choices, host resource controls, usage
+  reserve, exact gates and dated observations. Historical overlap below is
+  evidence for the extraction, not a second generic authority.</ZAI-GLM-PACKAGE-CANON></p>
 
   <scope title="1. Applicability — a harness gate, not a repository-wide mode">
     <facts ordered="false">

@@ -1373,6 +1373,177 @@ target deploy is a recorded saga: already-applied reversible targets are rolled
 back in reverse order; irreversible results remain visible as partial, never
 reported as success.
 
+### 7.3 Platform applicability for package/deploy targets — preparatory design {#platform-applicability-preparatory-design}
+
+_Status: design hypothesis recorded 2026-09-04, **not an implementation
+freeze**. The owner requires a cold re-read and a new design review when
+`R8-PLATFORM-APPLICABILITY` becomes current; that review may improve or replace
+any choice below before the first code edit._
+
+#### Candidate manifest shape
+
+One reusable strict value is carried by both target families:
+
+```toml
+[[artifacts.package]]
+id = "claudez-windows"
+mechanism = "package:static-file"
+when = { os = ["windows"] }
+inputs = [{ path = "launchers/claudez.ps1" }]
+outputs = [{ id = "claudez.ps1", kind = "file" }]
+
+[[artifacts.package]]
+id = "claudez-posix"
+mechanism = "package:static-file"
+when = { os = ["linux", "macos"] }
+inputs = [{ path = "launchers/claudez" }]
+outputs = [{ id = "claudez", kind = "file" }]
+
+[[deploy.target]]
+id = "install-claudez-windows"
+artifact = "claudez.ps1"
+mechanism = "deploy:vibe-opt-launcher"
+when = { os = ["windows"] }
+
+[[deploy.target]]
+id = "install-claudez-posix"
+artifact = "claudez"
+mechanism = "deploy:vibe-opt-launcher"
+when = { os = ["linux", "macos"] }
+
+[deploy]
+default_profile = "local"
+
+[deploy.profiles.local]
+targets = ["install-claudez-windows", "install-claudez-posix"]
+```
+
+`when` is an optional deny-unknown table. In the first epoch it contains one
+required member, `os`, whose value is a non-empty set drawn from exactly
+`windows | linux | macos`. The typed value stores canonical order and rejects
+duplicates. Absent `when` means unconditional. An explicit all-three set is
+redundant and should either canonicalise to absence or refuse with “remove the
+guard”; the activation-time review must choose one representation rather than
+letting equality and fingerprints disagree.
+
+The spelling deliberately uses a table rather than a top-level `os` field:
+applicability is one concept and future dimensions, if ever justified, belong
+inside it. The OS vocabulary and matching semantics are shared with
+PROP-009's boot activation; no second spelling such as `darwin`, `win32` or a
+Rust target triple is admitted. Exact code reuse, rather than merely equal
+strings, is an implementation acceptance question for the future review.
+
+#### Projection and validation order
+
+The candidate algorithm is:
+
+1. Parse every row and validate its field types, ids, safe declarant paths and
+   global uniqueness without considering the current OS. An inactive row is
+   not a hiding place for malformed syntax.
+2. Observe the host OS once at the command/orchestrator boundary and carry one
+   typed value into artifact/deploy planning. Providers and lower cells do not
+   reread ambient environment.
+3. Evaluate `when` and project the active package targets, outputs and deploy
+   targets before provider lookup, input probing, artifact freshness, profile
+   dependency closure or physical-destination collision checks.
+4. Validate and execute the active artifact DAG. An inactive package target
+   produces no record and its output ids are absent from the effective artifact
+   namespace. An active consumer of an inactive output refuses by both ids and
+   observed OS.
+5. Resolve the authored deploy profile, then project its applicable members.
+   Profiles remain named intent, never OS selectors; environment or host OS
+   does not choose a different profile. An active target depending on an
+   inactive target refuses. An inactive target's own dependencies are not
+   pulled into the effective closure.
+6. Report every authored-but-inactive row as typed skip evidence. If a selected
+   profile has zero applicable targets, refuse `NO_APPLICABLE_TARGETS` with the
+   profile, OS and authored target ids; an empty success would be a false green.
+
+Ids remain globally unique across the whole manifest even when predicates are
+mutually exclusive. Allowing a Windows and POSIX row to reuse one id would make
+artifact records, receipts, diffs and citations change meaning with the host.
+The condition chooses whether an identity participates; it never changes what
+that identity means.
+
+#### Identity, state and inverse operations
+
+The canonical predicate and observed OS enter the effective target-plan digest.
+Changing applicability must invalidate freshness and the deploy desired-config
+digest; otherwise an old receipt can masquerade as the new desired plan.
+
+An artifact record left by a previously active OS is not current evidence on a
+different OS. It may remain durable for a later return, but the effective graph
+must not resolve it while its producer is inactive. Cleanup belongs to the
+ordinary artifact-state/clean policy, never an incidental filter delete.
+
+Deploy needs stronger treatment because a previous OS may already own external
+state. The leading candidate is:
+
+- `deploy --plan` treats a now-inactive target with no receipt as a skip;
+- a now-inactive target with a receipt becomes an explicit
+  `retire-inactive` inverse action, verified and removed through the normal
+  provider/receipt law rather than silently orphaned;
+- explicit `undeploy --profile` enumerates receipt-owned profile targets even
+  when their current predicate is false, then either performs their supported
+  inverse or refuses with the exact provider/platform mismatch;
+- no applicability transition bypasses drift refusal or deletes unowned state.
+
+This inverse policy is intentionally the least-frozen part of the hypothesis.
+The future review must inspect the then-current receipt/profile transaction and
+decide whether automatic retirement belongs to `deploy`, an explicit reconcile
+mode, or only `undeploy`. What is already fixed is the invariant: changing OS
+must not silently call stale state current or make receipt-owned resources
+undiscoverable.
+
+#### Surfaces and evidence
+
+Human and JSON plans carry, for every authored row: target id, canonical
+predicate, observed OS, `active | skipped | retire-inactive`, and a bounded
+reason. Skipped rows call no provider, read no source artifact, acquire no
+destination lock and write no artifact/deploy state. This is proven with
+sentinel providers and absent OS-specific files, not by an empty log alone.
+
+The future implementation matrix starts with:
+
+- parse/write symmetry for absent, Windows-only and Linux+macOS predicates;
+- unknown key/OS, empty list, duplicate value and redundant-all handling;
+- global duplicate-id refusal across mutually exclusive rows;
+- injected Windows/Linux/macOS projection with no ambient reread;
+- inactive source/provider/destination sentinels proving zero calls;
+- active consumer → inactive producer and active target → inactive dependency
+  refusals;
+- one default profile whose Windows and POSIX effective sets differ correctly;
+- zero-applicable-profile refusal;
+- plan/fingerprint/JSON/human evidence parity;
+- prior-receipt transition and explicit undeploy behavior;
+- a real package carrying PowerShell/CMD and Bash launchers.
+
+#### Decision record and mandatory revisit
+
+**Decision for planning now.** Carry `when = { os = [...] }` as the leading
+design, with global identities, one injected host observation, pre-provider
+projection, explicit skip evidence and no OS-selected profile.
+
+**Why.** It composes one cross-platform manifest without copying profiles,
+reuses the established boot OS vocabulary, and keeps platform choice out of
+provider internals and environment-driven profile selection.
+
+**Considered and rejected for the hypothesis.** Separate `windows`/`posix`
+profiles alone—works today but duplicates human selection and cannot prevent an
+inapplicable target from entering other profiles. Top-level `os`—a second
+applicability namespace with no growth seam. Reusing target ids under disjoint
+guards—breaks durable identity. Letting providers self-skip—too late for DAG,
+profile and collision truth. Automatically selecting a profile by OS—violates
+the existing explicit-profile law.
+
+**When to revisit (mandatory, not optional).** Before
+`R8-PLATFORM-APPLICABILITY` enters implementation; when another target family
+needs applicability; when the host/platform type, artifact DAG or deploy
+receipt model has changed; or when a real consumer falsifies the inverse-state
+hypothesis. The implementing session re-reads current manifest structs,
+serialization, planner, profile closure, record/receipt state and all consumers,
+runs an adversarial design review, writes a new freeze, and only then codes.
+
 ## 8. LLM policy at this boundary
 
 All commissioning build, package and deploy mechanisms have complete
