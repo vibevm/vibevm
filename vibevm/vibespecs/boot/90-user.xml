@@ -93,9 +93,13 @@ project policy:</machine-quirks-lead></p>
   there. The canonical `claudez.ps1` / `claudez.cmd` are now receipt-deployed by
   `tool:org.vibevm.world/zai-glm-claude` under `~/.vibe/opt/bin`; old
   `~/opt/bin/claudez*` copies are legacy, and `claudez2` remains disabled unless
-  the owner explicitly re-enables it. The user `PATH` therefore carries **both**
-  directories, `~/.vibe/opt/bin` first. Verified live: `vibe --version` and the
-  canonical GLM launchers resolve from the new location.</QUIRK-VVM-STORE-MOVED-UNDER-DOT-VIBE>
+  the owner explicitly re-enables it. The user-scoped `PATH` carries both
+  directories with `~/.vibe/opt/bin` first, but the effective merged Windows
+  PATH observed in the current Codex process still puts a machine-scoped legacy
+  `~/opt/bin` earlier. Invoke the canonical GLM launcher by absolute path until
+  command resolution proves the new location; bare `claudez` may otherwise hit
+  the legacy copy. Verified live: the new files and receipts exist under
+  `~/.vibe/opt/bin`, and `vibe --version` resolves from the new store.</QUIRK-VVM-STORE-MOVED-UNDER-DOT-VIBE>
       <QUIRK-THE-OPT-NAME-IS-LORE-BEARING fact="true" status="impl/done">**The last path component `opt` is
   load-bearing and that is why the new home is `~/.vibe/opt` rather than
   `~/.vibe`.** The version manager recognises a managed install by the shape

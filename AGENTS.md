@@ -60,8 +60,9 @@ Keep it current-state; prune stale lines.
   launcher over the z.ai Anthropic-compatible gateway; it maps the large
   aliases to `glm-5.3[1m]`, keeps state in `~/.claude-glm`, and loads its
   bearer from the token file without exposing it. Launch fresh bounded work with
-  `claudez -p <pointer> --permission-mode bypassPermissions`; use ordinary
-  text output plus the durable report for long work, never `claudez2` unless
+  `C:/Users/olegc/.vibe/opt/bin/claudez.ps1 -p <pointer>
+  --permission-mode bypassPermissions` (bare `claudez` only after resolving it
+  to that exact file); use ordinary text output plus the durable report, never `claudez2` unless
   the owner explicitly re-enables it. PROP-055 and the package-owned launcher
   were re-verified 2026-09-04; any old `~/opt/bin/claudez*` copy is legacy.
 - **Codexrunner quiet-packet guard (verified 2026-08-30):** a plain
