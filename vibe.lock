@@ -1,6 +1,6 @@
 [meta]
 generated_by = "vibe 1.0.0"
-generated_at = "2026-08-30T00:11:24Z"
+generated_at = "2026-09-04T13:23:59Z"
 schema_version = 6
 root_dependencies = [
     "flow:org.vibevm.fractality/delegation-first@^1.0.0",
@@ -9,6 +9,7 @@ root_dependencies = [
     "org.vibevm.world/redbook@^1.0.0",
     "stack:org.vibevm.ai-native/rust-ai-native@^1.0.0",
     "stack:org.vibevm.ai-native/typescript-ai-native@^1.0.0",
+    "tool:org.vibevm.world/zai-glm-claude@^1.0.0",
 ]
 
 [[package]]
@@ -105,6 +106,17 @@ dependencies = [
     "lang:org.vibevm.ai-native/typescript-ai-native-lang@=1.0.0",
     "mcp:org.vibevm.ai-native/typescript-ai-native-mcp@=1.0.0",
 ]
+admitted_by = "root-edge"
+source_kind = "local"
+
+[[package]]
+kind = "tool"
+name = "zai-glm-claude"
+group = "org.vibevm.world"
+version = "1.0.0"
+source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.world/zai-glm-claude/v1.0.0"
+content_hash = "sha256:9bd0789895b540a4265bf90f951bdf297d896199a0270eeb97aaa917be100963"
+files_written = []
 admitted_by = "root-edge"
 source_kind = "local"
 

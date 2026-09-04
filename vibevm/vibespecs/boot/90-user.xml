@@ -90,10 +90,12 @@ project policy:</machine-quirks-lead></p>
   holds the `vibe` shims, `~/.vibe/opt/vibevm/` the versions and the `current`
   pointer. **`~/opt/bin` is NOT retired** — three sibling products (`vibeframe`,
   `vibeterm`, `launcher`) still keep their stores under `~/opt/` and their shims
-  there, and the delegation launchers `claudez` / `claudez2` are still
-  `~/opt/bin/claudez*` (they belong to no store). The user `PATH` therefore
-  carries **both** directories, `~/.vibe/opt/bin` first. Verified live: `vibe
-  --version` answers from the new location.</QUIRK-VVM-STORE-MOVED-UNDER-DOT-VIBE>
+  there. The canonical `claudez.ps1` / `claudez.cmd` are now receipt-deployed by
+  `tool:org.vibevm.world/zai-glm-claude` under `~/.vibe/opt/bin`; old
+  `~/opt/bin/claudez*` copies are legacy, and `claudez2` remains disabled unless
+  the owner explicitly re-enables it. The user `PATH` therefore carries **both**
+  directories, `~/.vibe/opt/bin` first. Verified live: `vibe --version` and the
+  canonical GLM launchers resolve from the new location.</QUIRK-VVM-STORE-MOVED-UNDER-DOT-VIBE>
       <QUIRK-THE-OPT-NAME-IS-LORE-BEARING fact="true" status="impl/done">**The last path component `opt` is
   load-bearing and that is why the new home is `~/.vibe/opt` rather than
   `~/.vibe`.** The version manager recognises a managed install by the shape

@@ -1,0 +1,95 @@
+schema = 1
+source_hash = "sha256:9bd0789895b540a4265bf90f951bdf297d896199a0270eeb97aaa917be100963"
+spec_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:2ec53cbe3b74caa74ea3e99334dd4bd208c0b25f37d94adf604a950aa24cc19a"
+
+[[file]]
+path = "LICENSE.md"
+sha256 = "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29"
+disposition = "copied"
+source = "LICENSE.md"
+
+[[file]]
+path = "README.xml"
+sha256 = "1d3dbfc014988a45b4c45b83c9d1d0ccf30d32231eeb2bbfdc46034f84d546b1"
+disposition = "converted"
+source = "README.md"
+
+[[file]]
+path = "launchers/claudez"
+sha256 = "bfa1c22c567002d506cef3571645b56eb1c86e82a16a186ec2b584fcdf3dbded"
+disposition = "copied"
+source = "launchers/claudez"
+
+[[file]]
+path = "launchers/claudez.cmd"
+sha256 = "ff1a6e3d06b6eeb68079e157abea5bcc76f663273d27d844472b16dd684d6b9a"
+disposition = "copied"
+source = "launchers/claudez.cmd"
+
+[[file]]
+path = "launchers/claudez.ps1"
+sha256 = "e26b3c9b1a07499a26b3e50f36fc4b56a9bbfb2a7b8ae029659af01317e5acc9"
+disposition = "copied"
+source = "launchers/claudez.ps1"
+
+[[file]]
+path = "tests/e2e/run.ps1"
+sha256 = "db3bb7f9ddeb0f0bf61946169e0c0d94ed05ae8e2515cf717fa71a45f9e9cf0a"
+disposition = "copied"
+source = "tests/e2e/run.ps1"
+
+[[file]]
+path = "vibe.toml"
+sha256 = "9e105240f9ddd8a15153587daa3ad0c09b01aa897bae0de694915b98cb81a17e"
+disposition = "copied"
+source = "vibe.toml"
+
+[[file]]
+path = "vibevm/vibespecs/boot/75-tool-zai-glm-claude.xml"
+sha256 = "7b2ecd75d3a55f0221d519e37bf8caca066d5d25b3530b6e9e9e50f032dd7fc5"
+disposition = "copied"
+source = "vibevm/vibespecs/boot/75-tool-zai-glm-claude.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/zai-glm-claude/ZAI-GLM-CLAUDE-PROTOCOL.xml"
+sha256 = "74d6d0fb1892ad0b9d979a950a90c1869ccfb43c4df301b5e874702957e0233e"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/zai-glm-claude/ZAI-GLM-CLAUDE-PROTOCOL.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/zai-glm-claude/packet-template.xml"
+sha256 = "ce1b12832d7f733b118fa54631ca671b044e7f7ba0bd83456bd852c62d12109b"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/zai-glm-claude/packet-template.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/zai-glm-claude/playbooks/glm-big.xml"
+sha256 = "c20ee1a3f19839fa3f4caa326ec22740382bb5ddff5197d1a8475b9437e0f414"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/zai-glm-claude/playbooks/glm-big.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/zai-glm-claude/playbooks/glm-turbo.xml"
+sha256 = "b9eae50da99d7caf5ffb0a372d6b302cc806c205fd6ecbeff92abbd7200faf9c"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/zai-glm-claude/playbooks/glm-turbo.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/zai-glm-claude/provenance.xml"
+sha256 = "e1700e72dfebec928a9b4fa3f5d2ce99d92522c1ca938555d29152494369b156"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/zai-glm-claude/provenance.xml"
+
+[[file]]
+path = "vibevm/vibespecs/manual-tests/MT-01-minimal-project.xml"
+sha256 = "d3ff05699cf4b87b12c7838fcda4dade2859949e2202790915973902891ceb89"
+disposition = "copied"
+source = "vibevm/vibespecs/manual-tests/MT-01-minimal-project.xml"
+
+[[file]]
+path = "vibevm/vibespecs/manual-tests/MT-02-posix-launcher.xml"
+sha256 = "bc975fad350ec4099c13bf1e9fda1a268f2ba472c02a0068ea2cabbfac5ba105"
+disposition = "copied"
+source = "vibevm/vibespecs/manual-tests/MT-02-posix-launcher.xml"

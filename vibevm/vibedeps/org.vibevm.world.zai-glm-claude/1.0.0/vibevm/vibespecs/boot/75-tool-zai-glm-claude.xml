@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Tool: z.ai GLM workers through Claude Code</title>
+  <status stage="impl" state="done"/>
+  <p><ZAI-GLM-CLAUDE-INSTALLED fact="true" status="impl/done">This project has installed
+  `tool:org.vibevm.world/zai-glm-claude`. It supplies a harness-neutral operating
+  contract for delegating bounded work to a z.ai GLM model through Claude Code,
+  plus receipt-owned PowerShell/CMD and Bash launchers deployable under
+  `&lt;settings-root&gt;/opt/bin`; the default settings root is `~/.vibe`.</ZAI-GLM-CLAUDE-INSTALLED></p>
+
+  <installation title="Installation state">
+    <p><LAUNCHER-LOCATION fact="true" status="impl/done">Bare `vibe install` materialises
+    the package and this boot contribution; it does not mutate user state. The
+    package installation procedure then runs the explicit host deploy profile
+    against the resolved package slot. `windows` writes exactly
+    `&lt;settings-root&gt;/opt/bin/claudez.ps1` and `claudez.cmd`; `posix` writes
+    executable `&lt;settings-root&gt;/opt/bin/claudez` for Linux/macOS. The default
+    settings root is `~/.vibe`; no profile is inferred from the environment.</LAUNCHER-LOCATION></p>
+    <fence lang="text">vibe deploy --profile windows --path vibevm/vibedeps/org.vibevm.world.zai-glm-claude/1.0.0
+vibe deploy --profile posix   --path vibevm/vibedeps/org.vibevm.world.zai-glm-claude/1.0.0</fence>
+    <p><LAUNCHER-VERIFY fact="true" status="spec/done">Before commissioning work, resolve
+    the launcher from the controlled directory and run a bounded health probe.
+    A file's presence proves installation only; the terminal probe identifies
+    live transport and the resolved model.</LAUNCHER-VERIFY></p>
+  </installation>
+
+  <parent-workflow title="The parent workflow">
+    <p><ZAI-GLM-CLAUDE-PARENT-WORKFLOW fact="true" status="spec/done">The parent keeps
+    architecture, ambiguity, acceptance, integration, commits, pushes and
+    irreversible actions. A GLM process receives a bounded packet, executes in
+    one dedicated cwd and leaves ordinary reviewable artifacts. Its `PASS` or
+    terminal success is evidence, never acceptance.</ZAI-GLM-CLAUDE-PARENT-WORKFLOW></p>
+    <facts ordered="true">
+      <PACKET-AS-FILE fact="true" status="spec/done">Put substantial context in a packet
+      file inside the worker cwd. The command-line prompt is only a short pointer
+      repeating the authority, visible-diff and report invariants.</PACKET-AS-FILE>
+      <ONE-CWD-ONE-WRITER fact="true" status="spec/done">Give every writing worker one
+      dedicated cwd and never run two live writers there. Parallelise only
+      disjoint write sets; overlapping reads are harmless.</ONE-CWD-ONE-WRITER>
+      <REPORT-EARLY fact="true" status="spec/done">Create the durable report skeleton
+      after the first meaningful slice and update it before long gates. Screen
+      prose may disappear; the report and visible artifacts are the delivery.</REPORT-EARLY>
+      <ROOT-OWNS-ACCEPTANCE fact="true" status="spec/done">The parent compares the report
+      to the actual files, reads the diff/result, repeats decisive checks and
+      issues accept, same-cwd repair, recommission or discard.</ROOT-OWNS-ACCEPTANCE>
+    </facts>
+  </parent-workflow>
+
+  <harnesses title="Claude and Codex parents">
+    <p><CODEX-PARENT fact="true" status="spec/done">A Codex parent launches the same
+    `claudez` command through its terminal/process runner with the worker cwd set
+    explicitly. Native Codex subagent APIs are not a substitute for this
+    provider-specific lane.</CODEX-PARENT></p>
+    <p><CLAUDE-PARENT fact="true" status="spec/done">A Claude parent launches the same
+    command from a scoped subshell or `Push-Location` block. It never leaves a
+    persistent bare `cd` that could retarget a later continuation.</CLAUDE-PARENT></p>
+    <p><SAME-CWD-CONTINUATION fact="true" status="spec/done">Fresh work uses `claudez -p`.
+    A correction uses `claudez -c -p` only after the prior process ended and
+    from the exact same cwd and launcher state directory. A different cwd or
+    `CLAUDE_CONFIG_DIR` is a different conversation.</SAME-CWD-CONTINUATION></p>
+  </harnesses>
+
+  <safety title="Secrets and terminal truth">
+    <p><NO-SECRETS-TO-WORKERS fact="true" status="spec/done">The parent may name the
+    credential source path but never reads, hashes, copies, logs or places the
+    token value in a packet or argv. The launcher alone reads the file and sends
+    the bearer to the configured TLS endpoint.</NO-SECRETS-TO-WORKERS></p>
+    <p><MODEL-IS-OBSERVED fact="true" status="spec/done">Configured aliases are requests,
+    not proof of model identity. Record the resolved model/version from terminal
+    metadata when available; never transfer an older GLM calibration silently to
+    a newer alias.</MODEL-IS-OBSERVED></p>
+    <p><TRANSPORT-IS-NOT-A-VERDICT fact="true" status="spec/done">A 429, gateway error,
+    timeout, turn cap, killed process or stalled final turn is transport state,
+    not a verdict on surviving work. Preserve cwd, diff and report before
+    deciding whether to continue or reroute.</TRANSPORT-IS-NOT-A-VERDICT></p>
+  </safety>
+
+  <reference title="Full operating contract">
+    <p><READ-PROTOCOL-BEFORE-SPAWN fact="true" status="impl/done">Before the first GLM worker
+    in a session, read the complete protocol and packet template:
+    @spec://org.vibevm.world/zai-glm-claude/flows/zai-glm-claude/ZAI-GLM-CLAUDE-PROTOCOL#root
+    and
+    @spec://org.vibevm.world/zai-glm-claude/flows/zai-glm-claude/packet-template#root.</READ-PROTOCOL-BEFORE-SPAWN></p>
+  </reference>
+</spec>

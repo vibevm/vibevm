@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Playbook: z.ai GLM big lane</title>
+  <status stage="spec" state="done"/>
+  <p><CALIBRATION fact="true" status="spec/done">This is a capability prior for the
+  launcher's big-model request, currently `glm-5.3[1m]`. Historic GLM-5.2 runs
+  informed it; every real run records the resolved model and may falsify the
+  prior. Alias text alone proves nothing.</CALIBRATION></p>
+  <wins title="Task shapes it tends to win">
+    <facts ordered="false">
+      <EXPLICIT-MODULE fact="true" status="spec/done">A substantial module or repair with
+      explicit architecture, bounded files and executable acceptance.</EXPLICIT-MODULE>
+      <BROAD-EXTRACTION fact="true" status="spec/done">Broad local reading that ends in a
+      structured inventory, migration map or concrete code change.</BROAD-EXTRACTION>
+      <MECHANICAL-BULK fact="true" status="spec/done">Templated bulk work whose errors are
+      cheap to detect with compiler/tests/diff.</MECHANICAL-BULK>
+      <CORRECTION fact="true" status="spec/done">Same-cwd correction after the parent names
+      an exact failed claim and oracle.</CORRECTION>
+    </facts>
+  </wins>
+  <risks title="Observed risks">
+    <facts ordered="false">
+      <SELF-REVIEW-RISK fact="true" status="spec/done">A polished report and green worker
+      suite can coexist with public-boundary, identity, containment or
+      false-positive-test defects. Parent review remains mandatory.</SELF-REVIEW-RISK>
+      <BROAD-GATE-RISK fact="true" status="spec/done">Without an exact command budget the
+      worker may rerun broad slow filters, select zero tests or mask an exit in a
+      pipeline. Packets name commands and expected counts.</BROAD-GATE-RISK>
+      <REPORT-LATE-RISK fact="true" status="spec/done">Long reasoning, turn caps and shared
+      quota walls can end before a final report. Write the skeleton early and
+      update it incrementally.</REPORT-LATE-RISK>
+      <CANONICAL-IDENTITY-RISK fact="true" status="spec/done">Digest goldens alone do not
+      prove semantic identity. Pair them with typed construction, equality,
+      absent-versus-empty and legacy order/allocation checks when applicable.</CANONICAL-IDENTITY-RISK>
+    </facts>
+  </risks>
+  <budget title="Budgeting">
+    <p><NO-UNIVERSAL-TURN-CAP fact="true" status="spec/done">There is no universal 30–50
+    turn cap. A narrow repair may fit; broad cold archaeology may need a
+    separate report-bearing pass or an uncapped run. Budget from task shape and
+    preserve work at every boundary.</NO-UNIVERSAL-TURN-CAP></p>
+    <p><PLAIN-OUTPUT fact="true" status="spec/done">Use ordinary output plus the durable
+    report for long parent-managed runs. Structured event streams are for short
+    probes or file-side telemetry, not bulk context ingestion.</PLAIN-OUTPUT></p>
+  </budget>
+</spec>

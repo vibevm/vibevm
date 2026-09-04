@@ -11,6 +11,7 @@ authors = ["Oleg Chirukhin"]
 "flow:org.vibevm.world/omnichannel" = "^1.0.0"
 "stack:org.vibevm.ai-native/rust-ai-native" = "^1.0.0"
 "stack:org.vibevm.ai-native/typescript-ai-native" = "^1.0.0"
+"tool:org.vibevm.world/zai-glm-claude" = "^1.0.0"
 
 [requires.packages."flow:org.vibevm.fractality/delegation-first"]
 version = "^1.0.0"

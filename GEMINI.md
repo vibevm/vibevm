@@ -54,15 +54,16 @@ Keep it current-state; prune stale lines.
   `opencode run` only as the last-resort fallback below. **During the active
   OpenAI ChatGPT lifecycle campaign, PROP-055 is the scoped override:** healthy
   `claudez` is the first execution lane, root accepts, and a correction
-  continues with `claudez -c` in the exact same dedicated cwd. The installed
-  `C:/Users/olegc/opt/bin/claudez.ps1` is a thin Claude Code launcher over the
-  z.ai Anthropic-compatible gateway; it currently maps the large aliases to
-  `glm-5.3[1m]`, keeps state in `~/.claude-glm`, and loads its bearer from
-  the token file without exposing it. Launch fresh bounded work with
+  continues with `claudez -c` in the exact same dedicated cwd. The receipt-
+  deployed `C:/Users/olegc/.vibe/opt/bin/claudez.ps1` from
+  `tool:org.vibevm.world/zai-glm-claude` is the canonical thin Claude Code
+  launcher over the z.ai Anthropic-compatible gateway; it maps the large
+  aliases to `glm-5.3[1m]`, keeps state in `~/.claude-glm`, and loads its
+  bearer from the token file without exposing it. Launch fresh bounded work with
   `claudez -p <pointer> --permission-mode bypassPermissions`; use ordinary
   text output plus the durable report for long work, never `claudez2` unless
-  the owner explicitly re-enables it. PROP-055 and launcher re-verified
-  2026-08-30 after an incorrect `opencode` fallback was caught in review.
+  the owner explicitly re-enables it. PROP-055 and the package-owned launcher
+  were re-verified 2026-09-04; any old `~/opt/bin/claudez*` copy is legacy.
 - **Codexrunner quiet-packet guard (verified 2026-08-30):** a plain
   `codexrunner exec <pointer>` auto-loaded the repository `AGENTS.md` before
   reading the named packet, then began the forbidden full 145k boot despite the

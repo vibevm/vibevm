@@ -43,3 +43,7 @@ kind = "static"
 [[entry]]
 path = "vibevm/vibedeps/org.vibevm.world.omnichannel/1.0.0/vibevm/vibespecs/boot/68-flow-omnichannel.xml"
 kind = "static"
+
+[[entry]]
+path = "vibevm/vibedeps/org.vibevm.world.zai-glm-claude/1.0.0/vibevm/vibespecs/boot/75-tool-zai-glm-claude.xml"
+kind = "static"
