@@ -58,12 +58,12 @@ paths and INDEX targets follow.</PACKAGES-CARRY-THE-LAYOUT-TOO></p>
 and `convert-spec-src` resolve spec homes by the NEW names
 (`vibevm/vibespecs`, `vibevm/vibepacks`); an old-layout root gets
 the loud migration recipe, never a silent walk.</REFACTOR-VERBS-FOLLOW></p>
-    <p><DETACH-IS-THE-TERMINAL-EXCEPTION fact="true" status="impl/plan">**L6 — removal is
+    <p><SCRAPE-IS-THE-TERMINAL-EXCEPTION fact="true" status="impl/plan">**L6 — removal is
 explicit and terminal.** The only supported transition from this layout to a
 project with no &#96;vibevm/&#96; root is the contract-driven, health-gated,
-recoverable detach operation at
+recoverable scrape operation at
 @spec://org.vibevm.core/vibevm/common/PROP-056#root. Blind deletion does not
-become a legacy layout and receives no compatibility reader.</DETACH-IS-THE-TERMINAL-EXCEPTION></p>
+become a legacy layout and receives no compatibility reader.</SCRAPE-IS-THE-TERMINAL-EXCEPTION></p>
   </laws>
   <verification title="3. Verification">
     <p><RELAYOUT-PROOF fact="true" status="spec/done">«Ничего не сломалось» is proven, not assumed: the full

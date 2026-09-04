@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
-  <title id="root">PROP-056 — Detached project export and in-place VibeVM removal</title>
+  <title id="root">PROP-056 — Scraped project export and in-place VibeVM removal</title>
   <status stage="spec" state="done" action="new"
     comment="Owner-commissioned 2026-09-04; normative design complete, implementation not started"/>
 
@@ -20,7 +20,7 @@
     a project contract, after which inventory, rewriting, deletion, health
     checks, rollback and proof are algorithmic.</OWNER-MANDATE></p>
     <p><OWNER-CONTRACT-RULING fact="true" status="spec/done">The default contract lives at
-    &#96;vibevm/detach/contract.toml&#96;, may be replaced by an explicit
+    &#96;vibevm/scrape/contract.toml&#96;, may be replaced by an explicit
     &#96;--contract&#96; path, and—when contained in the project and selected for
     removal—is the last project payload file removed. Standard Cargo, npm,
     Maven and Python/pip health checks are declarative; a snapshotted
@@ -31,47 +31,54 @@
     <facts ordered="false">
       <RELATED-ALGORITHMIC-REFACTORING fact="true" status="spec/done">PROP-031 supplies
       the write-side law: typed operation, deterministic plan, no free-form LLM
-      rewriting, and post-operation gating. Detach is one composed refactoring
+      rewriting, and post-operation gating. Scrape is one composed refactoring
       over source, manifests, generated state and project topology.</RELATED-ALGORITHMIC-REFACTORING>
       <RELATED-LAYOUT fact="true" status="spec/done">PROP-052 defines the
-      &#96;vibevm/&#96; root. Detach is the explicit terminal exception that removes
+      &#96;vibevm/&#96; root. Scrape is the explicit terminal exception that removes
       that root from an exported consumer; it does not reintroduce the retired
       pre-PROP-052 Vibe layout.</RELATED-LAYOUT>
       <RELATED-CLEAN fact="true" status="spec/done">PROP-053 &#96;vibe clean&#96; removes
       regenerable dependency and boot products while retaining authored project
-      state and &#96;vibe.lock&#96;. Detach is not clean: it removes the Vibe
+      state and &#96;vibe.lock&#96;. Scrape is not clean: it removes the Vibe
       relationship itself and therefore requires a contract, native health
       proof and recoverable commit.</RELATED-CLEAN>
       <RELATED-LIFECYCLE fact="true" status="spec/done">PROP-054 supplies typed lifecycle
       planning, injected environment authority, artifact identity and durable
-      transaction precedents. Detach reuses those principles but has a distinct
+      transaction precedents. Scrape reuses those principles but has a distinct
       external journal because project &#96;.vibe/&#96; is removable.</RELATED-LIFECYCLE>
       <RELATED-DISCIPLINES fact="true" status="spec/done">The Rust, TypeScript and Go
-      AI-Native stacks remain authoring disciplines. Detach removes their
+      AI-Native stacks remain authoring disciplines. Scrape removes their
       registered metadata and tool wiring; it never erases useful product code
       merely because a discipline helped create it.</RELATED-DISCIPLINES>
     </facts>
   </related>
 
   <problem title="3. Problem, boundary and vocabulary">
-    <p><DETACH-PROBLEM fact="true" status="spec/done">Blindly deleting Vibe paths is not
+    <p><SCRAPE-TERM-BOUNDARY fact="true" status="spec/done"><strong>Scrape</strong>
+    is the terminal cleaning operation defined here: it removes the selected
+    VibeVM repository layer while preserving the native product. The command
+    vocabulary deliberately reserves <strong>attach</strong> and
+    <strong>detach</strong> for a future live-tool relationship such as connecting
+    and disconnecting a debugger. Scrape is never an alias for that future
+    runtime operation, and no detach spelling is accepted by this command.</SCRAPE-TERM-BOUNDARY></p>
+    <p><SCRAPE-PROBLEM fact="true" status="spec/done">Blindly deleting Vibe paths is not
     safe. A Rust consumer may path-depend on the &#96;specmark&#96; proc macro inside
     &#96;vibevm/vibedeps&#96;; build scripts or CI may call &#96;vibe bin&#96;; generated
     product source may live beside disposable generated state; authored
     specifications may share a tree with generated boot output. A path name
-    alone cannot decide disposition.</DETACH-PROBLEM></p>
+    alone cannot decide disposition.</SCRAPE-PROBLEM></p>
     <facts ordered="false">
-      <DETACHED-TREE fact="true" status="spec/done">A <em>detached tree</em> is a project
+      <SCRAPED-TREE fact="true" status="spec/done">A <em>scraped tree</em> is a project
       tree for which every contract-selected Vibe path, dependency, managed
       marker, source annotation, tool script and environment reference is absent
       or explicitly retained under a neutral identity, and whose required
-      native health panel is accepted after detachment under the declared strict
+      native health panel is accepted after scraping under the declared strict
       or no-regression baseline policy. A retained non-pass verdict is never
-      described as an unconditional pass.</DETACHED-TREE>
+      described as an unconditional pass.</SCRAPED-TREE>
       <PRODUCT-PRESERVATION fact="true" status="spec/done">Product preservation means:
       all untouched files are byte-identical; every authored source rewrite is
       metadata erasure-equivalent; every declared relocation preserves exact
-      bytes and mode; native manifests and lockfiles describe the detached
+      bytes and mode; native manifests and lockfiles describe the scraped
       dependency graph; the health oracle accepts the result.</PRODUCT-PRESERVATION>
       <ZERO-RESIDUAL-SCOPE fact="true" status="spec/done">Zero residue means zero
       registered Vibe identities, paths and markers selected by this contract.
@@ -87,43 +94,43 @@
     influence of VibeVM on product architecture, infer replacements for arbitrary
     runtime libraries, mutate Git history, publish artifacts, or silently remove
     user-global deployments. Receipt-owned external deployments are reported;
-    the operator runs the existing explicit undeploy operation before detach
+    the operator runs the existing explicit undeploy operation before scrape
     when external removal is desired.</NON-GOALS></p>
   </problem>
 
   <surface title="4. Command surface">
     <facts ordered="false">
-      <DETACH-PLAN-COMMAND fact="true" status="impl/plan">&#96;vibe detach --plan
+      <SCRAPE-PLAN-COMMAND fact="true" status="impl/plan">&#96;vibe scrape --plan
       [--contract &lt;path&gt;] [--output &lt;dir&gt; | --in-place]&#96; is read-only.
       With neither execution mode, it plans the in-place form because that is the
       larger risk surface; it writes no project, journal, quarantine or report
-      file.</DETACH-PLAN-COMMAND>
-      <DETACH-EXPORT-COMMAND fact="true" status="impl/plan">&#96;vibe detach --output
-      &lt;absent-dir&gt; [--contract &lt;path&gt;]&#96; creates a detached export and
+      file.</SCRAPE-PLAN-COMMAND>
+      <SCRAPE-EXPORT-COMMAND fact="true" status="impl/plan">&#96;vibe scrape --output
+      &lt;absent-dir&gt; [--contract &lt;path&gt;]&#96; creates a scraped export and
       never changes the source tree. The destination must be absent; adoption of
-      an existing directory is forbidden.</DETACH-EXPORT-COMMAND>
-      <DETACH-INPLACE-COMMAND fact="true" status="impl/plan">&#96;vibe detach --in-place
+      an existing directory is forbidden.</SCRAPE-EXPORT-COMMAND>
+      <SCRAPE-INPLACE-COMMAND fact="true" status="impl/plan">&#96;vibe scrape --in-place
       [--contract &lt;path&gt;]&#96; executes the journaled in-place transaction.
       Interactive use shows the exact modified-file and deletion census;
-      unattended use requires &#96;--assume-yes&#96; after a green plan.</DETACH-INPLACE-COMMAND>
-      <DETACH-RECOVER-COMMAND fact="true" status="impl/plan">&#96;vibe detach --recover
+      unattended use requires &#96;--assume-yes&#96; after a green plan.</SCRAPE-INPLACE-COMMAND>
+      <SCRAPE-RECOVER-COMMAND fact="true" status="impl/plan">&#96;vibe scrape --recover
       --path &lt;project&gt;&#96; settles the one pending user-local transaction.
       Recovery reads the journaled contract and plan, never the possibly removed
-      project contract. A new detach refuses while recovery is pending.</DETACH-RECOVER-COMMAND>
-      <DETACH-CONTRACT-COMMANDS fact="true" status="impl/plan">&#96;vibe detach contract
+      project contract. A new scrape refuses while recovery is pending.</SCRAPE-RECOVER-COMMAND>
+      <SCRAPE-CONTRACT-COMMANDS fact="true" status="impl/plan">&#96;vibe scrape contract
       init&#96; writes a conservative default contract only when absent;
-      &#96;vibe detach contract check&#96; parses and plans it read-only. Existing
+      &#96;vibe scrape contract check&#96; parses and plans it read-only. Existing
       contracts are never silently refreshed by install or a language
-      discipline.</DETACH-CONTRACT-COMMANDS>
-      <DETACH-MODE-EXCLUSIVITY fact="true" status="spec/done">&#96;--output&#96; and
+      discipline.</SCRAPE-CONTRACT-COMMANDS>
+      <SCRAPE-MODE-EXCLUSIVITY fact="true" status="spec/done">&#96;--output&#96; and
       &#96;--in-place&#96; are mutually exclusive. &#96;--recover&#96; accepts neither
-      mode nor contract because the durable journal already fixes both.</DETACH-MODE-EXCLUSIVITY>
+      mode nor contract because the durable journal already fixes both.</SCRAPE-MODE-EXCLUSIVITY>
     </facts>
   </surface>
 
   <contract title="5. Contract discovery, schema and snapshot">
     <p><DEFAULT-CONTRACT fact="true" status="spec/done">The default is the project-root
-    literal &#96;vibevm/detach/contract.toml&#96;. Every operand inside it is
+    literal &#96;vibevm/scrape/contract.toml&#96;. Every operand inside it is
     project-root-relative regardless of where an alternate contract lives.
     Contract location never changes mutation authority.</DEFAULT-CONTRACT></p>
     <facts ordered="false">
@@ -164,7 +171,7 @@
     <p><CONTRACT-EXAMPLE-LEAD fact="true" status="spec/done">Schema-1 example for a mixed
     Rust/TypeScript/Go consumer:</CONTRACT-EXAMPLE-LEAD></p>
     <fence lang="toml">schema = 1
-id = "org.example.detached-release"
+id = "org.example.scraped-release"
 
 [policy]
 unclassified = "refuse"
@@ -313,10 +320,10 @@ when = { path_exists = "package.json" }
 id = "domain-health"
 kind = "custom"
 root = "."
-source = "vibevm/detach/health/domain_health.py"
+source = "vibevm/scrape/health/domain_health.py"
 snapshot = [
-  "vibevm/detach/health/domain_health.py",
-  "vibevm/detach/health/lib/**",
+  "vibevm/scrape/health/domain_health.py",
+  "vibevm/scrape/health/lib/**",
 ]
 interpreter = "python"
 argv = ["--phase", "{phase}", "--result", "{result}"]
@@ -488,8 +495,8 @@ timeout_seconds = 120</fence>
       &#96;{scratch}&#96;.</SCHEMA-HEALTH-CUSTOM></p>
       <p><SCHEMA-JTD-WIRES fact="true" status="spec/done">The normative machine shape is
       encoded as strict JTD wire schemas for
-      &#96;detach_plan/e1&#96;, &#96;detach_report/e1&#96; and
-      &#96;detach_health_result/e1&#96; in the first implementation atom. Those
+      &#96;scrape_plan/e1&#96;, &#96;scrape_report/e1&#96; and
+      &#96;scrape_health_result/e1&#96; in the first implementation atom. Those
       schemas must reproduce this section's required/optional/forbidden sets and
       closed enums exactly; generated types are the sole JSON reader/writer and
       handwritten shadow DTOs are forbidden.</SCHEMA-JTD-WIRES></p>
@@ -685,7 +692,7 @@ timeout_seconds = 120</fence>
         &#96;scope!&#96; expands to no product tokens; &#96;spec&#96;,
         &#96;verifies&#96; and &#96;cell&#96; preserve the item and add metadata/
         rustdoc only. The after AST with registered metadata erased must equal
-        the before AST under the same erasure. Invalid pre-detach macro grammar
+        the before AST under the same erasure. Invalid pre-scrape macro grammar
         refuses rather than becoming a newly compiling program.</RUST-ERASURE>
         <RUST-CARGO-COVERAGE fact="true" status="spec/done">Cargo removal covers normal,
         dev, build, target-specific and workspace dependency tables; member
@@ -700,16 +707,16 @@ timeout_seconds = 120</fence>
         stays lockless unless the contract explicitly requests creation.</RUST-LOCK>
         <RUST-RETAIN-MODE fact="true" status="spec/done">Schema 1 has no verified
         retain-annotations mode: a remaining registered Specmark macro, package
-        identity or source reference is residue and refuses detach. A future
+        identity or source reference is residue and refuses scrape. A future
         neutralization adapter would have to relocate a complete self-contained
         macro toolchain, change its registered identity/content and repoint every
         Cargo edge. Merely moving the shipped proc-macro—or copying it without
-        its grammar/workspace dependencies—is not neutral detachment.</RUST-RETAIN-MODE>
+        its grammar/workspace dependencies—is not neutral scraping.</RUST-RETAIN-MODE>
       </facts>
     </rust>
 
     <typescript-go title="7.2 TypeScript and Go">
-      <p><TYPESCRIPT-DETACH fact="true" status="spec/done">TypeScript metadata is parsed
+      <p><TYPESCRIPT-SCRAPE fact="true" status="spec/done">TypeScript metadata is parsed
       as JSDoc attached to AST nodes. In a mixed comment only registered tags
       whose payload parses under the discipline grammar leave; description,
       unrelated tags, indentation, order and line-ending style remain. Matching
@@ -717,21 +724,21 @@ timeout_seconds = 120</fence>
       a candidate. npm/pnpm/Yarn manifest and lock changes occur only under an
       explicit &#96;node-package-remove-v1&#96; row and are its derived graph
       consequence; ambiguous simultaneous managers or unrequested graph changes
-      refuse.</TYPESCRIPT-DETACH></p>
-      <p><GO-DETACH fact="true" status="spec/done">Go metadata is parsed with
+      refuse.</TYPESCRIPT-SCRAPE></p>
+      <p><GO-SCRAPE fact="true" status="spec/done">Go metadata is parsed with
       &#96;go/parser&#96; and &#96;go/token&#96;. Only complete registered
       &#96;//spec:&#96; directive lines leave their comment group. Product prose,
       strings/raw strings, block comments, generated headers,
       &#96;//go:&#96;, build constraints and lint directives remain. Native
       &#96;go.mod&#96;/&#96;go.sum&#96; reconciliation removes only dependencies
       made unreachable by an explicit &#96;go-module-remove-v1&#96; row. A module
-      graph delta without that authority refuses.</GO-DETACH></p>
+      graph delta without that authority refuses.</GO-SCRAPE></p>
     </typescript-go>
 
     <managed title="7.3 Managed blocks">
       <p><MANAGED-BLOCK-SAFETY fact="true" status="spec/done">A managed block is removed
       only when exact registered begin/end markers form the expected number of
-      nonoverlapping, correctly ordered pairs owned by the detaching provider.
+      nonoverlapping, correctly ordered pairs owned by the scrapeing provider.
       Missing ends, orphan ends, duplicate ids, illegal nesting, string-embedded
       pseudo-markers or digest drift refuse. Structural formats use their parser,
       never comment-like marker removal.</MANAGED-BLOCK-SAFETY></p>
@@ -881,7 +888,7 @@ timeout_seconds = 120</fence>
         absolute path, stable file identity, digest, size, mode and bounded
         version probe. After uses the same held identity. PATH shadowing,
         replacement, disappearance or retargeting fails closed.</EXECUTABLE-IDENTITY>
-        <DETACHED-ENVIRONMENT fact="true" status="spec/done">The child environment is
+        <SCRAPED-ENVIRONMENT fact="true" status="spec/done">The child environment is
         allowlisted and removes Vibe-specific variables and Vibe-managed bin
         directories. Reports contain variable names and value digests, never
         secret values. A check inherits the global network policy unless it
@@ -890,7 +897,7 @@ timeout_seconds = 120</fence>
         refuse. Tool-offline is legal only for built-in package-manager
         adapters, adds their native offline flags and reports network unverified
         beyond those flags. Custom checks default to deny, cannot select
-        tool-offline, and must explicitly select inherit for unconfined network.</DETACHED-ENVIRONMENT>
+        tool-offline, and must explicitly select inherit for unconfined network.</SCRAPED-ENVIRONMENT>
         <HEALTH-EFFECTS fact="true" status="spec/done">Checks declare read, write,
         process-spawn and network effects. In both phases every allowed write and
         known build output is redirected to phase scratch or an enforced
@@ -951,12 +958,12 @@ timeout_seconds = 120</fence>
       unreachable by planned removals disappear; shared transitive dependencies
       remain.</LOCK-GRAPH-PROOF>
       <PROOF-OUTSIDE-TREE fact="true" status="spec/done">Canonical proof is emitted to
-      stdout and the user-local transaction/report home, never into the detached
+      stdout and the user-local transaction/report home, never into the scraped
       project whose zero-residue assertion it would contradict.</PROOF-OUTSIDE-TREE>
     </facts>
   </residual>
 
-  <export title="10. Detached export mode">
+  <export title="10. Scraped export mode">
     <facts ordered="false">
       <EXPORT-SOURCE-READONLY fact="true" status="spec/done">Export holds the source
       project in an enforced read-only/COW view. The requested output must be
@@ -995,7 +1002,7 @@ timeout_seconds = 120</fence>
   <inplace title="11. In-place transaction and recovery">
     <p><EXTERNAL-JOURNAL fact="true" status="spec/done">The authoritative journal and lock
     are user-local and outside the project, for example
-    &#96;~/.vibe/detach/transactions/&lt;project-key&gt;/&lt;transaction-id&gt;/&#96;.
+    &#96;~/.vibe/scrape/transactions/&lt;project-key&gt;/&lt;transaction-id&gt;/&#96;.
     Project &#96;.vibe/&#96; is removable and can never contain the only journal,
     recovery intent, verifier snapshot or rollback bytes. The journal location
     is implementation-owned, not contract-configurable, and must itself be
@@ -1042,7 +1049,7 @@ timeout_seconds = 120</fence>
       contained/delete-last moves the contract as the last payload and prunes
       empty ancestors; external/preserve performs no project mutation. Both then
       run zero-exemption residual proof and after health in the isolated view.
-      After it exits, re-observe the complete detached tree digest and residual
+      After it exits, re-observe the complete scraped tree digest and residual
       proof before verified commit. Crossing the contract boundary is not commit.</TX-STEP-CONTRACT>
       <TX-STEP-COMMIT fact="true" status="spec/done">After all gates pass, durably mark
       verified, release project mutation ownership, copy the canonical report to
@@ -1064,7 +1071,7 @@ timeout_seconds = 120</fence>
     nor after is a third state and refuses rather than overwriting
     concurrent/user work.</ROLLBACK-DIRECTION></p>
     <p><GIT-INDEPENDENCE fact="true" status="spec/done">Git is not the rollback engine.
-    Detach works in non-Git projects and preserves untracked/ignored files
+    Scrape works in non-Git projects and preserves untracked/ignored files
     according to the contract. A dirty repository is allowed only when every
     affected path's observed digest is sealed in the plan; unrelated concurrent
     changes remain detectable and refuse at the affected boundary.</GIT-INDEPENDENCE></p>
@@ -1078,14 +1085,14 @@ timeout_seconds = 120</fence>
     residual assertions, exact health argv/executable identities, test modes,
     contract-last order, quarantine requirement, blockers and summary counts.</PLAN-CONTENT></p>
     <p><PLAN-JSON-SHAPE fact="true" status="spec/done">The plan wire is
-    &#96;detach_plan/e1&#96;. Its required top-level members and enums are fixed
+    &#96;scrape_plan/e1&#96;. Its required top-level members and enums are fixed
     below; item/rewrite/health variant members are the generated tagged unions
     from §5.1. Digests are lowercase &#96;sha256:&lt;64-hex&gt;&#96;, sizes/counts
     are nonnegative integers, and every array is already in canonical execution
     order.</PLAN-JSON-SHAPE></p>
     <fence lang="json">{
   "schema": 1,
-  "command": "detach",
+  "command": "scrape",
   "mode": "in-place",
   "plan_id": "sha256:...",
   "project": {
@@ -1093,7 +1100,7 @@ timeout_seconds = 120</fence>
     "tree_digest": "sha256:..."
   },
   "contract": {
-    "display_path": "vibevm/detach/contract.toml",
+    "display_path": "vibevm/scrape/contract.toml",
     "contained": true,
     "sha256": "sha256:...",
     "action": "delete-last"
@@ -1106,8 +1113,8 @@ timeout_seconds = 120</fence>
   "healthchecks": [],
   "contract_boundary": {
     "kind": "delete-last",
-    "path": "vibevm/detach/contract.toml",
-    "empty_ancestors": ["vibevm/detach", "vibevm"]
+    "path": "vibevm/scrape/contract.toml",
+    "empty_ancestors": ["vibevm/scrape", "vibevm"]
   },
   "blockers": [],
   "summary": {
@@ -1152,7 +1159,7 @@ timeout_seconds = 120</fence>
     recovery command. Neither is rendered as unqualified verified/full/complete.</NO-FALSE-SUCCESS></p>
     <p><STABLE-REPORT-HOME fact="true" status="spec/done">Before transaction-journal
     cleanup, the canonical report is atomically copied to
-    &#96;~/.vibe/detach/reports/&lt;transaction-id&gt;.json&#96; (or emitted only to
+    &#96;~/.vibe/scrape/reports/&lt;transaction-id&gt;.json&#96; (or emitted only to
     stdout when the operator explicitly disables retention). The report home is
     outside the project and distinct from the ephemeral transaction directory.</STABLE-REPORT-HOME></p>
   </plan-evidence>
@@ -1169,14 +1176,14 @@ timeout_seconds = 120</fence>
       <SEC-CUSTOM-CODE fact="true" status="spec/done">A custom health verifier is
       user-authorized code with the same trust consequence as a project build
       script. The plan names its exact snapshot/interpreter/effects before
-      confirmation; packages cannot inject an executable detach hook.</SEC-CUSTOM-CODE>
+      confirmation; packages cannot inject an executable scrape hook.</SEC-CUSTOM-CODE>
       <SEC-SECRETS fact="true" status="spec/done">Contract, plan, argv, output and reports
       may contain variable names and paths but never credential values. Custom
       children receive only allowlisted environment. Output redaction and bounds
       precede persistence.</SEC-SECRETS>
       <SEC-NO-SELF-DELETION fact="true" status="spec/done">The running Vibe executable,
       user-local journal and machine cache are outside project mutation
-      authority. Detach removes repository integration, not the operator's
+      authority. Scrape removes repository integration, not the operator's
       installed tool.</SEC-NO-SELF-DELETION>
     </facts>
   </security>
@@ -1238,11 +1245,11 @@ timeout_seconds = 120</fence>
       <ACCEPT-E2E fact="true" status="spec/done">End-to-end fixtures cover export and
       in-place mixed Rust/TypeScript/Go projects: green before, zero Vibe
       repository residue, native locks reconciled, green after, AST erasure
-      equality, unchanged hashes, external report, and a second detach plan that
+      equality, unchanged hashes, external report, and a second scrape plan that
       refuses “not a Vibe project” rather than deleting anything.</ACCEPT-E2E>
       <ACCEPT-HOST-DOGFOOD fact="true" status="spec/done">A separate host fixture covers
       this repository's direct &#96;vibevm/vibepacks&#96; Cargo path wiring and
-      proves the detacher reports non-Specmark product tool dependencies as
+      proves the scrapeer reports non-Specmark product tool dependencies as
       blockers rather than deleting them into a broken build.</ACCEPT-HOST-DOGFOOD>
     </facts>
   </acceptance>
@@ -1281,7 +1288,7 @@ timeout_seconds = 120</fence>
       non-reproducible.</REJECT-CONTRACT></p>
       <p><REVISIT-CONTRACT fact="true" status="spec/done"><strong>Revisit when.</strong>
       A stable package-contributed recipe protocol can compile into the same
-      closed plan without executing package code during detach.</REVISIT-CONTRACT></p>
+      closed plan without executing package code during scrape.</REVISIT-CONTRACT></p>
     </decision-contract>
 
     <decision-typed title="16.2 Typed rewrites over regex and shell">

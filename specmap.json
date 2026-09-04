@@ -65192,7 +65192,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:6cbcbaa79ad4fde9b6eac43201329159254014ed71c7918e2e23f28ed5222165",
+      "content_hash": "sha256:5816432e696bcf704afa4ccb48371e79f8d85c1aa3f10671b43b81a59c92d352",
       "doc_path": "common/PROP-052",
       "file": "vibevm/vibespecs/common/PROP-052-directory-layout.xml",
       "heading": "PROP-052: the vibevm/ root — the directory layout law",
@@ -65228,7 +65228,7 @@
     },
     {
       "anchor": "laws",
-      "content_hash": "sha256:f4a0a1ec8f2495bf917564d583fd086718e86a2ce6fed102ab137b7f03a862b5",
+      "content_hash": "sha256:23b4cef66433a292f8eca176bf80b3adf10a6acf517d6b1b5c79714c24bd451b",
       "doc_path": "common/PROP-052",
       "file": "vibevm/vibespecs/common/PROP-052-directory-layout.xml",
       "heading": "2. Laws",
@@ -65281,13 +65281,13 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-052#REFACTOR-VERBS-FOLLOW"
     },
     {
-      "anchor": "DETACH-IS-THE-TERMINAL-EXCEPTION",
-      "content_hash": "sha256:76986edb38cc58c9c40bc4cb9f69843ed682300db9b9c50a3eaa3db44acbd07f",
+      "anchor": "SCRAPE-IS-THE-TERMINAL-EXCEPTION",
+      "content_hash": "sha256:cc2b68a4ac1f43225b339536ce3fa7bf53bb3a9e8cb6bd40716ff57f16dbc703",
       "doc_path": "common/PROP-052",
       "file": "vibevm/vibespecs/common/PROP-052-directory-layout.xml",
-      "heading": "**L6 — removal is\nexplicit and terminal.** The only supported transition from this layout to a\nproject with no `vibevm/` root is the contract-driven, health-gated,\nrecoverable detach operation at\n@spec://org.vibevm.core/vibevm/common/PROP-056#root. Blind deletion does not\nbecome a legacy layout and receives no compatibility reader. @status:impl/plan",
+      "heading": "**L6 — removal is\nexplicit and terminal.** The only supported transition from this layout to a\nproject with no `vibevm/` root is the contract-driven, health-gated,\nrecoverable scrape operation at\n@spec://org.vibevm.core/vibevm/common/PROP-056#root. Blind deletion does not\nbecome a legacy layout and receives no compatibility reader. @status:impl/plan",
       "line": 61,
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-052#DETACH-IS-THE-TERMINAL-EXCEPTION"
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-052#SCRAPE-IS-THE-TERMINAL-EXCEPTION"
     },
     {
       "anchor": "verification",
@@ -111172,7 +111172,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:d6b65dd8994ae2e554c2e09ac08c513dd2f9fb8c18210f96a1650c32cc262b9a",
+      "content_hash": "sha256:2b203130151d9068e31d5c9dca7ff257b4fe6cbc9966b63f39812c81052c77f8",
       "doc_path": "modules/vibe-workspace/PROP-053",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-053-clean-verb.xml",
       "heading": "PROP-053: `vibe clean` and Maven-style verb chaining",
@@ -111189,13 +111189,13 @@
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#related"
     },
     {
-      "anchor": "CLEAN-IS-NOT-DETACH",
-      "content_hash": "sha256:32316f37176ea1d70843d2b754bcda96a1333308d5189b647d545e0a193d2e4a",
+      "anchor": "CLEAN-IS-NOT-SCRAPE",
+      "content_hash": "sha256:42879c42c619cc3b683757a2164a6d2270d64ca0cdeee473c7dae9cf636c8c3b",
       "doc_path": "modules/vibe-workspace/PROP-053",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-053-clean-verb.xml",
-      "heading": "`vibe clean` is not a\n  project-detachment surface. The terminal operation that removes the Vibe\n  relationship, rewrites native dependencies/metadata, proves native health and\n  can delete `vibe.lock` is\n  @spec://org.vibevm.core/vibevm/common/PROP-056#root. Clean retains its narrow,\n  reproducible derived-state semantics unchanged. @status:spec/done",
+      "heading": "`vibe clean` is not a\n  project-scraping surface. The terminal operation that removes the Vibe\n  relationship, rewrites native dependencies/metadata, proves native health and\n  can delete `vibe.lock` is\n  @spec://org.vibevm.core/vibevm/common/PROP-056#root. Clean retains its narrow,\n  reproducible derived-state semantics unchanged. @status:spec/done",
       "line": 6,
-      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#CLEAN-IS-NOT-DETACH"
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#CLEAN-IS-NOT-SCRAPE"
     },
     {
       "anchor": "mandate",
@@ -112591,9 +112591,9 @@
     },
     {
       "code": "xml-dialect",
-      "file": "vibevm/vibespecs/common/PROP-056-detached-project-export.xml",
-      "line": 64,
-      "message": "a <DETACHED-TREE> fact holds only text — found <em>"
+      "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
+      "line": 57,
+      "message": "a <SCRAPE-TERM-BOUNDARY> fact holds only text — found <strong>"
     },
     {
       "code": "long-section",
