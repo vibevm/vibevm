@@ -21,10 +21,11 @@
   "health_plan_id": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
   "health_baseline": "strict",
   "health_limits": {
-    "max_stdout_bytes": "1048576",
-    "max_stderr_bytes": "1048576",
-    "max_result_bytes": "1048576",
-    "termination_grace_seconds": 5
+    "max_stdout_bytes": "1",
+    "max_stderr_bytes": "1",
+    "max_result_bytes": "1",
+    "termination_grace_seconds": 1,
+    "future": true
   },
   "healthchecks": [],
   "contract_boundary": {

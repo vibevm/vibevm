@@ -33,6 +33,8 @@ parallel = false
 network = "deny"
 max_stdout_bytes = 1
 max_stderr_bytes = 1
+max_result_bytes = 1048576
+termination_grace_seconds = 1
 [[healthcheck]]
 id = "health"
 kind = "custom"
@@ -668,6 +670,8 @@ parallel = false
 network = "deny"
 max_stdout_bytes = 1024
 max_stderr_bytes = 1024
+max_result_bytes = 1048576
+termination_grace_seconds = 1
 
 [[healthcheck]]
 id = "health"

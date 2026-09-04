@@ -16,6 +16,9 @@
     "relocations": { "elements": { "ref": "relocation" }, "metadata": { "x-empty": "emit" } },
     "native_lock_changes": { "elements": { "ref": "native_lock_change" }, "metadata": { "x-empty": "emit" } },
     "assertions": { "elements": { "ref": "assertion" }, "metadata": { "x-empty": "emit" } },
+    "health_plan_id": { "type": "string" },
+    "health_baseline": { "ref": "health_baseline" },
+    "health_limits": { "ref": "health_limits" },
     "healthchecks": { "elements": { "ref": "healthcheck" }, "metadata": { "x-empty": "emit" } },
     "contract_boundary": { "ref": "contract_boundary" },
     "blockers": { "elements": { "ref": "blocker" }, "metadata": { "x-empty": "emit" } },
@@ -106,10 +109,89 @@
         "dependency-identities-absent-v1": { "properties": { "id": { "type": "string" }, "manager": { "ref": "lock_manager" }, "manifests": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }, "identities": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } } } }
       }
     },
+    "health_baseline": { "enum": ["strict", "no-regression"], "metadata": { "x-vocabulary": "closed" } },
     "network": { "enum": ["deny", "tool-offline", "inherit"], "metadata": { "x-vocabulary": "closed" } },
-    "tests_mode": { "enum": ["skip", "if-present", "required"], "metadata": { "x-vocabulary": "closed" } },
-    "executable_identity": {
-      "properties": { "display_path": { "type": "string" }, "sha256": { "type": "string" }, "bytes": { "type": "string" }, "version": { "type": "string" } }
+    "test_disposition": { "enum": ["skipped-by-contract", "skipped-not-present", "run-if-present", "run-required"], "metadata": { "x-vocabulary": "closed" } },
+    "health_limits": {
+      "properties": {
+        "max_stdout_bytes": { "type": "string" },
+        "max_stderr_bytes": { "type": "string" },
+        "max_result_bytes": { "type": "string" },
+        "termination_grace_seconds": { "type": "uint32" }
+      }
+    },
+    "asset_role": { "enum": ["cargo", "node", "npm-cli", "maven-launcher", "python", "custom-interpreter", "custom-native"], "metadata": { "x-vocabulary": "closed" } },
+    "asset_source": {
+      "discriminator": "kind",
+      "mapping": {
+        "resolved": { "properties": {} },
+        "bundle": { "properties": { "path": { "type": "string" } } }
+      }
+    },
+    "asset_identity": {
+      "properties": {
+        "id": { "type": "string" }, "role": { "ref": "asset_role" },
+        "display_path": { "type": "string" }, "sha256": { "type": "string" },
+        "bytes": { "type": "string" }, "mode": { "type": "uint32", "nullable": true },
+        "platform_identity": { "type": "string" }, "version": { "type": "string" },
+        "source": { "ref": "asset_source" }
+      }
+    },
+    "applicability": {
+      "discriminator": "kind",
+      "mapping": {
+        "applicable": { "properties": {} },
+        "skipped-when-missing": { "properties": { "path": { "type": "string" } } }
+      }
+    },
+    "prepared_arg": {
+      "discriminator": "kind",
+      "mapping": {
+        "literal": { "properties": { "value": { "type": "string" } } },
+        "root": { "properties": {} },
+        "scratch": { "properties": {} },
+        "result": { "properties": {} },
+        "phase": { "properties": {} },
+        "asset-path": { "properties": { "value": { "type": "string" } } },
+        "bundle-path": { "properties": { "value": { "type": "string" } } }
+      }
+    },
+    "environment_identity": {
+      "properties": {
+        "name": { "type": "string" }, "value_template": { "type": "string" },
+        "value_sha256": { "type": "string" }
+      }
+    },
+    "command_step": { "enum": ["install", "build", "test", "verify"], "metadata": { "x-vocabulary": "closed" } },
+    "prepared_command": {
+      "properties": {
+        "step": { "ref": "command_step" },
+        "executable_asset_id": { "type": "string" },
+        "argv": { "elements": { "ref": "prepared_arg" }, "metadata": { "x-empty": "emit" } },
+        "environment": { "elements": { "ref": "environment_identity" }, "metadata": { "x-empty": "emit" } },
+        "accepted_exit_codes": { "elements": { "type": "int32" }, "metadata": { "x-empty": "emit" } }
+      }
+    },
+    "effect_plan": {
+      "properties": {
+        "reads": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } },
+        "writes": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } },
+        "spawn": { "type": "boolean" }, "network": { "ref": "network" }
+      }
+    },
+    "sandbox_requirement": {
+      "properties": {
+        "exact_executable_identity": { "type": "boolean" },
+        "filesystem_isolation": { "type": "boolean" },
+        "read_policy_enforcement": { "type": "boolean" },
+        "process_tree_containment": { "type": "boolean" },
+        "graceful_termination": { "type": "boolean" },
+        "spawn_prevention": { "type": "boolean" },
+        "network_deny": { "type": "boolean" },
+        "bounded_output": { "type": "boolean" },
+        "atomic_result": { "type": "boolean" },
+        "bundle_materialization": { "type": "boolean" }
+      }
     },
     "snapshot_file_identity": {
       "properties": {
@@ -120,11 +202,11 @@
     "healthcheck": {
       "discriminator": "kind",
       "mapping": {
-        "cargo": { "properties": { "id": { "type": "string" }, "root": { "type": "string" }, "executable": { "ref": "executable_identity" }, "argv": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }, "tests": { "ref": "tests_mode" }, "network": { "ref": "network" }, "timeout_seconds": { "type": "uint32" } } },
-        "npm": { "properties": { "id": { "type": "string" }, "root": { "type": "string" }, "executable": { "ref": "executable_identity" }, "argv": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }, "tests": { "ref": "tests_mode" }, "network": { "ref": "network" }, "timeout_seconds": { "type": "uint32" } } },
-        "maven": { "properties": { "id": { "type": "string" }, "root": { "type": "string" }, "executable": { "ref": "executable_identity" }, "argv": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }, "tests": { "ref": "tests_mode" }, "network": { "ref": "network" }, "timeout_seconds": { "type": "uint32" } } },
-        "python-pip": { "properties": { "id": { "type": "string" }, "root": { "type": "string" }, "executable": { "ref": "executable_identity" }, "argv": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }, "tests": { "ref": "tests_mode" }, "network": { "ref": "network" }, "timeout_seconds": { "type": "uint32" } } },
-        "custom": { "properties": { "id": { "type": "string" }, "root": { "type": "string" }, "source": { "type": "string" }, "executable": { "ref": "executable_identity" }, "argv": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }, "snapshot": { "elements": { "ref": "snapshot_file_identity" }, "metadata": { "x-empty": "emit" } }, "reads": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }, "writes": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }, "spawn": { "type": "boolean" }, "protocol": { "enum": ["exit-code", "vibe-health-json-v1"], "metadata": { "x-vocabulary": "closed" } }, "network": { "ref": "network" }, "timeout_seconds": { "type": "uint32" } } }
+        "cargo": { "properties": { "id": { "type": "string" }, "root": { "type": "string" }, "applicability": { "ref": "applicability" }, "tests": { "ref": "test_disposition", "nullable": true }, "assets": { "elements": { "ref": "asset_identity" }, "metadata": { "x-empty": "emit" } }, "commands": { "elements": { "ref": "prepared_command" }, "metadata": { "x-empty": "emit" } }, "effects": { "ref": "effect_plan" }, "sandbox": { "ref": "sandbox_requirement" }, "timeout_seconds": { "type": "uint32" }, "assurance_reductions": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } } } },
+        "npm": { "properties": { "id": { "type": "string" }, "root": { "type": "string" }, "applicability": { "ref": "applicability" }, "tests": { "ref": "test_disposition", "nullable": true }, "assets": { "elements": { "ref": "asset_identity" }, "metadata": { "x-empty": "emit" } }, "commands": { "elements": { "ref": "prepared_command" }, "metadata": { "x-empty": "emit" } }, "effects": { "ref": "effect_plan" }, "sandbox": { "ref": "sandbox_requirement" }, "timeout_seconds": { "type": "uint32" }, "assurance_reductions": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } } } },
+        "maven": { "properties": { "id": { "type": "string" }, "root": { "type": "string" }, "applicability": { "ref": "applicability" }, "tests": { "ref": "test_disposition", "nullable": true }, "assets": { "elements": { "ref": "asset_identity" }, "metadata": { "x-empty": "emit" } }, "commands": { "elements": { "ref": "prepared_command" }, "metadata": { "x-empty": "emit" } }, "effects": { "ref": "effect_plan" }, "sandbox": { "ref": "sandbox_requirement" }, "timeout_seconds": { "type": "uint32" }, "assurance_reductions": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } } } },
+        "python-pip": { "properties": { "id": { "type": "string" }, "root": { "type": "string" }, "applicability": { "ref": "applicability" }, "tests": { "ref": "test_disposition", "nullable": true }, "assets": { "elements": { "ref": "asset_identity" }, "metadata": { "x-empty": "emit" } }, "commands": { "elements": { "ref": "prepared_command" }, "metadata": { "x-empty": "emit" } }, "effects": { "ref": "effect_plan" }, "sandbox": { "ref": "sandbox_requirement" }, "timeout_seconds": { "type": "uint32" }, "assurance_reductions": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } } } },
+        "custom": { "properties": { "id": { "type": "string" }, "root": { "type": "string" }, "applicability": { "ref": "applicability" }, "tests": { "ref": "test_disposition", "nullable": true }, "assets": { "elements": { "ref": "asset_identity" }, "metadata": { "x-empty": "emit" } }, "commands": { "elements": { "ref": "prepared_command" }, "metadata": { "x-empty": "emit" } }, "effects": { "ref": "effect_plan" }, "sandbox": { "ref": "sandbox_requirement" }, "timeout_seconds": { "type": "uint32" }, "assurance_reductions": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }, "source": { "type": "string" }, "snapshot": { "elements": { "ref": "snapshot_file_identity" }, "metadata": { "x-empty": "emit" } }, "protocol": { "enum": ["exit-code", "vibe-health-json-v1"], "metadata": { "x-vocabulary": "closed" } } } }
       }
     },
     "contract_boundary": {

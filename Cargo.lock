@@ -572,6 +572,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1d07550c9036bf2ae0c684c4297d503f838287c83c53686d05370d0e139ae570"
 
 [[package]]
+name = "command-group"
+version = "5.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a68fa787550392a9d58f44c21a3022cfb3ea3e2458b7f85d3b399d0ceeccf409"
+dependencies = [
+ "nix",
+ "winapi",
+]
+
+[[package]]
 name = "compact_str"
 version = "0.9.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1983,6 +1993,17 @@ checksum = "bb85c154ba489f01b25c0d36ae69a87e4a1c73a72631fc6c0eb6dde34a73e44b"
 dependencies = [
  "num-traits",
  "pxfm",
+]
+
+[[package]]
+name = "nix"
+version = "0.27.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2eb04e9c688eff1c89d72b407f168cf79bb9e867a9d3323ed6c01519eb9cc053"
+dependencies = [
+ "bitflags",
+ "cfg-if",
+ "libc",
 ]
 
 [[package]]
@@ -4523,7 +4544,9 @@ dependencies = [
  "anyhow",
  "cap-fs-ext",
  "cap-std",
+ "command-group",
  "proc-macro2",
+ "quick-xml",
  "quote",
  "serde",
  "serde_json",

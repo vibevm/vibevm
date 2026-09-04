@@ -18,6 +18,12 @@ pub struct Plan {
 
     pub contract_boundary: ContractBoundary,
 
+    pub health_baseline: HealthBaseline,
+
+    pub health_limits: HealthLimits,
+
+    pub health_plan_id: String,
+
     pub healthchecks: Vec<Healthcheck>,
 
     pub items: Vec<Item>,
@@ -37,6 +43,26 @@ pub struct Plan {
     pub schema: u32,
 
     pub summary: Summary,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "kind")]
+pub enum Applicability {
+    #[serde(rename = "applicable")]
+    Applicable(Box<ApplicabilityApplicable>),
+
+    #[serde(rename = "skipped-when-missing")]
+    SkippedWhenMissing(Box<ApplicabilitySkippedWhenMissing>),
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ApplicabilityApplicable {}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ApplicabilitySkippedWhenMissing {
+    pub path: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -122,6 +148,73 @@ pub struct AssertionTextLiteralAbsentV1 {
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
+pub struct AssetIdentity {
+    pub bytes: String,
+
+    pub display_path: String,
+
+    pub id: String,
+
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub mode: Option<u32>,
+
+    pub platform_identity: String,
+
+    pub role: AssetRole,
+
+    pub sha256: String,
+
+    pub source: AssetSource,
+
+    pub version: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum AssetRole {
+    #[serde(rename = "cargo")]
+    Cargo,
+
+    #[serde(rename = "custom-interpreter")]
+    CustomInterpreter,
+
+    #[serde(rename = "custom-native")]
+    CustomNative,
+
+    #[serde(rename = "maven-launcher")]
+    MavenLauncher,
+
+    #[serde(rename = "node")]
+    Node,
+
+    #[serde(rename = "npm-cli")]
+    NpmCli,
+
+    #[serde(rename = "python")]
+    Python,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "kind")]
+pub enum AssetSource {
+    #[serde(rename = "bundle")]
+    Bundle(Box<AssetSourceBundle>),
+
+    #[serde(rename = "resolved")]
+    Resolved(Box<AssetSourceResolved>),
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct AssetSourceBundle {
+    pub path: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct AssetSourceResolved {}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct Blocker {
     pub code: String,
 
@@ -135,6 +228,21 @@ pub struct Blocker {
 pub enum Command {
     #[serde(rename = "scrape")]
     Scrape,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum CommandStep {
+    #[serde(rename = "build")]
+    Build,
+
+    #[serde(rename = "install")]
+    Install,
+
+    #[serde(rename = "test")]
+    Test,
+
+    #[serde(rename = "verify")]
+    Verify,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -181,6 +289,18 @@ pub struct ContractIdentity {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct EffectPlan {
+    pub network: Network,
+
+    pub reads: Vec<String>,
+
+    pub spawn: bool,
+
+    pub writes: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum EntryKind {
     #[serde(rename = "directory")]
     Directory,
@@ -191,14 +311,12 @@ pub enum EntryKind {
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct ExecutableIdentity {
-    pub bytes: String,
+pub struct EnvironmentIdentity {
+    pub name: String,
 
-    pub display_path: String,
+    pub value_sha256: String,
 
-    pub sha256: String,
-
-    pub version: String,
+    pub value_template: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -217,6 +335,27 @@ pub enum FileClass {
 
     #[serde(rename = "unknown")]
     Unknown,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum HealthBaseline {
+    #[serde(rename = "no-regression")]
+    NoRegression,
+
+    #[serde(rename = "strict")]
+    Strict,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct HealthLimits {
+    pub max_result_bytes: String,
+
+    pub max_stderr_bytes: String,
+
+    pub max_stdout_bytes: String,
+
+    pub termination_grace_seconds: u32,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -241,17 +380,24 @@ pub enum Healthcheck {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct HealthcheckCargo {
-    pub argv: Vec<String>,
+    pub applicability: Applicability,
 
-    pub executable: ExecutableIdentity,
+    pub assets: Vec<AssetIdentity>,
+
+    pub assurance_reductions: Vec<String>,
+
+    pub commands: Vec<PreparedCommand>,
+
+    pub effects: EffectPlan,
 
     pub id: String,
 
-    pub network: Network,
-
     pub root: String,
 
-    pub tests: TestsMode,
+    pub sandbox: SandboxRequirement,
+
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub tests: Option<TestDisposition>,
 
     pub timeout_seconds: u32,
 }
@@ -268,45 +414,55 @@ pub enum HealthcheckCustomProtocol {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct HealthcheckCustom {
-    pub argv: Vec<String>,
+    pub applicability: Applicability,
 
-    pub executable: ExecutableIdentity,
+    pub assets: Vec<AssetIdentity>,
+
+    pub assurance_reductions: Vec<String>,
+
+    pub commands: Vec<PreparedCommand>,
+
+    pub effects: EffectPlan,
 
     pub id: String,
 
-    pub network: Network,
-
     pub protocol: HealthcheckCustomProtocol,
 
-    pub reads: Vec<String>,
-
     pub root: String,
+
+    pub sandbox: SandboxRequirement,
 
     pub snapshot: Vec<SnapshotFileIdentity>,
 
     pub source: String,
 
-    pub spawn: bool,
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub tests: Option<TestDisposition>,
 
     pub timeout_seconds: u32,
-
-    pub writes: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct HealthcheckMaven {
-    pub argv: Vec<String>,
+    pub applicability: Applicability,
 
-    pub executable: ExecutableIdentity,
+    pub assets: Vec<AssetIdentity>,
+
+    pub assurance_reductions: Vec<String>,
+
+    pub commands: Vec<PreparedCommand>,
+
+    pub effects: EffectPlan,
 
     pub id: String,
 
-    pub network: Network,
-
     pub root: String,
 
-    pub tests: TestsMode,
+    pub sandbox: SandboxRequirement,
+
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub tests: Option<TestDisposition>,
 
     pub timeout_seconds: u32,
 }
@@ -314,17 +470,24 @@ pub struct HealthcheckMaven {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct HealthcheckNpm {
-    pub argv: Vec<String>,
+    pub applicability: Applicability,
 
-    pub executable: ExecutableIdentity,
+    pub assets: Vec<AssetIdentity>,
+
+    pub assurance_reductions: Vec<String>,
+
+    pub commands: Vec<PreparedCommand>,
+
+    pub effects: EffectPlan,
 
     pub id: String,
 
-    pub network: Network,
-
     pub root: String,
 
-    pub tests: TestsMode,
+    pub sandbox: SandboxRequirement,
+
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub tests: Option<TestDisposition>,
 
     pub timeout_seconds: u32,
 }
@@ -332,17 +495,24 @@ pub struct HealthcheckNpm {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct HealthcheckPythonPip {
-    pub argv: Vec<String>,
+    pub applicability: Applicability,
 
-    pub executable: ExecutableIdentity,
+    pub assets: Vec<AssetIdentity>,
+
+    pub assurance_reductions: Vec<String>,
+
+    pub commands: Vec<PreparedCommand>,
+
+    pub effects: EffectPlan,
 
     pub id: String,
 
-    pub network: Network,
-
     pub root: String,
 
-    pub tests: TestsMode,
+    pub sandbox: SandboxRequirement,
+
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub tests: Option<TestDisposition>,
 
     pub timeout_seconds: u32,
 }
@@ -634,6 +804,79 @@ pub enum PerFileMatches {
 
     #[serde(rename = "zero-or-one-per-file")]
     ZeroOrOnePerFile,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "kind")]
+pub enum PreparedArg {
+    #[serde(rename = "asset-path")]
+    AssetPath(Box<PreparedArgAssetPath>),
+
+    #[serde(rename = "bundle-path")]
+    BundlePath(Box<PreparedArgBundlePath>),
+
+    #[serde(rename = "literal")]
+    Literal(Box<PreparedArgLiteral>),
+
+    #[serde(rename = "phase")]
+    Phase(Box<PreparedArgPhase>),
+
+    #[serde(rename = "result")]
+    Result(Box<PreparedArgResult>),
+
+    #[serde(rename = "root")]
+    Root(Box<PreparedArgRoot>),
+
+    #[serde(rename = "scratch")]
+    Scratch(Box<PreparedArgScratch>),
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct PreparedArgAssetPath {
+    pub value: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct PreparedArgBundlePath {
+    pub value: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct PreparedArgLiteral {
+    pub value: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct PreparedArgPhase {}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct PreparedArgResult {}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct PreparedArgRoot {}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct PreparedArgScratch {}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct PreparedCommand {
+    pub accepted_exit_codes: Vec<i32>,
+
+    pub argv: Vec<PreparedArg>,
+
+    pub environment: Vec<EnvironmentIdentity>,
+
+    pub executable_asset_id: String,
+
+    pub step: CommandStep,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -980,6 +1223,30 @@ pub enum RustForm {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct SandboxRequirement {
+    pub atomic_result: bool,
+
+    pub bounded_output: bool,
+
+    pub bundle_materialization: bool,
+
+    pub exact_executable_identity: bool,
+
+    pub filesystem_isolation: bool,
+
+    pub graceful_termination: bool,
+
+    pub network_deny: bool,
+
+    pub process_tree_containment: bool,
+
+    pub read_policy_enforcement: bool,
+
+    pub spawn_prevention: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum SetMatches {
     #[serde(rename = "exactly-one")]
     ExactlyOne,
@@ -1032,13 +1299,16 @@ pub struct Summary {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-pub enum TestsMode {
-    #[serde(rename = "if-present")]
-    IfPresent,
+pub enum TestDisposition {
+    #[serde(rename = "run-if-present")]
+    RunIfPresent,
 
-    #[serde(rename = "required")]
-    Required,
+    #[serde(rename = "run-required")]
+    RunRequired,
 
-    #[serde(rename = "skip")]
-    Skip,
+    #[serde(rename = "skipped-by-contract")]
+    SkippedByContract,
+
+    #[serde(rename = "skipped-not-present")]
+    SkippedNotPresent,
 }

@@ -13,6 +13,13 @@ fn vibe(settings: &tempfile::TempDir) -> Command {
 }
 
 fn init_contract(settings: &tempfile::TempDir, project: &tempfile::TempDir) {
+    fs::create_dir_all(project.path().join("src")).unwrap();
+    fs::write(
+        project.path().join("Cargo.toml"),
+        "[package]\nname='scrape-cli-fixture'\nversion='0.1.0'\nedition='2024'\n",
+    )
+    .unwrap();
+    fs::write(project.path().join("src/lib.rs"), "pub fn fixture() {}\n").unwrap();
     vibe(settings)
         .args(["scrape", "contract", "init", "--path"])
         .arg(project.path())
@@ -73,7 +80,8 @@ fn plan_and_contract_check_project_the_generated_plan_in_all_modes() {
         .assert()
         .failure()
         .stdout(predicate::str::contains("Scrape plan"))
-        .stdout(predicate::str::contains("health-preparation-required"));
+        .stdout(predicate::str::contains("health-unsupported"))
+        .stdout(predicate::str::contains("health-preparation-required").not());
 
     let quiet = vibe(&settings)
         .args(["--quiet", "scrape", "contract", "check", "--path"])
@@ -97,6 +105,9 @@ fn plan_and_contract_check_project_the_generated_plan_in_all_modes() {
     assert_eq!(document["mode"], "in-place");
     assert!(document.get("project").is_some());
     assert!(document.get("contract").is_some());
+    assert!(document.get("health_plan_id").is_some());
+    assert!(document["healthchecks"].as_array().unwrap().is_empty());
+    assert!(!document.to_string().contains("health-preparation-required"));
     assert!(document.get("tree_digest").is_none(), "no shadow core DTO");
 
     let export = vibe(&settings)
@@ -109,6 +120,13 @@ fn plan_and_contract_check_project_the_generated_plan_in_all_modes() {
     assert!(!export.status.success());
     let export: serde_json::Value = serde_json::from_slice(&export.stdout).unwrap();
     assert_eq!(export["mode"], "export");
+    assert!(
+        export["blockers"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|blocker| { blocker["code"] == "health-unsupported" })
+    );
 }
 
 #[test]

@@ -6,6 +6,7 @@ use std::path::{Component, Path, PathBuf};
 
 pub mod contract;
 pub mod glob;
+pub mod health;
 mod inventory;
 pub mod model;
 mod plan;
@@ -26,6 +27,16 @@ pub fn prepare(request: ScrapeRequest) -> Result<PreparedScrape, ScrapeError> {
     let output_identity = validate_mode(&request, &project)?;
     let contract = load_contract(&request, &project)?;
     let inventory = inventory::collect(&project)?;
+    let mut health_resolver = health::SystemHealthResolver::new(&project);
+    let mut health = health::prepare(&project, &contract.value, &inventory, &mut health_resolver)
+        .map_err(|error| ScrapeError::blocked(error.to_string()))?;
+    let platform = health::LocalProcessBackend::new();
+    let capabilities = health::HealthBackend::capabilities(&platform);
+    let same_path_required = matches!(&request.mode, ScrapeMode::Export { .. });
+    let capability_blockers =
+        health::capability_blockers(&health, capabilities, same_path_required);
+    health::add_blockers(&mut health, capability_blockers)
+        .map_err(|error| ScrapeError::blocked(error.to_string()))?;
     let rewrite_preparation = rewrite::prepare_rewrites(&project, &contract.value, &inventory)?;
     let plan = plan::build(
         &project,
@@ -34,12 +45,14 @@ pub fn prepare(request: ScrapeRequest) -> Result<PreparedScrape, ScrapeError> {
         &inventory,
         &rewrite_preparation.rewrites,
         rewrite_preparation.blockers,
+        &health,
         output_identity.as_deref(),
     )?;
     Ok(PreparedScrape {
         contract,
         inventory,
         rewrites: rewrite_preparation.rewrites,
+        health,
         plan,
     })
 }
@@ -235,6 +248,8 @@ parallel = false
 network = "tool-offline"
 max_stdout_bytes = 1048576
 max_stderr_bytes = 1048576
+max_result_bytes = 1048576
+termination_grace_seconds = 5
 
 [[healthcheck]]
 id = "cargo"
@@ -244,11 +259,10 @@ build = "check"
 workspace = true
 locked = true
 all_targets = true
-tests = "required"
+tests = "skip"
 profile = "dev"
 features = []
 timeout_seconds = 900
-when = { path_exists = "Cargo.toml" }
 "#;
 
 #[cfg(test)]
@@ -269,7 +283,188 @@ mod tests {
         let path = init_contract(root.path()).unwrap();
         let bytes = std::fs::read(path).unwrap();
         contract::Contract::parse(&bytes).unwrap();
+        let text = std::str::from_utf8(&bytes).unwrap();
+        assert!(text.contains("max_result_bytes = 1048576"));
+        assert!(text.contains("termination_grace_seconds = 5"));
+        assert!(!text.contains("when ="));
         assert!(init_contract(root.path()).is_err());
+    }
+
+    #[test]
+    fn health_is_prepared_once_and_wire_contains_no_placeholder_identity() {
+        let source = tempfile::tempdir().unwrap();
+        std::fs::create_dir(source.path().join("src")).unwrap();
+        std::fs::write(
+            source.path().join("Cargo.toml"),
+            "[package]\nname='health-fixture'\nversion='0.1.0'\nedition='2024'\n",
+        )
+        .unwrap();
+        std::fs::write(source.path().join("src/lib.rs"), "pub fn fixture() {}\n").unwrap();
+        init_contract(source.path()).unwrap();
+        let prepared = prepare(ScrapeRequest {
+            root: source.path().to_path_buf(),
+            contract: None,
+            mode: ScrapeMode::InPlace,
+        })
+        .unwrap();
+        assert_eq!(
+            prepared.health.plan_id,
+            prepared.plan.prepared_health.plan_id
+        );
+        assert!(prepared.health.checks.is_empty());
+        assert!(
+            prepared
+                .health
+                .blockers
+                .iter()
+                .any(|blocker| blocker.message.contains("version probe"))
+        );
+        assert!(
+            !prepared
+                .plan
+                .blockers
+                .iter()
+                .any(|blocker| blocker.code == "health-preparation-required")
+        );
+        let json = serde_json::to_string(&prepared.plan.to_wire().unwrap()).unwrap();
+        assert!(json.contains("health_plan_id"));
+        assert!(!json.contains("health-preparation-required"));
+    }
+
+    #[test]
+    fn health_resolver_failure_is_a_typed_blocker_without_fake_wire_row() {
+        let source = tempfile::tempdir().unwrap();
+        std::fs::create_dir(source.path().join("src")).unwrap();
+        std::fs::write(
+            source.path().join("Cargo.toml"),
+            "[package]\nname='health-fixture'\nversion='0.1.0'\nedition='2024'\n",
+        )
+        .unwrap();
+        std::fs::write(source.path().join("src/lib.rs"), "pub fn fixture() {}\n").unwrap();
+        init_contract(source.path()).unwrap();
+        std::fs::write(source.path().join("health.py"), "pass\n").unwrap();
+        append_contract(
+            source.path(),
+            r#"
+[[healthcheck]]
+id = "missing-interpreter"
+kind = "custom"
+root = "."
+source = "health.py"
+snapshot = ["health.py"]
+interpreter = "definitely-not-a-vibevm-health-tool"
+argv = []
+protocol = "exit-code"
+reads = ["**"]
+writes = []
+spawn = true
+network = "inherit"
+timeout_seconds = 1
+"#,
+        );
+        let prepared = prepare(ScrapeRequest {
+            root: source.path().to_path_buf(),
+            contract: None,
+            mode: ScrapeMode::InPlace,
+        })
+        .unwrap();
+        assert!(prepared.plan.blockers.iter().any(|blocker| {
+            blocker.code == "health-preparation-failed"
+                && blocker.rule_id.as_deref() == Some("missing-interpreter")
+        }));
+        let wire = prepared.plan.to_wire().unwrap();
+        assert!(
+            wire.healthchecks.is_empty(),
+            "failed rows emit no placeholders"
+        );
+    }
+
+    #[test]
+    fn projected_final_blocks_deleted_health_manifest() {
+        let source = tempfile::tempdir().unwrap();
+        std::fs::create_dir(source.path().join("src")).unwrap();
+        std::fs::write(
+            source.path().join("Cargo.toml"),
+            "[package]\nname='health-fixture'\nversion='0.1.0'\nedition='2024'\n",
+        )
+        .unwrap();
+        std::fs::write(source.path().join("src/lib.rs"), "pub fn fixture() {}\n").unwrap();
+        init_contract(source.path()).unwrap();
+        append_contract(
+            source.path(),
+            r#"
+[[classify]]
+id = "delete-cargo-manifest"
+kind = "delete"
+patterns = ["Cargo.toml"]
+owner = "vibe"
+proof = "contract-assertion-v1"
+modified = "delete"
+require_match = true
+"#,
+        );
+        let prepared = prepare(ScrapeRequest {
+            root: source.path().to_path_buf(),
+            contract: None,
+            mode: ScrapeMode::InPlace,
+        })
+        .unwrap();
+        assert!(prepared.plan.blockers.iter().any(|blocker| {
+            blocker.code == "health-projected-operand-missing"
+                && blocker.rule_id.as_deref() == Some("cargo")
+        }));
+    }
+
+    #[test]
+    fn projected_rewrite_cannot_remove_a_required_health_script() {
+        let source = tempfile::tempdir().unwrap();
+        std::fs::create_dir(source.path().join("src")).unwrap();
+        std::fs::write(
+            source.path().join("Cargo.toml"),
+            "[package]\nname='health-fixture'\nversion='0.1.0'\nedition='2024'\n",
+        )
+        .unwrap();
+        std::fs::write(source.path().join("src/lib.rs"), "pub fn fixture() {}\n").unwrap();
+        std::fs::write(
+            source.path().join("package.json"),
+            r#"{"scripts":{"build":"echo build"}}"#,
+        )
+        .unwrap();
+        std::fs::write(source.path().join("package-lock.json"), "{}").unwrap();
+        init_contract(source.path()).unwrap();
+        append_contract(
+            source.path(),
+            r#"
+[[rewrite]]
+id = "remove-build-script"
+kind = "json-member-remove-v1"
+path = "package.json"
+object = ["scripts"]
+members = ["build"]
+matches = "exactly-one"
+
+[[healthcheck]]
+id = "web"
+kind = "npm"
+root = "."
+manager = "npm"
+lockfile = "package-lock.json"
+install = "none"
+build_script = "build"
+tests = "skip"
+timeout_seconds = 10
+"#,
+        );
+        let prepared = prepare(ScrapeRequest {
+            root: source.path().to_path_buf(),
+            contract: None,
+            mode: ScrapeMode::InPlace,
+        })
+        .unwrap();
+        assert!(prepared.plan.blockers.iter().any(|blocker| {
+            blocker.code == "health-projected-npm-script-missing"
+                && blocker.rule_id.as_deref() == Some("web")
+        }));
     }
 
     #[test]

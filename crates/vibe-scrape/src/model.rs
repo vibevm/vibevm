@@ -123,7 +123,7 @@ pub struct ScrapePlan {
     pub blockers: Vec<Blocker>,
     pub summary: PlanSummary,
     #[serde(skip)]
-    pub prepared_healthchecks: Option<Vec<vibe_wire::generated::scrape::e1::plan::Healthcheck>>,
+    pub prepared_health: crate::health::PreparedHealth,
     #[serde(skip)]
     pub project_display_root: String,
     #[serde(skip)]
@@ -228,6 +228,7 @@ pub struct PreparedScrape {
     pub contract: ContractSnapshot,
     pub inventory: Inventory,
     pub rewrites: Vec<PreparedRewrite>,
+    pub health: crate::health::PreparedHealth,
     pub plan: ScrapePlan,
 }
 
@@ -289,24 +290,8 @@ impl ScrapePlan {
             .iter()
             .map(wire_assertion)
             .collect();
-        let healthchecks = if let Some(prepared) = &self.prepared_healthchecks {
-            prepared.clone()
-        } else if self.contract_value.healthcheck.is_empty() {
-            Vec::new()
-        } else if self
-            .blockers
-            .iter()
-            .any(|blocker| blocker.code == "health-preparation-required")
-        {
-            // Exact argv, executable identities, and custom verifier bytes are
-            // supplied by the health-preparation atom. Until then the blocker
-            // is the wire truth; placeholder identities are never published.
-            Vec::new()
-        } else {
-            return Err(ScrapeError::blocked(
-                "healthchecks exist without fully prepared identities/argv",
-            ));
-        };
+        let healthchecks = crate::health::to_wire_checks(&self.prepared_health)
+            .map_err(|error| ScrapeError::blocked(error.to_string()))?;
         let relocations = self
             .relocations
             .iter()
@@ -374,6 +359,10 @@ impl ScrapePlan {
                     w::ContractBoundary::Preserve(Box::new(w::ContractBoundaryPreserve {}))
                 }
             },
+            health_baseline: crate::health::wire_baseline(self.prepared_health.baseline),
+            health_limits: crate::health::wire_limits(&self.prepared_health)
+                .map_err(|error| ScrapeError::blocked(error.to_string()))?,
+            health_plan_id: self.prepared_health.plan_id.clone(),
             healthchecks,
             items,
             mode: if self.mode == "export" {

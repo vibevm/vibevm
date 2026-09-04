@@ -289,6 +289,8 @@ parallel = false
 network = "tool-offline"
 max_stdout_bytes = 1048576
 max_stderr_bytes = 1048576
+max_result_bytes = 1048576
+termination_grace_seconds = 5
 
 [[healthcheck]]
 id = "rust"
@@ -466,8 +468,10 @@ timeout_seconds = 120</fence>
       manifest and identities.</SCHEMA-RELOCATE-ASSERT></p>
 
       <p><SCHEMA-HEALTH-COMMON fact="true" status="spec/done">&#96;health&#96; requires
-      baseline, before/after failure policy, parallel flag, network policy and
-      positive timeout/output caps. Schema 1 admits only
+      baseline, before/after failure policy, parallel flag, network policy,
+      positive stdout/stderr/result caps and a positive
+      &#96;termination_grace_seconds&#96;. These limits are authored explicitly in
+      schema 1—there are no hidden process or protocol defaults. Schema 1 admits only
       &#96;before_failure = "refuse"&#96;,
       &#96;after_failure = "rollback"&#96; and &#96;parallel = false&#96;; these
       fields are explicit evidence, not open strategy extension points. Every
@@ -911,10 +915,13 @@ timeout_seconds = 120</fence>
         <HEALTH-OUTPUT-BOUND fact="true" status="spec/done">Stdout and stderr are drained
         concurrently. The report retains total byte count, full-stream digest,
         truncation/UTF-8 state and bounded head/tail excerpts; storage never
-        grows beyond declared caps and no secret is printed.</HEALTH-OUTPUT-BOUND>
+        grows beyond declared caps and no secret is printed. A structured custom
+        result is independently limited by &#96;max_result_bytes&#96;; stdout cannot
+        consume or enlarge that budget.</HEALTH-OUTPUT-BOUND>
         <HEALTH-TIMEOUT-CANCEL fact="true" status="spec/done">Timeout or cancellation
         terminates the exact process tree, graceful first and forced after the
-        declared grace. Before-phase cancellation leaves the project untouched;
+        explicitly declared &#96;termination_grace_seconds&#96;. Before-phase
+        cancellation leaves the project untouched;
         after-phase cancellation enters rollback.</HEALTH-TIMEOUT-CANCEL>
       </facts>
     </execution>

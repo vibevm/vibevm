@@ -13,6 +13,7 @@ use crate::model::{
     ScrapeError, ScrapeMode, ScrapePlan, ScrapeRequest,
 };
 
+#[allow(clippy::too_many_arguments)]
 pub fn build(
     project: &vibe_safefs::Project,
     request: &ScrapeRequest,
@@ -20,6 +21,7 @@ pub fn build(
     inventory: &Inventory,
     rewrites: &[PreparedRewrite],
     rewrite_blockers: Vec<Blocker>,
+    prepared_health: &crate::health::PreparedHealth,
     output_identity: Option<&str>,
 ) -> Result<ScrapePlan, ScrapeError> {
     let contract = &snapshot.value;
@@ -157,11 +159,12 @@ pub fn build(
         ContractBoundary::Preserve
     };
 
-    if !contract.healthcheck.is_empty() {
-        blockers.push(Blocker::new(
-            "health-preparation-required",
-            "health argv, executable identities, and verifier snapshots are not prepared yet",
-        ));
+    for blocker in &prepared_health.blockers {
+        let mut projected = Blocker::new(&blocker.code, &blocker.message);
+        if let Some(check_id) = &blocker.check_id {
+            projected = projected.rule(check_id);
+        }
+        blockers.push(projected);
     }
     if rewrites.iter().any(|rewrite| is_native_lock(&rewrite.path)) {
         blockers.push(Blocker::new(
@@ -176,6 +179,13 @@ pub fn build(
             "projected-final-invalid",
             format!("projected scraped tree fails residual validation: {error}"),
         ));
+    }
+    for blocker in crate::health::validate_projected_final(contract, prepared_health, &projected) {
+        let mut projected = Blocker::new(&blocker.code, &blocker.message);
+        if let Some(check_id) = blocker.check_id {
+            projected = projected.rule(check_id);
+        }
+        blockers.push(projected);
     }
 
     items.sort_by(|left, right| left.path.as_bytes().cmp(right.path.as_bytes()));
@@ -245,7 +255,7 @@ pub fn build(
         contract_boundary,
         blockers,
         summary: PlanSummary::default(),
-        prepared_healthchecks: None,
+        prepared_health: prepared_health.clone(),
         project_display_root: request.root.display().to_string(),
         contract_display_path: snapshot.display_path.clone(),
         contract_contained: snapshot.contained,
@@ -867,7 +877,7 @@ fn plan_identity(
         contract_boundary: &'a ContractBoundary,
         blockers: &'a [Blocker],
         summary: &'a PlanSummary,
-        prepared_healthchecks: Option<&'a [vibe_wire::generated::scrape::e1::plan::Healthcheck]>,
+        prepared_health: &'a crate::health::PreparedHealth,
         output_identity: Option<&'a str>,
     }
     let projection = IdentityProjection {
@@ -886,7 +896,7 @@ fn plan_identity(
         contract_boundary: &plan.contract_boundary,
         blockers: &plan.blockers,
         summary: &plan.summary,
-        prepared_healthchecks: plan.prepared_healthchecks.as_deref(),
+        prepared_health: &plan.prepared_health,
         output_identity,
     };
     let encoded = serde_json::to_vec(&projection).map_err(|error| {

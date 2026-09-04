@@ -34,6 +34,11 @@ fn valid_documents_round_trip_through_only_the_generated_types() {
         serde_json::from_value(variants_doc.clone()).expect("plan unions parse");
     assert_eq!(serde_json::to_value(variants).unwrap(), variants_doc);
 
+    let health_doc = document("valid/plan-health-minimal.json");
+    let health_plan: ScrapePlan =
+        serde_json::from_value(health_doc.clone()).expect("prepared health plan parses");
+    assert_eq!(serde_json::to_value(health_plan).unwrap(), health_doc);
+
     let report_doc = document("valid/report-minimal.json");
     let report: ScrapeReport = serde_json::from_value(report_doc.clone()).expect("report parses");
     assert_eq!(serde_json::to_value(report).unwrap(), report_doc);
@@ -80,9 +85,9 @@ fn plan_item_assertion_and_contract_boundary_arms_are_closed_unions() {
     let Healthcheck::Custom(custom) = &plan.healthchecks[0] else {
         panic!("custom health arm")
     };
-    assert_eq!(custom.reads, ["**"]);
-    assert!(custom.writes.is_empty());
-    assert!(!custom.spawn);
+    assert_eq!(custom.effects.reads, ["**"]);
+    assert!(custom.effects.writes.is_empty());
+    assert!(!custom.effects.spawn);
     assert_eq!(custom.snapshot.len(), 1);
 
     let mut preserve = document("valid/plan-minimal.json");
@@ -140,7 +145,7 @@ fn every_scrape_reader_rejects_top_level_and_union_variant_leakage() {
     );
 
     let mut plan = document("valid/plan-unions.json");
-    plan["healthchecks"][0]
+    plan["healthchecks"][0]["effects"]
         .as_object_mut()
         .unwrap()
         .remove("writes");
@@ -157,6 +162,12 @@ fn every_scrape_reader_rejects_top_level_and_union_variant_leakage() {
     assert!(
         serde_json::from_value::<ScrapeHealthResult>(health).is_err(),
         "the engine-owned health reply rejects an unknown member"
+    );
+
+    let plan = document("invalid/plan-health-unknown-field.json");
+    assert!(
+        serde_json::from_value::<ScrapePlan>(plan).is_err(),
+        "nested health limits reject unknown members"
     );
 }
 

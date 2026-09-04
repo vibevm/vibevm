@@ -133,19 +133,56 @@
       "identities": ["core-ai-native-specmark"]
     }
   ],
+  "health_plan_id": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+  "health_baseline": "no-regression",
+  "health_limits": {
+    "max_stdout_bytes": "1048576",
+    "max_stderr_bytes": "1048576",
+    "max_result_bytes": "1048576",
+    "termination_grace_seconds": 5
+  },
   "healthchecks": [
     {
       "kind": "custom",
       "id": "domain-health",
       "root": ".",
+      "applicability": { "kind": "applicable" },
+      "tests": null,
       "source": "vibevm/scrape/health/domain.py",
-      "executable": {
-        "display_path": "C:/Python/python.exe",
-        "sha256": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-        "bytes": "128000",
-        "version": "Python 3.13.7"
-      },
-      "argv": ["--phase", "{phase}", "--result", "{result}"],
+      "assets": [
+        {
+          "id": "domain-health/custom-launch",
+          "role": "custom-interpreter",
+          "display_path": "C:/Python/python.exe",
+          "sha256": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "bytes": "128000",
+          "mode": null,
+          "platform_identity": "volume:1/file:2",
+          "version": "Python 3.13.7",
+          "source": { "kind": "resolved" }
+        }
+      ],
+      "commands": [
+        {
+          "step": "verify",
+          "executable_asset_id": "domain-health/custom-launch",
+          "argv": [
+            { "kind": "bundle-path", "value": "vibevm/scrape/health/domain.py" },
+            { "kind": "literal", "value": "--phase" },
+            { "kind": "phase" },
+            { "kind": "literal", "value": "--result" },
+            { "kind": "result" }
+          ],
+          "environment": [
+            {
+              "name": "HOME",
+              "value_template": "{scratch}/home",
+              "value_sha256": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+            }
+          ],
+          "accepted_exit_codes": [0]
+        }
+      ],
       "snapshot": [
         {
           "path": "vibevm/scrape/health/domain.py",
@@ -154,12 +191,27 @@
           "mode": 420
         }
       ],
-      "reads": ["**"],
-      "writes": [],
-      "spawn": false,
+      "effects": {
+        "reads": ["**"],
+        "writes": [],
+        "spawn": false,
+        "network": "deny"
+      },
+      "sandbox": {
+        "exact_executable_identity": true,
+        "filesystem_isolation": true,
+        "read_policy_enforcement": true,
+        "process_tree_containment": true,
+        "graceful_termination": true,
+        "spawn_prevention": true,
+        "network_deny": true,
+        "bounded_output": true,
+        "atomic_result": true,
+        "bundle_materialization": true
+      },
       "protocol": "vibe-health-json-v1",
-      "network": "deny",
-      "timeout_seconds": 120
+      "timeout_seconds": 120,
+      "assurance_reductions": []
     }
   ],
   "contract_boundary": {

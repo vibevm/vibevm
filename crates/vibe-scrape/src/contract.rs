@@ -7,6 +7,9 @@ use serde::{Deserialize, Serialize};
 use crate::glob::{Glob, PortablePath};
 use crate::model::ScrapeError;
 
+pub const MAX_HEALTH_STREAM_BYTES: u64 = 16 * 1024 * 1024;
+pub const MAX_HEALTH_RESULT_BYTES: u64 = 16 * 1024 * 1024;
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Contract {
@@ -330,6 +333,8 @@ pub struct Health {
     pub network: NetworkPolicy,
     pub max_stdout_bytes: u64,
     pub max_stderr_bytes: u64,
+    pub max_result_bytes: u64,
+    pub termination_grace_seconds: u64,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -448,6 +453,16 @@ impl Healthcheck {
             Self::Custom { .. } => None,
         }
     }
+
+    pub fn when(&self) -> Option<&When> {
+        match self {
+            Self::Cargo { when, .. }
+            | Self::Npm { when, .. }
+            | Self::Maven { when, .. }
+            | Self::PythonPip { when, .. }
+            | Self::Custom { when, .. } => when.as_ref(),
+        }
+    }
 }
 
 impl Contract {
@@ -480,8 +495,25 @@ impl Contract {
         if self.health.parallel {
             return invalid("health.parallel must be false in schema 1");
         }
-        if self.health.max_stdout_bytes == 0 || self.health.max_stderr_bytes == 0 {
-            return invalid("health output caps must be positive");
+        if self.health.max_stdout_bytes == 0
+            || self.health.max_stderr_bytes == 0
+            || self.health.max_result_bytes == 0
+        {
+            return invalid("health output/result caps must be positive");
+        }
+        if self.health.max_stdout_bytes > MAX_HEALTH_STREAM_BYTES
+            || self.health.max_stderr_bytes > MAX_HEALTH_STREAM_BYTES
+            || self.health.max_result_bytes > MAX_HEALTH_RESULT_BYTES
+        {
+            return invalid(format!(
+                "health caps exceed engine maxima (stdout/stderr {MAX_HEALTH_STREAM_BYTES}, result {MAX_HEALTH_RESULT_BYTES})"
+            ));
+        }
+        if self.health.termination_grace_seconds == 0 {
+            return invalid("health.termination_grace_seconds must be positive");
+        }
+        if !self.healthcheck.iter().any(|check| check.when().is_none()) {
+            return invalid("at least one healthcheck must be unconditional");
         }
 
         let mut ids = BTreeSet::new();
@@ -1104,6 +1136,8 @@ parallel = false
 network = "tool-offline"
 max_stdout_bytes = 1
 max_stderr_bytes = 1
+max_result_bytes = 1
+termination_grace_seconds = 1
 [[healthcheck]]
 id = "cargo"
 kind = "cargo"
@@ -1369,5 +1403,39 @@ timeout_seconds = 1
 "#;
         assert!(Contract::parse(base.replace("reads = [\"**\"]\n", "").as_bytes()).is_err());
         assert!(Contract::parse(base.replace("writes = []\n", "").as_bytes()).is_err());
+    }
+
+    #[test]
+    fn health_caps_grace_and_unconditional_row_are_explicit() {
+        let base = minimal();
+        assert!(Contract::parse(base.replace("max_result_bytes = 1\n", "").as_bytes()).is_err());
+        assert!(
+            Contract::parse(
+                base.replace("termination_grace_seconds = 1\n", "")
+                    .as_bytes()
+            )
+            .is_err()
+        );
+        assert!(
+            Contract::parse(
+                base.replace("max_result_bytes = 1", "max_result_bytes = 0")
+                    .as_bytes()
+            )
+            .is_err()
+        );
+        assert!(
+            Contract::parse(
+                base.replace(
+                    "max_stdout_bytes = 1",
+                    &format!("max_stdout_bytes = {}", MAX_HEALTH_STREAM_BYTES + 1),
+                )
+                .as_bytes()
+            )
+            .is_err()
+        );
+        assert!(
+            Contract::parse((base + "when = { path_exists = \"Cargo.toml\" }\n").as_bytes())
+                .is_err()
+        );
     }
 }
