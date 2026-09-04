@@ -3,6 +3,12 @@
   <title id="root">PROP-053: `vibe clean` and Maven-style verb chaining</title>
   <status stage="spec" state="done" comment="commissioned by the owner 2026-08-24 (mandate quoted in §1); build rides the same session under the goal «почини баги в install и сделай команду clean»"/>
   <p><related fact="true" status="spec/done">**Related:** [PROP-009](PROP-009-loading-model.xml) (the install orchestration), [PROP-011](PROP-011-incremental-install.xml) (skip-when-fresh, the materialise diff, and the 2026-08-24 bug rulings `##EXPLICIT-PKGREF-FULL-SOLVE` / `##EMPTY-REQUIRES-IS-A-NO-OP` this verb composes with), [PROP-010](../vibe-registry/PROP-010-local-package-cache.xml) (the machine cache clean must NOT touch).</related></p>
+  <p><CLEAN-IS-NOT-DETACH fact="true" status="spec/done">&#96;vibe clean&#96; is not a
+  project-detachment surface. The terminal operation that removes the Vibe
+  relationship, rewrites native dependencies/metadata, proves native health and
+  can delete &#96;vibe.lock&#96; is
+  @spec://org.vibevm.core/vibevm/common/PROP-056#root. Clean retains its narrow,
+  reproducible derived-state semantics unchanged.</CLEAN-IS-NOT-DETACH></p>
   <mandate title="1. The owner's mandate">
     <p><CLEAN-MANDATE-VERBATIM fact="true" status="spec/done">The owner's words (2026-08-24), verbatim: «Для чистки нужно сделать отдельную команду vibe clean, аналог mvn clean. Она очистит vibedeps. Способ использования командной строки стоит переделать на способ похожий на Maven. Чтобы можно было сказать "vibe clean install", и вот тогда он вначале удалит всё, и потом перегенерирует вообще весь vibedeps. Если сделать vibe clean install org.vibevm.ai-native/rust-ai-native --offline, он должен вначале очистить всю папку, потом установить всё, потом обновить только тот пакет, что попросили.» And the refinement: «Суть команды clean в том, что я хочу, чтобы она работала похоже на Maven, но чтобы учитывалась специфика нашей работы с промтами.»</CLEAN-MANDATE-VERBATIM></p>
   </mandate>

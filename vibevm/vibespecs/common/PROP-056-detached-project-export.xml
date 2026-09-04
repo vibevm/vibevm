@@ -1,0 +1,1343 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">PROP-056 — Detached project export and in-place VibeVM removal</title>
+  <status stage="spec" state="done" action="new"
+    comment="Owner-commissioned 2026-09-04; normative design complete, implementation not started"/>
+
+  <p><STATUS-LINE fact="true" status="spec/done">This PROP defines the deterministic
+  operation that turns a VibeVM-managed consumer into a self-contained native
+  project with no selected VibeVM repository residue. It freezes the contract,
+  plan, typed rewrite, verification, export, in-place transaction, recovery and
+  evidence semantics. Product implementation remains planned.</STATUS-LINE></p>
+
+  <mandate title="1. Owner mandate and outcome">
+    <p><OWNER-MANDATE fact="true" status="spec/done">The owner requires a project that may
+    be authored and maintained with VibeVM and then delivered without VibeVM
+    repository artifacts: the &#96;vibevm/&#96; tree, project &#96;.vibe/&#96; state,
+    &#96;vibe.toml&#96;, &#96;vibe.lock&#96;, discipline policy/index artifacts, managed
+    harness blocks and source-level traceability metadata as selected by policy.
+    The operation must preserve the native build. Ambiguity is expressed once in
+    a project contract, after which inventory, rewriting, deletion, health
+    checks, rollback and proof are algorithmic.</OWNER-MANDATE></p>
+    <p><OWNER-CONTRACT-RULING fact="true" status="spec/done">The default contract lives at
+    &#96;vibevm/detach/contract.toml&#96;, may be replaced by an explicit
+    &#96;--contract&#96; path, and—when contained in the project and selected for
+    removal—is the last project payload file removed. Standard Cargo, npm,
+    Maven and Python/pip health checks are declarative; a snapshotted
+    user-defined verifier is the escape hatch for domain checks.</OWNER-CONTRACT-RULING></p>
+  </mandate>
+
+  <related title="2. Relationship to existing laws">
+    <facts ordered="false">
+      <RELATED-ALGORITHMIC-REFACTORING fact="true" status="spec/done">PROP-031 supplies
+      the write-side law: typed operation, deterministic plan, no free-form LLM
+      rewriting, and post-operation gating. Detach is one composed refactoring
+      over source, manifests, generated state and project topology.</RELATED-ALGORITHMIC-REFACTORING>
+      <RELATED-LAYOUT fact="true" status="spec/done">PROP-052 defines the
+      &#96;vibevm/&#96; root. Detach is the explicit terminal exception that removes
+      that root from an exported consumer; it does not reintroduce the retired
+      pre-PROP-052 Vibe layout.</RELATED-LAYOUT>
+      <RELATED-CLEAN fact="true" status="spec/done">PROP-053 &#96;vibe clean&#96; removes
+      regenerable dependency and boot products while retaining authored project
+      state and &#96;vibe.lock&#96;. Detach is not clean: it removes the Vibe
+      relationship itself and therefore requires a contract, native health
+      proof and recoverable commit.</RELATED-CLEAN>
+      <RELATED-LIFECYCLE fact="true" status="spec/done">PROP-054 supplies typed lifecycle
+      planning, injected environment authority, artifact identity and durable
+      transaction precedents. Detach reuses those principles but has a distinct
+      external journal because project &#96;.vibe/&#96; is removable.</RELATED-LIFECYCLE>
+      <RELATED-DISCIPLINES fact="true" status="spec/done">The Rust, TypeScript and Go
+      AI-Native stacks remain authoring disciplines. Detach removes their
+      registered metadata and tool wiring; it never erases useful product code
+      merely because a discipline helped create it.</RELATED-DISCIPLINES>
+    </facts>
+  </related>
+
+  <problem title="3. Problem, boundary and vocabulary">
+    <p><DETACH-PROBLEM fact="true" status="spec/done">Blindly deleting Vibe paths is not
+    safe. A Rust consumer may path-depend on the &#96;specmark&#96; proc macro inside
+    &#96;vibevm/vibedeps&#96;; build scripts or CI may call &#96;vibe bin&#96;; generated
+    product source may live beside disposable generated state; authored
+    specifications may share a tree with generated boot output. A path name
+    alone cannot decide disposition.</DETACH-PROBLEM></p>
+    <facts ordered="false">
+      <DETACHED-TREE fact="true" status="spec/done">A <em>detached tree</em> is a project
+      tree for which every contract-selected Vibe path, dependency, managed
+      marker, source annotation, tool script and environment reference is absent
+      or explicitly retained under a neutral identity, and whose required
+      native health panel is accepted after detachment under the declared strict
+      or no-regression baseline policy. A retained non-pass verdict is never
+      described as an unconditional pass.</DETACHED-TREE>
+      <PRODUCT-PRESERVATION fact="true" status="spec/done">Product preservation means:
+      all untouched files are byte-identical; every authored source rewrite is
+      metadata erasure-equivalent; every declared relocation preserves exact
+      bytes and mode; native manifests and lockfiles describe the detached
+      dependency graph; the health oracle accepts the result.</PRODUCT-PRESERVATION>
+      <ZERO-RESIDUAL-SCOPE fact="true" status="spec/done">Zero residue means zero
+      registered Vibe identities, paths and markers selected by this contract.
+      It does not mean deleting an ordinary word such as “vibe” from prose, nor
+      undoing architectural choices learned while using a discipline.</ZERO-RESIDUAL-SCOPE>
+      <ALGORITHMIC-BOUNDARY fact="true" status="spec/done">The owner supplies policy:
+      delete, keep, relocate, strip, retain, required checks and acceptable
+      baseline mode. The engine supplies all mechanics and verdicts. Any state
+      not decidable from the sealed contract and observed tree is a blocker,
+      never a guess or best-effort success.</ALGORITHMIC-BOUNDARY>
+    </facts>
+    <p><NON-GOALS fact="true" status="spec/done">Schema 1 does not reverse the historical
+    influence of VibeVM on product architecture, infer replacements for arbitrary
+    runtime libraries, mutate Git history, publish artifacts, or silently remove
+    user-global deployments. Receipt-owned external deployments are reported;
+    the operator runs the existing explicit undeploy operation before detach
+    when external removal is desired.</NON-GOALS></p>
+  </problem>
+
+  <surface title="4. Command surface">
+    <facts ordered="false">
+      <DETACH-PLAN-COMMAND fact="true" status="impl/plan">&#96;vibe detach --plan
+      [--contract &lt;path&gt;] [--output &lt;dir&gt; | --in-place]&#96; is read-only.
+      With neither execution mode, it plans the in-place form because that is the
+      larger risk surface; it writes no project, journal, quarantine or report
+      file.</DETACH-PLAN-COMMAND>
+      <DETACH-EXPORT-COMMAND fact="true" status="impl/plan">&#96;vibe detach --output
+      &lt;absent-dir&gt; [--contract &lt;path&gt;]&#96; creates a detached export and
+      never changes the source tree. The destination must be absent; adoption of
+      an existing directory is forbidden.</DETACH-EXPORT-COMMAND>
+      <DETACH-INPLACE-COMMAND fact="true" status="impl/plan">&#96;vibe detach --in-place
+      [--contract &lt;path&gt;]&#96; executes the journaled in-place transaction.
+      Interactive use shows the exact modified-file and deletion census;
+      unattended use requires &#96;--assume-yes&#96; after a green plan.</DETACH-INPLACE-COMMAND>
+      <DETACH-RECOVER-COMMAND fact="true" status="impl/plan">&#96;vibe detach --recover
+      --path &lt;project&gt;&#96; settles the one pending user-local transaction.
+      Recovery reads the journaled contract and plan, never the possibly removed
+      project contract. A new detach refuses while recovery is pending.</DETACH-RECOVER-COMMAND>
+      <DETACH-CONTRACT-COMMANDS fact="true" status="impl/plan">&#96;vibe detach contract
+      init&#96; writes a conservative default contract only when absent;
+      &#96;vibe detach contract check&#96; parses and plans it read-only. Existing
+      contracts are never silently refreshed by install or a language
+      discipline.</DETACH-CONTRACT-COMMANDS>
+      <DETACH-MODE-EXCLUSIVITY fact="true" status="spec/done">&#96;--output&#96; and
+      &#96;--in-place&#96; are mutually exclusive. &#96;--recover&#96; accepts neither
+      mode nor contract because the durable journal already fixes both.</DETACH-MODE-EXCLUSIVITY>
+    </facts>
+  </surface>
+
+  <contract title="5. Contract discovery, schema and snapshot">
+    <p><DEFAULT-CONTRACT fact="true" status="spec/done">The default is the project-root
+    literal &#96;vibevm/detach/contract.toml&#96;. Every operand inside it is
+    project-root-relative regardless of where an alternate contract lives.
+    Contract location never changes mutation authority.</DEFAULT-CONTRACT></p>
+    <facts ordered="false">
+      <ALTERNATE-CONTRACT fact="true" status="spec/done">An explicit
+      &#96;--contract&#96; may name a portable project-relative literal or an
+      explicit absolute regular file. A contained contract may be removed under
+      the contract-last law. An external contract is read-only and can never be
+      deleted or make any external path writable. Absolute selection walks and
+      pins every parent no-follow; contained/external identity is decided by
+      capability ancestry, never lexical prefix.</ALTERNATE-CONTRACT>
+      <CONTRACT-STRICTNESS fact="true" status="spec/done">The TOML schema rejects unknown
+      tables, fields, tagged kinds and enum values. &#96;schema&#96; must equal 1;
+      every id is a unique portable token across classification, rewrite,
+      relocation, assertion and health rows.</CONTRACT-STRICTNESS>
+      <CONTRACT-READ-SAFETY fact="true" status="spec/done">The contract is opened
+      no-follow as a regular single-link file, size-bounded to 1 MiB and read
+      stably through one held handle. A symlink, reparse point, hard link,
+      special file, identity change or second-pass mismatch refuses.</CONTRACT-READ-SAFETY>
+      <CONTRACT-SNAPSHOT fact="true" status="spec/done">Before the first mutation the
+      engine durably stores exact contract bytes, digest, canonical parsed value,
+      expanded inventory, prepared rewrite outputs, verifier snapshots and plan
+      hash in the user-local transaction. Recovery never rereads or reparses the
+      source contract.</CONTRACT-SNAPSHOT>
+      <CONTRACT-LAST fact="true" status="spec/done">For a contained contract,
+      &#96;commit.contract = "delete-last"&#96; reserves it from every earlier
+      wildcard batch. It is the last project payload file moved to quarantine;
+      only deterministic pruning of now-empty ancestor directories follows.
+      An external contract requires &#96;commit.contract = "preserve"&#96;.</CONTRACT-LAST>
+      <CONTRACT-LAST-VALIDATION fact="true" status="spec/done">A contained
+      delete-last contract must resolve to exactly one regular effective-delete
+      file. It cannot be effectively kept/generated, a rewrite target, relocation
+      source/destination, baseline target or ordinary deletion entry. Broad
+      patterns may select it only because the engine reserves its exact identity
+      into the last slot before classification ordering. Any overlap that would
+      produce another disposition refuses.</CONTRACT-LAST-VALIDATION>
+    </facts>
+
+    <p><CONTRACT-EXAMPLE-LEAD fact="true" status="spec/done">Schema-1 example for a mixed
+    Rust/TypeScript/Go consumer:</CONTRACT-EXAMPLE-LEAD></p>
+    <fence lang="toml">schema = 1
+id = "org.example.detached-release"
+
+[policy]
+unclassified = "refuse"
+links = "refuse"
+concurrent_change = "refuse"
+
+[scope]
+closed_roots = ["vibevm", ".vibe"]
+outside = "implicit-keep"
+
+[commit]
+contract = "delete-last"
+
+[[classify]]
+id = "remove-vibevm-tree"
+kind = "delete"
+patterns = ["vibevm", "vibevm/**"]
+owner = "vibe"
+proof = "contract-assertion-v1"
+modified = "delete"
+require_match = true
+
+[[classify]]
+id = "remove-project-vibe-state"
+kind = "delete"
+patterns = [".vibe", ".vibe/**", "vibe.toml", "vibe.lock"]
+owner = "vibe"
+proof = "contract-assertion-v1"
+modified = "delete"
+require_match = false
+
+[[classify]]
+id = "remove-discipline-state"
+kind = "delete"
+patterns = [
+  "conform.toml",
+  "specmap.toml",
+  "specmap.json",
+  "*-ai-native-conform-baseline.json",
+  "discipline/**",
+]
+owner = "vibe"
+proof = "contract-assertion-v1"
+modified = "delete"
+require_match = false
+
+[[classify]]
+id = "keep-harness-docs"
+kind = "keep"
+patterns = ["AGENTS.md", "CLAUDE.md", "GEMINI.md"]
+owner = "project"
+require_match = false
+
+[[rewrite]]
+id = "remove-harness-blocks"
+kind = "managed-block-remove-v1"
+paths = ["AGENTS.md", "CLAUDE.md", "GEMINI.md"]
+marker = "vibevm"
+matches = "zero-or-one-per-file"
+
+[[rewrite]]
+id = "strip-rust-specmark"
+kind = "rust-specmark-strip-v1"
+patterns = ["**/*.rs"]
+exclude = [".git/**", "vibevm/**", ".vibe/**", "target/**"]
+forms = ["scope", "spec", "verifies", "cell"]
+matches = "zero-or-more"
+
+[[rewrite]]
+id = "remove-rust-specmark-dependency"
+kind = "cargo-package-remove-v1"
+manifests = ["Cargo.toml", "crates/*/Cargo.toml"]
+package = "core-ai-native-specmark"
+aliases = ["specmark"]
+matches = "zero-or-more"
+
+[[rewrite]]
+id = "remove-vibe-workspace-excludes"
+kind = "toml-array-values-remove-v1"
+path = "Cargo.toml"
+table = ["workspace"]
+key = "exclude"
+values = ["vibevm", "vibevm/vibedeps"]
+matches = "zero-or-more"
+
+[[rewrite]]
+id = "strip-typescript-spec-tags"
+kind = "typescript-spec-comments-strip-v1"
+patterns = ["src/**/*.ts", "src/**/*.tsx"]
+matches = "zero-or-more"
+
+[[rewrite]]
+id = "strip-go-spec-directives"
+kind = "go-spec-directives-strip-v1"
+patterns = ["**/*.go"]
+exclude = [".git/**", "vibevm/**", ".vibe/**"]
+matches = "zero-or-more"
+
+[[assert]]
+id = "vibe-paths-absent"
+kind = "paths-absent-v1"
+patterns = ["vibevm", "vibevm/**", ".vibe", ".vibe/**", "vibe.toml", "vibe.lock"]
+
+[[assert]]
+id = "vibe-cargo-paths-absent"
+kind = "cargo-path-prefix-absent-v1"
+manifests = ["Cargo.toml", "crates/*/Cargo.toml"]
+prefixes = ["vibevm/", ".vibe/"]
+
+[health]
+baseline = "strict"
+before_failure = "refuse"
+after_failure = "rollback"
+parallel = false
+network = "tool-offline"
+max_stdout_bytes = 1048576
+max_stderr_bytes = 1048576
+
+[[healthcheck]]
+id = "rust"
+kind = "cargo"
+root = "."
+build = "build"
+workspace = true
+locked = true
+all_targets = true
+tests = "required"
+profile = "dev"
+features = []
+timeout_seconds = 900
+
+[[healthcheck]]
+id = "web"
+kind = "npm"
+root = "web"
+manager = "npm"
+lockfile = "package-lock.json"
+install = "none"
+build_script = "build"
+tests = "required"
+test_script = "test"
+timeout_seconds = 900
+when = { path_exists = "package.json" }
+
+[[healthcheck]]
+id = "domain-health"
+kind = "custom"
+root = "."
+source = "vibevm/detach/health/domain_health.py"
+snapshot = [
+  "vibevm/detach/health/domain_health.py",
+  "vibevm/detach/health/lib/**",
+]
+interpreter = "python"
+argv = ["--phase", "{phase}", "--result", "{result}"]
+protocol = "vibe-health-json-v1"
+network = "deny"
+reads = ["**"]
+writes = []
+spawn = true
+timeout_seconds = 120</fence>
+
+    <schema-shape title="5.1 Closed schema-1 shape">
+      <p><SCHEMA-TOP-LEVEL fact="true" status="spec/done">Required singleton tables are
+      &#96;policy&#96;, &#96;scope&#96;, &#96;commit&#96; and &#96;health&#96;.
+      Required scalars are &#96;schema = 1&#96; and one nonempty portable
+      &#96;id&#96;. The repeated tables are &#96;classify&#96;,
+      &#96;baseline&#96;, &#96;rewrite&#96;, &#96;relocate&#96;,
+      &#96;assert&#96; and &#96;healthcheck&#96;. At least one classify, one
+      assertion and one required after healthcheck must exist. Every omitted
+      optional collection is empty; there are no open extension tables.</SCHEMA-TOP-LEVEL></p>
+      <facts ordered="false">
+        <SCHEMA-POLICY fact="true" status="spec/done">&#96;policy&#96; requires
+        &#96;unclassified = "refuse"&#96;, &#96;links = "refuse"&#96; and
+        &#96;concurrent_change = "refuse"&#96;; schema 1 admits no other values.
+        &#96;scope&#96; requires a nonempty set of portable literal
+        &#96;closed_roots&#96; and &#96;outside = "implicit-keep"&#96;.
+        Missing closed roots are observations, and are errors only when a
+        covering classify row requires a match.</SCHEMA-POLICY>
+        <SCHEMA-COMMIT fact="true" status="spec/done">&#96;commit.contract&#96; is
+        &#96;delete-last&#96; for a contained contract and &#96;preserve&#96; for
+        an external contract. The contained/external observation selects which
+        value is legal; the contract cannot weaken it.</SCHEMA-COMMIT>
+        <SCHEMA-WHEN fact="true" status="spec/done">Schema-1
+        &#96;when&#96; is an optional deny-unknown table containing exactly one
+        required portable literal &#96;path_exists&#96;, resolved below that
+        check's root. No environment, command or OS predicate is inferred here;
+        the future common applicability feature may replace this shape only by
+        an explicit schema epoch.</SCHEMA-WHEN>
+      </facts>
+
+      <p><SCHEMA-CLASSIFY fact="true" status="spec/done">Every
+      &#96;[[classify]]&#96; requires &#96;id&#96;, a nonempty canonical set of
+      &#96;patterns&#96;, &#96;kind&#96;, &#96;owner&#96; and
+      &#96;require_match&#96;. Keep requires
+      &#96;owner = "project"&#96; and forbids &#96;proof&#96;/
+      &#96;modified&#96;. Delete/generated require
+      &#96;owner = "vibe"&#96;, proof and modified policy. Proof is exactly
+      &#96;contract-assertion-v1 | sha256-v1 | vibe-generated-v1&#96;;
+      modified is exactly &#96;refuse | keep | delete&#96;. Variant-inapplicable
+      fields are rejected.</SCHEMA-CLASSIFY></p>
+      <p><SCHEMA-BASELINE fact="true" status="spec/done">Each
+      &#96;[[baseline]]&#96; has one portable literal &#96;path&#96; and one
+      lowercase &#96;sha256:&lt;64-hex&gt;&#96;. Paths are globally unique.
+      Exactly one baseline is required for each regular file selected by a
+      &#96;sha256-v1&#96; rule; a baseline selected by no such rule is an error.</SCHEMA-BASELINE></p>
+      <p><SCHEMA-MATCH-CARDINALITY fact="true" status="spec/done">Every rewrite requires
+      one &#96;matches&#96; enum. Set-level adapters admit exactly
+      &#96;zero-or-more | one-or-more | exactly-one&#96;. Per-file adapters admit
+      exactly &#96;zero-or-one-per-file | exactly-one-per-file&#96;. A kind's row
+      below fixes which family it uses; integer/free-text cardinalities are
+      rejected.</SCHEMA-MATCH-CARDINALITY></p>
+
+      <table>
+        <tr><td>Rewrite kind</td><td>Required variant fields</td></tr>
+        <tr>
+          <td><SCHEMA-RW-MANAGED fact="true" status="spec/done">&#96;managed-block-remove-v1&#96;</SCHEMA-RW-MANAGED></td>
+          <td><SCHEMA-RW-MANAGED-FIELDS fact="true" status="spec/done">Literal
+          &#96;paths&#96;, registered &#96;marker&#96;, and
+          &#96;matches = zero-or-one-per-file | exactly-one-per-file&#96;.</SCHEMA-RW-MANAGED-FIELDS></td>
+        </tr>
+        <tr>
+          <td><SCHEMA-RW-RUST fact="true" status="spec/done">&#96;rust-specmark-strip-v1&#96;</SCHEMA-RW-RUST></td>
+          <td><SCHEMA-RW-RUST-FIELDS fact="true" status="spec/done">Nonempty
+          &#96;patterns&#96;, optional &#96;exclude&#96;, nonempty unique
+          &#96;forms&#96; drawn from scope/spec/verifies/cell, and
+          &#96;matches = zero-or-more | one-or-more&#96;.</SCHEMA-RW-RUST-FIELDS></td>
+        </tr>
+        <tr>
+          <td><SCHEMA-RW-CARGO fact="true" status="spec/done">&#96;cargo-package-remove-v1&#96;</SCHEMA-RW-CARGO></td>
+          <td><SCHEMA-RW-CARGO-FIELDS fact="true" status="spec/done">Manifest
+          patterns, exact Cargo &#96;package&#96;, optional alias allowlist and
+          set-level &#96;matches&#96;. Observed aliases outside a nonempty allowlist
+          refuse rather than disappear.</SCHEMA-RW-CARGO-FIELDS></td>
+        </tr>
+        <tr>
+          <td><SCHEMA-RW-NODE fact="true" status="spec/done">&#96;node-package-remove-v1&#96;</SCHEMA-RW-NODE></td>
+          <td><SCHEMA-RW-NODE-FIELDS fact="true" status="spec/done">Required literal
+          &#96;package_json&#96; and &#96;lockfile&#96;, selected
+          &#96;manager = npm | pnpm | yarn&#96;, nonempty &#96;packages&#96; array,
+          optional arrays of component-array &#96;script_paths&#96; and
+          &#96;config_paths&#96;, plus set-level &#96;matches&#96;.</SCHEMA-RW-NODE-FIELDS></td>
+        </tr>
+        <tr>
+          <td><SCHEMA-RW-GOMOD fact="true" status="spec/done">&#96;go-module-remove-v1&#96;</SCHEMA-RW-GOMOD></td>
+          <td><SCHEMA-RW-GOMOD-FIELDS fact="true" status="spec/done">Required literal
+          &#96;go_mod&#96;, optional literal &#96;go_sum&#96;, nonempty exact
+          &#96;modules&#96; array and set-level &#96;matches&#96;.
+          Replace/exclude/tool directives are part of the same parsed graph.</SCHEMA-RW-GOMOD-FIELDS></td>
+        </tr>
+        <tr>
+          <td><SCHEMA-RW-TOML fact="true" status="spec/done">&#96;toml-array-values-remove-v1&#96;</SCHEMA-RW-TOML></td>
+          <td><SCHEMA-RW-TOML-FIELDS fact="true" status="spec/done">One literal
+          &#96;path&#96;, component-array &#96;table&#96;, scalar
+          &#96;key&#96;, nonempty exact &#96;values&#96; and match cardinality.</SCHEMA-RW-TOML-FIELDS></td>
+        </tr>
+        <tr>
+          <td><SCHEMA-RW-LANGUAGE fact="true" status="spec/done">&#96;typescript-spec-comments-strip-v1&#96; /
+          &#96;go-spec-directives-strip-v1&#96;</SCHEMA-RW-LANGUAGE></td>
+          <td><SCHEMA-RW-LANGUAGE-FIELDS fact="true" status="spec/done">Nonempty
+          &#96;patterns&#96;, optional &#96;exclude&#96; and match cardinality;
+          the registered grammar is adapter-owned, not contract-provided.</SCHEMA-RW-LANGUAGE-FIELDS></td>
+        </tr>
+        <tr>
+          <td><SCHEMA-RW-JSON fact="true" status="spec/done">&#96;json-member-remove-v1&#96;</SCHEMA-RW-JSON></td>
+          <td><SCHEMA-RW-JSON-FIELDS fact="true" status="spec/done">One literal
+          &#96;path&#96;, component-array &#96;object&#96;, exact member names and
+          match cardinality.</SCHEMA-RW-JSON-FIELDS></td>
+        </tr>
+        <tr>
+          <td><SCHEMA-RW-TEXT fact="true" status="spec/done">&#96;text-exact-replace-v1&#96;</SCHEMA-RW-TEXT></td>
+          <td><SCHEMA-RW-TEXT-FIELDS fact="true" status="spec/done">One literal
+          &#96;path&#96;, required complete-file &#96;sha256&#96;, UTF-8
+          &#96;before&#96;/&#96;after&#96; literals and positive exact
+          &#96;occurrences&#96;.</SCHEMA-RW-TEXT-FIELDS></td>
+        </tr>
+      </table>
+      <p><SCHEMA-LOCK-CONSEQUENCE fact="true" status="spec/done">Cargo, Node and Go native
+      lock changes are derived consequences of explicit package/module removal
+      rows, never independent inferred authority. Each adapter records the
+      selected manager and exact graph delta. A graph change with no authorizing
+      rewrite row refuses.</SCHEMA-LOCK-CONSEQUENCE></p>
+
+      <p><SCHEMA-RELOCATE-ASSERT fact="true" status="spec/done">Every relocation requires
+      &#96;id&#96;, literal &#96;from&#96;/&#96;to&#96;,
+      &#96;conflict = "refuse"&#96; and boolean &#96;required&#96;. Assertion kinds
+      are closed: &#96;paths-absent-v1&#96; requires patterns;
+      &#96;text-literal-absent-v1&#96; requires path patterns plus literal
+      needles; &#96;cargo-path-prefix-absent-v1&#96; requires manifest patterns
+      plus prefixes; &#96;language-metadata-absent-v1&#96; requires language plus
+      source patterns; &#96;dependency-identities-absent-v1&#96; requires manager,
+      manifest and identities.</SCHEMA-RELOCATE-ASSERT></p>
+
+      <p><SCHEMA-HEALTH-COMMON fact="true" status="spec/done">&#96;health&#96; requires
+      baseline, before/after failure policy, parallel flag, network policy and
+      positive timeout/output caps. Schema 1 admits only
+      &#96;before_failure = "refuse"&#96;,
+      &#96;after_failure = "rollback"&#96; and &#96;parallel = false&#96;; these
+      fields are explicit evidence, not open strategy extension points. Every
+      &#96;[[healthcheck]]&#96; requires
+      unique id, kind, literal root, positive timeout, optional strict
+      &#96;when&#96; and optional per-check network override; health root alone may
+      use the special literal &#96;.&#96;. Cargo requires
+      &#96;build = check | build&#96;, booleans workspace/locked/all_targets,
+      &#96;profile = dev | release&#96;, a possibly empty feature array and tests
+      mode. npm requires manager, literal lockfile,
+      &#96;install = none | ci&#96;, tests mode, and exactly one nonempty
+      build_script or typecheck_script; test_script is required unless tests is
+      skip. Maven requires &#96;runner = wrapper-first | explicit&#96;, goal,
+      offline boolean and tests mode. Python requires interpreter, nonempty
+      source_roots, dependency_check/build booleans and tests mode; test_runner
+      is required unless tests is skip. Fields not named for a variant are
+      forbidden.</SCHEMA-HEALTH-COMMON></p>
+      <p><SCHEMA-HEALTH-CUSTOM fact="true" status="spec/done">Custom health requires
+      source, nonempty snapshot patterns containing that source, explicit
+      interpreter, argv, protocol, read/write patterns, spawn boolean and network
+      policy. JSON protocol requires the complete &#96;{result}&#96; placeholder
+      exactly once. Result and scratch paths are implicit transaction-owned
+      writes and MUST NOT be repeated in &#96;writes&#96;. Exit-code protocol
+      forbids &#96;{result}&#96;; optional diagnostics must live below
+      &#96;{scratch}&#96;.</SCHEMA-HEALTH-CUSTOM></p>
+      <p><SCHEMA-JTD-WIRES fact="true" status="spec/done">The normative machine shape is
+      encoded as strict JTD wire schemas for
+      &#96;detach_plan/e1&#96;, &#96;detach_report/e1&#96; and
+      &#96;detach_health_result/e1&#96; in the first implementation atom. Those
+      schemas must reproduce this section's required/optional/forbidden sets and
+      closed enums exactly; generated types are the sole JSON reader/writer and
+      handwritten shadow DTOs are forbidden.</SCHEMA-JTD-WIRES></p>
+    </schema-shape>
+  </contract>
+
+  <paths title="6. Path, glob, inventory and classification law">
+    <p><PATH-ROOTING fact="true" status="spec/done">Every mutation operand is resolved
+    from the pinned project root. No contract field can name an absolute
+    mutation path, parent traversal, drive, UNC path, URL or device. The explicit
+    alternate contract source is the sole read-only external-path exception.</PATH-ROOTING></p>
+    <facts ordered="false">
+      <GLOB-GRAMMAR fact="true" status="spec/done">Schema 1 owns one glob grammar:
+      &#96;*&#96; means zero or more non-separator characters within one component;
+      &#96;**&#96; means zero or more complete components and is legal only as a
+      whole component. &#96;?&#96;, character classes, braces, negation, escapes,
+      &#96;***&#96;, embedded &#96;**&#96;, backslashes, colons, empty components and
+      dot components are rejected.</GLOB-GRAMMAR>
+      <NO-AMBIENT-GLOB fact="true" status="spec/done">The filesystem and shell never
+      expand a pattern. The engine enumerates no-follow logical paths, renders
+      forward slashes, matches case-sensitively, byte-sorts and deduplicates.
+      Authored pattern order has no semantic effect.</NO-AMBIENT-GLOB>
+      <INVENTORY-CLOSED fact="true" status="spec/done">Every entry beneath a selected
+      deletion/classification root is inventoried. Any walk error, non-UTF-8
+      name, unsafe component, link/reparse point, special file or changed
+      identity is a failure rather than absence. Schema 1 requires
+      &#96;policy.unclassified = "refuse"&#96;.</INVENTORY-CLOSED>
+      <CLASSIFICATION-UNIVERSE fact="true" status="spec/done">The engine enumerates the
+      whole pinned project for pattern matching and residual proof, excluding
+      only &#96;.git/&#96; internals and externally owned transaction state.
+      Every existing entry at or below a literal &#96;scope.closed_roots&#96;
+      member must be explicitly classified; an unmatched entry there refuses.
+      Outside closed roots, unmatched paths are implicit project-owned keep.
+      Explicit classify/rewrite/assert patterns may still select them. Rewrite
+      targets are effectively kept unless an explicit classification conflict
+      says otherwise.</CLASSIFICATION-UNIVERSE>
+      <NO-RECURSIVE-BLIND-DELETE fact="true" status="spec/done">Project-selected trees
+      are never passed to an ambient recursive delete. Files are classified and
+      quarantined individually; directories are removed only when independently
+      observed empty, deepest first. A kept descendant prevents ancestor
+      deletion.</NO-RECURSIVE-BLIND-DELETE>
+      <GIT-METADATA-PROTECTED fact="true" status="spec/done">&#96;.git&#96; and every
+      descendant are non-addressable mutation paths in schema 1. A classify,
+      rewrite, relocation, baseline, health-write or assertion operand that can
+      effectively match them after include-minus-exclude evaluation refuses.
+      Every broad source selector must therefore exclude &#96;.git/**&#96;;
+      exclusion from inventory alone is never permission or a silent no-op.</GIT-METADATA-PROTECTED>
+      <CLASSIFICATION-LATTICE fact="true" status="spec/done">Classification uses a fixed
+      lattice, not first-match order: keep plus generated is invalid; keep
+      explicitly shields delete; generated proof dominates an overlapping delete;
+      same-kind overlap is allowed only when owner, proof and modified policy are
+      identical. Every path receives one effective disposition.</CLASSIFICATION-LATTICE>
+    </facts>
+
+    <ownership title="6.1 Ownership and modification">
+      <p><FILE-CLASSES fact="true" status="spec/done">The plan classifies observations as
+      &#96;generated-owned&#96;, &#96;managed-region&#96;,
+      &#96;authored-metadata&#96;, &#96;authored-product&#96; or
+      &#96;unknown&#96;. Path spelling alone never proves a class.</FILE-CLASSES></p>
+      <facts ordered="false">
+        <OWNERSHIP-PROOFS fact="true" status="spec/done">Vibe ownership is proven by a
+        matching receipt/artifact record, an exact registered generated marker
+        plus recorded digest, a contract SHA-256 baseline, or explicit
+        &#96;contract-assertion-v1&#96;. A failed ownership proof always refuses;
+        &#96;modified = "delete"&#96; cannot waive absent ownership.</OWNERSHIP-PROOFS>
+        <MODIFIED-POLICY fact="true" status="spec/done">Modification policies are
+        &#96;refuse&#96;, &#96;keep&#96; and &#96;delete&#96;. Refuse is the default.
+        Keep reclassifies the path and updates ancestor disposition. Delete
+        quarantines the modified bytes but must appear separately in human
+        confirmation and JSON evidence.</MODIFIED-POLICY>
+        <MODIFICATION-STATE fact="true" status="spec/done">Observed modification is
+        exactly &#96;unmodified | modified | unknown | not-applicable&#96;.
+        SHA-256 proof compares the contract baseline; generated proof obtains
+        its expected digest from the exact receipt/artifact record or registered
+        generated transaction that names the path. Contract assertion has no
+        baseline and therefore yields unknown. Refuse rejects modified and
+        unknown; keep preserves either; delete accepts either only as the
+        owner's explicit lossy disposition. Not-applicable belongs only to keep.</MODIFICATION-STATE>
+        <AUTHORED-SPECS fact="true" status="spec/done">Authored files under
+        &#96;vibevm/vibespecs&#96; are not generated merely because of their
+        directory. A full zero-residue contract must explicitly delete them or
+        relocate them to a neutral home. No built-in policy silently decides
+        their value.</AUTHORED-SPECS>
+        <PRODUCT-CODE-SURVIVES fact="true" status="spec/done">Generated cells, seams,
+        tests, models and other useful application source are authored product
+        once accepted into the project. They remain unless an exact contract
+        relocation or deletion row names them. Origin in a discipline is not
+        deletion authority.</PRODUCT-CODE-SURVIVES>
+      </facts>
+    </ownership>
+
+    <relocation title="6.2 Relocation">
+      <p><RELOCATION-CONTRACT fact="true" status="spec/done">A
+      &#96;[[relocate]]&#96; row names one exact source and one exact destination;
+      schema 1 admits no relocation glob. Source descendants must be effectively
+      kept, destination must be outside every deletion root, all relocations are
+      nonoverlapping and acyclic, and &#96;conflict = "refuse"&#96; is the only
+      collision policy.</RELOCATION-CONTRACT></p>
+      <p><RELOCATION-PHYSICS fact="true" status="spec/done">In-place relocation is a
+      capability-relative same-filesystem rename with journaled parent creation.
+      Cross-filesystem copy-and-delete is not an implicit fallback. Export mode
+      stages the corresponding byte/mode-identical copy inside its new
+      destination tree.</RELOCATION-PHYSICS></p>
+    </relocation>
+  </paths>
+
+  <rewrites title="7. Typed rewrite algebra">
+    <p><TYPED-ONLY fact="true" status="spec/done">Globs select candidates; they never
+    rewrite bytes. Authored source and structural manifests are changed only by a
+    closed typed adapter. Generic regex replacement, shell rewrite hooks,
+    implicit format conversion and whole-document reserialization are
+    forbidden.</TYPED-ONLY></p>
+    <p><REWRITE-PRECONDITION fact="true" status="spec/done">Every planned rewrite records
+    adapter epoch, parsed node identity, original byte span, complete before
+    digest, prepared after bytes/digest, expected match cardinality and reason.
+    Apply accepts only the journaled before state; recovery accepts only exact
+    before or exact after. A third state is concurrent mutation and refuses.</REWRITE-PRECONDITION></p>
+    <table>
+      <tr><td>Schema-1 kind</td><td>Exact responsibility</td></tr>
+      <tr>
+        <td><REWRITE-MANAGED-KIND fact="true" status="spec/done">&#96;managed-block-remove-v1&#96;</REWRITE-MANAGED-KIND></td>
+        <td><REWRITE-MANAGED-RESP fact="true" status="spec/done">Remove one registered,
+        whole-line, correctly paired managed block while preserving every
+        surrounding byte except deterministic adjacent-newline repair.</REWRITE-MANAGED-RESP></td>
+      </tr>
+      <tr>
+        <td><REWRITE-RUST-KIND fact="true" status="spec/done">&#96;rust-specmark-strip-v1&#96;</REWRITE-RUST-KIND></td>
+        <td><REWRITE-RUST-RESP fact="true" status="spec/done">Remove proven Specmark
+        scope macros, attributes and now-unused import leaves through the Rust
+        syntax tree; preserve attributed product items.</REWRITE-RUST-RESP></td>
+      </tr>
+      <tr>
+        <td><REWRITE-CARGO-KIND fact="true" status="spec/done">&#96;cargo-package-remove-v1&#96;</REWRITE-CARGO-KIND></td>
+        <td><REWRITE-CARGO-RESP fact="true" status="spec/done">Remove resolved package
+        identities/aliases from every dependency table, workspace inheritance,
+        target table, feature edge, patch and replace entry after proving no
+        remaining use.</REWRITE-CARGO-RESP></td>
+      </tr>
+      <tr>
+        <td><REWRITE-TOML-KIND fact="true" status="spec/done">&#96;toml-array-values-remove-v1&#96;</REWRITE-TOML-KIND></td>
+        <td><REWRITE-TOML-RESP fact="true" status="spec/done">Use a
+        formatting-preserving TOML editor to remove exact scalar array members
+        at a typed table/key path and exact cardinality.</REWRITE-TOML-RESP></td>
+      </tr>
+      <tr>
+        <td><REWRITE-TS-KIND fact="true" status="spec/done">&#96;typescript-spec-comments-strip-v1&#96;</REWRITE-TS-KIND></td>
+        <td><REWRITE-TS-RESP fact="true" status="spec/done">Remove only registered,
+        grammar-valid discipline JSDoc tag nodes; retain descriptions and
+        unrelated tags.</REWRITE-TS-RESP></td>
+      </tr>
+      <tr>
+        <td><REWRITE-GO-KIND fact="true" status="spec/done">&#96;go-spec-directives-strip-v1&#96;</REWRITE-GO-KIND></td>
+        <td><REWRITE-GO-RESP fact="true" status="spec/done">Remove grammar-valid
+        &#96;//spec:&#96; directive lines from parsed Go comment groups without
+        touching strings, block prose, &#96;//go:&#96; or build/lint directives.</REWRITE-GO-RESP></td>
+      </tr>
+      <tr>
+        <td><REWRITE-JSON-KIND fact="true" status="spec/done">&#96;json-member-remove-v1&#96;</REWRITE-JSON-KIND></td>
+        <td><REWRITE-JSON-RESP fact="true" status="spec/done">Remove exact registered
+        dependency/script/config members through a strict JSON object path and
+        formatting-preserving emitter.</REWRITE-JSON-RESP></td>
+      </tr>
+      <tr>
+        <td><REWRITE-NODE-PACKAGE-KIND fact="true" status="spec/done">&#96;node-package-remove-v1&#96;</REWRITE-NODE-PACKAGE-KIND></td>
+        <td><REWRITE-NODE-PACKAGE-RESP fact="true" status="spec/done">Remove explicit
+        Node package/script/config identities and reconcile exactly one selected
+        native lock manager as a derived graph operation.</REWRITE-NODE-PACKAGE-RESP></td>
+      </tr>
+      <tr>
+        <td><REWRITE-GO-MODULE-KIND fact="true" status="spec/done">&#96;go-module-remove-v1&#96;</REWRITE-GO-MODULE-KIND></td>
+        <td><REWRITE-GO-MODULE-RESP fact="true" status="spec/done">Remove explicit Go
+        module/tool identities and reconcile go.mod/go.sum without changing an
+        unrelated module edge.</REWRITE-GO-MODULE-RESP></td>
+      </tr>
+      <tr>
+        <td><REWRITE-EXACT-TEXT-KIND fact="true" status="spec/done">&#96;text-exact-replace-v1&#96;</REWRITE-EXACT-TEXT-KIND></td>
+        <td><REWRITE-EXACT-TEXT-RESP fact="true" status="spec/done">Escape hatch for an
+        unsupported textual format: one literal file, required complete-file
+        SHA-256, literal before/after text and exact occurrence count. No regex,
+        capture, encoding guess or glob target.</REWRITE-EXACT-TEXT-RESP></td>
+      </tr>
+    </table>
+
+    <rust title="7.1 Rust and Specmark">
+      <facts ordered="false">
+        <RUST-ALIAS-RESOLUTION fact="true" status="spec/done">The adapter derives every
+        local dependency name whose Cargo package identity is
+        &#96;core-ai-native-specmark&#96;; it never assumes the alias is
+        &#96;specmark&#96;. Qualified paths and explicit imports are resolved.
+        Glob imports, macro re-exports, shadowed aliases or ambiguous identity
+        refuse before mutation.</RUST-ALIAS-RESOLUTION>
+        <RUST-ERASURE fact="true" status="spec/done">A valid
+        &#96;scope!&#96; expands to no product tokens; &#96;spec&#96;,
+        &#96;verifies&#96; and &#96;cell&#96; preserve the item and add metadata/
+        rustdoc only. The after AST with registered metadata erased must equal
+        the before AST under the same erasure. Invalid pre-detach macro grammar
+        refuses rather than becoming a newly compiling program.</RUST-ERASURE>
+        <RUST-CARGO-COVERAGE fact="true" status="spec/done">Cargo removal covers normal,
+        dev, build, target-specific and workspace dependency tables; member
+        &#96;workspace = true&#96;; &#96;dep:&lt;alias&gt;&#96; and
+        alias-feature references; patch and replace tables; examples, benches
+        and build scripts. A dependency is removed only after the residual
+        resolver proves no use.</RUST-CARGO-COVERAGE>
+        <RUST-LOCK fact="true" status="spec/done">&#96;vibe.lock&#96; is removable Vibe
+        state; &#96;Cargo.lock&#96; is native project state. If Cargo.lock existed,
+        a typed lock-reconciliation step runs after manifest rewriting and a
+        final &#96;--locked&#96; check must pass. A previously lockless library
+        stays lockless unless the contract explicitly requests creation.</RUST-LOCK>
+        <RUST-RETAIN-MODE fact="true" status="spec/done">Schema 1 has no verified
+        retain-annotations mode: a remaining registered Specmark macro, package
+        identity or source reference is residue and refuses detach. A future
+        neutralization adapter would have to relocate a complete self-contained
+        macro toolchain, change its registered identity/content and repoint every
+        Cargo edge. Merely moving the shipped proc-macro—or copying it without
+        its grammar/workspace dependencies—is not neutral detachment.</RUST-RETAIN-MODE>
+      </facts>
+    </rust>
+
+    <typescript-go title="7.2 TypeScript and Go">
+      <p><TYPESCRIPT-DETACH fact="true" status="spec/done">TypeScript metadata is parsed
+      as JSDoc attached to AST nodes. In a mixed comment only registered tags
+      whose payload parses under the discipline grammar leave; description,
+      unrelated tags, indentation, order and line-ending style remain. Matching
+      text in strings, templates, regexes, Markdown or ordinary comments is not
+      a candidate. npm/pnpm/Yarn manifest and lock changes occur only under an
+      explicit &#96;node-package-remove-v1&#96; row and are its derived graph
+      consequence; ambiguous simultaneous managers or unrequested graph changes
+      refuse.</TYPESCRIPT-DETACH></p>
+      <p><GO-DETACH fact="true" status="spec/done">Go metadata is parsed with
+      &#96;go/parser&#96; and &#96;go/token&#96;. Only complete registered
+      &#96;//spec:&#96; directive lines leave their comment group. Product prose,
+      strings/raw strings, block comments, generated headers,
+      &#96;//go:&#96;, build constraints and lint directives remain. Native
+      &#96;go.mod&#96;/&#96;go.sum&#96; reconciliation removes only dependencies
+      made unreachable by an explicit &#96;go-module-remove-v1&#96; row. A module
+      graph delta without that authority refuses.</GO-DETACH></p>
+    </typescript-go>
+
+    <managed title="7.3 Managed blocks">
+      <p><MANAGED-BLOCK-SAFETY fact="true" status="spec/done">A managed block is removed
+      only when exact registered begin/end markers form the expected number of
+      nonoverlapping, correctly ordered pairs owned by the detaching provider.
+      Missing ends, orphan ends, duplicate ids, illegal nesting, string-embedded
+      pseudo-markers or digest drift refuse. Structural formats use their parser,
+      never comment-like marker removal.</MANAGED-BLOCK-SAFETY></p>
+    </managed>
+  </rewrites>
+
+  <health title="8. Verification and user-defined health">
+    <p><HEALTH-IS-ORACLE fact="true" status="spec/done">Verification is part of the
+    contract, not an informal script run after deletion. The engine
+    deterministically resolves, snapshots, invokes and judges the declared
+    oracle. It proves exactly that the declared oracle accepted; it cannot infer
+    that an incomplete user oracle covers every product requirement.</HEALTH-IS-ORACLE></p>
+    <facts ordered="false">
+      <HEALTH-BEFORE-AFTER fact="true" status="spec/done">The same canonical ordered
+      health plan runs before and after. Strict baseline requires every check to
+      pass; no-regression requires an admissible structured before verdict and
+      its subset/severity relation after. A non-admissible before state causes no
+      project mutation; an unacceptable after state rolls in-place work back.
+      Executable, arguments, verifier snapshot, environment identity and policies
+      are phase-identical except journaled phase/root/scratch values.</HEALTH-BEFORE-AFTER>
+      <HEALTH-TESTS-MODE fact="true" status="spec/done">Each preset declares
+      &#96;tests = "skip" | "if-present" | "required"&#96;. Required with no
+      discoverable test target is a preflight failure. If-present records a
+      typed skip, never pass. Skip is allowed but the final report labels
+      verification reduced.</HEALTH-TESTS-MODE>
+      <HEALTH-NO-RETRY fact="true" status="spec/done">No check retries by default.
+      Timeout, cancellation, process-tree loss, unavailable executable,
+      malformed protocol, undeclared effect or nonzero exit is an execution
+      failure and never baselineable. A valid structured result written by an
+      exit-0 custom verifier may carry a health-fail verdict; that is evidence
+      eligible for explicit no-regression comparison, not an execution
+      failure.</HEALTH-NO-RETRY>
+    </facts>
+
+    <presets title="8.1 Built-in presets">
+      <table>
+        <tr><td>Kind</td><td>Build/dependency checks</td><td>Tests</td></tr>
+        <tr>
+          <td><HEALTH-CARGO-KIND fact="true" status="spec/done">&#96;cargo&#96;</HEALTH-CARGO-KIND></td>
+          <td><HEALTH-CARGO-BUILD fact="true" status="spec/done">Resolve one Cargo
+          executable and run &#96;check&#96; or &#96;build&#96; with declared
+          workspace, all-targets, features, profile, locked and offline flags.
+          &#96;CARGO_TARGET_DIR&#96; is phase scratch.</HEALTH-CARGO-BUILD></td>
+          <td><HEALTH-CARGO-TEST fact="true" status="spec/done">Run
+          &#96;cargo test&#96; with the same graph selectors when not skipped.</HEALTH-CARGO-TEST></td>
+        </tr>
+        <tr>
+          <td><HEALTH-NPM-KIND fact="true" status="spec/done">&#96;npm&#96;</HEALTH-NPM-KIND></td>
+          <td><HEALTH-NPM-BUILD fact="true" status="spec/done">Validate
+          &#96;package.json&#96;/selected lock, optionally run explicit
+          &#96;ci&#96;, then require the declared build or typecheck script.
+          Missing build is not pass. Windows invokes the resolved Node plus
+          npm-cli asset rather than reparsing through npm.cmd.</HEALTH-NPM-BUILD></td>
+          <td><HEALTH-NPM-TEST fact="true" status="spec/done">Run the exact declared test
+          script; never use a silent &#96;--if-present&#96; shortcut for required
+          tests.</HEALTH-NPM-TEST></td>
+        </tr>
+        <tr>
+          <td><HEALTH-MAVEN-KIND fact="true" status="spec/done">&#96;maven&#96;</HEALTH-MAVEN-KIND></td>
+          <td><HEALTH-MAVEN-BUILD fact="true" status="spec/done">Resolve Maven wrapper
+          metadata or an explicit Maven installation, record Java/launcher
+          identity, and run batch/no-transfer-progress offline
+          &#96;verify&#96;. Module target writes are phase-owned.</HEALTH-MAVEN-BUILD></td>
+          <td><HEALTH-MAVEN-TEST fact="true" status="spec/done">Required/if-present runs
+          normal verify tests; skip adds the adapter's exact
+          &#96;-DskipTests&#96; policy and reports reduction.</HEALTH-MAVEN-TEST></td>
+        </tr>
+        <tr>
+          <td><HEALTH-PYTHON-KIND fact="true" status="spec/done">&#96;python-pip&#96;</HEALTH-PYTHON-KIND></td>
+          <td><HEALTH-PYTHON-BUILD fact="true" status="spec/done">Use an explicit
+          interpreter/environment; run &#96;python -m pip check&#96; and compile
+          selected files without importing project modules. A package-shaped
+          project carrying &#96;pyproject.toml&#96;, &#96;setup.cfg&#96; or legacy
+          &#96;setup.py&#96; must also
+          run offline &#96;python -m build --no-isolation&#96; for full assurance;
+          explicitly omitting it forces &#96;assurance = "reduced"&#96;. Bytecode/build
+          output is phase scratch.</HEALTH-PYTHON-BUILD></td>
+          <td><HEALTH-PYTHON-TEST fact="true" status="spec/done">Run the declared test
+          runner, initially pytest. Required with no runner is failure.</HEALTH-PYTHON-TEST></td>
+        </tr>
+      </table>
+      <p><PRESET-NO-INSTALL-BY-DEFAULT fact="true" status="spec/done">Presets use already
+      available dependencies by default. Network access and dependency
+      installation require explicit contract choices. Missing offline inputs are
+      failures with a recipe, never permission to fetch silently.</PRESET-NO-INSTALL-BY-DEFAULT></p>
+    </presets>
+
+    <custom title="8.2 Custom verifier">
+      <p><CUSTOM-VERIFIER-SOURCE fact="true" status="spec/done">A custom verifier names a
+      root-contained regular source/native executable, explicit interpreter and
+      structured outer argv. The engine never adds an implicit shell or accepts
+      an inline shell command string, implicit shebang choice or interpolated
+      argv. Explicit Python, Node, Bash, PowerShell or direct-native interpreters
+      are allowed because the snapshotted script is the owner's code-execution
+      authority; shell-language behavior inside an explicitly selected Bash or
+      PowerShell script is visible custom code, not engine reparsing.</CUSTOM-VERIFIER-SOURCE></p>
+      <p><CUSTOM-VERIFIER-SNAPSHOT fact="true" status="spec/done">Before the before phase,
+      the engine snapshots the exact declared source bundle—bytes, modes, paths,
+      sizes and digests—into the external transaction. Both phases execute that
+      snapshot. A verifier stored under &#96;vibevm/&#96; therefore remains
+      available after contract-last; undeclared dynamic imports from its former
+      source directory fail.</CUSTOM-VERIFIER-SNAPSHOT></p>
+      <facts ordered="false">
+        <CUSTOM-ARGV fact="true" status="spec/done">Arguments are arrays. Placeholders
+        &#96;{root}&#96;, &#96;{phase}&#96;, &#96;{scratch}&#96; and
+        &#96;{result}&#96; are allowed only as an entire argument and expand to
+        exactly one argument. JSON protocol requires &#96;{result}&#96; exactly
+        once. The engine precreates private result/scratch parents outside the
+        product view; writes there are implicit transaction effects.</CUSTOM-ARGV>
+        <CUSTOM-EXIT-PROTOCOL fact="true" status="spec/done">Under
+        &#96;protocol = "exit-code"&#96;, exit 0 is pass and every other terminal
+        state is fail. Output is diagnostic only.</CUSTOM-EXIT-PROTOCOL>
+        <CUSTOM-JSON-PROTOCOL fact="true" status="spec/done">Under
+        &#96;protocol = "vibe-health-json-v1"&#96;, exit 0 plus one atomically
+        written, size-bounded UTF-8 result object with protocol 1 is required.
+        Its &#96;pass | warn | fail&#96; status is a valid health verdict: strict
+        baseline admits only pass, while no-regression may compare warn/fail by
+        stable findings. Missing, malformed, duplicate, oversized, wrong-version
+        or nonzero-exit output is protocol/execution failure. Stdout can never
+        spoof the result.</CUSTOM-JSON-PROTOCOL>
+      </facts>
+      <fence lang="json">{
+  "protocol": 1,
+  "status": "pass",
+  "summary": "domain health passed",
+  "findings": [
+    {
+      "id": "stable/check-id",
+      "severity": "info",
+      "message": "bounded diagnostic",
+      "evidence": "root-relative/path:line"
+    }
+  ],
+  "metrics": { "tests": 42 }
+}</fence>
+      <p><CUSTOM-FINDING-LAW fact="true" status="spec/done">Finding ids are nonempty,
+      unique within one report and stable across phases. Severity is exactly
+      &#96;info &lt; warning &lt; error&#96;. Pass carries no warning/error
+      finding; warn carries at least one warning and no error; fail carries at
+      least one error. A contradictory status/finding set is protocol-error.</CUSTOM-FINDING-LAW></p>
+    </custom>
+
+    <execution title="8.3 Executable identity, environment and effects">
+      <facts ordered="false">
+        <EXECUTABLE-IDENTITY fact="true" status="spec/done">Every executable,
+        interpreter and adapter asset is resolved before mutation to canonical
+        absolute path, stable file identity, digest, size, mode and bounded
+        version probe. After uses the same held identity. PATH shadowing,
+        replacement, disappearance or retargeting fails closed.</EXECUTABLE-IDENTITY>
+        <DETACHED-ENVIRONMENT fact="true" status="spec/done">The child environment is
+        allowlisted and removes Vibe-specific variables and Vibe-managed bin
+        directories. Reports contain variable names and value digests, never
+        secret values. A check inherits the global network policy unless it
+        overrides it. Policy is exactly &#96;deny&#96;,
+        &#96;tool-offline&#96; or &#96;inherit&#96;; deny must be OS-enforced or
+        refuse. Tool-offline is legal only for built-in package-manager
+        adapters, adds their native offline flags and reports network unverified
+        beyond those flags. Custom checks default to deny, cannot select
+        tool-offline, and must explicitly select inherit for unconfined network.</DETACHED-ENVIRONMENT>
+        <HEALTH-EFFECTS fact="true" status="spec/done">Checks declare read, write,
+        process-spawn and network effects. In both phases every allowed write and
+        known build output is redirected to phase scratch or an enforced
+        copy-on-write view and discarded afterward; no healthcheck can mutate
+        the source or delivered tree. The writes list authorizes paths inside
+        that isolated view, never direct product writes. A custom verifier
+        defaults to &#96;writes = []&#96;. Any
+        undeclared project create, modify, delete, hardlink write or symlink
+        escape is failure. Network is failure under deny; tool-offline/inherit
+        instead report their explicitly narrower assurance.</HEALTH-EFFECTS>
+        <HEALTH-OUTPUT-BOUND fact="true" status="spec/done">Stdout and stderr are drained
+        concurrently. The report retains total byte count, full-stream digest,
+        truncation/UTF-8 state and bounded head/tail excerpts; storage never
+        grows beyond declared caps and no secret is printed.</HEALTH-OUTPUT-BOUND>
+        <HEALTH-TIMEOUT-CANCEL fact="true" status="spec/done">Timeout or cancellation
+        terminates the exact process tree, graceful first and forced after the
+        declared grace. Before-phase cancellation leaves the project untouched;
+        after-phase cancellation enters rollback.</HEALTH-TIMEOUT-CANCEL>
+      </facts>
+    </execution>
+
+    <baseline title="8.4 Baseline comparison">
+      <p><STRICT-BASELINE fact="true" status="spec/done">&#96;baseline = "strict"&#96; is
+      the default: all required before checks and all required after checks pass.
+      An execution, environment or protocol failure is never baselineable.</STRICT-BASELINE></p>
+      <p><NO-REGRESSION-BASELINE fact="true" status="spec/done">&#96;baseline =
+      "no-regression"&#96; is admitted only for structured verifiers with stable
+      unique finding ids: every before pass remains pass, after findings are a
+      subset of before findings, and no severity increases under
+      &#96;info &lt; warning &lt; error&#96;. A well-formed exit-0 warn/fail
+      report is a comparable health verdict; an opaque nonzero exit can never
+      become an accepted baseline.</NO-REGRESSION-BASELINE></p>
+      <p><NO-REGRESSION-ASSURANCE fact="true" status="spec/done">Any accepted after
+      verdict other than pass forces &#96;assurance = reduced&#96;. Its complete
+      retained finding ids and severities appear in JSON and the human headline;
+      a no-regression comparison may authorize delivery but cannot relabel
+      existing product illness as full health.</NO-REGRESSION-ASSURANCE></p>
+    </baseline>
+  </health>
+
+  <residual title="9. Residual and preservation proof">
+    <p><RESIDUAL-CLASSES fact="true" status="spec/done">The final verifier reports zero
+    unresolved members of: source metadata, dependency identity, manifest path,
+    managed marker, generated artifact, tool config, tool script, selected spec
+    URI, environment reference, lock entry and link escape.</RESIDUAL-CLASSES></p>
+    <facts ordered="false">
+      <RESIDUAL-LAYERS fact="true" status="spec/done">Proof combines language-aware scans,
+      parsed manifest/dependency graphs, exact registered path/identity scans and
+      a supplemental bounded lexical scan. A lexical prose hit is a disposition
+      blocker, never auto-deletion.</RESIDUAL-LAYERS>
+      <ERASURE-EQUIVALENCE fact="true" status="spec/done">For each authored Rust,
+      TypeScript and Go source,
+      &#96;erase_registered_metadata(parse(before)) == parse(after)&#96;.
+      Untouched files have identical bytes; relocations have identical
+      bytes/mode under the new path.</ERASURE-EQUIVALENCE>
+      <LOCK-GRAPH-PROOF fact="true" status="spec/done">Native manifest and lock adapters
+      record before and after dependency graphs. Only dependencies made
+      unreachable by planned removals disappear; shared transitive dependencies
+      remain.</LOCK-GRAPH-PROOF>
+      <PROOF-OUTSIDE-TREE fact="true" status="spec/done">Canonical proof is emitted to
+      stdout and the user-local transaction/report home, never into the detached
+      project whose zero-residue assertion it would contradict.</PROOF-OUTSIDE-TREE>
+    </facts>
+  </residual>
+
+  <export title="10. Detached export mode">
+    <facts ordered="false">
+      <EXPORT-SOURCE-READONLY fact="true" status="spec/done">Export holds the source
+      project in an enforced read-only/COW view. The requested output must be
+      disjoint from the source—neither equal, descendant nor ancestor. The engine
+      pins its parent no-follow and creates an exclusive sibling candidate on the
+      output filesystem; inability to enforce source immutability refuses.</EXPORT-SOURCE-READONLY>
+      <EXPORT-COPY-SET fact="true" status="spec/done">All project files outside selected
+      deletion roots are copied byte/mode-identically except typed rewrites.
+      The exact engine-reserved exclusion is &#96;.git&#96; and its descendants;
+      authoritative transaction state is external and therefore not in the
+      inventory. Ambient Git ignore or cache heuristics are never consulted:
+      every other observed regular project file is copied unless the contract
+      explicitly deletes it, so untracked/ignored product inputs cannot
+      disappear by accident.</EXPORT-COPY-SET>
+      <EXPORT-PUBLISH fact="true" status="spec/done">After candidate structural proof,
+      publish uses an atomic no-replace rename onto the still-absent requested
+      output; a raced occupant or platform without no-replace guarantee refuses.
+      The output is still transaction-owned and rollback-capable. Full residual
+      and after health run at the requested final path so path-sensitive builds are
+      proven where delivered. Failure removes only the exact owned output back
+      into stage; before that rename the engine re-enumerates the complete
+      no-follow descendant set and requires exact equality with the journaled
+      candidate paths, identities, digests and modes. An extra, missing or
+      changed descendant is a third state and refuses, preserving the concurrent
+      data in place. The source remains unchanged.</EXPORT-PUBLISH>
+      <EXPORT-RECOVERY fact="true" status="spec/done">Export uses the same external
+      journal with states &#96;prepared → candidate → published-pending-verify →
+      verified → cleanup-pending → complete&#96;. Before verified, recovery
+      discards or quarantines only the transaction-owned candidate/output and
+      never publishes it as success; verified states roll forward through
+      cleanup/report. Recovery validates the same complete descendant state,
+      never only the root-directory identity; any third state refuses.</EXPORT-RECOVERY>
+    </facts>
+  </export>
+
+  <inplace title="11. In-place transaction and recovery">
+    <p><EXTERNAL-JOURNAL fact="true" status="spec/done">The authoritative journal and lock
+    are user-local and outside the project, for example
+    &#96;~/.vibe/detach/transactions/&lt;project-key&gt;/&lt;transaction-id&gt;/&#96;.
+    Project &#96;.vibe/&#96; is removable and can never contain the only journal,
+    recovery intent, verifier snapshot or rollback bytes. The journal location
+    is implementation-owned, not contract-configurable, and must itself be
+    proven outside the pinned project root.</EXTERNAL-JOURNAL></p>
+    <p><SAME-VOLUME-QUARANTINE fact="true" status="spec/done">Removed and replaced bytes
+    live in an exclusively created, identity-pinned sibling quarantine under the
+    project parent on the same filesystem. A pre-existing, linked, replaced or
+    unverifiable quarantine refuses and is never adopted or deleted. The chosen
+    name is durable before creation.</SAME-VOLUME-QUARANTINE></p>
+    <facts ordered="true">
+      <TX-STEP-RECOVER fact="true" status="spec/done">Acquire the user-local project
+      transaction lock and settle any prior journal before loading a new
+      contract.</TX-STEP-RECOVER>
+      <TX-STEP-PLAN fact="true" status="spec/done">Pin root and parent; read/validate the
+      contract; inventory; prepare rewrites, relocations, native lock updates,
+      assertions and health identities; calculate one canonical plan hash.</TX-STEP-PLAN>
+      <TX-STEP-PREPARE fact="true" status="spec/done">Persist contract/verifier snapshots,
+      canonical plan, full before identities, complete rollback map and prepared
+      after bytes in the external journal; fsync it before executing any child.
+      No project byte or quarantine exists yet.</TX-STEP-PREPARE>
+      <TX-STEP-BEFORE fact="true" status="spec/done">Run before health from the sealed
+      verifier bundle in an enforced read-only/COW view whose writes are all
+      redirected to phase scratch. Strict requires pass; no-regression admits
+      only its specified structured baseline. If isolation cannot be enforced,
+      refuse. A before refusal mutates no source-project byte.</TX-STEP-BEFORE>
+      <TX-STEP-QUARANTINE fact="true" status="spec/done">After an admissible baseline,
+      durably select, exclusively create, identity-check and fsync the
+      same-volume quarantine; enter mutating state.</TX-STEP-QUARANTINE>
+      <TX-STEP-REWRITE fact="true" status="spec/done">Copy and fsync every rewrite
+      before-image into quarantine while its visible name remains present, then
+      atomically replace that name with the prepared after-image. Reconcile
+      native locks and apply exact relocations. Platforms lacking an atomic
+      replace primitive for the target refuse; no move-then-create missing-name
+      window is claimed atomic.</TX-STEP-REWRITE>
+      <TX-STEP-REMOVE fact="true" status="spec/done">Move every non-contract removal into
+      quarantine in canonical file order, then prune only observed-empty
+      non-contract directories.</TX-STEP-REMOVE>
+      <TX-STEP-PRECOMMIT fact="true" status="spec/done">Run residual/preservation proof
+      with a contained delete-last contract as the sole permitted residue; an
+      external preserved contract receives zero project-tree exemption. Any
+      failure rolls back.</TX-STEP-PRECOMMIT>
+      <TX-STEP-CONTRACT fact="true" status="spec/done">Durably enter the
+      rollback-capable &#96;contract-boundary&#96; state. Its tagged action is:
+      contained/delete-last moves the contract as the last payload and prunes
+      empty ancestors; external/preserve performs no project mutation. Both then
+      run zero-exemption residual proof and after health in the isolated view.
+      After it exits, re-observe the complete detached tree digest and residual
+      proof before verified commit. Crossing the contract boundary is not commit.</TX-STEP-CONTRACT>
+      <TX-STEP-COMMIT fact="true" status="spec/done">After all gates pass, durably mark
+      verified, release project mutation ownership, copy the canonical report to
+      the stable user-local report home, then clean the exact verified quarantine
+      and transaction journal. Cleanup failure leaves a verified transaction in
+      cleanup-pending state for roll-forward cleanup; it never reopens product
+      mutation.</TX-STEP-COMMIT>
+    </facts>
+    <p><ROLLBACK-DIRECTION fact="true" status="spec/done">The durable states are
+    &#96;prepared → before-passed → mutating → contract-boundary → verified →
+    cleanup-pending → complete&#96;, with
+    &#96;rolling-back → rolled-back | rollback-failed&#96; as the inverse branch.
+    The contract-boundary record carries exactly
+    &#96;delete-last-moved | external-preserved&#96;. Failure or recovery from any
+    state before verified restores in reverse journal order, including
+    restoration of a moved contained contract, and proves the
+    original bytes/modes. Verified and cleanup-pending only roll forward through
+    report/quarantine/journal cleanup. Any path matching neither journaled before
+    nor after is a third state and refuses rather than overwriting
+    concurrent/user work.</ROLLBACK-DIRECTION></p>
+    <p><GIT-INDEPENDENCE fact="true" status="spec/done">Git is not the rollback engine.
+    Detach works in non-Git projects and preserves untracked/ignored files
+    according to the contract. A dirty repository is allowed only when every
+    affected path's observed digest is sealed in the plan; unrelated concurrent
+    changes remain detectable and refuse at the affected boundary.</GIT-INDEPENDENCE></p>
+  </inplace>
+
+  <plan-evidence title="12. Plan, report and observable outcomes">
+    <p><PLAN-CONTENT fact="true" status="spec/done">Human and JSON plans are projections of
+    one typed value. They include project/contract identities, mode, every
+    matched path and effective class, ownership proof, modification state,
+    rewrite before/after digests, relocation graph, native lock changes,
+    residual assertions, exact health argv/executable identities, test modes,
+    contract-last order, quarantine requirement, blockers and summary counts.</PLAN-CONTENT></p>
+    <p><PLAN-JSON-SHAPE fact="true" status="spec/done">The plan wire is
+    &#96;detach_plan/e1&#96;. Its required top-level members and enums are fixed
+    below; item/rewrite/health variant members are the generated tagged unions
+    from §5.1. Digests are lowercase &#96;sha256:&lt;64-hex&gt;&#96;, sizes/counts
+    are nonnegative integers, and every array is already in canonical execution
+    order.</PLAN-JSON-SHAPE></p>
+    <fence lang="json">{
+  "schema": 1,
+  "command": "detach",
+  "mode": "in-place",
+  "plan_id": "sha256:...",
+  "project": {
+    "display_root": "C:/work/project",
+    "tree_digest": "sha256:..."
+  },
+  "contract": {
+    "display_path": "vibevm/detach/contract.toml",
+    "contained": true,
+    "sha256": "sha256:...",
+    "action": "delete-last"
+  },
+  "items": [],
+  "rewrites": [],
+  "relocations": [],
+  "native_lock_changes": [],
+  "assertions": [],
+  "healthchecks": [],
+  "contract_boundary": {
+    "kind": "delete-last",
+    "path": "vibevm/detach/contract.toml",
+    "empty_ancestors": ["vibevm/detach", "vibevm"]
+  },
+  "blockers": [],
+  "summary": {
+    "keep": 0,
+    "rewrite": 0,
+    "relocate": 0,
+    "delete_unmodified": 0,
+    "delete_modified": 0,
+    "delete_unknown": 0,
+    "delete_last": 1
+  }
+}</fence>
+    <p><PLAN-CONTRACT-BOUNDARY fact="true" status="spec/done">The required
+    &#96;contract_boundary&#96; tagged union is either
+    &#96;{"kind":"delete-last","path":&lt;project-relative&gt;,
+    "empty_ancestors":[...]}&#96; or exactly
+    &#96;{"kind":"preserve"}&#96;. Preserve has no path/ancestor members; delete-last
+    requires both. Variant leakage is rejected by JTD.</PLAN-CONTRACT-BOUNDARY></p>
+    <p><PLAN-DETERMINISM fact="true" status="spec/done">Plan display may carry absolute
+    root, contract and executable paths; the separately generated hash projection
+    excludes timestamps, transaction nonce, project-root display path, external
+    contract source path, user-local journal location and quarantine name. It
+    includes contract/verifier bytes, project-relative operands, executable
+    content/version identity, platform, mode and—for export—the canonical
+    requested output identity because that is a mutation target. The strict JTD
+    identity object contains no maps/floats and is encoded in schema field order
+    with canonical array order before SHA-256.</PLAN-DETERMINISM></p>
+    <p><REPORT-CONTENT fact="true" status="spec/done">The canonical external JSON report
+    records before/after root digests, unchanged-file hashes, deleted artifacts
+    with provenance, typed rewrites, relocations, dependency graphs, every health
+    terminal state/output digest/finding, skipped tests, residual counts,
+    rollback/recovery work and final outcome. Human output is rendered from the
+    same data. Outcome is exactly &#96;verified | refused | rolled-back |
+    rollback-failed&#96;; orthogonal &#96;assurance = full | reduced&#96; and
+    &#96;cleanup = complete | pending&#96; fields prevent an outcome-enum
+    explosion. The headline renders all three.</REPORT-CONTENT></p>
+    <p><NO-FALSE-SUCCESS fact="true" status="spec/done">Unavailable verification,
+    truncated/missing structured evidence and rollback failure cannot yield a
+    verified outcome. Explicitly skipped/if-present checks may yield
+    &#96;outcome = verified, assurance = reduced&#96;; committed quarantine/report
+    cleanup residue yields &#96;outcome = verified, cleanup = pending&#96; and a
+    recovery command. Neither is rendered as unqualified verified/full/complete.</NO-FALSE-SUCCESS></p>
+    <p><STABLE-REPORT-HOME fact="true" status="spec/done">Before transaction-journal
+    cleanup, the canonical report is atomically copied to
+    &#96;~/.vibe/detach/reports/&lt;transaction-id&gt;.json&#96; (or emitted only to
+    stdout when the operator explicitly disables retention). The report home is
+    outside the project and distinct from the ephemeral transaction directory.</STABLE-REPORT-HOME></p>
+  </plan-evidence>
+
+  <security title="13. Security and authority invariants">
+    <facts ordered="false">
+      <SEC-CONTAINMENT fact="true" status="spec/done">All project reads/writes are
+      capability-relative under pinned root/parent identities. No path
+      normalization, glob, relocation, managed marker or verifier write may
+      escape.</SEC-CONTAINMENT>
+      <SEC-NO-FOLLOW fact="true" status="spec/done">Links, reparse points, special files,
+      unexpected hard links and name/handle identity changes fail closed at
+      inventory and again before mutation.</SEC-NO-FOLLOW>
+      <SEC-CUSTOM-CODE fact="true" status="spec/done">A custom health verifier is
+      user-authorized code with the same trust consequence as a project build
+      script. The plan names its exact snapshot/interpreter/effects before
+      confirmation; packages cannot inject an executable detach hook.</SEC-CUSTOM-CODE>
+      <SEC-SECRETS fact="true" status="spec/done">Contract, plan, argv, output and reports
+      may contain variable names and paths but never credential values. Custom
+      children receive only allowlisted environment. Output redaction and bounds
+      precede persistence.</SEC-SECRETS>
+      <SEC-NO-SELF-DELETION fact="true" status="spec/done">The running Vibe executable,
+      user-local journal and machine cache are outside project mutation
+      authority. Detach removes repository integration, not the operator's
+      installed tool.</SEC-NO-SELF-DELETION>
+    </facts>
+  </security>
+
+  <acceptance title="14. Required verification matrix">
+    <facts ordered="false">
+      <ACCEPT-SCHEMA fact="true" status="spec/done">Strict parse/write tests cover every
+      tagged variant, unknown field/kind/enum, duplicate id, missing required
+      member, wrong schema and canonical plan identity.</ACCEPT-SCHEMA>
+      <ACCEPT-GLOBS fact="true" status="spec/done">Glob tests cover literal, component
+      star and whole-component double-star; reject question/class/brace/negation/
+      escape/triple-star/embedded-double-star, absolute/dot/backslash/colon
+      spellings; prove no shell/host expansion and deterministic order.</ACCEPT-GLOBS>
+      <ACCEPT-CLASSIFICATION fact="true" status="spec/done">Fixtures cover clean generated,
+      modified generated, explicit authored deletion, keep shielding, invalid
+      keep/generated overlap, unclassified members, authored specifications and
+      kept descendants preventing ancestor deletion.</ACCEPT-CLASSIFICATION>
+      <ACCEPT-RUST fact="true" status="spec/done">Rust goldens cover qualified/renamed
+      aliases, explicit/grouped imports, scope/spec/verifies/cell, every Cargo
+      dependency table, workspace inheritance, features and lock pruning across
+      src, tests, examples, benches, build.rs and arbitrarily nested workspace
+      members. Negatives preserve same-named local macros, strings/comments,
+      re-exports, glob imports and invalid macro grammar. End-to-end REDs prove
+      that a still-present path dependency blocks tree deletion before mutation,
+      and a still-present macro/attribute blocks dependency removal rather than
+      becoming rustc E0433 after publication.</ACCEPT-RUST>
+      <ACCEPT-TS-GO fact="true" status="spec/done">TypeScript/Go goldens cover mixed
+      comments, empty metadata comments, CRLF/indentation preservation and
+      non-target strings/prose/compiler/build/lint directives; product
+      source/tests remain native-buildable.</ACCEPT-TS-GO>
+      <ACCEPT-MANAGED-RELOCATE fact="true" status="spec/done">Managed-block fixtures cover
+      valid, absent, orphaned, reversed, duplicate, nested and embedded markers.
+      Relocation covers destination collision, overlap, cycle, cross-filesystem
+      refusal, byte/mode equality and ancestor retention.</ACCEPT-MANAGED-RELOCATE>
+      <ACCEPT-PRESETS fact="true" status="spec/done">Hermetic fake Cargo/npm/Maven/Python
+      adapters prove exact argv, tests skip/if-present/required, missing build/
+      test/dependency cases, offline behavior, scratch writes and zero command
+      reparsing. One real minimal project per preset proves native execution.</ACCEPT-PRESETS>
+      <ACCEPT-CUSTOM-HEALTH fact="true" status="spec/done">Custom-verifier tests cover
+      snapshot inside the deletion tree, every interpreter, exact tricky argv,
+      exit and JSON protocols, malformed/duplicate/oversized result, stdout
+      spoofing, flood/invalid UTF-8, timeout/cancel/process-tree cleanup,
+      executable/environment drift, undeclared writes and denied network.</ACCEPT-CUSTOM-HEALTH>
+      <ACCEPT-BASELINE fact="true" status="spec/done">Strict before-red refuses with zero
+      writes; before-green/after-red restores exact tree; admissible structured
+      no-regression before-fail/after-subset yields reduced assurance; a new or
+      worsened after finding rolls back; opaque nonzero never baselines.</ACCEPT-BASELINE>
+      <ACCEPT-TRANSACTION fact="true" status="spec/done">Fault injection at every journal,
+      stage, rewrite, relocation, quarantine, contract-last, assertion, health,
+      rollback and cleanup boundary proves restart idempotence, correct
+      direction, third-state refusal and exact restoration. Before and after
+      verifier writes are trapped in COW/scratch and the delivered tree digest is
+      re-proven after health.</ACCEPT-TRANSACTION>
+      <ACCEPT-EXPORT-RACES fact="true" status="spec/done">Export REDs cover output equal
+      to/inside/above source, destination race, unavailable no-replace rename,
+      crash before/after publication, path-sensitive health at final location,
+      and extra/missing/changed descendants before rollback. Concurrent output
+      data is never captured into transaction stage.</ACCEPT-EXPORT-RACES>
+      <ACCEPT-E2E fact="true" status="spec/done">End-to-end fixtures cover export and
+      in-place mixed Rust/TypeScript/Go projects: green before, zero Vibe
+      repository residue, native locks reconciled, green after, AST erasure
+      equality, unchanged hashes, external report, and a second detach plan that
+      refuses “not a Vibe project” rather than deleting anything.</ACCEPT-E2E>
+      <ACCEPT-HOST-DOGFOOD fact="true" status="spec/done">A separate host fixture covers
+      this repository's direct &#96;vibevm/vibepacks&#96; Cargo path wiring and
+      proves the detacher reports non-Specmark product tool dependencies as
+      blockers rather than deleting them into a broken build.</ACCEPT-HOST-DOGFOOD>
+    </facts>
+  </acceptance>
+
+  <implementation title="15. Implementation decomposition">
+    <facts ordered="true">
+      <IMPL-A fact="true" status="impl/plan">A — strict contract model, default generator,
+      path/glob parser, inventory/classification, canonical plan and human/JSON
+      rendering.</IMPL-A>
+      <IMPL-B fact="true" status="impl/plan">B — typed rewrite/relocation algebra,
+      managed blocks, Rust/Cargo, TypeScript/npm and Go/module adapters, native
+      lock reconciliation and residual proof.</IMPL-B>
+      <IMPL-C fact="true" status="impl/plan">C — health engine, built-in Cargo/npm/Maven/
+      Python presets, custom snapshot/protocol, effect/output/process control and
+      baseline comparison.</IMPL-C>
+      <IMPL-D fact="true" status="impl/plan">D — read-only source export transaction,
+      candidate publication and export evidence.</IMPL-D>
+      <IMPL-E fact="true" status="impl/plan">E — external journal/lock, same-volume
+      quarantine, in-place contract-last commit, rollback and recovery.</IMPL-E>
+      <IMPL-F fact="true" status="impl/plan">F — adversarial matrix, real ecosystem
+      smokes, cross-platform fault injection, host dogfood and final ratification.</IMPL-F>
+    </facts>
+  </implementation>
+
+  <decisions title="16. Foundational decisions">
+    <decision-contract title="16.1 Contract over heuristics">
+      <p><DECISION-CONTRACT fact="true" status="spec/done"><strong>Decision.</strong> One
+      strict project contract carries every policy choice; observation only
+      evaluates it.</DECISION-CONTRACT></p>
+      <p><WHY-CONTRACT fact="true" status="spec/done"><strong>Why.</strong> Generated,
+      authored and accepted-product states can share names. Making policy data
+      is the only way to keep execution deterministic without guessing.</WHY-CONTRACT></p>
+      <p><REJECT-CONTRACT fact="true" status="spec/done"><strong>Rejected.</strong>
+      Delete-known-names, Git-ignore-as-ownership, prompt-per-file and LLM
+      classification at execution time: each is order/environment dependent or
+      non-reproducible.</REJECT-CONTRACT></p>
+      <p><REVISIT-CONTRACT fact="true" status="spec/done"><strong>Revisit when.</strong>
+      A stable package-contributed recipe protocol can compile into the same
+      closed plan without executing package code during detach.</REVISIT-CONTRACT></p>
+    </decision-contract>
+
+    <decision-typed title="16.2 Typed rewrites over regex and shell">
+      <p><DECISION-TYPED fact="true" status="spec/done"><strong>Decision.</strong> Native
+      parsers own source/manifests; literal exact-replace is the only textual
+      escape hatch.</DECISION-TYPED></p>
+      <p><WHY-TYPED fact="true" status="spec/done"><strong>Why.</strong> Identity,
+      cardinality and erasure equivalence are mechanically provable only over
+      syntax nodes and exact preimages.</WHY-TYPED></p>
+      <p><REJECT-TYPED fact="true" status="spec/done"><strong>Rejected.</strong> Regex
+      source rewrites, arbitrary cleanup hooks and whole-file TOML/JSON
+      regeneration: they damage product text or hide the changed surface.</REJECT-TYPED></p>
+      <p><REVISIT-TYPED fact="true" status="spec/done"><strong>Revisit when.</strong> Add a
+      typed adapter when a real unsupported format has a parser and preservation
+      oracle.</REVISIT-TYPED></p>
+    </decision-typed>
+
+    <decision-health title="16.3 Built-in health plus explicit custom oracle">
+      <p><DECISION-HEALTH fact="true" status="spec/done"><strong>Decision.</strong> Common
+      ecosystems use declarative presets; unusual domain checks use a sealed
+      custom verifier with structured argv and protocol.</DECISION-HEALTH></p>
+      <p><WHY-HEALTH fact="true" status="spec/done"><strong>Why.</strong> Standard
+      operations should not require one-off scripts, while no finite preset
+      catalogue can express every project's definition of healthy.</WHY-HEALTH></p>
+      <p><REJECT-HEALTH fact="true" status="spec/done"><strong>Rejected.</strong> One shell
+      string, after-only testing, silent missing test scripts, automatic retry
+      and treating exit 0 as proof beyond the declared oracle.</REJECT-HEALTH></p>
+      <p><REVISIT-HEALTH fact="true" status="spec/done"><strong>Revisit when.</strong> A new
+      ecosystem demonstrates a stable build/test vocabulary deserving a built-in
+      adapter.</REVISIT-HEALTH></p>
+    </decision-health>
+
+    <decision-transaction title="16.4 Export default, recoverable in-place option">
+      <p><DECISION-TRANSACTION fact="true" status="spec/done"><strong>Decision.</strong>
+      Export is the safest delivery form; explicit in-place uses an external
+      journal and same-volume quarantine with contract-last commit.</DECISION-TRANSACTION></p>
+      <p><WHY-TRANSACTION fact="true" status="spec/done"><strong>Why.</strong> Project
+      &#96;.vibe&#96; cannot recover its own deletion, Git does not cover every
+      file, and multi-file mutation has no filesystem-wide atomic rename.
+      Journaled before/after states make interruption decidable.</WHY-TRANSACTION></p>
+      <p><REJECT-TRANSACTION fact="true" status="spec/done"><strong>Rejected.</strong>
+      Journal under project &#96;.vibe&#96;, Git reset as rollback, delete-first
+      uninstall, blind recursive removal, external configurable journal, and
+      cleaning quarantine before verified commit.</REJECT-TRANSACTION></p>
+      <p><REVISIT-TRANSACTION fact="true" status="spec/done"><strong>Revisit when.</strong>
+      A platform offers a stronger atomic directory-tree primitive without
+      weakening cross-platform recovery semantics.</REVISIT-TRANSACTION></p>
+    </decision-transaction>
+  </decisions>
+
+  <history title="17. History">
+    <p><HISTORY-COMMISSIONED fact="true" status="spec/done">2026-09-04: commissioned
+    directly by the owner after auditing how Rust Specmark, TypeScript JSDoc and
+    Go directive metadata behave when the Vibe tree disappears. The owner then
+    extended the request to an explicit default/alternate contract and
+    algorithmic standard/custom health checks, and ordered this feature ahead of
+    every remaining lifecycle R task.</HISTORY-COMMISSIONED></p>
+  </history>
+</spec>
