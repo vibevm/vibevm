@@ -25,6 +25,7 @@ mod progress;
 mod query;
 mod registry;
 mod requirements;
+mod scrape;
 mod select;
 mod skill;
 mod specmap;
@@ -47,6 +48,7 @@ pub use progress::*;
 pub use query::*;
 pub use registry::*;
 pub use requirements::*;
+pub use scrape::*;
 pub use select::*;
 pub use skill::*;
 pub use specmap::*;
@@ -189,6 +191,10 @@ pub enum Command {
     /// boot artifacts — keeping every authored file, the lock, and the
     /// machine cache. Any lifecycle phase may follow the clean prefix.
     Clean(CleanArgs),
+
+    /// Plan or perform terminal removal of the selected VibeVM project layer.
+    /// `attach` and `detach` remain reserved for a future live-tool surface.
+    Scrape(ScrapeArgs),
 
     /// Show installed packages whose registry-side latest version is
     /// newer than what the lockfile currently pins. Read-only — does

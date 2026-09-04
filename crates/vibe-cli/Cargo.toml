@@ -51,6 +51,7 @@ vibe-orchestrator.workspace = true
 vibe-settings.workspace = true
 vibe-wire.workspace = true
 vibe-spec.workspace = true
+vibe-scrape.workspace = true
 # `vibe explain` (the host traceability-explain command) is a thin surface
 # over the shared `vibe-trace` capability, which both the CLI and the MCP
 # `explain` tool call.

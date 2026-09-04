@@ -29,11 +29,14 @@ mod create_new;
 pub(crate) mod identity;
 mod stable;
 mod stream;
+pub use bounded::StableFileSnapshot;
 #[cfg(any(test, feature = "inject-failures"))]
 pub use create_new::{fail_before_publish, fail_before_stage_cleanup};
+pub use identity::FileIdentity;
 pub(crate) use identity::is_not_empty;
-use identity::{FileIdentity, file_identity, number_of_links};
+use identity::{file_identity, number_of_links};
 pub use stable::StableFileState;
+pub(crate) use stable::unix_mode;
 pub use stream::ContentDigest;
 
 /// How many distinct staging names to try before refusing. Exceeding this
@@ -176,7 +179,7 @@ impl Project {
                     && stable::mode_matches(visible.unix_mode, unix_mode) => {}
             Some(_) => {
                 return Err(possibly(anyhow::anyhow!(
-                    "published bytes or mode of `{}` do not match the staged state",
+                    "published bytes or mode of `{}` do not match the staged bytes/mode",
                     destination.join(&name).display()
                 )));
             }

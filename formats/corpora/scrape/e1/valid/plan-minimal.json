@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "command": "scrape",
+  "mode": "in-place",
+  "plan_id": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "project": {
+    "display_root": "C:/work/project",
+    "tree_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  },
+  "contract": {
+    "display_path": "vibevm/scrape/contract.toml",
+    "contained": true,
+    "sha256": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "action": "delete-last"
+  },
+  "items": [],
+  "rewrites": [],
+  "relocations": [],
+  "native_lock_changes": [],
+  "assertions": [],
+  "healthchecks": [],
+  "contract_boundary": {
+    "kind": "delete-last",
+    "path": "vibevm/scrape/contract.toml",
+    "empty_ancestors": ["vibevm/scrape", "vibevm"]
+  },
+  "blockers": [],
+  "summary": {
+    "keep": 0,
+    "rewrite": 0,
+    "relocate": 0,
+    "delete_unmodified": 0,
+    "delete_modified": 0,
+    "delete_unknown": 0,
+    "delete_last": 1
+  }
+}

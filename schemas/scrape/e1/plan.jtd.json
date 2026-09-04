@@ -1,0 +1,149 @@
+{
+  "metadata": {
+    "description": "Epoch-1 deterministic scrape plan. Arrays are emitted in canonical execution order; relational, digest and path laws are enforced by the scrape domain before this generated wire value is constructed.",
+    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-056#PLAN-JSON-SHAPE" },
+    "rustOptions": { "package": "vibe_wire::scrape_plan" }
+  },
+  "properties": {
+    "schema": { "type": "uint32" },
+    "command": { "ref": "command" },
+    "mode": { "ref": "mode" },
+    "plan_id": { "type": "string" },
+    "project": { "ref": "project_identity" },
+    "contract": { "ref": "contract_identity" },
+    "items": { "elements": { "ref": "item" }, "metadata": { "x-empty": "emit" } },
+    "rewrites": { "elements": { "ref": "rewrite" }, "metadata": { "x-empty": "emit" } },
+    "relocations": { "elements": { "ref": "relocation" }, "metadata": { "x-empty": "emit" } },
+    "native_lock_changes": { "elements": { "ref": "native_lock_change" }, "metadata": { "x-empty": "emit" } },
+    "assertions": { "elements": { "ref": "assertion" }, "metadata": { "x-empty": "emit" } },
+    "healthchecks": { "elements": { "ref": "healthcheck" }, "metadata": { "x-empty": "emit" } },
+    "contract_boundary": { "ref": "contract_boundary" },
+    "blockers": { "elements": { "ref": "blocker" }, "metadata": { "x-empty": "emit" } },
+    "summary": { "ref": "summary" }
+  },
+  "definitions": {
+    "command": { "enum": ["scrape"], "metadata": { "x-vocabulary": "closed" } },
+    "mode": { "enum": ["export", "in-place"], "metadata": { "x-vocabulary": "closed" } },
+    "contract_action": { "enum": ["delete-last", "preserve"], "metadata": { "x-vocabulary": "closed" } },
+    "project_identity": {
+      "properties": {
+        "display_root": { "type": "string" },
+        "tree_digest": { "type": "string" }
+      }
+    },
+    "contract_identity": {
+      "properties": {
+        "display_path": { "type": "string" },
+        "contained": { "type": "boolean" },
+        "sha256": { "type": "string" },
+        "action": { "ref": "contract_action" }
+      }
+    },
+    "file_class": { "enum": ["generated-owned", "managed-region", "authored-metadata", "authored-product", "unknown"], "metadata": { "x-vocabulary": "closed" } },
+    "owner": { "enum": ["project", "vibe"], "metadata": { "x-vocabulary": "closed" } },
+    "proof": { "enum": ["contract-assertion-v1", "sha256-v1", "vibe-generated-v1"], "metadata": { "x-vocabulary": "closed" } },
+    "modification": { "enum": ["unmodified", "modified", "unknown", "not-applicable"], "metadata": { "x-vocabulary": "closed" } },
+    "entry_kind": { "enum": ["file", "directory"], "metadata": { "x-vocabulary": "closed" } },
+    "item": {
+      "discriminator": "disposition",
+      "mapping": {
+        "keep": { "properties": { "path": { "type": "string" }, "entry_kind": { "ref": "entry_kind" }, "class": { "ref": "file_class" }, "owner": { "ref": "owner" }, "modification": { "ref": "modification" }, "bytes": { "type": "string", "nullable": true }, "sha256": { "type": "string", "nullable": true }, "rule_ids": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } } } },
+        "rewrite": { "properties": { "path": { "type": "string" }, "entry_kind": { "ref": "entry_kind" }, "class": { "ref": "file_class" }, "owner": { "ref": "owner" }, "modification": { "ref": "modification" }, "bytes": { "type": "string", "nullable": true }, "sha256": { "type": "string", "nullable": true }, "proof": { "ref": "proof", "nullable": true }, "rule_ids": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } } } },
+        "relocate": { "properties": { "path": { "type": "string" }, "entry_kind": { "ref": "entry_kind" }, "class": { "ref": "file_class" }, "owner": { "ref": "owner" }, "modification": { "ref": "modification" }, "bytes": { "type": "string", "nullable": true }, "sha256": { "type": "string", "nullable": true }, "proof": { "ref": "proof", "nullable": true }, "rule_ids": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } } } },
+        "delete-unmodified": { "properties": { "path": { "type": "string" }, "entry_kind": { "ref": "entry_kind" }, "class": { "ref": "file_class" }, "owner": { "ref": "owner" }, "modification": { "ref": "modification" }, "bytes": { "type": "string", "nullable": true }, "sha256": { "type": "string", "nullable": true }, "proof": { "ref": "proof", "nullable": true }, "rule_ids": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } } } },
+        "delete-modified": { "properties": { "path": { "type": "string" }, "entry_kind": { "ref": "entry_kind" }, "class": { "ref": "file_class" }, "owner": { "ref": "owner" }, "modification": { "ref": "modification" }, "bytes": { "type": "string", "nullable": true }, "sha256": { "type": "string", "nullable": true }, "proof": { "ref": "proof", "nullable": true }, "rule_ids": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } } } },
+        "delete-unknown": { "properties": { "path": { "type": "string" }, "entry_kind": { "ref": "entry_kind" }, "class": { "ref": "file_class" }, "owner": { "ref": "owner" }, "modification": { "ref": "modification" }, "bytes": { "type": "string", "nullable": true }, "sha256": { "type": "string", "nullable": true }, "proof": { "ref": "proof", "nullable": true }, "rule_ids": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } } } },
+        "delete-last": { "properties": { "path": { "type": "string" }, "entry_kind": { "ref": "entry_kind" }, "class": { "ref": "file_class" }, "owner": { "ref": "owner" }, "modification": { "ref": "modification" }, "bytes": { "type": "string", "nullable": true }, "sha256": { "type": "string", "nullable": true }, "proof": { "ref": "proof", "nullable": true }, "rule_ids": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } } } }
+      }
+    },
+    "set_matches": { "enum": ["zero-or-more", "one-or-more", "exactly-one"], "metadata": { "x-vocabulary": "closed" } },
+    "per_file_matches": { "enum": ["zero-or-one-per-file", "exactly-one-per-file"], "metadata": { "x-vocabulary": "closed" } },
+    "rust_form": { "enum": ["scope", "spec", "verifies", "cell"], "metadata": { "x-vocabulary": "closed" } },
+    "span": {
+      "properties": {
+        "start": { "type": "uint32" },
+        "end": { "type": "uint32" },
+        "node": { "type": "string" }
+      }
+    },
+    "rewrite": {
+      "discriminator": "kind",
+      "mapping": {
+        "managed-block-remove-v1": { "properties": { "id": { "type": "string" }, "adapter_epoch": { "type": "uint32" }, "path": { "type": "string" }, "marker": { "type": "string" }, "matches": { "ref": "per_file_matches" }, "before_sha256": { "type": "string" }, "after_sha256": { "type": "string" }, "after_bytes": { "type": "string" }, "reason": { "type": "string" }, "spans": { "elements": { "ref": "span" }, "metadata": { "x-empty": "emit" } } } },
+        "rust-specmark-strip-v1": { "properties": { "id": { "type": "string" }, "adapter_epoch": { "type": "uint32" }, "path": { "type": "string" }, "forms": { "elements": { "ref": "rust_form" }, "metadata": { "x-empty": "emit" } }, "matches": { "ref": "set_matches" }, "before_sha256": { "type": "string" }, "after_sha256": { "type": "string" }, "after_bytes": { "type": "string" }, "reason": { "type": "string" }, "spans": { "elements": { "ref": "span" }, "metadata": { "x-empty": "emit" } } } },
+        "cargo-package-remove-v1": { "properties": { "id": { "type": "string" }, "adapter_epoch": { "type": "uint32" }, "path": { "type": "string" }, "package": { "type": "string" }, "aliases": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }, "matches": { "ref": "set_matches" }, "before_sha256": { "type": "string" }, "after_sha256": { "type": "string" }, "after_bytes": { "type": "string" }, "reason": { "type": "string" }, "spans": { "elements": { "ref": "span" }, "metadata": { "x-empty": "emit" } } } },
+        "node-package-remove-v1": { "properties": { "id": { "type": "string" }, "adapter_epoch": { "type": "uint32" }, "path": { "type": "string" }, "manager": { "enum": ["npm", "pnpm", "yarn"], "metadata": { "x-vocabulary": "closed" } }, "packages": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }, "matches": { "ref": "set_matches" }, "before_sha256": { "type": "string" }, "after_sha256": { "type": "string" }, "after_bytes": { "type": "string" }, "reason": { "type": "string" }, "spans": { "elements": { "ref": "span" }, "metadata": { "x-empty": "emit" } } } },
+        "go-module-remove-v1": { "properties": { "id": { "type": "string" }, "adapter_epoch": { "type": "uint32" }, "path": { "type": "string" }, "modules": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }, "matches": { "ref": "set_matches" }, "before_sha256": { "type": "string" }, "after_sha256": { "type": "string" }, "after_bytes": { "type": "string" }, "reason": { "type": "string" }, "spans": { "elements": { "ref": "span" }, "metadata": { "x-empty": "emit" } } } },
+        "toml-array-values-remove-v1": { "properties": { "id": { "type": "string" }, "adapter_epoch": { "type": "uint32" }, "path": { "type": "string" }, "table": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }, "key": { "type": "string" }, "values": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }, "matches": { "ref": "set_matches" }, "before_sha256": { "type": "string" }, "after_sha256": { "type": "string" }, "after_bytes": { "type": "string" }, "reason": { "type": "string" }, "spans": { "elements": { "ref": "span" }, "metadata": { "x-empty": "emit" } } } },
+        "typescript-spec-comments-strip-v1": { "properties": { "id": { "type": "string" }, "adapter_epoch": { "type": "uint32" }, "path": { "type": "string" }, "matches": { "ref": "set_matches" }, "before_sha256": { "type": "string" }, "after_sha256": { "type": "string" }, "after_bytes": { "type": "string" }, "reason": { "type": "string" }, "spans": { "elements": { "ref": "span" }, "metadata": { "x-empty": "emit" } } } },
+        "go-spec-directives-strip-v1": { "properties": { "id": { "type": "string" }, "adapter_epoch": { "type": "uint32" }, "path": { "type": "string" }, "matches": { "ref": "set_matches" }, "before_sha256": { "type": "string" }, "after_sha256": { "type": "string" }, "after_bytes": { "type": "string" }, "reason": { "type": "string" }, "spans": { "elements": { "ref": "span" }, "metadata": { "x-empty": "emit" } } } },
+        "json-member-remove-v1": { "properties": { "id": { "type": "string" }, "adapter_epoch": { "type": "uint32" }, "path": { "type": "string" }, "object": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }, "members": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }, "matches": { "ref": "set_matches" }, "before_sha256": { "type": "string" }, "after_sha256": { "type": "string" }, "after_bytes": { "type": "string" }, "reason": { "type": "string" }, "spans": { "elements": { "ref": "span" }, "metadata": { "x-empty": "emit" } } } },
+        "text-exact-replace-v1": { "properties": { "id": { "type": "string" }, "adapter_epoch": { "type": "uint32" }, "path": { "type": "string" }, "occurrences": { "type": "uint32" }, "matches": { "type": "uint32" }, "before_sha256": { "type": "string" }, "after_sha256": { "type": "string" }, "after_bytes": { "type": "string" }, "reason": { "type": "string" }, "spans": { "elements": { "ref": "span" }, "metadata": { "x-empty": "emit" } } } }
+      }
+    },
+    "relocation": {
+      "properties": {
+        "id": { "type": "string" }, "from": { "type": "string" }, "to": { "type": "string" },
+        "sha256": { "type": "string" }, "bytes": { "type": "string" }, "mode": { "type": "uint32" }
+      }
+    },
+    "lock_manager": { "enum": ["cargo", "npm", "pnpm", "yarn", "go"], "metadata": { "x-vocabulary": "closed" } },
+    "native_lock_change": {
+      "properties": {
+        "manager": { "ref": "lock_manager" }, "path": { "type": "string" }, "before_sha256": { "type": "string" },
+        "after_sha256": { "type": "string" }, "before_graph": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } },
+        "after_graph": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } },
+        "removed": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }, "authorizing_rewrite_id": { "type": "string" }
+      }
+    },
+    "assertion": {
+      "discriminator": "kind",
+      "mapping": {
+        "paths-absent-v1": { "properties": { "id": { "type": "string" }, "patterns": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } } } },
+        "text-literal-absent-v1": { "properties": { "id": { "type": "string" }, "patterns": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }, "needles": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } } } },
+        "cargo-path-prefix-absent-v1": { "properties": { "id": { "type": "string" }, "manifests": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }, "prefixes": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } } } },
+        "language-metadata-absent-v1": { "properties": { "id": { "type": "string" }, "language": { "enum": ["rust", "typescript", "go"], "metadata": { "x-vocabulary": "closed" } }, "patterns": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } } } },
+        "dependency-identities-absent-v1": { "properties": { "id": { "type": "string" }, "manager": { "ref": "lock_manager" }, "manifests": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }, "identities": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } } } }
+      }
+    },
+    "network": { "enum": ["deny", "tool-offline", "inherit"], "metadata": { "x-vocabulary": "closed" } },
+    "tests_mode": { "enum": ["skip", "if-present", "required"], "metadata": { "x-vocabulary": "closed" } },
+    "executable_identity": {
+      "properties": { "display_path": { "type": "string" }, "sha256": { "type": "string" }, "bytes": { "type": "string" }, "version": { "type": "string" } }
+    },
+    "snapshot_file_identity": {
+      "properties": {
+        "path": { "type": "string" }, "sha256": { "type": "string" },
+        "bytes": { "type": "string" }, "mode": { "type": "uint32" }
+      }
+    },
+    "healthcheck": {
+      "discriminator": "kind",
+      "mapping": {
+        "cargo": { "properties": { "id": { "type": "string" }, "root": { "type": "string" }, "executable": { "ref": "executable_identity" }, "argv": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }, "tests": { "ref": "tests_mode" }, "network": { "ref": "network" }, "timeout_seconds": { "type": "uint32" } } },
+        "npm": { "properties": { "id": { "type": "string" }, "root": { "type": "string" }, "executable": { "ref": "executable_identity" }, "argv": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }, "tests": { "ref": "tests_mode" }, "network": { "ref": "network" }, "timeout_seconds": { "type": "uint32" } } },
+        "maven": { "properties": { "id": { "type": "string" }, "root": { "type": "string" }, "executable": { "ref": "executable_identity" }, "argv": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }, "tests": { "ref": "tests_mode" }, "network": { "ref": "network" }, "timeout_seconds": { "type": "uint32" } } },
+        "python-pip": { "properties": { "id": { "type": "string" }, "root": { "type": "string" }, "executable": { "ref": "executable_identity" }, "argv": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }, "tests": { "ref": "tests_mode" }, "network": { "ref": "network" }, "timeout_seconds": { "type": "uint32" } } },
+        "custom": { "properties": { "id": { "type": "string" }, "root": { "type": "string" }, "source": { "type": "string" }, "executable": { "ref": "executable_identity" }, "argv": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }, "snapshot": { "elements": { "ref": "snapshot_file_identity" }, "metadata": { "x-empty": "emit" } }, "reads": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }, "writes": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }, "spawn": { "type": "boolean" }, "protocol": { "enum": ["exit-code", "vibe-health-json-v1"], "metadata": { "x-vocabulary": "closed" } }, "network": { "ref": "network" }, "timeout_seconds": { "type": "uint32" } } }
+      }
+    },
+    "contract_boundary": {
+      "discriminator": "kind",
+      "mapping": {
+        "delete-last": { "properties": { "path": { "type": "string" }, "empty_ancestors": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } } } },
+        "preserve": { "properties": {} }
+      }
+    },
+    "blocker": {
+      "properties": { "code": { "type": "string" }, "message": { "type": "string" } },
+      "optionalProperties": { "path": { "type": "string", "metadata": { "x-default": null } } }
+    },
+    "summary": {
+      "properties": {
+        "keep": { "type": "uint32" }, "rewrite": { "type": "uint32" }, "relocate": { "type": "uint32" },
+        "delete_unmodified": { "type": "uint32" }, "delete_modified": { "type": "uint32" },
+        "delete_unknown": { "type": "uint32" }, "delete_last": { "type": "uint32" }
+      }
+    }
+  }
+}

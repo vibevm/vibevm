@@ -35,6 +35,16 @@ impl Project {
         read_stable_in(self, &root, relative, None)
     }
 
+    /// Observe stable content together with the opaque identity proved by the
+    /// same held-handle and final-name-recheck epoch.
+    pub fn stable_file_state_with_identity(
+        &self,
+        relative: &str,
+    ) -> Result<Option<(StableFileState, crate::file::identity::FileIdentity)>> {
+        let root = self.root_dir()?;
+        read_stable_with_identity_in(self, &root, relative, None)
+    }
+
     /// Copy a source file to another capability root without reopening its
     /// ambient path or allocating its content. The source stays held across
     /// both stability passes; the destination is staged, mode-adjusted and
@@ -299,6 +309,18 @@ pub(super) fn read_stable_in(
     relative: &str,
     cap: Option<u64>,
 ) -> Result<Option<StableFileState>> {
+    Ok(
+        read_stable_with_identity_in(project, directory, relative, cap)?
+            .map(|(state, _identity)| state),
+    )
+}
+
+fn read_stable_with_identity_in(
+    project: &Project,
+    directory: &Pinned,
+    relative: &str,
+    cap: Option<u64>,
+) -> Result<Option<(StableFileState, crate::file::identity::FileIdentity)>> {
     let Some((holder, name)) = project.holder_of(directory, relative)? else {
         return Ok(None);
     };
@@ -316,6 +338,15 @@ pub(super) fn read_stable_in(
     };
     verify_regular_single_link(&file, &display)?;
     let before = file.metadata()?;
+    if let Some(limit) = cap
+        && before.len() > limit
+    {
+        bail!(
+            "`{}` is {} bytes, over the {limit}-byte cap",
+            display.display(),
+            before.len()
+        );
+    }
     let first = hash_pass(&mut file, &display, cap)?;
     let second = hash_pass(&mut file, &display, cap)?;
     let state = finish_source_state(&file, &display, &before, second)?;
@@ -325,8 +356,9 @@ pub(super) fn read_stable_in(
             display.display()
         );
     }
+    let identity = file_identity(&file, &display)?;
     recheck_name(&holder, &name, &file, &display)?;
-    Ok(Some(state))
+    Ok(Some((state, identity)))
 }
 
 fn copy_pass(
@@ -433,13 +465,13 @@ pub(super) fn mode_matches(observed: Option<u32>, desired: Option<u32>) -> bool 
 }
 
 #[cfg(unix)]
-fn unix_mode(metadata: &std::fs::Metadata) -> Option<u32> {
+pub(crate) fn unix_mode(metadata: &std::fs::Metadata) -> Option<u32> {
     use std::os::unix::fs::PermissionsExt;
     Some(metadata.permissions().mode() & 0o7777)
 }
 
 #[cfg(not(unix))]
-fn unix_mode(_metadata: &std::fs::Metadata) -> Option<u32> {
+pub(crate) fn unix_mode(_metadata: &std::fs::Metadata) -> Option<u32> {
     None
 }
 

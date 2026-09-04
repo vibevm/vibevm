@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "command": "scrape",
+  "transaction_id": "01K4SCRAPE0000000000000000",
+  "plan_id": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "mode": "in-place",
+  "project_display_root": "C:/work/project",
+  "before_tree_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "after_tree_digest": null,
+  "unchanged_files": [],
+  "deleted_artifacts": [],
+  "rewrites": [],
+  "relocations": [],
+  "dependency_graphs": [],
+  "health": [],
+  "residuals": [],
+  "rollback": [],
+  "recovery": [],
+  "outcome": "success",
+  "assurance": "full",
+  "cleanup": "complete"
+}

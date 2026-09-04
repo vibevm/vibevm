@@ -36,12 +36,14 @@ pub use component::{
     ensure_no_follow_walk, ensure_safe_component, identity_key, judge_selection, path_identity_key,
     paths_overlap, split_relative,
 };
-pub use file::{ContentDigest, Presence, StableFileState};
+pub use file::{ContentDigest, FileIdentity, Presence, StableFileSnapshot, StableFileState};
 #[cfg(any(test, feature = "inject-failures"))]
 pub use file::{fail_after_publish, fail_before_publish, fail_before_stage_cleanup};
 #[cfg(any(test, feature = "inject-failures"))]
 pub use identity_hook::arm_identity_alias;
-pub use project::{ExclusiveChildError, LockGuard, Pinned, Project};
+pub use project::{
+    ExclusiveChildError, LockGuard, Pinned, PinnedAbsentPath, PinnedAbsoluteFile, Project,
+};
 pub use proof::{EntryProof, ProofRefusal};
 pub use publish::{PublishError, PublishStage, Published};
 #[cfg(any(test, feature = "inject-failures"))]

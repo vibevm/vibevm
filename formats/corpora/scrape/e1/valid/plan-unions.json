@@ -1,0 +1,180 @@
+{
+  "schema": 1,
+  "command": "scrape",
+  "mode": "export",
+  "plan_id": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+  "project": {
+    "display_root": "C:/work/project",
+    "tree_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+  },
+  "contract": {
+    "display_path": "vibevm/scrape/contract.toml",
+    "contained": true,
+    "sha256": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+    "action": "delete-last"
+  },
+  "items": [
+    {
+      "disposition": "keep",
+      "path": "README.md",
+      "entry_kind": "file",
+      "class": "authored-product",
+      "owner": "project",
+      "modification": "not-applicable",
+      "bytes": "120",
+      "sha256": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+      "rule_ids": ["keep-readme"]
+    },
+    {
+      "disposition": "rewrite",
+      "path": "src/lib.rs",
+      "entry_kind": "file",
+      "class": "authored-metadata",
+      "owner": "project",
+      "modification": "unmodified",
+      "bytes": "80",
+      "sha256": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+      "proof": null,
+      "rule_ids": ["strip-rust"]
+    },
+    {
+      "disposition": "relocate",
+      "path": "vibevm/specs/product.md",
+      "entry_kind": "file",
+      "class": "authored-product",
+      "owner": "project",
+      "modification": "not-applicable",
+      "bytes": "40",
+      "sha256": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+      "proof": null,
+      "rule_ids": ["move-product-spec"]
+    },
+    {
+      "disposition": "delete-unmodified",
+      "path": ".vibe/state.json",
+      "entry_kind": "file",
+      "class": "generated-owned",
+      "owner": "vibe",
+      "modification": "unmodified",
+      "bytes": "20",
+      "sha256": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+      "proof": "vibe-generated-v1",
+      "rule_ids": ["remove-state"]
+    },
+    {
+      "disposition": "delete-modified",
+      "path": "vibevm/generated.txt",
+      "entry_kind": "file",
+      "class": "generated-owned",
+      "owner": "vibe",
+      "modification": "modified",
+      "bytes": "10",
+      "sha256": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+      "proof": "sha256-v1",
+      "rule_ids": ["remove-generated"]
+    },
+    {
+      "disposition": "delete-unknown",
+      "path": "vibe.lock",
+      "entry_kind": "file",
+      "class": "authored-metadata",
+      "owner": "vibe",
+      "modification": "unknown",
+      "bytes": "5",
+      "sha256": "sha256:9999999999999999999999999999999999999999999999999999999999999999",
+      "proof": "contract-assertion-v1",
+      "rule_ids": ["remove-vibe-state"]
+    },
+    {
+      "disposition": "delete-last",
+      "path": "vibevm/scrape/contract.toml",
+      "entry_kind": "file",
+      "class": "authored-metadata",
+      "owner": "vibe",
+      "modification": "unknown",
+      "bytes": "500",
+      "sha256": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "proof": "contract-assertion-v1",
+      "rule_ids": ["remove-vibevm"]
+    }
+  ],
+  "rewrites": [],
+  "relocations": [],
+  "native_lock_changes": [],
+  "assertions": [
+    {
+      "kind": "paths-absent-v1",
+      "id": "paths",
+      "patterns": ["vibevm/**"]
+    },
+    {
+      "kind": "text-literal-absent-v1",
+      "id": "text",
+      "patterns": ["**/*.md"],
+      "needles": ["spec://org.vibevm"]
+    },
+    {
+      "kind": "cargo-path-prefix-absent-v1",
+      "id": "cargo",
+      "manifests": ["Cargo.toml"],
+      "prefixes": ["vibevm/"]
+    },
+    {
+      "kind": "language-metadata-absent-v1",
+      "id": "language",
+      "language": "rust",
+      "patterns": ["**/*.rs"]
+    },
+    {
+      "kind": "dependency-identities-absent-v1",
+      "id": "dependencies",
+      "manager": "cargo",
+      "manifests": ["Cargo.toml"],
+      "identities": ["core-ai-native-specmark"]
+    }
+  ],
+  "healthchecks": [
+    {
+      "kind": "custom",
+      "id": "domain-health",
+      "root": ".",
+      "source": "vibevm/scrape/health/domain.py",
+      "executable": {
+        "display_path": "C:/Python/python.exe",
+        "sha256": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "bytes": "128000",
+        "version": "Python 3.13.7"
+      },
+      "argv": ["--phase", "{phase}", "--result", "{result}"],
+      "snapshot": [
+        {
+          "path": "vibevm/scrape/health/domain.py",
+          "sha256": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "bytes": "2400",
+          "mode": 420
+        }
+      ],
+      "reads": ["**"],
+      "writes": [],
+      "spawn": false,
+      "protocol": "vibe-health-json-v1",
+      "network": "deny",
+      "timeout_seconds": 120
+    }
+  ],
+  "contract_boundary": {
+    "kind": "delete-last",
+    "path": "vibevm/scrape/contract.toml",
+    "empty_ancestors": ["vibevm/scrape", "vibevm"]
+  },
+  "blockers": [],
+  "summary": {
+    "keep": 1,
+    "rewrite": 1,
+    "relocate": 1,
+    "delete_unmodified": 1,
+    "delete_modified": 1,
+    "delete_unknown": 1,
+    "delete_last": 1
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "protocol": 1,
+  "status": "pass",
+  "summary": "domain health passed",
+  "findings": [
+    {
+      "id": "stable/check-id",
+      "severity": "info",
+      "message": "bounded diagnostic",
+      "evidence": "src/lib.rs:1"
+    }
+  ],
+  "metrics": {
+    "tests": 42
+  }
+}

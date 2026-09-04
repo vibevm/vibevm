@@ -1,0 +1,75 @@
+{
+  "metadata": {
+    "description": "Epoch-1 canonical scrape transaction report. This historical evidence is stored outside the scraped tree and is not recoverable from the resulting project.",
+    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-056#REPORT-CONTENT" },
+    "rustOptions": { "package": "vibe_wire::scrape_report" }
+  },
+  "properties": {
+    "schema": { "type": "uint32" },
+    "command": { "enum": ["scrape"], "metadata": { "x-vocabulary": "closed" } },
+    "transaction_id": { "type": "string" },
+    "plan_id": { "type": "string" },
+    "mode": { "enum": ["export", "in-place"], "metadata": { "x-vocabulary": "closed" } },
+    "project_display_root": { "type": "string" },
+    "before_tree_digest": { "type": "string" },
+    "after_tree_digest": { "type": "string", "nullable": true },
+    "unchanged_files": { "elements": { "ref": "file_witness" }, "metadata": { "x-empty": "emit" } },
+    "deleted_artifacts": { "elements": { "ref": "deleted_artifact" }, "metadata": { "x-empty": "emit" } },
+    "rewrites": { "elements": { "ref": "rewrite_result" }, "metadata": { "x-empty": "emit" } },
+    "relocations": { "elements": { "ref": "relocation_result" }, "metadata": { "x-empty": "emit" } },
+    "dependency_graphs": { "elements": { "ref": "dependency_graph_result" }, "metadata": { "x-empty": "emit" } },
+    "health": { "elements": { "ref": "health_result" }, "metadata": { "x-empty": "emit" } },
+    "residuals": { "elements": { "ref": "residual_count" }, "metadata": { "x-empty": "emit" } },
+    "rollback": { "elements": { "ref": "recovery_step" }, "metadata": { "x-empty": "emit" } },
+    "recovery": { "elements": { "ref": "recovery_step" }, "metadata": { "x-empty": "emit" } },
+    "outcome": { "enum": ["verified", "refused", "rolled-back", "rollback-failed"], "metadata": { "x-vocabulary": "closed" } },
+    "assurance": { "enum": ["full", "reduced"], "metadata": { "x-vocabulary": "closed" } },
+    "cleanup": { "enum": ["complete", "pending"], "metadata": { "x-vocabulary": "closed" } }
+  },
+  "definitions": {
+    "file_witness": {
+      "properties": { "path": { "type": "string" }, "sha256": { "type": "string" }, "bytes": { "type": "string" } }
+    },
+    "deleted_artifact": {
+      "properties": {
+        "path": { "type": "string" }, "sha256": { "type": "string" }, "bytes": { "type": "string" },
+        "class": { "enum": ["generated-owned", "managed-region", "authored-metadata", "authored-product", "unknown"], "metadata": { "x-vocabulary": "closed" } },
+        "modification": { "enum": ["unmodified", "modified", "unknown", "not-applicable"], "metadata": { "x-vocabulary": "closed" } }, "provenance": { "type": "string" }
+      }
+    },
+    "rewrite_result": {
+      "properties": { "id": { "type": "string" }, "kind": { "type": "string" }, "path": { "type": "string" }, "before_sha256": { "type": "string" }, "after_sha256": { "type": "string" }, "matches": { "type": "uint32" }, "erasure_equivalent": { "type": "boolean" } }
+    },
+    "relocation_result": {
+      "properties": { "id": { "type": "string" }, "from": { "type": "string" }, "to": { "type": "string" }, "sha256": { "type": "string" }, "bytes": { "type": "string" }, "mode_preserved": { "type": "boolean" } }
+    },
+    "dependency_graph_result": {
+      "properties": { "manager": { "enum": ["cargo", "npm", "pnpm", "yarn", "go"], "metadata": { "x-vocabulary": "closed" } }, "path": { "type": "string" }, "before": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }, "after": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }, "removed": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } } }
+    },
+    "phase": { "enum": ["before", "after"], "metadata": { "x-vocabulary": "closed" } },
+    "terminal_state": { "enum": ["pass", "warn", "fail", "skipped", "execution-failed", "cancelled", "timed-out"], "metadata": { "x-vocabulary": "closed" } },
+    "severity": { "enum": ["info", "warning", "error"], "metadata": { "x-vocabulary": "closed" } },
+    "finding": {
+      "properties": { "id": { "type": "string" }, "severity": { "ref": "severity" }, "message": { "type": "string" } },
+      "optionalProperties": { "evidence": { "type": "string", "metadata": { "x-default": null } } }
+    },
+    "stream_witness": {
+      "properties": { "bytes": { "type": "string" }, "sha256": { "type": "string" }, "truncated": { "type": "boolean" }, "utf8": { "type": "boolean" }, "head": { "type": "string" }, "tail": { "type": "string" } }
+    },
+    "health_result": {
+      "properties": {
+        "id": { "type": "string" }, "phase": { "ref": "phase" }, "terminal": { "ref": "terminal_state" },
+        "argv": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } },
+        "stdout": { "ref": "stream_witness" }, "stderr": { "ref": "stream_witness" },
+        "findings": { "elements": { "ref": "finding" }, "metadata": { "x-empty": "emit" } },
+        "tests_skipped": { "type": "boolean" }, "network_verified": { "type": "boolean" }
+      }
+    },
+    "residual_count": {
+      "properties": { "class": { "enum": ["source-metadata", "dependency-identity", "manifest-path", "managed-marker", "generated-artifact", "tool-config", "tool-script", "selected-spec-uri", "environment-reference", "lock-entry", "link-escape"], "metadata": { "x-vocabulary": "closed" } }, "count": { "type": "uint32" } }
+    },
+    "recovery_step": {
+      "properties": { "sequence": { "type": "uint32" }, "action": { "type": "string" }, "path": { "type": "string" }, "result": { "enum": ["complete", "pending", "refused", "failed"], "metadata": { "x-vocabulary": "closed" } } }
+    }
+  }
+}

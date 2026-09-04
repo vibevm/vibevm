@@ -635,6 +635,40 @@ foreign_parsers = "many"
 corpus = "formats/corpora/extensions-analyze/e1"
 sunset = "none"
 
+# ── Scraped-project plan, evidence and verifier protocol (3 JTD), PROP-056 ──
+# Plans and reports are public machine surfaces consumed by operators, scripts
+# and agents.  A plan can be recreated from the same sealed contract and tree;
+# the transaction report is historical evidence and cannot.  The custom-health
+# result is a transient, engine-owned reply that can be recreated by rerunning
+# the snapshotted verifier. Parser population remains honest, while all three
+# fixed epoch-1 object shapes independently reject unknown members.
+[format.scrape-plan]
+epoch = 1
+schema = "schemas/scrape/e1/plan.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+unknown_fields = "deny"
+corpus = "formats/corpora/scrape/e1"
+sunset = "none"
+
+[format.scrape-report]
+epoch = 1
+schema = "schemas/scrape/e1/report.jtd.json"
+recoverable = false
+foreign_parsers = "many"
+unknown_fields = "deny"
+corpus = "formats/corpora/scrape/e1"
+sunset = "none"
+
+[format.scrape-health-result]
+epoch = 1
+schema = "schemas/scrape/e1/health_result.jtd.json"
+recoverable = true
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/scrape/e1"
+sunset = "none"
+
 # ── Uninventoried surfaces (PROP-044 §6.5) ──────────────────────────────────
 [format.mcp-tools]
 epoch = 1

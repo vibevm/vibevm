@@ -1,0 +1,6 @@
+{
+  "schema": 1,
+  "command": "scrape",
+  "mode": "detach",
+  "plan_id": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+}

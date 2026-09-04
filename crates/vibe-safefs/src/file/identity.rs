@@ -1,4 +1,4 @@
-//! What the OS calls "the same file", and the per-platform way to ask.
+//! What the OS calls "the same filesystem object", and how to ask.
 //!
 //! Split out of the publication cell it serves so neither outgrows the
 //! file-length budget, and because everything here is one question with two
@@ -10,12 +10,21 @@ use std::path::Path;
 
 use anyhow::{Context, Result};
 
-/// The OS's identity pair: volume + file index on Windows, device and inode on
-/// Unix.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub(crate) struct FileIdentity {
+/// Opaque OS identity: volume + file index on Windows, device and inode on
+/// Unix. Equality is public; the platform representation is not.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub struct FileIdentity {
     volume: u64,
     index: u64,
+}
+
+impl FileIdentity {
+    pub(crate) fn identity_bytes(self) -> [u8; 16] {
+        let mut bytes = [0_u8; 16];
+        bytes[..8].copy_from_slice(&self.volume.to_be_bytes());
+        bytes[8..].copy_from_slice(&self.index.to_be_bytes());
+        bytes
+    }
 }
 
 /// The identity a path reports, with any injected alias applied.

@@ -2,8 +2,8 @@
 //
 // `FormatId` enumerates every surface a foreign parser reads, so an
 // unregistered format is inexpressible in the type system (PROP-044 §4.1
-// `##M-FORMAT-REGISTRY`). The `recoverable` / `foreign_parsers` axes
-// define each format's computed policy (PROP-044 §5 `##POLICY-IS-COMPUTED`).
+// `##M-FORMAT-REGISTRY`). Recoverability, parser population, and reader
+// unknown-field behavior remain separate declared facts.
 //
 // Internal identifier, not a wire type: it deliberately carries no
 // Serialize / Deserialize — the hand-written-wire ban of Ф4.3 would
@@ -82,6 +82,9 @@ pub enum FormatId {
     NativeReply,
     PackageSkillReceipt,
     RequirementsReport,
+    ScrapeHealthResult,
+    ScrapePlan,
+    ScrapeReport,
     SlotRecord,
 }
 
@@ -95,6 +98,13 @@ pub enum ForeignParsers {
     Ours,
     /// Read by independent parsers (scripts, agents, foreign clients).
     Many,
+}
+
+/// Whether generated readers accept undeclared object members.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum UnknownFields {
+    Allow,
+    Deny,
 }
 
 impl FormatId {
@@ -163,6 +173,9 @@ impl FormatId {
         FormatId::NativeReply,
         FormatId::PackageSkillReceipt,
         FormatId::RequirementsReport,
+        FormatId::ScrapeHealthResult,
+        FormatId::ScrapePlan,
+        FormatId::ScrapeReport,
         FormatId::SlotRecord,
     ];
 
@@ -232,6 +245,9 @@ impl FormatId {
             FormatId::NativeReply => "native-reply",
             FormatId::PackageSkillReceipt => "package-skill-receipt",
             FormatId::RequirementsReport => "requirements-report",
+            FormatId::ScrapeHealthResult => "scrape-health-result",
+            FormatId::ScrapePlan => "scrape-plan",
+            FormatId::ScrapeReport => "scrape-report",
             FormatId::SlotRecord => "slot-record",
         }
     }
@@ -302,6 +318,9 @@ impl FormatId {
             FormatId::NativeReply => 1,
             FormatId::PackageSkillReceipt => 1,
             FormatId::RequirementsReport => 1,
+            FormatId::ScrapeHealthResult => 1,
+            FormatId::ScrapePlan => 1,
+            FormatId::ScrapeReport => 1,
             FormatId::SlotRecord => 1,
         }
     }
@@ -372,6 +391,9 @@ impl FormatId {
             FormatId::NativeReply => true,
             FormatId::PackageSkillReceipt => false,
             FormatId::RequirementsReport => true,
+            FormatId::ScrapeHealthResult => true,
+            FormatId::ScrapePlan => true,
+            FormatId::ScrapeReport => false,
             FormatId::SlotRecord => true,
         }
     }
@@ -442,7 +464,83 @@ impl FormatId {
             FormatId::NativeReply => ForeignParsers::None,
             FormatId::PackageSkillReceipt => ForeignParsers::None,
             FormatId::RequirementsReport => ForeignParsers::Many,
+            FormatId::ScrapeHealthResult => ForeignParsers::None,
+            FormatId::ScrapePlan => ForeignParsers::Many,
+            FormatId::ScrapeReport => ForeignParsers::Many,
             FormatId::SlotRecord => ForeignParsers::None,
+        }
+    }
+
+    /// Policy for undeclared object members, independent of parser count.
+    pub fn unknown_fields(self) -> UnknownFields {
+        match self {
+            FormatId::ArtifactRecord => UnknownFields::Deny,
+            FormatId::BootArtifactTransaction => UnknownFields::Deny,
+            FormatId::CliExtensionsReport => UnknownFields::Allow,
+            FormatId::CliInitReport => UnknownFields::Allow,
+            FormatId::CliInstallPlan => UnknownFields::Allow,
+            FormatId::CliInstallReport => UnknownFields::Allow,
+            FormatId::CliLifecyclePlan => UnknownFields::Allow,
+            FormatId::CliLifecycleReport => UnknownFields::Allow,
+            FormatId::CliListReport => UnknownFields::Allow,
+            FormatId::CliPackageTree => UnknownFields::Allow,
+            FormatId::CliRegistryPublishReport => UnknownFields::Allow,
+            FormatId::CliRegistrySyncReport => UnknownFields::Allow,
+            FormatId::CliReinstallReport => UnknownFields::Allow,
+            FormatId::CliUninstallReport => UnknownFields::Allow,
+            FormatId::CliUpdateReport => UnknownFields::Allow,
+            FormatId::CompilerIr => UnknownFields::Deny,
+            FormatId::CompilerTraceIndex => UnknownFields::Allow,
+            FormatId::Config => UnknownFields::Deny,
+            FormatId::DeployIntent => UnknownFields::Deny,
+            FormatId::DeployReceipt => UnknownFields::Deny,
+            FormatId::ExtensionsAnalyze => UnknownFields::Allow,
+            FormatId::Handshake => UnknownFields::Allow,
+            FormatId::IndexByCap => UnknownFields::Allow,
+            FormatId::IndexByName => UnknownFields::Allow,
+            FormatId::IndexByPurl => UnknownFields::Allow,
+            FormatId::IndexCliCapabilitiesReport => UnknownFields::Allow,
+            FormatId::IndexCliGetReport => UnknownFields::Allow,
+            FormatId::IndexCliListReport => UnknownFields::Allow,
+            FormatId::IndexCliOutdatedReport => UnknownFields::Allow,
+            FormatId::IndexCliPurlsReport => UnknownFields::Allow,
+            FormatId::IndexCliSearchReport => UnknownFields::Allow,
+            FormatId::IndexCliVerifyReport => UnknownFields::Allow,
+            FormatId::IndexEntry => UnknownFields::Allow,
+            FormatId::IndexHttpAdminStatusResponse => UnknownFields::Allow,
+            FormatId::IndexHttpCapabilitiesResponse => UnknownFields::Allow,
+            FormatId::IndexHttpErrorResponse => UnknownFields::Allow,
+            FormatId::IndexHttpHealthResponse => UnknownFields::Allow,
+            FormatId::IndexHttpPackageDeleteResponse => UnknownFields::Allow,
+            FormatId::IndexHttpPackageListResponse => UnknownFields::Allow,
+            FormatId::IndexHttpPackageSearchResponse => UnknownFields::Allow,
+            FormatId::IndexHttpPackageUpsertResponse => UnknownFields::Allow,
+            FormatId::IndexHttpPackageVersionsResponse => UnknownFields::Allow,
+            FormatId::IndexHttpPurlsResponse => UnknownFields::Allow,
+            FormatId::IndexPrimary => UnknownFields::Allow,
+            FormatId::IndexRepomd => UnknownFields::Allow,
+            FormatId::Journal => UnknownFields::Allow,
+            FormatId::LifecycleContext => UnknownFields::Allow,
+            FormatId::LifecycleReply => UnknownFields::Deny,
+            FormatId::LifecycleState => UnknownFields::Deny,
+            FormatId::LlmOpenaiCompatibleAgentResult => UnknownFields::Deny,
+            FormatId::LlmOpenaiCompatibleChatRequest => UnknownFields::Allow,
+            FormatId::LlmOpenaiCompatibleChatResponse => UnknownFields::Allow,
+            FormatId::Lockfile => UnknownFields::Allow,
+            FormatId::Manifest => UnknownFields::Allow,
+            FormatId::McpLifecycleTasks => UnknownFields::Allow,
+            FormatId::McpTools => UnknownFields::Allow,
+            FormatId::NativeCompileReply => UnknownFields::Deny,
+            FormatId::NativeCompileRequest => UnknownFields::Allow,
+            FormatId::NativeContext => UnknownFields::Allow,
+            FormatId::NativeManifest => UnknownFields::Allow,
+            FormatId::NativeReply => UnknownFields::Deny,
+            FormatId::PackageSkillReceipt => UnknownFields::Deny,
+            FormatId::RequirementsReport => UnknownFields::Allow,
+            FormatId::ScrapeHealthResult => UnknownFields::Deny,
+            FormatId::ScrapePlan => UnknownFields::Deny,
+            FormatId::ScrapeReport => UnknownFields::Deny,
+            FormatId::SlotRecord => UnknownFields::Deny,
         }
     }
 }

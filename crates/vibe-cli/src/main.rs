@@ -162,6 +162,7 @@ fn main() -> ExitCode {
         Command::Clean(args) => {
             commands::clean::run(&ctx, args, prepare_lifecycle_install, cli.offline)
         }
+        Command::Scrape(args) => commands::scrape::run(&ctx, args),
         Command::Outdated(args) => commands::outdated::run(&ctx, args),
         Command::Search(args) => {
             // The composition root reads the search command's

@@ -24,6 +24,27 @@ fn project() -> (tempfile::TempDir, Project) {
     (dir, project)
 }
 
+#[test]
+fn stable_snapshot_binds_bytes_state_and_identity_to_one_epoch() {
+    let (dir, project) = project();
+    fs::write(dir.path().join("state.json"), b"stable").unwrap();
+
+    let snapshot = project
+        .read_file_snapshot_bounded("state.json", 6)
+        .unwrap()
+        .unwrap();
+    let (_, identity) = project
+        .stable_file_state_with_identity("state.json")
+        .unwrap()
+        .unwrap();
+
+    assert_eq!(snapshot.bytes, b"stable");
+    assert_eq!(snapshot.size, 6);
+    assert_eq!(snapshot.sha256.len(), 64);
+    assert_eq!(snapshot.identity, identity);
+    assert!(project.read_file_snapshot_bounded("state.json", 5).is_err());
+}
+
 /// A file exactly at the cap is the whole answer, not a refusal: the ceiling
 /// bounds allocation, it does not demand slack. Both entry points walk the
 /// same pinned capability to get it.

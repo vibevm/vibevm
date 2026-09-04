@@ -12,15 +12,34 @@
 //! still denote the very object that supplied the bytes, so a read can never
 //! answer for an object the path has already swapped out from under it.
 
-use std::io::Read;
+use std::io::{Read, Seek, SeekFrom};
 use std::path::Path;
 
 use anyhow::{Context, Result, bail};
+use sha2::Digest as _;
 
 use crate::Pinned;
 use crate::Project;
 use crate::file::cap_options;
 use crate::file::verify_regular_single_link;
+
+/// One bounded, stable read of a regular single-link file.
+///
+/// The identity is deliberately opaque: callers may compare it for equality,
+/// but cannot persist or reconstruct the platform-specific volume/object key.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct StableFileSnapshot {
+    /// Exact file bytes from the held-handle epoch.
+    pub bytes: Vec<u8>,
+    /// Lowercase SHA-256 over `bytes`.
+    pub sha256: String,
+    /// Exact byte length, repeated explicitly for guarded downstream APIs.
+    pub size: u64,
+    /// Exact Unix permission bits, including special bits; absent elsewhere.
+    pub unix_mode: Option<u32>,
+    /// Opaque filesystem identity of the held object and its rechecked name.
+    pub identity: crate::file::identity::FileIdentity,
+}
 
 /// How many bytes one read asks the handle for at a time. A fixed stack
 /// window: the loop's exact reservations, not this size, shape the returned
@@ -29,6 +48,86 @@ use crate::file::verify_regular_single_link;
 pub(crate) const READ_CHUNK: usize = 16 * 1024;
 
 impl Project {
+    /// Snapshot one file through a held no-follow capability, or `None` when
+    /// absent. Two bounded passes must agree, metadata must stay stable, and a
+    /// final capability-relative reopen must still name the held object.
+    pub fn read_file_snapshot_bounded(
+        &self,
+        relative: &str,
+        cap: usize,
+    ) -> Result<Option<StableFileSnapshot>> {
+        let root = self.root_dir()?;
+        self.read_file_snapshot_bounded_in(&root, relative, cap)
+    }
+
+    /// The pinned-directory form of [`Self::read_file_snapshot_bounded`].
+    pub fn read_file_snapshot_bounded_in(
+        &self,
+        directory: &Pinned,
+        relative: &str,
+        cap: usize,
+    ) -> Result<Option<StableFileSnapshot>> {
+        cap.checked_add(1)
+            .with_context(|| format!("cap {cap} is usize::MAX: cap + 1 would overflow"))?;
+        let Some((holder, name)) = self.holder_of(directory, relative)? else {
+            return Ok(None);
+        };
+        let display = holder.join(&name);
+        let mut options = cap_options();
+        let mut file = match holder.dir.open_with(&name, options.read(true)) {
+            Ok(file) => file.into_std(),
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => return Ok(None),
+            Err(error) => {
+                return Err(
+                    anyhow::Error::new(error).context(format!("opening `{}`", display.display()))
+                );
+            }
+        };
+        verify_regular_single_link(&file, &display)?;
+        let before = file
+            .metadata()
+            .with_context(|| format!("inspecting `{}`", display.display()))?;
+        if before.len() > cap as u64 {
+            bail!(
+                "`{}` is {} bytes, over the {cap}-byte cap",
+                display.display(),
+                before.len()
+            );
+        }
+        crate::race_hook::before_bounded_read(&holder, &name);
+        let first = bounded_pass(&mut file, cap, before.len(), &display)?;
+        let second = bounded_pass(&mut file, cap, before.len(), &display)?;
+        if first != second {
+            bail!(
+                "`{}` changed between its two held-handle passes",
+                display.display()
+            );
+        }
+        verify_regular_single_link(&file, &display)?;
+        let after = file
+            .metadata()
+            .with_context(|| format!("re-inspecting `{}`", display.display()))?;
+        let unix_mode = crate::file::stable::unix_mode(&after);
+        if before.len() != after.len()
+            || second.len() as u64 != after.len()
+            || crate::file::stable::unix_mode(&before) != unix_mode
+        {
+            bail!(
+                "`{}` changed length or mode during its stable read",
+                display.display()
+            );
+        }
+        let held = crate::file::identity::file_identity(&file, &display)?;
+        ensure_still_final_name(&holder, &name, held, &display)?;
+        Ok(Some(StableFileSnapshot {
+            sha256: format!("{:x}", sha2::Sha256::digest(&second)),
+            size: second.len() as u64,
+            bytes: second,
+            unix_mode,
+            identity: held,
+        }))
+    }
+
     /// Read one file at a project-relative path, or `None` when absent.
     ///
     /// The answer is at most `cap` bytes, and the buffer it lands in is
@@ -195,6 +294,44 @@ impl Project {
                 Err(anyhow::Error::new(error).context(format!("opening `{}`", display.display())))
             }
         }
+    }
+}
+
+fn bounded_pass(
+    file: &mut std::fs::File,
+    cap: usize,
+    metadata_len: u64,
+    display: &Path,
+) -> Result<Vec<u8>> {
+    file.seek(SeekFrom::Start(0))
+        .with_context(|| format!("seeking `{}`", display.display()))?;
+    let limit = cap
+        .checked_add(1)
+        .expect("caller validated that cap + 1 is representable");
+    let mut bytes = Vec::with_capacity(metadata_len as usize);
+    let mut fenced = file.take(limit as u64);
+    let mut chunk = [0u8; READ_CHUNK];
+    loop {
+        let used = match fenced.read(&mut chunk) {
+            Ok(used) => used,
+            Err(error) if error.kind() == std::io::ErrorKind::Interrupted => continue,
+            Err(error) => {
+                return Err(
+                    anyhow::Error::new(error).context(format!("reading `{}`", display.display()))
+                );
+            }
+        };
+        if used == 0 {
+            return Ok(bytes);
+        }
+        if used > cap - bytes.len() {
+            bail!(
+                "`{}` grew past its {cap}-byte cap while being read",
+                display.display()
+            );
+        }
+        bytes.reserve_exact(used);
+        bytes.extend_from_slice(&chunk[..used]);
     }
 }
 

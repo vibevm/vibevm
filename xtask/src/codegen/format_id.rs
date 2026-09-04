@@ -12,7 +12,8 @@ use anyhow::{Context, Result, anyhow, bail};
 // `generate_into` rather than looked up in `generated_dir_for`.
 
 /// One `[format.<id>]` record. The generated enum consumes `id`,
-/// `variant`, `epoch`, `recoverable` and `foreign_parsers`; `schema` is
+/// `variant`, `epoch`, `recoverable`, `foreign_parsers` and the independently
+/// declared `unknown_fields` policy; `schema` is
 /// the strictness pass's key — the path whose generated output the
 /// record's `foreign_parsers` role rules (`strictness.rs`). `corpus` is
 /// `wire-diff`'s denominator — the golden-bytes home whose shift that
@@ -28,6 +29,9 @@ pub(crate) struct FormatEntry {
     recoverable: bool,
     /// `none` | `ours` | `many`, validated.
     pub(super) foreign_parsers: String,
+    /// Reader behavior is independent of parser population: `allow` or
+    /// `deny`. Missing legacy rows retain the historical computed policy.
+    pub(super) unknown_fields: String,
     /// The record's schema — a repo-relative path or `"none"`. `"none"`
     /// has no generated output and no strictness policy; a path is what
     /// the pass keys its schema → role map by.
@@ -66,6 +70,23 @@ pub(crate) fn load_format_registry(root: &Path) -> Result<Vec<FormatEntry>> {
                 path.display()
             );
         }
+        let unknown_fields = entry
+            .get("unknown_fields")
+            .and_then(toml::Value::as_str)
+            .map(str::to_owned)
+            .unwrap_or_else(|| {
+                if foreign_parsers == "none" {
+                    "deny".to_owned()
+                } else {
+                    "allow".to_owned()
+                }
+            });
+        if !matches!(unknown_fields.as_str(), "allow" | "deny") {
+            bail!(
+                "`{}`: `[format.{id}].unknown_fields` must be allow|deny, got `{unknown_fields}`",
+                path.display()
+            );
+        }
         let schema = require_str(entry, id, "schema", &path)?;
         let corpus = require_str(entry, id, "corpus", &path)?;
         let variant = pascal_case(id).with_context(|| {
@@ -80,11 +101,42 @@ pub(crate) fn load_format_registry(root: &Path) -> Result<Vec<FormatEntry>> {
             epoch,
             recoverable,
             foreign_parsers,
+            unknown_fields,
             schema,
             corpus,
         });
     }
     Ok(entries)
+}
+
+pub(crate) fn schema_denies_unknown_fields(root: &Path, schema: &Path) -> Result<bool> {
+    let relative = schema
+        .strip_prefix(root)
+        .with_context(|| {
+            format!(
+                "schema `{}` is outside `{}`",
+                schema.display(),
+                root.display()
+            )
+        })?
+        .to_string_lossy()
+        .replace('\\', "/");
+    let entries = load_format_registry(root)?;
+    let matching = entries
+        .iter()
+        .filter(|entry| entry.schema == relative)
+        .collect::<Vec<_>>();
+    if matching.is_empty() {
+        bail!("schema `{relative}` has no format registry owner");
+    }
+    let policy = matching[0].unknown_fields.as_str();
+    if matching
+        .iter()
+        .any(|entry| entry.unknown_fields.as_str() != policy)
+    {
+        bail!("schema `{relative}` has registry owners with conflicting unknown_fields policies");
+    }
+    Ok(policy == "deny")
 }
 
 fn require_str(entry: &toml::Value, id: &str, key: &str, path: &Path) -> Result<String> {
@@ -159,8 +211,8 @@ pub(super) fn emit_format_id(root: &Path, out_dir: &Path) -> Result<()> {
     out.push_str("//\n");
     out.push_str("// `FormatId` enumerates every surface a foreign parser reads, so an\n");
     out.push_str("// unregistered format is inexpressible in the type system (PROP-044 §4.1\n");
-    out.push_str("// `##M-FORMAT-REGISTRY`). The `recoverable` / `foreign_parsers` axes\n");
-    out.push_str("// define each format's computed policy (PROP-044 §5 `##POLICY-IS-COMPUTED`).\n");
+    out.push_str("// `##M-FORMAT-REGISTRY`). Recoverability, parser population, and reader\n");
+    out.push_str("// unknown-field behavior remain separate declared facts.\n");
     out.push_str("//\n");
     out.push_str("// Internal identifier, not a wire type: it deliberately carries no\n");
     out.push_str("// Serialize / Deserialize — the hand-written-wire ban of Ф4.3 would\n");
@@ -192,6 +244,13 @@ pub(super) fn emit_format_id(root: &Path, out_dir: &Path) -> Result<()> {
     out.push_str("    Ours,\n");
     out.push_str("    /// Read by independent parsers (scripts, agents, foreign clients).\n");
     out.push_str("    Many,\n");
+    out.push_str("}\n\n");
+
+    out.push_str("/// Whether generated readers accept undeclared object members.\n");
+    out.push_str("#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]\n");
+    out.push_str("pub enum UnknownFields {\n");
+    out.push_str("    Allow,\n");
+    out.push_str("    Deny,\n");
     out.push_str("}\n\n");
 
     out.push_str("impl FormatId {\n");
@@ -251,6 +310,23 @@ pub(super) fn emit_format_id(root: &Path, out_dir: &Path) -> Result<()> {
             _ => unreachable!("foreign_parsers validated in load_format_registry"),
         };
         out.push_str(&format!("            FormatId::{} => {},\n", e.variant, fp));
+    }
+    out.push_str("        }\n");
+    out.push_str("    }\n");
+
+    out.push_str("\n    /// Policy for undeclared object members, independent of parser count.\n");
+    out.push_str("    pub fn unknown_fields(self) -> UnknownFields {\n");
+    out.push_str("        match self {\n");
+    for e in &entries {
+        let policy = match e.unknown_fields.as_str() {
+            "allow" => "UnknownFields::Allow",
+            "deny" => "UnknownFields::Deny",
+            _ => unreachable!("unknown_fields validated in load_format_registry"),
+        };
+        out.push_str(&format!(
+            "            FormatId::{} => {},\n",
+            e.variant, policy
+        ));
     }
     out.push_str("        }\n");
     out.push_str("    }\n");

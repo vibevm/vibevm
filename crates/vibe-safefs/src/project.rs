@@ -8,8 +8,11 @@ use specmark::spec;
 
 use crate::component::ensure_safe_component;
 
+mod absolute;
 mod enumerate;
 mod reset;
+
+pub use absolute::{PinnedAbsentPath, PinnedAbsoluteFile};
 
 /// The pinned project-root capability every mutation goes through.
 ///
@@ -140,6 +143,11 @@ impl Project {
                 .context("retaining the project-root capability")?,
             path: self.root_path.clone(),
         })
+    }
+
+    /// Opaque filesystem identity of the pinned project root.
+    pub fn root_identity(&self) -> Result<crate::file::identity::FileIdentity> {
+        self.root_dir()?.identity()
     }
 
     /// Walk to a descendant directory one component at a time, refusing
@@ -376,6 +384,28 @@ pub struct LockGuard {
 }
 
 impl Pinned {
+    /// Opaque filesystem identity of this held directory capability.
+    pub fn identity(&self) -> Result<crate::file::identity::FileIdentity> {
+        let handle = self
+            .dir
+            .try_clone()
+            .with_context(|| format!("retaining `{}` for identity", self.path.display()))?
+            .into_std_file();
+        crate::file::identity::file_identity(&handle, &self.path)
+    }
+
+    /// Exact Unix permission bits for this held directory; absent elsewhere.
+    pub fn unix_mode(&self) -> Result<Option<u32>> {
+        let metadata = self
+            .dir
+            .try_clone()
+            .with_context(|| format!("retaining `{}` for mode", self.path.display()))?
+            .into_std_file()
+            .metadata()
+            .with_context(|| format!("inspecting directory `{}`", self.path.display()))?;
+        Ok(crate::file::unix_mode(&metadata))
+    }
+
     /// Open one direct child directory, refusing reparse points.
     pub fn open_child(&self, name: &str) -> Result<Self> {
         ensure_safe_component(name)?;
@@ -567,3 +597,7 @@ mod race_tests;
 #[cfg(test)]
 #[path = "project/reset_tests.rs"]
 mod reset_tests;
+
+#[cfg(test)]
+#[path = "project/absolute_tests.rs"]
+mod absolute_tests;
