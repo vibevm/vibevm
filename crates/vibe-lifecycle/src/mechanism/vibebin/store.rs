@@ -23,8 +23,10 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARG
 
 use std::path::{Path, PathBuf};
 
+use vibe_safefs::{Project, StableFileState};
+
 use super::launcher::LauncherFlavour;
-use crate::mechanism::contain::{FileFault, digest_file, prove_regular_file};
+use crate::mechanism::contain::{FileFault, digest_file};
 use crate::mechanism::error::DeployProviderError;
 
 /// The settings-relative directory holding the immutable payloads.
@@ -130,31 +132,24 @@ pub(crate) fn place_payload(
 pub(crate) fn place_resource(
     target: &str,
     settings_root: &Path,
-    staging: Option<&Path>,
+    _staging: Option<&Path>,
     relative: &str,
     bytes: &[u8],
     executable: bool,
 ) -> Result<(), DeployProviderError> {
-    let destination = join(settings_root, relative);
-    let refuse = |error: std::io::Error| DeployProviderError::Write {
+    let project = Project::open(settings_root).map_err(|error| DeployProviderError::Write {
         target: target.to_owned(),
         path: relative.to_owned(),
-        reason: error.to_string(),
-    };
-    let Some(staging) = staging else {
-        ensure_parent(target, relative, &destination)?;
-        std::fs::write(&destination, bytes).map_err(refuse)?;
-        if executable {
-            make_executable(target, relative, &destination)?;
-        }
-        return Ok(());
-    };
-    let staged = staging.join(relative.replace('/', "_"));
-    std::fs::write(&staged, bytes).map_err(refuse)?;
-    if executable {
-        make_executable(target, relative, &staged)?;
-    }
-    publish(target, relative, &staged, &destination)
+        reason: format!("{error:#}"),
+    })?;
+    project
+        .write_atomic_with_mode(relative, bytes, executable_mode(executable))
+        .map_err(|error| DeployProviderError::Write {
+            target: target.to_owned(),
+            path: relative.to_owned(),
+            reason: format!("{:#}", error.into_report()),
+        })?;
+    Ok(())
 }
 
 /// Remove one owned resource; absence is success.
@@ -163,24 +158,90 @@ pub(crate) fn remove_resource(
     settings_root: &Path,
     relative: &str,
 ) -> Result<bool, DeployProviderError> {
-    let destination = join(settings_root, relative);
-    match prove_regular_file(&destination) {
-        Ok(_) => {}
-        Err(FileFault::Missing(_)) => return Ok(false),
-        Err(fault) => {
-            return Err(DeployProviderError::Write {
-                target: target.to_owned(),
-                path: relative.to_owned(),
-                reason: fault.reason(),
-            });
-        }
-    }
-    std::fs::remove_file(&destination).map_err(|error| DeployProviderError::Write {
+    let project = Project::open(settings_root).map_err(|error| DeployProviderError::Write {
         target: target.to_owned(),
         path: relative.to_owned(),
-        reason: error.to_string(),
+        reason: format!("{error:#}"),
     })?;
-    Ok(true)
+    project
+        .remove_file(relative)
+        .map_err(|error| DeployProviderError::Write {
+            target: target.to_owned(),
+            path: relative.to_owned(),
+            reason: format!("{error:#}"),
+        })
+}
+
+/// Observe one settings-relative regular file through the stable held-handle
+/// seam. Absence is a value; links, reparse ancestors and hard links refuse.
+pub(crate) fn resource_state(
+    target: &str,
+    root: &Path,
+    relative: &str,
+) -> Result<Option<StableFileState>, DeployProviderError> {
+    let project = Project::open(root).map_err(|error| DeployProviderError::Observe {
+        target: target.to_owned(),
+        resource: relative.to_owned(),
+        reason: format!("{error:#}"),
+    })?;
+    project
+        .stable_file_state(relative)
+        .map_err(|error| DeployProviderError::Observe {
+            target: target.to_owned(),
+            resource: relative.to_owned(),
+            reason: format!("{error:#}"),
+        })
+}
+
+/// The expected-state form: source resolution is rechecked on the first held
+/// pass before any destination parent, stage or published byte is touched.
+#[allow(clippy::too_many_arguments, reason = "one guarded copy contract")]
+pub(crate) fn copy_resource_expected(
+    target: &str,
+    source_root: &Path,
+    source_relative: &str,
+    destination_root: &Path,
+    destination_relative: &str,
+    unix_mode: Option<u32>,
+    expected_sha256: &str,
+    expected_bytes: u64,
+) -> Result<StableFileState, DeployProviderError> {
+    let source = Project::open(source_root).map_err(|error| DeployProviderError::Write {
+        target: target.to_owned(),
+        path: source_relative.to_owned(),
+        reason: format!("{error:#}"),
+    })?;
+    let destination =
+        Project::open(destination_root).map_err(|error| DeployProviderError::Write {
+            target: target.to_owned(),
+            path: destination_relative.to_owned(),
+            reason: format!("{error:#}"),
+        })?;
+    source
+        .copy_stable_file_to_expected(
+            source_relative,
+            &destination,
+            destination_relative,
+            unix_mode,
+            expected_sha256,
+            expected_bytes,
+        )
+        .map(|(state, _)| state)
+        .map_err(|error| DeployProviderError::Write {
+            target: target.to_owned(),
+            path: destination_relative.to_owned(),
+            reason: format!("{:#}", error.into_report()),
+        })
+}
+
+#[cfg(unix)]
+const fn executable_mode(executable: bool) -> Option<u32> {
+    if executable { Some(0o755) } else { None }
+}
+
+#[cfg(not(unix))]
+const fn executable_mode(_executable: bool) -> Option<u32> {
+    None
 }
 
 /// One settings-relative resource's absolute path, joined component by

@@ -36,7 +36,7 @@ pub use component::{
     ensure_no_follow_walk, ensure_safe_component, identity_key, judge_selection, path_identity_key,
     paths_overlap, split_relative,
 };
-pub use file::{ContentDigest, Presence};
+pub use file::{ContentDigest, Presence, StableFileState};
 #[cfg(any(test, feature = "inject-failures"))]
 pub use file::{fail_after_publish, fail_before_publish, fail_before_stage_cleanup};
 #[cfg(any(test, feature = "inject-failures"))]

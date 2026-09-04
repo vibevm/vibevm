@@ -9,6 +9,7 @@ use specmark::spec;
 use crate::component::ensure_safe_component;
 
 mod enumerate;
+mod reset;
 
 /// The pinned project-root capability every mutation goes through.
 ///
@@ -562,3 +563,7 @@ pub(crate) fn descend(base: &Pinned, components: &[&str]) -> std::io::Result<Opt
 #[cfg(test)]
 #[path = "project/race_tests.rs"]
 mod race_tests;
+
+#[cfg(test)]
+#[path = "project/reset_tests.rs"]
+mod reset_tests;

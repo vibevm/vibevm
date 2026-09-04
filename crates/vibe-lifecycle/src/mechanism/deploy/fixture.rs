@@ -395,6 +395,7 @@ impl DeployProvider for FixtureProvider {
             removed.push(resource.clone());
         }
         Ok(RemoveReport {
+            expected_remaining: Vec::new(),
             evidence: format!("fixture removed {} resource(s)", removed.len()),
             removed,
         })

@@ -334,7 +334,8 @@ fn archive_name(target: &str) -> String {
 fn zip_config(plan: &PackagePlan) -> Result<&WindowsZipConfig, MechanismError> {
     match &plan.config {
         PackageConfig::WindowsZip(config) => Ok(config),
-        PackageConfig::StaticSkill(_)
+        PackageConfig::StaticFile(_)
+        | PackageConfig::StaticSkill(_)
         | PackageConfig::AgentPlugin(_)
         | PackageConfig::ClientProjection(_) => Err(MechanismError::PlanRoleMismatch {
             provider: BUILTIN_WINDOWS_ZIP_PIN.to_owned(),

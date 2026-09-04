@@ -57,8 +57,11 @@ fn the_reserved_identity_is_spellable_and_stable() {
             "org.vibevm/vibe#claude-plugin",
             "org.vibevm/vibe#codex-plugin",
             "org.vibevm/vibe#opencode-plugin",
+            // §13.1's two rows, appended after all fourteen incumbents.
+            "org.vibevm/vibe#static-file",
+            "org.vibevm/vibe#vibe-opt-launcher",
         ],
-        "the fourteen shipped rows, in the order the collector appends them"
+        "the sixteen shipped rows, in the order the collector appends them"
     );
     assert_eq!(
         registry
@@ -81,6 +84,8 @@ fn the_reserved_identity_is_spellable_and_stable() {
             "deploy:claude-plugin",
             "deploy:codex-plugin",
             "deploy:opencode-plugin",
+            "package:static-file",
+            "deploy:vibe-opt-launcher",
         ],
     );
     for row in registry.rows() {
@@ -100,6 +105,7 @@ fn the_reserved_identity_is_spellable_and_stable() {
 /// same reason, and a deploy target reconciles state no engine census can
 /// hash. §6.3.0.2 rules the nine client rows in the same words —
 /// "Projection rows are engine-fresh; destination rows are provider-fresh."
+/// §13.1 applies that split to static-file and vibe-opt-launcher.
 /// The config-schema spellings are engine-owned identities under
 /// `schemas/mechanism/`, in one snake_case shape keyed by the PROVIDER id.
 #[test]
@@ -194,6 +200,16 @@ fn every_shipped_row_declares_the_freshness_and_schema_the_architecture_gives_it
                 "opencode-plugin",
                 MechanismFreshness::Provider,
                 "schemas/mechanism/deploy_opencode_plugin.jtd.json".to_string(),
+            ),
+            (
+                "static-file",
+                MechanismFreshness::Engine,
+                "schemas/mechanism/package_static_file.jtd.json".to_string(),
+            ),
+            (
+                "vibe-opt-launcher",
+                MechanismFreshness::Provider,
+                "schemas/mechanism/deploy_vibe_opt_launcher.jtd.json".to_string(),
             ),
         ],
     );

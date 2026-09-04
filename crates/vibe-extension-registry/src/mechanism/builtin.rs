@@ -3,7 +3,7 @@
 //! §3 of the build/package/deploy architecture rejects a privileged branch for
 //! what vibe already implements: the built-in Cargo adapter "is represented by
 //! the reserved provider key `org.vibevm/vibe#cargo`, not by a privileged
-//! branch outside the registry". This cell is that representation — fourteen
+//! branch outside the registry". This cell is that representation — sixteen
 //! ordinary declarations under one reserved identity, which the collector
 //! ALWAYS appends ahead of every collected manifest. Selection then has no
 //! builtin case to special-case: step 3 of §3.1 is a lookup in the same vector
@@ -38,7 +38,9 @@ pub(super) const RESERVED_OWNER: &str = "org.vibevm/vibe";
 /// The first five shipped rows are the ones §§5–7 name by key: `#cargo`
 /// (§5, the Cargo commissioning backend), `#static-skill` (§6.1),
 /// `#agent-plugin` (§6.2), `#vibe-bin` (§7.1) and `#windows-zip` (§7.0.8).
-/// The nine that follow are §6.3.0.2's commissioning matrix. Each is
+/// The nine that follow are §6.3.0.2's commissioning matrix. The two
+/// final rows are §13.1's opaque static-file packager and receipt-owned
+/// opt-launcher destination. Each is
 /// `protocol = 1`, because the provider protocol starts at 1 and nothing has
 /// revised it.
 struct BuiltinDescriptor {
@@ -67,10 +69,12 @@ struct BuiltinDescriptor {
 /// outright that "Cargo is provider-fresh", and a deploy target reconciles
 /// state outside the workspace that no engine-side census can hash, so
 /// `deploy:vibe-bin` is provider-fresh for the same reason. The three
-/// packaging rows are engine-fresh because their input set is closed and
-/// hashable by construction — §6.1 produces exactly one file from declared
+/// historical packaging rows are engine-fresh because their input set is closed
+/// and hashable by construction — §6.1 produces exactly one file from declared
 /// textual resources, §6.2 a directory of declared files, and §7.0.8's
 /// archive is exactly the declared inputs and nothing else.
+/// §13.1 gives the appended pair the same split: the closed static-file
+/// input is engine-fresh; the external opt destination is provider-fresh.
 ///
 /// §6.3.0.2 rules the nine client rows the same way and in the same words:
 /// "Projection rows are engine-fresh; destination rows are provider-fresh."
@@ -91,7 +95,7 @@ struct BuiltinDescriptor {
 // snake_case: the schema describes ONE PROVIDER's config, so it is keyed by
 // the provider's id and not by the logical capability it defaults for —
 // otherwise two providers of one key would have to share one schema identity.
-const BUILTINS: [BuiltinDescriptor; 14] = [
+const BUILTINS: [BuiltinDescriptor; 16] = [
     BuiltinDescriptor {
         id: "cargo",
         role: MechanismRole::Build,
@@ -194,6 +198,21 @@ const BUILTINS: [BuiltinDescriptor; 14] = [
         freshness: MechanismFreshness::Provider,
         config_schema: "schemas/mechanism/deploy_opencode_plugin.jtd.json",
     },
+    // §13.1's launcher-delivery pair, appended after every historical row.
+    BuiltinDescriptor {
+        id: "static-file",
+        role: MechanismRole::Package,
+        name: "static-file",
+        freshness: MechanismFreshness::Engine,
+        config_schema: "schemas/mechanism/package_static_file.jtd.json",
+    },
+    BuiltinDescriptor {
+        id: "vibe-opt-launcher",
+        role: MechanismRole::Deploy,
+        name: "vibe-opt-launcher",
+        freshness: MechanismFreshness::Provider,
+        config_schema: "schemas/mechanism/deploy_vibe_opt_launcher.jtd.json",
+    },
 ];
 
 /// The engine's own mechanism source — one owner and its declarations.
@@ -207,7 +226,7 @@ const BUILTINS: [BuiltinDescriptor; 14] = [
 ///
 /// let source = builtin_mechanism_source();
 /// assert_eq!(source.owner(), "org.vibevm/vibe");
-/// assert_eq!(source.declarations().len(), 14);
+/// assert_eq!(source.declarations().len(), 16);
 /// assert_eq!(source.declarations()[0].id, "cargo");
 ///
 /// // A projection row's provider id is NOT its logical name.

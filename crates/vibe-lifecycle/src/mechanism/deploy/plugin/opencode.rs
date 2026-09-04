@@ -215,6 +215,7 @@ pub(crate) fn remove(
         }
     }
     Ok(RemoveReport {
+        expected_remaining: Vec::new(),
         removed,
         evidence: "OpenCode: removed only receipt-owned contained skill files/MCP members; immutable support and foreign neighbours were preserved".to_owned(),
     })

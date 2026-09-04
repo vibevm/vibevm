@@ -526,6 +526,7 @@ impl DeployProvider for ClientPluginProvider {
             .into());
         }
         Ok(RemoveReport {
+            expected_remaining: Vec::new(),
             removed: installed.map(|_| vec![resource]).unwrap_or_default(),
             evidence: format!(
                 "{}: exact receipt-owned coordinate removed or already absent; marketplace support retained",

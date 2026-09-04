@@ -31,10 +31,12 @@ use vibe_core::manifest::{ArtifactPackageTarget, ExtensionHandler, MechanismRout
 use vibe_extension_registry::{
     MechanismRegistry, MechanismSelection, SelectionStep, resolve_mechanism,
 };
+use vibe_safefs::Project;
 
 mod error;
 mod inputs;
 pub(crate) mod protocol;
+pub(crate) mod static_file;
 
 pub use error::PackageError;
 
@@ -51,11 +53,12 @@ use super::zip::WindowsZipProvider;
 use super::{
     BUILTIN_AGENT_PLUGIN_NAME, BUILTIN_CLAUDE_PLUGIN_PROJECTION_NAME,
     BUILTIN_CODEX_PLUGIN_PROJECTION_NAME, BUILTIN_OPENCODE_PLUGIN_PROJECTION_NAME,
-    BUILTIN_STATIC_SKILL_NAME, BUILTIN_WINDOWS_ZIP_NAME, DEFAULT_PACKAGE_ROOT, PackageProvider,
-    PackageTargetRequest,
+    BUILTIN_STATIC_FILE_NAME, BUILTIN_STATIC_SKILL_NAME, BUILTIN_WINDOWS_ZIP_NAME,
+    DEFAULT_PACKAGE_ROOT, PackageProvider, PackageTargetRequest,
 };
 use inputs::resolve_inputs;
 use protocol::{PackagePlan, StagedArtifact};
+use static_file::StaticFileProvider;
 
 /// Everything one package-phase execution needs, and nothing more.
 ///
@@ -227,6 +230,9 @@ fn execute_one(
     let pin = row.pin().to_string();
     let key = target.mechanism.to_string();
     let provider: Builtin = match row.handler() {
+        ExtensionHandler::Builtin { name } if name == BUILTIN_STATIC_FILE_NAME => {
+            Builtin::StaticFile(StaticFileProvider)
+        }
         ExtensionHandler::Builtin { name } if name == BUILTIN_STATIC_SKILL_NAME => {
             Builtin::StaticSkill(StaticSkillProvider)
         }
@@ -273,7 +279,9 @@ fn execute_one(
     };
     let plan = provider.plan(&request)?;
     let fingerprint = provider.fingerprint(&request, &plan)?;
-    prepare_output_dir(&request)?;
+    if !provider.prepares_output() {
+        prepare_output_dir(&request)?;
+    }
     let staged = provider.apply(&request, &plan)?;
     let produced = record_all(
         execution,
@@ -297,20 +305,27 @@ fn execute_one(
 
 /// The builtin package-role adapters, behind one dispatch.
 ///
-/// An enum rather than a boxed trait object: the builtin set is closed and
-/// engine-owned, so the exhaustive match IS the registry of what this
-/// phase implements, and a third builtin cannot be added without the
-/// compiler naming every place that has to learn it.
+/// The builtin set is closed, so this exhaustive enum is its dispatch map.
 enum Builtin {
+    StaticFile(StaticFileProvider),
     StaticSkill(StaticSkillProvider),
     AgentPlugin(AgentPluginProvider),
     WindowsZip(WindowsZipProvider),
     ClientProjection(ClientProjectionProvider),
 }
 
+impl Builtin {
+    /// Static-file opens and proves its source before resetting the output
+    /// directory, so its one streaming safefs operation owns that ordering.
+    const fn prepares_output(&self) -> bool {
+        matches!(self, Self::StaticFile(_))
+    }
+}
+
 impl PackageProvider for Builtin {
     fn descriptor(&self) -> super::ProviderDescriptor {
         match self {
+            Self::StaticFile(provider) => provider.descriptor(),
             Self::StaticSkill(provider) => provider.descriptor(),
             Self::AgentPlugin(provider) => provider.descriptor(),
             Self::WindowsZip(provider) => provider.descriptor(),
@@ -323,6 +338,7 @@ impl PackageProvider for Builtin {
         request: &PackageTargetRequest<'_>,
     ) -> Result<PackagePlan, super::MechanismError> {
         match self {
+            Self::StaticFile(provider) => provider.plan(request),
             Self::StaticSkill(provider) => provider.plan(request),
             Self::AgentPlugin(provider) => provider.plan(request),
             Self::WindowsZip(provider) => provider.plan(request),
@@ -336,6 +352,7 @@ impl PackageProvider for Builtin {
         plan: &PackagePlan,
     ) -> Result<protocol::PackageFingerprint, super::MechanismError> {
         match self {
+            Self::StaticFile(provider) => provider.fingerprint(request, plan),
             Self::StaticSkill(provider) => provider.fingerprint(request, plan),
             Self::AgentPlugin(provider) => provider.fingerprint(request, plan),
             Self::WindowsZip(provider) => provider.fingerprint(request, plan),
@@ -349,6 +366,7 @@ impl PackageProvider for Builtin {
         plan: &PackagePlan,
     ) -> Result<Vec<StagedArtifact>, super::MechanismError> {
         match self {
+            Self::StaticFile(provider) => provider.apply(request, plan),
             Self::StaticSkill(provider) => provider.apply(request, plan),
             Self::AgentPlugin(provider) => provider.apply(request, plan),
             Self::WindowsZip(provider) => provider.apply(request, plan),
@@ -362,6 +380,7 @@ impl PackageProvider for Builtin {
         staged: &StagedArtifact,
     ) -> Result<protocol::VerifiedPackageArtifact, super::MechanismError> {
         match self {
+            Self::StaticFile(provider) => provider.verify(request, staged),
             Self::StaticSkill(provider) => provider.verify(request, staged),
             Self::AgentPlugin(provider) => provider.verify(request, staged),
             Self::WindowsZip(provider) => provider.verify(request, staged),
@@ -379,34 +398,17 @@ impl PackageProvider for Builtin {
 /// A link occupying the path is refused rather than followed — removing
 /// through one would delete somebody else's tree.
 fn prepare_output_dir(request: &PackageTargetRequest<'_>) -> Result<(), PackageError> {
-    let directory = request.output_dir();
     let refuse = |reason: String| PackageError::OutputRoot {
         target: request.target.id.clone(),
         path: request.output_dir_relative(),
         reason,
     };
-    if relative_to(&directory, request.project_root).is_none() {
-        return Err(refuse(
-            "it does not resolve inside the selected project".to_owned(),
-        ));
-    }
-    match std::fs::symlink_metadata(&directory) {
-        Ok(metadata) if metadata.file_type().is_symlink() => {
-            return Err(refuse(
-                "a link occupies the path; the engine never removes a tree through a link"
-                    .to_owned(),
-            ));
-        }
-        Ok(metadata) if metadata.is_dir() => {
-            std::fs::remove_dir_all(&directory).map_err(|error| refuse(error.to_string()))?;
-        }
-        Ok(_) => {
-            std::fs::remove_file(&directory).map_err(|error| refuse(error.to_string()))?;
-        }
-        Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
-        Err(error) => return Err(refuse(error.to_string())),
-    }
-    std::fs::create_dir_all(&directory).map_err(|error| refuse(error.to_string()))
+    let project =
+        Project::open(request.project_root).map_err(|error| refuse(format!("{error:#}")))?;
+    project
+        .reset_dir(&request.output_dir_relative())
+        .map(|_| ())
+        .map_err(|error| refuse(format!("{error:#}")))
 }
 
 /// Verify, record and publish every distributable one target produced.

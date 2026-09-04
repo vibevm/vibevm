@@ -71,6 +71,7 @@ pub(crate) fn unwind(
             retained.push(selected.target.id.clone());
             continue;
         };
+        let staging = home.staging();
         let request = DeployTargetRequest {
             target: selected.target,
             profile: &execution.selection.profile,
@@ -81,7 +82,9 @@ pub(crate) fn unwind(
             prior_receipt: Some(receipt),
             recovery_intent: None,
             artifact: None,
-            staging: None,
+            // A reversible provider's validated prior-state handle may name
+            // bytes in this deployment's engine-owned staging namespace.
+            staging: Some(&staging),
         };
         let transaction = Transaction {
             state,
@@ -101,7 +104,10 @@ pub(crate) fn unwind(
             receipt.prior_state_handle.as_deref(),
             ReceiptStatus::RolledBack,
         ) {
-            Ok(_) => rolled_back.push(selected.target.id.clone()),
+            Ok(_) => {
+                let _ = state.cleanup_staging(&home);
+                rolled_back.push(selected.target.id.clone());
+            }
             Err(_) => retained.push(selected.target.id.clone()),
         }
         drop(guards);

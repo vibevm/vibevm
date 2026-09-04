@@ -15,6 +15,7 @@
 //!
 //!    ```text
 //!    <home>/<deployment-id>/intent.json         the §7.2 durable intent
+//!    <home>/<deployment-id>/inverse.json        an in-progress saga inverse
 //!    <home>/<deployment-id>/checkpoints.json    the apply checkpoint ledger
 //!    <home>/<deployment-id>/lock-resources.json the §6.3.1.2 lock sidecar
 //!    <home>/<deployment-id>/receipt.json        the §7.2 finalized receipt
@@ -54,6 +55,9 @@ use vibe_wire::generated::deploy_receipt::DeployReceipt;
 
 use super::error::DeployError;
 use super::sidecar::{LOCK_RESOURCES_FILE, LockResources};
+
+mod inverse;
+pub(crate) use inverse::InverseRecord;
 
 // The provider-facing checkpoint sink lives in its own cell and is
 // re-exported here, so every existing `state::CheckpointLedger` use site
@@ -407,25 +411,34 @@ impl DeployState {
             path: rendered(&staging),
             reason,
         };
-        match std::fs::symlink_metadata(&staging) {
-            Ok(metadata) if metadata.file_type().is_symlink() => {
-                return Err(refuse(
-                    "a link occupies the staging path; the engine never removes a tree through a \
-                     link"
-                        .to_owned(),
-                ));
-            }
-            Ok(metadata) if metadata.is_dir() => {
-                std::fs::remove_dir_all(&staging).map_err(|error| refuse(error.to_string()))?;
-            }
-            Ok(_) => {
-                std::fs::remove_file(&staging).map_err(|error| refuse(error.to_string()))?;
-            }
-            Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
-            Err(error) => return Err(refuse(error.to_string())),
+        let relative = home.member(STAGING_DIR);
+        let keep_rollback = self.read_inverse(home)?.is_some();
+        if self.read_intent(home)?.is_some() || keep_rollback {
+            self.project
+                .dir(&[home.id(), STAGING_DIR], true)
+                .map_err(|error| refuse(format!("{error:#}")))?;
+        } else {
+            self.project
+                .reset_dir(&relative)
+                .map_err(|error| refuse(format!("{error:#}")))?;
         }
-        std::fs::create_dir_all(&staging).map_err(|error| refuse(error.to_string()))?;
         Ok(staging)
+    }
+
+    /// Clear rollback/staging bytes after the whole selected deploy finished.
+    /// A live intent deliberately keeps them for recovery instead.
+    pub(crate) fn cleanup_staging(&self, home: &DeploymentHome) -> Result<(), DeployError> {
+        let staging = home.staging();
+        if self.read_intent(home)?.is_some() || self.read_inverse(home)?.is_some() {
+            return Ok(());
+        }
+        self.project
+            .reset_dir(&home.member(STAGING_DIR))
+            .map(|_| ())
+            .map_err(|error| DeployError::StateHome {
+                path: rendered(&staging),
+                reason: format!("{error:#}"),
+            })
     }
 
     /// Every receipt this state home holds, in deployment-id order.

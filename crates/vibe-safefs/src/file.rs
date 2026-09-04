@@ -17,6 +17,7 @@ use std::path::Path;
 
 use anyhow::{Context, Result, bail};
 use cap_fs_ext::{FollowSymlinks, OpenOptionsFollowExt};
+use sha2::Digest as _;
 use specmark::spec;
 
 use crate::component::{STAGE_PREFIX, split_relative};
@@ -26,11 +27,13 @@ use crate::publish::{PublishError, Published};
 mod bounded;
 mod create_new;
 pub(crate) mod identity;
+mod stable;
 mod stream;
 #[cfg(any(test, feature = "inject-failures"))]
 pub use create_new::{fail_before_publish, fail_before_stage_cleanup};
 pub(crate) use identity::is_not_empty;
 use identity::{FileIdentity, file_identity, number_of_links};
+pub use stable::StableFileState;
 pub use stream::ContentDigest;
 
 /// How many distinct staging names to try before refusing. Exceeding this
@@ -55,10 +58,22 @@ impl Project {
     /// Atomically publish one file at a forward-slashed project-relative path.
     /// Missing parents are created no-follow.
     pub fn write_atomic(&self, relative: &str, bytes: &[u8]) -> Result<Published, PublishError> {
+        self.write_atomic_with_mode(relative, bytes, None)
+    }
+
+    /// Atomically publish one file with an optional exact Unix permission
+    /// mode. The mode is set on the held stage before rename, so the visible
+    /// name never has desired bytes with an intermediate mode.
+    pub fn write_atomic_with_mode(
+        &self,
+        relative: &str,
+        bytes: &[u8],
+        unix_mode: Option<u32>,
+    ) -> Result<Published, PublishError> {
         let root = self
             .root_dir()
             .map_err(|error| PublishError::before(Vec::new(), error))?;
-        self.write_atomic_in(&root, relative, bytes)
+        self.write_atomic_in_with_mode(&root, relative, bytes, unix_mode)
     }
 
     /// The same publication, relative to an already-pinned directory.
@@ -72,6 +87,17 @@ impl Project {
         directory: &Pinned,
         relative: &str,
         bytes: &[u8],
+    ) -> Result<Published, PublishError> {
+        self.write_atomic_in_with_mode(directory, relative, bytes, None)
+    }
+
+    /// The mode-aware twin of [`Self::write_atomic_in`].
+    pub fn write_atomic_in_with_mode(
+        &self,
+        directory: &Pinned,
+        relative: &str,
+        bytes: &[u8],
+        unix_mode: Option<u32>,
     ) -> Result<Published, PublishError> {
         let mut created: Vec<std::path::PathBuf> = Vec::new();
         let before = |created: &[std::path::PathBuf], error: anyhow::Error| {
@@ -97,6 +123,7 @@ impl Project {
         let written = std_file
             .write_all(bytes)
             .and_then(|()| std_file.flush())
+            .and_then(|()| stable::set_unix_mode(&std_file, unix_mode))
             .and_then(|()| std_file.sync_all());
         drop(std_file);
         if let Err(error) = written {
@@ -139,14 +166,17 @@ impl Project {
         // replacement larger than the candidate refuses at its own metadata —
         // spending nothing past `cap + 1` — instead of allocating a foreign
         // payload to compare against, and it never offers a prefix as success.
-        match self
-            .read_file_bounded_in(&destination, &name, bytes.len())
+        let wanted_digest = format!("{:x}", sha2::Sha256::digest(bytes));
+        match stable::read_stable_in(self, &destination, &name, Some(bytes.len() as u64))
             .map_err(&possibly)?
         {
-            Some(visible) if visible.as_slice() == bytes => {}
+            Some(visible)
+                if visible.sha256 == wanted_digest
+                    && visible.bytes == bytes.len() as u64
+                    && stable::mode_matches(visible.unix_mode, unix_mode) => {}
             Some(_) => {
                 return Err(possibly(anyhow::anyhow!(
-                    "published bytes of `{}` do not match the staged bytes",
+                    "published bytes or mode of `{}` do not match the staged state",
                     destination.join(&name).display()
                 )));
             }
@@ -324,6 +354,12 @@ impl Project {
     pub fn read_file(&self, relative: &str) -> Result<Option<Vec<u8>>> {
         let root = self.root_dir()?;
         self.read_file_in(&root, relative)
+    }
+
+    /// Remove one file at a project-relative path; `Ok(false)` when absent.
+    pub fn remove_file(&self, relative: &str) -> Result<bool> {
+        let root = self.root_dir()?;
+        self.remove_file_in(&root, relative)
     }
 
     /// Read one file at a relative path below `directory`, or `None` when
@@ -556,3 +592,7 @@ mod identity_tests;
 #[cfg(test)]
 #[path = "file/publish_verify_tests.rs"]
 mod publish_verify_tests;
+
+#[cfg(test)]
+#[path = "file/stable_tests.rs"]
+mod stable_tests;

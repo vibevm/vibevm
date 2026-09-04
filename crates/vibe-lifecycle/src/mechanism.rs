@@ -463,6 +463,12 @@ pub(crate) const BUILTIN_WINDOWS_ZIP_PIN: &str = "org.vibevm/vibe#windows-zip";
 /// The `handler = { kind = "builtin", name = … }` spelling of the same row.
 pub(crate) const BUILTIN_WINDOWS_ZIP_NAME: &str = "windows-zip";
 
+/// The reserved identity of §13.1's opaque static-file packager.
+pub(crate) const BUILTIN_STATIC_FILE_PIN: &str = "org.vibevm/vibe#static-file";
+
+/// The `handler = { kind = "builtin", name = … }` spelling of the same row.
+pub(crate) const BUILTIN_STATIC_FILE_NAME: &str = "static-file";
+
 /// The reserved identity of §6.3's Claude projection provider.
 ///
 /// The three pins below carry §6.3.0.2's deliberate lesson: a provider id
@@ -499,6 +505,12 @@ pub(crate) const BUILTIN_VIBE_BIN_PIN: &str = "org.vibevm/vibe#vibe-bin";
 
 /// The `handler = { kind = "builtin", name = … }` spelling of the same row.
 pub(crate) const BUILTIN_VIBE_BIN_NAME: &str = "vibe-bin";
+
+/// The reserved identity of §13.1's receipt-owned opt launcher provider.
+pub(crate) const BUILTIN_VIBE_OPT_LAUNCHER_PIN: &str = "org.vibevm/vibe#vibe-opt-launcher";
+
+/// The `handler = { kind = "builtin", name = … }` spelling of the same row.
+pub(crate) const BUILTIN_VIBE_OPT_LAUNCHER_NAME: &str = "vibe-opt-launcher";
 
 /// The reserved identity of §6.3.0.5's Claude standalone-skill deploy row.
 ///

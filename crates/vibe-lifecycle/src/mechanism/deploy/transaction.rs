@@ -1,5 +1,4 @@
-//! The §7.2 transaction — the atom's core, and the one cell that owns the
-//! order of durable events.
+//! The §7.2 transaction — the cell that owns the durable event order.
 //!
 //! §7.2 verbatim, each sentence a step below:
 //!
@@ -18,19 +17,11 @@
 //! > the exact resources. A receipt plus its still-present matching intent
 //! > is a benign crash after finalization: retire the intent.
 //!
-//! The ORDER is the whole point, so it is stated once, here, and no caller
-//! may reorder it: a provider is handed the destination only after the
-//! intent is durable, and the receipt is written only after an INDEPENDENT
-//! observation of the destination — never from what apply claimed.
+//! Providers see destinations only after durable intent; receipts follow
+//! independent observation, never an apply claim.
 //!
-//! One case §7.2 does not spell, decided here and named: an unretired
-//! intent whose plan hash is NOT the plan now being applied. Its
-//! three-digest law still runs in full — a foreign mutation refuses exactly
-//! as it would otherwise — but the roll-forward does not, because rolling a
-//! destination forward to a desired state nobody wants any more would be
-//! this engine inventing an intent. The stale journal is retired, the fact
-//! is reported, and the new plan applies over a destination the digest law
-//! just proved is at either its prior or its old desired state.
+//! A stale unretired plan still runs the three-digest law, then retires
+//! without roll-forward; the new plan applies only over a proven old state.
 //!
 //! §6.3.1.2 adds ONE record to that order and does not otherwise disturb it:
 //! the durable lock sidecar's PENDING binding, published and read back
@@ -54,9 +45,12 @@ use super::error::DeployError;
 use super::observation::{divergent, drifted, mismatched, prior_digest};
 use super::protocol::{DeployPlan, destination_scope};
 use super::sidecar;
-use super::state::{CheckpointLedger, DeployState, DeploymentHome};
+use super::state::{CheckpointLedger, DeployState, DeploymentHome, InverseRecord};
 use crate::mechanism::record::sanitize;
 use crate::mechanism::{DeployProvider, DeployTargetRequest, EffectClass};
+
+#[path = "transaction/inverse.rs"]
+mod inverse;
 
 /// Everything one target's transaction needs, and nothing it could use to
 /// mint an identity of its own.
@@ -383,27 +377,6 @@ impl Transaction<'_> {
         })
     }
 
-    /// Reverse one applied deployment — the saga's rollback step and the
-    /// body of `undeploy`.
-    ///
-    /// The drift law is the ENGINE's and is proven here, before the
-    /// provider is asked to remove anything: a resource that is absent is
-    /// already gone (benign), a resource at its recorded post-digest is
-    /// this deployment's to remove, and anything else is §7.2's refusal.
-    ///
-    /// `prior_state_handle` is how the CALLER says which of the two
-    /// inverse operations this is — the provider's inputs are otherwise
-    /// identical, and a provider cannot be asked to guess. The saga's
-    /// rollback passes the receipt's handle (restore what the failed
-    /// generation displaced); `undeploy` passes `None` (remove what the
-    /// receipt owns, whatever an earlier generation once held).
-    ///
-    /// §6.3.1.3's last sentence is the order at the end: "Successful
-    /// inverse clears committed ownership after the rolled-back receipt is
-    /// durable." A failure — the drift refusal, the provider's own, or the
-    /// receipt write — returns before the clear, so the committed binding
-    /// survives and the destination it names is still locked by whoever
-    /// tries again.
     pub(crate) fn remove(
         &self,
         provider: &dyn DeployProvider,
@@ -412,6 +385,20 @@ impl Transaction<'_> {
         prior_state_handle: Option<&str>,
         status: ReceiptStatus,
     ) -> Result<Vec<String>, DeployError> {
+        let inverse = match (prior_state_handle, receipt.resources.as_slice()) {
+            (Some(handle), [owned])
+                if self.provider_pin == crate::mechanism::BUILTIN_VIBE_OPT_LAUNCHER_PIN =>
+            {
+                Some(InverseRecord::new(
+                    receipt.generation,
+                    self.provider_pin,
+                    &owned.resource,
+                    &owned.post_digest,
+                    handle,
+                ))
+            }
+            _ => None,
+        };
         let resources: Vec<String> = receipt
             .resources
             .iter()
@@ -425,20 +412,42 @@ impl Transaction<'_> {
                 resources: drifted.join(", "),
             });
         }
+        if let Some(marker) = inverse.as_ref() {
+            self.state.write_inverse(self.home, marker)?;
+        }
         let present: Vec<String> = observed
             .iter()
             .filter(|resource| resource.digest.is_some())
             .map(|resource| resource.resource.clone())
             .collect();
         let report = provider.remove(request, &present, prior_state_handle)?;
+        let restored = if inverse.is_some() {
+            let independently_observed = provider.verify(request, &resources)?;
+            if independently_observed != report.expected_remaining {
+                return Err(DeployError::VerifyMismatch {
+                    target: request.target.id.clone(),
+                    resources: resources.join(", "),
+                });
+            }
+            independently_observed
+                .into_iter()
+                .filter_map(|resource| {
+                    resource.digest.map(|digest| OwnedResource {
+                        resource: resource.resource,
+                        post_digest: digest,
+                    })
+                })
+                .collect()
+        } else {
+            Vec::new()
+        };
         let mut reversed = receipt.clone();
         reversed.status = status;
         reversed.finalized_at = Some(self.timestamp(request)?);
-        // The receipt keeps existing and stops owning anything: §7.2 lets
-        // `undeploy` remove only receipt-owned state, so a receipt that
-        // still listed removed resources would authorise removing them
-        // twice.
-        reversed.resources = Vec::new();
+        reversed.resources = restored;
+        if inverse.is_some() {
+            reversed.prior_state_handle = None;
+        }
         reversed.evidence = Some(sanitize(&format!(
             "{}; removed {} resource(s): {}",
             receipt.evidence.as_deref().unwrap_or("no prior evidence"),
@@ -446,7 +455,12 @@ impl Transaction<'_> {
             report.evidence,
         )));
         self.state.write_receipt(self.home, &reversed)?;
-        sidecar::clear_committed(self.state, self.home, receipt.generation)?;
+        if inverse.is_none() {
+            sidecar::clear_committed(self.state, self.home, receipt.generation)?;
+        }
+        if inverse.is_some() {
+            self.state.retire_inverse(self.home)?;
+        }
         Ok(report.removed)
     }
 

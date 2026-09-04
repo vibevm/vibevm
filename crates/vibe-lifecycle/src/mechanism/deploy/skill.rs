@@ -466,6 +466,7 @@ impl DeployProvider for SkillDeployProvider {
         }
         self.prune(request, &destination)?;
         Ok(RemoveReport {
+            expected_remaining: Vec::new(),
             evidence: format!(
                 "{} skill `{}`: removed the receipt-owned entry {}; only proven-empty \
                  directories under the named skill directory were pruned and every foreign \

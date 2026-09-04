@@ -384,7 +384,8 @@ fn projection_config(
 ) -> Result<&ClientProjectionConfig, MechanismError> {
     match &plan.config {
         PackageConfig::ClientProjection(config) => Ok(config),
-        PackageConfig::StaticSkill(_)
+        PackageConfig::StaticFile(_)
+        | PackageConfig::StaticSkill(_)
         | PackageConfig::AgentPlugin(_)
         | PackageConfig::WindowsZip(_) => Err(MechanismError::PlanRoleMismatch {
             provider: client.pin().to_owned(),

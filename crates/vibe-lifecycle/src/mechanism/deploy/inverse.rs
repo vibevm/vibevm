@@ -11,8 +11,12 @@
 //!
 //! > "Apply, recovery, saga rollback and undeploy take the deployment-id
 //! > lock, then the union of current, committed and pending destination
-//! > locks in canonical order. … Successful inverse clears committed
-//! > ownership after the rolled-back receipt is durable."
+//! > locks in canonical order."
+//!
+//! Ordinary undeploy removes resources and clears ownership. A saga rollback
+//! that restores prior bytes instead publishes a rolled-back receipt owning
+//! that independently verified prior state, so the same requested deploy can
+//! continue without treating the engine's restoration as a foreign file.
 //!
 //! What this cell will NOT do is derive the document by parsing the logical
 //! member. That would be a second grammar for an identity the engine never

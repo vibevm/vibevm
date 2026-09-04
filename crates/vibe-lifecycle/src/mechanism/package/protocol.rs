@@ -20,6 +20,7 @@ use vibe_core::manifest::ArtifactKind;
 use vibe_wire::generated::artifact_record::ArtifactShape;
 
 use crate::mechanism::client_projection::config::ClientProjectionConfig;
+use crate::mechanism::package::static_file::StaticFileConfig;
 use crate::mechanism::plugin::config::AgentPluginConfig;
 use crate::mechanism::skill::config::StaticSkillConfig;
 use crate::mechanism::zip::config::WindowsZipConfig;
@@ -100,6 +101,7 @@ pub(crate) struct ResolvedInput {
 /// shape.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) enum PackageConfig {
+    StaticFile(StaticFileConfig),
     StaticSkill(StaticSkillConfig),
     AgentPlugin(AgentPluginConfig),
     WindowsZip(WindowsZipConfig),

@@ -143,6 +143,9 @@ pub(crate) struct ObservedResource {
 pub(crate) struct RemoveReport {
     /// The resource identities the provider really removed.
     pub(crate) removed: Vec<String>,
+    /// Exact resources a rollback claims remain after restoration. Empty for
+    /// ordinary undeploy and providers that remove rather than restore.
+    pub(crate) expected_remaining: Vec<ObservedResource>,
     /// Typed evidence, sanitised by the engine before it is reported.
     pub(crate) evidence: String,
 }

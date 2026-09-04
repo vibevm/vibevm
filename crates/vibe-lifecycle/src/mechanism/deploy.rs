@@ -42,9 +42,11 @@ use vibe_wire::generated::deploy_receipt::{DeployIdentity, DeployReceipt};
 pub(crate) mod artifact;
 pub(crate) mod error;
 pub(crate) mod inverse;
+mod inverse_resume;
 pub(crate) mod ledger;
 pub(crate) mod model;
 pub(crate) mod observation;
+pub(crate) mod opt_launcher;
 pub(crate) mod ownership;
 pub(crate) mod plan;
 pub(crate) mod plugin;
@@ -67,12 +69,16 @@ pub use plan::plan_deploy_targets;
 
 use super::order::{GraphNode, OrderFault, Unresolved, dag_order};
 use super::vibebin::VibeBinProvider;
-use super::{BUILTIN_VIBE_BIN_NAME, DeployProvider, DeployTargetRequest};
+use super::{
+    BUILTIN_VIBE_BIN_NAME, BUILTIN_VIBE_OPT_LAUNCHER_NAME, DeployProvider, DeployTargetRequest,
+};
+use opt_launcher::VibeOptLauncherProvider;
 use plugin::{ClientPluginProvider, PluginClient};
 use skill::SkillDeployProvider;
 // The inverse path lives in its own cell and is re-exported here, so
 // `undeploy_targets` and every test still spell it one way.
 pub(crate) use inverse::undeploy_resolved;
+use inverse_resume::resume_inverses;
 use model::row;
 use ownership::{ownership_of, refuse_changed_ownership, refuse_foreign_ownership};
 use preplan::{Preplanned, preplan};
@@ -220,6 +226,9 @@ fn builtin_provider(
         ExtensionHandler::Builtin { name } if name == BUILTIN_VIBE_BIN_NAME => {
             Ok(Box::new(VibeBinProvider))
         }
+        ExtensionHandler::Builtin { name } if name == BUILTIN_VIBE_OPT_LAUNCHER_NAME => {
+            Ok(Box::new(VibeOptLauncherProvider))
+        }
         ExtensionHandler::Builtin { name } if name == super::BUILTIN_CLAUDE_SKILL_NAME => {
             Ok(Box::new(SkillDeployProvider::new(SkillClient::Claude)))
         }
@@ -270,6 +279,7 @@ pub(crate) fn apply_selection(
     if resolved.is_empty() {
         return Ok(Vec::new());
     }
+    resume_inverses(execution, resolved)?;
     // Every artifact resolved, every provider planned, every prior receipt
     // read and the whole owned/lock resource set judged — before a single
     // destination byte, and before the state home is even created.
@@ -308,6 +318,11 @@ pub(crate) fn apply_prepared(
                     execution, &state, &identity, resolved, &applied, error,
                 ));
             }
+        }
+    }
+    for (index, _) in &applied {
+        if let Some(selected) = resolved.get(*index) {
+            state.cleanup_staging(&home_of(execution, &selected.target.id))?;
         }
     }
     Ok(outcomes)

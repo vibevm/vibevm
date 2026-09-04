@@ -292,7 +292,8 @@ impl PackageProvider for AgentPluginProvider {
 fn plugin_config(plan: &PackagePlan) -> Result<&AgentPluginConfig, MechanismError> {
     match &plan.config {
         PackageConfig::AgentPlugin(config) => Ok(config),
-        PackageConfig::StaticSkill(_)
+        PackageConfig::StaticFile(_)
+        | PackageConfig::StaticSkill(_)
         | PackageConfig::WindowsZip(_)
         | PackageConfig::ClientProjection(_) => Err(MechanismError::PlanRoleMismatch {
             provider: BUILTIN_AGENT_PLUGIN_PIN.to_owned(),

@@ -463,6 +463,7 @@ impl crate::mechanism::DeployProvider for VibeBinProvider {
             )?;
             return Ok(RemoveReport {
                 removed: Vec::new(),
+                expected_remaining: Vec::new(),
                 evidence: format!(
                     "vibe-bin restored the prior active-payload pointer {} to {digest}; the \
                      version-free launcher {} and every stored payload were left in place",
@@ -481,6 +482,7 @@ impl crate::mechanism::DeployProvider for VibeBinProvider {
             }
         }
         Ok(RemoveReport {
+            expected_remaining: Vec::new(),
             evidence: format!(
                 "vibe-bin removed {} owned resource(s) of `{}`; the content-addressed payloads \
                  were not touched",
