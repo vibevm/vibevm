@@ -1,0 +1,59 @@
+[package]
+name = "zai-glm-claude"
+group = "org.vibevm.world"
+kind = "tool"
+version = "1.0.0"
+epoch = 1
+format = "normal"
+authors = ["Oleg Chirukhin"]
+license = "UPL-1.0"
+description = "A receipt-installed Claude Code launcher and complete parent/worker protocol for delegating to z.ai GLM models from Claude or Codex"
+keywords = ["zai", "glm", "claude-code", "delegation", "agents"]
+
+[compatibility]
+min_vibe_version = "1.0.0"
+requires_kinds = []
+
+[boot_snippet]
+source = "vibevm/vibespecs/boot/75-tool-zai-glm-claude.xml"
+category = "tool"
+
+[[artifacts.package]]
+id = "claudez-powershell"
+mechanism = "package:static-file"
+inputs = [{ path = "launchers/claudez.ps1" }]
+outputs = [{ id = "claudez.ps1", kind = "file" }]
+
+[[artifacts.package]]
+id = "claudez-command"
+mechanism = "package:static-file"
+inputs = [{ path = "launchers/claudez.cmd" }]
+outputs = [{ id = "claudez.cmd", kind = "file" }]
+
+[[artifacts.package]]
+id = "claudez-posix"
+mechanism = "package:static-file"
+inputs = [{ path = "launchers/claudez" }]
+outputs = [{ id = "claudez", kind = "file" }]
+
+[[deploy.target]]
+id = "claudez-powershell"
+artifact = "claudez.ps1"
+mechanism = "deploy:vibe-opt-launcher"
+
+[[deploy.target]]
+id = "claudez-command"
+artifact = "claudez.cmd"
+mechanism = "deploy:vibe-opt-launcher"
+depends_on = ["claudez-powershell"]
+
+[[deploy.target]]
+id = "claudez-posix"
+artifact = "claudez"
+mechanism = "deploy:vibe-opt-launcher"
+
+[deploy.profiles.windows]
+targets = ["claudez-powershell", "claudez-command"]
+
+[deploy.profiles.posix]
+targets = ["claudez-posix"]

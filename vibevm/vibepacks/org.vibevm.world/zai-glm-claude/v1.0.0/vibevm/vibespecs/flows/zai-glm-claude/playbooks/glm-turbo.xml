@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Playbook: z.ai GLM turbo lane</title>
+  <status stage="spec" state="done"/>
+  <p><CALIBRATION fact="true" status="spec/done">The launcher currently requests
+  `glm-5-turbo` for Claude's small-model traffic. Direct worker use is justified
+  only by a live launcher/profile that actually selects it; internal Haiku
+  routing does not prove a separately controllable worker lane.</CALIBRATION></p>
+  <wins title="Task shapes it tends to win">
+    <facts ordered="false">
+      <SHORT-MECHANICAL fact="true" status="spec/done">Short, exact mechanical edits with
+      all context compiled into the packet and a deterministic oracle.</SHORT-MECHANICAL>
+      <CLASSIFICATION fact="true" status="spec/done">Bounded classification, extraction or
+      fixture filling with a supplied schema and no design choice.</CLASSIFICATION>
+      <CHEAP-VERIFY fact="true" status="spec/done">Tasks whose complete result is cheaper
+      to verify than to regenerate.</CHEAP-VERIFY>
+    </facts>
+  </wins>
+  <avoid title="Do not route here">
+    <facts ordered="false">
+      <NO-ARCHITECTURE fact="true" status="spec/done">Architecture, ambiguous semantics,
+      security posture and cross-system trade-offs remain parent-side.</NO-ARCHITECTURE>
+      <NO-THIN-PROMPT fact="true" status="spec/done">Do not hand a small lane a broad goal
+      with thin context. Exact examples, output skeleton and validation command
+      are part of the packet.</NO-THIN-PROMPT>
+      <NO-TRANSFERRED-CALIBRATION fact="true" status="spec/done">Do not inherit turn budgets,
+      tool restrictions or quality claims from a different direct-provider or
+      fractality profile. Observe the actual lane.</NO-TRANSFERRED-CALIBRATION>
+    </facts>
+  </avoid>
+</spec>
