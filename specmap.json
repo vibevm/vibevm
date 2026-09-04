@@ -51927,10 +51927,10 @@
     },
     {
       "anchor": "QUIRK-VVM-STORE-MOVED-UNDER-DOT-VIBE",
-      "content_hash": "sha256:8262d048434810d2f37ad16c243777966cd116d6b61bcd4dd8cb3e456b77c0e2",
+      "content_hash": "sha256:c23a0c085ed0275516039874b900eb5d1fcac35ac0eebd14a13c3094ca7897da",
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
-      "heading": "**The vibevm version store lives at\n  `~/.vibe/opt` on this box since 2026-08-20** (owner's instruction): `~/.vibe/opt/bin/`\n  holds the `vibe` shims, `~/.vibe/opt/vibevm/` the versions and the `current`\n  pointer. **`~/opt/bin` is NOT retired** — three sibling products (`vibeframe`,\n  `vibeterm`, `launcher`) still keep their stores under `~/opt/` and their shims\n  there. The canonical `claudez.ps1` / `claudez.cmd` are now receipt-deployed by\n  `tool:org.vibevm.world/zai-glm-claude` under `~/.vibe/opt/bin`; old\n  `~/opt/bin/claudez*` copies are legacy, and `claudez2` remains disabled unless\n  the owner explicitly re-enables it. The user `PATH` therefore carries **both**\n  directories, `~/.vibe/opt/bin` first. Verified live: `vibe --version` and the\n  canonical GLM launchers resolve from the new location. @status:impl/done",
+      "heading": "**The vibevm version store lives at\n  `~/.vibe/opt` on this box since 2026-08-20** (owner's instruction): `~/.vibe/opt/bin/`\n  holds the `vibe` shims, `~/.vibe/opt/vibevm/` the versions and the `current`\n  pointer. **`~/opt/bin` is NOT retired** — three sibling products (`vibeframe`,\n  `vibeterm`, `launcher`) still keep their stores under `~/opt/` and their shims\n  there. The canonical `claudez.ps1` / `claudez.cmd` are now receipt-deployed by\n  `tool:org.vibevm.world/zai-glm-claude` under `~/.vibe/opt/bin`; old\n  `~/opt/bin/claudez*` copies are legacy, and `claudez2` remains disabled unless\n  the owner explicitly re-enables it. The user-scoped `PATH` carries both\n  directories with `~/.vibe/opt/bin` first, but the effective merged Windows\n  PATH observed in the current Codex process still puts a machine-scoped legacy\n  `~/opt/bin` earlier. Invoke the canonical GLM launcher by absolute path until\n  command resolution proves the new location; bare `claudez` may otherwise hit\n  the legacy copy. Verified live: the new files and receipts exist under\n  `~/.vibe/opt/bin`, and `vibe --version` resolves from the new store. @status:impl/done",
       "line": 88,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#QUIRK-VVM-STORE-MOVED-UNDER-DOT-VIBE"
     },
@@ -51940,7 +51940,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "**The last path component `opt` is\n  load-bearing and that is why the new home is `~/.vibe/opt` rather than\n  `~/.vibe`.** The version manager recognises a managed install by the shape\n  `…/opt/<product>/versions/<kind>/<id>/<n>/`, matching the literal names\n  `opt`, the product, and `versions`. Keeping `opt` as the final component made\n  the move a pure file operation with **no code change**. Renaming it is a\n  product-wide decision, not a machine one — the sibling products key on the\n  same shape. @status:impl/done",
-      "line": 99,
+      "line": 103,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#QUIRK-THE-OPT-NAME-IS-LORE-BEARING"
     },
     {
@@ -51949,7 +51949,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "**A `vibe` shim finds its\n  version relative to its own directory** (`<shim dir>/../<product>/current`), so\n  moving the shims without moving the store beside them silently breaks the\n  command — the shim is found on `PATH`, runs, and reports no active version.\n  Met and reverted during the 2026-08-20 move; the working order is: move the\n  store and the shims together, rewrite the absolute path inside `current`, then\n  touch `PATH`. @status:impl/done",
-      "line": 107,
+      "line": 111,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#QUIRK-A-SHIM-RESOLVES-RELATIVE-TO-ITSELF"
     },
     {
@@ -51958,7 +51958,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "**The user `PATH` in\n  `HKCU\\Environment` is `REG_EXPAND_SZ` and contains `%USERPROFILE%`.** Reading it\n  through the ordinary accessor returns the EXPANDED string; writing that back\n  destroys the variable reference (here, `%USERPROFILE%\\go\\bin` would have become\n  a literal path). Read it unexpanded, edit the raw string, and write it back with\n  the value kind preserved. @status:impl/done",
-      "line": 114,
+      "line": 118,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#QUIRK-USER-PATH-IS-EXPANDABLE-AND-MUST-BE-READ-RAW"
     },
     {
@@ -51967,7 +51967,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "Trigger phrases that switch the session into an alternate working posture are catalogued in [PROP-006](../common/PROP-006-operating-modes.xml). Recognise a codeword when the owner invokes it; otherwise treat the session as default posture (the four rules from `CLAUDE.md` in their plain reading). @status:impl/done",
-      "line": 123,
+      "line": 127,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#operating-modes-intro"
     },
     {
@@ -51976,7 +51976,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "Codewords currently in force: @status:impl/done",
-      "line": 124,
+      "line": 128,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#codewords-lead"
     },
     {
@@ -51985,7 +51985,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "**«move fast and break things»** ([PROP-006 §2](../common/PROP-006-operating-modes.xml#mfbt)) — pre-authorised heads-down execution. Maximum scope, testable phases, no mid-work confirmations, full reasoning depth. The four `CLAUDE.md` rules survive unchanged; only Rule 4's \"ask before routine large changes\" is suspended. Non-routine red lines (force-push, history rewrite, large blobs, CI / signing / secrets, irreversible ops) STILL require explicit owner confirmation when active. @status:impl/done",
-      "line": 126,
+      "line": 130,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#CODEWORD-MFBT"
     },
     {
@@ -65192,7 +65192,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:3ee0f7703c3ee7bbb6f289f7cc0cdc096e0d05b29257501dd781cc8fd378cc71",
+      "content_hash": "sha256:6cbcbaa79ad4fde9b6eac43201329159254014ed71c7918e2e23f28ed5222165",
       "doc_path": "common/PROP-052",
       "file": "vibevm/vibespecs/common/PROP-052-directory-layout.xml",
       "heading": "PROP-052: the vibevm/ root — the directory layout law",
@@ -65228,7 +65228,7 @@
     },
     {
       "anchor": "laws",
-      "content_hash": "sha256:14afc26f4542d7628a238dd4338a3775ebf7528c1a2fe175902bf78229ef0fad",
+      "content_hash": "sha256:f4a0a1ec8f2495bf917564d583fd086718e86a2ce6fed102ab137b7f03a862b5",
       "doc_path": "common/PROP-052",
       "file": "vibevm/vibespecs/common/PROP-052-directory-layout.xml",
       "heading": "2. Laws",
@@ -65281,12 +65281,21 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-052#REFACTOR-VERBS-FOLLOW"
     },
     {
+      "anchor": "DETACH-IS-THE-TERMINAL-EXCEPTION",
+      "content_hash": "sha256:76986edb38cc58c9c40bc4cb9f69843ed682300db9b9c50a3eaa3db44acbd07f",
+      "doc_path": "common/PROP-052",
+      "file": "vibevm/vibespecs/common/PROP-052-directory-layout.xml",
+      "heading": "**L6 — removal is\nexplicit and terminal.** The only supported transition from this layout to a\nproject with no `vibevm/` root is the contract-driven, health-gated,\nrecoverable detach operation at\n@spec://org.vibevm.core/vibevm/common/PROP-056#root. Blind deletion does not\nbecome a legacy layout and receives no compatibility reader. @status:impl/plan",
+      "line": 61,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-052#DETACH-IS-THE-TERMINAL-EXCEPTION"
+    },
+    {
       "anchor": "verification",
       "content_hash": "sha256:cbbafdf6c4b52597520ebfc74188456f27a69cd090306b273ffddff4ee845fda",
       "doc_path": "common/PROP-052",
       "file": "vibevm/vibespecs/common/PROP-052-directory-layout.xml",
       "heading": "3. Verification",
-      "line": 62,
+      "line": 68,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-052#verification"
     },
     {
@@ -65295,7 +65304,7 @@
       "doc_path": "common/PROP-052",
       "file": "vibevm/vibespecs/common/PROP-052-directory-layout.xml",
       "heading": "«Ничего не сломалось» is proven, not assumed: the full\npanel green over the moved world; `vibe check` 0/0/0; specmap\nresolve 0 unresolved with the SAME edge count as before the move;\njudging debt unchanged; a double reinstall with zero lock drift\n(idempotence); INDEX targets resolving to on-disk files by script;\nzero grep hits of the old roots in product code outside the layout\nmodule; a clean-room smoke (`vibe init` → `install` → `check` in a\ntempdir) on the new layout; and a cold-agent routing probe finding\nthe lanes under `vibevm/vibespecs/boot`. @status:spec/done",
-      "line": 63,
+      "line": 69,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-052#RELAYOUT-PROOF"
     },
     {
@@ -111163,7 +111172,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:d26a236e819218fff92b1d95c83c3287e8146147f1775b79261c3088aef279ba",
+      "content_hash": "sha256:d6b65dd8994ae2e554c2e09ac08c513dd2f9fb8c18210f96a1650c32cc262b9a",
       "doc_path": "modules/vibe-workspace/PROP-053",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-053-clean-verb.xml",
       "heading": "PROP-053: `vibe clean` and Maven-style verb chaining",
@@ -111180,12 +111189,21 @@
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#related"
     },
     {
+      "anchor": "CLEAN-IS-NOT-DETACH",
+      "content_hash": "sha256:32316f37176ea1d70843d2b754bcda96a1333308d5189b647d545e0a193d2e4a",
+      "doc_path": "modules/vibe-workspace/PROP-053",
+      "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-053-clean-verb.xml",
+      "heading": "`vibe clean` is not a\n  project-detachment surface. The terminal operation that removes the Vibe\n  relationship, rewrites native dependencies/metadata, proves native health and\n  can delete `vibe.lock` is\n  @spec://org.vibevm.core/vibevm/common/PROP-056#root. Clean retains its narrow,\n  reproducible derived-state semantics unchanged. @status:spec/done",
+      "line": 6,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#CLEAN-IS-NOT-DETACH"
+    },
+    {
       "anchor": "mandate",
       "content_hash": "sha256:db26078bd3dbcc49948521ea43cfb2226fa759e8d71123b373a405ab0ba107e9",
       "doc_path": "modules/vibe-workspace/PROP-053",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-053-clean-verb.xml",
       "heading": "1. The owner's mandate",
-      "line": 6,
+      "line": 12,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#mandate"
     },
     {
@@ -111194,7 +111212,7 @@
       "doc_path": "modules/vibe-workspace/PROP-053",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-053-clean-verb.xml",
       "heading": "The owner's words (2026-08-24), verbatim: «Для чистки нужно сделать отдельную команду vibe clean, аналог mvn clean. Она очистит vibedeps. Способ использования командной строки стоит переделать на способ похожий на Maven. Чтобы можно было сказать \"vibe clean install\", и вот тогда он вначале удалит всё, и потом перегенерирует вообще весь vibedeps. Если сделать vibe clean install org.vibevm.ai-native/rust-ai-native --offline, он должен вначале очистить всю папку, потом установить всё, потом обновить только тот пакет, что попросили.» And the refinement: «Суть команды clean в том, что я хочу, чтобы она работала похоже на Maven, но чтобы учитывалась специфика нашей работы с промтами.» @status:spec/done",
-      "line": 7,
+      "line": 13,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#CLEAN-MANDATE-VERBATIM"
     },
     {
@@ -111203,7 +111221,7 @@
       "doc_path": "modules/vibe-workspace/PROP-053",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-053-clean-verb.xml",
       "heading": "2. What clean removes — and what it must never touch",
-      "line": 9,
+      "line": 15,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#semantics"
     },
     {
@@ -111212,7 +111230,7 @@
       "doc_path": "modules/vibe-workspace/PROP-053",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-053-clean-verb.xml",
       "heading": "**`vibe clean` removes exactly the derived prompt state** of the workspace it runs in: (a) the dependency world — the whole `vibevm/vibedeps/` root of the workspace; (b) the generated boot artifacts — `vibevm/vibespecs/boot/STATIC.*`, `INDEX.md` and `INLINE.*`, each carrying the generated-by-vibe marker. That is the mvn-clean analogue: what an install writes, clean deletes. @status:impl/plan",
-      "line": 10,
+      "line": 16,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#CLEAN-REMOVES-DERIVED"
     },
     {
@@ -111221,7 +111239,7 @@
       "doc_path": "modules/vibe-workspace/PROP-053",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-053-clean-verb.xml",
       "heading": "**Never touched — the authored surface:** every authored file under `vibevm/vibespecs/` (the boot snippets `00-*`/`90-*` included — vibe never writes them), `vibevm/vibefacts/`, the instruction files (`CLAUDE.md` / `AGENTS.md` / `GEMINI.md`, their `<vibevm>` blocks included — an install rewrites the block in place, so clean has nothing to reclaim there), and every project file outside the derived set. This is the prompt-work specificity of the mandate: our `target/` equivalent holds materialised PROMPTS, and the boundary between authored prompt and derived copy is the layout itself. @status:impl/plan",
-      "line": 12,
+      "line": 18,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#CLEAN-KEEPS-AUTHORED"
     },
     {
@@ -111230,7 +111248,7 @@
       "doc_path": "modules/vibe-workspace/PROP-053",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-053-clean-verb.xml",
       "heading": "**Never touched — `vibe.lock`.** The lock is the recorded resolution, not derived state: keeping it is what makes `vibe clean install --offline` reproduce the exact world from the machine cache with zero network — the mvn analogy is `target/` vs the dependency resolution, and the lock sits on the resolution side. @status:impl/plan",
-      "line": 13,
+      "line": 19,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#CLEAN-KEEPS-THE-LOCK"
     },
     {
@@ -111239,7 +111257,7 @@
       "doc_path": "modules/vibe-workspace/PROP-053",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-053-clean-verb.xml",
       "heading": "**Never touched — the machine cache** (`~/.vibe/cache`, PROP-010). It is our `~/.m2`: clean is per-workspace, the cache is per-machine, and the offline reinstall path depends on it. Cache hygiene has its own verbs (`vibe cache …`). @status:impl/plan",
-      "line": 14,
+      "line": 20,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#CLEAN-KEEPS-THE-CACHE"
     },
     {
@@ -111248,7 +111266,7 @@
       "doc_path": "modules/vibe-workspace/PROP-053",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-053-clean-verb.xml",
       "heading": "**The run reports what left:** the slot count removed and each generated artifact deleted, one line each — never a silent sweep. A clean over an already-clean tree reports «nothing to clean» and exits 0. @status:impl/plan",
-      "line": 15,
+      "line": 21,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#CLEAN-REPORTS"
     },
     {
@@ -111257,7 +111275,7 @@
       "doc_path": "modules/vibe-workspace/PROP-053",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-053-clean-verb.xml",
       "heading": "Clean refuses to run outside a vibe project (no `vibe.toml` at or above the cwd) — a guard against sweeping an unrelated directory. @status:impl/plan",
-      "line": 16,
+      "line": 22,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#CLEAN-NEEDS-A-PROJECT"
     },
     {
@@ -111266,7 +111284,7 @@
       "doc_path": "modules/vibe-workspace/PROP-053",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-053-clean-verb.xml",
       "heading": "3. Verb chaining — the Maven phase line",
-      "line": 19,
+      "line": 25,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#chaining"
     },
     {
@@ -111275,7 +111293,7 @@
       "doc_path": "modules/vibe-workspace/PROP-053",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-053-clean-verb.xml",
       "heading": "**`vibe clean install [<pkgref>…] [flags]`** is the phase chain: run `clean` first, then the install line exactly as if `vibe install …` had been typed. Flags after the chain (`--offline`, `--assume-yes`, …) belong to the install phase; `clean` itself takes none. `vibe clean` alone runs just the clean. @status:impl/plan",
-      "line": 20,
+      "line": 26,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#CHAIN-GRAMMAR"
     },
     {
@@ -111284,7 +111302,7 @@
       "doc_path": "modules/vibe-workspace/PROP-053",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-053-clean-verb.xml",
       "heading": "**With a pkgref, the chain is clean → install-everything → refresh-the-named:** after the wipe, the full world reinstalls from the lock/manifest (PROP-011 §2.2 semantics — held pins, no drift), and then the named packages alone are re-resolved fresh against their declared constraints (the scoped `vibe update` semantics for an installed package; plain addition for a new one — both through PROP-011 `##EXPLICIT-PKGREF-FULL-SOLVE`, so the world never shrinks to the named closure). @status:impl/plan",
-      "line": 22,
+      "line": 28,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#CHAIN-PKGREF-SEMANTICS"
     },
     {
@@ -111293,7 +111311,7 @@
       "doc_path": "modules/vibe-workspace/PROP-053",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-053-clean-verb.xml",
       "heading": "A failing phase stops the chain: `clean install` with a failing install leaves the tree cleaned and the failure reported — never a half-rolled-back mix. @status:impl/plan",
-      "line": 23,
+      "line": 29,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#CHAIN-STOPS-ON-RED"
     },
     {
@@ -111302,7 +111320,7 @@
       "doc_path": "modules/vibe-workspace/PROP-053",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-053-clean-verb.xml",
       "heading": "The only chain this PROP ships is `clean install`. A general phase grammar (`clean update`, `clean check`, …) is future work and must not be improvised ad hoc — each pairing needs its own semantics ruling. @status:impl/plan",
-      "line": 24,
+      "line": 30,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#CHAIN-ONLY-INSTALL"
     },
     {
@@ -112570,6 +112588,12 @@
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "line": 538,
       "message": "section `7. Canonical claudez packet template` spans 150 lines (threshold 120) — long sections read poorly and churn often; split into smaller leaves"
+    },
+    {
+      "code": "xml-dialect",
+      "file": "vibevm/vibespecs/common/PROP-056-detached-project-export.xml",
+      "line": 64,
+      "message": "a <DETACHED-TREE> fact holds only text — found <em>"
     },
     {
       "code": "long-section",
