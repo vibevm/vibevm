@@ -102,7 +102,32 @@ impl Project {
         bytes: &[u8],
         unix_mode: Option<u32>,
     ) -> Result<Published, PublishError> {
+        self.write_atomic_durable_in_with_mode(directory, relative, bytes, unix_mode)
+            .map(|durable| durable.published)
+    }
+
+    /// Atomically publish below a pinned directory and report whether the
+    /// containing directory accepted an explicit durability flush.
+    pub fn write_atomic_durable_in(
+        &self,
+        directory: &Pinned,
+        relative: &str,
+        bytes: &[u8],
+    ) -> Result<crate::DurableWrite, PublishError> {
+        self.write_atomic_durable_in_with_mode(directory, relative, bytes, None)
+    }
+
+    /// Mode-aware durable publication. File data is synced before rename;
+    /// parent-directory durability is returned as an explicit capability.
+    pub fn write_atomic_durable_in_with_mode(
+        &self,
+        directory: &Pinned,
+        relative: &str,
+        bytes: &[u8],
+        unix_mode: Option<u32>,
+    ) -> Result<crate::DurableWrite, PublishError> {
         let mut created: Vec<std::path::PathBuf> = Vec::new();
+        let mut directory_syncs = Vec::new();
         let before = |created: &[std::path::PathBuf], error: anyhow::Error| {
             PublishError::before(created.to_vec(), error)
         };
@@ -112,9 +137,23 @@ impl Project {
                 .shallow_clone()
                 .map_err(|error| before(&created, error))?
         } else {
-            let chain = parents.iter().map(String::as_str).collect::<Vec<_>>();
-            self.dir_at_recording(directory, &chain, &mut created)
-                .map_err(|error| before(&created, error))?
+            let mut current = directory
+                .shallow_clone()
+                .map_err(|error| before(&created, error))?;
+            for component in &parents {
+                let (child, made) = current
+                    .ensure_child_recording(component)
+                    .map_err(|error| before(&created, error))?;
+                if made {
+                    created.push(child.path().to_path_buf());
+                    directory_syncs.push(crate::DirectorySync {
+                        directory: current.path().to_path_buf(),
+                        durability: crate::transaction::sync_directory(&current),
+                    });
+                }
+                current = child;
+            }
+            current
         };
         // Refuse a destination that is already a link/reparse point or a
         // directory before staging anything beside it.
@@ -190,11 +229,11 @@ impl Project {
                 )));
             }
         }
-        // Directory sync is best-effort: some platforms do not support fsync
-        // on directory handles.
-        if let Ok(handle) = destination.dir.try_clone() {
-            let _ = handle.into_std_file().sync_all();
-        }
+        let parent = crate::transaction::sync_directory(&destination);
+        directory_syncs.push(crate::DirectorySync {
+            directory: destination.path().to_path_buf(),
+            durability: parent,
+        });
         // A post-publication fault still crosses the same durability attempt
         // as success. Callers may recover by re-reading the exact bytes; they
         // must not classify a branch that skipped the directory sync the
@@ -202,8 +241,13 @@ impl Project {
         if let Some(injected) = injected_post_publication_failure(relative) {
             return Err(possibly(injected));
         }
-        Ok(Published {
-            created_directories: created,
+        Ok(crate::DurableWrite {
+            published: Published {
+                created_directories: created,
+            },
+            file_synced: true,
+            parent,
+            directory_syncs,
         })
     }
 

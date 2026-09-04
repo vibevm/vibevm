@@ -25,6 +25,10 @@ impl FileIdentity {
         bytes[8..].copy_from_slice(&self.index.to_be_bytes());
         bytes
     }
+
+    pub(crate) const fn same_filesystem(self, other: Self) -> bool {
+        self.volume == other.volume
+    }
 }
 
 /// The identity a path reports, with any injected alias applied.

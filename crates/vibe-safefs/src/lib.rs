@@ -19,7 +19,10 @@
 //! Everything here is safe Rust over `cap-std`; there is no handwritten
 //! `unsafe` and no hand-declared OS ABI.
 
-#![forbid(unsafe_code)]
+// The crate remains safe Rust except for the native no-replace rename calls in
+// `transaction::platform`. `deny` lets that tiny cfg module opt in locally;
+// every other module still rejects unsafe code.
+#![deny(unsafe_code)]
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE");
 
@@ -30,6 +33,7 @@ mod project;
 mod proof;
 mod publish;
 mod race_hook;
+mod transaction;
 
 pub use component::{
     STAGE_PREFIX, SelectionFault, UnsafeComponent, classify_component, ensure_lexically_contained,
@@ -51,4 +55,17 @@ pub use race_hook::{
     arm_after_create_dir, arm_before_bounded_read, arm_before_create_dir, arm_before_link,
     arm_before_lock, arm_before_proved_removal, arm_before_publish_verify,
     arm_between_stream_passes, arm_bounded_read_identity_check, arm_lock_identity_check,
+};
+pub use transaction::{
+    CleanupCompletion, CleanupIntent, CleanupPreparation, DirectoryDurability, DirectorySync,
+    DurableWrite, EntryIdentity, EntryState, EntryStateKind, ExistingTreeEntryLease,
+    ExternalProjectLock, ExternalStore, OwnedDirectory, OwnedDirectoryCreateError,
+    OwnedDirectoryIdentity, OwnedTreeCleanupError, OwnedTreeCleanupProgress, OwnedTreeObservation,
+    OwnedTreePublishError, PublishedPendingVerification, RenameError, TreeEntry, TreeManifest,
+};
+#[cfg(any(test, feature = "inject-failures"))]
+pub use transaction::{
+    arm_after_owned_tree_publish_move, arm_after_rename_source_check, arm_before_owned_tree_check,
+    arm_before_owned_tree_publish, arm_before_rename_noreplace, arm_between_manifest_passes,
+    arm_during_manifest_lease, arm_during_native_mutation, arm_same_filesystem_check,
 };

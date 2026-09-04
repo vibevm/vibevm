@@ -155,7 +155,7 @@ impl PinnedAbsentPath {
     }
 }
 
-fn absolute_parts(path: &Path) -> Result<(PathBuf, Vec<String>)> {
+pub(crate) fn absolute_parts(path: &Path) -> Result<(PathBuf, Vec<String>)> {
     if !path.is_absolute() {
         bail!("path must be absolute: `{}`", path.display());
     }
@@ -194,7 +194,7 @@ fn output_component_identity(component: &str) -> String {
     component.to_owned()
 }
 
-fn open_anchor(path: &Path) -> Result<Pinned> {
+pub(crate) fn open_anchor(path: &Path) -> Result<Pinned> {
     let dir = cap_std::fs::Dir::open_ambient_dir(path, cap_std::ambient_authority())
         .with_context(|| format!("opening filesystem anchor `{}`", path.display()))?;
     Ok(Pinned {

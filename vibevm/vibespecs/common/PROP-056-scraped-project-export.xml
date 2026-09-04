@@ -96,6 +96,15 @@
     user-global deployments. Receipt-owned external deployments are reported;
     the operator runs the existing explicit undeploy operation before scrape
     when external removal is desired.</NON-GOALS></p>
+    <p><SCRAPE-EXECUTION-PLATFORM-E1 fact="true" status="spec/done">Epoch-1 contract
+    parsing, planning and contract checking are portable. Mutating
+    &#96;--output&#96;, &#96;--in-place&#96; and &#96;--recover&#96; execution is enabled only
+    on Windows, where the implementation proves handle-relative exclusive
+    directory creation, no-replace publication, write/delete-denying namespace
+    seals and restartable cleanup. Linux, macOS and other hosts return the typed
+    blocker &#96;scrape-platform-unsupported&#96; before journal creation or project
+    mutation. Their wire/state-machine shape remains portable, but the product
+    does not claim a weaker check-then-rename implementation as support.</SCRAPE-EXECUTION-PLATFORM-E1></p>
   </problem>
 
   <surface title="4. Command surface">
@@ -1277,7 +1286,8 @@ timeout_seconds = 120</fence>
       <IMPL-E fact="true" status="impl/plan">E — external journal/lock, same-volume
       quarantine, in-place contract-last commit, rollback and recovery.</IMPL-E>
       <IMPL-F fact="true" status="impl/plan">F — adversarial matrix, real ecosystem
-      smokes, cross-platform fault injection, host dogfood and final ratification.</IMPL-F>
+      smokes, Windows fault injection, explicit non-Windows fail-closed probes,
+      host dogfood and final ratification.</IMPL-F>
     </facts>
   </implementation>
 

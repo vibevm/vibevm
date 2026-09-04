@@ -8,7 +8,7 @@ use specmark::spec;
 
 use crate::component::ensure_safe_component;
 
-mod absolute;
+pub(crate) mod absolute;
 mod enumerate;
 mod reset;
 
@@ -25,6 +25,7 @@ pub use absolute::{PinnedAbsentPath, PinnedAbsoluteFile};
 pub struct Project {
     pub(crate) root: cap_std::fs::Dir,
     pub(crate) root_path: PathBuf,
+    pub(crate) ancestor_identities: Vec<crate::FileIdentity>,
 }
 
 /// A capability-pinned subdirectory of the project.
@@ -120,11 +121,17 @@ impl Project {
                 project_root.display()
             );
         }
-        let root = cap_std::fs::Dir::open_ambient_dir(project_root, cap_std::ambient_authority())
-            .with_context(|| format!("opening project root `{}`", project_root.display()))?;
+        let (anchor, components) = absolute::absolute_parts(project_root)?;
+        let mut pinned = absolute::open_anchor(&anchor)?;
+        let mut ancestor_identities = vec![pinned.identity()?];
+        for component in components {
+            pinned = pinned.open_child(&component)?;
+            ancestor_identities.push(pinned.identity()?);
+        }
         Ok(Self {
-            root,
+            root: pinned.dir,
             root_path: project_root.to_path_buf(),
+            ancestor_identities,
         })
     }
 
