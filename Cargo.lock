@@ -4779,6 +4779,7 @@ dependencies = [
  "cap-std",
  "core-ai-native-specmark",
  "icu_normalizer",
+ "libc",
  "sha2",
  "tempfile",
  "unicode-casefold",

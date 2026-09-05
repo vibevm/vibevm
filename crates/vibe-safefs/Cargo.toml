@@ -11,6 +11,7 @@ homepage.workspace = true
 description = "Capability-relative, no-follow project filesystem mutation for vibevm"
 
 [dependencies]
+libc = "0.2"
 anyhow.workspace = true
 cap-std.workspace = true
 cap-fs-ext.workspace = true
