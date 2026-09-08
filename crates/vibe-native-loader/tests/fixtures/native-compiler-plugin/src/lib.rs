@@ -92,6 +92,12 @@ pub fn handle(request: CompileRequest) -> CompileReply {
 }
 
 fn frontend_reply(request: CompileRequest) -> CompileReply {
+    let invalid = request
+        .execution
+        .config
+        .get("invalid_frontend")
+        .and_then(Option::as_ref)
+        == Some(&vibe_ext::__serde_json::Value::Bool(true));
     let stem = request
         .frontend_physical_stem
         .expect("frontend dispatch requires its physical stem");
@@ -105,7 +111,7 @@ fn frontend_reply(request: CompileRequest) -> CompileReply {
         lines.push(line.to_owned());
     }
     let end = u32::try_from(lines.len()).expect("fixture document stays bounded");
-    let payload = vibe_ext::__serde_json::json!({
+    let mut payload = vibe_ext::__serde_json::json!({
         "shape": "document-document",
         "ir_schema": 1,
         "level": "document",
@@ -127,6 +133,9 @@ fn frontend_reply(request: CompileRequest) -> CompileReply {
             }
         }
     });
+    if invalid {
+        payload["doc"]["tree"]["nodes"][0]["span"]["end"] = 999.into();
+    }
     let payload = match vibe_ext::__serde_json::from_value(payload) {
         Ok(payload) => payload,
         Err(_) => return failed("native frontend could not build document IR"),

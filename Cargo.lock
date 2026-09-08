@@ -4418,6 +4418,7 @@ dependencies = [
  "vibe-lifecycle",
  "vibe-llm",
  "vibe-mcp",
+ "vibe-native-loader-compiler-fixture",
  "vibe-native-loader-json-backend-fixture",
  "vibe-orchestrator",
  "vibe-package-source",
