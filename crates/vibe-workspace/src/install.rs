@@ -58,6 +58,7 @@ pub use hook_output::{
     apply_resolution_with_spec_format_and_hook_output,
     apply_resolution_with_spec_format_and_slot_lifecycle,
     apply_resolution_with_spec_format_and_slot_lifecycle_traced,
+    apply_resolution_with_spec_format_and_slot_lifecycle_traced_native,
 };
 use hooks_run::SubtreeOutcome;
 pub use hooks_run::{
@@ -82,6 +83,81 @@ pub use bootgen::{
     regenerate_boot_from_traced_prepared, regenerate_boot_from_with_spec_format,
     regenerate_boot_traced, regenerate_boot_with_spec_format,
 };
+
+/// The non-clone continuation produced by one native-aware install boot pass.
+///
+/// Its replay set is deliberately opaque outside `vibe-workspace`: later
+/// lifecycle fencing may move this value back into workspace, but no caller
+/// can inspect, rebuild, or splice its pending identity.
+pub struct NativeInstallCarriage {
+    epoch: crate::extension_world::OwnerRuntimeEpoch,
+    #[allow(
+        dead_code,
+        reason = "R5.4-INSTALL transports this opaque value; R5.4-FENCE consumes it"
+    )]
+    replay: bootgen::replay_prepare::BootReplaySet,
+}
+
+impl NativeInstallCarriage {
+    pub(crate) fn new(
+        epoch: crate::extension_world::OwnerRuntimeEpoch,
+        replay: bootgen::replay_prepare::BootReplaySet,
+    ) -> Self {
+        Self { epoch, replay }
+    }
+
+    /// Borrow the exact runtime epoch retained by this install.
+    #[must_use]
+    pub const fn epoch(&self) -> &crate::extension_world::OwnerRuntimeEpoch {
+        &self.epoch
+    }
+
+    #[cfg(test)]
+    pub(crate) const fn replay_is_empty_for_test(&self) -> bool {
+        matches!(self.replay, bootgen::replay_prepare::BootReplaySet::Empty)
+    }
+}
+
+/// Ordinary install reporting plus its opaque native continuation.
+pub struct NativeInstallOutcome {
+    pub outcome: InstallOutcome,
+    pub carriage: NativeInstallCarriage,
+}
+
+/// Regenerate one exact already-materialised resolution under install-time
+/// Collect policy and return its opaque runtime/replay continuation.
+#[allow(clippy::too_many_arguments)]
+pub fn regenerate_boot_from_traced_native<F, P>(
+    workspace: &Workspace,
+    resolution: &[ResolvedDep],
+    world: crate::extension_world::ExtensionWorldEpoch,
+    spec_format: SpecFormat,
+    trace: Option<&crate::compile_trace::TraceRun>,
+    lowering: crate::extension_world::OwnerRuntimeLowering,
+    run: crate::extension_world::OwnerRuntimeRunFacts,
+    make_provider: &mut F,
+) -> Result<(Vec<String>, NativeInstallCarriage), WorkspaceError>
+where
+    F: FnMut(
+        std::collections::BTreeMap<
+            crate::extension_world::OwnerRuntimeId,
+            vibe_spec::CompilerNativePolicy,
+        >,
+    ) -> Result<P, WorkspaceError>,
+    P: crate::extension_world::OwnerNativeCompileProvider,
+{
+    validate_redirect_blocks(workspace)?;
+    bootgen::regenerate_boot_from_traced_native_prepared(
+        workspace,
+        resolution,
+        world,
+        spec_format,
+        trace,
+        lowering,
+        run,
+        make_provider,
+    )
+}
 
 /// Materialise a resolution into the workspace and regenerate every node's
 /// boot artifacts (PROP-009 §2.7).

@@ -152,3 +152,105 @@ fn apply_with_materialise_lifecycle(
         hook_reports,
     })
 }
+
+/// Native-aware sibling used by the production install convergence path.
+/// Materialisation and pre-install callbacks finish before the exact supplied
+/// resolution is lowered and compiled; no Cargo process is reachable here.
+#[allow(clippy::too_many_arguments)]
+pub fn apply_resolution_with_spec_format_and_slot_lifecycle_traced_native<F, G, P>(
+    workspace: &Workspace,
+    resolution: &[ResolvedDep],
+    slot_integrity: SlotIntegrity,
+    spec_format: SpecFormat,
+    slot_verifier: Option<&dyn SlotVerifier>,
+    lifecycle: SlotLifecycleMode<'_>,
+    trace: Option<&crate::compile_trace::TraceRun>,
+    prepare: &mut F,
+    run: crate::extension_world::OwnerRuntimeRunFacts,
+    make_provider: &mut G,
+) -> Result<NativeInstallOutcome, WorkspaceError>
+where
+    F: FnMut(
+        &Workspace,
+        &[ResolvedDep],
+    ) -> Result<
+        (
+            crate::extension_world::ExtensionWorldEpoch,
+            crate::extension_world::OwnerRuntimeLowering,
+        ),
+        WorkspaceError,
+    >,
+    G: FnMut(
+        std::collections::BTreeMap<
+            crate::extension_world::OwnerRuntimeId,
+            vibe_spec::CompilerNativePolicy,
+        >,
+    ) -> Result<P, WorkspaceError>,
+    P: crate::extension_world::OwnerNativeCompileProvider,
+{
+    validate_redirect_blocks(workspace)?;
+    let materialise = |lifecycle| {
+        materialise_resolution_with_spec_format(
+            &workspace.root,
+            resolution,
+            MaterialiseOptions {
+                slot_integrity,
+                spec_format,
+                slot_verifier,
+                lifecycle,
+            },
+        )
+    };
+    let Materialised {
+        materialised,
+        skipped,
+        integrity_warnings,
+        post_install_deps,
+        hook_reports,
+    } = match lifecycle {
+        SlotLifecycleMode::None => materialise(MaterialiseLifecycle::None)?,
+        SlotLifecycleMode::Callback(callback) => {
+            materialise(MaterialiseLifecycle::Callback(callback))?
+        }
+        SlotLifecycleMode::LegacyHooks { policy, output } => {
+            let runner = ConfiguredHookRunner::new(output);
+            materialise(MaterialiseLifecycle::LegacyHooks {
+                policy,
+                probe: &SystemProbe,
+                runner: &runner,
+            })?
+        }
+    };
+    let kept = materialised
+        .iter()
+        .chain(&skipped)
+        .cloned()
+        .collect::<Vec<_>>();
+    let pruned = prune_stale_slots(&workspace.root, &kept)?;
+    // This callback is deliberately HERE: every slot and pre-install effect
+    // is now visible, while boot publication and the lock write have not run.
+    let (world, lowering) = prepare(workspace, resolution)?;
+    let (nodes_regenerated, carriage) =
+        super::bootgen::regenerate_boot_from_traced_native_prepared(
+            workspace,
+            resolution,
+            world,
+            spec_format,
+            trace,
+            lowering,
+            run,
+            make_provider,
+        )?;
+    Ok(NativeInstallOutcome {
+        outcome: InstallOutcome {
+            materialised,
+            skipped,
+            integrity_warnings,
+            pruned,
+            nodes_regenerated,
+            post_install_plan: PostInstallPlan::new(&workspace.root, post_install_deps),
+            hook_reports,
+        },
+        carriage,
+    })
+}

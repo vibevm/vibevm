@@ -206,9 +206,24 @@ impl AfterDurableWorld for CountingStage {
     fn after(
         &mut self,
         _project_root: &Path,
-        _run: InstallRunContext,
+        run: InstallRunContext,
         _workspace: &vibe_workspace::Workspace,
     ) -> anyhow::Result<WorldCallbackOutcome> {
+        let native = run
+            .native
+            .as_ref()
+            .expect("every completed production install carries one native epoch");
+        let (epoch, _) = native.parts();
+        assert_eq!(epoch.run().run_id, run.metadata.run_id);
+        assert_eq!(epoch.run().offline, run.metadata.offline);
+        assert_eq!(epoch.run().created_at, run.metadata.started);
+        assert_eq!(epoch.run().state_root, run.lease.root().join(".vibe"));
+        assert_eq!(
+            epoch.run().platform,
+            vibe_lifecycle::native::NativePlatform::current()
+                .expect("supported test platform")
+                .key()
+        );
         self.calls.fetch_add(1, Ordering::SeqCst);
         Ok(WorldCallbackOutcome::default())
     }

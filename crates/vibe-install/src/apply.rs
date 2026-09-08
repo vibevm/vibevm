@@ -74,6 +74,76 @@ pub struct ApplyReport {
 pub struct PreparedApplyReport {
     pub report: ApplyReport,
     pub workspace: Workspace,
+    /// Present only on the native-aware production sibling.
+    pub native: Option<vibe_workspace::install::NativeInstallCarriage>,
+}
+
+type LoweringFactory<'a> = &'a mut dyn FnMut(
+    &Workspace,
+    &[ResolvedDep],
+) -> std::result::Result<
+    (
+        vibe_workspace::extension_world::ExtensionWorldEpoch,
+        vibe_workspace::extension_world::OwnerRuntimeLowering,
+    ),
+    String,
+>;
+
+struct NativeApplyPreparation<'a> {
+    prepare: LoweringFactory<'a>,
+    run: vibe_workspace::extension_world::OwnerRuntimeRunFacts,
+    platform: vibe_lifecycle::native::NativePlatform,
+}
+
+impl PreparedApplyReport {
+    /// Native-aware production sibling without widening the compatibility
+    /// free-function surface. The caller supplies only owner-preset lowering;
+    /// provider construction and replay identity stay below this boundary.
+    #[allow(clippy::too_many_arguments)]
+    pub fn apply_native<S, F>(
+        source: &S,
+        planned: PlannedInstall,
+        slot_integrity: SlotIntegrity,
+        spec_format: SpecFormat,
+        run: RunMetadata,
+        streams: StreamMode,
+        seams: SlotLifecycleSeams,
+        lease: std::sync::Arc<LifecycleLease>,
+        trace: Option<&vibe_workspace::compile_trace::TraceRun>,
+        prepare: &mut F,
+        runtime_run: vibe_workspace::extension_world::OwnerRuntimeRunFacts,
+        platform: vibe_lifecycle::native::NativePlatform,
+    ) -> Result<Self>
+    where
+        S: InstallSource + ?Sized,
+        F: FnMut(
+            &Workspace,
+            &[ResolvedDep],
+        ) -> std::result::Result<
+            (
+                vibe_workspace::extension_world::ExtensionWorldEpoch,
+                vibe_workspace::extension_world::OwnerRuntimeLowering,
+            ),
+            String,
+        >,
+    {
+        apply_with_spec_format_and_lifecycle_observed_traced_prepared_inner(
+            source,
+            planned,
+            slot_integrity,
+            spec_format,
+            run,
+            streams,
+            seams,
+            lease,
+            trace,
+            Some(NativeApplyPreparation {
+                prepare,
+                run: runtime_run,
+                platform,
+            }),
+        )
+    }
 }
 
 /// Apply a confirmed plan. `slot_integrity` selects the PROP-011 §2.3
@@ -131,6 +201,7 @@ pub fn apply_with_spec_format_and_hook_output<S: InstallSource + ?Sized>(
             policy: hooks,
             output: hook_output,
         },
+        None,
         None,
         None,
     )
@@ -244,6 +315,35 @@ pub fn apply_with_spec_format_and_lifecycle_observed_traced_prepared<S: InstallS
     lease: std::sync::Arc<LifecycleLease>,
     trace: Option<&vibe_workspace::compile_trace::TraceRun>,
 ) -> Result<PreparedApplyReport> {
+    apply_with_spec_format_and_lifecycle_observed_traced_prepared_inner(
+        source,
+        planned,
+        slot_integrity,
+        spec_format,
+        run,
+        streams,
+        seams,
+        lease,
+        trace,
+        None,
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+fn apply_with_spec_format_and_lifecycle_observed_traced_prepared_inner<
+    S: InstallSource + ?Sized,
+>(
+    source: &S,
+    planned: PlannedInstall,
+    slot_integrity: SlotIntegrity,
+    spec_format: SpecFormat,
+    run: RunMetadata,
+    streams: StreamMode,
+    seams: SlotLifecycleSeams,
+    lease: std::sync::Arc<LifecycleLease>,
+    trace: Option<&vibe_workspace::compile_trace::TraceRun>,
+    native: Option<NativeApplyPreparation<'_>>,
+) -> Result<PreparedApplyReport> {
     let lifecycle = InstallSlotLifecycle::from_plan_observed(&planned, run, streams, seams, lease)?;
     let lifecycle_run = lifecycle.run_handle();
     let applied = apply_with_spec_format_and_slot_lifecycle(
@@ -254,6 +354,7 @@ pub fn apply_with_spec_format_and_lifecycle_observed_traced_prepared<S: InstallS
         SlotLifecycleMode::Callback(&lifecycle),
         Some(&lifecycle),
         trace,
+        native,
     );
     // A parked hosted row halts the orchestrator through the seam's only
     // stopping channel. It is a durable handoff, not a failure — so it is
@@ -292,6 +393,7 @@ pub fn apply_with_spec_format_and_lifecycle_observed_traced_prepared<S: InstallS
     Ok(prepared)
 }
 
+#[allow(clippy::too_many_arguments)]
 fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
     source: &S,
     planned: PlannedInstall,
@@ -306,6 +408,7 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
     // The borrowed compile-trace run, when the command owns one; carried into
     // the workspace apply's boot regeneration and no further.
     trace: Option<&vibe_workspace::compile_trace::TraceRun>,
+    native: Option<NativeApplyPreparation<'_>>,
 ) -> Result<PreparedApplyReport> {
     let PlannedInstall {
         project_root,
@@ -399,15 +502,54 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
     //    verifier reads is post-deferral, so an incrementally-updated
     //    in-place slot (which never consults it) still records fresh.
     let slot_verifier = RegistrySlotVerifier::from_fetched(&fetched);
-    let mut outcome = apply_resolution_with_spec_format_and_slot_lifecycle_traced(
-        &workspace,
-        &resolution,
-        slot_integrity,
-        spec_format,
-        Some(&slot_verifier),
-        lifecycle,
-        trace,
-    )?;
+    let (mut outcome, native) = match native {
+        Some(native) => {
+            let NativeApplyPreparation {
+                prepare: prepare_lowering,
+                run,
+                platform,
+            } = native;
+            let mut prepare = |workspace: &Workspace, resolution: &[ResolvedDep]| {
+                prepare_lowering(workspace, resolution).map_err(|reason| {
+                    vibe_workspace::WorkspaceError::NativeCompileProvider {
+                        owner: "<install-lowering>".to_owned(),
+                        reason,
+                    }
+                })
+            };
+            let mut make_provider = |policies| {
+                Ok(vibe_lifecycle::native::ArtifactCompilerNativeProvider::new(
+                    platform, policies,
+                ))
+            };
+            let prepared =
+                vibe_workspace::install::apply_resolution_with_spec_format_and_slot_lifecycle_traced_native(
+                    &workspace,
+                    &resolution,
+                    slot_integrity,
+                    spec_format,
+                    Some(&slot_verifier),
+                    lifecycle,
+                    trace,
+                    &mut prepare,
+                    run,
+                    &mut make_provider,
+                )?;
+            (prepared.outcome, Some(prepared.carriage))
+        }
+        None => (
+            apply_resolution_with_spec_format_and_slot_lifecycle_traced(
+                &workspace,
+                &resolution,
+                slot_integrity,
+                spec_format,
+                Some(&slot_verifier),
+                lifecycle,
+                trace,
+            )?,
+            None,
+        ),
+    };
 
     for warning in &outcome.integrity_warnings {
         tracing::warn!(target: "vibe_install::apply", "{warning}");
@@ -490,6 +632,7 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
 
     Ok(PreparedApplyReport {
         workspace,
+        native,
         report: ApplyReport {
             progress: InstallProgress::complete(&outcome),
             outcome,

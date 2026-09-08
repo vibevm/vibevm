@@ -34,7 +34,7 @@ use anyhow::{Context, Result};
 use vibe_core::PackageRef;
 use vibe_core::manifest::Lockfile;
 use vibe_install::{InstallRequest, Plan};
-use vibe_lifecycle::{AgentBackend, RunMetadata};
+use vibe_lifecycle::{AgentBackend, LifecycleLease, RunMetadata};
 use vibe_resolver::FeatureRequest;
 use vibe_workspace::compile_trace::TraceRun;
 
@@ -47,7 +47,8 @@ pub use args::{InstallInputs, InstallPolicy};
 pub use inputs::{generated_by, resolve_project_root, resolve_spec_format, selected_node_manifest};
 pub use lease::{acquire_lease, lease_root};
 pub use outcome::{
-    InstallDisposition, InstallRun, InstallRunContext, WorldCallbackOutcome, WorldCallbackSummary,
+    InstallDisposition, InstallRun, InstallRunContext, NativeInstallContext, WorldCallbackOutcome,
+    WorldCallbackSummary,
 };
 pub use resume::{
     ResumeOutcome, ResumeRequest, ResumedInstall, own_resume, prefixed, resume_slot_continuation,
@@ -55,6 +56,43 @@ pub use resume::{
 pub use selection::{PreparedSelection, ProvenSelection, SelectedManifest};
 
 use outcome::fresh_run;
+
+fn regenerate_native_world(
+    project_root: &std::path::Path,
+    workspace: &vibe_workspace::Workspace,
+    resolution: &[vibe_workspace::install::ResolvedDep],
+    spec_format: vibe_core::manifest::SpecFormat,
+    trace: Option<&TraceRun>,
+    metadata: &RunMetadata,
+    lease: &LifecycleLease,
+) -> Result<(Vec<String>, outcome::NativeInstallContext)> {
+    let (world, lowering, sidecar) =
+        crate::world::prepare_owner_runtime_inputs(project_root, workspace, resolution)?;
+    let platform = vibe_lifecycle::native::NativePlatform::current()?;
+    let run = vibe_workspace::extension_world::OwnerRuntimeRunFacts {
+        run_id: metadata.run_id.clone(),
+        state_root: lease.root().join(".vibe"),
+        platform: platform.key().to_owned(),
+        offline: metadata.offline,
+        created_at: metadata.started.clone(),
+    };
+    let mut make_provider = |policies| {
+        Ok(vibe_lifecycle::native::ArtifactCompilerNativeProvider::new(
+            platform, policies,
+        ))
+    };
+    let (nodes, carriage) = vibe_workspace::install::regenerate_boot_from_traced_native(
+        workspace,
+        resolution,
+        world,
+        spec_format,
+        trace,
+        lowering,
+        run,
+        &mut make_provider,
+    )?;
+    Ok((nodes, outcome::NativeInstallContext::new(carriage, sidecar)))
+}
 
 /// Everything one install execution needs that its caller already decided.
 ///
@@ -160,13 +198,14 @@ pub fn execute_prepared(
     // The resolved run metadata is the invocation's identity; the callback
     // context owns a clone so a later seam can still read it.
     let run_metadata = metadata.clone();
-    let lifecycle_run = InstallRunContext {
+    let mut lifecycle_run = InstallRunContext {
         metadata,
         // Shared, not moved: the resume seams below rebuild their slot runs
         // on this same one acquisition.
         lease: lease.clone(),
         lifecycle_run: None,
         lifecycle_reports: Vec::new(),
+        native: None,
     };
 
     // The command's ONE authoritative world, PROVEN at exactly the point this
@@ -254,8 +293,17 @@ pub fn execute_prepared(
         && lockfile_snapshot.meta.root_dependencies.is_empty()
     {
         observer.narrate(InstallNarration::EmptyWorld);
-        let nodes = vibe_workspace::install::regenerate_boot_traced(&workspace, spec_format, trace)
-            .context("regenerating boot artifacts for the empty world")?;
+        let (nodes, native) = regenerate_native_world(
+            &project_root,
+            &workspace,
+            &[],
+            spec_format,
+            trace,
+            &run_metadata,
+            &lease,
+        )
+        .context("regenerating boot artifacts for the empty world")?;
+        lifecycle_run.native = Some(native);
         let after = after_durable_world
             .take()
             .context("internal: install durable-world callback already consumed")?;
@@ -326,9 +374,19 @@ pub fn execute_prepared(
             // resolves nothing and copies nothing — so a re-read could only
             // ever differ by racing another process, which is exactly the
             // difference a single snapshot exists to refuse.
-            let nodes =
-                vibe_workspace::install::regenerate_boot_traced(&workspace, spec_format, trace)
-                    .context("regenerating boot artifacts from the materialised state")?;
+            let resolution = provisional_world(&workspace, &lockfile_snapshot, &[])
+                .context("projecting the exact fresh install world")?;
+            let (nodes, native) = regenerate_native_world(
+                &project_root,
+                &workspace,
+                &resolution,
+                spec_format,
+                trace,
+                &run_metadata,
+                &lease,
+            )
+            .context("regenerating boot artifacts from the materialised state")?;
+            lifecycle_run.native = Some(native);
             let after = after_durable_world
                 .take()
                 .context("internal: install durable-world callback already consumed")?;
@@ -355,7 +413,8 @@ pub fn execute_prepared(
                 // A satisfied resume still owes the post-durability world: the
                 // hosting output arrived, so an authored `phase:install` row
                 // must run, in the run the resume just finished.
-                ResumeOutcome::Completed(resumed) => {
+                ResumeOutcome::Completed(mut resumed) => {
+                    resumed.context.native = lifecycle_run.native.take();
                     return resume::finish_resumed(*resumed, &project_root, &workspace, after);
                 }
                 // TRANSPORTED, not reduced. The family is not knowable here —

@@ -140,6 +140,7 @@ fn a_planning_refusal_after_slot_rows_carries_them_in_the_lifecycle_family() {
         metadata: metadata(&path),
         lifecycle_run: None,
         lifecycle_reports: vec![slot_row()],
+        native: None,
     };
 
     let error = after_durable_world_stage(&SilentObserver, &path, run, &workspace, &agent())
@@ -197,6 +198,7 @@ fn a_planning_refusal_with_no_rows_is_still_lifecycle_shaped() {
         metadata: metadata(&path),
         lifecycle_run: None,
         lifecycle_reports: Vec::new(),
+        native: None,
     };
 
     let error = after_durable_world_stage(&SilentObserver, &path, run, &workspace, &agent())
@@ -237,6 +239,7 @@ fn a_foreign_lease_refuses_the_post_durability_stage_before_planning() {
         metadata: metadata(&path),
         lifecycle_run: None,
         lifecycle_reports: Vec::new(),
+        native: None,
     };
 
     let error = after_durable_world_stage(&SilentObserver, &path, run, &workspace, &agent())
@@ -282,6 +285,7 @@ fn a_selected_node_mismatch_refuses_the_post_durability_stage() {
         metadata: wrong,
         lifecycle_run: None,
         lifecycle_reports: Vec::new(),
+        native: None,
     };
 
     let error = after_durable_world_stage(&SilentObserver, &path, run, &workspace, &agent())

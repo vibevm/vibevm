@@ -437,7 +437,18 @@ fn run(inputs: PhaseRun<'_>, measured: &mut Measured) -> Result<Outcome> {
     // pre-install world.
     let planning_workspace =
         collector.planning_workspace(&prelude_workspace, phases.contains(&Phase::Install))?;
-    let ritual = world::plan_default_prepared(&project_root, planning_workspace, &phases)?;
+    let chain_installs = phases.contains(&Phase::Install);
+    let ritual = match collector.native(chain_installs)? {
+        Some(native) => {
+            let (epoch, sidecar) = native.parts();
+            world::plan_default_from_runtime(epoch, sidecar, &phases)?
+        }
+        None => world::plan_default_prepared(&project_root, planning_workspace, &phases)?,
+    };
+    // Retain the opaque replay authority across the complete dispatch. R5.4-
+    // FENCE will consume it at the build fence; INSTALL's responsibility is
+    // to move, never rebuild, the exact value into this execution epoch.
+    let _native_install = collector.take_native();
     notices.extend(ritual.notices.clone());
     surface_plan(observer, &ritual, &metadata, true)?;
     // ---- the ONE mechanism wiring (§6.0.2) ---------------------------

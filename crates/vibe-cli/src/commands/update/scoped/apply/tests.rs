@@ -71,6 +71,7 @@ fn resumed_run(rows: Vec<vibe_install::SlotLifecycleReport>) -> ResumeOutcome {
             metadata: metadata(),
             lifecycle_run: None,
             lifecycle_reports: Vec::new(),
+            native: None,
         },
     }))
 }

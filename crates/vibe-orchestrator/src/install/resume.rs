@@ -410,6 +410,7 @@ fn serviced(inputs: Serviced<'_>) -> Result<ResumeOutcome> {
         lease: lease.clone(),
         lifecycle_run: Some(lifecycle.run_handle()),
         lifecycle_reports: Vec::new(),
+        native: None,
     };
     if let Some(delegation) = lifecycle.parked() {
         crate::values::check_delegation(&delegation)?;

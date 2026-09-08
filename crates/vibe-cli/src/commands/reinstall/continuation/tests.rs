@@ -147,6 +147,7 @@ fn completed(rows: Vec<SlotLifecycleReport>) -> ResumeOutcome {
             metadata: metadata(),
             lifecycle_run: None,
             lifecycle_reports: Vec::new(),
+            native: None,
         },
     }))
 }

@@ -250,6 +250,7 @@ fn the_production_capture_never_takes_on_a_successful_region() {
                 lease: vibe_test_support::retained_lifecycle_lease(),
                 lifecycle_run: None,
                 lifecycle_reports: Vec::new(),
+                native: None,
             },
         }))),
         vibe_install::InstallProgress::default(),

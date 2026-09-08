@@ -13,6 +13,7 @@
 //! call site cannot express `unwrap_or` at all any more.
 
 use super::PrerequisiteInstall;
+use crate::ports::AfterDurableWorld;
 
 fn workspace() -> vibe_workspace::Workspace {
     let dir = tempfile::tempdir().expect("a temp project");
@@ -103,4 +104,73 @@ fn a_chain_without_install_uses_the_prelude_and_must_not_have_called() {
         noisy.planning_workspace(&prelude, false).is_err(),
         "a stage that ran on a chain with no install phase is a defect",
     );
+}
+
+#[test]
+fn the_exact_native_epoch_crosses_the_prerequisite_callback_once() {
+    let workspace = workspace();
+    let root = workspace.root.clone();
+    let (world, lowering, sidecar) =
+        crate::world::prepare_owner_runtime_inputs(&root, &workspace, &[]).unwrap();
+    let platform = vibe_lifecycle::native::NativePlatform::current().unwrap();
+    let facts = vibe_workspace::extension_world::OwnerRuntimeRunFacts {
+        run_id: "install-epoch".into(),
+        state_root: root.join(".vibe"),
+        platform: platform.key().into(),
+        offline: true,
+        created_at: "2026-09-08T00:00:00Z".into(),
+    };
+    let mut make_provider = |policies| {
+        Ok(vibe_lifecycle::native::ArtifactCompilerNativeProvider::new(
+            platform, policies,
+        ))
+    };
+    let (_, carriage) = vibe_workspace::install::regenerate_boot_from_traced_native(
+        &workspace,
+        &[],
+        world,
+        vibe_core::manifest::SpecFormat::Mixed,
+        None,
+        lowering,
+        facts,
+        &mut make_provider,
+    )
+    .unwrap();
+    let lease = std::sync::Arc::new(vibe_lifecycle::LifecycleLease::acquire(&root).unwrap());
+    let context = crate::install::InstallRunContext {
+        metadata: vibe_lifecycle::RunMetadata {
+            requested: "build".into(),
+            chain: vec!["validate".into(), "install".into(), "build".into()],
+            offline: true,
+            assume_yes: true,
+            agent_mode: vibe_wire::generated::lifecycle::e1::context::RunAgentMode::Cli,
+            force: false,
+            trace_compile: false,
+            run_id: "install-epoch".into(),
+            started: "2026-09-08T00:00:00Z".into(),
+            selected: ".".into(),
+        },
+        lease,
+        lifecycle_run: None,
+        lifecycle_reports: Vec::new(),
+        native: Some(crate::install::NativeInstallContext::new(carriage, sidecar)),
+    };
+    let mut collector = PrerequisiteInstall::default();
+    collector.after(&root, context, &workspace).unwrap();
+    let native = collector.native(true).unwrap().unwrap();
+    let (epoch, sidecar) = native.parts();
+    assert_eq!(epoch.run().run_id, "install-epoch");
+    let plan = crate::world::plan_default_from_runtime(
+        epoch,
+        sidecar,
+        &[
+            vibe_lifecycle::Phase::Validate,
+            vibe_lifecycle::Phase::Install,
+            vibe_lifecycle::Phase::Build,
+        ],
+    )
+    .unwrap();
+    assert_eq!(plan.workspace_root(), root);
+    assert!(collector.take_native().is_some());
+    assert!(collector.take_native().is_none(), "the carrier moves once");
 }

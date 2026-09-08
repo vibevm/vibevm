@@ -33,6 +33,8 @@ pub(super) struct PrerequisiteInstall {
     /// because it is the only copy carrying that install's `--git` delta.
     /// Private to this module ON PURPOSE: see the module note.
     workspace: Option<vibe_workspace::Workspace>,
+    /// The exact runtime/replay continuation produced with that workspace.
+    native: Option<crate::install::NativeInstallContext>,
     /// How many times the stage ran. The core consumes it exactly once, on the
     /// one branch that completes, and never fabricates a call on a failure or
     /// a park.
@@ -92,6 +94,27 @@ impl PrerequisiteInstall {
     pub(super) fn into_lifecycle_run(self) -> Option<vibe_lifecycle::LifecycleRunHandle> {
         self.lifecycle_run
     }
+
+    pub(super) fn native(
+        &self,
+        chain_installs: bool,
+    ) -> Result<Option<&crate::install::NativeInstallContext>> {
+        if !chain_installs {
+            anyhow::ensure!(
+                self.native.is_none(),
+                "internal: a native install epoch exists on a chain without install",
+            );
+            return Ok(None);
+        }
+        self.native
+            .as_ref()
+            .map(Some)
+            .context("internal: prerequisite install reported no native runtime epoch")
+    }
+
+    pub(super) fn take_native(&mut self) -> Option<crate::install::NativeInstallContext> {
+        self.native.take()
+    }
 }
 
 impl AfterDurableWorld for PrerequisiteInstall {
@@ -108,6 +131,7 @@ impl AfterDurableWorld for PrerequisiteInstall {
             .into_iter()
             .map(contribution_report)
             .collect();
+        self.native = run.native;
         // Captured, not re-read: this is the exact tree the install finished
         // with. A phase verb runs its OWN world stage afterwards, so this one
         // contributes nothing of its own.

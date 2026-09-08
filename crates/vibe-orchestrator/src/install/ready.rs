@@ -11,7 +11,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-
 
 use std::path::Path;
 
-use anyhow::Result;
+use anyhow::{Context, Result};
 use vibe_core::manifest::{Lockfile, SpecFormat};
 use vibe_core::user_config::SlotIntegrity;
 use vibe_install::PlannedInstall;
@@ -80,7 +80,25 @@ pub(super) fn apply(
     // engine. The install confirmation above is the sole trust
     // decision; there is no hook-specific prompt or allow flag.
     let slot_observer = observer.slot_observer(&lifecycle_run.metadata);
-    let applied = vibe_install::apply_with_spec_format_and_lifecycle_observed_traced_prepared(
+    let platform = vibe_lifecycle::native::NativePlatform::current()?;
+    let runtime_run = vibe_workspace::extension_world::OwnerRuntimeRunFacts {
+        run_id: run_metadata.run_id.clone(),
+        state_root: lifecycle_run.lease.root().join(".vibe"),
+        platform: platform.key().to_owned(),
+        offline: run_metadata.offline,
+        created_at: run_metadata.started.clone(),
+    };
+    let mut runtime_sidecar = None;
+    let mut prepare = |post_workspace: &Workspace,
+                       resolution: &[vibe_workspace::install::ResolvedDep]| {
+        crate::world::prepare_owner_runtime_inputs(project_root, post_workspace, resolution)
+            .map(|(world, lowering, sidecar)| {
+                runtime_sidecar = Some(sidecar);
+                (world, lowering)
+            })
+            .map_err(|error| format!("{error:#}"))
+    };
+    let applied = vibe_install::PreparedApplyReport::apply_native(
         resolver,
         planned,
         slot_integrity,
@@ -102,6 +120,9 @@ pub(super) fn apply(
         // its slot run on the caller's lease and never reacquires.
         lifecycle_run.lease.clone(),
         trace,
+        &mut prepare,
+        runtime_run,
+        platform,
     );
     // A parked slot row is a durable handoff, not an install failure:
     // the chain stopped at that row's point, whatever preceded it is
@@ -153,6 +174,13 @@ pub(super) fn apply(
         }
         Err(error) => return Err(error.into()),
     };
+    let native = applied
+        .native
+        .context("native-aware Ready apply returned no runtime continuation")?;
+    let sidecar = runtime_sidecar
+        .take()
+        .context("native-aware Ready apply returned no runtime sidecar")?;
+    lifecycle_run.native = Some(super::outcome::NativeInstallContext::new(native, sidecar));
     let post_workspace = applied.workspace;
     let applied = applied.report;
     lifecycle_run.lifecycle_run = applied.lifecycle_run.clone();
@@ -196,7 +224,8 @@ pub(super) fn apply(
         )?,
         &applied.lifecycle_reports,
     ) {
-        ResumeOutcome::Completed(resumed) => {
+        ResumeOutcome::Completed(mut resumed) => {
+            resumed.context.native = lifecycle_run.native.take();
             return complete_ready_resume(*resumed, project_root, &post_workspace, tail, after);
         }
         // TRANSPORTED neutrally — the family is the outer command's to choose.

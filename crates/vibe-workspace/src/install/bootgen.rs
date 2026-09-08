@@ -247,6 +247,60 @@ pub fn regenerate_boot_from_traced_prepared(
     })
 }
 
+#[allow(clippy::too_many_arguments)]
+pub(super) fn regenerate_boot_from_traced_native_prepared<F, P>(
+    workspace: &Workspace,
+    resolution: &[ResolvedDep],
+    world: ExtensionWorldEpoch,
+    spec_format: SpecFormat,
+    trace: Option<&crate::compile_trace::TraceRun>,
+    lowering: OwnerRuntimeLowering,
+    run: crate::extension_world::OwnerRuntimeRunFacts,
+    make_provider: &mut F,
+) -> Result<(Vec<String>, super::NativeInstallCarriage), WorkspaceError>
+where
+    F: FnMut(
+        std::collections::BTreeMap<
+            crate::extension_world::OwnerRuntimeId,
+            vibe_spec::CompilerNativePolicy,
+        >,
+    ) -> Result<P, WorkspaceError>,
+    P: crate::extension_world::OwnerNativeCompileProvider,
+{
+    let lowered = lower_owner_runtimes(workspace, &world, lowering)?;
+    let epoch = lowered.bind_run(run);
+    let policies = epoch
+        .lowered()
+        .nodes()
+        .keys()
+        .cloned()
+        .map(|rel| {
+            (
+                crate::extension_world::OwnerRuntimeId::Node { rel },
+                vibe_spec::CompilerNativePolicy::collect(),
+            )
+        })
+        .chain(epoch.lowered().units().keys().cloned().map(|provider| {
+            (
+                crate::extension_world::OwnerRuntimeId::Unit { provider },
+                vibe_spec::CompilerNativePolicy::collect(),
+            )
+        }))
+        .collect();
+    let mut provider = make_provider(policies)?;
+    let regenerated = native_managed::regenerate_boot_from_bound_native(
+        workspace,
+        resolution,
+        spec_format,
+        trace,
+        &epoch,
+        Some(&mut provider),
+    )?;
+    let nodes = regenerated.nodes.clone();
+    let replay = regenerated.into_replay_set(&epoch)?;
+    Ok((nodes, super::NativeInstallCarriage::new(epoch, replay)))
+}
+
 /// Regenerate from materialised dependency slots, without resolving or copying.
 pub fn regenerate_boot(workspace: &Workspace) -> Result<Vec<String>, WorkspaceError> {
     regenerate_boot_with_spec_format(workspace, SpecFormat::Mixed)

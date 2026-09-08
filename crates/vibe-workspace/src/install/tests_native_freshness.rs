@@ -3,8 +3,8 @@ use std::path::{Path, PathBuf};
 use std::time::{Duration, SystemTime};
 
 use tempfile::TempDir;
-use vibe_core::PackageName;
 use vibe_core::manifest::SpecFormat;
+use vibe_core::{ContentHash, Group, PackageKind, PackageName};
 use vibe_extension_registry::DependencyProviderId;
 use vibe_spec::CompilerNativePolicy;
 use vibe_wire::generated::compiler_trace_index::e1::index::{CompilerTraceIndex, ScopeStatus};
@@ -35,6 +35,148 @@ use crate::extension_world::{
     ExtensionWorldEpoch, OwnerRuntimeEpoch, OwnerRuntimeId, OwnerRuntimeLowering,
     OwnerRuntimeRunFacts, lower_owner_runtimes,
 };
+
+#[test]
+fn install_entry_binds_the_supplied_world_collects_pending_and_returns_its_epoch() {
+    let graph = native_graph();
+    let world = test_ok!(
+        ExtensionWorldEpoch::from_resolution(&graph.workspace.root, &graph.resolution),
+        "supplied install world"
+    );
+    let facts = OwnerRuntimeRunFacts {
+        run_id: "install-entry-epoch".to_owned(),
+        state_root: graph.workspace.root.join(".vibe"),
+        platform: "linux-x86_64".to_owned(),
+        offline: true,
+        created_at: "2026-09-08T00:00:00Z".to_owned(),
+    };
+    let mut make_provider = |_policies| Ok(FakeProvider::new(Reply::Missing));
+    let (nodes, carriage) = test_ok!(
+        regenerate_boot_from_traced_native(
+            &graph.workspace,
+            &graph.resolution,
+            world,
+            SpecFormat::Mixed,
+            None,
+            OwnerRuntimeLowering::compatibility_root_without_presets(),
+            facts,
+            &mut make_provider,
+        ),
+        "native-aware install regeneration"
+    );
+    assert_eq!(nodes, ["."]);
+    assert_eq!(carriage.epoch().run().run_id, "install-entry-epoch");
+    let index = test_ok!(
+        fs::read_to_string(unit_file(&graph, "middle", "INDEX.md")),
+        "pending unit index"
+    );
+    assert!(index.contains("vibe:native-pending"), "{index}");
+}
+
+struct PreInstallMarker;
+
+impl SlotLifecycle for PreInstallMarker {
+    fn pre_install(&self, context: SlotLifecycleContext<'_>) -> Result<(), String> {
+        fs::write(context.slot.join("pre-install-ran"), b"yes").map_err(|error| error.to_string())
+    }
+
+    fn post_install(&self, _context: SlotLifecycleContext<'_>) -> Result<(), String> {
+        Ok(())
+    }
+}
+
+#[test]
+fn ready_prepares_after_materialisation_and_preinstall_from_the_supplied_resolution() {
+    let root = test_ok!(TempDir::new(), "ready workspace");
+    write(
+        &root.path().join("vibe.toml"),
+        "[project]\ngroup='org.demo'\nname='host'\nversion='0.1.0'\n\
+         [requires.packages]\n'org.ready/compiler'={version='=1.0.0',link='static'}\n\
+         [[extensions.use]]\nref='org.ready/compiler#native'\n",
+    );
+    write_lock(root.path(), Vec::new());
+    let source = test_ok!(TempDir::new(), "new package source");
+    write(
+        &source.path().join("vibe.toml"),
+        "[package]\ngroup='org.ready'\nname='compiler'\nkind='tool'\nversion='1.0.0'\n\
+         [boot_snippet]\nsource='boot/compiler.md'\nlink='static'\n\
+         [[extension]]\nid='native'\npoint='compile:emitted'\n\
+         handler={kind='native',crate_dir='native'}\n",
+    );
+    write(&source.path().join("boot/compiler.md"), "# compiler\n");
+    let resolution = vec![ResolvedDep {
+        kind: PackageKind::Tool,
+        group: test_ok!(Group::parse("org.ready"), "group"),
+        name: "compiler".to_owned(),
+        version: test_ok!("1.0.0".parse(), "version"),
+        content_dir: source.path().to_path_buf(),
+        source_hash: Some(test_ok!(ContentHash::parse("sha256:aa"), "source hash")),
+        manifest: test_ok!(Manifest::read(source.path().join("vibe.toml")), "manifest"),
+        requires: Vec::new(),
+        admitted_by: None,
+        via_override: None,
+        source_mutable: false,
+        in_place_changed: None,
+    }];
+    let workspace = test_ok!(Workspace::load(root.path()), "workspace");
+    let target = crate::vibedeps::slot_abs_path(
+        root.path(),
+        &resolution[0].group,
+        &resolution[0].name,
+        &resolution[0].version,
+    );
+    let mut prepared = false;
+    let mut prepare = |workspace: &Workspace, supplied: &[ResolvedDep]| {
+        assert!(target.join("pre-install-ran").is_file());
+        assert!(
+            test_ok!(Lockfile::read(workspace.lockfile_path()), "stale lock")
+                .packages
+                .is_empty(),
+            "the Ready epoch must not reread or require the future lock"
+        );
+        assert_eq!(supplied.len(), 1);
+        prepared = true;
+        Ok((
+            test_ok!(
+                ExtensionWorldEpoch::from_resolution(&workspace.root, supplied),
+                "post-materialisation world"
+            ),
+            OwnerRuntimeLowering::compatibility_root_without_presets(),
+        ))
+    };
+    let facts = OwnerRuntimeRunFacts {
+        run_id: "ready-post-materialisation".to_owned(),
+        state_root: root.path().join(".vibe"),
+        platform: "linux-x86_64".to_owned(),
+        offline: true,
+        created_at: "2026-09-08T00:00:00Z".to_owned(),
+    };
+    let mut make_provider = |_policies| Ok(FakeProvider::new(Reply::Missing));
+    let applied = test_ok!(
+        apply_resolution_with_spec_format_and_slot_lifecycle_traced_native(
+            &workspace,
+            &resolution,
+            SlotIntegrity::TrustPresence,
+            SpecFormat::Mixed,
+            None,
+            SlotLifecycleMode::Callback(&PreInstallMarker),
+            None,
+            &mut prepare,
+            facts,
+            &mut make_provider,
+        ),
+        "Ready native apply"
+    );
+    assert!(prepared, "the post-materialisation callback ran");
+    assert_eq!(
+        applied.carriage.epoch().run().run_id,
+        "ready-post-materialisation"
+    );
+    assert!(
+        !applied.carriage.replay_is_empty_for_test(),
+        "the newly materialised compiler-native package entered pending replay"
+    );
+}
 
 pub(crate) struct NativeGraph {
     pub(crate) _root: TempDir,

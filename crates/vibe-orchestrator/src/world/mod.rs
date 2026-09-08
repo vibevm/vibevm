@@ -25,6 +25,10 @@ use vibe_wire::generated::lifecycle::e1::context::{
     Project as EnvelopeProject, World as EnvelopeWorld, WorldPackage,
 };
 use vibe_workspace::Workspace;
+use vibe_workspace::extension_world::{
+    ExtensionWorldEpoch, OwnerRuntimeEpoch, OwnerRuntimeLowering,
+};
+use vibe_workspace::install::ResolvedDep;
 use vibe_workspace::vibedeps::{in_place_slot_abs_path, slot_abs_path};
 
 mod package_skill;
@@ -32,6 +36,123 @@ pub use package_skill::RECONCILE_KEY as PACKAGE_SKILL_RECONCILE_KEY;
 pub use package_skill::RECOVER_KEY as PACKAGE_SKILL_RECOVER_KEY;
 
 use crate::RitualPlan;
+
+/// Orchestrator-owned state paired with a workspace-owned runtime epoch.
+/// Agent projection types deliberately never cross into `vibe-workspace`.
+#[derive(Default)]
+pub(crate) struct RuntimePlanSidecar {
+    package_bindings: BTreeMap<String, ProjectSkillBinding>,
+    package_desired_keys: BTreeSet<String>,
+}
+
+/// Build exact per-node presets from one supplied resolution, retaining only
+/// the selected node's execution sidecar for later phase dispatch.
+pub(crate) fn prepare_owner_runtime_inputs(
+    selected: &Path,
+    workspace: &Workspace,
+    resolution: &[ResolvedDep],
+) -> Result<(
+    ExtensionWorldEpoch,
+    OwnerRuntimeLowering,
+    RuntimePlanSidecar,
+)> {
+    let epoch = ExtensionWorldEpoch::from_resolution(&workspace.root, resolution)
+        .context("constructing the install extension-world epoch")?;
+    let selected_rel = workspace
+        .node_rel_of(selected)
+        .context("selected project is absent from the install workspace")?
+        .as_str()
+        .to_owned();
+    let mut node_presets = BTreeMap::new();
+    let mut selected_sidecar = None;
+    for (rel, manifest) in workspace.iter_nodes() {
+        let node_root = workspace.node_abs_path(rel);
+        let view = epoch
+            .node_owner_view(&node_root, manifest)
+            .context("projecting one install owner world")?;
+        let dependencies = view
+            .installed
+            .iter()
+            .map(|source| {
+                let resolved = resolution
+                    .iter()
+                    .find(|row| {
+                        row.group == *source.provider.id.group()
+                            && row.name == source.provider.id.name().as_str()
+                    })
+                    .with_context(|| {
+                        format!(
+                            "owner world contains `{}` outside the supplied resolution",
+                            source.provider.id
+                        )
+                    })?;
+                Ok(LoadedDependency {
+                    source: source.clone(),
+                    skills: resolved.manifest.skills.clone(),
+                })
+            })
+            .collect::<Result<Vec<_>>>()?;
+        let (presets, package_bindings, package_desired_keys) = package_skill::presets(
+            &node_root,
+            &view.host.provider,
+            &manifest.skills,
+            &dependencies,
+        )?;
+        if rel == selected_rel {
+            selected_sidecar = Some(RuntimePlanSidecar {
+                package_bindings,
+                package_desired_keys,
+            });
+        }
+        node_presets.insert(rel.to_owned(), presets);
+    }
+    let sidecar = selected_sidecar.context("selected owner runtime sidecar was not produced")?;
+    Ok((
+        epoch,
+        OwnerRuntimeLowering::new(selected_rel, node_presets),
+        sidecar,
+    ))
+}
+
+/// Construct the lifecycle ritual from the selected retained owner runtime.
+/// No lock, manifest, slot or registry is read here.
+pub(crate) fn plan_default_from_runtime(
+    epoch: &OwnerRuntimeEpoch,
+    sidecar: &RuntimePlanSidecar,
+    phases: &[Phase],
+) -> Result<RitualPlan> {
+    let selected = epoch.selected()?;
+    let runtime = selected.runtime();
+    let rows = runtime.rows()?;
+    let executions = ExecutablePlan::from_points(
+        runtime.registry(),
+        phases.iter().map(|phase| {
+            (
+                phase.to_string(),
+                ExtensionPoint::Phase(PhasePoint::Default(*phase)),
+            )
+        }),
+        SelectorSubject::unscoped(),
+    );
+    Ok(RitualPlan {
+        executions,
+        notices: runtime
+            .registry()
+            .notices()
+            .iter()
+            .map(ToString::to_string)
+            .collect(),
+        project: selected.project().clone(),
+        world: selected.world().clone(),
+        mechanisms: runtime.mechanisms().clone(),
+        mechanism_routes: runtime.routes().clone(),
+        native_candidates: rows.native().iter().map(|row| (*row).clone()).collect(),
+        workspace_root: epoch.lowered().workspace_root().to_path_buf(),
+        package_bindings: sidecar.package_bindings.clone(),
+        package_desired_keys: sidecar.package_desired_keys.clone(),
+        package_phase_planned: phases.contains(&Phase::Package),
+    })
+}
 
 /// Load the selected node's effective world and plan the requested default
 /// phases, from a workspace the caller ALREADY has.

@@ -14,6 +14,41 @@ use std::path::{Path, PathBuf};
 use vibe_install::SlotLifecycleReport;
 use vibe_lifecycle::{LifecycleRunHandle, RunMetadata};
 
+use crate::world::RuntimePlanSidecar;
+
+/// Exact native runtime/replay continuation paired with the selected node's
+/// orchestrator-only package-skill state.
+pub struct NativeInstallContext {
+    carriage: vibe_workspace::install::NativeInstallCarriage,
+    sidecar: RuntimePlanSidecar,
+}
+
+impl std::fmt::Debug for NativeInstallContext {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        formatter
+            .debug_struct("NativeInstallContext")
+            .finish_non_exhaustive()
+    }
+}
+
+impl NativeInstallContext {
+    pub(crate) fn new(
+        carriage: vibe_workspace::install::NativeInstallCarriage,
+        sidecar: RuntimePlanSidecar,
+    ) -> Self {
+        Self { carriage, sidecar }
+    }
+
+    pub(crate) fn parts(
+        &self,
+    ) -> (
+        &vibe_workspace::extension_world::OwnerRuntimeEpoch,
+        &RuntimePlanSidecar,
+    ) {
+        (self.carriage.epoch(), &self.sidecar)
+    }
+}
+
 /// Whether the existing install implementation applied a plan or proved the
 /// materialised world fresh. Lifecycle callers consume this instead of
 /// inferring machine state from rendered text.
@@ -124,7 +159,7 @@ pub(crate) fn fresh_run(
 
 /// Effective invocation facts the durable-world lifecycle callback needs in
 /// the canonical handler envelope.
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 #[spec(documents = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail")]
 pub struct InstallRunContext {
     /// The invocation's durable identity and effective posture.
@@ -139,6 +174,8 @@ pub struct InstallRunContext {
     pub lifecycle_run: Option<LifecycleRunHandle>,
     /// The slot rows it produced.
     pub lifecycle_reports: Vec<SlotLifecycleReport>,
+    /// The one native runtime/replay continuation for this installed world.
+    pub native: Option<NativeInstallContext>,
 }
 
 /// Counts produced by an additive post-durability observer. Keeping them

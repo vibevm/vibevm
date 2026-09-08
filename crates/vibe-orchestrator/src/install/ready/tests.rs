@@ -79,6 +79,7 @@ fn resumed() -> ResumeOutcome {
             lease: vibe_test_support::retained_lifecycle_lease(),
             lifecycle_run: None,
             lifecycle_reports: vec![row("resumed-in-context")],
+            native: None,
         },
     }))
 }

@@ -22,13 +22,6 @@ use super::{
     root_self_coordinate,
 };
 
-#[cfg_attr(
-    not(test),
-    expect(
-        dead_code,
-        reason = "remove when R5.4-INSTALL wires regeneration carriage"
-    )
-)]
 pub(crate) struct BoundBootRegeneration {
     pub nodes: Vec<String>,
     pub native: BTreeMap<OwnerRuntimeId, boot_artifacts::OwnerNativeCompileContinuation>,
@@ -36,13 +29,6 @@ pub(crate) struct BoundBootRegeneration {
 }
 
 impl BoundBootRegeneration {
-    #[cfg_attr(
-        not(test),
-        expect(
-            dead_code,
-            reason = "remove when R5.4-INSTALL consumes Collect replay candidates"
-        )
-    )]
     pub(crate) fn into_replay_set(
         self,
         epoch: &OwnerRuntimeEpoch,
@@ -51,13 +37,6 @@ impl BoundBootRegeneration {
     }
 }
 
-#[cfg_attr(
-    not(test),
-    expect(
-        dead_code,
-        reason = "remove when R5.4-INSTALL wires bound regeneration"
-    )
-)]
 pub(crate) fn regenerate_boot_from_bound_native<P: OwnerNativeCompileProvider>(
     workspace: &Workspace,
     resolution: &[ResolvedDep],
