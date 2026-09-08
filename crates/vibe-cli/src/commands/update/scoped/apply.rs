@@ -33,7 +33,7 @@ use vibe_workspace::Workspace;
 use vibe_workspace::compile_trace::TraceRun;
 use vibe_workspace::install::{
     ResolvedDep, SlotLifecycleMode, materialise_subtree_with_spec_format_and_slot_lifecycle,
-    regenerate_boot_traced, run_post_install_slot_lifecycle,
+    regenerate_boot_from_traced, run_post_install_slot_lifecycle,
 };
 
 use crate::commands::compile_trace::{RegisteredReportDraft, carry_measured};
@@ -61,6 +61,10 @@ pub(super) struct ScopedApply<'a> {
     /// apply may service — the ONE acquisition, never reacquired.
     pub(super) lease: &'a std::sync::Arc<vibe_lifecycle::LifecycleLease>,
     pub(super) resolved: usize,
+    /// The complete provisional epoch used for boot regeneration: unchanged
+    /// durable rows plus this scoped update's replacements.
+    pub(super) full_world: &'a [ResolvedDep],
+    /// The partial subtree this invocation materialises and commits.
     pub(super) resolution: &'a [ResolvedDep],
     pub(super) source_hashes: &'a SourceHashes,
     pub(super) updated: &'a [Resolved],
@@ -83,6 +87,7 @@ pub(super) fn apply(ctx: &output::Context, inputs: ScopedApply<'_>) -> Result<Up
         trace,
         lease,
         resolved,
+        full_world,
         resolution,
         source_hashes,
         updated,
@@ -127,10 +132,14 @@ pub(super) fn apply(ctx: &output::Context, inputs: ScopedApply<'_>) -> Result<Up
     }
     let mut subtree = materialised.context("re-materialising the updated subtree")?;
 
-    // Regenerate every node's boot from the new `vibedeps/` state — under the
-    // command's ONE borrowed recorder, so these compiles join the same run as
-    // everything else this invocation did.
-    let nodes_regenerated = regenerate_boot_traced(workspace, spec_format, trace)
+    // Regenerate every node's boot from the complete provisional world and the
+    // new `vibedeps/` state. The partial `resolution` above is only the set
+    // materialised by this scoped update; the durable lock still names the old
+    // epoch until regeneration succeeds and the new lock is committed below,
+    // so neither can be the boot authority here. The command's ONE borrowed
+    // recorder keeps these compiles in the same run as everything else this
+    // invocation did.
+    let nodes_regenerated = regenerate_boot_from_traced(workspace, full_world, spec_format, trace)
         .context("regenerating boot artifacts")?;
 
     // The scoped update's own complete record, assembled from what each step

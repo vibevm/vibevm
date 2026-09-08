@@ -274,6 +274,7 @@ fn run(
             trace,
             lease: &lease,
             resolved,
+            full_world: &staged.full_world,
             resolution: &staged.resolution,
             source_hashes: &staged.source_hashes,
             updated: &staged.updated,

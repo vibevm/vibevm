@@ -47,6 +47,11 @@ pub(super) struct PendingInPlace {
 /// What the staging region produced: the run, and the world it runs over.
 pub(super) struct Staged {
     pub(super) lifecycle: InstallSlotLifecycle,
+    /// The complete post-update epoch: unchanged durable rows with this
+    /// scoped subtree's replacements substituted in lock order.
+    pub(super) full_world: Vec<ResolvedDep>,
+    /// Only the re-resolved subtree that materialisation and lock replacement
+    /// consume.
     pub(super) resolution: Vec<ResolvedDep>,
     pub(super) source_hashes: SourceHashes,
     pub(super) updated: Vec<Resolved>,
@@ -198,6 +203,7 @@ pub(super) fn stage(
     )?;
     Ok(Staged {
         lifecycle: slot_lifecycle,
+        full_world: provisional_world,
         resolution,
         source_hashes,
         updated,
