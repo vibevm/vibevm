@@ -392,6 +392,10 @@ impl<'targets> Fences<'targets> {
 #[path = "native_provider_e2e_tests.rs"]
 mod native_provider_e2e_tests;
 
+#[cfg(test)]
+#[path = "native_build_package_e2e_tests.rs"]
+mod native_build_package_e2e_tests;
+
 type BuildRowSignature = Vec<(
     String,
     vibe_core::manifest::ExtensionHandler,

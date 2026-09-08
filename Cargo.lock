@@ -4641,6 +4641,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "vibe-native-loader-build-provider-fixture"
+version = "1.0.0"
+dependencies = [
+ "sha2",
+ "vibe-ext",
+]
+
+[[package]]
 name = "vibe-native-loader-compiler-fixture"
 version = "1.0.0"
 dependencies = [
@@ -4672,6 +4680,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "vibe-native-loader-package-provider-fixture"
+version = "1.0.0"
+dependencies = [
+ "sha2",
+ "vibe-ext",
+]
+
+[[package]]
 name = "vibe-orchestrator"
 version = "1.0.0"
 dependencies = [
@@ -4686,8 +4702,10 @@ dependencies = [
  "vibe-core",
  "vibe-install",
  "vibe-lifecycle",
+ "vibe-native-loader-build-provider-fixture",
  "vibe-native-loader-fixture",
  "vibe-native-loader-mechanism-fixture",
+ "vibe-native-loader-package-provider-fixture",
  "vibe-registry",
  "vibe-resolver",
  "vibe-spec",
