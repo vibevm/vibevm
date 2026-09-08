@@ -2,6 +2,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-056#root");
 
+use std::ffi::OsString;
 use std::io::IsTerminal as _;
 use std::path::{Path, PathBuf};
 
@@ -19,7 +20,19 @@ use vibe_scrape::transaction::{
 };
 use vibe_scrape::{ScrapeMode, ScrapeRequest};
 
-pub fn run(ctx: &Context, args: ScrapeArgs) -> Result<()> {
+/// Raw path authority captured once by the CLI composition root.
+pub(crate) struct ScrapeEnvironment {
+    settings: Option<OsString>,
+    home: Option<OsString>,
+}
+
+impl ScrapeEnvironment {
+    pub(crate) const fn new(settings: Option<OsString>, home: Option<OsString>) -> Self {
+        Self { settings, home }
+    }
+}
+
+pub fn run(ctx: &Context, args: ScrapeArgs, environment: ScrapeEnvironment) -> Result<()> {
     if let Some(command) = args.command {
         return match command {
             ScrapeCommand::Contract(contract) => match contract.command {
@@ -33,7 +46,7 @@ pub fn run(ctx: &Context, args: ScrapeArgs) -> Result<()> {
         let root = absolute_existing_root(args.path.as_deref().ok_or_else(|| {
             anyhow::anyhow!("`vibe scrape --recover` requires an explicit `--path <project>`")
         })?)?;
-        return recover(ctx, &root);
+        return recover(ctx, &root, &environment);
     }
 
     if !args.plan {
@@ -66,15 +79,20 @@ pub fn run(ctx: &Context, args: ScrapeArgs) -> Result<()> {
         let prepared = vibe_scrape::prepare(request)?;
         return render_plan(ctx, prepared.plan.to_wire()?);
     }
-    execute(ctx, request, args.assume_yes)
+    execute(ctx, request, args.assume_yes, &environment)
 }
 
-fn execute(ctx: &Context, request: ScrapeRequest, assume_yes: bool) -> Result<()> {
+fn execute(
+    ctx: &Context,
+    request: ScrapeRequest,
+    assume_yes: bool,
+    environment: &ScrapeEnvironment,
+) -> Result<()> {
     ensure_execution_platform()?;
     let identity = project_identity_token(&request.root)?;
     let key = project_key(&identity);
     let root_display = request.root.display().to_string();
-    let mut store = SystemTransactionStore::new(scrape_state_root()?)?;
+    let mut store = SystemTransactionStore::new(scrape_state_root(environment)?)?;
     store.prove_outside_project(&root_display)?;
     let _lock = store.lock_project(&key)?;
     if store.pending(&key)?.is_some() {
@@ -100,12 +118,12 @@ fn execute(ctx: &Context, request: ScrapeRequest, assume_yes: bool) -> Result<()
     }
 }
 
-fn recover(ctx: &Context, root: &Path) -> Result<()> {
+fn recover(ctx: &Context, root: &Path, environment: &ScrapeEnvironment) -> Result<()> {
     ensure_execution_platform()?;
     let identity = project_identity_token(root)?;
     let key = project_key(&identity);
     let root_display = root.display().to_string();
-    let mut store = SystemTransactionStore::new(scrape_state_root()?)?;
+    let mut store = SystemTransactionStore::new(scrape_state_root(environment)?)?;
     store.prove_outside_project(&root_display)?;
     let _lock = store.lock_project(&key)?;
     let journal = store
@@ -220,8 +238,8 @@ fn confirm(plan: &vibe_wire::generated::scrape::e1::plan::Plan) -> Result<()> {
     }
 }
 
-fn scrape_state_root() -> Result<PathBuf> {
-    if let Some(settings) = std::env::var_os("VIBE_SETTINGS") {
+fn scrape_state_root(environment: &ScrapeEnvironment) -> Result<PathBuf> {
+    if let Some(settings) = &environment.settings {
         let settings = PathBuf::from(settings);
         let base = if settings.is_file() {
             settings.parent().unwrap_or(&settings).to_path_buf()
@@ -230,7 +248,9 @@ fn scrape_state_root() -> Result<PathBuf> {
         };
         return Ok(base.join("scrape-state"));
     }
-    let home = std::env::var_os(if cfg!(windows) { "USERPROFILE" } else { "HOME" })
+    let home = environment
+        .home
+        .as_ref()
         .map(PathBuf::from)
         .context("resolving user home for scrape transaction state")?;
     Ok(home.join(".vibe").join("scrape"))
@@ -379,3 +399,7 @@ fn finish_render(blocker_count: usize) -> Result<()> {
         bail!("scrape plan is blocked by {blocker_count} finding(s)")
     }
 }
+
+#[cfg(test)]
+#[path = "scrape/environment_tests.rs"]
+mod environment_tests;
