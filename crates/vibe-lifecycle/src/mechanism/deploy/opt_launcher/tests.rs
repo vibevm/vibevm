@@ -133,12 +133,12 @@ fn selection() -> DeploySelection {
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-LAUNCHER-DELIVERY")]
 fn first_apply_refuses_an_unowned_occupant_without_mutating_it() {
     let world = World::new();
-    world.record_file("claudez.ps1", b"desired");
-    let destination = world.destination("claudez.ps1");
+    world.record_file("sample-launcher.ps1", b"desired");
+    let destination = world.destination("sample-launcher.ps1");
     std::fs::create_dir_all(destination.parent().expect("a parent"))
         .expect("the destination directory creates");
     std::fs::write(&destination, b"foreign").expect("the foreign occupant writes");
-    let targets = [target("claudez.ps1")];
+    let targets = [target("sample-launcher.ps1")];
     let selected = selection();
 
     let error = execute_deploy_targets(&world.execution(&targets, &selected))
@@ -161,20 +161,23 @@ fn first_apply_refuses_an_unowned_occupant_without_mutating_it() {
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-LAUNCHER-DELIVERY")]
 fn owned_update_is_verified_and_undeploy_removes_only_the_launcher() {
     let world = World::new();
-    world.record_file("claudez.ps1", b"first");
-    let targets = [target("claudez.ps1")];
+    world.record_file("sample-launcher.ps1", b"first");
+    let targets = [target("sample-launcher.ps1")];
     let selected = selection();
     let execution = world.execution(&targets, &selected);
 
     let first = execute_deploy_targets(&execution).expect("the first generation deploys");
     assert_eq!(first[0].provider, BUILTIN_VIBE_OPT_LAUNCHER_PIN);
-    assert_eq!(first[0].resources[0].resource, "opt/bin/claudez.ps1");
     assert_eq!(
-        std::fs::read(world.destination("claudez.ps1")).unwrap(),
+        first[0].resources[0].resource,
+        "opt/bin/sample-launcher.ps1"
+    );
+    assert_eq!(
+        std::fs::read(world.destination("sample-launcher.ps1")).unwrap(),
         b"first"
     );
 
-    world.record_file("claudez.ps1", b"second");
+    world.record_file("sample-launcher.ps1", b"second");
     let second = execute_deploy_targets(&execution).expect("the owned update deploys");
     assert_eq!(second[0].generation, 1);
     assert!(
@@ -182,14 +185,14 @@ fn owned_update_is_verified_and_undeploy_removes_only_the_launcher() {
         "the update retained exact prior state"
     );
     assert_eq!(
-        std::fs::read(world.destination("claudez.ps1")).unwrap(),
+        std::fs::read(world.destination("sample-launcher.ps1")).unwrap(),
         b"second"
     );
 
     std::fs::write(world.settings.path().join("opt/bin/neighbour"), b"keep")
         .expect("the neighbour writes");
     undeploy_targets(&execution).expect("the receipt-owned file removes");
-    assert!(!world.destination("claudez.ps1").exists());
+    assert!(!world.destination("sample-launcher.ps1").exists());
     assert_eq!(
         std::fs::read(world.settings.path().join("opt/bin/neighbour")).unwrap(),
         b"keep",
@@ -244,7 +247,7 @@ fn the_adapter_epoch_is_part_of_config_and_therefore_the_plan_hash() {
     let path = world.project.path().join("launcher");
     std::fs::write(&path, b"opaque").expect("the artifact writes");
     let artifact = ResolvedDeployArtifact {
-        id: "claudez".to_owned(),
+        id: "sample-launcher".to_owned(),
         kind: ArtifactKind::File,
         shape: ArtifactShape::File,
         absolute: path,
@@ -252,7 +255,7 @@ fn the_adapter_epoch_is_part_of_config_and_therefore_the_plan_hash() {
         digest: digest_of(b"opaque"),
         bytes: 6,
     };
-    let row = target("claudez");
+    let row = target("sample-launcher");
     let request = DeployTargetRequest {
         target: &row,
         profile: "posix",
@@ -457,15 +460,15 @@ fn selected<'a>(
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-LAUNCHER-DELIVERY")]
 fn a_later_target_failure_restores_the_exact_prior_launcher() {
     let world = World::new();
-    world.record_file("claudez.ps1", b"first");
-    let initial = [target("claudez.ps1")];
+    world.record_file("sample-launcher.ps1", b"first");
+    let initial = [target("sample-launcher.ps1")];
     let initial_selection = selection();
     execute_deploy_targets(&world.execution(&initial, &initial_selection))
         .expect("the prior generation deploys");
-    world.record_file("claudez.ps1", b"second");
+    world.record_file("sample-launcher.ps1", b"second");
     let targets = [
-        target("claudez.ps1"),
-        named_target("fail-later", "claudez.ps1"),
+        target("sample-launcher.ps1"),
+        named_target("fail-later", "sample-launcher.ps1"),
     ];
     let selection = DeploySelection {
         profile: "windows".to_owned(),
@@ -489,7 +492,7 @@ fn a_later_target_failure_restores_the_exact_prior_launcher() {
 
     assert!(matches!(error, DeployError::Saga { .. }));
     assert_eq!(
-        std::fs::read(world.destination("claudez.ps1")).unwrap(),
+        std::fs::read(world.destination("sample-launcher.ps1")).unwrap(),
         b"first",
     );
 }
@@ -498,12 +501,12 @@ fn a_later_target_failure_restores_the_exact_prior_launcher() {
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-LAUNCHER-DELIVERY")]
 fn an_interrupted_update_keeps_rollback_state_and_recovers_its_generation() {
     let world = World::new();
-    world.record_file("claudez.ps1", b"first");
-    let targets = [target("claudez.ps1")];
+    world.record_file("sample-launcher.ps1", b"first");
+    let targets = [target("sample-launcher.ps1")];
     let selected_profile = selection();
     let execution = world.execution(&targets, &selected_profile);
     execute_deploy_targets(&execution).expect("the prior generation deploys");
-    world.record_file("claudez.ps1", b"second");
+    world.record_file("sample-launcher.ps1", b"second");
     apply_selection(
         &execution,
         &[selected(
@@ -514,7 +517,7 @@ fn an_interrupted_update_keeps_rollback_state_and_recovers_its_generation() {
     )
     .expect_err("the update is interrupted after publication");
     assert_eq!(
-        std::fs::read(world.destination("claudez.ps1")).unwrap(),
+        std::fs::read(world.destination("sample-launcher.ps1")).unwrap(),
         b"second",
     );
 
@@ -524,7 +527,7 @@ fn an_interrupted_update_keeps_rollback_state_and_recovers_its_generation() {
     assert_eq!(recovered[0].settlement, "recovered");
     assert!(recovered[0].reversible);
     assert_eq!(
-        std::fs::read(world.destination("claudez.ps1")).unwrap(),
+        std::fs::read(world.destination("sample-launcher.ps1")).unwrap(),
         b"second",
     );
 }
@@ -536,12 +539,12 @@ fn a_posix_launcher_is_executable_and_mode_drift_is_not_content_only_success() {
     use std::os::unix::fs::PermissionsExt;
 
     let world = World::new();
-    world.record_file("claudez", b"#!/bin/sh\nexit 0\n");
-    let targets = [target("claudez")];
+    world.record_file("sample-launcher", b"#!/bin/sh\nexit 0\n");
+    let targets = [target("sample-launcher")];
     let selected = selection();
     let execution = world.execution(&targets, &selected);
     execute_deploy_targets(&execution).expect("the POSIX launcher deploys");
-    let destination = world.destination("claudez");
+    let destination = world.destination("sample-launcher");
     let metadata = std::fs::metadata(&destination).expect("the launcher metadata reads");
     assert_eq!(metadata.permissions().mode() & 0o7777, 0o755);
 

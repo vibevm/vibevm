@@ -14373,36 +14373,36 @@
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/mechanism/deploy/opt_launcher/tests.rs",
       "item_kind": "fn",
-      "line": 456,
+      "line": 459,
       "symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::a_later_target_failure_restores_the_exact_prior_launcher",
-      "end_line": 495,
-      "fingerprint": "tok1:134b0a54325d9131f75ca8a514e98ef32f5e003ade5d5b00ec9eee2a15492946"
+      "end_line": 498,
+      "fingerprint": "tok1:25fb99290d3b90b6cb7147534fdff13356364769d0b657940b2597fe264f6cee"
     },
     {
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/mechanism/deploy/opt_launcher/tests.rs",
       "item_kind": "fn",
-      "line": 532,
+      "line": 535,
       "symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::a_posix_launcher_is_executable_and_mode_drift_is_not_content_only_success",
-      "end_line": 561,
-      "fingerprint": "tok1:e7baf930c878df5c647041340d6728cf078f9748c490411dcbb6fd636955336b"
+      "end_line": 564,
+      "fingerprint": "tok1:e08add9b3c58c1ef35d1f81d2cfc4e942ae04d56e1ab6c5aa976a0d6488e14ca"
     },
     {
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/mechanism/deploy/opt_launcher/tests.rs",
       "item_kind": "fn",
-      "line": 497,
+      "line": 500,
       "symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::an_interrupted_update_keeps_rollback_state_and_recovers_its_generation",
-      "end_line": 530,
-      "fingerprint": "tok1:b8075cd7b114908eacf43c247ea4be5ea7ae880e9e05d851ebbae7daca7fc705"
+      "end_line": 533,
+      "fingerprint": "tok1:20d7c6702e0f3bd293216919686277ec1063a6757623300f1913352e4555bd45"
     },
     {
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/mechanism/deploy/opt_launcher/tests.rs",
       "item_kind": "fn",
-      "line": 199,
+      "line": 202,
       "symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::an_unsafe_artifact_filename_refuses_before_the_destination_exists",
-      "end_line": 238,
+      "end_line": 241,
       "fingerprint": "tok1:ea78839845fb2d62fbf0b6cd971ed5bd8f6309330824b24db9be907cc6f32c8a"
     },
     {
@@ -14412,7 +14412,7 @@
       "line": 132,
       "symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::first_apply_refuses_an_unowned_occupant_without_mutating_it",
       "end_line": 158,
-      "fingerprint": "tok1:f25b1f77d1eac9f3b8beb0d8ffaf149a2cd9ae5caa7c93c788a75bb75823622f"
+      "fingerprint": "tok1:bb62551f5547316aac1ebcb0dbaae2531ac2162abee6d7d0e1d2fe8b113c73c6"
     },
     {
       "crate_name": "vibe-lifecycle",
@@ -14421,7 +14421,7 @@
       "line": 106,
       "symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::inverse_drift::drift_before_rollback_leaves_no_marker_and_retry_never_overwrites",
       "end_line": 153,
-      "fingerprint": "tok1:15a1ace1909f4e46b01ebecf01bac822556976c9794d547b901abbe22e9a54b6"
+      "fingerprint": "tok1:14f34b5a57c37d82bf0e9efe03f7fb94555a2f6830ac0d5e84497d40e862cf2b"
     },
     {
       "crate_name": "vibe-lifecycle",
@@ -14430,7 +14430,7 @@
       "line": 155,
       "symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::inverse_drift::post_restore_drift_is_not_laundered_into_rolled_back_ownership",
       "end_line": 217,
-      "fingerprint": "tok1:962864ed3a69546499616e1f75d3801c8645fa66f97a8fc75381edc75b6ad7c3"
+      "fingerprint": "tok1:06dfdc37a6d4245d8df772b2fb3dc7e0a5f751ae797f9697505a1732abe98fc9"
     },
     {
       "crate_name": "vibe-lifecycle",
@@ -14438,8 +14438,8 @@
       "item_kind": "fn",
       "line": 160,
       "symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::owned_update_is_verified_and_undeploy_removes_only_the_launcher",
-      "end_line": 197,
-      "fingerprint": "tok1:31981966baf64ca850a38cad60e6214fcd8dd484fcc61cd2971eb6e718907926"
+      "end_line": 200,
+      "fingerprint": "tok1:8bfa50ee5110b60d3b39ef85f6e9deaef9283bd700531a28843e71f47caee388"
     },
     {
       "crate_name": "vibe-lifecycle",
@@ -14448,7 +14448,7 @@
       "line": 171,
       "symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::swap::artifact_swap_after_resolution_leaves_owned_destination_byte_and_mode_exact",
       "end_line": 212,
-      "fingerprint": "tok1:66d7ddd77962f71b64fb0470f816094a2d1893ece3a3efac0f36e92b5bd3aad7"
+      "fingerprint": "tok1:a69cfa76c298893936ce527aac2f9e117b9753e10dc0d953979e8f1681c885f5"
     },
     {
       "crate_name": "vibe-lifecycle",
@@ -14456,8 +14456,8 @@
       "item_kind": "fn",
       "line": 503,
       "symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::swap::backup_swap_after_handle_load_refuses_before_destination_mutation",
-      "end_line": 585,
-      "fingerprint": "tok1:9f5a7127bfaea0b2994e1c72dd63ea7de80f350da9c3a53e8d01a65e84776dbd"
+      "end_line": 590,
+      "fingerprint": "tok1:2aadfa2a3529b50be5a2c2f26dc6945655d7229544ff1b37ab0d3102e1e58f8e"
     },
     {
       "crate_name": "vibe-lifecycle",
@@ -14466,7 +14466,7 @@
       "line": 375,
       "symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::swap::manual_reversion_to_prior_bytes_without_inverse_marker_still_refuses",
       "end_line": 398,
-      "fingerprint": "tok1:fc86182267d8366d75e2d3ca23e26aff040ca4b4229c2f11df7603870bd0cdc2"
+      "fingerprint": "tok1:eff8f46f21efdb0c53fd372bd21671e50d17ef44483a135554073e26bcfca120"
     },
     {
       "crate_name": "vibe-lifecycle",
@@ -14475,7 +14475,7 @@
       "line": 241,
       "symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::swap::modified_after_crash_backup_refuses_recovery",
       "end_line": 274,
-      "fingerprint": "tok1:27e55221f0f2e4c3b894915fac4e67ffd1c4329adba1768126950cb0ddf7eaf9"
+      "fingerprint": "tok1:9d0facc566ea1aade1938d844a00c46ebb7f950a2703d2559e2c7f5b660cedb4"
     },
     {
       "crate_name": "vibe-lifecycle",
@@ -14484,7 +14484,7 @@
       "line": 454,
       "symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::swap::raced_destination_is_not_trusted_as_the_receipt_prior_backup",
       "end_line": 501,
-      "fingerprint": "tok1:2d91c2aff7440380e109e2916e82d2985c14ee43daf9533394670602e47ac166"
+      "fingerprint": "tok1:3f0f3d2052a60308d59ac6d8d4be79fcf0a8c4d464e9b3e27aefd27141169f17"
     },
     {
       "crate_name": "vibe-lifecycle",
@@ -14493,7 +14493,7 @@
       "line": 400,
       "symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::swap::recovery_before_prior_save_remains_reversible_for_a_later_saga_failure",
       "end_line": 452,
-      "fingerprint": "tok1:38e3d014f7b447e2d0d035be27eeb75dba1b4031876f22b3cc2cb1d796f6d5ef"
+      "fingerprint": "tok1:c8170b7a0ddb679ca6ec095b86d820592995f07f78f4a2aa79c2450f8ed9c2b4"
     },
     {
       "crate_name": "vibe-lifecycle",
@@ -14502,7 +14502,7 @@
       "line": 300,
       "symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::swap::retry_after_restore_before_receipt_publication_is_idempotent",
       "end_line": 373,
-      "fingerprint": "tok1:54ba953cd9ba0a186419ea4a9bb3ff7ec6d61fe7c1ffc5254c32c6ecf8d7253a"
+      "fingerprint": "tok1:0fb63df3a9c75a9b192f658f458343ebc011d4ef9207bbbc4b3130819c9f8de3"
     },
     {
       "crate_name": "vibe-lifecycle",
@@ -14511,16 +14511,16 @@
       "line": 276,
       "symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::swap::stale_prior_generation_backup_refuses_recovery",
       "end_line": 298,
-      "fingerprint": "tok1:9e877ca9acd48cbc15f23078162d0d5e60de2473e878d5b9d9e738a03cf1961c"
+      "fingerprint": "tok1:6aebb04f5655de48f7facc7d4f74350833d70cabedb3422750240dd226fbb035"
     },
     {
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/mechanism/deploy/opt_launcher/tests.rs",
       "item_kind": "fn",
-      "line": 240,
+      "line": 243,
       "symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::the_adapter_epoch_is_part_of_config_and_therefore_the_plan_hash",
-      "end_line": 287,
-      "fingerprint": "tok1:33de0c97769a75e2a7d80f55b6031503b4ebb6e59c660ac8e9a66b13d0d908f9"
+      "end_line": 290,
+      "fingerprint": "tok1:e6169d06056f3db4ac6c0c29a43642f341918e784c10b621066107e03918606a"
     },
     {
       "crate_name": "vibe-lifecycle",
@@ -15816,7 +15816,7 @@
       "line": 29,
       "symbol": "vibe_lifecycle::mechanism::package::static_file::tests::an_opaque_workspace_file_is_copied_exactly_and_recorded",
       "end_line": 53,
-      "fingerprint": "tok1:8c52a194dfcb42509d9e629cd71a63b442877c757227e2ca41eaf5511ad4e314"
+      "fingerprint": "tok1:ae483fe66c20bf6e91645241ef1763564898d4ffbca26112367b830353650132"
     },
     {
       "crate_name": "vibe-lifecycle",
@@ -39043,7 +39043,7 @@
     {
       "file": "crates/vibe-lifecycle/src/mechanism/deploy/opt_launcher/tests.rs",
       "from_symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::a_later_target_failure_restores_the_exact_prior_launcher",
-      "line": 457,
+      "line": 460,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-LAUNCHER-DELIVERY",
       "verb": "verifies"
@@ -39051,7 +39051,7 @@
     {
       "file": "crates/vibe-lifecycle/src/mechanism/deploy/opt_launcher/tests.rs",
       "from_symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::a_posix_launcher_is_executable_and_mode_drift_is_not_content_only_success",
-      "line": 534,
+      "line": 537,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-LAUNCHER-DELIVERY",
       "verb": "verifies"
@@ -39059,7 +39059,7 @@
     {
       "file": "crates/vibe-lifecycle/src/mechanism/deploy/opt_launcher/tests.rs",
       "from_symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::an_interrupted_update_keeps_rollback_state_and_recovers_its_generation",
-      "line": 498,
+      "line": 501,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-LAUNCHER-DELIVERY",
       "verb": "verifies"
@@ -39067,7 +39067,7 @@
     {
       "file": "crates/vibe-lifecycle/src/mechanism/deploy/opt_launcher/tests.rs",
       "from_symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::an_unsafe_artifact_filename_refuses_before_the_destination_exists",
-      "line": 200,
+      "line": 203,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-LAUNCHER-DELIVERY",
       "verb": "verifies"
@@ -39171,7 +39171,7 @@
     {
       "file": "crates/vibe-lifecycle/src/mechanism/deploy/opt_launcher/tests.rs",
       "from_symbol": "vibe_lifecycle::mechanism::deploy::opt_launcher::tests::the_adapter_epoch_is_part_of_config_and_therefore_the_plan_hash",
-      "line": 241,
+      "line": 244,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-LAUNCHER-DELIVERY",
       "verb": "verifies"
@@ -53359,10 +53359,10 @@
     },
     {
       "anchor": "QUIRK-VVM-STORE-MOVED-UNDER-DOT-VIBE",
-      "content_hash": "sha256:c23a0c085ed0275516039874b900eb5d1fcac35ac0eebd14a13c3094ca7897da",
+      "content_hash": "sha256:c35a5072a5b6b096bbbe0f6905f08a153c231e19e5e433eaaf8ba656ece94388",
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
-      "heading": "**The vibevm version store lives at\n  `~/.vibe/opt` on this box since 2026-08-20** (owner's instruction): `~/.vibe/opt/bin/`\n  holds the `vibe` shims, `~/.vibe/opt/vibevm/` the versions and the `current`\n  pointer. **`~/opt/bin` is NOT retired** — three sibling products (`vibeframe`,\n  `vibeterm`, `launcher`) still keep their stores under `~/opt/` and their shims\n  there. The canonical `claudez.ps1` / `claudez.cmd` are now receipt-deployed by\n  `tool:org.vibevm.world/zai-glm-claude` under `~/.vibe/opt/bin`; old\n  `~/opt/bin/claudez*` copies are legacy, and `claudez2` remains disabled unless\n  the owner explicitly re-enables it. The user-scoped `PATH` carries both\n  directories with `~/.vibe/opt/bin` first, but the effective merged Windows\n  PATH observed in the current Codex process still puts a machine-scoped legacy\n  `~/opt/bin` earlier. Invoke the canonical GLM launcher by absolute path until\n  command resolution proves the new location; bare `claudez` may otherwise hit\n  the legacy copy. Verified live: the new files and receipts exist under\n  `~/.vibe/opt/bin`, and `vibe --version` resolves from the new store. @status:impl/done",
+      "heading": "**The vibevm version store lives at\n  `~/.vibe/opt` on this box since 2026-08-20** (owner's instruction): `~/.vibe/opt/bin/`\n  holds the `vibe` shims, `~/.vibe/opt/vibevm/` the versions and the `current`\n  pointer. **`~/opt/bin` is NOT retired** — three sibling products (`vibeframe`,\n  `vibeterm`, `launcher`) still keep their stores under `~/opt/` and their shims\n  there. The owner retired the subscription-backed external GLM launcher family\n  on 2026-09-08; its host dependency and installed boot projection are gone and\n  its retained executables MUST NOT be invoked. The user-scoped `PATH` carries both\n  directories with `~/.vibe/opt/bin` first, but the effective merged Windows\n  PATH observed in the current Codex process still puts a machine-scoped legacy\n  `~/opt/bin` earlier. Do not invoke either retained launcher by bare name or\n  absolute path. Verified live: the historical files and receipts exist under\n  `~/.vibe/opt/bin`, and `vibe --version` resolves from the new store. @status:impl/done",
       "line": 88,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#QUIRK-VVM-STORE-MOVED-UNDER-DOT-VIBE"
     },
@@ -53372,7 +53372,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "**The last path component `opt` is\n  load-bearing and that is why the new home is `~/.vibe/opt` rather than\n  `~/.vibe`.** The version manager recognises a managed install by the shape\n  `…/opt/<product>/versions/<kind>/<id>/<n>/`, matching the literal names\n  `opt`, the product, and `versions`. Keeping `opt` as the final component made\n  the move a pure file operation with **no code change**. Renaming it is a\n  product-wide decision, not a machine one — the sibling products key on the\n  same shape. @status:impl/done",
-      "line": 103,
+      "line": 101,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#QUIRK-THE-OPT-NAME-IS-LORE-BEARING"
     },
     {
@@ -53381,7 +53381,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "**A `vibe` shim finds its\n  version relative to its own directory** (`<shim dir>/../<product>/current`), so\n  moving the shims without moving the store beside them silently breaks the\n  command — the shim is found on `PATH`, runs, and reports no active version.\n  Met and reverted during the 2026-08-20 move; the working order is: move the\n  store and the shims together, rewrite the absolute path inside `current`, then\n  touch `PATH`. @status:impl/done",
-      "line": 111,
+      "line": 109,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#QUIRK-A-SHIM-RESOLVES-RELATIVE-TO-ITSELF"
     },
     {
@@ -53390,7 +53390,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "**The user `PATH` in\n  `HKCU\\Environment` is `REG_EXPAND_SZ` and contains `%USERPROFILE%`.** Reading it\n  through the ordinary accessor returns the EXPANDED string; writing that back\n  destroys the variable reference (here, `%USERPROFILE%\\go\\bin` would have become\n  a literal path). Read it unexpanded, edit the raw string, and write it back with\n  the value kind preserved. @status:impl/done",
-      "line": 118,
+      "line": 116,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#QUIRK-USER-PATH-IS-EXPANDABLE-AND-MUST-BE-READ-RAW"
     },
     {
@@ -53399,7 +53399,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "Trigger phrases that switch the session into an alternate working posture are catalogued in [PROP-006](../common/PROP-006-operating-modes.xml). Recognise a codeword when the owner invokes it; otherwise treat the session as default posture (the four rules from `CLAUDE.md` in their plain reading). @status:impl/done",
-      "line": 127,
+      "line": 125,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#operating-modes-intro"
     },
     {
@@ -53408,7 +53408,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "Codewords currently in force: @status:impl/done",
-      "line": 128,
+      "line": 126,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#codewords-lead"
     },
     {
@@ -53417,7 +53417,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "**«move fast and break things»** ([PROP-006 §2](../common/PROP-006-operating-modes.xml#mfbt)) — pre-authorised heads-down execution. Maximum scope, testable phases, no mid-work confirmations, full reasoning depth. The four `CLAUDE.md` rules survive unchanged; only Rule 4's \"ask before routine large changes\" is suspended. Non-routine red lines (force-push, history rewrite, large blobs, CI / signing / secrets, irreversible ops) STILL require explicit owner confirmation when active. @status:impl/done",
-      "line": 130,
+      "line": 128,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#CODEWORD-MFBT"
     },
     {
@@ -64374,7 +64374,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:97fcf29d71d14785c4b0defc1cfbeb4de2fa00a98cbd19ab1d990767f1a93881",
+      "content_hash": "sha256:593366b0859a5e39c842e33201fabd3d92c772b44bcc027e890749d98595dc38",
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "PROP-045: XML spec sources and materialisation targets",
@@ -64617,7 +64617,7 @@
     },
     {
       "anchor": "polygon",
-      "content_hash": "sha256:c4ae579dfe884ba22414f978fbce0e393c3aecd539a606a85a66cddbd45e02aa",
+      "content_hash": "sha256:7872c6addd39ace42887988f39aa32b50d000cd0ebe7e312231036c506f8a7e9",
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "5. The redbook polygon — acceptance",
@@ -64644,7 +64644,7 @@
     },
     {
       "anchor": "agent-routing",
-      "content_hash": "sha256:4c3646c5f14b48d0c3e1d9f8a6089e02591b6ce51e7a7db3ae42ec41ca9a5d80",
+      "content_hash": "sha256:c5f86d90ba609a0dd8fa722513b403a0d38086be3ca6475a7860bc3f77f174d0",
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "5a. The dynamic-router measurement — external agents",
@@ -64653,10 +64653,10 @@
     },
     {
       "anchor": "AGENT-ROUTER-MEASURE",
-      "content_hash": "sha256:2c0bb1aff76faf34c0f8ec2a1bb11fde1b10471a50f45e86349137af72053b91",
+      "content_hash": "sha256:d5e27e2ce62bdb9cbca227771b3c4a987a2710be8caee7dd6777ef1d4f56506d",
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
-      "heading": "**The hardest part, named by the owner\n(2026-08-21): measuring the dynamic routers in EXTERNAL agents.** The\ndynamic lane has no code router — the reading agent resolves dynamic\nINCLUDEs itself — so readiness for XML targets is an empirical property\nof live agent harnesses, not of this repository's code, and it is\nMEASURED, not assumed. The instrument is the worker lanes this project\nalready runs: claudez (a Claude-family agent) and codexrunner (a\nGPT-family agent) are external agents by construction. Protocol: the\npolygon project (scenario №0 state — XML-materialised tree, honest\n`INDEX.md` with static and dynamic entries, at least one `when`-guarded\nconditional entry) plus a probe packet that orders a cold worker to\nperform the standard boot (read STATIC in full, then every INDEX entry,\nresolving dynamic INCLUDEs) and then answer control questions whose\nanswers exist ONLY inside dynamically-included XML files (one per\ndynamic entry, plus one inside a `when`-inactive entry that must NOT be\nanswered — the negative control). Scoring is by artifact: each answer\ncites the file it came from; the measure is answered/missed per lane,\nper agent family. The run is repeated over the `markdown» and `mixed»\nmaterialisations of the same tree as the baseline — the DELTA between\nXML and MD scores is the finding, not the absolute number. Results are\nrecorded in the polygon's report and this section's facts flip to\n`impl/…` with the measured numbers cited. *Проверь при постройке: probe\nне должен подсказывать формат — пакет говорит «выполни бут по\nCLAUDE.md/INDEX», не «прочитай XML».* MEASURED (2026-08-22, on the\nfinal dialect — named sections and facts, specdoc/3): **36/36 PASS,\nXML−MD delta = 0 everywhere.** The polygon (redbook closure + three\n`org.vibevm.probe` flows: two `os:windows` beacons, one `os:linux`\nnegative control) ran three materialisations × three lanes — codex\ngpt-5.5@low ×2 sweeps, codex gpt-5.6-sol@xhigh, claudez GLM big — with\na format-blind probe; every beacon answered with its exact\nmaterialised source path, and the inactive entry was correctly\nreported unreadable in all nine cells with zero beacon leakage.\nReport: `campaigns/packages-2026-09/xml-measure/RESULTS-2026-08-22.md`;\nthe harness is a reusable regression stand (`setup.sh` + the weak-tier\nsweep as the sensitive detector). @status:impl/done",
+      "heading": "**The hardest part, named by the owner\n(2026-08-21): measuring the dynamic routers in EXTERNAL agents.** The\ndynamic lane has no code router — the reading agent resolves dynamic\nINCLUDEs itself — so readiness for XML targets is an empirical property\nof live agent harnesses, not of this repository's code, and it is\nMEASURED, not assumed. At measurement time the instrument used one\nClaude-family external lane and codexrunner as the GPT-family lane. The former\nsubscription-backed lane was retired by owner ruling 2026-09-08 and is not a\ncurrent or repeatable runner; the reusable stand now exposes only its Codex\npath. Protocol: the\npolygon project (scenario №0 state — XML-materialised tree, honest\n`INDEX.md` with static and dynamic entries, at least one `when`-guarded\nconditional entry) plus a probe packet that orders a cold worker to\nperform the standard boot (read STATIC in full, then every INDEX entry,\nresolving dynamic INCLUDEs) and then answer control questions whose\nanswers exist ONLY inside dynamically-included XML files (one per\ndynamic entry, plus one inside a `when`-inactive entry that must NOT be\nanswered — the negative control). Scoring is by artifact: each answer\ncites the file it came from; the measure is answered/missed per lane,\nper agent family. The run is repeated over the `markdown» and `mixed»\nmaterialisations of the same tree as the baseline — the DELTA between\nXML and MD scores is the finding, not the absolute number. Results are\nrecorded in the polygon's report and this section's facts flip to\n`impl/…` with the measured numbers cited. *Проверь при постройке: probe\nне должен подсказывать формат — пакет говорит «выполни бут по\nCLAUDE.md/INDEX», не «прочитай XML».* MEASURED (2026-08-22, on the\nfinal dialect — named sections and facts, specdoc/3): **36/36 PASS,\nXML−MD delta = 0 everywhere.** The polygon (redbook closure + three\n`org.vibevm.probe` flows: two `os:windows` beacons, one `os:linux`\nnegative control) ran three materialisations × three lanes — codex\ngpt-5.5@low ×2 sweeps, codex gpt-5.6-sol@xhigh, claudez GLM big — with\na format-blind probe; every beacon answered with its exact\nmaterialised source path, and the inactive entry was correctly\nreported unreadable in all nine cells with zero beacon leakage.\nReport: `campaigns/packages-2026-09/xml-measure/RESULTS-2026-08-22.md`;\nthe harness is a reusable regression stand (`setup.sh` + the weak-tier\nsweep as the sensitive detector). @status:impl/done",
       "line": 396,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#AGENT-ROUTER-MEASURE"
     },
@@ -64666,7 +64666,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "**Model tiers are a measurement dimension —\nthe simpler models go first (owner's advice, verbatim, 2026-08-21: «при\nизмерении воркеров через Codex я бы советовал попользоваться не моделью\ngpt-5.6-sol, а в первую очередь более простыми моделями, чтобы проверить\nнасколько они вообще справляются с новыми режимами»).** A strong model\nmasks format friction; the weak model is the sensitive instrument. The\nCodex-lane probes therefore run the SIMPLER available tiers first\n(`CODEXRUNNER_MODEL`/`CODEXRUNNER_EFFORT` are the launcher's overrides;\nthe measurement slice enumerates which tiers the installed codex\nactually serves and records the list), with the pinned strong tier\n(gpt-5.6-sol) run last as the ceiling reference — the per-tier score\ntable, not one number, is the deliverable. The symmetric extension on\nthe Claude-family lane (a small slot exists there too) is the builder's\nown addition, applied with the same first-simple ordering unless the\nowner says otherwise. The lane DEFAULT for work tasks is untouched: this\ntiering is the measurement protocol's, not the launcher's. MEASURED\n(2026-08-22): the installed codex serves exactly two tiers — `gpt-5.5`\nand `gpt-5.6-sol` (`gpt-5.5-codex`, `gpt-5.1-codex-mini`,\n`codex-mini-latest` error on the ping; list recorded in the stand's\n`tiers.txt`); effort served as the second simplicity axis. The\nsensitive instrument went first per the owner's ordering — gpt-5.5@low,\ntwo full sweeps, 18/18 — and the ceiling gpt-5.6-sol@xhigh matched it\n9/9: the per-tier table shows NO tier gradient, i.e. the final\ndialect's format friction sits below even the cheap tier's noise\nfloor. Claude-family symmetric run: claudez big 9/9. @status:impl/done",
-      "line": 431,
+      "line": 433,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#AGENT-ROUTER-MODEL-TIERS"
     },
     {
@@ -64675,7 +64675,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "5b. Questions the build surfaced — dispositions",
-      "line": 457,
+      "line": 459,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#surfaced"
     },
     {
@@ -64684,7 +64684,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "**REVIEW markers and comments (S4 finding,\ndisposed).** The dialect legally SKIPS XML comments as layout and the\npivot deliberately drops them, so a projection loses `<!-- REVIEW: -->`\nmarkers. The law therefore is: comment-consuming readers (review aging,\nmanaged-block scanners) read RAW SOURCE TEXT of both forms — the comment\nsyntax is shared by MD and XML — and never the projection; S4 built\nreview aging exactly so, with source-relative lines. A comment-carrying\npivot was weighed and refused: comments are the one construct whose\nwhole point is to be invisible to the document model. @status:impl/done",
-      "line": 458,
+      "line": 460,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#REVIEW-COMMENTS-LAW"
     },
     {
@@ -64693,7 +64693,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "**The `normal` boot format over XML slots is\nnamed residue (S4 finding, open).** `compile_normal_entry` reads its\nclosure through vibe-spec's own MD section source, which the projection\ncannot feed without touching that crate; `simple` snippets and authored\nboot files carry XML materialisation fully today. The residue rides the\nS4b family (the engine/vibe-spec lane), recorded here so scenario №0's\npolygon states honestly which snippet formats its packages use. @status:spec/work",
-      "line": 467,
+      "line": 469,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#NORMAL-FORMAT-RESIDUE"
     },
     {
@@ -64702,7 +64702,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "**`show effective`'s boot-origin match is\nlogical-document keyed (S4 finding, closed by S5).** The literal-name\nmatch silently degraded a transformed snippet's origin to `user»; the\nS5 landing keys the match on the logical stem (`10-flow-wal.xml` and\n`10-flow-wal.xml` are one contribution), pinned by the polygon's\norigin test — a snippet materialised into `.xml` reports its package. @status:impl/done",
-      "line": 474,
+      "line": 476,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#BOOT-ORIGIN-LITERAL-MATCH"
     },
     {
@@ -64711,25 +64711,25 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "**Generated boot artifacts are\noutside the derived identity (S5 polygon finding, law).** Boot\nregeneration writes a child target-selected `vibevm/vibespecs/boot/STATIC.xml|STATIC.md`\nplus `INDEX.md` INTO a dependency slot after materialisation — so the\nderived hash excludes them (the same exclusion genre as the derived\nmanifest itself) and the format-purity claim never counts them: a\ntransformed slot's «no foreign-form spec files» is asserted over SOURCES,\nnot over projections the machine regenerates at will. The polygon caught both\nfailure shapes live before this law existed: a stale derived hash the\nmoment boot regenerated, and a fake purity violation on the one slot\nwhose snippet compiles to a child STATIC. @status:impl/done",
-      "line": 480,
+      "line": 482,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#GENERATED-ARTIFACTS-OUTSIDE-DERIVED"
     },
     {
       "anchor": "build-order",
-      "content_hash": "sha256:44522cf039506268d92fad77e87a4af4b308e7613e43607d42a05cf6e41554a8",
+      "content_hash": "sha256:10457541fec06b85d5abd63214ebe7c3bbe27f039376f5717124d5df80558c2d",
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "6. Build order",
-      "line": 493,
+      "line": 495,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#build-order"
     },
     {
       "anchor": "SLICES",
-      "content_hash": "sha256:5a72f2459cb6e648e8e0958be6302da0832db998a34730d9844d3c073ca1605a",
+      "content_hash": "sha256:e899c68694fcd90ccbce507fddb5a33c4d51c4b878884686f58efe24444c2ae4",
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
-      "heading": "S1 pivot + XML frontend/backend + golden round-trips over the\nredbook corpus → S2 MD backend (XML→MD) + degradation tests → S3 the\nsetting + transforming materialisation + the hash law → S4 the scanner/\nchecker/specmap/boot-compiler integration points (the measured `*.md`\nlist; the static splice learns XML input, INDEX carries materialised\npaths) → S5 the redbook polygon E2E: scenario №0 first, then the three\nmixed-input targets → S5a the external-agent router measurement (§5a,\nclaudez + codexrunner over the polygon) → S6 docs, ALPHA-NOTES, judging.\nEach slice lands with its own gates; the polygon plus the agent\nmeasurement are the wave's exit. @status:spec/work",
-      "line": 494,
+      "heading": "S1 pivot + XML frontend/backend + golden round-trips over the\nredbook corpus → S2 MD backend (XML→MD) + degradation tests → S3 the\nsetting + transforming materialisation + the hash law → S4 the scanner/\nchecker/specmap/boot-compiler integration points (the measured `*.md`\nlist; the static splice learns XML input, INDEX carries materialised\npaths) → S5 the redbook polygon E2E: scenario №0 first, then the three\nmixed-input targets → S5a the historical external-agent router measurement\n(§5a, two agent families over the polygon; only the Codex path remains\nrunnable) → S6 docs, ALPHA-NOTES, judging.\nEach slice lands with its own gates; the polygon plus the agent\nmeasurement are the wave's exit. @status:spec/work",
+      "line": 496,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#SLICES"
     },
     {
@@ -68937,7 +68937,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:d72aa892b5450217a9c447826549381d1cf486b4bd8d6eeafd98d5233527b230",
+      "content_hash": "sha256:7668759b633c4896b4cc648499190274265eb0c378c02285a773fcd720722016",
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "PROP-055 — ChatGPT-only campaign execution pool",
@@ -68954,21 +68954,30 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#STATUS-LINE"
     },
     {
-      "anchor": "ZAI-GLM-PACKAGE-CANON",
-      "content_hash": "sha256:cffff1b6e325cbb337426c6de76df1df02f0b0923abab713b56545af8ca81416",
+      "anchor": "SUBSCRIPTION-GLM-LANE-RETIRED",
+      "content_hash": "sha256:eea7c84202676f7748cdbdc6959b4ea4b3aac9d817e32db8ed84dbbe8c2ba4fa",
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
-      "heading": "**The portable direct-GLM\n  contract now lives in `tool:org.vibevm.world/zai-glm-claude`.** Its boot,\n  protocol, packet template, capability playbooks, terminal taxonomy and\n  launchers apply equally to Claude and Codex parents. This PROP retains only\n  the active ChatGPT campaign's routing choices, host resource controls, usage\n  reserve, exact gates and dated observations. Historical overlap below is\n  evidence for the extraction, not a second generic authority. @status:impl/done",
+      "heading": "**Owner\n  ruling 2026-09-08:** the subscription-backed external GLM launcher is retired\n  and MUST NOT be invoked, probed, retried, deployed, or selected as a worker\n  lane. The host root dependency, installed projection, and generated boot\n  contribution are removed. The canonical package source remains unchanged as\n  historical product evidence; it is not current execution authority. Dated\n  observations and legacy anchor names below describe completed runs only and\n  never authorize another command. **Decision:** remove the host root edge,\n  materialized slot, and boot contribution, and forbid the launcher family as\n  a current lane. **Why:** the subscription is cancelled, so the transport\n  cannot execute work while its boot still consumes every central session's\n  context. **Considered and rejected:** keeping a dormant installed copy still\n  pays that context cost; deleting or rewriting the canonical package source\n  would destroy deliberately preserved product evidence and violates the\n  owner's explicit perimeter. **When to revisit:** only after the owner restores\n  a compatible subscription and explicitly asks to reinstall the package into\n  this host project. @status:spec/done",
       "line": 10,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#SUBSCRIPTION-GLM-LANE-RETIRED"
+    },
+    {
+      "anchor": "ZAI-GLM-PACKAGE-CANON",
+      "content_hash": "sha256:5e4e88c98073062abb3f8ea7ba4258513895cb133bbdbfadb547e84c46cbad71",
+      "doc_path": "common/PROP-055",
+      "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
+      "heading": "The portable\n  direct-GLM contract was extracted into\n  `tool:org.vibevm.world/zai-glm-claude` and remains preserved in its canonical\n  package source. This host no longer consumes its boot or launcher artifacts.\n  The rest of this PROP retains the live ChatGPT campaign controls that are\n  independent of that retired transport. @status:impl/done",
+      "line": 27,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#ZAI-GLM-PACKAGE-CANON"
     },
     {
       "anchor": "scope",
-      "content_hash": "sha256:534b983f81056836b79d1fab73e0756a89ee12c73a23a6320cd8a36a02045352",
+      "content_hash": "sha256:bafdf21a27652bcace85babcfa53152c820b2aceba2528e6b359666eeaead56c",
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "1. Applicability — a harness gate, not a repository-wide mode",
-      "line": 18,
+      "line": 34,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#scope"
     },
     {
@@ -68977,25 +68986,25 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "This document applies\n      only when the current owner-facing **central coordinator** runs under an\n      OpenAI ChatGPT/Codex harness and is executing\n      `campaigns/packages-2026-09/TZ-LIFECYCLE-EXTENSIONS-v0.1.md` (or the owner\n      explicitly reactivates this contract by name). All conditions are\n      required. @status:spec/done",
-      "line": 20,
+      "line": 36,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#OPENAI-CENTRAL-ONLY"
     },
     {
       "anchor": "NON-OPENAI-MUST-SKIP",
-      "content_hash": "sha256:c01beb8c75fade6c98e1aa5b037d5bbe1221ce6c94728b8428b926675f43d76e",
+      "content_hash": "sha256:a96bfd8cd9f27a6bd122061d4effe24bb43f156e5728b9f85edff4b3b9fa4e42",
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
-      "heading": "Claude Code, a\n      `claudez` process, Gemini and every other non-OpenAI harness MUST NOT read\n      or apply this document. It is deliberately absent from the shared\n      `STATIC.xml` / `INDEX.md` boot lane. The byte-identical\n      `CLAUDE.md`/`AGENTS.md`/`GEMINI.md` triplet carries one conditional\n      pointer: an applicable OpenAI coordinator follows it; every other harness\n      skips it. @status:spec/done",
-      "line": 26,
+      "heading": "Claude Code, a\n      Gemini and every other non-OpenAI harness MUST NOT read\n      or apply this document. It is deliberately absent from the shared\n      `STATIC.xml` / `INDEX.md` boot lane. The byte-identical\n      `CLAUDE.md`/`AGENTS.md`/`GEMINI.md` triplet carries one conditional\n      pointer: an applicable OpenAI coordinator follows it; every other harness\n      skips it. @status:spec/done",
+      "line": 42,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#NON-OPENAI-MUST-SKIP"
     },
     {
       "anchor": "SUBAGENTS-MUST-SKIP",
-      "content_hash": "sha256:9bdcd623a38f35b80000ec2bcfc8d020adce8328807d31f7b3f7699ab74e06f1",
+      "content_hash": "sha256:90604bc67ccd4d60e6cca8b4d64c17a3ca65e3c9b584d4eb2bbef1881c0729d4",
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
-      "heading": "A task carrying\n      `##subagent-quiet-clause`, a worker packet or an explicit reviewer packet\n      is a subagent even when its executable is Codex. It follows that packet\n      and MUST NOT promote itself to this central contract. Native workers,\n      `codexrunner`, `claudez` and plain `claude` workers are all excluded by\n      this rule. @status:spec/done",
-      "line": 33,
+      "heading": "A task carrying\n      `##subagent-quiet-clause`, a worker packet or an explicit reviewer packet\n      is a subagent even when its executable is Codex. It follows that packet\n      and MUST NOT promote itself to this central contract. Native workers,\n      `codexrunner` and plain `claude` workers are all excluded by\n      this rule. @status:spec/done",
+      "line": 49,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#SUBAGENTS-MUST-SKIP"
     },
     {
@@ -69004,16 +69013,16 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "When the lifecycle\n      campaign completes, pauses, or the owner selects another campaign, this\n      contract becomes inactive without changing global project practice. A\n      successor campaign needs an explicit owner ruling before it inherits any\n      item. @status:spec/done",
-      "line": 39,
+      "line": 55,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#END-OF-CAMPAIGN"
     },
     {
       "anchor": "roles",
-      "content_hash": "sha256:9b2105e0d0f65248d8bd0775ef1f1772c79b8ae0f7a757000b08a87bdf0daa77",
+      "content_hash": "sha256:91300115ef3fb8573a901d9d02f9f8165cd26d1bd4f8ecf23bb9e9c5fa9bb5f2",
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "2. The central coordinator keeps judgment",
-      "line": 47,
+      "line": 63,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#roles"
     },
     {
@@ -69022,7 +69031,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "The central\n      ChatGPT/Codex session owns architecture, cross-wave planning, owner\n      rulings, destructive-action decisions, review verdicts, integration,\n      staging allow-lists, commits, mirrors and final gates. A worker may\n      propose or implement; it never self-accepts, moves authoritative status,\n      commits, pushes or declares the campaign complete. @status:spec/done",
-      "line": 49,
+      "line": 65,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#CENTRAL-OWNS-JUDGMENT"
     },
     {
@@ -69031,7 +69040,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Delegate\n      a bounded task when independent verification is cheaper than generating\n      it centrally. Keep a cross-cutting edit in one thread when its write\n      perimeter intersects live atoms or correctness depends on an unresolved\n      architectural choice. @status:spec/done",
-      "line": 55,
+      "line": 71,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#DELEGATE-WHEN-CHEAPER-TO-VERIFY"
     },
     {
@@ -69040,34 +69049,34 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "For a\n      substantive implementation, prefer review by a different model family or\n      fresh independent thread. Diversity counts only with exact file/line\n      evidence, a root rerun of the decisive test and a mutation or negative\n      oracle; another model's confidence is not evidence. @status:spec/done",
-      "line": 60,
+      "line": 76,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#MODEL-DIVERSITY-IS-A-GATE"
     },
     {
       "anchor": "CLAUDEZ-EXECUTES-ROOT-ACCEPTS",
-      "content_hash": "sha256:b67de9526245deb8beaaed04b832c1a395769b02a2280046d05709a385b26ab2",
+      "content_hash": "sha256:ae1158f4ea3cb7cbb8ebff30bb79412c6511d733cb22e97e0199b05a88ea9c3d",
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
-      "heading": "The owner\n      assigns `claudez` execution priority, never acceptance authority. The\n      central coordinator authors the architecture and packet, closes the write\n      perimeter, names acceptance and red proofs, then reviews the result as a\n      PR, reruns decisive tests/mutations and issues accept, same-cwd repair,\n      re-commission or discard. Worker-written PASS/review/commit claims have\n      zero authority; staging, commits, integration and final gates remain\n      central. @status:spec/done",
-      "line": 65,
+      "heading": "Retired\n      transport tombstone. No execution or correction command is authorized by\n      this anchor. The enduring rule is `CENTRAL-OWNS-JUDGMENT`: worker claims\n      have no acceptance authority. @status:spec/void",
+      "line": 81,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#CLAUDEZ-EXECUTES-ROOT-ACCEPTS"
     },
     {
       "anchor": "NO-NATIVE-SOL-ULTRA-ACCEPTANCE",
-      "content_hash": "sha256:b93a3296dfce60fd5d085c6878f1c3074ddd00b1f5e655c8ec0e7dc50ba23e24",
+      "content_hash": "sha256:e816c1387444cdc9a0d398346bfaa0ef4e799c804d234005809288ccb986a55d",
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
-      "heading": "**Owner\n      ruling 2026-08-28: do not commission native collaboration subagents that\n      inherit Sol Ultra for acceptance or review.** Every such spawn pays the\n      repository's enormous boot-lane prefix again before it can inspect the\n      diff, making the review disproportionately expensive. Acceptance stays\n      in the already-booted central Ultra context; an independent second family\n      uses subscription `claudez`/Opus launchers (or an explicitly external\n      lower-cost lane), never a native Sol Ultra reviewer. This does not forbid\n      a narrowly justified native execution task; it removes native Sol Ultra\n      from the acceptance route. @status:spec/done",
-      "line": 73,
+      "heading": "**Owner\n      ruling 2026-08-28: do not commission native collaboration subagents that\n      inherit Sol Ultra for acceptance or review.** Every such spawn pays the\n      repository's enormous boot-lane prefix again before it can inspect the\n      diff, making the review disproportionately expensive. Acceptance stays\n      in the already-booted central Ultra context; an independent second family\n      may use an explicitly available Opus or lower-cost external lane, never a\n      native Sol Ultra reviewer. This does not forbid\n      a narrowly justified native execution task; it removes native Sol Ultra\n      from the acceptance route. @status:spec/done",
+      "line": 85,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#NO-NATIVE-SOL-ULTRA-ACCEPTANCE"
     },
     {
       "anchor": "pool",
-      "content_hash": "sha256:092123dcfd572fa832c462638a43fe02e50b2aeb29ef24cf4a3be879d2481d8f",
+      "content_hash": "sha256:23032e1eda2c66ed9b5142eb3079ae538dbb68957f8daca3f731a7fb3b2af5b2",
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "3. Worker pool and routing",
-      "line": 86,
+      "line": 98,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#pool"
     },
     {
@@ -69076,34 +69085,34 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "The pool is a set of\n    interchangeable execution lanes with separate limits. Availability is\n    probed on live work; no lane is assumed healthy from an old ping. @status:spec/done",
-      "line": 87,
+      "line": 99,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#POOL-IS-DYNAMIC"
     },
     {
       "anchor": "NATIVE-WORKERS",
-      "content_hash": "sha256:00705a72c697d1d35e9888044ebb6f98fc9dfdd51efb66f440b3765914706827",
+      "content_hash": "sha256:ccca3cb2c93ac41368f04c5349d0eb9f5a9d13510c8bd3777272c47b6f8bc5b4",
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
-      "heading": "**Native collaboration\n      workers** are the low-latency fallback for a narrow execution/inventory task that\n      specifically benefits from current conversation context. They are not the\n      default execution lane while `claudez` is healthy. Use disjoint write\n      perimeters in parallel; retain packet/report/no-commit discipline. A Sol\n      Ultra native worker is never used for acceptance, per\n      `NO-NATIVE-SOL-ULTRA-ACCEPTANCE`. @status:spec/done",
-      "line": 91,
+      "heading": "**Native collaboration\n      workers** are the current low-latency execution lane for a narrow\n      implementation or inventory task that benefits from current conversation\n      context. Select model and reasoning effort explicitly when the task needs\n      an override. Use disjoint write\n      perimeters in parallel; retain packet/report/no-commit discipline. A Sol\n      Ultra native worker is never used for acceptance, per\n      `NO-NATIVE-SOL-ULTRA-ACCEPTANCE`. @status:spec/done",
+      "line": 103,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#NATIVE-WORKERS"
     },
     {
       "anchor": "SOL-XHIGH",
-      "content_hash": "sha256:5f0b617a1f183a8f5e9cc05ba11de7aa236d372e9ce3f9b4ffe84b6b11dbc291",
+      "content_hash": "sha256:e604ae1f6bd45b22c00497a3457ee2b5aeaa18f0a16d41b59d589ec6496921da",
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
-      "heading": "**`codexrunner` —\n      `gpt-5.6-sol`, effort `xhigh`** — is the second external lane for hard,\n      well-specified coding, broad code reading and mutation-backed repair when\n      `claudez` is busy/limited or model diversity is useful. It runs in a\n      dedicated worktree. Its yolo transport makes root diff review and a\n      closed write allow-list mandatory; worker claims about review, commits or\n      panels have no authority. @status:spec/done",
-      "line": 99,
+      "heading": "**`codexrunner` —\n      `gpt-5.6-sol`, effort `xhigh`** — is the second external lane for hard,\n      well-specified coding, broad code reading and mutation-backed repair when\n      a separate Codex process or model diversity is useful. It runs in a\n      dedicated worktree. Its yolo transport makes root diff review and a\n      closed write allow-list mandatory; worker claims about review, commits or\n      panels have no authority. @status:spec/done",
+      "line": 112,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#SOL-XHIGH"
     },
     {
       "anchor": "CLAUDEZ-LANE",
-      "content_hash": "sha256:a1fd8aa2db7064e9cc0abdaa306b4266d7ea3d0f95437a79a72eb0cb40ec6d71",
+      "content_hash": "sha256:24c3784122ac3094337b48da1d7635b118e58b1ac44a8cb20eea28210ce46147",
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
-      "heading": "**`claudez`** is a strong\n      implementation and review lane with an independent quota pool and is the\n      **default first choice** for every new delegable packet while its live\n      probe is healthy (owner priority ruling 2026-08-26). Its gateway may hit a\n      five-hour account limit: probe with a real bounded task before fan-out,\n      preserve the worktree/report/log and fail over to Sol/native instead of\n      repeatedly paying a known 429 wall. `claudez2` remains disabled until the\n      owner explicitly re-enables it. @status:spec/done",
-      "line": 106,
+      "heading": "Retired transport\n      tombstone. The subscription is cancelled; no health probe, fan-out,\n      continuation, or fallback through this lane is permitted. @status:spec/void",
+      "line": 119,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#CLAUDEZ-LANE"
     },
     {
@@ -69112,34 +69121,34 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "**Plain Claude Code with\n      Opus and max effort** is invoked explicitly as\n      `claude --model opus --effort max`; follow-up repair uses `claude -c` in\n      the exact same dedicated cwd. Use it for ambiguous code, adversarial\n      architecture/code review, or difficult correction. Read run metadata to\n      learn the resolved model; the alias is not proof of a version. @status:spec/done",
-      "line": 114,
+      "line": 122,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#OPUS-MAX-LANE"
     },
     {
       "anchor": "NEVER-FABLE",
-      "content_hash": "sha256:c03a3bd1371ba24e332f0349bd8bb1da0a230e1893c44f393c71d9dc32d4de4f",
+      "content_hash": "sha256:6da5552f6afbae88a87af0c2c95c2685a805b835ab7ba04ece875e38c8b6934c",
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
-      "heading": "**Never select Fable.** Do\n      not name it, configure it as fallback, or accept automatic fallback to\n      it. If Opus is unavailable, route to Sol, `claudez`, a native worker or\n      the central coordinator. @status:spec/done",
-      "line": 120,
+      "heading": "**Never select Fable.** Do\n      not name it, configure it as fallback, or accept automatic fallback to\n      it. If Opus is unavailable, route to Sol, a native worker or\n      the central coordinator. @status:spec/done",
+      "line": 128,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#NEVER-FABLE"
     },
     {
       "anchor": "routing",
-      "content_hash": "sha256:47745e4634797b993b85554d48bf1bcf254e5d374ff710c8243acdeca9e522c3",
+      "content_hash": "sha256:44b56688c3dd9210b1e15b884d8c47695e9310aa54853e29442573c819e7044c",
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "3.1 Default routing calculus",
-      "line": 125,
+      "line": 133,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#routing"
     },
     {
       "anchor": "ROUTE-CODE",
-      "content_hash": "sha256:eac2ee48f9fd01562798538e79762017abad940751b383ef62eddd174a9bc4d5",
+      "content_hash": "sha256:0dd7d08fba0522be40cf3015a31e90a36c55db4d144f58a3baf042238909021f",
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
-      "heading": "Hard but explicit code with\n        a cheap oracle: `claudez` first; Sol xhigh next when the primary lane is\n        unavailable or a second family is worth the spend. Use both concurrently\n        only for disjoint writes. Ambiguous high-impact code: `claudez` may\n        implement, but central/Opus/Sol independently reviews the judgment. @status:spec/done",
-      "line": 127,
+      "heading": "Hard but explicit code with\n        a cheap oracle: use a native collaboration worker first; Sol xhigh or\n        an explicitly available external family may provide independent\n        execution when diversity is worth the spend. Use both concurrently only\n        for disjoint writes. Ambiguous high-impact code remains centrally\n        designed and independently reviewed. @status:spec/done",
+      "line": 135,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#ROUTE-CODE"
     },
     {
@@ -69148,25 +69157,25 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Security, wire,\n        transaction and lifecycle reviews: central Ultra in its already-paid\n        context and, when independence is valuable, a fresh external model\n        family that did not author the change. Never pay the whole boot lane to\n        a native Sol Ultra acceptance subagent. Read-only external reviews may\n        run beside one code worker. @status:spec/done",
-      "line": 133,
+      "line": 142,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#ROUTE-REVIEW"
     },
     {
       "anchor": "ROUTE-MECHANICAL",
-      "content_hash": "sha256:13c1495bec02f748b8cd2bd7c7906abf6b3e1f28fe1fc0bf921bc8e40f8dcdfd",
+      "content_hash": "sha256:dc8d19887771ddf3e46c04ec9dce4006af34b38c9e89f310aec60156022625dc",
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
-      "heading": "Mechanical edits,\n        fixtures, corpus additions and exact test matrices: `claudez` first,\n        Sol/native on primary-lane limit or a genuine context advantage. The\n        packet supplies the skeleton; the worker fills named refinement points\n        rather than redrawing the architecture. @status:spec/done",
-      "line": 139,
+      "heading": "Mechanical edits,\n        fixtures, corpus additions and exact test matrices: use a native worker\n        or Sol according to context transfer and verification cost. The\n        packet supplies the skeleton; the worker fills named refinement points\n        rather than redrawing the architecture. @status:spec/done",
+      "line": 148,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#ROUTE-MECHANICAL"
     },
     {
       "anchor": "ROUTE-MICRO-LOCAL",
-      "content_hash": "sha256:cb461ec7b9dcc933a0b7d7a1ebb0424aad814af17115b61aa36c1f0e4e410414",
+      "content_hash": "sha256:5925a39c431331440b3341545669579f1d6f5af1485552e157c1442162ecee93",
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
-      "heading": "A deterministic\n        micro-edit remains central when its complete implementation and oracle\n        are cheaper than provisioning, reporting and reviewing an external\n        worker. Measured 2026-08-26: one prescribed `specmark::scope!` line took\n        `claudez` about 150 seconds plus packet/report review. Such a run is\n        useful as an intentional transport/template probe, not the routine\n        execution path. This is the verification-cheaper-than-generation law,\n        not an exception to `claudez` priority for genuinely delegable work. @status:spec/done",
-      "line": 144,
+      "heading": "A deterministic\n        micro-edit remains central when its complete implementation and oracle\n        are cheaper than provisioning, reporting and reviewing an external\n        worker. A 2026-08-26 external-worker measurement took about 150 seconds\n        plus packet/report review for one prescribed `specmark::scope!` line.\n        That confirms deterministic micro-edits remain central. This is the\n        verification-cheaper-than-generation law. @status:spec/done",
+      "line": 153,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#ROUTE-MICRO-LOCAL"
     },
     {
@@ -69175,16 +69184,16 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Architecture, provider\n        boundaries, public grammar, final trade-offs, commit grouping and\n        integration stay central. External architecture work is adversarial\n        review of a central draft, not delegation of the final decision. @status:spec/done",
-      "line": 153,
+      "line": 161,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#ROUTE-CENTRAL"
     },
     {
       "anchor": "transport",
-      "content_hash": "sha256:d299591894f9aa7c51f8caf899d9420393bbfc481e3668a9a62ee753ba9cdc31",
+      "content_hash": "sha256:def07ef89c3441b4c53f3756e148adc33a862dbab1180275f6e3487bf01b42ec",
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "4. Worker transport and resource limits",
-      "line": 161,
+      "line": 169,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#transport"
     },
     {
@@ -69193,16 +69202,16 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Every writing worker\n      gets a dedicated worktree/cwd and packet file. Continuation (`-c`) is used\n      only from that exact cwd. Large context travels in the packet file, never\n      a command-line argument. @status:spec/done",
-      "line": 163,
+      "line": 171,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#ONE-CWD-ONE-THREAD"
     },
     {
       "anchor": "WORKER-PERMISSION-POSTURE",
-      "content_hash": "sha256:78b937651fd9c25fa44a5d1e772291f91a49d36523a829b5644bea1157cd9683",
+      "content_hash": "sha256:a0bdcd585bd6579124cbb85961654c6884f494e77f3d63701d7212d80e6557ec",
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
-      "heading": "**Owner\n      ruling 2026-08-26: `claudez` and Opus are trusted to operate the\n      computer.** Do not spend orchestration effort protecting the machine\n      from these workers or starve them of PowerShell/Bash, Read/Glob/Grep,\n      repository history, formatters, generators and exact tests. Launch an\n      autonomous worker with an explicit non-interactive permission mode and\n      a normal task-capable tool surface; a restricted `--tools` experiment is\n      justified only when the restriction itself is being measured. Claude\n      Code 2.1.220 distinguishes `--tools` (the actual universe) from\n      `--allowedTools` (auto-approval), but this is an observability fact, not\n      a mandate to micromanage a strong worker. A resumed thread still gets an\n      explicit mode so stale session permissions are not accidental. @status:spec/done",
-      "line": 167,
+      "heading": "**Owner\n      ruling 2026-08-26: authorized native and external workers may use the\n      normal task-capable tool surface.** Do not spend orchestration effort\n      starving them of PowerShell/Bash, Read/Glob/Grep,\n      repository history, formatters, generators and exact tests. Launch an\n      autonomous worker with an explicit non-interactive permission mode and\n      a normal task-capable tool surface; a restricted `--tools` experiment is\n      justified only when the restriction itself is being measured. Claude\n      Code 2.1.220 distinguishes `--tools` (the actual universe) from\n      `--allowedTools` (auto-approval), but this is an observability fact, not\n      a mandate to micromanage a strong worker. A resumed thread still gets an\n      explicit mode so stale session permissions are not accidental. @status:spec/done",
+      "line": 175,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#WORKER-PERMISSION-POSTURE"
     },
     {
@@ -69211,7 +69220,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "The protected\n      boundary is the **handoff representation**, not the worker's access to\n      the machine. A writing worker leaves its result as ordinary unstaged\n      working-tree files plus the durable report in its dedicated cwd. It MUST\n      NOT package or hide the state in the index, a commit/branch, stash,\n      private worktree, patch-only deliverable, ignored/cache-only product\n      copy, reset/checkout state or an external service. Read-only git history,\n      blame, status and diffs are encouraged. Root can then inspect one visible\n      diff, rerun the oracles, stage, commit and integrate without decoding a\n      worker-private state machine. @status:spec/done",
-      "line": 180,
+      "line": 188,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#REVIEWABLE-WORKTREE-LAW"
     },
     {
@@ -69220,7 +69229,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Parallelism is routed on\n      write intersections, not read intersections. Read-only reviewers may\n      overlap. Intersecting or many-place writes are serialized under one\n      worker or the central coordinator. @status:spec/done",
-      "line": 190,
+      "line": 198,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#DISJOINT-WRITES"
     },
     {
@@ -69229,7 +69238,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "The box ceiling is two\n      simultaneous cold Cargo workers. Prefer one cargo-heavy implementation\n      plus one cargo-heavy review/test at most; text/read-only workers may use\n      otherwise free lanes. Cargo runs use `CARGO_BUILD_JOBS=4` where the\n      repository rule requires it. @status:spec/done",
-      "line": 194,
+      "line": 202,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#TWO-COLD-CARGO"
     },
     {
@@ -69238,7 +69247,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "A packet-level “do not run\n      Cargo” rule does **not** prevent Claude Code's Rust language server from\n      starting `rust-analyzer`/flycheck after the first Rust edit. Measured on\n      2026-08-27: one patch-only worktree grew a 2,225,158,486-byte local\n      `target/`; a second had already grown 297,254,505 bytes when its process was restarted. Root\n      therefore sets `CARGO_TARGET_DIR` to the one active warm integration\n      target **before launching** every patch-only Rust worker. The sibling\n      launched with that environment before its first edit created no local\n      target. Setting it only on a continuation is too late because an LSP\n      spawned by the original process may outlive that process. Orphaned\n      rust-analyzer processes are stopped only after their worker terminates;\n      the exact worktree is then reclaimed by `##ROLLING-WORKTREE-GC`. @status:spec/done",
-      "line": 199,
+      "line": 207,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#LSP-COLD-CACHE"
     },
     {
@@ -69247,7 +69256,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "A process census is\n      observation, not exclusion: on 2026-08-26 three independent workers all\n      observed zero Cargo processes and then started three cold builds in the\n      same race window. Every ChatGPT-commissioned worker therefore runs each\n      repository Cargo command through\n      `python campaigns/packages-2026-09/tasks/chatgpt-cargo.py -- cargo …`.\n      The wrapper holds one of two OS file locks for the complete child lifetime,\n      emits a waiting heartbeat, sets `CARGO_BUILD_JOBS=4` unless already set,\n      and releases on normal exit or process death. A packet may bypass it only\n      for a central coordinator's explicitly serialized command. The wrapper is\n      campaign harness infrastructure, never a VibeVM product command or\n      standing instruction for Claude. @status:spec/done",
-      "line": 211,
+      "line": 219,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#ATOMIC-CARGO-SLOTS"
     },
     {
@@ -69256,7 +69265,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "When this\n      campaign changes in-workspace `file://` package sources and the central\n      coordinator refreshes the local lock/materialisation, run\n      `vibe install --offline --assume-yes`. The required source bytes are\n      local and the selected dependency closure is already cached; an online\n      resolver adds latency and an unnecessary external failure mode. Drop\n      `--offline` only when the task explicitly needs a remote package version\n      not present locally. If this campaign has changed install/materialiser\n      code, drive that refresh through the **current workspace CLI**\n      (`chatgpt-cargo.py -- cargo run -p vibe-cli -- install --offline\n      --assume-yes`) or a separately verified current build, never an assumed\n      PATH binary: on 2026-08-28 the stale system launcher rewrote current\n      `.vibe-slot.toml` records back to legacy `.vibe-derived.toml`; the\n      workspace binary immediately restored the intended diff. @status:spec/done",
-      "line": 223,
+      "line": 231,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#OFFLINE-LOCAL-PACKAGE-REFRESH"
     },
     {
@@ -69265,7 +69274,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Campaign worktrees\n      are reclaimed **continuously, not at campaign close** (owner ruling\n      2026-08-26). As soon as an atom is accepted and integrated, root proves\n      that its product diff is landed, its report/decisions have a durable home,\n      its worker process is closed, and no unique untracked artifact remains;\n      then it immediately removes that exact worktree with `git worktree remove`\n      and runs `git worktree prune`. A clean obsolete worktree already proved\n      superseded is treated the same way. `--force` is used only after the same\n      evidence proves every remaining untracked file disposable; a live or\n      unintegrated dirty worktree is never reclaimed for space. Root measures\n      and reports reclaimed bytes. Retaining hundreds of gigabytes of rebuildable\n      `target/` trees until the epic ends is itself a process defect. @status:spec/done",
-      "line": 237,
+      "line": 245,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#ROLLING-WORKTREE-GC"
     },
     {
@@ -69274,16 +69283,16 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Every packet\n      carries `##subagent-quiet-clause`, an expected write perimeter, exact\n      acceptance, narrow self-verify commands, a durable\n      `WORKER-REPORT-<id>.md`, the reviewable-worktree law, a worker-side\n      full-panel ban and final `TASK-DONE`. A reasoned perimeter expansion is\n      disclosed in the report (and is forbidden only when it would intersect a\n      parallel writer). Screen prose is discarded; reports and visible diffs\n      are the deliverable. @status:spec/done",
-      "line": 249,
+      "line": 257,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#QUIET-ARTIFACT-CONTRACT"
     },
     {
       "anchor": "PLAIN-LAUNCHER-OUTPUT",
-      "content_hash": "sha256:ffa887e19beef703fc894719af801c5370093be89d4efcaa4d39134704f5e6a6",
+      "content_hash": "sha256:2b5c73ad2d0ab4b2a524c71ff2e3854d6936fe43ff7c55364391f3cb813127bd",
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
-      "heading": "When the central\n      Codex harness drives a long `claudez`/`claude` process through unified\n      exec, use ordinary text output plus the durable worker report by\n      default. `--output-format stream-json --verbose` emits a JSON event for\n      each thinking-token update: the 2026-08-28 A4b read-only audit produced\n      more than 2.7 MiB of transport output for about 10.4k thinking tokens\n      while its complete report was about 12 KiB. Feeding that stream back\n      through the tool wastes context and can fill the process pipe. Stream\n      JSON remains legitimate for a short transport/model-metadata probe or\n      when redirected to a file the model does not ingest; long work is\n      observed through process liveness, the visible diff and the bounded\n      report. @status:spec/done",
-      "line": 257,
+      "heading": "When the central\n      Codex harness drives a long external CLI worker through unified exec, use\n      ordinary text output plus the durable worker report by\n      default. `--output-format stream-json --verbose` emits a JSON event for\n      each thinking-token update: the 2026-08-28 A4b read-only audit produced\n      more than 2.7 MiB of transport output for about 10.4k thinking tokens\n      while its complete report was about 12 KiB. Feeding that stream back\n      through the tool wastes context and can fill the process pipe. Stream\n      JSON remains legitimate for a short transport/model-metadata probe or\n      when redirected to a file the model does not ingest; long work is\n      observed through process liveness, the visible diff and the bounded\n      report. @status:spec/done",
+      "line": 265,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#PLAIN-LAUNCHER-OUTPUT"
     },
     {
@@ -69292,16 +69301,16 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Default a worker report to\n      at most 150 lines: verdict, findings, changed-file set, decisive evidence,\n      commands and deviations. A longer report is justified only by a large\n      finding matrix or protocol review. Do not ask the worker to restate every\n      source it read; exact citations replace narrative. The 2026-08-26 probes\n      showed that a good Opus review can consume 47k output tokens and a GLM\n      review 30k when no report budget is stated. @status:spec/done",
-      "line": 269,
+      "line": 277,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#REPORT-BUDGET"
     },
     {
       "anchor": "handoff",
-      "content_hash": "sha256:fe8365a33e42f75df3e5bf6d7bc8188ff2df9a1190f1ab71e2b6ae3bfe19d193",
+      "content_hash": "sha256:744dc063e10e69f768f1c6fba87acbffc755a1e24bb7abdcfe6ab9e522b510e0",
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "4.1. Accepted evidence and terminal lane state",
-      "line": 279,
+      "line": 287,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#handoff"
     },
     {
@@ -69310,16 +69319,16 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "An untracked\n      worker report is evidence, never the sole durable home of an accepted\n      fact. Before root accepts an atom or permits its report/worktree/cache to\n      become disposable, root reviews every non-obvious implementation,\n      architecture, mutation and operational finding and gives it a home by\n      genre: normative product law → PROP/FEAT or named spec-debt; accepted\n      campaign architecture/status → the implementation ledger and TASKS;\n      real but deliberately unowned gap → BACKLOG or the tracked retrospective\n      harvest; harness-only launcher/panel fact → this PROP-055; local invariant\n      → code contract/test plus specmap edge where applicable. Rejected,\n      duplicated or non-durable observations may remain report-only, but root\n      makes that disposition consciously rather than losing them by omission.\n      Later waves drain the tracked harvest/backlog, not untracked `cache/`\n      archaeology. This classification is part of acceptance, not a session-end\n      courtesy, and applies equally to findings made by root during review. @status:spec/done",
-      "line": 281,
+      "line": 289,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#ACCEPTED-WISDOM-HARVEST"
     },
     {
       "anchor": "SUBSCRIPTION-LANES",
-      "content_hash": "sha256:b4fddcefcd8459ea043a7850db336f2c1bdcdedb26966f4d9ae293c3761c3e94",
+      "content_hash": "sha256:5f930f20c464396ece24f4adfd68fbb90200e491c42f71e7ee5b30aefca331ec",
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
-      "heading": "`claude` and\n      `claudez` run against subscription quotas and are cheap enough to use\n      freely and concurrently. Provider JSON may expose a nominal `costUSD`;\n      record it as comparative telemetry, never treat it as the owner's\n      marginal bill or set `--max-budget-usd`. Five-hour quota availability and\n      review throughput are the practical limits. **Deep-research agents are a\n      separate, genuinely expensive class** and are commissioned deliberately;\n      they are not implied by ordinary Opus/GLM delegation. @status:spec/done",
-      "line": 296,
+      "heading": "An explicitly\n      available `claude` lane runs against its own subscription quota. Provider\n      JSON may expose a nominal `costUSD`;\n      record it as comparative telemetry, never treat it as the owner's\n      marginal bill or set `--max-budget-usd`. Five-hour quota availability and\n      review throughput are the practical limits. **Deep-research agents are a\n      separate, genuinely expensive class** and are commissioned deliberately;\n      they are not implied by ordinary Opus/GLM delegation. @status:spec/done",
+      "line": 304,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#SUBSCRIPTION-LANES"
     },
     {
@@ -69328,7 +69337,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "**The central ChatGPT/Codex lane preserves a 15% pause reserve (owner ruling).** Before each major campaign atom, after a long gate and at least once per working hour, root runs `python campaigns/packages-2026-09/tasks/chatgpt-usage.py --pause-at-remaining 15`. The helper speaks the signed-in local Codex app-server's read-only `account/rateLimits/read`, selects the main `limit_id = codex` bucket (Spark's separate bucket is irrelevant unless root actually switches to it), and takes the minimum remaining percentage across primary, secondary and individual windows. It prints only safe plan/window metadata; no auth, account id, prompt or response content. Exit 75 / remaining ≤15 is a **temporary resource pause, never campaign completion, cancellation or blockage**: start no new work or worker, preserve every working-tree/report/cache/handoff artifact, finish only the current non-destructive safe checkpoint tail when needed to avoid ambiguity, and yield to the owner. Do not delete or compact away campaign state and do not mark the plan blocked/complete. The owner then either obtains more usage and resumes this same session, or requests a durable handoff to continue with a new model/resource set. A read failure gets one bounded retry; if it remains unavailable, do not guess enough reserve exists before another large atom. Live commissioning measured 65% used / 35% remaining in the main 10,080-minute Pro window; a threshold-equal negative probe exited 75. @status:spec/done",
-      "line": 304,
+      "line": 312,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#CENTRAL-USAGE-RESERVE-2026-08-29"
     },
     {
@@ -69337,7 +69346,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Workers never\n      receive token contents or a task that reads a token file. Secret-bearing\n      live smoke stays central and prints only a safe verdict. Launchers load\n      their own credentials without exposing them in packet, argv, log or\n      report. @status:spec/done",
-      "line": 305,
+      "line": 313,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#NO-SECRETS-TO-WORKERS"
     },
     {
@@ -69346,7 +69355,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "A quota/429/limit failure\n      is transport state, not a code verdict. Confirm it once, keep partial\n      artifacts, then re-route a fresh packet with durable context. Do not spin\n      retries, kill by broad process name, or discard a useful diff because the\n      runner exited non-zero. @status:spec/done",
-      "line": 310,
+      "line": 318,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#LIMIT-FAILOVER"
     },
     {
@@ -69355,7 +69364,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Root acceptance compares\n      actual changed files with the report, reads the diff as a PR, re-runs the\n      decisive narrow command, executes the red mutation/negative oracle, and\n      issues PASS, repair, re-commission or discard. Cosmetic tails are fixed\n      centrally; wrong judgment or behavior uses same-cwd continuation when\n      economical. @status:spec/done",
-      "line": 315,
+      "line": 323,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#ROOT-ACCEPTANCE"
     },
     {
@@ -69364,7 +69373,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "5. Fast development gates and the full-panel cadence",
-      "line": 324,
+      "line": 332,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#gates"
     },
     {
@@ -69373,7 +69382,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "**Owner ruling,\n    2026-08-26:** the approximately twenty-minute full repository panel must not\n    run after every small atom. During this ChatGPT campaign, exact tests are\n    the development gate; the full panel is an integration/batch gate. This is\n    the scoped successor to older campaign-TZ wording and changes no other\n    project or harness. @status:spec/done",
-      "line": 325,
+      "line": 333,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#OWNER-PANEL-RULING"
     },
     {
@@ -69382,7 +69391,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Before accepting an atom, run formatting for each touched workspace, `git diff --check`, exact\n      unit/integration tests, checks/clippy for touched crates, and the task oracle: codegen+wire corpus for schemas; compiler byte identity; isolated homes;\n      and a red mutation/negative fixture per load-bearing branch. A Rust edit in a `conform.toml`-gated crate also runs `cargo xtask conform check --scope\n      <crate-path>`; split test-support carries truthful per-item `#[cfg(test)]` because the syntax frontend reads it without its parent. New/moved\n      `specmark::scope!` or `#[specmark::spec(...)]` edges run `cargo xtask specmap` and review the derived map in the same atom. Expand only for another\n      named consumer. This closes the 2026-08-28 R3.4 findings: exact tests/clippy missed 52 conform findings; four later lawful edges stopped on a stale map. @status:spec/done",
-      "line": 332,
+      "line": 340,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#EXACT-GATES-PER-ATOM"
     },
     {
@@ -69391,7 +69400,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "`cargo xtask\n      check-codegen` finishes by comparing the worktree against `HEAD`; in the\n      mandated ordinary-unstaged worker handoff, an intended generated product\n      diff therefore makes it fail by construction. A schema/codegen worker\n      runs the generator, captures a stable hash of the relevant visible diff,\n      runs the generator again and proves the hash unchanged (plus focused\n      wire/corpus tests). Root runs the real `check-codegen` after staging the\n      atom in its human-authored commit/integrated tree. A worker's dirty-tree\n      exit is not codegen drift evidence by itself. @status:spec/done",
-      "line": 338,
+      "line": 346,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#DIRTY-CODEGEN-GATE"
     },
     {
@@ -69400,7 +69409,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "A gate transcript\n      is evidence only when it carries the exit status of the GATE process.\n      Never spell it as `command | tail; echo $?`: that status belongs to\n      `tail`, and an A6A codegen run on 2026-08-28 printed zero over an actual\n      `os error 5` publication failure. Run the gate unpiped, or redirect its\n      output, capture the child status immediately (`$?` / `$LASTEXITCODE` /\n      `PIPESTATUS[0]` as appropriate), and inspect the saved output afterward.\n      PowerShell cmdlet/conversion errors are non-terminating by default, so a\n      gate such as XML parsing first sets `$ErrorActionPreference = 'Stop'`\n      (or uses `-ErrorAction Stop`); otherwise it can print an error, continue\n      into a hand-written “clean” line and even commit invalid XML — observed\n      and repaired on 2026-08-28. A green-looking suffix with a masked parent\n      failure is no verdict. @status:spec/done",
-      "line": 347,
+      "line": 355,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#PIPELINE-EXIT-GUARD"
     },
     {
@@ -69409,7 +69418,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "A worker never runs\n      the full panel. It runs the narrow self-verify named by its packet. The\n      central coordinator does not run the full panel merely because a worker\n      finished. @status:spec/done",
-      "line": 361,
+      "line": 369,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#NO-WORKER-FULL-PANEL"
     },
     {
@@ -69418,7 +69427,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "A coherent batch may\n      contain several atomic local Conventional Commits, each accepted by its\n      exact gate. They remain unmirrored until the batch integration panel is\n      green. If that panel finds a defect, repair forward in the same batch and\n      rerun newly relevant narrow tests before the next panel. @status:spec/done",
-      "line": 365,
+      "line": 373,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#ATOMIC-LOCAL-COMMITS"
     },
     {
@@ -69427,7 +69436,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Run the full\n      `CARGO_BUILD_JOBS=4 tools/self-check.sh` panel when: **(1)** a cross-crate\n      integration batch is ready to leave local state; **(2)** a lifecycle wave\n      or owner scenario is declared green; **(3)** before mirror/push of\n      accumulated code; **(4)** before final epic acceptance; **(5)** a\n      high-risk change has no cheaper complete affected set. One panel may\n      satisfy several triggers for the same unchanged tree. @status:spec/done",
-      "line": 370,
+      "line": 378,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#FULL-PANEL-TRIGGERS"
     },
     {
@@ -69436,7 +69445,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "A panel result\n      belongs to the exact tree measured. A later product change invalidates\n      it. A report/docs-only change runs its document gates and may ride the\n      next integration panel, but cannot rewrite an earlier code verdict. @status:spec/done",
-      "line": 377,
+      "line": 385,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#PANEL-IS-FOR-EXACT-TREE"
     },
     {
@@ -69445,17 +69454,26 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Mirror only\n      after the accumulated batch panel is green and the staging allow-list is\n      reviewed. This preserves atomic human-authored commits while amortising\n      the slow panel over useful integration work. @status:spec/done",
-      "line": 381,
+      "line": 389,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#MIRROR-AFTER-GREEN-BATCH"
     },
     {
       "anchor": "observability",
-      "content_hash": "sha256:6e94bdb3109015df47bcf1a21c77e786b9797893904e397b0d4f2860af28a144",
+      "content_hash": "sha256:6525e21ea121863a1ed102f76958bbb2798e43af0a3caee16fc29a0fb2641371",
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
-      "heading": "6. Live lane observations",
-      "line": 388,
+      "heading": "6. Live and historical lane observations",
+      "line": 396,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#observability"
+    },
+    {
+      "anchor": "RETIRED-LANE-OBSERVATIONS-ARE-HISTORY",
+      "content_hash": "sha256:4ded5f20b7ce573af5905cc1ecfc9c83f8137e4c4c9cd413b01ce6a8333db80f",
+      "doc_path": "common/PROP-055",
+      "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
+      "heading": "All\n    dated observations whose anchor or prose names the retired subscription GLM\n    transport are historical evidence only. Their commands, retry advice,\n    quota assumptions, and availability conclusions are non-operative after\n    `SUBSCRIPTION-GLM-LANE-RETIRED`. Observations about other live lanes retain\n    their ordinary force. @status:spec/done",
+      "line": 397,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#RETIRED-LANE-OBSERVATIONS-ARE-HISTORY"
     },
     {
       "anchor": "OBSERVE-NOT-ASSUME",
@@ -69463,70 +69481,70 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Record only a live\n      task's exit, durable report, resolved-model metadata and reviewed quality.\n      A ping proves transport, not coding quality; an old successful run does\n      not prove a five-hour quota remains open. @status:spec/done",
-      "line": 390,
+      "line": 404,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#OBSERVE-NOT-ASSUME"
     },
     {
       "anchor": "PROBE-2026-08-26",
-      "content_hash": "sha256:175f3bfce2115c3e8ff13b8f0f68a87d4b2a8f464c3edade0a19138edb6425f1",
+      "content_hash": "sha256:15824cf1c3831c7580349699c8f7f81083aaab42d0fb74bfbb4e5fae01a291a3",
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
-      "heading": "Live work, not a ping,\n      measured both extra lanes. `claudez` resolved to `glm-5.3[1m]`, completed\n      an independent R7.1 review, found the missing blocking-HTTP timeouts, then\n      used same-cwd `-c` to implement and gate the repair; root additionally\n      repeated the Windows proxy canary 20 times. Plain Claude resolved to\n      `claude-opus-5`, produced an adversarial build/package/deploy review and\n      used same-cwd `-c` for nine central objections; it explicitly withdrew or\n      narrowed four earlier claims and strengthened crash/ownership design.\n      Both are high-quality usable lanes. Opus/max is reserved for ambiguous,\n      high-impact judgment because the two passes were materially more costly;\n      `claudez` is a parallel peer for bounded code/review but may hit its\n      separate five-hour wall. Both exceeded the desired prose budget, so\n      `##REPORT-BUDGET` is mandatory on future packets. After a later multi-hour\n      network outage killed every live worker process, their worktrees and\n      reports remained intact; a fresh isolated `claudez -p` returned exact\n      `CLAUDEZ_OK` through `glm-5.3[1m]` in about nine seconds. Recovery is\n      therefore census-first: retain completed artifacts and restart only\n      unfinished packets, never regenerate the batch wholesale. @status:spec/done",
-      "line": 394,
+      "heading": "Historical external-lane\n      probe. Its durable transport evidence was extracted to the preserved\n      package source; the current rules retain only the conclusions that a ping\n      is not a quality verdict and root acceptance remains mandatory. @status:spec/done",
+      "line": 408,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#PROBE-2026-08-26"
     },
     {
       "anchor": "CLAUDEZ-TURN-BUDGET",
-      "content_hash": "sha256:feda1b515d9ea045a83656effbd1fadcebd0be717e280b72b5f7ca49de8725a4",
+      "content_hash": "sha256:b2332c1c73468baa8df09e95383dbe12c662d70e1df4ecee878b51e77ef56338",
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
-      "heading": "A 140-turn R8\n      continuation reached turn 141 and transport-failed **before writing its\n      report**, despite useful code and focused-test progress; it emitted about\n      95k output tokens and repeatedly reran broad filters. Conversely, two\n      independent R3.4 cold implementation packets each consumed all 50 turns\n      in diligent required-input archaeology and reached at most their first\n      product edit; neither hit quota or transport failure. Therefore there is\n      no universal 30–50-turn implementation cap. Use 30–50 turns for a narrow\n      edit/repair or for an explicitly separate archaeology pass. A broad cold\n      implementation is either (a) two-stage — bounded archaeology with a\n      durable handoff, then same-cwd/session `-c` implementation — or (b)\n      uncapped when root has already supplied a sufficiently closed packet.\n      Split child-process tests/review when that prevents scope accretion, and\n      draft the durable report early rather than gambling on the final two\n      turns. Same-cwd `-c` preserves the subscription-paid context and is the\n      default recovery from a turn-cap boundary. `max_turns` exhaustion\n      preserves the worktree but is never PASS. @status:spec/done",
+      "heading": "Retired transport\n      budget tombstone. No current worker budget or continuation rule is\n      derived from this anchor. @status:spec/void",
       "line": 412,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#CLAUDEZ-TURN-BUDGET"
     },
     {
       "anchor": "CLAUDEZ-QUOTA-BOUNDARY-2026-08-27",
-      "content_hash": "sha256:87b8f78480c3e46388b48843b48d579c2cc2851d6c3a3d736297a9c3bb4c734f",
+      "content_hash": "sha256:ec54389153b8c55c5c3aeaebc562722e1197c4fab53cfd1b8818b4e289e5bf9a",
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
-      "heading": "Two\n      concurrent broad R3.4 continuations (147 and 111 turns) reached green\n      focused/parent gates and then both received 429 with the **same**\n      advertised reset instant before either wrote its mandated report. They\n      resolved to `glm-5.3[1m]`; the worktrees/logs remained complete. This\n      proves the five-hour allowance is account-wide, not per process:\n      parallel claudez jobs increase throughput but consume one shared window\n      concurrently. An uncapped run therefore does not license report-last\n      execution. Create the report skeleton after the first product slice,\n      update evidence incrementally before long parent gates, and treat quota\n      exhaustion as a preserved handoff to root/Opus rather than retrying\n      against the published reset. The hourly probe observes recovery; it does\n      not estimate remaining quota. @status:spec/done",
-      "line": 429,
+      "heading": "Retired\n      account-quota tombstone. No current retry, wait, or fan-out rule is\n      derived from this anchor. @status:spec/void",
+      "line": 415,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#CLAUDEZ-QUOTA-BOUNDARY-2026-08-27"
     },
     {
       "anchor": "CLAUDEZ-HOURLY-PROBE",
-      "content_hash": "sha256:b726999173a6941631cc651ead2175712876d75b182f507ad8a60ee0146651f7",
+      "content_hash": "sha256:301c25926ab6692ac45616751d1a8499b677766978bf0e23cd885761f78a1972",
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
-      "heading": "While this campaign\n      is active, the ChatGPT thread owns an hourly heartbeat named «Проверка\n      доступности claudez». It starts one fresh isolated `claudez -p` elementary\n      task whose only valid answer is `CLAUDEZ_OK`, records resolved model,\n      latency, transport/429 category and advertised reset time, and performs no\n      retry or repository work. This observes five-hour quota recovery without\n      burning a real implementation packet or spinning against a known wall. @status:spec/done",
-      "line": 442,
+      "heading": "Retired heartbeat\n      tombstone. No availability probe, scheduled run, retry, or repository work\n      may target the cancelled transport. No matching automation exists on the\n      current Codex host as of 2026-09-08. @status:spec/void",
+      "line": 418,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#CLAUDEZ-HOURLY-PROBE"
     },
     {
       "anchor": "CLAUDEZ-RECOVERED-2026-08-28",
-      "content_hash": "sha256:5a6ad65e43807cb6782236536391a8224616a096190780f1629e205837257e11",
+      "content_hash": "sha256:e2ed6a914153db96d5efcd51416158bfdc43fa3fa5716d0a59cbbed22edff3af",
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
-      "heading": "After the\n      account-wide wall advertised its 2026-08-28 reset, a fresh real A14 task\n      started through `claudez` without 429, implemented the shared prompt\n      resolver, wrote its report before long gates, mutation-proved the two\n      central guards and finished every exact gate. Availability is therefore\n      recovered for useful work, not merely for a ping; future routing still\n      treats the next five-hour wall as account-wide. @status:spec/done",
-      "line": 449,
+      "heading": "Historical\n      recovery tombstone. A past successful run does not establish present\n      availability. @status:spec/void",
+      "line": 422,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#CLAUDEZ-RECOVERED-2026-08-28"
     },
     {
       "anchor": "CLAUDEZ-R4-LIVE-2026-08-29",
-      "content_hash": "sha256:4fc242e2b98c510a6d3ac309e63bafa04a7449ebb6e39d1f150c08e741f11c0f",
+      "content_hash": "sha256:efdd8ccd07e24a8e210f3e904c7659f9f03864a119b1f4aa4f7ef8e9b5de70a1",
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
-      "heading": "The next\n      advertised reset was observed rather than assumed: a fresh isolated\n      direct launcher probe completed in 9.5 seconds with exact `PONG` and\n      resolved `glm-5.3[1m]`; a real R4.0 extraction then completed 95 turns,\n      left an ordinary diff/report and passed its focused gates. Root review\n      still found two proof defects — the compatibility test pinned a private\n      module rather than the public crate root, and an ambient fence was a raw\n      substring scan — and same-cwd `claudez -c` corrected both with AST-based\n      REDs in 26 turns. Root then found and locally closed the residual\n      `use std::*` glob case. Durable lesson: a healthy/high-quality claudez run\n      is execution evidence, never acceptance; public-boundary tests must name\n      the public path, and source-deny fences need syntax-aware negative\n      fixtures rather than reassuring grep. No run used `--max-budget-usd`. @status:spec/done",
-      "line": 456,
+      "heading": "Historical R4\n      transport tombstone. The accepted product evidence remains in commits and\n      gates; this anchor authorizes no runner. @status:spec/void",
+      "line": 425,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#CLAUDEZ-R4-LIVE-2026-08-29"
     },
     {
       "anchor": "CANONICAL-IDENTITY-ACCEPTANCE-2026-08-29",
-      "content_hash": "sha256:080dca25447c347e188c0990e25ea506634dba8c1bac91216651aad44d03f7a3",
+      "content_hash": "sha256:0ff431a84be0e01c69ec0e4221992d98bf07d14db08832c474d047534fa07772",
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
-      "heading": "A\n      later R4.1 T1/T3 pair passed its worker gates yet central review found four\n      identity-boundary defects: five-digit values entered a four-digit TOML\n      date, host provider plus document path was unconstructible, legacy plan\n      paid a temporary collection, and `CompiledSelector::Eq` treated OR-set\n      order/duplicates as semantic while the promised digest did not. Two\n      same-cwd claudez repairs plus an ordinary Opus/max byte-schedule audit\n      closed them before T2; conform also forced the enlarged selector RED into\n      a focused sub-600-line cell. Durable packet/acceptance rule: whenever a\n      canonical identity lands, pair its independent byte vector with Rust\n      equality, absent-versus-empty, typed constructor composition and legacy\n      allocation/order checks. A green digest golden alone does not prove one\n      semantic identity. @status:spec/done",
-      "line": 470,
+      "heading": "A\n      later R4.1 T1/T3 pair passed its worker gates yet central review found four\n      identity-boundary defects: five-digit values entered a four-digit TOML\n      date, host provider plus document path was unconstructible, legacy plan\n      paid a temporary collection, and `CompiledSelector::Eq` treated OR-set\n      order/duplicates as semantic while the promised digest did not. Two\n      same-cwd worker repairs plus an ordinary Opus/max byte-schedule audit\n      closed them before T2; conform also forced the enlarged selector RED into\n      a focused sub-600-line cell. Durable packet/acceptance rule: whenever a\n      canonical identity lands, pair its independent byte vector with Rust\n      equality, absent-versus-empty, typed constructor composition and legacy\n      allocation/order checks. A green digest golden alone does not prove one\n      semantic identity. @status:spec/done",
+      "line": 428,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#CANONICAL-IDENTITY-ACCEPTANCE-2026-08-29"
     },
     {
@@ -69535,25 +69553,25 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Two\n      disjoint R4.1 writers proved that write-perimeter independence does not\n      make cross-crate gates temporally independent. The registry writer's\n      downstream compile twice observed the workspace writer mid-move and went\n      red on transient duplicate/missing symbols; after that writer reached a\n      stable file boundary, the same gate passed unchanged. Cargo-slot\n      serialisation prevents concurrent cargo processes, not compilation of a\n      peer's half-written source. Schedule downstream gates after peer writers\n      are stable or classify the exact foreign path before repairing anything.\n      The same run exposed a second trap: `cargo test -p vibe-install lifecycle`\n      exited 0 while running **zero** tests; root replaced it with the full\n      package suite. Acceptance records test counts, never exit alone. Finally,\n      one split continuation used `git restore` despite a no-mutating-git packet\n      to heal its own transient newline collapse; the desired bytes survived,\n      but text prohibition is not enforcement — root still verifies the final\n      ordinary diff and ownership perimeter. @status:spec/done",
-      "line": 483,
+      "line": 441,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#PARALLEL-WRITER-GATES-2026-08-29"
     },
     {
       "anchor": "CLAUDEZ-LANES-DIVERGE-2026-08-28",
-      "content_hash": "sha256:1c1f3de9db2f256bea835b1c5cd5987d3fdd43905e88edb4dbcc997ac45f1c32",
+      "content_hash": "sha256:a59d1291d44f61fd7f1c9c6e069fc6e8c6c7368d98aed01f32363b2e3b611e8c",
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
-      "heading": "Launcher\n      health is per configured lane, not transferable testimony. During A15a,\n      primary `claudez` completed a long implementation and two `-c` review\n      repairs while a concurrent fresh `claudez2` task was rejected before any\n      edit with 429 `Insufficient balance or no resource package`. Therefore a\n      green primary probe does not license assuming `claudez2` is available,\n      and a secondary-lane 429 does not stop primary work. Preserve any\n      on-disk report/edit, make no retry loop against that lane, and route the\n      bounded task to the already-booted central context or ordinary Opus as\n      verification economics warrant. @status:spec/done",
-      "line": 499,
+      "heading": "Retired\n      multi-lane quota tombstone. No current availability or failover rule is\n      derived from this anchor. @status:spec/void",
+      "line": 457,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#CLAUDEZ-LANES-DIVERGE-2026-08-28"
     },
     {
       "anchor": "CLAUDEZ-INITIAL-STALL-2026-08-30",
-      "content_hash": "sha256:8289845abe3d4a73ec98ffd56b5d2b9f8cebf80f14b68e70b71ba79be43747d6",
+      "content_hash": "sha256:12936c563a6db10ab206c077b3911f29c131ddd81cc20fb2ff132d464d8daf5c",
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
-      "heading": "A fresh\n      real R8 containment correction launched through primary `claudez -p`\n      with explicit non-interactive permissions created its same-cwd session\n      but emitted no assistant/tool event for ten minutes: the session JSONL\n      remained at the initial user event and the assigned product files stayed\n      byte-unchanged. Root stopped only that unified-exec session, classified\n      the result as a transport stall rather than a code verdict, made no\n      claudez retry, and completed the deterministic micro-fix centrally under\n      `ROUTE-MICRO-LOCAL`. Initial-turn silence is therefore observed like a\n      stalled final turn: inspect session growth and the visible diff, preserve\n      both, stop only the exact process/session after a bounded window, then\n      fail over without regenerating or spinning the lane. @status:spec/done",
-      "line": 509,
+      "heading": "Retired\n      initial-stall tombstone. Generic transport failures remain evidence, not\n      code verdicts, under `LIMIT-FAILOVER`. @status:spec/void",
+      "line": 460,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#CLAUDEZ-INITIAL-STALL-2026-08-30"
     },
     {
@@ -69562,7 +69580,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "A\n      plain fresh `codexrunner exec` loaded repository `AGENTS.md` before its\n      named worker packet and began the forbidden full boot despite that\n      packet's `##subagent-quiet-clause`; root stopped it before product edits.\n      The strict live repair is `--strict-config --ignore-user-config -c\n      project_doc_max_bytes=0`, with `model_reasoning_effort=\"xhigh\"` repeated\n      in the later exec layer and shared `CARGO_TARGET_DIR` set before launch.\n      A no-tool probe returned exact `QUIET_OK`; the real retry resolved\n      `gpt-5.6-sol` / `xhigh`, read the packet first and loaded only its six\n      named standing files. A packet's quiet clause controls reading only when\n      the harness has not already injected project documentation ahead of it. @status:spec/done",
-      "line": 521,
+      "line": 463,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#CODEXRUNNER-QUIET-GUARD-2026-08-30"
     },
     {
@@ -69571,25 +69589,25 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "`tools/self-check.sh` lexically counts `run_step` lines while seven calls execute dynamically, so final\n      R3.4 printed `[54/47]` and still ended `all green` / exit 0. The denominator is an observability bug, never coverage evidence: trust the ordered gates + green tail.\n      A later tooling atom derives the runtime total or removes the false denominator; this docs-only finding does not rewrite the green verdict. @status:spec/done",
-      "line": 532,
+      "line": 474,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#PANEL-DENOMINATOR-2026-08-28"
     },
     {
       "anchor": "claudez-template",
-      "content_hash": "sha256:ac83ebb537985b0afba34ab4abfe28d769db74e8a8c02751eb201cf183b15c88",
+      "content_hash": "sha256:0f8b534aa16115bf7e3b442ff88937b67d64612b29aea24efc49982ee7f5ccf2",
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
-      "heading": "7. Canonical claudez packet template",
-      "line": 538,
+      "heading": "7. Canonical worker packet template",
+      "line": 480,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#claudez-template"
     },
     {
       "anchor": "TEMPLATE-IS-COPIED",
-      "content_hash": "sha256:3f249665a8dc6a84c95d45f00d30db3c7959a33f27827cf46f48348acac4669b",
+      "content_hash": "sha256:3bcfb3b71e8c186cef5f02bf5ff9e1ee7a559d9c46d496b4303b286e70624c17",
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
-      "heading": "The central\n    coordinator copies this skeleton into every new `claudez` packet and fills\n    every bracketed field. Do not point a worker at PROP-055 itself: this spec\n    is ChatGPT-only. Task-specific instructions override a template default\n    only when the packet says so explicitly. @status:spec/done",
-      "line": 539,
+      "heading": "The central\n    coordinator copies this skeleton into every substantial worker packet and\n    fills every bracketed field. Do not point a worker at PROP-055 itself: this\n    spec is ChatGPT-only. Task-specific instructions override a template\n    default only when the packet says so explicitly. @status:spec/done",
+      "line": 481,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#TEMPLATE-IS-COPIED"
     },
     {
@@ -69598,7 +69616,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Launch with an\n      explicit autonomous non-interactive permission mode and the normal tool\n      surface; do not construct a tiny deny-list as a substitute for review.\n      `Read Glob Grep`, PowerShell/Bash, read-only git history, formatters and\n      exact tests are legitimate worker instruments. The short pointer prompt\n      repeats only the handoff invariants: keep product work as an unstaged\n      visible diff, do not add/commit/stash/branch/reset/push, do not run the\n      full panel, and write the report before finishing. Root review, not tool\n      starvation, is the safety and acceptance mechanism. Do not set a maximum\n      dollar budget for Opus/Claude runs (owner ruling 2026-08-26); record cost\n      post-facto when JSON telemetry is available. @status:spec/done",
-      "line": 668,
+      "line": 610,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#TEMPLATE-LAUNCH-GUARD"
     },
     {
@@ -69607,25 +69625,25 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "After `TASK-DONE`,\n      root mechanically compares actual changed files to the report, reads the\n      diff, checks Decisions/Deviations, reruns decisive commands and red proofs,\n      then accepts, sends exact `-c` repair notes, re-commissions or discards.\n      The packet/template reduces review cost; it never replaces review. @status:spec/done",
-      "line": 680,
+      "line": 622,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#TEMPLATE-ROOT-CLOSE"
     },
     {
       "anchor": "opus-lane",
-      "content_hash": "sha256:176bac221bd71d38387e3e8cc62039297038bfddf6b5701db6c6748aa40ad91b",
+      "content_hash": "sha256:95cdc2fda87636af292c6b63a536aded9ffbb3ee818d335151b9fcf44170d8ff",
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "8. Opus 5 max — CLI lane and accumulated lessons",
-      "line": 689,
+      "line": 631,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#opus-lane"
     },
     {
       "anchor": "OPUS-USES-SAME-PACKET",
-      "content_hash": "sha256:fe4771c42b30e2fecee51225199c512806e4d2d412cf83f3101d8bfd6a35a407",
+      "content_hash": "sha256:d56ea384144cbe128f3c3859b1837e293494712b961693d4e999ac3dbe195936",
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
-      "heading": "Opus/max uses\n    the canonical packet above with `claudez` replaced by Opus where named.\n    Root still supplies the idea, accepted architecture, task boundaries and\n    red proofs; Opus implements or independently audits, leaves a reviewable\n    worktree, and receives exact acceptance repairs from root. @status:spec/done",
-      "line": 690,
+      "heading": "Opus/max uses\n    the canonical packet above. Root still supplies the idea, accepted\n    architecture, task boundaries and red proofs; Opus implements or\n    independently audits, leaves a reviewable worktree, and receives exact\n    acceptance repairs from root. @status:spec/done",
+      "line": 632,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#OPUS-USES-SAME-PACKET"
     },
     {
@@ -69634,7 +69652,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "8.1 Fresh run and continuation",
-      "line": 695,
+      "line": 637,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#invocation"
     },
     {
@@ -69643,7 +69661,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Run the installed\n      Claude Code launcher, never a hand-written direct API client. A first\n      turn is fresh `claude -p`; `-c` means continue the most recent session in\n      that cwd and is therefore used only for root's repair/acceptance follow-up.\n      Every concurrent Opus thread gets its own cwd so `-c` cannot resume a\n      neighbour. Do not use `--no-session-persistence` when a repair loop may\n      be needed. @status:spec/done",
-      "line": 696,
+      "line": 638,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#OPUS-CLI-ONLY"
     },
     {
@@ -69652,34 +69670,34 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Omit a fallback\n      model and inspect the JSON result's `canonicalModel`; never accept Fable.\n      The 2026-08-26 probes resolved `--model opus` to\n      `claude-opus-5` with a 1,000,000-token context. Omit\n      `--max-budget-usd` by owner ruling: subscription quota, not nominal API\n      accounting, is this lane's resource model. @status:spec/done",
-      "line": 710,
+      "line": 652,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#OPUS-NO-FALLBACK"
     },
     {
       "anchor": "opus-routing",
-      "content_hash": "sha256:56963f5d3827080dee930419b1382e40f4fb0cc45fea7782fd0d9d04967b9f84",
+      "content_hash": "sha256:771f130b69f1f8077be562e12789e34ddef1b2b91a82957fbf6e4e8802ba9271",
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "8.2 Task shape and parallelism",
-      "line": 717,
+      "line": 659,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#opus-routing"
     },
     {
       "anchor": "OPUS-JUDGMENT-LANE",
-      "content_hash": "sha256:6e2635d7f647c3bede8c9933f0c44e0ad2450c36fd37f95d08972121ed8b5920",
+      "content_hash": "sha256:c2d78324bca9938553ad4ddf7e2b4d75b4a01365621c7a4ac1371487c899f1da",
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
-      "heading": "Prefer Opus/max\n        for wide code archaeology, adversarial architecture/transaction review,\n        ambiguous repairs and implementation whose verification needs sustained\n        cross-file judgment. It may code as freely as `claudez`; root retains\n        architecture and acceptance. Deterministic micro-edits still fail the\n        verification-cheaper-than-generation test. @status:spec/done",
-      "line": 719,
+      "heading": "Prefer Opus/max\n        for wide code archaeology, adversarial architecture/transaction review,\n        ambiguous repairs and implementation whose verification needs sustained\n        cross-file judgment. It may code as freely as any authorized writing\n        worker; root retains\n        architecture and acceptance. Deterministic micro-edits still fail the\n        verification-cheaper-than-generation test. @status:spec/done",
+      "line": 661,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#OPUS-JUDGMENT-LANE"
     },
     {
       "anchor": "OPUS-PARALLEL",
-      "content_hash": "sha256:a8a9a6acf67b639caa953726b46f9153e1a892d6ae58701268c251b9b2338479",
+      "content_hash": "sha256:9acb0f202c37803c0fa0cdefbabd6b1c1f96e729de4003a07209d7c047b46835",
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
-      "heading": "Multiple Opus processes\n        may run concurrently in separate cwd/session pairs. Parallel readers\n        may overlap; writers are separated by intersecting product paths. Their\n        subscription quota is independent of `claudez`, so using both families\n        at once expands throughput and supplies review diversity. @status:spec/done",
-      "line": 725,
+      "heading": "Multiple Opus processes\n        may run concurrently in separate cwd/session pairs. Parallel readers\n        may overlap; writers are separated by intersecting product paths. Its\n        quota is independent of Codex, so using both families at once can expand\n        throughput and supply review diversity. @status:spec/done",
+      "line": 668,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#OPUS-PARALLEL"
     },
     {
@@ -69688,7 +69706,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Give Opus the normal\n        machine toolset. The first two audits were unnecessarily launched with\n        a read-only tool profile; one sensible PowerShell line-count command\n        was denied. Both still completed, but the owner corrected the policy:\n        PowerShell/Bash, Grep/Glob/Read, read-only git history and exact tests\n        are ordinary reasoning instruments. Protect only the reviewable\n        worktree handoff. @status:spec/done",
-      "line": 730,
+      "line": 673,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#OPUS-TOOLS"
     },
     {
@@ -69697,7 +69715,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "8.3 Live measurements — 2026-08-26",
-      "line": 739,
+      "line": 682,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#measurements"
     },
     {
@@ -69706,7 +69724,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "Two Opus/max\n      read-only audits ran concurrently through Claude Code 2.1.220. R3\n      verifier/trace: terminal success, 91 turns, about 9.2 minutes wall,\n      37,491 output tokens, nominal telemetry `$6.57`, 215-line report. R4\n      staged transforms: terminal success, 94 turns, about 9.8 minutes wall,\n      41,137 output tokens, nominal telemetry `$11.01`, 236-line report. Both\n      wrote only their report and produced concrete file/line matrices, red\n      proofs and commit slices. The nominal dollar fields do not change the\n      subscription-lane ruling. @status:spec/done",
-      "line": 740,
+      "line": 683,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#OPUS-FIRST-LIVE-BATCH"
     },
     {
@@ -69715,7 +69733,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "A broad Opus audit\n      genuinely benefits from a 200–240-line cap; implementation reports stay\n      near the canonical 140-line target. Require the report before final\n      completion because screen output is not the handoff. JSON telemetry is\n      kept for model/turn/time observation; it does not replace the durable\n      report. @status:spec/done",
-      "line": 749,
+      "line": 692,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#OPUS-REPORT-SHAPE"
     },
     {
@@ -69724,7 +69742,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "An A5a Opus/max implementation reached a green exact test, wrote the complete product diff, then produced no non-telemetry session event for about fifteen minutes while its final max-reasoning turn remained open. Root verified liveness from the Claude session JSONL, stopped only that exact marked `claude.exe` PID (never by name or tree), and resumed with `claude -c` in the same cwd. The session retained the diff and prior tool result; the continuation applied the acceptance repair and finished 13 focused + 42 parent tests. Therefore a killed/stalled final turn is not a code verdict and does not require regeneration: inspect the durable diff/report and last non-telemetry event, preserve them, then prefer same-cwd continuation. The exact-PID/no-tree rule applies to ordinary Opus too, even though its process family is not Codex's GUI family. @status:spec/done",
-      "line": 755,
+      "line": 698,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#OPUS-TAIL-RECOVERY-2026-08-29"
     },
     {
@@ -69733,25 +69751,25 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "The A5b implementation ignored its exact-gate budget at the tail and ran full `vibe-cli` sweeps through `cargo test | grep/head/awk`; the first spent roughly nine minutes inside unrelated `cli_spec_format` local install/submodule work. The rerun eventually printed 635/0, but the pipeline had discarded Cargo's exit status, so that number remained telemetry rather than root acceptance. Root used only unpiped, terminating exact e2e/golden/unit commands plus strict touched-crate clippy/workspace check/conform for the verdict. A worker package sweep is neither a substitute for the central full-panel trigger nor permission to mask the child status; when an overbroad sweep enters an unrelated slow test, stop its exact process chain and return to the packet's named tests. @status:spec/done",
-      "line": 756,
+      "line": 699,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#OPUS-BROAD-GATE-INCIDENT-2026-08-29"
     },
     {
       "anchor": "history",
-      "content_hash": "sha256:68101467fd7df42e657f3969bb5695b0480a13657287d12f0eea9cca7d4a4f11",
+      "content_hash": "sha256:08b605a56a799ff47ef94e386f5a7cc26d1fee9d3698a231bba6be572a3c18a0",
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "9. History",
-      "line": 760,
+      "line": 703,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#history"
     },
     {
       "anchor": "HIST-OWNER-2026-08-26",
-      "content_hash": "sha256:f214b2f174f31da8423db8db92968285f25c641a880cbc576071158b33dd5e87",
+      "content_hash": "sha256:79c265859519a1c28f75135ebdee0cf387d0869995e9533167109c7d995ae9ac",
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
-      "heading": "Authored from the\n    owner's 2026-08-26 rulings: use `claudez` and Opus/max alongside Sol/native\n    workers because quotas are separate; never select Fable; consolidate the\n    strategy in one ChatGPT-only document; keep the agent-instruction triplet\n    byte-identical; replace per-atom full panels with exact gates and batch\n    panels; trust both launchers with normal machine tools; preserve their\n    result as an unstaged, centrally reviewable worktree rather than a worker\n    commit/stash/index; and never cap subscription runs by nominal dollar\n      budget. @status:spec/done",
-      "line": 761,
+      "heading": "Authored from the\n    owner's 2026-08-26 rulings: use the former external GLM lane and Opus/max alongside Sol/native\n    workers because quotas are separate; never select Fable; consolidate the\n    strategy in one ChatGPT-only document; keep the agent-instruction triplet\n    byte-identical; replace per-atom full panels with exact gates and batch\n    panels; trust both launchers with normal machine tools; preserve their\n    result as an unstaged, centrally reviewable worktree rather than a worker\n    commit/stash/index; and never cap subscription runs by nominal dollar\n      budget. @status:spec/done",
+      "line": 704,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#HIST-OWNER-2026-08-26"
     },
     {
@@ -69760,7 +69778,7 @@
       "doc_path": "common/PROP-055",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
       "heading": "The\n    owner removed native Sol Ultra subagents from the acceptance pool after\n    observing that every reviewer repays the enormous boot-lane prefix.\n    Central Ultra now accepts in its existing context; independent review is\n    routed through subscription launchers or another explicitly cheaper\n    external lane. @status:spec/done",
-      "line": 770,
+      "line": 713,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-055#HIST-OWNER-2026-08-28-NATIVE-REVIEW"
     },
     {
@@ -73752,7 +73770,7 @@
     },
     {
       "anchor": "implementation",
-      "content_hash": "sha256:b12b47af63cd6d04fe02b3c7e29f852f323ab4a3c7dfab9e14956d92e912cbbd",
+      "content_hash": "sha256:b928bdb8eaf06b347588273bfa896d71931bf35c96c804069de05ab561386e0f",
       "doc_path": "design/deterministic-loading-aliasing",
       "file": "vibevm/vibespecs/design/deterministic-loading-aliasing.xml",
       "heading": "10. Implementation shape (for the worker cut, after approval)",
@@ -73761,10 +73779,10 @@
     },
     {
       "anchor": "impl-slices",
-      "content_hash": "sha256:697c95c42720a6667d726eb9176e246759fc033dcd682a3f98551c9eebf65cea",
+      "content_hash": "sha256:951d8fb339b20de9778eb82475a47f9ba2e7b6ab36aad0f81dfe66844af8bcfb",
       "doc_path": "design/deterministic-loading-aliasing",
       "file": "vibevm/vibespecs/design/deterministic-loading-aliasing.xml",
-      "heading": "Four work slices, each a claudez packet with a disjoint perimeter; every slice self-verifies with `cargo check -p vibe-spec` / `-p vibe-workspace` class commands and lands behind the existing gate panel: @status:spec/work",
+      "heading": "Four work slices, each a native collaboration packet with a disjoint perimeter; every slice self-verifies with `cargo check -p vibe-spec` / `-p vibe-workspace` class commands and lands behind the existing gate panel: @status:spec/work",
       "line": 83,
       "uri": "spec://org.vibevm.core/vibevm/design/deterministic-loading-aliasing#impl-slices"
     },
@@ -74382,7 +74400,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:5dfdb6da2d972d231e2e7789433c0772cfa2f2249dc532b9042c4aad45b2ca96",
+      "content_hash": "sha256:c529e68a93d3089b502e21e1bb47bc57913c69dbd3864ad1e46f326f292fcbe4",
       "doc_path": "design/lane-composition-dedup",
       "file": "vibevm/vibespecs/design/lane-composition-dedup.xml",
       "heading": "Design rationale: once-each lane composition — the aggregator double-emission (B-006)",
@@ -74643,7 +74661,7 @@
     },
     {
       "anchor": "implementation",
-      "content_hash": "sha256:961a5343b6fae054424a65abf94c5f01eeaf8917133a685b03909eb8e57511ca",
+      "content_hash": "sha256:b9840a854cc4691c6fc767e19895966fd7fae3393a03ec00970288dcdeac7a2a",
       "doc_path": "design/lane-composition-dedup",
       "file": "vibevm/vibespecs/design/lane-composition-dedup.xml",
       "heading": "8. Implementation shape (after the ruling — the worker cut)",
@@ -74652,10 +74670,10 @@
     },
     {
       "anchor": "impl-slices",
-      "content_hash": "sha256:79172fac0ba939b107d25b9b34c4be3741d7ac50c5d3580d0c90b654385303d4",
+      "content_hash": "sha256:b1e777026fc7bfebf2459b08f668d5341d0186769f39b04b71dcf7761dca0056",
       "doc_path": "design/lane-composition-dedup",
       "file": "vibevm/vibespecs/design/lane-composition-dedup.xml",
-      "heading": "Two claudez packets with disjoint perimeters, per the transport law (self-verify includes `cargo clippy -p <crate> --all-targets -- -D warnings`): **(W-A)** the composition elision — `crates/vibe-workspace/src/install/bootgen.rs` + `install/bootgen/hybrid_emit.rs` + `boot.rs` seam types + fixture tests (the vibevm shape: root → `static-transitive` aggregator → members; the dynamic-member guard; the golden lane); **(W-B)** the per-node qualify rider — `crates/vibe-spec/src/pipeline.rs` (`compile_normal_entry` emit phase) + `crates/vibe-workspace/src/boot_artifacts.rs` splice seam + a cross-origin fixture. Boss work: the §6 PROP edits, host lane regeneration (`vibe install --assume-yes`), gates, commits, and the two DRIFT review markers (`hybrid_emit.rs:148`, `bootgen.rs:89`) retired in the same landing. @status:spec/work",
+      "heading": "Two native collaboration packets with disjoint perimeters, per the transport law (self-verify includes `cargo clippy -p <crate> --all-targets -- -D warnings`): **(W-A)** the composition elision — `crates/vibe-workspace/src/install/bootgen.rs` + `install/bootgen/hybrid_emit.rs` + `boot.rs` seam types + fixture tests (the vibevm shape: root → `static-transitive` aggregator → members; the dynamic-member guard; the golden lane); **(W-B)** the per-node qualify rider — `crates/vibe-spec/src/pipeline.rs` (`compile_normal_entry` emit phase) + `crates/vibe-workspace/src/boot_artifacts.rs` splice seam + a cross-origin fixture. Boss work: the §6 PROP edits, host lane regeneration (`vibe install --assume-yes`), gates, commits, and the two DRIFT review markers (`hybrid_emit.rs:148`, `bootgen.rs:89`) retired in the same landing. @status:spec/work",
       "line": 45,
       "uri": "spec://org.vibevm.core/vibevm/design/lane-composition-dedup#impl-slices"
     },
@@ -114908,7 +114926,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:a31e3a14959c57529d13dae13440cbe6c34d3175b3723ba4e1468f4e45e36c31",
+      "content_hash": "sha256:c0da9a96b21b9ec7101e8bfcb61d3e24e163a3bbf7c92319326858f445fb0557",
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml",
       "heading": "Packages-Actualization Campaign v0.1 — wave 2: the authored packages measure themselves",
@@ -114916,12 +114934,21 @@
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#root"
     },
     {
+      "anchor": "TRANSPORT-SUPERSEDED-2026-09-08",
+      "content_hash": "sha256:6220ef09ef4234f30fc45e32be47bdaad473aeb35af7a5d92aa1a1ae8ea58760",
+      "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
+      "file": "vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml",
+      "heading": "Owner\n  ruling 2026-09-08 retires the former subscription-backed GLM transport and\n  cancels its subscription. Every earlier transport pin and runnable command in\n  this campaign is historical evidence only. Any remaining work uses the\n  current central routing contract. @status:spec/done",
+      "line": 5,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#TRANSPORT-SUPERSEDED-2026-09-08"
+    },
+    {
       "anchor": "mandate",
       "content_hash": "sha256:ac6e7c01f34df140023b601523b9a3a1cad1f6ef357adc565e7930bbe08f254d",
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml",
       "heading": "0. Mandate (owner's words, 2026-07-25, recorded verbatim)",
-      "line": 11,
+      "line": 16,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#mandate"
     },
     {
@@ -114930,7 +114957,7 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml",
       "heading": "1. Baseline (verified at authoring time, 2026-07-25)",
-      "line": 29,
+      "line": 34,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#baseline"
     },
     {
@@ -114939,7 +114966,7 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml",
       "heading": "2. Executors and the budget law",
-      "line": 90,
+      "line": 95,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#executors"
     },
     {
@@ -114948,7 +114975,7 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml",
       "heading": "3. Two decisions that make this campaign different",
-      "line": 118,
+      "line": 123,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#decisions"
     },
     {
@@ -114957,7 +114984,7 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml",
       "heading": "3.1 A prompt-only flow's facts are contracts on behaviour",
-      "line": 122,
+      "line": 127,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#world-verdicts"
     },
     {
@@ -114966,7 +114993,7 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml",
       "heading": "3.2 The discipline is verified by running it on itself",
-      "line": 149,
+      "line": 154,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#ai-native-verdicts"
     },
     {
@@ -114975,7 +115002,7 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml",
       "heading": "3.3 Superseded version slots are marked, never verified",
-      "line": 164,
+      "line": 169,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#versions"
     },
     {
@@ -114984,7 +115011,7 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml",
       "heading": "4. Campaign zone",
-      "line": 175,
+      "line": 180,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#layout"
     },
     {
@@ -114993,7 +115020,7 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml",
       "heading": "4.5 Amendments carried in from wave 1's close-out",
-      "line": 186,
+      "line": 191,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#amendments"
     },
     {
@@ -115002,16 +115029,16 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml",
       "heading": "4.6 Safe stop — where this campaign can halt losing nothing",
-      "line": 241,
+      "line": 246,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#safe-stop"
     },
     {
       "anchor": "phases",
-      "content_hash": "sha256:d875d56c4d96a600968691b47dc645884027a17399eb28fc89c1d2b0b77c7b28",
+      "content_hash": "sha256:4007e5e56529eb10bac9b2a503de0708436f03bb0d86ed51656ddcae03e2f0f2",
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml",
       "heading": "5. Phases",
-      "line": 342,
+      "line": 347,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#phases"
     },
     {
@@ -115020,7 +115047,7 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml",
       "heading": "Phase 0 — what stood before Phase A (recorded retrospectively)",
-      "line": 343,
+      "line": 348,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#phase-zero"
     },
     {
@@ -115029,7 +115056,7 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml",
       "heading": "Phase A — Scope and the fact-grain prerequisite",
-      "line": 414,
+      "line": 419,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#phase-a"
     },
     {
@@ -115038,7 +115065,7 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml",
       "heading": "Phase B — Markup (facts pass)",
-      "line": 481,
+      "line": 486,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#phase-b"
     },
     {
@@ -115047,7 +115074,7 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml",
       "heading": "Phase C — Verification (evidence pass)",
-      "line": 496,
+      "line": 501,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#phase-c"
     },
     {
@@ -115056,25 +115083,25 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml",
       "heading": "Phase D — Stitching",
-      "line": 523,
+      "line": 528,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#phase-d"
     },
     {
       "anchor": "phase-e",
-      "content_hash": "sha256:c9c3a5876066dee6d4db3da67f48900db1e79cd98eea93076bd50973f9a37226",
+      "content_hash": "sha256:177ad742cb8bf3ef111ef2a18b0457d69a0f5557302f7824ef730ff8e92668d5",
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml",
       "heading": "Phase E — Coding",
-      "line": 534,
+      "line": 539,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#phase-e"
     },
     {
       "anchor": "phase-t",
-      "content_hash": "sha256:b2c5dbe2f4c0d205753a573b16647ca1e2d5cd855634773287c4efba84a05345",
+      "content_hash": "sha256:4b9afd318fac98fd584480b17f929f8ebd4b2a80afb3fac37b5c4e827d9d7743",
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml",
       "heading": "Phase T — Test coverage by swarm (owner amendment, 2026-07-26)",
-      "line": 550,
+      "line": 549,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#phase-t"
     },
     {
@@ -115083,7 +115110,7 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml",
       "heading": "Phase F — The credibility report",
-      "line": 587,
+      "line": 581,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#phase-f"
     },
     {
@@ -115092,7 +115119,7 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml",
       "heading": "Phase G — Documentation (owner amendment, 2026-07-26)",
-      "line": 596,
+      "line": 590,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#phase-g"
     },
     {
@@ -115101,7 +115128,7 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml",
       "heading": "6. Predictions (falsifiable, campaign-wide)",
-      "line": 623,
+      "line": 617,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#predictions"
     },
     {
@@ -115110,7 +115137,7 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml",
       "heading": "6.5 Non-goals (named, with disposition)",
-      "line": 654,
+      "line": 648,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#non-goals"
     },
     {
@@ -115119,7 +115146,7 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml",
       "heading": "6.6 Risks and fallbacks",
-      "line": 713,
+      "line": 707,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#risks"
     },
     {
@@ -115128,7 +115155,7 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml",
       "heading": "7. LOG",
-      "line": 781,
+      "line": 775,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#log"
     },
     {
@@ -115137,7 +115164,7 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml",
       "heading": "7.1 Commit map — hashes bound to phases",
-      "line": 5468,
+      "line": 5462,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#commit-map"
     },
     {
@@ -115146,7 +115173,7 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml",
       "heading": "Phase A and Phase B — EXECUTED 2026-07-26/27; 124 commits",
-      "line": 5488,
+      "line": 5482,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#cm-ab"
     },
     {
@@ -115155,7 +115182,7 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml",
       "heading": "Phase C — EXECUTED 2026-07-28/29; 146 commits",
-      "line": 5506,
+      "line": 5500,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#cm-c"
     },
     {
@@ -115164,7 +115191,7 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml",
       "heading": "Phase D — EXECUTED 2026-07-29 → 2026-08-03; 93 zone commits",
-      "line": 5525,
+      "line": 5519,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#cm-d"
     },
     {
@@ -115173,7 +115200,7 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml",
       "heading": "Phases D-close, E, T, F, G — PLANNED; subjects spelled in advance",
-      "line": 5557,
+      "line": 5551,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#cm-planned"
     },
     {
@@ -115182,7 +115209,7 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml",
       "heading": "8. Deferrals",
-      "line": 5595,
+      "line": 5589,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#deferrals"
     },
     {
@@ -115191,7 +115218,7 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml",
       "heading": "9. REPORT",
-      "line": 5603,
+      "line": 5597,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#report"
     },
     {
@@ -115200,7 +115227,7 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml",
       "heading": "10. Quick-start for the executing session",
-      "line": 5606,
+      "line": 5600,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#quick-start"
     },
     {
@@ -115209,7 +115236,7 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml",
       "heading": "11. Whole-campaign acceptance",
-      "line": 5621,
+      "line": 5615,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#acceptance"
     },
     {
@@ -115758,14 +115785,8 @@
     {
       "code": "long-section",
       "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
-      "line": 388,
-      "message": "section `6. Live lane observations` spans 149 lines (threshold 120) — long sections read poorly and churn often; split into smaller leaves"
-    },
-    {
-      "code": "long-section",
-      "file": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
-      "line": 538,
-      "message": "section `7. Canonical claudez packet template` spans 150 lines (threshold 120) — long sections read poorly and churn often; split into smaller leaves"
+      "line": 480,
+      "message": "section `7. Canonical worker packet template` spans 150 lines (threshold 120) — long sections read poorly and churn often; split into smaller leaves"
     },
     {
       "code": "long-section",

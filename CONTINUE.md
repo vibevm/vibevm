@@ -1,8 +1,9 @@
-# CONTINUE — rolling cold-resume checkpoint, 2026-08-26
+# CONTINUE — historical cold-resume checkpoint, 2026-08-26
 
-> Canonical living state is `vibevm/vibespecs/WAL.xml`; if this snapshot and
-> the WAL diverge, the WAL wins. The granular campaign truth is
-> `campaigns/packages-2026-09/LIFECYCLE-EXTENSIONS-IMPLEMENTATION-LEDGER.md`.
+> This file is legacy migration evidence, not a current execution authority.
+> Worker names and launcher commands below describe the 2026-08-26 checkpoint
+> and MUST NOT be treated as live routing. Current state lives in the bound
+> user-local stewardship context and current authoritative campaign records.
 
 ## TL;DR
 
@@ -132,7 +133,7 @@ closed from accepted project authority:
 - R8 follows the committed mechanism/artifact/profile design; future VibeVM OS
   resources are compatibility constraints, not current implementation scope.
 
-If `claudez`/Opus hits a five-hour limit, retain its worktree/report and finish
+If an external worker hits a usage limit, retain its worktree/report and finish
 the task in root or another launcher. Never restart the whole batch blindly.
 
 ## Non-obvious findings from this run
@@ -145,9 +146,10 @@ the task in root or another launcher. Never restart the whole batch blindly.
 - The safe TOML diagnostic intentionally strips authored source lines because
   a manifest may contain secrets. The downstream oracle now requires parser
   diagnosis/position and asserts the raw line is absent.
-- `--allowedTools` is auto-approval, not the tool universe. More importantly,
-  the owner trusts Claudez/Opus with normal machine tools; protect the
-  reviewable worktree handoff rather than starving search/shell/history.
+- `--allowedTools` is auto-approval, not the tool universe. At this checkpoint,
+  the owner trusted the then-active Claudez/Opus lanes with normal machine
+  tools; protect the reviewable worktree handoff rather than starving
+  search/shell/history.
 - First Opus 5/max audits were run through ordinary Claude Code CLI, not a
   direct API. Fresh: `claude -p --model opus --effort max`; correction:
   same-cwd `claude -c -p`. JSON confirmed `claude-opus-5`, 1M context.

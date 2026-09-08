@@ -30,19 +30,19 @@ fn target(input: &str, output: &str) -> ArtifactPackageTarget {
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-LAUNCHER-DELIVERY")]
 fn an_opaque_workspace_file_is_copied_exactly_and_recorded() {
     let root = temp();
-    let source = root.path().join("launchers/claudez.ps1");
+    let source = root.path().join("launchers/sample-launcher.ps1");
     std::fs::create_dir_all(source.parent().expect("a parent")).expect("the source root creates");
     let bytes = b"#!/opaque\r\n\0\xff";
     std::fs::write(&source, bytes).expect("the opaque source writes");
 
-    let mut declared = target("launchers/claudez.ps1", "claudez.ps1");
+    let mut declared = target("launchers/sample-launcher.ps1", "sample-launcher.ps1");
     declared.config = Some(config(""));
     let outcomes = run_default(root.path(), &[declared]).expect("the static file packages");
 
     assert_eq!(outcomes[0].provider, BUILTIN_STATIC_FILE_PIN);
     assert_eq!(outcomes[0].produced.len(), 1);
     let produced = &outcomes[0].produced[0];
-    assert_eq!(produced.id, "claudez.ps1");
+    assert_eq!(produced.id, "sample-launcher.ps1");
     assert_eq!(produced.files, 1);
     assert_eq!(produced.bytes, bytes.len() as u64);
     assert_eq!(

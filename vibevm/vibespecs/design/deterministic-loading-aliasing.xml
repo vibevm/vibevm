@@ -80,7 +80,7 @@
     <p><oos-hot-attach fact="true" status="spec/work">**A hot-attach UX** for dynamic library lanes (§6) — the naming guarantees are this slice; the workflow that writes the INDEX entry is not.</oos-hot-attach></p>
   </out-of-scope>
   <implementation title="10. Implementation shape (for the worker cut, after approval)">
-    <p><impl-slices fact="true" status="spec/work">Four work slices, each a claudez packet with a disjoint perimeter; every slice self-verifies with `cargo check -p vibe-spec` / `-p vibe-workspace` class commands and lands behind the existing gate panel:</impl-slices></p>
+    <p><impl-slices fact="true" status="spec/work">Four work slices, each a native collaboration packet with a disjoint perimeter; every slice self-verifies with `cargo check -p vibe-spec` / `-p vibe-workspace` class commands and lands behind the existing gate panel:</impl-slices></p>
     <facts ordered="true">
       <IMPL-W1 fact="true" status="spec/work">**`vibe-spec` qualify module** (new cell, `crates/vibe-spec/src/qualify.rs`): `qualify_contribution(text, origin) -&gt; String` — heading + fact-id definitions and intra-doc `(#x)` links rewritten under the origin slug; fence-mask honoured; pure, property-tested (idempotence; append-independence; reversibility of the prefix).</IMPL-W1>
       <IMPL-W2 fact="true" status="spec/work">**directives grammar** (`crates/vibe-spec/src/directives.rs`): `as &lt;Alias&gt;` parsing on `#use` (the token tail after the address is currently ignored — the clause is backward-compatible); the `@!X` scanner beside `@spec://`; the per-file alias table with its two error classes.</IMPL-W2>

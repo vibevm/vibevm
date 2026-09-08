@@ -1386,28 +1386,28 @@ One reusable strict value is carried by both target families:
 
 ```toml
 [[artifacts.package]]
-id = "claudez-windows"
+id = "sample-launcher-windows"
 mechanism = "package:static-file"
 when = { os = ["windows"] }
-inputs = [{ path = "launchers/claudez.ps1" }]
-outputs = [{ id = "claudez.ps1", kind = "file" }]
+inputs = [{ path = "launchers/sample-launcher.ps1" }]
+outputs = [{ id = "sample-launcher.ps1", kind = "file" }]
 
 [[artifacts.package]]
-id = "claudez-posix"
+id = "sample-launcher-posix"
 mechanism = "package:static-file"
 when = { os = ["linux", "macos"] }
-inputs = [{ path = "launchers/claudez" }]
-outputs = [{ id = "claudez", kind = "file" }]
+inputs = [{ path = "launchers/sample-launcher" }]
+outputs = [{ id = "sample-launcher", kind = "file" }]
 
 [[deploy.target]]
-id = "install-claudez-windows"
-artifact = "claudez.ps1"
+id = "install-sample-launcher-windows"
+artifact = "sample-launcher.ps1"
 mechanism = "deploy:vibe-opt-launcher"
 when = { os = ["windows"] }
 
 [[deploy.target]]
-id = "install-claudez-posix"
-artifact = "claudez"
+id = "install-sample-launcher-posix"
+artifact = "sample-launcher"
 mechanism = "deploy:vibe-opt-launcher"
 when = { os = ["linux", "macos"] }
 
@@ -1415,7 +1415,7 @@ when = { os = ["linux", "macos"] }
 default_profile = "local"
 
 [deploy.profiles.local]
-targets = ["install-claudez-windows", "install-claudez-posix"]
+targets = ["install-sample-launcher-windows", "install-sample-launcher-posix"]
 ```
 
 `when` is an optional deny-unknown table. In the first epoch it contains one

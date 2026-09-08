@@ -3,22 +3,17 @@
 # Переключатель принадлежит ВЛАДЕЛЬЦУ: правьте эту строку в любой момент
 # (или скажите в чате — босс обновит файл). Босс перечитывает файл перед
 # КАЖДЫМ fan-out'ом воркеров, поэтому переключение действует немедленно.
-# Инструкция и все механики: SUBAGENT-LAUNCHERS.md рядом.
+# Исторические launcher-механики: SUBAGENT-LAUNCHERS.md рядом; они не являются
+# текущей execution authority.
 #
-#   "codexrunner" — воркеры = OpenAI Codex CLI (gpt-5.6-sol, xhigh)
-#               через запускалку codexrunner (лейн добавлен владельцем
-#               2026-08-20)
-#   "claudez" — воркеры = Claude Code на GLM через запускаторы
-#               claudez / claudez2 (две параллельные линии, worktrees)
-#   "native"  — воркеры = нативные субагенты хэрнесса (opus5),
-#               как исполнялась фаза D
+#   "native"  — нативные Codex collaboration workers; текущий и единственный
+#               live mode этой кампании
 #
-# Приоритет ЛЕЙНОВ внутри режима тоже выбирает владелец — действующий
-# порядок: SUBAGENT-LAUNCHERS.md ##launchers-priority-is-the-owners.
+# Subscription-backed external GLM launcher отменён владельцем 2026-09-08;
+# это семейство MUST NOT запускаться и не является допустимым mode.
 #
 # Ревью, вердикты, роутинг якорей и коммиты в ЛЮБОМ режиме остаются
 # за боссом — режим меняет только исполнителя черновой работы.
-# 2026-08-29, слово владельца: двойная поверхность — нативные opus5-субагенты
-# И лейн claudez (до 5 параллельных); подробности и историю см.
-# SUBAGENT-LAUNCHERS.md ##launchers-priority-is-the-owners.
-mode = "claudez"
+# История прежних launcher assignments сохранена в SUBAGENT-LAUNCHERS.md;
+# она не является текущей execution authority.
+mode = "native"

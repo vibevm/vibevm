@@ -107,14 +107,14 @@ impl DeployProvider for DriftingFail {
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-LAUNCHER-DELIVERY")]
 fn drift_before_rollback_leaves_no_marker_and_retry_never_overwrites() {
     let world = World::new();
-    world.record_file("claudez.ps1", b"first");
-    let initial = [target("claudez.ps1")];
+    world.record_file("sample-launcher.ps1", b"first");
+    let initial = [target("sample-launcher.ps1")];
     let initial_profile = selection();
     execute_deploy_targets(&world.execution(&initial, &initial_profile)).expect("initial deploy");
-    world.record_file("claudez.ps1", b"second");
+    world.record_file("sample-launcher.ps1", b"second");
     let targets = [
-        target("claudez.ps1"),
-        named_target("fail-later", "claudez.ps1"),
+        target("sample-launcher.ps1"),
+        named_target("fail-later", "sample-launcher.ps1"),
     ];
     let profile = DeploySelection {
         profile: "windows".into(),
@@ -131,7 +131,7 @@ fn drift_before_rollback_leaves_no_marker_and_retry_never_overwrites() {
             ),
             selected(
                 &targets[1],
-                Box::new(DriftingFail(world.destination("claudez.ps1"))),
+                Box::new(DriftingFail(world.destination("sample-launcher.ps1"))),
                 "org.example/tests#always-fail",
             ),
         ],
@@ -147,7 +147,7 @@ fn drift_before_rollback_leaves_no_marker_and_retry_never_overwrites() {
     execute_deploy_targets(&world.execution(&initial, &initial_profile))
         .expect_err("retry refuses without marker");
     assert_eq!(
-        std::fs::read(world.destination("claudez.ps1")).unwrap(),
+        std::fs::read(world.destination("sample-launcher.ps1")).unwrap(),
         b"user-drift"
     );
 }
@@ -156,14 +156,14 @@ fn drift_before_rollback_leaves_no_marker_and_retry_never_overwrites() {
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-LAUNCHER-DELIVERY")]
 fn post_restore_drift_is_not_laundered_into_rolled_back_ownership() {
     let world = World::new();
-    world.record_file("claudez.ps1", b"first");
-    let initial = [target("claudez.ps1")];
+    world.record_file("sample-launcher.ps1", b"first");
+    let initial = [target("sample-launcher.ps1")];
     let initial_profile = selection();
     execute_deploy_targets(&world.execution(&initial, &initial_profile)).expect("initial deploy");
-    world.record_file("claudez.ps1", b"second");
+    world.record_file("sample-launcher.ps1", b"second");
     let targets = [
-        target("claudez.ps1"),
-        named_target("fail-later", "claudez.ps1"),
+        target("sample-launcher.ps1"),
+        named_target("fail-later", "sample-launcher.ps1"),
     ];
     let profile = DeploySelection {
         profile: "windows".into(),
@@ -175,7 +175,7 @@ fn post_restore_drift_is_not_laundered_into_rolled_back_ownership() {
         &[
             selected(
                 &targets[0],
-                Box::new(DriftAfterRestore(world.destination("claudez.ps1"))),
+                Box::new(DriftAfterRestore(world.destination("sample-launcher.ps1"))),
                 BUILTIN_VIBE_OPT_LAUNCHER_PIN,
             ),
             selected(
@@ -208,7 +208,7 @@ fn post_restore_drift_is_not_laundered_into_rolled_back_ownership() {
             &store::resource_state(
                 "install-launcher",
                 world.settings.path(),
-                "opt/bin/claudez.ps1"
+                "opt/bin/sample-launcher.ps1"
             )
             .unwrap()
             .unwrap()

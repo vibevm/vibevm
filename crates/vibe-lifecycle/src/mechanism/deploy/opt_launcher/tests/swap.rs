@@ -172,19 +172,19 @@ impl DeployProvider for FailingBeforeDelegate {
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-LAUNCHER-DELIVERY")]
 fn artifact_swap_after_resolution_leaves_owned_destination_byte_and_mode_exact() {
     let world = World::new();
-    world.record_file("claudez.ps1", b"first");
-    let targets = [target("claudez.ps1")];
+    world.record_file("sample-launcher.ps1", b"first");
+    let targets = [target("sample-launcher.ps1")];
     let profile = selection();
     let execution = world.execution(&targets, &profile);
     execute_deploy_targets(&execution).expect("the prior launcher deploys");
     let before = store::resource_state(
         "install-launcher",
         world.settings.path(),
-        "opt/bin/claudez.ps1",
+        "opt/bin/sample-launcher.ps1",
     )
     .expect("the prior launcher observes")
     .expect("the prior launcher exists");
-    world.record_file("claudez.ps1", b"second");
+    world.record_file("sample-launcher.ps1", b"second");
 
     let error = apply_selection(
         &execution,
@@ -200,20 +200,20 @@ fn artifact_swap_after_resolution_leaves_owned_destination_byte_and_mode_exact()
     let after = store::resource_state(
         "install-launcher",
         world.settings.path(),
-        "opt/bin/claudez.ps1",
+        "opt/bin/sample-launcher.ps1",
     )
     .expect("the prior launcher re-observes")
     .expect("the prior launcher remains");
     assert_eq!(after, before, "bytes and Unix mode remain exact");
     assert_eq!(
-        std::fs::read(world.destination("claudez.ps1")).unwrap(),
+        std::fs::read(world.destination("sample-launcher.ps1")).unwrap(),
         b"first",
     );
 }
 
 fn interrupt_update(world: &World, body: &[u8]) {
-    world.record_file("claudez.ps1", body);
-    let targets = [target("claudez.ps1")];
+    world.record_file("sample-launcher.ps1", body);
+    let targets = [target("sample-launcher.ps1")];
     let profile = selection();
     let execution = world.execution(&targets, &profile);
     apply_selection(
@@ -242,8 +242,8 @@ fn backup_path(world: &World) -> std::path::PathBuf {
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-LAUNCHER-DELIVERY")]
 fn modified_after_crash_backup_refuses_recovery() {
     let world = World::new();
-    world.record_file("claudez.ps1", b"first");
-    let targets = [target("claudez.ps1")];
+    world.record_file("sample-launcher.ps1", b"first");
+    let targets = [target("sample-launcher.ps1")];
     let profile = selection();
     execute_deploy_targets(&world.execution(&targets, &profile)).expect("generation zero deploys");
     interrupt_update(&world, b"second");
@@ -254,7 +254,7 @@ fn modified_after_crash_backup_refuses_recovery() {
 
     assert!(matches!(error, DeployError::Provider(_)));
     assert_eq!(
-        std::fs::read(world.destination("claudez.ps1")).unwrap(),
+        std::fs::read(world.destination("sample-launcher.ps1")).unwrap(),
         b"second"
     );
     let state = crate::mechanism::deploy::state::DeployState::open(&world.state_home)
@@ -270,19 +270,19 @@ fn modified_after_crash_backup_refuses_recovery() {
         .expect("the receipt reads")
         .expect("the deploy owns a receipt");
     assert_eq!(receipt.resources.len(), 1);
-    assert_eq!(receipt.resources[0].resource, "opt/bin/claudez.ps1");
+    assert_eq!(receipt.resources[0].resource, "opt/bin/sample-launcher.ps1");
 }
 
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-LAUNCHER-DELIVERY")]
 fn stale_prior_generation_backup_refuses_recovery() {
     let world = World::new();
-    world.record_file("claudez.ps1", b"zero");
-    let targets = [target("claudez.ps1")];
+    world.record_file("sample-launcher.ps1", b"zero");
+    let targets = [target("sample-launcher.ps1")];
     let profile = selection();
     let execution = world.execution(&targets, &profile);
     execute_deploy_targets(&execution).expect("generation zero deploys");
-    world.record_file("claudez.ps1", b"one");
+    world.record_file("sample-launcher.ps1", b"one");
     execute_deploy_targets(&execution).expect("generation one deploys");
     interrupt_update(&world, b"two");
     std::fs::write(backup_path(&world), b"zero").expect("a stale generation replaces the backup");
@@ -292,7 +292,7 @@ fn stale_prior_generation_backup_refuses_recovery() {
 
     assert!(matches!(error, DeployError::Provider(_)));
     assert_eq!(
-        std::fs::read(world.destination("claudez.ps1")).unwrap(),
+        std::fs::read(world.destination("sample-launcher.ps1")).unwrap(),
         b"two"
     );
 }
@@ -301,15 +301,15 @@ fn stale_prior_generation_backup_refuses_recovery() {
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-LAUNCHER-DELIVERY")]
 fn retry_after_restore_before_receipt_publication_is_idempotent() {
     let world = World::new();
-    world.record_file("claudez.ps1", b"first");
-    let initial = [target("claudez.ps1")];
+    world.record_file("sample-launcher.ps1", b"first");
+    let initial = [target("sample-launcher.ps1")];
     let initial_profile = selection();
     execute_deploy_targets(&world.execution(&initial, &initial_profile))
         .expect("the prior launcher deploys");
-    world.record_file("claudez.ps1", b"second");
+    world.record_file("sample-launcher.ps1", b"second");
     let targets = [
-        target("claudez.ps1"),
-        named_target("fail-later", "claudez.ps1"),
+        target("sample-launcher.ps1"),
+        named_target("fail-later", "sample-launcher.ps1"),
     ];
     let profile = DeploySelection {
         profile: "windows".to_owned(),
@@ -330,7 +330,7 @@ fn retry_after_restore_before_receipt_publication_is_idempotent() {
     ];
     apply_selection(&execution, &resolved).expect_err("rollback crashes after restore");
     assert_eq!(
-        std::fs::read(world.destination("claudez.ps1")).unwrap(),
+        std::fs::read(world.destination("sample-launcher.ps1")).unwrap(),
         b"first"
     );
     let pending_state = crate::mechanism::deploy::state::DeployState::open(&world.state_home)
@@ -350,7 +350,7 @@ fn retry_after_restore_before_receipt_publication_is_idempotent() {
     );
     assert!(pending_home.directory().join("inverse.json").is_file());
 
-    let retried = [target("claudez.ps1")];
+    let retried = [target("sample-launcher.ps1")];
     let retried_profile = selection();
     let retried_execution = world.execution(&retried, &retried_profile);
     let mismatch = apply_selection(
@@ -367,7 +367,7 @@ fn retry_after_restore_before_receipt_publication_is_idempotent() {
         .expect("the inverse finalizes and ordinary deployment continues");
     assert_eq!(outcome.len(), 1, "the requested deploy returns its outcome");
     assert_eq!(
-        std::fs::read(world.destination("claudez.ps1")).unwrap(),
+        std::fs::read(world.destination("sample-launcher.ps1")).unwrap(),
         b"second"
     );
 }
@@ -376,14 +376,14 @@ fn retry_after_restore_before_receipt_publication_is_idempotent() {
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-LAUNCHER-DELIVERY")]
 fn manual_reversion_to_prior_bytes_without_inverse_marker_still_refuses() {
     let world = World::new();
-    world.record_file("claudez.ps1", b"first");
-    let targets = [target("claudez.ps1")];
+    world.record_file("sample-launcher.ps1", b"first");
+    let targets = [target("sample-launcher.ps1")];
     let profile = selection();
     let execution = world.execution(&targets, &profile);
     execute_deploy_targets(&execution).expect("generation zero deploys");
-    world.record_file("claudez.ps1", b"second");
+    world.record_file("sample-launcher.ps1", b"second");
     execute_deploy_targets(&execution).expect("generation one deploys");
-    std::fs::write(world.destination("claudez.ps1"), b"first")
+    std::fs::write(world.destination("sample-launcher.ps1"), b"first")
         .expect("a user manually reverts the bytes");
 
     let error = execute_deploy_targets(&execution)
@@ -401,12 +401,12 @@ fn manual_reversion_to_prior_bytes_without_inverse_marker_still_refuses() {
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-LAUNCHER-DELIVERY")]
 fn recovery_before_prior_save_remains_reversible_for_a_later_saga_failure() {
     let world = World::new();
-    world.record_file("claudez.ps1", b"first");
-    let initial = [target("claudez.ps1")];
+    world.record_file("sample-launcher.ps1", b"first");
+    let initial = [target("sample-launcher.ps1")];
     let initial_profile = selection();
     let initial_execution = world.execution(&initial, &initial_profile);
     execute_deploy_targets(&initial_execution).expect("generation zero deploys");
-    world.record_file("claudez.ps1", b"second");
+    world.record_file("sample-launcher.ps1", b"second");
     apply_selection(
         &initial_execution,
         &[selected(
@@ -419,8 +419,8 @@ fn recovery_before_prior_save_remains_reversible_for_a_later_saga_failure() {
     assert!(!backup_path(&world).exists(), "no backup was saved yet");
 
     let targets = [
-        target("claudez.ps1"),
-        named_target("fail-later", "claudez.ps1"),
+        target("sample-launcher.ps1"),
+        named_target("fail-later", "sample-launcher.ps1"),
     ];
     let profile = DeploySelection {
         profile: "windows".to_owned(),
@@ -446,7 +446,7 @@ fn recovery_before_prior_save_remains_reversible_for_a_later_saga_failure() {
 
     assert!(matches!(error, DeployError::Saga { .. }));
     assert_eq!(
-        std::fs::read(world.destination("claudez.ps1")).unwrap(),
+        std::fs::read(world.destination("sample-launcher.ps1")).unwrap(),
         b"first"
     );
 }
@@ -455,8 +455,8 @@ fn recovery_before_prior_save_remains_reversible_for_a_later_saga_failure() {
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-LAUNCHER-DELIVERY")]
 fn raced_destination_is_not_trusted_as_the_receipt_prior_backup() {
     let world = World::new();
-    world.record_file("claudez.ps1", b"first");
-    let targets = [target("claudez.ps1")];
+    world.record_file("sample-launcher.ps1", b"first");
+    let targets = [target("sample-launcher.ps1")];
     let profile = selection();
     execute_deploy_targets(&world.execution(&targets, &profile)).expect("the prior deploys");
     let state =
@@ -473,7 +473,7 @@ fn raced_destination_is_not_trusted_as_the_receipt_prior_backup() {
         .expect("receipt exists");
     let staging = home.staging();
     std::fs::create_dir_all(&staging).expect("staging creates");
-    std::fs::write(world.destination("claudez.ps1"), b"raced")
+    std::fs::write(world.destination("sample-launcher.ps1"), b"raced")
         .expect("the destination races after occupancy");
     let request = DeployTargetRequest {
         target: &targets[0],
@@ -491,7 +491,7 @@ fn raced_destination_is_not_trusted_as_the_receipt_prior_backup() {
     let error = VibeOptLauncherProvider
         .save_prior(
             &request,
-            &destination("claudez.ps1"),
+            &destination("sample-launcher.ps1"),
             &receipt.resources[0].post_digest,
         )
         .expect_err("raced bytes are not the receipt prior");
@@ -504,8 +504,8 @@ fn raced_destination_is_not_trusted_as_the_receipt_prior_backup() {
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#ZAI-GLM-LAUNCHER-DELIVERY")]
 fn backup_swap_after_handle_load_refuses_before_destination_mutation() {
     let world = World::new();
-    world.record_file("claudez.ps1", b"current");
-    let targets = [target("claudez.ps1")];
+    world.record_file("sample-launcher.ps1", b"current");
+    let targets = [target("sample-launcher.ps1")];
     let profile = selection();
     execute_deploy_targets(&world.execution(&targets, &profile)).expect("current deploys");
     let state =
@@ -556,7 +556,7 @@ fn backup_swap_after_handle_load_refuses_before_destination_mutation() {
     let before = store::resource_state(
         "install-launcher",
         world.settings.path(),
-        "opt/bin/claudez.ps1",
+        "opt/bin/sample-launcher.ps1",
     )
     .unwrap()
     .unwrap();
@@ -571,13 +571,18 @@ fn backup_swap_after_handle_load_refuses_before_destination_mutation() {
     .expect("the backup races after load");
 
     VibeOptLauncherProvider
-        .restore_prior(&request, &destination("claudez.ps1"), &handle, &loaded)
+        .restore_prior(
+            &request,
+            &destination("sample-launcher.ps1"),
+            &handle,
+            &loaded,
+        )
         .expect_err("expected state refuses before destination mutation");
 
     let after = store::resource_state(
         "install-launcher",
         world.settings.path(),
-        "opt/bin/claudez.ps1",
+        "opt/bin/sample-launcher.ps1",
     )
     .unwrap()
     .unwrap();

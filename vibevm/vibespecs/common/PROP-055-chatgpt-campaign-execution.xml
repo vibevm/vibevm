@@ -1,19 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">PROP-055 — ChatGPT-only campaign execution pool</title>
-  <status stage="spec" state="done" comment="owner rulings 2026-08-26; harness-scoped campaign operations, not product semantics"/>
+  <status stage="spec" state="done" comment="owner rulings through 2026-09-08; subscription-backed GLM launcher retired; harness-scoped campaign operations, not product semantics"/>
   <p><STATUS-LINE fact="true" status="spec/done">**Status: owner-ruled operating
   contract for the central OpenAI ChatGPT/Codex coordinator while the
   lifecycle/extensions campaign is active.** It consolidates worker routing,
   launcher use and test-panel cadence. It does not change VibeVM product
   semantics, Claude Code behavior, or a delegated packet.</STATUS-LINE></p>
-  <p><ZAI-GLM-PACKAGE-CANON fact="true" status="impl/done">**The portable direct-GLM
-  contract now lives in `tool:org.vibevm.world/zai-glm-claude`.** Its boot,
-  protocol, packet template, capability playbooks, terminal taxonomy and
-  launchers apply equally to Claude and Codex parents. This PROP retains only
-  the active ChatGPT campaign's routing choices, host resource controls, usage
-  reserve, exact gates and dated observations. Historical overlap below is
-  evidence for the extraction, not a second generic authority.</ZAI-GLM-PACKAGE-CANON></p>
+  <p><SUBSCRIPTION-GLM-LANE-RETIRED fact="true" status="spec/done">**Owner
+  ruling 2026-09-08:** the subscription-backed external GLM launcher is retired
+  and MUST NOT be invoked, probed, retried, deployed, or selected as a worker
+  lane. The host root dependency, installed projection, and generated boot
+  contribution are removed. The canonical package source remains unchanged as
+  historical product evidence; it is not current execution authority. Dated
+  observations and legacy anchor names below describe completed runs only and
+  never authorize another command. **Decision:** remove the host root edge,
+  materialized slot, and boot contribution, and forbid the launcher family as
+  a current lane. **Why:** the subscription is cancelled, so the transport
+  cannot execute work while its boot still consumes every central session's
+  context. **Considered and rejected:** keeping a dormant installed copy still
+  pays that context cost; deleting or rewriting the canonical package source
+  would destroy deliberately preserved product evidence and violates the
+  owner's explicit perimeter. **When to revisit:** only after the owner restores
+  a compatible subscription and explicitly asks to reinstall the package into
+  this host project.</SUBSCRIPTION-GLM-LANE-RETIRED></p>
+  <p><ZAI-GLM-PACKAGE-CANON fact="true" status="impl/done">The portable
+  direct-GLM contract was extracted into
+  `tool:org.vibevm.world/zai-glm-claude` and remains preserved in its canonical
+  package source. This host no longer consumes its boot or launcher artifacts.
+  The rest of this PROP retains the live ChatGPT campaign controls that are
+  independent of that retired transport.</ZAI-GLM-PACKAGE-CANON></p>
 
   <scope title="1. Applicability — a harness gate, not a repository-wide mode">
     <facts ordered="false">
@@ -24,7 +40,7 @@
       explicitly reactivates this contract by name). All conditions are
       required.</OPENAI-CENTRAL-ONLY>
       <NON-OPENAI-MUST-SKIP fact="true" status="spec/done">Claude Code, a
-      `claudez` process, Gemini and every other non-OpenAI harness MUST NOT read
+      Gemini and every other non-OpenAI harness MUST NOT read
       or apply this document. It is deliberately absent from the shared
       `STATIC.xml` / `INDEX.md` boot lane. The byte-identical
       `CLAUDE.md`/`AGENTS.md`/`GEMINI.md` triplet carries one conditional
@@ -34,7 +50,7 @@
       `##subagent-quiet-clause`, a worker packet or an explicit reviewer packet
       is a subagent even when its executable is Codex. It follows that packet
       and MUST NOT promote itself to this central contract. Native workers,
-      `codexrunner`, `claudez` and plain `claude` workers are all excluded by
+      `codexrunner` and plain `claude` workers are all excluded by
       this rule.</SUBAGENTS-MUST-SKIP>
       <END-OF-CAMPAIGN fact="true" status="spec/done">When the lifecycle
       campaign completes, pauses, or the owner selects another campaign, this
@@ -62,22 +78,18 @@
       fresh independent thread. Diversity counts only with exact file/line
       evidence, a root rerun of the decisive test and a mutation or negative
       oracle; another model's confidence is not evidence.</MODEL-DIVERSITY-IS-A-GATE>
-      <CLAUDEZ-EXECUTES-ROOT-ACCEPTS fact="true" status="spec/done">The owner
-      assigns `claudez` execution priority, never acceptance authority. The
-      central coordinator authors the architecture and packet, closes the write
-      perimeter, names acceptance and red proofs, then reviews the result as a
-      PR, reruns decisive tests/mutations and issues accept, same-cwd repair,
-      re-commission or discard. Worker-written PASS/review/commit claims have
-      zero authority; staging, commits, integration and final gates remain
-      central.</CLAUDEZ-EXECUTES-ROOT-ACCEPTS>
+      <CLAUDEZ-EXECUTES-ROOT-ACCEPTS fact="true" status="spec/void">Retired
+      transport tombstone. No execution or correction command is authorized by
+      this anchor. The enduring rule is `CENTRAL-OWNS-JUDGMENT`: worker claims
+      have no acceptance authority.</CLAUDEZ-EXECUTES-ROOT-ACCEPTS>
       <NO-NATIVE-SOL-ULTRA-ACCEPTANCE fact="true" status="spec/done">**Owner
       ruling 2026-08-28: do not commission native collaboration subagents that
       inherit Sol Ultra for acceptance or review.** Every such spawn pays the
       repository's enormous boot-lane prefix again before it can inspect the
       diff, making the review disproportionately expensive. Acceptance stays
       in the already-booted central Ultra context; an independent second family
-      uses subscription `claudez`/Opus launchers (or an explicitly external
-      lower-cost lane), never a native Sol Ultra reviewer. This does not forbid
+      may use an explicitly available Opus or lower-cost external lane, never a
+      native Sol Ultra reviewer. This does not forbid
       a narrowly justified native execution task; it removes native Sol Ultra
       from the acceptance route.</NO-NATIVE-SOL-ULTRA-ACCEPTANCE>
     </facts>
@@ -89,9 +101,10 @@
     probed on live work; no lane is assumed healthy from an old ping.</POOL-IS-DYNAMIC></p>
     <facts ordered="false">
       <NATIVE-WORKERS fact="true" status="spec/done">**Native collaboration
-      workers** are the low-latency fallback for a narrow execution/inventory task that
-      specifically benefits from current conversation context. They are not the
-      default execution lane while `claudez` is healthy. Use disjoint write
+      workers** are the current low-latency execution lane for a narrow
+      implementation or inventory task that benefits from current conversation
+      context. Select model and reasoning effort explicitly when the task needs
+      an override. Use disjoint write
       perimeters in parallel; retain packet/report/no-commit discipline. A Sol
       Ultra native worker is never used for acceptance, per
       `NO-NATIVE-SOL-ULTRA-ACCEPTANCE`.
@@ -99,18 +112,13 @@
       <SOL-XHIGH fact="true" status="spec/done">**`codexrunner` —
       `gpt-5.6-sol`, effort `xhigh`** — is the second external lane for hard,
       well-specified coding, broad code reading and mutation-backed repair when
-      `claudez` is busy/limited or model diversity is useful. It runs in a
+      a separate Codex process or model diversity is useful. It runs in a
       dedicated worktree. Its yolo transport makes root diff review and a
       closed write allow-list mandatory; worker claims about review, commits or
       panels have no authority.</SOL-XHIGH>
-      <CLAUDEZ-LANE fact="true" status="spec/done">**`claudez`** is a strong
-      implementation and review lane with an independent quota pool and is the
-      **default first choice** for every new delegable packet while its live
-      probe is healthy (owner priority ruling 2026-08-26). Its gateway may hit a
-      five-hour account limit: probe with a real bounded task before fan-out,
-      preserve the worktree/report/log and fail over to Sol/native instead of
-      repeatedly paying a known 429 wall. `claudez2` remains disabled until the
-      owner explicitly re-enables it.</CLAUDEZ-LANE>
+      <CLAUDEZ-LANE fact="true" status="spec/void">Retired transport
+      tombstone. The subscription is cancelled; no health probe, fan-out,
+      continuation, or fallback through this lane is permitted.</CLAUDEZ-LANE>
       <OPUS-MAX-LANE fact="true" status="spec/done">**Plain Claude Code with
       Opus and max effort** is invoked explicitly as
       `claude --model opus --effort max`; follow-up repair uses `claude -c` in
@@ -119,16 +127,17 @@
       learn the resolved model; the alias is not proof of a version.</OPUS-MAX-LANE>
       <NEVER-FABLE fact="true" status="spec/done">**Never select Fable.** Do
       not name it, configure it as fallback, or accept automatic fallback to
-      it. If Opus is unavailable, route to Sol, `claudez`, a native worker or
+      it. If Opus is unavailable, route to Sol, a native worker or
       the central coordinator.</NEVER-FABLE>
     </facts>
     <routing title="3.1 Default routing calculus">
       <facts ordered="false">
         <ROUTE-CODE fact="true" status="spec/done">Hard but explicit code with
-        a cheap oracle: `claudez` first; Sol xhigh next when the primary lane is
-        unavailable or a second family is worth the spend. Use both concurrently
-        only for disjoint writes. Ambiguous high-impact code: `claudez` may
-        implement, but central/Opus/Sol independently reviews the judgment.
+        a cheap oracle: use a native collaboration worker first; Sol xhigh or
+        an explicitly available external family may provide independent
+        execution when diversity is worth the spend. Use both concurrently only
+        for disjoint writes. Ambiguous high-impact code remains centrally
+        designed and independently reviewed.
         </ROUTE-CODE>
         <ROUTE-REVIEW fact="true" status="spec/done">Security, wire,
         transaction and lifecycle reviews: central Ultra in its already-paid
@@ -137,18 +146,17 @@
         a native Sol Ultra acceptance subagent. Read-only external reviews may
         run beside one code worker.</ROUTE-REVIEW>
         <ROUTE-MECHANICAL fact="true" status="spec/done">Mechanical edits,
-        fixtures, corpus additions and exact test matrices: `claudez` first,
-        Sol/native on primary-lane limit or a genuine context advantage. The
+        fixtures, corpus additions and exact test matrices: use a native worker
+        or Sol according to context transfer and verification cost. The
         packet supplies the skeleton; the worker fills named refinement points
         rather than redrawing the architecture.</ROUTE-MECHANICAL>
         <ROUTE-MICRO-LOCAL fact="true" status="spec/done">A deterministic
         micro-edit remains central when its complete implementation and oracle
         are cheaper than provisioning, reporting and reviewing an external
-        worker. Measured 2026-08-26: one prescribed `specmark::scope!` line took
-        `claudez` about 150 seconds plus packet/report review. Such a run is
-        useful as an intentional transport/template probe, not the routine
-        execution path. This is the verification-cheaper-than-generation law,
-        not an exception to `claudez` priority for genuinely delegable work.
+        worker. A 2026-08-26 external-worker measurement took about 150 seconds
+        plus packet/report review for one prescribed `specmark::scope!` line.
+        That confirms deterministic micro-edits remain central. This is the
+        verification-cheaper-than-generation law.
         </ROUTE-MICRO-LOCAL>
         <ROUTE-CENTRAL fact="true" status="spec/done">Architecture, provider
         boundaries, public grammar, final trade-offs, commit grouping and
@@ -165,9 +173,9 @@
       only from that exact cwd. Large context travels in the packet file, never
       a command-line argument.</ONE-CWD-ONE-THREAD>
       <WORKER-PERMISSION-POSTURE fact="true" status="spec/done">**Owner
-      ruling 2026-08-26: `claudez` and Opus are trusted to operate the
-      computer.** Do not spend orchestration effort protecting the machine
-      from these workers or starve them of PowerShell/Bash, Read/Glob/Grep,
+      ruling 2026-08-26: authorized native and external workers may use the
+      normal task-capable tool surface.** Do not spend orchestration effort
+      starving them of PowerShell/Bash, Read/Glob/Grep,
       repository history, formatters, generators and exact tests. Launch an
       autonomous worker with an explicit non-interactive permission mode and
       a normal task-capable tool surface; a restricted `--tools` experiment is
@@ -255,8 +263,8 @@
       parallel writer). Screen prose is discarded; reports and visible diffs
       are the deliverable.</QUIET-ARTIFACT-CONTRACT>
       <PLAIN-LAUNCHER-OUTPUT fact="true" status="spec/done">When the central
-      Codex harness drives a long `claudez`/`claude` process through unified
-      exec, use ordinary text output plus the durable worker report by
+      Codex harness drives a long external CLI worker through unified exec, use
+      ordinary text output plus the durable worker report by
       default. `--output-format stream-json --verbose` emits a JSON event for
       each thinking-token update: the 2026-08-28 A4b read-only audit produced
       more than 2.7 MiB of transport output for about 10.4k thinking tokens
@@ -293,9 +301,9 @@
       Later waves drain the tracked harvest/backlog, not untracked `cache/`
       archaeology. This classification is part of acceptance, not a session-end
       courtesy, and applies equally to findings made by root during review.</ACCEPTED-WISDOM-HARVEST>
-      <SUBSCRIPTION-LANES fact="true" status="spec/done">`claude` and
-      `claudez` run against subscription quotas and are cheap enough to use
-      freely and concurrently. Provider JSON may expose a nominal `costUSD`;
+      <SUBSCRIPTION-LANES fact="true" status="spec/done">An explicitly
+      available `claude` lane runs against its own subscription quota. Provider
+      JSON may expose a nominal `costUSD`;
       record it as comparative telemetry, never treat it as the owner's
       marginal bill or set `--max-budget-usd`. Five-hour quota availability and
       review throughput are the practical limits. **Deep-research agents are a
@@ -385,95 +393,45 @@
     </facts>
   </gates>
 
-  <observability title="6. Live lane observations">
+  <observability title="6. Live and historical lane observations">
+    <p><RETIRED-LANE-OBSERVATIONS-ARE-HISTORY fact="true" status="spec/done">All
+    dated observations whose anchor or prose names the retired subscription GLM
+    transport are historical evidence only. Their commands, retry advice,
+    quota assumptions, and availability conclusions are non-operative after
+    `SUBSCRIPTION-GLM-LANE-RETIRED`. Observations about other live lanes retain
+    their ordinary force.</RETIRED-LANE-OBSERVATIONS-ARE-HISTORY></p>
     <facts ordered="false">
       <OBSERVE-NOT-ASSUME fact="true" status="spec/done">Record only a live
       task's exit, durable report, resolved-model metadata and reviewed quality.
       A ping proves transport, not coding quality; an old successful run does
       not prove a five-hour quota remains open.</OBSERVE-NOT-ASSUME>
-      <PROBE-2026-08-26 fact="true" status="spec/done">Live work, not a ping,
-      measured both extra lanes. `claudez` resolved to `glm-5.3[1m]`, completed
-      an independent R7.1 review, found the missing blocking-HTTP timeouts, then
-      used same-cwd `-c` to implement and gate the repair; root additionally
-      repeated the Windows proxy canary 20 times. Plain Claude resolved to
-      `claude-opus-5`, produced an adversarial build/package/deploy review and
-      used same-cwd `-c` for nine central objections; it explicitly withdrew or
-      narrowed four earlier claims and strengthened crash/ownership design.
-      Both are high-quality usable lanes. Opus/max is reserved for ambiguous,
-      high-impact judgment because the two passes were materially more costly;
-      `claudez` is a parallel peer for bounded code/review but may hit its
-      separate five-hour wall. Both exceeded the desired prose budget, so
-      `##REPORT-BUDGET` is mandatory on future packets. After a later multi-hour
-      network outage killed every live worker process, their worktrees and
-      reports remained intact; a fresh isolated `claudez -p` returned exact
-      `CLAUDEZ_OK` through `glm-5.3[1m]` in about nine seconds. Recovery is
-      therefore census-first: retain completed artifacts and restart only
-      unfinished packets, never regenerate the batch wholesale.</PROBE-2026-08-26>
-      <CLAUDEZ-TURN-BUDGET fact="true" status="spec/done">A 140-turn R8
-      continuation reached turn 141 and transport-failed **before writing its
-      report**, despite useful code and focused-test progress; it emitted about
-      95k output tokens and repeatedly reran broad filters. Conversely, two
-      independent R3.4 cold implementation packets each consumed all 50 turns
-      in diligent required-input archaeology and reached at most their first
-      product edit; neither hit quota or transport failure. Therefore there is
-      no universal 30–50-turn implementation cap. Use 30–50 turns for a narrow
-      edit/repair or for an explicitly separate archaeology pass. A broad cold
-      implementation is either (a) two-stage — bounded archaeology with a
-      durable handoff, then same-cwd/session `-c` implementation — or (b)
-      uncapped when root has already supplied a sufficiently closed packet.
-      Split child-process tests/review when that prevents scope accretion, and
-      draft the durable report early rather than gambling on the final two
-      turns. Same-cwd `-c` preserves the subscription-paid context and is the
-      default recovery from a turn-cap boundary. `max_turns` exhaustion
-      preserves the worktree but is never PASS.</CLAUDEZ-TURN-BUDGET>
-      <CLAUDEZ-QUOTA-BOUNDARY-2026-08-27 fact="true" status="spec/done">Two
-      concurrent broad R3.4 continuations (147 and 111 turns) reached green
-      focused/parent gates and then both received 429 with the **same**
-      advertised reset instant before either wrote its mandated report. They
-      resolved to `glm-5.3[1m]`; the worktrees/logs remained complete. This
-      proves the five-hour allowance is account-wide, not per process:
-      parallel claudez jobs increase throughput but consume one shared window
-      concurrently. An uncapped run therefore does not license report-last
-      execution. Create the report skeleton after the first product slice,
-      update evidence incrementally before long parent gates, and treat quota
-      exhaustion as a preserved handoff to root/Opus rather than retrying
-      against the published reset. The hourly probe observes recovery; it does
-      not estimate remaining quota.</CLAUDEZ-QUOTA-BOUNDARY-2026-08-27>
-      <CLAUDEZ-HOURLY-PROBE fact="true" status="spec/done">While this campaign
-      is active, the ChatGPT thread owns an hourly heartbeat named «Проверка
-      доступности claudez». It starts one fresh isolated `claudez -p` elementary
-      task whose only valid answer is `CLAUDEZ_OK`, records resolved model,
-      latency, transport/429 category and advertised reset time, and performs no
-      retry or repository work. This observes five-hour quota recovery without
-      burning a real implementation packet or spinning against a known wall.</CLAUDEZ-HOURLY-PROBE>
-      <CLAUDEZ-RECOVERED-2026-08-28 fact="true" status="spec/done">After the
-      account-wide wall advertised its 2026-08-28 reset, a fresh real A14 task
-      started through `claudez` without 429, implemented the shared prompt
-      resolver, wrote its report before long gates, mutation-proved the two
-      central guards and finished every exact gate. Availability is therefore
-      recovered for useful work, not merely for a ping; future routing still
-      treats the next five-hour wall as account-wide.</CLAUDEZ-RECOVERED-2026-08-28>
-      <CLAUDEZ-R4-LIVE-2026-08-29 fact="true" status="spec/done">The next
-      advertised reset was observed rather than assumed: a fresh isolated
-      direct launcher probe completed in 9.5 seconds with exact `PONG` and
-      resolved `glm-5.3[1m]`; a real R4.0 extraction then completed 95 turns,
-      left an ordinary diff/report and passed its focused gates. Root review
-      still found two proof defects — the compatibility test pinned a private
-      module rather than the public crate root, and an ambient fence was a raw
-      substring scan — and same-cwd `claudez -c` corrected both with AST-based
-      REDs in 26 turns. Root then found and locally closed the residual
-      `use std::*` glob case. Durable lesson: a healthy/high-quality claudez run
-      is execution evidence, never acceptance; public-boundary tests must name
-      the public path, and source-deny fences need syntax-aware negative
-      fixtures rather than reassuring grep. No run used `--max-budget-usd`.
-      </CLAUDEZ-R4-LIVE-2026-08-29>
+      <PROBE-2026-08-26 fact="true" status="spec/done">Historical external-lane
+      probe. Its durable transport evidence was extracted to the preserved
+      package source; the current rules retain only the conclusions that a ping
+      is not a quality verdict and root acceptance remains mandatory.</PROBE-2026-08-26>
+      <CLAUDEZ-TURN-BUDGET fact="true" status="spec/void">Retired transport
+      budget tombstone. No current worker budget or continuation rule is
+      derived from this anchor.</CLAUDEZ-TURN-BUDGET>
+      <CLAUDEZ-QUOTA-BOUNDARY-2026-08-27 fact="true" status="spec/void">Retired
+      account-quota tombstone. No current retry, wait, or fan-out rule is
+      derived from this anchor.</CLAUDEZ-QUOTA-BOUNDARY-2026-08-27>
+      <CLAUDEZ-HOURLY-PROBE fact="true" status="spec/void">Retired heartbeat
+      tombstone. No availability probe, scheduled run, retry, or repository work
+      may target the cancelled transport. No matching automation exists on the
+      current Codex host as of 2026-09-08.</CLAUDEZ-HOURLY-PROBE>
+      <CLAUDEZ-RECOVERED-2026-08-28 fact="true" status="spec/void">Historical
+      recovery tombstone. A past successful run does not establish present
+      availability.</CLAUDEZ-RECOVERED-2026-08-28>
+      <CLAUDEZ-R4-LIVE-2026-08-29 fact="true" status="spec/void">Historical R4
+      transport tombstone. The accepted product evidence remains in commits and
+      gates; this anchor authorizes no runner.</CLAUDEZ-R4-LIVE-2026-08-29>
       <CANONICAL-IDENTITY-ACCEPTANCE-2026-08-29 fact="true" status="spec/done">A
       later R4.1 T1/T3 pair passed its worker gates yet central review found four
       identity-boundary defects: five-digit values entered a four-digit TOML
       date, host provider plus document path was unconstructible, legacy plan
       paid a temporary collection, and `CompiledSelector::Eq` treated OR-set
       order/duplicates as semantic while the promised digest did not. Two
-      same-cwd claudez repairs plus an ordinary Opus/max byte-schedule audit
+      same-cwd worker repairs plus an ordinary Opus/max byte-schedule audit
       closed them before T2; conform also forced the enlarged selector RED into
       a focused sub-600-line cell. Durable packet/acceptance rule: whenever a
       canonical identity lands, pair its independent byte vector with Rust
@@ -496,28 +454,12 @@
       to heal its own transient newline collapse; the desired bytes survived,
       but text prohibition is not enforcement — root still verifies the final
       ordinary diff and ownership perimeter.</PARALLEL-WRITER-GATES-2026-08-29>
-      <CLAUDEZ-LANES-DIVERGE-2026-08-28 fact="true" status="spec/done">Launcher
-      health is per configured lane, not transferable testimony. During A15a,
-      primary `claudez` completed a long implementation and two `-c` review
-      repairs while a concurrent fresh `claudez2` task was rejected before any
-      edit with 429 `Insufficient balance or no resource package`. Therefore a
-      green primary probe does not license assuming `claudez2` is available,
-      and a secondary-lane 429 does not stop primary work. Preserve any
-      on-disk report/edit, make no retry loop against that lane, and route the
-      bounded task to the already-booted central context or ordinary Opus as
-      verification economics warrant.</CLAUDEZ-LANES-DIVERGE-2026-08-28>
-      <CLAUDEZ-INITIAL-STALL-2026-08-30 fact="true" status="spec/done">A fresh
-      real R8 containment correction launched through primary `claudez -p`
-      with explicit non-interactive permissions created its same-cwd session
-      but emitted no assistant/tool event for ten minutes: the session JSONL
-      remained at the initial user event and the assigned product files stayed
-      byte-unchanged. Root stopped only that unified-exec session, classified
-      the result as a transport stall rather than a code verdict, made no
-      claudez retry, and completed the deterministic micro-fix centrally under
-      `ROUTE-MICRO-LOCAL`. Initial-turn silence is therefore observed like a
-      stalled final turn: inspect session growth and the visible diff, preserve
-      both, stop only the exact process/session after a bounded window, then
-      fail over without regenerating or spinning the lane.</CLAUDEZ-INITIAL-STALL-2026-08-30>
+      <CLAUDEZ-LANES-DIVERGE-2026-08-28 fact="true" status="spec/void">Retired
+      multi-lane quota tombstone. No current availability or failover rule is
+      derived from this anchor.</CLAUDEZ-LANES-DIVERGE-2026-08-28>
+      <CLAUDEZ-INITIAL-STALL-2026-08-30 fact="true" status="spec/void">Retired
+      initial-stall tombstone. Generic transport failures remain evidence, not
+      code verdicts, under `LIMIT-FAILOVER`.</CLAUDEZ-INITIAL-STALL-2026-08-30>
       <CODEXRUNNER-QUIET-GUARD-2026-08-30 fact="true" status="spec/done">A
       plain fresh `codexrunner exec` loaded repository `AGENTS.md` before its
       named worker packet and began the forbidden full boot despite that
@@ -535,12 +477,12 @@
     </facts>
   </observability>
 
-  <claudez-template title="7. Canonical claudez packet template">
+  <claudez-template title="7. Canonical worker packet template">
     <p><TEMPLATE-IS-COPIED fact="true" status="spec/done">The central
-    coordinator copies this skeleton into every new `claudez` packet and fills
-    every bracketed field. Do not point a worker at PROP-055 itself: this spec
-    is ChatGPT-only. Task-specific instructions override a template default
-    only when the packet says so explicitly.</TEMPLATE-IS-COPIED></p>
+    coordinator copies this skeleton into every substantial worker packet and
+    fills every bracketed field. Do not point a worker at PROP-055 itself: this
+    spec is ChatGPT-only. Task-specific instructions override a template
+    default only when the packet says so explicitly.</TEMPLATE-IS-COPIED></p>
     <fence lang="markdown"># PACKET-&lt;task-id&gt; — &lt;one bounded outcome&gt;
 
 ## Role and authority
@@ -550,9 +492,9 @@ The central coordinator owns architecture, acceptance, staging, commits and
 final gates. Your `PASS` is advisory. Do not claim that root reviewed/accepted
 anything. A prior report is a lead, never authority.
 
-On a `-c` continuation, discard your previous verdict where the correction
-packet contradicts it. Re-read the correction packet first and repair the
-named failure; do not defend the old answer.
+On a continuation or follow-up, discard your previous verdict where the
+correction packet contradicts it. Re-read the correction packet first and
+repair the named failure; do not defend the old answer.
 
 ## Task
 
@@ -635,9 +577,9 @@ Do not spend turns repeatedly trimming a long report. Create its concise
 skeleton after the first product slice, then update decisions/evidence
 incrementally before long parent gates (140-line target leaves headroom under a
 150-line hard cap). Never defer the first durable report write to the final two
-turns: `max_turns`, network loss and the account-wide five-hour quota can all
-end the next call, and a worker without the report has failed its deliverable
-even when useful edits remain.
+turns: a turn cap, network loss, or transport failure can end the next call,
+and a worker without the report has failed its deliverable even when useful
+edits remain.
 
 ```markdown
 # WORKER-REPORT — &lt;task-id&gt;
@@ -688,10 +630,10 @@ intermediate chat reasoning or final screen summary.</fence>
 
   <opus-lane title="8. Opus 5 max — CLI lane and accumulated lessons">
     <p><OPUS-USES-SAME-PACKET fact="true" status="spec/done">Opus/max uses
-    the canonical packet above with `claudez` replaced by Opus where named.
-    Root still supplies the idea, accepted architecture, task boundaries and
-    red proofs; Opus implements or independently audits, leaves a reviewable
-    worktree, and receives exact acceptance repairs from root.</OPUS-USES-SAME-PACKET></p>
+    the canonical packet above. Root still supplies the idea, accepted
+    architecture, task boundaries and red proofs; Opus implements or
+    independently audits, leaves a reviewable worktree, and receives exact
+    acceptance repairs from root.</OPUS-USES-SAME-PACKET></p>
     <invocation title="8.1 Fresh run and continuation">
       <p><OPUS-CLI-ONLY fact="true" status="spec/done">Run the installed
       Claude Code launcher, never a hand-written direct API client. A first
@@ -719,14 +661,15 @@ claude -c -p $repair --model opus --effort max `
         <OPUS-JUDGMENT-LANE fact="true" status="spec/done">Prefer Opus/max
         for wide code archaeology, adversarial architecture/transaction review,
         ambiguous repairs and implementation whose verification needs sustained
-        cross-file judgment. It may code as freely as `claudez`; root retains
+        cross-file judgment. It may code as freely as any authorized writing
+        worker; root retains
         architecture and acceptance. Deterministic micro-edits still fail the
         verification-cheaper-than-generation test.</OPUS-JUDGMENT-LANE>
         <OPUS-PARALLEL fact="true" status="spec/done">Multiple Opus processes
         may run concurrently in separate cwd/session pairs. Parallel readers
-        may overlap; writers are separated by intersecting product paths. Their
-        subscription quota is independent of `claudez`, so using both families
-        at once expands throughput and supplies review diversity.</OPUS-PARALLEL>
+        may overlap; writers are separated by intersecting product paths. Its
+        quota is independent of Codex, so using both families at once can expand
+        throughput and supply review diversity.</OPUS-PARALLEL>
         <OPUS-TOOLS fact="true" status="spec/done">Give Opus the normal
         machine toolset. The first two audits were unnecessarily launched with
         a read-only tool profile; one sensible PowerShell line-count command
@@ -759,7 +702,7 @@ claude -c -p $repair --model opus --effort max `
 
   <history title="9. History">
     <p><HIST-OWNER-2026-08-26 fact="true" status="spec/done">Authored from the
-    owner's 2026-08-26 rulings: use `claudez` and Opus/max alongside Sol/native
+    owner's 2026-08-26 rulings: use the former external GLM lane and Opus/max alongside Sol/native
     workers because quotas are separate; never select Fable; consolidate the
     strategy in one ChatGPT-only document; keep the agent-instruction triplet
     byte-identical; replace per-atom full panels with exact gates and batch

@@ -2,7 +2,12 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">Packages-Actualization Campaign v0.1 — wave 2: the authored packages measure themselves</title>
   <status stage="impl" state="work" comment="RATIFIED 2026-07-26 with all six §4.5 amendments adopted; Phase D closed 2026-08-03 at a green floor; PHASE E AUTHORIZED 2026-08-03 («даю добро»); AMENDED 2026-08-20 by owner ruling — PHASE T CANCELLED, PHASE G SPLIT (alpha doc layer rides the release, the doc package moves post-1.0), CAMPAIGN EXIT = RELEASE 1.0.0 per campaigns/packages-2026-09/TZ-RELEASE-1.0-v0.1.md (see LOG 2026-08-20)"/>
-  <p>**status: RATIFIED 2026-07-26 · PHASE D CLOSED 2026-08-03 (floor green, CONVERGENCE met: 17 owed drifts, every one on an owner-ruled build) · PHASE E AUTHORIZED 2026-08-03 — the owner's «даю добро»: first slice = wave А (B-011, самый высокий приоритет) + the research pair B-022/B-023 in a parallel lane; executor = claudez workers per SUBAGENT-MODE.toml, boss = Fable; T/F/G still wait for their own word · all six [§4.5](#amendments) amendments adopted · wave 2 of the Progress-Control programme, the sibling of [SPEC-ACTUALIZATION-CAMPAIGN-v0.1](SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml) (wave 1, host `spec/`, closed out 2026-07-26) · AMENDED 2026-08-20: Phase T cancelled by owner ruling, Phase G split, campaign exit = RELEASE 1.0.0 per [TZ-RELEASE-1.0](../../campaigns/packages-2026-09/TZ-RELEASE-1.0-v0.1.md)**</p>
+  <p><TRANSPORT-SUPERSEDED-2026-09-08 fact="true" status="spec/done">Owner
+  ruling 2026-09-08 retires the former subscription-backed GLM transport and
+  cancels its subscription. Every earlier transport pin and runnable command in
+  this campaign is historical evidence only. Any remaining work uses the
+  current central routing contract.</TRANSPORT-SUPERSEDED-2026-09-08></p>
+  <p>**status: RATIFIED 2026-07-26 · PHASE D CLOSED 2026-08-03 (floor green, CONVERGENCE met: 17 owed drifts, every one on an owner-ruled build) · PHASE E AUTHORIZED 2026-08-03 — the owner's «даю добро»: first slice = wave А (B-011, самый высокий приоритет) + the research pair B-022/B-023 in a parallel lane; historical executor = external GLM workers, boss = Fable; any remaining work uses the current central routing contract · all six [§4.5](#amendments) amendments adopted · wave 2 of the Progress-Control programme, the sibling of [SPEC-ACTUALIZATION-CAMPAIGN-v0.1](SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml) (wave 1, host `spec/`, closed out 2026-07-26) · AMENDED 2026-08-20: Phase T cancelled by owner ruling, Phase G split, campaign exit = RELEASE 1.0.0 per [TZ-RELEASE-1.0](../../campaigns/packages-2026-09/TZ-RELEASE-1.0-v0.1.md)**</p>
   <p>Contract for everything used here: [PROP-043](../modules/vibe-facts/PROP-043-facts-markup.xml) (the markup grammar) and [PROP-047](../modules/vibe-progress/PROP-047-progress-campaigns.xml) (the campaign toolchain; split from PROP-043 on 2026-08-22).
 Owner's manual: [OWNER-GUIDE](../modules/vibe-progress/OWNER-GUIDE.xml).
 Task formats: [templates/](../modules/vibe-progress/templates/impl-task.xml).
@@ -532,16 +537,10 @@ edit; it is closed by a published version.</p>
       <p>*Exit gate:* ledger empty or every survivor is an owner-ruled deferral.</p>
     </phase-d>
     <phase-e title="Phase E — Coding">
-      <p>*Entry:* per IMPL task, unit stability. *Executor (amended 2026-08-03 by
-owner directive):* the worker transport follows the owner-owned switch
-[`campaigns/packages-2026-09/SUBAGENT-MODE.toml`](../../campaigns/packages-2026-09/SUBAGENT-MODE.toml)
-— `claudez` (Claude Code workers on GLM-5.2 via the claudez/claudez2
-launchers: two parallel lanes in worktrees for disjoint-perimeter tasks,
-ONE thread for conflict-prone many-place edits, effort max built in) or
-`native` (the harness's built-in subagents, as Phase D ran); mechanics and
-the verified `-c` correction loop:
-[`SUBAGENT-LAUNCHERS.md`](../../campaigns/packages-2026-09/SUBAGENT-LAUNCHERS.md).
-The boss reviews every diff and makes every commit in either mode.
+      <p>*Entry:* per IMPL task, unit stability. *Executor (superseded
+2026-09-08):* any remaining task follows the current central routing contract;
+the local switch defaults to native collaboration workers. The boss reviews
+every diff and makes every commit.
 Wave-2 DRIFT tasks differ from wave 1's in one way that matters: a fix inside
 a package's crates must be **vendored forward** to every family member that
 copies it (`cargo xtask sync-engines`), and the task's acceptance says so
@@ -560,14 +559,9 @@ prose-judgement form (its report states so itself) — the «Placed before F
 on purpose» reasoning below is kept as written, as a dated record of the
 original design. The section itself is kept unedited below for the same
 reason.</p>
-      <p>*Entry:* E closed. *Executor:* per the T-spec's own header — GLM writers,
-one packet per writer; **the transport is concrete since 2026-08-03**: the
-owner-owned switch
-[`campaigns/packages-2026-09/SUBAGENT-MODE.toml`](../../campaigns/packages-2026-09/SUBAGENT-MODE.toml)
-routes packets to Claude-Code-on-GLM workers via claudez/claudez2 (two
-verified lanes) or back to the harness's native subagents — mechanics:
-[`SUBAGENT-LAUNCHERS.md`](../../campaigns/packages-2026-09/SUBAGENT-LAUNCHERS.md).
-Fractality stays out either way (§2's «no fractality», owner 2026-07-26).
+      <p>*Entry:* E closed. *Executor:* this phase is cancelled; its former
+transport description is historical and authorizes no launch. A future
+campaign selects its worker transport from the then-current central contract.
 *Reviewer:* the boss, per packet.</p>
       <p>**≥3 tests of distinct kinds per testable assertion.** Full specification:
 [`campaigns/packages-2026-09/PHASE-T-SPEC.md`](../../campaigns/packages-2026-09/PHASE-T-SPEC.md).

@@ -47,24 +47,18 @@ this sensitive file: it authorises *appending and curating verified
 operational facts in this subsection only*, never rewriting the rules above.
 Keep it current-state; prune stale lines.
 
-- **Harness delegation surface (verified 2026-08-30):** native
+- **Harness delegation surface (updated by owner 2026-09-08):** native
   `Agent` / `Task` / `Workflow` tools inherit their harness family; they
   offload context but do not select the machine's external GLM lane. General
   non-campaign GLM execution still routes through fractality, with bare
-  `opencode run` only as the last-resort fallback below. **During the active
-  OpenAI ChatGPT lifecycle campaign, PROP-055 is the scoped override:** healthy
-  `claudez` is the first execution lane, root accepts, and a correction
-  continues with `claudez -c` in the exact same dedicated cwd. The receipt-
-  deployed `C:/Users/olegc/.vibe/opt/bin/claudez.ps1` from
-  `tool:org.vibevm.world/zai-glm-claude` is the canonical thin Claude Code
-  launcher over the z.ai Anthropic-compatible gateway; it maps the large
-  aliases to `glm-5.3[1m]`, keeps state in `~/.claude-glm`, and loads its
-  bearer from the token file without exposing it. Launch fresh bounded work with
-  `C:/Users/olegc/.vibe/opt/bin/claudez.ps1 -p <pointer>
-  --permission-mode bypassPermissions` (bare `claudez` only after resolving it
-  to that exact file); use ordinary text output plus the durable report, never `claudez2` unless
-  the owner explicitly re-enables it. PROP-055 and the package-owned launcher
-  were re-verified 2026-09-04; any old `~/opt/bin/claudez*` copy is legacy.
+  `opencode run` only as the last-resort fallback below. During the active
+  OpenAI ChatGPT lifecycle campaign, PROP-055 remains the scoped campaign
+  contract, but its subscription-backed external GLM launcher lane is retired:
+  the owner cancelled that subscription on 2026-09-08, and that launcher family
+  may not be invoked. The host root dependency, installed projection,
+  and generated boot contribution are removed; the canonical package source and
+  prior receipts remain historical evidence. The campaign default is native
+  Codex collaboration workers; root retains review and acceptance.
 - **Codexrunner quiet-packet guard (verified 2026-08-30):** a plain
   `codexrunner exec <pointer>` auto-loaded the repository `AGENTS.md` before
   reading the named packet, then began the forbidden full 145k boot despite the
@@ -114,7 +108,8 @@ Keep it current-state; prune stale lines.
   — opencode 1.17.14, z.ai creds in its auth store (2026-07-12); use **only**
   `zai-coding-plan/*` (the `opencode/*` Zen gateway is unpaid here and errors).
   **Last resort only:** outside the PROP-055 campaign prefer the fractality
-  launcher; inside the active ChatGPT campaign prefer healthy `claudez`.
+  launcher; inside the active ChatGPT campaign follow PROP-055's remaining live
+  routing rules and use native Codex collaboration workers by default.
   Bare `opencode run` is used only when the applicable primary launcher is
   genuinely unavailable, never merely because it is convenient.**
 - **Packets** (TOML, schema 1): `[task]` goal/acceptance,
@@ -202,7 +197,7 @@ ChatGPT/Codex reads
 [`PROP-055`](vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml)
 after the common boot and local stewardship context while the
 lifecycle/extensions campaign is active.
-Claude Code, `claudez`, Gemini, every other non-OpenAI harness, and every task
+Claude Code, Gemini, every other non-OpenAI harness, and every task
 carrying `##subagent-quiet-clause` MUST NOT read or apply PROP-055; their common
 boot and explicit worker packet remain the whole instruction surface.
 

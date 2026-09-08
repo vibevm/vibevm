@@ -279,10 +279,10 @@
       <WAL-C-WIRE fact="true" status="impl/done">Every machine wire starts
       from JTD + registry + corpus + codegen. Never edit `formats/EPOCHS.toml`
       or generated Rust by hand.</WAL-C-WIRE>
-      <WAL-C-WORKERS fact="true" status="impl/done">Claudez is the default
-      delegable execution lane while healthy; Opus/max and external Sol supply
-      judgment or failover. Native Sol Ultra subagents are not an acceptance
-      lane because each pays the enormous boot prefix; root reviews in-context.
+      <WAL-C-WORKERS fact="true" status="impl/done">The subscription-backed
+      external GLM launcher was retired by the owner on 2026-09-08 and MUST NOT
+      be invoked. Native Codex collaboration workers are the current campaign
+      default; root reviews in-context and retains all acceptance authority.
       Root owns architecture, review, commits and gates.
       Accepted worktrees are reclaimed immediately.</WAL-C-WORKERS>
       <WAL-C-PANEL-DENOMINATOR fact="true" status="impl/work">Current

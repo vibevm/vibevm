@@ -398,9 +398,11 @@ while the dynamic-STATIC target stays the generated, extension-stable
 dynamic lane has no code router — the reading agent resolves dynamic
 INCLUDEs itself — so readiness for XML targets is an empirical property
 of live agent harnesses, not of this repository's code, and it is
-MEASURED, not assumed. The instrument is the worker lanes this project
-already runs: claudez (a Claude-family agent) and codexrunner (a
-GPT-family agent) are external agents by construction. Protocol: the
+MEASURED, not assumed. At measurement time the instrument used one
+Claude-family external lane and codexrunner as the GPT-family lane. The former
+subscription-backed lane was retired by owner ruling 2026-09-08 and is not a
+current or repeatable runner; the reusable stand now exposes only its Codex
+path. Protocol: the
 polygon project (scenario №0 state — XML-materialised tree, honest
 `INDEX.md` with static and dynamic entries, at least one `when`-guarded
 conditional entry) plus a probe packet that orders a cold worker to
@@ -497,8 +499,9 @@ setting + transforming materialisation + the hash law → S4 the scanner/
 checker/specmap/boot-compiler integration points (the measured `*.md`
 list; the static splice learns XML input, INDEX carries materialised
 paths) → S5 the redbook polygon E2E: scenario №0 first, then the three
-mixed-input targets → S5a the external-agent router measurement (§5a,
-claudez + codexrunner over the polygon) → S6 docs, ALPHA-NOTES, judging.
+mixed-input targets → S5a the historical external-agent router measurement
+(§5a, two agent families over the polygon; only the Codex path remains
+runnable) → S6 docs, ALPHA-NOTES, judging.
 Each slice lands with its own gates; the polygon plus the agent
 measurement are the wave's exit.</SLICES></p>
   </build-order>

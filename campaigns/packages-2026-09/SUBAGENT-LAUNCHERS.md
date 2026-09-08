@@ -1,13 +1,12 @@
-# Subagent launchers — claudez/claudez2/codexrunner as the worker transport {#root}
+# Subagent transport history — retired launcher evidence {#root}
 
-> Canonical installed successor (2026-09-04):
-> `tool:org.vibevm.world/zai-glm-claude` owns the portable direct z.ai
-> GLM-through-Claude-Code launcher and parent/worker contract for both Claude
-> and Codex. This document remains the global-refactoring campaign's detailed
-> observation/source record; where an early rule below conflicts with its own
-> later incident, the package's resolved protocol is the current generic law.
+> **Historical, non-operative record.** Owner ruling 2026-09-08 retired the
+> subscription-backed external GLM transport and cancelled its subscription.
+> None of the launcher commands, switches, probes, priorities, or recovery
+> recipes quoted below may be executed. Current routing lives in PROP-055; the
+> canonical package source remains unchanged as historical product evidence.
 
-<status stage="impl" state="done" comment="owner directive 2026-08-03; launchers reworked and verified the same day (the ALPHA/BRAVO matrix below); codexrunner added by owner directive 2026-08-20; the mode switch and the lane priority are the owner's levers"/>
+<status stage="impl" state="void" comment="retired by owner 2026-09-08; historical transport observations only; commands are non-operative"/>
 
 @fact:the-directive **The owner's directive (2026-08-03, chat, near-verbatim):**
 доработать запускаторы `claudez` / `claudez2`, чтобы они работали с `-c` как
@@ -19,7 +18,7 @@
 (конфликтоопасные), идут **одним потоком**; более-менее изолированные — **сразу
 двумя**.
 
-## 1. The switch — owned by the owner {#switch}
+## 1. Historical switch {#switch}
 
 @fact:switch-file The switch is one line in
 [`SUBAGENT-MODE.toml`](SUBAGENT-MODE.toml) beside this file:
@@ -39,7 +38,7 @@ pushes stay the boss's in both modes (the never-delegate set); briefs cite
 durable files only; Rules 1–4 bind identically; the presentation format to
 the owner is unaffected.
 
-## 2. The transport — what the launchers are {#transport}
+## 2. Retired transport mechanics {#transport}
 
 @fact:launchers-what Machine facts (this box; the launchers live OUTSIDE the
 repository): `C:\Users\olegc\opt\bin\{claudez,claudez2}` (bash) and
@@ -97,7 +96,7 @@ worktree-cwd — правило (config dir, cwd) выше это уже доп�
 секцию перед КАЖДЫМ fan-out'ом, как и `SUBAGENT-MODE.toml`. История
 назначений — строками ниже, верхняя действует:
 
-- **2026-08-29 (действует): двойная поверхность — нативные Opus-субагенты
+- **2026-08-29 (снято 2026-09-08): двойная поверхность — нативные Opus-субагенты
   + `claudez`.** Слово владельца (чат, near-verbatim): «ты можешь
   делегировать не только нативным агентам, но и запускалке Claudez
   (поддерживает до 5 параллельно запущенных Claudez, одновременно)» — на

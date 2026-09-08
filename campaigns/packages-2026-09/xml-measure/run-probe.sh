@@ -2,7 +2,7 @@
 set -euo pipefail
 
 usage() {
-  echo "usage: $0 --lane codex|claudez --variant xml|markdown|mixed [--model MODEL] [--effort EFFORT]" >&2
+  echo "usage: $0 --lane codex --variant xml|markdown|mixed [--model MODEL] [--effort EFFORT]" >&2
   exit 2
 }
 
@@ -21,16 +21,11 @@ while (($#)); do
   esac
 done
 
-[[ "$lane" == codex || "$lane" == claudez ]] || usage
+[[ "$lane" == codex ]] || usage
 [[ "$variant" == xml || "$variant" == markdown || "$variant" == mixed ]] || usage
 
-if [[ "$lane" == codex ]]; then
-  model=${model:-gpt-5.6-sol}
-  effort=${effort:-low}
-else
-  model=${model:-big}
-  effort=${effort:-max}
-fi
+model=${model:-gpt-5.6-sol}
+effort=${effort:-low}
 
 [[ "$model" =~ ^[A-Za-z0-9._-]+$ ]] || { echo "invalid model name" >&2; exit 2; }
 [[ "$effort" =~ ^[A-Za-z0-9._-]+$ ]] || { echo "invalid effort name" >&2; exit 2; }
@@ -79,22 +74,12 @@ project=$project_abs
 META
 
 set +e
-if [[ "$lane" == codex ]]; then
-  (
-    cd "$project_dir"
-    CODEXRUNNER_MODEL="$model" CODEXRUNNER_EFFORT="$effort" \
-      "$HOME/opt/bin/codexrunner" exec "$prompt" </dev/null
-  ) >"$run_dir/transcript.log" 2>&1
-  rc=$?
-else
-  (
-    cd "$project_dir"
-    "$HOME/opt/bin/claudez" -p "$prompt" \
-      --output-format text \
-      --allowedTools "Read" "Glob" "Grep" </dev/null
-  ) >"$run_dir/transcript.log" 2>&1
-  rc=$?
-fi
+(
+  cd "$project_dir"
+  CODEXRUNNER_MODEL="$model" CODEXRUNNER_EFFORT="$effort" \
+    "$HOME/opt/bin/codexrunner" exec "$prompt" </dev/null
+) >"$run_dir/transcript.log" 2>&1
+rc=$?
 set -e
 
 printf 'exit_code=%s\n' "$rc" >> "$run_dir/meta.txt"
