@@ -1357,13 +1357,13 @@ structure, and it goes when the file does.
 | поле | значение |
 |---|---|
 | @fact:B115-ANCHOR **anchor** | [`decision-records` `##GOVERNING-SPEC-SECTION-IS-THE-RECORD`](vibevm/vibedeps/org.vibevm.world.decision-records/1.0.0/vibevm/vibespecs/boot/25-flow-decision-records.xml) и `##REASON-IS-LOST-UNLESS-WRITTEN-DOWN` |
-| @fact:B115-LOCATOR **locator** | `cache/r4-t6b-reds-claudez/REVIEW-NOTES-t6b-round1.md` — единственный носитель нескольких решённых развилок T6b. Самая нагруженная: `std::error::Error::source()` у непрозрачной `TransformCompileError` возвращает `Some(private fault)`, а не `None`; довод — приватный источник не публикует именуемую таксономию, а молчаливый обрыв стандартной цепочки противоречит замороженному typed-source дизайну. В отслеживаемых авторитетах (ABI-заморозка, PROP-054) этого рулинга нет |
+| @fact:B115-LOCATOR **locator** | При заведении `cache/r4-t6b-reds-claudez/REVIEW-NOTES-t6b-round1.md` был единственным носителем нескольких решённых развилок T6b. Самая нагруженная: `std::error::Error::source()` у непрозрачной `TransformCompileError` возвращает `Some(private fault)`, а не `None`; довод — приватный источник не публикует именуемую таксономию, а молчаливый обрыв стандартной цепочки противоречит замороженному typed-source дизайну. Теперь ruling перенесён в отслеживаемый ABI §6.3; cache-путь остаётся историческим locator |
 | @fact:B115-SEVERITY **severity** | P2 |
-| @fact:B115-DISPOSITION **disposition** | `open` — поднять решённые развилки в тот якорь, который управляет значением (ABI §6.3 или PROP-054), с четырьмя полями записи решения; до этого `cache/` нельзя чистить (M-012 и так это запрещает, но здесь запрет держит ещё и смысл) |
+| @fact:B115-DISPOSITION **disposition** | `closed` — четырёхполевая запись решения поднята в управляющий якорь [ABI §6.3](campaigns/packages-2026-09/R4-TRANSFORM-PLAN-ABI-v0.1.md): непрозрачная публичная ошибка сохраняет приватный типизированный `source()`, потому что dyn-источник не публикует именуемую таксономию, а `None` молча рвёт стандартную причинную цепочку. Cache-отчёт остаётся только историческим evidence и больше не является единственным носителем rationale |
 | @fact:B115-FILED **filed by** | центральная приёмка R4.1 T6b, 2026-08-29 |
 
 - @fact:B115-THE-TRAP **В чём ловушка.** Мутация M1 делает `source() → None` и валит ровно один тест с сообщением «does not terminate the source chain». Тест защищает решение, но не объясняет его: следующая сессия, увидев RED, узнает *что* нельзя, но не *почему* — и первый же аргумент «непрозрачность лучше» переоткроет вопрос. Тест — это защёлка, запись решения — иммунитет.
-- @fact:B115-PARTIALLY-DRAINED **Частично осушено приёмкой T6c (2026-08-29).** Развилка следующего атома — граница свидетеля lane — записана сразу в управляющий документ: [ABI §6.4](campaigns/packages-2026-09/R4-TRANSFORM-PLAN-ABI-v0.1.md) (`4f2acb42`), с четырьмя полями и отклонёнными вариантами. Это меняет практику на будущее, но НЕ закрывает запись: перечисленные выше рулинги T6b по-прежнему живут только в `cache/r4-t6b-reds-claudez/REVIEW-NOTES-t6b-round1.md` и должны быть подняты отдельно.
+- @fact:B115-DRAINED **Осушено FINAL-археологией (2026-09-08).** Развилка T6c о границе свидетеля lane уже жила в [ABI §6.4](campaigns/packages-2026-09/R4-TRANSFORM-PLAN-ABI-v0.1.md) (`4f2acb42`); оставшийся T6b ruling о приватном typed source теперь записан рядом в §6.3 с решением, причиной, отклонённой альтернативой и последствием. `cache/r4-t6b-reds-claudez/REVIEW-NOTES-t6b-round1.md` сохраняется по M-012 как история коррекции, не как авторитет.
 
 ### B-117 — путь reached-субъекта не проверяется на контракт `paths` в production {#b-117}
 
@@ -1436,4 +1436,3 @@ structure, and it goes when the file does.
 | @fact:B122-SEVERITY **severity** | P3 — legacy-совместимость сужена, но прямой (новый) путь полноценен; сообщение об ошибке корректно называет чинящий шаг |
 | @fact:B122-DISPOSITION **disposition** | `open` — либо validate_plane учитывает lowering-проекцию (vibe-core узнаёт о ней — расширение периметра ядра), либо PROP-054-преемник фиксирует «[[binary]] не сочетается с [[deploy.target]]; мигрируйте на [[artifacts.build]]» как правило |
 | @fact:B122-FILED **filed by** | отчёт воркера R8-VIBE-BIN §0.9, зафиксировано центральной приёмкой 2026-08-30 |
-

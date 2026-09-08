@@ -494,6 +494,21 @@ error family. Do not add `#[non_exhaustive]` or a public fault taxonomy merely
 to anticipate T7–T10; T10 freezes external inspection when a real consumer
 exists.
 
+**Decision.** `std::error::Error::source()` on the opaque public
+`TransformCompileError` returns its private typed `TransformError` source.
+
+**Reason.** A private value exposed only as `&(dyn Error + 'static)` does not
+publish a nameable fault taxonomy, while retaining it preserves the standard
+causal chain and the typed-source design frozen for compiler failures.
+
+**Rejected alternative.** Returning `None` in the name of opacity. That hides
+no public type—the source remains private—but silently severs causal inspection
+and makes this error family weaker than the contract it wraps.
+
+**Consequence.** Public callers may traverse and render the cause without
+matching its private variants; crate tests pin the exact downcast, and any
+future public taxonomy still requires its own explicit compatibility decision.
+
 T6b intentionally retires T4's claim that an attached nonempty plan is inert.
 The empty-plan half stays byte/error/schedule exact. A nonempty plan under the
 empty production catalog now refuses before parse; the same plan under the

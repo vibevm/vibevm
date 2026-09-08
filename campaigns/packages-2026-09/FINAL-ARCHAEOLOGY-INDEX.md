@@ -88,10 +88,10 @@ reports remain local evidence and were not read during this audit.
 | `.wt/R5.5-WIRE-GATE` | `18715315` | patch-equivalent | retain packet/report pair |
 | `.wt/R5.5-WIRE-PROJECTION` | `dd50a080` | patch-equivalent | retain packet/report pair |
 | `.wt/R5.5-WIRE-PROJECTION-TRACE-V1` | `2dec1d7a` | patch-equivalent | retain packet/report pair |
-| `.wt/R5.5-WIRE-PROJECTION-TRACE` | `9051aade` | obsolete prototype, not cleanup-ready | HEAD is an ancestor, but seven dirty paths contain the v0.8 shared-JTD prototype and packet; accepted v1 implementation is `dc9cff48`. Retain until its untracked `shared.rs`/tests are explicitly compared with the v1 implementation or rejected. |
+| `.wt/R5.5-WIRE-PROJECTION-TRACE` | `9051aade` | superseded prototype | Four modified and two untracked code paths implement only the old v0.8 host slot, with an untracked execution packet. Accepted `dc9cff48` reauthors the feature in v1, adds contained-path admission, and mirrors it into every shipped vendor copy. The prototype is not equivalent and has no promotable delta; retain only as rejected pre-correction evidence. |
 
-The twelfth worktree is the remaining archaeology blocker; no removal or move
-is authorized here.
+The unexpected twelfth worktree is dispositioned, not cleaned. No removal or
+move is authorized here.
 
 ## Cache-family index
 
@@ -114,36 +114,83 @@ were not opened. Empty directories carry no evidence and are omitted.
 | `zai-glm-e2e/case-20260904T125538100Z-b7002b380e2841568aa5859c5eabf5c4/worker/WORKER-REPORT-E2E.md` | `ZAI-GLM` | retain: exact accepted `GLM_E2E_OK` evidence |
 | `zai-glm-e2e/case-20260904T125538100Z-b7002b380e2841568aa5859c5eabf5c4/live-pass-1-summary.json` | `ZAI-GLM` | retain: accepted pass/session/model-usage summary |
 
-### Accepted campaign families retained pending report-level disposition
+### Report-level disposition ledger
 
-Every exact nonempty family is named below. Product decisions are accepted in
-the named campaign/node, but the family may mix implementation, review,
-correction and rejected-run evidence. Therefore **retain** is exact and
-"every report is accepted" is deliberately not claimed.
+The **80 nonempty top-level cache families** are exhaustively mapped before
+the finer report census. Wildcards here are closed prefix classes, not an
+assumption about future directories.
 
-| owner/node | nonempty cache families | disposition |
-|---|---|---|
-| MUP | `multi-user-planning-package-claudez`, `multi-user-planning-package-opus` | retain historical implementation/review evidence; package result is accepted |
-| R2/R3/R4/R5/R6/R7/R8 early worker archive | `agents` | retain; 128 files/93 report-named files are mixed and remain unverifiable without a per-report map |
-| R4 | `r4`, `r4-0-impl-claudez`, `r4-0-inventory-opus`, `r4-1-activation-claudez`, `r4-1-inventory-opus`, `r4-1-owner-controls-claudez`, `r4-1-transform-plan-opus`, `r4-1-unit-transaction-claudez`, `r4-1-world-adapter-claudez` | retain historical R4 evidence |
-| R4.1 atoms | `r4-t1-config-digest-claudez`, `r4-t1-t3-correction-claudez`, `r4-t10`, `r4-t2-design-opus`, `r4-t2-transform-plan-claudez`, `r4-t3-selector-claudez`, `r4-t4-artifact-plan-recon-claudez`, `r4-t5-behavior-recon-claudez`, `r4-t6-positions-recon-claudez`, `r4-t6b-reds-claudez`, `r4-t6b-seam-claudez`, `r4-t6c`, `r4-t7`, `r4-t7-subject-wire-recon-claudez`, `r4-t8`, `r4-t9` | retain; accepted implementation is on main, report-level reasons remain evidence |
-| R5 native | `r5-native` | retain; exact route review above is accepted, remaining reviews/recon are historical |
-| R7.4 | `r74-a12`, `r74-a13`, `r74-a14`, `r74-a15-design`, `r74-a15a-package-source`, `r74-a15b-command`, `r74-a15c1-hosted-backend`, `r74-a15c2-tool-output`, `r74-a9`, `r74-bounded-publish-verify`, `r74-bounded-read`, `r74-cli-goldens`, `r74-dependency-audit`, `r74-lease`, `r74-lease-opus-review`, `r74-lease-plumbing`, `r74-mcp-audit`, `r74-opus-adjudication`, `r74-projection`, `r74-selected-map`, `r74-selected-plumbing`, `r74-selected-resume-repair`, `r74-selected-state`, `r74-state-audit`, `r74-state-io`, `r74-state-opus-review`, `r74-tasks-reader`, `r74-tool-output`, `r74-wire` | retain mixed accepted/rejected worker evidence; R7.4 product is on main |
-| R7.5 | `r75-p2-a4-audit`, `r75-p2-a4b-design`, `r75-p2-a4b-implementation`, `r75-p2-a4c-design`, `r75-p2-a4c0-streaming`, `r75-p2-a4c1-artifacts`, `r75-p2-a5a-opus`, `r75-p2-a5b-opus`, `r75-p2-recon`, `r75-p3-cli-opus`, `r75-p3-mcp-opus`, `r75-p3-pdsa-opus` | retain; acceptance/corrections are on main, individual reports not globally indexed |
-| R8 | `r8`, `r8-client-probe-marketplace`, `r8-clients` | retain architecture, probe and worker evidence; product is on main |
-| R3.4 review | `review-r34-conform`, `review-r34-exact-event` | retain accepted review packets/reports |
-| ZAI launcher | `zai-glm-launcher-contract` | retain fake-token/launcher contract evidence; package result is accepted |
+| exact family scope | families | accepted commit/node | family disposition |
+|---|---:|---|---|
+| `agent-plugins-spec` | 1 | R8 client/plugin architecture | equivalent upstream/research snapshot; retain provenance |
+| `agents` | 1 | R1–R8 accepted nodes | mixed worker archive; report-level outcomes are mapped below and retained as historical evidence |
+| `multi-user-planning-package-*` | 2 | MUP-6 | corrected/superseded by the accepted package; retain independent implementation/review evidence |
+| `r4*` | 25 | R4.0/R4.1 T1–T10 | corrected/superseded by accepted atom results; retain design, mutation and review evidence |
+| `r5-native` | 1 | R5.1–R5.5 | accepted route plus superseded recon/reviews; retain native ABI evidence |
+| `r74-*` | 29 | R7.4 A6–A15 | corrected/superseded by accepted R7.4 atoms; retain commissioning and review evidence |
+| `r75-*` | 12 | R7.5 P2/P3 | corrected/superseded by accepted R7.5 atoms; retain streaming/tool-boundary evidence |
+| `r8*` | 3 | R8 clients/package/deploy | accepted architecture/probe plus superseded worker reviews; retain client evidence |
+| `review-r34-*` | 2 | R3.4 gates | accepted independent review evidence; retain exactly |
+| `scrape-release` | 1 | scrape release | rejected as acceptance evidence because the promised report is absent; retain the incomplete outcome |
+| `sol-to-opus-handoff-preflight` | 1 | MUP-6 / FINAL-ARCHAEOLOGY | accepted emergency handoff evidence; retain exactly |
+| `zai-glm-e2e` | 1 | ZAI-GLM | one accepted case and four non-winning cases dispositioned below; retain operational evidence |
+| `zai-glm-launcher-contract` | 1 | ZAI launcher contract | accepted fake-token contract evidence; retain fixtures without reading token bodies |
+
+These closed scopes total **80/80** currently nonempty cache families.
+
+The report census is exact and reproducible: every nonempty `.md`/`.txt` file
+under `cache/` whose basename contains `report`, `review`, `notes`, `followup`,
+`continue`, or `CURRENT-LIFECYCLE-CAMPAIGN-STATE`, excluding packet inputs, is
+in one scope below, as are the three nonempty JSON review/summary artifacts. A
+scope groups reports only where every member has the same accepted node and
+disposition. “Superseded” applies to the report as a proposed or intermediate
+result, not to the retained historical evidence file.
+
+| exact report scope | count | accepted commit/node | report disposition and retention reason |
+|---|---:|---|---|
+| `cache/agents/R1-*/*` | 1 | accepted R1 line | corrected/superseded by the landed R1 result; retain the derived-order repair evidence |
+| `cache/agents/R2*/*` | 24 | R2.5–R2.8 | design, implementation, repair and review reports are corrected/superseded by the accepted R2 nodes on `main`; retain the iteration and refusal evidence |
+| `cache/agents/R3*/*`, `cache/agents/OPUS-R3*/*` | 44 | R3.2–R3.4 | corrected/superseded by the accepted R3 nodes; retain design, paused-attempt, repair and verifier-review history |
+| `cache/agents/R4*/*` | 4 | R4/R4.1 | architecture/design/review inputs are superseded by the accepted R4 implementation and later corrections; retain rationale evidence |
+| `cache/agents/R5*/*` | 1 | R5 native | scouting input superseded by the accepted R5 wire/loader/artifact route; retain architecture evidence |
+| `cache/agents/R6*/*` | 2 | R6/R6.2B | reconnaissance inputs superseded by accepted R6 atoms; retain boundary evidence |
+| `cache/agents/R7*/*` | 6 | R7/R7.1/R7.3 | repair/review/design reports corrected or superseded by accepted R7 commits; retain acceptance history |
+| `cache/agents/R8*/*` | 8 | R8/R8.1/R8.2B | implementation/review/specmap/design reports corrected or superseded by accepted R8 commits; retain acceptance history |
+| `cache/agents/RETROSPECTIVE-SPEC-HARVEST/*` | 1 | FINAL-SPEC-PROMOTION | superseded by tracked spec-promotion results; retain the harvest inventory |
+| `cache/multi-user-planning-package-*/*` | 2 | MUP-6 | corrected/superseded by the accepted multi-user-planning package; retain independent implementation/review evidence |
+| human-readable `cache/r4*/*` `.md`/`.txt` reports matching the basename filter and packet exclusion above | 49 | R4.0/R4.1 T1–T10 | all reports are corrected/superseded by accepted atom results; retain mutation, correction and review history. T6b's last cache-only ruling is now authoritative in ABI §6.3 |
+| `cache/r4-0-impl-claudez/run-review.json`, `cache/r4-t6b-seam-claudez/run-current-review.json` | 2 | R4.0 / R4.1 T6b | machine review artifacts corrected/superseded with their sibling review reports by accepted atom results; retain without treating them as authority |
+| `cache/r5-native/R5.4-R5.5-ROUTE-REVIEW.md` | 1 | accepted R5.4/R5.5 route | accepted decision evidence; retain exactly under M-012 |
+| `cache/r5-native/*` except the route review | 8 | R5.1–R5.3 | recon and central reviews are corrected/superseded by accepted R5 commits; retain the review chain |
+| `cache/r74-*/*` | 47 | R7.4 A6–A15 | intermediate design, implementation, follow-up, audit and review reports are corrected/superseded by accepted R7.4 atoms; retain bounded-publish/lease/state evidence |
+| `cache/r75-*/*` | 16 | R7.5 P2/P3 | intermediate recon/design/continuation/implementation reports are corrected/superseded by accepted R7.5 atoms; retain streaming/artifact/tool-boundary evidence |
+| `cache/r8/*`, `cache/r8-clients/*` | 14 | R8 clients/package/deploy | worker and central-review reports are corrected/superseded by accepted R8 client commits; retain client integration evidence |
+| `cache/review-r34-*/*` | 2 | R3.4 review gates | accepted independent review evidence; retain exactly |
+| `cache/sol-to-opus-handoff-preflight/CURRENT-LIFECYCLE-CAMPAIGN-STATE.md` | 1 | MUP-6 / FINAL-ARCHAEOLOGY | accepted emergency handoff snapshot; retain exactly |
+| accepted `cache/zai-glm-e2e/.../worker/WORKER-REPORT-E2E.md` | 1 | ZAI-GLM | accepted `GLM_E2E_OK` evidence; retain exactly with its summary |
+| accepted `cache/zai-glm-e2e/.../live-pass-1-summary.json` | 1 | ZAI-GLM | accepted machine pass/session/model-usage summary; retain exactly without opening raw logs |
+
+The scopes total **235/235** nonempty report/review/summary artifacts: 232
+human-readable reports and three machine JSON summaries. Packet inputs, raw
+JSONL, binary logs, token files and live semaphore/lock files are not reports
+and are not opened or counted. `cache/scrape-release/GLM-SCRAPE-AB.md` is
+additionally indexed as a misnamed, incomplete worker outcome: reject it as
+acceptance evidence because it is not the promised `GLM-REPORT-AB.md`; retain
+it only to explain that failed delivery.
 
 ### Mixed, obsolete or operational cache families
 
 | family | disposition |
 |---|---|
-| `zai-glm-e2e` except the exact accepted case above | unverifiable/mixed; retain failed or superseded attempts until a per-case disposition exists |
+| `zai-glm-e2e/case-20260904T124554643Z-8b6d77dfcd314cda842422e895c829d1` | rejected as acceptance evidence: no nonempty report or pass summary exists; retain its raw operational corpus without opening it |
+| `zai-glm-e2e/case-20260904T124628892Z-b4a01e12b40242e79d0e83299b0b4231` | rejected as acceptance evidence: no nonempty report or pass summary exists; superseded by the accepted case and retained as operational failure history |
+| `zai-glm-e2e/case-20260904T125131290Z-c268a8520ba14c1f94e681b75484143c` | rejected as acceptance evidence: no nonempty report or pass summary exists; superseded by the accepted case and retained as operational failure history |
+| `zai-glm-e2e/case-20260904T130412989Z-ef3a33f1f1104f21846bd2bbcfd92f65` | rejected as acceptance evidence: no nonempty report or pass summary exists; later than but does not replace the exact accepted case, so retain as non-winning operational history |
 | `scrape-release` | obsolete/incomplete worker packet: `GLM-SCRAPE-AB.md` is not the promised `GLM-REPORT-AB.md`; product acceptance must be read from main, not inferred from this file |
 | `chatgpt-cargo-slots` | live ephemeral semaphore files; never clean while any campaign command may be running |
 | `zai-glm-launcher-contract` fake binaries/token fixture | test evidence only; filenames explicitly identify fake data, but no secret content was read |
 
-## Promotion result and remaining blockers
+## Promotion result and closure
 
 Promoted now:
 
@@ -153,21 +200,18 @@ Promoted now:
    method were promoted there.
 3. The dangling references to rejected `neworder2/report.md` were removed;
    this index now records the v1 source and rejection.
+4. T6b's opaque-error causal-chain ruling is a four-field decision in
+   `R4-TRANSFORM-PLAN-ABI-v0.1.md` §6.3; B-115 is closed.
+5. All 235 nonempty report/review/summary artifacts have report-level
+   dispositions, all five ZAI cases have case-level dispositions, and the
+   dirty TRACE prototype is explicitly superseded by corrected commit
+   `dc9cff48`.
 
-No new root `BACKLOG.md` entry is needed: the remaining work is archaeology
-evidence classification, recorded here rather than an unstarted product bug.
+No new root `BACKLOG.md` entry is needed: the archaeology dispositions are
+complete, and cleanup is deliberately outside this atom rather than a product
+bug.
 
-Blockers before any cleanup:
-
-- the unexpected twelfth worktree's untracked shared-JTD prototype/tests need
-  explicit equivalence or rejection against accepted `dc9cff48`;
-- root backlog B-115 identifies
-  `cache/r4-t6b-reds-claudez/REVIEW-NOTES-t6b-round1.md` as the sole rationale
-  for still-unpromoted T6b decisions, notably why opaque
-  `TransformCompileError::source()` retains its private typed source; promote
-  those rulings into the governing R4 ABI/PROP decision record before cleanup;
-- `agents` and the mixed R4/R7/R8 report families lack per-report
-  accepted/corrected/rejected mapping;
-- non-winning ZAI E2E cases lack explicit per-case disposition;
-- live cargo-slot semaphore files cannot be treated as stale while commands
-  may still run.
+No archaeology classification blocker remains. Cleanup is still a separate,
+unauthorized action: branches, worktrees, cache reports, raw operational logs,
+and live cargo-slot semaphore files all remain in place. Semaphore/lock state
+must never be inferred stale while campaign commands may run.
