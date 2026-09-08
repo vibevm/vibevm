@@ -2,7 +2,7 @@ use std::path::Path;
 
 use vibe_core::manifest::SpecFormat;
 
-use super::support::{Fixture, compiler_manifest, node_manifest, write};
+use super::support::{Fixture, compiler_manifest, must_some, node_manifest, write};
 
 #[derive(Clone, Copy)]
 enum MinifyFixture {
@@ -47,7 +47,10 @@ impl Fixture {
 
 fn write_minify_source(root: &Path, fail_once: bool) {
     let slot = root.join("vibevm/vibedeps/org.demo.compiler/1.0.0/native");
-    let crates = Path::new(env!("CARGO_MANIFEST_DIR")).parent().unwrap();
+    let crates = must_some(
+        Path::new(env!("CARGO_MANIFEST_DIR")).parent(),
+        "orchestrator crate parent",
+    );
     let vibe_ext = crates
         .join("vibe-ext")
         .display()

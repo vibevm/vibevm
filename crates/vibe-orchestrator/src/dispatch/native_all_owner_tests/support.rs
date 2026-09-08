@@ -4,23 +4,25 @@ use std::sync::Arc;
 use vibe_core::manifest::{LockedPackage, Lockfile, Materialization, SpecFormat};
 use vibe_core::{ContentHash, Group, PackageKind, PackageName, PackageRef};
 use vibe_lifecycle::process::StreamMode;
-use vibe_lifecycle::{Phase, RunMetadata};
+use vibe_lifecycle::{LifecycleLease, Phase, RunMetadata};
 use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
 
 use crate::install::{InstallInputs, InstallPolicy, SelectedManifest, resolve_project_root};
 use crate::ports::*;
 use crate::{PhaseOutcome, PhaseRun, run_phases};
 
+#[path = "support/must.rs"]
+mod must;
+pub(super) use must::{NativeOutputs, must, must_some};
+
 pub(super) struct Fixture {
     pub(super) root: tempfile::TempDir,
     pub(super) spec_format: SpecFormat,
 }
 
-pub(super) type NativeOutputs = Vec<(String, Vec<(String, Vec<u8>)>)>;
-
 impl Fixture {
     pub(super) fn new(conflict: bool) -> Self {
-        let root = tempfile::tempdir().unwrap();
+        let root = must(tempfile::tempdir(), "all-owner temp root");
         let builtin = "org.vibevm/vibe#cargo";
         write(
             &root.path().join("vibe.toml"),
@@ -52,8 +54,8 @@ impl Fixture {
     }
 
     pub(super) fn run(&self) -> PhaseOutcome {
-        let root = resolve_project_root(self.root.path()).unwrap();
-        let lease = Arc::new(vibe_lifecycle::LifecycleLease::acquire(&root).unwrap());
+        let root = must(resolve_project_root(self.root.path()), "project root");
+        let lease = Arc::new(must(LifecycleLease::acquire(&root), "lease"));
         let phases = vec![
             Phase::Validate,
             Phase::Install,
@@ -69,7 +71,10 @@ impl Fixture {
             agent_mode: RunAgentMode::Cli,
             force: false,
             trace_compile: false,
-            run_id: vibe_lifecycle::process::allocate_run_id(&root).unwrap(),
+            run_id: must(
+                vibe_lifecycle::process::allocate_run_id(&root),
+                "lifecycle run id",
+            ),
             started: "2026-09-08T00:00:00Z".into(),
             selected: ".".into(),
         };
@@ -99,7 +104,7 @@ impl Fixture {
             trace: None,
             target_os: vibe_core::manifest::TargetOs::Linux,
             deploy: None,
-            observed_at: "2026-09-08T00:00:00Z".parse().unwrap(),
+            observed_at: must("2026-09-08T00:00:00Z".parse(), "observed timestamp"),
         })
     }
 
@@ -125,7 +130,10 @@ impl Fixture {
     }
 
     pub(super) fn native_context(&self) -> crate::install::NativeInstallContext {
-        let workspace = vibe_workspace::Workspace::load(self.root.path()).unwrap();
+        let workspace = must(
+            vibe_workspace::Workspace::load(self.root.path()),
+            "fixture workspace",
+        );
         let slot = self
             .root
             .path()
@@ -174,10 +182,14 @@ impl Fixture {
                 in_place_changed: None,
             },
         ];
-        let (world, lowering, sidecar) =
-            crate::world::prepare_owner_runtime_inputs(self.root.path(), &workspace, &resolution)
-                .unwrap();
-        let platform = vibe_lifecycle::native::NativePlatform::current().unwrap();
+        let (world, lowering, sidecar) = must(
+            crate::world::prepare_owner_runtime_inputs(self.root.path(), &workspace, &resolution),
+            "owner runtime inputs",
+        );
+        let platform = must(
+            vibe_lifecycle::native::NativePlatform::current(),
+            "platform",
+        );
         let facts = vibe_workspace::extension_world::OwnerRuntimeRunFacts {
             run_id: "0123456789abcdef0123456789abcdef".into(),
             state_root: self.root.path().join(".vibe"),
@@ -190,17 +202,19 @@ impl Fixture {
                 platform, policies,
             ))
         };
-        let (_, carriage) = vibe_workspace::install::regenerate_boot_from_traced_native(
-            &workspace,
-            &resolution,
-            world,
-            self.spec_format,
-            None,
-            lowering,
-            facts,
-            &mut provider,
-        )
-        .unwrap();
+        let (_, carriage) = must(
+            vibe_workspace::install::regenerate_boot_from_traced_native(
+                &workspace,
+                &resolution,
+                world,
+                self.spec_format,
+                None,
+                lowering,
+                facts,
+                &mut provider,
+            ),
+            "traced native boot regeneration",
+        );
         crate::install::NativeInstallContext::new(carriage, sidecar)
     }
 
@@ -245,8 +259,8 @@ impl Fixture {
             .filter_map(Result::ok)
             .filter(|entry| entry.file_name() != "observer.json")
             .map(|entry| {
-                serde_json::from_slice(&std::fs::read(entry.path()).expect("artifact record bytes"))
-                    .expect("artifact record JSON")
+                let bytes = must(std::fs::read(entry.path()), "artifact record bytes");
+                must(serde_json::from_slice(&bytes), "artifact record JSON")
             })
             .collect()
     }
@@ -271,9 +285,9 @@ impl Fixture {
             let mut files = std::fs::read_dir(&directory)
                 .unwrap_or_else(|error| panic!("{owner} output {}: {error}", directory.display()))
                 .map(|entry| {
-                    let entry = entry.expect("boot output entry");
+                    let entry = must(entry, "boot output entry");
                     let name = entry.file_name().to_string_lossy().into_owned();
-                    let bytes = std::fs::read(entry.path()).expect("boot output bytes");
+                    let bytes = must(std::fs::read(entry.path()), "boot output bytes");
                     (name, bytes)
                 })
                 .collect::<Vec<_>>();
@@ -311,7 +325,12 @@ impl Fixture {
                 .join(file),
         ]
         .into_iter()
-        .map(|path| std::fs::metadata(path).unwrap().modified().unwrap())
+        .map(|path| {
+            must(
+                must(std::fs::metadata(path), "boot output metadata").modified(),
+                "boot output modified time",
+            )
+        })
         .collect()
     }
 }
@@ -348,13 +367,14 @@ fn seed_compiler(root: &Path) {
         "[package]\ngroup='org.demo'\nname='base'\nkind='tool'\nversion='1.0.0'\n[boot_snippet]\nsource='boot/base.md'\nlink='static'\n",
     );
     write(&base.join("boot/base.md"), "# Base\n");
-    let vibe_ext = Path::new(env!("CARGO_MANIFEST_DIR"))
-        .parent()
-        .unwrap()
-        .join("vibe-ext")
-        .display()
-        .to_string()
-        .replace('\\', "/");
+    let vibe_ext = must_some(
+        Path::new(env!("CARGO_MANIFEST_DIR")).parent(),
+        "orchestrator crate parent",
+    )
+    .join("vibe-ext")
+    .display()
+    .to_string()
+    .replace('\\', "/");
     write(
         &slot.join("native/Cargo.toml"),
         &format!(
@@ -383,20 +403,29 @@ fn write_compiler_source(root: &Path, fail: bool) {
 }
 
 fn write_lock(root: &Path) {
-    let dep = PackageRef::parse("org.demo/compiler@=1.0.0").unwrap();
-    let base = PackageRef::parse("org.demo/base@=1.0.0").unwrap();
+    let dep = must(
+        PackageRef::parse("org.demo/compiler@=1.0.0"),
+        "compiler package ref",
+    );
+    let base = must(
+        PackageRef::parse("org.demo/base@=1.0.0"),
+        "base package ref",
+    );
     let mut lock = Lockfile::empty("fixture", "2026-09-08T00:00:00Z");
     lock.meta.root_dependencies = vec![dep];
     lock.packages.push(LockedPackage {
         kind: PackageKind::Tool,
-        name: PackageName::parse("compiler").unwrap(),
-        group: Group::parse("org.demo").unwrap(),
-        version: "1.0.0".parse().unwrap(),
+        name: must(PackageName::parse("compiler"), "compiler package name"),
+        group: must(Group::parse("org.demo"), "compiler group"),
+        version: must("1.0.0".parse(), "compiler version"),
         registry: None,
         source_url: "file:///fixture".into(),
         source_ref: None,
         resolved_commit: None,
-        content_hash: ContentHash::parse(&format!("sha256:{}", "a".repeat(64))).unwrap(),
+        content_hash: must(
+            ContentHash::parse(&format!("sha256:{}", "a".repeat(64))),
+            "compiler content hash",
+        ),
         boot_snippet: None,
         files_written: Vec::new(),
         dependencies: vec![base.clone()],
@@ -413,14 +442,17 @@ fn write_lock(root: &Path) {
     });
     lock.packages.push(LockedPackage {
         kind: PackageKind::Tool,
-        name: PackageName::parse("base").unwrap(),
-        group: Group::parse("org.demo").unwrap(),
-        version: "1.0.0".parse().unwrap(),
+        name: must(PackageName::parse("base"), "base package name"),
+        group: must(Group::parse("org.demo"), "base group"),
+        version: must("1.0.0".parse(), "base version"),
         registry: None,
         source_url: "file:///fixture".into(),
         source_ref: None,
         resolved_commit: None,
-        content_hash: ContentHash::parse(&format!("sha256:{}", "b".repeat(64))).unwrap(),
+        content_hash: must(
+            ContentHash::parse(&format!("sha256:{}", "b".repeat(64))),
+            "base content hash",
+        ),
         boot_snippet: None,
         files_written: Vec::new(),
         dependencies: Vec::new(),
@@ -435,12 +467,13 @@ fn write_lock(root: &Path) {
         language: None,
         materialization: Materialization::Copy,
     });
-    lock.write(root.join("vibe.lock")).unwrap();
+    must(lock.write(root.join("vibe.lock")), "fixture lockfile");
 }
 
 pub(super) fn write(path: &Path, body: &str) {
-    std::fs::create_dir_all(path.parent().unwrap()).unwrap();
-    std::fs::write(path, body).unwrap();
+    let parent = must_some(path.parent(), "fixture path parent");
+    must(std::fs::create_dir_all(parent), "fixture directory");
+    must(std::fs::write(path, body), "fixture file");
 }
 
 struct Harness;
