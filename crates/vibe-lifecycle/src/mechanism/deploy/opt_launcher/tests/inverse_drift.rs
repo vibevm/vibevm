@@ -40,7 +40,12 @@ impl DeployProvider for DriftAfterRestore {
         handle: Option<&str>,
     ) -> Result<RemoveReport, MechanismError> {
         let report = VibeOptLauncherProvider.remove(request, resources, handle)?;
-        std::fs::write(&self.0, b"post-restore-drift").expect("inject post-restore drift");
+        inject_write(
+            request,
+            &self.0,
+            b"post-restore-drift",
+            "inject post-restore drift",
+        )?;
         Ok(report)
     }
     fn recover(
@@ -74,7 +79,7 @@ impl DeployProvider for DriftingFail {
         plan: &DeployPlan,
         checkpoint: &mut CheckpointLedger<'_>,
     ) -> Result<ApplyReport, MechanismError> {
-        std::fs::write(&self.0, b"user-drift").expect("inject drift");
+        inject_write(request, &self.0, b"user-drift", "inject drift")?;
         AlwaysFail.apply(request, plan, checkpoint)
     }
     fn verify(

@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use specmark::verifies;
 use tempfile::TempDir;
@@ -32,6 +32,35 @@ struct World {
     clients: ClientExecutables,
     registry: vibe_extension_registry::MechanismRegistry,
     routes: MechanismRoutes,
+}
+
+fn inject_write(
+    request: &DeployTargetRequest<'_>,
+    path: &Path,
+    bytes: &[u8],
+    context: &str,
+) -> Result<(), MechanismError> {
+    std::fs::write(path, bytes).map_err(|error| {
+        MechanismError::Deploy(DeployProviderError::Write {
+            target: request.target.id.clone(),
+            path: crate::mechanism::contain::forward_slashed(path),
+            reason: format!("{context}: {error}"),
+        })
+    })
+}
+
+fn overwrite_artifact(
+    request: &DeployTargetRequest<'_>,
+    bytes: &[u8],
+    context: &str,
+) -> Result<(), MechanismError> {
+    let artifact = request.artifact.ok_or_else(|| {
+        MechanismError::Deploy(DeployProviderError::NoArtifact {
+            target: request.target.id.clone(),
+            provider: BUILTIN_VIBE_OPT_LAUNCHER_PIN,
+        })
+    })?;
+    inject_write(request, &artifact.absolute, bytes, context)
 }
 
 impl World {

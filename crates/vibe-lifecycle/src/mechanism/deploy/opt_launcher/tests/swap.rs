@@ -25,9 +25,7 @@ impl DeployProvider for SwappingBeforeApply {
         plan: &DeployPlan,
         checkpoint: &mut CheckpointLedger<'_>,
     ) -> Result<ApplyReport, MechanismError> {
-        let artifact = request.artifact.expect("the engine resolved the artifact");
-        std::fs::write(&artifact.absolute, b"wrong!")
-            .expect("the test swaps the source after resolution");
+        overwrite_artifact(request, b"wrong!", "swap source after resolution")?;
         VibeOptLauncherProvider.apply(request, plan, checkpoint)
     }
 
