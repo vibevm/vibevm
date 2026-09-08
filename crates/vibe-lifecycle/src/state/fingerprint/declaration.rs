@@ -200,6 +200,13 @@ fn pass_payload(hash: &mut FramedHash, pass: &ExtensionPass) {
     string_payload(hash, "artifact", pass.artifact.as_deref());
 }
 
+#[cfg(test)]
+pub(crate) fn pass_payload_fingerprint_for_test(pass: &ExtensionPass) -> String {
+    let mut hash = FramedHash::declaration();
+    pass_payload(&mut hash, pass);
+    hash.finish()
+}
+
 fn level_payload(hash: &mut FramedHash, label: &str, level: Option<ExtensionIrLevel>) {
     hash.presence(&format!("{label}_present"), level.is_some());
     if let Some(level) = level {

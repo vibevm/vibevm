@@ -1,12 +1,3 @@
-//! The declaration-fingerprint REDs (R7.5 P2/A4b).
-//!
-//! The declaration fingerprint is the evidence sibling of the execution
-//! fingerprint: it answers «is this the same DECLARED work?», so the mutation
-//! axes below are exactly the spec's exclusions and inclusions
-//! (PROP-054 `##DECLARATION-FINGERPRINT`). One case also recomputes the
-//! digest longhand from the frozen recipe — an independent implementation
-//! of the framing, not a call into production — and pins the vector.
-
 use std::collections::BTreeMap;
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -55,13 +46,10 @@ fn base_decl(point: &str) -> ExtensionDecl {
     }
 }
 
-/// One planned host declaration under the standard ungrouped-`demo` host.
 fn host_row(declaration: ExtensionDecl) -> ExtensionRegistryRow {
     host_row_with_content(declaration, None)
 }
 
-/// The same host row with an explicit precomputed host content hash — the
-/// `provider_content_present` axis.
 fn host_row_with_content(
     declaration: ExtensionDecl,
     content: Option<&str>,
@@ -94,7 +82,6 @@ fn prepared(root: &Path, row: &ExtensionRegistryRow) -> String {
         .declaration_fingerprint
 }
 
-/// The frozen longhand recipe — an INDEPENDENT framing implementation.
 fn frame(hash: &mut Sha256, label: &str, value: &[u8]) {
     hash.update((label.len() as u64).to_be_bytes());
     hash.update(label.as_bytes());
@@ -395,10 +382,10 @@ fn pass_fields_and_compiler_internals_move_the_declaration_identity() {
 
     let minimal = pass(Some(ExtensionPass {
         kind: ExtensionPassKind::Transform,
-        level: None,
+        level: Some(ExtensionIrLevel::Source),
         from: None,
         to: None,
-        after: None,
+        after: Some("parse".into()),
         before: None,
         replace: None,
         formats: None,
@@ -418,37 +405,51 @@ fn pass_fields_and_compiler_internals_move_the_declaration_identity() {
         after: Some("qualify".into()),
         before: None,
         replace: None,
-        formats: Some(vec!["xml".into(), "md".into()]),
-        artifact: Some("static-xml".into()),
+        formats: None,
+        artifact: None,
     }));
     assert_ne!(with_level, minimal);
-    let reordered_formats = pass(Some(ExtensionPass {
-        kind: ExtensionPassKind::Transform,
-        level: Some(ExtensionIrLevel::Closure),
+    let with_formats = pass(Some(ExtensionPass {
+        kind: ExtensionPassKind::Frontend,
+        level: None,
         from: None,
         to: None,
-        after: Some("qualify".into()),
+        after: None,
+        before: None,
+        replace: None,
+        formats: Some(vec!["xml".into(), "md".into()]),
+        artifact: None,
+    }));
+    let reordered_formats = pass(Some(ExtensionPass {
+        kind: ExtensionPassKind::Frontend,
+        level: None,
+        from: None,
+        to: None,
+        after: None,
         before: None,
         replace: None,
         formats: Some(vec!["md".into(), "xml".into()]),
-        artifact: Some("static-xml".into()),
+        artifact: None,
     }));
     assert_ne!(
-        reordered_formats, with_level,
+        reordered_formats, with_formats,
         "formats keep declaration order",
     );
     let lowered = pass(Some(ExtensionPass {
         kind: ExtensionPassKind::Lowering,
-        level: Some(ExtensionIrLevel::Closure),
+        level: None,
         from: None,
         to: None,
-        after: Some("qualify".into()),
+        after: None,
         before: None,
-        replace: None,
-        formats: Some(vec!["xml".into(), "md".into()]),
+        replace: Some("emit".into()),
+        formats: None,
         artifact: Some("static-xml".into()),
     }));
-    assert_ne!(lowered, with_level, "pass_kind is bound");
+    assert_ne!(
+        lowered, with_level,
+        "the valid lowering shape is declaration material",
+    );
 }
 
 /// The resolved agent prompt is declaration material: presence, address and

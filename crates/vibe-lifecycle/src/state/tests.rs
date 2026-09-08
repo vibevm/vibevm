@@ -21,6 +21,10 @@ use self::support::{config, context, dependency_row, row};
 mod declaration;
 
 #[cfg(test)]
+#[path = "tests/declaration_pass_kind.rs"]
+mod declaration_pass_kind;
+
+#[cfg(test)]
 #[path = "tests/inputs.rs"]
 mod inputs;
 

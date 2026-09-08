@@ -1,6 +1,8 @@
 //! Epoch/domain-separated deterministic execution fingerprints.
 
 mod declaration;
+#[cfg(test)]
+pub(crate) use declaration::pass_payload_fingerprint_for_test;
 pub(crate) mod inputs;
 #[cfg(test)]
 pub(crate) mod legacy;
