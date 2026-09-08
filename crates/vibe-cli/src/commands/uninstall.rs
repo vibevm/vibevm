@@ -143,18 +143,26 @@ pub fn run(ctx: &output::Context, args: UninstallArgs) -> Result<()> {
         .retain(|r| !(r.group.as_ref() == Some(group) && r.name == pkgref.name));
     lockfile.meta.generated_at = crate::commands::init::current_timestamp_utc();
 
-    // Drop the `[requires]` declaration from the project manifest.
+    // Drop the `[requires]` declaration from the project manifest. Once the
+    // destructive slot removal has happened, the durable lock and manifest
+    // must truthfully name the remaining installed world before any boot
+    // regeneration re-observes ambient durable state. A failed regeneration
+    // may leave stale, reparable boot output; it must not retain a false lock
+    // row for a slot that is already gone.
     let manifest_changed = drop_from_manifest_requires(&mut manifest, group, &pkgref.name);
+    lockfile.write(workspace.lockfile_path())?;
     if manifest_changed {
         manifest.write(project_root.join(Manifest::FILENAME))?;
     }
 
     // Regenerate every node's boot artifacts from the remaining
-    // materialised state — the uninstalled package is gone from boot.
+    // materialised state — the uninstalled package is gone from boot. Re-open
+    // the workspace so neither its manifest nor lock snapshot can retain the
+    // just-pruned package across this durable-world boundary.
+    let workspace = Workspace::discover(&project_root)
+        .context("rediscovering the pruned workspace before boot regeneration")?;
     regenerate_boot_with_spec_format(&workspace, spec_format)
         .context("regenerating boot artifacts")?;
-
-    lockfile.write(workspace.lockfile_path())?;
 
     let package = format!("{group}/{}", pkgref.name);
     let adoption_facts =
