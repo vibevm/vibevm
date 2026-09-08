@@ -236,6 +236,91 @@ read a VibeVM-sanctioned source and attach the secret only at VibeVM's owned TLS
 transport boundary. Naming a secret source is never permission to place its
 contents in a provider argv, environment, request envelope, log or receipt.
 
+### 3.3 Package-supplied native provider — ratified R8-PROVIDER-FREEZE (2026-09-08)
+
+**Decision.** R8 provider replacement is accepted only when a real
+package-supplied native mechanism provider crosses the production selection,
+artifact-admission, loader and invocation path. A fake provider or
+test-injected loader is useful component evidence but is not commissioning
+evidence: it cannot prove that an installed package can actually displace a
+builtin mechanism and execute.
+
+The transport reuses native ABI 1's four C symbols and the existing
+`NativeLoader`; it does not introduce a second dynamic-library loader or a Rust
+ABI. Canonical immutable image publication, the process cache, ABI-before-
+manifest admission, panic containment, bounded reply ownership, reply-size cap
+and exactly-once `vibe_ext_free` law remain unchanged. Mechanisms use a separate
+generated `NativeMechanismManifest`, selected by a new safe SDK macro. One
+cdylib belongs to one ABI family: a lifecycle, compiler or mechanism image may
+not declare entries from either of the other families.
+
+The wire lands deploy-first and remains JTD-first and versioned. It comprises
+the mechanism manifest plus operation-tagged request and reply roots covering
+exactly the six already-frozen operations: `plan`, `fingerprint`, `apply`,
+`verify`, `remove` and `recover`. This freeze fixes those roots and their
+separation from the lifecycle/compiler roots; it deliberately does not invent
+their field-level schema. R8-PROVIDER-WIRE owns that spelling and the generated
+readers under the asymmetry below.
+
+ABI-1 evolution is deliberately asymmetric at object-member boundaries. The
+host-authored request is a foreign document to the package, and the package-
+authored `NativeMechanismManifest` is a foreign document to the host; both
+readers ignore unknown object members so either side can add members within ABI
+1. The package reply is host-read and therefore rejects unknown members. This
+permissiveness never opens a vocabulary or semantic shortcut: closed enums,
+required members and types, operation/status discrimination, request/reply
+pairing and every relational manifest/selection admission remain strict in all
+three roots.
+
+After §3.1 resolves the one exact mechanism row, its provider pin and retained
+package identity authorize artifact resolution. The immutable artifact and the
+generated mechanism manifest are admitted against that exact selected
+mechanism, role, protocol and supported operation before invocation. No
+manifest entry, image or cached handle can substitute for another selected
+provider merely because it implements the same logical mechanism name.
+
+Carriage reuses the accepted R5.3 native artifact path exactly. After host-OS
+projection and selection of the exact mechanism row, resolution chooses the
+declared current-platform prebuilt first, otherwise the existing source
+fallback; source builds occur under the provider root at the build fence. The
+shared artifact record and its existing revalidation authorize the result,
+which is then published as the immutable digest-addressed image before
+`NativeLoader` admission. There is no second native resolver, build cache,
+artifact-filename guess, or provider record plane. A hand-placed fixture DLL
+that bypasses package resolution, the build fence, record revalidation or
+immutable publication is not E2E evidence.
+
+The engine continues to own the complete plan, ordering, artifact and
+destination locks, collision decisions, intent and receipt persistence,
+recovery, inverse sequencing and resource validation. A provider answers only
+the requested operation and returns bounded typed evidence; it cannot mint
+engine state, weaken ownership, choose a different target or claim recovery the
+engine did not perform. Errors and observability name bounded provider,
+operation and admission facts and never log request/reply bodies, secrets or
+unbounded plugin text.
+
+Host applicability is settled before native work: an inactive OS target is
+projected out before provider selection, source build, immutable-image
+publication, library load or invocation. It creates no provider side effect and
+cannot become commissioning evidence.
+
+Implementation is five serial atoms:
+
+1. **R8-PROVIDER-FREEZE** — this ratified boundary;
+2. **R8-PROVIDER-WIRE** — versioned JTD mechanism manifest and the six
+   request/reply operation roots;
+3. **R8-PROVIDER-SDK** — the safe mechanism-family export macro over ABI 1;
+4. **R8-PROVIDER-CARRIAGE** — exact selection, artifact/manifest admission and
+   production native invocation for deploy;
+5. **R8-PROVIDER-E2E** — a real installed fixture provider displaces the
+   builtin and completes the engine-owned deploy/inverse evidence path.
+
+Build- and package-role native provider transport is explicitly deferred after
+this deploy commissioning sequence. The common wire may reserve their lawful
+operations, but FREEZE through E2E makes no claim that either role is carried or
+invoked; later atoms extend transport without reopening the engine-owned plan,
+lock, collision, record or recovery laws above.
+
 ## 4. Artifact graph and registry
 
 The manifest declares desired producers; the run carries actual artifacts.
