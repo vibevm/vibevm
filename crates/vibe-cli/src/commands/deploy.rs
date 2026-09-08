@@ -54,8 +54,8 @@ pub(crate) use profile::resolve_profile;
 pub(crate) fn resolve_authority(
     deploy: Option<&vibe_core::manifest::DeploySection>,
     profile: Option<&str>,
+    os: TargetOs,
 ) -> Result<Option<vibe_orchestrator::DeployAuthority>> {
-    let os = current_target_os()?;
     let Some(resolution) = resolve_profile(deploy, profile, profile::ProfileMode::Forward(os))?
     else {
         return Ok(None);

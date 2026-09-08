@@ -17,6 +17,7 @@ use specmark::spec;
 use std::sync::Arc;
 
 use anyhow::{Context, Result};
+use vibe_core::manifest::TargetOs;
 use vibe_lifecycle::{AgentBackend, LifecycleLease, Phase, RunMetadata};
 use vibe_wire::generated::lifecycle_report::{
     LifecycleContributionReport, LifecycleDelegation, LifecycleStepReport,
@@ -41,6 +42,7 @@ use crate::values::{
 };
 use crate::{dispatch, world};
 
+mod applicability;
 /// The prerequisite install's collector, and the law over its captured tree.
 mod prerequisite;
 
@@ -95,6 +97,8 @@ pub struct PhaseRun<'a> {
     pub agent: Arc<dyn AgentBackend>,
     /// The surface's compile-trace recorder, borrowed.
     pub trace: Option<&'a TraceRun>,
+    /// Host OS observed once by the outer lifecycle command.
+    pub target_os: TargetOs,
     /// Everything the COMMAND LAYER resolved for this run's deploy half,
     /// when it resolved any (§7.0.5: "Profile resolution happens ONCE, in
     /// the command layer that owns flags, and travels as data"; §6.3.0.6:
@@ -261,6 +265,7 @@ fn run(inputs: PhaseRun<'_>, measured: &mut Measured) -> Result<Outcome> {
         manifest_mutation,
         agent,
         trace,
+        target_os,
         deploy,
         observed_at,
     } = inputs;
@@ -282,28 +287,12 @@ fn run(inputs: PhaseRun<'_>, measured: &mut Measured) -> Result<Outcome> {
     // reading them here keeps the boundary's no-manifest-below-the-surface rule
     // exactly as it was.
     let artifacts = manifest.artifacts.clone();
-    // The legacy `[[binary]]` rows and the declared deploy targets, taken
+    // The legacy `[[binary]]` rows, taken
     // off the SAME proven manifest and in the same breath as the artifact
     // graph — §7.0.7's lowering call site and the deploy fence's target
     // set both read them, and a second manifest read would be a second
     // answer.
     let binaries = manifest.binaries.clone();
-    let deploy_targets = manifest
-        .deploy
-        .as_ref()
-        .map(|section| section.targets.clone())
-        .unwrap_or_default();
-    // The deploy carriage: the command layer's resolved selection plus the
-    // engine's own state home and identity. Assembled once, here, from the
-    // proven manifest — never re-derived below.
-    let deploy_carriage = match deploy {
-        Some(authority) => Some(DeployCarriage::assemble(authority, &manifest)?),
-        None => None,
-    };
-    // §7.0.7's lowering, at the assembly that arms the fences: a legacy
-    // `[[binary]]` IS a build target after this call, so the executor has
-    // no legacy case.
-    let build_targets = lower_binaries(artifacts.as_ref(), &binaries)?;
     // ---- the agreement gate, before validate and before any state work ---
     //
     // `run_phases` is a PUBLIC entry point, and a validate-only chain reaches
@@ -321,6 +310,17 @@ fn run(inputs: PhaseRun<'_>, measured: &mut Measured) -> Result<Outcome> {
         observed_selected.as_deref(),
         "at phase execution",
     )?;
+    let project_packages = phases.contains(&Phase::Package) || deploy.is_some();
+    let package_artifacts = project_packages.then_some(artifacts.as_ref()).flatten();
+    let projected = applicability::project(&manifest, package_artifacts, deploy, target_os)?;
+    notices.extend(projected.notices);
+    let package_targets = projected.package_targets;
+    let deploy_targets = projected.deploy_targets;
+    let deploy_carriage = match projected.deploy {
+        Some(authority) => Some(DeployCarriage::assemble(authority, &manifest)?),
+        None => None,
+    };
+    let build_targets = lower_binaries(artifacts.as_ref(), &binaries)?;
     let prelude_workspace = workspace.clone();
     // Rebound into the bundle for the prerequisite install: the pair this run
     // just proved, never two fields the install could be handed separately.
@@ -474,16 +474,14 @@ fn run(inputs: PhaseRun<'_>, measured: &mut Measured) -> Result<Outcome> {
     let targets = MechanismTargets {
         project_root: &project_root,
         build: &build_targets,
-        package: artifacts.as_ref().map_or(
-            &[] as &[vibe_core::manifest::ArtifactPackageTarget],
-            |section| &section.package,
-        ),
+        package: &package_targets,
         deploy_targets: &deploy_targets,
         registry: &ritual.mechanisms,
         routes: &ritual.mechanism_routes,
         native_candidates: &ritual.native_candidates,
         native_platform,
         native: native_install,
+        target_os,
         offline: metadata.offline,
         created_at: &created_at,
         deploy: deploy_carriage.as_ref(),

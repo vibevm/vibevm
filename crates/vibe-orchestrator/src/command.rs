@@ -29,7 +29,7 @@ use std::sync::Arc;
 
 use anyhow::Result;
 use specmark::spec;
-use vibe_core::manifest::Manifest;
+use vibe_core::manifest::{Manifest, TargetOs};
 use vibe_lifecycle::inclusive_chain;
 use vibe_lifecycle::{AgentBackend, LifecycleLease, Phase, RunMetadata};
 use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
@@ -444,9 +444,10 @@ impl PreparedDefaultLifecycle {
     /// #     prepared: PreparedDefaultLifecycle,
     /// #     ports: DefaultLifecyclePorts<'_>,
     /// #     trace: Option<&vibe_workspace::compile_trace::TraceRun>,
+    /// #     target_os: vibe_core::manifest::TargetOs,
     /// #     observed_at: vibe_wire::generated::shared::Timestamp,
     /// # ) -> PhaseOutcome {
-    /// prepared.run(ports, trace, observed_at, None)
+    /// prepared.run(ports, trace, target_os, observed_at, None)
     /// # }
     /// # let _ = go;
     /// ```
@@ -454,6 +455,7 @@ impl PreparedDefaultLifecycle {
         self,
         ports: DefaultLifecyclePorts<'_>,
         trace: Option<&TraceRun>,
+        target_os: TargetOs,
         observed_at: Timestamp,
         deploy: Option<crate::DeployAuthority>,
     ) -> PhaseOutcome {
@@ -488,6 +490,7 @@ impl PreparedDefaultLifecycle {
             manifest_mutation,
             agent,
             trace,
+            target_os,
             deploy,
             observed_at,
         })

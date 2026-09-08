@@ -7,6 +7,7 @@
 //! `manifested` — is the one next door's, borrowed rather than copied.
 use std::sync::Arc;
 
+use vibe_core::manifest::TargetOs;
 use vibe_lifecycle::{AgentBackend, Phase, RunMetadata};
 use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
 
@@ -40,13 +41,18 @@ fn run_phases_over(root: &std::path::Path, phases: Vec<Phase>) -> PhaseOutcome {
     run_deploying(root, phases, None)
 }
 
-/// The same drive again, carrying the deploy half a command layer would
-/// have resolved — §7.0.5's "travels as data" and §6.3.0.6's injected home
-/// and client executables, from the position that surface hands them in at.
 fn run_deploying(
     root: &std::path::Path,
     phases: Vec<Phase>,
     deploy: Option<crate::DeployAuthority>,
+) -> PhaseOutcome {
+    run_deploying_on(root, phases, deploy, TargetOs::Linux)
+}
+pub(in crate::phase) fn run_deploying_on(
+    root: &std::path::Path,
+    phases: Vec<Phase>,
+    deploy: Option<crate::DeployAuthority>,
+    target_os: TargetOs,
 ) -> PhaseOutcome {
     let root = match resolve_project_root(root) {
         Ok(root) => root,
@@ -103,6 +109,7 @@ fn run_deploying(
         manifest_mutation: &NoManifestMutation,
         agent,
         trace: None,
+        target_os,
         deploy,
         observed_at: match "2026-08-30T12:00:05Z".parse() {
             Ok(instant) => instant,

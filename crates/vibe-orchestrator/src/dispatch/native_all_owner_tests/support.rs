@@ -93,6 +93,7 @@ impl Fixture {
             manifest_mutation: &NoManifestMutation,
             agent: Arc::new(vibe_lifecycle::NoAgentBackend),
             trace: None,
+            target_os: vibe_core::manifest::TargetOs::Linux,
             deploy: None,
             observed_at: "2026-09-08T00:00:00Z".parse().unwrap(),
         })

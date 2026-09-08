@@ -10,6 +10,7 @@ use std::path::Path;
 
 use anyhow::{Context, Result};
 use specmark::spec;
+use vibe_core::manifest::TargetOs;
 use vibe_core::user_config::UserConfig;
 use vibe_lifecycle::{LifecycleRequest, LifecycleStep, Phase, RunMetadata};
 
@@ -101,6 +102,7 @@ pub fn run(
     let agent: std::sync::Arc<dyn vibe_lifecycle::AgentBackend> = std::sync::Arc::new(
         install_agent_backend_from(prepared.workspace_root(), prepared.selected_manifest()),
     );
+    let target_os = current_target_os()?;
     // §7.0.5's ONE profile resolution, at the only place that owns both
     // halves: the flag this surface parsed and the cell's own manifest
     // snapshot. It happens exactly here — after the snapshot exists and
@@ -111,6 +113,7 @@ pub fn run(
                 .selected_manifest()
                 .and_then(|manifest| manifest.deploy.as_ref()),
             request.profile.as_deref(),
+            target_os,
         )?,
         None => None,
     };
@@ -143,6 +146,7 @@ pub fn run(
                 agent,
             },
             preparation.recorder(),
+            target_os,
             // The SAME injected clock the trace preparation and the finish
             // read: nothing below this surface reads time.
             now(),
@@ -376,6 +380,7 @@ fn execute(
         args: &install_args,
     };
     let environment = CliRegistryEnvironment::new(prepare_install);
+    let target_os = current_target_os()?;
     let deploy_selection = match deploy {
         Some(request) => super::deploy::resolve_authority(
             prelude
@@ -383,6 +388,7 @@ fn execute(
                 .parsed_ref()
                 .and_then(|manifest| manifest.deploy.as_ref()),
             request.profile.as_deref(),
+            target_os,
         )?,
         None => None,
     };
@@ -410,6 +416,7 @@ fn execute(
             manifest_mutation: &super::install::NoManifestMutation,
             agent,
             trace: preparation.recorder(),
+            target_os,
             // §7.0.5's ONE resolution, from this epoch's own re-proven
             // snapshot: a clean-prefixed deploy resolves its profile
             // exactly as the bare verb does, and against the manifest the
@@ -432,6 +439,12 @@ fn execute(
 /// `Drop` that invents a timestamp.
 fn now() -> vibe_wire::generated::shared::Timestamp {
     chrono::Utc::now()
+}
+
+fn current_target_os() -> Result<TargetOs> {
+    TargetOs::current().context(
+        "this host OS is outside the supported lifecycle applicability set: windows, linux, macos",
+    )
 }
 
 /// Classify the already-neutral shared phase outcome into this command's

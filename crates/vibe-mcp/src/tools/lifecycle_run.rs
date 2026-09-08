@@ -22,6 +22,7 @@ mod ports;
 use serde::Deserialize;
 use serde_json::{Value, json};
 use specmark::{cell, spec};
+use vibe_core::manifest::TargetOs;
 use vibe_lifecycle::{DEFAULT_PHASES, Phase};
 use vibe_orchestrator::failure::Measurement;
 use vibe_orchestrator::trace::CommandExit;
@@ -119,6 +120,9 @@ impl McpTool for LifecycleRunMcpTool {
             },
         )
         .map_err(|error| ToolError::PreExecution(format!("{error:#}")))?;
+        let target_os = TargetOs::current().ok_or_else(|| {
+            ToolError::PreExecution("host OS applicability is unsupported".to_owned())
+        })?;
         // The prepared metadata is the projection a Slot/InstallBarrier
         // failure borrows for its report; the hosted backend is built from
         // the leased workspace root ONLY — the paid manifest accessor is
@@ -149,6 +153,7 @@ impl McpTool for LifecycleRunMcpTool {
                 agent,
             },
             preparation.recorder(),
+            target_os,
             // The same injected clock the trace preparation and finish read:
             // this surface owns time, the engine below it never does.
             trace_clock(),

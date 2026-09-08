@@ -12,7 +12,7 @@ use anyhow::{Context, Result, bail};
 use specmark::spec;
 use vibe_core::manifest::{
     ArtifactBuildTarget, ArtifactPackageTarget, ArtifactsSection, BinaryDecl, DeployTarget,
-    Manifest, MechanismRoutes, build_target_for_binary,
+    Manifest, MechanismRoutes, TargetOs, build_target_for_binary,
 };
 use vibe_lifecycle::native::{NativeBuildExecution, NativePlatform, build_native_sources};
 use vibe_lifecycle::{
@@ -98,6 +98,8 @@ pub(crate) struct MechanismTargets<'a> {
     pub(crate) native_platform: Option<NativePlatform>,
     /// Exact install epoch and sealed replay, moved into this dispatch once.
     pub(crate) native: Option<NativeInstallContext>,
+    /// Command-observed OS whose projection produced package/deploy slices.
+    pub(crate) target_os: TargetOs,
     /// The run's effective offline posture.
     pub(crate) offline: bool,
     /// The run's injected instant, in the RFC 3339 spelling every record
@@ -345,6 +347,13 @@ impl<'targets> Fences<'targets> {
             return Ok(());
         }
         self.package = None;
+        anyhow::ensure!(
+            self.targets.package.iter().all(|target| target
+                .when
+                .as_ref()
+                .is_none_or(|when| when.applies_to(self.targets.target_os))),
+            "internal: package fence received a target inactive on the injected host OS"
+        );
         execute_package_targets(&PackageExecution {
             project_root: self.targets.project_root,
             targets: self.targets.package,

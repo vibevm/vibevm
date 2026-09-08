@@ -164,7 +164,7 @@ fn an_ordinary_error_passes_through_and_adds_no_rows() {
 /// The mutation this kills is deleting `ensure_selected` (or `ensure_root`)
 /// from the top of the executed region: without it the run proceeds and returns
 /// `Completed`, so the refusal below never happens.
-mod validate_only_gate {
+pub(super) mod validate_only_gate {
     use std::sync::Arc;
 
     use vibe_lifecycle::process::StreamMode;
@@ -275,7 +275,7 @@ mod validate_only_gate {
     }
 
     /// One temp project carrying exactly the given manifest.
-    pub(super) fn manifested(manifest: &str) -> tempfile::TempDir {
+    pub(in crate::phase) fn manifested(manifest: &str) -> tempfile::TempDir {
         let dir = tempfile::tempdir().unwrap();
         std::fs::write(dir.path().join("vibe.toml"), manifest).unwrap();
         dir
@@ -327,6 +327,7 @@ mod validate_only_gate {
             manifest_mutation: &NoManifestMutation,
             agent,
             trace: None,
+            target_os: vibe_core::manifest::TargetOs::Linux,
             deploy: None,
             observed_at: "2026-08-28T12:00:05Z".parse().expect("a fixture instant"),
         });
@@ -376,4 +377,4 @@ mod validate_only_gate {
 /// observation needs no file-writing handler, no real compile and no clock —
 /// only the `log` builtin and a target whose own refusal is deterministic.
 #[path = "mechanism_wiring_tests.rs"]
-mod mechanism_wiring;
+pub(super) mod mechanism_wiring;
