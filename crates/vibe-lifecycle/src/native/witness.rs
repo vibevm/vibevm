@@ -94,18 +94,24 @@ pub(super) fn source_witness_digest(
                     reason: "installed dependency has no locked content_hash".to_owned(),
                 })
         }
-        ProviderHome::Host => {
-            vibe_registry::compute_content_hash_with(RecipeId::Tree1, provider.root()).map_err(
-                |error| NativeArtifactError::SourceWitness {
+        ProviderHome::Host => match &provider.content_hash {
+            Some(content_hash) => Ok(content_hash.clone()),
+            None => vibe_registry::compute_content_hash_with(RecipeId::Tree1, provider.root())
+                .map_err(|error| NativeArtifactError::SourceWitness {
                     provider: provider.identity.clone(),
                     reason: error.to_string(),
-                },
-            )
-        }
+                }),
+        },
     }?;
     validate_content_hash(provider, &content_hash)?;
     let mut hash = Frame::new(SOURCE_DOMAIN);
     hash.field("content_hash", content_hash.as_bytes());
+    // A retained package self-view executes from the host seat but carries its
+    // immutable slot hash. Keep that stable witness distinct from dependency
+    // consumers of the same materialized source.
+    if provider.home == ProviderHome::Host && provider.content_hash.is_some() {
+        hash.field("relative_root", b"project");
+    }
     Ok(hash.finish())
 }
 

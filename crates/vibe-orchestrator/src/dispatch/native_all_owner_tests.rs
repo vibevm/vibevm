@@ -104,3 +104,93 @@ fn provider_pin_conflict_refuses_before_any_build_or_target_side_effect() {
     assert!(!fixture.observer_exists());
     assert_eq!(fixture.native_outputs(), before, "preflight writes nothing");
 }
+
+#[derive(Clone, Copy, Debug)]
+enum FenceFailure {
+    NativeBuild,
+    ReplayPrepare,
+    AuthoredTarget,
+}
+
+#[test]
+fn complete_fence_failures_preserve_their_exact_boundary_and_suppress_later_rows() {
+    for failure in [
+        FenceFailure::NativeBuild,
+        FenceFailure::ReplayPrepare,
+        FenceFailure::AuthoredTarget,
+    ] {
+        let fixture = Fixture::new(false);
+        match failure {
+            FenceFailure::NativeBuild => fixture.break_native_source(),
+            FenceFailure::ReplayPrepare => fixture.make_replay_fail(),
+            FenceFailure::AuthoredTarget => fixture.break_authored_target(),
+        }
+        let context = fixture.native_context();
+        let pending = fixture.native_outputs();
+        drop(context);
+        let repeated = fixture.native_context();
+        assert_eq!(
+            fixture.native_outputs(),
+            pending,
+            "{failure:?} repeated Collect is byte-stable before the fence"
+        );
+        drop(repeated);
+
+        let outcome = fixture.run();
+        let crate::PhaseOutcome::Failed {
+            measurement,
+            original,
+            ..
+        } = outcome
+        else {
+            panic!("{failure:?} must stop the complete fence")
+        };
+        let rows = match measurement {
+            crate::failure::Measurement::Lifecycle { rows, .. } => rows,
+            other => panic!("{failure:?} remains lifecycle-shaped: {other:?}"),
+        };
+        assert!(
+            rows.iter().all(|row| !row.key.ends_with("#after")),
+            "{failure:?} suppresses the later phase row: {rows:?}"
+        );
+        let rendered = format!("{original:#}");
+        match failure {
+            FenceFailure::NativeBuild => {
+                assert!(
+                    rendered.contains("building native source group"),
+                    "{rendered}"
+                );
+                assert_eq!(fixture.native_record_count(), 0);
+                assert!(!fixture.observer_exists());
+                assert_eq!(fixture.native_outputs(), pending);
+            }
+            FenceFailure::ReplayPrepare => {
+                assert!(
+                    rendered.contains("converging pending compiler-native boot artifacts"),
+                    "{rendered}"
+                );
+                assert_eq!(fixture.native_record_count(), 2);
+                assert!(!fixture.observer_exists());
+                assert_eq!(fixture.native_outputs(), pending);
+            }
+            FenceFailure::AuthoredTarget => {
+                assert!(
+                    rendered.contains("executing the declared [[artifacts.build]] targets"),
+                    "{rendered}"
+                );
+                assert_eq!(fixture.native_record_count(), 2);
+                assert!(
+                    fixture.observer_exists(),
+                    "the failing authored target observed converged boot before rustc refused"
+                );
+                for (owner, files) in fixture.native_outputs() {
+                    let output = output_text(&files);
+                    assert!(
+                        !output.contains("vibe:transforms-pending"),
+                        "{owner}: {output}"
+                    );
+                }
+            }
+        }
+    }
+}

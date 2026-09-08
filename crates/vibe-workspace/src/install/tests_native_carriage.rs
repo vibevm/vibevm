@@ -8,6 +8,22 @@ use super::*;
 #[test]
 fn install_entry_returns_the_supplied_epoch_and_all_owner_build_plan() {
     let graph = native_graph();
+    let source_root = graph
+        .resolution
+        .iter()
+        .find(|dependency| dependency.name == "middle")
+        .expect("native source owner")
+        .content_dir
+        .join("native");
+    write(
+        &source_root.join("Cargo.toml"),
+        "[package]\nname='install-must-not-build'\nversion='0.1.0'\nedition='2024'\nbuild='build.rs'\n[lib]\ncrate-type=['cdylib']\n",
+    );
+    write(&source_root.join("src/lib.rs"), "pub fn marker() {}\n");
+    write(
+        &source_root.join("build.rs"),
+        "fn main(){std::fs::write(std::path::Path::new(env!(\"CARGO_MANIFEST_DIR\")).join(\"cargo-ran\"),\"ran\").unwrap();}\n",
+    );
     let world = ExtensionWorldEpoch::from_resolution(&graph.workspace.root, &graph.resolution)
         .expect("supplied install world");
     let facts = OwnerRuntimeRunFacts {
@@ -35,6 +51,11 @@ fn install_entry_returns_the_supplied_epoch_and_all_owner_build_plan() {
     let index =
         fs::read_to_string(unit_file(&graph, "middle", "INDEX.md")).expect("pending unit index");
     assert!(index.contains("vibe:native-pending"), "{index}");
+    assert!(
+        !source_root.join("cargo-ran").exists() && !source_root.join("target").exists(),
+        "direct install seals replay but runs neither Cargo nor replay"
+    );
+    assert!(!carriage.replay_is_empty_for_test());
 }
 
 #[test]

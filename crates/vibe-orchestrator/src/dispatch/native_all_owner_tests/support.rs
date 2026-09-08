@@ -99,6 +99,27 @@ impl Fixture {
         })
     }
 
+    pub(super) fn break_native_source(&self) {
+        write(
+            &self
+                .root
+                .path()
+                .join("vibevm/vibedeps/org.demo.compiler/1.0.0/native/src/lib.rs"),
+            "this is not valid Rust\n",
+        );
+    }
+
+    pub(super) fn make_replay_fail(&self) {
+        write_compiler_source(self.root.path(), true);
+    }
+
+    pub(super) fn break_authored_target(&self) {
+        write(
+            &self.root.path().join("observer/src/main.rs"),
+            "this is not valid Rust\n",
+        );
+    }
+
     pub(super) fn native_context(&self) -> crate::install::NativeInstallContext {
         let workspace = vibe_workspace::Workspace::load(self.root.path()).unwrap();
         let slot = self
@@ -277,9 +298,18 @@ fn seed_compiler(root: &Path) {
             "[package]\nname='compiler-fixture'\nversion='1.0.0'\nedition='2024'\n[lib]\ncrate-type=['cdylib']\n[dependencies]\nvibe-ext={{path={vibe_ext:?}}}\n"
         ),
     );
+    write_compiler_source(root, false);
+}
+
+fn write_compiler_source(root: &Path, fail: bool) {
+    let body = if fail {
+        "use vibe_ext::{CompileReply,CompileReplyFail,CompileRequest,Manifest,ManifestExtension};fn manifest()->Manifest{Manifest{extensions:vec![ManifestExtension{id:\"native\".into(),point:\"compile:emitted\".into(),ir_schema:Some(1)}]}}fn handle(_:CompileRequest)->CompileReply{CompileReply::Fail(Box::new(CompileReplyFail{envelope:1,message:Some(\"replay refusal\".into())}))}vibe_ext::vibe_compile_extension!(manifest=manifest(),handler=handle);\n"
+    } else {
+        "use vibe_ext::{CompileReply,CompileReplyOk,CompileRequest,Manifest,ManifestExtension};fn manifest()->Manifest{Manifest{extensions:vec![ManifestExtension{id:\"native\".into(),point:\"compile:emitted\".into(),ir_schema:Some(1)}]}}fn handle(r:CompileRequest)->CompileReply{CompileReply::Ok(Box::new(CompileReplyOk{envelope:1,payload:r.payload,message:None}))}vibe_ext::vibe_compile_extension!(manifest=manifest(),handler=handle);\n"
+    };
     write(
-        &slot.join("native/src/lib.rs"),
-        "use vibe_ext::{CompileReply,CompileReplyOk,CompileRequest,Manifest,ManifestExtension};fn manifest()->Manifest{Manifest{extensions:vec![ManifestExtension{id:\"native\".into(),point:\"compile:emitted\".into(),ir_schema:Some(1)}]}}fn handle(r:CompileRequest)->CompileReply{CompileReply::Ok(Box::new(CompileReplyOk{envelope:1,payload:r.payload,message:None}))}vibe_ext::vibe_compile_extension!(manifest=manifest(),handler=handle);\n",
+        &root.join("vibevm/vibedeps/org.demo.compiler/1.0.0/native/src/lib.rs"),
+        body,
     );
 }
 

@@ -28,6 +28,9 @@ use super::native_managed::{
 mod support;
 pub(crate) use support::{FakePolicyKind, FakeProvider, FakeReplayFactory, Reply};
 
+#[path = "native_managed_unit_parity_tests.rs"]
+mod unit_parity;
+
 #[derive(Default)]
 struct Observer {
     emissions: Mutex<Vec<(usize, usize, usize)>>,
