@@ -3,9 +3,12 @@
 _Amendment queue, opened 2026-08-25. This file is not authoritative. The R1
 items in §§1–4 and the corresponding §5 status moves were applied at their
 stable owning anchors on 2026-09-08 from landed evidence `6d606ef2`,
-`1cf4f189`, `6a7f750d`, `4503fdb6` and `9c545f0d`. `##AMENDMENT-PLAN` and §6
-remain open for their later lifecycle owners; §§8 onward are untouched by this
-R1 disposition._
+`1cf4f189`, `6a7f750d`, `4503fdb6` and `9c545f0d`. The §6 reconciliation has
+now also been applied at its owning PROP-024/025/054 anchors; its dated R1
+deferred bodies below remain provenance, while the separate M-007 foreign
+build/package boundary stays open in the R7/R8 continuation. `##AMENDMENT-PLAN`
+remains the historical queue and §§8 onward were untouched by the R1
+disposition._
 
 ## 0. Scope and evidence boundary
 

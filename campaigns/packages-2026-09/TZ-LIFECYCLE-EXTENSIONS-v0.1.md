@@ -1,7 +1,7 @@
 # ТЗ: lifecycle-движок и машина расширений — входная точка исполнителя
 
-_STATUS: В РАБОТЕ — R1–R5 и R7 завершены; R6.1–R6.4 и R6.5 A–C2
-приняты, R6.5-D остаётся открытым. В R8 приняты artifact/package/deploy
+_STATUS: В РАБОТЕ — R1–R7 завершены, включая R6.5-D public compiler
+commissioning (`ee7f6f2d`, `def9909a`, `56307492`). В R8 приняты artifact/package/deploy
 builtins, platform applicability и нативный deploy-provider с read-only
 rehydration; обязательные M-007 native transports для build/package остаются
 открытыми, поэтому R8 и финальный gate не закрыты.
@@ -258,9 +258,9 @@ Pending→одна сборка→Fresh и failure/retry — `2e6bb266`.
 
 ### R6 — pass-ярус (спека §7.4; `vibe-spec` + `vibe-core`)
 
-**Статус 2026-09-08:** R6.1–R6.4 и R6.5 A–C2 приняты через
-`b2a6efb5`…`0797c4ca`. Открыт только R6.5-D: публичный TXT+JSON command,
-негативная матрица и регрессия R5.
+**Статус 2026-09-08: принят полностью.** R6.1–R6.4 и R6.5 A–C2 приняты через
+`b2a6efb5`…`0797c4ca`; D1 public command — `ee7f6f2d`, hybrid-plan repair —
+`def9909a`, D2 genuine installed TXT→JSON commissioning — `56307492`.
 
 - **Ш6.1 — валидация флага** `compiler_internals` (§14.1-строки; red-proof: `pass` без
   флага — отказ с ремедиацией).
@@ -271,13 +271,17 @@ Pending→одна сборка→Fresh и failure/retry — `2e6bb266`.
   .md/.xml; backend по имени `emit:*`).
 - **Ш6.4 — verifier включён** между плагин-пассами (невыключаем из манифеста; red-proof:
   фикстурный пасс, ломающий уникальность якорей, падает СВОИМ именем).
-- **Ш6.5 — e2e**: фронтенд `.txt` (строка = параграф, титул из имени файла) — документ
-  пакета входит в лейн и адресуется `spec://…`; JSON-бэкенд лейна; `vibe extensions`
-  показывает internals-вклады.
-  **Демо волны:** фикстурный пакет с `.txt`-доком и флагом → `vibe install` → нода в
-  STATIC.xml, `vibe show lane --json` (бэкенд) отдаёт лейн машинно; без флага — отказ.
-  Коммиты: `feat(vibe-spec): the pass tier — full IR behind one conspicuous flag` (+
-  дробление по шагам).
+- **Ш6.5 — e2e**: фронтенд `.txt` (непустая физическая строка = параграф,
+  пустые строки пропускаются, титул из физического имени файла, корневой anchor
+  `root`) — UTF-8 документ установленного normal-format пакета входит в лейн и
+  адресуется `spec://…`; JSON-бэкенд лейна выбирается точным id.
+  **Фактическое демо волны:** `vibe extensions compile --backend <id> --out -|<file>`
+  пишет deterministic newline-terminated bytes в stdout либо атомарно пишет те
+  же байты в файл. Без `compiler_internals`, без host activation, с неверным
+  artifact/image, при catalog/physical collision или неверном frontend output —
+  типизированный отказ; неверный frontend останавливает backend и сохраняет prior
+  output. R5 all-owner parity/retry остаётся зелёным.
+  Коммиты завершения: `ee7f6f2d`, `def9909a`, `56307492`.
 
 ### R7 — create и агентный ярус (спека §6.4–§6.5; `vibe-llm` + `vibe-lifecycle` + `vibe-mcp`)
 

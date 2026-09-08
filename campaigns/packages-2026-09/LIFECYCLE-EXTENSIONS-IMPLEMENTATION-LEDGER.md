@@ -5,8 +5,9 @@ map for `TZ-LIFECYCLE-EXTENSIONS-v0.1.md`; PROP-054 remains semantic authority.
 `SPEC-DEBT-LIFECYCLE*.md` remains the amendment queue. A row is complete only
 with landed commit, source, and decisive test evidence._
 
-Current boundary: R1–R5 and R7 are accepted. R6.1–R6.4 and R6.5 A–C2 are
-accepted through `0797c4ca`; R6.5-D remains open. R8's artifact/package/deploy
+Current boundary: R1–R7 are accepted. R6.5-D closes the compiler tier with
+public selected-backend compilation `ee7f6f2d`, hybrid pass-plan retention
+`def9909a` and genuine installed TXT→JSON commissioning `56307492`. R8's artifact/package/deploy
 builtins, platform applicability and real native deploy-provider adapter plus
 read-only rehydration are accepted through `d475963c`, but M-007 native
 build/package provider transport remains open. Neither R8 nor final acceptance
@@ -1669,7 +1670,7 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 | R6.2b strict domain conversion | done | `17afb5b6`; lossless `AnyIr` projection, all fifteen ordered gates, production replay at 12–14, emitted identity/framing at 15, owned custom targets, bounded hostile diagnostics and independent final freeze |
 | R6.3 before/after/replace, frontend/backend | done | schedule edit `e278a043`; one retained PassPlan `03fdbce2`; native execution `1633c8cb`; catalogs `b5434295`; owner runtime carriage `cf51582a` |
 | R6.4 mandatory verifier after plugin passes | done | `8c02dfd8`; production verify-each is unconditional for nonempty plans and invalid output stops at the exact qualified pass |
-| R6.5 `.txt` frontend + JSON lane backend e2e | in progress | A `578b4d9f`, B1 `5eac84c9`, B2 `393d519c`, C1 `ba639210`, C2 `0797c4ca` implement owner-scoped source discovery, selected native frontend/backend execution and manager-owned emitted provenance; D public command/negative/R5 commissioning remains open |
+| R6.5 `.txt` frontend + JSON lane backend e2e | done | A `578b4d9f`, B1 `5eac84c9`, B2 `393d519c`, C1 `ba639210`, C2 `0797c4ca` implement owner-scoped source discovery, selected native frontend/backend execution and manager-owned emitted provenance; D1 `ee7f6f2d` adds public `vibe extensions compile`, `def9909a` retains pass plans through hybrid emission, and D2 `56307492` proves genuine installed first-class TXT→JSON execution, deterministic stdout/atomic-file bytes, the negative matrix and R5 all-owner parity/retry |
 
 ### R7 — provider, create and hosted-agent tier
 
@@ -2191,7 +2192,7 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
 6. R4.2 XML minify binding and full RED corpus. **Done.**
 7. R4.3 analyzer wire/CLI. **Done.**
 8. R5 native wire + SDK; loader; build/prebuilt; bootstrap; parity. **Done through `2e6bb266`.**
-9. R6 executable grammar/positions/frontends/backends/mandatory verifier/e2e. **Implemented through R6.5-C2 `0797c4ca`; R6.5-D public commissioning remains.**
+9. R6 executable grammar/positions/frontends/backends/mandatory verifier/e2e. **Done through R6.5-D: public command `ee7f6f2d`, hybrid-plan repair `def9909a`, installed TXT→JSON commissioning `56307492`.**
 
 ### Lane B — create and hosted agent (parallel after baseline)
 
