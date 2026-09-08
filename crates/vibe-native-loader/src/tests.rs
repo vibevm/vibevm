@@ -503,3 +503,6 @@ fn diagnostics_bound_paths_and_scalars_without_echoing_bodies() {
         .to_string();
     assert!(!message.contains(std::str::from_utf8(&secret).expect("ASCII secret")));
 }
+
+#[path = "tests/mechanism.rs"]
+mod mechanism;

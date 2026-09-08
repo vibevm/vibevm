@@ -13,7 +13,14 @@ use std::path::{Path, PathBuf};
 use std::sync::{Arc, Mutex};
 
 use vibe_core::lifecycle::{CompilePoint, ExtensionPoint};
+use vibe_core::manifest::MechanismKey;
+use vibe_wire::behaviour::native_deploy::{self, DeployOperation};
 use vibe_wire::generated::native::e1::context::Context;
+use vibe_wire::generated::native::e1::deploy_reply::DeployReply;
+use vibe_wire::generated::native::e1::deploy_request::DeployRequest;
+use vibe_wire::generated::native::e1::mechanism_manifest::{
+    MechanismDescriptor, NativeDeployOperation,
+};
 use vibe_wire::generated::native::e1::reply::Reply;
 
 mod admission;
@@ -93,6 +100,79 @@ pub struct NativeCompileInvocation<'a> {
     pub request: &'a [u8],
 }
 
+/// One exact package-supplied deploy mechanism invocation.
+#[derive(Debug, Clone, Copy)]
+pub struct NativeMechanismInvocation<'a> {
+    /// Absolute path of the admitted immutable native image.
+    pub library: &'a Path,
+    /// Exact selected provider identity carried into the request.
+    pub provider: &'a str,
+    /// Exact selected descriptor id.
+    pub mechanism_id: &'a str,
+    /// Exact logical mechanism key selected from the registry.
+    pub logical_key: &'a MechanismKey,
+    /// Generated host-authored request.
+    pub request: &'a DeployRequest,
+}
+
+/// One admitted mechanism image with owned manifest-derived descriptor data.
+pub struct NativeMechanism {
+    library: Arc<dyn LibraryHandle>,
+    display_path: String,
+    provider: String,
+    logical_key: MechanismKey,
+    descriptor: MechanismDescriptor,
+}
+
+impl NativeMechanism {
+    /// The exact owned descriptor selected from the package manifest.
+    pub const fn descriptor(&self) -> &MechanismDescriptor {
+        &self.descriptor
+    }
+
+    /// The exact owned registry key admitted with the descriptor.
+    pub const fn logical_key(&self) -> &MechanismKey {
+        &self.logical_key
+    }
+
+    /// Invoke one admitted operation through the shared ABI-1 response guard.
+    pub fn invoke(&self, request: &DeployRequest) -> Result<DeployReply, NativeLoadError> {
+        let operation =
+            native_deploy::validate_request(request, &self.provider, &self.descriptor.id).map_err(
+                |error| NativeLoadError::MechanismRequestAdmission {
+                    path: self.display_path.clone(),
+                    id: scalar_preview(&self.descriptor.id),
+                    reason: error.to_string(),
+                },
+            )?;
+        if !self
+            .descriptor
+            .operations
+            .contains(&manifest_operation(operation))
+        {
+            return Err(NativeLoadError::MechanismRequestAdmission {
+                path: self.display_path.clone(),
+                id: scalar_preview(&self.descriptor.id),
+                reason: "requested operation is absent from the selected descriptor".to_owned(),
+            });
+        }
+        let encoded = serde_json::to_vec(request).map_err(|error| {
+            NativeLoadError::MechanismRequestSerialization {
+                path: self.display_path.clone(),
+                id: scalar_preview(&self.descriptor.id),
+                reason: format!("JSON at line {}, column {}", error.line(), error.column()),
+            }
+        })?;
+        let response = invoke_admitted(&self.library, &encoded, &self.display_path)?;
+        admission::parse_mechanism_reply(
+            response.bytes(),
+            operation,
+            &self.descriptor.id,
+            &self.display_path,
+        )
+    }
+}
+
 /// A strong-handle cache and safe invoker for native ABI 1 libraries.
 ///
 /// Keep one loader for the process lifetime when native extensions may be
@@ -168,6 +248,47 @@ impl NativeLoader {
         Ok(response.bytes().to_vec())
     }
 
+    /// Admit one exact mechanism descriptor and retain its owned data beside
+    /// the shared cached library handle.
+    pub fn admit_mechanism(
+        &self,
+        library_path: &Path,
+        provider: &str,
+        mechanism_id: &str,
+        logical_key: &MechanismKey,
+    ) -> Result<NativeMechanism, NativeLoadError> {
+        let (canonical, display_path) = validate_path(library_path)?;
+        let library = self.library(&canonical, &display_path)?;
+        let manifest = library.manifest_bytes(&display_path)?;
+        let descriptor = admission::select_mechanism_manifest(
+            &manifest,
+            mechanism_id,
+            logical_key,
+            &display_path,
+        )?;
+        Ok(NativeMechanism {
+            library,
+            display_path,
+            provider: provider.to_owned(),
+            logical_key: logical_key.clone(),
+            descriptor,
+        })
+    }
+
+    /// Admit and invoke one package-supplied deploy mechanism.
+    pub fn invoke_mechanism(
+        &self,
+        invocation: NativeMechanismInvocation<'_>,
+    ) -> Result<DeployReply, NativeLoadError> {
+        self.admit_mechanism(
+            invocation.library,
+            invocation.provider,
+            invocation.mechanism_id,
+            invocation.logical_key,
+        )?
+        .invoke(invocation.request)
+    }
+
     fn admit_library(
         &self,
         path: &Path,
@@ -220,6 +341,17 @@ impl NativeLoader {
             cache: Mutex::new(HashMap::new()),
             opener,
         }
+    }
+}
+
+fn manifest_operation(operation: DeployOperation) -> NativeDeployOperation {
+    match operation {
+        DeployOperation::Plan => NativeDeployOperation::Plan,
+        DeployOperation::Fingerprint => NativeDeployOperation::Fingerprint,
+        DeployOperation::Apply => NativeDeployOperation::Apply,
+        DeployOperation::Verify => NativeDeployOperation::Verify,
+        DeployOperation::Remove => NativeDeployOperation::Remove,
+        DeployOperation::Recover => NativeDeployOperation::Recover,
     }
 }
 

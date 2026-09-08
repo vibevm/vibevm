@@ -1,7 +1,13 @@
 use std::collections::HashSet;
 
 use vibe_core::lifecycle::ExtensionPoint;
+use vibe_core::manifest::{MechanismKey, MechanismRole};
+use vibe_wire::behaviour::native_deploy::{self, DeployOperation};
+use vibe_wire::generated::native::e1::deploy_reply::DeployReply;
 use vibe_wire::generated::native::e1::manifest::{Manifest, ManifestExtension};
+use vibe_wire::generated::native::e1::mechanism_manifest::{
+    MechanismDescriptor, MechanismManifest, NativeMechanismRole,
+};
 use vibe_wire::generated::native::e1::reply::Reply;
 
 use crate::error::NativeLoadError;
@@ -151,6 +157,89 @@ pub(crate) fn parse_reply(bytes: &[u8], path: &str) -> Result<Reply, NativeLoadE
             actual: reply.envelope,
         });
     }
+    Ok(reply)
+}
+
+pub(crate) fn select_mechanism_manifest(
+    bytes: &[u8],
+    mechanism_id: &str,
+    logical_key: &MechanismKey,
+    path: &str,
+) -> Result<MechanismDescriptor, NativeLoadError> {
+    if bytes.len() >= MANIFEST_CAP {
+        return Err(NativeLoadError::ManifestTooLarge {
+            path: path.to_owned(),
+            cap: MANIFEST_CAP,
+        });
+    }
+    let text = std::str::from_utf8(bytes).map_err(|_| NativeLoadError::ManifestUtf8 {
+        path: path.to_owned(),
+    })?;
+    let manifest: MechanismManifest =
+        serde_json::from_str(text).map_err(|error| NativeLoadError::MechanismManifestJson {
+            path: path.to_owned(),
+            reason: json_reason(&error),
+        })?;
+    native_deploy::validate_manifest(&manifest).map_err(|error| {
+        NativeLoadError::MechanismManifestAdmission {
+            path: path.to_owned(),
+            reason: error.to_string(),
+        }
+    })?;
+    let descriptor = manifest
+        .mechanisms
+        .into_iter()
+        .find(|descriptor| descriptor.id == mechanism_id)
+        .ok_or_else(|| NativeLoadError::MissingMechanismId {
+            path: path.to_owned(),
+            id: scalar_preview(mechanism_id),
+        })?;
+    if descriptor.role != NativeMechanismRole::Deploy {
+        return Err(NativeLoadError::MechanismManifestAdmission {
+            path: path.to_owned(),
+            reason: "selected mechanism role is not deploy".to_owned(),
+        });
+    }
+    if logical_key.role() != MechanismRole::Deploy || descriptor.name != logical_key.name() {
+        return Err(NativeLoadError::MechanismManifestAdmission {
+            path: path.to_owned(),
+            reason: "selected descriptor role/name differs from the registry mechanism key"
+                .to_owned(),
+        });
+    }
+    if descriptor.name.trim().is_empty()
+        || descriptor.name.len() > native_deploy::DIAGNOSTIC_CAP_BYTES
+        || descriptor.name.chars().any(char::is_control)
+    {
+        return Err(NativeLoadError::MechanismName {
+            path: path.to_owned(),
+            id: scalar_preview(mechanism_id),
+        });
+    }
+    Ok(descriptor)
+}
+
+pub(crate) fn parse_mechanism_reply(
+    bytes: &[u8],
+    expected: DeployOperation,
+    mechanism_id: &str,
+    path: &str,
+) -> Result<DeployReply, NativeLoadError> {
+    let text = std::str::from_utf8(bytes).map_err(|_| NativeLoadError::ReplyUtf8 {
+        path: path.to_owned(),
+    })?;
+    let reply: DeployReply =
+        serde_json::from_str(text).map_err(|error| NativeLoadError::MechanismReplyJson {
+            path: path.to_owned(),
+            reason: json_reason(&error),
+        })?;
+    native_deploy::validate_reply(expected, &reply).map_err(|error| {
+        NativeLoadError::MechanismReplyAdmission {
+            path: path.to_owned(),
+            id: scalar_preview(mechanism_id),
+            reason: error.to_string(),
+        }
+    })?;
     Ok(reply)
 }
 

@@ -78,6 +78,26 @@ pub enum NativeLoadError {
         "native manifest is invalid for `{path}` ({reason}) (violates spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE; fix: emit the generated ABI-1 Manifest wire shape)"
     )]
     ManifestJson { path: String, reason: String },
+    /// Mechanism manifest JSON did not satisfy its generated root.
+    #[error(
+        "native mechanism manifest is invalid for `{path}` ({reason}) (violates spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE; fix: emit the generated ABI-1 NativeMechanismManifest wire shape)"
+    )]
+    MechanismManifestJson { path: String, reason: String },
+    /// Mechanism manifest relational admission failed.
+    #[error(
+        "native mechanism manifest admission failed for `{path}` ({reason}) (violates spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE; fix: publish one admitted deploy mechanism descriptor)"
+    )]
+    MechanismManifestAdmission { path: String, reason: String },
+    /// The selected exact mechanism id was absent.
+    #[error(
+        "native mechanism manifest does not declare mechanism id `{id}` for `{path}` (violates spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE; fix: select the exact descriptor exported by this provider image)"
+    )]
+    MissingMechanismId { path: String, id: String },
+    /// The selected descriptor name was unsafe or unbounded.
+    #[error(
+        "native mechanism `{id}` has an invalid display name for `{path}` (violates spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE; fix: declare a nonblank bounded control-free name)"
+    )]
+    MechanismName { path: String, id: String },
     /// Two manifest rows used the same extension id.
     #[error(
         "native manifest contains duplicate extension id `{id}` for `{path}` (violates spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE; fix: declare each native extension id exactly once)"
@@ -132,6 +152,24 @@ pub enum NativeLoadError {
         "native context serialization failed ({reason}) (violates spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE; fix: report the generated ABI-1 context serialization defect)"
     )]
     ContextSerialization { reason: String },
+    /// The generated deploy request failed exact-pin or relational admission.
+    #[error(
+        "native mechanism request admission failed for `{id}` in `{path}` ({reason}) (violates spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE; fix: invoke the selected exact mechanism with an admitted request)"
+    )]
+    MechanismRequestAdmission {
+        path: String,
+        id: String,
+        reason: String,
+    },
+    /// The admitted generated deploy request could not serialize.
+    #[error(
+        "native mechanism request serialization failed for `{id}` in `{path}` ({reason}) (violates spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE; fix: report the generated wire serialization defect)"
+    )]
+    MechanismRequestSerialization {
+        path: String,
+        id: String,
+        reason: String,
+    },
     /// The plugin returned nonzero without publishing response ownership.
     #[error(
         "native invocation failed with plugin status {status} for `{path}` (violates spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE; fix: correct the native handler and retry the invocation)"
@@ -185,6 +223,20 @@ pub enum NativeLoadError {
         "native reply is invalid for `{path}` ({reason}) (violates spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE; fix: emit exactly the strict generated ABI-1 Reply shape)"
     )]
     ReplyJson { path: String, reason: String },
+    /// Reply JSON did not satisfy the strict deploy-reply root.
+    #[error(
+        "native mechanism reply is invalid for `{path}` ({reason}) (violates spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE; fix: emit exactly the strict ABI-1 DeployReply shape)"
+    )]
+    MechanismReplyJson { path: String, reason: String },
+    /// The strict reply failed epoch, operation or bounded-result admission.
+    #[error(
+        "native mechanism reply admission failed for `{id}` in `{path}` ({reason}) (violates spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE; fix: reply to the requested operation with admitted bounded data)"
+    )]
+    MechanismReplyAdmission {
+        path: String,
+        id: String,
+        reason: String,
+    },
     /// The reply envelope was not epoch 1.
     #[error(
         "native reply envelope is {actual}, expected 1, for `{path}` (violates spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE; fix: return a Reply with envelope 1)"

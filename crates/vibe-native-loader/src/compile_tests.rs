@@ -543,9 +543,13 @@ fn compile_and_lifecycle_are_structurally_fenced_to_shared_loader_paths() {
     assert_eq!(product.matches("fn admit_library(").count(), 1);
     assert_eq!(product.matches("fn invoke_admitted(").count(), 1);
     assert_eq!(product.matches("fn admitted_response(").count(), 1);
+    let loader = product
+        .split_once("impl NativeLoader {")
+        .expect("NativeLoader implementation")
+        .1;
     for method in ["pub fn invoke(&self", "pub fn invoke_compile("] {
-        let start = product.find(method).expect("public method");
-        let tail = &product[start..];
+        let start = loader.find(method).expect("NativeLoader public method");
+        let tail = &loader[start..];
         let end = tail.find("\n    }").expect("method end");
         let body = &tail[..end];
         assert!(body.contains("self.admit_library("));

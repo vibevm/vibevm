@@ -321,9 +321,9 @@ fn null_request_output_slots_and_null_free_match_lifecycle_contract() {
 }
 
 #[test]
-fn both_public_macros_use_the_one_emitter_and_compiler_dispatch_never_clones_ir() {
+fn all_three_public_macros_use_the_one_emitter_and_compiler_dispatch_never_clones_ir() {
     let source = include_str!("../src/lib.rs");
-    assert_eq!(source.matches("$crate::__vibe_ext_emit_abi!(").count(), 2);
+    assert_eq!(source.matches("$crate::__vibe_ext_emit_abi!(").count(), 3);
     assert_eq!(source.matches("fn initialize_outputs(").count(), 1);
     assert_eq!(
         source.matches("fn free(ptr: *mut u8, len: usize)").count(),

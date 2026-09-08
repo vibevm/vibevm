@@ -3,8 +3,11 @@
 //!
 //! Authors implement either a lifecycle `fn(Context) -> Reply` with
 //! [`vibe_extension!`] or a compiler `fn(CompileRequest) -> CompileReply` with
-//! [`vibe_compile_extension!`]. The generated C boundary owns JSON conversion,
-//! panic containment, and the exact response allocation/free pairing.
+//! [`vibe_compile_extension!`], or a deploy mechanism provider with
+//! [`vibe_mechanism_provider!`]. The generated C boundary owns JSON conversion,
+//! panic containment, and the exact response allocation/free pairing. Each
+//! cdylib invokes exactly one family macro because all families deliberately
+//! export the same four ABI-1 symbols.
 
 pub use vibe_wire::generated::native::e1::compile_reply::{
     CompileReply, CompileReplyFail, CompileReplyOk, CompileReplySkip,
@@ -16,13 +19,26 @@ pub use vibe_wire::generated::native::e1::compile_request::{
 pub use vibe_wire::generated::native::e1::context::{
     Artifact, Context, Execution, Io, Project, Run, RunAgentMode, SlotTarget, World, WorldPackage,
 };
+pub use vibe_wire::generated::native::e1::deploy_reply::DeployReply;
+pub use vibe_wire::generated::native::e1::deploy_request::DeployRequest;
 pub use vibe_wire::generated::native::e1::manifest::{Manifest, ManifestExtension};
+pub use vibe_wire::generated::native::e1::mechanism_manifest::{
+    MechanismDescriptor, MechanismManifest, NativeDeployArtifactKind, NativeDeployEffect,
+    NativeDeployNetwork, NativeDeployOperation, NativeDeployPrivilege, NativeDeployReversibility,
+    NativeMechanismRole,
+};
 pub use vibe_wire::generated::native::e1::reply::{Reply, ReplyArtifact, ReplyStatus};
+pub use vibe_wire::generated::native::e1::{
+    deploy_reply as mechanism_reply, deploy_request as mechanism_request,
+    mechanism_manifest as mechanism_provider,
+};
 
 #[doc(hidden)]
 pub use serde_json as __serde_json;
 #[doc(hidden)]
 pub use vibe_wire::behaviour::native_compile as __native_compile;
+#[doc(hidden)]
+pub use vibe_wire::behaviour::native_deploy as __native_deploy;
 
 /// Emit the one raw four-symbol ABI used by every safe author macro.
 ///
@@ -203,6 +219,70 @@ macro_rules! vibe_compile_extension {
 
         $crate::__vibe_ext_emit_abi!(
             panic_message = "vibe_compile_extension! requires panic = \"unwind\"; remove panic = \"abort\" from the extension's active Cargo profile",
+        );
+    };
+}
+
+/// Exports one deploy-mechanism provider through the same four-symbol ABI 1.
+///
+/// The manifest and request/reply roots are generated wire types. Host-side
+/// admission selects the exact descriptor and validates the request/reply
+/// exchange before and after this typed handler runs.
+#[macro_export]
+macro_rules! vibe_mechanism_provider {
+    (manifest = $manifest:expr, handler = $handler:path $(,)?) => {
+        #[doc(hidden)]
+        fn __vibe_ext_mechanism_manifest() -> &'static $crate::MechanismManifest {
+            static MANIFEST: std::sync::OnceLock<$crate::MechanismManifest> =
+                std::sync::OnceLock::new();
+            MANIFEST.get_or_init(|| $manifest)
+        }
+
+        #[doc(hidden)]
+        fn __vibe_ext_manifest_value() -> $crate::MechanismManifest {
+            __vibe_ext_mechanism_manifest().clone()
+        }
+
+        #[doc(hidden)]
+        fn __vibe_ext_handle(request: $crate::DeployRequest) -> $crate::DeployReply {
+            $handler(request)
+        }
+
+        #[doc(hidden)]
+        fn __vibe_ext_dispatch(request: &[u8]) -> Option<Vec<u8>> {
+            let request: $crate::DeployRequest = $crate::__serde_json::from_slice(request).ok()?;
+            let identity = match &request {
+                $crate::DeployRequest::Plan(value) => &value.identity,
+                $crate::DeployRequest::Fingerprint(value) => &value.identity,
+                $crate::DeployRequest::Apply(value) => &value.identity,
+                $crate::DeployRequest::Verify(value) => &value.identity,
+                $crate::DeployRequest::Remove(value) => &value.identity,
+                $crate::DeployRequest::Recover(value) => &value.identity,
+            };
+            let manifest = __vibe_ext_mechanism_manifest();
+            static MANIFEST_ADMITTED: std::sync::OnceLock<bool> = std::sync::OnceLock::new();
+            if !*MANIFEST_ADMITTED
+                .get_or_init(|| $crate::__native_deploy::validate_manifest(manifest).is_ok())
+            {
+                return None;
+            }
+            let descriptor = manifest
+                .mechanisms
+                .iter()
+                .find(|descriptor| descriptor.id == identity.mechanism)?;
+            let operation = $crate::__native_deploy::validate_request(
+                &request,
+                &identity.provider,
+                &descriptor.id,
+            )
+            .ok()?;
+            let reply = __vibe_ext_handle(request);
+            $crate::__native_deploy::validate_reply(operation, &reply).ok()?;
+            $crate::__serde_json::to_vec(&reply).ok()
+        }
+
+        $crate::__vibe_ext_emit_abi!(
+            panic_message = "vibe_mechanism_provider! requires panic = \"unwind\"; remove panic = \"abort\" from the provider's active Cargo profile",
         );
     };
 }
