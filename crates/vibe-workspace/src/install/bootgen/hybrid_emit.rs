@@ -13,7 +13,7 @@ use specmark::spec;
 use vibe_core::manifest::{LinkType, SpecFormat};
 use vibe_core::{Group, PackageName, layout};
 use vibe_extension_registry::DependencyProviderId;
-use vibe_spec::TransformPlan;
+use vibe_spec::CompilePlans;
 
 use crate::boot::hybrid::{self, UnitEdge, UnitId, UnitInput, ZoneMembership};
 use crate::boot::{BootBand, BootEntry, EffectiveBoot};
@@ -259,7 +259,7 @@ pub(super) fn emit_package_units(
             // before the fingerprints its digest feeds, and is read here
             // off the key it is filed under — never re-lowered, so one
             // declaration keeps one refusal surface.
-            runtimes.unit(&owner)?.transform_plan().clone(),
+            runtimes.unit(&owner)?.compile_plans().clone(),
         )
     };
 
@@ -367,7 +367,7 @@ fn emit_effective(
     fingerprint: &str,
     spec_format: SpecFormat,
     unit_trace: Option<&UnitTrace<'_>>,
-    transforms: TransformPlan,
+    plans: CompilePlans,
 ) -> Result<(), WorkspaceError> {
     let index = boot_dir.join(boot_artifacts::INDEX_FILE);
     let static_path = boot_dir.join(boot_artifacts::static_file(spec_format));
@@ -405,7 +405,7 @@ fn emit_effective(
         self_coord,
         spec_format,
         unit_trace.map(UnitTrace::acquisition),
-        transforms,
+        plans,
     )?;
     // ONE crash-recoverable publication: INDEX, the selected STATIC's
     // presence/bytes, and the stale spelling's absence land together — or

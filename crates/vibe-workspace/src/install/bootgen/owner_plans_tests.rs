@@ -19,10 +19,12 @@ fn boot_has_no_independent_plan_collector_or_lowerer() {
             "`{forbidden}` would restore a second lowering path"
         );
     }
+    assert!(!adapter.contains("TransformPlan::from_effective_rows"));
+    assert!(!runtime.contains("TransformPlan::from_effective_rows"));
     for authority in [
         "collect_owner_mechanisms(&view)",
         "collect_owner_view(view, presets)",
-        "TransformPlan::from_effective_rows(&compile_rows)",
+        "lower_effective_compile_rows(&compile_rows)",
     ] {
         assert_eq!(
             runtime.matches(authority).count(),
@@ -37,9 +39,15 @@ fn boot_has_no_independent_plan_collector_or_lowerer() {
 fn generation_fingerprints_and_emission_read_retained_runtimes() {
     let composition = include_str!("../bootgen.rs");
     let emission = include_str!("hybrid_emit.rs");
+    let attachment = include_str!("../../boot_artifacts.rs");
     assert!(composition.contains("lower_owner_runtimes(workspace, &world, lowering)"));
     assert!(composition.contains("plan_digest_frames(&runtimes)"));
-    assert!(composition.contains("runtimes.node(rel)?.transform_plan().clone()"));
-    assert!(emission.contains("runtimes.unit(&owner)?.transform_plan().clone()"));
+    assert!(composition.contains("runtimes.node(rel)?.compile_plans().clone()"));
+    assert!(emission.contains("runtimes.unit(&owner)?.compile_plans().clone()"));
+    assert!(attachment.contains("let plan = plans.attach_to("));
+    assert!(attachment.contains("let compiled = compile_static_artifact_with_plans("));
+    assert!(attachment.contains("CompilePlans::transforms_only(TransformPlan::empty())"));
+    assert!(!composition.contains("transform_plan().clone()"));
+    assert!(!emission.contains("transform_plan().clone()"));
     assert!(!composition.contains("unit_owner_plans"));
 }

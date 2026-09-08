@@ -164,8 +164,10 @@ fn public_active_pass_refusal(format: SpecFormat) {
     );
     let workspace = Workspace::load(root.path()).expect("active-pass workspace");
     let error = regenerate_public(&workspace, &resolution, format).unwrap_err();
+    let message = error.to_string();
     assert!(
-        error.to_string().contains("mandatory verify-each"),
+        message.contains("pass `__host__/active-pass#active`")
+            && message.contains("requires the compiler-native invoker before source execution"),
         "{error}"
     );
     assert_eq!(fs::read(&index).unwrap(), before[0]);

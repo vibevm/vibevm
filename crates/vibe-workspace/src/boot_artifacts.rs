@@ -247,7 +247,7 @@ pub fn render_static_with_spec_format(
         self_coord,
         spec_format,
         None,
-        TransformPlan::empty(),
+        CompilePlans::transforms_only(TransformPlan::empty()),
     )
 }
 
@@ -257,26 +257,26 @@ pub fn render_static_with_spec_format(
 /// at the compile boundary inside. `None` is the historical untraced path,
 /// byte-for-byte.
 ///
-/// `transforms` is the lane owner's own transform plan (R4 architecture §5.1:
+/// `plans` is the lane owner's retained compile plan (R4 architecture §5.1:
 /// activation authority follows the artifact being written), already lowered
 /// by the caller that holds the world. The per-unit path passes THAT
 /// package's view; a caller with no world passes
-/// [`TransformPlan::empty`].
+/// [`CompilePlans::transforms_only`].
 pub(crate) fn render_static_observed(
     boot: &EffectiveBoot,
     workspace_root: &Path,
     self_coord: &SelfCoordinate,
     spec_format: SpecFormat,
     acquisition: Option<&ScopeAcquisition<'_>>,
-    transforms: TransformPlan,
+    plans: CompilePlans,
 ) -> Result<Option<String>, WorkspaceError> {
-    let compiled = compile_static_artifact_with(
+    let compiled = compile_static_artifact_with_plans(
         boot,
         workspace_root,
         self_coord,
         spec_format,
         acquisition,
-        transforms,
+        plans,
         None,
         compile_artifact,
     )?;
