@@ -14,7 +14,7 @@ use vibe_core::manifest::{
     ArtifactBuildTarget, ArtifactPackageTarget, ArtifactsSection, BinaryDecl, DeployTarget,
     Manifest, MechanismRoutes, TargetOs, build_target_for_binary,
 };
-use vibe_lifecycle::native::{NativeBuildExecution, NativePlatform, build_native_sources};
+use vibe_lifecycle::native::{NativeBuildExecution, NativePlatform};
 use vibe_lifecycle::{
     BuildExecution, ClientExecutables, DeployExecution, DeploySelection, MechanismRegistry,
     PackageExecution, Phase, deploy_state_home, execute_build_targets, execute_deploy_targets,
@@ -98,6 +98,7 @@ pub(crate) struct MechanismTargets<'a> {
     pub(crate) native_platform: Option<NativePlatform>,
     /// Exact install epoch and sealed replay, moved into this dispatch once.
     pub(crate) native: Option<NativeInstallContext>,
+    pub(crate) native_mechanisms: vibe_lifecycle::native::NativeMechanismPlan,
     /// Command-observed OS whose projection produced package/deploy slices.
     pub(crate) target_os: TargetOs,
     /// The run's effective offline posture.
@@ -261,6 +262,7 @@ pub(crate) fn lower_binaries(
 /// with zero verify contributions still gets its verify member.
 pub(super) struct Fences<'targets> {
     targets: MechanismTargets<'targets>,
+    prepared_native: vibe_lifecycle::native::PreparedNativeMechanisms,
     build: Option<usize>,
     package: Option<usize>,
     deploy: Option<usize>,
@@ -282,6 +284,7 @@ impl<'targets> Fences<'targets> {
             .and_then(|_| fence(plan, chain, Phase::Deploy));
         Some(Self {
             targets,
+            prepared_native: Default::default(),
             build,
             package,
             deploy,
@@ -299,28 +302,17 @@ impl<'targets> Fences<'targets> {
             .targets
             .native_platform
             .context("build fence has no preselected native platform")?;
-        match native.as_ref() {
-            Some(native) => build_all_owner_native_sources(
-                native,
-                self.targets.project_root,
-                platform,
-                self.targets.offline,
-                self.targets.created_at,
-            )?,
-            None => {
-                let candidates = self.targets.native_candidates.iter().collect::<Vec<_>>();
-                build_native_sources(&NativeBuildExecution {
-                    candidates: &candidates,
-                    selected_project_root: self.targets.project_root,
-                    registry: self.targets.registry,
-                    routes: self.targets.routes,
-                    platform,
-                    offline: self.targets.offline,
-                    created_at: self.targets.created_at,
-                })
-                .context("building enabled native source extensions at the build fence")?;
-            }
-        }
+        self.prepared_native = super::native_mechanism::prepare(
+            native.as_ref(),
+            self.targets.native_candidates,
+            std::mem::take(&mut self.targets.native_mechanisms),
+            self.targets.project_root,
+            self.targets.registry,
+            self.targets.routes,
+            platform,
+            self.targets.offline,
+            self.targets.created_at,
+        )?;
         if let Some(native) = native.filter(|native| !native.replay_is_empty()) {
             let mut factory = platform.replay_factory();
             native
@@ -375,6 +367,7 @@ impl<'targets> Fences<'targets> {
         let Some(carriage) = self.targets.deploy else {
             return Ok(());
         };
+        let _prepared_native = &self.prepared_native;
         execute_deploy_targets(&DeployExecution {
             project_root: self.targets.project_root,
             targets: self.targets.deploy_targets,
@@ -394,35 +387,6 @@ impl<'targets> Fences<'targets> {
     }
 }
 
-fn build_all_owner_native_sources(
-    native: &NativeInstallContext,
-    project_root: &Path,
-    platform: NativePlatform,
-    offline: bool,
-    created_at: &str,
-) -> Result<()> {
-    let groups =
-        preflight_all_owner_native_sources(native, project_root, platform, offline, created_at)?;
-    for group in groups {
-        build_native_sources(&NativeBuildExecution {
-            candidates: &group.candidates,
-            selected_project_root: project_root,
-            registry: group.registry,
-            routes: group.routes,
-            platform,
-            offline,
-            created_at,
-        })
-        .with_context(|| {
-            format!(
-                "building native source group {}/{}",
-                group.source.0, group.source.3
-            )
-        })?;
-    }
-    Ok(())
-}
-
 type BuildRowSignature = Vec<(
     String,
     vibe_core::manifest::ExtensionHandler,
@@ -430,17 +394,17 @@ type BuildRowSignature = Vec<(
 )>;
 
 pub(super) struct PreflightBuildGroup<'a> {
-    source: (
+    pub(super) source: (
         String,
         PathBuf,
         vibe_lifecycle::native::NativeArtifactRecordRoot,
         String,
     ),
     signature: BuildRowSignature,
-    provider_pin: String,
-    candidates: Vec<&'a vibe_lifecycle::ExtensionRegistryRow>,
-    registry: &'a MechanismRegistry,
-    routes: &'a MechanismRoutes,
+    pub(super) provider_pin: String,
+    pub(super) candidates: Vec<&'a vibe_lifecycle::ExtensionRegistryRow>,
+    pub(super) registry: &'a MechanismRegistry,
+    pub(super) routes: &'a MechanismRoutes,
 }
 
 pub(super) fn preflight_all_owner_native_sources<'a>(

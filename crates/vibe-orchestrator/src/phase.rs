@@ -459,6 +459,13 @@ fn run(inputs: PhaseRun<'_>, measured: &mut Measured) -> Result<Outcome> {
     } else {
         None
     };
+    let native_mechanisms = vibe_lifecycle::native::project_native_mechanisms(
+        &package_targets,
+        &deploy_targets,
+        &ritual.mechanisms,
+        &ritual.mechanism_routes,
+    )
+    .context("selecting active native mechanism artifacts")?;
     notices.extend(ritual.notices.clone());
     surface_plan(observer, &ritual, &metadata, true)?;
     // ---- the ONE mechanism wiring (§6.0.2) ---------------------------
@@ -481,6 +488,7 @@ fn run(inputs: PhaseRun<'_>, measured: &mut Measured) -> Result<Outcome> {
         native_candidates: &ritual.native_candidates,
         native_platform,
         native: native_install,
+        native_mechanisms,
         target_os,
         offline: metadata.offline,
         created_at: &created_at,

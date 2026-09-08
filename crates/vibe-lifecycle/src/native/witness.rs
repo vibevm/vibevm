@@ -6,7 +6,7 @@ use sha2::{Digest, Sha256};
 use vibe_core::manifest::{ExtensionConfig, ExtensionHandler};
 use vibe_registry::RecipeId;
 
-use crate::ExtensionRegistryRow;
+use crate::{ExtensionRegistryRow, MechanismRegistryRow};
 
 use super::provider::{ProviderFacts, ProviderHome};
 use super::{NativeArtifactError, NativePlatform};
@@ -75,6 +75,51 @@ pub(super) fn config_witness_digest(rows: &[&ExtensionRegistryRow]) -> WitnessDi
         hash_config(&mut hash, row.effective_config());
     }
     hash.finish()
+}
+
+pub(super) fn mechanism_config_witness(rows: &[&MechanismRegistryRow]) -> String {
+    let mut hash = Frame::new(CONFIG_DOMAIN);
+    hash.field("row_count", rows.len().to_string().as_bytes());
+    for row in rows {
+        hash.field("key", row.key().to_string().as_bytes());
+        hash.field("pin", row.pin().to_string().as_bytes());
+        hash.field("declaration_id", row.declaration().id.as_bytes());
+        hash_native_handler(&mut hash, row.handler());
+        hash.field("protocol", &row.protocol().to_le_bytes());
+        hash.field("config_schema", slash(row.config_schema()).as_bytes());
+        hash.field("freshness", row.declaration().freshness.as_str().as_bytes());
+        hash.field("enabled", if row.is_enabled() { b"1" } else { b"0" });
+    }
+    hash.finish().hex()
+}
+
+fn hash_native_handler(hash: &mut Frame, handler: &ExtensionHandler) {
+    match handler {
+        ExtensionHandler::Native {
+            crate_dir,
+            prebuilt,
+        } => {
+            hash.field(
+                "crate_present",
+                if crate_dir.is_some() { b"1" } else { b"0" },
+            );
+            if let Some(path) = crate_dir {
+                hash.field("crate", slash(path).as_bytes());
+            }
+            hash.field(
+                "prebuilt_present",
+                if prebuilt.is_some() { b"1" } else { b"0" },
+            );
+            if let Some(prebuilt) = prebuilt {
+                hash.field("prebuilt_count", prebuilt.len().to_string().as_bytes());
+                for (platform, path) in prebuilt {
+                    hash.field("prebuilt_platform", platform.as_bytes());
+                    hash.field("prebuilt_path", slash(path).as_bytes());
+                }
+            }
+        }
+        other => hash.field("unexpected_handler", other.kind().as_bytes()),
+    }
 }
 
 pub(super) fn source_witness(provider: &ProviderFacts) -> Result<String, NativeArtifactError> {

@@ -8,6 +8,7 @@ mod cargo;
 mod compiler;
 mod compiler_facts;
 mod error;
+mod mechanism;
 mod path;
 mod platform;
 mod projection;
@@ -30,6 +31,11 @@ use crate::{ExtensionRegistryRow, MechanismRegistryRow};
 
 pub use compiler::{ArtifactCompilerNativeInvoker, ArtifactCompilerNativeProvider};
 pub use error::NativeArtifactError;
+pub use mechanism::{
+    NativeMechanismArtifactClaim, NativeMechanismBinding, NativeMechanismPlan,
+    NativeMechanismPreflight, PreparedNativeMechanism, PreparedNativeMechanisms,
+    preflight_native_mechanisms, project_native_mechanisms,
+};
 pub use platform::NativePlatform;
 pub use projection::{
     NativeArtifactRecordRoot, NativeSourceGroupProjection, project_native_source_groups,
@@ -578,6 +584,9 @@ fn slash(path: &Path) -> String {
 #[cfg(test)]
 #[path = "tests.rs"]
 mod tests;
+
+#[cfg(test)]
+mod mechanism_tests;
 
 #[cfg(test)]
 #[path = "compiler_tests.rs"]

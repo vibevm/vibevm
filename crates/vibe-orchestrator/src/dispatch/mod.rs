@@ -29,6 +29,7 @@ pub(crate) use mechanism::{DeployCarriage, MechanismTargets, lower_binaries};
 
 mod backends;
 mod mechanism;
+mod native_mechanism;
 mod verify;
 
 #[cfg(test)]
@@ -588,6 +589,8 @@ mod mechanism_tests;
 #[cfg(test)]
 #[path = "native_all_owner_tests.rs"]
 mod native_all_owner_tests;
+#[cfg(test)]
+mod native_mechanism_tests;
 
 /// The verify-boundary reds live in their own cell: they need a declared-input
 /// fixture and a mutating observer the row-accumulator reds have no use for,
