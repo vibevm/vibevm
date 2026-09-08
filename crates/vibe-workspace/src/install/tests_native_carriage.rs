@@ -126,6 +126,14 @@ fn unselected_member_and_package_unit_enter_the_carried_build_plan() {
 }
 
 fn write(path: &Path, body: &str) {
-    fs::create_dir_all(path.parent().expect("parent")).expect("create fixture directory");
-    fs::write(path, body).expect("write fixture");
+    let parent = match path.parent() {
+        Some(parent) => parent,
+        None => panic!("fixture path has no parent"),
+    };
+    if let Err(error) = fs::create_dir_all(parent) {
+        panic!("create fixture directory: {error}");
+    }
+    if let Err(error) = fs::write(path, body) {
+        panic!("write fixture: {error}");
+    }
 }

@@ -9,47 +9,73 @@ use vibe_wire::generated::shared::Timestamp;
 
 use super::*;
 
+fn must<T, E: std::fmt::Debug>(result: std::result::Result<T, E>, context: &str) -> T {
+    match result {
+        Ok(value) => value,
+        Err(error) => panic!("{context}: {error:?}"),
+    }
+}
+
+fn present<T>(value: Option<T>, context: &str) -> T {
+    match value {
+        Some(value) => value,
+        None => panic!("{context}"),
+    }
+}
+
 fn unit_fixture() -> (Fixture, DependencyProviderId) {
-    let root = tempfile::tempdir().expect("unit workspace");
-    fs::write(
-        root.path().join("vibe.toml"),
-        "[project]\ngroup='org.demo'\nname='host'\nversion='0.1.0'\n",
-    )
-    .expect("root manifest");
-    let group = Group::parse("org.demo").expect("group");
-    let version = "1.0.0".parse().expect("version");
+    let root = must(tempfile::tempdir(), "unit workspace");
+    must(
+        fs::write(
+            root.path().join("vibe.toml"),
+            "[project]\ngroup='org.demo'\nname='host'\nversion='0.1.0'\n",
+        ),
+        "root manifest",
+    );
+    let group = must(Group::parse("org.demo"), "group");
+    let version = must("1.0.0".parse(), "version");
     let slot = crate::vibedeps::slot_abs_path(root.path(), &group, "unit", &version);
-    fs::create_dir_all(slot.join("boot")).expect("unit boot");
-    fs::write(
-        slot.join("vibe.toml"),
-        "[package]\ngroup='org.demo'\nname='unit'\nkind='tool'\nversion='1.0.0'\n\
+    must(fs::create_dir_all(slot.join("boot")), "unit boot");
+    must(
+        fs::write(
+            slot.join("vibe.toml"),
+            "[package]\ngroup='org.demo'\nname='unit'\nkind='tool'\nversion='1.0.0'\n\
          [boot_snippet]\nsource='boot/input.md'\nlink='static'\n\
          [[extension]]\nid='native'\npoint='compile:emitted'\nhandler={kind='native',crate_dir='native'}\n",
-    )
-    .expect("unit manifest");
-    fs::write(slot.join("boot/input.md"), "# Unit {#root}\n\nbody\n").expect("unit source");
-    let workspace = Workspace::load(root.path()).expect("workspace");
+        ),
+        "unit manifest",
+    );
+    must(
+        fs::write(slot.join("boot/input.md"), "# Unit {#root}\n\nbody\n"),
+        "unit source",
+    );
+    let workspace = must(Workspace::load(root.path()), "workspace");
     let resolution = vec![crate::install::ResolvedDep {
         kind: PackageKind::Tool,
         group: group.clone(),
         name: "unit".to_owned(),
         version,
         content_dir: slot.clone(),
-        source_hash: Some(ContentHash::parse("sha256:aa").expect("source hash")),
-        manifest: Manifest::read(slot.join("vibe.toml")).expect("unit manifest"),
+        source_hash: Some(must(ContentHash::parse("sha256:aa"), "source hash")),
+        manifest: must(Manifest::read(slot.join("vibe.toml")), "unit manifest"),
         requires: Vec::new(),
         admitted_by: None,
         via_override: None,
         source_mutable: false,
         in_place_changed: None,
     }];
-    let world = ExtensionWorldEpoch::from_resolution(root.path(), &resolution).expect("world");
-    let lowered = lower_owner_runtimes(
-        &workspace,
-        &world,
-        OwnerRuntimeLowering::new(".", BTreeMap::new()),
-    )
-    .expect("runtimes");
+    let world = must(
+        ExtensionWorldEpoch::from_resolution(root.path(), &resolution),
+        "world",
+    );
+    let lowered = must(
+        lower_owner_runtimes(
+            &workspace,
+            &world,
+            OwnerRuntimeLowering::new(".", BTreeMap::new()),
+        ),
+        "runtimes",
+    );
     let epoch = lowered.bind_run(OwnerRuntimeRunFacts {
         run_id: "4123456789abcdef0123456789abcdef".to_owned(),
         state_root: root.path().join(".vibe"),
@@ -57,9 +83,7 @@ fn unit_fixture() -> (Fixture, DependencyProviderId) {
         offline: true,
         created_at: "2026-09-08T00:00:00Z".to_owned(),
     });
-    let relative = slot
-        .strip_prefix(root.path())
-        .expect("slot relative")
+    let relative = must(slot.strip_prefix(root.path()), "slot relative")
         .join("boot/input.md")
         .to_string_lossy()
         .replace('\\', "/");
@@ -82,7 +106,7 @@ fn unit_fixture() -> (Fixture, DependencyProviderId) {
     };
     let owner = DependencyProviderId::new(
         group,
-        vibe_core::PackageName::parse("unit").expect("package name"),
+        must(vibe_core::PackageName::parse("unit"), "package name"),
     );
     (
         Fixture {
@@ -102,17 +126,21 @@ fn compile_unit(
     provider: &mut FakeProvider,
     mode: OwnerNativeCompileMode<'_>,
 ) -> crate::boot_artifacts::native_managed::OwnerManagedStaticCompile {
-    compile_static_owner_managed(
-        &fixture.boot,
-        &fixture.workspace.root,
-        &fixture.self_coord,
-        SpecFormat::Mixed,
-        fixture.epoch.unit(owner).expect("unit owner"),
-        mode,
-        Some(provider),
+    present(
+        must(
+            compile_static_owner_managed(
+                &fixture.boot,
+                &fixture.workspace.root,
+                &fixture.self_coord,
+                SpecFormat::Mixed,
+                must(fixture.epoch.unit(owner), "unit owner"),
+                mode,
+                Some(provider),
+            ),
+            "unit compile",
+        ),
+        "unit artifact",
     )
-    .expect("unit compile")
-    .expect("unit artifact")
 }
 
 #[test]
