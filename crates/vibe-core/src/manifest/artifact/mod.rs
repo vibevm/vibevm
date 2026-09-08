@@ -18,6 +18,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#ARTIFACT-REGISTRY");
 
+mod applicability;
 mod binary_projection;
 mod error;
 mod wire;
@@ -41,6 +42,7 @@ use super::extension::ExtensionConfig;
 use super::mechanism::{MechanismKey, MechanismRole, ProviderPin, is_portable_token};
 use super::plane::{assert_acyclic, bounded_value};
 
+pub use applicability::PackageTargetProjection;
 pub use binary_projection::build_target_for_binary;
 pub use error::ArtifactsError;
 pub(crate) use wire::ArtifactsWire;

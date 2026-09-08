@@ -149,4 +149,34 @@ pub enum DeployError {
          fix: declare the profile or correct `default_profile`)"
     )]
     UnknownDefaultProfile { name: String },
+
+    #[error(
+        "[deploy.profiles.{name}] selects active target `{target}` whose dependency `{dependency}` is inactive on `{os}` \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS; \
+         fix: align their `when.os` guards or remove the dependency)"
+    )]
+    ActiveDependencyInactive {
+        name: String,
+        target: String,
+        dependency: String,
+        os: String,
+    },
+
+    #[error(
+        "NO_APPLICABLE_TARGETS: [deploy.profiles.{name}] has no target applicable to `{os}`; authored targets: {targets} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS; \
+         fix: add an unconditional or `{os}` target, or choose another profile)"
+    )]
+    NoApplicableTargets {
+        name: String,
+        os: String,
+        targets: String,
+    },
+
+    #[error(
+        "deploy profile `{name}` is absent while projecting applicability \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS; \
+         fix: select a declared profile)"
+    )]
+    MissingProjectedProfile { name: String },
 }

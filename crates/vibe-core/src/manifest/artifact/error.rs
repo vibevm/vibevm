@@ -156,4 +156,16 @@ pub enum ArtifactsError {
          fix: break the cycle — artifact inputs form a DAG)"
     )]
     Cycle { cycle: String },
+
+    #[error(
+        "active target `{consumer}` consumes artifact `{artifact}` from inactive [[artifacts.package]] `{producer}` on `{os}` \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#ARTIFACT-REGISTRY; \
+         fix: align their `when.os` guards or remove the dependency)"
+    )]
+    ActiveConsumerInactiveProducer {
+        consumer: String,
+        producer: String,
+        artifact: String,
+        os: String,
+    },
 }

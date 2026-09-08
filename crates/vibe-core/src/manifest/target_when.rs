@@ -50,6 +50,74 @@ impl TargetWhen {
     pub fn os(&self) -> &[TargetOs] {
         &self.os
     }
+
+    /// Evaluate this value against an explicitly injected host OS.
+    #[must_use]
+    pub fn applies_to(&self, os: TargetOs) -> bool {
+        self.os.contains(&os)
+    }
+}
+
+/// One authored target's pure applicability decision.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct TargetApplicability {
+    target: String,
+    when: Option<TargetWhen>,
+    observed_os: TargetOs,
+    active: bool,
+}
+
+impl TargetApplicability {
+    /// Decide one target without reading ambient process state.
+    #[must_use]
+    pub fn decide(target: impl Into<String>, when: Option<&TargetWhen>, os: TargetOs) -> Self {
+        Self {
+            target: target.into(),
+            when: when.cloned(),
+            observed_os: os,
+            active: when.is_none_or(|guard| guard.applies_to(os)),
+        }
+    }
+
+    #[must_use]
+    pub fn target(&self) -> &str {
+        &self.target
+    }
+
+    #[must_use]
+    pub const fn when(&self) -> Option<&TargetWhen> {
+        self.when.as_ref()
+    }
+
+    #[must_use]
+    pub const fn observed_os(&self) -> TargetOs {
+        self.observed_os
+    }
+
+    #[must_use]
+    pub const fn is_active(&self) -> bool {
+        self.active
+    }
+
+    #[must_use]
+    pub const fn status(&self) -> &'static str {
+        if self.active { "active" } else { "skipped" }
+    }
+
+    /// Stable explanation for human and machine plans.
+    #[must_use]
+    pub fn reason(&self) -> String {
+        if self.active {
+            return match &self.when {
+                Some(_) => format!("the when.os guard includes `{}`", self.observed_os),
+                None => "the target is unconditional".to_owned(),
+            };
+        }
+        format!(
+            "the when.os guard excludes observed host OS `{}`",
+            self.observed_os
+        )
+    }
 }
 
 impl TryFrom<TargetWhenWire> for TargetWhen {
@@ -74,6 +142,11 @@ mod tests {
     fn target_when_is_stored_in_canonical_order() {
         let guard = TargetWhen::new(vec![TargetOs::Macos, TargetOs::Windows]).unwrap();
         assert_eq!(guard.os(), [TargetOs::Windows, TargetOs::Macos]);
+        assert!(TargetApplicability::decide("x", Some(&guard), TargetOs::Windows).is_active());
+        assert_eq!(
+            TargetApplicability::decide("x", Some(&guard), TargetOs::Linux).status(),
+            "skipped"
+        );
     }
 
     #[test]

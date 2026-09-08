@@ -23,8 +23,49 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARG
 
 use anyhow::{Result, bail};
 use specmark::spec;
-use vibe_core::manifest::DeploySection;
+use vibe_core::manifest::{DeploySection, TargetApplicability, TargetOs};
 use vibe_lifecycle::DeploySelection;
+
+/// Forward commands project by one injected OS; explicit inverse does not.
+#[derive(Debug, Clone, Copy)]
+pub(crate) enum ProfileMode {
+    Forward(TargetOs),
+    Inverse,
+}
+
+/// The active engine selection plus the complete authored plan decisions.
+#[derive(Debug)]
+pub(crate) struct ProfileResolution {
+    selection: DeploySelection,
+    decisions: Vec<TargetApplicability>,
+    observed_os: Option<TargetOs>,
+}
+
+impl ProfileResolution {
+    pub(crate) fn into_selection(self) -> DeploySelection {
+        self.selection
+    }
+
+    pub(crate) fn selection(&self) -> &DeploySelection {
+        &self.selection
+    }
+
+    pub(crate) fn decisions(&self) -> &[TargetApplicability] {
+        &self.decisions
+    }
+
+    pub(crate) fn observed_os(&self) -> Option<TargetOs> {
+        self.observed_os
+    }
+}
+
+impl std::ops::Deref for ProfileResolution {
+    type Target = DeploySelection;
+
+    fn deref(&self) -> &Self::Target {
+        &self.selection
+    }
+}
 
 /// Resolve the profile this invocation deploys.
 ///
@@ -41,7 +82,8 @@ use vibe_lifecycle::DeploySelection;
 pub(crate) fn resolve_profile(
     deploy: Option<&DeploySection>,
     requested: Option<&str>,
-) -> Result<Option<DeploySelection>> {
+    mode: ProfileMode,
+) -> Result<Option<ProfileResolution>> {
     let Some(section) = deploy.filter(|section| !section.is_empty()) else {
         if let Some(name) = requested {
             bail!(
@@ -54,17 +96,17 @@ pub(crate) fn resolve_profile(
     };
     let defined = defined(section);
     if let Some(name) = requested {
-        let Some(profile) = section.profiles.get(name) else {
+        let Some(_profile) = section.profiles.get(name) else {
             bail!(
                 "`--profile {name}` names no profile this project defines; defined: {defined} \
                  (violates spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS; \
                  fix: name one of the defined profiles)"
             );
         };
-        return Ok(Some(selection(name, profile)));
+        return Ok(Some(selection(section, name, mode)?));
     }
     if let Some(name) = &section.default_profile {
-        let Some(profile) = section.profiles.get(name) else {
+        let Some(_profile) = section.profiles.get(name) else {
             // A validated manifest cannot reach this; a programmatically
             // built section can, and it refuses rather than deploying
             // nothing under a name nobody defined.
@@ -75,14 +117,14 @@ pub(crate) fn resolve_profile(
                  fix: correct `default_profile`)"
             );
         };
-        return Ok(Some(selection(name, profile)));
+        return Ok(Some(selection(section, name, mode)?));
     }
     // The exactly-one rule, and nothing beyond it: with two profiles and
     // no declared default, the project has not said which one it means,
     // and no environment variable is allowed to say it for the operator.
     let mut profiles = section.profiles.iter();
     match (profiles.next(), profiles.next()) {
-        (Some((name, profile)), None) => Ok(Some(selection(name, profile))),
+        (Some((name, _)), None) => Ok(Some(selection(section, name, mode)?)),
         _ => bail!(
             "`vibe deploy` needs a profile: this project declares no `[deploy] default_profile` \
              and defines {} profiles; defined: {defined} \
@@ -95,14 +137,26 @@ pub(crate) fn resolve_profile(
 }
 
 /// One profile row as the resolved selection.
-fn selection(name: &str, profile: &vibe_core::manifest::DeployProfile) -> DeploySelection {
-    DeploySelection {
-        profile: name.to_owned(),
-        // Authored order — §7: "Profile targets are ordered as authored
-        // and may declare dependencies." The engine's dependency walk
-        // constrains that order; it does not replace it.
-        targets: profile.targets.clone(),
-    }
+fn selection(section: &DeploySection, name: &str, mode: ProfileMode) -> Result<ProfileResolution> {
+    let (targets, decisions, observed_os) = match mode {
+        ProfileMode::Forward(os) => {
+            let projected = section.project_profile(name, os)?;
+            (
+                projected.active_targets().to_vec(),
+                projected.decisions().to_vec(),
+                Some(os),
+            )
+        }
+        ProfileMode::Inverse => (section.inverse_profile_targets(name)?, Vec::new(), None),
+    };
+    Ok(ProfileResolution {
+        selection: DeploySelection {
+            profile: name.to_owned(),
+            targets,
+        },
+        decisions,
+        observed_os,
+    })
 }
 
 /// The profiles this project defines, for a refusal that names them.

@@ -23,7 +23,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARG
 
 use anyhow::{Context, Result, bail};
 use specmark::spec;
-use vibe_core::manifest::Manifest;
+use vibe_core::manifest::{Manifest, TargetApplicability, TargetOs};
 use vibe_lifecycle::{
     DeployExecution, DeployPlanReport, DeploySelection, DeploymentRow, RemovalOutcome,
     deploy_state_home, list_deployments, plan_deploy_targets, undeploy_targets,
@@ -55,12 +55,14 @@ pub(crate) fn resolve_authority(
     deploy: Option<&vibe_core::manifest::DeploySection>,
     profile: Option<&str>,
 ) -> Result<Option<vibe_orchestrator::DeployAuthority>> {
-    let Some(selection) = resolve_profile(deploy, profile)? else {
+    let os = current_target_os()?;
+    let Some(resolution) = resolve_profile(deploy, profile, profile::ProfileMode::Forward(os))?
+    else {
         return Ok(None);
     };
     let (user_home, clients) = client_authority()?;
     Ok(Some(vibe_orchestrator::DeployAuthority {
-        selection,
+        selection: resolution.into_selection(),
         user_home,
         clients,
     }))
@@ -101,7 +103,12 @@ pub fn run(
 fn plan(ctx: &output::Context, args: &DeployArgs) -> Result<()> {
     let root = super::resolve_project_root(&args.lifecycle.path)?;
     let manifest = read_manifest(&root)?;
-    let Some(selection) = resolve_profile(manifest.deploy.as_ref(), args.profile.as_deref())?
+    let os = current_target_os()?;
+    let Some(resolution) = resolve_profile(
+        manifest.deploy.as_ref(),
+        args.profile.as_deref(),
+        profile::ProfileMode::Forward(os),
+    )?
     else {
         return report_nothing(ctx, "plan");
     };
@@ -112,7 +119,7 @@ fn plan(ctx: &output::Context, args: &DeployArgs) -> Result<()> {
     let reports = plan_deploy_targets(&DeployExecution {
         project_root: &root,
         targets: &targets,
-        selection: &selection,
+        selection: resolution.selection(),
         registry: &loaded.mechanisms,
         routes: &manifest.mechanism_routes,
         state_home: &roots.deployments,
@@ -123,7 +130,7 @@ fn plan(ctx: &output::Context, args: &DeployArgs) -> Result<()> {
         package: None,
         created_at: &now(),
     })?;
-    render_plan(ctx, &selection, &reports)
+    render_plan(ctx, &resolution, &reports)
 }
 
 /// `vibe undeploy --profile X`.
@@ -131,7 +138,12 @@ fn plan(ctx: &output::Context, args: &DeployArgs) -> Result<()> {
 pub fn run_undeploy(ctx: &output::Context, args: UndeployArgs) -> Result<()> {
     let root = super::resolve_project_root(&args.path)?;
     let manifest = read_manifest(&root)?;
-    let Some(selection) = resolve_profile(manifest.deploy.as_ref(), Some(&args.profile))? else {
+    let Some(resolution) = resolve_profile(
+        manifest.deploy.as_ref(),
+        Some(&args.profile),
+        profile::ProfileMode::Inverse,
+    )?
+    else {
         bail!(
             "`--profile {}` was requested, but this project declares no deploy profiles \
              (violates spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS; fix: \
@@ -146,7 +158,7 @@ pub fn run_undeploy(ctx: &output::Context, args: UndeployArgs) -> Result<()> {
     let removals = undeploy_targets(&DeployExecution {
         project_root: &root,
         targets: &targets,
-        selection: &selection,
+        selection: resolution.selection(),
         registry: &loaded.mechanisms,
         routes: &manifest.mechanism_routes,
         state_home: &roots.deployments,
@@ -157,7 +169,7 @@ pub fn run_undeploy(ctx: &output::Context, args: UndeployArgs) -> Result<()> {
         package: None,
         created_at: &now(),
     })?;
-    render_removals(ctx, &selection, &removals)
+    render_removals(ctx, resolution.selection(), &removals)
 }
 
 /// `vibe deployments [--json]` — the machine's receipts, and nothing else.
@@ -223,60 +235,144 @@ fn json_rows(rows: &[DeploymentRow]) -> serde_json::Value {
 /// Render one read-only plan.
 fn render_plan(
     ctx: &output::Context,
-    selection: &DeploySelection,
+    resolution: &profile::ProfileResolution,
     reports: &[DeployPlanReport],
 ) -> Result<()> {
     if ctx.is_json() {
-        return ctx.emit_json(&serde_json::json!({
-            "command": "deploy",
-            "ok": true,
-            "mode": "plan",
-            "profile": selection.profile,
-            "targets": reports
-                .iter()
-                .map(|report| serde_json::json!({
-                    "target": report.target,
-                    "mechanism": report.mechanism,
-                    "provider": report.provider,
-                    "via": report.via,
-                    "displaced_default": report.displaced_default,
-                    "planned": report.planned,
-                    "reason": report.reason,
-                    "summary": report.summary,
-                    "resources": report
-                        .resources
-                        .iter()
-                        .map(|resource| serde_json::json!({
-                            "resource": resource.resource,
-                            "desired_digest": resource.desired_digest,
-                            "recorded_digest": resource.recorded_digest,
-                            "change": resource.change,
-                        }))
-                        .collect::<Vec<_>>(),
-                }))
-                .collect::<Vec<_>>(),
-        }));
+        return ctx.emit_json(&plan_json(resolution, reports)?);
     }
-    ctx.heading(&format!("Deploy plan — profile `{}`", selection.profile));
-    for report in reports {
-        ctx.step(&format!(
-            "{} [{}] provider={} via={} — {}",
-            report.target,
-            if report.planned { "planned" } else { "fresh" },
-            report.provider,
-            report.via,
-            report.reason,
-        ));
-        for resource in &report.resources {
-            ctx.step(&format!("    {} {}", resource.change, resource.resource));
+    ctx.heading(&format!(
+        "Deploy plan — profile `{}` on `{}`",
+        resolution.profile,
+        resolution
+            .observed_os()
+            .context("forward deploy plan carries no observed OS")?,
+    ));
+    for decision in resolution.decisions() {
+        if decision.is_active() {
+            let report = report_for(reports, decision.target())?;
+            ctx.step(&format!(
+                "{} [{}] provider={} via={} — {}",
+                report.target,
+                if report.planned { "planned" } else { "fresh" },
+                report.provider,
+                report.via,
+                report.reason,
+            ));
+            for resource in &report.resources {
+                ctx.step(&format!("    {} {}", resource.change, resource.resource));
+            }
+        } else {
+            ctx.step(&format!(
+                "{} [skipped] when={} — {}",
+                decision.target(),
+                guard_text(decision),
+                decision.reason(),
+            ));
         }
     }
     let planned = reports.iter().filter(|report| report.planned).count();
+    let skipped = resolution
+        .decisions()
+        .iter()
+        .filter(|decision| !decision.is_active())
+        .count();
     ctx.summary(&format!(
-        "{planned} of {} target(s) would be deployed; nothing was read, built or changed",
+        "{planned} of {} applicable target(s) would be deployed; {skipped} skipped; nothing was read, built or changed",
         reports.len(),
     ));
     Ok(())
+}
+
+fn plan_json(
+    resolution: &profile::ProfileResolution,
+    reports: &[DeployPlanReport],
+) -> Result<serde_json::Value> {
+    let observed = resolution
+        .observed_os()
+        .context("forward deploy plan carries no observed OS")?;
+    let mut targets = Vec::with_capacity(resolution.decisions().len());
+    for decision in resolution.decisions() {
+        let mut row = if decision.is_active() {
+            let report = report_for(reports, decision.target())?;
+            serde_json::json!({
+                "target": report.target,
+                "mechanism": report.mechanism,
+                "provider": report.provider,
+                "via": report.via,
+                "displaced_default": report.displaced_default,
+                "planned": report.planned,
+                "reason": report.reason,
+                "summary": report.summary,
+                "resources": report.resources.iter().map(|resource| serde_json::json!({
+                    "resource": resource.resource,
+                    "desired_digest": resource.desired_digest,
+                    "recorded_digest": resource.recorded_digest,
+                    "change": resource.change,
+                })).collect::<Vec<_>>(),
+            })
+        } else {
+            serde_json::json!({
+                "target": decision.target(),
+                "planned": false,
+                "reason": decision.reason(),
+                "resources": Vec::<serde_json::Value>::new(),
+            })
+        };
+        let object = row
+            .as_object_mut()
+            .context("internal: deploy plan row is not an object")?;
+        object.insert("status".into(), decision.status().into());
+        object.insert("observed_os".into(), observed.as_str().into());
+        if let Some(guard) = decision.when() {
+            object.insert(
+                "when".into(),
+                serde_json::json!({
+                    "os": guard.os().iter().map(|os| os.as_str()).collect::<Vec<_>>()
+                }),
+            );
+        }
+        targets.push(row);
+    }
+    Ok(serde_json::json!({
+        "command": "deploy",
+        "ok": true,
+        "mode": "plan",
+        "profile": resolution.profile,
+        "observed_os": observed.as_str(),
+        "targets": targets,
+    }))
+}
+
+fn report_for<'a>(reports: &'a [DeployPlanReport], target: &str) -> Result<&'a DeployPlanReport> {
+    reports
+        .iter()
+        .find(|report| report.target == target)
+        .with_context(|| format!("internal: active deploy target `{target}` has no plan report"))
+}
+
+fn guard_text(decision: &TargetApplicability) -> String {
+    decision.when().map_or_else(
+        || "unconditional".to_owned(),
+        |guard| {
+            format!(
+                "os=[{}]",
+                guard
+                    .os()
+                    .iter()
+                    .map(|os| os.as_str())
+                    .collect::<Vec<_>>()
+                    .join(",")
+            )
+        },
+    )
+}
+
+/// Observe the process OS at the command boundary and nowhere below it.
+fn current_target_os() -> Result<TargetOs> {
+    TargetOs::current().context(
+        "this host OS is outside the supported deploy applicability set: windows, linux, macos",
+    )
 }
 
 /// Render one inverse deployment.

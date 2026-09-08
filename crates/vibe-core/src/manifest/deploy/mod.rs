@@ -15,6 +15,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS");
 
+mod applicability;
 mod error;
 mod wire;
 
@@ -31,6 +32,7 @@ use super::extension::ExtensionConfig;
 use super::mechanism::{MechanismKey, MechanismRole, ProviderPin, is_portable_token};
 use super::plane::{assert_acyclic, bounded_value};
 
+pub use applicability::DeployProfileProjection;
 pub use error::DeployError;
 pub(crate) use wire::DeploySectionWire;
 
@@ -293,12 +295,9 @@ impl DeploySection {
                     });
                 }
             }
-            // Every dependency of every selected target must be included in
-            // the selected profile — reachable transitively only through
-            // targets the profile itself selects, in authored order. An
-            // implicit auto-include would make a profile silently deploy more
-            // than it names, so the narrow reading is enforced: the selection
-            // is the whole truth.
+            // Authored closure is host-independent: every referenced row is
+            // still validated even when applicability later projects it out.
+            // Runtime projection separately refuses active -> inactive.
             let selected: BTreeSet<&str> = profile.targets.iter().map(String::as_str).collect();
             for target in &profile.targets {
                 let Some(depends_on) = self

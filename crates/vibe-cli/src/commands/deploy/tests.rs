@@ -12,7 +12,20 @@
 use specmark::verifies;
 use vibe_core::manifest::Manifest;
 
-use super::resolve_profile;
+use super::profile::{ProfileMode, ProfileResolution};
+use super::{plan_json, resolve_profile};
+use vibe_lifecycle::{DeployPlanReport, DeployResourcePlan};
+
+fn resolve(
+    deploy: Option<&vibe_core::manifest::DeploySection>,
+    requested: Option<&str>,
+) -> anyhow::Result<Option<ProfileResolution>> {
+    resolve_profile(
+        deploy,
+        requested,
+        ProfileMode::Forward(vibe_core::manifest::TargetOs::Windows),
+    )
+}
 
 /// Parse one fixture manifest.
 fn manifest(body: &str) -> Manifest {
@@ -58,7 +71,7 @@ fn an_explicit_profile_wins() {
     );
     let manifest = manifest(&body);
 
-    let selection = resolve_profile(manifest.deploy.as_ref(), Some("production"))
+    let selection = resolve(manifest.deploy.as_ref(), Some("production"))
         .expect("an explicit profile resolves")
         .expect("a selection");
 
@@ -79,7 +92,7 @@ fn the_declared_default_profile_answers_a_bare_deploy() {
     );
     let manifest = manifest(&body);
 
-    let selection = resolve_profile(manifest.deploy.as_ref(), None)
+    let selection = resolve(manifest.deploy.as_ref(), None)
         .expect("the declared default resolves")
         .expect("a selection");
 
@@ -94,7 +107,7 @@ fn exactly_one_profile_answers_a_bare_deploy() {
     let body = format!("{ARTIFACTS}{}{}", target("a"), profile("local", &["a"]),);
     let manifest = manifest(&body);
 
-    let selection = resolve_profile(manifest.deploy.as_ref(), None)
+    let selection = resolve(manifest.deploy.as_ref(), None)
         .expect("the exactly-one rule resolves")
         .expect("a selection");
 
@@ -115,7 +128,7 @@ fn two_profiles_without_a_default_refuse_and_name_them() {
     );
     let manifest = manifest(&body);
 
-    let error = resolve_profile(manifest.deploy.as_ref(), None)
+    let error = resolve(manifest.deploy.as_ref(), None)
         .expect_err("a bare deploy over two profiles is illegal");
 
     let rendered = error.to_string();
@@ -135,7 +148,7 @@ fn an_unknown_profile_refuses_and_lists_the_defined_ones() {
     let body = format!("{ARTIFACTS}{}{}", target("a"), profile("local", &["a"]));
     let manifest = manifest(&body);
 
-    let error = resolve_profile(manifest.deploy.as_ref(), Some("staging"))
+    let error = resolve(manifest.deploy.as_ref(), Some("staging"))
         .expect_err("an undefined profile refuses");
 
     let rendered = error.to_string();
@@ -152,7 +165,7 @@ fn a_project_with_no_deploy_section_selects_nothing() {
     let manifest = manifest(ARTIFACTS);
 
     assert!(
-        resolve_profile(manifest.deploy.as_ref(), None)
+        resolve(manifest.deploy.as_ref(), None)
             .expect("a project with nothing to deploy still runs")
             .is_none(),
     );
@@ -165,7 +178,7 @@ fn a_project_with_no_deploy_section_selects_nothing() {
 fn a_profile_flag_on_a_project_with_no_profiles_refuses() {
     let manifest = manifest(ARTIFACTS);
 
-    let error = resolve_profile(manifest.deploy.as_ref(), Some("local"))
+    let error = resolve(manifest.deploy.as_ref(), Some("local"))
         .expect_err("naming a profile that cannot exist refuses");
 
     assert!(
@@ -187,11 +200,108 @@ fn the_authored_target_order_survives() {
     );
     let manifest = manifest(&body);
 
-    let selection = resolve_profile(manifest.deploy.as_ref(), None)
+    let selection = resolve(manifest.deploy.as_ref(), None)
         .expect("the one profile resolves")
         .expect("a selection");
 
     assert_eq!(selection.targets, ["second", "first"]);
+}
+
+#[test]
+fn one_default_profile_projects_windows_and_posix_without_choosing_a_profile() {
+    let body = format!(
+        "{ARTIFACTS}[[deploy.target]]\nid='win'\nartifact='tool.exe'\nmechanism='deploy:vibe-bin'\nwhen={{os=['windows']}}\n\
+         [[deploy.target]]\nid='posix'\nartifact='tool.exe'\nmechanism='deploy:vibe-bin'\nwhen={{os=['linux','macos']}}\n\
+         [deploy]\ndefault_profile='local'\n{}",
+        profile("local", &["win", "posix"]),
+    );
+    let parsed = manifest(&body);
+    let deploy = parsed.deploy.as_ref();
+    let windows = resolve_profile(
+        deploy,
+        None,
+        ProfileMode::Forward(vibe_core::manifest::TargetOs::Windows),
+    )
+    .unwrap()
+    .unwrap();
+    let linux = resolve_profile(
+        deploy,
+        None,
+        ProfileMode::Forward(vibe_core::manifest::TargetOs::Linux),
+    )
+    .unwrap()
+    .unwrap();
+    assert_eq!(windows.profile, "local");
+    assert_eq!(linux.profile, "local");
+    assert_eq!(windows.targets, ["win"]);
+    assert_eq!(linux.targets, ["posix"]);
+    assert_eq!(windows.decisions()[1].status(), "skipped");
+
+    let reports = [DeployPlanReport {
+        target: "win".into(),
+        mechanism: "deploy:vibe-bin".into(),
+        provider: "org.vibevm/vibe#vibe-bin".into(),
+        via: "the shipped builtin default".into(),
+        displaced_default: None,
+        planned: true,
+        reason: "new deployment".into(),
+        resources: vec![DeployResourcePlan {
+            resource: "bin/tool".into(),
+            desired_digest: "0".repeat(64),
+            recorded_digest: None,
+            change: "create".into(),
+        }],
+        summary: "install tool".into(),
+    }];
+    let json = plan_json(&windows, &reports).unwrap();
+    let rows = json["targets"].as_array().unwrap();
+    assert_eq!(rows.len(), 2);
+    assert_eq!(rows[0]["status"], "active");
+    assert_eq!(rows[1]["status"], "skipped");
+    assert_eq!(rows[1]["observed_os"], "windows");
+    assert_eq!(rows[1]["when"]["os"], serde_json::json!(["linux", "macos"]));
+    assert!(rows[1]["reason"].as_str().unwrap().contains("excludes"));
+}
+
+#[test]
+fn forward_dependency_and_zero_applicable_refuse_but_inverse_keeps_authored_members() {
+    let body = format!(
+        "{ARTIFACTS}[[deploy.target]]\nid='win'\nartifact='tool.exe'\nmechanism='deploy:vibe-bin'\nwhen={{os=['windows']}}\n\
+         [[deploy.target]]\nid='posix'\nartifact='tool.exe'\nmechanism='deploy:vibe-bin'\nwhen={{os=['linux']}}\ndepends_on=['win']\n{}",
+        profile("local", &["win", "posix"]),
+    );
+    let parsed = manifest(&body);
+    let deploy = parsed.deploy.as_ref();
+    let error = resolve_profile(
+        deploy,
+        None,
+        ProfileMode::Forward(vibe_core::manifest::TargetOs::Linux),
+    )
+    .unwrap_err()
+    .to_string();
+    for expected in ["posix", "win", "linux"] {
+        assert!(error.contains(expected), "{error}");
+    }
+    let inverse = resolve_profile(deploy, None, ProfileMode::Inverse)
+        .unwrap()
+        .unwrap();
+    assert_eq!(inverse.targets, ["win", "posix"]);
+    assert!(inverse.decisions().is_empty());
+
+    let only_win = format!(
+        "{ARTIFACTS}{}{}",
+        target("win").replace("\n\n", "\nwhen={os=['windows']}\n\n"),
+        profile("local", &["win"])
+    );
+    let manifest = manifest(&only_win);
+    let error = resolve_profile(
+        manifest.deploy.as_ref(),
+        None,
+        ProfileMode::Forward(vibe_core::manifest::TargetOs::Linux),
+    )
+    .unwrap_err()
+    .to_string();
+    assert!(error.contains("NO_APPLICABLE_TARGETS"), "{error}");
 }
 
 /// The whole point, as a fence rather than a promise: the resolver's
