@@ -109,8 +109,8 @@ impl Pinned {
 
     /// The explicit publication spelling of [`Self::rename_child_to`].  On
     /// Epoch-1 execution is Windows-only and uses a source handle plus native
-    /// no-replace rename. Other platforms return `Unsupported`; Linux's
-    /// `renameat2` helper remains an explicitly partial future primitive.
+    /// no-replace rename. Every other platform returns `Unsupported`; there is
+    /// no partial runtime path that weakens the retained-handle contract.
     pub fn rename_child_noreplace_to(
         &self,
         destination: &Pinned,

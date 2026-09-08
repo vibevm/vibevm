@@ -1167,6 +1167,14 @@ timeout_seconds = 120</fence>
       <SEC-NO-FOLLOW fact="true" status="spec/done">Links, reparse points, special files,
       unexpected hard links and name/handle identity changes fail closed at
       inventory and again before mutation.</SEC-NO-FOLLOW>
+      <SEC-NATIVE-NOFOLLOW-BOUNDARY fact="true" status="spec/done">Epoch-1 Windows
+      crosses a hand-written native ABI in exactly five narrowly reviewed functions:
+      lease-entry, remove-expected, create-directory, rename-no-replace and NTSTATUS
+      conversion. No safe standard-library or cap-std primitive preserves the required
+      retained-handle, no-follow, no-replace and race semantics for those operations.
+      Each function owns its inline SAFETY proof and exact tests. This is not a broad
+      crate or file exemption. A second consumer or an expanded native ABI is the
+      trigger to revisit a dedicated audit crate.</SEC-NATIVE-NOFOLLOW-BOUNDARY>
       <SEC-CUSTOM-CODE fact="true" status="spec/done">A custom health verifier is
       user-authorized code with the same trust consequence as a project build
       script. The plan names its exact snapshot/interpreter/effects before

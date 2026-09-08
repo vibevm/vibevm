@@ -16,12 +16,13 @@
 //! — and a third (deploy) will. Two copies of a containment law is exactly how
 //! the weaker copy becomes the one an attacker reaches.
 //!
-//! Everything here is safe Rust over `cap-std`; there is no handwritten
-//! `unsafe` and no hand-declared OS ABI.
+//! The public API is safe Rust over `cap-std`. One reviewed cfg-Windows
+//! boundary uses a narrow hand-written NT ABI where the safe libraries cannot
+//! preserve the retained-handle, no-follow and no-replace contract.
 
-// The crate remains safe Rust except for the native no-replace rename calls in
-// `transaction::platform`. `deny` lets that tiny cfg module opt in locally;
-// every other module still rejects unsafe code.
+// Safe Rust remains the crate-wide default. `deny` lets only the reviewed
+// function-grain Windows boundary in `transaction::platform` opt in locally;
+// every other function still rejects unsafe code.
 #![deny(unsafe_code)]
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE");
