@@ -193,6 +193,10 @@ unit = "vibe-graph"
 reason = "M0 stub, no code yet — the task-graph runner per VIBEVM-SPEC §5 is unbuilt; nothing to gate until it lands"
 
 [[rust.exempt]]
+unit = "vibe-scrape"
+reason = "PROP-056 scrape landed as a campaign slice before its AI-Native Class-F/G adoption; it is scope-tagged, but its public seams have no compiled examples and its error layer carries no REQ edges. Keep explicit until the oversized cells are split and both gate prerequisites land"
+
+[[rust.exempt]]
 unit = "vibe-wire"
 reason = "generated code (JTD-schema codegen output), excluded by PROP-014 §2.3. That rule also designates the generator input under schemas/ as the taggable unit instead — designated, and untagged: measured 2026-08-05, none of the seven schemas carries a spec address and no scanner reads .json at all (B-060). The exemption stands on the generated-code half alone; do not read the second clause as a description of the tree"
 
