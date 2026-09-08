@@ -8,5 +8,12 @@ publish = false
 name = "vibe_native_loader_compiler_fixture"
 crate-type = ["rlib", "cdylib"]
 
+[features]
+default = ["abi"]
+abi = []
+
 [dependencies]
+base64.workspace = true
+quick-xml.workspace = true
+sha2.workspace = true
 vibe-ext = { path = "../../../../vibe-ext" }

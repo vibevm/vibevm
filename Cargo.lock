@@ -4642,6 +4642,9 @@ dependencies = [
 name = "vibe-native-loader-compiler-fixture"
 version = "1.0.0"
 dependencies = [
+ "base64",
+ "quick-xml",
+ "sha2",
  "vibe-ext",
 ]
 

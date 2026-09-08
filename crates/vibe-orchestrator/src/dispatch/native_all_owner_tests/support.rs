@@ -1,7 +1,7 @@
 use std::path::Path;
 use std::sync::Arc;
 
-use vibe_core::manifest::{LockedPackage, Lockfile, Materialization};
+use vibe_core::manifest::{LockedPackage, Lockfile, Materialization, SpecFormat};
 use vibe_core::{ContentHash, Group, PackageKind, PackageName, PackageRef};
 use vibe_lifecycle::process::StreamMode;
 use vibe_lifecycle::{Phase, RunMetadata};
@@ -12,7 +12,8 @@ use crate::ports::*;
 use crate::{PhaseOutcome, PhaseRun, run_phases};
 
 pub(super) struct Fixture {
-    root: tempfile::TempDir,
+    pub(super) root: tempfile::TempDir,
+    pub(super) spec_format: SpecFormat,
 }
 
 pub(super) type NativeOutputs = Vec<(String, Vec<(String, Vec<u8>)>)>;
@@ -44,7 +45,10 @@ impl Fixture {
         );
         seed_compiler(root.path());
         write_lock(root.path());
-        Self { root }
+        Self {
+            root,
+            spec_format: SpecFormat::Mixed,
+        }
     }
 
     pub(super) fn run(&self) -> PhaseOutcome {
@@ -190,7 +194,7 @@ impl Fixture {
             &workspace,
             &resolution,
             world,
-            vibe_core::manifest::SpecFormat::Mixed,
+            self.spec_format,
             None,
             lowering,
             facts,
@@ -198,6 +202,31 @@ impl Fixture {
         )
         .unwrap();
         crate::install::NativeInstallContext::new(carriage, sidecar)
+    }
+
+    pub(super) fn build_and_replay(
+        &self,
+        context: crate::install::NativeInstallContext,
+    ) -> anyhow::Result<()> {
+        let platform = vibe_lifecycle::native::NativePlatform::from_key(context.platform_key())?;
+        let (epoch, _) = context.parts();
+        let selected = epoch.selected()?;
+        super::super::native_mechanism::prepare(
+            Some(&context),
+            &[],
+            Default::default(),
+            self.root.path(),
+            selected.runtime().mechanisms(),
+            selected.runtime().routes(),
+            platform,
+            true,
+            "2026-09-08T00:00:00Z",
+        )?;
+        if !context.replay_is_empty() {
+            let mut factory = platform.replay_factory();
+            context.into_carriage().replay(&mut factory)?;
+        }
+        Ok(())
     }
 
     pub(super) fn observer_exists(&self) -> bool {
@@ -253,9 +282,41 @@ impl Fixture {
         })
         .collect()
     }
+
+    pub(super) fn build_count(&self) -> u32 {
+        std::fs::read_to_string(
+            self.root
+                .path()
+                .join("vibevm/vibedeps/org.demo.compiler/1.0.0/native/build-count"),
+        )
+        .ok()
+        .and_then(|value| value.parse().ok())
+        .unwrap_or(0)
+    }
+
+    pub(super) fn output_mtimes(&self) -> Vec<std::time::SystemTime> {
+        let boot = vibe_core::layout::current_boot_dir();
+        let file = if matches!(self.spec_format, SpecFormat::Xml) {
+            "STATIC.xml"
+        } else {
+            "STATIC.md"
+        };
+        [
+            self.root.path().join(&boot).join(file),
+            self.root.path().join("member").join(&boot).join(file),
+            self.root
+                .path()
+                .join("vibevm/vibedeps/org.demo.compiler/1.0.0")
+                .join(&boot)
+                .join(file),
+        ]
+        .into_iter()
+        .map(|path| std::fs::metadata(path).unwrap().modified().unwrap())
+        .collect()
+    }
 }
 
-fn node_manifest(name: &str, route: Option<&str>, foreign: bool) -> String {
+pub(super) fn node_manifest(name: &str, route: Option<&str>, foreign: bool) -> String {
     let workspace = if name == "root" {
         "[workspace]\nmembers=['member']\n"
     } else {
@@ -276,8 +337,10 @@ fn node_manifest(name: &str, route: Option<&str>, foreign: bool) -> String {
 
 fn seed_compiler(root: &Path) {
     let slot = root.join("vibevm/vibedeps/org.demo.compiler/1.0.0");
-    let manifest = "[package]\ngroup='org.demo'\nname='compiler'\nkind='tool'\nversion='1.0.0'\n[boot_snippet]\nsource='boot/compiler.md'\nlink='static'\n[requires.packages]\n'org.demo/base'={version='=1.0.0',link='static'}\n[[extension]]\nid='native'\npoint='compile:emitted'\nhandler={kind='native',crate_dir='native'}\n";
-    write(&slot.join("vibe.toml"), manifest);
+    write(
+        &slot.join("vibe.toml"),
+        &compiler_manifest("handler={kind='native',crate_dir='native'}"),
+    );
     write(&slot.join("boot/compiler.md"), "# Compiler {#root}\n");
     let base = root.join("vibevm/vibedeps/org.demo.base/1.0.0");
     write(
@@ -299,6 +362,12 @@ fn seed_compiler(root: &Path) {
         ),
     );
     write_compiler_source(root, false);
+}
+
+pub(super) fn compiler_manifest(handler: &str) -> String {
+    format!(
+        "[package]\ngroup='org.demo'\nname='compiler'\nkind='tool'\nversion='1.0.0'\n[boot_snippet]\nsource='boot/compiler.md'\nlink='static'\n[requires.packages]\n'org.demo/base'={{version='=1.0.0',link='static'}}\n[[extension]]\nid='native'\npoint='compile:emitted'\n{handler}\n"
+    )
 }
 
 fn write_compiler_source(root: &Path, fail: bool) {
@@ -369,7 +438,7 @@ fn write_lock(root: &Path) {
     lock.write(root.join("vibe.lock")).unwrap();
 }
 
-fn write(path: &Path, body: &str) {
+pub(super) fn write(path: &Path, body: &str) {
     std::fs::create_dir_all(path.parent().unwrap()).unwrap();
     std::fs::write(path, body).unwrap();
 }

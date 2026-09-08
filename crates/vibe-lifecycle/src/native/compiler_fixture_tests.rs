@@ -15,6 +15,24 @@ impl SectionSource for NoSections {
 }
 
 #[test]
+fn independent_native_minify_matches_builtin_with_column_zero_content_comment() {
+    let input = "<root>\n  <pure>\n    <a/>\n<!-- keep -->\n    <b/>\n  </pure>\n  <mixed>left <b/> right</mixed>\n  <data><![CDATA[ raw <xml> ]]><b/></data>\n</root>";
+    let builtin = vibe_spec::minify_emitted_xml(input).unwrap();
+    let native = vibe_native_loader_compiler_fixture::minify_for_test("static-xml", input)
+        .unwrap()
+        .unwrap();
+    assert_eq!(native.as_bytes(), builtin.as_bytes());
+    assert!(native.contains("<!-- keep -->"));
+    assert!(native.contains("<mixed>left <b/> right</mixed>"));
+    assert!(native.contains("<![CDATA[ raw <xml> ]]><b/>"));
+    assert!(vibe_spec::minify_emitted_xml(&native).is_ok());
+    assert_eq!(
+        vibe_native_loader_compiler_fixture::minify_for_test("static-md", input).unwrap(),
+        None
+    );
+}
+
+#[test]
 fn real_source_row_composes_manager_artifact_sdk_and_loader() {
     let root = tempdir().unwrap();
     let relative = fixture(root.path());

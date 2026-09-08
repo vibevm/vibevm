@@ -1,6 +1,9 @@
 #[path = "native_all_owner_tests/support.rs"]
 mod support;
 
+#[path = "native_all_owner_tests/minify_parity.rs"]
+mod minify_parity;
+
 use support::Fixture;
 
 #[test]
