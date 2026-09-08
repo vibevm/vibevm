@@ -1,0 +1,83 @@
+{
+  "metadata": {
+    "description": "Epoch-1 host-authored native package-provider request. Four operations are closed while object readers remain permissive for additive evolution.",
+    "x-diagnostic-cap-bytes": 8192,
+    "x-vocabularies": ["native_deploy_artifact_kind", "native_deploy_artifact_shape"],
+    "x-relational-laws": [
+      "envelope-protocol: envelope and protocol are exactly the admitted mechanism epoch",
+      "exact-identity: provider, package mechanism and target equal the selected engine values",
+      "resolved-inputs: ordered inputs retain exact engine-proven identity, path, digest, byte count, shape and origin",
+      "paths: project/package/output/staging roots and provider paths use canonical contained spellings",
+      "accepted-chain: fingerprint, apply and verify carry the exact accepted target/input/authority/plan/fingerprint prefix",
+      "staged-authority: apply and verify stage only accepted outputs under the engine staging root"
+    ],
+    "rustOptions": {"package": "vibe_wire::native::e1::package_request"}
+  },
+  "discriminator": "operation",
+  "mapping": {
+    "plan": {"properties": {
+      "envelope": {"type": "uint32"}, "protocol": {"type": "uint32"},
+      "identity": {"ref": "invocation_identity"}, "target": {"ref": "package_target"},
+      "inputs": {"elements": {"ref": "resolved_input"}, "metadata": {"x-empty": "emit"}},
+      "authority": {"ref": "package_authority"}
+    }},
+    "fingerprint": {"properties": {
+      "envelope": {"type": "uint32"}, "protocol": {"type": "uint32"},
+      "identity": {"ref": "invocation_identity"}, "target": {"ref": "package_target"},
+      "inputs": {"elements": {"ref": "resolved_input"}, "metadata": {"x-empty": "emit"}},
+      "authority": {"ref": "package_authority"}, "plan": {"ref": "package_plan"}
+    }},
+    "apply": {"properties": {
+      "envelope": {"type": "uint32"}, "protocol": {"type": "uint32"},
+      "identity": {"ref": "invocation_identity"}, "target": {"ref": "package_target"},
+      "inputs": {"elements": {"ref": "resolved_input"}, "metadata": {"x-empty": "emit"}},
+      "authority": {"ref": "package_authority"}, "plan": {"ref": "package_plan"},
+      "fingerprint": {"ref": "package_fingerprint"}, "staging": {"ref": "staging_authority"}
+    }},
+    "verify": {"properties": {
+      "envelope": {"type": "uint32"}, "protocol": {"type": "uint32"},
+      "identity": {"ref": "invocation_identity"}, "target": {"ref": "package_target"},
+      "inputs": {"elements": {"ref": "resolved_input"}, "metadata": {"x-empty": "emit"}},
+      "authority": {"ref": "package_authority"}, "plan": {"ref": "package_plan"},
+      "fingerprint": {"ref": "package_fingerprint"}, "staging": {"ref": "staging_authority"},
+      "staged": {"elements": {"ref": "staged_output"}, "metadata": {"x-empty": "emit"}}
+    }}
+  },
+  "definitions": {
+    "invocation_identity": {"properties": {"provider": {"type": "string"}, "mechanism": {"type": "string"}, "target": {"type": "string"}}},
+    "package_target": {
+      "properties": {"id": {"type": "string"}, "outputs": {"elements": {"ref": "declared_output"}, "metadata": {"x-empty": "emit"}}},
+      "optionalProperties": {"config_toml": {"type": "string", "metadata": {"x-default": null}}}
+    },
+    "declared_output": {"properties": {"id": {"type": "string"}, "kind": {"ref": "native_deploy_artifact_kind"}}},
+    "resolved_input": {"properties": {
+      "name": {"type": "string"}, "reference": {"type": "string"},
+      "path_absolute": {"type": "string"}, "path_relative": {"type": "string"},
+      "digest": {"type": "string"}, "bytes": {"type": "string"},
+      "shape": {"ref": "native_deploy_artifact_shape"}, "origin": {"ref": "input_origin"}
+    }},
+    "input_origin": {"discriminator": "kind", "mapping": {
+      "artifact-record": {"properties": {"recorded_kind": {"ref": "native_deploy_artifact_kind"}}},
+      "workspace-path": {"properties": {}}
+    }},
+    "package_authority": {"properties": {
+      "project_root_absolute": {"type": "string"},
+      "package_root_absolute": {"type": "string"}, "package_root_relative": {"type": "string"},
+      "output_root_absolute": {"type": "string"}, "output_root_relative": {"type": "string"}
+    }},
+    "package_plan": {"properties": {
+      "summary": {"type": "string"},
+      "outputs": {"elements": {"ref": "planned_output"}, "metadata": {"x-empty": "emit"}}
+    }},
+    "planned_output": {
+      "properties": {"id": {"type": "string"}, "kind": {"ref": "native_deploy_artifact_kind"}, "shape": {"ref": "native_deploy_artifact_shape"}, "path_relative": {"type": "string"}},
+      "optionalProperties": {"media_type": {"type": "string", "metadata": {"x-default": null}}}
+    },
+    "package_fingerprint": {"properties": {"digest": {"type": "string"}, "counted_inputs": {"type": "string"}}},
+    "staging_authority": {"properties": {"root_absolute": {"type": "string"}, "root_relative": {"type": "string"}}},
+    "staged_output": {
+      "properties": {"id": {"type": "string"}, "kind": {"ref": "native_deploy_artifact_kind"}, "shape": {"ref": "native_deploy_artifact_shape"}, "path_relative": {"type": "string"}},
+      "optionalProperties": {"media_type": {"type": "string", "metadata": {"x-default": null}}}
+    }
+  }
+}

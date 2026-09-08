@@ -14,4 +14,6 @@ pub mod deploy_reply;
 pub mod deploy_request;
 pub mod manifest;
 pub mod mechanism_manifest;
+pub mod package_reply;
+pub mod package_request;
 pub mod reply;
