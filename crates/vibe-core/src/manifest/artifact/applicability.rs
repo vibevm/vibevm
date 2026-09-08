@@ -6,6 +6,21 @@ use super::{ArtifactInput, ArtifactPackageTarget, ArtifactsError, ArtifactsSecti
 use crate::manifest::{TargetApplicability, TargetOs};
 
 /// The active package target set and the complete authored decision trail.
+///
+/// ```
+/// use vibe_core::manifest::{Manifest, TargetOs};
+///
+/// let manifest = Manifest::parse_str(
+///     "[project]\nname='demo'\nversion='0.1.0'\n\
+///      [[artifacts.package]]\nid='docs'\nmechanism='package:static-file'\n\
+///      outputs=[{id='site',kind='directory'}]\n",
+/// ).unwrap();
+/// let projection = manifest.artifacts.as_ref().unwrap()
+///     .project_package_targets(TargetOs::Linux).unwrap();
+/// assert_eq!(projection.active()[0].id, "docs");
+/// assert_eq!(projection.decisions()[0].status(), "active");
+/// assert!(projection.active_output_ids().contains("site"));
+/// ```
 #[derive(Debug)]
 pub struct PackageTargetProjection<'a> {
     active: Vec<&'a ArtifactPackageTarget>,

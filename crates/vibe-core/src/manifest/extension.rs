@@ -92,6 +92,14 @@ pub struct ExtensionAppliesTo {
 }
 
 /// The four pass-tier declaration kinds.
+///
+/// ```
+/// use vibe_core::manifest::ExtensionPassKind;
+///
+/// let terminal = ExtensionPassKind::Backend;
+/// assert!(matches!(terminal, ExtensionPassKind::Backend));
+/// assert_ne!(terminal, ExtensionPassKind::Transform);
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#PASS-TIER-LAW")]
 pub enum ExtensionPassKind {
@@ -102,6 +110,14 @@ pub enum ExtensionPassKind {
 }
 
 /// A named IR level used only by a pass declaration.
+///
+/// ```
+/// use vibe_core::manifest::ExtensionIrLevel;
+///
+/// let transition = (ExtensionIrLevel::Lane, ExtensionIrLevel::Emitted);
+/// assert_eq!(transition.0, ExtensionIrLevel::Lane);
+/// assert_ne!(transition.0, transition.1);
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#IR-LEVELS")]
 pub enum ExtensionIrLevel {
@@ -116,6 +132,19 @@ pub enum ExtensionIrLevel {
 /// R6.1 validates the kind-specific field matrix while preserving every
 /// accepted field and its authored spelling. Registry membership, named-pass
 /// resolution, and transition legality remain compiler concerns for R6.3.
+///
+/// ```
+/// use vibe_core::manifest::{ExtensionPass, ExtensionPassKind};
+///
+/// let pass = ExtensionPass {
+///     kind: ExtensionPassKind::Backend,
+///     level: None, from: None, to: None, after: None, before: None,
+///     replace: Some("emit".into()), formats: None,
+///     artifact: Some("static-xml".into()),
+/// };
+/// assert_eq!(pass.replace.as_deref(), Some("emit"));
+/// assert_eq!(pass.artifact.as_deref(), Some("static-xml"));
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#PASS-TIER-LAW")]
 pub struct ExtensionPass {

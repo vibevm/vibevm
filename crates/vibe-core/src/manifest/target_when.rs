@@ -11,6 +11,15 @@ use super::TargetOs;
 /// all-supported-OS sets, then stores the remaining values in canonical
 /// `windows`, `linux`, `macos` order so semantic equality and manifest
 /// rewriting cannot disagree.
+///
+/// ```
+/// use vibe_core::manifest::{TargetOs, TargetWhen};
+///
+/// let guard = TargetWhen::new(vec![TargetOs::Macos, TargetOs::Windows]).unwrap();
+/// assert_eq!(guard.os(), [TargetOs::Windows, TargetOs::Macos]);
+/// assert!(guard.applies_to(TargetOs::Macos));
+/// assert!(!guard.applies_to(TargetOs::Linux));
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(try_from = "TargetWhenWire", into = "TargetWhenWire")]
 pub struct TargetWhen {
@@ -59,6 +68,16 @@ impl TargetWhen {
 }
 
 /// One authored target's pure applicability decision.
+///
+/// ```
+/// use vibe_core::manifest::{TargetApplicability, TargetOs, TargetWhen};
+///
+/// let guard = TargetWhen::new(vec![TargetOs::Windows]).unwrap();
+/// let decision = TargetApplicability::decide("installer", Some(&guard), TargetOs::Linux);
+/// assert_eq!(decision.target(), "installer");
+/// assert_eq!(decision.status(), "skipped");
+/// assert!(decision.reason().contains("linux"));
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct TargetApplicability {
     target: String,

@@ -6,6 +6,23 @@ use super::{DeployError, DeploySection, DeployTarget};
 use crate::manifest::{TargetApplicability, TargetOs};
 
 /// One forward profile after its authored members were evaluated.
+///
+/// ```
+/// use vibe_core::manifest::{Manifest, TargetOs};
+///
+/// let manifest = Manifest::parse_str(
+///     "[project]\nname='demo'\nversion='0.1.0'\n\
+///      [[artifacts.build]]\nid='build'\nmechanism='build:cargo'\n\
+///      outputs=[{id='app',kind='file'}]\n\
+///      [[deploy.target]]\nid='local'\nartifact='app'\nmechanism='deploy:vibe-bin'\n\
+///      [deploy]\ndefault_profile='dev'\n[deploy.profiles.dev]\ntargets=['local']\n",
+/// ).unwrap();
+/// let projection = manifest.deploy.as_ref().unwrap()
+///     .project_profile("dev", TargetOs::Linux).unwrap();
+/// assert_eq!(projection.profile(), "dev");
+/// assert_eq!(projection.active_targets(), ["local"]);
+/// assert_eq!(projection.decisions()[0].status(), "active");
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct DeployProfileProjection {
     profile: String,
@@ -48,12 +65,16 @@ impl DeploySection {
             .targets
             .iter()
             .map(|id| {
-                let target = targets
-                    .get(id.as_str())
-                    .expect("validated profiles reference declared targets");
-                TargetApplicability::decide(id, target.when.as_ref(), os)
+                let target =
+                    targets
+                        .get(id.as_str())
+                        .ok_or_else(|| DeployError::UnknownProfileTarget {
+                            name: name.to_owned(),
+                            target: id.clone(),
+                        })?;
+                Ok(TargetApplicability::decide(id, target.when.as_ref(), os))
             })
-            .collect::<Vec<_>>();
+            .collect::<Result<Vec<_>, DeployError>>()?;
         let selected = profile
             .targets
             .iter()
@@ -118,9 +139,13 @@ impl DeploySection {
             .map(String::as_str)
             .collect::<BTreeSet<_>>();
         for id in &profile.targets {
-            let target = targets
-                .get(id.as_str())
-                .expect("validated profiles reference declared targets");
+            let target =
+                targets
+                    .get(id.as_str())
+                    .ok_or_else(|| DeployError::UnknownProfileTarget {
+                        name: name.to_owned(),
+                        target: id.clone(),
+                    })?;
             for dependency in target.depends_on.iter().flatten() {
                 if !selected.contains(dependency.as_str()) {
                     return Err(DeployError::MissingDependencyInProfile {
@@ -144,7 +169,7 @@ impl DeploySection {
 
 #[cfg(test)]
 mod tests {
-    use crate::manifest::{Manifest, TargetOs};
+    use crate::manifest::{DeployError, Manifest, TargetOs};
 
     fn manifest() -> Manifest {
         Manifest::parse_str(
@@ -198,5 +223,25 @@ mod tests {
             .to_string();
         assert!(error.contains("NO_APPLICABLE_TARGETS"), "{error}");
         assert!(!error.contains("dependency"), "{error}");
+    }
+
+    #[test]
+    fn constructed_profile_with_unknown_target_refuses_without_panicking() {
+        let mut manifest = manifest();
+        let deploy = manifest.deploy.as_mut().unwrap();
+        deploy.targets.clear();
+
+        for error in [
+            deploy
+                .project_profile("local", TargetOs::Linux)
+                .unwrap_err(),
+            deploy.inverse_profile_targets("local").unwrap_err(),
+        ] {
+            assert!(matches!(
+                error,
+                DeployError::UnknownProfileTarget { name, target }
+                    if name == "local" && target == "win"
+            ));
+        }
     }
 }
