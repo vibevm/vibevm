@@ -1,20 +1,22 @@
 //! Post-processing passes over jtd-codegen output — content edits the
 //! generator's emission gets before anything else reads the file.
 //!
-//! This file is the driver plus the first pass; the other seven —
+//! This file is the driver plus the first pass; the other nine —
 //! renaming field identifiers to snake_case (dropping the identity
 //! renames), turning wire maps into ordered `BTreeMap`s, collapsing
 //! optional collections per the schema's `x-empty`, lifting the `Box`
-//! off optional scalars and structures per the schema's `x-default`,
+//! off optional scalars and structures per the schema's `x-default`, moving
+//! complete final field chunks per the schema's `x-wire-order`,
 //! stamping `#[serde(deny_unknown_fields)]` on the structs of formats
 //! whose computed legacy policy or explicit registry `unknown_fields = "deny"`
 //! requires a strict reader, binding the domain
 //! Rust types the schema's `x-rust-type` names (an alias's right side
 //! or a type's name, decided by the definition's form, plus the import
-//! items a substitution orphans), and opening vocabularies per the
+//! items a substitution orphans), widening generated public derives to the
+//! project trait floor, and opening vocabularies per the
 //! schema's `x-vocabulary` — live in the sibling `snake_case`,
-//! `ordered_maps`, `empty_policy`, `optional_shapes`, `strictness`,
-//! `domain_types`, and `open_vocabulary` modules, split along those
+//! `ordered_maps`, `empty_policy`, `optional_shapes`, `wire_order`,
+//! `strictness`, `domain_types`, `derive_floor`, and `open_vocabulary` modules, split along those
 //! responsibility seams as the set outgrew the 600-line budget.
 //!
 //! The passes run in a fixed ORDER, and the order is a rule, not a
@@ -31,17 +33,21 @@
 //! optional-shapes pass is keyed to the shape likewise (the same skip
 //! attribute over the `Option<Box<…>>` field lines the empty-policy
 //! pass left standing — the scalars and structures), so it runs fifth.
-//! The strictness pass is keyed to the shape as well (the
+//! The wire-order pass then moves those complete final field chunks while
+//! the generator's original struct names remain, so it runs sixth. The
+//! strictness pass is keyed to the shape as well (the
 //! `#[derive(Serialize, Deserialize)]` line directly above a
 //! `pub struct … {` line — the exact place it inserts its attribute),
-//! so it runs sixth, ruled by the `foreign_parsers` role the format's
+//! so it runs seventh, ruled by the `foreign_parsers` role the format's
 //! registry record carries rather than by anything the file itself
 //! says. The domain-types pass is keyed to the shape just as much (the
 //! `pub type <Name> = …;` alias line, the `pub struct <Name> {` /
 //! `pub enum <Name> {` declaration line, and the `use <crate>::{…};`
-//! import line it may have to take away), so it runs seventh, ruled by
+//! import line it may have to take away), so it runs eighth, ruled by
 //! the schema's `x-rust-type` annotations rather than by anything the
-//! file itself says. Opening vocabularies then writes hand-rolled
+//! file itself says. The trait-floor pass runs ninth, after every pass
+//! that anchors on the pristine derive line. Opening vocabularies runs
+//! tenth and writes hand-rolled
 //! `impl Serialize` / `impl Deserialize` blocks into the file — text
 //! the pinned emission shape does not contain — and any shape-keyed
 //! pass running after it
@@ -95,9 +101,10 @@ use super::optional_shapes::apply_optional_shapes;
 use super::ordered_maps::ordered_maps;
 use super::snake_case::snake_case_fields;
 use super::strictness::{Strictness, apply_strictness};
+use super::wire_order::apply_wire_order;
 
 /// How the strictness slot is ruled for one emission — the only slot of
-/// the nine that asks a question the file itself cannot answer.
+/// the ten that asks a question the file itself cannot answer.
 ///
 /// A schema module's role comes from `formats/REGISTRY.toml`, keyed by
 /// the schema's own path, and a document no record claims is refused
@@ -122,7 +129,7 @@ pub(crate) enum StrictnessSource<'a> {
     Shared(&'a super::shared_module::SharedStrictness),
 }
 
-/// Read `file`, run all nine post-processing passes over it, write the
+/// Read `file`, run all ten post-processing passes over it, write the
 /// result back. Called in `generate_into` right after the generator
 /// succeeds — before the leaf is registered or anything compiles against
 /// it, so no consumer — compiler, clippy, oracle — ever sees the
@@ -139,13 +146,14 @@ pub(crate) enum StrictnessSource<'a> {
 /// pass is keyed to the shape as well, so it runs third; the
 /// empty-policy pass is keyed to the shape just the same, so it runs
 /// fourth; the optional-shapes pass is keyed to the shape likewise, so
-/// it runs fifth; the strictness pass is keyed to the shape just as
-/// much, so it runs sixth; the domain-types pass is keyed to the shape
+/// it runs fifth; wire-order moves complete final field chunks while the
+/// original struct names remain, so it runs sixth; the strictness pass is
+/// keyed to the shape just as much, so it runs seventh; the domain-types pass is keyed to the shape
 /// no less — the alias line, the declaration line and the import line
-/// it may have to take away — so it runs seventh; the trait-floor pass
+/// it may have to take away — so it runs eighth; the trait-floor pass
 /// takes the one slot two constraints leave it, after the last pass
 /// that anchors on the PRISTINE derive line and before the one that has
-/// to read the widened one, so it runs eighth; opening vocabularies
+/// to read the widened one, so it runs ninth; opening vocabularies
 /// then writes hand-rolled impls into the file, and a shape-keyed pass
 /// running after it would be reading a document that is no longer the
 /// generator's.
@@ -163,12 +171,13 @@ pub(crate) fn rewrite_generated(
     let ordered = ordered_maps(&snaked, &name)?;
     let emptied = apply_empty_policies(&ordered, &name, resolved, schema)?;
     let unboxed = apply_optional_shapes(&emptied, &name, resolved, schema)?;
+    let wire_ordered = apply_wire_order(&unboxed, &name, resolved, schema)?;
     let strict = match strictness {
         StrictnessSource::Registry {
             registry,
             projections,
         } => {
-            let ruled = apply_strictness(&unboxed, &name, schema, registry)?;
+            let ruled = apply_strictness(&wire_ordered, &name, schema, registry)?;
             let projected = super::reader_projection::apply_projected_copy_strictness(
                 &ruled,
                 &name,
@@ -177,7 +186,7 @@ pub(crate) fn rewrite_generated(
             apply_registry_unknown_field_policy(&projected, &name, schema)?
         }
         StrictnessSource::Shared(shared) => {
-            super::shared_module::apply_shared_strictness(&unboxed, &name, shared)?
+            super::shared_module::apply_shared_strictness(&wire_ordered, &name, shared)?
         }
     };
     let bound = apply_domain_types(&strict, &name, resolved, schema)?;

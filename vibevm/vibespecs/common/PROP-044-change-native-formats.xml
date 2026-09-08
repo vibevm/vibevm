@@ -236,6 +236,16 @@ A third-party generator's expressiveness never decides our policy. Measured
 2026-08-09: stock `jtd-codegen 0.4.1` handles tagged unions (`#[serde(tag)]`)
 but emits closed vocabularies and `Option&lt;Box&lt;…&gt;&gt;` optionals — exactly the gap
 the layer exists to close.</M-SCHEMA-DESCRIBES-FORM></p>
+    <p><M-WIRE-FIELD-ORDER fact="true" status="impl/done">**Exact object-member byte order is
+    opt-in and schema-declared.** JTD property-map order has no meaning and is
+    never inferred. A root or named-definition object that requires a stable
+    serialization order carries `metadata."x-wire-order"`: one array containing
+    every required and optional wire member exactly once. The generator validates
+    that complete census, resolves each member through the generated Rust field's
+    surviving serde rename or snake-case identity, and moves the complete final
+    field chunk before strictness and domain renaming. Missing, duplicate, unknown,
+    non-string or non-object annotations and unfamiliar generator shapes refuse
+    generation. Without the key the pass is byte-identical.</M-WIRE-FIELD-ORDER></p>
     <p><M-OPEN-ENUM-FROM-CLOSED fact="true" status="spec/plan">**4.2a The vocabulary resolution.** From a
 *closed* schema enum the generator emits an *open* Rust type:
 `enum { …known…, Unknown(String) }`. Compiler-checked exhaustiveness survives

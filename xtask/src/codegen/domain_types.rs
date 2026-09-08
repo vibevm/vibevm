@@ -72,7 +72,7 @@ use std::path::Path;
 
 use anyhow::{Result, bail};
 
-mod rulings;
+pub(super) mod rulings;
 mod variants;
 
 use rulings::{Arm, Keyword, Ruling, declared_in, domain_rulings};

@@ -32,6 +32,7 @@ mod shared_module;
 mod snake_case;
 mod strictness;
 mod vocabulary;
+mod wire_order;
 mod write;
 
 use crate::repo_root;
@@ -302,11 +303,13 @@ fn generate_into(
         // optional collections collapse per the schema's `x-empty`, then
         // optional scalars and structures lose their `Box` per the
         // schema's `x-default` (and its two Box-free defaults), then
+        // complete final field chunks move per explicit `x-wire-order`
+        // while the generator's original struct names remain, then
         // the structs of `foreign_parsers = "none"` formats take
         // `#[serde(deny_unknown_fields)]` per the registry's role, then
         // the vocabularies open per the schema's `x-vocabulary`. The pass
         // order is a rule, not a taste: boxing, snake-casing,
-        // map-ordering, empty-policy, optional-shapes, and strictness
+        // map-ordering, empty-policy, optional-shapes, wire-order, and strictness
         // are keyed to the pinned emission shape and run while the file
         // is still that emission; opening then writes hand-rolled impls
         // into it (the full rule lives in `postproc`'s docs). The

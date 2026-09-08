@@ -40,7 +40,10 @@ fn fragments() -> Value {
             "properties": {}
         },
         "payload": {
-            "metadata": {"x-vocabularies": ["closed_mode", "choice", "empty", "nested"]},
+            "metadata": {
+                "x-vocabularies": ["closed_mode", "choice", "empty", "nested"],
+                "x-wire-order": ["choice", "name", "nested", "empty", "mode"]
+            },
             "properties": {
                 "name": {"type": "string"},
                 "nested": {"ref": "nested"},
@@ -291,6 +294,16 @@ fn full_pipeline_emits_strict_canonical_types_and_a_permissive_field_adapter() -
     let projected = std::fs::read_to_string(fixture.generated.join("projected_request/mod.rs"))?;
     assert!(shared.contains("#[serde(deny_unknown_fields)]\npub struct Payload"));
     assert!(shared.contains("#[serde(deny_unknown_fields)]\npub struct Nested"));
+    let payload = shared.find("pub struct Payload {").unwrap();
+    let choice = shared[payload..].find("pub choice:").unwrap();
+    let name = shared[payload..].find("pub name:").unwrap();
+    let nested = shared[payload..].find("pub nested:").unwrap();
+    let empty = shared[payload..].find("pub empty:").unwrap();
+    let mode = shared[payload..].find("pub mode:").unwrap();
+    assert!(
+        choice < name && name < nested && nested < empty && empty < mode,
+        "vocabulary-owned order survives resolver, shared generation and rewire: {shared}"
+    );
     assert!(strict.contains("pub type StrictPayload = Payload;"));
     assert!(strict.contains("pub use crate::generated::shared::Payload;"));
     assert!(!strict.contains("pub struct Payload"));

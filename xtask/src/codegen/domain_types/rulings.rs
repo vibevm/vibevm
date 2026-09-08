@@ -292,7 +292,7 @@ fn classify_arm(form: &Value, definition: &str, annotation: &str, schema: &Path)
 /// schema's own file name minus the `.jtd.json` tail. The vocabulary
 /// substitution's scratch copy keeps the authored file name, so
 /// `resolved` spells it either way.
-fn root_stem(resolved: &Path) -> Result<String> {
+pub(in crate::codegen) fn root_stem(resolved: &Path) -> Result<String> {
     resolved
         .file_name()
         .and_then(|n| n.to_str())
@@ -310,7 +310,7 @@ fn root_stem(resolved: &Path) -> Result<String> {
 /// `binding_site` → `BindingSite`, `by_purl` → `ByPurl`: the case rule
 /// jtd-codegen applies to a definition key (and a schema stem) when it
 /// names an emitted type.
-fn pascal_case(stem: &str) -> String {
+pub(in crate::codegen) fn pascal_case(stem: &str) -> String {
     let mut out = String::with_capacity(stem.len());
     for part in stem.split('_') {
         let mut chars = part.chars();

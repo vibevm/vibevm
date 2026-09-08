@@ -299,13 +299,16 @@ fn rewrite_generated_runs_the_shared_strictness_slot() -> Result<()> {
 \n\
 #[derive(Serialize, Deserialize)]\n\
 pub struct SharedRow {\n    \
+#[serde(rename = \"first\")]\n    \
+pub first: String,\n\
+\n    \
 #[serde(rename = \"value\")]\n    \
 pub value: String,\n\
 }\n",
     )?;
     let resolved = dir.path().join("shared.jtd.json");
     let schema = dir.path().join("vocabularies.json");
-    let document = "{\"properties\":{\"value\":{\"type\":\"string\"}}}";
+    let document = "{\"ref\":\"shared_row\",\"definitions\":{\"shared_row\":{\"metadata\":{\"x-wire-order\":[\"value\",\"first\"]},\"properties\":{\"first\":{\"type\":\"string\"},\"value\":{\"type\":\"string\"}}}}}";
     std::fs::write(&resolved, document)?;
     std::fs::write(&schema, document)?;
 
@@ -321,6 +324,10 @@ pub value: String,\n\
         after.matches("#[serde(deny_unknown_fields)]").count(),
         1,
         "the shared policy must pass through rewrite_generated: {after}"
+    );
+    assert!(
+        after.find("pub value").unwrap() < after.find("pub first").unwrap(),
+        "the resolved shared vocabulary's wire order must run in the complete pipeline: {after}"
     );
     Ok(())
 }
