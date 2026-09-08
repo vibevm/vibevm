@@ -28,6 +28,80 @@ fn t1_self_coordinate_resolves_to_the_authored_spec_tree() {
 }
 
 #[test]
+fn active_custom_format_resolves_exact_and_id_prefix_without_global_registration() {
+    let ws = tempfile::TempDir::new().unwrap();
+    let dir = specs_root_under(ws.path()).join("common");
+    fs::create_dir_all(&dir).unwrap();
+    fs::write(dir.join("NOTE.txt"), "one\n").unwrap();
+    fs::write(dir.join("PROP-777-filename-title.txt"), "two\n").unwrap();
+    let resolver = FileResolver::new(ws.path(), host_coord());
+    let formats = vec!["txt".to_owned()];
+    for (doc, suffix, stem) in [
+        ("NOTE", "NOTE.txt", "NOTE"),
+        (
+            "PROP-777",
+            "PROP-777-filename-title.txt",
+            "PROP-777-filename-title",
+        ),
+    ] {
+        let address =
+            SpecAddress::parse(&format!("spec://org.vibevm.core/vibevm/common/{doc}#root"))
+                .unwrap();
+        assert!(
+            resolver.resolve_file(&address).is_err(),
+            "txt is never global"
+        );
+        let resolved = resolver.resolve_source_file(&address, &formats).unwrap();
+        assert!(resolved.path.ends_with(suffix));
+        assert_eq!(resolved.format, "txt");
+        assert_eq!(resolved.physical_stem, stem);
+    }
+}
+
+#[test]
+fn active_custom_form_joins_same_stem_collision_with_builtin_forms() {
+    let ws = tempfile::TempDir::new().unwrap();
+    let dir = specs_root_under(ws.path()).join("common");
+    fs::create_dir_all(&dir).unwrap();
+    for extension in ["md", "xml", "txt"] {
+        fs::write(dir.join(format!("CLASH.{extension}")), "body\n").unwrap();
+    }
+    let resolver = FileResolver::new(ws.path(), host_coord());
+    let address = SpecAddress::parse("spec://org.vibevm.core/vibevm/common/CLASH#root").unwrap();
+    let error = resolver
+        .resolve_source_file(&address, &["txt".to_owned()])
+        .unwrap_err();
+    let ResolveError::ActiveFormatCollision { files, .. } = error else {
+        panic!("active collision has its own diagnostic")
+    };
+    assert!(
+        files.contains("CLASH.md") && files.contains("CLASH.xml") && files.contains("CLASH.txt")
+    );
+}
+
+#[test]
+fn custom_canonical_stripping_is_scoped_and_legacy_spellings_are_exact() {
+    let formats = vec!["txt".to_owned()];
+    assert_eq!(
+        super::lookup::canonical_doc_path_with_formats(
+            "vibevm/vibespecs/common/PROP-777-title.txt",
+            &formats,
+        ),
+        "common/PROP-777"
+    );
+    assert_eq!(
+        canonical_doc_path("vibevm/vibespecs/common/NOTE-title.txt"),
+        "common/NOTE-title.txt"
+    );
+    for path in ["spec/common/NOTE.md", "vibevm/vibespecs/common/NOTE.xml"] {
+        assert_eq!(
+            super::lookup::canonical_doc_path_with_formats(path, &formats),
+            canonical_doc_path(path)
+        );
+    }
+}
+
+#[test]
 fn t2_legacy_host_authority_names_the_self_coordinate_and_b031() {
     // Т2: an undotted (legacy-host-shaped) authority no longer resolves;
     // the error points at the actual self coordinate and cites B-031. The

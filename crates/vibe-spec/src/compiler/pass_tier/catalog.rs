@@ -65,7 +65,6 @@ pub(crate) struct PassCatalogs {
     frontends: FrontendCatalog,
     backends: BackendCatalog,
     positioned: PassPlan,
-    catalog_entries: usize,
 }
 
 impl PassCatalogs {
@@ -86,12 +85,10 @@ impl PassCatalogs {
             PassPlan::build(positioned).map_err(|error| PassCatalogError::PositionedPlan {
                 detail: error.to_string(),
             })?;
-        let catalog_entries = plan.len() - positioned.len();
         Ok(Self {
             frontends,
             backends,
             positioned,
-            catalog_entries,
         })
     }
 
@@ -107,10 +104,17 @@ impl PassCatalogs {
         &self.positioned
     }
 
+    pub(crate) fn frontend_formats(&self) -> Vec<String> {
+        self.frontends
+            .physical_formats()
+            .map(str::to_owned)
+            .collect()
+    }
+
     pub(crate) fn catalog_execution_refusal(&self) -> Option<PassTierCompileError> {
-        (self.catalog_entries != 0).then(|| {
+        (self.backends.len() != 0).then(|| {
             PassTierExecutionError::CatalogDeferred {
-                entries: self.catalog_entries,
+                entries: self.backends.len(),
             }
             .into()
         })
@@ -125,6 +129,14 @@ pub(crate) enum PassCatalogError {
     MissingFormats { key: ExtensionKey },
     #[error("frontend pass `{key}` registers invalid source format `{format}`")]
     InvalidFormat { key: ExtensionKey, format: String },
+    #[error(
+        "frontend pass `{key}` for physical format `{format}` is awaiting R6.5 provider pre-admission before parsing `{physical_stem}`"
+    )]
+    FrontendDeferred {
+        key: ExtensionKey,
+        format: String,
+        physical_stem: String,
+    },
     #[error("frontend pass `{key}` cannot replace builtin source format `{format}` implicitly")]
     BuiltinFormat { key: ExtensionKey, format: String },
     #[error("source format `{format}` is registered by both `{first}` and `{second}`")]

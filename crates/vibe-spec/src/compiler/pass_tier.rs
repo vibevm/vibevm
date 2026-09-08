@@ -24,6 +24,10 @@ mod tests;
 mod execution_tests;
 
 #[cfg(test)]
+#[path = "pass_tier/frontend_discovery_tests.rs"]
+mod frontend_discovery_tests;
+
+#[cfg(test)]
 #[path = "pass_tier/catalog_tests.rs"]
 mod catalog_tests;
 

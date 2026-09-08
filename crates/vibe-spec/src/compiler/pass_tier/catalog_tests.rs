@@ -251,7 +251,7 @@ fn artifact(declarations: Vec<ExtensionDecl>) -> ArtifactPlan {
 }
 
 #[test]
-fn catalog_validation_and_production_gate_precede_source_and_invocation() {
+fn catalog_validation_precedes_reads_and_unused_frontends_leave_markdown_unchanged() {
     let guard = Guard::default();
     let error = compile_artifact_native(
         artifact(vec![frontend("one", &["adoc"]), frontend("two", &["adoc"])]),
@@ -263,10 +263,8 @@ fn catalog_validation_and_production_gate_precede_source_and_invocation() {
     assert_eq!(guard.reads.load(Ordering::SeqCst), 0);
     assert_eq!(guard.calls.load(Ordering::SeqCst), 0);
 
-    let error =
-        compile_artifact_native(artifact(vec![frontend("docs", &["adoc"])]), &guard, &guard)
-            .unwrap_err();
-    assert!(matches!(error, ArtifactCompileError::PassTier(_)));
-    assert_eq!(guard.reads.load(Ordering::SeqCst), 0);
+    compile_artifact_native(artifact(vec![frontend("docs", &["adoc"])]), &guard, &guard)
+        .expect("an unused frontend does not affect Markdown sources");
+    assert_ne!(guard.reads.load(Ordering::SeqCst), 0);
     assert_eq!(guard.calls.load(Ordering::SeqCst), 0);
 }

@@ -7,10 +7,10 @@ use std::collections::BTreeMap;
 use crate::compiler::ir::{DocumentIr, SourceFormatId, SourceIr};
 use crate::compiler::pass::IrPayload;
 
-use super::catalog::{CatalogPass, PassCatalogError};
+use super::catalog::{CatalogPass, PassCatalogCompileError, PassCatalogError};
 use super::plan::PassEntry;
 
-const BUILTIN_FORMATS: [&str; 2] = ["markdown", "xml"];
+const BUILTIN_FORMATS: [&str; 3] = ["markdown", "md", "xml"];
 
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub(crate) struct FrontendCatalog {
@@ -35,6 +35,12 @@ impl FrontendCatalog {
                     format: bounded(authored),
                 }
             })?;
+            if !is_physical_extension(format.as_str()) {
+                return Err(PassCatalogError::InvalidFormat {
+                    key: entry.key().clone(),
+                    format: bounded(authored),
+                });
+            }
             if BUILTIN_FORMATS.contains(&format.as_str()) {
                 return Err(PassCatalogError::BuiltinFormat {
                     key: entry.key().clone(),
@@ -61,6 +67,31 @@ impl FrontendCatalog {
     pub(crate) fn len(&self) -> usize {
         self.formats.len()
     }
+
+    pub(crate) fn physical_formats(&self) -> impl Iterator<Item = &str> {
+        self.formats.keys().map(String::as_str)
+    }
+
+    pub(crate) fn deferred(
+        &self,
+        format: &str,
+        physical_stem: &str,
+    ) -> Option<PassCatalogCompileError> {
+        self.formats.get(format).map(|pass| {
+            PassCatalogError::FrontendDeferred {
+                key: pass.key().clone(),
+                format: format.to_owned(),
+                physical_stem: physical_stem.to_owned(),
+            }
+            .into()
+        })
+    }
+}
+
+fn is_physical_extension(value: &str) -> bool {
+    let mut bytes = value.bytes();
+    bytes.next().is_some_and(|byte| byte.is_ascii_lowercase())
+        && bytes.all(|byte| byte.is_ascii_lowercase() || byte.is_ascii_digit() || byte == b'-')
 }
 
 fn bounded(value: &str) -> String {

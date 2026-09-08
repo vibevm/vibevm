@@ -30,6 +30,7 @@ use super::merge::MergePass;
 use super::observer::Observing;
 use super::pass::{Pass, PassName, PassSegmentError};
 use super::pass_tier::catalog::PassCatalogs;
+use super::pass_tier::frontend::FrontendCatalog;
 use super::pass_tier::plan::{PassPlacement, PassPlan};
 use super::pass_tier::schedule::{PassExecutionAuthority, PassSchedule};
 use super::pipeline::{CompilerPipeline, CompilerPipelineError};
@@ -184,6 +185,7 @@ pub(crate) struct BuiltinSchedule<'invoke> {
     close_state: CloseState,
     transforms: TransformSchedule<'invoke>,
     transform_names: Vec<PassName>,
+    pub(super) frontends: FrontendCatalog,
 }
 
 /// Wrap one internal transform fault as the public opaque artifact error.
@@ -251,6 +253,7 @@ impl<'invoke> BuiltinSchedule<'invoke> {
             close_state,
             transforms,
             transform_names,
+            frontends: FrontendCatalog::default(),
         })
     }
 
@@ -287,6 +290,7 @@ impl<'invoke> BuiltinSchedule<'invoke> {
         }
         let mut schedule =
             Self::emitted_base_with_invoker(plan, transforms, registry, observer, invoker, policy)?;
+        schedule.frontends = catalogs.frontends().clone();
         if !catalogs.positioned().is_empty() {
             let verifier = schedule.pipeline.install_pass_tier_verifier();
             PassSchedule::install(

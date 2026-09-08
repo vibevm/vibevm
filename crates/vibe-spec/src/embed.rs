@@ -36,6 +36,19 @@ pub trait SectionSource {
     /// could not be produced.
     fn section_text(&self, addr: &SpecAddress) -> Result<String, String>;
 
+    /// Resolve one compiler source under the active owner-format set. The
+    /// default preserves every existing in-memory source as canonical Markdown.
+    fn resolved_source(
+        &self,
+        addr: &SpecAddress,
+        _active_formats: &[String],
+    ) -> Result<ResolvedSource, String> {
+        Ok(ResolvedSource::markdown(
+            self.section_text(addr)?,
+            logical_stem(addr),
+        ))
+    }
+
     /// Expand `addr` into the concrete addresses it denotes — a pattern (a `*`
     /// in the package name) into its sorted member set, a point address into
     /// exactly itself. The default returns the address unchanged, so a source
@@ -45,6 +58,49 @@ pub trait SectionSource {
     /// overrides it to delegate to the resolver's total oracle.
     fn expand_pattern(&self, addr: &SpecAddress) -> Result<Vec<SpecAddress>, String> {
         Ok(vec![addr.clone()])
+    }
+}
+
+/// One physical source observation before frontend execution.
+#[derive(Debug)]
+pub struct ResolvedSource {
+    text: String,
+    format: crate::compiler::ir::SourceFormatId,
+    physical_stem: String,
+}
+
+impl ResolvedSource {
+    pub(crate) fn markdown(text: String, physical_stem: String) -> Self {
+        Self {
+            text,
+            format: crate::compiler::ir::SourceFormatId::canonical_markdown(),
+            physical_stem,
+        }
+    }
+
+    pub(crate) fn custom(
+        text: String,
+        format: String,
+        physical_stem: String,
+    ) -> Result<Self, String> {
+        Ok(Self {
+            text,
+            format: crate::compiler::ir::SourceFormatId::new(format)
+                .map_err(|error| error.to_string())?,
+            physical_stem,
+        })
+    }
+
+    pub fn format(&self) -> &str {
+        self.format.as_str()
+    }
+
+    pub fn physical_stem(&self) -> &str {
+        &self.physical_stem
+    }
+
+    pub(crate) fn into_parts(self) -> (String, crate::compiler::ir::SourceFormatId, String) {
+        (self.text, self.format, self.physical_stem)
     }
 }
 
@@ -190,6 +246,47 @@ impl SectionSource for FsSectionSource {
         };
         resolve_section(&src, &file, addr)
     }
+
+    fn resolved_source(
+        &self,
+        addr: &SpecAddress,
+        active_formats: &[String],
+    ) -> Result<ResolvedSource, String> {
+        let resolved = self
+            .resolver
+            .resolve_source_file(addr, active_formats)
+            .map_err(|error| error.to_string())?;
+        if resolved.format == "markdown" {
+            return self
+                .section_text(addr)
+                .map(|text| ResolvedSource::markdown(text, resolved.physical_stem));
+        }
+        let owned;
+        let bytes = match self.overlay.get(&resolved.path) {
+            Some(bytes) => bytes.as_ref(),
+            None => {
+                owned = std::fs::read(&resolved.path).map_err(|error| error.to_string())?;
+                &owned
+            }
+        };
+        let text = std::str::from_utf8(bytes)
+            .map_err(|error| {
+                format!(
+                    "custom source `{}` is not UTF-8: {error}",
+                    resolved.path.display()
+                )
+            })?
+            .to_owned();
+        ResolvedSource::custom(text, resolved.format, resolved.physical_stem)
+    }
+}
+
+fn logical_stem(addr: &SpecAddress) -> String {
+    addr.doc_path
+        .rsplit('/')
+        .next()
+        .unwrap_or(&addr.doc_path)
+        .to_owned()
 }
 
 fn project_overlay(file: &Path, bytes: &[u8]) -> Result<String, String> {

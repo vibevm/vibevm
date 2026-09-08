@@ -7,8 +7,7 @@ use crate::{DirectiveKind, SectionSource, SpecAddress};
 
 use super::embed_snapshot::EmbedResolutionSnapshot;
 use super::ir::{
-    ArtifactInputKind, ArtifactPlan, DocumentAddress, DocumentIr, DocumentSubject, SourceFormatId,
-    SourceIr,
+    ArtifactInputKind, ArtifactPlan, DocumentAddress, DocumentIr, DocumentSubject, SourceIr,
 };
 use super::source_snapshot::{DocumentObservation, ExpansionObservation, SourceResolutionSnapshot};
 
@@ -49,22 +48,32 @@ enum ArtifactRoot {
     Simple { input: usize, key: DocumentKey },
 }
 
-/// Discover the canonical pre-gather worklist, or propagate the caller's
-/// parse error unchanged.
-///
-/// `parse` runs once per newly discovered document — simple inputs, `#use`
-/// recursion, `#source` expansions and `#embed` targets alike — and may fail
-/// with any `E` the caller chooses; discovery then stops at the first
-/// failure and returns that exact value, exposing no partial [`Worklist`].
-/// A [`SectionSource`] lookup failure is NOT a callback failure: it keeps
-/// its historical observation/`record_use_failure` semantics and the
-/// discovery of everything else continues around it.
 pub(crate) fn discover<E>(
     plan: &ArtifactPlan,
     source: &impl SectionSource,
     parse: impl Fn(SourceIr) -> Result<DocumentIr, E>,
     record_use_failure: impl Fn(&SpecAddress, String),
 ) -> Result<Worklist, E> {
+    discover_with_formats(
+        plan,
+        source,
+        &[],
+        |source, _physical_stem| parse(source),
+        record_use_failure,
+    )
+}
+
+pub(crate) fn discover_with_formats<E>(
+    plan: &ArtifactPlan,
+    source: &impl SectionSource,
+    active_formats: &[String],
+    parse: impl Fn(SourceIr, &str) -> Result<DocumentIr, E>,
+    record_use_failure: impl Fn(&SpecAddress, String),
+) -> Result<Worklist, E> {
+    let source = ActiveSource {
+        source,
+        active_formats,
+    };
     let mut resolved = BTreeMap::new();
     let mut simple = BTreeMap::new();
     let mut failures = BTreeMap::new();
@@ -80,11 +89,8 @@ pub(crate) fn discover<E>(
                 let mut membership = Vec::new();
                 discover_uses(
                     seed,
-                    // The seed document is the one this contribution DECLARED:
-                    // it carries the row's subject, path and all. Everything
-                    // reached from it declares nothing and carries its own.
                     input.subject(),
-                    source,
+                    &source,
                     &parse,
                     &record_use_failure,
                     &mut seen,
@@ -110,7 +116,8 @@ pub(crate) fn discover<E>(
                 if let std::collections::btree_map::Entry::Vacant(entry) = simple.entry(key.clone())
                 {
                     discovery_order.push(DiscoveryKey::Simple(key));
-                    entry.insert(parse(source.clone())?);
+                    let physical_stem = physical_stem(source);
+                    entry.insert(parse(source.clone(), &physical_stem)?);
                 }
             }
             ArtifactInputKind::Elided { .. } | ArtifactInputKind::Hoisted { .. } => {}
@@ -124,7 +131,7 @@ pub(crate) fn discover<E>(
         let mut membership = Vec::new();
         discover_sources(
             &key,
-            source,
+            &source,
             &parse,
             &mut seen,
             &mut membership,
@@ -153,7 +160,7 @@ pub(crate) fn discover<E>(
                 for key in keys {
                     discover_embeds(
                         &key,
-                        source,
+                        &source,
                         &parse,
                         &mut embed_seen,
                         &mut embed_order,
@@ -166,7 +173,7 @@ pub(crate) fn discover<E>(
                     for source_key in source_membership.get(&key).into_iter().flatten() {
                         discover_embeds(
                             source_key,
-                            source,
+                            &source,
                             &parse,
                             &mut embed_seen,
                             &mut embed_order,
@@ -191,7 +198,7 @@ pub(crate) fn discover<E>(
                     .collect::<Vec<_>>();
                 discover_embed_targets(
                     targets,
-                    source,
+                    &source,
                     &parse,
                     &mut embed_seen,
                     &mut embed_order,
@@ -223,6 +230,37 @@ pub(crate) fn discover<E>(
         embeds,
         owners,
     })
+}
+
+struct ActiveSource<'source, Source> {
+    source: &'source Source,
+    active_formats: &'source [String],
+}
+
+impl<Source: SectionSource> ActiveSource<'_, Source> {
+    fn load(&self, address: &SpecAddress) -> Result<crate::embed::ResolvedSource, String> {
+        self.source.resolved_source(address, self.active_formats)
+    }
+
+    fn expand_pattern(&self, address: &SpecAddress) -> Result<Vec<SpecAddress>, String> {
+        self.source.expand_pattern(address)
+    }
+}
+
+fn physical_stem(source: &SourceIr) -> String {
+    match source.address() {
+        DocumentAddress::Spec(address) => address
+            .doc_path
+            .rsplit('/')
+            .next()
+            .unwrap_or(&address.doc_path)
+            .to_owned(),
+        DocumentAddress::StaticEntry { path, .. } => std::path::Path::new(path)
+            .file_stem()
+            .and_then(|value| value.to_str())
+            .unwrap_or(path)
+            .to_owned(),
+    }
 }
 
 fn spec_order(order: &[DiscoveryKey]) -> Vec<String> {
@@ -294,8 +332,8 @@ fn observations(
 fn discover_uses<E>(
     address: &SpecAddress,
     subject: &DocumentSubject,
-    source: &impl SectionSource,
-    parse: &impl Fn(SourceIr) -> Result<DocumentIr, E>,
+    source: &ActiveSource<'_, impl SectionSource>,
+    parse: &impl Fn(SourceIr, &str) -> Result<DocumentIr, E>,
     record_failure: &impl Fn(&SpecAddress, String),
     seen: &mut HashSet<String>,
     membership: &mut Vec<String>,
@@ -317,8 +355,8 @@ fn discover_uses<E>(
         return Ok(());
     }
     if !resolved.contains_key(&key) {
-        let text = match source.section_text(address) {
-            Ok(text) => text,
+        let source_observation = match source.load(address) {
+            Ok(resolved) => resolved,
             Err(reason) => {
                 record_failure(address, reason.clone());
                 failures.entry(key).or_insert(DocumentObservation::Failed {
@@ -328,12 +366,16 @@ fn discover_uses<E>(
                 return Ok(());
             }
         };
-        let document = parse(SourceIr::new(
-            DocumentAddress::Spec(address.clone()),
-            SourceFormatId::canonical_markdown(),
-            subject.clone(),
-            text,
-        ))?;
+        let (text, format, physical_stem) = source_observation.into_parts();
+        let document = parse(
+            SourceIr::new(
+                DocumentAddress::Spec(address.clone()),
+                format,
+                subject.clone(),
+                text,
+            ),
+            &physical_stem,
+        )?;
         discovery_order.push(DiscoveryKey::Spec(key.clone()));
         resolved.insert(key.clone(), document);
     }
@@ -365,8 +407,8 @@ fn discover_uses<E>(
 #[allow(clippy::too_many_arguments)]
 fn discover_sources<E>(
     key: &str,
-    source: &impl SectionSource,
-    parse: &impl Fn(SourceIr) -> Result<DocumentIr, E>,
+    source: &ActiveSource<'_, impl SectionSource>,
+    parse: &impl Fn(SourceIr, &str) -> Result<DocumentIr, E>,
     seen: &mut HashSet<String>,
     membership: &mut Vec<String>,
     discovery_order: &mut Vec<DiscoveryKey>,
@@ -439,8 +481,8 @@ fn discover_sources<E>(
 #[allow(clippy::too_many_arguments)]
 fn discover_embeds<E>(
     key: &str,
-    source: &impl SectionSource,
-    parse: &impl Fn(SourceIr) -> Result<DocumentIr, E>,
+    source: &ActiveSource<'_, impl SectionSource>,
+    parse: &impl Fn(SourceIr, &str) -> Result<DocumentIr, E>,
     seen: &mut HashSet<String>,
     embed_order: &mut Vec<String>,
     discovery_order: &mut Vec<DiscoveryKey>,
@@ -481,8 +523,8 @@ fn discover_embeds<E>(
 #[allow(clippy::too_many_arguments)]
 fn discover_embed_targets<E>(
     targets: impl IntoIterator<Item = SpecAddress>,
-    source: &impl SectionSource,
-    parse: &impl Fn(SourceIr) -> Result<DocumentIr, E>,
+    source: &ActiveSource<'_, impl SectionSource>,
+    parse: &impl Fn(SourceIr, &str) -> Result<DocumentIr, E>,
     seen: &mut HashSet<String>,
     embed_order: &mut Vec<String>,
     discovery_order: &mut Vec<DiscoveryKey>,
@@ -518,8 +560,8 @@ fn discover_embed_targets<E>(
 
 fn observe_document<E>(
     address: &SpecAddress,
-    source: &impl SectionSource,
-    parse: &impl Fn(SourceIr) -> Result<DocumentIr, E>,
+    source: &ActiveSource<'_, impl SectionSource>,
+    parse: &impl Fn(SourceIr, &str) -> Result<DocumentIr, E>,
     discovery_order: &mut Vec<DiscoveryKey>,
     resolved: &mut BTreeMap<String, DocumentIr>,
     failures: &mut BTreeMap<String, DocumentObservation>,
@@ -528,15 +570,15 @@ fn observe_document<E>(
     if resolved.contains_key(&key) || failures.contains_key(&key) {
         return Ok(());
     }
-    match source.section_text(address) {
-        Ok(text) => {
+    match source.load(address) {
+        Ok(source_observation) => {
             // A `#source` expansion or `#embed` target: reached, never
             // declared, so it carries its own address identity as its subject.
-            let document = parse(SourceIr::reached(
-                DocumentAddress::Spec(address.clone()),
-                SourceFormatId::canonical_markdown(),
-                text,
-            ))?;
+            let (text, format, physical_stem) = source_observation.into_parts();
+            let document = parse(
+                SourceIr::reached(DocumentAddress::Spec(address.clone()), format, text),
+                &physical_stem,
+            )?;
             discovery_order.push(DiscoveryKey::Spec(key.clone()));
             resolved.insert(key, document);
         }

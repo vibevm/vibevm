@@ -169,6 +169,10 @@ pub enum ResolveError {
         .xml.display()
     )]
     PairCollision { markdown: PathBuf, xml: PathBuf },
+    /// An active custom frontend made more than one physical form eligible for
+    /// the same logical document.
+    #[error("document `{doc_path}` has multiple active physical forms: {files}")]
+    ActiveFormatCollision { doc_path: String, files: String },
 }
 
 impl FileResolver {
@@ -272,6 +276,15 @@ impl FileResolver {
     /// anchor / revision — those address a node *within* the returned file
     /// (see [`DocTree`](crate::DocTree)).
     pub fn resolve_file(&self, addr: &SpecAddress) -> Result<PathBuf, ResolveError> {
+        self.resolve_source_file(addr, &[])
+            .map(|resolved| resolved.path)
+    }
+
+    pub(crate) fn resolve_source_file(
+        &self,
+        addr: &SpecAddress,
+        active_formats: &[String],
+    ) -> Result<ResolvedSourceFile, ResolveError> {
         // A pattern (a `*` in the package name) names a set, not a file. Refuse
         // it loudly rather than falling through to the suffix lookup, which would
         // report PackageSlotNotFound — "not installed" where the truth is "this
@@ -282,7 +295,17 @@ impl FileResolver {
             });
         }
         let base_spec = self.spec_root(&addr.authority)?;
-        resolve_doc(&base_spec, &addr.doc_path)
+        let resolved =
+            lookup::resolve_doc_with_formats(&base_spec, &addr.doc_path, active_formats)?;
+        Ok(ResolvedSourceFile {
+            physical_stem: resolved.physical_stem,
+            format: if matches!(resolved.extension.as_str(), "md" | "xml") {
+                "markdown".to_owned()
+            } else {
+                resolved.extension
+            },
+            path: resolved.path,
+        })
     }
 
     /// The `spec/` root an authority resolves against.
@@ -429,6 +452,13 @@ impl FileResolver {
 mod lookup;
 pub use lookup::canonical_doc_path;
 pub(crate) use lookup::{specs_root_under, vibedeps_root_under};
+
+#[derive(Debug)]
+pub(crate) struct ResolvedSourceFile {
+    pub(crate) path: PathBuf,
+    pub(crate) format: String,
+    pub(crate) physical_stem: String,
+}
 // The layout roots stay reachable under their historical path for the tests
 // that assert both physical layouts fold onto one address.
 #[cfg(test)]

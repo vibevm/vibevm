@@ -13,7 +13,8 @@ use super::super::transform::native_policy::{
     CompilerNativePolicyError,
 };
 use super::super::transform::registry::TransformRegistry;
-use super::super::worklist::{self, ErrorOwners};
+use super::super::worklist::ErrorOwners;
+use super::super::worklist::discover_with_formats as discover;
 use super::BuiltinSchedule;
 
 #[derive(Debug, thiserror::Error)]
@@ -474,13 +475,31 @@ fn run(
     schedule: BuiltinSchedule<'_>,
     trace: Option<&dyn CompileTraceSink>,
 ) -> Result<EmittedArtifact, ArtifactCompileError> {
-    let worklist = worklist::discover(
+    let active_formats = schedule
+        .frontends
+        .physical_formats()
+        .map(str::to_owned)
+        .collect::<Vec<_>>();
+    let worklist = discover(
         &plan,
         source,
-        |input| schedule.parse_source(input, trace),
+        &active_formats,
+        |input, physical_stem| {
+            if input.format().as_str() != "markdown" {
+                return Err(schedule
+                    .frontends
+                    .deferred(input.format().as_str(), physical_stem)
+                    .map(ArtifactCompileError::PassCatalog)
+                    .unwrap_or_else(|| ArtifactCompileError::Manager {
+                        reason: "resolved custom source has no active frontend".to_owned(),
+                    }));
+            }
+            schedule
+                .parse_source(input, trace)
+                .map_err(|error| schedule.document_error(error))
+        },
         |address, reason| schedule.record_failure(address, reason),
-    )
-    .map_err(|error| schedule.document_error(error))?;
+    )?;
     schedule.close_state.set_pending_sources(worklist.sources);
     schedule.close_state.set_pending_embeds(worklist.embeds);
     schedule.emit(worklist.documents, &plan, &worklist.owners, trace)

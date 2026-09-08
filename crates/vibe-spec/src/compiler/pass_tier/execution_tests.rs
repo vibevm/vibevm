@@ -150,23 +150,35 @@ fn artifact_plan(declarations: Vec<ExtensionDecl>) -> ArtifactPlan {
         ArtifactTarget::StaticXml,
         "vibevm/vibespecs/boot/STATIC.xml",
         "vibevm/vibespecs",
-        vec![
-            ArtifactInput::normal(
-                "org.demo/one",
-                "boot/one.md",
-                address("spec://org.demo/one/boot/one#root"),
-            )
-            .unwrap(),
-            ArtifactInput::normal(
-                "org.demo/two",
-                "boot/two.md",
-                address("spec://org.demo/two/boot/two#root"),
-            )
-            .unwrap(),
-        ],
+        inputs(),
     )
     .unwrap()
     .with_passes(passes)
+}
+
+fn inputs() -> Vec<ArtifactInput> {
+    ["one", "two"]
+        .into_iter()
+        .map(|name| {
+            ArtifactInput::normal(
+                format!("org.demo/{name}"),
+                format!("boot/{name}.md"),
+                address(&format!("spec://org.demo/{name}/boot/{name}#root")),
+            )
+            .unwrap()
+        })
+        .collect()
+}
+
+fn custom_artifact_plan(declarations: Vec<ExtensionDecl>, backend: &'static str) -> ArtifactPlan {
+    let registry = registry(declarations);
+    let passes = lower_effective_compile_rows(&registry.enabled_compile_rows())
+        .unwrap()
+        .passes()
+        .clone();
+    ArtifactPlan::custom_for_test(backend, inputs())
+        .unwrap()
+        .with_passes(passes)
 }
 
 fn address(value: &str) -> SpecAddress {
@@ -456,29 +468,31 @@ fn missing_invoker_and_unsupported_implementation_refuse_before_source() {
 }
 
 #[test]
-fn catalog_only_and_mixed_plans_are_deferred_before_source_or_invocation() {
-    for declarations in [
-        vec![declaration("catalog", frontend_for("custom-markup"))],
-        vec![
-            declaration("catalog", frontend_for("custom-markup")),
-            declaration(
-                "positioned",
-                transform(ExtensionIrLevel::Closure, "qualify"),
-            ),
-        ],
-    ] {
-        let source = Source::default();
-        let invoker = Invoker::new(ReplyMode::Echo);
-        let error =
-            compile_artifact_native(artifact_plan(declarations), &source, &invoker).unwrap_err();
-        assert!(matches!(
-            error,
-            ArtifactCompileError::PassTier(ref public)
-                if matches!(public.inner(), PassTierExecutionError::CatalogDeferred { entries: 1 })
-        ));
-        assert_eq!(source.reads(), 0);
-        assert!(invoker.calls().is_empty());
-    }
+fn backend_catalog_defers_immediately_while_unused_frontends_do_not() {
+    let source = Source::default();
+    let invoker = Invoker::new(ReplyMode::Echo);
+    let error = compile_artifact_native(
+        custom_artifact_plan(vec![declaration("backend", backend_for("json"))], "json"),
+        &source,
+        &invoker,
+    )
+    .unwrap_err();
+    assert!(matches!(
+        error,
+        ArtifactCompileError::PassTier(ref public)
+            if matches!(public.inner(), PassTierExecutionError::CatalogDeferred { entries: 1 })
+    ));
+    assert_eq!(source.reads(), 0);
+
+    let source = Source::default();
+    compile_artifact_native(
+        artifact_plan(vec![declaration("frontend", frontend_for("custom-markup"))]),
+        &source,
+        &invoker,
+    )
+    .unwrap();
+    assert_eq!(source.reads(), 2);
+    assert!(invoker.calls().is_empty());
 }
 
 #[test]

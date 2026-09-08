@@ -19,6 +19,20 @@ use super::ResolveError;
 /// one form, and the resolver never guesses which half of a split brain
 /// to read.
 pub(super) fn resolve_doc(base_spec: &Path, doc_path: &str) -> Result<PathBuf, ResolveError> {
+    resolve_doc_with_formats(base_spec, doc_path, &[]).map(|resolved| resolved.path)
+}
+
+pub(super) struct ResolvedDoc {
+    pub(super) path: PathBuf,
+    pub(super) extension: String,
+    pub(super) physical_stem: String,
+}
+
+pub(super) fn resolve_doc_with_formats(
+    base_spec: &Path,
+    doc_path: &str,
+    active_formats: &[String],
+) -> Result<ResolvedDoc, ResolveError> {
     let (dir, last) = match doc_path.rsplit_once('/') {
         Some((d, l)) => (base_spec.join(d), l),
         None => (base_spec.to_path_buf(), doc_path),
@@ -27,8 +41,11 @@ pub(super) fn resolve_doc(base_spec: &Path, doc_path: &str) -> Result<PathBuf, R
     if is_id_stem(last) {
         let matches: Vec<PathBuf> = read_dir_or_empty(&dir)
             .map(|e| e.path())
-            .filter(|p| id_file_matches(p, last))
+            .filter(|p| id_file_matches_with_formats(p, last, active_formats))
             .collect();
+        if let Some(collision) = active_same_stem_collision(doc_path, &matches, active_formats) {
+            return Err(collision);
+        }
         if let Some((md, xml)) = pair_among(&matches) {
             return Err(ResolveError::PairCollision { markdown: md, xml });
         }
@@ -37,7 +54,7 @@ pub(super) fn resolve_doc(base_spec: &Path, doc_path: &str) -> Result<PathBuf, R
                 doc_path: doc_path.to_string(),
                 base: base_spec.display().to_string(),
             }),
-            [one] => Ok(one.clone()),
+            [one] => resolved(one),
             many => Err(ResolveError::AmbiguousDoc {
                 id: last.to_string(),
                 count: many.len(),
@@ -45,16 +62,38 @@ pub(super) fn resolve_doc(base_spec: &Path, doc_path: &str) -> Result<PathBuf, R
             }),
         }
     } else {
-        let md = base_spec.join(format!("{doc_path}.md"));
-        let xml = base_spec.join(format!("{doc_path}.xml"));
-        match (md.is_file(), xml.is_file()) {
-            (true, true) => Err(ResolveError::PairCollision { markdown: md, xml }),
-            (true, false) => Ok(md),
-            (false, true) => Ok(xml),
-            (false, false) => Err(ResolveError::DocNotFound {
+        let mut candidates = vec![
+            base_spec.join(format!("{doc_path}.md")),
+            base_spec.join(format!("{doc_path}.xml")),
+        ];
+        candidates.extend(
+            active_formats
+                .iter()
+                .map(|format| base_spec.join(format!("{doc_path}.{format}"))),
+        );
+        candidates.sort();
+        candidates.dedup();
+        candidates.retain(|candidate| candidate.is_file());
+        if candidates.len() > 1
+            && candidates.iter().any(|candidate| {
+                candidate
+                    .extension()
+                    .and_then(|value| value.to_str())
+                    .is_some_and(|extension| active_formats.iter().any(|value| value == extension))
+            })
+        {
+            return Err(active_collision(doc_path, &candidates));
+        }
+        if let Some((md, xml)) = pair_among(&candidates) {
+            return Err(ResolveError::PairCollision { markdown: md, xml });
+        }
+        match candidates.as_slice() {
+            [one] => resolved(one),
+            [] => Err(ResolveError::DocNotFound {
                 doc_path: doc_path.to_string(),
                 base: base_spec.display().to_string(),
             }),
+            many => Err(active_collision(doc_path, many)),
         }
     }
 }
@@ -85,20 +124,80 @@ fn is_xml(p: &Path) -> bool {
 
 /// Does a file stem (either serialisation's extension stripped) equal `id`
 /// or start with `id-` (the descriptive-slug form)?
+#[cfg(test)]
 pub(super) fn id_file_matches(path: &Path, id: &str) -> bool {
-    let Some(name) = path.file_name().and_then(|s| s.to_str()) else {
+    id_file_matches_with_formats(path, id, &[])
+}
+
+fn id_file_matches_with_formats(path: &Path, id: &str, active_formats: &[String]) -> bool {
+    let extension = path.extension().and_then(|value| value.to_str());
+    if !matches!(extension, Some("md" | "xml"))
+        && !active_formats
+            .iter()
+            .any(|format| Some(format.as_str()) == extension)
+    {
         return false;
-    };
-    let Some(stem) = name
-        .strip_suffix(".md")
-        .or_else(|| name.strip_suffix(".xml"))
-    else {
+    }
+    let Some(stem) = path.file_stem().and_then(|value| value.to_str()) else {
         return false;
     };
     stem == id
         || stem
             .strip_prefix(id)
             .is_some_and(|rest| rest.starts_with('-'))
+}
+
+fn resolved(path: &Path) -> Result<ResolvedDoc, ResolveError> {
+    let extension = path
+        .extension()
+        .and_then(|value| value.to_str())
+        .unwrap_or_default();
+    let physical_stem = path
+        .file_stem()
+        .and_then(|value| value.to_str())
+        .unwrap_or_default();
+    Ok(ResolvedDoc {
+        path: path.to_owned(),
+        extension: extension.to_owned(),
+        physical_stem: physical_stem.to_owned(),
+    })
+}
+
+fn active_collision(doc_path: &str, files: &[PathBuf]) -> ResolveError {
+    ResolveError::ActiveFormatCollision {
+        doc_path: doc_path.to_owned(),
+        files: files
+            .iter()
+            .map(|path| path.display().to_string())
+            .collect::<Vec<_>>()
+            .join(", "),
+    }
+}
+
+fn active_same_stem_collision(
+    doc_path: &str,
+    files: &[PathBuf],
+    active_formats: &[String],
+) -> Option<ResolveError> {
+    for file in files {
+        let stem = file.file_stem()?;
+        let same = files
+            .iter()
+            .filter(|candidate| candidate.file_stem() == Some(stem))
+            .cloned()
+            .collect::<Vec<_>>();
+        if same.len() > 1
+            && same.iter().any(|candidate| {
+                candidate
+                    .extension()
+                    .and_then(|value| value.to_str())
+                    .is_some_and(|extension| active_formats.iter().any(|value| value == extension))
+            })
+        {
+            return Some(active_collision(doc_path, &same));
+        }
+    }
+    None
 }
 
 // --- The PROP-052 relayout seam — the one sanctioned duplication --------
@@ -158,6 +257,10 @@ pub(crate) fn vibedeps_root_under(base: &Path) -> PathBuf {
 /// layout names outside `vibe_core::layout` (see
 /// `crates/vibe-core/src/layout.rs`, PROP-052 L2).
 pub fn canonical_doc_path(file_rel: &str) -> String {
+    canonical_doc_path_with_formats(file_rel, &[])
+}
+
+pub fn canonical_doc_path_with_formats(file_rel: &str, active_formats: &[String]) -> String {
     let rel = file_rel
         .strip_prefix(&format!("{NEW_SPECS_ROOT}/"))
         .or_else(|| file_rel.strip_prefix(&format!("{LEGACY_SPECS_ROOT}/")))
@@ -166,10 +269,13 @@ pub fn canonical_doc_path(file_rel: &str) -> String {
         Some((d, n)) => (Some(d), n),
         None => (None, rel),
     };
-    let stem = name
+    let builtin = name
         .strip_suffix(".md")
-        .or_else(|| name.strip_suffix(".xml"))
-        .unwrap_or(name);
+        .or_else(|| name.strip_suffix(".xml"));
+    let custom = active_formats
+        .iter()
+        .find_map(|format| name.strip_suffix(&format!(".{format}")));
+    let stem = builtin.or(custom).unwrap_or(name);
     let mut parts = stem.split('-');
     let canonical = match (parts.next(), parts.next()) {
         (Some(kind @ ("PROP" | "FEAT")), Some(num))
