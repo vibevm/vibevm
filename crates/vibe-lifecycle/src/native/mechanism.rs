@@ -6,7 +6,10 @@ use std::path::PathBuf;
 use vibe_core::manifest::{
     ArtifactPackageTarget, DeployTarget, ExtensionHandler, MechanismKey, MechanismRoutes,
 };
-use vibe_extension_registry::{MechanismRegistry, MechanismRegistryRow, resolve_mechanism};
+use vibe_extension_registry::{
+    MechanismRegistry, MechanismRegistryRow, SelectionStep, resolve_mechanism,
+};
+use vibe_native_loader::{NativeLoadError, NativeMechanism};
 
 use super::cargo::build_cdylib;
 use super::path::{
@@ -30,6 +33,8 @@ pub struct NativeMechanismBinding {
     pub pin: String,
     pub descriptor_id: String,
     pub protocol: u32,
+    pub via: SelectionStep,
+    pub displaced_default: Option<String>,
 }
 
 #[derive(Debug, Clone)]
@@ -161,6 +166,10 @@ pub fn project_native_mechanisms(
             pin: pin.clone(),
             descriptor_id: row.declaration().id.clone(),
             protocol: row.protocol(),
+            via: selected.via(),
+            displaced_default: selected
+                .displaced_default()
+                .map(|default| default.pin().to_string()),
         };
         if let Some(existing) = plan
             .entries
@@ -184,6 +193,42 @@ pub fn project_native_mechanisms(
         }
     }
     Ok(plan)
+}
+
+impl PreparedNativeMechanism {
+    /// Admit one binding from this already-prepared immutable image.
+    ///
+    /// The process loader is the existing ABI-1 cache. This path performs no
+    /// selection, build, artifact-record read, or image publication.
+    pub(crate) fn admit(
+        &self,
+        binding: &NativeMechanismBinding,
+    ) -> Result<NativeMechanism, NativeLoadError> {
+        super::process_loader().admit_mechanism(
+            &self.image,
+            &binding.pin,
+            &binding.descriptor_id,
+            &binding.key,
+        )
+    }
+}
+
+impl PreparedNativeMechanisms {
+    /// Execute the selected deploy set through this process's prepared images.
+    pub fn execute_deploy_targets(
+        &self,
+        execution: &crate::DeployExecution<'_>,
+    ) -> Result<Vec<crate::DeployOutcome>, crate::DeployError> {
+        crate::mechanism::deploy::execute_prepared_deploy_targets(execution, self)
+    }
+
+    /// Reverse the selected deploy set while its prepared images are retained.
+    pub fn undeploy_targets(
+        &self,
+        execution: &crate::DeployExecution<'_>,
+    ) -> Result<Vec<crate::RemovalOutcome>, crate::DeployError> {
+        crate::mechanism::deploy::undeploy_prepared_targets(execution, self)
+    }
 }
 
 fn select<'a>(

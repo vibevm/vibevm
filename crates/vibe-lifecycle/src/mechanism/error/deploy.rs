@@ -22,6 +22,8 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARG
 use specmark::spec;
 use thiserror::Error;
 
+use super::{MechanismError, preview};
+
 /// Why a builtin deploy provider could not plan, apply, verify, remove or
 /// recover one target.
 ///
@@ -38,6 +40,22 @@ use thiserror::Error;
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS")]
 #[derive(Debug, Clone, PartialEq, Eq, Error)]
 pub enum DeployProviderError {
+    /// A selected package-native provider failed admission or one exact
+    /// operation. The reason is sanitized and bounded before construction;
+    /// request bodies and configuration never enter this diagnostic.
+    #[error(
+        "[[deploy.target]] `{target}` could not use native provider `{provider}` for `{operation}`: {reason} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE; fix: repair the \
+         selected provider artifact or its bounded protocol reply, then rerun — native failure \
+         never falls back to the builtin provider)"
+    )]
+    NativeTransport {
+        target: String,
+        provider: String,
+        operation: &'static str,
+        reason: String,
+    },
+
     /// One `config` member of a `[[deploy.target]]` row is missing,
     /// mistyped, unknown or engine-owned.
     ///
@@ -388,4 +406,109 @@ pub enum DeployProviderError {
         path: String,
         reason: String,
     },
+}
+
+pub(crate) fn native_transport(
+    target: &str,
+    provider: &str,
+    operation: &'static str,
+    reason: &str,
+) -> MechanismError {
+    DeployProviderError::NativeTransport {
+        target: target.to_owned(),
+        provider: preview(provider),
+        operation,
+        reason: preview(reason),
+    }
+    .into()
+}
+
+pub(crate) fn native_scalar(
+    value: &str,
+    target: &str,
+    provider: &str,
+    operation: &'static str,
+    name: &str,
+) -> Result<(), MechanismError> {
+    if value.trim().is_empty() || value.len() > 8192 || value.chars().any(char::is_control) {
+        return Err(native_transport(
+            target,
+            provider,
+            operation,
+            &format!("provider returned invalid {name}"),
+        ));
+    }
+    Ok(())
+}
+
+pub(crate) fn native_digest(
+    value: &str,
+    target: &str,
+    provider: &str,
+    operation: &'static str,
+) -> Result<(), MechanismError> {
+    if value.len() == 64
+        && value
+            .bytes()
+            .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte))
+    {
+        return Ok(());
+    }
+    Err(native_transport(
+        target,
+        provider,
+        operation,
+        "provider returned a non-canonical digest",
+    ))
+}
+
+pub(crate) fn native_owned_identity(
+    value: &str,
+    target: &str,
+    provider: &str,
+    operation: &'static str,
+) -> Result<String, MechanismError> {
+    native_scalar(
+        value,
+        target,
+        provider,
+        operation,
+        "owned resource identity",
+    )?;
+    Ok(value.to_owned())
+}
+
+pub(crate) fn native_lock_identity(
+    value: &str,
+    target: &str,
+    provider: &str,
+    operation: &'static str,
+) -> Result<String, MechanismError> {
+    native_scalar(value, target, provider, operation, "physical lock identity")?;
+    let tail = if let Some(tail) = value.strip_prefix('/') {
+        tail
+    } else if value.len() >= 3 && value.as_bytes()[0].is_ascii_alphabetic() && &value[1..3] == ":/"
+    {
+        &value[3..]
+    } else {
+        return Err(native_lock_fault(target, provider, operation));
+    };
+    if value.contains('\\')
+        || (!tail.is_empty()
+            && tail
+                .split('/')
+                .any(|part| part.is_empty() || matches!(part, "." | "..")))
+    {
+        return Err(native_lock_fault(target, provider, operation));
+    }
+    Ok(value.to_owned())
+}
+
+fn native_lock_fault(target: &str, provider: &str, operation: &'static str) -> MechanismError {
+    native_transport(
+        target,
+        provider,
+        operation,
+        "provider lock is not a canonical forward-slashed absolute destination",
+    )
 }

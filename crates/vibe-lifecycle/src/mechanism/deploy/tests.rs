@@ -151,7 +151,7 @@ fn the_reserved_deploy_row_keeps_the_identity_the_executor_matches() {
 /// name (the R8-CARGO law)". Routing is real, and the builtin did not run.
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE")]
-fn a_routed_away_deploy_target_refuses_by_the_unlanded_transport() {
+fn a_routed_native_target_requires_its_prepared_binding() {
     let fixture = Fixture::new("helper-bytes");
     let declaration = MechanismDecl {
         id: "installer".into(),
@@ -191,18 +191,25 @@ fn a_routed_away_deploy_target_refuses_by_the_unlanded_transport() {
         created_at: "2026-08-30T12:00:00Z",
     };
 
-    let error = execute_deploy_targets(&execution).expect_err("the transport is a later atom");
+    let error = execute_deploy_targets(&execution).expect_err("the native binding is not carried");
 
-    let DeployError::TransportNotLanded { key, pin, kind } = &error else {
-        panic!("expected the transport refusal, got: {error}");
+    let DeployError::Provider(MechanismError::Deploy(DeployProviderError::NativeTransport {
+        target,
+        provider,
+        operation,
+        reason,
+    })) = &error
+    else {
+        panic!("expected the prepared-binding refusal, got: {error}");
     };
-    assert_eq!(key, "deploy:vibe-bin");
-    assert_eq!(pin, "org.example/deployers#installer");
-    assert_eq!(kind, "native");
+    assert_eq!(target, "local-helper");
+    assert_eq!(provider, "org.example/deployers#installer");
+    assert_eq!(*operation, "admit");
+    assert!(reason.contains("no prepared build-fence binding"));
     assert!(
         error
             .to_string()
-            .contains("NOT deployed by a builtin instead")
+            .contains("never falls back to the builtin")
     );
 }
 

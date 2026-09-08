@@ -20,10 +20,18 @@ use vibe_core::manifest::{ArtifactKind, DeployTarget};
 use vibe_wire::generated::artifact_record::ArtifactShape;
 use vibe_wire::generated::deploy_intent::DeployIntent;
 use vibe_wire::generated::deploy_receipt::{DeployReceipt, DestinationScope};
+use vibe_wire::generated::native::e1::deploy_request as native;
+use vibe_wire::generated::shared::{
+    NativeDeployArtifactKind, NativeDeployArtifactShape, NativeDeployEffect, NativeDeployNetwork,
+    NativeDeployOperation, NativeDeployPrivilege, NativeDeployReversibility,
+};
 
-use super::model::ClientExecutables;
+use super::model::{ClientExecutable, ClientExecutables};
 use super::state::CheckpointLedger;
-use crate::mechanism::{EffectClass, MechanismError, ProviderDescriptor, ProviderOperation};
+use crate::mechanism::{
+    EffectClass, MechanismError, NetworkUse, PrivilegeNeed, ProviderDescriptor, ProviderOperation,
+    Reversibility,
+};
 
 /// One produced artifact a deploy target reconciles, resolved and proven by
 /// the ENGINE before any provider sees it.
@@ -161,6 +169,158 @@ pub(crate) const fn destination_scope(effect: EffectClass) -> DestinationScope {
         EffectClass::User => DestinationScope::User,
         EffectClass::Remote => DestinationScope::Remote,
         EffectClass::System => DestinationScope::System,
+    }
+}
+
+pub(super) fn wire_plan(plan: &DeployPlan) -> native::DeployPlan {
+    native::DeployPlan {
+        resources: plan
+            .resources
+            .iter()
+            .map(|row| native::PlannedResource {
+                resource: row.resource.clone(),
+                desired_digest: row.desired_digest.clone(),
+            })
+            .collect(),
+        lock_resources: plan.lock_resources.clone(),
+        config_digest: plan.config_digest.clone(),
+        reversible: plan.reversible,
+        summary: plan.summary.clone(),
+    }
+}
+
+pub(super) fn wire_artifact(value: &ResolvedDeployArtifact) -> native::DeployArtifact {
+    native::DeployArtifact {
+        id: value.id.clone(),
+        kind: wire_kind(value.kind),
+        shape: match value.shape {
+            ArtifactShape::File => NativeDeployArtifactShape::File,
+            ArtifactShape::Directory => NativeDeployArtifactShape::Directory,
+        },
+        digest: value.digest.clone(),
+        path_absolute: wire_path(&value.absolute),
+        path_relative: value.relative.clone(),
+    }
+}
+
+pub(super) fn authority(call: &DeployTargetRequest<'_>) -> native::DeployAuthority {
+    let clients = call.clients.all();
+    native::DeployAuthority {
+        project_root: wire_path(call.project_root),
+        settings_root: wire_path(call.settings_root),
+        user_home: wire_path(call.user_home),
+        clients: native::DeployClients {
+            claude: client(clients[0]),
+            codex: client(clients[1]),
+            opencode: client(clients[2]),
+        },
+    }
+}
+
+fn client(value: &ClientExecutable) -> native::DeployClient {
+    match value {
+        ClientExecutable::Resolved { command, path } => {
+            native::DeployClient::Resolved(Box::new(native::DeployClientResolved {
+                command: command.clone(),
+                path: wire_path(path),
+            }))
+        }
+        ClientExecutable::Missing { .. } => {
+            native::DeployClient::Missing(Box::new(native::DeployClientMissing {}))
+        }
+    }
+}
+
+pub(super) fn prior_receipt(value: &DeployReceipt) -> native::PriorReceipt {
+    native::PriorReceipt {
+        generation: value.generation,
+        provider: value.provider.key.clone(),
+        artifact_digest: value.artifact_digest.clone(),
+        desired_config_digest: value.desired_config_digest.clone(),
+        resources: value
+            .resources
+            .iter()
+            .map(|row| row.resource.clone())
+            .collect(),
+        prior_state_handle: value.prior_state_handle.clone(),
+    }
+}
+
+pub(super) fn recovery_intent(value: &DeployIntent) -> native::RecoveryIntent {
+    native::RecoveryIntent {
+        plan_hash: value.plan_hash.clone(),
+        resources: value
+            .resources
+            .iter()
+            .map(|row| row.resource.clone())
+            .collect(),
+    }
+}
+
+pub(super) fn wire_path(value: &Path) -> String {
+    value.to_string_lossy().replace('\\', "/")
+}
+
+fn wire_kind(value: ArtifactKind) -> NativeDeployArtifactKind {
+    match value {
+        ArtifactKind::Executable => NativeDeployArtifactKind::Executable,
+        ArtifactKind::Archive => NativeDeployArtifactKind::Archive,
+        ArtifactKind::File => NativeDeployArtifactKind::File,
+        ArtifactKind::Directory => NativeDeployArtifactKind::Directory,
+        ArtifactKind::Skill => NativeDeployArtifactKind::Skill,
+        ArtifactKind::AgentPlugin => NativeDeployArtifactKind::AgentPlugin,
+    }
+}
+
+pub(super) fn artifact_kind(value: &NativeDeployArtifactKind) -> ArtifactKind {
+    match value {
+        NativeDeployArtifactKind::Executable => ArtifactKind::Executable,
+        NativeDeployArtifactKind::Archive => ArtifactKind::Archive,
+        NativeDeployArtifactKind::File => ArtifactKind::File,
+        NativeDeployArtifactKind::Directory => ArtifactKind::Directory,
+        NativeDeployArtifactKind::Skill => ArtifactKind::Skill,
+        NativeDeployArtifactKind::AgentPlugin => ArtifactKind::AgentPlugin,
+    }
+}
+
+pub(super) fn operation(value: &NativeDeployOperation) -> ProviderOperation {
+    match value {
+        NativeDeployOperation::Plan => ProviderOperation::Plan,
+        NativeDeployOperation::Fingerprint => ProviderOperation::Fingerprint,
+        NativeDeployOperation::Apply => ProviderOperation::Apply,
+        NativeDeployOperation::Verify => ProviderOperation::Verify,
+        NativeDeployOperation::Remove => ProviderOperation::Remove,
+        NativeDeployOperation::Recover => ProviderOperation::Recover,
+    }
+}
+
+pub(super) const fn effect(value: &NativeDeployEffect) -> EffectClass {
+    match value {
+        NativeDeployEffect::Workspace => EffectClass::Workspace,
+        NativeDeployEffect::User => EffectClass::User,
+        NativeDeployEffect::Remote => EffectClass::Remote,
+        NativeDeployEffect::System => EffectClass::System,
+    }
+}
+
+pub(super) const fn network(value: &NativeDeployNetwork) -> NetworkUse {
+    match value {
+        NativeDeployNetwork::Never => NetworkUse::Never,
+        NativeDeployNetwork::WhenOnline => NetworkUse::WhenNotOffline,
+    }
+}
+
+pub(super) const fn privilege(value: &NativeDeployPrivilege) -> PrivilegeNeed {
+    match value {
+        NativeDeployPrivilege::None => PrivilegeNeed::None,
+        NativeDeployPrivilege::Elevated => PrivilegeNeed::Elevated,
+    }
+}
+
+pub(super) const fn reversibility(value: &NativeDeployReversibility) -> Reversibility {
+    match value {
+        NativeDeployReversibility::Reversible => Reversibility::Reversible,
+        NativeDeployReversibility::Irreversible => Reversibility::Irreversible,
     }
 }
 
@@ -305,9 +465,9 @@ pub(crate) struct DeployTargetRequest<'a> {
 /// thing to drift. The one member added here is not in §3.2's list at all
 /// — it answers §7.2's staging sentence, which only a destination has.
 #[derive(Debug, Clone, Copy)]
-pub(crate) struct DeployDescriptor {
+pub(crate) struct DeployDescriptor<'a> {
     /// The shared §3.2 descriptor, unchanged.
-    pub(crate) provider: ProviderDescriptor,
+    pub(crate) provider: ProviderDescriptor<'a>,
     /// Whether the destination supports atomic replacement, and therefore
     /// whether the engine stages into a scratch directory first.
     pub(crate) atomic_replacement: bool,
@@ -328,7 +488,7 @@ pub(crate) struct DeployDescriptor {
     pub(crate) reference_ownership: bool,
 }
 
-impl DeployDescriptor {
+impl DeployDescriptor<'_> {
     /// The destination scope this provider reconciles, derived from the
     /// ONE effect class it already declares.
     ///
@@ -363,7 +523,7 @@ pub(crate) trait DeployProvider {
     /// mandatory (§3.2) and the executor refuses a descriptor that omits
     /// it — a deploy that cannot be planned cannot be dry-run, and §7's
     /// `--plan` is a law, not a convenience.
-    fn descriptor(&self) -> DeployDescriptor;
+    fn descriptor(&self) -> DeployDescriptor<'_>;
 
     /// Validate the target's config, resolve the destination, and report
     /// every resource this deployment would touch with the digest it

@@ -266,37 +266,27 @@ impl SkillDeployProvider {
         hash.update(name.as_bytes());
         format!("{:x}", hash.finalize())
     }
-}
 
-impl DeployProvider for SkillDeployProvider {
-    fn descriptor(&self) -> DeployDescriptor {
+    pub(super) fn descriptor_for(client: SkillClient) -> DeployDescriptor<'static> {
         DeployDescriptor {
             provider: ProviderDescriptor {
-                key: self.client.pin(),
+                key: client.pin(),
                 kinds: &SUPPORTED_KINDS,
-                // §6.3's commissioning matrix: the user-scope skill roots
-                // live in the invoking user's home, never a workspace and
-                // never a machine-wide prefix.
                 effect: EffectClass::User,
                 network: NetworkUse::Never,
                 privilege: PrivilegeNeed::None,
-                // The capability exists (removal undoes a first
-                // deployment); the PER-PLAN answer below is the honest
-                // one, and §3.2 asks for it before apply.
                 reversibility: Reversibility::Reversible,
                 operations: &DEPLOY_OPERATIONS,
             },
-            // The entry is published by staged rename, so the destination
-            // supports atomic replacement and §7.2's staging sentence
-            // applies.
             atomic_replacement: true,
-            // §6.3.0.9: "A normal provider's lock resources equal its
-            // owned resources." This provider owns exactly one whole file
-            // under the injected home and shares no document, so it locks
-            // exactly what it owns and a second claimant is §7.2's flat
-            // collision.
             reference_ownership: false,
         }
+    }
+}
+
+impl DeployProvider for SkillDeployProvider {
+    fn descriptor(&self) -> DeployDescriptor<'static> {
+        Self::descriptor_for(self.client)
     }
 
     fn plan(&self, request: &DeployTargetRequest<'_>) -> Result<DeployPlan, MechanismError> {

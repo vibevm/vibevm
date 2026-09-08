@@ -34,6 +34,11 @@
 //!
 //! [`resolve_mechanism`]: vibe_extension_registry::resolve_mechanism
 
+#![allow(
+    mismatched_lifetime_syntaxes,
+    reason = "incumbent static provider implementations remain source-compatible while deploy descriptors can borrow owned native metadata"
+)]
+
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE");
 
 use std::path::{Path, PathBuf};
@@ -225,11 +230,11 @@ impl ProviderOperation {
 /// record's evidence summary, so a record says under what declared posture
 /// its artifact was produced.
 #[derive(Debug, Clone, Copy)]
-pub(crate) struct ProviderDescriptor {
+pub(crate) struct ProviderDescriptor<'a> {
     /// The reserved provider identity this descriptor belongs to.
-    pub(crate) key: &'static str,
+    pub(crate) key: &'a str,
     /// The artifact kinds the provider can produce.
-    pub(crate) kinds: &'static [ArtifactKind],
+    pub(crate) kinds: &'a [ArtifactKind],
     pub(crate) effect: EffectClass,
     pub(crate) network: NetworkUse,
     pub(crate) privilege: PrivilegeNeed,
@@ -237,10 +242,10 @@ pub(crate) struct ProviderDescriptor {
     /// The §3.2 operations this provider implements. A build provider
     /// implements four; `remove`/`recover` are deploy-only by the
     /// architecture's own sentence.
-    pub(crate) operations: &'static [ProviderOperation],
+    pub(crate) operations: &'a [ProviderOperation],
 }
 
-impl ProviderDescriptor {
+impl ProviderDescriptor<'_> {
     /// Whether the provider can produce one declared artifact kind.
     pub(crate) fn supports(&self, kind: ArtifactKind) -> bool {
         self.kinds.contains(&kind)
@@ -317,7 +322,7 @@ impl BuildTargetRequest<'_> {
 /// exists.
 pub(crate) trait BuildProvider {
     /// What this provider declares about itself.
-    fn descriptor(&self) -> ProviderDescriptor;
+    fn descriptor(&self) -> ProviderDescriptor<'_>;
 
     /// Validate the target's config, resolve its declared inputs and
     /// outputs, and report the argv this provider WOULD run. Pure: it
@@ -396,7 +401,7 @@ impl PackageTargetRequest<'_> {
 /// between two protocols.
 pub(crate) trait PackageProvider {
     /// What this provider declares about itself.
-    fn descriptor(&self) -> ProviderDescriptor;
+    fn descriptor(&self) -> ProviderDescriptor<'_>;
 
     /// Validate the target's config, resolve its declared outputs, and
     /// report what this provider WOULD produce.

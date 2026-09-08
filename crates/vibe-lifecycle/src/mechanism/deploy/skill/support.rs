@@ -509,8 +509,8 @@ pub(crate) fn engine_state_of(
 pub(crate) struct FailingAfterWrite(pub(crate) SkillClient);
 
 impl DeployProvider for FailingAfterWrite {
-    fn descriptor(&self) -> DeployDescriptor {
-        SkillDeployProvider::new(self.0).descriptor()
+    fn descriptor(&self) -> DeployDescriptor<'static> {
+        SkillDeployProvider::descriptor_for(self.0)
     }
 
     fn plan(&self, request: &DeployTargetRequest<'_>) -> Result<DeployPlan, MechanismError> {

@@ -4678,6 +4678,7 @@ dependencies = [
  "vibe-install",
  "vibe-lifecycle",
  "vibe-native-loader-fixture",
+ "vibe-native-loader-mechanism-fixture",
  "vibe-registry",
  "vibe-resolver",
  "vibe-spec",

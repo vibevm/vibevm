@@ -1,15 +1,8 @@
-//! The deploy phase's mechanism executor — §7.0's engine, and the third
-//! sibling of the build and package executors.
+//! The deploy phase's mechanism executor — §7.0's third mechanism-role engine.
 //!
-//! Built from the same parts as its two siblings on purpose: one resolver
-//! ([`resolve_mechanism`]), one dependency walk, one containment cell, one
-//! record reader. There is no `if builtin` shortcut here either — the
-//! executor asks who services the target's logical key and only then looks
-//! at the selected row's handler, so a host that routes `deploy:vibe-bin`
-//! to a plugin gets the plugin's refusal and demonstrably NOT a builtin.
-//!
+//! Prepared native bindings are consumed directly; every other target uses
+//! the one resolver, dependency walk, containment cell and record reader.
 //! Four things are this phase's own:
-//!
 //! 1. **the profile selection is DATA.** §7.0.5 resolves it once, in the
 //!    command layer that owns flags, and this executor consumes it. There
 //!    is no environment read, no `default_profile` walk and no
@@ -45,6 +38,7 @@ pub(crate) mod inverse;
 mod inverse_resume;
 pub(crate) mod ledger;
 pub(crate) mod model;
+mod native;
 pub(crate) mod observation;
 pub(crate) mod opt_launcher;
 pub(crate) mod ownership;
@@ -67,6 +61,7 @@ pub use model::{
 };
 pub use plan::plan_deploy_targets;
 
+use super::error::deploy::native_transport;
 use super::order::{GraphNode, OrderFault, Unresolved, dag_order};
 use super::vibebin::VibeBinProvider;
 use super::{
@@ -75,8 +70,7 @@ use super::{
 use opt_launcher::VibeOptLauncherProvider;
 use plugin::{ClientPluginProvider, PluginClient};
 use skill::SkillDeployProvider;
-// The inverse path lives in its own cell and is re-exported here, so
-// `undeploy_targets` and every test still spell it one way.
+// The inverse path lives in its own cell and is re-exported here.
 pub(crate) use inverse::undeploy_resolved;
 use inverse_resume::resume_inverses;
 use model::row;
@@ -100,6 +94,14 @@ pub fn execute_deploy_targets(
     apply_selection(execution, &resolved)
 }
 
+pub(crate) fn execute_prepared_deploy_targets(
+    execution: &DeployExecution<'_>,
+    prepared: &crate::native::PreparedNativeMechanisms,
+) -> Result<Vec<DeployOutcome>, DeployError> {
+    let resolved = resolve_selection_with(execution, Some(prepared))?;
+    apply_selection(execution, &resolved)
+}
+
 /// Reverse every selected target, in reverse dependency order.
 ///
 /// §7.2: "`undeploy` removes only receipt-owned state and refuses to erase
@@ -114,11 +116,15 @@ pub fn undeploy_targets(
     undeploy_resolved(execution, &resolved)
 }
 
-/// Every deployment this machine's state home records, in deployment-id
-/// order.
-///
-/// Receipt facts only — §7.2's record list contains no secret-bearing
-/// member, and this projection adds none.
+pub(crate) fn undeploy_prepared_targets(
+    execution: &DeployExecution<'_>,
+    prepared: &crate::native::PreparedNativeMechanisms,
+) -> Result<Vec<RemovalOutcome>, DeployError> {
+    let resolved = resolve_selection_with(execution, Some(prepared))?;
+    undeploy_resolved(execution, &resolved)
+}
+
+/// Receipt-only deployments in deployment-id order.
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS")]
 pub fn list_deployments(state_home: &Path) -> Result<Vec<DeploymentRow>, DeployError> {
     let state = DeployState::open(state_home)?;
@@ -157,14 +163,16 @@ impl GraphNode for Selected<'_> {
     }
 }
 
-/// Resolve the selection's targets and their providers, in dependency
-/// order.
-///
-/// This is the executor's ONE selection path (§7.0.2). Every caller —
-/// apply, plan and undeploy — goes through it, so the three surfaces
-/// cannot disagree about who services a key.
+/// Resolve selected targets and providers in dependency order.
 fn resolve_selection<'a>(
     execution: &DeployExecution<'a>,
+) -> Result<Vec<Selected<'a>>, DeployError> {
+    resolve_selection_with(execution, None)
+}
+
+fn resolve_selection_with<'a>(
+    execution: &DeployExecution<'a>,
+    prepared: Option<&crate::native::PreparedNativeMechanisms>,
 ) -> Result<Vec<Selected<'a>>, DeployError> {
     let mut selected = Vec::with_capacity(execution.selection.targets.len());
     for id in &execution.selection.targets {
@@ -177,6 +185,16 @@ fn resolve_selection<'a>(
                 target: id.clone(),
                 declared: declared(execution.targets),
             })?;
+        if let Some((entry, binding)) = prepared_binding(prepared, target)? {
+            selected.push(Selected {
+                target,
+                provider: Box::new(native::NativeDeployProvider::new(entry, binding, target)?),
+                pin: binding.pin.clone(),
+                via: binding.via,
+                displaced: binding.displaced_default.clone(),
+            });
+            continue;
+        }
         let selection = resolve_mechanism(
             execution.registry,
             &target.mechanism,
@@ -185,11 +203,20 @@ fn resolve_selection<'a>(
         )?;
         let row = selection.row();
         let pin = row.pin().to_string();
-        let key = target.mechanism.to_string();
-        let provider = builtin_provider(row.handler(), &key, &pin)?;
-        let descriptor = provider.descriptor();
-        // §3.2: "`plan` is mandatory for deploy providers."
-        if !descriptor.implements(super::ProviderOperation::Plan) {
+        if matches!(row.handler(), ExtensionHandler::Native { .. }) {
+            return Err(native_transport(
+                &target.id,
+                &pin,
+                "admit",
+                "selected native provider has no prepared build-fence binding",
+            )
+            .into());
+        }
+        let provider = builtin_provider(row.handler(), &target.mechanism.to_string(), &pin)?;
+        if !provider
+            .descriptor()
+            .implements(super::ProviderOperation::Plan)
+        {
             return Err(DeployError::PlanNotSupported {
                 target: target.id.clone(),
                 pin,
@@ -206,17 +233,39 @@ fn resolve_selection<'a>(
     order(selected)
 }
 
-/// The closed builtin dispatch of the deploy role.
-///
-/// §7.0.2 in one function: a non-builtin handler refuses by the unlanded
-/// transport's name, the `#vibe-bin` row constructs the §7.1 provider, and
-/// the three §6.3.0.5 skill rows construct ONE closed provider
-/// parameterised by its client — the same lesson the three projection
-/// rows landed: what differs between the three is DATA, not behaviour, so
-/// it lives in [`SkillClient`] and the adapter is written once. The
-/// refusal arms are not stubs — nothing is deployed by them, which is the
-/// whole point of a typed refusal.
-fn builtin_provider(
+fn prepared_binding<'a>(
+    prepared: Option<&'a crate::native::PreparedNativeMechanisms>,
+    target: &DeployTarget,
+) -> Result<
+    Option<(
+        &'a crate::native::PreparedNativeMechanism,
+        &'a crate::native::NativeMechanismBinding,
+    )>,
+    DeployError,
+> {
+    let mut found = None;
+    for entry in prepared.into_iter().flat_map(|value| &value.entries) {
+        for binding in &entry.bindings {
+            if binding.target != target.id {
+                continue;
+            }
+            if found.is_some() || binding.key != target.mechanism {
+                return Err(native_transport(
+                    &target.id,
+                    &binding.pin,
+                    "admit",
+                    "prepared carriage has duplicate or mismatched target bindings",
+                )
+                .into());
+            }
+            found = Some((entry, binding));
+        }
+    }
+    Ok(found)
+}
+
+/// Closed builtin dispatch; every foreign handler refuses without fallback.
+pub(super) fn builtin_provider(
     handler: &ExtensionHandler,
     key: &str,
     pin: &str,
@@ -453,7 +502,7 @@ fn identity_of(execution: &DeployExecution<'_>) -> DeployIdentity {
 }
 
 /// The selection, in dependency order.
-fn order(selected: Vec<Selected<'_>>) -> Result<Vec<Selected<'_>>, DeployError> {
+pub(super) fn order(selected: Vec<Selected<'_>>) -> Result<Vec<Selected<'_>>, DeployError> {
     let indices = dag_order(&selected, Unresolved::Refuse).map_err(|fault| match fault {
         OrderFault::Cycle { cycle } => DeployError::Cycle { cycle },
         // A profile that selects a target without its dependency is
@@ -477,7 +526,7 @@ fn order(selected: Vec<Selected<'_>>) -> Result<Vec<Selected<'_>>, DeployError> 
 }
 
 /// The displaced builtin default, when a replacement really replaced one.
-fn displaced(selection: &MechanismSelection<'_>) -> Option<String> {
+pub(super) fn displaced(selection: &MechanismSelection<'_>) -> Option<String> {
     match selection.via() {
         SelectionStep::BuiltinDefault => None,
         SelectionStep::TargetPin | SelectionStep::HostRoute => selection
@@ -487,7 +536,7 @@ fn displaced(selection: &MechanismSelection<'_>) -> Option<String> {
 }
 
 /// The declared target ids, for a refusal that names what IS available.
-fn declared(targets: &[DeployTarget]) -> String {
+pub(super) fn declared(targets: &[DeployTarget]) -> String {
     if targets.is_empty() {
         return "none declared".to_owned();
     }

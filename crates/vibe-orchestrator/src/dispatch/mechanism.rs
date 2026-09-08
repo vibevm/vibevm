@@ -17,8 +17,7 @@ use vibe_core::manifest::{
 use vibe_lifecycle::native::{NativeBuildExecution, NativePlatform};
 use vibe_lifecycle::{
     BuildExecution, ClientExecutables, DeployExecution, DeploySelection, MechanismRegistry,
-    PackageExecution, Phase, deploy_state_home, execute_build_targets, execute_deploy_targets,
-    execute_package_targets,
+    PackageExecution, Phase, deploy_state_home, execute_build_targets, execute_package_targets,
 };
 
 use crate::RitualPlan;
@@ -367,25 +366,29 @@ impl<'targets> Fences<'targets> {
         let Some(carriage) = self.targets.deploy else {
             return Ok(());
         };
-        let _prepared_native = &self.prepared_native;
-        execute_deploy_targets(&DeployExecution {
-            project_root: self.targets.project_root,
-            targets: self.targets.deploy_targets,
-            selection: &carriage.selection,
-            registry: self.targets.registry,
-            routes: self.targets.routes,
-            state_home: &carriage.state_home,
-            settings_root: &carriage.settings_root,
-            user_home: &carriage.user_home,
-            clients: &carriage.clients,
-            project: &carriage.project,
-            package: carriage.package.as_deref(),
-            created_at: self.targets.created_at,
-        })
-        .context("executing the selected [[deploy.target]] rows")?;
+        self.prepared_native
+            .execute_deploy_targets(&DeployExecution {
+                project_root: self.targets.project_root,
+                targets: self.targets.deploy_targets,
+                selection: &carriage.selection,
+                registry: self.targets.registry,
+                routes: self.targets.routes,
+                state_home: &carriage.state_home,
+                settings_root: &carriage.settings_root,
+                user_home: &carriage.user_home,
+                clients: &carriage.clients,
+                project: &carriage.project,
+                package: carriage.package.as_deref(),
+                created_at: self.targets.created_at,
+            })
+            .context("executing the selected [[deploy.target]] rows")?;
         Ok(())
     }
 }
+
+#[cfg(test)]
+#[path = "native_provider_e2e_tests.rs"]
+mod native_provider_e2e_tests;
 
 type BuildRowSignature = Vec<(
     String,
