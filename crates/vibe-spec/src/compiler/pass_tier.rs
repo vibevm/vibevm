@@ -2,8 +2,11 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#PASS-TIER-LAW");
 
+pub(crate) mod backend;
+pub(crate) mod catalog;
 pub(crate) mod execution;
 pub(crate) mod fault;
+pub(crate) mod frontend;
 pub(crate) mod lowering;
 #[cfg(test)]
 pub(crate) mod native;
@@ -20,5 +23,9 @@ mod tests;
 #[cfg(test)]
 #[path = "pass_tier/execution_tests.rs"]
 mod execution_tests;
+
+#[cfg(test)]
+#[path = "pass_tier/catalog_tests.rs"]
+mod catalog_tests;
 
 use crate::compiler::transform::plan::TransformProvider;

@@ -39,6 +39,8 @@ pub enum ArtifactCompileError {
     #[error(transparent)]
     PassTier(#[from] super::PassTierCompileError),
     #[error(transparent)]
+    PassCatalog(#[from] super::PassCatalogCompileError),
+    #[error(transparent)]
     NativePolicy(#[from] CompilerNativePolicyError),
 }
 

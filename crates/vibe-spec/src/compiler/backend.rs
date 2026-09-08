@@ -6,6 +6,14 @@ use std::sync::Arc;
 use super::ir::{ArtifactTarget, LaneIr, PreEmissionWitness};
 use super::pass::PassName;
 
+/// Compiler-owned artifact/backend ids. Catalog registration may only add new
+/// ids; replacing one of these is an explicit lowering-pass operation.
+pub(crate) const BUILTIN_BACKEND_IDS: [&str; 4] = ["static-md", "static-xml", "index", "inline"];
+
+pub(crate) fn is_builtin_backend_id(id: &str) -> bool {
+    BUILTIN_BACKEND_IDS.contains(&id)
+}
+
 // The single backend/target identity lives below this registry, in
 // `ir/target.rs`, so `ArtifactTarget` and `BackendRegistry` share one id law.
 pub(crate) use super::ir::BackendId;

@@ -29,6 +29,7 @@ use super::merge::MERGE_PASS_NAME;
 use super::merge::MergePass;
 use super::observer::Observing;
 use super::pass::{Pass, PassName, PassSegmentError};
+use super::pass_tier::catalog::PassCatalogs;
 use super::pass_tier::schedule::{PassExecutionAuthority, PassSchedule};
 use super::pipeline::{CompilerPipeline, CompilerPipelineError};
 #[cfg(test)]
@@ -46,6 +47,7 @@ use super::worklist;
 mod attribution;
 mod driver;
 pub use super::pass_tier::PassTierCompileError;
+pub use super::pass_tier::catalog::PassCatalogCompileError;
 pub use super::transform::fault::TransformCompileError;
 #[cfg(test)]
 pub(crate) use driver::compile_artifact_native_with_registries;
@@ -285,10 +287,14 @@ impl<'invoke> BuiltinSchedule<'invoke> {
         invoker: Option<&'invoke dyn CompilerNativeInvoker>,
         policy: Option<&'invoke NativePolicySession>,
     ) -> Result<Self, ArtifactCompileError> {
+        let catalogs = PassCatalogs::resolve(plan.passes())?;
+        if let Some(error) = catalogs.production_catalog_refusal() {
+            return Err(error.into());
+        }
         let mut schedule =
             Self::emitted_base_with_invoker(plan, transforms, registry, observer, invoker, policy)?;
         PassSchedule::install(
-            plan.passes(),
+            catalogs.positioned(),
             &mut schedule.pipeline,
             PassExecutionAuthority::production(),
         )?;
@@ -460,6 +466,7 @@ impl<'invoke> BuiltinSchedule<'invoke> {
         plan: &ArtifactPlan,
         invoker: &'invoke dyn CompilerNativeInvoker,
     ) -> Result<Self, ArtifactCompileError> {
+        let catalogs = PassCatalogs::resolve(plan.passes())?;
         let mut schedule = Self::emitted_base_with_invoker(
             plan,
             &TransformRegistry::builtins(),
@@ -470,7 +477,7 @@ impl<'invoke> BuiltinSchedule<'invoke> {
         )?;
         let verifier = schedule.pipeline.enable_pass_tier_verify_each_for_tests();
         PassSchedule::install(
-            plan.passes(),
+            catalogs.positioned(),
             &mut schedule.pipeline,
             PassExecutionAuthority::VerifiedTest { invoker, verifier },
         )?;
