@@ -1,6 +1,5 @@
 //! Built-in passes and the declared schedule prefix migrated so far.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR");
-use crate::{DocTree, SectionSource, SpecAddress};
 #[cfg(test)]
 use super::absorb::ABSORB_PASS_NAME;
 use super::absorb::AbsorbPass;
@@ -43,6 +42,7 @@ use super::transform::plan::TransformPlan;
 use super::transform::registry::TransformRegistry;
 use super::transform::schedule::TransformSchedule;
 use super::worklist;
+use crate::{DocTree, SectionSource, SpecAddress};
 mod attribution;
 mod driver;
 pub use super::pass_tier::PassTierCompileError;

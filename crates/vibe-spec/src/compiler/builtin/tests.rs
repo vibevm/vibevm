@@ -400,9 +400,8 @@ fn a_forwarded_custom_static_lane_keeps_a_resolvable_transform() {
     assert!(!retargeted.transforms().is_empty());
     reset_parse_invocations();
 
-    let backend = std::sync::Arc::new(
-        crate::compiler::emit::static_md::StaticMarkdownBackend::new(),
-    );
+    let backend =
+        std::sync::Arc::new(crate::compiler::emit::static_md::StaticMarkdownBackend::new());
     BuiltinSchedule::with_backend(
         &retargeted,
         &crate::compiler::transform::registry_test_support::identity_registry(),

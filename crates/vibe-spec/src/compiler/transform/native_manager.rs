@@ -1,17 +1,5 @@
 //! Borrowed compiler-native invocation and manager-owned reply admission.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-NATIVE-ONLY");
-use std::collections::BTreeMap;
-use std::fmt;
-use serde_json::Value;
-use vibe_core::lifecycle::CompilePoint;
-use vibe_core::manifest::ExtensionKey;
-use vibe_wire::behaviour::native_compile::{IrCarrier, NativeCompileError, validate_reply};
-use vibe_wire::generated::native::e1::compile_reply::CompileReply;
-use vibe_wire::generated::shared::Ir;
-use crate::compiler::ir::{IrCardinality, IrLevel, IrShape};
-use crate::compiler::pass::{AnyIr, PassName};
-use crate::compiler::verify::IrVerifier;
-use crate::compiler::wire;
 use super::config::{ConfigDatetime, ConfigOffset, ConfigTable, ConfigValue};
 use super::emitted_reconstruction;
 use super::lane_admission;
@@ -19,6 +7,18 @@ use super::native_identity::CompilerNativeImplementationDigest;
 use super::native_policy::CompilerNativePolicyError;
 use super::native_policy::session::{NativePolicySession, UnavailableDisposition};
 use super::plan::TransformConfig;
+use crate::compiler::ir::{IrCardinality, IrLevel, IrShape};
+use crate::compiler::pass::{AnyIr, PassName};
+use crate::compiler::verify::IrVerifier;
+use crate::compiler::wire;
+use serde_json::Value;
+use std::collections::BTreeMap;
+use std::fmt;
+use vibe_core::lifecycle::CompilePoint;
+use vibe_core::manifest::ExtensionKey;
+use vibe_wire::behaviour::native_compile::{IrCarrier, NativeCompileError, validate_reply};
+use vibe_wire::generated::native::e1::compile_reply::CompileReply;
+use vibe_wire::generated::shared::Ir;
 mod backend;
 pub(crate) use backend::{NativeBackendEntry, NativeBackendError, execute_backend};
 
