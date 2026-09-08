@@ -14,6 +14,24 @@ use anyhow::{Context, Result};
 
 /// Opaque OS identity: volume + file index on Windows, device and inode on
 /// Unix. Equality is public; the platform representation is not.
+///
+/// ```
+/// use vibe_safefs::Project;
+///
+/// # fn main() -> Result<(), Box<dyn std::error::Error>> {
+/// let scope = tempfile::tempdir()?;
+/// std::fs::write(scope.path().join("identity.bin"), b"same object")?;
+/// let project = Project::open(scope.path())?;
+/// let first = project
+///     .read_file_snapshot_bounded("identity.bin", 32)?
+///     .ok_or_else(|| std::io::Error::new(std::io::ErrorKind::NotFound, "first read absent"))?;
+/// let second = project
+///     .read_file_snapshot_bounded("identity.bin", 32)?
+///     .ok_or_else(|| std::io::Error::new(std::io::ErrorKind::NotFound, "second read absent"))?;
+/// assert_eq!(first.identity, second.identity);
+/// # Ok(())
+/// # }
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct FileIdentity {
     volume: u64,

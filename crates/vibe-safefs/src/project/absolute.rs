@@ -11,6 +11,21 @@ use super::{Pinned, Project};
 use crate::FileIdentity;
 
 /// An absolute file selection whose complete parent chain is pinned no-follow.
+///
+/// ```
+/// use vibe_safefs::Project;
+///
+/// # fn main() -> Result<(), Box<dyn std::error::Error>> {
+/// let scope = tempfile::tempdir()?;
+/// let path = scope.path().join("artifact.bin");
+/// std::fs::write(&path, b"artifact")?;
+/// let project = Project::open(scope.path())?;
+/// let pinned = Project::pin_absolute_file(&path)?;
+/// assert_eq!(pinned.relative_to(&project)?.as_deref(), Some("artifact.bin"));
+/// assert_eq!(pinned.read_snapshot_bounded(&project, 16)?.bytes, b"artifact");
+/// # Ok(())
+/// # }
+/// ```
 #[derive(Debug)]
 pub struct PinnedAbsoluteFile {
     parent: Pinned,
@@ -21,6 +36,19 @@ pub struct PinnedAbsoluteFile {
 
 /// An absent absolute destination described by one held existing ancestor and
 /// the safe components that do not exist below it.
+///
+/// ```
+/// use vibe_safefs::Project;
+///
+/// # fn main() -> Result<(), Box<dyn std::error::Error>> {
+/// let scope = tempfile::tempdir()?;
+/// let project = Project::open(scope.path())?;
+/// let absent = Project::pin_absent_path(&scope.path().join("missing/artifact.bin"))?;
+/// assert!(absent.descends_from(&project)?);
+/// assert!(absent.identity_token().starts_with("sha256:"));
+/// # Ok(())
+/// # }
+/// ```
 #[derive(Debug)]
 pub struct PinnedAbsentPath {
     ancestor: Pinned,
@@ -60,17 +88,16 @@ impl Project {
             bail!("absent destination cannot be a filesystem anchor");
         }
         let mut ancestor = open_anchor(&anchor)?;
-        let mut ancestor_identities = vec![ancestor.identity()?];
+        let mut ancestor_identity = ancestor.identity()?;
+        let mut ancestor_identities = vec![ancestor_identity];
         for (index, component) in components.iter().enumerate() {
             match ancestor.open_child_checked(component) {
                 Ok(Some(child)) => {
                     ancestor = child;
-                    ancestor_identities.push(ancestor.identity()?);
+                    ancestor_identity = ancestor.identity()?;
+                    ancestor_identities.push(ancestor_identity);
                 }
                 Ok(None) => {
-                    let ancestor_identity = *ancestor_identities
-                        .last()
-                        .expect("filesystem anchor identity was recorded");
                     return Ok(PinnedAbsentPath {
                         ancestor,
                         ancestor_identity,

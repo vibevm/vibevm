@@ -1,0 +1,534 @@
+macro_rules! project_file_methods {
+    () => {
+    /// Atomically publish one file at a forward-slashed project-relative path.
+    /// Missing parents are created no-follow.
+    pub fn write_atomic(&self, relative: &str, bytes: &[u8]) -> Result<Published, PublishError> {
+        self.write_atomic_with_mode(relative, bytes, None)
+    }
+
+    /// Atomically publish one file with an optional exact Unix permission
+    /// mode. The mode is set on the held stage before rename, so the visible
+    /// name never has desired bytes with an intermediate mode.
+    pub fn write_atomic_with_mode(
+        &self,
+        relative: &str,
+        bytes: &[u8],
+        unix_mode: Option<u32>,
+    ) -> Result<Published, PublishError> {
+        let root = self
+            .root_dir()
+            .map_err(|error| PublishError::before(Vec::new(), error))?;
+        self.write_atomic_in_with_mode(&root, relative, bytes, unix_mode)
+    }
+
+    /// The same publication, relative to an already-pinned directory.
+    ///
+    /// Failures carry [`PublishStage`](crate::PublishStage): everything up to
+    /// the rename is provably invisible, the rename and the verification after
+    /// it are not. Created directories are reported either way.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE")]
+    pub fn write_atomic_in(
+        &self,
+        directory: &Pinned,
+        relative: &str,
+        bytes: &[u8],
+    ) -> Result<Published, PublishError> {
+        self.write_atomic_in_with_mode(directory, relative, bytes, None)
+    }
+
+    /// The mode-aware twin of [`Self::write_atomic_in`].
+    pub fn write_atomic_in_with_mode(
+        &self,
+        directory: &Pinned,
+        relative: &str,
+        bytes: &[u8],
+        unix_mode: Option<u32>,
+    ) -> Result<Published, PublishError> {
+        self.write_atomic_durable_in_with_mode(directory, relative, bytes, unix_mode)
+            .map(|durable| durable.published)
+    }
+
+    /// Atomically publish below a pinned directory and report whether the
+    /// containing directory accepted an explicit durability flush.
+    pub fn write_atomic_durable_in(
+        &self,
+        directory: &Pinned,
+        relative: &str,
+        bytes: &[u8],
+    ) -> Result<crate::DurableWrite, PublishError> {
+        self.write_atomic_durable_in_with_mode(directory, relative, bytes, None)
+    }
+
+    /// Mode-aware durable publication. File data is synced before rename;
+    /// parent-directory durability is returned as an explicit capability.
+    pub fn write_atomic_durable_in_with_mode(
+        &self,
+        directory: &Pinned,
+        relative: &str,
+        bytes: &[u8],
+        unix_mode: Option<u32>,
+    ) -> Result<crate::DurableWrite, PublishError> {
+        self.write_atomic_durable_in_with_mode_stage(directory, relative, bytes, unix_mode, None)
+    }
+
+    /// Transaction-only deterministic staging. `stage_name` must be derived
+    /// from an already-durable transaction/step intent. A restart may reuse
+    /// only an exact regular single-link stage with the requested bytes/mode;
+    /// every other occupant is a third state and is never removed.
+    pub fn write_atomic_transactional_in_with_mode(
+        &self,
+        directory: &Pinned,
+        relative: &str,
+        bytes: &[u8],
+        unix_mode: Option<u32>,
+        stage_name: &str,
+    ) -> Result<crate::DurableWrite, PublishError> {
+        self.write_atomic_durable_in_with_mode_stage(
+            directory,
+            relative,
+            bytes,
+            unix_mode,
+            Some(stage_name),
+        )
+    }
+
+    fn write_atomic_durable_in_with_mode_stage(
+        &self,
+        directory: &Pinned,
+        relative: &str,
+        bytes: &[u8],
+        unix_mode: Option<u32>,
+        deterministic_stage: Option<&str>,
+    ) -> Result<crate::DurableWrite, PublishError> {
+        let mut created: Vec<std::path::PathBuf> = Vec::new();
+        let mut directory_syncs = Vec::new();
+        let before = |created: &[std::path::PathBuf], error: anyhow::Error| {
+            PublishError::before(created.to_vec(), error)
+        };
+        let (parents, name) = split_relative(relative).map_err(|error| before(&created, error))?;
+        let destination = if parents.is_empty() {
+            directory
+                .shallow_clone()
+                .map_err(|error| before(&created, error))?
+        } else {
+            let mut current = directory
+                .shallow_clone()
+                .map_err(|error| before(&created, error))?;
+            for component in &parents {
+                let (child, made) = current
+                    .ensure_child_recording(component)
+                    .map_err(|error| before(&created, error))?;
+                if made {
+                    created.push(child.path().to_path_buf());
+                    directory_syncs.push(crate::DirectorySync {
+                        directory: current.path().to_path_buf(),
+                        durability: crate::transaction::journal_recoverable_checkpoint(
+                            crate::transaction::sync_directory(&current),
+                        ),
+                    });
+                }
+                current = child;
+            }
+            current
+        };
+        // Refuse a destination that is already a link/reparse point or a
+        // directory before staging anything beside it.
+        refuse_unpublishable_destination(&destination, &name)
+            .map_err(|error| before(&created, error))?;
+        let (staged_name, staged_file, created_stage) = match deterministic_stage {
+            Some(stage_name) => {
+                validate_transaction_stage_name(stage_name)
+                    .map_err(|error| before(&created, error))?;
+                let mut options = cap_options();
+                match destination
+                    .dir
+                    .open_with(stage_name, options.read(true).write(true).create_new(true))
+                {
+                    Ok(file) => (stage_name.to_owned(), Some(file), true),
+                    Err(error) if error.kind() == std::io::ErrorKind::AlreadyExists => {
+                        let wanted = format!("{:x}", sha2::Sha256::digest(bytes));
+                        let observed = destination
+                            .inspect_transaction_stage_state(stage_name)
+                            .map_err(|error| before(&created, error))?
+                            .ok_or_else(|| {
+                                before(
+                                    &created,
+                                    anyhow::anyhow!(
+                                        "transaction stage disappeared during recovery"
+                                    ),
+                                )
+                            })?;
+                        if observed.sha256.as_deref() != Some(wanted.as_str())
+                            || observed.bytes != Some(bytes.len() as u64)
+                            || !stable::mode_matches(observed.unix_mode, unix_mode)
+                        {
+                            return Err(before(
+                                &created,
+                                anyhow::anyhow!(
+                                    "transaction stage differs from its durable intent"
+                                ),
+                            ));
+                        }
+                        (stage_name.to_owned(), None, false)
+                    }
+                    Err(error) => return Err(before(&created, anyhow::Error::new(error))),
+                }
+            }
+            None => {
+                let (name, file) =
+                    create_unique_stage(&destination).map_err(|error| before(&created, error))?;
+                (name, Some(file), true)
+            }
+        };
+        if let Some(staged_file) = staged_file {
+            let mut std_file = staged_file.into_std();
+            let written = std_file
+                .write_all(bytes)
+                .and_then(|()| std_file.flush())
+                .and_then(|()| stable::set_unix_mode(&std_file, unix_mode))
+                .and_then(|()| std_file.sync_all());
+            drop(std_file);
+            if let Err(error) = written {
+                if created_stage {
+                    let _ = destination.dir.remove_file(&staged_name);
+                }
+                return Err(before(
+                    &created,
+                    anyhow::Error::new(error).context(format!(
+                        "writing staged `{}`",
+                        destination.join(&staged_name).display()
+                    )),
+                ));
+            }
+        }
+        if let Some(injected) = create_new::injected_pre_publication_failure(relative) {
+            if created_stage {
+                let _ = destination.dir.remove_file(&staged_name);
+            }
+            return Err(before(&created, injected));
+        }
+        if let Err(error) = destination
+            .dir
+            .rename(&staged_name, &destination.dir, &name)
+        {
+            // Our own stage, created with `create_new`: removing it removes
+            // nothing anyone else owns. A failed rename leaves the destination
+            // untouched, so this stays `BeforePublication`.
+            if created_stage {
+                let _ = destination.dir.remove_file(&staged_name);
+            }
+            return Err(before(
+                &created,
+                anyhow::Error::new(error).context(format!(
+                    "publishing `{}`",
+                    destination.join(&name).display()
+                )),
+            ));
+        }
+        // Past this line the destination entry may already be the new bytes.
+        let possibly = |error: anyhow::Error| PublishError::possibly(created.clone(), error);
+        // The window a hostile replacement of the just-published file lands
+        // in: the rename is done and the verification read is the next step.
+        crate::race_hook::before_publish_verify(&destination, &name);
+        // The verification read is bounded by the candidate's own byte length,
+        // never an unbounded read of whatever the name holds now: a racing
+        // replacement larger than the candidate refuses at its own metadata —
+        // spending nothing past `cap + 1` — instead of allocating a foreign
+        // payload to compare against, and it never offers a prefix as success.
+        let wanted_digest = format!("{:x}", sha2::Sha256::digest(bytes));
+        match stable::read_stable_in(self, &destination, &name, Some(bytes.len() as u64))
+            .map_err(&possibly)?
+        {
+            Some(visible)
+                if visible.sha256 == wanted_digest
+                    && visible.bytes == bytes.len() as u64
+                    && stable::mode_matches(visible.unix_mode, unix_mode) => {}
+            Some(_) => {
+                return Err(possibly(anyhow::anyhow!(
+                    "published bytes or mode of `{}` do not match the staged bytes/mode",
+                    destination.join(&name).display()
+                )));
+            }
+            None => {
+                return Err(possibly(anyhow::anyhow!(
+                    "published file `{}` is absent immediately after publication",
+                    destination.join(&name).display()
+                )));
+            }
+        }
+        let parent = crate::transaction::journal_recoverable_checkpoint(
+            crate::transaction::sync_directory(&destination),
+        );
+        directory_syncs.push(crate::DirectorySync {
+            directory: destination.path().to_path_buf(),
+            durability: parent,
+        });
+        // A post-publication fault still crosses the same durability attempt
+        // as success. Callers may recover by re-reading the exact bytes; they
+        // must not classify a branch that skipped the directory sync the
+        // ordinary success path performs as equivalent to that success.
+        if let Some(injected) = injected_post_publication_failure(relative) {
+            return Err(possibly(injected));
+        }
+        Ok(crate::DurableWrite {
+            published: Published {
+                created_directories: created,
+            },
+            file_synced: true,
+            parent,
+            directory_syncs,
+        })
+    }
+
+    /// Judge a whole declared set before anything is spent: every path on its
+    /// own, and then the set against itself.
+    ///
+    /// Two declared rows that *lexically* differ can still be one file — a
+    /// case-folding volume, a hard link, a junction one level up. Where both
+    /// paths already exist this proves it now, from the file identity the OS
+    /// reports, instead of waiting for a post-write canonicalisation that only
+    /// notices after one row has already overwritten the other.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE")]
+    pub fn preflight_set(&self, relatives: &[String]) -> Result<()> {
+        self.preflight_set_against(relatives, &[])
+    }
+
+    /// The same judgement, widened to a set of **existing** paths the declared
+    /// outputs must also not turn out to be.
+    ///
+    /// The portable identity key is the free first gate and it stays: it
+    /// refuses `Docs/A.md` against `docs/a.md` with no syscall at all. What it
+    /// cannot model is an alias the *host* invents — a Win32 8.3 short
+    /// spelling, a Unix bind mount, a case-insensitive volume mounted inside a
+    /// case-sensitive one, a filesystem alias that does not exist yet. Only the
+    /// OS knows those, so where both paths exist the OS is asked, before the
+    /// caller spends anything.
+    ///
+    /// `prior` rows are compared, never validated as destinations: they already
+    /// exist and are somebody else's output. They are still opened through this
+    /// project's capability and no-follow, so a `prior` row cannot be used to
+    /// reach outside the project — a caller must not pass one that is.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE")]
+    pub fn preflight_set_against(&self, relatives: &[String], prior: &[String]) -> Result<()> {
+        let mut earlier_prior: Vec<(FileIdentity, &str)> = Vec::new();
+        for relative in prior {
+            if let Some(identity) = self.comparable_identity(relative)? {
+                earlier_prior.push((identity, relative));
+            }
+        }
+        let mut seen: Vec<(FileIdentity, &str)> = Vec::new();
+        for relative in relatives {
+            self.preflight(relative)?;
+            let Some(identity) = self.file_identity(relative)? else {
+                continue;
+            };
+            if let Some((_, earlier)) = seen.iter().find(|(known, _)| *known == identity) {
+                bail!(
+                    "declared outputs `{earlier}` and `{relative}` are the same physical \
+                     file on this filesystem; each declared output is one distinct file \
+                     written exactly once"
+                );
+            }
+            if let Some((_, earlier)) = earlier_prior.iter().find(|(known, _)| *known == identity) {
+                bail!(
+                    "declared output `{relative}` is the same physical file as `{earlier}`, \
+                     which an earlier phase already produced; writing it would destroy that \
+                     artifact under a different name"
+                );
+            }
+            seen.push((identity, relative));
+        }
+        Ok(())
+    }
+
+    /// The identity of an **already existing** row that is being compared
+    /// rather than written: `None` when it has none this project can read.
+    ///
+    /// A prior artifact is not a destination. It may be a directory, a device,
+    /// something whose permissions this process does not hold — none of which
+    /// is a reason to refuse the run, and Windows reports several of them as a
+    /// hard `Access is denied` rather than as "not a file". Skipping such a row
+    /// costs nothing, because the alias it could hide is caught anyway: a
+    /// declared output must itself pass [`preflight`](Self::preflight), which
+    /// refuses anything that is not an ordinary replaceable file, and the OS
+    /// does not report one identity for an openable regular file and an
+    /// unopenable non-file.
+    ///
+    /// A malformed relative path still propagates: that is a caller error, not
+    /// a filesystem state.
+    fn comparable_identity(&self, relative: &str) -> Result<Option<FileIdentity>> {
+        let root = self.root_dir()?;
+        let Some((holder, name)) = self.holder_of(&root, relative)? else {
+            return Ok(None);
+        };
+        let mut options = cap_options();
+        let Ok(file) = holder.dir.open_with(&name, options.read(true)) else {
+            return Ok(None);
+        };
+        let identity = file_identity(&file.into_std(), &holder.join(&name))?;
+        Ok(Some(identity::with_alias(identity, relative)))
+    }
+
+    /// The OS's own identity for a path that exists, or `None` when it does
+    /// not. Never follows a link.
+    fn file_identity(&self, relative: &str) -> Result<Option<FileIdentity>> {
+        let root = self.root_dir()?;
+        let Some((holder, name)) = self.holder_of(&root, relative)? else {
+            return Ok(None);
+        };
+        let mut options = cap_options();
+        match holder.dir.open_with(&name, options.read(true)) {
+            Ok(file) => {
+                let identity = file_identity(&file.into_std(), &holder.join(&name))?;
+                Ok(Some(identity::with_alias(identity, relative)))
+            }
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => Ok(None),
+            Err(error) => Err(anyhow::Error::new(error)
+                .context(format!("inspecting `{}`", holder.join(&name).display()))),
+        }
+    }
+
+    /// Judge a project-relative path without creating anything, mutating
+    /// anything, or reading a credential — the preflight a paid caller runs
+    /// before it spends. Every ancestor that *currently exists* and the final
+    /// path itself are opened no-follow: a link, reparse point, junction, a
+    /// non-directory ancestor, a directory or device where a file is declared,
+    /// or a hard-linked final file refuses here. Missing ancestors are legal;
+    /// the mutation path rechecks them, because only that check sees a race.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE")]
+    pub fn preflight(&self, relative: &str) -> Result<()> {
+        let (parents, name) = split_relative(relative)?;
+        let mut current = self.root_dir()?;
+        for component in &parents {
+            match current.open_child_checked(component) {
+                Ok(Some(child)) => current = child,
+                // A missing ancestor is not a problem: it will be created, and
+                // the creation itself is no-follow.
+                Ok(None) => return Ok(()),
+                Err(error) => {
+                    return Err(error.context(format!(
+                        "the declared output `{relative}` cannot use `{}` as a link-free \
+                         directory",
+                        current.join(component).display()
+                    )));
+                }
+            }
+        }
+        let mut options = cap_options();
+        match current.dir.open_with(&name, options.read(true)) {
+            Ok(file) => verify_regular_single_link(&file.into_std(), &current.join(&name)).context(
+                format!("the declared output `{relative}` is not a replaceable regular file"),
+            ),
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => Ok(()),
+            Err(error) => Err(anyhow::Error::new(error).context(format!(
+                "the declared output `{relative}` cannot be opened without following a link"
+            ))),
+        }
+    }
+
+    /// Read one file at a project-relative path, or `None` when absent.
+    pub fn read_file(&self, relative: &str) -> Result<Option<Vec<u8>>> {
+        let root = self.root_dir()?;
+        self.read_file_in(&root, relative)
+    }
+
+    /// Remove one file at a project-relative path; `Ok(false)` when absent.
+    pub fn remove_file(&self, relative: &str) -> Result<bool> {
+        let root = self.root_dir()?;
+        self.remove_file_in(&root, relative)
+    }
+
+    /// Read one file at a relative path below `directory`, or `None` when
+    /// absent. A link, a non-regular file, or a hard link count != 1 refuses.
+    pub fn read_file_in(&self, directory: &Pinned, relative: &str) -> Result<Option<Vec<u8>>> {
+        let Some((holder, name)) = self.holder_of(directory, relative)? else {
+            return Ok(None);
+        };
+        let mut options = cap_options();
+        match holder.dir.open_with(&name, options.read(true)) {
+            Ok(file) => {
+                let std_file = file.into_std();
+                verify_regular_single_link(&std_file, &holder.join(&name))?;
+                let mut bytes = Vec::new();
+                std::io::Read::read_to_end(&mut &std_file, &mut bytes)
+                    .with_context(|| format!("reading `{}`", holder.join(&name).display()))?;
+                Ok(Some(bytes))
+            }
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => Ok(None),
+            Err(error) => Err(anyhow::Error::new(error)
+                .context(format!("opening `{}`", holder.join(&name).display()))),
+        }
+    }
+
+    /// Judge one project-relative path without reading it: the credential-free
+    /// probe a freshness check needs. An unsafe component is [`Presence::Unusable`]
+    /// rather than an error, because a probe answers "may this be reused", never
+    /// "is this legal to declare" — that question was already answered.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-FINGERPRINT")]
+    pub fn probe_regular_nonempty(&self, relative: &str) -> Presence {
+        let Ok(root) = self.root_dir() else {
+            return Presence::Unusable;
+        };
+        let Ok(Some((holder, name))) = self.holder_of(&root, relative) else {
+            return Presence::Absent;
+        };
+        let mut options = cap_options();
+        match holder.dir.open_with(&name, options.read(true)) {
+            Ok(file) => {
+                let std_file = file.into_std();
+                if verify_regular_single_link(&std_file, &holder.join(&name)).is_err() {
+                    return Presence::Unusable;
+                }
+                match std_file.metadata() {
+                    Ok(metadata) if metadata.len() > 0 => Presence::RegularNonEmpty,
+                    Ok(_) => Presence::Unusable,
+                    Err(_) => Presence::Unusable,
+                }
+            }
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => Presence::Absent,
+            Err(_) => Presence::Unusable,
+        }
+    }
+
+    /// Remove one file at a relative path below `directory`; `Ok(false)` when
+    /// absent. Links and non-regular files refuse.
+    pub fn remove_file_in(&self, directory: &Pinned, relative: &str) -> Result<bool> {
+        let Some((holder, name)) = self.holder_of(directory, relative)? else {
+            return Ok(false);
+        };
+        let mut options = cap_options();
+        match holder.dir.open_with(&name, options.read(true)) {
+            Ok(file) => {
+                let std_file = file.into_std();
+                verify_regular_single_link(&std_file, &holder.join(&name))?;
+                holder
+                    .dir
+                    .remove_file(&name)
+                    .with_context(|| format!("removing `{}`", holder.join(&name).display()))?;
+                Ok(true)
+            }
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => Ok(false),
+            Err(error) => Err(anyhow::Error::new(error)
+                .context(format!("opening `{}`", holder.join(&name).display()))),
+        }
+    }
+
+    /// Resolve the pinned directory that should hold `relative`'s final
+    /// component, or `None` when an ancestor is absent.
+    fn holder_of(&self, directory: &Pinned, relative: &str) -> Result<Option<(Pinned, String)>> {
+        let (parents, name) = split_relative(relative)?;
+        if parents.is_empty() {
+            return Ok(Some((directory.shallow_clone()?, name)));
+        }
+        let chain = parents.iter().map(String::as_str).collect::<Vec<_>>();
+        match descend(directory, &chain) {
+            Ok(Some(holder)) => Ok(Some((holder, name))),
+            Ok(None) => Ok(None),
+            Err(error) => Err(anyhow::Error::new(error).context(format!(
+                "opening no-follow directory below `{}`",
+                directory.path().display()
+            ))),
+        }
+    }
+    };
+}

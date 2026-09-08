@@ -29,6 +29,23 @@ use crate::file::verify_regular_single_link;
 ///
 /// The identity is deliberately opaque: callers may compare it for equality,
 /// but cannot persist or reconstruct the platform-specific volume/object key.
+///
+/// ```
+/// use vibe_safefs::Project;
+///
+/// # fn main() -> Result<(), Box<dyn std::error::Error>> {
+/// let scope = tempfile::tempdir()?;
+/// std::fs::write(scope.path().join("payload.bin"), b"stable")?;
+/// let project = Project::open(scope.path())?;
+/// let snapshot = project
+///     .read_file_snapshot_bounded("payload.bin", 16)?
+///     .ok_or_else(|| std::io::Error::new(std::io::ErrorKind::NotFound, "payload vanished"))?;
+/// assert_eq!(snapshot.bytes, b"stable");
+/// assert_eq!(snapshot.size, 6);
+/// assert_eq!(snapshot.sha256.len(), 64);
+/// # Ok(())
+/// # }
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct StableFileSnapshot {
     /// Exact file bytes from the held-handle epoch.
@@ -69,7 +86,8 @@ impl Project {
         relative: &str,
         cap: usize,
     ) -> Result<Option<StableFileSnapshot>> {
-        cap.checked_add(1)
+        let limit = cap
+            .checked_add(1)
             .with_context(|| format!("cap {cap} is usize::MAX: cap + 1 would overflow"))?;
         let Some((holder, name)) = self.holder_of(directory, relative)? else {
             return Ok(None);
@@ -97,8 +115,8 @@ impl Project {
             );
         }
         crate::race_hook::before_bounded_read(&holder, &name);
-        let first = bounded_pass(&mut file, cap, before.len(), &display)?;
-        let second = bounded_pass(&mut file, cap, before.len(), &display)?;
+        let first = bounded_pass(&mut file, cap, limit, before.len(), &display)?;
+        let second = bounded_pass(&mut file, cap, limit, before.len(), &display)?;
         if first != second {
             bail!(
                 "`{}` changed between its two held-handle passes",
@@ -302,14 +320,12 @@ impl Project {
 fn bounded_pass(
     file: &mut std::fs::File,
     cap: usize,
+    limit: usize,
     metadata_len: u64,
     display: &Path,
 ) -> Result<Vec<u8>> {
     file.seek(SeekFrom::Start(0))
         .with_context(|| format!("seeking `{}`", display.display()))?;
-    let limit = cap
-        .checked_add(1)
-        .expect("caller validated that cap + 1 is representable");
     let mut bytes = Vec::with_capacity(metadata_len as usize);
     let mut fenced = file.take(limit as u64);
     let mut chunk = [0u8; READ_CHUNK];

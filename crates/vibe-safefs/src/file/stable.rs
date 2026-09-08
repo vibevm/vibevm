@@ -18,6 +18,22 @@ const WINDOW: usize = 64 * 1024;
 
 /// Stable identity of one regular single-link file read twice through one
 /// held no-follow handle. No content-sized allocation is retained.
+///
+/// ```
+/// use vibe_safefs::Project;
+///
+/// # fn main() -> Result<(), Box<dyn std::error::Error>> {
+/// let scope = tempfile::tempdir()?;
+/// std::fs::write(scope.path().join("state.bin"), b"streamed")?;
+/// let project = Project::open(scope.path())?;
+/// let state = project
+///     .stable_file_state("state.bin")?
+///     .ok_or_else(|| std::io::Error::new(std::io::ErrorKind::NotFound, "state file absent"))?;
+/// assert_eq!(state.bytes, 8);
+/// assert_eq!(state.sha256.len(), 64);
+/// # Ok(())
+/// # }
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct StableFileState {
     /// Lowercase SHA-256 over the file bytes.
