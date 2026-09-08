@@ -39,6 +39,35 @@ impl Project {
             },
         }
     }
+
+    /// Remove one project-relative directory tree when present without ever
+    /// creating the target or an absent parent. Every existing component and
+    /// child is opened no-follow before removal.
+    pub fn remove_dir_all_if_present(&self, relative: &str) -> Result<bool> {
+        let (parents, name) = split_relative(relative)?;
+        let parent = if parents.is_empty() {
+            self.root_dir()?
+        } else {
+            let chain = parents.iter().map(String::as_str).collect::<Vec<_>>();
+            let Some(parent) = self.dir_if_present(&chain)? else {
+                return Ok(false);
+            };
+            parent
+        };
+        let Some(directory) = parent.open_child_checked(&name)? else {
+            return Ok(false);
+        };
+        clear(&directory)?;
+        drop(directory);
+        match parent.dir.remove_dir(&name) {
+            Ok(()) => Ok(true),
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => Ok(true),
+            Err(error) => Err(anyhow::Error::new(error).context(format!(
+                "removing directory `{}`",
+                parent.join(&name).display()
+            ))),
+        }
+    }
 }
 
 fn clear(directory: &Pinned) -> Result<()> {

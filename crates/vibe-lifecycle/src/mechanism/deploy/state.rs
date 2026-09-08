@@ -425,15 +425,16 @@ impl DeployState {
         Ok(staging)
     }
 
-    /// Clear rollback/staging bytes after the whole selected deploy finished.
-    /// A live intent deliberately keeps them for recovery instead.
+    /// Remove rollback/staging scratch after the whole selected deploy finished.
+    /// A live intent or inverse deliberately keeps it for recovery instead;
+    /// absence stays absent and cleanup never manufactures a directory.
     pub(crate) fn cleanup_staging(&self, home: &DeploymentHome) -> Result<(), DeployError> {
         let staging = home.staging();
         if self.read_intent(home)?.is_some() || self.read_inverse(home)?.is_some() {
             return Ok(());
         }
         self.project
-            .reset_dir(&home.member(STAGING_DIR))
+            .remove_dir_all_if_present(&home.member(STAGING_DIR))
             .map(|_| ())
             .map_err(|error| DeployError::StateHome {
                 path: rendered(&staging),

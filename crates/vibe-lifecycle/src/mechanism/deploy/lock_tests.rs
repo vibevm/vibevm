@@ -232,8 +232,8 @@ fn staging_is_offered_only_where_the_destination_supports_atomic_replacement() {
 
     let home = DeploymentHome::new(&state_home, "org.example/demo", None, "local-helper");
     assert!(
-        home.staging().is_dir(),
-        "the engine prepared the staging directory it offered",
+        !home.staging().exists(),
+        "operation-scoped staging is removed after the provider finishes",
     );
     // One lock per destination, under the state home's own lock directory —
     // beside the deployment's own state lock, which is a different family.
@@ -266,5 +266,66 @@ fn staging_is_offered_only_where_the_destination_supports_atomic_replacement() {
     assert!(
         !plain_home.staging().exists(),
         "no staging directory is created for a provider that declared none",
+    );
+}
+
+#[test]
+fn cleanup_retains_staging_while_recovery_or_inverse_is_live() {
+    use super::state::InverseRecord;
+    use vibe_wire::generated::deploy_intent::{
+        DeployIntent, DeployTargetIdentity, Rfc3339Timestamp,
+    };
+
+    let root = crate::mechanism::package::support::temp();
+    let state = DeployState::open(root.path()).expect("state opens");
+    let intent_home = DeploymentHome::new(root.path(), "project", None, "intent-target");
+    let intent_staging = state.prepare_staging(&intent_home).expect("intent staging");
+    std::fs::write(intent_staging.join("keep"), b"intent").unwrap();
+    state
+        .write_intent(
+            &intent_home,
+            &DeployIntent {
+                plan_hash: "a".repeat(64),
+                resources: Vec::new(),
+                schema: vibe_wire::behaviour::deploy_records::INTENT_EPOCH,
+                started_at: "2026-09-08T00:00:00Z".parse::<Rfc3339Timestamp>().unwrap(),
+                target: DeployTargetIdentity {
+                    generation: 0,
+                    profile: "local".into(),
+                    project: "project".into(),
+                    target: "intent-target".into(),
+                    package: None,
+                },
+                prior_generation: None,
+            },
+        )
+        .unwrap();
+    state.cleanup_staging(&intent_home).unwrap();
+    assert_eq!(
+        std::fs::read(intent_staging.join("keep")).unwrap(),
+        b"intent"
+    );
+
+    let inverse_home = DeploymentHome::new(root.path(), "project", None, "inverse-target");
+    let inverse_staging = state
+        .prepare_staging(&inverse_home)
+        .expect("inverse staging");
+    std::fs::write(inverse_staging.join("keep"), b"inverse").unwrap();
+    state
+        .write_inverse(
+            &inverse_home,
+            &InverseRecord::new(
+                0,
+                "org.demo/provider#native",
+                "resource",
+                &"b".repeat(64),
+                "prior-handle",
+            ),
+        )
+        .unwrap();
+    state.cleanup_staging(&inverse_home).unwrap();
+    assert_eq!(
+        std::fs::read(inverse_staging.join("keep")).unwrap(),
+        b"inverse"
     );
 }
