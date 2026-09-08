@@ -30,22 +30,18 @@ fn all_five_handler_shapes_parse_without_restricting_agent_to_create() {
 id = "builtin"
 point = "phase:validate"
 handler = { kind = "builtin", name = "" }
-
 [[extension]]
 id = "script"
 point = "slot:pre-install"
 handler = { kind = "script", base = "hooks/prepare" }
-
 [[extension]]
 id = "binary"
 point = "phase:build"
 handler = { kind = "binary", name = "tool" }
-
 [[extension]]
 id = "native-source"
 point = "compile:emitted"
 handler = { kind = "native", crate_dir = "ext/squeeze" }
-
 [[extension]]
 id = "native-prebuilt"
 point = "phase:test"
@@ -83,7 +79,6 @@ config = { nan = nan, zero = -0.0, at = 1979-05-27T07:32:00Z, nested = { values 
 auto = false
 applies_to = { packages = ["org.demo/*"], paths = ["vibevm/vibespecs/**"] }
 when = { future = { mode = "opaque" } }
-
 [[extension]]
 id = "phase"
 point = "phase:test"
@@ -91,14 +86,31 @@ handler = { kind = "agent", prompt = "anything" }
 config = {}
 inputs = []
 when = {}
-
 [[extension]]
-id = "pass"
+id = "transform-pass"
 point = "compile:pass"
 handler = { kind = "native", crate_dir = "ext/pass" }
 auto = true
 compiler_internals = true
-pass = { kind = "transform", level = "closure", from = "source", to = "document", after = "qualify", before = "link", replace = "anything", formats = [], artifact = "" }
+pass = { kind = "transform", level = "closure", after = "qualify" }
+[[extension]]
+id = "lowering-pass"
+point = "compile:pass"
+handler = { kind = "builtin", name = "lower" }
+compiler_internals = true
+pass = { kind = "lowering", from = "source", to = "document", before = "parse", artifact = "static-xml" }
+[[extension]]
+id = "frontend-pass"
+point = "compile:pass"
+handler = { kind = "builtin", name = "front" }
+compiler_internals = true
+pass = { kind = "frontend", formats = ["txt"] }
+[[extension]]
+id = "backend-pass"
+point = "compile:pass"
+handler = { kind = "builtin", name = "back" }
+compiler_internals = true
+pass = { kind = "backend", artifact = "json" }
 "#,
     );
 
@@ -123,7 +135,25 @@ pass = { kind = "transform", level = "closure", from = "source", to = "document"
 
     let pass = manifest.extensions[2].pass.as_ref().unwrap();
     assert_eq!(pass.kind, ExtensionPassKind::Transform);
-    assert_eq!(pass.formats, Some(Vec::new()));
+    assert_eq!(
+        manifest.extensions[3]
+            .pass
+            .as_ref()
+            .unwrap()
+            .artifact
+            .as_deref(),
+        Some("static-xml")
+    );
+    assert_eq!(
+        manifest.extensions[4]
+            .pass
+            .as_ref()
+            .unwrap()
+            .formats
+            .as_ref()
+            .unwrap()[0],
+        "txt"
+    );
 
     let rendered = toml::to_string_pretty(&manifest).unwrap();
     let reparsed = Manifest::parse_str(&rendered).unwrap();
@@ -134,7 +164,14 @@ pass = { kind = "transform", level = "closure", from = "source", to = "document"
             .iter()
             .map(|row| row.id.as_str())
             .collect::<Vec<_>>(),
-        ["source", "phase", "pass"]
+        [
+            "source",
+            "phase",
+            "transform-pass",
+            "lowering-pass",
+            "frontend-pass",
+            "backend-pass"
+        ]
     );
     let reparsed_zero = reparsed.extensions[0].config.as_ref().unwrap().as_table()["zero"]
         .as_float()
@@ -171,6 +208,7 @@ message = "hello"
 # pass-comment
 kind = "transform"
 level = "closure"
+after = "qualify"
 "#,
     )
     .unwrap();
@@ -369,7 +407,7 @@ handler = { kind = "builtin", name = "" }
 
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#COMPILER-INTERNALS-FLAG")]
-fn pass_wire_accepts_every_kind_and_level_without_placement_policy() {
+fn pass_wire_accepts_each_frozen_kind_shape_and_roundtrips_it() {
     let manifest = parse(
         PROJECT,
         r#"
@@ -378,28 +416,31 @@ id = "transform"
 point = "compile:pass"
 handler = { kind = "builtin", name = "x" }
 compiler_internals = true
-pass = { kind = "transform", level = "source" }
-
+pass = { kind = "transform", level = "source", after = "parse" }
 [[extension]]
 id = "lowering"
 point = "compile:pass"
 handler = { kind = "builtin", name = "x" }
 compiler_internals = true
-pass = { kind = "lowering", from = "document", to = "closure" }
-
+pass = { kind = "lowering", from = "document", to = "closure", before = "close" }
+[[extension]]
+id = "replacement-lowering"
+point = "compile:pass"
+handler = { kind = "builtin", name = "x" }
+compiler_internals = true
+pass = { kind = "lowering", replace = "emit", artifact = "static-xml" }
 [[extension]]
 id = "frontend"
 point = "compile:pass"
 handler = { kind = "builtin", name = "x" }
 compiler_internals = true
-pass = { kind = "frontend", level = "lane", formats = ["txt"] }
-
+pass = { kind = "frontend", formats = ["txt"] }
 [[extension]]
 id = "backend"
 point = "compile:pass"
 handler = { kind = "builtin", name = "x" }
 compiler_internals = true
-pass = { kind = "backend", level = "emitted", artifact = "json" }
+pass = { kind = "backend", artifact = "json" }
 "#,
     );
     assert_eq!(
@@ -411,10 +452,72 @@ pass = { kind = "backend", level = "emitted", artifact = "json" }
         [
             ExtensionPassKind::Transform,
             ExtensionPassKind::Lowering,
+            ExtensionPassKind::Lowering,
             ExtensionPassKind::Frontend,
             ExtensionPassKind::Backend,
         ]
     );
+    let rendered = toml::to_string_pretty(&manifest).unwrap();
+    assert_eq!(manifest, Manifest::parse_str(&rendered).unwrap());
+}
+
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#PASS-TIER-LAW")]
+fn pass_wire_refuses_missing_conflicting_blank_and_foreign_fields() {
+    for (pass, expected) in [
+        (
+            r#"pass = { kind = "transform", after = "parse" }"#,
+            "requires field `level`",
+        ),
+        (
+            r#"pass = { kind = "transform", level = "source" }"#,
+            "exactly one",
+        ),
+        (
+            r#"pass = { kind = "transform", level = "source", after = "parse", from = "source" }"#,
+            "forbids field `from`",
+        ),
+        (
+            r#"pass = { kind = "lowering", from = "source", after = "parse" }"#,
+            "requires fields `from` and `to`",
+        ),
+        (
+            r#"pass = { kind = "lowering" }"#,
+            "requires fields `from` and `to`",
+        ),
+        (
+            r#"pass = { kind = "lowering", after = "parse", artifact = "  " }"#,
+            "must not be blank",
+        ),
+        (
+            r#"pass = { kind = "frontend" }"#,
+            "requires field `formats`",
+        ),
+        (
+            r#"pass = { kind = "frontend", formats = [] }"#,
+            "field `formats` is empty",
+        ),
+        (
+            r#"pass = { kind = "frontend", formats = ["txt"], after = "parse" }"#,
+            "forbids field `after`",
+        ),
+        (
+            r#"pass = { kind = "backend" }"#,
+            "requires field `artifact`",
+        ),
+        (
+            r#"pass = { kind = "backend", artifact = " " }"#,
+            "must not be blank",
+        ),
+    ] {
+        let error = parse_error(
+            PROJECT,
+            &format!(
+                "[[extension]]\nid = \"x\"\npoint = \"compile:pass\"\nhandler = {{ kind = \"builtin\", name = \"x\" }}\ncompiler_internals = true\n{pass}\n"
+            ),
+        );
+        assert!(error.contains(expected), "expected {expected:?}: {error}");
+    }
 }
 
 #[test]

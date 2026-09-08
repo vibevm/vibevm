@@ -20,6 +20,60 @@ fn decl(point: &str, handler: ExtensionHandler) -> ExtensionDecl {
     }
 }
 
+fn pass(kind: ExtensionPassKind) -> ExtensionPass {
+    ExtensionPass {
+        kind,
+        level: None,
+        from: None,
+        to: None,
+        after: None,
+        before: None,
+        replace: None,
+        formats: None,
+        artifact: None,
+    }
+}
+
+fn pass_with(kind: ExtensionPassKind, set: impl FnOnce(&mut ExtensionPass)) -> ExtensionPass {
+    let mut pass = pass(kind);
+    set(&mut pass);
+    pass
+}
+
+fn internals(pass: Option<ExtensionPass>) -> ExtensionDecl {
+    let mut declaration = decl(
+        "compile:pass",
+        ExtensionHandler::Builtin { name: "x".into() },
+    );
+    declaration.compiler_internals = Some(true);
+    declaration.pass = pass;
+    declaration
+}
+
+fn assert_pass_error(pass: ExtensionPass, expected: &str) {
+    let error = internals(Some(pass)).validate().unwrap_err();
+    assert!(error.contains(expected), "expected {expected:?}: {error}");
+    assert!(error.contains(PASS_TIER_LAW), "wrong authority: {error}");
+    assert!(
+        !error.contains(COMPILER_INTERNALS_FLAG),
+        "mixed authority: {error}"
+    );
+}
+
+fn set_field(pass: &mut ExtensionPass, field: &str) {
+    match field {
+        "level" => pass.level = Some(ExtensionIrLevel::Source),
+        "from" => pass.from = Some(ExtensionIrLevel::Source),
+        "to" => pass.to = Some(ExtensionIrLevel::Document),
+        "after" => pass.after = Some("parse".into()),
+        "before" => pass.before = Some("parse".into()),
+        "replace" => pass.replace = Some("parse".into()),
+        "formats" => pass.formats = Some(vec!["txt".into()]),
+        "artifact" => pass.artifact = Some("json".into()),
+        other => panic!("unknown pass field {other}"),
+    }
+}
+
 fn table(body: &str) -> toml::Table {
     toml::from_str(body).unwrap()
 }
@@ -282,31 +336,39 @@ fn compile_points_accept_only_builtin_and_native() {
 
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#COMPILER-INTERNALS-FLAG")]
-fn pass_flag_and_optional_pass_table_follow_presence_laws() {
+fn pass_flag_and_optional_valid_pass_table_follow_presence_laws() {
     let mut pass = decl(
         "compile:pass",
         ExtensionHandler::Builtin { name: "x".into() },
     );
-    assert!(pass.validate().unwrap_err().contains("requires field"));
+    assert_ne!(PASS_TIER_LAW, COMPILER_INTERNALS_FLAG);
+    let error = pass.validate().unwrap_err();
+    assert!(error.contains("requires field"), "{error}");
+    assert!(error.contains(COMPILER_INTERNALS_FLAG), "{error}");
+    assert!(!error.contains(PASS_TIER_LAW), "{error}");
+    pass.pass = Some(pass_with(ExtensionPassKind::Transform, |pass| {
+        pass.level = Some(ExtensionIrLevel::Closure);
+        pass.after = Some("qualify".into());
+    }));
+    assert!(
+        pass.validate()
+            .unwrap_err()
+            .contains("compiler_internals = true")
+    );
+    pass.pass = None;
     pass.compiler_internals = Some(false);
     assert!(pass.validate().unwrap_err().contains("requires field"));
     pass.compiler_internals = Some(true);
     assert!(pass.validate().is_ok(), "the pass table itself is optional");
 
-    pass.pass = Some(ExtensionPass {
-        kind: ExtensionPassKind::Transform,
-        level: Some(ExtensionIrLevel::Closure),
-        from: None,
-        to: None,
-        after: Some("qualify".into()),
-        before: Some("link".into()),
-        replace: Some("anything".into()),
-        formats: Some(Vec::new()),
-        artifact: Some(String::new()),
-    });
-    assert!(
-        pass.validate().is_ok(),
-        "kind-specific placement conflicts belong to R6"
+    pass.pass = Some(pass_with(ExtensionPassKind::Transform, |pass| {
+        pass.level = Some(ExtensionIrLevel::Closure);
+        pass.after = Some("  qualify  ".into());
+    }));
+    assert!(pass.validate().is_ok());
+    assert_eq!(
+        pass.pass.as_ref().unwrap().after.as_deref(),
+        Some("  qualify  ")
     );
 
     let mut ordinary = decl("phase:test", ExtensionHandler::Builtin { name: "x".into() });
@@ -315,6 +377,183 @@ fn pass_flag_and_optional_pass_table_follow_presence_laws() {
     ordinary.compiler_internals = None;
     ordinary.pass = pass.pass;
     assert!(ordinary.validate().unwrap_err().contains("field `pass`"));
+}
+
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#PASS-TIER-LAW")]
+fn every_pass_kind_accepts_its_exact_structural_shape() {
+    let valid = [
+        pass_with(ExtensionPassKind::Transform, |pass| {
+            pass.level = Some(ExtensionIrLevel::Closure);
+            pass.before = Some("link".into());
+        }),
+        pass_with(ExtensionPassKind::Lowering, |pass| {
+            pass.replace = Some("emit".into());
+            pass.artifact = Some("static-xml".into());
+        }),
+        pass_with(ExtensionPassKind::Lowering, |pass| {
+            pass.from = Some(ExtensionIrLevel::Document);
+            pass.to = Some(ExtensionIrLevel::Closure);
+            pass.after = Some("close".into());
+        }),
+        pass_with(ExtensionPassKind::Frontend, |pass| {
+            pass.formats = Some(vec![" txt ".into()]);
+        }),
+        pass_with(ExtensionPassKind::Backend, |pass| {
+            pass.artifact = Some(" json ".into());
+        }),
+    ];
+    for pass in valid {
+        assert!(internals(Some(pass)).validate().is_ok());
+    }
+}
+
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#PASS-TIER-LAW")]
+fn pass_kinds_refuse_missing_conflicting_blank_and_foreign_fields() {
+    assert_pass_error(
+        pass_with(ExtensionPassKind::Transform, |pass| {
+            pass.after = Some("parse".into())
+        }),
+        "requires field `level`",
+    );
+    assert_pass_error(
+        pass_with(ExtensionPassKind::Transform, |pass| {
+            pass.level = Some(ExtensionIrLevel::Source)
+        }),
+        "exactly one",
+    );
+    assert_pass_error(
+        pass_with(ExtensionPassKind::Transform, |pass| {
+            pass.level = Some(ExtensionIrLevel::Source);
+            pass.after = Some("parse".into());
+            pass.before = Some("parse".into());
+        }),
+        "exactly one",
+    );
+    for field in ["from", "to", "replace", "formats", "artifact"] {
+        let mut candidate = pass_with(ExtensionPassKind::Transform, |pass| {
+            pass.level = Some(ExtensionIrLevel::Source);
+            pass.after = Some("parse".into());
+        });
+        set_field(&mut candidate, field);
+        assert_pass_error(candidate, &format!("forbids field `{field}`"));
+    }
+
+    assert_pass_error(
+        pass_with(ExtensionPassKind::Lowering, |pass| {
+            pass.after = Some("parse".into())
+        }),
+        "requires fields `from` and `to`",
+    );
+    assert_pass_error(
+        pass_with(ExtensionPassKind::Lowering, |pass| {
+            pass.from = Some(ExtensionIrLevel::Source);
+            pass.to = Some(ExtensionIrLevel::Document);
+            pass.replace = Some("parse".into());
+            pass.artifact = Some("static-xml".into());
+        }),
+        "lowering replacement` forbids field `from`",
+    );
+    assert_pass_error(
+        pass_with(ExtensionPassKind::Lowering, |pass| {
+            pass.replace = Some("emit".into())
+        }),
+        "lowering replacement` requires field `artifact`",
+    );
+    for field in ["from", "to"] {
+        let mut candidate = pass_with(ExtensionPassKind::Lowering, |pass| {
+            pass.after = Some("parse".into());
+        });
+        set_field(&mut candidate, field);
+        assert_pass_error(candidate, "requires fields `from` and `to`");
+    }
+    for field in ["level", "formats"] {
+        let mut candidate = pass_with(ExtensionPassKind::Lowering, |pass| {
+            pass.from = Some(ExtensionIrLevel::Source);
+            pass.to = Some(ExtensionIrLevel::Document);
+            pass.after = Some("parse".into());
+        });
+        set_field(&mut candidate, field);
+        assert_pass_error(candidate, &format!("forbids field `{field}`"));
+    }
+    assert_pass_error(
+        pass_with(ExtensionPassKind::Lowering, |pass| {
+            pass.from = Some(ExtensionIrLevel::Source);
+            pass.to = Some(ExtensionIrLevel::Document);
+            pass.after = Some("parse".into());
+            pass.before = Some("close".into());
+        }),
+        "exactly one",
+    );
+    for (field, expected) in [
+        ("after", "must not be blank"),
+        ("artifact", "must not be blank"),
+    ] {
+        let mut candidate = pass_with(ExtensionPassKind::Lowering, |pass| {
+            pass.from = Some(ExtensionIrLevel::Source);
+            pass.to = Some(ExtensionIrLevel::Document);
+            pass.after = Some("parse".into());
+        });
+        set_field(&mut candidate, field);
+        match field {
+            "after" => candidate.after = Some(" \t ".into()),
+            "artifact" => candidate.artifact = Some(" \t ".into()),
+            _ => unreachable!(),
+        }
+        assert_pass_error(candidate, expected);
+    }
+
+    for (kind, required) in [
+        (ExtensionPassKind::Frontend, "formats"),
+        (ExtensionPassKind::Backend, "artifact"),
+    ] {
+        assert_pass_error(pass(kind), &format!("requires field `{required}`"));
+    }
+    assert_pass_error(
+        pass_with(ExtensionPassKind::Frontend, |pass| {
+            pass.formats = Some(Vec::new())
+        }),
+        "field `formats` is empty",
+    );
+    assert_pass_error(
+        pass_with(ExtensionPassKind::Frontend, |pass| {
+            pass.formats = Some(vec![" ".into()])
+        }),
+        "formats[0]",
+    );
+    assert_pass_error(
+        pass_with(ExtensionPassKind::Backend, |pass| {
+            pass.artifact = Some(" ".into())
+        }),
+        "must not be blank",
+    );
+
+    for (kind, allowed, forbidden) in [
+        (
+            ExtensionPassKind::Frontend,
+            "formats",
+            [
+                "level", "from", "to", "after", "before", "replace", "artifact",
+            ]
+            .as_slice(),
+        ),
+        (
+            ExtensionPassKind::Backend,
+            "artifact",
+            [
+                "level", "from", "to", "after", "before", "replace", "formats",
+            ]
+            .as_slice(),
+        ),
+    ] {
+        for field in forbidden {
+            let mut candidate = pass(kind);
+            set_field(&mut candidate, allowed);
+            set_field(&mut candidate, field);
+            assert_pass_error(candidate, &format!("forbids field `{field}`"));
+        }
+    }
 }
 
 #[test]

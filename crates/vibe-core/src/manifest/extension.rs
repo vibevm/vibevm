@@ -16,6 +16,7 @@ use crate::lifecycle::{CompilePoint, ExtensionPoint};
 use crate::manifest::declarant_path::{declarant_path, declarant_path_error};
 
 mod control;
+mod pass;
 mod wire;
 pub use control::{ExtensionKey, ExtensionUse, ExtensionsControl};
 pub(crate) use wire::{ExtensionDeclWire, ExtensionHandlerWire, ExtensionsControlWire};
@@ -24,8 +25,9 @@ const CONTRIB_GRAMMAR: &str = "spec://org.vibevm.core/vibevm/common/PROP-054#CON
 const HANDLER_TABLES: &str = "spec://org.vibevm.core/vibevm/common/PROP-054#REF-HANDLER-TABLES";
 const HANDLER_KINDS: &str = "spec://org.vibevm.core/vibevm/common/PROP-054#HANDLER-KINDS";
 const SELECTOR: &str = "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-SELECTOR";
-const INTERNALS_FLAG: &str =
+const COMPILER_INTERNALS_FLAG: &str =
     "spec://org.vibevm.core/vibevm/common/PROP-054#COMPILER-INTERNALS-FLAG";
+const PASS_TIER_LAW: &str = "spec://org.vibevm.core/vibevm/common/PROP-054#PASS-TIER-LAW";
 const RESERVED_EXTENSION_ID_PREFIX: &str = "@vibe/";
 const RESERVED_INTERNAL_BUILTIN: &str = "package-skill-project";
 
@@ -90,12 +92,6 @@ pub struct ExtensionAppliesTo {
 }
 
 /// The four pass-tier declaration kinds.
-///
-/// ```
-/// use vibe_core::manifest::ExtensionPassKind;
-///
-/// assert_ne!(ExtensionPassKind::Transform, ExtensionPassKind::Backend);
-/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#PASS-TIER-LAW")]
 pub enum ExtensionPassKind {
@@ -106,12 +102,6 @@ pub enum ExtensionPassKind {
 }
 
 /// A named IR level used only by a pass declaration.
-///
-/// ```
-/// use vibe_core::manifest::ExtensionIrLevel;
-///
-/// assert_ne!(ExtensionIrLevel::Source, ExtensionIrLevel::Emitted);
-/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#IR-LEVELS")]
 pub enum ExtensionIrLevel {
@@ -123,23 +113,9 @@ pub enum ExtensionIrLevel {
 }
 
 /// The declaration attached to a `compile:pass` contribution.
-///
-/// Field combinations deliberately remain unjudged here: R6 owns placement
-/// semantics. R2.1 preserves every field and its presence without inventing a
-/// conflict rule ahead of that work.
-///
-/// ```
-/// use vibe_core::manifest::{ExtensionIrLevel, ExtensionPass, ExtensionPassKind};
-///
-/// let pass = ExtensionPass {
-///     kind: ExtensionPassKind::Transform,
-///     level: Some(ExtensionIrLevel::Closure),
-///     from: None, to: None,
-///     after: Some("qualify".into()), before: None, replace: None,
-///     formats: None, artifact: None,
-/// };
-/// assert_eq!(pass.level, Some(ExtensionIrLevel::Closure));
-/// ```
+/// R6.1 validates the kind-specific field matrix while preserving every
+/// accepted field and its authored spelling. Registry membership, named-pass
+/// resolution, and transition legality remain compiler concerns for R6.3.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#PASS-TIER-LAW")]
 pub struct ExtensionPass {
@@ -293,21 +269,24 @@ impl ExtensionDecl {
         let is_pass = self.point == ExtensionPoint::Compile(CompilePoint::Pass);
         if is_pass && self.compiler_internals != Some(true) {
             return Err(format!(
-                "[[extension]] `{}` point `compile:pass` requires field `compiler_internals = true` ({INTERNALS_FLAG})",
+                "[[extension]] `{}` point `compile:pass` requires field `compiler_internals = true` ({COMPILER_INTERNALS_FLAG})",
                 self.id,
             ));
         }
         if !is_pass && let Some(value) = self.compiler_internals {
             return Err(format!(
-                "[[extension]] `{}` field `compiler_internals = {value}` is forbidden at point `{}`; it is reserved for `compile:pass` ({INTERNALS_FLAG})",
+                "[[extension]] `{}` field `compiler_internals = {value}` is forbidden at point `{}`; it is reserved for `compile:pass` ({COMPILER_INTERNALS_FLAG})",
                 self.id, self.point,
             ));
         }
         if !is_pass && self.pass.is_some() {
             return Err(format!(
-                "[[extension]] `{}` field `pass` is forbidden at point `{}`; it is legal only for `compile:pass` ({INTERNALS_FLAG})",
+                "[[extension]] `{}` field `pass` is forbidden at point `{}`; it is legal only for `compile:pass` ({COMPILER_INTERNALS_FLAG})",
                 self.id, self.point,
             ));
+        }
+        if let Some(pass) = &self.pass {
+            pass.validate(&self.id)?;
         }
         Ok(())
     }
