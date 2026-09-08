@@ -2,8 +2,8 @@
 
 use serde::{Deserialize, Serialize};
 
-/// Epoch-1 package-authored native deploy-mechanism manifest. Object readers
-/// are permissive for additive evolution; closed vocabularies and relational
+/// Epoch-1 package-authored native mechanism manifest. Object readers are
+/// permissive for additive evolution; closed vocabularies and relational
 /// admission remain exact.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct MechanismManifest {

@@ -144,6 +144,9 @@ pub struct NativeMechanism {
     display_path: String,
     provider: String,
     logical_key: MechanismKey,
+    expected_role: vibe_core::manifest::MechanismRole,
+    expected_name: String,
+    expected_protocol: u32,
     descriptor: MechanismDescriptor,
 }
 
@@ -158,8 +161,26 @@ impl NativeMechanism {
         &self.logical_key
     }
 
+    pub const fn expected_role(&self) -> vibe_core::manifest::MechanismRole {
+        self.expected_role
+    }
+
+    pub fn expected_name(&self) -> &str {
+        &self.expected_name
+    }
+
+    pub const fn expected_protocol(&self) -> u32 {
+        self.expected_protocol
+    }
+
     /// Invoke one admitted operation through the shared ABI-1 response guard.
     pub fn invoke(&self, request: &DeployRequest) -> Result<DeployReply, NativeLoadError> {
+        if self.expected_role != vibe_core::manifest::MechanismRole::Deploy {
+            return Err(NativeLoadError::MechanismRoleInvocation {
+                path: self.display_path.clone(),
+                role: self.expected_role.to_string(),
+            });
+        }
         let operation =
             native_deploy::validate_request(request, &self.provider, &self.descriptor.id).map_err(
                 |error| NativeLoadError::MechanismRequestAdmission {
@@ -313,6 +334,9 @@ impl NativeLoader {
             display_path,
             provider: provider.to_owned(),
             logical_key: logical_key.clone(),
+            expected_role: logical_key.role(),
+            expected_name: logical_key.name().to_owned(),
+            expected_protocol: native_deploy::PROTOCOL_EPOCH,
             descriptor,
         })
     }

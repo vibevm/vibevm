@@ -218,7 +218,7 @@ fn the_emitted_tape_is_the_landed_backends_own_output() {
     };
     let provenance = &arm.emitted.provenance;
     assert_eq!(provenance.backend, OPAQUE_BACKEND);
-    assert_eq!(provenance.producer, format!("emit:{OPAQUE_BACKEND}"));
+    assert_eq!(provenance.producer, "pass:org.demo/tools#opaque");
     assert_eq!(decode_base64(&arm.emitted.bytes_b64), OPAQUE_TAPE.to_vec());
     assert_eq!(provenance.bytes_digest, OPAQUE_DIGEST);
     // The pinned constant and the recomputed digest agree, so neither can
@@ -240,7 +240,7 @@ fn emitted_identity_is_one_tuple_and_the_digest_is_the_managers_own() {
     let provenance = &arm.emitted.provenance;
     let backend = provenance.backend.as_str();
     let context = &document["emitted"]["provenance"]["context"];
-    assert_eq!(provenance.producer, format!("emit:{backend}"));
+    assert_eq!(provenance.producer, "pass:org.demo/tools#opaque");
     assert_eq!(context["artifact"].as_str(), Some(backend));
     assert_eq!(context["target"].as_str(), Some(backend));
 
@@ -249,10 +249,7 @@ fn emitted_identity_is_one_tuple_and_the_digest_is_the_managers_own() {
     // builtin's tape is re-read by `markdown_observation` / `xml::observation`,
     // and this one is not even UTF-8.
     assert!(backend != "static-md" && backend != "static-xml");
-    assert_eq!(
-        context["frame"]["kind"].as_str(),
-        Some("compatibility-fragment")
-    );
+    assert_eq!(context["frame"]["kind"].as_str(), Some("static-lane"));
     assert!(std::str::from_utf8(&bytes).is_err());
     assert_eq!(provenance.bytes_digest, independent_bytes_digest(&bytes));
 }

@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "description": "Epoch-1 package-authored native deploy-mechanism manifest. Object readers are permissive for additive evolution; closed vocabularies and relational admission remain exact.",
+    "description": "Epoch-1 package-authored native mechanism manifest. Object readers are permissive for additive evolution; closed vocabularies and relational admission remain exact.",
     "x-diagnostic-cap-bytes": 8192,
     "x-vocabularies": [
       "native_mechanism_role",
@@ -13,9 +13,10 @@
     ],
     "x-relational-laws": [
       "descriptor-id: descriptor ids are nonblank, bounded, control-free and unique within one manifest",
-      "deploy-operation-set: a deploy descriptor carries each of plan, fingerprint, apply, verify, remove and recover exactly once in that canonical order",
+      "descriptor-name: descriptor names are nonblank, bounded and control-free",
+      "role-operation-set: build and package carry plan, fingerprint, apply and verify exactly once in canonical order; deploy carries those followed by remove and recover; acquire transport is deferred",
       "artifact-kinds: artifact kinds are nonempty, unique and appear in shared vocabulary canonical order",
-      "protocol: protocol is exactly the deploy protocol epoch admitted by the host"
+      "protocol: protocol is exactly the mechanism protocol epoch admitted by the host"
     ],
     "rustOptions": {
       "package": "vibe_wire::native::e1::mechanism_manifest"

@@ -7,17 +7,56 @@
 use std::collections::BTreeSet;
 use std::fmt;
 
+use super::native_mechanism::{NativeMechanismError, duplicate, epoch, scalar};
 use crate::generated::native::e1::{deploy_reply, deploy_request, mechanism_manifest};
-use crate::generated::shared::{NativeDeployArtifactKind, NativeDeployOperation};
+
+pub use super::native_mechanism::{DIAGNOSTIC_CAP_BYTES, PROTOCOL_EPOCH};
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct NativeDeployError {
+    inner: NativeMechanismError,
+}
+
+impl NativeDeployError {
+    pub const fn law(&self) -> &'static str {
+        self.inner.law()
+    }
+}
+
+impl From<NativeMechanismError> for NativeDeployError {
+    fn from(inner: NativeMechanismError) -> Self {
+        Self { inner }
+    }
+}
+
+impl fmt::Display for NativeDeployError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            formatter,
+            "native deploy {}: {}",
+            self.inner.law, self.inner.message
+        )
+    }
+}
+
+impl std::error::Error for NativeDeployError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        Some(&self.inner)
+    }
+}
+
+const fn deploy_error(law: &'static str, message: &'static str) -> NativeDeployError {
+    NativeDeployError {
+        inner: NativeMechanismError { law, message },
+    }
+}
 
 pub const ENVELOPE_EPOCH: u32 = 1;
-pub const PROTOCOL_EPOCH: u32 = 1;
-pub const DIAGNOSTIC_CAP_BYTES: usize = 8 * 1024;
 
 pub const RELATIONAL_LAWS: &[&str] = &[
     "artifact-kinds",
     "canonical-config",
-    "deploy-operation-set",
+    "descriptor-name",
     "descriptor-id",
     "envelope-protocol",
     "exact-pin",
@@ -26,6 +65,7 @@ pub const RELATIONAL_LAWS: &[&str] = &[
     "protocol",
     "reply-operation",
     "resource-identity",
+    "role-operation-set",
 ];
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -57,45 +97,10 @@ impl fmt::Display for DeployOperation {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct NativeDeployError {
-    law: &'static str,
-    message: &'static str,
-}
-
-impl NativeDeployError {
-    pub const fn law(&self) -> &'static str {
-        self.law
-    }
-}
-
-impl fmt::Display for NativeDeployError {
-    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(formatter, "native deploy {}: {}", self.law, self.message)
-    }
-}
-
-impl std::error::Error for NativeDeployError {}
-
 pub fn validate_manifest(
     manifest: &mechanism_manifest::MechanismManifest,
 ) -> Result<(), NativeDeployError> {
-    let mut ids = BTreeSet::new();
-    for descriptor in &manifest.mechanisms {
-        scalar(&descriptor.id, "mechanisms.id", "descriptor-id", true)?;
-        if !ids.insert(descriptor.id.as_str()) {
-            return Err(duplicate("descriptor-id", "mechanisms.id", &descriptor.id));
-        }
-        epoch(
-            descriptor.protocol,
-            PROTOCOL_EPOCH,
-            "mechanisms.protocol",
-            "protocol",
-        )?;
-        validate_operations(&descriptor.operations)?;
-        validate_artifact_kinds(&descriptor.artifact_kinds)?;
-    }
-    Ok(())
+    super::native_mechanism::validate_manifest(manifest).map_err(Into::into)
 }
 
 pub fn validate_request(
@@ -103,8 +108,8 @@ pub fn validate_request(
     expected_provider: &str,
     expected_mechanism: &str,
 ) -> Result<DeployOperation, NativeDeployError> {
-    scalar(expected_provider, "selected.provider", "exact-pin", true)?;
-    scalar(expected_mechanism, "selected.mechanism", "exact-pin", true)?;
+    scalar(expected_provider, "exact-pin", true)?;
+    scalar(expected_mechanism, "exact-pin", true)?;
     let (operation, envelope_value, protocol_value, identity) = match request {
         deploy_request::DeployRequest::Plan(value) => (
             DeployOperation::Plan,
@@ -178,23 +183,13 @@ pub fn validate_reply(
     reply: &deploy_reply::DeployReply,
 ) -> Result<(), NativeDeployError> {
     let (found, envelope_value, protocol_value) = reply_head(reply);
-    epoch(
-        envelope_value,
-        ENVELOPE_EPOCH,
-        "reply.envelope",
-        "envelope-protocol",
-    )?;
-    epoch(
-        protocol_value,
-        PROTOCOL_EPOCH,
-        "reply.protocol",
-        "envelope-protocol",
-    )?;
+    epoch(envelope_value, ENVELOPE_EPOCH, "envelope-protocol")?;
+    epoch(protocol_value, PROTOCOL_EPOCH, "envelope-protocol")?;
     if found != expected {
-        return Err(NativeDeployError {
-            law: "reply-operation",
-            message: "reply operation differs from the retained request operation",
-        });
+        return Err(deploy_error(
+            "reply-operation",
+            "reply operation differs from the retained request operation",
+        ));
     }
     validate_reply_result(reply)
 }
@@ -216,25 +211,16 @@ fn validate_request_head(
     expected_provider: &str,
     expected_mechanism: &str,
 ) -> Result<(), NativeDeployError> {
-    epoch(
-        envelope_value,
-        ENVELOPE_EPOCH,
-        "request.envelope",
-        "envelope-protocol",
-    )?;
-    epoch(
-        protocol_value,
-        PROTOCOL_EPOCH,
-        "request.protocol",
-        "envelope-protocol",
-    )?;
+    epoch(envelope_value, ENVELOPE_EPOCH, "envelope-protocol")?;
+    epoch(protocol_value, PROTOCOL_EPOCH, "envelope-protocol")?;
     for (field, value) in [
         ("identity.provider", identity.provider.as_str()),
         ("identity.mechanism", identity.mechanism.as_str()),
         ("identity.target", identity.target.as_str()),
         ("identity.profile", identity.profile.as_str()),
     ] {
-        scalar(value, field, "exact-pin", true)?;
+        let _ = field;
+        scalar(value, "exact-pin", true)?;
     }
     exact_pin("identity.provider", expected_provider, &identity.provider)?;
     exact_pin(
@@ -242,59 +228,6 @@ fn validate_request_head(
         expected_mechanism,
         &identity.mechanism,
     )
-}
-
-fn validate_operations(operations: &[NativeDeployOperation]) -> Result<(), NativeDeployError> {
-    let exact = [
-        NativeDeployOperation::Plan,
-        NativeDeployOperation::Fingerprint,
-        NativeDeployOperation::Apply,
-        NativeDeployOperation::Verify,
-        NativeDeployOperation::Remove,
-        NativeDeployOperation::Recover,
-    ];
-    if operations != exact {
-        return Err(NativeDeployError {
-            law: "deploy-operation-set",
-            message: "operations are not the exact canonical six-operation set",
-        });
-    }
-    Ok(())
-}
-
-fn validate_artifact_kinds(kinds: &[NativeDeployArtifactKind]) -> Result<(), NativeDeployError> {
-    if kinds.is_empty() {
-        return artifact_order();
-    }
-    let mut previous = None;
-    let mut seen = [false; 6];
-    for kind in kinds {
-        let rank = artifact_rank(kind);
-        if seen[rank] || previous.is_some_and(|prior| prior >= rank) {
-            return artifact_order();
-        }
-        seen[rank] = true;
-        previous = Some(rank);
-    }
-    Ok(())
-}
-
-fn artifact_rank(kind: &NativeDeployArtifactKind) -> usize {
-    match kind {
-        NativeDeployArtifactKind::Executable => 0,
-        NativeDeployArtifactKind::Archive => 1,
-        NativeDeployArtifactKind::File => 2,
-        NativeDeployArtifactKind::Directory => 3,
-        NativeDeployArtifactKind::Skill => 4,
-        NativeDeployArtifactKind::AgentPlugin => 5,
-    }
-}
-
-fn artifact_order() -> Result<(), NativeDeployError> {
-    Err(NativeDeployError {
-        law: "artifact-kinds",
-        message: "artifact kinds must be nonempty, unique, and canonical",
-    })
 }
 
 fn validate_artifact(artifact: &deploy_request::DeployArtifact) -> Result<(), NativeDeployError> {
@@ -334,19 +267,19 @@ fn validate_config(config: Option<&str>) -> Result<(), NativeDeployError> {
     let Some(config) = config else {
         return Ok(());
     };
-    let table: toml::Table = toml::from_str(config).map_err(|_| NativeDeployError {
-        law: "canonical-config",
-        message: "config_toml is not a TOML table",
-    })?;
-    let canonical = toml::to_string(&table).map_err(|_| NativeDeployError {
-        law: "canonical-config",
-        message: "config_toml cannot be canonically encoded",
+    let table: toml::Table = toml::from_str(config)
+        .map_err(|_| deploy_error("canonical-config", "config_toml is not a TOML table"))?;
+    let canonical = toml::to_string(&table).map_err(|_| {
+        deploy_error(
+            "canonical-config",
+            "config_toml cannot be canonically encoded",
+        )
     })?;
     if canonical != config {
-        return Err(NativeDeployError {
-            law: "canonical-config",
-            message: "config_toml is not in canonical TOML spelling",
-        });
+        return Err(deploy_error(
+            "canonical-config",
+            "config_toml is not in canonical TOML spelling",
+        ));
     }
     Ok(())
 }
@@ -428,7 +361,7 @@ fn validate_reply_result(reply: &deploy_reply::DeployReply) -> Result<(), Native
 }
 
 fn fail_message(message: &str) -> Result<(), NativeDeployError> {
-    scalar(message, "reply.fail.message", "fail-message", true)
+    Ok(scalar(message, "fail-message", true)?)
 }
 
 fn unique_resources<'a>(
@@ -437,9 +370,10 @@ fn unique_resources<'a>(
 ) -> Result<(), NativeDeployError> {
     let mut seen = BTreeSet::new();
     for resource in resources {
-        scalar(resource, field, "resource-identity", true)?;
+        let _ = field;
+        scalar(resource, "resource-identity", true)?;
         if !seen.insert(resource) {
-            return Err(duplicate("resource-identity", field, resource));
+            return Err(duplicate("resource-identity").into());
         }
     }
     Ok(())
@@ -447,55 +381,12 @@ fn unique_resources<'a>(
 
 fn exact_pin(_field: &'static str, expected: &str, found: &str) -> Result<(), NativeDeployError> {
     if found != expected {
-        return Err(NativeDeployError {
-            law: "exact-pin",
-            message: "request identity differs from the selected exact pin",
-        });
+        return Err(deploy_error(
+            "exact-pin",
+            "request identity differs from the selected exact pin",
+        ));
     }
     Ok(())
-}
-
-fn epoch(
-    found: u32,
-    expected: u32,
-    _field: &'static str,
-    law: &'static str,
-) -> Result<(), NativeDeployError> {
-    if found != expected {
-        return Err(NativeDeployError {
-            law,
-            message: "wire epoch differs from the admitted epoch",
-        });
-    }
-    Ok(())
-}
-
-fn scalar(
-    value: &str,
-    _field: &'static str,
-    law: &'static str,
-    nonblank: bool,
-) -> Result<(), NativeDeployError> {
-    let message = if nonblank && value.trim().is_empty() {
-        Some("scalar is blank")
-    } else if value.len() > DIAGNOSTIC_CAP_BYTES {
-        Some("scalar exceeds the 8192-byte cap")
-    } else if value.chars().any(char::is_control) {
-        Some("scalar contains a control character")
-    } else {
-        None
-    };
-    if let Some(message) = message {
-        return Err(NativeDeployError { law, message });
-    }
-    Ok(())
-}
-
-fn duplicate(law: &'static str, _field: &'static str, _value: &str) -> NativeDeployError {
-    NativeDeployError {
-        law,
-        message: "collection contains a duplicate identity",
-    }
 }
 
 fn absolute_path(value: &str, field: &'static str) -> Result<(), NativeDeployError> {
@@ -527,7 +418,8 @@ fn relative_path(value: &str, field: &'static str) -> Result<(), NativeDeployErr
 }
 
 fn path_scalar(value: &str, field: &'static str) -> Result<(), NativeDeployError> {
-    scalar(value, field, "paths", true)?;
+    let _ = field;
+    scalar(value, "paths", true)?;
     if value.contains('\\') {
         return path_error(field, value, "contains a backslash");
     }
@@ -552,8 +444,8 @@ fn path_error<T>(
     _value: &str,
     _reason: &'static str,
 ) -> Result<T, NativeDeployError> {
-    Err(NativeDeployError {
-        law: "paths",
-        message: "path does not satisfy its absolute/relative safe spelling",
-    })
+    Err(deploy_error(
+        "paths",
+        "path does not satisfy its absolute/relative safe spelling",
+    ))
 }

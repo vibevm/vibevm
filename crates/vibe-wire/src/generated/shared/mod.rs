@@ -1947,8 +1947,17 @@ pub enum NativeDeployReversibility {
 /// Closed role admitted for a package-supplied native mechanism descriptor.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum NativeMechanismRole {
+    #[serde(rename = "acquire")]
+    Acquire,
+
+    #[serde(rename = "build")]
+    Build,
+
     #[serde(rename = "deploy")]
     Deploy,
+
+    #[serde(rename = "package")]
+    Package,
 }
 
 /// Obsoletes projection: packages this version replaces.

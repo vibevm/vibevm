@@ -14,7 +14,7 @@ use std::path::PathBuf;
 use serde::Serialize;
 use serde::de::DeserializeOwned;
 use vibe_wire::generated::compiler_ir::e1::ir::{
-    AbsorptionState, ClosureIr, CompileMode, ContributionAbsorption, DocumentAddress, Ir,
+    AbsorptionState, ClosureIr, ContributionAbsorption, DocumentAddress, Ir, QualificationState,
 };
 
 fn corpus() -> PathBuf {
@@ -100,7 +100,7 @@ fn visited_nodes(closure: &ClosureIr) -> Vec<u32> {
 /// its author wrote, and an author may perfectly well have written something
 /// slug-shaped. A reverse assertion there would be a false law.
 fn qualify_violations(closure: &ClosureIr) -> Vec<String> {
-    if !matches!(closure.context.mode, CompileMode::QualifyPerNode) {
+    if !matches!(closure.qualification, QualificationState::Applied(_)) {
         return Vec::new();
     }
     let mut out = Vec::new();
@@ -161,7 +161,7 @@ fn the_corpus_anchors_and_rename_audit_are_builtin_qualify_output() {
     let mut checked = 0;
     for (name, closure) in closures() {
         assert_eq!(qualify_violations(&closure), Vec::<String>::new(), "{name}");
-        if !matches!(closure.context.mode, CompileMode::QualifyPerNode) {
+        if !matches!(closure.qualification, QualificationState::Applied(_)) {
             continue;
         }
         checked += 1;

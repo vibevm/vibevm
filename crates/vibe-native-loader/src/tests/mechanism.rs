@@ -2,9 +2,24 @@ use super::*;
 use vibe_core::manifest::MechanismKey;
 
 fn manifest(name: &str) -> Vec<u8> {
+    role_manifest(
+        "deploy",
+        name,
+        &[
+            "plan",
+            "fingerprint",
+            "apply",
+            "verify",
+            "remove",
+            "recover",
+        ],
+    )
+}
+
+fn role_manifest(role: &str, name: &str, operations: &[&str]) -> Vec<u8> {
     serde_json::to_vec(&json!({"mechanisms": [{
-        "id": "selected", "role": "deploy", "name": name, "protocol": 1,
-        "operations": ["plan", "fingerprint", "apply", "verify", "remove", "recover"],
+        "id": "selected", "role": role, "name": name, "protocol": 1,
+        "operations": operations,
         "artifact_kinds": ["executable"], "effect": "user", "network": "never",
         "privilege": "none", "reversibility": "reversible",
         "atomic_replacement": true, "reference_ownership": true
@@ -113,9 +128,42 @@ fn descriptor_is_owned_and_cached_handle_is_reused() {
         .expect("selected descriptor");
     assert_eq!(selected.descriptor().name, "selected");
     assert_eq!(selected.logical_key(), &key());
+    assert_eq!(
+        selected.expected_role(),
+        vibe_core::manifest::MechanismRole::Deploy
+    );
+    assert_eq!(selected.expected_name(), "selected");
+    assert_eq!(selected.expected_protocol(), 1);
     selected.invoke(&request("selected")).unwrap();
     selected.invoke(&request("selected")).unwrap();
     assert_eq!(opener.open_count.load(Ordering::SeqCst), 1);
     assert_eq!(library.invoke_count.load(Ordering::SeqCst), 2);
     assert_eq!(library.free_count.load(Ordering::SeqCst), 2);
+}
+
+#[test]
+fn build_and_package_handles_retain_role_and_refuse_deploy_invocation() {
+    for role in ["build", "package"] {
+        let (_directory, path) = fake_file();
+        let (loader, library, _) = loader_for(
+            FakeManifest::Bytes(role_manifest(
+                role,
+                "selected",
+                &["plan", "fingerprint", "apply", "verify"],
+            )),
+            FakeCall::published(0, reply()),
+        );
+        let logical: MechanismKey = format!("{role}:selected").parse().unwrap();
+        let selected = loader
+            .admit_mechanism(&path, "org.example/plugin", "selected", &logical)
+            .expect("matching producing role admits");
+        assert_eq!(selected.expected_role().as_str(), role);
+        assert_eq!(selected.expected_name(), "selected");
+        assert_eq!(selected.expected_protocol(), 1);
+        assert!(matches!(
+            selected.invoke(&request("selected")),
+            Err(NativeLoadError::MechanismRoleInvocation { .. })
+        ));
+        assert_eq!(library.invoke_count.load(Ordering::SeqCst), 0);
+    }
 }

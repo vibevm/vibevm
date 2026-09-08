@@ -439,6 +439,7 @@ fn admission_refuses_blank_control_and_oversize_fail_messages() {
         });
         let error = validate_reply(DeployOperation::Apply, &decoded_reply(value)).unwrap_err();
         assert_eq!(error.law(), "fail-message");
+        assert!(error.to_string().starts_with("native deploy "));
         assert!(error.to_string().contains(expected_fragment));
         assert!(error.to_string().len() < 256);
     }
@@ -481,7 +482,7 @@ fn manifest_admission_refuses_duplicate_ids_and_noncanonical_sets() {
         value["mechanisms"][0]["operations"] = operations;
         assert_eq!(
             law(validate_manifest(&decoded_manifest(value))),
-            "deploy-operation-set"
+            "role-operation-set"
         );
     }
 

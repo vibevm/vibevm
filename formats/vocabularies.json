@@ -16,7 +16,7 @@
   "io": {"metadata": {"description": "Invocation-local IO paths supplied to a lifecycle or native handler."},"properties": {"scratch": {"type": "string"}}},
   "reply_artifact": {"metadata": {"description": "One artifact declared by a lifecycle or native reply. It deliberately omits the engine-owned accumulated `phase`."},"properties": {"id": {"type": "string"},"path": {"type": "string"},"kind": {"type": "string"}}},
   "reply_status": {"metadata": {"x-vocabulary": "closed","description": "Closed lifecycle/native handler reply outcome."},"enum": ["ok","fail","skip"]},
-  "native_mechanism_role": {"metadata": {"x-vocabulary": "closed","description": "Closed role admitted for a package-supplied native mechanism descriptor."},"enum": ["deploy"]},
+  "native_mechanism_role": {"metadata": {"x-vocabulary": "closed","description": "Closed role admitted for a package-supplied native mechanism descriptor."},"enum": ["build","package","deploy","acquire"]},
   "native_deploy_operation": {"metadata": {"x-vocabulary": "closed","description": "Closed native deploy protocol operation."},"enum": ["plan","fingerprint","apply","verify","remove","recover"]},
   "native_deploy_artifact_kind": {"metadata": {"x-vocabulary": "closed","description": "Closed artifact-kind admission vocabulary for native deploy providers."},"enum": ["executable","archive","file","directory","skill","agent-plugin"]},
   "native_deploy_artifact_shape": {"metadata": {"x-vocabulary": "closed","description": "Closed physical artifact shape supplied to a native deploy provider."},"enum": ["file","directory"]},

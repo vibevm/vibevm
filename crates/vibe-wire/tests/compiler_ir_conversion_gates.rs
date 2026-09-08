@@ -215,7 +215,7 @@ fn digests_ids_and_indices_pass_the_named_conversion_gates() {
                 // Opaque bytes ride the custom backend; `emit.rs::prepare_target`
                 // gives a builtin a Markdown/XML tape the pass re-reads.
                 assert_eq!(provenance.backend, "opaque-test");
-                assert_eq!(provenance.producer, "emit:opaque-test");
+                assert_eq!(provenance.producer, "pass:org.demo/tools#opaque");
                 assert_id(&provenance.backend);
                 assert_digest(&provenance.source_lane_digest);
                 assert_digest(&provenance.bytes_digest);

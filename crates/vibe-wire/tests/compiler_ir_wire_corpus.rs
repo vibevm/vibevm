@@ -239,7 +239,7 @@ fn terminal_closure_is_applied_with_no_pending_snapshot() {
     assert_eq!(normal, 2, "both surviving occurrences reach link");
 }
 
-/// The complementary closure: the earliest, `plain`, compatibility-fragment
+/// The complementary closure: the earliest custom StaticLane
 /// value a registered custom backend produces — a POST-CLOSE state and nothing
 /// more. `close` is the only pass that has run, so both snapshots are still
 /// pending, its one node pair came from the `#use` topology, and its one edge
@@ -259,9 +259,9 @@ fn compat_closure_is_the_early_state_that_still_carries_its_snapshots() {
     );
     assert!(matches!(
         closure.context.frame,
-        ArtifactFrame::CompatibilityFragment(_)
+        ArtifactFrame::StaticLane(_)
     ));
-    assert!(matches!(closure.context.mode, CompileMode::Plain));
+    assert!(matches!(closure.context.mode, CompileMode::QualifyPerNode));
     assert!(matches!(
         closure.qualification,
         QualificationState::Pending(_)

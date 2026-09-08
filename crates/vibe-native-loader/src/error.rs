@@ -85,7 +85,7 @@ pub enum NativeLoadError {
     MechanismManifestJson { path: String, reason: String },
     /// Mechanism manifest relational admission failed.
     #[error(
-        "native mechanism manifest admission failed for `{path}` ({reason}) (violates spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE; fix: publish one admitted deploy mechanism descriptor)"
+        "native mechanism manifest admission failed for `{path}` ({reason}) (violates spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE; fix: publish one admitted role-specific mechanism descriptor)"
     )]
     MechanismManifestAdmission { path: String, reason: String },
     /// The selected exact mechanism id was absent.
@@ -98,6 +98,11 @@ pub enum NativeLoadError {
         "native mechanism `{id}` has an invalid display name for `{path}` (violates spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE; fix: declare a nonblank bounded control-free name)"
     )]
     MechanismName { path: String, id: String },
+    /// A role-admitted non-deploy handle reached the deploy-only request API.
+    #[error(
+        "native mechanism role `{role}` cannot use the deploy request API for `{path}` (violates spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE; fix: invoke it through its role-specific typed wire)"
+    )]
+    MechanismRoleInvocation { path: String, role: String },
     /// Two manifest rows used the same extension id.
     #[error(
         "native manifest contains duplicate extension id `{id}` for `{path}` (violates spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE; fix: declare each native extension id exactly once)"

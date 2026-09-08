@@ -180,7 +180,7 @@ pub(crate) fn select_mechanism_manifest(
             path: path.to_owned(),
             reason: json_reason(&error),
         })?;
-    native_deploy::validate_manifest(&manifest).map_err(|error| {
+    vibe_wire::behaviour::native_mechanism::validate_manifest(&manifest).map_err(|error| {
         NativeLoadError::MechanismManifestAdmission {
             path: path.to_owned(),
             reason: error.to_string(),
@@ -194,29 +194,25 @@ pub(crate) fn select_mechanism_manifest(
             path: path.to_owned(),
             id: scalar_preview(mechanism_id),
         })?;
-    if descriptor.role != NativeMechanismRole::Deploy {
-        return Err(NativeLoadError::MechanismManifestAdmission {
-            path: path.to_owned(),
-            reason: "selected mechanism role is not deploy".to_owned(),
-        });
-    }
-    if logical_key.role() != MechanismRole::Deploy || descriptor.name != logical_key.name() {
+    if descriptor_role(&descriptor.role) != logical_key.role()
+        || descriptor.name != logical_key.name()
+    {
         return Err(NativeLoadError::MechanismManifestAdmission {
             path: path.to_owned(),
             reason: "selected descriptor role/name differs from the registry mechanism key"
                 .to_owned(),
         });
     }
-    if descriptor.name.trim().is_empty()
-        || descriptor.name.len() > native_deploy::DIAGNOSTIC_CAP_BYTES
-        || descriptor.name.chars().any(char::is_control)
-    {
-        return Err(NativeLoadError::MechanismName {
-            path: path.to_owned(),
-            id: scalar_preview(mechanism_id),
-        });
-    }
     Ok(descriptor)
+}
+
+fn descriptor_role(role: &NativeMechanismRole) -> MechanismRole {
+    match role {
+        NativeMechanismRole::Build => MechanismRole::Build,
+        NativeMechanismRole::Package => MechanismRole::Package,
+        NativeMechanismRole::Deploy => MechanismRole::Deploy,
+        NativeMechanismRole::Acquire => MechanismRole::Acquire,
+    }
 }
 
 pub(crate) fn parse_mechanism_reply(
