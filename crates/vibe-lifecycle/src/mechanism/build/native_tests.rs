@@ -1,4 +1,4 @@
-use std::cell::RefCell;
+use std::cell::{Cell, RefCell};
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
@@ -15,7 +15,7 @@ use vibe_wire::generated::artifact_record::{ArtifactKind as RecordKind, Artifact
 use vibe_wire::generated::native::e1::{build_reply as reply, build_request as request};
 use vibe_wire::generated::shared::NativeDeployArtifactKind as WireKind;
 
-use crate::mechanism::contain::{digest_file, tree_digest};
+use crate::mechanism::contain::{digest_file, tree_digest, walk_tree};
 use crate::native::{
     NativeArtifactOrigin, NativeArtifactRecordRoot, NativeMechanismBinding, NativePlatform,
     PreparedNativeMechanism, PreparedNativeMechanisms,
@@ -160,6 +160,11 @@ enum Mode {
     Mismatch,
     Extra,
     Overlap,
+    MutateApplyFail,
+    MutateApplyFault,
+    MutateVerifyFail,
+    MutateVerifyMismatch,
+    WriteApplyFail,
 }
 
 struct FakeCalls {
@@ -167,6 +172,7 @@ struct FakeCalls {
     mode: Mode,
     kinds: Vec<WireKind>,
     calls: RefCell<Vec<&'static str>>,
+    observed_prior: Cell<bool>,
 }
 
 impl FakeCalls {
@@ -176,6 +182,7 @@ impl FakeCalls {
             mode,
             kinds: vec![WireKind::File, WireKind::Directory],
             calls: RefCell::new(Vec::new()),
+            observed_prior: Cell::new(false),
         }
     }
 
@@ -197,6 +204,11 @@ impl FakeCalls {
 
     fn write_outputs(&self) {
         let stage = self.root.join("target/vibe-native/native-demo");
+        self.observed_prior.set(
+            std::fs::read(stage.join("file.bin")).ok().as_deref() == Some(b"file-bytes")
+                && std::fs::read(stage.join("tree/a.txt")).ok().as_deref() == Some(b"tree-bytes"),
+        );
+        must(std::fs::create_dir_all(&stage), "staging root");
         must(
             std::fs::write(stage.join("file.bin"), b"file-bytes"),
             "file output",
@@ -212,6 +224,31 @@ impl FakeCalls {
                 "extra output",
             );
         }
+    }
+
+    fn corrupt_outputs(&self) {
+        let stage = self.root.join("target/vibe-native/native-demo");
+        must(
+            std::fs::write(stage.join("file.bin"), b"corrupt"),
+            "corrupt prior file",
+        );
+        let _ = std::fs::remove_file(stage.join("tree/a.txt"));
+        must(
+            std::fs::write(stage.join("new.bin"), b"new"),
+            "plant new output",
+        );
+    }
+
+    fn corrupt_records(&self) {
+        let records = self.root.join(".vibe/state/artifacts");
+        must(
+            std::fs::write(records.join("file-out.json"), b"corrupt record"),
+            "corrupt prior record",
+        );
+        must(
+            std::fs::remove_file(records.join("tree-out.json")),
+            "delete prior record",
+        );
     }
 }
 
@@ -254,6 +291,23 @@ impl NativeBuildCalls for FakeCalls {
         if matches!(self.mode, Mode::Fail(at) if at == operation) {
             return Ok(self.fail(operation));
         }
+        if matches!(self.mode, Mode::MutateApplyFail) && operation == "apply" {
+            self.corrupt_outputs();
+            return Ok(self.fail(operation));
+        }
+        if matches!(self.mode, Mode::MutateApplyFault) && operation == "apply" {
+            self.corrupt_outputs();
+            return Err("malformed loader reply after mutation".to_owned());
+        }
+        if matches!(self.mode, Mode::WriteApplyFail) && operation == "apply" {
+            self.write_outputs();
+            return Ok(self.fail(operation));
+        }
+        if matches!(self.mode, Mode::MutateVerifyFail) && operation == "verify" {
+            self.corrupt_outputs();
+            self.corrupt_records();
+            return Ok(self.fail(operation));
+        }
         Ok(match operation {
             "plan" => {
                 let outputs = if matches!(self.mode, Mode::Overlap) {
@@ -278,16 +332,19 @@ impl NativeBuildCalls for FakeCalls {
                 self.response(
                     "apply",
                     json!({"status":"ok","staged":[
-                        {"id":"file-out","path_relative":"file.bin","fresh":false},
-                        {"id":"tree-out","path_relative":"tree","fresh":true}
+                        {"id":"file-out","path_relative":"file.bin","fresh":self.observed_prior.get()},
+                        {"id":"tree-out","path_relative":"tree","fresh":self.observed_prior.get()}
                     ],"evidence":"native apply"}),
                 )
             }
             "verify" => {
                 let stage = self.root.join("target/vibe-native/native-demo");
+                if matches!(self.mode, Mode::MutateVerifyMismatch) {
+                    self.corrupt_outputs();
+                }
                 let (file_digest, file_bytes) = must(digest_file(&stage.join("file.bin")), "file digest");
                 let tree = must(tree_digest(&stage.join("tree")), "tree digest");
-                let digest = if matches!(self.mode, Mode::Mismatch) {
+                let digest = if matches!(self.mode, Mode::Mismatch | Mode::MutateVerifyMismatch) {
                     "c".repeat(64)
                 } else {
                     file_digest
@@ -350,8 +407,10 @@ fn native_file_and_directory_are_independently_verified_then_recorded() {
             .unwrap()
             .contains("sha256-tree/1")
     );
-    assert!(!produced[0].fresh && produced[1].fresh);
+    assert!(!produced[0].fresh && !produced[1].fresh);
 }
+
+include!("rollback_tests.rs");
 
 #[test]
 fn every_provider_failure_mismatch_extra_and_overlap_leave_zero_records() {
@@ -359,6 +418,7 @@ fn every_provider_failure_mismatch_extra_and_overlap_leave_zero_records() {
         Mode::Fail("plan"),
         Mode::Fail("fingerprint"),
         Mode::Fail("apply"),
+        Mode::WriteApplyFail,
         Mode::Fail("verify"),
         Mode::Fault("plan"),
         Mode::Mismatch,
@@ -378,6 +438,9 @@ fn every_provider_failure_mismatch_extra_and_overlap_leave_zero_records() {
             Mode::Overlap => {
                 assert!(error.to_string().contains("overlap"));
                 assert_eq!(calls.calls.borrow().as_slice(), &["plan"]);
+            }
+            Mode::WriteApplyFail => {
+                assert!(!root.path().join("target/vibe-native/native-demo").exists())
             }
             _ => {}
         }

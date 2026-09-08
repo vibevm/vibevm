@@ -2,7 +2,6 @@
 
 use vibe_core::manifest::{ArtifactBuildTarget, ArtifactInput, ArtifactKind};
 use vibe_native_loader::NativeMechanism;
-use vibe_safefs::Project;
 use vibe_wire::behaviour::native_build::RetainedBuild;
 use vibe_wire::generated::artifact_record::ArtifactShape;
 use vibe_wire::generated::native::e1::{build_reply as reply, build_request as request};
@@ -20,6 +19,9 @@ use super::record::{
     NativeRecordInputs, VerifiedNativeOutput, config_fingerprint, record_native_outputs,
 };
 use super::{BuildError, BuildExecution, ProducedArtifact};
+
+#[path = "rollback.rs"]
+mod rollback;
 
 pub(super) trait NativeBuildCalls {
     fn kinds(&self) -> &[WireKind];
@@ -121,86 +123,115 @@ pub(super) fn execute_with(
         .map_err(|reason| fault(target, binding, "fingerprint", &reason))?;
     let fingerprint = accepted_fingerprint(target, binding, fingerprint_reply)?;
 
-    let (staging, staging_absolute) = staging(execution, target, binding)?;
-    reset_staging(execution, target, binding, &staging.root_relative)?;
-    let apply_request = request::BuildRequest::Apply(Box::new(request::BuildRequestApply {
-        envelope: 1,
-        protocol: binding.protocol,
-        identity: identity.clone(),
-        target: target_wire.clone(),
-        authority: authority.clone(),
-        plan: plan.clone(),
-        fingerprint: fingerprint.clone(),
-        staging: staging.clone(),
-    }));
-    let apply_reply = calls
-        .invoke(
-            &target.id,
-            &apply_request,
-            RetainedBuild {
-                target: Some(&target_wire),
-                authority: Some(&authority),
-                plan: Some(&plan),
-                fingerprint: Some(&fingerprint),
-                ..RetainedBuild::default()
-            },
-        )
-        .map_err(|reason| fault(target, binding, "apply", &reason))?;
-    let (staged, apply_evidence) = accepted_staged(target, binding, &plan, apply_reply)?;
-
-    let verify_request = request::BuildRequest::Verify(Box::new(request::BuildRequestVerify {
-        envelope: 1,
-        protocol: binding.protocol,
-        identity,
-        target: target_wire.clone(),
-        authority: authority.clone(),
-        plan: plan.clone(),
-        fingerprint: fingerprint.clone(),
-        staging: staging.clone(),
-        staged: staged.clone(),
-    }));
-    let verify_reply = calls
-        .invoke(
-            &target.id,
-            &verify_request,
-            RetainedBuild {
-                target: Some(&target_wire),
-                authority: Some(&authority),
-                plan: Some(&plan),
-                fingerprint: Some(&fingerprint),
-                staging: Some(&staging),
-                staged: Some(&staged),
-            },
-        )
-        .map_err(|reason| fault(target, binding, "verify", &reason))?;
-    let (verified, verify_evidence) = accepted_verified(target, binding, verify_reply)?;
-    let outputs = verify_outputs(
-        target,
-        binding,
+    let (staging, staging_absolute) =
+        rollback::staging(execution.project_root, execution.build_root, &target.id)
+            .map_err(|reason| fault(target, binding, "apply", &reason))?;
+    let rollback = rollback::Snapshot::capture(
+        execution.project_root,
+        execution.build_root,
         &staging.root_relative,
-        &staging_absolute,
-        &plan,
-        &staged,
-        &verified,
-    )?;
-    let config = config_fingerprint(target, &binding.pin)
-        .map_err(|reason| fault(target, binding, "record", &reason))?;
-    let evidence = format!(
-        "native plan={}; fingerprint={}; apply={apply_evidence}; verify={verify_evidence}",
-        plan.summary, fingerprint.summary
-    );
-    record_native_outputs(
-        execution,
-        target,
-        &NativeRecordInputs {
-            entry,
-            binding,
-            config: &config,
-            fingerprint: &fingerprint.digest,
-            evidence: &evidence,
-        },
-        outputs,
+        &target.id,
+        target.outputs.iter().map(|output| output.id.as_str()),
     )
+    .map_err(|reason| fault(target, binding, "snapshot", &reason))?;
+    let outcome = (|| {
+        let apply_request = request::BuildRequest::Apply(Box::new(request::BuildRequestApply {
+            envelope: 1,
+            protocol: binding.protocol,
+            identity: identity.clone(),
+            target: target_wire.clone(),
+            authority: authority.clone(),
+            plan: plan.clone(),
+            fingerprint: fingerprint.clone(),
+            staging: staging.clone(),
+        }));
+        let apply_reply = calls
+            .invoke(
+                &target.id,
+                &apply_request,
+                RetainedBuild {
+                    target: Some(&target_wire),
+                    authority: Some(&authority),
+                    plan: Some(&plan),
+                    fingerprint: Some(&fingerprint),
+                    ..RetainedBuild::default()
+                },
+            )
+            .map_err(|reason| fault(target, binding, "apply", &reason))?;
+        let (staged, apply_evidence) = accepted_staged(target, binding, &plan, apply_reply)?;
+
+        let verify_request = request::BuildRequest::Verify(Box::new(request::BuildRequestVerify {
+            envelope: 1,
+            protocol: binding.protocol,
+            identity,
+            target: target_wire.clone(),
+            authority: authority.clone(),
+            plan: plan.clone(),
+            fingerprint: fingerprint.clone(),
+            staging: staging.clone(),
+            staged: staged.clone(),
+        }));
+        let verify_reply = calls
+            .invoke(
+                &target.id,
+                &verify_request,
+                RetainedBuild {
+                    target: Some(&target_wire),
+                    authority: Some(&authority),
+                    plan: Some(&plan),
+                    fingerprint: Some(&fingerprint),
+                    staging: Some(&staging),
+                    staged: Some(&staged),
+                },
+            )
+            .map_err(|reason| fault(target, binding, "verify", &reason))?;
+        let (verified, verify_evidence) = accepted_verified(target, binding, verify_reply)?;
+        let outputs = verify_outputs(
+            target,
+            binding,
+            &staging.root_relative,
+            &staging_absolute,
+            &plan,
+            &staged,
+            &verified,
+        )?;
+        let config = config_fingerprint(target, &binding.pin)
+            .map_err(|reason| fault(target, binding, "record", &reason))?;
+        let evidence = format!(
+            "native plan={}; fingerprint={}; apply={apply_evidence}; verify={verify_evidence}",
+            plan.summary, fingerprint.summary
+        );
+        record_native_outputs(
+            execution,
+            target,
+            &NativeRecordInputs {
+                entry,
+                binding,
+                config: &config,
+                fingerprint: &fingerprint.digest,
+                evidence: &evidence,
+            },
+            outputs,
+        )
+    })();
+    match outcome {
+        Ok(produced) => {
+            rollback.commit();
+            Ok(produced)
+        }
+        Err(error) => {
+            let original = error.to_string();
+            rollback.restore().map_err(|reason| {
+                fault(
+                    target,
+                    binding,
+                    "rollback",
+                    &format!("{reason}; original failure: {original}"),
+                )
+            })?;
+            Err(error)
+        }
+    }
 }
 
 fn wire_target(target: &ArtifactBuildTarget) -> Result<request::BuildTarget, String> {
@@ -278,40 +309,6 @@ fn authority(
         build_root_relative: build_root,
         offline: execution.offline,
     })
-}
-
-fn staging(
-    execution: &BuildExecution<'_>,
-    target: &ArtifactBuildTarget,
-    binding: &NativeMechanismBinding,
-) -> Result<(request::StagingAuthority, std::path::PathBuf), BuildError> {
-    let relative = checked_relative(&format!(
-        "{}/vibe-native/{}",
-        execution.build_root, target.id
-    ))
-    .map_err(|error| fault(target, binding, "apply", error.reason()))?;
-    let absolute = join_relative(execution.project_root, &relative);
-    Ok((
-        request::StagingAuthority {
-            root_absolute: vibe_core::machine_json_path(&absolute),
-            root_relative: relative,
-        },
-        absolute,
-    ))
-}
-
-fn reset_staging(
-    execution: &BuildExecution<'_>,
-    target: &ArtifactBuildTarget,
-    binding: &NativeMechanismBinding,
-    relative: &str,
-) -> Result<(), BuildError> {
-    let project = Project::open(execution.project_root)
-        .map_err(|error| fault(target, binding, "apply", &format!("{error:#}")))?;
-    project
-        .reset_dir(relative)
-        .map(|_| ())
-        .map_err(|error| fault(target, binding, "apply", &format!("{error:#}")))
 }
 
 fn accepted_plan(
