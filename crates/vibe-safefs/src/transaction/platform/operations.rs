@@ -472,4 +472,3 @@ pub(super) fn rename_noreplace(
         Err(classify(ntstatus_error(status), destination, new))
     }
 }
-

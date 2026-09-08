@@ -190,4 +190,3 @@ fn occupied(destination: &Pinned, name: &str) -> bool {
         Err(error) => error.kind() != std::io::ErrorKind::NotFound,
     }
 }
-
