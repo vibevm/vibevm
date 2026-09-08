@@ -290,6 +290,31 @@ artifact-filename guess, or provider record plane. A hand-placed fixture DLL
 that bypasses package resolution, the build fence, record revalidation or
 immutable publication is not E2E evidence.
 
+The landed adapter consumes that prepared image without resolving, building,
+reading an artifact record or publishing again. It retains the exact logical
+key, selected pin, descriptor/protocol, provider version/hash/root, platform,
+record and image identity. `via` and any displaced builtin remain selection
+facts carried into the engine-owned report and outcome. The unchanged receipt
+carries the exact provider identity, not those selection fields; the adapter
+never reconstructs them from a short name or lets the displaced builtin run.
+
+Restart identity is durable in the strict engine-owned lock sidecar. Each
+committed or pending generation may carry one exact `NativeProviderBinding`
+beside its physical lock resources and plan identity. This does **not** widen
+the frozen receipt or intent JTD: those records remain unchanged. Pending is
+written before the intent, promoted to committed only after the receipt is
+durable, and cleared by the same stale/inverse transitions that clear its lock
+generation.
+
+Standalone plan and undeploy rehydrate read-only from the current manifest and
+lock projection. The current selection/provider facts are compared with the
+receipt and committed/pending sidecar; source records, artifact bytes and the
+already-published immutable image are revalidated before existing-loader
+admission. Rehydration creates nothing and performs no build, record write,
+image publication, repair or builtin fallback. A first plan with no receipt or
+intent needs no sidecar; any native receipt or live intent requires its exact
+generation binding.
+
 The engine continues to own the complete plan, ordering, artifact and
 destination locks, collision decisions, intent and receipt persistence,
 recovery, inverse sequencing and resource validation. A provider answers only
@@ -304,16 +329,20 @@ projected out before provider selection, source build, immutable-image
 publication, library load or invocation. It creates no provider side effect and
 cannot become commissioning evidence.
 
-Implementation is five serial atoms:
+Implementation landed as seven serial concerns:
 
 1. **R8-PROVIDER-FREEZE** — this ratified boundary;
 2. **R8-PROVIDER-WIRE** — versioned JTD mechanism manifest and the six
    request/reply operation roots;
 3. **R8-PROVIDER-SDK** — the safe mechanism-family export macro over ABI 1;
-4. **R8-PROVIDER-CARRIAGE** — exact selection, artifact/manifest admission and
-   production native invocation for deploy;
-5. **R8-PROVIDER-E2E** — a real installed fixture provider displaces the
-   builtin and completes the engine-owned deploy/inverse evidence path.
+4. **R8-PROVIDER-CARRIAGE** — exact selection, artifact admission, build-fence
+   preparation and immutable-image carriage;
+5. **R8-PROVIDER-ADAPTER** — existing-loader admission and the six operations
+   through the incumbent deploy transaction;
+6. **R8-PROVIDER-E2E** — a real installed fixture provider displaces the
+   builtin and completes the engine-owned deploy/inverse evidence path;
+7. **R8-PROVIDER-REHYDRATION** — strict sidecar identity and read-only
+   restart plan, recovery and undeploy.
 
 Build- and package-role native provider transport is explicitly deferred after
 this deploy commissioning sequence. The common wire may reserve their lawful

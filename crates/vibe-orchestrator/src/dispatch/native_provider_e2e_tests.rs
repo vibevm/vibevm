@@ -512,6 +512,7 @@ fn assert_no_transient_state(path: &Path) {
     for entry in std::fs::read_dir(path).unwrap() {
         let entry = entry.unwrap();
         if entry.file_type().unwrap().is_dir() {
+            assert_ne!(entry.file_name(), std::ffi::OsStr::new("staging"));
             assert_no_transient_state(&entry.path());
         } else {
             let name = entry.file_name();
