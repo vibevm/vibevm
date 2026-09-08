@@ -1,5 +1,7 @@
 //! Pure active-target projection into exact native mechanism bindings.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#R8-PACKAGE-DEPLOY");
+
 use std::collections::BTreeMap;
 
 use vibe_core::manifest::{

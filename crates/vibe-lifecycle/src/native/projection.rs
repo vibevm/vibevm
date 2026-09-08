@@ -26,6 +26,7 @@ pub enum NativeArtifactRecordRoot {
 }
 
 /// Validate current-platform prebuilts and return only source fallbacks.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#BUILD-PHASE-OWNS-IT")]
 pub fn project_native_source_groups<'a>(
     candidates: &[&'a ExtensionRegistryRow],
     platform: NativePlatform,

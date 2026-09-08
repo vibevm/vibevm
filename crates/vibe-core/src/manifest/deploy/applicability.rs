@@ -1,5 +1,7 @@
 //! Pure forward and inverse profile projection.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#R8-PLATFORM-APPLICABILITY");
+
 use std::collections::{BTreeMap, BTreeSet};
 
 use super::{DeployError, DeploySection, DeployTarget};

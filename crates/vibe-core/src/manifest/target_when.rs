@@ -1,5 +1,7 @@
 //! Strict host-independent applicability value shared by package and deploy targets.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#R8-PLATFORM-APPLICABILITY");
+
 use serde::{Deserialize, Serialize};
 
 use super::TargetOs;

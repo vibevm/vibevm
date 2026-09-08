@@ -264,6 +264,7 @@ impl PreparedNativeMechanisms {
     }
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#R8-PACKAGE-DEPLOY")]
 pub fn preflight_native_mechanisms(
     plan: NativeMechanismPlan,
     execution: &NativeBuildExecution<'_>,

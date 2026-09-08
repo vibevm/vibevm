@@ -1,5 +1,7 @@
 //! Opaque native install epoch, all-owner build plan, and replay continuation.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#BUILD-PHASE-OWNS-IT");
+
 use super::{ResolvedDep, Workspace, WorkspaceError, bootgen, validate_redirect_blocks};
 use crate::extension_world::{OwnerRuntimeEpoch, OwnerRuntimeId};
 use vibe_core::manifest::SpecFormat;
