@@ -103,6 +103,15 @@ pub enum NativeLoadError {
         "native mechanism role `{role}` cannot use the deploy request API for `{path}` (violates spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE; fix: invoke it through its role-specific typed wire)"
     )]
     MechanismRoleInvocation { path: String, role: String },
+    /// An admitted mechanism reached a method for a different role.
+    #[error(
+        "native mechanism role `{actual}` cannot use the `{attempted}` request API for `{path}` (violates spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE; fix: invoke it through its admitted role-specific typed wire)"
+    )]
+    MechanismRoleMethod {
+        path: String,
+        actual: String,
+        attempted: String,
+    },
     /// Two manifest rows used the same extension id.
     #[error(
         "native manifest contains duplicate extension id `{id}` for `{path}` (violates spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE; fix: declare each native extension id exactly once)"
@@ -157,7 +166,7 @@ pub enum NativeLoadError {
         "native context serialization failed ({reason}) (violates spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE; fix: report the generated ABI-1 context serialization defect)"
     )]
     ContextSerialization { reason: String },
-    /// The generated deploy request failed exact-pin or relational admission.
+    /// The generated mechanism request failed exact-pin or relational admission.
     #[error(
         "native mechanism request admission failed for `{id}` in `{path}` ({reason}) (violates spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE; fix: invoke the selected exact mechanism with an admitted request)"
     )]
@@ -166,7 +175,7 @@ pub enum NativeLoadError {
         id: String,
         reason: String,
     },
-    /// The admitted generated deploy request could not serialize.
+    /// The admitted generated mechanism request could not serialize.
     #[error(
         "native mechanism request serialization failed for `{id}` in `{path}` ({reason}) (violates spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE; fix: report the generated wire serialization defect)"
     )]

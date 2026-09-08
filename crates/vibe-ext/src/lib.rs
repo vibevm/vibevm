@@ -1,14 +1,15 @@
 #![deny(unsafe_code)]
 //! Safe author surface for VibeVM native extension ABI 1.
 //!
-//! Authors implement lifecycle, compiler-transform, compiler-backend, or
-//! deploy-mechanism handlers through [`vibe_extension!`],
-//! [`vibe_compile_extension!`], [`vibe_backend_extension!`], or
-//! [`vibe_mechanism_provider!`]. The generated C boundary owns JSON conversion,
-//! panic containment, and exact response allocation/free pairing. Each cdylib
-//! invokes one macro because every family exports the same four ABI-1 symbols.
+//! Authors implement lifecycle, compiler-transform, compiler-backend, deploy,
+//! build, or package handlers through the corresponding safe export macro.
+//! The generated C boundary owns JSON conversion, panic containment, and exact
+//! response allocation/free pairing. Each cdylib invokes one macro because
+//! every family exports the same four ABI-1 symbols.
 
 pub use vibe_wire::behaviour::native_backend::BackendReplyError as BackendAuthorError;
+pub use vibe_wire::generated::native::e1::build_reply::BuildReply;
+pub use vibe_wire::generated::native::e1::build_request::BuildRequest;
 pub use vibe_wire::generated::native::e1::compile_reply::{
     CompileReply, CompileReplyFail, CompileReplyOk, CompileReplySkip,
 };
@@ -27,10 +28,13 @@ pub use vibe_wire::generated::native::e1::mechanism_manifest::{
     NativeDeployNetwork, NativeDeployOperation, NativeDeployPrivilege, NativeDeployReversibility,
     NativeMechanismRole,
 };
+pub use vibe_wire::generated::native::e1::package_reply::PackageReply;
+pub use vibe_wire::generated::native::e1::package_request::PackageRequest;
 pub use vibe_wire::generated::native::e1::reply::{Reply, ReplyArtifact, ReplyStatus};
 pub use vibe_wire::generated::native::e1::{
-    deploy_reply as mechanism_reply, deploy_request as mechanism_request,
-    mechanism_manifest as mechanism_provider,
+    build_reply, build_request, deploy_reply as mechanism_reply,
+    deploy_request as mechanism_request, mechanism_manifest as mechanism_provider, package_reply,
+    package_request,
 };
 
 #[doc(hidden)]
@@ -38,9 +42,16 @@ pub use serde_json as __serde_json;
 #[doc(hidden)]
 pub use vibe_wire::behaviour::native_backend as __native_backend;
 #[doc(hidden)]
+pub use vibe_wire::behaviour::native_build as __native_build;
+#[doc(hidden)]
 pub use vibe_wire::behaviour::native_compile as __native_compile;
 #[doc(hidden)]
 pub use vibe_wire::behaviour::native_deploy as __native_deploy;
+#[doc(hidden)]
+pub use vibe_wire::behaviour::native_package as __native_package;
+
+#[doc(hidden)]
+pub mod native_provider;
 
 /// Emit the one raw four-symbol ABI used by every safe author macro.
 ///
@@ -233,6 +244,14 @@ macro_rules! vibe_compile_extension {
 
 /// A compiler backend's bytes-only reply, constructible only through bounded
 /// SDK constructors. It cannot carry manager-owned emitted IR or provenance.
+///
+/// ```
+/// use vibe_ext::BackendResponse;
+///
+/// assert!(BackendResponse::ok(vec![0, 1, 2]).is_ok());
+/// assert!(BackendResponse::fail("backend refused the input").is_ok());
+/// assert!(BackendResponse::fail(" \n ").is_err());
+/// ```
 pub struct BackendResponse(vibe_wire::generated::native::e1::backend_reply::BackendReply);
 
 impl BackendResponse {

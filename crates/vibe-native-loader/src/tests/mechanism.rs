@@ -1,6 +1,9 @@
 use super::*;
 use vibe_core::manifest::MechanismKey;
 
+#[path = "mechanism_roles.rs"]
+mod roles;
+
 fn manifest(name: &str) -> Vec<u8> {
     role_manifest(
         "deploy",

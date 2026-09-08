@@ -336,9 +336,18 @@ fn null_request_output_slots_and_null_free_match_lifecycle_contract() {
 }
 
 #[test]
-fn all_four_public_macros_use_the_one_emitter_and_compiler_dispatch_never_clones_ir() {
+fn all_six_public_macros_use_the_one_emitter_and_compiler_dispatch_never_clones_ir() {
     let source = include_str!("../src/lib.rs");
-    assert_eq!(source.matches("$crate::__vibe_ext_emit_abi!(").count(), 4);
+    let provider = include_str!("../src/native_provider.rs");
+    assert_eq!(
+        source.matches("$crate::__vibe_ext_emit_abi!(").count()
+            + provider.matches("$crate::__vibe_ext_emit_abi!(").count(),
+        6
+    );
+    assert_eq!(
+        source.matches("macro_rules! __vibe_ext_emit_abi").count(),
+        1
+    );
     assert_eq!(source.matches("fn initialize_outputs(").count(), 1);
     assert_eq!(
         source.matches("fn free(ptr: *mut u8, len: usize)").count(),
@@ -355,4 +364,6 @@ fn all_four_public_macros_use_the_one_emitter_and_compiler_dispatch_never_clones
     assert!(compiler.contains("validate_reply_for_shape(request_shape, &reply)"));
     assert!(!compiler.contains("request.clone()"));
     assert!(!compiler.contains("payload.clone()"));
+    assert!(!provider.contains("fn initialize_outputs("));
+    assert!(!provider.contains("no_mangle"));
 }

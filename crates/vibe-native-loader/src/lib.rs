@@ -27,6 +27,7 @@ mod admission;
 mod error;
 #[allow(unsafe_code)]
 mod ffi;
+mod mechanism_call;
 
 pub use error::NativeLoadError;
 
