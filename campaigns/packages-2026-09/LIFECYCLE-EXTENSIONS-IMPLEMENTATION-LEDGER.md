@@ -1,9 +1,17 @@
 # Lifecycle/extensions — implementation reconciliation ledger
 
-_Rolling owner-facing checkpoint, 2026-08-28. This is the durable execution
+_Rolling owner-facing checkpoint, reconciled 2026-09-08. This is the durable execution
 map for `TZ-LIFECYCLE-EXTENSIONS-v0.1.md`; PROP-054 remains semantic authority.
 `SPEC-DEBT-LIFECYCLE*.md` remains the amendment queue. A row is complete only
 with landed commit, source, and decisive test evidence._
+
+Current boundary: R1–R5 and R7 are accepted. R6.1–R6.4 and R6.5 A–C2 are
+accepted through `0797c4ca`; R6.5-D remains open. R8's artifact/package/deploy
+builtins, platform applicability and real native deploy-provider adapter plus
+read-only rehydration are accepted through `d475963c`, but M-007 native
+build/package provider transport remains open. Neither R8 nor final acceptance
+is complete while selection can still end at an unimplemented foreign
+build/package transport.
 
 ## 1. Why this ledger exists
 
@@ -24,8 +32,10 @@ Install/Lifecycle/Update/Reinstall owners, exact displaced continuation and
 the final four-family parity matrix. The final quality tail repaired every
 panel-discovered stale oracle and discipline ratchet rather than baselining it.
 All accepted R3.4 and R7.4-through-A15a worktrees and fan-out worktrees were
-reviewed, archived and reclaimed under rolling GC; **only `main` remains**.
-Missing later waves were never implemented.
+reviewed, archived and reclaimed under rolling GC; **only `main` remained at
+that dated checkpoint**. Later R5 construction worktrees and cache reports are
+current FINAL-ARCHAEOLOGY inputs, not evidence that those accepted atoms are
+unlanded.
 
 The reusable decisions from untracked architecture/review reports are
 synthesised below. Those reports are evidence inputs, not authority and not the
@@ -1636,7 +1646,7 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 | Step | State | Evidence |
 |---|---|---|
 | R4.0 one pure registry below lifecycle/workspace | done | kernel `6af1b86f`, map `8531cf82`; exact runtime-dependency/AST-ambient/public-reexport fences; kernel 22, lifecycle 287/3 ignored, orchestrator 126 + doctests, strict clippy/check/conform/DAG green |
-| R4.1 four positions, owner-scoped activation, header, per-unit fingerprint, reference oracle | in progress | controls `52a59dcc`; transaction `91142777` / `ab68d145`; T1 `b65f9958`; T3 `48d7dc75`; T2 `49e944f0` + `87ef2df6`; T4 `a252fcc8`; T5 `0eb46c82`; T6a `01f1522e`; T6b `6ffedb03`; T6c `cb6006d4`; T7 `419e1aed`; T8 `99e52760`; T9 `513f3945`; T10A `35cd04d1`; T10B `3618ee2b` (lowering + typed subjects + threading; config value-tower refusal until R4.2); T10C `855ac6ce` (fp frame + active-only header; §7.1 freeze repaired; wire-gate/verify/decompiler pins); map `92a0b72e`. **R4.1 code-complete**; remaining R4.1 debt rides R4.2 (toml edge, activation e2e) |
+| R4.1 four positions, owner-scoped activation, header, per-unit fingerprint, reference oracle | done | controls `52a59dcc`; transaction `91142777` / `ab68d145`; T1–T10C through `855ac6ce`, map `92a0b72e`; R4.2 `7a09ec2d` closed the config/activation dependencies and the coherent R4 panel accepted the workstream |
 | R4.2 builtin XML minify | done | kernel `016f0fab`/`fbbd5140`; binding + segmenter + RED map + T1 config closure + two-epoch activation/member/deactivation e2e `7a09ec2d`; kernel §8 ratification |
 | R4.3 lane analyzer | done | observer seam + witness accounting + `analyze_node_lane` one-home composition + strict JTD exchange + CLI; parity/hoisted/occurrence pins; `f24c24f4`, map `8de095bd` |
 
@@ -1647,19 +1657,19 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 | R5.1 native JTD context/reply/manifest + `vibe-ext` macro | done | SHARED-STRICT `52edc577`; WIRE `fd81a003` / map `4c9378c9`; SDK `bfaea140`; integrated 17 + 7 + 7 gate, real abort refusal, 20 mutation proofs; schema first, unanimous shared-reader strictness, plugin-side unwind/memory boundary |
 | R5.2 loader | done | LOADER `9f7b8854` / map `36efa500`; integrated 15 loader + 7 SDK + 7 native-wire gate, clean check-codegen/conform/specmap, 8 mutation proofs; separate unsafe quarantine, canonical strong cache, exact ABI/manifest admission and free-once guard |
 | R5.3 source/prebuilt resolution and in-slot build | done | ARTIFACT `1baac652` / trace `0ef041c7` / map `fd31533e`; WIRING `332f8e28` / map `48fcb39e`; GATE `be037d77` / trace `c2fe99fc` / map `ee3f4b49`; source/prebuilt production composition, immutable process-loader images, process-free resolver, stale-before-cache and lifecycle law all mutation-backed |
-| R5.4 pending bootstrap convergence | in progress | EPOCH-WORLD `c559916b` / map `492ed834`, EPOCH-LOWER registry `ab0ab90f` / runtime `d2b06561` / map `55595f1f`, and PENDING state `36bdfab8` / driver `e851c82b` / frame `828e10df` / map `5257658b` accepted; frozen remainder WORKSPACE → INSTALL → FENCE → GATE; exact incoming world emits ordered pending without Cargo; native build then recompiles once before authored targets and removes pending only after the transform really executes |
-| R5.5 compiler-native wire, invocation and minify parity | in progress | WIRE-PROJECTION `9051aade` / trace `dc9cff48` / map `5adea048`; WIRE `ed6e7c2a` / map `f0dfaf33`; WIRE-GATE `36b7f1e2`; INVOKE-MANAGER `846979f9` / map `150f0866`; SDK `777dbb5e`; LOADER `126dfc0b` / trace `feb98591`; ARTIFACT `6b5ab9e9` / map `a5a69a0c`; GATE `9b1e4525`; INVOKE parent accepted; R5.4 → PARITY remain |
+| R5.4 pending bootstrap convergence | done | EPOCH/WORLD/PENDING/WORKSPACE children through `09bd0c91`; production INSTALL `362d7c8d`, all-owner FENCE `06f8f465`, failure/parity GATE `0435b937`; install performs no Cargo/replay, build preflights all groups, then build→replay→authored targets→rows with exact pending/failure/retry truth |
+| R5.5 compiler-native wire, invocation and minify parity | done | WIRE/INVOKE children through `9b1e4525`; PARITY `2e6bb266` proves independent native XML minify equals builtin across root/member/package-unit, Pending→one build→Fresh, mtime stability and fail-once retry |
 
 ### R6 — full compiler pass tier
 
 | Step | State | Evidence / gap |
 |---|---|---|
-| R6.1 `compiler_internals` + executable pass grammar | partial | conspicuous flag/raw table land; kind-specific required/forbidden fields intentionally deferred |
+| R6.1 `compiler_internals` + executable pass grammar | done | `b2a6efb5`; kind-specific required/forbidden matrices, exact flag/point law and compatibility wire tests |
 | R6.2a whole-IR wire epoch | done | `c26cd039`; six strict carriers, generated types, derived corpus, 42 conversion-gate/producer-oracle tests and independent final freeze |
 | R6.2b strict domain conversion | done | `17afb5b6`; lossless `AnyIr` projection, all fifteen ordered gates, production replay at 12–14, emitted identity/framing at 15, owned custom targets, bounded hostile diagnostics and independent final freeze |
-| R6.3 before/after/replace, frontend/backend | missing | compiler never consumes manifest pass rows |
-| R6.4 mandatory verifier after plugin passes | missing | depends on R3.3/R5 |
-| R6.5 `.txt` frontend + JSON lane backend e2e | missing | no custom format registry/backend artifact surface |
+| R6.3 before/after/replace, frontend/backend | done | schedule edit `e278a043`; one retained PassPlan `03fdbce2`; native execution `1633c8cb`; catalogs `b5434295`; owner runtime carriage `cf51582a` |
+| R6.4 mandatory verifier after plugin passes | done | `8c02dfd8`; production verify-each is unconditional for nonempty plans and invalid output stops at the exact qualified pass |
+| R6.5 `.txt` frontend + JSON lane backend e2e | in progress | A `578b4d9f`, B1 `5eac84c9`, B2 `393d519c`, C1 `ba639210`, C2 `0797c4ca` implement owner-scoped source discovery, selected native frontend/backend execution and manager-owned emitted provenance; D public command/negative/R5 commissioning remains open |
 
 ### R7 — provider, create and hosted-agent tier
 
@@ -1689,12 +1699,14 @@ system remains fully usable with no selected agent contribution or provider.
 | Cargo commissioning build provider | done | `a22da2a3`; metadata + compiler-artifact JSON selection under §5's seven laws; hard-link containment streamed (B-120) |
 | fully static one-file skill | done | `a5dc3cbc`; whole-line include consumption, binary-asset refusal, one `SKILL.md` distributable |
 | Agent Plugins 1.0 directory | done | `a5dc3cbc`, corrected by `40c53f0a`; plugin schema, canonical directory digest, `agent-plugin` kind + directory shape, obligatory `place` map, reparse refusal; client-native adaptation is reproducible package work |
-| Claude/Codex/OpenCode client projections and local deploy | package + deploy engine foundation done; client providers missing | client foundation `3496fcc5` / `c7a2ea7b`; package projections `40c53f0a` / `8192dba6`; deploy foundation `ce056058` / `d6d32db6`: typed canonical provenance, three exact epoch-1 projections, strict capability reports, injected prior ownership and durable committed/pending physical locks; standalone skill and client-plugin providers remain |
+| Claude/Codex/OpenCode client projections and local deploy | done | foundation `3496fcc5`; package projections `40c53f0a`; deploy sidecar/ownership `ce056058`; skill `63d74ea6`; plugin adapters `ce851287`; commissioning `ae36ac48` proves all three isolated clients through plan/deploy/verify/recover/undeploy |
 | deploy targets/profiles/plan/undeploy | done (engine) | `0a42456e`; grammar `2a3f3b44`; once-only profile selection, third fence, read-only `--plan`, undeploy/deployments; executing destination providers arrive with their own atoms |
 | intent/receipt/recovery for general destinations | done | `0a42456e`; the general §7.2 protocol — atomic intent, checkpoints, verify-then-receipt, locks, three-digest recovery, saga, drift refusal — proven over hermetic crash windows |
 | `deploy:vibe-bin` under `~/.vibe/bin` | done | the real provider: CAS store, version-free marked launcher + pointer, update/rollback/undeploy proven by running the launcher in the §10 e2e |
 | deterministic Windows zip lifecycle binding | done | `0a42456e`; STORED-only writer, fixed 1980 timestamp, refusing census, independent-extractor oracle green live |
-| plugin-overridable builder/installer/deployer fixture | partial | the replacement law is proven at the registry (`9dd072d2`: a foreign row displaces the builtin in routing; the builtin stays queryable and demonstrably unselected); a non-builtin selection refuses by the unlanded transport's name, so the executing e2e waits on the plugin transport |
+| artifact/deploy platform applicability | done | grammar `d4edb3ae`, package projection `8ff4b711`, lifecycle/command projection `bb50aeab`; one injected OS observation, inactive-before-provider/source/record/collision and active→inactive dependency refusal |
+| package-supplied native deploy provider | done | freeze/wire/SDK/carriage `854707a1`→`269bec0d`; adapter `370ea177`; read-only restart rehydration `a24e4aff`; closure `d475963c`; real exact-pinned provider displaces builtin and runs six deploy operations with durable sidecar identity |
+| package-supplied native build/package providers | in progress | shared registry selection and exact pins are implemented, but §3.3 deliberately commissions only deploy transport; foreign build/package request/reply adapters and real displacement E2E remain M-007 work, so R8 is not complete |
 
 ## 4. Owner additions — preservation and implementation status
 
@@ -1705,13 +1717,13 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
 | Owner requirement | Durable law | Implementation |
 |---|---|---|
 | LLM is optional paid enhancement | algorithmic baseline; `off/assist/required`; lazy provider; per-feature/run budgets | missing outside provider seam |
-| Static skill artifact | exactly one validated `SKILL.md`; explicit include consumption | missing |
-| Agent Plugin | 1.0 directory, portable skill/MCP subset, client projections distinct | missing |
-| Classic Cargo/meta-build | provider protocol, Cargo metadata + JSON artifact messages, no autodetect | missing |
-| Claude/Codex/OpenCode local install | versioned adapters; CLI/public filesystem contracts; ownership receipts | project projection only |
-| VibeVM tools in `~/.vibe/bin` | immutable store + version-free launcher; separate from `vibe bin` | missing |
-| Deploy profiles | named target selections; local/remote; explicit default; plan and inverse | missing |
-| User-overridable mechanisms | exact pin → host route → builtin default → failure | missing |
+| Static skill artifact | exactly one validated `SKILL.md`; explicit include consumption | done `a5dc3cbc` |
+| Agent Plugin | 1.0 directory, portable skill/MCP subset, client projections distinct | done `40c53f0a` |
+| Classic Cargo/meta-build | provider protocol, Cargo metadata + JSON artifact messages, no autodetect | builtin done `a22da2a3`; foreign native build transport open |
+| Claude/Codex/OpenCode local install | versioned adapters; CLI/public filesystem contracts; ownership receipts | done `ae36ac48` |
+| VibeVM tools in `~/.vibe/bin` | immutable store + version-free launcher; separate from `vibe bin` | done `45d88e80` |
+| Deploy profiles | named target selections; local/remote; explicit default; plan and inverse | done `0a42456e` |
+| User-overridable mechanisms | exact pin → host route → builtin default → failure | deploy execution done `d475963c`; native build/package execution open under M-007 |
 | Download/system package managers/VibeVM OS horizon | qualified identities; desired/artifact/deployment separate; effect class + receipt | future by design; compatibility constraints active now |
 
 ## 5. Architecture decisions in force
@@ -2175,11 +2187,11 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
    atomic writer + newest-nine retention, one recorder through workspace/CLI,
    then presentation/e2e. **Done through final all-green panel and GC.**
 4. Pure registry extraction. **Done `6af1b86f` / `8531cf82`.**
-5. R4.1 staged positions/owner views/header/oracle/fingerprint.
-6. R4.2 XML minify binding and full RED corpus.
-7. R4.3 analyzer wire/CLI.
-8. R5 native wire + SDK; loader; build/prebuilt; bootstrap; parity.
-9. R6 executable grammar/positions/frontends/backends/mandatory verifier/e2e.
+5. R4.1 staged positions/owner views/header/oracle/fingerprint. **Done.**
+6. R4.2 XML minify binding and full RED corpus. **Done.**
+7. R4.3 analyzer wire/CLI. **Done.**
+8. R5 native wire + SDK; loader; build/prebuilt; bootstrap; parity. **Done through `2e6bb266`.**
+9. R6 executable grammar/positions/frontends/backends/mandatory verifier/e2e. **Implemented through R6.5-C2 `0797c4ca`; R6.5-D public commissioning remains.**
 
 ### Lane B — create and hosted agent (parallel after baseline)
 
@@ -2211,12 +2223,11 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
 4. Static-skill and Agent Plugin package providers in parallel. **Done
    `a5dc3cbc`, with the dispatch fences wiring both mechanism phases.**
 5. Client projections and general deploy planner/intent/receipt/recovery.
-   **The deploy half is done `0a42456e`; client projections are
-   R8-CLIENTS'.**
-6. `vibe-bin`, profiles/plan/undeploy, plugin replacement fixture and Windows
-   zip provider. **Profiles/plan/undeploy and the zip are done `0a42456e`;
-   `vibe-bin` is done (R8-VIBE-BIN); the replacement fixture waits on the
-   plugin transport.**
+   **Done through client commissioning `ae36ac48`.**
+6. `vibe-bin`, profiles/plan/undeploy, provider replacement and Windows zip.
+   **Builtin deploy and zip are done; native deploy replacement/rehydration is
+   done through `d475963c`. Native build/package provider transports remain
+   open under M-007.**
 
 ### Final serialization
 

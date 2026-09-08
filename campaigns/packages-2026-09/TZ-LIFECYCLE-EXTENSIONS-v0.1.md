@@ -1,7 +1,10 @@
 # ТЗ: lifecycle-движок и машина расширений — входная точка исполнителя
 
-_STATUS: В РАБОТЕ — R1/R2, R3.1–R3.4, R6.2a/b, R7.1–R7.4, R8.1 и
-R8.2a завершены; остальные строки остаются открытыми.
+_STATUS: В РАБОТЕ — R1–R5 и R7 завершены; R6.1–R6.4 и R6.5 A–C2
+приняты, R6.5-D остаётся открытым. В R8 приняты artifact/package/deploy
+builtins, platform applicability и нативный deploy-provider с read-only
+rehydration; обязательные M-007 native transports для build/package остаются
+открытыми, поэтому R8 и финальный gate не закрыты.
 Эта шапка — краткий указатель, не второй журнал. Точная гранулярная сверка,
 физический recovery-аудит и действующий atom-level dependency plan:
 `LIFECYCLE-EXTENSIONS-IMPLEMENTATION-LEDGER.md`. Спека-закон:
@@ -229,6 +232,10 @@ R8.2a завершены; остальные строки остаются от�
 
 ### R5 — нативный ярус (спека §8; новый крейт `vibe-ext` + загрузчик)
 
+**Статус 2026-09-08: принято полностью.** Bootstrap convergence закрыт
+`362d7c8d`/`06f8f465`/`0435b937`; точный native/builtin minify parity,
+Pending→одна сборка→Fresh и failure/retry — `2e6bb266`.
+
 - **Ш5.1 — крейт `vibe-ext`**: типы Context/Reply, макрос `vibe_extension!` (четыре
   C-символа, catch_unwind, (де)сериализация). Собственный юнит-сьют.
 - **Ш5.2 — загрузчик** (libloading; семь шагов §14.4 `##REF-WIRE-NATIVE`; кэш по пути;
@@ -250,6 +257,10 @@ R8.2a завершены; остальные строки остаются от�
   `feat(vibe-lifecycle): natives build in-slot…`, `test(vibe-spec): native minify parity`.
 
 ### R6 — pass-ярус (спека §7.4; `vibe-spec` + `vibe-core`)
+
+**Статус 2026-09-08:** R6.1–R6.4 и R6.5 A–C2 приняты через
+`b2a6efb5`…`0797c4ca`. Открыт только R6.5-D: публичный TXT+JSON command,
+негативная матрица и регрессия R5.
 
 - **Ш6.1 — валидация флага** `compiler_internals` (§14.1-строки; red-proof: `pass` без
   флага — отказ с ремедиацией).
@@ -303,6 +314,13 @@ R8.2a завершены; остальные строки остаются от�
 
 ### R8 — package/build/deploy (спека §4.2 + принятый successor-дизайн)
 
+**Статус исполнения 2026-09-08.** Artifact DAG/records, Cargo, static
+skill, Agent Plugin, Windows zip, deploy engine/profiles/clients/vibe-bin,
+platform applicability и реальный package-supplied native **deploy** provider
+с restart rehydration приняты. Native provider transports ролей build/package
+явно остаются M-007 work: общий registry и точный pin без исполнения не
+считаются plugin replacement. Поэтому R8 остаётся `impl/work`.
+
 Цели deploy уже выбраны владельцем; `##OPEN-DEPLOY-TARGETS` не является
 развилкой. Полная форма и порядок — в
 `BUILD-PACKAGE-DEPLOY-ARCHITECTURE-v0.1.md` и
@@ -316,10 +334,9 @@ atom `R8-PLATFORM-APPLICABILITY` добавляет first-class `when`/`os` к
 package targets ничего не производят, неактивные deploy targets не входят в
 profile closure/collision checks, а active→inactive dependency отказывает с
 именем обоих рядов. Parse/write, human/JSON plan и skip evidence входят в тот
-же atom. Сегодняшняя подробная схема в successor-дизайне — подготовленная
-hypothesis, не implementation freeze: когда atom станет current, обязательны
-cold re-read актуальной grammar/engine, повторный design review и улучшенная
-freeze до первого code edit. Будущий VibeVM OS остаётся
+же atom. Это было preparatory hypothesis, не implementation freeze; обязательный
+cold re-read и повторный design review выполнены, а реализация принята
+`d4edb3ae`/`8ff4b711`/`bb50aeab`. Будущий VibeVM OS остаётся
 compatibility horizon, не текущей системной мутацией.
 
 ## §4. Сквозные гейты (каждый коммит, каждая волна)

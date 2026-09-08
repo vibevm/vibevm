@@ -140,11 +140,10 @@ build-output denylist:</SHIPPABLE-TREE-DEF></p>
       <facts ordered="false">
         <MATERIALISE-AS-TODAY fact="true" status="spec/done">**Decision.** `vibe install` materialises the shippable tree — including code —
   into the `vibedeps/` slot, as today.</MATERIALISE-AS-TODAY>
-        <BUILD-CONSUMER-SIDE fact="true" status="spec/done">Turning that source into a runnable tool is consumer-side and **must never
-  write into the committed slot or the hash**:</BUILD-CONSUMER-SIDE>
+        <BUILD-CONSUMER-SIDE fact="true" status="spec/done">**Original hook-placement rule, retained as history.** Turning source into a runnable tool is consumer-side and build output never enters the source hash. Its stronger “never write inside the committed slot” clause is superseded by `##BUILD-MECHANISM-SUCCESSOR`: provider-root `target/` is legal because the shippable tree and slot record own neither it nor its bytes.</BUILD-CONSUMER-SIDE>
       </facts>
       <facts ordered="false">
-        <HOOK-BUILD fact="true" status="spec/done">A code-bearing tool package builds via a **`post-install` hook**
+        <HOOK-BUILD fact="true" status="spec/done">The original generic path remains available: a code-bearing tool package may build via a **`post-install` hook**
   ([PROP-020](../modules/vibe-workspace/PROP-020-install-hooks.xml)) whose build
   output is directed to a **gitignored** location (e.g.
   `&lt;project-root&gt;/.vibe/&lt;pkg&gt;-target/`), never the slot. To let a hook address
@@ -156,10 +155,9 @@ build-output denylist:</SHIPPABLE-TREE-DEF></p>
   reference the shipped crates directly through its own toolchain (§2.4) and
   skip the build hook entirely — the hook is the path for a consumer that wants
   a ready binary without driving the language's build system itself.</NATIVE-CONSUMER-SKIP>
+        <BUILD-MECHANISM-SUCCESSOR fact="true" status="impl/done">**Lifecycle successor.** Declared build targets are selected through the shared mechanism registry and recorded artifact DAG. The builtin `build:cargo` provider runs under the exact package/provider root, consumes `cargo metadata` plus `cargo build --message-format=json-render-diagnostics`, selects only the declared contained compiler artifact from Cargo's messages, and persists provider/config/platform/toolchain/output identity in the shared artifact record. Native extensions and compatibility-lowered `[[binary]]` targets may therefore build into the provider's own gitignored `target/`; that output remains outside the shippable tree and `.vibe-slot.toml` footprint. Evidence: `a22da2a3`, `1baac652`, `332f8e28` and `06f8f465`. Package-supplied native execution for build/package roles remains open; only builtin providers and the deploy-role native transport are commissioned.</BUILD-MECHANISM-SUCCESSOR>
       </facts>
-      <p><HOOK-RESET-UNAFFECTED fact="true" status="spec/done">The hook's own reset semantics (PROP-020 §2.1 — slot re-materialised on update,
-edits never compound) are unaffected: the build output lives outside the slot,
-so there is nothing in the slot to reset.</HOOK-RESET-UNAFFECTED></p>
+      <p><HOOK-RESET-UNAFFECTED fact="true" status="impl/done">The record-aware reset successor does not own build output: whether a hook writes outside the slot or Cargo writes the provider-root `target/` inside it, the path is outside `.vibe-slot.toml`. Same-slot refresh preserves it and unchanged source mtimes let the build system remain incremental; a version change selects a different current slot. Hook-created unrecorded state retains PROP-020's explicit idempotence boundary.</HOOK-RESET-UNAFFECTED></p>
     </build>
     <consume title="2.4 Consuming shipped code — external-path-dep, no nested workspace">
       <p><req-consume fact="true" status="spec/done">`req r1`</req-consume></p>
@@ -319,10 +317,12 @@ L4 (implemented checkers) ships in the package whose language they check.</PLACE
   <out-of-scope title="5. Out of scope">
     <facts ordered="false">
       <OOS-AUTODETECT fact="true" status="spec/done">**Auto-detecting the build system / language** of a code-bearing package —
-  the package declares its build via a `post-install` hook (PROP-020); vibevm
-  does not infer `cargo` vs `npm`.</OOS-AUTODETECT>
+  the package declares a hook or explicit artifact/mechanism target; vibevm
+  does not infer `cargo` vs `npm`. The commissioned builtin is selected only by
+  the declared `build:cargo` target.</OOS-AUTODETECT>
       <OOS-SANDBOX fact="true" status="spec/done">**Sandboxing the build hook** — inherits PROP-020 §4's posture (hooks run with
-  the user's privileges; trust is the allow-list + consent).</OOS-SANDBOX>
+  the user's privileges; package installation is the consent and execution is
+  made observable through exact provider/target evidence).</OOS-SANDBOX>
       <OOS-TS-CHECKER fact="true" status="impl/done">**Out of scope when written; since delivered.** TypeScript shipped no
   implemented tool to relocate, so its cards kept `specified` checker statuses until a
   TS pilot existed (§2.6 deferral). The `typescript-ai-native` family shipped with its

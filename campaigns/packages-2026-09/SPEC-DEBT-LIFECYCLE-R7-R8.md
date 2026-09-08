@@ -3,8 +3,10 @@
 _Amendment queue, opened 2026-08-26. This file is not authoritative. R7
 present-truth/LLM laws from §§1–3 and the closed owner forks in §13 were applied
 at their owning PROP-000/PROP-054 anchors by R7.5-P0 on 2026-08-28; their draft
-text below is historical input, not a second live contract. Sections 4–12 remain
-the R8 queue. Exact R8 architecture record:
+text below is historical input, not a second live contract. On 2026-09-08,
+landed portions of §§4–11 were promoted to PROP-024/025/054 and §12 remained
+deferred by design. Build/package native provider transport remains explicitly
+open under M-007; no selection-only proof is relabelled execution. Exact R8 architecture record:
 `BUILD-PACKAGE-DEPLOY-ARCHITECTURE-v0.1.md`; exact R7.5 architecture record:
 `R7-EXTERNAL-ORCHESTRATION-ARCHITECTURE-v0.1.md`._
 
@@ -32,9 +34,9 @@ exited 0 and produced the exact declared `LIVE_OK\n` output. No token or
 provider response body was printed. This proves the live provider seam; mock
 and security gates remain the deterministic acceptance evidence.
 
-The remaining sections include owner rulings made after PROP-054 was written.
-They authorise implementation but remain draft amendments at their owning
-anchors.
+The sections below retain the original proposed text as provenance. Their
+current applied/deferred disposition is stated at each heading and in §13;
+the authoritative law now lives at the owning PROP anchors.
 
 ## 1. PROP-000 `##CRATE-LLM` present-truth replacement
 
@@ -142,6 +144,11 @@ global create number.
 
 ## 4. Two nouns, one extension machine
 
+**Disposition — applied, with one execution boundary still open.** The shared
+registry/route/pin law landed in `2a3f3b44`/`9dd072d2`; real native provider
+execution is commissioned for deploy through `d475963c`. Native build/package
+transport remains M-007 work.
+
 Owning anchors: `##POINT-GRAMMAR`, `##CONTRIB-GRAMMAR`, `##ONE-MACHINE`,
 `##OBS-REGISTRY`, `##PRESET-LAW`.
 
@@ -178,6 +185,10 @@ generated state are always provider-qualified; two ambiguous authored route
 values are a collision, never an interactive pick.
 
 ## 5. Artifact target grammar and registry
+
+**Disposition — applied.** Grammar, DAG execution and durable artifact records
+landed through `2a3f3b44` and `a22da2a3` and are promoted at PROP-054
+`##R8-ARTIFACT-RUNTIME`.
 
 Owning anchors: `##PHASE-BUILD`, `##PHASE-PACKAGE`, `##ARTIFACT-REGISTRY`,
 `##PHASE-FINGERPRINT`.
@@ -218,6 +229,11 @@ Existing `[[binary]]` lowers compatibly into one Cargo build target. Direct
 
 ## 6. Cargo is the commissioning mechanism, not a hard-coded phase
 
+**Disposition — applied for the builtin; foreign native transport deferred.**
+`a22da2a3` commissions the one Cargo provider and `[[binary]]` lowering;
+PROP-024/025 now carry its exact root/message/record law. A package-supplied
+native replacement for the build role remains open under M-007.
+
 Amend PROP-024 `##OOS-AUTODETECT`, PROP-025 `##BINARY-TABLE`,
 `##SLOT-RESIDENT`, `##TRUST-CURRENT-SLOT`, and PROP-054 `##PHASE-BUILD`:
 
@@ -237,6 +253,10 @@ mechanism protocol. A host may route `build:cargo` away from the builtin without
 changing the phase model.
 
 ## 7. Package targets — static skill and Agent Plugins 1.0
+
+**Disposition — applied for builtin package providers.** `a5dc3cbc` and
+`40c53f0a` commission static-skill, Agent Plugin and client projections. A
+package-supplied native replacement for the package role remains open.
 
 Replace/extend `##PHASE-PACKAGE` with:
 
@@ -268,6 +288,10 @@ artifacts. Unsupported components are declared omissions or hard errors, never
 silent drops.
 
 ## 8. Deploy profiles own local installation and remote placement
+
+**Disposition — applied.** Profiles, plan/undeploy and destination execution
+landed through `0a42456e`, `45d88e80` and `ae36ac48`; platform projection is
+the `d4edb3ae`→`bb50aeab` successor.
 
 This closes PROP-054 `##OPEN-DEPLOY-TARGETS`. Selected target genres are:
 
@@ -310,6 +334,10 @@ is explicit/defaulted in the manifest, never inferred from env or credentials.
 
 ## 9. Ownership, intent journal and receipt
 
+**Disposition — applied.** The general deploy transaction landed in
+`0a42456e`; strict physical/native sidecar generations and read-only restart
+rehydration extend it through `a24e4aff` without widening receipt/intent JTD.
+
 Every external mutation has a scope (`project | user | machine | system |
 remote`), exact provider and durable desired-state digest.
 
@@ -336,6 +364,9 @@ VibeVM secret source and attach it at VibeVM's owned TLS transport boundary.
 
 ## 10. Agent/client installation adapters
 
+**Disposition — applied.** All three client projections and six isolated
+deploy adapters are commissioned through `ae36ac48`.
+
 Commissioning evidence as of 2026-08-26:
 
 | Client | Public skill target | Full plugin posture |
@@ -361,6 +392,10 @@ binding only. User/client installation remains explicit general deploy work.
 
 ## 11. Two launcher genres under `~/.vibe/bin`
 
+**Disposition — applied.** The project-pinned `vibe bin` compatibility family
+remains distinct from receipt-owned `deploy:vibe-bin`, commissioned by
+`45d88e80`; neither adopts the other's files.
+
 PROP-025's project-pinned `vibe bin` shim and a locally deployed global tool are
 different genres. Their launcher bodies carry an exact VibeVM owner/genre
 marker. They never fall through into one another. A name occupied by the other
@@ -372,6 +407,10 @@ immutable content-addressed payload. Existing `vibe bin` remains lockfile→slot
 artifact per current working directory.
 
 ## 12. VibeVM OS horizon — compatibility, not current scope
+
+**Disposition — deferred by design.** Stable identities, scopes, records and
+transactions constrain the current implementation; privileged broker, global
+solver, system services and whole-system transactions remain POST-OS work.
 
 Future VibeVM packages may declare locally built artifacts, digest/signature-
 pinned HTTPS/registry/OCI prebuilt payloads, system package coordinates, config,
@@ -388,9 +427,10 @@ privilege; plan+intent+receipt for mutation; durable partial failure. Privileged
 broker, global solver, services and whole-system transactions remain future
 work.
 
-## 13. Proposed status queue
+## 13. Status disposition
 
-No movement is applied by this draft.
+Applied movements are recorded below; the two explicit open transport rows and
+POST-OS remain non-final.
 
 | Anchor | Proposed when evidence lands |
 |---|---|
@@ -399,8 +439,10 @@ No movement is applied by this draft.
 | PROP-054 `##AGENT-CLI` CLI execution | applied as `##AGENT-CLI-EXECUTION`, `impl/done` |
 | PROP-054 `##AGENT-HANDSHAKE` + MCP | hosted anchor already `impl/done`; `##AGENT-MCP-SURFACE` applied `impl/done` |
 | `##OPEN-CREATE-BUDGET` | closed `spec/done`; policy at `##LLM-BUDGET`, grammar/defaults remain consuming-feature implementation work |
-| `##OPEN-DEPLOY-TARGETS` | closed `spec/done` by §8 owner ruling; grammar/profiles landed at `2a3f3b44`, runtime statuses remain open |
+| `##OPEN-DEPLOY-TARGETS` | closed `spec/done`; grammar/profiles `2a3f3b44`, deploy engine `0a42456e`, client/vibe-bin/native-provider runtime through `d475963c` |
 | project package-skill binding | record `impl/done` safety successor at `9275f373`/`67886ea7`; do not imply user deploy |
-| artifact/mechanism/deploy grammar | record `impl/done` grammar successor at `2a3f3b44`; records/routing/runtime remain open |
-| `##PHASE-BUILD`, `##PHASE-PACKAGE`, `##PHASE-DEPLOY` | move only per landed mechanism/target evidence |
-| PROP-024/025 build wording | amend with Cargo/general mechanism compatibility when Cargo atom lands |
+| artifact/mechanism/deploy grammar | applied runtime successors at PROP-054 `##R8-ARTIFACT-RUNTIME` / `##R8-DEPLOY-RUNTIME`; native build/package provider execution remains open |
+| `##PHASE-BUILD`, `##PHASE-PACKAGE`, `##PHASE-DEPLOY` | builtin/package/deploy runtime evidence landed; parent R8 remains `impl/work` for M-007 native build/package transport |
+| PROP-024/025 build wording | applied with Cargo/general mechanism compatibility and record-aware refresh evidence |
+| native build/package provider transport | open `impl/work`; deploy-only ABI transport cannot close M-007 |
+| VibeVM OS system layer | deferred POST-OS by design |
