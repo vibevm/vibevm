@@ -1,0 +1,54 @@
+{
+  "metadata": {
+    "description": "Epoch-1 package-authored native deploy-mechanism manifest. Object readers are permissive for additive evolution; closed vocabularies and relational admission remain exact.",
+    "x-diagnostic-cap-bytes": 8192,
+    "x-vocabularies": [
+      "native_mechanism_role",
+      "native_deploy_operation",
+      "native_deploy_artifact_kind",
+      "native_deploy_effect",
+      "native_deploy_network",
+      "native_deploy_privilege",
+      "native_deploy_reversibility"
+    ],
+    "x-relational-laws": [
+      "descriptor-id: descriptor ids are nonblank, bounded, control-free and unique within one manifest",
+      "deploy-operation-set: a deploy descriptor carries each of plan, fingerprint, apply, verify, remove and recover exactly once in that canonical order",
+      "artifact-kinds: artifact kinds are nonempty, unique and appear in shared vocabulary canonical order",
+      "protocol: protocol is exactly the deploy protocol epoch admitted by the host"
+    ],
+    "rustOptions": {
+      "package": "vibe_wire::native::e1::mechanism_manifest"
+    }
+  },
+  "properties": {
+    "mechanisms": {
+      "elements": { "ref": "mechanism_descriptor" },
+      "metadata": { "x-empty": "emit" }
+    }
+  },
+  "definitions": {
+    "mechanism_descriptor": {
+      "properties": {
+        "id": { "type": "string" },
+        "role": { "ref": "native_mechanism_role" },
+        "name": { "type": "string" },
+        "protocol": { "type": "uint32" },
+        "operations": {
+          "elements": { "ref": "native_deploy_operation" },
+          "metadata": { "x-empty": "emit" }
+        },
+        "artifact_kinds": {
+          "elements": { "ref": "native_deploy_artifact_kind" },
+          "metadata": { "x-empty": "emit" }
+        },
+        "effect": { "ref": "native_deploy_effect" },
+        "network": { "ref": "native_deploy_network" },
+        "privilege": { "ref": "native_deploy_privilege" },
+        "reversibility": { "ref": "native_deploy_reversibility" },
+        "atomic_replacement": { "type": "boolean" },
+        "reference_ownership": { "type": "boolean" }
+      }
+    }
+  }
+}

@@ -211,6 +211,33 @@ foreign_parsers = "none"
 corpus = "formats/corpora/native/e1"
 sunset = "none"
 
+# Package-supplied deploy mechanisms reuse the native ABI-1 transport. The
+# package-authored manifest and host-authored request are additive foreign-read
+# documents; the host-read reply is closed and strict.
+[format.native-mechanism-manifest]
+epoch = 1
+schema = "schemas/native/e1/mechanism_manifest.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "formats/corpora/native/e1"
+sunset = "none"
+
+[format.native-deploy-request]
+epoch = 1
+schema = "schemas/native/e1/deploy_request.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "formats/corpora/native/e1"
+sunset = "none"
+
+[format.native-deploy-reply]
+epoch = 1
+schema = "schemas/native/e1/deploy_reply.jtd.json"
+recoverable = true
+foreign_parsers = "none"
+corpus = "formats/corpora/native/e1"
+sunset = "none"
+
 # ── Requirements metadata answer (1 JTD), PROP-054 §14.7 / R7.5 ─────────────
 # The R7.5 read-only requirements answer: one bounded document an external
 # orchestrator reads to learn what this project declares and recorded about

@@ -1,0 +1,178 @@
+{
+  "metadata": {
+    "description": "Epoch-1 native deploy reply. The host reads every reply object strictly; each operation has an exact ok/fail result shape.",
+    "x-diagnostic-cap-bytes": 8192,
+    "x-relational-laws": [
+      "envelope-protocol: envelope and protocol are exactly the epochs admitted by the host",
+      "reply-operation: the reply operation is exactly the retained operation of its admitted request",
+      "fail-message: every fail message is nonblank, control-free and at most the diagnostic cap",
+      "resource-identity: resource ids are nonblank, bounded and unique within each result collection"
+    ],
+    "rustOptions": {
+      "package": "vibe_wire::native::e1::deploy_reply"
+    }
+  },
+  "discriminator": "operation",
+  "mapping": {
+    "plan": {
+      "properties": {
+        "envelope": { "type": "uint32" },
+        "protocol": { "type": "uint32" },
+        "result": { "ref": "plan_result" }
+      }
+    },
+    "fingerprint": {
+      "properties": {
+        "envelope": { "type": "uint32" },
+        "protocol": { "type": "uint32" },
+        "result": { "ref": "fingerprint_result" }
+      }
+    },
+    "apply": {
+      "properties": {
+        "envelope": { "type": "uint32" },
+        "protocol": { "type": "uint32" },
+        "result": { "ref": "apply_result" }
+      }
+    },
+    "verify": {
+      "properties": {
+        "envelope": { "type": "uint32" },
+        "protocol": { "type": "uint32" },
+        "result": { "ref": "verify_result" }
+      }
+    },
+    "remove": {
+      "properties": {
+        "envelope": { "type": "uint32" },
+        "protocol": { "type": "uint32" },
+        "result": { "ref": "remove_result" }
+      }
+    },
+    "recover": {
+      "properties": {
+        "envelope": { "type": "uint32" },
+        "protocol": { "type": "uint32" },
+        "result": { "ref": "recover_result" }
+      }
+    }
+  },
+  "definitions": {
+    "plan_result": {
+      "discriminator": "status",
+      "mapping": {
+        "ok": {
+          "properties": {
+            "summary": { "type": "string" },
+            "resources": {
+              "elements": { "ref": "planned_resource" },
+              "metadata": { "x-empty": "emit" }
+            },
+            "lock_resources": {
+              "elements": { "type": "string" },
+              "metadata": { "x-empty": "emit" }
+            },
+            "config_digest": { "type": "string" },
+            "reversible": { "type": "boolean" }
+          }
+        },
+        "fail": { "properties": { "message": { "type": "string" } } }
+      }
+    },
+    "fingerprint_result": {
+      "discriminator": "status",
+      "mapping": {
+        "ok": {
+          "properties": {
+            "digest": { "type": "string" },
+            "summary": { "type": "string" }
+          }
+        },
+        "fail": { "properties": { "message": { "type": "string" } } }
+      }
+    },
+    "apply_result": {
+      "discriminator": "status",
+      "mapping": {
+        "ok": {
+          "properties": {
+            "completed": {
+              "elements": { "type": "string" },
+              "metadata": { "x-empty": "emit" }
+            },
+            "evidence": { "type": "string" }
+          },
+          "optionalProperties": {
+            "prior_state_handle": { "type": "string", "metadata": { "x-default": null } }
+          }
+        },
+        "fail": { "properties": { "message": { "type": "string" } } }
+      }
+    },
+    "verify_result": {
+      "discriminator": "status",
+      "mapping": {
+        "ok": {
+          "properties": {
+            "observed": {
+              "elements": { "ref": "observed_resource" },
+              "metadata": { "x-empty": "emit" }
+            }
+          }
+        },
+        "fail": { "properties": { "message": { "type": "string" } } }
+      }
+    },
+    "remove_result": {
+      "discriminator": "status",
+      "mapping": {
+        "ok": {
+          "properties": {
+            "removed": {
+              "elements": { "type": "string" },
+              "metadata": { "x-empty": "emit" }
+            },
+            "expected_remaining": {
+              "elements": { "type": "string" },
+              "metadata": { "x-empty": "emit" }
+            },
+            "evidence": { "type": "string" }
+          }
+        },
+        "fail": { "properties": { "message": { "type": "string" } } }
+      }
+    },
+    "recover_result": {
+      "discriminator": "status",
+      "mapping": {
+        "ok": {
+          "properties": {
+            "completed": {
+              "elements": { "type": "string" },
+              "metadata": { "x-empty": "emit" }
+            },
+            "evidence": { "type": "string" }
+          },
+          "optionalProperties": {
+            "prior_state_handle": { "type": "string", "metadata": { "x-default": null } }
+          }
+        },
+        "fail": { "properties": { "message": { "type": "string" } } }
+      }
+    },
+    "planned_resource": {
+      "properties": {
+        "resource": { "type": "string" },
+        "desired_digest": { "type": "string" }
+      }
+    },
+    "observed_resource": {
+      "properties": {
+        "resource": { "type": "string" }
+      },
+      "optionalProperties": {
+        "digest": { "type": "string", "metadata": { "x-default": null } }
+      }
+    }
+  }
+}

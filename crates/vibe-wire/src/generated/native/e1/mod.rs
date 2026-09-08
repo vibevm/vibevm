@@ -7,5 +7,8 @@
 pub mod compile_reply;
 pub mod compile_request;
 pub mod context;
+pub mod deploy_reply;
+pub mod deploy_request;
 pub mod manifest;
+pub mod mechanism_manifest;
 pub mod reply;

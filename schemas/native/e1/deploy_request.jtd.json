@@ -1,0 +1,203 @@
+{
+  "metadata": {
+    "description": "Epoch-1 host-authored native deploy request. The operation discriminator is closed while every object reader is permissive to additive members.",
+    "x-diagnostic-cap-bytes": 8192,
+    "x-vocabularies": ["native_deploy_artifact_kind", "native_deploy_artifact_shape"],
+    "x-relational-laws": [
+      "envelope-protocol: envelope and protocol are exactly the epochs admitted by the host",
+      "exact-pin: identity.provider and identity.mechanism equal the selected provider-qualified mechanism pin",
+      "canonical-config: config_toml, when present, is canonical TOML; absence and the present empty string remain distinct",
+      "paths: artifact and authority paths are absolute or relative exactly as their member names declare, bounded and control-free"
+    ],
+    "rustOptions": {
+      "package": "vibe_wire::native::e1::deploy_request"
+    }
+  },
+  "discriminator": "operation",
+  "mapping": {
+    "plan": {
+      "properties": {
+        "envelope": { "type": "uint32" },
+        "protocol": { "type": "uint32" },
+        "identity": { "ref": "invocation_identity" },
+        "artifact": { "ref": "deploy_artifact" },
+        "authority": { "ref": "deploy_authority" }
+      },
+      "optionalProperties": {
+        "config_toml": { "type": "string", "metadata": { "x-default": null } },
+        "prior_receipt": { "ref": "prior_receipt", "metadata": { "x-default": null } },
+        "recovery_intent": { "ref": "recovery_intent", "metadata": { "x-default": null } }
+      }
+    },
+    "fingerprint": {
+      "properties": {
+        "envelope": { "type": "uint32" },
+        "protocol": { "type": "uint32" },
+        "identity": { "ref": "invocation_identity" },
+        "artifact": { "ref": "deploy_artifact" },
+        "plan": { "ref": "deploy_plan" }
+      },
+      "optionalProperties": {
+        "config_toml": { "type": "string", "metadata": { "x-default": null } }
+      }
+    },
+    "apply": {
+      "properties": {
+        "envelope": { "type": "uint32" },
+        "protocol": { "type": "uint32" },
+        "identity": { "ref": "invocation_identity" },
+        "artifact": { "ref": "deploy_artifact" },
+        "plan": { "ref": "deploy_plan" }
+      },
+      "optionalProperties": {
+        "staging": { "type": "string", "metadata": { "x-default": null } },
+        "prior_receipt": { "ref": "prior_receipt", "metadata": { "x-default": null } }
+      }
+    },
+    "verify": {
+      "properties": {
+        "envelope": { "type": "uint32" },
+        "protocol": { "type": "uint32" },
+        "identity": { "ref": "invocation_identity" },
+        "resources": {
+          "elements": { "ref": "planned_resource" },
+          "metadata": { "x-empty": "emit" }
+        }
+      }
+    },
+    "remove": {
+      "properties": {
+        "envelope": { "type": "uint32" },
+        "protocol": { "type": "uint32" },
+        "identity": { "ref": "invocation_identity" },
+        "resources": {
+          "elements": { "type": "string" },
+          "metadata": { "x-empty": "emit" }
+        }
+      },
+      "optionalProperties": {
+        "prior_state_handle": { "type": "string", "metadata": { "x-default": null } }
+      }
+    },
+    "recover": {
+      "properties": {
+        "envelope": { "type": "uint32" },
+        "protocol": { "type": "uint32" },
+        "identity": { "ref": "invocation_identity" },
+        "artifact": { "ref": "deploy_artifact" },
+        "plan": { "ref": "deploy_plan" },
+        "observed": {
+          "elements": { "ref": "observed_resource" },
+          "metadata": { "x-empty": "emit" }
+        }
+      },
+      "optionalProperties": {
+        "staging": { "type": "string", "metadata": { "x-default": null } },
+        "prior_receipt": { "ref": "prior_receipt", "metadata": { "x-default": null } },
+        "recovery_intent": { "ref": "recovery_intent", "metadata": { "x-default": null } }
+      }
+    }
+  },
+  "definitions": {
+    "invocation_identity": {
+      "properties": {
+        "provider": { "type": "string" },
+        "mechanism": { "type": "string" },
+        "target": { "type": "string" },
+        "profile": { "type": "string" }
+      }
+    },
+    "deploy_artifact": {
+      "properties": {
+        "id": { "type": "string" },
+        "kind": { "ref": "native_deploy_artifact_kind" },
+        "shape": { "ref": "native_deploy_artifact_shape" },
+        "digest": { "type": "string" },
+        "path_absolute": { "type": "string" },
+        "path_relative": { "type": "string" }
+      }
+    },
+    "deploy_authority": {
+      "properties": {
+        "project_root": { "type": "string" },
+        "settings_root": { "type": "string" },
+        "user_home": { "type": "string" },
+        "clients": { "ref": "deploy_clients" }
+      }
+    },
+    "deploy_clients": {
+      "properties": {
+        "claude": { "ref": "deploy_client" },
+        "codex": { "ref": "deploy_client" },
+        "opencode": { "ref": "deploy_client" }
+      }
+    },
+    "deploy_client": {
+      "discriminator": "state",
+      "mapping": {
+        "resolved": {
+          "properties": {
+            "command": { "type": "string" },
+            "path": { "type": "string" }
+          }
+        },
+        "missing": {
+          "properties": {}
+        }
+      }
+    },
+    "deploy_plan": {
+      "properties": {
+        "summary": { "type": "string" },
+        "resources": {
+          "elements": { "ref": "planned_resource" },
+          "metadata": { "x-empty": "emit" }
+        },
+        "lock_resources": {
+          "elements": { "type": "string" },
+          "metadata": { "x-empty": "emit" }
+        },
+        "config_digest": { "type": "string" },
+        "reversible": { "type": "boolean" }
+      }
+    },
+    "planned_resource": {
+      "properties": {
+        "resource": { "type": "string" },
+        "desired_digest": { "type": "string" }
+      }
+    },
+    "observed_resource": {
+      "properties": {
+        "resource": { "type": "string" }
+      },
+      "optionalProperties": {
+        "digest": { "type": "string", "metadata": { "x-default": null } }
+      }
+    },
+    "prior_receipt": {
+      "properties": {
+        "generation": { "type": "uint32" },
+        "provider": { "type": "string" },
+        "artifact_digest": { "type": "string" },
+        "desired_config_digest": { "type": "string" },
+        "resources": {
+          "elements": { "type": "string" },
+          "metadata": { "x-empty": "emit" }
+        }
+      },
+      "optionalProperties": {
+        "prior_state_handle": { "type": "string", "metadata": { "x-default": null } }
+      }
+    },
+    "recovery_intent": {
+      "properties": {
+        "plan_hash": { "type": "string" },
+        "resources": {
+          "elements": { "type": "string" },
+          "metadata": { "x-empty": "emit" }
+        }
+      }
+    }
+  }
+}

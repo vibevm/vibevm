@@ -1844,6 +1844,113 @@ pub enum NamingConvention {
     Name,
 }
 
+/// Closed artifact-kind admission vocabulary for native deploy providers.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum NativeDeployArtifactKind {
+    #[serde(rename = "agent-plugin")]
+    AgentPlugin,
+
+    #[serde(rename = "archive")]
+    Archive,
+
+    #[serde(rename = "directory")]
+    Directory,
+
+    #[serde(rename = "executable")]
+    Executable,
+
+    #[serde(rename = "file")]
+    File,
+
+    #[serde(rename = "skill")]
+    Skill,
+}
+
+/// Closed physical artifact shape supplied to a native deploy provider.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum NativeDeployArtifactShape {
+    #[serde(rename = "directory")]
+    Directory,
+
+    #[serde(rename = "file")]
+    File,
+}
+
+/// Closed effect scope declared by a native deploy mechanism.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum NativeDeployEffect {
+    #[serde(rename = "remote")]
+    Remote,
+
+    #[serde(rename = "system")]
+    System,
+
+    #[serde(rename = "user")]
+    User,
+
+    #[serde(rename = "workspace")]
+    Workspace,
+}
+
+/// Closed network-use contract declared by a native deploy mechanism.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum NativeDeployNetwork {
+    #[serde(rename = "never")]
+    Never,
+
+    #[serde(rename = "when-online")]
+    WhenOnline,
+}
+
+/// Closed native deploy protocol operation.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum NativeDeployOperation {
+    #[serde(rename = "apply")]
+    Apply,
+
+    #[serde(rename = "fingerprint")]
+    Fingerprint,
+
+    #[serde(rename = "plan")]
+    Plan,
+
+    #[serde(rename = "recover")]
+    Recover,
+
+    #[serde(rename = "remove")]
+    Remove,
+
+    #[serde(rename = "verify")]
+    Verify,
+}
+
+/// Closed privilege contract declared by a native deploy mechanism.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum NativeDeployPrivilege {
+    #[serde(rename = "elevated")]
+    Elevated,
+
+    #[serde(rename = "none")]
+    None,
+}
+
+/// Closed reversibility contract declared by a native deploy mechanism.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum NativeDeployReversibility {
+    #[serde(rename = "irreversible")]
+    Irreversible,
+
+    #[serde(rename = "reversible")]
+    Reversible,
+}
+
+/// Closed role admitted for a package-supplied native mechanism descriptor.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum NativeMechanismRole {
+    #[serde(rename = "deploy")]
+    Deploy,
+}
+
 /// Obsoletes projection: packages this version replaces.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ObsoletesEntry {
