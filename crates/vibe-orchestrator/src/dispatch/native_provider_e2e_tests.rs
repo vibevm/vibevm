@@ -29,6 +29,7 @@ struct Fixture {
     manifest: Manifest,
     registry: vibe_lifecycle::MechanismRegistry,
     routes: MechanismRoutes,
+    platform: NativePlatform,
     prepared: vibe_lifecycle::native::PreparedNativeMechanisms,
     clients: ClientExecutables,
 }
@@ -43,7 +44,7 @@ impl Fixture {
         let project = root.path().join("project");
         let settings = root.path().join("settings");
         let user_home = root.path().join("home");
-        let provider_root = root.path().join("package-provider");
+        let provider_root = project.join("vibevm/vibedeps/org.example.native-deploy/1.0.0");
         std::fs::create_dir_all(provider_root.join("native")).unwrap();
         std::fs::create_dir_all(&project).unwrap();
         std::fs::create_dir_all(&user_home).unwrap();
@@ -79,7 +80,7 @@ impl Fixture {
                 root: provider_root,
                 version: "1.0.0".to_owned(),
                 kind: PackageKind::Tool,
-                content_hash: ContentHash::parse("sha256:aa").unwrap(),
+                content_hash: ContentHash::parse(&format!("sha256:{}", "a".repeat(64))).unwrap(),
             },
             declarations: Vec::new(),
             controls: ExtensionsControl::default(),
@@ -148,6 +149,7 @@ impl Fixture {
             manifest,
             registry,
             routes,
+            platform,
             prepared,
             clients: ClientExecutables {
                 claude: ClientExecutable::Missing {
@@ -185,6 +187,36 @@ impl Fixture {
             package: None,
             created_at: NOW,
         }
+    }
+
+    fn rehydrate(
+        &self,
+        selection: &DeploySelection,
+    ) -> Result<vibe_lifecycle::native::PreparedNativeMechanisms, String> {
+        let artifacts = self.manifest.artifacts.as_ref().unwrap();
+        let plan = project_native_mechanisms(
+            &artifacts.package,
+            &self.manifest.deploy.as_ref().unwrap().targets,
+            &self.registry,
+            &self.routes,
+        )
+        .map_err(|error| error.to_string())?;
+        let native = NativeBuildExecution {
+            candidates: &[],
+            selected_project_root: &self.project,
+            registry: &self.registry,
+            routes: &self.routes,
+            platform: self.platform,
+            offline: true,
+            created_at: NOW,
+        };
+        let prepared = preflight_native_mechanisms(plan, &native)
+            .and_then(|preflight| preflight.rehydrate(&native))
+            .map_err(|error| error.to_string())?;
+        prepared
+            .validate_restart(&self.execute(selection))
+            .map_err(|error| error.to_string())?;
+        Ok(prepared)
     }
 }
 
@@ -300,6 +332,179 @@ fn real_package_native_provider_runs_all_six_operations_without_builtin_fallback
     assert_no_transient_state(&deploy_state_home(&fixture.settings));
 }
 
+#[test]
+fn process_restart_rehydrates_plan_undeploy_and_interrupted_recovery_read_only() {
+    let fixture = Fixture::new();
+    let normal = fixture.selection("normal", &["normal"]);
+    let before = snapshot(&fixture.project);
+    let restarted = fixture.rehydrate(&normal).unwrap();
+    let reports = restarted
+        .plan_deploy_targets(&fixture.execute(&normal))
+        .unwrap();
+    assert_eq!(reports.len(), 1);
+    assert!(!fixture.state_home.exists(), "plan creates no state home");
+    assert_eq!(snapshot(&fixture.project), before);
+
+    fixture
+        .prepared
+        .execute_deploy_targets(&fixture.execute(&normal))
+        .unwrap();
+    fixture
+        .rehydrate(&normal)
+        .unwrap()
+        .undeploy_targets(&fixture.execute(&normal))
+        .unwrap();
+    assert!(!fixture.settings.join("native-provider/normal").exists());
+
+    let interrupted = fixture.selection("interrupted", &["interrupt"]);
+    fixture
+        .prepared
+        .execute_deploy_targets(&fixture.execute(&interrupted))
+        .unwrap_err();
+    let recovered = fixture
+        .rehydrate(&interrupted)
+        .unwrap()
+        .execute_deploy_targets(&fixture.execute(&interrupted))
+        .unwrap();
+    assert_eq!(recovered[0].settlement, "recovered");
+}
+
+#[test]
+fn restart_refuses_binding_route_provider_and_image_drift_without_repair() {
+    let fixture = Fixture::new();
+    let normal = fixture.selection("normal", &["normal"]);
+    fixture
+        .prepared
+        .execute_deploy_targets(&fixture.execute(&normal))
+        .unwrap();
+    let receipt: serde_json::Value = serde_json::from_slice(
+        &std::fs::read(find_named(&fixture.state_home, "receipt.json")).unwrap(),
+    )
+    .unwrap();
+    assert_eq!(receipt["provider"]["version"], "1.0.0");
+    assert_eq!(
+        receipt["provider"]["content_hash"],
+        format!("sha256:{}", "a".repeat(64))
+    );
+    let sidecar = find_named(&fixture.state_home, "lock-resources.json");
+    let original = std::fs::read(&sidecar).unwrap();
+    for (field, value) in [
+        ("target", serde_json::json!("other")),
+        ("mechanism", serde_json::json!("deploy:other")),
+        ("pin", serde_json::json!("org.example/other#fixture")),
+        ("descriptor_id", serde_json::json!("other")),
+        ("protocol", serde_json::json!(2)),
+        ("provider_version", serde_json::json!("2.0.0")),
+        (
+            "provider_hash",
+            serde_json::json!(format!("sha256:{}", "b".repeat(64))),
+        ),
+        ("platform", serde_json::json!("other-x86_64")),
+        ("record_root", serde_json::json!("project")),
+        ("origin", serde_json::json!("source-record")),
+        ("image", serde_json::json!(".vibe/native-load/e1/other.dll")),
+        ("image_digest", serde_json::json!("b".repeat(64))),
+    ] {
+        let mut document: serde_json::Value = serde_json::from_slice(&original).unwrap();
+        document["committed"]["native"][field] = value;
+        std::fs::write(&sidecar, serde_json::to_vec_pretty(&document).unwrap()).unwrap();
+        let before = snapshot(&fixture.state_home);
+        assert!(
+            fixture
+                .prepared
+                .validate_restart(&fixture.execute(&normal))
+                .is_err()
+        );
+        assert_eq!(snapshot(&fixture.state_home), before, "{field}");
+    }
+    std::fs::write(&sidecar, &original).unwrap();
+
+    let mut changed_routes = fixture.routes.clone();
+    changed_routes.insert(
+        "deploy:vibe-bin".parse().unwrap(),
+        ProviderPin::parse("org.vibevm/vibe#vibe-bin").unwrap(),
+    );
+    let mut changed = fixture.execute(&normal);
+    changed.routes = &changed_routes;
+    assert!(fixture.prepared.validate_restart(&changed).is_err());
+    let empty = collect_mechanisms(&ExtensionWorld {
+        installed: Vec::new(),
+        host: HostExtensionSource {
+            provider: HostProvider {
+                identity: HostIdentity::ungrouped_project("demo"),
+                root: fixture.project.clone(),
+                version: "1.0.0".into(),
+                kind: None,
+                content_hash: None,
+            },
+            declarations: Vec::new(),
+            controls: ExtensionsControl::default(),
+            mechanisms: Vec::new(),
+        },
+        effective_stack: None,
+    })
+    .unwrap();
+    changed.registry = &empty;
+    assert!(fixture.prepared.validate_restart(&changed).is_err());
+
+    for stale in [false, true] {
+        let fixture = Fixture::new();
+        let image = fixture.prepared.entries[0].image.clone();
+        if stale {
+            std::fs::write(&image, b"stale image").unwrap();
+        } else {
+            std::fs::remove_file(&image).unwrap();
+        }
+        let before = snapshot(&fixture.project);
+        assert!(
+            fixture
+                .rehydrate(&fixture.selection("normal", &["normal"]))
+                .is_err()
+        );
+        assert_eq!(snapshot(&fixture.project), before);
+    }
+}
+
+fn snapshot(root: &Path) -> Vec<(String, Vec<u8>)> {
+    let mut rows = Vec::new();
+    collect_files(root, root, &mut rows);
+    rows.sort_by(|left, right| left.0.cmp(&right.0));
+    rows
+}
+
+fn find_named(root: &Path, name: &str) -> PathBuf {
+    let mut files = Vec::new();
+    collect_files(root, root, &mut files);
+    root.join(
+        files
+            .into_iter()
+            .find(|(path, _)| {
+                Path::new(path)
+                    .file_name()
+                    .is_some_and(|value| value == name)
+            })
+            .unwrap()
+            .0,
+    )
+}
+
+fn collect_files(root: &Path, directory: &Path, rows: &mut Vec<(String, Vec<u8>)>) {
+    for entry in std::fs::read_dir(directory).into_iter().flatten().flatten() {
+        let path = entry.path();
+        if entry.file_type().unwrap().is_dir() {
+            collect_files(root, &path, rows);
+        } else {
+            rows.push((
+                path.strip_prefix(root)
+                    .unwrap()
+                    .to_string_lossy()
+                    .replace('\\', "/"),
+                std::fs::read(path).unwrap(),
+            ));
+        }
+    }
+}
+
 fn assert_no_transient_state(path: &Path) {
     if !path.exists() {
         return;
@@ -356,43 +561,36 @@ id = "payload-package"
 mechanism = "package:static-file"
 inputs = [{ path = "payload.txt" }]
 outputs = [{ id = "payload.txt", kind = "file" }]
-
 [[deploy.target]]
 id = "normal"
 artifact = "payload.txt"
 mechanism = "deploy:vibe-bin"
 config = { foreign = true }
-
 [[deploy.target]]
 id = "interrupt"
 artifact = "payload.txt"
 mechanism = "deploy:vibe-bin"
 config = { foreign = true }
-
 [[deploy.target]]
 id = "pure-a"
 artifact = "payload.txt"
 mechanism = "deploy:vibe-bin"
 config = { foreign = true }
-
 [[deploy.target]]
 id = "pure-b"
 artifact = "payload.txt"
 mechanism = "deploy:vibe-bin"
 config = { foreign = true }
-
 [[deploy.target]]
 id = "logical"
 artifact = "payload.txt"
 mechanism = "deploy:vibe-bin"
 config = { foreign = true }
-
 [[deploy.target]]
 id = "backslash"
 artifact = "payload.txt"
 mechanism = "deploy:vibe-bin"
 config = { foreign = true }
-
 [[deploy.target]]
 id = "bad-lock"
 artifact = "payload.txt"

@@ -24,9 +24,13 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARG
 use anyhow::{Context, Result, bail};
 use specmark::spec;
 use vibe_core::manifest::{Manifest, TargetApplicability, TargetOs};
+use vibe_lifecycle::native::{
+    NativeBuildExecution, NativePlatform, PreparedNativeMechanisms, preflight_native_mechanisms,
+    project_native_mechanisms,
+};
 use vibe_lifecycle::{
     DeployExecution, DeployPlanReport, DeploySelection, DeploymentRow, RemovalOutcome,
-    deploy_state_home, list_deployments, plan_deploy_targets, undeploy_targets,
+    deploy_state_home, list_deployments,
 };
 
 use crate::cli::{DeployArgs, UndeployArgs};
@@ -103,7 +107,8 @@ pub fn run(
 fn plan(ctx: &output::Context, args: &DeployArgs) -> Result<()> {
     let root = super::resolve_project_root(&args.lifecycle.path)?;
     let manifest = read_manifest(&root)?;
-    let os = current_target_os()?;
+    let platform = NativePlatform::current()?;
+    let os = current_target_os(platform);
     let Some(resolution) = resolve_profile(
         manifest.deploy.as_ref(),
         args.profile.as_deref(),
@@ -116,7 +121,8 @@ fn plan(ctx: &output::Context, args: &DeployArgs) -> Result<()> {
     let roots = state_roots()?;
     let (user_home, clients) = client_authority()?;
     let targets = deploy_targets(&manifest);
-    let reports = plan_deploy_targets(&DeployExecution {
+    let created_at = now();
+    let execution = DeployExecution {
         project_root: &root,
         targets: &targets,
         selection: resolution.selection(),
@@ -128,8 +134,10 @@ fn plan(ctx: &output::Context, args: &DeployArgs) -> Result<()> {
         clients: &clients,
         project: &identity(&manifest),
         package: None,
-        created_at: &now(),
-    })?;
+        created_at: &created_at,
+    };
+    let prepared = rehydrate(&execution, platform)?;
+    let reports = prepared.plan_deploy_targets(&execution)?;
     render_plan(ctx, &resolution, &reports)
 }
 
@@ -155,7 +163,9 @@ pub fn run_undeploy(ctx: &output::Context, args: UndeployArgs) -> Result<()> {
     let roots = state_roots()?;
     let (user_home, clients) = client_authority()?;
     let targets = deploy_targets(&manifest);
-    let removals = undeploy_targets(&DeployExecution {
+    let platform = NativePlatform::current()?;
+    let created_at = now();
+    let execution = DeployExecution {
         project_root: &root,
         targets: &targets,
         selection: resolution.selection(),
@@ -167,9 +177,36 @@ pub fn run_undeploy(ctx: &output::Context, args: UndeployArgs) -> Result<()> {
         clients: &clients,
         project: &identity(&manifest),
         package: None,
-        created_at: &now(),
-    })?;
+        created_at: &created_at,
+    };
+    let prepared = rehydrate(&execution, platform)?;
+    let removals = prepared.undeploy_targets(&execution)?;
     render_removals(ctx, resolution.selection(), &removals)
+}
+
+fn rehydrate(
+    execution: &DeployExecution<'_>,
+    platform: NativePlatform,
+) -> Result<PreparedNativeMechanisms> {
+    let targets = execution
+        .targets
+        .iter()
+        .filter(|target| execution.selection.targets.contains(&target.id))
+        .cloned()
+        .collect::<Vec<_>>();
+    let plan = project_native_mechanisms(&[], &targets, execution.registry, execution.routes)?;
+    let native = NativeBuildExecution {
+        candidates: &[],
+        selected_project_root: execution.project_root,
+        registry: execution.registry,
+        routes: execution.routes,
+        platform,
+        offline: true,
+        created_at: execution.created_at,
+    };
+    let prepared = preflight_native_mechanisms(plan, &native)?.rehydrate(&native)?;
+    prepared.validate_restart(execution)?;
+    Ok(prepared)
 }
 
 /// `vibe deployments [--json]` — the machine's receipts, and nothing else.
@@ -369,10 +406,12 @@ fn guard_text(decision: &TargetApplicability) -> String {
 }
 
 /// Observe the process OS at the command boundary and nowhere below it.
-fn current_target_os() -> Result<TargetOs> {
-    TargetOs::current().context(
-        "this host OS is outside the supported deploy applicability set: windows, linux, macos",
-    )
+fn current_target_os(platform: NativePlatform) -> TargetOs {
+    match platform {
+        NativePlatform::WindowsX86_64 => TargetOs::Windows,
+        NativePlatform::LinuxX86_64 => TargetOs::Linux,
+        NativePlatform::MacosAarch64 => TargetOs::Macos,
+    }
 }
 
 /// Render one inverse deployment.

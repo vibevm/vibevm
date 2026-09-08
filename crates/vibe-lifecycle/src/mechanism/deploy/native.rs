@@ -12,9 +12,9 @@ use vibe_wire::generated::native::e1::{deploy_reply as reply, deploy_request as 
 
 use super::protocol::{
     ApplyReport, DeployDescriptor, DeployFingerprint, DeployPlan, DeployProvider,
-    DeployTargetRequest, ObservedResource, PlannedDeployResource, RemoveReport, artifact_kind,
-    authority, effect, network, operation, prior_receipt, privilege, recovery_intent,
-    reversibility, wire_artifact, wire_path, wire_plan,
+    DeployTargetRequest, NativeProviderBinding, ObservedResource, PlannedDeployResource,
+    RemoveReport, artifact_kind, authority, effect, network, operation, prior_receipt, privilege,
+    recovery_intent, reversibility, wire_artifact, wire_path, wire_plan,
 };
 use crate::mechanism::deploy::ledger::CheckpointLedger;
 use crate::mechanism::error::deploy::{
@@ -29,6 +29,7 @@ use crate::native::{NativeMechanismBinding, PreparedNativeMechanism};
 
 pub(super) struct NativeDeployProvider {
     mechanism: NativeMechanism,
+    binding: NativeProviderBinding,
     provider: String,
     kinds: Vec<ArtifactKind>,
     operations: Vec<ProviderOperation>,
@@ -46,6 +47,7 @@ impl NativeDeployProvider {
         prepared: &PreparedNativeMechanism,
         binding: &NativeMechanismBinding,
         target: &DeployTarget,
+        project_root: &std::path::Path,
     ) -> Result<Self, MechanismError> {
         if binding.protocol != PROTOCOL_EPOCH {
             return Err(native_fault(
@@ -55,6 +57,8 @@ impl NativeDeployProvider {
                 "prepared binding protocol differs from native deploy protocol 1",
             ));
         }
+        let restart = super::sidecar::restart_binding(prepared, binding, project_root)
+            .map_err(|error| native_fault(&target.id, &binding.pin, "admit", &error))?;
         let mechanism = prepared
             .admit(binding)
             .map_err(|error| native_fault(&target.id, &binding.pin, "admit", &error.to_string()))?;
@@ -81,6 +85,7 @@ impl NativeDeployProvider {
             atomic_replacement: descriptor.atomic_replacement,
             reference_ownership: descriptor.reference_ownership,
             mechanism,
+            binding: restart,
             provider: binding.pin.clone(),
             planned: Mutex::new(Vec::new()),
         })
@@ -191,6 +196,10 @@ impl DeployProvider for NativeDeployProvider {
             atomic_replacement: self.atomic_replacement,
             reference_ownership: self.reference_ownership,
         }
+    }
+
+    fn native_binding(&self) -> Option<&NativeProviderBinding> {
+        Some(&self.binding)
     }
 
     fn plan(&self, call: &DeployTargetRequest<'_>) -> Result<DeployPlan, MechanismError> {

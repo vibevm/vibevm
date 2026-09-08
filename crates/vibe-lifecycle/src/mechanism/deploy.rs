@@ -1,27 +1,4 @@
-//! The deploy phase's mechanism executor — §7.0's third mechanism-role engine.
-//!
-//! Prepared native bindings are consumed directly; every other target uses
-//! the one resolver, dependency walk, containment cell and record reader.
-//! Four things are this phase's own:
-//! 1. **the profile selection is DATA.** §7.0.5 resolves it once, in the
-//!    command layer that owns flags, and this executor consumes it. There
-//!    is no environment read, no `default_profile` walk and no
-//!    exactly-one rule anywhere below this line — the engine cannot
-//!    re-derive what it was told;
-//! 2. **every selected plan is made before the first apply.** §6.3.0.10's
-//!    pre-apply epoch is a transaction PREREQUISITE, not a preview: it
-//!    resolves every artifact, calls every provider's `plan`, judges the
-//!    whole owned/lock resource set through the shared physical identity,
-//!    and only then may target 0 touch anything. Apply reuses exactly what
-//!    it produced ([`preplan`]);
-//! 3. **the destination is transacted, not written.** Every applied target
-//!    goes through [`transaction`], whose order is §7.2's;
-//! 4. **a failed multi-target run is a saga.** Already-applied REVERSIBLE
-//!    targets are rolled back in reverse order; an irreversible one stays
-//!    visible as partial, and the run reports both lists rather than a
-//!    success.
-//!
-//! [`resolve_mechanism`]: vibe_extension_registry::resolve_mechanism
+//! Deploy provider selection, transaction, inverse, and restart admission.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS");
 
@@ -80,12 +57,7 @@ use saga::unwind;
 use state::{DeployState, DeploymentHome};
 use transaction::Transaction;
 
-/// Deploy every selected target, in dependency order.
-///
-/// The canonical use is on [`DeployExecution`]. A selection with no
-/// targets deploys nothing and says so, which is what makes an ordinary
-/// `vibe deploy` on a project that declares no deploy section
-/// byte-identical to the historical run.
+/// Deploy every selected target in dependency order.
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS")]
 pub fn execute_deploy_targets(
     execution: &DeployExecution<'_>,
@@ -102,12 +74,15 @@ pub(crate) fn execute_prepared_deploy_targets(
     apply_selection(execution, &resolved)
 }
 
-/// Reverse every selected target, in reverse dependency order.
-///
-/// §7.2: "`undeploy` removes only receipt-owned state and refuses to erase
-/// a path changed after deployment without an explicit force/recovery
-/// decision." The drift refusal is the ENGINE's and fires before the
-/// provider is asked to remove anything.
+pub(crate) fn plan_prepared_deploy_targets(
+    execution: &DeployExecution<'_>,
+    prepared: &crate::native::PreparedNativeMechanisms,
+) -> Result<Vec<DeployPlanReport>, DeployError> {
+    let resolved = resolve_selection_with(execution, Some(prepared))?;
+    plan::plan_resolved(execution, &resolved)
+}
+
+/// Reverse every selected target in reverse dependency order.
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS")]
 pub fn undeploy_targets(
     execution: &DeployExecution<'_>,
@@ -124,7 +99,6 @@ pub(crate) fn undeploy_prepared_targets(
     undeploy_resolved(execution, &resolved)
 }
 
-/// Receipt-only deployments in deployment-id order.
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS")]
 pub fn list_deployments(state_home: &Path) -> Result<Vec<DeploymentRow>, DeployError> {
     let state = DeployState::open(state_home)?;
@@ -135,7 +109,6 @@ pub fn list_deployments(state_home: &Path) -> Result<Vec<DeploymentRow>, DeployE
         .collect())
 }
 
-/// One resolved target: the row, the provider, and the routing decision.
 pub(crate) struct Selected<'a> {
     pub(crate) target: &'a DeployTarget,
     pub(crate) provider: Box<dyn DeployProvider>,
@@ -163,7 +136,6 @@ impl GraphNode for Selected<'_> {
     }
 }
 
-/// Resolve selected targets and providers in dependency order.
 fn resolve_selection<'a>(
     execution: &DeployExecution<'a>,
 ) -> Result<Vec<Selected<'a>>, DeployError> {
@@ -188,7 +160,12 @@ fn resolve_selection_with<'a>(
         if let Some((entry, binding)) = prepared_binding(prepared, target)? {
             selected.push(Selected {
                 target,
-                provider: Box::new(native::NativeDeployProvider::new(entry, binding, target)?),
+                provider: Box::new(native::NativeDeployProvider::new(
+                    entry,
+                    binding,
+                    target,
+                    execution.project_root,
+                )?),
                 pin: binding.pin.clone(),
                 via: binding.via,
                 displaced: binding.displaced_default.clone(),
@@ -264,7 +241,78 @@ fn prepared_binding<'a>(
     Ok(found)
 }
 
-/// Closed builtin dispatch; every foreign handler refuses without fallback.
+pub(crate) fn validate_restart(
+    execution: &DeployExecution<'_>,
+    prepared: &crate::native::PreparedNativeMechanisms,
+) -> Result<(), DeployError> {
+    let state = view::DeployStateView::open(execution.state_home)?;
+    for id in &execution.selection.targets {
+        let target = execution
+            .targets
+            .iter()
+            .find(|target| target.id == *id)
+            .ok_or_else(|| DeployError::UnknownTarget {
+                profile: execution.selection.profile.clone(),
+                target: id.clone(),
+                declared: declared(execution.targets),
+            })?;
+        let selected = resolve_mechanism(
+            execution.registry,
+            &target.mechanism,
+            target.provider.as_ref(),
+            execution.routes,
+        )?;
+        let pin = selected.row().pin().to_string();
+        let current = prepared_binding(Some(prepared), target)?
+            .map(|(entry, binding)| {
+                sidecar::restart_binding(entry, binding, execution.project_root)
+            })
+            .transpose()
+            .map_err(|error| restart_error(target, &pin, &error.to_string()))?;
+        if matches!(selected.row().handler(), ExtensionHandler::Native { .. }) != current.is_some()
+        {
+            return Err(restart_error(
+                target,
+                &pin,
+                "current selected transport differs from the rehydrated binding",
+            ));
+        }
+        let home = home_of(execution, &target.id);
+        let receipt = state.read_receipt(&home)?;
+        let intent = state.read_intent(&home)?;
+        let sidecar = state.read_lock_resources(&home)?;
+        if let Some(receipt) = receipt.as_ref() {
+            if receipt.provider.key != pin {
+                return Err(restart_error(target, &pin, "receipt provider pin changed"));
+            }
+            let committed = sidecar
+                .as_ref()
+                .and_then(|record| record.committed.as_ref())
+                .filter(|binding| binding.generation == receipt.generation);
+            sidecar::compare_restart(
+                target,
+                &pin,
+                current.as_ref(),
+                committed,
+                Some(receipt),
+                "receipt",
+            )?;
+        }
+        if let Some(intent) = intent.as_ref() {
+            let pending = sidecar
+                .as_ref()
+                .and_then(|record| record.pending.as_ref())
+                .filter(|binding| binding.matches(intent.target.generation, &intent.plan_hash));
+            sidecar::compare_restart(target, &pin, current.as_ref(), pending, None, "intent")?;
+        }
+    }
+    Ok(())
+}
+
+fn restart_error(target: &DeployTarget, pin: &str, reason: &str) -> DeployError {
+    native_transport(&target.id, pin, "rehydrate", reason).into()
+}
+
 pub(super) fn builtin_provider(
     handler: &ExtensionHandler,
     key: &str,
@@ -309,18 +357,7 @@ pub(super) fn builtin_provider(
     }
 }
 
-/// Apply one already-resolved selection: §6.3.0.10's pre-apply epoch, then
-/// the §7.2 saga.
-///
-/// Separated from [`resolve_selection`] so the saga's own laws — reverse
-/// rollback, the irreversible partial — are provable with hermetic
-/// providers. Selection still happens in exactly one place; this half
-/// receives its result and never re-derives it.
-///
-/// The [`preplan`] call is INSIDE this function rather than beside it
-/// because that is what makes its promise checkable: there is no order of
-/// calls a caller could choose in which target 0 applies before target 1
-/// has been planned and judged.
+/// Run the pre-apply epoch, then the deploy saga.
 pub(crate) fn apply_selection(
     execution: &DeployExecution<'_>,
     resolved: &[Selected<'_>],
@@ -336,13 +373,6 @@ pub(crate) fn apply_selection(
     apply_prepared(execution, resolved, &prepared)
 }
 
-/// Apply what the pre-apply epoch already prepared.
-///
-/// Separated from [`apply_selection`] so §6.3.1.1's recheck is provable:
-/// the window it closes is *between* preplanning and applying, and a
-/// function that owns both ends has no such window a test can open. Every
-/// shipped caller still goes through [`apply_selection`], which composes the
-/// two in the only order the law admits.
 pub(crate) fn apply_prepared(
     execution: &DeployExecution<'_>,
     resolved: &[Selected<'_>],
@@ -354,7 +384,6 @@ pub(crate) fn apply_prepared(
     let state = DeployState::open(execution.state_home)?;
     let identity = identity_of(execution);
     let mut outcomes: Vec<DeployOutcome> = Vec::with_capacity(resolved.len());
-    // What has been applied so far, newest last — the saga's stack.
     let mut applied: Vec<(usize, DeployReceipt)> = Vec::new();
     for ((index, selected), planned) in resolved.iter().enumerate().zip(prepared) {
         match apply_one(execution, &state, &identity, selected, planned) {
@@ -377,16 +406,6 @@ pub(crate) fn apply_prepared(
     Ok(outcomes)
 }
 
-/// One target's whole apply: lock the deployment, lock the PREPLANNED and
-/// recorded destinations, re-read prior ownership, transact.
-///
-/// The artifact and the plan arrive from the pre-apply epoch and are not
-/// recomputed (§6.3.0.10: "Reuse the resulting values during apply; do not
-/// resolve or plan a second time"). What is still this function's is the
-/// lock ORDER — §6.3.1.3's deployment-state lock, then the canonical union
-/// of the current plan's, the committed and the pending destinations — the
-/// §6.3.1.1 recheck those locks make meaningful, and the staging directory,
-/// which is apply-time scratch by definition.
 fn apply_one(
     execution: &DeployExecution<'_>,
     state: &DeployState,
@@ -398,24 +417,14 @@ fn apply_one(
     let artifact = &planned.artifact;
     let plan = &planned.plan;
     let descriptor = selected.provider.descriptor();
-    // §6.3.1.3, in the order it states: the stable deployment-state lock
-    // FIRST, so every sidecar, intent and receipt transition below is this
-    // run's alone.
     let _deployment = state.lock_deployment(&home)?;
-    // Prior ownership is the first state judgement under that lock. In
-    // particular it precedes the legacy pending-binding repair below: a
-    // plan made against a receipt that changed may not write even an
-    // engine-owned sidecar before it refuses.
     refuse_changed_ownership(state, &home, selected, planned)?;
-    // Then the durable bindings — including the typed fallback an
-    // interrupted ORDINARY deployment needs before its recovery may take
-    // the physical locks its journal implies.
-    let bindings = sidecar::settle_bindings(state, &home, ownership_of(selected))?;
-    // §6.3.0.9: the locks are the plan's PHYSICAL set, which for every
-    // ordinary provider is its owned set and for a reference owner is the
-    // shared document it holds while it edits its own member — UNION the
-    // committed and pending bindings, because an update reconciles a new
-    // destination set while the previous one is still deployed.
+    let bindings = sidecar::settle_bindings(
+        state,
+        &home,
+        ownership_of(selected),
+        selected.provider.native_binding(),
+    )?;
     let _guards = state.lock_destinations(&sidecar::union(plan, &bindings))?;
     let resources: Vec<String> = plan
         .resources
@@ -436,12 +445,6 @@ fn apply_one(
         user_home: execution.user_home,
         clients: execution.clients,
         prior_receipt: planned.prior_receipt.as_ref(),
-        // Deliberately `None`: the recovery intent is settlement-
-        // reachability EVIDENCE for a plan, and this is the apply-time
-        // request. The locked occupant recheck inside `apply` stays
-        // receipt-only; the transaction settles whatever journal is
-        // unretired under its own plan-hash law before this request is
-        // ever built into a write.
         recovery_intent: None,
         artifact: Some(artifact),
         staging: staging.as_deref(),
@@ -483,7 +486,6 @@ fn apply_one(
     ))
 }
 
-/// This deployment's own directory inside the state home.
 fn home_of(execution: &DeployExecution<'_>, target: &str) -> DeploymentHome {
     DeploymentHome::new(
         execution.state_home,
@@ -493,7 +495,6 @@ fn home_of(execution: &DeployExecution<'_>, target: &str) -> DeploymentHome {
     )
 }
 
-/// The project/package identity every record of this run is keyed under.
 fn identity_of(execution: &DeployExecution<'_>) -> DeployIdentity {
     DeployIdentity {
         project: execution.project.to_owned(),
@@ -501,7 +502,6 @@ fn identity_of(execution: &DeployExecution<'_>) -> DeployIdentity {
     }
 }
 
-/// The selection, in dependency order.
 pub(super) fn order(selected: Vec<Selected<'_>>) -> Result<Vec<Selected<'_>>, DeployError> {
     let indices = dag_order(&selected, Unresolved::Refuse).map_err(|fault| match fault {
         OrderFault::Cycle { cycle } => DeployError::Cycle { cycle },
@@ -525,7 +525,6 @@ pub(super) fn order(selected: Vec<Selected<'_>>) -> Result<Vec<Selected<'_>>, De
     Ok(result)
 }
 
-/// The displaced builtin default, when a replacement really replaced one.
 pub(super) fn displaced(selection: &MechanismSelection<'_>) -> Option<String> {
     match selection.via() {
         SelectionStep::BuiltinDefault => None,
@@ -535,7 +534,6 @@ pub(super) fn displaced(selection: &MechanismSelection<'_>) -> Option<String> {
     }
 }
 
-/// The declared target ids, for a refusal that names what IS available.
 pub(super) fn declared(targets: &[DeployTarget]) -> String {
     if targets.is_empty() {
         return "none declared".to_owned();
@@ -547,8 +545,6 @@ pub(super) fn declared(targets: &[DeployTarget]) -> String {
         .join(", ")
 }
 
-// The hermetic provider every §7.2 law is proven against, and the world it
-// is proven inside — two cells, because they answer two questions.
 #[cfg(test)]
 #[path = "deploy/fixture.rs"]
 pub(crate) mod fixture;
@@ -581,8 +577,6 @@ mod lock_tests;
 #[path = "deploy/saga_tests.rs"]
 mod saga_tests;
 
-// §6.3.1's own three laws, one cell each: the injected prior ownership, the
-// durable lock sidecar's crash windows, and the inverse that reads it.
 #[cfg(test)]
 #[path = "deploy/prior_receipt_tests.rs"]
 mod prior_receipt_tests;

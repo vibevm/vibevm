@@ -240,6 +240,60 @@ pub(super) fn publish_load_image(
     verify_load_image(&root, &destination, expected_digest, expected_bytes)
 }
 
+/// Locate and revalidate an already-published immutable image without creating
+/// directories, copying bytes, or repairing any state.
+pub(super) fn existing_load_image(
+    selected_project_root: &Path,
+    source: &Path,
+    expected_digest: &str,
+    expected_bytes: u64,
+) -> Result<PathBuf, NativeArtifactError> {
+    if !valid_lower_hex_64(expected_digest) {
+        return Err(load_image_error(
+            source,
+            "artifact digest is not exactly 64 lowercase hex characters".to_owned(),
+        ));
+    }
+    let basename = source
+        .file_name()
+        .and_then(|name| name.to_str())
+        .filter(|name| !name.is_empty())
+        .ok_or_else(|| load_image_error(source, "artifact basename is not valid UTF-8".into()))?;
+    let root = selected_project_root.canonicalize().map_err(|error| {
+        load_image_error(
+            selected_project_root,
+            format!("canonicalizing selected project root: {error}"),
+        )
+    })?;
+    let mut directory = root.clone();
+    for component in LOAD_IMAGE_DIR.into_iter().chain([expected_digest]) {
+        let candidate = directory.join(component);
+        let metadata = std::fs::symlink_metadata(&candidate)
+            .map_err(|error| load_image_error(&candidate, error.to_string()))?;
+        if metadata.file_type().is_symlink() || !metadata.file_type().is_dir() {
+            return Err(load_image_error(
+                &candidate,
+                "cache component is a link or not a directory".to_owned(),
+            ));
+        }
+        directory = candidate
+            .canonicalize()
+            .map_err(|error| load_image_error(&candidate, error.to_string()))?;
+        if directory.strip_prefix(&root).is_err() {
+            return Err(load_image_error(
+                &candidate,
+                "cache component escapes the selected project root".to_owned(),
+            ));
+        }
+    }
+    verify_load_image(
+        &root,
+        &directory.join(basename),
+        expected_digest,
+        expected_bytes,
+    )
+}
+
 fn ensure_load_directory(
     root: &Path,
     parent: &Path,

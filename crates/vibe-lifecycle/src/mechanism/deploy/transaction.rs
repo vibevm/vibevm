@@ -17,18 +17,8 @@
 //! > the exact resources. A receipt plus its still-present matching intent
 //! > is a benign crash after finalization: retire the intent.
 //!
-//! Providers see destinations only after durable intent; receipts follow
-//! independent observation, never an apply claim.
-//!
-//! A stale unretired plan still runs the three-digest law, then retires
-//! without roll-forward; the new plan applies only over a proven old state.
-//!
-//! §6.3.1.2 adds ONE record to that order and does not otherwise disturb it:
-//! the durable lock sidecar's PENDING binding, published and read back
-//! before the intent — and therefore before any external write could have
-//! begun — and promoted to COMMITTED only after the receipt is durable. Each
-//! of the four settlements below moves exactly one slot of it, and every
-//! transition runs under the deployment-state lock this cell's caller holds.
+//! Provider state and native restart identity are staged beside lock resources
+//! before intent, promoted after receipt, and cleared by the same settlements.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS");
 
@@ -150,6 +140,7 @@ impl Transaction<'_> {
             generation,
             &plan_hash,
             &plan.lock_resources,
+            provider.native_binding(),
         )?;
         // 2 — the durable intent, ATOMICALLY, before the first external
         // write. Every planned resource carries the digest the plan wants
@@ -330,6 +321,7 @@ impl Transaction<'_> {
             ReceiptStatus::Failed
         };
         let receipt = self.receipt(
+            provider,
             request,
             plan,
             generation.number,
@@ -468,6 +460,7 @@ impl Transaction<'_> {
     #[allow(clippy::too_many_arguments, reason = "§7.2's own record list")]
     fn receipt(
         &self,
+        provider: &dyn DeployProvider,
         request: &DeployTargetRequest<'_>,
         plan: &DeployPlan,
         generation: u32,
@@ -493,8 +486,12 @@ impl Transaction<'_> {
             profile: request.profile.to_owned(),
             provider: ProviderIdentity {
                 key: self.provider_pin.to_owned(),
-                version: None,
-                content_hash: None,
+                version: provider
+                    .native_binding()
+                    .map(|binding| binding.provider_version.clone()),
+                content_hash: provider
+                    .native_binding()
+                    .and_then(|binding| binding.provider_hash.clone()),
             },
             resources: owned.to_vec(),
             reversible: plan.reversible,

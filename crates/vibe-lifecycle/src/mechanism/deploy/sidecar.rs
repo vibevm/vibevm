@@ -1,50 +1,109 @@
-//! The engine-owned durable lock sidecar — §6.3.1.2's
-//! `lock-resources.json`, and the whole algebra of its two generations.
-//!
-//! §6.3.0.9 admitted a provider that owns a LOGICAL member of a shared
-//! physical destination while locking the document itself, and §7.2's record
-//! list is the OWNED set — so the physical lock lived only inside a plan,
-//! and a plan does not survive to recovery or undeploy time. §6.3.1.2 closes
-//! exactly that gap:
-//!
-//! > "The strict-serde epoch-1 `lock-resources.json` is engine-owned and
-//! > outside the JTD intent and receipt wires. Each binding carries
-//! > generation, plan hash and exact physical lock resources. A pending
-//! > binding is durable before its matching intent and therefore before the
-//! > first external write; finalisation promotes it to committed only after
-//! > the receipt is durable. The old committed binding is retained
-//! > throughout an update, so no crash window loses the inverse lock."
-//!
-//! Three decisions shape this cell:
-//!
-//! 1. **it is an ENGINE sidecar, never a wire record.** The intent and the
-//!    receipt are frozen A2 shapes with `deny_unknown_fields`; a lock
-//!    resource added to either would change a published contract to record
-//!    something no reader of it may act on. So this record has its own file,
-//!    its own epoch and its own strict shape, exactly as the checkpoint
-//!    ledger next door does and for the same reason;
-//! 2. **the stored spelling is the provider's own.** Locks are already
-//!    sorted and deduplicated by the shared physical identity where they are
-//!    TAKEN ([`DeployState::lock_destinations`]), so normalising them here
-//!    would be a second identity law over the same values — and would lose
-//!    the exact spelling a refusal has to quote;
-//! 3. **every transition below runs under the deployment-state lock.** They
-//!    are read-modify-write pairs over one file, and the caller holds
-//!    [`DeployState::lock_deployment`] before it reaches any of them.
-//!
-//! [`DeployState::lock_destinations`]: super::state::DeployState::lock_destinations
-//! [`DeployState::lock_deployment`]: super::state::DeployState::lock_deployment
+//! Strict engine-owned committed/pending lock and native-provider bindings.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS");
 
 use std::collections::BTreeMap;
+use std::path::Path;
 
 use serde::{Deserialize, Serialize};
 use vibe_wire::generated::deploy_receipt::DeployReceipt;
 
 use super::error::DeployError;
-use super::protocol::DeployPlan;
+use super::protocol::{DeployPlan, NativeProviderBinding};
 use super::state::{DeployState, DeploymentHome};
+use crate::native::{
+    NativeArtifactOrigin, NativeArtifactRecordRoot, NativeMechanismBinding, PreparedNativeMechanism,
+};
+
+pub(super) fn compare_restart(
+    target: &vibe_core::manifest::DeployTarget,
+    pin: &str,
+    current: Option<&NativeProviderBinding>,
+    durable: Option<&LockBinding>,
+    receipt: Option<&DeployReceipt>,
+    record: &str,
+) -> Result<(), DeployError> {
+    let stored = durable.and_then(|binding| binding.native.as_ref());
+    if current != stored && (current.is_some() || stored.is_some()) {
+        return Err(restart_fault(
+            target,
+            pin,
+            &format!("{record} native binding changed"),
+        ));
+    }
+    if let (Some(current), Some(receipt)) = (current, receipt)
+        && (receipt.provider.version.as_deref() != Some(&current.provider_version)
+            || receipt.provider.content_hash != current.provider_hash)
+    {
+        return Err(restart_fault(
+            target,
+            pin,
+            "receipt provider version or hash changed",
+        ));
+    }
+    Ok(())
+}
+
+fn restart_fault(
+    target: &vibe_core::manifest::DeployTarget,
+    pin: &str,
+    reason: &str,
+) -> DeployError {
+    crate::mechanism::error::deploy::native_transport(&target.id, pin, "rehydrate", reason).into()
+}
+
+pub(super) fn restart_binding(
+    prepared: &PreparedNativeMechanism,
+    binding: &NativeMechanismBinding,
+    root: &Path,
+) -> Result<NativeProviderBinding, String> {
+    let root = root.canonicalize().map_err(|error| error.to_string())?;
+    let relative = |path: &Path| {
+        let canonical = path.canonicalize().map_err(|error| error.to_string())?;
+        canonical
+            .strip_prefix(&root)
+            .map(|path| {
+                if path.as_os_str().is_empty() {
+                    ".".to_owned()
+                } else {
+                    crate::mechanism::contain::forward_slashed(path)
+                }
+            })
+            .map_err(|_| "native restart path escapes the selected project".to_owned())
+    };
+    let record_id = prepared.record.as_ref().and_then(|path| {
+        Path::new(path)
+            .file_stem()
+            .and_then(|value| value.to_str())
+            .map(str::to_owned)
+    });
+    Ok(NativeProviderBinding {
+        target: binding.target.clone(),
+        mechanism: binding.key.to_string(),
+        pin: binding.pin.clone(),
+        descriptor_id: binding.descriptor_id.clone(),
+        protocol: binding.protocol,
+        provider_version: prepared.provider_version.clone(),
+        provider_hash: prepared.provider_hash.clone(),
+        provider_root: relative(&prepared.provider_root)?,
+        platform: prepared.platform.key().to_owned(),
+        record_root: match prepared.record_root {
+            NativeArtifactRecordRoot::Project => "project",
+            NativeArtifactRecordRoot::Slot => "slot",
+        }
+        .to_owned(),
+        origin: match prepared.origin {
+            NativeArtifactOrigin::Prebuilt => "prebuilt",
+            NativeArtifactOrigin::SourceRecord => "source-record",
+        }
+        .to_owned(),
+        record_id,
+        record_path: prepared.record.clone(),
+        image: relative(&prepared.image)?,
+        image_digest: prepared.digest.clone(),
+        image_bytes: prepared.bytes,
+    })
+}
 
 /// The sidecar's file name inside a deployment's own directory.
 pub(crate) const LOCK_RESOURCES_FILE: &str = "lock-resources.json";
@@ -90,6 +149,9 @@ pub(crate) struct LockBinding {
     /// The exact physical lock resource spellings, in the provider's own
     /// declared order.
     pub(crate) resources: Vec<String>,
+    /// Exact native runtime identity, absent for builtin providers.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub(crate) native: Option<NativeProviderBinding>,
 }
 
 /// Who is asking, in the two facts every sidecar law reads.
@@ -176,8 +238,71 @@ impl LockBinding {
                 )));
             }
         }
+        if let Some(native) = &self.native {
+            validate_native(native, slot)?;
+        }
         Ok(())
     }
+}
+
+fn validate_native(value: &NativeProviderBinding, slot: &str) -> Result<(), DeployError> {
+    let invalid_value = |reason: &str| invalid(format!("the {slot} native binding {reason}"));
+    let pin = vibe_core::manifest::ProviderPin::parse(&value.pin)
+        .map_err(|_| invalid_value("has an invalid provider pin"))?;
+    value
+        .mechanism
+        .parse::<vibe_core::manifest::MechanismKey>()
+        .map_err(|_| invalid_value("has an invalid logical mechanism key"))?;
+    if pin.id() != value.descriptor_id || value.protocol != 1 {
+        return Err(invalid_value("has a mismatched descriptor or protocol"));
+    }
+    for scalar in [&value.target, &value.provider_version] {
+        if scalar.trim().is_empty() || scalar.chars().any(char::is_control) {
+            return Err(invalid_value("has a blank or control-bearing scalar"));
+        }
+    }
+    if value
+        .provider_hash
+        .as_deref()
+        .is_some_and(|hash| vibe_core::ContentHash::parse(hash).is_err())
+        || crate::native::NativePlatform::from_key(&value.platform).is_err()
+        || !matches!(value.record_root.as_str(), "project" | "slot")
+        || !matches!(value.origin.as_str(), "prebuilt" | "source-record")
+        || value.image_bytes == 0
+        || !digest(&value.image_digest)
+    {
+        return Err(invalid_value(
+            "has invalid provider, platform, origin, or image facts",
+        ));
+    }
+    for path in [&value.provider_root, &value.image] {
+        if !relative(path) {
+            return Err(invalid_value("has a non-canonical relative path"));
+        }
+    }
+    match (&value.record_id, &value.record_path, value.origin.as_str()) {
+        (None, None, "prebuilt") => {}
+        (Some(id), Some(path), "source-record")
+            if digest(id) && path == &format!(".vibe/state/artifacts/{id}.json") => {}
+        _ => return Err(invalid_value("has an invalid record/origin matrix")),
+    }
+    Ok(())
+}
+
+fn relative(value: &str) -> bool {
+    value == "."
+        || (!value.is_empty()
+        && std::path::Path::new(value).components().all(|component| {
+            matches!(component, std::path::Component::Normal(part) if !part.is_empty())
+        })
+        && !value.contains('\\'))
+}
+
+fn digest(value: &str) -> bool {
+    value.len() == 64
+        && value
+            .bytes()
+            .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte))
 }
 
 /// Publish `pending = current` while RETAINING `committed` — §6.3.1.2's
@@ -193,6 +318,7 @@ pub(crate) fn stage_pending(
     generation: u32,
     plan_hash: &str,
     resources: &[String],
+    native: Option<&NativeProviderBinding>,
 ) -> Result<(), DeployError> {
     let mut record = state
         .read_lock_resources(home)?
@@ -201,6 +327,7 @@ pub(crate) fn stage_pending(
         generation,
         plan_hash: plan_hash.to_owned(),
         resources: resources.to_vec(),
+        native: native.cloned(),
     });
     state.write_lock_resources(home, &record)
 }
@@ -309,6 +436,7 @@ pub(crate) fn settle_bindings(
     state: &DeployState,
     home: &DeploymentHome,
     owner: Ownership<'_>,
+    native: Option<&NativeProviderBinding>,
 ) -> Result<LockResources, DeployError> {
     let mut record = state
         .read_lock_resources(home)?
@@ -316,19 +444,24 @@ pub(crate) fn settle_bindings(
     let Some(intent) = state.read_intent(home)? else {
         return Ok(record);
     };
-    if record
+    if let Some(pending) = record
         .pending
         .as_ref()
-        .is_some_and(|pending| pending.matches(intent.target.generation, &intent.plan_hash))
+        .filter(|pending| pending.matches(intent.target.generation, &intent.plan_hash))
     {
+        if pending.native.as_ref() != native {
+            return Err(invalid(
+                "the interrupted native provider binding changed".to_owned(),
+            ));
+        }
         return Ok(record);
     }
-    if owner.reference {
+    if owner.reference || native.is_some() {
         return Err(DeployError::LockSidecarMissing {
             target: owner.target.to_owned(),
             pin: owner.pin.to_owned(),
             sidecar: LOCK_RESOURCES_FILE,
-            operation: "settling an interrupted deployment",
+            operation: "settling an interrupted or native deployment",
         });
     }
     // This is both the interrupted-intent legacy repair and the benign
@@ -344,6 +477,7 @@ pub(crate) fn settle_bindings(
             .iter()
             .map(|planned| planned.resource.clone())
             .collect(),
+        native: None,
     });
     state.write_lock_resources(home, &record)?;
     Ok(record)

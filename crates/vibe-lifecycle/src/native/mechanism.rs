@@ -13,7 +13,8 @@ use vibe_native_loader::{NativeLoadError, NativeMechanism};
 
 use super::cargo::build_cdylib;
 use super::path::{
-    VerifiedFile, prebuilt_file, publish_load_image, relative_spelling, source_crate,
+    VerifiedFile, existing_load_image, prebuilt_file, publish_load_image, relative_spelling,
+    source_crate,
 };
 use super::provider::{ProviderFacts, ProviderHome, mechanism_facts};
 use super::record::{
@@ -53,7 +54,6 @@ impl NativeMechanismPlan {
     pub fn is_empty(&self) -> bool {
         self.entries.is_empty()
     }
-
     #[must_use]
     pub fn entry_count(&self) -> usize {
         self.entries.len()
@@ -214,6 +214,20 @@ impl PreparedNativeMechanism {
 }
 
 impl PreparedNativeMechanisms {
+    pub fn plan_deploy_targets(
+        &self,
+        execution: &crate::DeployExecution<'_>,
+    ) -> Result<Vec<crate::DeployPlanReport>, crate::DeployError> {
+        crate::mechanism::deploy::plan_prepared_deploy_targets(execution, self)
+    }
+
+    pub fn validate_restart(
+        &self,
+        execution: &crate::DeployExecution<'_>,
+    ) -> Result<(), crate::DeployError> {
+        crate::mechanism::deploy::validate_restart(execution, self)
+    }
+
     /// Execute the selected deploy set through this process's prepared images.
     pub fn execute_deploy_targets(
         &self,
@@ -422,41 +436,100 @@ impl NativeMechanismPreflight {
                 resolved[index] = Some((file.clone(), NativeArtifactOrigin::Prebuilt, None));
             }
         }
-        let mut entries = Vec::with_capacity(self.plan.entries.len());
-        for (index, planned) in self.plan.entries.into_iter().enumerate() {
-            let artifact = self.artifacts.get(index);
-            let provider = artifact
-                .map(|value| &value.provider)
-                .ok_or_else(|| selection_error("prepared mechanism lost provider provenance"))?;
-            let (file, origin, record) = resolved[index]
-                .take()
-                .ok_or_else(|| selection_error("prepared mechanism lost its artifact"))?;
-            let image = publish_load_image(
+        finish(self.plan, &self.artifacts, resolved, execution, |file| {
+            publish_load_image(
                 execution.selected_project_root,
                 &file.absolute,
                 &file.digest,
                 file.bytes,
-            )?;
-            entries.push(PreparedNativeMechanism {
-                bindings: planned.bindings,
-                provider: provider.identity.clone(),
-                provider_version: provider.version.clone(),
-                provider_hash: provider.content_hash.clone(),
-                provider_root: provider.root.clone(),
-                record_root: match provider.home {
-                    ProviderHome::Dependency => NativeArtifactRecordRoot::Slot,
-                    ProviderHome::Host => NativeArtifactRecordRoot::Project,
-                },
-                platform: execution.platform,
-                origin,
-                record,
-                image,
-                digest: file.digest,
-                bytes: file.bytes,
-            });
-        }
-        Ok(PreparedNativeMechanisms { entries })
+            )
+        })
     }
+
+    /// Rehydrate only existing records and immutable images; never build or publish.
+    pub fn rehydrate(
+        self,
+        execution: &NativeBuildExecution<'_>,
+    ) -> Result<PreparedNativeMechanisms, NativeArtifactError> {
+        let mut resolved = (0..self.plan.entries.len())
+            .map(|_| None)
+            .collect::<Vec<_>>();
+        for group in &self.groups {
+            let source = source_witness(&group.provider)?;
+            let id = record_id(&group.provider, &group.crate_wire, execution.platform);
+            let build_provider = self
+                .build_provider
+                .as_deref()
+                .ok_or_else(|| selection_error("source group has no preflighted build provider"))?;
+            let file = revalidate_source_record(&SourceRecordExpectation {
+                selected_project_root: execution.selected_project_root,
+                provider: &group.provider,
+                platform: execution.platform,
+                record_id: &id,
+                build_provider,
+                source_witness: &source,
+                config_witness: &group.config,
+            })?;
+            for index in &group.entries {
+                resolved[*index] = Some((
+                    file.clone(),
+                    NativeArtifactOrigin::SourceRecord,
+                    Some(record_path(&id)),
+                ));
+            }
+        }
+        for (index, artifact) in self.artifacts.iter().enumerate() {
+            if let ArtifactState::Prebuilt(file) = &artifact.state {
+                resolved[index] = Some((file.clone(), NativeArtifactOrigin::Prebuilt, None));
+            }
+        }
+        finish(self.plan, &self.artifacts, resolved, execution, |file| {
+            existing_load_image(
+                execution.selected_project_root,
+                &file.absolute,
+                &file.digest,
+                file.bytes,
+            )
+        })
+    }
+}
+
+fn finish(
+    plan: NativeMechanismPlan,
+    artifacts: &[PreflightArtifact],
+    mut resolved: Vec<Option<(VerifiedFile, NativeArtifactOrigin, Option<String>)>>,
+    execution: &NativeBuildExecution<'_>,
+    image: impl Fn(&VerifiedFile) -> Result<PathBuf, NativeArtifactError>,
+) -> Result<PreparedNativeMechanisms, NativeArtifactError> {
+    let mut entries = Vec::with_capacity(plan.entries.len());
+    for (index, planned) in plan.entries.into_iter().enumerate() {
+        let provider = &artifacts
+            .get(index)
+            .ok_or_else(|| selection_error("prepared mechanism lost provider provenance"))?
+            .provider;
+        let (file, origin, record) = resolved[index]
+            .take()
+            .ok_or_else(|| selection_error("prepared mechanism lost its artifact"))?;
+        let image = image(&file)?;
+        entries.push(PreparedNativeMechanism {
+            bindings: planned.bindings,
+            provider: provider.identity.clone(),
+            provider_version: provider.version.clone(),
+            provider_hash: provider.content_hash.clone(),
+            provider_root: provider.root.clone(),
+            record_root: match provider.home {
+                ProviderHome::Dependency => NativeArtifactRecordRoot::Slot,
+                ProviderHome::Host => NativeArtifactRecordRoot::Project,
+            },
+            platform: execution.platform,
+            origin,
+            record,
+            image,
+            digest: file.digest,
+            bytes: file.bytes,
+        });
+    }
+    Ok(PreparedNativeMechanisms { entries })
 }
 
 fn selection_error(reason: &str) -> NativeArtifactError {

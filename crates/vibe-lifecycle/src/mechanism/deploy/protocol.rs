@@ -1,21 +1,10 @@
-//! The deploy role's provider-protocol value types — what the six §3.2
-//! operations of a [`DeployProvider`] take and hand back, plus the two
-//! engine-owned values the command layer hands DOWN (the resolved profile
-//! selection and the proven artifact).
-//!
-//! Shared by every deploy provider on purpose, exactly as the package
-//! role's vocabulary is: one trait, one protocol. What is deliberately NOT
-//! here is anything a provider could use to mint its own identity — no
-//! output path, no state path, no generation counter. Those are the
-//! engine's (§3.2), and a provider that cannot name them cannot invent a
-//! second lifecycle.
-//!
-//! [`DeployProvider`]: crate::mechanism::DeployProvider
+//! Deploy provider protocol values and the engine-owned restart identity.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS");
 
 use std::path::{Path, PathBuf};
 
+use serde::{Deserialize, Serialize};
 use vibe_core::manifest::{ArtifactKind, DeployTarget};
 use vibe_wire::generated::artifact_record::ArtifactShape;
 use vibe_wire::generated::deploy_intent::DeployIntent;
@@ -32,6 +21,28 @@ use crate::mechanism::{
     EffectClass, MechanismError, NetworkUse, PrivilegeNeed, ProviderDescriptor, ProviderOperation,
     Reversibility,
 };
+
+/// Exact package-native runtime identity retained for process restart.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub(crate) struct NativeProviderBinding {
+    pub(crate) target: String,
+    pub(crate) mechanism: String,
+    pub(crate) pin: String,
+    pub(crate) descriptor_id: String,
+    pub(crate) protocol: u32,
+    pub(crate) provider_version: String,
+    pub(crate) provider_hash: Option<String>,
+    pub(crate) provider_root: String,
+    pub(crate) platform: String,
+    pub(crate) record_root: String,
+    pub(crate) origin: String,
+    pub(crate) record_id: Option<String>,
+    pub(crate) record_path: Option<String>,
+    pub(crate) image: String,
+    pub(crate) image_digest: String,
+    pub(crate) image_bytes: u64,
+}
 
 /// One produced artifact a deploy target reconciles, resolved and proven by
 /// the ENGINE before any provider sees it.
@@ -524,6 +535,11 @@ pub(crate) trait DeployProvider {
     /// it — a deploy that cannot be planned cannot be dry-run, and §7's
     /// `--plan` is a law, not a convenience.
     fn descriptor(&self) -> DeployDescriptor<'_>;
+
+    /// Durable restart identity when this is a package native provider.
+    fn native_binding(&self) -> Option<&NativeProviderBinding> {
+        None
+    }
 
     /// Validate the target's config, resolve the destination, and report
     /// every resource this deployment would touch with the digest it
