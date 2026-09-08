@@ -10,6 +10,7 @@ use crate::compiler::ir::IrCardinality;
 use crate::compiler::pass::{
     DynPass, Pass, PassDescriptor, PassName, PassSegment, PassSegmentError, erase_pass,
 };
+use crate::compiler::pass_tier::frontend::DocumentPipeline;
 
 enum Placement {
     Before(PassName),
@@ -129,16 +130,13 @@ impl<'pass> CompilerPipeline<'pass> {
             &planned_artifact,
         )?;
 
-        let document = rebuild(
-            std::mem::take(&mut self.document).into_passes(),
-            &mut grouped,
-        );
+        let document = rebuild(self.document.take_passes(), &mut grouped);
         let artifact = rebuild(
             std::mem::take(&mut self.artifact).into_passes(),
             &mut grouped,
         );
         debug_assert!(grouped.is_empty());
-        let document = PassSegment::from_passes(document)?;
+        let document = DocumentPipeline::from_passes(document)?;
         let artifact = PassSegment::from_passes(artifact)?;
         self.document = document;
         self.artifact = artifact;

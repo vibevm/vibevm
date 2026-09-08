@@ -129,14 +129,6 @@ pub(crate) enum PassCatalogError {
     MissingFormats { key: ExtensionKey },
     #[error("frontend pass `{key}` registers invalid source format `{format}`")]
     InvalidFormat { key: ExtensionKey, format: String },
-    #[error(
-        "frontend pass `{key}` for physical format `{format}` is awaiting R6.5 provider pre-admission before parsing `{physical_stem}`"
-    )]
-    FrontendDeferred {
-        key: ExtensionKey,
-        format: String,
-        physical_stem: String,
-    },
     #[error("frontend pass `{key}` cannot replace builtin source format `{format}` implicitly")]
     BuiltinFormat { key: ExtensionKey, format: String },
     #[error("source format `{format}` is registered by both `{first}` and `{second}`")]

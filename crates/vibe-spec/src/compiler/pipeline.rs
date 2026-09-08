@@ -14,6 +14,7 @@ use super::ir::{
 use super::pass::{
     AnyIr, IrPayload, Pass, PassDescriptor, PassName, PassSegment, PassSegmentError,
 };
+use super::pass_tier::frontend::DocumentPipeline;
 use super::trace::CompileTraceSink;
 use super::verify::IrVerifier;
 
@@ -113,7 +114,7 @@ pub(crate) enum ScheduleItem {
 /// One complete schedule: document segment → gather → artifact segment.
 #[derive(Default)]
 pub(crate) struct CompilerPipeline<'pass> {
-    document: PassSegment<'pass>,
+    document: DocumentPipeline<'pass>,
     gather: GatherDocuments,
     artifact: PassSegment<'pass>,
     pass_names: BTreeSet<PassName>,
@@ -453,17 +454,24 @@ impl<'pass> CompilerPipeline<'pass> {
         source: SourceIr,
         trace: Option<&dyn CompileTraceSink>,
     ) -> Result<DocumentIr, CompilerPipelineError> {
-        let output = self
-            .document
-            .run_traced(AnyIr::Source(source), self.verifier, trace)?;
-        match output {
-            AnyIr::Document(document) => Ok(document),
-            other => Err(CompilerPipelineError::UnexpectedCarrier {
-                boundary: "document segment output",
-                expected: DOCUMENT_DOCUMENT,
-                actual: other.shape(),
-            }),
-        }
+        self.document.run(source, None, self.verifier, trace)
+    }
+
+    pub(crate) fn run_document_with_parser(
+        &self,
+        source: SourceIr,
+        parser: &PassSegment<'_>,
+        trace: Option<&dyn CompileTraceSink>,
+    ) -> Result<DocumentIr, CompilerPipelineError> {
+        self.document
+            .run(source, Some(parser), self.verifier, trace)
+    }
+
+    pub(crate) fn validate_frontend_parser(
+        &self,
+        parser: &PassSegment<'_>,
+    ) -> Result<(), CompilerPipelineError> {
+        self.document.validate(parser)
     }
 
     fn validate_boundaries(&self) -> Result<(), CompilerPipelineError> {
@@ -476,11 +484,7 @@ impl<'pass> CompilerPipeline<'pass> {
     }
 
     fn validate_document_boundaries(&self) -> Result<(), CompilerPipelineError> {
-        validate_segment_endpoints(
-            DOCUMENT_ENDPOINTS,
-            self.document.first_input(),
-            self.document.last_output(),
-        )
+        self.document.validate_default()
     }
 
     fn expect_boundary(

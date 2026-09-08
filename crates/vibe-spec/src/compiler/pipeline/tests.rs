@@ -251,7 +251,7 @@ fn incomplete_schedule_fails_before_consuming_any_source() {
     assert!(matches!(
         error,
         CompilerPipelineError::ScheduleBoundary {
-            boundary: "document segment output",
+            boundary: "document segment input",
             ..
         }
     ));

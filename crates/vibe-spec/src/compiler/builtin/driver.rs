@@ -485,17 +485,8 @@ fn run(
         source,
         &active_formats,
         |input, physical_stem| {
-            if input.format().as_str() != "markdown" {
-                return Err(schedule
-                    .frontends
-                    .deferred(input.format().as_str(), physical_stem)
-                    .map(ArtifactCompileError::PassCatalog)
-                    .unwrap_or_else(|| ArtifactCompileError::Manager {
-                        reason: "resolved custom source has no active frontend".to_owned(),
-                    }));
-            }
             schedule
-                .parse_source(input, trace)
+                .parse_source(input, physical_stem, trace)
                 .map_err(|error| schedule.document_error(error))
         },
         |address, reason| schedule.record_failure(address, reason),

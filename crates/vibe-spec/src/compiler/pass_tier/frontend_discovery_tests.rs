@@ -214,11 +214,8 @@ fn production_selects_txt_then_returns_typed_frontend_deferred() {
     let error = crate::compiler::builtin::compile_artifact(plan, &source).unwrap_err();
     assert!(matches!(
         error,
-        crate::compiler::builtin::ArtifactCompileError::PassCatalog(ref public)
-            if matches!(
-                public.inner(),
-                super::catalog::PassCatalogError::FrontendDeferred { format, physical_stem, .. }
-                    if format == "txt" && physical_stem == "NOTE"
-            )
+        crate::compiler::builtin::ArtifactCompileError::Pass { pass, reason }
+            if pass == "pass:org.demo/formats#txt"
+                && reason.contains("provider pre-admission")
     ));
 }

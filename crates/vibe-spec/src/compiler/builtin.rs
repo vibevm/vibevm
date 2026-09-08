@@ -30,7 +30,7 @@ use super::merge::MergePass;
 use super::observer::Observing;
 use super::pass::{Pass, PassName, PassSegmentError};
 use super::pass_tier::catalog::PassCatalogs;
-use super::pass_tier::frontend::FrontendCatalog;
+use super::pass_tier::frontend::FrontendSeats;
 use super::pass_tier::plan::{PassPlacement, PassPlan};
 use super::pass_tier::schedule::{PassExecutionAuthority, PassSchedule};
 use super::pipeline::{CompilerPipeline, CompilerPipelineError};
@@ -80,11 +80,6 @@ pub use driver::{
 const PARSE_PASS_NAME: &str = "parse";
 const MARKDOWN_FORMAT: &str = "markdown";
 
-/// The built-in source-to-document lowering.
-///
-/// The shipping [`crate::SectionSource`] seam supplies canonical Markdown even
-/// when the authored file is XML, so this pass has one built-in frontend today.
-/// R6 may register additional frontend passes without widening this one.
 struct ParsePass {
     name: PassName,
 }
@@ -136,7 +131,6 @@ pub(crate) fn parse_invocations() -> usize {
     PARSE_INVOCATIONS.with(std::cell::Cell::get)
 }
 
-/// A parse failure remains the source of the manager's named-pass error.
 #[derive(Debug, thiserror::Error)]
 #[error("the built-in parser does not accept source format `{format}`")]
 struct ParseError {
@@ -179,16 +173,14 @@ pub(crate) fn without_verify_each<T>(body: impl FnOnce() -> T) -> T {
     body()
 }
 
-/// The declared built-in schedule prefix used by production.
 pub(crate) struct BuiltinSchedule<'invoke> {
     pipeline: CompilerPipeline<'invoke>,
     close_state: CloseState,
     transforms: TransformSchedule<'invoke>,
     transform_names: Vec<PassName>,
-    pub(super) frontends: FrontendCatalog,
+    pub(super) frontends: FrontendSeats,
 }
 
-/// Wrap one internal transform fault as the public opaque artifact error.
 fn transform_public(inner: TransformError) -> ArtifactCompileError {
     ArtifactCompileError::Transform(TransformCompileError::new(inner))
 }
@@ -253,7 +245,7 @@ impl<'invoke> BuiltinSchedule<'invoke> {
             close_state,
             transforms,
             transform_names,
-            frontends: FrontendCatalog::default(),
+            frontends: FrontendSeats::default(),
         })
     }
 
@@ -290,14 +282,22 @@ impl<'invoke> BuiltinSchedule<'invoke> {
         }
         let mut schedule =
             Self::emitted_base_with_invoker(plan, transforms, registry, observer, invoker, policy)?;
-        schedule.frontends = catalogs.frontends().clone();
-        if !catalogs.positioned().is_empty() {
+        schedule.frontends = FrontendSeats::deferred(catalogs.frontends());
+        schedule
+            .frontends
+            .validate(&schedule.pipeline)
+            .map_err(|error| ArtifactCompileError::Manager {
+                reason: format!("frontend parse-seat validation failed: {error}"),
+            })?;
+        if !schedule.frontends.is_empty() || !catalogs.positioned().is_empty() {
             let verifier = schedule.pipeline.install_pass_tier_verifier();
-            PassSchedule::install(
-                catalogs.positioned(),
-                &mut schedule.pipeline,
-                PassExecutionAuthority::verified(invoker, verifier),
-            )?;
+            if !catalogs.positioned().is_empty() {
+                PassSchedule::install(
+                    catalogs.positioned(),
+                    &mut schedule.pipeline,
+                    PassExecutionAuthority::verified(invoker, verifier),
+                )?;
+            }
         }
         Ok(schedule)
     }
@@ -356,9 +356,11 @@ impl<'invoke> BuiltinSchedule<'invoke> {
     fn parse_source(
         &self,
         source: SourceIr,
+        physical_stem: &str,
         trace: Option<&dyn CompileTraceSink>,
     ) -> Result<DocumentIr, CompilerPipelineError> {
-        self.pipeline.run_document_traced(source, trace)
+        self.frontends
+            .run(&self.pipeline, source, physical_stem, trace)
     }
 
     fn record_failure(&self, address: &SpecAddress, reason: String) {
@@ -507,9 +509,6 @@ impl<'invoke> BuiltinSchedule<'invoke> {
     }
 }
 
-/// Test-only construction of the REAL declared schedules, so a focused test
-/// outside this module can observe the production pass list rather than a
-/// hand-built imitation of it.
 #[cfg(test)]
 impl BuiltinSchedule<'static> {
     pub(crate) fn linked_for_test(
@@ -545,7 +544,7 @@ pub(crate) fn compile_artifact_prefix(
     let worklist = worklist::discover(
         &plan,
         source,
-        |input| schedule.parse_source(input, None),
+        |input| schedule.parse_source(input, "", None),
         |address, reason| schedule.record_failure(address, reason),
     )
     .map_err(|error| schedule.document_error(error))?;
@@ -566,7 +565,7 @@ pub(crate) fn compile_artifact_lane(
     let worklist = worklist::discover(
         &plan,
         source,
-        |input| schedule.parse_source(input, None),
+        |input| schedule.parse_source(input, "", None),
         |address, reason| schedule.record_failure(address, reason),
     )
     .map_err(|error| schedule.document_error(error))?;
