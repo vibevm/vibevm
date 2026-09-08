@@ -75,6 +75,16 @@ pub enum NativeArtifactError {
     TransportNotLanded { provider: String, kind: String },
 
     #[error(
+        "native build provider `{provider}` has only a source artifact for `{platform}`, so selecting it to build its own transport forms a bootstrap cycle (spec://org.vibevm.core/vibevm/common/PROP-054#BUILD-PHASE-OWNS-IT); fix: ship a current-platform prebuilt for the provider or restore the builtin build:cargo route"
+    )]
+    BootstrapCycle { provider: String, platform: String },
+
+    #[error(
+        "native build provider `{provider}` has a current prebuilt, but foreign build-provider execution is not connected in this carriage atom (spec://org.vibevm.core/vibevm/common/PROP-054#BUILD-PHASE-OWNS-IT); fix: use the builtin build:cargo route until BUILD-ADAPTER lands"
+    )]
+    BuildAdapterNotConnected { provider: String },
+
+    #[error(
         "native dependency provider `{provider}` cannot prepare build-output ignores at `{root}`: {reason} (spec://org.vibevm.core/vibevm/common/PROP-054#IN-SLOT-BUILD); fix: restore the exact dependency-slot ancestry and writable ignore file"
     )]
     BuildIgnore {

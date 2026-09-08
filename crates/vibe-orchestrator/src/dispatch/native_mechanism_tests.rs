@@ -172,4 +172,13 @@ fn fence_prepares_mechanisms_before_replay_and_authored_targets() {
         .find("execute_build_targets(&BuildExecution")
         .unwrap();
     assert!(prepare < replay && replay < authored);
+
+    let phase = include_str!("../phase.rs");
+    let projection = phase
+        .find("project_native_target_mechanisms(")
+        .expect("phase uses the canonical active-target projection");
+    let build = phase[projection..].find("&build_targets").unwrap();
+    let package = phase[projection..].find("&package_targets").unwrap();
+    let deploy = phase[projection..].find("&deploy_targets").unwrap();
+    assert!(build < package && package < deploy);
 }

@@ -5,7 +5,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARG
 use std::path::Path;
 
 use specmark::spec;
-use vibe_core::manifest::{DeployTarget, ExtensionHandler};
+use vibe_core::manifest::{DeployTarget, ExtensionHandler, MechanismRole};
 use vibe_extension_registry::{MechanismSelection, SelectionStep, resolve_mechanism};
 use vibe_wire::generated::deploy_receipt::{DeployIdentity, DeployReceipt};
 
@@ -220,25 +220,11 @@ fn prepared_binding<'a>(
     )>,
     DeployError,
 > {
-    let mut found = None;
-    for entry in prepared.into_iter().flat_map(|value| &value.entries) {
-        for binding in &entry.bindings {
-            if binding.target != target.id {
-                continue;
-            }
-            if found.is_some() || binding.key != target.mechanism {
-                return Err(native_transport(
-                    &target.id,
-                    &binding.pin,
-                    "admit",
-                    "prepared carriage has duplicate or mismatched target bindings",
-                )
-                .into());
-            }
-            found = Some((entry, binding));
-        }
-    }
-    Ok(found)
+    prepared
+        .map(|value| value.binding_for(MechanismRole::Deploy, &target.id, &target.mechanism))
+        .transpose()
+        .map_err(|(pin, reason)| native_transport(&target.id, pin, "admit", reason).into())
+        .map(Option::flatten)
 }
 
 pub(crate) fn validate_restart(

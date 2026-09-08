@@ -459,7 +459,8 @@ fn run(inputs: PhaseRun<'_>, measured: &mut Measured) -> Result<Outcome> {
     } else {
         None
     };
-    let native_mechanisms = vibe_lifecycle::native::project_native_mechanisms(
+    let native_mechanisms = vibe_lifecycle::native::project_native_target_mechanisms(
+        &build_targets,
         &package_targets,
         &deploy_targets,
         &ritual.mechanisms,

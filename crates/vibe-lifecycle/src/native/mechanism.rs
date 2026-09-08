@@ -1,16 +1,12 @@
 //! Selected deploy-native mechanism artifact planning and preparation.
 
-use std::collections::BTreeMap;
 use std::path::PathBuf;
 
-use vibe_core::manifest::{
-    ArtifactPackageTarget, DeployTarget, ExtensionHandler, MechanismKey, MechanismRoutes,
-};
-use vibe_extension_registry::{
-    MechanismRegistry, MechanismRegistryRow, SelectionStep, resolve_mechanism,
-};
+use vibe_core::manifest::{ExtensionHandler, MechanismKey};
+use vibe_extension_registry::{MechanismRegistryRow, SelectionStep};
 use vibe_native_loader::{NativeLoadError, NativeMechanism};
 
+use super::build_provider::{MechanismBuildTransport, mechanism_build_provider};
 use super::cargo::build_cdylib;
 use super::path::{
     VerifiedFile, existing_load_image, prebuilt_file, publish_load_image, relative_spelling,
@@ -24,8 +20,12 @@ use super::record::{
 use super::witness::{mechanism_config_witness, record_id, source_witness};
 use super::{
     NativeArtifactError, NativeArtifactOrigin, NativeArtifactRecordRoot, NativeBuildExecution,
-    NativePlatform, prepare_dependency_ignore, select_build_provider,
+    NativePlatform, prepare_dependency_ignore,
 };
+
+#[path = "mechanism/plan.rs"]
+mod plan;
+pub use plan::{project_native_mechanisms, project_native_target_mechanisms};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct NativeMechanismBinding {
@@ -63,6 +63,10 @@ impl NativeMechanismPlan {
     pub fn binding_count(&self) -> usize {
         self.entries.iter().map(|entry| entry.bindings.len()).sum()
     }
+
+    pub fn bindings(&self) -> impl Iterator<Item = &NativeMechanismBinding> {
+        self.entries.iter().flat_map(|entry| &entry.bindings)
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -83,6 +87,7 @@ pub struct NativeMechanismPreflight {
     artifacts: Vec<PreflightArtifact>,
     groups: Vec<SourceGroup>,
     build_provider: Option<String>,
+    build_transport: Option<MechanismBuildTransport>,
     claims: Vec<NativeMechanismArtifactClaim>,
 }
 
@@ -125,76 +130,6 @@ pub struct PreparedNativeMechanisms {
     pub entries: Vec<PreparedNativeMechanism>,
 }
 
-pub fn project_native_mechanisms(
-    package: &[ArtifactPackageTarget],
-    deploy: &[DeployTarget],
-    registry: &MechanismRegistry,
-    routes: &MechanismRoutes,
-) -> Result<NativeMechanismPlan, NativeArtifactError> {
-    for target in package {
-        select(
-            target.mechanism.clone(),
-            target.provider.as_ref(),
-            registry,
-            routes,
-        )?;
-    }
-    let mut plan = NativeMechanismPlan::default();
-    let mut selected_pins = BTreeMap::<MechanismKey, String>::new();
-    for target in deploy {
-        let selected = select(
-            target.mechanism.clone(),
-            target.provider.as_ref(),
-            registry,
-            routes,
-        )?;
-        let row = selected.row();
-        let pin = row.pin().to_string();
-        if let Some(previous) = selected_pins.insert(target.mechanism.clone(), pin.clone())
-            && previous != pin
-        {
-            return Err(selection_error(
-                "active deploy targets select different exact provider pins for one logical mechanism key",
-            ));
-        }
-        if row.is_builtin() || !matches!(row.handler(), ExtensionHandler::Native { .. }) {
-            continue;
-        }
-        let binding = NativeMechanismBinding {
-            target: target.id.clone(),
-            key: target.mechanism.clone(),
-            pin: pin.clone(),
-            descriptor_id: row.declaration().id.clone(),
-            protocol: row.protocol(),
-            via: selected.via(),
-            displaced_default: selected
-                .displaced_default()
-                .map(|default| default.pin().to_string()),
-        };
-        if let Some(existing) = plan
-            .entries
-            .iter_mut()
-            .find(|entry| entry.row.pin().to_string() == pin)
-        {
-            if existing.row.key() != row.key()
-                || existing.row.handler() != row.handler()
-                || existing.row.declaration().id != row.declaration().id
-            {
-                return Err(selection_error(
-                    "one exact pin resolved to conflicting rows",
-                ));
-            }
-            existing.bindings.push(binding);
-        } else {
-            plan.entries.push(PlannedMechanism {
-                row: row.clone(),
-                bindings: vec![binding],
-            });
-        }
-    }
-    Ok(plan)
-}
-
 impl PreparedNativeMechanism {
     /// Admit one binding from this already-prepared immutable image.
     ///
@@ -214,6 +149,31 @@ impl PreparedNativeMechanism {
 }
 
 impl PreparedNativeMechanisms {
+    pub(crate) fn binding_for(
+        &self,
+        role: vibe_core::manifest::MechanismRole,
+        target: &str,
+        key: &MechanismKey,
+    ) -> Result<Option<(&PreparedNativeMechanism, &NativeMechanismBinding)>, (&str, &'static str)>
+    {
+        let mut found = None;
+        for entry in &self.entries {
+            for binding in &entry.bindings {
+                if binding.key.role() != role || binding.target != target {
+                    continue;
+                }
+                if found.is_some() || &binding.key != key {
+                    return Err((
+                        &binding.pin,
+                        "prepared carriage has duplicate or mismatched target bindings",
+                    ));
+                }
+                found = Some((entry, binding));
+            }
+        }
+        Ok(found)
+    }
+
     pub fn plan_deploy_targets(
         &self,
         execution: &crate::DeployExecution<'_>,
@@ -243,16 +203,6 @@ impl PreparedNativeMechanisms {
     ) -> Result<Vec<crate::RemovalOutcome>, crate::DeployError> {
         crate::mechanism::deploy::undeploy_prepared_targets(execution, self)
     }
-}
-
-fn select<'a>(
-    key: MechanismKey,
-    pin: Option<&vibe_core::manifest::ProviderPin>,
-    registry: &'a MechanismRegistry,
-    routes: &MechanismRoutes,
-) -> Result<vibe_extension_registry::MechanismSelection<'a>, NativeArtifactError> {
-    resolve_mechanism(registry, &key, pin, routes)
-        .map_err(|error| selection_error(&error.to_string()))
 }
 
 pub fn preflight_native_mechanisms(
@@ -340,16 +290,20 @@ pub fn preflight_native_mechanisms(
             crate_dir: group.crate_wire.clone(),
         });
     }
-    let build_provider = if groups.is_empty() {
+    let build_transport = if groups.is_empty() {
         None
     } else {
-        Some(select_build_provider(execution)?.pin())
+        Some(mechanism_build_provider(execution)?)
     };
+    let build_provider = build_transport
+        .as_ref()
+        .map(|transport| transport.pin().to_owned());
     Ok(NativeMechanismPreflight {
         plan,
         artifacts,
         groups,
         build_provider,
+        build_transport,
         claims,
     })
 }
@@ -369,6 +323,9 @@ impl NativeMechanismPreflight {
         self,
         execution: &NativeBuildExecution<'_>,
     ) -> Result<PreparedNativeMechanisms, NativeArtifactError> {
+        if let Some(transport) = &self.build_transport {
+            transport.admit_prepare(execution.platform.key())?;
+        }
         let mut resolved: Vec<Option<(VerifiedFile, NativeArtifactOrigin, Option<String>)>> =
             (0..self.plan.entries.len()).map(|_| None).collect();
         for group in &self.groups {

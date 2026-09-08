@@ -57,13 +57,12 @@ fn handle(_context: Context) -> Reply {
 
 vibe_ext::vibe_extension!(
     manifest = Manifest {
+        // One image belongs to one manifest family. This fixture exercises
+        // lifecycle invocation; the host compiler row remains a build-only
+        // candidate whose selector never runs.
         extensions: vec![ManifestExtension {
             id: "phase-native".to_owned(),
             point: "phase:build".to_owned(),
-            ir_schema: None,
-        }, ManifestExtension {
-            id: "compile-native".to_owned(),
-            point: "compile:source".to_owned(),
             ir_schema: None,
         }],
     },

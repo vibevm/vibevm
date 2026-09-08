@@ -4,6 +4,7 @@
 //! record. It does not load a library, attach lifecycle dispatch, reorder the
 //! registry, or build lazily during invocation.
 
+mod build_provider;
 mod cargo;
 mod compiler;
 mod compiler_facts;
@@ -20,27 +21,26 @@ use std::path::{Path, PathBuf};
 use std::sync::OnceLock;
 
 use specmark::spec;
-use vibe_core::manifest::{ExtensionHandler, MechanismKey, MechanismRoutes};
-use vibe_extension_registry::{
-    ExtensionRegistry, MechanismRegistry, SelectorSubject, resolve_mechanism,
-};
+use vibe_core::manifest::{ExtensionHandler, MechanismRoutes};
+use vibe_extension_registry::{ExtensionRegistry, MechanismRegistry, SelectorSubject};
 use vibe_native_loader::{NativeInvocation, NativeLoader};
 
+use crate::ExtensionRegistryRow;
 use crate::handlers::{NativeBackend, NativeBackendRequest};
-use crate::{ExtensionRegistryRow, MechanismRegistryRow};
 
 pub use compiler::{ArtifactCompilerNativeInvoker, ArtifactCompilerNativeProvider};
 pub use error::NativeArtifactError;
 pub use mechanism::{
     NativeMechanismArtifactClaim, NativeMechanismBinding, NativeMechanismPlan,
     NativeMechanismPreflight, PreparedNativeMechanism, PreparedNativeMechanisms,
-    preflight_native_mechanisms, project_native_mechanisms,
+    preflight_native_mechanisms, project_native_mechanisms, project_native_target_mechanisms,
 };
 pub use platform::NativePlatform;
 pub use projection::{
     NativeArtifactRecordRoot, NativeSourceGroupProjection, project_native_source_groups,
 };
 
+use build_provider::{SelectedBuildProvider, select_build_provider};
 use cargo::build_cdylib;
 use compiler_facts::{CompilerArtifactResolutionError, pending_source_capture};
 use path::{VerifiedFile, prebuilt_file, relative_spelling, source_crate};
@@ -447,59 +447,6 @@ fn source_group_rows<'a>(
             record: record_path(&record_id(provider, crate_wire, platform)),
             reason: "source group is not present in the supplied candidate epoch".to_owned(),
         })
-}
-
-pub(super) struct SelectedBuildProvider<'registry> {
-    pub(super) key: MechanismKey,
-    pub(super) row: &'registry MechanismRegistryRow,
-}
-
-impl SelectedBuildProvider<'_> {
-    fn pin(&self) -> String {
-        self.row.pin().to_string()
-    }
-}
-
-fn select_build_provider<'registry>(
-    execution: &NativeBuildExecution<'registry>,
-) -> Result<SelectedBuildProvider<'registry>, NativeArtifactError> {
-    let key = "build:cargo".parse::<MechanismKey>().map_err(|error| {
-        NativeArtifactError::MechanismSelection {
-            reason: format!("engine-owned key is invalid: {error}"),
-        }
-    })?;
-    let selection =
-        resolve_mechanism(execution.registry, &key, None, execution.routes).map_err(|error| {
-            NativeArtifactError::MechanismSelection {
-                reason: error.to_string(),
-            }
-        })?;
-    admit_builtin(selection.row())?;
-    Ok(SelectedBuildProvider {
-        key,
-        row: selection.row(),
-    })
-}
-
-fn admit_builtin(row: &MechanismRegistryRow) -> Result<(), NativeArtifactError> {
-    let provider = row.pin().to_string();
-    if !row.is_builtin() {
-        return Err(NativeArtifactError::TransportNotLanded {
-            provider,
-            kind: row.handler().kind().to_owned(),
-        });
-    }
-    match row.handler() {
-        ExtensionHandler::Builtin { name } if name == "cargo" => Ok(()),
-        ExtensionHandler::Builtin { name } => Err(NativeArtifactError::UnknownBuiltin {
-            provider,
-            name: name.clone(),
-        }),
-        handler => Err(NativeArtifactError::UnknownBuiltin {
-            provider,
-            name: handler.kind().to_owned(),
-        }),
-    }
 }
 
 fn prepare_dependency_ignore(provider: &ProviderFacts) -> Result<(), NativeArtifactError> {
