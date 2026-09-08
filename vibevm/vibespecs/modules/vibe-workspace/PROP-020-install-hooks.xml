@@ -8,7 +8,9 @@ campaign). `[hooks]` parses in `vibe-core` (`manifest/package/hooks.rs`),
 `vibe-workspace/src/hooks.rs` runs the whole contract — the pre/post phases, the
 Git-Bash-first Windows interpreter selection, the trust gate over
 `DEFAULT_ALLOWED_GROUPS`, the ran / skipped / failed statuses and the
-`VIBE_HOOK_*` environment — and `vibe-install`'s apply pipeline drives it. One of
+  `VIBE_HOOK_*` environment — and `vibe-install`'s apply pipeline drives it.
+  R1 successor `4503fdb6`/`9c545f0d` makes the exact nonempty materialisation
+  report the sole hook-rerun trigger, including verify repair. One of
 four orthogonal specs carved from the bridge-packages design (the others:
 [PROP-021](../vibe-registry/PROP-021-submodule-sources.xml) submodule sources,
 [PROP-022](PROP-022-materialization-modes.xml) materialization modes,
@@ -49,11 +51,14 @@ token a hook never sees).</related></p>
         <WHAT-HOOKS-ARE fact="true" status="impl/done">A package may declare `pre-install` / `post-install` scripts in its manifest.
   vibevm runs them at fixed points in the install pipeline, in the package's own
   materialised slot, choosing the right interpreter for the host OS.</WHAT-HOOKS-ARE>
-        <EFFECTS-EPHEMERAL fact="true" status="impl/done">Their
-  effects are **ephemeral**: re-installing or updating the package resets the
-  slot first (per [PROP-022](PROP-022-materialization-modes.xml)), then re-runs
-  the hooks, so a hook is a pure function of the package content, never an
-  accreting pile of edits.</EFFECTS-EPHEMERAL>
+        <EFFECTS-EPHEMERAL fact="true" status="impl/done">Only a hook's edits
+  to materialiser-owned recorded payload are ephemeral: reinstall, update or
+  integrity repair restores those bytes per
+  [PROP-022](PROP-022-materialization-modes.xml), then reruns hooks exactly
+  when that payload diff is nonempty. Hook-created unrecorded state is outside
+  `.vibe-slot.toml` ownership and survives by design; a rerun may compound it,
+  so hooks must be idempotent until a separate hook-output ownership contract
+  exists.</EFFECTS-EPHEMERAL>
       </facts>
     </what>
   </motivation>
@@ -75,13 +80,12 @@ token a hook never sees).</related></p>
       <p><CWD-IS-SLOT fact="true" status="impl/done">The hook's **working directory is the package's materialised slot**; it sees
 exactly the tree vibevm will use.</CWD-IS-SLOT></p>
       <facts ordered="false">
-        <RESET-THEN-RERUN fact="true" status="impl/done">**On update / reinstall, hook effects are reset, then hooks re-run.** The slot
-  is first returned to its pristine materialised state — for `snapshot`/
-  `hardlink` modes by re-materialising from cache, for `in-place` mode by
-  `git clean -dfx` ([PROP-022 §2.4](PROP-022-materialization-modes.xml#in-place))
-  — so a previous run's edits never compound.</RESET-THEN-RERUN>
-        <RESET-IS-MODE-PROPERTY fact="true" status="impl/done">This reset is a
-  materialization-mode property; hooks only define *when* the re-run happens.</RESET-IS-MODE-PROPERTY>
+        <RESET-THEN-RERUN fact="true" status="impl/done">**On update, reinstall or integrity repair, the materialiser restores its recorded payload, then hooks rerun if and only if that payload diff is nonempty.** For `copy`/`hardlink`, restoration is the PROP-054 §9.3 record diff: an unrecorded hook-created path survives and may be changed again by the rerun. `in-place` remains a separate git-native reset whose `git clean -dfx` removes untracked hook output. The landed `cli_hook_rerun::reinstall_runs_post_hook_once_only_for_a_nonempty_force_diff` proof records the copy-slot boundary directly: `.hook-count` is `1` after install, remains `1` after empty reinstall, and becomes `2` after a recorded-payload repair. Copy/hardlink hooks therefore remain responsible for idempotence until a separate hook-output ownership contract exists.</RESET-THEN-RERUN>
+        <RESET-IS-MODE-PROPERTY fact="true" status="impl/done">Reset remains a
+  materialization-mode property: `copy`/`hardlink` restore only the recorded
+  footprint and preserve unrecorded outputs, while `in-place` reports its
+  git-native change. Hooks consume that exact change report to decide whether
+  the one rerun occurs.</RESET-IS-MODE-PROPERTY>
       </facts>
     </phases>
     <script-selection title="2.2 Interpreter selection is OS-derived">
@@ -199,8 +203,7 @@ phase:</STREAMS-AND-EXIT></p>
   non-interactive run without `--allow-hooks`.</ACC-CONSENT>
       <ACC-FAILURE-SEMANTICS fact="true" status="impl/done">A `pre-install` non-zero exit rolls back the slot and fails the package; a
   `post-install` failure installs-but-flags.</ACC-FAILURE-SEMANTICS>
-      <ACC-RESET-RERUN fact="true" status="impl/done">Updating a package resets the prior hook's edits (per the materialization
-  mode) before re-running the hooks.</ACC-RESET-RERUN>
+      <ACC-RESET-RERUN fact="true" status="impl/done">Updating, reinstalling or integrity-repairing a package restores the prior hook's recorded payload edits (per the materialization mode); a nonempty payload change reruns hooks exactly once and an empty change runs none.</ACC-RESET-RERUN>
       <ACC-RUNNER-SEAM fact="true" status="impl/done">The `HookRunner` seam lets tests assert selection/env/failure paths without
   spawning real processes.</ACC-RUNNER-SEAM>
       <ACC-FLOOR-GREEN fact="true" status="impl/done">Full `self-check.sh` green; conform 0/0/0; specmap clean.</ACC-FLOOR-GREEN>

@@ -9,7 +9,9 @@ campaign). The `Materialization` enum ships with `Copy` as the default (wire `co
 hardlink / in-place machinery runs through `vibe-install` (`plan.rs` /
 `fetched.rs` / `apply.rs`, the `materialise_in_place` seam); submodule
 snapshot-embedding lands in `git_package_registry/fetch.rs`; and the destructive
-guard sits in `commands/uninstall.rs`. One of four orthogonal specs from the
+guard sits in `commands/uninstall.rs`. R1 successor `6d606ef2`/`1cf4f189`
+reconciles `copy`/`hardlink` refresh through the strict slot record without
+touching unrecorded outputs. One of four orthogonal specs from the
 bridge-packages design (siblings:
 [PROP-020](PROP-020-install-hooks.xml) install hooks,
 [PROP-021](../vibe-registry/PROP-021-submodule-sources.xml) submodule sources,
@@ -67,8 +69,7 @@ materialization = "copy"       # default | "hardlink" | "in-place"</fence>
     <snapshot title="2.2 `copy` — the vendored full copy (default)">
       <p><req-snapshot fact="true" status="impl/done">`req r1`</req-snapshot></p>
       <facts ordered="false">
-        <SNAPSHOT-PIPELINE fact="true" status="impl/done">The status quo: live-git cache → `.git`-stripped content tree → full
-  recursive copy into the slot.</SNAPSHOT-PIPELINE>
+        <SNAPSHOT-PIPELINE fact="true" status="impl/done">Initial placement is live-git cache → `.git`-stripped shippable tree → full recursive copy into the slot. Refresh is record-aware: the incoming tree is reconciled against `.vibe-slot.toml` rather than replacing the directory.</SNAPSHOT-PIPELINE>
         <STRIP-EXTENDED fact="true" status="impl/done">[PROP-024 §2.2](../../common/PROP-024-code-bearing-packages.xml#shippable-tree)
   extends the `.git` strip to build output (`.vibe/`, `target/`, `node_modules/`,
   `.vibeignore` globs) for code-bearing packages, so such a package vendors its
@@ -78,24 +79,16 @@ materialization = "copy"       # default | "hardlink" | "in-place"</fence>
         <SUBMODULE-EMBEDDED fact="true" status="impl/done">Submodule
   content is embedded into the copied tree
   ([PROP-021 §2.3](../vibe-registry/PROP-021-submodule-sources.xml#snapshot-embedding)).</SUBMODULE-EMBEDDED>
-        <HOOK-RESET-REMATERIALISE fact="true" status="impl/done">A hook's edits are reset on update by re-materialising the slot from cache
-  (network-free).</HOOK-RESET-REMATERIALISE>
+        <HOOK-RESET-REMATERIALISE fact="true" status="impl/done">For `copy` and `hardlink` slots, update/reinstall restores the materialiser-owned payload by diffing the incoming shippable tree against `.vibe-slot.toml`: changed owned files are replaced, stale owned files are removed, equal files stay untouched, and unrecorded build output is preserved. Hooks rerun exactly when that materialisation diff is nonempty, per PROP-020 §2.1.</HOOK-RESET-REMATERIALISE>
       </facts>
     </snapshot>
     <hardlink title="2.3 `hardlink` — per-file hardlink, copy on change">
       <p><req-hardlink fact="true" status="impl/done">`req r1`</req-hardlink></p>
       <facts ordered="false">
-        <HARDLINK-MODE fact="true" status="impl/done">For packages **big in bytes but modest in file count**. Instead of copying
-  file bytes, materialise hardlinks each file from the cached content tree into the
-  slot; on update, only changed files are re-linked, the rest are left — the VVM
-  `placer` algorithm ([PROP-019 §2.15](../../common/PROP-019-version-manager.xml#instances)):
-  a per-file manifest of `(rel, size, mtime, hash-for-small-files)`, large files
-  compared by `(size, mtime)` only (never read).</HARDLINK-MODE>
+        <HARDLINK-MODE fact="true" status="impl/done">For packages **big in bytes but modest in file count**. Initial placement may hardlink source/cache files into the slot, falling back to copy when linking is unavailable. Refresh uses the common `.vibe-slot.toml` path→SHA-256 footprint: equal files are left in place and a changed destination is unlinked before its replacement is staged, so writing a slot can never mutate the source/cache inode through a hardlink.</HARDLINK-MODE>
         <HARDLINK-FALLBACK fact="true" status="impl/done">A hardlink that fails
   (cross-volume / unsupported filesystem) falls back to copy.</HARDLINK-FALLBACK>
-        <HARDLINK-CONTRACT fact="true" status="impl/done">The slot still presents a **full tree** (the contract is unchanged from
-  `snapshot`); identity stays `content_hash`, computed cheaply via the manifest
-  for large files.</HARDLINK-CONTRACT>
+        <HARDLINK-CONTRACT fact="true" status="impl/done">The slot still presents a full shippable tree and its source identity remains `content_hash`. The slot record is reconciliation and integrity metadata, not a second source identity; unrecorded paths such as `target/` remain outside the materialiser-owned footprint.</HARDLINK-CONTRACT>
         <HARDLINK-NOT-GIANT fact="true" status="impl/done">This mode does **not** help the file-count case — the per-file
   syscall remains — so it is not the giant-repo answer (§2.4 is).</HARDLINK-NOT-GIANT>
       </facts>
@@ -125,8 +118,7 @@ full tree walk is unacceptable. vibevm never walks the tree:</IN-PLACE-LEAD></p>
     <identity title="2.5 Identity follows the mode">
       <p><req-identity fact="true" status="impl/done">`req r1`</req-identity></p>
       <facts ordered="false">
-        <ID-COPY-MODES fact="true" status="impl/done">**`copy` / `hardlink`** — `content_hash` over the slot tree (the existing
-  identity), `hardlink` computing it cheaply via the diff manifest.</ID-COPY-MODES>
+        <ID-COPY-MODES fact="true" status="impl/done">**`copy` / `hardlink`** — source identity remains `content_hash`; `.vibe-slot.toml` independently records the owned destination footprint and exact per-file SHA-256 values used for reconciliation and verification.</ID-COPY-MODES>
         <ID-IN-PLACE fact="true" status="impl/done">**`in-place`** — **`resolved_commit`**, not `content_hash`. The slot is a
   mutable git working tree (hooks edit it), so a content hash is neither stable
   nor affordable to compute; the git commit *is* the identity, known in O(1).
@@ -192,9 +184,7 @@ full tree walk is unacceptable. vibevm never walks the tree:</IN-PLACE-LEAD></p>
       <ACC-FIELD-PARSES fact="true" status="impl/done">`[package].materialization` parses to `copy` (default) / `hardlink` /
   `in-place`; an unknown value is a manifest error, and the legacy `snapshot`
   is refused with the rename recipe.</ACC-FIELD-PARSES>
-      <ACC-MODE-BEHAVIORS fact="true" status="impl/done">`copy` behaves exactly as today; `hardlink` shares unchanged files by
-  link with copy fallback and presents a full tree; `in-place` clones once into
-  an unversioned, `.gitignore`d slot managed by git.</ACC-MODE-BEHAVIORS>
+      <ACC-MODE-BEHAVIORS fact="true" status="impl/done">`copy` and `hardlink` reconcile their recorded footprint without touching unrecorded paths; `hardlink` may share initial files with copy fallback and replaces changed destinations without mutating source inodes. `in-place` clones once into an unversioned, `.gitignore`d slot managed by git.</ACC-MODE-BEHAVIORS>
       <ACC-IN-PLACE-IDENTITY fact="true" status="impl/done">`in-place` identity is `resolved_commit`; no full-tree hash is computed.</ACC-IN-PLACE-IDENTITY>
       <ACC-DESTRUCTIVE-GUARD fact="true" status="impl/done">A destructive op on an `in-place` slot confirms interactively / requires
   `--force` non-interactively; hooks and `git clean` are exempt.</ACC-DESTRUCTIVE-GUARD>

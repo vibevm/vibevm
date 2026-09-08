@@ -1,8 +1,11 @@
 # Lifecycle/extension campaign — authoritative-spec amendment queue
 
-_Draft only, 2026-08-25. This file is not authoritative and changes no PROP
-status. The owner applies or rejects each amendment at the named owning anchor.
-Anchors are deliberately kept unchanged._
+_Amendment queue, opened 2026-08-25. This file is not authoritative. The R1
+items in §§1–4 and the corresponding §5 status moves were applied at their
+stable owning anchors on 2026-09-08 from landed evidence `6d606ef2`,
+`1cf4f189`, `6a7f750d`, `4503fdb6` and `9c545f0d`. `##AMENDMENT-PLAN` and §6
+remain open for their later lifecycle owners; §§8 onward are untouched by this
+R1 disposition._
 
 ## 0. Scope and evidence boundary
 
@@ -172,22 +175,28 @@ the declared hooks once. Empty diff runs none.
 
 ```xml
 <RESET-THEN-RERUN fact="true" status="impl/done">**On update, reinstall or
-integrity repair, hook effects are reset, then hooks re-run if and only if the
-materialiser changed the recorded payload.** For `copy`/`hardlink`, reset is the
-PROP-054 §9.3 record diff; for `in-place`, it remains the mode's git-native
-reset. A zero-change result runs no hook, preventing effects from compounding;
-any nonempty result, including verify repair, runs the hook once so the final
-slot again represents materialised payload plus declared hook effects.
+integrity repair, the materialiser restores its recorded payload, then hooks
+rerun if and only if that payload diff is nonempty.** For `copy`/`hardlink`,
+restoration is the PROP-054 §9.3 record diff: an unrecorded hook-created path
+survives and may be changed again by the rerun. `in-place` remains a separate
+git-native reset whose `git clean -dfx` removes untracked hook output.
+The landed `cli_hook_rerun::reinstall_runs_post_hook_once_only_for_a_nonempty_force_diff`
+proof records the copy-slot boundary directly: `.hook-count` is `1` after install,
+remains `1` after empty reinstall, and becomes `2` after a recorded-payload
+repair. Copy/hardlink hooks therefore remain responsible for idempotence until
+a separate hook-output ownership contract exists.
 </RESET-THEN-RERUN>
 ```
 
-This ruling preserves PROP-020's effective-state
-law. If a hook intentionally rewrites a recorded file and that file later
-drifts, verify repair first restores the pristine materialised byte. Skipping
-the hook at that point leaves the slot in a third state—neither the previously
-prepared package nor the declared package-plus-hook result—until some unrelated
-future source change happens to rerun the hook. Rerunning once after every
-nonempty payload change restores the pure-function model without compounding.
+This ruling preserves only the recorded-payload effective-state law. If a hook
+intentionally rewrites a recorded file and that file later drifts, verify
+repair first restores the pristine materialised byte and reruns the hook once.
+For copy/hardlink it does not adopt or reset unrecorded hook outputs:
+`.hook-count` surviving and moving `1 → 2` is the landed counterexample to the
+earlier pure-function/no-compounding claim. The separate in-place reset keeps
+its existing `git clean -dfx` removal of untracked output. A future hook-output
+ownership design may strengthen the copy/hardlink boundary; R1 does not invent
+it.
 
 ### 3.B TZ-DEMO — rejected
 
@@ -286,19 +295,20 @@ Evidence: `6d606ef2`, `derived.rs::read_derived_manifest`,
 Owning document:
 `vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml`.
 
-These are proposed authoritative movements after owner review; this draft does
-not perform them:
+R1 disposition: the table's supported movements are applied at the
+authoritative anchors. `##AMENDMENT-PLAN` alone remains unmoved because its
+trust/native/build successors are outside R1.
 
-| Exact anchor | Current | Proposed now | Evidence / reason |
+| Exact anchor | Before | Disposition | Evidence / reason |
 |---|---:|---:|---|
-| `##SLOT-RECORD` | `spec/plan` | `impl/done` | `6d606ef2` |
-| `##REF-SLOT-RECORD` | `spec/plan` | `impl/done` | strict schema, record-last write, generated JTD wire in `6d606ef2`; atomic replacement in `1cf4f189` |
-| `##DIFF-MATERIALISE` | `spec/plan` | `impl/done` | `1cf4f189` |
-| `##MTIME-LAW` | `spec/plan` | `impl/done` | unchanged-file byte/inode/mtime oracles in `1cf4f189` |
-| `##MUTABLE-GETS-A-GATE` | `spec/plan` | `impl/done` | `6a7f750d` |
-| `##SELF-HEAL` | `spec/plan` | `impl/done` | `9c545f0d`: 3.A, one-shot post plan, COW hardlinks, exact in-place change report |
+| `##SLOT-RECORD` | `spec/plan` | **applied `impl/done`** | `6d606ef2` |
+| `##REF-SLOT-RECORD` | `spec/plan` | **applied `impl/done`** | strict schema, record-last write, generated JTD wire in `6d606ef2`; atomic replacement in `1cf4f189` |
+| `##DIFF-MATERIALISE` | `spec/plan` | **applied `impl/done`** | `1cf4f189` |
+| `##MTIME-LAW` | `spec/plan` | **applied `impl/done`** | unchanged-file byte/inode/mtime oracles in `1cf4f189` |
+| `##MUTABLE-GETS-A-GATE` | `spec/plan` | **applied `impl/done`** | `6a7f750d` |
+| `##SELF-HEAL` | `spec/plan` | **applied `impl/done`** | `9c545f0d`: 3.A, one-shot post plan, COW hardlinks, exact in-place change report |
 | `##AMENDMENT-PLAN` | `spec/plan` | **no move yet** | this file is only the draft; authoritative owners have not applied it, and later lifecycle amendments remain |
-| `##R1-DIFF` | `impl/plan` | **no move yet** | code/gate complete through `9c545f0d`; owner amendments still must land |
+| `##R1-DIFF` | `impl/plan` | **applied `impl/done`** | authoritative R1 amendments landed; code/gate complete through `9c545f0d` |
 
 `##WIPE-TODAY` may retain its historical status but should gain a dated
 successor sentence naming `6d606ef2`, `1cf4f189`, and `6a7f750d`.
@@ -370,14 +380,14 @@ implemented contract. Do not move its status on R1 evidence.
 ## 7. Owner application checklist
 
 - 3.A selected; R1.4 landed as `9c545f0d` with a full green panel.
-- Apply the SELF-HEAL / RESET status movements now supported by that evidence.
-- Apply §§1–4 at their owning anchors without renaming facts.
+- SELF-HEAL / RESET status movements applied 2026-09-08.
+- §§1–4 applied at their owning anchors without renaming facts.
 - Regenerate specmap and run the full repository panel in the authoritative
   owner session.
 - Leave §6 trust/native/build amendments deferred until their corresponding
   lifecycle waves land.
-- Close PROP-054 `##R1-DIFF` only after the owner applies §§1–4; this draft
-  remains evidence and replacement text, never the authoritative edit itself.
+- PROP-054 `##R1-DIFF` closed after §§1–4 were applied; this queue remains the
+  provenance record, never the authoritative law itself.
 
 ## 8. R2/R3 normative conflict queue
 

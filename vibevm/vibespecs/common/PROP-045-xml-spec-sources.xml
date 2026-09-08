@@ -217,8 +217,8 @@ stack and docx readers ride it), not a first-hit pick.</fact></p>
 reproducibility rules).** The materialisation format is a REPRODUCIBLE
 project property, so its canonical home is the project manifest:
 `vibe.toml [project] spec_format = "mixed" | "markdown" | "xml"`, with
-the effective value recorded where derived state lives (the derived
-manifest below) so two machines materialise identically. The user-config
+the effective value recorded in the slot record defined by PROP-054 §9.2
+so two machines materialise identically. The user-config
 family supplies only the operator DEFAULT for projects that do not pin
 one (`[install] spec_format`, beside `slot_integrity`), per the standing
 precedence CLI &gt; env &gt; project &gt; user &gt; built-in; vibe-settings is
@@ -276,24 +276,7 @@ exactly-one resolution replaced guessing in every machine reader (a
 new one — `show effective` — was found by the build itself and reads
 the lane as the tape it is), boot_directory fails loud on both names,
 and the host lane re-landed as STATIC.xml with 26 contributions.</STATIC-FOLLOWS-THE-TARGET></p>
-    <p><HASH-LAW fact="true" status="spec/work">**The hash law under transformation (ADR-part, upgraded by
-the measure).** Source identity is untouched: the lockfile
-`content_hash` and the machine store keep hashing the SOURCE form
-(PROP-010's verbatim store and collision law stand on source bytes). A
-transformed slot is a DERIVED artifact with its own recorded identity:
-materialisation under `markdown`/`xml` runs a VERSIONED deterministic
-converter and writes a **derived manifest** into the slot —
-`(source_hash, output_format, converter_recipe, derived_hash)` — where
-`derived_hash` is the standard content-hash recipe over the transformed
-tree. The P011V spot-check then stays MEANINGFUL for every format:
-`mixed` slots verify against the lock source hash as built; transformed
-slots verify against their derived manifest's `derived_hash`, and a
-missing/mismatched derived manifest (or a converter_recipe the binary no
-longer carries) is `Diverged` → honest re-materialise. The slot's
-freshness decision includes the output format: changing `spec_format`
-re-materialises even though `(kind, name, version)` did not move.
-Semantic equivalence of source and derivative is the converter's own
-proof through the shared IR (the golden corpus), never the hash's job.</HASH-LAW></p>
+    <p><HASH-LAW fact="true" status="impl/done">**The hash law under transformation.** Source identity is unchanged: lockfile `content_hash` and the machine store hash the source form. A transformed slot is a derived artifact whose identity and owned footprint are recorded in the single `.vibe-slot.toml`: `source_hash`, `spec_format`, versioned `converter_recipe`, optional `overlay_hash`, `derived_hash`, and per-file source/output/disposition/SHA-256 rows. The legacy `.vibe-derived.toml` is no longer written; its schema-1 reader remains only as a read-only compatibility tombstone until a real rematerialisation migrates the slot. Mixed slots verify their recorded source identity and payload; transformed slots additionally verify recipe, representation and `derived_hash`. A missing legacy record triggers one final migration, a malformed new record refuses, and mismatched valid state rematerialises through the owned diff; changing `spec_format` can never earn a presence skip. Semantic equivalence remains the converter's proof through the shared IR, never the hash's job.</HASH-LAW></p>
     <p><BOOT-LANE-SCOPE fact="true" status="impl/done">**Boot-lane law under the setting (revised by the
 owner's scenario ruling, 2026-08-21, and completed by `##STATIC-FOLLOWS-THE-TARGET`).** Boot artifacts are generated
 projections. The static compiler consumes snippets in WHATEVER format the
@@ -483,8 +466,8 @@ origin test — a snippet materialised into `.xml` reports its package.</BOOT-OR
 outside the derived identity (S5 polygon finding, law).** Boot
 regeneration writes a child target-selected `vibevm/vibespecs/boot/STATIC.xml|STATIC.md`
 plus `INDEX.md` INTO a dependency slot after materialisation — so the
-derived hash excludes them (the same exclusion genre as the derived
-manifest itself) and the format-purity claim never counts them: a
+derived hash excludes them: they are outside the slot record's owned payload,
+just as the record file itself is outside content identity. The format-purity claim never counts them: a
 transformed slot's «no foreign-form spec files» is asserted over SOURCES,
 not over projections the machine regenerates at will. The polygon caught both
 failure shapes live before this law existed: a stale derived hash the
