@@ -6,8 +6,9 @@ a rich ecosystem of dependency-loaded packages. This doc is the running capture 
 method — it is itself a candidate package (**recursion**: extraction produces packages, and its
 own method becomes one — working name `org.vibevm.world/knowledge-extraction`). Companions:
 `00-understanding.md` (project-specific model + git state), `scope.md` / `oldpacks.md` /
-`concepts.md` / `allspecs.md` / `trace-baseline/` (the live checklists), `report.md` (the
-engine requirements). Keep this current as findings accrue._
+`concepts.md` / `allspecs.md` / `trace-baseline/` (the live checklists). The rejected v1
+run's engine requirements are harvested into §§6–9 below; the archaeology index records their
+historical source. Keep this current as findings accrue._
 
 ---
 
@@ -129,17 +130,20 @@ For each target package P in `concepts.md`:
 2. **Delete/thin the host source** — remove the extracted section, or reduce to a stub (a link +
    project-specific residue). Delete the whole file where it empties. No loading prose.
 3. **Declare the dependency** — `"<kind>:<group>/<name>" = { version, link = "static" }` in the
-   host manifest (or the family aggregator's).
+   host manifest (or the family aggregator's). Treat dependency insertion, materialisation and
+   boot-index regeneration as one transaction with the move: a citation whose package is not
+   yet resolvable is an invalid intermediate result, not partial success.
 4. **Retarget inbound edges** — every citer of a removed anchor, code `#[spec]`/`scope!` edges AND
    prose `spec://…#anchor` links, tree-wide → the package address. **Load-bearing code-cited
    anchors move WITH their content to the package** and the code edge is repointed; a move that
-   would orphan a code edge must be refused until the edge is handled.
+   would orphan a code edge must be refused until the edge is handled. Add `external_specs`
+   authority only for an actual code edge into the package; prose citations resolve without it.
 5. **Install + gate + commit** — materialize + regenerate the boot index; the gate ladder (§8);
    one topic commit per package/family. Update `allspecs.md` + the notesfile disposition.
 
 ### Phase R — report
-The by-hand moves are the requirements spec for a future *engine* that automates them
-(`report.md`); the chief automatable operation is the graph-wide citer rewrite (§9 R2).
+The by-hand moves feed the requirements below for a future *engine* that automates them; the
+chief automatable operation is the graph-wide citer rewrite (R2).
 
 ## 7. The per-package capsule, in one line
 author package (content in) → delete/thin host → declare static dep → repoint citers → install →
@@ -151,9 +155,29 @@ gate → commit. Nothing about loading is ever written in the host.
 3. **Full self-check green** — fmt / tests / lint / spec-lint / cross-file-identity gates.
 4. **Boot resolves** — reinstall regenerates the boot index; every path it names exists.
 
-## 9. Operational findings (portable gotchas)
+## 9. Mechanizable invariants and their v1 archaeology disposition
+
+The rejected `cultural-backup` v1 run named ten engine requirements. This table is the promoted,
+current disposition; the branch is evidence, not an authority and not a source to cherry-pick.
+
+| id | current invariant | disposition |
+|---|---|---|
+| R1 | Move a unit with its anchor; refuse any operation that drops its stable address. | retained in the trace baseline and Phase M |
+| R2 | Rewrite every code edge and prose citer atomically from the graph, never by first textual match. | retained as the core Phase M operation |
+| R3 | Distinguish load-bearing code edges from prose and refuse an orphaned code edge. | retained in Phase M and the gate ladder |
+| R4 | Commit text move, dependency, materialisation and boot-index activation as one transaction. | promoted above from v1 archaeology |
+| R5 | Add `external_specs` lazily for code edges only; prose citations do not grant or require code-edge authority. | promoted above from v1 archaeology |
+| R6 | Support a partial-anchor split: project binding/verbatim authority may stay while the reusable region moves. | promoted; Phase A's mixed classification is an executable split input |
+| R7 | Deduplicate by best-version merge, not first-wins; merge into the package when the host is stronger. | retained in `concepts.md` |
+| R8 | Treat byte-identical sibling files as one linked-file mutation set; update or refuse the whole fan-out. | promoted from the trio experience |
+| R9 | A do-not-rewrite/do-not-extract mark preserves authorisation text verbatim. | retained in the verbatim guard |
+| R10 | The move succeeds only after graph, prose-link, full self-check and boot-resolution postconditions. | retained in §8 |
+
+## 10. Operational findings (portable gotchas)
 - **Install requires the tool's own live agent-servers OFF** — an MCP server running from a
-  materialized-deps slot locks it; a full re-materialize then fails ("Access denied"). Stop them.
+  materialized-deps slot locks it; a full re-materialize then fails ("Access denied"). An engine
+  must stop the holder, materialise out of place, or prove an unchanged locked slot can be
+  skipped; blindly retrying the same in-place replacement is not recovery.
 - **Local resolution** — resolving from the in-tree package registry needs the right flag/mode
   (here `--registry packages`); a plain dev binary is not an "installed" tool and gets no ambient
   registry.
@@ -166,10 +190,10 @@ gate → commit. Nothing about loading is ever written in the host.
   `spec://<group>/<name>/<path>#<anchor>`.
 - **Package families** model hierarchical topics (aggregator + member sub-packages).
 
-## 10. Recursion note
+## 11. Recursion note
 This process, generalized and stripped of "vibevm", is itself the package `knowledge-extraction`
-(working name). The vibevm run is its first application and its proof — see the checklists in
-this directory and `report.md`.
+(working name). The vibevm run is its first application and its proof — see the surviving
+checklists in this directory and the archaeology index for rejected-run provenance.
 
 ---
 
