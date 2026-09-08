@@ -128,7 +128,7 @@ fn write_project(root: &Path, deploy: &str) {
                 "config = {{ offline = true }}\n\n",
                 "[[artifacts.package]]\nid = \"demo\"\n",
                 "mechanism = \"package:static-skill\"\n",
-                "outputs = [{{ id = \"demo.md\", kind = \"file\" }}]\n",
+                "outputs = [{{ id = \"demo.md\", kind = \"skill\" }}]\n",
                 "config = {{ source = \"skills/demo\" }}\n\n",
                 "{deploy}",
             ),
