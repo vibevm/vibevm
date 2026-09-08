@@ -12,6 +12,7 @@ use super::{
     ArtifactBuildTarget, ArtifactInput, ArtifactKind, ArtifactOutput, ArtifactPackageTarget,
     ArtifactsSection,
 };
+use crate::manifest::TargetWhen;
 use crate::manifest::extension::ExtensionConfig;
 use crate::manifest::mechanism::{MechanismKey, MechanismRole, ProviderPin};
 
@@ -61,6 +62,8 @@ struct PackageTargetWire {
     mechanism: String,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     provider: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    when: Option<TargetWhen>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     inputs: Option<Vec<toml::Table>>,
     outputs: Vec<OutputWire>,
@@ -222,6 +225,7 @@ impl TryFrom<PackageTargetWire> for ArtifactPackageTarget {
         Ok(Self {
             mechanism: parse_mechanism(MechanismRole::Package, &wire.id, &wire.mechanism)?,
             provider,
+            when: wire.when,
             id: wire.id,
             inputs,
             outputs: wire
@@ -246,6 +250,7 @@ impl TryFrom<ArtifactPackageTarget> for PackageTargetWire {
             id: target.id,
             mechanism: target.mechanism.to_string(),
             provider: target.provider.map(|pin| pin.to_string()),
+            when: target.when,
             inputs: target
                 .inputs
                 .map(|rows| rows.into_iter().map(input_to_table).collect()),

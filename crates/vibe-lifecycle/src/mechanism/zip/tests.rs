@@ -24,6 +24,7 @@ fn zip_target(id: &str, inputs: Vec<ArtifactInput>, table: &str) -> ArtifactPack
         id: id.to_owned(),
         mechanism: key("package:windows-zip"),
         provider: None,
+        when: None,
         inputs: Some(inputs),
         outputs: vec![ArtifactOutput {
             id: format!("{id}.zip"),

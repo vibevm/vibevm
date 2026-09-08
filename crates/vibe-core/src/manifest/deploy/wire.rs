@@ -6,6 +6,7 @@ use indexmap::IndexMap;
 use serde::{Deserialize, Serialize};
 
 use super::{DeployProfile, DeploySection, DeployTarget};
+use crate::manifest::TargetWhen;
 use crate::manifest::extension::ExtensionConfig;
 use crate::manifest::mechanism::{MechanismKey, ProviderPin};
 
@@ -30,6 +31,8 @@ struct DeployTargetWire {
     mechanism: String,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     provider: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    when: Option<TargetWhen>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     depends_on: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -125,6 +128,7 @@ impl TryFrom<DeployTargetWire> for DeployTarget {
             artifact: wire.artifact,
             mechanism,
             provider,
+            when: wire.when,
             depends_on: wire.depends_on,
             config: wire.config.map(ExtensionConfig::from_table),
         })
@@ -140,6 +144,7 @@ impl TryFrom<DeployTarget> for DeployTargetWire {
             artifact: target.artifact,
             mechanism: target.mechanism.to_string(),
             provider: target.provider.map(|pin| pin.to_string()),
+            when: target.when,
             depends_on: target.depends_on,
             config: target.config.map(ExtensionConfig::into_table),
         })

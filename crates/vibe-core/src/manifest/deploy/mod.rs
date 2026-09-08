@@ -26,6 +26,7 @@ use std::collections::{BTreeMap, BTreeSet};
 
 use indexmap::IndexMap;
 
+use super::TargetWhen;
 use super::extension::ExtensionConfig;
 use super::mechanism::{MechanismKey, MechanismRole, ProviderPin, is_portable_token};
 use super::plane::{assert_acyclic, bounded_value};
@@ -57,10 +58,77 @@ pub struct DeployTarget {
     /// Optional exact provider pin (`<group>/<package>#<id>`); selection
     /// lands later.
     pub provider: Option<ProviderPin>,
+    /// Optional host-OS applicability guard. Absence is unconditional.
+    pub when: Option<TargetWhen>,
     /// Authored presence is preserved: absent and `depends_on = []` both
     /// mean "no dependencies", but the distinction survives the round-trip.
     pub depends_on: Option<Vec<String>>,
     pub config: Option<ExtensionConfig>,
+}
+
+#[cfg(test)]
+mod platform_applicability_stage_a_tests {
+    use super::*;
+    use crate::manifest::{ArtifactKind, ArtifactOutput, ArtifactPackageTarget, ArtifactsSection};
+
+    fn parse(when: &str) -> crate::manifest::Manifest {
+        crate::manifest::Manifest::parse_str(&format!(
+            "[project]\nname = \"demo\"\nversion = \"0.1.0\"\n\n[[artifacts.package]]\nid = \"package-launcher\"\nmechanism = \"package:static-file\"\ninputs = [{{ path = \"launcher\" }}]\noutputs = [{{ id = \"launcher\", kind = \"file\" }}]\n\n[[deploy.target]]\nid = \"install-launcher\"\nartifact = \"launcher\"\nmechanism = \"deploy:vibe-opt-launcher\"\n{when}[deploy.profiles.local]\ntargets = [\"install-launcher\"]\n"
+        ))
+        .unwrap()
+    }
+
+    #[test]
+    fn deploy_when_round_trips_and_absence_stays_unconditional() {
+        let guarded = parse("when = { os = [\"linux\", \"windows\"] }\n");
+        let rendered = toml::to_string_pretty(&guarded).unwrap();
+        let windows = rendered.rfind("\"windows\"").unwrap();
+        let linux = rendered.rfind("\"linux\"").unwrap();
+        assert!(windows < linux, "{rendered}");
+        assert_eq!(
+            crate::manifest::Manifest::parse_str(&rendered).unwrap(),
+            guarded
+        );
+
+        let unconditional = parse("");
+        assert!(
+            unconditional.deploy.as_ref().unwrap().targets[0]
+                .when
+                .is_none()
+        );
+    }
+
+    #[test]
+    fn validation_keeps_global_id_truth_independent_of_when() {
+        let mut artifacts = ArtifactsSection::default();
+        let target = |id: &str, output: &str, when| ArtifactPackageTarget {
+            id: id.to_owned(),
+            mechanism: "package:static-file".parse().unwrap(),
+            provider: None,
+            when,
+            inputs: Some(vec![crate::manifest::ArtifactInput::Path {
+                path: "launcher".into(),
+            }]),
+            outputs: vec![ArtifactOutput {
+                id: output.to_owned(),
+                kind: ArtifactKind::File,
+                select: None,
+            }],
+            config: None,
+        };
+        artifacts.package.push(target(
+            "windows",
+            "launcher",
+            Some(TargetWhen::new(vec![crate::manifest::TargetOs::Windows]).unwrap()),
+        ));
+        artifacts.package.push(target(
+            "linux",
+            "launcher",
+            Some(TargetWhen::new(vec![crate::manifest::TargetOs::Linux]).unwrap()),
+        ));
+        let error = artifacts.validate().unwrap_err().to_string();
+        assert!(error.contains("duplicate artifact id"), "{error}");
+    }
 }
 
 impl DeployTarget {

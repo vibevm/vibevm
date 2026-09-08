@@ -27,6 +27,7 @@ mod project;
 pub mod purl;
 mod redirect;
 mod subskill;
+mod target_when;
 
 pub use artifact::{
     ArtifactBuildTarget, ArtifactInput, ArtifactKind, ArtifactOutput, ArtifactPackageTarget,
@@ -71,6 +72,7 @@ pub use subskill::{
     ActivationRules, DeliveryMode, SubskillConflicts, SubskillContent, SubskillManifest,
     SubskillMeta, SubskillRecommends,
 };
+pub use target_when::TargetWhen;
 
 use std::fs;
 use std::path::Path;

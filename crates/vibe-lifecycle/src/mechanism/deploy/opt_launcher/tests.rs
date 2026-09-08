@@ -113,6 +113,7 @@ fn named_target(id: &str, artifact: &str) -> DeployTarget {
         artifact: artifact.to_owned(),
         mechanism: key("deploy:vibe-opt-launcher"),
         provider: None,
+        when: None,
         depends_on: None,
         config: Some(config("")),
     }

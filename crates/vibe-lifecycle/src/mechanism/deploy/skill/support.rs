@@ -149,6 +149,7 @@ pub(crate) fn target(client: SkillClient, id: &str, artifact: &str, name: &str) 
         artifact: artifact.to_owned(),
         mechanism: key(&format!("deploy:{}-skill", client.as_str())),
         provider: None,
+        when: None,
         depends_on: None,
         config: Some(config(&format!("name = \"{name}\""))),
     }

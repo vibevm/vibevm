@@ -14,6 +14,7 @@ fn target(input: &str, output: &str) -> ArtifactPackageTarget {
         id: "launcher".to_owned(),
         mechanism: key("package:static-file"),
         provider: None,
+        when: None,
         inputs: Some(vec![ArtifactInput::Path {
             path: PathBuf::from(input),
         }]),

@@ -44,6 +44,7 @@ pub(crate) fn target(id: &str, artifact: &str, depends_on: &[&str]) -> DeployTar
         artifact: artifact.to_owned(),
         mechanism: key("deploy:vibe-bin"),
         provider: Some(pin(FIXTURE_PIN)),
+        when: None,
         depends_on: Some(depends_on.iter().map(|name| (*name).to_owned()).collect()),
         config: None,
     }

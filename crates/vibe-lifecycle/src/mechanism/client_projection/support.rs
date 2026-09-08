@@ -61,6 +61,7 @@ pub(crate) fn projection_target(
         id: id.to_owned(),
         mechanism: key(mechanism),
         provider: None,
+        when: None,
         inputs: Some(vec![ArtifactInput::Artifact {
             artifact: CANONICAL_ARTIFACT.to_owned(),
         }]),

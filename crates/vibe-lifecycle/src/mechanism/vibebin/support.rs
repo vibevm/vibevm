@@ -131,6 +131,7 @@ pub(crate) fn target(id: &str, artifact: &str, config_text: Option<&str>) -> Dep
         artifact: artifact.to_owned(),
         mechanism: key("deploy:vibe-bin"),
         provider: None,
+        when: None,
         depends_on: None,
         config: config_text.map(config),
     }

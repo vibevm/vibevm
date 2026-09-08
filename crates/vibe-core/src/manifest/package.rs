@@ -503,17 +503,17 @@ pub enum BootCategory {
 ///
 /// assert_eq!(TargetOs::Linux.as_str(), "linux");
 /// assert_eq!(TargetOs::Windows.to_string(), "windows");
-/// // `current()` maps the host to a variant, or `None` off the set.
 /// let _ = TargetOs::current();
 /// ```
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
 pub enum TargetOs {
     /// Microsoft Windows — `std::env::consts::OS == "windows"`.
     Windows,
-    /// Apple macOS — `std::env::consts::OS == "macos"`.
-    Macos,
     /// Linux — `std::env::consts::OS == "linux"`.
     Linux,
+    /// Apple macOS — `std::env::consts::OS == "macos"`.
+    Macos,
 }
 
 impl TargetOs {

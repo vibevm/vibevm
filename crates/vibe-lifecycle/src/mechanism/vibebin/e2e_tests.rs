@@ -147,6 +147,7 @@ fn tool(artifact: &str) -> DeployTarget {
         artifact: artifact.to_owned(),
         mechanism: key("deploy:vibe-bin"),
         provider: None,
+        when: None,
         depends_on: None,
         config: Some(config(&format!("command = \"{COMMAND}\""))),
     }
@@ -162,6 +163,7 @@ fn refuser() -> DeployTarget {
         artifact: "notes.md".to_owned(),
         mechanism: key("deploy:vibe-bin"),
         provider: None,
+        when: None,
         depends_on: None,
         config: Some(config("command = \"vibe-e2e-notes\"")),
     }

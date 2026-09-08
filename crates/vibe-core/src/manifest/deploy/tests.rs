@@ -422,6 +422,7 @@ fn programmatic_deploy_sections_fail_the_same_validator() {
         artifact: artifacts.build[0].outputs[0].id.clone(),
         mechanism: "deploy:vibe-bin".parse().unwrap(),
         provider: None,
+        when: None,
         depends_on: Some(vec!["x".into()]),
         config: None,
     });

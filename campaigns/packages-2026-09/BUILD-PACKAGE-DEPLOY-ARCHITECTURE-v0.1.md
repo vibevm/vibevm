@@ -1544,6 +1544,66 @@ hypothesis. The implementing session re-reads current manifest structs,
 serialization, planner, profile closure, record/receipt state and all consumers,
 runs an adversarial design review, writes a new freeze, and only then codes.
 
+### 7.4 Platform applicability implementation freeze — ratified 2026-09-08
+
+This is the mandatory fresh review of §7.3 against the landed artifact DAG,
+package executor, deploy selection/preplan/collision path and receipt inverse.
+It supersedes §7.3 wherever that section deliberately left a choice open.
+
+**Canonical value.** Both `[[artifacts.package]]` and `[[deploy.target]]`
+carry the same optional strict table:
+
+```toml
+when = { os = ["windows", "linux"] }
+```
+
+`os` is required when `when` is present and is OR: a row is applicable when
+the one injected host OS is a member. The vocabulary is exactly `windows |
+linux | macos`, reusing `vibe-core`'s existing `TargetOs` and `current()`
+probe. Absence is unconditional. The semantic value and serializer use
+canonical order `windows`, `linux`, `macos`. Empty sets, duplicate values,
+unknown members or keys, and the redundant all-three set refuse; the last
+case is written without a guard. There is no top-level `os`, `posix`, alias,
+target triple, negation or environment-selected profile.
+
+**Validation epochs.** Parsing and host-independent validation inspect every
+authored row before applicability: strict shape, safe values, globally unique
+target/output identities, references and authored graph cycles do not become
+optional on another OS. Applicability later projects execution membership; it
+never changes an id's meaning. One command/orchestrator boundary observes the
+host once and carries that typed value down. Providers and lower cells never
+re-probe ambient state.
+
+**Forward projection.** Before provider lookup, source/artifact probing,
+freshness, deploy profile dependency closure or physical-resource collision
+judgement, package and deploy rows are projected by applicability. Inactive
+package rows produce no artifact or record, and an old record cannot stand in
+for an inactive producer. An active package consumer of an inactive package
+producer, an active deploy target consuming an inactive producer, or an active
+deploy target depending on an inactive deploy target refuses naming both rows,
+the observed OS and the relevant artifact/dependency. Inactive deploy rows do
+not pull dependencies and never reach provider plan, destination locks or
+collision checks. A selected profile with no applicable members refuses
+`NO_APPLICABLE_TARGETS`; host OS never selects a different profile.
+
+**Evidence and inverse.** Human and JSON plan projections enumerate authored
+profile rows and carry the canonical predicate, observed OS, `active | skipped`
+status and a bounded reason. Lifecycle package/deploy narration likewise names
+skips. A skipped row causes no provider, source, destination or state access.
+Forward deploy does not automatically retire a receipt that became inactive.
+Explicit `undeploy --profile` enumerates the authored profile, including rows
+inactive on the current host, and attempts only the ordinary receipt-owned
+inverse; provider/platform inability and drift still refuse normally. Thus an
+OS transition neither calls stale state current nor makes owned state
+undiscoverable.
+
+**Staging.** Stage A lands only the strict shared manifest value, canonical
+serde and host-independent validation while the concurrent R5.4 implementation
+owns runtime files. Stage B, after R5.4, lands the single-observation projection,
+dependency refusals, skip plans/narration and inverse selection. Stage A must
+not partially filter or call providers; until Stage B lands, guarded rows parse
+and round-trip but retain the old runtime path.
+
 ## 8. LLM policy at this boundary
 
 All commissioning build, package and deploy mechanisms have complete

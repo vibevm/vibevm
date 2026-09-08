@@ -161,6 +161,7 @@ pub(crate) fn skill_target(id: &str, source: &str, resources: &[&str]) -> Artifa
         id: id.to_owned(),
         mechanism: key("package:static-skill"),
         provider: None,
+        when: None,
         inputs: Some(
             resources
                 .iter()
@@ -200,6 +201,7 @@ pub(crate) fn plugin_target(
         id: id.to_owned(),
         mechanism: key("package:agent-plugin"),
         provider: None,
+        when: None,
         inputs: Some(inputs),
         outputs: vec![ArtifactOutput {
             id: format!("{id}.dir"),

@@ -35,6 +35,7 @@ use std::path::{Path, PathBuf};
 
 use serde::{Deserialize, Serialize};
 
+use super::TargetWhen;
 use super::declarant_path::{declarant_path, declarant_path_pattern};
 use super::extension::ExtensionConfig;
 use super::mechanism::{MechanismKey, MechanismRole, ProviderPin, is_portable_token};
@@ -213,11 +214,75 @@ pub struct ArtifactPackageTarget {
     pub mechanism: MechanismKey,
     /// Optional exact provider pin; routing resolution lands later.
     pub provider: Option<ProviderPin>,
+    /// Optional host-OS applicability guard. Absence is unconditional.
+    pub when: Option<TargetWhen>,
     /// Authored presence is preserved: absent and `inputs = []` differ in
     /// nothing semantic today, but the distinction survives the round-trip.
     pub inputs: Option<Vec<ArtifactInput>>,
     pub outputs: Vec<ArtifactOutput>,
     pub config: Option<ExtensionConfig>,
+}
+
+#[cfg(test)]
+mod platform_applicability_stage_a_tests {
+    use crate::manifest::{Manifest, TargetOs};
+
+    const PROJECT: &str = "[project]\nname = \"demo\"\nversion = \"0.1.0\"\n\n";
+
+    fn package(when: &str) -> String {
+        format!(
+            "{PROJECT}[[artifacts.package]]\nid = \"package-launcher\"\nmechanism = \"package:static-file\"\n{when}inputs = [{{ path = \"launcher\" }}]\noutputs = [{{ id = \"launcher\", kind = \"file\" }}]\n"
+        )
+    }
+
+    #[test]
+    fn package_when_round_trips_in_canonical_order() {
+        let manifest =
+            Manifest::parse_str(&package("when = { os = [\"macos\", \"windows\"] }\n")).unwrap();
+        let target = &manifest.artifacts.as_ref().unwrap().package[0];
+        let guard = target.when.as_ref().unwrap();
+        assert_eq!(guard.os(), [TargetOs::Windows, TargetOs::Macos]);
+        let rendered = toml::to_string_pretty(&manifest).unwrap();
+        let windows = rendered.find("\"windows\"").unwrap();
+        let macos = rendered.find("\"macos\"").unwrap();
+        assert!(windows < macos, "{rendered}");
+        assert_eq!(Manifest::parse_str(&rendered).unwrap(), manifest);
+    }
+
+    #[test]
+    fn package_when_is_strict_and_non_redundant() {
+        for (guard, fragment) in [
+            ("when = {}\n", "missing field `os`"),
+            ("when = { os = [] }\n", "at least one"),
+            ("when = { os = [\"linux\", \"linux\"] }\n", "more than once"),
+            (
+                "when = { os = [\"windows\", \"linux\", \"macos\"] }\n",
+                "redundant",
+            ),
+            ("when = { os = [\"plan9\"] }\n", "unknown variant"),
+            (
+                "when = { os = [\"linux\"], arch = [\"x86_64\"] }\n",
+                "unknown field",
+            ),
+        ] {
+            let error = Manifest::parse_str(&package(guard))
+                .unwrap_err()
+                .to_string();
+            assert!(error.contains(fragment), "{error}");
+        }
+    }
+
+    #[test]
+    fn absent_package_when_is_unconditional_and_round_trips_absent() {
+        let manifest = Manifest::parse_str(&package("")).unwrap();
+        assert!(
+            manifest.artifacts.as_ref().unwrap().package[0]
+                .when
+                .is_none()
+        );
+        let rendered = toml::to_string_pretty(&manifest).unwrap();
+        assert!(!rendered.contains("when"), "{rendered}");
+    }
 }
 
 impl ArtifactPackageTarget {

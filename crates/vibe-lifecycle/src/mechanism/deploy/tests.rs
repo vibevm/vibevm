@@ -27,6 +27,7 @@ fn builtin_target(id: &str, config: Option<&str>) -> DeployTarget {
         artifact: "helper.exe".to_owned(),
         mechanism: key("deploy:vibe-bin"),
         provider: None,
+        when: None,
         depends_on: None,
         config: config.map(configured),
     }
