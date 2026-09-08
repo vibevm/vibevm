@@ -2,6 +2,7 @@
 
 use std::path::PathBuf;
 
+use specmark::spec;
 use vibe_core::manifest::{ExtensionHandler, MechanismKey};
 use vibe_extension_registry::{MechanismRegistryRow, SelectionStep};
 use vibe_native_loader::{NativeLoadError, NativeMechanism};
@@ -28,6 +29,7 @@ mod plan;
 pub use plan::{project_native_mechanisms, project_native_target_mechanisms};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE")]
 pub struct NativeMechanismBinding {
     pub target: String,
     pub key: MechanismKey,
@@ -45,6 +47,7 @@ struct PlannedMechanism {
 }
 
 #[derive(Debug, Clone, Default)]
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE")]
 pub struct NativeMechanismPlan {
     entries: Vec<PlannedMechanism>,
 }
@@ -70,6 +73,7 @@ impl NativeMechanismPlan {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#ARTIFACT-REGISTRY")]
 pub enum NativeMechanismArtifactClaim {
     Source {
         provider: String,
@@ -82,6 +86,7 @@ pub enum NativeMechanismArtifactClaim {
     },
 }
 
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#BUILD-PHASE-OWNS-IT")]
 pub struct NativeMechanismPreflight {
     plan: NativeMechanismPlan,
     artifacts: Vec<PreflightArtifact>,
@@ -110,6 +115,7 @@ struct SourceGroup {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#BUILD-PHASE-OWNS-IT")]
 pub struct PreparedNativeMechanism {
     pub bindings: Vec<NativeMechanismBinding>,
     pub provider: String,
@@ -126,6 +132,7 @@ pub struct PreparedNativeMechanism {
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#BUILD-PHASE-OWNS-IT")]
 pub struct PreparedNativeMechanisms {
     pub entries: Vec<PreparedNativeMechanism>,
 }

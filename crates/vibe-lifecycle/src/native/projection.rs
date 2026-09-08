@@ -2,10 +2,13 @@
 
 use std::path::PathBuf;
 
+use specmark::spec;
+
 use super::provider::ProviderHome;
 use super::{ExtensionRegistryRow, NativeArtifactError, NativePlatform, source_groups};
 
 /// One source group after the lifecycle layer applies prebuilt-first selection.
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#BUILD-PHASE-OWNS-IT")]
 pub struct NativeSourceGroupProjection<'a> {
     pub provider: String,
     pub provider_root: PathBuf,
@@ -16,6 +19,7 @@ pub struct NativeSourceGroupProjection<'a> {
 
 /// Relative-root vocabulary written into the durable artifact record.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#ARTIFACT-REGISTRY")]
 pub enum NativeArtifactRecordRoot {
     Project,
     Slot,
