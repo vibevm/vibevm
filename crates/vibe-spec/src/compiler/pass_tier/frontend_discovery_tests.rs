@@ -141,14 +141,22 @@ impl SectionSource for GuardedSource {
         panic!("custom resolution must not use the Markdown reader")
     }
 
-    fn resolved_source(
+    fn source_metadata(
         &self,
         _addr: &SpecAddress,
         active_formats: &[String],
-    ) -> Result<crate::embed::ResolvedSource, String> {
+    ) -> Result<crate::ResolvedSourceMetadata, String> {
         if !active_formats.iter().any(|format| format == "txt") {
             return Err("txt is inactive".to_owned());
         }
+        crate::ResolvedSourceMetadata::new("NOTE.txt", "txt".to_owned(), "NOTE".to_owned())
+    }
+
+    fn read_resolved_source(
+        &self,
+        _addr: &SpecAddress,
+        _metadata: crate::ResolvedSourceMetadata,
+    ) -> Result<crate::embed::ResolvedSource, String> {
         self.0.set(self.0.get() + 1);
         crate::embed::ResolvedSource::custom(
             "first\nsecond\n".to_owned(),

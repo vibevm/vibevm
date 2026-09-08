@@ -22,6 +22,9 @@ use crate::{
 
 use super::*;
 
+#[path = "compiler_frontend_tests.rs"]
+mod frontend_tests;
+
 const RUN_ID: &str = "0123456789abcdef0123456789abcdef";
 
 fn declaration(
@@ -236,78 +239,6 @@ fn test_support_call_moves_payload_and_is_feature_gated() {
     let source = include_str!("../../../vibe-spec/src/compiler/transform/native_manager.rs");
     assert!(source.contains("#[cfg(any(test, feature = \"test-support\"))]"));
     assert!(source.contains("pub fn into_payload(self) -> Ir"));
-}
-
-#[test]
-fn all_row_order_and_request_authorities_are_exact() {
-    let root = tempdir().unwrap();
-    let relative = fixture(root.path());
-    let nested = ExtensionConfig::from_table(
-        toml::from_str("name = 'exact'\n[nested]\ncount = 3\nflags = [true, false]\n").unwrap(),
-    );
-    let declarations = vec![
-        declaration(
-            "builtin",
-            ExtensionHandler::Builtin {
-                name: "noop".to_owned(),
-            },
-            "compile:pass",
-            None,
-        ),
-        native("compiler-ok", Some(&relative), Some(nested)),
-    ];
-    let (registry, mechanisms) = registries(root.path(), declarations);
-    let all = registry.rows().iter().collect::<Vec<_>>();
-    assert_eq!(all[0].declaration().id, "builtin");
-    assert_eq!(all[1].declaration().id, "compiler-ok");
-    let candidates = vec![all[1]];
-    let routes = MechanismRoutes::default();
-    let project = project(root.path());
-    let world = world();
-    let invoker = make_invoker(
-        &all,
-        &candidates,
-        root.path(),
-        &mechanisms,
-        &routes,
-        &project,
-        &world,
-        RUN_ID,
-    );
-    let config = effective_config(all[1]).unwrap();
-    let expected_payload = payload();
-    let request = invoker
-        .request_for_test(CompilerNativeCall::new_for_test(
-            all[1].key(),
-            CompilePoint::Pass,
-            1,
-            &config,
-            compiler_native_implementation_digest(all[1]).unwrap(),
-            expected_payload.clone(),
-        ))
-        .unwrap();
-    assert_eq!(request.envelope, 1);
-    assert_eq!(request.point, "compile:pass");
-    assert_eq!(request.execution.id, "compiler-ok");
-    assert_eq!(request.execution.package, all[1].provider().to_string());
-    assert_eq!(request.execution.config, config);
-    assert_eq!(request.project, project);
-    assert_eq!(request.world, world);
-    assert_eq!(request.payload, expected_payload);
-    assert!(!request.io.scratch.contains('\\'));
-    let canonical_root = root
-        .path()
-        .canonicalize()
-        .unwrap()
-        .display()
-        .to_string()
-        .replace('\\', "/");
-    assert!(request.io.scratch.starts_with(&canonical_root));
-    assert!(request.io.scratch.ends_with(&format!(
-        "{:x}",
-        Sha256::digest(all[1].key().to_string().as_bytes())
-    )));
-    assert_ne!(all[1].key().to_string(), request.execution.id);
 }
 
 #[test]

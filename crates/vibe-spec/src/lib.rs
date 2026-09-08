@@ -102,7 +102,9 @@ pub use compiler::observer::{
 };
 pub use directives::{Directive, DirectiveError, DirectiveKind, Directives, InPlaceUse};
 pub use doctree::{DocTree, Node, NodeId, NodeKind};
-pub use embed::{EmbedError, FsSectionSource, SectionSource, expand_embeds};
+pub use embed::{
+    EmbedError, FsSectionSource, ResolvedSourceMetadata, SectionSource, expand_embeds,
+};
 pub use gate::{DuplicateId, first_duplicate};
 pub use link_table::{LinkTable, LinkTableError, build_link_table};
 pub use markers::{Block, close, decompile, open};

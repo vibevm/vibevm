@@ -2,9 +2,10 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#PASS-FRONTEND");
 
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
+use std::sync::Mutex;
 
-use crate::compiler::ir::{DocumentIr, SourceFormatId, SourceIr};
+use crate::compiler::ir::{DocumentAddress, DocumentIr, SourceFormatId, SourceIr};
 use crate::compiler::pass::{
     AnyIr, DynPass, IrPayload, Pass, PassDescriptor, PassName, PassSegment, PassSegmentError,
 };
@@ -13,7 +14,80 @@ use crate::compiler::trace::CompileTraceSink;
 use crate::compiler::verify::IrVerifier;
 
 use super::catalog::{CatalogPass, PassCatalogError};
+use super::native::{NativePass, NativePassAdmission};
 use super::plan::PassEntry;
+
+pub(crate) trait FormatAdmission<E>:
+    Fn(&std::path::Path, &str, &str) -> Result<(), E>
+{
+}
+impl<E, T> FormatAdmission<E> for T where T: Fn(&std::path::Path, &str, &str) -> Result<(), E> {}
+
+pub(crate) struct AdmittedSource<'source, Source, Admit> {
+    source: &'source Source,
+    active_formats: &'source [String],
+    admit: &'source Admit,
+}
+
+impl<'source, Source, Admit> AdmittedSource<'source, Source, Admit> {
+    pub(crate) const fn new(
+        source: &'source Source,
+        active_formats: &'source [String],
+        admit: &'source Admit,
+    ) -> Self {
+        Self {
+            source,
+            active_formats,
+            admit,
+        }
+    }
+}
+
+impl<Source: crate::SectionSource, Admit> AdmittedSource<'_, Source, Admit> {
+    pub(crate) fn load<E>(
+        &self,
+        address: &crate::SpecAddress,
+    ) -> Result<Result<crate::embed::ResolvedSource, String>, E>
+    where
+        Admit: FormatAdmission<E>,
+    {
+        let metadata = match self.source.source_metadata(address, self.active_formats) {
+            Ok(metadata) => metadata,
+            Err(error) => return Ok(Err(error)),
+        };
+        if metadata.format() != "markdown" {
+            (self.admit)(
+                metadata.origin(),
+                metadata.format(),
+                metadata.physical_stem(),
+            )?;
+        }
+        Ok(self.source.read_resolved_source(address, metadata))
+    }
+
+    pub(crate) fn expand_pattern(
+        &self,
+        address: &crate::SpecAddress,
+    ) -> Result<Vec<crate::SpecAddress>, String> {
+        self.source.expand_pattern(address)
+    }
+}
+
+pub(crate) fn physical_stem(source: &SourceIr) -> String {
+    match source.address() {
+        DocumentAddress::Spec(address) => address
+            .doc_path
+            .rsplit('/')
+            .next()
+            .unwrap_or(&address.doc_path)
+            .to_owned(),
+        DocumentAddress::StaticEntry { path, .. } => std::path::Path::new(path)
+            .file_stem()
+            .and_then(|value| value.to_str())
+            .unwrap_or(path)
+            .to_owned(),
+    }
+}
 
 const BUILTIN_FORMATS: [&str; 3] = ["markdown", "md", "xml"];
 
@@ -23,13 +97,15 @@ pub(crate) struct FrontendCatalog {
 }
 
 #[derive(Default)]
-pub(crate) struct FrontendSeats {
+pub(crate) struct FrontendSeats<'invoke> {
+    invoker: Option<&'invoke dyn crate::compiler::transform::native_manager::CompilerNativeInvoker>,
     formats: BTreeMap<String, FrontendSeat>,
+    admitted: Mutex<BTreeSet<vibe_core::manifest::ExtensionKey>>,
 }
 
 enum FrontendSeat {
-    Deferred {
-        format: String,
+    Native {
+        admission: NativePassAdmission,
         name: PassName,
     },
     #[cfg(test)]
@@ -40,23 +116,37 @@ enum FrontendSeat {
 type TestFrontendFactory =
     dyn Fn(&str) -> Result<PassSegment<'static>, PassSegmentError> + Send + Sync;
 
-impl FrontendSeats {
-    pub(crate) fn deferred(catalog: &FrontendCatalog) -> Self {
-        Self {
-            formats: catalog
-                .formats
-                .iter()
-                .map(|(format, binding)| {
-                    (
-                        format.clone(),
-                        FrontendSeat::Deferred {
-                            format: format.clone(),
-                            name: binding.descriptor().name.clone(),
-                        },
-                    )
-                })
-                .collect(),
-        }
+impl<'invoke> FrontendSeats<'invoke> {
+    pub(crate) fn native(
+        catalog: &FrontendCatalog,
+        invoker: Option<
+            &'invoke dyn crate::compiler::transform::native_manager::CompilerNativeInvoker,
+        >,
+    ) -> Result<Self, FrontendAdmissionError> {
+        let formats = catalog
+            .formats
+            .iter()
+            .map(|(format, binding)| {
+                let name = binding.descriptor().name.clone();
+                Ok((
+                    format.clone(),
+                    FrontendSeat::Native {
+                        admission: NativePassAdmission::from_entry(binding.entry()).map_err(
+                            |error| FrontendAdmissionError {
+                                pass: Some(name.clone()),
+                                reason: error.to_string(),
+                            },
+                        )?,
+                        name,
+                    },
+                ))
+            })
+            .collect::<Result<_, FrontendAdmissionError>>()?;
+        Ok(Self {
+            invoker,
+            formats,
+            admitted: Mutex::new(BTreeSet::new()),
+        })
     }
 
     pub(crate) fn physical_formats(&self) -> impl Iterator<Item = &str> {
@@ -73,8 +163,8 @@ impl FrontendSeats {
     ) -> Result<(), CompilerPipelineError> {
         for seat in self.formats.values() {
             match seat {
-                FrontendSeat::Deferred { format, name } => {
-                    let parser = deferred_segment(format, name, "")?;
+                FrontendSeat::Native { name, .. } => {
+                    let parser = descriptor_segment(name)?;
                     pipeline.validate_frontend_parser(&parser)?;
                 }
                 #[cfg(test)]
@@ -86,6 +176,46 @@ impl FrontendSeats {
         Ok(())
     }
 
+    pub(crate) fn admit(&self, format: &str) -> Result<(), FrontendAdmissionError> {
+        let Some(seat) = self.formats.get(format) else {
+            return Err(FrontendAdmissionError {
+                pass: None,
+                reason: format!("custom source format `{format}` has no selected frontend seat"),
+            });
+        };
+        let (admission, name) = match seat {
+            FrontendSeat::Native { admission, name } => (admission, name),
+            #[cfg(test)]
+            FrontendSeat::Installed(_) => return Ok(()),
+        };
+        let admitted = self.admitted.lock().map_err(|_| FrontendAdmissionError {
+            pass: Some(name.clone()),
+            reason: "frontend admission state is unavailable".to_owned(),
+        })?;
+        if admitted.contains(admission.key()) {
+            return Ok(());
+        }
+        drop(admitted);
+        let invoker = self.invoker.ok_or_else(|| FrontendAdmissionError {
+            pass: Some(name.clone()),
+            reason: "frontend provider pre-admission requires a compiler-native invoker".to_owned(),
+        })?;
+        admission
+            .admit(invoker)
+            .map_err(|error| FrontendAdmissionError {
+                pass: Some(name.clone()),
+                reason: error.to_string(),
+            })?;
+        self.admitted
+            .lock()
+            .map_err(|_| FrontendAdmissionError {
+                pass: Some(name.clone()),
+                reason: "frontend admission state is unavailable".to_owned(),
+            })?
+            .insert(admission.key().clone());
+        Ok(())
+    }
+
     pub(crate) fn run(
         &self,
         pipeline: &CompilerPipeline<'_>,
@@ -93,12 +223,41 @@ impl FrontendSeats {
         physical_stem: &str,
         trace: Option<&dyn CompileTraceSink>,
     ) -> Result<DocumentIr, CompilerPipelineError> {
-        let Some(seat) = self.formats.get(source.format().as_str()) else {
-            return pipeline.run_document_traced(source, trace);
+        let format = source.format().as_str();
+        let Some(seat) = self.formats.get(format) else {
+            if format == "markdown" {
+                return pipeline.run_document_traced(source, trace);
+            }
+            return Err(PassSegmentError::PassFailed {
+                pass: PassName::new(format!("frontend:{format}"))
+                    .expect("a source format is nonblank"),
+                source: Box::new(FrontendNotAdmitted),
+            }
+            .into());
         };
         match seat {
-            FrontendSeat::Deferred { format, name } => {
-                let parser = deferred_segment(format, name, physical_stem)?;
+            FrontendSeat::Native { admission, name } => {
+                if !self
+                    .admitted
+                    .lock()
+                    .is_ok_and(|admitted| admitted.contains(admission.key()))
+                {
+                    return Err(PassSegmentError::PassFailed {
+                        pass: name.clone(),
+                        source: Box::new(FrontendNotAdmitted),
+                    }
+                    .into());
+                }
+                let invoker = self.invoker.expect("admission requires an invoker");
+                let mut parser = PassSegment::default();
+                parser.push(
+                    NativePass::<SourceIr, DocumentIr>::from_admission(
+                        admission.clone(),
+                        invoker,
+                        name.clone(),
+                    )
+                    .with_frontend_physical_stem(physical_stem),
+                )?;
                 pipeline.run_document_with_parser(source, &parser, trace)
             }
             #[cfg(test)]
@@ -126,50 +285,40 @@ impl FrontendSeats {
     }
 }
 
-fn deferred_segment(
-    format: &str,
-    name: &PassName,
-    physical_stem: &str,
-) -> Result<PassSegment<'static>, PassSegmentError> {
+fn descriptor_segment(name: &PassName) -> Result<PassSegment<'static>, PassSegmentError> {
     let mut parser = PassSegment::default();
-    parser.push(DeferredFrontendPass {
-        format: format.to_owned(),
-        physical_stem: physical_stem.to_owned(),
-        name: name.clone(),
-    })?;
+    parser.push(FrontendDescriptorPass(name.clone()))?;
     Ok(parser)
 }
 
-struct DeferredFrontendPass {
-    format: String,
-    physical_stem: String,
-    name: PassName,
-}
+struct FrontendDescriptorPass(PassName);
 
-impl Pass for DeferredFrontendPass {
+impl Pass for FrontendDescriptorPass {
     type Input = SourceIr;
     type Output = DocumentIr;
     type Error = FrontendProviderDeferred;
 
     fn name(&self) -> &PassName {
-        &self.name
+        &self.0
     }
 
     fn run(&self, _input: SourceIr) -> Result<DocumentIr, Self::Error> {
-        Err(FrontendProviderDeferred {
-            format: self.format.clone(),
-            physical_stem: self.physical_stem.clone(),
-        })
+        Err(FrontendProviderDeferred)
     }
 }
 
 #[derive(Debug, thiserror::Error)]
-#[error(
-    "frontend format `{format}` at physical stem `{physical_stem}` awaits R6.5-B2 provider pre-admission"
-)]
-struct FrontendProviderDeferred {
-    format: String,
-    physical_stem: String,
+#[error("frontend descriptor cannot execute")]
+struct FrontendProviderDeferred;
+
+#[derive(Debug, thiserror::Error)]
+#[error("custom frontend reached execution without metadata pre-admission")]
+struct FrontendNotAdmitted;
+
+#[derive(Debug)]
+pub(crate) struct FrontendAdmissionError {
+    pub(crate) pass: Option<PassName>,
+    pub(crate) reason: String,
 }
 
 #[derive(Default)]

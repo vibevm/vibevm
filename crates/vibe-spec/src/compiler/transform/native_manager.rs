@@ -34,6 +34,7 @@ pub struct CompilerNativeCall<'call> {
     order: u32,
     config: &'call BTreeMap<String, Option<Value>>,
     implementation: CompilerNativeImplementationDigest,
+    frontend_physical_stem: Option<&'call str>,
     payload: Ir,
 }
 
@@ -54,8 +55,16 @@ impl<'call> CompilerNativeCall<'call> {
             order,
             config,
             implementation,
+            frontend_physical_stem: None,
             payload,
         }
+    }
+
+    #[cfg(any(test, feature = "test-support"))]
+    #[doc(hidden)]
+    pub fn with_frontend_physical_stem_for_test(mut self, stem: &'call str) -> Self {
+        self.frontend_physical_stem = Some(stem);
+        self
     }
 
     pub fn key(&self) -> &ExtensionKey {
@@ -76,6 +85,10 @@ impl<'call> CompilerNativeCall<'call> {
 
     pub const fn implementation(&self) -> CompilerNativeImplementationDigest {
         self.implementation
+    }
+
+    pub fn frontend_physical_stem(&self) -> Option<&str> {
+        self.frontend_physical_stem
     }
 
     pub fn payload(&self) -> &Ir {
@@ -125,6 +138,20 @@ impl std::error::Error for CompilerNativeInvokerError {}
 
 /// The narrow loader/artifact-independent native invocation seam.
 pub trait CompilerNativeInvoker: Send + Sync {
+    /// Admit one payload-free frontend row before its selected source is read.
+    fn admit_frontend(
+        &self,
+        _key: &ExtensionKey,
+        _order: u32,
+        _config: &BTreeMap<String, Option<Value>>,
+        _implementation: CompilerNativeImplementationDigest,
+    ) -> Result<(), CompilerNativeInvokerError> {
+        Err(CompilerNativeInvokerError::new(
+            CompilerNativeInvokerErrorKind::InvocationFailed,
+            "the compiler-native invoker does not admit frontend catalogs",
+        ))
+    }
+
     fn invoke(&self, call: CompilerNativeCall<'_>) -> Result<Vec<u8>, CompilerNativeInvokerError>;
 }
 
@@ -155,6 +182,7 @@ pub(crate) struct NativeEntry<'entry> {
     implementation: CompilerNativeImplementationDigest,
     pass: &'entry PassName,
     expected: Option<IrShape>,
+    frontend_physical_stem: Option<&'entry str>,
 }
 
 impl<'entry> NativeEntry<'entry> {
@@ -177,9 +205,11 @@ impl<'entry> NativeEntry<'entry> {
             implementation,
             pass,
             expected: None,
+            frontend_physical_stem: None,
         }
     }
 
+    #[allow(clippy::too_many_arguments)]
     pub(crate) fn new_pass(
         runtime: NativeRuntime<'entry>,
         key: &'entry ExtensionKey,
@@ -188,6 +218,7 @@ impl<'entry> NativeEntry<'entry> {
         implementation: CompilerNativeImplementationDigest,
         pass: &'entry PassName,
         expected: IrShape,
+        frontend_physical_stem: Option<&'entry str>,
     ) -> Self {
         Self {
             runtime,
@@ -199,6 +230,7 @@ impl<'entry> NativeEntry<'entry> {
             implementation,
             pass,
             expected: Some(expected),
+            frontend_physical_stem,
         }
     }
 }
@@ -278,6 +310,7 @@ pub(crate) fn execute(
         implementation,
         pass,
         expected,
+        frontend_physical_stem,
     } = entry;
     let NativeRuntime { invoker, policy } = runtime;
     let owned_config;
@@ -301,6 +334,7 @@ pub(crate) fn execute(
         order,
         config: projected,
         implementation,
+        frontend_physical_stem,
         payload,
     }) {
         Ok(raw) => raw,

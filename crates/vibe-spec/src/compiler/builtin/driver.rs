@@ -14,7 +14,7 @@ use super::super::transform::native_policy::{
 };
 use super::super::transform::registry::TransformRegistry;
 use super::super::worklist::ErrorOwners;
-use super::super::worklist::discover_with_formats as discover;
+use super::super::worklist::discover_with_formats_admitted as discover;
 use super::BuiltinSchedule;
 
 #[derive(Debug, thiserror::Error)]
@@ -484,10 +484,11 @@ fn run(
         &plan,
         source,
         &active_formats,
+        |_path, format, _stem| schedule.admit_frontend(format),
         |input, physical_stem| {
             schedule
                 .parse_source(input, physical_stem, trace)
-                .map_err(|error| schedule.document_error(error))
+                .map_err(|error| schedule.frontend_error(error))
         },
         |address, reason| schedule.record_failure(address, reason),
     )?;

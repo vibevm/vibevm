@@ -14,6 +14,38 @@ use serde_json::Value;
 
 use super::plan::PassEntry;
 
+#[derive(Clone)]
+pub(super) struct NativePassAdmission {
+    key: vibe_core::manifest::ExtensionKey,
+    order: u32,
+    config: BTreeMap<String, Option<Value>>,
+    implementation: crate::compiler::transform::native_identity::CompilerNativeImplementationDigest,
+}
+
+impl NativePassAdmission {
+    pub(super) fn from_entry(entry: &PassEntry) -> Result<Self, NativePassBuildError> {
+        let identity = NativeHandlerIdentity::from_handler(entry.handler())?
+            .ok_or(NativePassBuildError::NotNative)?;
+        Ok(Self {
+            key: entry.key().clone(),
+            order: entry.ordinal(),
+            config: project_config(entry.config())?,
+            implementation: identity.digest(),
+        })
+    }
+
+    pub(super) fn admit(
+        &self,
+        invoker: &dyn CompilerNativeInvoker,
+    ) -> Result<(), crate::compiler::transform::native_manager::CompilerNativeInvokerError> {
+        invoker.admit_frontend(&self.key, self.order, &self.config, self.implementation)
+    }
+
+    pub(super) fn key(&self) -> &vibe_core::manifest::ExtensionKey {
+        &self.key
+    }
+}
+
 /// One pass-tier native invocation with a compile-time carrier contract.
 pub(super) struct NativePass<'invoke, Input, Output> {
     invoker: &'invoke dyn CompilerNativeInvoker,
@@ -21,6 +53,7 @@ pub(super) struct NativePass<'invoke, Input, Output> {
     order: u32,
     config: BTreeMap<String, Option<Value>>,
     implementation: crate::compiler::transform::native_identity::CompilerNativeImplementationDigest,
+    frontend_physical_stem: Option<String>,
     name: PassName,
     marker: PhantomData<fn(Input) -> Output>,
 }
@@ -31,18 +64,33 @@ impl<'invoke, Input, Output> NativePass<'invoke, Input, Output> {
         invoker: &'invoke dyn CompilerNativeInvoker,
         name: PassName,
     ) -> Result<Self, NativePassBuildError> {
-        let identity = NativeHandlerIdentity::from_handler(entry.handler())?
-            .ok_or(NativePassBuildError::NotNative)?;
-        let config = project_config(entry.config())?;
-        Ok(Self {
+        Ok(Self::from_admission(
+            NativePassAdmission::from_entry(entry)?,
             invoker,
-            key: entry.key().clone(),
-            order: entry.ordinal(),
-            config,
-            implementation: identity.digest(),
+            name,
+        ))
+    }
+
+    pub(super) fn from_admission(
+        admission: NativePassAdmission,
+        invoker: &'invoke dyn CompilerNativeInvoker,
+        name: PassName,
+    ) -> Self {
+        Self {
+            invoker,
+            key: admission.key,
+            order: admission.order,
+            config: admission.config,
+            implementation: admission.implementation,
+            frontend_physical_stem: None,
             name,
             marker: PhantomData,
-        })
+        }
+    }
+
+    pub(super) fn with_frontend_physical_stem(mut self, stem: &str) -> Self {
+        self.frontend_physical_stem = Some(stem.to_owned());
+        self
     }
 }
 
@@ -69,6 +117,7 @@ where
                 self.implementation,
                 &self.name,
                 Output::SHAPE,
+                self.frontend_physical_stem.as_deref(),
             ),
             input.into_any(),
         )?

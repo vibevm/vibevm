@@ -9,6 +9,7 @@ use super::embed_snapshot::EmbedResolutionSnapshot;
 use super::ir::{
     ArtifactInputKind, ArtifactPlan, DocumentAddress, DocumentIr, DocumentSubject, SourceIr,
 };
+use super::pass_tier::frontend::{AdmittedSource as ActiveSource, FormatAdmission, physical_stem};
 use super::source_snapshot::{DocumentObservation, ExpansionObservation, SourceResolutionSnapshot};
 
 #[derive(Debug)]
@@ -70,10 +71,25 @@ pub(crate) fn discover_with_formats<E>(
     parse: impl Fn(SourceIr, &str) -> Result<DocumentIr, E>,
     record_use_failure: impl Fn(&SpecAddress, String),
 ) -> Result<Worklist, E> {
-    let source = ActiveSource {
+    discover_with_formats_admitted(
+        plan,
         source,
         active_formats,
-    };
+        |_path, _format, _stem| Ok(()),
+        parse,
+        record_use_failure,
+    )
+}
+
+pub(crate) fn discover_with_formats_admitted<E>(
+    plan: &ArtifactPlan,
+    source: &impl SectionSource,
+    active_formats: &[String],
+    admit: impl Fn(&std::path::Path, &str, &str) -> Result<(), E>,
+    parse: impl Fn(SourceIr, &str) -> Result<DocumentIr, E>,
+    record_use_failure: impl Fn(&SpecAddress, String),
+) -> Result<Worklist, E> {
+    let source = ActiveSource::new(source, active_formats, &admit);
     let mut resolved = BTreeMap::new();
     let mut simple = BTreeMap::new();
     let mut failures = BTreeMap::new();
@@ -232,37 +248,6 @@ pub(crate) fn discover_with_formats<E>(
     })
 }
 
-struct ActiveSource<'source, Source> {
-    source: &'source Source,
-    active_formats: &'source [String],
-}
-
-impl<Source: SectionSource> ActiveSource<'_, Source> {
-    fn load(&self, address: &SpecAddress) -> Result<crate::embed::ResolvedSource, String> {
-        self.source.resolved_source(address, self.active_formats)
-    }
-
-    fn expand_pattern(&self, address: &SpecAddress) -> Result<Vec<SpecAddress>, String> {
-        self.source.expand_pattern(address)
-    }
-}
-
-fn physical_stem(source: &SourceIr) -> String {
-    match source.address() {
-        DocumentAddress::Spec(address) => address
-            .doc_path
-            .rsplit('/')
-            .next()
-            .unwrap_or(&address.doc_path)
-            .to_owned(),
-        DocumentAddress::StaticEntry { path, .. } => std::path::Path::new(path)
-            .file_stem()
-            .and_then(|value| value.to_str())
-            .unwrap_or(path)
-            .to_owned(),
-    }
-}
-
 fn spec_order(order: &[DiscoveryKey]) -> Vec<String> {
     order
         .iter()
@@ -273,14 +258,6 @@ fn spec_order(order: &[DiscoveryKey]) -> Vec<String> {
         .collect()
 }
 
-/// The canonical identity of one gathered document.
-///
-/// Typed, never a delimiter-joined string. A joined spelling such as
-/// `static:{origin}\0{path}` cannot separate `("a", "b\0c")` from `("a\0b", "c")`,
-/// so two genuinely distinct static entries would land on one map slot and the
-/// second would silently overwrite the first. This is the key every map that
-/// can overwrite a document uses — discovery, close, and the inter-pass gather
-/// guard alike — so the guard's collision set is exactly the map's.
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub(crate) enum DocumentKey {
     Spec(String),
@@ -332,7 +309,7 @@ fn observations(
 fn discover_uses<E>(
     address: &SpecAddress,
     subject: &DocumentSubject,
-    source: &ActiveSource<'_, impl SectionSource>,
+    source: &ActiveSource<'_, impl SectionSource, impl FormatAdmission<E>>,
     parse: &impl Fn(SourceIr, &str) -> Result<DocumentIr, E>,
     record_failure: &impl Fn(&SpecAddress, String),
     seen: &mut HashSet<String>,
@@ -355,7 +332,7 @@ fn discover_uses<E>(
         return Ok(());
     }
     if !resolved.contains_key(&key) {
-        let source_observation = match source.load(address) {
+        let source_observation = match source.load(address)? {
             Ok(resolved) => resolved,
             Err(reason) => {
                 record_failure(address, reason.clone());
@@ -407,7 +384,7 @@ fn discover_uses<E>(
 #[allow(clippy::too_many_arguments)]
 fn discover_sources<E>(
     key: &str,
-    source: &ActiveSource<'_, impl SectionSource>,
+    source: &ActiveSource<'_, impl SectionSource, impl FormatAdmission<E>>,
     parse: &impl Fn(SourceIr, &str) -> Result<DocumentIr, E>,
     seen: &mut HashSet<String>,
     membership: &mut Vec<String>,
@@ -481,7 +458,7 @@ fn discover_sources<E>(
 #[allow(clippy::too_many_arguments)]
 fn discover_embeds<E>(
     key: &str,
-    source: &ActiveSource<'_, impl SectionSource>,
+    source: &ActiveSource<'_, impl SectionSource, impl FormatAdmission<E>>,
     parse: &impl Fn(SourceIr, &str) -> Result<DocumentIr, E>,
     seen: &mut HashSet<String>,
     embed_order: &mut Vec<String>,
@@ -523,7 +500,7 @@ fn discover_embeds<E>(
 #[allow(clippy::too_many_arguments)]
 fn discover_embed_targets<E>(
     targets: impl IntoIterator<Item = SpecAddress>,
-    source: &ActiveSource<'_, impl SectionSource>,
+    source: &ActiveSource<'_, impl SectionSource, impl FormatAdmission<E>>,
     parse: &impl Fn(SourceIr, &str) -> Result<DocumentIr, E>,
     seen: &mut HashSet<String>,
     embed_order: &mut Vec<String>,
@@ -560,7 +537,7 @@ fn discover_embed_targets<E>(
 
 fn observe_document<E>(
     address: &SpecAddress,
-    source: &ActiveSource<'_, impl SectionSource>,
+    source: &ActiveSource<'_, impl SectionSource, impl FormatAdmission<E>>,
     parse: &impl Fn(SourceIr, &str) -> Result<DocumentIr, E>,
     discovery_order: &mut Vec<DiscoveryKey>,
     resolved: &mut BTreeMap<String, DocumentIr>,
@@ -570,7 +547,7 @@ fn observe_document<E>(
     if resolved.contains_key(&key) || failures.contains_key(&key) {
         return Ok(());
     }
-    match source.load(address) {
+    match source.load(address)? {
         Ok(source_observation) => {
             // A `#source` expansion or `#embed` target: reached, never
             // declared, so it carries its own address identity as its subject.

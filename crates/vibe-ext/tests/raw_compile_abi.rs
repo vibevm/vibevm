@@ -275,7 +275,22 @@ fn structurally_or_behaviorally_bad_requests_never_call_handler() {
 fn invalid_handler_replies_are_never_published() {
     let _guard = TEST_LOCK.lock().expect("test lock");
     assert_refused(&request_bytes("bad-reply-envelope"));
-    assert_refused(&request_bytes("changed-shape"));
+    let mut staged = request_value("changed-shape");
+    staged["point"] = "compile:source".into();
+    assert_refused(&serde_json::to_vec(&staged).unwrap());
+}
+
+#[test]
+fn pass_transition_is_strict_but_stage_points_still_require_same_shape() {
+    let _guard = TEST_LOCK.lock().expect("test lock");
+    let mut pass = request_value("changed-shape");
+    pass["point"] = "compile:pass".into();
+    let (status, response, response_len) = invoke_bytes(&serde_json::to_vec(&pass).unwrap());
+    assert_eq!(status, 0);
+    let reply = decode_and_free(response, response_len);
+    assert_eq!(reply["payload"]["shape"], "document-document");
+
+    assert_refused(&request_bytes("bad-reply-envelope"));
 }
 
 #[test]
@@ -336,6 +351,7 @@ fn all_four_public_macros_use_the_one_emitter_and_compiler_dispatch_never_clones
         .expect("compiler macro exists")
         .1;
     assert!(compiler.contains("validate_request(&request)"));
+    assert!(compiler.contains("validate_reply(&reply)"));
     assert!(compiler.contains("validate_reply_for_shape(request_shape, &reply)"));
     assert!(!compiler.contains("request.clone()"));
     assert!(!compiler.contains("payload.clone()"));

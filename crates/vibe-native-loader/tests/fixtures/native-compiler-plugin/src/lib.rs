@@ -52,6 +52,9 @@ pub fn fixture_manifest() -> Manifest {
 }
 
 pub fn handle(request: CompileRequest) -> CompileReply {
+    if request.execution.id == "compiler-ok" && request.frontend_physical_stem.is_some() {
+        return frontend_reply(request);
+    }
     match request.execution.id.as_str() {
         "compiler-skip" => CompileReply::Skip(Box::new(CompileReplySkip {
             envelope: 1,
@@ -86,6 +89,53 @@ pub fn handle(request: CompileRequest) -> CompileReply {
             message: Some(format!("handled {}", request.execution.id)),
         })),
     }
+}
+
+fn frontend_reply(request: CompileRequest) -> CompileReply {
+    let stem = request
+        .frontend_physical_stem
+        .expect("frontend dispatch requires its physical stem");
+    let Ir::SourceDocument(payload) = request.payload else {
+        return failed("native frontend requires source document IR");
+    };
+    let source = payload.doc;
+    let mut lines = vec![format!("# {stem} {{#root}}")];
+    for line in source.text.lines().filter(|line| !line.trim().is_empty()) {
+        lines.push(String::new());
+        lines.push(line.to_owned());
+    }
+    let end = u32::try_from(lines.len()).expect("fixture document stays bounded");
+    let payload = vibe_ext::__serde_json::json!({
+        "shape": "document-document",
+        "ir_schema": 1,
+        "level": "document",
+        "cardinality": "document",
+        "doc": {
+            "source": source,
+            "tree": {
+                "nodes": [
+                    {"level": 0, "kind": "heading", "heading": "", "trailing": "",
+                     "heading_line": 0, "span": {"start": 0, "end": end}, "children": [1]},
+                    {"id": "root", "level": 1, "kind": "heading", "heading": stem,
+                     "trailing": "", "heading_line": 0,
+                     "span": {"start": 0, "end": end}, "parent": 0, "children": []}
+                ],
+                "anchors": {"root": 1},
+                "duplicate_anchors": [],
+                "lines": lines,
+                "directives": {"aliases": {}, "directives": [], "errors": [], "in_place_uses": []}
+            }
+        }
+    });
+    let payload = match vibe_ext::__serde_json::from_value(payload) {
+        Ok(payload) => payload,
+        Err(_) => return failed("native frontend could not build document IR"),
+    };
+    CompileReply::Ok(Box::new(CompileReplyOk {
+        envelope: 1,
+        payload,
+        message: Some("handled compiler-ok frontend".to_owned()),
+    }))
 }
 
 fn minify_reply(request: CompileRequest) -> CompileReply {

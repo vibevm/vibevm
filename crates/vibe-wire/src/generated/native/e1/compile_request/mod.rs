@@ -25,6 +25,11 @@ pub struct CompileRequest {
     pub project: Project,
 
     pub world: World,
+
+    /// Physical filename stem selected for a frontend invocation; absent for
+    /// every other compiler-native call.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub frontend_physical_stem: Option<String>,
 }
 
 pub use crate::generated::shared::AbsorptionOccurrence;

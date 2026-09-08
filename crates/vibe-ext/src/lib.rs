@@ -194,8 +194,9 @@ macro_rules! vibe_extension {
 /// Exports one compiler extension through the four-symbol ABI 1 surface.
 ///
 /// Requests use the generated permissive compiler reader. Behavioral request
-/// admission occurs before the typed handler is called, and only a reply that
-/// preserves the admitted IR shape is serialized.
+/// admission occurs before the typed handler is called. Stage replies preserve
+/// shape; `compile:pass` replies stay strict while the manager checks the
+/// retained row's declared transition.
 #[macro_export]
 macro_rules! vibe_compile_extension {
     (manifest = $manifest:expr, handler = $handler:path $(,)?) => {
@@ -214,8 +215,13 @@ macro_rules! vibe_compile_extension {
             let request: $crate::CompileRequest =
                 $crate::__serde_json::from_slice(request).ok()?;
             let request_shape = $crate::__native_compile::validate_request(&request).ok()?;
+            let pass_transition = request.point == "compile:pass";
             let reply = __vibe_ext_handle(request);
-            $crate::__native_compile::validate_reply_for_shape(request_shape, &reply).ok()?;
+            if pass_transition {
+                $crate::__native_compile::validate_reply(&reply).ok()?;
+            } else {
+                $crate::__native_compile::validate_reply_for_shape(request_shape, &reply).ok()?;
+            }
             $crate::__serde_json::to_vec(&reply).ok()
         }
 

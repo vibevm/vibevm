@@ -1,5 +1,3 @@
-//! Epoch-1 compiler-native wire roots and transport-neutral admission.
-
 use std::any::TypeId;
 use std::collections::BTreeSet;
 use std::path::PathBuf;
@@ -59,6 +57,12 @@ fn payload(name: &str) -> serde_json::Value {
 fn request(point: &str, payload: serde_json::Value) -> compile_request::CompileRequest {
     let mut document = json("formats/corpora/native/e1/compile_request.valid.json");
     document["point"] = point.into();
+    if point != "compile:pass" {
+        document
+            .as_object_mut()
+            .unwrap()
+            .remove("frontend_physical_stem");
+    }
     document["payload"] = payload;
     serde_json::from_value(document).expect("request structurally decodes")
 }
@@ -174,7 +178,6 @@ fn registry_and_schemas_pin_the_two_asymmetric_roots() {
         request["properties"]["payload"]["metadata"]["x-reader-projection"],
         "permissive"
     );
-    assert!(request.get("optionalProperties").is_none());
     assert!(request.get("definitions").is_none());
     for forbidden in ["run", "artifacts", "slot_target", "tasks"] {
         assert!(!keys(&request["properties"]).contains(forbidden));
@@ -216,7 +219,7 @@ fn request_projection_accepts_forward_members_and_refuses_duplicate_known_keys()
     let raw = read("formats/corpora/native/e1/compile_request.valid.json");
     let parsed: compile_request::CompileRequest = serde_json::from_str(&raw)
         .expect("forward root and recursively nested members are ignored");
-    assert_eq!(parsed.point, "compile:source");
+    assert_eq!(parsed.point, "compile:pass");
     assert_eq!(
         validate_request(&parsed).unwrap().carrier,
         IrCarrier::SourceDocument

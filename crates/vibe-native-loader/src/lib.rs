@@ -100,6 +100,29 @@ pub struct NativeCompileInvocation<'a> {
     pub request: &'a [u8],
 }
 
+/// One exactly admitted compiler extension backed by a strong cached handle.
+pub struct NativeCompiler {
+    library: Arc<dyn LibraryHandle>,
+    display_path: String,
+    extension_id: String,
+    point: CompilePoint,
+}
+
+impl NativeCompiler {
+    pub fn extension_id(&self) -> &str {
+        &self.extension_id
+    }
+
+    pub const fn point(&self) -> CompilePoint {
+        self.point
+    }
+
+    pub fn invoke(&self, request: &[u8]) -> Result<Vec<u8>, NativeLoadError> {
+        let response = invoke_admitted(&self.library, request, &self.display_path)?;
+        Ok(response.bytes().to_vec())
+    }
+}
+
 /// One exact package-supplied deploy mechanism invocation.
 #[derive(Debug, Clone, Copy)]
 pub struct NativeMechanismInvocation<'a> {
@@ -237,15 +260,34 @@ impl NativeLoader {
         &self,
         invocation: NativeCompileInvocation<'_>,
     ) -> Result<Vec<u8>, NativeLoadError> {
-        let (library, display_path) = self.admit_library(
+        self.admit_compile(
             invocation.library,
             invocation.extension_id,
-            ExtensionPoint::Compile(invocation.point),
+            invocation.point,
+        )?
+        .invoke(invocation.request)
+    }
+
+    /// Admit ABI 1 and one exact compiler manifest row without invoking it.
+    pub fn admit_compile(
+        &self,
+        library_path: &Path,
+        extension_id: &str,
+        point: CompilePoint,
+    ) -> Result<NativeCompiler, NativeLoadError> {
+        let (library, display_path) = self.admit_library(
+            library_path,
+            extension_id,
+            ExtensionPoint::Compile(point),
             Some(1),
             admission::ManifestFamily::Compiler,
         )?;
-        let response = invoke_admitted(&library, invocation.request, &display_path)?;
-        Ok(response.bytes().to_vec())
+        Ok(NativeCompiler {
+            library,
+            display_path,
+            extension_id: extension_id.to_owned(),
+            point,
+        })
     }
 
     /// Admit one exact mechanism descriptor and retain its owned data beside

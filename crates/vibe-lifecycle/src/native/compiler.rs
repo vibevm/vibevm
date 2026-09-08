@@ -2,11 +2,12 @@
 
 use std::collections::BTreeMap;
 use std::path::Path;
+use std::sync::Mutex;
 
 use specmark::spec;
 use vibe_core::lifecycle::ExtensionPoint;
 use vibe_core::manifest::{ExtensionHandler, MechanismRoutes};
-use vibe_native_loader::{NativeCompileInvocation, NativeLoader};
+use vibe_native_loader::{NativeCompileInvocation, NativeCompiler, NativeLoader};
 use vibe_spec::{
     CompilerNativeCall, CompilerNativeInvoker, CompilerNativeInvokerError,
     CompilerNativeInvokerErrorKind, CompilerNativePolicy, compiler_native_implementation_digest,
@@ -48,6 +49,7 @@ pub struct ArtifactCompilerNativeInvoker<'a> {
     run_id: &'a str,
     loader: &'static NativeLoader,
     facts: PendingFactRecorder,
+    admitted_frontends: Mutex<BTreeMap<u32, AdmittedFrontend>>,
 }
 
 impl<'a> ArtifactCompilerNativeInvoker<'a> {
@@ -102,6 +104,7 @@ impl<'a> ArtifactCompilerNativeInvoker<'a> {
             run_id,
             loader: process_loader(),
             facts: PendingFactRecorder::new(),
+            admitted_frontends: Mutex::new(BTreeMap::new()),
         }
     }
 
@@ -134,26 +137,79 @@ impl<'a> ArtifactCompilerNativeInvoker<'a> {
         &'row self,
         call: CompilerNativeCall<'_>,
     ) -> Result<PreparedCall<'row>, CompilerNativeInvokerError> {
-        let manager_order = call.order();
-        let order = usize::try_from(manager_order).map_err(|_| {
+        let prepared = self.prepare_row(
+            call.key(),
+            call.point(),
+            call.order(),
+            call.config(),
+            call.implementation(),
+        )?;
+        let manager_config = call.config().clone();
+        let frontend_physical_stem = call.frontend_physical_stem().map(str::to_owned);
+        let scratch = execution_scratch(
+            self.selected_project_root,
+            self.run_id,
+            &prepared.qualified_key,
+        )
+        .map_err(|error| {
             failed(format!(
-                "compile row order {} is not an index",
-                call.order()
+                "compile row `{}` scratch: {error}",
+                prepared.qualified_key
             ))
         })?;
+        let request = CompileRequest {
+            envelope: 1,
+            execution: Execution {
+                config: manager_config,
+                id: prepared.row.declaration().id.clone(),
+                package: prepared.row.provider().to_string(),
+            },
+            io: Io {
+                scratch: scratch.display().to_string().replace('\\', "/"),
+            },
+            payload: call.into_payload(),
+            point: prepared.point.to_string(),
+            project: self.project.clone(),
+            world: self.world.clone(),
+            frontend_physical_stem,
+        };
+        native_compile::validate_request(&request).map_err(|error| {
+            failed(format!(
+                "compile row `{}` generated request: {error}",
+                prepared.qualified_key
+            ))
+        })?;
+        Ok(PreparedCall {
+            row: prepared.row,
+            order: prepared.order,
+            point: prepared.point,
+            qualified_key: prepared.qualified_key,
+            request,
+        })
+    }
+
+    fn prepare_row<'row>(
+        &'row self,
+        key: &vibe_core::manifest::ExtensionKey,
+        point: vibe_core::lifecycle::CompilePoint,
+        manager_order: u32,
+        config: &BTreeMap<String, Option<serde_json::Value>>,
+        expected_implementation: vibe_spec::CompilerNativeImplementationDigest,
+    ) -> Result<PreparedRow<'row>, CompilerNativeInvokerError> {
+        let order = usize::try_from(manager_order)
+            .map_err(|_| failed(format!("compile row order {manager_order} is not an index")))?;
         let row = self.all_compile_rows.get(order).copied().ok_or_else(|| {
             failed(format!(
-                "compile row order {} is outside retained epoch {}",
-                call.order(),
+                "compile row order {manager_order} is outside retained epoch {}",
                 self.all_compile_rows.len()
             ))
         })?;
-        if row.key() != call.key() {
+        if row.key() != key {
             return Err(failed(format!(
                 "compile row order {} names `{}`, not `{}`",
-                call.order(),
+                manager_order,
                 row.key(),
-                call.key()
+                key
             )));
         }
         if !row.is_enabled() {
@@ -165,11 +221,11 @@ impl<'a> ArtifactCompilerNativeInvoker<'a> {
                 row.key()
             )));
         }
-        if row.declaration().point != ExtensionPoint::Compile(call.point()) {
+        if row.declaration().point != ExtensionPoint::Compile(point) {
             return Err(failed(format!(
                 "compile row `{}` does not declare point `{}`",
                 row.key(),
-                call.point()
+                point
             )));
         }
         let projected = effective_config(row).map_err(|error| {
@@ -178,7 +234,7 @@ impl<'a> ArtifactCompilerNativeInvoker<'a> {
                 row.key()
             ))
         })?;
-        if &projected != call.config() {
+        if &projected != config {
             return Err(failed(format!(
                 "compile row `{}` effective config differs from manager call",
                 row.key()
@@ -190,7 +246,7 @@ impl<'a> ArtifactCompilerNativeInvoker<'a> {
                 row.key()
             ))
         })?;
-        if implementation != call.implementation() {
+        if implementation != expected_implementation {
             return Err(failed(format!(
                 "compile row `{}` implementation differs from manager call",
                 row.key()
@@ -219,42 +275,89 @@ impl<'a> ArtifactCompilerNativeInvoker<'a> {
             ));
         }
 
-        let qualified_key = call.key().to_string();
-        let point = call.point();
-        let manager_config = call.config().clone();
-        let scratch = execution_scratch(self.selected_project_root, self.run_id, &qualified_key)
-            .map_err(|error| failed(format!("compile row `{qualified_key}` scratch: {error}")))?;
-        let request = CompileRequest {
-            envelope: 1,
-            execution: Execution {
-                config: manager_config,
-                id: row.declaration().id.clone(),
-                package: row.provider().to_string(),
-            },
-            io: Io {
-                scratch: scratch.display().to_string().replace('\\', "/"),
-            },
-            payload: call.into_payload(),
-            point: point.to_string(),
-            project: self.project.clone(),
-            world: self.world.clone(),
-        };
-        native_compile::validate_request(&request).map_err(|error| {
-            failed(format!(
-                "compile row `{qualified_key}` generated request: {error}"
-            ))
-        })?;
-        Ok(PreparedCall {
+        Ok(PreparedRow {
             row,
             order: manager_order,
             point,
-            qualified_key,
-            request,
+            qualified_key: key.to_string(),
         })
     }
 }
 
 impl CompilerNativeInvoker for ArtifactCompilerNativeInvoker<'_> {
+    fn admit_frontend(
+        &self,
+        key: &vibe_core::manifest::ExtensionKey,
+        order: u32,
+        config: &BTreeMap<String, Option<serde_json::Value>>,
+        implementation: vibe_spec::CompilerNativeImplementationDigest,
+    ) -> Result<(), CompilerNativeInvokerError> {
+        let prepared = self.prepare_row(
+            key,
+            vibe_core::lifecycle::CompilePoint::Pass,
+            order,
+            config,
+            implementation,
+        )?;
+        let artifact = match resolve_native_artifact_for_compiler(
+            &self.execution(),
+            prepared.row,
+            prepared.order,
+        ) {
+            Ok(artifact) => artifact,
+            Err(CompilerArtifactResolutionError::Missing { record, .. }) => {
+                return Err(CompilerNativeInvokerError::new(
+                    CompilerNativeInvokerErrorKind::BuildableSourceUnavailable,
+                    format!(
+                        "compile row `{}` source record `{record}` is missing",
+                        prepared.qualified_key
+                    ),
+                ));
+            }
+            Err(CompilerArtifactResolutionError::Artifact(error)) => {
+                return Err(artifact_failure(&prepared.qualified_key, error));
+            }
+            Err(CompilerArtifactResolutionError::Fact(reason)) => {
+                return Err(failed(format!(
+                    "compile row `{}` pending facts: {reason}",
+                    prepared.qualified_key
+                )));
+            }
+        };
+        let image = publish_load_image(
+            self.selected_project_root,
+            Path::new(&artifact.path_absolute),
+            &artifact.digest,
+            artifact.bytes,
+        )
+        .map_err(|error| {
+            failed(format!(
+                "compile row `{}` image: {error}",
+                prepared.qualified_key
+            ))
+        })?;
+        let compiler = self
+            .loader
+            .admit_compile(&image, &prepared.row.declaration().id, prepared.point)
+            .map_err(|error| {
+                failed(format!(
+                    "compile row `{}` loader: {error}",
+                    prepared.qualified_key
+                ))
+            })?;
+        self.admitted_frontends
+            .lock()
+            .map_err(|_| failed("compiler frontend admission cache is unavailable"))?
+            .insert(
+                prepared.order,
+                AdmittedFrontend {
+                    key: prepared.qualified_key,
+                    compiler,
+                },
+            );
+        Ok(())
+    }
+
     fn invoke(&self, call: CompilerNativeCall<'_>) -> Result<Vec<u8>, CompilerNativeInvokerError> {
         let prepared = self.prepare(call)?;
         let encoded = serde_json::to_vec(&prepared.request).map_err(|error| {
@@ -263,6 +366,29 @@ impl CompilerNativeInvoker for ArtifactCompilerNativeInvoker<'_> {
                 prepared.qualified_key
             ))
         })?;
+        if prepared.request.frontend_physical_stem.is_some() {
+            let admitted_frontends = self
+                .admitted_frontends
+                .lock()
+                .map_err(|_| failed("compiler frontend admission cache is unavailable"))?;
+            let admitted = admitted_frontends
+                .get(&prepared.order)
+                .ok_or_else(|| failed("compiler frontend was not pre-admitted"))?;
+            if admitted.key != prepared.qualified_key
+                || admitted.compiler.extension_id() != prepared.row.declaration().id
+                || admitted.compiler.point() != prepared.point
+            {
+                return Err(failed(
+                    "compiler frontend admission differs from retained row",
+                ));
+            }
+            return admitted.compiler.invoke(&encoded).map_err(|error| {
+                failed(format!(
+                    "compile row `{}` loader: {error}",
+                    prepared.qualified_key
+                ))
+            });
+        }
         let execution = self.execution();
         let artifact =
             match resolve_native_artifact_for_compiler(&execution, prepared.row, prepared.order) {
@@ -443,6 +569,18 @@ struct PreparedCall<'row> {
     point: vibe_core::lifecycle::CompilePoint,
     qualified_key: String,
     request: CompileRequest,
+}
+
+struct PreparedRow<'row> {
+    row: &'row ExtensionRegistryRow,
+    order: u32,
+    point: vibe_core::lifecycle::CompilePoint,
+    qualified_key: String,
+}
+
+struct AdmittedFrontend {
+    key: String,
+    compiler: NativeCompiler,
 }
 
 fn artifact_failure(key: &str, error: NativeArtifactError) -> CompilerNativeInvokerError {

@@ -31,5 +31,14 @@
         "description": "The one canonical compiler-IR family, decoded through the generated duplicate-preserving permissive projection for foreign readers."
       }
     }
+  },
+  "optionalProperties": {
+    "frontend_physical_stem": {
+      "type": "string",
+      "metadata": {
+        "x-default": null,
+        "description": "Physical filename stem selected for a frontend invocation; absent for every other compiler-native call."
+      }
+    }
   }
 }

@@ -205,6 +205,9 @@ pub enum NativeCompileError {
     UnsupportedPoint {
         point: DiagnosticScalar,
     },
+    FrontendPhysicalStem {
+        stem: DiagnosticScalar,
+    },
     StageCarrier {
         point: NativeCompilePoint,
         carrier: IrCarrier,
@@ -232,6 +235,9 @@ impl fmt::Display for NativeCompileError {
             }
             Self::UnsupportedPoint { point } => {
                 write!(formatter, "unsupported native compile point `{point}`")
+            }
+            Self::FrontendPhysicalStem { stem } => {
+                write!(formatter, "invalid native frontend physical stem `{stem}`")
             }
             Self::StageCarrier { point, carrier } => {
                 write!(
@@ -276,6 +282,17 @@ pub fn validate_request(
     }
     let shape = validate_ir(&request.payload, CompileWireSide::Request)?;
     let point = NativeCompilePoint::parse(&request.point)?;
+    if let Some(stem) = &request.frontend_physical_stem
+        && (point != NativeCompilePoint::Pass
+            || stem.is_empty()
+            || stem.len() > DIAGNOSTIC_SCALAR_BYTES
+            || stem.chars().any(char::is_control)
+            || stem.contains(['/', '\\']))
+    {
+        return Err(NativeCompileError::FrontendPhysicalStem {
+            stem: DiagnosticScalar::from_wire(stem),
+        });
+    }
     let accepted = match point {
         NativeCompilePoint::Source => shape.carrier == IrCarrier::SourceDocument,
         NativeCompilePoint::Document => shape.carrier == IrCarrier::DocumentDocument,

@@ -1,20 +1,3 @@
-//! `#embed` expansion (PROP-035 §7.1) — the macro splice.
-//!
-//! `#embed <spec://…>` is replaced, textually, by the section (or whole
-//! document) the address names. Expansion is **recursive to a fixed point**: an
-//! embedded section may itself contain `#embed`, and those are expanded too, so
-//! no `#embed` survives the output. A cycle guard (PROP-035 §9) keys on the
-//! address currently being expanded and rejects a repeat with the offending
-//! path (`a → b → a`), the same diagnostic C's include guards give.
-//!
-//! The section text an address resolves to is supplied by a [`SectionSource`],
-//! so the expander is testable without a filesystem. [`FsSectionSource`] is the
-//! real one — it composes the whole crate: [`FileResolver`] to find the file,
-//! then [`DocTree`] to resolve the anchor to a node and take its text.
-//!
-//! Spliced text is wrapped in open/close markers (PROP-035 §11) so the result
-//! stays reversible.
-
 use std::collections::{BTreeMap, HashMap};
 use std::fmt::Write as _;
 use std::path::{Path, PathBuf};
@@ -25,43 +8,92 @@ use crate::directives::{DirectiveKind, Directives};
 use crate::doctree::DocTree;
 use crate::resolver::FileResolver;
 
-/// Supplies the text a `spec://` address resolves to. Abstract so `#embed`
-/// expansion can be driven from a filesystem, an in-memory map, or a test mock.
-///
-/// The fold and the use-graph traverser both reach a document's `#source` edges
-/// through this trait, so the one fact they share — a `#source` address may name
-/// a *set* (a glob), not a file — lives here as [`SectionSource::expand_pattern`].
 pub trait SectionSource {
-    /// The text of the section (or whole document) `addr` names, or a reason it
-    /// could not be produced.
     fn section_text(&self, addr: &SpecAddress) -> Result<String, String>;
 
-    /// Resolve one compiler source under the active owner-format set. The
-    /// default preserves every existing in-memory source as canonical Markdown.
-    fn resolved_source(
+    fn source_metadata(
         &self,
         addr: &SpecAddress,
         _active_formats: &[String],
+    ) -> Result<ResolvedSourceMetadata, String> {
+        ResolvedSourceMetadata::new(
+            PathBuf::from(&addr.doc_path),
+            "markdown".to_owned(),
+            logical_stem(addr),
+        )
+    }
+
+    fn read_resolved_source(
+        &self,
+        addr: &SpecAddress,
+        metadata: ResolvedSourceMetadata,
     ) -> Result<ResolvedSource, String> {
+        if metadata.format() != "markdown" {
+            return Err("custom source metadata requires an explicit admitted reader".to_owned());
+        }
         Ok(ResolvedSource::markdown(
             self.section_text(addr)?,
-            logical_stem(addr),
+            metadata.physical_stem,
         ))
     }
 
-    /// Expand `addr` into the concrete addresses it denotes — a pattern (a `*`
-    /// in the package name) into its sorted member set, a point address into
-    /// exactly itself. The default returns the address unchanged, so a source
-    /// with no notion of an installed set (every test mock, every in-memory map)
-    /// degrades to point behaviour rather than breaking, and no existing
-    /// [`SectionSource`] needs touching when this lands. [`FsSectionSource`]
-    /// overrides it to delegate to the resolver's total oracle.
+    fn resolved_source(
+        &self,
+        addr: &SpecAddress,
+        active_formats: &[String],
+    ) -> Result<ResolvedSource, String> {
+        let metadata = self.source_metadata(addr, active_formats)?;
+        self.read_resolved_source(addr, metadata)
+    }
+
     fn expand_pattern(&self, addr: &SpecAddress) -> Result<Vec<SpecAddress>, String> {
         Ok(vec![addr.clone()])
     }
 }
 
-/// One physical source observation before frontend execution.
+/// Text-free physical source identity resolved before content admission.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ResolvedSourceMetadata {
+    origin: PathBuf,
+    format: crate::compiler::ir::SourceFormatId,
+    physical_stem: String,
+}
+
+impl ResolvedSourceMetadata {
+    pub fn new(
+        origin: impl Into<PathBuf>,
+        format: String,
+        physical_stem: String,
+    ) -> Result<Self, String> {
+        if format != "markdown"
+            && (physical_stem.is_empty()
+                || physical_stem.len() > 128
+                || physical_stem.chars().any(char::is_control)
+                || physical_stem.contains(['/', '\\']))
+        {
+            return Err("physical source stem is empty, unsafe, or exceeds 128 bytes".to_owned());
+        }
+        Ok(Self {
+            origin: origin.into(),
+            format: crate::compiler::ir::SourceFormatId::new(format)
+                .map_err(|error| error.to_string())?,
+            physical_stem,
+        })
+    }
+
+    pub fn origin(&self) -> &Path {
+        &self.origin
+    }
+
+    pub fn format(&self) -> &str {
+        self.format.as_str()
+    }
+
+    pub fn physical_stem(&self) -> &str {
+        &self.physical_stem
+    }
+}
+
 #[derive(Debug)]
 pub struct ResolvedSource {
     text: String,
@@ -120,10 +152,6 @@ pub fn expand_embeds(text: &str, source: &impl SectionSource) -> Result<String, 
     expand_with(text, "", &mut resolve, &mut edge)
 }
 
-/// Shared byte engine used by the public helper and the named compiler pass.
-/// `edge` receives the pinless source context and the embed directive's ordinal
-/// among embeds in that context, a stable authored-occurrence identity even
-/// when pre-embed normalization removes preceding use/source lines.
 pub(crate) fn expand_with(
     text: &str,
     root_context: &str,
@@ -185,16 +213,6 @@ fn expand_rec(
     Ok(out)
 }
 
-/// The real [`SectionSource`]: resolve the address to a file (either
-/// serialisation), read it through the spec-source dispatch, and take the
-/// addressed node's text — the crate's layers composed end to end.
-///
-/// A `.xml` source never reaches the tree raw: `load_spec_text` delivers its
-/// canonical Markdown projection (PROP-045 ##PROJECTION-READ), so the fold,
-/// the embed expansion and the anchor resolution all work unchanged over
-/// either form — the recorded degradation being that a diagnostic naming a
-/// line inside an XML dependency cites the projection's line, not the
-/// XML source's.
 pub struct FsSectionSource {
     resolver: FileResolver,
     overlay: BTreeMap<PathBuf, Arc<[u8]>>,
@@ -208,26 +226,48 @@ impl FsSectionSource {
         }
     }
 
-    /// Resolve through `resolver` exactly as [`Self::new`] does, replacing
-    /// only files whose exact resolved path is present in `overlay`.
-    ///
-    /// Overlay bytes remain owned by this source. They are projected through
-    /// the same Markdown/XML dispatch as filesystem bytes before anchor
-    /// lookup; addresses absent from the map retain the ordinary filesystem
-    /// path and diagnostics.
     #[must_use]
     pub fn with_overlay(resolver: FileResolver, overlay: BTreeMap<PathBuf, Arc<[u8]>>) -> Self {
         Self { resolver, overlay }
+    }
+
+    fn read_resolved(
+        &self,
+        addr: &SpecAddress,
+        metadata: ResolvedSourceMetadata,
+    ) -> Result<ResolvedSource, String> {
+        if metadata.format() == "markdown" {
+            let src = match self.overlay.get(metadata.origin()) {
+                Some(bytes) => project_overlay(metadata.origin(), bytes)?,
+                None => vibe_specdoc::load_spec_text(metadata.origin())
+                    .map(|(src, _kind)| src)
+                    .map_err(|error| error.to_string())?,
+            };
+            return resolve_section(&src, metadata.origin(), addr)
+                .map(|text| ResolvedSource::markdown(text, metadata.physical_stem));
+        }
+        let owned;
+        let bytes = match self.overlay.get(metadata.origin()) {
+            Some(bytes) => bytes.as_ref(),
+            None => {
+                owned = std::fs::read(metadata.origin()).map_err(|error| error.to_string())?;
+                &owned
+            }
+        };
+        let text = std::str::from_utf8(bytes)
+            .map_err(|error| {
+                format!(
+                    "custom source `{}` is not UTF-8: {error}",
+                    metadata.origin().display()
+                )
+            })?
+            .to_owned();
+        ResolvedSource::custom(text, metadata.format().to_owned(), metadata.physical_stem)
     }
 }
 
 impl SectionSource for FsSectionSource {
     fn expand_pattern(&self, addr: &SpecAddress) -> Result<Vec<SpecAddress>, String> {
-        // Delegate to the resolver's total oracle: a non-pattern address
-        // denotes exactly itself (it returns before any scan), a pattern
-        // denotes its sorted members, and a pattern matching nothing is the
-        // empty set — so the trait's "what does this address denote" question
-        // has one answer, whatever calls it.
         self.resolver
             .expand_pattern(addr)
             .map_err(|e| e.to_string())
@@ -247,37 +287,24 @@ impl SectionSource for FsSectionSource {
         resolve_section(&src, &file, addr)
     }
 
-    fn resolved_source(
+    fn source_metadata(
         &self,
         addr: &SpecAddress,
         active_formats: &[String],
-    ) -> Result<ResolvedSource, String> {
+    ) -> Result<ResolvedSourceMetadata, String> {
         let resolved = self
             .resolver
             .resolve_source_file(addr, active_formats)
             .map_err(|error| error.to_string())?;
-        if resolved.format == "markdown" {
-            return self
-                .section_text(addr)
-                .map(|text| ResolvedSource::markdown(text, resolved.physical_stem));
-        }
-        let owned;
-        let bytes = match self.overlay.get(&resolved.path) {
-            Some(bytes) => bytes.as_ref(),
-            None => {
-                owned = std::fs::read(&resolved.path).map_err(|error| error.to_string())?;
-                &owned
-            }
-        };
-        let text = std::str::from_utf8(bytes)
-            .map_err(|error| {
-                format!(
-                    "custom source `{}` is not UTF-8: {error}",
-                    resolved.path.display()
-                )
-            })?
-            .to_owned();
-        ResolvedSource::custom(text, resolved.format, resolved.physical_stem)
+        ResolvedSourceMetadata::new(resolved.path, resolved.format, resolved.physical_stem)
+    }
+
+    fn read_resolved_source(
+        &self,
+        addr: &SpecAddress,
+        metadata: ResolvedSourceMetadata,
+    ) -> Result<ResolvedSource, String> {
+        self.read_resolved(addr, metadata)
     }
 }
 

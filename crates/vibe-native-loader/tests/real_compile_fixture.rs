@@ -4,7 +4,7 @@ use serde_json::json;
 use vibe_core::lifecycle::CompilePoint;
 use vibe_native_loader::{NativeCompileInvocation, NativeLoadError, NativeLoader};
 use vibe_wire::generated::native::e1::compile_reply::CompileReply;
-use vibe_wire::generated::native::e1::compile_request::CompileRequest;
+use vibe_wire::generated::native::e1::compile_request::{CompileRequest, Ir};
 
 #[test]
 fn real_compiler_fixture_loads_raw_statuses_and_recovers_after_panic() {
@@ -52,8 +52,43 @@ fn real_compiler_fixture_loads_raw_statuses_and_recovers_after_panic() {
     }
 }
 
+#[test]
+fn real_compiler_frontend_derives_title_from_physical_stem() {
+    let loader = NativeLoader::new();
+    let library = fixture_library();
+    let mut request = request("compiler-ok");
+    request.frontend_physical_stem = Some("NOTE-descriptive".to_owned());
+    let Ir::SourceDocument(source) = &mut request.payload else {
+        unreachable!("fixture request carries source IR")
+    };
+    source.doc.format = "txt".to_owned();
+    source.doc.text = "first\n\nsecond\n".to_owned();
+
+    let raw = invoke_request(&loader, &library, "compiler-ok", &request).unwrap();
+    let CompileReply::Ok(reply) = decode(&raw) else {
+        panic!("frontend returns an ok document")
+    };
+    let Ir::DocumentDocument(document) = reply.payload else {
+        panic!("frontend returns document IR")
+    };
+    assert_eq!(document.doc.tree.nodes[1].heading, "NOTE-descriptive");
+    assert_eq!(
+        document.doc.tree.lines,
+        ["# NOTE-descriptive {#root}", "", "first", "", "second"]
+    );
+}
+
 fn invoke(loader: &NativeLoader, library: &Path, id: &str) -> Result<Vec<u8>, NativeLoadError> {
-    let request = serde_json::to_vec(&request(id)).expect("compile request JSON");
+    invoke_request(loader, library, id, &request(id))
+}
+
+fn invoke_request(
+    loader: &NativeLoader,
+    library: &Path,
+    id: &str,
+    request: &CompileRequest,
+) -> Result<Vec<u8>, NativeLoadError> {
+    let request = serde_json::to_vec(request).expect("compile request JSON");
     loader.invoke_compile(NativeCompileInvocation {
         library,
         extension_id: id,

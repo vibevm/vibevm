@@ -126,13 +126,25 @@ impl SectionSource for MixedSource {
         panic!("the typed discovery boundary must be used")
     }
 
-    fn resolved_source(
+    fn source_metadata(
         &self,
         addr: &SpecAddress,
         active_formats: &[String],
-    ) -> Result<ResolvedSource, String> {
+    ) -> Result<crate::ResolvedSourceMetadata, String> {
         if addr.to_string().contains("/txt/") {
             assert_eq!(active_formats, ["txt"]);
+            crate::ResolvedSourceMetadata::new("NOTE.txt", "txt".into(), "NOTE".into())
+        } else {
+            crate::ResolvedSourceMetadata::new("MD.md", "markdown".into(), "MD".into())
+        }
+    }
+
+    fn read_resolved_source(
+        &self,
+        _addr: &SpecAddress,
+        metadata: crate::ResolvedSourceMetadata,
+    ) -> Result<ResolvedSource, String> {
+        if metadata.format() == "txt" {
             ResolvedSource::custom("first\n\nsecond\n".into(), "txt".into(), "NOTE".into())
         } else {
             Ok(ResolvedSource::markdown(

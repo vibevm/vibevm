@@ -10,6 +10,9 @@ use vibe_wire::generated::native::e1::context::Context;
 
 use super::*;
 
+#[path = "compile_admission_tests.rs"]
+mod admission_tests;
+
 type ErrorClassifier = fn(&NativeLoadError) -> bool;
 type LifecycleReplyCase = (Vec<u8>, ErrorClassifier);
 type CompilerManifestCase = (&'static str, CompilePoint, Vec<u8>, ErrorClassifier);
@@ -43,6 +46,7 @@ impl FakeCall {
 }
 
 struct FakeLibrary {
+    abi: u32,
     manifest: Vec<u8>,
     calls: Mutex<VecDeque<FakeCall>>,
     invoke_count: AtomicUsize,
@@ -52,7 +56,7 @@ struct FakeLibrary {
 
 impl ffi::LibraryHandle for FakeLibrary {
     fn abi(&self) -> u32 {
-        1
+        self.abi
     }
 
     fn manifest_bytes(&self, _path: &str) -> Result<Vec<u8>, NativeLoadError> {
@@ -103,6 +107,7 @@ fn loader_for(
     calls: impl IntoIterator<Item = FakeCall>,
 ) -> (NativeLoader, Arc<FakeLibrary>, Arc<FakeOpener>) {
     let library = Arc::new(FakeLibrary {
+        abi: 1,
         manifest,
         calls: Mutex::new(calls.into_iter().collect()),
         invoke_count: AtomicUsize::new(0),
@@ -547,14 +552,31 @@ fn compile_and_lifecycle_are_structurally_fenced_to_shared_loader_paths() {
         .split_once("impl NativeLoader {")
         .expect("NativeLoader implementation")
         .1;
-    for method in ["pub fn invoke(&self", "pub fn invoke_compile("] {
-        let start = loader.find(method).expect("NativeLoader public method");
-        let tail = &loader[start..];
-        let end = tail.find("\n    }").expect("method end");
-        let body = &tail[..end];
-        assert!(body.contains("self.admit_library("));
-        assert!(body.contains("invoke_admitted("));
-    }
+    let compile = loader
+        .split_once("pub fn invoke_compile(")
+        .expect("compile invocation")
+        .1
+        .split_once("\n    }")
+        .unwrap()
+        .0;
+    assert!(compile.contains("self.admit_compile("));
+    assert!(compile.contains(".invoke(invocation.request)"));
+    let admit = loader
+        .split_once("pub fn admit_compile(")
+        .expect("compile admission")
+        .1
+        .split_once("\n    }")
+        .unwrap()
+        .0;
+    assert!(admit.contains("self.admit_library("));
+    assert!(!admit.contains("invoke_admitted("));
+    let handle = product
+        .split_once("impl NativeCompiler {")
+        .expect("admitted compiler handle")
+        .1;
+    assert!(handle.contains("invoke_admitted(&self.library"));
+    assert!(loader.contains("self.admit_library("));
+    assert!(loader.contains("invoke_admitted("));
     assert!(!product.contains("compile_reply"));
     assert!(!include_str!("admission.rs").contains("compile_reply"));
     assert!(!include_str!("error.rs").contains("compile_reply"));

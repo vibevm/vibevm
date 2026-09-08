@@ -137,10 +137,6 @@ struct ParseError {
     format: String,
 }
 
-// Whether a newly constructed built-in schedule turns the R3.3 verify-each
-// seam on. It defaults to ON, so every existing unit test keeps crossing the
-// real verifier exactly as before; thread-local because the suite runs tests
-// in parallel and one scope must not disarm another test's verifier.
 #[cfg(test)]
 std::thread_local! {
     static VERIFY_EACH: std::cell::Cell<bool> = const { std::cell::Cell::new(true) };
@@ -151,14 +147,7 @@ fn verify_each_enabled() -> bool {
     VERIFY_EACH.with(std::cell::Cell::get)
 }
 
-/// Build and run built-in schedules exactly as PRODUCTION builds them — with
-/// the inter-pass verifier hook absent — for the duration of `body`.
-///
-/// This exists so a guarantee that must not depend on the optional verifier
-/// can be tested against the construction production actually uses. The guard
-/// restores the previous state on drop, so a failing assertion inside `body`
-/// cannot leak the off state into the rest of the thread's work. It is
-/// `#[cfg(test)]` and deliberately not widened into `feature = "test-support"`.
+/// Run a test under the production verifier default.
 #[cfg(test)]
 pub(crate) fn without_verify_each<T>(body: impl FnOnce() -> T) -> T {
     struct Restore(bool);
@@ -178,7 +167,7 @@ pub(crate) struct BuiltinSchedule<'invoke> {
     close_state: CloseState,
     transforms: TransformSchedule<'invoke>,
     transform_names: Vec<PassName>,
-    pub(super) frontends: FrontendSeats,
+    pub(super) frontends: FrontendSeats<'invoke>,
 }
 
 fn transform_public(inner: TransformError) -> ArtifactCompileError {
@@ -230,11 +219,6 @@ impl<'invoke> BuiltinSchedule<'invoke> {
         pipeline
             .push_builtin_artifact(LinkPass::new())
             .expect("the static built-in link schedule is valid");
-        // The R3.3 test-only enabling seam: every built-in pass output crosses
-        // the real verifier hook in unit tests. Production construction keeps
-        // the verifier off, byte- and error-identical to before. One scoped
-        // cfg-test switch ([`without_verify_each`]) turns it off so a test can
-        // observe exactly the schedule production builds.
         #[cfg(test)]
         if verify_each_enabled() {
             pipeline.enable_verify_each_for_tests();
@@ -282,7 +266,8 @@ impl<'invoke> BuiltinSchedule<'invoke> {
         }
         let mut schedule =
             Self::emitted_base_with_invoker(plan, transforms, registry, observer, invoker, policy)?;
-        schedule.frontends = FrontendSeats::deferred(catalogs.frontends());
+        schedule.frontends = FrontendSeats::native(catalogs.frontends(), invoker)
+            .map_err(frontend_admission_error)?;
         schedule
             .frontends
             .validate(&schedule.pipeline)
@@ -310,9 +295,6 @@ impl<'invoke> BuiltinSchedule<'invoke> {
         invoker: Option<&'invoke dyn CompilerNativeInvoker>,
         policy: Option<&'invoke NativePolicySession>,
     ) -> Result<Self, ArtifactCompileError> {
-        // Transform resolution — including the compatibility-fragment frame
-        // refusal — precedes the backend lookup, exactly as the frozen T6b
-        // construction order demands.
         let schedule = Self::assembled_with_invoker(plan, transforms, observer, invoker, policy)?;
         let backend = registry
             .selected(&plan.context().target())
@@ -322,8 +304,6 @@ impl<'invoke> BuiltinSchedule<'invoke> {
         Self::append_emit(schedule, backend, plan, observer)
     }
 
-    /// The custom-backend construction path of the test-support vehicles;
-    /// production always selects through [`Self::emitted`].
     #[cfg(feature = "test-support")]
     fn with_backend(
         plan: &ArtifactPlan,
@@ -334,7 +314,6 @@ impl<'invoke> BuiltinSchedule<'invoke> {
         Self::append_emit(schedule, backend, plan, &None)
     }
 
-    /// Append emit with the artifact's active compiler-plan header.
     fn append_emit(
         mut schedule: Self,
         backend: std::sync::Arc<dyn EmitBackend>,
@@ -361,6 +340,26 @@ impl<'invoke> BuiltinSchedule<'invoke> {
     ) -> Result<DocumentIr, CompilerPipelineError> {
         self.frontends
             .run(&self.pipeline, source, physical_stem, trace)
+    }
+
+    fn admit_frontend(&self, format: &str) -> Result<(), ArtifactCompileError> {
+        self.frontends
+            .admit(format)
+            .map_err(frontend_admission_error)
+    }
+
+    fn frontend_error(&self, error: CompilerPipelineError) -> ArtifactCompileError {
+        match error {
+            CompilerPipelineError::Segment(PassSegmentError::VerificationFailed {
+                pass,
+                source,
+                ..
+            }) if pass.as_str().starts_with("pass:") => ArtifactCompileError::Pass {
+                pass: pass.to_string(),
+                reason: format!("inter-pass verification rejected the output: {source}"),
+            },
+            other => self.document_error(other),
+        }
     }
 
     fn record_failure(&self, address: &SpecAddress, reason: String) {
@@ -426,6 +425,20 @@ impl<'invoke> BuiltinSchedule<'invoke> {
                 }),
             },
         }
+    }
+}
+
+fn frontend_admission_error(
+    error: super::pass_tier::frontend::FrontendAdmissionError,
+) -> ArtifactCompileError {
+    match error.pass {
+        Some(pass) => ArtifactCompileError::Pass {
+            pass: pass.to_string(),
+            reason: error.reason,
+        },
+        None => ArtifactCompileError::Manager {
+            reason: error.reason,
+        },
     }
 }
 
@@ -530,12 +543,6 @@ impl BuiltinSchedule<'static> {
     }
 }
 
-/// Compile one validated whole artifact plan through the artifact prefix.
-///
-/// Parse-dependent discovery invokes the document segment per honest document,
-/// crosses one gather barrier, then the whole artifact segment runs once. A
-/// document-segment failure — transform or otherwise — propagates through
-/// T6a's fallible discovery with its typed fault intact.
 pub(crate) fn compile_artifact_prefix(
     plan: ArtifactPlan,
     source: &impl SectionSource,

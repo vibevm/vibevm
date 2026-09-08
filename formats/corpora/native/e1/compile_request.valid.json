@@ -1,6 +1,7 @@
 {
   "envelope": 1,
-  "point": "compile:source",
+  "frontend_physical_stem": "GUIDE-descriptive",
+  "point": "compile:pass",
   "execution": {
     "id": "source-transform",
     "package": "org.example/native-compiler",
