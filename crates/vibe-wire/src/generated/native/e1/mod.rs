@@ -5,6 +5,8 @@
 // this file by hand will be overwritten on the next codegen run.
 
 pub mod backend_reply;
+pub mod build_reply;
+pub mod build_request;
 pub mod compile_reply;
 pub mod compile_request;
 pub mod context;

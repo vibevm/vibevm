@@ -230,6 +230,22 @@ foreign_parsers = "many"
 corpus = "formats/corpora/native/e1"
 sunset = "none"
 
+[format.native-build-request]
+epoch = 1
+schema = "schemas/native/e1/build_request.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "formats/corpora/native/e1"
+sunset = "none"
+
+[format.native-build-reply]
+epoch = 1
+schema = "schemas/native/e1/build_reply.jtd.json"
+recoverable = true
+foreign_parsers = "none"
+corpus = "formats/corpora/native/e1"
+sunset = "none"
+
 [format.native-deploy-request]
 epoch = 1
 schema = "schemas/native/e1/deploy_request.jtd.json"

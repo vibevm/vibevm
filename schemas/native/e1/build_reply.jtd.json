@@ -1,0 +1,55 @@
+{
+  "metadata": {
+    "description": "Epoch-1 host-read native build-provider reply. Every operation and nested object is strict.",
+    "x-diagnostic-cap-bytes": 8192,
+    "x-reply-cap-bytes": 25165824,
+    "x-relational-laws": [
+      "envelope-protocol: envelope and protocol are exactly the admitted mechanism epoch",
+      "reply-operation: reply operation equals the retained request operation",
+      "fail-message: fail messages are nonblank, bounded and control-free",
+      "plan-outputs: planned outputs exactly match declared ids/kinds in order and use unique contained paths",
+      "fingerprint: digest is exactly 64 lowercase hex and summaries are bounded",
+      "staged-outputs: staged outputs exactly match the accepted plan in order",
+      "verification-rows: verification rows exactly match staged outputs in order with canonical digest and byte count"
+    ],
+    "rustOptions": {"package": "vibe_wire::native::e1::build_reply"}
+  },
+  "discriminator": "operation",
+  "mapping": {
+    "plan": {"properties": {"envelope": {"type": "uint32"}, "protocol": {"type": "uint32"}, "result": {"ref": "plan_result"}}},
+    "fingerprint": {"properties": {"envelope": {"type": "uint32"}, "protocol": {"type": "uint32"}, "result": {"ref": "fingerprint_result"}}},
+    "apply": {"properties": {"envelope": {"type": "uint32"}, "protocol": {"type": "uint32"}, "result": {"ref": "apply_result"}}},
+    "verify": {"properties": {"envelope": {"type": "uint32"}, "protocol": {"type": "uint32"}, "result": {"ref": "verify_result"}}}
+  },
+  "definitions": {
+    "plan_result": {"discriminator": "status", "mapping": {
+      "ok": {"properties": {"plan": {"ref": "build_plan"}}},
+      "fail": {"properties": {"message": {"type": "string"}}}
+    }},
+    "fingerprint_result": {"discriminator": "status", "mapping": {
+      "ok": {"properties": {"fingerprint": {"ref": "build_fingerprint"}}},
+      "fail": {"properties": {"message": {"type": "string"}}}
+    }},
+    "apply_result": {"discriminator": "status", "mapping": {
+      "ok": {"properties": {"staged": {"elements": {"ref": "staged_output"}, "metadata": {"x-empty": "emit"}}, "evidence": {"type": "string"}}},
+      "fail": {"properties": {"message": {"type": "string"}}}
+    }},
+    "verify_result": {"discriminator": "status", "mapping": {
+      "ok": {"properties": {"verified": {"elements": {"ref": "verified_output"}, "metadata": {"x-empty": "emit"}}, "evidence": {"type": "string"}}},
+      "fail": {"properties": {"message": {"type": "string"}}}
+    }},
+    "build_plan": {"properties": {"summary": {"type": "string"}, "outputs": {"elements": {"ref": "planned_output"}, "metadata": {"x-empty": "emit"}}}},
+    "planned_output": {"properties": {
+      "id": {"type": "string"}, "kind": {"type": "string"}, "shape": {"type": "string"}, "path_relative": {"type": "string"}
+    }},
+    "build_fingerprint": {"properties": {"digest": {"type": "string"}, "summary": {"type": "string"}}},
+    "staged_output": {"properties": {
+      "id": {"type": "string"}, "path_relative": {"type": "string"},
+      "fresh": {"type": "boolean"}
+    }},
+    "verified_output": {"properties": {
+      "id": {"type": "string"}, "path_relative": {"type": "string"},
+      "digest": {"type": "string"}, "bytes": {"type": "string"}
+    }}
+  }
+}

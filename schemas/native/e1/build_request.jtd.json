@@ -1,0 +1,85 @@
+{
+  "metadata": {
+    "description": "Epoch-1 host-authored native build-provider request. Four operations are closed while object readers remain permissive for additive evolution.",
+    "x-diagnostic-cap-bytes": 8192,
+    "x-vocabularies": ["native_deploy_artifact_kind", "native_deploy_artifact_shape"],
+    "x-relational-laws": [
+      "envelope-protocol: envelope and protocol are exactly the admitted mechanism epoch",
+      "exact-identity: provider, build mechanism and target equal the selected engine values",
+      "canonical-config: target config and output selection TOML preserve absence and canonical spelling",
+      "paths: project/build/staging roots and declared paths use canonical contained spellings",
+      "declared-sets: inputs are unique and outputs are nonempty with unique ids",
+      "accepted-chain: fingerprint, apply and verify carry the exact accepted plan/fingerprint prefix",
+      "staged-authority: apply and verify stage only the accepted outputs under the engine staging root"
+    ],
+    "rustOptions": {"package": "vibe_wire::native::e1::build_request"}
+  },
+  "discriminator": "operation",
+  "mapping": {
+    "plan": {
+      "properties": {
+        "envelope": {"type": "uint32"}, "protocol": {"type": "uint32"},
+        "identity": {"ref": "invocation_identity"}, "target": {"ref": "build_target"},
+        "authority": {"ref": "build_authority"}
+      }
+    },
+    "fingerprint": {
+      "properties": {
+        "envelope": {"type": "uint32"}, "protocol": {"type": "uint32"},
+        "identity": {"ref": "invocation_identity"}, "target": {"ref": "build_target"},
+        "authority": {"ref": "build_authority"}, "plan": {"ref": "build_plan"}
+      }
+    },
+    "apply": {
+      "properties": {
+        "envelope": {"type": "uint32"}, "protocol": {"type": "uint32"},
+        "identity": {"ref": "invocation_identity"}, "target": {"ref": "build_target"},
+        "authority": {"ref": "build_authority"}, "plan": {"ref": "build_plan"},
+        "fingerprint": {"ref": "build_fingerprint"}, "staging": {"ref": "staging_authority"}
+      }
+    },
+    "verify": {
+      "properties": {
+        "envelope": {"type": "uint32"}, "protocol": {"type": "uint32"},
+        "identity": {"ref": "invocation_identity"}, "target": {"ref": "build_target"},
+        "authority": {"ref": "build_authority"}, "plan": {"ref": "build_plan"},
+        "fingerprint": {"ref": "build_fingerprint"}, "staging": {"ref": "staging_authority"},
+        "staged": {"elements": {"ref": "staged_output"}, "metadata": {"x-empty": "emit"}}
+      }
+    }
+  },
+  "definitions": {
+    "invocation_identity": {"properties": {"provider": {"type": "string"}, "mechanism": {"type": "string"}, "target": {"type": "string"}}},
+    "build_target": {
+      "properties": {"id": {"type": "string"}, "workdir": {"type": "string"}, "outputs": {"elements": {"ref": "declared_output"}, "metadata": {"x-empty": "emit"}}},
+      "optionalProperties": {"inputs": {"elements": {"ref": "declared_input"}, "metadata": {"x-default": null, "x-empty": "emit"}}, "config_toml": {"type": "string", "metadata": {"x-default": null}}}
+    },
+    "declared_input": {"discriminator": "kind", "mapping": {
+      "path": {"properties": {"path_relative": {"type": "string"}}},
+      "artifact": {"properties": {"artifact": {"type": "string"}}}
+    }},
+    "declared_output": {
+      "properties": {"id": {"type": "string"}, "kind": {"ref": "native_deploy_artifact_kind"}},
+      "optionalProperties": {"select_toml": {"type": "string", "metadata": {"x-default": null}}}
+    },
+    "build_authority": {"properties": {
+      "project_root_absolute": {"type": "string"}, "build_root_absolute": {"type": "string"},
+      "build_root_relative": {"type": "string"}, "offline": {"type": "boolean"}
+    }},
+    "build_plan": {"properties": {
+      "summary": {"type": "string"},
+      "outputs": {"elements": {"ref": "planned_output"}, "metadata": {"x-empty": "emit"}}
+    }},
+    "planned_output": {"properties": {
+      "id": {"type": "string"}, "kind": {"ref": "native_deploy_artifact_kind"},
+      "shape": {"ref": "native_deploy_artifact_shape"}, "path_relative": {"type": "string"}
+    }},
+    "build_fingerprint": {"properties": {"digest": {"type": "string"}, "summary": {"type": "string"}}},
+    "staging_authority": {"properties": {"root_absolute": {"type": "string"}, "root_relative": {"type": "string"}}},
+    "staged_output": {"properties": {
+      "id": {"type": "string"}, "kind": {"ref": "native_deploy_artifact_kind"},
+      "shape": {"ref": "native_deploy_artifact_shape"}, "path_relative": {"type": "string"},
+      "fresh": {"type": "boolean"}
+    }}
+  }
+}
