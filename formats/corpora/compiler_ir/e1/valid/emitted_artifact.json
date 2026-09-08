@@ -8,11 +8,11 @@
       "context": {
         "artifact": "opaque-test",
         "target": "opaque-test",
-        "frame": {"kind": "compatibility-fragment"},
-        "mode": "plain"
+        "frame": {"kind": "static-lane", "generated_path": "artifacts/opaque-test", "source_root": "vibevm/vibespecs"},
+        "mode": "qualify-per-node"
       },
       "backend": "opaque-test",
-      "producer": "emit:opaque-test",
+      "producer": "pass:org.demo/tools#opaque",
       "source_lane_digest": "55c09fcad1c2cb4c9fc653fc0d15429958bd007d00ae2ba6d286d9362333b4a8",
       "renames": [],
       "contributions": [

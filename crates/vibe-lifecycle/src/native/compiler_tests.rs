@@ -25,6 +25,9 @@ use super::*;
 #[path = "compiler_frontend_tests.rs"]
 mod frontend_tests;
 
+#[path = "compiler_backend_admission_tests.rs"]
+mod backend_tests;
+
 const RUN_ID: &str = "0123456789abcdef0123456789abcdef";
 
 fn declaration(

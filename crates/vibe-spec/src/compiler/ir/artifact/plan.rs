@@ -5,7 +5,7 @@
 use std::collections::BTreeMap;
 
 use crate::SpecAddress;
-use crate::compiler::ir::{ArtifactTarget, SourceIr};
+use crate::compiler::ir::{ArtifactTarget, BackendId, SourceIr};
 use crate::compiler::pass_tier::PassPlan;
 use crate::compiler::transform::plan::TransformPlan;
 
@@ -119,13 +119,29 @@ impl ArtifactPlan {
         backend: &'static str,
         contributions: Vec<ArtifactInput>,
     ) -> Result<Self, ArtifactPlanError> {
-        let target = ArtifactTarget::custom(backend)
-            .expect("the test-support backend id is a valid BackendId");
+        Self::custom_backend(
+            BackendId::new(backend).expect("the test backend id is valid"),
+            format!("artifacts/{backend}"),
+            "vibevm/vibespecs",
+            contributions,
+        )
+    }
+
+    pub(crate) fn custom_backend(
+        backend: BackendId,
+        generated_path: impl Into<String>,
+        source_root: impl Into<String>,
+        contributions: Vec<ArtifactInput>,
+    ) -> Result<Self, ArtifactPlanError> {
+        let target = ArtifactTarget::custom_backend(backend);
         let context = ArtifactContext::new(
-            ArtifactId::new(backend)?,
+            ArtifactId::new(target.backend_id())?,
             target,
-            ArtifactFrame::CompatibilityFragment,
-            StaticCompileMode::Plain,
+            ArtifactFrame::StaticLane {
+                generated_path: generated_path.into(),
+                source_root: source_root.into(),
+            },
+            StaticCompileMode::QualifyPerNode,
         )?;
         Self::new(context, contributions)
     }

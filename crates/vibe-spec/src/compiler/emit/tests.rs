@@ -3,7 +3,9 @@ use std::{cell::Cell, rc::Rc};
 
 use super::*;
 use crate::compiler::backend::{BackendRegistry, EmitBackend};
-use crate::compiler::builtin::{compile_artifact_lane, compile_artifact_with_registry};
+use crate::compiler::builtin::{
+    compile_artifact_lane, compile_artifact_with_backend_id, compile_artifact_with_registry,
+};
 use crate::compiler::ir::{
     ArtifactContext, ArtifactFrame, ArtifactId, ArtifactInput, ArtifactPlan, ArtifactTarget,
     LaneChunk, LaneContribution, LaneInputDigest, LaneIr, LaneNode, LinkFenceSnapshot,
@@ -72,7 +74,7 @@ fn opaque_registered_backend_runs_the_complete_schedule_and_preserves_non_utf8()
     let mut registry = BackendRegistry::default();
     registry.register(Arc::new(OpaqueBackend::new())).unwrap();
     reset_emit_invocations();
-    let emitted = compile_artifact_with_registry(
+    let emitted = compile_artifact_with_backend_id(
         ArtifactPlan::custom_for_test(
             "opaque",
             vec![ArtifactInput::simple("org.demo/a", "boot/a.md", "# A\n").unwrap()],
@@ -80,6 +82,7 @@ fn opaque_registered_backend_runs_the_complete_schedule_and_preserves_non_utf8()
         .unwrap(),
         &Source("# Entry {#root}\n"),
         &registry,
+        &BackendId::new("opaque").unwrap(),
     )
     .unwrap();
     assert_eq!(emitted.bytes(), [0x00, 0xff, b'\n']);

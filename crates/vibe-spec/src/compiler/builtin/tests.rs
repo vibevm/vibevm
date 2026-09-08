@@ -390,14 +390,7 @@ fn opaque_retarget_forwards_the_whole_transform_plan() {
 
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY")]
-fn a_forwarded_custom_frame_with_a_resolvable_transform_still_refuses_before_anything() {
-    // The full forwarded-frame law (ABI §6.3): retarget proves the plan
-    // crossed intact, then EXECUTION on the custom CompatibilityFragment
-    // frame refuses the typed plan-wide fault BEFORE the custom-backend
-    // lookup (the builtin registry cannot even select `opaque-test`) and
-    // before the first parse. Distinct from the ArtifactPlan::compatibility
-    // path: this is a real StaticLane world whose plan was FORWARDED onto a
-    // custom frame with a transform the registry could resolve.
+fn a_forwarded_custom_static_lane_keeps_a_resolvable_transform() {
     let carried = static_lane_plan().with_transforms(identity_plan(&[(
         "org.demo/tools#doc",
         crate::compiler::transform::plan::TransformStage::Document,
@@ -407,27 +400,18 @@ fn a_forwarded_custom_frame_with_a_resolvable_transform_still_refuses_before_any
     assert!(!retargeted.transforms().is_empty());
     reset_parse_invocations();
 
-    let error = match BuiltinSchedule::emitted_for_test(
+    let backend = std::sync::Arc::new(
+        crate::compiler::emit::static_md::StaticMarkdownBackend::new(),
+    );
+    BuiltinSchedule::with_backend(
         &retargeted,
         &crate::compiler::transform::registry_test_support::identity_registry(),
-    ) {
-        Ok(_) => panic!("a forwarded nonempty compatibility-fragment plan must refuse"),
-        Err(error) => error,
-    };
-    assert!(
-        matches!(
-            error,
-            ArtifactCompileError::Transform(ref public)
-                if matches!(
-                    public.inner(),
-                    crate::compiler::transform::fault::TransformError::CompatibilityFragmentPlan { entries: 1 }
-                )
-        ),
-        "the frame fault wins over backend selection: {error:?}"
-    );
+        backend,
+    )
+    .expect("the first-class custom StaticLane accepts the forwarded transform");
     assert_eq!(
         parse_invocations(),
         0,
-        "the refusal precedes the first parse"
+        "schedule construction does not parse"
     );
 }

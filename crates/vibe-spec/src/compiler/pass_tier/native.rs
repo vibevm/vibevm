@@ -8,7 +8,8 @@ use std::marker::PhantomData;
 use crate::compiler::pass::{IrPayload, Pass, PassName};
 use crate::compiler::transform::native_identity::NativeHandlerIdentity;
 use crate::compiler::transform::native_manager::{
-    CompilerNativeInvoker, NativeEntry, NativeManagerError, NativeRuntime, execute,
+    CompilerNativeInvoker, NativeBackendEntry, NativeEntry, NativeManagerError, NativeRuntime,
+    execute, execute_backend,
 };
 use serde_json::Value;
 
@@ -41,8 +42,79 @@ impl NativePassAdmission {
         invoker.admit_frontend(&self.key, self.order, &self.config, self.implementation)
     }
 
+    pub(super) fn admit_backend(
+        &self,
+        invoker: &dyn CompilerNativeInvoker,
+        backend: &str,
+    ) -> Result<(), crate::compiler::transform::native_manager::CompilerNativeInvokerError> {
+        invoker.admit_backend(
+            &self.key,
+            self.order,
+            &self.config,
+            self.implementation,
+            backend,
+        )
+    }
+
     pub(super) fn key(&self) -> &vibe_core::manifest::ExtensionKey {
         &self.key
+    }
+}
+
+pub(crate) struct NativeBackendPass<'invoke> {
+    invoker: &'invoke dyn CompilerNativeInvoker,
+    admission: NativePassAdmission,
+    backend: String,
+    name: PassName,
+}
+
+impl<'invoke> NativeBackendPass<'invoke> {
+    pub(super) fn new(
+        entry: &PassEntry,
+        invoker: &'invoke dyn CompilerNativeInvoker,
+        backend: &str,
+        name: PassName,
+    ) -> Result<Self, NativePassBuildError> {
+        Ok(Self {
+            invoker,
+            admission: NativePassAdmission::from_entry(entry)?,
+            backend: backend.to_owned(),
+            name,
+        })
+    }
+
+    pub(super) fn admit(&self) -> Result<(), super::backend::BackendAdmissionError> {
+        self.admission
+            .admit_backend(self.invoker, &self.backend)
+            .map_err(|error| super::backend::BackendAdmissionError {
+                pass: self.name.clone(),
+                reason: error.to_string(),
+            })
+    }
+}
+
+impl Pass for NativeBackendPass<'_> {
+    type Input = crate::compiler::ir::LaneIr;
+    type Output = crate::compiler::ir::EmittedArtifact;
+    type Error = NativePassError;
+
+    fn name(&self) -> &PassName {
+        &self.name
+    }
+
+    fn run(&self, input: Self::Input) -> Result<Self::Output, Self::Error> {
+        Ok(execute_backend(
+            NativeBackendEntry::new(
+                NativeRuntime::new(self.invoker, None),
+                &self.admission.key,
+                self.admission.order,
+                &self.admission.config,
+                self.admission.implementation,
+                &self.name,
+                &self.backend,
+            ),
+            input,
+        )?)
     }
 }
 
@@ -158,9 +230,11 @@ fn project_config(
 }
 
 #[derive(Debug, thiserror::Error)]
-pub(super) enum NativePassError {
+pub(crate) enum NativePassError {
     #[error(transparent)]
     Manager(#[from] NativeManagerError),
+    #[error(transparent)]
+    Backend(#[from] crate::compiler::transform::native_manager::NativeBackendError),
     #[error("the native manager returned a carrier outside the pass's typed output")]
     WrongOutput,
 }

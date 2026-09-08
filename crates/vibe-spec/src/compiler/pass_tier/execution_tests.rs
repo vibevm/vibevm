@@ -170,17 +170,6 @@ fn inputs() -> Vec<ArtifactInput> {
         .collect()
 }
 
-fn custom_artifact_plan(declarations: Vec<ExtensionDecl>, backend: &'static str) -> ArtifactPlan {
-    let registry = registry(declarations);
-    let passes = lower_effective_compile_rows(&registry.enabled_compile_rows())
-        .unwrap()
-        .passes()
-        .clone();
-    ArtifactPlan::custom_for_test(backend, inputs())
-        .unwrap()
-        .with_passes(passes)
-}
-
 fn address(value: &str) -> SpecAddress {
     SpecAddress::parse(value).unwrap()
 }
@@ -468,22 +457,8 @@ fn missing_invoker_and_unsupported_implementation_refuse_before_source() {
 }
 
 #[test]
-fn backend_catalog_defers_immediately_while_unused_frontends_do_not() {
-    let source = Source::default();
+fn unused_frontends_do_not_affect_builtin_sources() {
     let invoker = Invoker::new(ReplyMode::Echo);
-    let error = compile_artifact_native(
-        custom_artifact_plan(vec![declaration("backend", backend_for("json"))], "json"),
-        &source,
-        &invoker,
-    )
-    .unwrap_err();
-    assert!(matches!(
-        error,
-        ArtifactCompileError::PassTier(ref public)
-            if matches!(public.inner(), PassTierExecutionError::CatalogDeferred { entries: 1 })
-    ));
-    assert_eq!(source.reads(), 0);
-
     let source = Source::default();
     compile_artifact_native(
         artifact_plan(vec![declaration("frontend", frontend_for("custom-markup"))]),

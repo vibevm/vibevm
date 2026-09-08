@@ -10,7 +10,6 @@ use crate::compiler::ir::IrShape;
 use crate::compiler::pass::{PassDescriptor, PassName};
 
 use super::backend::BackendCatalog;
-use super::execution::{PassTierCompileError, PassTierExecutionError};
 use super::frontend::FrontendCatalog;
 use super::plan::{PassEntry, PassPlan};
 
@@ -109,15 +108,6 @@ impl PassCatalogs {
             .physical_formats()
             .map(str::to_owned)
             .collect()
-    }
-
-    pub(crate) fn catalog_execution_refusal(&self) -> Option<PassTierCompileError> {
-        (self.backends.len() != 0).then(|| {
-            PassTierExecutionError::CatalogDeferred {
-                entries: self.backends.len(),
-            }
-            .into()
-        })
     }
 }
 

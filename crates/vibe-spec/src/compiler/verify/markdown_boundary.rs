@@ -162,13 +162,20 @@ fn a_custom_target_is_exempt_from_the_markdown_boundary_law() {
             crate::compiler::ir::ArtifactId::new("opaque").unwrap(),
             crate::compiler::ir::ArtifactTarget::custom("opaque")
                 .expect("opaque is a valid backend id"),
-            crate::compiler::ir::ArtifactFrame::CompatibilityFragment,
-            StaticCompileMode::Plain,
+            crate::compiler::ir::ArtifactFrame::StaticLane {
+                generated_path: "artifacts/opaque".to_owned(),
+                source_root: "vibevm/vibespecs".to_owned(),
+            },
+            StaticCompileMode::QualifyPerNode,
         )
-        .expect("a custom backend pairs with the compatibility fragment"),
+        .expect("a custom backend pairs with its first-class StaticLane"),
         markdown.source_node_count,
         markdown.source_link_digest.clone(),
-        markdown.frame.clone(),
+        crate::compiler::ir::LaneFrame {
+            generated_path: Some("artifacts/opaque".to_owned()),
+            source_root: Some("vibevm/vibespecs".to_owned()),
+            renames: markdown.frame.renames.clone(),
+        },
         markdown.contributions.clone(),
     );
     verify(&AnyIr::Lane(custom)).expect("a structured custom backend is exempt");

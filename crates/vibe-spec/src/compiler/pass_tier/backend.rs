@@ -5,10 +5,12 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#PASS-BACKEND");
 use std::collections::BTreeMap;
 
 use crate::compiler::backend::{BackendId, is_builtin_backend_id};
-use crate::compiler::ir::{EmittedIr, LaneIr};
-use crate::compiler::pass::IrPayload;
+use crate::compiler::ir::{ArtifactTarget, EmittedIr, LaneIr};
+use crate::compiler::pass::{IrPayload, PassName};
+use crate::compiler::transform::native_manager::CompilerNativeInvoker;
 
 use super::catalog::{CatalogPass, PassCatalogError};
+use super::native::NativeBackendPass;
 use super::plan::PassEntry;
 
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
@@ -57,6 +59,44 @@ impl BackendCatalog {
     pub(crate) fn len(&self) -> usize {
         self.backends.len()
     }
+
+    pub(crate) fn selected_native<'invoke>(
+        &self,
+        target: &ArtifactTarget,
+        invoker: Option<&'invoke dyn CompilerNativeInvoker>,
+    ) -> Result<Option<NativeBackendPass<'invoke>>, BackendAdmissionError> {
+        if !target.is_custom() {
+            return Ok(None);
+        }
+        let backend = target.backend_id();
+        let binding = self.get(backend).ok_or_else(|| BackendAdmissionError {
+            pass: PassName::new(format!("backend:{backend}"))
+                .expect("a validated backend id forms a pass name"),
+            reason: format!("custom backend `{backend}` has no selected catalog entry"),
+        })?;
+        let invoker = invoker.ok_or_else(|| BackendAdmissionError {
+            pass: binding.descriptor().name.clone(),
+            reason: "backend provider pre-admission requires a compiler-native invoker".to_owned(),
+        })?;
+        let pass = NativeBackendPass::new(
+            binding.entry(),
+            invoker,
+            backend,
+            binding.descriptor().name.clone(),
+        )
+        .map_err(|error| BackendAdmissionError {
+            pass: binding.descriptor().name.clone(),
+            reason: error.to_string(),
+        })?;
+        pass.admit()?;
+        Ok(Some(pass))
+    }
+}
+
+#[derive(Debug)]
+pub(crate) struct BackendAdmissionError {
+    pub(crate) pass: PassName,
+    pub(crate) reason: String,
 }
 
 fn bounded(value: &str) -> String {

@@ -1,9 +1,6 @@
 //! Built-in passes and the declared schedule prefix migrated so far.
-
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR");
-
 use crate::{DocTree, SectionSource, SpecAddress};
-
 #[cfg(test)]
 use super::absorb::ABSORB_PASS_NAME;
 use super::absorb::AbsorbPass;
@@ -46,7 +43,6 @@ use super::transform::plan::TransformPlan;
 use super::transform::registry::TransformRegistry;
 use super::transform::schedule::TransformSchedule;
 use super::worklist;
-
 mod attribution;
 mod driver;
 pub use super::pass_tier::PassTierCompileError;
@@ -60,6 +56,8 @@ pub(crate) use driver::compile_artifact_observed_with_registries;
 pub(crate) use driver::compile_artifact_passes_for_test;
 #[cfg(test)]
 pub(crate) use driver::compile_artifact_traced_with_registries;
+#[cfg(test)]
+pub(crate) use driver::compile_artifact_with_backend_id;
 #[cfg(test)]
 pub(crate) use driver::compile_artifact_with_registries;
 #[cfg(test)]
@@ -79,11 +77,9 @@ pub use driver::{
 
 const PARSE_PASS_NAME: &str = "parse";
 const MARKDOWN_FORMAT: &str = "markdown";
-
 struct ParsePass {
     name: PassName,
 }
-
 impl ParsePass {
     fn new() -> Self {
         Self {
@@ -92,7 +88,6 @@ impl ParsePass {
         }
     }
 }
-
 impl Pass for ParsePass {
     type Input = SourceIr;
     type Output = DocumentIr;
@@ -115,38 +110,31 @@ impl Pass for ParsePass {
         Ok(DocumentIr::new(input, tree))
     }
 }
-
 #[cfg(test)]
 std::thread_local! {
     static PARSE_INVOCATIONS: std::cell::Cell<usize> = const { std::cell::Cell::new(0) };
 }
-
 #[cfg(test)]
 pub(crate) fn reset_parse_invocations() {
     PARSE_INVOCATIONS.with(|count| count.set(0));
 }
-
 #[cfg(test)]
 pub(crate) fn parse_invocations() -> usize {
     PARSE_INVOCATIONS.with(std::cell::Cell::get)
 }
-
 #[derive(Debug, thiserror::Error)]
 #[error("the built-in parser does not accept source format `{format}`")]
 struct ParseError {
     format: String,
 }
-
 #[cfg(test)]
 std::thread_local! {
     static VERIFY_EACH: std::cell::Cell<bool> = const { std::cell::Cell::new(true) };
 }
-
 #[cfg(test)]
 fn verify_each_enabled() -> bool {
     VERIFY_EACH.with(std::cell::Cell::get)
 }
-
 /// Run a test under the production verifier default.
 #[cfg(test)]
 pub(crate) fn without_verify_each<T>(body: impl FnOnce() -> T) -> T {
@@ -169,7 +157,6 @@ pub(crate) struct BuiltinSchedule<'invoke> {
     transform_names: Vec<PassName>,
     pub(super) frontends: FrontendSeats<'invoke>,
 }
-
 fn transform_public(inner: TransformError) -> ArtifactCompileError {
     ArtifactCompileError::Transform(TransformCompileError::new(inner))
 }
@@ -261,11 +248,30 @@ impl<'invoke> BuiltinSchedule<'invoke> {
         policy: Option<&'invoke NativePolicySession>,
     ) -> Result<Self, ArtifactCompileError> {
         let catalogs = PassCatalogs::resolve(plan.passes())?;
-        if let Some(error) = catalogs.catalog_execution_refusal() {
-            return Err(error.into());
-        }
         let mut schedule =
-            Self::emitted_base_with_invoker(plan, transforms, registry, observer, invoker, policy)?;
+            Self::assembled_with_invoker(plan, transforms, observer, invoker, policy)?;
+        let native_backend = catalogs
+            .backends()
+            .selected_native(&plan.context().target(), invoker)
+            .map_err(backend_admission_error)?;
+        let native_backend_active = native_backend.is_some();
+        if let Some(backend) = native_backend {
+            schedule
+                .pipeline
+                .push_builtin_artifact(backend)
+                .expect("the catalog backend continues the assembled schedule");
+            schedule
+                .transforms
+                .push_emitted_after_emit(&mut schedule.pipeline)
+                .map_err(transform_public)?;
+        } else {
+            let backend = registry
+                .selected(&plan.context().target())
+                .map_err(|error| ArtifactCompileError::Registry {
+                    reason: error.to_string(),
+                })?;
+            schedule = Self::append_emit(schedule, backend, plan, observer)?;
+        }
         schedule.frontends = FrontendSeats::native(catalogs.frontends(), invoker)
             .map_err(frontend_admission_error)?;
         schedule
@@ -274,7 +280,10 @@ impl<'invoke> BuiltinSchedule<'invoke> {
             .map_err(|error| ArtifactCompileError::Manager {
                 reason: format!("frontend parse-seat validation failed: {error}"),
             })?;
-        if !schedule.frontends.is_empty() || !catalogs.positioned().is_empty() {
+        if native_backend_active
+            || !schedule.frontends.is_empty()
+            || !catalogs.positioned().is_empty()
+        {
             let verifier = schedule.pipeline.install_pass_tier_verifier();
             if !catalogs.positioned().is_empty() {
                 PassSchedule::install(
@@ -287,24 +296,7 @@ impl<'invoke> BuiltinSchedule<'invoke> {
         Ok(schedule)
     }
 
-    fn emitted_base_with_invoker(
-        plan: &ArtifactPlan,
-        transforms: &TransformRegistry,
-        registry: &BackendRegistry,
-        observer: &Observing,
-        invoker: Option<&'invoke dyn CompilerNativeInvoker>,
-        policy: Option<&'invoke NativePolicySession>,
-    ) -> Result<Self, ArtifactCompileError> {
-        let schedule = Self::assembled_with_invoker(plan, transforms, observer, invoker, policy)?;
-        let backend = registry
-            .selected(&plan.context().target())
-            .map_err(|error| ArtifactCompileError::Registry {
-                reason: error.to_string(),
-            })?;
-        Self::append_emit(schedule, backend, plan, observer)
-    }
-
-    #[cfg(feature = "test-support")]
+    #[cfg(any(test, feature = "test-support"))]
     fn with_backend(
         plan: &ArtifactPlan,
         registry: &TransformRegistry,
@@ -439,6 +431,15 @@ fn frontend_admission_error(
         None => ArtifactCompileError::Manager {
             reason: error.reason,
         },
+    }
+}
+
+fn backend_admission_error(
+    error: super::pass_tier::backend::BackendAdmissionError,
+) -> ArtifactCompileError {
+    ArtifactCompileError::Backend {
+        pass: error.pass.to_string(),
+        reason: error.reason,
     }
 }
 

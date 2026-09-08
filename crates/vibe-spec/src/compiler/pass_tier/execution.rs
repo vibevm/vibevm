@@ -38,10 +38,6 @@ pub(crate) enum PassTierExecutionError {
         #[source]
         source: CompilerPipelineError,
     },
-    #[error(
-        "pass plan contains {entries} frontend/backend catalog row(s); catalog execution is deferred to R6.5"
-    )]
-    CatalogDeferred { entries: usize },
 }
 
 /// Public opaque pass-tier construction or capability refusal.

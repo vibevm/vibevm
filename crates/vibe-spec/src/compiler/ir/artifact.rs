@@ -124,10 +124,13 @@ impl ArtifactContext {
                 ) if generated_path.ends_with(".xml")
             )
         } else {
-            // The one custom-target row: the artifact IS the backend id, under
-            // the compatibility fragment. Identity never implies registration.
-            target.is_custom()
-                && frame == ArtifactFrame::CompatibilityFragment
+            matches!(
+                (&frame, mode),
+                (
+                    ArtifactFrame::StaticLane { .. },
+                    StaticCompileMode::QualifyPerNode
+                )
+            ) && target.is_custom()
                 && artifact.as_str() == target.backend_id()
         };
         if !valid {

@@ -143,13 +143,34 @@ fn build_provenance(
     producer: PassName,
     bytes: &[u8],
 ) -> EmissionProvenance {
-    EmissionProvenance {
-        context: witness.context.clone(),
+    provenance_from_parts(
+        witness.context.clone(),
+        witness.lane_digest.clone(),
+        witness.frame.renames.clone(),
+        witness.emission_witnesses.clone(),
         backend,
         producer,
-        source_lane_digest: witness.lane_digest.clone(),
-        renames: witness.frame.renames.clone(),
-        contributions: witness.emission_witnesses.clone(),
+        bytes,
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+fn provenance_from_parts(
+    context: super::ir::ArtifactContext,
+    source_lane_digest: super::ir::LaneInputDigest,
+    renames: Vec<super::ir::OriginRename>,
+    contributions: Vec<EmissionContributionWitness>,
+    backend: BackendId,
+    producer: PassName,
+    bytes: &[u8],
+) -> EmissionProvenance {
+    EmissionProvenance {
+        context,
+        backend,
+        producer,
+        source_lane_digest,
+        renames,
+        contributions,
         // Empty at emission: the backend produced these bytes and no
         // post-backend transform has rewritten them yet. Only
         // `transform::emitted_reconstruction` ever appends, and only when a
@@ -159,6 +180,24 @@ fn build_provenance(
         emitted_transforms: Vec::new(),
         bytes_digest: digest::bytes_digest(bytes),
     }
+}
+
+/// Reconstruct manager-owned evidence for a bytes-only native backend reply.
+pub(crate) fn build_native_provenance(
+    lane: &LaneIr,
+    backend: BackendId,
+    producer: PassName,
+    bytes: &[u8],
+) -> EmissionProvenance {
+    provenance_from_parts(
+        lane.context().clone(),
+        digest::lane_digest(lane),
+        lane.frame.renames.clone(),
+        contribution_witnesses(lane),
+        backend,
+        producer,
+        bytes,
+    )
 }
 
 /// The pass's own witness capture, for tests that drive a backend directly

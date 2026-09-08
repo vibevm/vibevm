@@ -115,7 +115,7 @@ impl BackendRegistry {
             })
     }
 
-    #[cfg(feature = "test-support")]
+    #[cfg(any(test, feature = "test-support"))]
     pub(crate) fn get(&self, id: &BackendId) -> Result<Arc<dyn EmitBackend>, BackendRegistryError> {
         self.implementations
             .get(id)

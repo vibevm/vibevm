@@ -3,6 +3,7 @@
 
 use base64::Engine as _;
 use base64::engine::general_purpose::STANDARD;
+use vibe_core::{Group, HostOwner, PackageName};
 
 use super::super::backend::BackendId;
 use super::super::emit::emitted_bytes_digest;
@@ -27,6 +28,8 @@ use super::{
 
 /// The framing cell names this type so its refusals stay `emit-identity`.
 pub(super) type GateRefusal = IrWireError;
+
+const QUALIFIED_COMPONENT_CAP_BYTES: usize = 256;
 
 pub(super) fn gate_emit_identity(detail: impl Into<String>) -> GateRefusal {
     gate(G_EMIT_IDENTITY, detail)
@@ -244,9 +247,8 @@ fn expected_artifact_id<'a>(context: &ArtifactContext, backend: &'a str) -> &'a 
     }
 }
 
-/// EMIT IDENTITY: `target` and `backend` are one id, the artifact id is the
-/// one this context row rides, `producer` is `emit:<backend>`, and
-/// `bytes_digest` is the one digest recomputed from the wire document alone.
+/// EMIT IDENTITY: builtin producers remain `emit:<backend>`; a custom backend
+/// carries the qualified pass identity the manager selected and authored.
 fn check_emit_identity(provenance: &EmissionProvenance, bytes: &[u8]) -> Result<(), IrWireError> {
     let backend = provenance.backend.as_str();
     let context = &provenance.context;
@@ -271,13 +273,19 @@ fn check_emit_identity(provenance: &EmissionProvenance, bytes: &[u8]) -> Result<
             ),
         ));
     }
+    let producer = provenance.producer.as_str();
     let expected_producer = format!("emit:{backend}");
-    if provenance.producer.as_str() != expected_producer {
+    let producer_valid = if context.target().is_custom() {
+        qualified_native_producer(producer)
+    } else {
+        producer == expected_producer
+    };
+    if !producer_valid {
         return Err(gate(
             G_EMIT_IDENTITY,
             format!(
-                "producer must be `{expected_producer}`, got {}",
-                bounded_preview(provenance.producer.as_str())
+                "producer violates the selected backend identity, got {}",
+                bounded_preview(producer)
             ),
         ));
     }
@@ -289,6 +297,40 @@ fn check_emit_identity(provenance: &EmissionProvenance, bytes: &[u8]) -> Result<
         ));
     }
     Ok(())
+}
+
+fn qualified_native_producer(producer: &str) -> bool {
+    let Some(key) = producer.strip_prefix("pass:") else {
+        return false;
+    };
+    let Some((owner, id)) = key.split_once('#') else {
+        return false;
+    };
+    if id.contains('#') || !canonical_component(id) {
+        return false;
+    }
+    let Some((group, name)) = owner.split_once('/') else {
+        return false;
+    };
+    if name.contains('/') || !canonical_component(group) || !canonical_component(name) {
+        return false;
+    }
+    if group == vibe_core::host_owner::HOST_OWNER {
+        return HostOwner::parse(owner).is_ok_and(|host| {
+            host.to_string() == owner
+                && !host.project().chars().any(char::is_control)
+                && !host.project().trim().is_empty()
+        });
+    }
+    Group::parse(group).is_ok_and(|parsed| parsed.as_str() == group)
+        && PackageName::parse(name).is_ok_and(|parsed| parsed.as_str() == name)
+}
+
+fn canonical_component(value: &str) -> bool {
+    !value.is_empty()
+        && value.len() <= QUALIFIED_COMPONENT_CAP_BYTES
+        && value.trim() == value
+        && !value.chars().any(char::is_control)
 }
 
 fn decode_emission_witness(

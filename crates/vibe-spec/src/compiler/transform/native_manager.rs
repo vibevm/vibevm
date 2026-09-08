@@ -1,22 +1,17 @@
 //! Borrowed compiler-native invocation and manager-owned reply admission.
-
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-NATIVE-ONLY");
-
 use std::collections::BTreeMap;
 use std::fmt;
-
 use serde_json::Value;
 use vibe_core::lifecycle::CompilePoint;
 use vibe_core::manifest::ExtensionKey;
 use vibe_wire::behaviour::native_compile::{IrCarrier, NativeCompileError, validate_reply};
 use vibe_wire::generated::native::e1::compile_reply::CompileReply;
 use vibe_wire::generated::shared::Ir;
-
 use crate::compiler::ir::{IrCardinality, IrLevel, IrShape};
 use crate::compiler::pass::{AnyIr, PassName};
 use crate::compiler::verify::IrVerifier;
 use crate::compiler::wire;
-
 use super::config::{ConfigDatetime, ConfigOffset, ConfigTable, ConfigValue};
 use super::emitted_reconstruction;
 use super::lane_admission;
@@ -24,10 +19,10 @@ use super::native_identity::CompilerNativeImplementationDigest;
 use super::native_policy::CompilerNativePolicyError;
 use super::native_policy::session::{NativePolicySession, UnavailableDisposition};
 use super::plan::TransformConfig;
+mod backend;
+pub(crate) use backend::{NativeBackendEntry, NativeBackendError, execute_backend};
 
 const DIAGNOSTIC_BYTES: usize = 256;
-
-/// One manager-authored call lent to a compiler-native invoker.
 pub struct CompilerNativeCall<'call> {
     key: &'call ExtensionKey,
     point: CompilePoint,
@@ -35,6 +30,7 @@ pub struct CompilerNativeCall<'call> {
     config: &'call BTreeMap<String, Option<Value>>,
     implementation: CompilerNativeImplementationDigest,
     frontend_physical_stem: Option<&'call str>,
+    backend: Option<&'call str>,
     payload: Ir,
 }
 
@@ -56,59 +52,59 @@ impl<'call> CompilerNativeCall<'call> {
             config,
             implementation,
             frontend_physical_stem: None,
+            backend: None,
             payload,
         }
     }
-
     #[cfg(any(test, feature = "test-support"))]
     #[doc(hidden)]
     pub fn with_frontend_physical_stem_for_test(mut self, stem: &'call str) -> Self {
         self.frontend_physical_stem = Some(stem);
         self
     }
-
+    #[cfg(any(test, feature = "test-support"))]
+    #[doc(hidden)]
+    pub fn with_backend_for_test(mut self, backend: &'call str) -> Self {
+        self.backend = Some(backend);
+        self
+    }
     pub fn key(&self) -> &ExtensionKey {
         self.key
     }
-
     pub const fn point(&self) -> CompilePoint {
         self.point
     }
-
     pub const fn order(&self) -> u32 {
         self.order
     }
-
     pub fn config(&self) -> &BTreeMap<String, Option<Value>> {
         self.config
     }
-
     pub const fn implementation(&self) -> CompilerNativeImplementationDigest {
         self.implementation
     }
-
     pub fn frontend_physical_stem(&self) -> Option<&str> {
         self.frontend_physical_stem
+    }
+    pub fn backend(&self) -> Option<&str> {
+        self.backend
     }
 
     pub fn payload(&self) -> &Ir {
         &self.payload
     }
 
-    /// Move the manager-owned compiler IR into the generated transport root.
     pub fn into_payload(self) -> Ir {
         self.payload
     }
 }
 
-/// The bounded classification an invoker can return to the manager.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum CompilerNativeInvokerErrorKind {
     BuildableSourceUnavailable,
     InvocationFailed,
 }
 
-/// A typed invoker refusal whose diagnostic storage is capped at creation.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct CompilerNativeInvokerError {
     kind: CompilerNativeInvokerErrorKind,
@@ -149,6 +145,21 @@ pub trait CompilerNativeInvoker: Send + Sync {
         Err(CompilerNativeInvokerError::new(
             CompilerNativeInvokerErrorKind::InvocationFailed,
             "the compiler-native invoker does not admit frontend catalogs",
+        ))
+    }
+
+    /// Admit one payload-free backend row before any artifact source is read.
+    fn admit_backend(
+        &self,
+        _key: &ExtensionKey,
+        _order: u32,
+        _config: &BTreeMap<String, Option<Value>>,
+        _implementation: CompilerNativeImplementationDigest,
+        _backend: &str,
+    ) -> Result<(), CompilerNativeInvokerError> {
+        Err(CompilerNativeInvokerError::new(
+            CompilerNativeInvokerErrorKind::InvocationFailed,
+            "the compiler-native invoker does not admit backend catalogs",
         ))
     }
 
@@ -335,6 +346,7 @@ pub(crate) fn execute(
         config: projected,
         implementation,
         frontend_physical_stem,
+        backend: None,
         payload,
     }) {
         Ok(raw) => raw,

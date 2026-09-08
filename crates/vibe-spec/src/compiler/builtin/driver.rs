@@ -1,6 +1,6 @@
 use crate::{CompileObserver, SectionSource, SpecAddress};
 
-#[cfg(feature = "test-support")]
+#[cfg(any(test, feature = "test-support"))]
 use super::super::backend::BackendId;
 use super::super::backend::BackendRegistry;
 use super::super::ir::{ArtifactInputWitness, ArtifactPlan, EmittedArtifact, StaticCompileMode};
@@ -329,7 +329,7 @@ pub(crate) fn compile_artifact_passes_for_test(
     run(plan, source, schedule, trace)
 }
 
-#[cfg(feature = "test-support")]
+#[cfg(any(test, feature = "test-support"))]
 pub(crate) fn compile_artifact_with_backend_id(
     plan: ArtifactPlan,
     source: &impl SectionSource,

@@ -36,6 +36,10 @@ mod frontend_pipeline_tests;
 mod frontend_execution_tests;
 
 #[cfg(test)]
+#[path = "pass_tier/backend_execution_tests.rs"]
+mod backend_execution_tests;
+
+#[cfg(test)]
 #[path = "pass_tier/catalog_tests.rs"]
 mod catalog_tests;
 

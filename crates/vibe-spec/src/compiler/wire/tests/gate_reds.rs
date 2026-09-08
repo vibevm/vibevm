@@ -417,6 +417,36 @@ fn a_producer_that_is_not_the_backends_pass_is_red() {
 }
 
 #[test]
+fn a_custom_backend_producer_requires_one_canonical_qualified_extension_key() {
+    for producer in [
+        "emit:opaque-test",
+        "pass:org.demo/tools",
+        "pass:org.demo/tools#opaque#extra",
+        "pass:org.demo/tools/extra#opaque",
+        "pass:/tools#opaque",
+        "pass:org.demo/#opaque",
+        "pass:org.demo/tools#",
+        "pass:Org.demo/tools#opaque",
+        "pass: org.demo/tools#opaque",
+        "pass:__host__/my%2fapp#opaque",
+    ] {
+        let mut document = raw("emitted_artifact.json");
+        document["emitted"]["provenance"]["producer"] = serde_json::json!(producer);
+        assert_gate(&document, "emit-identity");
+    }
+
+    let mut overlong = raw("emitted_artifact.json");
+    overlong["emitted"]["provenance"]["producer"] =
+        serde_json::json!(format!("pass:org.demo/tools#{}", "a".repeat(257)));
+    assert_gate(&overlong, "emit-identity");
+
+    let mut control = raw("emitted_artifact.json");
+    control["emitted"]["provenance"]["producer"] =
+        serde_json::json!("pass:org.demo/tools#opa\nque");
+    assert_gate(&control, "scalar-ids");
+}
+
+#[test]
 fn a_bytes_digest_that_is_not_the_managers_own_is_red() {
     let mut document = raw("emitted_artifact.json");
     let mut digest: Vec<char> = document["emitted"]["provenance"]["bytes_digest"]

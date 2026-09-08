@@ -7,8 +7,8 @@
     "context": {
       "artifact": "demo-backend",
       "target": "demo-backend",
-      "frame": {"kind": "compatibility-fragment"},
-      "mode": "plain"
+      "frame": {"kind": "static-lane", "generated_path": "artifacts/demo-backend", "source_root": "vibevm/vibespecs"},
+      "mode": "qualify-per-node"
     },
     "nodes": [
       {

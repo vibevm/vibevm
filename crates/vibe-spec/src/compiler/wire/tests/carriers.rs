@@ -152,6 +152,7 @@ fn a_valid_custom_target_round_trips_with_its_owned_backend_id() {
     assert_eq!(a.context().target(), b.context().target());
     let round: serde_json::Value = serde_json::from_slice(&wire).unwrap();
     assert_eq!(round["closure"]["context"]["target"], "demo-backend");
+    assert_eq!(round["closure"]["context"]["frame"]["kind"], "static-lane");
 }
 
 // ── Verifier-valid plugin mutations the producer oracles would reject ───────

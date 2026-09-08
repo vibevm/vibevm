@@ -33,6 +33,8 @@ use super::{
     process_loader, resolve_native_artifact_for_compiler,
 };
 
+mod admission;
+
 /// One borrowed compiler-native execution epoch backed by retained ARTIFACTs.
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-NATIVE-ONLY")]
 pub struct ArtifactCompilerNativeInvoker<'a> {
@@ -50,6 +52,7 @@ pub struct ArtifactCompilerNativeInvoker<'a> {
     loader: &'static NativeLoader,
     facts: PendingFactRecorder,
     admitted_frontends: Mutex<BTreeMap<u32, AdmittedFrontend>>,
+    admitted_backends: Mutex<BTreeMap<u32, AdmittedBackend>>,
 }
 
 impl<'a> ArtifactCompilerNativeInvoker<'a> {
@@ -105,6 +108,7 @@ impl<'a> ArtifactCompilerNativeInvoker<'a> {
             loader: process_loader(),
             facts: PendingFactRecorder::new(),
             admitted_frontends: Mutex::new(BTreeMap::new()),
+            admitted_backends: Mutex::new(BTreeMap::new()),
         }
     }
 
@@ -146,6 +150,7 @@ impl<'a> ArtifactCompilerNativeInvoker<'a> {
         )?;
         let manager_config = call.config().clone();
         let frontend_physical_stem = call.frontend_physical_stem().map(str::to_owned);
+        let backend = call.backend().map(str::to_owned);
         let scratch = execution_scratch(
             self.selected_project_root,
             self.run_id,
@@ -184,6 +189,7 @@ impl<'a> ArtifactCompilerNativeInvoker<'a> {
             order: prepared.order,
             point: prepared.point,
             qualified_key: prepared.qualified_key,
+            backend,
             request,
         })
     }
@@ -282,16 +288,14 @@ impl<'a> ArtifactCompilerNativeInvoker<'a> {
             qualified_key: key.to_string(),
         })
     }
-}
 
-impl CompilerNativeInvoker for ArtifactCompilerNativeInvoker<'_> {
-    fn admit_frontend(
-        &self,
+    fn admit_compiler<'row>(
+        &'row self,
         key: &vibe_core::manifest::ExtensionKey,
         order: u32,
         config: &BTreeMap<String, Option<serde_json::Value>>,
         implementation: vibe_spec::CompilerNativeImplementationDigest,
-    ) -> Result<(), CompilerNativeInvokerError> {
+    ) -> Result<AdmittedCompiler<'row>, CompilerNativeInvokerError> {
         let prepared = self.prepare_row(
             key,
             vibe_core::lifecycle::CompilePoint::Pass,
@@ -345,104 +349,11 @@ impl CompilerNativeInvoker for ArtifactCompilerNativeInvoker<'_> {
                     prepared.qualified_key
                 ))
             })?;
-        self.admitted_frontends
-            .lock()
-            .map_err(|_| failed("compiler frontend admission cache is unavailable"))?
-            .insert(
-                prepared.order,
-                AdmittedFrontend {
-                    key: prepared.qualified_key,
-                    compiler,
-                },
-            );
-        Ok(())
-    }
-
-    fn invoke(&self, call: CompilerNativeCall<'_>) -> Result<Vec<u8>, CompilerNativeInvokerError> {
-        let prepared = self.prepare(call)?;
-        let encoded = serde_json::to_vec(&prepared.request).map_err(|error| {
-            failed(format!(
-                "compile row `{}` request serialization: {error}",
-                prepared.qualified_key
-            ))
-        })?;
-        if prepared.request.frontend_physical_stem.is_some() {
-            let admitted_frontends = self
-                .admitted_frontends
-                .lock()
-                .map_err(|_| failed("compiler frontend admission cache is unavailable"))?;
-            let admitted = admitted_frontends
-                .get(&prepared.order)
-                .ok_or_else(|| failed("compiler frontend was not pre-admitted"))?;
-            if admitted.key != prepared.qualified_key
-                || admitted.compiler.extension_id() != prepared.row.declaration().id
-                || admitted.compiler.point() != prepared.point
-            {
-                return Err(failed(
-                    "compiler frontend admission differs from retained row",
-                ));
-            }
-            return admitted.compiler.invoke(&encoded).map_err(|error| {
-                failed(format!(
-                    "compile row `{}` loader: {error}",
-                    prepared.qualified_key
-                ))
-            });
-        }
-        let execution = self.execution();
-        let artifact =
-            match resolve_native_artifact_for_compiler(&execution, prepared.row, prepared.order) {
-                Ok(artifact) => artifact,
-                Err(CompilerArtifactResolutionError::Missing { record, fact }) => {
-                    self.facts.record(*fact).map_err(|error| {
-                        failed(format!(
-                            "compile row `{}` pending fact recorder: {error}",
-                            prepared.qualified_key
-                        ))
-                    })?;
-                    return Err(CompilerNativeInvokerError::new(
-                        CompilerNativeInvokerErrorKind::BuildableSourceUnavailable,
-                        format!(
-                            "compile row `{}` source record `{record}` is missing",
-                            prepared.qualified_key
-                        ),
-                    ));
-                }
-                Err(CompilerArtifactResolutionError::Artifact(error)) => {
-                    return Err(artifact_failure(&prepared.qualified_key, error));
-                }
-                Err(CompilerArtifactResolutionError::Fact(reason)) => {
-                    return Err(failed(format!(
-                        "compile row `{}` pending facts: {reason}",
-                        prepared.qualified_key
-                    )));
-                }
-            };
-        let image = publish_load_image(
-            self.selected_project_root,
-            Path::new(&artifact.path_absolute),
-            &artifact.digest,
-            artifact.bytes,
-        )
-        .map_err(|error| {
-            failed(format!(
-                "compile row `{}` image: {error}",
-                prepared.qualified_key
-            ))
-        })?;
-        self.loader
-            .invoke_compile(NativeCompileInvocation {
-                library: &image,
-                extension_id: &prepared.row.declaration().id,
-                point: prepared.point,
-                request: &encoded,
-            })
-            .map_err(|error| {
-                failed(format!(
-                    "compile row `{}` loader: {error}",
-                    prepared.qualified_key
-                ))
-            })
+        Ok(AdmittedCompiler {
+            row: prepared.row,
+            key: prepared.qualified_key,
+            compiler,
+        })
     }
 }
 
@@ -568,6 +479,7 @@ struct PreparedCall<'row> {
     order: u32,
     point: vibe_core::lifecycle::CompilePoint,
     qualified_key: String,
+    backend: Option<String>,
     request: CompileRequest,
 }
 
@@ -579,6 +491,18 @@ struct PreparedRow<'row> {
 }
 
 struct AdmittedFrontend {
+    key: String,
+    compiler: NativeCompiler,
+}
+
+struct AdmittedBackend {
+    key: String,
+    backend: String,
+    compiler: NativeCompiler,
+}
+
+struct AdmittedCompiler<'row> {
+    row: &'row ExtensionRegistryRow,
     key: String,
     compiler: NativeCompiler,
 }
