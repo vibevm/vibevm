@@ -5,8 +5,9 @@ present-truth/LLM laws from §§1–3 and the closed owner forks in §13 were ap
 at their owning PROP-000/PROP-054 anchors by R7.5-P0 on 2026-08-28; their draft
 text below is historical input, not a second live contract. On 2026-09-08,
 landed portions of §§4–11 were promoted to PROP-024/025/054 and §12 remained
-deferred by design. Build/package native provider transport remains explicitly
-open under M-007; no selection-only proof is relabelled execution. Exact R8 architecture record:
+deferred by design. M-007 later commissioned real package-supplied native
+Build/Package execution through `00cabac8`→`55cfbf94`; this applied successor,
+not the earlier selection-only evidence, closes the two transport rows. Exact R8 architecture record:
 `BUILD-PACKAGE-DEPLOY-ARCHITECTURE-v0.1.md`; exact R7.5 architecture record:
 `R7-EXTERNAL-ORCHESTRATION-ARCHITECTURE-v0.1.md`._
 
@@ -24,6 +25,7 @@ Landed evidence safe to cite now:
 | `2a3f3b44` | strict artifact/mechanism/deploy grammar, target DAGs, provider pins/routes and named profiles with parse/write symmetry |
 | `1dd5e1f5`, `eae4494e` | R7.3 durable hosted run/outbox, candidate-state atomicity, exact phase/slot reconciliation, same-command no-spend resume and generated install/update/reinstall report roots |
 | `9c340df8`, `6f074e66`, `77752cd8` | R7.4 strict hosted MCP lifecycle run/tasks, final all-green boundary and mirrored checkpoint |
+| `00cabac8`, `93df9d28`, `e9388559`, `2193e6e7`, `fe0eb9df`, `0ca2b781`, `123ac504`, `68ce9078`, `55cfbf94` | M-007 separate native Build/Package wire+SDK, all-role prepared carriage, both adapters, provider-fresh rollback and real installed two-cdylib Build→A2→Package displacement with no builtin fallback |
 
 The production provider's mock, loopback, proxy, redirect, size, redaction and
 timeout gates are green. The earlier ordinary-process transport failure was
@@ -144,10 +146,12 @@ global create number.
 
 ## 4. Two nouns, one extension machine
 
-**Disposition — applied, with one execution boundary still open.** The shared
+**Disposition — applied.** The shared
 registry/route/pin law landed in `2a3f3b44`/`9dd072d2`; real native provider
-execution is commissioned for deploy through `d475963c`. Native build/package
-transport remains M-007 work.
+execution is commissioned for deploy through `d475963c` and for Build/Package
+through M-007 `00cabac8`→`55cfbf94`. The latter uses separate wires/SDK,
+all-role prepared carriage and real installed two-cdylib execution; selection
+alone was never counted as completion.
 
 Owning anchors: `##POINT-GRAMMAR`, `##CONTRIB-GRAMMAR`, `##ONE-MACHINE`,
 `##OBS-REGISTRY`, `##PRESET-LAW`.
@@ -229,10 +233,11 @@ Existing `[[binary]]` lowers compatibly into one Cargo build target. Direct
 
 ## 6. Cargo is the commissioning mechanism, not a hard-coded phase
 
-**Disposition — applied for the builtin; foreign native transport deferred.**
-`a22da2a3` commissions the one Cargo provider and `[[binary]]` lowering;
-PROP-024/025 now carry its exact root/message/record law. A package-supplied
-native replacement for the build role remains open under M-007.
+**Disposition — applied for builtin and foreign native execution.** `a22da2a3`
+commissions the Cargo provider and `[[binary]]` lowering; PROP-024/025 now carry
+its exact root/message/record law. M-007 `00cabac8`→`55cfbf94` commissions a
+package-supplied native replacement through exact prepared carriage, engine
+staging/A2 records and provider-fresh rollback, with no Cargo fallback.
 
 Amend PROP-024 `##OOS-AUTODETECT`, PROP-025 `##BINARY-TABLE`,
 `##SLOT-RESIDENT`, `##TRUST-CURRENT-SLOT`, and PROP-054 `##PHASE-BUILD`:
@@ -254,9 +259,11 @@ changing the phase model.
 
 ## 7. Package targets — static skill and Agent Plugins 1.0
 
-**Disposition — applied for builtin package providers.** `a5dc3cbc` and
-`40c53f0a` commission static-skill, Agent Plugin and client projections. A
-package-supplied native replacement for the package role remains open.
+**Disposition — applied for builtin and foreign native package providers.**
+`a5dc3cbc` and `40c53f0a` commission static-skill, Agent Plugin and client
+projections. M-007 `00cabac8`→`55cfbf94` commissions a package-supplied native
+replacement that resolves and revalidates the real Build A2 record before its
+four provider operations and writes no destination outside Package staging.
 
 Replace/extend `##PHASE-PACKAGE` with:
 
@@ -429,8 +436,8 @@ work.
 
 ## 13. Status disposition
 
-Applied movements are recorded below; the two explicit open transport rows and
-POST-OS remain non-final.
+Applied movements are recorded below; the former Build/Package transport rows
+are closed by M-007 and POST-OS remains deferred.
 
 | Anchor | Proposed when evidence lands |
 |---|---|
@@ -441,8 +448,8 @@ POST-OS remain non-final.
 | `##OPEN-CREATE-BUDGET` | closed `spec/done`; policy at `##LLM-BUDGET`, grammar/defaults remain consuming-feature implementation work |
 | `##OPEN-DEPLOY-TARGETS` | closed `spec/done`; grammar/profiles `2a3f3b44`, deploy engine `0a42456e`, client/vibe-bin/native-provider runtime through `d475963c` |
 | project package-skill binding | record `impl/done` safety successor at `9275f373`/`67886ea7`; do not imply user deploy |
-| artifact/mechanism/deploy grammar | applied runtime successors at PROP-054 `##R8-ARTIFACT-RUNTIME` / `##R8-DEPLOY-RUNTIME`; native build/package provider execution remains open |
-| `##PHASE-BUILD`, `##PHASE-PACKAGE`, `##PHASE-DEPLOY` | builtin/package/deploy runtime evidence landed; parent R8 remains `impl/work` for M-007 native build/package transport |
+| artifact/mechanism/deploy grammar | applied runtime successors at PROP-054 `##R8-ARTIFACT-RUNTIME` / `##R8-DEPLOY-RUNTIME`; native Build/Package provider execution closes through M-007 `55cfbf94` |
+| `##PHASE-BUILD`, `##PHASE-PACKAGE`, `##PHASE-DEPLOY` | builtin/package/deploy runtime evidence landed; M-007 adds real installed native Build→A2→Package execution; parent R8 is `impl/done` |
 | PROP-024/025 build wording | applied with Cargo/general mechanism compatibility and record-aware refresh evidence |
-| native build/package provider transport | open `impl/work`; deploy-only ABI transport cannot close M-007 |
+| native build/package provider transport | applied `impl/done`; separate wires/SDK, all-role carriage, both prepared adapters, provider-fresh rollback and real installed two-cdylib E2E through `00cabac8`→`55cfbf94` |
 | VibeVM OS system layer | deferred POST-OS by design |

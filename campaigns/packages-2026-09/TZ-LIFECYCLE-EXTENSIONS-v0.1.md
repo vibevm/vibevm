@@ -1,10 +1,13 @@
 # ТЗ: lifecycle-движок и машина расширений — входная точка исполнителя
 
-_STATUS: В РАБОТЕ — R1–R7 завершены, включая R6.5-D public compiler
+_STATUS: В РАБОТЕ — R1–R8 реализованы, включая R6.5-D public compiler
 commissioning (`ee7f6f2d`, `def9909a`, `56307492`). В R8 приняты artifact/package/deploy
-builtins, platform applicability и нативный deploy-provider с read-only
-rehydration; обязательные M-007 native transports для build/package остаются
-открытыми, поэтому R8 и финальный gate не закрыты.
+builtins, platform applicability, нативный deploy-provider с read-only
+rehydration и обязательный M-007 native replacement для Build/Package через
+`00cabac8`, `93df9d28`, `e9388559`, `2193e6e7`, `fe0eb9df`, `0ca2b781`,
+`123ac504`, `68ce9078`, `55cfbf94`. R8 закрыт `impl/done`; открыты только
+финальные conform/full acceptance, owner acceptance и mirror/push, поэтому
+эпик целиком ещё не закрыт.
 Эта шапка — краткий указатель, не второй журнал. Точная гранулярная сверка,
 физический recovery-аудит и действующий atom-level dependency plan:
 `LIFECYCLE-EXTENSIONS-IMPLEMENTATION-LEDGER.md`. Спека-закон:
@@ -318,12 +321,21 @@ Pending→одна сборка→Fresh и failure/retry — `2e6bb266`.
 
 ### R8 — package/build/deploy (спека §4.2 + принятый successor-дизайн)
 
-**Статус исполнения 2026-09-08.** Artifact DAG/records, Cargo, static
+**Статус исполнения 2026-09-08.** R8 принят целиком. Artifact DAG/records, Cargo, static
 skill, Agent Plugin, Windows zip, deploy engine/profiles/clients/vibe-bin,
 platform applicability и реальный package-supplied native **deploy** provider
-с restart rehydration приняты. Native provider transports ролей build/package
-явно остаются M-007 work: общий registry и точный pin без исполнения не
-считаются plugin replacement. Поэтому R8 остаётся `impl/work`.
+с restart rehydration приняты. M-007 добавил отдельные JTD/SDK wires для
+Build/Package, all-role prepared carriage, оба адаптера и provider-fresh
+rollback. Реальный установленный пакет поставляет две отдельные cdylib,
+вытесняет `build:cargo` и `package:static-file`, создаёт A2 build record и
+потребляет его в Package без builtin fallback. Цепочка доказательств:
+`00cabac8`, `93df9d28`, `e9388559`, `2193e6e7`, `fe0eb9df`, `0ca2b781`,
+`123ac504`, `68ce9078`, `55cfbf94`; R8 имеет статус `impl/done`.
+
+Это не расширяет `vibe install`: dependency materialisation остаётся его
+немеханизмной install-фазой. Установка приложения остаётся deploy-role
+механизмом. Открыт только финальный campaign gate; финальный self-check,
+owner acceptance и mirror/push здесь не заявляются выполненными.
 
 Цели deploy уже выбраны владельцем; `##OPEN-DEPLOY-TARGETS` не является
 развилкой. Полная форма и порядок — в

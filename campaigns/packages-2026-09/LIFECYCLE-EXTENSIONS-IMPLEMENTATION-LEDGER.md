@@ -5,14 +5,16 @@ map for `TZ-LIFECYCLE-EXTENSIONS-v0.1.md`; PROP-054 remains semantic authority.
 `SPEC-DEBT-LIFECYCLE*.md` remains the amendment queue. A row is complete only
 with landed commit, source, and decisive test evidence._
 
-Current boundary: R1–R7 are accepted. R6.5-D closes the compiler tier with
+Current boundary: R1–R8 are accepted in implementation. R6.5-D closes the compiler tier with
 public selected-backend compilation `ee7f6f2d`, hybrid pass-plan retention
-`def9909a` and genuine installed TXT→JSON commissioning `56307492`. R8's artifact/package/deploy
-builtins, platform applicability and real native deploy-provider adapter plus
-read-only rehydration are accepted through `d475963c`, but M-007 native
-build/package provider transport remains open. Neither R8 nor final acceptance
-is complete while selection can still end at an unimplemented foreign
-build/package transport.
+`def9909a` and genuine installed TXT→JSON commissioning `56307492`. R8's
+artifact/package/deploy builtins, platform applicability, native deploy-provider
+adapter/rehydration and M-007 native Build/Package replacement are accepted.
+The M-007 chain `00cabac8`, `93df9d28`, `e9388559`, `2193e6e7`, `fe0eb9df`,
+`0ca2b781`, `123ac504`, `68ce9078`, `55cfbf94` covers separate wires/SDK,
+all-role carriage, prepared adapters, provider-fresh rollback and a real
+installed two-cdylib Build→A2→Package E2E with no builtin fallback. R8 is done;
+final conform/full acceptance, owner acceptance and mirror/push remain open.
 
 ## 1. Why this ledger exists
 
@@ -1707,7 +1709,7 @@ system remains fully usable with no selected agent contribution or provider.
 | deterministic Windows zip lifecycle binding | done | `0a42456e`; STORED-only writer, fixed 1980 timestamp, refusing census, independent-extractor oracle green live |
 | artifact/deploy platform applicability | done | grammar `d4edb3ae`, package projection `8ff4b711`, lifecycle/command projection `bb50aeab`; one injected OS observation, inactive-before-provider/source/record/collision and active→inactive dependency refusal |
 | package-supplied native deploy provider | done | freeze/wire/SDK/carriage `854707a1`→`269bec0d`; adapter `370ea177`; read-only restart rehydration `a24e4aff`; closure `d475963c`; real exact-pinned provider displaces builtin and runs six deploy operations with durable sidecar identity |
-| package-supplied native build/package providers | in progress | shared registry selection and exact pins are implemented, but §3.3 deliberately commissions only deploy transport; foreign build/package request/reply adapters and real displacement E2E remain M-007 work, so R8 is not complete |
+| package-supplied native build/package providers | done | M-007 `00cabac8`→`55cfbf94`: separate versioned Build/Package wires and safe ABI-1 macros, all-role exact-pin carriage, prepared Build/Package adapters, stable provider-fresh rollback, and a real installed package whose two cdylibs displace Cargo/static-file, produce the Build A2 record and consume it through Package without fallback |
 
 ## 4. Owner additions — preservation and implementation status
 
@@ -1720,11 +1722,11 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
 | LLM is optional paid enhancement | algorithmic baseline; `off/assist/required`; lazy provider; per-feature/run budgets | missing outside provider seam |
 | Static skill artifact | exactly one validated `SKILL.md`; explicit include consumption | done `a5dc3cbc` |
 | Agent Plugin | 1.0 directory, portable skill/MCP subset, client projections distinct | done `40c53f0a` |
-| Classic Cargo/meta-build | provider protocol, Cargo metadata + JSON artifact messages, no autodetect | builtin done `a22da2a3`; foreign native build transport open |
+| Classic Cargo/meta-build | provider protocol, Cargo metadata + JSON artifact messages, no autodetect | builtin done `a22da2a3`; foreign native Build replacement done through M-007 `55cfbf94` |
 | Claude/Codex/OpenCode local install | versioned adapters; CLI/public filesystem contracts; ownership receipts | done `ae36ac48` |
 | VibeVM tools in `~/.vibe/bin` | immutable store + version-free launcher; separate from `vibe bin` | done `45d88e80` |
 | Deploy profiles | named target selections; local/remote; explicit default; plan and inverse | done `0a42456e` |
-| User-overridable mechanisms | exact pin → host route → builtin default → failure | deploy execution done `d475963c`; native build/package execution open under M-007 |
+| User-overridable mechanisms | exact pin → host route → builtin default → failure | deploy execution done `d475963c`; native Build/Package execution done through M-007 `55cfbf94` |
 | Download/system package managers/VibeVM OS horizon | qualified identities; desired/artifact/deployment separate; effect class + receipt | future by design; compatibility constraints active now |
 
 ## 5. Architecture decisions in force
@@ -2227,8 +2229,9 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
    **Done through client commissioning `ae36ac48`.**
 6. `vibe-bin`, profiles/plan/undeploy, provider replacement and Windows zip.
    **Builtin deploy and zip are done; native deploy replacement/rehydration is
-   done through `d475963c`. Native build/package provider transports remain
-   open under M-007.**
+   done through `d475963c`; native Build/Package replacement is done through
+   M-007 `00cabac8`→`55cfbf94`, including the real installed two-cdylib
+   Build→A2→Package E2E.**
 
 ### Final serialization
 

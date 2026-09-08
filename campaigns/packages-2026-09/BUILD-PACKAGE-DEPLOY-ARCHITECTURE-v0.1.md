@@ -350,6 +350,37 @@ operations, but FREEZE through E2E makes no claim that either role is carried or
 invoked; later atoms extend transport without reopening the engine-owned plan,
 lock, collision, record or recovery laws above.
 
+#### 3.3.1 Accepted M-007 Build/Package successor (2026-09-08)
+
+The preceding seven-step list and deploy-first deferral remain the dated
+R8-PROVIDER-FREEZE record. M-007 has now discharged that deferral without
+rewriting it. Build and Package use separate generated, versioned
+`plan|fingerprint|apply|verify` request/reply roots and separate safe ABI-1
+author macros; deploy retains its six-operation contract. One cdylib still
+belongs to one ABI family, so the commissioning package supplies distinct
+Build and Package images.
+
+The successor sequence is: role admission (`00cabac8`); Build wire
+(`93df9d28`); Package wire (`e9388559`); SDK (`2193e6e7`); all-role selection,
+prebuilt/source admission and prepared carriage (`fe0eb9df`); prepared Build
+adapter (`0ca2b781`); the Build provider-fresh stable-staging rollback repair
+(`123ac504`); prepared Package adapter (`68ce9078`); and real installed-package
+commissioning (`55cfbf94`). The adapters consume the already-prepared binding and
+never re-resolve, rebuild or fall back to the displaced builtin.
+
+The E2E obligation now covers **both** deferred roles: one real installed
+dependency package contributes two ABI-isolated cdylibs, exact routes displace
+`build:cargo` and `package:static-file`, the foreign Build provider produces
+the engine-owned A2 record, and the foreign Package provider consumes that
+same revalidated record. A second Build invocation observes exact prior bytes
+and reports provider freshness without rewriting them. Invalid builtin-only
+configuration proves neither displaced builtin ran.
+
+This successor does not collapse lifecycle nouns. Dependency materialisation
+is still the non-mechanism `vibe install` phase. Installing an application or
+other external destination remains a deploy-role operation with the plan,
+lock, intent, receipt, recovery and inverse laws above.
+
 ## 4. Artifact graph and registry
 
 The manifest declares desired producers; the run carries actual artifacts.
