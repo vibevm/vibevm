@@ -1,0 +1,42 @@
+# The vibevm repository currently maintains its 1.0.0 package family as
+# mutable in-tree development slots. Refresh the consumer materialization and
+# content hash after each accepted source change; do not mint patch versions
+# merely to move the dogfood tree forward.
+[package]
+name = "multi-user-planning"
+group = "org.vibevm.world"
+kind = "flow"
+version = "1.0.0"
+epoch = 1
+format = "normal"
+authors = ["Oleg Chirukhin"]
+license = "UPL-1.0"
+description = "Multi-contributor campaign stewardship with ritual-free session continuation, deterministic goals, and explicit opt-in handoffs"
+keywords = ["planning", "campaigns", "multi-user", "goal", "continuation", "handoff", "agents"]
+
+[compatibility]
+min_vibe_version = "0.1.0"
+requires_kinds = []
+
+# This flow replaces wal/wal-specspaces as the session-continuity owner.  It
+# intentionally has no dependency on either package.  Compatible redbook laws
+# are cited from the protocol, while the package remains independently usable.
+[boot_snippet]
+source = "vibevm/vibespecs/boot/12-flow-multi-user-planning.xml"
+category = "flow"
+concepts = ["campaign stewardship", "ritual-free continuation", "user-local plan", "optional handoff", "verification economy"]
+
+[[skill]]
+name = "steward-status"
+path = "spec/skills/steward-status"
+description = "Resolve the current user-local stewardship context, verify it against the repository, and report the active campaign frontier without starting work"
+
+[[skill]]
+name = "steward-handoff"
+path = "spec/skills/steward-handoff"
+description = "On explicit owner request, prepare or receive a formal same-machine central-agent handoff while preserving acceptance boundaries and the complete campaign route"
+
+[[skill]]
+name = "steward-goal"
+path = "spec/skills/steward-goal"
+description = "Render or refresh the deterministic local campaign goal from the selected plan node; ordinary continuation does not require a custody claim"

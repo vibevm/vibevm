@@ -28,6 +28,7 @@
   A-VALID-MESSAGE-CAN-STILL-VIOLATE-THE-ATOMIC-RULE → org-vibevm-world-%2Dgit-conventional-commits-%2DA-VALID-MESSAGE-CAN-STILL-VIOLATE-THE-ATOMIC-RULE (org.vibevm.world/git-conventional-commits)
   A-WEB-UI-MERGE-IS-NOT-INTEGRATED-UNTIL-BROUGHT-HOME → org-vibevm-world-%2Dsource-mirrors-%2DA-WEB-UI-MERGE-IS-NOT-INTEGRATED-UNTIL-BROUGHT-HOME (org.vibevm.world/source-mirrors)
   ACCEPTANCE-NEVER-TRANSFERS → org-vibevm-world-%2Dmulti-user-planning-%2DACCEPTANCE-NEVER-TRANSFERS (org.vibevm.world/multi-user-planning)
+  ADVISORY-CUSTODY → org-vibevm-world-%2Dmulti-user-planning-%2DADVISORY-CUSTODY (org.vibevm.world/multi-user-planning)
   AGENT-CANNOT-ASK-VASYA → org-vibevm-world-%2Ddecision-records-%2DAGENT-CANNOT-ASK-VASYA (org.vibevm.world/decision-records)
   AGENT-READS-THE-TREE-COLD-EVERY-SESSION → org-vibevm-world-%2Dspec-genres-%2DAGENT-READS-THE-TREE-COLD-EVERY-SESSION (org.vibevm.world/spec-genres)
   AI-PROCESS-IS-OPTIMIZED-FOR → org-vibevm-world-%2Dtwo-process-model-%2DAI-PROCESS-IS-OPTIMIZED-FOR (org.vibevm.world/two-process-model)
@@ -48,6 +49,7 @@
   BOUNDARY-WRITE-THE-COMMIT-MAP-ENTRY → org-vibevm-world-%2Dcampaign-plans-%2DBOUNDARY-WRITE-THE-COMMIT-MAP-ENTRY (org.vibevm.world/campaign-plans)
   CASE-THE-USER-EDITED-CODE-DIRECTLY → org-vibevm-world-%2Dsync-from-code-%2DCASE-THE-USER-EDITED-CODE-DIRECTLY (org.vibevm.world/sync-from-code)
   CASE-THE-USER-GAVE-AN-IMPERATIVE-CHAT-COMMAND → org-vibevm-world-%2Dsync-from-code-%2DCASE-THE-USER-GAVE-AN-IMPERATIVE-CHAT-COMMAND (org.vibevm.world/sync-from-code)
+  CASUAL-CONTINUATION → org-vibevm-world-%2Dmulti-user-planning-%2DCASUAL-CONTINUATION (org.vibevm.world/multi-user-planning)
   CENTRAL-ONLY → org-vibevm-world-%2Dmulti-user-planning-%2DCENTRAL-ONLY (org.vibevm.world/multi-user-planning)
   CITE-SPEC-URIS-WHERE-RELEVANT → org-vibevm-world-%2Dgit-conventional-commits-%2DCITE-SPEC-URIS-WHERE-RELEVANT (org.vibevm.world/git-conventional-commits)
   CLIMB-THE-LADDER-BEFORE-CHOOSING-A-CONSERVATIVE-DEFAULT → org-vibevm-world-%2Dconflict-protocol-%2DCLIMB-THE-LADDER-BEFORE-CHOOSING-A-CONSERVATIVE-DEFAULT (org.vibevm.world/conflict-protocol)
@@ -84,6 +86,7 @@
   EVERY-LATER-PHASE-ENDS-GREEN-AND-EVERY-BOUNDARY-IS-A-SAFE-STOP → org-vibevm-world-%2Dcampaign-plans-%2DEVERY-LATER-PHASE-ENDS-GREEN-AND-EVERY-BOUNDARY-IS-A-SAFE-STOP (org.vibevm.world/campaign-plans)
   EVERY-NORMATIVE-STATEMENT-IS-ADDRESSABLE → org-vibevm-world-%2Daddressable-specs-%2DEVERY-NORMATIVE-STATEMENT-IS-ADDRESSABLE (org.vibevm.world/addressable-specs)
   EVERY-SETUP-TOUCHING-CHANGE-UPDATES-THE-DOC-IN-THE-SAME-COMMIT → org-vibevm-world-%2Ddev-runtime-docs-%2DEVERY-SETUP-TOUCHING-CHANGE-UPDATES-THE-DOC-IN-THE-SAME-COMMIT (org.vibevm.world/dev-runtime-docs)
+  EXPLICIT-HANDOFF-ONLY → org-vibevm-world-%2Dmulti-user-planning-%2DEXPLICIT-HANDOFF-ONLY (org.vibevm.world/multi-user-planning)
   FACT-IS-RECOVERABLE-FROM-THE-CODE → org-vibevm-world-%2Ddecision-records-%2DFACT-IS-RECOVERABLE-FROM-THE-CODE (org.vibevm.world/decision-records)
   FORMAT-DOES-NOT-ENFORCE-ATOMICITY → org-vibevm-world-%2Dgit-conventional-commits-%2DFORMAT-DOES-NOT-ENFORCE-ATOMICITY (org.vibevm.world/git-conventional-commits)
   FULL-PROTOCOL-POINTER → org-vibevm-world-%2Dmulti-user-planning-%2DFULL-PROTOCOL-POINTER (org.vibevm.world/multi-user-planning)
@@ -113,6 +116,7 @@
   LAW-SHORT-NAMES-RESOLVE-ONLY-AT-THE-BOUNDARY → org-vibevm-world-%2Dqualified-naming-%2DLAW-SHORT-NAMES-RESOLVE-ONLY-AT-THE-BOUNDARY (org.vibevm.world/qualified-naming)
   LAW-THE-RE-FETCH-LIST → org-vibevm-world-%2Dcomparative-research-%2DLAW-THE-RE-FETCH-LIST (org.vibevm.world/comparative-research)
   LAW-TWO-WAY-GAPS → org-vibevm-world-%2Dcomparative-research-%2DLAW-TWO-WAY-GAPS (org.vibevm.world/comparative-research)
+  LIVE-CONFLICT-STOPS → org-vibevm-world-%2Dmulti-user-planning-%2DLIVE-CONFLICT-STOPS (org.vibevm.world/multi-user-planning)
   LOCAL-DOES-NOT-GRANT → org-vibevm-world-%2Dmulti-user-planning-%2DLOCAL-DOES-NOT-GRANT (org.vibevm.world/multi-user-planning)
   MEMBER-ADDRESSABLE-SPECS → org-vibevm-world-%2Dredbook-%2DMEMBER-ADDRESSABLE-SPECS (org.vibevm.world/redbook)
   MEMBER-ATOMIC-COMMITS → org-vibevm-world-%2Dredbook-%2DMEMBER-ATOMIC-COMMITS (org.vibevm.world/redbook)
@@ -137,6 +141,7 @@
   MEMBER-TWO-PROCESS-MODEL → org-vibevm-world-%2Dredbook-%2DMEMBER-TWO-PROCESS-MODEL (org.vibevm.world/redbook)
   MEMBERS-MAY-MOVE-AHEAD-BETWEEN-EDITIONS → org-vibevm-world-%2Dredbook-%2DMEMBERS-MAY-MOVE-AHEAD-BETWEEN-EDITIONS (org.vibevm.world/redbook)
   MODES-CHANGE-CONFIRMATION-BEHAVIOUR-NOT-WHAT-IS-OFF-LIMITS → org-vibevm-world-%2Doperating-modes-%2DMODES-CHANGE-CONFIRMATION-BEHAVIOUR-NOT-WHAT-IS-OFF-LIMITS (org.vibevm.world/operating-modes)
+  MUTATION-IS-SUSPICION-TRIGGERED → org-vibevm-world-%2Dmulti-user-planning-%2DMUTATION-IS-SUSPICION-TRIGGERED (org.vibevm.world/multi-user-planning)
   NAME-THE-GENRE-BEFORE-WRITING-ANY-DOCUMENT → org-vibevm-world-%2Dspec-genres-%2DNAME-THE-GENRE-BEFORE-WRITING-ANY-DOCUMENT (org.vibevm.world/spec-genres)
   NEITHER-SUBORDINATE-NOR-TOOL → org-vibevm-world-%2Dtwo-process-model-%2DNEITHER-SUBORDINATE-NOR-TOOL (org.vibevm.world/two-process-model)
   NEVER-ACT-ON-AN-UNCATALOGUED-CODEWORD → org-vibevm-world-%2Doperating-modes-%2DNEVER-ACT-ON-AN-UNCATALOGUED-CODEWORD (org.vibevm.world/operating-modes)
@@ -505,6 +510,7 @@
   two-copies-will-diverge → org-vibevm-world-%2Daddressable-specs-%2Dtwo-copies-will-diverge (org.vibevm.world/addressable-specs)
   two-things-are-always-true-lead → org-vibevm-world-%2Dlicensing-%2Dtwo-things-are-always-true-lead (org.vibevm.world/licensing)
   uncertainty → org-vibevm-world-%2Dconflict-protocol-%2Duncertainty (org.vibevm.world/conflict-protocol)
+  verification → org-vibevm-world-%2Dmulti-user-planning-%2Dverification (org.vibevm.world/multi-user-planning)
   what → org-vibevm-world-%2Ddiscovery-prompt-%2Dwhat (org.vibevm.world/discovery-prompt)
   when → org-vibevm-world-%2Dcampaign-plans-%2Dwhen (org.vibevm.world/campaign-plans), org-vibevm-world-%2Dcomparative-research-%2Dwhen (org.vibevm.world/comparative-research), org-vibevm-world-%2Ddiscovery-prompt-%2Dwhen (org.vibevm.world/discovery-prompt), org-vibevm-world-%2Dhealth-audit-%2Dwhen (org.vibevm.world/health-audit), org-vibevm-world-%2Dlicensing-%2Dwhen (org.vibevm.world/licensing), org-vibevm-world-%2Dmanaged-blocks-%2Dwhen (org.vibevm.world/managed-blocks), org-vibevm-world-%2Dmanual-tests-%2Dwhen (org.vibevm.world/manual-tests), org-vibevm-world-%2Dqualified-naming-%2Dwhen (org.vibevm.world/qualified-naming), org-vibevm-world-%2Dtool-design-lessons-%2Dwhen (org.vibevm.world/tool-design-lessons)
   why → org-vibevm-world-%2Ddecision-records-%2Dwhy (org.vibevm.world/decision-records), org-vibevm-world-%2Dgit-attribution-policy-%2Dwhy (org.vibevm.world/git-attribution-policy), org-vibevm-world-%2Dspec-genres-%2Dwhy (org.vibevm.world/spec-genres)
@@ -1356,7 +1362,7 @@ pre-run; never record the pass.</org-vibevm-world--manual-tests--REPORT-THE-PRE-
   </org-vibevm-world--manual-tests--never>
 </spec>
 
-<!-- vibe:c1 vibe:static org.vibevm.world/multi-user-planning — vibevm/vibedeps/org.vibevm.world.multi-user-planning/0.2.1/vibevm/vibespecs/boot/12-flow-multi-user-planning.xml -->
+<!-- vibe:c1 vibe:static org.vibevm.world/multi-user-planning — vibevm/vibedeps/org.vibevm.world.multi-user-planning/1.0.0/vibevm/vibespecs/boot/12-flow-multi-user-planning.xml -->
 
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
@@ -1369,18 +1375,32 @@ does not claim custody, create central state, or apply the central clauses
 below; its explicit packet remains its whole task.</org-vibevm-world--multi-user-planning--CENTRAL-ONLY></p>
   <p><org-vibevm-world--multi-user-planning--RESOLVE-LOCAL-CONTEXT-FIRST fact="true" status="impl/done">Before campaign
 work, resolve this repository/worktree/branch to one context under
-`~/.vibe/steward/contexts/`. Read its `settings.toml`, `custody.toml`, complete
-`plan.toml`, and latest acknowledged handoff. If global or context settings are
-absent, create the documented safe defaults. Never infer current state from a
-repository-level personal checkpoint.</org-vibevm-world--multi-user-planning--RESOLVE-LOCAL-CONTEXT-FIRST></p>
+`~/.vibe/steward/contexts/`. Read its `settings.toml`, complete `plan.toml`,
+advisory `custody.toml`, and verify the repository tree. Read handoff material
+only when the owner explicitly requests formal handoff inspection or receipt.
+If global or context settings are absent, create the documented safe defaults.
+Never infer current state from a repository-level personal checkpoint.</org-vibevm-world--multi-user-planning--RESOLVE-LOCAL-CONTEXT-FIRST></p>
   <org-vibevm-world--multi-user-planning--authority title="Authority and custody">
     <facts ordered="false">
       <org-vibevm-world--multi-user-planning--LOCAL-DOES-NOT-GRANT fact="true" status="impl/done">User-local state
   coordinates this developer's sessions; it cannot grant project authority or
   overrule human instructions, specs, tests or code.</org-vibevm-world--multi-user-planning--LOCAL-DOES-NOT-GRANT>
-      <org-vibevm-world--multi-user-planning--ONE-CENTRAL-HOLDER fact="true" status="impl/done">Exactly one central
-  session holds the write baton for a local context epoch. A handoff offer
-  fences the outgoing holder read-only; a receipt advances custody.</org-vibevm-world--multi-user-planning--ONE-CENTRAL-HOLDER>
+      <org-vibevm-world--multi-user-planning--ONE-CENTRAL-HOLDER fact="true" status="impl/void">Retired v0.2
+  mandatory-holder law. Its current heirs are `CASUAL-CONTINUATION`,
+  `ADVISORY-CUSTODY` and `LIVE-CONFLICT-STOPS`.</org-vibevm-world--multi-user-planning--ONE-CENTRAL-HOLDER>
+      <org-vibevm-world--multi-user-planning--CASUAL-CONTINUATION fact="true" status="impl/done">A timeout, crash,
+  compaction, new chat or model change is ordinary continuation. Any
+  owner-facing central agent may resume from the exact binding, settings,
+  complete plan and repository evidence without creating session, handoff,
+  receipt or takeover documents.</org-vibevm-world--multi-user-planning--CASUAL-CONTINUATION>
+      <org-vibevm-world--multi-user-planning--ADVISORY-CUSTODY fact="true" status="impl/done">Custody states, epoch,
+  holder, session and heartbeat are coordination diagnostics, not permission or
+  a default write gate. Only a valid `offering` created by an explicit
+  owner-requested formal handoff fences writes.</org-vibevm-world--multi-user-planning--ADVISORY-CUSTODY>
+      <org-vibevm-world--multi-user-planning--LIVE-CONFLICT-STOPS fact="true" status="impl/done">An empirically
+  observed live conflicting writer or input drift stops writes until the
+  owner resolves the conflict. Stale or mismatched custody metadata alone does
+  not.</org-vibevm-world--multi-user-planning--LIVE-CONFLICT-STOPS>
       <org-vibevm-world--multi-user-planning--ACCEPTANCE-NEVER-TRANSFERS fact="true" status="impl/done">Custody may
   transfer. Acceptance does not: dirty changes and worker claims arrive as
   candidates until the incoming central agent independently reviews and gates
@@ -1388,6 +1408,10 @@ repository-level personal checkpoint.</org-vibevm-world--multi-user-planning--RE
     </facts>
   </org-vibevm-world--multi-user-planning--authority>
   <org-vibevm-world--multi-user-planning--handoff-command title="Receiving by context id">
+    <p><org-vibevm-world--multi-user-planning--EXPLICIT-HANDOFF-ONLY fact="true" status="impl/done">Offer/receipt is
+the exact protocol only after an explicit owner request such as `HANDOFF CENTRAL
+TO &lt;target&gt;` or `ACCEPT HANDOFF FROM &lt;context-id&gt;`. Never infer formal
+handoff merely from restart, compaction, model change or custody metadata.</org-vibevm-world--multi-user-planning--EXPLICIT-HANDOFF-ONLY></p>
     <p><org-vibevm-world--multi-user-planning--RECEIVE-COMMAND fact="true" status="impl/done">Recognise
 `ACCEPT HANDOFF FROM &lt;context-id&gt;` / `RECEIVE HANDOFF FROM
 &lt;context-id&gt;` and Russian `ПРИМИ ХЭНДОФФ ИЗ &lt;context-id&gt;` by intent.
@@ -1417,6 +1441,15 @@ output is allowed after the fence; further repository/plan mutation is not.</org
   evidence for omissions and contradictions.</org-vibevm-world--multi-user-planning--REPLAN-AND-BACKSCAN>
     </facts>
   </org-vibevm-world--multi-user-planning--planning>
+  <org-vibevm-world--multi-user-planning--verification title="Verification economy">
+    <p><org-vibevm-world--multi-user-planning--MUTATION-IS-SUSPICION-TRIGGERED fact="true" status="impl/done">Run
+  essential affected checks and ordinary negative/invariant tests for every
+  atom. Counterfactual mutation is not a routine gate: use one smallest
+  reversible mutation only when a concrete observation makes the result
+  suspicious and that probe is cheaper than the named alternative proof. Stop
+  after its exact rerun; never enter an open-ended mutation loop. Canon:
+  @spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/campaign-execution#MUTATION-DIAGNOSTIC-LAW.</org-vibevm-world--multi-user-planning--MUTATION-IS-SUSPICION-TRIGGERED></p>
+  </org-vibevm-world--multi-user-planning--verification>
   <org-vibevm-world--multi-user-planning--profiles title="Persistent user profiles">
     <p><org-vibevm-world--multi-user-planning--PROFILE-QUALITY-FLOOR fact="true" status="impl/done">The owner selects
 `ultra` or `standard` independently of the model name and may switch it during a
@@ -1428,12 +1461,12 @@ setting. Canon:
   </org-vibevm-world--multi-user-planning--profiles>
   <org-vibevm-world--multi-user-planning--goal title="Deterministic campaign goal">
     <p><org-vibevm-world--multi-user-planning--GOAL-MUST-BE-CURRENT fact="true" status="impl/done">An owner-facing
-central holder checks the current context's `GOAL.md` before campaign work and
+central agent checks the current context's `GOAL.md` before campaign work and
 after every plan, selected-goal or planning-profile change. Missing or stale
 goal bytes are regenerated deterministically from `plan.toml` through
-`steward-goal`; no LLM paraphrase enters the canonical file. A worker, a
-non-holder, or an outgoing holder in `offering` reports staleness but MUST NOT
-write. Canon:
+`steward-goal`; no LLM paraphrase enters the canonical file. No holder/session
+claim is required. A worker or a central agent fenced by a valid explicit
+`offering` reports staleness but MUST NOT write. Canon:
 @spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/goal-projection#root.</org-vibevm-world--multi-user-planning--GOAL-MUST-BE-CURRENT></p>
   </org-vibevm-world--multi-user-planning--goal>
   <org-vibevm-world--multi-user-planning--canon title="Full protocol">

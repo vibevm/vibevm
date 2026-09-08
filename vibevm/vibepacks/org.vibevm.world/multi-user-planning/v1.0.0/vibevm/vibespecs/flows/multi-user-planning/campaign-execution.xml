@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Central stewardship of a long campaign</title>
+  <status stage="spec" state="done"/>
+  <role title="1. The central coordinator's irreducible job">
+    <p><CENTRAL-JOB fact="true" status="spec/done">The central coordinator owns
+the coherent idea: reconstructing the mandate, architecture, dependencies and
+risks; maintaining the lossless plan; choosing atoms; reviewing actual output;
+issuing acceptance; promoting knowledge; integrating commits; and proving
+closure. Tools and workers may execute bounded work, but these judgments remain
+central even when delegation is cheap.</CENTRAL-JOB></p>
+    <p><ACTIVITY-NOT-PROGRESS fact="true" status="spec/done">Tool calls, generated
+code, green producer tests, commits and completed UI rows are activity. Progress
+is an obligation moving to a justified disposition with durable evidence while
+the remaining route stays truthful.</ACTIVITY-NOT-PROGRESS></p>
+  </role>
+  <loop title="2. The stewardship loop">
+    <facts ordered="true">
+      <LOOP-ORIENT fact="true" status="spec/done">**Orient:** read authority and
+  the full plan; verify tree, selected campaign goal, candidates and the
+  accepted boundary empirically. Treat ordinary custody metadata as advisory.
+  Refresh a stale `GOAL.md` in any owner-facing continuation unless an explicit
+  formal handoff is currently `offering`.</LOOP-ORIENT>
+      <LOOP-REFINE fact="true" status="spec/done">**Refine:** expand one coherent
+  frontier region; state dependencies, write perimeter, acceptance, essential
+  verification and safe stop before execution. Add a mutation diagnostic only
+  after the suspicion and economy conditions in `MUTATION-DIAGNOSTIC-LAW` are
+  met.</LOOP-REFINE>
+      <LOOP-EXECUTE fact="true" status="spec/done">**Execute:** work directly or
+  commission bounded workers according to the project's delegation policy.
+  Preserve ordinary inspectable artifacts.</LOOP-EXECUTE>
+      <LOOP-JUDGE fact="true" status="spec/done">**Judge:** inspect the real
+  diff/result against architecture and mandate, reproduce decisive essential
+  gates, and inspect for concrete false-green signals. If a result or test is
+  suspicious, apply `MUTATION-DIAGNOSTIC-LAW`; do not mutate by ritual.</LOOP-JUDGE>
+      <LOOP-INTEGRATE fact="true" status="spec/done">**Integrate:** repair or
+  reject defects; promote stable discoveries; commit atomically; update
+  acceptance tier, dependencies and projection.</LOOP-INTEGRATE>
+      <LOOP-LOOK-BACK fact="true" status="spec/done">**Look back:** ask what the
+  result falsified, what new obligation appeared, what knowledge still lives
+  only in a report, and whether distant architecture still composes. Replan
+  before selecting the next atom.</LOOP-LOOK-BACK>
+    </facts>
+    <p><LOOP-NOT-AUTOMATION fact="true" status="spec/done">This is an operating
+discipline, not an automatic product loop. Human intervention, long-running
+creative work and indeterminate iteration are normal. Lifecycle systems may
+provide evidence and phase mechanics without choosing the next action.</LOOP-NOT-AUTOMATION></p>
+  </loop>
+  <reasoning title="3. Sustained reasoning">
+    <p><REASON-FROM-MODEL fact="true" status="spec/done">Do not reduce a large
+campaign to the number of rows a harness happens to display. Reconstruct the
+hierarchy from mandate and evidence, keep unresolved uncertainty explicit, and
+reason across phase boundaries before local optimization. When a change affects
+the core idea, update the route first, not retrospectively.</REASON-FROM-MODEL></p>
+    <p><ULTRA-DISCIPLINE fact="true" status="spec/done">Under `ultra`, use the
+available extended reasoning to keep architecture, distant dependencies and
+acceptance in one coherent model. Larger atoms are allowed only where their
+result remains reviewable. Deep reasoning is not permission to leave conclusions
+only in context or skip mechanical proof.</ULTRA-DISCIPLINE></p>
+    <p><STANDARD-DISCIPLINE fact="true" status="spec/done">Under `standard`,
+externalize more of the chain before acting: smaller atoms, explicit per-claim
+tables, frequent backscans and stronger preference for independent review.
+Never compensate for limited context by silently dropping distant stages or
+declaring a shallow plan complete.</STANDARD-DISCIPLINE></p>
+  </reasoning>
+  <workers title="4. Workers are producers, never custody shortcuts">
+    <p><WORKER-PACKET fact="true" status="spec/done">When workers are used, one
+packet has a bounded goal, closed write perimeter, supplied architecture,
+acceptance and exact self-checks, plus a durable report location. The worker
+returns ordinary inspectable files and evidence; it does not commit, hide state
+inside a private representation, claim central review or advance project
+status unless project policy explicitly makes it a central session instead.</WORKER-PACKET></p>
+    <p><WORKER-REVIEW fact="true" status="spec/done">Review a worker result like
+an untrusted but capable pull request: compare the actual artifact to the
+packet, verify every consequential claim, and inspect whether its tests exercise
+and assert the claimed behavior. Use a counterfactual mutation only under
+`MUTATION-DIAGNOSTIC-LAW`. A worker's PASS, token count or confident narrative
+cannot substitute for acceptance.</WORKER-REVIEW></p>
+    <p><WORKER-FAILURE fact="true" status="spec/done">A transport error, timeout
+or killed final turn is not a code verdict. Inspect what survived, preserve it,
+then recalculate whether the remainder is cheaper to repair centrally, resume,
+recommission or reject. Never delete first or restart blindly.</WORKER-FAILURE></p>
+  </workers>
+  <gates title="5. Gate economy">
+    <p><EXACT-GATES fact="true" status="spec/done">Every atom runs formatting,
+diff hygiene and exact affected tests/checks/lints, including applicable
+ordinary negative-case and invariant tests. Those tests are essential
+verification, not counterfactual mutation. A pipe or wrapper that discards the
+child exit status is telemetry, not a gate.</EXACT-GATES></p>
+    <p><FULL-PANEL-TRIGGERS fact="true" status="spec/done">An expensive full
+panel belongs at a coherent integration boundary, after broad shared-foundation
+change, before release/publication, or at final campaign acceptance. Do not run
+it reflexively after every small atom; do not omit it merely because every atom
+had local tests. The panel must run on the unchanged tree being accepted.</FULL-PANEL-TRIGGERS></p>
+    <p><MUTATION-DIAGNOSTIC-LAW fact="true" status="spec/done">**Counterfactual
+mutation is suspicion-triggered diagnostic evidence, never an atom ritual.**
+Essential verification always runs first. A mutation may run only when both a
+concrete observed signal makes the result or test suspicious and the smallest
+targeted mutation is cheaper than the best named alternative proof. Suspicious
+signals include: changed behavior that changes no relevant assertion or output;
+an affected path that is skipped, swallowed or replaced by a mock; an assertion
+that accepts empty data, an over-broad match or the wrong object; a wrapper that
+loses exit status or a target test that was not selected; a test coupled to
+implementation structure without an independent oracle; contradiction with a
+specification, direct reproduction, trace, snapshot, golden or other independent
+check; and a pass that is flaky or cannot be reproduced on the acceptance tree.
+Public or safety-critical surface and worker-produced code raise scrutiny but are
+not suspicious by themselves. Before mutation, record one hypothesis, the
+smallest reversible edit, one exact affected command, the expected red result
+and why this is cheaper than the named alternative. The default budget is one
+mutation and one exact rerun; one replacement mutation is allowed only when the
+first could not execute, never merely because its result was inconvenient or
+ambiguous. Stop immediately when the test turns red (sensitivity shown), remains
+green (repair the false-green test or oracle), cannot execute or is inconclusive
+(restore and use the alternative proof or replan), or ceases to be cheaper.
+Restore the original bytes and reproduce essential gates on the unchanged tree
+before acceptance. Open-ended mutant search, mutation-score chasing and
+whole-suite mutation loops are forbidden unless the owner separately authorizes
+a diagnostic campaign with its own budget and exit criteria.</MUTATION-DIAGNOSTIC-LAW></p>
+    <p><MUTATION-POLICY-DECISION fact="true" status="spec/done">**Decision:**
+counterfactual mutation is a bounded, suspicion-triggered diagnostic, not a
+routine acceptance gate. **Why:** full mutation work consumes disproportionate
+tokens and can trap an agent in repeated mutant attempts for days while exact
+affected checks usually supply the needed evidence. **Considered and rejected:**
+mutation at every atom or public boundary is predictably too expensive; banning
+all mutation discards a useful probe when a pass is concretely suspicious.
+**When to revisit:** repeated false-green defects escape essential verification,
+or the owner explicitly commissions a dedicated mutation-quality campaign with
+a measured budget.</MUTATION-POLICY-DECISION></p>
+    <p><TEST-THE-TEST fact="true" status="spec/done">Inspect test relevance and
+sensitivity, especially at public boundaries, for safety properties and around
+easily vacuous assertions. Those risk categories increase scrutiny but do not
+themselves trigger mutation. When a concrete suspicious signal exists, follow
+`MUTATION-DIAGNOSTIC-LAW`; otherwise essential verification is the gate.</TEST-THE-TEST></p>
+  </gates>
+  <wisdom title="6. Learning while executing">
+    <p><WISDOM-TRIGGER fact="true" status="spec/done">At review, milestone and
+handoff, ask which observations generalize beyond the current atom. Promote a
+verified product law into its spec, an executable invariant into a test, an
+operational campaign lesson into the governing flow, and unresolved future work
+into a named backlog/plan node. Do not wait for session end, when causal context
+has already decayed.</WISDOM-TRIGGER></p>
+    <p><REPORT-RETENTION fact="true" status="spec/done">A report may be removed
+only after its unique code is integrated/rejected and every accepted durable
+fact has another governing home. “The worker finished” and “its knowledge is
+preserved” are different claims.</REPORT-RETENTION></p>
+  </wisdom>
+  <stops title="7. Honest stopping conditions">
+    <p><SAFE-STOP fact="true" status="spec/done">A safe stop has an internally
+consistent tree, an explicit accepted boundary, every incomplete artifact
+classified candidate, a current complete plan, and a literal next recipe. It
+may occur between atoms even when the campaign is far from complete.</SAFE-STOP></p>
+    <p><NO-CREATIVE-STOP fact="true" status="spec/done">Do not transform “hard,”
+“long,” “resources low,” “worker stopped,” or “visible plan ended” into a
+creative claim of completion. Continue, preserve recoverable state, or report
+the real blocker. A formal handoff is used only on explicit owner request.
+Completion is reserved for proven exit criteria.</NO-CREATIVE-STOP></p>
+  </stops>
+</spec>

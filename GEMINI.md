@@ -170,8 +170,12 @@ Keep it current-state; prune stale lines.
 Personal execution state is not a project setting. An owner-facing central
 session resolves the exact repository/worktree/revision binding under
 `~/.vibe/steward/contexts/*/binding.toml`, then reads the context's
-`settings.toml`, `custody.toml`, complete `plan.toml`, and latest acknowledged
-handoff. The selected campaign's derived `GOAL.md` and bounded
+`settings.toml`, complete `plan.toml`, and actual repository state. Ordinary
+continuation after timeout, crash, compaction, model change or a new chat needs
+no session record, custody claim, handoff bundle, receipt or takeover document.
+`custody.toml` is advisory unless a valid explicit formal handoff is currently
+`offering`; read handoff bundles only when the owner explicitly requests that
+workflow or asks to inspect one. The selected campaign's derived `GOAL.md` and bounded
 `GOAL-CLAUDE.txt` live beside them. Missing global defaults are created as
 `interaction_mode = "collab"`
 and `planning_profile = "standard"`; context overrides may differ by branch or
@@ -184,7 +188,7 @@ axis changes correctness, authority or safety rules.
 longer authoritative. It remains temporarily only until the first multi-user
 handoff is receipted and its explicit owner value has been preserved locally.
 
-Workers and reviewers do not read, create or claim central custody. They always
+Workers and reviewers do not read, create or claim formal central custody. They always
 follow their explicit packet and `##subagent-quiet-clause`; worker reports are
 evidence, never acceptance. Canon:
 `spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/MULTI-USER-PLANNING-PROTOCOL#root`.
@@ -216,8 +220,9 @@ not update them as central-session state.
   (`vibevm/vibepacks/org.vibevm.fractality/`).
 - **Boot scoping.** A specspace session reads the host's repo-wide commit and
   safety rules plus the target's own boot contract and relevant specs. Its
-  plan/custody/handoff come from a context bound to that target under
-  `~/.vibe/steward/`; it does not load unrelated host/specspace plans. A task
+  plan and settings come from a context bound to that target under
+  `~/.vibe/steward/`; custody/handoff state is consulted only for an explicit
+  formal transfer. It does not load unrelated host/specspace plans. A task
   crossing boundaries says so before touching the other project.
 
 ## Memory discipline: project facts stay in the project
@@ -239,7 +244,7 @@ Facts about *this project* — its design, conventions, decisions, milestones, o
 Project facts do **not** belong in the running harness's global per-user auto-memory (whatever tool-specific path that happens to be). A teammate who clones the repo will never see global user-memory, and anything they need to know about the project must live in the repo.
 
 User-local stewardship is reserved for this developer's preferences, exact
-checkout/branch context, personal execution plan, central custody/handoffs and
+checkout/branch context, personal execution plan, optional formal handoffs and
 machine facts. **Classification test:** if another contributor needs the fact
 to build, review or understand the project, promote it into the repository; if
 it only resumes this developer's central session, keep it local. A worker
@@ -265,16 +270,18 @@ only product work already ready under the ordinary git rules—wind-down itself
 does not manufacture shared-state commits. A transfer to a different central
 agent uses the separate two-phase handoff below.
 
-## Central custody handoff — `HANDOFF CENTRAL TO <target>`
+## Explicit formal handoff — `HANDOFF CENTRAL TO <target>`
 
-A planned model/harness change, session rollover or owner-authorized recovery
-uses `steward-handoff` and
+Only an explicit owner request to create, receive, cancel or recover a formal
+handoff uses `steward-handoff` and
 `spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/custody-and-handoff#root`.
 Outgoing: verify and backscan, write/hash an immutable offer plus comprehensive
 `HANDOFF.md`, set custody `offering`, then become repository/plan read-only.
 Incoming: read cold, verify hashes and tree, classify every candidate, write a
 receipt, advance epoch once, report restored state, and wait for owner
-direction. Custody transfers; unaccepted work never does.
+direction. Formal custody transfers; unaccepted work never does. A timeout,
+crash, compaction, model change or ordinary new session is not a handoff and
+does not run this protocol.
 
 The owner never pastes a handoff body. In a new/resumed central session,
 `ACCEPT HANDOFF FROM <context-id>` / `ПРИМИ ХЭНДОФФ ИЗ <context-id>` resolves
@@ -293,7 +300,8 @@ local directory for an id.
 
 ## Session-resume command — `ВОССТАНОВИ СЕССИЮ` / `RESUME SESSION`
 
-When the user issues a resume trigger phrase, the job is to **restore context and report — nothing else**. Recognise the intent, not the exact wording:
+When the user issues a resume trigger phrase, restore the durable context
+without a takeover ritual. Recognise the intent, not the exact wording:
 
 - Russian: `ВОССТАНОВИ СЕССИЮ`, `ВОССТАНОВИ КОНТЕКСТ`, `ПРОДОЛЖАЕМ С ТОГО ЖЕ МЕСТА`.
 - English: `RESUME SESSION`, `RESTORE SESSION`, `RESTORE CONTEXT`.
@@ -301,18 +309,25 @@ When the user issues a resume trigger phrase, the job is to **restore context an
 **Required behaviour** when a resume phrase fires:
 
 1. Run the full project boot, resolve the exact user-local context, and read its
-   settings, custody, complete plan and latest acknowledged handoff; verify
-   branch, sync, working tree, recent commits and named artifacts empirically.
-2. **Emit a status report in the chat**: context/profile, custody epoch/holder,
+   settings and complete plan; verify branch, sync, working tree, recent commits
+   and named artifacts empirically. Do not create or claim session, custody,
+   handoff, receipt or takeover state. Consult formal handoff data only when the
+   owner explicitly named that workflow.
+2. **Emit a status report in the chat**: context/profile, advisory coordination state when relevant,
    accepted boundary, candidates, full remaining epic route, expanded current
    frontier, gate-panel state, blockers, and the **judging debt** while a
    campaign is live (`python campaigns/<zone>/tasks/judging-debt.py` — reporting
    is not paying it). Name the candidate next atom from the local plan.
-3. **Stop and wait for direction.** No code edits, plan-phase execution,
-   custody takeover, commits or pushes. A stored next atom is a candidate, not
-   authorization to choose the owner's priority.
+3. If the owner asked only to restore/report, stop and wait for direction. If
+   the same request says to continue, proceed with that owner instruction after
+   the status report; no separate claim is required. A stored next atom alone
+   is still a candidate, not authorization to choose the owner's priority. Stop
+   only if an actually live conflicting writer or semantic input drift is
+   observed, not because stale custody metadata names another session.
 
-Rationale: the resume boundary exists so the owner can inspect the restored state and steer — possibly somewhere other than the recorded next step. A session that boots straight into execution takes that decision away (rule recorded 2026-06-12 after exactly that misfire).
+Rationale: a report-only request preserves the owner's chance to steer, while
+an explicit “continue” already supplies that direction. Session loss must not
+manufacture ceremony or block recoverable work.
 
 <vibevm>
 <!-- Generated by vibe — do not edit inside this block; it is rewritten on `vibe install`. Text outside the <vibevm> markers is yours. -->

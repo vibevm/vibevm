@@ -76,8 +76,10 @@
       <MODEL-DIVERSITY-IS-A-GATE fact="true" status="spec/done">For a
       substantive implementation, prefer review by a different model family or
       fresh independent thread. Diversity counts only with exact file/line
-      evidence, a root rerun of the decisive test and a mutation or negative
-      oracle; another model's confidence is not evidence.</MODEL-DIVERSITY-IS-A-GATE>
+      evidence, a root rerun of the decisive test and applicable ordinary
+      negative-case or invariant checks; another model's confidence is not
+      evidence. Counterfactual mutation follows the package's
+      `MUTATION-DIAGNOSTIC-LAW` and is never required by diversity alone.</MODEL-DIVERSITY-IS-A-GATE>
       <CLAUDEZ-EXECUTES-ROOT-ACCEPTS fact="true" status="spec/void">Retired
       transport tombstone. No execution or correction command is authorized by
       this anchor. The enduring rule is `CENTRAL-OWNS-JUDGMENT`: worker claims
@@ -111,7 +113,7 @@
       </NATIVE-WORKERS>
       <SOL-XHIGH fact="true" status="spec/done">**`codexrunner` —
       `gpt-5.6-sol`, effort `xhigh`** — is the second external lane for hard,
-      well-specified coding, broad code reading and mutation-backed repair when
+      well-specified coding, broad code reading and evidence-backed repair when
       a separate Codex process or model diversity is useful. It runs in a
       dedicated worktree. Its yolo transport makes root diff review and a
       closed write allow-list mandatory; worker claims about review, commits or
@@ -290,7 +292,7 @@
       worker report is evidence, never the sole durable home of an accepted
       fact. Before root accepts an atom or permits its report/worktree/cache to
       become disposable, root reviews every non-obvious implementation,
-      architecture, mutation and operational finding and gives it a home by
+      architecture, diagnostic and operational finding and gives it a home by
       genre: normative product law → PROP/FEAT or named spec-debt; accepted
       campaign architecture/status → the implementation ledger and TASKS;
       real but deliberately unowned gap → BACKLOG or the tracked retrospective
@@ -322,8 +324,11 @@
       runner exited non-zero.</LIMIT-FAILOVER>
       <ROOT-ACCEPTANCE fact="true" status="spec/done">Root acceptance compares
       actual changed files with the report, reads the diff as a PR, re-runs the
-      decisive narrow command, executes the red mutation/negative oracle, and
-      issues PASS, repair, re-commission or discard. Cosmetic tails are fixed
+      decisive essential commands and applicable ordinary negative/invariant
+      checks, and issues PASS, repair, re-commission or discard. A
+      counterfactual mutation runs only for a concrete suspicious result under
+      @spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/campaign-execution#MUTATION-DIAGNOSTIC-LAW.
+      Cosmetic tails are fixed
       centrally; wrong judgment or behavior uses same-cwd continuation when
       economical.</ROOT-ACCEPTANCE>
     </facts>
@@ -338,8 +343,8 @@
     project or harness.</OWNER-PANEL-RULING></p>
     <facts ordered="false">
       <EXACT-GATES-PER-ATOM fact="true" status="spec/done">Before accepting an atom, run formatting for each touched workspace, `git diff --check`, exact
-      unit/integration tests, checks/clippy for touched crates, and the task oracle: codegen+wire corpus for schemas; compiler byte identity; isolated homes;
-      and a red mutation/negative fixture per load-bearing branch. A Rust edit in a `conform.toml`-gated crate also runs `cargo xtask conform check --scope
+      unit/integration tests, checks/clippy for touched crates, applicable ordinary negative-case/invariant tests, and the task oracle: codegen+wire corpus for schemas; compiler byte identity; isolated homes.
+      Counterfactual mutation is not an atom ritual and runs only under the package's suspicion-and-economy law. A Rust edit in a `conform.toml`-gated crate also runs `cargo xtask conform check --scope
       &lt;crate-path&gt;`; split test-support carries truthful per-item `#[cfg(test)]` because the syntax frontend reads it without its parent. New/moved
       `specmark::scope!` or `#[specmark::spec(...)]` edges run `cargo xtask specmap` and review the derived map in the same atom. Expand only for another
       named consumer. This closes the 2026-08-28 R3.4 findings: exact tests/clippy missed 52 conform findings; four later lawful edges stopped on a stale map.</EXACT-GATES-PER-ATOM>
@@ -527,9 +532,11 @@ explicitly delegates a nested swarm.
 2. &lt;negative/security/failure criterion&gt;
 3. &lt;compatibility/idempotence criterion&gt;
 
-For every load-bearing branch name a RED proof: mutation or counterexample that
-fails when the guard is removed. An empty grep/test output is not proof until a
-known positive control demonstrates the instrument can fire.
+Name the essential ordinary negative-case or invariant check for each
+load-bearing branch. If a concrete observation makes a result suspicious, name
+one smallest counterfactual diagnostic under `MUTATION-DIAGNOSTIC-LAW`; never
+commission an open-ended mutation search. An empty grep/test output is not proof
+until a known positive control demonstrates the instrument can fire.
 
 ## Constraints
 
@@ -589,8 +596,8 @@ PASS | FAIL | BLOCKED (advisory only)
 - exact path — why
 ## Acceptance evidence
 - criterion → result, exact file:line/test output
-## Red proofs
-- guard → mutation/counterexample
+## Suspicion-triggered diagnostics
+- suspicious signal → bounded diagnostic and result, or none
 ## Commands
 - command → exit + decisive lines
 ## Decisions and why
@@ -621,7 +628,8 @@ intermediate chat reasoning or final screen summary.</fence>
       </TEMPLATE-LAUNCH-GUARD>
       <TEMPLATE-ROOT-CLOSE fact="true" status="spec/done">After `TASK-DONE`,
       root mechanically compares actual changed files to the report, reads the
-      diff, checks Decisions/Deviations, reruns decisive commands and red proofs,
+      diff, checks Decisions/Deviations, reruns decisive essential commands and
+      only those diagnostics whose suspicion trigger actually fired,
       then accepts, sends exact `-c` repair notes, re-commissions or discards.
       The packet/template reduces review cost; it never replaces review.
       </TEMPLATE-ROOT-CLOSE>
@@ -631,7 +639,7 @@ intermediate chat reasoning or final screen summary.</fence>
   <opus-lane title="8. Opus 5 max — CLI lane and accumulated lessons">
     <p><OPUS-USES-SAME-PACKET fact="true" status="spec/done">Opus/max uses
     the canonical packet above. Root still supplies the idea, accepted
-    architecture, task boundaries and red proofs; Opus implements or
+    architecture, task boundaries and essential verification; Opus implements or
     independently audits, leaves a reviewable worktree, and receives exact
     acceptance repairs from root.</OPUS-USES-SAME-PACKET></p>
     <invocation title="8.1 Fresh run and continuation">

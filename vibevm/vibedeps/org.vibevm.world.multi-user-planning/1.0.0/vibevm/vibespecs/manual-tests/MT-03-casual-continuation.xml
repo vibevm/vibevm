@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">MT-03 — casual continuation without custody ritual</title>
+  <status stage="test" state="work"/>
+  <purpose title="Purpose">
+    <p><PURPOSE fact="true" status="test/work">Prove that an owner-facing
+central agent can resume after timeout, crash, compaction, new chat or model
+change from durable binding, settings, complete plan and repository evidence,
+without offer/receipt handoff, session documents or takeover ritual.</PURPOSE></p>
+  </purpose>
+  <setup title="Setup">
+    <facts ordered="true">
+      <SETUP-CONTEXT fact="true" status="test/work">Create an exact bound
+  context containing settings and a complete hierarchical plan with accepted
+  repository-backed nodes, at least one dirty candidate and distant stages not
+  visible in a short UI plan.</SETUP-CONTEXT>
+      <SETUP-ADVISORY-CUSTODY fact="true" status="test/work">Run separate cases
+  with custody `vacant`, `held` by a different session, and held with a stale
+  heartbeat. No case has a valid open explicit formal offer.</SETUP-ADVISORY-CUSTODY>
+      <SETUP-NO-RITUAL fact="true" status="test/work">Remove or leave absent
+  `sessions/`, handoff bundles, `HANDOFF.md`, receipt and takeover records. End
+  the prior agent without an outgoing summary.</SETUP-NO-RITUAL>
+    </facts>
+  </setup>
+  <procedure title="Procedure">
+    <facts ordered="true">
+      <STEP-COLD-RESOLVE fact="true" status="test/work">Start a fresh
+  owner-facing central agent and direct it to continue. It resolves the exact
+  binding, reads settings and the complete plan, and inspects branch, HEAD,
+  ahead/behind, dirty tree and named artifacts.</STEP-COLD-RESOLVE>
+      <STEP-CLASSIFY fact="true" status="test/work">The agent checks persisted
+  accepted nodes against durable project evidence, keeps dirty/worker/incomplete
+  work candidate, names the complete remaining route and identifies any stored
+  claim contradicted by the tree.</STEP-CLASSIFY>
+      <STEP-CUSTODY-DIAGNOSE fact="true" status="test/work">The agent reports
+  custody as advisory and verifies whether a conflicting writer is actually
+  live. Stale, vacant or mismatched metadata alone causes no claim, receipt or
+  takeover action.</STEP-CUSTODY-DIAGNOSE>
+      <STEP-CONTINUE fact="true" status="test/work">With no observed live
+  conflicting writer or moving input, the agent refreshes stale goal output and
+  continues the owner-requested atom without creating ritual records.</STEP-CONTINUE>
+      <STEP-CONFLICT fact="true" status="test/work">In a separate probe, make
+  another central writer observably live or move plan/tree input during the
+  snapshot. The fresh agent preserves artifacts, performs no overwrite and asks
+  the owner to select the writer.</STEP-CONFLICT>
+    </facts>
+  </procedure>
+  <pass title="Pass criteria">
+    <facts ordered="false">
+      <PASS-NO-RITUAL fact="true" status="test/work">All vacant, stale and
+  mismatched-holder cases resume without session, offer, receipt, `HANDOFF.md`,
+  takeover record or custody claim.</PASS-NO-RITUAL>
+      <PASS-COMPLETE fact="true" status="test/work">The fresh agent recovers
+  every top-level stage, current frontier, accepted boundary and candidate from
+  durable local/project state without chat history.</PASS-COMPLETE>
+      <PASS-AUTHORITY fact="true" status="test/work">Owner and project evidence
+  govern continuation; custody metadata neither grants authority nor launders a
+  candidate into accepted state.</PASS-AUTHORITY>
+      <PASS-SAFETY fact="true" status="test/work">An observed live writer or
+  moved input stops writes, while stale metadata alone does not.</PASS-SAFETY>
+      <PASS-NO-SHARED-STATE fact="true" status="test/work">No personal state is
+  added to the repository and no new shared mutable continuity file is
+  introduced.</PASS-NO-SHARED-STATE>
+    </facts>
+  </pass>
+</spec>
