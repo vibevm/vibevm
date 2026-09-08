@@ -3,11 +3,10 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#PASS-TIER-LAW");
 
 use std::fmt;
-use std::marker::PhantomData;
 
 use vibe_core::manifest::ExtensionKey;
 
-use crate::compiler::pass::{IrPayload, Pass, PassName, PassNameError};
+use crate::compiler::pass::PassNameError;
 use crate::compiler::pipeline::CompilerPipelineError;
 
 /// Internal construction/execution faults for one resolved pass plan.
@@ -28,8 +27,10 @@ pub(crate) enum PassTierExecutionError {
     },
     #[error("pass `{key}` replacement anchor `{anchor}` is absent from the complete schedule")]
     ReplacementAnchor { key: ExtensionKey, anchor: String },
-    #[error("pass `{key}` cannot execute in the verified test lane: {detail}")]
-    TestExecution { key: ExtensionKey, detail: String },
+    #[error("pass `{key}` cannot enter native execution: {detail}")]
+    NativeExecution { key: ExtensionKey, detail: String },
+    #[error("pass `{key}` requires the compiler-native invoker before source execution")]
+    MissingInvoker { key: ExtensionKey },
     #[error("the verified pass-tier lane has no installed pipeline verifier")]
     VerifierCapability,
     #[error("the pass-tier schedule is invalid: {source}")]
@@ -38,9 +39,9 @@ pub(crate) enum PassTierExecutionError {
         source: CompilerPipelineError,
     },
     #[error(
-        "a nonempty pass plan ({entries} entries) cannot execute until R6.4 installs mandatory verify-each"
+        "pass plan contains {entries} frontend/backend catalog row(s); catalog execution is deferred to R6.5"
     )]
-    VerifyEachRequired { entries: usize },
+    CatalogDeferred { entries: usize },
 }
 
 /// Public opaque pass-tier construction or capability refusal.
@@ -77,42 +78,5 @@ impl std::error::Error for PassTierCompileError {
 impl From<PassTierExecutionError> for PassTierCompileError {
     fn from(inner: PassTierExecutionError) -> Self {
         Self::new(inner)
-    }
-}
-
-/// A typed schedule vehicle used only while production is fail-closed.
-pub(super) struct CapabilityBlockedPass<Input, Output> {
-    name: PassName,
-    marker: PhantomData<fn(Input) -> Output>,
-}
-
-impl<Input, Output> CapabilityBlockedPass<Input, Output> {
-    pub(super) fn new(name: PassName) -> Self {
-        Self {
-            name,
-            marker: PhantomData,
-        }
-    }
-}
-
-#[derive(Debug, thiserror::Error)]
-#[error("mandatory pass-tier verify-each is unavailable")]
-pub(super) struct CapabilityBlocked;
-
-impl<Input, Output> Pass for CapabilityBlockedPass<Input, Output>
-where
-    Input: IrPayload,
-    Output: IrPayload,
-{
-    type Input = Input;
-    type Output = Output;
-    type Error = CapabilityBlocked;
-
-    fn name(&self) -> &PassName {
-        &self.name
-    }
-
-    fn run(&self, _input: Input) -> Result<Output, Self::Error> {
-        Err(CapabilityBlocked)
     }
 }

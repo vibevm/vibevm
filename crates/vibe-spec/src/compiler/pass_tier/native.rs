@@ -1,4 +1,4 @@
-//! Verified test-only pass-tier adapter over the one compiler-native manager.
+//! Verified pass-tier adapter over the one compiler-native manager.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#WHOLE-IR-WIRE");
 
@@ -61,7 +61,7 @@ where
 
     fn run(&self, input: Input) -> Result<Output, Self::Error> {
         let output = execute(
-            NativeEntry::new_pass_for_test(
+            NativeEntry::new_pass(
                 NativeRuntime::new(self.invoker, None),
                 &self.key,
                 self.order,
@@ -80,7 +80,7 @@ where
 
 #[derive(Debug, thiserror::Error)]
 pub(super) enum NativePassBuildError {
-    #[error("the pass-tier test executor requires a native handler")]
+    #[error("pass-tier execution requires a native handler")]
     NotNative,
     #[error(transparent)]
     Identity(

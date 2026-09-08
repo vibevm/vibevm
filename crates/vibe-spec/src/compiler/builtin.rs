@@ -282,16 +282,19 @@ impl<'invoke> BuiltinSchedule<'invoke> {
         policy: Option<&'invoke NativePolicySession>,
     ) -> Result<Self, ArtifactCompileError> {
         let catalogs = PassCatalogs::resolve(plan.passes())?;
-        if let Some(error) = catalogs.production_catalog_refusal() {
+        if let Some(error) = catalogs.catalog_execution_refusal() {
             return Err(error.into());
         }
         let mut schedule =
             Self::emitted_base_with_invoker(plan, transforms, registry, observer, invoker, policy)?;
-        PassSchedule::install(
-            catalogs.positioned(),
-            &mut schedule.pipeline,
-            PassExecutionAuthority::production(),
-        )?;
+        if !catalogs.positioned().is_empty() {
+            let verifier = schedule.pipeline.install_pass_tier_verifier();
+            PassSchedule::install(
+                catalogs.positioned(),
+                &mut schedule.pipeline,
+                PassExecutionAuthority::verified(invoker, verifier),
+            )?;
+        }
         Ok(schedule)
     }
 
@@ -485,22 +488,14 @@ impl<'invoke> BuiltinSchedule<'invoke> {
         plan: &ArtifactPlan,
         invoker: &'invoke dyn CompilerNativeInvoker,
     ) -> Result<Self, ArtifactCompileError> {
-        let catalogs = PassCatalogs::resolve(plan.passes())?;
-        let mut schedule = Self::emitted_base_with_invoker(
+        Self::emitted_with_invoker(
             plan,
             &TransformRegistry::builtins(),
             &BackendRegistry::builtins(),
             &None,
             Some(invoker),
             None,
-        )?;
-        let verifier = schedule.pipeline.enable_pass_tier_verify_each_for_tests();
-        PassSchedule::install(
-            catalogs.positioned(),
-            &mut schedule.pipeline,
-            PassExecutionAuthority::VerifiedTest { invoker, verifier },
-        )?;
-        Ok(schedule)
+        )
     }
 
     pub(crate) fn pass_tier_verifier_enabled_for_test(&self) -> bool {

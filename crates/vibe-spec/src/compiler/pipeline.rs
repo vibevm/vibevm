@@ -124,7 +124,6 @@ pub(crate) struct CompilerPipeline<'pass> {
 
 /// Unforgeable witness that this exact construction path installed the real
 /// inter-pass verifier for pass-tier execution.
-#[cfg(test)]
 pub(crate) struct PassTierVerifierCapability {
     _private: (),
 }
@@ -225,18 +224,15 @@ impl<'pass> CompilerPipeline<'pass> {
     /// pass.
     #[cfg(test)]
     pub(crate) fn enable_verify_each_for_tests(&mut self) {
-        self.verifier = Some(IrVerifier);
+        let _capability = self.install_pass_tier_verifier();
     }
 
-    /// Install the real verifier and mint the capability required by the
-    /// temporary R6.3-C pass-tier execution lane.
-    #[cfg(test)]
-    pub(crate) fn enable_pass_tier_verify_each_for_tests(&mut self) -> PassTierVerifierCapability {
+    /// Install the real verifier and mint pass-tier execution authority.
+    pub(crate) fn install_pass_tier_verifier(&mut self) -> PassTierVerifierCapability {
         self.verifier = Some(IrVerifier);
         PassTierVerifierCapability { _private: () }
     }
 
-    #[cfg(test)]
     pub(crate) fn has_pass_tier_verifier(&self, _capability: &PassTierVerifierCapability) -> bool {
         self.verifier.is_some()
     }

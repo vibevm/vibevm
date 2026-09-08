@@ -6,38 +6,32 @@ use vibe_core::manifest::{ExtensionIrLevel as Level, ExtensionPassKind as Kind};
 
 use crate::compiler::ir::{ClosureIr, DocumentIr, Documents, EmittedIr, LaneIr, SourceIr};
 use crate::compiler::pass::{IrPayload, Pass, PassName};
-#[cfg(test)]
 use crate::compiler::pipeline::PassTierVerifierCapability;
 use crate::compiler::pipeline::{CompilerPipeline, PipelineEdit, ScheduleItem};
-#[cfg(test)]
 use crate::compiler::transform::native_manager::CompilerNativeInvoker;
 
-use super::execution::{CapabilityBlockedPass, PassTierCompileError, PassTierExecutionError};
-#[cfg(test)]
+use super::execution::{PassTierCompileError, PassTierExecutionError};
 use super::native::NativePass;
 use super::plan::{PassEntry, PassPlacement, PassPlan};
 
-/// Execution authority is deliberately closed in production until R6.4.
-pub(crate) enum PassExecutionAuthority<'invoke> {
-    Production(std::marker::PhantomData<&'invoke ()>),
-    #[cfg(test)]
-    VerifiedTest {
-        invoker: &'invoke dyn CompilerNativeInvoker,
-        verifier: PassTierVerifierCapability,
-    },
+pub(crate) struct PassExecutionAuthority<'invoke> {
+    invoker: Option<&'invoke dyn CompilerNativeInvoker>,
+    verifier: PassTierVerifierCapability,
 }
 
 impl<'invoke> PassExecutionAuthority<'invoke> {
-    pub(crate) const fn production() -> Self {
-        Self::Production(std::marker::PhantomData)
+    pub(crate) const fn verified(
+        invoker: Option<&'invoke dyn CompilerNativeInvoker>,
+        verifier: PassTierVerifierCapability,
+    ) -> Self {
+        Self { invoker, verifier }
     }
 }
 
 pub(crate) struct PassSchedule;
 
 impl PassSchedule {
-    /// Resolve every name, placement and carrier, validate the complete edit
-    /// batch, and only then apply the production capability gate.
+    /// Check live verification, resolve every entry, then apply one edit batch.
     pub(crate) fn install<'invoke>(
         plan: &PassPlan,
         pipeline: &mut CompilerPipeline<'invoke>,
@@ -46,10 +40,7 @@ impl PassSchedule {
         if plan.is_empty() {
             return Ok(());
         }
-        #[cfg(test)]
-        if let PassExecutionAuthority::VerifiedTest { verifier, .. } = &authority
-            && !pipeline.has_pass_tier_verifier(verifier)
-        {
+        if !pipeline.has_pass_tier_verifier(&authority.verifier) {
             return Err(PassTierExecutionError::VerifierCapability.into());
         }
         let snapshot = pipeline.schedule();
@@ -60,12 +51,6 @@ impl PassSchedule {
         pipeline
             .apply_builtin_edits(edits)
             .map_err(|source| PassTierExecutionError::Schedule { source })?;
-        if matches!(authority, PassExecutionAuthority::Production(_)) {
-            return Err(PassTierExecutionError::VerifyEachRequired {
-                entries: plan.len(),
-            }
-            .into());
-        }
         Ok(())
     }
 }
@@ -172,21 +157,18 @@ where
     Input: IrPayload,
     Output: IrPayload,
 {
-    match authority {
-        PassExecutionAuthority::Production(_) => {
-            place(entry, CapabilityBlockedPass::<Input, Output>::new(name))
+    let invoker = authority
+        .invoker
+        .ok_or_else(|| PassTierExecutionError::MissingInvoker {
+            key: entry.key().clone(),
+        })?;
+    let pass = NativePass::<Input, Output>::from_entry(entry, invoker, name).map_err(|error| {
+        PassTierExecutionError::NativeExecution {
+            key: entry.key().clone(),
+            detail: error.to_string(),
         }
-        #[cfg(test)]
-        PassExecutionAuthority::VerifiedTest { invoker, .. } => {
-            let pass = NativePass::<Input, Output>::from_entry(entry, *invoker, name).map_err(
-                |error| PassTierExecutionError::TestExecution {
-                    key: entry.key().clone(),
-                    detail: error.to_string(),
-                },
-            )?;
-            place(entry, pass)
-        }
-    }
+    })?;
+    place(entry, pass)
 }
 
 fn place<'invoke>(

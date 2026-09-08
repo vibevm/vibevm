@@ -180,8 +180,7 @@ impl<'entry> NativeEntry<'entry> {
         }
     }
 
-    #[cfg(test)]
-    pub(crate) fn new_pass_for_test(
+    pub(crate) fn new_pass(
         runtime: NativeRuntime<'entry>,
         key: &'entry ExtensionKey,
         order: u32,

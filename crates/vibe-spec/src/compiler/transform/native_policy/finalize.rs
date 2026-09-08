@@ -252,7 +252,8 @@ mod tests {
     use super::*;
 
     #[test]
-    fn pending_filter_preserves_the_exact_pass_suffix() {
+    fn pending_filter_preserves_the_exact_pass_suffix() -> Result<(), CompilerPendingFinalizeError>
+    {
         let path = "vibevm/vibespecs/boot/STATIC.md";
         let transforms = "vibe:transforms org.demo/tools#native";
         let suffix = " vibe:passes sha256:abc 1:org.demo/tools#pass:after=emit";
@@ -261,16 +262,16 @@ mod tests {
             static_header_block(CommentSyntax::Markdown, path)
         );
         let (active, observed) =
-            active_payload(bytes.as_bytes(), CommentSyntax::Markdown, path, transforms).unwrap();
+            active_payload(bytes.as_bytes(), CommentSyntax::Markdown, path, transforms)?;
         assert_eq!(active, format!("{transforms}{suffix}"));
         assert_eq!(observed, suffix);
         assert_eq!(
             preserve_pass_suffix(None, &observed).as_deref(),
             Some(suffix.trim_start())
         );
-        assert_eq!(
-            preserve_pass_suffix(Some("vibe:transforms retained".into()), &observed).unwrap(),
-            format!("vibe:transforms retained{suffix}")
-        );
+        let retained = preserve_pass_suffix(Some("vibe:transforms retained".into()), &observed)
+            .ok_or_else(|| error(FinalizeFault::OriginalFraming))?;
+        assert_eq!(retained, format!("vibe:transforms retained{suffix}"));
+        Ok(())
     }
 }

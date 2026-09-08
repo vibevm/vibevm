@@ -65,7 +65,7 @@ pub(crate) struct PassCatalogs {
     frontends: FrontendCatalog,
     backends: BackendCatalog,
     positioned: PassPlan,
-    total_entries: usize,
+    catalog_entries: usize,
 }
 
 impl PassCatalogs {
@@ -86,11 +86,12 @@ impl PassCatalogs {
             PassPlan::build(positioned).map_err(|error| PassCatalogError::PositionedPlan {
                 detail: error.to_string(),
             })?;
+        let catalog_entries = plan.len() - positioned.len();
         Ok(Self {
             frontends,
             backends,
             positioned,
-            total_entries: plan.len(),
+            catalog_entries,
         })
     }
 
@@ -106,10 +107,10 @@ impl PassCatalogs {
         &self.positioned
     }
 
-    pub(crate) fn production_catalog_refusal(&self) -> Option<PassTierCompileError> {
-        (self.total_entries != 0 && self.positioned.is_empty()).then(|| {
-            PassTierExecutionError::VerifyEachRequired {
-                entries: self.total_entries,
+    pub(crate) fn catalog_execution_refusal(&self) -> Option<PassTierCompileError> {
+        (self.catalog_entries != 0).then(|| {
+            PassTierExecutionError::CatalogDeferred {
+                entries: self.catalog_entries,
             }
             .into()
         })

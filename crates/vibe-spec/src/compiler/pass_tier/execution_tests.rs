@@ -1,4 +1,4 @@
-//! R6.3-C pass-tier scheduling and verified test-execution acceptance.
+//! R6.4 production pass-tier scheduling and mandatory verification acceptance.
 
 use std::path::PathBuf;
 use std::sync::Mutex;
@@ -26,8 +26,8 @@ use crate::SectionSource;
 use crate::SpecAddress;
 use crate::compiler::builtin::without_verify_each;
 use crate::compiler::builtin::{
-    ArtifactCompileError, BuiltinSchedule, compile_artifact_native,
-    compile_artifact_passes_for_test,
+    ArtifactCompileError, BuiltinSchedule, compile_artifact, compile_artifact_native,
+    compile_artifact_native_traced, compile_artifact_passes_for_test,
 };
 use crate::compiler::ir::{
     ArtifactInput, ArtifactPlan, ArtifactTarget, DocumentAddress, SourceFormatId, SourceIr,
@@ -85,6 +85,20 @@ fn backend_for(artifact: &str) -> ExtensionPass {
         replace: None,
         formats: None,
         artifact: Some(artifact.to_owned()),
+    }
+}
+
+fn frontend_for(format: &str) -> ExtensionPass {
+    ExtensionPass {
+        kind: ExtensionPassKind::Frontend,
+        level: None,
+        from: None,
+        to: None,
+        after: None,
+        before: None,
+        replace: None,
+        formats: Some(vec![format.to_owned()]),
+        artifact: None,
     }
 }
 
@@ -363,7 +377,7 @@ fn failure_and_trace_use_pass_qualified_key_identity() {
     )]);
     let trace = Trace::default();
     let invoker = Invoker::new(ReplyMode::Echo);
-    compile_artifact_passes_for_test(plan, &Source::default(), &invoker, Some(&trace)).unwrap();
+    compile_artifact_native_traced(plan, &Source::default(), &invoker, &trace).unwrap();
     let name = format!("pass:{}", pass_key("closure"));
     assert!(trace.0.lock().unwrap().contains(&name));
 
@@ -382,7 +396,7 @@ fn failure_and_trace_use_pass_qualified_key_identity() {
 }
 
 #[test]
-fn production_refuses_nonempty_plan_before_source_or_invocation() {
+fn production_executes_valid_positioned_passes_and_preflights_invalid_schedules() {
     let invalid = artifact_plan(vec![declaration(
         "unknown",
         transform(ExtensionIrLevel::Closure, "unknown"),
@@ -404,17 +418,67 @@ fn production_refuses_nonempty_plan_before_source_or_invocation() {
     )]);
     let source = Source::default();
     let invoker = Invoker::new(ReplyMode::Echo);
-    let error = compile_artifact_native(plan, &source, &invoker).unwrap_err();
+    compile_artifact_native(plan, &source, &invoker).unwrap();
+    assert_eq!(source.reads(), 2);
+    assert_eq!(invoker.calls(), [pass_key("closure")]);
+}
+
+#[test]
+fn missing_invoker_and_unsupported_implementation_refuse_before_source() {
+    let plan = artifact_plan(vec![declaration(
+        "missing",
+        transform(ExtensionIrLevel::Closure, "qualify"),
+    )]);
+    let source = Source::default();
+    let error = compile_artifact(plan, &source).unwrap_err();
     assert!(matches!(
         error,
         ArtifactCompileError::PassTier(ref public)
-            if matches!(
-                public.inner(),
-                PassTierExecutionError::VerifyEachRequired { entries: 1 }
-            )
+            if matches!(public.inner(), PassTierExecutionError::MissingInvoker { key } if key.as_str() == pass_key("missing"))
+    ));
+    assert_eq!(source.reads(), 0);
+
+    let mut builtin = declaration("builtin", transform(ExtensionIrLevel::Closure, "qualify"));
+    builtin.handler = ExtensionHandler::Builtin {
+        name: "unsupported-pass".into(),
+    };
+    let source = Source::default();
+    let invoker = Invoker::new(ReplyMode::Echo);
+    let error =
+        compile_artifact_native(artifact_plan(vec![builtin]), &source, &invoker).unwrap_err();
+    assert!(matches!(
+        error,
+        ArtifactCompileError::PassTier(ref public)
+            if matches!(public.inner(), PassTierExecutionError::NativeExecution { key, .. } if key.as_str() == pass_key("builtin"))
     ));
     assert_eq!(source.reads(), 0);
     assert!(invoker.calls().is_empty());
+}
+
+#[test]
+fn catalog_only_and_mixed_plans_are_deferred_before_source_or_invocation() {
+    for declarations in [
+        vec![declaration("catalog", frontend_for("custom-markup"))],
+        vec![
+            declaration("catalog", frontend_for("custom-markup")),
+            declaration(
+                "positioned",
+                transform(ExtensionIrLevel::Closure, "qualify"),
+            ),
+        ],
+    ] {
+        let source = Source::default();
+        let invoker = Invoker::new(ReplyMode::Echo);
+        let error =
+            compile_artifact_native(artifact_plan(declarations), &source, &invoker).unwrap_err();
+        assert!(matches!(
+            error,
+            ArtifactCompileError::PassTier(ref public)
+                if matches!(public.inner(), PassTierExecutionError::CatalogDeferred { entries: 1 })
+        ));
+        assert_eq!(source.reads(), 0);
+        assert!(invoker.calls().is_empty());
+    }
 }
 
 #[test]
@@ -448,4 +512,15 @@ fn pass_tier_verifier_cannot_be_disabled_and_stops_before_the_next_pass() {
         "{error:?}"
     );
     assert_eq!(invoker.calls(), [pass_key("first")]);
+}
+
+#[test]
+fn empty_plan_installs_no_pass_tier_verifier() {
+    let plan = artifact_plan(Vec::new());
+    let invoker = Invoker::new(ReplyMode::Echo);
+    let schedule = without_verify_each(|| {
+        BuiltinSchedule::emitted_with_passes_for_test(&plan, &invoker).unwrap()
+    });
+    assert!(!schedule.pass_tier_verifier_enabled_for_test());
+    assert!(invoker.calls().is_empty());
 }

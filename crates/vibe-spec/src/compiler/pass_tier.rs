@@ -8,7 +8,6 @@ pub(crate) mod execution;
 pub(crate) mod fault;
 pub(crate) mod frontend;
 pub(crate) mod lowering;
-#[cfg(test)]
 pub(crate) mod native;
 pub(crate) mod plan;
 pub(crate) mod schedule;
