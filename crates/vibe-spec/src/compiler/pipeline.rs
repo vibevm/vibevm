@@ -18,7 +18,6 @@ use super::trace::CompileTraceSink;
 use super::verify::IrVerifier;
 
 mod edit;
-#[cfg(test)]
 pub(crate) use edit::PipelineEdit;
 #[cfg(test)]
 mod edit_tests;
@@ -123,6 +122,13 @@ pub(crate) struct CompilerPipeline<'pass> {
     verifier: Option<IrVerifier>,
 }
 
+/// Unforgeable witness that this exact construction path installed the real
+/// inter-pass verifier for pass-tier execution.
+#[cfg(test)]
+pub(crate) struct PassTierVerifierCapability {
+    _private: (),
+}
+
 impl<'pass> CompilerPipeline<'pass> {
     pub(crate) fn push_document<P: Pass + 'pass>(
         &mut self,
@@ -220,6 +226,19 @@ impl<'pass> CompilerPipeline<'pass> {
     #[cfg(test)]
     pub(crate) fn enable_verify_each_for_tests(&mut self) {
         self.verifier = Some(IrVerifier);
+    }
+
+    /// Install the real verifier and mint the capability required by the
+    /// temporary R6.3-C pass-tier execution lane.
+    #[cfg(test)]
+    pub(crate) fn enable_pass_tier_verify_each_for_tests(&mut self) -> PassTierVerifierCapability {
+        self.verifier = Some(IrVerifier);
+        PassTierVerifierCapability { _private: () }
+    }
+
+    #[cfg(test)]
+    pub(crate) fn has_pass_tier_verifier(&self, _capability: &PassTierVerifierCapability) -> bool {
+        self.verifier.is_some()
     }
 
     /// Whether this pipeline carries the verify-each seam at all.

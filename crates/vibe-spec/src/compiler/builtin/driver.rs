@@ -37,6 +37,8 @@ pub enum ArtifactCompileError {
     #[error(transparent)]
     Transform(#[from] super::TransformCompileError),
     #[error(transparent)]
+    PassTier(#[from] super::PassTierCompileError),
+    #[error(transparent)]
     NativePolicy(#[from] CompilerNativePolicyError),
 }
 
@@ -309,6 +311,19 @@ pub(crate) fn compile_artifact_native_with_registries(
         None,
         Some(invoker),
     )
+}
+
+/// The sole arbitrary-pass execution lane before R6.4: cfg-test, backed by
+/// the real compiler-native manager and the real verify-each pipeline.
+#[cfg(test)]
+pub(crate) fn compile_artifact_passes_for_test(
+    plan: ArtifactPlan,
+    source: &impl SectionSource,
+    invoker: &dyn CompilerNativeInvoker,
+    trace: Option<&dyn CompileTraceSink>,
+) -> Result<EmittedArtifact, ArtifactCompileError> {
+    let schedule = BuiltinSchedule::emitted_with_passes_for_test(&plan, invoker)?;
+    run(plan, source, schedule, trace)
 }
 
 #[cfg(feature = "test-support")]

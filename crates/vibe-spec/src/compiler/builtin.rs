@@ -29,6 +29,7 @@ use super::merge::MERGE_PASS_NAME;
 use super::merge::MergePass;
 use super::observer::Observing;
 use super::pass::{Pass, PassName, PassSegmentError};
+use super::pass_tier::schedule::{PassExecutionAuthority, PassSchedule};
 use super::pipeline::{CompilerPipeline, CompilerPipelineError};
 #[cfg(test)]
 use super::qualify::QUALIFY_PASS_NAME;
@@ -44,11 +45,14 @@ use super::worklist;
 
 mod attribution;
 mod driver;
+pub use super::pass_tier::PassTierCompileError;
 pub use super::transform::fault::TransformCompileError;
 #[cfg(test)]
 pub(crate) use driver::compile_artifact_native_with_registries;
 #[cfg(test)]
 pub(crate) use driver::compile_artifact_observed_with_registries;
+#[cfg(test)]
+pub(crate) use driver::compile_artifact_passes_for_test;
 #[cfg(test)]
 pub(crate) use driver::compile_artifact_traced_with_registries;
 #[cfg(test)]
@@ -281,6 +285,24 @@ impl<'invoke> BuiltinSchedule<'invoke> {
         invoker: Option<&'invoke dyn CompilerNativeInvoker>,
         policy: Option<&'invoke NativePolicySession>,
     ) -> Result<Self, ArtifactCompileError> {
+        let mut schedule =
+            Self::emitted_base_with_invoker(plan, transforms, registry, observer, invoker, policy)?;
+        PassSchedule::install(
+            plan.passes(),
+            &mut schedule.pipeline,
+            PassExecutionAuthority::production(),
+        )?;
+        Ok(schedule)
+    }
+
+    fn emitted_base_with_invoker(
+        plan: &ArtifactPlan,
+        transforms: &TransformRegistry,
+        registry: &BackendRegistry,
+        observer: &Observing,
+        invoker: Option<&'invoke dyn CompilerNativeInvoker>,
+        policy: Option<&'invoke NativePolicySession>,
+    ) -> Result<Self, ArtifactCompileError> {
         // Transform resolution — including the compatibility-fragment frame
         // refusal — precedes the backend lookup, exactly as the frozen T6b
         // construction order demands.
@@ -429,6 +451,34 @@ impl BuiltinSchedule<'static> {
         observer: &Observing,
     ) -> Result<Self, ArtifactCompileError> {
         Self::emitted_with_invoker(plan, transforms, registry, observer, None, None)
+    }
+}
+
+#[cfg(test)]
+impl<'invoke> BuiltinSchedule<'invoke> {
+    pub(crate) fn emitted_with_passes_for_test(
+        plan: &ArtifactPlan,
+        invoker: &'invoke dyn CompilerNativeInvoker,
+    ) -> Result<Self, ArtifactCompileError> {
+        let mut schedule = Self::emitted_base_with_invoker(
+            plan,
+            &TransformRegistry::builtins(),
+            &BackendRegistry::builtins(),
+            &None,
+            Some(invoker),
+            None,
+        )?;
+        let verifier = schedule.pipeline.enable_pass_tier_verify_each_for_tests();
+        PassSchedule::install(
+            plan.passes(),
+            &mut schedule.pipeline,
+            PassExecutionAuthority::VerifiedTest { invoker, verifier },
+        )?;
+        Ok(schedule)
+    }
+
+    pub(crate) fn pass_tier_verifier_enabled_for_test(&self) -> bool {
+        self.pipeline.verify_each_enabled_for_test()
     }
 }
 

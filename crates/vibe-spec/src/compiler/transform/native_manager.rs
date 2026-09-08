@@ -12,6 +12,7 @@ use vibe_wire::behaviour::native_compile::{IrCarrier, NativeCompileError, valida
 use vibe_wire::generated::native::e1::compile_reply::CompileReply;
 use vibe_wire::generated::shared::Ir;
 
+use crate::compiler::ir::{IrCardinality, IrLevel, IrShape};
 use crate::compiler::pass::{AnyIr, PassName};
 use crate::compiler::verify::IrVerifier;
 use crate::compiler::wire;
@@ -150,8 +151,10 @@ pub(crate) struct NativeEntry<'entry> {
     point: CompilePoint,
     order: u32,
     config: Option<&'entry TransformConfig>,
+    projected_config: Option<&'entry BTreeMap<String, Option<Value>>>,
     implementation: CompilerNativeImplementationDigest,
     pass: &'entry PassName,
+    expected: Option<IrShape>,
 }
 
 impl<'entry> NativeEntry<'entry> {
@@ -170,8 +173,33 @@ impl<'entry> NativeEntry<'entry> {
             point,
             order,
             config,
+            projected_config: None,
             implementation,
             pass,
+            expected: None,
+        }
+    }
+
+    #[cfg(test)]
+    pub(crate) fn new_pass_for_test(
+        runtime: NativeRuntime<'entry>,
+        key: &'entry ExtensionKey,
+        order: u32,
+        projected_config: &'entry BTreeMap<String, Option<Value>>,
+        implementation: CompilerNativeImplementationDigest,
+        pass: &'entry PassName,
+        expected: IrShape,
+    ) -> Self {
+        Self {
+            runtime,
+            key,
+            point: CompilePoint::Pass,
+            order,
+            config: None,
+            projected_config: Some(projected_config),
+            implementation,
+            pass,
+            expected: Some(expected),
         }
     }
 }
@@ -247,19 +275,32 @@ pub(crate) fn execute(
         point,
         order,
         config,
+        projected_config,
         implementation,
         pass,
+        expected,
     } = entry;
     let NativeRuntime { invoker, policy } = runtime;
-    let projected = execution_config(config.map(TransformConfig::as_table))?;
+    let owned_config;
+    let projected = match projected_config {
+        Some(projected) => projected,
+        None => {
+            owned_config = execution_config(config.map(TransformConfig::as_table))?;
+            &owned_config
+        }
+    };
     let verifier = IrVerifier;
-    let witness = verifier.witness(&input).map_err(transition)?;
+    let witness = if point == CompilePoint::Pass {
+        None
+    } else {
+        Some(verifier.witness(&input).map_err(transition)?)
+    };
     let payload = wire::encode_generated(&input).map_err(returned_request)?;
     let raw = match invoker.invoke(CompilerNativeCall {
         key,
         point,
         order,
-        config: &projected,
+        config: projected,
         implementation,
         payload,
     }) {
@@ -295,19 +336,33 @@ pub(crate) fn execute(
                 return Err(NativeManagerError::InternalCarrier { point });
             };
             let actual = shape.carrier;
-            let expected = expected_carrier(point);
-            if actual != expected {
-                return Err(NativeManagerError::Carrier { expected, actual });
+            let expected_carrier = expected_carrier(point, expected);
+            if actual != expected_carrier {
+                return Err(NativeManagerError::Carrier {
+                    expected: expected_carrier,
+                    actual,
+                });
             }
             let returned = wire::decode_generated(&reply.payload).map_err(returned_ir)?;
             let final_value = admit_stage(point, input, returned, pass)?;
-            verifier.verify(&final_value).map_err(transition)?;
-            verifier
-                .verify_transition(&witness, &final_value)
-                .map_err(transition)?;
+            if let Some(witness) = &witness {
+                verifier.verify(&final_value).map_err(transition)?;
+                verifier
+                    .verify_transition(witness, &final_value)
+                    .map_err(transition)?;
+            }
             final_value
         }
     };
+    if let Some(expected) = expected {
+        let actual = output.shape();
+        if actual != expected {
+            return Err(NativeManagerError::Carrier {
+                expected: carrier_for_shape(expected),
+                actual: carrier_for_shape(actual),
+            });
+        }
+    }
     if let Some(policy) = policy {
         policy.success(order, key, point, config, implementation)?;
     }
@@ -317,13 +372,30 @@ pub(crate) fn execute(
     })
 }
 
-fn expected_carrier(point: CompilePoint) -> IrCarrier {
+fn expected_carrier(point: CompilePoint, pass_output: Option<IrShape>) -> IrCarrier {
     match point {
         CompilePoint::Source => IrCarrier::SourceDocument,
         CompilePoint::Document => IrCarrier::DocumentDocument,
         CompilePoint::Lane => IrCarrier::LaneArtifact,
         CompilePoint::Emitted => IrCarrier::EmittedArtifact,
-        CompilePoint::Pass => unreachable!("compile:pass never lowers into the staged plan"),
+        CompilePoint::Pass => {
+            let Some(pass_output) = pass_output else {
+                unreachable!("the test-only pass-tier entry supplies its output shape")
+            };
+            carrier_for_shape(pass_output)
+        }
+    }
+}
+
+fn carrier_for_shape(shape: IrShape) -> IrCarrier {
+    match (shape.level, shape.cardinality) {
+        (IrLevel::Source, IrCardinality::Document) => IrCarrier::SourceDocument,
+        (IrLevel::Document, IrCardinality::Document) => IrCarrier::DocumentDocument,
+        (IrLevel::Document, IrCardinality::Artifact) => IrCarrier::DocumentsArtifact,
+        (IrLevel::Closure, IrCardinality::Artifact) => IrCarrier::ClosureArtifact,
+        (IrLevel::Lane, IrCardinality::Artifact) => IrCarrier::LaneArtifact,
+        (IrLevel::Emitted, IrCardinality::Artifact) => IrCarrier::EmittedArtifact,
+        _ => unreachable!("the compiler has no wire carrier for {shape:?}"),
     }
 }
 
@@ -333,6 +405,9 @@ fn admit_stage(
     returned: AnyIr,
     pass: &PassName,
 ) -> Result<AnyIr, NativeManagerError> {
+    if point == CompilePoint::Pass {
+        return Ok(returned);
+    }
     match (point, original, returned) {
         (CompilePoint::Source, AnyIr::Source(_), value @ AnyIr::Source(_))
         | (CompilePoint::Document, AnyIr::Document(_), value @ AnyIr::Document(_)) => Ok(value),

@@ -2,14 +2,23 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#PASS-TIER-LAW");
 
+pub(crate) mod execution;
 pub(crate) mod fault;
 pub(crate) mod lowering;
+#[cfg(test)]
+pub(crate) mod native;
 pub(crate) mod plan;
+pub(crate) mod schedule;
 
+pub use execution::PassTierCompileError;
 pub(crate) use plan::PassPlan;
 
 #[cfg(test)]
 #[path = "pass_tier/tests.rs"]
 mod tests;
+
+#[cfg(test)]
+#[path = "pass_tier/execution_tests.rs"]
+mod execution_tests;
 
 use crate::compiler::transform::plan::TransformProvider;
