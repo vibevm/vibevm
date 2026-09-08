@@ -4418,6 +4418,7 @@ dependencies = [
  "vibe-lifecycle",
  "vibe-llm",
  "vibe-mcp",
+ "vibe-native-loader-json-backend-fixture",
  "vibe-orchestrator",
  "vibe-package-source",
  "vibe-publish",
@@ -4650,6 +4651,13 @@ dependencies = [
 
 [[package]]
 name = "vibe-native-loader-fixture"
+version = "1.0.0"
+dependencies = [
+ "vibe-ext",
+]
+
+[[package]]
+name = "vibe-native-loader-json-backend-fixture"
 version = "1.0.0"
 dependencies = [
  "vibe-ext",

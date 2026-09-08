@@ -18,10 +18,25 @@ pub struct ExtensionsArgs {
 /// The `vibe extensions …` subcommands.
 #[derive(Debug, Clone, clap::Subcommand)]
 pub enum ExtensionsCommand {
+    /// Compile the selected node through one activated custom backend.
+    Compile(CompileArgs),
     /// Compile the selected node's static lane in process and report the
     /// attribution evidence (R4.3): per-provider contribution bytes, frame
     /// overhead, and every transform pass's byte effect.
     Analyze(AnalyzeArgs),
+}
+
+#[derive(Debug, Clone, clap::Args)]
+pub struct CompileArgs {
+    /// Directory of the selected workspace node.
+    #[arg(long, default_value = ".")]
+    pub path: PathBuf,
+    /// Activated custom backend id.
+    #[arg(long)]
+    pub backend: String,
+    /// Explicit artifact destination, or `-` for raw stdout bytes.
+    #[arg(long)]
+    pub out: PathBuf,
 }
 
 /// `vibe extensions analyze` — the lane analyzer (R4.3).

@@ -42,6 +42,8 @@ use super::{
 #[path = "native_managed/replay.rs"]
 mod replay;
 pub(crate) use replay::compile_static_owner_managed_with_source;
+mod explicit;
+pub(crate) use explicit::compile_backend_owner_managed;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub(crate) enum OwnerNativeCompileStatus {

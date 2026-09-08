@@ -3,8 +3,11 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#OBS-REGISTRY");
 
 use std::collections::BTreeMap;
+use std::io::Write;
+use std::path::Path;
 
-use anyhow::{Context, Result};
+use anyhow::{Context, Result, bail};
+use sha2::{Digest, Sha256};
 use vibe_core::machine_json_path;
 use vibe_core::manifest::{
     ExtensionAppliesTo, ExtensionConfig, ExtensionHandler, ExtensionIrLevel, ExtensionPass,
@@ -21,7 +24,7 @@ use vibe_wire::generated::extensions_report::{
     ProviderSource, SelectorSubject, SelectorSubjectKind, State, Tier,
 };
 
-use crate::cli::ExtensionsArgs;
+use crate::cli::{CompileArgs, ExtensionsArgs};
 use crate::output;
 
 use vibe_orchestrator as world;
@@ -90,6 +93,82 @@ pub fn run(ctx: &output::Context, args: ExtensionsArgs) -> Result<()> {
     ctx.summary(&format!(
         "{} extension declaration(s), {} effective",
         report.count, report.effective_count
+    ));
+    Ok(())
+}
+
+pub fn run_compile(ctx: &output::Context, args: CompileArgs, offline: bool) -> Result<()> {
+    if ctx.is_json() || ctx.is_quiet() {
+        bail!(
+            "`vibe extensions compile` emits artifact bytes; omit --json/--quiet and use --out - for stdout"
+        )
+    }
+    let selected = vibe_workspace::Workspace::discover_selected(&args.path)
+        .context("discovering the selected workspace node")?;
+    let node_rel = selected.selected.as_str().to_owned();
+    let backend = vibe_spec::BackendId::new(args.backend.clone())?;
+    let platform = vibe_lifecycle::native::NativePlatform::current()?;
+    let created_at = chrono::Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Millis, true);
+    let run_id = {
+        let mut digest = Sha256::new();
+        digest.update(
+            selected
+                .workspace
+                .root
+                .as_os_str()
+                .to_string_lossy()
+                .as_bytes(),
+        );
+        digest.update(node_rel.as_bytes());
+        digest.update(backend.as_str().as_bytes());
+        digest.update(created_at.as_bytes());
+        format!("{:x}", digest.finalize())[..32].to_owned()
+    };
+    let owner = vibe_workspace::extension_world::OwnerRuntimeId::Node {
+        rel: node_rel.clone(),
+    };
+    let mut provider = vibe_lifecycle::native::ArtifactCompilerNativeProvider::existing(
+        platform,
+        BTreeMap::from([(owner, vibe_spec::CompilerNativePolicy::fail())]),
+        &selected.workspace.root,
+    )?;
+    let artifact = vibe_workspace::install::compile_node_backend(
+        &selected.workspace,
+        &node_rel,
+        backend,
+        vibe_workspace::extension_world::OwnerRuntimeRunFacts {
+            run_id,
+            state_root: selected.workspace.root.join(".vibe"),
+            platform: platform.key().to_owned(),
+            offline,
+            created_at,
+        },
+        &mut provider,
+    )
+    .context("custom compilation requires installed/prebuilt native artifacts; run `vibe build` after changing native sources")?
+    .ok_or_else(|| anyhow::anyhow!("the selected node has no static-lane contributions"))?;
+    if args.out.as_os_str() == "-" {
+        std::io::stdout().write_all(artifact.bytes())?;
+        return Ok(());
+    }
+    let parent = args
+        .out
+        .parent()
+        .filter(|parent| !parent.as_os_str().is_empty())
+        .unwrap_or_else(|| Path::new("."));
+    let mut temporary = tempfile::NamedTempFile::new_in(parent)
+        .with_context(|| format!("creating atomic output beside `{}`", args.out.display()))?;
+    temporary.write_all(artifact.bytes())?;
+    temporary.as_file().sync_all()?;
+    temporary
+        .persist(&args.out)
+        .map_err(|error| error.error)
+        .with_context(|| format!("publishing `{}`", args.out.display()))?;
+    ctx.summary(&format!(
+        "compiled backend `{}` to {} ({} bytes)",
+        args.backend,
+        args.out.display(),
+        artifact.bytes().len()
     ));
     Ok(())
 }
@@ -321,6 +400,38 @@ fn state_text(state: &State) -> &'static str {
         State::Effective => "effective",
         State::Inactive => "inactive",
         State::SelectorMismatch => "selector-mismatch",
+    }
+}
+
+#[cfg(test)]
+mod compile_tests {
+    use super::*;
+
+    #[test]
+    fn empty_compile_preserves_output_and_creates_no_boot_artifacts() {
+        let project = tempfile::tempdir().unwrap();
+        std::fs::write(
+            project.path().join("vibe.toml"),
+            "[project]\nname='empty'\nversion='0.1.0'\n",
+        )
+        .unwrap();
+        let out = project.path().join("result.json");
+        std::fs::write(&out, b"sentinel").unwrap();
+        let context =
+            output::Context::from_flags(false, false, None, false, crate::cli::AgentModeArg::Auto);
+        let error = run_compile(
+            &context,
+            CompileArgs {
+                path: project.path().to_owned(),
+                backend: "json".to_owned(),
+                out: out.clone(),
+            },
+            true,
+        )
+        .unwrap_err();
+        assert!(error.to_string().contains("no static-lane contributions"));
+        assert_eq!(std::fs::read(out).unwrap(), b"sentinel");
+        assert!(!project.path().join("vibevm/vibespecs/boot").exists());
     }
 }
 

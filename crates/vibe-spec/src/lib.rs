@@ -54,8 +54,8 @@ pub use compiler::builtin::{
 };
 pub use compiler::ir::{
     ArtifactContext, ArtifactInput, ArtifactInputType, ArtifactInputWitness, ArtifactPlan,
-    ArtifactPlanError, ArtifactTarget, DocumentProvider, EmissionProvenance, EmittedArtifact,
-    emitted_output_fingerprint,
+    ArtifactPlanError, ArtifactTarget, BackendId, BackendIdError, DocumentProvider,
+    EmissionProvenance, EmittedArtifact, emitted_output_fingerprint,
 };
 // The R4.1 T10B adapter seam (PROP-054 `#TRANSFORM-PLAN-IDENTITY`): the
 // workspace lowers one lane owner's effective compile rows into an

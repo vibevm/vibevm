@@ -31,13 +31,13 @@ mod compile_plan_tests;
 mod hybrid_emit;
 use hybrid_emit::{append_hoisted, build_unit_table, emit_package_units, verify_fingerprints};
 
-/// R4.3 write-free selected-node analyzer.
 #[path = "bootgen/analyze.rs"]
 mod analyze;
 #[cfg(test)]
 pub(crate) use analyze::analyze_effective_bound_native;
 pub use analyze::{
     AnalyzedBoundLane, AnalyzedLane, analyze_node_lane, analyze_node_lane_bound_native,
+    compile_node_backend,
 };
 
 mod materialised_read;

@@ -139,6 +139,9 @@ fn main() -> ExitCode {
             Some(cli::ExtensionsCommand::Analyze(analyze)) => {
                 commands::extensions_analyze::run(&ctx, analyze)
             }
+            Some(cli::ExtensionsCommand::Compile(compile)) => {
+                commands::extensions::run_compile(&ctx, compile, cli.offline)
+            }
         },
         Command::Validate(args) => run_lifecycle(vibe_lifecycle::Phase::Validate, args),
         // `vibe install` is the OUTERMOST command on this path: it owns the

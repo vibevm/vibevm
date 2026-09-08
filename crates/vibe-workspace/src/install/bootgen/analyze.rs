@@ -23,14 +23,14 @@ use std::collections::{BTreeMap, HashSet};
 use std::sync::Arc;
 
 use vibe_core::manifest::SpecFormat;
-use vibe_spec::{CompileObserver, DocumentProvider, EmittedArtifact};
+use vibe_spec::{BackendId, CompileObserver, DocumentProvider, EmittedArtifact};
 
 use crate::boot;
 use crate::boot::hybrid::hoist;
 use crate::errors::WorkspaceError;
 use crate::extension_world::{
     ExtensionWorldEpoch, OwnerNativeCompileProvider, OwnerRuntimeEpoch, OwnerRuntimeLowering,
-    lower_owner_runtimes,
+    OwnerRuntimeRunFacts, lower_owner_runtimes,
 };
 use crate::{Workspace, boot_artifacts};
 
@@ -248,6 +248,83 @@ pub fn analyze_node_lane_bound_native<P: OwnerNativeCompileProvider>(
         node_rel,
         provider,
         observer,
+    )
+}
+
+pub fn compile_node_backend<P: OwnerNativeCompileProvider>(
+    workspace: &Workspace,
+    node_rel: &str,
+    backend: BackendId,
+    run: OwnerRuntimeRunFacts,
+    provider: &mut P,
+) -> Result<Option<EmittedArtifact>, WorkspaceError> {
+    let root = workspace.root.clone();
+    let node_dir = workspace.node_abs_path(node_rel);
+    let node_manifest = workspace
+        .member_by_rel_path(node_rel)
+        .map(|member| member.manifest.clone())
+        .unwrap_or_else(|| workspace.root_manifest.clone());
+    let resolution: Vec<ResolvedDep> = read_durable_resolution(&root)?;
+    let world = ExtensionWorldEpoch::from_resolution(&root, &resolution).map_err(world_error)?;
+    let runtimes = lower_owner_runtimes(
+        workspace,
+        &world,
+        OwnerRuntimeLowering::new(node_rel, BTreeMap::new()),
+    )?;
+    let epoch = runtimes.bind_run(run);
+    let self_coord = super::root_self_coordinate(&workspace.root_manifest);
+    let table = build_unit_table(&root, &resolution);
+    let with_static = with_static_set(&table);
+    let pulls = hoist::soft_static_pulls(&table);
+    let shared: HashSet<_> = pulls
+        .iter()
+        .filter(|(package, pullers)| {
+            pullers.len() >= 2
+                && table
+                    .get(package)
+                    .is_some_and(|unit| unit.has_static_boot())
+        })
+        .map(|(package, _)| package.clone())
+        .collect();
+    let spec_format = match boot_artifacts::resolve_static_path(&node_dir)? {
+        Some(path) if path.extension().and_then(|extension| extension.to_str()) == Some("xml") => {
+            SpecFormat::Xml
+        }
+        _ => SpecFormat::Mixed,
+    };
+    let own = node_own_boot(&node_dir, node_rel)?;
+    let inherited = if node_rel == "." {
+        Vec::new()
+    } else {
+        node_own_boot(&root, ".")?
+            .into_iter()
+            .filter(|boot| boot.category == Some(vibe_core::manifest::BootCategory::Foundation))
+            .collect()
+    };
+    let dependencies = node_dependency_boot(
+        &root,
+        &node_manifest,
+        &resolution,
+        &with_static,
+        spec_format,
+    );
+    let mut effective = boot::compute_effective_boot(boot::NodeBootInputs {
+        own_boot: &own,
+        inherited_foundation: &inherited,
+        dependencies: &dependencies,
+        default_link: node_manifest.boot.default_link,
+    })?;
+    if node_rel == "." {
+        append_hoisted(&mut effective, &shared, &table, &pulls);
+    }
+    desubstitute_covered_units(&mut effective, &table);
+    boot_artifacts::native_managed::compile_backend_owner_managed(
+        &effective,
+        &root,
+        &self_coord,
+        backend,
+        epoch.selected()?,
+        provider,
     )
 }
 

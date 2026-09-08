@@ -1,7 +1,7 @@
 //! Artifact-backed compiler-native invocation over one retained registry epoch.
 
 use std::collections::BTreeMap;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::sync::Mutex;
 
 use specmark::spec;
@@ -23,17 +23,17 @@ use vibe_workspace::extension_world::{
 };
 
 use crate::execution::effective_config;
-use crate::process::execution_scratch;
 use crate::{ExtensionRegistryRow, MechanismRegistry};
 
 use super::{
-    NativeArtifactError, NativeBuildExecution, NativePlatform,
+    NativeArtifactError, NativeBuildExecution, NativePlatform, ResolvedNativeArtifact,
     compiler_facts::{CompilerArtifactResolutionError, PendingFactRecorder},
-    path::publish_load_image,
+    path::{existing_load_image, publish_load_image},
     process_loader, resolve_native_artifact_for_compiler,
 };
 
 mod admission;
+use admission::ArtifactAccess;
 
 /// One borrowed compiler-native execution epoch backed by retained ARTIFACTs.
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-NATIVE-ONLY")]
@@ -53,6 +53,7 @@ pub struct ArtifactCompilerNativeInvoker<'a> {
     facts: PendingFactRecorder,
     admitted_frontends: Mutex<BTreeMap<u32, AdmittedFrontend>>,
     admitted_backends: Mutex<BTreeMap<u32, AdmittedBackend>>,
+    access: ArtifactAccess,
 }
 
 impl<'a> ArtifactCompilerNativeInvoker<'a> {
@@ -76,6 +77,32 @@ impl<'a> ArtifactCompilerNativeInvoker<'a> {
             project,
             world,
             run_id,
+            ArtifactAccess::Published,
+        )
+    }
+
+    #[cfg(test)]
+    pub(super) fn existing_for_test(
+        all_compile_rows: &[&'a ExtensionRegistryRow],
+        execution: NativeBuildExecution<'a>,
+        project: &'a Project,
+        world: &'a World,
+        run_id: &'a str,
+        scratch: &Path,
+    ) -> Self {
+        Self::from_parts(
+            all_compile_rows,
+            execution.candidates,
+            execution.selected_project_root,
+            execution.registry,
+            execution.routes,
+            execution.platform,
+            execution.offline,
+            execution.created_at,
+            project,
+            world,
+            run_id,
+            ArtifactAccess::existing(scratch).expect("test scratch exists"),
         )
     }
 
@@ -92,6 +119,7 @@ impl<'a> ArtifactCompilerNativeInvoker<'a> {
         project: &'a Project,
         world: &'a World,
         run_id: &'a str,
+        access: ArtifactAccess,
     ) -> Self {
         Self {
             all_compile_rows: all_compile_rows.to_vec().into_boxed_slice(),
@@ -109,6 +137,7 @@ impl<'a> ArtifactCompilerNativeInvoker<'a> {
             facts: PendingFactRecorder::new(),
             admitted_frontends: Mutex::new(BTreeMap::new()),
             admitted_backends: Mutex::new(BTreeMap::new()),
+            access,
         }
     }
 
@@ -151,17 +180,11 @@ impl<'a> ArtifactCompilerNativeInvoker<'a> {
         let manager_config = call.config().clone();
         let frontend_physical_stem = call.frontend_physical_stem().map(str::to_owned);
         let backend = call.backend().map(str::to_owned);
-        let scratch = execution_scratch(
+        let scratch = self.access.scratch(
             self.selected_project_root,
             self.run_id,
             &prepared.qualified_key,
-        )
-        .map_err(|error| {
-            failed(format!(
-                "compile row `{}` scratch: {error}",
-                prepared.qualified_key
-            ))
-        })?;
+        )?;
         let request = CompileRequest {
             envelope: 1,
             execution: Execution {
@@ -328,18 +351,11 @@ impl<'a> ArtifactCompilerNativeInvoker<'a> {
                 )));
             }
         };
-        let image = publish_load_image(
+        let image = self.access.image(
             self.selected_project_root,
-            Path::new(&artifact.path_absolute),
-            &artifact.digest,
-            artifact.bytes,
-        )
-        .map_err(|error| {
-            failed(format!(
-                "compile row `{}` image: {error}",
-                prepared.qualified_key
-            ))
-        })?;
+            artifact,
+            &prepared.qualified_key,
+        )?;
         let compiler = self
             .loader
             .admit_compile(&image, &prepared.row.declaration().id, prepared.point)
@@ -379,6 +395,7 @@ impl CompilerNativeFactBinding for ArtifactCompilerNativeInvoker<'_> {
 pub struct ArtifactCompilerNativeProvider {
     platform: NativePlatform,
     policies: BTreeMap<OwnerRuntimeId, CompilerNativePolicy>,
+    access: ArtifactAccess,
 }
 
 impl ArtifactCompilerNativeProvider {
@@ -387,7 +404,29 @@ impl ArtifactCompilerNativeProvider {
         platform: NativePlatform,
         policies: BTreeMap<OwnerRuntimeId, CompilerNativePolicy>,
     ) -> Self {
-        Self { platform, policies }
+        Self {
+            platform,
+            policies,
+            access: ArtifactAccess::Published,
+        }
+    }
+
+    pub fn existing(
+        platform: NativePlatform,
+        policies: BTreeMap<OwnerRuntimeId, CompilerNativePolicy>,
+        scratch: &Path,
+    ) -> Result<Self, WorkspaceError> {
+        let access = ArtifactAccess::existing(scratch).map_err(|reason| {
+            WorkspaceError::NativeCompileProvider {
+                owner: "<explicit-compile>".to_owned(),
+                reason,
+            }
+        })?;
+        Ok(Self {
+            platform,
+            policies,
+            access,
+        })
     }
 
     fn finish(self) -> Result<(), WorkspaceError> {
@@ -469,6 +508,7 @@ impl OwnerNativeCompileProvider for ArtifactCompilerNativeProvider {
             owner.project(),
             owner.world(),
             &run.run_id,
+            self.access.clone(),
         );
         Ok(OwnerNativeCompileBinding::new(invoker, policy))
     }

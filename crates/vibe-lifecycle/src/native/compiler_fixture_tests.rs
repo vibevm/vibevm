@@ -215,6 +215,8 @@ fn lifecycle_and_compiler_share_loader_and_images_are_immutable() {
 #[test]
 fn compiler_adapter_source_fence_excludes_forbidden_planes() {
     let source = include_str!("compiler.rs");
+    let admission = include_str!("compiler/admission.rs");
+    let loader = include_str!("../../../vibe-native-loader/src/lib.rs");
     for forbidden in [
         "build_native_sources",
         "std::process",
@@ -240,6 +242,11 @@ fn compiler_adapter_source_fence_excludes_forbidden_planes() {
     assert!(source.contains("config: manager_config"));
     assert!(!source.contains("config: projected"));
     assert!(source.contains("publish_load_image"));
-    assert!(source.contains("self.loader\n            .invoke_compile"));
-    assert!(source.contains("library: &image"));
+    assert!(source.contains(".admit_compile(&image"));
+    assert!(admission.contains("self.loader\n            .invoke_compile"));
+    assert!(admission.contains("fn invoke_admitted("));
+    assert!(admission.contains(".compiler()\n        .invoke(request)"));
+    assert!(admission.contains("library: &image"));
+    assert!(loader.contains("self.admit_compile("));
+    assert!(loader.contains(".invoke(invocation.request)"));
 }

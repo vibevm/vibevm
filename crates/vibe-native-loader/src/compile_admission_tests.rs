@@ -7,12 +7,19 @@ fn admitted_compiler_handle_refuses_before_invoke_and_reuses_the_exact_handle() 
         manifest(&[("compiler", "compile:pass", Some(1))]),
         [FakeCall::published(0, b"reply".to_vec())],
     );
+    let file_before = std::fs::read(&path).unwrap();
+    let modified_before = std::fs::metadata(&path).unwrap().modified().unwrap();
     let compiler = loader
         .admit_compile(&path, "compiler", CompilePoint::Pass)
         .unwrap();
     assert_eq!(compiler.extension_id(), "compiler");
     assert_eq!(compiler.point(), CompilePoint::Pass);
     assert_eq!(library.invoke_count.load(Ordering::SeqCst), 0);
+    assert_eq!(std::fs::read(&path).unwrap(), file_before);
+    assert_eq!(
+        std::fs::metadata(&path).unwrap().modified().unwrap(),
+        modified_before
+    );
     assert_eq!(compiler.invoke(b"request").unwrap(), b"reply");
     assert_eq!(library.invoke_count.load(Ordering::SeqCst), 1);
 

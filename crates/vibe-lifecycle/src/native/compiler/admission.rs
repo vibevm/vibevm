@@ -1,6 +1,53 @@
 //! Payload-free catalog admission and admitted compiler invocation.
 
 use super::*;
+use crate::process::execution_scratch;
+
+#[derive(Clone)]
+pub(super) enum ArtifactAccess {
+    Published,
+    Existing { scratch: PathBuf },
+}
+
+impl ArtifactAccess {
+    pub(super) fn existing(scratch: &Path) -> Result<Self, String> {
+        let metadata = std::fs::symlink_metadata(scratch).map_err(|error| error.to_string())?;
+        if metadata.file_type().is_symlink() || !metadata.file_type().is_dir() {
+            return Err("existing compiler scratch is a link or not a directory".to_owned());
+        }
+        let scratch = scratch.canonicalize().map_err(|error| error.to_string())?;
+        Ok(Self::Existing { scratch })
+    }
+
+    pub(super) fn scratch(
+        &self,
+        root: &Path,
+        run_id: &str,
+        key: &str,
+    ) -> Result<PathBuf, CompilerNativeInvokerError> {
+        match self {
+            Self::Published => execution_scratch(root, run_id, key)
+                .map_err(|error| failed(format!("compile row `{key}` scratch: {error}"))),
+            Self::Existing { scratch } => Ok(scratch.clone()),
+        }
+    }
+
+    pub(super) fn image(
+        &self,
+        root: &Path,
+        artifact: ResolvedNativeArtifact,
+        key: &str,
+    ) -> Result<PathBuf, CompilerNativeInvokerError> {
+        let source = Path::new(&artifact.path_absolute);
+        let image = match self {
+            Self::Published => publish_load_image(root, source, &artifact.digest, artifact.bytes),
+            Self::Existing { .. } => {
+                existing_load_image(root, source, &artifact.digest, artifact.bytes)
+            }
+        };
+        image.map_err(|error| failed(format!("compile row `{key}` image: {error}")))
+    }
+}
 
 impl CompilerNativeInvoker for ArtifactCompilerNativeInvoker<'_> {
     fn admit_frontend(
@@ -170,18 +217,11 @@ impl ArtifactCompilerNativeInvoker<'_> {
                     )));
                 }
             };
-        let image = publish_load_image(
+        let image = self.access.image(
             self.selected_project_root,
-            Path::new(&artifact.path_absolute),
-            &artifact.digest,
-            artifact.bytes,
-        )
-        .map_err(|error| {
-            failed(format!(
-                "compile row `{}` image: {error}",
-                prepared.qualified_key
-            ))
-        })?;
+            artifact,
+            &prepared.qualified_key,
+        )?;
         self.loader
             .invoke_compile(NativeCompileInvocation {
                 library: &image,

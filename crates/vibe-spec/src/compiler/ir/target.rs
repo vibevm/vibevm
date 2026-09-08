@@ -17,7 +17,7 @@ pub struct BackendIdError {
 }
 
 impl BackendId {
-    pub(crate) fn new(value: impl Into<String>) -> Result<Self, BackendIdError> {
+    pub fn new(value: impl Into<String>) -> Result<Self, BackendIdError> {
         let value = value.into();
         if valid_id_spelling(&value) {
             Ok(Self(value))
@@ -36,7 +36,7 @@ impl BackendId {
         valid_id_spelling(value)
     }
 
-    pub(crate) fn as_str(&self) -> &str {
+    pub fn as_str(&self) -> &str {
         &self.0
     }
 }

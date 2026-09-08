@@ -127,7 +127,7 @@ impl ArtifactPlan {
         )
     }
 
-    pub(crate) fn custom_backend(
+    pub fn custom_backend(
         backend: BackendId,
         generated_path: impl Into<String>,
         source_root: impl Into<String>,

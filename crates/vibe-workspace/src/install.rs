@@ -77,6 +77,7 @@ pub use bootgen::verify_boot_graph;
 /// observer — the same composition regeneration runs, minus every write.
 pub use bootgen::{
     AnalyzedBoundLane, AnalyzedLane, analyze_node_lane, analyze_node_lane_bound_native,
+    compile_node_backend,
 };
 pub use bootgen::{
     BootRegeneration, regenerate_boot, regenerate_boot_from, regenerate_boot_from_traced,

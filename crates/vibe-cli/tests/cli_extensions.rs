@@ -581,3 +581,20 @@ fn assert_error(user: &UserScratch, root: &Path, needle: &str) {
         "expected exact recovery command in {error}"
     );
 }
+
+#[test]
+fn compile_rejects_wrapped_output_modes_before_touching_the_explicit_target() {
+    let user = UserScratch::new();
+    let target = user.settings.join("artifact.json");
+    fs::write(&target, b"sentinel").unwrap();
+    for mode in ["--json", "--quiet"] {
+        let output = query_vibe(&user)
+            .args([mode, "extensions", "compile", "--backend", "json", "--out"])
+            .arg(&target)
+            .output()
+            .unwrap();
+        assert!(!output.status.success());
+        assert!(String::from_utf8_lossy(&output.stderr).contains("use --out - for stdout"));
+        assert_eq!(fs::read(&target).unwrap(), b"sentinel");
+    }
+}

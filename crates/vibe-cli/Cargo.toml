@@ -95,6 +95,7 @@ tokio.workspace = true
 futures.workspace = true
 
 [dev-dependencies]
+vibe-native-loader-json-backend-fixture = { path = "../vibe-native-loader/tests/fixtures/native-json-backend" }
 assert_cmd.workspace = true
 # The lease-ordering red arms safefs' `before_lock` race hook to rewrite the
 # selected manifest between `Project::open` and the OS lock — the inject
