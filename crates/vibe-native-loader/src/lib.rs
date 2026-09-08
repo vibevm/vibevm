@@ -102,6 +102,18 @@ pub struct NativeCompileInvocation<'a> {
 }
 
 /// One exactly admitted compiler extension backed by a strong cached handle.
+///
+/// Admission rejects a relative library path before attempting to open it.
+///
+/// ```
+/// use std::path::Path;
+/// use vibe_core::lifecycle::CompilePoint;
+/// use vibe_native_loader::{NativeLoadError, NativeLoader};
+///
+/// let loader = NativeLoader::new();
+/// let result = loader.admit_compile(Path::new("relative-plugin"), "minify", CompilePoint::Pass);
+/// assert!(matches!(result, Err(NativeLoadError::PathNotAbsolute { .. })));
+/// ```
 pub struct NativeCompiler {
     library: Arc<dyn LibraryHandle>,
     display_path: String,
@@ -125,6 +137,33 @@ impl NativeCompiler {
 }
 
 /// One exact package-supplied deploy mechanism invocation.
+///
+/// The request and its selected logical key are carried together to the loader;
+/// path admission still happens before the plugin can be invoked.
+///
+/// ```
+/// use std::path::Path;
+/// use vibe_core::manifest::MechanismKey;
+/// use vibe_native_loader::{NativeLoadError, NativeLoader, NativeMechanismInvocation};
+/// use vibe_wire::generated::native::e1::deploy_request::DeployRequest;
+///
+/// # fn main() -> Result<(), Box<dyn std::error::Error>> {
+/// let logical_key: MechanismKey = "deploy:fixture".parse()?;
+/// let request: DeployRequest = serde_json::from_value(serde_json::json!({
+///     "operation": "remove", "envelope": 1, "protocol": 1,
+///     "identity": {"provider": "org.example/plugin", "mechanism": "fixture",
+///         "target": "tool", "profile": "default"},
+///     "resources": []
+/// }))?;
+/// let loader = NativeLoader::new();
+/// let result = loader.invoke_mechanism(NativeMechanismInvocation {
+///     library: Path::new("relative-plugin"), provider: "org.example/plugin",
+///     mechanism_id: "fixture", logical_key: &logical_key, request: &request,
+/// });
+/// assert!(matches!(result, Err(NativeLoadError::PathNotAbsolute { .. })));
+/// # Ok(())
+/// # }
+/// ```
 #[derive(Debug, Clone, Copy)]
 pub struct NativeMechanismInvocation<'a> {
     /// Absolute path of the admitted immutable native image.
@@ -140,6 +179,25 @@ pub struct NativeMechanismInvocation<'a> {
 }
 
 /// One admitted mechanism image with owned manifest-derived descriptor data.
+///
+/// The logical key participates in admission, while an invalid path is refused
+/// before any native image is opened.
+///
+/// ```
+/// use std::path::Path;
+/// use vibe_core::manifest::MechanismKey;
+/// use vibe_native_loader::{NativeLoadError, NativeLoader};
+///
+/// # fn main() -> Result<(), Box<dyn std::error::Error>> {
+/// let logical_key: MechanismKey = "deploy:fixture".parse()?;
+/// let loader = NativeLoader::new();
+/// let result = loader.admit_mechanism(
+///     Path::new("relative-plugin"), "org.example/plugin", "fixture", &logical_key,
+/// );
+/// assert!(matches!(result, Err(NativeLoadError::PathNotAbsolute { .. })));
+/// # Ok(())
+/// # }
+/// ```
 pub struct NativeMechanism {
     library: Arc<dyn LibraryHandle>,
     display_path: String,

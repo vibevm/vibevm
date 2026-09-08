@@ -2,6 +2,14 @@
 
 use vibe_ext::{BackendResponse, CompileRequest, Ir, Manifest, ManifestExtension};
 
+/// Identify the JSON backend fixture linked through the loader's dev graph.
+///
+/// ```
+/// assert_eq!(
+///     vibe_native_loader_json_backend_fixture::fixture_marker(),
+///     "vibe-native-loader-json-backend-fixture"
+/// );
+/// ```
 pub fn fixture_marker() -> &'static str {
     "vibe-native-loader-json-backend-fixture"
 }
@@ -24,17 +32,26 @@ fn backend(request: CompileRequest) -> BackendResponse {
         .and_then(Option::as_ref)
         == Some(&vibe_ext::__serde_json::Value::Bool(true))
     {
-        return BackendResponse::fail("deterministic JSON backend refusal")
-            .expect("fixture failure is bounded");
+        return match BackendResponse::fail("deterministic JSON backend refusal") {
+            Ok(response) => response,
+            Err(error) => panic!("fixture failure is bounded: {error:?}"),
+        };
     }
     let Ir::LaneArtifact(payload) = request.payload else {
-        return BackendResponse::fail("JSON backend requires lane IR")
-            .expect("fixture failure is bounded");
+        return match BackendResponse::fail("JSON backend requires lane IR") {
+            Ok(response) => response,
+            Err(error) => panic!("fixture failure is bounded: {error:?}"),
+        };
     };
-    let mut bytes = vibe_ext::__serde_json::to_vec(&payload.lane)
-        .expect("generated lane serializes deterministically");
+    let mut bytes = match vibe_ext::__serde_json::to_vec(&payload.lane) {
+        Ok(bytes) => bytes,
+        Err(error) => panic!("generated lane serializes deterministically: {error:?}"),
+    };
     bytes.push(b'\n');
-    BackendResponse::ok(bytes).expect("fixture bytes satisfy backend limits")
+    match BackendResponse::ok(bytes) {
+        Ok(response) => response,
+        Err(error) => panic!("fixture bytes satisfy backend limits: {error:?}"),
+    }
 }
 
 vibe_ext::vibe_backend_extension!(manifest = manifest(), handler = backend);

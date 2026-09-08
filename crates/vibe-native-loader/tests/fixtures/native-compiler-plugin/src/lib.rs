@@ -51,6 +51,37 @@ pub fn fixture_manifest() -> Manifest {
     }
 }
 
+/// Dispatch one generated compiler request through the fixture handler.
+///
+/// ```
+/// use vibe_ext::{CompileReply, CompileRequest};
+/// use vibe_native_loader_compiler_fixture::handle;
+///
+/// # fn main() -> Result<(), Box<dyn std::error::Error>> {
+/// let request: CompileRequest = vibe_ext::__serde_json::from_value(
+///     vibe_ext::__serde_json::json!({
+///         "envelope": 1,
+///         "execution": {"id": "compiler-skip", "package": "org.example/compiler", "config": {}},
+///         "io": {"scratch": ".vibe/compile/run"},
+///         "payload": {
+///             "shape": "source-document", "ir_schema": 1, "level": "source",
+///             "cardinality": "document",
+///             "doc": {
+///                 "address": {"kind": "static-entry", "origin": "fixture", "path": "fixture.md"},
+///                 "format": "markdown", "text": "fixture compiler input",
+///                 "subject": {"declared_path": "fixture.md", "provider": {"kind": "unclaimed"}}
+///             }
+///         },
+///         "point": "compile:pass",
+///         "project": {"root": ".", "name": "host", "version": "1.0.0", "kind": "flow",
+///             "manifest": "vibe.toml", "spec_roots": ["vibevm/vibespecs"]},
+///         "world": {"lockfile": "vibe.lock", "deps_root": "vibevm/vibedeps", "packages": []}
+///     }),
+/// )?;
+/// assert!(matches!(handle(request), CompileReply::Skip(_)));
+/// # Ok(())
+/// # }
+/// ```
 pub fn handle(request: CompileRequest) -> CompileReply {
     if request.execution.id == "compiler-ok" && request.frontend_physical_stem.is_some() {
         return frontend_reply(request);
@@ -98,9 +129,9 @@ fn frontend_reply(request: CompileRequest) -> CompileReply {
         .get("invalid_frontend")
         .and_then(Option::as_ref)
         == Some(&vibe_ext::__serde_json::Value::Bool(true));
-    let stem = request
-        .frontend_physical_stem
-        .expect("frontend dispatch requires its physical stem");
+    let Some(stem) = request.frontend_physical_stem else {
+        panic!("frontend dispatch requires its physical stem");
+    };
     let Ir::SourceDocument(payload) = request.payload else {
         return failed("native frontend requires source document IR");
     };
@@ -110,7 +141,10 @@ fn frontend_reply(request: CompileRequest) -> CompileReply {
         lines.push(String::new());
         lines.push(line.to_owned());
     }
-    let end = u32::try_from(lines.len()).expect("fixture document stays bounded");
+    let end = match u32::try_from(lines.len()) {
+        Ok(end) => end,
+        Err(error) => panic!("fixture document stays bounded: {error:?}"),
+    };
     let mut payload = vibe_ext::__serde_json::json!({
         "shape": "document-document",
         "ir_schema": 1,
@@ -196,6 +230,16 @@ fn minify_for_backend(backend: &str, tape: &str) -> Result<Option<String>, Strin
 }
 
 /// Test-only safe projection of the independently implemented fixture logic.
+///
+/// ```
+/// use vibe_native_loader_compiler_fixture::minify_for_test;
+///
+/// # fn main() -> Result<(), String> {
+/// let output = minify_for_test("static-xml", "<root>\n  <child/>\n</root>")?;
+/// assert_eq!(output.as_deref(), Some("<root><child/></root>"));
+/// # Ok(())
+/// # }
+/// ```
 #[doc(hidden)]
 pub fn minify_for_test(backend: &str, tape: &str) -> Result<Option<String>, String> {
     minify_for_backend(backend, tape)

@@ -15,6 +15,14 @@ use vibe_ext::{
     NativeDeployReversibility, NativeMechanismRole,
 };
 
+/// Identify the mechanism fixture linked through the loader's dev graph.
+///
+/// ```
+/// assert_eq!(
+///     vibe_native_loader_mechanism_fixture::fixture_marker(),
+///     "vibe-native-loader-mechanism-fixture"
+/// );
+/// ```
 pub fn fixture_marker() -> &'static str {
     "vibe-native-loader-mechanism-fixture"
 }
@@ -149,8 +157,10 @@ fn handle(request: DeployRequest) -> DeployReply {
             let mut removed = Vec::new();
             for resource in request.resources {
                 let destination = destination(&resource);
-                if Path::new(&destination).exists() {
-                    fs::remove_file(destination).expect("fixture removes owned resource");
+                if Path::new(&destination).exists()
+                    && let Err(error) = fs::remove_file(destination)
+                {
+                    panic!("fixture removes owned resource: {error:?}");
                 }
                 removed.push(resource);
             }
@@ -185,9 +195,15 @@ fn handle(request: DeployRequest) -> DeployReply {
 
 fn copy(source: &str, destination: &str) {
     let destination = Path::new(destination);
-    fs::create_dir_all(destination.parent().expect("destination parent"))
-        .expect("fixture creates destination parent");
-    fs::copy(source, destination).expect("fixture copies artifact");
+    let Some(parent) = destination.parent() else {
+        panic!("destination parent");
+    };
+    if let Err(error) = fs::create_dir_all(parent) {
+        panic!("fixture creates destination parent: {error:?}");
+    }
+    if let Err(error) = fs::copy(source, destination) {
+        panic!("fixture copies artifact: {error:?}");
+    }
 }
 
 fn destination(resource: &str) -> String {
@@ -198,10 +214,10 @@ fn destination(resource: &str) -> String {
 }
 
 fn read_digest(path: &str) -> String {
-    fs::read_to_string(path)
-        .expect("fixture reads resolved artifact")
-        .trim()
-        .to_owned()
+    match fs::read_to_string(path) {
+        Ok(digest) => digest.trim().to_owned(),
+        Err(error) => panic!("fixture reads resolved artifact: {error:?}"),
+    }
 }
 
 vibe_ext::vibe_mechanism_provider!(manifest = manifest(), handler = handle);

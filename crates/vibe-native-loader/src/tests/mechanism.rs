@@ -20,37 +20,46 @@ fn manifest(name: &str) -> Vec<u8> {
 }
 
 fn role_manifest(role: &str, name: &str, operations: &[&str]) -> Vec<u8> {
-    serde_json::to_vec(&json!({"mechanisms": [{
+    match serde_json::to_vec(&json!({"mechanisms": [{
         "id": "selected", "role": role, "name": name, "protocol": 1,
         "operations": operations,
         "artifact_kinds": ["executable"], "effect": "user", "network": "never",
         "privilege": "none", "reversibility": "reversible",
         "atomic_replacement": true, "reference_ownership": true
-    }]}))
-    .expect("mechanism manifest JSON")
+    }]})) {
+        Ok(bytes) => bytes,
+        Err(error) => panic!("mechanism manifest JSON: {error:?}"),
+    }
 }
 
 fn key() -> MechanismKey {
-    "deploy:selected".parse().expect("logical mechanism key")
+    match "deploy:selected".parse() {
+        Ok(key) => key,
+        Err(error) => panic!("logical mechanism key: {error:?}"),
+    }
 }
 
 fn request(mechanism: &str) -> DeployRequest {
-    serde_json::from_value(json!({
+    match serde_json::from_value(json!({
         "operation": "remove", "envelope": 1, "protocol": 1,
         "identity": {"provider": "org.example/plugin", "mechanism": mechanism,
             "target": "tool", "profile": "default"},
         "resources": []
-    }))
-    .expect("mechanism request")
+    })) {
+        Ok(request) => request,
+        Err(error) => panic!("mechanism request: {error:?}"),
+    }
 }
 
 fn reply() -> Vec<u8> {
-    serde_json::to_vec(&json!({
+    match serde_json::to_vec(&json!({
         "operation": "remove", "envelope": 1, "protocol": 1,
         "result": {"status": "ok", "removed": [], "expected_remaining": [],
             "evidence": "fixture"}
-    }))
-    .expect("mechanism reply")
+    })) {
+        Ok(bytes) => bytes,
+        Err(error) => panic!("mechanism reply: {error:?}"),
+    }
 }
 
 #[test]
