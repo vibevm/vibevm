@@ -19,6 +19,14 @@ use vibe_ext::{
 
 const OUTPUT: &str = "foreign-package.bin";
 
+/// Identify the real package-provider fixture linked into the commissioning E2E.
+///
+/// ```
+/// assert_eq!(
+///     vibe_native_loader_package_provider_fixture::fixture_marker(),
+///     "vibe-native-loader-package-provider-fixture"
+/// );
+/// ```
 pub fn fixture_marker() -> &'static str {
     "vibe-native-loader-package-provider-fixture"
 }

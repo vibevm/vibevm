@@ -19,6 +19,14 @@ use vibe_ext::{
 const OUTPUT: &str = "foreign.bin";
 const CONTENTS: &[u8] = b"foreign native build output\n";
 
+/// Identify the real build-provider fixture linked into the commissioning E2E.
+///
+/// ```
+/// assert_eq!(
+///     vibe_native_loader_build_provider_fixture::fixture_marker(),
+///     "vibe-native-loader-build-provider-fixture"
+/// );
+/// ```
 pub fn fixture_marker() -> &'static str {
     "vibe-native-loader-build-provider-fixture"
 }
