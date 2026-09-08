@@ -122,14 +122,17 @@ fn existing_backend_reuses_a_verified_image_without_touching_scratch() {
     .unwrap();
     let scratch_before = fs::metadata(root.path()).unwrap().modified().unwrap();
     let image_before = fs::read(&image).unwrap();
-    let invoker = ArtifactCompilerNativeInvoker::existing_for_test(
+    let invoker = match ArtifactCompilerNativeInvoker::existing_for_test(
         &rows,
         run,
         &project,
         &world,
         RUN_ID,
         root.path(),
-    );
+    ) {
+        Ok(invoker) => invoker,
+        Err(error) => panic!("existing backend fixture admits: {error}"),
+    };
     let config = effective_config(rows[0]).unwrap();
     invoker
         .admit_backend(
@@ -162,14 +165,17 @@ fn existing_backend_missing_stale_or_source_built_never_creates_an_image() {
     let routes = MechanismRoutes::default();
     let project_value = project(missing.path());
     let world_value = world();
-    let invoker = ArtifactCompilerNativeInvoker::existing_for_test(
+    let invoker = match ArtifactCompilerNativeInvoker::existing_for_test(
         &rows,
         execution(&rows, missing.path(), &mechanisms, &routes),
         &project_value,
         &world_value,
         RUN_ID,
         missing.path(),
-    );
+    ) {
+        Ok(invoker) => invoker,
+        Err(error) => panic!("missing backend fixture scratch admits: {error}"),
+    };
     let config = effective_config(rows[0]).unwrap();
     assert!(
         invoker
@@ -214,14 +220,17 @@ fn existing_backend_missing_stale_or_source_built_never_creates_an_image() {
     );
     let rows = registry.rows().iter().collect::<Vec<_>>();
     let source_project = project(source.path());
-    let invoker = ArtifactCompilerNativeInvoker::existing_for_test(
+    let invoker = match ArtifactCompilerNativeInvoker::existing_for_test(
         &rows,
         execution(&rows, source.path(), &mechanisms, &routes),
         &source_project,
         &world_value,
         RUN_ID,
         source.path(),
-    );
+    ) {
+        Ok(invoker) => invoker,
+        Err(error) => panic!("source backend fixture scratch admits: {error}"),
+    };
     let config = effective_config(rows[0]).unwrap();
     assert!(
         invoker

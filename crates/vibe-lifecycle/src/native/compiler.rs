@@ -89,8 +89,8 @@ impl<'a> ArtifactCompilerNativeInvoker<'a> {
         world: &'a World,
         run_id: &'a str,
         scratch: &Path,
-    ) -> Self {
-        Self::from_parts(
+    ) -> Result<Self, String> {
+        Ok(Self::from_parts(
             all_compile_rows,
             execution.candidates,
             execution.selected_project_root,
@@ -102,8 +102,8 @@ impl<'a> ArtifactCompilerNativeInvoker<'a> {
             project,
             world,
             run_id,
-            ArtifactAccess::existing(scratch).expect("test scratch exists"),
-        )
+            ArtifactAccess::existing(scratch)?,
+        ))
     }
 
     #[allow(clippy::too_many_arguments)]
