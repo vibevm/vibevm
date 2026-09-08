@@ -252,6 +252,7 @@ macro_rules! vibe_compile_extension {
 /// assert!(BackendResponse::fail("backend refused the input").is_ok());
 /// assert!(BackendResponse::fail(" \n ").is_err());
 /// ```
+#[specmark::spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#PASS-BACKEND")]
 pub struct BackendResponse(vibe_wire::generated::native::e1::backend_reply::BackendReply);
 
 impl BackendResponse {

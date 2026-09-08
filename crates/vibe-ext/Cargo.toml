@@ -12,4 +12,5 @@ description = "Safe Rust author SDK for VibeVM native extension ABI 1"
 
 [dependencies]
 serde_json.workspace = true
+specmark.workspace = true
 vibe-wire.workspace = true

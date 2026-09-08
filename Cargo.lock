@@ -4460,6 +4460,7 @@ dependencies = [
 name = "vibe-ext"
 version = "1.0.0"
 dependencies = [
+ "core-ai-native-specmark",
  "serde_json",
  "vibe-wire",
 ]

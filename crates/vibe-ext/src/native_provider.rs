@@ -1,5 +1,7 @@
 //! Safe build/package mechanism-provider author boundary.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#R8-NATIVE-BUILD-PACKAGE-OPEN");
+
 use vibe_wire::behaviour::{native_build, native_mechanism, native_package};
 use vibe_wire::generated::native::e1::{
     build_reply::BuildReply, build_request::BuildRequest, mechanism_manifest::MechanismManifest,
