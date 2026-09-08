@@ -8,6 +8,7 @@ use vibe_extension_registry::{ExtensionProvider, ExtensionRegistryRow};
 
 use super::fault::{CompilePlanLoweringError, PassTierFault};
 use super::plan::{PassEntry, PassPlacement, PassPlan};
+use crate::compiler::ir::ArtifactPlan;
 use crate::compiler::transform::plan::{TransformPlan, TransformProvider};
 
 /// The two immutable owner-scoped compiler plans produced from one row walk.
@@ -19,13 +20,40 @@ pub struct CompilePlans {
 
 impl CompilePlans {
     #[must_use]
-    pub fn transforms(&self) -> &TransformPlan {
+    pub fn transforms_only(transforms: TransformPlan) -> Self {
+        Self {
+            transforms,
+            passes: PassPlan::empty(),
+        }
+    }
+
+    #[must_use]
+    pub const fn transforms(&self) -> &TransformPlan {
         &self.transforms
     }
 
     #[must_use]
-    pub fn passes(&self) -> &PassPlan {
+    pub const fn passes(&self) -> &PassPlan {
         &self.passes
+    }
+
+    /// Attach both tiers, filtering passes by the artifact discriminator.
+    #[must_use]
+    pub fn attach_to(&self, plan: ArtifactPlan) -> ArtifactPlan {
+        plan.with_transforms(self.transforms.clone())
+            .with_passes(self.passes.clone())
+    }
+
+    /// Stable owner-plan frame for one artifact; transform-only stays exact.
+    #[must_use]
+    pub fn digest_hex_for_artifact(&self, artifact: &str) -> Option<String> {
+        let transforms = self.transforms.digest_hex();
+        let passes = self.passes.for_artifact(artifact).digest_hex();
+        match (transforms, passes) {
+            (value, None) => value,
+            (None, Some(pass)) => Some(format!("pass:{pass}")),
+            (Some(transform), Some(pass)) => Some(format!("{transform}:pass:{pass}")),
+        }
     }
 }
 

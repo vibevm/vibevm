@@ -226,18 +226,16 @@ pub enum WorkspaceError {
         source: Box<ExtensionWorldError>,
     },
 
-    /// One lane owner's effective `compile:*` rows do not form a transform
-    /// plan. The declaration is malformed or names a capability this compiler
-    /// does not yet own; `source` states which.
+    /// One lane owner's effective `compile:*` rows do not form compile plans.
     #[error(
-        "the compile-point extensions of `{owner}` do not form a transform plan: {source} \
-         (violates spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY; \
+        "the compile-point extensions of `{owner}` do not form compile plans: {source} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#PASS-TIER-LAW; \
          fix: correct the declaration the underlying error names, then run `vibe install`)"
     )]
     TransformPlan {
         owner: String,
         #[source]
-        source: vibe_spec::TransformLoweringError,
+        source: vibe_spec::CompilePlanLoweringError,
     },
 
     /// Runtime lowering named no node in the supplied workspace.

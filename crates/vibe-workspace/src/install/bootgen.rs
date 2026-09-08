@@ -22,14 +22,16 @@ use super::{ResolvedDep, io_err};
 /// Durable-world owner-plan lowering along its own responsibility.
 #[path = "bootgen/owner_plans.rs"]
 mod owner_plans;
-use owner_plans::plan_digest_frames;
+use owner_plans::{plan_digest_frames, plan_digest_frames_for};
+#[cfg(test)]
+#[path = "bootgen/compile_plan_tests.rs"]
+mod compile_plan_tests;
 
 #[path = "bootgen/hybrid_emit.rs"]
 mod hybrid_emit;
 use hybrid_emit::{append_hoisted, build_unit_table, emit_package_units, verify_fingerprints};
 
-/// The R4.3 lane analyzer's write-free entry — one selected node's lane
-/// composed and compiled under the analyzer observer.
+/// R4.3 write-free selected-node analyzer.
 #[path = "bootgen/analyze.rs"]
 mod analyze;
 #[cfg(test)]
@@ -38,7 +40,6 @@ pub use analyze::{
     AnalyzedBoundLane, AnalyzedLane, analyze_node_lane, analyze_node_lane_bound_native,
 };
 
-/// The workspace root's B-031 `<group>/<name>` self coordinate, when declared.
 mod materialised_read;
 pub(super) use materialised_read::read_durable_resolution;
 mod conditions;
@@ -54,8 +55,6 @@ pub(crate) mod replay_publish;
 pub use desubstitute::desubstitute_covered_units;
 
 fn root_self_coordinate(root_manifest: &Manifest) -> vibe_spec::SelfCoordinate {
-    // Role-blind: a package-rooted checkout compiles its lanes exactly as a
-    // project does (PROP-024 ##MANIFEST-ROLES-ARE-EQUIPOTENT).
     match root_manifest.consumer_node() {
         Some(node) => vibe_spec::SelfCoordinate::new(
             node.group.as_ref().map(|g| g.as_str().to_owned()),
@@ -81,10 +80,7 @@ pub fn regenerate_boot_from_with_spec_format(
     regenerate_boot_from_traced(workspace, resolution, spec_format, None)
 }
 
-/// The traced sibling of [`regenerate_boot_from_with_spec_format`]: one
-/// borrowed run, carried through package-unit emission first, then every
-/// root/member node. The run is BORROWED — this layer never opens, finishes
-/// or clones it into an outcome; the command owner does all three.
+/// Traced regeneration; the command owner retains the borrowed run.
 pub fn regenerate_boot_from_traced(
     workspace: &Workspace,
     resolution: &[ResolvedDep],
@@ -123,28 +119,21 @@ pub fn regenerate_boot_from_traced_prepared(
     let world = ExtensionWorldEpoch::from_resolution(&workspace.root, resolution)
         .map_err(owner_plans::world_error)?;
 
-    // The per-unit compiler (PROP-038 §2.1): emit each materialised package's
-    // own STATIC.md / INDEX.md from its own edges, and learn which packages
-    // statically link a child (`with_static`) — a node's dynamic edge to such
-    // a package points at its compiled STATIC.md so the whole zone loads, not
-    // just the snippet. For a tree with no intermediate static edge this is a
-    // no-op, keeping the node artifacts byte-identical (PROP-038 §5).
+    // Compile package units first so node edges can target complete zones.
     let table = build_unit_table(&workspace.root, resolution);
     // Lower every owner before plan digests feed unit fingerprints.
     let runtimes = lower_owner_runtimes(workspace, &world, lowering)?;
-    // Boot-graph fingerprints (PROP-038 §2.7) drive the dirty-subgraph skip in
-    // per-unit emission (§2.8) — a package whose fingerprint is unchanged is
-    // not recompiled. Keyed on each unit's resolved version, plus the owner
-    // plan frame of every unit whose owner activated something.
+    // Unit version plus its artifact-filtered owner plan drives dirty skips.
     let versions: HashMap<UnitId, String> = resolution
         .iter()
         .map(|d| ((d.group.clone(), d.name.clone()), d.version.to_string()))
         .collect();
-    let fps = fingerprint::fingerprints(&table, &versions, &plan_digest_frames(&runtimes));
-    // Soft hoisting (PROP-038 §2.4): a package soft-statically linked by two or
-    // more units is `shared` — hoisted to the global root STATIC.md and linked
-    // once, its local zones left a #use marker. `pulls` also feeds the
-    // shared-by hint. For a tree with no shared package this is all empty.
+    let fps = fingerprint::fingerprints(
+        &table,
+        &versions,
+        &plan_digest_frames_for(&runtimes, spec_format),
+    );
+    // Hoist packages pulled statically by two or more units.
     let pulls = hoist::soft_static_pulls(&table);
     let shared: HashSet<UnitId> = pulls
         .iter()
@@ -194,41 +183,13 @@ pub fn regenerate_boot_from_traced_prepared(
             dependencies: &deps,
             default_link: manifest.boot.default_link,
         })?;
-        // The absolute root is the hoist point: it carries the single copy of
-        // every shared package (PROP-038 §2.4).
-        // <!-- REVIEW: DRIFT-030 §4 step 1 — this append is a SECOND write path
-        // into the root's static lane. `compute_effective_boot` above has
-        // already emitted a static entry for any package in the root's own
-        // static closure (`node_dependency_boot` → `boot.rs:246-288`, path from
-        // `bootgen.rs:305-310`), and `render_static` concatenates entry by
-        // entry with no dedup on `path` (`boot_artifacts.rs:224-261`). So a
-        // package that is both hoisted and in the root's closure lands twice.
-        // Measured on a fixture of vibevm's shape (root --static-transitive-->
-        // content-minimal aggregator --static--> member): counting the
-        // entry-point node in `hoist::soft_static_pulls` does clear the
-        // aggregator's copy — its zone degrades to the `#use` marker §2.5
-        // designs — but the root then holds the member twice, once per path.
-        // PROP-038 `##HOIST-LCA` explains why the collision is structural here:
-        // the hoist target is the LCA of a *continuous static zone*, and for an
-        // unbroken root→aggregator→member static chain that LCA IS the root,
-        // i.e. the hoist destination and the root's own compile site coincide.
-        // Which mechanism owns the dedup is a design question, so DRIFT-030
-        // stopped on its §8 rather than paper over it at this call. -->
+        // The absolute root is the hoist point for shared packages.
         if rel == "." {
             append_hoisted(&mut effective, &shared, &table, &pulls);
         }
-        // B-006 (lane dedup): roll a substituted unit-STATIC entry back to the
-        // package's own snippet — or elide a contentless umbrella — once every
-        // boot-bearing member of its zone is present individually in this
-        // lane. A pure pass over the composition and the unit table; coverage
-        // is never lost (a member missing from the lane keeps the
-        // substitution in place). Sits after `append_hoisted` so the hoisted
-        // single-copies count as present, and before the artifact write so the
-        // rendered lane is the once-each form.
+        // Collapse covered unit zones after hoisting, before artifact writes.
         desubstitute_covered_units(&mut effective, &table);
-        // This node's OWN lane plan (PROP-054 ##COMPILE-ACTIVATION). Root and
-        // members take distinct host seats over the same parsed package epoch;
-        // no member reparses or reorders the installed world.
+        // Each node receives its own retained owner plan.
         boot_artifacts::write_boot_artifacts_traced(
             &node_dir,
             rel,
@@ -237,7 +198,7 @@ pub fn regenerate_boot_from_traced_prepared(
             &effective,
             spec_format,
             trace,
-            runtimes.node(rel)?.transform_plan().clone(),
+            runtimes.node(rel)?.compile_plans().clone(),
         )?;
         nodes_regenerated.push(rel.to_string());
     }
@@ -329,12 +290,7 @@ pub fn regenerate_boot_traced(
     regenerate_boot_from_traced(workspace, &resolution, spec_format, trace)
 }
 
-/// Verify the per-unit boot artifacts are current (PROP-038 §3) — the integrity
-/// half of `vibe check`, reconstructing the resolution from the materialised
-/// dependency tree. Returns the stale units: a package that statically links a
-/// child but whose on-disk fingerprint is missing or mismatched, i.e. one the
-/// dirty-subgraph should have regenerated. An empty result means the boot graph
-/// is consistent.
+/// Return package units whose durable boot fingerprints are stale.
 #[spec(
     implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#tests",
     r = 1
@@ -368,17 +324,7 @@ pub fn verify_boot_graph(workspace: &Workspace) -> Result<Vec<UnitId>, Workspace
     )
 }
 
-/// Discover a node's own authored boot files — every spec source in its
-/// live boot lane (`.md` or dialect `.xml`, PROP-045 ##LOADER-LAW), minus
-/// the generated `STATIC.md` / `INDEX.md`. The user-owned `00-core.md` /
-/// `90-user.md` are `Foundation` / `UserOverride` by name convention; any
-/// other authored file is mid-band (`None`).
-///
-/// One document, one form (PROP-045 ##TARGET-MIXED): `X.md` + `X.xml` in
-/// one boot dir is a split brain — an error naming both, never a guess.
-///
-/// `pub(crate)` so [`crate::publish`] can reuse it to regenerate a
-/// staged copy's boot artifacts for the published shape (PROP-009 §2.11).
+/// Discover authored node boot sources, rejecting split Markdown/XML forms.
 pub(crate) fn node_own_boot(
     node_dir: &Path,
     node_rel: &str,

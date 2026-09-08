@@ -44,9 +44,9 @@ use serde::Serialize;
 use specmark::spec;
 use vibe_core::{layout, manifest::SpecFormat};
 use vibe_spec::{
-    ArtifactCompileError, ArtifactInputType, ArtifactPlan, ArtifactTarget, EmittedArtifact,
-    FileResolver, FsSectionSource, SelfCoordinate, TransformPlan, compile_artifact,
-    compile_artifact_traced,
+    ArtifactCompileError, ArtifactInputType, ArtifactPlan, ArtifactTarget, CompilePlans,
+    EmittedArtifact, FileResolver, FsSectionSource, SelfCoordinate, TransformPlan,
+    compile_artifact, compile_artifact_traced,
 };
 
 use crate::boot::EffectiveBoot;
@@ -297,34 +297,9 @@ pub(crate) fn render_static_observed(
 ///
 /// The trace law of this seam (R3.4): no static entries means no scope AND no
 /// compiler, exactly as before; an acquisition present means the occurrence is
-/// taken **at the compile boundary** — after every fallible preparation step,
-/// immediately before the ONE compiler call — and that call runs through the
-/// resulting sink ([`compile_artifact_traced`]), its result supplying both the
-/// scope's terminal word and the artifact; no acquisition means the historical
-/// `compiler` path, exactly once. A compiler failure fails the scope and then
-/// returns the ORIGINAL error mapping unchanged; a later transaction failure
-/// may legitimately leave the scope `compiled` (the command owner finalises
-/// the run).
-///
-/// Acquiring here rather than in the caller is the point: an input that cannot
-/// be built and a plan the compiler refuses to accept both return before a
-/// scope exists, so no pre-compiler refusal can leave a pending occurrence for
-/// work that was never attempted.
-///
-/// The injected `compiler` is the seam the characterization tests use; it is
-/// consulted only on the unobserved, untraced path — the traced and
-/// observed paths are always the real built-in schedule, because that is
-/// the schedule a trace certifies and the one whose evidence the analyzer
-/// reports.
-///
-/// The `observer` is the R4.3 analyzer seam, threaded beside the trace
-/// acquisition exactly as T10C threaded the owner plan: `None` is every
-/// write path's historical behavior, `Some` hands the same compile's
-/// attribution evidence to one in-process observer and changes no byte
-/// of the result.
-// The observer is one argument past the lint's threshold, same shape as
-// the two wrappers above: the other seven are the emission inputs this
-// entry already took before R4.3.
+/// Acquires tracing only after fallible preparation and immediately before
+/// the compiler. The injected compiler is used only by characterization tests;
+/// observed/traced paths retain the real built-in schedule.
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn compile_static_artifact_with(
     boot: &EffectiveBoot,
@@ -333,6 +308,32 @@ pub(crate) fn compile_static_artifact_with(
     spec_format: SpecFormat,
     acquisition: Option<&ScopeAcquisition<'_>>,
     transforms: TransformPlan,
+    observer: Option<std::sync::Arc<dyn vibe_spec::CompileObserver>>,
+    compiler: impl FnOnce(
+        ArtifactPlan,
+        &FsSectionSource,
+    ) -> Result<EmittedArtifact, ArtifactCompileError>,
+) -> Result<Option<StaticCompile>, WorkspaceError> {
+    compile_static_artifact_with_plans(
+        boot,
+        workspace_root,
+        self_coord,
+        spec_format,
+        acquisition,
+        CompilePlans::transforms_only(transforms),
+        observer,
+        compiler,
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+fn compile_static_artifact_with_plans(
+    boot: &EffectiveBoot,
+    workspace_root: &Path,
+    self_coord: &SelfCoordinate,
+    spec_format: SpecFormat,
+    acquisition: Option<&ScopeAcquisition<'_>>,
+    plans: CompilePlans,
     observer: Option<std::sync::Arc<dyn vibe_spec::CompileObserver>>,
     compiler: impl FnOnce(
         ArtifactPlan,
@@ -349,19 +350,17 @@ pub(crate) fn compile_static_artifact_with(
     } else {
         ArtifactTarget::StaticMarkdown
     };
-    let plan = ArtifactPlan::static_lane(
-        target,
-        static_path(spec_format),
-        layout_paths::vibedeps(""),
-        inputs,
-    )
-    .map_err(|error| WorkspaceError::InlineCompile {
-        reason: error.to_string(),
-    })?
-    // The owner-scoped plan of the lane being written. An empty plan adds no
-    // pass, so this attachment is byte-inert for every owner that declares
-    // no compile-point extension — which is every owner in this repository.
-    .with_transforms(transforms);
+    let plan = plans.attach_to(
+        ArtifactPlan::static_lane(
+            target,
+            static_path(spec_format),
+            layout_paths::vibedeps(""),
+            inputs,
+        )
+        .map_err(|error| WorkspaceError::InlineCompile {
+            reason: error.to_string(),
+        })?,
+    );
     let source = FsSectionSource::new(FileResolver::new(workspace_root, self_coord.clone()));
     // THE COMPILE BOUNDARY. Every fallible preparation above has completed;
     // the next thing that happens is the compiler. Only now is the occurrence
@@ -469,23 +468,11 @@ pub fn write_boot_artifacts_with_spec_format(
         boot,
         spec_format,
         None,
-        TransformPlan::empty(),
+        CompilePlans::transforms_only(TransformPlan::empty()),
     )
 }
 
-/// The traced sibling: one borrowed run, carried through this node's static
-/// compile. `node_rel` is the node's canonical workspace-relative path (`.`)
-/// — the portable identity the trace records, never `node_dir`. A recorder
-/// absent, or a node with no static entries, compiles exactly as the wrapper
-/// above; a recorder present mints the base identity here and the occurrence
-/// is acquired at the compile boundary below, completing from the compiler's
-/// own result. The run is borrowed: this layer never opens or finishes it.
-///
-/// `transforms` is this NODE's own owner-scoped plan (R4 architecture §5.1:
-/// a node manifest activates its node lane), lowered by the caller that
-/// holds the durable world.
-// The owner plan is one argument past the lint's threshold; the other seven
-// are the emission inputs this entry already took before T10B.
+/// Traced node writer carrying the retained owner compile plans.
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn write_boot_artifacts_traced(
     node_dir: &Path,
@@ -495,7 +482,7 @@ pub(crate) fn write_boot_artifacts_traced(
     boot: &EffectiveBoot,
     spec_format: SpecFormat,
     trace: Option<&TraceRun>,
-    transforms: TransformPlan,
+    plans: CompilePlans,
 ) -> Result<WrittenArtifacts, WorkspaceError> {
     // A node with no static contributions declares no scope at all, and the
     // base identity is only minted when a recorder is present, so off mode
@@ -510,7 +497,7 @@ pub(crate) fn write_boot_artifacts_traced(
         boot,
         spec_format,
         acquisition.as_ref(),
-        transforms,
+        plans,
     )
 }
 
@@ -523,20 +510,20 @@ fn write_boot_artifacts_inner(
     boot: &EffectiveBoot,
     spec_format: SpecFormat,
     acquisition: Option<&ScopeAcquisition<'_>>,
-    transforms: TransformPlan,
+    plans: CompilePlans,
 ) -> Result<WrittenArtifacts, WorkspaceError> {
     // Compile every fallible semantic artifact before touching existing files.
     // INDEX rendering precedes the compiler and may refuse — which is exactly
     // why the trace occurrence is NOT acquired here: it is taken inside, at
     // the compile boundary, so a refusal on this line declares nothing.
     let index_text = render_index_with_spec_format(boot, None, spec_format)?;
-    let static_artifact = compile_static_artifact_with(
+    let static_artifact = compile_static_artifact_with_plans(
         boot,
         workspace_root,
         self_coord,
         spec_format,
         acquisition,
-        transforms,
+        plans,
         None,
         compile_artifact,
     )?

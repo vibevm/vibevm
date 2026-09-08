@@ -1,0 +1,238 @@
+//! Compile-plan attachment, identity, and compatibility proofs.
+
+use std::collections::{BTreeMap, BTreeSet};
+use std::fs;
+use std::path::{Path, PathBuf};
+use std::time::{Duration, SystemTime};
+
+use tempfile::TempDir;
+use vibe_core::manifest::{Manifest, SpecFormat};
+use vibe_core::{ContentHash, Group, PackageKind};
+
+use super::*;
+use crate::extension_world::{
+    ExtensionWorldEpoch, OwnerRuntimeId, OwnerRuntimeLowering, lower_owner_runtimes,
+};
+use crate::install::ResolvedDep;
+
+const MD_PASS: &str = "[[extension]]\nid='md-pass'\npoint='compile:pass'\n\
+handler={kind='builtin',name='emit-md'}\ncompiler_internals=true\n\
+pass={kind='backend',artifact='static-md'}\n";
+const XML_PASS: &str = "[[extension]]\nid='xml-pass'\npoint='compile:pass'\n\
+handler={kind='builtin',name='emit-xml'}\ncompiler_internals=true\n\
+pass={kind='backend',artifact='static-xml'}\n";
+const TRANSFORM: &str = "[[extension]]\nid='minify'\npoint='compile:emitted'\n\
+handler={kind='builtin',name='xml-minify'}\n";
+const ACTIVE_PASS: &str = "[[extension]]\nid='active'\npoint='compile:pass'\n\
+handler={kind='builtin',name='active-test'}\ncompiler_internals=true\n\
+pass={kind='transform',level='closure',after='qualify'}\n";
+
+#[test]
+fn root_member_and_unit_lower_once_with_filtered_safe_headers_and_freshness() {
+    let fixture = compile_plan_fixture();
+    let workspace = Workspace::load(fixture.path()).expect("workspace");
+    let resolution = vec![resolved(fixture.path(), "passes")];
+    let world = ExtensionWorldEpoch::from_resolution(fixture.path(), &resolution).expect("world");
+    let (lowered, events) = OwnerRuntimeLowering::observe(|| {
+        lower_owner_runtimes(
+            &workspace,
+            &world,
+            OwnerRuntimeLowering::new(".", BTreeMap::new()),
+        )
+        .expect("owner compile plans")
+    });
+    assert_eq!(events.len(), 3, "root, member and package unit lower once");
+    assert_eq!(events.iter().collect::<BTreeSet<_>>().len(), 3);
+    assert!(events.contains(&OwnerRuntimeId::Node { rel: ".".into() }));
+    assert!(events.contains(&OwnerRuntimeId::Node {
+        rel: "member".into()
+    }));
+    assert!(events.iter().any(|owner| {
+        matches!(owner, OwnerRuntimeId::Unit { provider } if provider.to_string() == "org.demo/passes")
+    }));
+
+    let root = lowered.node(".").expect("root runtime");
+    assert_eq!(root.compile_plans().passes().len(), 2);
+    let md = vibe_spec::compile_plan_header_for_test(root.compile_plans(), "static-md")
+        .expect("markdown pass header");
+    let xml = vibe_spec::compile_plan_header_for_test(root.compile_plans(), "static-xml")
+        .expect("XML pass header");
+    assert!(
+        md.starts_with("vibe:transforms vibe:passes sha256:"),
+        "{md}"
+    );
+    assert!(md.contains("root-%2Dhost"), "{md}");
+    assert!(!md.contains("xml-pass"), "{md}");
+    assert!(
+        md.contains("0:"),
+        "original effective order is retained: {md}"
+    );
+    assert!(md.contains(":intrinsic"), "{md}");
+    assert!(!md.contains("--") && !md.ends_with('-'), "{md}");
+    assert!(
+        xml.contains("xml-pass") && !xml.contains("md-pass"),
+        "{xml}"
+    );
+    assert_ne!(md, xml, "artifact filtering changes the pass digest/header");
+
+    let md_frames = plan_digest_frames_for(&lowered, SpecFormat::Markdown);
+    let xml_frames = plan_digest_frames_for(&lowered, SpecFormat::Xml);
+    assert_eq!(md_frames.len(), 1);
+    assert_eq!(xml_frames.len(), 1);
+    assert_ne!(
+        md_frames, xml_frames,
+        "freshness uses the filtered pass plan"
+    );
+    assert!(md_frames.values().all(|digest| digest.starts_with("pass:")));
+
+    let member = lowered.node("member").expect("member runtime");
+    assert!(member.compile_plans().passes().is_empty());
+    assert_eq!(
+        member.compile_plans().digest_hex_for_artifact("static-md"),
+        member.transform_plan().digest_hex()
+    );
+    let transform_header =
+        vibe_spec::compile_plan_header_for_test(member.compile_plans(), "static-md").unwrap();
+    assert!(transform_header.starts_with("vibe:transforms "));
+    assert!(!transform_header.contains("vibe:passes"));
+}
+
+#[test]
+fn empty_compile_plans_keep_bytes_and_dirty_skip_mtime_exact() {
+    let root = TempDir::new().expect("empty workspace");
+    write(
+        &root.path().join("vibe.toml"),
+        "[project]\nname='empty'\nversion='0.1.0'\n[boot]\ndefault_link='static'\n",
+    );
+    write(
+        &root
+            .path()
+            .join(vibe_core::layout::current_boot_dir())
+            .join("00-core.md"),
+        "# Empty compatibility lane\n",
+    );
+    let workspace = Workspace::load(root.path()).expect("empty workspace");
+    regenerate_boot_from(&workspace, &[]).expect("first empty generation");
+    let static_lane = root.path().join(vibe_core::layout::current_boot_index());
+    let before = fs::read(&static_lane).expect("empty-plan generated bytes");
+    assert!(!String::from_utf8_lossy(&before).contains("vibe:passes"));
+    let old = SystemTime::UNIX_EPOCH + Duration::from_secs(946_684_800);
+    let file = fs::OpenOptions::new()
+        .write(true)
+        .open(&static_lane)
+        .unwrap();
+    file.set_times(fs::FileTimes::new().set_modified(old))
+        .unwrap();
+    regenerate_boot_from(&workspace, &[]).expect("second empty generation");
+    assert_eq!(fs::read(&static_lane).unwrap(), before);
+    assert_eq!(fs::metadata(&static_lane).unwrap().modified().unwrap(), old);
+}
+
+#[test]
+fn active_pass_refuses_before_source_execution_or_publication() {
+    for format in [SpecFormat::Mixed, SpecFormat::Xml] {
+        public_active_pass_refusal(format);
+    }
+}
+
+fn public_active_pass_refusal(format: SpecFormat) {
+    let root = TempDir::new().expect("active-pass workspace");
+    let manifest = "[project]\nname='active-pass'\nversion='0.1.0'\n\
+        [requires.packages]\n'org.demo/content'={version='=1.0.0',link='static'}\n";
+    write(&root.path().join("vibe.toml"), manifest);
+    let content = slot(root.path(), "content");
+    write(
+        &content.join("vibe.toml"),
+        "[package]\ngroup='org.demo'\nname='content'\nkind='tool'\nversion='1.0.0'\n\
+         [boot_snippet]\nsource='boot/content.md'\nlink='static'\n",
+    );
+    write(&content.join("boot/content.md"), "# Content\n");
+    let resolution = vec![resolved(root.path(), "content")];
+    let workspace = Workspace::load(root.path()).expect("baseline workspace");
+    regenerate_public(&workspace, &resolution, format).expect("baseline publication");
+    let index = root.path().join(vibe_core::layout::current_boot_index());
+    let static_lane = root.path().join(if matches!(format, SpecFormat::Xml) {
+        vibe_core::layout::current_boot_static_xml()
+    } else {
+        vibe_core::layout::current_boot_static_md()
+    });
+    let before = [fs::read(&index).unwrap(), fs::read(&static_lane).unwrap()];
+
+    write(
+        &root.path().join("vibe.toml"),
+        &format!("{manifest}{ACTIVE_PASS}"),
+    );
+    let workspace = Workspace::load(root.path()).expect("active-pass workspace");
+    let error = regenerate_public(&workspace, &resolution, format).unwrap_err();
+    assert!(
+        error.to_string().contains("mandatory verify-each"),
+        "{error}"
+    );
+    assert_eq!(fs::read(&index).unwrap(), before[0]);
+    assert_eq!(fs::read(&static_lane).unwrap(), before[1]);
+}
+
+fn regenerate_public(
+    workspace: &Workspace,
+    resolution: &[ResolvedDep],
+    format: SpecFormat,
+) -> Result<Vec<String>, WorkspaceError> {
+    if matches!(format, SpecFormat::Mixed) {
+        regenerate_boot_from(workspace, resolution)
+    } else {
+        regenerate_boot_from_with_spec_format(workspace, resolution, format)
+    }
+}
+
+fn compile_plan_fixture() -> TempDir {
+    let root = TempDir::new().expect("compile-plan workspace");
+    write(
+        &root.path().join("vibe.toml"),
+        &format!(
+            "[project]\nname='root--host'\nversion='0.1.0'\n\
+             [workspace]\nmembers=['member']\n{MD_PASS}{XML_PASS}"
+        ),
+    );
+    write(
+        &root.path().join("member/vibe.toml"),
+        &format!("[project]\ngroup='org.demo'\nname='member'\nversion='0.1.0'\n{TRANSFORM}"),
+    );
+    let slot = slot(root.path(), "passes");
+    write(
+        &slot.join("vibe.toml"),
+        &format!(
+            "[package]\ngroup='org.demo'\nname='passes'\nkind='tool'\nversion='1.0.0'\n\
+             [boot_snippet]\nsource='boot/passes.md'\nlink='static'\n{MD_PASS}{XML_PASS}"
+        ),
+    );
+    write(&slot.join("boot/passes.md"), "# Pass unit\n");
+    root
+}
+
+fn resolved(root: &Path, name: &str) -> ResolvedDep {
+    let content_dir = slot(root, name);
+    ResolvedDep {
+        kind: PackageKind::Tool,
+        group: Group::parse("org.demo").unwrap(),
+        name: name.to_owned(),
+        version: "1.0.0".parse().unwrap(),
+        content_dir: content_dir.clone(),
+        source_hash: Some(ContentHash::parse("sha256:aa").unwrap()),
+        manifest: Manifest::read(content_dir.join("vibe.toml")).unwrap(),
+        requires: Vec::new(),
+        admitted_by: None,
+        via_override: None,
+        source_mutable: false,
+        in_place_changed: None,
+    }
+}
+
+fn slot(root: &Path, name: &str) -> PathBuf {
+    root.join(vibe_core::layout::current_vibedeps_root())
+        .join(format!("org.demo.{name}/1.0.0"))
+}
+
+fn write(path: &Path, bytes: &str) {
+    fs::create_dir_all(path.parent().unwrap()).unwrap();
+    fs::write(path, bytes).unwrap();
+}

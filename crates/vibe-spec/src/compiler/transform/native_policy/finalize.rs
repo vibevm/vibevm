@@ -4,7 +4,9 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#BOOTSTRAP-ORDER"
 
 use std::fmt;
 
-use crate::compiler::emit::framing::{CommentSyntax, static_header, static_header_with_pending};
+use crate::compiler::emit::framing::{
+    CommentSyntax, static_header, static_header_block, static_header_with_pending,
+};
 use crate::compiler::ir::{ArtifactFrame, EmittedArtifact, StaticCompileMode};
 
 use super::emitted_reconstruction;
@@ -108,7 +110,10 @@ pub fn finalize_compiler_pending_artifact(
     } else {
         return Err(error(FinalizeFault::UnsupportedArtifact));
     };
-    let expected = static_header(syntax, generated_path, Some(&full_active));
+    let (actual_active, pass_suffix) =
+        active_payload(artifact.bytes(), syntax, generated_path, &full_active)?;
+    let filtered_active = preserve_pass_suffix(filtered_active, &pass_suffix);
+    let expected = static_header(syntax, generated_path, Some(&actual_active));
     let replacement = static_header_with_pending(
         syntax,
         generated_path,
@@ -129,6 +134,41 @@ pub fn finalize_compiler_pending_artifact(
     bytes.extend_from_slice(body);
     let artifact = emitted_reconstruction::reframe(artifact, bytes);
     Ok(CompilerFinalizedPendingArtifact { artifact, pending })
+}
+
+fn preserve_pass_suffix(transforms: Option<String>, suffix: &str) -> Option<String> {
+    match (transforms, suffix.strip_prefix(' ')) {
+        (Some(transforms), _) => Some(format!("{transforms}{suffix}")),
+        (None, Some(passes)) if !passes.is_empty() => Some(passes.to_owned()),
+        (None, _) => None,
+    }
+}
+
+fn active_payload(
+    bytes: &[u8],
+    syntax: CommentSyntax,
+    generated_path: &str,
+    transforms: &str,
+) -> Result<(String, String), CompilerPendingFinalizeError> {
+    let fixed = static_header_block(syntax, generated_path);
+    let rest = bytes
+        .strip_prefix(fixed.as_bytes())
+        .ok_or_else(|| error(FinalizeFault::OriginalFraming))?;
+    let end = rest
+        .iter()
+        .position(|byte| *byte == b'\n')
+        .ok_or_else(|| error(FinalizeFault::OriginalFraming))?;
+    let line =
+        std::str::from_utf8(&rest[..end]).map_err(|_| error(FinalizeFault::OriginalFraming))?;
+    let payload = line
+        .strip_prefix("<!-- ")
+        .and_then(|value| value.strip_suffix(" -->"))
+        .ok_or_else(|| error(FinalizeFault::OriginalFraming))?;
+    let suffix = payload
+        .strip_prefix(transforms)
+        .filter(|suffix| suffix.is_empty() || suffix.starts_with(" vibe:passes sha256:"))
+        .ok_or_else(|| error(FinalizeFault::OriginalFraming))?;
+    Ok((payload.to_owned(), suffix.to_owned()))
 }
 
 fn validate_shape(pending: &CompilerPendingSet) -> Result<(), CompilerPendingFinalizeError> {
@@ -205,4 +245,32 @@ fn policy_error(source: CompilerNativePolicyError) -> CompilerPendingFinalizeErr
 
 fn error(fault: FinalizeFault) -> CompilerPendingFinalizeError {
     CompilerPendingFinalizeError { fault }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn pending_filter_preserves_the_exact_pass_suffix() {
+        let path = "vibevm/vibespecs/boot/STATIC.md";
+        let transforms = "vibe:transforms org.demo/tools#native";
+        let suffix = " vibe:passes sha256:abc 1:org.demo/tools#pass:after=emit";
+        let bytes = format!(
+            "{}<!-- {transforms}{suffix} -->\n\nbody",
+            static_header_block(CommentSyntax::Markdown, path)
+        );
+        let (active, observed) =
+            active_payload(bytes.as_bytes(), CommentSyntax::Markdown, path, transforms).unwrap();
+        assert_eq!(active, format!("{transforms}{suffix}"));
+        assert_eq!(observed, suffix);
+        assert_eq!(
+            preserve_pass_suffix(None, &observed).as_deref(),
+            Some(suffix.trim_start())
+        );
+        assert_eq!(
+            preserve_pass_suffix(Some("vibe:transforms retained".into()), &observed).unwrap(),
+            format!("vibe:transforms retained{suffix}")
+        );
+    }
 }

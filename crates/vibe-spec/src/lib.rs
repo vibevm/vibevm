@@ -50,7 +50,7 @@ pub use compiler::builtin::{
 #[cfg(feature = "test-support")]
 pub use compiler::builtin::{
     compile_artifact_missing_backend_test_vehicle, compile_artifact_opaque_test_vehicle,
-    compile_artifact_replacement_test_vehicle,
+    compile_artifact_replacement_test_vehicle, compile_plan_header_for_test,
 };
 pub use compiler::ir::{
     ArtifactContext, ArtifactInput, ArtifactInputType, ArtifactInputWitness, ArtifactPlan,
@@ -63,6 +63,8 @@ pub use compiler::ir::{
 // cross — the plan VALUE, its refusal, and nothing that can author either.
 // The seed, entry, provider, implementation and config values, and every
 // digest, stay inside the crate.
+pub use compiler::pass_tier::fault::CompilePlanLoweringError;
+pub use compiler::pass_tier::lowering::{CompilePlans, lower_effective_compile_rows};
 pub use compiler::transform::fault::TransformLoweringError;
 pub use compiler::transform::header::transforms_header_payload_excluding;
 pub use compiler::transform::native_finalize::{

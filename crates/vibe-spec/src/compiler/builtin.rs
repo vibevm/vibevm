@@ -30,6 +30,7 @@ use super::merge::MergePass;
 use super::observer::Observing;
 use super::pass::{Pass, PassName, PassSegmentError};
 use super::pass_tier::catalog::PassCatalogs;
+use super::pass_tier::plan::{PassPlacement, PassPlan};
 use super::pass_tier::schedule::{PassExecutionAuthority, PassSchedule};
 use super::pipeline::{CompilerPipeline, CompilerPipelineError};
 #[cfg(test)]
@@ -40,6 +41,7 @@ use super::transform::fault::TransformError;
 use super::transform::header as transform_header;
 use super::transform::native_manager::CompilerNativeInvoker;
 use super::transform::native_policy::session::NativePolicySession;
+use super::transform::plan::TransformPlan;
 use super::transform::registry::TransformRegistry;
 use super::transform::schedule::TransformSchedule;
 use super::worklist;
@@ -176,11 +178,7 @@ pub(crate) fn without_verify_each<T>(body: impl FnOnce() -> T) -> T {
     body()
 }
 
-/// The declared built-in schedule prefix currently used by production.
-///
-/// Keeping construction in one function makes the list executable rather than
-/// a registry beside a separate call path. R3.2 appends later built-ins here as
-/// each phase migrates.
+/// The declared built-in schedule prefix used by production.
 pub(crate) struct BuiltinSchedule<'invoke> {
     pipeline: CompilerPipeline<'invoke>,
     close_state: CloseState,
@@ -189,10 +187,6 @@ pub(crate) struct BuiltinSchedule<'invoke> {
 }
 
 /// Wrap one internal transform fault as the public opaque artifact error.
-/// The builtin cell owns this conversion (the transform cell names no
-/// builtin type, and the builtin cell names no transform construction), and
-/// it is the ONE conversion site: the attribution cell below reaches it
-/// through `super` rather than restating it.
 fn transform_public(inner: TransformError) -> ArtifactCompileError {
     ArtifactCompileError::Transform(TransformCompileError::new(inner))
 }
@@ -333,21 +327,14 @@ impl<'invoke> BuiltinSchedule<'invoke> {
         Self::append_emit(schedule, backend, plan, &None)
     }
 
-    /// Append the selected emit backend, and with it the artifact's ACTIVE
-    /// transforms header (R4 architecture §7.1).
-    ///
-    /// The header payload is derived here, from the plan the artifact was
-    /// compiled with, because this is the one place that holds both the
-    /// artifact plan and the emit pass. It is engine framing — never plugin
-    /// bytes — and an empty plan derives `None`, which is the exact
-    /// historical byte stream.
+    /// Append emit with the artifact's active compiler-plan header.
     fn append_emit(
         mut schedule: Self,
         backend: std::sync::Arc<dyn EmitBackend>,
         plan: &ArtifactPlan,
         observer: &Observing,
     ) -> Result<Self, ArtifactCompileError> {
-        let header = transform_header::transforms_header_payload(plan.transforms());
+        let header = active_header_payload(plan.transforms(), plan.passes());
         schedule
             .pipeline
             .push_builtin_artifact(EmitPass::observed(backend, header, observer.clone()))
@@ -431,6 +418,38 @@ impl<'invoke> BuiltinSchedule<'invoke> {
             },
         }
     }
+}
+
+pub(crate) fn active_header_payload(
+    transforms: &TransformPlan,
+    passes: &PassPlan,
+) -> Option<String> {
+    let transforms = transform_header::transforms_header_payload(transforms);
+    let Some(digest) = passes.digest_hex() else {
+        return transforms;
+    };
+    let mut payload =
+        transforms.unwrap_or_else(|| transform_header::TRANSFORMS_HEADER_PREFIX.to_owned());
+    payload.push(' ');
+    payload.push_str("vibe:passes sha256:");
+    payload.push_str(&digest);
+    for entry in passes.entries() {
+        let position = match entry.placement() {
+            PassPlacement::Before(anchor) => format!("before={anchor}"),
+            PassPlacement::After(anchor) => format!("after={anchor}"),
+            PassPlacement::Replace(anchor) => format!("replace={anchor}"),
+            PassPlacement::Intrinsic => "intrinsic".to_owned(),
+        };
+        let token = format!("{}:{}:{position}", entry.ordinal(), entry.key().as_str());
+        payload.push(' ');
+        payload.push_str(&vibe_specdoc::encode_generated_xml_comment(&token));
+    }
+    Some(payload)
+}
+
+#[cfg(feature = "test-support")]
+pub fn compile_plan_header_for_test(plans: &crate::CompilePlans, artifact: &str) -> Option<String> {
+    active_header_payload(plans.transforms(), &plans.passes().for_artifact(artifact))
 }
 
 impl BuiltinSchedule<'static> {

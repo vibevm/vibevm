@@ -12,7 +12,7 @@ use vibe_extension_registry::{
     DependencyProviderId, ExtensionRegistry, ExtensionRegistryRow, ExtensionWorld,
     MechanismRegistry, RegistryRowIndex, SyntheticPresetSource,
 };
-use vibe_spec::TransformPlan;
+use vibe_spec::{CompilePlans, TransformPlan, lower_effective_compile_rows};
 use vibe_wire::generated::lifecycle::e1::context::{Project, World, WorldPackage};
 
 use crate::{Workspace, WorkspaceError};
@@ -51,7 +51,7 @@ pub struct OwnerRuntime {
     registry: ExtensionRegistry,
     compile_order: Box<[RegistryRowIndex]>,
     native_candidates: Box<[RegistryRowIndex]>,
-    transform_plan: TransformPlan,
+    compile_plans: CompilePlans,
     mechanisms: MechanismRegistry,
     routes: MechanismRoutes,
 }
@@ -69,7 +69,12 @@ impl OwnerRuntime {
 
     #[must_use]
     pub const fn transform_plan(&self) -> &TransformPlan {
-        &self.transform_plan
+        self.compile_plans.transforms()
+    }
+
+    #[must_use]
+    pub const fn compile_plans(&self) -> &CompilePlans {
+        &self.compile_plans
     }
 
     #[must_use]
@@ -157,6 +162,10 @@ pub struct OwnerRuntimeLowering {
 }
 
 impl OwnerRuntimeLowering {
+    #[cfg(test)]
+    pub(crate) fn observe<T>(run: impl FnOnce() -> T) -> (T, Vec<OwnerRuntimeId>) {
+        observe_lowerings(run)
+    }
     #[must_use]
     pub fn new(
         selected_node: impl Into<String>,
@@ -469,7 +478,7 @@ fn lower_owner(
                 })
         })
         .collect::<Result<Vec<_>, _>>()?;
-    let transform_plan = TransformPlan::from_effective_rows(&compile_rows).map_err(|source| {
+    let compile_plans = lower_effective_compile_rows(&compile_rows).map_err(|source| {
         WorkspaceError::TransformPlan {
             owner: id.to_string(),
             source,
@@ -481,7 +490,7 @@ fn lower_owner(
         registry,
         compile_order: compile_order.into_boxed_slice(),
         native_candidates: native_candidates.into_boxed_slice(),
-        transform_plan,
+        compile_plans,
         mechanisms,
         routes,
     };

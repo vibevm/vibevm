@@ -220,17 +220,18 @@ fn compile_static_owner_managed_using<P: OwnerNativeCompileProvider>(
     } else {
         ArtifactTarget::StaticMarkdown
     };
-    let transforms = owner.runtime().transform_plan().clone();
-    let plan = ArtifactPlan::static_lane(
-        target,
-        static_path(spec_format),
-        layout_paths::vibedeps(""),
-        inputs,
-    )
-    .map_err(|error| WorkspaceError::InlineCompile {
-        reason: error.to_string(),
-    })?
-    .with_transforms(transforms.clone());
+    let compile_plans = owner.runtime().compile_plans().clone();
+    let plan = compile_plans.attach_to(
+        ArtifactPlan::static_lane(
+            target,
+            static_path(spec_format),
+            layout_paths::vibedeps(""),
+            inputs,
+        )
+        .map_err(|error| WorkspaceError::InlineCompile {
+            reason: error.to_string(),
+        })?,
+    );
     let owned_source;
     let source = match injected_source {
         Some(source) => source,
@@ -276,7 +277,7 @@ fn compile_static_owner_managed_using<P: OwnerNativeCompileProvider>(
             outcome,
             &binding,
             &owner_id,
-            &transforms,
+            compile_plans.transforms(),
             spec_format,
             deferred,
             finalizer,

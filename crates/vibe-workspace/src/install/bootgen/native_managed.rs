@@ -12,7 +12,7 @@ use crate::{Workspace, WorkspaceError, boot_artifacts};
 use super::hybrid_emit::{
     append_hoisted, emit_package_units, emit_package_units_bound, with_static_set,
 };
-use super::owner_plans::plan_digest_frames;
+use super::owner_plans::plan_digest_frames_for;
 use super::replay_prepare::{
     BootReplayCandidates, BootReplaySet, NodeReplayCandidate, node_generated_dependencies,
     seal_replay_set,
@@ -65,7 +65,7 @@ pub(crate) fn regenerate_boot_from_bound_native<P: OwnerNativeCompileProvider>(
             )
         })
         .collect();
-    let plan_digests = plan_digest_frames(epoch.lowered());
+    let plan_digests = plan_digest_frames_for(epoch.lowered(), spec_format);
     let fps = fingerprint::fingerprints(&table, &versions, &plan_digests);
     let pulls = hoist::soft_static_pulls(&table);
     let shared: HashSet<UnitId> = pulls
@@ -210,7 +210,7 @@ pub(crate) fn fingerprint_with_pending_for_test(
     fingerprint::fingerprints_with_pending(
         &table,
         &versions,
-        &plan_digest_frames(epoch.lowered()),
+        &plan_digest_frames_for(epoch.lowered(), SpecFormat::Mixed),
         &pending,
     )
     .remove(id)
