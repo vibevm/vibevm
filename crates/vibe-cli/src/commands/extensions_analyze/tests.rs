@@ -8,6 +8,8 @@ use std::path::Path;
 use std::sync::Arc;
 
 use tempfile::TempDir;
+use vibe_core::manifest::{LockedPackage, Lockfile, Materialization};
+use vibe_core::{ContentHash, Group, PackageKind, PackageName, SourceUrl};
 
 use super::{Collector, lower, run, verify_through_the_reader};
 use crate::cli::AgentModeArg;
@@ -54,6 +56,33 @@ fn fixture() -> TempDir {
         "vibevm/vibedeps/org.vibevm.lib/1.0.0/boot/10-lib.md",
         "# Lib\n\nDependency text.\n",
     );
+    let mut lock = Lockfile::empty("extensions-analyze-fixture", "2026-09-09T00:00:00Z");
+    lock.packages = vec![LockedPackage {
+        kind: PackageKind::Feat,
+        name: PackageName::parse("lib").expect("fixture package name"),
+        group: Group::parse("org.vibevm").expect("fixture package group"),
+        version: "1.0.0".parse().expect("fixture package version"),
+        registry: None,
+        source_url: SourceUrl::new("file:///fixture"),
+        source_ref: None,
+        resolved_commit: None,
+        content_hash: ContentHash::parse("sha256:aa").expect("fixture content hash"),
+        boot_snippet: Some("boot/10-lib.md".to_owned()),
+        files_written: Vec::new(),
+        dependencies: Vec::new(),
+        admitted_by: None,
+        via_override: None,
+        overridden: false,
+        source_kind: None,
+        via_redirect: None,
+        features: Vec::new(),
+        subskills_active: Vec::new(),
+        describes: None,
+        language: None,
+        materialization: Materialization::Copy,
+    }];
+    lock.write(root.join("vibe.lock"))
+        .expect("fixture lockfile");
     dir
 }
 
