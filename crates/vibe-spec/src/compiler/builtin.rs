@@ -213,28 +213,28 @@ impl<'invoke> BuiltinSchedule<'invoke> {
             .push_source_before_parse(&mut pipeline)
             .map_err(transform_public)?;
         pipeline
-            .push_document(ParsePass::new())
+            .push_builtin_document(ParsePass::new())
             .expect("the static built-in parse schedule is valid");
         transforms
             .push_document_after_parse(&mut pipeline)
             .map_err(transform_public)?;
         pipeline
-            .push_artifact(ClosePass::new(plan.clone(), close_state.clone()))
+            .push_builtin_artifact(ClosePass::new(plan.clone(), close_state.clone()))
             .expect("the static built-in close schedule is valid");
         pipeline
-            .push_artifact(MergePass::new())
+            .push_builtin_artifact(MergePass::new())
             .expect("the static built-in merge schedule is valid");
         pipeline
-            .push_artifact(EmbedPass::new())
+            .push_builtin_artifact(EmbedPass::new())
             .expect("the static built-in embed schedule is valid");
         pipeline
-            .push_artifact(QualifyPass::new())
+            .push_builtin_artifact(QualifyPass::new())
             .expect("the static built-in qualify schedule is valid");
         pipeline
-            .push_artifact(AbsorbPass::new())
+            .push_builtin_artifact(AbsorbPass::new())
             .expect("the static built-in absorb schedule is valid");
         pipeline
-            .push_artifact(LinkPass::new())
+            .push_builtin_artifact(LinkPass::new())
             .expect("the static built-in link schedule is valid");
         // The R3.3 test-only enabling seam: every built-in pass output crosses
         // the real verifier hook in unit tests. Production construction keeps
@@ -264,7 +264,7 @@ impl<'invoke> BuiltinSchedule<'invoke> {
         let mut schedule = Self::linked_with_invoker(plan, registry, observer, invoker, policy)?;
         schedule
             .pipeline
-            .push_artifact(AssemblePass::new())
+            .push_builtin_artifact(AssemblePass::new())
             .expect("the static built-in assemble schedule is valid");
         schedule
             .transforms
@@ -322,7 +322,7 @@ impl<'invoke> BuiltinSchedule<'invoke> {
         let header = transform_header::transforms_header_payload(plan.transforms());
         schedule
             .pipeline
-            .push_artifact(EmitPass::observed(backend, header, observer.clone()))
+            .push_builtin_artifact(EmitPass::observed(backend, header, observer.clone()))
             .expect("the selected emit backend continues the built-in schedule");
         schedule
             .transforms

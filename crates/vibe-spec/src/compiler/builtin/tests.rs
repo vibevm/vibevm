@@ -5,8 +5,9 @@ use specmark::verifies;
 use super::*;
 use crate::SpecAddress;
 use crate::compiler::ir::{DocumentAddress, SourceFormatId};
-use crate::compiler::pass::{IrPayload, PassSegmentError};
-use crate::compiler::pipeline::{CompilerPipelineError, ScheduleItem};
+use crate::compiler::pass::{IdentityPass, IrPayload, PassName, PassSegmentError};
+use crate::compiler::pipeline::{CompilerPipelineError, PipelineEdit, ScheduleItem};
+use crate::compiler::transform::plan::TransformStage;
 use crate::compiler::transform::registry_test_support::{identity_plan, identity_registry};
 
 fn source(format: &str, text: &str) -> SourceIr {
@@ -117,6 +118,48 @@ fn production_lane_declares_parse_gather_close_merge_embed_qualify_absorb_link_a
             && assemble.name.as_str() == ASSEMBLE_PASS_NAME
             && assemble.input == ClosureIr::SHAPE
             && assemble.output == LaneIr::SHAPE
+    ));
+}
+
+#[test]
+fn only_the_builtin_schedule_snapshot_supplies_placement_anchors() {
+    let mut builtins = BuiltinSchedule::assembled(
+        &plan(StaticCompileMode::Plain),
+        &TransformRegistry::builtins(),
+        &None,
+    )
+    .unwrap()
+    .pipeline;
+    builtins
+        .apply_builtin_edits(vec![PipelineEdit::after(
+            PassName::new(PARSE_PASS_NAME).unwrap(),
+            IdentityPass::<DocumentIr>::new(PassName::new("after-parse").unwrap()),
+        )])
+        .unwrap();
+
+    let carried = static_lane_plan().with_transforms(identity_plan(&[(
+        "org.demo/tools#document",
+        TransformStage::Document,
+    )]));
+    let mut transformed = BuiltinSchedule::assembled(&carried, &identity_registry(), &None)
+        .unwrap()
+        .pipeline;
+    let plugin = transformed
+        .schedule()
+        .into_iter()
+        .find_map(|item| match item {
+            ScheduleItem::Pass(pass) if pass.name.as_str().starts_with("transform:document:") => {
+                Some(pass.name)
+            }
+            _ => None,
+        })
+        .unwrap();
+    assert!(matches!(
+        transformed.apply_builtin_edits(vec![PipelineEdit::after(
+            plugin.clone(),
+            IdentityPass::<DocumentIr>::new(PassName::new("after-plugin").unwrap()),
+        )]),
+        Err(CompilerPipelineError::AnchorNotBuiltin { anchor }) if anchor == plugin
     ));
 }
 

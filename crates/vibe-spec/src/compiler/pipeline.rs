@@ -17,12 +17,62 @@ use super::pass::{
 use super::trace::CompileTraceSink;
 use super::verify::IrVerifier;
 
+mod edit;
+#[cfg(test)]
+pub(crate) use edit::PipelineEdit;
+#[cfg(test)]
+mod edit_tests;
+
 const SOURCE_DOCUMENT: IrShape = IrShape::new(IrLevel::Source, IrCardinality::Document);
 const DOCUMENT_DOCUMENT: IrShape = IrShape::new(IrLevel::Document, IrCardinality::Document);
 const DOCUMENT_ARTIFACT: IrShape = IrShape::new(IrLevel::Document, IrCardinality::Artifact);
 const CLOSURE_ARTIFACT: IrShape = IrShape::new(IrLevel::Closure, IrCardinality::Artifact);
 const LANE_ARTIFACT: IrShape = IrShape::new(IrLevel::Lane, IrCardinality::Artifact);
 const EMITTED_ARTIFACT: IrShape = IrShape::new(IrLevel::Emitted, IrCardinality::Artifact);
+
+#[derive(Clone, Copy)]
+pub(super) struct SegmentEndpoints {
+    first_boundary: &'static str,
+    first: IrShape,
+    last_boundary: &'static str,
+    last: IrShape,
+}
+
+pub(super) const DOCUMENT_ENDPOINTS: SegmentEndpoints = SegmentEndpoints {
+    first_boundary: "document segment input",
+    first: SOURCE_DOCUMENT,
+    last_boundary: "document segment output",
+    last: DOCUMENT_DOCUMENT,
+};
+
+pub(super) const ARTIFACT_ENDPOINTS: SegmentEndpoints = SegmentEndpoints {
+    first_boundary: "artifact segment input",
+    first: DOCUMENT_ARTIFACT,
+    last_boundary: "artifact segment output",
+    last: EMITTED_ARTIFACT,
+};
+
+pub(super) fn preserved_segment_endpoints(
+    segment: &'static str,
+    passes: &[PassDescriptor],
+) -> Option<SegmentEndpoints> {
+    let first = passes.first()?.input;
+    let last = passes.last()?.output;
+    Some(SegmentEndpoints {
+        first_boundary: match segment {
+            "document" => "document segment input",
+            "artifact" => "artifact segment input",
+            _ => "compiler segment input",
+        },
+        first,
+        last_boundary: match segment {
+            "document" => "document segment output",
+            "artifact" => "artifact segment output",
+            _ => "compiler segment output",
+        },
+        last,
+    })
+}
 
 /// The typed cardinality boundary between per-document and per-artifact work.
 ///
@@ -68,6 +118,8 @@ pub(crate) struct CompilerPipeline<'pass> {
     gather: GatherDocuments,
     artifact: PassSegment<'pass>,
     pass_names: BTreeSet<PassName>,
+    builtin_names: BTreeSet<PassName>,
+    edits_applied: bool,
     verifier: Option<IrVerifier>,
 }
 
@@ -93,6 +145,32 @@ impl<'pass> CompilerPipeline<'pass> {
         self.ensure_name_free(&name)?;
         self.artifact.push(pass)?;
         self.pass_names.insert(name);
+        Ok(())
+    }
+
+    pub(crate) fn push_builtin_document<P: Pass + 'pass>(
+        &mut self,
+        pass: P,
+    ) -> Result<(), CompilerPipelineError> {
+        if self.edits_applied {
+            return Err(CompilerPipelineError::EditsAlreadyApplied);
+        }
+        let name = pass.name().clone();
+        self.push_document(pass)?;
+        self.builtin_names.insert(name);
+        Ok(())
+    }
+
+    pub(crate) fn push_builtin_artifact<P: Pass + 'pass>(
+        &mut self,
+        pass: P,
+    ) -> Result<(), CompilerPipelineError> {
+        if self.edits_applied {
+            return Err(CompilerPipelineError::EditsAlreadyApplied);
+        }
+        let name = pass.name().clone();
+        self.push_artifact(pass)?;
+        self.builtin_names.insert(name);
         Ok(())
     }
 
@@ -375,27 +453,17 @@ impl<'pass> CompilerPipeline<'pass> {
 
     fn validate_boundaries(&self) -> Result<(), CompilerPipelineError> {
         self.validate_document_boundaries()?;
-        self.expect_boundary(
-            "artifact segment input",
-            DOCUMENT_ARTIFACT,
+        validate_segment_endpoints(
+            ARTIFACT_ENDPOINTS,
             self.artifact.first_input(),
-        )?;
-        self.expect_boundary(
-            "artifact segment output",
-            EMITTED_ARTIFACT,
             self.artifact.last_output(),
         )
     }
 
     fn validate_document_boundaries(&self) -> Result<(), CompilerPipelineError> {
-        self.expect_boundary(
-            "document segment input",
-            SOURCE_DOCUMENT,
+        validate_segment_endpoints(
+            DOCUMENT_ENDPOINTS,
             self.document.first_input(),
-        )?;
-        self.expect_boundary(
-            "document segment output",
-            DOCUMENT_DOCUMENT,
             self.document.last_output(),
         )
     }
@@ -418,9 +486,53 @@ impl<'pass> CompilerPipeline<'pass> {
     }
 }
 
+pub(super) fn validate_segment_endpoints(
+    endpoints: SegmentEndpoints,
+    first: Option<IrShape>,
+    last: Option<IrShape>,
+) -> Result<(), CompilerPipelineError> {
+    validate_boundary(endpoints.first_boundary, endpoints.first, first)?;
+    validate_boundary(endpoints.last_boundary, endpoints.last, last)
+}
+
+fn validate_boundary(
+    boundary: &'static str,
+    expected: IrShape,
+    actual: Option<IrShape>,
+) -> Result<(), CompilerPipelineError> {
+    if actual == Some(expected) {
+        Ok(())
+    } else {
+        Err(CompilerPipelineError::ScheduleBoundary {
+            boundary,
+            expected,
+            actual,
+        })
+    }
+}
+
 /// Why the declared schedule could not be built or executed.
 #[derive(Debug, thiserror::Error)]
 pub(crate) enum CompilerPipelineError {
+    #[error(
+        "compiler schedule edits were already applied; one immutable builtin snapshot accepts one edit batch"
+    )]
+    EditsAlreadyApplied,
+    #[error("compiler pass placement anchor `{anchor}` is not an immutable builtin pass")]
+    AnchorNotBuiltin { anchor: PassName },
+    #[error("compiler builtin pass `{anchor}` has more than one replacement")]
+    DuplicateReplacement { anchor: PassName },
+    #[error(
+        "replacement `{replacement}` for builtin `{anchor}` must preserve its exact {expected_input:?} -> {expected_output:?} shape, got {actual_input:?} -> {actual_output:?}"
+    )]
+    ReplacementShape {
+        anchor: PassName,
+        replacement: PassName,
+        expected_input: IrShape,
+        expected_output: IrShape,
+        actual_input: IrShape,
+        actual_output: IrShape,
+    },
     #[error("compiler schedule contains duplicate pass name `{pass}`")]
     DuplicateName { pass: PassName },
     #[error(

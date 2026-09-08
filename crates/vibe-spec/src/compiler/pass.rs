@@ -147,6 +147,10 @@ pub(crate) trait DynPass: Send + Sync {
 
 struct ErasedPass<P>(P);
 
+pub(super) fn erase_pass<'pass, P: Pass + 'pass>(pass: P) -> Box<dyn DynPass + 'pass> {
+    Box::new(ErasedPass(pass))
+}
+
 impl<P: Pass> DynPass for ErasedPass<P> {
     fn descriptor(&self) -> PassDescriptor {
         PassDescriptor {
@@ -207,6 +211,20 @@ impl<'pass> PassSegment<'pass> {
         }
         self.passes.push(pass);
         Ok(())
+    }
+
+    pub(super) fn from_passes(
+        passes: Vec<Box<dyn DynPass + 'pass>>,
+    ) -> Result<Self, PassSegmentError> {
+        let mut segment = Self::default();
+        for pass in passes {
+            segment.push_dyn(pass)?;
+        }
+        Ok(segment)
+    }
+
+    pub(super) fn into_passes(self) -> Vec<Box<dyn DynPass + 'pass>> {
+        self.passes
     }
 
     /// Test-only route past the typed pass surface, so the erased manager's
