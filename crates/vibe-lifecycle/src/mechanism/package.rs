@@ -35,7 +35,9 @@ use vibe_safefs::Project;
 
 mod error;
 mod inputs;
+mod native;
 pub(crate) mod protocol;
+mod record;
 pub(crate) mod static_file;
 
 pub use error::PackageError;
@@ -45,9 +47,6 @@ use super::client_projection::client::ProjectionClient;
 use super::contain::{forward_slashed, relative_to};
 use super::order::{GraphNode, OrderFault, Unresolved, dag_order};
 use super::plugin::AgentPluginProvider;
-use super::record::{
-    RecordFreshness, RecordInputs, build_record, config_digest, sanitize, write_record,
-};
 use super::skill::StaticSkillProvider;
 use super::zip::WindowsZipProvider;
 use super::{
@@ -58,6 +57,7 @@ use super::{
 };
 use inputs::resolve_inputs;
 use protocol::{PackagePlan, StagedArtifact};
+use record::record_all_builtin;
 use static_file::StaticFileProvider;
 
 /// Everything one package-phase execution needs, and nothing more.
@@ -205,12 +205,26 @@ pub struct PackageOutcome {
 pub fn execute_package_targets(
     execution: &PackageExecution<'_>,
 ) -> Result<Vec<PackageOutcome>, PackageError> {
+    execute_targets(execution, None)
+}
+
+pub(crate) fn execute_prepared_package_targets(
+    execution: &PackageExecution<'_>,
+    prepared: &crate::native::PreparedNativeMechanisms,
+) -> Result<Vec<PackageOutcome>, PackageError> {
+    execute_targets(execution, Some(prepared))
+}
+
+fn execute_targets(
+    execution: &PackageExecution<'_>,
+    prepared: Option<&crate::native::PreparedNativeMechanisms>,
+) -> Result<Vec<PackageOutcome>, PackageError> {
     let mut outcomes = Vec::with_capacity(execution.targets.len());
     for index in order(execution.targets)? {
         let Some(target) = execution.targets.get(index) else {
             continue;
         };
-        outcomes.push(execute_one(execution, target)?);
+        outcomes.push(execute_one(execution, target, prepared)?);
     }
     Ok(outcomes)
 }
@@ -219,6 +233,7 @@ pub fn execute_package_targets(
 fn execute_one(
     execution: &PackageExecution<'_>,
     target: &ArtifactPackageTarget,
+    prepared: Option<&crate::native::PreparedNativeMechanisms>,
 ) -> Result<PackageOutcome, PackageError> {
     let selection = resolve_mechanism(
         execution.registry,
@@ -262,6 +277,52 @@ fn execute_one(
                 name: name.clone(),
             });
         }
+        ExtensionHandler::Native { .. } if prepared.is_some() => {
+            let Some(prepared) = prepared else {
+                unreachable!("match guard proved prepared carriage")
+            };
+            let (entry, binding) = prepared
+                .binding_for(
+                    vibe_core::manifest::MechanismRole::Package,
+                    &target.id,
+                    &target.mechanism,
+                )
+                .map_err(|(binding_pin, reason)| PackageError::NativeTransport {
+                    target: target.id.clone(),
+                    pin: binding_pin.to_owned(),
+                    operation: "admit",
+                    reason: super::error::preview(reason),
+                })?
+                .ok_or_else(|| PackageError::NativeTransport {
+                    target: target.id.clone(),
+                    pin: pin.clone(),
+                    operation: "admit",
+                    reason: "selected native provider has no prepared Package-role binding"
+                        .to_owned(),
+                })?;
+            if binding.pin != pin
+                || binding.descriptor_id != row.declaration().id
+                || binding.protocol != row.protocol()
+                || binding.protocol != 1
+            {
+                return Err(PackageError::NativeTransport {
+                    target: target.id.clone(),
+                    pin,
+                    operation: "admit",
+                    reason: "prepared binding differs from selected pin, descriptor, or protocol"
+                        .to_owned(),
+                });
+            }
+            let resolved = resolve_inputs(execution.project_root, target)?;
+            let request = PackageTargetRequest {
+                target,
+                project_root: execution.project_root,
+                package_root: execution.package_root,
+                inputs: &resolved,
+            };
+            let produced = native::execute(execution, &request, entry, binding)?;
+            return Ok(native_outcome(target, &selection, binding, produced));
+        }
         handler => {
             return Err(PackageError::TransportNotLanded {
                 key,
@@ -283,7 +344,7 @@ fn execute_one(
         prepare_output_dir(&request)?;
     }
     let staged = provider.apply(&request, &plan)?;
-    let produced = record_all(
+    let produced = record_all_builtin(
         execution,
         &request,
         &provider,
@@ -306,7 +367,7 @@ fn execute_one(
 /// The builtin package-role adapters, behind one dispatch.
 ///
 /// The builtin set is closed, so this exhaustive enum is its dispatch map.
-enum Builtin {
+pub(super) enum Builtin {
     StaticFile(StaticFileProvider),
     StaticSkill(StaticSkillProvider),
     AgentPlugin(AgentPluginProvider),
@@ -397,7 +458,7 @@ impl PackageProvider for Builtin {
 /// produced, and the record would be a true statement about a wrong thing.
 /// A link occupying the path is refused rather than followed — removing
 /// through one would delete somebody else's tree.
-fn prepare_output_dir(request: &PackageTargetRequest<'_>) -> Result<(), PackageError> {
+pub(super) fn prepare_output_dir(request: &PackageTargetRequest<'_>) -> Result<(), PackageError> {
     let refuse = |reason: String| PackageError::OutputRoot {
         target: request.target.id.clone(),
         path: request.output_dir_relative(),
@@ -413,97 +474,6 @@ fn prepare_output_dir(request: &PackageTargetRequest<'_>) -> Result<(), PackageE
 
 /// Verify, record and publish every distributable one target produced.
 #[allow(clippy::too_many_arguments)]
-fn record_all(
-    execution: &PackageExecution<'_>,
-    request: &PackageTargetRequest<'_>,
-    provider: &Builtin,
-    plan: &PackagePlan,
-    inputs_digest: &str,
-    counted: usize,
-    staged: &[StagedArtifact],
-    pin: &str,
-) -> Result<Vec<PackagedArtifact>, PackageError> {
-    let descriptor = provider.descriptor();
-    let config_fingerprint = config_digest(
-        &request.target.mechanism,
-        pin,
-        std::slice::from_ref(&plan.summary),
-        &plan.inputs,
-    );
-    let mut produced = Vec::with_capacity(staged.len());
-    for artifact in staged {
-        let verified = provider.verify(request, artifact)?;
-        // The input ORIGINS are named, not merely counted: §6.0.2's whole
-        // point is that a consumed artifact came from the engine's own
-        // record rather than a guessed path, and evidence that cannot say
-        // which happened cannot corroborate it.
-        let evidence = sanitize(&format!(
-            "{}; {}; engine-fresh over {counted} declared input(s) [{}]; {} file(s) covering {} \
-             byte(s) at {}",
-            descriptor.posture(),
-            plan.summary,
-            origins(request),
-            verified.files,
-            verified.bytes,
-            verified.path_relative,
-        ));
-        // Engine-fresh, and the record says so by PRESENCE: §4.1 admits
-        // it "only when the complete input set is closed and hashable",
-        // and every engine-fresh package provider's input set is exactly
-        // that (§§6.1–6.3, §7.0.8). `toolchain` is absent because no toolchain
-        // took part — the transformation is this engine's own.
-        let record = build_record(&RecordInputs {
-            target: &request.target.id,
-            mechanism: &request.target.mechanism,
-            provider_key: pin,
-            provider_version: None,
-            provider_hash: None,
-            output_id: &verified.output_id,
-            kind: artifact.kind,
-            shape: artifact.shape.clone(),
-            digest: &verified.digest,
-            path_absolute: &verified.path_absolute,
-            path_relative: &verified.path_relative,
-            freshness: RecordFreshness {
-                inputs: Some(inputs_digest),
-                config: Some(&config_fingerprint),
-                toolchain: None,
-            },
-            platform: None,
-            media_type: artifact.media_type.as_deref(),
-            created_at: execution.created_at,
-            evidence,
-        })?;
-        let path = write_record(execution.project_root, &record)?;
-        produced.push(PackagedArtifact {
-            id: verified.output_id,
-            path_absolute: verified.path_absolute,
-            path_relative: verified.path_relative,
-            digest: verified.digest,
-            bytes: verified.bytes,
-            files: verified.files,
-            record: path,
-        });
-    }
-    Ok(produced)
-}
-
-/// How many declared inputs came from a record and how many from the
-/// workspace — the evidence's own witness for §6.0.2's law.
-fn origins(request: &PackageTargetRequest<'_>) -> String {
-    let recorded = request
-        .inputs
-        .iter()
-        .filter(|input| input.origin.recorded_kind().is_some())
-        .count();
-    let workspace = request.inputs.len() - recorded;
-    format!(
-        "{}={recorded} {}={workspace}",
-        protocol::InputOrigin::RECORD_SPELLING,
-        protocol::InputOrigin::WORKSPACE_SPELLING,
-    )
-}
-
 /// The displaced builtin default, when a replacement really replaced one.
 fn displaced(selection: &MechanismSelection<'_>) -> Option<String> {
     match selection.via() {
@@ -511,6 +481,22 @@ fn displaced(selection: &MechanismSelection<'_>) -> Option<String> {
         SelectionStep::TargetPin | SelectionStep::HostRoute => selection
             .displaced_default()
             .map(|row| row.pin().to_string()),
+    }
+}
+
+fn native_outcome(
+    target: &ArtifactPackageTarget,
+    selection: &MechanismSelection<'_>,
+    binding: &crate::native::NativeMechanismBinding,
+    produced: Vec<PackagedArtifact>,
+) -> PackageOutcome {
+    PackageOutcome {
+        target: target.id.clone(),
+        mechanism: target.mechanism.to_string(),
+        provider: binding.pin.clone(),
+        via: selection.via().to_string(),
+        displaced_default: displaced(selection),
+        produced,
     }
 }
 
@@ -591,3 +577,7 @@ mod e2e_tests;
 #[cfg(test)]
 #[path = "package/chain_tests.rs"]
 mod chain_tests;
+
+#[cfg(test)]
+#[path = "package/native_tests.rs"]
+mod native_tests;

@@ -68,6 +68,32 @@ pub enum PackageError {
         kind: String,
     },
 
+    /// A prepared native package provider refused one typed operation.
+    #[error(
+        "[[artifacts.package]] `{target}` native provider `{pin}` failed during `{operation}`: {reason} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE; fix: repair the \
+         selected provider or its exact prepared binding; native failure never falls back to a builtin)"
+    )]
+    NativeTransport {
+        target: String,
+        pin: String,
+        operation: &'static str,
+        reason: String,
+    },
+
+    /// Independent engine verification disagreed with the provider claim.
+    #[error(
+        "[[artifacts.package]] `{target}` native provider `{pin}` output `{output}` at `{path}` failed independent verification: {reason} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#ARTIFACT-REGISTRY; fix: make the provider's staged bytes and verify claim agree exactly)"
+    )]
+    NativeOutput {
+        target: String,
+        pin: String,
+        output: String,
+        path: String,
+        reason: String,
+    },
+
     /// Selection landed on an engine-owned row this package phase does not
     /// implement. Reachable only if the builtin table grows a package-role
     /// row before its adapter exists.

@@ -10,6 +10,7 @@ mod compiler;
 mod compiler_facts;
 mod error;
 mod mechanism;
+mod package_execution;
 mod path;
 mod platform;
 mod projection;

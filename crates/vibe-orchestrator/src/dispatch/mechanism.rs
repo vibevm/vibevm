@@ -17,7 +17,7 @@ use vibe_core::manifest::{
 use vibe_lifecycle::native::{NativeBuildExecution, NativePlatform};
 use vibe_lifecycle::{
     BuildExecution, ClientExecutables, DeployExecution, DeploySelection, MechanismRegistry,
-    PackageExecution, Phase, deploy_state_home, execute_package_targets,
+    PackageExecution, Phase, deploy_state_home,
 };
 
 use crate::RitualPlan;
@@ -346,15 +346,16 @@ impl<'targets> Fences<'targets> {
                 .is_none_or(|when| when.applies_to(self.targets.target_os))),
             "internal: package fence received a target inactive on the injected host OS"
         );
-        execute_package_targets(&PackageExecution {
-            project_root: self.targets.project_root,
-            targets: self.targets.package,
-            registry: self.targets.registry,
-            routes: self.targets.routes,
-            package_root: PackageExecution::default_package_root(),
-            created_at: self.targets.created_at,
-        })
-        .context("executing the declared [[artifacts.package]] targets")?;
+        self.prepared_native
+            .execute_package_targets(&PackageExecution {
+                project_root: self.targets.project_root,
+                targets: self.targets.package,
+                registry: self.targets.registry,
+                routes: self.targets.routes,
+                package_root: PackageExecution::default_package_root(),
+                created_at: self.targets.created_at,
+            })
+            .context("executing the declared [[artifacts.package]] targets")?;
         Ok(())
     }
 

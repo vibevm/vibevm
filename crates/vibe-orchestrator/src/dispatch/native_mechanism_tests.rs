@@ -172,6 +172,7 @@ fn fence_prepares_mechanisms_before_replay_and_authored_targets() {
         .find(".execute_build_targets(&BuildExecution")
         .unwrap();
     assert!(prepare < replay && replay < authored);
+    assert!(source.contains(".execute_package_targets(&PackageExecution"));
 
     let phase = include_str!("../phase.rs");
     let projection = phase
