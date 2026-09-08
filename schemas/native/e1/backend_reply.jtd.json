@@ -1,0 +1,35 @@
+{
+  "metadata": {
+    "description": "ABI-1 compiler-backend reply. The strict host reader accepts only bounded backend bytes or one bounded failure; compiler IR identity remains manager-owned.",
+    "x-diagnostic-cap-bytes": 8192,
+    "x-decoded-cap-bytes": 16777216,
+    "x-reply-cap-bytes": 25165824,
+    "x-relational-laws": [
+      "envelope: envelope is exactly ABI epoch 1",
+      "backend-bytes: ok bytes_b64 is canonical padded standard base64 and decodes within the backend byte cap",
+      "reply-cap: the raw reply is bounded before JSON decoding and decoded-byte allocation",
+      "message: optional ok diagnostics are bounded and control-free; fail diagnostics are additionally nonblank"
+    ],
+    "rustOptions": {
+      "package": "vibe_wire::native::e1::backend_reply"
+    }
+  },
+  "discriminator": "status",
+  "mapping": {
+    "ok": {
+      "properties": {
+        "envelope": { "type": "uint32" },
+        "bytes_b64": { "type": "string" }
+      },
+      "optionalProperties": {
+        "message": { "type": "string", "metadata": { "x-default": null } }
+      }
+    },
+    "fail": {
+      "properties": {
+        "envelope": { "type": "uint32" },
+        "message": { "type": "string" }
+      }
+    }
+  }
+}

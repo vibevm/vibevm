@@ -211,6 +211,14 @@ foreign_parsers = "none"
 corpus = "formats/corpora/native/e1"
 sunset = "none"
 
+[format.native-backend-reply]
+epoch = 1
+schema = "schemas/native/e1/backend_reply.jtd.json"
+recoverable = true
+foreign_parsers = "none"
+corpus = "formats/corpora/native/e1"
+sunset = "none"
+
 # Package-supplied deploy mechanisms reuse the native ABI-1 transport. The
 # package-authored manifest and host-authored request are additive foreign-read
 # documents; the host-read reply is closed and strict.

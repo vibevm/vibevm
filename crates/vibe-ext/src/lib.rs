@@ -1,14 +1,14 @@
 #![deny(unsafe_code)]
 //! Safe author surface for VibeVM native extension ABI 1.
 //!
-//! Authors implement either a lifecycle `fn(Context) -> Reply` with
-//! [`vibe_extension!`] or a compiler `fn(CompileRequest) -> CompileReply` with
-//! [`vibe_compile_extension!`], or a deploy mechanism provider with
+//! Authors implement lifecycle, compiler-transform, compiler-backend, or
+//! deploy-mechanism handlers through [`vibe_extension!`],
+//! [`vibe_compile_extension!`], [`vibe_backend_extension!`], or
 //! [`vibe_mechanism_provider!`]. The generated C boundary owns JSON conversion,
-//! panic containment, and the exact response allocation/free pairing. Each
-//! cdylib invokes exactly one family macro because all families deliberately
-//! export the same four ABI-1 symbols.
+//! panic containment, and exact response allocation/free pairing. Each cdylib
+//! invokes one macro because every family exports the same four ABI-1 symbols.
 
+pub use vibe_wire::behaviour::native_backend::BackendReplyError as BackendAuthorError;
 pub use vibe_wire::generated::native::e1::compile_reply::{
     CompileReply, CompileReplyFail, CompileReplyOk, CompileReplySkip,
 };
@@ -35,6 +35,8 @@ pub use vibe_wire::generated::native::e1::{
 
 #[doc(hidden)]
 pub use serde_json as __serde_json;
+#[doc(hidden)]
+pub use vibe_wire::behaviour::native_backend as __native_backend;
 #[doc(hidden)]
 pub use vibe_wire::behaviour::native_compile as __native_compile;
 #[doc(hidden)]
@@ -219,6 +221,67 @@ macro_rules! vibe_compile_extension {
 
         $crate::__vibe_ext_emit_abi!(
             panic_message = "vibe_compile_extension! requires panic = \"unwind\"; remove panic = \"abort\" from the extension's active Cargo profile",
+        );
+    };
+}
+
+/// A compiler backend's bytes-only reply, constructible only through bounded
+/// SDK constructors. It cannot carry manager-owned emitted IR or provenance.
+pub struct BackendResponse(vibe_wire::generated::native::e1::backend_reply::BackendReply);
+
+impl BackendResponse {
+    pub fn ok(bytes: Vec<u8>) -> Result<Self, BackendAuthorError> {
+        Self::ok_with_message(bytes, None)
+    }
+
+    pub fn ok_with_message(
+        bytes: Vec<u8>,
+        message: Option<String>,
+    ) -> Result<Self, BackendAuthorError> {
+        vibe_wire::behaviour::native_backend::ok_reply(&bytes, message).map(Self)
+    }
+
+    pub fn fail(message: impl Into<String>) -> Result<Self, BackendAuthorError> {
+        vibe_wire::behaviour::native_backend::fail_reply(message.into()).map(Self)
+    }
+
+    #[doc(hidden)]
+    pub fn __into_wire(self) -> vibe_wire::generated::native::e1::backend_reply::BackendReply {
+        self.0
+    }
+}
+
+/// Export one compiler backend through the existing four-symbol compiler ABI.
+#[macro_export]
+macro_rules! vibe_backend_extension {
+    (manifest = $manifest:expr, handler = $handler:path $(,)?) => {
+        #[doc(hidden)]
+        fn __vibe_ext_manifest_value() -> $crate::Manifest {
+            $manifest
+        }
+
+        #[doc(hidden)]
+        fn __vibe_ext_handle(request: $crate::CompileRequest) -> $crate::BackendResponse {
+            $handler(request)
+        }
+
+        #[doc(hidden)]
+        fn __vibe_ext_dispatch(request: &[u8]) -> Option<Vec<u8>> {
+            let request: $crate::CompileRequest = $crate::__serde_json::from_slice(request).ok()?;
+            $crate::__native_compile::validate_request(&request).ok()?;
+            if request.point != "compile:pass"
+                || !matches!(&request.payload, $crate::Ir::LaneArtifact(_))
+            {
+                return None;
+            }
+            let reply = __vibe_ext_handle(request).__into_wire();
+            $crate::__native_backend::validate_reply(&reply).ok()?;
+            let encoded = $crate::__serde_json::to_vec(&reply).ok()?;
+            (encoded.len() <= $crate::__native_backend::REPLY_CAP_BYTES).then_some(encoded)
+        }
+
+        $crate::__vibe_ext_emit_abi!(
+            panic_message = "vibe_backend_extension! requires panic = \"unwind\"; remove panic = \"abort\" from the extension's active Cargo profile",
         );
     };
 }
