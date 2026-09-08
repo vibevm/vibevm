@@ -169,7 +169,7 @@ fn fence_prepares_mechanisms_before_replay_and_authored_targets() {
     let prepare = source.find("native_mechanism::prepare(").unwrap();
     let replay = source.find(".replay(&mut factory)").unwrap();
     let authored = source
-        .find("execute_build_targets(&BuildExecution")
+        .find(".execute_build_targets(&BuildExecution")
         .unwrap();
     assert!(prepare < replay && replay < authored);
 

@@ -17,7 +17,7 @@ use vibe_core::manifest::{
 use vibe_lifecycle::native::{NativeBuildExecution, NativePlatform};
 use vibe_lifecycle::{
     BuildExecution, ClientExecutables, DeployExecution, DeploySelection, MechanismRegistry,
-    PackageExecution, Phase, deploy_state_home, execute_build_targets, execute_package_targets,
+    PackageExecution, Phase, deploy_state_home, execute_package_targets,
 };
 
 use crate::RitualPlan;
@@ -319,16 +319,17 @@ impl<'targets> Fences<'targets> {
                 .replay(&mut factory)
                 .context("converging pending compiler-native boot artifacts")?;
         }
-        execute_build_targets(&BuildExecution {
-            project_root: self.targets.project_root,
-            targets: self.targets.build,
-            registry: self.targets.registry,
-            routes: self.targets.routes,
-            build_root: BuildExecution::default_build_root(),
-            offline: self.targets.offline,
-            created_at: self.targets.created_at,
-        })
-        .context("executing the declared [[artifacts.build]] targets")?;
+        self.prepared_native
+            .execute_build_targets(&BuildExecution {
+                project_root: self.targets.project_root,
+                targets: self.targets.build,
+                registry: self.targets.registry,
+                routes: self.targets.routes,
+                build_root: BuildExecution::default_build_root(),
+                offline: self.targets.offline,
+                created_at: self.targets.created_at,
+            })
+            .context("executing the declared [[artifacts.build]] targets")?;
         Ok(())
     }
 

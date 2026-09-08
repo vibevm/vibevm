@@ -174,6 +174,58 @@ impl PreparedNativeMechanisms {
         Ok(found)
     }
 
+    /// Execute build targets with this exact prepared native carriage.
+    ///
+    /// ```
+    /// use std::path::Path;
+    /// use vibe_core::manifest::{ExtensionsControl, MechanismRoutes};
+    /// use vibe_extension_registry::collect_mechanisms;
+    /// use vibe_lifecycle::native::PreparedNativeMechanisms;
+    /// use vibe_lifecycle::{
+    ///     BuildExecution, ExtensionWorld, HostExtensionSource, HostIdentity, HostProvider,
+    /// };
+    ///
+    /// let world = ExtensionWorld {
+    ///     installed: Vec::new(),
+    ///     host: HostExtensionSource {
+    ///         provider: HostProvider {
+    ///             identity: HostIdentity::ungrouped_project("demo"),
+    ///             root: Path::new(".").to_path_buf(),
+    ///             version: "0.1.0".into(),
+    ///             kind: None,
+    ///             content_hash: None,
+    ///         },
+    ///         declarations: Vec::new(),
+    ///         controls: ExtensionsControl::default(),
+    ///         mechanisms: Vec::new(),
+    ///     },
+    ///     effective_stack: None,
+    /// };
+    /// let registry = collect_mechanisms(&world).unwrap();
+    /// let routes = MechanismRoutes::default();
+    /// let execution = BuildExecution {
+    ///     project_root: Path::new("."),
+    ///     targets: &[],
+    ///     registry: &registry,
+    ///     routes: &routes,
+    ///     build_root: BuildExecution::default_build_root(),
+    ///     offline: true,
+    ///     created_at: "2026-09-08T00:00:00Z",
+    /// };
+    /// assert!(
+    ///     PreparedNativeMechanisms::default()
+    ///         .execute_build_targets(&execution)
+    ///         .unwrap()
+    ///         .is_empty()
+    /// );
+    /// ```
+    pub fn execute_build_targets(
+        &self,
+        execution: &crate::BuildExecution<'_>,
+    ) -> Result<Vec<crate::BuildOutcome>, crate::BuildError> {
+        crate::mechanism::build::execute_prepared_build_targets(execution, self)
+    }
+
     pub fn plan_deploy_targets(
         &self,
         execution: &crate::DeployExecution<'_>,

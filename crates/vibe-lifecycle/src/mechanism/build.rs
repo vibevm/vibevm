@@ -28,6 +28,8 @@ use vibe_extension_registry::{
 use vibe_wire::generated::artifact_record::ArtifactShape;
 
 mod error;
+mod native;
+mod record;
 
 pub use error::BuildError;
 
@@ -186,12 +188,26 @@ pub struct BuildOutcome {
 pub fn execute_build_targets(
     execution: &BuildExecution<'_>,
 ) -> Result<Vec<BuildOutcome>, BuildError> {
+    execute_targets(execution, None)
+}
+
+pub(crate) fn execute_prepared_build_targets(
+    execution: &BuildExecution<'_>,
+    prepared: &crate::native::PreparedNativeMechanisms,
+) -> Result<Vec<BuildOutcome>, BuildError> {
+    execute_targets(execution, Some(prepared))
+}
+
+fn execute_targets(
+    execution: &BuildExecution<'_>,
+    prepared: Option<&crate::native::PreparedNativeMechanisms>,
+) -> Result<Vec<BuildOutcome>, BuildError> {
     let mut outcomes = Vec::with_capacity(execution.targets.len());
     for index in order(execution.targets)? {
         let Some(target) = execution.targets.get(index) else {
             continue;
         };
-        outcomes.push(execute_one(execution, target)?);
+        outcomes.push(execute_one(execution, target, prepared)?);
     }
     Ok(outcomes)
 }
@@ -200,6 +216,7 @@ pub fn execute_build_targets(
 fn execute_one(
     execution: &BuildExecution<'_>,
     target: &ArtifactBuildTarget,
+    prepared: Option<&crate::native::PreparedNativeMechanisms>,
 ) -> Result<BuildOutcome, BuildError> {
     let selection = resolve_mechanism(
         execution.registry,
@@ -217,6 +234,47 @@ fn execute_one(
                 key,
                 pin,
                 name: name.clone(),
+            });
+        }
+        ExtensionHandler::Native { .. } if prepared.is_some() => {
+            let Some(prepared) = prepared else {
+                unreachable!("match guard proved prepared carriage")
+            };
+            let (entry, binding) = prepared
+                .binding_for(
+                    vibe_core::manifest::MechanismRole::Build,
+                    &target.id,
+                    &target.mechanism,
+                )
+                .map_err(|(binding_pin, reason)| BuildError::NativeTransport {
+                    target: target.id.clone(),
+                    pin: binding_pin.to_owned(),
+                    operation: "admit",
+                    reason: super::error::preview(reason),
+                })?
+                .ok_or_else(|| BuildError::NativeTransport {
+                    target: target.id.clone(),
+                    pin: pin.clone(),
+                    operation: "admit",
+                    reason: "selected native provider has no prepared Build-role binding"
+                        .to_owned(),
+                })?;
+            if binding.pin != pin || binding.protocol != row.protocol() || binding.protocol != 1 {
+                return Err(BuildError::NativeTransport {
+                    target: target.id.clone(),
+                    pin,
+                    operation: "admit",
+                    reason: "prepared binding differs from selected pin or protocol".to_owned(),
+                });
+            }
+            let produced = native::execute(execution, target, entry, binding)?;
+            return Ok(BuildOutcome {
+                target: target.id.clone(),
+                mechanism: key,
+                provider: binding.pin.clone(),
+                via: selection.via().to_string(),
+                displaced_default: displaced(&selection),
+                produced,
             });
         }
         handler => {
@@ -376,3 +434,7 @@ mod tests;
 #[cfg(test)]
 #[path = "build/e2e_tests.rs"]
 mod e2e_tests;
+
+#[cfg(test)]
+#[path = "build/native_tests.rs"]
+mod native_tests;
