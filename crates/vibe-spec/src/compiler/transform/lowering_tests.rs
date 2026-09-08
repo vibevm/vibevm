@@ -206,7 +206,7 @@ fn an_activated_dependency_row_keeps_its_place_in_the_one_effective_order() {
 /// violation, and it has its own arm for exactly that reason.
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY")]
-fn a_compile_pass_row_refuses_typed_until_r6_owns_the_pass_tier() {
+fn staged_only_lowering_keeps_compile_pass_out_of_the_transform_plan() {
     let registry = collected_host(vec![
         Declared::builtin("doc", "compile:document", "test-identity-document"),
         Declared::pass("pass", "test-identity-source"),

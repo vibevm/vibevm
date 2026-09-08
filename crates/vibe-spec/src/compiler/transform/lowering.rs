@@ -19,9 +19,8 @@
 //! contract produce a plausible plan, and a plan digest would then bless a
 //! membership no manifest declared. `compile:pass` is inside the compile
 //! family by construction (`enabled_compile_rows` is the whole family), and
-//! it refuses on its own arm until R6 owns the pass tier — a separate arm
-//! rather than a shared one, because R6 splits it into routing, not into a
-//! different error.
+//! it refuses on its own staged-only arm; R6's joint lowering partitions that
+//! row into the separate `PassPlan` before calling this cell.
 //!
 //! **The epoch is registry-owned.** The workspace hands a handler name; the
 //! epoch comes from [`TransformRegistry`] and from nowhere else, so no
@@ -150,9 +149,8 @@ fn selector(source: &ExtensionRegistryRow) -> Option<CompiledSelector> {
 /// Two refusals, deliberately separate. A NON-compile point means the caller
 /// broke the input contract — `enabled_compile_rows()` cannot produce one —
 /// so it names the point it actually saw. `compile:pass` is a lawful member
-/// of the compile family whose tier R6 owns; it refuses on its own arm so
-/// that R6's routing split replaces one arm rather than reinterpreting a
-/// shared one.
+/// of the compile family but not a staged transform; the joint pass-tier
+/// lowering partitions it before calling this staged-only cell.
 fn stage(
     row: usize,
     preview: impl Fn() -> BoundedPreview,

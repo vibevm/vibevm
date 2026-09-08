@@ -6,6 +6,7 @@ use std::collections::BTreeMap;
 
 use crate::SpecAddress;
 use crate::compiler::ir::{ArtifactTarget, SourceIr};
+use crate::compiler::pass_tier::PassPlan;
 use crate::compiler::transform::plan::TransformPlan;
 
 use super::{
@@ -20,6 +21,7 @@ pub struct ArtifactPlan {
     context: ArtifactContext,
     contributions: Vec<ArtifactInput>,
     transforms: TransformPlan,
+    passes: PassPlan,
 }
 
 impl ArtifactPlan {
@@ -64,6 +66,7 @@ impl ArtifactPlan {
             context,
             contributions,
             transforms: TransformPlan::empty(),
+            passes: PassPlan::empty(),
         })
     }
 
@@ -79,6 +82,7 @@ impl ArtifactPlan {
                 seed,
             })],
             transforms: TransformPlan::empty(),
+            passes: PassPlan::empty(),
         }
     }
 
@@ -144,9 +148,19 @@ impl ArtifactPlan {
         Self { transforms, ..self }
     }
 
+    /// Attach the owner pass plan projected to this artifact discriminator.
+    pub(crate) fn with_passes(self, passes: PassPlan) -> Self {
+        let passes = passes.for_artifact(self.context.artifact().as_str());
+        Self { passes, ..self }
+    }
+
     /// The owner-scoped transform plan this artifact carries.
     pub(crate) fn transforms(&self) -> &TransformPlan {
         &self.transforms
+    }
+
+    pub(crate) fn passes(&self) -> &PassPlan {
+        &self.passes
     }
 
     pub(crate) fn context(&self) -> &ArtifactContext {

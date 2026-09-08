@@ -18,6 +18,7 @@ pub(crate) mod link;
 pub(crate) mod merge;
 pub(crate) mod observer;
 pub(crate) mod pass;
+pub(crate) mod pass_tier;
 pub(crate) mod pipeline;
 pub(crate) mod qualify;
 pub(crate) mod source_snapshot;
