@@ -131,6 +131,40 @@ fn init_stack_flag_sets_active_stack() {
     let user = UserScratch::new();
     let dir = tempfile::tempdir().unwrap();
     let path = dir.path();
+    let registry = tempfile::tempdir().unwrap();
+    let stack = registry
+        .path()
+        .join("org.example")
+        .join("rust-cli")
+        .join("v1.0.0");
+    fs::create_dir_all(&stack).unwrap();
+    fs::write(
+        stack.join("vibe.toml"),
+        "[package]\ngroup = \"org.example\"\nname = \"rust-cli\"\nkind = \"stack\"\nversion = \"1.0.0\"\nepoch = 1\n",
+    )
+    .unwrap();
+
+    // `--stack` writes the requested activation into the new manifest, but
+    // strict world admission cannot accept it until that stack is installed.
+    user.vibe()
+        .arg("init")
+        .arg("--path")
+        .arg(path)
+        .arg("--stack")
+        .arg("rust-cli")
+        .assert()
+        .failure()
+        .stderr(predicate::str::contains("names no installed stack"));
+    user.vibe()
+        .arg("install")
+        .arg("org.example/rust-cli@=1.0.0")
+        .arg("--path")
+        .arg(path)
+        .arg("--registry")
+        .arg(registry.path())
+        .arg("--assume-yes")
+        .assert()
+        .success();
 
     user.vibe()
         .arg("init")
