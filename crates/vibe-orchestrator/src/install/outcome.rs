@@ -18,6 +18,7 @@ use crate::world::RuntimePlanSidecar;
 
 /// Exact native runtime/replay continuation paired with the selected node's
 /// orchestrator-only package-skill state.
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#BUILD-PHASE-OWNS-IT")]
 pub struct NativeInstallContext {
     carriage: vibe_workspace::install::NativeInstallCarriage,
     sidecar: RuntimePlanSidecar,
