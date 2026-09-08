@@ -1,3 +1,5 @@
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-056#SEC-NO-FOLLOW");
+
 /// A just-created sibling directory whose handle and namespace identity have
 /// both been pinned.
 ///

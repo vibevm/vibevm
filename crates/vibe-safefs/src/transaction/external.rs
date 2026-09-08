@@ -1,3 +1,5 @@
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-056#SEC-NO-FOLLOW");
+
 /// A capability root selected explicitly by the caller, never inferred from
 /// the project and never hardcoded below project `.vibe`.
 ///

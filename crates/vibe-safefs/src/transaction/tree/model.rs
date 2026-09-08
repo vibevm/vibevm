@@ -1,3 +1,5 @@
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-056#SEC-NO-FOLLOW");
+
 /// Opaque identity of one manifest entry.  The token is a domain-separated
 /// digest of the OS identity; raw device, volume and inode/index values never
 /// leave the crate.

@@ -1,5 +1,7 @@
 use super::{Assurance, Digest, MutationKind, TreeManifest};
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-056#IMPL-E");
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct PlannedMutationEvidence {
     pub id: String,

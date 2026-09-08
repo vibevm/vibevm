@@ -1,3 +1,5 @@
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-056#SEC-NO-FOLLOW");
+
 #[cfg(any(test, feature = "inject-failures"))]
 pub type OwnedTreeCheckHook = Box<dyn Fn(&Pinned, &str)>;
 
