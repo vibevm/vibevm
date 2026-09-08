@@ -127,7 +127,7 @@ fn capture_fixture<'a>(
     let provider = crate::native::provider::facts(row);
     let Ok(rows) = crate::native::source_group_rows(
         execution.candidates,
-        &provider.identity,
+        &provider,
         "native",
         execution.platform,
     ) else {

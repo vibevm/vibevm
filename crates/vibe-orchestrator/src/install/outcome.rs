@@ -47,6 +47,27 @@ impl NativeInstallContext {
     ) {
         (self.carriage.epoch(), &self.sidecar)
     }
+
+    pub(crate) fn platform_key(&self) -> &str {
+        &self.carriage.epoch().run().platform
+    }
+
+    pub(crate) fn replay_is_empty(&self) -> bool {
+        self.carriage.replay_is_empty()
+    }
+
+    pub(crate) fn build_parts(
+        &self,
+    ) -> (
+        &vibe_workspace::extension_world::OwnerRuntimeEpoch,
+        &[vibe_workspace::extension_world::OwnerRuntimeId],
+    ) {
+        (self.carriage.epoch(), self.carriage.build_owners())
+    }
+
+    pub(crate) fn into_carriage(self) -> vibe_workspace::install::NativeInstallCarriage {
+        self.carriage
+    }
 }
 
 /// Whether the existing install implementation applied a plan or proved the

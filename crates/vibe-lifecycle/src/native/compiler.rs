@@ -374,13 +374,6 @@ pub struct ArtifactCompilerNativeReplayFactory {
 
 impl ArtifactCompilerNativeReplayFactory {
     #[must_use]
-    #[cfg_attr(
-        not(test),
-        expect(
-            dead_code,
-            reason = "remove when R5.4-INSTALL constructs the lifecycle replay factory"
-        )
-    )]
     pub const fn new(platform: NativePlatform) -> Self {
         Self { platform }
     }

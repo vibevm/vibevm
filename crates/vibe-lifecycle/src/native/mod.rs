@@ -10,6 +10,7 @@ mod compiler_facts;
 mod error;
 mod path;
 mod platform;
+mod projection;
 mod provider;
 mod record;
 mod witness;
@@ -30,6 +31,9 @@ use crate::{ExtensionRegistryRow, MechanismRegistryRow};
 pub use compiler::{ArtifactCompilerNativeInvoker, ArtifactCompilerNativeProvider};
 pub use error::NativeArtifactError;
 pub use platform::NativePlatform;
+pub use projection::{
+    NativeArtifactRecordRoot, NativeSourceGroupProjection, project_native_source_groups,
+};
 
 use cargo::build_cdylib;
 use compiler_facts::{CompilerArtifactResolutionError, pending_source_capture};
@@ -201,11 +205,7 @@ pub fn build_native_sources(
         prepare_dependency_ignore(&group.provider)?;
         let (provider_root, manifest) = source_crate(&group.provider, &group.crate_dir)?;
         let config = config_witness(&group.rows);
-        let id = record_id(
-            &group.provider.identity,
-            &group.crate_wire,
-            execution.platform,
-        );
+        let id = record_id(&group.provider, &group.crate_wire, execution.platform);
         let built = build_cdylib(
             &group.provider,
             &manifest,
@@ -318,7 +318,7 @@ fn resolve_native_artifact_inner(
         .map_err(CompilerArtifactResolutionError::Artifact)?;
     let rows = source_group_rows(
         execution.candidates,
-        &provider.identity,
+        &provider,
         &crate_wire,
         execution.platform,
     )
@@ -331,7 +331,7 @@ fn resolve_native_artifact_inner(
     let source = source_digest.hex();
     let config_digest = config_witness_digest(&rows);
     let config = config_digest.hex();
-    let id = record_id(&provider.identity, &crate_wire, execution.platform);
+    let id = record_id(&provider, &crate_wire, execution.platform);
     let build_provider =
         select_build_provider(execution).map_err(CompilerArtifactResolutionError::Artifact)?;
     let build_provider_pin = build_provider.pin();
@@ -378,7 +378,7 @@ fn resolve_native_artifact_inner(
 }
 
 fn source_groups<'a>(
-    candidates: &'a [&'a ExtensionRegistryRow],
+    candidates: &[&'a ExtensionRegistryRow],
     platform: NativePlatform,
     validate_prebuilt: bool,
 ) -> Result<Vec<SourceGroup<'a>>, NativeArtifactError> {
@@ -427,15 +427,15 @@ fn source_groups<'a>(
 }
 
 fn source_group_rows<'a>(
-    candidates: &'a [&'a ExtensionRegistryRow],
-    provider: &str,
+    candidates: &[&'a ExtensionRegistryRow],
+    provider: &ProviderFacts,
     crate_wire: &str,
     platform: NativePlatform,
 ) -> Result<Vec<&'a ExtensionRegistryRow>, NativeArtifactError> {
     let groups = source_groups(candidates, platform, false)?;
     groups
         .into_iter()
-        .find(|group| group.provider.identity == provider && group.crate_wire == crate_wire)
+        .find(|group| group.provider == *provider && group.crate_wire == crate_wire)
         .map(|group| group.rows)
         .ok_or_else(|| NativeArtifactError::SourceState {
             record: record_path(&record_id(provider, crate_wire, platform)),

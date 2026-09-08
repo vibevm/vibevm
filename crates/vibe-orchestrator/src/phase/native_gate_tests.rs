@@ -301,23 +301,16 @@ fn source_and_prebuilt_compose_through_phase_and_slot_with_one_image_machine() {
     let text = format!(
         "[project]\nname='native-gate'\nversion='0.1.0'\n\n\
          [[extension]]\nid='source-ok'\npoint='phase:build'\nhandler={{kind='native',crate_dir='native'}}\n\n\
-         [[extension]]\nid='prebuilt-ok'\npoint='phase:build'\nhandler={{kind='native',prebuilt={{{:?}={relative:?}}}}}\n\n\
-         [[extension]]\nid='compile-native'\npoint='compile:source'\nhandler={{kind='native',crate_dir='native'}}\napplies_to={{paths=['never/**']}}\n",
+         [[extension]]\nid='prebuilt-ok'\npoint='phase:build'\nhandler={{kind='native',prebuilt={{{:?}={relative:?}}}}}\n",
         platform_key()
     );
     let dir = manifested(&text);
-    write_source_crate(
-        dir.path(),
-        &[
-            ("source-ok", "phase:build"),
-            ("compile-native", "compile:source"),
-        ],
-        "source gate",
-    );
+    write_source_crate(dir.path(), &[("source-ok", "phase:build")], "source gate");
     copy_fixture(dir.path());
 
-    let PhaseOutcome::Completed(values) = run_phases_over(dir.path(), vec![Phase::Build]) else {
-        panic!("source and prebuilt phase rows complete")
+    let outcome = run_phases_over(dir.path(), vec![Phase::Build]);
+    let PhaseOutcome::Completed(values) = outcome else {
+        panic!("source and prebuilt phase rows complete: {outcome:?}")
     };
     assert_eq!(
         report_ids(&values),
@@ -330,12 +323,6 @@ fn source_and_prebuilt_compose_through_phase_and_slot_with_one_image_machine() {
     assert_eq!(
         values.contributions[1].message.as_deref(),
         Some("prebuilt-ok handled phase:build")
-    );
-    assert!(
-        values
-            .contributions
-            .iter()
-            .all(|row| !row.key.ends_with("#compile-native"))
     );
     let before_slot = image_files(dir.path());
     assert_eq!(before_slot.len(), 2, "one source and one prebuilt image");

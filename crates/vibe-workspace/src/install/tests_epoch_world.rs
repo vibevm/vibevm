@@ -596,3 +596,6 @@ fn durable_projection_distinguishes_empty_from_malformed_or_missing_named_state(
 
 #[path = "tests_native_freshness.rs"]
 pub(crate) mod native_freshness;
+
+#[path = "tests_native_carriage.rs"]
+mod native_carriage;

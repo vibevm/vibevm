@@ -174,7 +174,7 @@ pub(crate) fn dispatch_plan(
     metadata: RunMetadata,
     state_chain: Vec<String>,
     verification_observed_at: Option<Timestamp>,
-    targets: Option<&MechanismTargets<'_>>,
+    targets: Option<MechanismTargets<'_>>,
 ) -> Result<DispatchOutcome> {
     // The lease root IS the state root: `begin` derives its store path from
     // the lease, and a plan whose workspace root disagrees refuses here
@@ -223,7 +223,7 @@ pub(crate) fn dispatch_plan_with_run(
     agent: &Arc<dyn AgentBackend>,
     metadata: &RunMetadata,
     verification_observed_at: Option<Timestamp>,
-    targets: Option<&MechanismTargets<'_>>,
+    targets: Option<MechanismTargets<'_>>,
 ) -> Result<DispatchOutcome> {
     let mut measured = MeasuredDispatch::default();
     dispatch_measured(
@@ -262,7 +262,7 @@ fn dispatch_measured(
     metadata: &RunMetadata,
     measured: &mut MeasuredDispatch,
     verification_observed_at: Option<Timestamp>,
-    targets: Option<&MechanismTargets<'_>>,
+    targets: Option<MechanismTargets<'_>>,
 ) -> Result<DispatchOutcome> {
     let package_binding = ProjectPackageBindingBackend::new(plan);
     let native_candidates = plan.native_candidates.iter().collect::<Vec<_>>();
@@ -585,6 +585,9 @@ mod tests;
 #[cfg(test)]
 #[path = "mechanism_tests.rs"]
 mod mechanism_tests;
+#[cfg(test)]
+#[path = "native_all_owner_tests.rs"]
+mod native_all_owner_tests;
 
 /// The verify-boundary reds live in their own cell: they need a declared-input
 /// fixture and a mutating observer the row-accumulator reds have no use for,

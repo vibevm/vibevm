@@ -1,46 +1,7 @@
 //! The engine-owned mechanism fences: where a COMPLETE default-phase plan
 //! executes its declared `[[artifacts.build]]` and `[[artifacts.package]]`
-//! targets, INSIDE the one contribution walk (§6.0.2's wiring).
-//!
-//! ## Why the fences live here and not above the dispatch
-//!
-//! §2 is the architecture's PRIMARY law — the nine-phase line, with
-//! `generate` owning deterministic derived source and `build` producing code
-//! artifacts *from* that source. An executor placed above this walk would run
-//! the mechanism build before every `phase:generate` contribution, which
-//! inverts the one edge §2 exists to fix. The contribution walk is the only
-//! place in the engine that already visits phases in the requested chain's
-//! order, so it is the only place both edges can hold at once.
-//!
-//! ## Where inside a phase, and why
-//!
-//! An engine-owned action fires **before that phase's own contributions** —
-//! the identical position, and the identical reason, as the verify boundary
-//! next door ("BEFORE the first verify-or-later row, and therefore before any
-//! verify contribution is dispatched"). §3 spells the difference the position
-//! encodes: "an ordinary `phase:build` contribution adds a task to the
-//! ritual; a build-role mechanism can service one or more declarative build
-//! targets". The declared targets ARE the phase's artifact production; a
-//! contribution is an addition to it. Firing first is what lets a
-//! `phase:build` or `phase:package` contribution observe or consume the
-//! artifact — and its A2 record — that its own phase just produced. The
-//! reverse order would make every such contribution run before the artifact
-//! it might read exists, and there would be no in-phase reading of §4's
-//! "later phases consume records" at all.
-//!
-//! Both fences therefore straddle the verify gate exactly as the phase line
-//! does: build, then verify, then package.
-//!
-//! ## Why the targets are a parameter and not a plan field
-//!
-//! The same reason the verify boundary's permission is: the dispatcher is
-//! entered from TWO epochs and only one owns the complete chain. The
-//! post-durability install callback dispatches a `[validate, install]` plan
-//! while carrying the outer command's `metadata.chain`, which for
-//! `vibe package` already names every phase through `package`. A fence that
-//! read the chain alone would fire there and build a project's artifacts
-//! during its prerequisite install. `None` is every partial epoch saying "not
-//! here, whatever the chain says".
+//! targets inside the one contribution walk. Engine work fires before that
+//! phase's own rows; partial install epochs pass no targets and arm no fence.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM");
 
@@ -61,6 +22,7 @@ use vibe_lifecycle::{
 };
 
 use crate::RitualPlan;
+use crate::install::NativeInstallContext;
 
 /// Everything one deploy dispatch's COMMAND SURFACE resolved, travelling as
 /// data — §7.0.5's "travels as data" and §6.3.0.6's "Home and executable
@@ -131,6 +93,11 @@ pub(crate) struct MechanismTargets<'a> {
     pub(crate) routes: &'a MechanismRoutes,
     /// Enabled native rows from the exact registry epoch, in its one order.
     pub(crate) native_candidates: &'a [vibe_lifecycle::ExtensionRegistryRow],
+    /// Platform selected before dispatch; complete chains recover it from the
+    /// install epoch, while isolated build slices observe it at their surface.
+    pub(crate) native_platform: Option<NativePlatform>,
+    /// Exact install epoch and sealed replay, moved into this dispatch once.
+    pub(crate) native: Option<NativeInstallContext>,
     /// The run's effective offline posture.
     pub(crate) offline: bool,
     /// The run's injected instant, in the RFC 3339 spelling every record
@@ -291,7 +258,7 @@ pub(crate) fn lower_binaries(
 /// contributions still packages its declared targets, exactly as a project
 /// with zero verify contributions still gets its verify member.
 pub(super) struct Fences<'targets> {
-    targets: &'targets MechanismTargets<'targets>,
+    targets: MechanismTargets<'targets>,
     build: Option<usize>,
     package: Option<usize>,
     deploy: Option<usize>,
@@ -301,49 +268,64 @@ impl<'targets> Fences<'targets> {
     /// Arm every fence for one plan, or nothing at all for a partial epoch.
     #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM")]
     pub(super) fn arm(
-        targets: Option<&'targets MechanismTargets<'targets>>,
+        targets: Option<MechanismTargets<'targets>>,
         plan: &RitualPlan,
         chain: &[String],
     ) -> Option<Self> {
         let targets = targets?;
+        let build = fence(plan, chain, Phase::Build);
+        let package = fence(plan, chain, Phase::Package);
+        let deploy = targets
+            .deploy
+            .and_then(|_| fence(plan, chain, Phase::Deploy));
         Some(Self {
             targets,
-            build: fence(plan, chain, Phase::Build),
-            package: fence(plan, chain, Phase::Package),
-            // §7.0.5: "The fence arms only when the dispatch carries a
-            // resolved selection AND that epoch's plan reaches `deploy`."
-            // The two conditions are separate for a reason — a chain that
-            // reaches deploy without a selection is `vibe deploy` on a
-            // project that declares no deploy section, which must stay the
-            // historical no-op rather than become a refusal.
-            deploy: targets
-                .deploy
-                .and_then(|_| fence(plan, chain, Phase::Deploy)),
+            build,
+            package,
+            deploy,
         })
     }
 
-    /// Fire the build fence if this index is where it is armed.
-    ///
-    /// Called at the top of every iteration and once more with the plan's
-    /// length, so every armed index from `0` to `len` is visited exactly once
-    /// and a fence can be neither skipped nor fired twice.
+    /// Fire the build fence once at its armed execution index.
     pub(super) fn fire_build(&mut self, index: usize) -> Result<()> {
         if self.build != Some(index) {
             return Ok(());
         }
-        self.build = None;
-        let candidates = self.targets.native_candidates.iter().collect::<Vec<_>>();
-        let platform = NativePlatform::current().context("selecting the native build platform")?;
-        build_native_sources(&NativeBuildExecution {
-            candidates: &candidates,
-            selected_project_root: self.targets.project_root,
-            registry: self.targets.registry,
-            routes: self.targets.routes,
-            platform,
-            offline: self.targets.offline,
-            created_at: self.targets.created_at,
-        })
-        .context("building enabled native source extensions at the build fence")?;
+        self.build.take();
+        let native = self.targets.native.take();
+        let platform = self
+            .targets
+            .native_platform
+            .context("build fence has no preselected native platform")?;
+        match native.as_ref() {
+            Some(native) => build_all_owner_native_sources(
+                native,
+                self.targets.project_root,
+                platform,
+                self.targets.offline,
+                self.targets.created_at,
+            )?,
+            None => {
+                let candidates = self.targets.native_candidates.iter().collect::<Vec<_>>();
+                build_native_sources(&NativeBuildExecution {
+                    candidates: &candidates,
+                    selected_project_root: self.targets.project_root,
+                    registry: self.targets.registry,
+                    routes: self.targets.routes,
+                    platform,
+                    offline: self.targets.offline,
+                    created_at: self.targets.created_at,
+                })
+                .context("building enabled native source extensions at the build fence")?;
+            }
+        }
+        if let Some(native) = native.filter(|native| !native.replay_is_empty()) {
+            let mut factory = platform.replay_factory();
+            native
+                .into_carriage()
+                .replay(&mut factory)
+                .context("converging pending compiler-native boot artifacts")?;
+        }
         execute_build_targets(&BuildExecution {
             project_root: self.targets.project_root,
             targets: self.targets.build,
@@ -357,7 +339,7 @@ impl<'targets> Fences<'targets> {
         Ok(())
     }
 
-    /// Fire the package fence if this index is where it is armed.
+    /// Fire the package fence at its armed execution index.
     pub(super) fn fire_package(&mut self, index: usize) -> Result<()> {
         if self.package != Some(index) {
             return Ok(());
@@ -375,14 +357,7 @@ impl<'targets> Fences<'targets> {
         Ok(())
     }
 
-    /// Fire the deploy fence if this index is where it is armed.
-    ///
-    /// The third member of §6.0's fence family, armed at the deploy
-    /// phase's own-contribution boundary with the identical position and
-    /// the identical reason: a `phase:deploy` contribution that wants to
-    /// observe what the deployment did runs after it, and the phase line
-    /// puts deploy last, so this fires after the package fence and after
-    /// the verify gate between them.
+    /// Fire the deploy fence at its armed execution index.
     pub(super) fn fire_deploy(&mut self, index: usize) -> Result<()> {
         if self.deploy != Some(index) {
             return Ok(());
@@ -408,6 +383,191 @@ impl<'targets> Fences<'targets> {
         .context("executing the selected [[deploy.target]] rows")?;
         Ok(())
     }
+}
+
+fn build_all_owner_native_sources(
+    native: &NativeInstallContext,
+    project_root: &Path,
+    platform: NativePlatform,
+    offline: bool,
+    created_at: &str,
+) -> Result<()> {
+    let groups =
+        preflight_all_owner_native_sources(native, project_root, platform, offline, created_at)?;
+    for group in groups {
+        build_native_sources(&NativeBuildExecution {
+            candidates: &group.candidates,
+            selected_project_root: project_root,
+            registry: group.registry,
+            routes: group.routes,
+            platform,
+            offline,
+            created_at,
+        })
+        .with_context(|| {
+            format!(
+                "building native source group {}/{}",
+                group.source.0, group.source.3
+            )
+        })?;
+    }
+    Ok(())
+}
+
+type BuildRowSignature = Vec<(
+    String,
+    vibe_core::manifest::ExtensionHandler,
+    Option<vibe_core::manifest::ExtensionConfig>,
+)>;
+
+pub(super) struct PreflightBuildGroup<'a> {
+    source: (
+        String,
+        PathBuf,
+        vibe_lifecycle::native::NativeArtifactRecordRoot,
+        String,
+    ),
+    signature: BuildRowSignature,
+    provider_pin: String,
+    candidates: Vec<&'a vibe_lifecycle::ExtensionRegistryRow>,
+    registry: &'a MechanismRegistry,
+    routes: &'a MechanismRoutes,
+}
+
+pub(super) fn preflight_all_owner_native_sources<'a>(
+    native: &'a NativeInstallContext,
+    project_root: &Path,
+    platform: NativePlatform,
+    offline: bool,
+    created_at: &str,
+) -> Result<Vec<PreflightBuildGroup<'a>>> {
+    preflight_all_owner_native_sources_with(
+        native,
+        project_root,
+        platform,
+        offline,
+        created_at,
+        |_, execution| {
+            platform
+                .resolved_build_provider_pin(execution)
+                .map_err(Into::into)
+        },
+    )
+}
+
+#[cfg(test)]
+pub(super) fn preflight_with_test_pins(
+    native: &NativeInstallContext,
+    project_root: &Path,
+    platform: NativePlatform,
+    mut pin: impl FnMut(&vibe_workspace::extension_world::OwnerRuntimeId) -> String,
+) -> Result<()> {
+    preflight_all_owner_native_sources_with(
+        native,
+        project_root,
+        platform,
+        true,
+        "2026-09-08T00:00:00Z",
+        |owner, _| Ok(pin(owner)),
+    )
+    .map(|_| ())
+}
+
+fn preflight_all_owner_native_sources_with<'a>(
+    native: &'a NativeInstallContext,
+    project_root: &Path,
+    platform: NativePlatform,
+    offline: bool,
+    created_at: &str,
+    mut resolve_pin: impl FnMut(
+        &vibe_workspace::extension_world::OwnerRuntimeId,
+        &NativeBuildExecution<'_>,
+    ) -> Result<String>,
+) -> Result<Vec<PreflightBuildGroup<'a>>> {
+    let (epoch, owners) = native.build_parts();
+    let mut groups: Vec<PreflightBuildGroup<'a>> = Vec::new();
+    for owner in owners {
+        let view = match owner {
+            vibe_workspace::extension_world::OwnerRuntimeId::Node { rel } => epoch.node(rel)?,
+            vibe_workspace::extension_world::OwnerRuntimeId::Unit { provider } => {
+                epoch.unit(provider)?
+            }
+        };
+        let runtime = view.runtime();
+        let rows = runtime.rows()?;
+        let all_candidates = rows.native().to_vec();
+        let execution = NativeBuildExecution {
+            candidates: &all_candidates,
+            selected_project_root: project_root,
+            registry: runtime.mechanisms(),
+            routes: runtime.routes(),
+            platform,
+            offline,
+            created_at,
+        };
+        let owner_groups =
+            vibe_lifecycle::native::project_native_source_groups(&all_candidates, platform)?;
+        if owner_groups.is_empty() {
+            continue;
+        }
+        let provider_pin = resolve_pin(owner, &execution)
+            .with_context(|| format!("preflighting build provider for retained owner {owner:?}"))?;
+        for projection in owner_groups {
+            let source = (
+                projection.provider,
+                projection.provider_root,
+                projection.record_root,
+                projection.crate_dir,
+            );
+            let candidates = projection.candidates;
+            let signature = candidates
+                .iter()
+                .map(|row| {
+                    (
+                        row.key().as_str().to_owned(),
+                        row.declaration().handler.clone(),
+                        row.effective_config().cloned(),
+                    )
+                })
+                .collect::<Vec<_>>();
+            if let Some(previous) = groups.iter().find(|group| group.source == source) {
+                anyhow::ensure!(
+                    previous.signature == signature && previous.provider_pin == provider_pin,
+                    "native source group `{}/{}` has conflicting effective rows or build provider across retained owners",
+                    source.0,
+                    source.3,
+                );
+                continue;
+            }
+            groups.push(PreflightBuildGroup {
+                source,
+                signature,
+                provider_pin: provider_pin.clone(),
+                candidates,
+                registry: runtime.mechanisms(),
+                routes: runtime.routes(),
+            });
+        }
+    }
+    for group in &groups {
+        platform
+            .admit_build_provider(&NativeBuildExecution {
+                candidates: &group.candidates,
+                selected_project_root: project_root,
+                registry: group.registry,
+                routes: group.routes,
+                platform,
+                offline,
+                created_at,
+            })
+            .with_context(|| {
+                format!(
+                    "admitting build provider {} for native source group {}/{}",
+                    group.provider_pin, group.source.0, group.source.3
+                )
+            })?;
+    }
+    Ok(groups)
 }
 
 /// Where one phase's own contributions begin, or `None` when the requested

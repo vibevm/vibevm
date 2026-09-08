@@ -36,43 +36,6 @@ use crate::extension_world::{
     OwnerRuntimeRunFacts, lower_owner_runtimes,
 };
 
-#[test]
-fn install_entry_binds_the_supplied_world_collects_pending_and_returns_its_epoch() {
-    let graph = native_graph();
-    let world = test_ok!(
-        ExtensionWorldEpoch::from_resolution(&graph.workspace.root, &graph.resolution),
-        "supplied install world"
-    );
-    let facts = OwnerRuntimeRunFacts {
-        run_id: "install-entry-epoch".to_owned(),
-        state_root: graph.workspace.root.join(".vibe"),
-        platform: "linux-x86_64".to_owned(),
-        offline: true,
-        created_at: "2026-09-08T00:00:00Z".to_owned(),
-    };
-    let mut make_provider = |_policies| Ok(FakeProvider::new(Reply::Missing));
-    let (nodes, carriage) = test_ok!(
-        regenerate_boot_from_traced_native(
-            &graph.workspace,
-            &graph.resolution,
-            world,
-            SpecFormat::Mixed,
-            None,
-            OwnerRuntimeLowering::compatibility_root_without_presets(),
-            facts,
-            &mut make_provider,
-        ),
-        "native-aware install regeneration"
-    );
-    assert_eq!(nodes, ["."]);
-    assert_eq!(carriage.epoch().run().run_id, "install-entry-epoch");
-    let index = test_ok!(
-        fs::read_to_string(unit_file(&graph, "middle", "INDEX.md")),
-        "pending unit index"
-    );
-    assert!(index.contains("vibe:native-pending"), "{index}");
-}
-
 struct PreInstallMarker;
 
 impl SlotLifecycle for PreInstallMarker {

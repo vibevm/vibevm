@@ -15,9 +15,20 @@ const RECORD_DOMAIN: &[u8] = b"vibe-native-build-record-id\0epoch=1\0";
 const CONFIG_DOMAIN: &[u8] = b"vibe-native-build-config\0epoch=1\0";
 const SOURCE_DOMAIN: &[u8] = b"vibe-native-source-witness\0epoch=1\0";
 
-pub(super) fn record_id(provider: &str, crate_dir: &str, platform: NativePlatform) -> String {
+pub(super) fn record_id(
+    provider: &ProviderFacts,
+    crate_dir: &str,
+    platform: NativePlatform,
+) -> String {
     let mut hash = Frame::new(RECORD_DOMAIN);
-    hash.field("provider", provider.as_bytes());
+    hash.field("provider", provider.identity.as_bytes());
+    hash.field(
+        "relative_root",
+        match provider.home {
+            ProviderHome::Dependency => b"slot",
+            ProviderHome::Host => b"project",
+        },
+    );
     hash.field("crate_dir", crate_dir.as_bytes());
     hash.field("platform", platform.key().as_bytes());
     hash.finish().hex()

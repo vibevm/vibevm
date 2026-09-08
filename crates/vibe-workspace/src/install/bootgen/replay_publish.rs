@@ -147,13 +147,6 @@ impl std::error::Error for BootReplayPublishFailure {
     }
 }
 
-#[cfg_attr(
-    not(test),
-    expect(
-        dead_code,
-        reason = "remove when R5.4-INSTALL invokes replay publication"
-    )
-)]
 pub(crate) fn publish_boot_replay(
     prepared: PreparedBootReplay,
 ) -> Result<PublishedBootReplay, BootReplayPublishFailure> {

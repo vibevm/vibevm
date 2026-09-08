@@ -492,7 +492,7 @@ fn missing_source_record_is_the_only_buildable_class() {
     assert!(!root.path().join("target").exists());
 
     let provider = super::provider::facts(all[0]);
-    let id = super::witness::record_id(&provider.identity, "native", current_platform());
+    let id = super::witness::record_id(&provider, "native", current_platform());
     let relative = super::record::record_path(&id);
     fs::create_dir_all(root.path().join(&relative).parent().unwrap()).unwrap();
     fs::write(root.path().join(relative), b"not-json").unwrap();
@@ -578,6 +578,40 @@ fn prebuilt_image_and_loader_failures_are_hard() {
             CompilerNativeInvokerErrorKind::InvocationFailed
         );
     }
+}
+
+#[test]
+fn current_prebuilt_with_source_fallback_projects_no_cargo_group() {
+    let root = tempdir().unwrap();
+    let relative = fixture(root.path());
+    let handler = ExtensionHandler::Native {
+        crate_dir: Some(PathBuf::from("native-fallback")),
+        prebuilt: Some(BTreeMap::from([(
+            current_platform().key().to_owned(),
+            relative,
+        )])),
+    };
+    let (registry, mechanisms) = registries(
+        root.path(),
+        vec![declaration("prebuilt-first", handler, "compile:pass", None)],
+    );
+    let all = registry.rows().iter().collect::<Vec<_>>();
+    assert!(
+        project_native_source_groups(&all, current_platform())
+            .unwrap()
+            .is_empty()
+    );
+    assert!(
+        build_native_sources(&execution(
+            &all,
+            root.path(),
+            &mechanisms,
+            &MechanismRoutes::default(),
+        ))
+        .unwrap()
+        .is_empty()
+    );
+    assert!(!root.path().join("native-fallback").exists());
 }
 
 #[path = "compiler_fixture_tests.rs"]

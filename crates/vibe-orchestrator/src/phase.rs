@@ -448,7 +448,17 @@ fn run(inputs: PhaseRun<'_>, measured: &mut Measured) -> Result<Outcome> {
     // Retain the opaque replay authority across the complete dispatch. R5.4-
     // FENCE will consume it at the build fence; INSTALL's responsibility is
     // to move, never rebuild, the exact value into this execution epoch.
-    let _native_install = collector.take_native();
+    let native_install = collector.take_native();
+    let native_platform = if phases.contains(&Phase::Build) {
+        Some(match native_install.as_ref() {
+            Some(native) => vibe_lifecycle::native::NativePlatform::from_key(native.platform_key())
+                .context("reading the native platform stored by prerequisite install")?,
+            None => vibe_lifecycle::native::NativePlatform::current()
+                .context("selecting the isolated build-slice native platform")?,
+        })
+    } else {
+        None
+    };
     notices.extend(ritual.notices.clone());
     surface_plan(observer, &ritual, &metadata, true)?;
     // ---- the ONE mechanism wiring (§6.0.2) ---------------------------
@@ -472,6 +482,8 @@ fn run(inputs: PhaseRun<'_>, measured: &mut Measured) -> Result<Outcome> {
         registry: &ritual.mechanisms,
         routes: &ritual.mechanism_routes,
         native_candidates: &ritual.native_candidates,
+        native_platform,
+        native: native_install,
         offline: metadata.offline,
         created_at: &created_at,
         deploy: deploy_carriage.as_ref(),
@@ -488,7 +500,7 @@ fn run(inputs: PhaseRun<'_>, measured: &mut Measured) -> Result<Outcome> {
             &agent,
             &metadata,
             Some(observed_at),
-            Some(&targets),
+            Some(targets),
         )
     } else {
         dispatch::dispatch_plan(
@@ -499,7 +511,7 @@ fn run(inputs: PhaseRun<'_>, measured: &mut Measured) -> Result<Outcome> {
             metadata,
             state_chain,
             Some(observed_at),
-            Some(&targets),
+            Some(targets),
         )
     };
     let outcome = match dispatched {

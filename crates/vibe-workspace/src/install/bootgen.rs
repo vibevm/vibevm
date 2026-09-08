@@ -298,7 +298,7 @@ where
     )?;
     let nodes = regenerated.nodes.clone();
     let replay = regenerated.into_replay_set(&epoch)?;
-    Ok((nodes, super::NativeInstallCarriage::new(epoch, replay)))
+    Ok((nodes, super::NativeInstallCarriage::new(epoch, replay)?))
 }
 
 /// Regenerate from materialised dependency slots, without resolving or copying.

@@ -367,13 +367,6 @@ pub(super) fn seal_replay_set(
     }))
 }
 
-#[cfg_attr(
-    not(test),
-    expect(
-        dead_code,
-        reason = "remove when R5.4-INSTALL invokes replay preparation"
-    )
-)]
 pub(crate) fn prepare_boot_replay<F: CompilerNativeReplayFactory>(
     replay: BootReplaySet,
     epoch: &OwnerRuntimeEpoch,
