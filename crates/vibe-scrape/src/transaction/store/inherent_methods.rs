@@ -149,7 +149,7 @@ macro_rules! system_transaction_store_inherent_methods {
             .map_err(|error| store_error(format!("reading transaction journal: {error:#}")))?
             .ok_or_else(|| store_error("transaction journal is absent"))?
             .bytes;
-        let journal: Journal = strict_json_parse(&bytes, "transaction journal")?;
+        let journal = journal_wire::decode(&bytes).map_err(store_error)?;
         if journal.transaction_id != *transaction {
             return Err(store_error(
                 "transaction directory and journal identity differ",
@@ -167,11 +167,12 @@ macro_rules! system_transaction_store_inherent_methods {
     }
 
     fn write_journal(&self, journal: &Journal, initial: bool) -> Result<(), TransactionError> {
-        let bytes = strict_json_bytes(
-            journal,
-            MAX_TRANSACTION_JOURNAL_BYTES,
-            "transaction journal",
-        )?;
+        let bytes = journal_wire::encode(journal).map_err(store_error)?;
+        if bytes.len() > MAX_TRANSACTION_JOURNAL_BYTES {
+            return Err(store_error(format!(
+                "encoded transaction journal exceeds {MAX_TRANSACTION_JOURNAL_BYTES} byte bound"
+            )));
+        }
         self.write_journal_bytes(journal, initial, &bytes)
     }
 

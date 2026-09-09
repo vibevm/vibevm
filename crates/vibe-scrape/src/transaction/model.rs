@@ -12,6 +12,7 @@ pub use verification::*;
 
 pub(crate) const MAX_TRANSACTION_JOURNAL_BYTES: usize = 64 * 1024 * 1024;
 pub(crate) const MAX_CANONICAL_REPORT_BYTES: usize = 64 * 1024 * 1024;
+pub(crate) const JOURNAL_EPOCH: u32 = 2;
 
 /// A lowercase, domain-separated SHA-256 identifier.
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]

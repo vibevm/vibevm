@@ -5,3 +5,4 @@
 // this file by hand will be overwritten on the next codegen run.
 
 pub mod retirement_checkpoint;
+pub mod transaction_journal;

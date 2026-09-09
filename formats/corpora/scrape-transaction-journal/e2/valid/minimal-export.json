@@ -1,0 +1,43 @@
+{
+  "schema": 2,
+  "revision": 0,
+  "project_key": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+  "transaction_id": "TX000001",
+  "mode": "export",
+  "plan_id": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+  "canonical_plan": "{\"schema\":1}",
+  "verification_workspace": null,
+  "project_display_root": "C:/project",
+  "execution": {
+    "kind": "export",
+    "plan": {
+      "output_identity": "output-id",
+      "output_parent_identity": "parent-id",
+      "output_display_path": "C:/output",
+      "output_name": "output",
+      "before_same_display_path": false,
+      "after_same_display_path": false,
+      "entries": [],
+      "source_tree": { "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333", "entries": [] },
+      "final_manifest": { "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333", "entries": [] }
+    }
+  },
+  "state": { "kind": "preparing" },
+  "snapshots": [],
+  "snapshots_persisted": 0,
+  "snapshot_active": null,
+  "candidate_name": null,
+  "quarantine_name": null,
+  "owned_tree_token": null,
+  "owned_tree_seal": null,
+  "cleanup_wal": null,
+  "completed_steps": 0,
+  "active_step": null,
+  "mutation_progress": [],
+  "actual_mutations": [],
+  "settlement_intent": null,
+  "delivered_tree": null,
+  "verification": [],
+  "events": [],
+  "report": null
+}

@@ -47,7 +47,7 @@ pub fn journal(
     expected_key: &ProjectKey,
     display_root: &str,
 ) -> Result<(), TransactionError> {
-    if value.schema != 1 || &value.project_key != expected_key {
+    if value.schema != JOURNAL_EPOCH || &value.project_key != expected_key {
         return corrupt("journal schema/project key mismatch");
     }
     digest(&Digest(value.project_key.0.clone()))?;

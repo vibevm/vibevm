@@ -83,6 +83,7 @@ impl FormatId {
         FormatId::ScrapePlan,
         FormatId::ScrapeReport,
         FormatId::ScrapeRetirementCheckpoint,
+        FormatId::ScrapeTransactionJournal,
         FormatId::ScrapeTransactionOwner,
         FormatId::SlotRecord,
     ];
@@ -168,6 +169,7 @@ impl FormatId {
             FormatId::ScrapePlan => "scrape-plan",
             FormatId::ScrapeReport => "scrape-report",
             FormatId::ScrapeRetirementCheckpoint => "scrape-retirement-checkpoint",
+            FormatId::ScrapeTransactionJournal => "scrape-transaction-journal",
             FormatId::ScrapeTransactionOwner => "scrape-transaction-owner",
             FormatId::SlotRecord => "slot-record",
         }
@@ -254,6 +256,7 @@ impl FormatId {
             FormatId::ScrapePlan => 1,
             FormatId::ScrapeReport => 1,
             FormatId::ScrapeRetirementCheckpoint => 2,
+            FormatId::ScrapeTransactionJournal => 2,
             FormatId::ScrapeTransactionOwner => 3,
             FormatId::SlotRecord => 1,
         }
@@ -340,6 +343,7 @@ impl FormatId {
             FormatId::ScrapePlan => true,
             FormatId::ScrapeReport => false,
             FormatId::ScrapeRetirementCheckpoint => false,
+            FormatId::ScrapeTransactionJournal => false,
             FormatId::ScrapeTransactionOwner => false,
             FormatId::SlotRecord => true,
         }
@@ -426,6 +430,7 @@ impl FormatId {
             FormatId::ScrapePlan => ForeignParsers::Many,
             FormatId::ScrapeReport => ForeignParsers::Many,
             FormatId::ScrapeRetirementCheckpoint => ForeignParsers::None,
+            FormatId::ScrapeTransactionJournal => ForeignParsers::None,
             FormatId::ScrapeTransactionOwner => ForeignParsers::None,
             FormatId::SlotRecord => ForeignParsers::None,
         }
@@ -512,6 +517,7 @@ impl FormatId {
             FormatId::ScrapePlan => UnknownFields::Deny,
             FormatId::ScrapeReport => UnknownFields::Deny,
             FormatId::ScrapeRetirementCheckpoint => UnknownFields::Deny,
+            FormatId::ScrapeTransactionJournal => UnknownFields::Deny,
             FormatId::ScrapeTransactionOwner => UnknownFields::Deny,
             FormatId::SlotRecord => UnknownFields::Deny,
         }

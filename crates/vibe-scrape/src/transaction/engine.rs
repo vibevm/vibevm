@@ -134,7 +134,7 @@ where
         let mode = prepared.mode();
         let execution = prepared.mode.clone();
         let mut journal = Journal {
-            schema: 1,
+            schema: JOURNAL_EPOCH,
             revision: 0,
             project_key: key,
             transaction_id,

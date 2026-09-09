@@ -251,11 +251,12 @@ macro_rules! system_transaction_store_trait_methods {
         // This exact byte vector is the revision-zero journal publication.
         // Its strict serialization and 64 MiB cap are proven before the first
         // project-home/transaction/workspace namespace creation.
-        let initial_journal_bytes = strict_json_bytes(
-            journal,
-            MAX_TRANSACTION_JOURNAL_BYTES,
-            "initial transaction journal",
-        )?;
+        let initial_journal_bytes = journal_wire::encode(journal).map_err(store_error)?;
+        if initial_journal_bytes.len() > MAX_TRANSACTION_JOURNAL_BYTES {
+            return Err(store_error(format!(
+                "encoded initial transaction journal exceeds {MAX_TRANSACTION_JOURNAL_BYTES} byte bound"
+            )));
+        }
         if self.pending(&journal.project_key)?.is_some() {
             return Err(store_error(
                 "a pending scrape transaction already occupies the project home",

@@ -1,0 +1,86 @@
+{
+  "schema": 2,
+  "revision": 9,
+  "project_key": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+  "transaction_id": "TXFULL002",
+  "mode": "in-place",
+  "plan_id": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+  "canonical_plan": "{\"schema\":1,\"command\":\"scrape\"}",
+  "verification_workspace": { "name": "v", "display_root": "C:/state/v", "ownership_token": "owner-v" },
+  "project_display_root": "C:/project",
+  "execution": {
+    "kind": "in-place",
+    "plan": {
+      "quarantine_parent_identity": "quarantine-parent",
+      "before_same_display_path": true,
+      "after_same_display_path": false,
+      "steps": [
+        {
+          "id": "rewrite-one",
+          "pair_id": "pair-one",
+          "kind": "atomic-rewrite",
+          "transitions": [
+            {
+              "location": "project",
+              "path": "src/main.rs",
+              "before": { "kind": "absent" },
+              "after": { "kind": "file", "state": { "sha256": "sha256:3333333333333333333333333333333333333333333333333333333333333333", "bytes": 7, "mode": null } }
+            },
+            {
+              "location": "quarantine",
+              "path": "old",
+              "before": { "kind": "empty-directory", "mode": null },
+              "after": { "kind": "tree", "state": { "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444", "root_mode": 493, "descendants": [{ "relative_path": "file", "kind": "file", "sha256": "sha256:5555555555555555555555555555555555555555555555555555555555555555", "bytes": 4, "mode": 420 }] } }
+            }
+          ]
+        }
+      ],
+      "contract": { "kind": "delete-last", "path": "vibe.toml", "empty_ancestors": ["vibevm"] },
+      "contract_step": { "id": "contract", "pair_id": null, "kind": "contract-delete-last", "transitions": [] },
+      "contract_cleanup_step": { "id": "cleanup", "pair_id": null, "kind": "prune-empty-directory", "transitions": [] },
+      "before_tree": { "digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666", "entries": [{ "path": "vibe.toml", "kind": "file", "sha256": "sha256:7777777777777777777777777777777777777777777777777777777777777777", "bytes": 10, "mode": null }] },
+      "pre_contract_tree": { "digest": "sha256:8888888888888888888888888888888888888888888888888888888888888888", "entries": [] },
+      "post_contract_tree": { "digest": "sha256:9999999999999999999999999999999999999999999999999999999999999999", "entries": [] },
+      "after_tree": { "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "entries": [] }
+    }
+  },
+  "state": { "kind": "contract-boundary", "action": "delete-last-moved" },
+  "snapshots": [{ "kind": "prepared-after", "name": "prepared/one", "sha256": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "bytes": 12, "mode": 420 }],
+  "snapshots_persisted": 1,
+  "snapshot_active": null,
+  "candidate_name": "candidate",
+  "quarantine_name": "quarantine",
+  "owned_tree_token": "tree-token",
+  "owned_tree_seal": { "directory_identity": "directory", "manifest_digest": "manifest", "entries": [{ "path": "file", "kind": "file", "sha256": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc", "bytes": 5, "mode": 420, "identity": "entry" }] },
+  "cleanup_wal": { "name": "candidate", "directory_identity": "directory", "manifest_digest": "manifest", "completed": [], "active": { "intent_token": "intent", "progress_key": "progress", "path": "file", "expected": { "path": "file", "kind": "file", "sha256": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc", "bytes": 5, "mode": 420, "identity": "entry" }, "root": false } },
+  "completed_steps": 1,
+  "active_step": 0,
+  "mutation_progress": [
+    { "id": "create", "kind": { "kind": "export-candidate-create" }, "status": "planned" },
+    { "id": "entry", "kind": { "kind": "export-entry" }, "status": "apply-intent" },
+    { "id": "publish", "kind": { "kind": "export-publish" }, "status": "applied" },
+    { "id": "quarantine", "kind": { "kind": "in-place-quarantine-create" }, "status": "rollback-intent" },
+    { "id": "rewrite", "kind": { "kind": "in-place", "mutation": "atomic-rewrite" }, "status": "rolled-back" }
+  ],
+  "actual_mutations": [{ "id": "rewrite", "kind": { "kind": "in-place", "mutation": "atomic-rewrite" }, "direction": "rollback", "origin": "recovery", "status": "rolled-back" }],
+  "settlement_intent": "rolled-back",
+  "delivered_tree": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "verification": [{ "phase": "after-health", "evidence_sha256": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", "evidence": { "accepted": false, "assurance": "reduced", "summary": "refused", "canonical_evidence": [123, 125] } }],
+  "events": ["prepared", "rolled back"],
+  "report": {
+    "project_key": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "transaction_id": "TXFULL002",
+    "plan_id": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+    "mode": "in-place",
+    "outcome": "rolled-back",
+    "assurance": "reduced",
+    "cleanup": "pending",
+    "before_tree": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+    "after_tree": null,
+    "snapshots": [{ "kind": "prepared-after", "name": "prepared/one", "sha256": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "bytes": 12, "mode": 420 }],
+    "verification": [],
+    "planned_mutations": [{ "id": "rewrite", "kind": { "kind": "in-place", "mutation": "atomic-rewrite" } }],
+    "actual_mutations": [],
+    "events": ["rolled back"]
+  }
+}

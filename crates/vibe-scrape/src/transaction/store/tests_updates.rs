@@ -261,12 +261,14 @@
 
     #[test]
     fn strict_enum_payloads_reject_unknown_and_duplicate_members() {
-        let unknown = serde_json::from_slice::<ExportPayload>(
-            br#"{"prepared-after":{"snapshot_name":"after","unexpected":true}}"#,
+        use vibe_wire::generated::scrape::e2::transaction_journal::ExportPayload as WirePayload;
+
+        let unknown = serde_json::from_slice::<WirePayload>(
+            br#"{"kind":"prepared-after","snapshot_name":"after","unexpected":true}"#,
         );
         assert!(unknown.is_err());
-        let duplicate = serde_json::from_slice::<ExportPayload>(
-            br#"{"prepared-after":{"snapshot_name":"first","snapshot_name":"second"}}"#,
+        let duplicate = serde_json::from_slice::<WirePayload>(
+            br#"{"kind":"prepared-after","snapshot_name":"first","snapshot_name":"second"}"#,
         );
         assert!(duplicate.is_err());
     }

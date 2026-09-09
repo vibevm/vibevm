@@ -7,7 +7,7 @@ use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::time::{SystemTime, UNIX_EPOCH};
 
-use serde::{Deserialize, Deserializer, Serialize, Serializer};
+use serde::{Deserialize, Serialize};
 use sha2::{Digest as _, Sha256};
 use vibe_safefs::{
     CleanupIntent, CleanupPreparation, DirectoryDurability, EntryIdentity, EntryState,
@@ -43,6 +43,7 @@ const MAX_TREE_ENTRIES: usize = 65_536;
 
 include!("store/trait_methods.rs");
 include!("store/inherent_methods.rs");
+mod journal_wire;
 
 static TRANSACTION_NONCE: AtomicU64 = AtomicU64::new(0);
 
@@ -158,7 +159,6 @@ impl SystemTransactionStore {
     system_transaction_store_inherent_methods!();
 }
 
-include!("store/domain_defs.rs");
 include!("store/safefs_wire.rs");
 
 impl TransactionStore for SystemTransactionStore {

@@ -17,21 +17,6 @@ fn strict_json_bytes<T: Serialize>(
     Ok(bytes)
 }
 
-fn serialize_canonical_plan<S>(bytes: &[u8], serializer: S) -> Result<S::Ok, S::Error>
-where
-    S: Serializer,
-{
-    let value = std::str::from_utf8(bytes).map_err(serde::ser::Error::custom)?;
-    serializer.serialize_str(value)
-}
-
-fn deserialize_canonical_plan<'de, D>(deserializer: D) -> Result<Vec<u8>, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    String::deserialize(deserializer).map(String::into_bytes)
-}
-
 fn strict_json_parse<'a, T: Deserialize<'a>>(
     bytes: &'a [u8],
     label: &str,
@@ -180,35 +165,19 @@ fn verification_workspace_token(project: &ProjectKey, transaction: &TransactionI
 }
 
 fn journal_intent_sha256(journal: &Journal) -> Result<String, TransactionError> {
+    let parts = journal_wire::intent_parts(journal).map_err(store_error)?;
     let mut hash = Sha256::new();
     hash.update(b"vibe-scrape-store-journal-intent-e1\0");
     hash_intent_part(&mut hash, &journal.schema.to_be_bytes());
     hash_intent_part(&mut hash, journal.project_key.0.as_bytes());
     hash_intent_part(&mut hash, journal.transaction_id.0.as_bytes());
-    hash_intent_part(
-        &mut hash,
-        &serde_json::to_vec(&journal.mode)
-            .map_err(|error| store_error(format!("encoding journal mode intent: {error}")))?,
-    );
+    hash_intent_part(&mut hash, &parts.mode);
     hash_intent_part(&mut hash, journal.plan_id.0.as_bytes());
     hash_intent_part(&mut hash, journal.project_display_root.as_bytes());
     hash_intent_part(&mut hash, &journal.canonical_plan);
-    hash_intent_part(
-        &mut hash,
-        &serde_json::to_vec(&journal.verification_workspace).map_err(|error| {
-            store_error(format!("encoding verification workspace intent: {error}"))
-        })?,
-    );
-    hash_intent_part(
-        &mut hash,
-        &serde_json::to_vec(&journal.execution)
-            .map_err(|error| store_error(format!("encoding journal execution intent: {error}")))?,
-    );
-    hash_intent_part(
-        &mut hash,
-        &serde_json::to_vec(&journal.snapshots)
-            .map_err(|error| store_error(format!("encoding journal snapshot intent: {error}")))?,
-    );
+    hash_intent_part(&mut hash, &parts.workspace);
+    hash_intent_part(&mut hash, &parts.execution);
+    hash_intent_part(&mut hash, &parts.snapshots);
     Ok(format!("sha256:{:x}", hash.finalize()))
 }
 

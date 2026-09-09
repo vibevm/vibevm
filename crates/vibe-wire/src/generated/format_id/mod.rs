@@ -97,6 +97,7 @@ pub enum FormatId {
     ScrapePlan,
     ScrapeReport,
     ScrapeRetirementCheckpoint,
+    ScrapeTransactionJournal,
     ScrapeTransactionOwner,
     SlotRecord,
 }

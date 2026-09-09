@@ -1,0 +1,324 @@
+{
+  "metadata": {
+    "description": "Epoch-2 internal scrape transaction journal. This strict external-state record is the sole restart authority after project state may have been removed. Epoch 1 was pre-public handwritten JSON and is deliberately refused rather than migrated implicitly. Root and named object order is schema-declared; inline discriminator arms use jtd-codegen's deterministic canonical field order.",
+    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-056#IMPL-E" },
+    "rustOptions": { "package": "vibe_wire::scrape_transaction_journal" },
+    "x-wire-order": ["schema", "revision", "project_key", "transaction_id", "mode", "plan_id", "canonical_plan", "verification_workspace", "project_display_root", "execution", "state", "snapshots", "snapshots_persisted", "snapshot_active", "candidate_name", "quarantine_name", "owned_tree_token", "owned_tree_seal", "cleanup_wal", "completed_steps", "active_step", "mutation_progress", "actual_mutations", "settlement_intent", "delivered_tree", "verification", "events", "report"]
+  },
+  "properties": {
+    "schema": { "type": "uint32" },
+    "revision": { "ref": "u64_count" },
+    "project_key": { "type": "string" },
+    "transaction_id": { "type": "string" },
+    "mode": { "ref": "transaction_mode" },
+    "plan_id": { "type": "string" },
+    "canonical_plan": { "type": "string" },
+    "verification_workspace": { "ref": "verification_workspace_intent", "nullable": true },
+    "project_display_root": { "type": "string" },
+    "execution": { "ref": "prepared_mode" },
+    "state": { "ref": "transaction_state" },
+    "snapshots": { "elements": { "ref": "snapshot_record" }, "metadata": { "x-empty": "emit" } },
+    "snapshots_persisted": { "ref": "usize_count" },
+    "snapshot_active": { "ref": "usize_count", "nullable": true },
+    "candidate_name": { "type": "string", "nullable": true },
+    "quarantine_name": { "type": "string", "nullable": true },
+    "owned_tree_token": { "type": "string", "nullable": true },
+    "owned_tree_seal": { "ref": "owned_tree_seal", "nullable": true },
+    "cleanup_wal": { "ref": "owned_tree_cleanup_wal", "nullable": true },
+    "completed_steps": { "ref": "usize_count" },
+    "active_step": { "ref": "usize_count", "nullable": true },
+    "mutation_progress": { "elements": { "ref": "mutation_progress" }, "metadata": { "x-empty": "emit" } },
+    "actual_mutations": { "elements": { "ref": "actual_mutation_evidence" }, "metadata": { "x-empty": "emit" } },
+    "settlement_intent": { "ref": "outcome", "nullable": true },
+    "delivered_tree": { "type": "string", "nullable": true },
+    "verification": { "elements": { "ref": "verification_record" }, "metadata": { "x-empty": "emit" } },
+    "events": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } },
+    "report": { "ref": "internal_report", "nullable": true }
+  },
+  "definitions": {
+    "u64_count": { "type": "float64", "metadata": { "x-rust-type": "u64" } },
+    "usize_count": { "type": "float64", "metadata": { "x-rust-type": "usize" } },
+    "transaction_mode": { "enum": ["export", "in-place"], "metadata": { "x-vocabulary": "closed" } },
+    "contract_boundary_action": { "enum": ["delete-last-moved", "external-preserved"], "metadata": { "x-vocabulary": "closed" } },
+    "transaction_state": {
+      "discriminator": "kind",
+      "mapping": {
+        "preparing": { "properties": {} },
+        "prepared": { "properties": {} },
+        "before-passed": { "properties": {} },
+        "candidate": { "properties": {} },
+        "published-pending-verify": { "properties": {} },
+        "mutating": { "properties": {} },
+        "contract-boundary": { "properties": { "action": { "ref": "contract_boundary_action" } } },
+        "verified": { "properties": {} },
+        "cleanup-pending": { "properties": {} },
+        "complete": { "properties": {} },
+        "rolling-back": { "properties": {} },
+        "rolled-back": { "properties": {} },
+        "rollback-failed": { "properties": {} }
+      }
+    },
+    "snapshot_kind": { "enum": ["contract", "canonical-contract", "canonical-plan", "verifier", "prepared-after"], "metadata": { "x-vocabulary": "closed" } },
+    "snapshot_record": {
+      "metadata": { "x-wire-order": ["kind", "name", "sha256", "bytes", "mode"] },
+      "properties": {
+        "kind": { "ref": "snapshot_kind" },
+        "name": { "type": "string" },
+        "sha256": { "type": "string" },
+        "bytes": { "ref": "u64_count" },
+        "mode": { "type": "uint32", "nullable": true }
+      }
+    },
+    "tree_entry_kind": { "enum": ["file", "directory"], "metadata": { "x-vocabulary": "closed" } },
+    "tree_entry": {
+      "metadata": { "x-wire-order": ["path", "kind", "sha256", "bytes", "mode"] },
+      "properties": {
+        "path": { "type": "string" },
+        "kind": { "ref": "tree_entry_kind" },
+        "sha256": { "type": "string", "nullable": true },
+        "bytes": { "ref": "u64_count", "nullable": true },
+        "mode": { "type": "uint32", "nullable": true }
+      }
+    },
+    "tree_manifest": {
+      "metadata": { "x-wire-order": ["digest", "entries"] },
+      "properties": {
+        "digest": { "type": "string" },
+        "entries": { "elements": { "ref": "tree_entry" }, "metadata": { "x-empty": "emit" } }
+      }
+    },
+    "file_state": {
+      "metadata": { "x-wire-order": ["sha256", "bytes", "mode"] },
+      "properties": {
+        "sha256": { "type": "string" },
+        "bytes": { "ref": "u64_count" },
+        "mode": { "type": "uint32", "nullable": true }
+      }
+    },
+    "export_payload": {
+      "discriminator": "kind",
+      "mapping": {
+        "source": { "properties": { "source_path": { "type": "string" }, "before": { "ref": "file_state" } } },
+        "prepared-after": { "properties": { "snapshot_name": { "type": "string" } } }
+      }
+    },
+    "export_entry": {
+      "metadata": { "x-wire-order": ["target_path", "kind", "mode", "payload"] },
+      "properties": {
+        "target_path": { "type": "string" },
+        "kind": { "ref": "tree_entry_kind" },
+        "mode": { "type": "uint32", "nullable": true },
+        "payload": { "ref": "export_payload", "nullable": true }
+      }
+    },
+    "export_plan": {
+      "metadata": { "x-wire-order": ["output_identity", "output_parent_identity", "output_display_path", "output_name", "before_same_display_path", "after_same_display_path", "entries", "source_tree", "final_manifest"] },
+      "properties": {
+        "output_identity": { "type": "string" },
+        "output_parent_identity": { "type": "string" },
+        "output_display_path": { "type": "string" },
+        "output_name": { "type": "string" },
+        "before_same_display_path": { "type": "boolean" },
+        "after_same_display_path": { "type": "boolean" },
+        "entries": { "elements": { "ref": "export_entry" }, "metadata": { "x-empty": "emit" } },
+        "source_tree": { "ref": "tree_manifest" },
+        "final_manifest": { "ref": "tree_manifest" }
+      }
+    },
+    "subtree_entry": {
+      "metadata": { "x-wire-order": ["relative_path", "kind", "sha256", "bytes", "mode"] },
+      "properties": {
+        "relative_path": { "type": "string" },
+        "kind": { "ref": "tree_entry_kind" },
+        "sha256": { "type": "string", "nullable": true },
+        "bytes": { "ref": "u64_count", "nullable": true },
+        "mode": { "type": "uint32", "nullable": true }
+      }
+    },
+    "subtree_state": {
+      "metadata": { "x-wire-order": ["digest", "root_mode", "descendants"] },
+      "properties": {
+        "digest": { "type": "string" },
+        "root_mode": { "type": "uint32", "nullable": true },
+        "descendants": { "elements": { "ref": "subtree_entry" }, "metadata": { "x-empty": "emit" } }
+      }
+    },
+    "path_state": {
+      "discriminator": "kind",
+      "mapping": {
+        "absent": { "properties": {} },
+        "file": { "properties": { "state": { "ref": "file_state" } } },
+        "empty-directory": { "properties": { "mode": { "type": "uint32", "nullable": true } } },
+        "tree": { "properties": { "state": { "ref": "subtree_state" } } }
+      }
+    },
+    "location": { "enum": ["project", "quarantine"], "metadata": { "x-vocabulary": "closed" } },
+    "path_transition": {
+      "metadata": { "x-wire-order": ["location", "path", "before", "after"] },
+      "properties": {
+        "location": { "ref": "location" },
+        "path": { "type": "string" },
+        "before": { "ref": "path_state" },
+        "after": { "ref": "path_state" }
+      }
+    },
+    "mutation_kind": { "enum": ["capture-before-image", "atomic-rewrite", "create-relocation-parent", "relocate", "quarantine-file", "prune-empty-directory", "contract-delete-last", "contract-ancestor-tree-park", "contract-external-preserve"], "metadata": { "x-vocabulary": "closed" } },
+    "mutation_step": {
+      "metadata": { "x-wire-order": ["id", "pair_id", "kind", "transitions"] },
+      "properties": {
+        "id": { "type": "string" },
+        "pair_id": { "type": "string", "nullable": true },
+        "kind": { "ref": "mutation_kind" },
+        "transitions": { "elements": { "ref": "path_transition" }, "metadata": { "x-empty": "emit" } }
+      }
+    },
+    "contract_commit": {
+      "discriminator": "kind",
+      "mapping": {
+        "delete-last": { "properties": { "path": { "type": "string" }, "empty_ancestors": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } } } },
+        "external-preserve": { "properties": {} }
+      }
+    },
+    "in_place_plan": {
+      "metadata": { "x-wire-order": ["quarantine_parent_identity", "before_same_display_path", "after_same_display_path", "steps", "contract", "contract_step", "contract_cleanup_step", "before_tree", "pre_contract_tree", "post_contract_tree", "after_tree"] },
+      "properties": {
+        "quarantine_parent_identity": { "type": "string" },
+        "before_same_display_path": { "type": "boolean" },
+        "after_same_display_path": { "type": "boolean" },
+        "steps": { "elements": { "ref": "mutation_step" }, "metadata": { "x-empty": "emit" } },
+        "contract": { "ref": "contract_commit" },
+        "contract_step": { "ref": "mutation_step" },
+        "contract_cleanup_step": { "ref": "mutation_step", "nullable": true },
+        "before_tree": { "ref": "tree_manifest" },
+        "pre_contract_tree": { "ref": "tree_manifest" },
+        "post_contract_tree": { "ref": "tree_manifest" },
+        "after_tree": { "ref": "tree_manifest" }
+      }
+    },
+    "prepared_mode": {
+      "discriminator": "kind",
+      "mapping": {
+        "export": { "properties": { "plan": { "ref": "export_plan" } } },
+        "in-place": { "properties": { "plan": { "ref": "in_place_plan" } } }
+      }
+    },
+    "owned_entry_seal": {
+      "metadata": { "x-wire-order": ["path", "kind", "sha256", "bytes", "mode", "identity"] },
+      "properties": {
+        "path": { "type": "string" },
+        "kind": { "ref": "tree_entry_kind" },
+        "sha256": { "type": "string", "nullable": true },
+        "bytes": { "ref": "u64_count", "nullable": true },
+        "mode": { "type": "uint32", "nullable": true },
+        "identity": { "type": "string" }
+      }
+    },
+    "owned_tree_seal": {
+      "metadata": { "x-wire-order": ["directory_identity", "manifest_digest", "entries"] },
+      "properties": {
+        "directory_identity": { "type": "string" },
+        "manifest_digest": { "type": "string" },
+        "entries": { "elements": { "ref": "owned_entry_seal" }, "metadata": { "x-empty": "emit" } }
+      }
+    },
+    "owned_tree_cleanup_intent": {
+      "metadata": { "x-wire-order": ["intent_token", "progress_key", "path", "expected", "root"] },
+      "properties": {
+        "intent_token": { "type": "string" },
+        "progress_key": { "type": "string" },
+        "path": { "type": "string" },
+        "expected": { "ref": "owned_entry_seal" },
+        "root": { "type": "boolean" }
+      }
+    },
+    "owned_tree_cleanup_wal": {
+      "metadata": { "x-wire-order": ["name", "directory_identity", "manifest_digest", "completed", "active"] },
+      "properties": {
+        "name": { "type": "string" },
+        "directory_identity": { "type": "string" },
+        "manifest_digest": { "type": "string" },
+        "completed": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } },
+        "active": { "ref": "owned_tree_cleanup_intent", "nullable": true }
+      }
+    },
+    "verification_workspace_intent": {
+      "metadata": { "x-wire-order": ["name", "display_root", "ownership_token"] },
+      "properties": {
+        "name": { "type": "string" },
+        "display_root": { "type": "string" },
+        "ownership_token": { "type": "string" }
+      }
+    },
+    "assurance": { "enum": ["full", "reduced"], "metadata": { "x-vocabulary": "closed" } },
+    "cleanup": { "enum": ["complete", "pending"], "metadata": { "x-vocabulary": "closed" } },
+    "outcome": { "enum": ["verified", "refused", "rolled-back", "rollback-failed"], "metadata": { "x-vocabulary": "closed" } },
+    "planned_mutation_kind": {
+      "discriminator": "kind",
+      "mapping": {
+        "export-candidate-create": { "properties": {} },
+        "export-entry": { "properties": {} },
+        "export-publish": { "properties": {} },
+        "in-place-quarantine-create": { "properties": {} },
+        "in-place": { "properties": { "mutation": { "ref": "mutation_kind" } } }
+      }
+    },
+    "mutation_direction": { "enum": ["apply", "rollback"], "metadata": { "x-vocabulary": "closed" } },
+    "mutation_origin": { "enum": ["execution", "recovery"], "metadata": { "x-vocabulary": "closed" } },
+    "mutation_status": { "enum": ["planned", "no-mutation", "apply-intent", "applied", "rollback-intent", "rolled-back"], "metadata": { "x-vocabulary": "closed" } },
+    "mutation_progress": {
+      "metadata": { "x-wire-order": ["id", "kind", "status"] },
+      "properties": { "id": { "type": "string" }, "kind": { "ref": "planned_mutation_kind" }, "status": { "ref": "mutation_status" } }
+    },
+    "actual_mutation_evidence": {
+      "metadata": { "x-wire-order": ["id", "kind", "direction", "origin", "status"] },
+      "properties": {
+        "id": { "type": "string" },
+        "kind": { "ref": "planned_mutation_kind" },
+        "direction": { "ref": "mutation_direction" },
+        "origin": { "ref": "mutation_origin" },
+        "status": { "ref": "mutation_status" }
+      }
+    },
+    "planned_mutation_evidence": {
+      "metadata": { "x-wire-order": ["id", "kind"] },
+      "properties": { "id": { "type": "string" }, "kind": { "ref": "planned_mutation_kind" } }
+    },
+    "verification_phase": { "enum": ["before", "pre-contract-residual", "final-residual", "after-health", "final-tree", "source-unchanged"], "metadata": { "x-vocabulary": "closed" } },
+    "verification_evidence": {
+      "metadata": { "x-wire-order": ["accepted", "assurance", "summary", "canonical_evidence"] },
+      "properties": {
+        "accepted": { "type": "boolean" },
+        "assurance": { "ref": "assurance" },
+        "summary": { "type": "string" },
+        "canonical_evidence": { "elements": { "type": "uint8" }, "metadata": { "x-empty": "emit" } }
+      }
+    },
+    "verification_record": {
+      "metadata": { "x-wire-order": ["phase", "evidence_sha256", "evidence"] },
+      "properties": {
+        "phase": { "ref": "verification_phase" },
+        "evidence_sha256": { "type": "string" },
+        "evidence": { "ref": "verification_evidence" }
+      }
+    },
+    "internal_report": {
+      "metadata": { "x-wire-order": ["project_key", "transaction_id", "plan_id", "mode", "outcome", "assurance", "cleanup", "before_tree", "after_tree", "snapshots", "verification", "planned_mutations", "actual_mutations", "events"] },
+      "properties": {
+        "project_key": { "type": "string" },
+        "transaction_id": { "type": "string" },
+        "plan_id": { "type": "string" },
+        "mode": { "ref": "transaction_mode" },
+        "outcome": { "ref": "outcome" },
+        "assurance": { "ref": "assurance" },
+        "cleanup": { "ref": "cleanup" },
+        "before_tree": { "type": "string", "nullable": true },
+        "after_tree": { "type": "string", "nullable": true },
+        "snapshots": { "elements": { "ref": "snapshot_record" }, "metadata": { "x-empty": "emit" } },
+        "verification": { "elements": { "ref": "verification_record" }, "metadata": { "x-empty": "emit" } },
+        "planned_mutations": { "elements": { "ref": "planned_mutation_evidence" }, "metadata": { "x-empty": "emit" } },
+        "actual_mutations": { "elements": { "ref": "actual_mutation_evidence" }, "metadata": { "x-empty": "emit" } },
+        "events": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }
+      }
+    }
+  }
+}

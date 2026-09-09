@@ -53,7 +53,7 @@
             entries: Vec::new(),
         };
         let mut journal = Journal {
-            schema: 1,
+            schema: JOURNAL_EPOCH,
             revision: 0,
             project_key: key.clone(),
             transaction_id: TransactionId("TX000001".to_owned()),
@@ -239,7 +239,7 @@
             .store
             .write_durable(
                 &relative,
-                br#"{"schema":1,"unexpected":true}"#,
+                br#"{"schema":2,"unexpected":true}"#,
                 "corrupt test journal",
             )
             .unwrap();
@@ -247,6 +247,21 @@
             .store
             .load_journal(&fixture.key, &fixture.journal.transaction_id);
         assert!(matches!(error, Err(TransactionError::Store(_))));
+    }
+
+    #[test]
+    fn exact_pre_public_epoch_one_shape_refuses_with_restart_recipe() {
+        let path = Path::new(env!("CARGO_MANIFEST_DIR")).join(
+            "../../formats/corpora/scrape-transaction-journal/e2/invalid/legacy-epoch1-shape.json",
+        );
+        let bytes = fs::read(path).unwrap();
+        let error = journal_wire::decode(&bytes).expect_err("epoch 1 has no implicit migration");
+        assert!(error.contains("pre-public"), "{error}");
+        assert!(error.contains("restart scrape"), "{error}");
+        assert!(
+            error.contains("automatic migration is not available"),
+            "{error}"
+        );
     }
 
     #[cfg(windows)]
@@ -258,8 +273,7 @@
             unreachable!()
         };
         plan.output_identity = "different-but-valid-output-identity".to_owned();
-        let bytes = strict_json_bytes(&corrupted, MAX_TRANSACTION_JOURNAL_BYTES, "drifted journal")
-            .unwrap();
+        let bytes = journal_wire::encode(&corrupted).unwrap();
         let relative = journal_relative(&fixture.key, &fixture.journal.transaction_id).unwrap();
         fixture
             .store
@@ -278,21 +292,13 @@
     #[test]
     fn embedded_canonical_plan_is_strict_utf8_not_an_unbounded_byte_array() {
         let fixture = fixture();
-        let bytes = strict_json_bytes(
-            &fixture.journal,
-            MAX_TRANSACTION_JOURNAL_BYTES,
-            "test journal",
-        )
-        .unwrap();
+        let bytes = journal_wire::encode(&fixture.journal).unwrap();
         let value: serde_json::Value = serde_json::from_slice(&bytes).unwrap();
         assert_eq!(
             value["canonical_plan"].as_str().unwrap().as_bytes(),
             fixture.journal.canonical_plan
         );
-        assert_eq!(
-            strict_json_parse::<Journal>(&bytes, "test journal").unwrap(),
-            fixture.journal
-        );
+        assert_eq!(journal_wire::decode(&bytes).unwrap(), fixture.journal);
     }
 
     #[cfg(windows)]

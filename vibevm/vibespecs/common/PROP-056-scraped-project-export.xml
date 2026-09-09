@@ -1279,6 +1279,13 @@ timeout_seconds = 120</fence>
       candidate publication and export evidence.</IMPL-D>
       <IMPL-E fact="true" status="impl/done">E — external journal/lock, same-volume
       quarantine, in-place contract-last commit, rollback and recovery.</IMPL-E>
+      <JOURNAL-E2-TRANSITION fact="true" status="impl/done">The pre-public internal
+      transaction journal moved from handwritten epoch 1 JSON to the strict generated
+      `scrape-transaction-journal/e2` root. Old epoch-1 state refuses with an actionable
+      restart recipe and is not migrated automatically; the public scrape plan, report and
+      health-result roots remain byte-identical at epoch 1. Root and named-object member
+      order is schema-declared; inline standard JTD discriminator arms use the pinned
+      generator's deterministic canonical field order.</JOURNAL-E2-TRANSITION>
       <IMPL-F fact="true" status="impl/done">F — the bounded epoch-1 evidence includes
       transaction/store fault matrices, composed production recovery, real Rust
       Cargo/custom smokes, Windows races and explicit non-Windows fail-closed

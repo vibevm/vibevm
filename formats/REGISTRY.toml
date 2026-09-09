@@ -763,6 +763,17 @@ unknown_fields = "deny"
 corpus = "formats/corpora/scrape/e1"
 sunset = "none"
 
+# Internal, restart-authoritative state. Epoch 2 is the first generated JTD
+# root; pre-public handwritten epoch 1 is refused rather than guessed forward.
+[format.scrape-transaction-journal]
+epoch = 2
+schema = "schemas/scrape/e2/transaction_journal.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/scrape-transaction-journal/e2"
+sunset = "none"
+
 # Internal external-transaction sidecars. Their embedded epochs predate their
 # JTD roots and remain byte-identical through schema-declared wire order.
 [format.scrape-transaction-owner]

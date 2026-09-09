@@ -28,7 +28,7 @@
         seal: OwnedTreeSeal,
     ) -> Journal {
         Journal {
-            schema: 1,
+            schema: super::super::JOURNAL_EPOCH,
             revision: 0,
             project_key: super::super::ProjectKey("project".to_owned()),
             transaction_id: super::super::TransactionId("TXN001".to_owned()),
