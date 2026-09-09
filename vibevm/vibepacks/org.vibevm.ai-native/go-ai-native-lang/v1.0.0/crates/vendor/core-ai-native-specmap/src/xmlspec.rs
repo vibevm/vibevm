@@ -33,6 +33,7 @@ mod doc;
 mod facts;
 mod mdout;
 mod reader;
+mod requirements;
 
 use crate::mdspec::{KindLine, canonical_doc_path, duplicate_anchor_warning, parse_kind_line};
 use mdout::{document_lines, item_line, para_line, section_lines, typed_id_after, unit_body};
@@ -95,15 +96,16 @@ pub(super) struct XUnit {
 
 pub(super) struct XFact {
     id: Option<String>,
+    requirements: Option<requirements::ArtifactRequirements>,
     status: Option<XStatus>,
     /// Native line of the `<fact>` element (the anchor's own line).
     line: u32,
 }
 
 impl XFact {
-    /// A fact worth serialising: an id, a status, or both.
+    /// A fact worth serialising: identity, requirements, status, or a mixture.
     fn is_meaningful(&self) -> bool {
-        self.id.is_some() || self.status.is_some()
+        self.id.is_some() || self.requirements.is_some() || self.status.is_some()
     }
 }
 
@@ -422,6 +424,8 @@ impl Minter<'_> {
     }
 }
 
+#[cfg(test)]
+mod requirements_tests;
 #[cfg(test)]
 mod td_tests;
 #[cfg(test)]

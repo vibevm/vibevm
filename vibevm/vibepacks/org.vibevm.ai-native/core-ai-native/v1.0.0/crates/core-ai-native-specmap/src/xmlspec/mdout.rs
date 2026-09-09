@@ -165,6 +165,9 @@ pub(super) fn para_line(u: &XUnit, typed: Option<&str>) -> String {
     if !u.text.is_empty() {
         parts.push(u.text.clone());
     }
+    if let Some(requirements) = u.fact.as_ref().and_then(|f| f.requirements.as_ref()) {
+        parts.push(format!("@requires:{}", requirements.canonical_csv()));
+    }
     if let Some(st) = u.fact.as_ref().and_then(|f| f.status.as_ref()) {
         parts.push(status_suffix(st));
     }
@@ -187,6 +190,9 @@ pub(super) fn item_line(u: &XUnit, index: usize, ordered: bool, typed: Option<&s
     if !rest.is_empty() {
         parts.push(rest.to_string());
     }
+    if let Some(requirements) = u.fact.as_ref().and_then(|f| f.requirements.as_ref()) {
+        parts.push(format!("@requires:{}", requirements.canonical_csv()));
+    }
     if let Some(st) = u.fact.as_ref().and_then(|f| f.status.as_ref()) {
         parts.push(status_suffix(st));
     }
@@ -199,6 +205,9 @@ pub(super) fn unit_body(u: &XUnit) -> String {
     let mut parts: Vec<String> = Vec::new();
     if !u.text.is_empty() {
         parts.push(u.text.clone());
+    }
+    if let Some(requirements) = u.fact.as_ref().and_then(|f| f.requirements.as_ref()) {
+        parts.push(format!("@requires:{}", requirements.canonical_csv()));
     }
     if let Some(st) = u.fact.as_ref().and_then(|f| f.status.as_ref()) {
         parts.push(status_suffix(st));

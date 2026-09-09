@@ -7,6 +7,7 @@ specmark::scope!("spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014
 
 use super::blocks::status_from_attrs;
 use super::reader::{Ev, Parser, Violation, attr, only_attrs};
+use super::requirements::ArtifactRequirements;
 use super::{XBlock, XFact, XUnit};
 use specmark_grammar::is_valid_fact_id;
 
@@ -114,6 +115,7 @@ pub(super) fn fact_element(
             "audience",
             "comment",
             "ref",
+            "requires",
         ][..]
     } else {
         &[
@@ -125,6 +127,7 @@ pub(super) fn fact_element(
             "audience",
             "comment",
             "ref",
+            "requires",
         ][..]
     };
     only_attrs(attrs, allowed, element_name, at)?;
@@ -158,6 +161,46 @@ pub(super) fn fact_element(
     } else {
         None
     };
+    let requirements = attr(attrs, "requires")
+        .map(|raw| ArtifactRequirements::parse(raw, at))
+        .transpose()?;
+    if let Some(requirements) = &requirements {
+        if id.is_none() {
+            return Err(Violation::at(
+                at,
+                "a fact with `requires` must have an address; the table-cell id exemption does not apply",
+            ));
+        }
+        if id.as_deref().is_some_and(|id| !is_valid_fact_id(id)) {
+            return Err(Violation::at(
+                at,
+                "a fact with `requires` must have a valid fact address",
+            ));
+        }
+        let Some(status) = &status else {
+            return Err(Violation::at(
+                at,
+                "a fact with `requires` must carry a final `status`",
+            ));
+        };
+        if status.state == "void" {
+            return Err(Violation::at(
+                at,
+                "a fact at `state=void` cannot carry `requires`",
+            ));
+        }
+        if requirements.contains_external()
+            && status
+                .r#ref
+                .as_deref()
+                .is_none_or(|value| value.trim().is_empty())
+        {
+            return Err(Violation::at(
+                at,
+                "the `external` requirement needs exactly one non-empty fact `ref`",
+            ));
+        }
+    }
     let mut text = String::new();
     if !was_empty {
         loop {
@@ -191,6 +234,7 @@ pub(super) fn fact_element(
     Ok((
         XFact {
             id,
+            requirements,
             status,
             line: at as u32,
         },

@@ -429,7 +429,7 @@ or end of a paragraph's text, never mid-sentence, never inside code or links.</S
       </facts>
     </rollup>
     <terminal-artifacts title="3.11 Terminal artifact obligations">
-      <p><TERMINALITY-IS-ORTHOGONAL fact="true" status="impl/done">**Decision
+      <p><TERMINALITY-IS-ORTHOGONAL fact="true" status="impl/done" requires="specification">**Decision
       (owner, 2026-09-09): terminality is independent of status.** `stage/state`
       continues to answer where a fact stands now, and `done` continues to mean
       done only for that stage. An addressable fact may separately declare the
@@ -655,7 +655,7 @@ or end of a paragraph's text, never mid-sentence, never inside code or links.</S
     <facts ordered="false">
       <EVERY-GENRE-IN-SCOPE fact="true" status="impl/done">**Every genre is in scope** — contracts, design docs, research, plans, manual
   tests: a design decision the code ignores is first-class drift.</EVERY-GENRE-IN-SCOPE>
-      <GENRE-TERMINALS fact="true" status="spec/done">Genre informs which
+      <GENRE-TERMINALS fact="true" status="spec/done" requires="specification">Genre informs which
   artifact kinds an author declares, but no genre silently supplies a terminal
   status. A contract may end as specification, implementation, verification or
   a frozen combination; research may require its own study plus dispositions;
