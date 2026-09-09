@@ -5,8 +5,8 @@
 //! the per-file budget.
 
 use super::{
-    ADDRESS_CAP_BYTES, AddressDefect, EdgeRef, IMPLEMENTED_LAWS, PathUnsafety, RequirementsError,
-    validate, validate_edge,
+    ADDRESS_CAP_BYTES, AddressDefect, EdgeRef, IMPLEMENTED_LAWS, PathUnsafety, REQUIREMENTS_EPOCH,
+    RequirementsError, validate, validate_edge,
 };
 use crate::behaviour::compiler_trace_index::DIAGNOSTIC_CAP_BYTES;
 use crate::generated::requirements_report::{
@@ -76,6 +76,7 @@ pub(super) fn host_row() -> RequirementRow {
         source: coordinate(RequirementSourceKind::Host, "org.demo/host"),
         authoring: AuthoringObservation {
             presence: AuthoringObservationPresence::Marked,
+            requires: None,
             status: Some(status(FactStatusStage::Spec, FactStatusState::Work)),
         },
         adoption: AdoptionObservation {
@@ -92,6 +93,7 @@ pub(super) fn package_row() -> RequirementRow {
         source: coordinate(RequirementSourceKind::Package, "org.vendor/tool"),
         authoring: AuthoringObservation {
             presence: AuthoringObservationPresence::Unmarked,
+            requires: None,
             status: None,
         },
         adoption: AdoptionObservation {
@@ -116,7 +118,7 @@ pub(super) fn edge(verb: RequirementRelationVerb, symbol: &str, line: u32) -> Re
 /// relations not requested.
 pub(super) fn base() -> RequirementsReport {
     RequirementsReport {
-        requirements: 1,
+        requirements: REQUIREMENTS_EPOCH,
         observation: observation(),
         query: query(false),
         sources: vec![
@@ -219,7 +221,7 @@ fn the_law_list_is_a_set() {
 #[test]
 fn the_report_identity_is_held_to_its_shape() {
     let mut epoch = base();
-    epoch.requirements = 2;
+    epoch.requirements = 1;
     assert_eq!(law_of(&epoch), "report-identity");
 
     for field in ["observation_id", "source_digest"] {

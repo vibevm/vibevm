@@ -145,19 +145,20 @@ pub(super) fn apply_with_policies(
                 // Unreachable through the schema side — R21 refuses the
                 // site while the map is built — and named here rather
                 // than rewritten, so the two sides cannot part silently.
-                (Required::Required, Policy::Omit) => {
+                (Required::Required, Policy::Omit | Policy::Preserve) => {
                     bail!(
                         "{file}:{line}: the collection field `{ident}` is \
-                         bare (a required member) yet keyed `omit` — rule \
-                         R21 forbids omitting a required collection.\n\
+                         bare (a required member) yet keyed `{}` — rule \
+                         R21 permits only `emit` for a required collection.\n\
                          Fix: align the schema's `metadata.\"x-empty\"` \
                          with the field's requiredness, then run `cargo \
-                         xtask codegen`."
+                         xtask codegen`.",
+                        policy.as_str()
                     );
                 }
                 (Required::Optional, policy) => {
                     emit_collapsed(&attrs, &mut out, file, line, ident, &collection, policy)?;
-                    emit_collapsed_line(body, chunk, ident, &collection, &mut out);
+                    emit_collection_line(body, chunk, ident, &collection, policy, &mut out);
                 }
             }
             attrs.clear();
@@ -235,6 +236,9 @@ fn emit_collapsed(
                     collection.container
                 )),
                 Policy::Emit => out.push_str("#[serde(default)]"),
+                Policy::Preserve => {
+                    out.push_str("#[serde(default, skip_serializing_if = \"Option::is_none\")]")
+                }
             }
             out.push_str(ending);
         } else if rename_wire(attr_text).is_some() {
@@ -268,14 +272,15 @@ fn emit_collapsed(
     Ok(())
 }
 
-/// Emit the collapsed field line itself: the indent and the identifier
-/// are the generator's, byte for byte; only the type loses its
-/// `Option<Box<…>` wrapper.
-fn emit_collapsed_line(
+/// Emit the field line itself. `omit` and `emit` collapse the optional
+/// collection to its bare container; `preserve` removes only the
+/// wire-invisible `Box` and retains `Option<C>`.
+fn emit_collection_line(
     body: &str,
     chunk: &str,
     ident: &str,
     collection: &Collection<'_>,
+    policy: Policy,
     out: &mut String,
 ) {
     let indent = &body[..body.len() - body.trim_start().len()];
@@ -284,7 +289,13 @@ fn emit_collapsed_line(
     out.push_str("pub ");
     out.push_str(ident);
     out.push_str(": ");
-    out.push_str(collection.collapsed);
+    if policy == Policy::Preserve {
+        out.push_str("Option<");
+        out.push_str(collection.collapsed);
+        out.push('>');
+    } else {
+        out.push_str(collection.collapsed);
+    }
     out.push(',');
     out.push_str(ending);
 }

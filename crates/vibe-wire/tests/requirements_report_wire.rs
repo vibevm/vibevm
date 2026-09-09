@@ -32,13 +32,13 @@ use vibe_wire::generated::requirements_report::{
 };
 
 fn corpus_dir() -> PathBuf {
-    repo_root().join("formats/corpora/requirements/e1")
+    repo_root().join("formats/corpora/requirements/e2")
 }
 
 /// Parse one corpus through the generated root, prove the bytes
 /// survive, and prove the value satisfies every relational law.
 fn corpus(name: &str) -> RequirementsReport {
-    let authored = read_json(&format!("formats/corpora/requirements/e1/{name}"));
+    let authored = read_json(&format!("formats/corpora/requirements/e2/{name}"));
     let report: RequirementsReport =
         serde_json::from_value(authored.clone()).unwrap_or_else(|e| panic!("{name}: {e}"));
     assert_eq!(
@@ -75,13 +75,14 @@ fn the_format_is_inventoried_under_a_surface_neutral_id() {
         "the requirements root is not a CLI-only format"
     );
     let row = &formats["requirements-report"];
+    assert_eq!(row["epoch"].as_integer(), Some(2));
     assert_eq!(
         row["schema"].as_str(),
         Some("schemas/requirements_report.jtd.json")
     );
     assert_eq!(
         row["corpus"].as_str(),
-        Some("formats/corpora/requirements/e1")
+        Some("formats/corpora/requirements/e2")
     );
     assert_eq!(
         row["foreign_parsers"].as_str(),
@@ -141,7 +142,7 @@ fn lock_selected_specmap_schema() -> PathBuf {
 #[test]
 fn the_base_corpus_keeps_four_observation_axes_apart() {
     let report = corpus("report_base.json");
-    assert_eq!(report.requirements, 1);
+    assert_eq!(report.requirements, 2);
     assert!(!report.truncated);
     assert!(!report.query.relations);
     assert_eq!(report.query.limit, 100);
@@ -450,6 +451,20 @@ fn the_relation_vocabularies_are_the_specmap_engine_s_own_closed_sets() {
         enum_at(&schema, "/definitions/fact_status/properties/state/enum"),
         ["hold", "plan", "work", "done", "void"]
     );
+    assert_eq!(
+        enum_at(&schema, "/definitions/required_artifact_kind/enum"),
+        [
+            "specification",
+            "implementation",
+            "verification",
+            "documentation",
+            "decision",
+            "research",
+            "plan",
+            "disposition",
+            "external",
+        ]
+    );
     // Every enum site on this root is CLOSED — a requirements answer
     // with an unknown word is a reader error, not a newer writer.
     let mut open_sites = Vec::new();
@@ -458,7 +473,11 @@ fn the_relation_vocabularies_are_the_specmap_engine_s_own_closed_sets() {
         open_sites.iter().all(|policy| policy == "closed"),
         "every requirements vocabulary is closed: {open_sites:?}"
     );
-    assert_eq!(open_sites.len(), 10, "ten closed vocabularies on this root");
+    assert_eq!(
+        open_sites.len(),
+        11,
+        "eleven closed vocabularies on this root"
+    );
     // The base source layer's own closed set, which the correction
     // added: four states, four different instructions.
     assert_eq!(

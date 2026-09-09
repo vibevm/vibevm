@@ -121,6 +121,7 @@ fn a_duplicate_fact_row_is_a_typed_invariant_never_a_silent_dedup() {
         },
         authoring: AuthoringObservation {
             presence: AuthoringObservationPresence::Unmarked,
+            requires: None,
             status: None,
         },
         adoption: vibe_wire::generated::requirements_report::AdoptionObservation {

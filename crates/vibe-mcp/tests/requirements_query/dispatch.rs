@@ -61,7 +61,7 @@ fn one_call_returns_the_generated_root_and_the_bounded_text() {
     assert_eq!(response["result"]["isError"], false);
 
     let structured = &response["result"]["structuredContent"];
-    assert_eq!(structured["requirements"], 1);
+    assert_eq!(structured["requirements"], 2);
     assert_eq!(structured["query"]["limit"], 100);
     assert_eq!(structured["query"]["relations"], false);
     assert_eq!(structured["truncated"], false);
@@ -78,6 +78,7 @@ fn one_call_returns_the_generated_root_and_the_bounded_text() {
     let text = content[0]["text"].as_str().unwrap();
     assert!(text.contains(ADDRESS), "{text}");
     assert!(text.contains("authoring=marked=impl/done"), "{text}");
+    assert!(text.contains("requires=unclassified"), "{text}");
     assert!(
         !text.contains(PROSE),
         "the text channel carried prose: {text}"

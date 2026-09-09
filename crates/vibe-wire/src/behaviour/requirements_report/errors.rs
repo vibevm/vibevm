@@ -16,7 +16,8 @@ use crate::generated::requirements_report::{
 mod defects;
 
 pub use defects::{
-    AddressDefect, EdgeRef, ReasonDefect, SourceDefect, SourceStateDefect, StatusAxis,
+    AddressDefect, EdgeRef, ReasonDefect, RequirementsSetDefect, SourceDefect, SourceStateDefect,
+    StatusAxis,
 };
 
 /// Why a project-relative forward-slashed path failed its law. The
@@ -175,6 +176,12 @@ pub enum RequirementsError {
         host: bool,
         presence: AdoptionObservationPresence,
     },
+    /// `requirements-set` — a present authored set is empty,
+    /// repeats a kind, or is not in canonical vocabulary order.
+    RequirementsSet {
+        index: usize,
+        defect: RequirementsSetDefect,
+    },
     /// `edge-bounds` — a 0 line; source lines are 1-based.
     EdgeLine { at: EdgeRef },
     /// `edge-bounds` — a blank symbol.
@@ -235,6 +242,7 @@ impl RequirementsError {
             | E::EdgesWithoutRequest { .. }
             | E::RelationSourceMissing { .. } => "relation-state-matrix",
             E::StatusPresence { .. } | E::AdoptionKind { .. } => "status-presence",
+            E::RequirementsSet { .. } => "requirements-set",
             E::EdgeLine { .. } | E::EdgeBlank { .. } | E::EdgeFile { .. } => "edge-bounds",
             E::ScalarOverCap { .. } | E::UnsafeScalar { .. } => "bounded-text",
             E::RowsOverLimit { .. } | E::TruncationClaim { .. } => "truncation-honesty",
@@ -482,6 +490,9 @@ impl std::fmt::Display for RequirementsError {
                 if *host { "host" } else { "package" },
                 adoption_spelling(presence)
             ),
+            E::RequirementsSet { index, defect } => {
+                write!(f, "rows[{index}].authoring.requires {}", defect.phrase())
+            }
             E::EdgeLine { at } => {
                 write!(f, "{at}.line is 0; source lines are 1-based")
             }

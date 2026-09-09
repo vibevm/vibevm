@@ -43,8 +43,9 @@ pub struct RequirementsReport {
     /// the base source layer above.
     pub relation_sources: Vec<RelationSource>,
 
-    /// The requirements wire epoch — 1 today. A reader that does not know the
-    /// number stops rather than guessing at the members.
+    /// The requirements wire epoch — 2 today. Epoch 2 adds only the optional
+    /// authored `requires` set and its identity frames. A reader that does not
+    /// know the number stops rather than guessing at the members.
     pub requirements: u32,
 
     /// One row per addressed fact, sorted by full address. Explicit even when
@@ -115,6 +116,8 @@ pub enum AuthoringObservationPresence {
     Unmarked,
 }
 
+/// The authored axis in epoch-2 frame order: presence, optional status, then
+/// the optional terminal-artifact contract.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct AuthoringObservation {
     /// Whether the authored document carries a status marker for this fact. An
@@ -125,6 +128,12 @@ pub struct AuthoringObservation {
     /// The authored status. Present exactly for `marked`.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub status: Option<FactStatus>,
+
+    /// The optional authored terminal-artifact contract. Absent means
+    /// unclassified; present is a non-empty set emitted in canonical vocabulary
+    /// order with no duplicate. It is not a terminal or fulfilment verdict.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub requires: Option<Vec<RequiredArtifactKind>>,
 }
 
 /// Where the unit stands in its development cycle (PROP-043 §3.3). Closed: a
@@ -253,6 +262,37 @@ pub struct RelationSource {
     /// explain.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub reason_code: Option<String>,
+}
+
+/// The closed PROP-043 terminal-artifact vocabulary, in canonical order.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum RequiredArtifactKind {
+    #[serde(rename = "decision")]
+    Decision,
+
+    #[serde(rename = "disposition")]
+    Disposition,
+
+    #[serde(rename = "documentation")]
+    Documentation,
+
+    #[serde(rename = "external")]
+    External,
+
+    #[serde(rename = "implementation")]
+    Implementation,
+
+    #[serde(rename = "plan")]
+    Plan,
+
+    #[serde(rename = "research")]
+    Research,
+
+    #[serde(rename = "specification")]
+    Specification,
+
+    #[serde(rename = "verification")]
+    Verification,
 }
 
 /// How the edge came to exist, in the specmap engine's own closed spelling.

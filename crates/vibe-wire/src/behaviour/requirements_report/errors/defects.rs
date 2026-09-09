@@ -187,3 +187,41 @@ impl ReasonDefect {
         }
     }
 }
+
+/// What is wrong with a present authored requirements set.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum RequirementsSetDefect {
+    /// An unmarked authoring observation cannot carry authored metadata.
+    UnmarkedAuthoring,
+    /// Requirements exist without the final authored status they qualify.
+    StatusAbsent,
+    /// A void fact asserts no claim and therefore carries no requirements.
+    VoidStatus,
+    /// Presence carried no member; absence is the only unclassified form.
+    Empty,
+    /// One kind appears more than once.
+    Duplicate,
+    /// Kinds do not follow the closed vocabulary's canonical order.
+    OutOfOrder,
+}
+
+impl RequirementsSetDefect {
+    pub(super) fn phrase(self) -> &'static str {
+        match self {
+            RequirementsSetDefect::UnmarkedAuthoring => {
+                "is present while authoring is `unmarked`; only a marked fact carries authored requirements"
+            }
+            RequirementsSetDefect::StatusAbsent => {
+                "is present without authoring.status; requirements qualify a final authored status"
+            }
+            RequirementsSetDefect::VoidStatus => {
+                "is present with authoring status state `void`; a void fact asserts no claim"
+            }
+            RequirementsSetDefect::Empty => {
+                "is empty; absence means unclassified and presence is non-empty"
+            }
+            RequirementsSetDefect::Duplicate => "repeats a kind; the member is a set",
+            RequirementsSetDefect::OutOfOrder => "is not in canonical artifact-vocabulary order",
+        }
+    }
+}

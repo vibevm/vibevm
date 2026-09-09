@@ -12,7 +12,7 @@
     "x-address-cap-bytes": 2048,
     "x-limit-max": 256,
     "x-relational-laws": [
-      "report-identity: `requirements` is exactly 1 (the epoch this root speaks), and `observation.observation_id` and `observation.source_digest` are each `sha256:` followed by 64 lowercase hex characters. A present `observation.lifecycle_run_id` is exactly 32 lowercase hex — the same id the lifecycle state and the evidence wire hold themselves to. `observation.selected` is `.` or a safe forward-slashed workspace-relative path (nonblank, no backslash, no control byte, no leading `/`, no drive letter, no `.`, `..` or empty segment)",
+      "report-identity: `requirements` is exactly 2 (the epoch this root speaks), and `observation.observation_id` and `observation.source_digest` are each `sha256:` followed by 64 lowercase hex characters. A present `observation.lifecycle_run_id` is exactly 32 lowercase hex — the same id the lifecycle state and the evidence wire hold themselves to. `observation.selected` is `.` or a safe forward-slashed workspace-relative path (nonblank, no backslash, no control byte, no leading `/`, no drive letter, no `.`, `..` or empty segment)",
       "query-bounds: `query.limit` is within 1..=256 (`x-limit-max`) — zero answers nothing and an unbounded query is not bounded metadata — and a present `query.address_prefix` starts with `spec://`, never a bare fact id, and carries no CR, LF, NUL or backslash",
       "address-grammar: every row's `address` is a FULL `spec://<group>/<package>/<path>#<fact>` address: the `spec://` scheme, a group that parses as a `vibe_core::Group`, a package that parses as a `vibe_core::PackageName`, a nonblank forward-slashed path with no `.`, `..` or empty segment, exactly one `#`, and a nonblank fact anchor. Identity is always the full address (`##OPTIONAL-IR-FACT-EVIDENCE`); a bare id names nothing a second reader could resolve, and a coordinate that only LOOKS like one is not one",
       "prefix-scope: when `query.address_prefix` is present every row's `address` starts with it — a bounded query that answered outside its own scope is not the query that was asked",
@@ -22,6 +22,7 @@
       "row-source-binding: every row names an `available` source result for its `source.package`, agreeing with it on `kind` — one coordinate has one base result, so a row that calls it `host` while the base layer calls it `package` is naming a source that does not exist — and the coordinate parsed out of the row's own full address equals that `source.package`. A row whose address says one package while its source says another is two claims wearing one row",
       "relation-state-matrix: a relation source's `provenance` is decided by its `state` — `not-requested` and `unavailable` carry `none`, `current` carries `fresh-project-map`, `carried` carries `carried-package-map`, and `stale` or `invalid` carries whichever map failed to prove itself (never `none`). `not-requested` carries no reason code; `stale`, `unavailable` and `invalid` each carry a nonblank one; `current` and `carried` carry none. The KIND of the source constrains the provenance: a host package's relation state is built fresh in memory, so it is `current`/`fresh-project-map` (or `stale`/`invalid` with that provenance, or `unavailable`/`none`) and never `carried`; an installed package's comes from its carried `package.specmap.json`, so it is `carried`/`carried-package-map` (or `stale`/`invalid` with that provenance, or `unavailable`/`none`) and never `current`. With `query.relations = false` every named source is `not-requested`/`none` and NO row carries an edge — a query that did not ask loaded no map. With `query.relations = true` no source is `not-requested`, and every package that owns a row has a relation-source result even when that row has zero edges: silence about a package that was scanned is not an answer. An edge may only appear on a row whose package this answer named a relation source for",
       "status-presence: authoring `marked` carries a status and `unmarked` carries none; adoption `recorded` carries a status, while `not-applicable`, `absent` and `indeterminate` carry none. The three absent-adoption words are three different facts — a host-authored row has no consumer overlay to consult, a package row with no registry entry has none recorded, and a row whose entry exists without a status is indeterminate — and collapsing them into one boolean is exactly the loss this matrix prevents. The SOURCE kind decides which of them is legal: a `host` row is always `not-applicable`, and a `package` row is never `not-applicable`",
+      "requirements-set: an absent authoring `requires` member means unclassified. When present, authoring is `marked`, `authoring.status` is present with state other than `void`, and the set is non-empty, sorted in the closed artifact vocabulary's canonical order and unique. It is an authored contract only — no action, ref, terminal, fulfilled or verified verdict is carried or derived from it",
       "edge-bounds: every relation edge's `line` is at least 1 (source lines are 1-based; a 0 names nothing), and its `symbol` and `file` are nonblank, with `file` a safe repo-relative forward-slashed path — no backslash, no control byte, no absolute root, no drive prefix, no `.`, `..` or empty segment",
       "bounded-text: every identity and diagnostic scalar is bounded — an `address` or `address_prefix` by `x-address-cap-bytes`, every other scalar by the shared diagnostic cap (`x-diagnostic-cap-bytes`) — and none of them carries CR, LF or NUL. The report is written for a reader that will print it; an unbounded identity is a diagnostic that scrolls a terminal off its own answer",
       "truncation-honesty: `truncated` is true only when the row count reached `query.limit`, and a truncated answer carries at least one row. A report that dropped nothing never claims it did, and one that claims truncation while holding fewer rows than its own limit is describing another query"
@@ -31,7 +32,7 @@
     "requirements": {
       "type": "uint32",
       "metadata": {
-        "description": "The requirements wire epoch — 1 today. A reader that does not know the number stops rather than guessing at the members."
+        "description": "The requirements wire epoch — 2 today. Epoch 2 adds only the optional authored `requires` set and its identity frames. A reader that does not know the number stops rather than guessing at the members."
       }
     },
     "observation": {
@@ -285,6 +286,10 @@
       }
     },
     "authoring_observation": {
+      "metadata": {
+        "x-wire-order": ["presence", "status", "requires"],
+        "description": "The authored axis in epoch-2 frame order: presence, optional status, then the optional terminal-artifact contract."
+      },
       "properties": {
         "presence": {
           "enum": ["marked", "unmarked"],
@@ -301,7 +306,32 @@
             "x-default": null,
             "description": "The authored status. Present exactly for `marked`."
           }
+        },
+        "requires": {
+          "elements": { "ref": "required_artifact_kind" },
+          "metadata": {
+            "x-default": null,
+            "x-empty": "preserve",
+            "description": "The optional authored terminal-artifact contract. Absent means unclassified; present is a non-empty set emitted in canonical vocabulary order with no duplicate. It is not a terminal or fulfilment verdict."
+          }
         }
+      }
+    },
+    "required_artifact_kind": {
+      "enum": [
+        "specification",
+        "implementation",
+        "verification",
+        "documentation",
+        "decision",
+        "research",
+        "plan",
+        "disposition",
+        "external"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "The closed PROP-043 terminal-artifact vocabulary, in canonical order."
       }
     },
     "adoption_observation": {

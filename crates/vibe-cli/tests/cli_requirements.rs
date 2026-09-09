@@ -118,7 +118,7 @@ fn json_emits_exactly_one_generated_requirements_root() {
     let assert = requirements(&user, root.path(), &["--json"]).success();
     let (report, _) = parse_report(&assert.get_output().stdout);
 
-    assert_eq!(report.requirements, 1);
+    assert_eq!(report.requirements, 2);
     assert_eq!(report.observation.selected, ".");
     assert_eq!(report.query.limit, 100, "the default row bound is restated");
     assert!(!report.query.relations);
@@ -153,13 +153,13 @@ fn human_output_is_the_bounded_projection_and_carries_no_fact_prose() {
     let stdout = String::from_utf8(assert.get_output().stdout.clone()).unwrap();
 
     assert!(
-        stdout.starts_with("requirements 1: selected=. sources=1 rows=2 truncated=false\n"),
+        stdout.starts_with("requirements 2: selected=. sources=1 rows=2 truncated=false\n"),
         "the summary line opens the answer: {stdout}",
     );
     assert!(stdout.contains("source host org.example/demo: available"));
     assert!(stdout.contains(
         "spec://org.example/demo/RULE#ALPHA authoring=marked=impl/done \
-         adoption=not-applicable relations=0"
+         requires=unclassified adoption=not-applicable relations=0"
     ));
     assert!(stdout.contains("relations org.example/demo: not-requested"));
     assert!(
@@ -185,7 +185,7 @@ fn quiet_output_stays_one_bounded_line() {
     );
     assert_eq!(
         stdout.trim_end(),
-        "requirements 1: selected=. sources=1 rows=2 truncated=false",
+        "requirements 2: selected=. sources=1 rows=2 truncated=false",
     );
     assert!(!stdout.contains("PROSECANARY"));
 }

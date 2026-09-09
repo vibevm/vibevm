@@ -13,10 +13,13 @@
 //! outgrew the 600-line budget. The two halves meet at
 //! `EmptyPolicies`: this half builds it, the child obeys it.
 //!
-//! What it enforces: whether an empty collection is WRITTEN is a policy
+//! What it enforces: whether an empty collection is WRITTEN, and whether
+//! explicit empty must remain distinguishable from absence, is a policy
 //! the schema declares per field, `metadata."x-empty"` — `"omit"`: an
 //! empty collection is not written; `"emit"`: the collection is written
-//! even when empty. A missing annotation on a collection is a
+//! even when empty; `"preserve"`: an optional collection remains an
+//! `Option<C>`, so absence and explicit empty are distinct. A missing
+//! annotation on a collection is a
 //! generation error, not a default, because the one thing this pass may
 //! not do is guess.
 //!
@@ -41,7 +44,9 @@
 //! optional + `emit` row collapses with `#[serde(default)]` and no skip
 //! — a branch with zero sites today, present in the machine and proven
 //! by test, because a rule that exists only while its sites do is not a
-//! rule.
+//! rule. Optional + `preserve` removes only the generator's invisible
+//! `Box`, retaining `Option<C>` and its presence bit. Required +
+//! `preserve` is invalid because a required member has no absence state.
 //!
 //! The predicate is chosen by container (`Vec::is_empty`,
 //! `BTreeMap::is_empty`) — the exact form the hand-written twins already
@@ -102,6 +107,8 @@ enum Policy {
     Omit,
     /// The collection is written even when empty.
     Emit,
+    /// Absence and explicit empty remain distinct wire states.
+    Preserve,
 }
 
 impl Policy {
@@ -110,6 +117,7 @@ impl Policy {
         match self {
             Policy::Omit => "omit",
             Policy::Emit => "emit",
+            Policy::Preserve => "preserve",
         }
     }
 }
@@ -262,8 +270,9 @@ fn join_trail(trail: &str, key: &str) -> String {
     }
 }
 
-/// Read one site's `metadata."x-empty"` and rule on it: `"omit"` or
-/// `"emit"` is the policy; a missing key, a non-string, or a stranger
+/// Read one site's `metadata."x-empty"` and rule on it: `"omit"`,
+/// `"emit"` or `"preserve"` is the policy; a missing key, a non-string,
+/// or a stranger
 /// word is a generation error naming the schema, the site's path in the
 /// resolved document and the recipe. A REQUIRED member carrying `omit`
 /// refuses separately — rule R21: a `properties` member is required, and
@@ -276,7 +285,7 @@ fn site_policy(site: &Site<'_>, schema: &Path) -> Result<Policy> {
              `metadata.\"x-empty\"` — whether an empty collection is written \
              or omitted is decided per field on the schema side and is not \
              derivable from the generated Rust.\n\
-             Fix: add `\"x-empty\": \"omit\"` or `\"emit\"` to this member's \
+             Fix: add `\"x-empty\": \"omit\"`, `\"emit\"` or `\"preserve\"` to this member's \
              `metadata` (in {} itself, or in the vocabulary fragment it pulls \
              from formats/vocabularies.json), then run `cargo xtask codegen`.",
             schema.display(),
@@ -287,30 +296,31 @@ fn site_policy(site: &Site<'_>, schema: &Path) -> Result<Policy> {
     let policy = match annotation.as_str() {
         Some("omit") => Policy::Omit,
         Some("emit") => Policy::Emit,
+        Some("preserve") => Policy::Preserve,
         _ => {
             let found = annotation.to_string();
             bail!(
                 "schema {}: the collection field `{}` carries \
                  `metadata.\"x-empty\"` = {found} — expected the string \
-                 `\"omit\"` or `\"emit\"`.\n\
-                 Fix: set the annotation to `\"omit\"` or `\"emit\"`, then run \
+                 `\"omit\"`, `\"emit\"` or `\"preserve\"`.\n\
+                 Fix: set the annotation to one of those three values, then run \
                  `cargo xtask codegen`.",
                 schema.display(),
                 site.path
             );
         }
     };
-    if site.required == Required::Required && policy == Policy::Omit {
+    if site.required == Required::Required && policy != Policy::Emit {
         bail!(
             "schema {}: the collection field `{}` carries \
-             `metadata.\"x-empty\"` = \"omit\", but it is a member of \
-             `properties` — rule R21: a `properties` member is required; a \
-             writer omitting an empty one would produce a document invalid by \
-             this same schema.\n\
+             `metadata.\"x-empty\"` = \"{}\", but it is a member of \
+             `properties` — rule R21: a required collection has no absence \
+             state, so only `emit` is meaningful.\n\
              Fix: set the annotation to \"emit\" (the only lawful policy for a \
              required collection), then run `cargo xtask codegen`.",
             schema.display(),
-            site.path
+            site.path,
+            policy.as_str()
         );
     }
     Ok(policy)

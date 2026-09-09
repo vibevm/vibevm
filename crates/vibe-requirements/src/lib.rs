@@ -82,3 +82,5 @@ mod tests_followup;
 mod tests_provider;
 #[cfg(test)]
 mod tests_query;
+#[cfg(test)]
+mod tests_requirements;

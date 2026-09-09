@@ -3,7 +3,13 @@
 
 use sha2::{Digest as _, Sha256};
 use vibe_facts::SourceFileWitness;
-use vibe_wire::generated::requirements_report::RequirementSourceKind;
+use vibe_wire::generated::requirements_report::{
+    AdoptionObservation, AdoptionObservationPresence, AuthoringObservation,
+    AuthoringObservationPresence, FactStatus, FactStatusStage, FactStatusState,
+    RequiredArtifactKind, RequirementRow, RequirementSource, RequirementSourceKind,
+    RequirementsObservation, RequirementsQuery, RequirementsReport, SourceResult,
+    SourceResultState,
+};
 
 use crate::digest::{observation_id, scope_digest, source_result_digest};
 
@@ -157,10 +163,10 @@ fn recipe_three_observation_id_is_pinned_for_a_fixed_answer() {
     let report = crate::query(&crate::RequirementsQuery::default(), &context, None).unwrap();
     assert_eq!(
         report.observation.observation_id,
-        // Pinned 2026-08-28 (labeled presence/count framing); regenerate
+        // Pinned 2026-09-09 (epoch-2 requires presence/count framing); regenerate
         // only beside a deliberate recipe change (clock exclusion is
         // pinned by the query-suite test).
-        "sha256:46b8284fa7e0e87e094367f6801b2587ca57389f832a377f4a5ffa38e2ac4f46",
+        "sha256:15c2ff43cb097fdaa1bcb3a5f1499ea065e50064ba20d0b006c085a99d8a96cb",
         "the pinned observation-id vector moved"
     );
     // And the same fixed answer, byte-stable across runs.
@@ -212,4 +218,142 @@ fn flipping_one_labeled_bit_or_truncated_moves_the_observation_id() {
     let mut reasoned = base.clone();
     reasoned.sources[0].reason_code = Some("x".to_string());
     assert_ne!(observation_id(&reasoned), base_id);
+}
+
+fn epoch_two_fixture(requires: Option<Vec<RequiredArtifactKind>>) -> RequirementsReport {
+    let source = RequirementSource {
+        kind: RequirementSourceKind::Host,
+        package: "org.example/demo".to_string(),
+    };
+    RequirementsReport {
+        requirements: 2,
+        observation: RequirementsObservation {
+            observation_id: String::new(),
+            observed_at: "2026-01-01T00:00:00Z".parse().unwrap(),
+            selected: ".".to_string(),
+            source_digest: format!("sha256:{}", "2".repeat(64)),
+            lifecycle_run_id: None,
+        },
+        query: RequirementsQuery {
+            limit: 100,
+            relations: false,
+            address_prefix: None,
+        },
+        sources: vec![SourceResult {
+            source: source.clone(),
+            state: SourceResultState::Available,
+            digest: Some(format!("sha256:{}", "3".repeat(64))),
+            reason_code: None,
+            adoption_entries: None,
+        }],
+        relation_sources: Vec::new(),
+        rows: vec![RequirementRow {
+            address: "spec://org.example/demo/RULE#A".to_string(),
+            source,
+            authoring: AuthoringObservation {
+                presence: AuthoringObservationPresence::Marked,
+                status: Some(FactStatus {
+                    stage: FactStatusStage::Spec,
+                    state: FactStatusState::Done,
+                }),
+                requires,
+            },
+            adoption: AdoptionObservation {
+                presence: AdoptionObservationPresence::NotApplicable,
+                status: None,
+            },
+            relations: Vec::new(),
+        }],
+        truncated: false,
+    }
+}
+
+/// Independent longhand epoch-2 frame schedule. This intentionally does
+/// not call any production frame/spelling helper.
+fn longhand_epoch_two(requirements: Option<&[&str]>) -> String {
+    let mut m = Manual::new(b"vibe-requirements-observation-id\0epoch=2\0");
+    m.field(b"requirements", b"2");
+    m.field(b"selected", b".");
+    m.field(
+        b"source_digest",
+        format!("sha256:{}", "2".repeat(64)).as_bytes(),
+    );
+    m.field(b"lifecycle_run_id.present", b"0");
+    m.field(b"limit", b"100");
+    m.field(b"relations", b"false");
+    m.field(b"address_prefix.present", b"0");
+    m.count(b"source_count", 1);
+    m.field(b"kind", b"host");
+    m.field(b"package", b"org.example/demo");
+    m.field(b"state", b"available");
+    m.field(b"digest.present", b"1");
+    m.field(b"digest", format!("sha256:{}", "3".repeat(64)).as_bytes());
+    m.field(b"reason_code.present", b"0");
+    m.field(b"adoption_entries.present", b"0");
+    m.count(b"relation_source_count", 0);
+    m.count(b"row_count", 1);
+    m.field(b"address", b"spec://org.example/demo/RULE#A");
+    m.field(b"kind", b"host");
+    m.field(b"package", b"org.example/demo");
+    m.field(b"authoring", b"marked");
+    m.field(b"authoring.status.present", b"1");
+    m.field(b"stage", b"spec");
+    m.field(b"state", b"done");
+    m.field(
+        b"authoring.requires.present",
+        if requirements.is_some() { b"1" } else { b"0" },
+    );
+    if let Some(requirements) = requirements {
+        m.count(b"authoring.requires.count", requirements.len());
+        for kind in requirements {
+            m.field(b"authoring.requires.item", kind.as_bytes());
+        }
+    }
+    m.field(b"adoption", b"not-applicable");
+    m.field(b"adoption.status.present", b"0");
+    m.count(b"edge_count", 0);
+    m.field(b"truncated", b"false");
+    m.finish()
+}
+
+#[test]
+fn epoch_two_requires_frames_match_longhand_absent_single_and_multi_goldens() {
+    let cases = [
+        (None, None),
+        (
+            Some(vec![RequiredArtifactKind::Implementation]),
+            Some(vec!["implementation"]),
+        ),
+        (
+            Some(vec![
+                RequiredArtifactKind::Specification,
+                RequiredArtifactKind::Verification,
+                RequiredArtifactKind::Decision,
+            ]),
+            Some(vec!["specification", "verification", "decision"]),
+        ),
+    ];
+    let mut ids = Vec::new();
+    for (wire, spellings) in cases {
+        let report = epoch_two_fixture(wire);
+        let production = observation_id(&report);
+        assert_eq!(
+            production,
+            longhand_epoch_two(spellings.as_deref()),
+            "production framing drifted from the independent schedule"
+        );
+        ids.push(production);
+    }
+    assert_eq!(
+        ids.iter().collect::<std::collections::BTreeSet<_>>().len(),
+        3
+    );
+    assert_eq!(
+        ids,
+        [
+            "sha256:88eb3b17cda4d7cf7f2f687e04b8f093584ce052a0a0a69460b784b319bdf84d",
+            "sha256:5204115bbb0f2c0e8d8feb9e38fd089e462e45572dfc97a481c048cdc67ff029",
+            "sha256:c7a438c5e2047ac5c7b4d8d492e08c2025e8b13ec75b4272dfd15e7a8d08a159",
+        ]
+    );
 }

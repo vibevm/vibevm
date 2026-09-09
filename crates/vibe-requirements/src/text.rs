@@ -62,9 +62,10 @@ pub fn render(report: &RequirementsReport) -> String {
     }
     for row in &report.rows {
         out.push_str(&format!(
-            "{} authoring={} adoption={} relations={}\n",
+            "{} authoring={} requires={} adoption={} relations={}\n",
             row.address,
             authoring(row),
+            requirements(row),
             adoption(row),
             row.relations.len()
         ));
@@ -76,6 +77,35 @@ pub fn render(report: &RequirementsReport) -> String {
         ));
     }
     out
+}
+
+fn requirements(row: &vibe_wire::generated::requirements_report::RequirementRow) -> String {
+    let Some(requirements) = row.authoring.requires.as_ref() else {
+        return "unclassified".to_string();
+    };
+    let kinds = requirements
+        .iter()
+        .map(required_artifact_kind)
+        .collect::<Vec<_>>()
+        .join(",");
+    format!("[{kinds}]")
+}
+
+fn required_artifact_kind(
+    kind: &vibe_wire::generated::requirements_report::RequiredArtifactKind,
+) -> &'static str {
+    use vibe_wire::generated::requirements_report::RequiredArtifactKind as K;
+    match kind {
+        K::Specification => "specification",
+        K::Implementation => "implementation",
+        K::Verification => "verification",
+        K::Documentation => "documentation",
+        K::Decision => "decision",
+        K::Research => "research",
+        K::Plan => "plan",
+        K::Disposition => "disposition",
+        K::External => "external",
+    }
 }
 
 fn kind(kind: &vibe_wire::generated::requirements_report::RequirementSourceKind) -> &'static str {

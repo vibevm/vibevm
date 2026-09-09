@@ -3,11 +3,11 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#FACT-QUERY-CONTRACT");
 
-use progress_core::model::{Stage, State};
+use progress_core::model::{ArtifactKind, Stage, State};
 use vibe_facts::AdoptionObservation;
 use vibe_wire::generated::requirements_report::{
     AdoptionObservationPresence, AuthoringObservationPresence, FactStatusStage, FactStatusState,
-    RequirementRow, RequirementSource, RequirementSourceKind,
+    RequiredArtifactKind, RequirementRow, RequirementSource, RequirementSourceKind,
 };
 
 use crate::QueryError;
@@ -38,6 +38,10 @@ pub(crate) fn build(
                     AuthoringObservationPresence::Unmarked
                 },
                 status: row.authored_status.map(map_status),
+                requires: row
+                    .authored_requirements
+                    .as_ref()
+                    .map(|requirements| requirements.iter().map(map_artifact_kind).collect()),
             },
             adoption: vibe_wire::generated::requirements_report::AdoptionObservation {
                 presence: map_adoption(&row.adoption),
@@ -49,6 +53,24 @@ pub(crate) fn build(
             relations: Vec::new(),
         })
         .collect()
+}
+
+/// Exhaustive progress-core → generated wire artifact-kind mapping.
+/// The report deliberately carries only the authored declaration: marker
+/// action/ref and any progress-local terminal observation stay outside this
+/// public metadata root.
+fn map_artifact_kind(kind: ArtifactKind) -> RequiredArtifactKind {
+    match kind {
+        ArtifactKind::Specification => RequiredArtifactKind::Specification,
+        ArtifactKind::Implementation => RequiredArtifactKind::Implementation,
+        ArtifactKind::Verification => RequiredArtifactKind::Verification,
+        ArtifactKind::Documentation => RequiredArtifactKind::Documentation,
+        ArtifactKind::Decision => RequiredArtifactKind::Decision,
+        ArtifactKind::Research => RequiredArtifactKind::Research,
+        ArtifactKind::Plan => RequiredArtifactKind::Plan,
+        ArtifactKind::Disposition => RequiredArtifactKind::Disposition,
+        ArtifactKind::External => RequiredArtifactKind::External,
+    }
 }
 
 fn map_adoption(adoption: &AdoptionObservation) -> AdoptionObservationPresence {

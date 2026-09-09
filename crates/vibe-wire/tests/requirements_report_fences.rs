@@ -15,11 +15,18 @@ use vibe_wire::generated::requirements_report::RequirementsReport;
 mod support;
 use support::{read_json, repo_root};
 
-/// The four verdict words `##REQUIREMENT-OBSERVATION-AXES` bars. The
+/// Verdict-like members `##REQUIREMENT-OBSERVATION-AXES` bars. The
 /// relation VERB `verifies` is not one of them: an edge saying a
 /// symbol claims to verify a fact is an observation, and the past
 /// participle would be the verdict.
-const FORBIDDEN_VERDICT_WORDS: &[&str] = &["unmet", "met", "fulfilled", "verified"];
+const FORBIDDEN_VERDICT_WORDS: &[&str] = &[
+    "unmet",
+    "met",
+    "fulfilled",
+    "verified",
+    "terminal",
+    "verdict",
+];
 
 /// The member names that would turn a metadata answer into a content
 /// answer. `##FACT-QUERY-CONTRACT`: no fact prose, code body, prompt,
@@ -45,13 +52,13 @@ const FORBIDDEN_CONTENT_MEMBERS: &[&str] = &[
 const SOURCE_BODY_CANARY: &str = "CANARY-fact-prose-must-never-ship";
 
 fn corpus_dir() -> std::path::PathBuf {
-    repo_root().join("formats/corpora/requirements/e1")
+    repo_root().join("formats/corpora/requirements/e2")
 }
 
 /// Parse one corpus through the generated root, prove the bytes
 /// survive, and prove the value satisfies every relational law.
 fn corpus(name: &str) -> RequirementsReport {
-    let authored = read_json(&format!("formats/corpora/requirements/e1/{name}"));
+    let authored = read_json(&format!("formats/corpora/requirements/e2/{name}"));
     let report: RequirementsReport =
         serde_json::from_value(authored.clone()).unwrap_or_else(|e| panic!("{name}: {e}"));
     assert_eq!(
@@ -125,7 +132,7 @@ fn the_requirements_wire_carries_no_verdict_and_no_prose() {
 /// report ships no prose» means operationally (`Q3`).
 #[test]
 fn an_injected_source_body_cannot_survive_re_emission() {
-    let mut poisoned = read_json("formats/corpora/requirements/e1/report_base.json");
+    let mut poisoned = read_json("formats/corpora/requirements/e2/report_base.json");
     // One canary at the root, one on a fact row, and one inside the
     // row's own nested observation — the three places a prose leak
     // would plausibly be introduced.

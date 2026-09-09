@@ -255,7 +255,7 @@ impl FormatId {
             FormatId::NativePackageRequest => 1,
             FormatId::NativeReply => 1,
             FormatId::PackageSkillReceipt => 1,
-            FormatId::RequirementsReport => 1,
+            FormatId::RequirementsReport => 2,
             FormatId::ScrapeHealthResult => 1,
             FormatId::ScrapePlan => 1,
             FormatId::ScrapePreparedHealthSnapshot => 2,

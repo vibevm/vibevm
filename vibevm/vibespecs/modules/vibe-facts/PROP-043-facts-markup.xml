@@ -589,7 +589,7 @@ or end of a paragraph's text, never mid-sentence, never inside code or links.</S
           partial inputs. A progress report may render its own explicitly named
           evidence observation, including unavailable, but never persist it as
           authored truth.</REQUIRES-PROJECTION-LAW>
-          <REQUIRES-WIRE-EPOCH fact="true" status="spec/done">Adding the set to
+          <REQUIRES-WIRE-EPOCH fact="true" status="impl/done">Adding the set to
           a strict public machine wire requires a new wire epoch and independent
           canonical identity frames: explicit presence, canonical count and
           canonical kind order. Additive Rust deserialization compatibility is

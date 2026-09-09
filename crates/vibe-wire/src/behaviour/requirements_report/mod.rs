@@ -3,7 +3,7 @@
 //! (PROP-054 §14.7 `##REF-REQUIREMENTS-WIRE`, `##FACT-QUERY-CONTRACT`;
 //! R7.5 P1).
 //!
-//! JTD owns the FORM (the ten closed vocabularies, the optional
+//! JTD owns the FORM (the closed vocabularies, the optional
 //! statuses, the explicit-even-when-empty lists); the laws a form
 //! cannot say are named in the schema's `metadata.x-relational-laws`
 //! (`schemas/requirements_report.jtd.json`) and enforced HERE, in one
@@ -32,7 +32,7 @@
 use crate::behaviour::compiler_trace_index::{DIAGNOSTIC_CAP_BYTES, ScalarPreview};
 use crate::behaviour::scalars::{has_control_bytes, is_lowercase_hex, relative_path_defect};
 use crate::generated::requirements_report::{
-    AdoptionObservationPresence, AuthoringObservationPresence, RequirementRow,
+    AdoptionObservationPresence, AuthoringObservationPresence, FactStatusState, RequirementRow,
     RequirementSourceKind, RequirementsReport, SourceResultState,
 };
 
@@ -41,8 +41,8 @@ mod errors;
 mod sources;
 
 pub use errors::{
-    AddressDefect, EdgeRef, PathUnsafety, ReasonDefect, RequirementsError, SourceDefect,
-    SourceStateDefect, StatusAxis,
+    AddressDefect, EdgeRef, PathUnsafety, ReasonDefect, RequirementsError, RequirementsSetDefect,
+    SourceDefect, SourceStateDefect, StatusAxis,
 };
 
 use coordinates::{SCHEME, address_coordinate, address_defect};
@@ -60,6 +60,10 @@ mod tests_coherence;
 #[path = "tests_relations.rs"]
 mod tests_relations;
 
+#[cfg(test)]
+#[path = "tests_requirements.rs"]
+mod tests_requirements;
+
 /// Every implemented law label, in schema order. Set-equal to the
 /// schema's `x-relational-laws` prefixes by the wire test.
 pub const IMPLEMENTED_LAWS: &[&str] = &[
@@ -73,13 +77,14 @@ pub const IMPLEMENTED_LAWS: &[&str] = &[
     "row-source-binding",
     "relation-state-matrix",
     "status-presence",
+    "requirements-set",
     "edge-bounds",
     "bounded-text",
     "truncation-honesty",
 ];
 
 /// The requirements wire epoch this validator speaks.
-pub const REQUIREMENTS_EPOCH: u32 = 1;
+pub const REQUIREMENTS_EPOCH: u32 = 2;
 
 /// The inclusive row-bound range a query may ask for — the numbers
 /// `##REF-REQUIREMENTS-SURFACES` fixes for both surfaces.
@@ -234,6 +239,7 @@ fn rows_gate(
         }
         previous = Some(&row.address);
         binding_gate(index, row, sources)?;
+        requirements_gate(index, row)?;
         status_gate(index, row)?;
         edges_gate(index, row)?;
     }
@@ -335,6 +341,73 @@ fn status_gate(index: usize, row: &RequirementRow) -> Result<(), RequirementsErr
         });
     }
     Ok(())
+}
+
+/// `requirements-set`: absence is the authored «unclassified» value;
+/// presence is a non-empty set in the schema vocabulary's canonical
+/// order. The generated enum closes membership, while this relational
+/// gate owns cardinality, order and uniqueness.
+fn requirements_gate(index: usize, row: &RequirementRow) -> Result<(), RequirementsError> {
+    let Some(requirements) = row.authoring.requires.as_deref() else {
+        return Ok(());
+    };
+    if matches!(
+        row.authoring.presence,
+        AuthoringObservationPresence::Unmarked
+    ) {
+        return Err(RequirementsError::RequirementsSet {
+            index,
+            defect: RequirementsSetDefect::UnmarkedAuthoring,
+        });
+    }
+    let Some(status) = row.authoring.status.as_ref() else {
+        return Err(RequirementsError::RequirementsSet {
+            index,
+            defect: RequirementsSetDefect::StatusAbsent,
+        });
+    };
+    if matches!(status.state, FactStatusState::Void) {
+        return Err(RequirementsError::RequirementsSet {
+            index,
+            defect: RequirementsSetDefect::VoidStatus,
+        });
+    }
+    if requirements.is_empty() {
+        return Err(RequirementsError::RequirementsSet {
+            index,
+            defect: RequirementsSetDefect::Empty,
+        });
+    }
+    for pair in requirements.windows(2) {
+        let left = artifact_kind_rank(&pair[0]);
+        let right = artifact_kind_rank(&pair[1]);
+        if left >= right {
+            return Err(RequirementsError::RequirementsSet {
+                index,
+                defect: if left == right {
+                    RequirementsSetDefect::Duplicate
+                } else {
+                    RequirementsSetDefect::OutOfOrder
+                },
+            });
+        }
+    }
+    Ok(())
+}
+
+fn artifact_kind_rank(kind: &crate::generated::requirements_report::RequiredArtifactKind) -> u8 {
+    use crate::generated::requirements_report::RequiredArtifactKind as K;
+    match kind {
+        K::Specification => 0,
+        K::Implementation => 1,
+        K::Verification => 2,
+        K::Documentation => 3,
+        K::Decision => 4,
+        K::Research => 5,
+        K::Plan => 6,
+        K::Disposition => 7,
+        K::External => 8,
+    }
 }
 
 /// `edge-bounds` and the edge half of `row-order`: 1-based lines,

@@ -165,6 +165,31 @@ pub struct Report {
     Ok(())
 }
 
+/// A presence-sensitive optional collection keeps the absent versus
+/// explicit-empty distinction. Only the generator's wire-invisible Box
+/// is removed.
+#[test]
+fn a_preserve_optional_vec_retains_the_option() -> Result<()> {
+    let doc = json!({
+        "optionalProperties": {
+            "packages": {
+                "elements": { "type": "string" },
+                "metadata": { "x-empty": "preserve" }
+            }
+        }
+    });
+    assert_eq!(
+        apply(OPTIONAL_VEC_FIELD, "requirements_report/mod.rs", doc)?,
+        r#"#[derive(Serialize, Deserialize)]
+pub struct ConflictsEntry {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub packages: Option<Vec<String>>,
+}
+"#
+    );
+    Ok(())
+}
+
 /// A whole file in the shape of the real ones — header, `use` lines, a
 /// doc comment, a required collection, an optional one, a non-collection
 /// optional, a rename-carrying keyword field — changes in exactly two
@@ -273,6 +298,21 @@ fn a_required_omit_collection_refuses_per_rule_r21() -> Result<()> {
     Ok(())
 }
 
+#[test]
+fn a_required_preserve_collection_refuses_because_presence_is_mandatory() -> Result<()> {
+    let doc = json!({
+        "properties": {
+            "outcomes": {
+                "elements": { "ref": "outcome" },
+                "metadata": { "x-empty": "preserve" }
+            }
+        }
+    });
+    let error = policies(doc).expect_err("required + preserve has no absence state");
+    assert!(error.to_string().contains("only `emit` is meaningful"));
+    Ok(())
+}
+
 /// A4.3's red: a collection member without `metadata."x-empty"` is a
 /// generation error, not a default — the policy is decided on the
 /// schema side and is not derivable from the generated Rust.
@@ -298,7 +338,7 @@ fn a_collection_without_an_annotation_refuses() -> Result<()> {
     Ok(())
 }
 
-/// The annotation must be exactly `"omit"` or `"emit"` — anything else
+/// The annotation must be exactly `"omit"`, `"emit"` or `"preserve"` — anything else
 /// refuses, naming what was found.
 #[test]
 fn a_stranger_annotation_refuses_naming_it() -> Result<()> {
@@ -310,7 +350,7 @@ fn a_stranger_annotation_refuses_naming_it() -> Result<()> {
             }
         }
     });
-    let err = policies(doc).expect_err("only omit and emit are policies");
+    let err = policies(doc).expect_err("only the three named values are policies");
     assert!(
         err.to_string().contains("sometimes"),
         "names what was found: {err}"

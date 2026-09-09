@@ -3,7 +3,8 @@
 //!
 //! All recipes share one primitive (architecture §4.2's frame):
 //! `be64(label_len) || label || be64(value_len) || value`, seeded with
-//! a domain string + `\0epoch=1\0`. Numbers and counts are canonical
+//! a domain string carrying that recipe's epoch. Source/scope stay at
+//! epoch 1; the report observation identity is epoch 2. Numbers and counts are canonical
 //! decimal UTF-8; enums use their WIRE spelling; arrays frame their
 //! count before their already-canonical elements; every optional member
 //! frames a LABELED presence field (`field("<member>.present", "0|1")`)
@@ -21,8 +22,9 @@ use sha2::{Digest as _, Sha256};
 use vibe_facts::SourceFileWitness;
 use vibe_wire::generated::requirements_report::{
     AdoptionObservationPresence, AuthoringObservationPresence, FactStatus, FactStatusStage,
-    FactStatusState, RelationSource, RelationSourceProvenance, RelationSourceState, RequirementRow,
-    RequirementSourceKind, RequirementsReport, SourceResultState,
+    FactStatusState, RelationSource, RelationSourceProvenance, RelationSourceState,
+    RequiredArtifactKind, RequirementRow, RequirementSourceKind, RequirementsReport,
+    SourceResultState,
 };
 
 /// Recipe 1's domain — one source result's digest over its documents.
@@ -30,7 +32,7 @@ pub(crate) const SOURCE_DOMAIN: &[u8] = b"vibe-requirements-source-digest\0epoch
 /// Recipe 2's domain — the observation's scope digest.
 pub(crate) const SCOPE_DOMAIN: &[u8] = b"vibe-requirements-scope-digest\0epoch=1\0";
 /// Recipe 3's domain — the answer's own identity.
-pub(crate) const OBSERVATION_DOMAIN: &[u8] = b"vibe-requirements-observation-id\0epoch=1\0";
+pub(crate) const OBSERVATION_DOMAIN: &[u8] = b"vibe-requirements-observation-id\0epoch=2\0";
 
 /// One framed field: `be64(label_len) || label || be64(value_len) || value`.
 fn field(hasher: &mut Sha256, label: &[u8], value: &[u8]) {
@@ -252,6 +254,21 @@ fn row_members(hasher: &mut Sha256, row: &RequirementRow) {
     if let Some(status) = &row.authoring.status {
         status_members(hasher, status);
     }
+    presence(
+        hasher,
+        b"authoring.requires",
+        row.authoring.requires.is_some(),
+    );
+    if let Some(requirements) = &row.authoring.requires {
+        count(hasher, b"authoring.requires.count", requirements.len());
+        for kind in requirements {
+            field(
+                hasher,
+                b"authoring.requires.item",
+                artifact_kind_spelling(kind).as_bytes(),
+            );
+        }
+    }
     // Adoption axis.
     field(
         hasher,
@@ -328,6 +345,20 @@ fn authoring_spelling(presence: &AuthoringObservationPresence) -> &'static str {
     match presence {
         AuthoringObservationPresence::Marked => "marked",
         AuthoringObservationPresence::Unmarked => "unmarked",
+    }
+}
+
+fn artifact_kind_spelling(kind: &RequiredArtifactKind) -> &'static str {
+    match kind {
+        RequiredArtifactKind::Specification => "specification",
+        RequiredArtifactKind::Implementation => "implementation",
+        RequiredArtifactKind::Verification => "verification",
+        RequiredArtifactKind::Documentation => "documentation",
+        RequiredArtifactKind::Decision => "decision",
+        RequiredArtifactKind::Research => "research",
+        RequiredArtifactKind::Plan => "plan",
+        RequiredArtifactKind::Disposition => "disposition",
+        RequiredArtifactKind::External => "external",
     }
 }
 

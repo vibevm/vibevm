@@ -3555,87 +3555,95 @@
       "item_kind": "schema",
       "line": 1,
       "symbol": "requirements_report",
-      "end_line": 402
+      "end_line": 432
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/requirements_report.jtd.json",
       "item_kind": "schema-def",
-      "line": 307,
+      "line": 337,
       "symbol": "requirements_report::adoption_observation",
-      "end_line": 326
+      "end_line": 356
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/requirements_report.jtd.json",
       "item_kind": "schema-def",
-      "line": 287,
+      "line": 288,
       "symbol": "requirements_report::authoring_observation",
-      "end_line": 306
+      "end_line": 319
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/requirements_report.jtd.json",
       "item_kind": "schema-def",
-      "line": 327,
+      "line": 357,
       "symbol": "requirements_report::fact_status",
-      "end_line": 355
+      "end_line": 385
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/requirements_report.jtd.json",
       "item_kind": "schema-def",
-      "line": 189,
+      "line": 190,
       "symbol": "requirements_report::relation_source",
-      "end_line": 231
+      "end_line": 232
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/requirements_report.jtd.json",
       "item_kind": "schema-def",
-      "line": 356,
+      "line": 320,
+      "symbol": "requirements_report::required_artifact_kind",
+      "end_line": 336
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/requirements_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 386,
       "symbol": "requirements_report::requirement_relation",
-      "end_line": 400
+      "end_line": 430
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/requirements_report.jtd.json",
       "item_kind": "schema-def",
-      "line": 232,
+      "line": 233,
       "symbol": "requirements_report::requirement_row",
-      "end_line": 269
+      "end_line": 270
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/requirements_report.jtd.json",
       "item_kind": "schema-def",
-      "line": 270,
+      "line": 271,
       "symbol": "requirements_report::requirement_source",
-      "end_line": 286
+      "end_line": 287
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/requirements_report.jtd.json",
       "item_kind": "schema-def",
-      "line": 78,
+      "line": 79,
       "symbol": "requirements_report::requirements_observation",
-      "end_line": 117
+      "end_line": 118
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/requirements_report.jtd.json",
       "item_kind": "schema-def",
-      "line": 118,
+      "line": 119,
       "symbol": "requirements_report::requirements_query",
-      "end_line": 145
+      "end_line": 146
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/requirements_report.jtd.json",
       "item_kind": "schema-def",
-      "line": 146,
+      "line": 147,
       "symbol": "requirements_report::source_result",
-      "end_line": 188
+      "end_line": 189
     },
     {
       "crate_name": "<schema>",
@@ -21963,9 +21971,9 @@
       "crate_name": "vibe-requirements",
       "file": "crates/vibe-requirements/src/digest.rs",
       "item_kind": "mod",
-      "line": 18,
+      "line": 19,
       "symbol": "vibe_requirements::digest",
-      "end_line": 18,
+      "end_line": 19,
       "fingerprint": "tok1:d1de19b63e0a8cdb6a2a5ff9def97b374762a6cf81b3031e96d12bbd453f1e48"
     },
     {
@@ -46528,7 +46536,7 @@
     {
       "file": "crates/vibe-requirements/src/digest.rs",
       "from_symbol": "vibe_requirements::digest",
-      "line": 18,
+      "line": 19,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#FACT-QUERY-CONTRACT",
       "verb": "implements"
@@ -68700,7 +68708,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:f4454fac5addb82f737809dc4af6599c85698ddbb06c92d142205e22725d0a81",
+      "content_hash": "sha256:bff6bf2c7f82cf4b428bf372cfb33dc8d5fb8d9c6acc1b6814f78498399fae16",
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "PROP-054 — The vibe lifecycle and the extension machine",
@@ -69195,7 +69203,7 @@
     },
     {
       "anchor": "lifecycle",
-      "content_hash": "sha256:3f34ca1fec88c7f45612ce651d65f0c82ed0a3e5118c14b4a484f047ba68464d",
+      "content_hash": "sha256:ad1256b15aa38d103472106344123217b812d1cb9dd9c84e809f29762e2f84c4",
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "4. The vibe lifecycle",
@@ -69420,7 +69428,7 @@
     },
     {
       "anchor": "external-orchestration",
-      "content_hash": "sha256:24e02b7d955865b962d06b3753b622c50d73d42eb8e5ba854713820aed4e881e",
+      "content_hash": "sha256:b4921c52c1c2e1ac070629270130090e210ccc5d893846f661c13c18b88a5bf5",
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "4.6 The lifecycle is a framework; the development loop is external",
@@ -69573,10 +69581,10 @@
     },
     {
       "anchor": "FACT-TERMINAL-REQUIREMENTS-AXIS",
-      "content_hash": "sha256:86371f81cf261428ed7122954a3e5d277f860c6646e9e0dd0ad7d0237dfc4c30",
+      "content_hash": "sha256:500b2fadca7d47ee00c454eaeae212347f24dccb04e395e2e403ac7abec2bbb2",
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
-      "heading": "**An\n      authored terminal-artifact contract is part of authoring, not a fifth\n      verdict axis.** Epoch 2 of the requirements report carries the optional\n      canonical `requires` set from PROP-043 beside authoring status. Absent\n      means unclassified and present is non-empty, sorted, unique and closed to\n      the artifact vocabulary. The metadata query does not emit `terminal`,\n      `fulfilled` or another synthetic join: external consumers may combine the\n      declaration with adoption, relation and lifecycle observations under\n      their own policy, while the progress report may name its local\n      provider-bound terminal observation explicitly. Epoch 1 readers remain\n      strict and reject the new shape rather than silently misreading it. @status:spec/done",
+      "heading": "**An\n      authored terminal-artifact contract is part of authoring, not a fifth\n      verdict axis.** Epoch 2 of the requirements report carries the optional\n      canonical `requires` set from PROP-043 beside authoring status. Absent\n      means unclassified and present is non-empty, sorted, unique and closed to\n      the artifact vocabulary. The metadata query does not emit `terminal`,\n      `fulfilled` or another synthetic join: external consumers may combine the\n      declaration with adoption, relation and lifecycle observations under\n      their own policy, while the progress report may name its local\n      provider-bound terminal observation explicitly. Epoch 1 readers remain\n      strict and reject the new shape rather than silently misreading it. @status:impl/done",
       "line": 190,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#FACT-TERMINAL-REQUIREMENTS-AXIS"
     },
@@ -69591,10 +69599,10 @@
     },
     {
       "anchor": "FACT-TERMINAL-REQUIREMENTS-E2-FRAME-SCHEDULE",
-      "content_hash": "sha256:1e1c8318b8e993db94be10324e7d9c96c4dd0158a17c8c9c3e8588685420c472",
+      "content_hash": "sha256:55c029a3cacc498a1c575ab06c37e16bc624072cb40be2a85e78994399bf682a",
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
-      "heading": "**The\n      epoch-2 row insertion is exact.** Each row keeps the epoch-1 order\n      `address`, `kind`, `package`, `authoring`,\n      `authoring.status.present`, then `stage` and `state` when status is\n      present. Immediately after those fields it frames\n      `authoring.requires.present = 0|1`; when present it next frames\n      `authoring.requires.count` as canonical decimal and one\n      `authoring.requires.item` per kind in PROP-043 canonical vocabulary\n      order. Adoption presence/status and every later row/report frame then\n      continue in their epoch-1 order unchanged. Labels and position are epoch\n      material. An independent longhand golden that does not call the production\n      writer pins absent, singleton and multi-kind vectors. @status:spec/done",
+      "heading": "**The\n      epoch-2 row insertion is exact.** Each row keeps the epoch-1 order\n      `address`, `kind`, `package`, `authoring`,\n      `authoring.status.present`, then `stage` and `state` when status is\n      present. Immediately after those fields it frames\n      `authoring.requires.present = 0|1`; when present it next frames\n      `authoring.requires.count` as canonical decimal and one\n      `authoring.requires.item` per kind in PROP-043 canonical vocabulary\n      order. Adoption presence/status and every later row/report frame then\n      continue in their epoch-1 order unchanged. Labels and position are epoch\n      material. An independent longhand golden that does not call the production\n      writer pins absent, singleton and multi-kind vectors. @status:impl/done",
       "line": 202,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#FACT-TERMINAL-REQUIREMENTS-E2-FRAME-SCHEDULE"
     },
@@ -70788,7 +70796,7 @@
     },
     {
       "anchor": "reference",
-      "content_hash": "sha256:569416cf7717abc1771c07cf413bead8c6d8df815d19d78216b0b2c0c79d4f39",
+      "content_hash": "sha256:1e4d7c98aec4d480c97bb16fb445128c731ca20807b95f59b2c20c21ab7a8cf2",
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "14. Reference — the exact shapes (normative for the build)",
@@ -70932,7 +70940,7 @@
     },
     {
       "anchor": "external-orchestration-wire",
-      "content_hash": "sha256:1ee9534c7e51cbf964c956c92cfd0d3af4908a07c99be28cb6c6c8a2d2d7526b",
+      "content_hash": "sha256:b8a7f8ad65ab9067c1b48227af592d041d77fd4ee7c3b7a7e8b046c5db07195d",
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "14.7 R7.5 evidence and requirements wires",
@@ -70950,10 +70958,10 @@
     },
     {
       "anchor": "REF-REQUIREMENTS-WIRE",
-      "content_hash": "sha256:578e183d7b844ddb5663d587243d4201ceff30472f44b263ba9a34415d25d6c4",
+      "content_hash": "sha256:6a5fdaf0c2e8f6c25ad563e8f4685744aeeb74910ec8b28294316a6b8c15d5cd",
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
-      "heading": "P1 froze the\n      strict metadata-only epoch-1 requirements report. The 2026-09-09\n      terminal-artifact amendment advances it to epoch 2 solely to add the\n      optional authored `requires` set and the corresponding observation-id\n      frames. It still does not embed verification evidence or a terminal\n      verdict into fact rows: lifecycle evidence and fact/relation observations\n      remain independent roots an external orchestrator may join by full\n      address/edge and exact observation identity. @status:spec/done",
+      "heading": "P1 froze the\n      strict metadata-only epoch-1 requirements report. The 2026-09-09\n      terminal-artifact amendment advances it to epoch 2 solely to add the\n      optional authored `requires` set and the corresponding observation-id\n      frames. It still does not embed verification evidence or a terminal\n      verdict into fact rows: lifecycle evidence and fact/relation observations\n      remain independent roots an external orchestrator may join by full\n      address/edge and exact observation identity. @status:impl/done",
       "line": 548,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-REQUIREMENTS-WIRE"
     },
@@ -85683,7 +85691,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:dcb88969edc3ed3cf55505a5664e9c92bdb3d245780a44d36326b0defa0c2603",
+      "content_hash": "sha256:27c7030d8dfe7979323fbf330244cc33672c48c2ddc5bf57b2c12e5d63b9414f",
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "PROP-043 — The facts markup: the inline status grammar and its IR",
@@ -85854,7 +85862,7 @@
     },
     {
       "anchor": "markup",
-      "content_hash": "sha256:df50d328c48f694e27a5853ca0a769bb11f832d51cebccbcb37280abb6d68dad",
+      "content_hash": "sha256:69aec2e59bb80f1e2c6d1d351ecab07f8c8a7aa49d443c65b2526aa55e68929a",
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "3. The markup language",
@@ -86655,7 +86663,7 @@
     },
     {
       "anchor": "terminal-artifacts",
-      "content_hash": "sha256:99b88d481d3d60ca6218c1ce43f6b00980776ff8e7d5ce1d392003c2a429ff90",
+      "content_hash": "sha256:e63241af12b827782913a69c85f19875e9318d2c75a20c89567c846c9990603f",
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "3.11 Terminal artifact obligations",
@@ -86862,7 +86870,7 @@
     },
     {
       "anchor": "compatibility",
-      "content_hash": "sha256:7bdc1013c9c1e719d9c5df2b30d94aa60169de731d153ab885ee8fa997c31adb",
+      "content_hash": "sha256:ca5eb394c59b65651b47c3a406a455f207f71a872f3989a392284a86862d8e03",
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "3.11.3 Compatibility and projections",
@@ -86889,10 +86897,10 @@
     },
     {
       "anchor": "REQUIRES-WIRE-EPOCH",
-      "content_hash": "sha256:0472177a68629b56aac993f51306a2468a8f669730776c3ad982b1891cbefafd",
+      "content_hash": "sha256:e210e6305569e25de2519d45d7a666802ccf1640990890b41d04088f1de486e7",
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
-      "heading": "Adding the set to\n          a strict public machine wire requires a new wire epoch and independent\n          canonical identity frames: explicit presence, canonical count and\n          canonical kind order. Additive Rust deserialization compatibility is\n          not permission to change a strict JTD epoch in place. @status:spec/done",
+      "heading": "Adding the set to\n          a strict public machine wire requires a new wire epoch and independent\n          canonical identity frames: explicit presence, canonical count and\n          canonical kind order. Additive Rust deserialization compatibility is\n          not permission to change a strict JTD epoch in place. @status:impl/done",
       "line": 592,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#REQUIRES-WIRE-EPOCH"
     },

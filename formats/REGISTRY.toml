@@ -289,15 +289,15 @@ sunset = "none"
 # no precedent for a new surface.) Computed policy: rebuildable by re-running
 # the query (`recoverable = true`), read by scripts, agents and raw
 # `curl | jq` (`foreign_parsers = "many"`), so the generated reader stays
-# permissive — the strictness this root DOES carry is its ten closed
+# permissive — the strictness this root DOES carry is its eleven closed
 # vocabularies, its exact member set and the hand-written relational
 # validator beside it, never `deny_unknown_fields`.
 [format.requirements-report]
-epoch = 1
+epoch = 2
 schema = "schemas/requirements_report.jtd.json"
 recoverable = true
 foreign_parsers = "many"
-corpus = "formats/corpora/requirements/e1"
+corpus = "formats/corpora/requirements/e2"
 sunset = "none"
 
 # ── Compiler IR pass wire (1 JTD), PROP-054 §7.4.4 `##WHOLE-IR-WIRE` ─────────
