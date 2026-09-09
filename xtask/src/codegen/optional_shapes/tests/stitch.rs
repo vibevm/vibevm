@@ -224,8 +224,8 @@ fn the_real_vocabulary_home_walks_to_its_sites() -> Result<()> {
             .expect("the vocabulary home parses");
     let doc_shapes = shapes(json!({ "definitions": home }))?;
     assert_eq!(
-        doc_shapes.sites, 41,
-        "the real shared home includes the promoted compiler-IR optional sites"
+        doc_shapes.sites, 42,
+        "the real shared home includes every promoted optional site"
     );
     Ok(())
 }

@@ -2157,6 +2157,139 @@ pub enum RunAgentMode {
     Cli,
 }
 
+/// One public/internal scrape health finding. Optional evidence remains omitted
+/// when absent on the public epoch-1 surfaces.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ScrapeHealthFinding {
+    pub id: String,
+
+    pub message: String,
+
+    pub severity: ScrapeHealthSeverity,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub evidence: Option<String>,
+}
+
+/// The before/after phase shared by internal health evidence and the public
+/// scrape report.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ScrapeHealthPhase {
+    #[serde(rename = "after")]
+    After,
+
+    #[serde(rename = "before")]
+    Before,
+}
+
+/// The one canonical ordered health row. Internal evidence persists this exact
+/// generated value and the public epoch-1 report appends it unchanged.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ScrapeHealthRow {
+    pub argv: Vec<String>,
+
+    pub findings: Vec<ScrapeHealthFinding>,
+
+    pub id: String,
+
+    pub network_verified: bool,
+
+    pub phase: ScrapeHealthPhase,
+
+    pub stderr: ScrapeHealthStreamWitness,
+
+    pub stdout: ScrapeHealthStreamWitness,
+
+    pub step: ScrapeHealthStep,
+
+    pub terminal: ScrapeHealthTerminalState,
+
+    pub tests_skipped: bool,
+}
+
+/// The ordered collection seam used by the public report's permissive reader
+/// projection while the canonical row type remains strict and shared.
+pub type ScrapeHealthRows = Vec<ScrapeHealthRow>;
+
+/// The one shared scrape health finding severity vocabulary.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ScrapeHealthSeverity {
+    #[serde(rename = "error")]
+    Error,
+
+    #[serde(rename = "info")]
+    Info,
+
+    #[serde(rename = "warning")]
+    Warning,
+}
+
+/// The command step carried by one health evidence row.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ScrapeHealthStep {
+    #[serde(rename = "build")]
+    Build,
+
+    #[serde(rename = "install")]
+    Install,
+
+    #[serde(rename = "none")]
+    None,
+
+    #[serde(rename = "test")]
+    Test,
+
+    #[serde(rename = "verify")]
+    Verify,
+}
+
+/// Bounded redacted stream evidence shared by durable internal evidence and the
+/// public scrape report.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ScrapeHealthStreamWitness {
+    pub bytes: String,
+
+    pub head: String,
+
+    pub redacted: bool,
+
+    pub sha256: String,
+
+    pub tail: String,
+
+    pub truncated: bool,
+
+    pub utf8: bool,
+}
+
+/// The closed health-row terminal vocabulary.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ScrapeHealthTerminalState {
+    #[serde(rename = "cancelled")]
+    Cancelled,
+
+    #[serde(rename = "execution-failed")]
+    ExecutionFailed,
+
+    #[serde(rename = "fail")]
+    Fail,
+
+    #[serde(rename = "pass")]
+    Pass,
+
+    #[serde(rename = "skipped")]
+    Skipped,
+
+    #[serde(rename = "timed-out")]
+    TimedOut,
+
+    #[serde(rename = "warn")]
+    Warn,
+}
+
 /// The package slot targeted by a pre/post-install contribution.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct SlotTarget {

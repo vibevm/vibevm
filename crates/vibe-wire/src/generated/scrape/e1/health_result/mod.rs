@@ -9,7 +9,7 @@ use std::collections::BTreeMap;
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct HealthResult {
-    pub findings: Vec<Finding>,
+    pub findings: Vec<ScrapeHealthFinding>,
 
     pub metrics: BTreeMap<String, u32>,
 
@@ -20,18 +20,7 @@ pub struct HealthResult {
     pub summary: String,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
-pub struct Finding {
-    pub id: String,
-
-    pub message: String,
-
-    pub severity: Severity,
-
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub evidence: Option<String>,
-}
+pub type Finding = ScrapeHealthFinding;
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum HealthStatus {
@@ -45,14 +34,8 @@ pub enum HealthStatus {
     Warn,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-pub enum Severity {
-    #[serde(rename = "error")]
-    Error,
+pub use crate::generated::shared::ScrapeHealthFinding;
 
-    #[serde(rename = "info")]
-    Info,
+pub use crate::generated::shared::ScrapeHealthSeverity;
 
-    #[serde(rename = "warning")]
-    Warning,
-}
+pub type Severity = ScrapeHealthSeverity;

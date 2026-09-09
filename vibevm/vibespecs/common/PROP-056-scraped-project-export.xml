@@ -1286,6 +1286,16 @@ timeout_seconds = 120</fence>
       health-result roots remain byte-identical at epoch 1. Root and named-object member
       order is schema-declared; inline standard JTD discriminator arms use the pinned
       generator's deterministic canonical field order.</JOURNAL-E2-TRANSITION>
+      <HEALTH-PERSISTENCE-E2-TRANSITION fact="true" status="impl/done">The pre-public
+      prepared-health snapshot and canonical transaction health evidence use the strict
+      generated `scrape-prepared-health-snapshot/e2` and
+      `scrape-verification-health-evidence/e2` roots. An old handwritten prepared-health
+      shape refuses with the restart recipe rather than being guessed forward. Live file
+      identities and separately journaled verifier bundle bytes remain outside the plan
+      snapshot and are reattached only after their recorded digest, byte count, mode and
+      path identity agree. The public scrape plan, report and custom health-result roots
+      remain byte-identical at epoch 1; their health finding/report-row vocabulary has one
+      generated shared authority.</HEALTH-PERSISTENCE-E2-TRANSITION>
       <IMPL-F fact="true" status="impl/done">F — the bounded epoch-1 evidence includes
       transaction/store fault matrices, composed production recovery, real Rust
       Cargo/custom smokes, Windows races and explicit non-Windows fail-closed

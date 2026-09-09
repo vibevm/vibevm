@@ -5,7 +5,6 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-056#IMPL-E");
 use vibe_wire::generated::scrape::e1::report as w;
 
 use super::model as tx;
-use crate::health;
 use crate::model::PreparedScrape;
 
 pub fn report_to_wire(
@@ -173,7 +172,7 @@ pub fn report_to_wire_plan(
             .iter()
             .map(|event| bounded_text(event))
             .collect(),
-        health: health_results_from_plan(report, &value)?,
+        health: health_results(report)?,
         mode: match report.mode {
             tx::TransactionMode::Export => w::ReportMode::Export,
             tx::TransactionMode::InPlace => w::ReportMode::InPlace,
@@ -199,117 +198,42 @@ pub fn report_to_wire_plan(
     })
 }
 
-fn health_results_from_plan(
+fn health_results(
     report: &tx::TransactionReport,
-    plan: &serde_json::Value,
-) -> Result<Vec<w::HealthResult>, tx::TransactionError> {
-    let health_plan = plan["healthchecks"].as_array().cloned().unwrap_or_default();
+) -> Result<w::ScrapeHealthRows, tx::TransactionError> {
     let mut answer = Vec::new();
     for record in &report.verification {
-        let phase = match record.phase {
-            tx::VerificationPhase::Before => w::Phase::Before,
-            tx::VerificationPhase::AfterHealth => w::Phase::After,
-            _ => continue,
-        };
-        if let Some(failure) = health_failure_result(record, phase.clone(), &health_plan)? {
-            answer.extend(failure);
+        if !matches!(
+            record.phase,
+            tx::VerificationPhase::Before | tx::VerificationPhase::AfterHealth
+        ) {
             continue;
         }
-        let result: health::PhaseHealthResult =
-            serde_json::from_slice(&record.evidence.canonical_evidence)
-                .map_err(|error| tx::TransactionError::Verification(error.to_string()))?;
-        for check in result.checks {
-            append_check_rows(&mut answer, check, phase.clone(), &health_plan);
+        let evidence = serde_json::from_slice::<
+            vibe_wire::generated::scrape::e2::verification_health_evidence::VerificationHealthEvidence,
+        >(&record.evidence.canonical_evidence)
+        .map_err(|error| tx::TransactionError::Verification(format!(
+            "decoding schema-2 verification health evidence: {error}"
+        )))?;
+        if evidence.schema != 2 {
+            return Err(tx::TransactionError::Verification(format!(
+                "unsupported verification health evidence schema {}",
+                evidence.schema
+            )));
         }
+        let expected_phase = match record.phase {
+            tx::VerificationPhase::Before => w::ScrapeHealthPhase::Before,
+            tx::VerificationPhase::AfterHealth => w::ScrapeHealthPhase::After,
+            _ => unreachable!("non-health phases continued above"),
+        };
+        if evidence.rows.iter().any(|row| row.phase != expected_phase) {
+            return Err(tx::TransactionError::Verification(
+                "verification health evidence phase differs from its journal record".to_owned(),
+            ));
+        }
+        answer.extend(evidence.rows);
     }
     Ok(answer)
-}
-
-fn append_check_rows(
-    answer: &mut Vec<w::HealthResult>,
-    check: health::CheckResult,
-    phase: w::Phase,
-    health_plan: &[serde_json::Value],
-) {
-    let (tests_skipped, network_verified) = planned_health_flags(health_plan, &check.id);
-    let (terminal, findings) = terminal_findings(&check.state);
-    if check.commands.is_empty() {
-        answer.push(w::HealthResult {
-            argv: Vec::new(),
-            findings,
-            id: check.id,
-            network_verified,
-            phase,
-            stderr: empty_stream(),
-            stdout: empty_stream(),
-            step: w::HealthResultStep::None,
-            terminal,
-            tests_skipped,
-        });
-        return;
-    }
-    let last = check.commands.len() - 1;
-    for (index, execution) in check.commands.into_iter().enumerate() {
-        answer.push(w::HealthResult {
-            argv: execution.actual_argv,
-            findings: if index == last {
-                findings.clone()
-            } else {
-                Vec::new()
-            },
-            id: check.id.clone(),
-            network_verified,
-            phase: phase.clone(),
-            stderr: stream(&execution.stderr),
-            stdout: stream(&execution.stdout),
-            step: health_step(execution.step),
-            terminal: if index == last {
-                terminal.clone()
-            } else {
-                w::TerminalState::Pass
-            },
-            tests_skipped,
-        });
-    }
-}
-
-fn planned_health_flags(health_plan: &[serde_json::Value], id: &str) -> (bool, bool) {
-    let prepared = health_plan.iter().find(|row| row["id"] == id);
-    let tests_skipped = prepared
-        .and_then(|row| row["tests"].as_str())
-        .is_some_and(|tests| tests.starts_with("skipped"));
-    let network_verified = prepared.is_some_and(|row| row["effects"]["network"] == "deny");
-    (tests_skipped, network_verified)
-}
-
-fn terminal_findings(state: &health::CheckState) -> (w::TerminalState, Vec<w::Finding>) {
-    match state {
-        health::CheckState::Skipped { .. } => (w::TerminalState::Skipped, Vec::new()),
-        health::CheckState::Completed(health::HealthVerdict::Pass) => {
-            (w::TerminalState::Pass, Vec::new())
-        }
-        health::CheckState::Completed(health::HealthVerdict::Structured(value)) => (
-            match value.status {
-                health::HealthStatus::Pass => w::TerminalState::Pass,
-                health::HealthStatus::Warn => w::TerminalState::Warn,
-                health::HealthStatus::Fail => w::TerminalState::Fail,
-            },
-            value
-                .findings
-                .iter()
-                .map(|finding| w::Finding {
-                    id: finding.id.clone(),
-                    message: finding.message.clone(),
-                    severity: match finding.severity {
-                        health::Severity::Info => w::Severity::Info,
-                        health::Severity::Warning => w::Severity::Warning,
-                        health::Severity::Error => w::Severity::Error,
-                    },
-                    evidence: finding.evidence.clone(),
-                })
-                .collect(),
-        ),
-    }
 }
 fn json_required<'a>(
     value: &'a serde_json::Value,
@@ -365,95 +289,6 @@ fn json_modification(value: &str) -> Result<w::DeletedArtifactModification, tx::
     })
 }
 
-fn health_failure_result(
-    record: &tx::VerificationRecord,
-    phase: w::Phase,
-    health_plan: &[serde_json::Value],
-) -> Result<Option<Vec<w::HealthResult>>, tx::TransactionError> {
-    let Ok(failure) = serde_json::from_slice::<super::verifier::HealthFailureEvidence>(
-        &record.evidence.canonical_evidence,
-    ) else {
-        return Ok(None);
-    };
-    let terminal = match failure.terminal.as_str() {
-        "execution-failed" => w::TerminalState::ExecutionFailed,
-        "cancelled" => w::TerminalState::Cancelled,
-        "timed-out" => w::TerminalState::TimedOut,
-        other => {
-            return Err(tx::TransactionError::Verification(format!(
-                "unknown health failure terminal `{other}`"
-            )));
-        }
-    };
-    let mut rows = Vec::new();
-    for check in failure.prior_checks {
-        append_check_rows(&mut rows, check, phase.clone(), health_plan);
-    }
-    let (tests_skipped, network_verified) = planned_health_flags(health_plan, &failure.check_id);
-    rows.extend(
-        failure
-            .prior_executions
-            .into_iter()
-            .map(|execution| w::HealthResult {
-                argv: execution.actual_argv,
-                findings: Vec::new(),
-                id: failure.check_id.clone(),
-                network_verified,
-                phase: phase.clone(),
-                stderr: stream(&execution.stderr),
-                stdout: stream(&execution.stdout),
-                step: health_step(execution.step),
-                terminal: w::TerminalState::Pass,
-                tests_skipped,
-            })
-            .collect::<Vec<_>>(),
-    );
-    rows.push(w::HealthResult {
-        argv: failure
-            .execution
-            .as_ref()
-            .map(|execution| execution.actual_argv.clone())
-            .unwrap_or_default(),
-        findings: vec![w::Finding {
-            evidence: None,
-            id: "health-execution-failure".to_owned(),
-            message: bounded_text(&failure.message),
-            severity: w::Severity::Error,
-        }],
-        id: failure.check_id,
-        network_verified,
-        phase,
-        stderr: failure
-            .execution
-            .as_ref()
-            .map(|execution| stream(&execution.stderr))
-            .unwrap_or_else(empty_stream),
-        stdout: failure
-            .execution
-            .as_ref()
-            .map(|execution| stream(&execution.stdout))
-            .unwrap_or_else(empty_stream),
-        step: failure
-            .execution
-            .as_ref()
-            .map_or(w::HealthResultStep::None, |execution| {
-                health_step(execution.step)
-            }),
-        terminal,
-        tests_skipped,
-    });
-    Ok(Some(rows))
-}
-
-fn health_step(step: health::CommandStep) -> w::HealthResultStep {
-    match step {
-        health::CommandStep::Install => w::HealthResultStep::Install,
-        health::CommandStep::Build => w::HealthResultStep::Build,
-        health::CommandStep::Test => w::HealthResultStep::Test,
-        health::CommandStep::Verify => w::HealthResultStep::Verify,
-    }
-}
-
 fn bounded_text(value: &str) -> String {
     value.chars().take(4096).collect()
 }
@@ -466,28 +301,6 @@ fn may_emit_restored_witnesses(
     outcome == tx::Outcome::RolledBack && before.is_some() && before == after
 }
 
-fn stream(value: &health::StreamEvidence) -> w::StreamWitness {
-    w::StreamWitness {
-        bytes: value.total_bytes.to_string(),
-        head: String::from_utf8_lossy(&value.head).into_owned(),
-        sha256: value.sha256.clone(),
-        tail: String::from_utf8_lossy(&value.tail).into_owned(),
-        truncated: value.truncated,
-        redacted: value.redacted,
-        utf8: value.utf8 == health::Utf8State::Valid,
-    }
-}
-fn empty_stream() -> w::StreamWitness {
-    w::StreamWitness {
-        bytes: "0".into(),
-        head: String::new(),
-        sha256: "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855".into(),
-        tail: String::new(),
-        truncated: false,
-        redacted: true,
-        utf8: true,
-    }
-}
 fn actual_steps(
     report: &tx::TransactionReport,
     direction: tx::MutationDirection,

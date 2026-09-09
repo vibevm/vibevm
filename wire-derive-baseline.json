@@ -12,6 +12,7 @@
     "vibe-mcp": 7,
     "vibe-publish": 3,
     "vibe-registry": 7,
+    "vibe-scrape": 5,
     "vibe-trace": 3,
     "vibe-wire": 2,
     "vibe-workspace": 3,

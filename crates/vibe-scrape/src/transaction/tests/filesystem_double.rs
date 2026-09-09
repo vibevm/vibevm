@@ -415,12 +415,10 @@ impl TransactionVerifier for AcceptingVerifier {
         ));
         let canonical_evidence = match context.phase {
             VerificationPhase::Before | VerificationPhase::AfterHealth => serde_json::to_vec(
-                &serde_json::json!({
-                    "phase": if context.phase == VerificationPhase::Before { "before" } else { "after" },
-                    "plan_id": hash("health").0,
-                    "checks": [],
-                    "assurance_reduced": false,
-                }),
+                &vibe_wire::generated::scrape::e2::verification_health_evidence::VerificationHealthEvidence {
+                    schema: 2,
+                    rows: Vec::new(),
+                },
             )
             .unwrap(),
             _ => format!("evidence/{:?}", context.phase).into_bytes(),
@@ -490,12 +488,10 @@ impl TransactionVerifier for RealTreeVerifier {
     ) -> Result<VerificationEvidence, TransactionError> {
         let canonical_evidence = match context.phase {
             VerificationPhase::Before | VerificationPhase::AfterHealth => serde_json::to_vec(
-                &serde_json::json!({
-                    "phase": if context.phase == VerificationPhase::Before { "before" } else { "after" },
-                    "plan_id": hash("health").0,
-                    "checks": [],
-                    "assurance_reduced": context.phase == VerificationPhase::AfterHealth,
-                }),
+                &vibe_wire::generated::scrape::e2::verification_health_evidence::VerificationHealthEvidence {
+                    schema: 2,
+                    rows: Vec::new(),
+                },
             )
             .unwrap(),
             _ => format!("real-tree/e1/{:?}", context.phase).into_bytes(),

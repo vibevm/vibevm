@@ -145,9 +145,7 @@ pub(crate) fn persistence_capacity_blocker(
                 .and_then(|results| value.checked_add(results))
         })
         .ok_or_else(|| HealthError::Preparation("health evidence size overflow".to_owned()))?;
-    let health_plan_bytes = serde_json::to_vec(prepared)
-        .map_err(|error| HealthError::Preparation(format!("sizing health plan: {error}")))?
-        .len() as u128;
+    let health_plan_bytes = super::snapshot_bytes(prepared)?.len() as u128;
     let tree_overhead = inventory.entries.iter().try_fold(0u128, |total, entry| {
         total
             .checked_add(2048)

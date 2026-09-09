@@ -2,14 +2,15 @@
   "metadata": {
     "description": "Epoch-1 result written atomically by a custom scrape health verifier. The host is the sole reader; protocol, status and severities are closed and relational status/finding laws are checked by the scrape domain.",
     "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-056#CUSTOM-JSON-PROTOCOL" },
-    "rustOptions": { "package": "vibe_wire::scrape_health_result" }
+    "rustOptions": { "package": "vibe_wire::scrape_health_result" },
+    "x-vocabularies": ["scrape_health_finding"]
   },
   "properties": {
     "protocol": { "type": "uint32" },
     "status": { "ref": "health_status" },
     "summary": { "type": "string" },
     "findings": {
-      "elements": { "ref": "finding" },
+      "elements": { "ref": "scrape_health_finding" },
       "metadata": { "x-empty": "emit" }
     },
     "metrics": {
@@ -19,16 +20,7 @@
   },
   "definitions": {
     "health_status": { "enum": ["pass", "warn", "fail"], "metadata": { "x-vocabulary": "closed" } },
-    "severity": { "enum": ["info", "warning", "error"], "metadata": { "x-vocabulary": "closed" } },
-    "finding": {
-      "properties": {
-        "id": { "type": "string" },
-        "severity": { "ref": "severity" },
-        "message": { "type": "string" }
-      },
-      "optionalProperties": {
-        "evidence": { "type": "string", "metadata": { "x-default": null } }
-      }
-    }
+    "finding": { "ref": "scrape_health_finding" },
+    "severity": { "ref": "scrape_health_severity" }
   }
 }

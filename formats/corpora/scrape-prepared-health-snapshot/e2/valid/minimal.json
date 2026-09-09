@@ -1,0 +1,1 @@
+{"schema":2,"plan_id":"sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","baseline":"strict","max_stdout_bytes":1,"max_stderr_bytes":2,"max_result_bytes":3,"termination_grace_seconds":4,"checks":[],"blockers":[]}

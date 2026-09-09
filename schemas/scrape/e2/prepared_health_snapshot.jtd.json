@@ -1,0 +1,160 @@
+{
+  "metadata": {
+    "description": "Epoch-2 durable prepared-health execution snapshot. It contains every restart input except live handles and verifier bundle bytes, which are identity-checked and reattached from separately journaled snapshots.",
+    "rustOptions": { "package": "vibe_wire::scrape_prepared_health_snapshot" },
+    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-056#CUSTOM-VERIFIER-SNAPSHOT" },
+    "x-wire-order": ["schema", "plan_id", "baseline", "max_stdout_bytes", "max_stderr_bytes", "max_result_bytes", "termination_grace_seconds", "checks", "blockers"]
+  },
+  "properties": {
+    "schema": { "type": "uint32" },
+    "plan_id": { "type": "string" },
+    "baseline": { "ref": "baseline_policy" },
+    "max_stdout_bytes": { "ref": "u64_count" },
+    "max_stderr_bytes": { "ref": "u64_count" },
+    "max_result_bytes": { "ref": "u64_count" },
+    "termination_grace_seconds": { "ref": "u64_count" },
+    "checks": { "elements": { "ref": "prepared_healthcheck" }, "metadata": { "x-empty": "emit" } },
+    "blockers": { "elements": { "ref": "health_blocker" }, "metadata": { "x-empty": "emit" } }
+  },
+  "definitions": {
+    "u64_count": { "type": "float64", "metadata": { "x-rust-type": "u64" } },
+    "baseline_policy": { "enum": ["strict", "no-regression"], "metadata": { "x-vocabulary": "closed" } },
+    "health_blocker": {
+      "metadata": { "x-wire-order": ["code", "check_id", "message"] },
+      "properties": {
+        "code": { "type": "string" },
+        "check_id": { "type": "string", "nullable": true },
+        "message": { "type": "string" }
+      }
+    },
+    "healthcheck_kind": { "enum": ["cargo", "npm", "maven", "python-pip", "custom"], "metadata": { "x-vocabulary": "closed" } },
+    "applicability": {
+      "discriminator": "kind",
+      "mapping": {
+        "applicable": { "properties": {} },
+        "skipped-when-missing": { "properties": { "path": { "type": "string" } } }
+      }
+    },
+    "test_disposition": { "enum": ["skipped-by-contract", "skipped-not-present", "run-if-present", "run-required"], "metadata": { "x-vocabulary": "closed" } },
+    "network_mode": { "enum": ["deny", "tool-offline", "inherit"], "metadata": { "x-vocabulary": "closed" } },
+    "asset_role": { "enum": ["cargo", "rustc", "rustdoc", "node", "npm-cli", "maven-launcher", "python", "custom-interpreter", "custom-native"], "metadata": { "x-vocabulary": "closed" } },
+    "version_kind": { "enum": ["content", "probe"], "metadata": { "x-vocabulary": "closed" } },
+    "asset_source": {
+      "discriminator": "kind",
+      "mapping": {
+        "resolved": { "properties": {} },
+        "bundle": { "properties": { "path": { "type": "string" } } }
+      }
+    },
+    "asset_identity": {
+      "metadata": { "x-wire-order": ["id", "role", "display_path", "sha256", "bytes", "mode", "platform_identity", "version", "version_kind", "source"] },
+      "properties": {
+        "id": { "type": "string" },
+        "role": { "ref": "asset_role" },
+        "display_path": { "type": "string" },
+        "sha256": { "type": "string" },
+        "bytes": { "ref": "u64_count" },
+        "mode": { "type": "uint32", "nullable": true },
+        "platform_identity": { "type": "string" },
+        "version": { "type": "string" },
+        "version_kind": { "ref": "version_kind" },
+        "source": { "ref": "asset_source" }
+      }
+    },
+    "command_step": { "enum": ["install", "build", "test", "verify"], "metadata": { "x-vocabulary": "closed" } },
+    "prepared_arg": {
+      "discriminator": "kind",
+      "mapping": {
+        "literal": { "properties": { "value": { "type": "string" } } },
+        "root": { "properties": {} },
+        "scratch": { "properties": {} },
+        "result": { "properties": {} },
+        "phase": { "properties": {} },
+        "asset-path": { "properties": { "value": { "type": "string" } } },
+        "bundle-path": { "properties": { "value": { "type": "string" } } }
+      }
+    },
+    "environment_value": {
+      "discriminator": "kind",
+      "mapping": {
+        "literal": { "properties": { "value": { "type": "string" } } },
+        "scratch-path": { "properties": { "value": { "type": "string" } } },
+        "asset-path": { "properties": { "value": { "type": "string" } } }
+      }
+    },
+    "prepared_command": {
+      "metadata": { "x-wire-order": ["step", "executable_asset_id", "argv", "environment", "accepted_exit_codes"] },
+      "properties": {
+        "step": { "ref": "command_step" },
+        "executable_asset_id": { "type": "string" },
+        "argv": { "elements": { "ref": "prepared_arg" }, "metadata": { "x-empty": "emit" } },
+        "environment": { "values": { "ref": "environment_value" }, "metadata": { "x-empty": "emit" } },
+        "accepted_exit_codes": { "elements": { "type": "int32" }, "metadata": { "x-empty": "emit" } }
+      }
+    },
+    "effect_plan": {
+      "metadata": { "x-wire-order": ["reads", "writes", "spawn"] },
+      "properties": {
+        "reads": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } },
+        "writes": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } },
+        "spawn": { "type": "boolean" }
+      }
+    },
+    "termination_mode": { "enum": ["forced-tree", "graceful-then-forced"], "metadata": { "x-vocabulary": "closed" } },
+    "sandbox_requirement": {
+      "metadata": { "x-wire-order": ["exact_executable_identity", "filesystem_isolation", "read_policy_enforcement", "process_tree_containment", "graceful_termination", "termination_mode", "spawn_prevention", "network_deny", "bounded_output", "atomic_result", "bundle_materialization"] },
+      "properties": {
+        "exact_executable_identity": { "type": "boolean" },
+        "filesystem_isolation": { "type": "boolean" },
+        "read_policy_enforcement": { "type": "boolean" },
+        "process_tree_containment": { "type": "boolean" },
+        "graceful_termination": { "type": "boolean" },
+        "termination_mode": { "ref": "termination_mode" },
+        "spawn_prevention": { "type": "boolean" },
+        "network_deny": { "type": "boolean" },
+        "bounded_output": { "type": "boolean" },
+        "atomic_result": { "type": "boolean" },
+        "bundle_materialization": { "type": "boolean" }
+      }
+    },
+    "result_protocol": { "enum": ["built-in", "exit-code", "vibe-health-json-v1"], "metadata": { "x-vocabulary": "closed" } },
+    "bundle_entry_kind": { "enum": ["file", "directory"], "metadata": { "x-vocabulary": "closed" } },
+    "bundle_entry": {
+      "metadata": { "x-wire-order": ["path", "kind", "sha256", "bytes", "mode"] },
+      "properties": {
+        "path": { "type": "string" },
+        "kind": { "ref": "bundle_entry_kind" },
+        "sha256": { "type": "string", "nullable": true },
+        "bytes": { "ref": "u64_count", "nullable": true },
+        "mode": { "type": "uint32", "nullable": true }
+      }
+    },
+    "custom_bundle": {
+      "metadata": { "x-wire-order": ["sha256", "source", "entries"] },
+      "properties": {
+        "sha256": { "type": "string" },
+        "source": { "type": "string" },
+        "entries": { "elements": { "ref": "bundle_entry" }, "metadata": { "x-empty": "emit" } }
+      }
+    },
+    "prepared_healthcheck": {
+      "metadata": { "x-wire-order": ["id", "kind", "root", "applicability", "tests", "network", "assets", "commands", "effects", "sandbox", "protocol", "custom_bundle", "assurance_reductions", "timeout_seconds"] },
+      "properties": {
+        "id": { "type": "string" },
+        "kind": { "ref": "healthcheck_kind" },
+        "root": { "type": "string" },
+        "applicability": { "ref": "applicability" },
+        "tests": { "ref": "test_disposition", "nullable": true },
+        "network": { "ref": "network_mode" },
+        "assets": { "elements": { "ref": "asset_identity" }, "metadata": { "x-empty": "emit" } },
+        "commands": { "elements": { "ref": "prepared_command" }, "metadata": { "x-empty": "emit" } },
+        "effects": { "ref": "effect_plan" },
+        "sandbox": { "ref": "sandbox_requirement" },
+        "protocol": { "ref": "result_protocol" },
+        "custom_bundle": { "ref": "custom_bundle", "nullable": true },
+        "assurance_reductions": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } },
+        "timeout_seconds": { "ref": "u64_count" }
+      }
+    }
+  }
+}

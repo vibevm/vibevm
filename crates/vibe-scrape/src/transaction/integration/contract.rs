@@ -19,7 +19,7 @@ pub(super) fn snapshots(
             .map_err(|error| tx::TransactionError::InvalidPrepared(error.to_string()))?,
     )
     .map_err(|error| tx::TransactionError::InvalidPrepared(error.to_string()))?;
-    let health = serde_json::to_vec(&prepared.health)
+    let health = crate::health::snapshot_bytes(&prepared.health)
         .map_err(|error| tx::TransactionError::InvalidPrepared(error.to_string()))?;
     let mut answer = vec![
         tx::Snapshot {

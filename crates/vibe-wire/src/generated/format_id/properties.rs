@@ -81,10 +81,12 @@ impl FormatId {
         FormatId::RequirementsReport,
         FormatId::ScrapeHealthResult,
         FormatId::ScrapePlan,
+        FormatId::ScrapePreparedHealthSnapshot,
         FormatId::ScrapeReport,
         FormatId::ScrapeRetirementCheckpoint,
         FormatId::ScrapeTransactionJournal,
         FormatId::ScrapeTransactionOwner,
+        FormatId::ScrapeVerificationHealthEvidence,
         FormatId::SlotRecord,
     ];
 
@@ -167,10 +169,12 @@ impl FormatId {
             FormatId::RequirementsReport => "requirements-report",
             FormatId::ScrapeHealthResult => "scrape-health-result",
             FormatId::ScrapePlan => "scrape-plan",
+            FormatId::ScrapePreparedHealthSnapshot => "scrape-prepared-health-snapshot",
             FormatId::ScrapeReport => "scrape-report",
             FormatId::ScrapeRetirementCheckpoint => "scrape-retirement-checkpoint",
             FormatId::ScrapeTransactionJournal => "scrape-transaction-journal",
             FormatId::ScrapeTransactionOwner => "scrape-transaction-owner",
+            FormatId::ScrapeVerificationHealthEvidence => "scrape-verification-health-evidence",
             FormatId::SlotRecord => "slot-record",
         }
     }
@@ -254,10 +258,12 @@ impl FormatId {
             FormatId::RequirementsReport => 1,
             FormatId::ScrapeHealthResult => 1,
             FormatId::ScrapePlan => 1,
+            FormatId::ScrapePreparedHealthSnapshot => 2,
             FormatId::ScrapeReport => 1,
             FormatId::ScrapeRetirementCheckpoint => 2,
             FormatId::ScrapeTransactionJournal => 2,
             FormatId::ScrapeTransactionOwner => 3,
+            FormatId::ScrapeVerificationHealthEvidence => 2,
             FormatId::SlotRecord => 1,
         }
     }
@@ -341,10 +347,12 @@ impl FormatId {
             FormatId::RequirementsReport => true,
             FormatId::ScrapeHealthResult => true,
             FormatId::ScrapePlan => true,
+            FormatId::ScrapePreparedHealthSnapshot => false,
             FormatId::ScrapeReport => false,
             FormatId::ScrapeRetirementCheckpoint => false,
             FormatId::ScrapeTransactionJournal => false,
             FormatId::ScrapeTransactionOwner => false,
+            FormatId::ScrapeVerificationHealthEvidence => false,
             FormatId::SlotRecord => true,
         }
     }
@@ -428,10 +436,12 @@ impl FormatId {
             FormatId::RequirementsReport => ForeignParsers::Many,
             FormatId::ScrapeHealthResult => ForeignParsers::None,
             FormatId::ScrapePlan => ForeignParsers::Many,
+            FormatId::ScrapePreparedHealthSnapshot => ForeignParsers::None,
             FormatId::ScrapeReport => ForeignParsers::Many,
             FormatId::ScrapeRetirementCheckpoint => ForeignParsers::None,
             FormatId::ScrapeTransactionJournal => ForeignParsers::None,
             FormatId::ScrapeTransactionOwner => ForeignParsers::None,
+            FormatId::ScrapeVerificationHealthEvidence => ForeignParsers::None,
             FormatId::SlotRecord => ForeignParsers::None,
         }
     }
@@ -515,10 +525,12 @@ impl FormatId {
             FormatId::RequirementsReport => UnknownFields::Allow,
             FormatId::ScrapeHealthResult => UnknownFields::Deny,
             FormatId::ScrapePlan => UnknownFields::Deny,
+            FormatId::ScrapePreparedHealthSnapshot => UnknownFields::Deny,
             FormatId::ScrapeReport => UnknownFields::Deny,
             FormatId::ScrapeRetirementCheckpoint => UnknownFields::Deny,
             FormatId::ScrapeTransactionJournal => UnknownFields::Deny,
             FormatId::ScrapeTransactionOwner => UnknownFields::Deny,
+            FormatId::ScrapeVerificationHealthEvidence => UnknownFields::Deny,
             FormatId::SlotRecord => UnknownFields::Deny,
         }
     }

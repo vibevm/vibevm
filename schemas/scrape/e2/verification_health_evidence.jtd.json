@@ -1,0 +1,13 @@
+{
+  "metadata": {
+    "description": "Epoch-2 canonical internal health evidence. Rows use the same generated closure as the public epoch-1 scrape report, so report projection decodes rather than reinterprets durable evidence.",
+    "rustOptions": { "package": "vibe_wire::scrape_verification_health_evidence" },
+    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-056#REPORT-CONTENT" },
+    "x-vocabularies": ["scrape_health_rows"],
+    "x-wire-order": ["schema", "rows"]
+  },
+  "properties": {
+    "schema": { "type": "uint32" },
+    "rows": { "ref": "scrape_health_rows", "metadata": { "x-empty": "emit" } }
+  }
+}

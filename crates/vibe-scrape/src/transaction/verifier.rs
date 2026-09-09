@@ -2,16 +2,18 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-056#IMPL-E");
 
-use serde::{Deserialize, Serialize};
 use sha2::{Digest as _, Sha256};
 use std::path::{Path, PathBuf};
 
 use super::model as tx;
 use super::traits::TransactionVerifier;
 use crate::health::{self, CheckState, HealthPhase, HealthStatus, HealthVerdict};
+use vibe_wire::generated::scrape::e2::verification_health_evidence::ScrapeHealthTerminalState;
 
+pub(crate) mod evidence;
 mod phase;
 
+use evidence::FailureEvidence;
 use phase::{
     before_accepted, create_phase_directory, materialize_exact_tree, observe, proof_evidence, seal,
 };
@@ -27,6 +29,19 @@ pub struct PreparedHealthVerifier {
 struct PhaseDirectory {
     path: PathBuf,
     _capability: vibe_safefs::Pinned,
+}
+
+fn rejected_health_evidence(
+    prepared: &health::PreparedHealth,
+    failure: evidence::FailureEvidence,
+) -> Result<tx::VerificationEvidence, tx::TransactionError> {
+    let canonical_evidence = evidence::failure_bytes(prepared, &failure)?;
+    Ok(tx::VerificationEvidence {
+        accepted: false,
+        assurance: tx::Assurance::Reduced,
+        summary: failure.message,
+        canonical_evidence,
+    })
 }
 
 /// Recovery adapter for journals discovered before their verifier snapshots
@@ -57,19 +72,6 @@ impl RecoveryHealthVerifier {
     }
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub(crate) struct HealthFailureEvidence {
-    pub phase: HealthPhase,
-    pub check_id: String,
-    pub terminal: String,
-    pub execution: Option<health::CommandExecution>,
-    #[serde(default)]
-    pub prior_executions: Vec<health::CommandExecution>,
-    #[serde(default)]
-    pub prior_checks: Vec<health::CheckResult>,
-    pub message: String,
-}
-
 impl PreparedHealthVerifier {
     #[must_use]
     pub fn new(prepared: health::PreparedHealth) -> Self {
@@ -83,7 +85,7 @@ impl PreparedHealthVerifier {
     }
 
     pub fn from_snapshot(bytes: &[u8]) -> Result<Self, tx::TransactionError> {
-        let prepared = serde_json::from_slice(bytes).map_err(|error| {
+        let prepared = health::snapshot_from_bytes(bytes).map_err(|error| {
             tx::TransactionError::Verification(format!(
                 "decoding sealed prepared health snapshot: {error}"
             ))
@@ -94,6 +96,17 @@ impl PreparedHealthVerifier {
     pub fn from_journal_snapshots<Read>(
         health_bytes: &[u8],
         journal: &tx::Journal,
+        read: Read,
+    ) -> Result<Self, tx::TransactionError>
+    where
+        Read: FnMut(&str) -> Result<Vec<u8>, tx::TransactionError>,
+    {
+        Self::from_snapshot_records(health_bytes, &journal.snapshots, read)
+    }
+
+    fn from_snapshot_records<Read>(
+        health_bytes: &[u8],
+        snapshots: &[tx::SnapshotRecord],
         mut read: Read,
     ) -> Result<Self, tx::TransactionError>
     where
@@ -109,8 +122,7 @@ impl PreparedHealthVerifier {
                     continue;
                 }
                 let name = format!("verifier/{}/{}", check.id, entry.path);
-                let record = journal
-                    .snapshots
+                let record = snapshots
                     .iter()
                     .find(|record| record.name == name)
                     .ok_or_else(|| {
@@ -118,6 +130,11 @@ impl PreparedHealthVerifier {
                             "custom verifier snapshot `{name}` is not journaled"
                         ))
                     })?;
+                if record.kind != tx::SnapshotKind::Verifier {
+                    return Err(tx::TransactionError::Verification(format!(
+                        "custom verifier snapshot `{name}` differs from sealed bundle"
+                    )));
+                }
                 let bytes = read(&name)?;
                 let digest = format!("sha256:{:x}", Sha256::digest(&bytes));
                 if entry.sha256.as_deref() != Some(digest.as_str())
@@ -252,22 +269,18 @@ impl TransactionVerifier for PreparedHealthVerifier {
                 execution,
                 ..
             }) => {
-                let failure = HealthFailureEvidence {
-                    phase,
-                    check_id,
-                    terminal: "execution-failed".to_owned(),
-                    execution: Some(*execution),
-                    prior_executions,
-                    prior_checks,
-                    message: "health command returned an unaccepted exit code".to_owned(),
-                };
-                return Ok(tx::VerificationEvidence {
-                    accepted: false,
-                    assurance: tx::Assurance::Reduced,
-                    summary: failure.message.clone(),
-                    canonical_evidence: serde_json::to_vec(&failure)
-                        .map_err(|error| tx::TransactionError::Verification(error.to_string()))?,
-                });
+                return rejected_health_evidence(
+                    &self.prepared,
+                    FailureEvidence {
+                        phase,
+                        check_id,
+                        terminal: ScrapeHealthTerminalState::ExecutionFailed,
+                        execution: Some(*execution),
+                        prior_executions,
+                        prior_checks,
+                        message: "health command returned an unaccepted exit code".to_owned(),
+                    },
+                );
             }
             Err(health::HealthError::CommandChangedTree {
                 check_id,
@@ -277,22 +290,18 @@ impl TransactionVerifier for PreparedHealthVerifier {
                 execution,
                 ..
             }) => {
-                let failure = HealthFailureEvidence {
-                    phase,
-                    check_id,
-                    terminal: "execution-failed".to_owned(),
-                    execution: Some(*execution),
-                    prior_executions,
-                    prior_checks,
-                    message: detail,
-                };
-                return Ok(tx::VerificationEvidence {
-                    accepted: false,
-                    assurance: tx::Assurance::Reduced,
-                    summary: failure.message.clone(),
-                    canonical_evidence: serde_json::to_vec(&failure)
-                        .map_err(|error| tx::TransactionError::Verification(error.to_string()))?,
-                });
+                return rejected_health_evidence(
+                    &self.prepared,
+                    FailureEvidence {
+                        phase,
+                        check_id,
+                        terminal: ScrapeHealthTerminalState::ExecutionFailed,
+                        execution: Some(*execution),
+                        prior_executions,
+                        prior_checks,
+                        message: detail,
+                    },
+                );
             }
             Err(health::HealthError::TimedOut {
                 check_id,
@@ -301,22 +310,18 @@ impl TransactionVerifier for PreparedHealthVerifier {
                 execution,
                 ..
             }) => {
-                let failure = HealthFailureEvidence {
-                    phase,
-                    check_id,
-                    terminal: "timed-out".to_owned(),
-                    execution: Some(*execution),
-                    prior_executions,
-                    prior_checks,
-                    message: "health command exceeded its sealed timeout".to_owned(),
-                };
-                return Ok(tx::VerificationEvidence {
-                    accepted: false,
-                    assurance: tx::Assurance::Reduced,
-                    summary: failure.message.clone(),
-                    canonical_evidence: serde_json::to_vec(&failure)
-                        .map_err(|error| tx::TransactionError::Verification(error.to_string()))?,
-                });
+                return rejected_health_evidence(
+                    &self.prepared,
+                    FailureEvidence {
+                        phase,
+                        check_id,
+                        terminal: ScrapeHealthTerminalState::TimedOut,
+                        execution: Some(*execution),
+                        prior_executions,
+                        prior_checks,
+                        message: "health command exceeded its sealed timeout".to_owned(),
+                    },
+                );
             }
             Err(health::HealthError::Cancelled {
                 check_id,
@@ -325,23 +330,19 @@ impl TransactionVerifier for PreparedHealthVerifier {
                 execution,
                 ..
             }) => {
-                let failure = HealthFailureEvidence {
-                    phase,
-                    check_id,
-                    terminal: "cancelled".to_owned(),
-                    execution: Some(*execution),
-                    prior_executions,
-                    prior_checks,
-                    message: "health command was cancelled and its process tree terminated"
-                        .to_owned(),
-                };
-                return Ok(tx::VerificationEvidence {
-                    accepted: false,
-                    assurance: tx::Assurance::Reduced,
-                    summary: failure.message.clone(),
-                    canonical_evidence: serde_json::to_vec(&failure)
-                        .map_err(|error| tx::TransactionError::Verification(error.to_string()))?,
-                });
+                return rejected_health_evidence(
+                    &self.prepared,
+                    FailureEvidence {
+                        phase,
+                        check_id,
+                        terminal: ScrapeHealthTerminalState::Cancelled,
+                        execution: Some(*execution),
+                        prior_executions,
+                        prior_checks,
+                        message: "health command was cancelled and its process tree terminated"
+                            .to_owned(),
+                    },
+                );
             }
             Err(health::HealthError::CheckProtocolFailed {
                 check_id,
@@ -350,40 +351,32 @@ impl TransactionVerifier for PreparedHealthVerifier {
                 mut executions,
             }) => {
                 let execution = executions.pop();
-                let failure = HealthFailureEvidence {
-                    phase,
-                    check_id,
-                    terminal: "execution-failed".to_owned(),
-                    execution,
-                    prior_executions: executions,
-                    prior_checks,
-                    message: detail,
-                };
-                return Ok(tx::VerificationEvidence {
-                    accepted: false,
-                    assurance: tx::Assurance::Reduced,
-                    summary: failure.message.clone(),
-                    canonical_evidence: serde_json::to_vec(&failure)
-                        .map_err(|error| tx::TransactionError::Verification(error.to_string()))?,
-                });
+                return rejected_health_evidence(
+                    &self.prepared,
+                    FailureEvidence {
+                        phase,
+                        check_id,
+                        terminal: ScrapeHealthTerminalState::ExecutionFailed,
+                        execution,
+                        prior_executions: executions,
+                        prior_checks,
+                        message: detail,
+                    },
+                );
             }
             Err(error) => {
-                let failure = HealthFailureEvidence {
-                    phase,
-                    check_id: "health-panel".to_owned(),
-                    terminal: "execution-failed".to_owned(),
-                    execution: None,
-                    prior_executions: Vec::new(),
-                    prior_checks: Vec::new(),
-                    message: error.to_string(),
-                };
-                return Ok(tx::VerificationEvidence {
-                    accepted: false,
-                    assurance: tx::Assurance::Reduced,
-                    summary: failure.message.clone(),
-                    canonical_evidence: serde_json::to_vec(&failure)
-                        .map_err(|encode| tx::TransactionError::Verification(encode.to_string()))?,
-                });
+                return rejected_health_evidence(
+                    &self.prepared,
+                    FailureEvidence {
+                        phase,
+                        check_id: "health-panel".to_owned(),
+                        terminal: ScrapeHealthTerminalState::ExecutionFailed,
+                        execution: None,
+                        prior_executions: Vec::new(),
+                        prior_checks: Vec::new(),
+                        message: error.to_string(),
+                    },
+                );
             }
         };
         if !before {
@@ -415,8 +408,7 @@ impl TransactionVerifier for PreparedHealthVerifier {
                 | health::BaselineDecision::RollbackAfter => (false, true),
             }
         };
-        let canonical_evidence = serde_json::to_vec(&result)
-            .map_err(|error| tx::TransactionError::Verification(error.to_string()))?;
+        let canonical_evidence = evidence::phase_bytes(&self.prepared, &result)?;
         Ok(tx::VerificationEvidence {
             accepted,
             assurance: if assurance {
@@ -482,3 +474,7 @@ impl TransactionVerifier for RecoveryHealthVerifier {
         }
     }
 }
+
+#[cfg(test)]
+#[path = "verifier/tests.rs"]
+mod tests;

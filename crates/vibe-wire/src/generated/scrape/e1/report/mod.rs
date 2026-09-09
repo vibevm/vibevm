@@ -75,7 +75,8 @@ pub struct Report {
 
     pub events: Vec<String>,
 
-    pub health: Vec<HealthResult>,
+    #[serde(deserialize_with = "__reader_projection::deserialize_scrape_health_rows_0")]
+    pub health: ScrapeHealthRows,
 
     pub mode: ReportMode,
 
@@ -193,69 +194,13 @@ pub struct FileWitness {
     pub sha256: String,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
-pub struct Finding {
-    pub id: String,
+pub type Finding = ScrapeHealthFinding;
 
-    pub message: String,
+pub type HealthResult = ScrapeHealthRow;
 
-    pub severity: Severity,
+pub type HealthResultStep = ScrapeHealthStep;
 
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub evidence: Option<String>,
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-pub enum HealthResultStep {
-    #[serde(rename = "build")]
-    Build,
-
-    #[serde(rename = "install")]
-    Install,
-
-    #[serde(rename = "none")]
-    None,
-
-    #[serde(rename = "test")]
-    Test,
-
-    #[serde(rename = "verify")]
-    Verify,
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
-pub struct HealthResult {
-    pub argv: Vec<String>,
-
-    pub findings: Vec<Finding>,
-
-    pub id: String,
-
-    pub network_verified: bool,
-
-    pub phase: Phase,
-
-    pub stderr: StreamWitness,
-
-    pub stdout: StreamWitness,
-
-    pub step: HealthResultStep,
-
-    pub terminal: TerminalState,
-
-    pub tests_skipped: bool,
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-pub enum Phase {
-    #[serde(rename = "after")]
-    After,
-
-    #[serde(rename = "before")]
-    Before,
-}
+pub type Phase = ScrapeHealthPhase;
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum RecoveryStepResult {
@@ -362,56 +307,228 @@ pub struct RewriteResult {
     pub path: String,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-pub enum Severity {
-    #[serde(rename = "error")]
-    Error,
+pub use crate::generated::shared::ScrapeHealthFinding;
 
-    #[serde(rename = "info")]
-    Info,
+pub use crate::generated::shared::ScrapeHealthPhase;
 
-    #[serde(rename = "warning")]
-    Warning,
-}
+pub use crate::generated::shared::ScrapeHealthRow;
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
-pub struct StreamWitness {
-    pub bytes: String,
+pub use crate::generated::shared::ScrapeHealthRows;
 
-    pub head: String,
+pub use crate::generated::shared::ScrapeHealthSeverity;
 
-    pub redacted: bool,
+pub use crate::generated::shared::ScrapeHealthStep;
 
-    pub sha256: String,
+pub use crate::generated::shared::ScrapeHealthStreamWitness;
 
-    pub tail: String,
+pub use crate::generated::shared::ScrapeHealthTerminalState;
 
-    pub truncated: bool,
+pub type Severity = ScrapeHealthSeverity;
 
-    pub utf8: bool,
-}
+pub type StreamWitness = ScrapeHealthStreamWitness;
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-pub enum TerminalState {
-    #[serde(rename = "cancelled")]
-    Cancelled,
+pub type TerminalState = ScrapeHealthTerminalState;
 
-    #[serde(rename = "execution-failed")]
-    ExecutionFailed,
+#[doc(hidden)]
+#[allow(clippy::collapsible_if, unused_variables)]
+mod __reader_projection {
+    #[derive(Clone, Copy)]
+    struct NoDuplicateValue;
 
-    #[serde(rename = "fail")]
-    Fail,
+    impl<'de> serde::de::DeserializeSeed<'de> for NoDuplicateValue {
+        type Value = serde_json::Value;
 
-    #[serde(rename = "pass")]
-    Pass,
+        fn deserialize<D>(self, deserializer: D) -> Result<Self::Value, D::Error>
+        where
+            D: serde::Deserializer<'de>,
+        {
+            deserializer.deserialize_any(NoDuplicateValueVisitor)
+        }
+    }
 
-    #[serde(rename = "skipped")]
-    Skipped,
+    struct NoDuplicateValueVisitor;
 
-    #[serde(rename = "timed-out")]
-    TimedOut,
+    impl<'de> serde::de::Visitor<'de> for NoDuplicateValueVisitor {
+        type Value = serde_json::Value;
 
-    #[serde(rename = "warn")]
-    Warn,
+        fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            formatter.write_str("a JSON value without duplicate object members")
+        }
+
+        fn visit_bool<E>(self, value: bool) -> Result<Self::Value, E> {
+            Ok(serde_json::Value::Bool(value))
+        }
+
+        fn visit_i64<E>(self, value: i64) -> Result<Self::Value, E> {
+            Ok(serde_json::Value::Number(value.into()))
+        }
+
+        fn visit_u64<E>(self, value: u64) -> Result<Self::Value, E> {
+            Ok(serde_json::Value::Number(value.into()))
+        }
+
+        fn visit_f64<E>(self, value: f64) -> Result<Self::Value, E>
+        where
+            E: serde::de::Error,
+        {
+            serde_json::Number::from_f64(value)
+                .map(serde_json::Value::Number)
+                .ok_or_else(|| E::custom("non-finite JSON number"))
+        }
+
+        fn visit_str<E>(self, value: &str) -> Result<Self::Value, E> {
+            Ok(serde_json::Value::String(value.to_string()))
+        }
+
+        fn visit_string<E>(self, value: String) -> Result<Self::Value, E> {
+            Ok(serde_json::Value::String(value))
+        }
+
+        fn visit_none<E>(self) -> Result<Self::Value, E> {
+            Ok(serde_json::Value::Null)
+        }
+
+        fn visit_unit<E>(self) -> Result<Self::Value, E> {
+            Ok(serde_json::Value::Null)
+        }
+
+        fn visit_some<D>(self, deserializer: D) -> Result<Self::Value, D::Error>
+        where
+            D: serde::Deserializer<'de>,
+        {
+            serde::de::DeserializeSeed::deserialize(NoDuplicateValue, deserializer)
+        }
+
+        fn visit_newtype_struct<D>(self, deserializer: D) -> Result<Self::Value, D::Error>
+        where
+            D: serde::Deserializer<'de>,
+        {
+            serde::de::DeserializeSeed::deserialize(NoDuplicateValue, deserializer)
+        }
+
+        fn visit_seq<A>(self, mut sequence: A) -> Result<Self::Value, A::Error>
+        where
+            A: serde::de::SeqAccess<'de>,
+        {
+            let mut items = Vec::new();
+            while let Some(item) = sequence.next_element_seed(NoDuplicateValue)? {
+                items.push(item);
+            }
+            Ok(serde_json::Value::Array(items))
+        }
+
+        fn visit_map<A>(self, mut map: A) -> Result<Self::Value, A::Error>
+        where
+            A: serde::de::MapAccess<'de>,
+        {
+            let mut object = serde_json::Map::new();
+            while let Some(key) = map.next_key::<String>()? {
+                if object.contains_key(&key) {
+                    return Err(<A::Error as serde::de::Error>::custom(
+                        "duplicate object member",
+                    ));
+                }
+                let value = map.next_value_seed(NoDuplicateValue)?;
+                object.insert(key, value);
+            }
+            Ok(serde_json::Value::Object(object))
+        }
+    }
+
+    pub(super) fn deserialize_scrape_health_rows_0<'de, D>(
+        deserializer: D,
+    ) -> Result<crate::generated::shared::ScrapeHealthRows, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        let mut value = serde::de::DeserializeSeed::deserialize(NoDuplicateValue, deserializer)?;
+        prune_scrape_health_rows(&mut value);
+        serde_json::from_value(value).map_err(<D::Error as serde::de::Error>::custom)
+    }
+
+    fn prune_scrape_health_finding(value: &mut serde_json::Value) {
+        let Some(object) = value.as_object_mut() else {
+            return;
+        };
+        object.retain(|key, _| matches!(key.as_str(), "evidence" | "id" | "message" | "severity"));
+        if let Some(child) = object.get_mut("severity") {
+            prune_scrape_health_severity(child);
+        }
+    }
+
+    fn prune_scrape_health_phase(_value: &mut serde_json::Value) {}
+
+    fn prune_scrape_health_row(value: &mut serde_json::Value) {
+        let Some(object) = value.as_object_mut() else {
+            return;
+        };
+        object.retain(|key, _| {
+            matches!(
+                key.as_str(),
+                "argv"
+                    | "findings"
+                    | "id"
+                    | "network_verified"
+                    | "phase"
+                    | "stderr"
+                    | "stdout"
+                    | "step"
+                    | "terminal"
+                    | "tests_skipped"
+            )
+        });
+        if let Some(child) = object.get_mut("argv") {
+            if let Some(items) = child.as_array_mut() {
+                for item in items {}
+            }
+        }
+        if let Some(child) = object.get_mut("findings") {
+            if let Some(items) = child.as_array_mut() {
+                for item in items {
+                    prune_scrape_health_finding(item);
+                }
+            }
+        }
+        if let Some(child) = object.get_mut("phase") {
+            prune_scrape_health_phase(child);
+        }
+        if let Some(child) = object.get_mut("stderr") {
+            prune_scrape_health_stream_witness(child);
+        }
+        if let Some(child) = object.get_mut("stdout") {
+            prune_scrape_health_stream_witness(child);
+        }
+        if let Some(child) = object.get_mut("step") {
+            prune_scrape_health_step(child);
+        }
+        if let Some(child) = object.get_mut("terminal") {
+            prune_scrape_health_terminal_state(child);
+        }
+    }
+
+    fn prune_scrape_health_rows(value: &mut serde_json::Value) {
+        if let Some(items) = value.as_array_mut() {
+            for item in items {
+                prune_scrape_health_row(item);
+            }
+        }
+    }
+
+    fn prune_scrape_health_severity(_value: &mut serde_json::Value) {}
+
+    fn prune_scrape_health_step(_value: &mut serde_json::Value) {}
+
+    fn prune_scrape_health_stream_witness(value: &mut serde_json::Value) {
+        let Some(object) = value.as_object_mut() else {
+            return;
+        };
+        object.retain(|key, _| {
+            matches!(
+                key.as_str(),
+                "bytes" | "head" | "redacted" | "sha256" | "tail" | "truncated" | "utf8"
+            )
+        });
+    }
+
+    fn prune_scrape_health_terminal_state(_value: &mut serde_json::Value) {}
 }

@@ -95,10 +95,12 @@ pub enum FormatId {
     RequirementsReport,
     ScrapeHealthResult,
     ScrapePlan,
+    ScrapePreparedHealthSnapshot,
     ScrapeReport,
     ScrapeRetirementCheckpoint,
     ScrapeTransactionJournal,
     ScrapeTransactionOwner,
+    ScrapeVerificationHealthEvidence,
     SlotRecord,
 }
 

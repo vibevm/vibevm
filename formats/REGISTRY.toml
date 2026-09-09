@@ -794,6 +794,24 @@ unknown_fields = "deny"
 corpus = "formats/corpora/scrape-retirement-checkpoint/e2"
 sunset = "none"
 
+[format.scrape-prepared-health-snapshot]
+epoch = 2
+schema = "schemas/scrape/e2/prepared_health_snapshot.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/scrape-prepared-health-snapshot/e2"
+sunset = "none"
+
+[format.scrape-verification-health-evidence]
+epoch = 2
+schema = "schemas/scrape/e2/verification_health_evidence.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/scrape-verification-health-evidence/e2"
+sunset = "none"
+
 # ── Uninventoried surfaces (PROP-044 §6.5) ──────────────────────────────────
 [format.mcp-tools]
 epoch = 1

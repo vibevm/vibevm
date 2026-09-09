@@ -6,6 +6,10 @@ use std::collections::BTreeSet;
 use std::fmt;
 
 use serde::de::{self, DeserializeSeed, MapAccess, SeqAccess, Visitor};
+use vibe_wire::generated::scrape::e1::health_result::{
+    HealthResult as WireHealthResult, HealthStatus as WireHealthStatus,
+    ScrapeHealthSeverity as WireSeverity,
+};
 
 use super::model::{Finding, HealthError, HealthStatus, Severity, StructuredVerdict};
 
@@ -21,9 +25,8 @@ pub fn parse_health_result(bytes: &[u8], cap: usize) -> Result<StructuredVerdict
     std::str::from_utf8(bytes)
         .map_err(|error| HealthError::Protocol(format!("custom result is not UTF-8: {error}")))?;
     reject_duplicate_keys(bytes)?;
-    let wire: vibe_wire::generated::scrape::e1::health_result::HealthResult =
-        serde_json::from_slice(bytes)
-            .map_err(|error| HealthError::Protocol(format!("invalid health JSON: {error}")))?;
+    let wire: WireHealthResult = serde_json::from_slice(bytes)
+        .map_err(|error| HealthError::Protocol(format!("invalid health JSON: {error}")))?;
     if wire.protocol != 1 {
         return Err(HealthError::Protocol(format!(
             "custom result protocol must equal 1, got {}",
@@ -49,12 +52,12 @@ pub fn parse_health_result(bytes: &[u8], cap: usize) -> Result<StructuredVerdict
                 )));
             }
             let severity = match finding.severity {
-                vibe_wire::generated::scrape::e1::health_result::Severity::Info => Severity::Info,
-                vibe_wire::generated::scrape::e1::health_result::Severity::Warning => {
+                WireSeverity::Info => Severity::Info,
+                WireSeverity::Warning => {
                     has_warning = true;
                     Severity::Warning
                 }
-                vibe_wire::generated::scrape::e1::health_result::Severity::Error => {
+                WireSeverity::Error => {
                     has_error = true;
                     Severity::Error
                 }
@@ -68,7 +71,7 @@ pub fn parse_health_result(bytes: &[u8], cap: usize) -> Result<StructuredVerdict
         })
         .collect::<Result<Vec<_>, _>>()?;
     let status = match wire.status {
-        vibe_wire::generated::scrape::e1::health_result::HealthStatus::Pass => {
+        WireHealthStatus::Pass => {
             if has_warning || has_error {
                 return Err(HealthError::Protocol(
                     "pass result carries a warning/error finding".to_owned(),
@@ -76,7 +79,7 @@ pub fn parse_health_result(bytes: &[u8], cap: usize) -> Result<StructuredVerdict
             }
             HealthStatus::Pass
         }
-        vibe_wire::generated::scrape::e1::health_result::HealthStatus::Warn => {
+        WireHealthStatus::Warn => {
             if !has_warning || has_error {
                 return Err(HealthError::Protocol(
                     "warn result requires a warning and forbids errors".to_owned(),
@@ -84,7 +87,7 @@ pub fn parse_health_result(bytes: &[u8], cap: usize) -> Result<StructuredVerdict
             }
             HealthStatus::Warn
         }
-        vibe_wire::generated::scrape::e1::health_result::HealthStatus::Fail => {
+        WireHealthStatus::Fail => {
             if !has_error {
                 return Err(HealthError::Protocol(
                     "fail result requires an error finding".to_owned(),
