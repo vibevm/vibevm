@@ -14,6 +14,7 @@ use std::path::Path;
 
 use super::{OptionalShapes, apply_with_shapes, decisions_from_doc};
 use anyhow::Result;
+use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 
 /// The optional string of the real `by_name` output, quoted verbatim.
@@ -334,6 +335,45 @@ pub struct ListEntry {
 "#
     );
     Ok(())
+}
+
+#[test]
+fn flat_some_null_none_and_missing_refusal_are_serde_exact() {
+    mod required_nullable {
+        use serde::Deserialize;
+
+        pub fn deserialize<'de, D, T>(deserializer: D) -> Result<Option<T>, D::Error>
+        where
+            D: serde::Deserializer<'de>,
+            T: Deserialize<'de>,
+        {
+            Option::<T>::deserialize(deserializer)
+        }
+    }
+
+    #[derive(Debug, PartialEq, Eq, Serialize, Deserialize)]
+    #[serde(tag = "kind", rename_all = "kebab-case")]
+    enum Payload {
+        Made { value: String },
+    }
+
+    #[derive(Debug, PartialEq, Eq, Serialize, Deserialize)]
+    struct Holder {
+        #[serde(deserialize_with = "required_nullable::deserialize")]
+        payload: Option<Payload>,
+    }
+
+    let some = Holder {
+        payload: Some(Payload::Made { value: "x".into() }),
+    };
+    assert_eq!(
+        serde_json::to_string(&some).unwrap(),
+        r#"{"payload":{"kind":"made","value":"x"}}"#
+    );
+    let none = Holder { payload: None };
+    assert_eq!(serde_json::to_string(&none).unwrap(), r#"{"payload":null}"#);
+    assert!(serde_json::from_str::<Holder>(r#"{"payload":null}"#).is_ok());
+    assert!(serde_json::from_str::<Holder>("{}").is_err());
 }
 
 #[test]
