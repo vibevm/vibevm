@@ -68657,7 +68657,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:c071848e587e7667b012706d3bf626e07b19c727747a77932b86e20d070cdbc3",
+      "content_hash": "sha256:287d2d48b4dce8260fa2ac5c976882dd31cf95478c8058d0e4731684824f7fe3",
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "PROP-054 — The vibe lifecycle and the extension machine",
@@ -70538,7 +70538,7 @@
     },
     {
       "anchor": "roadmap",
-      "content_hash": "sha256:e542ad9fca0bea56694b0011af469e5672a18e94cd16c10a529899d1d7cddd73",
+      "content_hash": "sha256:9f01d23944291db5084263ea41b574dcb408d158a204f2dc7ab065e42b04b8a8",
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
       "heading": "12. The proposed build order — six self-standing waves",
@@ -70619,10 +70619,10 @@
     },
     {
       "anchor": "R8-PACKAGE-DEPLOY",
-      "content_hash": "sha256:43fd2937588c5d57704cceef964585bb21e04533e0e3cc69977a1b22b3c8575f",
+      "content_hash": "sha256:3aab04fa4a411090fcd0595e35483932a8f4c1871ae305088a874f0b0843c486",
       "doc_path": "common/PROP-054",
       "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
-      "heading": "**R8 — package/build/deploy substance accepted in implementation.** Artifact DAG/records, Cargo, static skill, Agent Plugin, three client adapters, `vibe-bin`, profiles/intent/receipt/recovery, platform applicability and package-supplied native deploy/build/package providers are implemented. Deploy restart rehydration remains read-only; Build/Package replacement executes through exact prepared carriage and a real installed two-cdylib build→A2→package E2E with no builtin fallback. Evidence through deploy `d475963c`, then M-007 `00cabac8`, `93df9d28`, `e9388559`, `2193e6e7`, `fe0eb9df`, `0ca2b781`, `123ac504`, `68ce9078`, `55cfbf94`. This node is done; the PROP root remains `impl/work` only for final campaign gates, owner acceptance and mirror/push. @status:impl/done",
+      "heading": "**R8 — package/build/deploy substance accepted in implementation.** Artifact DAG/records, Cargo, static skill, Agent Plugin, three client adapters, `vibe-bin`, profiles/intent/receipt/recovery, platform applicability and package-supplied native deploy/build/package providers are implemented. Deploy restart rehydration remains read-only; Build/Package replacement executes through exact prepared carriage and a real installed two-cdylib build→A2→package E2E with no builtin fallback. Evidence through deploy `d475963c`, then M-007 `00cabac8`, `93df9d28`, `e9388559`, `2193e6e7`, `fe0eb9df`, `0ca2b781`, `123ac504`, `68ce9078`, `55cfbf94`. This node is done. All technical/full/conform/generated/specmap/no-transform and mirror work is complete at `39fa498a34d30c7744c8598c9f1a0673a6aeee62`; the PROP root remains `impl/work` solely because owner final inspection in the current chat is pending. @status:impl/done",
       "line": 377,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#R8-PACKAGE-DEPLOY"
     },
