@@ -763,6 +763,26 @@ unknown_fields = "deny"
 corpus = "formats/corpora/scrape/e1"
 sunset = "none"
 
+# Internal external-transaction sidecars. Their embedded epochs predate their
+# JTD roots and remain byte-identical through schema-declared wire order.
+[format.scrape-transaction-owner]
+epoch = 3
+schema = "schemas/scrape/e3/transaction_owner.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/scrape-transaction-owner/e3"
+sunset = "none"
+
+[format.scrape-retirement-checkpoint]
+epoch = 2
+schema = "schemas/scrape/e2/retirement_checkpoint.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/scrape-retirement-checkpoint/e2"
+sunset = "none"
+
 # ── Uninventoried surfaces (PROP-044 §6.5) ──────────────────────────────────
 [format.mcp-tools]
 epoch = 1

@@ -132,7 +132,7 @@
             ),
             ownership_token: owner.ownership_token,
             directory_identity: owner.directory_identity,
-            manifest: SafefsManifestWire::from(&manifest),
+            manifest: safefs_manifest_to_wire(&manifest),
             completed: Vec::new(),
             active: None,
             tree_removed: false,
@@ -156,7 +156,7 @@
         else {
             panic!("nonempty transaction must have a retirement intent")
         };
-        wire.active = Some(CleanupIntentWire::from(&intent));
+        wire.active = Some(cleanup_intent_to_wire(&intent));
         fixture
             .store
             .write_retirement(&fixture.key, &fixture.journal.transaction_id, &wire)

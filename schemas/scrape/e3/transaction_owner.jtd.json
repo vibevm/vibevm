@@ -1,0 +1,20 @@
+{
+  "metadata": {
+    "description": "Schema-3 transaction owner seal. The exact member order preserves the pre-JTD sidecar bytes used to bind one external transaction root and verification workspace to their durable identities.",
+    "rustOptions": { "package": "vibe_wire::scrape_transaction_owner" },
+    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-056#IMPL-E" },
+    "x-wire-order": ["schema", "project_key", "transaction_id", "journal_intent_sha256", "ownership_token", "directory_identity", "entry_identity", "workspace_directory_identity", "workspace_entry_identity", "workspace_project_identity"]
+  },
+  "properties": {
+    "schema": { "type": "uint32" },
+    "project_key": { "type": "string" },
+    "transaction_id": { "type": "string" },
+    "journal_intent_sha256": { "type": "string" },
+    "ownership_token": { "type": "string" },
+    "directory_identity": { "type": "string" },
+    "entry_identity": { "type": "string" },
+    "workspace_directory_identity": { "type": "string" },
+    "workspace_entry_identity": { "type": "string" },
+    "workspace_project_identity": { "type": "string" }
+  }
+}

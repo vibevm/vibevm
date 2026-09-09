@@ -378,7 +378,7 @@ macro_rules! system_transaction_store_inherent_methods {
                     stable_report_sha256: sha256_bytes(&stable_report),
                     ownership_token: owner.ownership_token,
                     directory_identity: owner.directory_identity,
-                    manifest: SafefsManifestWire::from(&manifest),
+                    manifest: safefs_manifest_to_wire(&manifest),
                     completed: Vec::new(),
                     active: None,
                     tree_removed: false,
@@ -390,7 +390,7 @@ macro_rules! system_transaction_store_inherent_methods {
 
         let identity = OwnedDirectoryIdentity::from_token(&wire.directory_identity)
             .map_err(|error| store_error(format!("invalid retirement root identity: {error:#}")))?;
-        let manifest: SafefsTreeManifest = wire.manifest.clone().try_into()?;
+        let manifest = safefs_manifest_from_wire(wire.manifest.clone())?;
         let mut progress = OwnedTreeCleanupProgress::from_completed(wire.completed.clone())
             .map_err(|error| store_error(format!("invalid retirement progress: {error:#}")))?;
 
@@ -411,7 +411,7 @@ macro_rules! system_transaction_store_inherent_methods {
             }
 
             if let Some(active) = wire.active.take() {
-                let intent: CleanupIntent = active.try_into()?;
+                let intent = cleanup_intent_from_wire(active)?;
                 let completion = project_home
                     .execute_owned_child_retirement(
                         transaction_component(transaction)?,
@@ -450,7 +450,7 @@ macro_rules! system_transaction_store_inherent_methods {
                     self.write_retirement(project, transaction, &wire)?;
                 }
                 CleanupPreparation::Intent(intent) => {
-                    wire.active = Some(CleanupIntentWire::from(&intent));
+                    wire.active = Some(cleanup_intent_to_wire(&intent));
                     self.write_retirement(project, transaction, &wire)?;
                 }
             }

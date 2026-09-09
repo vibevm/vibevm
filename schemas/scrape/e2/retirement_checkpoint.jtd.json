@@ -1,0 +1,71 @@
+{
+  "metadata": {
+    "description": "Schema-2 retirement checkpoint for exact restartable removal of one owned external transaction tree. The root and every nested object preserve the pre-JTD member order.",
+    "rustOptions": { "package": "vibe_wire::scrape_retirement_checkpoint" },
+    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-056#IMPL-E" },
+    "x-wire-order": ["schema", "project_key", "transaction_id", "stable_report_sha256", "ownership_token", "directory_identity", "manifest", "completed", "active", "tree_removed"]
+  },
+  "properties": {
+    "schema": { "type": "uint32" },
+    "project_key": { "type": "string" },
+    "transaction_id": { "type": "string" },
+    "stable_report_sha256": { "type": "string" },
+    "ownership_token": { "type": "string" },
+    "directory_identity": { "type": "string" },
+    "manifest": { "ref": "safefs_manifest" },
+    "completed": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } },
+    "active": { "ref": "cleanup_intent", "nullable": true },
+    "tree_removed": { "type": "boolean" }
+  },
+  "definitions": {
+    "byte_count": {
+      "type": "float64",
+      "metadata": {
+        "description": "An exact non-negative byte count. JTD has no uint64 form, so generated Rust narrows the numeric form to u64 and refuses fractions, negatives and overflow.",
+        "x-rust-type": "u64"
+      }
+    },
+    "entry_kind": {
+      "enum": ["file", "directory"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "entry_state": {
+      "metadata": {
+        "x-wire-order": ["kind", "sha256", "bytes", "unix_mode", "identity"]
+      },
+      "properties": {
+        "kind": { "ref": "entry_kind" },
+        "sha256": { "type": "string", "nullable": true },
+        "bytes": { "ref": "byte_count", "nullable": true },
+        "unix_mode": { "type": "uint32", "nullable": true },
+        "identity": { "type": "string" }
+      }
+    },
+    "tree_entry": {
+      "metadata": { "x-wire-order": ["path", "state"] },
+      "properties": {
+        "path": { "type": "string" },
+        "state": { "ref": "entry_state" }
+      }
+    },
+    "safefs_manifest": {
+      "metadata": { "x-wire-order": ["digest", "entries"] },
+      "properties": {
+        "digest": { "type": "string" },
+        "entries": { "elements": { "ref": "tree_entry" }, "metadata": { "x-empty": "emit" } }
+      }
+    },
+    "cleanup_intent": {
+      "metadata": {
+        "x-wire-order": ["intent_token", "progress_key", "path", "expected", "root"]
+      },
+      "properties": {
+        "intent_token": { "type": "string" },
+        "progress_key": { "type": "string" },
+        "path": { "type": "string" },
+        "expected": { "ref": "entry_state" },
+        "root": { "type": "boolean" }
+      }
+    }
+  }
+}

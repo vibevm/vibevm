@@ -328,7 +328,7 @@ fn validate_retirement_identity(
     OwnedDirectoryIdentity::from_token(&wire.directory_identity).map_err(|error| {
         store_error(format!("invalid retirement directory identity: {error:#}"))
     })?;
-    let manifest: SafefsTreeManifest = wire.manifest.clone().try_into()?;
+    let manifest = safefs_manifest_from_wire(wire.manifest.clone())?;
     validate_safefs_manifest(&manifest)?;
     let order = safefs_cleanup_order(&manifest);
     if wire.completed.len() > order.len()

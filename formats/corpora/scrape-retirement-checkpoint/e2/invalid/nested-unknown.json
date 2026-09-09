@@ -1,0 +1,1 @@
+{"schema":2,"project_key":"p","transaction_id":"t","stable_report_sha256":"s","ownership_token":"o","directory_identity":"d","manifest":{"digest":"m","entries":[]},"completed":[],"active":{"intent_token":"intent","progress_key":"file:a","path":"a","expected":{"kind":"file","sha256":"h","bytes":1,"unix_mode":null,"identity":"i"},"root":false,"extra":true},"tree_removed":false}
