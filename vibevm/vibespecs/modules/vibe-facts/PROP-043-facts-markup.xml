@@ -428,6 +428,185 @@ or end of a paragraph's text, never mid-sentence, never inside code or links.</S
   and *computed* separately — a divergence is information, not noise.</EXPLICIT-BEATS>
       </facts>
     </rollup>
+    <terminal-artifacts title="3.11 Terminal artifact obligations">
+      <p><TERMINALITY-IS-ORTHOGONAL fact="true" status="spec/done">**Decision
+      (owner, 2026-09-09): terminality is independent of status.** `stage/state`
+      continues to answer where a fact stands now, and `done` continues to mean
+      done only for that stage. An addressable fact may separately declare the
+      artifact kinds whose satisfaction closes the whole fact. No stage is a
+      mandatory successor of another, and no fact is forced toward source-code
+      implementation merely because its specification is complete.</TERMINALITY-IS-ORTHOGONAL></p>
+      <p><REQUIRES-GRAMMAR fact="true" status="spec/done">The Markdown form is
+      exactly one qualified trailing annotation
+      `@requires:&lt;kind&gt;[,&lt;kind&gt;…]`, immediately before the fact's final
+      status shorthand admitted by §3.7 (qualified full/bare or legacy
+      full/bare), or final `&lt;status …/&gt;` point marker. `@requires` itself has
+      no legacy bare spelling. The XML-dialect equivalent
+      is a `requires="&lt;kind&gt;[,&lt;kind&gt;…]"` attribute on the named or generic
+      fact element, beside `status`; it is never an attribute of the standalone
+      document/section `&lt;status&gt;` element. Both forms lower to one fact-owned
+      semantic set.</REQUIRES-GRAMMAR></p>
+      <fence lang="markdown">@fact:PROTOCOL The protocol text is the delivered artifact. @requires:specification @status:spec/done
+
+@fact:PARSER The parser implements and proves the grammar. @requires:implementation,verification @status:test/done</fence>
+      <facts ordered="false">
+        <REQUIRES-FACT-OWNED fact="true" status="spec/done">A requirements
+        annotation belongs only to an explicitly addressed fact. Paragraphs,
+        list items, quotes and table cells may carry it; a table cell loses its
+        usual anchor exemption when it does. A fragment, an unaddressed unit,
+        a document marker and a section marker cannot carry requirements.
+        `@fact/code:` may carry them normally; its bound fence remains part of
+        the same fact body.</REQUIRES-FACT-OWNED>
+        <REQUIRES-PLACEMENT fact="true" status="spec/done">The complete
+        trailing cluster is `@requires:…` then the status marker, with only
+        whitespace between them and nothing after the status. A second
+        annotation, a token elsewhere in the fact, an empty member, a leading
+        or trailing comma, or a requirement with no final status is a parse
+        error rather than prose or a best-effort attachment.</REQUIRES-PLACEMENT>
+        <REQUIRES-OPAQUE-CONTEXTS fact="true" status="spec/done">Fenced code,
+        inline code and link destinations remain opaque. A look-alike outside
+        the exact trailing position remains ordinary Markdown unless it is a
+        malformed attempt in the terminal annotation cluster; the parser does
+        not reserve every occurrence of the English word `requires`.</REQUIRES-OPAQUE-CONTEXTS>
+        <REQUIRES-SET-LAW fact="true" status="spec/done">Requirements are a
+        non-empty unordered set. The IR stores them in the fixed vocabulary
+        order and every backend emits that canonical order. Authored duplicates
+        are an error, not silently meaningful repetition. Changing presence,
+        membership or spelling changes the fact content identity and therefore
+        makes prior campaign verdicts due for re-judgement.</REQUIRES-SET-LAW>
+        <REQUIRES-ABSENCE fact="true" status="spec/done">Absent requirements
+        mean **unclassified terminal contract**, never an empty set and never
+        vacuous success. Existing facts therefore retain their exact status and
+        acquire no terminal claim. An explicitly empty set is invalid; a live
+        fact that requires nothing uses a self-carried artifact kind, while a
+        `void` fact carries no requirements because it asserts no claim;
+        `state=void` plus a requirements annotation is a parse/check error, not
+        an ordinary pending fact.</REQUIRES-ABSENCE>
+      </facts>
+      <artifacts title="3.11.1 Closed artifact vocabulary">
+        <p><REQUIRED-ARTIFACT-KINDS fact="true" status="spec/done">The closed
+        vocabulary, in canonical order, is `specification`, `implementation`,
+        `verification`, `documentation`, `decision`, `research`, `plan`,
+        `disposition`, `external`. A new kind requires an amendment here before
+        parser, IR or wire support. These are closure artifacts, not document
+        genres: a research document may require an implementation, and a
+        contract fact may itself be a decision artifact.</REQUIRED-ARTIFACT-KINDS></p>
+        <facts ordered="false">
+          <ARTIFACT-SELF-CARRIED fact="true" status="spec/done">`specification`,
+          `decision`, `research` and `plan` name the addressed fact body (plus
+          its typed bound object, when any) as the delivered artifact. They need
+          no `implements` edge merely to exist. `state=done` asserts that this
+          self-carried artifact is complete; independent campaign judgement may
+          still confirm, drift or reject that assertion.</ARTIFACT-SELF-CARRIED>
+          <ARTIFACT-IMPLEMENTATION fact="true" status="spec/done">`implementation`
+          requires independently observed implementing evidence for this exact
+          fact address. A provider that knows the address and reports zero is
+          `missing`; no provider or an address outside its knowledge is
+          `unavailable`, never silently satisfied.</ARTIFACT-IMPLEMENTATION>
+          <ARTIFACT-VERIFICATION fact="true" status="spec/done">`verification`
+          requires independently observed verifying evidence for the exact fact.
+          An edge establishes attribution, not that a test run passed forever;
+          campaign verdict freshness remains separate evidence and is never
+          copied into authored markup.</ARTIFACT-VERIFICATION>
+          <ARTIFACT-DOCUMENTATION fact="true" status="spec/done">`documentation`
+          is self-carried by a fact at `doc/done`; otherwise it requires an
+          independently observed `documents` artifact/relation. Documentation
+          about a fact and the fact's normative specification remain distinct.</ARTIFACT-DOCUMENTATION>
+          <ARTIFACT-DISPOSITION fact="true" status="spec/done">`disposition`
+          is a self-carried authored assertion that the addressed fact body is
+          the durable outcome record for the thing it discusses. At
+          `state=done` the declaration itself satisfies the artifact presence;
+          campaign judgement still confirms or rejects whether the body really
+          records an accepted, rejected, deferred or superseded outcome. The
+          core never guesses those semantics from prose.</ARTIFACT-DISPOSITION>
+          <ARTIFACT-EXTERNAL fact="true" status="spec/done">`external` names an
+          artifact outside the fact body and therefore requires exactly one
+          non-empty fact `ref` plus an observer capable of checking that
+          locator. In Markdown that ref is the existing `ref` attribute of the
+          final status point marker; in XML it is the existing `ref` attribute
+          of the named/generic fact element. Both lower through the fact's
+          `status.ref` pivot member to one semantic fact locator. A shorthand
+          status cannot carry a ref, and a missing/empty/duplicate ref is an
+          error. A ref with no observer is `unavailable`, not proof by pointer.</ARTIFACT-EXTERNAL>
+        </facts>
+      </artifacts>
+      <terminal-observation title="3.11.2 Derived terminal observation">
+        <facts ordered="false">
+          <TERMINAL-OUTCOMES fact="true" status="spec/done">The closed derived
+          outcome is `unclassified | pending | terminal`. `unclassified` means
+          `requires` is absent. `pending` means the set is present but the fact
+          is not at `state=done`, carries any action, or at least one required
+          artifact is missing or unavailable. `terminal` means the non-empty
+          set is present, the fact is at `state=done`, no action remains, and
+          every required artifact is satisfied. Parser/check errors are invalid
+          input, not a fourth outcome.</TERMINAL-OUTCOMES>
+          <TERMINAL-PER-ARTIFACT fact="true" status="spec/done">Each required
+          kind is reported as `satisfied | missing | unavailable`, with exact
+          evidence locators when available. Overall `pending` never erases that
+          distinction. The markup declares the closure contract; current
+          evidence observes it. Neither side forges the other.</TERMINAL-PER-ARTIFACT>
+          <TERMINAL-NO-STAGE-INFERENCE fact="true" status="spec/done">No stage
+          ordering implies an artifact. `test/done` does not by itself prove an
+          implementation; `impl/done` does not imply documentation; and
+          `freeze/done` does not imply source code. Only the declared set plus
+          its artifact observations decides terminality.</TERMINAL-NO-STAGE-INFERENCE>
+          <TERMINAL-ROLLUP-SEPARATE fact="true" status="spec/done">Status
+          rollup remains the existing worst-of `(stage,state)` operation.
+          Terminality aggregates separately as classified, terminal, pending
+          and unclassified counts; it never changes the stage sort key. The
+          existing `done` report view remains stage-local, while a separate
+          terminal view selects only derived `terminal` facts.</TERMINAL-ROLLUP-SEPARATE>
+          <TERMINAL-FOLD-LAW fact="true" status="spec/done">A section/document
+          marker cannot fold away fact-owned requirements. Classified facts
+          remain fact-grained until a future explicitly specified aggregate
+          requirements carrier can preserve every set losslessly. A fold that
+          would drop requirements is a check error.</TERMINAL-FOLD-LAW>
+          <TERMINAL-FREEZE-CORRECTION fact="true" status="spec/done">The old
+          generic evidence heuristic “every `freeze/*` needs an `implements`
+          edge” is superseded for classified facts: freeze uses the same
+          declared artifact set as every other stage. During migration an
+          unclassified frozen fact retains the legacy warning rather than
+          silently losing a check. A specification-only frozen contract becomes
+          honest by declaring `requires=specification`.</TERMINAL-FREEZE-CORRECTION>
+        </facts>
+      </terminal-observation>
+      <compatibility title="3.11.3 Compatibility and projections">
+        <facts ordered="false">
+          <REQUIRES-COMPATIBILITY fact="true" status="spec/done">Old source,
+          parse sidecars, caches and baselines decode missing requirements as
+          unclassified. No existing source bytes, status, verdict or `done`
+          view changes. A newly annotated fact deliberately changes its content
+          hash; this is semantic evolution, so no compatibility layer preserves
+          its prior judgement.</REQUIRES-COMPATIBILITY>
+          <REQUIRES-PROJECTION-LAW fact="true" status="spec/done">Every
+          fact-preserving Markdown/XML pivot and authored-fact query carries the
+          normalized set. The requirements metadata query exposes the authored
+          set and keeps authoring, adoption, relations and lifecycle evidence
+          as separate axes; it does not invent a portable terminal verdict from
+          partial inputs. A progress report may render its own explicitly named
+          evidence observation, including unavailable, but never persist it as
+          authored truth.</REQUIRES-PROJECTION-LAW>
+          <REQUIRES-WIRE-EPOCH fact="true" status="spec/done">Adding the set to
+          a strict public machine wire requires a new wire epoch and independent
+          canonical identity frames: explicit presence, canonical count and
+          canonical kind order. Additive Rust deserialization compatibility is
+          not permission to change a strict JTD epoch in place.</REQUIRES-WIRE-EPOCH>
+        </facts>
+      </compatibility>
+      <never title="3.11.4 Never">
+        <facts ordered="false">
+          <NEVER-INFER-TERMINAL-FROM-DONE fact="true" status="spec/done">Never
+          infer whole-fact terminality from `state=done` alone.</NEVER-INFER-TERMINAL-FROM-DONE>
+          <NEVER-INFER-IMPLEMENTATION-FROM-STAGE fact="true" status="spec/done">Never
+          infer an implementation artifact from a later stage or from freeze.</NEVER-INFER-IMPLEMENTATION-FROM-STAGE>
+          <NEVER-TREAT-ABSENCE-AS-EMPTY fact="true" status="spec/done">Never
+          treat absent requirements as an empty satisfied set.</NEVER-TREAT-ABSENCE-AS-EMPTY>
+          <NEVER-PERSIST-LIVE-TERMINALITY-AS-AUTHORED-FACT fact="true" status="spec/done">Never
+          persist a live evidence-derived terminal observation back into source
+          markup or a source-only cache.</NEVER-PERSIST-LIVE-TERMINALITY-AS-AUTHORED-FACT>
+        </facts>
+      </never>
+    </terminal-artifacts>
   </markup>
   <parsing title="4. Parsing rules">
     <facts ordered="false">
@@ -473,10 +652,14 @@ or end of a paragraph's text, never mid-sentence, never inside code or links.</S
     <facts ordered="false">
       <EVERY-GENRE-IN-SCOPE fact="true" status="impl/done">**Every genre is in scope** — contracts, design docs, research, plans, manual
   tests: a design decision the code ignores is first-class drift.</EVERY-GENRE-IN-SCOPE>
-      <GENRE-TERMINALS fact="true" status="impl/done">Genre only
-  changes what the terminal looks like: a contract unit ends at `freeze/done`
-  with evidence; a research doc's "implementation" is its downstream deltas; a
-  campaign plan's own status line converts to a document marker mechanically.</GENRE-TERMINALS>
+      <GENRE-TERMINALS fact="true" status="spec/done">Genre informs which
+  artifact kinds an author declares, but no genre silently supplies a terminal
+  status. A contract may end as specification, implementation, verification or
+  a frozen combination; research may require its own study plus dispositions;
+  a campaign plan may itself be the artifact while its execution is a separate
+  fact. `##TERMINALITY-IS-ORTHOGONAL` and the explicit `@requires` set replace
+  the former one-shape claim that every contract ends at `freeze/done` with an
+  implementation edge.</GENRE-TERMINALS>
     </facts>
   </genres>
   <config title="6. Scope configuration — `facts.toml`">

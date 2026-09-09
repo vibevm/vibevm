@@ -104,8 +104,11 @@ stable.</CONFIG-MOVED-TO-FACTS></p>
   `verifies` / `deviates` edge counts per unit.</EVIDENCE-SPECMAP>
       <EVIDENCE-MISMATCH-FLAGS fact="true" status="spec/done">`report` then flags
   **markup-vs-reality mismatches** — e.g. a unit marked `test/done` with zero
-  `verifies` edges, or `freeze/done` on a specmap orphan — and `check` can gate
-  on the worst of them.</EVIDENCE-MISMATCH-FLAGS>
+  `verifies` edges. An **unclassified** `freeze/done` specmap orphan retains
+  the legacy implementation warning; a classified frozen fact is checked only
+  against the artifact kinds in its own `@requires` set. `check` can gate on
+  the worst mismatch without inventing an undeclared implementation
+  obligation.</EVIDENCE-MISMATCH-FLAGS>
       <EVIDENCE-OPTIONAL fact="true" status="impl/done">A project without specmap runs with an empty evidence
   column; nothing in the core knows the provider's shape.</EVIDENCE-OPTIONAL>
     </facts>
@@ -116,6 +119,28 @@ recognises `@fact:&lt;ID&gt;` fact anchors as addressable units (PROP-014 §2.1,
 fact amendment's twin), so `implements`/`verifies` edges land **per fact**
 and the provider's mismatch checks apply at the campaign grain, not only
 per section.</FACT-GRAIN-EVIDENCE></p>
+    <p><ARTIFACT-SATISFACTION-SEAM fact="true" status="spec/done">The evidence
+    seam also serves PROP-043 `##TERMINAL-PER-ARTIFACT`: for each declared
+    terminal artifact it reports `satisfied | missing | unavailable` and exact
+    locators when it has them. The facts core itself satisfies self-carried
+    specification/decision/research/plan/disposition artifacts from their
+    explicit declaration on the addressed `state=done` fact; the vibevm specmap adapter observes exact
+    `implements`, `verifies` and `documents` relations; an external artifact
+    stays unavailable until an observer can check its `ref`. A provider absence
+    and a known zero are never conflated.</ARTIFACT-SATISFACTION-SEAM></p>
+    <p><TERMINAL-OBSERVATION-SURFACE fact="true" status="spec/done">`report`
+    renders the authored canonical `requires` set, each artifact observation,
+    and the derived `unclassified | pending | terminal` result. A separate
+    `terminal` view selects only terminal facts; the existing `done` view
+    remains exactly `state=done`. XML/Markdown/JSON projections share one row
+    model. Dashboard/state projections consume that result and never recompute
+    it from partial cache fields.</TERMINAL-OBSERVATION-SURFACE></p>
+    <p><TERMINAL-OBSERVATION-NOT-VERDICT fact="true" status="spec/done">A
+    terminal observation answers only whether the fact's declared artifact set
+    is currently satisfied by this provider snapshot. Campaign verdicts
+    (`confirmed | drift | unverifiable`), lifecycle verification evidence and
+    adoption remain separate axes. The observation is never written into
+    authored markup, the tracked cache or a baseline as truth.</TERMINAL-OBSERVATION-NOT-VERDICT></p>
   </evidence>
   <data title="5. Data contracts">
     <p><DATA-DISCIPLINE fact="true" status="impl/done">All formats are schema-versioned (`"schema": 1`); all writes are atomic
@@ -190,7 +215,12 @@ drift row already closed. The map is the source; the count is a view of it.</CAC
   check` sits in the gate panel and yellows on divergence.</EDIT-UPDATES-MARKER>
       <TASK-LOOP fact="true" status="spec/done">Task pipelines close the loop: an IMPL task cites markers on entry and
   updates them on exit (`impl/work → impl/done`, then `test/plan`).</TASK-LOOP>
-      <FREEZE-NEEDS-EVIDENCE fact="true" status="spec/done">`freeze/done` requires green evidence where a provider exists (§4).</FREEZE-NEEDS-EVIDENCE>
+      <FREEZE-NEEDS-EVIDENCE fact="true" status="spec/done">A classified
+  `freeze/done` fact requires the artifact evidence its own `@requires` set
+  names; freeze alone never manufactures an implementation obligation. An
+  unclassified frozen fact retains the legacy implementation-edge warning
+  during migration, so introducing terminal contracts cannot silently weaken
+  an existing gate.</FREEZE-NEEDS-EVIDENCE>
       <DOC-COVERAGE-RATCHET fact="true" status="spec/done">Doc-coverage (units lacking `documents` edges / doc-view closure) ratchets
   like specmap orphans.</DOC-COVERAGE-RATCHET>
       <PERIODIC-REVERIFICATION fact="true" status="spec/done">Periodic re-verification runs as a recurring campaign

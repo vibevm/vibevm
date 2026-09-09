@@ -137,6 +137,20 @@ three lanes byte-equal, the polygon re-ran 3/3. A live lesson worth
 its line: XML reserves every case-insensitive `xml`-prefixed name, so
 `XMLBOOT` cannot be an element — the predicate refuses it and the
 generic form carries such ids.</NAMED-FACT-ELEMENTS></p>
+    <p><TERMINAL-REQUIREMENTS-PIVOT fact="true" status="spec/done">**Terminal
+    requirements cross the pivot as fact metadata, not status metadata.** A
+    Markdown fact's trailing `@requires:` set and an XML named/generic fact's
+    `requires="…"` attribute lower to the same optional canonical artifact-kind
+    set from PROP-043 `##REQUIRED-ARTIFACT-KINDS`. The set survives every
+    Markdown→pivot→XML→pivot→Markdown polygon exactly; absence survives as
+    absence. The existing semantic fact `ref` follows the same polygon through
+    `Fact.status.ref`: Markdown spells it on the final status point marker and
+    XML spells it on the named/generic fact element; `external` requirements
+    admit exactly that one non-empty locator. A standalone document/section
+    `&lt;status&gt;` cannot carry requirements, and the closed XML dialect rejects
+    `requires` on any non-fact element. This is
+    the format-neutral carrier for PROP-043 `##REQUIRES-GRAMMAR`, not a second
+    terminality implementation.</TERMINAL-REQUIREMENTS-PIVOT></p>
     <p><FACTS-GROUP-ELEMENT fact="true" status="impl/done">**Decision (ADR-part; owner ruling 2026-08-22,
 near-verbatim): «Не правильней ли не включать внутри list элементы item,
 а сразу ставить в тело list элементы типа `&lt;THE-LAW fact="true"...&gt;`? И
