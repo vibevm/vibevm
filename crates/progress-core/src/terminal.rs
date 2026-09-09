@@ -9,7 +9,8 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#term
 use crate::doc::{Fact, ParsedDoc};
 use crate::evidence::EvidenceProvider;
 use crate::model::{ArtifactKind, ArtifactRequirements, Marker, Stage, State};
-use serde::{Deserialize, Serialize};
+
+pub use crate::evidence::{ArtifactObservation, ArtifactState, TerminalCounts, TerminalOutcome};
 
 /// A provider's typed answer before terminal semantics are applied.
 ///
@@ -25,67 +26,11 @@ pub enum ProviderArtifactEvidence {
     },
 }
 
-/// The closed per-artifact result exposed by reports and state projections.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(rename_all = "lowercase")]
-pub enum ArtifactState {
-    Satisfied,
-    Missing,
-    Unavailable,
-}
-
-/// One declared artifact observed against the current provider snapshot.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-pub struct ArtifactObservation {
-    pub kind: ArtifactKind,
-    pub state: ArtifactState,
-    /// `None` means the provider could not count; `Some(0)` is a known zero.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub count: Option<usize>,
-    /// Independent of count: `None` means locators are unavailable.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub locators: Option<Vec<String>>,
-}
-
-/// The closed overall result for one fact.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(rename_all = "lowercase")]
-pub enum TerminalOutcome {
-    Unclassified,
-    Pending,
-    Terminal,
-}
-
 /// One complete, ephemeral terminal observation.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct TerminalObservation {
     pub outcome: TerminalOutcome,
     pub artifacts: Vec<ArtifactObservation>,
-}
-
-/// Aggregate terminality, deliberately separate from stage/status rollup.
-#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
-pub struct TerminalCounts {
-    pub classified: usize,
-    pub terminal: usize,
-    pub pending: usize,
-    pub unclassified: usize,
-}
-
-impl TerminalCounts {
-    pub fn observe(&mut self, outcome: TerminalOutcome) {
-        match outcome {
-            TerminalOutcome::Unclassified => self.unclassified += 1,
-            TerminalOutcome::Pending => {
-                self.classified += 1;
-                self.pending += 1;
-            }
-            TerminalOutcome::Terminal => {
-                self.classified += 1;
-                self.terminal += 1;
-            }
-        }
-    }
 }
 
 /// Exact local address of an explicitly anchored fact.

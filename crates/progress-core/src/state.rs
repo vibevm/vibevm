@@ -13,9 +13,26 @@ use std::collections::BTreeMap;
 use std::path::Path;
 
 mod terminal;
-pub use terminal::{TerminalFileState, TerminalState, write_terminal_state};
+pub use terminal::write_terminal_state;
 
 pub const STATE_SCHEMA: u32 = 1;
+pub const TERMINAL_STATE_SCHEMA: u32 = 1;
+
+/// One file's ephemeral terminality counts in `terminal.json`.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct TerminalFileState {
+    pub path: String,
+    pub counts: crate::evidence::TerminalCounts,
+}
+
+/// The dashboard's separate provider-bound terminal projection.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct TerminalState {
+    pub schema: u32,
+    pub updated_at: String,
+    pub files: Vec<TerminalFileState>,
+    pub aggregate: crate::evidence::TerminalCounts,
+}
 
 /// A gate's last reported verdict. `stale` is what a gate holds once the
 /// corpus moved under it and nobody re-ran it; `unknown` is a gate the

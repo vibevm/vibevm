@@ -22,6 +22,62 @@ pub struct Evidence {
     pub refs: Vec<String>,
 }
 
+/// The closed per-artifact result exposed by reports and state projections.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum ArtifactState {
+    Satisfied,
+    Missing,
+    Unavailable,
+}
+
+/// One declared artifact observed against the current provider snapshot.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ArtifactObservation {
+    pub kind: ArtifactKind,
+    pub state: ArtifactState,
+    /// `None` means the provider could not count; `Some(0)` is a known zero.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub count: Option<usize>,
+    /// Independent of count: `None` means locators are unavailable.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub locators: Option<Vec<String>>,
+}
+
+/// The closed overall result for one fact.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum TerminalOutcome {
+    Unclassified,
+    Pending,
+    Terminal,
+}
+
+/// Aggregate terminality, deliberately separate from stage/status rollup.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
+pub struct TerminalCounts {
+    pub classified: usize,
+    pub terminal: usize,
+    pub pending: usize,
+    pub unclassified: usize,
+}
+
+impl TerminalCounts {
+    pub fn observe(&mut self, outcome: TerminalOutcome) {
+        match outcome {
+            TerminalOutcome::Unclassified => self.unclassified += 1,
+            TerminalOutcome::Pending => {
+                self.classified += 1;
+                self.pending += 1;
+            }
+            TerminalOutcome::Terminal => {
+                self.classified += 1;
+                self.terminal += 1;
+            }
+        }
+    }
+}
+
 /// Given a unit address (`spec://…#anchor` or `path#anchor`), return facts.
 ///
 /// Canonical use — the adapter wires a real provider (specmap in vibevm);

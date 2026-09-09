@@ -3255,18 +3255,18 @@
       "crate_name": "progress-core",
       "file": "crates/progress-core/src/state.rs",
       "item_kind": "struct",
-      "line": 32,
+      "line": 49,
       "symbol": "progress_core::state::GateRecord",
-      "end_line": 47,
+      "end_line": 64,
       "fingerprint": "tok1:a85b768c571c7b479777a64364a12e041d5d9c1a6497c1a0c5e37f00b736198b"
     },
     {
       "crate_name": "progress-core",
       "file": "crates/progress-core/src/state.rs",
       "item_kind": "fn",
-      "line": 181,
+      "line": 198,
       "symbol": "progress_core::state::record_gate",
-      "end_line": 205,
+      "end_line": 222,
       "fingerprint": "tok1:b66bab69aa9fd1944164aeaf14fdc665e3b8e30033a5e9dfdec27d36a6478b58"
     },
     {
@@ -3291,9 +3291,9 @@
       "crate_name": "progress-core",
       "file": "crates/progress-core/src/terminal.rs",
       "item_kind": "fn",
-      "line": 103,
+      "line": 48,
       "symbol": "progress_core::terminal::resolve_terminal",
-      "end_line": 137,
+      "end_line": 82,
       "fingerprint": "tok1:cb14dfddb051fd1c12f3f03988733ccb45bd588e6f9b475083066cfd54dd4685"
     },
     {
@@ -30675,7 +30675,7 @@
     {
       "file": "crates/progress-core/src/state.rs",
       "from_symbol": "progress_core::state::GateRecord",
-      "line": 36,
+      "line": 53,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#state",
       "verb": "implements"
@@ -30683,7 +30683,7 @@
     {
       "file": "crates/progress-core/src/state.rs",
       "from_symbol": "progress_core::state::record_gate",
-      "line": 188,
+      "line": 205,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#state",
       "verb": "implements"
@@ -30707,7 +30707,7 @@
     {
       "file": "crates/progress-core/src/terminal.rs",
       "from_symbol": "progress_core::terminal::resolve_terminal",
-      "line": 104,
+      "line": 49,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#terminal-artifacts",
       "verb": "implements"

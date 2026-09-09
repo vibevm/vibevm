@@ -9,24 +9,9 @@ use crate::doc::ParsedDoc;
 use crate::evidence::EvidenceProvider;
 use crate::terminal::{TerminalCounts, counts_for_doc};
 use anyhow::Result;
-use serde::{Deserialize, Serialize};
 use std::path::Path;
 
-pub const TERMINAL_STATE_SCHEMA: u32 = 1;
-
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-pub struct TerminalFileState {
-    pub path: String,
-    pub counts: TerminalCounts,
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-pub struct TerminalState {
-    pub schema: u32,
-    pub updated_at: String,
-    pub files: Vec<TerminalFileState>,
-    pub aggregate: TerminalCounts,
-}
+use super::{TERMINAL_STATE_SCHEMA, TerminalFileState, TerminalState};
 
 /// Write `terminal.json` from parsed documents and one provider snapshot.
 /// Invalid documents are omitted rather than assigned an invented outcome.
