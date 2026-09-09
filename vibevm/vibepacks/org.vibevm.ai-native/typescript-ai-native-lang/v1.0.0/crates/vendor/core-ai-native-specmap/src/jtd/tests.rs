@@ -480,5 +480,5 @@ fn live_thin_root_projects_exact_shared_inventory() {
     assert_eq!(edges.len(), 1);
     assert_eq!(edges[0].fromSymbol, "ir");
     assert_eq!(edges[0].file, "formats/vocabularies.json");
-    assert_eq!(edges[0].line, 41);
+    assert_eq!(edges[0].line, 57);
 }
