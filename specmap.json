@@ -506,6 +506,14 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/deploy_checkpoints.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "deploy_checkpoints",
+      "end_line": 20
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/deploy_intent.jtd.json",
       "item_kind": "schema",
       "line": 1,
@@ -535,6 +543,46 @@
       "line": 51,
       "symbol": "deploy_intent::rfc3339_timestamp",
       "end_line": 57
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/deploy_inverse.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "deploy_inverse",
+      "end_line": 20
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/deploy_lock_resources.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "deploy_lock_resources",
+      "end_line": 98
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/deploy_lock_resources.jtd.json",
+      "item_kind": "schema-def",
+      "line": 90,
+      "symbol": "deploy_lock_resources::image_byte_count",
+      "end_line": 96
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/deploy_lock_resources.jtd.json",
+      "item_kind": "schema-def",
+      "line": 37,
+      "symbol": "deploy_lock_resources::lock_binding",
+      "end_line": 56
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/deploy_lock_resources.jtd.json",
+      "item_kind": "schema-def",
+      "line": 57,
+      "symbol": "deploy_lock_resources::native_provider_binding",
+      "end_line": 89
     },
     {
       "crate_name": "<schema>",
@@ -1054,7 +1102,7 @@
       "item_kind": "schema",
       "line": 1,
       "symbol": "health_result",
-      "end_line": 34
+      "end_line": 26
     },
     {
       "crate_name": "<schema>",
@@ -1062,23 +1110,23 @@
       "item_kind": "schema-def",
       "line": 23,
       "symbol": "health_result::finding",
-      "end_line": 32
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/scrape/e1/health_result.jtd.json",
-      "item_kind": "schema-def",
-      "line": 21,
-      "symbol": "health_result::health_status",
-      "end_line": 21
+      "end_line": 23
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/scrape/e1/health_result.jtd.json",
       "item_kind": "schema-def",
       "line": 22,
-      "symbol": "health_result::severity",
+      "symbol": "health_result::health_status",
       "end_line": 22
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e1/health_result.jtd.json",
+      "item_kind": "schema-def",
+      "line": 24,
+      "symbol": "health_result::severity",
+      "end_line": 24
     },
     {
       "crate_name": "<schema>",
@@ -1300,152 +1348,48 @@
       "crate_name": "<schema>",
       "file": "formats/vocabularies.json",
       "item_kind": "schema-def",
-      "line": 78,
+      "line": 86,
       "symbol": "ir::absorption_occurrence",
-      "end_line": 78
+      "end_line": 86
     },
     {
       "crate_name": "<schema>",
       "file": "formats/vocabularies.json",
       "item_kind": "schema-def",
-      "line": 84,
+      "line": 92,
       "symbol": "ir::absorption_plan",
-      "end_line": 84
+      "end_line": 92
     },
     {
       "crate_name": "<schema>",
       "file": "formats/vocabularies.json",
       "item_kind": "schema-def",
-      "line": 85,
+      "line": 93,
       "symbol": "ir::absorption_state",
-      "end_line": 85
+      "end_line": 93
     },
     {
       "crate_name": "<schema>",
       "file": "formats/vocabularies.json",
       "item_kind": "schema-def",
-      "line": 95,
+      "line": 103,
       "symbol": "ir::artifact_context",
-      "end_line": 95
+      "end_line": 103
     },
     {
       "crate_name": "<schema>",
       "file": "formats/vocabularies.json",
       "item_kind": "schema-def",
-      "line": 94,
+      "line": 102,
       "symbol": "ir::artifact_frame",
-      "end_line": 94
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "formats/vocabularies.json",
-      "item_kind": "schema-def",
-      "line": 58,
-      "symbol": "ir::artifact_target",
-      "end_line": 58
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "formats/vocabularies.json",
-      "item_kind": "schema-def",
-      "line": 59,
-      "symbol": "ir::authority",
-      "end_line": 59
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "formats/vocabularies.json",
-      "item_kind": "schema-def",
-      "line": 56,
-      "symbol": "ir::cardinality_artifact",
-      "end_line": 56
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "formats/vocabularies.json",
-      "item_kind": "schema-def",
-      "line": 55,
-      "symbol": "ir::cardinality_document",
-      "end_line": 55
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "formats/vocabularies.json",
-      "item_kind": "schema-def",
-      "line": 81,
-      "symbol": "ir::closure_contribution",
-      "end_line": 81
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "formats/vocabularies.json",
-      "item_kind": "schema-def",
-      "line": 79,
-      "symbol": "ir::closure_document",
-      "end_line": 79
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "formats/vocabularies.json",
-      "item_kind": "schema-def",
-      "line": 80,
-      "symbol": "ir::closure_edge",
-      "end_line": 80
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "formats/vocabularies.json",
-      "item_kind": "schema-def",
-      "line": 96,
-      "symbol": "ir::closure_ir",
-      "end_line": 96
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "formats/vocabularies.json",
-      "item_kind": "schema-def",
-      "line": 77,
-      "symbol": "ir::closure_occurrence",
-      "end_line": 77
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "formats/vocabularies.json",
-      "item_kind": "schema-def",
-      "line": 57,
-      "symbol": "ir::compile_mode",
-      "end_line": 57
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "formats/vocabularies.json",
-      "item_kind": "schema-def",
-      "line": 83,
-      "symbol": "ir::contribution_absorption",
-      "end_line": 83
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "formats/vocabularies.json",
-      "item_kind": "schema-def",
-      "line": 76,
-      "symbol": "ir::contribution_meta",
-      "end_line": 76
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "formats/vocabularies.json",
-      "item_kind": "schema-def",
-      "line": 64,
-      "symbol": "ir::directive",
-      "end_line": 64
+      "end_line": 102
     },
     {
       "crate_name": "<schema>",
       "file": "formats/vocabularies.json",
       "item_kind": "schema-def",
       "line": 66,
-      "symbol": "ir::directive_error",
+      "symbol": "ir::artifact_target",
       "end_line": 66
     },
     {
@@ -1453,215 +1397,39 @@
       "file": "formats/vocabularies.json",
       "item_kind": "schema-def",
       "line": 67,
-      "symbol": "ir::directives",
+      "symbol": "ir::authority",
       "end_line": 67
     },
     {
       "crate_name": "<schema>",
       "file": "formats/vocabularies.json",
       "item_kind": "schema-def",
+      "line": 64,
+      "symbol": "ir::cardinality_artifact",
+      "end_line": 64
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
       "line": 63,
-      "symbol": "ir::doc_node",
+      "symbol": "ir::cardinality_document",
       "end_line": 63
     },
     {
       "crate_name": "<schema>",
       "file": "formats/vocabularies.json",
       "item_kind": "schema-def",
-      "line": 68,
-      "symbol": "ir::doc_tree",
-      "end_line": 68
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "formats/vocabularies.json",
-      "item_kind": "schema-def",
-      "line": 61,
-      "symbol": "ir::document_address",
-      "end_line": 61
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "formats/vocabularies.json",
-      "item_kind": "schema-def",
-      "line": 72,
-      "symbol": "ir::document_ir",
-      "end_line": 72
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "formats/vocabularies.json",
-      "item_kind": "schema-def",
-      "line": 90,
-      "symbol": "ir::document_observation",
-      "end_line": 90
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "formats/vocabularies.json",
-      "item_kind": "schema-def",
-      "line": 69,
-      "symbol": "ir::document_provider",
-      "end_line": 69
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "formats/vocabularies.json",
-      "item_kind": "schema-def",
-      "line": 70,
-      "symbol": "ir::document_subject",
-      "end_line": 70
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "formats/vocabularies.json",
-      "item_kind": "schema-def",
-      "line": 93,
-      "symbol": "ir::embed_resolution_snapshot",
-      "end_line": 93
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "formats/vocabularies.json",
-      "item_kind": "schema-def",
-      "line": 102,
-      "symbol": "ir::emission_contribution_witness",
-      "end_line": 102
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "formats/vocabularies.json",
-      "item_kind": "schema-def",
-      "line": 103,
-      "symbol": "ir::emission_provenance",
-      "end_line": 103
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "formats/vocabularies.json",
-      "item_kind": "schema-def",
-      "line": 104,
-      "symbol": "ir::emitted_artifact",
-      "end_line": 104
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "formats/vocabularies.json",
-      "item_kind": "schema-def",
-      "line": 91,
-      "symbol": "ir::expansion_observation",
-      "end_line": 91
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "formats/vocabularies.json",
-      "item_kind": "schema-def",
-      "line": 73,
-      "symbol": "ir::fence_snapshot",
-      "end_line": 73
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "formats/vocabularies.json",
-      "item_kind": "schema-def",
-      "line": 65,
-      "symbol": "ir::in_place_use",
-      "end_line": 65
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "formats/vocabularies.json",
-      "item_kind": "schema-def",
-      "line": 99,
-      "symbol": "ir::lane_chunk",
-      "end_line": 99
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "formats/vocabularies.json",
-      "item_kind": "schema-def",
-      "line": 100,
-      "symbol": "ir::lane_contribution",
-      "end_line": 100
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "formats/vocabularies.json",
-      "item_kind": "schema-def",
-      "line": 97,
-      "symbol": "ir::lane_frame",
-      "end_line": 97
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "formats/vocabularies.json",
-      "item_kind": "schema-def",
-      "line": 101,
-      "symbol": "ir::lane_ir",
-      "end_line": 101
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "formats/vocabularies.json",
-      "item_kind": "schema-def",
-      "line": 98,
-      "symbol": "ir::lane_node",
-      "end_line": 98
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "formats/vocabularies.json",
-      "item_kind": "schema-def",
-      "line": 52,
-      "symbol": "ir::level_closure",
-      "end_line": 52
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "formats/vocabularies.json",
-      "item_kind": "schema-def",
-      "line": 51,
-      "symbol": "ir::level_document",
-      "end_line": 51
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "formats/vocabularies.json",
-      "item_kind": "schema-def",
-      "line": 54,
-      "symbol": "ir::level_emitted",
-      "end_line": 54
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "formats/vocabularies.json",
-      "item_kind": "schema-def",
-      "line": 53,
-      "symbol": "ir::level_lane",
-      "end_line": 53
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "formats/vocabularies.json",
-      "item_kind": "schema-def",
-      "line": 50,
-      "symbol": "ir::level_source",
-      "end_line": 50
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "formats/vocabularies.json",
-      "item_kind": "schema-def",
-      "line": 86,
-      "symbol": "ir::link_contribution_witness",
-      "end_line": 86
+      "line": 89,
+      "symbol": "ir::closure_contribution",
+      "end_line": 89
     },
     {
       "crate_name": "<schema>",
       "file": "formats/vocabularies.json",
       "item_kind": "schema-def",
       "line": 87,
-      "symbol": "ir::link_occurrence",
+      "symbol": "ir::closure_document",
       "end_line": 87
     },
     {
@@ -1669,72 +1437,352 @@
       "file": "formats/vocabularies.json",
       "item_kind": "schema-def",
       "line": 88,
-      "symbol": "ir::link_result",
+      "symbol": "ir::closure_edge",
       "end_line": 88
     },
     {
       "crate_name": "<schema>",
       "file": "formats/vocabularies.json",
       "item_kind": "schema-def",
-      "line": 89,
-      "symbol": "ir::link_state",
-      "end_line": 89
+      "line": 104,
+      "symbol": "ir::closure_ir",
+      "end_line": 104
     },
     {
       "crate_name": "<schema>",
       "file": "formats/vocabularies.json",
       "item_kind": "schema-def",
-      "line": 75,
-      "symbol": "ir::origin_rename",
-      "end_line": 75
+      "line": 85,
+      "symbol": "ir::closure_occurrence",
+      "end_line": 85
     },
     {
       "crate_name": "<schema>",
       "file": "formats/vocabularies.json",
       "item_kind": "schema-def",
-      "line": 82,
-      "symbol": "ir::qualification_state",
-      "end_line": 82
+      "line": 65,
+      "symbol": "ir::compile_mode",
+      "end_line": 65
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 91,
+      "symbol": "ir::contribution_absorption",
+      "end_line": 91
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 84,
+      "symbol": "ir::contribution_meta",
+      "end_line": 84
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 72,
+      "symbol": "ir::directive",
+      "end_line": 72
     },
     {
       "crate_name": "<schema>",
       "file": "formats/vocabularies.json",
       "item_kind": "schema-def",
       "line": 74,
-      "symbol": "ir::rename_entry",
+      "symbol": "ir::directive_error",
       "end_line": 74
     },
     {
       "crate_name": "<schema>",
       "file": "formats/vocabularies.json",
       "item_kind": "schema-def",
+      "line": 75,
+      "symbol": "ir::directives",
+      "end_line": 75
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
       "line": 71,
-      "symbol": "ir::source_doc",
+      "symbol": "ir::doc_node",
       "end_line": 71
     },
     {
       "crate_name": "<schema>",
       "file": "formats/vocabularies.json",
       "item_kind": "schema-def",
-      "line": 92,
-      "symbol": "ir::source_resolution_snapshot",
-      "end_line": 92
+      "line": 76,
+      "symbol": "ir::doc_tree",
+      "end_line": 76
     },
     {
       "crate_name": "<schema>",
       "file": "formats/vocabularies.json",
       "item_kind": "schema-def",
-      "line": 62,
-      "symbol": "ir::span",
-      "end_line": 62
+      "line": 69,
+      "symbol": "ir::document_address",
+      "end_line": 69
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 80,
+      "symbol": "ir::document_ir",
+      "end_line": 80
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 98,
+      "symbol": "ir::document_observation",
+      "end_line": 98
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 77,
+      "symbol": "ir::document_provider",
+      "end_line": 77
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 78,
+      "symbol": "ir::document_subject",
+      "end_line": 78
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 101,
+      "symbol": "ir::embed_resolution_snapshot",
+      "end_line": 101
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 110,
+      "symbol": "ir::emission_contribution_witness",
+      "end_line": 110
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 111,
+      "symbol": "ir::emission_provenance",
+      "end_line": 111
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 112,
+      "symbol": "ir::emitted_artifact",
+      "end_line": 112
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 99,
+      "symbol": "ir::expansion_observation",
+      "end_line": 99
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 81,
+      "symbol": "ir::fence_snapshot",
+      "end_line": 81
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 73,
+      "symbol": "ir::in_place_use",
+      "end_line": 73
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 107,
+      "symbol": "ir::lane_chunk",
+      "end_line": 107
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 108,
+      "symbol": "ir::lane_contribution",
+      "end_line": 108
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 105,
+      "symbol": "ir::lane_frame",
+      "end_line": 105
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 109,
+      "symbol": "ir::lane_ir",
+      "end_line": 109
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 106,
+      "symbol": "ir::lane_node",
+      "end_line": 106
     },
     {
       "crate_name": "<schema>",
       "file": "formats/vocabularies.json",
       "item_kind": "schema-def",
       "line": 60,
-      "symbol": "ir::spec_address",
+      "symbol": "ir::level_closure",
       "end_line": 60
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 59,
+      "symbol": "ir::level_document",
+      "end_line": 59
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 62,
+      "symbol": "ir::level_emitted",
+      "end_line": 62
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 61,
+      "symbol": "ir::level_lane",
+      "end_line": 61
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 58,
+      "symbol": "ir::level_source",
+      "end_line": 58
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 94,
+      "symbol": "ir::link_contribution_witness",
+      "end_line": 94
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 95,
+      "symbol": "ir::link_occurrence",
+      "end_line": 95
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 96,
+      "symbol": "ir::link_result",
+      "end_line": 96
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 97,
+      "symbol": "ir::link_state",
+      "end_line": 97
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 83,
+      "symbol": "ir::origin_rename",
+      "end_line": 83
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 90,
+      "symbol": "ir::qualification_state",
+      "end_line": 90
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 82,
+      "symbol": "ir::rename_entry",
+      "end_line": 82
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 79,
+      "symbol": "ir::source_doc",
+      "end_line": 79
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 100,
+      "symbol": "ir::source_resolution_snapshot",
+      "end_line": 100
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 70,
+      "symbol": "ir::span",
+      "end_line": 70
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "formats/vocabularies.json",
+      "item_kind": "schema-def",
+      "line": 68,
+      "symbol": "ir::spec_address",
+      "end_line": 68
     },
     {
       "crate_name": "<schema>",
@@ -2625,6 +2673,198 @@
       "end_line": 114
     },
     {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/prepared_health_snapshot.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "prepared_health_snapshot",
+      "end_line": 160
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/prepared_health_snapshot.jtd.json",
+      "item_kind": "schema-def",
+      "line": 31,
+      "symbol": "prepared_health_snapshot::applicability",
+      "end_line": 37
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/prepared_health_snapshot.jtd.json",
+      "item_kind": "schema-def",
+      "line": 49,
+      "symbol": "prepared_health_snapshot::asset_identity",
+      "end_line": 63
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/prepared_health_snapshot.jtd.json",
+      "item_kind": "schema-def",
+      "line": 40,
+      "symbol": "prepared_health_snapshot::asset_role",
+      "end_line": 40
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/prepared_health_snapshot.jtd.json",
+      "item_kind": "schema-def",
+      "line": 42,
+      "symbol": "prepared_health_snapshot::asset_source",
+      "end_line": 48
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/prepared_health_snapshot.jtd.json",
+      "item_kind": "schema-def",
+      "line": 21,
+      "symbol": "prepared_health_snapshot::baseline_policy",
+      "end_line": 21
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/prepared_health_snapshot.jtd.json",
+      "item_kind": "schema-def",
+      "line": 122,
+      "symbol": "prepared_health_snapshot::bundle_entry",
+      "end_line": 131
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/prepared_health_snapshot.jtd.json",
+      "item_kind": "schema-def",
+      "line": 121,
+      "symbol": "prepared_health_snapshot::bundle_entry_kind",
+      "end_line": 121
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/prepared_health_snapshot.jtd.json",
+      "item_kind": "schema-def",
+      "line": 64,
+      "symbol": "prepared_health_snapshot::command_step",
+      "end_line": 64
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/prepared_health_snapshot.jtd.json",
+      "item_kind": "schema-def",
+      "line": 132,
+      "symbol": "prepared_health_snapshot::custom_bundle",
+      "end_line": 139
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/prepared_health_snapshot.jtd.json",
+      "item_kind": "schema-def",
+      "line": 95,
+      "symbol": "prepared_health_snapshot::effect_plan",
+      "end_line": 102
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/prepared_health_snapshot.jtd.json",
+      "item_kind": "schema-def",
+      "line": 77,
+      "symbol": "prepared_health_snapshot::environment_value",
+      "end_line": 84
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/prepared_health_snapshot.jtd.json",
+      "item_kind": "schema-def",
+      "line": 22,
+      "symbol": "prepared_health_snapshot::health_blocker",
+      "end_line": 29
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/prepared_health_snapshot.jtd.json",
+      "item_kind": "schema-def",
+      "line": 30,
+      "symbol": "prepared_health_snapshot::healthcheck_kind",
+      "end_line": 30
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/prepared_health_snapshot.jtd.json",
+      "item_kind": "schema-def",
+      "line": 39,
+      "symbol": "prepared_health_snapshot::network_mode",
+      "end_line": 39
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/prepared_health_snapshot.jtd.json",
+      "item_kind": "schema-def",
+      "line": 65,
+      "symbol": "prepared_health_snapshot::prepared_arg",
+      "end_line": 76
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/prepared_health_snapshot.jtd.json",
+      "item_kind": "schema-def",
+      "line": 85,
+      "symbol": "prepared_health_snapshot::prepared_command",
+      "end_line": 94
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/prepared_health_snapshot.jtd.json",
+      "item_kind": "schema-def",
+      "line": 140,
+      "symbol": "prepared_health_snapshot::prepared_healthcheck",
+      "end_line": 158
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/prepared_health_snapshot.jtd.json",
+      "item_kind": "schema-def",
+      "line": 120,
+      "symbol": "prepared_health_snapshot::result_protocol",
+      "end_line": 120
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/prepared_health_snapshot.jtd.json",
+      "item_kind": "schema-def",
+      "line": 104,
+      "symbol": "prepared_health_snapshot::sandbox_requirement",
+      "end_line": 119
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/prepared_health_snapshot.jtd.json",
+      "item_kind": "schema-def",
+      "line": 103,
+      "symbol": "prepared_health_snapshot::termination_mode",
+      "end_line": 103
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/prepared_health_snapshot.jtd.json",
+      "item_kind": "schema-def",
+      "line": 38,
+      "symbol": "prepared_health_snapshot::test_disposition",
+      "end_line": 38
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/prepared_health_snapshot.jtd.json",
+      "item_kind": "schema-def",
+      "line": 20,
+      "symbol": "prepared_health_snapshot::u64_count",
+      "end_line": 20
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/prepared_health_snapshot.jtd.json",
+      "item_kind": "schema-def",
+      "line": 41,
+      "symbol": "prepared_health_snapshot::version_kind",
+      "end_line": 41
+    },
+    {
       "crate_name": "progress-core",
       "file": "crates/progress-core/src/lib.rs",
       "item_kind": "mod",
@@ -3177,111 +3417,119 @@
       "item_kind": "schema",
       "line": 1,
       "symbol": "report",
-      "end_line": 77
+      "end_line": 66
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/scrape/e1/report.jtd.json",
       "item_kind": "schema-def",
-      "line": 35,
+      "line": 43,
       "symbol": "report::deleted_artifact",
-      "end_line": 41
+      "end_line": 49
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/scrape/e1/report.jtd.json",
       "item_kind": "schema-def",
-      "line": 48,
+      "line": 56,
       "symbol": "report::dependency_graph_result",
-      "end_line": 50
+      "end_line": 58
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/scrape/e1/report.jtd.json",
       "item_kind": "schema-def",
-      "line": 32,
+      "line": 40,
       "symbol": "report::file_witness",
+      "end_line": 42
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e1/report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 33,
+      "symbol": "report::finding",
+      "end_line": 33
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e1/report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 34,
+      "symbol": "report::health_result",
       "end_line": 34
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/scrape/e1/report.jtd.json",
       "item_kind": "schema-def",
-      "line": 54,
-      "symbol": "report::finding",
-      "end_line": 57
+      "line": 35,
+      "symbol": "report::health_result_step",
+      "end_line": 35
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/scrape/e1/report.jtd.json",
       "item_kind": "schema-def",
-      "line": 61,
-      "symbol": "report::health_result",
-      "end_line": 69
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/scrape/e1/report.jtd.json",
-      "item_kind": "schema-def",
-      "line": 51,
+      "line": 36,
       "symbol": "report::phase",
-      "end_line": 51
+      "end_line": 36
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/scrape/e1/report.jtd.json",
       "item_kind": "schema-def",
-      "line": 73,
+      "line": 62,
       "symbol": "report::recovery_step",
-      "end_line": 75
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/scrape/e1/report.jtd.json",
-      "item_kind": "schema-def",
-      "line": 45,
-      "symbol": "report::relocation_result",
-      "end_line": 47
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/scrape/e1/report.jtd.json",
-      "item_kind": "schema-def",
-      "line": 70,
-      "symbol": "report::residual_count",
-      "end_line": 72
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/scrape/e1/report.jtd.json",
-      "item_kind": "schema-def",
-      "line": 42,
-      "symbol": "report::rewrite_result",
-      "end_line": 44
+      "end_line": 64
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/scrape/e1/report.jtd.json",
       "item_kind": "schema-def",
       "line": 53,
-      "symbol": "report::severity",
-      "end_line": 53
+      "symbol": "report::relocation_result",
+      "end_line": 55
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/scrape/e1/report.jtd.json",
       "item_kind": "schema-def",
-      "line": 58,
-      "symbol": "report::stream_witness",
-      "end_line": 60
+      "line": 59,
+      "symbol": "report::residual_count",
+      "end_line": 61
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/scrape/e1/report.jtd.json",
       "item_kind": "schema-def",
-      "line": 52,
-      "symbol": "report::terminal_state",
+      "line": 50,
+      "symbol": "report::rewrite_result",
       "end_line": 52
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e1/report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 37,
+      "symbol": "report::severity",
+      "end_line": 37
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e1/report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 38,
+      "symbol": "report::stream_witness",
+      "end_line": 38
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e1/report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 39,
+      "symbol": "report::terminal_state",
+      "end_line": 39
     },
     {
       "crate_name": "<schema>",
@@ -3373,6 +3621,62 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/retirement_checkpoint.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "retirement_checkpoint",
+      "end_line": 71
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/retirement_checkpoint.jtd.json",
+      "item_kind": "schema-def",
+      "line": 21,
+      "symbol": "retirement_checkpoint::byte_count",
+      "end_line": 27
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/retirement_checkpoint.jtd.json",
+      "item_kind": "schema-def",
+      "line": 58,
+      "symbol": "retirement_checkpoint::cleanup_intent",
+      "end_line": 69
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/retirement_checkpoint.jtd.json",
+      "item_kind": "schema-def",
+      "line": 28,
+      "symbol": "retirement_checkpoint::entry_kind",
+      "end_line": 31
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/retirement_checkpoint.jtd.json",
+      "item_kind": "schema-def",
+      "line": 32,
+      "symbol": "retirement_checkpoint::entry_state",
+      "end_line": 43
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/retirement_checkpoint.jtd.json",
+      "item_kind": "schema-def",
+      "line": 51,
+      "symbol": "retirement_checkpoint::safefs_manifest",
+      "end_line": 57
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/retirement_checkpoint.jtd.json",
+      "item_kind": "schema-def",
+      "line": 44,
+      "symbol": "retirement_checkpoint::tree_entry",
+      "end_line": 50
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/index_cli/e1/search_report.jtd.json",
       "item_kind": "schema",
       "line": 1,
@@ -3413,6 +3717,366 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/transaction_journal.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "transaction_journal",
+      "end_line": 324
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/transaction_journal.jtd.json",
+      "item_kind": "schema-def",
+      "line": 272,
+      "symbol": "transaction_journal::actual_mutation_evidence",
+      "end_line": 281
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/transaction_journal.jtd.json",
+      "item_kind": "schema-def",
+      "line": 252,
+      "symbol": "transaction_journal::assurance",
+      "end_line": 252
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/transaction_journal.jtd.json",
+      "item_kind": "schema-def",
+      "line": 253,
+      "symbol": "transaction_journal::cleanup",
+      "end_line": 253
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/transaction_journal.jtd.json",
+      "item_kind": "schema-def",
+      "line": 42,
+      "symbol": "transaction_journal::contract_boundary_action",
+      "end_line": 42
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/transaction_journal.jtd.json",
+      "item_kind": "schema-def",
+      "line": 175,
+      "symbol": "transaction_journal::contract_commit",
+      "end_line": 181
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/transaction_journal.jtd.json",
+      "item_kind": "schema-def",
+      "line": 105,
+      "symbol": "transaction_journal::export_entry",
+      "end_line": 113
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/transaction_journal.jtd.json",
+      "item_kind": "schema-def",
+      "line": 98,
+      "symbol": "transaction_journal::export_payload",
+      "end_line": 104
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/transaction_journal.jtd.json",
+      "item_kind": "schema-def",
+      "line": 114,
+      "symbol": "transaction_journal::export_plan",
+      "end_line": 127
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/transaction_journal.jtd.json",
+      "item_kind": "schema-def",
+      "line": 90,
+      "symbol": "transaction_journal::file_state",
+      "end_line": 97
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/transaction_journal.jtd.json",
+      "item_kind": "schema-def",
+      "line": 182,
+      "symbol": "transaction_journal::in_place_plan",
+      "end_line": 197
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/transaction_journal.jtd.json",
+      "item_kind": "schema-def",
+      "line": 304,
+      "symbol": "transaction_journal::internal_report",
+      "end_line": 322
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/transaction_journal.jtd.json",
+      "item_kind": "schema-def",
+      "line": 155,
+      "symbol": "transaction_journal::location",
+      "end_line": 155
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/transaction_journal.jtd.json",
+      "item_kind": "schema-def",
+      "line": 265,
+      "symbol": "transaction_journal::mutation_direction",
+      "end_line": 265
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/transaction_journal.jtd.json",
+      "item_kind": "schema-def",
+      "line": 165,
+      "symbol": "transaction_journal::mutation_kind",
+      "end_line": 165
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/transaction_journal.jtd.json",
+      "item_kind": "schema-def",
+      "line": 266,
+      "symbol": "transaction_journal::mutation_origin",
+      "end_line": 266
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/transaction_journal.jtd.json",
+      "item_kind": "schema-def",
+      "line": 268,
+      "symbol": "transaction_journal::mutation_progress",
+      "end_line": 271
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/transaction_journal.jtd.json",
+      "item_kind": "schema-def",
+      "line": 267,
+      "symbol": "transaction_journal::mutation_status",
+      "end_line": 267
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/transaction_journal.jtd.json",
+      "item_kind": "schema-def",
+      "line": 166,
+      "symbol": "transaction_journal::mutation_step",
+      "end_line": 174
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/transaction_journal.jtd.json",
+      "item_kind": "schema-def",
+      "line": 254,
+      "symbol": "transaction_journal::outcome",
+      "end_line": 254
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/transaction_journal.jtd.json",
+      "item_kind": "schema-def",
+      "line": 205,
+      "symbol": "transaction_journal::owned_entry_seal",
+      "end_line": 215
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/transaction_journal.jtd.json",
+      "item_kind": "schema-def",
+      "line": 224,
+      "symbol": "transaction_journal::owned_tree_cleanup_intent",
+      "end_line": 233
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/transaction_journal.jtd.json",
+      "item_kind": "schema-def",
+      "line": 234,
+      "symbol": "transaction_journal::owned_tree_cleanup_wal",
+      "end_line": 243
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/transaction_journal.jtd.json",
+      "item_kind": "schema-def",
+      "line": 216,
+      "symbol": "transaction_journal::owned_tree_seal",
+      "end_line": 223
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/transaction_journal.jtd.json",
+      "item_kind": "schema-def",
+      "line": 146,
+      "symbol": "transaction_journal::path_state",
+      "end_line": 154
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/transaction_journal.jtd.json",
+      "item_kind": "schema-def",
+      "line": 156,
+      "symbol": "transaction_journal::path_transition",
+      "end_line": 164
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/transaction_journal.jtd.json",
+      "item_kind": "schema-def",
+      "line": 282,
+      "symbol": "transaction_journal::planned_mutation_evidence",
+      "end_line": 285
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/transaction_journal.jtd.json",
+      "item_kind": "schema-def",
+      "line": 255,
+      "symbol": "transaction_journal::planned_mutation_kind",
+      "end_line": 264
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/transaction_journal.jtd.json",
+      "item_kind": "schema-def",
+      "line": 198,
+      "symbol": "transaction_journal::prepared_mode",
+      "end_line": 204
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/transaction_journal.jtd.json",
+      "item_kind": "schema-def",
+      "line": 61,
+      "symbol": "transaction_journal::snapshot_kind",
+      "end_line": 61
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/transaction_journal.jtd.json",
+      "item_kind": "schema-def",
+      "line": 62,
+      "symbol": "transaction_journal::snapshot_record",
+      "end_line": 71
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/transaction_journal.jtd.json",
+      "item_kind": "schema-def",
+      "line": 128,
+      "symbol": "transaction_journal::subtree_entry",
+      "end_line": 137
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/transaction_journal.jtd.json",
+      "item_kind": "schema-def",
+      "line": 138,
+      "symbol": "transaction_journal::subtree_state",
+      "end_line": 145
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/transaction_journal.jtd.json",
+      "item_kind": "schema-def",
+      "line": 41,
+      "symbol": "transaction_journal::transaction_mode",
+      "end_line": 41
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/transaction_journal.jtd.json",
+      "item_kind": "schema-def",
+      "line": 43,
+      "symbol": "transaction_journal::transaction_state",
+      "end_line": 60
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/transaction_journal.jtd.json",
+      "item_kind": "schema-def",
+      "line": 73,
+      "symbol": "transaction_journal::tree_entry",
+      "end_line": 82
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/transaction_journal.jtd.json",
+      "item_kind": "schema-def",
+      "line": 72,
+      "symbol": "transaction_journal::tree_entry_kind",
+      "end_line": 72
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/transaction_journal.jtd.json",
+      "item_kind": "schema-def",
+      "line": 83,
+      "symbol": "transaction_journal::tree_manifest",
+      "end_line": 89
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/transaction_journal.jtd.json",
+      "item_kind": "schema-def",
+      "line": 39,
+      "symbol": "transaction_journal::u64_count",
+      "end_line": 39
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/transaction_journal.jtd.json",
+      "item_kind": "schema-def",
+      "line": 40,
+      "symbol": "transaction_journal::usize_count",
+      "end_line": 40
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/transaction_journal.jtd.json",
+      "item_kind": "schema-def",
+      "line": 287,
+      "symbol": "transaction_journal::verification_evidence",
+      "end_line": 295
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/transaction_journal.jtd.json",
+      "item_kind": "schema-def",
+      "line": 286,
+      "symbol": "transaction_journal::verification_phase",
+      "end_line": 286
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/transaction_journal.jtd.json",
+      "item_kind": "schema-def",
+      "line": 296,
+      "symbol": "transaction_journal::verification_record",
+      "end_line": 303
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/transaction_journal.jtd.json",
+      "item_kind": "schema-def",
+      "line": 244,
+      "symbol": "transaction_journal::verification_workspace_intent",
+      "end_line": 251
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e3/transaction_owner.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "transaction_owner",
+      "end_line": 20
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/uninstall_report.jtd.json",
       "item_kind": "schema",
       "line": 1,
@@ -3450,6 +4114,14 @@
       "line": 161,
       "symbol": "update_report::update_hook_report",
       "end_line": 178
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/scrape/e2/verification_health_evidence.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "verification_health_evidence",
+      "end_line": 13
     },
     {
       "crate_name": "<schema>",
@@ -14796,7 +15468,7 @@
       "line": 210,
       "symbol": "vibe_lifecycle::mechanism::deploy::inverse_tests::a_reference_owner_refuses_to_reverse_without_its_recorded_binding",
       "end_line": 300,
-      "fingerprint": "tok1:07b2d7fcc1ae112c2f541d63107ba1559c06b52fabcd648d8fbdeec36480adde"
+      "fingerprint": "tok1:5d7ac97e5f072c72cb8c2905683ddd5210ae63d5cef57ede575387138a1275eb"
     },
     {
       "crate_name": "vibe-lifecycle",
@@ -14805,7 +15477,7 @@
       "line": 391,
       "symbol": "vibe_lifecycle::mechanism::deploy::inverse_tests::an_ordinary_mismatched_sidecar_never_uses_the_legacy_fallback",
       "end_line": 441,
-      "fingerprint": "tok1:c65128b5135eb8125befd7033b89c9316dedbbd3a065eee5811326906e82688d"
+      "fingerprint": "tok1:6f086443f3aaf6eacd01cc4fef670a521a7035203827dfd94746e1830f943d80"
     },
     {
       "crate_name": "vibe-lifecycle",
@@ -16128,7 +16800,7 @@
       "line": 81,
       "symbol": "vibe_lifecycle::mechanism::deploy::transaction_tests::apply_checkpoints_each_completed_operation",
       "end_line": 117,
-      "fingerprint": "tok1:0081f1acb4aaef8726adfab60d10c57cb9daf09ed8c838a4e99f7548f8b6da5c"
+      "fingerprint": "tok1:234393b4615a9564e627707c4f8fc59608c8fae4e89b88b592b959113d2f7e7a"
     },
     {
       "crate_name": "vibe-lifecycle",
@@ -29402,6 +30074,30 @@
       "verb": "implements"
     },
     {
+      "file": "schemas/deploy_checkpoints.jtd.json",
+      "from_symbol": "deploy_checkpoints",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#R8-DEPLOY-RUNTIME",
+      "verb": "implements"
+    },
+    {
+      "file": "schemas/deploy_inverse.jtd.json",
+      "from_symbol": "deploy_inverse",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#R8-DEPLOY-RUNTIME",
+      "verb": "implements"
+    },
+    {
+      "file": "schemas/deploy_lock_resources.jtd.json",
+      "from_symbol": "deploy_lock_resources",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#R8-DEPLOY-RUNTIME",
+      "verb": "implements"
+    },
+    {
       "file": "schemas/extensions_analyze.jtd.json",
       "from_symbol": "extensions_analyze",
       "line": 1,
@@ -29460,7 +30156,7 @@
     {
       "file": "formats/vocabularies.json",
       "from_symbol": "ir",
-      "line": 49,
+      "line": 57,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#WHOLE-IR-WIRE",
       "verb": "implements"
@@ -29535,6 +30231,14 @@
       "line": 1,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#PLAN-JSON-SHAPE",
+      "verb": "implements"
+    },
+    {
+      "file": "schemas/scrape/e2/prepared_health_snapshot.jtd.json",
+      "from_symbol": "prepared_health_snapshot",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#CUSTOM-VERIFIER-SNAPSHOT",
       "verb": "implements"
     },
     {
@@ -29963,11 +30667,35 @@
       "verb": "implements"
     },
     {
+      "file": "schemas/scrape/e2/retirement_checkpoint.jtd.json",
+      "from_symbol": "retirement_checkpoint",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#IMPL-E",
+      "verb": "implements"
+    },
+    {
       "file": "schemas/slot_record.jtd.json",
       "from_symbol": "slot_record",
       "line": 1,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-SLOT-RECORD",
+      "verb": "implements"
+    },
+    {
+      "file": "schemas/scrape/e2/transaction_journal.jtd.json",
+      "from_symbol": "transaction_journal",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#IMPL-E",
+      "verb": "implements"
+    },
+    {
+      "file": "schemas/scrape/e3/transaction_owner.jtd.json",
+      "from_symbol": "transaction_owner",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#IMPL-E",
       "verb": "implements"
     },
     {
@@ -29984,6 +30712,14 @@
       "line": 1,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#JTD-SSOT",
+      "verb": "implements"
+    },
+    {
+      "file": "schemas/scrape/e2/verification_health_evidence.jtd.json",
+      "from_symbol": "verification_health_evidence",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#REPORT-CONTENT",
       "verb": "implements"
     },
     {
@@ -64942,7 +65678,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:de0e3df547f970a2430aa1d648cebca596a617c79353a882b14443d556bc664b",
+      "content_hash": "sha256:abba560b5819aa4a3ab3ea40595e4ff85ba41094745b06b45ccb6bcb29f8dcd1",
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "PROP-044: Change-native formats — surviving perpetual evolution",
@@ -65176,7 +65912,7 @@
     },
     {
       "anchor": "machinery",
-      "content_hash": "sha256:af98ecbc8dc0c7bab4129f5f45de3a892ab3e2a28fda013ae2a44e593daa7437",
+      "content_hash": "sha256:9479c808290647ca2c03074bdaed8b65ac535556b29336978e03f0d27f31466d",
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "4. The machinery",
@@ -65211,12 +65947,21 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#M-SCHEMA-DESCRIBES-FORM"
     },
     {
+      "anchor": "M-WIRE-FIELD-ORDER",
+      "content_hash": "sha256:7b1382c2f48fdcde169a752f2a0f66dbd74b189647af8f0b831a9c513fe93a32",
+      "doc_path": "common/PROP-044",
+      "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "heading": "**Exact object-member byte order is\n    opt-in and schema-declared.** JTD property-map order has no meaning and is\n    never inferred. A root or named-definition object that requires a stable\n    serialization order carries `metadata.\"x-wire-order\"`: one array containing\n    every required and optional wire member exactly once. The generator validates\n    that complete census, resolves each member through the generated Rust field's\n    surviving serde rename or snake-case identity, and moves the complete final\n    field chunk before strictness and domain renaming. Missing, duplicate, unknown,\n    non-string or non-object annotations and unfamiliar generator shapes refuse\n    generation. Without the key the pass is byte-identical. @status:impl/done",
+      "line": 239,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#M-WIRE-FIELD-ORDER"
+    },
+    {
       "anchor": "M-OPEN-ENUM-FROM-CLOSED",
       "content_hash": "sha256:442bb27330b4a519b1f0fffa9cc38d5ae124a55c5205ff82208f8234ae635f2d",
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**4.2a The vocabulary resolution.** From a\n*closed* schema enum the generator emits an *open* Rust type:\n`enum { …known…, Unknown(String) }`. Compiler-checked exhaustiveness survives\n(the `Unknown` arm is mandatory), the original string is preserved through any\nrewrite, and tolerance of future values is structural. The trilemma the\ndiscovery corpus recorded — tagging vs fallback values vs codegen, mutually\nincompatible — dissolves because the decision moved from the schema language\ninto the generator. @status:spec/plan",
-      "line": 239,
+      "line": 249,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#M-OPEN-ENUM-FROM-CLOSED"
     },
     {
@@ -65225,7 +65970,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**4.2b Integers wider than 32 bits ride the\nwire as decimal strings** *(owner ruling 2026-08-20, the B-091 fork answered\nonce and generally)*. JTD (RFC 8927) has no 64-bit integer type at all — the\npinned generator rejects `uint64` and `int64` as InvalidType (measured\n2026-08-15) — so every field wider than 32 bits would otherwise re-litigate\nthe same bad trilemma: a `uint32` that is false at and above 2³², a `float64`\nthat loses precision past 2⁵³, or an untyped `{}` that loses the field\nentirely. The general answer: such a field is encoded as a **canonical decimal\nstring** — ASCII digits only, no sign, no leading zeros except `\"0\"` itself —\nthe schema says `string`, the Rust type stays the true integer, conversion\nlives at the serde boundary, and non-canonical input is refused loudly rather\nthan coerced. Timestamps are not this rule's business: they ride as RFC 3339\nthrough the `timestamp` vocabulary. First application: the catalog manifest's\nfile `size` (`formats/breaks/003.md`). @status:impl/done",
-      "line": 247,
+      "line": 257,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#M-WIDE-INTEGERS-AS-STRINGS"
     },
     {
@@ -65234,7 +65979,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**The class boundary is domain honesty, not\nthe Rust type** *(ADR-part; owner accepted the recommendation 2026-08-20,\nclosing BACKLOG B-095)*. The one question asked of a field: does its DOMAIN\nhonestly fit `uint32`? A count bounded by construction (a page size capped in\ncode, a result count bounded by the corpus) says `uint32` in the schema and\ncrosses the boundary through a **checked** conversion — never a silent `as` —\nfailing loudly on the unreachable overflow. A field whose domain does not fit\n(a lifetime request counter, an uptime) is this rule's subject and rides as\nthe canonical decimal string, because a `uint32` schema would lie on a\nlong-lived server and a JSON number breaks silently past 2⁵³ — the exact\nsilent-drift genre this document exists to kill. There is no third category\nand no exception list: alternatives weighed were per-field exceptions (each\ninvites the next negotiation) and float64 numbers (honest until they are\nnot). Applied 2026-08-20 across both envelope families: three admin counters\nbecame strings, twenty-two count-class fields became checked `uint32`, and\ntheir recorded schema deviations died. @status:impl/done",
-      "line": 261,
+      "line": 271,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#WIDE-INTEGERS-CLASS-BOUNDARY"
     },
     {
@@ -65243,7 +65988,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**4.3 Canonical bytes, deterministic writers.** One\nstate — one byte sequence: sorted keys, injected clocks (a writer never calls\n`now()`; time arrives as input), pinned encodings, deterministic compression.\nDeterminism is not cosmetics; it is the *measuring instrument*: it makes\n\"rebuild and compare\" a real verification, an empty diff a real no-op, and a\nwire-diff a quantitative measure of any break. @status:spec/plan",
-      "line": 277,
+      "line": 287,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#M-CANONICAL-BYTES"
     },
     {
@@ -65252,7 +65997,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**4.4 Journal and projection — no read-modify-write.**\nMutations of derived artifacts are appends to the journal followed by\nreprojection; a writer never accepts as input a value parsed from its own\npublished output (machine-enforced at module boundaries). This dissolves the\nworst hazard the discovery found — \"tolerant reading without capture silently\ndeletes foreign fields on the next rewrite\" — not by adding capture machinery\nbut by removing the rewrite: there is nothing to preserve because nothing read\nis ever written back. Reader strictness can then be dropped for free. @status:spec/plan",
-      "line": 283,
+      "line": 293,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#M-JOURNAL-NOT-RMW"
     },
     {
@@ -65261,7 +66006,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**4.5 must-understand and record quarantine.** Each\nrecord names the capabilities a reader must have to act on it. A reader lacking\nthem quarantines *that record* — the file loads, the server starts, and the\nrefusal surfaces at the point of use with a generated recipe (\"unavailable\nbecause X; run Y\"). This is the exact inversion of additive-only: there the\n*schema* promises ignorability forever; here the *writer* declares it per\nrecord, addressably and revocably. Unknown fields outside must-understand are\nignored; unknown records are quarantined, never dropped silently. @status:spec/plan",
-      "line": 291,
+      "line": 301,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#M-MUST-UNDERSTAND"
     },
     {
@@ -65270,7 +66015,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**4.6 Epochs are parallel worlds, not mutations.** A heavy break\nmints a new epoch at a new path (`/e4/…`); the old world keeps publishing until\nits announced sunset, then freezes — free of charge, because the transport is\ngit. Worlds are physically unable to poison each other. Within an epoch,\nobligations hold; epoch boundaries are where \"we will one day break any vow\"\nhappens in a controlled, rehearsed, announced way. Light breaks (a new\ncapability under must-understand) need no epoch at all. @status:spec/plan",
-      "line": 299,
+      "line": 309,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#M-EPOCHS"
     },
     {
@@ -65279,7 +66024,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**4.7 Breaking is a switched resource; recipes are data.**\n`formats/EPOCHS.toml` carries `break_window_open`; while it is closed, CI\nrefuses any change under `schemas/**` or `formats/**` — a *period of stability*\nis the state of a flag, visible in the git log of one file, not a virtue or a\nhope. Any wire-visible change requires a break note\n(`formats/breaks/NNN.md`: what · epoch · who fixes · sunset · user recipe), and\nthe golden-corpus wire-diff must be empty or covered by one — the gate does not\nforbid breaks, it makes an *unannounced* break impossible. Every derived value\ncarries its recipe id (`content_hash` rides as `sha256-tree/1:…`, the exclusion\nlist and normalisation live in `hash_recipes/1.toml` as data, each recipe\nfrozen by a golden test) — changing a computation becomes a visible new recipe,\nnever a silent change of every value in the world. @status:spec/plan",
-      "line": 306,
+      "line": 316,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#M-BREAK-WINDOW"
     },
     {
@@ -65288,7 +66033,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "5. Placement and computed policy",
-      "line": 319,
+      "line": 329,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#placement"
     },
     {
@@ -65297,7 +66042,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**The placement ladder.** Cost of change grows\nmonotonically: config < lockfile < index export files < `by-name` projection <\njournal < `vibe.toml` < identity/handshake. The one placement rule a weak\nauthor can apply without understanding the system: **put every new fact on the\nlowest rung that bears it.** A volatile fact in the manifest is a decade-long\ndebt; the same fact in the lockfile is free. @status:spec/plan",
-      "line": 320,
+      "line": 330,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#PLACEMENT-LADDER"
     },
     {
@@ -65306,7 +66051,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**A format's policy is computed, not chosen**, from\ntwo axes: is it recoverable without a human, and how many independent parsers\nexist. Recoverable + one parser → hard gate + silent rebuild (lockfile,\ncaches). Recoverable + many parsers → epochs, parallel publication, generated\nclients, narrow projection (catalog, CLI JSON). Unrecoverable + one parser →\nepoch-in-file + codemod (configs). Unrecoverable + many parsers is the worst\nquadrant — minimise it, epoch it, migrate it by bot (`vibe.toml` is the only\nresident, and creating a *new* format in this quadrant requires an explicit\nowner decision recorded in the format registry). @status:spec/plan",
-      "line": 326,
+      "line": 336,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#POLICY-IS-COMPUTED"
     },
     {
@@ -65315,7 +66060,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**Migrations come in three kinds, and two must not\nexist.** Derived data has *no migrations ever* — delete and rebuild; writing an\nindex migrator is an architecture error, because it asserts the index is\nauthoritative. Authored data gets *codemods*: idempotent, comment-preserving\n(document-edit in place, never serialise-from-struct), rehearsed on a corpus of\nreal files, applied locally by `vibe migrate` and remotely by bot pull request\n— the one scalable way to migrate data you do not own, and a capability a\ngit-organisation registry has that Maven Central structurally lacks. Runtime\ncompatibility shims are forbidden; the only exception is frozen per-epoch\n*readers* of old manifests inside the indexer — readers, not shims: they branch\nno logic and are never edited after freezing. @status:spec/plan",
-      "line": 335,
+      "line": 345,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MIGRATION-TAXONOMY"
     },
     {
@@ -65324,7 +66069,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "6. The formats of this project, by name",
-      "line": 347,
+      "line": 357,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#our-formats"
     },
     {
@@ -65333,7 +66078,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**6.1 The catalog is three things with three fates.** The\nread-for-rewrite core (`by-name/`, `repomd.json`) stops being read at all —\nserver mutations become journal appends, `add`/`remove`/`reindex` become\nreprojections; after that, reader strictness drops for free, `generated_at`\ncomes from the journal (event time, not process clocks), the catalog becomes\ndeterministic and rebuild-testable. The export files (`primary.jsonl(.gz)`,\n`by-cap/`, `by-purl/`) are strict canonical exports, and every published\nformat must have a *generated reader used in a round-trip test* — publishing\nwhat we cannot read back is how write-only formats drift. The narrow public\ngate — name, version, hash+recipe, URL, yanked, tombstone — is a new, small,\nslow-moving artifact: the one surface we actually defend before foreign tools,\nso that everything richer behind it may churn weekly. The catalog repository\nitself is *declared disposable*: pin content by hash, not by commit — a\npermission we can actually keep, instead of a promise we cannot. @status:spec/plan",
-      "line": 348,
+      "line": 358,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#FMT-CATALOG"
     },
     {
@@ -65342,7 +66087,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**The catalog's version stops being a number nobody\ncompares.** Its heavy role moves into the *path* (the epoch); its light role\ninto per-record must-understand. The old question \"is the version a gate or a\ndeclaration?\" dissolved because it sought both answers inside one `u32`. @status:spec/plan",
-      "line": 362,
+      "line": 372,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#FMT-CATALOG-VERSION"
     },
     {
@@ -65351,7 +66096,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**6.2 `vibe.toml` is the most expensive format in the\nsystem** — authored, unrecoverable, resident in foreign repositories, and an\nexternal surface *de facto* because agents read files, not APIs. It is the one\nplace we honestly pay the stability tax: an **epoch marker in the file,\nintroduced before first publication** (absence ≠ \"assume 1\"; absence is the\ndistinct pre-epoch state, interpreted by a heuristic exactly once in history);\nstrictness with did-you-mean hints in our namespace (in a hand-written file an\nunknown key is a typo and the author is present — the asymmetry with the\nmachine-written catalog is principled, not inconsistent); a named reserve\nsection we never touch; a **generated projection as the published copy**, so\nforeign tools read a recoverable artifact while the hand-written original\nremains our internal concern; migration by codemod + bot PR; and a minimal\nsurface — every new manifest key is a years-long obligation and requires a\nbreak note, a codemod, and generated documentation. @status:spec/plan",
-      "line": 366,
+      "line": 376,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#FMT-MANIFEST"
     },
     {
@@ -65360,7 +66105,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**6.3 `vibe.lock` is the cheapest format and becomes free by\nconstruction.** \"Schema version 5, reject on `!=`\" is replaced by: the lockfile\nis valid only for the exact (epoch, generator hash, recipe ids) that built it;\nany mismatch → silently regenerate; `--frozen` turns that into a loud error for\nCI. Deterministic by the same rules as the catalog. Consequence for design:\nsince this format's evolution is free, volatile facts belong here — the bottom\nrung of the ladder. @status:spec/plan",
-      "line": 380,
+      "line": 390,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#FMT-LOCKFILE"
     },
     {
@@ -65369,7 +66114,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**6.4 Configs are preferences, not data — failure is\nstructurally impossible.** `fn load() -> Config` with no `Result`: unknown key\n→ warning; invalid value → default plus warning; the file is rewritten to\ncanonical form opportunistically. Blocking a build over a stale setting is the\nworst possible trade at ten releases a day. Strict failure belongs where wrong\nreading corrupts results; graceful degradation where it only changes comfort. @status:spec/plan",
-      "line": 387,
+      "line": 397,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#FMT-CONFIGS"
     },
     {
@@ -65378,7 +66123,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**6.5 Surfaces nobody inventoried are formats too.**\nThe seven CLI `--json` reports (scripts and agents parse them), MCP tool\nschemas (literally a contract with foreign agents), skill/subskill files, the\njournal, the handshake — each is \"something a foreign parser reads\", each gets\na registry entry, a schema, an epoch and a corpus. @status:spec/plan",
-      "line": 393,
+      "line": 403,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#FMT-UNINVENTORIED"
     },
     {
@@ -65387,7 +66132,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "7. Obligations have types; stability is a mechanism",
-      "line": 399,
+      "line": 409,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#obligations"
     },
     {
@@ -65396,7 +66141,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**Three types of obligation, and only two eternal ones.**\n*Eternal* (both about honesty, not content): we never present a wrong answer as\nright; we never answer silence for a name that existed. Both are keepable\nforever because they forbid no change. *Expiring*: epoch support windows — they\ndo not get broken, they *expire on schedule*. *Revocable*: everything else —\nnames, fields, structures, vocabularies, paths. The owner's prediction «любое\nобязательство однажды нарушим» is satisfied by construction: almost nothing\nhere is vowed. @status:spec/plan",
-      "line": 400,
+      "line": 410,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#OBLIGATION-TYPES"
     },
     {
@@ -65405,7 +66150,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**An obligation without a written breaking procedure\nis a hope, not an obligation.** Every obligation ships with its procedure\n(announce → transform/reproject → publish in parallel → sunset → leave a\ntombstone) and the procedure is *rehearsed*: the release pipeline replays a\ncold upgrade from the oldest supported epoch, and a staged sunset is drilled\nperiodically. Early breaking is the same procedure compressed, plus a recorded\nowner reason — friction is asymmetric by design: extending a sunset is free,\nshortening one takes an explicit owner act. @status:spec/plan",
-      "line": 408,
+      "line": 418,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#OBLIGATION-PROCEDURE"
     },
     {
@@ -65414,7 +66159,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**A period of stability is a closed break window plus\na published expiry.** The honest move-fast contract with millions of users is\nnot \"we won't break you\" but **\"you always know the date you break, and the fix\nis one command.\"** The date travels inside the world it retires; clients warn\nahead of it; on the day, the refusal carries the recipe. Heavy breaks batch\ninto trains — parallel publication and support windows are fixed costs per\ntrain, not per change. @status:spec/plan",
-      "line": 416,
+      "line": 426,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#STABILITY-IS-A-FLAG"
     },
     {
@@ -65423,7 +66168,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**The pre-publication regime, and the switch only the\nowner can flip (owner ruling, 2026-08-10, near-verbatim: «я пока ничего не\nпубликовал на большую публику… я хочу, чтобы мы не применяли миграции до тех\nпор, пока я не скажу, что состоялось первое представление публике… технически\nэтот факт нельзя определить никак — только владелец может сказать, что это\nпроизошло»).** Until that declaration the system is in the pre-publication\nregime: breaking is free *and unmigrated* — no codemods run, no bot PRs, no\nparallel worlds, no sunset calendars; break machinery reports instead of\ndemanding (corpora regenerate freely, break notes are optional records);\nreaders of old shapes are conveniences deletable at will; the standing user\nrecipe is «regenerate / re-init / re-fetch». The fact of the first public\npresentation is technically undetectable **by design** and must never be\ninferred from technical events — not from a push, not from the default\nregistry filling, not from a tag; any earlier «de-facto publication» reading\nis superseded by this ruling. The switch is one owner-only line\n(`public = true` in `formats/EPOCHS.toml`), and flipping it is the single\nmoment obligations, migrations, support windows and the handshake vow\nactivate. The wave-0 slots (epoch markers, recipe identity, must-understand,\nyank) are still built early — not because the window is closing silently, but\nbecause they are cheap now, constrain today's breaking not at all, and are\nwhat makes the later freeze possible at all. @status:spec/done",
-      "line": 423,
+      "line": 433,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#THE-PUBLIC-SWITCH"
     },
     {
@@ -65432,7 +66177,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "8. Laws for AI agents — gates, not admonitions",
-      "line": 445,
+      "line": 455,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#agents"
     },
     {
@@ -65441,7 +66186,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**Governing rule: a policy that exists only in\nprose is already broken.** Every rule below lives at one of three levels,\npreferring the highest: L1 — inexpressible in types (the agent physically\ncannot write it); L2 — inexpressible in the schema language; L3 — refused by\nCI. An agent's freedom is confined to three directories: schemas, codemods, and\napplication code; everything else is generated and drift-gated. @status:spec/plan",
-      "line": 446,
+      "line": 456,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#AGENT-PROSE-IS-BROKEN"
     },
     {
@@ -65450,7 +66195,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**The gate set.** G1: all wire I/O through\n`wire::publish/load(FormatId,…)`; unregistered formats untypeable (L1). G2:\nserde derives forbidden outside `**/generated/**` (L3). G3: regenerate +\n`git diff --exit-code` (L3). G4: a writer must not accept a wire-parsed type as\ninput (L1). G5: double-build under different clocks/host/locale/paths must be\nbyte-identical; `now()` banned in writer modules (L1+L3). G6:\n`rebuild --check` — tear down and reproject from a pinned input (L3). G7:\nschema/format changes demand a break note; golden wire-diff empty or covered\n(L3). G8: schema changes refused while the break window is closed (L3). G9: a\nvocabulary exists in exactly one schema; both wire sides, Rust types, docs and\nprose lists are generated from it (L1+L3). G10: every derived value carries a\nrecipe id; every recipe has a frozen golden (L3). G11: every published format\nhas a generated reader exercised in round-trip tests (L3). G12: clients must\nread the corpora of supported epochs; on sunset the same test flips to\nasserting the refusal text and recipe (L3). G13: schema/format edits never\nshare a commit with application code (L3). G14: config load returns no\n`Result` (L1). G15: manifest codemods edit the TOML document in place;\nserialising from a struct is refused (L3). @status:spec/plan",
-      "line": 452,
+      "line": 462,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#AGENT-GATES"
     },
     {
@@ -65459,7 +66204,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**A gate's message is the only documentation that is\nreliably read.** Every failure states what was violated, why the rule exists\n(one sentence), and the exact next command — generated from the registry and\nbreak notes, never hand-written. And the agent is left no decisions it gets\nwrong: strict-or-tolerant, optional-or-required, open-or-closed, field-or-epoch\neach have exactly one machine answer — policy from the generator, placement\nfrom the ladder, epoch from the wire-diff. The agent brings *intent*; the\nschema fixes form; the generator fixes policy. @status:spec/plan",
-      "line": 470,
+      "line": 480,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#AGENT-MESSAGES"
     },
     {
@@ -65468,7 +66213,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**8a. The wire-work decision path — what an agent\ndoes when its task touches a format, in order, no steps skipped:**\n(1) *Name the format.* Find it in `formats/REGISTRY.toml`; absent → this task\nmints a format, which is an owner-visible act — stop and surface. (2) *Place\nthe fact.* Walk the ladder (§5) from the bottom: does the lockfile bear it?\nthe exports? only then higher — and a new `vibe.toml` key is a years-long\nobligation demanding its own break note. (3) *Edit the schema, never the\ntype.* The change is made in `schemas/<format>/e<N>/…`; collections carry an\nexplicit empty-policy annotation; vocabularies live here and nowhere else.\n(4) *Regenerate* (`cargo xtask codegen`) and write behaviour only against\ngenerated types. (5) *Run the wire-diff.* Empty → done. Non-empty → write the\nbreak note (what · who fixes · recipe), and let the diff class decide: additive\nunder must-understand → light break, no epoch; shape or meaning of existing\ndata → epoch question, which is an owner fork. (6) *Never touch* `generated/**`\nby hand, vendored copies, or another epoch's frozen schema — those three edits\nare always wrong regardless of intent. @status:spec/plan",
-      "line": 478,
+      "line": 488,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#WIRE-DECISION-PATH"
     },
     {
@@ -65477,7 +66222,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "9. Honest risks and revisit triggers",
-      "line": 495,
+      "line": 505,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#risks"
     },
     {
@@ -65486,7 +66231,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**The recoverability bet.** Upstream sources vanish —\ndeleted repositories, force-pushes, privatisation. If rebuild-from-truth stops\nbeing possible and a content-addressed source archive is not built, the index\nsilently becomes authoritative and the whole system degrades into a\ncompatibility regime without its detector. *Trigger:* first observed\nunreachable source that the journal references → the archive subsystem becomes\na mandate, not an idea. This is the likeliest way this document is wrong. @status:spec/plan",
-      "line": 496,
+      "line": 506,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#RISK-RECOVERABILITY"
     },
     {
@@ -65495,7 +66240,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**The journal/projection rework is a real rebuild, not an\nedit.** Its cost gate is measured before commitment (the TZ's phase 0 measures\nthe three server mutation paths); if it exceeds the budget, the documented\nfallback is temporary unknown-capture on the three read-modify-write types —\nnamed here explicitly as the compromise it is, so it cannot masquerade as the\ndesign. @status:spec/plan",
-      "line": 503,
+      "line": 513,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#RISK-RMW-VOLUME"
     },
     {
@@ -65504,7 +66249,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**Foreign `curl | jq` will happen regardless of\ngenerated clients**, and there will never be a signal of it (raw files in git\ngive no telemetry, by design). The honest posture: assume raw parsing exists,\nkeep the narrow gate genuinely boring, and treat any change to it at the\nhighest severity class. @status:spec/plan",
-      "line": 509,
+      "line": 519,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#RISK-RAW-PARSERS"
     },
     {
@@ -65513,7 +66258,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**The degenerate-first guard.** The epoch machinery\nmust exist, but its first implementation may be degenerate — one live world and\n`min_client` in the handshake; parallel publication is built when the second\nworld is actually minted. A gate heavier than the system it guards gets walked\naround, and a walked-around gate is worse than none: it manufactures false\nconfidence. *Trigger for scaling up:* the first real epoch train, and no\nearlier. @status:spec/plan",
-      "line": 514,
+      "line": 524,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#RISK-OVERENGINEERING"
     },
     {
@@ -65522,7 +66267,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**Signature and authenticity remain parked by the\nowner's standing ruling (`BACKLOG.md` B-015): mechanism slots only, no\ncryptography.** What this document adds is ordering, not scope: the\nmust-understand set and the signature *slot* exist in the schema before any\ntolerance ships, because a tolerant reader that can silently ignore a future\nsignature field is a downgrade attack waiting; slots are irreversible-window\nwork, cryptography is not. @status:spec/plan",
-      "line": 521,
+      "line": 531,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#RISK-SECURITY-PARKED"
     },
     {
@@ -65531,7 +66276,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "10. Sources — the two-way links",
-      "line": 529,
+      "line": 539,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#sources"
     },
     {
@@ -65540,7 +66285,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**This contract's lore and evidence, so a cold reader entering\nfrom either side finds the other:** the architectural reasoning with rejected\nalternatives is\n[`vibevm/vibespecs/design/change-native-formats-verdict.xml`](../design/change-native-formats-verdict.xml)\n(the convened-council verdict, recorded near-verbatim); the research it stands\non — ten data-at-rest ecosystems, eight serialization formats, the\nclient-survival study, the wire census of this tree, four adversarial worker\nreviews and the reviewer's verdict — is imported whole at\n[`vibevm/vibespecs/research/schema-evolution-2026-08/`](../research/schema-evolution-2026-08/)\n(reading order: its `12-HANDOFF.xml §2`); the first build that implemented this\ncontract left its reasoning at the anchors of\n[PROP-005](../modules/vibe-index/PROP-005-package-index.xml) and in the docblocks\nits phases wrote, never in the plan that carried it. Where lore and\nthis contract disagree, this contract wins and the lore is corrected. @status:spec/plan",
-      "line": 530,
+      "line": 540,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#SOURCES"
     },
     {
@@ -71017,7 +71762,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:9a144cb31007b4fe56d834fd8ca6aed99933c43e607a3edc3a352cb5338f0f01",
+      "content_hash": "sha256:1707c4a7ec24fd7f3a1b7dba469acb674a14f3a9709208be77a0d2373784b7eb",
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "PROP-056 — Scraped project export and in-place VibeVM removal",
@@ -72493,7 +73238,7 @@
     },
     {
       "anchor": "implementation",
-      "content_hash": "sha256:db5d75c1f31f5e18869997da8d00366919ce053a4a883681e6fe4a2055edf3d2",
+      "content_hash": "sha256:53e1cc9227082483ae2c6f2b39c5ae48fb2f374492f0fb6511a9928be1e37567",
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "15. Implementation decomposition",
@@ -72546,12 +73291,30 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#IMPL-E"
     },
     {
+      "anchor": "JOURNAL-E2-TRANSITION",
+      "content_hash": "sha256:9d4fe11f7eb59d5170764f6e9b3c5478aaca31926a858febfb783bf038bb3261",
+      "doc_path": "common/PROP-056",
+      "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
+      "heading": "The pre-public internal\n      transaction journal moved from handwritten epoch 1 JSON to the strict generated\n      `scrape-transaction-journal/e2` root. Old epoch-1 state refuses with an actionable\n      restart recipe and is not migrated automatically; the public scrape plan, report and\n      health-result roots remain byte-identical at epoch 1. Root and named-object member\n      order is schema-declared; inline standard JTD discriminator arms use the pinned\n      generator's deterministic canonical field order. @status:impl/done",
+      "line": 1282,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#JOURNAL-E2-TRANSITION"
+    },
+    {
+      "anchor": "HEALTH-PERSISTENCE-E2-TRANSITION",
+      "content_hash": "sha256:166fc075ac9a170983d3afe75748d0d2cd4355ca3603f1100ed536042909c7ae",
+      "doc_path": "common/PROP-056",
+      "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
+      "heading": "The pre-public\n      prepared-health snapshot and canonical transaction health evidence use the strict\n      generated `scrape-prepared-health-snapshot/e2` and\n      `scrape-verification-health-evidence/e2` roots. An old handwritten prepared-health\n      shape refuses with the restart recipe rather than being guessed forward. Live file\n      identities and separately journaled verifier bundle bytes remain outside the plan\n      snapshot and are reattached only after their recorded digest, byte count, mode and\n      path identity agree. The public scrape plan, report and custom health-result roots\n      remain byte-identical at epoch 1; their health finding/report-row vocabulary has one\n      generated shared authority. @status:impl/done",
+      "line": 1289,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#HEALTH-PERSISTENCE-E2-TRANSITION"
+    },
+    {
       "anchor": "IMPL-F",
-      "content_hash": "sha256:dea0106e43028cc54412acd85315449a43b62e6d9195a274a51aa3464fbdd114",
+      "content_hash": "sha256:d0acd1273ec7bb376cd4fe19ba81d00af7ed0bab57b9dd7f747440be1a58e54e",
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "F — the bounded epoch-1 evidence includes\n      transaction/store fault matrices, composed production recovery, real Rust\n      Cargo/custom smokes, Windows races and explicit non-Windows fail-closed\n      probes. Wider ecosystem and host-dogfood rows remain planned above. @status:impl/done",
-      "line": 1282,
+      "line": 1299,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#IMPL-F"
     },
     {
@@ -72560,7 +73323,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "16. Foundational decisions",
-      "line": 1289,
+      "line": 1306,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#decisions"
     },
     {
@@ -72569,7 +73332,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "16.1 Contract over heuristics",
-      "line": 1290,
+      "line": 1307,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#decision-contract"
     },
     {
@@ -72578,7 +73341,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "Decision. One\n      strict project contract carries every policy choice; observation only\n      evaluates it. @status:spec/done",
-      "line": 1291,
+      "line": 1308,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#DECISION-CONTRACT"
     },
     {
@@ -72587,7 +73350,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "Why. Generated,\n      authored and accepted-product states can share names. Making policy data\n      is the only way to keep execution deterministic without guessing. @status:spec/done",
-      "line": 1294,
+      "line": 1311,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#WHY-CONTRACT"
     },
     {
@@ -72596,7 +73359,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "Rejected.\n      Delete-known-names, Git-ignore-as-ownership, prompt-per-file and LLM\n      classification at execution time: each is order/environment dependent or\n      non-reproducible. @status:spec/done",
-      "line": 1297,
+      "line": 1314,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#REJECT-CONTRACT"
     },
     {
@@ -72605,7 +73368,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "Revisit when.\n      A stable package-contributed recipe protocol can compile into the same\n      closed plan without executing package code during scrape. @status:spec/done",
-      "line": 1301,
+      "line": 1318,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#REVISIT-CONTRACT"
     },
     {
@@ -72614,7 +73377,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "16.2 Typed rewrites over regex and shell",
-      "line": 1306,
+      "line": 1323,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#decision-typed"
     },
     {
@@ -72623,7 +73386,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "Decision. Native\n      parsers own source/manifests; literal exact-replace is the only textual\n      escape hatch. @status:spec/done",
-      "line": 1307,
+      "line": 1324,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#DECISION-TYPED"
     },
     {
@@ -72632,7 +73395,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "Why. Identity,\n      cardinality and erasure equivalence are mechanically provable only over\n      syntax nodes and exact preimages. @status:spec/done",
-      "line": 1310,
+      "line": 1327,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#WHY-TYPED"
     },
     {
@@ -72641,7 +73404,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "Rejected. Regex\n      source rewrites, arbitrary cleanup hooks and whole-file TOML/JSON\n      regeneration: they damage product text or hide the changed surface. @status:spec/done",
-      "line": 1313,
+      "line": 1330,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#REJECT-TYPED"
     },
     {
@@ -72650,7 +73413,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "Revisit when. Add a\n      typed adapter when a real unsupported format has a parser and preservation\n      oracle. @status:spec/done",
-      "line": 1316,
+      "line": 1333,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#REVISIT-TYPED"
     },
     {
@@ -72659,7 +73422,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "16.3 Built-in health plus explicit custom oracle",
-      "line": 1321,
+      "line": 1338,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#decision-health"
     },
     {
@@ -72668,7 +73431,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "Decision. Common\n      ecosystems use declarative presets; unusual domain checks use a sealed\n      custom verifier with structured argv and protocol. @status:spec/done",
-      "line": 1322,
+      "line": 1339,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#DECISION-HEALTH"
     },
     {
@@ -72677,7 +73440,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "Why. Standard\n      operations should not require one-off scripts, while no finite preset\n      catalogue can express every project's definition of healthy. @status:spec/done",
-      "line": 1325,
+      "line": 1342,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#WHY-HEALTH"
     },
     {
@@ -72686,7 +73449,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "Rejected. One shell\n      string, after-only testing, silent missing test scripts, automatic retry\n      and treating exit 0 as proof beyond the declared oracle. @status:spec/done",
-      "line": 1328,
+      "line": 1345,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#REJECT-HEALTH"
     },
     {
@@ -72695,7 +73458,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "Revisit when. A new\n      ecosystem demonstrates a stable build/test vocabulary deserving a built-in\n      adapter. @status:spec/done",
-      "line": 1331,
+      "line": 1348,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#REVISIT-HEALTH"
     },
     {
@@ -72704,7 +73467,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "16.4 Export default, recoverable in-place option",
-      "line": 1336,
+      "line": 1353,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#decision-transaction"
     },
     {
@@ -72713,7 +73476,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "Decision.\n      Export is the safest delivery form; explicit in-place uses an external\n      journal and same-volume quarantine with contract-last commit. @status:spec/done",
-      "line": 1337,
+      "line": 1354,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#DECISION-TRANSACTION"
     },
     {
@@ -72722,7 +73485,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "Why. Project\n      `.vibe` cannot recover its own deletion, Git does not cover every\n      file, and multi-file mutation has no filesystem-wide atomic rename.\n      Journaled before/after states make interruption decidable. @status:spec/done",
-      "line": 1340,
+      "line": 1357,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#WHY-TRANSACTION"
     },
     {
@@ -72731,7 +73494,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "Rejected.\n      Journal under project `.vibe`, Git reset as rollback, delete-first\n      uninstall, blind recursive removal, external configurable journal, and\n      cleaning quarantine before verified commit. @status:spec/done",
-      "line": 1344,
+      "line": 1361,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#REJECT-TRANSACTION"
     },
     {
@@ -72740,7 +73503,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "Revisit when.\n      A platform offers a stronger atomic directory-tree primitive without\n      weakening cross-platform recovery semantics. @status:spec/done",
-      "line": 1348,
+      "line": 1365,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#REVISIT-TRANSACTION"
     },
     {
@@ -72749,7 +73512,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "17. History",
-      "line": 1354,
+      "line": 1371,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#history"
     },
     {
@@ -72758,7 +73521,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "2026-09-04: commissioned\n    directly by the owner after auditing how Rust Specmark, TypeScript JSDoc and\n    Go directive metadata behave when the Vibe tree disappears. The owner then\n    extended the request to an explicit default/alternate contract and\n    algorithmic standard/custom health checks, and ordered this feature ahead of\n    every remaining lifecycle R task. @status:spec/done",
-      "line": 1355,
+      "line": 1372,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#HISTORY-COMMISSIONED"
     },
     {
@@ -72767,7 +73530,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "2026-09-05:\n    implemented and ratified the Windows epoch-1 product surface: generated\n    plan/report wire, external journal/workspace, capability mutation, export,\n    in-place contract-last, rollback/recovery, exact-copy health, Cargo and the\n    narrow custom profile. Recorded the remaining manager-native lock, wider\n    preset/custom, mixed-language and host-dogfood work as explicit planned\n    scope. @status:impl/done",
-      "line": 1361,
+      "line": 1378,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#HISTORY-EPOCH1-WINDOWS"
     },
     {
