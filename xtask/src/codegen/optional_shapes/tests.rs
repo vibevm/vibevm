@@ -522,3 +522,6 @@ fn a_true_literal_refuses_like_any_other_named_default() -> Result<()> {
 
 #[path = "tests/stitch.rs"]
 mod stitch;
+
+#[path = "tests/union.rs"]
+mod union;

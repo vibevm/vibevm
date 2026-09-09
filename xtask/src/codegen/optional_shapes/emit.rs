@@ -45,12 +45,20 @@ const REQUIRED_NULLABLE_FORM: &str =
 /// The type declarations a generated file carries, as a first sweep
 /// reads them: the payload of an `Option<Box<…>>` field is classified
 /// against these — a `pub type` alias resolving to a primitive is a
-/// scalar, a `pub struct` name is a structure, and anything else (a
-/// vocabulary `pub enum`, a stranger) has no rule.
+/// scalar, a `pub struct` name is a structure, and a `pub enum` is classified
+/// by its own serde attributes as a tagged union, an untagged unsupported
+/// union, or a simple vocabulary.
 struct TypeDecls<'a> {
     aliases: BTreeMap<&'a str, &'a str>,
-    enums: BTreeSet<&'a str>,
+    enums: BTreeMap<&'a str, EnumClass>,
     structs: BTreeSet<&'a str>,
+}
+
+#[derive(Clone, Copy)]
+enum EnumClass {
+    Vocabulary,
+    Tagged,
+    Untagged,
 }
 
 /// The Rust side of the stitch, over text, so the tests drive exactly
@@ -207,11 +215,18 @@ fn lookup(
 fn type_decls(src: &str) -> TypeDecls<'_> {
     let mut decls = TypeDecls {
         aliases: BTreeMap::new(),
-        enums: BTreeSet::new(),
+        enums: BTreeMap::new(),
         structs: BTreeSet::new(),
     };
+    let mut tagged = false;
+    let mut untagged = false;
     for chunk in src.split_inclusive('\n') {
         let text = chunk.trim_end_matches(['\r', '\n']).trim();
+        if text.starts_with("#[") && text.ends_with(']') {
+            tagged |= text.starts_with("#[serde(tag = \"");
+            untagged |= text == "#[serde(untagged)]";
+            continue;
+        }
         if let Some(rest) = text.strip_prefix("pub type ")
             && let Some((name, target)) = rest.split_once('=')
         {
@@ -227,8 +242,17 @@ fn type_decls(src: &str) -> TypeDecls<'_> {
         } else if let Some(rest) = text.strip_prefix("pub enum ")
             && let Some(name) = rest.strip_suffix(" {")
         {
-            decls.enums.insert(name);
+            let class = if tagged {
+                EnumClass::Tagged
+            } else if untagged {
+                EnumClass::Untagged
+            } else {
+                EnumClass::Vocabulary
+            };
+            decls.enums.insert(name, class);
         }
+        tagged = false;
+        untagged = false;
     }
     decls
 }
@@ -295,8 +319,17 @@ fn classify_payload(
     if decls.structs.contains(ty) {
         return Ok(ShapeClass::Structure);
     }
-    if decls.enums.contains(ty) {
-        return Ok(ShapeClass::Vocabulary);
+    if let Some(class) = decls.enums.get(ty) {
+        return match class {
+            EnumClass::Vocabulary => Ok(ShapeClass::Vocabulary),
+            EnumClass::Tagged => Ok(ShapeClass::Union),
+            EnumClass::Untagged => bail!(
+                "{file}:{line}: the field `{ident}` carries the untagged enum `{ty}` — \
+                 only a generated `#[serde(tag = …)]` discriminator union has a \
+                 required-nullable shape; untagged unions remain unsupported.\n\
+                 Fix: use a JTD discriminator form, then run `cargo xtask codegen`."
+            ),
+        };
     }
     bail!(
         "{file}:{line}: the optional field `{ident}` carries the payload \

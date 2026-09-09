@@ -40,6 +40,10 @@
 //! which accepts a present value or `null` but makes absence a missing-
 //! field error. The rule is attached to the decision, not to any format,
 //! so every future required-nullable member gets the same strictness.
+//! A required-nullable discriminator union is this same row: the earlier
+//! union pass already boxed every recursive arm, so the field-level box is
+//! unnecessary and `Option<TaggedEnum>` preserves the flat tagged value or
+//! explicit `null`. Optional/omittable and untagged unions remain unsupported.
 //!
 //! The stitch: the schema side classifies each site by its RESOLVED form
 //! (a `ref` follows the document's own `definitions` — the vocabulary
@@ -94,6 +98,8 @@ enum ShapeClass {
     Vocabulary,
     /// A `properties` / `optionalProperties` form: a generated struct.
     Structure,
+    /// A `discriminator` form: a generated internally tagged enum.
+    Union,
     /// An `elements` / `values` form reached through a named alias. Direct
     /// collection fields remain owned by the empty-policy pass.
     Collection,
@@ -106,6 +112,7 @@ impl ShapeClass {
             ShapeClass::Scalar => "scalar",
             ShapeClass::Vocabulary => "vocabulary",
             ShapeClass::Structure => "structure",
+            ShapeClass::Union => "tagged union",
             ShapeClass::Collection => "collection",
         }
     }
@@ -330,6 +337,17 @@ fn site_decision(
         // A structure reads no annotation: the Option is the point, the
         // Box is the noise, and the decision is already made.
         ShapeClass::Structure => Decision::OptionValue,
+        ShapeClass::Union => {
+            bail!(
+                "schema {}: the optional field `{}` resolves to a discriminator union — \
+                 omittable unions remain unsupported; only a required member with \
+                 `nullable: true` may become `Option<TaggedEnum>`.\n\
+                 Fix: make the member required-nullable, or remove the union from this \
+                 optional site, then run `cargo xtask codegen`.",
+                schema.display(),
+                site.path
+            )
+        }
         ShapeClass::Collection => unreachable!("required collection refs returned above"),
         ShapeClass::Scalar => scalar_decision(site, schema)?,
         ShapeClass::Vocabulary => vocabulary_decision(site, schema)?,
@@ -382,8 +400,8 @@ fn resolve_form<'a>(
 
 /// Classify a resolved form by its JTD shape: a `type` form is a scalar,
 /// an `enum` is a vocabulary, and a `properties` / `optionalProperties`
-/// form is a structure. Anything else — a `discriminator` union or empty
-/// form — has no rule in this pass and refuses rather than passes for
+/// form is a structure, and a `discriminator` is a tagged union. Anything
+/// else — including an empty form — has no rule in this pass and refuses rather than passes for
 /// processed: the tally would otherwise catch it as a bare count, which
 /// names nothing.
 fn classify_form(form: &Map<String, Value>, path: &str, schema: &Path) -> Result<ShapeClass> {
@@ -396,11 +414,10 @@ fn classify_form(form: &Map<String, Value>, path: &str, schema: &Path) -> Result
     if form.contains_key("properties") || form.contains_key("optionalProperties") {
         return Ok(ShapeClass::Structure);
     }
-    let shape = if form.contains_key("discriminator") {
-        "a discriminator union"
-    } else {
-        "no JTD form at all"
-    };
+    if form.contains_key("discriminator") {
+        return Ok(ShapeClass::Union);
+    }
+    let shape = "no JTD form at all";
     bail!(
         "schema {}: the optional field `{}` resolves to {shape} — the pass \
          has no shape rule for it (an optional vocabulary, a tagged union or \
