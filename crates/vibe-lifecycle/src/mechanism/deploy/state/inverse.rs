@@ -1,15 +1,12 @@
 //! Durable causal marker for an in-progress opt-launcher saga inverse.
 
-use serde::{Deserialize, Serialize};
-
 use super::{DeployState, DeploymentHome};
 use crate::mechanism::deploy::error::DeployError;
 
 const FILE: &str = "inverse.json";
 const EPOCH: u32 = 1;
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) struct InverseRecord {
     pub(crate) schema: u32,
     pub(crate) generation: u32,

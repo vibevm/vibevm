@@ -5,7 +5,6 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARG
 use std::collections::BTreeMap;
 use std::path::Path;
 
-use serde::{Deserialize, Serialize};
 use vibe_wire::generated::deploy_receipt::DeployReceipt;
 
 use super::error::DeployError;
@@ -14,6 +13,9 @@ use super::state::{DeployState, DeploymentHome};
 use crate::native::{
     NativeArtifactOrigin, NativeArtifactRecordRoot, NativeMechanismBinding, PreparedNativeMechanism,
 };
+
+#[path = "sidecar/wire.rs"]
+pub(super) mod wire;
 
 pub(super) fn compare_restart(
     target: &vibe_core::manifest::DeployTarget,
@@ -119,18 +121,15 @@ pub(crate) const LOCK_RESOURCES_EPOCH: u32 = 1;
 /// committed binding, and an UPDATE has both at once — which is the whole
 /// point, because the crash window between them is where the inverse lock
 /// would otherwise be lost.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) struct LockResources {
     /// Record schema epoch; 1 in epoch 1.
     pub(crate) schema: u32,
     /// The binding the last finalised receipt owns — what an inverse
     /// operation must lock.
-    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub(crate) committed: Option<LockBinding>,
     /// The binding the deployment in flight will own — durable before its
     /// intent, and therefore before any external write could have begun.
-    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub(crate) pending: Option<LockBinding>,
 }
 
@@ -139,8 +138,7 @@ pub(crate) struct LockResources {
 /// `plan_hash` is what makes the binding attributable: a pending binding
 /// left by an earlier plan cannot be read as this plan's progress, exactly
 /// as the checkpoint ledger cannot.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) struct LockBinding {
     /// The deployment generation this binding belongs to.
     pub(crate) generation: u32,
@@ -150,7 +148,6 @@ pub(crate) struct LockBinding {
     /// declared order.
     pub(crate) resources: Vec<String>,
     /// Exact native runtime identity, absent for builtin providers.
-    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub(crate) native: Option<NativeProviderBinding>,
 }
 

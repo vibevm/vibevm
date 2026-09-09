@@ -46,7 +46,6 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARG
 
 use std::path::{Path, PathBuf};
 
-use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use vibe_safefs::{LockGuard, Project};
 use vibe_wire::behaviour::deploy_records::{validate_intent, validate_receipt};
@@ -58,6 +57,8 @@ use super::sidecar::{LOCK_RESOURCES_FILE, LockResources};
 
 mod inverse;
 pub(crate) use inverse::InverseRecord;
+mod wire;
+use wire::StateRecord;
 
 // The provider-facing checkpoint sink lives in its own cell and is
 // re-exported here, so every existing `state::CheckpointLedger` use site
@@ -94,8 +95,7 @@ pub(crate) const CHECKPOINT_EPOCH: u32 = 1;
 ///
 /// `plan_hash` ties the ledger to the intent it belongs to, so a ledger
 /// left by an earlier plan cannot be read as progress against this one.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) struct CheckpointRecord {
     pub(crate) schema: u32,
     pub(crate) plan_hash: String,
@@ -376,15 +376,7 @@ impl DeployState {
         let Some(record) = self.read::<CheckpointRecord>(&home.member(CHECKPOINT_FILE))? else {
             return Ok(None);
         };
-        if record.schema != CHECKPOINT_EPOCH {
-            return Err(DeployError::RecordInvalid {
-                record: CHECKPOINT_FILE,
-                reason: format!(
-                    "schema epoch {} is not the {CHECKPOINT_EPOCH} this engine writes",
-                    record.schema
-                ),
-            });
-        }
+        wire::validate_checkpoint(&record)?;
         if record.plan_hash != plan_hash {
             return Ok(None);
         }
@@ -397,6 +389,7 @@ impl DeployState {
         home: &DeploymentHome,
         record: &CheckpointRecord,
     ) -> Result<(), DeployError> {
+        wire::validate_checkpoint(record)?;
         self.publish(&home.member(CHECKPOINT_FILE), record)
     }
 
@@ -494,10 +487,10 @@ impl DeployState {
     }
 
     /// Encode and publish one JSON record atomically.
-    fn publish<T: Serialize>(&self, relative: &str, value: &T) -> Result<(), DeployError> {
-        let bytes = serde_json::to_vec_pretty(value).map_err(|error| DeployError::StateWrite {
+    fn publish<T: StateRecord>(&self, relative: &str, value: &T) -> Result<(), DeployError> {
+        let bytes = value.encode().map_err(|error| DeployError::StateWrite {
             path: relative.to_owned(),
-            reason: error.to_string(),
+            reason: error,
         })?;
         self.project
             .write_atomic(relative, &bytes)
@@ -509,7 +502,7 @@ impl DeployState {
     }
 
     /// Read and decode one JSON record, or `None` when it is not there.
-    fn read<T: for<'de> Deserialize<'de>>(&self, relative: &str) -> Result<Option<T>, DeployError> {
+    fn read<T: StateRecord>(&self, relative: &str) -> Result<Option<T>, DeployError> {
         read_record(&self.project, relative)
     }
 
@@ -540,7 +533,7 @@ impl DeployState {
 /// [`DeployStateView`](super::view::DeployStateView). One decoder, one
 /// refusal wording, no chance of a planner and an apply disagreeing about
 /// what a state home holds.
-pub(super) fn read_record<T: for<'de> Deserialize<'de>>(
+pub(super) fn read_record<T: StateRecord>(
     project: &Project,
     relative: &str,
 ) -> Result<Option<T>, DeployError> {
@@ -553,9 +546,9 @@ pub(super) fn read_record<T: for<'de> Deserialize<'de>>(
     else {
         return Ok(None);
     };
-    let value = serde_json::from_slice(&bytes).map_err(|error| DeployError::StateRead {
+    let value = T::decode(&bytes).map_err(|error| DeployError::StateRead {
         path: relative.to_owned(),
-        reason: error.to_string(),
+        reason: error,
     })?;
     Ok(Some(value))
 }

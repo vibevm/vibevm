@@ -4,7 +4,6 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARG
 
 use std::path::{Path, PathBuf};
 
-use serde::{Deserialize, Serialize};
 use vibe_core::manifest::{ArtifactKind, DeployTarget};
 use vibe_wire::generated::artifact_record::ArtifactShape;
 use vibe_wire::generated::deploy_intent::DeployIntent;
@@ -23,8 +22,7 @@ use crate::mechanism::{
 };
 
 /// Exact package-native runtime identity retained for process restart.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) struct NativeProviderBinding {
     pub(crate) target: String,
     pub(crate) mechanism: String,

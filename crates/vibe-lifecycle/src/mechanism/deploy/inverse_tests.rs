@@ -53,7 +53,7 @@ fn free(state_home: &std::path::Path, name: &str) -> bool {
 fn sidecar(state_home: &std::path::Path, target_id: &str) -> Option<LockResources> {
     let home = DeploymentHome::new(state_home, "org.example/demo", None, target_id);
     let bytes = std::fs::read(home.directory().join(LOCK_RESOURCES_FILE)).ok()?;
-    Some(serde_json::from_slice(&bytes).expect("the sidecar is this engine's own shape"))
+    Some(super::sidecar::wire::decode(&bytes).expect("the sidecar is this engine's own shape"))
 }
 
 /// Replace one deployment's durable lock record.
@@ -252,7 +252,7 @@ fn a_reference_owner_refuses_to_reverse_without_its_recorded_binding() {
     write_sidecar(
         &state_home,
         "codex-entry",
-        &serde_json::to_vec_pretty(&moved).expect("the fixture record encodes"),
+        &super::sidecar::wire::encode(&moved).expect("the fixture record encodes"),
     );
     let error = undeploy_resolved(
         &execution,
@@ -415,7 +415,7 @@ fn an_ordinary_mismatched_sidecar_never_uses_the_legacy_fallback() {
     write_sidecar(
         &state_home,
         "local-helper",
-        &serde_json::to_vec_pretty(&record).expect("the record encodes"),
+        &super::sidecar::wire::encode(&record).expect("the record encodes"),
     );
 
     let error = undeploy_resolved(

@@ -34,7 +34,7 @@ fn sidecar(fixture: &Fixture, target_id: &str) -> Option<LockResources> {
             .join(LOCK_RESOURCES_FILE),
     )
     .ok()?;
-    Some(serde_json::from_slice(&bytes).expect("the sidecar is this engine's own shape"))
+    Some(super::sidecar::wire::decode(&bytes).expect("the sidecar is this engine's own shape"))
 }
 
 /// Overwrite one deployment's durable lock record.
@@ -43,7 +43,7 @@ fn write_sidecar(fixture: &Fixture, target_id: &str, record: &LockResources) {
         home(fixture, target_id)
             .directory()
             .join(LOCK_RESOURCES_FILE),
-        serde_json::to_vec_pretty(record).expect("the fixture record encodes"),
+        super::sidecar::wire::encode(record).expect("the fixture record encodes"),
     )
     .expect("the fixture record writes");
 }

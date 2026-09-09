@@ -8,7 +8,7 @@
 
 use specmark::verifies;
 
-use super::state::{CheckpointRecord, DeployState, DeploymentHome};
+use super::state::{DeployState, DeploymentHome};
 use super::support::{Faults, Fixture, FixtureProvider, Witness, selected, selection, target};
 use super::{DeployError, apply_selection};
 
@@ -102,8 +102,8 @@ fn apply_checkpoints_each_completed_operation() {
 
     let ledger = state_file(&fixture, "local-helper", "checkpoints.json")
         .expect("one completed operation is durable");
-    let record: CheckpointRecord =
-        serde_json::from_value(ledger).expect("the ledger is this engine's own shape");
+    let record: vibe_wire::generated::deploy_checkpoints::DeployCheckpoints =
+        serde_json::from_value(ledger).expect("the ledger is this engine's own generated shape");
     assert_eq!(record.schema, 1);
     assert_eq!(record.completed, ["bin/helper"]);
     assert!(

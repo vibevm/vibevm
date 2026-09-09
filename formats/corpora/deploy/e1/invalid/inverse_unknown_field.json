@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "generation": 4,
+  "provider_pin": "org.example/providers#native",
+  "resource": "bin/tool",
+  "receipt_post_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "prior_state_handle": "rollback/generation-3",
+  "force": true
+}

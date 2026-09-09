@@ -1,0 +1,98 @@
+{
+  "metadata": {
+    "description": "Epoch-1 engine-owned deploy lock sidecar. It durably retains committed and pending generation bindings, including the exact package-native provider image identity needed for read-only process-restart rehydration. Neither slot is reconstructible after a crash.",
+    "rustOptions": {
+      "package": "vibe_wire::deploy_lock_resources"
+    },
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-054#R8-DEPLOY-RUNTIME"
+    },
+    "x-wire-order": ["schema", "committed", "pending"]
+  },
+  "properties": {
+    "schema": {
+      "type": "uint32",
+      "metadata": {
+        "description": "Record schema epoch; exactly 1 in epoch 1."
+      }
+    }
+  },
+  "optionalProperties": {
+    "committed": {
+      "ref": "lock_binding",
+      "metadata": {
+        "x-default": null,
+        "description": "The binding owned by the last finalised receipt."
+      }
+    },
+    "pending": {
+      "ref": "lock_binding",
+      "metadata": {
+        "x-default": null,
+        "description": "The binding durably staged for the deployment in flight."
+      }
+    }
+  },
+  "definitions": {
+    "lock_binding": {
+      "metadata": {
+        "description": "One generation's physical lock set joined to the exact plan and optional native provider runtime that produced it.",
+        "x-wire-order": ["generation", "plan_hash", "resources", "native"]
+      },
+      "properties": {
+        "generation": { "type": "uint32" },
+        "plan_hash": { "type": "string" },
+        "resources": {
+          "elements": { "type": "string" },
+          "metadata": { "x-empty": "emit" }
+        }
+      },
+      "optionalProperties": {
+        "native": {
+          "ref": "native_provider_binding",
+          "metadata": { "x-default": null }
+        }
+      }
+    },
+    "native_provider_binding": {
+      "metadata": {
+        "description": "Exact package-native deploy provider identity retained for process restart.",
+        "x-wire-order": ["target", "mechanism", "pin", "descriptor_id", "protocol", "provider_version", "provider_hash", "provider_root", "platform", "record_root", "origin", "record_id", "record_path", "image", "image_digest", "image_bytes"]
+      },
+      "properties": {
+        "target": { "type": "string" },
+        "mechanism": { "type": "string" },
+        "pin": { "type": "string" },
+        "descriptor_id": { "type": "string" },
+        "protocol": { "type": "uint32" },
+        "provider_version": { "type": "string" },
+        "provider_hash": {
+          "type": "string",
+          "nullable": true
+        },
+        "provider_root": { "type": "string" },
+        "platform": { "type": "string" },
+        "record_root": { "type": "string" },
+        "origin": { "type": "string" },
+        "record_id": {
+          "type": "string",
+          "nullable": true
+        },
+        "record_path": {
+          "type": "string",
+          "nullable": true
+        },
+        "image": { "type": "string" },
+        "image_digest": { "type": "string" },
+        "image_bytes": { "ref": "image_byte_count" }
+      }
+    },
+    "image_byte_count": {
+      "type": "float64",
+      "metadata": {
+        "description": "An exact non-negative byte count. Stock JTD has no uint64 form, so the schema's numeric form is narrowed by generated Rust to u64; decimals, negatives and overflow refuse at the generated reader.",
+        "x-rust-type": "u64"
+      }
+    }
+  }
+}

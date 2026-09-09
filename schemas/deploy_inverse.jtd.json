@@ -1,0 +1,20 @@
+{
+  "metadata": {
+    "description": "Epoch-1 engine-owned causal marker for an in-progress deploy saga inverse. It binds the generation, exact provider pin, resource, post-apply receipt digest and prior-state handle that recovery must retain until independently verified restoration.",
+    "rustOptions": {
+      "package": "vibe_wire::deploy_inverse"
+    },
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-054#R8-DEPLOY-RUNTIME"
+    },
+    "x-wire-order": ["schema", "generation", "provider_pin", "resource", "receipt_post_digest", "prior_state_handle"]
+  },
+  "properties": {
+    "schema": { "type": "uint32" },
+    "generation": { "type": "uint32" },
+    "provider_pin": { "type": "string" },
+    "resource": { "type": "string" },
+    "receipt_post_digest": { "type": "string" },
+    "prior_state_handle": { "type": "string" }
+  }
+}

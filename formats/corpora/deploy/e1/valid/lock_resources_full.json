@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "committed": {
+    "generation": 2,
+    "plan_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "resources": [
+      "bin/tool"
+    ]
+  },
+  "pending": {
+    "generation": 3,
+    "plan_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "resources": [
+      "config/tool.json"
+    ],
+    "native": {
+      "target": "tool",
+      "mechanism": "deploy:vibe-bin",
+      "pin": "org.example/providers#native",
+      "descriptor_id": "native",
+      "protocol": 1,
+      "provider_version": "1.2.3",
+      "provider_hash": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "provider_root": "slots/provider",
+      "platform": "windows-x86_64",
+      "record_root": "slot",
+      "origin": "source-record",
+      "record_id": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "record_path": ".vibe/state/artifacts/dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd.json",
+      "image": ".vibe/native/images/provider.dll",
+      "image_digest": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "image_bytes": 4294967297
+    }
+  }
+}
