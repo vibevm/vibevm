@@ -13,8 +13,12 @@ adapter/rehydration and M-007 native Build/Package replacement are accepted.
 The M-007 chain `00cabac8`, `93df9d28`, `e9388559`, `2193e6e7`, `fe0eb9df`,
 `0ca2b781`, `123ac504`, `68ce9078`, `55cfbf94` covers separate wires/SDK,
 all-role carriage, prepared adapters, provider-fresh rollback and a real
-installed two-cdylib Build→A2→Package E2E with no builtin fallback. R8 is done;
-final conform/full acceptance, owner acceptance and mirror/push remain open.
+installed two-cdylib Build→A2→Package E2E with no builtin fallback. R8 is done.
+Technical final serialization, conform, the unchanged full panel and both
+mirrors are complete at mirrored checkpoint
+`39fa498a34d30c7744c8598c9f1a0673a6aeee62`. The epic is **ready for owner
+final inspection**; that inspection in the current chat is the sole remaining
+acceptance item, and this ledger does not fabricate its outcome.
 
 ## 1. Why this ledger exists
 
@@ -2235,7 +2239,41 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
 
 ### Final serialization
 
-Apply every spec-debt amendment/status with landed evidence, repair the
-campaign path/format migration and stability instrument, run both owner scenarios, independent audit, final
-unchanged full panel, and mirror. The epic is not complete before every row in
-§3 is `done` or explicitly `future` by the owner design.
+Every technical serialization obligation is complete: the promoted specs and
+statuses carry landed evidence, path/format and stability instruments are
+green, both owner scenarios and the retry scenario pass, the independent
+audits and unchanged full panel pass, and both remotes mirror the checkpoint.
+The sole remaining acceptance item is owner final inspection in the current
+chat; until that happens the epic is ready for inspection, not owner-accepted.
+
+## 8. Canonical final technical evidence — mirrored checkpoint
+
+Checkpoint: `39fa498a34d30c7744c8598c9f1a0673a6aeee62`, present identically at
+`origin/main` and `github/main`; the mirror check is green.
+
+- Conform: **59 acknowledged**, split exactly as 5 ambient-environment,
+  41 no-unwrap and 13 unsafe; **0 new**, **0 frozen**.
+- Owner scenarios: phase-announcer commissioning **1/1**; native XML minify
+  parity plus Cargo freshness **1/1**; fail-once native build preservation and
+  exact retry convergence **1/1**.
+- Full panel: `CARGO_BUILD_JOBS=4` under Git-for-Windows ran
+  `tools/self-check.sh` through nominal stages 1–47 plus auxiliary stages
+  48–54, exited 0 after **1891.625s**, and ended `self-check: all green`.
+  Workspace tests consumed **1198s**; both user-home tripwires were green.
+- Generated and wire state: codegen processed **78 schemas / 104 submodules**
+  cleanly; the handwritten-wire derive ratchet is exactly **167** total, with
+  `vibe-core=33`, `vibe-lifecycle=2`, `vibe-scrape=5`, `xtask=12`; engine sync
+  is **51 pairs / 9 sets**, clean.
+- Specmap: **7053 units / 3388 tagged code items / 2945 edges**, 26 warnings,
+  **0 suspects**, **0 gated orphans**, **0 unresolved host edges**.
+- No-transform reinstall: the offline reinstall preserved all **five** boot
+  files with aggregate SHA-256
+  `7c178ca99ac090b1b604c4adf88273fc5a8ebc105c8eee61b78381e130cabaa6`
+  and produced zero boot diff and zero other tracked diff.
+- Facts: exhaustive scope covered **548 files** with **0 errors / 0 warnings**.
+  Judging debt remains a report-only measurement: **2501 tasks / 154 files**,
+  **0 orphaned decisions**, **484 stale rows**; no debt was rewritten by the
+  receipt.
+- Acceptance boundary: all technical, full-panel, conform, generated,
+  traceability, boot-stability and mirror work is complete. **Owner final
+  inspection in the current chat remains pending** and is the only open item.

@@ -1,13 +1,15 @@
 # ТЗ: lifecycle-движок и машина расширений — входная точка исполнителя
 
-_STATUS: В РАБОТЕ — R1–R8 реализованы, включая R6.5-D public compiler
+_STATUS: READY FOR OWNER FINAL INSPECTION — R1–R8 реализованы, включая R6.5-D public compiler
 commissioning (`ee7f6f2d`, `def9909a`, `56307492`). В R8 приняты artifact/package/deploy
 builtins, platform applicability, нативный deploy-provider с read-only
 rehydration и обязательный M-007 native replacement для Build/Package через
 `00cabac8`, `93df9d28`, `e9388559`, `2193e6e7`, `fe0eb9df`, `0ca2b781`,
-`123ac504`, `68ce9078`, `55cfbf94`. R8 закрыт `impl/done`; открыты только
-финальные conform/full acceptance, owner acceptance и mirror/push, поэтому
-эпик целиком ещё не закрыт.
+`123ac504`, `68ce9078`, `55cfbf94`. R8 закрыт `impl/done`; технические
+conform/full/generated/specmap/boot-stability gates и оба зеркала зелёные на
+mirrored checkpoint `39fa498a34d30c7744c8598c9f1a0673a6aeee62`. Единственный
+оставшийся acceptance item — финальная инспекция владельца в текущем чате;
+owner acceptance здесь не заявляется.
 Эта шапка — краткий указатель, не второй журнал. Точная гранулярная сверка,
 физический recovery-аудит и действующий atom-level dependency plan:
 `LIFECYCLE-EXTENSIONS-IMPLEMENTATION-LEDGER.md`. Спека-закон:
@@ -334,8 +336,9 @@ rollback. Реальный установленный пакет поставл�
 
 Это не расширяет `vibe install`: dependency materialisation остаётся его
 немеханизмной install-фазой. Установка приложения остаётся deploy-role
-механизмом. Открыт только финальный campaign gate; финальный self-check,
-owner acceptance и mirror/push здесь не заявляются выполненными.
+механизмом. Финальный technical campaign gate, conform и mirror/push завершены
+на `39fa498a34d30c7744c8598c9f1a0673a6aeee62`; открыта только owner final
+inspection в текущем чате, и её результат здесь не предрешается.
 
 Цели deploy уже выбраны владельцем; `##OPEN-DEPLOY-TARGETS` не является
 развилкой. Полная форма и порядок — в
@@ -405,7 +408,9 @@ install / compiler периметры сверяются с ledger перед fa
 
 ## §7. Definition of Done эпика
 
-Все восемь волн посажены; панель зелёная; оба сценария §10 зелёные; лейны без трансформов
-байт-стабильны; `SPEC-DEBT-LIFECYCLE.md` полон (по волне на секцию) и передан владельцу;
-статусы фактов спек не тронуты исполнителем; ничего из §1 не нарушено. Финальное слово —
-владельческая инспекция.
+Все восемь волн посажены; полная technical panel зелёная; оба сценария §10 и
+fail-once retry зелёные; лейны без трансформов байт-стабильны; spec promotion,
+conform, specmap, no-transform reinstall и оба зеркала завершены на
+`39fa498a34d30c7744c8598c9f1a0673a6aeee62`; ничего из §1 не нарушено. Эпик
+готов к приёмке, но не объявлен принятым: единственный оставшийся пункт —
+финальная инспекция владельца в текущем чате.
