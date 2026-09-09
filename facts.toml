@@ -242,4 +242,10 @@ exclude = [
     # `vibedeps` path component is an always-on exclusion (`DEFAULT_EXCLUDES`),
     # so this pattern neither reaches them nor needs to.
     "vibevm/vibepacks/**/vibevm/vibespecs/flows/discovery-prompt/DISCOVERY-PROMPT.xml",
+    # RETIRED Z.AI/GLM CLAUDE EXECUTION LANE — one historical overview, not a
+    # living host contract. The owner cancelled and retired this lane and
+    # explicitly requires its canonical package source to remain untouched.
+    # Exclude only the uninstalled README retained as package history; the
+    # package's XML specs and the wider namespace remain observed.
+    "vibevm/vibepacks/org.vibevm.world/zai-glm-claude/v1.0.0/README.md",
 ]
