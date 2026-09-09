@@ -20,7 +20,9 @@ use super::shared_module::emitted_name;
 use super::vocabulary::Resolved;
 
 mod emit;
+mod reachability;
 pub(crate) use emit::{append_consumer_adapter, rewrite_consumer};
+use reachability::{is_pure_ref, reachable_definition_names};
 
 const MARKER: &str = "x-reader-projection";
 const PERMISSIVE: &str = "permissive";
@@ -45,6 +47,7 @@ pub(crate) struct ProjectionScan {
 struct ScanContext<'a> {
     fragment_names: &'a BTreeSet<String>,
     schema: &'a Path,
+    referenced_definitions: BTreeSet<String>,
     scan: ProjectionScan,
     consumed: BTreeMap<String, usize>,
 }
@@ -88,6 +91,7 @@ pub(crate) fn scan_schema(
     let mut context = ScanContext {
         fragment_names,
         schema,
+        referenced_definitions: reachable_definition_names(doc),
         scan: ProjectionScan::default(),
         consumed: BTreeMap::new(),
     };
@@ -219,6 +223,9 @@ fn scan_form(
 
     if let Some(definitions) = object.get("definitions").and_then(Value::as_object) {
         for (name, definition) in definitions {
+            if is_pure_ref(definition) && !context.referenced_definitions.contains(name) {
+                continue;
+            }
             scan_form(
                 definition,
                 &emitted_name(name),

@@ -465,6 +465,58 @@ fn invalid_marker_shapes_and_values_refuse() {
 }
 
 #[test]
+fn compatibility_aliases_preserve_names_without_hiding_real_readers() {
+    let fragments = BTreeSet::from(["payload".to_string()]);
+    let compatibility = json!({
+        "properties": {
+            "payload": {
+                "ref": "payload",
+                "metadata": {"x-reader-projection": "permissive"}
+            }
+        },
+        "definitions": {
+            "legacy_payload": {"ref": "legacy_payload_tail"},
+            "legacy_payload_tail": {"ref": "payload"}
+        }
+    });
+    let scan = scan_schema(
+        &compatibility,
+        Path::new("schemas/request.jtd.json"),
+        &fragments,
+    )
+    .unwrap();
+    assert_eq!(scan.uses.len(), 1);
+    assert!(scan.ordinary_roots.is_empty());
+
+    let hidden_reader = json!({
+        "properties": {
+            "payload": {
+                "ref": "payload",
+                "metadata": {"x-reader-projection": "permissive"}
+            }
+        },
+        "definitions": {
+            "hidden": {"properties": {"value": {"ref": "legacy_payload"}}},
+            "legacy_payload": {"ref": "payload"}
+        }
+    });
+    let scan = scan_schema(
+        &hidden_reader,
+        Path::new("schemas/request.jtd.json"),
+        &fragments,
+    )
+    .unwrap();
+    assert_eq!(scan.ordinary_roots, BTreeSet::from(["payload".to_string()]));
+
+    let used = json!({
+        "properties": {"legacy": {"ref": "legacy_payload"}},
+        "definitions": {"legacy_payload": {"ref": "payload"}}
+    });
+    let scan = scan_schema(&used, Path::new("schemas/request.jtd.json"), &fragments).unwrap();
+    assert_eq!(scan.ordinary_roots, BTreeSet::from(["payload".to_string()]));
+}
+
+#[test]
 fn two_markers_may_not_resolve_to_one_generated_field() {
     let fragments = BTreeSet::from(["payload".to_string()]);
     let schema = json!({
