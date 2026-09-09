@@ -6,7 +6,8 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#evidence");
 
-use crate::model::{Marker, Stage, State};
+use crate::model::{ArtifactKind, Marker, Stage, State};
+use crate::terminal::ProviderArtifactEvidence;
 use serde::{Deserialize, Serialize};
 
 /// External facts about one unit, whatever the provider can supply.
@@ -43,6 +44,33 @@ pub struct Evidence {
 /// ```
 pub trait EvidenceProvider {
     fn evidence_for(&self, unit_addr: &str) -> Option<Evidence>;
+
+    /// Observe one typed terminal artifact without collapsing provider
+    /// absence into a known zero. Existing providers need implement only
+    /// [`EvidenceProvider::evidence_for`]; this adapter preserves their
+    /// legacy behaviour for implementation and verification evidence.
+    fn artifact_evidence_for(
+        &self,
+        unit_addr: &str,
+        artifact: ArtifactKind,
+        _reference: Option<&str>,
+    ) -> ProviderArtifactEvidence {
+        let Some(evidence) = self.evidence_for(unit_addr) else {
+            return ProviderArtifactEvidence::Unavailable;
+        };
+        let count = match artifact {
+            ArtifactKind::Implementation => evidence.implements,
+            ArtifactKind::Verification => evidence.verifies,
+            _ => return ProviderArtifactEvidence::Unavailable,
+        };
+        ProviderArtifactEvidence::Known {
+            count,
+            // Legacy refs merge implements and verifies locators. Reusing
+            // that bag for either typed artifact would forge attribution;
+            // typed providers override this method when they can separate it.
+            locators: None,
+        }
+    }
 }
 
 /// The null provider: always empty.
@@ -100,5 +128,28 @@ mod tests {
             refs: vec![],
         };
         assert!(mismatch(&marker(Stage::Test, State::Done), &proven).is_none());
+    }
+
+    #[test]
+    fn legacy_adapter_never_attributes_the_merged_ref_bag_to_one_verb() {
+        struct Legacy;
+        impl EvidenceProvider for Legacy {
+            fn evidence_for(&self, _unit_addr: &str) -> Option<Evidence> {
+                Some(Evidence {
+                    implements: 1,
+                    verifies: 1,
+                    refs: vec!["implementation.rs:1".into(), "verification.rs:2".into()],
+                })
+            }
+        }
+        for kind in [ArtifactKind::Implementation, ArtifactKind::Verification] {
+            assert_eq!(
+                Legacy.artifact_evidence_for("a.md#A", kind, None),
+                ProviderArtifactEvidence::Known {
+                    count: 1,
+                    locators: None,
+                }
+            );
+        }
     }
 }

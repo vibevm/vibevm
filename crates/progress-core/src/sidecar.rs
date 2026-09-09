@@ -38,7 +38,7 @@ use std::path::{Path, PathBuf};
 
 /// Schema of the sidecar file. A foreign value reads as an empty store:
 /// the payload is regenerable, so there is nothing here worth migrating.
-pub const PAYLOAD_SCHEMA: u32 = 2;
+pub const PAYLOAD_SCHEMA: u32 = 3;
 
 /// The one file a payload bucket holds.
 pub const PAYLOAD_FILE: &str = "payloads.json";
@@ -389,5 +389,26 @@ mod tests {
         assert_eq!(got.markers.len(), doc.markers.len());
         assert!(back.get("a.md", "deadbeef").is_none(), "stale hash");
         assert!(back.get("b.md", &doc.content_hash).is_none(), "wrong path");
+    }
+
+    #[test]
+    fn schema_two_without_exact_marker_ownership_is_a_clean_cache_miss() {
+        let dir = tempfile::tempdir().expect("tempdir");
+        let bucket = dir.path().join("bucket");
+        let doc = crate::parse::parse_document(
+            "a.md",
+            "@fact:A body @requires:specification @spec/done\n",
+        );
+        Payloads::load(Some(bucket.clone())).store([&doc]);
+        let path = bucket.join(PAYLOAD_FILE);
+        let current = std::fs::read_to_string(&path).expect("stored schema three");
+        std::fs::write(&path, current.replacen("\"schema\":3", "\"schema\":2", 1))
+            .expect("downgrade fixture");
+        assert!(
+            Payloads::load(Some(bucket))
+                .get("a.md", &doc.content_hash)
+                .is_none(),
+            "schema two reparses rather than guessing marker ownership"
+        );
     }
 }

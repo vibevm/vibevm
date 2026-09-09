@@ -19,6 +19,7 @@ use progress_core::{cache, journal, rollup, scope, sidecar, state};
 use vibe_registry::ShellGit;
 
 use crate::cli::ProgressCommonArgs;
+use crate::commands::progress_evidence::EvidenceSnapshot;
 
 /// The observed tree + campaign zone, resolved once per invocation.
 pub(crate) struct Ground {
@@ -277,7 +278,19 @@ impl Refresh {
 /// derived, lives outside the tree, and a failure to write it is a slower
 /// next run — so it goes second and says nothing either way.
 pub(crate) fn refresh_state(g: &mut Ground) -> Result<Refresh> {
-    let Some(campaign) = &g.campaign else {
+    if g.campaign.is_none() {
+        return Ok(Refresh::default());
+    }
+    let evidence = EvidenceSnapshot::load(&g.root)?;
+    refresh_state_with_evidence(g, &evidence)
+}
+
+/// Refresh using a snapshot preloaded before a command's earlier writes.
+pub(crate) fn refresh_state_with_evidence(
+    g: &mut Ground,
+    evidence: &EvidenceSnapshot,
+) -> Result<Refresh> {
+    let Some(campaign) = g.campaign.as_ref() else {
         return Ok(Refresh::default());
     };
     let run_dir = campaign.join("run");
@@ -317,6 +330,10 @@ pub(crate) fn refresh_state(g: &mut Ground) -> Result<Refresh> {
         &phase,
         c,
     )?);
+    writes.insert(
+        "terminal.json".to_string(),
+        state::write_terminal_state(&run_dir.join("state"), g.docs.iter(), evidence.provider())?,
+    );
     Ok(Refresh {
         campaign: Some(campaign.clone()),
         writes,

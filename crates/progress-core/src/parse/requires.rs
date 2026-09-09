@@ -164,9 +164,9 @@ fn malformed_annotation(start: usize) -> TailAnnotation {
 }
 
 fn last_token(s: &str) -> (usize, &str) {
-    let start = s
-        .rfind(char::is_whitespace)
-        .map_or(0, |at| at + s[at..].chars().next().unwrap().len_utf8());
+    let start = s.rfind(char::is_whitespace).map_or(0, |at| {
+        at + s[at..].chars().next().map_or(0, char::len_utf8)
+    });
     (start, &s[start..])
 }
 
@@ -299,7 +299,13 @@ pub(super) fn mask_link_destinations(s: &str) -> String {
             i += 1;
         }
     }
-    String::from_utf8(bytes).expect("blanking whole UTF-8 characters preserves UTF-8")
+    match String::from_utf8(bytes) {
+        Ok(masked) => masked,
+        // Replacing source bytes only with ASCII spaces preserves UTF-8. If
+        // that invariant ever changes, retain the original visible text
+        // rather than manufacturing a lossy parse surface.
+        Err(_) => s.to_string(),
+    }
 }
 
 fn is_escaped(s: &str, at: usize) -> bool {
@@ -336,7 +342,7 @@ fn destination_close(s: &str, start: usize) -> Option<(usize, usize)> {
     let mut j = start;
     let mut escaped = false;
     while j < s.len() && depth > 0 {
-        let c = s[j..].chars().next().expect("j is a character boundary");
+        let c = s[j..].chars().next()?;
         if escaped {
             escaped = false;
             j += c.len_utf8();

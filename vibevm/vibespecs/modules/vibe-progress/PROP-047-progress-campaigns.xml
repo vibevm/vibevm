@@ -47,9 +47,9 @@ stable.</CONFIG-MOVED-TO-FACTS></p>
   unmarked paragraphs** in scope — the campaign gate. Exit codes are stable
   for CI.</CMD-CHECK>
       <CMD-REPORT fact="true" status="impl/done">**`report`** — the tree status: XML native, `--md` table,
-  `--json`. Filters: `--view done|todo|qa|remove|doc` (the five resolution
+  `--json`. Filters: `--view done|todo|qa|remove|doc|terminal` (the six resolution
   views: `state=done` · `action=continue` · `stage=test&amp;state=plan|work` ·
-  `action=remove` · `actionstage=doc`), `--audience user|author|dev`,
+  `action=remove` · `actionstage=doc` · derived terminal artifact closure), `--audience user|author|dev`,
   per-file and whole-project rollups, explicit-vs-computed columns, and the
   evidence column when a provider is wired (§4).</CMD-REPORT>
       <CMD-MIRROR fact="true" status="impl/done">**`mirror`** — materialize the per-file cache view (campaign
@@ -119,7 +119,7 @@ recognises `@fact:&lt;ID&gt;` fact anchors as addressable units (PROP-014 §2.1,
 fact amendment's twin), so `implements`/`verifies` edges land **per fact**
 and the provider's mismatch checks apply at the campaign grain, not only
 per section.</FACT-GRAIN-EVIDENCE></p>
-    <p><ARTIFACT-SATISFACTION-SEAM fact="true" status="spec/done">The evidence
+    <p><ARTIFACT-SATISFACTION-SEAM fact="true" status="impl/done">The evidence
     seam also serves PROP-043 `##TERMINAL-PER-ARTIFACT`: for each declared
     terminal artifact it reports `satisfied | missing | unavailable` and exact
     locators when it has them. The facts core itself satisfies self-carried
@@ -128,14 +128,14 @@ per section.</FACT-GRAIN-EVIDENCE></p>
     `implements`, `verifies` and `documents` relations; an external artifact
     stays unavailable until an observer can check its `ref`. A provider absence
     and a known zero are never conflated.</ARTIFACT-SATISFACTION-SEAM></p>
-    <p><TERMINAL-OBSERVATION-SURFACE fact="true" status="spec/done">`report`
+    <p><TERMINAL-OBSERVATION-SURFACE fact="true" status="impl/done">`report`
     renders the authored canonical `requires` set, each artifact observation,
     and the derived `unclassified | pending | terminal` result. A separate
     `terminal` view selects only terminal facts; the existing `done` view
     remains exactly `state=done`. XML/Markdown/JSON projections share one row
     model. Dashboard/state projections consume that result and never recompute
     it from partial cache fields.</TERMINAL-OBSERVATION-SURFACE></p>
-    <p><TERMINAL-OBSERVATION-NOT-VERDICT fact="true" status="spec/done">A
+    <p><TERMINAL-OBSERVATION-NOT-VERDICT fact="true" status="impl/done">A
     terminal observation answers only whether the fact's declared artifact set
     is currently satisfied by this provider snapshot. Campaign verdicts
     (`confirmed | drift | unverifiable`), lifecycle verification evidence and
@@ -215,7 +215,7 @@ drift row already closed. The map is the source; the count is a view of it.</CAC
   check` sits in the gate panel and yellows on divergence.</EDIT-UPDATES-MARKER>
       <TASK-LOOP fact="true" status="spec/done">Task pipelines close the loop: an IMPL task cites markers on entry and
   updates them on exit (`impl/work → impl/done`, then `test/plan`).</TASK-LOOP>
-      <FREEZE-NEEDS-EVIDENCE fact="true" status="spec/done">A classified
+      <FREEZE-NEEDS-EVIDENCE fact="true" status="impl/done">A classified
   `freeze/done` fact requires the artifact evidence its own `@requires` set
   names; freeze alone never manufactures an implementation obligation. An
   unclassified frozen fact retains the legacy implementation-edge warning

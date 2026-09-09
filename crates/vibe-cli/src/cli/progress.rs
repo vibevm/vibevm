@@ -126,7 +126,7 @@ pub struct ProgressReportArgs {
     #[arg(long)]
     pub md: bool,
 
-    /// One of the five resolution views: done | todo | qa | remove | doc.
+    /// Resolution view: done | todo | qa | remove | doc | terminal.
     #[arg(long)]
     pub view: Option<String>,
 

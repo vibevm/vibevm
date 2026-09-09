@@ -29,7 +29,7 @@ fn fixture(root: &Path) {
         root.join(common::spec_rel("a.md")),
         "<status stage=\"impl\" state=\"work\"/>\n\n\
          # Alpha {#alpha}\n\n\
-         ##a1 The first claim. @test/plan\n\n\
+         ##a1 The first claim. @requires:specification @spec/done\n\n\
          - ##a2 An item. @doc/done\n\
          - ##a3 Another item. @impl/hold\n",
     )
@@ -104,6 +104,7 @@ fn sidecar_absent_runs_cold() {
     );
     let warm_corpus = state(root, "corpus.json");
     let warm_campaign = state(root, "campaign.json");
+    let warm_terminal = state(root, "terminal.json");
 
     // …and now it is gone, the way a fresh clone or a cleaned home has it.
     std::fs::remove_dir_all(&store_root).expect("erase the store");
@@ -117,6 +118,7 @@ fn sidecar_absent_runs_cold() {
     );
     assert_eq!(state(root, "corpus.json"), warm_corpus, "corpus.json");
     assert_eq!(state(root, "campaign.json"), warm_campaign, "campaign.json");
+    assert_eq!(state(root, "terminal.json"), warm_terminal, "terminal.json");
     // The run that missed also rebuilt what it missed — the store is an
     // accelerator that repairs itself, never a thing to restore by hand.
     assert!(store_root.is_dir(), "the run wrote the store back");

@@ -40,14 +40,19 @@ pub(crate) fn run(ctx: &Context, args: &ProgressCheckArgs) -> Result<()> {
                 );
             }
         }
-        // Lossless folds (PROP-043 §3.9 `POST-CAMPAIGN-FOLD`): a section
-        // marker that collapses agreeing units must carry everything they
-        // carried. Reported at warning severity because an explicit `#rollup`
-        // may deliberately bless the divergence.
+        // Ordinary explicit rollup divergence is advisory. Fact-owned
+        // terminal requirements have no section carrier, so folding them is
+        // an irreversible loss and therefore an error.
         for fold in folds {
-            warnings += 1;
+            let fatal = fold.lost == rollup::FoldLoss::Requirements;
+            if fatal {
+                errors += 1;
+            } else {
+                warnings += 1;
+            }
             if !ctx.is_quiet() {
-                println!("{}:{}: Warning [FoldLossy] {fold}", doc.path, fold.line);
+                let severity = if fatal { "Error" } else { "Warning" };
+                println!("{}:{}: {severity} [FoldLossy] {fold}", doc.path, fold.line);
             }
         }
         if args.exhaustive {

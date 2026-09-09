@@ -401,20 +401,10 @@ impl<'a> Adapter<'a> {
     /// the pivot's fact status represents only the carrier unit itself.
     fn marker_for(
         &self,
-        b: &progress_core::doc::Block,
+        _b: &progress_core::doc::Block,
         f: &progress_core::doc::Fact,
     ) -> Option<&'a Marker> {
-        let end_line = b.line_start + b.source_text[..f.span.1].matches('\n').count();
-        let gran_ok = |g: Granularity| match f.kind {
-            FactKind::Para | FactKind::Lead => g == Granularity::Paragraph,
-            FactKind::Item => g == Granularity::Item,
-            FactKind::Cell => g == Granularity::Cell,
-        };
-        self.doc
-            .markers
-            .iter()
-            .filter(|m| m.line >= f.line && m.line <= end_line && gran_ok(m.granularity))
-            .min_by_key(|m| m.line)
+        f.marker_index.and_then(|index| self.doc.markers.get(index))
     }
 
     fn is_quote_unit(&self, b: &progress_core::doc::Block, f: &progress_core::doc::Fact) -> bool {

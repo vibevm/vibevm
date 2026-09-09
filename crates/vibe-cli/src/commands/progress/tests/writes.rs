@@ -24,6 +24,7 @@ fn artifacts(root: &Path) -> Vec<PathBuf> {
     for name in [
         "corpus.json",
         "campaign.json",
+        "terminal.json",
         "findings.json",
         "tasks.json",
         "docdebt.json",
@@ -135,6 +136,7 @@ fn edited_file_forces_the_write() {
         "cache.json",
         "corpus.json",
         "campaign.json",
+        "terminal.json",
         "payloads.json",
     ] {
         assert_eq!(
@@ -283,6 +285,7 @@ fn absent_file_is_always_written() {
         "cache.json",
         "corpus.json",
         "campaign.json",
+        "terminal.json",
         "payloads.json",
     ] {
         let path = artifacts(root)
@@ -370,6 +373,7 @@ fn check_with_write_state_writes_like_scan() {
         "cache.json",
         "corpus.json",
         "campaign.json",
+        "terminal.json",
         "payloads.json",
     ] {
         let path = artifacts(root)

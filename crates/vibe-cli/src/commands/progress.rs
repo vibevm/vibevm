@@ -7,11 +7,11 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#t
 use std::path::Path;
 
 use anyhow::{Context as _, Result, bail};
-use progress_core::evidence::{EvidenceProvider, NoEvidence};
 use progress_core::model::Audience;
 use progress_core::report::View;
 use progress_core::{cache, journal, report, rollup, state, weave};
 
+use super::progress_evidence::EvidenceSnapshot;
 use crate::cli::{
     GateStatusArg, ProgressArgs, ProgressCheckArgs, ProgressCommonArgs, ProgressGateArgs,
     ProgressReportArgs, ProgressSubcommand, ProgressWeaveArgs,
@@ -48,7 +48,9 @@ mod seal;
 
 // Re-exported under their own names so every caller — the verbs below, the
 // two verb submodules, the tests — reaches them exactly as before.
-use grounding::{Ground, campaign_id, ground, refresh_state, resolve_campaign};
+use grounding::{
+    Ground, campaign_id, ground, refresh_state, refresh_state_with_evidence, resolve_campaign,
+};
 
 pub fn run(ctx: &Context, args: ProgressArgs) -> Result<()> {
     match args.command {
@@ -131,7 +133,7 @@ fn parse_view(s: Option<&str>) -> Result<Option<View>> {
         None => Ok(None),
         Some(v) => match View::parse(v) {
             Some(view) => Ok(Some(view)),
-            None => bail!("unknown --view `{v}` (expected done|todo|qa|remove|doc)"),
+            None => bail!("unknown --view `{v}` (expected done|todo|qa|remove|doc|terminal)"),
         },
     }
 }
@@ -157,12 +159,9 @@ fn report_body(g: &Ground, a: &ProgressReportArgs, json: bool) -> Result<String>
     // The evidence column is wired only where the index exists. A project
     // without `specmap.json` reports exactly as before and says nothing
     // about it — a missing index is not an error (PROP-043 §6).
-    let specmap = super::progress_evidence::SpecmapEvidence::load(&g.root)?;
-    let provider: &dyn EvidenceProvider = match &specmap {
-        Some(s) => s,
-        None => &NoEvidence,
-    };
-    let rows = report::rows(g.docs.iter(), view, audience, provider);
+    let evidence = EvidenceSnapshot::load(&g.root)?;
+    let rows = report::rows(g.docs.iter(), view, audience, evidence.provider());
+    let terminal_mode = view == Some(View::Terminal);
     let rollups: Vec<(String, rollup::DocRollup)> = g
         .docs
         .iter()
@@ -171,9 +170,9 @@ fn report_body(g: &Ground, a: &ProgressReportArgs, json: bool) -> Result<String>
     Ok(if json {
         format!("{}\n", serde_json::to_string_pretty(&rows)?)
     } else if a.md {
-        report::render_md(&rows, &rollups)
+        report::render_md_with_mode(&rows, &rollups, terminal_mode)
     } else {
-        report::render_xml(&rows, &rollups)
+        report::render_xml_with_mode(&rows, &rollups, terminal_mode)
     })
 }
 
@@ -188,13 +187,14 @@ fn mirror(ctx: &Context, a: &ProgressCommonArgs) -> Result<()> {
     let Some(campaign) = &g.campaign else {
         bail!("`vibe progress mirror` needs a campaign zone (campaigns/<id>/ or --campaign)");
     };
+    let evidence = EvidenceSnapshot::load(&g.root)?;
     let dir = campaign.join("run").join("mirror");
     for doc in &g.docs {
         let rel = doc.path.replace('/', "__");
         let body = serde_json::to_string_pretty(doc)?;
         cache::write_atomic(&dir.join(format!("{rel}.json")), body.as_bytes())?;
     }
-    refresh_state(&mut g)?;
+    refresh_state_with_evidence(&mut g, &evidence)?;
     if !ctx.is_quiet() {
         println!(
             "progress mirror: {} per-file views under {}",
@@ -262,6 +262,7 @@ fn resume(ctx: &Context, a: &ProgressCommonArgs) -> Result<()> {
     let Some(campaign) = &g.campaign else {
         bail!("`vibe progress resume` needs a campaign zone (campaigns/<id>/ or --campaign)");
     };
+    let evidence = EvidenceSnapshot::load(&g.root)?;
     let run_dir = campaign.join("run");
     let events = journal::read_journal(&run_dir.join("journal.jsonl"))?;
     let open = journal::open_steps(&events);
@@ -285,7 +286,7 @@ fn resume(ctx: &Context, a: &ProgressCommonArgs) -> Result<()> {
     let phase = journal::derive_phase(&events);
     let body = journal::render_resume(&campaign_id(campaign), &phase, &counters, &open, next_hint);
     journal::write_resume(&run_dir.join("RESUME.md"), &body)?;
-    refresh_state(&mut g)?;
+    refresh_state_with_evidence(&mut g, &evidence)?;
     if !ctx.is_quiet() {
         print!("{body}");
     }
@@ -334,6 +335,10 @@ fn gate(ctx: &Context, a: &ProgressGateArgs) -> Result<()> {
     }
     Ok(())
 }
+
+#[cfg(test)]
+#[path = "progress/evidence_boundaries.rs"]
+mod evidence_boundaries;
 
 #[cfg(test)]
 mod tests;

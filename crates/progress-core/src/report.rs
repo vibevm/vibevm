@@ -1,15 +1,17 @@
-//! Report rendering: XML (native), Markdown table, and the five
+//! Report rendering: XML (native), Markdown table, and the six
 //! resolution views (PROP-043 §5 `report`).
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#CMD-REPORT");
 
-use crate::doc::ParsedDoc;
+use crate::doc::{Fact, ParsedDoc};
 use crate::evidence::{Evidence, EvidenceProvider};
-use crate::model::{Audience, Granularity, Marker, Stage, State};
+use crate::model::{ArtifactRequirements, Audience, Granularity, Marker, Stage, State};
+#[cfg(test)]
 use crate::rollup::DocRollup;
+use crate::terminal::{ArtifactObservation, TerminalOutcome, fact_address, resolve_terminal};
 use serde::{Deserialize, Serialize};
 
-/// The five resolution views — filters over one model (PROP-043 §5).
+/// The six resolution views — filters over one model (PROP-043 §5).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum View {
@@ -18,6 +20,7 @@ pub enum View {
     Qa,
     Remove,
     Doc,
+    Terminal,
 }
 
 impl View {
@@ -28,6 +31,7 @@ impl View {
             "qa" => Some(View::Qa),
             "remove" => Some(View::Remove),
             "doc" => Some(View::Doc),
+            "terminal" => Some(View::Terminal),
             _ => None,
         }
     }
@@ -42,6 +46,8 @@ impl View {
             }
             View::Remove => m.action == Some(crate::model::Action::Remove),
             View::Doc => m.actionstage == Some(Stage::Doc),
+            // Terminality is derived only after evidence resolution.
+            View::Terminal => true,
         }
     }
 }
@@ -74,6 +80,19 @@ pub struct Row {
     /// The marker claims more than the evidence shows — `mismatch`'s verdict.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub mismatch: Option<String>,
+    /// Exact fact address when the conditional terminal surface is active.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub address: Option<String>,
+    /// Authored terminal artifact set, kept in canonical order.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub requires: Option<ArtifactRequirements>,
+    /// Current per-artifact observations from the same provider snapshot.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub artifacts: Vec<ArtifactObservation>,
+    /// Derived overall result, including `unclassified`. Absent for invalid
+    /// facts and when no classified fact activates the compatibility surface.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub terminal: Option<TerminalOutcome>,
 }
 
 /// The address of the innermost anchored unit containing `line` —
@@ -100,9 +119,36 @@ pub fn rows<'a>(
     audience: Option<Audience>,
     evidence: &dyn EvidenceProvider,
 ) -> Vec<Row> {
+    let docs: Vec<&ParsedDoc> = docs.into_iter().collect();
+    // Conditional compatibility boundary: an entirely legacy corpus keeps
+    // every new row member absent. Once one valid classified fact activates
+    // the surface, valid addressed peers explicitly report `unclassified`.
+    let terminal_surface = docs.iter().any(|doc| {
+        doc.error_count() == 0
+            && doc
+                .blocks
+                .iter()
+                .flat_map(|block| &block.facts)
+                .any(|fact| {
+                    fact.requirements.is_some()
+                        && fact_address(doc, fact).is_some()
+                        && fact
+                            .marker_index
+                            .is_some_and(|index| doc.markers.get(index).is_some())
+                })
+    });
     let mut out = Vec::new();
     for doc in docs {
-        for m in &doc.markers {
+        let mut facts_by_marker: Vec<Option<&Fact>> = vec![None; doc.markers.len()];
+        for fact in doc.blocks.iter().flat_map(|block| &block.facts) {
+            if let Some(slot) = fact
+                .marker_index
+                .and_then(|index| facts_by_marker.get_mut(index))
+            {
+                *slot = Some(fact);
+            }
+        }
+        for (marker_index, m) in doc.markers.iter().enumerate() {
             if let Some(v) = view
                 && !v.matches(m)
             {
@@ -117,10 +163,44 @@ pub fn rows<'a>(
                 || m.action.map(|a| a.to_string()),
                 |ast| m.action.map(|a| format!("{a}+{ast}")),
             );
-            let found = unit_addr_at(doc, m.line).and_then(|addr| evidence.evidence_for(&addr));
-            let mismatch = found
-                .as_ref()
-                .and_then(|ev| crate::evidence::mismatch(m, ev));
+            let fact = facts_by_marker[marker_index];
+            let exact_address = fact.and_then(|fact| fact_address(doc, fact));
+            let evidence_address = exact_address.clone().or_else(|| {
+                matches!(m.granularity, Granularity::Document | Granularity::Section)
+                    .then(|| unit_addr_at(doc, m.line))
+                    .flatten()
+            });
+            let found = evidence_address
+                .as_deref()
+                .and_then(|addr| evidence.evidence_for(addr));
+            let valid_fact = terminal_surface
+                && doc.error_count() == 0
+                && fact.is_some()
+                && exact_address.is_some();
+            let classified = valid_fact && fact.is_some_and(|fact| fact.requirements.is_some());
+            let observation = match (valid_fact, fact, exact_address.as_deref()) {
+                (true, Some(fact), Some(address)) => Some(resolve_terminal(
+                    address,
+                    m,
+                    fact.requirements.as_ref(),
+                    evidence,
+                )),
+                _ => None,
+            };
+            if view == Some(View::Terminal)
+                && !observation
+                    .as_ref()
+                    .is_some_and(|value| value.outcome == TerminalOutcome::Terminal)
+            {
+                continue;
+            }
+            let mismatch = found.as_ref().and_then(|ev| {
+                if classified && m.stage == Stage::Freeze {
+                    None
+                } else {
+                    crate::evidence::mismatch(m, ev)
+                }
+            });
             out.push(Row {
                 path: doc.path.clone(),
                 line: m.line,
@@ -131,142 +211,27 @@ pub fn rows<'a>(
                 comment: m.comment.clone(),
                 evidence: found,
                 mismatch,
+                address: valid_fact.then_some(exact_address).flatten(),
+                requires: valid_fact
+                    .then(|| fact.and_then(|fact| fact.requirements.clone()))
+                    .flatten(),
+                artifacts: observation
+                    .as_ref()
+                    .map(|value| value.artifacts.clone())
+                    .unwrap_or_default(),
+                terminal: observation.map(|value| value.outcome),
             });
         }
     }
     out
 }
 
-fn xml_escape(s: &str) -> String {
-    s.replace('&', "&amp;")
-        .replace('<', "&lt;")
-        .replace('>', "&gt;")
-        .replace('"', "&quot;")
-}
+mod render;
+pub use render::{render_md, render_md_with_mode, render_xml, render_xml_with_mode};
 
-/// The native XML report (PROP-043 §5: XML is the native output).
-pub fn render_xml(rows: &[Row], rollups: &[(String, DocRollup)]) -> String {
-    let mut s = String::from(
-        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<progress-report schema=\"1\">\n",
-    );
-    s.push_str("  <files>\n");
-    for (path, r) in rollups {
-        let eff = r
-            .effective
-            .map(|(st, sta)| format!(" stage=\"{st}\" state=\"{sta}\""))
-            .unwrap_or_default();
-        s.push_str(&format!(
-            "    <file path=\"{}\"{} markers=\"{}\" facts=\"{}\" unmarked=\"{}\"/>\n",
-            xml_escape(path),
-            eff,
-            r.marker_count,
-            r.fact_count,
-            r.unmarked_facts
-        ));
-    }
-    s.push_str("  </files>\n  <markers>\n");
-    for row in rows {
-        s.push_str(&format!(
-            "    <marker path=\"{}\" line=\"{}\" granularity=\"{:?}\" stage=\"{}\" state=\"{}\"{}{}",
-            xml_escape(&row.path),
-            row.line,
-            row.granularity,
-            row.stage,
-            row.state,
-            row.action
-                .as_deref()
-                .map(|a| format!(" action=\"{}\"", xml_escape(a)))
-                .unwrap_or_default(),
-            row.comment
-                .as_deref()
-                .map(|c| format!(" comment=\"{}\"", xml_escape(c)))
-                .unwrap_or_default(),
-        ));
-        // A row the provider could not answer closes exactly as it always
-        // did — an evidence-less run is byte-identical (PROP-043 §6).
-        match &row.evidence {
-            None => s.push_str("/>\n"),
-            Some(ev) => s.push_str(&format!(
-                ">\n      <evidence implements=\"{}\" verifies=\"{}\"{}/>\n    </marker>\n",
-                ev.implements,
-                ev.verifies,
-                row.mismatch
-                    .as_deref()
-                    .map(|m| format!(" mismatch=\"{}\"", xml_escape(m)))
-                    .unwrap_or_default(),
-            )),
-        }
-    }
-    s.push_str("  </markers>\n</progress-report>\n");
-    s
-}
-
-fn md_escape(s: &str) -> String {
-    s.replace('|', "\\|").replace('\n', " ")
-}
-
-/// The Markdown table render (source · stage · state · action · comment),
-/// plus a right-most `evidence` column when any row carries evidence.
-pub fn render_md(rows: &[Row], rollups: &[(String, DocRollup)]) -> String {
-    // The column exists only when the wired provider answered something:
-    // an evidence-less run renders the table it always rendered.
-    let with_evidence = rows.iter().any(|r| r.evidence.is_some());
-    let mut s = if with_evidence {
-        String::from(
-            "| source | stage | state | action | comment | evidence |\n|---|---|---|---|---|---|\n",
-        )
-    } else {
-        String::from("| source | stage | state | action | comment |\n|---|---|---|---|---|\n")
-    };
-    for (path, r) in rollups {
-        if let Some((st, sta)) = r.effective {
-            s.push_str(&format!(
-                "| **{}** ({} markers, {}/{} unmarked) | {} | {} |  |  |",
-                md_escape(path),
-                r.marker_count,
-                r.unmarked_facts,
-                r.fact_count,
-                st,
-                sta
-            ));
-        } else {
-            s.push_str(&format!(
-                "| **{}** (no markers, {} facts) | — | — |  |  |",
-                md_escape(path),
-                r.fact_count
-            ));
-        }
-        // A file rollup is not a unit — its evidence cell is always empty.
-        if with_evidence {
-            s.push_str("  |");
-        }
-        s.push('\n');
-    }
-    for row in rows {
-        s.push_str(&format!(
-            "| {}:{} | {} | {} | {} | {} |",
-            md_escape(&row.path),
-            row.line,
-            row.stage,
-            row.state,
-            row.action.as_deref().map(md_escape).unwrap_or_default(),
-            row.comment.as_deref().map(md_escape).unwrap_or_default(),
-        ));
-        if with_evidence {
-            match &row.evidence {
-                Some(ev) => s.push_str(&format!(
-                    " impl={} ver={}{} |",
-                    ev.implements,
-                    ev.verifies,
-                    if row.mismatch.is_some() { " ⚠" } else { "" },
-                )),
-                None => s.push_str("  |"),
-            }
-        }
-        s.push('\n');
-    }
-    s
-}
+#[cfg(test)]
+#[path = "report/terminal_tests.rs"]
+mod terminal_tests;
 
 #[cfg(test)]
 mod tests {
@@ -274,8 +239,7 @@ mod tests {
     use crate::evidence::NoEvidence;
     use crate::parse::parse_document;
 
-    /// Every marker of this fixture sits inside the `{#t}` unit, so both
-    /// rows address `spec/t.md#t`.
+    /// The standalone marker addresses the heading; the fact row owns `b1`.
     const FIXTURE: &str = "\
 # T {#t}
 
@@ -406,12 +370,15 @@ mod tests {
     /// A marker whose line precedes every heading has no unit address, so
     /// the provider is never asked: "no unit" cannot become "zero edges".
     #[test]
-    fn unaddressed_marker_asks_nothing() {
+    fn unaddressed_markers_ask_nothing() {
         let text = "<status stage=\"impl\" state=\"done\"/>\n\n# T {#t}\n\nBody. @test/plan\n";
         let (doc, _) = fixture(text);
         let rows = rows([&doc], None, None, &Stub(Evidence::default()));
         assert!(rows[0].evidence.is_none(), "line 1 is inside no unit");
-        assert!(rows[1].evidence.is_some(), "the body row is inside `#t`");
+        assert!(
+            rows[1].evidence.is_none(),
+            "fact-grain evidence never falls back to a heading"
+        );
     }
 
     #[test]

@@ -36,6 +36,7 @@ pub mod scope;
 pub mod seal;
 pub mod sidecar;
 pub mod state;
+pub mod terminal;
 pub mod weave;
 
 use anyhow::{Context, Result};

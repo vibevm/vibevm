@@ -3163,6 +3163,15 @@
     },
     {
       "crate_name": "progress-core",
+      "file": "crates/progress-core/src/report/render.rs",
+      "item_kind": "mod",
+      "line": 1,
+      "symbol": "progress_core::report::render",
+      "end_line": 3,
+      "fingerprint": "tok1:884c53945ff5f1217009077c587505493eed7cbc931738abded0f80a131d1331"
+    },
+    {
+      "crate_name": "progress-core",
       "file": "crates/progress-core/src/rollup.rs",
       "item_kind": "mod",
       "line": 11,
@@ -3174,10 +3183,10 @@
       "crate_name": "progress-core",
       "file": "crates/progress-core/src/rollup.rs",
       "item_kind": "fn",
-      "line": 126,
+      "line": 128,
       "symbol": "progress_core::rollup::fold_check",
-      "end_line": 185,
-      "fingerprint": "tok1:4083b13ace819f40cb9d764d8ac7e8c6143c8f5452bf7b4f169177cc0fd7e6f9"
+      "end_line": 179,
+      "fingerprint": "tok1:5f02878f36ac2b60bcb896ea67eaf50b5bc2095a0226e5a51b33cfef92a8a95c"
     },
     {
       "crate_name": "progress-core",
@@ -3246,19 +3255,46 @@
       "crate_name": "progress-core",
       "file": "crates/progress-core/src/state.rs",
       "item_kind": "struct",
-      "line": 29,
+      "line": 32,
       "symbol": "progress_core::state::GateRecord",
-      "end_line": 44,
+      "end_line": 47,
       "fingerprint": "tok1:a85b768c571c7b479777a64364a12e041d5d9c1a6497c1a0c5e37f00b736198b"
     },
     {
       "crate_name": "progress-core",
       "file": "crates/progress-core/src/state.rs",
       "item_kind": "fn",
-      "line": 178,
+      "line": 181,
       "symbol": "progress_core::state::record_gate",
-      "end_line": 202,
+      "end_line": 205,
       "fingerprint": "tok1:b66bab69aa9fd1944164aeaf14fdc665e3b8e30033a5e9dfdec27d36a6478b58"
+    },
+    {
+      "crate_name": "progress-core",
+      "file": "crates/progress-core/src/state/terminal.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "progress_core::state::terminal",
+      "end_line": 5,
+      "fingerprint": "tok1:884c53945ff5f1217009077c587505493eed7cbc931738abded0f80a131d1331"
+    },
+    {
+      "crate_name": "progress-core",
+      "file": "crates/progress-core/src/terminal.rs",
+      "item_kind": "mod",
+      "line": 7,
+      "symbol": "progress_core::terminal",
+      "end_line": 7,
+      "fingerprint": "tok1:1818fd62652999878f4c9c2303f17f334dbdea4cb1310988efe34e07e2a25739"
+    },
+    {
+      "crate_name": "progress-core",
+      "file": "crates/progress-core/src/terminal.rs",
+      "item_kind": "fn",
+      "line": 103,
+      "symbol": "progress_core::terminal::resolve_terminal",
+      "end_line": 137,
+      "fingerprint": "tok1:cb14dfddb051fd1c12f3f03988733ccb45bd588e6f9b475083066cfd54dd4685"
     },
     {
       "crate_name": "progress-core",
@@ -6707,9 +6743,9 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/progress/grounding.rs",
       "item_kind": "fn",
-      "line": 57,
+      "line": 58,
       "symbol": "vibe_cli::commands::progress::grounding::ground",
-      "end_line": 147,
+      "end_line": 148,
       "fingerprint": "tok1:e52e6889636374089330254e29fefcd24759ddb71222f153ad52443d5429e64d"
     },
     {
@@ -6743,10 +6779,10 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/progress_evidence.rs",
       "item_kind": "fn",
-      "line": 84,
+      "line": 145,
       "symbol": "vibe_cli::commands::progress_evidence::SpecmapEvidence::evidence_for",
-      "end_line": 99,
-      "fingerprint": "tok1:bd81b8f6325323fddada6b2336386c570663b2a69c68c83230324c2e3581cadc"
+      "end_line": 162,
+      "fingerprint": "tok1:935c562fadeedeaaecaa47cf451d1eadd49d78b3c05a59042bee9da80289795b"
     },
     {
       "crate_name": "vibe-cli",
@@ -30557,6 +30593,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/progress-core/src/report/render.rs",
+      "from_symbol": "progress_core::report::render",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#TERMINAL-OBSERVATION-SURFACE",
+      "verb": "implements"
+    },
+    {
       "file": "crates/progress-core/src/rollup.rs",
       "from_symbol": "progress_core::rollup",
       "line": 11,
@@ -30567,7 +30611,7 @@
     {
       "file": "crates/progress-core/src/rollup.rs",
       "from_symbol": "progress_core::rollup::fold_check",
-      "line": 137,
+      "line": 139,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#tool",
       "verb": "implements"
@@ -30631,7 +30675,7 @@
     {
       "file": "crates/progress-core/src/state.rs",
       "from_symbol": "progress_core::state::GateRecord",
-      "line": 33,
+      "line": 36,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#state",
       "verb": "implements"
@@ -30639,9 +30683,33 @@
     {
       "file": "crates/progress-core/src/state.rs",
       "from_symbol": "progress_core::state::record_gate",
-      "line": 185,
+      "line": 188,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#state",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/progress-core/src/state/terminal.rs",
+      "from_symbol": "progress_core::state::terminal",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#TERMINAL-OBSERVATION-SURFACE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/progress-core/src/terminal.rs",
+      "from_symbol": "progress_core::terminal",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#terminal-artifacts",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/progress-core/src/terminal.rs",
+      "from_symbol": "progress_core::terminal::resolve_terminal",
+      "line": 104,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#terminal-artifacts",
       "verb": "implements"
     },
     {
@@ -32476,7 +32544,7 @@
     {
       "file": "crates/vibe-cli/src/commands/progress/grounding.rs",
       "from_symbol": "vibe_cli::commands::progress::grounding::ground",
-      "line": 70,
+      "line": 71,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#tool",
       "verb": "implements"
@@ -32508,7 +32576,7 @@
     {
       "file": "crates/vibe-cli/src/commands/progress_evidence.rs",
       "from_symbol": "vibe_cli::commands::progress_evidence::SpecmapEvidence::evidence_for",
-      "line": 91,
+      "line": 152,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#evidence",
       "verb": "implements"
@@ -85691,7 +85759,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:27c7030d8dfe7979323fbf330244cc33672c48c2ddc5bf57b2c12e5d63b9414f",
+      "content_hash": "sha256:03e6ebedebccc426aa5804b07d300f055abb6f636fdf2c7edc8516f03faf72e1",
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "PROP-043 — The facts markup: the inline status grammar and its IR",
@@ -85862,7 +85930,7 @@
     },
     {
       "anchor": "markup",
-      "content_hash": "sha256:69aec2e59bb80f1e2c6d1d351ecab07f8c8a7aa49d443c65b2526aa55e68929a",
+      "content_hash": "sha256:447b9d62b6a15a56ed26e94f20f3ac4dcb856b5282f9313e154aa39b2b663575",
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "3. The markup language",
@@ -86663,7 +86731,7 @@
     },
     {
       "anchor": "terminal-artifacts",
-      "content_hash": "sha256:e63241af12b827782913a69c85f19875e9318d2c75a20c89567c846c9990603f",
+      "content_hash": "sha256:ab6b0895f522a6f28448ce8b92d1e794dae6830376889cca039176911dbbe1fa",
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "3.11 Terminal artifact obligations",
@@ -86672,10 +86740,10 @@
     },
     {
       "anchor": "TERMINALITY-IS-ORTHOGONAL",
-      "content_hash": "sha256:89589b442d13e2dc87a4c22ba87e01fe01a7221c44358c89a49e711c413dce10",
+      "content_hash": "sha256:c5a2b8326040e04bc19fd354bbe71d2cbb1eda14023eca640ded5d66ad4424fd",
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
-      "heading": "**Decision\n      (owner, 2026-09-09): terminality is independent of status.** `stage/state`\n      continues to answer where a fact stands now, and `done` continues to mean\n      done only for that stage. An addressable fact may separately declare the\n      artifact kinds whose satisfaction closes the whole fact. No stage is a\n      mandatory successor of another, and no fact is forced toward source-code\n      implementation merely because its specification is complete. @status:spec/done",
+      "heading": "**Decision\n      (owner, 2026-09-09): terminality is independent of status.** `stage/state`\n      continues to answer where a fact stands now, and `done` continues to mean\n      done only for that stage. An addressable fact may separately declare the\n      artifact kinds whose satisfaction closes the whole fact. No stage is a\n      mandatory successor of another, and no fact is forced toward source-code\n      implementation merely because its specification is complete. @status:impl/done",
       "line": 432,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#TERMINALITY-IS-ORTHOGONAL"
     },
@@ -86735,7 +86803,7 @@
     },
     {
       "anchor": "artifacts",
-      "content_hash": "sha256:144d14a2ee0acf8f8ee1358708dff563f7e7a3e63452def1192fcd9a099c0751",
+      "content_hash": "sha256:9ed28676d454a6058415b3c16bea02bb0303f9db98b71e6f8863efa61d834d69",
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "3.11.1 Closed artifact vocabulary",
@@ -86753,61 +86821,61 @@
     },
     {
       "anchor": "ARTIFACT-SELF-CARRIED",
-      "content_hash": "sha256:954038f0d2b437d2adafa319fcd0492ea424847eb573c55ea452c75562cf8b32",
+      "content_hash": "sha256:46fe045b163359e6301d13b067423ff350bbc39ea7c17ac7d1c7ae70e565a6c1",
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
-      "heading": "`specification`,\n          `decision`, `research` and `plan` name the addressed fact body (plus\n          its typed bound object, when any) as the delivered artifact. They need\n          no `implements` edge merely to exist. `state=done` asserts that this\n          self-carried artifact is complete; independent campaign judgement may\n          still confirm, drift or reject that assertion. @status:spec/done",
+      "heading": "`specification`,\n          `decision`, `research` and `plan` name the addressed fact body (plus\n          its typed bound object, when any) as the delivered artifact. They need\n          no `implements` edge merely to exist. `state=done` asserts that this\n          self-carried artifact is complete; independent campaign judgement may\n          still confirm, drift or reject that assertion. @status:impl/done",
       "line": 498,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#ARTIFACT-SELF-CARRIED"
     },
     {
       "anchor": "ARTIFACT-IMPLEMENTATION",
-      "content_hash": "sha256:38db97998b538e56919cb79fee2b248c94f6c674a36eac039d149638a63651ba",
+      "content_hash": "sha256:b6d76cb94343875513820af645a37d161a27120e8c92d6074aef3afd86c5b383",
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
-      "heading": "`implementation`\n          requires independently observed implementing evidence for this exact\n          fact address. A provider that knows the address and reports zero is\n          `missing`; no provider or an address outside its knowledge is\n          `unavailable`, never silently satisfied. @status:spec/done",
+      "heading": "`implementation`\n          requires independently observed implementing evidence for this exact\n          fact address. A provider that knows the address and reports zero is\n          `missing`; no provider or an address outside its knowledge is\n          `unavailable`, never silently satisfied. @status:impl/done",
       "line": 504,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#ARTIFACT-IMPLEMENTATION"
     },
     {
       "anchor": "ARTIFACT-VERIFICATION",
-      "content_hash": "sha256:1c624fa2eda52a2855f7bfbca4836bc5434c66ba229c26dd7940674a5ecd6fc9",
+      "content_hash": "sha256:35f5505309b7870596d448ca62b1fbe051c14a558cc8ea32f9c67acdcb448d0d",
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
-      "heading": "`verification`\n          requires independently observed verifying evidence for the exact fact.\n          An edge establishes attribution, not that a test run passed forever;\n          campaign verdict freshness remains separate evidence and is never\n          copied into authored markup. @status:spec/done",
+      "heading": "`verification`\n          requires independently observed verifying evidence for the exact fact.\n          An edge establishes attribution, not that a test run passed forever;\n          campaign verdict freshness remains separate evidence and is never\n          copied into authored markup. @status:impl/done",
       "line": 509,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#ARTIFACT-VERIFICATION"
     },
     {
       "anchor": "ARTIFACT-DOCUMENTATION",
-      "content_hash": "sha256:3e0efb314eeb300fafd513d08e1bdfbf2c381920a84904cc00274c9fc3cf70f9",
+      "content_hash": "sha256:f2c51cb5694652e7aa67a4636fa9c24bb7a0308943c147e7c45385cd95e05934",
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
-      "heading": "`documentation`\n          is self-carried by a fact at `doc/done`; otherwise it requires an\n          independently observed `documents` artifact/relation. Documentation\n          about a fact and the fact's normative specification remain distinct. @status:spec/done",
+      "heading": "`documentation`\n          is self-carried by a fact at `doc/done`; otherwise it requires an\n          independently observed `documents` artifact/relation. Documentation\n          about a fact and the fact's normative specification remain distinct. @status:impl/done",
       "line": 514,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#ARTIFACT-DOCUMENTATION"
     },
     {
       "anchor": "ARTIFACT-DISPOSITION",
-      "content_hash": "sha256:e025d70b5c3de34b8fabedf77cba09eadb7edd3cf8c7f88ad966de03365eef4c",
+      "content_hash": "sha256:8e2d98144611de37f418c666d665b5f89556e23e2b0c3387c58ac54877f48874",
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
-      "heading": "`disposition`\n          is a self-carried authored assertion that the addressed fact body is\n          the durable outcome record for the thing it discusses. At\n          `state=done` the declaration itself satisfies the artifact presence;\n          campaign judgement still confirms or rejects whether the body really\n          records an accepted, rejected, deferred or superseded outcome. The\n          core never guesses those semantics from prose. @status:spec/done",
+      "heading": "`disposition`\n          is a self-carried authored assertion that the addressed fact body is\n          the durable outcome record for the thing it discusses. At\n          `state=done` the declaration itself satisfies the artifact presence;\n          campaign judgement still confirms or rejects whether the body really\n          records an accepted, rejected, deferred or superseded outcome. The\n          core never guesses those semantics from prose. @status:impl/done",
       "line": 518,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#ARTIFACT-DISPOSITION"
     },
     {
       "anchor": "ARTIFACT-EXTERNAL",
-      "content_hash": "sha256:38ca933c190bb579b2d3787de06ca9fa2e6cf2c5b1a88e9492bc5ccb98956e10",
+      "content_hash": "sha256:aeb825b8d312e7ef596a0c1fa2dd32802c45688c62db07cf30374a86f5cea795",
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
-      "heading": "`external` names an\n          artifact outside the fact body and therefore requires exactly one\n          non-empty fact `ref` plus an observer capable of checking that\n          locator. In Markdown that ref is the existing `ref` attribute of the\n          final status point marker; in XML it is the existing `ref` attribute\n          of the named/generic fact element. Both lower through the fact's\n          `status.ref` pivot member to one semantic fact locator. A shorthand\n          status cannot carry a ref, and a missing/empty/duplicate ref is an\n          error. A ref with no observer is `unavailable`, not proof by pointer. @status:spec/done",
+      "heading": "`external` names an\n          artifact outside the fact body and therefore requires exactly one\n          non-empty fact `ref` plus an observer capable of checking that\n          locator. In Markdown that ref is the existing `ref` attribute of the\n          final status point marker; in XML it is the existing `ref` attribute\n          of the named/generic fact element. Both lower through the fact's\n          `status.ref` pivot member to one semantic fact locator. A shorthand\n          status cannot carry a ref, and a missing/empty/duplicate ref is an\n          error. A ref with no observer is `unavailable`, not proof by pointer. @status:impl/done",
       "line": 525,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#ARTIFACT-EXTERNAL"
     },
     {
       "anchor": "terminal-observation",
-      "content_hash": "sha256:7eadd091dbe38b0ae28e92aff293a9c0565dbb9712e6870d5a8e83b484812182",
+      "content_hash": "sha256:018a1ec29c5a7158684ebe9dd586ce1c6ee969e039e0ba2124c911925a8e0c63",
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "3.11.2 Derived terminal observation",
@@ -86816,61 +86884,61 @@
     },
     {
       "anchor": "TERMINAL-OUTCOMES",
-      "content_hash": "sha256:46730d3d27c82d0848b45e69e28cb72fbcabd790b35aa476fd399ce3fcd53284",
+      "content_hash": "sha256:11055a12c47c79ce828295d2f6545ba66578450fb94229fb5110cadada126b4e",
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
-      "heading": "The closed derived\n          outcome is `unclassified | pending | terminal`. `unclassified` means\n          `requires` is absent. `pending` means the set is present but the fact\n          is not at `state=done`, carries any action, or at least one required\n          artifact is missing or unavailable. `terminal` means the non-empty\n          set is present, the fact is at `state=done`, no action remains, and\n          every required artifact is satisfied. Parser/check errors are invalid\n          input, not a fourth outcome. @status:spec/done",
+      "heading": "The closed derived\n          outcome is `unclassified | pending | terminal`. `unclassified` means\n          `requires` is absent. `pending` means the set is present but the fact\n          is not at `state=done`, carries any action, or at least one required\n          artifact is missing or unavailable. `terminal` means the non-empty\n          set is present, the fact is at `state=done`, no action remains, and\n          every required artifact is satisfied. Parser/check errors are invalid\n          input, not a fourth outcome. @status:impl/done",
       "line": 538,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#TERMINAL-OUTCOMES"
     },
     {
       "anchor": "TERMINAL-PER-ARTIFACT",
-      "content_hash": "sha256:04b524d94e8c8da6ee3ba56b1bbeedf0a4ed7bf80a1aaccd44b3308a49295d9c",
+      "content_hash": "sha256:ed7fee963b0cf1acde8b2db3d23f5a09f6e229658fbbf2d2b17b91f9f2a79549",
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
-      "heading": "Each required\n          kind is reported as `satisfied | missing | unavailable`, with exact\n          evidence locators when available. Overall `pending` never erases that\n          distinction. The markup declares the closure contract; current\n          evidence observes it. Neither side forges the other. @status:spec/done",
+      "heading": "Each required\n          kind is reported as `satisfied | missing | unavailable`, with exact\n          evidence locators when available. Overall `pending` never erases that\n          distinction. The markup declares the closure contract; current\n          evidence observes it. Neither side forges the other. @status:impl/done",
       "line": 546,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#TERMINAL-PER-ARTIFACT"
     },
     {
       "anchor": "TERMINAL-NO-STAGE-INFERENCE",
-      "content_hash": "sha256:441bab1ccbe4066bc03f608bde06fa5076c15aa169c545a728b86ef449c867cc",
+      "content_hash": "sha256:300a4b770ff6b9ebc197e39b15c64ab5ae97b1fc75a3ed939bf1b4cdea2e9da0",
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
-      "heading": "No stage\n          ordering implies an artifact. `test/done` does not by itself prove an\n          implementation; `impl/done` does not imply documentation; and\n          `freeze/done` does not imply source code. Only the declared set plus\n          its artifact observations decides terminality. @status:spec/done",
+      "heading": "No stage\n          ordering implies an artifact. `test/done` does not by itself prove an\n          implementation; `impl/done` does not imply documentation; and\n          `freeze/done` does not imply source code. Only the declared set plus\n          its artifact observations decides terminality. @status:impl/done",
       "line": 551,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#TERMINAL-NO-STAGE-INFERENCE"
     },
     {
       "anchor": "TERMINAL-ROLLUP-SEPARATE",
-      "content_hash": "sha256:f146fcd1a463ef0ad1f6a2c6863543f05395b35901ecd08f579e5f1a859b4c9b",
+      "content_hash": "sha256:edd1e3dfedb30ee5a9dabc5099ab499ac9061fef2ba5299f40c93dc08fca7fcd",
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
-      "heading": "Status\n          rollup remains the existing worst-of `(stage,state)` operation.\n          Terminality aggregates separately as classified, terminal, pending\n          and unclassified counts; it never changes the stage sort key. The\n          existing `done` report view remains stage-local, while a separate\n          terminal view selects only derived `terminal` facts. @status:spec/done",
+      "heading": "Status\n          rollup remains the existing worst-of `(stage,state)` operation.\n          Terminality aggregates separately as classified, terminal, pending\n          and unclassified counts; it never changes the stage sort key. The\n          existing `done` report view remains stage-local, while a separate\n          terminal view selects only derived `terminal` facts. @status:impl/done",
       "line": 556,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#TERMINAL-ROLLUP-SEPARATE"
     },
     {
       "anchor": "TERMINAL-FOLD-LAW",
-      "content_hash": "sha256:c215f59fbc4ad82d879ca9b0264c365657960b3df8780eb9cc7f84097be10c38",
+      "content_hash": "sha256:b252cc8cc63fecb0ac8506209e6fa2cb65d4b62f33a2a17f288116164011916f",
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
-      "heading": "A section/document\n          marker cannot fold away fact-owned requirements. Classified facts\n          remain fact-grained until a future explicitly specified aggregate\n          requirements carrier can preserve every set losslessly. A fold that\n          would drop requirements is a check error. @status:spec/done",
+      "heading": "A section/document\n          marker cannot fold away fact-owned requirements. Classified facts\n          remain fact-grained until a future explicitly specified aggregate\n          requirements carrier can preserve every set losslessly. A fold that\n          would drop requirements is a check error. @status:impl/done",
       "line": 562,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#TERMINAL-FOLD-LAW"
     },
     {
       "anchor": "TERMINAL-FREEZE-CORRECTION",
-      "content_hash": "sha256:6ba41f367c4da6bc7af664d85f2e4a4a1e87765100e108fb56cd7cf630a05c1c",
+      "content_hash": "sha256:50abc19bfb544db1b4a4453046c3fa1efcc8c7cf3544437a713bd877335113e6",
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
-      "heading": "The old\n          generic evidence heuristic “every `freeze/*` needs an `implements`\n          edge” is superseded for classified facts: freeze uses the same\n          declared artifact set as every other stage. During migration an\n          unclassified frozen fact retains the legacy warning rather than\n          silently losing a check. A specification-only frozen contract becomes\n          honest by declaring `requires=specification`. @status:spec/done",
+      "heading": "The old\n          generic evidence heuristic “every `freeze/*` needs an `implements`\n          edge” is superseded for classified facts: freeze uses the same\n          declared artifact set as every other stage. During migration an\n          unclassified frozen fact retains the legacy warning rather than\n          silently losing a check. A specification-only frozen contract becomes\n          honest by declaring `requires=specification`. @status:impl/done",
       "line": 567,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#TERMINAL-FREEZE-CORRECTION"
     },
     {
       "anchor": "compatibility",
-      "content_hash": "sha256:ca5eb394c59b65651b47c3a406a455f207f71a872f3989a392284a86862d8e03",
+      "content_hash": "sha256:2ee883c18299ccf25bcbcb13126261a9c212e78610773975f70fd3168480a42d",
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "3.11.3 Compatibility and projections",
@@ -86879,19 +86947,19 @@
     },
     {
       "anchor": "REQUIRES-COMPATIBILITY",
-      "content_hash": "sha256:665008d425138509d2acec7eccbb8b9a577d9499e4a522ee221945be4b5f17cb",
+      "content_hash": "sha256:d6e41797e8e481b10aaf384137f25895452484b8efd12c2ec84975d3b3f1561b",
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
-      "heading": "Old source,\n          parse sidecars, caches and baselines decode missing requirements as\n          unclassified. No existing source bytes, status, verdict or `done`\n          view changes. A newly annotated fact deliberately changes its content\n          hash; this is semantic evolution, so no compatibility layer preserves\n          its prior judgement. @status:spec/done",
+      "heading": "Old source,\n          parse sidecars, caches and baselines decode missing requirements as\n          unclassified. No existing source bytes, status, verdict or `done`\n          view changes. A newly annotated fact deliberately changes its content\n          hash; this is semantic evolution, so no compatibility layer preserves\n          its prior judgement. @status:impl/done",
       "line": 578,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#REQUIRES-COMPATIBILITY"
     },
     {
       "anchor": "REQUIRES-PROJECTION-LAW",
-      "content_hash": "sha256:200e208d1ad1ae5ebf07059c158a366298209b70813b0b95020eb803634448c7",
+      "content_hash": "sha256:b02f00281cfa2a6a391be5b300ce16f5b511e3e546baf74798e1d26d1b64323f",
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
-      "heading": "Every\n          fact-preserving Markdown/XML pivot and authored-fact query carries the\n          normalized set. The requirements metadata query exposes the authored\n          set and keeps authoring, adoption, relations and lifecycle evidence\n          as separate axes; it does not invent a portable terminal verdict from\n          partial inputs. A progress report may render its own explicitly named\n          evidence observation, including unavailable, but never persist it as\n          authored truth. @status:spec/done",
+      "heading": "Every\n          fact-preserving Markdown/XML pivot and authored-fact query carries the\n          normalized set. The requirements metadata query exposes the authored\n          set and keeps authoring, adoption, relations and lifecycle evidence\n          as separate axes; it does not invent a portable terminal verdict from\n          partial inputs. A progress report may render its own explicitly named\n          evidence observation, including unavailable, but never persist it as\n          authored truth. @status:impl/done",
       "line": 584,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#REQUIRES-PROJECTION-LAW"
     },
@@ -86906,7 +86974,7 @@
     },
     {
       "anchor": "never",
-      "content_hash": "sha256:d7e149a8a9caac46ea2ff5540b9023da5cc816b636fadfbcf548666f2f4f277d",
+      "content_hash": "sha256:13ebf945bcff78a54cff164a6dfe6d2a87ce30fe39c7eb613ab21b30d502dc54",
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "3.11.4 Never",
@@ -86915,37 +86983,37 @@
     },
     {
       "anchor": "NEVER-INFER-TERMINAL-FROM-DONE",
-      "content_hash": "sha256:c27f46214c780d6eeb24cbabf63667bb14f0f3c3b7d6aa881121717187d12ce6",
+      "content_hash": "sha256:4c496feeed19621c186718fd16e694b51347fd8a84ec0743f607c1ae84ae29e0",
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
-      "heading": "Never\n          infer whole-fact terminality from `state=done` alone. @status:spec/done",
+      "heading": "Never\n          infer whole-fact terminality from `state=done` alone. @status:impl/done",
       "line": 601,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#NEVER-INFER-TERMINAL-FROM-DONE"
     },
     {
       "anchor": "NEVER-INFER-IMPLEMENTATION-FROM-STAGE",
-      "content_hash": "sha256:195a03726a497a7ef8ef113c72e29140b60848b96da45aa0a26ab3a478deab6b",
+      "content_hash": "sha256:aa4aafef820b3c8f969028334a23d062952d8691fc33b1e11246f3b7dd9107c4",
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
-      "heading": "Never\n          infer an implementation artifact from a later stage or from freeze. @status:spec/done",
+      "heading": "Never\n          infer an implementation artifact from a later stage or from freeze. @status:impl/done",
       "line": 603,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#NEVER-INFER-IMPLEMENTATION-FROM-STAGE"
     },
     {
       "anchor": "NEVER-TREAT-ABSENCE-AS-EMPTY",
-      "content_hash": "sha256:7697cedfa4adadca752052ce6c02a965b9fd2afff69f1e9978d9bb2f314697a7",
+      "content_hash": "sha256:72dc3c94e3a5063a7f49a36933a56a85c9589191340472cbd4697936df2150ba",
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
-      "heading": "Never\n          treat absent requirements as an empty satisfied set. @status:spec/done",
+      "heading": "Never\n          treat absent requirements as an empty satisfied set. @status:impl/done",
       "line": 605,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#NEVER-TREAT-ABSENCE-AS-EMPTY"
     },
     {
       "anchor": "NEVER-PERSIST-LIVE-TERMINALITY-AS-AUTHORED-FACT",
-      "content_hash": "sha256:58b0083e6405541381f673016a83512c294b2bd0d3c56e2b6354bc07ed82c2e1",
+      "content_hash": "sha256:e1981e0efdaf9676ab701341b72342a6d764ef2dec89ae1264b0f95a8647cd7f",
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
-      "heading": "Never\n          persist a live evidence-derived terminal observation back into source\n          markup or a source-only cache. @status:spec/done",
+      "heading": "Never\n          persist a live evidence-derived terminal observation back into source\n          markup or a source-only cache. @status:impl/done",
       "line": 607,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#NEVER-PERSIST-LIVE-TERMINALITY-AS-AUTHORED-FACT"
     },
@@ -93640,7 +93708,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:fafeeed265414832f3097e0f4a489e79c08f4cc0ea81ce73426985df5f316ca3",
+      "content_hash": "sha256:f3f97580ccf573aaede6ad928bfe7c874d2114ab1e6a09dfe90ca090fce50396",
       "doc_path": "modules/vibe-progress/PROP-047",
       "file": "vibevm/vibespecs/modules/vibe-progress/PROP-047-progress-campaigns.xml",
       "heading": "PROP-047 — Progress Control: the campaign toolchain",
@@ -93721,7 +93789,7 @@
     },
     {
       "anchor": "tool",
-      "content_hash": "sha256:e99050204929baebd41817d0ee9d1c577d7de04205883cc824e58d7bad6dd9aa",
+      "content_hash": "sha256:0580d2f7491cccd030122e90e9c22ce835d37ff3a040fc6b293579ab0e74b627",
       "doc_path": "modules/vibe-progress/PROP-047",
       "file": "vibevm/vibespecs/modules/vibe-progress/PROP-047-progress-campaigns.xml",
       "heading": "3. The tool — `vibe progress`",
@@ -93775,10 +93843,10 @@
     },
     {
       "anchor": "CMD-REPORT",
-      "content_hash": "sha256:b31494ec71d08c294bdafca8f60e9e102f090f03a81819e9447baec2ddfc0697",
+      "content_hash": "sha256:34d27f10e4492858ebccd5b13058ad8e24966faea65a4ebc29db5e2604684253",
       "doc_path": "modules/vibe-progress/PROP-047",
       "file": "vibevm/vibespecs/modules/vibe-progress/PROP-047-progress-campaigns.xml",
-      "heading": "**`report`** — the tree status: XML native, `--md` table,\n  `--json`. Filters: `--view done|todo|qa|remove|doc` (the five resolution\n  views: `state=done` · `action=continue` · `stage=test&state=plan|work` ·\n  `action=remove` · `actionstage=doc`), `--audience user|author|dev`,\n  per-file and whole-project rollups, explicit-vs-computed columns, and the\n  evidence column when a provider is wired (§4). @status:impl/done",
+      "heading": "**`report`** — the tree status: XML native, `--md` table,\n  `--json`. Filters: `--view done|todo|qa|remove|doc|terminal` (the six resolution\n  views: `state=done` · `action=continue` · `stage=test&state=plan|work` ·\n  `action=remove` · `actionstage=doc` · derived terminal artifact closure), `--audience user|author|dev`,\n  per-file and whole-project rollups, explicit-vs-computed columns, and the\n  evidence column when a provider is wired (§4). @status:impl/done",
       "line": 49,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#CMD-REPORT"
     },
@@ -93847,7 +93915,7 @@
     },
     {
       "anchor": "evidence",
-      "content_hash": "sha256:a32fd94a0614b2cf7c9dbb05e85e0d4a9382b92c2d6ad6f2cb56531ed8a88a00",
+      "content_hash": "sha256:5a5a91fa96c795e82914db720ac9fc9de8d59bc1dccb7c0f77bc0b0e522b8d57",
       "doc_path": "modules/vibe-progress/PROP-047",
       "file": "vibevm/vibespecs/modules/vibe-progress/PROP-047-progress-campaigns.xml",
       "heading": "4. Evidence providers",
@@ -93910,28 +93978,28 @@
     },
     {
       "anchor": "ARTIFACT-SATISFACTION-SEAM",
-      "content_hash": "sha256:f8edd7a0df1333d236a055a213271544fc3e46ad7d8fb80da1a81a7f45d6de99",
+      "content_hash": "sha256:ffd57d02698b478f2fd6d3996d340e8c3b3351c2f86228369b6abb7c1fd668c5",
       "doc_path": "modules/vibe-progress/PROP-047",
       "file": "vibevm/vibespecs/modules/vibe-progress/PROP-047-progress-campaigns.xml",
-      "heading": "The evidence\n    seam also serves PROP-043 `##TERMINAL-PER-ARTIFACT`: for each declared\n    terminal artifact it reports `satisfied | missing | unavailable` and exact\n    locators when it has them. The facts core itself satisfies self-carried\n    specification/decision/research/plan/disposition artifacts from their\n    explicit declaration on the addressed `state=done` fact; the vibevm specmap adapter observes exact\n    `implements`, `verifies` and `documents` relations; an external artifact\n    stays unavailable until an observer can check its `ref`. A provider absence\n    and a known zero are never conflated. @status:spec/done",
+      "heading": "The evidence\n    seam also serves PROP-043 `##TERMINAL-PER-ARTIFACT`: for each declared\n    terminal artifact it reports `satisfied | missing | unavailable` and exact\n    locators when it has them. The facts core itself satisfies self-carried\n    specification/decision/research/plan/disposition artifacts from their\n    explicit declaration on the addressed `state=done` fact; the vibevm specmap adapter observes exact\n    `implements`, `verifies` and `documents` relations; an external artifact\n    stays unavailable until an observer can check its `ref`. A provider absence\n    and a known zero are never conflated. @status:impl/done",
       "line": 122,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#ARTIFACT-SATISFACTION-SEAM"
     },
     {
       "anchor": "TERMINAL-OBSERVATION-SURFACE",
-      "content_hash": "sha256:7b7a3cddae56d35dbf546343e19911bac4fa11619e96a77efa6b3f7eee952f34",
+      "content_hash": "sha256:d8cd0c410aad212a5a28d279cfdad868ab568caf6472720e83531f656538921e",
       "doc_path": "modules/vibe-progress/PROP-047",
       "file": "vibevm/vibespecs/modules/vibe-progress/PROP-047-progress-campaigns.xml",
-      "heading": "`report`\n    renders the authored canonical `requires` set, each artifact observation,\n    and the derived `unclassified | pending | terminal` result. A separate\n    `terminal` view selects only terminal facts; the existing `done` view\n    remains exactly `state=done`. XML/Markdown/JSON projections share one row\n    model. Dashboard/state projections consume that result and never recompute\n    it from partial cache fields. @status:spec/done",
+      "heading": "`report`\n    renders the authored canonical `requires` set, each artifact observation,\n    and the derived `unclassified | pending | terminal` result. A separate\n    `terminal` view selects only terminal facts; the existing `done` view\n    remains exactly `state=done`. XML/Markdown/JSON projections share one row\n    model. Dashboard/state projections consume that result and never recompute\n    it from partial cache fields. @status:impl/done",
       "line": 131,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#TERMINAL-OBSERVATION-SURFACE"
     },
     {
       "anchor": "TERMINAL-OBSERVATION-NOT-VERDICT",
-      "content_hash": "sha256:8403c6d46ec568c516491c871bffbcea4088d90e1d49220fb6a9475e4a5319a5",
+      "content_hash": "sha256:679e582430ee37097b6808b838ff76e97f85fccaf78dbf60216ba57a043394bb",
       "doc_path": "modules/vibe-progress/PROP-047",
       "file": "vibevm/vibespecs/modules/vibe-progress/PROP-047-progress-campaigns.xml",
-      "heading": "A\n    terminal observation answers only whether the fact's declared artifact set\n    is currently satisfied by this provider snapshot. Campaign verdicts\n    (`confirmed | drift | unverifiable`), lifecycle verification evidence and\n    adoption remain separate axes. The observation is never written into\n    authored markup, the tracked cache or a baseline as truth. @status:spec/done",
+      "heading": "A\n    terminal observation answers only whether the fact's declared artifact set\n    is currently satisfied by this provider snapshot. Campaign verdicts\n    (`confirmed | drift | unverifiable`), lifecycle verification evidence and\n    adoption remain separate axes. The observation is never written into\n    authored markup, the tracked cache or a baseline as truth. @status:impl/done",
       "line": 138,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#TERMINAL-OBSERVATION-NOT-VERDICT"
     },
@@ -94108,7 +94176,7 @@
     },
     {
       "anchor": "maintenance",
-      "content_hash": "sha256:5cdb41f36c4692ad786a793dc4ec5441c175f825cbce490fddb25836ee886d53",
+      "content_hash": "sha256:f759f1be58f9ae7b716f2b549fa6343e1c31561b0ae33aeb5b3edfc2edbaf7db",
       "doc_path": "modules/vibe-progress/PROP-047",
       "file": "vibevm/vibespecs/modules/vibe-progress/PROP-047-progress-campaigns.xml",
       "heading": "6. Maintenance discipline",
@@ -94144,10 +94212,10 @@
     },
     {
       "anchor": "FREEZE-NEEDS-EVIDENCE",
-      "content_hash": "sha256:f0f2db7664df3668fe83a083547757f48ea9a8f47e9750e306dd0a2f62e01274",
+      "content_hash": "sha256:b6e4bc5bf8f4bac5488d0f87757f4acc5fe0f43e4360eea1f554c4a10a5d501b",
       "doc_path": "modules/vibe-progress/PROP-047",
       "file": "vibevm/vibespecs/modules/vibe-progress/PROP-047-progress-campaigns.xml",
-      "heading": "A classified\n  `freeze/done` fact requires the artifact evidence its own `@requires` set\n  names; freeze alone never manufactures an implementation obligation. An\n  unclassified frozen fact retains the legacy implementation-edge warning\n  during migration, so introducing terminal contracts cannot silently weaken\n  an existing gate. @status:spec/done",
+      "heading": "A classified\n  `freeze/done` fact requires the artifact evidence its own `@requires` set\n  names; freeze alone never manufactures an implementation obligation. An\n  unclassified frozen fact retains the legacy implementation-edge warning\n  during migration, so introducing terminal contracts cannot silently weaken\n  an existing gate. @status:impl/done",
       "line": 218,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#FREEZE-NEEDS-EVIDENCE"
     },

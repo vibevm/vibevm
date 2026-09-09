@@ -383,6 +383,7 @@ fn mk_fact(kind: FactKind, text: &str, source: &str, s: usize, e: usize, line: u
         content_hash: content_hash(&body),
         body,
         marked: false,
+        marker_index: None,
         covers: None,
     }
 }

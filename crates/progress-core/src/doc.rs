@@ -61,6 +61,15 @@ pub struct Fact {
     /// Set by the marker scan: the unit carries its own marker.
     #[serde(default)]
     pub marked: bool,
+    /// Index into [`ParsedDoc::markers`] of this fact's whole-unit status.
+    ///
+    /// The association is established while the parser still has the fact's
+    /// exact block-local byte span. A line number is not sufficient: several
+    /// table cells, each with its own status and ref, may share one physical
+    /// source line. Old parse sidecars decode this additive field as `None`;
+    /// consumers must then decline to guess an owner.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub marker_index: Option<usize>,
     /// The 1-based inclusive line range of an adjacent block this fact's body
     /// extends into, when its anchor names an object type (`@fact/code:<ID>`).
     ///

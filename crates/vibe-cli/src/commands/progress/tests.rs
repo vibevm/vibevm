@@ -250,7 +250,7 @@ fn incremental_fixture(root: &Path) -> std::io::Result<()> {
          ##b1 A paragraph under the section marker. @spec/work\n\n\
          | h1 | h2 |\n\
          | --- | --- |\n\
-         | ##b2 cell one @impl/done | ##b3 cell two @impl/work |\n",
+         | ##b2 cell one @requires:specification @impl/done | ##b3 cell two @impl/work |\n",
     )?;
     std::fs::write(
         root.join("progress.toml"),

@@ -246,3 +246,23 @@ fn every_markdown_carrier_round_trips_requirements() {
         5
     );
 }
+
+#[test]
+fn same_line_table_cells_keep_their_own_status_ref_and_requirements() {
+    let md = "| A | B |\n|---|---|\n\
+              | @fact:LEFT left @requires:specification @status:spec/done | \
+              @fact:RIGHT right @requires:external <status stage=\"impl\" state=\"done\" ref=\"proof:right\"/> |\n";
+    let ir = from_markdown(md).expect("two independently marked cells");
+    let xml = to_xml(&ir);
+    assert!(
+        xml.contains("<LEFT fact=\"true\" status=\"spec/done\" requires=\"specification\""),
+        "{xml}"
+    );
+    assert!(
+        xml.contains(
+            "<RIGHT fact=\"true\" status=\"impl/done\" requires=\"external\" ref=\"proof:right\""
+        ),
+        "{xml}"
+    );
+    assert_eq!(crate::from_xml(&xml).expect("XML reparse"), ir);
+}

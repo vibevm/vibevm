@@ -27,6 +27,7 @@ mod markers;
 mod requires;
 #[cfg(test)]
 mod requires_link_tests;
+mod requires_owner;
 mod swallowed;
 mod units;
 
@@ -36,6 +37,7 @@ use blocks::collect_blocks;
 use facts::{bind_covered_blocks, segment_facts};
 use markers::scan_markers;
 use requires::scan_requirements;
+use requires_owner::check_requirement_owners;
 use sha2::{Digest, Sha256};
 use swallowed::check_swallowed_anchors;
 use units::collect_units;
@@ -66,6 +68,7 @@ pub fn parse_document(path: &str, text: &str) -> ParsedDoc {
     bind_covered_blocks(&mut doc);
     scan_markers(&mut doc);
     scan_requirements(&mut doc);
+    check_requirement_owners(&mut doc);
     check_anchor_laws(&mut doc, text);
     doc.fact_count = doc.blocks.iter().map(|b| b.facts.len()).sum();
     doc

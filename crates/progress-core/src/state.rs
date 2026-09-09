@@ -12,6 +12,9 @@ use serde_json::json;
 use std::collections::BTreeMap;
 use std::path::Path;
 
+mod terminal;
+pub use terminal::{TerminalFileState, TerminalState, write_terminal_state};
+
 pub const STATE_SCHEMA: u32 = 1;
 
 /// A gate's last reported verdict. `stale` is what a gate holds once the

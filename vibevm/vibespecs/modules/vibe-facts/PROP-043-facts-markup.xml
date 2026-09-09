@@ -429,7 +429,7 @@ or end of a paragraph's text, never mid-sentence, never inside code or links.</S
       </facts>
     </rollup>
     <terminal-artifacts title="3.11 Terminal artifact obligations">
-      <p><TERMINALITY-IS-ORTHOGONAL fact="true" status="spec/done">**Decision
+      <p><TERMINALITY-IS-ORTHOGONAL fact="true" status="impl/done">**Decision
       (owner, 2026-09-09): terminality is independent of status.** `stage/state`
       continues to answer where a fact stands now, and `done` continues to mean
       done only for that stage. An addressable fact may separately declare the
@@ -495,34 +495,34 @@ or end of a paragraph's text, never mid-sentence, never inside code or links.</S
         genres: a research document may require an implementation, and a
         contract fact may itself be a decision artifact.</REQUIRED-ARTIFACT-KINDS></p>
         <facts ordered="false">
-          <ARTIFACT-SELF-CARRIED fact="true" status="spec/done">`specification`,
+          <ARTIFACT-SELF-CARRIED fact="true" status="impl/done">`specification`,
           `decision`, `research` and `plan` name the addressed fact body (plus
           its typed bound object, when any) as the delivered artifact. They need
           no `implements` edge merely to exist. `state=done` asserts that this
           self-carried artifact is complete; independent campaign judgement may
           still confirm, drift or reject that assertion.</ARTIFACT-SELF-CARRIED>
-          <ARTIFACT-IMPLEMENTATION fact="true" status="spec/done">`implementation`
+          <ARTIFACT-IMPLEMENTATION fact="true" status="impl/done">`implementation`
           requires independently observed implementing evidence for this exact
           fact address. A provider that knows the address and reports zero is
           `missing`; no provider or an address outside its knowledge is
           `unavailable`, never silently satisfied.</ARTIFACT-IMPLEMENTATION>
-          <ARTIFACT-VERIFICATION fact="true" status="spec/done">`verification`
+          <ARTIFACT-VERIFICATION fact="true" status="impl/done">`verification`
           requires independently observed verifying evidence for the exact fact.
           An edge establishes attribution, not that a test run passed forever;
           campaign verdict freshness remains separate evidence and is never
           copied into authored markup.</ARTIFACT-VERIFICATION>
-          <ARTIFACT-DOCUMENTATION fact="true" status="spec/done">`documentation`
+          <ARTIFACT-DOCUMENTATION fact="true" status="impl/done">`documentation`
           is self-carried by a fact at `doc/done`; otherwise it requires an
           independently observed `documents` artifact/relation. Documentation
           about a fact and the fact's normative specification remain distinct.</ARTIFACT-DOCUMENTATION>
-          <ARTIFACT-DISPOSITION fact="true" status="spec/done">`disposition`
+          <ARTIFACT-DISPOSITION fact="true" status="impl/done">`disposition`
           is a self-carried authored assertion that the addressed fact body is
           the durable outcome record for the thing it discusses. At
           `state=done` the declaration itself satisfies the artifact presence;
           campaign judgement still confirms or rejects whether the body really
           records an accepted, rejected, deferred or superseded outcome. The
           core never guesses those semantics from prose.</ARTIFACT-DISPOSITION>
-          <ARTIFACT-EXTERNAL fact="true" status="spec/done">`external` names an
+          <ARTIFACT-EXTERNAL fact="true" status="impl/done">`external` names an
           artifact outside the fact body and therefore requires exactly one
           non-empty fact `ref` plus an observer capable of checking that
           locator. In Markdown that ref is the existing `ref` attribute of the
@@ -535,7 +535,7 @@ or end of a paragraph's text, never mid-sentence, never inside code or links.</S
       </artifacts>
       <terminal-observation title="3.11.2 Derived terminal observation">
         <facts ordered="false">
-          <TERMINAL-OUTCOMES fact="true" status="spec/done">The closed derived
+          <TERMINAL-OUTCOMES fact="true" status="impl/done">The closed derived
           outcome is `unclassified | pending | terminal`. `unclassified` means
           `requires` is absent. `pending` means the set is present but the fact
           is not at `state=done`, carries any action, or at least one required
@@ -543,28 +543,28 @@ or end of a paragraph's text, never mid-sentence, never inside code or links.</S
           set is present, the fact is at `state=done`, no action remains, and
           every required artifact is satisfied. Parser/check errors are invalid
           input, not a fourth outcome.</TERMINAL-OUTCOMES>
-          <TERMINAL-PER-ARTIFACT fact="true" status="spec/done">Each required
+          <TERMINAL-PER-ARTIFACT fact="true" status="impl/done">Each required
           kind is reported as `satisfied | missing | unavailable`, with exact
           evidence locators when available. Overall `pending` never erases that
           distinction. The markup declares the closure contract; current
           evidence observes it. Neither side forges the other.</TERMINAL-PER-ARTIFACT>
-          <TERMINAL-NO-STAGE-INFERENCE fact="true" status="spec/done">No stage
+          <TERMINAL-NO-STAGE-INFERENCE fact="true" status="impl/done">No stage
           ordering implies an artifact. `test/done` does not by itself prove an
           implementation; `impl/done` does not imply documentation; and
           `freeze/done` does not imply source code. Only the declared set plus
           its artifact observations decides terminality.</TERMINAL-NO-STAGE-INFERENCE>
-          <TERMINAL-ROLLUP-SEPARATE fact="true" status="spec/done">Status
+          <TERMINAL-ROLLUP-SEPARATE fact="true" status="impl/done">Status
           rollup remains the existing worst-of `(stage,state)` operation.
           Terminality aggregates separately as classified, terminal, pending
           and unclassified counts; it never changes the stage sort key. The
           existing `done` report view remains stage-local, while a separate
           terminal view selects only derived `terminal` facts.</TERMINAL-ROLLUP-SEPARATE>
-          <TERMINAL-FOLD-LAW fact="true" status="spec/done">A section/document
+          <TERMINAL-FOLD-LAW fact="true" status="impl/done">A section/document
           marker cannot fold away fact-owned requirements. Classified facts
           remain fact-grained until a future explicitly specified aggregate
           requirements carrier can preserve every set losslessly. A fold that
           would drop requirements is a check error.</TERMINAL-FOLD-LAW>
-          <TERMINAL-FREEZE-CORRECTION fact="true" status="spec/done">The old
+          <TERMINAL-FREEZE-CORRECTION fact="true" status="impl/done">The old
           generic evidence heuristic “every `freeze/*` needs an `implements`
           edge” is superseded for classified facts: freeze uses the same
           declared artifact set as every other stage. During migration an
@@ -575,13 +575,13 @@ or end of a paragraph's text, never mid-sentence, never inside code or links.</S
       </terminal-observation>
       <compatibility title="3.11.3 Compatibility and projections">
         <facts ordered="false">
-          <REQUIRES-COMPATIBILITY fact="true" status="spec/done">Old source,
+          <REQUIRES-COMPATIBILITY fact="true" status="impl/done">Old source,
           parse sidecars, caches and baselines decode missing requirements as
           unclassified. No existing source bytes, status, verdict or `done`
           view changes. A newly annotated fact deliberately changes its content
           hash; this is semantic evolution, so no compatibility layer preserves
           its prior judgement.</REQUIRES-COMPATIBILITY>
-          <REQUIRES-PROJECTION-LAW fact="true" status="spec/done">Every
+          <REQUIRES-PROJECTION-LAW fact="true" status="impl/done">Every
           fact-preserving Markdown/XML pivot and authored-fact query carries the
           normalized set. The requirements metadata query exposes the authored
           set and keeps authoring, adoption, relations and lifecycle evidence
@@ -598,13 +598,13 @@ or end of a paragraph's text, never mid-sentence, never inside code or links.</S
       </compatibility>
       <never title="3.11.4 Never">
         <facts ordered="false">
-          <NEVER-INFER-TERMINAL-FROM-DONE fact="true" status="spec/done">Never
+          <NEVER-INFER-TERMINAL-FROM-DONE fact="true" status="impl/done">Never
           infer whole-fact terminality from `state=done` alone.</NEVER-INFER-TERMINAL-FROM-DONE>
-          <NEVER-INFER-IMPLEMENTATION-FROM-STAGE fact="true" status="spec/done">Never
+          <NEVER-INFER-IMPLEMENTATION-FROM-STAGE fact="true" status="impl/done">Never
           infer an implementation artifact from a later stage or from freeze.</NEVER-INFER-IMPLEMENTATION-FROM-STAGE>
-          <NEVER-TREAT-ABSENCE-AS-EMPTY fact="true" status="spec/done">Never
+          <NEVER-TREAT-ABSENCE-AS-EMPTY fact="true" status="impl/done">Never
           treat absent requirements as an empty satisfied set.</NEVER-TREAT-ABSENCE-AS-EMPTY>
-          <NEVER-PERSIST-LIVE-TERMINALITY-AS-AUTHORED-FACT fact="true" status="spec/done">Never
+          <NEVER-PERSIST-LIVE-TERMINALITY-AS-AUTHORED-FACT fact="true" status="impl/done">Never
           persist a live evidence-derived terminal observation back into source
           markup or a source-only cache.</NEVER-PERSIST-LIVE-TERMINALITY-AS-AUTHORED-FACT>
         </facts>

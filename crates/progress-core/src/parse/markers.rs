@@ -58,7 +58,7 @@ pub(super) fn scan_markers(doc: &mut ParsedDoc) {
                     continue; // stranded — already reported
                 };
                 let span = (0usize, b.scan_text.len());
-                extract_from_span(doc, b, span, span.0, *gran, true);
+                extract_from_span(doc, b, span, span.0, *gran, true, None);
             }
             BlockKind::Text => {
                 for (fi, f) in b.facts.iter().enumerate() {
@@ -68,9 +68,18 @@ pub(super) fn scan_markers(doc: &mut ParsedDoc) {
                         FactKind::Para | FactKind::Lead => Granularity::Paragraph,
                     };
                     let (_, content_start) = take_fact_id(&b.scan_text, f.span.0, f.span.1);
-                    let had = extract_from_span(doc, b, f.span, content_start, gran, false);
+                    let (had, marker_index) = extract_from_span(
+                        doc,
+                        b,
+                        f.span,
+                        content_start,
+                        gran,
+                        false,
+                        f.id.as_deref(),
+                    );
                     if had {
                         doc.blocks[i].facts[fi].marked = true;
+                        doc.blocks[i].facts[fi].marker_index = marker_index;
                     } else {
                         doc.unmarked_facts.push((i, fi));
                     }
@@ -108,10 +117,12 @@ fn extract_from_span(
     content_start: usize,
     gran: Granularity,
     standalone: bool,
-) -> bool {
+    owner: Option<&str>,
+) -> (bool, Option<usize>) {
     let text = &b.scan_text;
     let (s, e) = span;
     let mut found_any = false;
+    let mut whole_unit_marker = None;
     let mut i = s;
     let bytes = text.as_bytes();
     while i < e {
@@ -166,7 +177,12 @@ fn extract_from_span(
                     }
                 }
                 if let Some(m) = build_marker(&d, form, gran_here, line) {
+                    let marker_index = doc.markers.len();
                     doc.markers.push(m);
+                    if gran_here == gran && gran_here != Granularity::Fragment {
+                        flag_duplicate_whole_unit(doc, whole_unit_marker, marker_index, owner);
+                        whole_unit_marker = Some(marker_index);
+                    }
                     // A point/shorthand marks the unit; a wrapper inside
                     // the unit counts too (an inline fact is still a
                     // marked fact — §3.8 item 6).
@@ -205,6 +221,7 @@ fn extract_from_span(
             let after_ok = text[i + sh.len..e].trim().is_empty();
             if standalone || before_ok || after_ok {
                 let line = b.line_start + text[..i].matches('\n').count();
+                let marker_index = doc.markers.len();
                 doc.markers.push(Marker {
                     stage: sh.stage,
                     state: sh.state,
@@ -217,6 +234,8 @@ fn extract_from_span(
                     granularity: gran,
                     line,
                 });
+                flag_duplicate_whole_unit(doc, whole_unit_marker, marker_index, owner);
+                whole_unit_marker = Some(marker_index);
                 found_any = true;
                 i += sh.len;
                 continue;
@@ -226,7 +245,28 @@ fn extract_from_span(
         let step = text[i..].chars().next().map(char::len_utf8).unwrap_or(1);
         i += step;
     }
-    found_any
+    (found_any, whole_unit_marker)
+}
+
+fn flag_duplicate_whole_unit(
+    doc: &mut ParsedDoc,
+    first: Option<usize>,
+    second: usize,
+    owner: Option<&str>,
+) {
+    let Some(first) = first else { return };
+    let owner = owner
+        .map(|id| format!("fact `{id}`"))
+        .unwrap_or_else(|| "unit".into());
+    doc.issues.push(Issue {
+        severity: Severity::Error,
+        line: doc.markers[second].line,
+        code: IssueCode::DuplicateStatus,
+        message: format!(
+            "second whole-unit status for {owner} (first at line {})",
+            doc.markers[first].line
+        ),
+    });
 }
 
 fn push_attr_issues(doc: &mut ParsedDoc, d: &DecodedAttrs, lex_errors: &[String], line: usize) {
@@ -275,6 +315,7 @@ fn build_marker(
 #[cfg(test)]
 mod tests {
     use super::super::parse_document;
+    use crate::model::Granularity;
 
     #[test]
     fn point_marker_attributes_keep_inline_code_verbatim() {
@@ -286,5 +327,68 @@ mod tests {
         let marker = doc.document_marker().expect("document marker");
         assert_eq!(marker.comment.as_deref(), Some("shipped with `471e3b1b`"));
         assert_eq!(marker.r#ref.as_deref(), Some("`release-proof`"));
+    }
+
+    #[test]
+    fn same_line_cells_keep_exact_marker_indices_through_serde() {
+        let source = "| A | B |\n|---|---|\n| @fact:A one @requires:external <status stage=\"impl\" state=\"done\" ref=\"left\"/> | @fact:B two @requires:external <status stage=\"test\" state=\"done\" ref=\"right\"/> |\n";
+        let doc = parse_document("x.md", source);
+        assert_eq!(doc.error_count(), 0, "issues: {:#?}", doc.issues);
+        let facts: Vec<_> = doc.blocks.iter().flat_map(|block| &block.facts).collect();
+        let left = facts[0].marker_index.expect("left marker");
+        let right = facts[1].marker_index.expect("right marker");
+        assert_ne!(left, right, "same physical line still has two owners");
+        assert_eq!(doc.markers[left].r#ref.as_deref(), Some("left"));
+        assert_eq!(doc.markers[right].r#ref.as_deref(), Some("right"));
+
+        let json = serde_json::to_string(&doc).expect("serialize parse sidecar");
+        let decoded: crate::doc::ParsedDoc =
+            serde_json::from_str(&json).expect("decode parse sidecar");
+        let facts: Vec<_> = decoded
+            .blocks
+            .iter()
+            .flat_map(|block| &block.facts)
+            .collect();
+        assert_eq!(
+            decoded.markers[facts[0].marker_index.unwrap()].r#ref,
+            Some("left".into())
+        );
+        assert_eq!(
+            decoded.markers[facts[1].marker_index.unwrap()].r#ref,
+            Some("right".into())
+        );
+    }
+
+    #[test]
+    fn two_whole_unit_statuses_are_duplicate_with_or_without_requirements() {
+        for source in [
+            "@fact:A @spec/done body @impl/done\n",
+            "@fact:A @spec/done body @requires:specification @impl/done\n",
+        ] {
+            let doc = parse_document("x.md", source);
+            assert!(
+                doc.issues.iter().any(|issue| {
+                    issue.code == crate::doc::IssueCode::DuplicateStatus
+                        && issue.message.contains("fact `A`")
+                        && issue.message.contains("first at line")
+                }),
+                "{source}: {:#?}",
+                doc.issues
+            );
+        }
+    }
+
+    #[test]
+    fn fragment_wrapper_plus_one_whole_unit_status_remains_legal() {
+        let doc = parse_document(
+            "x.md",
+            "@fact:A <status stage=\"spec\" state=\"done\">part</status> rest @requires:specification @impl/done\n",
+        );
+        assert_eq!(doc.error_count(), 0, "issues: {:#?}", doc.issues);
+        let fact = &doc.blocks[0].facts[0];
+        assert_eq!(
+            doc.markers[fact.marker_index.unwrap()].granularity,
+            Granularity::Paragraph
+        );
     }
 }

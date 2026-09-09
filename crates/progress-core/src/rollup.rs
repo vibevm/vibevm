@@ -74,6 +74,7 @@ pub enum FoldLoss {
     Audience,
     Ref,
     Comment,
+    Requirements,
 }
 
 impl FoldLoss {
@@ -85,6 +86,7 @@ impl FoldLoss {
             FoldLoss::Audience => "audience",
             FoldLoss::Ref => "ref",
             FoldLoss::Comment => "comment",
+            FoldLoss::Requirements => "requirements",
         }
     }
 }
@@ -125,11 +127,11 @@ impl fmt::Display for FoldIssue {
 
 /// Verify every claimed marker-density fold in one document.
 ///
-/// A section-level marker **folds** the unit markers under it when all of
-/// them carry the same `(stage, state)`; the fold is **lossless** when the
-/// section marker carries exactly that pair and every `action`,
+/// A document- or section-level marker **folds** the immediate unit markers
+/// under it when all carry the same `(stage, state)`; the fold is **lossless**
+/// when the aggregate marker carries exactly that pair and every `action`,
 /// `actionstage`, `audience`, `ref` and `comment` those units carried.
-/// One issue per section — the first unit whose information the fold drops.
+/// One issue per aggregate — the first unit whose information it drops.
 ///
 /// Silent by design: a section with no section-level marker, a section
 /// with no unit markers, and a section whose units **disagree** — a mixed
@@ -138,18 +140,23 @@ impl fmt::Display for FoldIssue {
 pub fn fold_check(doc: &ParsedDoc) -> Vec<FoldIssue> {
     let sections = section_markers(doc);
     let mut out = Vec::new();
+    if let Some(document) = doc.document_marker()
+        && let Some(issue) = fold_issue(
+            doc,
+            &doc.path,
+            document,
+            &folded_document_units(doc, &sections),
+        )
+    {
+        out.push(issue);
+    }
     for (i, u) in doc.units.iter().enumerate() {
         let Some(section) = sections[i] else { continue };
         let folded = folded_units(doc, i, &sections);
-        let Some(first) = folded.first() else {
-            continue;
-        };
         // Agreement is the fold precondition, and a disagreeing section is
         // silent — that is `POST-CAMPAIGN-FOLD`'s own wording ("a section
         // whose units agree collapses to one unit marker … mixed sections
-        // stay fact-marked"). The task's own §6 sketch described a *mixed*
-        // section and so could never fire; the executor read the rule over
-        // the fixture, which was the right call.
+        // stay fact-marked").
         //
         // Reviewer's ruling on the residual (2026-07-25): what survives the
         // precondition — unanimous units under a section marker carrying a
@@ -164,24 +171,37 @@ pub fn fold_check(doc: &ParsedDoc) -> Vec<FoldIssue> {
         // promote the adapter's fold class back to Error. -->
         //
         // spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#rollup
-        let pair = (first.stage, first.state);
-        if folded.iter().any(|m| (m.stage, m.state) != pair) {
-            continue;
-        }
-        if let Some((m, lost)) = folded
-            .iter()
-            .find_map(|m| loss_of(section, m).map(|lost| (*m, lost)))
-        {
-            out.push(FoldIssue {
-                section: section_name(u),
-                line: section.line,
-                unit: unit_name(doc, m),
-                unit_line: m.line,
-                lost,
-            });
+        if let Some(issue) = fold_issue(doc, &section_name(u), section, &folded) {
+            out.push(issue);
         }
     }
     out
+}
+
+fn fold_issue(
+    doc: &ParsedDoc,
+    owner: &str,
+    aggregate: &Marker,
+    folded: &[&Marker],
+) -> Option<FoldIssue> {
+    let first = folded.first()?;
+    let pair = (first.stage, first.state);
+    if folded
+        .iter()
+        .any(|marker| (marker.stage, marker.state) != pair)
+    {
+        return None;
+    }
+    let (unit, lost) = folded
+        .iter()
+        .find_map(|unit| loss_of(doc, aggregate, unit).map(|lost| (*unit, lost)))?;
+    Some(FoldIssue {
+        section: owner.to_string(),
+        line: aggregate.line,
+        unit: unit_name(doc, unit),
+        unit_line: unit.line,
+        lost,
+    })
 }
 
 /// The section-level marker each heading unit carries, by unit index. A
@@ -206,6 +226,40 @@ fn section_markers(doc: &ParsedDoc) -> Vec<Option<&Marker>> {
 /// Index of the heading unit a line falls directly under.
 fn owner_index(doc: &ParsedDoc, line: usize) -> Option<usize> {
     doc.units.iter().rposition(|u| u.line_start <= line)
+}
+
+fn folded_document_units<'a>(
+    doc: &'a ParsedDoc,
+    sections: &[Option<&'a Marker>],
+) -> Vec<&'a Marker> {
+    let mut opaque: Vec<(usize, usize)> = Vec::new();
+    let mut out = Vec::new();
+    for (index, unit) in doc.units.iter().enumerate() {
+        if opaque
+            .iter()
+            .any(|&(start, end)| unit.line_start > start && unit.line_start <= end)
+        {
+            continue;
+        }
+        if let Some(marker) = sections[index] {
+            opaque.push((unit.line_start, unit.line_end));
+            out.push(marker);
+        }
+    }
+    for marker in &doc.markers {
+        let fact_grain = matches!(
+            marker.granularity,
+            Granularity::Paragraph | Granularity::Item | Granularity::Cell
+        );
+        let hidden = opaque
+            .iter()
+            .any(|&(start, end)| marker.line > start && marker.line <= end);
+        if fact_grain && !hidden {
+            out.push(marker);
+        }
+    }
+    out.sort_by_key(|marker| marker.line);
+    out
 }
 
 /// The units a section marker stands over: every unit marker inside the
@@ -253,7 +307,19 @@ fn folded_units<'a>(
 }
 
 /// What the section marker fails to carry from one folded unit.
-fn loss_of(section: &Marker, unit: &Marker) -> Option<FoldLoss> {
+fn loss_of(doc: &ParsedDoc, section: &Marker, unit: &Marker) -> Option<FoldLoss> {
+    let marker_index = doc
+        .markers
+        .iter()
+        .position(|candidate| std::ptr::eq(candidate, unit));
+    if marker_index.is_some_and(|index| {
+        doc.blocks
+            .iter()
+            .flat_map(|block| &block.facts)
+            .any(|fact| fact.marker_index == Some(index) && fact.requirements.is_some())
+    }) {
+        return Some(FoldLoss::Requirements);
+    }
     if (unit.stage, unit.state) != (section.stage, section.state) {
         return Some(FoldLoss::State);
     }
@@ -293,10 +359,29 @@ fn section_name(u: &Unit) -> String {
 /// The name of the unit a marker belongs to: a subsection's anchor for a
 /// section marker, else the `##<ID>` of the fact it sits in.
 fn unit_name(doc: &ParsedDoc, m: &Marker) -> String {
+    let marker_index = doc
+        .markers
+        .iter()
+        .position(|candidate| std::ptr::eq(candidate, m));
+    if let Some(id) = marker_index.and_then(|index| {
+        doc.blocks
+            .iter()
+            .flat_map(|block| &block.facts)
+            .find(|fact| fact.marker_index == Some(index))
+            .and_then(|fact| fact.id.as_deref())
+    }) {
+        return id.to_string();
+    }
     if m.granularity == Granularity::Section
         && let Some(j) = owner_index(doc, m.line)
     {
         return section_name(&doc.units[j]);
+    }
+    if matches!(
+        m.granularity,
+        Granularity::Paragraph | Granularity::Item | Granularity::Cell | Granularity::Fragment
+    ) {
+        return format!("line {}", m.line);
     }
     for b in &doc.blocks {
         if m.line < b.line_start || m.line > b.line_end {
@@ -310,6 +395,10 @@ fn unit_name(doc: &ParsedDoc, m: &Marker) -> String {
     }
     format!("line {}", m.line)
 }
+
+#[cfg(test)]
+#[path = "rollup/terminal_tests.rs"]
+mod terminal_tests;
 
 #[cfg(test)]
 mod tests {
@@ -423,6 +512,23 @@ Body paragraph. @idea
         assert_eq!(issues.len(), 1);
         assert_eq!(issues[0].unit, "a");
         assert_eq!(issues[0].lost, FoldLoss::Action);
+    }
+
+    #[test]
+    fn fold_losing_fact_owned_requirements_is_caught() {
+        let text = "\
+# T {#t}
+
+## S {#s}
+
+<status stage=\"spec\" state=\"done\"/>
+
+@fact:A complete contract @requires:specification @spec/done
+";
+        let issues = fold_check(&parse_document("x.md", text));
+        assert_eq!(issues.len(), 1);
+        assert_eq!(issues[0].unit, "A");
+        assert_eq!(issues[0].lost, FoldLoss::Requirements);
     }
 
     /// Mixed stages are not a fold at all: the check never demands that
