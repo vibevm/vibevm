@@ -50,14 +50,14 @@ fn markdown_and_xml_forms_mint_the_same_canonical_address() {
     write_spec(
         markdown.path(),
         &spec_rel("RULE.md"),
-        "# Rules\n\n@fact:FIRST First. @status:impl/done\n",
+        "# Rules\n\n@fact:FIRST First. @requires:verification,specification @status:impl/done\n",
     );
     let xml = tempdir().expect("tempdir");
     write_spec(
         xml.path(),
         &spec_rel("RULE.xml"),
         format!(
-            "<spec {XML_NS}><p><fact id=\"FIRST\" status=\"impl/done\">First.</fact></p></spec>"
+            "<spec {XML_NS}><p><fact id=\"FIRST\" status=\"impl/done\" requires=\"specification,verification\">First.</fact></p></spec>"
         )
         .as_str(),
     );
@@ -70,6 +70,13 @@ fn markdown_and_xml_forms_mint_the_same_canonical_address() {
         from_md,
         vec![AuthoredFact {
             address: "spec://org.example/pkg/RULE#FIRST".to_string(),
+            requirements:
+                Some(
+                    progress_core::model::ArtifactRequirements::parse_csv(
+                        "specification,verification",
+                    )
+                    .unwrap(),
+                ),
             status: Some(status("impl/done")),
         }]
     );
@@ -252,18 +259,25 @@ fn join_reaches_all_four_adoption_states_and_keeps_host_rows_pure() {
     let authored = vec![
         AuthoredFact {
             address: "spec://org.example/pkg/RULE#ABSENT".to_string(),
+            requirements: Some(
+                progress_core::model::ArtifactRequirements::parse_csv("specification,plan")
+                    .unwrap(),
+            ),
             status: Some(status("spec/plan")),
         },
         AuthoredFact {
             address: "spec://org.example/pkg/RULE#MARKED".to_string(),
+            requirements: None,
             status: Some(status("spec/work")),
         },
         AuthoredFact {
             address: "spec://org.example/pkg/RULE#RECORDED".to_string(),
+            requirements: None,
             status: Some(status("spec/plan")),
         },
         AuthoredFact {
             address: "spec://org.example/demo/common/RULE#HOST".to_string(),
+            requirements: None,
             status: Some(status("spec/work")),
         },
     ];
@@ -279,6 +293,18 @@ fn join_reaches_all_four_adoption_states_and_keeps_host_rows_pure() {
     assert_eq!(
         by_address("spec://org.example/pkg/RULE#ABSENT").adoption,
         AdoptionObservation::Absent
+    );
+    assert_eq!(
+        by_address("spec://org.example/pkg/RULE#ABSENT")
+            .authored_requirements
+            .as_ref()
+            .map(|requirements| requirements.to_csv()),
+        Some("specification,plan".into())
+    );
+    assert!(
+        by_address("spec://org.example/pkg/RULE#MARKED")
+            .authored_requirements
+            .is_none()
     );
     assert_eq!(
         by_address("spec://org.example/pkg/RULE#MARKED").adoption,
@@ -319,14 +345,17 @@ fn shuffled_authored_input_cannot_change_joined_output_order() {
     let authored = vec![
         AuthoredFact {
             address: "spec://org.example/pkg/RULE#C".to_string(),
+            requirements: None,
             status: None,
         },
         AuthoredFact {
             address: "spec://org.example/pkg/RULE#A".to_string(),
+            requirements: None,
             status: None,
         },
         AuthoredFact {
             address: "spec://org.example/pkg/RULE#B".to_string(),
+            requirements: None,
             status: None,
         },
     ];

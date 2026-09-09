@@ -74,11 +74,12 @@ pub enum AdoptionObservation {
     Recorded(FactStatus),
 }
 
-/// One per-address row of the adoption join: the authored address, the
-/// status its source document claims, and the adoption observation.
+/// One per-address row of the adoption join: the authored address, terminal
+/// requirements and status its source document claims, and adoption state.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct AdoptionRow {
     pub address: String,
+    pub authored_requirements: Option<progress_core::model::ArtifactRequirements>,
     pub authored_status: Option<FactStatus>,
     pub adoption: AdoptionObservation,
 }
@@ -461,10 +462,12 @@ fn is_plain_file(path: &Path) -> bool {
 ///
 /// let authored = [AuthoredFact {
 ///     address: "spec://org.example/pkg/RULE#A".to_string(),
+///     requirements: None,
 ///     status: None,
 /// }];
 /// let rows = join_adoption(&Registry::default(), "org.example/pkg", SourceKind::Package, &authored).unwrap();
 /// assert_eq!(rows[0].adoption, AdoptionObservation::Absent);
+/// assert!(rows[0].authored_requirements.is_none());
 ///
 /// let rows = join_adoption(&Registry::default(), "org.example/pkg", SourceKind::Host, &authored).unwrap();
 /// assert_eq!(rows[0].adoption, AdoptionObservation::NotApplicable);
@@ -480,6 +483,7 @@ pub fn join_adoption(
         .iter()
         .map(|fact| AdoptionRow {
             address: fact.address.clone(),
+            authored_requirements: fact.requirements.clone(),
             authored_status: fact.status,
             adoption: match source_kind {
                 SourceKind::Host => AdoptionObservation::NotApplicable,

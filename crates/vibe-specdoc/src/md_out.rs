@@ -172,6 +172,9 @@ fn emit_unit_body(u: &Unit, typed_id: Option<&str>, text: &str, out: &mut String
     if !text.is_empty() {
         parts.push(text.to_string());
     }
+    if let Some(requirements) = u.fact.as_ref().and_then(|f| f.requirements.as_ref()) {
+        parts.push(format!("@requires:{}", requirements.to_csv()));
+    }
     if let Some(st) = u.fact.as_ref().and_then(|f| f.status.as_ref()) {
         parts.push(status_suffix_md(st));
     }

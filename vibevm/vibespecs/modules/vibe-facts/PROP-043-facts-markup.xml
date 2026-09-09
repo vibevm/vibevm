@@ -436,7 +436,7 @@ or end of a paragraph's text, never mid-sentence, never inside code or links.</S
       artifact kinds whose satisfaction closes the whole fact. No stage is a
       mandatory successor of another, and no fact is forced toward source-code
       implementation merely because its specification is complete.</TERMINALITY-IS-ORTHOGONAL></p>
-      <p><REQUIRES-GRAMMAR fact="true" status="spec/done">The Markdown form is
+      <p><REQUIRES-GRAMMAR fact="true" status="impl/done">The Markdown form is
       exactly one qualified trailing annotation
       `@requires:&lt;kind&gt;[,&lt;kind&gt;…]`, immediately before the fact's final
       status shorthand admitted by §3.7 (qualified full/bare or legacy
@@ -450,31 +450,34 @@ or end of a paragraph's text, never mid-sentence, never inside code or links.</S
 
 @fact:PARSER The parser implements and proves the grammar. @requires:implementation,verification @status:test/done</fence>
       <facts ordered="false">
-        <REQUIRES-FACT-OWNED fact="true" status="spec/done">A requirements
+        <REQUIRES-FACT-OWNED fact="true" status="impl/done">A requirements
         annotation belongs only to an explicitly addressed fact. Paragraphs,
         list items, quotes and table cells may carry it; a table cell loses its
         usual anchor exemption when it does. A fragment, an unaddressed unit,
         a document marker and a section marker cannot carry requirements.
         `@fact/code:` may carry them normally; its bound fence remains part of
         the same fact body.</REQUIRES-FACT-OWNED>
-        <REQUIRES-PLACEMENT fact="true" status="spec/done">The complete
+        <REQUIRES-PLACEMENT fact="true" status="impl/done">The complete
         trailing cluster is `@requires:…` then the status marker, with only
         whitespace between them and nothing after the status. A second
-        annotation, a token elsewhere in the fact, an empty member, a leading
-        or trailing comma, or a requirement with no final status is a parse
-        error rather than prose or a best-effort attachment.</REQUIRES-PLACEMENT>
-        <REQUIRES-OPAQUE-CONTEXTS fact="true" status="spec/done">Fenced code,
-        inline code and link destinations remain opaque. A look-alike outside
-        the exact trailing position remains ordinary Markdown unless it is a
-        malformed attempt in the terminal annotation cluster; the parser does
-        not reserve every occurrence of the English word `requires`.</REQUIRES-OPAQUE-CONTEXTS>
-        <REQUIRES-SET-LAW fact="true" status="spec/done">Requirements are a
+        contiguous `@requires` token in that trailing cluster, an empty member,
+        a leading or trailing comma, or a trailing requirement with no final
+        status is a parse error rather than a best-effort attachment. An
+        occurrence separated from the final status by ordinary prose is not in
+        the cluster and remains prose.</REQUIRES-PLACEMENT>
+        <REQUIRES-OPAQUE-CONTEXTS fact="true" status="impl/done">Fenced code,
+        inline code and link destinations remain opaque. Any look-alike outside
+        the exact trailing cluster remains ordinary Markdown even when its
+        comma-separated value happens to use legal artifact names; only the
+        cluster is grammar. The parser does not reserve every occurrence of the
+        English word `requires`.</REQUIRES-OPAQUE-CONTEXTS>
+        <REQUIRES-SET-LAW fact="true" status="impl/done">Requirements are a
         non-empty unordered set. The IR stores them in the fixed vocabulary
         order and every backend emits that canonical order. Authored duplicates
         are an error, not silently meaningful repetition. Changing presence,
         membership or spelling changes the fact content identity and therefore
         makes prior campaign verdicts due for re-judgement.</REQUIRES-SET-LAW>
-        <REQUIRES-ABSENCE fact="true" status="spec/done">Absent requirements
+        <REQUIRES-ABSENCE fact="true" status="impl/done">Absent requirements
         mean **unclassified terminal contract**, never an empty set and never
         vacuous success. Existing facts therefore retain their exact status and
         acquire no terminal claim. An explicitly empty set is invalid; a live
@@ -484,7 +487,7 @@ or end of a paragraph's text, never mid-sentence, never inside code or links.</S
         an ordinary pending fact.</REQUIRES-ABSENCE>
       </facts>
       <artifacts title="3.11.1 Closed artifact vocabulary">
-        <p><REQUIRED-ARTIFACT-KINDS fact="true" status="spec/done">The closed
+        <p><REQUIRED-ARTIFACT-KINDS fact="true" status="impl/done">The closed
         vocabulary, in canonical order, is `specification`, `implementation`,
         `verification`, `documentation`, `decision`, `research`, `plan`,
         `disposition`, `external`. A new kind requires an amendment here before

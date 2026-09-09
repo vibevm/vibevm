@@ -349,9 +349,13 @@ impl<'a> Adapter<'a> {
         };
         let marker = self.marker_for(b, f);
         let (_, after_anchor) = take_fact_id(&effective, 0, effective.len());
-        let bare = strip_marker(&effective[after_anchor..], marker);
+        let bare = strip_requirements(
+            strip_marker(&effective[after_anchor..], marker),
+            f.requirements.as_ref(),
+        );
         let fact = Fact {
             id: f.id.clone(),
+            requirements: f.requirements.clone(),
             status: marker.map(StatusEl::from),
         };
         Unit {
@@ -507,6 +511,25 @@ fn strip_marker<'s>(s: &'s str, m: Option<&Marker>) -> &'s str {
         }
     }
     s
+}
+
+/// Remove the qualified requirements token that precedes a trailing status.
+fn strip_requirements<'s>(
+    s: &'s str,
+    requirements: Option<&progress_core::model::ArtifactRequirements>,
+) -> &'s str {
+    if requirements.is_none() {
+        return s;
+    }
+    let text = s.trim_end();
+    let start = text
+        .rfind(char::is_whitespace)
+        .map_or(0, |at| at + text[at..].chars().next().unwrap().len_utf8());
+    if text[start..].starts_with("@requires:") {
+        &text[..start]
+    } else {
+        s
+    }
 }
 
 /// The possible shorthand spellings of a marker, longest first: the

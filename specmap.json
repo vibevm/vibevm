@@ -3019,6 +3019,24 @@
     },
     {
       "crate_name": "progress-core",
+      "file": "crates/progress-core/src/model.rs",
+      "item_kind": "enum",
+      "line": 12,
+      "symbol": "progress_core::model::ArtifactKind",
+      "end_line": 28,
+      "fingerprint": "tok1:078660b385b56cfa5a510a3542c9ddf876dccad6cad3d3667effb0ae1c6d10e7"
+    },
+    {
+      "crate_name": "progress-core",
+      "file": "crates/progress-core/src/model.rs",
+      "item_kind": "struct",
+      "line": 68,
+      "symbol": "progress_core::model::ArtifactRequirements",
+      "end_line": 71,
+      "fingerprint": "tok1:07db009ae2e4f8f44aae73d825e221d56724e259a4b30a4966d4ecb8ea7c92c6"
+    },
+    {
+      "crate_name": "progress-core",
       "file": "crates/progress-core/src/parse/mod.rs",
       "item_kind": "mod",
       "line": 19,
@@ -30376,6 +30394,22 @@
       "line": 6,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#attributes",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/progress-core/src/model.rs",
+      "from_symbol": "progress_core::model::ArtifactKind",
+      "line": 15,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#terminal-artifacts",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/progress-core/src/model.rs",
+      "from_symbol": "progress_core::model::ArtifactRequirements",
+      "line": 69,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#terminal-artifacts",
       "verb": "implements"
     },
     {
@@ -66290,7 +66324,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:a0531097e364da5c2508fe4117d0d3a88a6764bc07e9507bfdb558c47a134556",
+      "content_hash": "sha256:dd0416d33d7600d9d1e6ae2f14569ec03a9a1a090a5b5f6498dbccd6d4460fd1",
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "PROP-045: XML spec sources and materialisation targets",
@@ -66326,7 +66360,7 @@
     },
     {
       "anchor": "shape",
-      "content_hash": "sha256:4f7591e5d9e7a0e0001daddd1030227e6531f825d721e861092494050d6c3a9b",
+      "content_hash": "sha256:767ea61a66ee43014e7e178628455e6c9be31046ef055f17ba0520d911b8bd4f",
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "2. The shape — one pivot, two frontends, two backends",
@@ -66380,10 +66414,10 @@
     },
     {
       "anchor": "TERMINAL-REQUIREMENTS-PIVOT",
-      "content_hash": "sha256:6131af986a30fe454bc3b9e7f6a1071f8bbaf4cc841a8c1ae03003ae70dfaa3a",
+      "content_hash": "sha256:f58258d1efdfed0c287b89167dab5d3a2dc5af071f7d3ce228eaa2a8334825ae",
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
-      "heading": "**Terminal\n    requirements cross the pivot as fact metadata, not status metadata.** A\n    Markdown fact's trailing `@requires:` set and an XML named/generic fact's\n    `requires=\"…\"` attribute lower to the same optional canonical artifact-kind\n    set from PROP-043 `##REQUIRED-ARTIFACT-KINDS`. The set survives every\n    Markdown→pivot→XML→pivot→Markdown polygon exactly; absence survives as\n    absence. The existing semantic fact `ref` follows the same polygon through\n    `Fact.status.ref`: Markdown spells it on the final status point marker and\n    XML spells it on the named/generic fact element; `external` requirements\n    admit exactly that one non-empty locator. A standalone document/section\n    `<status>` cannot carry requirements, and the closed XML dialect rejects\n    `requires` on any non-fact element. This is\n    the format-neutral carrier for PROP-043 `##REQUIRES-GRAMMAR`, not a second\n    terminality implementation. @status:spec/done",
+      "heading": "**Terminal\n    requirements cross the pivot as fact metadata, not status metadata.** A\n    Markdown fact's trailing `@requires:` set and an XML named/generic fact's\n    `requires=\"…\"` attribute lower to the same optional canonical artifact-kind\n    set from PROP-043 `##REQUIRED-ARTIFACT-KINDS`. The set survives every\n    Markdown→pivot→XML→pivot→Markdown polygon exactly; absence survives as\n    absence. The existing semantic fact `ref` follows the same polygon through\n    `Fact.status.ref`: Markdown spells it on the final status point marker and\n    XML spells it on the named/generic fact element; `external` requirements\n    admit exactly that one non-empty locator. A standalone document/section\n    `<status>` cannot carry requirements, and the closed XML dialect rejects\n    `requires` on any non-fact element. This is\n    the format-neutral carrier for PROP-043 `##REQUIRES-GRAMMAR`, not a second\n    terminality implementation. @status:impl/done",
       "line": 140,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#TERMINAL-REQUIREMENTS-PIVOT"
     },
@@ -85649,7 +85683,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:d47a324538f7e873b24f23569a7f00c1e05cf955afd2890157395c48061349c2",
+      "content_hash": "sha256:dcb88969edc3ed3cf55505a5664e9c92bdb3d245780a44d36326b0defa0c2603",
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "PROP-043 — The facts markup: the inline status grammar and its IR",
@@ -85820,7 +85854,7 @@
     },
     {
       "anchor": "markup",
-      "content_hash": "sha256:3f74e85bcd62198f0b749eec57c3c4ec73abde8b39e1ef3de0c5d5db5bd930ee",
+      "content_hash": "sha256:df50d328c48f694e27a5853ca0a769bb11f832d51cebccbcb37280abb6d68dad",
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "3. The markup language",
@@ -86621,7 +86655,7 @@
     },
     {
       "anchor": "terminal-artifacts",
-      "content_hash": "sha256:e5df94282c65b62b1db095ad83746e0e62140eb702cd4bacb4af29f8502f2e7c",
+      "content_hash": "sha256:99b88d481d3d60ca6218c1ce43f6b00980776ff8e7d5ce1d392003c2a429ff90",
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "3.11 Terminal artifact obligations",
@@ -86639,74 +86673,74 @@
     },
     {
       "anchor": "REQUIRES-GRAMMAR",
-      "content_hash": "sha256:8e4e05ce08dcec4da6a66b09e1294375150c72013b8f7cc7dd0a746089529204",
+      "content_hash": "sha256:f607f8abfe3774da568a7af61fb3e141927086d0fdb17049ae133dab4ef04626",
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
-      "heading": "The Markdown form is\n      exactly one qualified trailing annotation\n      `@requires:<kind>[,<kind>…]`, immediately before the fact's final\n      status shorthand admitted by §3.7 (qualified full/bare or legacy\n      full/bare), or final `<status …/>` point marker. `@requires` itself has\n      no legacy bare spelling. The XML-dialect equivalent\n      is a `requires=\"<kind>[,<kind>…]\"` attribute on the named or generic\n      fact element, beside `status`; it is never an attribute of the standalone\n      document/section `<status>` element. Both forms lower to one fact-owned\n      semantic set. @status:spec/done",
+      "heading": "The Markdown form is\n      exactly one qualified trailing annotation\n      `@requires:<kind>[,<kind>…]`, immediately before the fact's final\n      status shorthand admitted by §3.7 (qualified full/bare or legacy\n      full/bare), or final `<status …/>` point marker. `@requires` itself has\n      no legacy bare spelling. The XML-dialect equivalent\n      is a `requires=\"<kind>[,<kind>…]\"` attribute on the named or generic\n      fact element, beside `status`; it is never an attribute of the standalone\n      document/section `<status>` element. Both forms lower to one fact-owned\n      semantic set. @status:impl/done",
       "line": 439,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#REQUIRES-GRAMMAR"
     },
     {
       "anchor": "REQUIRES-FACT-OWNED",
-      "content_hash": "sha256:b71c81de8bf72c2734a4854862563f5b8454bf84dfdccba2d2fc89b2073e2efc",
+      "content_hash": "sha256:ac3093d3667cb2a02e1723ed953b8c3de0a6f538a87c84caf7aac12bae39c162",
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
-      "heading": "A requirements\n        annotation belongs only to an explicitly addressed fact. Paragraphs,\n        list items, quotes and table cells may carry it; a table cell loses its\n        usual anchor exemption when it does. A fragment, an unaddressed unit,\n        a document marker and a section marker cannot carry requirements.\n        `@fact/code:` may carry them normally; its bound fence remains part of\n        the same fact body. @status:spec/done",
+      "heading": "A requirements\n        annotation belongs only to an explicitly addressed fact. Paragraphs,\n        list items, quotes and table cells may carry it; a table cell loses its\n        usual anchor exemption when it does. A fragment, an unaddressed unit,\n        a document marker and a section marker cannot carry requirements.\n        `@fact/code:` may carry them normally; its bound fence remains part of\n        the same fact body. @status:impl/done",
       "line": 453,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#REQUIRES-FACT-OWNED"
     },
     {
       "anchor": "REQUIRES-PLACEMENT",
-      "content_hash": "sha256:07d12f3a37bc4352a4386ce78d2b7b24962c1db966e28b71aa702e31e5832aa2",
+      "content_hash": "sha256:774e8291c1fe3cc09699f2377072285752e8d5185112c642b1f4e8b16f58494d",
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
-      "heading": "The complete\n        trailing cluster is `@requires:…` then the status marker, with only\n        whitespace between them and nothing after the status. A second\n        annotation, a token elsewhere in the fact, an empty member, a leading\n        or trailing comma, or a requirement with no final status is a parse\n        error rather than prose or a best-effort attachment. @status:spec/done",
+      "heading": "The complete\n        trailing cluster is `@requires:…` then the status marker, with only\n        whitespace between them and nothing after the status. A second\n        contiguous `@requires` token in that trailing cluster, an empty member,\n        a leading or trailing comma, or a trailing requirement with no final\n        status is a parse error rather than a best-effort attachment. An\n        occurrence separated from the final status by ordinary prose is not in\n        the cluster and remains prose. @status:impl/done",
       "line": 460,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#REQUIRES-PLACEMENT"
     },
     {
       "anchor": "REQUIRES-OPAQUE-CONTEXTS",
-      "content_hash": "sha256:867a66dff7c7098e91c5c660f0b650a7146a5ab699f8d6991aa4bad2c2d0a8b1",
+      "content_hash": "sha256:0c4b6b56186260c4b94cadc3847bf32e458d8cb0c369bfc81e5ed9e0d1eefed1",
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
-      "heading": "Fenced code,\n        inline code and link destinations remain opaque. A look-alike outside\n        the exact trailing position remains ordinary Markdown unless it is a\n        malformed attempt in the terminal annotation cluster; the parser does\n        not reserve every occurrence of the English word `requires`. @status:spec/done",
-      "line": 466,
+      "heading": "Fenced code,\n        inline code and link destinations remain opaque. Any look-alike outside\n        the exact trailing cluster remains ordinary Markdown even when its\n        comma-separated value happens to use legal artifact names; only the\n        cluster is grammar. The parser does not reserve every occurrence of the\n        English word `requires`. @status:impl/done",
+      "line": 468,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#REQUIRES-OPAQUE-CONTEXTS"
     },
     {
       "anchor": "REQUIRES-SET-LAW",
-      "content_hash": "sha256:cb9acae884c9308174dfac7b9ffd49ac510b70ef1ccc32fa7d8b62f42ffc5648",
+      "content_hash": "sha256:1b3fdba23d5c5ac6619d4b28094731bd5c018ef87ebdd9f722e2085f5b7c7deb",
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
-      "heading": "Requirements are a\n        non-empty unordered set. The IR stores them in the fixed vocabulary\n        order and every backend emits that canonical order. Authored duplicates\n        are an error, not silently meaningful repetition. Changing presence,\n        membership or spelling changes the fact content identity and therefore\n        makes prior campaign verdicts due for re-judgement. @status:spec/done",
-      "line": 471,
+      "heading": "Requirements are a\n        non-empty unordered set. The IR stores them in the fixed vocabulary\n        order and every backend emits that canonical order. Authored duplicates\n        are an error, not silently meaningful repetition. Changing presence,\n        membership or spelling changes the fact content identity and therefore\n        makes prior campaign verdicts due for re-judgement. @status:impl/done",
+      "line": 474,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#REQUIRES-SET-LAW"
     },
     {
       "anchor": "REQUIRES-ABSENCE",
-      "content_hash": "sha256:92ed4df6c2a2f249d5486b0fa001c39dba90666343ab1d521e9806c8bc8b46e0",
+      "content_hash": "sha256:ec32599197d00f8dfef5db40bc3949c9d0761d3d83f9f7afa07ab1d18662ac80",
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
-      "heading": "Absent requirements\n        mean **unclassified terminal contract**, never an empty set and never\n        vacuous success. Existing facts therefore retain their exact status and\n        acquire no terminal claim. An explicitly empty set is invalid; a live\n        fact that requires nothing uses a self-carried artifact kind, while a\n        `void` fact carries no requirements because it asserts no claim;\n        `state=void` plus a requirements annotation is a parse/check error, not\n        an ordinary pending fact. @status:spec/done",
-      "line": 477,
+      "heading": "Absent requirements\n        mean **unclassified terminal contract**, never an empty set and never\n        vacuous success. Existing facts therefore retain their exact status and\n        acquire no terminal claim. An explicitly empty set is invalid; a live\n        fact that requires nothing uses a self-carried artifact kind, while a\n        `void` fact carries no requirements because it asserts no claim;\n        `state=void` plus a requirements annotation is a parse/check error, not\n        an ordinary pending fact. @status:impl/done",
+      "line": 480,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#REQUIRES-ABSENCE"
     },
     {
       "anchor": "artifacts",
-      "content_hash": "sha256:9e5ab67c087b367fe1e06b29bf5af5f5d6dcd477f20858d24cccaa0506717c6f",
+      "content_hash": "sha256:144d14a2ee0acf8f8ee1358708dff563f7e7a3e63452def1192fcd9a099c0751",
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "3.11.1 Closed artifact vocabulary",
-      "line": 486,
+      "line": 489,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#artifacts"
     },
     {
       "anchor": "REQUIRED-ARTIFACT-KINDS",
-      "content_hash": "sha256:c2a359789b2a0a57f29ac064e4954a0b766c0ad5af3be0064157e6524a28ed7c",
+      "content_hash": "sha256:17f9cad92e04ffc29b36aa76dc2a2e23e187ac11dbb0ae80b0bc35271bed00fc",
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
-      "heading": "The closed\n        vocabulary, in canonical order, is `specification`, `implementation`,\n        `verification`, `documentation`, `decision`, `research`, `plan`,\n        `disposition`, `external`. A new kind requires an amendment here before\n        parser, IR or wire support. These are closure artifacts, not document\n        genres: a research document may require an implementation, and a\n        contract fact may itself be a decision artifact. @status:spec/done",
-      "line": 487,
+      "heading": "The closed\n        vocabulary, in canonical order, is `specification`, `implementation`,\n        `verification`, `documentation`, `decision`, `research`, `plan`,\n        `disposition`, `external`. A new kind requires an amendment here before\n        parser, IR or wire support. These are closure artifacts, not document\n        genres: a research document may require an implementation, and a\n        contract fact may itself be a decision artifact. @status:impl/done",
+      "line": 490,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#REQUIRED-ARTIFACT-KINDS"
     },
     {
@@ -86715,7 +86749,7 @@
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "`specification`,\n          `decision`, `research` and `plan` name the addressed fact body (plus\n          its typed bound object, when any) as the delivered artifact. They need\n          no `implements` edge merely to exist. `state=done` asserts that this\n          self-carried artifact is complete; independent campaign judgement may\n          still confirm, drift or reject that assertion. @status:spec/done",
-      "line": 495,
+      "line": 498,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#ARTIFACT-SELF-CARRIED"
     },
     {
@@ -86724,7 +86758,7 @@
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "`implementation`\n          requires independently observed implementing evidence for this exact\n          fact address. A provider that knows the address and reports zero is\n          `missing`; no provider or an address outside its knowledge is\n          `unavailable`, never silently satisfied. @status:spec/done",
-      "line": 501,
+      "line": 504,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#ARTIFACT-IMPLEMENTATION"
     },
     {
@@ -86733,7 +86767,7 @@
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "`verification`\n          requires independently observed verifying evidence for the exact fact.\n          An edge establishes attribution, not that a test run passed forever;\n          campaign verdict freshness remains separate evidence and is never\n          copied into authored markup. @status:spec/done",
-      "line": 506,
+      "line": 509,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#ARTIFACT-VERIFICATION"
     },
     {
@@ -86742,7 +86776,7 @@
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "`documentation`\n          is self-carried by a fact at `doc/done`; otherwise it requires an\n          independently observed `documents` artifact/relation. Documentation\n          about a fact and the fact's normative specification remain distinct. @status:spec/done",
-      "line": 511,
+      "line": 514,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#ARTIFACT-DOCUMENTATION"
     },
     {
@@ -86751,7 +86785,7 @@
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "`disposition`\n          is a self-carried authored assertion that the addressed fact body is\n          the durable outcome record for the thing it discusses. At\n          `state=done` the declaration itself satisfies the artifact presence;\n          campaign judgement still confirms or rejects whether the body really\n          records an accepted, rejected, deferred or superseded outcome. The\n          core never guesses those semantics from prose. @status:spec/done",
-      "line": 515,
+      "line": 518,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#ARTIFACT-DISPOSITION"
     },
     {
@@ -86760,7 +86794,7 @@
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "`external` names an\n          artifact outside the fact body and therefore requires exactly one\n          non-empty fact `ref` plus an observer capable of checking that\n          locator. In Markdown that ref is the existing `ref` attribute of the\n          final status point marker; in XML it is the existing `ref` attribute\n          of the named/generic fact element. Both lower through the fact's\n          `status.ref` pivot member to one semantic fact locator. A shorthand\n          status cannot carry a ref, and a missing/empty/duplicate ref is an\n          error. A ref with no observer is `unavailable`, not proof by pointer. @status:spec/done",
-      "line": 522,
+      "line": 525,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#ARTIFACT-EXTERNAL"
     },
     {
@@ -86769,7 +86803,7 @@
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "3.11.2 Derived terminal observation",
-      "line": 533,
+      "line": 536,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#terminal-observation"
     },
     {
@@ -86778,7 +86812,7 @@
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "The closed derived\n          outcome is `unclassified | pending | terminal`. `unclassified` means\n          `requires` is absent. `pending` means the set is present but the fact\n          is not at `state=done`, carries any action, or at least one required\n          artifact is missing or unavailable. `terminal` means the non-empty\n          set is present, the fact is at `state=done`, no action remains, and\n          every required artifact is satisfied. Parser/check errors are invalid\n          input, not a fourth outcome. @status:spec/done",
-      "line": 535,
+      "line": 538,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#TERMINAL-OUTCOMES"
     },
     {
@@ -86787,7 +86821,7 @@
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "Each required\n          kind is reported as `satisfied | missing | unavailable`, with exact\n          evidence locators when available. Overall `pending` never erases that\n          distinction. The markup declares the closure contract; current\n          evidence observes it. Neither side forges the other. @status:spec/done",
-      "line": 543,
+      "line": 546,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#TERMINAL-PER-ARTIFACT"
     },
     {
@@ -86796,7 +86830,7 @@
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "No stage\n          ordering implies an artifact. `test/done` does not by itself prove an\n          implementation; `impl/done` does not imply documentation; and\n          `freeze/done` does not imply source code. Only the declared set plus\n          its artifact observations decides terminality. @status:spec/done",
-      "line": 548,
+      "line": 551,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#TERMINAL-NO-STAGE-INFERENCE"
     },
     {
@@ -86805,7 +86839,7 @@
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "Status\n          rollup remains the existing worst-of `(stage,state)` operation.\n          Terminality aggregates separately as classified, terminal, pending\n          and unclassified counts; it never changes the stage sort key. The\n          existing `done` report view remains stage-local, while a separate\n          terminal view selects only derived `terminal` facts. @status:spec/done",
-      "line": 553,
+      "line": 556,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#TERMINAL-ROLLUP-SEPARATE"
     },
     {
@@ -86814,7 +86848,7 @@
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "A section/document\n          marker cannot fold away fact-owned requirements. Classified facts\n          remain fact-grained until a future explicitly specified aggregate\n          requirements carrier can preserve every set losslessly. A fold that\n          would drop requirements is a check error. @status:spec/done",
-      "line": 559,
+      "line": 562,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#TERMINAL-FOLD-LAW"
     },
     {
@@ -86823,7 +86857,7 @@
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "The old\n          generic evidence heuristic “every `freeze/*` needs an `implements`\n          edge” is superseded for classified facts: freeze uses the same\n          declared artifact set as every other stage. During migration an\n          unclassified frozen fact retains the legacy warning rather than\n          silently losing a check. A specification-only frozen contract becomes\n          honest by declaring `requires=specification`. @status:spec/done",
-      "line": 564,
+      "line": 567,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#TERMINAL-FREEZE-CORRECTION"
     },
     {
@@ -86832,7 +86866,7 @@
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "3.11.3 Compatibility and projections",
-      "line": 573,
+      "line": 576,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#compatibility"
     },
     {
@@ -86841,7 +86875,7 @@
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "Old source,\n          parse sidecars, caches and baselines decode missing requirements as\n          unclassified. No existing source bytes, status, verdict or `done`\n          view changes. A newly annotated fact deliberately changes its content\n          hash; this is semantic evolution, so no compatibility layer preserves\n          its prior judgement. @status:spec/done",
-      "line": 575,
+      "line": 578,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#REQUIRES-COMPATIBILITY"
     },
     {
@@ -86850,7 +86884,7 @@
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "Every\n          fact-preserving Markdown/XML pivot and authored-fact query carries the\n          normalized set. The requirements metadata query exposes the authored\n          set and keeps authoring, adoption, relations and lifecycle evidence\n          as separate axes; it does not invent a portable terminal verdict from\n          partial inputs. A progress report may render its own explicitly named\n          evidence observation, including unavailable, but never persist it as\n          authored truth. @status:spec/done",
-      "line": 581,
+      "line": 584,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#REQUIRES-PROJECTION-LAW"
     },
     {
@@ -86859,7 +86893,7 @@
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "Adding the set to\n          a strict public machine wire requires a new wire epoch and independent\n          canonical identity frames: explicit presence, canonical count and\n          canonical kind order. Additive Rust deserialization compatibility is\n          not permission to change a strict JTD epoch in place. @status:spec/done",
-      "line": 589,
+      "line": 592,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#REQUIRES-WIRE-EPOCH"
     },
     {
@@ -86868,7 +86902,7 @@
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "3.11.4 Never",
-      "line": 596,
+      "line": 599,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#never"
     },
     {
@@ -86877,7 +86911,7 @@
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "Never\n          infer whole-fact terminality from `state=done` alone. @status:spec/done",
-      "line": 598,
+      "line": 601,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#NEVER-INFER-TERMINAL-FROM-DONE"
     },
     {
@@ -86886,7 +86920,7 @@
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "Never\n          infer an implementation artifact from a later stage or from freeze. @status:spec/done",
-      "line": 600,
+      "line": 603,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#NEVER-INFER-IMPLEMENTATION-FROM-STAGE"
     },
     {
@@ -86895,7 +86929,7 @@
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "Never\n          treat absent requirements as an empty satisfied set. @status:spec/done",
-      "line": 602,
+      "line": 605,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#NEVER-TREAT-ABSENCE-AS-EMPTY"
     },
     {
@@ -86904,7 +86938,7 @@
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "Never\n          persist a live evidence-derived terminal observation back into source\n          markup or a source-only cache. @status:spec/done",
-      "line": 604,
+      "line": 607,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#NEVER-PERSIST-LIVE-TERMINALITY-AS-AUTHORED-FACT"
     },
     {
@@ -86913,7 +86947,7 @@
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "4. Parsing rules",
-      "line": 611,
+      "line": 614,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#parsing"
     },
     {
@@ -86922,7 +86956,7 @@
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "Markdown frontend first: the scanner operates on the document tree\n  (headings → units per the PROP-035 §5 body-span rule), then recognizes\n  `<status>` elements and shorthand in text nodes only — never inside fenced\n  code, inline code, or link targets. @status:impl/done",
-      "line": 613,
+      "line": 616,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#PARSE-MARKDOWN-FIRST"
     },
     {
@@ -86931,7 +86965,7 @@
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "**Countable units** *(fact amendment, 2026-07-24)*: inside a text block\n  the scanner recognizes list items (`-` / `*` / `+` and `N.` / `N)`\n  lines, with their indented continuation lines, at every nesting level)\n  and table rows (`|`-delimited); the units the exhaustive counter walks\n  are: plain paragraphs, the lead lines of a block before its first list\n  item, each list item, and each non-empty body cell of a table. Header\n  and delimiter rows of a table are structure. A marker counts for the\n  unit whose text carries it (first/last token of that unit, or a\n  fragment wrapper inside it). @status:impl/done",
-      "line": 617,
+      "line": 620,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#PARSE-COUNTABLE"
     },
     {
@@ -86940,7 +86974,7 @@
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "**Fact anchors** *(fact amendment, 2026-07-24)*: a `@fact:<ID>` first token\n  of a paragraph or list item is that unit's anchor, recorded alongside\n  the heading anchors; the scanner enforces the anchored-when-marked law\n  (§3.8) — a marked unit with no anchor, and a duplicate id, are `check`\n  errors. An opener inside code spans/fences is opaque, as all markup is. @status:impl/done",
-      "line": 626,
+      "line": 629,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#PARSE-FACT-ANCHORS"
     },
     {
@@ -86949,7 +86983,7 @@
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "**Typed fact — the fence joins the body** *(owner ruling variant D\n  2026-08-06; built 2026-08-20, B-068)*: `@fact/code:<ID>` is a fact\n  definition in the same position and id namespace as `@fact:<ID>`, whose\n  body is its own unit **plus the first fenced block after it** (blank\n  lines between are fine; any other block breaks the adjacency and is a\n  parse error, as is a typed fact that is not the last fact of its text\n  block). The attached fence enters the fact's content hash — editing the\n  fence stales the fact — while staying opaque to marker/anchor scans, as\n  all fences are. `code` is the one implemented type: an unknown type\n  (`@fact/<t>:`) is a parse error naming `<t>`, never a silent skip — a\n  grammar must not promise what it cannot check. By default a fence\n  remains an example belonging to no fact; the typed form is the opt-in\n  that turns it into a judgeable assertion. @status:impl/done",
-      "line": 631,
+      "line": 634,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#PARSE-TYPED-FACT-CODE"
     },
     {
@@ -86958,7 +86992,7 @@
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "The element grammar is XML: attributes quoted, point markers self-closed.\n  A future XML storage frontend consumes the same attribute schema natively;\n  the markup language does not change. @status:impl/done",
-      "line": 644,
+      "line": 647,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#PARSE-XML-GRAMMAR"
     },
     {
@@ -86967,7 +87001,7 @@
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "Foreign inline grammars (`@spec://`, `#use`, `#embed`, `#source`,\n  `<!-- REVIEW: … -->`) are opaque text to this scanner (§2). @status:impl/done",
-      "line": 647,
+      "line": 650,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#PARSE-FOREIGN-OPAQUE"
     },
     {
@@ -86976,7 +87010,7 @@
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "5. Genre semantics",
-      "line": 651,
+      "line": 654,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#genres"
     },
     {
@@ -86985,7 +87019,7 @@
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "**Every genre is in scope** — contracts, design docs, research, plans, manual\n  tests: a design decision the code ignores is first-class drift. @status:impl/done",
-      "line": 653,
+      "line": 656,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#EVERY-GENRE-IN-SCOPE"
     },
     {
@@ -86994,7 +87028,7 @@
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "Genre informs which\n  artifact kinds an author declares, but no genre silently supplies a terminal\n  status. A contract may end as specification, implementation, verification or\n  a frozen combination; research may require its own study plus dispositions;\n  a campaign plan may itself be the artifact while its execution is a separate\n  fact. `##TERMINALITY-IS-ORTHOGONAL` and the explicit `@requires` set replace\n  the former one-shape claim that every contract ends at `freeze/done` with an\n  implementation edge. @status:spec/done",
-      "line": 655,
+      "line": 658,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#GENRE-TERMINALS"
     },
     {
@@ -87003,7 +87037,7 @@
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "6. Scope configuration — `facts.toml`",
-      "line": 665,
+      "line": 668,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#config"
     },
     {
@@ -87012,7 +87046,7 @@
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "Optional dev-mode mechanics, configured by a `facts.toml` at the package\n  root (the `clippy.toml` pattern — tool config, not manifest pollution);\n  `progress.toml` is read as a silent legacy fallback for the transition\n  (owner correction 2026-08-22: the observed tree is a facts-layer concern). @status:impl/done",
-      "line": 667,
+      "line": 670,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#CONFIG-FILE"
     },
     {
@@ -87021,7 +87055,7 @@
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "Include-style globs name what **is** observed (not gitignore-style excludes): @status:impl/done",
-      "line": 671,
+      "line": 674,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#INCLUDE-STYLE"
     },
     {
@@ -87030,7 +87064,7 @@
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "**Default excludes** (applied always, even under explicit includes),\n  in two kinds. **By directory**, matched against any path component:\n  `vibedeps/`, `.vibe/`, `refs/`, `fixtures/`, `campaigns/`, `target/`,\n  `node_modules/`, `**/vendor/`. **By file name**, matched against the\n  basename wherever it sits: `LICENSE.md`. @status:impl/done",
-      "line": 676,
+      "line": 679,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#DEFAULT-EXCLUDES"
     },
     {
@@ -87039,7 +87073,7 @@
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "Rationale: regenerated dependency copies must\n  never carry authored markup (PROP-009's install-never-edits-authored-spec\n  law), third-party and test-asserted content is off-limits, and the campaign\n  zone (PROP-047 §5.4) is not itself corpus. A licence is the same case one granularity\n  down — verbatim text the observing project neither authored nor is the\n  source of truth for, replaced wholesale from upstream — so it needed the\n  file-name kind rather than a directory. @status:spec/done",
-      "line": 681,
+      "line": 684,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#excludes-rationale"
     },
     {
@@ -87048,7 +87082,7 @@
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "**Project-side `exclude`** — an optional list of globs in\n  `progress.toml`, matched against the `/`-separated repo-relative path and\n  applied **after** the includes and after both default kinds. It exists for\n  what an include glob cannot say: *everything under this subtree except these\n  named files* — a derived index, a generated projection, anything whose own\n  words make a hand edit a defect. this section is include-style so that nothing is\n  observed by accident, and an **enumerated** exclude list serves that purpose\n  exactly as well as an enumerated include list; both are explicit and both\n  are reviewable. It must not become a wildcard escape hatch, so: a pattern\n  matching **no** observed file is reported by name on every subcommand, the\n  count of files it removes is printed by `scan`, an invalid glob is a clean\n  error naming the pattern, and an absent key behaves as a config that never\n  had one. @status:impl/done",
-      "line": 688,
+      "line": 691,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#CONFIG-EXCLUDE"
     },
     {
@@ -87057,7 +87091,7 @@
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "A nested package with its own\n  `progress.toml` owns its subtree (the host aggregates; it does not reach in) —\n  this is how a specspace keeps its own cadence. @status:spec/done",
-      "line": 701,
+      "line": 704,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#NESTED-OWNS-SUBTREE"
     },
     {
@@ -87066,7 +87100,7 @@
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "7. Out of scope / future",
-      "line": 706,
+      "line": 709,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#future"
     },
     {
@@ -87075,7 +87109,7 @@
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "XML document storage (arrives with the PROP-035 XML frontend — this markup is\n  already native to it); @status:spec/done",
-      "line": 708,
+      "line": 711,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#FUT-XML-STORAGE"
     },
     {
@@ -87084,7 +87118,7 @@
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "extraction into a\n  standalone distributable product (the separability law keeps it cheap); @status:spec/done",
-      "line": 710,
+      "line": 713,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#FUT-EXTRACTION"
     },
     {

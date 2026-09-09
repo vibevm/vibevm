@@ -2,7 +2,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#placement");
 
-use crate::model::Marker;
+use crate::model::{ArtifactRequirements, Marker};
 use serde::{Deserialize, Serialize};
 
 /// A contiguous run of non-blank lines (outside fences), or one fenced
@@ -37,6 +37,9 @@ pub struct Fact {
     /// The `##<ID>` fact anchor, when the unit carries one (§3.8).
     #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
+    /// Optional authored terminal contract. Absence means unclassified.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub requirements: Option<ArtifactRequirements>,
     /// 1-based line the unit starts on.
     pub line: usize,
     /// Byte span of the unit's own text inside the block's `scan_text`.
@@ -161,6 +164,8 @@ pub enum IssueCode {
     /// author writes `@fact/image:` today and learns in a year that nothing
     /// ever read it.
     FenceBinding,
+    /// A malformed or semantically invalid fact-owned `@requires:` annotation.
+    TerminalRequirements,
     /// A second fact anchor swallowed into the body of another.
     ///
     /// A fact anchor is the first token of its paragraph (`@fact:<ID>`,

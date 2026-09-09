@@ -174,6 +174,19 @@ fn a_legacy_summary_loads_and_is_ignored() {
     assert!(text.contains("\"unverifiable\""), "the verdicts do");
 }
 
+#[test]
+fn old_parsed_doc_json_without_requirements_decodes_as_unclassified() {
+    let doc = crate::parse::parse_document("old.md", "@fact:A body @status:spec/done\n");
+    let json = serde_json::to_string(&doc).expect("serialize legacy-shaped document");
+    assert!(
+        !json.contains("requirements"),
+        "absence stays omitted: {json}"
+    );
+    let decoded: ParsedDoc = serde_json::from_str(&json).expect("old ParsedDoc JSON decodes");
+    let fact = &decoded.blocks[0].facts[0];
+    assert!(fact.requirements.is_none());
+}
+
 /// The count is a *read*, not a field (F-077): it comes out of the
 /// verdicts every time, it goes back into no record, and a record with
 /// no verdict map has no count rather than an empty one — the

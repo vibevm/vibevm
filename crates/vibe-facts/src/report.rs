@@ -10,6 +10,7 @@ use crate::{FactOrigin, FactStatus, Registry};
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct AuthoredFact {
     pub address: String,
+    pub requirements: Option<progress_core::model::ArtifactRequirements>,
     pub status: Option<FactStatus>,
 }
 
@@ -94,6 +95,7 @@ fn collect_unit(unit: &Unit, prefix: &str, out: &mut Vec<AuthoredFact>) {
         .map(|status| FactStatus::new(status.stage, status.state));
     out.push(AuthoredFact {
         address: format!("{prefix}{id}"),
+        requirements: fact.requirements.clone(),
         status,
     });
 }

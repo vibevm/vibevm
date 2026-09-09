@@ -6,6 +6,7 @@ use super::xml_in::{Ev, Parser};
 use super::xml_support::{kind, only_attrs, status_from_attrs};
 use crate::doc::{Block, Fact, Unit};
 use crate::{Error, Result};
+use progress_core::model::{ArtifactKind, ArtifactRequirements, State};
 
 impl<'a> Parser<'a> {
     pub(super) fn facts_block(
@@ -113,6 +114,7 @@ impl<'a> Parser<'a> {
             &[
                 "fact",
                 "status",
+                "requires",
                 "action",
                 "actionstage",
                 "audience",
@@ -124,6 +126,7 @@ impl<'a> Parser<'a> {
                 "id",
                 "fact",
                 "status",
+                "requires",
                 "action",
                 "actionstage",
                 "audience",
@@ -163,6 +166,41 @@ impl<'a> Parser<'a> {
             Some(_) => Some(status_from_attrs(attrs, at, self)?),
             None => None,
         };
+        let requirements = match attrs.iter().find(|(key, _)| key == "requires") {
+            Some((_, value)) => {
+                Some(ArtifactRequirements::parse_csv(value).map_err(|message| {
+                    self.err(at, format!("invalid `requires` attribute: {message}"))
+                })?)
+            }
+            None => None,
+        };
+        if requirements.is_some() && status.is_none() {
+            return Err(self.err(
+                at,
+                "a fact with `requires` needs a `status` attribute".into(),
+            ));
+        }
+        if requirements.is_some() && status.as_ref().is_some_and(|s| s.state == State::Void) {
+            return Err(self.err(
+                at,
+                "a void fact cannot carry terminal artifact requirements".into(),
+            ));
+        }
+        if requirements
+            .as_ref()
+            .is_some_and(|set| set.contains(ArtifactKind::External))
+        {
+            let refs = attrs
+                .iter()
+                .filter(|(key, _)| key == "ref")
+                .collect::<Vec<_>>();
+            if refs.len() != 1 || refs[0].1.trim().is_empty() {
+                return Err(self.err(
+                    at,
+                    "an `external` requirement needs exactly one non-empty fact `ref`".into(),
+                ));
+            }
+        }
         if let Some(id) = &id {
             self.mint_fact(id.clone(), at)?;
         }
@@ -197,6 +235,13 @@ impl<'a> Parser<'a> {
                 }
             }
         }
-        Ok((Fact { id, status }, text))
+        Ok((
+            Fact {
+                id,
+                requirements,
+                status,
+            },
+            text,
+        ))
     }
 }

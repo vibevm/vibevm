@@ -125,3 +125,124 @@ fn table_cell_escaped_code_span_pipe_survives_full_trip() {
         "{result:?}"
     );
 }
+
+#[test]
+fn requirements_survive_both_pivot_polygons_in_canonical_order() {
+    let md = "# T {#t}\n\n\
+              @fact:A body @requires:external,verification,specification <status stage=\"test\" state=\"done\" ref=\"proof:1\"/>\n";
+    let ir = from_markdown(md).expect("requirements Markdown");
+    let fact = match &ir.preamble[0] {
+        crate::doc::Block::Paragraph(unit) => unit.fact.as_ref().unwrap(),
+        other => panic!("{other:?}"),
+    };
+    assert_eq!(
+        fact.requirements.as_ref().unwrap().to_csv(),
+        "specification,verification,external"
+    );
+    assert_eq!(
+        fact.status.as_ref().unwrap().r#ref.as_deref(),
+        Some("proof:1")
+    );
+
+    let xml = to_xml(&ir);
+    assert!(
+        xml.contains(
+            "status=\"test/done\" requires=\"specification,verification,external\" ref=\"proof:1\""
+        ),
+        "{xml}"
+    );
+    let from_xml = crate::from_xml(&xml).expect("XML reparse");
+    assert_eq!(from_xml, ir);
+    let emitted_md = crate::to_markdown(&from_xml);
+    assert!(
+        emitted_md.contains("@requires:specification,verification,external <status"),
+        "{emitted_md}"
+    );
+    assert_eq!(from_markdown(&emitted_md).unwrap(), ir);
+    assert_eq!(to_xml(&from_markdown(&emitted_md).unwrap()), xml);
+}
+
+#[test]
+fn xml_named_and_generic_requirements_share_one_ir() {
+    let named = "<spec xmlns=\"https://vibevm.org/spec/1\"><p><LAW fact=\"true\" status=\"spec/done\" requires=\"plan,specification\">body</LAW></p></spec>";
+    let generic = "<spec xmlns=\"https://vibevm.org/spec/1\"><p><fact id=\"LAW\" status=\"spec/done\" requires=\"plan,specification\">body</fact></p></spec>";
+    let named_ir = crate::from_xml(named).unwrap();
+    let generic_ir = crate::from_xml(generic).unwrap();
+    assert_eq!(named_ir, generic_ir);
+    let canonical = to_xml(&named_ir);
+    assert!(
+        canonical.contains("requires=\"specification,plan\""),
+        "{canonical}"
+    );
+    assert_eq!(crate::from_xml(&canonical).unwrap(), named_ir);
+}
+
+#[test]
+fn xml_requirements_fail_closed() {
+    let cases = [
+        ("requires=\"\" status=\"spec/done\"", "list is empty"),
+        ("requires=\"plan,\" status=\"spec/done\"", "empty member"),
+        ("requires=\"plan,plan\" status=\"spec/done\"", "duplicate"),
+        (
+            "requires=\"spaceship\" status=\"spec/done\"",
+            "unknown required",
+        ),
+        ("requires=\"plan\"", "needs a `status`"),
+        ("requires=\"plan\" status=\"spec/void\"", "void fact"),
+        (
+            "requires=\"external\" status=\"impl/done\"",
+            "non-empty fact `ref`",
+        ),
+        (
+            "requires=\"external\" status=\"impl/done\" ref=\"\"",
+            "non-empty fact `ref`",
+        ),
+    ];
+    for (attrs, needle) in cases {
+        let xml = format!(
+            "<spec xmlns=\"https://vibevm.org/spec/1\"><p><fact id=\"A\" {attrs}>body</fact></p></spec>"
+        );
+        let error = crate::from_xml(&xml).expect_err(attrs);
+        assert!(error.to_string().contains(needle), "{attrs}: {error}");
+    }
+
+    let non_fact = "<spec xmlns=\"https://vibevm.org/spec/1\"><p requires=\"plan\">body</p></spec>";
+    let error = crate::from_xml(non_fact).expect_err("non-fact requires");
+    assert!(
+        error.to_string().contains("no `requires` attribute"),
+        "{error}"
+    );
+
+    let standalone = "<spec xmlns=\"https://vibevm.org/spec/1\"><status stage=\"spec\" state=\"done\" requires=\"plan\"/></spec>";
+    let error = crate::from_xml(standalone).expect_err("status cannot carry requires");
+    assert!(
+        error.to_string().contains("no `requires` attribute"),
+        "{error}"
+    );
+
+    let duplicate_ref = "<spec xmlns=\"https://vibevm.org/spec/1\"><p><fact id=\"A\" status=\"impl/done\" requires=\"external\" ref=\"one\" ref=\"two\">body</fact></p></spec>";
+    assert!(crate::from_xml(duplicate_ref).is_err());
+}
+
+#[test]
+fn every_markdown_carrier_round_trips_requirements() {
+    let md = "# T {#t}\n\n\
+              @fact:PARA paragraph @requires:verification,specification @status:test/done\n\n\
+              - @fact:ITEM item @requires:verification,specification @status:test/done\n\n\
+              | H |\n|---|\n| @fact:CELL cell @requires:verification,specification @status:test/done |\n\n\
+              > @fact:QUOTE quote @requires:verification,specification @status:test/done\n\n\
+              @fact/code:CODE typed @requires:verification,specification @status:test/done\n\n\
+              ```rust\nassert!(true);\n```\n";
+    let ir = from_markdown(md).expect("all carriers parse");
+    let xml = to_xml(&ir);
+    let xml_ir = crate::from_xml(&xml).expect("all carriers parse as XML");
+    assert_eq!(xml_ir, ir);
+    let emitted = crate::to_markdown(&xml_ir);
+    assert_eq!(from_markdown(&emitted).unwrap(), ir);
+    assert_eq!(
+        emitted
+            .matches("@requires:specification,verification")
+            .count(),
+        5
+    );
+}

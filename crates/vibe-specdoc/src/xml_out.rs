@@ -168,6 +168,9 @@ fn fact_attrs(f: &Fact, named: bool) -> Attrs<'_> {
     }
     if let Some(st) = &f.status {
         out.push(("status", format!("{}/{}", st.stage, st.state)));
+        if let Some(requirements) = &f.requirements {
+            out.push(("requires", requirements.to_csv()));
+        }
         push_status_extras(&mut out, st);
     }
     out

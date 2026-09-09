@@ -137,7 +137,7 @@ three lanes byte-equal, the polygon re-ran 3/3. A live lesson worth
 its line: XML reserves every case-insensitive `xml`-prefixed name, so
 `XMLBOOT` cannot be an element — the predicate refuses it and the
 generic form carries such ids.</NAMED-FACT-ELEMENTS></p>
-    <p><TERMINAL-REQUIREMENTS-PIVOT fact="true" status="spec/done">**Terminal
+    <p><TERMINAL-REQUIREMENTS-PIVOT fact="true" status="impl/done">**Terminal
     requirements cross the pivot as fact metadata, not status metadata.** A
     Markdown fact's trailing `@requires:` set and an XML named/generic fact's
     `requires="…"` attribute lower to the same optional canonical artifact-kind

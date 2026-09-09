@@ -24,7 +24,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-045#shape");
 
-use progress_core::model::{Action, Audience, Stage, State};
+use progress_core::model::{Action, ArtifactRequirements, Audience, Stage, State};
 
 /// One whole document: the H1 title, the document `<status>`, the
 /// document-level blocks (everything not under a section — the preamble
@@ -144,6 +144,8 @@ pub struct Fact {
     /// marked table cell (the cell exemption of the anchored-when-marked
     /// law); the XML frontend enforces exactly that.
     pub id: Option<String>,
+    /// Optional authored terminal artifact contract, in canonical order.
+    pub requirements: Option<ArtifactRequirements>,
     pub status: Option<StatusEl>,
 }
 
@@ -151,7 +153,7 @@ impl Fact {
     /// A fact worth serialising: an id, a status, or both. A unit carrying
     /// neither is plain text and takes no `<fact>` element.
     pub fn is_meaningful(&self) -> bool {
-        self.id.is_some() || self.status.is_some()
+        self.id.is_some() || self.requirements.is_some() || self.status.is_some()
     }
 }
 

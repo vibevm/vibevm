@@ -377,6 +377,7 @@ fn mk_fact(kind: FactKind, text: &str, source: &str, s: usize, e: usize, line: u
     Fact {
         kind,
         id,
+        requirements: None,
         line,
         span: (s, e),
         content_hash: content_hash(&body),
