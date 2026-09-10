@@ -24,8 +24,8 @@ fn init_project(user: &UserScratch) -> tempfile::TempDir {
 
 fn extension_registry() -> tempfile::TempDir {
     let registry = tempfile::tempdir().unwrap();
-    let source = fixture_registry().join("org.vibevm/integration-alpha/v0.1.0");
-    let package = registry.path().join("org.vibevm/integration-alpha/v0.1.0");
+    let source = fixture_registry().join("org.vibevm/integration-alpha/v1.0.0");
+    let package = registry.path().join("org.vibevm/integration-alpha/v1.0.0");
     common::copy_tree(&source, &package);
     let manifest = package.join("vibe.toml");
     let mut body = fs::read_to_string(&manifest).unwrap();
@@ -375,7 +375,7 @@ fn standalone_and_chained_clean_refuse_a_plan_before_the_wipe() {
         install_from(&user, project.path(), registry.path());
         let slot = project
             .path()
-            .join(common::slot_dir("org.vibevm.integration-alpha", "0.1.0"));
+            .join(common::slot_dir("org.vibevm.integration-alpha", "1.0.0"));
         let mut command = user.vibe();
         command.arg("clean").arg("--path").arg(project.path());
         if chained {
@@ -429,7 +429,7 @@ disable = ["org.vibevm/integration-alpha#clean-guard"]
     assert!(
         project
             .path()
-            .join(common::slot_dir("org.vibevm.integration-alpha", "0.1.0"))
+            .join(common::slot_dir("org.vibevm.integration-alpha", "1.0.0"))
             .is_dir()
     );
 }
@@ -474,7 +474,7 @@ fn active_stack_does_not_break_a_second_clean_after_the_world_is_gone() {
     let registry = extension_registry();
     let package_manifest = registry
         .path()
-        .join("org.vibevm/integration-alpha/v0.1.0/vibe.toml");
+        .join("org.vibevm/integration-alpha/v1.0.0/vibe.toml");
     let body = fs::read_to_string(&package_manifest).unwrap().replacen(
         "kind = \"flow\"",
         "kind = \"stack\"",
@@ -519,8 +519,8 @@ fn clean_build_defers_future_stack_and_controls_until_after_install() {
     let user = UserScratch::new();
     let project = init_project(&user);
     let registry = extension_registry();
-    let beta_source = fixture_registry().join("org.vibevm/integration-beta/v0.1.0");
-    let beta = registry.path().join("org.vibevm/integration-beta/v0.1.0");
+    let beta_source = fixture_registry().join("org.vibevm/integration-beta/v1.0.0");
+    let beta = registry.path().join("org.vibevm/integration-beta/v1.0.0");
     common::copy_tree(&beta_source, &beta);
     let beta_manifest = beta.join("vibe.toml");
     let mut beta_body = fs::read_to_string(&beta_manifest).unwrap().replacen(
@@ -546,7 +546,7 @@ config = { message = "future {phase} {package}" }
     manifest
         .requires
         .packages
-        .push(PackageRef::parse("stack:org.vibevm/integration-beta@^0.1.0").unwrap());
+        .push(PackageRef::parse("stack:org.vibevm/integration-beta@^1.0.0").unwrap());
     manifest.active = Some(ActiveSection {
         stack: Some("integration-beta".to_string()),
     });

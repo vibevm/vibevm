@@ -36,7 +36,7 @@ category = "tool"
 
 [[skill]]
 name = "fractality-delegate"
-path = "spec/skills/fractality-delegate"
+path = "vibevm/vibespecs/skills/fractality-delegate"
 description = "Delegate a task to a fractality worker or swarm: matrix routing, packet authoring, spawn/observe, and the boss review loop"
 
 # The shipped binaries (PROP-025): `vibe bin build` compiles them in the

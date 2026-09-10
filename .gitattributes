@@ -46,6 +46,15 @@ refs/src/**             linguist-vendored=true
 crates/vibe-wire/src/generated/**    linguist-generated=true
 crates/specmap-core/src/generated/**    linguist-generated=true
 
+# Materialised dependency trees and compiled boot lanes are byte-for-byte
+# projections of package payloads. Their source may legitimately carry
+# Markdown hard-break spaces or historical blank EOF lines; review and lint
+# that whitespace at the authored package, not again at every generated copy.
+vibevm/vibedeps/** whitespace=-trailing-space,-space-before-tab,-blank-at-eof
+vibevm/vibepacks/**/vibevm/vibedeps/** whitespace=-trailing-space,-space-before-tab,-blank-at-eof
+research/**/vibevm/vibedeps/** whitespace=-trailing-space,-space-before-tab,-blank-at-eof
+vibevm/vibepacks/**/vibevm/vibespecs/boot/STATIC.md whitespace=-trailing-space,-space-before-tab,-blank-at-eof
+
 # Lockfile is structurally interesting but isn't human-authored
 # language. Keep it out of stats; tooling can still read it.
 vibe.lock        linguist-generated=true

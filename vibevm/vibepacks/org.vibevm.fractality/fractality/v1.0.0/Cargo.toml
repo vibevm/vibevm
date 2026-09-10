@@ -16,7 +16,7 @@ members = [
 # vibedeps packages are their own Cargo workspaces; without the exclude,
 # cargo would bind their crates to THIS workspace and manifest inheritance
 # breaks (GUIDE-AI-NATIVE-RUST §13.3, PROP-024 §2.4).
-exclude = ["vibedeps"]
+exclude = ["vibevm/vibedeps"]
 
 [workspace.package]
 version = "1.0.0"
@@ -84,7 +84,7 @@ thiserror = "2.0"
 # crate is served from this workspace's own vibedeps slot; `package =`
 # renames it so sources say `specmark::scope!(…)` like every other
 # discipline consumer.
-specmark = { package = "core-ai-native-specmark", path = "vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmark" }
+specmark = { package = "core-ai-native-specmark", path = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/crates/vendor/core-ai-native-specmark" }
 
 # Process control (D11). sysinfo pinned: rustc 1.93.1 on this box (plan F9).
 sysinfo = "=0.37.2"

@@ -1,20 +1,9 @@
 # sync-engines.toml — the vendor-sync manifest (`cargo xtask sync-engines`,
 # DEFERRALS-CLOSEOUT-PLAN v0.1 D1).
 
-# Superseded version slots — deliberately the target of NO sync set. A
-# frozen slot ships the engine of its own era; syncing today's sources
-# into it would rewrite history, the opposite of what a version slot is
-# (the C5 1.0.0 mint left the v0.x generation in place per the additive
-# precedent). The coverage check accepts these as recorded decisions and
-# warns about any entry that stops naming a real dir.
-frozen_targets = [
-    "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor",
-    "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/vendor",
-    "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor",
-    "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/vendor",
-    "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/vendor",
-    "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/vendor",
-]
+# Every surviving package slot is live at 1.0.0. No superseded vendor tree is
+# retained outside the sync sets below.
+frozen_targets = []
 
 # (multi-source [[sync]] sets since
 # MCP-SOVEREIGNTY-PLAN Wave 2 / D3a). Crates are AUTHORED once and every
@@ -59,7 +48,7 @@ crates = [
 targets = ["vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.0.0/crates/vendor"]
 
 # The rust stack's toolchain crates the server links, into the rust mcp
-# package (the pin `=0.7.0` in its vibe.toml holds these byte-identical
+# package (the pin `=1.0.0` in its vibe.toml holds these byte-identical
 # copies and the consumer's installed stack to ONE version).
 [[sync]]
 source_root = "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/crates"
@@ -86,7 +75,7 @@ crates = [
 targets = ["vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.0.0/crates/vendor"]
 
 # The typescript stack's toolchain crates the server links, into the
-# typescript mcp package (pin `=0.6.0`).
+# typescript mcp package (pin `=1.0.0`).
 [[sync]]
 source_root = "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.0.0/crates"
 crates = [
@@ -122,7 +111,7 @@ crates = [
 targets = ["vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.0.0/crates/vendor"]
 
 # The go stack's toolchain crates the server links, into the go mcp
-# package (pin `=0.1.0`).
+# package (pin `=1.0.0`).
 [[sync]]
 source_root = "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.0.0/crates"
 crates = [

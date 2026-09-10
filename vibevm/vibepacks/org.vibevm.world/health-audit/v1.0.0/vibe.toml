@@ -25,5 +25,5 @@ when = "installed:org.vibevm.world/wal"
 
 [[skill]]
 name = "health-audit"
-path = "spec/skills/health-audit"
+path = "vibevm/vibespecs/skills/health-audit"
 description = "Run one periodic health audit: walk the category checklist, record findings with severity and disposition in AUDIT.md, carry forward what stays open"

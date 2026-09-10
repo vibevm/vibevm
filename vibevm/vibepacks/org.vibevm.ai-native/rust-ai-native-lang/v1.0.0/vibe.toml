@@ -50,10 +50,10 @@ description = "the agentic type oracle: a persistent enriching relay (serve) ove
 
 [[skill]]
 name = "rust-ai-native-sweep"
-path = "spec/skills/rust-ai-native-sweep"
+path = "vibevm/vibespecs/skills/rust-ai-native-sweep"
 description = "The recurring AI-Native discipline sweep: floor gates, then the health collector's ratchet items; weekly drift + judgment tiers"
 
 [[skill]]
 name = "rust-ai-native-terraform"
-path = "spec/skills/rust-ai-native-terraform"
+path = "vibevm/vibespecs/skills/rust-ai-native-terraform"
 description = "Adopt the AI-Native discipline on an existing Rust codebase: inventory-not-gate, the registries, characterization, then card raids crate by crate"

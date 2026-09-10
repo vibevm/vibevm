@@ -5,84 +5,108 @@
       "file": "crates/rust-demo/src/lib.rs",
       "item_kind": "mod",
       "line": 6,
-      "symbol": "rust_demo"
+      "symbol": "rust_demo",
+      "end_line": 6,
+      "fingerprint": "tok1:19e8de1800df8d4a7533b0a09c862336d0d55aeec7813803661c491af6babe86"
     },
     {
       "crate_name": "rust-demo",
       "file": "crates/rust-demo/src/cells.rs",
       "item_kind": "mod",
       "line": 3,
-      "symbol": "rust_demo::cells"
+      "symbol": "rust_demo::cells",
+      "end_line": 3,
+      "fingerprint": "tok1:19e8de1800df8d4a7533b0a09c862336d0d55aeec7813803661c491af6babe86"
     },
     {
       "crate_name": "rust-demo",
       "file": "crates/rust-demo/src/cells/farewell.rs",
       "item_kind": "mod",
       "line": 4,
-      "symbol": "rust_demo::cells::farewell"
+      "symbol": "rust_demo::cells::farewell",
+      "end_line": 4,
+      "fingerprint": "tok1:2c6d8ebfdc82e34753c9670ef3ea43a856915858279b3f9a919fedd115f9fe83"
     },
     {
       "crate_name": "rust-demo",
       "file": "crates/rust-demo/src/cells/farewell.rs",
       "item_kind": "fn",
       "line": 10,
-      "symbol": "rust_demo::cells::farewell::farewell"
+      "symbol": "rust_demo::cells::farewell::farewell",
+      "end_line": 21,
+      "fingerprint": "tok1:0b0ca7626a2f4aae051dd91e2abd0474cc05b4c357b72680c2ea9c340a06f566"
     },
     {
       "crate_name": "rust-demo",
       "file": "crates/rust-demo/src/cells/greeting.rs",
       "item_kind": "mod",
       "line": 5,
-      "symbol": "rust_demo::cells::greeting"
+      "symbol": "rust_demo::cells::greeting",
+      "end_line": 5,
+      "fingerprint": "tok1:f55199ff49c6f1ee09a24c168809b38b449681a863b25401ca98f3e84f43d3e2"
     },
     {
       "crate_name": "rust-demo",
       "file": "crates/rust-demo/src/cells/greeting.rs",
       "item_kind": "struct",
       "line": 13,
-      "symbol": "rust_demo::cells::greeting::GuestName"
+      "symbol": "rust_demo::cells::greeting::GuestName",
+      "end_line": 26,
+      "fingerprint": "tok1:47312bffa5d33a765db19232039fb618379f1f66385945a1e0d19562487ebe09"
     },
     {
       "crate_name": "rust-demo",
       "file": "crates/rust-demo/src/cells/greeting.rs",
       "item_kind": "enum",
       "line": 34,
-      "symbol": "rust_demo::cells::greeting::ParseError"
+      "symbol": "rust_demo::cells::greeting::ParseError",
+      "end_line": 61,
+      "fingerprint": "tok1:7e245680bfab47ba54250c947dc4fdc178817f5a6540f1bfe35af111a9c9785c"
     },
     {
       "crate_name": "rust-demo",
       "file": "crates/rust-demo/src/cells/greeting.rs",
       "item_kind": "fn",
       "line": 87,
-      "symbol": "rust_demo::cells::greeting::greet"
+      "symbol": "rust_demo::cells::greeting::greet",
+      "end_line": 98,
+      "fingerprint": "tok1:46b4b1c336cffc1ad011dfde0f5b109e77abca2c90c727b47e6a00fbe7d3a31e"
     },
     {
       "crate_name": "rust-demo",
       "file": "crates/rust-demo/src/cells/greeting.rs",
       "item_kind": "fn",
       "line": 63,
-      "symbol": "rust_demo::cells::greeting::parse_guest_name"
+      "symbol": "rust_demo::cells::greeting::parse_guest_name",
+      "end_line": 85,
+      "fingerprint": "tok1:2fb9eee000547b1efec0bf2c87f59f5ae8572f47f093d3b872bb7f34769ab743"
     },
     {
       "crate_name": "rust-demo",
       "file": "crates/rust-demo/src/core.rs",
       "item_kind": "mod",
       "line": 3,
-      "symbol": "rust_demo::core"
+      "symbol": "rust_demo::core",
+      "end_line": 3,
+      "fingerprint": "tok1:18538d2cbe02f0bf424d5ca6ea3580cc5a08488c895b9a0d8f3fecc075921bf0"
     },
     {
       "crate_name": "rust-demo",
       "file": "crates/rust-demo/src/core/text.rs",
       "item_kind": "mod",
       "line": 3,
-      "symbol": "rust_demo::core::text"
+      "symbol": "rust_demo::core::text",
+      "end_line": 3,
+      "fingerprint": "tok1:18538d2cbe02f0bf424d5ca6ea3580cc5a08488c895b9a0d8f3fecc075921bf0"
     },
     {
       "crate_name": "rust-demo",
       "file": "crates/rust-demo/src/core/text.rs",
       "item_kind": "fn",
       "line": 7,
-      "symbol": "rust_demo::core::text::normalise"
+      "symbol": "rust_demo::core::text::normalise",
+      "end_line": 18,
+      "fingerprint": "tok1:fe33b0e42637650c388578927d2941759775dd30aec69ff6a1c6cced550bf8a7"
     }
   ],
   "edges": [
@@ -183,7 +207,7 @@
       "verb": "implements"
     }
   ],
-  "schema": 2,
+  "schema": 3,
   "spec_units": [
     {
       "anchor": "root",

@@ -9,14 +9,14 @@
 
   Usage:  .\fractality.ps1 mc status
           .\fractality.ps1 ps
-          .\fractality.ps1 run --packet fractality\v0.1.0\spec\examples\hello-glm.toml
+          .\fractality.ps1 run --packet fractality\v1.0.0\vibevm\vibespecs\examples\hello-glm.toml
 #>
 $ErrorActionPreference = 'Stop'
 $here = Split-Path -Parent $MyInvocation.MyCommand.Path
 
-$bin = Join-Path $here 'fractality\v0.1.0\target\debug\fractality.exe'
+$bin = Join-Path $here 'fractality\v1.0.0\target\debug\fractality.exe'
 if (-not (Test-Path $bin)) {
-    Write-Error "fractality: binary not built at $bin — build it: cargo build -p fractality-cli (from fractality\v0.1.0)"
+    Write-Error "fractality: binary not built at $bin — build it: cargo build -p fractality-cli (from fractality\v1.0.0)"
     exit 2
 }
 

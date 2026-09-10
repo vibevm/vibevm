@@ -12,7 +12,7 @@ namespace = "rust-ai-native-mcp"
 
 scan_roots = ["crates/rust-ai-native-mcp"]
 
-spec_roots = ["spec"]
+spec_roots = ["vibevm/vibespecs"]
 
 root_spec_docs = []
 

@@ -28,15 +28,15 @@ concepts = ["campaign stewardship", "ritual-free continuation", "user-local plan
 
 [[skill]]
 name = "steward-status"
-path = "spec/skills/steward-status"
+path = "vibevm/vibespecs/skills/steward-status"
 description = "Resolve the current user-local stewardship context, verify it against the repository, and report the active campaign frontier without starting work"
 
 [[skill]]
 name = "steward-handoff"
-path = "spec/skills/steward-handoff"
+path = "vibevm/vibespecs/skills/steward-handoff"
 description = "On explicit owner request, prepare or receive a formal same-machine central-agent handoff while preserving acceptance boundaries and the complete campaign route"
 
 [[skill]]
 name = "steward-goal"
-path = "spec/skills/steward-goal"
+path = "vibevm/vibespecs/skills/steward-goal"
 description = "Render or refresh the deterministic local campaign goal from the selected plan node; ordinary continuation does not require a custody claim"

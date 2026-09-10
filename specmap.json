@@ -8969,7 +8969,7 @@
       "line": 50,
       "symbol": "vibe_cli::tests::cli_clean_and_world::an_explicit_pkgref_install_keeps_the_rest_of_the_world",
       "end_line": 94,
-      "fingerprint": "tok1:bf9e77e72ddd51b49902a715d004c7b68876986524ec27811670c85f362d884e"
+      "fingerprint": "tok1:0e71fa2fb430b7d8378fe6bba999ae3655269c198e6d250532b43d1857aa9ef1"
     },
     {
       "crate_name": "vibe-cli",
@@ -8978,7 +8978,7 @@
       "line": 96,
       "symbol": "vibe_cli::tests::cli_clean_and_world::an_offline_pkgref_install_keeps_the_rest_of_the_world",
       "end_line": 124,
-      "fingerprint": "tok1:9e7532d9909fd7669301332f5bcd454c482839f85aadc36d8a8f924c9e3cb5ed"
+      "fingerprint": "tok1:74ec3bf94c3175268da40199551800d451fcc065e5405056d7b1aedd42c0bad3"
     },
     {
       "crate_name": "vibe-cli",
@@ -8987,7 +8987,7 @@
       "line": 199,
       "symbol": "vibe_cli::tests::cli_clean_and_world::clean_install_rebuilds_the_whole_world",
       "end_line": 225,
-      "fingerprint": "tok1:3ab93fbea04f6bbef2be773245de07f1c9ebe157141dab67f92f34c27d2326fe"
+      "fingerprint": "tok1:d856456038e2163dbd1c7d74c503b6db6078e1ec5cbcb98598ddf7f237c2242d"
     },
     {
       "crate_name": "vibe-cli",
@@ -8996,7 +8996,7 @@
       "line": 227,
       "symbol": "vibe_cli::tests::cli_clean_and_world::clean_install_with_a_pkgref_refreshes_the_named_and_keeps_the_world",
       "end_line": 254,
-      "fingerprint": "tok1:6adaaad83cb7d35a4f3e42e59059351b112fe8b7ec2c22386c6dbb56fbcb3aa2"
+      "fingerprint": "tok1:25d8e3ed0f8fcb6345d66db6ea4873444a0dbf356cd231f770d981fa65b131f2"
     },
     {
       "crate_name": "vibe-cli",
@@ -9014,7 +9014,7 @@
       "line": 25,
       "symbol": "vibe_cli::tests::cli_default_path::default_path_installs_via_global_registry",
       "end_line": 170,
-      "fingerprint": "tok1:1c7f6b45744b0e771a4e64268f50bdc075a5c0092219249b0e5a365a8f1ce899"
+      "fingerprint": "tok1:4343d142ba2a45d18cf4417648c84033d3d0b6b66a9702b41041048dde8d85fc"
     },
     {
       "crate_name": "vibe-cli",
@@ -9059,7 +9059,7 @@
       "line": 277,
       "symbol": "vibe_cli::tests::cli_lifecycle::clean_build_wipes_then_restores_the_world_and_keeps_lifecycle_state",
       "end_line": 318,
-      "fingerprint": "tok1:add4d72f9abbfe7b70cecf8b5d34bbf8e2b13f076f6b04b17ec87e37d6566cb2"
+      "fingerprint": "tok1:c09c745a8cecd92d847bd7da62fba0b0295050b9a5ab87cee1de0e52e14fcacb"
     },
     {
       "crate_name": "vibe-cli",
@@ -9068,7 +9068,7 @@
       "line": 391,
       "symbol": "vibe_cli::tests::cli_lifecycle::clean_path_precedence_matches_the_original_install_chain",
       "end_line": 447,
-      "fingerprint": "tok1:e171f035db6753b41cc100ca7099826a8764b72cd8a5b3e372c8366d404ee002"
+      "fingerprint": "tok1:10b027f4f0dd96181b6ef954c96878c2a4e83711687854f8351f583e80505829"
     },
     {
       "crate_name": "vibe-cli",
@@ -9104,7 +9104,7 @@
       "line": 449,
       "symbol": "vibe_cli::tests::cli_lifecycle::install_failure_after_clean_does_not_roll_the_wipe_back",
       "end_line": 497,
-      "fingerprint": "tok1:a79a6c08994209afa5cbbf4dd546f37f0824564950453638fa50d2b29c4ef62d"
+      "fingerprint": "tok1:b6538b311ab2f260150a21f5517ba92c65fb48f390858d2fc098475104ca16a4"
     },
     {
       "crate_name": "vibe-cli",
@@ -9140,7 +9140,7 @@
       "line": 360,
       "symbol": "vibe_cli::tests::cli_lifecycle::outer_clean_consent_does_not_silently_approve_the_child_install",
       "end_line": 389,
-      "fingerprint": "tok1:9a38c92f6a7d63977b64dd397c7317715cb903402b7562df28ab4ce9f7014b63"
+      "fingerprint": "tok1:e682fb98958b5f2ffb1ed2498808e309f8a9e3442547e73c07d33a7ce4dd2a16"
     },
     {
       "crate_name": "vibe-cli",
@@ -9167,7 +9167,7 @@
       "line": 22,
       "symbol": "vibe_cli::tests::cli_lifecycle_commissioning::phase_announcer_owner_scenario_is_green_end_to_end",
       "end_line": 357,
-      "fingerprint": "tok1:9fb44864213dddda95034c8895a9e5a893daf901369b4220cc8ebf6376ba8e95"
+      "fingerprint": "tok1:d94fe83925d1e328bb2eb346e39854f66bb7136f0005429893a28511091b7a32"
     },
     {
       "crate_name": "vibe-cli",
@@ -9176,7 +9176,7 @@
       "line": 264,
       "symbol": "vibe_cli::tests::cli_lifecycle_dispatch::builtin_clean_runs_before_terminal_wipe",
       "end_line": 289,
-      "fingerprint": "tok1:0be7c101032e018c40726cb5911c4cd7aa84175145d7fbf7c7157981b7a7fe81"
+      "fingerprint": "tok1:17577e347208eb35deff0665dc6c2b32c1026e0ab723d41b1c47048e9a651c1d"
     },
     {
       "crate_name": "vibe-cli",
@@ -9203,7 +9203,7 @@
       "line": 324,
       "symbol": "vibe_cli::tests::cli_lifecycle_presets::stack_manifest_drives_real_cargo_with_ordered_presets_and_selective_freshness",
       "end_line": 433,
-      "fingerprint": "tok1:772275474de29f20aff0031b61279ee83366f326fe5909d1e355cdb67146617c"
+      "fingerprint": "tok1:4fa6ff4fa6b35a5c92e79b85b85a483fc63341fe1ac2211746a8264a840fa7c5"
     },
     {
       "crate_name": "vibe-cli",
@@ -9212,7 +9212,7 @@
       "line": 84,
       "symbol": "vibe_cli::tests::cli_mcp_kind::mcp_install_registers_and_uninstall_removes_package_servers",
       "end_line": 170,
-      "fingerprint": "tok1:f8eb4308c1d7077146672fff6700eccb93ce2f249c3b0c8dbb4486ad0942b1c4"
+      "fingerprint": "tok1:3545e27d0f2a2c7481d6373136fe5ac9a5389c06ca733ba5a94e86149e2d0cf1"
     },
     {
       "crate_name": "vibe-cli",
@@ -9221,7 +9221,7 @@
       "line": 17,
       "symbol": "vibe_cli::tests::cli_mcp_kind::mcp_kind_installs_and_its_exact_pin_selects_the_pinned_stack",
       "end_line": 82,
-      "fingerprint": "tok1:8cc6b7d4c55e742fbfb28fc23cc21dd178e4220e8a8549dcf4929cdd0ee23987"
+      "fingerprint": "tok1:294db579a51912eefa2eacc0a317b820852af704aa682b133deaeba527affa66"
     },
     {
       "crate_name": "vibe-cli",
@@ -9230,7 +9230,7 @@
       "line": 82,
       "symbol": "vibe_cli::tests::cli_mutable_slot::in_project_file_registry_skips_unchanged_then_reconciles_one_changed_file",
       "end_line": 145,
-      "fingerprint": "tok1:dba5cc53dbb14013e2722f7402470ead5ce684f8449b2784d4be510f5f8eb9bd"
+      "fingerprint": "tok1:d42600db683c5a24d4c30c5f0a539cfbc7f5fd907593d5a0b368c0dcd79a648d"
     },
     {
       "crate_name": "vibe-cli",
@@ -9239,7 +9239,7 @@
       "line": 20,
       "symbol": "vibe_cli::tests::cli_pkg_cycle::full_install_cycle",
       "end_line": 226,
-      "fingerprint": "tok1:8659c24e627eaa455976bf974f7e00d1d22bf2151282481d00064c6060c8d0d1"
+      "fingerprint": "tok1:03051517cfee6013384477cf04866bc12ec3007b84e6aa51053fe5dffe8fd674"
     },
     {
       "crate_name": "vibe-cli",
@@ -9257,7 +9257,7 @@
       "line": 940,
       "symbol": "vibe_cli::tests::cli_pkg_cycle::install_from_git_source_with_tag_records_source_kind_git",
       "end_line": 1045,
-      "fingerprint": "tok1:b539d1220a80f9818964f9aa0302b6bf71d6bb10d916904d19eacae6beb19df0"
+      "fingerprint": "tok1:51bd03216e4cffb6d6e1455b6b6c6c34190aee05df80a9dd98d1f56ba637ea82"
     },
     {
       "crate_name": "vibe-cli",
@@ -9266,7 +9266,7 @@
       "line": 1111,
       "symbol": "vibe_cli::tests::cli_pkg_cycle::install_git_source_then_repeat_install_no_args_is_idempotent",
       "end_line": 1183,
-      "fingerprint": "tok1:599c67946d24380b50cec68a5ba6d18a073a3c14c8da7fae1e554ba0ce91c6fd"
+      "fingerprint": "tok1:9b7d07c713946af2e6f36563afd3eb9a9b6a58bb4b50abeaa2f86fba2401f5d9"
     },
     {
       "crate_name": "vibe-cli",
@@ -9275,7 +9275,7 @@
       "line": 228,
       "symbol": "vibe_cli::tests::cli_pkg_cycle::install_second_install_is_idempotent",
       "end_line": 281,
-      "fingerprint": "tok1:e01ab0985d87688852e3e5c3ae75203ae08b32f3a2721bc6ab19999e7e7aa79a"
+      "fingerprint": "tok1:be0d86baaa48b07f03f58ad616bcf395fd6f77400c2d059168095aa6ea06306b"
     },
     {
       "crate_name": "vibe-cli",
@@ -13413,9 +13413,9 @@
       "file": "crates/vibe-index/tests/content_hash_parity.rs",
       "item_kind": "fn",
       "line": 81,
-      "symbol": "vibe_index::tests::content_hash_parity::flow_wal_v0_1_0_matches_canonical_algorithm",
+      "symbol": "vibe_index::tests::content_hash_parity::flow_wal_v1_0_0_matches_canonical_algorithm",
       "end_line": 102,
-      "fingerprint": "tok1:a172bc08187a77e644e69663f29449f3e7bdb240dbe449f975602f50984412b3"
+      "fingerprint": "tok1:dfbb70d3764fecefcc84cc81f7d0e39f15df51ac493ae9cb858b9c6fde665656"
     },
     {
       "crate_name": "vibe-index",
@@ -38717,7 +38717,7 @@
     },
     {
       "file": "crates/vibe-index/tests/content_hash_parity.rs",
-      "from_symbol": "vibe_index::tests::content_hash_parity::flow_wal_v0_1_0_matches_canonical_algorithm",
+      "from_symbol": "vibe_index::tests::content_hash_parity::flow_wal_v1_0_0_matches_canonical_algorithm",
       "line": 82,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#trust",
@@ -55106,10 +55106,10 @@
     },
     {
       "anchor": "REGISTRY-VIBESPECS",
-      "content_hash": "sha256:514b4b16d6ff827b72a89f78794fa8b49fb952777262e8f21f40f72cd4b3345f",
+      "content_hash": "sha256:dde68094bbfcfb42a59944378c7e7182af46ce74a853d8ff7a6b16e41477fdb5",
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
-      "heading": "**Package registry — GitHub organization `vibespecs`:** `https://github.com/vibespecs`. Per-package repos: `https://github.com/vibespecs/<group>.<name>` (`NamingConvention::Fqdn` per [PROP-008 §2.5](../modules/vibe-registry/PROP-008-qualified-naming.xml#repo-naming) — e.g. `org.vibevm_wal`; default since M1.19). The legacy `flow-*` repos are archived read-only. All publishing and consumption of v0.1.0+ packages goes through GitHub. @status:impl/done",
+      "heading": "**Package registry — GitHub organization `vibespecs`:** `https://github.com/vibespecs`. Per-package repos: `https://github.com/vibespecs/<group>.<name>` (`NamingConvention::Fqdn` per [PROP-008 §2.5](../modules/vibe-registry/PROP-008-qualified-naming.xml#repo-naming) — e.g. `org.vibevm_wal`; default since M1.19). The legacy `flow-*` repos are archived read-only. All publishing and consumption of v1.0.0+ packages goes through GitHub. @status:impl/done",
       "line": 13,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#REGISTRY-VIBESPECS"
     },
@@ -55241,10 +55241,10 @@
     },
     {
       "anchor": "CMD-PUBLISH",
-      "content_hash": "sha256:d909b3641255f14c36760b7a4d002c3f6d178dc20baee95d4137c7b829359518",
+      "content_hash": "sha256:ad00d2393071bc54468e1d6987cca07d49fde065603ed227406a295747784a00",
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
-      "heading": "Publish to GitHub (verified 2026-04-29): `vibe registry publish fixtures/registry/flow/<name>/v0.1.0` — публишер сам создаёт репо в `vibespecs` org через `POST /orgs/vibespecs/repos`, пушит контент, тэгает версию. Token считывается из `~/.vibe/github.publish.token` без побочных эффектов. @status:impl/done",
+      "heading": "Publish to GitHub: `vibe registry publish vibevm/vibepacks/<group>/<name>/v1.0.0` — публишер сам создаёт репо в `vibespecs` org через `POST /orgs/vibespecs/repos`, пушит контент, тэгает версию. Token считывается из `~/.vibe/github.publish.token` без побочных эффектов. @status:impl/done",
       "line": 32,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#CMD-PUBLISH"
     },
@@ -55430,7 +55430,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:7aeadfb2e410d59c236dae3e4f937195b31991490f1b66743d0cb6ab916e7765",
+      "content_hash": "sha256:3c76d95d101ac9a849cbd2984ee8ad2bedbf2110083912c7c740aa95cc58b354",
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "PROP-000: Foundational technical decisions",
@@ -56357,7 +56357,7 @@
     },
     {
       "anchor": "package-layout",
-      "content_hash": "sha256:e95d9c6e90e3cf8a80c1379bc5443993dc42b08576a7e9aa72954fb38a989605",
+      "content_hash": "sha256:10c9c3f57f76b02ec8bb124ba3b6813ed70019ce007cb6081c5277f9255bb239",
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "13. Package layout convention",
@@ -56384,10 +56384,10 @@
     },
     {
       "anchor": "mirror-example",
-      "content_hash": "sha256:b93c44e3d5b19882e17c124464f12027fe5db76bc6fc0bdaf6a235ba872ed0c0",
+      "content_hash": "sha256:11bbe85aa03ff1c40be7448f730b9d085205aa5d90ae072efc20e3da32de3361",
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
-      "heading": "Concretely, the canonical `flow:wal@0.1.0` payload (vendored as a hermetic e2e test fixture under `fixtures/registry/flow/wal/v0.1.0/`) contains `spec/flows/wal/WAL-PROTOCOL.md` at exactly that relative path; after `vibe install flow:wal`, the file lives at `spec/flows/wal/WAL-PROTOCOL.md` inside the user's project. No mapping, no rewriting. @status:spec/done",
+      "heading": "Concretely, the canonical `flow:org.vibevm.world/wal@1.0.0` payload under `vibevm/vibepacks/org.vibevm.world/wal/v1.0.0/` contains `vibevm/vibespecs/flows/wal/WAL-PROTOCOL.xml`; after `vibe install`, the same file lives verbatim under `vibevm/vibedeps/org.vibevm.world.wal/1.0.0/vibevm/vibespecs/flows/wal/WAL-PROTOCOL.xml`. No mapping, no rewriting. @status:spec/done",
       "line": 165,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#mirror-example"
     },
@@ -61715,7 +61715,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:55acbd043f4d023e1c861f2827ac870a392d00fb61958525d94f90471dabd9cc",
+      "content_hash": "sha256:93d188345c01c2c9bd1096fdea1ba3d3238c96b25ac270af01a621a0c824e8a7",
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "PROP-024 — Code-bearing packages (a package is a project)",
@@ -61733,10 +61733,10 @@
     },
     {
       "anchor": "related",
-      "content_hash": "sha256:67c125ce66260ae971f29ff6b1a89aec42bb80e4b71f9b60ea08ce8a922cb648",
+      "content_hash": "sha256:eba050e66c46084bea95ee20bdade515174bf5b4d920083107c8ceadb9d10f5a",
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
-      "heading": "**Related:** [PROP-002 §2.1](../modules/vibe-registry/PROP-002-decentralized-registry.xml#identity)\n(content-hash identity — re-scoped here to the shippable tree),\n[PROP-007](../modules/vibe-workspace/PROP-007-workspace.xml) (workspace +\n`vibedeps/`), [PROP-009 §2.1/§2.3](../modules/vibe-workspace/PROP-009-loading-model.xml#two-trees)\n(the verbatim materialise step + the boot path it emits),\n[PROP-011 §2.6](../modules/vibe-workspace/PROP-011-incremental-install.xml)\n(in-workspace `file://` mutability — the dev loop that re-materialises edited\npackage source), [PROP-020](../modules/vibe-workspace/PROP-020-install-hooks.xml)\n(the `post-install` build hook), [PROP-022 §2.2](../modules/vibe-workspace/PROP-022-materialization-modes.xml#snapshot)\n(the `copy`-mode tree — re-scoped here), the discipline mechanism specs\n[ENGINE-CONFORM](../../vibedeps/org.vibevm.ai-native.core-ai-native/0.8.0/spec/mechanisms/ENGINE-CONFORM-v0.1.md) and\n[PROP-014](../../vibedeps/org.vibevm.ai-native.core-ai-native/0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md)\n(the tools that relocate; the specs themselves now ship in\n`flow:org.vibevm.ai-native/core-ai-native` — `spec://org.vibevm.ai-native/core-ai-native/mechanisms/…`). @status:spec/done",
+      "heading": "**Related:** [PROP-002 §2.1](../modules/vibe-registry/PROP-002-decentralized-registry.xml#identity)\n(content-hash identity — re-scoped here to the shippable tree),\n[PROP-007](../modules/vibe-workspace/PROP-007-workspace.xml) (workspace +\n`vibedeps/`), [PROP-009 §2.1/§2.3](../modules/vibe-workspace/PROP-009-loading-model.xml#two-trees)\n(the verbatim materialise step + the boot path it emits),\n[PROP-011 §2.6](../modules/vibe-workspace/PROP-011-incremental-install.xml)\n(in-workspace `file://` mutability — the dev loop that re-materialises edited\npackage source), [PROP-020](../modules/vibe-workspace/PROP-020-install-hooks.xml)\n(the `post-install` build hook), [PROP-022 §2.2](../modules/vibe-workspace/PROP-022-materialization-modes.xml#snapshot)\n(the `copy`-mode tree — re-scoped here), the discipline mechanism specs\n[ENGINE-CONFORM](../../vibedeps/org.vibevm.ai-native.core-ai-native/1.0.0/vibevm/vibespecs/mechanisms/ENGINE-CONFORM-v0.1.xml) and\n[PROP-014](../../vibedeps/org.vibevm.ai-native.core-ai-native/1.0.0/vibevm/vibespecs/mechanisms/PROP-014-specmap-bidirectional-traceability.xml)\n(the tools that relocate; the specs themselves now ship in\n`flow:org.vibevm.ai-native/core-ai-native` — `spec://org.vibevm.ai-native/core-ai-native/mechanisms/…`). @status:spec/done",
       "line": 13,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#related"
     },
@@ -61886,7 +61886,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:c2fcb267c04b82ce837bc57e7da3ced2225d8aaf9b82a3091d45ff82f1c901e4",
+      "content_hash": "sha256:5c678b0f6221be1b3109e2d228049ef0c9effc439f33a9b05f1af977536c06ce",
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "2. Decisions",
@@ -62171,7 +62171,7 @@
     },
     {
       "anchor": "consume",
-      "content_hash": "sha256:f01911338253bc22295e49c2e33af64bd333e315ba4d7adb042bf6c6320b56f9",
+      "content_hash": "sha256:b38e98d900430206116a6f217d0eff6fb366a5726aa81acce55187668a9cb1d9",
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "2.4 Consuming shipped code — external-path-dep, no nested workspace",
@@ -62209,10 +62209,10 @@
     },
     {
       "anchor": "WORKSPACE-EXCLUDE",
-      "content_hash": "sha256:5f502e8c96325ac3b064c5022778623113bcb413e2d3d40b2b01e57fe0d4d90f",
+      "content_hash": "sha256:6c44799cf79a26fc8e3d571b001fce81fda5009398fbcd3490b5c57c3caf42bf",
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
-      "heading": "The consumer **excludes** `vibedeps/` (and, for a self-hosting repo, the\n  in-repo `packages/` source) from its `[workspace]`, so the slot's crates\n  belong to the *package's* workspace, not the consumer's — Cargo forbids a\n  directory living in two workspaces, and this is the standard resolution for a\n  repo that contains a sub-project with its own workspace. @status:spec/done",
+      "heading": "The consumer **excludes** `vibevm/vibedeps/` (and, for a self-hosting repo, the\n  in-repo `vibevm/vibepacks/` source) from its `[workspace]`, so the slot's crates\n  belong to the *package's* workspace, not the consumer's — Cargo forbids a\n  directory living in two workspaces, and this is the standard resolution for a\n  repo that contains a sub-project with its own workspace. @status:spec/done",
       "line": 180,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#WORKSPACE-EXCLUDE"
     },
@@ -62281,7 +62281,7 @@
     },
     {
       "anchor": "bootstrap",
-      "content_hash": "sha256:1bd06a505a3314a001d54cb5e7e9d085e06d7b39523c62540212aac383f9a845",
+      "content_hash": "sha256:a1eb23096e1587d283e01dcf6f333e13fc2a68109820ad8f55d797585337be32",
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "2.5 Self-hosting bootstrap — the toolchain is vendored",
@@ -62310,10 +62310,10 @@
     },
     {
       "anchor": "CLEAN-CLONE-BUILDS",
-      "content_hash": "sha256:55a61565e965f95e9d79af9ac560f87cc4316193d4b03930d35f22b27ed653bf",
+      "content_hash": "sha256:2c4e5afbbd563137175f80be5dba818ae8c2331cc0822089974348a121ba64be",
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
-      "heading": "Because `vibedeps/` is committed (PROP-009 §2.1), a fresh clone\n  builds from a clean checkout **with no prior `vibe install`** — the path-dep\n  target (`vibedeps/org.vibevm.ai-native.rust-ai-native-lang/0.2.0/crates/specmark`, …) already exists\n  in the tree. @status:spec/done",
+      "heading": "Because `vibedeps/` is committed (PROP-009 §2.1), a fresh clone\n  builds from a clean checkout **with no prior `vibe install`** — the path-dep\n  target (`vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/crates/vendor/core-ai-native-specmark`, …) already exists\n  in the tree. @status:spec/done",
       "line": 210,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#CLEAN-CLONE-BUILDS"
     },
@@ -74995,7 +74995,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:bba9b46231e6c84a6246c1229e47df4a7a3e8a0b96c47b8d0beddf8e9f56fc7d",
+      "content_hash": "sha256:11192156a5181b6d315442584634e86e67212752958ac8df3462edd78ff6ca7f",
       "doc_path": "design/command-nodes",
       "file": "vibevm/vibespecs/design/command-nodes.xml",
       "heading": "Command nodes in the map — B-019(б)",
@@ -75022,7 +75022,7 @@
     },
     {
       "anchor": "measured",
-      "content_hash": "sha256:e9929f45d8328ed00e130268177d6d9c374f76667ee028f653f0130590553da6",
+      "content_hash": "sha256:0cf5ff13839e7bd4206f55e8985beb9c7fe6a1047773187f5ff71e6077798d4a",
       "doc_path": "design/command-nodes",
       "file": "vibevm/vibespecs/design/command-nodes.xml",
       "heading": "1. What was measured at design time",
@@ -75112,10 +75112,10 @@
     },
     {
       "anchor": "m-twentyone-copies",
-      "content_hash": "sha256:0dfbb8b1c25526b1b4296045d548ec0b8d8487af000cdc7a8978c2e9f1221baa",
+      "content_hash": "sha256:6e1d36e8b1c97f4e4a2d5ce89a1ac6d371ad0e4e7db879532d4e1c64a0ea948a",
       "doc_path": "design/command-nodes",
       "file": "vibevm/vibespecs/design/command-nodes.xml",
-      "heading": "**The engine crate exists in 22 directories: one authored\nand 21 copies** — the coexisting v0.7.0 slot plus 20 regenerated vendor and\n`vibedeps/` snapshots. The authored one is\n`vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/`.\nEvery engine edit is followed by `cargo xtask sync-engines` as its own step. @status:impl/done",
+      "heading": "**The engine crate exists in 21 directories: one authored\nand 20 copies** — every surviving package and materialized slot is at 1.0.0.\nThe authored one is\n`vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.0.0/crates/core-ai-native-specmap/`.\nEvery engine edit is followed by `cargo xtask sync-engines` as its own step. @status:impl/done",
       "line": 77,
       "uri": "spec://org.vibevm.core/vibevm/design/command-nodes#m-twentyone-copies"
     },
@@ -78694,7 +78694,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:043b3760fbe3d469924bd3bb719577c61d84dbc478502a4819bf563d458349e7",
+      "content_hash": "sha256:9e587c09b13e3d7351dcb2b82ab9817ad4919365c34901e97c8b8a33e89ad443",
       "doc_path": "design/seam-error-and-assertion-parity",
       "file": "vibevm/vibespecs/design/seam-error-and-assertion-parity.xml",
       "heading": "The gate gains seam-error and conformance-assertion parity across languages",
@@ -78928,7 +78928,7 @@
     },
     {
       "anchor": "parity-lift",
-      "content_hash": "sha256:c15f6ed12c3ac16f5db86c086b9060afb758c051bc7bfc61baf2e2647ae74b1d",
+      "content_hash": "sha256:77cbf00351b6a3298c66a048a8790d673982b7d854552e4def3aabbe31b9aaf0",
       "doc_path": "design/seam-error-and-assertion-parity",
       "file": "vibevm/vibespecs/design/seam-error-and-assertion-parity.xml",
       "heading": "4. The parity-principle lift (boss contract diff, fork №9)",
@@ -78937,10 +78937,10 @@
     },
     {
       "anchor": "lift-home",
-      "content_hash": "sha256:83802e733aaa22c8edec03a0256b8774eb2d55eaca5da37fb86d258885418768",
+      "content_hash": "sha256:7f03caec041e454ee85e5a5b933e03e0f492f932f1cbe1b9bc94e40b9895c1f1",
       "doc_path": "design/seam-error-and-assertion-parity",
       "file": "vibevm/vibespecs/design/seam-error-and-assertion-parity.xml",
-      "heading": "**The home, ruled.** Map fork №9 (2026-08-04): «Ядро дисциплины» — the\nlanguage-neutral guiding layer of `core-ai-native`, manifesto level, one home, the\nstacks cite. The carrier is [`00-MANIFESTO.xml`](../../packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.xml)\n§4 (where the strictness lives), a boss-authored clause set the language guides\ncite. @status:spec/work",
+      "heading": "**The home, ruled.** Map fork №9 (2026-08-04): «Ядро дисциплины» — the\nlanguage-neutral guiding layer of `core-ai-native`, manifesto level, one home, the\nstacks cite. The carrier is [`00-MANIFESTO.xml`](../../vibepacks/org.vibevm.ai-native/core-ai-native/v1.0.0/vibevm/vibespecs/00-MANIFESTO.xml)\n§4 (where the strictness lives), a boss-authored clause set the language guides\ncite. @status:spec/work",
       "line": 182,
       "uri": "spec://org.vibevm.core/vibevm/design/seam-error-and-assertion-parity#lift-home"
     },
@@ -85759,7 +85759,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:662444df1a16985904e07097551d9bd41fe2d8b95e565d2b0c4cb275b66b3191",
+      "content_hash": "sha256:0d3a3a2e47167812769fefe96aaed0417a84ca8ce54dc72367af07c81186bfde",
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "PROP-043 — The facts markup: the inline status grammar and its IR",
@@ -85786,10 +85786,10 @@
     },
     {
       "anchor": "related",
-      "content_hash": "sha256:6bced3c2e0b6174cf0337641a9902ddcfcdc6ec76ff6323040003fa843a50b89",
+      "content_hash": "sha256:375dadd1e4c121ddc1f5f5577afdc1ac6bff513acd49dff35ccd549fe4bfee3e",
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
-      "heading": "**Depends on / relates to** (all as *external companions* — see the\nseparability law, §2): the `addressable-specs` flow (anchors, `spec://` URIs),\n[PROP-035](../vibe-workspace/PROP-035-spec-compiler.xml) (the document IR whose\nMarkdown/XML dual-frontend model this markup targets),\n[PROP-014 specmap](../../../vibedeps/org.vibevm.ai-native.core-ai-native/0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md)\n(spec↔code traceability — consumed by the progress layer through the\nevidence-provider seam, PROP-047 §4),\n[PROP-029](../../common/PROP-029-fully-qualified-addresses.xml) (`spec://`\ngrammar), and [PROP-047](../vibe-progress/PROP-047-progress-campaigns.xml) —\nthe campaign toolchain built on this grammar. The first consumer was the\nspec-actualization campaign\n(`vibevm/vibespecs/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml`). @status:spec/done",
+      "heading": "**Depends on / relates to** (all as *external companions* — see the\nseparability law, §2): the `addressable-specs` flow (anchors, `spec://` URIs),\n[PROP-035](../vibe-workspace/PROP-035-spec-compiler.xml) (the document IR whose\nMarkdown/XML dual-frontend model this markup targets),\n[PROP-014 specmap](../../../vibedeps/org.vibevm.ai-native.core-ai-native/1.0.0/vibevm/vibespecs/mechanisms/PROP-014-specmap-bidirectional-traceability.xml)\n(spec↔code traceability — consumed by the progress layer through the\nevidence-provider seam, PROP-047 §4),\n[PROP-029](../../common/PROP-029-fully-qualified-addresses.xml) (`spec://`\ngrammar), and [PROP-047](../vibe-progress/PROP-047-progress-campaigns.xml) —\nthe campaign toolchain built on this grammar. The first consumer was the\nspec-actualization campaign\n(`vibevm/vibespecs/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml`). @status:spec/done",
       "line": 10,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#related"
     },
@@ -87199,7 +87199,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:0183e0b7bb8408e60988a7bc9dcd176b89587e90bb4f23c477fcddeb2955d29d",
+      "content_hash": "sha256:ec70b4e1f8f36035830a9a29f46211fcfd977a6622dda4cd318706e4e56734ac",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "vibevm/vibespecs/modules/vibe-index/PROP-005-package-index.xml",
       "heading": "PROP-005: Optional package index — per-org metadata + standalone index server",
@@ -89888,7 +89888,7 @@
     },
     {
       "anchor": "architecture",
-      "content_hash": "sha256:44518f78758fe78dd86d68f51786d9d0fee7236ef5dfe3fe71a7b84be45dea47",
+      "content_hash": "sha256:eb8e8fe9801bc99da7fb89b0285cc9342e2ec83a80942851b7cbfbed9dac6339",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "vibevm/vibespecs/modules/vibe-index/PROP-005-package-index.xml",
       "heading": "3. Architecture",
@@ -89897,7 +89897,7 @@
     },
     {
       "anchor": "crate-layout",
-      "content_hash": "sha256:aa4b825e67a783aec146432f5d432892f660974853c564e31df2066e679cf753",
+      "content_hash": "sha256:4dee058abd0cd653037e17e4a229d4351319597154b09b16734a4b33169eb1e4",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "vibevm/vibespecs/modules/vibe-index/PROP-005-package-index.xml",
       "heading": "3.1 Crate layout",
@@ -89926,7 +89926,7 @@
     },
     {
       "anchor": "deps",
-      "content_hash": "sha256:a7841d846596b80c12fb9fd20b9395708dd034aed5249bafff06ead8b043a7db",
+      "content_hash": "sha256:f455291676183819ce9145815d06a6a57018e55b7d532b31422ca1b3aadca550",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "vibevm/vibespecs/modules/vibe-index/PROP-005-package-index.xml",
       "heading": "3.2 Dependencies",
@@ -90153,10 +90153,10 @@
     },
     {
       "anchor": "THE-PARITY-GATE-RUNS-TWO-FIXTURES-IN-TWO-RECIPES",
-      "content_hash": "sha256:4c06c1e072fa74414c65a7b9e58114a8c72555d7d36dcae2498b35d81d002638",
+      "content_hash": "sha256:303e58834e2c08e9c0f052531da0ab37f80ef43337e22c1a496cc1a31e074e31",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "vibevm/vibespecs/modules/vibe-index/PROP-005-package-index.xml",
-      "heading": "**The parity gate is wider than one fixture and one algorithm.** It runs BOTH implementations over BOTH fixtures in BOTH recipes: `fixtures/golden-flow-wal-0.1.0/` is the ordinary package, and `fixtures/golden-order-trap-0.1.0/` is the tree built to make recipes 0 and 1 disagree — a directory whose name is continued by a sibling file at a byte below `/`, the only shape on which component-wise and byte-wise ordering part company ([PROP-002 §2.1](../vibe-registry/PROP-002-decentralized-registry.xml#identity)). A single fixture would let the two implementations agree by accident on every tree that never exercises the difference, which is exactly how a hash regression once reached a consumer before any golden noticed. @status:impl/done",
+      "heading": "**The parity gate is wider than one fixture and one algorithm.** It runs BOTH implementations over BOTH fixtures in BOTH recipes: `fixtures/golden-flow-wal-1.0.0/` is the ordinary package, and `fixtures/golden-order-trap-0.1.0/` is the tree built to make recipes 0 and 1 disagree — a directory whose name is continued by a sibling file at a byte below `/`, the only shape on which component-wise and byte-wise ordering part company ([PROP-002 §2.1](../vibe-registry/PROP-002-decentralized-registry.xml#identity)). A single fixture would let the two implementations agree by accident on every tree that never exercises the difference, which is exactly how a hash regression once reached a consumer before any golden noticed. @status:impl/done",
       "line": 1033,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#THE-PARITY-GATE-RUNS-TWO-FIXTURES-IN-TWO-RECIPES"
     },
@@ -114414,7 +114414,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:a90a831328bc2f469fc723909f38c8cca8534f6668fc74ac9dc6f0e6b3c90c29",
+      "content_hash": "sha256:3ee3d521ccffe94f2846909e4024bc1b2f74ac72377275b05ce0a562fe3eca2b",
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "PROP-035: The spec compiler — directive preprocessor, package formats, and the two-mode boot linker",
@@ -114450,10 +114450,10 @@
     },
     {
       "anchor": "related",
-      "content_hash": "sha256:6b9c3b27b7257087022d1e19455de6e8321ebab63d1440e8ad1237aa2340d18c",
+      "content_hash": "sha256:a40ff1cbab905678e943ba44119e1d372bccfef0a4e921216df36aa3fdda854c",
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
-      "heading": "**Related:** [PROP-028](../../common/PROP-028-package-families.xml) (families — the aggregator role), [PROP-029](../../common/PROP-029-fully-qualified-addresses.xml) (`spec://` addressing, the `/` group↔name joiner), [PROP-008](../vibe-registry/PROP-008-qualified-naming.xml) (pkgref grammar `kind:group/name@version`), the `addressable-specs` flow (anchor / section grammar), [`vibevm/vibespecs/design/loading-and-boot-model.xml`](../../design/loading-and-boot-model.xml) (the static/dynamic-linking metaphor this PROP completes), [PROP-014 specmap](../../../packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.xml) (the `uri↔file` index the router extends). @status:spec/done",
+      "heading": "**Related:** [PROP-028](../../common/PROP-028-package-families.xml) (families — the aggregator role), [PROP-029](../../common/PROP-029-fully-qualified-addresses.xml) (`spec://` addressing, the `/` group↔name joiner), [PROP-008](../vibe-registry/PROP-008-qualified-naming.xml) (pkgref grammar `kind:group/name@version`), the `addressable-specs` flow (anchor / section grammar), [`vibevm/vibespecs/design/loading-and-boot-model.xml`](../../design/loading-and-boot-model.xml) (the static/dynamic-linking metaphor this PROP completes), [PROP-014 specmap](../../../vibepacks/org.vibevm.ai-native/core-ai-native/v1.0.0/vibevm/vibespecs/mechanisms/PROP-014-specmap-bidirectional-traceability.xml) (the `uri↔file` index the router extends). @status:spec/done",
       "line": 8,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#related"
     },
@@ -116025,7 +116025,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:1c6aa8e19f5b9c5c10f9c9d35a25851a0aaee4ce188497e718f153e281f7cdab",
+      "content_hash": "sha256:db561dd314885d9fc6f83caaacabefdb9a021ef24a4a2b967242ae4534fce4cb",
       "doc_path": "modules/vibe-workspace/PROP-038",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-038-hybrid-boot-linking.xml",
       "heading": "PROP-038: Hybrid boot linking — per-package compilation units with soft/hard static edges",
@@ -116070,10 +116070,10 @@
     },
     {
       "anchor": "related",
-      "content_hash": "sha256:4a4a5aff34a255e5257fa8e28ed89a843bf0a882781330dfb5c387c18523f120",
+      "content_hash": "sha256:0021f64f1062b388deb2376ee69032f81db2a5508a108cb560a9cbe368392d80",
       "doc_path": "modules/vibe-workspace/PROP-038",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-038-hybrid-boot-linking.xml",
-      "heading": "**Related:** [PROP-017 §3](../vibe-resolver/PROP-017-resolvo-resolver.xml#encoding) (resolvo — the single-version-per-name invariant this rests on), [PROP-011 §2.4](PROP-011-incremental-install.xml#boot-regen) (whole-tree boot regeneration — revised here to a dirty-subgraph), [PROP-022](PROP-022-materialization-modes.xml) / [PROP-014](../../../packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.xml) (`content_hash`, the specmap/link-table index), [`vibevm/vibespecs/design/loading-and-boot-model.xml`](../../design/loading-and-boot-model.xml) (the static/dynamic-linking metaphor this PROP completes). @status:spec/done",
+      "heading": "**Related:** [PROP-017 §3](../vibe-resolver/PROP-017-resolvo-resolver.xml#encoding) (resolvo — the single-version-per-name invariant this rests on), [PROP-011 §2.4](PROP-011-incremental-install.xml#boot-regen) (whole-tree boot regeneration — revised here to a dirty-subgraph), [PROP-022](PROP-022-materialization-modes.xml) / [PROP-014](../../../vibepacks/org.vibevm.ai-native/core-ai-native/v1.0.0/vibevm/vibespecs/mechanisms/PROP-014-specmap-bidirectional-traceability.xml) (`content_hash`, the specmap/link-table index), [`vibevm/vibespecs/design/loading-and-boot-model.xml`](../../design/loading-and-boot-model.xml) (the static/dynamic-linking metaphor this PROP completes). @status:spec/done",
       "line": 9,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#related"
     },

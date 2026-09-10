@@ -4,7 +4,7 @@
   <p>fractality is the pilot use of vibevm (workspace `CLAUDE.md`,
 §"vibevm pilot posture"; owner directive 2026-07-09). This file is the
 ledger of **deferrable** improvement wishes for vibevm and the packages
-under `packages/` that fractality development surfaces: features,
+under `vibevm/vibepacks/` that fractality development surfaces: features,
 ergonomics, non-blocking bugs. Urgent large bugs are not parked here —
 they are fixed in the host immediately, in the session that hit them.</p>
   <p>Entry format — newest on top, one dated block per item:</p>
@@ -17,23 +17,21 @@ they are fixed in the host immediately, in the session that hit them.</p>
 from here should land in a host plan/WAL, not vanish.</p>
   <section title="What must land for this workspace to run vibevm &quot;normally&quot;">
     <p>The definition of "normal": a cold clone runs `vibe install` in
-`fractality/v0.1.0/` with **no flags, no vendored copies, no
-working-tree gymnastics**, and gets the same 26 packages. Concretely,
+`fractality/v1.0.0/` with **no flags, no vendored copies, no
+working-tree gymnastics**, and gets the same 31 packages. Concretely,
 in dependency order:</p>
     <list ordered="true">
       <item>**Multi-source resolution** — one resolve walk that consults the
-   repo's own `packages/` tree *and* the `[[registry]]` blocks
+   repo's own `vibevm/vibepacks/` tree *and* the `[[registry]]` blocks
    (fall-through for published-only members). Shapes that would do:
    `--registry` joining the multi-walk instead of shadowing it, or a
    first-class `[[registry]] url = "file:///…"` / mirror-overlay for
    authoring repos. Until then: the vendored copies + exclusive
    `--registry` recipe in the workspace CLAUDE.md.</item>
-      <item>**Publish the missing versions to vibespecs** (owner-gated): `wal`
-   0.2.0 (registry has only v0.1.0; redbook 0.2.0 pins `=0.2.0` — the
-   published registry cannot serve edition 0.2.0 at all today),
-   `redbook` 0.2.0 itself, `rust-ai-native` family 0.7.0,
-   `core-ai-native` 0.7.0, `two-process-model` 0.1.0, and the rest of
-   the edition set. Either this **or** item 1 unblocks a cold clone;
+      <item>**Publish the v1 versions to vibespecs** (owner-gated): `wal`,
+   `redbook`, the `rust-ai-native` family, `core-ai-native`,
+   `two-process-model`, and the rest of the 1.0.0 edition set. Either
+   this **or** item 1 unblocks a cold clone;
    both make it robust.</item>
       <item>**`vibe registry test` probe fix** — use a group-qualified probe
    pkgref so the diagnostic stops reporting healthy registries as
@@ -46,7 +44,8 @@ in dependency order:</p>
    when the project tree it operates on is newer than itself; the
    stale-parser failure this session was silent misdirection.</item>
       <item>**`vibe bin build` for this workspace's slot** — build
-   `rust-ai-native` in `vibedeps/stack-rust-ai-native-lang/0.7.0/` so
+   `rust-ai-native` in
+   `vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/` so
    the discipline CLI runs in its canonical consumer form instead of
    borrowing the host package's `target/`.</item>
     </list>
@@ -55,8 +54,9 @@ in dependency order:</p>
     <p>**Ground rules.** Nothing here deletes or recreates
 `org.vibevm.fractality`. Disposable *scratch consumer projects* live
 under the session scratchpad (`vibe init` there is free); in-workspace
-checks only regenerate what vibe itself owns (`vibe.lock`, `vibedeps/`,
-`vibevm/vibespecs/boot/INDEX.md`, the `&lt;vibevm&gt;` block) via `install`/`reinstall`.
+checks only regenerate what vibe itself owns (`vibe.lock`, `vibevm/vibedeps/`,
+`vibevm/vibespecs/boot/{STATIC.md,INDEX.md}`, the `&lt;vibevm&gt;` block) via
+`install`/`reinstall`.
 Hand-authored files (`vibe.toml` outside managed edits, specs, crates,
 WAL/CONTINUE) are never touched by a verification run. Run every check
 with the working-tree binary (`&lt;host&gt;/target/debug/vibe.exe`) unless
@@ -64,54 +64,54 @@ the item is *about* the installed shim (item 5).</p>
     <list ordered="true">
       <item>**Multi-source resolution.**</item>
       <item>Build a *pruned registry copy* in the scratchpad: copy
-     `&lt;host&gt;/packages/` minus `org.vibevm.world/atomic-commits` and
-     `org.vibevm.world/sync-from-code` (recreates today's true upstream state
+     `&lt;host&gt;/vibevm/vibepacks/` minus
+     `org.vibevm.world/git-atomic-commits/v1.0.0` and
+     `org.vibevm.world/sync-from-code/v1.0.0` (recreates a mixed-source state
      without touching the real tree).</item>
       <item>`vibe init` a scratch project; `vibe.toml`: require
-     `flow:org.vibevm.world/redbook = "^0.2.0"`, the two `[[registry]]`
+     `flow:org.vibevm.world/redbook = "^1.0.0"`, the two `[[registry]]`
      blocks, and the new local-source mechanism under test (joined
      `--registry`, `[[registry]] url="file:///…"`, or mirror overlay —
      whatever shape ships).</item>
-      <item>Expected: one `vibe install` resolves all 26 — 24 from the pruned
-     local copy, `atomic-commits`/`sync-from-code` from vibespecs;
+      <item>Expected: one `vibe install` resolves all 31 — 29 from the pruned
+     local copy, `git-atomic-commits`/`sync-from-code` from vibespecs;
      `vibe.lock` shows mixed `source_url`s; exit 0, no manual steps.</item>
-      <item>Then in-workspace: after the owner de-vendors the two copies from
-     `&lt;host&gt;/packages/` (host-side commit), `vibe install` in
-     `fractality/v0.1.0/` re-resolves cleanly with the same 26-package
-     lock (content hashes unchanged for the 24 local ones).</item>
+      <item>Then in-workspace: point `--registry` at that pruned scratch copy;
+     `vibe install` in `fractality/v1.0.0/` re-resolves cleanly with the same
+     31-package lock (content hashes unchanged for the 29 local ones).</item>
       <item>**Published editions.**</item>
       <item>`git ls-remote --tags https://github.com/vibespecs/org.vibevm.&lt;name&gt;`
-     shows the pinned tags: `wal` v0.2.0, `redbook` v0.2.0,
-     `rust-ai-native{,-lang,-mcp}` v0.7.0, `core-ai-native` v0.7.0,
-     `two-process-model` v0.1.0 (plus the rest of the edition set).</item>
+     shows `v1.0.0` for `wal`, `redbook`,
+     `rust-ai-native{,-lang,-mcp}`, `core-ai-native`,
+     `two-process-model`, and the rest of the edition set.</item>
       <item>Scratch project with **no** local registry at all (network only):
-     `vibe install` of `flow:org.vibevm.world/redbook@^0.2.0` +
-     `stack:org.vibevm.ai-native/rust-ai-native@^0.7.0` completes; lock's
+     `vibe install` of `flow:org.vibevm.world/redbook@^1.0.0` +
+     `stack:org.vibevm.ai-native/rust-ai-native@^1.0.0` completes; lock's
      `source_url`s are all `https://github.com/vibespecs/…`.</item>
       <item>Content-hash cross-check: each package's `content_hash` in the
      scratch lock equals the hash in this workspace's `vibe.lock` (same
      bytes from either source — the PROP-002 identity law).</item>
       <item>**`vibe registry test` probe.**</item>
-      <item>From `fractality/v0.1.0/`: `vibe registry test` reports
+      <item>From `fractality/v1.0.0/`: `vibe registry test` reports
      `vibespecs → reachable`; the string `is not group-qualified` never
      appears. GitVerse may report `unreachable`/`auth-required` (that is
      this box's network, item is not about it) — but not the probe bug.</item>
       <item>**Boot-slot collision report.**</item>
-      <item>`vibe reinstall` in `fractality/v0.1.0/` → the run reports the
+      <item>`vibe reinstall` in `fractality/v1.0.0/` → the run reports the
      collisions (today: slot 10 core-ai-native+wal, slot 20
      rust-ai-native-lang+sync-from-code) or the packages get re-slotted
      so `grep -oE '/[0-9]+-' vibevm/vibespecs/boot/INDEX.md | sort | uniq -d` is
      empty. Either way: nothing silent.</item>
       <item>**Installed-shim rot.**</item>
       <item>Re-run the original failing case with the *shim*:
-     `~/opt/bin/vibe install --registry "&lt;host&gt;/packages" --unattended`
+     `~/opt/bin/vibe install --registry "&lt;host&gt;/vibevm/vibepacks" --unattended`
      in a scratch project requiring `stack:org.vibevm.ai-native/rust-ai-native` —
      the manifest parse error must be gone (shim refreshed), **or** the
      shim refuses/warns loudly that it is older than the tree it
      operates on (whichever story ships).</item>
       <item>**Slot binary build.**</item>
-      <item>From `fractality/v0.1.0/`: `vibe bin build` (consented) →
-     `vibedeps/stack-rust-ai-native-lang/0.7.0/target/release/rust-ai-native.exe`
+      <item>From `fractality/v1.0.0/`: `vibe bin build` (consented) →
+     `vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/target/release/rust-ai-native.exe`
      exists; `vibe bin exec rust-ai-native -- floor` runs the workspace
      floor end to end with the same verdict as the borrowed host binary;
      then the workspace CLAUDE.md recipe (§"Driving vibevm here") flips

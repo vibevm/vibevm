@@ -3,8 +3,8 @@
 //! `mcp-` prefix, and — the load-bearing law — its exact `=X.Y.Z` pin
 //! selects EXACTLY the pinned version of the package it serves, even
 //! when the registry offers a newer one. The fixture pair
-//! `org.vibevm/pin-server` (kind = mcp, pins `=0.1.0`) and
-//! `org.vibevm/pin-stack` (v0.1.0 AND v0.2.0 published) exists for
+//! `org.vibevm/pin-server` (kind = mcp, pins `=1.0.0`) and
+//! `org.vibevm/pin-stack` (v1.0.0 AND v1.1.0 published) exists for
 //! exactly this test.
 
 mod common;
@@ -35,7 +35,7 @@ fn mcp_kind_installs_and_its_exact_pin_selects_the_pinned_stack() {
 
     // The mcp slot materialises under the kind-prefixed dir, tree verbatim
     // (the [[mcp_server]]-referenced binary crate included).
-    let slot_dir = common::slot_dir("org.vibevm.pin-server", "0.1.0");
+    let slot_dir = common::slot_dir("org.vibevm.pin-server", "1.0.0");
     let mcp_slot = project.path().join(&slot_dir);
     for rel in ["vibe.toml", "crates/pin-server-mcp/src/main.rs"] {
         assert!(
@@ -44,7 +44,7 @@ fn mcp_kind_installs_and_its_exact_pin_selects_the_pinned_stack() {
         );
     }
 
-    // The exact pin resolved pin-stack at 0.1.0 — NOT the newer 0.2.0 the
+    // The exact pin resolved pin-stack at 1.0.0 — NOT the newer 1.1.0 the
     // fixture registry deliberately offers (PROP-027 §2.3: one version
     // set, held by the resolver).
     assert!(
@@ -52,7 +52,7 @@ fn mcp_kind_installs_and_its_exact_pin_selects_the_pinned_stack() {
             .path()
             .join(common::slot_rel(
                 "org.vibevm.pin-stack",
-                "0.1.0",
+                "1.0.0",
                 "vibe.toml"
             ))
             .is_file(),
@@ -61,7 +61,7 @@ fn mcp_kind_installs_and_its_exact_pin_selects_the_pinned_stack() {
     assert!(
         !project
             .path()
-            .join(common::slot_dir("org.vibevm.pin-stack", "0.2.0"))
+            .join(common::slot_dir("org.vibevm.pin-stack", "1.1.0"))
             .exists(),
         "the newer stack version must NOT be selected over the exact pin"
     );
@@ -124,8 +124,8 @@ fn mcp_install_registers_and_uninstall_removes_package_servers() {
     let entry = &doc["mcpServers"]["pin-server"];
     let command = entry["command"].as_str().expect("command string");
     assert!(
-        command.contains(&common::slot_dir("org.vibevm.pin-server", "0.1.0"))
-            || command.contains(&common::slot_dir("mcp-pin-server", "0.1.0").replace('/', "\\")),
+        command.contains(&common::slot_dir("org.vibevm.pin-server", "1.0.0"))
+            || command.contains(&common::slot_dir("mcp-pin-server", "1.0.0").replace('/', "\\")),
         "command launches the slot artifact directly: {command}"
     );
     assert!(

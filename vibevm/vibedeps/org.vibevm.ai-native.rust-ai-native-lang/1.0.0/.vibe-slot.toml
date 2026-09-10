@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:517460d81b4b7f0444333be2d6a252961d4271ef2f9ccfa12f9fafc43c479d38"
+source_hash = "sha256:ddfe01d8b1b7c2694ef6409276873c10b6f51fe98c14faf774dbaadde0aa8ab4"
 spec_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:079b7cf2b797dd579a056373c975915ac0a4a560dcf65cb805919ad96bb1bce0"
+derived_hash = "sha256:71a89d181c30cac9f164c910866f31dc845935b30cf0c50118c52389a7ec6433"
 
 [[file]]
 path = "Cargo.lock"
@@ -486,7 +486,7 @@ source = "crates/vendor/core-ai-native-specmap/Cargo.toml"
 
 [[file]]
 path = "crates/vendor/core-ai-native-specmap/src/config.rs"
-sha256 = "9f88072bb89626401479b8e8671a9582a44dc6fc39d19412b0b8dcd0a7c454d5"
+sha256 = "0f43c87919b1805babb09b85a3048c6627b2b0bb06fa91bc2ccbe1769afadcfc"
 disposition = "copied"
 source = "crates/vendor/core-ai-native-specmap/src/config.rs"
 
@@ -534,19 +534,31 @@ source = "crates/vendor/core-ai-native-specmap/src/index/tests.rs"
 
 [[file]]
 path = "crates/vendor/core-ai-native-specmap/src/jtd.rs"
-sha256 = "402db9e166651b0b1d843aa1c451e200158547a107c81f97d98f25252505a27f"
+sha256 = "0e15f8d5ca16ba993044aeebce3d57a1313799e0249d43e6749257488d54fd3e"
 disposition = "copied"
 source = "crates/vendor/core-ai-native-specmap/src/jtd.rs"
 
 [[file]]
+path = "crates/vendor/core-ai-native-specmap/src/jtd/contained_path.rs"
+sha256 = "4e4875a6fb904a899b72813ca53cf87d56389d3012e7d969f149555d2ff278ca"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-specmap/src/jtd/contained_path.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-specmap/src/jtd/contained_path/tests.rs"
+sha256 = "9bdbe5268781a8c548dcba6284c728b73ddfb04cee4efd969f9723aeef4dcff0"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-specmap/src/jtd/contained_path/tests.rs"
+
+[[file]]
 path = "crates/vendor/core-ai-native-specmap/src/jtd/positions.rs"
-sha256 = "416a3ab8ae4cbe6b2ffd71411c4b398a22de4133b7f59ddc42848addef4f5789"
+sha256 = "739dc73724a60c332b21c17f4b35880e3d74f9d8069318177f5abe47a32fec91"
 disposition = "copied"
 source = "crates/vendor/core-ai-native-specmap/src/jtd/positions.rs"
 
 [[file]]
 path = "crates/vendor/core-ai-native-specmap/src/jtd/tests.rs"
-sha256 = "b327b7e90f344b13efb538139d7361d8b5c174545add83ded6b14260a445143a"
+sha256 = "583a743cd269def6d98b67340ed26b6b6d6be8bc2d6a4222a7a53c38df16977b"
 disposition = "copied"
 source = "crates/vendor/core-ai-native-specmap/src/jtd/tests.rs"
 
@@ -624,7 +636,7 @@ source = "crates/vendor/core-ai-native-specmap/src/tripwire.rs"
 
 [[file]]
 path = "crates/vendor/core-ai-native-specmap/src/xmlspec.rs"
-sha256 = "5690449d21ee36f539a4e39c0b23bf564010778f917a5e3d765c9e6a961d80c5"
+sha256 = "c2a13559f4109b8f7f13eab98015babc8af3b058da1b03abf66dc6ba80b7c952"
 disposition = "copied"
 source = "crates/vendor/core-ai-native-specmap/src/xmlspec.rs"
 
@@ -642,13 +654,13 @@ source = "crates/vendor/core-ai-native-specmap/src/xmlspec/doc.rs"
 
 [[file]]
 path = "crates/vendor/core-ai-native-specmap/src/xmlspec/facts.rs"
-sha256 = "bf4a4e13bff8d5b46877017b05d7f4e0b571939512dacf7e53354ff38d443286"
+sha256 = "627f92c3db22abd0ac9f3e939c4c7f38ff121b082c7fda9a81aca11b04e30aca"
 disposition = "copied"
 source = "crates/vendor/core-ai-native-specmap/src/xmlspec/facts.rs"
 
 [[file]]
 path = "crates/vendor/core-ai-native-specmap/src/xmlspec/mdout.rs"
-sha256 = "23969d6c1f395157f4c50c09e29ed50a24e188ae3a9245a1d8e3d5be06031b1e"
+sha256 = "70f607e20b1488e9bf7da56733f5140089758df0bf330dca3bcc82f871e327d9"
 disposition = "copied"
 source = "crates/vendor/core-ai-native-specmap/src/xmlspec/mdout.rs"
 
@@ -657,6 +669,18 @@ path = "crates/vendor/core-ai-native-specmap/src/xmlspec/reader.rs"
 sha256 = "c2eab11b5581bac340d2aa548deb0601c3d2065bcb6670ee4463dab4f1e5e08e"
 disposition = "copied"
 source = "crates/vendor/core-ai-native-specmap/src/xmlspec/reader.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-specmap/src/xmlspec/requirements.rs"
+sha256 = "835c40a00b9303dc04c1c095e36ba3bc1dc095ec4308db4b92b7333671445ee8"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-specmap/src/xmlspec/requirements.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-specmap/src/xmlspec/requirements_tests.rs"
+sha256 = "bca3d860662944632f519cc3b33af982c685ef02c24df71d085b699fbb1797f8"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-specmap/src/xmlspec/requirements_tests.rs"
 
 [[file]]
 path = "crates/vendor/core-ai-native-specmap/src/xmlspec/td_tests.rs"
@@ -708,13 +732,13 @@ source = "crates/vendor/core-ai-native-specmark/tests/usage.rs"
 
 [[file]]
 path = "specmap.toml"
-sha256 = "2f076c779d19c66179ec0ada3a83bbed3e4c8037b357ce9df1f829ebaff14d47"
+sha256 = "fb7c008e186f9bbffe5f13fb4a57598bc8cc36e047863c82359879990d31d1b6"
 disposition = "copied"
 source = "specmap.toml"
 
 [[file]]
 path = "vibe.toml"
-sha256 = "06f70316b91442c7a2ffbd6b73533eb9f92987c33182896230a4c21a35d8480c"
+sha256 = "f5658add3678829076f69f6800931c98d14635ecf2d6b0bd832ef6e4c91b7817"
 disposition = "copied"
 source = "vibe.toml"
 

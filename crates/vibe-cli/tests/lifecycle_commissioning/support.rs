@@ -186,7 +186,7 @@ fn assert_plan_row(row: &PlannedContribution, expected: &ExpectedRow) {
             expected.handler,
         )
     );
-    assert_eq!(row.version.as_deref(), Some("0.1.0"));
+    assert_eq!(row.version.as_deref(), Some("1.0.0"));
     assert!(row.reference.is_none());
     assert!(row.slot_target.is_none());
 }
@@ -212,7 +212,7 @@ pub fn assert_report_rows(report: &LifecycleReport, expected: &[ExpectedRow]) {
                 expected.handler,
             )
         );
-        assert_eq!(row.version.as_deref(), Some("0.1.0"));
+        assert_eq!(row.version.as_deref(), Some("1.0.0"));
         assert!(row.reference.is_none());
         assert!(row.slot_target.is_none());
     }
@@ -246,7 +246,7 @@ pub fn assert_optional_shape(
     assert!(row.stderr.is_none());
     assert!(row.stdout_truncated.is_none());
     assert!(row.stderr_truncated.is_none());
-    assert_eq!(row.version.as_deref(), Some("0.1.0"));
+    assert_eq!(row.version.as_deref(), Some("1.0.0"));
 }
 
 pub fn exact_line_index(text: &str, expected: &str) -> usize {

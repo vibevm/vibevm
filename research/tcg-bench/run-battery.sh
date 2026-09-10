@@ -67,7 +67,7 @@ command -v node >/dev/null 2>&1 || { echo "FATAL: node not on PATH" >&2; exit 3;
   exit 3
 }
 
-SLOT_CONFORM="$REPO_ROOT/vibedeps/stack-typescript-ai-native-lang/0.6.0/target/release/typescript-ai-native-conform.exe"
+SLOT_CONFORM="$REPO_ROOT/vibevm/vibedeps/org.vibevm.ai-native.typescript-ai-native-lang/1.0.0/target/release/typescript-ai-native-conform.exe"
 if [ ! -x "$SLOT_CONFORM" ]; then
   echo "note: conform artifact missing; building via vibe bin build (org.vibevm, consented)" >&2
   (cd "$REPO_ROOT" && cargo run -q -p vibe-cli -- bin build typescript-ai-native-conform) || {
@@ -124,7 +124,7 @@ remove_work() { # <work dir>
 }
 
 TOOLS_BLOCK="Tools available for this task: run
-  \"$REPO_ROOT/vibedeps/stack-typescript-ai-native-lang/0.6.0/target/release/typescript-ai-native-tcg.exe\" validate <file> --json
+  \"$REPO_ROOT/vibevm/vibedeps/org.vibevm.ai-native.typescript-ai-native-lang/1.0.0/target/release/typescript-ai-native-tcg.exe\" validate <file> --json
 to type-check a file (with discipline findings) BEFORE writing it to disk is final, and
   ... scope <file> / complete <file> --position L:C / type <file> --position L:C
 for in-scope symbols, type-valid completions, and expression types. Consult them before and after each edit."

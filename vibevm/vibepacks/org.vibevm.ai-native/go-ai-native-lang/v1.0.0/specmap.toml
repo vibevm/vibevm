@@ -29,7 +29,7 @@ scan_roots = [
 ]
 
 # The package's prompt content (guide, cards, mechanisms, boot).
-spec_roots = ["spec"]
+spec_roots = ["vibevm/vibespecs"]
 
 root_spec_docs = []
 

@@ -447,19 +447,20 @@
       "id": "DBT-0023",
       "kind": "dependency-advisory",
       "severity": "P2",
-      "title": "fractality specspace lockfile pins quinn-proto 0.11.14 (RUSTSEC-2026-0185, high 7.5)",
-      "detail": "cargo audit over the host Cargo.lock flagged quinn-proto 0.11.14 (remote memory exhaustion via unbounded out-of-order stream reassembly; fix >=0.11.15). The host lock was bumped to 0.11.16 in-run at the 2026-08-03 phase-D exit-gate audit. The same vulnerable pin sits in packages/org.vibevm.fractality/fractality/v0.1.0/Cargo.lock - a specspace-owned workspace this host session does not edit (boot-scoping law). The specspace's next session runs `cargo update -p quinn-proto` in its own workspace and re-runs its floor. Note: on the host, quinn-proto is not in the default-target dependency graph (cargo tree -i finds nothing) - the exposure is the lock entry, not compiled code; the fractality workspace should verify the same.",
+      "title": "fractality specspace quinn-proto advisory resolved at 0.11.16",
+      "detail": "The 2026-08-03 audit found quinn-proto 0.11.14 in the former fractality package slot (RUSTSEC-2026-0185; fix >=0.11.15). The surviving v1 workspace lock was updated to 0.11.16 on 2026-09-10 and its Cargo gate is rerun as part of the v1-only package cleanup.",
       "evidence": [
         "RUSTSEC-2026-0185 (2026-06-22), solution >=0.11.15",
         "host fix: Cargo.lock quinn-proto 0.11.14 -> 0.11.16, audit run 2026-08-03",
-        "packages/org.vibevm.fractality/fractality/v0.1.0/Cargo.lock still names quinn-proto (grep, 2026-08-03)"
+        "vibevm/vibepacks/org.vibevm.fractality/fractality/v1.0.0/Cargo.lock: quinn-proto 0.11.16 (2026-09-10)"
       ],
       "source": "health-audit A-D inventory at the packages-2026-09 phase-D exit gate (2026-08-03), finding 2026-08-03-02",
-      "disposition": "filed",
+      "disposition": "accepted",
+      "accepted_reason": "the only surviving fractality package lock now pins the patched 0.11.16 release",
       "tripwires": [
-        "touch:packages/org.vibevm.fractality/fractality/v0.1.0/Cargo.lock"
+        "touch:vibevm/vibepacks/org.vibevm.fractality/fractality/v1.0.0/Cargo.lock"
       ],
-      "sunset": "closes when the fractality lock carries quinn-proto >=0.11.15 and its floor is green"
+      "sunset": "re-open if the surviving fractality lock regresses below quinn-proto 0.11.15"
     }
   ]
 }

@@ -92,7 +92,7 @@ fn in_project_file_registry_skips_unchanged_then_reconciles_one_changed_file() {
 
     let slot = project
         .path()
-        .join(common::slot_dir("org.vibevm.world.wal", "0.2.0"));
+        .join(common::slot_dir("org.vibevm.world.wal", "1.0.0"));
     let changed_payload = slot.join("README.md");
     let record = slot.join(vibe_workspace::vibedeps::SLOT_RECORD_FILENAME);
     let payload_mtimes = age_recorded_payloads(&slot);
@@ -106,7 +106,7 @@ fn in_project_file_registry_skips_unchanged_then_reconciles_one_changed_file() {
         second["skipped"].as_array().unwrap(),
         &[serde_json::Value::String(common::slot_dir(
             "org.vibevm.world.wal",
-            "0.2.0"
+            "1.0.0"
         ))]
     );
     assert_eq!(recorded_mtimes(&slot), payload_mtimes);
@@ -115,7 +115,7 @@ fn in_project_file_registry_skips_unchanged_then_reconciles_one_changed_file() {
         record_mtime
     );
 
-    let registry_changed = registry.join("org.vibevm.world/wal/v0.2.0/README.md");
+    let registry_changed = registry.join("org.vibevm.world/wal/v1.0.0/README.md");
     let edited = format!(
         "{}\nmutable registry edit\n",
         fs::read_to_string(&registry_changed).unwrap()

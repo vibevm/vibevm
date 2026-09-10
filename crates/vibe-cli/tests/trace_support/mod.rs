@@ -247,7 +247,7 @@ pub fn lifecycle_run_dirs(project: &Path) -> Vec<String> {
 pub fn static_project(user: &UserScratch) -> tempfile::TempDir {
     let project = tempfile::tempdir().unwrap();
     user.init_project(project.path());
-    declare_static_dependency(project.path(), "flow:org.vibevm/integration-alpha", "^0.1");
+    declare_static_dependency(project.path(), "flow:org.vibevm/integration-alpha", "^1.0");
     project
 }
 

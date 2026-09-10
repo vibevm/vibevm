@@ -44,7 +44,7 @@ fn seeded(user: &UserScratch) -> tempfile::TempDir {
         "\n[[registry]]\nname = \"fixture\"\nurl = \"{url}\"\n"
     ));
     std::fs::write(&manifest, text).unwrap();
-    declare_static_dependency(project.path(), "flow:org.vibevm/integration-alpha", "^0.1");
+    declare_static_dependency(project.path(), "flow:org.vibevm/integration-alpha", "^1.0");
 
     let seed = user
         .vibe()

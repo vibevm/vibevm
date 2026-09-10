@@ -35,7 +35,7 @@ fn file_url(dir: &Path) -> String {
     format!("file://{s}")
 }
 
-/// Warm the store: install `org.vibevm.world/wal@=0.2.0` from a
+/// Warm the store: install `org.vibevm.world/wal@=1.0.0` from a
 /// one-shot directory registry (`--registry`), then re-install the
 /// same pinned pkgref under `--offline` with ZERO registries (no
 /// `--registry`, no `[[registry]]` in `vibe.toml`, the scratch home
@@ -53,7 +53,7 @@ fn offline_install_resolves_from_the_store_with_zero_registries() {
     let reg = make_wal_dir_registry(project.path());
     user.vibe()
         .arg("install")
-        .arg("org.vibevm.world/wal@=0.2.0")
+        .arg("org.vibevm.world/wal@=1.0.0")
         .arg("--path")
         .arg(project.path())
         .arg("--registry")
@@ -63,7 +63,7 @@ fn offline_install_resolves_from_the_store_with_zero_registries() {
         .success();
     let entry = user
         .settings
-        .join("cache/org.vibevm.world/wal/v0.2.0/vibe.toml");
+        .join("cache/org.vibevm.world/wal/v1.0.0/vibe.toml");
     assert!(
         entry.is_file(),
         "fixture: the warm install must land the store entry"
@@ -73,7 +73,7 @@ fn offline_install_resolves_from_the_store_with_zero_registries() {
     // the freshness fast path cannot skip the resolution).
     user.vibe()
         .arg("install")
-        .arg("org.vibevm.world/wal@=0.2.0")
+        .arg("org.vibevm.world/wal@=1.0.0")
         .arg("--path")
         .arg(project.path())
         .arg("--assume-yes")
@@ -86,7 +86,7 @@ fn offline_install_resolves_from_the_store_with_zero_registries() {
             .path()
             .join(common::slot_rel(
                 "org.vibevm.world.wal",
-                "0.2.0",
+                "1.0.0",
                 "vibe.toml"
             ))
             .is_file(),
@@ -111,7 +111,7 @@ fn offline_miss_names_the_package_and_the_recipes() {
     let reg = make_wal_dir_registry(project.path());
     user.vibe()
         .arg("install")
-        .arg("org.vibevm.world/wal@=0.2.0")
+        .arg("org.vibevm.world/wal@=1.0.0")
         .arg("--path")
         .arg(project.path())
         .arg("--registry")
@@ -171,14 +171,14 @@ fn a_version_deleted_from_the_registry_still_installs_from_the_store() {
     let project = tempfile::tempdir().unwrap();
     user.init_project(project.path());
 
-    // A declared file:// registry serving wal v0.2.0.
+    // A declared file:// registry serving wal v1.0.0.
     let reg = make_wal_dir_registry(outer.path());
     write_project_with_per_package_registry(project.path(), &file_url(&reg));
 
     // First install: online, from the registry — warms store + lock.
     user.vibe()
         .arg("install")
-        .arg("org.vibevm.world/wal@=0.2.0")
+        .arg("org.vibevm.world/wal@=1.0.0")
         .arg("--path")
         .arg(project.path())
         .arg("--assume-yes")
@@ -187,14 +187,14 @@ fn a_version_deleted_from_the_registry_still_installs_from_the_store() {
 
     // The registry "goes silent": the version directory is deleted
     // upstream.
-    fs::remove_dir_all(reg.join("org.vibevm.world").join("wal").join("v0.2.0")).unwrap();
+    fs::remove_dir_all(reg.join("org.vibevm.world").join("wal").join("v1.0.0")).unwrap();
 
     // The re-install (online; explicit pkgref forces the full
     // resolution): the registry no longer lists the version, the store
     // still holds it — the install must succeed.
     user.vibe()
         .arg("install")
-        .arg("org.vibevm.world/wal@=0.2.0")
+        .arg("org.vibevm.world/wal@=1.0.0")
         .arg("--path")
         .arg(project.path())
         .arg("--assume-yes")
@@ -206,7 +206,7 @@ fn a_version_deleted_from_the_registry_still_installs_from_the_store() {
             .path()
             .join(common::slot_rel(
                 "org.vibevm.world.wal",
-                "0.2.0",
+                "1.0.0",
                 "vibe.toml"
             ))
             .is_file(),

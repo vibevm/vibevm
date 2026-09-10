@@ -50,10 +50,10 @@ description = "the agentic type oracle: a persistent enriching relay (serve) ove
 # go-ai-native toolchain.
 [[skill]]
 name = "go-ai-native-sweep"
-path = "spec/skills/go-ai-native-sweep"
+path = "vibevm/vibespecs/skills/go-ai-native-sweep"
 description = "The recurring AI-Native discipline sweep for Go: the seven-step floor, then the health collector's ratchet items"
 
 [[skill]]
 name = "go-ai-native-terraform"
-path = "spec/skills/go-ai-native-terraform"
+path = "vibevm/vibespecs/skills/go-ai-native-terraform"
 description = "Adopt the AI-Native discipline on an existing Go codebase: inventory-not-gate, the registries, characterization, then card raids package by package"

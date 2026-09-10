@@ -302,7 +302,7 @@ fn clean_build_wipes_then_restores_the_world_and_keeps_lifecycle_state() {
     assert!(
         project
             .path()
-            .join(common::slot_dir("org.vibevm.integration-alpha", "0.1.0"))
+            .join(common::slot_dir("org.vibevm.integration-alpha", "1.0.0"))
             .is_dir(),
         "the prerequisite install restores dependency slots after clean",
     );
@@ -382,7 +382,7 @@ fn outer_clean_consent_does_not_silently_approve_the_child_install() {
     assert!(
         !project
             .path()
-            .join(common::slot_dir("org.vibevm.integration-alpha", "0.1.0"))
+            .join(common::slot_dir("org.vibevm.integration-alpha", "1.0.0"))
             .exists(),
         "the outer clean consent must not become install consent",
     );
@@ -409,7 +409,7 @@ fn clean_path_precedence_matches_the_original_install_chain() {
     assert!(
         selected
             .path()
-            .join(common::slot_dir("org.vibevm.integration-alpha", "0.1.0"))
+            .join(common::slot_dir("org.vibevm.integration-alpha", "1.0.0"))
             .is_dir(),
         "default outer `.` must yield to the child path",
     );
@@ -420,7 +420,7 @@ fn clean_path_precedence_matches_the_original_install_chain() {
     install_alpha(&user, child.path());
     let child_marker = child
         .path()
-        .join(common::slot_dir("org.vibevm.integration-alpha", "0.1.0"))
+        .join(common::slot_dir("org.vibevm.integration-alpha", "1.0.0"))
         .join("child-must-stay.txt");
     fs::write(&child_marker, "untouched\n").unwrap();
 
@@ -440,7 +440,7 @@ fn clean_path_precedence_matches_the_original_install_chain() {
     assert!(
         outer
             .path()
-            .join(common::slot_dir("org.vibevm.integration-alpha", "0.1.0"))
+            .join(common::slot_dir("org.vibevm.integration-alpha", "1.0.0"))
             .is_dir(),
         "the selected outer project must be restored",
     );
@@ -462,7 +462,7 @@ fn install_failure_after_clean_does_not_roll_the_wipe_back() {
 
     let slot = project
         .path()
-        .join(common::slot_dir("org.vibevm.integration-alpha", "0.1.0"));
+        .join(common::slot_dir("org.vibevm.integration-alpha", "1.0.0"));
     let index = project.path().join(common::index_rel());
     assert!(slot.is_dir() && index.is_file());
 

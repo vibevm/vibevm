@@ -2,7 +2,7 @@
 //!
 //! Two jobs live here:
 //!
-//! 1. **Golden lock.** `golden-flow-wal-0.1.0` is a small, standalone
+//! 1. **Golden lock.** `golden-flow-wal-1.0.0` is a small, standalone
 //!    synthetic package (`com.example/golden-pkg`) kept frozen purely as a
 //!    cross-impl hash anchor — it deliberately reuses no real package's name
 //!    (it was de-collided from the shipped `org.vibevm.world/wal` package,
@@ -10,7 +10,7 @@
 //!    at the repo root) keeps every text byte identical on Windows / macOS /
 //!    Linux, so the digest is stable cross-platform. [`GOLDEN`] is recipe 0's
 //!    value for that fixture (the form every lockfile already carries), and
-//!    [`flow_wal_v0_1_0_matches_canonical_algorithm`] asserts recipe 0
+//!    [`flow_wal_v1_0_0_matches_canonical_algorithm`] asserts recipe 0
 //!    explicitly so the constant stays verbatim even though `vibe-index`'s
 //!    default is now recipe 1.
 //!
@@ -53,10 +53,10 @@ use specmark::verifies;
 use vibe_index::content_hash::compute_content_hash_with;
 use vibe_index::hash_recipe::RecipeId;
 
-/// Recipe 0's frozen hash of `golden-flow-wal-0.1.0` — the form the registry
+/// Recipe 0's frozen hash of `golden-flow-wal-1.0.0` — the form the registry
 /// still emits and every lockfile already carries. Verbatim; do not edit
 /// unless the fixture bytes or recipe 0 itself changed.
-const GOLDEN: &str = "sha256:e10a49c0a8e1b35e3f0dc1e74d6ce26605052b2eead2225124051d67a2f76cb6";
+const GOLDEN: &str = "sha256:6c81b77ce3d3ddaa5c72880b181808e4343e8cc643dc7ce3c0cfe5b0c1e7dea2";
 
 /// Recipe 1's frozen hash of `golden-order-trap-0.1.0`. Recipe 1 normalises
 /// separators before ordering, so this value is the same on every host. To
@@ -69,7 +69,7 @@ const TRAP_RECIPE1: &str =
 fn golden_flow_wal() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .join("fixtures")
-        .join("golden-flow-wal-0.1.0")
+        .join("golden-flow-wal-1.0.0")
 }
 
 fn golden_order_trap() -> PathBuf {
@@ -83,7 +83,7 @@ fn golden_order_trap() -> PathBuf {
     "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#trust",
     r = 1
 )]
-fn flow_wal_v0_1_0_matches_canonical_algorithm() {
+fn flow_wal_v1_0_0_matches_canonical_algorithm() {
     let fixture = golden_flow_wal();
     assert!(
         fixture.is_dir(),

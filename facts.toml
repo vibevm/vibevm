@@ -145,30 +145,6 @@ include = [
 # dead one is reported by name.
 exclude = [
     "vibevm/vibepacks/**/vibevm/vibespecs/cards/INDEX.xml",
-    # SUPERSEDED VERSION SLOTS — frozen history, not living contracts.
-    # Plan §3.3 rules that a superseded slot is "marked, never verified",
-    # because verifying frozen history costs what a live contract costs and
-    # buys nothing. `check --exhaustive` cannot express that: it demands a
-    # marker on every paragraph, and one document-level marker does not
-    # satisfy it. So the slot leaves the corpus instead.
-    # These two are 33 files and 1 908 facts — 23 % of Phase B's whole
-    # workload, on text nothing resolves to.
-    # Owner policy (2026-07-26) makes this a rare case rather than a growing
-    # one: a package version is NOT bumped on every change. The source text is
-    # edited in place and `vibe update` re-materialises consumers, so new
-    # superseded slots appear only at a real release — which is also why the
-    # -lang re-mint was called off rather than executed.
-    "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.7.0/**",
-    "vibevm/vibepacks/org.vibevm.world/redbook/v0.1.0/**",
-    # Same owner policy, applied to the steward package's frozen slots
-    # (B-118 drain, 2026-08-30): multi-user-planning shipped v0.2.1 and its
-    # two superseded slots stayed in the corpus because this list is
-    # enumerated by hand — the T10B-era end-to-end panel then went red on
-    # 102 unmarked facts, most of them paragraphs of frozen history nothing
-    # resolves to. The LIVE slot (v0.2.1) stays observed and its unmarked
-    # facts were marked, not excluded.
-    "vibevm/vibepacks/org.vibevm.world/multi-user-planning/v0.1.0/**",
-    "vibevm/vibepacks/org.vibevm.world/multi-user-planning/v0.2.0/**",
     # LEGACY LANGUAGE PROJECTIONS — frozen history, same category as a
     # superseded version slot and excluded for the same reason: §3.3 rules them
     # "marked, never verified", and `--exhaustive` cannot express that (it

@@ -696,7 +696,7 @@ native diagnostics are silent; the corpus asserts the asymmetry so it
 flips red when r-a catches up), and the honest fidelity posture
 throughout: rust-analyzer is NOT rustc, the oracle approximates, the
 floor stays the truth. Briefs:
-`vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/rust/tools/vibe-agentic-tcg-rust.xml`
+`vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/vibevm/vibespecs/rust/tools/vibe-agentic-tcg-rust.xml`
 (shipped line) and `rust-ai-native-tcg.xml` (token-level, VERY-FAR-FUTURE);
 mechanisms: TCG-ORACLE-RUST-v0.1 / TCG-PROTOCOL-RUST-v0.1 (same tree).
 The `ra_ap_*` embedding is the Far backlog's first entry. No agent
@@ -719,7 +719,7 @@ enrichment through the same conform engine as the gate), the portable
 (PROP-026; liftable into a standalone MCP server per the owner's
 portability amendment), and the automated two-arm opencode battery
 (gpt-oss-20b (free)) in research/tcg-bench. Component brief:
-`vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/typescript/tools/vibe-agentic-tcg-ts.xml`;
+`vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.0.0/vibevm/vibespecs/typescript/tools/vibe-agentic-tcg-ts.xml`;
 mechanisms: TCG-ORACLE-v0.1 / TCG-PROTOCOL-v0.1 (same tree). Token-level
 TCG for TypeScript is re-dispositioned VERY-FAR-FUTURE in its own brief;
 M1.23 below keeps the Rust token-level line as was.
@@ -733,7 +733,7 @@ engine (XGrammar-2 / SynCode class) guarantees parseable output and
 validates the harness integration that the later, harder stages
 (scope/name constraining on rust-analyzer, type-valid continuations,
 discipline profiles) will reuse. Tool spec:
-`vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/rust/tools/rust-ai-native-tcg.xml`
+`vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/vibevm/vibespecs/rust/tools/rust-ai-native-tcg.xml`
 (the tool brief, renamed vibe-tcg → vibe-tcg-rust → rust-ai-native-tcg
 across the D13 suffix policy and its PROP-028 §2.4 supersession — the bare name belongs to the
 generic product crate; M1.25's agentic twin is this milestone's

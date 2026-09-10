@@ -36,6 +36,7 @@ use serde::Deserialize;
 /// assert!(cfg.root_spec_docs.is_empty());
 /// assert!(cfg.spec_exclude.is_empty());
 /// assert!(cfg.schema_roots.is_empty());
+/// assert!(cfg.schema_vocabulary.is_none());
 /// // Quality thresholds default to the start placeholders; both gate off at 0.
 /// assert_eq!(cfg.max_connections_per_item, 3);
 /// assert_eq!(cfg.max_section_lines, 120);
@@ -99,6 +100,10 @@ pub struct Config {
     /// default) ⇒ the schema scanner contributes nothing ⇒ the index of a
     /// project with no schema roots is byte-stable against the Rust-only scan.
     pub schema_roots: Vec<String>,
+    /// Optional project-root-relative path to the shared JTD vocabulary file
+    /// used by explicitly thin schema roots. Absent preserves the original
+    /// inline-only schema scan byte for byte; the scanner never infers a path.
+    pub schema_vocabulary: Option<String>,
     /// Installed packages' spec trees that participate in **resolution
     /// only** (PROP-014 §7.1): their units suppress dangling-edge warnings
     /// and feed queries, but are never serialised into this project's
@@ -175,6 +180,7 @@ impl Default for Config {
             root_spec_docs: Vec::new(),
             spec_exclude: Vec::new(),
             schema_roots: Vec::new(),
+            schema_vocabulary: None,
             external_specs: Vec::new(),
             exempt: Vec::new(),
             dispositioned: Vec::new(),
@@ -377,6 +383,7 @@ mod tests {
         assert_eq!(cfg.spec_roots, ["vibevm/vibespecs"]);
         assert!(cfg.root_spec_docs.is_empty());
         assert!(cfg.external_specs.is_empty());
+        assert!(cfg.schema_vocabulary.is_none());
         // Quality thresholds: the start placeholders, leaf grain.
         assert_eq!(cfg.max_connections_per_item, 3);
         assert_eq!(cfg.max_section_lines, 120);
@@ -430,6 +437,15 @@ mod tests {
         )
         .unwrap();
         assert_eq!(cfg.schema_roots, vec!["schemas", "packages/*/schemas"]);
+        assert!(cfg.schema_vocabulary.is_none());
+        let cfg: Config = toml::from_str(
+            "namespace = \"demo\"\nschema_vocabulary = \"formats/vocabularies.json\"\n",
+        )
+        .unwrap();
+        assert_eq!(
+            cfg.schema_vocabulary.as_deref(),
+            Some("formats/vocabularies.json")
+        );
     }
 
     #[test]

@@ -63,10 +63,10 @@ fn an_explicit_pkgref_install_keeps_the_rest_of_the_world() {
         &["flow:org.vibevm/integration-alpha"],
     )
     .success();
-    let alpha = slot(project.path(), "org.vibevm.integration-alpha", "0.1.0");
+    let alpha = slot(project.path(), "org.vibevm.integration-alpha", "1.0.0");
     assert!(alpha.is_dir(), "alpha slot after its install");
     install(&user, project.path(), &["flow:org.vibevm/integration-beta"]).success();
-    let beta = slot(project.path(), "org.vibevm.integration-beta", "0.1.0");
+    let beta = slot(project.path(), "org.vibevm.integration-beta", "1.0.0");
     assert!(beta.is_dir(), "beta slot after its install");
     assert!(
         alpha.is_dir(),
@@ -118,7 +118,7 @@ fn an_offline_pkgref_install_keeps_the_rest_of_the_world() {
     )
     .success();
     assert!(
-        slot(project.path(), "org.vibevm.integration-beta", "0.1.0").is_dir(),
+        slot(project.path(), "org.vibevm.integration-beta", "1.0.0").is_dir(),
         "the beta slot must survive an offline alpha install"
     );
 }
@@ -214,8 +214,8 @@ fn clean_install_rebuilds_the_whole_world() {
     clean(&user, project.path(), &["install"]).success();
 
     assert!(
-        slot(project.path(), "org.vibevm.integration-alpha", "0.1.0").is_dir()
-            && slot(project.path(), "org.vibevm.integration-beta", "0.1.0").is_dir(),
+        slot(project.path(), "org.vibevm.integration-alpha", "1.0.0").is_dir()
+            && slot(project.path(), "org.vibevm.integration-beta", "1.0.0").is_dir(),
         "clean install rebuilds every slot"
     );
     assert!(
@@ -247,8 +247,8 @@ fn clean_install_with_a_pkgref_refreshes_the_named_and_keeps_the_world() {
     .success();
 
     assert!(
-        slot(project.path(), "org.vibevm.integration-alpha", "0.1.0").is_dir()
-            && slot(project.path(), "org.vibevm.integration-beta", "0.1.0").is_dir(),
+        slot(project.path(), "org.vibevm.integration-alpha", "1.0.0").is_dir()
+            && slot(project.path(), "org.vibevm.integration-beta", "1.0.0").is_dir(),
         "the chained pkgref refresh keeps the whole world"
     );
 }

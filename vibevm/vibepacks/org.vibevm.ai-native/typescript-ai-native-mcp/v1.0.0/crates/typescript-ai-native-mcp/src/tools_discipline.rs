@@ -28,7 +28,7 @@ pub(crate) fn language_mismatch(args: &Value) -> Option<ToolOutput> {
     }
     Some(ToolOutput::failed(format!(
         "this server serves language `typescript`; asked for `{asked}` — mount \
-         that language's own discipline server (mcp:org.vibevm/{asked}-ai-native-mcp) \
+         that language's own discipline server (mcp:org.vibevm.ai-native/{asked}-ai-native-mcp) \
          and call it there (PROP-027; PROP-026 §2)"
     )))
 }

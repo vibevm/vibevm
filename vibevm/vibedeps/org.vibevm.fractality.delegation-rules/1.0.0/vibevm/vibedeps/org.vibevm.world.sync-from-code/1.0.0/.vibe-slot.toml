@@ -1,0 +1,35 @@
+schema = 1
+source_hash = "sha256:c068ab0517275cc6c7d11ce0e77e20c8dc9f038c6e6e4ae0832902b063ce0fc5"
+spec_format = "mixed"
+
+[[file]]
+path = "LICENSE"
+sha256 = "7b05e254512285b6a4c33fa97a9b8a4751ff8bf674da7189420f066ef7b9672b"
+
+[[file]]
+path = "README.md"
+sha256 = "7fb9b178ceb4d797fe931d3078c44374969bfb669cdd290065f656479a80cec1"
+
+[[file]]
+path = "vibe.toml"
+sha256 = "1df4d97290f2f9efd57d8ffa3c22e4f2395474d9601ad51c127fbde2df22377c"
+
+[[file]]
+path = "vibevm/vibespecs/boot/20-flow-sync-from-code.xml"
+sha256 = "39f99e5a30b6a5c8cc8bfda48404dd7411f6047cf272d4e41fc7577c5fb16285"
+
+[[file]]
+path = "vibevm/vibespecs/boot/20a-wal-binding.xml"
+sha256 = "dc07206e44c8eb126b12af884be56f2f8fa1862cd16c5cb7ed27131a98ecc739"
+
+[[file]]
+path = "vibevm/vibespecs/flows/sync-from-code/SYNC-PROTOCOL.xml"
+sha256 = "f40bf411748e7683c58cfc721491ba98e1484fdfe4bd2511dce9db30ae69621b"
+
+[[file]]
+path = "vibevm/vibespecs/flows/sync-from-code/review-workflow.xml"
+sha256 = "9e84c70121ee1ef4c06733119cd842c476e19f45b7e8b80d60ee15b56421a732"
+
+[[file]]
+path = "vibevm/vibespecs/flows/sync-from-code/when-to-apply.xml"
+sha256 = "7348ba635505b048a41a9c5dc8ce8786ffd18ad4b6f929ae2a0384a331090aeb"

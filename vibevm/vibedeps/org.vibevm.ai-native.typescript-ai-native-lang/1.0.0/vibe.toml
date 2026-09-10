@@ -50,10 +50,10 @@ description = "the agentic type oracle: a persistent enriching relay (serve) ove
 
 [[skill]]
 name = "typescript-ai-native-sweep"
-path = "spec/skills/typescript-ai-native-sweep"
+path = "vibevm/vibespecs/skills/typescript-ai-native-sweep"
 description = "The recurring AI-Native discipline sweep for TypeScript: the seven-step floor, then the health collector's ratchet items"
 
 [[skill]]
 name = "typescript-ai-native-terraform"
-path = "spec/skills/typescript-ai-native-terraform"
+path = "vibevm/vibespecs/skills/typescript-ai-native-terraform"
 description = "Adopt the AI-Native discipline on an existing TypeScript codebase: inventory-not-gate, the registries, characterization, then card raids cell by cell"

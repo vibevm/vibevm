@@ -23,14 +23,15 @@ depend on it. The repository is only its incubator.
 4. `CONTINUE.xml` (this directory) — the cold-resume snapshot; the WAL wins
    wherever they diverge.
 5. The active plan the WAL names. Today:
-   [`fractality/v0.1.0/spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.xml`](fractality/v0.1.0/spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.xml).
+   [`fractality/v1.0.0/vibevm/vibespecs/plans/FRACTALITY-IGNITION-PLAN-v0.1.xml`](fractality/v1.0.0/vibevm/vibespecs/plans/FRACTALITY-IGNITION-PLAN-v0.1.xml).
 6. The generated practice lane (owner directive, 2026-07-09): the
    `<vibevm>` boot block in
-   [`fractality/v0.1.0/CLAUDE.md`](fractality/v0.1.0/CLAUDE.md) —
-   i.e. every entry of `fractality/v0.1.0/spec/boot/INDEX.md`, in order.
+   [`fractality/v1.0.0/CLAUDE.md`](fractality/v1.0.0/CLAUDE.md) —
+   i.e. `fractality/v1.0.0/vibevm/vibespecs/boot/STATIC.md` first, then
+   every entry of `fractality/v1.0.0/vibevm/vibespecs/boot/INDEX.md`, in order.
    These are the redbook practice snippets plus the AI-Native discipline
    boot, materialised by `vibe install` into the specspace's own
-   `vibedeps/`. They bind every session here the same way the flows bind
+   `vibevm/vibedeps/`. They bind every session here the same way the flows bind
    any vibevm consumer project.
 
 Do **not** load the host's `vibevm/vibespecs/boot/`, `vibevm/vibespecs/WAL.xml`, or host specs, and do
@@ -47,7 +48,7 @@ external project would. Friction discovered here is product signal, not
 noise.
 
 - When fractality work reveals an obvious defect, gap, or missing feature in
-  vibevm itself or in any package under `packages/`, improving the host is
+  vibevm itself or in any package under `vibevm/vibepacks/`, improving the host is
   **in scope** — this refines the "don't scan the host" default above:
   still say so in the session when crossing, but no separate permission is
   needed.
@@ -67,7 +68,7 @@ noise.
   commits follow the host rules (Rules 1–4), and the host WAL is updated
   when host files change.
 
-### Driving vibevm here, today (verified 2026-07-09 — do not rediscover)
+### Driving vibevm here, today (verified 2026-09-10 — do not rediscover)
 
 Until the backlog items land, this is the working recipe:
 
@@ -76,33 +77,35 @@ Until the backlog items land, this is the working recipe:
    `<host-root>/target/debug/vibe.exe`. The PATH `vibe`
    (`~/opt/bin/vibe`) is stale — its manifest parser already failed once
    on a valid package manifest.
-2. **Install / update specspace deps.** From `fractality/v0.1.0/`:
-   `<host-root>/target/debug/vibe.exe install --registry
-   "<host-root>/packages" --unattended --invoked-by claude-code`.
+2. **Install / update specspace deps.** From `fractality/v1.0.0/`:
+   `<host-root>/target/debug/vibe.exe install --offline --registry
+   "<host-root>/vibevm/vibepacks" --unattended --invoked-by claude-code`.
    Know the semantics: `--registry` is the **exclusive** M0
    local-directory mode (VIBEVM-SPEC §9.1) — it shadows the manifest's
    `[[registry]]` blocks entirely, so network fall-through does not
    happen under this command. The `[[registry]]` blocks in `vibe.toml`
    are therefore dormant today; they document intent for the day
    multi-source resolution exists.
-3. **Why pure-local resolves at all:** the two redbook members that are
-   published-only (`atomic-commits`, `sync-from-code`, tags v0.1.0 on
-   `github.com/vibespecs`) are **vendored** into
-   `<host-root>/packages/org.vibevm/<name>/v0.1.0/`. They are the
-   owner's own published flows, tag-pinned. Do not edit the vendored
-   copies — upstream is the published repo.
+3. **Why pure-local resolves at all:** the complete v1 closure is authored
+   under `<host-root>/vibevm/vibepacks/<group>/<name>/v1.0.0/` and is
+   materialised here under
+   `vibevm/vibedeps/<group>.<name>/1.0.0/`. Edit the canonical vibepack,
+   never a materialised dependency copy.
 4. **Boot artifacts** live in this specspace:
-   `fractality/v0.1.0/spec/boot/INDEX.md` + the `<vibevm>` block in
-   `fractality/v0.1.0/CLAUDE.md`, reading snippets out of the
-   specspace-local `vibedeps/`. `vibe reinstall` (from `v0.1.0/`)
-   recomputes boot artifacts without re-resolving.
+   `fractality/v1.0.0/vibevm/vibespecs/boot/{STATIC.md,INDEX.md}` + the
+   `<vibevm>` block in `fractality/v1.0.0/CLAUDE.md`, reading snippets out
+   of the specspace-local FQDN `vibevm/vibedeps/` projection. `vibe
+   reinstall` (from `v1.0.0/`) recomputes boot artifacts without
+   re-resolving.
 5. **Discipline toolchain binary.** The umbrella `rust-ai-native` CLI is
    used from the host package's built tree —
-   `<host-root>/packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/target/debug/rust-ai-native.exe`
-   (byte-same 0.7.0 sources as this specspace's `vibedeps` slot; the
+   `<host-root>/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/target/debug/rust-ai-native.exe`
+   (byte-same 1.0.0 sources as this specspace's FQDN `vibevm/vibedeps`
+   slot; the
    slot has no `target/` yet). Canonical consumer forms (GUIDE §13:
-   `vibe bin exec …` / `cargo run --manifest-path vibedeps/…`) build the
-   slot on first use — switch to them once the slot is built.
+   `vibe bin exec …` / `cargo run --manifest-path
+   vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/Cargo.toml
+   …`) build the slot on first use — switch to them once the slot is built.
 6. **Network notes:** GitVerse over https hangs from this box (>60 s);
    GitHub answers anonymously for public vibespecs repos. Keep installs
    local.
@@ -116,8 +119,8 @@ delete the backlog entry.
 ## Hard conventions
 
 - **Language:** Rust. Each code-bearing package version dir is its **own
-  Cargo workspace** (the host root workspace excludes `packages/`), starting
-  with `fractality/v0.1.0/`. **No Python in the shipped codebase** (owner
+  Cargo workspace** (the host root workspace excludes `vibevm/vibepacks/`), starting
+  with `fractality/v1.0.0/`. **No Python in the shipped codebase** (owner
   directive, 2026-07-10, verbatim): «в финальной версии я не хочу видеть у
   себя в кодовой базе никакого python. Можно использовать python для тестов
   и прототипов, но результат в идеале должен быть на Rust/Typescript с
@@ -136,9 +139,9 @@ delete the backlog entry.
   which crate inside the specspace changed. The specspace is one subsystem
   from the host's point of view.
 - **Floor (gate panel), from Phase 1 on:** the AI-Native floor, run inside
-  `fractality/v0.1.0/`: `rust-ai-native floor` (= fmt → test → clippy →
+  `fractality/v1.0.0/`: `rust-ai-native floor` (= fmt → test → clippy →
   conform → specmap → test-gate; zero-install form: `cargo run
-  --manifest-path vibedeps/stack-rust-ai-native-lang/0.7.0/Cargo.toml -p
+  --manifest-path vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/Cargo.toml -p
   rust-ai-native-cli --bin rust-ai-native -- floor`). Green at every phase
   boundary (safe-stop law). Until crates exist, the floor is "host `bash
   tools/self-check.sh` stays green".
@@ -147,7 +150,7 @@ delete the backlog entry.
   `delegation-rules`) — declares `flow:org.vibevm.world/redbook` and
   `stack:org.vibevm.ai-native/rust-ai-native` in its `vibe.toml`
   `[requires.packages]` and materialises them (`vibe install --registry
-  <host>/packages`) at authoring time. The discipline (conform + specmap
+  <host>/vibevm/vibepacks`) at authoring time. The discipline (conform + specmap
   gates, specmark `scope!` tags, GUIDE §13 wiring) applies from the first
   line of code, not retrofitted (DEF-9 resolved early by the same
   directive).
@@ -156,7 +159,7 @@ delete the backlog entry.
   only and never echoes them; tests use fakes. One accidental echo is a leak
   (sessions are screen-recorded).
 - **Clean-room law:** every reference source in
-  [`fractality/v0.1.0/spec/refs/INVENTORY.xml`](fractality/v0.1.0/spec/refs/INVENTORY.xml)
+  [`fractality/v1.0.0/vibevm/vibespecs/refs/INVENTORY.xml`](fractality/v1.0.0/vibevm/vibespecs/refs/INVENTORY.xml)
   is inspiration-only. Study → write a study note (what it achieves, which
   decisions we take) → implement from the note. Never port lines, never
   adapt code file-by-file. This binds the whole specspace.
@@ -222,7 +225,7 @@ discipline-bound code writes garbage. Pick one, explicitly, per task:
    enough that precise formulation would BE the work, instruct the
    delegate to load the corpus before touching code: "execute the
    session boot in ./CLAUDE.md (read every vibevm/vibespecs/boot/INDEX.md entry),
-   read vibedeps/stack-rust-ai-native-lang/0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md,
+   read vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/vibevm/vibespecs/rust/GUIDE-AI-NATIVE-RUST.xml,
    read the plan sections named below — then do the task". The ~60–80 KB
    of boot text is noise next to a big task's context, and it is served
    from provider cache after the first turn.
@@ -391,15 +394,15 @@ files, WAL) stays the source of truth and wins on divergence.
 committed, never left to rot in an ephemeral dir.**
 
 **Case 1 — every paid trial run.** Any `trial/run-arm.sh` / `run-advise.sh`
-fire writes its evidence to `fractality/v0.1.0/target/trial-results/`, which
+fire writes its evidence to `fractality/v1.0.0/target/trial-results/`, which
 is **gitignored**. That evidence is the record of real GLM spend; letting a
 `cargo clean` or a fresh checkout erase it wastes the money. So **after
 every trial fire, preserve it durably and commit — this is not optional and
 not deferrable**:
 
 ```sh
-cd fractality/v0.1.0
-bash spec/manual-tests/trial/save-results.sh <group-description>   # e.g. c3-mt-c3-03-gated-rerun
+cd fractality/v1.0.0
+bash vibevm/vibespecs/manual-tests/trial/save-results.sh <group-description>   # e.g. c3-mt-c3-03-gated-rerun
 # then fill in the scaffolded reports/trial-results/<dated-group>/README.md
 cd ../.. && git add reports/trial-results && git commit -m "test(fractality): preserve <group> paid-run evidence"
 ```

@@ -260,7 +260,7 @@ The `( … )` subshell handles CWD restoration automatically — exit the subshe
 
 **Install.** The server ships with the toolchain: `rustup component add rust-analyzer`. Editor bindings: VS Code / VSCodium — the official *rust-analyzer* extension; Neovim / Emacs / Helix / JetBrains (via the Rust plugin) all drive the same `rust-analyzer` binary.
 
-**Multi-workspace layout — the one gotcha.** This repo is a monorepo of **several Cargo workspaces** (PROP-024). The root workspace ([`Cargo.toml`](Cargo.toml)) `exclude`s `packages/` and `vibedeps/`, and those carry their *own* workspaces — `vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/`, the AI-native stacks under `vibevm/vibepacks/org.vibevm.ai-native/…`, and the vendored copies under `vibedeps/`. So:
+**Multi-workspace layout — the one gotcha.** This repo is a monorepo of **several Cargo workspaces** (PROP-024). The root workspace ([`Cargo.toml`](Cargo.toml)) excludes `vibevm/vibepacks/` and `vibevm/vibedeps/`, and those carry their *own* workspaces — `vibevm/vibepacks/org.vibevm.fractality/fractality/v1.0.0/`, the AI-native stacks under `vibevm/vibepacks/org.vibevm.ai-native/…`, and the materialized copies under `vibevm/vibedeps/`. So:
 
 - Opening the **repo root** indexes the host workspace (`crates/`, `xtask`, `apps/`). That is what you want for `vibe-cli` work.
 - To edit a **nested workspace** (fractality, the discipline stacks, an mcp package), open that subdirectory in a second editor window, or add its `Cargo.toml` to your editor's linked-projects list (VS Code: `rust-analyzer.linkedProjects`). Pointing the root workspace at a nested one slows indexing and confuses `cargo metadata`.
@@ -309,10 +309,10 @@ Full design: [PROP-002 §2.10](vibevm/vibespecs/modules/vibe-registry/PROP-002-d
 
 ```sh
 # Dry-run first (read-only — only hits GET /repos/...).
-cargo run --release -p vibe-cli -- registry publish fixtures/registry/flow/wal/v0.1.0 --dry-run
+cargo run --release -p vibe-cli -- registry publish vibevm/vibepacks/org.vibevm.world/wal/v1.0.0 --dry-run
 
 # Apply.
-cargo run --release -p vibe-cli -- registry publish fixtures/registry/flow/wal/v0.1.0
+cargo run --release -p vibe-cli -- registry publish vibevm/vibepacks/org.vibevm.world/wal/v1.0.0
 ```
 
 The dry-run output shows the synthetic clone URL, the action verb (`Would create` or `Would reuse existing`), and the tag that would be pushed. No token value appears anywhere in output — `vibe` reads the token in-process, redacts on `Display`/`Debug`, and never logs the value. The video-recording-safe defaults are baked in.

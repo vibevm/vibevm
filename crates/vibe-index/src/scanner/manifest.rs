@@ -412,7 +412,7 @@ capabilities = ["ui:landing-page"]
 
     #[test]
     fn parses_real_fixture() {
-        let body = include_bytes!("../../fixtures/golden-flow-wal-0.1.0/vibe.toml");
+        let body = include_bytes!("../../fixtures/golden-flow-wal-1.0.0/vibe.toml");
         let m = parse_manifest(body).unwrap();
         let pkg = require_package(&m).unwrap();
         assert_eq!(pkg.name, "golden-pkg");

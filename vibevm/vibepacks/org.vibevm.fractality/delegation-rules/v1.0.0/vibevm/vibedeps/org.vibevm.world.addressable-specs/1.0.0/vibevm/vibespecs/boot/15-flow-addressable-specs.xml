@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Flow: Addressable Specs</title>
+  <status stage="impl" state="done"/>
+  <p><EVERY-NORMATIVE-STATEMENT-IS-ADDRESSABLE fact="true" status="impl/done">Every normative statement in this project's spec tree is
+**addressable**: it lives under a stable `{#kebab-anchor}` and is
+cited by URI, never by paraphrase.</EVERY-NORMATIVE-STATEMENT-IS-ADDRESSABLE></p>
+  <fence>spec://&lt;module&gt;/&lt;doc&gt;#&lt;section&gt;[.&lt;sub&gt;]</fence>
+  <correction-contract title="The correction contract">
+    <p><CORRECTION-CITES-THE-VIOLATED-ANCHOR fact="true" status="impl/done">When the human corrects the agent, the correction cites the violated
+anchor: "you are violating `spec://…#verification.timeout` — the
+spec says 600 s, you wrote 300 s".</CORRECTION-CITES-THE-VIOLATED-ANCHOR></p>
+    <p><RESOLVE-READ-COMPARE-FIX fact="true" status="impl/done">Resolve the URI, read the unit,
+compare, fix.</RESOLVE-READ-COMPARE-FIX></p>
+    <p><twenty-tokens-exact-hit fact="true" status="spec/done">Twenty tokens, exact hit — no guessing what
+"verification" means or which part is "wrong".</twenty-tokens-exact-hit></p>
+    <p><THE-SAME-CONTRACT-BINDS-THE-AGENT fact="true" status="impl/done">The same contract binds the agent: when citing the spec — in chat,
+commit bodies, code markers, review notes — cite the anchor, never a
+paraphrase and never a line number.</THE-SAME-CONTRACT-BINDS-THE-AGENT></p>
+  </correction-contract>
+  <single-source title="Single source of truth">
+    <p><EACH-FACT-HAS-EXACTLY-ONE-AUTHORITATIVE-ANCHOR fact="true" status="impl/done">Each fact has exactly one authoritative anchor.</EACH-FACT-HAS-EXACTLY-ONE-AUTHORITATIVE-ANCHOR></p>
+    <p><NEVER-COPY-A-NORMATIVE-VALUE-CITE-THE-ANCHOR fact="true" status="impl/done">Never copy a
+normative value into a second file — cite the anchor instead.</NEVER-COPY-A-NORMATIVE-VALUE-CITE-THE-ANCHOR></p>
+    <p><two-copies-will-diverge fact="true" status="spec/done">Two
+copies *will* diverge, and a later session cannot tell which one
+binds.</two-copies-will-diverge></p>
+  </single-source>
+  <placement title="Placement">
+    <p><CRITICAL-CONSTRAINTS-LIVE-AT-THE-START-OR-END fact="true" status="impl/done">Critical constraints live at the START or END of a file, never
+buried mid-document.</CRITICAL-CONSTRAINTS-LIVE-AT-THE-START-OR-END></p>
+    <p><models-attend-to-the-edges-of-context fact="true" status="spec/done">Models attend to the edges of context ("Lost in
+the Middle", Liu et al. 2023/2024); a mid-file invariant is an
+invariant the reader statistically skipped.</models-attend-to-the-edges-of-context></p>
+  </placement>
+  <pointers title="Where the full rules live">
+    <facts ordered="false">
+      <POINTER-THE-PROTOCOL fact="true" status="impl/done">Why addressability is IPC requirement #1, the URI scheme, the
+  token economics:
+  @spec://org.vibevm.world/addressable-specs/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL#root</POINTER-THE-PROTOCOL>
+      <POINTER-THE-AUTHORING-RULES fact="true" status="impl/done">Unit of meaning, normativity marking, deviations, size budgets,
+  anchor stability:
+  @spec://org.vibevm.world/addressable-specs/flows/addressable-specs/authoring-rules#root</POINTER-THE-AUTHORING-RULES>
+      <POINTER-THE-SPEC-TREE-LAYOUT fact="true" status="impl/done">PROP vs FEAT, what goes where, the `.human/` buffer:
+  @spec://org.vibevm.world/addressable-specs/flows/addressable-specs/spec-tree-layout#root</POINTER-THE-SPEC-TREE-LAYOUT>
+    </facts>
+  </pointers>
+  <never title="Never">
+    <facts ordered="false">
+      <NEVER-CITE-BY-PARAPHRASE-WHEN-AN-ANCHOR-EXISTS fact="true" status="impl/done">Never cite a spec section by paraphrase when an anchor exists.</NEVER-CITE-BY-PARAPHRASE-WHEN-AN-ANCHOR-EXISTS>
+      <NEVER-DUPLICATE-A-NORMATIVE-VALUE fact="true" status="impl/done">Never duplicate a normative value into a second file — cite its
+  anchor.</NEVER-DUPLICATE-A-NORMATIVE-VALUE>
+      <NEVER-BURY-AN-INVARIANT-IN-THE-MIDDLE-OF-A-FILE fact="true" status="impl/done">Never bury an invariant in the middle of a file.</NEVER-BURY-AN-INVARIANT-IN-THE-MIDDLE-OF-A-FILE>
+      <NEVER-RENAME-OR-DELETE-A-CITED-ANCHOR fact="true" status="impl/done">Never rename or delete an anchor that has ever been cited —
+  anchors are immutable; retire with a tombstone instead.</NEVER-RENAME-OR-DELETE-A-CITED-ANCHOR>
+      <NEVER-INVENT-AN-ANCHOR fact="true" status="impl/done">Never invent an anchor — resolve the URI and read the unit before
+  acting on it.</NEVER-INVENT-AN-ANCHOR>
+    </facts>
+  </never>
+</spec>

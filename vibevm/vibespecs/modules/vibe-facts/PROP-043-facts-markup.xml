@@ -11,7 +11,7 @@ the data contracts and the campaign consumer moved verbatim to PROP-047 at the
 separability law, §2): the `addressable-specs` flow (anchors, `spec://` URIs),
 [PROP-035](../vibe-workspace/PROP-035-spec-compiler.xml) (the document IR whose
 Markdown/XML dual-frontend model this markup targets),
-[PROP-014 specmap](../../../vibedeps/org.vibevm.ai-native.core-ai-native/0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md)
+[PROP-014 specmap](../../../vibedeps/org.vibevm.ai-native.core-ai-native/1.0.0/vibevm/vibespecs/mechanisms/PROP-014-specmap-bidirectional-traceability.xml)
 (spec↔code traceability — consumed by the progress layer through the
 evidence-provider seam, PROP-047 §4),
 [PROP-029](../../common/PROP-029-fully-qualified-addresses.xml) (`spec://`

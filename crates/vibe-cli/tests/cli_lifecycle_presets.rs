@@ -34,10 +34,10 @@ fn path_challenge(kind: &str) -> tempfile::TempDir {
 
 fn registry() -> tempfile::TempDir {
     let registry = path_challenge("registry");
-    let selected_source = fixture_registry().join("org.vibevm.fixture/lifecycle-rust-stack/v0.1.0");
+    let selected_source = fixture_registry().join("org.vibevm.fixture/lifecycle-rust-stack/v1.0.0");
     let selected = registry
         .path()
-        .join("org.vibevm.fixture/lifecycle-rust-stack/v0.1.0");
+        .join("org.vibevm.fixture/lifecycle-rust-stack/v1.0.0");
     common::copy_tree(&selected_source, &selected);
     if cfg!(windows) {
         fs::remove_file(selected.join("scripts/build.sh")).unwrap();
@@ -117,7 +117,7 @@ edition = "2024"
 
     let selected_slot = project.path().join(common::slot_dir(
         "org.vibevm.fixture.lifecycle-rust-stack",
-        "0.1.0",
+        "1.0.0",
     ));
     assert!(selected_slot.is_dir());
     assert!(selected_slot.to_string_lossy().contains(' '));
@@ -332,7 +332,7 @@ fn stack_manifest_drives_real_cargo_with_ordered_presets_and_selective_freshness
     let (plan, first) = run_test(&user, project.path(), registry.path());
     let build = planned(&plan, BUILD_KEY);
     assert_eq!(build.provider, SELECTED);
-    assert_eq!(build.version.as_deref(), Some("0.1.0"));
+    assert_eq!(build.version.as_deref(), Some("1.0.0"));
     assert_eq!(build.handler, "script");
     assert_eq!(build.tier, "preset");
     let test = planned(&plan, TEST_KEY);

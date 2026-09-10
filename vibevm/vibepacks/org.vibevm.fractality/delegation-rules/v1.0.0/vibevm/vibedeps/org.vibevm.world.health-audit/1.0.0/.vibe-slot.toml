@@ -1,0 +1,39 @@
+schema = 1
+source_hash = "sha256:db3a36d635ec1dcb08878bb1c0dccb3287b6146882e92a543c4c3397318433e6"
+spec_format = "mixed"
+
+[[file]]
+path = "LICENSE.md"
+sha256 = "c0e2a0382616f6ad368f3d15845916310a4a3113802df74a759d41b9d914e1be"
+
+[[file]]
+path = "README.md"
+sha256 = "a0b36bf7d3443040681c61c76624dbbcfb086cc2781498037e6947c9709e908c"
+
+[[file]]
+path = "vibe.toml"
+sha256 = "1f3e1f93fd3121fd1b441bf45493034d3ec19503f63c3c42e67bcd1f8ca3c69b"
+
+[[file]]
+path = "vibevm/vibespecs/boot/42-flow-health-audit.xml"
+sha256 = "d8b458eb62802222bc29d3829a6bb74507e369c804853f7dd84009e07fadae1d"
+
+[[file]]
+path = "vibevm/vibespecs/boot/42a-wal-binding.xml"
+sha256 = "81a3dada895d490f189eb63fa5bb69b4d09bc4b97f5f1e185475046d3e3e37fb"
+
+[[file]]
+path = "vibevm/vibespecs/flows/health-audit/HEALTH-AUDIT-PROTOCOL.xml"
+sha256 = "8096327db314a4719640611e625c5d5c7ab497b1c82ccc1d6539fa6283536643"
+
+[[file]]
+path = "vibevm/vibespecs/flows/health-audit/audit-checklist.xml"
+sha256 = "368d2fb9c06334bc442c57986655eb4f777539a4570660ddd41aa8de255c2001"
+
+[[file]]
+path = "vibevm/vibespecs/flows/health-audit/running-an-audit.xml"
+sha256 = "596e62c00c707d194cc396c7922725e1a1f4480b7cd20f244f2664c2587ad5e8"
+
+[[file]]
+path = "vibevm/vibespecs/skills/health-audit/SKILL.md"
+sha256 = "5a714276d299b2a7f992b49f071c5d2e31795f747b75c51c4d610831cb0f66bf"

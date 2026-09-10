@@ -12,7 +12,7 @@ namespace = "typescript-ai-native-mcp"
 
 scan_roots = ["crates/typescript-ai-native-mcp"]
 
-spec_roots = ["spec"]
+spec_roots = ["vibevm/vibespecs"]
 
 root_spec_docs = []
 

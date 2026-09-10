@@ -2,9 +2,9 @@
 
 The committed Rust consumer testbed (AGENTIC-TCG-RUST-PLAN v0.1,
 Phase 2): a real vibe project — its own `vibe.toml` resolved from the
-in-repo registry, the rust-ai-native 0.7.0 family (the
+in-repo registry, the rust-ai-native 1.0.0 family (the
 rust-ai-native-lang stack + its mcp server, PROP-028) materialised
-into `vibedeps/`, the full discipline floor green — mirroring
+into `vibevm/vibedeps/`, the full discipline floor green — mirroring
 `research/ts-demo` cell for cell so the two languages' oracles answer
 the same shaped questions.
 
@@ -26,7 +26,7 @@ Setup from a fresh clone:
 
 ```sh
 cd research/rust-demo
-vibe install --registry ../../packages --assume-yes
+vibe install --registry ../../vibevm/vibepacks --assume-yes
 cargo test
 vibe bin exec rust-ai-native -- floor
 ```

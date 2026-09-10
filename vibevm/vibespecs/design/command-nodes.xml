@@ -74,10 +74,10 @@ identically, because all three CLIs are Rust crates on clap** —
 `go-ai-native-cli/src/main.rs:23`. What is per-language is the *code* extractor
 each drives (`syn` in-process for Rust; the `ts-extract` and `go-extract`
 sidecars for the other two) — not the command declaration.</m-all-three-stacks-are-clap></p>
-    <p><m-twentyone-copies fact="true" status="impl/done">**The engine crate exists in 22 directories: one authored
-and 21 copies** — the coexisting v0.7.0 slot plus 20 regenerated vendor and
-`vibedeps/` snapshots. The authored one is
-`vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/`.
+    <p><m-twentyone-copies fact="true" status="impl/done">**The engine crate exists in 21 directories: one authored
+and 20 copies** — every surviving package and materialized slot is at 1.0.0.
+The authored one is
+`vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.0.0/crates/core-ai-native-specmap/`.
 Every engine edit is followed by `cargo xtask sync-engines` as its own step.</m-twentyone-copies></p>
   </measured>
   <recognition title="2. How a command is recognised">

@@ -20,5 +20,5 @@ category = "flow"
 
 [[skill]]
 name = "draft-eula"
-path = "spec/skills/draft-eula"
+path = "vibevm/vibespecs/skills/draft-eula"
 description = "Draft or review a project's license posture: the placeholder EULA with relicense intent, the dependency-permissiveness check, and the third-party carve-out"

@@ -23,8 +23,8 @@ fn init_project(user: &UserScratch) -> tempfile::TempDir {
 
 fn log_registry() -> tempfile::TempDir {
     let registry = tempfile::tempdir().unwrap();
-    let source = fixture_registry().join("org.vibevm/integration-alpha/v0.1.0");
-    let package = registry.path().join("org.vibevm/integration-alpha/v0.1.0");
+    let source = fixture_registry().join("org.vibevm/integration-alpha/v1.0.0");
+    let package = registry.path().join("org.vibevm/integration-alpha/v1.0.0");
     common::copy_tree(&source, &package);
     let manifest = package.join("vibe.toml");
     let mut body = fs::read_to_string(&manifest).unwrap();
@@ -270,7 +270,7 @@ fn builtin_clean_runs_before_terminal_wipe() {
     install_from(&user, project.path(), registry.path());
     let slot = project
         .path()
-        .join(common::slot_dir("org.vibevm.integration-alpha", "0.1.0"));
+        .join(common::slot_dir("org.vibevm.integration-alpha", "1.0.0"));
 
     let assert = user
         .vibe()
@@ -296,7 +296,7 @@ fn clean_refusal_runs_no_handler_and_preserves_the_world() {
     install_from(&user, project.path(), registry.path());
     let slot = project
         .path()
-        .join(common::slot_dir("org.vibevm.integration-alpha", "0.1.0"));
+        .join(common::slot_dir("org.vibevm.integration-alpha", "1.0.0"));
 
     let output = user
         .vibe()
@@ -552,7 +552,7 @@ fn direct_callback_failure_keeps_the_durable_world_and_emits_no_install_success(
     let registry = log_registry();
     let package_manifest = registry
         .path()
-        .join("org.vibevm/integration-alpha/v0.1.0/vibe.toml");
+        .join("org.vibevm/integration-alpha/v1.0.0/vibe.toml");
     let body = fs::read_to_string(&package_manifest)
         .unwrap()
         .replace(
@@ -589,7 +589,7 @@ fn direct_callback_failure_keeps_the_durable_world_and_emits_no_install_success(
     assert!(
         project
             .path()
-            .join(common::slot_dir("org.vibevm.integration-alpha", "0.1.0"))
+            .join(common::slot_dir("org.vibevm.integration-alpha", "1.0.0"))
             .is_dir()
     );
 }

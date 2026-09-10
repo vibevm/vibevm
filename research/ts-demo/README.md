@@ -12,11 +12,11 @@ spec markers, and the full seven-step floor.
 cd research/ts-demo
 # 1. Materialise the discipline packages from the in-repo registry.
 cargo run --manifest-path ../../Cargo.toml -p vibe-cli -- \
-    install --path . --registry ../../packages --assume-yes
+    install --path . --registry ../../vibevm/vibepacks --assume-yes
 # 2. The npm toolchain (node >= 22.6).
 npm install
 # 3. The floor, via the materialised slot.
-cargo run --manifest-path vibedeps/stack-typescript-ai-native-lang/0.6.0/Cargo.toml \
+cargo run --manifest-path vibevm/vibedeps/org.vibevm.ai-native.typescript-ai-native-lang/1.0.0/Cargo.toml \
     -p typescript-ai-native-cli --bin typescript-ai-native -- floor
 ```
 

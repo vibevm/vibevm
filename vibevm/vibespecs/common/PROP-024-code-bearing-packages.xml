@@ -20,8 +20,8 @@ the working checkers, not a prose description of them.</status-line></p>
 package source), [PROP-020](../modules/vibe-workspace/PROP-020-install-hooks.xml)
 (the `post-install` build hook), [PROP-022 §2.2](../modules/vibe-workspace/PROP-022-materialization-modes.xml#snapshot)
 (the `copy`-mode tree — re-scoped here), the discipline mechanism specs
-[ENGINE-CONFORM](../../vibedeps/org.vibevm.ai-native.core-ai-native/0.8.0/spec/mechanisms/ENGINE-CONFORM-v0.1.md) and
-[PROP-014](../../vibedeps/org.vibevm.ai-native.core-ai-native/0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md)
+[ENGINE-CONFORM](../../vibedeps/org.vibevm.ai-native.core-ai-native/1.0.0/vibevm/vibespecs/mechanisms/ENGINE-CONFORM-v0.1.xml) and
+[PROP-014](../../vibedeps/org.vibevm.ai-native.core-ai-native/1.0.0/vibevm/vibespecs/mechanisms/PROP-014-specmap-bidirectional-traceability.xml)
 (the tools that relocate; the specs themselves now ship in
 `flow:org.vibevm.ai-native/core-ai-native` — `spec://org.vibevm.ai-native/core-ai-native/mechanisms/…`).</related></p>
   <p><SANCTION-GRANTED fact="true" status="spec/done">**Owner sanction:** PROP-024 reshapes the owner-frozen `VIBEVM-SPEC.md` (§4.2
@@ -172,13 +172,13 @@ build-output denylist:</SHIPPABLE-TREE-DEF></p>
       </facts>
       <fence lang="toml"># consumer's root Cargo.toml — one pinned alias, updated once per package bump
 [workspace.dependencies]
-specmark = { path = "vibedeps/org.vibevm.ai-native.rust-ai-native-lang/0.2.0/crates/specmark" }
+specmark = { path = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/crates/vendor/core-ai-native-specmark" }
 
 [workspace]
-exclude = ["vibedeps", "packages"]   # disclaim the package's own workspaces</fence>
+exclude = ["vibevm/vibedeps", "vibevm/vibepacks"]   # disclaim the package's own workspaces</fence>
       <facts ordered="false">
-        <WORKSPACE-EXCLUDE fact="true" status="spec/done">The consumer **excludes** `vibedeps/` (and, for a self-hosting repo, the
-  in-repo `packages/` source) from its `[workspace]`, so the slot's crates
+        <WORKSPACE-EXCLUDE fact="true" status="spec/done">The consumer **excludes** `vibevm/vibedeps/` (and, for a self-hosting repo, the
+  in-repo `vibevm/vibepacks/` source) from its `[workspace]`, so the slot's crates
   belong to the *package's* workspace, not the consumer's — Cargo forbids a
   directory living in two workspaces, and this is the standard resolution for a
   repo that contains a sub-project with its own workspace.</WORKSPACE-EXCLUDE>
@@ -209,7 +209,7 @@ neither the slot nor the consumer's own `target/`.</BINARY-RUN-FORM></p>
   `vibedeps/` slot.</SELF-HOST-VENDORED>
         <CLEAN-CLONE-BUILDS fact="true" status="spec/done">Because `vibedeps/` is committed (PROP-009 §2.1), a fresh clone
   builds from a clean checkout **with no prior `vibe install`** — the path-dep
-  target (`vibedeps/org.vibevm.ai-native.rust-ai-native-lang/0.2.0/crates/specmark`, …) already exists
+  target (`vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/crates/vendor/core-ai-native-specmark`, …) already exists
   in the tree.</CLEAN-CLONE-BUILDS>
         <NO-CHICKEN-EGG fact="true" status="spec/done">There is no chicken-and-egg: the toolchain a build needs is vendored
   beside the code that needs it.</NO-CHICKEN-EGG>

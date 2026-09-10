@@ -34,7 +34,7 @@ scan_roots = [
 
 # The package's prompt content (guides, cards, boot). Irrelevant to the orphan
 # gate (which reads code edges, not spec units), but named for completeness.
-spec_roots = ["spec"]
+spec_roots = ["vibevm/vibespecs"]
 
 # No repo-root spec document here (the consumer hosts VIBEVM-SPEC.md).
 root_spec_docs = []

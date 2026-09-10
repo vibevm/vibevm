@@ -71,19 +71,17 @@ Keep it current-state; prune stale lines.
   files, resolved `gpt-5.6-sol` / `xhigh`, and left product work unstaged.
   Without the late effort override this machine's user layer reported `ultra`
   despite the launcher's earlier xhigh default.
-- **Post-clean v1 build workaround (verified 2026-08-30):** the repository-root
-  `fractality.ps1` is stale despite the v1 ledger below — it still hardcodes
-  `fractality/v0.1.0/target/debug/fractality.exe`, so it cannot launch the
-  current slot after a clean. Build v1 directly from `fractality/v1.0.0/`,
-  temporarily junctioning that slot's root `vibedeps` to its tracked
-  `vibevm/vibedeps` because the Cargo path dependencies still name the old
-  root layout; build `fractality-cli`, `fractality-mission-control` and
-  `fractality-pod`, remove the junction, then invoke
-  `v1.0.0/target/debug/fractality.exe` directly. **Do not use the current
-  `vibe install` as this repair:** against the old slot it migrates the tracked
-  dependency/boot projection to the new coordinate layout and creates a large
-  unrelated diff without satisfying Cargo's old root path. This failed route
-  was restored and its generated `org.*`/`STATIC.md` residue removed exactly.
+- **Current v1 launcher / post-clean build (updated 2026-09-10):** the
+  specspace-root `fractality.ps1` / `fractality.sh` launchers now target
+  `fractality/v1.0.0/target/debug/fractality.exe`; their example packet is
+  `fractality/v1.0.0/vibevm/vibespecs/examples/hello-glm.toml`. The v1 Cargo
+  workspace now addresses its installed toolchain directly under
+  `vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/`, so the
+  root-`vibedeps` junction workaround verified on 2026-08-30 applied only to
+  the removed layout and is retired. After derived dependencies are cleaned,
+  regenerate them from the v1 slot with `<host>/target/debug/vibe.exe install
+  --offline --registry <host>/vibevm/vibepacks`, then build `fractality-cli`,
+  `fractality-mission-control` and `fractality-pod` there directly.
 - **Build / run:** `cargo build -p fractality-cli` (also
   `-p fractality-mission-control -p fractality-pod`) from
   `vibevm/vibepacks/org.vibevm.fractality/fractality/v1.0.0/`; drive via the launcher;

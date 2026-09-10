@@ -9,13 +9,13 @@
 #
 # Usage:  ./fractality.sh mc status
 #         ./fractality.sh ps
-#         ./fractality.sh run --packet fractality/v0.1.0/spec/examples/hello-glm.toml
+#         ./fractality.sh run --packet fractality/v1.0.0/vibevm/vibespecs/examples/hello-glm.toml
 set -euo pipefail
 
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-bin="$here/fractality/v0.1.0/target/debug/fractality.exe"
+bin="$here/fractality/v1.0.0/target/debug/fractality.exe"
 if [[ ! -x "$bin" ]]; then
-  echo "fractality: binary not built at $bin — build it: cargo build -p fractality-cli (from fractality/v0.1.0)" >&2
+  echo "fractality: binary not built at $bin — build it: cargo build -p fractality-cli (from fractality/v1.0.0)" >&2
   exit 2
 fi
 

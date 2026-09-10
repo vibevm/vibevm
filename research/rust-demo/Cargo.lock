@@ -4,7 +4,7 @@ version = 4
 
 [[package]]
 name = "core-ai-native-specmark"
-version = "0.7.0"
+version = "1.0.0"
 dependencies = [
  "core-ai-native-specmark-grammar",
  "proc-macro2",
@@ -14,7 +14,7 @@ dependencies = [
 
 [[package]]
 name = "core-ai-native-specmark-grammar"
-version = "0.7.0"
+version = "1.0.0"
 dependencies = [
  "proc-macro2",
  "syn",

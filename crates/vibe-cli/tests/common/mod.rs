@@ -165,23 +165,23 @@ pub fn workspace_root() -> PathBuf {
         .to_path_buf()
 }
 
-/// The real `org.vibevm.world/wal@0.2.0` package as it ships in this
+/// The real `org.vibevm.world/wal@1.0.0` package as it ships in this
 /// repo — the tree the `wal` e2e tests dogfood rather than a fixture.
 /// Routed through the layout module so the R4 flip keeps the dogfood
 /// pointing at the moved tree.
 fn real_wal_dir() -> PathBuf {
     workspace_root()
         .join(packages_root())
-        .join("org.vibevm.world/wal/v0.2.0")
+        .join("org.vibevm.world/wal/v1.0.0")
 }
 
 /// Build a directory registry under `<root>/wal-registry/` carrying the
-/// real `org.vibevm.world/wal@0.2.0` package, copied verbatim from
+/// real `org.vibevm.world/wal@1.0.0` package, copied verbatim from
 /// [`real_wal_dir`]. Returns the registry dir (`<root>/wal-registry`) so
 /// it can be passed straight to `vibe install --registry <dir>`.
 pub fn make_wal_dir_registry(root: &Path) -> PathBuf {
     let registry = root.join("wal-registry");
-    let pkg = registry.join("org.vibevm.world").join("wal").join("v0.2.0");
+    let pkg = registry.join("org.vibevm.world").join("wal").join("v1.0.0");
     copy_tree(&real_wal_dir(), &pkg);
     registry
 }
@@ -352,7 +352,7 @@ fn describe_path(path: &Path) -> String {
 /// Build a per-package bare git registry under `root/`: one bare repo
 /// per package, content at the repo root, tagged `v<semver>`.
 ///
-/// For this test we seed exactly one package: `org.vibevm.world/wal@0.2.0`
+/// For this test we seed exactly one package: `org.vibevm.world/wal@1.0.0`
 /// → `<root>/org.vibevm.world.wal.git`. The "registry" is then `<root>`
 /// itself — `MultiRegistryResolver` composes per-package URLs by
 /// appending `<group>.<name>.git` to the org URL (the `fqdn` naming
@@ -369,11 +369,11 @@ pub fn make_per_package_registry(root: &Path) -> PathBuf {
 
     // Per-package layout: package contents live AT THE ROOT of the repo,
     // not under `<group>/<name>/v<ver>/`. Seed it from the real
-    // `org.vibevm.world/wal@0.2.0` package (dogfood, not a fixture).
+    // `org.vibevm.world/wal@1.0.0` package (dogfood, not a fixture).
     copy_tree(&real_wal_dir(), &src);
     run_git(&src, &["add", "-A"]);
-    run_git(&src, &["commit", "-m", "org.vibevm.world/wal@0.2.0"]);
-    run_git(&src, &["tag", "v0.2.0"]);
+    run_git(&src, &["commit", "-m", "org.vibevm.world/wal@1.0.0"]);
+    run_git(&src, &["tag", "v1.0.0"]);
 
     let bare = root.join("org.vibevm.world.wal.git");
     run_git(
@@ -436,8 +436,8 @@ pub fn make_single_package_bare_repo(root: &Path) -> PathBuf {
     run_git(&src, &["config", "user.name", "Test"]);
     copy_tree(&real_wal_dir(), &src);
     run_git(&src, &["add", "-A"]);
-    run_git(&src, &["commit", "-m", "org.vibevm.world/wal@0.2.0"]);
-    run_git(&src, &["tag", "v0.2.0"]);
+    run_git(&src, &["commit", "-m", "org.vibevm.world/wal@1.0.0"]);
+    run_git(&src, &["tag", "v1.0.0"]);
     let bare = root.join("flow-wal-direct.git");
     run_git(
         root,

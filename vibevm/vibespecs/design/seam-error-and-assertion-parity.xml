@@ -181,7 +181,7 @@ slice in this batch (own files) — its own lane.</floor-twin></p>
   <parity-lift title="4. The parity-principle lift (boss contract diff, fork №9)">
     <p><lift-home fact="true" status="spec/work">**The home, ruled.** Map fork №9 (2026-08-04): «Ядро дисциплины» — the
 language-neutral guiding layer of `core-ai-native`, manifesto level, one home, the
-stacks cite. The carrier is [`00-MANIFESTO.xml`](../../packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.xml)
+stacks cite. The carrier is [`00-MANIFESTO.xml`](../../vibepacks/org.vibevm.ai-native/core-ai-native/v1.0.0/vibevm/vibespecs/00-MANIFESTO.xml)
 §4 (where the strictness lives), a boss-authored clause set the language guides
 cite.</lift-home></p>
     <p><lift-principle fact="true" status="spec/work">**The principle (owner verbatim, 2026-08-02, B-035 anchor):**

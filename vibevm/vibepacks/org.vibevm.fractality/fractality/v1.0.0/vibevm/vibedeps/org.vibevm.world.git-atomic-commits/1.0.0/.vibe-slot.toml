@@ -1,0 +1,27 @@
+schema = 1
+source_hash = "sha256:6f454486ce7f3edcc208231b2b88fea61be6b65938ada1914a98ddfcb957960d"
+spec_format = "mixed"
+
+[[file]]
+path = "LICENSE"
+sha256 = "7b05e254512285b6a4c33fa97a9b8a4751ff8bf674da7189420f066ef7b9672b"
+
+[[file]]
+path = "README.md"
+sha256 = "52607dc59b0c1aaeb72b230554b4ff51acdaecec5c8eeb7b84db0fcb73ac6b9c"
+
+[[file]]
+path = "vibe.toml"
+sha256 = "86feac27d85ae42c8ca65834a02d9dd095614c6c3bf8b3d25a5a47b32cec7dd0"
+
+[[file]]
+path = "vibevm/vibespecs/boot/30-flow-atomic-commits.xml"
+sha256 = "d94d333e3215616aaaf6f6e6b4d4f6c584e98bef8fd69d944a8cfd4b0eb9a0d7"
+
+[[file]]
+path = "vibevm/vibespecs/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.xml"
+sha256 = "7da2944a6748c644d55b0824f9c9bb4677d0c7ce55be02f38529b067ca3add06"
+
+[[file]]
+path = "vibevm/vibespecs/flows/atomic-commits/splitting-large-changes.xml"
+sha256 = "a9acb751b50bb3de718acf012944fb8dcd507aa6bd9b6a5f58c3285fc440b11d"

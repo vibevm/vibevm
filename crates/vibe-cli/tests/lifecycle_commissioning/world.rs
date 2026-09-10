@@ -9,12 +9,12 @@ const COORDINATES: [(&str, &str, &str); 2] = [
     (
         "org.vibevm.fixture",
         "phase-announcer",
-        "org.vibevm.fixture/phase-announcer/v0.1.0",
+        "org.vibevm.fixture/phase-announcer/v1.0.0",
     ),
     (
         "org.vibevm.fixture",
         "lifecycle-rust-stack",
-        "org.vibevm.fixture/lifecycle-rust-stack/v0.1.0",
+        "org.vibevm.fixture/lifecycle-rust-stack/v1.0.0",
     ),
 ];
 
@@ -23,8 +23,8 @@ name = "owner-scenario"
 version = "0.0.1"
 
 [requires.packages]
-"org.vibevm.fixture/phase-announcer" = "=0.1.0"
-"org.vibevm.fixture/lifecycle-rust-stack" = "=0.1.0"
+"org.vibevm.fixture/phase-announcer" = "=1.0.0"
+"org.vibevm.fixture/lifecycle-rust-stack" = "=1.0.0"
 
 [active]
 stack = "lifecycle-rust-stack"
@@ -128,16 +128,16 @@ fn assert_epoch_a_install(project: &Path, lock: &Lockfile) {
     assert_eq!(lock.packages.len(), 2);
     for (group, name, _) in COORDINATES {
         let package = find_package(lock, group, name);
-        assert_eq!(package.version.to_string(), "0.1.0");
+        assert_eq!(package.version.to_string(), "1.0.0");
         assert!(
             project
-                .join(common::slot_dir(&format!("{group}.{name}"), "0.1.0"))
+                .join(common::slot_dir(&format!("{group}.{name}"), "1.0.0"))
                 .is_dir()
         );
     }
     let announcer = project.join(common::slot_dir(
         "org.vibevm.fixture.phase-announcer",
-        "0.1.0",
+        "1.0.0",
     ));
     let manifest = Manifest::read(announcer.join("vibe.toml")).unwrap();
     assert_eq!(

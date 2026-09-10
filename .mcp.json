@@ -10,17 +10,17 @@
       ]
     },
     "rust-ai-native": {
-      "command": "C:/Users/olegc/gits/vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/target/release/rust-ai-native-mcp.exe",
+      "command": "C:/Users/olegc/git/v/vibevm/target/debug/rust-ai-native-mcp.exe",
       "args": [
         "--path",
-        "C:\\Users\\olegc\\gits\\vibevm"
+        "C:\\Users\\olegc\\git\\v\\vibevm"
       ]
     },
     "typescript-ai-native": {
-      "command": "C:/Users/olegc/gits/vibevm/vibedeps/mcp-typescript-ai-native-mcp/0.6.0/target/release/typescript-ai-native-mcp.exe",
+      "command": "C:/Users/olegc/git/v/vibevm/target/debug/typescript-ai-native-mcp.exe",
       "args": [
         "--path",
-        "C:\\Users\\olegc\\gits\\vibevm"
+        "C:\\Users\\olegc\\git\\v\\vibevm"
       ]
     }
   },

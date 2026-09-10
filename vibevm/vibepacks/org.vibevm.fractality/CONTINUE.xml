@@ -107,9 +107,10 @@ the owner picks which follow-up, if any, to commission.</p>
 evidence rule), `WAL.xml`, this file, `SPECSPACES.md` row, `VIBEVM-BACKLOG.xml`;
 **`plans/`** (postponed.xml + PP-001/002/003/004); **`reports/`** (per-phase
 narratives + **`trial-results/`** — the committed paid-run evidence, dated
-groups). `fractality/v0.1.0/` — the Cargo workspace: `crates/{core,
+groups). `fractality/v1.0.0/` — the Cargo workspace: `crates/{core,
 mission-control, pod, mc-client, backend-claude-code, cli, initiative}`;
-`spec/` (PROP-001, VISION, plans/**RLM** + **ADVISOR**, manual-tests/**MT-C3-01/02/03**</p>
+`vibevm/vibespecs/` (PROP-001, VISION, plans/**RLM** + **ADVISOR**,
+manual-tests/**MT-C3-01/02/03**</p>
     <list ordered="false">
       <item>**MT-C2-05** + the trial harness `run-arm.sh`/`save-results.sh`/`score-g2.py`).
 New this session: core `credibility.rs`, cli `advise.rs`.</item>
@@ -152,9 +153,9 @@ a1a9403 feat(fractality): Stage C — the `fractality advise` verb (D-C3-7)</fen
   </section>
   <section title="Quick-start">
     <fence lang="sh">cd vibevm/vibepacks/org.vibevm.fractality &amp;&amp; head -40 WAL.xml
-cd fractality/v0.1.0
-# floor (ALWAYS from v0.1.0; NEVER while a trial fires):
-/c/Users/olegc/gits/vibevm/packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/target/debug/rust-ai-native.exe floor
+cd fractality/v1.0.0
+# floor (ALWAYS from v1.0.0; NEVER while a trial fires):
+cargo run --manifest-path vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/Cargo.toml -p rust-ai-native-cli --bin rust-ai-native -- floor
 # delegate to GLM (CC+z.ai): claude -p '&lt;task&gt;' --model glm-5.2[1m] at the z.ai gateway</fence>
     <p>Resume phrase: `восстанови сессию fractality` (report-then-wait).</p>
   </section>

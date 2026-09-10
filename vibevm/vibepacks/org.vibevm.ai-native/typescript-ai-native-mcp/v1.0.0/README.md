@@ -21,9 +21,8 @@ tsc's own engine, agreement by construction). @status:impl/done
 
 @fact:server-brief-pointer The brief (tool inventory, the tool↔CLI parity map, the session and
 capture semantics):
-[`spec/tools/discipline-mcp-typescript.xml`](spec/tools/discipline-mcp-typescript.xml). @status:impl/done
+[`vibevm/vibespecs/tools/discipline-mcp-typescript.xml`](vibevm/vibespecs/tools/discipline-mcp-typescript.xml). @status:impl/done
 
 @fact:PREREQUISITE-NODE-AND-THE-PROJECTS-OWN-TYPESCRIPT Prerequisite (inherited from the stack): node ≥ 22.6 and the project's
 own `typescript` devDependency — absent tools hard-fail with the
 install recipe, through MCP as on the CLI. @status:impl/done
-

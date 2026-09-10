@@ -14,4 +14,5 @@ forget about it.
 
 ## Versioning
 
-Stays at `0.0.1` forever. Bumping it would defeat the "throwaway" point.
+Stays at `1.0.0` as a fixed fixture coordinate. A later smoke should replace
+the throwaway repository rather than model product evolution here.

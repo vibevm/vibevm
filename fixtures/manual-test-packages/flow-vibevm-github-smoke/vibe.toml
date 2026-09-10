@@ -2,7 +2,7 @@
 name = "vibevm-github-smoke"
 group = "org.vibevm"
 kind = "flow"
-version = "0.0.1"
+version = "1.0.0"
 authors = ["Oleg Chirukhin"]
 license = "EULA"
 description = "Throwaway test fixture for `vibe registry publish` against GitHub. Not a real package — just exercises the GitHub API publish path. Safe to break."

@@ -40,7 +40,7 @@
 //!   (created via `vibe registry publish --repo-url …` direct-push;
 //!   see `fixtures/manual-test-packages/flow-vibevm-direct-push-smoke/`).
 //!
-//! Both carry `v0.0.1` and a single eager file plus a boot snippet —
+//! Both carry `v1.0.0` and a single eager file plus a boot snippet —
 //! enough to exercise the resolver, fetcher, integrity check, and
 //! materialisation paths without burning a real package name in the
 //! canonical `vibespecs` orgs.
@@ -137,7 +137,7 @@ fn install_github_smoke_alone() {
         "source_url must point at github.com; got `{}`",
         pkg.source_url
     );
-    assert_eq!(pkg.version.to_string(), "0.0.1");
+    assert_eq!(pkg.version.to_string(), "1.0.0");
 
     // The package's eager file lands at the conventional path.
     assert!(
@@ -184,7 +184,7 @@ fn install_gitverse_smoke_alone() {
         "source_url must point at gitverse.ru; got `{}`",
         pkg.source_url
     );
-    assert_eq!(pkg.version.to_string(), "0.0.1");
+    assert_eq!(pkg.version.to_string(), "1.0.0");
 
     assert!(
         project

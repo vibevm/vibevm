@@ -1,0 +1,23 @@
+schema = 1
+source_hash = "sha256:a4257fd33b740d36f02805ab9cc997c3c447bfbc29abf0915f38fd34bbb9f3b3"
+spec_format = "mixed"
+
+[[file]]
+path = "LICENSE"
+sha256 = "7b05e254512285b6a4c33fa97a9b8a4751ff8bf674da7189420f066ef7b9672b"
+
+[[file]]
+path = "README.md"
+sha256 = "ac5b64061b0af77033184ab58b2c74af6e37ba70d180ef8157bba13b4d7bc840"
+
+[[file]]
+path = "vibe.toml"
+sha256 = "2d2c1f531ce1d4c1eee47417a5afff6061f233c0b612442de134262aac2a5a19"
+
+[[file]]
+path = "vibevm/vibespecs/boot/32-flow-autonomy.xml"
+sha256 = "384b77e7b4c32df7cdd54ca12e294893ce7c6de3eaa23b8acdf34104b217a44a"
+
+[[file]]
+path = "vibevm/vibespecs/flows/autonomy/AUTONOMY-PROTOCOL.xml"
+sha256 = "8ccd7cd0b773941dca53a43644c23c99bc6306fb47861b7a76d2dbafe5851ff3"

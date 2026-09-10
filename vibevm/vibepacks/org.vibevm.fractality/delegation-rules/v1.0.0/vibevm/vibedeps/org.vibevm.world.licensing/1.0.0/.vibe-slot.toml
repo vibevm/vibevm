@@ -1,0 +1,35 @@
+schema = 1
+source_hash = "sha256:2c7db23ae8b7a9a3ef1f7d2a7b54425113f43c4ab14f1e83f3458ffb00a33288"
+spec_format = "mixed"
+
+[[file]]
+path = "LICENSE.md"
+sha256 = "c0e2a0382616f6ad368f3d15845916310a4a3113802df74a759d41b9d914e1be"
+
+[[file]]
+path = "README.md"
+sha256 = "26c1adeb52632c409fe92aec82ea2725ea96ea682abada91f4adb68451dba48f"
+
+[[file]]
+path = "vibe.toml"
+sha256 = "f7d6a6b774bd761bdcf3f4cf72f41d6bfd0e9d85b1bc882e384a06b97025e561"
+
+[[file]]
+path = "vibevm/vibespecs/boot/60-flow-licensing.xml"
+sha256 = "813dcf62879c431b99a2b99b290bc631f4633162aba0c839149fa97958429f47"
+
+[[file]]
+path = "vibevm/vibespecs/flows/licensing/LICENSING-PROTOCOL.xml"
+sha256 = "3331fbf05e0383f4f4a23c9e51bd5db59d18d594d590a337b3d72b0cea647e53"
+
+[[file]]
+path = "vibevm/vibespecs/flows/licensing/dependency-licenses.xml"
+sha256 = "98073ba91e82e3991669c8501192ab0fc4fbb462e5c44420981444d2654f1736"
+
+[[file]]
+path = "vibevm/vibespecs/flows/licensing/eula-template.xml"
+sha256 = "a18ad09ea3ac1273bc787bee5c601008ace310aae87e4c42e030de21a98d523d"
+
+[[file]]
+path = "vibevm/vibespecs/skills/draft-eula/SKILL.md"
+sha256 = "d226c21ebac6123a9e96982728c0863f1463846fcc699747c1e965e128450147"

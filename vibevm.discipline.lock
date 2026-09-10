@@ -10,17 +10,17 @@
 # hashes here. Hand edits outside that flow are a defect.
 
 schema = 1
-discipline_version = "0.2.0"
+discipline_version = "1.0.0"
 discipline_status = "BETA"
 
 [[package]]
-pkgref = "flow:org.vibevm/discipline-core@0.2.0"
-source = "packages/org.vibevm/discipline-core/v0.2.0"
-slot = "vibedeps/flow-discipline-core/0.2.0"
-content_hash = "sha256:1106260c884dd03b0f14e52d4c54d128580a80bc520a56c01220aa0ec007422c"
+pkgref = "flow:org.vibevm.ai-native/core-ai-native@1.0.0"
+source = "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.0.0"
+slot = "vibevm/vibedeps/org.vibevm.ai-native.core-ai-native/1.0.0"
+content_hash = "sha256:c869ddb0f62bb842440243ab9fb5dee82e61555b27defd0fef860bd102031655"
 
 [[package]]
-pkgref = "stack:org.vibevm/rust-ai-native@0.2.0"
-source = "packages/org.vibevm/rust-ai-native/v0.2.0"
-slot = "vibedeps/stack-rust-ai-native/0.2.0"
-content_hash = "sha256:124151889b95b01c23bea3fb68618b7dbd2e14630443b814270506712dcbea43"
+pkgref = "stack:org.vibevm.ai-native/rust-ai-native@1.0.0"
+source = "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native/v1.0.0"
+slot = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native/1.0.0"
+content_hash = "sha256:e3a7b08775a375909f14ab1ecf02f5fc7e2f98f21b36b15dcd1d79a42d239b0b"

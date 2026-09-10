@@ -5,117 +5,139 @@
 namespace = "fractality"
 
 scan_roots = ["crates/*"]
-spec_roots = ["spec"]
+spec_roots = ["vibevm/vibespecs"]
 root_spec_docs = []
 exempt = []
 dispositioned = []
 
 # Installed packages' spec trees, read for URI RESOLUTION only
-# (PROP-014 §7.1) — discovered from vibedeps/ at init time.
+# (PROP-014 §7.1) — discovered from vibevm/vibedeps/ at init time.
 
 # The sibling policy package (C2 D6): the routing calculus in
 # fractality-initiative implements ITS contract, so its anchors must
 # resolve here. A sibling path, not a vibedeps slot — this gate runs
-# only inside the monorepo, where the layout is guaranteed.
+# only inside the monorepo, where the layout is guaranteed. Its legacy
+# short namespace is retained because the existing source edges use it.
 [[external_specs]]
 namespace = "delegation-rules"
-root = "../../delegation-rules/v1.0.0/spec/flows/delegation-rules"
-[[external_specs]]
-namespace = "addressable-specs"
-root = "vibedeps/flow-addressable-specs/0.1.0/spec"
+root = "../../delegation-rules/v1.0.0/vibevm/vibespecs/flows/delegation-rules"
 
 [[external_specs]]
-namespace = "atomic-commits"
-root = "vibedeps/flow-atomic-commits/0.1.0/spec"
+namespace = "org.vibevm.ai-native/core-ai-native"
+root = "vibevm/vibedeps/org.vibevm.ai-native.core-ai-native/1.0.0/vibevm/vibespecs"
 
 [[external_specs]]
-namespace = "attribution-policy"
-root = "vibedeps/flow-attribution-policy/0.1.0/spec"
+namespace = "org.vibevm.ai-native/rust-ai-native-lang"
+root = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/vibevm/vibespecs"
 
 [[external_specs]]
-namespace = "campaign-plans"
-root = "vibedeps/flow-campaign-plans/0.1.0/spec"
+namespace = "org.vibevm.ai-native/rust-ai-native-mcp"
+root = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-mcp/1.0.0/vibevm/vibespecs"
 
 [[external_specs]]
-namespace = "comparative-research"
-root = "vibedeps/flow-comparative-research/0.1.0/spec"
+namespace = "org.vibevm.world/addressable-specs"
+root = "vibevm/vibedeps/org.vibevm.world.addressable-specs/1.0.0/vibevm/vibespecs"
 
 [[external_specs]]
-namespace = "conflict-protocol"
-root = "vibedeps/flow-conflict-protocol/0.1.0/spec"
+namespace = "org.vibevm.world/campaign-plans"
+root = "vibevm/vibedeps/org.vibevm.world.campaign-plans/1.0.0/vibevm/vibespecs"
 
 [[external_specs]]
-namespace = "core-ai-native"
-root = "vibedeps/flow-core-ai-native/0.7.0/spec"
+namespace = "org.vibevm.world/comparative-research"
+root = "vibevm/vibedeps/org.vibevm.world.comparative-research/1.0.0/vibevm/vibespecs"
 
 [[external_specs]]
-namespace = "decision-records"
-root = "vibedeps/flow-decision-records/0.1.0/spec"
+namespace = "org.vibevm.world/conflict-protocol"
+root = "vibevm/vibedeps/org.vibevm.world.conflict-protocol/1.0.0/vibevm/vibespecs"
 
 [[external_specs]]
-namespace = "discovery-prompt"
-root = "vibedeps/flow-discovery-prompt/0.1.0/spec"
+namespace = "org.vibevm.world/decision-records"
+root = "vibevm/vibedeps/org.vibevm.world.decision-records/1.0.0/vibevm/vibespecs"
 
 [[external_specs]]
-namespace = "health-audit"
-root = "vibedeps/flow-health-audit/0.1.0/spec"
+namespace = "org.vibevm.world/dev-runtime-docs"
+root = "vibevm/vibedeps/org.vibevm.world.dev-runtime-docs/1.0.0/vibevm/vibespecs"
 
 [[external_specs]]
-namespace = "licensing"
-root = "vibedeps/flow-licensing/0.1.0/spec"
+namespace = "org.vibevm.world/discovery-prompt"
+root = "vibevm/vibedeps/org.vibevm.world.discovery-prompt/1.0.0/vibevm/vibespecs"
 
 [[external_specs]]
-namespace = "managed-blocks"
-root = "vibedeps/flow-managed-blocks/0.1.0/spec"
+namespace = "org.vibevm.world/git-atomic-commits"
+root = "vibevm/vibedeps/org.vibevm.world.git-atomic-commits/1.0.0/vibevm/vibespecs"
 
 [[external_specs]]
-namespace = "manual-tests"
-root = "vibedeps/flow-manual-tests/0.1.0/spec"
+namespace = "org.vibevm.world/git-attribution-policy"
+root = "vibevm/vibedeps/org.vibevm.world.git-attribution-policy/1.0.0/vibevm/vibespecs"
 
 [[external_specs]]
-namespace = "operating-modes"
-root = "vibedeps/flow-operating-modes/0.1.0/spec"
+namespace = "org.vibevm.world/git-autonomy"
+root = "vibevm/vibedeps/org.vibevm.world.git-autonomy/1.0.0/vibevm/vibespecs"
 
 [[external_specs]]
-namespace = "qualified-naming"
-root = "vibedeps/flow-qualified-naming/0.1.0/spec"
+namespace = "org.vibevm.world/git-conventional-commits"
+root = "vibevm/vibedeps/org.vibevm.world.git-conventional-commits/1.0.0/vibevm/vibespecs"
 
 [[external_specs]]
-namespace = "redbook"
-root = "vibedeps/flow-redbook/0.2.0/spec"
+namespace = "org.vibevm.world/git-practices"
+root = "vibevm/vibedeps/org.vibevm.world.git-practices/1.0.0/vibevm/vibespecs"
 
 [[external_specs]]
-namespace = "secrets-hygiene"
-root = "vibedeps/flow-secrets-hygiene/0.1.0/spec"
+namespace = "org.vibevm.world/health-audit"
+root = "vibevm/vibedeps/org.vibevm.world.health-audit/1.0.0/vibevm/vibespecs"
 
 [[external_specs]]
-namespace = "source-mirrors"
-root = "vibedeps/flow-source-mirrors/0.1.0/spec"
+namespace = "org.vibevm.world/licensing"
+root = "vibevm/vibedeps/org.vibevm.world.licensing/1.0.0/vibevm/vibespecs"
 
 [[external_specs]]
-namespace = "spec-genres"
-root = "vibedeps/flow-spec-genres/0.1.0/spec"
+namespace = "org.vibevm.world/managed-blocks"
+root = "vibevm/vibedeps/org.vibevm.world.managed-blocks/1.0.0/vibevm/vibespecs"
 
 [[external_specs]]
-namespace = "sync-from-code"
-root = "vibedeps/flow-sync-from-code/0.1.0/spec"
+namespace = "org.vibevm.world/manual-tests"
+root = "vibevm/vibedeps/org.vibevm.world.manual-tests/1.0.0/vibevm/vibespecs"
 
 [[external_specs]]
-namespace = "tool-design-lessons"
-root = "vibedeps/flow-tool-design-lessons/0.1.0/spec"
+namespace = "org.vibevm.world/operating-modes"
+root = "vibevm/vibedeps/org.vibevm.world.operating-modes/1.0.0/vibevm/vibespecs"
 
 [[external_specs]]
-namespace = "two-process-model"
-root = "vibedeps/flow-two-process-model/0.1.0/spec"
+namespace = "org.vibevm.world/qualified-naming"
+root = "vibevm/vibedeps/org.vibevm.world.qualified-naming/1.0.0/vibevm/vibespecs"
 
 [[external_specs]]
-namespace = "wal"
-root = "vibedeps/flow-wal/0.2.0/spec"
+namespace = "org.vibevm.world/redbook"
+root = "vibevm/vibedeps/org.vibevm.world.redbook/1.0.0/vibevm/vibespecs"
 
 [[external_specs]]
-namespace = "rust-ai-native-mcp"
-root = "vibedeps/mcp-rust-ai-native-mcp/0.7.0/spec"
+namespace = "org.vibevm.world/secrets-hygiene"
+root = "vibevm/vibedeps/org.vibevm.world.secrets-hygiene/1.0.0/vibevm/vibespecs"
 
 [[external_specs]]
-namespace = "rust-ai-native-lang"
-root = "vibedeps/stack-rust-ai-native-lang/0.7.0/spec"
+namespace = "org.vibevm.world/source-mirrors"
+root = "vibevm/vibedeps/org.vibevm.world.source-mirrors/1.0.0/vibevm/vibespecs"
+
+[[external_specs]]
+namespace = "org.vibevm.world/spec-genres"
+root = "vibevm/vibedeps/org.vibevm.world.spec-genres/1.0.0/vibevm/vibespecs"
+
+[[external_specs]]
+namespace = "org.vibevm.world/sync-from-code"
+root = "vibevm/vibedeps/org.vibevm.world.sync-from-code/1.0.0/vibevm/vibespecs"
+
+[[external_specs]]
+namespace = "org.vibevm.world/tool-design-lessons"
+root = "vibevm/vibedeps/org.vibevm.world.tool-design-lessons/1.0.0/vibevm/vibespecs"
+
+[[external_specs]]
+namespace = "org.vibevm.world/two-process-model"
+root = "vibevm/vibedeps/org.vibevm.world.two-process-model/1.0.0/vibevm/vibespecs"
+
+[[external_specs]]
+namespace = "org.vibevm.world/wal"
+root = "vibevm/vibedeps/org.vibevm.world.wal/1.0.0/vibevm/vibespecs"
+
+[[external_specs]]
+namespace = "org.vibevm.world/wal-specspaces"
+root = "vibevm/vibedeps/org.vibevm.world.wal-specspaces/1.0.0/vibevm/vibespecs"

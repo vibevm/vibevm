@@ -28,7 +28,7 @@ use specmark::verifies;
 /// (so this test cannot silently duplicate the project-registry path), and
 /// the install resolves through the global layer — proven by the lockfile's
 /// `source_url` (`git+file://…/org.vibevm.world.wal.git`) and the
-/// materialised `vibedeps/org.vibevm.world.wal/0.2.0/` slot.
+/// materialised `vibedeps/org.vibevm.world.wal/1.0.0/` slot.
 ///
 /// The short name `vibe install wal` is deliberately NOT covered here: a
 /// hermetic per-package git registry carries no PROP-005 package index, so
@@ -45,7 +45,7 @@ fn default_path_installs_via_global_registry() {
 
     // 1. A hermetic per-package git registry under a temp dir — one bare
     //    repo, `org.vibevm.world.wal.git`, seeded from the real
-    //    `org.vibevm.world/wal@0.2.0` package tree (dogfood, not a fixture).
+    //    `org.vibevm.world/wal@1.0.0` package tree (dogfood, not a fixture).
     let outer = tempfile::tempdir().unwrap();
     let org_root = make_per_package_registry(outer.path());
 
@@ -131,12 +131,12 @@ fn default_path_installs_via_global_registry() {
         "expected per-package URL ending in /org.vibevm.world.wal.git, got: {}",
         entry.source_url
     );
-    assert_eq!(entry.source_ref.as_deref(), Some("v0.2.0"));
+    assert_eq!(entry.source_ref.as_deref(), Some("v1.0.0"));
     assert!(!entry.overridden);
 
     // The materialised deps-root slot — the real
-    // `org.vibevm.world/wal@0.2.0` tree the registry was seeded from.
-    let slot_dir = common::slot_dir("org.vibevm.world.wal", "0.2.0");
+    // `org.vibevm.world/wal@1.0.0` tree the registry was seeded from.
+    let slot_dir = common::slot_dir("org.vibevm.world.wal", "1.0.0");
     let slot = project.path().join(&slot_dir);
     assert!(
         slot.join("vibe.toml").is_file(),

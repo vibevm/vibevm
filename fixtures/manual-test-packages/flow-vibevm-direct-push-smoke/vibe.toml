@@ -2,7 +2,7 @@
 name = "vibevm-direct-push-smoke"
 group = "org.vibevm"
 kind = "flow"
-version = "0.0.1"
+version = "1.0.0"
 authors = ["Oleg Chirukhin"]
 license = "EULA"
 description = "Throwaway test fixture for `vibe registry publish --repo-url`. Not a real package — just exercises the no-API direct git push path against a freshly provisioned host repo."

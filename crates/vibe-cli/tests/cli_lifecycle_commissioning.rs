@@ -171,7 +171,7 @@ fn phase_announcer_owner_scenario_is_green_end_to_end() {
 
     let stack_root = vibe_core::machine_json_path(&project.join(common::slot_dir(
         "org.vibevm.fixture.lifecycle-rust-stack",
-        "0.1.0",
+        "1.0.0",
     )));
     for (sequence, key, id, point, declaration, base, inputs) in [
         (
@@ -254,7 +254,7 @@ fn phase_announcer_owner_scenario_is_green_end_to_end() {
                 ProviderSource::Dependency,
                 STACK,
                 Some(PackageKind::Stack),
-                "0.1.0"
+                "1.0.0"
             )
         );
         assert_eq!(row.provider.root.as_deref(), Some(stack_root.as_str()));
@@ -263,7 +263,7 @@ fn phase_announcer_owner_scenario_is_green_end_to_end() {
 
     let announcer_root = vibe_core::machine_json_path(&project.join(common::slot_dir(
         "org.vibevm.fixture.phase-announcer",
-        "0.1.0",
+        "1.0.0",
     )));
     let expected_config = BTreeMap::from([(
         "message".to_string(),
@@ -348,7 +348,7 @@ fn phase_announcer_owner_scenario_is_green_end_to_end() {
                 ProviderSource::Dependency,
                 ANNOUNCER,
                 Some(PackageKind::Tool),
-                "0.1.0"
+                "1.0.0"
             )
         );
         assert_eq!(row.provider.root.as_deref(), Some(announcer_root.as_str()));

@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:afc21df266cb01af96fb8f46ac4d3abcc3da8650a0e351784bc53f43562c633b"
+source_hash = "sha256:db3a36d635ec1dcb08878bb1c0dccb3287b6146882e92a543c4c3397318433e6"
 spec_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:2f8f2c25e341467b8b6c58c122426a5667ed5ea7630658057e6942eada98aca0"
+derived_hash = "sha256:613bf9c70614d4ed965c4374464e7ee84181eed34826d8982e12d791313caea2"
 
 [[file]]
 path = "LICENSE.md"
@@ -18,7 +18,7 @@ source = "README.md"
 
 [[file]]
 path = "vibe.toml"
-sha256 = "6912be5a7d96a1e83f4abbedb2efaedbb55daba00c91c925f4a109bab073774d"
+sha256 = "1f3e1f93fd3121fd1b441bf45493034d3ec19503f63c3c42e67bcd1f8ca3c69b"
 disposition = "copied"
 source = "vibe.toml"
 

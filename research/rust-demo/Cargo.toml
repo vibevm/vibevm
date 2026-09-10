@@ -18,11 +18,11 @@
 [workspace]
 resolver = "3"
 members = ["crates/rust-demo"]
-exclude = ["vibedeps"]
+exclude = ["vibevm/vibedeps"]
 
 [workspace.dependencies]
 # The inert #[spec]/scope! tags this project's code carries (GUIDE §13
 # move 3) — the shipped proc-macro, consumed from the materialised slot.
-specmark = { package = "core-ai-native-specmark", path = "vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmark" }
+specmark = { package = "core-ai-native-specmark", path = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/crates/vendor/core-ai-native-specmark" }
 # One thiserror enum per layer; messages cite the violated REQ (GUIDE §4).
 thiserror = "2"

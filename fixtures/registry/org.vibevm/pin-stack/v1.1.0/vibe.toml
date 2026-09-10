@@ -1,0 +1,9 @@
+[package]
+name = "pin-stack"
+group = "org.vibevm"
+kind = "stack"
+version = "1.1.0"
+authors = ["vibevm test fixtures"]
+license = "EULA"
+description = "The NEWER pin-stack a correct resolver must NOT select while pin-server pins =1.0.0"
+keywords = ["test", "fixture", "mcp", "pin"]
