@@ -61,10 +61,11 @@ pub enum Error {
     #[error(
         "rebuild --check: {count} drift item(s) against the journal under `{data_dir}`. A catalog \
          that differs from its journal's projection carries a fact the journal does not \
-         describe — a derived artifact holding truth, which PROP-044 \
-         `##FORBID-SECRET-TRUTH` forbids. Fix: regenerate the catalog FROM the journal \
-         (every vibe-index mutation reprojects it wholesale); never edit the journal to match \
-         the catalog — that would launder the secret truth into the truth layer."
+         describe — a derived artifact holding truth \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-044#truth; \
+         fix: regenerate the catalog FROM the journal — every vibe-index mutation reprojects it \
+         wholesale — and never edit the journal to match \
+         the catalog — that would launder the secret truth into the truth layer.)"
     )]
     ProjectionDrift { data_dir: PathBuf, count: usize },
 
