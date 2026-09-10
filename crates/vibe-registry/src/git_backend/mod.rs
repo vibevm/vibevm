@@ -173,8 +173,9 @@ pub trait GitBackend: Send + Sync {
     /// — the caller cleans up.
     fn bootstrap(&self, url: &str, refname: &str, dest: &Path) -> Result<(), GitError>;
 
-    /// Fast-forward `dest` to `origin/<refname>`. Assumes `dest` is a git
-    /// repository previously populated by `bootstrap`.
+    /// Refresh `dest` to `refname`. Tags are peeled to detached commits,
+    /// branches track their `origin` branch, and exact commits stay detached.
+    /// Assumes `dest` is a git repository previously populated by `bootstrap`.
     fn update(&self, dest: &Path, refname: &str) -> Result<(), GitError>;
 
     /// The commit SHA the working tree at `dest` is checked out at —

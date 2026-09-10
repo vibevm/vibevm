@@ -69,6 +69,114 @@ fn clone_then_update_against_bare_origin() {
 
     g.update(&dest, "main").expect("update should succeed");
     assert!(dest.join("new.md").exists());
+    assert_eq!(
+        git_stdout(&dest, &["symbolic-ref", "--short", "HEAD"]),
+        "main"
+    );
+    assert_eq!(
+        git_stdout(
+            &dest,
+            &[
+                "rev-parse",
+                "--abbrev-ref",
+                "--symbolic-full-name",
+                "@{upstream}",
+            ],
+        ),
+        "origin/main"
+    );
+}
+
+#[test]
+fn bootstrap_peels_annotated_and_lightweight_tags_to_detached_commits() {
+    skip_without_git!();
+    let tmp = tempdir().unwrap();
+    let bare = make_bare_origin_with_tags(tmp.path());
+    let git = ShellGit::new();
+
+    for (tag, version) in [("v0.3.0", "0.3.0"), ("v0.2.0", "0.2.0")] {
+        let dest = tmp.path().join(format!("clone-{version}"));
+        git.bootstrap(&bare.to_string_lossy(), tag, &dest).unwrap();
+        let expected = git_stdout(
+            &bare,
+            &["rev-parse", &format!("refs/tags/{tag}^{{commit}}")],
+        );
+        assert_eq!(git.head_commit(&dest).unwrap().unwrap(), expected);
+        assert!(
+            !git_succeeds(&dest, &["symbolic-ref", "-q", "HEAD"]),
+            "tag checkout must leave HEAD detached"
+        );
+        let manifest = fs::read_to_string(dest.join("vibe.toml")).unwrap();
+        assert!(
+            manifest.contains(&format!("version = \"{version}\"")),
+            "tag {tag} checked out unexpected content: {manifest}"
+        );
+    }
+}
+
+#[test]
+fn bootstrap_checks_out_an_exact_commit_without_inventing_a_remote_branch() {
+    skip_without_git!();
+    let tmp = tempdir().unwrap();
+    let bare = make_bare_origin_with_tags(tmp.path());
+    let commit = git_stdout(&bare, &["rev-parse", "refs/tags/v0.2.0^{commit}"]);
+    let dest = tmp.path().join("clone-commit");
+
+    let git = ShellGit::new();
+    git.bootstrap(&bare.to_string_lossy(), &commit, &dest)
+        .unwrap();
+
+    assert_eq!(git.head_commit(&dest).unwrap().unwrap(), commit);
+    assert!(
+        !git_succeeds(&dest, &["symbolic-ref", "-q", "HEAD"]),
+        "exact commit checkout must leave HEAD detached"
+    );
+}
+
+#[test]
+fn update_force_refreshes_a_moved_annotated_tag() {
+    skip_without_git!();
+    let tmp = tempdir().unwrap();
+    let bare = make_bare_origin_with_tags(tmp.path());
+    let src = tmp.path().join("src");
+    let dest = tmp.path().join("clone-moved-tag");
+    let git = ShellGit::new();
+
+    git.bootstrap(&bare.to_string_lossy(), "v0.3.0", &dest)
+        .unwrap();
+    let old_commit = git.head_commit(&dest).unwrap().unwrap();
+
+    fs::write(
+        src.join("vibe.toml"),
+        "[package]\ngroup = \"org.vibevm\"\nname = \"x\"\nkind = \"flow\"\nversion = \"0.3.0\"\nmarker = \"replacement\"\n",
+    )
+    .unwrap();
+    run_or_panic(&src, &["add", "vibe.toml"]);
+    run_or_panic(&src, &["commit", "-m", "replace 0.3.0"]);
+    run_or_panic(
+        &src,
+        &["tag", "--force", "-a", "v0.3.0", "-m", "replacement"],
+    );
+    run_or_panic(
+        &src,
+        &[
+            "push",
+            "--force",
+            bare.to_str().unwrap(),
+            "refs/tags/v0.3.0:refs/tags/v0.3.0",
+        ],
+    );
+    let replacement = git_stdout(&src, &["rev-parse", "refs/tags/v0.3.0^{commit}"]);
+
+    git.update(&dest, "v0.3.0").unwrap();
+
+    assert_ne!(replacement, old_commit);
+    assert_eq!(git.head_commit(&dest).unwrap().unwrap(), replacement);
+    assert!(
+        fs::read_to_string(dest.join("vibe.toml"))
+            .unwrap()
+            .contains("marker = \"replacement\"")
+    );
 }
 
 #[test]
@@ -368,6 +476,30 @@ mod fixtures {
                 String::from_utf8_lossy(&out.stderr)
             );
         }
+    }
+
+    pub(super) fn git_stdout(cwd: &Path, args: &[&str]) -> String {
+        let mut cmd = Command::new("git");
+        apply_common_env(&mut cmd, false);
+        cmd.args(args).current_dir(cwd);
+        let out = cmd.output().expect("failed to spawn git for test query");
+        if !out.status.success() {
+            panic!(
+                "test query `git {}` failed: {}",
+                args.join(" "),
+                String::from_utf8_lossy(&out.stderr)
+            );
+        }
+        String::from_utf8_lossy(&out.stdout).trim().to_string()
+    }
+
+    pub(super) fn git_succeeds(cwd: &Path, args: &[&str]) -> bool {
+        let mut cmd = Command::new("git");
+        apply_common_env(&mut cmd, false);
+        cmd.args(args).current_dir(cwd);
+        cmd.output()
+            .map(|out| out.status.success())
+            .unwrap_or(false)
     }
 
     pub(super) fn git_available() -> bool {

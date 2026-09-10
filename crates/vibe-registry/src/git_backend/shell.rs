@@ -135,55 +135,12 @@ impl ShellGit {
 impl GitBackend for ShellGit {
     fn bootstrap(&self, url: &str, refname: &str, dest: &Path) -> Result<(), GitError> {
         self.preflight()?;
-        let dest_s = dest.to_string_lossy();
-        // `--recurse-submodules` clones and checks out any submodules the
-        // package repo declares in `.gitmodules` (PROP-021 §2.1). Harmless
-        // on a repo with none; the `--` / `--branch` markers stay in place
-        // so `classify_failure`'s url/refname extraction is unaffected.
-        let args = [
-            "clone",
-            "--recurse-submodules",
-            "--branch",
-            refname,
-            "--",
-            url,
-            dest_s.as_ref(),
-        ];
-        self.run(&args, None).map(|_| ())
+        checkout::bootstrap(self, url, refname, dest)
     }
 
     fn update(&self, dest: &Path, refname: &str) -> Result<(), GitError> {
         self.preflight()?;
-        // Fetch from origin, including tags, then hard-reset the working
-        // tree to the fetched tip. `--hard` is intentional: the registry
-        // cache is a read-only mirror and we want it to match upstream
-        // exactly, never a surprise merge commit. `--tags` is required
-        // because the per-package registry shape (PROP-002 §2.5) uses
-        // tags as versions — without it, freshly-published versions are
-        // invisible to a previously-bootstrapped clone.
-        self.run(&["fetch", "--prune", "--tags", "origin"], Some(dest))?;
-        // Try the tag-form first (PROP-002 §2.5: versions are git tags),
-        // then fall back to the branch-form (legacy GitMonorepoRegistry path,
-        // and registry-level metadata refs). `refs/tags/<name>` and
-        // `origin/<name>` are both unambiguous fully-qualified refs;
-        // git resolves them without the heuristic-driven ambiguity of a
-        // bare `<name>`. The fallback chain MUST stay in this order
-        // because a `vN.M.K`-shaped tag is what every per-package repo
-        // ships under M1.1-revision.
-        let tag_ref = format!("refs/tags/{refname}");
-        let reset_ok = self.run(&["reset", "--hard", &tag_ref], Some(dest)).is_ok();
-        if !reset_ok {
-            let branch_ref = format!("origin/{refname}");
-            self.run(&["reset", "--hard", &branch_ref], Some(dest))?;
-        }
-        // The working tree now matches the target ref; re-sync submodules
-        // to the gitlink commits that ref pins (PROP-021 §2.1). `--init`
-        // picks up new submodules; `--recursive` handles nesting and is a no-op otherwise.
-        self.run(
-            &["submodule", "update", "--init", "--recursive"],
-            Some(dest),
-        )
-        .map(|_| ())
+        checkout::update(self, dest, refname)
     }
 
     fn head_commit(&self, dest: &Path) -> Result<Option<String>, GitError> {
@@ -365,6 +322,9 @@ impl GitBackend for ShellGit {
 
 mod tar;
 use tar::extract_single_file_from_tar;
+
+/// Clone/fetch and ref-kind-aware checkout mechanics.
+mod checkout;
 
 /// The read-only checkout queries (`last_commit_iso`, `branch`) — an
 /// `impl ShellGit` block of its own, split out per the file-length budget.
