@@ -15,8 +15,13 @@ use crate::output;
 
 use super::embedded;
 use super::env;
+use super::model::Origin;
 use super::tools;
-use super::{VvmEnv, confirm, make_persister, path_has_dir};
+use super::{VvmEnv, confirm, current_record, make_persister, path_has_dir};
+
+fn needs_build_tools(origin: Option<Origin>) -> bool {
+    origin != Some(Origin::Binary)
+}
 
 /// `vibe self doctor`: probe the required toolchain, the shim dir on PATH,
 /// the active version's binary, and the embedded registry (PROP-030).
@@ -31,12 +36,14 @@ pub(super) fn run_doctor_cmd(
     let shim_dir = store.shim_dir();
     let on_path = path_has_dir(env.path_var.as_deref(), &shim_dir);
     let active = store.active()?;
-    let embedded_registry = active.as_ref().and_then(embedded::embedded_root_for);
+    let current = current_record(&store)?;
+    let build_tools_required = needs_build_tools(current.as_ref().map(|record| record.origin));
+    let embedded_registry = current.as_ref().and_then(embedded::embedded_root_for);
     let active_missing = active
         .as_ref()
         .map(|r| !store.binary_path(&r.version_id(), r.instance).is_file())
         .unwrap_or(false);
-    let problems = tools.iter().filter(|t| !t.ok).count()
+    let problems = usize::from(build_tools_required) * tools.iter().filter(|t| !t.ok).count()
         + usize::from(!on_path)
         + usize::from(active_missing);
 
@@ -47,11 +54,14 @@ pub(super) fn run_doctor_cmd(
             "problems": problems,
             "tools": tools.iter().map(|t| serde_json::json!({
                 "name": t.name, "version": t.version, "ok": t.ok,
+                "required": build_tools_required,
                 "min": t.min_version, "help": t.help_url,
             })).collect::<Vec<_>>(),
             "shim_dir": shim_dir.display().to_string(),
             "shim_dir_on_path": on_path,
             "active": active.as_ref().map(|r| r.version_id().to_string()),
+            "current": current.as_ref().map(|r| r.selector().to_string()),
+            "build_tools_required": build_tools_required,
             "active_binary_ok": !active_missing,
             "embedded_registry": embedded_registry.as_ref().map(|p| p.display().to_string()),
         }));
@@ -59,13 +69,21 @@ pub(super) fn run_doctor_cmd(
 
     ctx.heading("vibe self doctor");
     for t in &tools {
-        match &t.version {
-            Some(v) if t.ok => ctx.step(&format!("ok   {} {}", t.name, v)),
-            Some(v) => ctx.step(&format!(
+        match (&t.version, build_tools_required) {
+            (Some(v), false) => ctx.step(&format!(
+                "info {} {} (optional for binary instance)",
+                t.name, v
+            )),
+            (None, false) => ctx.step(&format!(
+                "skip {} not found (not required by binary instance)",
+                t.name
+            )),
+            (Some(v), true) if t.ok => ctx.step(&format!("ok   {} {}", t.name, v)),
+            (Some(v), true) => ctx.step(&format!(
                 "MISS {} {} (need >= {}) — {}",
                 t.name, v, t.min_version, t.help_url
             )),
-            None => ctx.step(&format!("MISS {} not found — {}", t.name, t.help_url)),
+            (None, true) => ctx.step(&format!("MISS {} not found — {}", t.name, t.help_url)),
         }
     }
     let (linker, lurl) = tools::linker_hint();
@@ -113,4 +131,17 @@ pub(super) fn run_doctor_cmd(
         ctx.summary(&format!("{problems} problem(s) — see above."));
     }
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn binary_instances_do_not_require_a_source_build_toolchain() {
+        assert!(!needs_build_tools(Some(Origin::Binary)));
+        assert!(needs_build_tools(Some(Origin::External)));
+        assert!(needs_build_tools(Some(Origin::Managed)));
+        assert!(needs_build_tools(None));
+    }
 }

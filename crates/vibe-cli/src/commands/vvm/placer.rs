@@ -63,6 +63,13 @@ pub(crate) enum PlaceError {
           fix: report this — the manifest is malformed)"
     )]
     Serialise { detail: String },
+
+    #[error(
+        "refusing to overwrite immutable local instance `{path}` \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-019#instances; \
+          fix: allocate a fresh terminal #N instance)"
+    )]
+    InstanceExists { path: PathBuf },
 }
 
 /// Files at or below this size are compared by content hash (cheap, robust);
@@ -223,6 +230,10 @@ pub(crate) fn place(
     manifest: &Manifest,
     prev: Option<(&Path, &Manifest)>,
 ) -> Result<(), PlaceError> {
+    let final_dir = store.instance_dir(id, instance);
+    if final_dir.exists() {
+        return Err(PlaceError::InstanceExists { path: final_dir });
+    }
     let staging = store.version_id_dir(id).join(".staging");
     if staging.exists() {
         remove_tree(&staging).map_err(|source| PlaceError::Layout {
@@ -270,13 +281,6 @@ pub(crate) fn place(
         source,
     })?;
 
-    let final_dir = store.instance_dir(id, instance);
-    if final_dir.exists() {
-        remove_tree(&final_dir).map_err(|source| PlaceError::Layout {
-            path: final_dir.clone(),
-            source,
-        })?;
-    }
     if let Some(parent) = final_dir.parent() {
         fs::create_dir_all(parent).map_err(|source| PlaceError::Layout {
             path: parent.to_path_buf(),
@@ -323,7 +327,7 @@ mod tests {
         let id = VersionId::new(Kind::Branch, "main");
         let built = tmp.path().join("built-vibe");
         fs::write(&built, b"BIN").unwrap();
-        let dist = vec![(built, BINARY_NAME.to_string())];
+        let dist = vec![(built.clone(), BINARY_NAME.to_string())];
         let manifest = manifest_for(&dist).unwrap();
 
         place(&store, &id, 1, &dist, &manifest, None).unwrap();
@@ -341,6 +345,17 @@ mod tests {
             fs::read(store.instance_dir(&id, 2).join(BINARY_NAME)).unwrap(),
             b"BIN"
         );
+
+        // A reused terminal #N is immutable even if state bookkeeping was
+        // damaged; placement never deletes or rewrites the old payload.
+        fs::write(&built, b"REPLACEMENT").unwrap();
+        let replacement = vec![(built, BINARY_NAME.to_string())];
+        let replacement_manifest = manifest_for(&replacement).unwrap();
+        let error = place(&store, &id, 1, &replacement, &replacement_manifest, None)
+            .unwrap_err()
+            .to_string();
+        assert!(error.contains("immutable local instance"));
+        assert_eq!(fs::read(inst.join(BINARY_NAME)).unwrap(), b"BIN");
     }
 
     /// `is_transient_lock` recognises the Windows `ERROR_ACCESS_DENIED` (5)

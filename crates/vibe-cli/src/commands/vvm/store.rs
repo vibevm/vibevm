@@ -54,6 +54,13 @@ pub enum StoreError {
           fix: report this — the in-memory state is malformed)"
     )]
     Serialise { detail: String },
+
+    #[error(
+        "refusing to rewrite immutable local instance `{selector}` \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-019#layout; \
+          fix: allocate a new terminal #N instance instead)"
+    )]
+    ImmutableInstance { selector: String },
 }
 
 /// The `vibe` binary's file name on this platform.
@@ -131,6 +138,11 @@ impl VersionStore {
         self.data_dir().join("current")
     }
 
+    /// `<root>/vibevm/previous` — the immediate local rollback pointer.
+    pub fn previous_path(&self) -> PathBuf {
+        self.data_dir().join("previous")
+    }
+
     /// Load the inventory, defaulting to empty on a fresh machine.
     pub fn load_state(&self) -> Result<State, StoreError> {
         let path = self.state_path();
@@ -172,18 +184,33 @@ impl VersionStore {
     /// Allocate the next monotonic instance number (PROP-019 §9.4).
     pub fn alloc_instance(&self) -> Result<u64, StoreError> {
         let mut state = self.load_state()?;
-        let n = state.next_instance.max(1);
+        let after_existing = state
+            .installs
+            .iter()
+            .map(|record| record.instance)
+            .max()
+            .unwrap_or(0)
+            .saturating_add(1);
+        let n = state.next_instance.max(after_existing).max(1);
         state.next_instance = n + 1;
         self.save_state(&state)?;
         Ok(n)
     }
 
-    /// Upsert an instance record (replacing any with the same id+instance).
+    /// Record one immutable local instance. Replaying the exact same record is
+    /// idempotent; changing metadata behind an existing terminal `#N` refuses.
     pub fn record_install(&self, record: InstallRecord) -> Result<(), StoreError> {
         let mut state = self.load_state()?;
-        state
-            .installs
-            .retain(|r| !(r.version_id() == record.version_id() && r.instance == record.instance));
+        if let Some(existing) = state.installs.iter().find(|existing| {
+            existing.version_id() == record.version_id() && existing.instance == record.instance
+        }) {
+            if existing == &record {
+                return Ok(());
+            }
+            return Err(StoreError::ImmutableInstance {
+                selector: record.selector().to_string(),
+            });
+        }
         state.installs.push(record);
         self.save_state(&state)
     }
@@ -196,18 +223,6 @@ impl VersionStore {
             .into_iter()
             .filter(|r| &r.version_id() == id)
             .collect())
-    }
-
-    /// Drop every instance record of a version id from the inventory (no-op
-    /// if absent). Does not touch files.
-    pub fn forget_id(&self, id: &VersionId) -> Result<(), StoreError> {
-        let mut state = self.load_state()?;
-        let before = state.installs.len();
-        state.installs.retain(|r| &r.version_id() != id);
-        if state.installs.len() != before {
-            self.save_state(&state)?;
-        }
-        Ok(())
     }
 
     /// Drop a single instance record from the inventory (no-op if absent).
@@ -223,9 +238,8 @@ impl VersionStore {
         Ok(())
     }
 
-    /// The active instance dir as named by the `current` file (PROP-019 §2.5).
-    pub fn read_current(&self) -> Option<PathBuf> {
-        let text = fs::read_to_string(self.current_path()).ok()?;
+    fn read_pointer(&self, path: &Path) -> Option<PathBuf> {
+        let text = fs::read_to_string(path).ok()?;
         let trimmed = text.trim();
         if trimmed.is_empty() {
             None
@@ -234,25 +248,82 @@ impl VersionStore {
         }
     }
 
-    /// Repoint `current` at an instance dir, atomically (PROP-019 §2.5).
-    pub fn write_current(&self, instance_dir: &Path) -> Result<(), StoreError> {
+    /// The active instance dir as named by the `current` file (PROP-019 §2.5).
+    pub fn read_current(&self) -> Option<PathBuf> {
+        self.read_pointer(&self.current_path())
+    }
+
+    /// The instance dir saved for an immediate local rollback.
+    pub fn read_previous(&self) -> Option<PathBuf> {
+        self.read_pointer(&self.previous_path())
+    }
+
+    fn write_pointer(&self, name: &str, instance_dir: &Path) -> Result<(), StoreError> {
         let dir = self.data_dir();
         fs::create_dir_all(&dir).map_err(|source| StoreError::WriteLayout {
             path: dir.clone(),
             source,
         })?;
-        let tmp = dir.join("current.tmp");
+        let path = dir.join(name);
+        let tmp = dir.join(format!("{name}.tmp"));
         fs::write(&tmp, format!("{}\n", instance_dir.display())).map_err(|source| {
             StoreError::WriteLayout {
                 path: tmp.clone(),
                 source,
             }
         })?;
-        fs::rename(&tmp, self.current_path()).map_err(|source| StoreError::WriteLayout {
-            path: self.current_path(),
-            source,
-        })?;
+        fs::rename(&tmp, &path).map_err(|source| StoreError::WriteLayout { path, source })?;
         Ok(())
+    }
+
+    fn clear_pointer(&self, path: &Path) -> Result<(), StoreError> {
+        match fs::remove_file(path) {
+            Ok(()) => Ok(()),
+            Err(source) if source.kind() == io::ErrorKind::NotFound => Ok(()),
+            Err(source) => Err(StoreError::WriteLayout {
+                path: path.to_path_buf(),
+                source,
+            }),
+        }
+    }
+
+    /// Repoint `current` atomically and remember the displaced valid instance
+    /// as the immediate rollback target.
+    pub fn write_current(&self, instance_dir: &Path) -> Result<(), StoreError> {
+        if let Some(old) = self.read_current()
+            && !same_path(&old, instance_dir)
+            && self.record_at(&old)?.is_some()
+        {
+            self.write_pointer("previous", &old)?;
+        }
+        self.write_pointer("current", instance_dir)
+    }
+
+    /// Repair activation around destructive removal without recording the
+    /// soon-to-be-deleted current instance as rollback history.
+    pub fn reset_activation(
+        &self,
+        current: Option<&Path>,
+        previous: Option<&Path>,
+    ) -> Result<(), StoreError> {
+        match current {
+            Some(path) => self.write_pointer("current", path)?,
+            None => self.clear_pointer(&self.current_path())?,
+        }
+        match previous {
+            Some(path) => self.write_pointer("previous", path),
+            None => self.clear_pointer(&self.previous_path()),
+        }
+    }
+
+    /// Find the inventory record whose immutable instance dir is `path`.
+    pub fn record_at(&self, path: &Path) -> Result<Option<InstallRecord>, StoreError> {
+        Ok(self.load_state()?.installs.into_iter().find(|record| {
+            same_path(
+                &self.instance_dir(&record.version_id(), record.instance),
+                path,
+            )
+        }))
     }
 
     /// The installed instance the `current` file points at, if any.
@@ -260,15 +331,16 @@ impl VersionStore {
         let Some(home) = self.read_current() else {
             return Ok(None);
         };
-        for record in self.load_state()?.installs {
-            if same_path(
-                &self.instance_dir(&record.version_id(), record.instance),
-                &home,
-            ) {
-                return Ok(Some(record));
-            }
-        }
-        Ok(None)
+        self.record_at(&home)
+    }
+
+    /// The recorded immediate rollback instance, if the sidecar is present
+    /// and still names an inventoried local payload.
+    pub fn previous(&self) -> Result<Option<InstallRecord>, StoreError> {
+        let Some(home) = self.read_previous() else {
+            return Ok(None);
+        };
+        self.record_at(&home)
     }
 }
 
@@ -341,5 +413,52 @@ mod tests {
         let active = store.active().unwrap().unwrap();
         assert_eq!(active.version_id(), id);
         assert_eq!(active.instance, 1);
+    }
+
+    #[test]
+    fn switching_tracks_an_exact_rollback_instance() {
+        let tmp = tempfile::tempdir().unwrap();
+        let store = VersionStore::new(tmp.path());
+        let id = VersionId::new(Kind::Tag, "1.0.0");
+        for instance in [1, 2] {
+            store
+                .record_install(rec(Kind::Tag, "1.0.0", instance))
+                .unwrap();
+            fs::create_dir_all(store.instance_dir(&id, instance)).unwrap();
+        }
+
+        let first = store.instance_dir(&id, 1);
+        let second = store.instance_dir(&id, 2);
+        store.write_current(&first).unwrap();
+        assert!(store.previous().unwrap().is_none());
+        store.write_current(&second).unwrap();
+        assert_eq!(
+            store.active().unwrap().unwrap().selector().to_string(),
+            "tag:1.0.0#2"
+        );
+        assert_eq!(
+            store.previous().unwrap().unwrap().selector().to_string(),
+            "tag:1.0.0#1"
+        );
+
+        // Activating the saved rollback target swaps the two pointers.
+        store.write_current(&first).unwrap();
+        assert_eq!(store.active().unwrap().unwrap().instance, 1);
+        assert_eq!(store.previous().unwrap().unwrap().instance, 2);
+    }
+
+    #[test]
+    fn an_existing_terminal_instance_number_is_immutable() {
+        let tmp = tempfile::tempdir().unwrap();
+        let store = VersionStore::new(tmp.path());
+        let original = rec(Kind::Branch, "main", 7);
+        store.record_install(original.clone()).unwrap();
+        store.record_install(original).unwrap();
+
+        let mut changed = rec(Kind::Branch, "main", 7);
+        changed.commit = "different".into();
+        let error = store.record_install(changed).unwrap_err().to_string();
+        assert!(error.contains("branch:main#7"));
+        assert_eq!(store.alloc_instance().unwrap(), 8);
     }
 }

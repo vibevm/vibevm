@@ -28,11 +28,15 @@ pub enum VvmSubcommand {
     /// Switch the active version (repoints `VIBEVM_HOME`).
     Use(VvmUseArgs),
 
+    /// Switch back to the previously active immutable local instance.
+    /// Repeating the command toggles between the two instances.
+    Rollback,
+
     /// List installed versions, marking the active one (`*`).
     #[command(visible_alias = "list")]
     Ls,
 
-    /// Print the active version's canonical id (`<kind>:<id>`).
+    /// Print the running/active payload's exact selector and provenance.
     Current,
 
     /// Print the absolute path of the active `vibe` binary.
@@ -126,8 +130,8 @@ pub struct VvmImportArgs {
     #[arg(long = "use")]
     pub activate: bool,
 
-    /// Admit a different payload as a new inspection candidate for this tag;
-    /// the previous immutable instance remains installed.
+    /// Compatibility flag; distinct payloads now always become a fresh
+    /// immutable local #N while the mutable tag keeps the same version label.
     #[arg(long)]
     pub replace_candidate: bool,
 }
@@ -151,7 +155,7 @@ pub struct VvmUpdateArgs {
 
 #[derive(Debug, clap::Args)]
 pub struct VvmUseArgs {
-    /// Version selector: latest | stable | <X.Y.Z> | <commit> | <branch>.
+    /// Version selector, including an exact local `<kind>:<id>#N`.
     pub selector: String,
 
     #[command(flatten)]
@@ -165,7 +169,8 @@ pub struct VvmUseArgs {
 
 #[derive(Debug, clap::Args)]
 pub struct VvmEnvArgs {
-    /// Version to emit the activation line for. Defaults to the active one.
+    /// Version (including exact `<kind>:<id>#N`) to emit an activation line
+    /// for. Defaults to the active one.
     pub selector: Option<String>,
 
     #[command(flatten)]
@@ -213,8 +218,8 @@ pub struct VvmDoctorArgs {
 
 #[derive(Debug, clap::Args)]
 pub struct VvmRemoveArgs {
-    /// Version to remove. Omit to pick interactively; never wipes all
-    /// without `--all`.
+    /// Version to remove. A terminal `#N` removes only that immutable local
+    /// instance. Omit to pick interactively; never wipes all without `--all`.
     pub selector: Option<String>,
 
     #[command(flatten)]
@@ -247,7 +252,7 @@ pub struct VvmGcArgs {
     #[arg(long, conflicts_with = "prune_others")]
     pub build: bool,
 
-    /// Remove all versions except the current, including their sources.
+    /// Remove old instances except the current and its immediate rollback.
     #[arg(long)]
     pub prune_others: bool,
 

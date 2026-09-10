@@ -26,7 +26,7 @@ fn install_root_override_remains_the_install_base() {
     assert_eq!(root, override_base.join("opt"));
 }
 use crate::commands::vvm::model::{
-    InstallRecord, Kind, Origin, Profile, Selector, State, VersionId,
+    InstallRecord, InstanceId, Kind, Origin, Profile, Selector, State, VersionId,
 };
 use specmark::verifies;
 
@@ -74,6 +74,16 @@ fn resolve_installed_picks_the_newest_instance_per_selector() {
             .unwrap()
             .instance,
         5
+    );
+    assert_eq!(
+        resolve_installed(
+            &state,
+            &Selector::Exact(InstanceId::new(VersionId::new(Kind::Branch, "main"), 1)),
+            "branch:main#1",
+        )
+        .unwrap()
+        .instance,
+        1
     );
     // not installed → error.
     assert!(

@@ -47,6 +47,13 @@ pub(crate) enum ResolveError {
     NoSemverTags,
 
     #[error(
+        "exact local instance `{selector}` has no remote ref \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-019#selectors; \
+          fix: omit the terminal #N when resolving a source version)"
+    )]
+    LocalInstanceSelector { selector: String },
+
+    #[error(
         "preparing the managed clone at `{path}` failed: {source} \
          (violates spec://org.vibevm.core/vibevm/common/PROP-019#provenance; \
           fix: ensure the VVM source directory is writable)"
@@ -197,6 +204,9 @@ pub(crate) fn resolve_in_clone(
             };
             Ok(ResolvedVersion { id, commit })
         }
+        model::Selector::Exact(instance) => Err(ResolveError::LocalInstanceSelector {
+            selector: instance.to_string(),
+        }),
         model::Selector::Ambiguous(name) => {
             if let Some(commit) = super::git::verify(repo, &format!("refs/remotes/origin/{name}")) {
                 return Ok(ResolvedVersion {

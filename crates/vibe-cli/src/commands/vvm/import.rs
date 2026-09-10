@@ -36,29 +36,25 @@ pub(crate) fn perform_import(
     ensure_payload_file(req.executable)?;
     let digest = sha256_file(req.executable)?;
     let id = VersionId::new(Kind::Tag, tag);
+    // Kept as a CLI compatibility flag. Remote version labels are mutable;
+    // every distinct payload is now admitted as a fresh immutable local #N.
+    let _ = req.replace_candidate;
 
     let mut existing = store.instances_of(&id)?;
     existing.sort_by_key(|record| record.instance);
-    if let Some(record) = existing
-        .iter()
-        .rev()
-        .find(|record| record.payload_sha256.as_deref() == Some(digest.as_str()))
-    {
+    if let Some(record) = existing.iter().rev().find(|record| {
+        record.payload_sha256.as_deref() == Some(digest.as_str())
+            && record.commit == req.commit.unwrap_or("unknown")
+            && record.profile == req.profile
+    }) {
         let instance_dir = store.instance_dir(&id, record.instance);
         activate_if_requested(store, &instance_dir, req.activate)?;
         ctx.summary(&format!(
-            "{id} payload already imported (instance {}) — reused{}",
-            record.instance,
+            "{} payload already imported — reused{}",
+            record.selector(),
             if req.activate { " and activated" } else { "" }
         ));
         return Ok(());
-    }
-
-    if !existing.is_empty() && !req.replace_candidate {
-        bail!(
-            "refusing to replace immutable release `{id}` with a different SHA256 payload; \
-             pass `--replace-candidate` to preserve the old instance and add a new inspection candidate"
-        );
     }
 
     let instance = store.alloc_instance()?;
@@ -90,7 +86,7 @@ pub(crate) fn perform_import(
     activate_if_requested(store, &instance_dir, req.activate)?;
     ctx.created(&instance_dir.display().to_string());
     ctx.summary(&format!(
-        "imported {id} (instance {instance}){}",
+        "imported {id}#{instance}{}",
         if req.activate { " — active" } else { "" }
     ));
     Ok(())
@@ -164,7 +160,7 @@ mod tests {
     }
 
     #[test]
-    fn import_reuses_same_hash_and_refuses_a_different_immutable_payload() {
+    fn import_reuses_same_hash_and_preserves_each_distinct_mutable_version_payload() {
         let tmp = tempfile::tempdir().unwrap();
         let store = VersionStore::new(tmp.path().join("opt"));
         let payload = tmp.path().join("ready-vibe.exe");
@@ -182,11 +178,19 @@ mod tests {
         assert_eq!(store.load_state().unwrap().next_instance, 2);
 
         fs::write(&payload, b"candidate-two").unwrap();
-        let error = perform_import(&quiet(), &store, &request(&payload, false, false))
-            .unwrap_err()
-            .to_string();
-        assert!(error.contains("refusing to replace immutable release"));
-        assert_eq!(store.instances_of(&id).unwrap().len(), 1);
+        perform_import(&quiet(), &store, &request(&payload, false, false)).unwrap();
+        let records = store.instances_of(&id).unwrap();
+        assert_eq!(records.len(), 2);
+        assert_eq!(records[0].selector().to_string(), "tag:1.2.3#1");
+        assert_eq!(records[1].selector().to_string(), "tag:1.2.3#2");
+        assert_eq!(
+            fs::read(store.binary_path(&id, 1)).unwrap(),
+            b"candidate-one"
+        );
+        assert_eq!(
+            fs::read(store.binary_path(&id, 2)).unwrap(),
+            b"candidate-two"
+        );
     }
 
     #[test]

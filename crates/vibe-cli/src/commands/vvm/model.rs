@@ -24,6 +24,13 @@ pub enum ModelError {
     EmptySelector,
 
     #[error(
+        "invalid exact instance selector `{0}` \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-019#selectors; \
+          fix: use a copyable selector such as `tag:1.2.3#4`, with a positive terminal instance number)"
+    )]
+    InvalidInstanceSelector(String),
+
+    #[error(
         "unknown build profile `{0}` \
          (violates spec://org.vibevm.core/vibevm/common/PROP-019#build; \
           fix: pass `debug` or `release`)"
@@ -93,6 +100,27 @@ impl fmt::Display for VersionId {
     }
 }
 
+/// The immutable identity of one locally installed payload. The version id
+/// may move as its remote tag/branch is republished; the terminal `#N` never
+/// does and is globally unique within a store.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct InstanceId {
+    pub version: VersionId,
+    pub instance: u64,
+}
+
+impl InstanceId {
+    pub fn new(version: VersionId, instance: u64) -> Self {
+        InstanceId { version, instance }
+    }
+}
+
+impl fmt::Display for InstanceId {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}#{}", self.version, self.instance)
+    }
+}
+
 /// The build profile (PROP-019 §2.2).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
@@ -139,6 +167,8 @@ pub enum Selector {
     /// An explicit kind+id (forced `--tag/--branch/--commit`, the canonical
     /// `<kind>:<id>` form, an unambiguous hex commit, or `X.Y.Z`).
     Explicit(VersionId),
+    /// One exact immutable local payload, rendered as `<kind>:<id>#N`.
+    Exact(InstanceId),
     /// A bare name, resolved later by precedence branch > tag > commit.
     Ambiguous(String),
 }
@@ -150,24 +180,57 @@ impl Selector {
         if raw.is_empty() {
             return Err(ModelError::EmptySelector);
         }
+        let full = raw;
+        let (raw, instance) = split_instance_suffix(raw)?;
+        let selector = Self::parse_version(raw, forced);
+        if let Some(instance) = instance {
+            return match selector {
+                Selector::Explicit(version) => {
+                    Ok(Selector::Exact(InstanceId::new(version, instance)))
+                }
+                _ => Err(ModelError::InvalidInstanceSelector(full.to_string())),
+            };
+        }
+        Ok(selector)
+    }
+
+    fn parse_version(raw: &str, forced: Option<Kind>) -> Selector {
         if let Some(kind) = forced {
-            return Ok(Selector::Explicit(VersionId::new(kind, raw)));
+            return Selector::Explicit(VersionId::new(kind, raw));
         }
         // The canonical `<kind>:<id>` form, as `man ls` prints it.
         if let Some((k, rest)) = raw.split_once(':')
             && let Some(kind) = Kind::from_token(k)
             && !rest.is_empty()
         {
-            return Ok(Selector::Explicit(VersionId::new(kind, rest)));
+            return Selector::Explicit(VersionId::new(kind, rest));
         }
-        Ok(match raw {
+        match raw {
             "latest" => Selector::Latest,
             "stable" => Selector::Stable,
             _ if looks_like_commit(raw) => Selector::Explicit(VersionId::new(Kind::Commit, raw)),
             _ if looks_like_semver_tag(raw) => Selector::Explicit(VersionId::new(Kind::Tag, raw)),
             _ => Selector::Ambiguous(raw.to_string()),
-        })
+        }
     }
+}
+
+fn split_instance_suffix(raw: &str) -> Result<(&str, Option<u64>), ModelError> {
+    let Some((version, suffix)) = raw.rsplit_once('#') else {
+        return Ok((raw, None));
+    };
+    if suffix.is_empty() || !suffix.bytes().all(|byte| byte.is_ascii_digit()) {
+        return Ok((raw, None));
+    }
+    let instance = suffix
+        .parse::<u64>()
+        .ok()
+        .filter(|instance| *instance > 0)
+        .ok_or_else(|| ModelError::InvalidInstanceSelector(raw.to_string()))?;
+    if version.is_empty() {
+        return Err(ModelError::InvalidInstanceSelector(raw.to_string()));
+    }
+    Ok((version, Some(instance)))
 }
 
 fn looks_like_commit(s: &str) -> bool {
@@ -233,6 +296,35 @@ impl InstallRecord {
     pub fn version_id(&self) -> VersionId {
         VersionId::new(self.kind, self.id.clone())
     }
+
+    /// The copyable selector for this exact immutable local payload.
+    pub fn selector(&self) -> InstanceId {
+        InstanceId::new(self.version_id(), self.instance)
+    }
+
+    /// A stable human provenance label even for old records that predate a
+    /// source path or for binary imports whose original file may be gone.
+    pub fn source_label(&self) -> &str {
+        match self.origin {
+            Origin::External => self.source_path.as_deref().unwrap_or("external:unknown"),
+            Origin::Managed => "managed-git",
+            Origin::Binary => "local-import",
+        }
+    }
+
+    /// One compact provenance-rich line used by human `ls`/`current` output;
+    /// its first token is always directly copyable back into selector verbs.
+    pub fn human_identity(&self) -> String {
+        format!(
+            "{}  origin={} source={:?} commit={} sha256={} profile={}",
+            self.selector(),
+            self.origin.as_str(),
+            self.source_label(),
+            self.commit,
+            self.payload_sha256.as_deref().unwrap_or("-"),
+            self.profile.as_str(),
+        )
+    }
 }
 
 /// The on-disk inventory at `<root>/vibevm/state.toml` (PROP-019 §2.4).
@@ -294,6 +386,27 @@ mod tests {
     }
 
     #[test]
+    fn legacy_state_without_optional_provenance_fields_remains_readable() {
+        let legacy = r#"
+next_instance = 0
+
+[[install]]
+kind = "tag"
+id = "1.0.0"
+instance = 3
+commit = "abc1234"
+toolchain = "prebuilt"
+profile = "release"
+installed_at = "2026-01-01T00:00:00Z"
+origin = "binary"
+"#;
+        let state: State = toml::from_str(legacy).unwrap();
+        assert_eq!(state.installs[0].selector().to_string(), "tag:1.0.0#3");
+        assert!(state.installs[0].payload_sha256.is_none());
+        assert!(state.installs[0].source_path.is_none());
+    }
+
+    #[test]
     #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#selectors", r = 1)]
     fn selector_parse_classifies_by_shape() {
         use Selector::*;
@@ -319,7 +432,41 @@ mod tests {
             Selector::parse("tag:1.2.3", None).unwrap(),
             Explicit(VersionId::new(Kind::Tag, "1.2.3"))
         );
+        assert_eq!(
+            Selector::parse("tag:1.2.3#7", None).unwrap(),
+            Exact(InstanceId::new(VersionId::new(Kind::Tag, "1.2.3"), 7))
+        );
+        assert_eq!(
+            Selector::parse("1.2.3#7", None).unwrap(),
+            Exact(InstanceId::new(VersionId::new(Kind::Tag, "1.2.3"), 7))
+        );
+        assert!(Selector::parse("latest#7", None).is_err());
+        assert!(Selector::parse("tag:1.2.3#0", None).is_err());
         assert!(Selector::parse("   ", None).is_err());
+    }
+
+    #[test]
+    fn instance_selector_is_terminal_copyable_identity() {
+        let record = InstallRecord {
+            kind: Kind::Tag,
+            id: "1.2.3".into(),
+            instance: 9,
+            commit: "abc".into(),
+            toolchain: "prebuilt".into(),
+            profile: Profile::Release,
+            installed_at: "now".into(),
+            origin: Origin::Binary,
+            source_path: None,
+            payload_sha256: Some("feedface".into()),
+        };
+        assert_eq!(record.selector().to_string(), "tag:1.2.3#9");
+        assert_eq!(record.source_label(), "local-import");
+        let identity = record.human_identity();
+        assert!(identity.starts_with("tag:1.2.3#9 "));
+        assert!(identity.contains("origin=binary"));
+        assert!(identity.contains("source=\"local-import\""));
+        assert!(identity.contains("commit=abc"));
+        assert!(identity.contains("sha256=feedface"));
     }
 
     #[test]

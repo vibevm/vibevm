@@ -28,6 +28,27 @@ pub(crate) enum VvmError {
     NoActiveVersion,
 
     #[error(
+        "no valid rollback instance is recorded \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-019#activation; \
+          fix: activate another installed instance first, or use its exact `<kind>:<id>#N` selector)"
+    )]
+    NoRollback,
+
+    #[error(
+        "an exact local #N selector cannot be installed again \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-019#surface; \
+          fix: install the mutable version id without `#N`, or activate the local payload with `vibe self use <kind>:<id>#N`)"
+    )]
+    ExactInstanceInstall,
+
+    #[error(
+        "binary self-update needs the release-artifact fetcher, which is not installed yet \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-019#surface; \
+          fix: import a downloaded payload with `vibe self import <PATH> --tag <X.Y.Z> --use`, or run `vibe self install latest --mirror <gitverse|github>` on a machine with Rust)"
+    )]
+    BinaryFetchUnavailable,
+
+    #[error(
         "{detail} \
          (violates spec://org.vibevm.core/vibevm/common/PROP-019#surface; \
           fix: install it first — see `vibe self install`)"

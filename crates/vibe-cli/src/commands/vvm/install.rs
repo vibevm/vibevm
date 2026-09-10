@@ -96,11 +96,12 @@ pub(crate) fn perform_install(
     if let Some((prev_dir, prev_man, prev_rec)) = &prev
         && !req.force
         && placer::matches(&manifest, prev_man)
+        && same_provenance(prev_rec, req, &out.toolchain)
     {
         store.write_current(prev_dir)?;
         ctx.summary(&format!(
-            "{id} already up to date (instance {}) — active",
-            prev_rec.instance
+            "{id}#{} already up to date — active",
+            prev_rec.instance,
         ));
     } else {
         let instance = store.alloc_instance()?;
@@ -123,10 +124,18 @@ pub(crate) fn perform_install(
         let inst_dir = store.instance_dir(id, instance);
         store.write_current(&inst_dir)?;
         ctx.created(&inst_dir.display().to_string());
-        ctx.summary(&format!("installed {id} (instance {instance}) — active"));
+        ctx.summary(&format!("installed {id}#{instance} — active"));
     }
 
     Ok(())
+}
+
+fn same_provenance(record: &InstallRecord, req: &InstallRequest<'_>, toolchain: &str) -> bool {
+    record.commit == req.resolved.commit
+        && record.toolchain == toolchain
+        && record.profile == req.profile
+        && record.origin == req.origin
+        && record.source_path == req.source_path
 }
 
 /// The newest existing instance of `id` plus its manifest, for diff-copy.
@@ -229,21 +238,39 @@ mod tests {
         .unwrap();
         assert_eq!(store.instances_of(&resolved.id).unwrap().len(), 1);
 
+        // A mutable remote label at a new commit is a distinct local instance
+        // even when its payload bytes happen to be identical.
+        let moved = ResolvedVersion {
+            id: resolved.id.clone(),
+            commit: "feedbeefcafe".into(),
+        };
+        perform_install(
+            &quiet(),
+            &store,
+            src.path(),
+            &req(&moved, false, "t3"),
+            &FakeBuilder {
+                content: b"v1".to_vec(),
+            },
+        )
+        .unwrap();
+        assert_eq!(store.instances_of(&resolved.id).unwrap().len(), 2);
+
         // Changed bytes → a new instance, current advances.
         perform_install(
             &quiet(),
             &store,
             src.path(),
-            &req(&resolved, false, "t3"),
+            &req(&resolved, false, "t4"),
             &FakeBuilder {
                 content: b"v2".to_vec(),
             },
         )
         .unwrap();
-        assert_eq!(store.instances_of(&resolved.id).unwrap().len(), 2);
+        assert_eq!(store.instances_of(&resolved.id).unwrap().len(), 3);
         assert_eq!(
             store.read_current().unwrap(),
-            store.instance_dir(&resolved.id, 2)
+            store.instance_dir(&resolved.id, 3)
         );
 
         // --force on identical bytes → still a new instance.
@@ -251,12 +278,12 @@ mod tests {
             &quiet(),
             &store,
             src.path(),
-            &req(&resolved, true, "t4"),
+            &req(&resolved, true, "t5"),
             &FakeBuilder {
                 content: b"v2".to_vec(),
             },
         )
         .unwrap();
-        assert_eq!(store.instances_of(&resolved.id).unwrap().len(), 3);
+        assert_eq!(store.instances_of(&resolved.id).unwrap().len(), 4);
     }
 }
