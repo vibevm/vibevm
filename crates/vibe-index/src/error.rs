@@ -55,6 +55,19 @@ pub enum Error {
     )]
     Unprojectable(String),
 
+    /// The disposable catalog rebuilt from the journal differs from the
+    /// catalog on disk. The per-path differences are emitted by the command
+    /// before this summary reaches the process boundary.
+    #[error(
+        "rebuild --check: {count} drift item(s) against the journal under `{data_dir}`. A catalog \
+         that differs from its journal's projection carries a fact the journal does not \
+         describe — a derived artifact holding truth, which PROP-044 \
+         `##FORBID-SECRET-TRUTH` forbids. Fix: regenerate the catalog FROM the journal \
+         (every vibe-index mutation reprojects it wholesale); never edit the journal to match \
+         the catalog — that would launder the secret truth into the truth layer."
+    )]
+    ProjectionDrift { data_dir: PathBuf, count: usize },
+
     /// A structurally bounded JSON-envelope count did not fit the
     /// schema's exact `uint32` domain. Never truncate it.
     #[error(

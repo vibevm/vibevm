@@ -21,6 +21,7 @@ pub mod kinds;
 pub mod list;
 pub mod outdated;
 pub mod purls;
+pub mod rebuild;
 pub mod reindex;
 pub mod remove;
 pub mod rescan_org;
@@ -162,6 +163,9 @@ pub enum Command {
     /// (Re)build the index from authoritative package state.
     Reindex(reindex::Args),
 
+    /// Prove the catalog is the byte-exact projection of its journal.
+    Rebuild(rebuild::Args),
+
     /// Re-enumerate the org unconditionally and refresh the org-image
     /// cache (ignores the cache + validator).
     RescanOrg(rescan_org::Args),
@@ -225,6 +229,7 @@ impl Command {
         match self {
             Command::Init(a) => Some(&a.data_dir),
             Command::Reindex(a) => Some(&a.data_dir),
+            Command::Rebuild(a) => Some(&a.data_dir),
             Command::RescanOrg(a) => Some(&a.data_dir),
             Command::Get(a) => Some(&a.data_dir),
             Command::List(a) => Some(&a.data_dir),
@@ -255,6 +260,7 @@ pub fn dispatch(command: Command, log_level: Option<LogLevel>) -> Result<()> {
     match command {
         Command::Init(args) => init::run(args),
         Command::Reindex(args) => reindex::run(args),
+        Command::Rebuild(args) => rebuild::run(args),
         Command::RescanOrg(args) => rescan_org::run(args),
         Command::Get(args) => get::run(args),
         Command::List(args) => list::run(args),

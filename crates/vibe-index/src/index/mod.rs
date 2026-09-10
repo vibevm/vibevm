@@ -30,9 +30,10 @@ pub use search::{SearchHit, lookup_capability, lookup_purl, search, tokenise};
 ///
 /// **Stated once, here.** Two consumers ask the same question of a
 /// catalog — "is this still the projection of its journal?" —
-/// `cargo xtask rebuild --check` and the golden-corpus test, and both
-/// need this list to know what the comparison owns. It used to be
-/// written out twice, identically, in those two places; a second copy
+/// the shared rebuild checker (surfaced as both `vibe-index rebuild
+/// --check` and `cargo xtask rebuild --check`) and the golden-corpus
+/// test, and both need this list to know what the comparison owns. It
+/// used to be written out twice, identically, in those two places; a second copy
 /// of a normative value diverges exactly where neither reader survives
 /// the divergence, because the one holding the shorter list goes GREEN
 /// over a real drift instead of naming it.

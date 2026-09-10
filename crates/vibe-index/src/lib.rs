@@ -8,7 +8,8 @@
 //! The utility builds and serves an opt-in per-org metadata catalog:
 //! `init` / `reindex` / `add` / `remove` mutate a data directory of
 //! index files; `get` / `list` / `search` / `capabilities` / `purls`
-//! / `outdated` read it; `serve` exposes the same surface over HTTP.
+//! / `outdated` read it; `rebuild --check` proves it from the journal;
+//! `serve` exposes the same surface over HTTP.
 //! Help-text rendering for every subcommand is exercised by
 //! `tests/help_smoke.rs` and is a standing regression invariant.
 //!
@@ -27,6 +28,7 @@ pub mod journal;
 pub mod lock;
 pub mod lockfile;
 pub mod publish;
+pub mod rebuild;
 pub mod scanner;
 pub mod server;
 pub mod types;

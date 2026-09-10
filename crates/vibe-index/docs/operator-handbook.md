@@ -23,10 +23,11 @@ of re-scanning brings back a yank, a rename, a freeze or a tombstone —
 a scan can only re-observe what the sources still say. Lose the catalog
 and you have lost nothing that is not recoverable, but note **how** it
 comes back: any mutation reprojects it wholesale, and
-`cargo xtask rebuild --check <data-dir>` proves a catalog matches its
-journal. There is deliberately **no repair verb** — nothing rewrites a
-damaged catalog in place — so recovery is "make a mutation", not "run
-the fixer". Back up `state/journal/`.
+`vibe-index rebuild <data-dir> --check` proves a catalog matches its
+journal (`cargo xtask rebuild --check <data-dir>` remains a maintainer-side
+compatibility wrapper). There is deliberately **no repair verb** — nothing
+rewrites a damaged catalog in place — so recovery is "make a mutation", not
+"run the fixer". Back up `state/journal/`.
 
 ## Bootstrap from existing clones
 
