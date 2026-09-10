@@ -13,7 +13,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#i
 use std::path::{Path, PathBuf};
 
 use crate::error::{Error, Result};
-use crate::index::{by_name, inverted, primary, repomd};
+use crate::index::{WRITER_DIRS, WRITER_FILES};
 
 /// B-072 — whether two data directories hold the SAME projection,
 /// byte for byte, over exactly the file set [`Index::project`]
@@ -26,18 +26,7 @@ use crate::index::{by_name, inverted, primary, repomd};
 ///
 /// [`Index::project`]: super::Index
 pub(super) fn projection_matches(scratch: &Path, disk: &Path) -> Result<bool> {
-    const FILES: [&str; 4] = [
-        repomd::FILENAME,
-        "hello.json",
-        primary::FILENAME,
-        primary::FILENAME_GZ,
-    ];
-    const DIRS: [&str; 3] = [
-        by_name::DIRNAME,
-        inverted::BY_CAP_DIRNAME,
-        inverted::BY_PURL_DIRNAME,
-    ];
-    for name in FILES {
+    for name in WRITER_FILES {
         let fresh = std::fs::read(scratch.join(name));
         let old = std::fs::read(disk.join(name));
         match (fresh, old) {
@@ -45,7 +34,7 @@ pub(super) fn projection_matches(scratch: &Path, disk: &Path) -> Result<bool> {
             _ => return Ok(false),
         }
     }
-    for name in DIRS {
+    for name in WRITER_DIRS {
         let fresh = rel_files(&scratch.join(name))?;
         let old = rel_files(&disk.join(name))?;
         if fresh != old {
