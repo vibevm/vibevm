@@ -17,6 +17,7 @@ mod error;
 pub use error::{RELEASE_MANIFEST_CONTRACT, ReleaseManifestError};
 
 pub const DISTRIBUTION_MANIFEST_FILENAME: &str = "DISTRIBUTION.json";
+pub const DISTRIBUTION_SOURCE_ARCHIVE_FILENAME: &str = "vibevm-source.zip";
 pub const DISTRIBUTION_SCHEMA_VERSION: u32 = 1;
 pub const DISTRIBUTION_PRODUCT: &str = "vibevm";
 pub const DISTRIBUTION_REPOSITORY: &str = "vibevm/vibevm";
@@ -55,6 +56,18 @@ pub struct DistributionComponent {
     pub digest: String,
 }
 
+/// Non-executable source snapshot shipped alongside the two runtime binaries.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct DistributionSourceArchive {
+    pub path: String,
+    pub size: u64,
+    /// Lowercase `sha256:<64 hex digits>` digest of the archive bytes.
+    pub digest: String,
+    /// Lowercase full Git tree object ID represented by the archive.
+    pub tree_oid: String,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct BundleDistributionManifest {
@@ -68,6 +81,7 @@ pub struct BundleDistributionManifest {
     pub source_commit: String,
     pub target: String,
     pub components: Vec<DistributionComponent>,
+    pub source_archive: DistributionSourceArchive,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -112,6 +126,7 @@ impl BundleDistributionManifest {
         source_commit: impl Into<String>,
         target: impl Into<String>,
         components: Vec<DistributionComponent>,
+        source_archive: DistributionSourceArchive,
     ) -> Result<Self, ReleaseManifestError> {
         let version = version.to_string();
         let manifest = Self {
@@ -123,6 +138,7 @@ impl BundleDistributionManifest {
             source_commit: source_commit.into(),
             target: target.into(),
             components,
+            source_archive,
         };
         manifest.validate()?;
         Ok(manifest)
@@ -138,7 +154,18 @@ impl BundleDistributionManifest {
             &self.source_commit,
         )?;
         validate_target(&self.target)?;
-        validate_components(&self.target, &self.components)
+        validate_components(&self.target, &self.components)?;
+        validate_source_archive(&self.source_archive)?;
+        if self
+            .components
+            .iter()
+            .any(|component| component.path == self.source_archive.path)
+        {
+            return Err(ReleaseManifestError::SourceArchivePath {
+                path: self.source_archive.path.clone(),
+            });
+        }
+        Ok(())
     }
 
     pub fn to_json_bytes(&self) -> Result<Vec<u8>, ReleaseManifestError> {
@@ -297,6 +324,22 @@ impl AggregateDistributionManifest {
                 }
             }
         }
+        let Some(first) = self.platforms.first() else {
+            return Err(ReleaseManifestError::TargetMatrix {
+                expected: SUPPORTED_DISTRIBUTION_TARGETS
+                    .iter()
+                    .map(|target| (*target).to_string())
+                    .collect(),
+                actual: Vec::new(),
+            });
+        };
+        for platform in &self.platforms {
+            if platform.bundle.source_archive != first.bundle.source_archive {
+                return Err(ReleaseManifestError::SourceArchiveMismatch {
+                    target: platform.target.clone(),
+                });
+            }
+        }
         Ok(())
     }
 
@@ -367,16 +410,19 @@ fn validate_identity(
             tag: tag.to_string(),
         });
     }
-    if !matches!(source_commit.len(), 40 | 64)
-        || !source_commit
-            .bytes()
-            .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte))
-    {
+    if !is_lowercase_git_oid(source_commit) {
         return Err(ReleaseManifestError::SourceCommit {
             value: source_commit.to_string(),
         });
     }
     Ok(())
+}
+
+fn is_lowercase_git_oid(value: &str) -> bool {
+    matches!(value.len(), 40 | 64)
+        && value
+            .bytes()
+            .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte))
 }
 
 fn validate_target(target: &str) -> Result<(), ReleaseManifestError> {
@@ -456,6 +502,28 @@ fn validate_asset(asset: &DistributionAsset) -> Result<(), ReleaseManifestError>
         });
     }
     validate_digest("distribution asset", &asset.digest)
+}
+
+fn validate_source_archive(
+    source_archive: &DistributionSourceArchive,
+) -> Result<(), ReleaseManifestError> {
+    if !is_bundle_relative_file(&source_archive.path) {
+        return Err(ReleaseManifestError::SourceArchivePath {
+            path: source_archive.path.clone(),
+        });
+    }
+    if source_archive.size == 0 {
+        return Err(ReleaseManifestError::EmptyArtifact {
+            field: "source archive".to_string(),
+        });
+    }
+    validate_digest("source archive", &source_archive.digest)?;
+    if !is_lowercase_git_oid(&source_archive.tree_oid) {
+        return Err(ReleaseManifestError::SourceArchiveTreeOid {
+            value: source_archive.tree_oid.clone(),
+        });
+    }
+    Ok(())
 }
 
 fn validate_digest(field: &str, digest: &str) -> Result<(), ReleaseManifestError> {

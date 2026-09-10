@@ -107,6 +107,24 @@ pub enum ReleaseManifestError {
         actual: Vec<String>,
     },
     #[error(
+        "source archive has invalid bundle-relative path `{path}` \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-019#instances; \
+         fix: use a non-executable archive path without root or parent traversal)"
+    )]
+    SourceArchivePath { path: String },
+    #[error(
+        "source archive has invalid Git tree object ID `{value}` \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-019#instances; \
+         fix: record the full lowercase 40- or 64-hex tree OID represented by the archive)"
+    )]
+    SourceArchiveTreeOid { value: String },
+    #[error(
+        "platform `{target}` carries a different source archive than the other release bundles \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-019#instances; \
+         fix: build all four platform bundles from the same source archive, tree, digest, and commit)"
+    )]
+    SourceArchiveMismatch { target: String },
+    #[error(
         "distribution asset name must be non-empty and contain no path separators \
          (violates spec://org.vibevm.core/vibevm/common/PROP-019#instances; \
          fix: use the platform bundle's plain release-asset file name)"

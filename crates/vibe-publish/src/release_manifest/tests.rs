@@ -1,8 +1,18 @@
 use super::*;
 
 const SOURCE_COMMIT: &str = "0123456789abcdef0123456789abcdef01234567";
+const SOURCE_TREE: &str = "89abcdef0123456789abcdef0123456789abcdef";
 const DIGEST_A: &str = "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
 const DIGEST_B: &str = "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb";
+
+fn source_archive() -> DistributionSourceArchive {
+    DistributionSourceArchive {
+        path: DISTRIBUTION_SOURCE_ARCHIVE_FILENAME.to_string(),
+        size: 40,
+        digest: DIGEST_B.to_string(),
+        tree_oid: SOURCE_TREE.to_string(),
+    }
+}
 
 fn bundle(target: &str) -> BundleDistributionManifest {
     BundleDistributionManifest {
@@ -27,6 +37,7 @@ fn bundle(target: &str) -> BundleDistributionManifest {
                 digest: DIGEST_A.to_string(),
             },
         ],
+        source_archive: source_archive(),
     }
 }
 
@@ -109,6 +120,25 @@ fn aggregate_rejects_identity_drift_between_platforms() {
 }
 
 #[test]
+fn aggregate_requires_identical_source_archive_across_all_platforms() {
+    for mutation in 0..4 {
+        let mut invalid = aggregate();
+        let archive = &mut invalid.platforms[2].bundle.source_archive;
+        match mutation {
+            0 => archive.path = "other-source.zip".to_string(),
+            1 => archive.size += 1,
+            2 => archive.digest = format!("sha256:{}", "c".repeat(64)),
+            3 => archive.tree_oid = "d".repeat(40),
+            _ => unreachable!(),
+        }
+        assert!(matches!(
+            invalid.validate(),
+            Err(ReleaseManifestError::SourceArchiveMismatch { .. })
+        ));
+    }
+}
+
+#[test]
 fn serialization_is_deterministic_and_canonicalizes_vector_order() {
     let first = aggregate().to_json_bytes().unwrap();
     let mut reordered = aggregate();
@@ -133,6 +163,47 @@ fn strict_json_rejects_unknown_fields() {
     assert!(matches!(
         BundleDistributionManifest::from_json_slice(&bytes),
         Err(ReleaseManifestError::Json(_))
+    ));
+}
+
+#[test]
+fn source_archive_is_required_and_strict() {
+    let valid = bundle(SUPPORTED_DISTRIBUTION_TARGETS[0]);
+    valid.validate().unwrap();
+
+    let mut missing = serde_json::to_value(&valid).unwrap();
+    missing.as_object_mut().unwrap().remove("source_archive");
+    assert!(matches!(
+        BundleDistributionManifest::from_json_slice(&serde_json::to_vec(&missing).unwrap()),
+        Err(ReleaseManifestError::Json(_))
+    ));
+
+    let mut unsafe_path = valid.clone();
+    unsafe_path.source_archive.path = "../source.zip".to_string();
+    assert!(matches!(
+        unsafe_path.validate(),
+        Err(ReleaseManifestError::SourceArchivePath { .. })
+    ));
+
+    let mut empty = valid.clone();
+    empty.source_archive.size = 0;
+    assert!(matches!(
+        empty.validate(),
+        Err(ReleaseManifestError::EmptyArtifact { .. })
+    ));
+
+    let mut bad_digest = valid.clone();
+    bad_digest.source_archive.digest = "sha256:not-a-digest".to_string();
+    assert!(matches!(
+        bad_digest.validate(),
+        Err(ReleaseManifestError::Digest { .. })
+    ));
+
+    let mut bad_tree = valid;
+    bad_tree.source_archive.tree_oid = "A".repeat(40);
+    assert!(matches!(
+        bad_tree.validate(),
+        Err(ReleaseManifestError::SourceArchiveTreeOid { .. })
     ));
 }
 

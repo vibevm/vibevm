@@ -57,8 +57,9 @@ pub use orchestrator::{PublishConfig, PublishOutcome, Publisher};
 pub use post_hook::{HookConfig, HookError, HookReport, fire as fire_index_hook};
 pub use release_manifest::{
     AggregateDistributionManifest, BundleDistributionManifest, DISTRIBUTION_MANIFEST_FILENAME,
-    DISTRIBUTION_PRODUCT, DISTRIBUTION_REPOSITORY, DISTRIBUTION_SCHEMA_VERSION, DistributionAsset,
-    DistributionComponent, DistributionComponentName, PlatformDistributionFragment,
+    DISTRIBUTION_PRODUCT, DISTRIBUTION_REPOSITORY, DISTRIBUTION_SCHEMA_VERSION,
+    DISTRIBUTION_SOURCE_ARCHIVE_FILENAME, DistributionAsset, DistributionComponent,
+    DistributionComponentName, DistributionSourceArchive, PlatformDistributionFragment,
     ReleaseManifestError, SUPPORTED_DISTRIBUTION_TARGETS,
 };
 pub use token::{Token, TokenSource, host_env_var, load_token, load_token_for_host};
