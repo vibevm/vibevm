@@ -425,11 +425,64 @@ fn anonymous_client_discovers_lists_and_downloads_by_exact_asset_id() {
 }
 
 #[test]
+fn authenticated_read_variants_discover_list_and_download_draft_assets() {
+    let mock = MockGithub::spawn();
+    let client = mock.client("draft-token");
+    let mut draft = release(60, "v4.0.0");
+    draft["draft"] = json!(true);
+    mock.json(StatusCode::OK, draft);
+    mock.json(
+        StatusCode::OK,
+        json!([asset(61, "vibe.zip", b"draft bundle", "ignored")]),
+    );
+    mock.bytes(StatusCode::OK, b"draft bundle");
+
+    assert!(
+        client
+            .find_release_authenticated("v4.0.0")
+            .unwrap()
+            .unwrap()
+            .draft
+    );
+    assert_eq!(client.list_assets_authenticated(60).unwrap()[0].id, 61);
+    assert_eq!(
+        client.download_asset_authenticated(61).unwrap(),
+        b"draft bundle"
+    );
+
+    let state = mock.state.lock().unwrap();
+    assert_eq!(state.requests.len(), 3);
+    assert_eq!(
+        state.requests[0].uri,
+        "/api/repos/vibevm/vibe/releases/tags/v4.0.0"
+    );
+    assert_eq!(
+        state.requests[1].uri,
+        "/api/repos/vibevm/vibe/releases/60/assets?per_page=100"
+    );
+    assert_eq!(
+        state.requests[2].uri,
+        "/api/repos/vibevm/vibe/releases/assets/61"
+    );
+    assert_eq!(
+        state.requests[2].headers["accept"],
+        "application/octet-stream"
+    );
+    for request in &state.requests {
+        assert_eq!(request.headers["authorization"], "Bearer draft-token");
+        assert_eq!(request.headers["x-github-api-version"], "2022-11-28");
+    }
+}
+
+#[test]
 fn anonymous_write_refuses_before_sending_a_request() {
     let mock = MockGithub::spawn();
     let client = mock.anonymous_client();
     let request = CreateGithubRelease::for_version(&"1.0.0".parse().unwrap(), "abc123");
     let errors = [
+        client.find_release_authenticated("v1.0.0").unwrap_err(),
+        client.list_assets_authenticated(1).unwrap_err(),
+        client.download_asset_authenticated(1).unwrap_err(),
         client.create_release(&request).unwrap_err(),
         client.upsert_release(&request).unwrap_err(),
         client

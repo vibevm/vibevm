@@ -21,6 +21,7 @@ use crate::github::DEFAULT_GITHUB_API_BASE;
 
 mod model;
 pub use model::*;
+mod read;
 
 const GITHUB_JSON: &str = "application/vnd.github+json";
 const GITHUB_BINARY: &str = "application/octet-stream";
@@ -112,19 +113,6 @@ impl GithubReleaseClient {
         })
     }
 
-    pub fn find_release(&self, tag: &str) -> Result<Option<GithubRelease>, GithubReleaseError> {
-        validate_release_tag(tag, self.token_value())?;
-        let url = self.api_url(&["releases", "tags", tag])?;
-        let response = self.send(
-            self.read_request(Method::GET, url, GITHUB_JSON),
-            "find release",
-        )?;
-        if response.status() == reqwest::StatusCode::NOT_FOUND {
-            return Ok(None);
-        }
-        self.json_response(response, "find release").map(Some)
-    }
-
     pub fn create_release(
         &self,
         request: &CreateGithubRelease,
@@ -146,7 +134,7 @@ impl GithubReleaseClient {
         request: &CreateGithubRelease,
     ) -> Result<GithubRelease, GithubReleaseError> {
         self.require_write("upsert release")?;
-        let Some(existing) = self.find_release(&request.tag_name)? else {
+        let Some(existing) = self.find_release_authenticated(&request.tag_name)? else {
             return self.create_release(request);
         };
         self.update_release(
@@ -180,20 +168,6 @@ impl GithubReleaseClient {
         self.json_response(response, "update release")
     }
 
-    pub fn list_assets(
-        &self,
-        release_id: u64,
-    ) -> Result<Vec<GithubReleaseAsset>, GithubReleaseError> {
-        let id = release_id.to_string();
-        let mut url = self.api_url(&["releases", &id, "assets"])?;
-        url.query_pairs_mut().append_pair("per_page", "100");
-        let response = self.send(
-            self.read_request(Method::GET, url, GITHUB_JSON),
-            "list release assets",
-        )?;
-        self.json_response(response, "list release assets")
-    }
-
     pub fn upload_asset(
         &self,
         release_id: u64,
@@ -218,28 +192,6 @@ impl GithubReleaseClient {
             "upload release asset",
         )?;
         self.json_response(response, "upload release asset")
-    }
-
-    /// Download the current bytes for an exact GitHub release-asset ID.
-    /// Reads never send the optional publish token.
-    pub fn download_asset(&self, asset_id: u64) -> Result<Vec<u8>, GithubReleaseError> {
-        let id = asset_id.to_string();
-        let url = self.api_url(&["releases", "assets", &id])?;
-        let response = self.send(
-            self.read_request(Method::GET, url, GITHUB_BINARY),
-            "download public release asset",
-        )?;
-        let status = response.status();
-        if !status.is_success() {
-            return Err(self.status_error(response, "download public release asset"));
-        }
-        response
-            .bytes()
-            .map(|bytes| bytes.to_vec())
-            .map_err(|error| GithubReleaseError::Transport {
-                operation: "download public release asset",
-                message: self.redact(error.to_string()),
-            })
     }
 
     pub fn delete_asset(&self, asset_id: u64) -> Result<(), GithubReleaseError> {
@@ -302,7 +254,7 @@ impl GithubReleaseClient {
         self.require_write("replace release asset")?;
         validate_asset_name(name, self.token_value())?;
         let old_assets = self
-            .list_assets(release_id)?
+            .list_assets_authenticated(release_id)?
             .into_iter()
             .filter(|asset| asset.name == name)
             .collect::<Vec<_>>();
@@ -395,6 +347,22 @@ impl GithubReleaseClient {
             .header(ACCEPT, accept)
             .header("X-GitHub-Api-Version", GITHUB_API_VERSION)
             .header(USER_AGENT, user_agent())
+    }
+
+    fn authenticated_read_request(
+        &self,
+        method: Method,
+        url: reqwest::Url,
+        accept: &'static str,
+        operation: &'static str,
+    ) -> Result<RequestBuilder, GithubReleaseError> {
+        let token = self
+            .token
+            .as_ref()
+            .ok_or(GithubReleaseError::AuthenticationRequired { operation })?;
+        Ok(self
+            .read_request(method, url, accept)
+            .header(AUTHORIZATION, format!("Bearer {}", token.value())))
     }
 
     fn write_request(
