@@ -250,8 +250,73 @@ version = "0.0.1"
     assert_eq!(payload["dry_run"], true);
     assert_eq!(
         payload["repo_url"],
-        "ssh://git@invalid.example/never/created.git"
+        "ssh://***@invalid.example/never/created.git"
     );
+}
+
+#[test]
+fn publish_direct_repo_url_redacts_credentials_from_text_and_json() {
+    let project = tempfile::tempdir().unwrap();
+    init_project(project.path());
+
+    let pkg_dir = tempfile::tempdir().unwrap();
+    fs::write(
+        pkg_dir.path().join("vibe.toml"),
+        r#"[package]
+group = "org.vibevm"
+name = "tiny"
+kind = "flow"
+version = "0.0.1"
+"#,
+    )
+    .unwrap();
+
+    let secret = "publish-secret-must-not-escape";
+    let credentialed_url = format!("https://publisher:{secret}@invalid.example/never/created.git");
+    for json in [false, true] {
+        let mut command = vibe();
+        if json {
+            command.arg("--json");
+        }
+        let out = command
+            .arg("registry")
+            .arg("publish")
+            .arg(pkg_dir.path())
+            .arg("--repo-url")
+            .arg(&credentialed_url)
+            .arg("--dry-run")
+            .arg("--path")
+            .arg(project.path())
+            .output()
+            .unwrap();
+        assert!(
+            out.status.success(),
+            "credentialed dry-run should succeed: {}",
+            String::from_utf8_lossy(&out.stderr)
+        );
+        let stdout = String::from_utf8_lossy(&out.stdout);
+        let stderr = String::from_utf8_lossy(&out.stderr);
+        assert!(
+            !stdout.contains(secret),
+            "secret leaked to stdout: {stdout}"
+        );
+        assert!(
+            !stderr.contains(secret),
+            "secret leaked to stderr: {stderr}"
+        );
+        assert!(
+            stdout.contains("https://***@invalid.example/never/created.git"),
+            "redacted URL missing from output: {stdout}"
+        );
+        if json {
+            let payload: serde_json::Value =
+                serde_json::from_slice(&out.stdout).expect("valid JSON");
+            assert_eq!(
+                payload["repo_url"],
+                "https://***@invalid.example/never/created.git"
+            );
+        }
+    }
 }
 
 #[test]

@@ -102,13 +102,12 @@ pub fn extract_org_segment(org_url: &str) -> Result<String, PublishError> {
 /// ```
 /// use vibe_publish::PublishError;
 ///
-/// let err = PublishError::TagCollision {
+/// let err = PublishError::ConcurrentUpdate {
 ///     repo: "vibespecs/org.vibevm.wal".to_string(),
-///     tag: "v0.1.0".to_string(),
 /// };
 /// let rendered = err.to_string();
-/// assert!(rendered.contains("tag `v0.1.0` already exists"));
-/// assert!(rendered.contains("does not force-push tags"));
+/// assert!(rendered.contains("changed concurrently"));
+/// assert!(rendered.contains("neither `main` nor the version tag was changed"));
 /// ```
 #[derive(Debug, Error)]
 #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#publish")]
@@ -155,12 +154,13 @@ pub enum PublishError {
     OrgNotFound { host: String, org: String },
 
     #[error(
-        "publish refused: tag `{tag}` already exists on `{repo}`. \
-         Pick a new version — `vibe registry publish` does not force-push tags. \
+        "publish refused: `{repo}` changed concurrently after its `main` and version-tag refs \
+         were observed. The guarded publish stopped; neither `main` nor the version tag was changed \
+         by this invocation. Re-run `vibe registry publish` against the new head. \
          (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#publish; \
-         fix: bump `[package].version` in `vibe.toml` and publish again)"
+         fix: inspect the concurrent publish if needed, then retry)"
     )]
-    TagCollision { repo: String, tag: String },
+    ConcurrentUpdate { repo: String },
 
     #[error(
         "publish refused: no push access to `{repo}`. Ask a maintainer of \

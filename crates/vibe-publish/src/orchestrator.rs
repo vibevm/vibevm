@@ -146,10 +146,11 @@ impl<'c, C: RepoCreator + ?Sized> Publisher<'c, C> {
     ///   dance is skipped entirely (no org extraction, no token); else
     ///   the org is extracted from `config.org_url`, the repo is probed
     ///   and created if absent, and the credentialed push URL is built.
-    /// - **Idempotence boundary.** A fresh commit + tag is always pushed;
-    ///   a pre-existing tag is a [`PublishError::TagCollision`] (publish
-    ///   never force-pushes tags). `config.dry_run` plans without any
-    ///   network or git side effect.
+    /// - **Mutable versions.** Publishing layers an exact payload-tree
+    ///   commit on the current `main` and moves the selected version tag.
+    ///   Both refs update atomically under exact leases; a concurrent move
+    ///   is [`PublishError::ConcurrentUpdate`]. An identical retry is a
+    ///   no-op. `config.dry_run` plans without any network or git side effect.
     /// - **Errors.** Every failure is a typed [`PublishError`] naming the
     ///   violated expectation and a fix surface — scope / auth / host
     ///   problems before any push, git / IO problems during it; the
@@ -209,7 +210,10 @@ impl<'c, C: RepoCreator + ?Sized> Publisher<'c, C> {
                 name,
                 version,
                 repo_name,
-                repo_url: direct_url.to_string(),
+                // `--repo-url` may itself carry HTTPS user-info. It is
+                // required for git, but never belongs in a user-facing
+                // outcome (plain output and JSON both render this field).
+                repo_url: git_publish::redact_credentials(direct_url),
                 tag,
                 created_repo: false,
                 host: self.creator.host_name().to_string(),
@@ -273,7 +277,7 @@ impl<'c, C: RepoCreator + ?Sized> Publisher<'c, C> {
         // Step 4: push contents and tag (skipped on dry-run).
         // Push URL is constructed by the host adapter — SSH-auth hosts
         // return the SSH form; HTTPS-token-auth hosts inject credentials
-        // for this single push only. Token never appears in stdout /
+        // for this one publish's git subprocesses only. Token never appears in stdout /
         // stderr / log lines; modern git redacts URL passwords in its
         // own diagnostics. The push URL MUST NOT appear in any
         // vibevm-produced output (the user-facing PublishOutcome.repo_url

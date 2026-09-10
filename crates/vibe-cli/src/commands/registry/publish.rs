@@ -286,6 +286,7 @@ fn run_publish_direct(
     if url.is_empty() {
         bail!("--repo-url must be a non-empty git URL");
     }
+    let display_url = vibe_publish::git_publish::redact_credentials(url);
 
     let source_dir = args
         .source
@@ -296,7 +297,7 @@ fn run_publish_direct(
     ctx.heading(&format!(
         "Publishing {} → direct git URL `{}`{}",
         source_dir.display(),
-        url,
+        display_url,
         if args.dry_run { " [dry-run]" } else { "" },
     ));
     ctx.step("No host API in play — pushing with local git credentials.");

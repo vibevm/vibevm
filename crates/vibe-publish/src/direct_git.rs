@@ -23,7 +23,10 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#publish");
 
-use crate::{CreateOpts, PublishError, RepoCreator, RepoInfo, ValidatedOrg, extract_host_segment};
+use crate::{
+    CreateOpts, PublishError, RepoCreator, RepoInfo, ValidatedOrg, extract_host_segment,
+    git_publish,
+};
 
 /// Direct-push adapter. Constructed from a single repo URL; carries
 /// no token, no API client, no org scoping. Every [`RepoCreator`]
@@ -53,8 +56,8 @@ impl DirectRepoCreator {
         }
     }
 
-    /// The configured URL. Exposed so the CLI can echo it in the
-    /// outcome envelope.
+    /// The configured push URL. Callers that render it must first apply
+    /// [`crate::git_publish::redact_credentials`].
     pub fn repo_url(&self) -> &str {
         &self.repo_url
     }
@@ -110,7 +113,7 @@ impl RepoCreator for DirectRepoCreator {
             "internal error: DirectRepoCreator::create_repo invoked for `{}` — \
              direct-push adapter does not provision repositories. The publish \
              pipeline should have short-circuited at `direct_repo_url`.",
-            self.repo_url
+            git_publish::redact_credentials(&self.repo_url)
         )))
     }
 

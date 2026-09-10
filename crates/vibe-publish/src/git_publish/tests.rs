@@ -1,5 +1,6 @@
 use super::*;
 use std::fs;
+use std::path::Path;
 use tempfile::tempdir;
 
 fn git_available() -> bool {
@@ -8,6 +9,47 @@ fn git_available() -> bool {
         .output()
         .map(|o| o.status.success())
         .unwrap_or(false)
+}
+
+fn run_git(cwd: &Path, args: &[&str]) -> Output {
+    let output = Command::new("git")
+        .args(args)
+        .current_dir(cwd)
+        .env("LC_ALL", "C")
+        .env("LANG", "C")
+        .output()
+        .unwrap();
+    assert!(
+        output.status.success(),
+        "git {} failed in {}\nstdout:\n{}\nstderr:\n{}",
+        args.join(" "),
+        cwd.display(),
+        String::from_utf8_lossy(&output.stdout),
+        String::from_utf8_lossy(&output.stderr),
+    );
+    output
+}
+
+fn init_bare(root: &Path) -> std::path::PathBuf {
+    let bare = root.join("origin.git");
+    run_git(root, &["init", "--bare", bare.to_str().unwrap()]);
+    bare
+}
+
+fn write_package(source: &Path, protocol: &str) {
+    fs::write(
+        source.join("vibe.toml"),
+        "[package]\ngroup = \"org.vibevm\"\nname = \"wal\"\nkind = \"flow\"\nversion = \"0.1.0\"\n",
+    )
+    .unwrap();
+    fs::create_dir_all(source.join("spec")).unwrap();
+    fs::write(source.join("spec/PROTOCOL.md"), protocol).unwrap();
+}
+
+fn git_rev_parse(repo: &Path, reference: &str) -> String {
+    String::from_utf8_lossy(&run_git(repo, &["rev-parse", reference]).stdout)
+        .trim()
+        .to_string()
 }
 
 #[test]
@@ -85,13 +127,232 @@ fn push_release_against_local_bare_origin() {
     );
 }
 
-// Tag-collision classification is exercised via the substring
-// matcher in `push_with_classification`. End-to-end testing of the
-// collision case is awkward because publishing two distinct package
-// trees to the same bare origin fails on the `main` branch
-// non-fast-forward before reaching the tag push. The collision
-// path is best validated against a real registry; that's part of
-// the live-migration smoke-test in the next commit.
+#[test]
+fn republish_moves_same_version_tag_preserves_history_and_removes_stale_files() {
+    if !git_available() {
+        eprintln!("skipping: git not on PATH");
+        return;
+    }
+
+    let outer = tempdir().unwrap();
+    let bare = init_bare(outer.path());
+    let src = tempdir().unwrap();
+    write_package(src.path(), "first\n");
+    fs::write(src.path().join("stale.txt"), "remove me\n").unwrap();
+
+    let url = bare.to_string_lossy().into_owned();
+    let version = semver::Version::parse("0.1.0").unwrap();
+    push_release(src.path(), &url, "v0.1.0", "wal", &version).unwrap();
+    let first_main = git_rev_parse(&bare, "refs/heads/main");
+    run_git(&bare, &["tag", "v0.0.9", &first_main]);
+
+    fs::remove_file(src.path().join("stale.txt")).unwrap();
+    fs::write(src.path().join("spec/PROTOCOL.md"), "second\n").unwrap();
+    push_release(src.path(), &url, "v0.1.0", "wal", &version).unwrap();
+
+    let second_main = git_rev_parse(&bare, "refs/heads/main");
+    assert_ne!(
+        second_main, first_main,
+        "changed payload needs a new commit"
+    );
+    assert_eq!(
+        git_rev_parse(&bare, "refs/heads/main^"),
+        first_main,
+        "republish must append to main history"
+    );
+    assert_eq!(
+        git_rev_parse(&bare, "refs/tags/v0.1.0^{}"),
+        second_main,
+        "same-version tag must select the replacement commit"
+    );
+    assert_eq!(
+        git_rev_parse(&bare, "refs/tags/v0.0.9"),
+        first_main,
+        "unrelated older version tags must not move"
+    );
+
+    let tree = String::from_utf8_lossy(
+        &run_git(&bare, &["ls-tree", "-r", "--name-only", "refs/heads/main"]).stdout,
+    )
+    .lines()
+    .map(str::to_owned)
+    .collect::<Vec<_>>();
+    assert_eq!(tree, vec!["spec/PROTOCOL.md", "vibe.toml"]);
+    assert_eq!(
+        String::from_utf8_lossy(
+            &run_git(&bare, &["show", "refs/heads/main:spec/PROTOCOL.md"]).stdout
+        ),
+        "second\n"
+    );
+}
+
+#[test]
+fn identical_republish_is_a_ref_and_history_noop() {
+    if !git_available() {
+        eprintln!("skipping: git not on PATH");
+        return;
+    }
+
+    let outer = tempdir().unwrap();
+    let bare = init_bare(outer.path());
+    let src = tempdir().unwrap();
+    write_package(src.path(), "same\n");
+    let url = bare.to_string_lossy().into_owned();
+    let version = semver::Version::parse("0.1.0").unwrap();
+
+    push_release(src.path(), &url, "v0.1.0", "wal", &version).unwrap();
+    let main_before = git_rev_parse(&bare, "refs/heads/main");
+    let tag_before = git_rev_parse(&bare, "refs/tags/v0.1.0");
+    push_release(src.path(), &url, "v0.1.0", "wal", &version).unwrap();
+
+    assert_eq!(git_rev_parse(&bare, "refs/heads/main"), main_before);
+    assert_eq!(git_rev_parse(&bare, "refs/tags/v0.1.0"), tag_before);
+    let count = String::from_utf8_lossy(
+        &run_git(&bare, &["rev-list", "--count", "refs/heads/main"]).stdout,
+    )
+    .trim()
+    .parse::<usize>()
+    .unwrap();
+    assert_eq!(count, 1, "identical retry must not create another commit");
+}
+
+#[test]
+fn concurrent_main_move_rejects_both_release_refs_atomically() {
+    if !git_available() {
+        eprintln!("skipping: git not on PATH");
+        return;
+    }
+
+    let outer = tempdir().unwrap();
+    let bare = init_bare(outer.path());
+    let src = tempdir().unwrap();
+    write_package(src.path(), "first\n");
+    let url = bare.to_string_lossy().into_owned();
+    let version = semver::Version::parse("0.1.0").unwrap();
+    push_release(src.path(), &url, "v0.1.0", "wal", &version).unwrap();
+    let original_tag = git_rev_parse(&bare, "refs/tags/v0.1.0");
+
+    fs::write(src.path().join("spec/PROTOCOL.md"), "publisher change\n").unwrap();
+    let competitor_parent = outer.path().to_path_buf();
+    let competitor_root = outer.path().join("competitor");
+    let bare_for_hook = bare.clone();
+    let err = push_release_inner(src.path(), &url, "v0.1.0", "wal", &version, move |_| {
+        run_git(
+            &competitor_parent,
+            &[
+                "clone",
+                "--branch=main",
+                bare_for_hook.to_str().unwrap(),
+                competitor_root.to_str().unwrap(),
+            ],
+        );
+        run_git(
+            &competitor_root,
+            &["config", "user.email", "competitor@example.com"],
+        );
+        run_git(
+            &competitor_root,
+            &["config", "user.name", "Concurrent publisher"],
+        );
+        fs::write(competitor_root.join("competitor.txt"), "won\n").unwrap();
+        run_git(&competitor_root, &["add", "-A"]);
+        run_git(&competitor_root, &["commit", "-m", "concurrent publish"]);
+        run_git(&competitor_root, &["push", "origin", "main"]);
+        Ok(())
+    })
+    .expect_err("stale leases must reject the publish");
+
+    assert!(
+        matches!(&err, PublishError::ConcurrentUpdate { .. }),
+        "expected concurrency classification, got: {err:?}"
+    );
+    assert_eq!(
+        git_rev_parse(&bare, "refs/tags/v0.1.0"),
+        original_tag,
+        "atomic rejection must leave the version tag untouched"
+    );
+    assert_eq!(
+        String::from_utf8_lossy(
+            &run_git(&bare, &["show", "refs/heads/main:competitor.txt"]).stdout
+        ),
+        "won\n",
+        "the competing main update must remain the only winning update"
+    );
+}
+
+#[test]
+fn concurrent_tag_move_rejects_main_and_tag_atomically() {
+    if !git_available() {
+        eprintln!("skipping: git not on PATH");
+        return;
+    }
+
+    let outer = tempdir().unwrap();
+    let bare = init_bare(outer.path());
+    let src = tempdir().unwrap();
+    write_package(src.path(), "first\n");
+    let url = bare.to_string_lossy().into_owned();
+    let version = semver::Version::parse("0.1.0").unwrap();
+    push_release(src.path(), &url, "v0.1.0", "wal", &version).unwrap();
+    let original_main = git_rev_parse(&bare, "refs/heads/main");
+
+    fs::write(src.path().join("spec/PROTOCOL.md"), "publisher change\n").unwrap();
+    let bare_for_hook = bare.clone();
+    let err = push_release_inner(src.path(), &url, "v0.1.0", "wal", &version, move |_| {
+        // Replace the annotated tag with a lightweight tag at the
+        // same commit. Its ref value still changed, so the exact tag
+        // lease must reject this publisher's otherwise valid update.
+        run_git(&bare_for_hook, &["tag", "-f", "v0.1.0", "refs/heads/main"]);
+        Ok(())
+    })
+    .expect_err("stale tag lease must reject the publish");
+
+    assert!(
+        matches!(&err, PublishError::ConcurrentUpdate { .. }),
+        "expected concurrency classification, got: {err:?}"
+    );
+    assert_eq!(
+        git_rev_parse(&bare, "refs/heads/main"),
+        original_main,
+        "atomic rejection must leave main untouched"
+    );
+    assert_eq!(
+        git_rev_parse(&bare, "refs/tags/v0.1.0"),
+        original_main,
+        "the concurrent tag value must remain the winner"
+    );
+}
+
+#[test]
+fn release_publish_never_persists_target_url_in_git_config() {
+    if !git_available() {
+        eprintln!("skipping: git not on PATH");
+        return;
+    }
+
+    let outer = tempdir().unwrap();
+    let bare = init_bare(outer.path());
+    let src = tempdir().unwrap();
+    write_package(src.path(), "payload\n");
+    let url = bare.to_string_lossy().into_owned();
+    let inspected_url = url.clone();
+    let version = semver::Version::parse("0.1.0").unwrap();
+
+    push_release_inner(
+        src.path(),
+        &url,
+        "v0.1.0",
+        "wal",
+        &version,
+        move |staging| {
+            let config = fs::read_to_string(staging.join(".git/config")).unwrap();
+            assert!(!config.contains(&inspected_url));
+            assert!(!config.contains("[remote \"origin\"]"));
+            Ok(())
+        },
+    )
+    .unwrap();
+}
 
 #[test]
 fn redact_credentials_hides_user_info() {
@@ -141,6 +402,31 @@ fn redact_credentials_within_message() {
     assert!(!scrubbed.contains("secret"));
     assert!(scrubbed.contains("https://***@github.com/foo/bar.git"));
     assert!(scrubbed.contains("failed: oops"));
+}
+
+#[test]
+fn redact_credentials_preserves_unicode_around_url() {
+    let msg = "публикация https://user:secret@example.org/пакет завершена";
+    assert_eq!(
+        redact_credentials(msg),
+        "публикация https://***@example.org/пакет завершена"
+    );
+}
+
+#[test]
+fn concurrency_classifier_does_not_hide_host_policy_or_atomic_capability_errors() {
+    assert!(is_concurrent_ref_rejection(
+        "! [rejected] main -> main (stale info)"
+    ));
+    assert!(!is_concurrent_ref_rejection(
+        "fatal: the receiving end does not support --atomic push"
+    ));
+    assert!(!is_concurrent_ref_rejection(
+        "remote: protected tag update failed; atomic push failed"
+    ));
+    assert!(!is_concurrent_ref_rejection(
+        "remote rejected: cannot lock ref 'refs/tags/v1.0.0'"
+    ));
 }
 
 #[test]

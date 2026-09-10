@@ -29,12 +29,13 @@
 //! Push authentication. GitHub does not let an HTTP API token push by
 //! itself; the standard pattern is to embed the token in the HTTPS
 //! clone URL as `https://x-access-token:<TOKEN>@github.com/{org}/{repo}.git`
-//! for the duration of one `git remote add` / `git push` invocation.
+//! for the duration of the `git ls-remote` / `git fetch` / `git push`
+//! invocations that prepare one publish.
 //! Modern git (≥ 2.31) redacts URL passwords in its own log output to
 //! `***`, so the embedded form is safe in stderr — but the URL must
 //! never appear in any vibevm-produced output anyway. [`push_url`]
 //! constructs the credentialed URL on demand; the value is consumed
-//! immediately by the publisher and never persisted.
+//! immediately by the publisher, which never writes it to `.git/config`.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#publish");
 
@@ -159,8 +160,8 @@ impl RepoCreator for GithubRepoCreator {
         // exchange and then redacts the password in any diagnostic
         // output (modern git ≥ 2.31). The URL is never written to any
         // vibevm-produced surface — Publisher::publish hands it to
-        // `git_publish::push_release` as an argv parameter and never
-        // reads it back into stdout / stderr / logs.
+        // `git_publish::push_release` as an argv parameter, never writes
+        // it to `.git/config`, and never reads it back into output/logs.
         format!(
             "https://x-access-token:{}@{}/{}/{}.git",
             self.token.value(),
