@@ -49,7 +49,7 @@ pub(super) fn probe_candidate(
     candidate: &str,
     auth: &IndexAuth,
 ) -> HandshakeProbe {
-    let url = format!("{candidate}/hello.json");
+    let url = hello_url(candidate);
     let resp = match client.get(&url).send() {
         Ok(resp) if resp.status().is_success() => resp,
         Ok(resp) => {
@@ -103,6 +103,10 @@ pub(super) fn probe_candidate(
         }
     };
     interpret(&url, candidate, &handshake)
+}
+
+pub(super) fn hello_url(candidate: &str) -> String {
+    format!("{candidate}/hello.json")
 }
 
 /// Match a parsed handshake against what this build reads.

@@ -61,14 +61,18 @@ pub enum IndexUrlSource {
     Env,
     /// The `[[registry]].index_url` manifest key — a project property.
     ManifestKey,
-    /// `<registry-url>/index` — the unset-rung guess the spec
-    /// prescribes trying (`##INDEX-URL-DEFAULT`).
+    /// The unset-rung guess: a canonical public GitHub organisation
+    /// maps to its raw `index` repository at the registry ref; every
+    /// other registry keeps the `<registry-url>/index` default.
     Default,
 }
 
 /// The index-location ladder for one `[[registry]]` (PROP-005 §2.2
 /// `#form-factor`): env `VIBEVM_INDEX_URL_<REGISTRY>` → the
-/// `index_url` manifest key → the default `<registry-url>/index`.
+/// `index_url` manifest key → a host-aware default. A canonical
+/// public `https://github.com/<org>` registry maps to
+/// `https://raw.githubusercontent.com/<org>/index/<registry-ref>`;
+/// other registries retain the default `<registry-url>/index`.
 /// The env var is an operator's per-run re-point and wins; the key is
 /// a project property; the default is what the resolver tries when
 /// neither is set. The exact value `none` on either explicit step
@@ -100,9 +104,72 @@ fn resolve_index_url_with(env: Option<String>, registry: &RegistrySection) -> In
         return resolved;
     }
     IndexUrlResolution::Url {
-        base: format!("{}/index", registry.url.trim_end_matches('/')),
+        base: github_raw_index_url(&registry.url, &registry.r#ref)
+            .unwrap_or_else(|| format!("{}/index", registry.url.trim_end_matches('/'))),
         source: IndexUrlSource::Default,
     }
+}
+
+/// Translate only the canonical public GitHub organisation form. The
+/// exact-host and one-component checks deliberately reject lookalikes,
+/// userinfo, queries and repository/nested paths: those keep the generic
+/// default instead of being silently reinterpreted as another origin.
+fn github_raw_index_url(registry_url: &str, registry_ref: &str) -> Option<String> {
+    let parsed = reqwest::Url::parse(registry_url).ok()?;
+    if parsed.scheme() != "https"
+        || parsed.host_str() != Some("github.com")
+        || !parsed.username().is_empty()
+        || parsed.password().is_some()
+        || parsed.port().is_some()
+        || parsed.query().is_some()
+        || parsed.fragment().is_some()
+    {
+        return None;
+    }
+
+    let owner = parsed.path().strip_prefix('/')?;
+    let owner = owner.strip_suffix('/').unwrap_or(owner);
+    if owner.is_empty() || owner.contains('/') {
+        return None;
+    }
+    let owner = owner.strip_suffix(".git").unwrap_or(owner);
+    if !valid_github_owner(owner) || !valid_raw_ref(registry_ref) {
+        return None;
+    }
+
+    Some(format!(
+        "https://raw.githubusercontent.com/{owner}/index/{registry_ref}"
+    ))
+}
+
+fn valid_github_owner(owner: &str) -> bool {
+    owner
+        .bytes()
+        .all(|byte| byte.is_ascii_alphanumeric() || byte == b'-')
+        && owner
+            .as_bytes()
+            .first()
+            .is_some_and(u8::is_ascii_alphanumeric)
+        && owner
+            .as_bytes()
+            .last()
+            .is_some_and(u8::is_ascii_alphanumeric)
+}
+
+/// Keep the raw-base rewrite conservative while supporting ordinary branch,
+/// tag and fully qualified ref spellings. Each slash-delimited component must
+/// already be URL-path-safe; unusual-but-valid git refs stay on the generic
+/// default rather than being interpolated into a different URL structure.
+fn valid_raw_ref(registry_ref: &str) -> bool {
+    !registry_ref.is_empty()
+        && registry_ref.split('/').all(|component| {
+            !component.is_empty()
+                && component != "."
+                && component != ".."
+                && component
+                    .bytes()
+                    .all(|byte| byte.is_ascii_alphanumeric() || matches!(byte, b'-' | b'_' | b'.'))
+        })
 }
 
 /// One explicit rung of the ladder: an absent or whitespace-only value
@@ -205,25 +272,87 @@ mod tests {
         "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#form-factor",
         r = 1
     )]
-    fn ladder_defaults_to_registry_url_slash_index() {
+    fn ladder_github_org_defaults_to_raw_index_at_registry_ref() {
         let reg = ladder_section("r", "https://github.com/vibespecs", None);
         let got = resolve_index_url_with(None, &reg);
         assert_eq!(
             got,
             IndexUrlResolution::Url {
-                base: "https://github.com/vibespecs/index".into(),
+                base: "https://raw.githubusercontent.com/vibespecs/index/main".into(),
                 source: IndexUrlSource::Default,
             }
         );
-        // A trailing slash on the registry URL must not double up.
-        let reg = ladder_section("r", "https://github.com/vibespecs/", None);
-        let got = resolve_index_url_with(None, &reg);
+
+        let mut reg = ladder_section("r", "https://github.com/vibespecs", None);
+        reg.r#ref = "release/v1.2".into();
+        let IndexUrlResolution::Url { base, .. } = resolve_index_url_with(None, &reg) else {
+            panic!("GitHub default should resolve to a URL");
+        };
         assert_eq!(
-            got,
+            base,
+            "https://raw.githubusercontent.com/vibespecs/index/release/v1.2"
+        );
+    }
+
+    #[test]
+    fn ladder_github_default_normalizes_trailing_slash_and_dot_git() {
+        for url in [
+            "https://github.com/vibespecs/",
+            "https://github.com/vibespecs.git",
+            "https://github.com/vibespecs.git/",
+        ] {
+            let reg = ladder_section("r", url, None);
+            assert_eq!(
+                resolve_index_url_with(None, &reg),
+                IndexUrlResolution::Url {
+                    base: "https://raw.githubusercontent.com/vibespecs/index/main".into(),
+                    source: IndexUrlSource::Default,
+                },
+                "url = {url}"
+            );
+        }
+    }
+
+    #[test]
+    fn ladder_does_not_rewrite_github_lookalikes_or_nested_paths() {
+        for url in [
+            "https://github.com.example/vibespecs",
+            "https://github.com/vibespecs/packages",
+            "http://github.com/vibespecs",
+        ] {
+            let reg = ladder_section("r", url, None);
+            assert_eq!(
+                resolve_index_url_with(None, &reg),
+                IndexUrlResolution::Url {
+                    base: format!("{url}/index"),
+                    source: IndexUrlSource::Default,
+                },
+                "url = {url}"
+            );
+        }
+    }
+
+    #[test]
+    fn ladder_non_github_default_is_unchanged() {
+        let reg = ladder_section("r", "https://gitverse.ru/vibespecs", None);
+        assert_eq!(
+            resolve_index_url_with(None, &reg),
             IndexUrlResolution::Url {
-                base: "https://github.com/vibespecs/index".into(),
+                base: "https://gitverse.ru/vibespecs/index".into(),
                 source: IndexUrlSource::Default,
             }
+        );
+    }
+
+    #[test]
+    fn github_default_produces_the_static_handshake_url() {
+        let reg = ladder_section("r", "https://github.com/vibespecs", None);
+        let IndexUrlResolution::Url { base, .. } = resolve_index_url_with(None, &reg) else {
+            panic!("GitHub default should resolve to a URL");
+        };
+        assert_eq!(
+            super::super::handshake::hello_url(&base),
+            "https://raw.githubusercontent.com/vibespecs/index/main/hello.json"
         );
     }
 
@@ -269,7 +398,7 @@ mod tests {
         assert_eq!(
             got,
             IndexUrlResolution::Url {
-                base: "https://github.com/vibespecs/index".into(),
+                base: "https://raw.githubusercontent.com/vibespecs/index/main".into(),
                 source: IndexUrlSource::Default,
             }
         );
