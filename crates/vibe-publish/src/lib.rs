@@ -36,18 +36,31 @@ mod creator;
 pub mod direct_git;
 pub mod git_publish;
 pub mod github;
+pub mod github_release;
 pub mod gitverse;
 mod orchestrator;
 pub mod post_hook;
 pub mod redirect_sync;
+pub mod release_manifest;
 pub mod token;
 
 pub use creator::{CreateOpts, RepoCreator, RepoInfo, ValidatedOrg};
 pub use direct_git::DirectRepoCreator;
 pub use github::GithubRepoCreator;
+pub use github_release::{
+    CreateGithubRelease, DEFAULT_GITHUB_UPLOAD_BASE, GITHUB_API_VERSION, GithubGitObject,
+    GithubGitRef, GithubRelease, GithubReleaseAsset, GithubReleaseClient, GithubReleaseError,
+    UpdateGithubRelease, sha256_digest,
+};
 pub use gitverse::GitverseRepoCreator;
 pub use orchestrator::{PublishConfig, PublishOutcome, Publisher};
 pub use post_hook::{HookConfig, HookError, HookReport, fire as fire_index_hook};
+pub use release_manifest::{
+    AggregateDistributionManifest, BundleDistributionManifest, DISTRIBUTION_MANIFEST_FILENAME,
+    DISTRIBUTION_PRODUCT, DISTRIBUTION_REPOSITORY, DISTRIBUTION_SCHEMA_VERSION, DistributionAsset,
+    DistributionComponent, DistributionComponentName, PlatformDistributionFragment,
+    ReleaseManifestError, SUPPORTED_DISTRIBUTION_TARGETS,
+};
 pub use token::{Token, TokenSource, host_env_var, load_token, load_token_for_host};
 
 /// Pull the org segment out of an org URL.
