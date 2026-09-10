@@ -166,7 +166,7 @@ fn include_path(path: &Path) -> String {
     path.display().to_string().replace('\\', "\\\\")
 }
 
-fn newest_rlib(deps: &Path, stem: &str) -> Result<PathBuf> {
+fn rlib_candidates(deps: &Path, stem: &str) -> Result<Vec<PathBuf>> {
     let prefix = format!("lib{stem}-");
     let mut candidates = std::fs::read_dir(deps)?
         .filter_map(|entry| entry.ok())
@@ -177,14 +177,13 @@ fn newest_rlib(deps: &Path, stem: &str) -> Result<PathBuf> {
                 .is_some_and(|name| name.starts_with(&prefix) && name.ends_with(".rlib"))
         })
         .collect::<Vec<_>>();
-    candidates.sort_by_key(|path| {
-        std::fs::metadata(path)
-            .and_then(|metadata| metadata.modified())
-            .ok()
-    });
-    candidates
-        .pop()
-        .with_context(|| format!("finding {prefix}*.rlib under {}", deps.display()))
+    candidates.sort();
+    anyhow::ensure!(
+        !candidates.is_empty(),
+        "finding {prefix}*.rlib under {}",
+        deps.display()
+    );
+    Ok(candidates)
 }
 
 fn compile_and_run_generated(fixture: &Fixture) -> Result<()> {
@@ -236,30 +235,50 @@ fn main() {{
         .parent()
         .context("test executable has no dependency directory")?
         .to_path_buf();
-    let serde = newest_rlib(&deps, "serde")?;
-    let serde_json = newest_rlib(&deps, "serde_json")?;
+    let serde_candidates = rlib_candidates(&deps, "serde")?;
+    let serde_json_candidates = rlib_candidates(&deps, "serde_json")?;
     let executable = fixture.root.join(if cfg!(windows) {
         "projection_fixture.exe"
     } else {
         "projection_fixture"
     });
-    let status = Command::new("rustc")
-        .arg("--edition=2024")
-        .arg(&source_path)
-        .arg("-L")
-        .arg(format!("dependency={}", deps.display()))
-        .arg("--extern")
-        .arg(format!("serde={}", serde.display()))
-        .arg("--extern")
-        .arg(format!("serde_json={}", serde_json.display()))
-        .arg("-o")
-        .arg(&executable)
-        .status()
-        .context("compiling the generated projection fixture")?;
-    anyhow::ensure!(
-        status.success(),
-        "generated projection fixture did not compile"
-    );
+    // Cargo can leave several feature variants in `deps`; serde and serde_json
+    // must agree on the exact serde_core build whose traits cross this boundary.
+    let mut compiled = false;
+    let mut last_failure = None;
+    'serde: for serde in &serde_candidates {
+        for serde_json in &serde_json_candidates {
+            let output = Command::new("rustc")
+                .arg("--edition=2024")
+                .arg(&source_path)
+                .arg("-L")
+                .arg(format!("dependency={}", deps.display()))
+                .arg("--extern")
+                .arg(format!("serde={}", serde.display()))
+                .arg("--extern")
+                .arg(format!("serde_json={}", serde_json.display()))
+                .arg("-o")
+                .arg(&executable)
+                .output()
+                .context("compiling the generated projection fixture")?;
+            if output.status.success() {
+                compiled = true;
+                break 'serde;
+            }
+            last_failure = Some((serde, serde_json, output));
+        }
+    }
+    if !compiled {
+        let (serde, serde_json, output) = last_failure
+            .context("no serde/serde_json artifact pair was available for the generated fixture")?;
+        anyhow::bail!(
+            "no compatible serde/serde_json artifact pair compiled the generated projection fixture (tried {} pair(s)); last pair: {} + {}\n{}",
+            serde_candidates.len() * serde_json_candidates.len(),
+            serde.display(),
+            serde_json.display(),
+            String::from_utf8_lossy(&output.stderr)
+        );
+    }
     let status = Command::new(&executable)
         .status()
         .context("running the generated projection fixture")?;
