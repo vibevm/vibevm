@@ -39,12 +39,16 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#publish");
 
+use std::borrow::Cow;
 use std::time::Duration;
 
 use serde::{Deserialize, Serialize};
 
 use crate::token::Token;
 use crate::{CreateOpts, PublishError, RepoCreator, RepoInfo, ValidatedOrg};
+
+const GITHUB_DESCRIPTION_MAX_CHARS: usize = 350;
+const VALIDATION_SUMMARY_MAX_CHARS: usize = 1_000;
 
 /// Default base URL for the GitHub REST API.
 pub const DEFAULT_GITHUB_API_BASE: &str = "https://api.github.com";
@@ -210,10 +214,11 @@ impl RepoCreator for GithubRepoCreator {
         opts: &CreateOpts,
     ) -> Result<RepoInfo, PublishError> {
         let url = format!("{}/orgs/{}/repos", self.api_base, org.as_str());
+        let description = normalize_description(opts.description.as_deref());
         let body = CreateRepoBody {
             name,
             private: false,
-            description: opts.description.as_deref(),
+            description: description.as_deref(),
             homepage: opts.homepage.as_deref(),
             auto_init: false,
             has_issues: true,
@@ -265,19 +270,15 @@ impl RepoCreator for GithubRepoCreator {
                 org: org.as_str().to_string(),
             }),
             422 => {
-                // Validation errors include "repo already exists" (when
-                // a concurrent caller created the repo between our
-                // exists-check and our POST). Re-running the publish
-                // command resolves the race because the second
-                // exists-check returns true.
+                let response = res.text().unwrap_or_default();
                 Err(PublishError::UnexpectedResponse {
                     host: self.host_name.clone(),
                     status: 422,
-                    body: format!(
-                        "validation error from GitHub when creating `{}/{name}` (often: repo \
-                         already exists). Re-run `vibe registry publish` — the existing repo \
-                         will be reused.",
-                        org.as_str()
+                    body: classify_validation_response(
+                        &response,
+                        self.token.value(),
+                        org.as_str(),
+                        name,
                     ),
                 })
             }
@@ -293,6 +294,124 @@ impl RepoCreator for GithubRepoCreator {
     }
 }
 
+fn normalize_description(description: Option<&str>) -> Option<Cow<'_, str>> {
+    let description = description?;
+    if description.chars().count() <= GITHUB_DESCRIPTION_MAX_CHARS {
+        return Some(Cow::Borrowed(description));
+    }
+    let mut shortened = description
+        .chars()
+        .take(GITHUB_DESCRIPTION_MAX_CHARS - 1)
+        .collect::<String>();
+    shortened.push('…');
+    Some(Cow::Owned(shortened))
+}
+
+fn classify_validation_response(raw: &str, token: &str, org: &str, name: &str) -> String {
+    let parsed = serde_json::from_str::<serde_json::Value>(raw).ok();
+    let summary = validation_summary(parsed.as_ref(), raw);
+    let rendered = if parsed.as_ref().is_some_and(is_name_already_exists) {
+        format!(
+            "repository `{org}/{name}` was created concurrently ({summary}). Re-run \
+             `vibe registry publish`; the existing repository will be reused."
+        )
+    } else {
+        format!(
+            "GitHub rejected repository metadata for `{org}/{name}`: {summary}. Check the \
+             repository name, shortened description, and homepage, then retry."
+        )
+    };
+    redact_and_bound(&rendered, token, VALIDATION_SUMMARY_MAX_CHARS)
+}
+
+fn is_name_already_exists(value: &serde_json::Value) -> bool {
+    value
+        .get("errors")
+        .and_then(serde_json::Value::as_array)
+        .is_some_and(|errors| {
+            errors.iter().any(|error| {
+                let field_is_name = error
+                    .get("field")
+                    .and_then(serde_json::Value::as_str)
+                    .is_some_and(|field| field.eq_ignore_ascii_case("name"));
+                if !field_is_name {
+                    return false;
+                }
+                let code_matches = error
+                    .get("code")
+                    .and_then(serde_json::Value::as_str)
+                    .is_some_and(|code| code.eq_ignore_ascii_case("already_exists"));
+                let message_matches = error
+                    .get("message")
+                    .and_then(serde_json::Value::as_str)
+                    .map(str::to_ascii_lowercase)
+                    .is_some_and(|message| {
+                        message.contains("already exists") || message.contains("already been taken")
+                    });
+                code_matches || message_matches
+            })
+        })
+}
+
+fn validation_summary(parsed: Option<&serde_json::Value>, raw: &str) -> String {
+    let mut parts = Vec::new();
+    if let Some(message) = parsed
+        .and_then(|value| value.get("message"))
+        .and_then(serde_json::Value::as_str)
+    {
+        parts.push(message.to_string());
+    }
+    if let Some(errors) = parsed
+        .and_then(|value| value.get("errors"))
+        .and_then(serde_json::Value::as_array)
+    {
+        for error in errors {
+            if let Some(text) = error.as_str() {
+                parts.push(text.to_string());
+                continue;
+            }
+            let mut detail = String::new();
+            for key in ["resource", "field", "code", "message"] {
+                let Some(value) = error.get(key).and_then(serde_json::Value::as_str) else {
+                    continue;
+                };
+                if !detail.is_empty() {
+                    detail.push_str(", ");
+                }
+                detail.push_str(key);
+                detail.push('=');
+                detail.push_str(value);
+            }
+            if !detail.is_empty() {
+                parts.push(detail);
+            }
+        }
+    }
+    if parts.is_empty() {
+        let fallback = raw.trim();
+        if fallback.is_empty() {
+            "validation failed without details".to_string()
+        } else {
+            fallback.to_string()
+        }
+    } else {
+        parts.join("; ")
+    }
+}
+
+fn redact_and_bound(value: &str, token: &str, max_chars: usize) -> String {
+    let mut safe = crate::git_publish::redact_credentials(value);
+    if !token.is_empty() {
+        safe = safe.replace(token, "***");
+    }
+    if safe.chars().count() <= max_chars {
+        return safe;
+    }
+    let mut bounded = safe.chars().take(max_chars - 1).collect::<String>();
+    bounded.push('…');
+    bounded
+}
+
 fn classify_send_error(e: reqwest::Error, host: &str) -> PublishError {
     if e.is_connect() || e.is_timeout() {
         return PublishError::HostUnreachable {
@@ -306,65 +425,5 @@ fn classify_send_error(e: reqwest::Error, host: &str) -> PublishError {
 }
 
 #[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn push_url_embeds_token_for_https() {
-        let token = Token::from_explicit("test-token-please-redact");
-        let creator = GithubRepoCreator::new(token, "vibespecs").unwrap();
-        // `push_url` now takes a `&ValidatedOrg`; mint one via the
-        // scope gate (the only public way in).
-        let org = creator.validate_scope("vibespecs").unwrap();
-        let url = creator.push_url(&org, "flow-wal");
-        assert_eq!(
-            url,
-            "https://x-access-token:test-token-please-redact@github.com/vibespecs/flow-wal.git"
-        );
-    }
-
-    #[test]
-    fn push_url_does_not_appear_in_creator_debug() {
-        // Constructing a creator and calling Debug on it must never
-        // print the token, even though `push_url` reads it. (We don't
-        // derive Debug on GithubRepoCreator; this test verifies that
-        // Token redaction holds via the wrapped Token.)
-        let token = Token::from_explicit("super-secret-do-not-leak");
-        let dbg = format!("{token:?}");
-        assert!(!dbg.contains("super-secret-do-not-leak"));
-        assert!(dbg.contains("***"));
-    }
-
-    #[test]
-    fn expected_org_is_set_at_construction() {
-        let token = Token::from_explicit("ignored");
-        let creator = GithubRepoCreator::new(token, "my-org").unwrap();
-        assert_eq!(creator.expected_org(), Some("my-org"));
-    }
-
-    #[test]
-    fn validate_scope_passes_for_matching_org() {
-        let token = Token::from_explicit("ignored");
-        let creator = GithubRepoCreator::new(token, "vibespecs").unwrap();
-        assert!(creator.validate_scope("vibespecs").is_ok());
-    }
-
-    #[test]
-    fn validate_scope_blocks_user_namespace() {
-        // A token with broad scopes could in principle target a user
-        // namespace; the adapter's scope guard refuses.
-        let token = Token::from_explicit("ignored");
-        let creator = GithubRepoCreator::new(token, "vibespecs").unwrap();
-        let err = creator
-            .validate_scope("some-other-user")
-            .expect_err("scope guard must fire");
-        assert!(matches!(err, PublishError::ScopeViolation { .. }));
-    }
-
-    #[test]
-    fn host_name_is_github_com_by_default() {
-        let token = Token::from_explicit("ignored");
-        let creator = GithubRepoCreator::new(token, "vibespecs").unwrap();
-        assert_eq!(creator.host_name(), "github.com");
-    }
-}
+#[path = "github/tests.rs"]
+mod tests;
