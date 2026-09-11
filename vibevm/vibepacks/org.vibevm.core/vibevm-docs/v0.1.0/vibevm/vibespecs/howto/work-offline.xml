@@ -7,7 +7,7 @@
     <needs>the vibevm skill installed for your agent; network access now; a project with `vibe.toml`</needs>
     <outcome>`vibe cache list` shows the project's packages and the extra one; `vibe cache check` reports every entry intact; `vibe install --offline` completes without a network request</outcome>
     <assert>vibe cache check</assert>
-    <assert>vibe install --offline --assume-yes</assert>
+    <assert>vibe reinstall --force --offline --assume-yes</assert>
   </prompt>
   <what-happens title="What happens">
     <p>The agent runs `vibe cache add` for the extra package, which resolves it and its whole dependency closure and fetches every node into the [store](../glossary/index.xml#store) without touching the project. It runs `vibe install` once online so the project's own packages are in the store too, then `vibe cache check` to verify every stored entry against its [fingerprint](../glossary/index.xml#fingerprint). Finally it runs `vibe install --offline`: resolution and fetch are satisfied from the store alone, and the command fails loudly if anything is missing rather than installing a partial graph.</p>
@@ -43,6 +43,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#MIRROR-LAYER"/>
   </air-gapped>
   <edge-cases title="Edge cases and rules">
+    <p>If an offline install refuses a package the store already holds, the project's registries were never cloned on this machine and vibe cannot learn which versions exist; one online install in any project clones them, and a `file://` mirror needs no clone at all.</p>
     <p>Offline resolution sees the store as of its last refresh: a version published after you went offline is invisible until you are back and run `vibe registry sync` or an online install.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#AS-OF-LAST-REFRESH"/>
     <p>A package in the store is usable even when its registry no longer lists it; a package that never reached the store is a hard error naming the missing [coordinate](../glossary/index.xml#coordinate).</p>

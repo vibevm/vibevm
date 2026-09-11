@@ -4,7 +4,7 @@
   <status stage="doc" state="work" audience="user"/>
   <p>This page takes a project from source to a running deployment with three commands, shows what each leaves on disk, and how to take a deployment down again without guessing what it owned.</p>
   <prompt id="build-package-deploy">For the VibeVM project in the current folder, show me the deploy plan for the profile named local, then run the deploy, list the deployments this machine now holds, and finally undeploy the same profile. Stop and ask me before the deploy and before the undeploy.
-    <needs>the vibevm skill installed for your agent; a project whose manifest declares build and package targets and a deploy profile named `local`; the project's stack tools on the `PATH`</needs>
+    <needs>the vibevm skill installed for your agent; a project whose manifest declares a build artifact, a deploy target with the mechanism `deploy:vibe-bin` and a profile named `local`, as the tables on this page show; `cargo` on the `PATH`</needs>
     <outcome>the plan names the targets in order; after the deploy `vibe deployments` lists the profile with a generation and a status; after the undeploy every receipt-owned resource is gone and the listing shows the profile as removed</outcome>
     <assert>vibe deploy --plan --profile local</assert>
     <assert>vibe deployments --json</assert>
@@ -14,17 +14,36 @@
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#R8-DEPLOY-RUNTIME"/>
   </what-happens>
   <by-hand title="By hand">
-    <p>1. Assemble the distributables without touching any destination:</p>
-    <example id="package" fixture="hello-vibe">
-      <run>vibe package --path hello-vibe</run>
+        <p>1. Declare what to build, what to deploy and where. A target names an artifact and the mechanism that places it; a profile is an ordered list of targets:</p>
+    <fence lang="toml">[[artifacts.build]]
+id = "hello"
+mechanism = "build:cargo"
+outputs = [{ id = "hello", kind = "executable", select = { package = "hello", bin = "hello" } }]
+config = { offline = true }
+
+[[deploy.target]]
+id = "local"
+artifact = "hello"
+mechanism = "deploy:vibe-bin"
+config = { command = "hello" }
+
+[deploy]
+default_profile = "local"
+
+[deploy.profiles.local]
+targets = ["local"]</fence>
+    <p>The mechanism `deploy:vibe-bin` places the executable as a launcher in vibe's own `bin/` folder on this machine, so the command runs from any terminal; other mechanisms are listed in the specification.</p>
+    <p>2. Assemble the distributables without touching any destination:</p>
+    <example id="package" fixture="hello-deploy">
+      <run>vibe package --path hello-deploy --assume-yes</run>
       <expect></expect>
     </example>
-    <p>2. See the plan for a profile, then deploy it:</p>
-    <example id="deploy-plan" fixture="hello-vibe">
-      <run>vibe deploy --plan --path hello-vibe</run>
+    <p>3. See the plan for a profile, then deploy it:</p>
+    <example id="deploy-plan" fixture="hello-deploy">
+      <run>vibe deploy --plan --profile local --path hello-deploy</run>
       <expect></expect>
     </example>
-    <p>3. List what this machine holds, and take a profile down:</p>
+    <p>4. List what this machine holds, and take a profile down:</p>
     <example id="deployments" fixture="hello-vibe">
       <run>vibe deployments</run>
       <expect></expect>

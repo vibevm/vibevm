@@ -25,8 +25,8 @@
     <p>Each tool is one `[[binary]]` entry: a `name`, unique in the package, and a `crate`, a directory inside the shippable tree with a `Cargo.toml`. `vibe bin list` shows what the installed packages declare, `vibe bin build` builds the named tools or all of them, `vibe bin path` prints an artifact's location, and `vibe bin exec &lt;name&gt; -- &lt;args&gt;` runs it through the lock file. Building executes the package's build scripts, so it asks for consent the first time, like an install does.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#BINARY-TABLE"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#BUILD-CONSENT"/>
-    <example id="bin-list" fixture="hello-vibe">
-      <run>vibe bin list --path hello-vibe</run>
+    <example id="bin-list" fixture="hello-vibe-cwd">
+      <run>vibe bin list</run>
       <expect></expect>
     </example>
   </binaries>

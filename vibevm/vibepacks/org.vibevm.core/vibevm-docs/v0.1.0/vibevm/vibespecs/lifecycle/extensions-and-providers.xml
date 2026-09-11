@@ -39,8 +39,8 @@
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#OBS-REGISTRY"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE"/>
     <p>`vibe tools` lists the binaries and servers the installed packages brought, which is the [registry](../glossary/index.xml#registry) of what a contribution of kind `binary` may name.</p>
-    <example id="tools" fixture="hello-vibe">
-      <run>vibe tools --path hello-vibe</run>
+    <example id="tools" fixture="hello-vibe-cwd">
+      <run>vibe tools</run>
       <expect></expect>
     </example>
   </seeing>

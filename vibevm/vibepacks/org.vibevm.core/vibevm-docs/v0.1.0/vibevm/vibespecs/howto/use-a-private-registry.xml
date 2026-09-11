@@ -31,6 +31,16 @@
     <p>Put the same registry block into `~/.vibe/registry.toml`. It is merged after each project's own list, so projects that name their registries are unaffected and projects that do not inherit the machine's. `vibe init` seeds a new project's registries from this file, which is how a company's default becomes every new project's default.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#USER-LEVEL-REGISTRIES"/>
   </machine-wide>
+  <redirects title="Delegating a package to another registry">
+    <p>A registry may point at a package that lives elsewhere. Instead of the package, the repository named after it carries one file, `vibe-redirect.toml`, with a `[redirect]` table: `target_url` names the repository where the package really is, and `ref_policy` says which tag to fetch there, the same tag by default or one `pinned_ref` for every version. A consumer installing the package sees no difference; the resolver follows the pointer once, never a chain, and records the stub's address in the [lock file](../glossary/index.xml#lock-file) as `via_redirect`.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REDIRECT-STUB"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REDIRECT-MARKER-FILE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#RD-STEP-HOP-LIMIT"/>
+    <p>The versions a consumer can see are the tags of the stub, not of the target: the registry's owner admits each version by tagging the stub. `vibe registry redirect` creates a stub, `redirect-sync` copies the target's tags into it after confirmation, and `redirect-update` changes the pointer.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REDIRECT-TAG-VISIBILITY"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REDIRECT-SYNC-HELPER"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REDIRECT-LOCKFILE-FIELD"/>
+  </redirects>
   <tokens title="Tokens">
     <p>A token never lands in a file vibe writes and never appears in its output. With `--auth token-env` vibe reads it from `VIBEVM_REGISTRY_TOKEN_&lt;HOST&gt;` at run time and sends it over an encrypted connection only. Keep the variable in your shell profile or your CI secret [store](../glossary/index.xml#store), not in the repository.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#TOKEN-NEVER-ON-DISK"/>

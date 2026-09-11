@@ -36,7 +36,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#REINSTALL-NO-FORCE"/>
   </recovery>
   <edge-cases title="Edge cases and rules">
-    <p>`vibe outdated` needs the registry and, for the fastest answer, its [index](../glossary/index.xml#index-registry); without a network it reports what it could not reach rather than guessing.</p>
+    <p>`vibe outdated` reads the registries declared in the project's manifest, and for the fastest answer their [index](../glossary/index.xml#index-registry); a project created by `vibe init` declares none, so add one with `vibe registry add` before asking. Without a network it reports what it could not reach rather than guessing.</p>
     <p>A dependency declared as a git branch is walked again on update and its lock entry moves to the branch's current commit; a tag or a commit stays where it is.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#ROW-GS-BRANCH-MEANING"/>
     <p>`--upstream` also compares the upstream releases a package declares it describes, for packages that document a third-party library.</p>
