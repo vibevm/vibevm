@@ -59,6 +59,11 @@ fn copy_dir_skips_dot_git_subtrees() {
     let dst = tempdir().unwrap();
     fs::create_dir_all(src.path().join(".git/objects")).unwrap();
     fs::write(src.path().join(".git/HEAD"), "ref: refs/heads/main").unwrap();
+    fs::write(
+        src.path().join(".gitmodules"),
+        "[submodule \"vendor/upstream\"]\n\tpath = vendor/upstream\n",
+    )
+    .unwrap();
     fs::write(src.path().join("README.md"), "hi").unwrap();
     fs::write(
         src.path().join("vibe.toml"),
@@ -72,6 +77,7 @@ fn copy_dir_skips_dot_git_subtrees() {
     assert!(dst.path().join("vibe.toml").exists());
     assert!(!dst.path().join(".git").exists());
     assert!(!dst.path().join(".git/HEAD").exists());
+    assert!(!dst.path().join(".gitmodules").exists());
 }
 
 #[test]

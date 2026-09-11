@@ -445,6 +445,7 @@ mod tests {
             created_repo: true,
             host: "example.invalid".into(),
             dry_run: false,
+            submodules: Vec::new(),
         };
         let report = fire(
             &outcome,

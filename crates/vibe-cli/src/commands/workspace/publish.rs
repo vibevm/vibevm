@@ -62,6 +62,8 @@ struct PublishedEntry {
     /// reused an existing one. Always `false` under `--dry-run`'s
     /// reuse path, `true` under `--dry-run`'s would-create path.
     created_repo: bool,
+    /// Populated gitlinks flattened into ordinary release files.
+    submodules: Vec<vibe_workspace::publish::SubmoduleProvenance>,
 }
 
 #[derive(Debug, Serialize)]
@@ -252,6 +254,12 @@ pub(super) fn run_publish(ctx: &output::Context, args: WorkspacePublishArgs) -> 
                 entry.pkgref, entry.repo_url, entry.tag
             ));
         }
+        for submodule in &entry.submodules {
+            ctx.step(&format!(
+                "submodule `{}` vendored at `{}`",
+                submodule.path, submodule.commit
+            ));
+        }
     }) {
         Ok(published) => {
             // Every node published. `remaining` is empty.
@@ -410,6 +418,7 @@ fn publish_loop(
             repo_url: outcome.repo_url,
             tag: outcome.tag,
             created_repo: outcome.created_repo,
+            submodules: staged.submodules,
         };
         on_progress(&entry, plan.dry_run);
         published.push(entry);
@@ -540,5 +549,6 @@ fn dry_run_outcome(config: &PublishConfig, org_url: &str) -> Result<vibe_publish
         created_repo: true,
         host: extract_host_segment(org_url).unwrap_or_else(|_| "git".to_string()),
         dry_run: true,
+        submodules: Vec::new(),
     })
 }

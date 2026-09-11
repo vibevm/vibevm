@@ -79,9 +79,13 @@ still belongs to).</related></p>
   the package and committed it. This needs **none** of PROP-021/022 machinery:
   it is plain files in a `snapshot` package. A vendored bridge is therefore the
   cheapest case — the flag (§2.1) plus, if the layout needs shaping, hooks.</CLASS-VENDORED>
-        <CLASS-SUBMODULE fact="true" status="impl/done">**Submodule-backed** — the package references the upstream via a git
-  submodule ([PROP-021](PROP-021-submodule-sources.xml)), fetched on install and
-  updated on update, so the bridge tracks upstream without re-vendoring.</CLASS-SUBMODULE>
+        <CLASS-SUBMODULE fact="true" status="impl/done">**Submodule-backed authoring** — the maintainer workspace references upstream
+  through a Git submodule ([PROP-021](PROP-021-submodule-sources.xml)). A direct
+  Git-source install preserves that live Git composition. Registry publication
+  deliberately flattens a clean populated gitlink into ordinary package files,
+  removes `.gitmodules`, and reports `submodule &lt;path&gt; vendored at &lt;sha&gt;`;
+  the published package is therefore a truthful vendored snapshot, not a
+  dangling promise that consumers will recurse into the maintainer's repo.</CLASS-SUBMODULE>
         <CLASS-REFERENCE fact="true" status="impl/done">**Reference-backed** — the package repository contains only maintainer-authored
   metadata and adapters. `[[embedded_source]]` declares the original public Git
   URL, an immutable full commit, an independently verified source-tree hash and
@@ -173,9 +177,11 @@ mandates none of them:</COMPOSE-OPTIONAL></p>
   `kind` or identity.</ACC-FLAG-PARSES>
       <ACC-VENDORED-PLAIN fact="true" status="impl/done">A vendored bridge installs as a plain `snapshot` package (flag + optional
   hooks), with no submodule/materialization machinery engaged.</ACC-VENDORED-PLAIN>
-      <ACC-SUBMODULE-FULL fact="true" status="impl/done">A submodule-backed bridge fetches upstream ([PROP-021](PROP-021-submodule-sources.xml)),
-  runs declared hooks ([PROP-020](../vibe-workspace/PROP-020-install-hooks.xml)),
-  and projects its skill via the `include` selector.</ACC-SUBMODULE-FULL>
+      <ACC-SUBMODULE-FULL fact="true" status="impl/done">A Git-source submodule-backed bridge fetches upstream recursively
+  ([PROP-021](PROP-021-submodule-sources.xml)). Registry publication instead
+  verifies and flattens each clean populated gitlink, omits Git metadata,
+  reports the exact vendored commit, then ordinary install/hooks/skill
+  projection consume that plain snapshot.</ACC-SUBMODULE-FULL>
       <ACC-REFERENCE fact="true" status="impl/done">A reference-backed bridge repository contains no upstream files or gitlinks;
   install authenticates the declared immutable source into a machine-local
   cache, records the pin in `vibe.lock`, and projects only the declared skill

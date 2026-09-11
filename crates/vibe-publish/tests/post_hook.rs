@@ -146,6 +146,7 @@ fn outcome() -> PublishOutcome {
         created_repo: true,
         host: "github.com".into(),
         dry_run: false,
+        submodules: Vec::new(),
     }
 }
 

@@ -8,7 +8,9 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#selective-publish");
 
 use std::path::{Path, PathBuf};
+use std::process::{Command, Output};
 
+use serde::Serialize;
 use specmark::spec;
 use vibe_core::manifest::{Manifest, OriginSection, SpecFormat};
 
@@ -27,6 +29,19 @@ pub struct StagedNode {
     pub staging: tempfile::TempDir,
     /// The `[origin]` marker written into the staged `vibe.toml`.
     pub origin: OriginSection,
+    /// Populated gitlinks that were flattened into ordinary files.
+    /// Empty for an ordinary package and when the source is not a Git
+    /// working tree, so staging never invents provenance it did not observe.
+    pub submodules: Vec<SubmoduleProvenance>,
+}
+
+/// Provenance for one populated submodule flattened by publish staging.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+pub struct SubmoduleProvenance {
+    /// Forward-slashed path relative to the published package root.
+    pub path: String,
+    /// Exact gitlink object id recorded by the source repository index.
+    pub commit: String,
 }
 
 /// Inputs to [`stage_node`] describing the source-of-truth monorepo.
@@ -88,7 +103,14 @@ pub fn stage_node(
     })?;
     let staging_path = staging.path();
 
-    // Step 1 — copy the directory tree, skipping `.git/` and `.vibe/`.
+    // Observe gitlinks before copying strips the Git boundary. A clean,
+    // matching checkout is the only state that can honestly be called
+    // "vendored at <sha>" after it becomes plain files.
+    let submodules = inspect_populated_submodules(source_dir)?;
+
+    // Step 1 — copy the directory tree, skipping `.git/`, `.gitmodules`,
+    // and `.vibe/`. A flattened release must not advertise gitlinks that
+    // no longer exist in its published tree.
     copy_tree_excluding(source_dir, staging_path)?;
 
     // Step 2 — inject `[origin]` + the generated-copy description.
@@ -170,6 +192,7 @@ pub fn stage_node(
     Ok(StagedNode {
         staging,
         origin: origin_section,
+        submodules,
     })
 }
 
@@ -280,12 +303,16 @@ fn copy_tree_excluding(src: &Path, dst: &Path) -> Result<()> {
                 path: path.clone(),
                 reason: format!("walked path escaped its copy root `{}`", src.display()),
             })?;
-            // Skip `.git/` and `.vibe/` at any depth — the published copy
-            // is a clean repo; the dev cache must not travel.
-            if rel
-                .components()
-                .any(|c| matches!(c.as_os_str().to_str(), Some(".git") | Some(".vibe")))
-            {
+            // Skip `.git`, `.gitmodules`, and `.vibe` at any depth. Submodule
+            // working-tree bytes are deliberately copied as plain files, but
+            // neither their repository metadata nor a now-dangling module
+            // declaration belongs in the flattened release.
+            if rel.components().any(|c| {
+                matches!(
+                    c.as_os_str().to_str(),
+                    Some(".git") | Some(".gitmodules") | Some(".vibe")
+                )
+            }) {
                 continue;
             }
             let target = dst.join(rel);
@@ -316,4 +343,111 @@ fn copy_tree_excluding(src: &Path, dst: &Path) -> Result<()> {
         }
     }
     Ok(())
+}
+
+/// Inspect populated gitlinks while their index provenance is still
+/// available. A non-Git source remains publishable and simply yields no
+/// provenance. Once a gitlink is observed, however, its checkout must be at
+/// the indexed commit and clean: otherwise no commit id truthfully describes
+/// the bytes publication would flatten.
+fn inspect_populated_submodules(source_dir: &Path) -> Result<Vec<SubmoduleProvenance>> {
+    let Some(index) = git_probe(source_dir, &["ls-files", "--stage", "-z"])? else {
+        return Ok(Vec::new());
+    };
+    let mut submodules = Vec::new();
+    for record in index.stdout.split(|byte| *byte == 0) {
+        if record.is_empty() {
+            continue;
+        }
+        let Some(tab) = record.iter().position(|byte| *byte == b'\t') else {
+            continue;
+        };
+        let header = std::str::from_utf8(&record[..tab]).map_err(|error| WorkspaceError::Io {
+            path: source_dir.to_path_buf(),
+            reason: format!("reading gitlink index metadata as UTF-8: {error}"),
+        })?;
+        let mut fields = header.split_whitespace();
+        let mode = fields.next().unwrap_or_default();
+        let commit = fields.next().unwrap_or_default();
+        if mode != "160000" || commit.is_empty() {
+            continue;
+        }
+        let rel = std::str::from_utf8(&record[tab + 1..]).map_err(|error| WorkspaceError::Io {
+            path: source_dir.to_path_buf(),
+            reason: format!("reading gitlink path as UTF-8: {error}"),
+        })?;
+        let checkout = source_dir.join(rel);
+        // An uninitialised submodule may leave an empty directory. It has no
+        // bytes to flatten and therefore no vendoring event to report.
+        if !checkout.is_dir() || !checkout.join(".git").exists() {
+            continue;
+        }
+
+        let head = git_required(&checkout, &["rev-parse", "--verify", "HEAD^{commit}"])?;
+        let actual = String::from_utf8_lossy(&head.stdout).trim().to_string();
+        if !actual.eq_ignore_ascii_case(commit) {
+            return Err(WorkspaceError::Io {
+                path: checkout,
+                reason: format!(
+                    "submodule checkout is at `{actual}`, but the containing repository pins `{commit}`; initialise/update it before publishing"
+                ),
+            });
+        }
+        let status = git_required(
+            &checkout,
+            &["status", "--porcelain=v1", "--untracked-files=all"],
+        )?;
+        if !status.stdout.is_empty() {
+            return Err(WorkspaceError::Io {
+                path: checkout,
+                reason: "submodule checkout has uncommitted or untracked bytes; clean it before publishing so the vendored commit claim stays truthful".to_string(),
+            });
+        }
+        submodules.push(SubmoduleProvenance {
+            path: rel.replace('\\', "/"),
+            commit: commit.to_ascii_lowercase(),
+        });
+    }
+    submodules.sort_by(|left, right| left.path.cmp(&right.path));
+    Ok(submodules)
+}
+
+fn git_probe(cwd: &Path, args: &[&str]) -> Result<Option<Output>> {
+    match git_command(cwd, args).output() {
+        Ok(output) if output.status.success() => Ok(Some(output)),
+        Ok(_) | Err(_) => Ok(None),
+    }
+}
+
+fn git_required(cwd: &Path, args: &[&str]) -> Result<Output> {
+    let output = git_command(cwd, args)
+        .output()
+        .map_err(|error| WorkspaceError::Io {
+            path: cwd.to_path_buf(),
+            reason: format!("spawning git {}: {error}", args.join(" ")),
+        })?;
+    if !output.status.success() {
+        return Err(WorkspaceError::Io {
+            path: cwd.to_path_buf(),
+            reason: format!(
+                "git {} failed while verifying submodule provenance: {}",
+                args.join(" "),
+                String::from_utf8_lossy(&output.stderr).trim()
+            ),
+        });
+    }
+    Ok(output)
+}
+
+fn git_command(cwd: &Path, args: &[&str]) -> Command {
+    let mut command = Command::new("git");
+    command
+        .arg("-C")
+        .arg(cwd)
+        .args(args)
+        .env("GIT_TERMINAL_PROMPT", "0")
+        .env("GCM_INTERACTIVE", "Never")
+        .env("LC_ALL", "C")
+        .env("LANG", "C");
+    command
 }

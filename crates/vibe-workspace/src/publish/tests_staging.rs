@@ -4,6 +4,25 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#
 
 use super::*;
 
+#[cfg(test)]
+fn run_git(cwd: &Path, args: &[&str]) -> std::process::Output {
+    let output = std::process::Command::new("git")
+        .args(args)
+        .current_dir(cwd)
+        .env("LC_ALL", "C")
+        .env("LANG", "C")
+        .output()
+        .unwrap();
+    assert!(
+        output.status.success(),
+        "git {} failed in {}: {}",
+        args.join(" "),
+        cwd.display(),
+        String::from_utf8_lossy(&output.stderr)
+    );
+    output
+}
+
 #[test]
 fn stage_node_writes_origin_section() {
     let tmp = TempDir::new().unwrap();
@@ -51,6 +70,88 @@ fn stage_node_excludes_git_and_vibe_dirs() {
     assert!(!staged.staging.path().join(".git").exists());
     assert!(!staged.staging.path().join(".vibe").exists());
     assert!(staged.staging.path().join("keep.md").is_file());
+}
+
+#[test]
+fn stage_node_flattens_clean_submodule_without_dangling_git_metadata() {
+    if std::process::Command::new("git")
+        .arg("--version")
+        .output()
+        .map(|output| !output.status.success())
+        .unwrap_or(true)
+    {
+        eprintln!("skipping: git not on PATH");
+        return;
+    }
+
+    let upstream = TempDir::new().unwrap();
+    run_git(upstream.path(), &["init", "--initial-branch=main"]);
+    run_git(
+        upstream.path(),
+        &["config", "user.email", "test@example.invalid"],
+    );
+    run_git(upstream.path(), &["config", "user.name", "test"]);
+    write(upstream.path(), "UPSTREAM.md", "pinned upstream bytes\n");
+    run_git(upstream.path(), &["add", "-A"]);
+    run_git(upstream.path(), &["commit", "-m", "upstream"]);
+    let upstream_commit =
+        String::from_utf8_lossy(&run_git(upstream.path(), &["rev-parse", "HEAD"]).stdout)
+            .trim()
+            .to_string();
+
+    let source = TempDir::new().unwrap();
+    run_git(source.path(), &["init", "--initial-branch=main"]);
+    run_git(
+        source.path(),
+        &["config", "user.email", "test@example.invalid"],
+    );
+    run_git(source.path(), &["config", "user.name", "test"]);
+    write(source.path(), "vibe.toml", &package("bridge", "feat"));
+    run_git(source.path(), &["add", "-A"]);
+    run_git(source.path(), &["commit", "-m", "bridge"]);
+    let upstream_path = upstream.path().to_string_lossy();
+    run_git(
+        source.path(),
+        &[
+            "-c",
+            "protocol.file.allow=always",
+            "submodule",
+            "add",
+            upstream_path.as_ref(),
+            "vendor/upstream",
+        ],
+    );
+    run_git(source.path(), &["commit", "-am", "pin upstream"]);
+
+    let staged = stage_node(source.path(), ".", &origin_info()).unwrap();
+    assert_eq!(
+        staged.submodules,
+        [SubmoduleProvenance {
+            path: "vendor/upstream".to_string(),
+            commit: upstream_commit,
+        }]
+    );
+    assert!(
+        staged
+            .staging
+            .path()
+            .join("vendor/upstream/UPSTREAM.md")
+            .is_file(),
+        "populated submodule bytes must ship"
+    );
+    assert!(!staged.staging.path().join(".gitmodules").exists());
+    assert!(!staged.staging.path().join("vendor/upstream/.git").exists());
+
+    // A fresh index sees ordinary files, never a 160000 gitlink.
+    run_git(staged.staging.path(), &["init", "--initial-branch=main"]);
+    run_git(staged.staging.path(), &["add", "-A"]);
+    let index =
+        String::from_utf8_lossy(&run_git(staged.staging.path(), &["ls-files", "--stage"]).stdout)
+            .into_owned();
+    assert!(
+        !index.lines().any(|line| line.starts_with("160000 ")),
+        "{index}"
+    );
 }
 
 #[test]

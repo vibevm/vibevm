@@ -29,6 +29,9 @@ use process::{
     run_remote_git_in, staged_tree_changed,
 };
 
+mod submodules;
+pub use submodules::SubmoduleProvenance;
+
 /// Publish the source tree as the current release on `main` and `tag`.
 ///
 /// A missing repository history gets one initial commit. An existing
@@ -48,7 +51,8 @@ pub fn push_release(
     tag: &str,
     package_name: &str,
     version: &semver::Version,
-) -> Result<(), PublishError> {
+) -> Result<Vec<SubmoduleProvenance>, PublishError> {
+    let submodules = submodules::inspect(source_dir)?;
     push_release_inner(
         source_dir,
         clone_url,
@@ -56,7 +60,14 @@ pub fn push_release(
         package_name,
         version,
         |_| Ok(()),
-    )
+    )?;
+    Ok(submodules)
+}
+
+/// Inspect the submodules that a publish would flatten, without changing the
+/// source or a remote. Used to make dry-run reporting match real publication.
+pub fn inspect_submodules(source_dir: &Path) -> Result<Vec<SubmoduleProvenance>, PublishError> {
+    submodules::inspect(source_dir)
 }
 
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
@@ -420,8 +431,9 @@ pub fn shallow_clone(clone_url: &str) -> Result<TempDir, PublishError> {
     Ok(staging)
 }
 
-/// Recursively copy `src` → `dst`. Skips any `.git/` subtree (defensive;
-/// unusual to find one in a publish source dir).
+/// Recursively copy `src` → `dst`. Skips `.git` and `.gitmodules` at any
+/// depth: populated submodule bytes become ordinary files, so shipping the
+/// declarations would leave a dangling and misleading Git boundary.
 fn copy_dir(src: &Path, dst: &Path) -> Result<(), PublishError> {
     std::fs::create_dir_all(dst).map_err(|e| PublishError::Io {
         path: dst.to_path_buf(),
@@ -436,10 +448,10 @@ fn copy_dir(src: &Path, dst: &Path) -> Result<(), PublishError> {
                 message: format!("walked path escaped its copy root `{}`", src.display()),
             })?
             .to_path_buf();
-        if rel
-            .components()
-            .any(|c| c.as_os_str() == std::ffi::OsStr::new(".git"))
-        {
+        if rel.components().any(|c| {
+            c.as_os_str() == std::ffi::OsStr::new(".git")
+                || c.as_os_str() == std::ffi::OsStr::new(".gitmodules")
+        }) {
             continue;
         }
         let target = dst.join(&rel);

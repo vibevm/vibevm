@@ -43,8 +43,8 @@ type Result<T> = std::result::Result<T, WorkspaceError>;
 mod staging;
 
 pub use staging::{
-    OriginInfo, StagedNode, generated_copy_description, generated_copy_readme_banner,
-    pull_request_template, stage_node,
+    OriginInfo, StagedNode, SubmoduleProvenance, generated_copy_description,
+    generated_copy_readme_banner, pull_request_template, stage_node,
 };
 
 /// One node of a workspace selected for publishing — the root (when it
