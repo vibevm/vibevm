@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Command reference</title>
+  <status stage="doc" state="work" audience="user"/>
+  <p>Every command vibe accepts, with its options, in the words the program itself prints. Nothing on this page is written by hand.</p>
+  <global title="Global options">
+    <p>Every command takes `--json` for machine-readable output, `--quiet` for a one-line summary, `--invoked-by &lt;agent&gt;` to stamp the caller into reports, `--unattended` to answer every confirmation, `--offline` to forbid network access, and `--agent-mode` to say how agent steps run. The full text:</p>
+    <derived kind="cli-help" ref="vibe --help"/>
+  </global>
+  <projects title="Projects and packages">
+    <derived kind="cli-help" ref="vibe init --help"/>
+    <derived kind="cli-help" ref="vibe install --help"/>
+    <derived kind="cli-help" ref="vibe update --help"/>
+    <derived kind="cli-help" ref="vibe uninstall --help"/>
+    <derived kind="cli-help" ref="vibe reinstall --help"/>
+    <derived kind="cli-help" ref="vibe list --help"/>
+    <derived kind="cli-help" ref="vibe outdated --help"/>
+    <derived kind="cli-help" ref="vibe check --help"/>
+    <derived kind="cli-help" ref="vibe tree --help"/>
+    <derived kind="cli-help" ref="vibe show --help"/>
+    <derived kind="cli-help" ref="vibe why --help"/>
+    <derived kind="cli-help" ref="vibe friends --help"/>
+    <derived kind="cli-help" ref="vibe workspace --help"/>
+  </projects>
+  <registries title="Registries, search and the store">
+    <derived kind="cli-help" ref="vibe registry --help"/>
+    <derived kind="cli-help" ref="vibe search --help"/>
+    <derived kind="cli-help" ref="vibe cache --help"/>
+  </registries>
+  <lifecycle title="The lifecycle">
+    <derived kind="cli-help" ref="vibe validate --help"/>
+    <derived kind="cli-help" ref="vibe generate --help"/>
+    <derived kind="cli-help" ref="vibe build --help"/>
+    <derived kind="cli-help" ref="vibe test --help"/>
+    <derived kind="cli-help" ref="vibe create --help"/>
+    <derived kind="cli-help" ref="vibe verify --help"/>
+    <derived kind="cli-help" ref="vibe package --help"/>
+    <derived kind="cli-help" ref="vibe deploy --help"/>
+    <derived kind="cli-help" ref="vibe undeploy --help"/>
+    <derived kind="cli-help" ref="vibe deployments --help"/>
+    <derived kind="cli-help" ref="vibe clean --help"/>
+    <derived kind="cli-help" ref="vibe scrape --help"/>
+    <derived kind="cli-help" ref="vibe extensions --help"/>
+    <derived kind="cli-help" ref="vibe tools --help"/>
+    <derived kind="cli-help" ref="vibe bin --help"/>
+  </lifecycle>
+  <agents title="Agents">
+    <derived kind="cli-help" ref="vibe mcp --help"/>
+    <derived kind="cli-help" ref="vibe skill --help"/>
+    <derived kind="cli-help" ref="vibe agentic --help"/>
+    <derived kind="cli-help" ref="vibe command --help"/>
+    <derived kind="cli-help" ref="vibe aiui --help"/>
+    <derived kind="cli-help" ref="vibe term --help"/>
+    <derived kind="cli-help" ref="vibe frame --help"/>
+  </agents>
+  <specs title="Specifications and traceability">
+    <derived kind="cli-help" ref="vibe explain --help"/>
+    <derived kind="cli-help" ref="vibe query --help"/>
+    <derived kind="cli-help" ref="vibe select --help"/>
+    <derived kind="cli-help" ref="vibe specmap --help"/>
+    <derived kind="cli-help" ref="vibe trace --help"/>
+    <derived kind="cli-help" ref="vibe facts --help"/>
+    <derived kind="cli-help" ref="vibe requirements --help"/>
+    <derived kind="cli-help" ref="vibe progress --help"/>
+    <derived kind="cli-help" ref="vibe refactor --help"/>
+  </specs>
+  <machine title="The machine and vibe itself">
+    <derived kind="cli-help" ref="vibe self --help"/>
+    <derived kind="cli-help" ref="vibe vars --help"/>
+    <derived kind="cli-help" ref="vibe prefs --help"/>
+    <derived kind="cli-help" ref="vibe version --help"/>
+  </machine>
+  <documentation title="Documentation">
+    <derived kind="cli-help" ref="vibe doc --help"/>
+  </documentation>
+</spec>
