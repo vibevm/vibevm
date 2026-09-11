@@ -303,7 +303,7 @@ Live integration scripts live under [`manual-tests/`](manual-tests/). One file p
 - `github.com` (or any subdomain) → `GitHubCreator`. `POST /orgs/{org}/repos` works natively; HTTPS push uses the token embedded in the URL for one push (modern git ≥ 2.31 redacts URL passwords in its own logs).
 - `gitverse.ru` → `GitVerseCreator`. `GET /repos/{owner}/{repo}` works for presence; `POST /orgs/{org}/repos` is not exposed by the live host (verified 2026-04-26), so create-leg requires manual web-UI pre-creation. The adapter remains in tree for any future Gitea-shape host that fully supports the org-scoped POST.
 
-Full design: [PROP-002 §2.10](vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml#publish). User-facing reference: [`docs/commands/registry-publish.md`](docs/commands/registry-publish.md).
+Full design: [PROP-002 §2.10](vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml#publish). User-facing reference: [`docs-legacy/commands/registry-publish.md`](docs-legacy/commands/registry-publish.md).
 
 **Routine usage:**
 
