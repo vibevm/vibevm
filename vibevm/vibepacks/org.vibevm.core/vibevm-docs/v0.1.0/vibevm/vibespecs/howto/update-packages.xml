@@ -15,12 +15,12 @@
   </what-happens>
   <by-hand title="By hand">
     <p>1. See what is behind:</p>
-    <example id="outdated" fixture="hello-vibe">
+    <example id="outdated" fixture="hello-vibe-registry">
       <run>vibe outdated --path hello-vibe</run>
       <expect></expect>
     </example>
     <p>2. Update one package, or all of them:</p>
-    <example id="update" fixture="hello-vibe">
+    <example id="update" fixture="hello-vibe-registry">
       <run>vibe update org.vibevm.world/wal --path hello-vibe --assume-yes</run>
       <expect></expect>
     </example>

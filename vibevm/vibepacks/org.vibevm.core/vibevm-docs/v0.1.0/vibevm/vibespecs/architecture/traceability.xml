@@ -3,8 +3,8 @@
   <title id="root">Traceability: specs, code and the map</title>
   <status stage="doc" state="work" audience="dev"/>
   <p>Every public piece of code in vibe points at the rule it implements, and a generated map lets you ask in either direction: which code implements this rule, which rule does this code answer to.</p>
-  <example id="explain" fixture="hello-vibe">
-    <run>vibe explain "spec://org.vibevm.core/vibevm/common/PROP-000#KIND-SET" --path hello-vibe</run>
+  <example id="explain" fixture="host">
+    <run>vibe explain "spec://org.vibevm.core/vibevm/common/PROP-000#KIND-SET"</run>
     <expect></expect>
   </example>
   <marks title="Marks in the code">
@@ -23,9 +23,9 @@
     <rule ref="spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#RULE-GENERATED-CODE-IS-EXCLUDED"/>
   </the-map>
   <asking title="Asking the map">
-    <p>`vibe explain "spec://…#anchor"` builds the map fresh in memory and prints one target's subgraph: what implements, verifies or documents it. `vibe query` filters the map by address, symbol or kind and returns the many nodes that fit. `vibe select --where "lacks:verifies scope:spec://…"` walks the graph with a predicate: every rule with no verifier, the implementers of a rule and one hop around them. `--json` gives each answer to an agent.</p>
-    <example id="select" fixture="hello-vibe">
-      <run>vibe select --where "uri:spec://org.vibevm.core/vibevm/common/PROP-000#KIND-SET depth:1" --path hello-vibe</run>
+    <p>The commands below run in a checkout of vibe itself, whose specifications carry a map; an installed package answers only if it shipped one. `vibe explain "spec://…#anchor"` builds the map fresh in memory and prints one target's subgraph: what implements, verifies or documents it. `vibe query` filters the map by address, symbol or kind and returns the many nodes that fit. `vibe select --where "lacks:verifies scope:spec://…"` walks the graph with a predicate: every rule with no verifier, the implementers of a rule and one hop around them. `--json` gives each answer to an agent.</p>
+    <example id="select" fixture="host">
+      <run>vibe select --where "uri:spec://org.vibevm.core/vibevm/common/PROP-000#KIND-SET depth:1"</run>
       <expect></expect>
     </example>
   </asking>
