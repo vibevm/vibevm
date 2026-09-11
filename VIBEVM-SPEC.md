@@ -175,9 +175,11 @@ Use these terms and only these terms in code, in documentation, in error message
 
 ### 4.1 The installable kinds {#four-installable-kinds}
 
-vibevm packages come in six kinds. A user installs them with `vibe install <kind>:<name>`. The kind set is a closed register that grows only by an owner-sanctioned amendment to this section — it is terminology discipline, not an architectural ceiling (the `PackageKind` enum's own documentation records that extending it is a spec change, not a design change). `app` — installable, runnable graphical applications — is anticipated as a future kind and deliberately not yet specified.
+vibevm packages come in eight kinds. A user installs them with `vibe install <kind>:<name>`. The kind set is a closed register that grows only by an owner-sanctioned amendment to this section — it is terminology discipline, not an architectural ceiling (the `PackageKind` enum's own documentation records that extending it is a spec change, not a design change).
 
 *Amendment, owner ruling of 2026-08-06 (recorded on his instruction): `lang` is added as the sixth kind. The register was five until that date.*
+
+*Amendment, 2026-09-12, prepared by the docs-2026-09 campaign under the owner's session goal «документация сделана и задеплоена» and pending his ratification at the merge of the campaign branch: `doc` and `app` are added as the seventh and eighth kinds. The register was six until that date. Normative spec: PROP-057.*
 
 **`flow`** — A process discipline. Modifies how the human-AI development process works in this project. Examples: WAL discipline, sync-from-code reconciliation, conventional-commits enforcement, REVIEW marker conventions. A flow contributes content to `spec/flows/<name>/` and may register one or more snippets in `spec/boot/`.
 
@@ -196,6 +198,10 @@ vibevm packages come in six kinds. A user installs them with `vibe install <kind
 *What this does NOT answer.* The kind does not tell an agent what it can invoke. The boot lane already names which language disciplines are installed — each language package contributes a snippet — so the roster question is answered before it is asked. What binaries and servers those languages brought is a different question, and `vibe tools` is its answer.
 
 **`mcp`** — An agent-server package. Its primary deliverable is one or more Model Context Protocol servers, declared in `[[mcp_server]]` tables (legal only in this kind) and delivered as [PROP-025](spec/modules/vibe-workspace/PROP-025-binary-delivery.md) binaries built in the package's own slot. An `mcp` package that serves another package's toolchain (a language stack's discipline tools, say) MUST require that package with an exact `=X.Y.Z` pin, so the served engines and the consumer's gates resolve to one version set — "one engine, one truth" enforced by the resolver, not by protocol. Examples: rust-ai-native-mcp (the AI-Native Rust discipline gates + type oracle over MCP), typescript-ai-native-mcp. Normative spec: PROP-027.
+
+**`doc`** — Documentation as a package. A `doc` package documents one or more other packages (its *subjects*, named in `[[documents]]`), carries a human-readable `title` and `abstract`, and is read, never executed: it may not declare a boot snippet, an MCP server or a binary, `vibe install` refuses it, and `vibe cache add` warms it into the machine store for the local reader, the site and the agent skill. Its translations are separate `doc` packages, one per language. Examples: `org.vibevm.core/vibevm-docs`, `org.vibevm.world/multi-user-planning-docs`. Normative spec: PROP-057.
+
+**`app`** — A standalone product with its own deployment profile in the build, package and deploy planes of PROP-054. The boundary with `tool` is mechanical: a `tool` lives in a project and runs through `vibe bin exec` by the lock file; an `app` runs in no consumer project and is built and deployed on its own. Example: `org.vibevm.doc/web`, the documentation site. Normative spec: PROP-057.
 
 ### 4.2 The directory layout {#directory-layout}
 
