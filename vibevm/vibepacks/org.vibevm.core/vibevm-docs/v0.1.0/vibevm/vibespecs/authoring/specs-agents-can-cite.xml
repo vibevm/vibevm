@@ -12,8 +12,8 @@
     <p>`spec://&lt;group&gt;/&lt;name&gt;[@&lt;version&gt;]/&lt;path&gt;/&lt;document&gt;#&lt;anchor&gt;`: the package [coordinate](../glossary/index.xml#coordinate), an optional version, the document's path inside `vibevm/vibespecs/` without its extension, and an [anchor](../glossary/index.xml#anchor). The version is a feature, never an obligation: absent, the address resolves against the freshest installed version. Anchors are section ids and [fact](../glossary/index.xml#fact) ids in one address space, so a rule is cited the same way whether it is a section or one sentence.</p>
     <rule ref="spec://org.vibevm.world/addressable-specs/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL#URI-SCHEME-IS-THE-FULL-GRAMMAR"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#URI-VERSION-OPTIONAL"/>
-    <example id="explain" fixture="hello-vibe">
-      <run>vibe explain "spec://org.vibevm.core/vibevm/common/PROP-000#KIND-SET" --path hello-vibe</run>
+    <example id="explain" fixture="host">
+      <run>vibe explain "spec://org.vibevm.core/vibevm/common/PROP-000#KIND-SET"</run>
       <expect></expect>
     </example>
   </the-address>
@@ -24,7 +24,7 @@
     <rule ref="spec://org.vibevm.world/addressable-specs/flows/addressable-specs/authoring-rules#A-CHECKABLE-CLAIM-BELONGS-OUTSIDE-THE-FENCE"/>
   </the-unit>
   <the-dialect title="Two serialisations, one model">
-    <p>A specification is written in Markdown or in the project's XML dialect, and both parse into one document model. In XML a section is an element named after its anchor, `&lt;retry-policy title="3. Retries"&gt;`. A rule is an element named after its id, with the attribute `fact="true"` and a status. In Markdown the same rule is a paragraph opening with `@fact:RETRY-COUNT` and closing with `@status:spec/done`. A tool that knows nothing of your vocabulary still finds every rule by one attribute test, and a converter turns one form into the other without loss.</p>
+    <p>A specification is written in Markdown or in the project's XML dialect, and both parse into one document model. In XML a section is an element named after its anchor, `&lt;retry-policy title="3. Retries"&gt;`. A rule is an element named after its id, with the attribute `fact="true"` and a status. In Markdown the same rule is a paragraph opening with `@fact:RETRY-COUNT` and closing with `@status:spec/done`. A tool that knows nothing of your vocabulary still finds every rule by one attribute test, and a converter turns one form into the other, reporting anything a round trip would not preserve.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#NAMED-FACT-ELEMENTS"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#XML-DIALECT-IS-THE-MD-SUBSET"/>
     <p>The status on each unit says where it stands: `spec/done` for a settled rule, `impl/done` once code implements it, `spec/work` for a draft. Two id registers carry the signal at no cost: an upper-case id marks a rule with binding weight, a lower-case one a lead-in or a note.</p>
