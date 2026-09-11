@@ -1620,3 +1620,23 @@ structure, and it goes when the file does.
 | @fact:B140-SEVERITY **severity** | P3 |
 | @fact:B140-DISPOSITION **disposition** | `open` — единый набор глобальных флагов на всех командах проекта (`--path`, `--quiet`, `--json`) с одной семантикой |
 | @fact:B140-FILED **filed by** | кампания документации, PP-O1 (аномалии A10, A11) и проба 2026-09-12 |
+
+## B-141 — словарь `boot_snippet.category` не знает видов `feat`, `lang`, `mcp`
+
+| поле | значение |
+|---|---|
+| @fact:B141-WHAT **what** | `[boot_snippet].category` принимает `foundation, flow, stack, tool, app, user-override`, тогда как `[package].kind` — `flow, feat, stack, tool, mcp, lang` (и с PROP-057 `doc`, `app`); автор `feat`- или `lang`-пакета обязан выбрать чужую категорию (в прогоне PP-O1 агент выбрал `app` для feat и `foundation` для lang) |
+| @fact:B141-EFFECT **effect** | порядок чтения в boot-лейне для feat/lang задаётся случайной категорией; руководство (`authoring/write-a-lang-package`) советует `stack` как ближайшую по смыслу |
+| @fact:B141-SEVERITY **severity** | P3 — словари должны совпадать или категория должна выводиться из вида |
+| @fact:B141-DISPOSITION **disposition** | `open` — PROP-009/PROP-049: либо категория по умолчанию выводится из `kind`, либо словарь категорий расширяется теми же именами |
+| @fact:B141-FILED **filed by** | кампания документации, PP-O1 аномалия A13, 2026-09-12 |
+
+## B-142 — `vibe list` и `vibe tree` расходятся о загрузочном сниппете пакета
+
+| поле | значение |
+|---|---|
+| @fact:B142-WHAT **what** | после установки `org.vibevm.world/wal` `vibe list` печатает `BOOT SNIPPET  —`, а `vibe tree --plain` показывает тот же пакет как `dynamic`-запись лейна |
+| @fact:B142-EFFECT **effect** | два обзора одного проекта противоречат друг другу; страница `howto/install-a-package` ссылается на `vibe tree` |
+| @fact:B142-SEVERITY **severity** | P3 |
+| @fact:B142-DISPOSITION **disposition** | `open` — колонка `BOOT SNIPPET` у `vibe list` читает то же поле lock-файла, что и `tree` |
+| @fact:B142-FILED **filed by** | кампания документации, PP-O1 аномалия A15, 2026-09-12 |
