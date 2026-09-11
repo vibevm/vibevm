@@ -361,3 +361,50 @@ Implementation consequence for bridge authors:
 - A direct external skill/resource is admitted only through a typed manifest
   qualifier and a matching locked source record.
 - Never generate a symlink farm as a compatibility shortcut.
+
+## J-012 — Stale-plan decisions after the first publication
+
+Date: 2026-09-11
+
+Reclassified against the owner decisions and the implemented reference-backed
+model:
+
+- T13's old separate `vibespecs-bridges` workspace existed to quarantine Git
+  submodules from the host repository. Reference-backed packages contain no
+  gitlinks, and the owner explicitly chose to keep canonical local vibepacks
+  while sharing them outward without changing that structure. Their canonical
+  source therefore remains `vibevm/vibepacks/org.vibevm.bridges/`; each
+  published package is still one independent public repository.
+- T14 is closed by spec amendment, not by building `[hooks].allowed_groups`.
+  The later owner ruling in PROP-054 makes installation the consent and total
+  observability the safety model. PROP-020 now marks the never-wired allow-list,
+  first-run prompt and non-interactive abort as superseded historical design.
+- T15 remains correctly deferred: neither bridge vendors the Python checkout,
+  and the authenticated source cache is produced from a clean exact Git commit.
+  The first package that must ship a dirty/buildable Python working tree remains
+  the trigger for a new immutable hash recipe and `.vibeignore` parser.
+- T9 and T10 remain separate design tasks by the source plan itself; no MCP
+  bridge or harness-command/plugin lane is claimed by these packages. T16/T17
+  likewise retain their explicit plugin/Cursor demand triggers.
+
+## J-013 — Original Phase-2 mandatory tail closed
+
+Date: 2026-09-11
+
+- T1: `vibe check` now has a seventeenth `bridge_provenance` cell. A bridge
+  must identify the upstream with `describes`, name its own SPDX licence, carry
+  its root licence file, and provide either structured external-source
+  provenance or a legacy Upstream section. Reference sources separately expose
+  upstream SPDX and immutable licence evidence.
+- T2: `vibe tree` plain and TUI mark bridge rows; JSON separates the package
+  delivery `source` from `upstream`, and the detail card never displays a cache
+  path.
+- T6: both per-package and workspace publication remove `.gitmodules` when a
+  clean populated submodule is flattened, preserve no gitlink/`.git`, and
+  report `submodule <path> vendored at <sha>`. Dirty or commit-mismatched
+  submodules refuse publication rather than producing false provenance.
+- T7: Windows E2E installed the real Spec Kit bridge into both the default
+  `mixed` project and explicit `markdown` project. `vibe check` and offline
+  skill dry-run were green; package payload bytes matched and only the
+  representation-specific slot record differed. With no boot contribution,
+  `INDEX.md` matched and neither mode invented `STATIC.*`.
