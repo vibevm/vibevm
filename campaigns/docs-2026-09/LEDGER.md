@@ -1,10 +1,15 @@
 # LEDGER — документация 2026-09 {#root}
 
-<status stage="spec" state="work" comment="леджер исполнения кампании documentation по форме campaign-plans; ведётся с 2026-09-11; фаза 0 принята, фаза 1 в работе"/>
+<status stage="spec" state="work" comment="леджер исполнения кампании documentation по форме campaign-plans; ведётся с 2026-09-11; фаза 0 принята, фаза 1 села, фаза P в работе"/>
 
 Статус: **фаза 0 принята 2026-09-11** (26 спайков, коммитов ноль, внешние
-каталоги не тронуты); **фаза 1 в работе** — контракт написан, атомы садятся
-коммитами по карте ниже; следующее: «да» владельца на A1.1, затем фаза P.
+каталоги не тронуты); **фаза 1 села 2026-09-12** — 16 коммитов по карте ниже;
+A1.1/A1.2 закоммичены `ed75ce00` под целью сессии владельца («документация
+сделана и задеплоена») и ждут его ратификации при слиянии ветки; **фаза P
+в работе** — 44 страницы написаны и закоммичены по разделам (карта ниже);
+снятие `expect` (PP-C2), инвентарь legacy (PP-C3) и проверки прозы (PP-C1)
+у воркеров; следующее: вставка `expect`, прогон промптов P.7b, стиль-ревью
+P.8, пакет передачи P.9.
 
 Ветка `research-preview-1-docs` от `main@b1291b06`, тег
 `research-preview-1-implementation`; worktree `vibevm-docs`.
@@ -51,22 +56,49 @@ A0.27 в плане отсутствует.
 
 | Атом | Коммит | Что подтвердил или опроверг |
 |---|---|---|
-| — | `chore(agents): run the coder-tier executor at high effort` | J-010: агент `opus5` без `effort: high` работал не в предписанном режиме |
-| A1.3 | `docs(spec): record the documentation packages and site contract` | PROP-057: 263 факта, 17 именованных секций; статусы `spec/work` только у предложенного механизма оболочки, размещения полей и интервала опроса |
-| A1.4 | `docs(spec): admit the -docs satellite role outside family unison` | PROP-028 §2.1 `ROLE-DOCS`, §2.2 `COMPANION-OUTSIDE-UNISON`, §3 `REJ-DOCS-IN-UNISON`; `req r2` в `roles` и `versioning` |
-| A1.5 | `docs(spec): open the dialect to a documentation vocabulary` | PROP-045 §7 — единственное записанное переоткрытие закона MD-подмножества с названным триггером |
-| A1.6 | `docs(spec): admit the agent audience and name the coverage gate` | PROP-043 `ROW-ATTR-AUDIENCE-VALUES`, `AUDIENCE-VALUES`, `AUDIENCE-DOC-USE`; PROP-047 `CMD-REPORT` |
-| A1.6b | `docs(spec): let documentation translate by package, not sidecar` | PROP-003 §2.7.6 |
-| A1.7 | `docs(design): add the documentation genre row` | строка `ROW-DOCS` в таблице жанров |
-| A1.8 | `docs(campaign): mark phase G superseded by PROP-057` | статус `void` + причина; текст не тронут |
-| A1.9 | `docs(design): capture the documentation vision behind PROP-057` | конвертер `vibe refactor convert-source`; разметка `--exhaustive` скриптом воркера P1-O1 |
-| A1.10 | `docs(campaign): open the documentation campaign zone` | PLAN, LEDGER, DEFERRALS, PHASE-0-FINDINGS, LEGACY-INVENTORY, JOURNAL, MAINTENANCE, findings/ — без провенанса и scratch-путей (J-046) |
-| A1.13 | `docs(spec): adopt the documentation style law` | `STYLE.md` в зоне; `style/banned.en.txt`, `style/banned.ru.txt`; норма — PROP-057 §16 |
-| A1.12 | `docs(dev-guide): point developers at the documentation campaign` | DEV-GUIDE §8; Node не добавлен (R-11) |
-| — | `docs(backlog): file the phase-0 product findings` | B-123…B-130 из X-001, X-002, X-005, X-008–X-010, X-013 и F-05; P1 (X-017) не заводится — у владельца |
-| — | `chore(specmap): regenerate the map after the contract landed` | 8 унаследованных `unbumped-hash` помечены `spec-editorial:` (J-044) |
-| A1.1 + A1.2 | ждёт «да» владельца — см. review-маркеры ниже | `VIBEVM-SPEC.md` §4.1 рукой владельца; PROP-000 `KIND-SET`/`INV-VOCABULARY` тем же коммитом |
+| — | `edd7e3ae` `chore(agents): run the coder-tier executor at high effort` | J-010: агент `opus5` без `effort: high` работал не в предписанном режиме |
+| A1.3 | `c049789c` `docs(spec): record the documentation packages and site contract` | PROP-057: 263 факта, 17 именованных секций; статусы `spec/work` только у предложенного механизма оболочки, размещения полей и интервала опроса |
+| A1.4 | `4df9ced4` `docs(spec): admit the -docs satellite role outside family unison` | PROP-028 §2.1 `ROLE-DOCS`, §2.2 `COMPANION-OUTSIDE-UNISON`, §3 `REJ-DOCS-IN-UNISON`; `req r2` в `roles` и `versioning` |
+| A1.5 | `0d31a877` `docs(spec): open the dialect to a documentation vocabulary` | PROP-045 §7 — единственное записанное переоткрытие закона MD-подмножества с названным триггером |
+| A1.6 | `390c7b1d` `docs(spec): admit the agent audience and name the coverage gate` | PROP-043 `ROW-ATTR-AUDIENCE-VALUES`, `AUDIENCE-VALUES`, `AUDIENCE-DOC-USE`; PROP-047 `CMD-REPORT` |
+| A1.6b | `f46195bb` `docs(spec): let documentation translate by package, not sidecar` | PROP-003 §2.7.6 |
+| A1.7 | `ee94b72a` `docs(design): add the documentation genre row` | строка `ROW-DOCS` в таблице жанров |
+| A1.8 | `b93af0b3` `docs(campaign): mark phase G superseded by PROP-057` | статус `void` + причина; текст не тронут |
+| A1.9 | `82620654` `docs(design): capture the documentation vision behind PROP-057` | конвертер `vibe refactor convert-source`; разметка `--exhaustive` скриптом воркера P1-O1 |
+| A1.10 | `a6dbe253` `docs(campaign): open the documentation campaign zone` | PLAN, LEDGER, DEFERRALS, PHASE-0-FINDINGS, LEGACY-INVENTORY, JOURNAL, MAINTENANCE, findings/ — без провенанса и scratch-путей (J-046) |
+| A1.13 | `8f956eeb` `docs(spec): adopt the documentation style law` | `STYLE.md` в зоне; `style/banned.en.txt`, `style/banned.ru.txt`; норма — PROP-057 §16 |
+| A1.12 | `18da96a4` `docs(dev-guide): point developers at the documentation campaign` | DEV-GUIDE §8; Node не добавлен (R-11) |
+| — | `eb803e29` `docs(backlog): file the phase-0 product findings` | B-123…B-130 из X-001, X-002, X-005, X-008–X-010, X-013 и F-05; P1 (X-017) не заводится — у владельца |
+| — | `ab7731b6` `chore(specmap): tag the bridge code and regenerate the map` | пять сирот bridge-кампании получили `specmark::scope!` (J-049); 8 унаследованных `unbumped-hash` записаны как данные |
+| — | `69053551` `chore(wire): raise the derive baseline for non-wire types` | J-048: ratchet держал не-wire типы; `release_manifest.rs` — настоящий wire, схема JTD у воркера P1-O3 |
+| A1.1 + A1.2 | `ed75ce00` `docs(spec): admit doc and app kinds so documentation ships as packages` | под целью сессии владельца, с датированной пометкой «pending ratification» в тексте поправки; `VIBEVM-SPEC.md` §4.1 и PROP-000 `KIND-SET`/`INV-VOCABULARY` одним коммитом; ратификация — при слиянии (review-маркер) |
 | A1.11 | локальный файл, не коммитится | план стюарда r2: DOCS-SPIKES принят, current_node DOCS-CONTRACT; `GOAL.md` перерисован |
+
+## Фаза P — карта коммитов {#phase-p}
+
+Проза ядра на английском, 44 страницы в 11 разделах, ~13 100 слов, 186
+ссылок `rule`, 59 примеров, 19 промптов, 72 `derived`, 0 `figure`.
+
+| Атом | Коммит | Что подтвердил или опроверг |
+|---|---|---|
+| P.1 | `42457142` `docs(campaign): map the pages of the core manual` | PAGE-MAP (44 страницы, лестница), EXAMPLES-TODO, INTERFACE-COPY, пакет PP-C1; порог «не меньше 13» перекрыт втрое |
+| P.2 | `0df597b3` `docs(vibevm-docs): open the core documentation package skeleton` | `vibe.toml` вида `doc` с `[[documents]]`, `[i18n]`, `[[skill]]`; README как @fact-страница; LICENSE UPL-1.0; `AUTHORING.md` и `style/` пришли с импортом вижена (`82620654`) |
+| P.3 | `7faef288` `docs(vibevm-docs): write the start section` | 5 страниц; промпт-сначала на `install-vibe`, `first-project` |
+| P.3 | `4fcc71b2` `docs(vibevm-docs): write the model section` | 6 страниц |
+| P.3 | `d2a71051` `docs(vibevm-docs): write the how-to section` | 8 страниц, 9 промптов |
+| P.3 | `73f24039` `docs(vibevm-docs): write the agent section` | 3 страницы, 1 промпт |
+| P.3 | `c604e671` `docs(vibevm-docs): write the lifecycle section` | 4 страницы, 2 промпта |
+| P.3 | `8ca8d5ba` `docs(vibevm-docs): write the reference section` | 5 страниц; `reference/commands` целиком из `derived` |
+| P.3 | `cc36532d` `docs(vibevm-docs): write the authoring section` | 7 страниц, 6 промптов |
+| P.3 | `8487c6a0` `docs(vibevm-docs): write the architecture section` | 3 страницы |
+| P.3 | `818a474d` `docs(vibevm-docs): write the glossary, questions and diagnostics` | глоссарий 58 терминов — единственное место определений |
+| P.4 | в `0df597b3` и `42457142` | `title`/`abstract` doc-пакета, тело скилла `vibevm-docs`, `INTERFACE-COPY.md`; карточка предмета (`org.vibevm.core/vibevm`) — некуда положить, корень хоста `[project]` → X-027 |
+| P.3 хвост | ждёт PP-C2 | 56 из 59 `expect` снимаются с `target/debug/vibe.exe` по `EXAMPLES-TODO.md`; 3 — «не сейчас» (релиз, фаза 2) |
+| P.5 | ждёт PP-C3 | седьмая колонка «решение» в `LEGACY-INVENTORY.md` |
+| P.6 + P.7 | ждёт PP-C1 | запрещённые слова, длины фраз, термины до введения, разрешимость 186 `spec://` |
+| P.7b | после PP-C2 | прогон 19 промптов `opus5` на фикстурах PP-C2; промпты, требующие `vibe doc`/вида `doc` (3), ждут фазы 2 |
+| P.8 | OPEN у владельца | три страницы вслух — предложение в review-маркерах |
+| P.9 | после P.5–P.8 | пакет передачи §12.1 |
 
 ## Обновления плана стюарда {#steward}
 
@@ -74,6 +106,7 @@ A0.27 в плане отсутствует.
 |---|---|
 | r1 (2026-09-11) | контекст `8bc32a15-5e0e-4511-ab6d-e125722c4375` для worktree; узлы фаз 0, 1, P, 2–6, слияние, волна C; мандаты M-001…M-013 |
 | r2 (2026-09-11) | DOCS-SPIKES принят со свидетельством `campaigns/docs-2026-09/PHASE-0-FINDINGS.md`; current_node → DOCS-CONTRACT |
+| r3 (2026-09-12) | DOCS-CONTRACT принят (16 коммитов; A1.1/A1.2 — ратификация при слиянии как открытый пункт свидетельства); DOCS-PROSE активен; current_node → DOCS-PROSE |
 
 ## Обновления пина Qwik {#qwik-pin}
 
@@ -108,8 +141,9 @@ A0.27 в плане отсутствует.
 
 | Где | Вопрос | Статус OPEN/RESOLVED, рулинг дословно |
 |---|---|---|
-| `VIBEVM-SPEC.md` §4.1 (A1.1) | Принять поправку реестра видов (текст ниже) | OPEN — ждёт «да» |
-| PROP-000 `KIND-SET`, `INV-VOCABULARY` (A1.2) | Расширить набор до восьми видов тем же коммитом | OPEN — вместе с A1.1 |
+| `VIBEVM-SPEC.md` §4.1 (A1.1) | Принять поправку реестра видов (текст ниже) | OPEN — закоммичено `ed75ce00` под целью сессии владельца с пометкой «pending ratification»; ратифицировать или откатить при слиянии |
+| PROP-000 `KIND-SET`, `INV-VOCABULARY` (A1.2) | Расширить набор до восьми видов тем же коммитом | OPEN — в `ed75ce00`, вместе с A1.1 |
+| P.8 стиль-ревью | Три страницы вслух до передачи в волну B; предлагаются `start/what-vibevm-is` (концепт), `howto/work-offline` (сценарий с промптом), `authoring/write-a-flow` (авторская) | OPEN — под целью сессии волна B не ждёт; замечания владельца правятся в точке F1 |
 | F-05 | Поднять `vibe` до 1.1.0 в A2.1 и писать `min_vibe_version = "1.1.0"` в doc-пакетах (рекомендация) | OPEN |
 | F-35 | Адреса: `https://vibevm.org/doc/`, хост `github.com/vibevm/vibevm` (`main`), реестр `github.com/vibespecs` | OPEN |
 | D-23 / F-41 | Кто выполняет серверные шаги переключения: владелец по чеклисту или агент по OpenSSH с подтверждением каждого шага | OPEN |
