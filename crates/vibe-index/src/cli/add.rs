@@ -113,6 +113,8 @@ pub fn run(args: Args) -> Result<()> {
         homepage: pkg.homepage.clone(),
         keywords: pkg.keywords.clone(),
         describes: pkg.describes.as_ref().map(|p| p.to_string()),
+        bridge: pkg.bridge,
+        embedded_sources: mfst::embedded_sources_from(&manifest.embedded_sources),
         compatibility: mfst::compatibility_from(&manifest.compatibility),
         provides: mfst::provides_from(&manifest.provides),
         requires: mfst::requires_from(&manifest.requires),

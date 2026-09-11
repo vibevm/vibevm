@@ -140,6 +140,8 @@ pub(super) fn dependency_source(
 
     Ok(LoadedDependency {
         skills: manifest.skills,
+        declared_sources: manifest.embedded_sources,
+        embedded_sources: package.embedded_sources.clone(),
         source: DependencyExtensionSource {
             provider: DependencyProvider {
                 id: DependencyProviderId::new(package.group.clone(), package.name.clone()),

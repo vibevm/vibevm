@@ -74,6 +74,7 @@ fn ready_prepares_after_materialisation_and_preinstall_from_the_supplied_resolut
         version: test_ok!("1.0.0".parse(), "version"),
         content_dir: source.path().to_path_buf(),
         source_hash: Some(test_ok!(ContentHash::parse("sha256:aa"), "source hash")),
+        embedded_sources: Vec::new(),
         manifest: test_ok!(Manifest::read(source.path().join("vibe.toml")), "manifest"),
         requires: Vec::new(),
         admitted_by: None,

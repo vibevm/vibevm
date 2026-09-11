@@ -15,6 +15,8 @@ pub use crate::generated::shared::ConflictsEntry;
 
 pub use crate::generated::shared::DeliveryMode;
 
+pub use crate::generated::shared::EmbeddedSourceEntry;
+
 pub use crate::generated::shared::FeaturesEntry;
 
 pub use crate::generated::shared::Group;

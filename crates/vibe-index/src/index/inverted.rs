@@ -389,6 +389,8 @@ mod tests {
             homepage: None,
             keywords: vec![],
             describes: describes.map(|s| s.to_string()),
+            bridge: false,
+            embedded_sources: vec![],
             compatibility: None,
             provides: (!capabilities.is_empty()).then_some(ProvidesEntry {
                 capabilities: capabilities.iter().map(|s| s.to_string()).collect(),

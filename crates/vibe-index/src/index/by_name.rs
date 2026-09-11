@@ -155,6 +155,8 @@ mod tests {
             homepage: None,
             keywords: vec![],
             describes: None,
+            bridge: false,
+            embedded_sources: vec![],
             compatibility: None,
             provides: None,
             requires: None,

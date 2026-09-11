@@ -71,6 +71,9 @@ pub enum Error {
     Registry(#[from] vibe_registry::RegistryError),
 
     #[error(transparent)]
+    EmbeddedSource(#[from] vibe_registry::EmbeddedSourceError),
+
+    #[error(transparent)]
     Solve(#[from] vibe_resolver::SolveError),
 
     #[error(transparent)]

@@ -188,6 +188,7 @@ fn hooked_dep_named_with_mode(name: &str, hardlink: bool) -> (ResolvedDep, TempD
             version: ver("1.0.0"),
             content_dir: source.path().to_path_buf(),
             source_hash: Some(hash('1')),
+            embedded_sources: Vec::new(),
             manifest,
             requires: Vec::new(),
             admitted_by: None,

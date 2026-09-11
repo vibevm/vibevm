@@ -47,8 +47,9 @@ use super::{Materialization, read_toml, write_toml};
 /// `1` M0/M1.1 · `2` per-package registries · `3` PROP-003 features ·
 /// `4` PROP-007 workspace path-source (`source_kind = "path"`) ·
 /// `5` PROP-008 qualified naming (the per-package `group` field) ·
-/// `6` PROP-050 visibility provenance.
-pub const CURRENT_SCHEMA_VERSION: u32 = 6;
+/// `6` PROP-050 visibility provenance · `7` immutable embedded-source
+/// provenance for reference-backed packages.
+pub const CURRENT_SCHEMA_VERSION: u32 = 7;
 
 fn is_false(b: &bool) -> bool {
     !*b
@@ -94,7 +95,7 @@ pub struct Lockfile {
 /// let m: LockfileMeta = toml::from_str(r#"
 ///     generated_by = "vibe 0.1.0"
 ///     generated_at = "2026-05-21T12:00:00Z"
-///     schema_version = 6
+///     schema_version = 7
 ///     solver = "resolvo-0.x"
 /// "#).unwrap();
 /// assert_eq!(m.schema_version, CURRENT_SCHEMA_VERSION);
@@ -225,6 +226,50 @@ pub enum SourceKind {
     Local,
 }
 
+/// One immutable external source authenticated for a locked package. The
+/// record contains portable provenance only: cache paths and credentials are
+/// deliberately absent.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct LockedEmbeddedSource {
+    pub name: String,
+    pub source_url: SourceUrl,
+    /// Optional advertised ref used to obtain the exact commit. It is fetch
+    /// provenance, never the source identity.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub source_ref: Option<String>,
+    /// Exact commit verified at fetch time.
+    pub resolved_commit: String,
+    /// Git tree object owned by `resolved_commit`.
+    pub tree_oid: String,
+    /// Independent SHA-256 identity of the upstream tree.
+    pub content_hash: ContentHash,
+    /// SPDX expression for the upstream bytes. This is distinct from the
+    /// adapter package's own `[package].license`.
+    pub upstream_license: String,
+    /// Portable path of the verified licence file inside the source tree.
+    pub license_path: PathBuf,
+    /// Immutable public upstream license URL at the resolved commit.
+    pub license_url: String,
+    /// Hash of the licence file bytes verified inside the authenticated tree.
+    pub license_file_sha256: ContentHash,
+}
+
+impl LockedEmbeddedSource {
+    /// Whether this portable lock row authenticates exactly one authored
+    /// declaration. Cache paths are deliberately absent from both sides.
+    pub fn matches_declaration(&self, declaration: &super::EmbeddedSourceDecl) -> bool {
+        self.name == declaration.name
+            && self.source_url.as_str() == declaration.url
+            && self.source_ref == declaration.ref_hint
+            && self.resolved_commit == declaration.commit
+            && self.content_hash == declaration.content_hash
+            && self.upstream_license == declaration.upstream_license
+            && self.license_path == declaration.license_path
+            && self.license_url == declaration.license_url
+    }
+}
+
 /// One installed package, as it appears in the lockfile.
 ///
 /// ```
@@ -262,6 +307,13 @@ pub struct LockedPackage {
     pub group: Group,
     pub version: semver::Version,
 
+    /// `true` when the installed package is an authored bridge around an
+    /// upstream project rather than the upstream project itself. Kept on the
+    /// lock row so provenance remains visible without reopening mutable slot
+    /// metadata.
+    #[serde(default, skip_serializing_if = "is_false")]
+    pub bridge: bool,
+
     /// Name of the registry that served this package — matches a
     /// `[[registry]].name` in `vibe.toml`. `None` for local-directory
     /// registries (`--registry <path>`), override-resolved packages, and
@@ -293,6 +345,16 @@ pub struct LockedPackage {
     /// **identity** component of the (group, name, version, content_hash)
     /// tuple. Present in every lockfile version.
     pub content_hash: ContentHash,
+
+    /// Immutable external source inputs authenticated for this package.
+    /// Serialized as nested `[[package.embedded_source]]` rows. Machine-local
+    /// cache locations are intentionally derivable rather than locked.
+    #[serde(
+        default,
+        rename = "embedded_source",
+        skip_serializing_if = "Vec::is_empty"
+    )]
+    pub embedded_sources: Vec<LockedEmbeddedSource>,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub boot_snippet: Option<String>,

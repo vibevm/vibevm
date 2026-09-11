@@ -31,6 +31,8 @@ pub use crate::generated::shared::ConflictsEntry;
 
 pub use crate::generated::shared::DeliveryMode;
 
+pub use crate::generated::shared::EmbeddedSourceEntry;
+
 /// One registry fact — the eleven-variant `Event` union of `journal::record`.
 /// Not the namesake campaign journal of PROP-043: a different crate keeping a
 /// different law; this one is the package registry's journal of catalog facts.

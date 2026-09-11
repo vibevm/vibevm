@@ -59,6 +59,8 @@ fn entry(kind: PackageKind, group: Group, name: &str, version: &str) -> VersionE
         homepage: None,
         keywords: vec![],
         describes: None,
+        bridge: false,
+        embedded_sources: vec![],
         compatibility: None,
         provides: None,
         requires: None,

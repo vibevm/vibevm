@@ -35,6 +35,30 @@ pub(super) fn bootstrap(
     sync_submodules(git, dest)
 }
 
+/// Clone one exact upstream tree for a dependency-declared embedded source.
+/// No submodule recursion: the source is opaque content and its own dependency
+/// graph is outside the bridge package's authority.
+pub(super) fn bootstrap_embedded(
+    git: &ShellGit,
+    url: &str,
+    refname: &str,
+    dest: &Path,
+) -> Result<(), GitError> {
+    let dest_s = dest.to_string_lossy();
+    git.run(
+        &[
+            "clone",
+            "--no-checkout",
+            "--no-tags",
+            "--",
+            url,
+            dest_s.as_ref(),
+        ],
+        None,
+    )?;
+    fetch_and_checkout(git, dest, refname)
+}
+
 pub(super) fn update(git: &ShellGit, dest: &Path, refname: &str) -> Result<(), GitError> {
     fetch_and_checkout(git, dest, refname)?;
     sync_submodules(git, dest)

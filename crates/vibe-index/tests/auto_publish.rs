@@ -77,6 +77,8 @@ fn entry(kind: PackageKind, name: &str, version: &str) -> VersionEntry {
         homepage: None,
         keywords: vec![name.into()],
         describes: None,
+        bridge: false,
+        embedded_sources: vec![],
         compatibility: Default::default(),
         provides: None,
         requires: Default::default(),

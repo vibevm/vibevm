@@ -36,11 +36,13 @@ fn publish_resolution_lock(root: &Path, resolution: &[ResolvedDep]) {
             name: PackageName::parse(&dep.name).unwrap(),
             group: dep.group.clone(),
             version: dep.version.clone(),
+            bridge: false,
             registry: None,
             source_url: "file:///fixture".into(),
             source_ref: None,
             resolved_commit: None,
             content_hash: dep.source_hash.clone().unwrap(),
+            embedded_sources: Vec::new(),
             boot_snippet: None,
             files_written: Vec::new(),
             dependencies: dep

@@ -160,9 +160,9 @@ pub(super) fn apply(ctx: &output::Context, inputs: ScopedApply<'_>) -> Result<Up
     // Replace each subtree package's lockfile entry, carrying the
     // install-scoped metadata (features / language) the version bump does
     // not change.
-    for (cached, deps, _) in updated {
+    for (cached, deps, _, embedded_sources) in updated {
         let old = lockfile.find(&cached.resolved.group, &cached.resolved.name);
-        let entry = locked_package(cached, deps, old);
+        let entry = locked_package(cached, deps, old, embedded_sources);
         match lockfile
             .packages
             .iter()

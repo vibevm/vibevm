@@ -57,6 +57,7 @@ fn unit_fixture() -> (Fixture, DependencyProviderId) {
         version,
         content_dir: slot.clone(),
         source_hash: Some(must(ContentHash::parse("sha256:aa"), "source hash")),
+        embedded_sources: Vec::new(),
         manifest: must(Manifest::read(slot.join("vibe.toml")), "unit manifest"),
         requires: Vec::new(),
         admitted_by: None,

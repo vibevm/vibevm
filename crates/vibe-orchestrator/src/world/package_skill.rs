@@ -11,7 +11,7 @@ use vibe_agent_projection::pkgskill::{
 };
 use vibe_core::lifecycle::{ExtensionPoint, Phase, PhasePoint};
 use vibe_core::manifest::{
-    ExtensionConfig, ExtensionDecl, ExtensionHandler, ExtensionKey, SkillDecl,
+    EmbeddedSourceDecl, ExtensionConfig, ExtensionDecl, ExtensionHandler, ExtensionKey, SkillDecl,
 };
 use vibe_lifecycle::{
     DependencyProvider, DependencyProviderId, ExtensionProvider, HostIdentity, HostProvider,
@@ -33,12 +33,13 @@ pub(super) fn presets(
     selected: &Path,
     host: &HostProvider,
     host_skills: &[SkillDecl],
+    host_embedded_sources: &[EmbeddedSourceDecl],
     installed: &[LoadedDependency],
 ) -> Result<PresetPlan> {
     let mut inputs = Vec::new();
     if !host_skills.is_empty() {
         inputs.push(ProjectSkillProviderInput {
-            provider: authored_provider(host)?,
+            provider: authored_provider(host, host_embedded_sources)?,
             declarations: host_skills.to_vec(),
         });
     }
@@ -47,7 +48,7 @@ pub(super) fn presets(
             .iter()
             .filter(|dependency| !dependency.skills.is_empty())
             .map(|dependency| ProjectSkillProviderInput {
-                provider: installed_provider(&dependency.source.provider),
+                provider: installed_provider(dependency),
                 declarations: dependency.skills.clone(),
             }),
     );
@@ -89,7 +90,10 @@ pub(super) fn presets(
     Ok((presets, by_key, desired))
 }
 
-fn authored_provider(host: &HostProvider) -> Result<DeclaredSkillProvider> {
+fn authored_provider(
+    host: &HostProvider,
+    embedded_sources: &[EmbeddedSourceDecl],
+) -> Result<DeclaredSkillProvider> {
     let HostIdentity::Coordinate(id) = &host.identity else {
         bail!("a selected host with [[skill]] must have package coordinates");
     };
@@ -102,10 +106,12 @@ fn authored_provider(host: &HostProvider) -> Result<DeclaredSkillProvider> {
         version: host.version.clone(),
         kind,
         root: host.root.clone(),
+        embedded_sources: embedded_sources.to_vec(),
     })
 }
 
-fn installed_provider(provider: &DependencyProvider) -> DeclaredSkillProvider {
+fn installed_provider(dependency: &LoadedDependency) -> DeclaredSkillProvider {
+    let provider = &dependency.source.provider;
     DeclaredSkillProvider::Installed {
         group: provider.id.group().clone(),
         name: provider.id.name().clone(),
@@ -113,6 +119,8 @@ fn installed_provider(provider: &DependencyProvider) -> DeclaredSkillProvider {
         kind: provider.kind,
         root: provider.root.clone(),
         content_hash: provider.content_hash.clone(),
+        embedded_sources: dependency.embedded_sources.clone(),
+        declared_sources: dependency.declared_sources.clone(),
     }
 }
 
@@ -124,6 +132,7 @@ fn provider(binding: &ProjectSkillBinding) -> ExtensionProvider {
             version,
             kind,
             root,
+            ..
         } => ExtensionProvider::Host(HostProvider {
             identity: HostIdentity::coordinate(DependencyProviderId::new(
                 group.clone(),
@@ -141,6 +150,7 @@ fn provider(binding: &ProjectSkillBinding) -> ExtensionProvider {
             kind,
             root,
             content_hash,
+            ..
         } => ExtensionProvider::Dependency(DependencyProvider {
             id: DependencyProviderId::new(group.clone(), name.clone()),
             root: root.clone(),

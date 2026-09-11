@@ -125,11 +125,13 @@ pub(crate) fn locked(name: &str, hash: &str, dependencies: &[&str]) -> LockedPac
         name: PackageName::parse(name).unwrap(),
         group: group(),
         version: version(),
+        bridge: false,
         registry: None,
         source_url: "file:///fixture".into(),
         source_ref: None,
         resolved_commit: None,
         content_hash: ContentHash::parse(hash).unwrap(),
+        embedded_sources: Vec::new(),
         boot_snippet: None,
         files_written: Vec::new(),
         dependencies: dependencies
@@ -164,6 +166,7 @@ pub(crate) fn resolved(root: &Path, name: &str, hash: &str, dependencies: &[&str
         version: version(),
         content_dir: slot.clone(),
         source_hash: Some(ContentHash::parse(hash).unwrap()),
+        embedded_sources: Vec::new(),
         manifest: Manifest::read(slot.join(Manifest::FILENAME)).unwrap(),
         requires: dependencies
             .iter()

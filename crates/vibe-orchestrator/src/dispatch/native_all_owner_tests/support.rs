@@ -148,6 +148,7 @@ impl Fixture {
                 source_hash: Some(
                     ContentHash::parse(&format!("sha256:{}", "a".repeat(64))).unwrap(),
                 ),
+                embedded_sources: Vec::new(),
                 manifest: vibe_core::manifest::Manifest::read(
                     self.root
                         .path()
@@ -169,6 +170,7 @@ impl Fixture {
                 source_hash: Some(
                     ContentHash::parse(&format!("sha256:{}", "b".repeat(64))).unwrap(),
                 ),
+                embedded_sources: Vec::new(),
                 manifest: vibe_core::manifest::Manifest::read(
                     self.root
                         .path()
@@ -418,6 +420,7 @@ fn write_lock(root: &Path) {
         name: must(PackageName::parse("compiler"), "compiler package name"),
         group: must(Group::parse("org.demo"), "compiler group"),
         version: must("1.0.0".parse(), "compiler version"),
+        bridge: false,
         registry: None,
         source_url: "file:///fixture".into(),
         source_ref: None,
@@ -426,6 +429,7 @@ fn write_lock(root: &Path) {
             ContentHash::parse(&format!("sha256:{}", "a".repeat(64))),
             "compiler content hash",
         ),
+        embedded_sources: Vec::new(),
         boot_snippet: None,
         files_written: Vec::new(),
         dependencies: vec![base.clone()],
@@ -445,6 +449,7 @@ fn write_lock(root: &Path) {
         name: must(PackageName::parse("base"), "base package name"),
         group: must(Group::parse("org.demo"), "base group"),
         version: must("1.0.0".parse(), "base version"),
+        bridge: false,
         registry: None,
         source_url: "file:///fixture".into(),
         source_ref: None,
@@ -453,6 +458,7 @@ fn write_lock(root: &Path) {
             ContentHash::parse(&format!("sha256:{}", "b".repeat(64))),
             "base content hash",
         ),
+        embedded_sources: Vec::new(),
         boot_snippet: None,
         files_written: Vec::new(),
         dependencies: Vec::new(),

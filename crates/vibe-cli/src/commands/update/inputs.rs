@@ -65,6 +65,7 @@ pub(super) fn locked_package(
     cached: &CachedPackage,
     dependencies: &[PackageRef],
     old: Option<&LockedPackage>,
+    embedded_sources: &[vibe_core::manifest::LockedEmbeddedSource],
 ) -> LockedPackage {
     let source_kind = if cached.overridden {
         SourceKind::Override
@@ -80,11 +81,13 @@ pub(super) fn locked_package(
         group: cached.resolved.group.clone(),
         name: vibe_core::PackageName::from_validated(cached.resolved.name.clone()),
         version: cached.resolved.version.clone(),
+        bridge: cached.package_meta().bridge,
         registry: cached.registry_name.clone(),
         source_url: vibe_core::SourceUrl::new(cached.source_uri.clone()),
         source_ref: cached.source_ref.clone(),
         resolved_commit: cached.resolved_commit.clone(),
         content_hash: vibe_core::ContentHash::from_validated(cached.content_hash.clone()),
+        embedded_sources: embedded_sources.to_vec(),
         boot_snippet: None,
         files_written: Vec::new(),
         dependencies: dependencies.to_vec(),

@@ -25,6 +25,7 @@ use specmark::spec;
 use vibe_core::manifest::Manifest;
 use vibe_core::{Group, PackageRef};
 
+pub mod embedded_source;
 pub mod git_backend;
 pub mod git_package_registry;
 pub mod git_registry;
@@ -36,6 +37,11 @@ pub mod search;
 pub mod store;
 pub mod vendor;
 
+pub use embedded_source::{
+    CachedEmbeddedSource, EmbeddedSourceError, cache_embedded_source, cache_embedded_source_with,
+    cache_locked_embedded_source, cache_locked_embedded_source_with, lock_embedded_sources,
+    lock_embedded_sources_with,
+};
 pub use git_backend::{GitBackend, GitError, ShellGit};
 pub use git_package_registry::GitPerPackageRegistry;
 pub use git_registry::{GitMonorepoRegistry, RegistryMeta, default_cache_root};
@@ -354,7 +360,9 @@ pub use error::{AllVersionsUnusableDetail, RegistryError, StoreEntryMismatchDeta
 // guarantee about neither.
 pub use hash_recipe::{RecipeId, order_entries, order_paths};
 pub(crate) use shippable::copy_dir_recursive;
-pub use shippable::{compute_content_hash, compute_content_hash_with};
+pub use shippable::{
+    compute_content_hash, compute_content_hash_with, compute_portable_content_hash,
+};
 pub use store::{
     InsertOutcome, entry_dir, insert_from, list_all, list_older_than, list_versions, lookup,
     record_hash, recorded_hash, remove_all, remove_entry, remove_name, store_root,

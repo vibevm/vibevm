@@ -220,6 +220,7 @@ fn resolved(root: &Path, name: &str) -> ResolvedDep {
         version: "1.0.0".parse().unwrap(),
         content_dir: content_dir.clone(),
         source_hash: Some(ContentHash::parse("sha256:aa").unwrap()),
+        embedded_sources: Vec::new(),
         manifest: Manifest::read(content_dir.join("vibe.toml")).unwrap(),
         requires: Vec::new(),
         admitted_by: None,

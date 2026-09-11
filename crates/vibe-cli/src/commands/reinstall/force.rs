@@ -174,6 +174,7 @@ pub(super) fn run(ctx: &output::Context, inputs: Forced<'_>) -> Result<Reinstall
             version: cached.resolved.version.clone(),
             content_dir: cached.cache_dir.clone(),
             source_hash: Some(ContentHash::from_validated(cached.content_hash.clone())),
+            embedded_sources: locked.embedded_sources.clone(),
             manifest: cached.manifest.clone(),
             // The recorded resolution edges — `apply_resolution` walks
             // them to compose each node's dependency boot. A lockfile

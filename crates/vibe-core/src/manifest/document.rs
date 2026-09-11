@@ -47,9 +47,9 @@ use super::extension::{ExtensionDecl, ExtensionsControl};
 use super::i18n::I18nDecl;
 use super::mechanism::{MechanismDecl, MechanismRoutes};
 use super::package::{
-    BinaryDecl, BootSnippet, Compatibility, ConditionalTarget, ConflictsList, FeaturesTable,
-    HooksDecl, LinkType, ManifestWire, McpServerDecl, Obsoletes, OverrideTable, PackageMeta,
-    Provides, Recommends, Requires, RequiresAny, SkillDecl, Suggests, VisibilityMeta,
+    BinaryDecl, BootSnippet, Compatibility, ConditionalTarget, ConflictsList, EmbeddedSourceDecl,
+    FeaturesTable, HooksDecl, LinkType, ManifestWire, McpServerDecl, Obsoletes, OverrideTable,
+    PackageMeta, Provides, Recommends, Requires, RequiresAny, SkillDecl, Suggests, VisibilityMeta,
 };
 use super::project::{
     ActiveSection, LlmSection, MirrorSection, OverrideSection, ProjectSection, RegistrySection,
@@ -119,6 +119,16 @@ pub struct Manifest {
     /// `[suggests]` — forward hints, never auto-installed (package-role).
     #[serde(default, skip_serializing_if = "Suggests::is_empty")]
     pub suggests: Suggests,
+
+    /// `[[embedded_source]]` — immutable external source inputs referenced by
+    /// this package without vendoring their bytes into the package tree.
+    /// Package-role and independently content-addressed.
+    #[serde(
+        default,
+        rename = "embedded_source",
+        skip_serializing_if = "Vec::is_empty"
+    )]
+    pub embedded_sources: Vec<EmbeddedSourceDecl>,
 
     /// `[[skill]]` — agent-installable skills this package ships, projected
     /// into coding agents by `vibe skill install` (PROP-018 §2.4). A skill

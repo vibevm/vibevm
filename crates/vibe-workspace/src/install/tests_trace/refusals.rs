@@ -59,6 +59,7 @@ fn a_compiler_failure_fails_the_scope_and_preserves_the_error() {
             version: ver("1.0.0"),
             content_dir: src.path().to_path_buf(),
             source_hash: Some(source_hash()),
+            embedded_sources: Vec::new(),
             manifest: Manifest::read(src.path().join("vibe.toml")).unwrap(),
             requires: vec![],
             admitted_by: None,

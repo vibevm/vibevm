@@ -86,6 +86,7 @@ fn unselected_member_and_package_unit_enter_the_carried_build_plan() {
         version,
         content_dir: member_slot,
         source_hash: Some(ContentHash::parse("sha256:aa").expect("member hash")),
+        embedded_sources: Vec::new(),
         manifest: Manifest::read(root.path().join("member/vibe.toml")).expect("member manifest"),
         requires: Vec::new(),
         admitted_by: None,

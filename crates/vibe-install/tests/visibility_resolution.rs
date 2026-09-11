@@ -228,6 +228,7 @@ impl Fixture {
             language: None,
             exact: false,
             generated_by: "visibility golden".to_string(),
+            offline: false,
         };
         match vibe_install::plan(&self.source, &self.root, request, &NullObserver).unwrap() {
             Plan::Ready(planned) => planned,

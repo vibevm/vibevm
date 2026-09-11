@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">PROP-021 — Submodule sources</title>
-  <status stage="impl" state="done" comment="C 2026-07-25: submodule sources ship (recurse clone/update + snapshot embedding + in-place native); motivation, rejected and out-of-scope facts stay spec-stage; fact grain 2026-07-24"/>
+  <status stage="impl" state="work" comment="C 2026-09-11: git-native submodules and dependency-declared immutable Git sources ship for locked skill loading; source-aware build/write roots remain"/>
   <p><status-line fact="true" status="impl/done">**Status: IMPLEMENTED** (specified 2026-06-24 in an owner-requested design
 session; verified against the tree 2026-07-25 by the spec-actualization
 campaign). The git backend clones with `--recurse-submodules` and runs
@@ -20,7 +20,7 @@ gains `--recurse-submodules`), [PROP-002](PROP-002-decentralized-registry.xml)
 is fetched into), [PROP-022 §2](../vibe-workspace/PROP-022-materialization-modes.xml)
 (how submodule content reaches the slot differs by mode),
 [PROP-003](../vibe-resolver/PROP-003-dep-evolution.xml) (the dependency grammar
-the future dependency-declared form would extend).</related></p>
+  the dependency-declared form extends).</related></p>
   <motivation title="1. Motivation">
     <problem title="1.1 The problem — embedded repos do not come along">
       <facts ordered="false">
@@ -65,25 +65,47 @@ copy-based modes, or living natively for `in-place`
       <p><APPLIES-BOTH-CLONES fact="true" status="impl/done">This applies identically to the registry cache clone and to an `in-place`
 slot clone ([PROP-022 §2.4](../vibe-workspace/PROP-022-materialization-modes.xml#in-place)).</APPLIES-BOTH-CLONES></p>
     </fetch>
-    <source-abstraction title="2.2 Submodule is an abstract embedded source — git now, dependency later">
+    <source-abstraction title="2.2 Embedded sources — git-native and dependency-declared">
       <p><req-source-abstraction fact="true" status="impl/done">`req r1`</req-source-abstraction></p>
       <p><EMBEDDED-SOURCE-MODEL fact="true" status="impl/done">A submodule is modelled as an **embedded source**: content that lives at a
 subpath of the package and is resolved from elsewhere. There are two
 declaration forms:</EMBEDDED-SOURCE-MODEL></p>
       <facts ordered="false">
-        <FORM-GIT-NATIVE fact="true" status="impl/done">**git-native** (`.gitmodules`) — the only form **implemented now**. vibevm
+        <FORM-GIT-NATIVE fact="true" status="impl/done">**git-native** (`.gitmodules`) — vibevm
   reads no `.gitmodules` itself; git does, via §2.1.</FORM-GIT-NATIVE>
-        <FORM-DEPENDENCY-DECLARED fact="true" status="spec/done">**dependency-declared** (future) — a package's manifest names an embedded
-  source in its dependency section, so a submodule can be expressed even for a
-  package whose own distribution is not a live git checkout (e.g. a future
-  binary package). This form is **specified as the extension point and
-  stubbed**, not built (§4) — the abstraction exists so the git path is not a
-  one-off.</FORM-DEPENDENCY-DECLARED>
+        <FORM-DEPENDENCY-DECLARED fact="true" status="impl/done">**dependency-declared** — a package's manifest uses `[[embedded_source]]`
+  to name an upstream Git source independently of the package repository. The
+  declaration carries a portable name, public credential-free HTTPS URL, full
+  immutable commit, expected `sha256:` source-tree hash, optional ref hint, and
+  upstream licence provenance. This supports snapshot/binary-distributed bridge
+  packages without copying the upstream tree into their repository.</FORM-DEPENDENCY-DECLARED>
       </facts>
       <p><NOT-A-PACKAGE fact="true" status="impl/done">Either way, the embedded repo is **not** a second vibevm package: it is git
 content, never entered into the dependency resolver
 ([PROP-002](PROP-002-decentralized-registry.xml): one git repo = one package;
-the submodule is part of *this* package's content, not a node).</NOT-A-PACKAGE></p>
+  the submodule is part of *this* package's content, not a node).</NOT-A-PACKAGE></p>
+      <facts ordered="false">
+        <DECLARED-SOURCE-AUTH fact="true" status="impl/done">A dependency-declared source is authenticated twice: its resolved checkout
+  must equal the declared commit and its deterministic source-tree hash must
+  equal `content_hash`. `ref_hint` is diagnostic only and never selects bytes.</DECLARED-SOURCE-AUTH>
+        <DECLARED-SOURCE-CACHE fact="true" status="impl/done">Authenticated trees live in an accretive content-addressed directory below
+  the user's Vibe settings cache. A complete matching entry is reused offline;
+  a cache miss is fetched into a sibling temporary directory and published by
+  atomic rename only after both checks pass.</DECLARED-SOURCE-CACHE>
+        <DECLARED-SOURCE-VIEW fact="true" status="impl/work">The owning package remains an ordinary physical `vibedeps` slot containing
+  only its published payload. Vibe loaders resolve an explicit embedded-source
+  qualifier through a root-aware view backed by the authenticated cache; there
+  is no fallback from a missing package path into upstream. Generic tools may
+  request the verified physical source root, but the absolute machine path is
+  never persisted in the lock, slot record, index or generated artifact.</DECLARED-SOURCE-VIEW>
+        <DECLARED-SOURCE-OPAQUE fact="true" status="impl/done">Fetch does not recurse into submodules and projection refuses gitlinks and
+  symbolic links. An embedded source's own vibevm manifest, lifecycle hooks and
+  dependency declarations are inert data unless a bridge explicitly selects an
+  ordinary file from them.</DECLARED-SOURCE-OPAQUE>
+        <DECLARED-SOURCE-WRITES fact="true" status="impl/work">The canonical cache tree is read-only input in policy. A mechanism that may
+  write to its source receives a disposable copied/reflinked worktree; it never
+  receives a hardlink or writable handle into the canonical cache.</DECLARED-SOURCE-WRITES>
+      </facts>
     </source-abstraction>
     <snapshot-embedding title="2.3 Snapshot materialisation embeds the submodule content">
       <p><req-snapshot-embedding fact="true" status="impl/done">`req r1`</req-snapshot-embedding></p>
@@ -128,13 +150,12 @@ the submodule is part of *this* package's content, not a node).</NOT-A-PACKAGE><
   </rejected>
   <out-of-scope title="4. Out of scope">
     <facts ordered="false">
-      <OOS-DEPENDENCY-FORM fact="true" status="spec/done">**The dependency-declared submodule form** (§2.2) — specified as the
-  extension point, not implemented. It waits on a real consumer (binary /
-  non-git packages), per the owner's "spec the abstraction, build only the git
-  path" direction.</OOS-DEPENDENCY-FORM>
-      <OOS-NON-GIT-SOURCES fact="true" status="spec/done">**Submodules under non-git package sources** — a path- or future
-  binary-source package has no git context to recurse; embedded sources there
-  await the dependency-declared form.</OOS-NON-GIT-SOURCES>
+      <OOS-DEPENDENCY-FORM fact="true" status="spec/done">**Treating a dependency-declared embedded source as a normal package
+  dependency** — excluded by §2.2; it has content identity and provenance but no
+  package coordinate and no resolver edges.</OOS-DEPENDENCY-FORM>
+      <OOS-NON-GIT-SOURCES fact="true" status="spec/done">**Non-Git external source kinds** — the v1 declaration accepts only Git. An
+  archive/OCI source needs its own immutable identity and extraction rules
+  before it can join the same abstraction.</OOS-NON-GIT-SOURCES>
       <OOS-RECURSIVE-RESOLUTION fact="true" status="spec/done">**Recursive vibevm resolution inside a submodule** — a submodule's own
   `vibe.toml`, if any, is not honoured; the submodule is opaque content.</OOS-RECURSIVE-RESOLUTION>
     </facts>
@@ -151,6 +172,9 @@ the submodule is part of *this* package's content, not a node).</NOT-A-PACKAGE><
   submodule content with no extra lockfile field.</ACC-LOCK-REPRODUCES>
       <ACC-VENDORED-UNCHANGED fact="true" status="impl/done">A vendored ("git in git") package needs none of this — it is plain files and
   installs unchanged.</ACC-VENDORED-UNCHANGED>
+      <ACC-DECLARED-SOURCE fact="true" status="impl/done">A package distributed without `.git` can declare an exact external Git tree;
+  a successful install records its source pin separately in `vibe.lock`, and a
+  subsequent projection succeeds from the cache without contacting upstream.</ACC-DECLARED-SOURCE>
       <ACC-FLOOR-GREEN fact="true" status="impl/done">Full `self-check.sh` green; conform 0/0/0; specmap clean.</ACC-FLOOR-GREEN>
     </facts>
   </acceptance>

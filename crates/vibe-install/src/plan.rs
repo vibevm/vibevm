@@ -51,6 +51,9 @@ pub struct InstallRequest {
     /// Lockfile provenance stamp for a freshly created `vibe.lock`,
     /// e.g. `vibe 1.0.0`.
     pub generated_by: String,
+    /// Whole-invocation network posture. Embedded-source hydration obeys the
+    /// same hard offline boundary as package resolution.
+    pub offline: bool,
 }
 
 /// The planning verdict.
@@ -381,6 +384,7 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
             &store_root,
             &request.features,
             &workspace.root,
+            request.offline,
         )?);
     }
 
@@ -417,6 +421,7 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
         &workspace.root,
         &language_chain,
         &request.features,
+        request.offline,
         manifest,
         &root_id,
         &mut fetched,
@@ -441,6 +446,7 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
                 version: f.cached.resolved.version.clone(),
                 content_dir: f.cached.cache_dir.clone(),
                 source_hash: Some(ContentHash::from_validated(f.cached.content_hash.clone())),
+                embedded_sources: f.embedded_sources.clone(),
                 manifest: f.cached.manifest.clone(),
                 // A `[requires.packages]` dependency pkgref is
                 // group-qualified (PROP-008 §2.6).

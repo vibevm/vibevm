@@ -356,6 +356,7 @@ fn lifecycle_provider_drives_real_pending_fact_join_through_bound_analyzer() {
         version,
         content_dir: slot.clone(),
         source_hash: Some(vibe_core::ContentHash::parse("sha256:aa").expect("content hash")),
+        embedded_sources: Vec::new(),
         manifest: vibe_core::manifest::Manifest::read(slot.join("vibe.toml"))
             .expect("package manifest"),
         requires: Vec::new(),

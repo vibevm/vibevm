@@ -138,6 +138,11 @@ impl GitBackend for ShellGit {
         checkout::bootstrap(self, url, refname, dest)
     }
 
+    fn bootstrap_embedded(&self, url: &str, refname: &str, dest: &Path) -> Result<(), GitError> {
+        self.preflight()?;
+        checkout::bootstrap_embedded(self, url, refname, dest)
+    }
+
     fn update(&self, dest: &Path, refname: &str) -> Result<(), GitError> {
         self.preflight()?;
         checkout::update(self, dest, refname)
@@ -155,6 +160,17 @@ impl GitBackend for ShellGit {
             Ok(None)
         } else {
             Ok(Some(sha))
+        }
+    }
+
+    fn head_tree(&self, dest: &Path) -> Result<Option<String>, GitError> {
+        self.preflight()?;
+        let output = self.run(&["rev-parse", "HEAD^{tree}"], Some(dest))?;
+        let oid = String::from_utf8_lossy(&output.stdout).trim().to_string();
+        if oid.is_empty() {
+            Ok(None)
+        } else {
+            Ok(Some(oid))
         }
     }
 
@@ -384,6 +400,9 @@ fn apply_common_env(cmd: &mut Command, force_silence: bool) {
     #[cfg(windows)]
     {
         use std::os::windows::process::CommandExt;
+        // Deep package/cache roots are routine on Windows. Apply this to the
+        // invocation rather than requiring a machine-global gitconfig edit.
+        cmd.arg("-c").arg("core.longpaths=true");
         cmd.creation_flags(0x0800_0000);
     }
 }

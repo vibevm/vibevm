@@ -6,11 +6,15 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill");
 
+use std::collections::BTreeMap;
+use std::fs;
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
 use specmark::spec;
-use vibe_core::manifest::{Lockfile, Manifest, SkillDecl};
+use vibe_core::manifest::{
+    EmbeddedSourceDecl, LockedEmbeddedSource, Lockfile, Manifest, SkillDecl,
+};
 use vibe_core::{ContentHash, Group, PackageKind, PackageName};
 use vibe_workspace::Workspace;
 
@@ -38,6 +42,10 @@ pub struct DeclaredSkill {
     pub decl: SkillDecl,
     /// Absolute path to the skill body (`base.join(decl.path)`).
     pub source: PathBuf,
+    /// Containment root for `source`. Normally the package slot; after
+    /// hydration it may be an authenticated embedded tree or an immutable
+    /// composed-skill cache entry.
+    pub source_root: PathBuf,
     /// `"project"` / a member rel-path, or `"<kind>:<name>"` for an
     /// installed package.
     pub origin: String,
@@ -57,6 +65,7 @@ pub enum DeclaredSkillProvider {
         version: String,
         kind: PackageKind,
         root: PathBuf,
+        embedded_sources: Vec<EmbeddedSourceDecl>,
     },
     Installed {
         group: Group,
@@ -65,6 +74,8 @@ pub enum DeclaredSkillProvider {
         kind: PackageKind,
         root: PathBuf,
         content_hash: ContentHash,
+        embedded_sources: Vec<LockedEmbeddedSource>,
+        declared_sources: Vec<EmbeddedSourceDecl>,
     },
 }
 
@@ -82,6 +93,44 @@ impl DeclaredSkillProvider {
             Self::Authored { root, .. } | Self::Installed { root, .. } => root,
         }
     }
+
+    fn embedded_root(&self, requested: &str, offline: bool) -> Result<PathBuf> {
+        match self {
+            Self::Authored {
+                embedded_sources, ..
+            } => {
+                let declaration = embedded_sources
+                    .iter()
+                    .find(|source| source.name == requested)
+                    .with_context(|| format!("undeclared embedded source `{requested}`"))?;
+                Ok(vibe_registry::cache_embedded_source_with(declaration, offline)?.tree)
+            }
+            Self::Installed {
+                embedded_sources,
+                declared_sources,
+                ..
+            } => {
+                let declaration = declared_sources
+                    .iter()
+                    .find(|source| source.name == requested)
+                    .with_context(|| format!("undeclared embedded source `{requested}`"))?;
+                let locked = embedded_sources
+                    .iter()
+                    .find(|source| source.name == requested)
+                    .with_context(|| {
+                        format!(
+                            "installed package manifest names embedded source `{requested}` but vibe.lock has no matching authenticated pin"
+                        )
+                    })?;
+                if !locked.matches_declaration(declaration) {
+                    bail!(
+                        "installed package embedded source `{requested}` disagrees with vibe.lock; rerun `vibe install` to regenerate the locked source view"
+                    );
+                }
+                Ok(vibe_registry::cache_locked_embedded_source_with(locked, offline)?.tree)
+            }
+        }
+    }
 }
 
 /// Standalone/package-binding selection shared by every surface.
@@ -90,11 +139,21 @@ impl DeclaredSkillProvider {
 pub struct DeclaredSkillFilter<'a> {
     names: &'a [String],
     agent: Option<&'a str>,
+    offline: bool,
 }
 
 impl<'a> DeclaredSkillFilter<'a> {
     pub fn new(names: &'a [String], agent: Option<&'a str>) -> Self {
-        Self { names, agent }
+        Self {
+            names,
+            agent,
+            offline: false,
+        }
+    }
+
+    pub fn with_offline(mut self, offline: bool) -> Self {
+        self.offline = offline;
+        self
     }
 
     /// The package-phase binding's default: every declared skill and every
@@ -103,6 +162,7 @@ impl<'a> DeclaredSkillFilter<'a> {
         DeclaredSkillFilter {
             names: &[],
             agent: None,
+            offline: false,
         }
     }
 }
@@ -121,7 +181,7 @@ pub fn collect_declared_skills(project_root: &Path) -> Result<Vec<DeclaredSkill>
         } else {
             rel.to_string()
         };
-        lower_manifest_skills(manifest, &base, &origin, None, &mut out)?;
+        lower_manifest_skills(manifest, &base, &origin, None, None, &mut out)?;
     }
 
     let lock_path = ws.lockfile_path();
@@ -144,6 +204,7 @@ pub fn collect_declared_skills(project_root: &Path) -> Result<Vec<DeclaredSkill>
                 &slot,
                 &origin,
                 Some(pkg.content_hash.clone()),
+                Some(&pkg.embedded_sources),
                 &mut out,
             )?;
         }
@@ -156,6 +217,7 @@ fn lower_manifest_skills(
     base: &Path,
     origin: &str,
     content_hash: Option<ContentHash>,
+    locked_embedded_sources: Option<&[LockedEmbeddedSource]>,
     out: &mut Vec<DeclaredSkill>,
 ) -> Result<()> {
     if manifest.skills.is_empty() {
@@ -176,6 +238,8 @@ fn lower_manifest_skills(
             kind: package.kind,
             root: base.to_path_buf(),
             content_hash,
+            embedded_sources: locked_embedded_sources.unwrap_or_default().to_vec(),
+            declared_sources: manifest.embedded_sources.clone(),
         },
         None => DeclaredSkillProvider::Authored {
             group: package.group.clone(),
@@ -183,11 +247,13 @@ fn lower_manifest_skills(
             version: package.version.to_string(),
             kind: package.kind,
             root: base.to_path_buf(),
+            embedded_sources: manifest.embedded_sources.clone(),
         },
     };
     for decl in &manifest.skills {
         out.push(DeclaredSkill {
             source: base.join(&decl.path),
+            source_root: base.to_path_buf(),
             decl: decl.clone(),
             origin: origin.to_string(),
             provider: provider.clone(),
@@ -277,8 +343,8 @@ pub fn prepare_declared_skill_projection(
         None => Agent::ALL.to_vec(),
     };
     let all = collect_declared_skills(project_root)?;
-    let selected: Vec<&DeclaredSkill> = all
-        .iter()
+    let selected: Vec<DeclaredSkill> = all
+        .into_iter()
         .filter(|skill| {
             filter.names.is_empty() || filter.names.iter().any(|name| name == &skill.decl.name)
         })
@@ -289,9 +355,14 @@ pub fn prepare_declared_skill_projection(
 
     let scopes = scope.expand();
     let mut tasks = Vec::new();
-    for skill in selected {
-        super::receipt::ensure_no_follow_walk(skill.provider.root(), &skill.source, true)
+    for mut skill in selected {
+        hydrate_declared_skill(&mut skill, filter.offline)?;
+        super::receipt::ensure_no_follow_walk(&skill.source_root, &skill.source, true)
             .with_context(|| format!("unsafe source for declared skill `{}`", skill.decl.name))?;
+        if skill.source.exists() {
+            let selected = super::snapshot_source(&skill.source, &skill.decl.include)?;
+            super::validate_skill_frontmatter(&skill.decl.name, &skill.source, &selected)?;
+        }
         for agent in skill_agents(&skill.decl, &requested_agents)? {
             for concrete_scope in &scopes {
                 tasks.push(ProjectionTask {
@@ -308,6 +379,131 @@ pub fn prepare_declared_skill_projection(
         project_root: project_root.to_path_buf(),
         tasks,
     })
+}
+
+/// Resolve a declaration's explicit content roots without changing the public
+/// package root. Direct external skills point at the verified upstream cache;
+/// a local adapter with resources becomes one immutable composed source tree.
+pub(super) fn hydrate_declared_skill(skill: &mut DeclaredSkill, offline: bool) -> Result<()> {
+    if let Some(source) = skill.decl.source.as_deref() {
+        let root = skill.provider.embedded_root(source, offline)?;
+        skill.source = root.join(&skill.decl.path);
+        skill.source_root = root;
+    }
+    if skill.decl.resources.is_empty() {
+        return Ok(());
+    }
+
+    super::receipt::ensure_no_follow_walk(&skill.source_root, &skill.source, false)
+        .with_context(|| format!("unsafe local adapter source for `{}`", skill.decl.name))?;
+    let mut desired = super::snapshot_source(&skill.source, &skill.decl.include)?;
+    for resource in &skill.decl.resources {
+        let root = skill
+            .provider
+            .embedded_root(&resource.embedded_source, offline)?;
+        let source = root.join(&resource.path);
+        super::receipt::ensure_no_follow_walk(&root, &source, false).with_context(|| {
+            format!(
+                "unsafe embedded resource `{}` for skill `{}`",
+                resource.path.display(),
+                skill.decl.name
+            )
+        })?;
+        let selected = super::snapshot_source(&source, &resource.include)?;
+        for (relative, bytes) in selected {
+            let target = format!(
+                "{}/{}",
+                resource.target.to_string_lossy().replace('\\', "/"),
+                relative
+            );
+            if desired.insert(target.clone(), bytes).is_some() {
+                bail!(
+                    "[[skill.resource]] for `{}` collides with another selected file at `{target}`",
+                    skill.decl.name
+                );
+            }
+        }
+    }
+    super::receipt::judge_selection(desired.keys().map(String::as_str)).map_err(|fault| {
+        anyhow::anyhow!(
+            "composed skill `{}` selects a non-portable file set: {fault}",
+            skill.decl.name
+        )
+    })?;
+    let tree = composed_skill_tree(&skill.provider.identity(), &skill.decl.name, &desired)?;
+    skill.source = tree.clone();
+    skill.source_root = tree;
+    skill.decl.include.clear();
+    skill.decl.resources.clear();
+    Ok(())
+}
+
+fn composed_skill_tree(
+    provider: &str,
+    skill: &str,
+    desired: &BTreeMap<String, Vec<u8>>,
+) -> Result<PathBuf> {
+    use sha2::{Digest, Sha256};
+    let mut hasher = Sha256::new();
+    hasher.update(provider.as_bytes());
+    hasher.update([0]);
+    hasher.update(skill.as_bytes());
+    hasher.update([0]);
+    for (path, bytes) in desired {
+        hasher.update(path.as_bytes());
+        hasher.update([0]);
+        hasher.update(bytes);
+        hasher.update([0]);
+    }
+    let key = hasher
+        .finalize()
+        .iter()
+        .fold(String::new(), |mut rendered, byte| {
+            use std::fmt::Write;
+            let _ = write!(&mut rendered, "{byte:02x}");
+            rendered
+        });
+    let settings = vibe_core::settings::settings_dir()
+        .context("cannot resolve Vibe settings directory for composed skill cache")?;
+    let entry = settings
+        .join("cache")
+        .join("skill-compositions")
+        .join("v1")
+        .join(key);
+    let tree = entry.join("tree");
+    if tree.is_dir() {
+        let present = super::snapshot_source(&tree, &[])?;
+        if present != *desired {
+            bail!(
+                "composed skill cache entry `{}` is corrupt; remove this derived entry and retry",
+                entry.display()
+            );
+        }
+        return Ok(tree);
+    }
+    let parent = entry
+        .parent()
+        .context("composed skill cache entry has no parent")?;
+    fs::create_dir_all(parent)
+        .with_context(|| format!("creating composed skill cache `{}`", parent.display()))?;
+    let temporary = parent.join(format!(".stage-{}", std::process::id()));
+    if temporary.exists() {
+        fs::remove_dir_all(&temporary)
+            .with_context(|| format!("removing stale stage `{}`", temporary.display()))?;
+    }
+    super::write_snapshot(&temporary.join("tree"), desired)?;
+    match fs::rename(&temporary, &entry) {
+        Ok(()) => Ok(tree),
+        Err(_) if tree.is_dir() => {
+            let _ = fs::remove_dir_all(&temporary);
+            Ok(tree)
+        }
+        Err(error) => {
+            let _ = fs::remove_dir_all(&temporary);
+            Err(error)
+                .with_context(|| format!("publishing composed skill cache `{}`", entry.display()))
+        }
+    }
 }
 
 /// The declaration's effective agent set, intersected with `requested`.

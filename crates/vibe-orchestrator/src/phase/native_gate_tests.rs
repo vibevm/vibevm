@@ -243,6 +243,7 @@ impl SlotFixture {
                 source_hash: Some(
                     ContentHash::parse(&format!("sha256:{}", "a".repeat(64))).unwrap(),
                 ),
+                embedded_sources: Vec::new(),
                 manifest,
                 requires: Vec::new(),
                 admitted_by: None,

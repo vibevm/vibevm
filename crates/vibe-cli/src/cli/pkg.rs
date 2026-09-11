@@ -348,6 +348,12 @@ pub struct OutdatedArgs {
     /// than silently miss its packages.
     #[arg(long)]
     pub auth_required: bool,
+
+    /// Also compare GitHub upstream releases declared by locked `describes`
+    /// PURLs. Only `pkg:github/<owner>/<repo>@<semver>` is supported; the
+    /// package-registry check remains separate.
+    #[arg(long)]
+    pub upstream: bool,
 }
 
 #[derive(Debug, clap::Args)]
