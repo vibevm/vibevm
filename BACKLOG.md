@@ -1560,3 +1560,63 @@ structure, and it goes when the file does.
 | @fact:B134-SEVERITY **severity** | P3 — обход тривиален, но флаг лжёт |
 | @fact:B134-DISPOSITION **disposition** | `open` — прокинуть `--kind` в шаблон слота (манифест, имя и категория сниппета) или снять флаг из `--help` |
 | @fact:B134-FILED **filed by** | кампания документации, проба центральной сессии 2026-09-12 (три формы вызова) |
+
+## B-135 — `vibe uninstall` оставляет пустой каталог `vibevm/vibedeps/<пакет>/`
+
+| поле | значение |
+|---|---|
+| @fact:B135-WHAT **what** | `vibe uninstall org.vibevm.world/wal --path hello-vibe --assume-yes` печатает «removed its vibedeps/ slot», но `vibevm/vibedeps/org.vibevm.world.wal/` остаётся пустым каталогом; `test ! -e vibevm/vibedeps/org.vibevm.world.wal` красный |
+| @fact:B135-EFFECT **effect** | «нет и следа» после удаления не выполняется буквально; скрипты и ассерты документации, проверяющие отсутствие каталога, ложно красные |
+| @fact:B135-SEVERITY **severity** | P3 — пустой каталог безвреден, но противоречит отчёту команды |
+| @fact:B135-DISPOSITION **disposition** | `open` — удалять пустой родительский каталог слота вместе со слотом |
+| @fact:B135-FILED **filed by** | кампания документации, прогон промптов PP-O1 (`remove-a-package`) и проба центральной сессии, 2026-09-12 |
+
+## B-136 — `vibe outdated` требует `[[registry]]` в манифесте, которого `vibe init` не пишет
+
+| поле | значение |
+|---|---|
+| @fact:B136-WHAT **what** | свежий проект от `vibe init` не несёт `[[registry]]`; `vibe install` резолвит через машинный `registry.toml`, а `vibe outdated` отказывает: «no registry configured. Add a `[[registry]]` entry to `vibe.toml`…». Установленный скилл `vibevm` при этом утверждает, что `vibe init` записал два реестра (`crates/vibe-mcp/src/skill_template.md`) |
+| @fact:B136-EFFECT **effect** | три источника расходятся: `install`, `outdated`/`registry list` и скилл; пользователь свежего проекта не может спросить об обновлениях без ручной правки манифеста |
+| @fact:B136-SEVERITY **severity** | P2 — базовый сценарий «есть ли новее» не работает из коробки, скилл вводит агента в заблуждение |
+| @fact:B136-DISPOSITION **disposition** | `open` — `outdated` читает те же слои реестров, что `install`; текст скилла приводится к факту |
+| @fact:B136-FILED **filed by** | кампания документации, PP-O1 (`update-packages`, аномалия A2) и проба 2026-09-12 |
+
+## B-137 — `vibe registry test` называет несуществующий SSH-адрес достижимым
+
+| поле | значение |
+|---|---|
+| @fact:B137-WHAT **what** | `vibe registry add acme git@github.com:acme-specs …` и затем `vibe registry test` → `reachable (auth=none)` для вымышленной организации, хотя `--help` определяет `reachable` как «org URL responded» и предусматривает `unreachable` |
+| @fact:B137-EFFECT **effect** | диагностика не диагностирует: опечатка в адресе или отсутствующая организация обнаружатся только при первой установке |
+| @fact:B137-SEVERITY **severity** | P3 |
+| @fact:B137-DISPOSITION **disposition** | `open` — для SSH-адресов зондировать хост и организацию (например, `git ls-remote` на стаб или организационный URL), либо честно печатать `unprobed` |
+| @fact:B137-FILED **filed by** | кампания документации, PP-O1 (`private-registry`, аномалия A5), 2026-09-12 |
+
+## B-138 — `vibe scrape` на проекте без кода: дефолтный контракт непроходим, `--output` не принимает `..`
+
+| поле | значение |
+|---|---|
+| @fact:B138-WHAT **what** | (1) `vibe scrape --plan` без контракта отвечает «not a Vibe project: default scrape contract … is absent», хотя проект — проект; (2) дефолтный контракт от `contract init` ставит `modified = "refuse"` и `proof = "contract-assertion-v1"`, у которого нет baseline, так что каждый файл vibe «unknown» и план блокируется 23 находками на чистом `vibe init` + `vibe install`; (3) единственный healthcheck по умолчанию — `cargo`, и без `Cargo.toml` контракт не проходит `check`; (4) `--output ../x` отвергается как «dot component» вместо нормализации |
+| @fact:B138-EFFECT **effect** | сценарий «убрать vibe из готового проекта» требует трёх ручных правок контракта, о которых не говорит ни `--help`, ни сообщения; страница руководства их описывает |
+| @fact:B138-SEVERITY **severity** | P2 — флагманская операция недоступна без чтения спецификации |
+| @fact:B138-DISPOSITION **disposition** | `open` — сообщение об отсутствующем контракте должно предлагать `contract init`; для файлов, записанных самим vibe (слоты, boot-артефакты), baseline известен из lock и `.vibe-boot-artifacts.lock`, а не «unknown»; healthcheck по умолчанию — по обнаруженному инструменту проекта; `--output` нормализует путь |
+| @fact:B138-FILED **filed by** | кампания документации, PP-O1 (`scrape`, аномалия A8) и пробы 2026-09-12 |
+
+## B-139 — `--profile` у `vibe deploy` не объяснён, схема профиля недостижима из `--help`
+
+| поле | значение |
+|---|---|
+| @fact:B139-WHAT **what** | `vibe deploy --help` называет `--profile`, но ни он, ни `vibe package --help` не говорят, как объявить профиль: таблицы `[[artifacts.build]]`, `[[deploy.target]]` с `mechanism`/`config`, `[deploy.profiles.<имя>]` и `default_profile` известны только из тестов (`crates/vibe-cli/tests/cli_deploy.rs`) |
+| @fact:B139-EFFECT **effect** | агент по промпту «покажи план деплоя профиля local» сделал шесть попыток угадать схему и сдался; руководство теперь показывает таблицы, но продукт сам себя не объясняет |
+| @fact:B139-SEVERITY **severity** | P3 — после появления справочника манифеста (A2.13) закрывается документацией; `--help` всё равно должен ссылаться на страницу |
+| @fact:B139-DISPOSITION **disposition** | `open` — в `--help` команд lifecycle добавить адрес страницы руководства или краткую схему |
+| @fact:B139-FILED **filed by** | кампания документации, PP-O1 (`build-package-deploy`, аномалия A9), 2026-09-12 |
+
+## B-140 — у `vibe bin list` и `vibe tools` нет `--path`, `vibe bin exec` глотает его молча; `--quiet` не действует у части команд
+
+| поле | значение |
+|---|---|
+| @fact:B140-WHAT **what** | `vibe bin list --path X` → exit 2 («unexpected argument»), `vibe tools --path X` → то же, тогда как почти все команды проекта принимают `--path`; `vibe bin exec … --path X` принимает и игнорирует; `vibe registry list --quiet` и `vibe mcp status` печатают полный вывод при документированном «single summary line» |
+| @fact:B140-EFFECT **effect** | скрипты и агенты, привыкшие к `--path`, получают разное поведение от команд одного продукта; документация вынуждена описывать исключения |
+| @fact:B140-SEVERITY **severity** | P3 |
+| @fact:B140-DISPOSITION **disposition** | `open` — единый набор глобальных флагов на всех командах проекта (`--path`, `--quiet`, `--json`) с одной семантикой |
+| @fact:B140-FILED **filed by** | кампания документации, PP-O1 (аномалии A10, A11) и проба 2026-09-12 |
