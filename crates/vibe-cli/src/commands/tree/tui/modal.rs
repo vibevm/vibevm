@@ -19,6 +19,7 @@ use ratatui_core::text::Line;
 
 use super::super::model::{
     Condition, ConditionKind, DeclaredLink, LoadOrigin, LoadType, Package, Source, SourceKind,
+    Upstream,
 };
 use super::state::{App, RowNode};
 use super::theme::Theme;
@@ -70,6 +71,10 @@ fn package_card(p: &Package, theme: &Theme) -> Card {
     card.push("name", &p.name);
     card.push("version", &p.version);
     card.push("kind", &p.kind);
+    if p.bridge {
+        card.push("role", "bridge (maintainer package)");
+        card.push("upstream", upstream_value(p.upstream.as_ref()));
+    }
     card.push("load type", load_type_label(p.load.load_type));
     card.push(
         "declared link",
@@ -94,6 +99,32 @@ fn package_card(p: &Package, theme: &Theme) -> Card {
     card.push("boot path", p.load.boot_path.as_deref().unwrap_or("(none)"));
     card.push("dependencies", deps_value(&p.dependencies));
     card
+}
+
+/// Keep the package's delivery provenance and its foreign upstream provenance
+/// as separate labelled facts. Only portable identities are rendered here.
+fn upstream_value(upstream: Option<&Upstream>) -> String {
+    let Some(upstream) = upstream else {
+        return "(not recorded)".to_string();
+    };
+    let mut lines = Vec::new();
+    if let Some(describes) = &upstream.describes {
+        lines.push(format!("describes: {describes}"));
+    }
+    for source in &upstream.sources {
+        lines.push(format!("{}: {}", source.name, source.url));
+        lines.push(format!("  commit: {}", source.commit));
+        lines.push(format!("  hash: {}", source.content_hash));
+        lines.push(format!(
+            "  license: {} ({})",
+            source.license, source.license_url
+        ));
+    }
+    if lines.is_empty() {
+        "(not recorded)".to_string()
+    } else {
+        lines.join("\n")
+    }
 }
 
 /// The `when` condition value, with the full raw text and the parsed kind
@@ -201,6 +232,8 @@ mod tests {
             name: "widget".to_string(),
             kind: "flow".to_string(),
             version: "1.2.3".to_string(),
+            bridge: false,
+            upstream: None,
             content_hash: Some("abc0123456789".to_string()),
             source: Some(Source {
                 kind: Some(SourceKind::Git),
@@ -282,6 +315,26 @@ mod tests {
         assert!(deps.starts_with("2"));
         assert!(deps.contains("org.demo/dep-a"));
         assert!(deps.contains("org.demo/dep-b"));
+    }
+
+    #[test]
+    fn bridge_card_separates_package_source_from_upstream() {
+        let theme = Theme::default();
+        let mut package = fixture_pkg();
+        package.bridge = true;
+        package.upstream = Some(Upstream {
+            describes: Some("pkg:github/github/spec-kit@v1.0.6".to_string()),
+            sources: Vec::new(),
+        });
+        let card = package_card(&package, &theme);
+        let rows: std::collections::HashMap<&str, &str> = card
+            .rows()
+            .iter()
+            .map(|r| (r.header.as_str(), r.value.as_str()))
+            .collect();
+        assert_eq!(rows["role"], "bridge (maintainer package)");
+        assert!(rows["source"].contains("https://example.invalid/widget"));
+        assert!(rows["upstream"].contains("pkg:github/github/spec-kit@v1.0.6"));
     }
 
     /// A missing-row card carries the id + status fields only.

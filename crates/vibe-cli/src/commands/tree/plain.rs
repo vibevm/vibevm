@@ -107,7 +107,11 @@ fn walk(
         // A non-trivial admission (friend closure, override — PROP-050
         // ##VIBE-WHY) rides as a suffix; a plain root-edge arrival adds
         // nothing, so the ordinary tree stays as quiet as before.
-        name: format!("{prefix}{connector}{id}{marker}{}", pkg.provenance_suffix),
+        name: format!(
+            "{prefix}{connector}{id}{marker}{}{}",
+            pkg.bridge_suffix(),
+            pkg.provenance_suffix
+        ),
         load: load_label(pkg.load.load_type),
         transitive: pkg.load.transitive,
         condition: pkg.condition.present,
@@ -224,6 +228,8 @@ mod tests {
             name: name.to_string(),
             kind: "flow".to_string(),
             version: "0.1.0".to_string(),
+            bridge: false,
+            upstream: None,
             content_hash: None,
             source: None,
             load: Load {
@@ -293,6 +299,21 @@ mod tests {
         ];
         let out = render(&tree(packages, &["g/a"]));
         assert!(out.contains("(*)"));
+    }
+
+    #[test]
+    fn bridge_row_has_a_distinct_upstream_suffix() {
+        let mut bridge = pkg("org.bridge/spec-kit", LoadType::None, false, false, &[]);
+        bridge.bridge = true;
+        bridge.upstream = Some(Upstream {
+            describes: Some("pkg:github/github/spec-kit@v1.0.6".to_string()),
+            sources: Vec::new(),
+        });
+        let out = render(&tree(vec![bridge], &["org.bridge/spec-kit"]));
+        assert!(
+            out.contains("org.bridge/spec-kit [bridge -> pkg:github/github/spec-kit@v1.0.6]"),
+            "bridge role and upstream identity are visible:\n{out}"
+        );
     }
 
     #[test]

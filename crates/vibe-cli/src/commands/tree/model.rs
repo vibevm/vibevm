@@ -58,6 +58,15 @@ pub struct Package {
     pub name: String,
     pub kind: String,
     pub version: String,
+    /// Whether this node is the maintainer-authored package half of a bridge.
+    /// Omitted for ordinary packages so their v1 JSON remains byte-stable.
+    #[serde(skip_serializing_if = "is_false")]
+    pub bridge: bool,
+    /// Upstream identity is deliberately separate from [`Package::source`]:
+    /// `source` says where the bridge package bytes came from, while this says
+    /// what foreign project those package bytes adapt.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub upstream: Option<Upstream>,
     pub content_hash: Option<String>,
     pub source: Option<Source>,
     pub load: Load,
@@ -71,6 +80,58 @@ pub struct Package {
     /// text-render only.
     #[serde(skip)]
     pub provenance_suffix: String,
+}
+
+impl Package {
+    /// Compact text marker shared by the plain and interactive trees.
+    pub fn bridge_suffix(&self) -> String {
+        if !self.bridge {
+            return String::new();
+        }
+        let Some(upstream) = &self.upstream else {
+            return " [bridge]".to_string();
+        };
+        if let Some(describes) = &upstream.describes {
+            return format!(" [bridge -> {describes}]");
+        }
+        if let Some(source) = upstream.sources.first() {
+            let extra = upstream.sources.len().saturating_sub(1);
+            return if extra == 0 {
+                format!(" [bridge -> {}]", source.url)
+            } else {
+                format!(" [bridge -> {} +{extra}]", source.url)
+            };
+        }
+        " [bridge]".to_string()
+    }
+}
+
+/// Foreign provenance adapted by a bridge package. This is not the package's
+/// registry/install source and contains no machine-local cache location.
+#[derive(Debug, Serialize)]
+pub struct Upstream {
+    pub describes: Option<String>,
+    pub sources: Vec<UpstreamSource>,
+}
+
+/// One independently authenticated external source behind a bridge.
+#[derive(Debug, Serialize)]
+pub struct UpstreamSource {
+    pub name: String,
+    pub url: String,
+    #[serde(rename = "ref")]
+    pub source_ref: Option<String>,
+    pub commit: String,
+    pub tree_oid: String,
+    pub content_hash: String,
+    pub license: String,
+    pub license_path: String,
+    pub license_url: String,
+    pub license_file_sha256: String,
+}
+
+fn is_false(value: &bool) -> bool {
+    !*value
 }
 
 /// `source` — where the bytes came from on this install (informational).

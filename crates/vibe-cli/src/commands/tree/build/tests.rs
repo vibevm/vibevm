@@ -259,6 +259,8 @@ fn fixture_package(id: &str) -> Package {
         name: name.to_string(),
         kind: "flow".to_string(),
         version: "0.1.0".to_string(),
+        bridge: false,
+        upstream: None,
         content_hash: None,
         source: None,
         load: Load {

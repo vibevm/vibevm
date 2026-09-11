@@ -189,7 +189,11 @@ fn walk(
     rows.push(VisibleRow {
         node: RowNode::Package(idx),
         id: id.to_string(),
-        name: format!("{connector}{indicator}{id}{marker}"),
+        name: format!(
+            "{connector}{indicator}{id}{marker}{}{}",
+            pkg.bridge_suffix(),
+            pkg.provenance_suffix
+        ),
         load: load_label(pkg.load.load_type),
         transitive: pkg.load.transitive,
         condition: pkg.condition.present,
@@ -247,6 +251,8 @@ mod tests {
             name: name.to_string(),
             kind: "flow".to_string(),
             version: "0.1.0".to_string(),
+            bridge: false,
+            upstream: None,
             content_hash: None,
             source: None,
             load: Load {
@@ -327,6 +333,32 @@ mod tests {
 
     fn filter_b_d() -> BTreeSet<String> {
         ["g/b".to_string(), "g/d".to_string()].into_iter().collect()
+    }
+
+    #[test]
+    fn bridge_row_names_the_upstream_in_the_interactive_tree() {
+        let mut bridge = pkg("org.bridge/spec-kit", &[]);
+        bridge.bridge = true;
+        bridge.upstream = Some(Upstream {
+            describes: Some("pkg:github/github/spec-kit@v1.0.6".to_string()),
+            sources: Vec::new(),
+        });
+        let tree = tree(vec![bridge], &["org.bridge/spec-kit"]);
+        let filter = ["org.bridge/spec-kit".to_string()].into_iter().collect();
+        let rows = flatten_g(
+            &tree,
+            &BTreeSet::new(),
+            Ordering::Topological,
+            TreeShape::MembersAsRoots,
+            &filter,
+        );
+        assert!(
+            rows[0]
+                .name
+                .contains("[bridge -> pkg:github/github/spec-kit@v1.0.6]"),
+            "interactive row carries bridge role and upstream: {:?}",
+            rows[0].name
+        );
     }
 
     #[test]
