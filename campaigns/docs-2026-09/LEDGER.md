@@ -111,6 +111,7 @@ A0.27 в плане отсутствует.
 | r2 (2026-09-11) | DOCS-SPIKES принят со свидетельством `campaigns/docs-2026-09/PHASE-0-FINDINGS.md`; current_node → DOCS-CONTRACT |
 | r3 (2026-09-12) | DOCS-CONTRACT принят (16 коммитов; A1.1/A1.2 — ратификация при слиянии как открытый пункт свидетельства); DOCS-PROSE активен; current_node → DOCS-PROSE |
 | r4 (2026-09-12) | подузлы фазы P: DOCS-ARCHITECTURE, DOCS-FOUNDATIONS, DOCS-ARCHITECTURE-REFERENCE, DOCS-PIPELINE приняты со свидетельствами коммитов разделов; DOCS-WORKFLOWS активен до снятия `expect`; DOCS-PROSE-CHECKS активен (PP-C1…C3, PP-O1) |
+| r5 (2026-09-12) | DOCS-PROSE-CHECKS: свидетельства PP-C1 (`435d3aef`, `2f48c888`), PP-C3 (`bf5eff6a`), PP-O1 (`50439d94`); открыто: PP-C2b, PP-O1b, три промпта фазы 2; DOCS-WORKFLOWS: страницы поправлены под продукт (`c79325e7`, `50439d94`) |
 
 ## Обновления пина Qwik {#qwik-pin}
 
