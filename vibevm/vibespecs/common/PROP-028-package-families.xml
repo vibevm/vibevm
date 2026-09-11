@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">PROP-028 — Package families: `&lt;family&gt;` / `-lang` / `-mcp`</title>
-  <status stage="impl" state="done" comment="B0 2026-07-24: IMPLEMENTED 2026-07-07; the three families in force; fact grain 2026-07-24"/>
+  <status stage="impl" state="done" comment="B0 2026-07-24: IMPLEMENTED 2026-07-07; the three families in force; fact grain 2026-07-24; amended 2026-09-11 by PROP-057 — the companion role -docs outside family unison (§2.1, §2.2, §3), specified, implementation with the docs-2026-09 campaign"/>
   <p><status-line fact="true" status="impl/done">**Status:** IMPLEMENTED 2026-07-07 — owner-directed (the package-family
 rename). The three families in force ship under this convention: requiring one
 aggregator installs its whole family at a single resolved version set, and the
@@ -32,7 +32,7 @@ name it replaced), [PROP-027](../modules/vibe-mcp/PROP-027-mcp-packages.xml)
   </context>
   <decision title="2. Decision">
     <roles title="2.1 Three roles, one family stem">
-      <p><req-roles fact="true" status="impl/done">`req r1`</req-roles></p>
+      <p><req-roles fact="true" status="impl/done">`req r2`</req-roles></p>
       <p><FAMILY-DEF fact="true" status="impl/done">A **package family** is a set of packages sharing a `&lt;family&gt;` stem and
 delivering one coherent capability across three roles:</FAMILY-DEF></p>
       <facts ordered="false">
@@ -48,13 +48,23 @@ delivering one coherent capability across three roles:</FAMILY-DEF></p>
   toolchain served over MCP. It exact-pins its `-lang` stack (PROP-027 §2.3)
   and version-mirrors it, so one engine set answers both the CLI floor and the
   agent's tools.</ROLE-MCP>
+        <ROLE-DOCS fact="true" status="spec/done" action="continue" actionstage="impl">**`&lt;family&gt;-docs`** — the *documentation companion* (`kind = "doc"`,
+  [PROP-057 §3](PROP-057-documentation-packages-and-site.xml)): the
+  official-by-default documentation of the family's subject, in the subject's
+  group. Unlike the three code roles it is a **companion, not a member**: it
+  is never pinned by the aggregator, it does not take part in the family's
+  unison (§2.2), it keeps its own version line, and it states compatibility
+  with its subject through the version constraint of its `[[documents]]`
+  table. Its translations follow the same companion form, one package per
+  language, named `&lt;family&gt;-docs-&lt;lang&gt;` with a lower-case BCP-47 tag
+  (`rust-ai-native-docs-ru`). Amended 2026-09-11.</ROLE-DOCS>
       </facts>
       <p><AGGREGATOR-PINS-DELIBERATE fact="true" status="impl/done">The aggregator's exact pins are deliberate, not kind-mandated: a stack may pin
 its dependencies however it likes, but a family is a *tested version set*, so
 the aggregator holds its members equal.</AGGREGATOR-PINS-DELIBERATE></p>
     </roles>
     <versioning title="2.2 The version line follows the name, and the family moves in unison">
-      <p><req-versioning fact="true" status="impl/done">`req r1`</req-versioning></p>
+      <p><req-versioning fact="true" status="impl/done">`req r2`</req-versioning></p>
       <facts ordered="false">
         <VERSION-FOLLOWS-NAME fact="true" status="impl/done">A family member's version line is continuous with its NAME.</VERSION-FOLLOWS-NAME>
         <RENAME-NEW-IDENTITY fact="true" status="impl/done">Per PROP-008 §2.2 a
@@ -80,6 +90,13 @@ the aggregator holds its members equal.</AGGREGATOR-PINS-DELIBERATE></p>
   the shared foundation core-ai-native **0.8.0** — a foundation is not in any one
   family's unison, it bumps on its own content and every family widens its `^`
   floor to meet it.</family-standings>
+        <COMPANION-OUTSIDE-UNISON fact="true" status="spec/done" action="continue" actionstage="impl">The `-docs` companion (§2.1) stands **outside** unison: a
+  documentation edit never bumps the family's code, and a family release
+  never forces a documentation release; the two are tied only by the
+  `[[documents]]` constraint the companion declares, and the site picks the
+  newest documentation whose constraint admits the family version
+  ([PROP-057 §4](PROP-057-documentation-packages-and-site.xml)). Amended
+  2026-09-11.</COMPANION-OUTSIDE-UNISON>
       </facts>
     </versioning>
     <families title="2.3 The families in force">
@@ -158,13 +175,23 @@ MCP server carries the `&lt;family&gt;` prefix:</SURFACE-NAMING-LAW></p>
       <REJ-CARET-PINS fact="true" status="impl/done">**Caret pins in the aggregator**: a caret would let members skew within a
   single install, dissolving the "one engine, one truth" the `-mcp` exact pin
   exists to guarantee.</REJ-CARET-PINS>
+      <REJ-DOCS-IN-UNISON fact="true" status="spec/done">**The `-docs` companion inside unison** (2026-09-11): a family is a
+  *tested version set* of code, and prose moves in a different rhythm —
+  every typo fix in the manual would bump the language stack and the MCP
+  server, and every code release would demand a documentation release the
+  owner has ruled out. Rejected together with a documentation subgroup
+  (`&lt;group&gt;.docs/&lt;name&gt;`) and a language encoded in the group; the
+  reasons are recorded at [PROP-057 §3](PROP-057-documentation-packages-and-site.xml).</REJ-DOCS-IN-UNISON>
     </facts>
   </rejected>
   <open title="4. Open questions">
     <status stage="spec" state="work" comment="B1 2026-07-24: two questions still open, no owner ruling yet"/>
     <facts ordered="true">
-      <open-family-app fact="true" status="spec/work">A future `&lt;family&gt;-app` role (the anticipated `app` kind, VIBEVM-SPEC §4.1)
-   would join the aggregator's `[requires]` under the same exact-pin rule.</open-family-app>
+      <open-family-app fact="true" status="spec/work">A future `&lt;family&gt;-app` role (the `app` kind, admitted by the
+   PROP-057 amendment of VIBEVM-SPEC §4.1) would join the aggregator's
+   `[requires]` under the same exact-pin rule. Still open: no family ships an
+   `app` today; the first `app` (the documentation site, `org.vibevm.doc/web`)
+   belongs to no family.</open-family-app>
       <open-member-opt-out fact="true" status="spec/work">Whether `vibe install &lt;family&gt;` should offer per-member opt-out (the mirror
    of PROP-027 §4's multi-server question); v1 is all-or-nothing per family.</open-member-opt-out>
     </facts>
