@@ -57,8 +57,8 @@ pub use discovery::SelectedWorkspace;
 pub use errors::WorkspaceError;
 pub use extension_world::ExtensionWorldError;
 pub use publish::{
-    OriginInfo, PublishNode, Selection, SkippedNode, StagedNode, select_publishable_nodes,
-    stage_node, topo_order,
+    OriginInfo, PublishNode, Selection, SkippedNode, StagedNode, SubmoduleProvenance,
+    select_publishable_nodes, stage_node, topo_order,
 };
 
 type Result<T> = std::result::Result<T, WorkspaceError>;

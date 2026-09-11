@@ -64,6 +64,14 @@ copy-based modes, or living natively for `in-place`
       </facts>
       <p><APPLIES-BOTH-CLONES fact="true" status="impl/done">This applies identically to the registry cache clone and to an `in-place`
 slot clone ([PROP-022 §2.4](../vibe-workspace/PROP-022-materialization-modes.xml#in-place)).</APPLIES-BOTH-CLONES></p>
+      <p><PUBLISH-FLATTENS-GITLINKS fact="true" status="impl/done">**Publication boundary.** Workspace/direct Git source acquisition may carry
+real submodules, but a per-package registry repository is a self-contained
+package snapshot. Publish inspects each populated gitlink before copying,
+requires its checkout to match the indexed commit and be clean, copies its
+files as ordinary payload, drops `.git` and `.gitmodules`, and reports the
+path plus exact vendored commit. Registry consumers therefore fetch no hidden
+second repository; `resolved_commit` identifies the published package repo,
+while the publication report preserves the flattened upstream evidence.</PUBLISH-FLATTENS-GITLINKS></p>
     </fetch>
     <source-abstraction title="2.2 Embedded sources — git-native and dependency-declared">
       <p><req-source-abstraction fact="true" status="impl/done">`req r1`</req-source-abstraction></p>

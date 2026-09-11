@@ -84,6 +84,7 @@ impl PublishConfig {
 ///     created_repo: true,
 ///     host: "github.com".to_string(),
 ///     dry_run: false,
+///     submodules: Vec::new(),
 /// };
 /// assert_eq!(outcome.tag, format!("v{}", outcome.version));
 /// ```
@@ -98,6 +99,9 @@ pub struct PublishOutcome {
     pub created_repo: bool,
     pub host: String,
     pub dry_run: bool,
+    /// Populated gitlinks flattened into ordinary files, with the exact
+    /// commits that identify those bytes. Empty for ordinary packages.
+    pub submodules: Vec<git_publish::SubmoduleProvenance>,
 }
 
 /// The publish orchestrator.
@@ -202,9 +206,11 @@ impl<'c, C: RepoCreator + ?Sized> Publisher<'c, C> {
                     path: manifest_path.clone(),
                     reason: format!("could not derive a repo name: {e}"),
                 })?;
-            if !config.dry_run {
-                git_publish::push_release(&config.source_dir, direct_url, &tag, &name, &version)?;
-            }
+            let submodules = if config.dry_run {
+                git_publish::inspect_submodules(&config.source_dir)?
+            } else {
+                git_publish::push_release(&config.source_dir, direct_url, &tag, &name, &version)?
+            };
             return Ok(PublishOutcome {
                 kind,
                 name,
@@ -218,6 +224,7 @@ impl<'c, C: RepoCreator + ?Sized> Publisher<'c, C> {
                 created_repo: false,
                 host: self.creator.host_name().to_string(),
                 dry_run: config.dry_run,
+                submodules,
             });
         }
 
@@ -282,10 +289,12 @@ impl<'c, C: RepoCreator + ?Sized> Publisher<'c, C> {
         // own diagnostics. The push URL MUST NOT appear in any
         // vibevm-produced output (the user-facing PublishOutcome.repo_url
         // carries the public clone URL for display).
-        if !config.dry_run {
+        let submodules = if config.dry_run {
+            git_publish::inspect_submodules(&config.source_dir)?
+        } else {
             let push_url = self.creator.push_url(&validated_org, &repo_name);
-            git_publish::push_release(&config.source_dir, &push_url, &tag, &name, &version)?;
-        }
+            git_publish::push_release(&config.source_dir, &push_url, &tag, &name, &version)?
+        };
 
         Ok(PublishOutcome {
             kind,
@@ -297,6 +306,7 @@ impl<'c, C: RepoCreator + ?Sized> Publisher<'c, C> {
             created_repo,
             host: self.creator.host_name().to_string(),
             dry_run: config.dry_run,
+            submodules,
         })
     }
 }

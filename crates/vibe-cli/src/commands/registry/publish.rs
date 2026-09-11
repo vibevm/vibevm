@@ -29,6 +29,8 @@ struct PublishReport {
     tag: String,
     created_repo: bool,
     dry_run: bool,
+    /// Populated submodules flattened into ordinary release files.
+    submodules: Vec<vibe_publish::git_publish::SubmoduleProvenance>,
     /// Status of the optional post-publish index hook. Always
     /// present; `fired = false` + `error = None` means the hook was
     /// dormant (no env config) and the operator wanted no index update.
@@ -66,6 +68,7 @@ struct DirectPublishReport {
     repo_name: String,
     tag: String,
     dry_run: bool,
+    submodules: Vec<vibe_publish::git_publish::SubmoduleProvenance>,
 }
 
 pub(super) fn run_publish(ctx: &output::Context, args: RegistryPublishArgs) -> Result<()> {
@@ -227,6 +230,7 @@ pub(super) fn run_publish(ctx: &output::Context, args: RegistryPublishArgs) -> R
             tag: outcome.tag.clone(),
             created_repo: outcome.created_repo,
             dry_run: outcome.dry_run,
+            submodules: outcome.submodules.clone(),
             index_hook: Some(hook_report),
         })?;
         return Ok(());
@@ -256,6 +260,7 @@ pub(super) fn run_publish(ctx: &output::Context, args: RegistryPublishArgs) -> R
         "{} repository `{}` on `{}`",
         action_verb, outcome.repo_name, outcome.host
     ));
+    report_flattened_submodules(ctx, &outcome.submodules);
     if outcome.dry_run {
         ctx.summary(&format!(
             "\nvibe registry publish [dry-run]: would push to `{}` and tag `{}`. \
@@ -328,10 +333,12 @@ fn run_publish_direct(
             repo_name: outcome.repo_name.clone(),
             tag: outcome.tag.clone(),
             dry_run: outcome.dry_run,
+            submodules: outcome.submodules.clone(),
         })?;
         return Ok(());
     }
 
+    report_flattened_submodules(ctx, &outcome.submodules);
     if outcome.dry_run {
         ctx.summary(&format!(
             "\nvibe registry publish [dry-run]: would push `{}:{}` @ {} → `{}` (tag `{}`). \
@@ -345,4 +352,16 @@ fn run_publish_direct(
         ));
     }
     Ok(())
+}
+
+fn report_flattened_submodules(
+    ctx: &output::Context,
+    submodules: &[vibe_publish::git_publish::SubmoduleProvenance],
+) {
+    for submodule in submodules {
+        ctx.step(&format!(
+            "submodule `{}` vendored at `{}`",
+            submodule.path, submodule.commit
+        ));
+    }
 }
