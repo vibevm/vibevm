@@ -2,7 +2,7 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">Versions and updates</title>
   <status stage="doc" state="work" audience="user"/>
-  <p>A version is a promise about behaviour, not a snapshot of files. Your project asks for a range, the lock file pins one number, and an update moves the pin on purpose. vibe itself follows the same rule: one number stands for one contract, however often the binary behind it is rebuilt.</p>
+  <p>A version is a promise about behaviour, not a snapshot of files. Your project asks for a range, vibe records the one number it chose, and an update moves that number on purpose. vibe itself follows the same rule: one number stands for one contract, however often the binary behind it is rebuilt.</p>
   <example id="outdated" fixture="hello-vibe">
     <run>vibe outdated --path hello-vibe</run>
     <expect></expect>

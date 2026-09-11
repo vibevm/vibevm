@@ -2,7 +2,7 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">What the lifecycle epic delivered</title>
   <status stage="doc" state="work" audience="dev"/>
-  <p>Between July and September 2026 vibe grew from a package installer into a build system with an extension machine, a native ABI, deploy receipts and a terminal export. This page tells that route as one system, what was decided on the way, and what was left for later.</p>
+  <p>Between July and September 2026 vibe grew from a package installer into a build system with an extension machine, a native ABI, a record of every deployment and a terminal export. This page tells that route as one system, what was decided on the way, and what was left for later.</p>
   <the-route title="The route, in eight stages">
     <p>The work ran as eight numbered stages, each landed as atomic commits with tests and a traceability map, and recorded in a ledger that names every commit. Read them as one story rather than eight features.</p>
     <table>

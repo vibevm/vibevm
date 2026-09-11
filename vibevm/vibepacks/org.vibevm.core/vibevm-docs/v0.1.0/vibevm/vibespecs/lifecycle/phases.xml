@@ -2,7 +2,7 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">The lifecycle: from validate to deploy</title>
   <status stage="doc" state="work" audience="user"/>
-  <p>Building software has a fixed order of steps, and vibe names them: check the workspace, produce generated sources, build, test, let an agent create what only an agent can, verify, assemble, deploy. Each step runs only when something it depends on changed.</p>
+  <p>Building software has a fixed order of steps, and vibe names them: check the tree, produce generated sources, build, test, let an agent create what only an agent can, verify, assemble, deploy. Each step runs only when something it depends on changed.</p>
   <example id="deploy-plan" fixture="hello-vibe">
     <run>vibe deploy --plan --path hello-vibe</run>
     <expect></expect>

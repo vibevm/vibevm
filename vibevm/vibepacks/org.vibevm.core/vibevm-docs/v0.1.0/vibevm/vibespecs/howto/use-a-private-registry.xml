@@ -2,7 +2,7 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">Use a private registry</title>
   <status stage="doc" state="work" audience="user"/>
-  <p>A company can keep its packages in its own place and still use vibe unchanged. This page points a project or a whole machine at a private registry, with or without an index, and keeps the public one as a fallback.</p>
+  <p>A company can keep its packages in its own place and still use vibe unchanged. This page points a project or a whole machine at that place, with or without a search catalogue beside it, and keeps the public one as a fallback.</p>
   <prompt id="private-registry">Add the private registry named acme at git@github.com:acme-specs as the first registry of the VibeVM project in the current folder, authenticated over SSH, keep the public vibespecs registry as a fallback, and test that both are reachable.
     <needs>the vibevm skill installed for your agent; an SSH key that the private host accepts, loaded in the agent; a project with `vibe.toml`</needs>
     <outcome>`vibe registry list` shows `acme` first and `vibespecs` second; `vibe registry test` reports both reachable</outcome>

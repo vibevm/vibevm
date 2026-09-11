@@ -2,7 +2,7 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">Registries and the index</title>
   <status stage="doc" state="work" audience="user"/>
-  <p>A registry is where packages are published: by default a public organisation on GitHub, one repository per package. A project lists the registries it trusts, in order. An index beside the registry answers searches without cloning anything.</p>
+  <p>Packages are published to a place vibe knows how to read: by default a public organisation on GitHub, one repository per package. A project lists such places in the order it trusts them. A catalogue beside each one answers searches without cloning anything.</p>
   <example id="registry-list" fixture="hello-vibe">
     <run>vibe registry list --path hello-vibe</run>
     <expect></expect>

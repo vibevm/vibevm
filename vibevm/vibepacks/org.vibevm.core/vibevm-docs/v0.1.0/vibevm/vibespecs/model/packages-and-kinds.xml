@@ -2,7 +2,7 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">Packages and their kinds</title>
   <status stage="doc" state="work" audience="user"/>
-  <p>Everything vibe installs is a package: a folder with a small manifest and the text or tools it delivers. Packages come in eight kinds, and the kind tells you what a package is for before you open it: a way of working, a feature, a technology, a tool, a language guide, an agent server, documentation, or an application.</p>
+  <p>Everything vibe installs is a package: a folder with a small description file and the text or tools it delivers. Packages come in eight kinds, and the kind tells you what a package is for before you open it: a way of working, a feature, a technology, a tool, a language guide, an agent server, documentation, or an application.</p>
   <example id="list" fixture="hello-vibe">
     <run>vibe list --path hello-vibe</run>
     <expect></expect>

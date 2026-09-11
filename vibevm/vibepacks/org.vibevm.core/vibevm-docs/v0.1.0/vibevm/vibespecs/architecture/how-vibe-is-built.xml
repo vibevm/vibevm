@@ -2,7 +2,7 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">How vibe is built</title>
   <status stage="doc" state="work" audience="dev"/>
-  <p>vibe is one binary built from a family of Rust libraries, each owning one concern: the manifest, resolution, the registry, the workspace on disk, the agent surfaces. This page maps the libraries, the seams between them, and the path an install takes through them.</p>
+  <p>vibe is one binary built from a set of Rust libraries, each owning one concern: reading the description of a project, choosing versions, fetching from where packages are published, writing the tree on disk, talking to agents. This page maps the libraries, the seams between them, and the path an install takes through them.</p>
   <five-layers title="Five layers">
     <p>Read the product bottom-up. *Identity*: a package is a coordinate plus a content fingerprint, and the kind is metadata. *Registry*: ordered package sources with mirrors, overrides and an optional index. *Store*: every fetched package version kept once per machine. *Materialisation*: the resolved graph copied into the project's dependency tree and recorded in the lock file. *Computed boot*: the packages' contributions projected into the two generated files an agent reads. Everything a user sees is one of these five layers or a surface over them.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#surfaces"/>

@@ -2,7 +2,7 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">Read documentation locally</title>
   <status stage="doc" state="work" audience="user"/>
-  <p>Documentation of the packages you use, including private ones, can be read on your own machine with nothing sent anywhere. This page fetches the manual into the store and opens the reader in a browser.</p>
+  <p>Documentation of the packages you use, including private ones, can be read on your own machine with nothing sent anywhere. This page fetches the manual onto your machine and opens the reader in a browser.</p>
   <prompt id="read-docs-locally">Fetch the VibeVM manual, the package org.vibevm.core/vibevm-docs, into the machine store, open the local documentation reader, and tell me the address to open in my browser.
     <needs>the vibevm skill installed for your agent; network access to the registry once, or the package already in the store</needs>
     <outcome>`vibe cache list` shows `org.vibevm.core/vibevm-docs`; `vibe doc serve` is running and prints an address on `127.0.0.1`; the browser shows the manual's first page</outcome>

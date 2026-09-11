@@ -2,7 +2,7 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">The lock file: vibe.lock</title>
   <status stage="doc" state="work" audience="user"/>
-  <p>The lock file is written by vibe and committed by you. This page explains every field so you can read a diff of it in a pull request and know what changed.</p>
+  <p>`vibe.lock` is the file vibe writes and you commit: the exact versions the project got. This page explains every field so you can read a diff of it in a pull request and know what changed.</p>
   <where title="Where it lives and who writes it">
     <p>There is one `vibe.lock` per workspace, at the absolute root, beside the root manifest; members never have their own. `vibe install` and `vibe update` write it; `vibe clean` keeps it; nothing edits it by hand. It is the recorded decision; the dependency tree on disk is only its consequence and can always be rebuilt from it.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#NESTING-PRINCIPLE"/>

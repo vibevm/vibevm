@@ -2,7 +2,7 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">The boot lane: how an agent reads a project</title>
   <status stage="doc" state="work" audience="user"/>
-  <p>When an agent starts, it reads a short ordered list of files that vibe computed from everything the project depends on. The list has a fixed first file, read in full, and an index of the rest. Some entries are read always, some only when a condition holds, and nothing in the list is written by hand.</p>
+  <p>When an agent starts, it reads a short ordered list of files that vibe computed from everything the project depends on. The list has a fixed first file, read in full, and a list of the rest. Some entries are read always, some only when a condition holds, and nothing in the list is written by hand.</p>
   <example id="tree" fixture="hello-vibe">
     <run>vibe tree --plain --path hello-vibe</run>
     <expect></expect>
