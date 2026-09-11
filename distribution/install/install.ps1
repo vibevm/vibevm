@@ -38,6 +38,17 @@ function Test-VibeSemVer {
     return $Value -match '^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[0-9A-Za-z.-]+)?(\+[0-9A-Za-z.-]+)?$'
 }
 
+function Add-VibeRefreshNonce {
+    param(
+        [Parameter(Mandatory)][string]$Uri,
+        [Parameter(Mandatory)][string]$Nonce
+    )
+
+    # Braces are required here: Windows PowerShell 5.1 otherwise treats the
+    # question mark as part of the variable name under StrictMode.
+    return "${Uri}?vvm_refresh=$Nonce"
+}
+
 function Get-VibeTarget {
     if (-not [System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform(
         [System.Runtime.InteropServices.OSPlatform]::Windows
@@ -227,7 +238,7 @@ function Invoke-VibeInstall {
 
         Write-Host "Fetching VibeVM release metadata for $target..."
         Invoke-VibeDownload `
-            -Uri "$manifestUri?vvm_refresh=$cacheNonce" `
+            -Uri (Add-VibeRefreshNonce -Uri $manifestUri -Nonce $cacheNonce) `
             -Destination $manifestPath `
             -MaximumBytes $script:VibeManifestMaxBytes
         $release = Read-VibeReleaseManifest -Path $manifestPath -Target $target -RequestedVersion $RequestedVersion
@@ -236,7 +247,7 @@ function Invoke-VibeInstall {
         $bootstrapPath = Join-Path $tempDirectory $release.Name
         Write-Host "Downloading VibeVM $($release.Version) bootstrap..."
         Invoke-VibeDownload `
-            -Uri "$releaseBase/$($release.Name)?vvm_refresh=$cacheNonce" `
+            -Uri (Add-VibeRefreshNonce -Uri "$releaseBase/$($release.Name)" -Nonce $cacheNonce) `
             -Destination $bootstrapPath `
             -MaximumBytes $release.Size
 

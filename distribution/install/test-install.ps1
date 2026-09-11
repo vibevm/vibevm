@@ -44,6 +44,12 @@ try {
     if (-not (Test-VibeSemVer '1.2.3-rc.1+build.7')) {
         throw 'SemVer validation rejected a valid version'
     }
+    $refreshUri = Add-VibeRefreshNonce `
+        -Uri 'https://example.invalid/DISTRIBUTIONS.json' `
+        -Nonce 'acceptance-nonce'
+    if ($refreshUri -cne 'https://example.invalid/DISTRIBUTIONS.json?vvm_refresh=acceptance-nonce') {
+        throw 'refresh URI construction is not compatible with Windows PowerShell StrictMode'
+    }
     $release = Read-VibeReleaseManifest `
         -Path $manifestPath `
         -Target 'x86_64-pc-windows-msvc' `
