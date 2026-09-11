@@ -2,7 +2,7 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">Set up a workspace</title>
   <status stage="doc" state="work" audience="author"/>
-  <p>Several packages developed together can live in one repository and share one lock file. This page turns a folder into such a workspace and shows how members refer to each other by path.</p>
+  <p>Several packages developed together can live in one repository and share one record of the versions they use. This page turns a folder into such a workspace and shows how members refer to each other by path.</p>
   <prompt id="set-up-a-workspace">Turn the VibeVM project in the current folder into a workspace with two member packages under packages/: org.acme/notes-flow and org.acme/notes-docs, where notes-docs documents notes-flow. Run an install and show me that one lock file at the root covers both members.
     <needs>the vibevm skill installed for your agent; a project with `vibe.toml` at the root</needs>
     <outcome>the root `vibe.toml` carries a `[workspace]` table listing both members, each member folder carries its own `vibe.toml` with a `[package]` table, and one `vibe.lock` at the root records the resolution</outcome>

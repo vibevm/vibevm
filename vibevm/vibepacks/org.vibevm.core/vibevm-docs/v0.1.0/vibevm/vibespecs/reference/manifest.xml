@@ -2,7 +2,7 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">The manifest: vibe.toml</title>
   <status stage="doc" state="work" audience="user"/>
-  <p>The manifest is the one file you write to describe a project or a package: its name, what it depends on, where packages come from, and what it delivers. This page lists every table and field with its meaning.</p>
+  <p>`vibe.toml` is the one file you write to describe a project or a package: its name, what it depends on, where packages come from, and what it delivers. This page lists every table and field with its meaning.</p>
   <one-file title="One file, three roles">
     <p>Every node, whether a consumer project, a publishable package or a workspace root, has a file named `vibe.toml`. The tables present decide the role: `[project]` marks a consumer that is never published, `[package]` a publishable package, `[workspace]` a coordinator of members; the first two exclude each other, the third composes with either or with neither.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#ONE-MANIFEST"/>

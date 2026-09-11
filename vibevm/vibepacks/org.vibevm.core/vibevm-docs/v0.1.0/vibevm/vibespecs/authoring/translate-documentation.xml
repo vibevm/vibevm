@@ -2,7 +2,7 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">Translate documentation</title>
   <status stage="doc" state="work" audience="author"/>
-  <p>A translation is a separate package in the same shape as the original: same pages, same anchors, same examples by reference, in another language. This page creates one and explains what makes it official.</p>
+  <p>A translation is a separate package in the same shape as the original: same pages, same section names, same examples by reference, in another language. This page creates one and explains what makes it official.</p>
   <prompt id="translate-documentation">Create the package org.acme/notes-flow-docs-ru in packages/notes-flow-docs-ru of the current VibeVM project as the Russian translation of org.acme/notes-flow-docs: mirror its page tree file for file, keep every anchor and block, replace each example with a reference to the source example, and write the manifest with [translates] and the same [[documents]] subject. Run vibe doc check --translations.
     <needs>the vibevm skill installed for your agent; the source documentation package in the same project</needs>
     <outcome>the translation has the same files and anchors as the source, `[i18n] canonical = "ru"`, `[translates]` pointing at the source, and `vibe doc check --translations` reports no structural difference</outcome>

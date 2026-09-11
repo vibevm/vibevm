@@ -2,7 +2,7 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">Extensions and providers</title>
   <status stage="doc" state="work" audience="author"/>
-  <p>A package can plug into the lifecycle: run a step, transform a stage, or hand a task to an agent. This page explains how such contributions are declared, how a project turns them on, and how to see which ones ran and why.</p>
+  <p>A package can plug into the build: run a step, transform a stage, or hand a task to an agent. This page explains how such plug-ins are declared, how a project turns them on, and how to see which ones ran and why.</p>
   <example id="extensions" fixture="hello-vibe">
     <run>vibe extensions --path hello-vibe</run>
     <expect></expect>

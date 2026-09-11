@@ -2,7 +2,7 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">Update packages</title>
   <status stage="doc" state="work" audience="user"/>
-  <p>Packages change. This page shows which of yours have a newer version, moves one or all of them forward, and explains what the lock file does during the move.</p>
+  <p>Packages change. This page shows which of yours have a newer version, moves one or all of them forward, and explains what vibe records during the move.</p>
   <prompt id="update-packages">In the VibeVM project in the current folder, show me which packages have newer versions, then update all of them, and summarise what changed in the lock file.
     <needs>the vibevm skill installed for your agent; a project with `vibe.toml` and `vibe.lock`; network access to the project's registries</needs>
     <outcome>`vibe outdated` lists the candidates, `vibe update --all` moves the pins, and the diff of `vibe.lock` shows the old and new versions</outcome>

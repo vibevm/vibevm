@@ -2,7 +2,7 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">Publish a package</title>
   <status stage="doc" state="work" audience="author"/>
-  <p>You wrote a package and want others to install it. This page publishes it to a registry as its own repository, tags the version, and checks that a fresh project can install it.</p>
+  <p>You wrote a package and want others to install it. This page publishes it to the place your projects install from, as its own repository, tags the version, and checks that a fresh project can install it.</p>
   <prompt id="publish-a-package">Publish the package in the folder packages/notes to the first registry of this project, using the publish token already in my environment, then create a scratch project elsewhere and install the published package into it to prove it works. Ask me before the actual push.
     <needs>the vibevm skill installed for your agent; a publish token for the registry's host in the environment or under `~/.vibe/`; the package's `vibe.toml` complete, with a version that has not been published before</needs>
     <outcome>a repository named after the package's coordinate exists in the registry organisation with a tag for the version; a scratch project installs it and `vibe list` shows the version</outcome>
