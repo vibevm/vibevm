@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">How an agent reads this manual</title>
+  <status stage="doc" state="work" audience="agent"/>
+  <p>This manual is published for machines as much as for people. An agent can fetch any page as plain text, ask where a rule lives, and load the whole corpus in one file sized to its budget.</p>
+  <the-files title="The machine files">
+    <table>
+      <tr><td>Address</td><td>What it is</td><td>When to read it</td></tr>
+      <tr><td>`https://vibevm.org/doc/llms.txt`</td><td>the index: one line per page, the page's first paragraph</td><td>first, to choose a page</td></tr>
+      <tr><td>`https://vibevm.org/doc/&lt;page&gt;.md`</td><td>one page as plain Markdown, block numbers included</td><td>to answer one question</td></tr>
+      <tr><td>`https://vibevm.org/doc/&lt;page&gt;.xml`</td><td>the same page in its source form, with every rule address and example intact</td><td>to quote a rule or run an example</td></tr>
+      <tr><td>`https://vibevm.org/doc/llms-small.txt`, `llms-medium.txt`, `llms-full.txt`</td><td>the corpus in three sizes, stable text first</td><td>only when a task spans many pages</td></tr>
+      <tr><td>`https://vibevm.org/doc/manifest.json`</td><td>every page with its language, audiences, status and anchors</td><td>to navigate programmatically</td></tr>
+      <tr><td>`https://vibevm.org/doc/resolve?uri=spec://…`</td><td>the resolver: an address in, the page and block out</td><td>when a message or a page cites an address</td></tr>
+      <tr><td>`https://vibevm.org/doc/ru/…`</td><td>the same files for another language</td><td>when the user reads that language</td></tr>
+    </table>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#SEO-LLMS-FILES"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#SEO-RAW-PROJECTIONS"/>
+  </the-files>
+  <offline title="Without a network">
+    <p>The same pages live in the machine store once `vibe cache add org.vibevm.core/vibevm-docs` has run. `vibe explain "spec://org.vibevm.core/vibevm-docs/&lt;page&gt;#&lt;anchor&gt;"` prints a page or a block; `vibe doc manifest --llms small` prints the index from the store. Nothing on this path contacts the network, which is why proprietary documentation is read this way.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#LOCAL-WARMUP"/>
+  </offline>
+  <citing title="Citing a place">
+    <p>Every block on a page carries a number, `p12` and so on, assigned when the page is built and the same in the web page, the Markdown and the XML. A citation is the page address plus that number: `spec://org.vibevm.core/vibevm-docs/model/boot-lane#p7`. Headings keep their named anchors as well, and a named anchor never changes once published; a block number names the current text and may shift after an edit, like a line number.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#READER-NUMBERED-BLOCKS"/>
+    <p>Rules on a page are quoted from the specification by address and shown in the specification's own language. Prefer the address of the specification over the address of the manual when you tell a user what a rule says; prefer the manual's page when you explain why.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#OBS-RULE-EDGE-UNPINNED"/>
+  </citing>
+  <procedure title="The procedure the skill teaches">
+    <p>1. On an error, read the address the message names, then the page the diagnostics page maps it to. 2. On a question, answer from one page: the first paragraph is the plain answer, the rule blocks carry the exact wording. 3. On a task, take the page's request block as your task, substitute the user's names and paths, run it, then run the asserts; the task is done when every assert exits zero. 4. When choosing among documentations of one package, prefer the one marked official and name the publisher of a community one. 5. Never load the full corpus when one page answers.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#OBS-AUDIENCE-AGENT"/>
+  </procedure>
+  <edge-cases title="Edge cases and rules">
+    <p>Text written for agents is never part of a project's boot lane; this manual is fetched when needed, not read at every session start.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#INV-DOC-NEVER-BOOTS"/>
+    <p>A page that exists in the source language but not in the language you asked for is served in the source language under the address you asked for, with a note; do not treat it as missing.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#READER-LANGUAGE-SWITCH-KEEPS-PLACE"/>
+  </edge-cases>
+</spec>
