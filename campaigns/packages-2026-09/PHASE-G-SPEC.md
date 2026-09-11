@@ -1,6 +1,6 @@
 # Phase G — Documentation as a package that cites and never copies {#root}
 
-<status stage="spec" state="plan" comment="drafted 2026-07-26 from the owner's directive; not ratified"/>
+<status stage="spec" state="void" comment="drafted 2026-07-26 from the owner's directive; not ratified; SUPERSEDED 2026-09-11 by PROP-057 (vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml) and the docs-2026-09 campaign — the text below is kept as history and is not a plan"/>
 
 **Placement:** after Phase F (the credibility report). Wave 1 deferred its own
 Phase G for want of inputs; this is that work, re-specified.
