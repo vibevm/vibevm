@@ -5,7 +5,27 @@
   <p>Every command can answer in JSON for scripts and agents. This page lists the documents, their schemas and the envelope fields that every document carries.</p>
   <example id="list-json" fixture="hello-vibe">
     <run>vibe list --json --path hello-vibe</run>
-    <expect></expect>
+    <expect>{
+  "ok": true,
+  "command": "list",
+  "project": "&lt;TMP&gt;/work/hello-vibe",
+  "count": 1,
+  "packages": [
+    {
+      "kind": "flow",
+      "name": "wal",
+      "version": "1.0.0",
+      "bridge": false,
+      "authors": [
+        "Oleg Chirukhin"
+      ],
+      "source_url": "file:///&lt;REPO&gt;/vibevm/vibepacks/org.vibevm.world/wal/v1.0.0",
+      "content_hash": "sha256:58eccc204df7e63e78e8d15f9416b6fd528e786b74d9e0e5e2fcb859716ea0d0",
+      "boot_snippet": null,
+      "files_written": []
+    }
+  ]
+}</expect>
   </example>
   <the-rule title="One rule for every format">
     <p>Anything a foreign parser reads, a report a script parses, a file another language writes, a [manifest](../glossary/index.xml#manifest) a browser fetches, is described by a schema and registered in one inventory. The Rust types and the TypeScript types are generated from the schema, never written by hand, so the two sides cannot drift. An unregistered format is not merely discouraged: it cannot be expressed in the type system that writes it.</p>

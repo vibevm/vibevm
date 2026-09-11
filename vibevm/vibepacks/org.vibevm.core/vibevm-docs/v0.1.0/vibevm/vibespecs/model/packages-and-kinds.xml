@@ -5,7 +5,10 @@
   <p>Everything vibe installs is a package: a folder with a small description file and the text or tools it delivers. Packages come in eight kinds, and the kind tells you what a package is for before you open it: a way of working, a feature, a technology, a tool, a language guide, an agent server, documentation, or an application.</p>
   <example id="list" fixture="hello-vibe">
     <run>vibe list --path hello-vibe</run>
-    <expect></expect>
+    <expect>KIND  NAME  VERSION  ROLE     BOOT SNIPPET
+flow  wal  1.0.0    package  —
+
+1 package installed.</expect>
   </example>
   <a-package title="What a package is">
     <p>A package is a project made installable. It has the same layout as a project, with its own `vibe.toml` and its own `vibevm/vibespecs/`, and it may carry code beside them. When a project installs it, the package's published tree is copied verbatim into the project's dependency tree; nothing is extracted, rewritten or merged.</p>

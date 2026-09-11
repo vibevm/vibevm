@@ -17,21 +17,38 @@
     <p>1. Warm the store with a package and its dependencies. Inside a project its [registries](../glossary/index.xml#registry) are the source; outside one, the machine-wide registries:</p>
     <example id="cache-add" fixture="empty">
       <run>vibe cache add org.vibevm.world/wal</run>
-      <expect></expect>
+      <expect>Pre-warming the machine store (&lt;TMP&gt;/home/cache)
+  ✓ created  org.vibevm.world/wal@1.0.0
+
+1 fetched, 0 already present — nothing materialised into any project.</expect>
     </example>
     <p>2. See and verify what the store holds:</p>
     <example id="cache-list" fixture="hello-vibe">
       <run>vibe cache list</run>
-      <expect></expect>
+      <expect>GROUP             NAME  VERSION
+org.vibevm.world  wal   1.0.0
+
+1 package in &lt;TMP&gt;/home/cache.</expect>
     </example>
     <example id="cache-check" fixture="hello-vibe">
       <run>vibe cache check</run>
-      <expect></expect>
+      <expect>Integrity sweep of the machine store (&lt;TMP&gt;/home/cache)
+
+1 ok, 0 mismatched, 0 unrecorded.</expect>
     </example>
     <p>3. Install without a network:</p>
     <example id="install-offline" fixture="hello-vibe-empty">
       <run>vibe install org.vibevm.world/wal --path hello-vibe --offline --assume-yes</run>
-      <expect></expect>
+      <expect>Resolving 1 root package…
+
+Materialising 1 package into vibedeps/:
+  org.vibevm.world/wal@1.0.0
+
+closure diff:
+  → + org.vibevm.world/wal@1.0.0 (root-edge)
+  → lane vibevm/vibespecs/boot/INDEX.md: 737 -&gt; 854 B
+
+Materialised 1 package into vibedeps/; regenerated boot artifacts for 1 node(s).</expect>
     </example>
   </by-hand>
   <switching-it-on title="Three ways to switch offline mode on">

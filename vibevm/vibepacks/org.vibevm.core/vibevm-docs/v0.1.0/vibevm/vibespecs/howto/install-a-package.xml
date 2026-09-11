@@ -17,17 +17,34 @@
     <p>1. Install by [coordinate](../glossary/index.xml#coordinate). Add `@` and a constraint to ask for a range or an exact version:</p>
     <example id="install" fixture="hello-vibe-empty">
       <run>vibe install org.vibevm.world/wal --path hello-vibe --assume-yes</run>
-      <expect></expect>
+      <expect>Resolving 1 root package…
+
+Materialising 1 package into vibedeps/:
+  org.vibevm.world/wal@1.0.0
+
+closure diff:
+  → + org.vibevm.world/wal@1.0.0 (root-edge)
+  → lane vibevm/vibespecs/boot/INDEX.md: 737 -&gt; 854 B
+
+Materialised 1 package into vibedeps/; regenerated boot artifacts for 1 node(s).</expect>
     </example>
     <p>2. Confirm the plan when asked. `--assume-yes` answers yes for scripts and agents.</p>
     <p>3. Check what was recorded and what the agent will read:</p>
     <example id="list" fixture="hello-vibe">
       <run>vibe list --path hello-vibe</run>
-      <expect></expect>
+      <expect>KIND  NAME  VERSION  ROLE     BOOT SNIPPET
+flow  wal  1.0.0    package  —
+
+1 package installed.</expect>
     </example>
     <example id="tree" fixture="hello-vibe">
       <run>vibe tree --plain --path hello-vibe</run>
-      <expect></expect>
+      <expect>project: &lt;TMP&gt;/work/hello-vibe
+STATIC.md: (none)
+packages: 1   roots: 1
+columns: load  T=transitive  C=condition  S=in STATIC.md
+
+org.vibevm.world/wal  dynamic  .  .  .</expect>
     </example>
   </by-hand>
   <constraints title="Asking for a version">

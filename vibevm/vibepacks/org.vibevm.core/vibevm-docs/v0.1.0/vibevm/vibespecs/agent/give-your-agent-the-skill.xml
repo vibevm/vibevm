@@ -17,12 +17,31 @@
     <p>1. See the plan first; nothing is written:</p>
     <example id="mcp-status" fixture="hello-vibe">
       <run>vibe mcp status --path hello-vibe</run>
-      <expect></expect>
+      <expect>Detected agents: claude, claude-desktop, opencode, codex
+  → would-create mcp     claude (project) → &lt;TMP&gt;/work/hello-vibe/.mcp.json (file does not exist yet)
+  → would-update mcp     claude (user) → &lt;HOME&gt;/.claude.json (mcpServers/vibevm differs)
+  → would-update mcp     claude-desktop (user) → &lt;HOME&gt;/AppData/Roaming/Claude/claude_desktop_config.json (mcpServers/vibevm absent)
+  → would-create mcp     cursor (project) → &lt;TMP&gt;/work/hello-vibe/.cursor/mcp.json (file does not exist yet)
+  → would-create mcp     cursor (user) → &lt;HOME&gt;/.cursor/mcp.json (file does not exist yet)
+  → would-create mcp     opencode (project) → &lt;TMP&gt;/work/hello-vibe/opencode.json (file does not exist yet)
+  → would-update mcp     opencode (user) → &lt;HOME&gt;/.config/opencode/opencode.json (mcp/vibevm differs)
+  → would-update mcp     codex (user) → &lt;HOME&gt;/.codex/config.toml ([mcp_servers.vibevm] absent)
+  → would-create skill   claude (project) → &lt;TMP&gt;/work/hello-vibe/.claude/skills/vibevm/SKILL.md
+  → would-update skill   claude (user) → &lt;HOME&gt;/.claude/skills/vibevm/SKILL.md
+  → would-create skill   opencode (project) → &lt;TMP&gt;/work/hello-vibe/.opencode/skills/vibevm/SKILL.md
+  → would-update skill   opencode (user) → &lt;HOME&gt;/.config/opencode/skills/vibevm/SKILL.md
+  → would-create skill   codex (project) → &lt;TMP&gt;/work/hello-vibe/.agents/skills/vibevm/SKILL.md
+  → would-create skill   codex (user) → &lt;HOME&gt;/.agents/skills/vibevm/SKILL.md</expect>
     </example>
     <p>2. Install for every detected agent, or for one with `--agent claude`, `--agent codex`, `--agent opencode`, `--agent cursor`, `--agent claude-desktop`:</p>
     <example id="mcp-install" fixture="hello-vibe">
       <run>vibe mcp install --auto --yes --dry-run --path hello-vibe</run>
-      <expect></expect>
+      <expect>  → would mcp     claude (project) → &lt;TMP&gt;/work/hello-vibe/.mcp.json (file does not exist yet)
+  → would mcp     opencode (project) → &lt;TMP&gt;/work/hello-vibe/opencode.json (file does not exist yet)
+  → would skill   claude (project) → &lt;TMP&gt;/work/hello-vibe/.claude/skills/vibevm/SKILL.md
+  → would skill   claude-desktop (project) → (no skill loader) (agent `claude-desktop` has no project-scope skill loader)
+  → would skill   opencode (project) → &lt;TMP&gt;/work/hello-vibe/.opencode/skills/vibevm/SKILL.md
+  → would skill   codex (project) → &lt;TMP&gt;/work/hello-vibe/.agents/skills/vibevm/SKILL.md</expect>
     </example>
     <p>3. Choose the scope: `--scope project` writes into the project's own agent folders, `--scope user` into your home configuration, `--scope both` into both. Without a project in the current folder the user scope is chosen for you.</p>
   </by-hand>
@@ -31,7 +50,8 @@
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-018#PROJECTION-DEF"/>
     <example id="skill-list" fixture="hello-vibe">
       <run>vibe skill list --path hello-vibe</run>
-      <expect></expect>
+      <expect>  → wal-status [flow:wal] → agents: all — Read the project WAL end to end and emit a ten-line orientation: phase, attention items, next step; warn on staleness
+1 skill(s) declared.</expect>
     </example>
     <p>The skill of this manual, `vibevm-docs`, arrives the same way once the manual is in the machine [store](../glossary/index.xml#store).</p>
   </skills-from-packages>

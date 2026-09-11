@@ -17,19 +17,46 @@
     <p>1. Create the package slot:</p>
     <example id="init-package" fixture="project">
       <run>vibe init package org.acme/review-notes</run>
-      <expect></expect>
+      <expect>Creating package `org.acme/review-notes` in `&lt;TMP&gt;/work`
+  ✓ created  vibevm/vibepacks/org.acme/review-notes/v0.1.0/vibe.toml
+  ✓ created  vibevm/vibepacks/org.acme/review-notes/v0.1.0/vibevm/vibespecs/boot/10-tool-review-notes.md
+  ✓ created  vibevm/vibepacks/org.acme/review-notes/v0.1.0/README.md
+  • kept     vibevm/vibespecs/boot/INDEX.md (regenerated)
+  • kept     CLAUDE.md (regenerated)
+  • kept     AGENTS.md (regenerated)
+  • kept     GEMINI.md (regenerated)
+
+Done. Project `org.acme/review-notes`: 3 files created, 4 kept.
+
+Next:
+  • edit vibevm/vibespecs/boot/00-core.md and vibevm/vibespecs/common as your project takes shape
+  • install packages with `vibe install &lt;kind&gt;:&lt;name&gt;` (e.g. flow:wal)</expect>
     </example>
     <p>2. Edit the manifest the scaffold wrote: set `kind = "flow"`, fill in the description, and point `[boot_snippet]` at your snippet. As generated:</p>
     <example id="manifest" fixture="flow-slot">
       <run>cat vibevm/vibepacks/org.acme/review-notes/v0.1.0/vibe.toml</run>
-      <expect></expect>
+      <expect>[package]
+group = "org.acme"
+name = "review-notes"
+kind = "tool"
+version = "0.1.0"
+epoch = 1
+authors = ["vibevm docs fixtures"]
+license = "UPL-1.0"
+description = ""
+format = "normal"
+
+[boot_snippet]
+source = "vibevm/vibespecs/boot/10-tool-review-notes.md"
+category = "tool"
+link = "dynamic"</expect>
     </example>
     <p>3. Inside the slot, write the snippet at `vibevm/vibespecs/boot/review-notes.xml`. Keep it short: what to do, and the address of the rule that says why. It is read by every agent, in every session, of every project that installs your flow.</p>
     <p>4. Write the protocol under `vibevm/vibespecs/flows/review-notes/`: one anchored section per rule, one idea per section, a status marker on each.</p>
     <p>5. Check and publish:</p>
     <example id="check" fixture="flow-slot">
       <run>vibe check --path vibevm/vibepacks/org.acme/review-notes/v0.1.0</run>
-      <expect></expect>
+      <expect>vibe check: clean — every check passed against `&lt;TMP&gt;/work/vibevm/vibepacks/org.acme/review-notes/v0.1.0`</expect>
     </example>
   </by-hand>
   <the-snippet title="The snippet is the expensive part">

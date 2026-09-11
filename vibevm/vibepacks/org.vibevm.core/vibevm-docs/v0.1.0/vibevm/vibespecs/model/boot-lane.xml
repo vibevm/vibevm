@@ -5,7 +5,12 @@
   <p>When an agent starts, it reads a short ordered list of files that vibe computed from everything the project depends on. The list has a fixed first file, read in full, and a list of the rest. Some entries are read always, some only when a condition holds, and nothing in the list is written by hand.</p>
   <example id="tree" fixture="hello-vibe">
     <run>vibe tree --plain --path hello-vibe</run>
-    <expect></expect>
+    <expect>project: &lt;TMP&gt;/work/hello-vibe
+STATIC.md: (none)
+packages: 1   roots: 1
+columns: load  T=transitive  C=condition  S=in STATIC.md
+
+org.vibevm.world/wal  dynamic  .  .  .</expect>
   </example>
   <the-order title="The order of reading">
     <p>An [agent session](../glossary/index.xml#agent-session) begins with the instruction file its vendor reads, `CLAUDE.md`, `AGENTS.md` or `GEMINI.md`. At the end of that file sits a short block vibe maintains, and the block says: read `vibevm/vibespecs/boot/STATIC.xml` first and in full, then open `vibevm/vibespecs/boot/INDEX.md` and read every file it names, in order. That is the whole boot: three steps, all of them reading.</p>

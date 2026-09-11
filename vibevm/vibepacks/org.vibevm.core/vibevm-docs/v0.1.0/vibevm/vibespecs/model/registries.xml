@@ -5,7 +5,7 @@
   <p>Packages are published to a place vibe knows how to read: by default a public organisation on GitHub, one repository per package. A project lists such places in the order it trusts them. A catalogue beside each one answers searches without cloning anything.</p>
   <example id="registry-list" fixture="hello-vibe">
     <run>vibe registry list --path hello-vibe</run>
-    <expect></expect>
+    <expect>No `[[registry]]` entries in `vibe.toml`. Use `--registry &lt;path&gt;` on `vibe install` for a local-directory source, or add a `[[registry]]` block.</expect>
   </example>
   <what-a-registry-is title="What a registry is">
     <p>A [registry](../glossary/index.xml#registry) is not a server vibe runs. It is a hosting organisation, such as `https://github.com/vibespecs`, where every package is its own git repository named after the package's [coordinate](../glossary/index.xml#coordinate). Publishing means pushing a repository and tagging a version; installing means cloning at a tag. Who may publish is decided by the hosting service's own permissions, so vibe carries no accounts of its own.</p>

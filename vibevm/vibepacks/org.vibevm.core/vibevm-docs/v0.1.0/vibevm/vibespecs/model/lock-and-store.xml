@@ -5,7 +5,7 @@
   <p>One file in your project records exactly which package versions it got, down to a checksum of their content, so a teammate installs the same bytes. One folder on your machine keeps those bytes once per computer, so a second project or an offline day costs nothing extra.</p>
   <example id="cache-path" fixture="hello-vibe">
     <run>vibe cache path</run>
-    <expect></expect>
+    <expect>&lt;TMP&gt;/home/cache</expect>
   </example>
   <identity title="Identity is the content, not the address">
     <p>A package version is identified by four things: its group, its name, its version, and a [fingerprint](../glossary/index.xml#fingerprint) of every file it contains. The address it was fetched from is written down for information only. That is why a mirror, a moved repository or a vendored copy never changes the [lock file](../glossary/index.xml#lock-file): as long as the bytes are the same, the package is the same.</p>

@@ -5,7 +5,10 @@
   <p>A project keeps two kinds of text apart: the rules your team wrote, and the copies of shared rules that arrived with the packages you installed. Installing a package never edits your own text. Removing one never leaves a trace in it.</p>
   <example id="list" fixture="hello-vibe">
     <run>vibe list --path hello-vibe</run>
-    <expect></expect>
+    <expect>KIND  NAME  VERSION  ROLE     BOOT SNIPPET
+flow  wal  1.0.0    package  —
+
+1 package installed.</expect>
   </example>
   <the-rule title="The founding rule">
     <p>Think of how a C++ program uses a library: you write `#include`, and the library's headers are read at build time, but nobody pastes the library's source into your files. vibe follows the same rule for text. Your specifications live in `vibevm/vibespecs/`; the packages you depend on are copied, whole and unchanged, into `vibevm/vibedeps/`, one folder per package and version. The two trees never mix.</p>

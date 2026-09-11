@@ -5,7 +5,12 @@
   <p>After the first install, a project holds a handful of files you wrote and a larger set that vibe wrote for you. This page names each of them and says who is allowed to change it, so nothing you edit gets overwritten and nothing vibe generates gets edited by hand.</p>
   <example id="tree" fixture="hello-vibe">
     <run>vibe tree --plain --path hello-vibe</run>
-    <expect></expect>
+    <expect>project: &lt;TMP&gt;/work/hello-vibe
+STATIC.md: (none)
+packages: 1   roots: 1
+columns: load  T=transitive  C=condition  S=in STATIC.md
+
+org.vibevm.world/wal  dynamic  .  .  .</expect>
   </example>
   <the-files title="The files, one by one">
     <p>Start with the two files at the root, because everything else is derived from them.</p>

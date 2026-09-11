@@ -17,12 +17,19 @@
     <p>1. Remove by [coordinate](../glossary/index.xml#coordinate); the version is not needed:</p>
     <example id="uninstall" fixture="hello-vibe">
       <run>vibe uninstall org.vibevm.world/wal --path hello-vibe --assume-yes</run>
-      <expect></expect>
+      <expect>
+Uninstall org.vibevm.world/wal@1.0.0 — remove `vibevm/vibedeps/org.vibevm.world.wal/1.0.0` and regenerate boot.
+  - removed  vibevm/vibedeps/org.vibevm.world.wal/1.0.0
+
+Uninstalled org.vibevm.world/wal@1.0.0 — removed its vibedeps/ slot, regenerated boot.</expect>
     </example>
     <p>2. Check the reading list:</p>
     <example id="tree" fixture="hello-vibe-removed">
       <run>vibe tree --plain --path hello-vibe</run>
-      <expect></expect>
+      <expect>project: &lt;TMP&gt;/work/hello-vibe
+STATIC.md: (none)
+packages: 0   roots: 0
+columns: load  T=transitive  C=condition  S=in STATIC.md</expect>
     </example>
   </by-hand>
   <derived-state title="Removing derived state without removing packages">

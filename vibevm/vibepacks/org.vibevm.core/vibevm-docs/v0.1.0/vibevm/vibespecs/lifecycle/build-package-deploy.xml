@@ -46,7 +46,7 @@ targets = ["local"]</fence>
     <p>4. List what this machine holds, and take a profile down:</p>
     <example id="deployments" fixture="hello-vibe">
       <run>vibe deployments</run>
-      <expect></expect>
+      <expect>no deployments recorded on this machine</expect>
     </example>
     <p>`vibe undeploy --profile &lt;name&gt;` reverses that profile. The listing never shows secrets.</p>
   </by-hand>
