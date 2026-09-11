@@ -27,6 +27,31 @@ fn authenticated_tag_ref_read_uses_the_exact_singular_endpoint() {
 }
 
 #[test]
+fn existing_tag_is_read_then_force_moved() {
+    let mock = MockGithub::spawn();
+    let client = mock.client("release-token");
+    for sha in ["old", "new"] {
+        mock.json(
+            StatusCode::OK,
+            json!({
+                "ref": "refs/tags/v1.2.3",
+                "object": { "sha": sha, "type": "commit", "url": "https://example.test/object" }
+            }),
+        );
+    }
+
+    let reference = client.force_move_or_create_tag("v1.2.3", "new").unwrap();
+    assert_eq!(reference.object.sha, "new");
+    let state = mock.state.lock().unwrap();
+    assert_eq!(state.requests[0].method, "GET");
+    assert_eq!(state.requests[1].method, "PATCH");
+    assert_eq!(
+        state.requests[1].uri,
+        "/api/repos/vibevm/vibe/git/refs/tags/v1.2.3"
+    );
+}
+
+#[test]
 fn configured_endpoints_reject_and_redact_user_info() {
     let rendered = GithubReleaseClient::with_endpoints(
         Token::from_explicit("password"),

@@ -258,8 +258,8 @@ impl GithubReleaseClient {
         tag: &str,
         source_commit: &str,
     ) -> Result<GithubGitRef, GithubReleaseError> {
-        match self.force_move_tag(tag, source_commit) {
-            Ok(reference) => Ok(reference),
+        match self.get_tag_ref_authenticated(tag) {
+            Ok(_) => self.force_move_tag(tag, source_commit),
             Err(GithubReleaseError::NotFound { .. }) => self.create_tag_ref(tag, source_commit),
             Err(error) => Err(error),
         }

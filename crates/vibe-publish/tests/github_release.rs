@@ -400,10 +400,10 @@ fn mutable_tag_is_created_when_force_move_finds_no_ref() {
 
     let state = mock.state.lock().unwrap();
     assert_eq!(state.requests.len(), 2);
-    assert_eq!(state.requests[0].method, "PATCH");
+    assert_eq!(state.requests[0].method, "GET");
     assert_eq!(
         state.requests[0].uri,
-        "/api/repos/vibevm/vibe/git/refs/tags/v1.2.3"
+        "/api/repos/vibevm/vibe/git/ref/tags/v1.2.3"
     );
     assert_eq!(state.requests[1].method, "POST");
     assert_eq!(state.requests[1].uri, "/api/repos/vibevm/vibe/git/refs");
