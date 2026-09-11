@@ -3,32 +3,32 @@
   <title id="root">Write a flow package</title>
   <status stage="doc" state="work" audience="author"/>
   <p>A flow tells an agent how a team works: how to commit, what to check before pushing, how to keep notes between sessions. This page writes one from scratch, including the short text the agent reads at every session start.</p>
-  <prompt id="write-a-flow">Create a flow package org.acme/review-notes in the folder packages/review-notes of the current VibeVM project. It should teach an agent to leave a short REVIEW.md note at the root of the project after every change it makes, with the date and what changed. Write the boot snippet, the protocol document and the manifest, then run vibe check on the package.
+  <prompt id="write-a-flow">Create a flow package org.acme/review-notes in the current VibeVM project, as an in-tree package under vibevm/vibepacks/. It should teach an agent to leave a short REVIEW.md note at the root of the project after every change it makes, with the date and what changed. Write the boot snippet, the protocol document and the manifest, then run vibe check on the package.
     <needs>the vibevm skill installed for your agent; a project with `vibe.toml` at the root</needs>
-    <outcome>`packages/review-notes/vibe.toml` declares a `flow` package with a boot snippet; the snippet is under two hundred words and names the protocol by address; the protocol document has anchored sections; `vibe check --path packages/review-notes` reports no errors</outcome>
-    <assert>vibe check --path packages/review-notes --quiet</assert>
-    <assert>test -f packages/review-notes/vibevm/vibespecs/boot/review-notes.xml</assert>
+    <outcome>`vibevm/vibepacks/org.acme/review-notes/v0.1.0/vibe.toml` declares a `flow` package with a boot snippet; the snippet is under two hundred words and names the protocol by address; the protocol document has anchored sections; `vibe check --path vibevm/vibepacks/org.acme/review-notes/v0.1.0` reports no errors</outcome>
+    <assert>vibe check --path vibevm/vibepacks/org.acme/review-notes/v0.1.0 --quiet</assert>
+    <assert>test -f vibevm/vibepacks/org.acme/review-notes/v0.1.0/vibevm/vibespecs/boot/review-notes.xml</assert>
   </prompt>
   <what-happens title="What happens">
-    <p>The agent runs `vibe init package org.acme/review-notes packages/review-notes`, which writes a [manifest](../glossary/index.xml#manifest) with a `[package]` table, the `vibevm/` layout and the two boot files every node has. It then writes three things. The [boot snippet](../glossary/index.xml#boot-snippet) is a short instruction the agent of a consuming project reads at every session start. The protocol is the full set of rules under `vibevm/vibespecs/flows/review-notes/`, with anchored sections the snippet cites. The manifest's `[boot_snippet]` table points at the snippet with the category `flow`. Finally it runs `vibe check` on the package, which validates the manifest and the layout like it would for any project.</p>
+    <p>The agent runs `vibe init package org.acme/review-notes`, which adds a package slot to the project at `vibevm/vibepacks/org.acme/review-notes/v0.1.0/`: a [manifest](../glossary/index.xml#manifest) with a `[package]` table, a README and a placeholder snippet. The project's own [registry](../glossary/index.xml#registry) sees the slot, so the flow can be installed and tried in place before it is published. It then writes three things. The [boot snippet](../glossary/index.xml#boot-snippet) is a short instruction the agent of a consuming project reads at every session start. The protocol is the full set of rules under `vibevm/vibespecs/flows/review-notes/`, with anchored sections the snippet cites. The manifest's `[boot_snippet]` table points at the snippet with the category `flow`. Finally it runs `vibe check` on the package, which validates the manifest and the layout like it would for any project.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-024#PKG-PROJECT-LAW"/>
   </what-happens>
   <by-hand title="By hand">
-    <p>1. Create the package skeleton:</p>
-    <example id="init-package" fixture="workspace-root">
-      <run>vibe init package org.acme/review-notes packages/review-notes</run>
+    <p>1. Create the package slot:</p>
+    <example id="init-package" fixture="project">
+      <run>vibe init package org.acme/review-notes</run>
       <expect></expect>
     </example>
-    <p>2. Write the manifest. A flow needs the package identity, a description, and the snippet declaration:</p>
-    <example id="manifest" fixture="workspace">
-      <run>cat packages/review-notes/vibe.toml</run>
+    <p>2. Edit the manifest the scaffold wrote: set `kind = "flow"`, fill in the description, and point `[boot_snippet]` at your snippet. As generated:</p>
+    <example id="manifest" fixture="flow-slot">
+      <run>cat vibevm/vibepacks/org.acme/review-notes/v0.1.0/vibe.toml</run>
       <expect></expect>
     </example>
-    <p>3. Write the snippet at `vibevm/vibespecs/boot/review-notes.xml`. Keep it short: what to do, and the address of the rule that says why. It is read by every agent, in every session, of every project that installs your flow.</p>
+    <p>3. Inside the slot, write the snippet at `vibevm/vibespecs/boot/review-notes.xml`. Keep it short: what to do, and the address of the rule that says why. It is read by every agent, in every session, of every project that installs your flow.</p>
     <p>4. Write the protocol under `vibevm/vibespecs/flows/review-notes/`: one anchored section per rule, one idea per section, a status marker on each.</p>
     <p>5. Check and publish:</p>
-    <example id="check" fixture="workspace">
-      <run>vibe check --path packages/review-notes</run>
+    <example id="check" fixture="flow-slot">
+      <run>vibe check --path vibevm/vibepacks/org.acme/review-notes/v0.1.0</run>
       <expect></expect>
     </example>
   </by-hand>
@@ -40,6 +40,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SUGGESTED-DEFAULT"/>
   </the-snippet>
   <layout title="What goes where">
+    <p>Paths are relative to the package root, the slot `vibevm/vibepacks/org.acme/review-notes/v0.1.0/`.</p>
     <table>
       <tr><td>Path</td><td>Purpose</td></tr>
       <tr><td>`vibe.toml`</td><td>the manifest: `[package]`, `[boot_snippet]`, optional `[[skill]]`, `[requires]`</td></tr>

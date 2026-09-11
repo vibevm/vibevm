@@ -3,14 +3,14 @@
   <title id="root">Ship tools and MCP servers</title>
   <status stage="doc" state="work" audience="author"/>
   <p>A package can deliver programs: command-line tools built on install, or a server your agent talks to. This page declares both, builds them in the package's own folder, and explains why a server pins the exact version of the tools it serves.</p>
-  <prompt id="ship-tools">In the package packages/notes-tools of the current VibeVM project, declare the Rust crate crates/notes-check as a binary named notes-check, build it through vibe, and run it through vibe bin exec with --help to prove the dispatch works.
+  <prompt id="ship-tools">In the current VibeVM project, create the tool package org.acme/notes-tools as an in-tree package with a small Rust crate crates/notes-check inside it, declare the crate as a binary named notes-check, install the package into the project, build the tool through vibe, and run it through vibe bin exec with --help to prove the dispatch works.
     <needs>the vibevm skill installed for your agent; a package with a Cargo workspace at its root and a binary crate; the Rust toolchain on the `PATH`</needs>
     <outcome>the manifest carries a `[[binary]]` table; `vibe bin list` shows the tool; `vibe bin build` produced it in the package's own target folder; `vibe bin exec notes-check -- --help` prints the tool's help</outcome>
-    <assert>vibe bin list --path packages/notes-tools</assert>
-    <assert>vibe bin exec notes-check --path packages/notes-tools -- --help</assert>
+    <assert>vibe bin list</assert>
+    <assert>vibe bin exec notes-check -- --help</assert>
   </prompt>
   <what-happens title="What happens">
-    <p>The agent adds a `[[binary]]` table naming the tool and the crate directory inside the package. It runs `vibe bin build`, which asks for consent and runs a release build inside the package's own workspace. Then it runs `vibe bin exec`, which resolves the tool through the project's [lock file](../glossary/index.xml#lock-file) to the artifact of the exact version installed and runs it. Consumers get the same: installing the package materialises its source, building on first use produces the tool beside it, and the artifact never enters the package's [fingerprint](../glossary/index.xml#fingerprint).</p>
+    <p>The agent scaffolds the package slot with `vibe init package`, puts the crate inside it, adds a `[[binary]]` table naming the tool and the crate directory, and installs the package into the project from the project's own [registry](../glossary/index.xml#registry). It runs `vibe bin build`, which asks for consent and runs a release build inside the package's own workspace. Then it runs `vibe bin exec`, which resolves the tool through the project's [lock file](../glossary/index.xml#lock-file) to the artifact of the exact version installed and runs it. Consumers get the same: installing the package materialises its source, building on first use produces the tool beside it, and the artifact never enters the package's [fingerprint](../glossary/index.xml#fingerprint).</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#BINARY-MUST"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#HASHES-STABLE"/>
   </what-happens>
