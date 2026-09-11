@@ -1,23 +1,31 @@
 use std::collections::VecDeque;
+use std::convert::Infallible;
 use std::sync::{Arc, Mutex, mpsc};
 use std::thread;
+use std::time::Duration;
 
 use axum::Router;
-use axum::body::{Body, to_bytes};
+use axum::body::{Body, Bytes, to_bytes};
 use axum::extract::State;
 use axum::http::{HeaderMap, Request, Response, StatusCode};
 use axum::routing::any;
 use serde_json::{Value, json};
 use tokio::net::TcpListener;
 use vibe_publish::{
-    CreateGithubRelease, GithubReleaseClient, GithubReleaseError, Token, UpdateGithubRelease,
-    sha256_digest,
+    CreateGithubRelease, GithubMakeLatest, GithubReleaseClient, GithubReleaseError, Token,
+    UpdateGithubRelease, sha256_digest,
 };
+
+#[path = "github_release/recovery.rs"]
+mod recovery;
 
 struct PlannedResponse {
     status: StatusCode,
     body: Vec<u8>,
     content_type: &'static str,
+    headers: Vec<(&'static str, String)>,
+    chunked: bool,
+    delay: Duration,
 }
 
 #[derive(Debug)]
@@ -40,23 +48,43 @@ struct MockState(Arc<Mutex<MockStateInner>>);
 async fn handle(State(state): State<MockState>, request: Request<Body>) -> Response<Body> {
     let (parts, body) = request.into_parts();
     let body = to_bytes(body, usize::MAX).await.unwrap().to_vec();
-    let mut state = state.0.lock().unwrap();
-    state.requests.push(CapturedRequest {
-        method: parts.method.to_string(),
-        uri: parts.uri.to_string(),
-        headers: parts.headers,
-        body,
-    });
-    let planned = state.responses.pop_front().unwrap_or(PlannedResponse {
-        status: StatusCode::INTERNAL_SERVER_ERROR,
-        body: br#"{"message":"mock response queue exhausted"}"#.to_vec(),
-        content_type: "application/json",
-    });
-    Response::builder()
+    let planned = {
+        let mut state = state.0.lock().unwrap();
+        state.requests.push(CapturedRequest {
+            method: parts.method.to_string(),
+            uri: parts.uri.to_string(),
+            headers: parts.headers,
+            body,
+        });
+        state.responses.pop_front().unwrap_or(PlannedResponse {
+            status: StatusCode::INTERNAL_SERVER_ERROR,
+            body: br#"{"message":"mock response queue exhausted"}"#.to_vec(),
+            content_type: "application/json",
+            headers: Vec::new(),
+            chunked: false,
+            delay: Duration::ZERO,
+        })
+    };
+    if !planned.delay.is_zero() {
+        tokio::time::sleep(planned.delay).await;
+    }
+    let mut response = Response::builder()
         .status(planned.status)
-        .header("content-type", planned.content_type)
-        .body(Body::from(planned.body))
-        .unwrap()
+        .header("content-type", planned.content_type);
+    for (name, value) in planned.headers {
+        response = response.header(name, value);
+    }
+    let body = if planned.chunked {
+        let chunks = planned
+            .body
+            .chunks(3)
+            .map(|chunk| Ok::<_, Infallible>(Bytes::copy_from_slice(chunk)))
+            .collect::<Vec<_>>();
+        Body::from_stream(futures::stream::iter(chunks))
+    } else {
+        Body::from(planned.body)
+    };
+    response.body(body).unwrap()
 }
 
 struct MockGithub {
@@ -102,6 +130,24 @@ impl MockGithub {
                 status,
                 body: serde_json::to_vec(&body).unwrap(),
                 content_type: "application/json",
+                headers: Vec::new(),
+                chunked: false,
+                delay: Duration::ZERO,
+            });
+    }
+
+    fn json_with_link(&self, status: StatusCode, body: Value, link: String) {
+        self.state
+            .lock()
+            .unwrap()
+            .responses
+            .push_back(PlannedResponse {
+                status,
+                body: serde_json::to_vec(&body).unwrap(),
+                content_type: "application/json",
+                headers: vec![("link", link)],
+                chunked: false,
+                delay: Duration::ZERO,
             });
     }
 
@@ -114,6 +160,39 @@ impl MockGithub {
                 status,
                 body: body.to_vec(),
                 content_type: "application/octet-stream",
+                headers: Vec::new(),
+                chunked: false,
+                delay: Duration::ZERO,
+            });
+    }
+
+    fn chunked_bytes(&self, status: StatusCode, body: &[u8]) {
+        self.state
+            .lock()
+            .unwrap()
+            .responses
+            .push_back(PlannedResponse {
+                status,
+                body: body.to_vec(),
+                content_type: "application/octet-stream",
+                headers: Vec::new(),
+                chunked: true,
+                delay: Duration::ZERO,
+            });
+    }
+
+    fn delayed_json(&self, delay: Duration, body: Value) {
+        self.state
+            .lock()
+            .unwrap()
+            .responses
+            .push_back(PlannedResponse {
+                status: StatusCode::OK,
+                body: serde_json::to_vec(&body).unwrap(),
+                content_type: "application/json",
+                headers: Vec::new(),
+                chunked: false,
+                delay,
             });
     }
 
@@ -206,7 +285,6 @@ fn create_find_list_update_release_and_force_move_tag() {
             .sha,
         "def456"
     );
-
     let state = mock.state.lock().unwrap();
     let requests = &state.requests;
     assert_eq!(requests.len(), 5);
@@ -283,6 +361,62 @@ fn upload_public_download_rename_and_delete_use_the_right_auth_boundaries() {
 }
 
 #[test]
+fn release_deletion_is_authenticated_and_release_scoped() {
+    let mock = MockGithub::spawn();
+    let client = mock.client("release-token");
+    mock.bytes(StatusCode::NO_CONTENT, b"");
+
+    client.delete_release(77).unwrap();
+
+    let state = mock.state.lock().unwrap();
+    assert_eq!(state.requests.len(), 1);
+    assert_eq!(state.requests[0].method, "DELETE");
+    assert_eq!(state.requests[0].uri, "/api/repos/vibevm/vibe/releases/77");
+    assert_eq!(
+        state.requests[0].headers["authorization"],
+        "Bearer release-token"
+    );
+}
+
+#[test]
+fn mutable_tag_is_created_when_force_move_finds_no_ref() {
+    let mock = MockGithub::spawn();
+    let client = mock.client("release-token");
+    mock.json(StatusCode::NOT_FOUND, json!({"message": "Not Found"}));
+    mock.json(
+        StatusCode::CREATED,
+        json!({
+            "ref": "refs/tags/v1.2.3",
+            "object": {
+                "sha": "def456",
+                "type": "commit",
+                "url": "https://example.test/object"
+            }
+        }),
+    );
+
+    let reference = client.force_move_or_create_tag("v1.2.3", "def456").unwrap();
+    assert_eq!(reference.object.sha, "def456");
+
+    let state = mock.state.lock().unwrap();
+    assert_eq!(state.requests.len(), 2);
+    assert_eq!(state.requests[0].method, "PATCH");
+    assert_eq!(
+        state.requests[0].uri,
+        "/api/repos/vibevm/vibe/git/refs/tags/v1.2.3"
+    );
+    assert_eq!(state.requests[1].method, "POST");
+    assert_eq!(state.requests[1].uri, "/api/repos/vibevm/vibe/git/refs");
+    assert_eq!(
+        serde_json::from_slice::<Value>(&state.requests[1].body).unwrap(),
+        json!({"ref": "refs/tags/v1.2.3", "sha": "def456"})
+    );
+    for request in &state.requests {
+        assert_eq!(request.headers["authorization"], "Bearer release-token");
+    }
+}
+
+#[test]
 fn upsert_release_updates_an_existing_mutable_release() {
     let mock = MockGithub::spawn();
     let client = mock.client("release-token");
@@ -301,69 +435,6 @@ fn upsert_release_updates_an_existing_mutable_release() {
     assert_eq!(state.requests[0].method, "GET");
     assert_eq!(state.requests[1].method, "PATCH");
     assert_eq!(state.requests[1].uri, "/api/repos/vibevm/vibe/releases/40");
-}
-
-#[test]
-fn replace_uploads_verifies_deletes_old_then_renames() {
-    let mock = MockGithub::spawn();
-    let client = mock.client("release-token");
-    let old = b"old";
-    let new = b"new bundle";
-    let public_url = format!("{}/downloads/vibe.zip", mock.base);
-    mock.json(
-        StatusCode::OK,
-        json!([asset(21, "vibe.zip", old, &public_url)]),
-    );
-    mock.json(
-        StatusCode::CREATED,
-        asset(22, "temporary", new, &public_url),
-    );
-    mock.bytes(StatusCode::NO_CONTENT, b"");
-    mock.json(StatusCode::OK, asset(22, "vibe.zip", new, &public_url));
-
-    let replaced = client
-        .publish_asset(4, "vibe.zip", "application/zip", new)
-        .unwrap();
-    assert_eq!(replaced.id, 22);
-    assert_eq!(replaced.name, "vibe.zip");
-
-    let state = mock.state.lock().unwrap();
-    assert_eq!(state.requests.len(), 4);
-    assert_eq!(state.requests[0].method, "GET");
-    assert_eq!(state.requests[1].method, "POST");
-    assert!(state.requests[1].uri.contains("name=.vibe-upload-"));
-    assert_eq!(
-        state.requests[2].uri,
-        "/api/repos/vibevm/vibe/releases/assets/21"
-    );
-    assert_eq!(state.requests[2].method, "DELETE");
-    assert_eq!(state.requests[3].method, "PATCH");
-    let rename_body: Value = serde_json::from_slice(&state.requests[3].body).unwrap();
-    assert_eq!(rename_body, json!({"name": "vibe.zip"}));
-}
-
-#[test]
-fn replacement_verification_failure_keeps_the_old_asset() {
-    let mock = MockGithub::spawn();
-    let client = mock.client("release-token");
-    let public_url = format!("{}/downloads/vibe.zip", mock.base);
-    mock.json(
-        StatusCode::OK,
-        json!([asset(30, "vibe.zip", b"old", &public_url)]),
-    );
-    let mut wrong = asset(31, "temporary", b"new", &public_url);
-    wrong["digest"] = json!(sha256_digest(b"different"));
-    mock.json(StatusCode::CREATED, wrong);
-
-    let error = client
-        .replace_asset(4, "vibe.zip", "application/zip", b"new")
-        .unwrap_err();
-    assert!(matches!(
-        error,
-        GithubReleaseError::AssetVerification { .. }
-    ));
-    let state = mock.state.lock().unwrap();
-    assert_eq!(state.requests.len(), 2, "old asset must not be deleted");
 }
 
 #[test]
@@ -483,6 +554,9 @@ fn anonymous_write_refuses_before_sending_a_request() {
         client.find_release_authenticated("v1.0.0").unwrap_err(),
         client.list_assets_authenticated(1).unwrap_err(),
         client.download_asset_authenticated(1).unwrap_err(),
+        client
+            .download_asset_authenticated_bounded(1, 1, 1)
+            .unwrap_err(),
         client.create_release(&request).unwrap_err(),
         client.upsert_release(&request).unwrap_err(),
         client
@@ -492,11 +566,15 @@ fn anonymous_write_refuses_before_sending_a_request() {
             .upload_asset(1, "vibe.zip", "application/zip", b"bytes")
             .unwrap_err(),
         client.delete_asset(1).unwrap_err(),
+        client.delete_release(1).unwrap_err(),
         client.rename_asset(1, "vibe.zip").unwrap_err(),
         client
             .publish_asset(1, "vibe.zip", "application/zip", b"bytes")
             .unwrap_err(),
         client.force_move_tag("v1.0.0", "abc123").unwrap_err(),
+        client
+            .force_move_or_create_tag("v1.0.0", "abc123")
+            .unwrap_err(),
     ];
     for error in errors {
         assert!(matches!(
@@ -508,20 +586,4 @@ fn anonymous_write_refuses_before_sending_a_request() {
         assert!(rendered.contains("load_token_for_host"));
     }
     assert!(mock.state.lock().unwrap().requests.is_empty());
-}
-
-#[test]
-fn configured_endpoints_reject_and_redact_user_info() {
-    let rendered = GithubReleaseClient::with_endpoints(
-        Token::from_explicit("password"),
-        "vibevm",
-        "vibe",
-        "https://publisher:password@example.test/api",
-        "https://uploads.example.test",
-    )
-    .err()
-    .expect("credentialed API base must be refused")
-    .to_string();
-    assert!(!rendered.contains("password"));
-    assert!(rendered.contains("https://***@example.test/api"));
 }

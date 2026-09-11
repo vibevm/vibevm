@@ -210,6 +210,10 @@ console = "0.16"
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 sha2 = "0.10"
+# Shared release ZIP reader/writer for the xtask producer and VVM bootstrap
+# consumer. MIT; default codecs are disabled so the distribution surface
+# carries only the zlib-rs-backed DEFLATE codec it emits and accepts.
+zip = { version = "4", default-features = false, features = ["deflate-flate2-zlib-rs"] }
 getrandom = "0.3"
 semver = { version = "1", features = ["serde"] }
 indexmap = { version = "2", features = ["serde"] }

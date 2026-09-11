@@ -5,6 +5,7 @@
 //! from `~/.vibe` by linking `vibe-test-support` (DRIFT-020).
 
 use std::path::Path;
+#[cfg(not(windows))]
 use std::process::Command as Sys;
 
 use assert_cmd::Command;
@@ -19,38 +20,90 @@ fn vibe(base: &Path) -> Command {
     cmd
 }
 
+/// Copy the real test binary below `source/target/` so current_exe provenance
+/// identifies that worktree rather than relying on (and accidentally trusting)
+/// `current_dir`.
+#[cfg(not(windows))]
+fn source_vibe(base: &Path, source: &Path) -> Command {
+    let probe = vibe_test_support::vibe();
+    let destination = source.join("target").join("bootstrap").join(bin_name());
+    std::fs::create_dir_all(destination.parent().unwrap()).unwrap();
+    std::fs::copy(probe.get_program(), &destination).unwrap();
+    let mut cmd = Command::new(destination);
+    cmd.env("VIBEVM_INSTALL_ROOT", base)
+        .env_remove("VIBEVM_HOME")
+        .current_dir(source);
+    cmd
+}
+
 fn bin_name() -> &'static str {
     if cfg!(windows) { "vibe.exe" } else { "vibe" }
 }
 
+#[cfg(not(windows))]
+fn index_bin_name() -> &'static str {
+    if cfg!(windows) {
+        "vibe-index.exe"
+    } else {
+        "vibe-index"
+    }
+}
+
 #[test]
-fn ls_is_empty_on_a_fresh_root() {
+fn ls_on_a_fresh_root_still_identifies_the_direct_source_execution() {
     let base = TempDir::new().unwrap();
     vibe(base.path())
         .args(["self", "ls"])
         .assert()
         .success()
-        .stdout(predicates::str::contains("no versions installed"));
+        .stdout(predicates::str::contains("> source origin=external"))
+        .stdout(predicates::str::contains("0 instance(s) installed"));
 }
 
 #[test]
-fn which_fails_without_an_active_version() {
+fn which_reports_the_direct_source_executable_without_an_active_version() {
     let base = TempDir::new().unwrap();
     vibe(base.path())
         .args(["self", "which"])
         .assert()
-        .failure()
-        .stderr(predicates::str::contains("no active version"));
+        .success()
+        .stdout(predicates::str::contains(bin_name()));
 }
 
 #[test]
+fn remove_selector_conflicts_with_all() {
+    let base = TempDir::new().unwrap();
+    vibe(base.path())
+        .args(["self", "remove", "tag:1.0.0", "--all"])
+        .assert()
+        .failure()
+        .stderr(predicates::str::contains("cannot be used with"));
+    vibe(base.path())
+        .args(["self", "remove", "--all", "--tag"])
+        .assert()
+        .failure()
+        .stderr(predicates::str::contains("cannot be used with"));
+}
+
+#[test]
+fn doctor_exits_nonzero_when_reported_problems_remain() {
+    let base = TempDir::new().unwrap();
+    vibe(base.path())
+        .args(["--json", "self", "doctor"])
+        .assert()
+        .failure()
+        .stdout(predicates::str::contains("\"ok\": false"))
+        .stdout(predicates::str::contains("\"problems\":"));
+}
+
+#[test]
+#[cfg(not(windows))]
 fn install_builds_publishes_and_records_under_the_temp_root() {
     let base = TempDir::new().unwrap();
     let src = TempDir::new().unwrap();
     write_tiny_source(src.path());
 
-    vibe(base.path())
-        .current_dir(src.path())
+    source_vibe(base.path(), src.path())
         .args(["self", "install"])
         .assert()
         .success()
@@ -65,9 +118,11 @@ fn install_builds_publishes_and_records_under_the_temp_root() {
         instance_dir.starts_with(base.path()),
         "instance is under the temp root"
     );
+    let bin = instance_dir.join("bin");
+    assert!(bin.join(bin_name()).is_file(), "vibe published under bin/");
     assert!(
-        instance_dir.join(bin_name()).is_file(),
-        "binary published in the instance dir"
+        bin.join(index_bin_name()).is_file(),
+        "vibe-index published under bin/"
     );
 
     let state =
@@ -84,15 +139,15 @@ fn install_builds_publishes_and_records_under_the_temp_root() {
 }
 
 #[test]
+#[cfg(not(windows))]
 fn update_builds_and_activates_latest_like_install() {
-    // `self update` is `self install latest`: from a tiny in-tree source on
-    // branch `main`, it builds, publishes, and flips `current` to it.
+    // A source execution updates `latest`: it builds both essential binaries,
+    // publishes, and flips `current` to the new immutable instance.
     let base = TempDir::new().unwrap();
     let src = TempDir::new().unwrap();
     write_tiny_source(src.path());
 
-    vibe(base.path())
-        .current_dir(src.path())
+    source_vibe(base.path(), src.path())
         .args(["self", "update"])
         .assert()
         .success()
@@ -106,20 +161,36 @@ fn update_builds_and_activates_latest_like_install() {
 }
 
 /// Write a minimal, dependency-free vibevm-shaped source tree (a cargo
-/// workspace with a `crates/vibe-cli` hello-world bin) under a git repo, so
-/// the real `CargoBuilder` has something tiny and offline to compile.
+/// workspace with tiny `vibe` and `vibe-index` bins) under a git repo, so the
+/// real `CargoBuilder` has something tiny and offline to compile.
+#[cfg(not(windows))]
 fn write_tiny_source(dir: &Path) {
     use std::fs;
     fs::create_dir_all(dir.join("crates").join("vibe-cli").join("src")).unwrap();
+    fs::create_dir_all(dir.join("crates").join("vibe-index").join("src")).unwrap();
     fs::write(
         dir.join("Cargo.toml"),
-        "[workspace]\nmembers = [\"crates/vibe-cli\"]\nresolver = \"2\"\n",
+        "[workspace]\nmembers = [\"crates/vibe-cli\", \"crates/vibe-index\"]\nresolver = \"2\"\n",
     )
     .unwrap();
     fs::write(
         dir.join("crates").join("vibe-cli").join("Cargo.toml"),
         "[package]\nname = \"vibe-cli\"\nversion = \"0.0.0\"\nedition = \"2021\"\n\n\
          [[bin]]\nname = \"vibe\"\npath = \"src/main.rs\"\n",
+    )
+    .unwrap();
+    fs::write(
+        dir.join("crates").join("vibe-index").join("Cargo.toml"),
+        "[package]\nname = \"vibe-index\"\nversion = \"0.0.0\"\nedition = \"2021\"\n\n\
+         [[bin]]\nname = \"vibe-index\"\npath = \"src/main.rs\"\n",
+    )
+    .unwrap();
+    fs::write(
+        dir.join("crates")
+            .join("vibe-index")
+            .join("src")
+            .join("main.rs"),
+        "fn main() { println!(\"tiny vibe-index\"); }\n",
     )
     .unwrap();
     fs::write(
@@ -146,6 +217,7 @@ fn write_tiny_source(dir: &Path) {
     );
 }
 
+#[cfg(not(windows))]
 fn git(dir: &Path, args: &[&str]) {
     let ok = Sys::new("git")
         .current_dir(dir)

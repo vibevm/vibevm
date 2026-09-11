@@ -1,11 +1,12 @@
 //! Placing a built distribution into a new immutable instance by diff-copy
 //! (PROP-019 §2.15): hardlink unchanged files from the previous instance,
-//! copy only what changed, never hashing large files.
+//! copy only what changed. Essential binaries are always content-hashed;
+//! future large optional assets may use the bounded size/mtime policy.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#instances");
 
 use std::fs;
-use std::io;
+use std::io::{self, Read};
 use std::path::{Path, PathBuf};
 use std::time::UNIX_EPOCH;
 
@@ -15,7 +16,14 @@ use specmark::spec;
 use thiserror::Error;
 
 use super::model::VersionId;
-use super::store::VersionStore;
+use super::store::{BINARY_NAME, INDEX_BINARY_NAME, VersionStore, open_regular_no_follow};
+
+#[path = "placer_integrity.rs"]
+mod integrity;
+#[cfg(test)]
+use integrity::manifest_shape_valid;
+use integrity::{actual_matches, safe_reuse};
+pub(crate) use integrity::{installed_files_match, matches_on_disk};
 
 /// The placement layer's failure surface (PROP-019 §2.15): statting a built
 /// file, copying it into the new instance, or preparing/publishing the
@@ -72,9 +80,8 @@ pub(crate) enum PlaceError {
     InstanceExists { path: PathBuf },
 }
 
-/// Files at or below this size are compared by content hash (cheap, robust);
-/// larger files are compared by `(size, mtime)` only — never read in bulk
-/// (PROP-019 §2.15, §9.2).
+/// Non-essential files at or below this size are content-hashed; larger
+/// optional files may use `(size, mtime)`. Essential binaries always hash.
 const SMALL_FILE_MAX: u64 = 16 * 1024 * 1024;
 
 /// One distribution file's identity in a manifest.
@@ -98,6 +105,10 @@ impl Manifest {
     fn get(&self, rel: &str) -> Option<&FileEntry> {
         self.files.iter().find(|e| e.rel == rel)
     }
+
+    pub(crate) fn content_hash_for(&self, rel: &str) -> Option<&str> {
+        self.get(rel)?.hash.as_deref()
+    }
 }
 
 const MANIFEST_NAME: &str = ".vvm-manifest.toml";
@@ -110,11 +121,28 @@ fn mtime_nanos(meta: &fs::Metadata) -> i64 {
         .unwrap_or(0)
 }
 
-fn small_file_hash(path: &Path) -> Option<String> {
-    let bytes = fs::read(path).ok()?;
+fn content_hash(path: &Path) -> io::Result<String> {
+    let (mut file, _) = open_regular_no_follow(path)?;
     let mut h = Sha256::new();
-    h.update(&bytes);
-    Some(format!("{:x}", h.finalize()))
+    let mut buffer = [0_u8; 64 * 1024];
+    loop {
+        let read = file.read(&mut buffer)?;
+        if read == 0 {
+            break;
+        }
+        h.update(&buffer[..read]);
+    }
+    Ok(format!("{:x}", h.finalize()))
+}
+
+fn is_essential_binary(rel: &str) -> bool {
+    Path::new(rel)
+        .file_name()
+        .is_some_and(|name| name == BINARY_NAME || name == INDEX_BINARY_NAME)
+}
+
+fn should_hash(rel: &str, size: u64) -> bool {
+    is_essential_binary(rel) || size <= SMALL_FILE_MAX
 }
 
 /// Compute a manifest entry for a distribution file (PROP-019 §2.15).
@@ -124,8 +152,11 @@ fn entry_for(src: &Path, rel: &str) -> Result<FileEntry, PlaceError> {
         source,
     })?;
     let size = meta.len();
-    let hash = if size <= SMALL_FILE_MAX {
-        small_file_hash(src)
+    let hash = if should_hash(rel, size) {
+        Some(content_hash(src).map_err(|source| PlaceError::Stat {
+            path: src.to_path_buf(),
+            source,
+        })?)
     } else {
         None
     };
@@ -157,7 +188,13 @@ fn unchanged(new: &FileEntry, prev: &FileEntry) -> bool {
 
 /// Read an instance's manifest, if present.
 pub(crate) fn read_manifest(instance_dir: &Path) -> Option<Manifest> {
-    let text = fs::read_to_string(instance_dir.join(MANIFEST_NAME)).ok()?;
+    let path = instance_dir.join(MANIFEST_NAME);
+    let (mut file, metadata) = open_regular_no_follow(&path).ok()?;
+    if metadata.len() > 4 * 1024 * 1024 {
+        return None;
+    }
+    let mut text = String::with_capacity(metadata.len() as usize);
+    file.read_to_string(&mut text).ok()?;
     toml::from_str(&text).ok()
 }
 
@@ -197,6 +234,15 @@ fn remove_tree(path: &Path) -> io::Result<()> {
     retry(|| fs::remove_dir_all(path))
 }
 
+fn guard(store: &VersionStore, path: &Path) -> Result<(), PlaceError> {
+    store
+        .guard_mutation_path(path)
+        .map_err(|error| PlaceError::Layout {
+            path: path.to_path_buf(),
+            source: io::Error::other(error),
+        })
+}
+
 /// Run `op`, retrying only on a transient lock with a short backoff. The
 /// backoff sequence is bounded (~5s total) — long enough for a scanner to
 /// release a handle, short enough that a genuinely locked file still
@@ -231,24 +277,46 @@ pub(crate) fn place(
     prev: Option<(&Path, &Manifest)>,
 ) -> Result<(), PlaceError> {
     let final_dir = store.instance_dir(id, instance);
+    guard(store, &final_dir)?;
     if final_dir.exists() {
         return Err(PlaceError::InstanceExists { path: final_dir });
     }
     let staging = store.version_id_dir(id).join(".staging");
+    store
+        .guard_mutation_tree(&staging)
+        .map_err(|error| PlaceError::Layout {
+            path: staging.clone(),
+            source: io::Error::other(error),
+        })?;
     if staging.exists() {
         remove_tree(&staging).map_err(|source| PlaceError::Layout {
             path: staging.clone(),
             source,
         })?;
     }
-    fs::create_dir_all(&staging).map_err(|source| PlaceError::Layout {
+    let staging_parent = staging.parent().expect("version staging has a parent");
+    guard(store, staging_parent)?;
+    fs::create_dir_all(staging_parent).map_err(|source| PlaceError::Layout {
+        path: staging_parent.to_path_buf(),
+        source,
+    })?;
+    fs::create_dir(&staging).map_err(|source| PlaceError::Layout {
         path: staging.clone(),
         source,
     })?;
+    if let Some((previous, _)) = prev {
+        store
+            .guard_mutation_tree(previous)
+            .map_err(|error| PlaceError::Layout {
+                path: previous.to_path_buf(),
+                source: io::Error::other(error),
+            })?;
+    }
 
     for (src, rel) in dist {
         let dest = staging.join(rel);
         if let Some(parent) = dest.parent() {
+            guard(store, parent)?;
             fs::create_dir_all(parent).map_err(|source| PlaceError::Layout {
                 path: parent.to_path_buf(),
                 source,
@@ -257,7 +325,8 @@ pub(crate) fn place(
         let reuse = prev.and_then(|(pdir, pman)| {
             let new_e = manifest.get(rel)?;
             let prev_e = pman.get(rel)?;
-            unchanged(new_e, prev_e).then(|| pdir.join(rel))
+            let prev_file = pdir.join(rel);
+            safe_reuse(new_e, prev_e, &prev_file).then_some(prev_file)
         });
         let hardlinked = match &reuse {
             Some(prev_file) => fs::hard_link(prev_file, &dest).is_ok(),
@@ -269,6 +338,19 @@ pub(crate) fn place(
                 to: dest.clone(),
                 source,
             })?;
+        }
+        let expected = manifest
+            .get(rel)
+            .expect("distribution manifest covers every file");
+        if !actual_matches(expected, &dest) {
+            return Err(PlaceError::Copy {
+                from: src.clone(),
+                to: dest,
+                source: io::Error::new(
+                    io::ErrorKind::InvalidData,
+                    "placed bytes do not match the pre-copy manifest",
+                ),
+            });
         }
     }
 
@@ -282,6 +364,7 @@ pub(crate) fn place(
     })?;
 
     if let Some(parent) = final_dir.parent() {
+        guard(store, parent)?;
         fs::create_dir_all(parent).map_err(|source| PlaceError::Layout {
             path: parent.to_path_buf(),
             source,
@@ -294,6 +377,41 @@ pub(crate) fn place(
     Ok(())
 }
 
+/// Publish a fully verified bundle staging directory as one immutable local
+/// instance. Verification/extraction belongs to the bundle consumer; this
+/// seam provides the same no-overwrite and transient-lock-safe rename as the
+/// source-build placer.
+pub(crate) fn publish_staged_instance(
+    store: &VersionStore,
+    id: &VersionId,
+    instance: u64,
+    staging: &Path,
+) -> Result<PathBuf, PlaceError> {
+    let final_dir = store.instance_dir(id, instance);
+    store
+        .guard_mutation_tree(staging)
+        .map_err(|error| PlaceError::Layout {
+            path: staging.to_path_buf(),
+            source: io::Error::other(error),
+        })?;
+    guard(store, &final_dir)?;
+    if final_dir.exists() {
+        return Err(PlaceError::InstanceExists { path: final_dir });
+    }
+    if let Some(parent) = final_dir.parent() {
+        guard(store, parent)?;
+        fs::create_dir_all(parent).map_err(|source| PlaceError::Layout {
+            path: parent.to_path_buf(),
+            source,
+        })?;
+    }
+    rename_into_place(staging, &final_dir).map_err(|source| PlaceError::Layout {
+        path: final_dir.clone(),
+        source,
+    })?;
+    Ok(final_dir)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -301,8 +419,19 @@ mod tests {
     use crate::commands::vvm::store::BINARY_NAME;
     use specmark::verifies;
 
+    fn write_test_binary(path: &Path, bytes: &[u8]) {
+        fs::write(path, bytes).unwrap();
+        #[cfg(unix)]
+        {
+            use std::os::unix::fs::PermissionsExt;
+            let mut permissions = fs::metadata(path).unwrap().permissions();
+            permissions.set_mode(0o755);
+            fs::set_permissions(path, permissions).unwrap();
+        }
+    }
+
     #[test]
-    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#instances", r = 1)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#instances", r = 2)]
     fn manifest_round_trips_and_detects_change() {
         let tmp = tempfile::tempdir().unwrap();
         let f = tmp.path().join("vibe");
@@ -317,16 +446,25 @@ mod tests {
         fs::write(&f, b"hello world").unwrap();
         let m2 = manifest_for(&[(f, "vibe".into())]).unwrap();
         assert!(!matches(&m2, &m), "changed content does not match");
+        assert!(should_hash(
+            &format!("bin/{BINARY_NAME}"),
+            SMALL_FILE_MAX + 1
+        ));
+        assert!(should_hash(
+            &format!("bin/{INDEX_BINARY_NAME}"),
+            SMALL_FILE_MAX + 1
+        ));
+        assert!(!should_hash("assets/large.bin", SMALL_FILE_MAX + 1));
     }
 
     #[test]
-    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#instances", r = 1)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#instances", r = 2)]
     fn place_creates_an_instance_with_a_manifest() {
         let tmp = tempfile::tempdir().unwrap();
         let store = VersionStore::new(tmp.path());
         let id = VersionId::new(Kind::Branch, "main");
         let built = tmp.path().join("built-vibe");
-        fs::write(&built, b"BIN").unwrap();
+        write_test_binary(&built, b"BIN");
         let dist = vec![(built.clone(), BINARY_NAME.to_string())];
         let manifest = manifest_for(&dist).unwrap();
 
@@ -336,33 +474,37 @@ mod tests {
         assert!(inst.join(MANIFEST_NAME).is_file());
         assert!(read_manifest(&inst).is_some());
 
-        // A second place against the unchanged previous hardlinks (same
-        // content placed into instance 2).
-        let dist2 = vec![(inst.join(BINARY_NAME), BINARY_NAME.to_string())];
+        // Corrupting the previous bytes must not propagate through a hardlink.
+        fs::write(inst.join(BINARY_NAME), b"CORRUPT").unwrap();
+        let fresh = tmp.path().join("fresh-vibe");
+        write_test_binary(&fresh, b"BIN");
+        let dist2 = vec![(fresh, BINARY_NAME.to_string())];
         let m2 = manifest_for(&dist2).unwrap();
         place(&store, &id, 2, &dist2, &m2, Some((&inst, &manifest))).unwrap();
         assert_eq!(
             fs::read(store.instance_dir(&id, 2).join(BINARY_NAME)).unwrap(),
             b"BIN"
         );
+        assert_eq!(fs::read(inst.join(BINARY_NAME)).unwrap(), b"CORRUPT");
+        assert!(!matches_on_disk(&store, &m2, &manifest, &inst));
 
         // A reused terminal #N is immutable even if state bookkeeping was
         // damaged; placement never deletes or rewrites the old payload.
-        fs::write(&built, b"REPLACEMENT").unwrap();
+        write_test_binary(&built, b"REPLACEMENT");
         let replacement = vec![(built, BINARY_NAME.to_string())];
         let replacement_manifest = manifest_for(&replacement).unwrap();
         let error = place(&store, &id, 1, &replacement, &replacement_manifest, None)
             .unwrap_err()
             .to_string();
         assert!(error.contains("immutable local instance"));
-        assert_eq!(fs::read(inst.join(BINARY_NAME)).unwrap(), b"BIN");
+        assert_eq!(fs::read(inst.join(BINARY_NAME)).unwrap(), b"CORRUPT");
     }
 
     /// `is_transient_lock` recognises the Windows `ERROR_ACCESS_DENIED` (5)
     /// and the kind-level `PermissionDenied` — the scanner-held-handle races
     /// the publish rename / staging cleanup retry on — and not other errors.
     #[test]
-    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#instances", r = 1)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#instances", r = 2)]
     fn is_transient_lock_classifies_access_denied() {
         assert!(is_transient_lock(&io::Error::from_raw_os_error(5)));
         assert!(is_transient_lock(&io::Error::new(
@@ -379,7 +521,7 @@ mod tests {
     /// (the common path, no retry needed) and report the lock-class errors
     /// they would retry on rather than masking them.
     #[test]
-    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#instances", r = 1)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#instances", r = 2)]
     fn rename_and_remove_succeed_when_unlocked() {
         let tmp = tempfile::tempdir().unwrap();
         let from = tmp.path().join("staging");
@@ -391,5 +533,49 @@ mod tests {
         assert!(!from.exists(), "rename moved the dir out of staging");
         remove_tree(&to).unwrap();
         assert!(!to.exists());
+    }
+
+    #[test]
+    fn installed_manifest_shape_rejects_traversal_duplicates_and_extras() {
+        let entry = |rel: &str| FileEntry {
+            rel: rel.into(),
+            size: 1,
+            mtime_nanos: 0,
+            hash: Some("a".repeat(64)),
+        };
+        let valid = Manifest {
+            files: vec![entry(BINARY_NAME)],
+        };
+        assert!(manifest_shape_valid(
+            super::super::model::Origin::Binary,
+            &valid
+        ));
+        for files in [
+            vec![entry("../vibe")],
+            vec![entry(BINARY_NAME), entry("extra")],
+            vec![entry(BINARY_NAME), entry(BINARY_NAME)],
+        ] {
+            assert!(!manifest_shape_valid(
+                super::super::model::Origin::Binary,
+                &Manifest { files }
+            ));
+        }
+    }
+
+    #[test]
+    fn source_change_between_manifest_and_copy_is_rejected() {
+        let temp = tempfile::tempdir().unwrap();
+        let store = VersionStore::new(temp.path().join("opt"));
+        let source = temp.path().join("vibe");
+        write_test_binary(&source, b"first");
+        let dist = vec![(source.clone(), BINARY_NAME.to_string())];
+        let manifest = manifest_for(&dist).unwrap();
+        write_test_binary(&source, b"second");
+        let id = VersionId::new(Kind::Tag, "1.0.0");
+        let error = place(&store, &id, 1, &dist, &manifest, None)
+            .unwrap_err()
+            .to_string();
+        assert!(error.contains("placed bytes do not match"), "{error}");
+        assert!(!store.instance_dir(&id, 1).exists());
     }
 }

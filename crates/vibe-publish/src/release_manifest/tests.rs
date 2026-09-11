@@ -51,8 +51,13 @@ fn fragment(target: &str) -> PlatformDistributionFragment {
         source_commit: SOURCE_COMMIT.to_string(),
         target: target.to_string(),
         asset: DistributionAsset {
-            name: format!("vibe-v1.2.3-{target}.tar.gz"),
+            name: format!("vibevm-1.2.3-{target}.zip"),
             size: 30,
+            digest: DIGEST_A.to_string(),
+        },
+        bootstrap: DistributionAsset {
+            name: format!("vibe-bootstrap-{target}"),
+            size: 10,
             digest: DIGEST_A.to_string(),
         },
         bundle: bundle(target),
@@ -116,6 +121,85 @@ fn aggregate_rejects_identity_drift_between_platforms() {
             field: "source_commit",
             ..
         })
+    ));
+}
+
+#[test]
+fn aggregate_requires_globally_distinct_bundle_and_bootstrap_asset_names() {
+    let mut invalid = aggregate();
+    invalid.platforms[1].bootstrap.name = invalid.platforms[0].bootstrap.name.clone();
+    assert!(matches!(
+        invalid.validate(),
+        Err(ReleaseManifestError::AssetNameCollision { .. })
+    ));
+}
+
+#[test]
+fn fragment_requires_a_distinct_bootstrap_matching_vibe() {
+    let target = SUPPORTED_DISTRIBUTION_TARGETS[0];
+    fragment(target).validate().unwrap();
+
+    let mut collision = fragment(target);
+    collision.bootstrap.name = collision.asset.name.clone();
+    assert!(matches!(
+        collision.validate(),
+        Err(ReleaseManifestError::AssetNameCollision { .. })
+    ));
+
+    let mut wrong_size = fragment(target);
+    wrong_size.bootstrap.size += 1;
+    assert!(matches!(
+        wrong_size.validate(),
+        Err(ReleaseManifestError::BootstrapMismatch { field: "size", .. })
+    ));
+
+    let mut wrong_digest = fragment(target);
+    wrong_digest.bootstrap.digest = DIGEST_B.to_string();
+    assert!(matches!(
+        wrong_digest.validate(),
+        Err(ReleaseManifestError::BootstrapMismatch {
+            field: "digest",
+            ..
+        })
+    ));
+
+    let mut missing = serde_json::to_value(fragment(target)).unwrap();
+    missing.as_object_mut().unwrap().remove("bootstrap");
+    assert!(matches!(
+        PlatformDistributionFragment::from_json_slice(&serde_json::to_vec(&missing).unwrap()),
+        Err(ReleaseManifestError::Json(_))
+    ));
+}
+
+#[test]
+fn independent_limits_reject_oversized_declarations_before_io() {
+    let target = SUPPORTED_DISTRIBUTION_TARGETS[0];
+
+    let mut component = bundle(target);
+    component.components[0].size = DISTRIBUTION_COMPONENT_MAX_BYTES + 1;
+    assert!(matches!(
+        component.validate(),
+        Err(ReleaseManifestError::ArtifactTooLarge { .. })
+    ));
+
+    let mut source = bundle(target);
+    source.source_archive.size = DISTRIBUTION_SOURCE_ARCHIVE_MAX_BYTES + 1;
+    assert!(matches!(
+        source.validate(),
+        Err(ReleaseManifestError::ArtifactTooLarge { .. })
+    ));
+
+    let mut platform = fragment(target);
+    platform.asset.size = DISTRIBUTION_BUNDLE_MAX_BYTES + 1;
+    assert!(matches!(
+        platform.validate(),
+        Err(ReleaseManifestError::ArtifactTooLarge { .. })
+    ));
+
+    let oversized_json = vec![b' '; DISTRIBUTION_MANIFEST_MAX_BYTES as usize + 1];
+    assert!(matches!(
+        PlatformDistributionFragment::from_json_slice(&oversized_json),
+        Err(ReleaseManifestError::ArtifactTooLarge { .. })
     ));
 }
 

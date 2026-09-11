@@ -44,7 +44,7 @@
       </facts>
     </optional>
     <form-factor title="2.2 Form factor: per-org **index** living in a separate git repository">
-      <p><req-form-factor fact="true" status="impl/done">`req r1`</req-form-factor></p>
+      <p><req-form-factor fact="true" status="impl/done">`req r2`</req-form-factor></p>
       <p><INDEX-REPO fact="true" status="impl/done">**Decision.** Each vibevm registry org that opts in maintains a dedicated git repository named `index` (configurable; default name `index`) under the same org root:</INDEX-REPO></p>
       <facts ordered="false">
         <index-url-github fact="true" status="impl/done">`https://github.com/vibespecs/index`</index-url-github>
@@ -73,13 +73,20 @@
       <fence lang="toml">[[registry]]
 name = "vibespecs"
 url = "https://github.com/vibespecs"
-naming = "kind-name"
-index_url = "https://github.com/vibespecs/index"  # default; explicit override allowed
+naming = "fqdn"
+index_url = "https://raw.githubusercontent.com/vibespecs/index/main"  # explicit override
 # or, to point at a hosted server:
 # index_url = "https://index.vibespecs.dev"
 # or, to disable index lookup entirely:
 # index_url = "none"</fence>
-      <p><INDEX-URL-DEFAULT fact="true" status="impl/done">Default: `&lt;registry-url&gt;/index`; the resolver tries the default location when `index_url` is unset. Built as the bottom rung of the resolution ladder (`resolve_index_url`, `crates/vibe-registry/src/index_client/`): env override → manifest key → this default; the exact value `none` on either explicit rung disables the index deliberately (no probe, no network). A probe of the *default* rung finding nothing is a registry without an index, not an error — consumers (the resolver, `vibe search`) fall through quietly to the git path; only an *explicit* URL that fails to answer is surfaced.</INDEX-URL-DEFAULT></p>
+      <p><INDEX-URL-DEFAULT fact="true" status="impl/done">The bottom rung is host-aware. Canonical public `https://github.com/&lt;org&gt;`
+maps to `https://raw.githubusercontent.com/&lt;org&gt;/index/&lt;registry-ref&gt;`;
+other hosts retain `&lt;registry-url&gt;/index`. This makes both fresh and already-
+seeded GitHub configurations whose `index_url` field is absent consume the static
+repository rather than its HTML page. The full ladder remains env override →
+manifest key → host-aware default; exact `none` on either explicit rung
+disables lookup. Lookalike hosts, nested paths, userinfo, unsafe owners/refs,
+queries and fragments are never rewritten.</INDEX-URL-DEFAULT></p>
       <p><THE-KEY-DOES-NOT-EXIST-YET-AND-THE-SECTION-IS-STRICT fact="true" status="impl/done">**For three months this block was a parse refusal, and saying so was the point — until 2026-08-20, when the key landed (B-083, owner-ruled «построить ключ»).** `RegistrySection` carried `deny_unknown_fields` without `index_url`, so a reader copying the example got an error; the fact above honestly said `plan` while the tree disagreed with the document. The strictness itself was never the defect and stays: the section still refuses unknown fields, now with `index_url` among the known ones — pinned red-then-green by the landing (the pre-landing parse error is quoted in the worker report; `registry_section_still_refuses_unknown_fields_alongside_index_url` keeps the refusal honest).</THE-KEY-DOES-NOT-EXIST-YET-AND-THE-SECTION-IS-STRICT></p>
       <p><INDEX-URL-TODAY-IS-AN-ENVIRONMENT-VARIABLE fact="true" status="impl/done">**The environment variable `VIBEVM_INDEX_URL_&lt;REGISTRY&gt;` is the ladder's top rung — the operator's per-run re-point, no longer the only source.** Until 2026-08-20 it was the sole locator, deliberately weaker than the manifest field it stood in for (per-shell, per-run, travelling with neither project nor lockfile) — which is why it never closed the requirement above. Now it *overrides* the key: env beats `index_url` beats the default, and `none` at either explicit rung disables the index. The name normalization (`ASCII alphanumerics upper-cased, the rest to `_``) is unchanged.</INDEX-URL-TODAY-IS-AN-ENVIRONMENT-VARIABLE></p>
       <p><AN-ABSENT-INDEX-FALLS-BACK-WITHOUT-A-WORD fact="true" status="impl/done">404 / connect-failure on the index → **silent** fallback to live `ls-remote`: no error message, because the operator never promised an index. This half is built, and it is the `absent` outcome of [`##A-PROBE-HAS-THREE-OUTCOMES-NOT-TWO`](#optional) — the other two outcomes are never silent.</AN-ABSENT-INDEX-FALLS-BACK-WITHOUT-A-WORD></p>
@@ -94,7 +101,7 @@ index_url = "https://github.com/vibespecs/index"  # default; explicit override a
       <p><SERVER-MODE-WRINKLE fact="true" status="impl/done">**Server-mode wrinkle.** The `vibe-index serve` mode (§2.5) is described in the prompt as "the only writer; source of truth". This is true *for the index data*. The server holds the canonical RAM copy, persists it to disk on every mutation, and refuses writes from other processes (file lock + mtime checks at startup). But the server's writes are **derived from package-repo state** — the ground truth for "is this version published?" is still the actual git tag in the actual package repo. A divergence (index says `v0.1.0` exists; the package repo's tag was force-deleted) surfaces at consumer install time as an integrity failure on cross-source `content_hash` verification, and the operator has the diagnostic clear: "your index lies; reindex".</SERVER-MODE-WRINKLE></p>
     </truth>
     <layout title="2.4 File layout inside the index repo">
-      <p><req-layout fact="true" status="impl/done">`req r1`</req-layout></p>
+      <p><req-layout fact="true" status="impl/done">`req r2`</req-layout></p>
       <p><INDEX-FILE-LAYOUT fact="true" status="impl/done">**Decision.** The index repo's working tree (and equivalently its raw-HTTP-served file tree) carries:</INDEX-FILE-LAYOUT></p>
       <fence>&lt;index-root&gt;/
 ├── hello.json                                 # the eternal handshake — read FIRST, dispatches to a world
@@ -440,7 +447,7 @@ GET    /metrics                                   # Prometheus text format</fenc
       <p><THE-BODY-CARRIES-NO-INSTANCE-MEMBER fact="true" status="impl/done">**`instance` is not emitted, and the subset is the four members above plus `unavailable`.** RFC 7807 makes every member optional, so omitting `instance` is conformance rather than a gap — but naming a member the body does not carry teaches a client to look for it. What the body does carry beyond the four is the refusal row, as an extension member, which is the mechanism that RFC provides for precisely this and the reason the status can stay `404` while the answer stops being «not found».</THE-BODY-CARRIES-NO-INSTANCE-MEMBER></p>
     </http>
     <cli title="2.11 CLI surface">
-      <p><req-cli fact="true" status="impl/done">`req r1`</req-cli></p>
+      <p><req-cli fact="true" status="impl/done">`req r2`</req-cli></p>
       <p><CLI-SURFACE fact="true" status="impl/done">**Decision.** `vibe-index [--log-level LEVEL] &lt;subcommand&gt; &lt;data-dir&gt; [args]`. The data directory is a **required positional** on every verb — the one argument no invocation can omit, so it is not dressed as an option. One global flag stands above the verbs: `--log-level off|error|warn|info|debug|trace`.</CLI-SURFACE></p>
       <fence># Lifecycle
 vibe-index init &lt;data-dir&gt; --registry NAME --registry-url URL [--naming fqdn|kind-name|name|kind/name] [--force]
@@ -1146,11 +1153,17 @@ a snapshot or at a frozen version (PROP-044 §2b) — the axes are orthogonal.</
       <TEST-HERMETIC fact="true" status="impl/done">**Hermetic, with no live tier at all:** every test runs without network, and the GitHub API walk is proved against a **mock REST server on a random port whose canned responses point at local bare repositories**, so `git clone` resolves entirely against the filesystem (`tests/from_github_e2e.rs`). The opt-in live run against the real registry this section once promised does not exist and is not owed: a test that needs the internet and a real organisation is one nobody runs, so it proves nothing on the day it would have mattered, while the mock proves the walk's shape on every commit. What it deliberately does not prove is that the real host still answers the way the mock does — that question belongs to the manual tier, not to an ignored test.</TEST-HERMETIC>
     </facts>
   </tests>
-  <distribution title="6. Distribution — a workspace crate">
-    <p><design-distribution fact="true" status="impl/done">`design r1`</design-distribution></p>
+  <distribution title="6. Distribution — essential member of the VibeVM bundle">
+    <p><design-distribution fact="true" status="impl/done">`design r2`</design-distribution></p>
     <p><WORKSPACE-MEMBER fact="true" status="impl/done">**Decision (revised 2026-05-22).** `vibe-index` lives at `crates/vibe-index/` as a member of the top-level vibevm workspace. It is built, tested, clippy-gated, and fmt-checked by the same `cargo … --workspace` invocations as every other crate, and it depends on `vibe-core` directly.</WORKSPACE-MEMBER></p>
     <p><fold-in-why fact="true" status="spec/done">**Why this reverses the original standalone-workspace decision.** The proposal first placed `vibe-index` in its own Cargo workspace under `services/`, outside `crates/`, so an org owner could vendor just that subdirectory. The cost was a hand-duplicated `vibe.toml` parser with nothing tying it to `vibe-core` — and, sitting outside `cargo test --workspace`, nothing routinely exercising it. It rotted silently against the M1.17 / M1.18 manifest-schema churn ([§9](#open) item 11). Folding the crate back in kills both failure modes at once: the scanner now parses through `vibe-core::Manifest` (one source of truth — the schema cannot drift), and the routine workspace gate covers it (drift is caught the moment it appears).</fold-in-why></p>
-    <p><REDISTRIBUTION fact="true" status="impl/done">**Redistribution.** An org owner who wants to host their own index server clones the vibevm repository and runs `cargo install --path crates/vibe-index`. The "vendor only the subdirectory" affordance is gone; in exchange the binary can never ship a stale view of the manifest schema. The HTTP-server deps (`axum` / `tower` / `tower-http`) enter the workspace `Cargo.lock` — `reqwest` was already there for the `vibe-registry` index client, so the marginal cost is `tower` / `tower-http` / `flate2`.</REDISTRIBUTION></p>
+    <p><REDISTRIBUTION fact="true" status="impl/done">**Redistribution.** `vibe-index` is an Essential component of every native
+VibeVM distribution, installed and switched atomically beside `vibe`; this is
+the default on-premises operator path. Its matching source is available through
+`vibe self source`. A developer may still build it from the workspace with
+`cargo install --path crates/vibe-index`, but consumers no longer need to clone
+the repository merely to operate an index. Keeping it in the workspace still
+prevents manifest-schema drift through its direct `vibe-core` dependency.</REDISTRIBUTION></p>
     <p><GATE-COVERS fact="true" status="impl/done">**Gate.** `tools/self-check.sh` no longer special-cases a second workspace — the workspace-wide steps (fmt, then `cargo test --workspace`, then `cargo clippy --workspace --all-targets -- -D warnings`) cover `vibe-index` like any member.</GATE-COVERS></p>
     <p><THE-PANEL-NOW-HAS-STEPS-THAT-LOOK-ONLY-AT-THIS-CRATE fact="true" status="impl/done">**What has changed since is the opposite of a special case: the panel grew steps that look *specifically* at this crate, and they are the interesting half.** A clock gate greps `crates/vibe-index/src/{index,types,journal}` for any call that reads the wall clock, because determinism here is an instrument rather than a preference ([§2.9](#server-mode)); `check-codegen` refuses a drift between the schemas and the generated types ([§2.12](#types)); `specmap --check` refuses a stale traceability map; and the wire-derive ratchet refuses a hand-written wire. None of them is a workspace step, and none of them would fire from `cargo test` alone — which is why the number of steps in the panel is not a proxy for what it checks.</THE-PANEL-NOW-HAS-STEPS-THAT-LOOK-ONLY-AT-THIS-CRATE></p>
   </distribution>
@@ -1167,7 +1180,7 @@ a snapshot or at a frozen version (PROP-044 §2b) — the axes are orthogonal.</
   <ops title="8. Operations">
     <p><ops-lead fact="true" status="impl/done">A typical setup for an org owner who wants to host an index:</ops-lead></p>
     <fence># One-time bootstrap (on a host with the org's clones available).
-$ vibe-index init  ./vibespecs-index   --registry vibespecs   --registry-url https://github.com/vibespecs   --naming kind-name
+$ vibe-index init  ./vibespecs-index   --registry vibespecs   --registry-url https://github.com/vibespecs   --naming fqdn
 $ vibe-index reindex ./vibespecs-index --from-clones  /var/lib/vibespecs-mirror
 
 # Push the static files to &lt;org&gt;/index repo (operators wire this once):

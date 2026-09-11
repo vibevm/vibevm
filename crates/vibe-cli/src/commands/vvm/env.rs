@@ -13,7 +13,32 @@ use std::process::Command;
 
 use anyhow::{Context, Result, bail};
 
-use super::store::BINARY_NAME;
+use super::store::VersionStore;
+
+#[path = "env_rc.rs"]
+mod rc_io;
+#[cfg(test)]
+use rc_io::BLOCK_BEGIN;
+#[cfg(test)]
+use rc_io::write_rc_atomic_at;
+use rc_io::{read_rc_file, rebuild, set_or_add, split_block, write_rc_atomic};
+#[path = "env_shim.rs"]
+mod shim;
+pub(crate) use shim::{shim_statuses, write_shims};
+#[cfg(test)]
+use shim::{write_shim_atomic, write_shim_atomic_at, write_shim_atomic_using};
+
+fn posix_quote(value: &str) -> String {
+    format!("'{}'", value.replace('\'', "'\"'\"'"))
+}
+
+fn fish_quote(value: &str) -> String {
+    format!("'{}'", value.replace('\\', "\\\\").replace('\'', "\\'"))
+}
+
+fn powershell_quote(value: &str) -> String {
+    format!("'{}'", value.replace('\'', "''"))
+}
 
 // ---------------------------------------------------------------------------
 // shells
@@ -64,13 +89,26 @@ impl Shell {
         }
     }
 
-    /// The `eval`-able line that sets `VIBEVM_HOME` for this shell.
+    /// The `eval`-able line that selects an exact instance for this shell.
+    /// The override wins in stable shims; HOME remains advisory compatibility.
     pub(crate) fn export_line(self, home: &Path) -> String {
-        let h = home.display();
+        let home = home.display().to_string();
         match self {
-            Shell::Fish => format!("set -gx VIBEVM_HOME \"{h}\""),
-            Shell::Pwsh => format!("$env:VIBEVM_HOME = \"{h}\""),
-            _ => format!("export VIBEVM_HOME=\"{h}\""),
+            Shell::Fish => format!(
+                "set -gx VIBEVM_SHELL_HOME {}; set -gx VIBEVM_HOME {}",
+                fish_quote(&home),
+                fish_quote(&home)
+            ),
+            Shell::Pwsh => format!(
+                "$env:VIBEVM_SHELL_HOME = {}; $env:VIBEVM_HOME = {}",
+                powershell_quote(&home),
+                powershell_quote(&home)
+            ),
+            _ => format!(
+                "export VIBEVM_SHELL_HOME={}; export VIBEVM_HOME={}",
+                posix_quote(&home),
+                posix_quote(&home)
+            ),
         }
     }
 
@@ -85,66 +123,6 @@ impl Shell {
             _ => home.join(".profile"),
         }
     }
-}
-
-// ---------------------------------------------------------------------------
-// shims
-// ---------------------------------------------------------------------------
-
-fn posix_shim() -> String {
-    // Read the live `current` pointer (instant switch, no reload); fall back
-    // to the advisory $VIBEVM_HOME (PROP-019 §2.5).
-    format!(
-        "#!/bin/sh\n\
-         # vibevm (VVM) shim — execs the active instance from ../vibevm/current.\n\
-         self=\"$(CDPATH= cd -- \"$(dirname -- \"$0\")\" && pwd)\"\n\
-         home=\"$(cat \"$self/../vibevm/current\" 2>/dev/null)\"\n\
-         [ -z \"$home\" ] && home=\"$VIBEVM_HOME\"\n\
-         if [ -z \"$home\" ]; then\n\
-         \x20 echo 'vibe: no active version — run: vibe self use <selector>' >&2\n\
-         \x20 exit 1\n\
-         fi\n\
-         exec \"$home/{BINARY_NAME}\" \"$@\"\n"
-    )
-}
-
-fn cmd_shim() -> String {
-    format!(
-        "@echo off\r\n\
-         set \"VVM_CUR=%~dp0..\\vibevm\\current\"\r\n\
-         set \"VVM_HOME=\"\r\n\
-         if exist \"%VVM_CUR%\" set /p VVM_HOME=<\"%VVM_CUR%\"\r\n\
-         if \"%VVM_HOME%\"==\"\" set \"VVM_HOME=%VIBEVM_HOME%\"\r\n\
-         if \"%VVM_HOME%\"==\"\" (\r\n\
-         echo vibe: no active version - run: vibe self use ^<selector^> 1>&2\r\n\
-         exit /b 1\r\n\
-         )\r\n\
-         \"%VVM_HOME%\\{BINARY_NAME}\" %*\r\n"
-    )
-}
-
-/// Write the stable shims into `bin_dir` (PROP-019 §2.5). They read
-/// `$VIBEVM_HOME` and exec the active binary. Idempotent.
-pub(crate) fn write_shims(bin_dir: &Path) -> Result<()> {
-    fs::create_dir_all(bin_dir).with_context(|| format!("creating `{}`", bin_dir.display()))?;
-    let posix = bin_dir.join("vibe");
-    fs::write(&posix, posix_shim()).with_context(|| format!("writing `{}`", posix.display()))?;
-    #[cfg(unix)]
-    set_executable(&posix)?;
-    if cfg!(windows) {
-        let cmd = bin_dir.join("vibe.cmd");
-        fs::write(&cmd, cmd_shim()).with_context(|| format!("writing `{}`", cmd.display()))?;
-    }
-    Ok(())
-}
-
-#[cfg(unix)]
-fn set_executable(p: &Path) -> Result<()> {
-    use std::os::unix::fs::PermissionsExt;
-    let mut perm = fs::metadata(p)?.permissions();
-    perm.set_mode(0o755);
-    fs::set_permissions(p, perm).with_context(|| format!("chmod +x `{}`", p.display()))?;
-    Ok(())
 }
 
 // ---------------------------------------------------------------------------
@@ -168,8 +146,31 @@ pub(crate) trait EnvPersister {
     fn activation_hint(&self) -> String;
 }
 
-const BLOCK_BEGIN: &str = "# >>> vibevm (VVM) — managed, do not edit by hand >>>";
-const BLOCK_END: &str = "# <<< vibevm (VVM) <<<";
+pub(crate) struct ActivationOutcome {
+    pub path: Persisted,
+    pub advisory_home_warning: Option<String>,
+}
+
+/// The one activation transaction used by use/rollback/bootstrap/update:
+/// stable shims and generic PATH first, journaled live pointer second, and
+/// version-specific advisory HOME last.
+pub(crate) fn activate_instance(
+    store: &VersionStore,
+    home: &Path,
+    persister: &dyn EnvPersister,
+) -> Result<ActivationOutcome> {
+    write_shims(store)?;
+    let path = persister.ensure_on_path(&store.shim_dir())?;
+    store.write_current(home)?;
+    let advisory_home_warning = persister
+        .set_vibevm_home(home)
+        .err()
+        .map(|error| error.to_string());
+    Ok(ActivationOutcome {
+        path,
+        advisory_home_warning,
+    })
+}
 
 /// A POSIX rc-file persister: maintains one marked block in the rc file
 /// (PROP-019 §2.6). Idempotent and testable in a temp dir.
@@ -186,7 +187,7 @@ impl RcFilePersister {
     /// Upsert a managed line identified by `prefix`; returns whether the file
     /// changed.
     fn upsert(&self, prefix: &str, line: &str) -> Result<Persisted> {
-        let text = fs::read_to_string(&self.rc_path).unwrap_or_default();
+        let (text, permissions) = read_rc_file(&self.rc_path)?;
         let (pre, mut block, post) = split_block(&text);
         if !set_or_add(&mut block, prefix, line) {
             return Ok(Persisted::Unchanged);
@@ -195,32 +196,42 @@ impl RcFilePersister {
             fs::create_dir_all(parent)
                 .with_context(|| format!("creating `{}`", parent.display()))?;
         }
-        fs::write(&self.rc_path, rebuild(&pre, &block, &post))
-            .with_context(|| format!("writing `{}`", self.rc_path.display()))?;
+        write_rc_atomic(
+            &self.rc_path,
+            rebuild(&pre, &block, &post).as_bytes(),
+            permissions,
+        )?;
         Ok(Persisted::Changed)
     }
 }
 
 impl EnvPersister for RcFilePersister {
     fn set_vibevm_home(&self, home: &Path) -> Result<Persisted> {
+        let home = home.display().to_string();
         let (prefix, line) = match self.shell {
             Shell::Fish => (
                 "set -gx VIBEVM_HOME",
-                format!("set -gx VIBEVM_HOME \"{}\"", home.display()),
+                format!("set -gx VIBEVM_HOME {}", fish_quote(&home)),
             ),
             _ => (
                 "export VIBEVM_HOME=",
-                format!("export VIBEVM_HOME=\"{}\"", home.display()),
+                format!("export VIBEVM_HOME={}", posix_quote(&home)),
             ),
         };
         self.upsert(prefix, &line)
     }
 
     fn ensure_on_path(&self, dir: &Path) -> Result<Persisted> {
-        let d = dir.display();
+        let dir = dir.display().to_string();
         let (prefix, line) = match self.shell {
-            Shell::Fish => ("fish_add_path", format!("fish_add_path \"{d}\"")),
-            _ => ("export PATH=", format!("export PATH=\"{d}:$PATH\"")),
+            Shell::Fish => (
+                "fish_add_path",
+                format!("fish_add_path {}", fish_quote(&dir)),
+            ),
+            _ => (
+                "export PATH=",
+                format!("export PATH={}:$PATH", posix_quote(&dir)),
+            ),
         };
         self.upsert(prefix, &line)
     }
@@ -497,69 +508,6 @@ fn expand_percent_vars(raw: &str, lookup: &impl Fn(&str) -> Option<String>) -> S
 
 fn paths_equal(left: &str, right: &str) -> bool {
     left.eq_ignore_ascii_case(right)
-}
-
-// --- rc block helpers ------------------------------------------------------
-
-/// Split a file into (text before the managed block, the block's inner
-/// lines, text after the block). No block → (whole text, [], "").
-fn split_block(text: &str) -> (String, Vec<String>, String) {
-    if let (Some(b), Some(e)) = (text.find(BLOCK_BEGIN), text.find(BLOCK_END))
-        && b < e
-    {
-        let pre = text[..b].to_string();
-        let inner = &text[b + BLOCK_BEGIN.len()..e];
-        let block = inner
-            .lines()
-            .map(str::trim)
-            .filter(|l| !l.is_empty())
-            .map(str::to_string)
-            .collect();
-        let post = text[e + BLOCK_END.len()..].to_string();
-        return (pre, block, post);
-    }
-    (text.to_string(), Vec::new(), String::new())
-}
-
-/// Replace the block line beginning with `prefix`, or append `line`. Returns
-/// whether anything changed.
-fn set_or_add(block: &mut Vec<String>, prefix: &str, line: &str) -> bool {
-    if let Some(slot) = block.iter_mut().find(|l| l.starts_with(prefix)) {
-        if slot == line {
-            return false;
-        }
-        *slot = line.to_string();
-        true
-    } else {
-        block.push(line.to_string());
-        true
-    }
-}
-
-fn rebuild(pre: &str, block: &[String], post: &str) -> String {
-    if block.is_empty() {
-        return format!("{pre}{post}");
-    }
-    let pre = pre.trim_end_matches('\n');
-    let post = post.trim_start_matches('\n');
-    let mut out = String::new();
-    if !pre.is_empty() {
-        out.push_str(pre);
-        out.push('\n');
-    }
-    out.push_str(BLOCK_BEGIN);
-    out.push('\n');
-    out.push_str(&block.join("\n"));
-    out.push('\n');
-    out.push_str(BLOCK_END);
-    out.push('\n');
-    if !post.is_empty() {
-        out.push_str(post);
-        if !post.ends_with('\n') {
-            out.push('\n');
-        }
-    }
-    out
 }
 
 #[cfg(test)]

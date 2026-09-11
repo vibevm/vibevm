@@ -1,6 +1,8 @@
 //! Shared Git subprocess construction, failure classification, and secret
 //! redaction for the publish-side workflows.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#publish");
+
 use std::path::Path;
 use std::process::{Command, Output};
 

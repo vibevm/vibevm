@@ -14,7 +14,7 @@ use super::kinds::NamingConvention;
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[spec(
     implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#layout",
-    r = 1
+    r = 2
 )]
 pub struct Repomd {
     pub schema_version: u32,
@@ -99,7 +99,7 @@ mod tests {
     #[test]
     #[verifies(
         "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#layout",
-        r = 1
+        r = 2
     )]
     fn repomd_round_trips() {
         let r = sample_repomd();

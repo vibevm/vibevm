@@ -80,6 +80,7 @@ reqwest.workspace = true
 tracing.workspace = true
 tracing-subscriber.workspace = true
 walkdir.workspace = true
+zip.workspace = true
 # `vibe tree` interactive TUI (PROP-036 §2.11).
 rat-salsa.workspace = true
 rat-widget.workspace = true

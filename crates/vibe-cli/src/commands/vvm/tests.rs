@@ -8,7 +8,11 @@ use super::*;
 
 #[test]
 fn default_root_is_under_dot_vibe_and_not_the_legacy_home_opt() {
-    let home = PathBuf::from("C:/Users/tester");
+    let home = PathBuf::from(if cfg!(windows) {
+        "C:/Users/tester"
+    } else {
+        "/home/tester"
+    });
     let root = resolve_root(None, None, Some(home.clone())).unwrap();
     assert_eq!(root, home.join(".vibe").join("opt"));
     assert_ne!(root, home.join("opt"));
@@ -16,14 +20,41 @@ fn default_root_is_under_dot_vibe_and_not_the_legacy_home_opt() {
 
 #[test]
 fn install_root_override_remains_the_install_base() {
-    let override_base = PathBuf::from("D:/vvm-test");
+    let override_base = PathBuf::from(if cfg!(windows) {
+        "D:/vvm-test"
+    } else {
+        "/tmp/vvm-test"
+    });
     let root = resolve_root(
         None,
         Some(override_base.clone()),
-        Some(PathBuf::from("C:/Users/tester")),
+        Some(PathBuf::from(if cfg!(windows) {
+            "C:/Users/tester"
+        } else {
+            "/home/tester"
+        })),
     )
     .unwrap();
     assert_eq!(root, override_base.join("opt"));
+}
+
+#[test]
+fn relative_install_root_is_absolutized_and_parent_components_are_normalized() {
+    let cwd = PathBuf::from(if cfg!(windows) {
+        r"C:\work\repo"
+    } else {
+        "/work/repo"
+    });
+    let root = absolute_lexical(Path::new("../owner/.vibe"), &cwd).unwrap();
+    assert!(root.is_absolute());
+    assert_eq!(
+        root,
+        if cfg!(windows) {
+            PathBuf::from(r"C:\work\owner\.vibe")
+        } else {
+            PathBuf::from("/work/owner/.vibe")
+        }
+    );
 }
 use crate::commands::vvm::model::{
     InstallRecord, InstanceId, Kind, Origin, Profile, Selector, State, VersionId,
@@ -42,11 +73,23 @@ fn rec(kind: Kind, id: &str, instance: u64) -> InstallRecord {
         origin: Origin::Managed,
         source_path: None,
         payload_sha256: None,
+        distribution_manifest_sha256: None,
     }
 }
 
 #[test]
-#[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#selectors", r = 1)]
+fn use_revalidation_rejects_an_inventoried_instance_deleted_before_activation() {
+    let temp = tempfile::tempdir().unwrap();
+    let store = VersionStore::new(temp.path());
+    let record = rec(Kind::Branch, "main", 1);
+    store.record_install(record.clone()).unwrap();
+    let error = ensure_activatable(&store, &record).unwrap_err().to_string();
+    assert!(error.contains("incomplete or corrupt"), "{error}");
+    assert!(store.read_current().unwrap().is_none());
+}
+
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#selectors", r = 2)]
 fn resolve_installed_picks_the_newest_instance_per_selector() {
     let state = State {
         next_instance: 9,

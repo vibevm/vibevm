@@ -5,7 +5,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#provenance");
 
 use std::fs;
-use std::io::IsTerminal;
+use std::io::{self, IsTerminal};
 use std::path::{Path, PathBuf};
 
 use dialoguer::Select;
@@ -183,8 +183,10 @@ pub(crate) fn resolve_in_clone(
         }
         model::Selector::Explicit(v) => {
             let commit = match v.kind {
-                Kind::Tag => super::git::verify(repo, &format!("refs/tags/{}", v.id))
-                    .or_else(|| super::git::verify(repo, &format!("refs/tags/v{}", v.id)))
+                Kind::Tag => super::git::verify(repo, &format!("refs/tags/{}^{{commit}}", v.id))
+                    .or_else(|| {
+                        super::git::verify(repo, &format!("refs/tags/v{}^{{commit}}", v.id))
+                    })
                     .ok_or_else(|| ResolveError::RefNotFound {
                         what: format!("tag `{}`", v.id),
                     })?,
@@ -214,7 +216,8 @@ pub(crate) fn resolve_in_clone(
                     commit,
                 });
             }
-            if let Some(commit) = super::git::verify(repo, &format!("refs/tags/{name}")) {
+            if let Some(commit) = super::git::verify(repo, &format!("refs/tags/{name}^{{commit}}"))
+            {
                 return Ok(ResolvedVersion {
                     id: VersionId::new(Kind::Tag, name.clone()),
                     commit,
@@ -243,11 +246,12 @@ fn highest_semver_tag(repo: &Path) -> Result<(String, String), ResolveError> {
         }
     }
     let (_, tag) = best.ok_or(ResolveError::NoSemverTags)?;
-    let commit = super::git::verify(repo, &format!("refs/tags/{tag}")).ok_or_else(|| {
-        ResolveError::RefNotFound {
-            what: format!("tag `{tag}`"),
-        }
-    })?;
+    let commit =
+        super::git::verify(repo, &format!("refs/tags/{tag}^{{commit}}")).ok_or_else(|| {
+            ResolveError::RefNotFound {
+                what: format!("tag `{tag}`"),
+            }
+        })?;
     Ok((tag, commit))
 }
 
@@ -267,6 +271,12 @@ pub(crate) fn prepare_from_mirror(
     selector: &model::Selector,
 ) -> Result<CloneOutcome, ResolveError> {
     let dir = store.mirror_dir();
+    store
+        .guard_mutation_tree(&dir)
+        .map_err(|error| ResolveError::Clone {
+            path: dir.clone(),
+            source: io::Error::other(error),
+        })?;
     if dir.join(".git").is_dir() {
         super::git::fetch(&dir)?;
     } else {
@@ -341,12 +351,12 @@ mod tests {
         g(&["tag", "1.2.0"]);
         fs::write(dir.join("a.txt"), "2").unwrap();
         g(&["commit", "-aqm", "two"]);
-        g(&["tag", "1.10.0"]);
+        g(&["tag", "-a", "1.10.0", "-m", "release"]);
         g(&["branch", "feature"]);
     }
 
     #[test]
-    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#build", r = 1)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#build", r = 2)]
     fn find_source_root_walks_up_to_the_workspace() {
         let tmp = tempfile::tempdir().unwrap();
         let root = tmp.path();
@@ -361,7 +371,7 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#selectors", r = 1)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#selectors", r = 2)]
     fn resolve_in_clone_against_a_local_clone() {
         let src = tempfile::tempdir().unwrap();
         make_source_repo(src.path());
@@ -371,7 +381,18 @@ mod tests {
 
         let r = |s| resolve_in_clone(&clone, &s).unwrap();
         assert_eq!(r(Selector::Latest).id, VersionId::new(Kind::Branch, "main"));
-        assert_eq!(r(Selector::Stable).id, VersionId::new(Kind::Tag, "1.10.0"));
+        let peeled = super::super::git::verify(&clone, "refs/tags/1.10.0^{commit}").unwrap();
+        let tag_object =
+            super::super::git::run(&clone, &["rev-parse", "refs/tags/1.10.0"]).unwrap();
+        assert_ne!(peeled, tag_object, "fixture must use a real annotated tag");
+        let stable = r(Selector::Stable);
+        assert_eq!(stable.id, VersionId::new(Kind::Tag, "1.10.0"));
+        assert_eq!(stable.commit, peeled);
+        assert_eq!(
+            r(Selector::Explicit(VersionId::new(Kind::Tag, "1.10.0"))).commit,
+            peeled
+        );
+        assert_eq!(r(Selector::Ambiguous("1.10.0".into())).commit, peeled);
         assert_eq!(
             r(Selector::Explicit(VersionId::new(Kind::Tag, "1.2.0"))).id,
             VersionId::new(Kind::Tag, "1.2.0")
@@ -383,7 +404,7 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#build", r = 1)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#build", r = 2)]
     fn mirror_parses_names_and_maps_urls() {
         assert_eq!(Mirror::parse("gitverse").unwrap(), Mirror::GitVerse);
         assert_eq!(Mirror::parse("github").unwrap(), Mirror::Github);
@@ -393,7 +414,7 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#provenance", r = 1)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#provenance", r = 2)]
     fn prepare_from_mirror_clones_then_fetches() {
         let upstream = tempfile::tempdir().unwrap();
         make_source_repo(upstream.path());
@@ -410,5 +431,27 @@ mod tests {
         // Second call reuses + fetches (no re-clone) and still resolves.
         let out2 = prepare_from_mirror(&store, &url, &Selector::Latest).unwrap();
         assert_eq!(out2.resolved.id, VersionId::new(Kind::Branch, "main"));
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn linked_managed_mirror_is_rejected_before_git_mutation() {
+        use std::os::unix::fs::symlink;
+
+        let temp = tempfile::tempdir().unwrap();
+        let store = VersionStore::new(temp.path().join("opt"));
+        fs::create_dir_all(store.mirror_dir().parent().unwrap()).unwrap();
+        let outside = temp.path().join("outside");
+        fs::create_dir_all(&outside).unwrap();
+        symlink(&outside, store.mirror_dir()).unwrap();
+        let error = prepare_from_mirror(
+            &store,
+            "https://invalid.example/repo",
+            &model::Selector::Latest,
+        )
+        .unwrap_err()
+        .to_string();
+        assert!(error.contains("symlink or reparse point"), "{error}");
+        assert!(fs::read_dir(outside).unwrap().next().is_none());
     }
 }

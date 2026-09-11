@@ -145,7 +145,7 @@ mod tests {
     use specmark::verifies;
 
     #[test]
-    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#tools", r = 1)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#tools", r = 2)]
     fn required_tools_table_is_well_formed() {
         assert!(!REQUIRED_TOOLS.is_empty());
         for t in REQUIRED_TOOLS {
@@ -172,7 +172,7 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#tools", r = 1)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#tools", r = 2)]
     fn extract_semver_tolerates_vendor_suffixes() {
         assert_eq!(
             extract_semver("git version 2.43.0").as_deref(),
@@ -190,7 +190,7 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#tools", r = 1)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#tools", r = 2)]
     fn version_ok_compares_semver() {
         assert!(version_ok("1.93.1", "1.93.0"));
         assert!(version_ok("2.0.0", "1.93.0"));

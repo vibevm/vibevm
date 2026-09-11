@@ -20,6 +20,7 @@ use specmark::spec;
 use thiserror::Error;
 
 use super::model::{self, InstallRecord, Origin};
+use super::provenance;
 use super::selfloc::same_location;
 use super::source::{external_path, find_source_root};
 use super::store::VersionStore;
@@ -65,9 +66,9 @@ pub(crate) struct RelocatePlan {
     /// The new source path (canonical, `\\?\`-stripped — the form install
     /// records), repointed to.
     pub new: String,
-    /// Active instances whose `source_path` is `old` — repointed, kept.
+    /// Active, running, or rollback instances sourced from `old` — repointed, kept.
     pub repoint: Vec<InstanceRef>,
-    /// Non-active instances built from `old` — dir removed, record forgotten.
+    /// Unprotected instances built from `old` — dir removed, record forgotten.
     pub delete: Vec<InstanceRef>,
     /// Records that are neither external-from-`old` (informational).
     pub untouched: usize,
@@ -109,6 +110,8 @@ fn plan_relocate(
     old: &Path,
     new: &str,
     active: Option<&InstallRecord>,
+    running: Option<&InstallRecord>,
+    previous: Option<&InstallRecord>,
 ) -> RelocatePlan {
     let mut repoint = Vec::new();
     let mut delete = Vec::new();
@@ -120,8 +123,12 @@ fn plan_relocate(
                 .is_some_and(|p| same_location(p, old));
         if !matches_old {
             untouched += 1;
-        } else if active
-            .is_some_and(|a| a.version_id() == r.version_id() && a.instance == r.instance)
+        } else if [active, running, previous]
+            .into_iter()
+            .flatten()
+            .any(|protected| {
+                protected.version_id() == r.version_id() && protected.instance == r.instance
+            })
         {
             repoint.push((r.version_id(), r.instance));
         } else {
@@ -193,11 +200,34 @@ fn apply_relocate(
     store: &VersionStore,
     plan: &RelocatePlan,
 ) -> Result<ApplyCounts> {
+    for (id, instance) in &plan.delete {
+        store.guard_mutation_tree(&store.instance_dir(id, *instance))?;
+    }
+    let active = store.active()?;
+    let previous = store.previous()?;
+    let is_deleted = |record: &InstallRecord| {
+        plan.delete
+            .iter()
+            .any(|(id, instance)| record.version_id() == *id && record.instance == *instance)
+    };
+    anyhow::ensure!(
+        active.as_ref().is_none_or(|record| !is_deleted(record))
+            && previous.as_ref().is_none_or(|record| !is_deleted(record)),
+        "relocate plan attempted to delete an activation pointer target"
+    );
+    let current_path = active
+        .as_ref()
+        .map(|record| store.instance_dir(&record.version_id(), record.instance));
+    let previous_path = previous
+        .as_ref()
+        .map(|record| store.instance_dir(&record.version_id(), record.instance));
+    store.reset_activation(current_path.as_deref(), previous_path.as_deref())?;
     // 1. Remove the stale instance directories (the filesystem half). A locked
     //    dir is reported and KEPT (not forgotten) so it is not orphaned.
     let mut kept: Vec<InstanceRef> = Vec::new();
     for (id, instance) in &plan.delete {
         let dir = store.instance_dir(id, *instance);
+        store.guard_mutation_tree(&dir)?;
         if !dir.exists() {
             continue; // already gone — nothing to remove, record will be dropped
         }
@@ -225,7 +255,7 @@ fn report_plan_human(ctx: &output::Context, plan: &RelocatePlan) {
     ctx.heading("vibe self relocate");
     ctx.step(&format!("source: {} → {}", plan.old.display(), plan.new));
     ctx.step(&format!(
-        "repoint: {} active instance(s)",
+        "repoint: {} protected instance(s)",
         plan.repoint.len()
     ));
     ctx.step(&format!(
@@ -259,7 +289,16 @@ pub(super) fn run_relocate_cmd(
     };
 
     let active = store.active()?;
-    let plan = plan_relocate(&state, &old, &new, active.as_ref());
+    let running = provenance::running_record(&store)?;
+    let previous = store.previous()?;
+    let plan = plan_relocate(
+        &state,
+        &old,
+        &new,
+        active.as_ref(),
+        running.as_ref(),
+        previous.as_ref(),
+    );
 
     // No-op: the recorded source already resolves to the target.
     if same_location(&old, &new) {
@@ -360,7 +399,7 @@ pub(super) fn run_relocate_cmd(
     }
     if !plan.repoint.is_empty() {
         ctx.summary(&format!(
-            "repointed {} active instance's source → {}",
+            "repointed {} protected instance source path(s) → {}",
             plan.repoint.len(),
             plan.new
         ));

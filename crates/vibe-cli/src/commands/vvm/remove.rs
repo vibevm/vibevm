@@ -1,7 +1,7 @@
-//! `vibe self remove` and `vibe self gc` (PROP-019 §2.9, §2.10) over the
-//! instance layout: removing a version drops all its instances and its
-//! managed source clone; gc prunes non-active instances. A committer's
-//! external tree is never touched.
+//! `vibe self remove` and `vibe self gc` over immutable instances. Scoped
+//! binary-bundle removal can retain `bin/` or source independently; default
+//! removal drops both. GC preserves the active instance plus immediate
+//! rollback. A committer's external tree is never touched.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#remove");
 
@@ -10,13 +10,22 @@ use std::fs;
 
 use anyhow::{Context, Result};
 use dialoguer::{MultiSelect, Select};
+use vibe_publish::release_manifest::DISTRIBUTION_SOURCE_ARCHIVE_FILENAME;
 
 use super::error::VvmError;
 use super::model::{self, InstallRecord, InstanceId, Selector, VersionId};
+use super::provenance;
 use super::store::VersionStore;
 use super::{VvmEnv, confirm, forced_kind, require_tty, resolve_installed};
 use crate::cli::{VvmGcArgs, VvmRemoveArgs};
 use crate::output;
+
+#[path = "remove_guard.rs"]
+mod guard;
+use guard::{
+    RemovalEffects, guard_remove_targets, remove_mirror_after, removes_last_managed,
+    scoped_removal_notes,
+};
 
 /// What `self remove` deletes for a version (PROP-019 §2.9).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -79,58 +88,128 @@ impl fmt::Display for RemoveTarget {
     }
 }
 
-/// Remove a version id: all its instances (Bin/Both) and its managed source
-/// clone (Src/Both). Never removes an external committer tree (it lives at
-/// `source_path`, not under `src/`). Best-effort: a locked instance dir is
-/// skipped (PROP-019 §2.9).
+fn protection_reason<'a>(
+    target: &RemoveTarget,
+    active: Option<&'a InstallRecord>,
+    running: Option<&'a InstallRecord>,
+) -> Option<(&'static str, &'a InstallRecord)> {
+    running
+        .filter(|record| target.matches(record))
+        .map(|record| ("running", record))
+        .or_else(|| {
+            active
+                .filter(|record| target.matches(record))
+                .map(|record| ("active", record))
+        })
+}
+
+fn protection_blocks(reason: &str, force: bool) -> bool {
+    reason == "running" || !force
+}
+
+fn gc_protected(
+    record: &InstallRecord,
+    active: &InstallRecord,
+    rollback: Option<&InstallRecord>,
+    running: Option<&InstallRecord>,
+) -> bool {
+    same_record(record, active)
+        || rollback.is_some_and(|saved| same_record(record, saved))
+        || running.is_some_and(|saved| same_record(record, saved))
+}
+
+/// Apply bin/source/both to each selected immutable instance. Binary bundles
+/// own their `bin/` and `source/` independently; external worktrees are never
+/// touched. Whole-instance removal remains best-effort around running locks.
 fn remove_target(
     ctx: &output::Context,
     store: &VersionStore,
+    state: &mut model::State,
     target: &RemoveTarget,
     scope: RemoveScope,
-) -> Result<()> {
+) -> Result<RemovalEffects> {
     let id = target.version_id();
-    let mut removed = false;
-    if matches!(scope, RemoveScope::Bin | RemoveScope::Both) {
-        for rec in store
-            .instances_of(id)?
-            .into_iter()
-            .filter(|record| target.matches(record))
-        {
-            let dir = store.instance_dir(id, rec.instance);
-            let forget = if dir.exists() {
-                match fs::remove_dir_all(&dir) {
-                    Ok(()) => {
-                        ctx.removed(&dir.display().to_string());
-                        removed = true;
-                        true
+    let records = store
+        .instances_of(id)?
+        .into_iter()
+        .filter(|record| target.matches(record))
+        .collect::<Vec<_>>();
+    let mut effects = RemovalEffects::default();
+    for record in &records {
+        let home = store.instance_dir(id, record.instance);
+        store.guard_mutation_path(&home)?;
+        match scope {
+            RemoveScope::Both => {
+                store.guard_mutation_tree(&home)?;
+                let forget = if home.exists() {
+                    match fs::remove_dir_all(&home) {
+                        Ok(()) => {
+                            ctx.removed(&home.display().to_string());
+                            effects.any = true;
+                            true
+                        }
+                        Err(error) => {
+                            ctx.summary(&format!("skipped {} (in use?): {error}", home.display()));
+                            false
+                        }
                     }
-                    Err(e) => {
-                        ctx.summary(&format!("skipped {} (in use?): {e}", dir.display()));
-                        false
-                    }
+                } else {
+                    effects.any = true;
+                    true
+                };
+                if forget {
+                    state.installs.retain(|candidate| {
+                        !(candidate.version_id() == *id && candidate.instance == record.instance)
+                    });
                 }
-            } else {
-                removed = true;
-                true
-            };
-            if forget {
-                store.forget_instance(id, rec.instance)?;
             }
+            RemoveScope::Bin => {
+                let bin = store.instance_bin_dir(id, record.instance);
+                store.guard_mutation_tree(&bin)?;
+                if bin.exists() {
+                    fs::remove_dir_all(&bin)
+                        .with_context(|| format!("removing `{}`", bin.display()))?;
+                    ctx.removed(&bin.display().to_string());
+                    effects.any = true;
+                    effects.bin = true;
+                }
+                let legacy = home.join(super::store::BINARY_NAME);
+                store.guard_mutation_path(&legacy)?;
+                if legacy.is_file() {
+                    fs::remove_file(&legacy)
+                        .with_context(|| format!("removing `{}`", legacy.display()))?;
+                    ctx.removed(&legacy.display().to_string());
+                    effects.any = true;
+                    effects.bin = true;
+                }
+            }
+            RemoveScope::Src if record.origin == model::Origin::Binary => {
+                let source = store.instance_source_dir(id, record.instance);
+                store.guard_mutation_tree(&source)?;
+                if source.exists() {
+                    fs::remove_dir_all(&source)
+                        .with_context(|| format!("removing `{}`", source.display()))?;
+                    ctx.removed(&source.display().to_string());
+                    effects.any = true;
+                    effects.binary_source = true;
+                }
+                let archive = home.join(DISTRIBUTION_SOURCE_ARCHIVE_FILENAME);
+                store.guard_mutation_path(&archive)?;
+                if archive.is_file() {
+                    fs::remove_file(&archive)
+                        .with_context(|| format!("removing `{}`", archive.display()))?;
+                    ctx.removed(&archive.display().to_string());
+                    effects.any = true;
+                    effects.binary_source = true;
+                }
+            }
+            RemoveScope::Src => {}
         }
     }
-    if matches!(scope, RemoveScope::Src | RemoveScope::Both) {
-        let src = store.src_dir(id);
-        if src.exists() {
-            fs::remove_dir_all(&src).with_context(|| format!("removing `{}`", src.display()))?;
-            ctx.removed(&src.display().to_string());
-            removed = true;
-        }
-    }
-    if !removed {
+    if !effects.any {
         ctx.summary(&format!("{target}: nothing on disk to remove"));
     }
-    Ok(())
+    Ok(effects)
 }
 
 pub(super) fn run_remove_cmd(
@@ -139,8 +218,11 @@ pub(super) fn run_remove_cmd(
     args: VvmRemoveArgs,
 ) -> Result<()> {
     let store = env.store()?;
-    let state = store.load_state()?;
+    let _lock = super::install::InstallLock::acquire(&store)?;
+    let mut state = store.load_state()?;
+    let initial_records = state.installs.len();
     let active = store.active()?;
+    let running = provenance::running_record(&store)?;
 
     let targets: Vec<RemoveTarget> = if args.all {
         let ids = distinct_ids(&state);
@@ -178,19 +260,39 @@ pub(super) fn run_remove_cmd(
     let scope = removal_scope(args.bin, args.src);
     let mut effective = Vec::new();
     for target in targets {
-        if active
-            .as_ref()
-            .map(|record| target.matches(record))
-            .unwrap_or(false)
-            && !args.force
+        let protected = protection_reason(&target, active.as_ref(), running.as_ref());
+        if let Some((reason, record)) = protected
+            && protection_blocks(reason, args.force)
         {
-            ctx.summary(&format!(
-                "skipped active {} — use --force to remove it",
-                active.as_ref().unwrap().selector()
-            ));
+            if reason == "running" {
+                ctx.summary(&format!(
+                    "skipped running {} — the executing instance cannot remove itself",
+                    record.selector()
+                ));
+            } else {
+                ctx.summary(&format!(
+                    "skipped active {} — use --force to remove it",
+                    record.selector()
+                ));
+            }
             continue;
         }
         effective.push(target);
+    }
+
+    let selected_origin = |origin| {
+        state.installs.iter().any(|record| {
+            record.origin == origin && effective.iter().any(|target| target.matches(record))
+        })
+    };
+    let selected_external = selected_origin(model::Origin::External);
+    let selected_managed = selected_origin(model::Origin::Managed);
+    let selected_binary = selected_origin(model::Origin::Binary);
+
+    guard_remove_targets(&store, &state, &effective, scope)?;
+    let mirror_candidate = removes_last_managed(&state, &effective, scope);
+    if mirror_candidate {
+        store.guard_mutation_tree(&store.mirror_dir())?;
     }
 
     let previous = store.previous()?;
@@ -202,8 +304,36 @@ pub(super) fn run_remove_cmd(
     if matches!(scope, RemoveScope::Bin | RemoveScope::Both) && pointer_targeted {
         repair_activation_before_removal(&store, &state, &effective)?;
     }
+    let mut effects = RemovalEffects::default();
     for target in &effective {
-        remove_target(ctx, &store, target, scope)?;
+        effects.merge(remove_target(ctx, &store, &mut state, target, scope)?);
+    }
+    let remove_mirror = remove_mirror_after(mirror_candidate, scope, &state);
+    if remove_mirror {
+        let mirror = store.mirror_dir();
+        if mirror.exists() {
+            fs::remove_dir_all(&mirror).with_context(|| {
+                format!("removing shared managed mirror `{}`", mirror.display())
+            })?;
+            ctx.removed(&mirror.display().to_string());
+            effects.any = true;
+            effects.managed_source = true;
+        }
+    }
+    if state.installs.len() != initial_records {
+        store.save_state(&state)?;
+    }
+    if !effective.is_empty() {
+        for note in scoped_removal_notes(
+            scope,
+            effects,
+            selected_external,
+            selected_managed,
+            selected_binary,
+            mirror_candidate,
+        ) {
+            ctx.summary(note);
+        }
     }
     ctx.summary("done.");
     Ok(())
@@ -218,11 +348,7 @@ fn repair_activation_before_removal(
         .installs
         .iter()
         .filter(|record| !targets.iter().any(|target| target.matches(record)))
-        .filter(|record| {
-            store
-                .binary_path(&record.version_id(), record.instance)
-                .is_file()
-        })
+        .filter(|record| super::ensure_activatable(store, record).is_ok())
         .collect();
     let active = store.active()?;
     let previous = store.previous()?;
@@ -305,6 +431,7 @@ enum GcAction {
 
 pub(super) fn run_gc_cmd(ctx: &output::Context, env: &VvmEnv, args: VvmGcArgs) -> Result<()> {
     let store = env.store()?;
+    let _lock = super::install::InstallLock::acquire(&store)?;
     let action = if args.build {
         GcAction::Build
     } else if args.prune_others {
@@ -317,6 +444,7 @@ pub(super) fn run_gc_cmd(ctx: &output::Context, env: &VvmEnv, args: VvmGcArgs) -
         GcAction::Cancel => ctx.summary("nothing to do."),
         GcAction::Build => {
             let dir = store.build_dir();
+            store.guard_mutation_tree(&dir)?;
             if dir.exists() {
                 fs::remove_dir_all(&dir)
                     .with_context(|| format!("removing `{}`", dir.display()))?;
@@ -327,15 +455,14 @@ pub(super) fn run_gc_cmd(ctx: &output::Context, env: &VvmEnv, args: VvmGcArgs) -
         }
         GcAction::Prune => {
             let active = store.active()?.ok_or(VvmError::NoActiveVersion)?;
-            let state = store.load_state()?;
+            let running = provenance::running_record(&store)?;
+            let mut state = store.load_state()?;
             let saved_previous = store.previous()?;
             let rollback = saved_previous
                 .as_ref()
                 .filter(|record| {
                     !same_record(record, &active)
-                        && store
-                            .binary_path(&record.version_id(), record.instance)
-                            .is_file()
+                        && super::ensure_activatable(&store, record).is_ok()
                 })
                 .cloned()
                 .or_else(|| {
@@ -343,20 +470,15 @@ pub(super) fn run_gc_cmd(ctx: &output::Context, env: &VvmEnv, args: VvmGcArgs) -
                         .installs
                         .iter()
                         .filter(|record| !same_record(record, &active))
-                        .filter(|record| {
-                            store
-                                .binary_path(&record.version_id(), record.instance)
-                                .is_file()
-                        })
+                        .filter(|record| super::ensure_activatable(&store, record).is_ok())
                         .max_by_key(|record| record.instance)
                         .cloned()
                 });
             let others: Vec<_> = state
                 .installs
                 .iter()
-                .filter(|r| {
-                    !same_record(r, &active)
-                        && rollback.as_ref().is_none_or(|saved| !same_record(r, saved))
+                .filter(|record| {
+                    !gc_protected(record, &active, rollback.as_ref(), running.as_ref())
                 })
                 .cloned()
                 .collect();
@@ -369,11 +491,25 @@ pub(super) fn run_gc_cmd(ctx: &output::Context, env: &VvmEnv, args: VvmGcArgs) -
                 ctx.summary("no instances outside the active + rollback pair to prune.");
                 return Ok(());
             }
+            for record in &others {
+                store.guard_mutation_tree(
+                    &store.instance_dir(&record.version_id(), record.instance),
+                )?;
+            }
+            let remove_mirror = !state.installs.iter().any(|record| {
+                record.origin == model::Origin::Managed
+                    && !others.iter().any(|removed| same_record(record, removed))
+            });
+            if remove_mirror {
+                store.guard_mutation_tree(&store.mirror_dir())?;
+            }
+            let build_dir = store.build_dir();
+            store.guard_mutation_tree(&build_dir)?;
             if !confirm(
                 ctx,
                 args.yes,
                 &format!(
-                    "Remove {} instance(s) except the active and immediate rollback? This cannot be undone.",
+                    "Remove {} instance(s) except active, immediate rollback, and running? This cannot be undone.",
                     others.len()
                 ),
             )? {
@@ -384,6 +520,7 @@ pub(super) fn run_gc_cmd(ctx: &output::Context, env: &VvmEnv, args: VvmGcArgs) -
             let mut pruned = 0usize;
             for r in &others {
                 let dir = store.instance_dir(&r.version_id(), r.instance);
+                store.guard_mutation_tree(&dir)?;
                 let forget = if dir.exists() {
                     match fs::remove_dir_all(&dir) {
                         Ok(()) => true,
@@ -396,16 +533,35 @@ pub(super) fn run_gc_cmd(ctx: &output::Context, env: &VvmEnv, args: VvmGcArgs) -
                     true
                 };
                 if forget {
-                    store.forget_instance(&r.version_id(), r.instance)?;
+                    state.installs.retain(|candidate| {
+                        !(candidate.version_id() == r.version_id()
+                            && candidate.instance == r.instance)
+                    });
                     pruned += 1;
                 }
             }
-            let dir = store.build_dir();
-            if dir.exists() {
-                let _ = fs::remove_dir_all(&dir);
+            if pruned > 0 {
+                store.save_state(&state)?;
+            }
+            if remove_mirror
+                && !state
+                    .installs
+                    .iter()
+                    .any(|record| record.origin == model::Origin::Managed)
+            {
+                let mirror = store.mirror_dir();
+                if mirror.exists() {
+                    fs::remove_dir_all(&mirror).with_context(|| {
+                        format!("removing shared managed mirror `{}`", mirror.display())
+                    })?;
+                }
+            }
+            store.guard_mutation_tree(&build_dir)?;
+            if build_dir.exists() {
+                let _ = fs::remove_dir_all(&build_dir);
             }
             ctx.summary(&format!(
-                "pruned {} instance(s); kept the active and immediate rollback.",
+                "pruned {} instance(s); kept active, immediate rollback, and running.",
                 pruned
             ));
         }
@@ -436,163 +592,5 @@ fn gc_menu(ctx: &output::Context) -> Result<GcAction> {
 }
 
 #[cfg(test)]
-mod tests {
-    use super::*;
-    use crate::cli::{ForcedKind, VvmGcArgs, VvmRemoveArgs};
-    use crate::commands::vvm::model::{InstallRecord, Kind, Origin, Profile};
-    use crate::commands::vvm::store::BINARY_NAME;
-    use specmark::verifies;
-
-    fn rec(kind: Kind, id: &str, instance: u64) -> InstallRecord {
-        InstallRecord {
-            kind,
-            id: id.into(),
-            instance,
-            commit: "c".into(),
-            toolchain: "t".into(),
-            profile: Profile::Debug,
-            installed_at: "now".into(),
-            origin: Origin::Managed,
-            source_path: None,
-            payload_sha256: None,
-        }
-    }
-
-    fn quiet() -> output::Context {
-        output::Context::from_flags(true, false, None, true, crate::cli::AgentModeArg::Auto)
-    }
-
-    #[test]
-    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#remove", r = 1)]
-    fn removal_scope_defaults_to_both() {
-        assert_eq!(removal_scope(false, false), RemoveScope::Both);
-        assert_eq!(removal_scope(true, false), RemoveScope::Bin);
-        assert_eq!(removal_scope(false, true), RemoveScope::Src);
-    }
-
-    #[test]
-    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#remove", r = 1)]
-    fn remove_id_drops_all_instances_and_forgets() {
-        let tmp = tempfile::tempdir().unwrap();
-        let store = VersionStore::new(tmp.path());
-        let id = VersionId::new(Kind::Tag, "1.0.0");
-        for n in [1u64, 2] {
-            store.record_install(rec(Kind::Tag, "1.0.0", n)).unwrap();
-            fs::create_dir_all(store.instance_dir(&id, n)).unwrap();
-        }
-        remove_target(
-            &quiet(),
-            &store,
-            &RemoveTarget::Version(id.clone()),
-            RemoveScope::Both,
-        )
-        .unwrap();
-        assert!(!store.instance_dir(&id, 1).exists());
-        assert!(!store.instance_dir(&id, 2).exists());
-        assert!(store.instances_of(&id).unwrap().is_empty());
-    }
-
-    fn no_forced_kind() -> ForcedKind {
-        ForcedKind {
-            tag: false,
-            branch: false,
-            commit: false,
-        }
-    }
-
-    fn installed_store(instances: &[u64]) -> (tempfile::TempDir, VersionStore, VersionId) {
-        let tmp = tempfile::tempdir().unwrap();
-        let store = VersionStore::new(tmp.path());
-        let id = VersionId::new(Kind::Tag, "1.0.0");
-        for &instance in instances {
-            store
-                .record_install(rec(Kind::Tag, "1.0.0", instance))
-                .unwrap();
-            let dir = store.instance_dir(&id, instance);
-            fs::create_dir_all(&dir).unwrap();
-            fs::write(dir.join(BINARY_NAME), format!("payload-{instance}")).unwrap();
-            store.write_current(&dir).unwrap();
-        }
-        (tmp, store, id)
-    }
-
-    #[test]
-    fn forced_active_exact_removal_repoints_current_to_rollback_first() {
-        let (tmp, store, id) = installed_store(&[1, 2]);
-        let env = VvmEnv {
-            root: Some(tmp.path().to_path_buf()),
-            ..VvmEnv::default()
-        };
-        run_remove_cmd(
-            &quiet(),
-            &env,
-            VvmRemoveArgs {
-                selector: Some("tag:1.0.0#2".into()),
-                kind: no_forced_kind(),
-                all: false,
-                bin: false,
-                src: false,
-                force: true,
-                yes: true,
-            },
-        )
-        .unwrap();
-
-        assert_eq!(store.active().unwrap().unwrap().instance, 1);
-        assert!(!store.instance_dir(&id, 2).exists());
-        assert!(store.instance_dir(&id, 1).exists());
-        assert!(store.previous().unwrap().is_none());
-    }
-
-    #[test]
-    fn removing_saved_rollback_repoints_previous_without_moving_current() {
-        let (tmp, store, id) = installed_store(&[1, 2, 3]);
-        let env = VvmEnv {
-            root: Some(tmp.path().to_path_buf()),
-            ..VvmEnv::default()
-        };
-        run_remove_cmd(
-            &quiet(),
-            &env,
-            VvmRemoveArgs {
-                selector: Some("tag:1.0.0#2".into()),
-                kind: no_forced_kind(),
-                all: false,
-                bin: false,
-                src: false,
-                force: false,
-                yes: true,
-            },
-        )
-        .unwrap();
-
-        assert_eq!(store.active().unwrap().unwrap().instance, 3);
-        assert_eq!(store.previous().unwrap().unwrap().instance, 1);
-        assert!(!store.instance_dir(&id, 2).exists());
-    }
-
-    #[test]
-    fn gc_keeps_active_and_immediate_rollback_instances() {
-        let (tmp, store, id) = installed_store(&[1, 2, 3]);
-        let env = VvmEnv {
-            root: Some(tmp.path().to_path_buf()),
-            ..VvmEnv::default()
-        };
-        run_gc_cmd(
-            &quiet(),
-            &env,
-            VvmGcArgs {
-                build: false,
-                prune_others: true,
-                yes: true,
-            },
-        )
-        .unwrap();
-
-        assert!(!store.instance_dir(&id, 1).exists());
-        assert!(store.instance_dir(&id, 2).exists());
-        assert!(store.instance_dir(&id, 3).exists());
-        assert_eq!(store.active().unwrap().unwrap().instance, 3);
-        assert_eq!(store.previous().unwrap().unwrap().instance, 2);
-    }
-}
+#[path = "remove_tests.rs"]
+mod tests;

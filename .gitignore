@@ -78,3 +78,5 @@ __pycache__/
 # was observed and is now unstageable.
 /.wt/
 dist/
+!/xtask/src/dist/
+!/xtask/src/dist/**

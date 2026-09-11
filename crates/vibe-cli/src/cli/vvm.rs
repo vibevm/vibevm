@@ -15,17 +15,21 @@ pub struct VvmArgs {
 
 #[derive(Debug, Subcommand)]
 pub enum VvmSubcommand {
-    /// Build and install a version of vibevm from source.
+    /// Install a version: verified release bundle from a binary execution,
+    /// or a two-binary build from a source execution / explicit mirror.
     Install(VvmInstallArgs),
 
     /// Import a ready-built local vibe executable without network access.
     Import(VvmImportArgs),
 
-    /// Rebuild and activate the latest in-tree version — a shorthand for
-    /// `self install latest`.
+    /// Bootstrap from an aggregate manifest and its release download base.
+    Bootstrap(VvmBootstrapArgs),
+
+    /// Refresh and activate the current logical version. Binary executions
+    /// refetch their mutable release; source executions rebuild `latest`.
     Update(VvmUpdateArgs),
 
-    /// Switch the active version (repoints `VIBEVM_HOME`).
+    /// Switch the active version; `--eval` creates a shell-local override.
     Use(VvmUseArgs),
 
     /// Switch back to the previously active immutable local instance.
@@ -39,8 +43,11 @@ pub enum VvmSubcommand {
     /// Print the running/active payload's exact selector and provenance.
     Current,
 
-    /// Print the absolute path of the active `vibe` binary.
-    Which,
+    /// Print the active instance's `vibe`, `vibe-index`, or source path.
+    Which(VvmWhichArgs),
+
+    /// Print exactly the source tree used by the running/active instance.
+    Source,
 
     /// Verify the install and environment; `--fix` repairs PATH and shims.
     Doctor(VvmDoctorArgs),
@@ -136,8 +143,34 @@ pub struct VvmImportArgs {
     pub replace_candidate: bool,
 }
 
-/// Flags for `self update` — `self install latest` with only the build
-/// knobs (the selector is fixed to `latest`, no mirror: an in-tree rebuild).
+#[derive(Debug, clap::Args)]
+pub struct VvmBootstrapArgs {
+    /// Already-downloaded aggregate `DISTRIBUTIONS.json`.
+    #[arg(long, value_name = "PATH")]
+    pub manifest: PathBuf,
+
+    /// Expected semantic version, without a `v` prefix.
+    #[arg(long, value_name = "X.Y.Z")]
+    pub version: String,
+
+    /// Release asset directory, normally ending in `/download/vX.Y.Z`.
+    #[arg(long, value_name = "URL")]
+    pub release_base: String,
+
+    /// Install a fresh immutable #N even when bundle bytes are unchanged.
+    #[arg(long)]
+    pub force: bool,
+}
+
+#[derive(Debug, clap::Args)]
+pub struct VvmWhichArgs {
+    /// Instance member to locate: vibe | vibe-index | source.
+    #[arg(default_value = "vibe")]
+    pub component: String,
+}
+
+/// Flags for `self update`: force controls both binary refresh and source
+/// rebuild; profile knobs apply to the source path only.
 #[derive(Debug, clap::Args)]
 pub struct VvmUpdateArgs {
     /// Build profile (`debug` | `release`). Defaults to `debug`.
@@ -161,8 +194,9 @@ pub struct VvmUseArgs {
     #[command(flatten)]
     pub kind: ForcedKind,
 
-    /// Print the shell line to `eval` in the current shell instead of
-    /// writing the durable environment.
+    /// Print a shell-local override line instead of changing durable state.
+    /// Clear it with `unset VIBEVM_SHELL_HOME` (sh/fish) or
+    /// `Remove-Item Env:VIBEVM_SHELL_HOME` (PowerShell).
     #[arg(long)]
     pub eval: bool,
 }
@@ -176,8 +210,9 @@ pub struct VvmEnvArgs {
     #[command(flatten)]
     pub kind: ForcedKind,
 
-    /// Target shell syntax (bash|zsh|fish|powershell|posix). Defaults to the
-    /// detected shell.
+    /// Target shell syntax (bash|zsh|fish|powershell|posix). The emitted
+    /// VIBEVM_SHELL_HOME override wins over durable `current`; clear it to
+    /// return to the durable selection.
     #[arg(long)]
     pub shell: Option<String>,
 }
@@ -220,24 +255,26 @@ pub struct VvmDoctorArgs {
 pub struct VvmRemoveArgs {
     /// Version to remove. A terminal `#N` removes only that immutable local
     /// instance. Omit to pick interactively; never wipes all without `--all`.
+    #[arg(conflicts_with = "all")]
     pub selector: Option<String>,
 
     #[command(flatten)]
     pub kind: ForcedKind,
 
     /// Remove every installed version (asks for confirmation).
-    #[arg(long)]
+    #[arg(long, conflicts_with_all = ["selector", "tag", "branch", "commit"])]
     pub all: bool,
 
-    /// Remove only the built binary, keeping the source tree.
+    /// Remove only instance binaries, retaining source and provenance.
     #[arg(long, conflicts_with = "src")]
     pub bin: bool,
 
-    /// Remove only the source tree, keeping the built binary.
+    /// Remove only managed/instance-owned source, retaining binaries.
     #[arg(long, conflicts_with = "bin")]
     pub src: bool,
 
-    /// Remove even the active version.
+    /// Remove an active version when it is not the currently executing instance.
+    /// A running instance is never self-removable.
     #[arg(long)]
     pub force: bool,
 

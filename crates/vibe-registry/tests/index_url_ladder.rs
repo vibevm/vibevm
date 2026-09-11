@@ -234,7 +234,7 @@ fn versions_of(r: &MultiRegistryResolver, name: &str) -> Vec<String> {
 #[test]
 #[verifies(
     "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#form-factor",
-    r = 1
+    r = 2
 )]
 fn manifest_key_attaches_index_without_env() {
     let mut canned = CannedFiles::default();
@@ -256,7 +256,7 @@ fn manifest_key_attaches_index_without_env() {
 #[test]
 #[verifies(
     "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#form-factor",
-    r = 1
+    r = 2
 )]
 fn default_location_is_probed_when_no_key_is_set() {
     let mut canned = CannedFiles::default();
@@ -278,7 +278,7 @@ fn default_location_is_probed_when_no_key_is_set() {
 #[test]
 #[verifies(
     "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#form-factor",
-    r = 1
+    r = 2
 )]
 fn none_switches_the_index_off_even_where_a_default_would_answer() {
     let mut canned = CannedFiles::default();

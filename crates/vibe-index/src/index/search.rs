@@ -64,7 +64,7 @@ fn push_if_keepable(out: &mut Vec<String>, tok: String) {
 
 #[spec(
     implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#cli",
-    r = 1
+    r = 2
 )]
 pub fn search(index: &Index, query: &str, kind_filter: Option<PackageKind>) -> Vec<SearchHit> {
     let query_tokens: BTreeSet<String> = tokenise(query).into_iter().collect();

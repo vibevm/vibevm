@@ -8,6 +8,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#surface");
 
 mod builder;
+mod bundle;
 mod doctor;
 mod embedded;
 mod env;
@@ -17,6 +18,7 @@ mod import;
 mod install;
 mod model;
 mod placer;
+mod provenance;
 mod relocate;
 mod remove;
 pub(crate) mod selfloc;
@@ -31,13 +33,13 @@ use anyhow::Result;
 use dialoguer::Confirm;
 
 use crate::cli::{
-    ForcedKind, VvmArgs, VvmEnvArgs, VvmImportArgs, VvmInstallArgs, VvmSubcommand, VvmUpdateArgs,
-    VvmUseArgs,
+    ForcedKind, VvmArgs, VvmEnvArgs, VvmImportArgs, VvmInstallArgs, VvmSubcommand, VvmUseArgs,
 };
 use crate::output;
 
 use error::VvmError;
 use model::{InstallRecord, State, VersionId};
+use provenance::running_record;
 use store::VersionStore;
 
 pub(crate) use embedded::embedded_root_at;
@@ -93,30 +95,59 @@ pub(crate) fn resolve_root(
     managed_root.or_else(|| {
         install_base_override
             .or_else(|| home.map(|path| path.join(".vibe")))
+            .and_then(|base| absolute_lexical(&base, &std::env::current_dir().ok()?))
             .map(|base| base.join("opt"))
     })
+}
+
+fn absolute_lexical(path: &Path, cwd: &Path) -> Option<PathBuf> {
+    let combined = if path.is_absolute() {
+        path.to_path_buf()
+    } else {
+        cwd.join(path)
+    };
+    let mut normalized = PathBuf::new();
+    for component in combined.components() {
+        match component {
+            std::path::Component::CurDir => {}
+            std::path::Component::ParentDir => {
+                if !normalized.pop() {
+                    return None;
+                }
+            }
+            other => normalized.push(other.as_os_str()),
+        }
+    }
+    normalized.is_absolute().then_some(normalized)
 }
 
 pub fn run(ctx: &output::Context, args: VvmArgs, env: VvmEnv) -> Result<()> {
     match args.command {
         VvmSubcommand::Install(a) => run_install_cmd(ctx, &env, a),
         VvmSubcommand::Import(a) => run_import_cmd(ctx, &env, a),
-        VvmSubcommand::Update(a) => run_update_cmd(ctx, &env, a),
+        VvmSubcommand::Bootstrap(a) => bundle::run_bootstrap_cmd(ctx, &env, a),
+        VvmSubcommand::Update(a) => bundle::run_update_cmd(ctx, &env, a),
         VvmSubcommand::Use(a) => run_use_cmd(ctx, &env, a),
         VvmSubcommand::Rollback => run_rollback_cmd(ctx, &env),
-        VvmSubcommand::Ls => run_ls(ctx, &env),
-        VvmSubcommand::Current => run_current(ctx, &env),
-        VvmSubcommand::Which => run_which(ctx, &env),
+        VvmSubcommand::Ls => provenance::run_ls_cmd(ctx, &env),
+        VvmSubcommand::Current => provenance::run_current_cmd(ctx, &env),
+        VvmSubcommand::Which(a) => provenance::run_which_cmd(ctx, &env, a),
+        VvmSubcommand::Source => provenance::run_source_cmd(ctx, &env),
         VvmSubcommand::Doctor(a) => doctor::run_doctor_cmd(ctx, &env, a),
         VvmSubcommand::Remove(a) => remove::run_remove_cmd(ctx, &env, a),
         VvmSubcommand::Gc(a) => remove::run_gc_cmd(ctx, &env, a),
         VvmSubcommand::Env(a) => run_env_cmd(&env, a),
-        VvmSubcommand::Relocate(a) => relocate::run_relocate_cmd(ctx, &env, a),
+        VvmSubcommand::Relocate(a) => {
+            let store = env.store()?;
+            let _lock = install::InstallLock::acquire(&store)?;
+            relocate::run_relocate_cmd(ctx, &env, a)
+        }
     }
 }
 
 fn run_import_cmd(ctx: &output::Context, env: &VvmEnv, args: VvmImportArgs) -> Result<()> {
     let store = env.store()?;
+    let _lock = install::InstallLock::acquire(&store)?;
     let profile = model::Profile::parse(&args.profile)?;
     let now = chrono::Utc::now().to_rfc3339();
     let req = import::ImportRequest {
@@ -124,130 +155,19 @@ fn run_import_cmd(ctx: &output::Context, env: &VvmEnv, args: VvmImportArgs) -> R
         tag: &args.tag,
         commit: args.commit.as_deref(),
         profile,
-        activate: args.activate,
         replace_candidate: args.replace_candidate,
         now: &now,
     };
-    import::perform_import(ctx, &store, &req)?;
-    Ok(())
-}
-
-fn same_record(a: &InstallRecord, b: &InstallRecord) -> bool {
-    a.version_id() == b.version_id() && a.instance == b.instance
-}
-
-/// Prefer the managed executable's own immutable identity; bare/dev runs have none.
-fn running_record(store: &VersionStore) -> Result<Option<InstallRecord>> {
-    let exe = std::env::current_exe().ok();
-    let Some(location) = selfloc::derive_self(exe.as_deref()) else {
-        return Ok(None);
-    };
-    Ok(store.record_at(&location.home)?)
-}
-
-fn current_record(store: &VersionStore) -> Result<Option<InstallRecord>> {
-    if let Some(record) = running_record(store)? {
-        return Ok(Some(record));
+    let outcome = import::perform_import(ctx, &store, &req)?;
+    debug_assert_eq!(
+        outcome.home,
+        store.instance_dir(&outcome.record.version_id(), outcome.record.instance)
+    );
+    let _ = outcome.reused;
+    if args.activate {
+        ensure_activatable(&store, &outcome.record)?;
+        activate_record(ctx, env, &store, &outcome.record, "self:import")?;
     }
-    Ok(store.active()?)
-}
-
-fn run_ls(ctx: &output::Context, env: &VvmEnv) -> Result<()> {
-    let store = env.store()?;
-    let mut state = store.load_state()?;
-    state
-        .installs
-        .sort_by(|a, b| a.id.cmp(&b.id).then(a.instance.cmp(&b.instance)));
-    let active = store.active()?;
-    let current = current_record(&store)?;
-
-    if ctx.is_json() {
-        let installs: Vec<serde_json::Value> = state
-            .installs
-            .iter()
-            .map(|r| {
-                serde_json::json!({
-                    "id": r.version_id().to_string(),
-                    "selector": r.selector().to_string(),
-                    "instance": r.instance,
-                    "commit": r.commit,
-                    "toolchain": r.toolchain,
-                    "profile": r.profile.as_str(),
-                    "origin": r.origin.as_str(),
-                    "source": r.source_label(),
-                    "source_path": r.source_path,
-                    "payload_sha256": r.payload_sha256,
-                    "installed_at": r.installed_at,
-                    "active": active.as_ref().map(|a| same_record(a, r)).unwrap_or(false),
-                    "current": current.as_ref().map(|a| same_record(a, r)).unwrap_or(false),
-                })
-            })
-            .collect();
-        return ctx.emit_json(&serde_json::json!({
-            "ok": true,
-            "command": "self:ls",
-            "active": active.as_ref().map(|a| a.version_id().to_string()),
-            "active_selector": active.as_ref().map(|a| a.selector().to_string()),
-            "current": current.as_ref().map(|r| r.selector().to_string()),
-            "count": installs.len(),
-            "installs": installs,
-        }));
-    }
-
-    if state.installs.is_empty() {
-        ctx.summary("(no versions installed — run `vibe self install`)");
-        return Ok(());
-    }
-    for r in &state.installs {
-        let marker = if current.as_ref().map(|a| same_record(a, r)).unwrap_or(false) {
-            "*"
-        } else {
-            " "
-        };
-        ctx.step(&format!("{marker} {}", r.human_identity()));
-    }
-    ctx.summary(&format!("{} instance(s) installed.", state.installs.len()));
-    Ok(())
-}
-
-fn run_current(ctx: &output::Context, env: &VvmEnv) -> Result<()> {
-    let store = env.store()?;
-    let current = current_record(&store)?;
-    if ctx.is_json() {
-        return ctx.emit_json(&serde_json::json!({
-            "ok": true,
-            "command": "self:current",
-            "active": current.as_ref().map(|r| r.version_id().to_string()),
-            "selector": current.as_ref().map(|r| r.selector().to_string()),
-            "instance": current.as_ref().map(|r| r.instance),
-            "origin": current.as_ref().map(|r| r.origin.as_str()),
-            "source": current.as_ref().map(|r| r.source_label()),
-            "source_path": current.as_ref().and_then(|r| r.source_path.as_deref()),
-            "commit": current.as_ref().map(|r| r.commit.as_str()),
-            "payload_sha256": current.as_ref().and_then(|r| r.payload_sha256.as_deref()),
-        }));
-    }
-    match current {
-        Some(r) => ctx.summary(&r.human_identity()),
-        None => ctx.summary("(no active version)"),
-    }
-    Ok(())
-}
-
-fn run_which(ctx: &output::Context, env: &VvmEnv) -> Result<()> {
-    let store = env.store()?;
-    let Some(record) = current_record(&store)? else {
-        return Err(VvmError::NoActiveVersion.into());
-    };
-    let path = store.binary_path(&record.version_id(), record.instance);
-    if ctx.is_json() {
-        return ctx.emit_json(&serde_json::json!({
-            "ok": true,
-            "command": "self:which",
-            "path": path.display().to_string(),
-        }));
-    }
-    ctx.summary(&path.display().to_string());
     Ok(())
 }
 
@@ -263,6 +183,21 @@ fn run_install_cmd(ctx: &output::Context, env: &VvmEnv, args: VvmInstallArgs) ->
     // Source comes from running provenance, a bare dev cwd, or the managed mirror.
     let running = running_record(&store)?;
     if args.mirror.is_none()
+        && running
+            .as_ref()
+            .is_some_and(|record| record.origin == model::Origin::Binary)
+        && let model::Selector::Explicit(id) = &selector
+        && id.kind == model::Kind::Tag
+    {
+        return bundle::install_binary_version(
+            ctx,
+            env,
+            &store,
+            id.id.strip_prefix('v').unwrap_or(&id.id),
+            args.force,
+        );
+    }
+    if args.mirror.is_none()
         && matches!(&selector, model::Selector::Latest)
         && running
             .as_ref()
@@ -270,17 +205,20 @@ fn run_install_cmd(ctx: &output::Context, env: &VvmEnv, args: VvmInstallArgs) ->
     {
         return Err(VvmError::BinaryFetchUnavailable.into());
     }
+    let _lock = install::InstallLock::acquire(&store)?;
     let running_tree = running
         .as_ref()
         .filter(|record| record.origin == model::Origin::External)
         .and_then(|record| record.source_path.as_deref())
         .and_then(|path| source::find_source_root(Path::new(path)));
-    let in_tree = running_tree.or_else(|| {
-        running
-            .is_none()
-            .then(|| env.cwd.as_deref().and_then(source::find_source_root))
-            .flatten()
-    });
+    let in_tree = running_tree
+        .or_else(provenance::executable_source_root)
+        .or_else(|| {
+            running
+                .is_none()
+                .then(|| env.cwd.as_deref().and_then(source::find_source_root))
+                .flatten()
+        });
     let prefer_in_tree = matches!(selector, model::Selector::Latest) && args.mirror.is_none();
 
     let (source_dir, resolved, origin, source_path) =
@@ -319,29 +257,13 @@ fn run_install_cmd(ctx: &output::Context, env: &VvmEnv, args: VvmInstallArgs) ->
         origin,
         source_path,
     };
-    install::perform_install(ctx, &store, &source_dir, &req, &builder::CargoBuilder)
-}
-
-/// `self update` — rebuild and activate the latest in-tree version. A thin
-/// shorthand over `self install latest` (PROP-019 §2.2) that fixes the
-/// selector to `latest` and carries only the build knobs.
-fn run_update_cmd(ctx: &output::Context, env: &VvmEnv, args: VvmUpdateArgs) -> Result<()> {
-    run_install_cmd(
-        ctx,
-        env,
-        VvmInstallArgs {
-            selector: "latest".to_string(),
-            kind: ForcedKind {
-                tag: false,
-                branch: false,
-                commit: false,
-            },
-            profile: args.profile,
-            release: args.release,
-            mirror: None,
-            force: args.force,
-        },
-    )
+    let outcome = install::perform_install(ctx, &store, &source_dir, &req, &builder::CargoBuilder)?;
+    debug_assert_eq!(
+        outcome.home,
+        store.instance_dir(&outcome.record.version_id(), outcome.record.instance)
+    );
+    let _ = outcome.reused;
+    activate_record(ctx, env, &store, &outcome.record, "self:install")
 }
 
 fn resolve_profile(args: &VvmInstallArgs) -> Result<model::Profile, model::ModelError> {
@@ -368,31 +290,47 @@ fn forced_kind(k: &ForcedKind) -> Option<model::Kind> {
 
 fn run_use_cmd(ctx: &output::Context, env: &VvmEnv, args: VvmUseArgs) -> Result<()> {
     let store = env.store()?;
-    let state = store.load_state()?;
     let selector = model::Selector::parse(&args.selector, forced_kind(&args.kind))?;
-    let rec = resolve_installed(&state, &selector, &args.selector)?;
-    let home = store.instance_dir(&rec.version_id(), rec.instance);
-    let shell = env::Shell::detect(env.shell.as_deref());
 
     if args.eval {
+        let state = store.load_state()?;
+        let rec = resolve_installed(&state, &selector, &args.selector)?;
+        ensure_activatable(&store, &rec)?;
+        let home = store.instance_dir(&rec.version_id(), rec.instance);
+        let shell = env::Shell::detect(env.shell.as_deref());
         // Print only the line to eval in the current shell; persist nothing.
         println!("{}", shell.export_line(&home));
         return Ok(());
     }
 
+    let _lock = install::InstallLock::acquire(&store)?;
+    let state = store.load_state()?;
+    let rec = resolve_installed(&state, &selector, &args.selector)?;
+    ensure_activatable(&store, &rec)?;
     activate_record(ctx, env, &store, &rec, "self:use")
 }
 
 fn run_rollback_cmd(ctx: &output::Context, env: &VvmEnv) -> Result<()> {
     let store = env.store()?;
+    let _lock = install::InstallLock::acquire(&store)?;
     let record = store.previous()?.ok_or(VvmError::NoRollback)?;
-    if !store
-        .binary_path(&record.version_id(), record.instance)
-        .is_file()
-    {
-        return Err(VvmError::NoRollback.into());
-    }
+    ensure_activatable(&store, &record).map_err(|_| VvmError::NoRollback)?;
     activate_record(ctx, env, &store, &record, "self:rollback")
+}
+
+fn ensure_activatable(store: &VersionStore, record: &InstallRecord) -> Result<(), VvmError> {
+    let intact = if record.origin == model::Origin::Binary && record.source_path.is_some() {
+        bundle::installed_bundle_intact(store, record)
+    } else {
+        placer::installed_files_match(store, record)
+    };
+    if intact {
+        Ok(())
+    } else {
+        Err(VvmError::CorruptInstance {
+            selector: record.selector().to_string(),
+        })
+    }
 }
 
 fn activate_record(
@@ -405,14 +343,9 @@ fn activate_record(
     let id = record.version_id();
     let home = store.instance_dir(&id, record.instance);
     let shell = env::Shell::detect(env.shell.as_deref());
-
-    // Flip the live pointer — the switch is instant, no console reload.
-    store.write_current(&home)?;
-    // Keep shims present and the advisory env current for external tools.
-    env::write_shims(&store.shim_dir())?;
     let persister = make_persister(env, shell)?;
-    persister.set_vibevm_home(&home)?;
-    persister.ensure_on_path(&store.shim_dir())?;
+    let path_ready = path_has_dir(env.path_var.as_deref(), &store.shim_dir());
+    let activated = env::activate_instance(store, &home, persister.as_ref())?;
 
     if ctx.is_json() {
         return ctx.emit_json(&serde_json::json!({
@@ -422,14 +355,26 @@ fn activate_record(
             "selector": record.selector().to_string(),
             "instance": record.instance,
             "home": home.display().to_string(),
+            "path_on_current_process": path_ready,
+            "durable_path_changed": activated.path == env::Persisted::Changed,
+            "advisory_home_warning": activated.advisory_home_warning,
         }));
     }
     ctx.summary(&format!("active → {}", record.selector()));
     ctx.summary("  switched live; the next `vibe` in this shell uses it");
-    ctx.summary(&format!(
-        "  external tools: {}",
-        persister.activation_hint()
-    ));
+    if path_ready {
+        ctx.summary("  PATH is ready in this process");
+    } else {
+        ctx.summary(&format!(
+            "  external tools: {}",
+            persister.activation_hint()
+        ));
+    }
+    if let Some(warning) = activated.advisory_home_warning {
+        ctx.summary(&format!(
+            "  warning: live pointer switched; advisory VIBEVM_HOME update failed: {warning}"
+        ));
+    }
     Ok(())
 }
 
@@ -444,10 +389,12 @@ fn run_env_cmd(env: &VvmEnv, args: VvmEnvArgs) -> Result<()> {
             let state = store.load_state()?;
             let selector = model::Selector::parse(raw, forced_kind(&args.kind))?;
             let rec = resolve_installed(&state, &selector, raw)?;
+            ensure_activatable(&store, &rec)?;
             store.instance_dir(&rec.version_id(), rec.instance)
         }
         None => {
             let rec = store.active()?.ok_or(VvmError::NoActiveVersion)?;
+            ensure_activatable(&store, &rec)?;
             store.instance_dir(&rec.version_id(), rec.instance)
         }
     };

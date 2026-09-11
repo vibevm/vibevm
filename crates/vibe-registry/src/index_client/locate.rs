@@ -228,7 +228,7 @@ mod tests {
     #[test]
     #[specmark::verifies(
         "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#form-factor",
-        r = 1
+        r = 2
     )]
     fn ladder_env_beats_key_and_default() {
         let reg = ladder_section(
@@ -249,7 +249,7 @@ mod tests {
     #[test]
     #[specmark::verifies(
         "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#form-factor",
-        r = 1
+        r = 2
     )]
     fn ladder_key_beats_default() {
         let reg = ladder_section(
@@ -270,7 +270,7 @@ mod tests {
     #[test]
     #[specmark::verifies(
         "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#form-factor",
-        r = 1
+        r = 2
     )]
     fn ladder_github_org_defaults_to_raw_index_at_registry_ref() {
         let reg = ladder_section("r", "https://github.com/vibespecs", None);

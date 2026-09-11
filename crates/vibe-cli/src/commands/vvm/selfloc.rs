@@ -24,10 +24,35 @@ pub fn derive_self(exe: Option<&Path>) -> Option<SelfLocation> {
     // the shims cannot exec one once it lands in `current`, so strip it and
     // keep every derived path plain (PROP-019 §2.5).
     let exe = strip_verbatim(exe?.canonicalize().ok()?);
-    let instance = exe.parent()?;
-    let id_dir = instance.parent()?;
-    let kind_dir = id_dir.parent()?;
-    let versions = kind_dir.parent()?;
+    let binary_dir = exe.parent()?;
+    let instance = if binary_dir.file_name().is_some_and(|name| name == "bin") {
+        binary_dir.parent()?
+    } else {
+        binary_dir
+    };
+    instance.file_name()?.to_str()?.parse::<u64>().ok()?;
+    let versions = instance.ancestors().skip(2).find(|ancestor| {
+        ancestor.file_name().is_some_and(|name| name == "versions")
+            && ancestor
+                .parent()
+                .and_then(Path::file_name)
+                .is_some_and(|name| name == "vibevm")
+            && ancestor
+                .parent()
+                .and_then(Path::parent)
+                .and_then(Path::file_name)
+                .is_some_and(|name| name == "opt")
+    })?;
+    let relative = instance.strip_prefix(versions).ok()?;
+    let components = relative.components().collect::<Vec<_>>();
+    if components.len() < 3
+        || !matches!(
+            components.first()?.as_os_str().to_str()?,
+            "branch" | "tag" | "commit"
+        )
+    {
+        return None;
+    }
     let vibevm = versions.parent()?;
     let root = vibevm.parent()?;
     let shaped = versions.file_name().is_some_and(|n| n == "versions")
@@ -65,7 +90,7 @@ mod tests {
     use specmark::verifies;
 
     #[test]
-    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#activation", r = 1)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#activation", r = 2)]
     fn derive_self_parses_a_managed_layout() {
         let tmp = tempfile::tempdir().unwrap();
         let inst = tmp
@@ -95,10 +120,32 @@ mod tests {
         let bare_exe = bare.join("vibe");
         std::fs::write(&bare_exe, b"x").unwrap();
         assert!(derive_self(Some(&bare_exe)).is_none());
+
+        // Modern binary bundles keep both executables below instance/bin.
+        let modern_bin = inst.join("bin");
+        std::fs::create_dir_all(&modern_bin).unwrap();
+        let modern_exe = modern_bin.join("vibe");
+        std::fs::write(&modern_exe, b"x").unwrap();
+        let modern = derive_self(Some(&modern_exe)).unwrap();
+        assert!(same_location(&modern.root, tmp.path().join("opt")));
+        assert!(same_location(&modern.home, &inst));
+
+        // Slash-bearing refs occupy multiple path components before the
+        // numeric terminal instance and remain self-locatable.
+        let slash_instance = tmp
+            .path()
+            .join("opt/vibevm/versions/branch/feature/versions/topic/7");
+        let slash_bin = slash_instance.join("bin");
+        std::fs::create_dir_all(&slash_bin).unwrap();
+        let slash_exe = slash_bin.join("vibe");
+        std::fs::write(&slash_exe, b"x").unwrap();
+        let slash = derive_self(Some(&slash_exe)).unwrap();
+        assert!(same_location(&slash.root, tmp.path().join("opt")));
+        assert!(same_location(&slash.home, slash_instance));
     }
 
     #[test]
-    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#activation", r = 1)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#activation", r = 2)]
     fn strip_verbatim_drops_the_windows_prefix() {
         assert_eq!(
             strip_verbatim(PathBuf::from(r"\\?\C:\Users\x\opt")),

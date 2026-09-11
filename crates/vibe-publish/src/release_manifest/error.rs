@@ -80,6 +80,12 @@ pub enum ReleaseManifestError {
     )]
     EmptyArtifact { field: String },
     #[error(
+        "{field} declares {size} bytes, exceeding the independent {max}-byte distribution limit \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-019#instances; \
+         fix: reject the artifact before download or buffering and publish a bounded distribution)"
+    )]
+    ArtifactTooLarge { field: String, size: u64, max: u64 },
+    #[error(
         "{field} has invalid digest `{digest}`; expected `sha256:<64 lowercase hex digits>` \
          (violates spec://org.vibevm.core/vibevm/common/PROP-019#instances; \
          fix: recompute the SHA-256 digest from the exact artifact bytes)"
@@ -130,4 +136,16 @@ pub enum ReleaseManifestError {
          fix: use the platform bundle's plain release-asset file name)"
     )]
     AssetName,
+    #[error(
+        "platform `{target}` reuses release asset name `{name}` for its bundle and bootstrap \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-019#instances; \
+         fix: publish the full ZIP and raw bootstrap executable under distinct names)"
+    )]
+    AssetNameCollision { target: String, name: String },
+    #[error(
+        "platform `{target}` bootstrap does not match the embedded `vibe` component: {field} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-019#instances; \
+         fix: publish the exact same built vibe executable both inside the bundle and as the raw bootstrap asset)"
+    )]
+    BootstrapMismatch { target: String, field: &'static str },
 }

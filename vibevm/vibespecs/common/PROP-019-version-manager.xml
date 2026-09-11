@@ -13,9 +13,12 @@ distribution locks its files (the `.exe`, and any future DLLs). v2 keeps the
 v1 command surface but reworks the internals: a live `current` pointer
 file + `current_exe()` ground truth (env demoted to advisory), the *whole
 distribution directory* as the immutable unit of install/switch, content-
-cheap diff-copy between instances, sources held *by reference* (never
-copied), and a new `vibe vars` reconciliation command. §9 records every
-decision and the questions explored to reach them.</status-line></p>
+cheap diff-copy between instances, and a new `vibe vars` reconciliation
+command. **v3 landed 2026-09-11:** source builds still hold developer/managed
+checkouts by reference, while a binary release owns the exact clean source
+snapshot that produced it; `vibe` + essential `vibe-index` ship and activate
+together; mutable remote version labels create immutable local `#N`
+generations. §9 records the resulting decisions.</status-line></p>
   <p><related fact="true" status="spec/done">**Related:** [PROP-018](PROP-018-agentic-standalone-modes.xml) (VVM is a
 second *standalone-mode* citizen after `vibe skill` — pure algorithm, no
 LLM; §2.1), [PROP-016](PROP-016-source-mirrors.xml) (the source mirrors VVM
@@ -37,18 +40,20 @@ the repo's `rust-toolchain.toml` (the pin VVM honours when building).</related><
       <facts ordered="false">
         <force-no-reload fact="true" status="spec/done">the owner iterates fast and must not have to **reload the console** after
   each `self install`/`use`;</force-no-reload>
-        <force-multi-file fact="true" status="spec/done">and a distribution is **more than one file** (today a `vibe.exe`, tomorrow
-  DLLs and bundled assets), all of which lock while running.</force-multi-file>
+        <force-multi-file fact="true" status="impl/done">and a distribution is **more than one file** (`vibe`, `vibe-index`, exact
+  source, manifest and future assets), any executable member of which may lock
+  while running.</force-multi-file>
       </facts>
     </problem>
     <what title="1.2 What VVM is — a self-distribution manager">
       <facts ordered="false">
         <VVM-COMMAND-GROUP fact="true" status="spec/done">VVM is a command group, `vibe self`, described as
   **"VibeVM Version Manager / VVM"**.</VVM-COMMAND-GROUP>
-        <VVM-CAPABILITIES fact="true" status="spec/done">It builds a selected version of vibevm from git, installs the resulting
-  *distribution* under a managed prefix, exposes it on `PATH` through a stable
-  shim, and lets the user switch the active version (with no console reload),
-  list, garbage-collect, and remove.</VVM-CAPABILITIES>
+        <VVM-CAPABILITIES fact="true" status="impl/done">It either builds a selected version from git or installs a verified native
+  release, places the whole `vibe` + `vibe-index` distribution under a managed
+  prefix, exposes both commands through stable shims, tracks the exact source
+  tree, and lets the user update, switch, inspect, roll back, garbage-collect,
+  and remove immutable local instances.</VVM-CAPABILITIES>
         <VVM-PLATFORMS fact="true" status="spec/done">It runs on Windows, macOS, and Linux, across the shells those platforms use.</VVM-PLATFORMS>
       </facts>
     </what>
@@ -76,40 +81,53 @@ the repo's `rust-toolchain.toml` (the pin VVM honours when building).</related><
       </facts>
     </standalone>
     <surface title="2.2 Command surface — `vibe self` (+ `vibe vars`)">
-      <p><req-surface fact="true" status="spec/done">`req r2`</req-surface></p>
+      <p><req-surface fact="true" status="spec/done">`req r3`</req-surface></p>
       <p><SELF-NAMING fact="true" status="spec/done">`vibe self` — named after rustup's `self` (a tool that manages its own
 versions), and unambiguous where `man` collided with the Unix manual page:</SELF-NAMING></p>
       <facts ordered="false">
-        <CMD-INSTALL fact="true" status="spec/done">`self install &lt;selector&gt;` — build and install a version (§2.7). Flags:
-  `--release` / `--profile &lt;debug|release&gt;` (default **debug**, a single
-  source-of-truth constant, §7); `--mirror &lt;gitverse|github&gt;` (clone path
-  only, §2.7); `--force` (fresh instance, bypass the diff-copy dedup-skip);
-  `-y`/`--yes`.</CMD-INSTALL>
-        <CMD-UPDATE fact="true" status="spec/done">`self update` — rebuild and activate the latest in-tree version; a
-  shorthand for `self install latest` (§2.7), carrying `--release` /
-  `--profile` / `--force`.</CMD-UPDATE>
-        <CMD-IMPORT fact="true" status="impl/done">`self import &lt;PATH&gt; --tag &lt;X.Y.Z&gt;` — put a READY-BUILT local `vibe`
+        <CMD-INSTALL fact="true" status="impl/done">`self install &lt;selector&gt;` — from a source execution, build the selected
+  ref; from a managed binary execution, an explicit `X.Y.Z` installs that
+  native release. Flags: `--release` / `--profile &lt;debug|release&gt;` (source
+  lane); `--mirror &lt;gitverse|github&gt;` (force the source lane); `--force`
+  (always allocate a fresh immutable `#N`).</CMD-INSTALL>
+        <CMD-UPDATE fact="true" status="impl/done">`self update` follows the running origin. A source/worktree execution rebuilds
+  its exact source root at `latest`; a binary execution refreshes its **current
+  logical SemVer** from the mutable release and never jumps versions.
+  `--force` redownloads/reinstalls even when the bundle digest is unchanged.</CMD-UPDATE>
+        <CMD-IMPORT fact="true" status="impl/done">`self import &lt;PATH&gt; --tag &lt;X.Y.Z&gt;` — put a legacy READY-BUILT local `vibe`
   executable into the inventory as an immutable `tag:` instance, reusing the
   store/placer/lock/state machinery (built 2026-08-20 for the 1.0.0
   distributive; the install.ps1 of the zip calls it instead of duplicating
   `state.toml`). Local by construction: no network, no signature machinery —
   the file is streamed through SHA-256 once, and that digest drives
-  idempotence: same tag + same digest reuses the instance; same tag +
-  DIFFERENT digest is refused (an immutable release is never silently
-  replaced) unless `--replace-candidate` deliberately adds a new inspection
-  instance beside the preserved old one. Optional `--commit`, `--profile`
-  (default `release`); inactive by default — `--use` flips `current` and
-  writes the shims.</CMD-IMPORT>
-        <CMD-USE fact="true" status="spec/done">`self use &lt;selector&gt;` — make a version active by repointing the live
+  idempotence: same tag + same digest reuses the instance; same mutable tag +
+  different digest creates a new local `#N` beside the preserved old one.
+  `--replace-candidate` remains compatibility spelling. Optional `--commit`, `--profile`
+  (default `release`); inactive by default — `--use` runs the same complete
+  shim/PATH/pointer/advisory-HOME activation as every other lane.</CMD-IMPORT>
+        <CMD-BOOTSTRAP fact="true" status="impl/done">`self bootstrap --manifest DISTRIBUTIONS.json --version X.Y.Z
+  --release-base URL` is the narrow machine-facing cold-start verb. It verifies
+  the temporary bootstrap against the aggregate, downloads one bounded native
+  bundle anonymously, verifies/extracts it, and activates it; `--force` makes
+  another generation.</CMD-BOOTSTRAP>
+        <CMD-USE fact="true" status="impl/done">`self use &lt;selector&gt;` — make a version active by repointing the live
   `current` file — **no console reload** (§2.5). `--eval` prints the shell
-  line for the current shell instead of touching the durable environment.</CMD-USE>
-        <CMD-LS fact="true" status="spec/done">`self ls` (alias `list`) — list installed versions, marking the active one.</CMD-LS>
-        <CMD-CURRENT-WHICH fact="true" status="spec/done">`self current` / `self which` — the active selector / the active binary path.</CMD-CURRENT-WHICH>
+  line for an integrity-checked shell-local override instead of touching the
+  durable environment.</CMD-USE>
+        <CMD-ROLLBACK fact="true" status="impl/done">`self rollback` atomically swaps to the immediate `previous` instance;
+  repeating it toggles the two pointers without deleting either generation.</CMD-ROLLBACK>
+        <CMD-LS fact="true" status="impl/done">`self ls` (alias `list`) prints copyable `&lt;kind&gt;:&lt;id&gt;#N` selectors and
+  provenance. `*` marks the active pointer; `&gt;` independently marks the
+  actually running executable, including a direct developer-worktree binary.</CMD-LS>
+        <CMD-CURRENT-WHICH fact="true" status="impl/done">`self current` shows active and running identities separately. `self which
+  [vibe|vibe-index|source]` prints that member's absolute path; `self source`
+  prints exactly the running/active source root for shell composition.</CMD-CURRENT-WHICH>
         <CMD-REMOVE fact="true" status="spec/done">`self remove &lt;selector&gt;` (aliases `rm`, `del`, `uninstall`) — safe by
   default (§2.9).</CMD-REMOVE>
         <CMD-GC fact="true" status="spec/done">`self gc` — reclaim disk (§2.10).</CMD-GC>
         <CMD-DOCTOR fact="true" status="spec/done">`self doctor` (+ `--fix`) — verify the install and environment (§2.11).</CMD-DOCTOR>
-        <CMD-ENV fact="true" status="spec/done">`self env` — print activation lines for a shell.</CMD-ENV>
+        <CMD-ENV fact="true" status="impl/done">`self env` — print safely quoted `VIBEVM_SHELL_HOME` + advisory
+  `VIBEVM_HOME` activation for a shell.</CMD-ENV>
         <CMD-RELOCATE fact="true" status="spec/done">`self relocate &lt;path&gt;` — repoint source provenance to a moved checkout and
   clear the instances built from the abandoned tree (§2.17). Flags:
   `--from &lt;old-path&gt;` (override the inferred old location); `-y`/`--yes`
@@ -120,25 +138,29 @@ the values vibevm *actually* uses (derived from `current_exe`) versus what
 the environment says — so scripts never break on a stale `$VIBEVM_HOME`.</CMD-VARS></p>
     </surface>
     <selectors title="2.3 Version selectors and resolution">
-      <p><req-selectors fact="true" status="spec/done">`req r1`</req-selectors></p>
+      <p><req-selectors fact="true" status="spec/done">`req r2`</req-selectors></p>
       <p><SELECTOR-DEF fact="true" status="spec/done">A *selector* names what to install or use; resolution is deterministic:</SELECTOR-DEF></p>
       <facts ordered="false">
         <SEL-LATEST fact="true" status="spec/done">`latest` → tip of branch `main`.</SEL-LATEST>
         <SEL-STABLE fact="true" status="spec/done">`stable` → highest semantic-version git tag (the newest release).</SEL-STABLE>
-        <SEL-SEMVER fact="true" status="spec/done">`X.Y.Z` → a tag; tries `X.Y.Z` then `vX.Y.Z`.</SEL-SEMVER>
+        <SEL-SEMVER fact="true" status="impl/done">`X.Y.Z` → a tag; tries `X.Y.Z` then `vX.Y.Z`, always peeling an
+  annotated tag to its exact commit before recording/building.</SEL-SEMVER>
         <SEL-COMMIT fact="true" status="spec/done">a hex commit-ish → a commit.</SEL-COMMIT>
         <SEL-CANONICAL fact="true" status="spec/done">the canonical `&lt;kind&gt;:&lt;id&gt;` form (as `self ls` prints) → that exact id.</SEL-CANONICAL>
+        <SEL-INSTANCE fact="true" status="impl/done">`&lt;kind&gt;:&lt;id&gt;#N` → one exact immutable local generation; the terminal
+  `#N` disambiguates repeated content under the same mutable remote label.</SEL-INSTANCE>
         <SEL-BARE fact="true" status="spec/done">any other bare name → branch, then tag, then commit (hex commits and
   `X.Y.Z` tags are classified before this point).</SEL-BARE>
       </facts>
       <facts ordered="false">
         <SEL-FORCE-FLAGS fact="true" status="spec/done">`--tag` / `--branch` / `--commit` force interpretation, mapping to
   fully-qualified git refs so a name that is both never resolves by accident.</SEL-FORCE-FLAGS>
-        <SEL-DEFAULTS fact="true" status="spec/done">No selector: `install` → `latest`; `use`/`remove` → the current active.</SEL-DEFAULTS>
+        <SEL-DEFAULTS fact="true" status="impl/done">No selector: `install` → `latest`; `remove` opens an interactive picker (or
+  refuses without a TTY); `use` requires an explicit selector.</SEL-DEFAULTS>
       </facts>
     </selectors>
     <layout title="2.4 On-disk layout — instances, the `current` pointer, manifests">
-      <p><req-layout fact="true" status="spec/done">`req r1`</req-layout></p>
+      <p><req-layout fact="true" status="spec/done">`req r2`</req-layout></p>
       <facts ordered="false">
         <INSTANCE-UNIT fact="true" status="spec/done">The **unit of install and switch is a whole distribution directory**
   (an *instance*: the binary plus future DLLs/assets), not a single file
@@ -146,23 +168,24 @@ the environment says — so scripts never break on a stale `$VIBEVM_HOME`.</CMD-
         <CANONICAL-ID fact="true" status="spec/done">A version has a **canonical id** `&lt;kind&gt;:&lt;id&gt;` (`kind ∈ {tag, branch,
   commit}`); each id may have several instances (one per install).</CANONICAL-ID>
       </facts>
-      <fence>$VIBEVM_INSTALL_ROOT/            install base — default: home dir
-                                 (Windows: %USERPROFILE%); tests pin to temp
+      <fence>$VIBEVM_INSTALL_ROOT/            install base — default: ~/.vibe
 └─ opt/
-   ├─ bin/                       ← on PATH; stable shims, content never changes
-   │   ├─ vibe                   POSIX shim (Git Bash / macOS / Linux)
-   │   └─ vibe.cmd               cmd / PowerShell shim
+   ├─ bin/                       ← on PATH; stable shims
+   │   ├─ vibe, vibe-index       POSIX shims
+   │   └─ vibe.cmd, vibe-index.cmd   Windows shims
    └─ vibevm/
        ├─ current                ← live pointer: the active instance dir
+       ├─ previous               ← immediate rollback pointer
        ├─ state.toml             inventory: every instance + its metadata
        ├─ versions/&lt;kind&gt;/&lt;id&gt;/&lt;instance&gt;/   immutable distribution dirs
-       │       vibe[.exe], *.dll/.so, assets…
-       │       vibeterm/   the packaged vibeterm Electron app (runtime + resources/app
-       │                   + node_modules; §2.7) — present only when npm/electron packaged it
-       │       .vvm-manifest.toml   file list (rel,size,mtime,hash?) for diff-copy
+       │       bin/{vibe[.exe],vibe-index[.exe]}
+       │       source/                 binary lane: extracted exact source tree
+       │       vibevm-source.zip       binary lane: retained verification source
+       │       DISTRIBUTION.json       binary lane: component/source identity
+       │       .vvm-manifest.toml      source-build diff-copy inventory
        ├─ build/                 shared cargo --target-dir (gc-able)
-       └─ src/&lt;kind&gt;/&lt;id&gt;/       MANAGED clones only (clone path); never the
-                                 committer's own tree (§2.7)</fence>
+       └─ src/.mirror/           shared managed source clone; external developer
+                                 worktrees stay outside and are referenced</fence>
       <facts ordered="false">
         <ROOT-DEFAULT fact="true" status="impl/done">`$VIBEVM_INSTALL_ROOT` (the install BASE) defaults to `~/.vibe` → root
   `~/.vibe/opt` in normal use (owner ruling 2026-08-20, the release-1.0
@@ -174,22 +197,29 @@ the environment says — so scripts never break on a stale `$VIBEVM_HOME`.</CMD-
         <INSTANCE-COUNTER fact="true" status="spec/done">`&lt;instance&gt;` is a monotonic counter (§9.4) — never a hash of the payload
   (§9.2).</INSTANCE-COUNTER>
         <SHIM-STABLE fact="true" status="spec/done">The shim dir is stable; switching repoints `current`, never the shim.</SHIM-STABLE>
-        <SOURCES-BY-REF fact="true" status="spec/done">Sources are held **by reference** (§2.7, §2.16), never bulk-copied
-  into the root (a checkout's `target/` is tens of GB).</SOURCES-BY-REF>
+        <SOURCES-BY-REF fact="true" status="impl/done">Development/managed checkouts are held **by reference** and their untracked
+  caches are never copied. A binary instance instead owns a clean tracked-file
+  snapshot under its own `source/`, because shipped skills may require the
+  matching vibevm source even on a machine without a checkout (§2.16).</SOURCES-BY-REF>
       </facts>
     </layout>
     <activation title="2.5 Activation — live `current` file + `current_exe` truth">
-      <p><req-activation fact="true" status="spec/done">`req r1`</req-activation></p>
+      <p><req-activation fact="true" status="spec/done">`req r2`</req-activation></p>
       <p><ACTIVATION-LAW fact="true" status="spec/done">**Switching must not reload the console and must not overwrite a running
 file.** (v1's "env is truth" violated the first; see §9.1.) The model has
-three layers:</ACTIVATION-LAW></p>
+four layers:</ACTIVATION-LAW></p>
       <facts ordered="true">
-        <LAYER-CURRENT-EXE fact="true" status="spec/done">**`current_exe()` → the running process's truth.** A managed `vibe` lives
-   at `…/opt/vibevm/versions/&lt;kind&gt;/&lt;id&gt;/&lt;instance&gt;/vibe[.exe]`, so it
+        <LAYER-CURRENT-EXE fact="true" status="impl/done">**`current_exe()` → the running process's truth.** A modern managed `vibe` lives
+   at `…/opt/vibevm/versions/&lt;kind&gt;/&lt;id&gt;/&lt;instance&gt;/bin/vibe[.exe]`
+   (legacy root-level binaries remain readable), so it
    derives its own version id, `VIBEVM_HOME` (= its instance dir), and
    `VIBEVM_INSTALL_ROOT` (walk up to `opt`) from its own path — no env var
    needed. Outside a managed location (dev `cargo run`, a bare copy), it
    falls back to env, then defaults.</LAYER-CURRENT-EXE>
+        <LAYER-SHELL-OVERRIDE fact="true" status="impl/done">**`VIBEVM_SHELL_HOME` → explicit shell-local selection.** `self use --eval`
+   and `self env` emit it together with advisory HOME; stable shims prioritize
+   this non-durable override so evaluation really switches both `vibe` and
+   `vibe-index` even while durable `current` names another instance.</LAYER-SHELL-OVERRIDE>
         <LAYER-CURRENT-FILE fact="true" status="spec/done">**`current` file → the live active instance.** The shim reads
    `$shimdir/../vibevm/current` on **every** launch and execs that instance.
    `self use` rewrites `current` → the **next** `vibe` in the **same shell**
@@ -202,15 +232,16 @@ three layers:</ACTIVATION-LAW></p>
    managed run).</LAYER-ENV-ADVISORY>
       </facts>
       <facts ordered="false">
-        <SHIMS-MINIMAL fact="true" status="spec/done">The shims (`bin/{vibe,vibe.cmd}`) are minimal: resolve `current`, exec; if
-  absent, fall back to `$VIBEVM_HOME`, else print "no active vibevm — run
+        <SHIMS-MINIMAL fact="true" status="impl/done">The four shims (`bin/{vibe,vibe.cmd,vibe-index,vibe-index.cmd}`) are minimal:
+  use explicit shell override, else resolve `current`, then fall back to
+  `$VIBEVM_HOME`; exec the corresponding member or print "no active vibevm — run
   `vibe self use &lt;selector&gt;`".</SHIMS-MINIMAL>
-        <SHIMS-BOTH-FORMS fact="true" status="spec/done">Both POSIX and `.cmd` shims exist (Git Bash
+        <SHIMS-BOTH-FORMS fact="true" status="impl/done">Both POSIX and `.cmd` forms exist for both commands (Git Bash
   won't resolve `.cmd`; cmd/PowerShell won't run an extensionless script).</SHIMS-BOTH-FORMS>
       </facts>
     </activation>
     <path title="2.6 PATH and durable environment management">
-      <p><req-path fact="true" status="spec/done">`req r1`</req-path></p>
+      <p><req-path fact="true" status="spec/done">`req r2`</req-path></p>
       <p><ENV-MGMT-LEAD fact="true" status="spec/done">VVM detects OS and shell and manages durable settings under strict rules:</ENV-MGMT-LEAD></p>
       <facts ordered="false">
         <PATH-SHIM-DIR fact="true" status="spec/done">**The shim dir on `PATH`** (stable; set once).</PATH-SHIM-DIR>
@@ -232,52 +263,74 @@ three layers:</ACTIVATION-LAW></p>
   write; the earlier `[Environment]` API form silently expanded references
   and lost the kind. POSIX: a marked block in the detected shell's rc —
   bash/zsh/fish/`.profile`),</RULE-OS-AWARE>
-        <RULE-CONSENT fact="true" status="spec/done">and **consent + honesty** (mutating edits need a confirm / `-y` /
-  `self doctor --fix`, print the diff, and say the change reaches only new
-  shells).</RULE-CONSENT>
+        <RULE-CONSENT fact="true" status="impl/done">and **consent + honesty** (interactive maintenance uses confirm / `-y` /
+  `self doctor --fix`; executing the native bootstrap one-liner is itself the
+  explicit install consent). Output says whether PATH was already live or only
+  durable for new shells. Activation writes stable PATH first, flips `current`
+  second, and updates advisory `VIBEVM_HOME` last, so a failure cannot point the
+  durable version variable ahead of the live selector.</RULE-CONSENT>
         <RULE-INJECTABLE-SEAM fact="true" status="spec/done">The durable writer is an injectable seam so tests exercise the POSIX rc
   path in a temp file and never mutate the real machine.</RULE-INJECTABLE-SEAM>
       </facts>
     </path>
-    <build title="2.7 The install pipeline — sources by reference, diff-copy to an instance">
-      <p><req-build-pipeline fact="true" status="spec/done">`req r1`</req-build-pipeline></p>
-      <p><PIPELINE-OVERVIEW fact="true" status="spec/done">Installing a version is: locate the source (by reference, never copied),
-build it incrementally, place the distribution into a **new immutable
-instance** by diff-copy, record provenance, flip `current`.</PIPELINE-OVERVIEW></p>
+    <build title="2.7 Install pipelines — source builds and verified native bundles">
+      <p><req-build-pipeline fact="true" status="spec/done">`req r2`</req-build-pipeline></p>
+      <p><PIPELINE-OVERVIEW fact="true" status="impl/done">Both lanes end identically: stage a complete `vibe` + `vibe-index`
+distribution, record a fresh immutable local instance, then flip `current`.
+The source lane builds from a referenced checkout; the binary lane verifies a
+bounded published bundle and installs its owned clean source snapshot.</PIPELINE-OVERVIEW></p>
       <facts ordered="false">
-        <STEP-LOCATE fact="true" status="spec/done">**Locate source (§2.16).** Two origins, never bulk-copied:</STEP-LOCATE>
+        <STEP-LOCATE fact="true" status="impl/done">**Locate source (§2.16).** Source builds have two referenced origins:</STEP-LOCATE>
         <LOC-EXTERNAL fact="true" status="spec/done">*external* — `self install` run inside a committer's own checkout
     (outside the install root): build it **in place**, never touch its git
     state, and record its canonical absolute path as provenance so a later
     `self install &lt;id&gt;` can rebuild from the remembered location (a *linked
     source*).</LOC-EXTERNAL>
-        <LOC-MANAGED fact="true" status="spec/done">*managed* — a clone vibevm owns under `src/&lt;kind&gt;/&lt;id&gt;`: created once,
+        <LOC-MANAGED fact="true" status="impl/done">*managed* — a shared clone vibevm owns under `src/.mirror`: created once,
     then updated **incrementally** with `git fetch`/`checkout` (or
     `pull`; stash first if dirty), never re-cloned, so a full rebuild
     (hours, in a large future) is avoided.</LOC-MANAGED>
         <STEP-RESOLVE fact="true" status="spec/done">**Resolve.** The selector (§2.3) → a concrete commit, recorded.</STEP-RESOLVE>
-        <STEP-BUILD fact="true" status="spec/done">**Build.** `cargo build [--release] -p vibe-cli` into the **shared**
+        <STEP-BUILD fact="true" status="impl/done">**Build.** `cargo build [--release] -p vibe-cli -p vibe-index` into the **shared**
   `build/` target dir (§9.3 — never the source tree's `target/`; load-
   bearing on Windows and keeps the dev tree clean), honouring
   `rust-toolchain.toml`.</STEP-BUILD>
-        <STEP-VIBE-ONLY fact="true" status="spec/done">**Build the `vibe` binary only.** The terminal products (vibeterm,
+        <STEP-VIBE-ONLY fact="true" status="impl/done">**Build the two essential binaries only.** `vibe-index` is part of VibeVM's
+  own distribution because on-premises registry owners require it. The
+  terminal products (vibeterm,
   vibeframe) and the GUI launchers (vibe-launcher) used to be packaged
   into the instance alongside `vibe`; they have moved to a separate
   products repo (`vibevm-term`) and now publish themselves to `PATH`
   through their own version-manager (`&lt;product&gt; self install`). The
-  install pipeline here builds `vibe` only — `vibe term` / `vibe frame`
+  install pipeline here builds `vibe` + `vibe-index` — `vibe term` / `vibe frame`
   resolve the terminal apps through `$VIBEVM_&lt;APP&gt;` → the active
   instance's packaged `&lt;app&gt;/` (back-compat) → `PATH`, with an in-place
   fallback for `vibe tree` when no terminal app is available
   (`spec://term-common/PROP-vvm#root` is the products-repo twin).</STEP-VIBE-ONLY>
-        <STEP-PLACE fact="true" status="spec/done">**Place by diff-copy (§2.15).** The built distribution is placed into a
+        <STEP-PLACE fact="true" status="impl/done">**Place a source build by diff-copy (§2.15).** Both binaries are placed under
+  `instance/bin/`; unchanged files may be hardlinked from the prior source
+  instance. The distribution is placed into a
   fresh instance dir, copying only files that changed versus the previous
   instance and hardlinking the rest — so a 2 GB distribution where only
   `vibe.exe` changed costs one file copy, never a full re-copy or a payload
   hash (§9.2). If nothing changed, no new instance is made.</STEP-PLACE>
-        <STEP-RECORD-FLIP fact="true" status="spec/done">**Record + flip.** `state.toml` gets the instance (id, instance, commit,
-  toolchain, profile, time, origin, source_path); `current` is flipped
-  atomically to the new instance.</STEP-RECORD-FLIP>
+        <STEP-BINARY-BUNDLE fact="true" status="impl/done">**Install a binary bundle.** Select one of the four fixed targets from
+  `DISTRIBUTIONS.json`; enforce independent size limits; verify outer bundle,
+  embedded manifest, both binaries, and `vibevm-source.zip` by SHA-256; reject
+  traversal, collisions, symlinks, special files, extras, and decompression
+  overflow; cap source files/materialized nodes/depth/path at
+  200,000/400,000/256/4096; retain the source ZIP and extract it under
+  `source/`. The inventory retains the authenticated manifest digest that
+  anchors later `doctor`/reuse checks.</STEP-BINARY-BUNDLE>
+        <STEP-MUTABLE-IMMUTABLE fact="true" status="impl/done">**Remote labels are mutable; local instances are not.** A republished
+  `v1.0.0` may have new bytes, but it becomes `tag:1.0.0#N+1`. A non-forced
+  identical bundle reuses an instance only after re-verifying its manifest,
+  binaries, retained source ZIP, and extracted source file set/content.</STEP-MUTABLE-IMMUTABLE>
+        <STEP-RECORD-FLIP fact="true" status="impl/done">**Record + activate.** `state.toml` gets the instance (id, instance,
+  commit, toolchain, profile, time, origin, source_path). Every activating
+  lane then uses one failure-ordered transaction: publish the stable shims,
+  persist their generic PATH, journal/flip `current` + `previous`, and update
+  advisory `VIBEVM_HOME` last.</STEP-RECORD-FLIP>
       </facts>
       <p><NO-OVERWRITE-EVER fact="true" status="spec/done">Because every install writes a **new** instance dir and switching is a
 pointer flip, **no in-use file is ever overwritten** — the running process
@@ -285,12 +338,13 @@ keeps its instance dir intact; no lock, no reload, for the `.exe` or any
 DLL, on any OS (§9.3).</NO-OVERWRITE-EVER></p>
     </build>
     <tools title="2.8 Required toolchain — a single source of truth">
-      <p><req-tools fact="true" status="spec/done">`req r1`</req-tools></p>
+      <p><req-tools fact="true" status="spec/done">`req r2`</req-tools></p>
       <facts ordered="false">
-        <TOOLS-LIST fact="true" status="spec/done">A from-source build needs **git**, a **Rust toolchain** (rustc + cargo,
+        <TOOLS-LIST fact="true" status="impl/done">A from-source build needs **git**, a **Rust toolchain** (rustc + cargo,
   stable ≥ 1.93, edition 2024 — via rustup so the pin resolves), and a
   **system linker / C toolchain** (Windows: VS Build Tools; macOS: Xcode CLT;
-  Linux: `build-essential`).</TOOLS-LIST>
+  Linux: `build-essential`). A native binary install needs none of those;
+  its bootstrap uses only the platform download/TLS facilities.</TOOLS-LIST>
         <NO-OPENSSL fact="true" status="spec/done">OpenSSL is deliberately not required (rustls).</NO-OPENSSL>
         <TOOLS-TABLE-SSOT fact="true" status="spec/done">The list lives once as a `REQUIRED_TOOLS` table — `(name, min_version,
   check_command, help_url)` — read by `self doctor` (§2.11) and asserted by a
@@ -299,29 +353,33 @@ DLL, on any OS (§9.3).</NO-OVERWRITE-EVER></p>
       </facts>
     </tools>
     <remove title="2.9 Removal — safe by default">
-      <p><req-remove fact="true" status="spec/done">`req r1`</req-remove></p>
+      <p><req-remove fact="true" status="spec/done">`req r2`</req-remove></p>
       <p><REMOVE-SAFE fact="true" status="spec/done">`self remove` never silently wipes everything:</REMOVE-SAFE></p>
       <facts ordered="false">
-        <RM-SELECTOR fact="true" status="spec/done">`self remove &lt;selector&gt;` — remove that version's instances (and, with
-  `--src`, the managed source). `--bin`/`--src`/`--both` (default both).</RM-SELECTOR>
+        <RM-SELECTOR fact="true" status="impl/done">`self remove &lt;selector&gt;` — remove that version or exact `#N`.
+  For binary bundles, `--bin` removes only `bin/`, `--src` only the owned
+  `source/` + retained source ZIP, and the default removes the whole instance.
+  A scoped removal reports the deliberately partial, non-activatable result;
+  external worktrees are never deleted and shared managed-source effects are
+  reported separately.</RM-SELECTOR>
         <RM-PICKER fact="true" status="spec/done">`self remove` with no selector — an **interactive picker**; a non-
   interactive context errors with a hint, never a wipe.</RM-PICKER>
         <RM-ALL fact="true" status="spec/done">`self remove --all` — every version, behind the flag **and** a re-confirm.</RM-ALL>
-        <RM-PROTECTED fact="true" status="spec/done">The **active** version and the **running** instance are protected:
-  removing the active needs `--force`; a running instance's files are never
-  deleted out from under it (best-effort, skipped if locked).</RM-PROTECTED>
+        <RM-PROTECTED fact="true" status="impl/done">The **active** version and the **running** instance are protected:
+  removing an active but non-running instance needs `--force`; the actually
+  running instance is never removable, even with that flag.</RM-PROTECTED>
       </facts>
       <p><EXTERNAL-NEVER-REMOVED fact="true" status="spec/done">External sources (committer trees) are **never** removed — VVM only forgets
-their provenance record; managed `src/&lt;kind&gt;/&lt;id&gt;` clones are VVM's to drop.</EXTERNAL-NEVER-REMOVED></p>
+their provenance record; the managed `src/.mirror` clone is VVM's to drop.</EXTERNAL-NEVER-REMOVED></p>
     </remove>
     <gc title="2.10 Garbage collection — `self gc`">
-      <p><req-gc fact="true" status="spec/done">`req r1`</req-gc></p>
+      <p><req-gc fact="true" status="spec/done">`req r2`</req-gc></p>
       <p><GC-LEAD fact="true" status="spec/done">`self gc` reclaims disk:</GC-LEAD></p>
       <facts ordered="false">
         <GC-BUILD fact="true" status="spec/done">`--build` — clean the shared Rust build cache (`build/`); forces a rebuild
   next install but touches no installed instance.</GC-BUILD>
-        <GC-PRUNE-OTHERS fact="true" status="spec/done">`--prune-others` — remove every instance except the active (and managed
-  sources), behind a re-confirm.</GC-PRUNE-OTHERS>
+        <GC-PRUNE-OTHERS fact="true" status="impl/done">`--prune-others` — remove every instance except the active and its immediate
+  rollback target (plus referenced source), behind a re-confirm.</GC-PRUNE-OTHERS>
       </facts>
       <facts ordered="false">
         <GC-BEST-EFFORT fact="true" status="spec/done">Instances are pruned **best-effort**: a dir still locked by a running
@@ -329,45 +387,58 @@ their provenance record; managed `src/&lt;kind&gt;/&lt;id&gt;` clones are VVM's 
   succeeds and the inode lives until the process exits).</GC-BEST-EFFORT>
         <GC-REFCOUNT-SAFE fact="true" status="spec/done">Hardlinked files are refcount-safe — removing one instance never corrupts
   another that shares inodes (§2.15).</GC-REFCOUNT-SAFE>
-        <GC-AUTO-PRUNE-BINARY fact="true" status="spec/done">**Auto-prune on install** is enabled **only for binary artifacts** (§9.5);
-  source builds keep their instances until a manual `gc` (cheap once
-  hardlink-sharing lands).</GC-AUTO-PRUNE-BINARY>
+        <GC-AUTO-PRUNE-BINARY fact="true" status="impl/done">**No install silently erases rollback history.** Binary and source
+  generations remain until explicit `remove` or `gc --prune-others`; the
+  immediate `previous` target survives pruning.</GC-AUTO-PRUNE-BINARY>
         <GC-SCOPE fact="true" status="spec/done">`self gc` operates **only** inside the install root and **never** touches
   the shared `~/.cargo` caches.</GC-SCOPE>
       </facts>
     </gc>
     <introspection title="2.11 Introspection — `doctor`, `ls`, `current`, `which`, `env`">
-      <p><req-introspection fact="true" status="spec/done">`req r1`</req-introspection></p>
+      <p><req-introspection fact="true" status="spec/done">`req r2`</req-introspection></p>
       <facts ordered="false">
-        <DOCTOR-VERIFIES fact="true" status="spec/done">`self doctor` verifies end to end: the shim dir is on `PATH`; the
-  `REQUIRED_TOOLS` are present with adequate versions; `current` resolves to
-  an installed instance whose binary exists. It prints a panel with
-  remediation; `--fix` performs the PATH / env edits (§2.6) with consent.</DOCTOR-VERIFIES>
-        <LS-READS-CURRENT fact="true" status="spec/done">`self ls` / `current` / `which` read the **`current` file** for the active
-  selection (not the env).</LS-READS-CURRENT>
+        <DOCTOR-VERIFIES fact="true" status="impl/done">`self doctor` verifies end to end: both generated stable shims have their
+  expected content/mode and their directory is on `PATH`; every source-built
+  active/running instance still matches its placement manifest; source origins
+  have their required build tools; and a modern binary origin does **not**
+  require Rust/git but must pass the authenticated manifest-rooted full
+  bundle/source integrity check. Source paths must still resolve to an actual
+  vibevm root. A legacy
+  single-binary import is labeled partial with an update recipe but its payload
+  is still verified. It exits non-zero while problems remain; `--fix` repairs
+  shims/PATH with consent and recomputes the result.</DOCTOR-VERIFIES>
+        <LS-READS-CURRENT fact="true" status="impl/done">`self ls` / `current` / `which` read the **`current` file** for the active
+  selection and `current_exe()` for the independently running selection. A
+  direct worktree executable wins over cwd and over an unrelated active binary.</LS-READS-CURRENT>
         <ENV-PRINTS fact="true" status="spec/done">`self env` prints shell-specific activation lines.</ENV-PRINTS>
       </facts>
     </introspection>
     <bootstrap title="2.12 Cold-start (bootstrap)">
-      <p><req-bootstrap fact="true" status="spec/done">`req r1`</req-bootstrap></p>
+      <p><req-bootstrap fact="true" status="spec/done">`req r2`</req-bootstrap></p>
       <facts ordered="false">
-        <COLD-START-PATH fact="true" status="spec/done">VVM installs `vibe`, so the first binary cannot come from `vibe self`. The
-  cold-start path is `git clone &lt;mirror&gt; &amp;&amp; cd vibevm &amp;&amp; cargo run -p vibe-cli
-  -- self install` — one `cargo run` from a fresh clone bootstraps the managed
-  install (as nvm is installed by a script, not by node).</COLD-START-PATH>
-        <BOOTSTRAP-SCRIPT-LATER fact="true" status="spec/done">A generated one-line bootstrap script is far-backlog (§6).</BOOTSTRAP-SCRIPT-LATER>
+        <COLD-START-PATH fact="true" status="impl/done">Stable endpoints provide one-line native cold start: Bash for Linux/macOS/WSL
+  and PowerShell for Windows. Each bounded script downloads
+  `DISTRIBUTIONS.json`, verifies a small raw `vibe` bootstrap by size/SHA-256,
+  then that Rust binary verifies and atomically installs the full bundle.</COLD-START-PATH>
+        <BOOTSTRAP-SCRIPT-LATER fact="true" status="impl/done">The scripts are shipped release assets `install.sh` and `install.ps1` and
+  are exposed by stable `https://vibevm.org/install.*` redirects. Homebrew,
+  WinGet, and CMD installers remain outside this slice.</BOOTSTRAP-SCRIPT-LATER>
       </facts>
     </bootstrap>
     <security title="2.13 Security and trust">
-      <p><req-security fact="true" status="spec/done">`req r1`</req-security></p>
+      <p><req-security fact="true" status="spec/done">`req r2`</req-security></p>
       <p><ACE-ACCEPTED fact="true" status="spec/done">Building an arbitrary ref is arbitrary code execution — inherent to a build
 tool the user invokes deliberately, and accepted.</ACE-ACCEPTED></p>
       <p><sec-constraints-lead fact="true" status="spec/done">Constraints:</sec-constraints-lead></p>
       <facts ordered="false">
         <SEC-TLS fact="true" status="spec/done">host-key (SSH) / TLS verification never disabled on clone;</SEC-TLS>
-        <SEC-TOKEN fact="true" status="spec/done">the publish token is **never** read by VVM nor shown by `vibe vars`;</SEC-TOKEN>
+        <SEC-TOKEN fact="true" status="impl/done">binary install/update reads public releases anonymously; the publish token is
+  **never** read by VVM nor shown by `vibe vars`;</SEC-TOKEN>
         <SEC-SCOPE fact="true" status="spec/done">VVM operates only inside the install root and the declared, consented
   environment edits;</SEC-SCOPE>
+        <SEC-STORE-PATHS fact="true" status="impl/done">every store mutation is lexically contained and rejects symlink/reparse or
+  special-file ancestors; `current`, `previous`, and recovery-journal paths
+  must name exact inventoried instances before they can be applied;</SEC-STORE-PATHS>
         <SEC-TREE-UNTOUCHED fact="true" status="spec/done">the committer's own source tree is **never** mutated (§2.7, §2.16).</SEC-TREE-UNTOUCHED>
       </facts>
     </security>
@@ -394,9 +465,10 @@ to env/default outside a managed run); "environment" is the raw env. A
 script reads `vibe vars` and knows exactly the context it runs in.</VARS-SEMANTICS></p>
     </vars>
     <instances title="2.15 Distribution instances and diff-copy">
-      <p><req-instances fact="true" status="spec/done">`req r1`</req-instances></p>
-      <p><DIFF-COPY-LAW fact="true" status="spec/done">Placing a built distribution into a new instance copies only what changed
-and hardlinks the rest, **without hashing gigabytes** (§9.2):</DIFF-COPY-LAW></p>
+      <p><req-instances fact="true" status="spec/done">`req r2`</req-instances></p>
+      <p><DIFF-COPY-LAW fact="true" status="impl/done">Source-built instances use the existing diff-copy optimization. Binary
+bundles take the verification-first lane: their publisher digests are checked
+on download and again before an identical local instance is reused.</DIFF-COPY-LAW></p>
       <facts ordered="false">
         <MANIFEST-PER-INSTANCE fact="true" status="spec/done">Each instance carries `.vvm-manifest.toml`: per dist file `(rel, size,
   mtime, hash?)`. The build dir is **persistent** (shared `--target-dir`),
@@ -409,7 +481,8 @@ and hardlinks the rest, **without hashing gigabytes** (§9.2):</DIFF-COPY-LAW></
   failure (cross-volume / unsupported) → copy.</COMPARE-RULES>
         <DEDUP-SKIP fact="true" status="spec/done">If **every** file is unchanged, no new instance is made — `current` stays
   ("already up to date"). `--force` always makes a fresh instance.</DEDUP-SKIP>
-        <STAGE-ATOMIC fact="true" status="spec/done">The new instance is staged then atomically renamed, then `current` flips.</STAGE-ATOMIC>
+        <STAGE-ATOMIC fact="true" status="impl/done">The complete new instance is staged then atomically renamed; stable PATH is
+  ensured, `current` flips, and only then advisory `VIBEVM_HOME` updates.</STAGE-ATOMIC>
         <GC-SAFE-IMMUTABLE fact="true" status="spec/done">gc is refcount-safe (§2.10); instances are immutable after publish.</GC-SAFE-IMMUTABLE>
       </facts>
       <facts ordered="false">
@@ -422,21 +495,22 @@ and hardlinks the rest, **without hashing gigabytes** (§9.2):</DIFF-COPY-LAW></
       </facts>
     </instances>
     <provenance title="2.16 Source provenance and linked sources">
-      <p><req-provenance fact="true" status="spec/done">`req r1`</req-provenance></p>
-      <p><PROVENANCE-LEAD fact="true" status="spec/done">Sources are never bulk-copied into the install root (a checkout's `target/`
-is tens of GB). Each instance records its **origin**:</PROVENANCE-LEAD></p>
+      <p><req-provenance fact="true" status="spec/done">`req r2`</req-provenance></p>
+      <p><PROVENANCE-LEAD fact="true" status="impl/done">A developer checkout's caches are never copied. Source builds reference a
+checkout; binary bundles carry a clean tracked snapshot. Each instance records
+its **origin**, source path, commit, and payload identity:</PROVENANCE-LEAD></p>
       <facts ordered="false">
-        <PROV-MANAGED fact="true" status="spec/done">`managed` — a VVM-owned clone at `src/&lt;kind&gt;/&lt;id&gt;` (VVM updates it via git
+        <PROV-MANAGED fact="true" status="impl/done">`managed` — the VVM-owned clone at `src/.mirror` (VVM updates it via git
   and may drop it on `remove`/`gc`).</PROV-MANAGED>
         <PROV-EXTERNAL fact="true" status="spec/done">`external` — a committer's own checkout, identified by its **canonical
   absolute path** (`source_path`); VVM never modifies or removes it, only
   remembers where it is.</PROV-EXTERNAL>
-        <PROV-BINARY fact="true" status="impl/work">`binary` — a prebuilt artifact. Two roads into this origin: the LOCAL
+        <PROV-BINARY fact="true" status="impl/done">`binary` — a prebuilt artifact. Two roads enter this origin: the legacy LOCAL
   import (`self import`, shipped 2026-08-20) hashes the supplied file itself —
   SHA-256 computed on this machine, stored as `payload_sha256`, driving
-  reuse/refusal; the FETCHED publisher artifact (far-backlog,
-  `self install --binary`) will be keyed by the publisher's digest computed
-  once at publish. The two must not be conflated: local import verifies
+  reuse/refusal. The fetched native release path is keyed by the publisher's bundle/component/source
+  digests and owns its extracted clean source under the immutable instance.
+  The two must not be conflated: local import verifies
   nothing about authorship, only integrity-identity of the bytes it was
   handed.</PROV-BINARY>
       </facts>
@@ -444,12 +518,15 @@ is tens of GB). Each instance records its **origin**:</PROVENANCE-LEAD></p>
         <LINKED-SOURCE fact="true" status="spec/done">The remembered `source_path` makes an external source a **linked source**:
   `self install &lt;id&gt;` can rebuild from the recorded location from anywhere,
   without being in the checkout and without copying it.</LINKED-SOURCE>
-        <INSTANCE-SELF-CONTAINED fact="true" status="spec/done">The installed instance is self-contained (it runs without the source); the
-  path is needed only to rebuild, and a clear error is given if it has moved.</INSTANCE-SELF-CONTAINED>
+        <INSTANCE-SELF-CONTAINED fact="true" status="impl/done">Every installed binary bundle is self-contained **with** its matching source
+  because packaged skills may need it. `self source` returns
+  `instance/source`; for source/worktree executions it returns the canonical
+  external/managed git root. A missing owned source is a diagnosed broken
+  bundle, not a cwd fallback.</INSTANCE-SELF-CONTAINED>
       </facts>
     </provenance>
     <relocate title="2.17 Relocate — repointing provenance after a checkout move">
-      <p><req-relocate fact="true" status="spec/done">`req r1`</req-relocate></p>
+      <p><req-relocate fact="true" status="spec/done">`req r2`</req-relocate></p>
       <facts ordered="false">
         <relocate-motivation fact="true" status="spec/done">A committer's checkout is not pinned in place: it is cloned, moved, renamed,
   re-organised on disk. When it moves, every *external* instance's remembered
@@ -476,11 +553,11 @@ is tens of GB). Each instance records its **origin**:</PROVENANCE-LEAD></p>
   the live tree; *(b)* the **built instance directories** sourced from the old
   tree are **removed** — they are provenance-stale artifacts of the abandoned
   checkout, and their records are forgotten.</REL-REPOINT-PRUNE>
-        <REL-ACTIVE-KEPT fact="true" status="spec/done">**The active instance is never deleted.** Relocating must not pull the
-  running binary out from under the machine: the active instance's directory is
-  kept and only its `source_path` is repointed. Removing the active (or any
-  version) is `self remove`'s job (§2.9). A stale instance dir still locked by
-  a running process is skipped best-effort and collected later (§2.10).</REL-ACTIVE-KEPT>
+        <REL-ACTIVE-KEPT fact="true" status="impl/done">**Active, actually running, and immediate rollback instances are never
+  deleted.** Their directories remain, their matching provenance is repointed,
+  and `current`/`previous` are repaired as one journaled transaction before
+  any stale instance removal. Removing a protected version is `self remove`'s
+  job (§2.9).</REL-ACTIVE-KEPT>
         <REL-CONSENT fact="true" status="spec/done">**Consent and scriptability.** Removing instances is irreversible, so the
   default is an **interactive warning** that lists what is repointed and what
   is removed, behind a confirm. `-y`/`--yes` (or `--unattended`) skips it for
@@ -494,9 +571,56 @@ instance dirs. It never touches a committer's source tree (external sources are
 held by reference, §2.16), never the shared `build/` cache (that is `self gc`,
 §2.10), and never `~/.cargo`.</RELOCATE-SCOPE></p>
     </relocate>
+    <release-production title="2.18 Native release production — four hosts, one verified release">
+      <p><req-release-production fact="true" status="impl/done">`req r1`</req-release-production></p>
+      <facts ordered="false">
+        <RELEASE-TARGETS fact="true" status="impl/done">The closed native matrix is
+  `x86_64-pc-windows-msvc`, `x86_64-unknown-linux-musl`,
+  `x86_64-apple-darwin`, and `aarch64-apple-darwin`. Each host builds only its
+  own native target; no successful cross-compile is passed off as host proof.</RELEASE-TARGETS>
+        <RELEASE-HOST-SCRIPTS fact="true" status="impl/done">Four dependency-light wrappers under `distribution/release/` drive
+  `cargo xtask dist build`. Construction runs without tests by default;
+  `--checks`, `--tests`, and `--self-check` are explicit opt-ins, and
+  `--upload` remains the manual build-plus-upload convenience. The Linux
+  wrapper installs the Rust musl target through rustup and fails early with an
+  actionable message when the required `musl-gcc` is absent; it never invokes
+  a package manager or sudo.</RELEASE-HOST-SCRIPTS>
+        <RELEASE-CLEAN-SNAPSHOT fact="true" status="impl/done">The producer resolves one immutable commit OID, reads every identity/file
+  from that OID, and materializes it offline from the local Git object store.
+  Raw `git archive` supplies committed bytes only; a deterministic ZIP encoder
+  normalizes ordering, timestamp and modes. The nested source ZIP uses STORED
+  entries so its bytes have no architecture-dependent compressor input; the
+  outer platform ZIP still applies DEFLATE for transport. A fail-closed
+  portability gate rejects tracked paths that cannot have one identity on all
+  four targets (including non-ASCII/case/reserved-name collisions), and the
+  same 200,000-file / 400,000-node / 256-component / 4096-byte path limits are
+  enforced before emission and extraction. Optional gates run
+  in a disposable source tree and separate Cargo target cache; release
+  compilation starts from a fresh expansion. The user's checkout, untracked
+  files, and caches are never cleaned, reset, or copied.</RELEASE-CLEAN-SNAPSHOT>
+        <RELEASE-SOURCE-ARCHIVE fact="true" status="impl/done">Every platform ZIP embeds the same byte-identical
+  `vibevm-source.zip`, its source tree OID and SHA-256, plus `vibe`,
+  `vibe-index`, `DISTRIBUTION.json`, `LICENSE.md`, and `README.md`. The raw
+  bootstrap asset is byte-identical to the bundle's `vibe` component.</RELEASE-SOURCE-ARCHIVE>
+        <RELEASE-MUTABLE fact="true" status="impl/done">**Every version label is mutable by default.** `dist prepare --version V`
+  deletes any existing draft or published release for `V`, moves or creates
+  `vV` at the exact source commit, and creates one fresh draft. Four hosts may
+  independently replace their ZIP/bootstrap/fragment triplets. The exact
+  direct `refs/tags/vV` → commit binding is verified after prepare and again
+  immediately before publication. `dist finalize`
+  requires and remotely verifies all twelve platform assets, publishes
+  `DISTRIBUTIONS.json` + both installers, then publishes with GitHub
+  `make_latest=legacy` so rebuilding an older SemVer cannot demote a newer one.</RELEASE-MUTABLE>
+        <RELEASE-SECRETS fact="true" status="impl/done">Compilation, build scripts, tests, self-check, Git, and built-binary probes
+  receive no publish credential. Host wrappers disable command tracing before
+  retaining an upload credential. CI builds `xtask` without credentials and
+  runs that already-built trusted binary only in narrow prepare/upload/finalize
+  steps carrying `GITHUB_TOKEN`.</RELEASE-SECRETS>
+      </facts>
+    </release-production>
   </decisions>
   <architecture title="3. Architecture — seams and cells">
-    <p><req-architecture fact="true" status="spec/done">`req r1`</req-architecture></p>
+    <p><req-architecture fact="true" status="spec/done">`req r2`</req-architecture></p>
     <p><SEAMS-LEAD fact="true" status="spec/done">VVM is built from testable seams so the slow, machine-mutating parts are
 mockable and unit tests never clone, build, or edit the real environment:</SEAMS-LEAD></p>
     <facts ordered="false">
@@ -507,6 +631,9 @@ mockable and unit tests never clone, build, or edit the real environment:</SEAMS
       <SEAM-BUILDER fact="true" status="spec/done">`Builder` — runs `cargo` for a profile/toolchain; mocked in tests.</SEAM-BUILDER>
       <SEAM-PLACER fact="true" status="spec/done">`Placer` — the diff-copy of a distribution into a new instance (§2.15).</SEAM-PLACER>
       <SEAM-ENV-PERSISTER fact="true" status="spec/done">`EnvPersister` — the durable `PATH`/env edits (§2.6), injectable.</SEAM-ENV-PERSISTER>
+      <SEAM-BUNDLE fact="true" status="impl/done">`release_manifest` + the VVM bundle reader — strict aggregate/fragment/bundle
+  wire contracts, bounded anonymous download, safe ZIP extraction, and
+  byte-level reusable-instance verification.</SEAM-BUNDLE>
       <SEAM-TOOL-DOCTOR fact="true" status="spec/done">`ToolDoctor` — the `REQUIRED_TOOLS` table and checks (§2.8).</SEAM-TOOL-DOCTOR>
       <SEAM-VARS fact="true" status="spec/done">`vars` — the actual-vs-environment resolver (§2.14), `current_exe`-aware.</SEAM-VARS>
     </facts>
@@ -520,12 +647,13 @@ mockable and unit tests never clone, build, or edit the real environment:</SEAMS
   </architecture>
   <mvp title="4. MVP scope">
     <facts ordered="false">
-      <MVP-VERBS fact="true" status="spec/done">The full verb set on all three platforms: `self install` (external in-place +
+      <MVP-VERBS fact="true" status="impl/done">The full verb set on all three platforms: `self install` (external in-place +
   managed clone paths, debug + release, diff-copy into instances), `self use`
   (live `current`, no reload), `self ls`/`current`/`which`, `self remove`
   (safe + `--all`), `self gc` (build cache + prune), `self doctor` (+ `--fix`),
-  `self env`, `self relocate` (§2.17), `self import` (local ready-built
-  payload, 2026-08-20), and `vibe vars`.</MVP-VERBS>
+  `self env`, `self relocate` (§2.17), `self import` (legacy local ready-built
+  payload), `self bootstrap` (native bundle), `self rollback`, `self source`,
+  component-aware `self which`, and `vibe vars`.</MVP-VERBS>
       <MVP-RESOLUTION-ENV fact="true" status="spec/done">Selector resolution per §2.3; durable
   PATH/advisory-env per §2.6 across Windows (cmd/PowerShell/Git Bash), macOS
   (zsh/bash), Linux (bash/zsh/fish).</MVP-RESOLUTION-ENV>
@@ -536,10 +664,9 @@ mockable and unit tests never clone, build, or edit the real environment:</SEAMS
   </mvp>
   <out-of-scope title="5. Out of scope (now)">
     <facts ordered="false">
-      <OOS-BINARY fact="true" status="spec/done">FETCHED prebuilt-binary installs (`self install --binary` — network
-  download keyed by a publisher digest). The LOCAL half left this list on
-  2026-08-20: `self import` of an already-on-disk executable is in scope and
-  shipped (`##CMD-IMPORT`);</OOS-BINARY>
+      <OOS-BINARY fact="true" status="impl/done">**Retired from out-of-scope:** fetched, publisher-digest-bound native bundles
+  ship through `self bootstrap`, binary `self update`, and explicit SemVer
+  `self install` (§2.7, §2.12).</OOS-BINARY>
       <OOS-OFFLINE fact="true" status="spec/done">offline / vendored builds;</OOS-OFFLINE>
       <OOS-SIGNATURES fact="true" status="spec/done">cryptographic signature verification;</OOS-SIGNATURES>
       <OOS-REFLINK fact="true" status="spec/done">reflink/CoW placement (hardlink is the portable choice).</OOS-REFLINK>
@@ -548,9 +675,11 @@ mockable and unit tests never clone, build, or edit the real environment:</SEAMS
   </out-of-scope>
   <far-backlog title="6. Far backlog">
     <facts ordered="false">
-      <FB-BINARY-INSTALL fact="true" status="spec/done">`self install --binary` — fetch a prebuilt artifact keyed by the
-  publisher's digest (counter instance, full copy, auto-prune on, §9.5).</FB-BINARY-INSTALL>
-      <FB-BOOTSTRAP-SCRIPT fact="true" status="spec/done">A generated one-line bootstrap script for cold-start (§2.12).</FB-BOOTSTRAP-SCRIPT>
+      <FB-BINARY-INSTALL fact="true" status="impl/done">**Shipped, no longer backlog:** binary refresh/install is origin-directed
+  rather than a separate `--binary` switch; remote labels stay mutable and
+  local counter instances immutable.</FB-BINARY-INSTALL>
+      <FB-BOOTSTRAP-SCRIPT fact="true" status="impl/done">**Shipped, no longer backlog:** bounded Bash and PowerShell one-line
+  bootstrap assets (§2.12).</FB-BOOTSTRAP-SCRIPT>
       <FB-OFFLINE fact="true" status="spec/done">Offline builds via vendoring or a registry mirror.</FB-OFFLINE>
       <FB-REFLINK fact="true" status="spec/done">Reflink/CoW placement where the filesystem supports it (§2.15).</FB-REFLINK>
       <FB-SIGNATURES fact="true" status="spec/done">Signature/provenance verification of the resolved ref.</FB-SIGNATURES>
@@ -568,18 +697,19 @@ mockable and unit tests never clone, build, or edit the real environment:</SEAMS
     </facts>
   </maintenance>
   <acceptance title="8. Acceptance">
-    <p><req-acceptance fact="true" status="spec/done">`req r1`</req-acceptance></p>
+    <p><req-acceptance fact="true" status="spec/done">`req r2`</req-acceptance></p>
     <facts ordered="false">
-      <ACC-FRESH-CLONE fact="true" status="spec/done">From a fresh clone, `cargo run -p vibe-cli -- self install` produces a
-  working managed install and a `vibe` on `PATH` (after the printed
-  activation step) on Windows, macOS, Linux.</ACC-FRESH-CLONE>
+      <ACC-FRESH-CLONE fact="true" status="impl/done">From a fresh clone, the source lane builds both essential binaries. From a
+  clean machine, the Bash/PowerShell bootstrap installs the verified native
+  pair plus source and durably exposes stable shims; output states whether the
+  current shell already sees PATH.</ACC-FRESH-CLONE>
       <ACC-USE-NO-RELOAD fact="true" status="spec/done">`self use` switches the active version and the **next** `vibe` in the
   **same shell** is the new one — no reload (`current` file).</ACC-USE-NO-RELOAD>
       <ACC-NO-INUSE-REPLACE fact="true" status="spec/done">Reinstalling the running version replaces no in-use file (new instance +
   pointer flip); the running process is unharmed.</ACC-NO-INUSE-REPLACE>
-      <ACC-DIFF-COPY fact="true" status="spec/done">A distribution where only `vibe.exe` changed copies one file; unchanged
-  files are hardlinked (`.vvm-manifest.toml` diff); no payload is hashed in
-  bulk.</ACC-DIFF-COPY>
+      <ACC-DIFF-COPY fact="true" status="impl/done">A source-built distribution where only one essential binary changed copies
+  that file; unchanged source-build members may be hardlinked. The binary
+  lane instead verifies every bounded payload member and source before reuse.</ACC-DIFF-COPY>
       <ACC-VARS fact="true" status="spec/done">`vibe vars` reports actual vs environment; `vibe vars diff`/`full`/`full
   diff` per §2.14; the publish token never appears.</ACC-VARS>
       <ACC-REMOVE-GC-SAFE fact="true" status="spec/done">`self remove` never wipes without `--all` + reconfirm; `self gc` never
@@ -590,9 +720,21 @@ mockable and unit tests never clone, build, or edit the real environment:</SEAMS
   non-TTY run without `--yes` errors.</ACC-RELOCATE>
       <ACC-IMPORT fact="true" status="impl/done">`self import` is inactive by default (`--use` alone activates);
   importing the same tag with the same payload SHA-256 reuses the instance and
-  allocates nothing; a different payload under the same tag is refused with
-  the replace-candidate recipe; `--replace-candidate` preserves the previous
-  instance beside the new one.</ACC-IMPORT>
+  allocates nothing; a different payload under the same mutable tag creates a
+  new `#N` and preserves the previous instance; `--replace-candidate` remains
+  compatibility spelling.</ACC-IMPORT>
+      <ACC-BINARY-BUNDLE fact="true" status="impl/done">A native bootstrap installs both essential binaries and the matching exact
+  source tree under one immutable instance; `self source` returns its absolute
+  path, normal same-digest refresh is a verified no-op, `--force` allocates the
+  next `#N`, and rollback restores the previous generation.</ACC-BINARY-BUNDLE>
+      <ACC-RUNNING-PROVENANCE fact="true" status="impl/done">With two source worktrees and one binary install, `self ls/current/which`
+  distinguish active `*` from running `&gt;`; a directly executed worktree
+  reports its own executable/root/commit and never borrows cwd or active
+  binary provenance.</ACC-RUNNING-PROVENANCE>
+      <ACC-RELEASE-CONTOUR fact="true" status="impl/done">Each fixed host wrapper defaults to build-only/no tests; explicit gates are
+  opt-in. All four fragments must bind the same commit/tree/source archive
+  before mutable release finalization; build subprocesses receive no publish
+  credentials.</ACC-RELEASE-CONTOUR>
       <ACC-FLOOR-GREEN fact="true" status="spec/done">Full `self-check.sh` green; conform 0/0/0; specmap clean.</ACC-FLOOR-GREEN>
     </facts>
   </acceptance>
@@ -625,8 +767,10 @@ recording them so a cold reader sees *why*, not just *what*.</rationale-lead></p
         <KEY-NEVER-READS fact="true" status="spec/done">So the instance key never reads the payload (§9.4), and change detection
   for diff-copy hashes only **small** files, trusting `(size, mtime)` for
   large ones (§2.15).</KEY-NEVER-READS>
-        <BINARY-PUBLISHER-DIGEST fact="true" status="impl/done">Future FETCHED binary artifacts are keyed by the **publisher's** digest
-  (computed once at publish), never re-hashed locally. The local `self
+        <BINARY-PUBLISHER-DIGEST fact="true" status="impl/done">Fetched binary artifacts are keyed by the **publisher's** digest
+  (computed once at publish), verified during download/extraction, and their
+  installed manifest, binaries, retained source ZIP and extracted source are
+  rechecked before reuse. The local `self
   import` path is deliberately outside this rule: it has no publisher, so it
   hashes the handed file once on entry — that digest is its identity, not a
   verification of anyone's claim.</BINARY-PUBLISHER-DIGEST>
@@ -656,16 +800,17 @@ recording them so a cold reader sees *why*, not just *what*.</rationale-lead></p
   skip.</CHANGE-VIA-MANIFEST>
       </facts>
     </rationale-counter>
-    <rationale-prune title="9.5 Why auto-prune only for binary artifacts">
+    <rationale-prune title="9.5 Why explicit prune preserves rollback">
       <facts ordered="false">
-        <AUTO-PRUNE-BINARY-ONLY fact="true" status="spec/done">Auto-pruning old instances on install bounds disk. It is enabled only for
-  **binary** installs (full copies, no source/git context).</AUTO-PRUNE-BINARY-ONLY>
-        <SOURCE-KEEPS fact="true" status="spec/done">Source rebuilds keep their instances until a manual `gc`: they are cheap
-  once hardlink-sharing lands (instances share unchanged files), and a
-  committer may want several around. (The owner chose this split.)</SOURCE-KEEPS>
+        <AUTO-PRUNE-BINARY-ONLY fact="true" status="impl/done">Install never silently prunes either origin: a same-label previous payload
+  is the rollback evidence for mutable releases. Disk reclamation is an
+  explicit `remove` / `gc --prune-others` decision.</AUTO-PRUNE-BINARY-ONLY>
+        <SOURCE-KEEPS fact="true" status="impl/done">Pruning preserves the active and immediate previous instances. Source builds
+  retain referenced checkout context; binary instances retain their exact
+  source snapshot until explicitly pruned.</SOURCE-KEEPS>
       </facts>
     </rationale-prune>
-    <rationale-sources title="9.6 Why sources are held by reference, never copied">
+    <rationale-sources title="9.6 Why developer sources are referenced but release source is copied">
       <facts ordered="false">
         <COPY-UNTENABLE fact="true" status="spec/done">Copying a checkout into the install root is untenable — a working tree's
   cargo `target/` is already tens of GB.</COPY-UNTENABLE>
@@ -674,8 +819,11 @@ recording them so a cold reader sees *why*, not just *what*.</rationale-lead></p
   place**, never touched.</MANAGED-INCREMENTAL>
         <LINKED-BONUS fact="true" status="spec/done">This also gives *linked sources* (§2.16): rebuild from a remembered
   location without being in it.</LINKED-BONUS>
-        <DIST-COPIED-NOT-SOURCE fact="true" status="spec/done">The built distribution *is* copied (small relative to source; diff-copy
-  keeps even that minimal), but never the source.</DIST-COPIED-NOT-SOURCE>
+        <DIST-COPIED-NOT-SOURCE fact="true" status="impl/done">A developer working tree is never copied because its ignored build/cache
+  surface may be enormous. A binary release deliberately embeds only the
+  committed clean tree—normalized offline from one Git OID—because skills may
+  need source and no external checkout exists. Its installed `source/` is part
+  of the immutable distribution, not a development clone.</DIST-COPIED-NOT-SOURCE>
       </facts>
     </rationale-sources>
     <rationale-warning title="9.7 Why the binary, not the shim, emits the divergence warning">

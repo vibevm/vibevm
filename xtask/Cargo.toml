@@ -13,6 +13,7 @@ description = "Project tooling — codegen, drift checks, and other build-time h
 [dependencies]
 anyhow.workspace = true
 clap.workspace = true
+semver.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 toml.workspace = true
@@ -24,6 +25,8 @@ conform-core.workspace = true
 rust-ai-native-conform-frontend.workspace = true
 rust-ai-native-cli.workspace = true
 vibe-index.workspace = true
+vibe-publish.workspace = true
+zip.workspace = true
 # The CLI path (not only the tests) needs a scratch directory to
 # reproject into; the tests were using it as a dev-dependency before.
 tempfile.workspace = true

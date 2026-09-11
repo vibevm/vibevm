@@ -5,12 +5,13 @@
 //! downloads deliberately omit authorization so the same path works for a
 //! bootstrap client that has no publish credential.
 
-use std::sync::atomic::{AtomicU64, Ordering};
-use std::time::{Duration, SystemTime, UNIX_EPOCH};
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#instances");
+
+use std::time::Duration;
 
 use reqwest::Method;
 use reqwest::blocking::{Client, RequestBuilder, Response};
-use reqwest::header::{ACCEPT, AUTHORIZATION, CONTENT_TYPE, HeaderValue, USER_AGENT};
+use reqwest::header::{ACCEPT, AUTHORIZATION, USER_AGENT};
 use serde::Serialize;
 use serde::de::DeserializeOwned;
 use sha2::{Digest, Sha256};
@@ -21,11 +22,13 @@ use crate::github::DEFAULT_GITHUB_API_BASE;
 
 mod model;
 pub use model::*;
+mod asset;
 mod read;
 
 const GITHUB_JSON: &str = "application/vnd.github+json";
 const GITHUB_BINARY: &str = "application/octet-stream";
-static TEMP_ASSET_SEQUENCE: AtomicU64 = AtomicU64::new(1);
+const DEFAULT_CONNECT_TIMEOUT: Duration = Duration::from_secs(20);
+const DEFAULT_TRANSFER_TIMEOUT: Duration = Duration::from_secs(30 * 60);
 
 /// Client scoped to one GitHub repository.
 pub struct GithubReleaseClient {
@@ -77,6 +80,27 @@ impl GithubReleaseClient {
         Self::build(Some(token), owner, repo, api_base, upload_base)
     }
 
+    /// Endpoint and timeout seam for deterministic transport tests.
+    pub fn with_endpoints_and_timeouts(
+        token: Token,
+        owner: impl Into<String>,
+        repo: impl Into<String>,
+        api_base: &str,
+        upload_base: &str,
+        connect_timeout: Duration,
+        transfer_timeout: Duration,
+    ) -> Result<Self, GithubReleaseError> {
+        Self::build_with_timeouts(
+            Some(token),
+            owner,
+            repo,
+            api_base,
+            upload_base,
+            connect_timeout,
+            transfer_timeout,
+        )
+    }
+
     pub fn anonymous_with_endpoints(
         owner: impl Into<String>,
         repo: impl Into<String>,
@@ -93,11 +117,32 @@ impl GithubReleaseClient {
         api_base: &str,
         upload_base: &str,
     ) -> Result<Self, GithubReleaseError> {
+        Self::build_with_timeouts(
+            token,
+            owner,
+            repo,
+            api_base,
+            upload_base,
+            DEFAULT_CONNECT_TIMEOUT,
+            DEFAULT_TRANSFER_TIMEOUT,
+        )
+    }
+
+    fn build_with_timeouts(
+        token: Option<Token>,
+        owner: impl Into<String>,
+        repo: impl Into<String>,
+        api_base: &str,
+        upload_base: &str,
+        connect_timeout: Duration,
+        transfer_timeout: Duration,
+    ) -> Result<Self, GithubReleaseError> {
         let secret = token.as_ref().map(Token::value);
         validate_base(api_base, secret)?;
         validate_base(upload_base, secret)?;
         let client = Client::builder()
-            .timeout(Duration::from_secs(60))
+            .connect_timeout(connect_timeout)
+            .timeout(transfer_timeout)
             .build()
             .map_err(|error| GithubReleaseError::Transport {
                 operation: "client construction",
@@ -146,6 +191,7 @@ impl GithubReleaseClient {
                 body: Some(request.body.clone()),
                 draft: Some(request.draft),
                 prerelease: Some(request.prerelease),
+                make_latest: None,
             },
         )
     }
@@ -167,115 +213,18 @@ impl GithubReleaseClient {
         )?;
         self.json_response(response, "update release")
     }
-
-    pub fn upload_asset(
-        &self,
-        release_id: u64,
-        name: &str,
-        content_type: &str,
-        bytes: &[u8],
-    ) -> Result<GithubReleaseAsset, GithubReleaseError> {
-        validate_asset_name(name, self.token_value())?;
+    /// Delete a release without deleting the Git tag it references.
+    pub fn delete_release(&self, release_id: u64) -> Result<(), GithubReleaseError> {
         let id = release_id.to_string();
-        let mut url = self.upload_url(&["releases", &id, "assets"])?;
-        url.query_pairs_mut().append_pair("name", name);
-        let content_type = HeaderValue::from_str(content_type).map_err(|error| {
-            GithubReleaseError::InvalidContentType {
-                value: self.redact(content_type),
-                detail: self.redact(error.to_string()),
-            }
-        })?;
+        let url = self.api_url(&["releases", &id])?;
         let response = self.send(
-            self.write_request(Method::POST, url, "upload release asset")?
-                .header(CONTENT_TYPE, content_type)
-                .body(bytes.to_vec()),
-            "upload release asset",
-        )?;
-        self.json_response(response, "upload release asset")
-    }
-
-    pub fn delete_asset(&self, asset_id: u64) -> Result<(), GithubReleaseError> {
-        let id = asset_id.to_string();
-        let url = self.api_url(&["releases", "assets", &id])?;
-        let response = self.send(
-            self.write_request(Method::DELETE, url, "delete release asset")?,
-            "delete release asset",
+            self.write_request(Method::DELETE, url, "delete release")?,
+            "delete release",
         )?;
         if response.status().is_success() {
             return Ok(());
         }
-        Err(self.status_error(response, "delete release asset"))
-    }
-
-    pub fn rename_asset(
-        &self,
-        asset_id: u64,
-        name: &str,
-    ) -> Result<GithubReleaseAsset, GithubReleaseError> {
-        validate_asset_name(name, self.token_value())?;
-        #[derive(Serialize)]
-        struct RenameAsset<'a> {
-            name: &'a str,
-        }
-        let id = asset_id.to_string();
-        let url = self.api_url(&["releases", "assets", &id])?;
-        let response = self.send(
-            self.write_request(Method::PATCH, url, "rename release asset")?
-                .json(&RenameAsset { name }),
-            "rename release asset",
-        )?;
-        self.json_response(response, "rename release asset")
-    }
-
-    /// Publish one logical release asset. Existing same-name assets are
-    /// replaced by default through the verified temporary-upload protocol.
-    pub fn publish_asset(
-        &self,
-        release_id: u64,
-        name: &str,
-        content_type: &str,
-        bytes: &[u8],
-    ) -> Result<GithubReleaseAsset, GithubReleaseError> {
-        self.replace_asset(release_id, name, content_type, bytes)
-    }
-
-    /// Replace all existing assets named `name` without a delete-first gap.
-    ///
-    /// The new bytes are uploaded under a process-unique temporary name. The
-    /// returned size and SHA-256 digest must match locally computed values
-    /// before any old asset is deleted; only then is the verified asset renamed.
-    pub fn replace_asset(
-        &self,
-        release_id: u64,
-        name: &str,
-        content_type: &str,
-        bytes: &[u8],
-    ) -> Result<GithubReleaseAsset, GithubReleaseError> {
-        self.require_write("replace release asset")?;
-        validate_asset_name(name, self.token_value())?;
-        let old_assets = self
-            .list_assets_authenticated(release_id)?
-            .into_iter()
-            .filter(|asset| asset.name == name)
-            .collect::<Vec<_>>();
-        let expected_digest = sha256_digest(bytes);
-        let temporary_name = temporary_asset_name(name, &expected_digest);
-        let uploaded = self.upload_asset(release_id, &temporary_name, content_type, bytes)?;
-        if uploaded.size != bytes.len() as u64
-            || uploaded.digest.as_deref() != Some(expected_digest.as_str())
-        {
-            return Err(GithubReleaseError::AssetVerification {
-                name: self.redact(uploaded.name),
-                expected_size: bytes.len() as u64,
-                actual_size: uploaded.size,
-                expected_digest,
-                actual_digest: uploaded.digest.map(|digest| self.redact(digest)),
-            });
-        }
-        for old in old_assets {
-            self.delete_asset(old.id)?;
-        }
-        self.rename_asset(uploaded.id, name)
+        Err(self.status_error(response, "delete release"))
     }
 
     /// Force-move the Git tag backing a mutable release to `source_commit`.
@@ -300,6 +249,43 @@ impl GithubReleaseClient {
             "force-move release tag",
         )?;
         self.json_response(response, "force-move release tag")
+    }
+
+    /// Point a mutable release tag at `source_commit`, creating the ref when
+    /// this version has never been released before.
+    pub fn force_move_or_create_tag(
+        &self,
+        tag: &str,
+        source_commit: &str,
+    ) -> Result<GithubGitRef, GithubReleaseError> {
+        match self.force_move_tag(tag, source_commit) {
+            Ok(reference) => Ok(reference),
+            Err(GithubReleaseError::NotFound { .. }) => self.create_tag_ref(tag, source_commit),
+            Err(error) => Err(error),
+        }
+    }
+
+    fn create_tag_ref(
+        &self,
+        tag: &str,
+        source_commit: &str,
+    ) -> Result<GithubGitRef, GithubReleaseError> {
+        validate_release_tag(tag, self.token_value())?;
+        #[derive(Serialize)]
+        struct CreateRef<'a> {
+            r#ref: String,
+            sha: &'a str,
+        }
+        let url = self.api_url(&["git", "refs"])?;
+        let response = self.send(
+            self.write_request(Method::POST, url, "create release tag")?
+                .json(&CreateRef {
+                    r#ref: format!("refs/tags/{tag}"),
+                    sha: source_commit,
+                }),
+            "create release tag",
+        )?;
+        self.json_response(response, "create release tag")
     }
 
     fn api_url(&self, suffix: &[&str]) -> Result<reqwest::Url, GithubReleaseError> {
@@ -459,24 +445,6 @@ pub fn sha256_digest(bytes: &[u8]) -> String {
         output.push(HEX[(byte & 0x0f) as usize] as char);
     }
     output
-}
-
-fn temporary_asset_name(name: &str, digest: &str) -> String {
-    let sequence = TEMP_ASSET_SEQUENCE.fetch_add(1, Ordering::Relaxed);
-    let nanos = SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .unwrap_or_default()
-        .as_nanos();
-    let digest_prefix = digest
-        .strip_prefix("sha256:")
-        .unwrap_or(digest)
-        .chars()
-        .take(12)
-        .collect::<String>();
-    format!(
-        ".vibe-upload-{}-{nanos}-{sequence}-{digest_prefix}-{name}",
-        std::process::id()
-    )
 }
 
 fn validate_base(base: &str, token: Option<&str>) -> Result<(), GithubReleaseError> {

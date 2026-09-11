@@ -49,18 +49,23 @@ pub use direct_git::DirectRepoCreator;
 pub use github::GithubRepoCreator;
 pub use github_release::{
     CreateGithubRelease, DEFAULT_GITHUB_UPLOAD_BASE, GITHUB_API_VERSION, GithubGitObject,
-    GithubGitRef, GithubRelease, GithubReleaseAsset, GithubReleaseClient, GithubReleaseError,
-    UpdateGithubRelease, sha256_digest,
+    GithubGitRef, GithubMakeLatest, GithubRelease, GithubReleaseAsset, GithubReleaseClient,
+    GithubReleaseError, UpdateGithubRelease, sha256_digest,
 };
 pub use gitverse::GitverseRepoCreator;
 pub use orchestrator::{PublishConfig, PublishOutcome, Publisher};
 pub use post_hook::{HookConfig, HookError, HookReport, fire as fire_index_hook};
 pub use release_manifest::{
-    AggregateDistributionManifest, BundleDistributionManifest, DISTRIBUTION_MANIFEST_FILENAME,
-    DISTRIBUTION_PRODUCT, DISTRIBUTION_REPOSITORY, DISTRIBUTION_SCHEMA_VERSION,
-    DISTRIBUTION_SOURCE_ARCHIVE_FILENAME, DistributionAsset, DistributionComponent,
-    DistributionComponentName, DistributionSourceArchive, PlatformDistributionFragment,
-    ReleaseManifestError, SUPPORTED_DISTRIBUTION_TARGETS,
+    AggregateDistributionManifest, BundleDistributionManifest,
+    DISTRIBUTION_AGGREGATE_MANIFEST_MAX_BYTES, DISTRIBUTION_BOOTSTRAP_MAX_BYTES,
+    DISTRIBUTION_BUNDLE_MAX_BYTES, DISTRIBUTION_COMPONENT_MAX_BYTES,
+    DISTRIBUTION_MANIFEST_FILENAME, DISTRIBUTION_MANIFEST_MAX_BYTES, DISTRIBUTION_PRODUCT,
+    DISTRIBUTION_REPOSITORY, DISTRIBUTION_SCHEMA_VERSION, DISTRIBUTION_SOURCE_ARCHIVE_FILENAME,
+    DISTRIBUTION_SOURCE_ARCHIVE_MAX_BYTES, DISTRIBUTION_SOURCE_EXPANDED_MAX_BYTES,
+    DISTRIBUTION_SOURCE_MAX_DEPTH, DISTRIBUTION_SOURCE_MAX_FILES,
+    DISTRIBUTION_SOURCE_MAX_MATERIALIZED_ENTRIES, DISTRIBUTION_SOURCE_MAX_PATH_BYTES,
+    DistributionAsset, DistributionComponent, DistributionComponentName, DistributionSourceArchive,
+    PlatformDistributionFragment, ReleaseManifestError, SUPPORTED_DISTRIBUTION_TARGETS,
 };
 pub use token::{Token, TokenSource, host_env_var, load_token, load_token_for_host};
 

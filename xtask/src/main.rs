@@ -42,6 +42,7 @@ use clap::{Parser, Subcommand};
 mod batch_review;
 mod codegen;
 mod conform;
+mod dist;
 mod epochs;
 mod mirror;
 mod rebuild;
@@ -52,6 +53,7 @@ mod wire_diff;
 use batch_review::{BatchReviewArgs, run_batch_review};
 use codegen::{run_check_codegen, run_codegen};
 use conform::{run_conform_check, run_conform_freeze};
+use dist::run_dist;
 use mirror::run_mirror;
 use rebuild::run_rebuild;
 use specmap::run_specmap;
@@ -225,6 +227,12 @@ enum Cmd {
         check: bool,
     },
 
+    /// Build, inspect and publish the four native vibevm distribution bundles.
+    Dist {
+        #[command(subcommand)]
+        command: dist::DistCommand,
+    },
+
     /// Fan the local mainline out to every target in `mirrors.toml`
     /// (the benevolent-dictator / hub-and-spoke mirror model, no primary):
     /// push `main` + tags to every `push` target, fast-forward-only and
@@ -380,6 +388,7 @@ fn main() -> Result<()> {
         Cmd::CheckCodegen => run_check_codegen(),
         Cmd::Specmap { check } => run_specmap(check),
         Cmd::SyncEngines { check } => run_sync_engines(check),
+        Cmd::Dist { command } => run_dist(&repo_root()?, command),
         Cmd::TestGate { baseline } => rust_ai_native_cli::run_test_gate(&repo_root()?, &baseline),
         Cmd::Tripwire { base, debt } => {
             rust_ai_native_cli::run_tripwire(&repo_root()?, base.as_deref(), &debt)

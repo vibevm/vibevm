@@ -2,6 +2,8 @@ use serde::{Deserialize, Serialize};
 use specmark::spec;
 use thiserror::Error;
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#instances");
+
 pub const DEFAULT_GITHUB_UPLOAD_BASE: &str = "https://uploads.github.com";
 pub const GITHUB_API_VERSION: &str = "2022-11-28";
 
@@ -46,6 +48,17 @@ pub struct UpdateGithubRelease {
     pub draft: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub prerelease: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub make_latest: Option<GithubMakeLatest>,
+}
+
+/// GitHub's validated `make_latest` policy for release updates.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "lowercase")]
+pub enum GithubMakeLatest {
+    True,
+    False,
+    Legacy,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize)]
@@ -160,6 +173,17 @@ pub enum GithubReleaseError {
         actual_size: u64,
         expected_digest: String,
         actual_digest: Option<String>,
+    },
+    #[error(
+        "GitHub {operation} declared/read {actual_size} bytes; expected exactly {expected_size} within the independent {max_size}-byte limit \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-019#instances; \
+         fix: abort the bounded download and replace the inconsistent release asset)"
+    )]
+    DownloadSize {
+        operation: &'static str,
+        expected_size: u64,
+        actual_size: u64,
+        max_size: u64,
     },
     #[error(
         "invalid HTTP content type `{value}`: {detail} \

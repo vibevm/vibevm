@@ -42,11 +42,32 @@ pub(crate) enum VvmError {
     ExactInstanceInstall,
 
     #[error(
-        "binary self-update needs the release-artifact fetcher, which is not installed yet \
+        "`latest` is a source-branch selector, not a binary release version \
          (violates spec://org.vibevm.core/vibevm/common/PROP-019#surface; \
-          fix: import a downloaded payload with `vibe self import <PATH> --tag <X.Y.Z> --use`, or run `vibe self install latest --mirror <gitverse|github>` on a machine with Rust)"
+          fix: use `vibe self update` for the current binary version, `vibe self install X.Y.Z` to change it, or pass `--mirror` for a source build)"
     )]
     BinaryFetchUnavailable,
+
+    #[error(
+        "unknown instance member `{0}` \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-019#surface; \
+          fix: use `vibe`, `vibe-index`, or `source`)"
+    )]
+    UnknownWhich(String),
+
+    #[error(
+        "instance member `{component}` is not built at `{path}` \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-019#surface; \
+          fix: rebuild/reinstall this instance so both essential binaries and source are present)"
+    )]
+    MissingWhich { component: String, path: String },
+
+    #[error(
+        "cannot resolve the exact source tree for this execution \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-019#provenance; \
+          fix: run from a source checkout or reinstall the binary bundle with its source archive)"
+    )]
+    NoSource,
 
     #[error(
         "{detail} \
@@ -68,4 +89,13 @@ pub(crate) enum VvmError {
           fix: re-run on an interactive terminal, or pass the named flag)"
     )]
     NoTty { detail: String },
+
+    #[error("vibe self doctor found {problems} unresolved problem(s)")]
+    DoctorProblems { problems: usize },
+
+    #[error(
+        "installed instance `{selector}` is incomplete or corrupt \
+         (fix: reinstall that version; use `--force` to retain the damaged #N for inspection)"
+    )]
+    CorruptInstance { selector: String },
 }

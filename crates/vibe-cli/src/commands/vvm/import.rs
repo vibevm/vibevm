@@ -2,18 +2,13 @@
 //! inventory. The path is local-only: no resolver, network, or signature
 //! machinery participates.
 
-use std::fs;
-use std::io::{BufReader, Read};
 use std::path::Path;
 
 use anyhow::{Context, Result, bail};
-use sha2::{Digest, Sha256};
 
-use super::env;
-use super::install::InstallLock;
 use super::model::{InstallRecord, Kind, Origin, Profile, VersionId};
 use super::placer;
-use super::store::{BINARY_NAME, VersionStore};
+use super::store::{BINARY_NAME, VersionStore, open_regular_no_follow};
 use crate::output;
 
 pub(crate) struct ImportRequest<'a> {
@@ -21,21 +16,30 @@ pub(crate) struct ImportRequest<'a> {
     pub tag: &'a str,
     pub commit: Option<&'a str>,
     pub profile: Profile,
-    pub activate: bool,
     pub replace_candidate: bool,
     pub now: &'a str,
+}
+
+pub(crate) struct ImportOutcome {
+    pub record: InstallRecord,
+    pub home: std::path::PathBuf,
+    pub reused: bool,
 }
 
 pub(crate) fn perform_import(
     ctx: &output::Context,
     store: &VersionStore,
     req: &ImportRequest<'_>,
-) -> Result<()> {
-    let _lock = InstallLock::acquire(store)?;
+) -> Result<ImportOutcome> {
     let tag = parse_tag(req.tag)?;
     ensure_payload_file(req.executable)?;
-    let digest = sha256_file(req.executable)?;
     let id = VersionId::new(Kind::Tag, tag);
+    let dist = vec![(req.executable.to_path_buf(), BINARY_NAME.to_string())];
+    let manifest = placer::manifest_for(&dist)?;
+    let digest = manifest
+        .content_hash_for(BINARY_NAME)
+        .context("import payload manifest omitted its required SHA-256")?
+        .to_string();
     // Kept as a CLI compatibility flag. Remote version labels are mutable;
     // every distinct payload is now admitted as a fresh immutable local #N.
     let _ = req.replace_candidate;
@@ -46,20 +50,21 @@ pub(crate) fn perform_import(
         record.payload_sha256.as_deref() == Some(digest.as_str())
             && record.commit == req.commit.unwrap_or("unknown")
             && record.profile == req.profile
+            && placer::installed_files_match(store, record)
     }) {
         let instance_dir = store.instance_dir(&id, record.instance);
-        activate_if_requested(store, &instance_dir, req.activate)?;
         ctx.summary(&format!(
-            "{} payload already imported — reused{}",
-            record.selector(),
-            if req.activate { " and activated" } else { "" }
+            "{} payload already imported — reused",
+            record.selector()
         ));
-        return Ok(());
+        return Ok(ImportOutcome {
+            record: record.clone(),
+            home: instance_dir,
+            reused: true,
+        });
     }
 
     let instance = store.alloc_instance()?;
-    let dist = vec![(req.executable.to_path_buf(), BINARY_NAME.to_string())];
-    let manifest = placer::manifest_for(&dist)?;
     let previous = existing.last().and_then(|record| {
         let dir = store.instance_dir(&id, record.instance);
         placer::read_manifest(&dir).map(|manifest| (dir, manifest))
@@ -69,7 +74,7 @@ pub(crate) fn perform_import(
         .map(|(dir, manifest)| (dir.as_path(), manifest));
     placer::place(store, &id, instance, &dist, &manifest, previous_ref)?;
 
-    store.record_install(InstallRecord {
+    let record = InstallRecord {
         kind: Kind::Tag,
         id: id.id.clone(),
         instance,
@@ -80,16 +85,18 @@ pub(crate) fn perform_import(
         origin: Origin::Binary,
         source_path: None,
         payload_sha256: Some(digest),
-    })?;
+        distribution_manifest_sha256: None,
+    };
+    store.record_install(record.clone())?;
 
     let instance_dir = store.instance_dir(&id, instance);
-    activate_if_requested(store, &instance_dir, req.activate)?;
     ctx.created(&instance_dir.display().to_string());
-    ctx.summary(&format!(
-        "imported {id}#{instance}{}",
-        if req.activate { " — active" } else { "" }
-    ));
-    Ok(())
+    ctx.summary(&format!("imported {id}#{instance}"));
+    Ok(ImportOutcome {
+        record,
+        home: instance_dir,
+        reused: false,
+    })
 }
 
 fn parse_tag(raw: &str) -> Result<String> {
@@ -101,59 +108,48 @@ fn parse_tag(raw: &str) -> Result<String> {
 }
 
 fn ensure_payload_file(path: &Path) -> Result<()> {
-    let metadata = fs::metadata(path)
+    let (_, metadata) = open_regular_no_follow(path)
         .with_context(|| format!("reading import payload `{}`", path.display()))?;
-    if !metadata.is_file() {
-        bail!("import payload `{}` is not a file", path.display());
-    }
-    Ok(())
-}
-
-fn sha256_file(path: &Path) -> Result<String> {
-    let file = fs::File::open(path)
-        .with_context(|| format!("opening import payload `{}`", path.display()))?;
-    let mut reader = BufReader::new(file);
-    let mut hasher = Sha256::new();
-    let mut buffer = [0_u8; 64 * 1024];
-    loop {
-        let read = reader
-            .read(&mut buffer)
-            .with_context(|| format!("hashing import payload `{}`", path.display()))?;
-        if read == 0 {
-            break;
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+        if metadata.permissions().mode() & 0o111 == 0 {
+            bail!("import payload `{}` is not executable", path.display());
         }
-        hasher.update(&buffer[..read]);
     }
-    Ok(format!("{:x}", hasher.finalize()))
-}
-
-fn activate_if_requested(store: &VersionStore, instance_dir: &Path, activate: bool) -> Result<()> {
-    if activate {
-        store.write_current(instance_dir)?;
-        env::write_shims(&store.shim_dir())?;
-    }
+    #[cfg(not(unix))]
+    let _ = metadata;
     Ok(())
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::commands::vvm::env::{self, EnvPersister, Persisted};
+    use std::cell::Cell;
+    use std::fs;
 
     fn quiet() -> output::Context {
         output::Context::from_flags(true, false, None, true, crate::cli::AgentModeArg::Auto)
     }
 
-    fn request<'a>(
-        executable: &'a Path,
-        replace_candidate: bool,
-        activate: bool,
-    ) -> ImportRequest<'a> {
+    fn write_payload(path: &Path, bytes: &[u8]) {
+        fs::write(path, bytes).unwrap();
+        #[cfg(unix)]
+        {
+            use std::os::unix::fs::PermissionsExt;
+            let mut permissions = fs::metadata(path).unwrap().permissions();
+            permissions.set_mode(0o755);
+            fs::set_permissions(path, permissions).unwrap();
+        }
+    }
+
+    fn request(executable: &Path, replace_candidate: bool) -> ImportRequest<'_> {
         ImportRequest {
             executable,
             tag: "1.2.3",
             commit: Some("abc1234"),
             profile: Profile::Release,
-            activate,
             replace_candidate,
             now: "2026-08-20T00:00:00Z",
         }
@@ -164,21 +160,21 @@ mod tests {
         let tmp = tempfile::tempdir().unwrap();
         let store = VersionStore::new(tmp.path().join("opt"));
         let payload = tmp.path().join("ready-vibe.exe");
-        fs::write(&payload, b"candidate-one").unwrap();
+        write_payload(&payload, b"candidate-one");
 
-        perform_import(&quiet(), &store, &request(&payload, false, false)).unwrap();
+        perform_import(&quiet(), &store, &request(&payload, false)).unwrap();
         assert!(
-            store.read_current().is_none(),
+            store.read_current().unwrap().is_none(),
             "import is inactive by default"
         );
 
-        perform_import(&quiet(), &store, &request(&payload, false, false)).unwrap();
+        perform_import(&quiet(), &store, &request(&payload, false)).unwrap();
         let id = VersionId::new(Kind::Tag, "1.2.3");
         assert_eq!(store.instances_of(&id).unwrap().len(), 1);
         assert_eq!(store.load_state().unwrap().next_instance, 2);
 
-        fs::write(&payload, b"candidate-two").unwrap();
-        perform_import(&quiet(), &store, &request(&payload, false, false)).unwrap();
+        write_payload(&payload, b"candidate-two");
+        perform_import(&quiet(), &store, &request(&payload, false)).unwrap();
         let records = store.instances_of(&id).unwrap();
         assert_eq!(records.len(), 2);
         assert_eq!(records[0].selector().to_string(), "tag:1.2.3#1");
@@ -194,19 +190,25 @@ mod tests {
     }
 
     #[test]
-    fn replace_candidate_preserves_old_instance_and_use_writes_current_and_shims() {
+    fn imported_outcome_uses_the_common_durable_activation_path() {
         let tmp = tempfile::tempdir().unwrap();
         let store = VersionStore::new(tmp.path().join("opt"));
         let payload = tmp.path().join("ready-vibe.exe");
-        fs::write(&payload, b"candidate-one").unwrap();
-        perform_import(&quiet(), &store, &request(&payload, false, false)).unwrap();
+        write_payload(&payload, b"candidate-one");
+        perform_import(&quiet(), &store, &request(&payload, false)).unwrap();
 
-        fs::write(&payload, b"candidate-two").unwrap();
-        perform_import(&quiet(), &store, &request(&payload, true, true)).unwrap();
+        write_payload(&payload, b"candidate-two");
+        let outcome = perform_import(&quiet(), &store, &request(&payload, true)).unwrap();
+        let persister = FakePersister::default();
+        env::activate_instance(&store, &outcome.home, &persister).unwrap();
 
         let id = VersionId::new(Kind::Tag, "1.2.3");
         assert_eq!(store.instances_of(&id).unwrap().len(), 2);
-        assert_eq!(store.read_current().unwrap(), store.instance_dir(&id, 2));
+        assert_eq!(
+            store.read_current().unwrap().unwrap(),
+            store.instance_dir(&id, 2)
+        );
+        assert!(persister.path.get() && persister.home.get());
         assert!(store.shim_dir().join("vibe").is_file());
         let shim = fs::read_to_string(store.shim_dir().join("vibe")).unwrap();
         assert!(shim.contains("vibe self use"));
@@ -214,5 +216,46 @@ mod tests {
         if cfg!(windows) {
             assert!(store.shim_dir().join("vibe.cmd").is_file());
         }
+    }
+
+    #[derive(Default)]
+    struct FakePersister {
+        path: Cell<bool>,
+        home: Cell<bool>,
+    }
+
+    impl EnvPersister for FakePersister {
+        fn set_vibevm_home(&self, _home: &Path) -> Result<Persisted> {
+            self.home.set(true);
+            Ok(Persisted::Changed)
+        }
+
+        fn ensure_on_path(&self, _dir: &Path) -> Result<Persisted> {
+            self.path.set(true);
+            Ok(Persisted::Changed)
+        }
+
+        fn activation_hint(&self) -> String {
+            "test".into()
+        }
+    }
+
+    #[test]
+    fn tampered_or_missing_legacy_payload_is_never_reused() {
+        let temp = tempfile::tempdir().unwrap();
+        let store = VersionStore::new(temp.path().join("opt"));
+        let payload = temp.path().join("ready-vibe");
+        write_payload(&payload, b"candidate");
+        perform_import(&quiet(), &store, &request(&payload, false)).unwrap();
+        let id = VersionId::new(Kind::Tag, "1.2.3");
+
+        fs::write(store.binary_path(&id, 1), b"tampered").unwrap();
+        perform_import(&quiet(), &store, &request(&payload, false)).unwrap();
+        assert_eq!(store.instances_of(&id).unwrap().len(), 2);
+
+        fs::remove_file(store.binary_path(&id, 2)).unwrap();
+        perform_import(&quiet(), &store, &request(&payload, false)).unwrap();
+        assert_eq!(store.instances_of(&id).unwrap().len(), 3);
+        assert_eq!(fs::read(store.binary_path(&id, 3)).unwrap(), b"candidate");
     }
 }

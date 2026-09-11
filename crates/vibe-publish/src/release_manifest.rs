@@ -7,17 +7,45 @@
 //! into an [`AggregateDistributionManifest`]. All three documents are strict
 //! JSON contracts with deterministic serializers.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#instances");
+
 use std::collections::BTreeSet;
-use std::path::{Component, Path};
 
 use semver::Version;
 use serde::{Deserialize, Serialize};
 
 mod error;
 pub use error::{RELEASE_MANIFEST_CONTRACT, ReleaseManifestError};
+mod validation;
+use validation::*;
 
 pub const DISTRIBUTION_MANIFEST_FILENAME: &str = "DISTRIBUTION.json";
+pub const DISTRIBUTION_AGGREGATE_MANIFEST_FILENAME: &str = "DISTRIBUTIONS.json";
 pub const DISTRIBUTION_SOURCE_ARCHIVE_FILENAME: &str = "vibevm-source.zip";
+pub const DISTRIBUTION_BASH_INSTALLER_FILENAME: &str = "install.sh";
+pub const DISTRIBUTION_POWERSHELL_INSTALLER_FILENAME: &str = "install.ps1";
+/// Independent parser limit for a bundle manifest or platform fragment.
+pub const DISTRIBUTION_MANIFEST_MAX_BYTES: u64 = 4 * 1024 * 1024;
+/// Independent parser limit for the four-platform aggregate manifest.
+pub const DISTRIBUTION_AGGREGATE_MANIFEST_MAX_BYTES: u64 = 4 * 1024 * 1024;
+/// Maximum declared size of either executable carried inside a bundle.
+pub const DISTRIBUTION_COMPONENT_MAX_BYTES: u64 = 512 * 1024 * 1024;
+/// Maximum declared size of the raw bootstrap executable release asset.
+pub const DISTRIBUTION_BOOTSTRAP_MAX_BYTES: u64 = 512 * 1024 * 1024;
+/// Maximum compressed size of the canonical source snapshot inside a bundle.
+pub const DISTRIBUTION_SOURCE_ARCHIVE_MAX_BYTES: u64 = 1024 * 1024 * 1024;
+/// Maximum total expanded bytes accepted from the tracked source snapshot.
+pub const DISTRIBUTION_SOURCE_EXPANDED_MAX_BYTES: u64 = 4 * 1024 * 1024 * 1024;
+/// Maximum regular-file count accepted from the tracked source snapshot.
+pub const DISTRIBUTION_SOURCE_MAX_FILES: u64 = 200_000;
+/// Maximum materialized files plus unique implicit directories in source/.
+pub const DISTRIBUTION_SOURCE_MAX_MATERIALIZED_ENTRIES: u64 = 400_000;
+/// Maximum slash-separated component count for one tracked source path.
+pub const DISTRIBUTION_SOURCE_MAX_DEPTH: usize = 256;
+/// Maximum UTF-8 bytes in one canonical (ASCII-only) tracked source path.
+pub const DISTRIBUTION_SOURCE_MAX_PATH_BYTES: usize = 4096;
+/// Stay strictly below GitHub Releases' 2 GiB per-file ceiling.
+pub const DISTRIBUTION_BUNDLE_MAX_BYTES: u64 = 2 * 1024 * 1024 * 1024 - 1;
 pub const DISTRIBUTION_SCHEMA_VERSION: u32 = 1;
 pub const DISTRIBUTION_PRODUCT: &str = "vibevm";
 pub const DISTRIBUTION_REPOSITORY: &str = "vibevm/vibevm";
@@ -104,6 +132,9 @@ pub struct PlatformDistributionFragment {
     pub source_commit: String,
     pub target: String,
     pub asset: DistributionAsset,
+    /// Raw `vibe[.exe]` used by dependency-light hosted bootstraps before
+    /// they have a ZIP reader or an installed VVM.
+    pub bootstrap: DistributionAsset,
     /// The exact manifest embedded in this platform's bundle.
     pub bundle: BundleDistributionManifest,
 }
@@ -172,10 +203,19 @@ impl BundleDistributionManifest {
         self.validate()?;
         let mut canonical = self.clone();
         canonical.components.sort_by_key(|component| component.name);
-        deterministic_json(&canonical)
+        bounded_json(
+            &canonical,
+            DISTRIBUTION_MANIFEST_MAX_BYTES,
+            "bundle manifest",
+        )
     }
 
     pub fn from_json_slice(bytes: &[u8]) -> Result<Self, ReleaseManifestError> {
+        validate_buffer_size(
+            "bundle manifest",
+            bytes.len() as u64,
+            DISTRIBUTION_MANIFEST_MAX_BYTES,
+        )?;
         let value: Self = serde_json::from_slice(bytes)?;
         value.validate()?;
         Ok(value)
@@ -185,6 +225,7 @@ impl BundleDistributionManifest {
 impl PlatformDistributionFragment {
     pub fn new(
         asset: DistributionAsset,
+        bootstrap: DistributionAsset,
         bundle: BundleDistributionManifest,
     ) -> Result<Self, ReleaseManifestError> {
         let fragment = Self {
@@ -196,6 +237,7 @@ impl PlatformDistributionFragment {
             source_commit: bundle.source_commit.clone(),
             target: bundle.target.clone(),
             asset,
+            bootstrap,
             bundle,
         };
         fragment.validate()?;
@@ -213,7 +255,44 @@ impl PlatformDistributionFragment {
         )?;
         validate_target(&self.target)?;
         validate_asset(&self.asset)?;
+        validate_buffer_size(
+            "platform bundle",
+            self.asset.size,
+            DISTRIBUTION_BUNDLE_MAX_BYTES,
+        )?;
+        validate_asset(&self.bootstrap)?;
+        validate_buffer_size(
+            "raw bootstrap",
+            self.bootstrap.size,
+            DISTRIBUTION_BOOTSTRAP_MAX_BYTES,
+        )?;
+        if self.asset.name == self.bootstrap.name {
+            return Err(ReleaseManifestError::AssetNameCollision {
+                target: self.target.clone(),
+                name: self.asset.name.clone(),
+            });
+        }
         self.bundle.validate()?;
+        let vibe = self
+            .bundle
+            .components
+            .iter()
+            .find(|component| component.name == DistributionComponentName::Vibe)
+            .ok_or_else(|| ReleaseManifestError::Components {
+                target: self.target.clone(),
+            })?;
+        if self.bootstrap.size != vibe.size {
+            return Err(ReleaseManifestError::BootstrapMismatch {
+                target: self.target.clone(),
+                field: "size",
+            });
+        }
+        if self.bootstrap.digest != vibe.digest {
+            return Err(ReleaseManifestError::BootstrapMismatch {
+                target: self.target.clone(),
+                field: "digest",
+            });
+        }
         for (field, matches) in [
             ("product", self.product == self.bundle.product),
             ("repository", self.repository == self.bundle.repository),
@@ -242,10 +321,19 @@ impl PlatformDistributionFragment {
             .bundle
             .components
             .sort_by_key(|component| component.name);
-        deterministic_json(&canonical)
+        bounded_json(
+            &canonical,
+            DISTRIBUTION_MANIFEST_MAX_BYTES,
+            "platform fragment",
+        )
     }
 
     pub fn from_json_slice(bytes: &[u8]) -> Result<Self, ReleaseManifestError> {
+        validate_buffer_size(
+            "platform fragment",
+            bytes.len() as u64,
+            DISTRIBUTION_MANIFEST_MAX_BYTES,
+        )?;
         let value: Self = serde_json::from_slice(bytes)?;
         value.validate()?;
         Ok(value)
@@ -304,8 +392,17 @@ impl AggregateDistributionManifest {
             });
         }
 
+        let mut release_asset_names = BTreeSet::new();
         for platform in &self.platforms {
             platform.validate()?;
+            for asset in [&platform.asset, &platform.bootstrap] {
+                if !release_asset_names.insert(asset.name.clone()) {
+                    return Err(ReleaseManifestError::AssetNameCollision {
+                        target: platform.target.clone(),
+                        name: asset.name.clone(),
+                    });
+                }
+            }
             for (field, matches) in [
                 ("product", platform.product == self.product),
                 ("repository", platform.repository == self.repository),
@@ -355,215 +452,34 @@ impl AggregateDistributionManifest {
                 .components
                 .sort_by_key(|component| component.name);
         }
-        deterministic_json(&canonical)
+        bounded_json(
+            &canonical,
+            DISTRIBUTION_AGGREGATE_MANIFEST_MAX_BYTES,
+            "aggregate manifest",
+        )
     }
 
     pub fn from_json_slice(bytes: &[u8]) -> Result<Self, ReleaseManifestError> {
+        validate_buffer_size(
+            "aggregate manifest",
+            bytes.len() as u64,
+            DISTRIBUTION_AGGREGATE_MANIFEST_MAX_BYTES,
+        )?;
         let value: Self = serde_json::from_slice(bytes)?;
         value.validate()?;
         Ok(value)
     }
 }
 
-fn deterministic_json<T: Serialize>(value: &T) -> Result<Vec<u8>, ReleaseManifestError> {
+fn bounded_json<T: Serialize>(
+    value: &T,
+    max: u64,
+    field: &'static str,
+) -> Result<Vec<u8>, ReleaseManifestError> {
     let mut bytes = serde_json::to_vec_pretty(value)?;
     bytes.push(b'\n');
+    validate_buffer_size(field, bytes.len() as u64, max)?;
     Ok(bytes)
-}
-
-fn validate_schema(actual: u32) -> Result<(), ReleaseManifestError> {
-    if actual != DISTRIBUTION_SCHEMA_VERSION {
-        return Err(ReleaseManifestError::SchemaVersion {
-            actual,
-            expected: DISTRIBUTION_SCHEMA_VERSION,
-        });
-    }
-    Ok(())
-}
-
-fn validate_identity(
-    product: &str,
-    repository: &str,
-    version: &str,
-    tag: &str,
-    source_commit: &str,
-) -> Result<(), ReleaseManifestError> {
-    if product != DISTRIBUTION_PRODUCT {
-        return Err(ReleaseManifestError::Product {
-            actual: product.to_string(),
-            expected: DISTRIBUTION_PRODUCT,
-        });
-    }
-    if repository != DISTRIBUTION_REPOSITORY {
-        return Err(ReleaseManifestError::Repository {
-            actual: repository.to_string(),
-            expected: DISTRIBUTION_REPOSITORY,
-        });
-    }
-    Version::parse(version).map_err(|error| ReleaseManifestError::Version {
-        value: version.to_string(),
-        detail: error.to_string(),
-    })?;
-    if tag != format!("v{version}") {
-        return Err(ReleaseManifestError::Tag {
-            version: version.to_string(),
-            tag: tag.to_string(),
-        });
-    }
-    if !is_lowercase_git_oid(source_commit) {
-        return Err(ReleaseManifestError::SourceCommit {
-            value: source_commit.to_string(),
-        });
-    }
-    Ok(())
-}
-
-fn is_lowercase_git_oid(value: &str) -> bool {
-    matches!(value.len(), 40 | 64)
-        && value
-            .bytes()
-            .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte))
-}
-
-fn validate_target(target: &str) -> Result<(), ReleaseManifestError> {
-    if !SUPPORTED_DISTRIBUTION_TARGETS.contains(&target) {
-        return Err(ReleaseManifestError::UnsupportedTarget {
-            target: target.to_string(),
-        });
-    }
-    Ok(())
-}
-
-fn target_sort_key(target: &str) -> usize {
-    match target {
-        "x86_64-pc-windows-msvc" => 0,
-        "x86_64-unknown-linux-musl" => 1,
-        "x86_64-apple-darwin" => 2,
-        "aarch64-apple-darwin" => 3,
-        _ => SUPPORTED_DISTRIBUTION_TARGETS.len(),
-    }
-}
-
-fn validate_components(
-    target: &str,
-    components: &[DistributionComponent],
-) -> Result<(), ReleaseManifestError> {
-    let names = components
-        .iter()
-        .map(|component| component.name)
-        .collect::<BTreeSet<_>>();
-    let required = [
-        DistributionComponentName::Vibe,
-        DistributionComponentName::VibeIndex,
-    ]
-    .into_iter()
-    .collect::<BTreeSet<_>>();
-    if components.len() != required.len() || names != required {
-        return Err(ReleaseManifestError::Components {
-            target: target.to_string(),
-        });
-    }
-    let paths = components
-        .iter()
-        .map(|component| component.path.as_str())
-        .collect::<BTreeSet<_>>();
-    if paths.len() != components.len() {
-        return Err(ReleaseManifestError::Components {
-            target: target.to_string(),
-        });
-    }
-    for component in components {
-        if !is_bundle_relative_file(&component.path) {
-            return Err(ReleaseManifestError::ComponentPath {
-                component: component.name.as_str().to_string(),
-                path: component.path.clone(),
-            });
-        }
-        if component.size == 0 {
-            return Err(ReleaseManifestError::EmptyArtifact {
-                field: format!("component `{}`", component.name.as_str()),
-            });
-        }
-        validate_digest(
-            &format!("component `{}`", component.name.as_str()),
-            &component.digest,
-        )?;
-    }
-    Ok(())
-}
-
-fn validate_asset(asset: &DistributionAsset) -> Result<(), ReleaseManifestError> {
-    if asset.name.trim().is_empty() || asset.name.contains('/') || asset.name.contains('\\') {
-        return Err(ReleaseManifestError::AssetName);
-    }
-    if asset.size == 0 {
-        return Err(ReleaseManifestError::EmptyArtifact {
-            field: "distribution asset".to_string(),
-        });
-    }
-    validate_digest("distribution asset", &asset.digest)
-}
-
-fn validate_source_archive(
-    source_archive: &DistributionSourceArchive,
-) -> Result<(), ReleaseManifestError> {
-    if !is_bundle_relative_file(&source_archive.path) {
-        return Err(ReleaseManifestError::SourceArchivePath {
-            path: source_archive.path.clone(),
-        });
-    }
-    if source_archive.size == 0 {
-        return Err(ReleaseManifestError::EmptyArtifact {
-            field: "source archive".to_string(),
-        });
-    }
-    validate_digest("source archive", &source_archive.digest)?;
-    if !is_lowercase_git_oid(&source_archive.tree_oid) {
-        return Err(ReleaseManifestError::SourceArchiveTreeOid {
-            value: source_archive.tree_oid.clone(),
-        });
-    }
-    Ok(())
-}
-
-fn validate_digest(field: &str, digest: &str) -> Result<(), ReleaseManifestError> {
-    let valid = digest.strip_prefix("sha256:").is_some_and(|hex| {
-        hex.len() == 64
-            && hex
-                .bytes()
-                .all(|byte| byte.is_ascii_hexdigit() && !byte.is_ascii_uppercase())
-    });
-    if !valid {
-        return Err(ReleaseManifestError::Digest {
-            field: field.to_string(),
-            digest: digest.to_string(),
-        });
-    }
-    Ok(())
-}
-
-fn is_bundle_relative_file(value: &str) -> bool {
-    if value.trim().is_empty()
-        || value.starts_with('/')
-        || value.starts_with('\\')
-        || value.ends_with('/')
-        || value.ends_with('\\')
-        || value.contains(':')
-        || value
-            .split(['/', '\\'])
-            .any(|segment| segment.is_empty() || segment == "..")
-    {
-        return false;
-    }
-    let mut saw_normal = false;
-    for component in Path::new(value).components() {
-        match component {
-            Component::Normal(_) => saw_normal = true,
-            Component::CurDir => {}
-            Component::ParentDir | Component::RootDir | Component::Prefix(_) => return false,
-        }
-    }
-    saw_normal
 }
 
 #[cfg(test)]

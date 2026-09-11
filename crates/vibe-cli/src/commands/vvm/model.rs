@@ -31,6 +31,13 @@ pub enum ModelError {
     InvalidInstanceSelector(String),
 
     #[error(
+        "unsafe version id `{0}` \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-019#layout; \
+          fix: use a relative git ref without empty, `.`, or `..` path components)"
+    )]
+    UnsafeVersionId(String),
+
+    #[error(
         "unknown build profile `{0}` \
          (violates spec://org.vibevm.core/vibevm/common/PROP-019#build; \
           fix: pass `debug` or `release`)"
@@ -90,7 +97,19 @@ impl VersionId {
 
     /// The on-disk path segment `<kind>/<id>` (PROP-019 §2.4).
     pub fn path_segment(&self) -> PathBuf {
+        assert!(
+            safe_version_id(&self.id),
+            "unsafe VersionId reached store path"
+        );
         PathBuf::from(self.kind.as_str()).join(&self.id)
+    }
+
+    pub fn validate(&self) -> Result<(), ModelError> {
+        if safe_version_id(&self.id) {
+            Ok(())
+        } else {
+            Err(ModelError::UnsafeVersionId(self.id.clone()))
+        }
     }
 }
 
@@ -182,7 +201,7 @@ impl Selector {
         }
         let full = raw;
         let (raw, instance) = split_instance_suffix(raw)?;
-        let selector = Self::parse_version(raw, forced);
+        let selector = Self::parse_version(raw, forced)?;
         if let Some(instance) = instance {
             return match selector {
                 Selector::Explicit(version) => {
@@ -194,25 +213,49 @@ impl Selector {
         Ok(selector)
     }
 
-    fn parse_version(raw: &str, forced: Option<Kind>) -> Selector {
+    fn parse_version(raw: &str, forced: Option<Kind>) -> Result<Selector, ModelError> {
         if let Some(kind) = forced {
-            return Selector::Explicit(VersionId::new(kind, raw));
+            let id = VersionId::new(kind, raw);
+            id.validate()?;
+            return Ok(Selector::Explicit(id));
         }
         // The canonical `<kind>:<id>` form, as `man ls` prints it.
         if let Some((k, rest)) = raw.split_once(':')
             && let Some(kind) = Kind::from_token(k)
             && !rest.is_empty()
         {
-            return Selector::Explicit(VersionId::new(kind, rest));
+            let id = VersionId::new(kind, rest);
+            id.validate()?;
+            return Ok(Selector::Explicit(id));
         }
-        match raw {
+        let selector = match raw {
             "latest" => Selector::Latest,
             "stable" => Selector::Stable,
             _ if looks_like_commit(raw) => Selector::Explicit(VersionId::new(Kind::Commit, raw)),
             _ if looks_like_semver_tag(raw) => Selector::Explicit(VersionId::new(Kind::Tag, raw)),
             _ => Selector::Ambiguous(raw.to_string()),
+        };
+        let value = match &selector {
+            Selector::Explicit(id) => Some(&id.id),
+            Selector::Ambiguous(id) => Some(id),
+            _ => None,
+        };
+        if let Some(value) = value
+            && !safe_version_id(value)
+        {
+            return Err(ModelError::UnsafeVersionId(value.clone()));
         }
+        Ok(selector)
     }
+}
+
+fn safe_version_id(value: &str) -> bool {
+    !value.is_empty()
+        && !value.contains(['\\', ':', '\0'])
+        && value
+            .split('/')
+            .all(|component| !component.is_empty() && component != "." && component != "..")
+        && !PathBuf::from(value).is_absolute()
 }
 
 fn split_instance_suffix(raw: &str) -> Result<(&str, Option<u64>), ModelError> {
@@ -250,7 +293,7 @@ pub enum Origin {
     Managed,
     /// A committer's own checkout, referenced by `source_path`; never touched.
     External,
-    /// A prebuilt artifact (far-backlog).
+    /// A verified prebuilt bundle or legacy local single-binary import.
     Binary,
 }
 
@@ -282,13 +325,18 @@ pub struct InstallRecord {
     pub installed_at: String,
     /// Where the source came from (PROP-019 §2.16).
     pub origin: Origin,
-    /// Canonical absolute path of the source — only for `external` origins.
+    /// Canonical absolute source path: a referenced checkout for `external`,
+    /// or the instance-owned extracted tree for a modern `binary` bundle.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub source_path: Option<String>,
     /// Integrity digest of a locally imported prebuilt payload. This is
     /// populated only for `binary` origins and is not a signature.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub payload_sha256: Option<String>,
+    /// SHA-256 of the exact authenticated `DISTRIBUTION.json` bytes. Modern
+    /// bundles require this trust root before following component digests.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub distribution_manifest_sha256: Option<String>,
 }
 
 impl InstallRecord {
@@ -305,8 +353,11 @@ impl InstallRecord {
     /// A stable human provenance label even for old records that predate a
     /// source path or for binary imports whose original file may be gone.
     pub fn source_label(&self) -> &str {
+        if let Some(path) = self.source_path.as_deref() {
+            return path;
+        }
         match self.origin {
-            Origin::External => self.source_path.as_deref().unwrap_or("external:unknown"),
+            Origin::External => "external:unknown",
             Origin::Managed => "managed-git",
             Origin::Binary => "local-import",
         }
@@ -348,7 +399,7 @@ mod tests {
     use specmark::verifies;
 
     #[test]
-    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#layout", r = 1)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#layout", r = 2)]
     fn version_id_renders_and_splits_by_kind() {
         let v = VersionId::new(Kind::Tag, "1.2.3");
         assert_eq!(v.to_string(), "tag:1.2.3");
@@ -360,7 +411,7 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#layout", r = 1)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#layout", r = 2)]
     fn state_round_trips_through_toml() {
         let state = State {
             next_instance: 4,
@@ -375,6 +426,7 @@ mod tests {
                 origin: Origin::External,
                 source_path: Some("C:/src/vibevm".into()),
                 payload_sha256: None,
+                distribution_manifest_sha256: None,
             }],
         };
         let text = toml::to_string(&state).unwrap();
@@ -407,7 +459,7 @@ origin = "binary"
     }
 
     #[test]
-    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#selectors", r = 1)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#selectors", r = 2)]
     fn selector_parse_classifies_by_shape() {
         use Selector::*;
         assert_eq!(Selector::parse("latest", None).unwrap(), Latest);
@@ -442,6 +494,13 @@ origin = "binary"
         );
         assert!(Selector::parse("latest#7", None).is_err());
         assert!(Selector::parse("tag:1.2.3#0", None).is_err());
+        assert_eq!(
+            Selector::parse("feature/topic", Some(Kind::Branch)).unwrap(),
+            Explicit(VersionId::new(Kind::Branch, "feature/topic"))
+        );
+        for unsafe_id in ["../escape", "a/../b", "a/./b", "a//b", "/root", r"C:\root"] {
+            assert!(Selector::parse(unsafe_id, Some(Kind::Branch)).is_err());
+        }
         assert!(Selector::parse("   ", None).is_err());
     }
 
@@ -458,6 +517,7 @@ origin = "binary"
             origin: Origin::Binary,
             source_path: None,
             payload_sha256: Some("feedface".into()),
+            distribution_manifest_sha256: None,
         };
         assert_eq!(record.selector().to_string(), "tag:1.2.3#9");
         assert_eq!(record.source_label(), "local-import");
@@ -470,7 +530,7 @@ origin = "binary"
     }
 
     #[test]
-    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#build", r = 1)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#build", r = 2)]
     fn profile_parses_and_defaults_to_debug() {
         assert_eq!(Profile::parse("release").unwrap(), Profile::Release);
         assert!(Profile::parse("fast").is_err());
