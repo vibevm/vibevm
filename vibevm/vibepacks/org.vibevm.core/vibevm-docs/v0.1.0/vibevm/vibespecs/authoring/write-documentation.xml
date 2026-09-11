@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Write documentation for a package</title>
+  <status stage="doc" state="work" audience="author"/>
+  <p>A manual for a package is itself a package: it names what it documents, carries a title and a summary, and is read rather than installed. This page writes one, with examples that are run and rules quoted from the source they come from.</p>
+  <prompt id="write-documentation">Create a documentation package org.acme/notes-flow-docs in packages/notes-flow-docs of the current VibeVM project, documenting the package org.acme/notes-flow: a manifest with kind doc, a title and an abstract, a [[documents]] entry for the subject, and one page explaining what the flow does with a rule quoted from the subject's protocol by address. Run vibe doc check on it.
+    <needs>the vibevm skill installed for your agent; a project with `vibe.toml` at the root and the subject package in it</needs>
+    <outcome>`packages/notes-flow-docs/vibe.toml` declares `kind = "doc"`, `title`, `abstract` and `[[documents]]`; the page under `vibevm/vibespecs/` has a first paragraph without terms and a `rule` block whose address resolves; `vibe doc check --citations` reports no unresolved citation</outcome>
+    <assert>grep -q "kind = \"doc\"" packages/notes-flow-docs/vibe.toml</assert>
+    <assert>vibe doc check --citations --path packages/notes-flow-docs</assert>
+  </prompt>
+  <what-happens title="What happens">
+    <p>The agent creates the package with the `doc` kind, fills the card, names the subject, and writes the first page in the XML dialect with the documentation vocabulary. `vibe doc check --citations` resolves every `rule` address against the subject's specification and fails on any that does not exist. The manual is published like any package; the site finds it through the `[[documents]]` edge and, because the subject's group published it under the `-docs` name, shows it as the subject's official documentation.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#REL-DEFAULT-CONVENTION"/>
+  </what-happens>
+  <the-manifest title="The manifest">
+    <p>A `doc` package must name at least one subject and carry a `title` and an `abstract`; it may declare a skill, images and, for a translation, the documentation it mirrors. It may not declare a boot snippet, a binary or a server: documentation is read, never executed, and never enters a session's reading list.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#KIND-DOC-MUST-DOCUMENT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#KIND-DOC-MUST-NOT-EXECUTE"/>
+    <p>The `abstract` answers four questions in three to six sentences: what the manual covers, for whom, what it assumes known, what it leaves out. The `title` is the display name on every shelf; the coordinate stays the identity, and the publisher is shown beside it. Images are optional source files in the package tree; when absent, the site draws a placeholder from the coordinate.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#CARD-DESCRIPTION-AND-ABSTRACT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#CARD-PLACEHOLDERS-GENERATED"/>
+  </the-manifest>
+  <the-vocabulary title="The vocabulary of a page">
+    <p>Pages are written in the project's XML dialect, extended for documentation with a small vocabulary that ordinary specifications do not have. Each element is checked by a tool, which is the point of having it.</p>
+    <table>
+      <tr><td>Element</td><td>What it does</td><td>What checks it</td></tr>
+      <tr><td>`example` with `run` and `expect`</td><td>a command and its expected output, run in a fixture</td><td>the runner: exact match after declared normalisation</td></tr>
+      <tr><td>`rule ref="spec://…#ANCHOR"`</td><td>quotes a rule from a specification, live, in the specification's language</td><td>the anchor exists</td></tr>
+      <tr><td>`derived kind="cli-help | jtd-schema | manifest-field"`</td><td>inserts a generated reference block</td><td>regenerated at build; a divergence is red</td></tr>
+      <tr><td>`note kind="note | tip | warning"`</td><td>a call-out</td><td>the schema</td></tr>
+      <tr><td>`figure src alt` with `caption`</td><td>an image from the package tree</td><td>the file exists and passes the media rules</td></tr>
+      <tr><td>`prompt` with `needs`, `outcome`, `assert`</td><td>the request a user gives an agent to do the task, and the commands that prove it was done</td><td>an agent runs it in a clean fixture, then the asserts</td></tr>
+      <tr><td>`when="os:…"` on any block</td><td>a platform variant</td><td>the condition vocabulary</td></tr>
+    </table>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#DOC-VOCAB-BY-KIND"/>
+    <p>A page that quotes a normative value, a flag, a path, a field name, does so through `rule`; it never restates the value in prose, because a restated value is a second copy that drifts.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#INV-DOC-CITES-NEVER-COPIES"/>
+  </the-vocabulary>
+  <the-shape title="The shape of a page">
+    <p>A concept page has a noun as its title, opens with a paragraph that uses no term of the glossary, shows an example before it explains, explains as a ladder where each step uses only the steps before it, and ends with edge cases and questions. A task page has an imperative title, opens the same way, and then gives the request for an agent before anything else: what to ask, what the agent needs, what you will see, and the commands that prove it worked. Manual steps follow only when they are worth walking. No page ends with a conclusion.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#STYLE-PAGE-SKELETON"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#STYLE-PROMPT-FIRST"/>
+    <p>The full writing rules, including the banned words and the limits on sentence length in technical passages, ship with this manual as `AUTHORING.md`; `vibe doc check --style` enforces the mechanical part.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#STYLE-LINT"/>
+  </the-shape>
+  <checks title="Checking and publishing">
+    <p>`vibe doc check --examples --citations --derived --media --style` runs every check; the examples run against the real binary in a sandbox copied from the fixture the page names, and a page is committed only when the checks are green. Publishing is `vibe registry publish` like any package; a reader gets the manual with `vibe cache add`, and the site renders it when the index announces it.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-EXAMPLE-RUNNER"/>
+  </checks>
+  <edge-cases title="Edge cases and rules">
+    <p>Any group may document any package; the site shows such a manual on the community shelf with its publisher, and the subject's own group can promote it to official by naming it in `[documentation]`.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#REL-OFFICIAL-IS-CONVERGENCE"/>
+    <p>Examples in a README of an ordinary package are not run: the vocabulary opens only in packages of kind `doc`.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#DOC-VOCAB-README-LIMIT"/>
+    <p>A manual describes a version range of its subject through `[[documents]] version`, and the site shows, for each subject version, the newest manual whose range admits it.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#REL-VERSION-SELECTION"/>
+  </edge-cases>
+</spec>

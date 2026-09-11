@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Write a flow package</title>
+  <status stage="doc" state="work" audience="author"/>
+  <p>A flow tells an agent how a team works: how to commit, what to check before pushing, how to keep notes between sessions. This page writes one from scratch, including the short text the agent reads at every session start.</p>
+  <prompt id="write-a-flow">Create a flow package org.acme/review-notes in the folder packages/review-notes of the current VibeVM project. It should teach an agent to leave a short REVIEW.md note at the root of the project after every change it makes, with the date and what changed. Write the boot snippet, the protocol document and the manifest, then run vibe check on the package.
+    <needs>the vibevm skill installed for your agent; a project with `vibe.toml` at the root</needs>
+    <outcome>`packages/review-notes/vibe.toml` declares a `flow` package with a boot snippet; the snippet is under two hundred words and names the protocol by address; the protocol document has anchored sections; `vibe check --path packages/review-notes` reports no errors</outcome>
+    <assert>vibe check --path packages/review-notes --quiet</assert>
+    <assert>test -f packages/review-notes/vibevm/vibespecs/boot/review-notes.xml</assert>
+  </prompt>
+  <what-happens title="What happens">
+    <p>The agent runs `vibe init package org.acme/review-notes packages/review-notes`, which writes a manifest with a `[package]` table, the `vibevm/` layout and the two boot files every node has. It then writes three things: the boot snippet, a short instruction the agent of a consuming project reads at every session start; the protocol, the full rules under `vibevm/vibespecs/flows/review-notes/`, with anchored sections the snippet cites; and the manifest's `[boot_snippet]` table pointing at the snippet with the category `flow`. Finally it runs `vibe check` on the package, which validates the manifest and the layout like it would for any project.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-024#PKG-PROJECT-LAW"/>
+  </what-happens>
+  <by-hand title="By hand">
+    <p>1. Create the package skeleton:</p>
+    <example id="init-package" fixture="workspace-root">
+      <run>vibe init package org.acme/review-notes packages/review-notes</run>
+      <expect></expect>
+    </example>
+    <p>2. Write the manifest. A flow needs the package identity, a description, and the snippet declaration:</p>
+    <example id="manifest" fixture="none">
+      <run>cat packages/review-notes/vibe.toml</run>
+      <expect></expect>
+    </example>
+    <p>3. Write the snippet at `vibevm/vibespecs/boot/review-notes.xml`. Keep it short: what to do, and the address of the rule that says why. It is read by every agent, in every session, of every project that installs your flow.</p>
+    <p>4. Write the protocol under `vibevm/vibespecs/flows/review-notes/`: one anchored section per rule, one idea per section, a status marker on each.</p>
+    <p>5. Check and publish:</p>
+    <example id="check" fixture="workspace">
+      <run>vibe check --path packages/review-notes</run>
+      <expect></expect>
+    </example>
+  </by-hand>
+  <the-snippet title="The snippet is the expensive part">
+    <p>A snippet is paid for on every session start by every consumer. Write it as an instruction, not an explanation: name the rule, the address, the command. Put the reasoning in the protocol, where an agent reads it once when it needs to. And never assume another package is installed: a snippet that says «as the WAL protocol requires» in a project without that protocol sends the agent looking for a rule that is not there. If your flow builds on another, declare the concept it relies on and let vibe warn when the concept is absent.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-048#THE-LAYER-LAW"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-049#SNIPPET-GENRE-RULE"/>
+    <p>The consumer decides how your snippet is linked, compiled into the priority lane or listed in the index; you may suggest a default in `[boot_snippet]`, and the consumer's choice wins.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SUGGESTED-DEFAULT"/>
+  </the-snippet>
+  <layout title="What goes where">
+    <table>
+      <tr><td>Path</td><td>Purpose</td></tr>
+      <tr><td>`vibe.toml`</td><td>the manifest: `[package]`, `[boot_snippet]`, optional `[[skill]]`, `[requires]`</td></tr>
+      <tr><td>`README.md`</td><td>what the flow is, shown on the registry and the site</td></tr>
+      <tr><td>`vibevm/vibespecs/boot/&lt;name&gt;.xml`</td><td>the boot snippet</td></tr>
+      <tr><td>`vibevm/vibespecs/flows/&lt;name&gt;/`</td><td>the protocol and its supporting documents</td></tr>
+      <tr><td>`vibevm/vibespecs/skills/&lt;skill&gt;/SKILL.md`</td><td>skills the flow offers to agents, declared in `[[skill]]`</td></tr>
+      <tr><td>`LICENSE.md`</td><td>the licence; permissive licences only in the public registry</td></tr>
+    </table>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-024#SPEC-SUBTREE"/>
+    <p>Everything under the package root except build output is the package: that is what is fingerprinted, copied into consumers and shown by the site.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-024#SHIPPABLE-TREE-DEF"/>
+  </layout>
+  <edge-cases title="Edge cases and rules">
+    <p>Cross-references inside the package are addresses, `spec://org.acme/review-notes/flows/review-notes/PROTOCOL#anchor`, never relative file paths; they survive being copied into any consumer.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-052#ADDRESSES-SURVIVE-THE-MOVE"/>
+    <p>Versions never move: to change a published snippet, bump the version and publish again. A consumer sees the change at its next update, not before.</p>
+    <p>A flow may require other packages; a consumer installing yours gets them too, and their snippets enter the consumer's lane after yours.</p>
+  </edge-cases>
+</spec>
