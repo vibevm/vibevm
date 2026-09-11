@@ -92,11 +92,11 @@ A0.27 в плане отсутствует.
 | P.3 | `8ca8d5ba` `docs(vibevm-docs): write the reference section` | 5 страниц; `reference/commands` целиком из `derived` |
 | P.3 | `cc36532d` `docs(vibevm-docs): write the authoring section` | 7 страниц, 6 промптов |
 | P.3 | `8487c6a0` `docs(vibevm-docs): write the architecture section` | 3 страницы |
-| P.3 | `818a474d` `docs(vibevm-docs): write the glossary, questions and diagnostics` | глоссарий 58 терминов — единственное место определений |
+| P.3 | `818a474d` `docs(vibevm-docs): write the glossary, questions and diagnostics` | глоссарий 50 терминов — единственное место определений; после PP-C1 `fingerprint` и `freshness fingerprint` разведены (одно слово — одно значение) |
 | P.4 | в `0df597b3` и `42457142` | `title`/`abstract` doc-пакета, тело скилла `vibevm-docs`, `INTERFACE-COPY.md`; карточка предмета (`org.vibevm.core/vibevm`) — некуда положить, корень хоста `[project]` → X-027 |
 | P.3 хвост | ждёт PP-C2 | 56 из 59 `expect` снимаются с `target/debug/vibe.exe` по `EXAMPLES-TODO.md`; 3 — «не сейчас» (релиз, фаза 2) |
 | P.5 | ждёт PP-C3 | седьмая колонка «решение» в `LEGACY-INVENTORY.md` |
-| P.6 + P.7 | ждёт PP-C1 | запрещённые слова, длины фраз, термины до введения, разрешимость 186 `spec://` |
+| P.6 + P.7 | `435d3aef` `docs(vibevm-docs): act on the first prose check`; `2f48c888` `docs(vibevm-docs): shorten the longest sentences` | PP-C1: 385 цитат (3 якоря исправлены, 9 плейсхолдеров/самоадресаций — правила X-029), 11 запрещённых слов (4 исправлены, `capabilities` снят со списка), 195 длинных фраз (35 переписаны, порог — X-028), 3 абзаца-процедуры разбиты, 308 терминов до введения → 212 ссылок на глоссарий; повторная проверка: 0 нарушений (J-059, J-060) |
 | P.7b | после PP-C2 | прогон 19 промптов `opus5` на фикстурах PP-C2; промпты, требующие `vibe doc`/вида `doc` (3), ждут фазы 2 |
 | P.8 | OPEN у владельца | три страницы вслух — предложение в review-маркерах |
 | P.9 | после P.5–P.8 | пакет передачи §12.1 |

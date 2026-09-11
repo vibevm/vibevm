@@ -36,7 +36,7 @@ glossary + faq + diagnostics; каркас `0df597b3`; правка фиксту
 | Страницы: XML корректен, inline — Markdown, `<`/`&` экранированы | принято | J-051…J-053; разбор 44 файлов стандартным парсером чист; `vibe check` 0 ошибок |
 | `expect` сняты с бинарника | ⏳ PP-C2 | `findings/WORKER-REPORT-PP-C2.md`; сборка бинарника — в отчёте; 3 примера «не сейчас» (`EXAMPLES-TODO.md` §not-now) |
 | Инвентарь legacy без пустых строк | ⏳ PP-C3 | `LEGACY-INVENTORY.md`, колонка «решение»; строки «нужен автор» разобраны Fable |
-| P.6 стиль и P.7 цитаты с нулём замечаний | ⏳ PP-C1 | `findings/PP-C1-prose-checks.md`; скрипты воркера — первые фикстуры A2.25 |
+| P.6 стиль и P.7 цитаты с нулём замечаний | принято: замечания отработаны `435d3aef`, `2f48c888`; повторная проверка терминов и XML — 0 (J-059, J-060); открытые калибровки линтера — X-028, X-029 | `findings/PP-C1-prose-checks.md`, `findings/WORKER-REPORT-PP-C1.md` (скрипты `analyze.py`, `render_report.py`, `validate_md.py` — первые фикстуры A2.25) |
 | Каждый промпт прошёл прогон P.7b | ⏳ PP-O1 | `findings/WORKER-REPORT-PP-O1.md`, `findings/PP-O1-runs/`; промпты, ждущие фазы 2: `read-docs-locally`, `write-documentation`, `translate-documentation`; не прогоняемые в песочнице: `install-vibe`, `give-your-agent-the-skill` (только `--dry-run`) |
 | Стиль-ревью владельца P.8 | ⏳ OPEN | review-маркер в `LEDGER.md`; под целью сессии владельца волна B не ждёт его; замечания — в точке F1 |
 
@@ -78,7 +78,7 @@ glossary + faq + diagnostics; каркас `0df597b3`; правка фиксту
    Порядок фазы 2: A2.1–A2.7 виды, манифест, индекс, гейт; A2.8–A2.12 пивот
    и проверки; A2.13–A2.21 конвейер и поверхности.
 3. Findings фазы 0 — `PHASE-0-FINDINGS.md` и `findings/`; леджер —
-   `LEDGER.md`; отложенное — `DEFERRALS.md` (X-001…X-027, каждое с
+   `LEDGER.md`; отложенное — `DEFERRALS.md` (X-001…X-029, каждое с
    триггером и атомом); журнал — `JOURNAL.md`, ведётся по R-33 в том же
    атоме, где случилось событие.
 4. Первые фикстуры: раннер A2.9 — `EXAMPLES-TODO.md` §fixtures и корпус
