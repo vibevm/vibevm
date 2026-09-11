@@ -1,0 +1,216 @@
+name: Build vibevm distributions
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Mutable product version to prepare and finalize
+        required: true
+        type: string
+        default: "1.0.0"
+      upload:
+        description: Replace the version's GitHub draft, upload all four bundles, and publish it
+        required: true
+        type: boolean
+        default: false
+      checks:
+        description: Forward --checks to every native build
+        required: true
+        type: boolean
+        default: false
+      tests:
+        description: Forward --tests to every native build (off by default)
+        required: true
+        type: boolean
+        default: false
+      self_check:
+        description: Forward --self-check to every native build
+        required: true
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: vibevm-distribution-${{ inputs.version }}
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    name: Prepare one mutable-version draft
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - name: Check out the selected revision
+        if: ${{ inputs.upload }}
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Select the repository Rust toolchain
+        if: ${{ inputs.upload }}
+        run: rustup show active-toolchain
+
+      - name: Build the release orchestrator without credentials
+        if: ${{ inputs.upload }}
+        run: cargo build --locked --package xtask
+
+      - name: Prepare or replace the mutable-version draft
+        if: ${{ inputs.upload }}
+        env:
+          VIBEVM_DIST_VERSION: ${{ inputs.version }}
+          VIBEVM_PUBLISH_TOKEN_GITHUB: ${{ secrets.GITHUB_TOKEN }}
+          CARGO_MANIFEST_DIR: ${{ github.workspace }}/xtask
+        run: target/debug/xtask dist prepare --version "$VIBEVM_DIST_VERSION"
+
+      - name: Build-only run needs no GitHub draft
+        if: ${{ inputs.upload == false }}
+        run: echo "upload=false; native jobs will build without touching GitHub Releases."
+
+  build:
+    name: ${{ matrix.label }}
+    needs: prepare
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - label: Windows x86_64
+            runner: windows-2025
+            target: x86_64-pc-windows-msvc
+            script: distribution/release/build-windows-x86_64.ps1
+          - label: Linux x86_64
+            runner: ubuntu-24.04
+            target: x86_64-unknown-linux-musl
+            script: distribution/release/build-linux-x86_64.sh
+          - label: macOS Intel
+            runner: macos-15-intel
+            target: x86_64-apple-darwin
+            script: distribution/release/build-macos-x86_64.sh
+          - label: macOS ARM64
+            runner: macos-15
+            target: aarch64-apple-darwin
+            script: distribution/release/build-macos-aarch64.sh
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - name: Check out the selected revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Select the repository Rust toolchain and native target
+        shell: bash
+        run: |
+          set -eu
+          rustup show active-toolchain
+          rustup target add "${{ matrix.target }}"
+
+      - name: Install the Linux static-linker toolchain
+        if: ${{ matrix.target == 'x86_64-unknown-linux-musl' }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes musl-tools
+
+      - name: Build the Windows bundle
+        if: ${{ runner.os == 'Windows' }}
+        shell: pwsh
+        env:
+          VIBEVM_DIST_VERSION: ${{ inputs.version }}
+        run: |
+          $options = @()
+          if ('${{ inputs.checks }}' -eq 'true') { $options += '--checks' }
+          if ('${{ inputs.tests }}' -eq 'true') { $options += '--tests' }
+          if ('${{ inputs.self_check }}' -eq 'true') { $options += '--self-check' }
+          & ./${{ matrix.script }} @options
+
+      - name: Build the POSIX bundle
+        if: ${{ runner.os != 'Windows' }}
+        shell: bash
+        env:
+          VIBEVM_DIST_VERSION: ${{ inputs.version }}
+        run: |
+          set -eu
+          set --
+          if [ '${{ inputs.checks }}' = true ]; then set -- "$@" --checks; fi
+          if [ '${{ inputs.tests }}' = true ]; then set -- "$@" --tests; fi
+          if [ '${{ inputs.self_check }}' = true ]; then set -- "$@" --self-check; fi
+          sh '${{ matrix.script }}' "$@"
+
+      - name: Retain the native bundle as a workflow artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: vibevm-${{ matrix.target }}
+          path: |
+            dist/vibevm-*
+            dist/vibe-bootstrap-*
+          if-no-files-found: error
+
+  upload:
+    name: Upload ${{ matrix.target }} from retained build output
+    if: ${{ inputs.upload }}
+    needs:
+      - prepare
+      - build
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        target:
+          - x86_64-pc-windows-msvc
+          - x86_64-unknown-linux-musl
+          - x86_64-apple-darwin
+          - aarch64-apple-darwin
+    steps:
+      - name: Check out the selected revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Build the release orchestrator without credentials
+        run: cargo build --locked --package xtask
+
+      - name: Restore the exact native build output
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        with:
+          name: vibevm-${{ matrix.target }}
+          path: dist
+
+      - name: Upload only from the prebuilt orchestrator
+        env:
+          VIBEVM_DIST_VERSION: ${{ inputs.version }}
+          VIBEVM_PUBLISH_TOKEN_GITHUB: ${{ secrets.GITHUB_TOKEN }}
+          CARGO_MANIFEST_DIR: ${{ github.workspace }}/xtask
+        run: target/debug/xtask dist upload-built --target "${{ matrix.target }}"
+
+  finalize:
+    name: Verify four bundles and finalize the release
+    if: ${{ always() && inputs.upload && needs.prepare.result == 'success' && needs.upload.result == 'success' }}
+    needs:
+      - prepare
+      - upload
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - name: Check out the selected revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Select the repository Rust toolchain
+        run: rustup show active-toolchain
+
+      - name: Build the release orchestrator without credentials
+        run: cargo build --locked --package xtask
+
+      - name: Finalize only the complete four-target draft
+        env:
+          VIBEVM_DIST_VERSION: ${{ inputs.version }}
+          VIBEVM_PUBLISH_TOKEN_GITHUB: ${{ secrets.GITHUB_TOKEN }}
+          CARGO_MANIFEST_DIR: ${{ github.workspace }}/xtask
+        run: target/debug/xtask dist finalize --version "$VIBEVM_DIST_VERSION" --publish
