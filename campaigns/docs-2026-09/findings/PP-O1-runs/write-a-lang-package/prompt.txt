@@ -1,0 +1,6 @@
+<prompt id="write-a-lang-package">Create a lang package org.acme/sql-style in the current VibeVM project, as an in-tree package under vibevm/vibepacks/: a guide on how our team writes SQL. Give it a boot snippet that names the three rules an agent must always follow, and a guide document with the full idioms, examples and the reasons behind them. Run vibe check on it.
+    <needs>the vibevm skill installed for your agent; a project with `vibe.toml` at the root</needs>
+    <outcome>`vibevm/vibepacks/org.acme/sql-style/v0.1.0/vibe.toml` declares `kind = "lang"` with a boot snippet; the guide under `vibevm/vibespecs/` has anchored sections the snippet cites; `vibe check` reports no errors</outcome>
+    <assert>vibe check --path vibevm/vibepacks/org.acme/sql-style/v0.1.0 --quiet</assert>
+    <assert>grep -q "kind = \"lang\"" vibevm/vibepacks/org.acme/sql-style/v0.1.0/vibe.toml</assert>
+  </prompt>

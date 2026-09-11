@@ -2,7 +2,7 @@
 
 <status stage="doc" state="work" comment="генерируется скриптом campaigns/docs-2026-09/tasks/page-index.py из страниц пакета vibevm-docs; руками не править"/>
 
-Страниц: 44; секций с якорями: 274; примеров: 59; промптов: 19; ссылок `rule`: 375; блоков `derived`: 72; фигур: 0.
+Страниц: 44; секций с якорями: 275; примеров: 60; промптов: 19; ссылок `rule`: 381; блоков `derived`: 72; фигур: 0.
 
 | Страница | Якорь | Заголовок | Первые слова |
 |---|---|---|---|
@@ -194,11 +194,12 @@
 | `howto/update-packages` | `by-hand` | By hand | 1. See what is behind: |
 | `howto/update-packages` | `the-constraint` | The constraint stays where you put it | An update moves the pin in the lock file within the constraint |
 | `howto/update-packages` | `recovery` | Recovering after a breaking update | If an update leaves the project in a state that no longer |
-| `howto/update-packages` | `edge-cases` | Edge cases and rules | `vibe outdated` needs the registry and, for the fastest answer, its [index](../glossary/index.xml#index-registry); |
+| `howto/update-packages` | `edge-cases` | Edge cases and rules | `vibe outdated` reads the registries declared in the project's manifest, and for |
 | `howto/use-a-private-registry` | `root` | Use a private registry | |
 | `howto/use-a-private-registry` | `what-happens` | What happens | The agent runs `vibe registry add acme git@github.com:acme-specs --auth ssh --position primary`, |
 | `howto/use-a-private-registry` | `by-hand` | By hand | 1. Add the registry to the project. The address is the organisation |
 | `howto/use-a-private-registry` | `machine-wide` | For every project on a machine | Put the same registry block into `~/.vibe/registry.toml`. It is merged after each |
+| `howto/use-a-private-registry` | `redirects` | Delegating a package to another registry | A registry may point at a package that lives elsewhere. Instead of |
 | `howto/use-a-private-registry` | `tokens` | Tokens | A token never lands in a file vibe writes and never appears |
 | `howto/use-a-private-registry` | `edge-cases` | Edge cases and rules | A private registry without an [index](../glossary/index.xml#index-registry) still works; searches skip it and |
 | `howto/work-offline` | `root` | Work offline | |
@@ -206,10 +207,10 @@
 | `howto/work-offline` | `by-hand` | By hand | 1. Warm the store with a package and its dependencies. Inside a |
 | `howto/work-offline` | `switching-it-on` | Three ways to switch offline mode on | The flag `--offline` on any command; the environment variable `VIBE_OFFLINE=1`; or the |
 | `howto/work-offline` | `air-gapped` | A whole team without a network | For a machine that never sees the registry, `vibe registry vendor` writes |
-| `howto/work-offline` | `edge-cases` | Edge cases and rules | Offline resolution sees the store as of its last refresh: a version |
+| `howto/work-offline` | `edge-cases` | Edge cases and rules | If an offline install refuses a package the store already holds, the |
 | `lifecycle/build-package-deploy` | `root` | Build, package and deploy a project | |
 | `lifecycle/build-package-deploy` | `what-happens` | What happens | `vibe deploy --plan` runs the whole default [lifecycle](../glossary/index.xml#lifecycle) in planning mode and |
-| `lifecycle/build-package-deploy` | `by-hand` | By hand | 1. Assemble the distributables without touching any destination: |
+| `lifecycle/build-package-deploy` | `by-hand` | By hand | 1. Declare what to build, what to deploy and where. A target |
 | `lifecycle/build-package-deploy` | `artifacts` | Artifacts and targets | The [manifest](../glossary/index.xml#manifest) declares what `build` produces and what `package` assembles, as artifact |
 | `lifecycle/build-package-deploy` | `edge-cases` | Edge cases and rules | Two deploys of the same profile do not race: the engine takes |
 | `lifecycle/extensions-and-providers` | `root` | Extensions and providers | |
@@ -226,8 +227,8 @@
 | `lifecycle/phases` | `where-steps-come-from` | Where the steps come from | The phases are fixed; what runs inside them is contributed by packages. |
 | `lifecycle/phases` | `edge-cases` | Edge cases and rules | A failing step stops the chain; the phases before it keep their |
 | `lifecycle/scrape` | `root` | Remove VibeVM from a project | |
-| `lifecycle/scrape` | `what-happens` | What happens | The agent runs `vibe scrape --plan`, which reads the project's contract, classifies |
-| `lifecycle/scrape` | `by-hand` | By hand | 1. Look at the plan: |
+| `lifecycle/scrape` | `what-happens` | What happens | The agent creates the contract with `vibe scrape contract init` if the |
+| `lifecycle/scrape` | `by-hand` | By hand | 1. Create the contract. The default is conservative: it names vibe's trees, |
 | `lifecycle/scrape` | `the-contract` | The contract | What counts as vibe's and what counts as yours is not guessed |
 | `lifecycle/scrape` | `edge-cases` | Edge cases and rules | Scrape is not clean. `vibe clean` removes what vibe can regenerate and |
 | `model/boot-lane` | `root` | The boot lane: how an agent reads a project | |

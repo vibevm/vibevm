@@ -1,0 +1,6 @@
+<prompt id="write-documentation">Create a documentation package org.acme/notes-flow-docs in the current VibeVM project, as an in-tree package under vibevm/vibepacks/, documenting the package org.acme/notes-flow. Give it a manifest with kind doc, a title and an abstract, and a [[documents]] entry for the subject. Write one page explaining what the flow does, with a rule quoted from the subject's protocol by address. Run vibe doc check on it.
+    <needs>the vibevm skill installed for your agent; a project with `vibe.toml` at the root and the subject package in it</needs>
+    <outcome>`vibevm/vibepacks/org.acme/notes-flow-docs/v0.1.0/vibe.toml` declares `kind = "doc"`, `title`, `abstract` and `[[documents]]`; the page under `vibevm/vibespecs/` has a first paragraph without terms and a `rule` block whose address resolves; `vibe doc check --citations` reports no unresolved citation</outcome>
+    <assert>grep -q "kind = \"doc\"" vibevm/vibepacks/org.acme/notes-flow-docs/v0.1.0/vibe.toml</assert>
+    <assert>vibe doc check --citations --path vibevm/vibepacks/org.acme/notes-flow-docs/v0.1.0</assert>
+  </prompt>

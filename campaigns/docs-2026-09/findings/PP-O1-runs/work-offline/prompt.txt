@@ -1,0 +1,6 @@
+<prompt id="work-offline">Before I go offline, fetch into the machine store everything the VibeVM project in the current folder needs plus the package org.vibevm.world/multi-user-planning, then verify the store and show me that an offline install of this project succeeds.
+    <needs>the vibevm skill installed for your agent; network access now; a project with `vibe.toml`</needs>
+    <outcome>`vibe cache list` shows the project's packages and the extra one; `vibe cache check` reports every entry intact; `vibe install --offline` completes without a network request</outcome>
+    <assert>vibe cache check</assert>
+    <assert>vibe install --offline --assume-yes</assert>
+  </prompt>

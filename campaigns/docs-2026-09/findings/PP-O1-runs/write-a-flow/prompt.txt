@@ -1,0 +1,6 @@
+<prompt id="write-a-flow">Create a flow package org.acme/review-notes in the current VibeVM project, as an in-tree package under vibevm/vibepacks/. It should teach an agent to leave a short REVIEW.md note at the root of the project after every change it makes, with the date and what changed. Write the boot snippet, the protocol document and the manifest, then run vibe check on the package.
+    <needs>the vibevm skill installed for your agent; a project with `vibe.toml` at the root</needs>
+    <outcome>`vibevm/vibepacks/org.acme/review-notes/v0.1.0/vibe.toml` declares a `flow` package with a boot snippet; the snippet is under two hundred words and names the protocol by address; the protocol document has anchored sections; `vibe check --path vibevm/vibepacks/org.acme/review-notes/v0.1.0` reports no errors</outcome>
+    <assert>vibe check --path vibevm/vibepacks/org.acme/review-notes/v0.1.0 --quiet</assert>
+    <assert>test -f vibevm/vibepacks/org.acme/review-notes/v0.1.0/vibevm/vibespecs/boot/review-notes.xml</assert>
+  </prompt>

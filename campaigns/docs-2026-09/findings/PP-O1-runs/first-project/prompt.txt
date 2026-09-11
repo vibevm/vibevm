@@ -1,0 +1,8 @@
+<prompt id="first-project">Create a VibeVM project named hello-vibe in the current folder, install the package org.vibevm.world/wal into it from the default registry, and show me the reading list the agent gets at session start.
+    <needs>the vibevm skill installed for your agent; network access to github.com/vibespecs, or the package already in the machine store</needs>
+    <outcome>a folder `hello-vibe` with `vibe.toml`, `vibe.lock`, a `vibevm/` directory, and `CLAUDE.md`, `AGENTS.md` and `GEMINI.md` ending with a `&lt;vibevm&gt;` block; `vibe check` reports no errors</outcome>
+    <assert>test -f hello-vibe/vibe.toml</assert>
+    <assert>test -f hello-vibe/vibe.lock</assert>
+    <assert>grep -q "org.vibevm.world/wal" hello-vibe/vibe.lock</assert>
+    <assert>vibe check --path hello-vibe --quiet</assert>
+  </prompt>

@@ -1,0 +1,6 @@
+<prompt id="write-a-feat-or-stack">Create two in-tree packages under vibevm/vibepacks/ in the current VibeVM project. The first is a feat org.acme/welcome-page that describes a welcome page with acceptance criteria and requires the capability ui:page-host. The second is a stack org.acme/static-site that provides ui:page-host and explains how a page is built as a static HTML file. Run vibe check on both.
+    <needs>the vibevm skill installed for your agent; a project with `vibe.toml` at the root</needs>
+    <outcome>the feat's manifest requires `ui:page-host`, the stack's manifest provides it, each has its specification documents under `vibevm/vibespecs/`, and `vibe check` reports no errors for either</outcome>
+    <assert>vibe check --path vibevm/vibepacks/org.acme/welcome-page/v0.1.0 --quiet</assert>
+    <assert>vibe check --path vibevm/vibepacks/org.acme/static-site/v0.1.0 --quiet</assert>
+  </prompt>
