@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">PROP-045: XML spec sources and materialisation targets</title>
-  <status stage="spec" state="work" comment="commissioned by the owner 2026-08-21 (mandate quoted in §1 verbatim); DRAFT skeleton authored the same sitting, ahead of the XML-MEASURE integration map — refinement points are named inline and close as the measure and the build land"/>
+  <status stage="spec" state="work" comment="commissioned by the owner 2026-08-21 (mandate quoted in §1 verbatim); DRAFT skeleton authored the same sitting, ahead of the XML-MEASURE integration map — refinement points are named inline and close as the measure and the build land; amended 2026-09-11 by PROP-057 — §7 opens a documentation vocabulary for packages of kind doc, the one recorded reopening of the MD-subset law, implementation with the docs-2026-09 campaign"/>
   <mandate title="1. Mandate">
     <p><MANDATE-VERBATIM fact="true" status="spec/done">The owner's mandate, verbatim (2026-08-21): «XML как
 источник спецификаций (вместо Markdown). Везде где пользователь использует
@@ -57,7 +57,10 @@ silent skip (the same closed-vocabulary law the typed-fact grammar took).
 This is what makes the owner's degradation law hold by construction:
 XML→MD loses nothing semantic because the dialect cannot express what MD
 cannot; «всё невыразимое — не поддерживается» is enforced by the schema,
-not by a lossy converter.</fact></p>
+not by a lossy converter. **Reopened once, 2026-09-11, for exactly one
+genre** — §7 `##DOC-VOCAB-REOPENING`: the documentation vocabulary of
+PROP-057 is additive, gated by the package kind `doc`, and one-way to
+Markdown by law; for the spec vocabulary this decision stands unchanged.</fact></p>
     <p><DIALECT-SKETCH fact="true" status="spec/work">The dialect, first cut (*построй и уточни: точные
 имена элементов/атрибутов финализируются с первым золотым корпусом*):</DIALECT-SKETCH></p>
     <fence lang="xml">&lt;spec xmlns="https://vibevm.org/spec/1"&gt;
@@ -502,4 +505,90 @@ runnable) → S6 docs, ALPHA-NOTES, judging.
 Each slice lands with its own gates; the polygon plus the agent
 measurement are the wave's exit.</SLICES></p>
   </build-order>
+  <documentation-vocabulary title="7. The documentation vocabulary — the dialect reopened for one genre">
+    <p><DOC-VOCAB-REOPENING fact="true" status="spec/done">**Decision (ADR-part; the recorded reopening of `##XML-DIALECT-IS-THE-MD-SUBSET`, 2026-09-11).**
+The decision-records law lets a decision be reopened only by a named trigger,
+and the trigger is named: a consumer appeared that needs constructs Markdown
+cannot express — the documentation genre of
+[PROP-057](PROP-057-documentation-packages-and-site.xml): a verifiable
+example with its expected output, a live citation of a specification rule, a
+generated reference block, an agent prompt with asserts. The dialect gains a
+**second, additive vocabulary** for that genre. The spec vocabulary keeps the
+MD-subset law unchanged; the documentation vocabulary is open only inside
+packages of kind `doc` and projects to Markdown one way, by law, not by
+defect.</DOC-VOCAB-REOPENING></p>
+    <facts ordered="false">
+      <DOC-VOCAB-BY-KIND fact="true" status="spec/done" action="continue" actionstage="impl">**The vocabulary is a parameter of the reader, not of the document.** `Vocabulary::{Spec, Doc}` (default `Spec`) selects the accepted element set through additive entry points (`from_xml_with`, `load_spec_text_with`, `project_spec_text_with`); the mapping «package kind → vocabulary» is the caller's, because the pivot knows no `PackageKind` by the separability law. A document declares nothing about its vocabulary.</DOC-VOCAB-BY-KIND>
+      <DOC-VOCAB-LOUD-IN-SPEC fact="true" status="spec/done" action="continue" actionstage="impl">A documentation element met under the `Spec` vocabulary is a **loud error** with a genre-naming message («open only in packages of kind `doc`»), never a silent skip — the same closed-vocabulary law as everywhere in the dialect.</DOC-VOCAB-LOUD-IN-SPEC>
+      <DOC-VOCAB-DISCRIMINATOR fact="true" status="spec/done" action="continue" actionstage="impl">**The discriminator against name collisions.** `example`, `rule`, `derived` and `run` already live in the corpus as named sections (`&lt;example title="…"&gt;`). The rule: **a documentation block never carries `title=`; a named section always does.** `&lt;example title="…"&gt;` is a section under any vocabulary; `&lt;example&gt;` without `title` is a block under `Doc`. The writer does not depend on the vocabulary: the elementability blacklist does not grow, and one IR serialises to the same bytes under both vocabularies.</DOC-VOCAB-DISCRIMINATOR>
+      <DOC-VOCAB-WHEN-SLOT fact="true" status="spec/done" action="continue" actionstage="impl">**`when` is a property of the slot, not of a block kind:** `Section.blocks` and `SpecDoc.preamble` hold `BlockNode { when: Option&lt;Cond&gt;, block }`, so a condition applies to any block and to sections. `Cond` is a closed list — the boot lane's condition vocabulary (`os:…`, agent) — with a nearest-legal hint on error.</DOC-VOCAB-WHEN-SLOT>
+      <DOC-VOCAB-MD-ONE-WAY fact="true" status="spec/done" action="continue" actionstage="impl">**The Markdown projection of the documentation genre is one-way, and this is pinned.** `md_out` emits the best projection of every element (the table below); parsing that projection back yields a different IR (`Conversion::IrDivergent`), and the expectation test `doc_genre_is_not_round_trippable_through_markdown` pins it. The projection exists because the host scanners (`facts check`, `progress`) read XML only through it (`##PROJECTION-READ`) — the documentation stays observed. Authoring documentation is XML only; `md_in` is not widened, and cannot be: the Markdown block kinds are closed in `progress-core`.</DOC-VOCAB-MD-ONE-WAY>
+      <DOC-VOCAB-VERBATIM-TEXTS fact="true" status="spec/done" action="continue" actionstage="impl">The texts of `run`, `expect`, `stderr`, the body of `prompt` and each `assert` are verbatim like `Fence::text`; CDATA is admitted in exactly these elements by an explicit list.</DOC-VOCAB-VERBATIM-TEXTS>
+      <DOC-VOCAB-RULE-ADDRESS fact="true" status="spec/done" action="continue" actionstage="impl">The address of a `rule` drops any `~rN` revision suffix: a pin that strays into the attribute never becomes a pin on the `documents` edge (PROP-057 §14 — citations are live and unpinned).</DOC-VOCAB-RULE-ADDRESS>
+      <DOC-VOCAB-NO-TABS fact="true" status="spec/done">There is no tabs element on purpose; `when` replaces it. Step-by-step procedures are an ordered list with `example` blocks inside. Inline content stays Markdown (`##INLINE-STAYS-MARKDOWN`).</DOC-VOCAB-NO-TABS>
+      <DOC-VOCAB-README-LIMIT fact="true" status="spec/done">Known limit: the README and specs of packages of other kinds cannot carry verifiable examples — the vocabulary opens by package kind. Their fences render at level 0 as they are, unverified.</DOC-VOCAB-README-LIMIT>
+    </facts>
+    <p><doc-vocab-table-lead fact="true" status="spec/done">The elements, their Markdown projection and their checker (the semantics of each checker are PROP-057 §10 and §14):</doc-vocab-table-lead></p>
+    <table>
+      <tr>
+        <td>Element</td>
+        <td>Purpose</td>
+        <td>Markdown projection</td>
+        <td>Checker</td>
+      </tr>
+      <tr>
+        <td><ROW-DOCVOCAB-EXAMPLE fact="true" status="spec/done">`example` with children `run`, `expect` (stdout) and optional `stderr`; attributes `id`, `fixture`, `lang`, `exit` (default `0`), `when`</ROW-DOCVOCAB-EXAMPLE></td>
+        <td><ROW-DOCVOCAB-EXAMPLE-PURPOSE fact="true" status="spec/done">a command and its expected output; `fixture` names a hermetic fixture project that declares the normalisation rules and the map «`--json` document → JTD schema»; an absent `stderr` asserts «stderr is empty»</ROW-DOCVOCAB-EXAMPLE-PURPOSE></td>
+        <td><ROW-DOCVOCAB-EXAMPLE-MD fact="true" status="spec/done">two adjacent fences, `sh` and `output` (a third, `stderr`, when present)</ROW-DOCVOCAB-EXAMPLE-MD></td>
+        <td><ROW-DOCVOCAB-EXAMPLE-CHECK fact="true" status="spec/done">the runner `vibe doc check --examples` against the built binary: exact match after the declared normalisation, no match templates; a divergence is red</ROW-DOCVOCAB-EXAMPLE-CHECK></td>
+      </tr>
+      <tr>
+        <td><ROW-DOCVOCAB-EXAMPLE-REF fact="true" status="spec/done">`example ref="&lt;id&gt;"`</ROW-DOCVOCAB-EXAMPLE-REF></td>
+        <td><ROW-DOCVOCAB-EXAMPLE-REF-PURPOSE fact="true" status="spec/done">in a translation: a reference to the source's example instead of an example of its own</ROW-DOCVOCAB-EXAMPLE-REF-PURPOSE></td>
+        <td><ROW-DOCVOCAB-EXAMPLE-REF-MD fact="true" status="spec/done">the same fences, copied from the source at projection time</ROW-DOCVOCAB-EXAMPLE-REF-MD></td>
+        <td><ROW-DOCVOCAB-EXAMPLE-REF-CHECK fact="true" status="spec/done">the `id` exists in the source</ROW-DOCVOCAB-EXAMPLE-REF-CHECK></td>
+      </tr>
+      <tr>
+        <td><ROW-DOCVOCAB-RULE fact="true" status="spec/done">`rule ref="spec://…#ANCHOR"`</ROW-DOCVOCAB-RULE></td>
+        <td><ROW-DOCVOCAB-RULE-PURPOSE fact="true" status="spec/done">the insertion point of a rule from a specification; the site shows the fact's **current** text in place, in the specification's language; the citation text is not pivot state — it is substituted at build</ROW-DOCVOCAB-RULE-PURPOSE></td>
+        <td><ROW-DOCVOCAB-RULE-MD fact="true" status="spec/done">a link to the anchor, as a quote with the address</ROW-DOCVOCAB-RULE-MD></td>
+        <td><ROW-DOCVOCAB-RULE-CHECK fact="true" status="spec/done">the anchor resolver; a `documents` edge without a pin; a vanished anchor is a build error</ROW-DOCVOCAB-RULE-CHECK></td>
+      </tr>
+      <tr>
+        <td><ROW-DOCVOCAB-DERIVED fact="true" status="spec/done">`derived kind="cli-help | jtd-schema | manifest-field" ref="…"`</ROW-DOCVOCAB-DERIVED></td>
+        <td><ROW-DOCVOCAB-DERIVED-PURPOSE fact="true" status="spec/done">the insertion of a machine-derived reference or a manifest field (for example `abstract`); the text is not stored</ROW-DOCVOCAB-DERIVED-PURPOSE></td>
+        <td><ROW-DOCVOCAB-DERIVED-MD fact="true" status="spec/done">a fence with the text, marked «generated from …», or a table</ROW-DOCVOCAB-DERIVED-MD></td>
+        <td><ROW-DOCVOCAB-DERIVED-CHECK fact="true" status="spec/done">the generator at build; a divergence is red except under an explicit `--accept`</ROW-DOCVOCAB-DERIVED-CHECK></td>
+      </tr>
+      <tr>
+        <td><ROW-DOCVOCAB-NOTE fact="true" status="spec/done">`note kind="note | tip | warning"`</ROW-DOCVOCAB-NOTE></td>
+        <td><ROW-DOCVOCAB-NOTE-PURPOSE fact="true" status="spec/done">a call-out; its body is a unit and therefore addressable by a fact anchor</ROW-DOCVOCAB-NOTE-PURPOSE></td>
+        <td><ROW-DOCVOCAB-NOTE-MD fact="true" status="spec/done">a quote with the kind label in its first line</ROW-DOCVOCAB-NOTE-MD></td>
+        <td><ROW-DOCVOCAB-NOTE-CHECK fact="true" status="spec/done">the schema</ROW-DOCVOCAB-NOTE-CHECK></td>
+      </tr>
+      <tr>
+        <td><ROW-DOCVOCAB-FIGURE fact="true" status="spec/done">`figure src alt` with a child `caption`</ROW-DOCVOCAB-FIGURE></td>
+        <td><ROW-DOCVOCAB-FIGURE-PURPOSE fact="true" status="spec/done">an image with a caption; the file is a source file in the package tree; the caption is a unit</ROW-DOCVOCAB-FIGURE-PURPOSE></td>
+        <td><ROW-DOCVOCAB-FIGURE-MD fact="true" status="spec/done">an inline image plus a caption paragraph</ROW-DOCVOCAB-FIGURE-MD></td>
+        <td><ROW-DOCVOCAB-FIGURE-CHECK fact="true" status="spec/done">the file exists and passes the media rules of PROP-057 §7</ROW-DOCVOCAB-FIGURE-CHECK></td>
+      </tr>
+      <tr>
+        <td><ROW-DOCVOCAB-PROMPT fact="true" status="spec/done">`prompt id` with a body and children `needs`, `outcome`, `assert` (one or more)</ROW-DOCVOCAB-PROMPT></td>
+        <td><ROW-DOCVOCAB-PROMPT-PURPOSE fact="true" status="spec/done">a task for an agent in the user's voice; what the agent needs; what the person sees when it worked; shell commands that must exit zero after the agent's work</ROW-DOCVOCAB-PROMPT-PURPOSE></td>
+        <td><ROW-DOCVOCAB-PROMPT-MD fact="true" status="spec/done">a `prompt` fence, a «needs» list, an «outcome» paragraph, an assert list; the same fence in `llms*.txt`</ROW-DOCVOCAB-PROMPT-MD></td>
+        <td><ROW-DOCVOCAB-PROMPT-CHECK fact="true" status="spec/done">`vibe doc check --prompts`: a run by the configured agent in a clean temporary directory, then the asserts; outside the panel; on a scenario page an assert is mandatory (the style linter)</ROW-DOCVOCAB-PROMPT-CHECK></td>
+      </tr>
+      <tr>
+        <td><ROW-DOCVOCAB-WHEN fact="true" status="spec/done">the attribute `when="os:…"` on any block and on sections</ROW-DOCVOCAB-WHEN></td>
+        <td><ROW-DOCVOCAB-WHEN-PURPOSE fact="true" status="spec/done">platform and agent variants</ROW-DOCVOCAB-WHEN-PURPOSE></td>
+        <td><ROW-DOCVOCAB-WHEN-MD fact="true" status="spec/done">a sub-heading named after the platform</ROW-DOCVOCAB-WHEN-MD></td>
+        <td><ROW-DOCVOCAB-WHEN-CHECK fact="true" status="spec/done">the existing condition vocabulary of the boot lane</ROW-DOCVOCAB-WHEN-CHECK></td>
+      </tr>
+    </table>
+    <facts ordered="false">
+      <doc-vocab-why fact="true" status="spec/done">**Why:** the owner chose the named-element form — a named tag is self-describing for an agent, and an example is verifiable by construction. A second vocabulary rather than a widened one keeps the spec dialect exactly as measured and pinned; gating by kind keeps a `flow` README from silently acquiring unverified «examples».</doc-vocab-why>
+      <doc-vocab-rejected fact="true" status="spec/done">**Considered and rejected:** Markdown with directives; conventions inside the present dialect (a fence pair «by agreement» — nothing can check it); a tabs element; own examples in translations; widening `md_in` (the Markdown block kinds are closed in `progress-core`).</doc-vocab-rejected>
+      <doc-vocab-revisit fact="true" status="spec/done">**Revisit when:** two authors' requests for a construct outside this set, or for verifiable examples in the README of an ordinary package, are recorded in BACKLOG.</doc-vocab-revisit>
+    </facts>
+  </documentation-vocabulary>
 </spec>
