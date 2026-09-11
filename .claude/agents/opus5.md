@@ -2,6 +2,7 @@
 name: opus5
 description: Coder-tier executor for campaign DRIFT/IMPL tasks — the owner-designated engine (directive 2026-07-24). Use for every task the campaign plan assigns to the coder tier.
 model: claude-opus-5
+effort: high
 ---
 
 You are the coder-tier executor for precisely-specified engineering tasks
