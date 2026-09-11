@@ -150,7 +150,7 @@ mod tests {
         let lockfile = r#"[meta]
 generated_by = "vibe-test"
 generated_at = "2026-05-04T00:00:00Z"
-schema_version = 6
+schema_version = 7
 
 [[package]]
 kind = "flow"
@@ -183,7 +183,7 @@ files_written = []
         // An empty lockfile, but a vibedeps/ slot on disk — orphan.
         fs::write(
             project.path().join("vibe.lock"),
-            "[meta]\ngenerated_by = \"vibe-test\"\ngenerated_at = \"2026-05-04T00:00:00Z\"\nschema_version = 6\n",
+            "[meta]\ngenerated_by = \"vibe-test\"\ngenerated_at = \"2026-05-04T00:00:00Z\"\nschema_version = 7\n",
         )
         .unwrap();
         fs::create_dir_all(
@@ -213,7 +213,7 @@ files_written = []
         let lockfile = r#"[meta]
 generated_by = "vibe-test"
 generated_at = "2026-07-13T00:00:00Z"
-schema_version = 6
+schema_version = 7
 
 [[package]]
 kind = "flow"
@@ -252,7 +252,7 @@ source_kind = "embedded"
         let lockfile = r#"[meta]
 generated_by = "vibe-test"
 generated_at = "2026-07-13T00:00:00Z"
-schema_version = 6
+schema_version = 7
 
 [[package]]
 kind = "flow"

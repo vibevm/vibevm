@@ -10,6 +10,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#linter");
 
 pub mod activation_conflict;
 pub mod boot_directory;
+pub mod bridge_provenance;
 pub mod facts_sync;
 pub mod features_graph;
 pub mod i18n_coverage;
@@ -27,6 +28,7 @@ pub mod wal_wellformed;
 
 pub use activation_conflict::ActivationConflictCheck;
 pub use boot_directory::BootDirectoryCheck;
+pub use bridge_provenance::BridgeProvenanceCheck;
 pub use facts_sync::FactsSyncCheck;
 pub use features_graph::FeaturesGraphCheck;
 pub use i18n_coverage::I18nCoverageCheck;
