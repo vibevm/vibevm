@@ -7,7 +7,7 @@
 //! and (when applicable) the offending file path / line.
 //!
 //! The cell roster has grown far past the v0 six — `run_all` is the
-//! authoritative inventory (16 cells today); the numbered list below
+//! authoritative inventory (17 cells today); the numbered list below
 //! is the founding six of [`VIBEVM-SPEC.md` §12](../../../VIBEVM-SPEC.md),
 //! kept as orientation, not as the census:
 //!
@@ -59,10 +59,11 @@ use specmark::spec;
 pub mod checks;
 
 pub use checks::{
-    ActivationConflictCheck, BootDirectoryCheck, FactsSyncCheck, FeaturesGraphCheck,
-    I18nCoverageCheck, LocalSourceFreshnessCheck, LockfileFilesCheck, ManifestEpochCheck,
-    ManifestValidityCheck, RedirectBlockCheck, ReviewAgingCheck, SnippetPresuppositionCheck,
-    SubskillStructureCheck, VisibilityHygieneCheck, WalFreshnessCheck, WalWellformedCheck,
+    ActivationConflictCheck, BootDirectoryCheck, BridgeProvenanceCheck, FactsSyncCheck,
+    FeaturesGraphCheck, I18nCoverageCheck, LocalSourceFreshnessCheck, LockfileFilesCheck,
+    ManifestEpochCheck, ManifestValidityCheck, RedirectBlockCheck, ReviewAgingCheck,
+    SnippetPresuppositionCheck, SubskillStructureCheck, VisibilityHygieneCheck, WalFreshnessCheck,
+    WalWellformedCheck,
 };
 
 /// Stable identifier for a single check. Used in [`Finding::check`]
@@ -127,6 +128,10 @@ pub enum CheckId {
     /// grants, dead `friends`/`unfriend`/`[override]` entries, lockfile
     /// members without a readable slot manifest.
     VisibilityHygiene,
+    /// PROP-023 §2.4 — every bridge identifies its upstream, separates the
+    /// bridge and upstream licence surfaces, and carries an inspectable
+    /// provenance form without requiring network access.
+    BridgeProvenance,
     /// PROP-038 §3 — every per-unit boot artifact's recorded fingerprint
     /// matches a fresh recomputation (the hybrid linker's dirty-subgraph is
     /// consistent); a stale artifact warns to `vibe reinstall`.
@@ -152,6 +157,7 @@ impl CheckId {
             CheckId::FactsSync => "facts_sync",
             CheckId::SnippetPresupposition => "snippet_presupposition",
             CheckId::VisibilityHygiene => "visibility_hygiene",
+            CheckId::BridgeProvenance => "bridge_provenance",
             CheckId::BootGraphIntegrity => "boot_graph_integrity",
         }
     }
@@ -178,6 +184,7 @@ impl CheckId {
             CheckId::FactsSync,
             CheckId::SnippetPresupposition,
             CheckId::VisibilityHygiene,
+            CheckId::BridgeProvenance,
         ]
     }
 }
@@ -401,7 +408,7 @@ pub trait Check {
 /// use vibe_check::{CheckId, all_checks};
 ///
 /// let checks = all_checks();
-/// assert_eq!(checks.len(), 16);
+/// assert_eq!(checks.len(), 17);
 /// assert_eq!(checks[0].id(), CheckId::ManifestValidity);
 /// ```
 pub fn all_checks() -> Vec<Box<dyn Check>> {
@@ -422,6 +429,7 @@ pub fn all_checks() -> Vec<Box<dyn Check>> {
         Box::new(FactsSyncCheck),
         Box::new(SnippetPresuppositionCheck),
         Box::new(VisibilityHygieneCheck),
+        Box::new(BridgeProvenanceCheck),
     ]
 }
 
@@ -526,6 +534,7 @@ mod tests {
                 CheckId::FactsSync,
                 CheckId::SnippetPresupposition,
                 CheckId::VisibilityHygiene,
+                CheckId::BridgeProvenance,
             ]
         );
     }
