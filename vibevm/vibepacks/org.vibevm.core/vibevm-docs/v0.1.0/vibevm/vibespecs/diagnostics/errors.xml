@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">From an error message to the rule</title>
+  <status stage="doc" state="work" audience="user"/>
+  <p>vibe's error messages name the rule they enforce. This page lists the messages you are likely to meet, what each means, and the shortest way out, in the order they tend to appear.</p>
+  <how-to-read title="How to read an error">
+    <p>An error has three parts: what vibe refused, why, and where the rule lives, as an address such as `spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#IDENTITY-TUPLE`. `vibe explain "&lt;address&gt;"` prints the rule and what implements it; the pages of this manual explain the mechanism behind it. Exit codes are stable for scripts: 1 for a general failure, 3 for a conflict-shaped refusal such as a malformed managed block, 5 when you declined a plan.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#SURF-EXIT-CODE"/>
+  </how-to-read>
+  <install-errors title="Installing">
+    <table>
+      <tr><td>Message</td><td>What it means</td><td>Way out</td><td>Rule</td></tr>
+      <tr><td>`package … is already installed at version … — use vibe update instead`</td><td>the coordinate is already in the lock file with the same content</td><td>`vibe update &lt;coordinate&gt;` to move it, `vibe list` to look</td><td>`PROP-011#UPDATE-MOVES-LOCK`</td></tr>
+      <tr><td>`content drift on …: lockfile pins sha256:… but the source served sha256:…`</td><td>the bytes served differ from the bytes the lock file remembered: a re-tagged version, a broken mirror or an override</td><td>find out which; re-pin by uninstall and install, drop the mirror, or record the override; never edit the lock file</td><td>`PROP-002#EFF-FORCE-PUSH-CAUGHT`</td></tr>
+      <tr><td>`malformed &lt;vibevm&gt; block in …`</td><td>an instruction file has two markers of a kind, an opener without a closer, or a closer first</td><td>repair the file so exactly one ordered pair remains; `vibe check` finds it before the next install</td><td>`PROP-012#CLASS-MALFORMED`</td></tr>
+      <tr><td>`the materialised vibedeps/ tree is incomplete — … slot(s) missing`</td><td>a package the lock file pins has no folder on disk and the regeneration mode cannot conjure it</td><td>`vibe reinstall --force` to fetch it again</td><td>`PROP-009#REINSTALL-FORCE`</td></tr>
+      <tr><td>`package declares a [boot_snippet].source … that does not exist in the package`</td><td>the package's manifest points at a snippet file it does not ship</td><td>report it to the package's author; pin an earlier version meanwhile</td><td>`PROP-009#SCHEMA-BOOT-SNIPPET`</td></tr>
+      <tr><td>`user declined the install plan`</td><td>you answered no; nothing was written</td><td>nothing to fix</td><td>`PROP-009#PLAN-UNIT`</td></tr>
+      <tr><td>`package … is not installed`</td><td>`vibe uninstall` named a coordinate the lock file does not hold</td><td>`vibe list`; check the spelling</td><td>—</td></tr>
+    </table>
+  </install-errors>
+  <resolution-errors title="Resolving">
+    <table>
+      <tr><td>Message</td><td>What it means</td><td>Way out</td><td>Rule</td></tr>
+      <tr><td>`package … is not in the registry`</td><td>every configured registry answered that it has no such package</td><td>check the coordinate and the registries; `vibe search` to find it</td><td>`PROP-002#REGISTRY-WALK-ORDER`</td></tr>
+      <tr><td>`no version of … matches …`</td><td>the package exists but no published version satisfies the constraint</td><td>widen the constraint or ask for a version that exists</td><td>`PROP-000#CF-RANGE`</td></tr>
+      <tr><td>`package A needs C ^1 but B needs C ^2 …`</td><td>two constraints on one package cannot both hold</td><td>the fix ladder on the questions page: widen, update, override, fork</td><td>`PROP-002#OVERRIDE-SHORT-CIRCUIT`</td></tr>
+      <tr><td>`no registry configured …`</td><td>the manifest has no `[[registry]]` and no `--registry` was passed</td><td>`vibe registry add`, or seed from `~/.vibe/registry.toml`</td><td>`PROP-010#INIT-SEEDS`</td></tr>
+      <tr><td>an offline error naming a missing coordinate</td><td>`--offline` was set and the store does not hold the package</td><td>go online once, or `vibe cache add` it from a machine that is</td><td>`PROP-010#OFFLINE-HARD-ERROR`</td></tr>
+    </table>
+  </resolution-errors>
+  <git-errors title="Fetching">
+    <table>
+      <tr><td>Message</td><td>What it means</td><td>Way out</td><td>Rule</td></tr>
+      <tr><td>`the git executable is not available on PATH`</td><td>vibe shells out to the system git for every fetch and found none</td><td>install git and open a new terminal</td><td>`PROP-001#root`</td></tr>
+      <tr><td>`remote repository … not found (does it exist? is access granted?)`</td><td>the repository address is wrong or your credentials lack read access</td><td>check the registry's address and its authentication regime</td><td>`PROP-002#AUTH-REGIMES`</td></tr>
+      <tr><td>`ssh authentication failed for …`</td><td>the host answered but rejected your key</td><td>load the key into your agent; check the registry's `auth`</td><td>`PROP-002#ROW-AUTH-SSH`</td></tr>
+      <tr><td>`unable to reach … (network or DNS error)`</td><td>no route to the host</td><td>check the network, or work from the store with `--offline`</td><td>`PROP-010#OFFLINE-FLAG`</td></tr>
+      <tr><td>`branch / ref … not found on …`</td><td>the git source names a tag, branch or commit the repository does not have</td><td>fix the reference in the manifest</td><td>`PROP-002#ROW-GS-TAG-MEANING`</td></tr>
+      <tr><td>a mirror served different bytes</td><td>the mirror is out of date or tampered with</td><td>remove the mirror; the canonical registry is tried next</td><td>`PROP-002#MIRROR-INTEGRITY-MANDATORY`</td></tr>
+    </table>
+  </git-errors>
+  <publish-errors title="Publishing">
+    <table>
+      <tr><td>Message</td><td>What it means</td><td>Way out</td><td>Rule</td></tr>
+      <tr><td>`publish refused: no token available for host …`</td><td>no publish token in the environment or under `~/.vibe/`</td><td>place the token where the settings page says; never in the repository</td><td>`PROP-000#token-secrecy`</td></tr>
+      <tr><td>`publish refused: token lacks repo:create permission …`</td><td>the token cannot create repositories in the organisation</td><td>a token with the right scope, or `--repo-url` to an existing repository</td><td>`PROP-002#SHAPE-OWN-REPO`</td></tr>
+      <tr><td>`publish refused: tag … already exists on …`</td><td>the version was published before</td><td>bump the version; published versions never move</td><td>`PROP-002#IDENTITY-CONSEQUENCE`</td></tr>
+      <tr><td>`publish refused: source directory … does not look like a vibevm package`</td><td>the folder has no manifest with a `[package]` table</td><td>publish the package's root, or add the table</td><td>`PROP-007#PACKAGE-XOR-PROJECT`</td></tr>
+      <tr><td>`publish refused: organization … does not exist on …` or `no push access`</td><td>the registry's organisation or your rights on it</td><td>check the registry address and the token's owner</td><td>`PROP-002#REG-FIELD-URL`</td></tr>
+    </table>
+  </publish-errors>
+  <lifecycle-errors title="Running the lifecycle">
+    <table>
+      <tr><td>Message</td><td>What it means</td><td>Way out</td><td>Rule</td></tr>
+      <tr><td>a contribution reported `fail` and the chain stopped</td><td>one step of a phase failed; the phases before it kept their results</td><td>read the contribution's id and output in the run's narration; `vibe extensions` shows where it came from</td><td>`PROP-054#FAILURE-BY-PHASE`</td></tr>
+      <tr><td>a parked agent task</td><td>a step needs an agent and vibe runs under one; the task waits in the outbox</td><td>the hosting agent performs it and re-runs the same command</td><td>`PROP-054#AGENT-HANDSHAKE`</td></tr>
+      <tr><td>`undeploy` refused a path</td><td>a file a receipt owns changed after deployment</td><td>decide by hand; vibe will not delete edited work</td><td>`PROP-054#R8-DEPLOY-RUNTIME`</td></tr>
+      <tr><td>`clean` refused to run</td><td>no project at or above the current folder</td><td>run it inside a project</td><td>`PROP-053#CLEAN-NEEDS-A-PROJECT`</td></tr>
+    </table>
+  </lifecycle-errors>
+  <edge-cases title="When the message is not vibe's">
+    <p>A message you do not find here is probably from a layer below: usually git. Run the command again with `VIBE_LOG=vibe_registry=debug,vibe_publish=debug` to see the underlying command line and its output. And when a message cites an address, the rule is one `vibe explain` away.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#root"/>
+  </edge-cases>
+</spec>
