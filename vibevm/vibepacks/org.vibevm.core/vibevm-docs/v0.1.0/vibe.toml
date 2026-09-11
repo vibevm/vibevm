@@ -1,0 +1,40 @@
+# The core documentation of VibeVM as a package of kind `doc`
+# (spec://org.vibevm.core/vibevm/common/PROP-057#kinds). Like the other
+# in-tree packages it is a mutable development slot of one version: the
+# content moves, the number stays, and the machine store refreshes by hash.
+[package]
+name = "vibevm-docs"
+group = "org.vibevm.core"
+kind = "doc"
+version = "0.1.0"
+epoch = 1
+format = "normal"
+authors = ["Oleg Chirukhin"]
+license = "UPL-1.0"
+description = "The VibeVM manual: install vibe, understand packages and the boot lane, work with an agent, author and publish packages."
+keywords = ["documentation", "manual", "vibevm", "packages", "agents", "lifecycle"]
+title = "VibeVM Manual"
+abstract = """
+What it covers: what VibeVM is and how it gives a coding agent the right text to read; installing vibe; creating a project; packages, registries, the lock file and the machine store; installing, updating, publishing and working offline; giving an agent the vibevm skill and asking it to do the work; the lifecycle from validate to deploy; a full command, manifest, lock-file and settings reference; writing packages of every kind, including documentation and its translations.
+For whom: people who run vibe in their projects, people who write packages, and the agents that read on their behalf.
+What it assumes known: how to use a terminal and a text editor, what a coding agent is, and what a package manager does for a programming language.
+What it leaves out: the normative specifications themselves (this manual quotes them, never restates them), the internals of any one agent product, and the design history of vibe.
+"""
+
+[compatibility]
+min_vibe_version = "1.1.0"
+requires_kinds = []
+
+[i18n]
+canonical = "en"
+
+# The subject of this documentation: the host itself, a project coordinate
+# (spec://org.vibevm.core/vibevm/common/PROP-057#relation).
+[[documents]]
+package = "org.vibevm.core/vibevm"
+version = "^1.0"
+
+[[skill]]
+name = "vibevm-docs"
+path = "vibevm/vibespecs/skills/vibevm-docs"
+description = "Find the page, the rule or the prompt in the VibeVM manual that answers the user's question or performs the user's task, locally from the machine store or from vibevm.org/doc"
