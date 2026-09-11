@@ -1,0 +1,6 @@
+<prompt id="give-your-agent-the-skill">Wire vibe into every coding agent installed on this machine, for the VibeVM project in the current folder: install the vibevm skill and the MCP server entry, then show me what was written and for which agents.
+    <needs>vibe on the `PATH`; a project with `vibe.toml` in the current folder; at least one supported agent installed: Claude Code, Claude Desktop, Cursor, OpenCode or Codex</needs>
+    <outcome>`vibe mcp status` shows an up-to-date server entry and skill for each detected agent; the next agent session in this project knows the vibe commands and can query the project's packages</outcome>
+    <assert>vibe mcp status</assert>
+    <assert>vibe skill list --quiet</assert>
+  </prompt>

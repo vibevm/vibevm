@@ -1,0 +1,6 @@
+<prompt id="build-package-deploy">For the VibeVM project in the current folder, show me the deploy plan for the profile named local, then run the deploy, list the deployments this machine now holds, and finally undeploy the same profile. Stop and ask me before the deploy and before the undeploy.
+    <needs>the vibevm skill installed for your agent; a project whose manifest declares build and package targets and a deploy profile named `local`; the project's stack tools on the `PATH`</needs>
+    <outcome>the plan names the targets in order; after the deploy `vibe deployments` lists the profile with a generation and a status; after the undeploy every receipt-owned resource is gone and the listing shows the profile as removed</outcome>
+    <assert>vibe deploy --plan --profile local</assert>
+    <assert>vibe deployments --json</assert>
+  </prompt>

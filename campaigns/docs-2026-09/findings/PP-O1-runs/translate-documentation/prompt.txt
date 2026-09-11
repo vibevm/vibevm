@@ -1,0 +1,6 @@
+<prompt id="translate-documentation">Create the package org.acme/notes-flow-docs-ru in the current VibeVM project, as an in-tree package under vibevm/vibepacks/, as the Russian translation of org.acme/notes-flow-docs. Mirror its page tree file for file, keep every anchor and block, and replace each example with a reference to the source example. Write the manifest with [translates] and the same [[documents]] subject. Run vibe doc check --translations.
+    <needs>the vibevm skill installed for your agent; the source documentation package in the same project</needs>
+    <outcome>the translation has the same files and anchors as the source, `[i18n] canonical = "ru"`, `[translates]` pointing at the source, and `vibe doc check --translations` reports no structural difference</outcome>
+    <assert>grep -q "canonical = \"ru\"" vibevm/vibepacks/org.acme/notes-flow-docs-ru/v0.1.0/vibe.toml</assert>
+    <assert>vibe doc check --translations --path vibevm/vibepacks/org.acme/notes-flow-docs-ru/v0.1.0</assert>
+  </prompt>

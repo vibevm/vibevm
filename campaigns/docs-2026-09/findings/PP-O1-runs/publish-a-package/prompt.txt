@@ -1,0 +1,5 @@
+<prompt id="publish-a-package">Publish the in-tree package org.acme/notes of this project, the slot vibevm/vibepacks/org.acme/notes/v0.1.0, to the first registry of this project, using the publish token already in my environment, then create a scratch project elsewhere and install the published package into it to prove it works. Ask me before the actual push.
+    <needs>the vibevm skill installed for your agent; a publish token for the registry's host in the environment or under `~/.vibe/`; the package's `vibe.toml` complete, with a version that has not been published before</needs>
+    <outcome>a repository named after the package's coordinate exists in the registry organisation with a tag for the version; a scratch project installs it and `vibe list` shows the version</outcome>
+    <assert>vibe registry publish vibevm/vibepacks/org.acme/notes/v0.1.0 --dry-run</assert>
+  </prompt>

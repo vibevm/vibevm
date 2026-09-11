@@ -58,6 +58,10 @@
 | `hello-vibe` | `hello-vibe-empty` | `vibe install org.vibevm.world/wal --path hello-vibe --assume-yes` |
 | `hello-vibe-relay` | `hello-vibe` | `vibe agentic explain --path hello-vibe` — в `hello-vibe/.vibe/agentic/command.md` припаркована инструкция |
 | `hello-vibe-removed` | `hello-vibe` | `vibe uninstall org.vibevm.world/wal --path hello-vibe --assume-yes` |
+| `hello-vibe-cwd` | `hello-vibe` | то же дерево; **cwd команды — `work/hello-vibe`** (для команд без `--path`: `vibe bin`, `vibe tools`) |
+| `hello-cargo` | `hello-vibe` | в `work/hello-vibe`: `cargo init --name hello --vcs none` (Cargo.toml и `src/main.rs`), затем `cargo generate-lockfile --offline` — проект с настоящим инструментом сборки для health-проверок и артефактов |
+| `hello-deploy` | `hello-cargo` | копия дерева `hello-vibe` под именем `work/hello-deploy`; в её `vibe.toml` дописаны таблицы со страницы `lifecycle/build-package-deploy`, шаг 1 (артефакт `hello`, цель `local` с `deploy:vibe-bin`, профиль `local`) |
+| `hello-vibe-scrape` | `hello-cargo` | `vibe scrape contract init --path hello-vibe`; в `hello-vibe/vibevm/scrape/contract.toml` оба `modified = "refuse"` заменены на `modified = "delete"`; `vibe scrape contract check --path hello-vibe` обязан быть зелёным, иначе — в отчёт |
 | `project` | `empty` | `vibe init` в `work/` (проект в cwd; `[project] name = "work"`) |
 | `flow-slot` | `project` | `vibe init package org.acme/review-notes` — слот `vibevm/vibepacks/org.acme/review-notes/v0.1.0/` как есть (`kind = "tool"`, страница объясняет правку вида) |
 | `package-spec` | `flow-slot` | в слот положен `vibevm/vibespecs/NOTES-FLOW.md` из одного заголовка `# Notes flow {#root}` и одного абзаца `@fact:ONE-NOTE One note per review. @status:spec/done`; **cwd команды — `work/vibevm/vibepacks/org.acme/review-notes/v0.1.0`** |
@@ -93,7 +97,7 @@
 | `agent/give-your-agent-the-skill` | `skill-list` | `vibe skill list --path hello-vibe` | `hello-vibe` | ждёт |
 | `architecture/traceability` | `explain` | `vibe explain "spec://org.vibevm.core/vibevm/common/PROP-000#KIND-SET" --path hello-vibe` | `hello-vibe` | ждёт |
 | `architecture/traceability` | `select` | `vibe select --where "uri:spec://org.vibevm.core/vibevm/common/PROP-000#KIND-SET depth:1" --path hello-vibe` | `hello-vibe` | ждёт |
-| `authoring/ship-tools-and-mcp-servers` | `bin-list` | `vibe bin list --path hello-vibe` | `hello-vibe` | ждёт |
+| `authoring/ship-tools-and-mcp-servers` | `bin-list` | `vibe bin list` | `hello-vibe-cwd` | ждёт |
 | `authoring/specs-agents-can-cite` | `explain` | `vibe explain "spec://org.vibevm.core/vibevm/common/PROP-000#KIND-SET" --path hello-vibe` | `hello-vibe` | ждёт |
 | `authoring/specs-agents-can-cite` | `convert` | `vibe refactor convert-source --from md --to xml --dry-run vibevm/vibespecs` | `package-spec` | ждёт |
 | `authoring/write-a-flow` | `init-package` | `vibe init package org.acme/review-notes` | `project` | ждёт |
@@ -120,14 +124,15 @@
 | `howto/work-offline` | `cache-list` | `vibe cache list` | `hello-vibe` | ждёт |
 | `howto/work-offline` | `cache-check` | `vibe cache check` | `hello-vibe` | ждёт |
 | `howto/work-offline` | `install-offline` | `vibe install org.vibevm.world/wal --path hello-vibe --offline --assume-yes` | `hello-vibe-empty` | ждёт |
-| `lifecycle/build-package-deploy` | `package` | `vibe package --path hello-vibe` | `hello-vibe` | ждёт |
-| `lifecycle/build-package-deploy` | `deploy-plan` | `vibe deploy --plan --path hello-vibe` | `hello-vibe` | ждёт |
+| `lifecycle/build-package-deploy` | `package` | `vibe package --path hello-deploy --assume-yes` | `hello-deploy` | ждёт |
+| `lifecycle/build-package-deploy` | `deploy-plan` | `vibe deploy --plan --profile local --path hello-deploy` | `hello-deploy` | ждёт |
 | `lifecycle/build-package-deploy` | `deployments` | `vibe deployments` | `hello-vibe` | ждёт |
 | `lifecycle/extensions-and-providers` | `extensions` | `vibe extensions --path hello-vibe` | `hello-vibe` | ждёт |
-| `lifecycle/extensions-and-providers` | `tools` | `vibe tools --path hello-vibe` | `hello-vibe` | ждёт |
-| `lifecycle/phases` | `deploy-plan` | `vibe deploy --plan --path hello-vibe` | `hello-vibe` | ждёт |
-| `lifecycle/scrape` | `scrape-plan` | `vibe scrape --plan --path hello-vibe` | `hello-vibe` | ждёт |
-| `lifecycle/scrape` | `scrape-output` | `vibe scrape --output hello-clean --path hello-vibe` | `hello-vibe` | ждёт |
+| `lifecycle/extensions-and-providers` | `tools` | `vibe tools` | `hello-vibe-cwd` | ждёт |
+| `lifecycle/phases` | `deploy-plan` | `vibe deploy --plan --profile local --path hello-deploy` | `hello-deploy` | ждёт |
+| `lifecycle/scrape` | `scrape-contract` | `vibe scrape contract init --path hello-vibe` | `hello-cargo` | ждёт |
+| `lifecycle/scrape` | `scrape-plan` | `vibe scrape --plan --path hello-vibe` | `hello-vibe-scrape` | ждёт |
+| `lifecycle/scrape` | `scrape-output` | `vibe scrape --output hello-clean --path hello-vibe` | `hello-vibe-scrape` | ждёт |
 | `model/boot-lane` | `tree` | `vibe tree --plain --path hello-vibe` | `hello-vibe` | ждёт |
 | `model/lock-and-store` | `cache-path` | `vibe cache path` | `hello-vibe` | ждёт |
 | `model/packages-and-kinds` | `list` | `vibe list --path hello-vibe` | `hello-vibe` | ждёт |

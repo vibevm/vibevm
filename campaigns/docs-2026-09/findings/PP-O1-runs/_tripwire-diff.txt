@@ -1,0 +1,84 @@
+4056d4055
+< d          0 2026-09-10 20:15:24.2735975000 C:\Users\olegc/.vibe/cache/org.vibevm.world/multi-user-planning
+4067,4069d4065
+< d          0 2026-09-10 20:44:20.1120948000 C:\Users\olegc/.vibe/cache/org.vibevm.world/multi-user-planning/v1.0.0
+< d          0 2026-09-10 20:44:20.1156004000 C:\Users\olegc/.vibe/cache/org.vibevm.world/multi-user-planning/v1.0.0/vibevm/vibespecs
+< d          0 2026-09-10 20:44:20.1171103000 C:\Users\olegc/.vibe/cache/org.vibevm.world/multi-user-planning/v1.0.0/vibevm/vibespecs/skills/steward-goal/scripts
+4761d4756
+< d          0 2026-09-12 00:45:43.5529853000 C:\Users\olegc/.vibe/steward/contexts/d2ab5a82-5b2b-4cd9-ab41-3a4e48f8bfe1
+4763a4759,4773
+> d          0 2026-09-12 01:35:20.4652235000 C:\Users\olegc/.vibe/steward/contexts/d2ab5a82-5b2b-4cd9-ab41-3a4e48f8bfe1
+> d          0 2026-09-12 01:36:40.4584172000 C:\Users\olegc/.vibe/cache/org.vibevm.world/multi-user-planning/v1.0.0
+> d          0 2026-09-12 01:36:40.4589181000 C:\Users\olegc/.vibe/cache/org.vibevm.world/multi-user-planning/v1.0.0/vibevm/vibespecs/boot
+> d          0 2026-09-12 01:36:40.4594183000 C:\Users\olegc/.vibe/cache/org.vibevm.world/multi-user-planning/v1.0.0/vibevm/vibespecs/examples
+> d          0 2026-09-12 01:36:40.4604222000 C:\Users\olegc/.vibe/cache/org.vibevm.world/multi-user-planning/v1.0.0/vibevm/vibespecs/examples/steward-goal/expected
+> d          0 2026-09-12 01:36:40.4609274000 C:\Users\olegc/.vibe/cache/org.vibevm.world/multi-user-planning/v1.0.0/vibevm/vibespecs/examples/steward-goal
+> d          0 2026-09-12 01:36:40.4619312000 C:\Users\olegc/.vibe/cache/org.vibevm.world/multi-user-planning/v1.0.0/vibevm/vibespecs/examples/steward-goal/home
+> d          0 2026-09-12 01:36:40.4619312000 C:\Users\olegc/.vibe/cache/org.vibevm.world/multi-user-planning/v1.0.0/vibevm/vibespecs/examples/steward-goal/home/contexts
+> d          0 2026-09-12 01:36:40.4629362000 C:\Users\olegc/.vibe/cache/org.vibevm.world/multi-user-planning/v1.0.0/vibevm/vibespecs/examples/steward-goal/home/contexts/00000000-0000-4000-8000-000000000001
+> d          0 2026-09-12 01:36:40.4639395000 C:\Users\olegc/.vibe/cache/org.vibevm.world/multi-user-planning/v1.0.0/vibevm/vibespecs/flows
+> d          0 2026-09-12 01:36:40.4684447000 C:\Users\olegc/.vibe/cache/org.vibevm.world/multi-user-planning/v1.0.0/vibevm/vibespecs/flows/multi-user-planning
+> d          0 2026-09-12 01:36:40.4689463000 C:\Users\olegc/.vibe/cache/org.vibevm.world/multi-user-planning/v1.0.0/vibevm/vibespecs
+> d          0 2026-09-12 01:36:40.4704476000 C:\Users\olegc/.vibe/cache/org.vibevm.world/multi-user-planning/v1.0.0/vibevm/vibespecs/manual-tests
+> d          0 2026-09-12 01:36:40.4719489000 C:\Users\olegc/.vibe/cache/org.vibevm.world/multi-user-planning/v1.0.0/vibevm/vibespecs/skills/steward-goal/scripts
+> d          0 2026-09-12 01:36:40.5191030000 C:\Users\olegc/.vibe/cache/org.vibevm.world/multi-user-planning
+6033a6044
+> f         19 2026-09-12 01:36:40.4709452000 C:\Users\olegc/.vibe/cache/org.vibevm.world/multi-user-planning/v1.0.0/vibevm/vibespecs/skills/steward-goal/scripts/.gitignore
+7027a7039
+> f         69 2026-09-12 01:36:40.4609274000 C:\Users\olegc/.vibe/cache/org.vibevm.world/multi-user-planning/v1.0.0/vibevm/vibespecs/examples/steward-goal/home/config.toml
+7094d7105
+< f         72 2026-09-08 05:45:38.9363432000 C:\Users\olegc/.vibe/cache/org.vibevm.world/multi-user-planning/v1.0.0.sha256
+7109a7121
+> f         72 2026-09-12 01:36:40.5185986000 C:\Users\olegc/.vibe/cache/org.vibevm.world/multi-user-planning/v1.0.0.sha256
+7965a7978
+> f        143 2026-09-12 01:36:40.4629362000 C:\Users\olegc/.vibe/cache/org.vibevm.world/multi-user-planning/v1.0.0/vibevm/vibespecs/examples/steward-goal/home/contexts/00000000-0000-4000-8000-000000000001/settings.toml
+9089a9103
+> f        284 2026-09-12 01:36:40.4619312000 C:\Users\olegc/.vibe/cache/org.vibevm.world/multi-user-planning/v1.0.0/vibevm/vibespecs/examples/steward-goal/home/contexts/00000000-0000-4000-8000-000000000001/custody.toml
+11972a11987
+> f        773 2026-09-12 01:36:40.4594183000 C:\Users\olegc/.vibe/cache/org.vibevm.world/multi-user-planning/v1.0.0/vibevm/vibespecs/examples/steward-goal/expected/GOAL-CLAUDE.txt
+16570a16586
+> f       1833 2026-09-12 01:36:40.4574181000 C:\Users\olegc/.vibe/cache/org.vibevm.world/multi-user-planning/v1.0.0/LICENSE.md
+16781a16798
+> f       1944 2026-09-12 01:36:40.4609274000 C:\Users\olegc/.vibe/cache/org.vibevm.world/multi-user-planning/v1.0.0/vibevm/vibespecs/examples/steward-goal/expected/GOAL.txt
+16794a16812
+> f       1953 2026-09-12 01:36:40.4584172000 C:\Users\olegc/.vibe/cache/org.vibevm.world/multi-user-planning/v1.0.0/vibe.toml
+17021d17038
+< f       2047 2026-09-12 00:45:43.5494777000 C:\Users\olegc/.vibe/steward/contexts/d2ab5a82-5b2b-4cd9-ab41-3a4e48f8bfe1/GOAL-CLAUDE.txt
+17202a17220
+> f       2122 2026-09-12 01:36:40.4624382000 C:\Users\olegc/.vibe/cache/org.vibevm.world/multi-user-planning/v1.0.0/vibevm/vibespecs/examples/steward-goal/home/contexts/00000000-0000-4000-8000-000000000001/plan.toml
+18529a18548
+> f       2700 2026-09-12 01:35:20.4573228000 C:\Users\olegc/.vibe/steward/contexts/d2ab5a82-5b2b-4cd9-ab41-3a4e48f8bfe1/GOAL-CLAUDE.txt
+19961a19981
+> f       3622 2026-09-12 01:36:40.4699448000 C:\Users\olegc/.vibe/cache/org.vibevm.world/multi-user-planning/v1.0.0/vibevm/vibespecs/manual-tests/MT-02-deterministic-goal.xml
+20336a20357
+> f       3913 2026-09-12 01:36:40.4704476000 C:\Users\olegc/.vibe/cache/org.vibevm.world/multi-user-planning/v1.0.0/vibevm/vibespecs/manual-tests/MT-03-casual-continuation.xml
+20744a20766
+> f       4258 2026-09-12 01:36:40.4694452000 C:\Users\olegc/.vibe/cache/org.vibevm.world/multi-user-planning/v1.0.0/vibevm/vibespecs/manual-tests/MT-01-same-machine-central-handoff.xml
+23570a23593
+> f       6914 2026-09-12 01:36:40.4579178000 C:\Users\olegc/.vibe/cache/org.vibevm.world/multi-user-planning/v1.0.0/README.md
+23584a23608
+> f       6919 2026-09-12 01:36:40.4669444000 C:\Users\olegc/.vibe/cache/org.vibevm.world/multi-user-planning/v1.0.0/vibevm/vibespecs/flows/multi-user-planning/migration-and-composition.xml
+23959a23984
+> f       7335 2026-09-12 01:36:40.4644445000 C:\Users\olegc/.vibe/cache/org.vibevm.world/multi-user-planning/v1.0.0/vibevm/vibespecs/flows/multi-user-planning/collaboration-and-acceptance.xml
+23982a24008
+> f       7417 2026-09-12 01:36:40.4679465000 C:\Users\olegc/.vibe/cache/org.vibevm.world/multi-user-planning/v1.0.0/vibevm/vibespecs/flows/multi-user-planning/plan-hierarchy.xml
+24005a24032
+> f       7474 2026-09-12 01:36:40.4589181000 C:\Users\olegc/.vibe/cache/org.vibevm.world/multi-user-planning/v1.0.0/vibevm/vibespecs/boot/12-flow-multi-user-planning.xml
+24638a24666
+> f       8304 2026-09-12 01:36:40.4689463000 C:\Users\olegc/.vibe/cache/org.vibevm.world/multi-user-planning/v1.0.0/vibevm/vibespecs/flows/multi-user-planning/user-local-state.xml
+26411a26440
+> f      11242 2026-09-12 01:36:40.4639395000 C:\Users\olegc/.vibe/cache/org.vibevm.world/multi-user-planning/v1.0.0/vibevm/vibespecs/flows/multi-user-planning/campaign-execution.xml
+26763a26793
+> f      11949 2026-09-12 01:36:40.4674452000 C:\Users\olegc/.vibe/cache/org.vibevm.world/multi-user-planning/v1.0.0/vibevm/vibespecs/flows/multi-user-planning/MULTI-USER-PLANNING-PROTOCOL.xml
+27827a27858
+> f      14550 2026-09-12 01:36:40.4659444000 C:\Users\olegc/.vibe/cache/org.vibevm.world/multi-user-planning/v1.0.0/vibevm/vibespecs/flows/multi-user-planning/goal-projection.xml
+28073a28105
+> f      15452 2026-09-12 01:36:40.4654442000 C:\Users\olegc/.vibe/cache/org.vibevm.world/multi-user-planning/v1.0.0/vibevm/vibespecs/flows/multi-user-planning/custody-and-handoff.xml
+28808a28841
+> f      18020 2026-09-12 01:36:40.4719489000 C:\Users\olegc/.vibe/cache/org.vibevm.world/multi-user-planning/v1.0.0/vibevm/vibespecs/skills/steward-goal/scripts/test_render_goal.py
+31423a31457
+> f      28321 2026-09-12 01:36:40.4709452000 C:\Users\olegc/.vibe/cache/org.vibevm.world/multi-user-planning/v1.0.0/vibevm/vibespecs/skills/steward-goal/scripts/render_goal.py
+35570d35603
+< f      71453 2026-09-12 00:45:43.5519809000 C:\Users\olegc/.vibe/steward/contexts/d2ab5a82-5b2b-4cd9-ab41-3a4e48f8bfe1/GOAL.md
+35626a35660
+> f      72281 2026-09-12 01:35:20.4608315000 C:\Users\olegc/.vibe/steward/contexts/d2ab5a82-5b2b-4cd9-ab41-3a4e48f8bfe1/GOAL.md

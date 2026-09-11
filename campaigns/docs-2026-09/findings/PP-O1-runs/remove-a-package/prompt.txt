@@ -1,0 +1,6 @@
+<prompt id="remove-a-package">Remove the package org.vibevm.world/wal from the VibeVM project in the current folder and confirm that nothing of it remains in the reading list.
+    <needs>the vibevm skill installed for your agent; a project in which the package is installed</needs>
+    <outcome>the requirement is gone from `vibe.toml`, the entry is gone from `vibe.lock`, the package's folder is gone from `vibevm/vibedeps/`, and `vibe tree` no longer lists its snippet; `vibe check` reports no errors</outcome>
+    <assert>test ! -e vibevm/vibedeps/org.vibevm.world.wal</assert>
+    <assert>vibe check --quiet</assert>
+  </prompt>

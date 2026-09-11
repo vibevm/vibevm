@@ -1,0 +1,6 @@
+<prompt id="scrape">Show me the scrape plan for the VibeVM project in the current folder, then export a scraped copy of it to the new folder ../product-clean, and prove that the copy builds without vibe.
+    <needs>the vibevm skill installed for your agent; a project with `vibe.toml` and a scrape contract, or the default one; the project's native build tool on the `PATH`</needs>
+    <outcome>`../product-clean` exists, holds no `vibevm/` directory, no `vibe.toml`, no `vibe.lock` and no managed block in the agent instruction files, and its native build and tests pass</outcome>
+    <assert>test ! -e ../product-clean/vibe.toml</assert>
+    <assert>test ! -e ../product-clean/vibevm</assert>
+  </prompt>

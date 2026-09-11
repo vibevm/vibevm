@@ -1,0 +1,6 @@
+<prompt id="install-a-package">Install the package org.vibevm.world/wal into the VibeVM project in the current folder, accept the plan, and tell me which version was recorded and what the agent will read from it at session start.
+    <needs>the vibevm skill installed for your agent; a project with `vibe.toml` in the current folder; network access to the project's registries, or the package already in the machine store</needs>
+    <outcome>`vibe.toml` lists the package under its requirements, `vibe.lock` pins one version with its content fingerprint, the package's tree sits under `vibevm/vibedeps/`, and `vibe tree` shows its boot snippet in the reading list</outcome>
+    <assert>grep -q "org.vibevm.world/wal" vibe.lock</assert>
+    <assert>vibe check --quiet</assert>
+  </prompt>

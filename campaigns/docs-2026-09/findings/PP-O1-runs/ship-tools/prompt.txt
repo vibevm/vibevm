@@ -1,0 +1,6 @@
+<prompt id="ship-tools">In the current VibeVM project, create the tool package org.acme/notes-tools as an in-tree package with a small Rust crate crates/notes-check inside it, declare the crate as a binary named notes-check, install the package into the project, build the tool through vibe, and run it through vibe bin exec with --help to prove the dispatch works.
+    <needs>the vibevm skill installed for your agent; a package with a Cargo workspace at its root and a binary crate; the Rust toolchain on the `PATH`</needs>
+    <outcome>the manifest carries a `[[binary]]` table; `vibe bin list` shows the tool; `vibe bin build` produced it in the package's own target folder; `vibe bin exec notes-check -- --help` prints the tool's help</outcome>
+    <assert>vibe bin list</assert>
+    <assert>vibe bin exec notes-check -- --help</assert>
+  </prompt>

@@ -1,0 +1,6 @@
+<prompt id="private-registry">Add the private registry named acme at git@github.com:acme-specs as the first registry of the VibeVM project in the current folder, authenticated over SSH, keep the public vibespecs registry as a fallback, and test that both are reachable.
+    <needs>the vibevm skill installed for your agent; an SSH key that the private host accepts, loaded in the agent; a project with `vibe.toml`</needs>
+    <outcome>`vibe registry list` shows `acme` first and `vibespecs` second; `vibe registry test` reports both reachable</outcome>
+    <assert>vibe registry list --quiet</assert>
+    <assert>vibe registry test</assert>
+  </prompt>

@@ -1,0 +1,6 @@
+<prompt id="install-vibe">Install vibe on this machine: on Windows from the latest release archive at github.com/vibevm/vibevm, otherwise by building the source checkout with its first-run script. Then open a new shell and confirm that `vibe --version` prints a version.
+    <needs>network access to github.com; on a platform other than Windows, git and a Rust toolchain</needs>
+    <outcome>`vibe --version` prints `vibe 1.0.0` in a new terminal, and `vibe self doctor` reports no problems</outcome>
+    <assert>vibe --version</assert>
+    <assert>vibe self doctor</assert>
+  </prompt>
