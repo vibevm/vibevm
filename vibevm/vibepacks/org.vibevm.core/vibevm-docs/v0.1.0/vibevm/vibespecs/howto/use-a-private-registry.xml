@@ -10,7 +10,7 @@
     <assert>vibe registry test</assert>
   </prompt>
   <what-happens title="What happens">
-    <p>The agent runs `vibe registry add acme git@github.com:acme-specs --auth ssh --position primary`, which writes a new registry block at the top of the manifest's list. From now on every resolution asks `acme` first and the public registry second, and a package that exists in both comes from `acme`. `vibe registry test` probes each registry for reachability and authentication without fetching anything.</p>
+    <p>The agent runs `vibe registry add acme git@github.com:acme-specs --auth ssh --position primary`, which writes a new [registry](../glossary/index.xml#registry) block at the top of the [manifest](../glossary/index.xml#manifest)'s list. From now on every resolution asks `acme` first and the public registry second, and a package that exists in both comes from `acme`. `vibe registry test` probes each registry for reachability and authentication without fetching anything.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REGISTRY-WALK-ORDER"/>
   </what-happens>
   <by-hand title="By hand">
@@ -32,13 +32,13 @@
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#USER-LEVEL-REGISTRIES"/>
   </machine-wide>
   <tokens title="Tokens">
-    <p>A token never lands in a file vibe writes and never appears in its output. With `--auth token-env` vibe reads it from `VIBEVM_REGISTRY_TOKEN_&lt;HOST&gt;` at run time and sends it over an encrypted connection only. Keep the variable in your shell profile or your CI secret store, not in the repository.</p>
+    <p>A token never lands in a file vibe writes and never appears in its output. With `--auth token-env` vibe reads it from `VIBEVM_REGISTRY_TOKEN_&lt;HOST&gt;` at run time and sends it over an encrypted connection only. Keep the variable in your shell profile or your CI secret [store](../glossary/index.xml#store), not in the repository.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#TOKEN-NEVER-ON-DISK"/>
   </tokens>
   <edge-cases title="Edge cases and rules">
-    <p>A private registry without an index still works; searches skip it and installs clone what they need. Add an index repository beside the packages and point `VIBEVM_INDEX_URL_ACME` at it to make searches and cold installs fast.</p>
+    <p>A private registry without an [index](../glossary/index.xml#index-registry) still works; searches skip it and installs clone what they need. Add an index repository beside the packages and point `VIBEVM_INDEX_URL_ACME` at it to make searches and cold installs fast.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#INDEX-OPTIONAL"/>
-    <p>A mirror is not a second registry. Use `vibe registry set-mirror` for an alternative address of the same packages, verified against the same fingerprints; use `registry add` for a different source of packages.</p>
+    <p>A mirror is not a second registry. Use `vibe registry set-mirror` for an alternative address of the same packages, verified against the same [fingerprints](../glossary/index.xml#fingerprint); use `registry add` for a different source of packages.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#MIRROR-WALK-SEMANTICS"/>
     <p>In a script that must notice a private registry being down, pass `--auth-required` to `vibe install`: an authentication error then stops the install instead of walking on to the public fallback.</p>
   </edge-cases>

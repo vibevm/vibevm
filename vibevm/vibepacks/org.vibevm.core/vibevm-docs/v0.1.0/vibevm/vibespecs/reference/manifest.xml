@@ -7,7 +7,7 @@
     <p>Every node, whether a consumer project, a publishable package or a workspace root, has a file named `vibe.toml`. The tables present decide the role: `[project]` marks a consumer that is never published, `[package]` a publishable package, `[workspace]` a coordinator of members; the first two exclude each other, the third composes with either or with neither.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#ONE-MANIFEST"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#PACKAGE-XOR-PROJECT"/>
-    <p>Unknown keys are rejected, not ignored: a manifest written for a newer vibe than the one reading it fails to parse with the offending key named.</p>
+    <p>Unknown keys are rejected, not ignored: a [manifest](../glossary/index.xml#manifest) written for a newer vibe than the one reading it fails to parse with the offending key named.</p>
   </one-file>
   <package-table title="[package]">
     <table>
@@ -88,6 +88,6 @@
   </documentation-tables>
   <example-manifest title="A complete example">
     <derived kind="manifest-field" ref="org.vibevm.core/vibevm-docs"/>
-    <p>The manifest of this manual, generated from the package itself, shows a `doc` package with a card, a subject and a skill.</p>
+    <p>The manifest of this manual, generated from the package itself, shows a `doc` package with a card, a subject and a [skill](../glossary/index.xml#skill).</p>
   </example-manifest>
 </spec>

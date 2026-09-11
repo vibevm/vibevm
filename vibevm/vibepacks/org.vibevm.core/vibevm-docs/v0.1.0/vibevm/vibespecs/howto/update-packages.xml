@@ -10,7 +10,7 @@
     <assert>vibe list --quiet</assert>
   </prompt>
   <what-happens title="What happens">
-    <p>The agent first runs `vibe outdated`, which compares every pin in the lock file with the newest version the registry offers and prints the difference; it changes nothing. Then it runs `vibe update --all`: vibe re-resolves the graph, preferring the current version of every package that is not being updated, fetches what is new into the store, shows the plan, and on confirmation replaces the package trees, rewrites the lock file and regenerates the boot files. The agent finishes by reading the lock file's diff back to you: that diff is the exact list of text your agent will read differently from now on.</p>
+    <p>The agent first runs `vibe outdated`, which compares every pin in the [lock file](../glossary/index.xml#lock-file) with the newest version the [registry](../glossary/index.xml#registry) offers and prints the difference; it changes nothing. Then it runs `vibe update --all`: vibe re-resolves the graph, preferring the current version of every package that is not being updated, fetches what is new into the [store](../glossary/index.xml#store), shows the plan, and on confirmation replaces the package trees, rewrites the lock file and regenerates the boot files. The agent finishes by reading the lock file's diff back to you: that diff is the exact list of text your agent will read differently from now on.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#UPDATE-MOVES-LOCK"/>
   </what-happens>
   <by-hand title="By hand">
@@ -25,10 +25,10 @@
       <expect></expect>
     </example>
     <p>`vibe update --all` updates everything in the lock file; the two forms are mutually exclusive.</p>
-    <p>3. Read the diff of `vibe.lock` before you commit it. Each changed entry names the old and the new version and fingerprint.</p>
+    <p>3. Read the diff of `vibe.lock` before you commit it. Each changed entry names the old and the new version and [fingerprint](../glossary/index.xml#fingerprint).</p>
   </by-hand>
   <the-constraint title="The constraint stays where you put it">
-    <p>An update moves the pin in the lock file within the constraint the manifest names; it never widens or narrows the constraint. If the manifest says `^1.0`, an update will not cross to 2.0 on its own. To move the constraint too, install the new version explicitly with a new constraint, or pass `--exact` to pin the resolved version in the manifest as well.</p>
+    <p>An update moves the pin in the lock file within the constraint the [manifest](../glossary/index.xml#manifest) names; it never widens or narrows the constraint. If the manifest says `^1.0`, an update will not cross to 2.0 on its own. To move the constraint too, install the new version explicitly with a new constraint, or pass `--exact` to pin the resolved version in the manifest as well.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#CF-RANGE"/>
   </the-constraint>
   <recovery title="Recovering after a breaking update">
@@ -36,7 +36,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#REINSTALL-NO-FORCE"/>
   </recovery>
   <edge-cases title="Edge cases and rules">
-    <p>`vibe outdated` needs the registry and, for the fastest answer, its index; without a network it reports what it could not reach rather than guessing.</p>
+    <p>`vibe outdated` needs the registry and, for the fastest answer, its [index](../glossary/index.xml#index-registry); without a network it reports what it could not reach rather than guessing.</p>
     <p>A dependency declared as a git branch is walked again on update and its lock entry moves to the branch's current commit; a tag or a commit stays where it is.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#ROW-GS-BRANCH-MEANING"/>
     <p>`--upstream` also compares the upstream releases a package declares it describes, for packages that document a third-party library.</p>

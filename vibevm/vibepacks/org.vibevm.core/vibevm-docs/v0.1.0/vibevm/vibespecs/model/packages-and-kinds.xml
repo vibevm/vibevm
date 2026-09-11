@@ -10,7 +10,7 @@
   <a-package title="What a package is">
     <p>A package is a project made installable. It has the same layout as a project, with its own `vibe.toml` and its own `vibevm/vibespecs/`, and it may carry code beside them. When a project installs it, the package's published tree is copied verbatim into the project's dependency tree; nothing is extracted, rewritten or merged.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-052#PACKAGES-CARRY-THE-LAYOUT-TOO"/>
-    <p>A package is named by a *coordinate*: a group, a slash, and a name, as in `org.vibevm.world/wal`. The group looks like a reversed domain name and says who publishes; the name is unique within the group. A version completes the address when one is needed: `org.vibevm.world/wal@1.0.0`. The kind is not part of the name. It may be written as a prefix on the command line, `flow:org.vibevm.world/wal`, and then vibe checks that the package really is of that kind.</p>
+    <p>A package is named by a *[coordinate](../glossary/index.xml#coordinate)*: a group, a slash, and a name, as in `org.vibevm.world/wal`. The group looks like a reversed domain name and says who publishes; the name is unique within the group. A version completes the address when one is needed: `org.vibevm.world/wal@1.0.0`. The kind is not part of the name. It may be written as a prefix on the command line, `flow:org.vibevm.world/wal`, and then vibe checks that the package really is of that kind.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#IDENTITY-TUPLE"/>
   </a-package>
   <the-kinds title="The eight kinds">
@@ -25,15 +25,15 @@
       <tr><td>`doc`</td><td>documentation of other packages: read, never installed</td><td>`org.vibevm.core/vibevm-docs`</td></tr>
       <tr><td>`app`</td><td>a standalone product with its own deployment</td><td>`org.vibevm.doc/web`</td></tr>
     </table>
-    <p>The set is closed and grows only by an amendment to the specification; a manifest with an unknown kind is rejected rather than guessed.</p>
+    <p>The set is closed and grows only by an amendment to the specification; a [manifest](../glossary/index.xml#manifest) with an unknown kind is rejected rather than guessed.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#KIND-SET"/>
     <p>The kind is metadata about the package, not part of its identity: it decides where content is placed, what the `--kind` filter of `vibe list` and `vibe search` shows, and whether a kind-prefixed name is accepted. Two packages of different kinds may not share a coordinate, because the coordinate alone is the identity.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#KIND-METADATA"/>
   </the-kinds>
   <families title="Families and companions">
-    <p>Some capabilities arrive as several packages that share a name stem: the language guide, the server that serves its tools, and a small bundle that pins both at one version. This is a *family*. Requiring the bundle installs the family, and a change to any member bumps every member to one shared version, so the pieces can never drift apart.</p>
+    <p>Some [capabilities](../glossary/index.xml#capability) arrive as several packages that share a name stem: the language guide, the server that serves its tools, and a small bundle that pins both at one version. This is a *family*. Requiring the bundle installs the family, and a change to any member bumps every member to one shared version, so the pieces can never drift apart.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-028#UNISON-LAW"/>
-    <p>Documentation is the exception. A package's manual is its *companion*, named with the suffix `-docs` in the same group, and it keeps its own version line: a fixed typo in the manual does not release the tools, and a new tool version does not demand a new manual. The manual says which versions of its subject it describes, and the site picks the newest manual that fits.</p>
+    <p>Documentation is the exception. A package's manual is its *[companion](../glossary/index.xml#companion)*, named with the suffix `-docs` in the same group, and it keeps its own version line: a fixed typo in the manual does not release the tools, and a new tool version does not demand a new manual. The manual says which versions of its subject it describes, and the site picks the newest manual that fits.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-028#ROLE-DOCS"/>
   </families>
   <edge-cases title="Edge cases and rules">
@@ -41,7 +41,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#GROUP-CHANGE-NEW-PACKAGE"/>
     <p>A documentation package cannot be installed into a project. `vibe install` refuses it and names the command that fetches it for reading instead.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#KIND-DOC-NOT-INSTALLED"/>
-    <p>A short name without a group, such as `wal`, is accepted on the command line and resolved through the registry index; it is convenience, and the manifest always records the full coordinate.</p>
+    <p>A short name without a group, such as `wal`, is accepted on the command line and resolved through the [registry](../glossary/index.xml#registry) [index](../glossary/index.xml#index-registry); it is convenience, and the manifest always records the full coordinate.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#ROW-SHORT-BEHAVIOUR"/>
   </edge-cases>
 </spec>

@@ -4,7 +4,7 @@
   <status stage="doc" state="work" audience="user"/>
   <p>vibe's error messages name the rule they enforce. This page lists the messages you are likely to meet, what each means, and the shortest way out, in the order they tend to appear.</p>
   <how-to-read title="How to read an error">
-    <p>An error has three parts: what vibe refused, why, and where the rule lives, as an address such as `spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#IDENTITY-TUPLE`. `vibe explain "&lt;address&gt;"` prints the rule and what implements it; the pages of this manual explain the mechanism behind it. Exit codes are stable for scripts: 1 for a general failure, 3 for a conflict-shaped refusal such as a malformed managed block, 5 when you declined a plan.</p>
+    <p>An error has three parts: what vibe refused, why, and where the rule lives, as an address such as `spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#IDENTITY-TUPLE`. `vibe explain "&lt;address&gt;"` prints the rule and what implements it; the pages of this manual explain the mechanism behind it. Exit codes are stable for scripts: 1 for a general failure, 3 for a conflict-shaped refusal such as a malformed [managed block](../glossary/index.xml#managed-block), 5 when you declined a plan.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#SURF-EXIT-CODE"/>
   </how-to-read>
   <install-errors title="Installing">

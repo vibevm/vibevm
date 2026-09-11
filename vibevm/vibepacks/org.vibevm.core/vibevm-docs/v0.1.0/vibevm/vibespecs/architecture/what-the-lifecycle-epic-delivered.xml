@@ -4,7 +4,7 @@
   <status stage="doc" state="work" audience="dev"/>
   <p>Between July and September 2026 vibe grew from a package installer into a build system with an extension machine, a native ABI, a record of every deployment and a terminal export. This page tells that route as one system, what was decided on the way, and what was left for later.</p>
   <the-route title="The route, in eight stages">
-    <p>The work ran as eight numbered stages, each landed as atomic commits with tests and a traceability map, and recorded in a ledger that names every commit. Read them as one story rather than eight features.</p>
+    <p>The work ran as eight numbered stages, each landed as atomic commits with tests and a [traceability map](../glossary/index.xml#traceability-map), and recorded in a ledger that names every commit. Read them as one story rather than eight features.</p>
     <table>
       <tr><td>Stage</td><td>What it delivered</td></tr>
       <tr><td>R1, diff materialisation</td><td>a strict record per dependency slot, so an install writes only what changed and never wipes a tree; a hash gate for mutable sources; hooks that run only on a real change</td></tr>
@@ -16,23 +16,23 @@
       <tr><td>R7, providers and agents</td><td>the model provider seam with an OpenAI-compatible adapter, the CLI agent handler, the hosted outbox with delegated resume, the MCP lifecycle surfaces, and the substrate for external orchestration</td></tr>
       <tr><td>R8, package, build and deploy</td><td>the project skill binding, the mechanism and artifact grammar, artifact records and the target graph, the Cargo build provider, one-file skills, the Agent Plugins directory, client projections, deploy profiles with intents, receipts and recovery, a deterministic zip, platform applicability, and package-supplied native providers</td></tr>
     </table>
-    <p>Beside the route, the scrape operation landed as its own contract: the deterministic removal of the vibe layer from a finished project, with a plan, a health proof and a recoverable in-place transaction.</p>
+    <p>Beside the route, the [scrape](../glossary/index.xml#scrape) operation landed as its own contract: the deterministic removal of the vibe layer from a finished project, with a plan, a health proof and a recoverable in-place transaction.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#SCRAPED-TREE"/>
   </the-route>
   <decisions title="Decisions that hold">
-    <p>One nine-phase line: dependency materialisation is `install`, placement outside the project is `deploy`, and `package` mutates no destination. One extension plane: scheduled contributions answer when, sibling mechanism providers answer how, and built-ins are ordinary providers a host may replace by an exact pin. Native wire is C plus JSON, schema first; the author SDK is safe Rust and the loader is quarantined. Every external mutation has a plan, an intent, an independent verification and a receipt, and a third observed digest refuses. Automatic skill binding is project-only; user and client installation is an explicit deploy. Every subsystem keeps a complete algorithmic mode; a model enhances and never gates.</p>
+    <p>One nine-phase line: dependency materialisation is `install`, placement outside the project is `deploy`, and `package` mutates no destination. One extension plane: scheduled [contributions](../glossary/index.xml#contribution) answer when, sibling mechanism providers answer how, and built-ins are ordinary providers a host may replace by an exact pin. Native wire is C plus JSON, schema first; the author SDK is safe Rust and the loader is quarantined. Every external mutation has a plan, an intent, an independent verification and a [receipt](../glossary/index.xml#receipt), and a third observed digest refuses. Automatic [skill](../glossary/index.xml#skill) binding is project-only; user and client installation is an explicit deploy. Every subsystem keeps a complete algorithmic mode; a model enhances and never gates.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE"/>
-    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#WHY-C-ABI"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#why-c-abi"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#LLM-IS-AN-ENHANCEMENT"/>
   </decisions>
   <boundaries title="Compatibility boundaries and migrations">
-    <p>The dependency slot record and the lifecycle state are strict, versioned machine formats; older trees are migrated once on the next install, never read in place. The compiler IR's wire projection is versioned per carrier. Deploy receipts and lifecycle fingerprints live under `.vibe/`, machine state that is not committed; losing them costs one full run, not correctness. Handwritten wire types are counted by a ratchet against a frozen baseline, so a new machine format cannot arrive without a schema.</p>
+    <p>The dependency slot record and the [lifecycle](../glossary/index.xml#lifecycle) state are strict, versioned machine formats; older trees are migrated once on the next install, never read in place. The compiler IR's wire projection is versioned per carrier. Deploy receipts and [freshness fingerprints](../glossary/index.xml#freshness-fingerprint) live under `.vibe/`, machine state that is not committed; losing them costs one full run, not correctness. Handwritten wire types are counted by a ratchet against a frozen baseline, so a new machine format cannot arrive without a schema.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-STATE-HOME"/>
   </boundaries>
   <deferred title="Deliberately left for later">
     <p>Deploy targets beyond the first genres, a WebAssembly extension tier, per-language and per-resource preference overrides, cloud sync of user preferences, a built-in inference backend, and the general phase grammar beyond `clean install` for the clean lifecycle. Each is named in its specification with a compatibility law, so the door stays open without a half-built feature behind it.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS"/>
-    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#WASM"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#WASM-DEFERRED"/>
   </deferred>
   <retired title="Retired lanes, kept as history">
     <p>The campaign also ran execution lanes that are no longer current: a subscription-backed external worker lane was retired by the owner in September 2026, and its package source stays in the tree as history while its host dependency and boot contribution were removed. A reader who meets its name in old ledgers should treat it as evidence of how the work was done, not as a supported way to use the product.</p>

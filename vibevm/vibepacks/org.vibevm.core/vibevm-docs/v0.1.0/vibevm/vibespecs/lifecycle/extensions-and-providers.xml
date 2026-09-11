@@ -8,7 +8,7 @@
     <expect></expect>
   </example>
   <points-and-contributions title="Points and contributions">
-    <p>The lifecycle exposes named *extension points*, strings of the form `family:name`. The `phase:` family is the nine phases; the `slot:` family names places inside a phase where a stack or a discipline expects to plug something; the `compile:` family is the boot compiler's own pipeline, where a package may transform the text an agent will read. A *contribution* binds a handler to a point and is declared in a manifest as an `[[extension]]` table, in a package or in the project itself.</p>
+    <p>The [lifecycle](../glossary/index.xml#lifecycle) exposes named *[extension points](../glossary/index.xml#extension-point)*, strings of the form `family:name`. The `phase:` family is the nine phases; the `slot:` family names places inside a phase where a stack or a discipline expects to plug something; the `compile:` family is the boot compiler's own pipeline, where a package may transform the text an agent will read. A *[contribution](../glossary/index.xml#contribution)* binds a handler to a point and is declared in a [manifest](../glossary/index.xml#manifest) as an `[[extension]]` table, in a package or in the project itself.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-GRAMMAR"/>
     <p>A contribution carries an id, which is also the key a project uses to disable or override it; the same handler may be bound several times under different ids with different configuration.</p>
@@ -38,7 +38,7 @@
     <p>`vibe extensions` lists every declared contribution in the installed world with its point, handler and origin; `--json` gives the same to a scanner. Everything a contribution can do is declared, so a scanner needs no execution to audit a project. Every run prints the contributions it will execute before it starts, and a run can be traced pass by pass with `--trace-compile` into `.vibe/trace/`.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#OBS-REGISTRY"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE"/>
-    <p>`vibe tools` lists the binaries and servers the installed packages brought, which is the registry of what a contribution of kind `binary` may name.</p>
+    <p>`vibe tools` lists the binaries and servers the installed packages brought, which is the [registry](../glossary/index.xml#registry) of what a contribution of kind `binary` may name.</p>
     <example id="tools" fixture="hello-vibe">
       <run>vibe tools --path hello-vibe</run>
       <expect></expect>
@@ -53,7 +53,7 @@
     <p>A contribution may carry a selector that limits it to matching files or targets, so a formatter binds to one language's sources and not to the rest of the tree.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-SELECTOR"/>
     <p>A native handler crosses a C-and-JSON boundary, never the Rust ABI, so a library built by another toolchain version still loads.</p>
-    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#WHY-C-ABI"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#why-c-abi"/>
     <p>Enabled model work carries per-run ceilings on calls and tokens; a step that would exceed them stops rather than spends.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#LLM-BUDGET"/>
   </edge-cases>

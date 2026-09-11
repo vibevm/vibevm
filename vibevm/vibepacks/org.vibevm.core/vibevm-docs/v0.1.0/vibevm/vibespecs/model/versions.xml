@@ -8,13 +8,13 @@
     <expect></expect>
   </example>
   <asking title="Asking for a version">
-    <p>Package versions follow semantic versioning: three numbers, where the first changes when a package breaks compatibility. In the manifest you name a constraint, not a version: `^1.0` means any 1.x from 1.0 up, `=1.2.0` means exactly that one, and a bare coordinate means the newest stable release. The resolver picks one version per package that satisfies every constraint in the graph, and the lock file records the choice.</p>
+    <p>Package versions follow semantic versioning: three numbers, where the first changes when a package breaks compatibility. In the [manifest](../glossary/index.xml#manifest) you name a constraint, not a version: `^1.0` means any 1.x from 1.0 up, `=1.2.0` means exactly that one, and a bare [coordinate](../glossary/index.xml#coordinate) means the newest stable release. The resolver picks one version per package that satisfies every constraint in the graph, and the [lock file](../glossary/index.xml#lock-file) records the choice.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#CF-RANGE"/>
     <p>A family of packages that must move together pins its members exactly, so that a language guide and the server that serves its tools always resolve to one version set. You will meet these pins in the manifests of bundles; they are deliberate.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-028#AGGREGATOR-PINS-DELIBERATE"/>
   </asking>
   <moving title="Moving the pin">
-    <p>`vibe outdated` reads the lock file and the registry and lists the packages with a newer version available; it changes nothing. `vibe update` re-resolves and moves the pins, preferring to keep every package you did not name at its current version, so that updating one package does not silently drag the others along.</p>
+    <p>`vibe outdated` reads the lock file and the [registry](../glossary/index.xml#registry) and lists the packages with a newer version available; it changes nothing. `vibe update` re-resolves and moves the pins, preferring to keep every package you did not name at its current version, so that updating one package does not silently drag the others along.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#TRAIT-PIN-PREFERENCES"/>
     <p>After an update the dependency tree and the boot files are regenerated, and the diff of the lock file is the change log of what your agent will now read.</p>
   </moving>
@@ -32,6 +32,6 @@
   <edge-cases title="Edge cases and rules">
     <p>Two packages with the same coordinate and version but different bytes are two different things, and the second is refused. If a maintainer needs to re-publish, the version number changes.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#IDENTITY-CONSEQUENCE"/>
-    <p>A branch used as a git source is the one exception to pinning by number: its lock entry records the commit that was installed, and an update walks the branch again.</p>
+    <p>A branch used as a [git source](../glossary/index.xml#git-source) is the one exception to pinning by number: its lock entry records the commit that was installed, and an update walks the branch again.</p>
   </edge-cases>
 </spec>

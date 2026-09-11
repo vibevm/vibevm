@@ -38,10 +38,6 @@
     <p>A package tied to another by name for the default case of officiality and by nothing else: the documentation `&lt;name&gt;-docs` of a package, or the translation `&lt;docname&gt;-&lt;lang&gt;` of a documentation. A companion keeps its own version line and stays outside family unison.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-028#ROLE-DOCS"/>
   </companion>
-  <content-hash title="content hash">
-    <p>The fingerprint of a package's shippable tree, the identity half of a package version; verified on every fetch and recorded in the lock file.</p>
-    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#HASH-UNCHANGED"/>
-  </content-hash>
   <contribution title="contribution">
     <p>A binding of a handler to an extension point, declared as an `[[extension]]` table in a package or a project; the unit the lifecycle runs and reports.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-GRAMMAR"/>
@@ -74,10 +70,14 @@
     <p>An optional, additive content set of a package, declared in `[features]` and activated at install; features may depend on features.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#FEATURES-TABLE"/>
   </feature>
-  <fingerprint-freshness title="fingerprint (freshness)">
-    <p>The hash of a phase run's declared inputs, recorded under `.vibe/`; a phase whose fingerprint did not change is skipped on the next run.</p>
+  <fingerprint title="fingerprint">
+    <p>The hash of a package's shippable tree, the identity half of a package version, recorded as `content_hash` in the lock file and verified on every fetch.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#HASH-UNCHANGED"/>
+  </fingerprint>
+  <freshness-fingerprint title="freshness fingerprint">
+    <p>The hash of a phase run's declared inputs, recorded under `.vibe/`; a phase whose freshness fingerprint did not change is skipped on the next run.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-FINGERPRINT"/>
-  </fingerprint-freshness>
+  </freshness-fingerprint>
   <git-source title="git source">
     <p>A dependency declared by a git repository and a tag, commit or branch instead of a registry; identity and fingerprint discipline are the same, and a branch is re-walked on update.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#GS-IDENTITY"/>

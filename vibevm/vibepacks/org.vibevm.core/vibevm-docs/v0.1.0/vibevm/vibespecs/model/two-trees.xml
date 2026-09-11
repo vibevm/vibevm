@@ -17,7 +17,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#VIBEDEPS-COMMITTED"/>
   </why-commit>
   <what-regenerates title="What regenerates, and when">
-    <p>Three things in a project are derived from the manifest and the lock file, and vibe rebuilds them on demand: the dependency tree, the generated boot files, and the managed block in the agent instruction files. `vibe reinstall` rebuilds all three from the lock file and the machine store, without asking any registry; add `--force` to fetch the package files again from their sources.</p>
+    <p>Three things in a project are derived from the [manifest](../glossary/index.xml#manifest) and the [lock file](../glossary/index.xml#lock-file), and vibe rebuilds them on demand: the dependency tree, the generated boot files, and the [managed block](../glossary/index.xml#managed-block) in the agent instruction files. `vibe reinstall` rebuilds all three from the lock file and the machine [store](../glossary/index.xml#store), without asking any [registry](../glossary/index.xml#registry); add `--force` to fetch the package files again from their sources.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#REINSTALL"/>
     <p>`vibe clean` goes one step further and removes the derived state altogether, keeping everything you wrote, the lock file and the machine store. It is the command for a clean start before a build, and it refuses to run outside a project so it cannot sweep the wrong folder.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#CLEAN-KEEPS-AUTHORED"/>

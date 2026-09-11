@@ -10,7 +10,7 @@
     <assert>test -f packages/review-notes/vibevm/vibespecs/boot/review-notes.xml</assert>
   </prompt>
   <what-happens title="What happens">
-    <p>The agent runs `vibe init package org.acme/review-notes packages/review-notes`, which writes a manifest with a `[package]` table, the `vibevm/` layout and the two boot files every node has. It then writes three things: the boot snippet, a short instruction the agent of a consuming project reads at every session start; the protocol, the full rules under `vibevm/vibespecs/flows/review-notes/`, with anchored sections the snippet cites; and the manifest's `[boot_snippet]` table pointing at the snippet with the category `flow`. Finally it runs `vibe check` on the package, which validates the manifest and the layout like it would for any project.</p>
+    <p>The agent runs `vibe init package org.acme/review-notes packages/review-notes`, which writes a [manifest](../glossary/index.xml#manifest) with a `[package]` table, the `vibevm/` layout and the two boot files every node has. It then writes three things: the [boot snippet](../glossary/index.xml#boot-snippet), a short instruction the agent of a consuming project reads at every session start; the protocol, the full rules under `vibevm/vibespecs/flows/review-notes/`, with anchored sections the snippet cites; and the manifest's `[boot_snippet]` table pointing at the snippet with the category `flow`. Finally it runs `vibe check` on the package, which validates the manifest and the layout like it would for any project.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-024#PKG-PROJECT-LAW"/>
   </what-happens>
   <by-hand title="By hand">
@@ -36,7 +36,7 @@
     <p>A snippet is paid for on every session start by every consumer. Write it as an instruction, not an explanation: name the rule, the address, the command. Put the reasoning in the protocol, where an agent reads it once when it needs to. And never assume another package is installed: a snippet that says «as the WAL protocol requires» in a project without that protocol sends the agent looking for a rule that is not there. If your flow builds on another, declare the concept it relies on and let vibe warn when the concept is absent.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-048#THE-LAYER-LAW"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-049#SNIPPET-GENRE-RULE"/>
-    <p>The consumer decides how your snippet is linked, compiled into the priority lane or listed in the index; you may suggest a default in `[boot_snippet]`, and the consumer's choice wins.</p>
+    <p>The consumer decides how your snippet is linked, compiled into the priority lane or listed in `INDEX.md`; you may suggest a default in `[boot_snippet]`, and the consumer's choice wins.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SUGGESTED-DEFAULT"/>
   </the-snippet>
   <layout title="What goes where">

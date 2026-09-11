@@ -9,7 +9,7 @@
     <assert>vibe registry publish packages/notes --dry-run</assert>
   </prompt>
   <what-happens title="What happens">
-    <p>The agent runs `vibe registry publish packages/notes --dry-run` first and shows you what would happen: the registry, the repository name derived from the coordinate, the version tag. After your yes it runs the real command: vibe creates the repository in the registry organisation through the host's API if it does not exist, pushes the package's shippable tree, and tags the version. The package is then one more repository the registry's index will pick up. To prove it, the agent creates a scratch project and installs the package by coordinate.</p>
+    <p>The agent runs `vibe registry publish packages/notes --dry-run` first and shows you what would happen: the [registry](../glossary/index.xml#registry), the repository name derived from the [coordinate](../glossary/index.xml#coordinate), the version tag. After your yes it runs the real command: vibe creates the repository in the registry organisation through the host's API if it does not exist, pushes the package's shippable tree, and tags the version. The package is then one more repository the registry's [index](../glossary/index.xml#index-registry) will pick up. To prove it, the agent creates a scratch project and installs the package by coordinate.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#SHAPE-OWN-REPO"/>
   </what-happens>
   <by-hand title="By hand">
@@ -20,7 +20,7 @@
       <run>vibe registry publish packages/notes --dry-run</run>
       <expect></expect>
     </example>
-    <p>3. Publish. `--registry` picks a registry by name; without it the first one in the manifest is used:</p>
+    <p>3. Publish. `--registry` picks a registry by name; without it the first one in the [manifest](../glossary/index.xml#manifest) is used:</p>
     <example id="publish" fixture="package-notes">
       <run>vibe registry publish packages/notes --registry local --dry-run</run>
       <expect></expect>
@@ -28,7 +28,7 @@
     <p>4. Install it from a fresh project to be sure: `vibe init scratch` and `vibe install &lt;group&gt;/notes --path scratch`.</p>
   </by-hand>
   <versions title="Versions never move">
-    <p>A published version is immutable: a tag that already exists is refused, and consumers verify the content fingerprint on every install, so a re-pushed tag is caught rather than silently accepted. To ship a fix, bump the version in the manifest and publish again.</p>
+    <p>A published version is immutable: a tag that already exists is refused, and consumers verify the content [fingerprint](../glossary/index.xml#fingerprint) on every install, so a re-pushed tag is caught rather than silently accepted. To ship a fix, bump the version in the manifest and publish again.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#EFF-FORCE-PUSH-CAUGHT"/>
   </versions>
   <workspaces title="Several packages at once">

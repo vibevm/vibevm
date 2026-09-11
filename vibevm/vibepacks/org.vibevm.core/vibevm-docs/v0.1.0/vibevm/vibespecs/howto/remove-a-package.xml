@@ -10,11 +10,11 @@
     <assert>vibe check --quiet</assert>
   </prompt>
   <what-happens title="What happens">
-    <p>The agent runs `vibe uninstall org.vibevm.world/wal`. vibe shows what will leave: the requirement line in the manifest, the lock entry, the package's folder in the dependency tree, and any dependency that only this package needed. On confirmation it removes them and regenerates the boot files, so the next agent session no longer reads the package's snippet. Your own files, including the two boot files you own and anything in `vibevm/vibespecs/`, are never touched.</p>
+    <p>The agent runs `vibe uninstall org.vibevm.world/wal`. vibe shows what will leave: the requirement line in the [manifest](../glossary/index.xml#manifest), the lock entry, the package's folder in the dependency tree, and any dependency that only this package needed. On confirmation it removes them and regenerates the boot files, so the next [agent session](../glossary/index.xml#agent-session) no longer reads the package's snippet. Your own files, including the two boot files you own and anything in `vibevm/vibespecs/`, are never touched.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#TREE-AUTHORED"/>
   </what-happens>
   <by-hand title="By hand">
-    <p>1. Remove by coordinate; the version is not needed:</p>
+    <p>1. Remove by [coordinate](../glossary/index.xml#coordinate); the version is not needed:</p>
     <example id="uninstall" fixture="hello-vibe">
       <run>vibe uninstall org.vibevm.world/wal --path hello-vibe --assume-yes</run>
       <expect></expect>
@@ -26,7 +26,7 @@
     </example>
   </by-hand>
   <derived-state title="Removing derived state without removing packages">
-    <p>Sometimes you want a clean slate rather than a smaller graph: before a build, after a tool upgrade, or to prove the tree can be rebuilt. `vibe clean` deletes the dependency tree and the generated boot files and keeps the manifest, the lock file, everything you wrote and the machine store. `vibe clean install` chains the two steps.</p>
+    <p>Sometimes you want a clean slate rather than a smaller graph: before a build, after a tool upgrade, or to prove the tree can be rebuilt. `vibe clean` deletes the dependency tree and the generated boot files and keeps the manifest, the [lock file](../glossary/index.xml#lock-file), everything you wrote and the machine [store](../glossary/index.xml#store). `vibe clean install` chains the two steps.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#CLEAN-REMOVES-DERIVED"/>
     <p>The command refuses to run outside a project, so it cannot sweep an unrelated folder by mistake.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#CLEAN-NEEDS-A-PROJECT"/>

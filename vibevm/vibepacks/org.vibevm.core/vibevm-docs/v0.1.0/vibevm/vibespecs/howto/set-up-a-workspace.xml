@@ -12,7 +12,7 @@
     <assert>vibe check --quiet</assert>
   </prompt>
   <what-happens title="What happens">
-    <p>The agent adds a `[workspace]` table to the root manifest naming the member paths, and creates each member with `vibe init package org.acme/notes-flow packages/notes-flow`, which writes a manifest with a `[package]` table. Membership is explicit: a folder with a manifest that is not listed is not a member. Then it runs `vibe install` at the root: vibe discovers the workspace, resolves the requirements of every member in one unified resolution, and writes a single lock file at the root.</p>
+    <p>The agent adds a `[workspace]` table to the root [manifest](../glossary/index.xml#manifest) naming the member paths, and creates each member with `vibe init package org.acme/notes-flow packages/notes-flow`, which writes a manifest with a `[package]` table. Membership is explicit: a folder with a manifest that is not listed is not a member. Then it runs `vibe install` at the root: vibe discovers the workspace, resolves the requirements of every member in one unified resolution, and writes a single [lock file](../glossary/index.xml#lock-file) at the root.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#EXPLICIT-MEMBERSHIP"/>
   </what-happens>
   <by-hand title="By hand">
@@ -33,11 +33,11 @@
     </example>
   </by-hand>
   <one-manifest title="One manifest, three roles">
-    <p>Every node has a file named `vibe.toml`, and what the file contains decides what the node is: a `[package]` table makes it a publishable package, a `[project]` table makes it a consumer that is never published, and a `[workspace]` table makes it coordinate members. A node cannot be both a package and a project, but a workspace root may be either, or neither.</p>
+    <p>Every node has a file named `vibe.toml`, and what the file contains decides what the node is: a `[package]` table makes it a publishable package, a `[project]` table makes it a consumer that is never published, and a `[workspace]` table makes it [coordinate](../glossary/index.xml#coordinate) members. A node cannot be both a package and a project, but a workspace root may be either, or neither.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#PACKAGE-XOR-PROJECT"/>
   </one-manifest>
   <members-referring title="Members referring to each other">
-    <p>A member requires a sibling by path rather than by registry, with a `path` source in its requirements. The lock file records such an entry with a source kind of `path` and the member's folder relative to the root, so the lock stays portable across machines. When the workspace is published, the path becomes an ordinary coordinate in each published copy.</p>
+    <p>A member requires a sibling by path rather than by [registry](../glossary/index.xml#registry), with a `path` source in its requirements. The lock file records such an entry with a source kind of `path` and the member's folder relative to the root, so the lock stays portable across machines. When the workspace is published, the path becomes an ordinary coordinate in each published copy.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#MEMBER-IS-NODE"/>
   </members-referring>
   <edge-cases title="Edge cases and rules">

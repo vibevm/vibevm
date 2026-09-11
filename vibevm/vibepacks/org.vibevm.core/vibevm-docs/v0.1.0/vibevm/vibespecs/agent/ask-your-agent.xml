@@ -4,7 +4,7 @@
   <status stage="doc" state="work" audience="user"/>
   <p>Every page in this manual that describes a task starts with the plain request you type to your agent. This page explains what those requests assume, how the agent proves the work is done, and what happens when vibe hands a job back to the agent instead of doing it itself.</p>
   <the-prompt-blocks title="The requests on these pages">
-    <p>A task page opens with a block you can copy into any agent that has the vibevm skill: it names the thing, states the result, and mentions no secrets. Under it, *needs* lists what the agent must have (the skill, network access, a token in the environment), *outcome* says what you will see when it worked, and the *assert* lines are commands that must succeed afterwards. The asserts are the point: an agent's answer cannot be checked by its wording, but a command's exit code can. Run them yourself, or ask the agent to run them and show you the results.</p>
+    <p>A task page opens with a block you can copy into any agent that has the vibevm [skill](../glossary/index.xml#skill): it names the thing, states the result, and mentions no secrets. Under it, *needs* lists what the agent must have (the skill, network access, a token in the environment), *outcome* says what you will see when it worked, and the *assert* lines are commands that must succeed afterwards. The asserts are the point: an agent's answer cannot be checked by its wording, but a command's exit code can. Run them yourself, or ask the agent to run them and show you the results.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#STYLE-PROMPT-FIRST"/>
     <p>A request that includes a step that cannot be undone, publishing or deleting, says that the agent must confirm before that step. Keep that line when you adapt a request.</p>
   </the-prompt-blocks>
@@ -17,7 +17,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-018#ONE-OP-TWO-TRANSPORTS"/>
   </two-transports>
   <the-relay title="When vibe hands the job back">
-    <p>vibe has no model inside it. When an operation needs reasoning, such as explaining a project in prose, vibe does not attempt it: it composes an instruction and parks it in the project's relay mailbox, `.vibe/agentic/command.md`. The agent then runs `vibe command`, which prints the instruction and clears the mailbox, and carries it out with its own model. There is no automatic write-back: if the result should reach vibe, the agent runs the command that records it.</p>
+    <p>vibe has no model inside it. When an operation needs reasoning, such as explaining a project in prose, vibe does not attempt it: it composes an instruction and parks it in the project's [relay](../glossary/index.xml#relay) mailbox, `.vibe/agentic/command.md`. The agent then runs `vibe command`, which prints the instruction and clears the mailbox, and carries it out with its own model. There is no automatic write-back: if the result should reach vibe, the agent runs the command that records it.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-018#RELAY-PARKS"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-018#NO-WRITE-BACK"/>
     <example id="agentic-explain" fixture="hello-vibe">

@@ -10,7 +10,7 @@
     <assert>test ! -e ../product-clean/vibevm</assert>
   </prompt>
   <what-happens title="What happens">
-    <p>The agent runs `vibe scrape --plan`, which reads the project's contract, classifies every file the tool ever wrote or marked, and prints the complete plan without writing anything: what is deleted, what is rewritten, what is kept under a neutral name. Then it runs `vibe scrape --output ../product-clean`, which creates the scraped copy in a new folder and runs the project's native health checks on it; the original is untouched. The copy is a plain project of its language: no manifest, no lock file, no dependency tree, no boot files, no managed block, no source annotations that pointed at specifications.</p>
+    <p>The agent runs `vibe scrape --plan`, which reads the project's contract, classifies every file the tool ever wrote or marked, and prints the complete plan without writing anything: what is deleted, what is rewritten, what is kept under a neutral name. Then it runs `vibe scrape --output ../product-clean`, which creates the scraped copy in a new folder and runs the project's native health checks on it; the original is untouched. The copy is a plain project of its language: no [manifest](../glossary/index.xml#manifest), no [lock file](../glossary/index.xml#lock-file), no dependency tree, no boot files, no [managed block](../glossary/index.xml#managed-block), no source annotations that pointed at specifications.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#SCRAPED-TREE"/>
   </what-happens>
   <by-hand title="By hand">
@@ -24,7 +24,7 @@
       <run>vibe scrape --output hello-clean --path hello-vibe</run>
       <expect></expect>
     </example>
-    <p>3. Or scrape in place, which is a recoverable transaction and requires explicit authorisation: `vibe scrape --in-place --assume-yes`. If it is interrupted, `vibe scrape --recover --path &lt;root&gt;` settles the pending transaction.</p>
+    <p>3. Or [scrape](../glossary/index.xml#scrape) in place, which is a recoverable transaction and requires explicit authorisation: `vibe scrape --in-place --assume-yes`. If it is interrupted, `vibe scrape --recover --path &lt;root&gt;` settles the pending transaction.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#SCRAPE-RECOVER-COMMAND"/>
   </by-hand>
   <the-contract title="The contract">

@@ -12,7 +12,7 @@
     <assert>vibe check --path hello-vibe --quiet</assert>
   </prompt>
   <what-happens title="What happens">
-    <p>The agent runs `vibe init hello-vibe`, which creates the folder with a manifest, an empty lock file, the two boot files that are yours to edit, and the three agent instruction files. It then runs `vibe install org.vibevm.world/wal --path hello-vibe`: vibe reads the manifest's registries, finds the package, resolves a version, fetches it into the machine store, shows a plan, and on confirmation copies the package into `hello-vibe/vibevm/vibedeps/`, writes the lock file, and generates the boot files the agent will read. Finally the agent runs `vibe tree` to show that reading list and `vibe check` to confirm the project is consistent.</p>
+    <p>The agent runs `vibe init hello-vibe`, which creates the folder with a [manifest](../glossary/index.xml#manifest), an empty [lock file](../glossary/index.xml#lock-file), the two boot files that are yours to edit, and the three agent instruction files. It then runs `vibe install org.vibevm.world/wal --path hello-vibe`: vibe reads the manifest's [registries](../glossary/index.xml#registry), finds the package, resolves a version, fetches it into the machine [store](../glossary/index.xml#store), shows a plan, and on confirmation copies the package into `hello-vibe/vibevm/vibedeps/`, writes the lock file, and generates the boot files the agent will read. Finally the agent runs `vibe tree` to show that reading list and `vibe check` to confirm the project is consistent.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#ARTIFACTS-PAIR"/>
   </what-happens>
   <by-hand title="By hand">
@@ -43,9 +43,9 @@
     </example>
   </by-hand>
   <what-appeared title="What appeared on disk">
-    <p>Open `hello-vibe/vibe.toml`: it names the project and, after the install, lists `org.vibevm.world/wal` under its requirements with a version range. Open `hello-vibe/vibe.lock`: it pins the exact version and the content fingerprint. Under `hello-vibe/vibevm/vibedeps/` sits the package's published tree, unchanged. Under `hello-vibe/vibevm/vibespecs/boot/` sit your two boot files and the two generated ones, `STATIC.xml` and `INDEX.md`. And at the end of `CLAUDE.md`, `AGENTS.md` and `GEMINI.md` stands the block that points an agent at them.</p>
+    <p>Open `hello-vibe/vibe.toml`: it names the project and, after the install, lists `org.vibevm.world/wal` under its requirements with a version range. Open `hello-vibe/vibe.lock`: it pins the exact version and the content [fingerprint](../glossary/index.xml#fingerprint). Under `hello-vibe/vibevm/vibedeps/` sits the package's published tree, unchanged. Under `hello-vibe/vibevm/vibespecs/boot/` sit your two boot files and the two generated ones, `STATIC.xml` and `INDEX.md`. And at the end of `CLAUDE.md`, `AGENTS.md` and `GEMINI.md` stands the block that points an agent at them.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#ONE-BLOCK-LAW"/>
-    <p>Open a new agent session in `hello-vibe` and ask it what rules it follows: it will name the package you just installed, because it read the lane before answering.</p>
+    <p>Open a new [agent session](../glossary/index.xml#agent-session) in `hello-vibe` and ask it what rules it follows: it will name the package you installed a moment ago, because it read the lane before answering.</p>
   </what-appeared>
   <edge-cases title="Edge cases and rules">
     <p>A repeated `vibe install` with no package names installs whatever the manifest requires; that is the command after cloning an existing project.</p>
