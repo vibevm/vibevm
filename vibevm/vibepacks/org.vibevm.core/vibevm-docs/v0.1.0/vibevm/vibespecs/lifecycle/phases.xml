@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">The lifecycle: from validate to deploy</title>
+  <status stage="doc" state="work" audience="user"/>
+  <p>Building software has a fixed order of steps, and vibe names them: check the workspace, produce generated sources, build, test, let an agent create what only an agent can, verify, assemble, deploy. Each step runs only when something it depends on changed.</p>
+  <example id="deploy-plan" fixture="hello-vibe">
+    <run>vibe deploy --plan --path hello-vibe</run>
+    <expect></expect>
+  </example>
+  <the-phases title="The nine phases">
+    <p>vibe has two lifecycles. `clean` has one phase and removes derived state. `default` has nine phases in a fixed order: `validate`, `install`, `generate`, `build`, `test`, `create`, `verify`, `package`, `deploy`. Naming a phase runs every phase before it as well: `vibe test` validates, installs, generates, builds and tests.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#INVOKE-RUNS-PRIORS"/>
+    <table>
+      <tr><td>Phase</td><td>What it does</td></tr>
+      <tr><td>`validate`</td><td>the cheap preflight: the manifest parses, the declared extensions and profiles are well formed; no network</td></tr>
+      <tr><td>`install`</td><td>the package install described elsewhere in this manual: resolve, fetch, copy, generate the boot files</td></tr>
+      <tr><td>`generate`</td><td>derived sources from specifications and prompts, written where the project's stack says</td></tr>
+      <tr><td>`build`</td><td>the deterministic build of the project's stack</td></tr>
+      <tr><td>`test`</td><td>deterministic checks: the stack's test runner and the discipline gates the installed packages contribute</td></tr>
+      <tr><td>`create`</td><td>the optional agentic step: work that only an agent can do, long and non-deterministic, off unless the project switches it on</td></tr>
+      <tr><td>`verify`</td><td>the late quality gate over what was built and created</td></tr>
+      <tr><td>`package`</td><td>assemble distributables without touching any destination</td></tr>
+      <tr><td>`deploy`</td><td>apply the packaged artifacts to explicit destinations through a named profile</td></tr>
+    </table>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#LIFECYCLES"/>
+  </the-phases>
+  <fresh title="Nothing runs twice for nothing">
+    <p>Every phase run records a fingerprint of the inputs it declared; the next run skips a phase whose inputs did not change. Freshness is judged per contribution, so one stale step re-runs alone and its neighbours stay skipped. This is what makes `vibe deploy` cheap to type twice: the second time it mostly reports that everything is fresh.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-FINGERPRINT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#FRESHNESS-IS-PER-CONTRIBUTION"/>
+  </fresh>
+  <the-plan title="Seeing before doing">
+    <p>`--plan` reports what a phase run would do and changes nothing; every real run prints, before executing, the contributions it will run: their id, the point they bind to, the kind of handler, and where they came from. Nothing in the lifecycle runs invisibly.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#SURFACE-THE-RITUAL"/>
+    <p>`vibe clean &lt;phase&gt;` chains the clean lifecycle in front of any default phase: `vibe clean build` removes the derived state and then validates, installs, generates and builds.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#CHAIN-GENERAL"/>
+  </the-plan>
+  <where-steps-come-from title="Where the steps come from">
+    <p>The phases are fixed; what runs inside them is contributed by packages. A stack package binds the language's build and test runners, a discipline package binds its gates, a project may bind its own scripts. Installing a package is the consent for its contributions to run, and the manifest of the project can switch a contribution off or override it by its id.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#INSTALL-IS-CONSENT"/>
+    <p>The lifecycle is a framework, not a universal coding agent: it runs deterministic mechanics and hands agentic work to whatever agent hosts it.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#LIFECYCLE-IS-FRAMEWORK"/>
+  </where-steps-come-from>
+  <edge-cases title="Edge cases and rules">
+    <p>A failing step stops the chain; the phases before it keep their results, and the failure names the contribution that failed.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#FAILURE-BY-PHASE"/>
+    <p>The older verbs keep their meaning beside the lifecycle: `vibe check`, `vibe bin build`, `vibe skill` and `vibe cache` are not phases.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#EXISTING-VERBS-STAY"/>
+    <p>Fingerprints and last-run records live in `.vibe/lifecycle.toml`, machine state that is not committed; deleting it costs one full run.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-STATE-HOME"/>
+  </edge-cases>
+</spec>

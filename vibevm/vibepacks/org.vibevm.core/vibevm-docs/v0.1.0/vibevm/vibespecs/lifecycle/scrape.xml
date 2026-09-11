@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Remove VibeVM from a project</title>
+  <status stage="doc" state="work" audience="user"/>
+  <p>When a project is finished and must leave without a trace of the tool that helped build it, one operation removes every vibe file and reference while keeping the product and its build intact.</p>
+  <prompt id="scrape">Show me the scrape plan for the VibeVM project in the current folder, then export a scraped copy of it to the new folder ../product-clean, and prove that the copy builds without vibe.
+    <needs>the vibevm skill installed for your agent; a project with `vibe.toml` and a scrape contract, or the default one; the project's native build tool on the `PATH`</needs>
+    <outcome>`../product-clean` exists, holds no `vibevm/` directory, no `vibe.toml`, no `vibe.lock` and no managed block in the agent instruction files, and its native build and tests pass</outcome>
+    <assert>test ! -e ../product-clean/vibe.toml</assert>
+    <assert>test ! -e ../product-clean/vibevm</assert>
+  </prompt>
+  <what-happens title="What happens">
+    <p>The agent runs `vibe scrape --plan`, which reads the project's contract, classifies every file the tool ever wrote or marked, and prints the complete plan without writing anything: what is deleted, what is rewritten, what is kept under a neutral name. Then it runs `vibe scrape --output ../product-clean`, which creates the scraped copy in a new folder and runs the project's native health checks on it; the original is untouched. The copy is a plain project of its language: no manifest, no lock file, no dependency tree, no boot files, no managed block, no source annotations that pointed at specifications.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#SCRAPED-TREE"/>
+  </what-happens>
+  <by-hand title="By hand">
+    <p>1. Look at the plan:</p>
+    <example id="scrape-plan" fixture="hello-vibe">
+      <run>vibe scrape --plan --path hello-vibe</run>
+      <expect></expect>
+    </example>
+    <p>2. Export to a new folder, which must not exist yet:</p>
+    <example id="scrape-output" fixture="hello-vibe">
+      <run>vibe scrape --output hello-clean --path hello-vibe</run>
+      <expect></expect>
+    </example>
+    <p>3. Or scrape in place, which is a recoverable transaction and requires explicit authorisation: `vibe scrape --in-place --assume-yes`. If it is interrupted, `vibe scrape --recover --path &lt;root&gt;` settles the pending transaction.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#SCRAPE-RECOVER-COMMAND"/>
+  </by-hand>
+  <the-contract title="The contract">
+    <p>What counts as vibe's and what counts as yours is not guessed from file names; a contract says it. The default contract lives at `vibevm/scrape/contract.toml` in the project, `vibe scrape contract` creates or validates one, and `--contract &lt;file&gt;` reads another. A contained contract is the last file removed, so the plan can be re-read until the end.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#DEFAULT-CONTRACT"/>
+    <p>A scrape never deletes a path blindly: a build script that calls a vibe tool, generated product sources that sit beside disposable generated state, an authored specification that shares a tree with generated boot output, all are dispositioned by the contract, and untouched files stay byte-identical.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#PRODUCT-PRESERVATION"/>
+  </the-contract>
+  <edge-cases title="Edge cases and rules">
+    <p>Scrape is not clean. `vibe clean` removes what vibe can regenerate and keeps the relationship; scrape removes the relationship itself, which is why it needs a contract, a health proof and a recoverable commit.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#RELATED-CLEAN"/>
+    <p>`--output` and `--in-place` are mutually exclusive; a plan is always available before either.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#SCRAPE-MODE-EXCLUSIVITY"/>
+    <p>The words attach and detach are reserved for a future live-tool relationship, such as connecting a debugger; scrape is never an alias for them.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#SCRAPE-TERM-BOUNDARY"/>
+  </edge-cases>
+</spec>
