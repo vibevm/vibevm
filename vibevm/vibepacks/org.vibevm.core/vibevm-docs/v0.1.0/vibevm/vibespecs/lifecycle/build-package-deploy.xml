@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Build, package and deploy a project</title>
+  <status stage="doc" state="work" audience="user"/>
+  <p>This page takes a project from source to a running deployment with three commands, shows what each leaves on disk, and how to take a deployment down again without guessing what it owned.</p>
+  <prompt id="build-package-deploy">For the VibeVM project in the current folder, show me the deploy plan for the profile named local, then run the deploy, list the deployments this machine now holds, and finally undeploy the same profile. Stop and ask me before the deploy and before the undeploy.
+    <needs>the vibevm skill installed for your agent; a project whose manifest declares build and package targets and a deploy profile named `local`; the project's stack tools on the `PATH`</needs>
+    <outcome>the plan names the targets in order; after the deploy `vibe deployments` lists the profile with a generation and a status; after the undeploy every receipt-owned resource is gone and the listing shows the profile as removed</outcome>
+    <assert>vibe deploy --plan --profile local</assert>
+    <assert>vibe deployments --json</assert>
+  </prompt>
+  <what-happens title="What happens">
+    <p>`vibe deploy --plan` runs the whole default lifecycle in planning mode and prints what each phase would do, ending with the ordered targets of the profile; nothing is written. The real `vibe deploy` then validates, installs, generates, builds, tests, creates, verifies and packages, skipping every step whose inputs did not change, and applies the packaged artifacts to the profile's targets in order. For every resource it creates it writes a *receipt*: what was placed where, under which generation, owned by which profile. `vibe deployments` reads the receipts this machine holds. `vibe undeploy --profile local` walks the receipts in reverse dependency order and removes exactly what they own, refusing a path that changed after deployment.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#R8-DEPLOY-RUNTIME"/>
+  </what-happens>
+  <by-hand title="By hand">
+    <p>1. Assemble the distributables without touching any destination:</p>
+    <example id="package" fixture="hello-vibe">
+      <run>vibe package --path hello-vibe</run>
+      <expect></expect>
+    </example>
+    <p>2. See the plan for a profile, then deploy it:</p>
+    <example id="deploy-plan" fixture="hello-vibe">
+      <run>vibe deploy --plan --path hello-vibe</run>
+      <expect></expect>
+    </example>
+    <p>3. List what this machine holds, and take a profile down:</p>
+    <example id="deployments" fixture="hello-vibe">
+      <run>vibe deployments</run>
+      <expect></expect>
+    </example>
+    <p>`vibe undeploy --profile &lt;name&gt;` reverses that profile. The listing never shows secrets.</p>
+  </by-hand>
+  <artifacts title="Artifacts and targets">
+    <p>The manifest declares what `build` produces and what `package` assembles as artifact targets with dependencies between them; vibe lowers them into one validated graph and records every produced artifact, so that `package` consumes exactly what `build` verified and `deploy` applies exactly what `package` assembled. An artifact or a target may declare the operating systems it applies to, and a target that does not apply to the current machine is skipped with a note.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#R8-ARTIFACT-RUNTIME"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#R8-PLATFORM-APPLICABILITY"/>
+    <p>A deploy profile names its targets in order and the provider that applies each: a folder on this machine, an agent's project or user configuration, and the genres the specification lists. An installed package may replace a built-in provider through an exact pin, so a team can ship its own way of deploying.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#R8-NATIVE-DEPLOY-PROVIDER"/>
+  </artifacts>
+  <edge-cases title="Edge cases and rules">
+    <p>Two deploys of the same profile do not race: the engine takes a collision lock per profile and the second waits or refuses, never interleaves.</p>
+    <p>A receipt is the only authority for removal. If a file a receipt owns was edited after deployment, `undeploy` leaves it in place and says so, rather than deleting someone's work.</p>
+    <p>`--force` on a lifecycle verb ignores the recorded fingerprints for one run; it does not change what the run means.</p>
+    <p>The deploy phase applies packaged artifacts and nothing else: a step that needs an agent, such as writing release notes, belongs to `create`, and runs only when the project switches it on.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-CREATE"/>
+  </edge-cases>
+</spec>

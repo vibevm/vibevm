@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Extensions and providers</title>
+  <status stage="doc" state="work" audience="author"/>
+  <p>A package can plug into the lifecycle: run a step, transform a stage, or hand a task to an agent. This page explains how such contributions are declared, how a project turns them on, and how to see which ones ran and why.</p>
+  <example id="extensions" fixture="hello-vibe">
+    <run>vibe extensions --path hello-vibe</run>
+    <expect></expect>
+  </example>
+  <points-and-contributions title="Points and contributions">
+    <p>The lifecycle exposes named *extension points*, strings of the form `family:name`. The `phase:` family is the nine phases; the `slot:` family names places inside a phase where a stack or a discipline expects to plug something; the `compile:` family is the boot compiler's own pipeline, where a package may transform the text an agent will read. A *contribution* binds a handler to a point and is declared in a manifest as an `[[extension]]` table, in a package or in the project itself.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-GRAMMAR"/>
+    <p>A contribution carries an id, which is also the key a project uses to disable or override it; the same handler may be bound several times under different ids with different configuration.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-FIELDS"/>
+  </points-and-contributions>
+  <handlers title="Five kinds of handler">
+    <table>
+      <tr><td>Kind</td><td>What runs</td></tr>
+      <tr><td>`builtin`</td><td>a handler compiled into vibe, such as a logger</td></tr>
+      <tr><td>`script`</td><td>a shell or PowerShell script shipped by the package, resolved by platform</td></tr>
+      <tr><td>`binary`</td><td>a program the package delivers and vibe builds on install</td></tr>
+      <tr><td>`native`</td><td>a dynamic library loaded in process through a C ABI, from an exact prebuilt for the platform</td></tr>
+      <tr><td>`agent`</td><td>a prompt: work handed to the hosting agent, or to a configured model provider when a person runs vibe at a terminal</td></tr>
+    </table>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#HANDLER-KINDS"/>
+    <p>Every handler receives one context envelope, a versioned JSON document that names the project, the phase, the artifacts produced so far and the configuration of the contribution, and answers with a reply envelope that may declare new artifacts. The envelope is how phases talk to each other.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#ENVELOPE-LAW"/>
+  </handlers>
+  <activation title="Switching contributions on">
+    <p>Installing a package is the consent to run its contributions: a dependency's phase and slot contributions are active as soon as the package is installed. The consuming manifest can activate a contribution that is not automatic, disable one by its id, or override its configuration. There are no consent dialogs at run time; there is total transparency instead.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#HOST-ACTIVATION"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#OBS-LAW"/>
+    <p>Within one point, contributions run in a fixed order: the built-in bindings of the effective preset first, then the packages' contributions in dependency order, then the project's own; the order is derived, never negotiated.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#ORDER-LAW"/>
+  </activation>
+  <seeing title="Seeing what ran">
+    <p>`vibe extensions` lists every declared contribution in the installed world with its point, handler and origin; `--json` gives the same to a scanner. Everything a contribution can do is declared, so a scanner needs no execution to audit a project. Every run prints the contributions it will execute before it starts, and a run can be traced pass by pass with `--trace-compile` into `.vibe/trace/`.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#OBS-REGISTRY"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE"/>
+    <p>`vibe tools` lists the binaries and servers the installed packages brought, which is the registry of what a contribution of kind `binary` may name.</p>
+    <example id="tools" fixture="hello-vibe">
+      <run>vibe tools --path hello-vibe</run>
+      <expect></expect>
+    </example>
+  </seeing>
+  <providers title="Providers">
+    <p>A contribution of kind `agent` needs someone to run its prompt. Under an agent host, vibe parks the task for that agent and resumes when the declared outputs exist. At a terminal, vibe can call a configured model provider, the first one being any OpenAI-compatible endpoint, and it reads the provider's credentials only when a non-fresh agent step actually reaches the point of calling it. Every model-enhanced feature declares whether it is off, assisting or required, and off is the default.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-PROVIDER-SEAM"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#LLM-ENHANCEMENT-MODES"/>
+  </providers>
+  <edge-cases title="Edge cases and rules">
+    <p>A contribution may carry a selector that limits it to matching files or targets, so a formatter binds to one language's sources and not to the rest of the tree.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-SELECTOR"/>
+    <p>A native handler crosses a C-and-JSON boundary, never the Rust ABI, so a library built by another toolchain version still loads.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#WHY-C-ABI"/>
+    <p>Enabled model work carries per-run ceilings on calls and tokens; a step that would exceed them stops rather than spends.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#LLM-BUDGET"/>
+  </edge-cases>
+</spec>
