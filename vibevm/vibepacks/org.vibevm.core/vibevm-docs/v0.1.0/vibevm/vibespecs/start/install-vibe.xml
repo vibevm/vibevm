@@ -28,7 +28,7 @@
         <run>vibe --version</run>
         <expect>vibe 1.0.0</expect>
       </example>
-      <p>The archive also contains `SHA256SUMS.txt`. Compare the digest of `vibe.exe` with the line in that file before you run the installer; the installer does the same check.</p>
+      <p>The archive also contains `SHA256SUMS.txt`. Compare the digest of `vibe.exe` with the line in that file before you run the installer. The installer does the same check.</p>
     </windows>
     <from-source title="From the source, on any platform">
       <p>1. Install git and a Rust toolchain. OpenSSL is not needed.</p>
@@ -36,7 +36,7 @@
       <p>2. Clone the repository: `git clone https://github.com/vibevm/vibevm.git` and enter the folder.</p>
       <p>3. Run the first-run script: `bash tools/first-run.sh` on Linux and macOS, `.\tools\first-run.ps1` on Windows. It builds the program, installs it into the managed [store](../glossary/index.xml#store) and sets up the launchers.</p>
       <p>4. Open a new terminal and run `vibe --version`, then `vibe self doctor`.</p>
-      <p>Later, `vibe self install latest` rebuilds from the tip of the main branch, `vibe self ls` lists the versions on the machine, and `vibe self rollback` returns to the previous one.</p>
+      <p>Later, `vibe self install latest` rebuilds from the tip of the main branch. `vibe self ls` lists the versions on the machine, and `vibe self rollback` returns to the previous one.</p>
       <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#CMD-INSTALL"/>
     </from-source>
   </by-hand>

@@ -3,14 +3,14 @@
   <title id="root">Translate documentation</title>
   <status stage="doc" state="work" audience="author"/>
   <p>A translation is a separate package in the same shape as the original: same pages, same section names, same examples by reference, in another language. This page creates one and explains what makes it official.</p>
-  <prompt id="translate-documentation">Create the package org.acme/notes-flow-docs-ru in packages/notes-flow-docs-ru of the current VibeVM project as the Russian translation of org.acme/notes-flow-docs: mirror its page tree file for file, keep every anchor and block, replace each example with a reference to the source example, and write the manifest with [translates] and the same [[documents]] subject. Run vibe doc check --translations.
+  <prompt id="translate-documentation">Create the package org.acme/notes-flow-docs-ru in packages/notes-flow-docs-ru of the current VibeVM project as the Russian translation of org.acme/notes-flow-docs. Mirror its page tree file for file, keep every anchor and block, and replace each example with a reference to the source example. Write the manifest with [translates] and the same [[documents]] subject. Run vibe doc check --translations.
     <needs>the vibevm skill installed for your agent; the source documentation package in the same project</needs>
     <outcome>the translation has the same files and anchors as the source, `[i18n] canonical = "ru"`, `[translates]` pointing at the source, and `vibe doc check --translations` reports no structural difference</outcome>
     <assert>grep -q "canonical = \"ru\"" packages/notes-flow-docs-ru/vibe.toml</assert>
     <assert>vibe doc check --translations --path packages/notes-flow-docs-ru</assert>
   </prompt>
   <what-happens title="What happens">
-    <p>The agent copies the source's page tree, translates the prose of each block in place without adding or removing a block, replaces every `example` with `example ref="&lt;id&gt;"` pointing at the source's example, sets the package language, names the source in `[translates]` and the same subject in `[[documents]]`. `vibe doc check --translations` then compares the two trees: the same paths, the same [anchors](../glossary/index.xml#anchor), the same number and kinds of blocks; a difference is an error. The site, seeing a `translates` edge from a package in the source's group named `&lt;source&gt;-ru`, shows the translation as official and offers it in the language selector.</p>
+    <p>The agent copies the source's page tree and translates the prose of each block in place, without adding or removing a block. It replaces every `example` with `example ref="&lt;id&gt;"` pointing at the source's example. It sets the package language, names the source in `[translates]` and the same subject in `[[documents]]`. `vibe doc check --translations` then compares the two trees: the same paths, the same [anchors](../glossary/index.xml#anchor), the same number and kinds of blocks; a difference is an error. The site, seeing a `translates` edge from a package in the source's group named `&lt;source&gt;-ru`, shows the translation as official and offers it in the language selector.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#LOC-MIRROR"/>
   </what-happens>
   <the-manifest title="The manifest">

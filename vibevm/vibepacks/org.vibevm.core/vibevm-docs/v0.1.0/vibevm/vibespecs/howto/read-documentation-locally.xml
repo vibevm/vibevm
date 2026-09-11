@@ -24,7 +24,7 @@
       <run>vibe doc serve --help</run>
       <expect></expect>
     </example>
-    <p>3. Pick a language with the selector on any page; the reader shows the manual's own language where a page has no translation, and says so.</p>
+    <p>3. Pick a language with the selector on any page. Where a page has no translation, the reader shows the manual's own language and says so.</p>
   </by-hand>
   <private-packages title="Private packages">
     <p>The same reader shows the documentation of packages that live in a private registry or only on your machine: whatever the store holds, the reader renders. This is the intended path for proprietary documentation, and it is why the reader never contacts the public site.</p>

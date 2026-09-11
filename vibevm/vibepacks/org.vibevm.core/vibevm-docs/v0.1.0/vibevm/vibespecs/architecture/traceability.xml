@@ -30,7 +30,7 @@
     </example>
   </asking>
   <documentation-edges title="Documentation in the map">
-    <p>This manual enters the same map. Every `rule` block on a page is a `documents` edge from the page to the rule it quotes, scanned on the host side through the engine's scanner seam, and the edge carries no revision pin: the citation is live, the page shows the rule's current text, and the only check is that the anchor exists. Whether the prose around a citation went stale is a human's question, not a suspect flag.</p>
+    <p>This manual enters the same map. Every `rule` block on a page is a `documents` edge from the page to the rule it quotes, scanned on the host side through the engine's scanner seam. The edge carries no revision pin: the citation is live, the page shows the rule's current text, and the only check is that the anchor exists. Whether the prose around a citation went stale is a human's question, not a suspect flag.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-EDGES-HOST-SIDE"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#OBS-RULE-EDGE-UNPINNED"/>
   </documentation-edges>

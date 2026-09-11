@@ -33,7 +33,7 @@
   <families title="Families and companions">
     <p>Some [capabilities](../glossary/index.xml#capability) arrive as several packages that share a name stem: the language guide, the server that serves its tools, and a small bundle that pins both at one version. This is a *family*. Requiring the bundle installs the family, and a change to any member bumps every member to one shared version, so the pieces can never drift apart.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-028#UNISON-LAW"/>
-    <p>Documentation is the exception. A package's manual is its *[companion](../glossary/index.xml#companion)*, named with the suffix `-docs` in the same group, and it keeps its own version line: a fixed typo in the manual does not release the tools, and a new tool version does not demand a new manual. The manual says which versions of its subject it describes, and the site picks the newest manual that fits.</p>
+    <p>Documentation is the exception. A package's manual is its *[companion](../glossary/index.xml#companion)*, named with the suffix `-docs` in the same group, and it keeps its own version line. A fixed typo in the manual does not release the tools, and a new tool version does not demand a new manual. The manual says which versions of its subject it describes, and the site picks the newest manual that fits.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-028#ROLE-DOCS"/>
   </families>
   <edge-cases title="Edge cases and rules">

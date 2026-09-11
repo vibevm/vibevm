@@ -8,7 +8,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#VIBEDEPS-COMMITTED"/>
   </q-commit-vibedeps>
   <q-conflict title="A dependency deep in my tree clashes on a version. How do I fix it?">
-    <p>First read the resolver's explanation: it names the two constraints that disagree, and overlapping ranges are not a conflict. Then climb the ladder from lightest to heaviest: widen a constraint you over-narrowed; move the intermediate dependency to a version with a compatible constraint with `vibe update`; add an `[[override]]` for the one [coordinate](../glossary/index.xml#coordinate) with a `reason`; fork and use a [git source](../glossary/index.xml#git-source) when the dependency's own constraint must change. One version per package across the whole workspace is the rule, so vibe stops rather than installing two.</p>
+    <p>First read the resolver's explanation: it names the two constraints that disagree, and overlapping ranges are not a conflict. Then climb the ladder from lightest to heaviest. Widen a constraint you over-narrowed. Move the intermediate dependency to a version with a compatible constraint with `vibe update`. Add an `[[override]]` for the one [coordinate](../glossary/index.xml#coordinate), with a `reason`. Fork and use a [git source](../glossary/index.xml#git-source) when the dependency's own constraint must change. One version per package across the whole workspace is the rule, so vibe stops rather than installing two.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#OVERRIDE-SHORT-CIRCUIT"/>
   </q-conflict>
   <q-confirm title="Why does install ask me to confirm?">

@@ -14,7 +14,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#OFFLINE-LOCAL-ONLY"/>
   </what-happens>
   <by-hand title="By hand">
-    <p>1. Warm the store with a package and its dependencies; inside a project its [registries](../glossary/index.xml#registry) are the source, outside one the machine-wide registries:</p>
+    <p>1. Warm the store with a package and its dependencies. Inside a project its [registries](../glossary/index.xml#registry) are the source; outside one, the machine-wide registries:</p>
     <example id="cache-add" fixture="empty">
       <run>vibe cache add org.vibevm.world/wal</run>
       <expect></expect>

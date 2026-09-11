@@ -13,7 +13,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#SHAPE-OWN-REPO"/>
   </what-happens>
   <by-hand title="By hand">
-    <p>1. Put a publish token where vibe reads it: the environment variable `VIBEVM_PUBLISH_TOKEN`, or a file `~/.vibe/&lt;host&gt;.publish.token` such as `~/.vibe/github.publish.token`, readable by you alone. The token needs the right to create repositories in the organisation.</p>
+    <p>1. Put a publish token where vibe reads it. That is the environment variable `VIBEVM_PUBLISH_TOKEN`, or a file `~/.vibe/&lt;host&gt;.publish.token` such as `~/.vibe/github.publish.token`, readable by you alone. The token needs the right to create repositories in the organisation.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#token-secrecy"/>
     <p>2. Rehearse:</p>
     <example id="publish-dry-run" fixture="package-notes">
@@ -32,7 +32,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#EFF-FORCE-PUSH-CAUGHT"/>
   </versions>
   <workspaces title="Several packages at once">
-    <p>A repository that develops several packages publishes them with `vibe workspace publish`: it orders the members by their dependencies on each other, publishes each as its own repository, and stops at the first failure with a report of what was published and what remains. `--member` restricts the run to one node; `--dry-run` shows the selection and the order without pushing.</p>
+    <p>A repository that develops several packages publishes them with `vibe workspace publish`. It orders the members by their dependencies on each other and publishes each as its own repository. It stops at the first failure with a report of what was published and what remains. `--member` restricts the run to one node; `--dry-run` shows the selection and the order without pushing.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#PUBLISH-REGEN"/>
   </workspaces>
   <edge-cases title="Edge cases and rules">
