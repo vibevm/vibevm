@@ -10,11 +10,11 @@
     <assert>vibe check --quiet</assert>
   </prompt>
   <what-happens title="What happens">
-    <p>The agent runs `vibe install org.vibevm.world/wal`. vibe walks the project's registries in order and asks the first one that knows the package for its versions; with no constraint given, it picks the newest stable release. It resolves the package's own dependencies with the rest of the project's graph, fetches everything that is not yet in the machine store, verifies each fingerprint, and prints a plan: which packages will be added at which versions, and which files will change. Nothing is written until you confirm. On confirmation vibe copies the packages into `vibevm/vibedeps/`, records the requirement in `vibe.toml` and the pins in `vibe.lock`, and regenerates the boot files. Then the agent runs `vibe tree` to show you the new reading list.</p>
+    <p>The agent runs `vibe install org.vibevm.world/wal`. vibe walks the project's [registries](../glossary/index.xml#registry) in order and asks the first one that knows the package for its versions; with no constraint given, it picks the newest stable release. It resolves the package's own dependencies with the rest of the project's graph, fetches everything that is not yet in the machine [store](../glossary/index.xml#store), verifies each [fingerprint](../glossary/index.xml#fingerprint), and prints a plan: which packages will be added at which versions, and which files will change. Nothing is written until you confirm. On confirmation vibe copies the packages into `vibevm/vibedeps/`, records the requirement in `vibe.toml` and the pins in `vibe.lock`, and regenerates the boot files. Then the agent runs `vibe tree` to show you the new reading list.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#PHASE-RESOLUTION"/>
   </what-happens>
   <by-hand title="By hand">
-    <p>1. Install by coordinate. Add `@` and a constraint to ask for a range or an exact version:</p>
+    <p>1. Install by [coordinate](../glossary/index.xml#coordinate). Add `@` and a constraint to ask for a range or an exact version:</p>
     <example id="install" fixture="hello-vibe-empty">
       <run>vibe install org.vibevm.world/wal --path hello-vibe --assume-yes</run>
       <expect></expect>
@@ -31,9 +31,9 @@
     </example>
   </by-hand>
   <constraints title="Asking for a version">
-    <p>`vibe install org.vibevm.world/wal@^1.0` accepts any 1.x; `@=1.0.0` accepts exactly one; `--exact` writes the resolved version as an exact pin into the manifest instead of a range. The manifest keeps the constraint you asked for; the lock file keeps the version you got.</p>
+    <p>`vibe install org.vibevm.world/wal@^1.0` accepts any 1.x; `@=1.0.0` accepts exactly one; `--exact` writes the resolved version as an exact pin into the [manifest](../glossary/index.xml#manifest) instead of a range. The manifest keeps the constraint you asked for; the [lock file](../glossary/index.xml#lock-file) keeps the version you got.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#CF-RANGE"/>
-    <p>A kind prefix, as in `flow:org.vibevm.world/wal`, is optional and acts as a check: if the package turns out to be of another kind, the install stops.</p>
+    <p>A kind prefix, as in `flow:org.vibevm.world/wal`, is optional; when present, vibe checks it: if the package turns out to be of another kind, the install stops.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#ROW-QUALIFIED-KIND-BEHAVIOUR"/>
   </constraints>
   <after-a-clone title="After cloning a project">

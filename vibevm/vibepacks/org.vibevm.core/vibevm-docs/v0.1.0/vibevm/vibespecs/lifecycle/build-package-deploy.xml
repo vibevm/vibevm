@@ -10,7 +10,7 @@
     <assert>vibe deployments --json</assert>
   </prompt>
   <what-happens title="What happens">
-    <p>`vibe deploy --plan` runs the whole default lifecycle in planning mode and prints what each phase would do, ending with the ordered targets of the profile; nothing is written. The real `vibe deploy` then validates, installs, generates, builds, tests, creates, verifies and packages, skipping every step whose inputs did not change, and applies the packaged artifacts to the profile's targets in order. For every resource it creates it writes a *receipt*: what was placed where, under which generation, owned by which profile. `vibe deployments` reads the receipts this machine holds. `vibe undeploy --profile local` walks the receipts in reverse dependency order and removes exactly what they own, refusing a path that changed after deployment.</p>
+    <p>`vibe deploy --plan` runs the whole default [lifecycle](../glossary/index.xml#lifecycle) in planning mode and prints what each phase would do, ending with the ordered targets of the profile; nothing is written. The real `vibe deploy` then validates, installs, generates, builds, tests, creates, verifies and packages, skipping every step whose inputs did not change, and applies the packaged artifacts to the profile's targets in order. For every resource it creates it writes a *[receipt](../glossary/index.xml#receipt)*: what was placed where, under which generation, owned by which profile. `vibe deployments` reads the receipts this machine holds. `vibe undeploy --profile local` walks the receipts in reverse dependency order and removes exactly what they own, refusing a path that changed after deployment.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#R8-DEPLOY-RUNTIME"/>
   </what-happens>
   <by-hand title="By hand">
@@ -32,16 +32,16 @@
     <p>`vibe undeploy --profile &lt;name&gt;` reverses that profile. The listing never shows secrets.</p>
   </by-hand>
   <artifacts title="Artifacts and targets">
-    <p>The manifest declares what `build` produces and what `package` assembles as artifact targets with dependencies between them; vibe lowers them into one validated graph and records every produced artifact, so that `package` consumes exactly what `build` verified and `deploy` applies exactly what `package` assembled. An artifact or a target may declare the operating systems it applies to, and a target that does not apply to the current machine is skipped with a note.</p>
+    <p>The [manifest](../glossary/index.xml#manifest) declares what `build` produces and what `package` assembles as artifact targets with dependencies between them; vibe lowers them into one validated graph and records every produced artifact, so that `package` consumes exactly what `build` verified and `deploy` applies exactly what `package` assembled. An artifact or a target may declare the operating systems it applies to, and a target that does not apply to the current machine is skipped with a note.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#R8-ARTIFACT-RUNTIME"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#R8-PLATFORM-APPLICABILITY"/>
-    <p>A deploy profile names its targets in order and the provider that applies each: a folder on this machine, an agent's project or user configuration, and the genres the specification lists. An installed package may replace a built-in provider through an exact pin, so a team can ship its own way of deploying.</p>
+    <p>A [deploy profile](../glossary/index.xml#deploy-profile) names its targets in order and the provider that applies each: a folder on this machine, an agent's project or user configuration, and the genres the specification lists. An installed package may replace a built-in provider through an exact pin, so a team can ship its own way of deploying.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#R8-NATIVE-DEPLOY-PROVIDER"/>
   </artifacts>
   <edge-cases title="Edge cases and rules">
     <p>Two deploys of the same profile do not race: the engine takes a collision lock per profile and the second waits or refuses, never interleaves.</p>
     <p>A receipt is the only authority for removal. If a file a receipt owns was edited after deployment, `undeploy` leaves it in place and says so, rather than deleting someone's work.</p>
-    <p>`--force` on a lifecycle verb ignores the recorded fingerprints for one run; it does not change what the run means.</p>
+    <p>`--force` on a lifecycle verb ignores the recorded [fingerprints](../glossary/index.xml#fingerprint) for one run; it does not change what the run means.</p>
     <p>The deploy phase applies packaged artifacts and nothing else: a step that needs an agent, such as writing release notes, belongs to `create`, and runs only when the project switches it on.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-CREATE"/>
   </edge-cases>

@@ -10,7 +10,7 @@
     <assert>grep -q "kind = \"lang\"" packages/sql-style/vibe.toml</assert>
   </prompt>
   <what-happens title="What happens">
-    <p>The agent creates the package skeleton, writes the guide and its snippet the way a flow's are written, and sets the kind to `lang`. The difference from a flow is the genre, not the mechanics: a flow says how the team works, a lang package says how to write in something, and the kind tells an agent, a registry and the site which is which before the file is opened.</p>
+    <p>The agent creates the package skeleton, writes the guide and its snippet the way a flow's are written, and sets the kind to `lang`. The difference from a flow is the genre, not the mechanics: a flow says how the team works, a lang package says how to write in something, and the kind tells an agent, a [registry](../glossary/index.xml#registry) and the site which is which before the file is opened.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#KIND-SET"/>
   </what-happens>
   <what-a-lang-is title="What a lang package is, and is not">
@@ -22,7 +22,7 @@
     <p>A language guide that also ships tools, a checker, a formatter, a type oracle, becomes a family: the guide package `&lt;family&gt;-lang`, a server package `&lt;family&gt;-mcp` that serves the same tools to agents, and a bundle `&lt;family&gt;` that pins both at one version. The members move in unison; a consumer requires the bundle and gets a tested set.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-028#FAMILY-DEF"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-028#UNISON-LAW"/>
-    <p>The family stem leads every named surface: crates, binaries, skills and the server all carry the `&lt;family&gt;` prefix, so everything of one language sorts and reads together.</p>
+    <p>The family stem leads every named surface: crates, binaries, [skills](../glossary/index.xml#skill) and the server all carry the `&lt;family&gt;` prefix, so everything of one language sorts and reads together.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-028#SURFACE-NAMING-LAW"/>
   </families>
   <by-hand title="By hand">
@@ -36,7 +36,7 @@
     <p>4. Check: `vibe check --path packages/sql-style`.</p>
   </by-hand>
   <edge-cases title="Edge cases and rules">
-    <p>What a language brought that can be run is answered by `vibe tools`, not by the kind: the boot lane says which disciplines are installed, the tools registry says what they brought.</p>
+    <p>What a language brought that can be run is answered by `vibe tools`, not by the kind: the [boot lane](../glossary/index.xml#boot-lane) says which disciplines are installed, the tools registry says what they brought.</p>
     <p>Before the `lang` kind existed, language guides were stacks; a `stack` package that is really a guide should move to `lang` at its next version, so that the word means one thing.</p>
   </edge-cases>
 </spec>

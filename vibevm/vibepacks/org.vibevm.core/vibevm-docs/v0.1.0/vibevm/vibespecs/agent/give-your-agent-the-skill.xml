@@ -10,7 +10,7 @@
     <assert>vibe skill list --quiet</assert>
   </prompt>
   <what-happens title="What happens">
-    <p>The agent runs `vibe mcp install --auto --yes`. vibe detects the agents present on the machine and, for each, writes two things: an entry in the agent's configuration that starts `vibe mcp serve` as a server the agent can query, and a skill file, `SKILL.md`, that teaches the agent the vibe commands and when to use them. Both writes touch only the vibevm entry of each configuration; anything else in those files is left alone. The command is idempotent: a second run reports every unchanged entry as unchanged.</p>
+    <p>The agent runs `vibe mcp install --auto --yes`. vibe detects the agents present on the machine and, for each, writes two things: an entry in the agent's configuration that starts `vibe mcp serve` as a server the agent can query, and a [skill](../glossary/index.xml#skill) file, `SKILL.md`, that teaches the agent the vibe commands and when to use them. Both writes touch only the vibevm entry of each configuration; anything else in those files is left alone. The command is idempotent: a second run reports every unchanged entry as unchanged.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#CONSENT-WRITE-SCOPE"/>
   </what-happens>
   <by-hand title="By hand">
@@ -33,7 +33,7 @@
       <run>vibe skill list --path hello-vibe</run>
       <expect></expect>
     </example>
-    <p>The skill of this manual, `vibevm-docs`, arrives the same way once the manual is in the machine store.</p>
+    <p>The skill of this manual, `vibevm-docs`, arrives the same way once the manual is in the machine [store](../glossary/index.xml#store).</p>
   </skills-from-packages>
   <servers-from-packages title="Servers that packages bring">
     <p>A package of the `mcp` kind delivers a server built from its own code, such as the discipline tools of a language family. `vibe mcp install` registers such servers in the agents' configurations beside vibe's own, with the path of the built binary; `vibe mcp status` reports whether each is built and current. Registering a server means the agent will run that package's code at session start, so registration asks for consent like an install does.</p>

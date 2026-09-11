@@ -8,23 +8,23 @@
     <expect></expect>
   </example>
   <what-a-registry-is title="What a registry is">
-    <p>A registry is not a server vibe runs. It is a hosting organisation, such as `https://github.com/vibespecs`, where every package is its own git repository named after the package's coordinate. Publishing means pushing a repository and tagging a version; installing means cloning at a tag. Who may publish is decided by the hosting service's own permissions, so vibe carries no accounts of its own.</p>
+    <p>A [registry](../glossary/index.xml#registry) is not a server vibe runs. It is a hosting organisation, such as `https://github.com/vibespecs`, where every package is its own git repository named after the package's [coordinate](../glossary/index.xml#coordinate). Publishing means pushing a repository and tagging a version; installing means cloning at a tag. Who may publish is decided by the hosting service's own permissions, so vibe carries no accounts of its own.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#SHAPE-OWN-REPO"/>
-    <p>A project declares its registries in the manifest as an ordered list. Each entry has a local name, the organisation's root address, and a naming convention that maps a coordinate to a repository name. When a package is requested, vibe walks the list in order and the first registry that has a matching version wins.</p>
+    <p>A project declares its registries in the [manifest](../glossary/index.xml#manifest) as an ordered list. Each entry has a local name, the organisation's root address, and a naming convention that maps a coordinate to a repository name. When a package is requested, vibe walks the list in order and the first registry that has a matching version wins.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REGISTRY-WALK-ORDER"/>
     <p>A machine may add registries of its own in `~/.vibe/registry.toml`, merged after the project's; a project's list always wins over the machine's. This is how a company points every project on a laptop at its private registry without editing each project.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#PROJECT-OVERRIDES"/>
   </what-a-registry-is>
   <the-index title="The index">
-    <p>Cloning a repository to learn what is in it is slow, and listing an organisation to search it is impossible without an account. So a registry may keep an *index*: a separate repository beside the packages that records, for every published version, the manifest's summary and the content fingerprint. `vibe search` reads the index; a fresh install reads it to skip a round of clones.</p>
+    <p>Cloning a repository to learn what is in it is slow, and listing an organisation to search it is impossible without an account. So a registry may keep an *[index](../glossary/index.xml#index-registry)*: a separate repository beside the packages that records, for every published version, the manifest's summary and the content [fingerprint](../glossary/index.xml#fingerprint). `vibe search` reads the index; a fresh install reads it to skip a round of clones.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#INDEX-OPTIONAL"/>
-    <p>The index is a cache, never the truth. If it disagrees with a package repository, the repository wins, and a package resolved through the index is still verified against its content fingerprint when it arrives. A registry without an index works exactly as before, just slower; a missing index is not an error.</p>
+    <p>The index is a cache, never the truth. If it disagrees with a package repository, the repository wins, and a package resolved through the index is still verified against its content fingerprint when it arrives. A registry without an index works exactly as before, only slower; a missing index is not an error.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#REPOS-AUTHORITATIVE"/>
     <p>The index location is derived from the registry's address and can be overridden per registry with an environment variable named after the registry, `VIBEVM_INDEX_URL_&lt;NAME&gt;`; the literal value `none` switches index lookups off for that registry.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#INDEX-URL-TODAY-IS-AN-ENVIRONMENT-VARIABLE"/>
   </the-index>
   <mirrors-and-overrides title="Mirrors, overrides and git sources">
-    <p>A *mirror* is another address for the same registry, tried first for availability and verified against the same fingerprints; a mirror that serves different bytes for a known version is refused, not trusted. Mirrors never appear in the lock file: the canonical address is what gets recorded, so switching mirrors changes nothing for your teammates.</p>
+    <p>A *mirror* is another address for the same registry, tried first for availability and verified against the same fingerprints; a mirror that serves different bytes for a known version is refused, not trusted. Mirrors never appear in the [lock file](../glossary/index.xml#lock-file): the canonical address is what gets recorded, so switching mirrors changes nothing for your teammates.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#MIRROR-INTEGRITY-MANDATORY"/>
     <p>An *override* replaces one package with a copy from elsewhere, for a hotfix or a patch waiting upstream; it short-circuits the registry walk for that one coordinate and is marked as such in the lock file, so nobody mistakes it for a published version.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#OVERRIDE-SHORT-CIRCUIT"/>

@@ -9,8 +9,8 @@
   </example>
   <the-files title="The files, one by one">
     <p>Start with the two files at the root, because everything else is derived from them.</p>
-    <p>`vibe.toml` is the *manifest*. You write it, or `vibe init` writes the first version for you. It names the project, lists the packages it requires with a version range for each, and lists the registries to fetch them from. It is the only file a teammate needs to reproduce your setup, together with the lock file beside it.</p>
-    <p>`vibe.lock` is the *lock file*. vibe writes it, you commit it, and you never edit it. It records the exact version of every package that was installed, including the ones your packages pulled in, and a fingerprint of each package's content. With it, a fresh clone installs the same bytes on any machine.</p>
+    <p>`vibe.toml` is the *[manifest](../glossary/index.xml#manifest)*. You write it, or `vibe init` writes the first version for you. It names the project, lists the packages it requires with a version range for each, and lists the [registries](../glossary/index.xml#registry) to fetch them from. It is the only file a teammate needs to reproduce your setup, together with the [lock file](../glossary/index.xml#lock-file) beside it.</p>
+    <p>`vibe.lock` is the *lock file*. vibe writes it, you commit it, and you never edit it. It records the exact version of every package that was installed, including the ones your packages pulled in, and a [fingerprint](../glossary/index.xml#fingerprint) of each package's content. With it, a fresh clone installs the same bytes on any machine.</p>
     <p>Below them sits one directory, `vibevm/`, with three children. This layout is the same in every project and every package, and it is not configurable.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-052#THE-LAYOUT"/>
     <p>`vibevm/vibespecs/` is *your* tree: the specifications and rules this project itself writes, in Markdown or in the project's XML dialect. vibe reads it and never writes into it, with one exception described below.</p>
@@ -21,7 +21,7 @@
   <the-boot-files title="The boot files">
     <p>The exception in your tree is `vibevm/vibespecs/boot/`. Two files there are yours: `00-core` holds the project's foundations, `90-user` holds your personal overrides, and vibe never touches either. Two files there are generated: `STATIC.xml`, the text an agent reads first and in full, and `INDEX.md`, a manifest of what it reads next. Both carry a header saying they are generated; the header is not decoration.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#ARTIFACTS-GENERATED"/>
-    <p>The agent finds the boot files through a short managed block at the end of `CLAUDE.md`, `AGENTS.md` and `GEMINI.md`, between the lines `&lt;vibevm&gt;` and `&lt;/vibevm&gt;`. vibe rewrites what is between the two markers and nothing else in those files; the rest of the file is yours, and so is the position of the block once it exists.</p>
+    <p>The agent finds the boot files through a short [managed block](../glossary/index.xml#managed-block) at the end of `CLAUDE.md`, `AGENTS.md` and `GEMINI.md`, between the lines `&lt;vibevm&gt;` and `&lt;/vibevm&gt;`. vibe rewrites what is between the two markers and nothing else in those files; the rest of the file is yours, and so is the position of the block once it exists.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#OUTSIDE-PRESERVED"/>
   </the-boot-files>
   <who-writes-what title="Who writes what">
@@ -37,7 +37,7 @@
       <tr><td>the `&lt;vibevm&gt;` block in agent instruction files</td><td>vibe</td><td>yes</td><td>only its position</td></tr>
       <tr><td>`.vibe/`</td><td>vibe</td><td>no</td><td>never</td></tr>
     </table>
-    <p>The last row is the project's scratch space: caches and internal state, ignored by git and safe to delete. The machine-wide store of fetched packages is elsewhere, in your home directory, and is shared by every project on the machine.</p>
+    <p>The last row is the project's scratch space: caches and internal state, ignored by git and safe to delete. The machine-wide [store](../glossary/index.xml#store) of fetched packages is elsewhere, in your home directory, and is shared by every project on the machine.</p>
   </who-writes-what>
   <edge-cases title="Edge cases and rules">
     <p>If you delete `vibevm/vibedeps/` or the generated boot files, `vibe reinstall` rebuilds them from the lock file and the store without touching the network.</p>

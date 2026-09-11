@@ -4,7 +4,7 @@
   <status stage="doc" state="work" audience="user"/>
   <p>`vibe.lock` is the file vibe writes and you commit: the exact versions the project got. This page explains every field so you can read a diff of it in a pull request and know what changed.</p>
   <where title="Where it lives and who writes it">
-    <p>There is one `vibe.lock` per workspace, at the absolute root, beside the root manifest; members never have their own. `vibe install` and `vibe update` write it; `vibe clean` keeps it; nothing edits it by hand. It is the recorded decision; the dependency tree on disk is only its consequence and can always be rebuilt from it.</p>
+    <p>There is one `vibe.lock` per workspace, at the absolute root, beside the root [manifest](../glossary/index.xml#manifest); members never have their own. `vibe install` and `vibe update` write it; `vibe clean` keeps it; nothing edits it by hand. It is the recorded decision; the dependency tree on disk is only its consequence and can always be rebuilt from it.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#NESTING-PRINCIPLE"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#CLEAN-KEEPS-THE-LOCK"/>
   </where>
@@ -42,9 +42,9 @@
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#EFF-LOCKFILE-STABLE"/>
   </reading-a-diff>
   <edge-cases title="Edge cases and rules">
-    <p>An unchanged manifest against an unchanged lock file makes `vibe install` skip the resolver entirely: the lock is the answer.</p>
+    <p>An unchanged manifest against an unchanged [lock file](../glossary/index.xml#lock-file) makes `vibe install` skip the resolver entirely: the lock is the answer.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#LOCKFILE-RESPECTING"/>
-    <p>The lock file records no registry index and no mirror: reproducing it needs only the coordinates, the fingerprints and a source that can serve them.</p>
+    <p>The lock file records no [registry](../glossary/index.xml#registry) [index](../glossary/index.xml#index-registry) and no mirror: reproducing it needs only the [coordinates](../glossary/index.xml#coordinate), the [fingerprints](../glossary/index.xml#fingerprint) and a source that can serve them.</p>
     <p>`vibe why &lt;coordinate&gt;` explains from the lock file and the manifests why a package is in the project, or what blocked it.</p>
   </edge-cases>
 </spec>

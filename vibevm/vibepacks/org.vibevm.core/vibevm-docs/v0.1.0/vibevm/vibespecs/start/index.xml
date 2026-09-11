@@ -20,10 +20,10 @@
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#TWO-TREES"/>
   </step-4>
   <step-5 title="Step 5: see how the agent reads it">
-    <p>Read [The boot lane](../model/boot-lane.xml). The agent opens the instruction file, reads one generated file in full, and follows an index for the rest. It never runs vibe to start. When you later add packages, remove them or update them, the lane is regenerated and the agent's next session reads the new one.</p>
+    <p>Read [The boot lane](../model/boot-lane.xml). The agent opens the instruction file, reads one generated file in full, and follows a list for the rest. It never runs vibe to start. When you later add packages, remove them or update them, the lane is regenerated and the agent's next session reads the new one.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SESSION-START-ORDER"/>
   </step-5>
   <after title="After the route">
-    <p>From here the manual branches. To work day to day, the pages under *How to* cover installing, updating, removing, working offline and publishing. To understand the machinery, the pages under *Model* explain packages and kinds, registries, the lock file and versions. To let your agent do the work, *Give your agent the vibevm skill* comes next. And whenever a command refuses, *From an error message to the rule* names the rule it enforced.</p>
+    <p>From here the manual branches. To work day to day, the pages under *How to* cover installing, updating, removing, working offline and publishing. To understand the machinery, the pages under *Model* explain packages and kinds, [registries](../glossary/index.xml#registry), the [lock file](../glossary/index.xml#lock-file) and versions. To let your agent do the work, *Give your agent the vibevm [skill](../glossary/index.xml#skill)* comes next. And whenever a command refuses, *From an error message to the rule* names the rule it enforced.</p>
   </after>
 </spec>

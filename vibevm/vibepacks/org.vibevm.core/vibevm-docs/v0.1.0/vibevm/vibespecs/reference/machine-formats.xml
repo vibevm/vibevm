@@ -8,10 +8,10 @@
     <expect></expect>
   </example>
   <the-rule title="One rule for every format">
-    <p>Anything a foreign parser reads, a report a script parses, a file another language writes, a manifest a browser fetches, is described by a schema and registered in one inventory. The Rust types and the TypeScript types are generated from the schema, never written by hand, so the two sides cannot drift. An unregistered format is not merely discouraged: it cannot be expressed in the type system that writes it.</p>
+    <p>Anything a foreign parser reads, a report a script parses, a file another language writes, a [manifest](../glossary/index.xml#manifest) a browser fetches, is described by a schema and registered in one inventory. The Rust types and the TypeScript types are generated from the schema, never written by hand, so the two sides cannot drift. An unregistered format is not merely discouraged: it cannot be expressed in the type system that writes it.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#jtd"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-044#M-FORMAT-REGISTRY"/>
-    <p>The schemas are JSON Typedef documents under `schemas/` in the source tree; the registry is `formats/REGISTRY.toml`, which records for each format its epoch, its schema, whether it can be rebuilt from other state, how many parsers read it, and a corpus of golden documents that a build compares against.</p>
+    <p>The schemas are JSON Typedef documents under `schemas/` in the source tree; the [registry](../glossary/index.xml#registry) is `formats/REGISTRY.toml`, which records for each format its epoch, its schema, whether it can be rebuilt from other state, how many parsers read it, and a corpus of golden documents that a build compares against.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-044#POLICY-IS-COMPUTED"/>
   </the-rule>
   <the-envelope title="The envelope">
@@ -33,7 +33,7 @@
       <tr><td>`vibe requirements --json`</td><td>the requirements report</td><td><derived kind="jtd-schema" ref="schemas/requirements_report.jtd.json"/></td></tr>
       <tr><td>`vibe tree --json`</td><td>the package tree</td><td>a JSON Schema document, `package-tree.schema.v1.json`</td></tr>
     </table>
-    <p>The documents of the index server, the scrape contract and plan, the compiler trace and the native ABI have schemas of their own in the same folder; the registry lists all of them.</p>
+    <p>The documents of the [index](../glossary/index.xml#index-registry) server, the [scrape](../glossary/index.xml#scrape) contract and plan, the compiler trace and the native ABI have schemas of their own in the same folder; the registry lists all of them.</p>
   </the-documents>
   <edge-cases title="Edge cases and rules">
     <p>A document that no schema describes is a defect, not a feature; the campaign that wrote this manual filed the ones it found in the product's backlog, and the examples on these pages mark such documents as unchecked rather than passed.</p>

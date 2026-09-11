@@ -9,7 +9,7 @@
     <rule ref="spec://org.vibevm.world/addressable-specs/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL#FOR-POINT-CORRECTIONS-THE-URI-WINS"/>
   </two-processes>
   <the-address title="The address">
-    <p>`spec://&lt;group&gt;/&lt;name&gt;[@&lt;version&gt;]/&lt;path&gt;/&lt;document&gt;#&lt;anchor&gt;`: the package coordinate, an optional version, the document's path inside `vibevm/vibespecs/` without its extension, and an anchor. The version is a feature, never an obligation: absent, the address resolves against the freshest installed version. Anchors are section ids and fact ids in one address space, so a rule is cited the same way whether it is a section or one sentence.</p>
+    <p>`spec://&lt;group&gt;/&lt;name&gt;[@&lt;version&gt;]/&lt;path&gt;/&lt;document&gt;#&lt;anchor&gt;`: the package [coordinate](../glossary/index.xml#coordinate), an optional version, the document's path inside `vibevm/vibespecs/` without its extension, and an [anchor](../glossary/index.xml#anchor). The version is a feature, never an obligation: absent, the address resolves against the freshest installed version. Anchors are section ids and [fact](../glossary/index.xml#fact) ids in one address space, so a rule is cited the same way whether it is a section or one sentence.</p>
     <rule ref="spec://org.vibevm.world/addressable-specs/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL#URI-SCHEME-IS-THE-FULL-GRAMMAR"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#URI-VERSION-OPTIONAL"/>
     <example id="explain" fixture="hello-vibe">
@@ -40,7 +40,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#INV-ANCHORS-IMMUTABLE"/>
   </immutable>
   <edge-cases title="Edge cases and rules">
-    <p>A generated file is never a citation target: cite the source document, not the compiled boot lane.</p>
+    <p>A generated file is never a citation target: cite the source document, not the compiled [boot lane](../glossary/index.xml#boot-lane).</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#COMPILED-LANE-IS-NOT-A-CITATION-TARGET"/>
     <p>`vibe facts check` validates the markup of a package's specifications; `vibe check` validates the package as a whole; both run before publishing.</p>
     <p>Code may cite specifications too, with an attribute on the item that implements a rule, and a map then answers which code implements which rule in both directions; the architecture pages of this manual explain that map.</p>

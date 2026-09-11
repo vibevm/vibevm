@@ -31,7 +31,7 @@
       <tr><td>`.vibe/lifecycle.toml`, `.vibe/trace/`, `.vibe/agentic/`</td><td>lifecycle fingerprints, compile traces and the agent relay mailbox; machine state, not committed</td></tr>
     </table>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#L2-REPO-SHARED"/>
-    <p>Preferences merge layer by layer: a scalar from a higher layer replaces, tables merge deeply, arrays replace as a whole. `vibe prefs list` shows every resolved value with its origin, `vibe prefs show-origins` the contribution of each layer, and `vibe prefs set` writes one key into one layer.</p>
+    <p>Preferences merge layer by layer: a scalar from a higher layer replaces, tables merge deeply, arrays replace as a whole. `vibe prefs list` shows every resolved value with its origin, `vibe prefs show-origins` the [contribution](../glossary/index.xml#contribution) of each layer, and `vibe prefs set` writes one key into one layer.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#MERGE-SCALARS"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#MERGE-ARRAYS"/>
   </inside-a-project>
@@ -56,12 +56,12 @@
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#LAYER-ENV-ADVISORY"/>
   </variables>
   <precedence title="Precedence">
-    <p>For the same setting, a flag on the command line wins over an environment variable, which wins over the project's configuration, which wins over the user's, which wins over the built-in default. The same order holds for registries: a project's list wins over the machine's.</p>
+    <p>For the same setting, a flag on the command line wins over an environment variable, which wins over the project's configuration, which wins over the user's, which wins over the built-in default. The same order holds for [registries](../glossary/index.xml#registry): a project's list wins over the machine's.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#PROJECT-OVERRIDES"/>
   </precedence>
   <edge-cases title="Edge cases and rules">
     <p>Token files are surface secrets: restrict them to your user, never commit them, never paste their contents anywhere. vibe redacts a token in every output and error, and the discipline on your side is the same.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#token-secrecy"/>
-    <p>`vibe show config` is the project-configuration view with the origin of each value; `vibe prefs` is the application-preference store. They are different files and different commands.</p>
+    <p>`vibe show config` is the project-configuration view with the origin of each value; `vibe prefs` is the application-preference file. They are different files and different commands.</p>
   </edge-cases>
 </spec>

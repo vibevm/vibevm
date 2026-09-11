@@ -10,7 +10,7 @@
     <assert>vibe doc check --translations --path packages/notes-flow-docs-ru</assert>
   </prompt>
   <what-happens title="What happens">
-    <p>The agent copies the source's page tree, translates the prose of each block in place without adding or removing a block, replaces every `example` with `example ref="&lt;id&gt;"` pointing at the source's example, sets the package language, names the source in `[translates]` and the same subject in `[[documents]]`. `vibe doc check --translations` then compares the two trees: the same paths, the same anchors, the same number and kinds of blocks; a difference is an error. The site, seeing a `translates` edge from a package in the source's group named `&lt;source&gt;-ru`, shows the translation as official and offers it in the language selector.</p>
+    <p>The agent copies the source's page tree, translates the prose of each block in place without adding or removing a block, replaces every `example` with `example ref="&lt;id&gt;"` pointing at the source's example, sets the package language, names the source in `[translates]` and the same subject in `[[documents]]`. `vibe doc check --translations` then compares the two trees: the same paths, the same [anchors](../glossary/index.xml#anchor), the same number and kinds of blocks; a difference is an error. The site, seeing a `translates` edge from a package in the source's group named `&lt;source&gt;-ru`, shows the translation as official and offers it in the language selector.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#LOC-MIRROR"/>
   </what-happens>
   <the-manifest title="The manifest">

@@ -8,18 +8,18 @@
     <expect></expect>
   </example>
   <identity title="Identity is the content, not the address">
-    <p>A package version is identified by four things: its group, its name, its version, and a fingerprint of every file it contains. The address it was fetched from is written down for information only. That is why a mirror, a moved repository or a vendored copy never changes the lock file: as long as the bytes are the same, the package is the same.</p>
+    <p>A package version is identified by four things: its group, its name, its version, and a [fingerprint](../glossary/index.xml#fingerprint) of every file it contains. The address it was fetched from is written down for information only. That is why a mirror, a moved repository or a vendored copy never changes the [lock file](../glossary/index.xml#lock-file): as long as the bytes are the same, the package is the same.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#IDENTITY-TUPLE"/>
     <p>The fingerprint is also the integrity gate. If a source serves different bytes under a known version, because a tag was force-pushed or a mirror was tampered with, vibe refuses before writing anything, and tells you which fingerprint it expected and which it saw.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#EFF-FORCE-PUSH-CAUGHT"/>
   </identity>
   <the-lock-file title="The lock file">
-    <p>`vibe.lock` lists every package in the resolved graph, direct and transitive, with its exact version, its fingerprint, the registry it came from and how it was resolved. vibe writes it on every install and update; you commit it and never edit it. A fresh clone with the lock file installs the identical graph, and a pull request that changes it shows precisely what moved.</p>
+    <p>`vibe.lock` lists every package in the resolved graph, direct and transitive, with its exact version, its fingerprint, the [registry](../glossary/index.xml#registry) it came from and how it was resolved. vibe writes it on every install and update; you commit it and never edit it. A fresh clone with the lock file installs the identical graph, and a pull request that changes it shows precisely what moved.</p>
     <p>The lock file is kept even when derived state is removed: `vibe clean` deletes the dependency tree and the generated boot files but leaves the lock alone, because the lock is the recorded decision and the tree is only its consequence.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#CLEAN-KEEPS-THE-LOCK"/>
   </the-lock-file>
   <the-store title="The machine store">
-    <p>Every package vibe fetches, for any project, lands in one store under your home directory, `~/.vibe/cache/`, keyed by the package's identity rather than by where it came from. A version fetched for one project is available to every other project on the machine, whichever registry they configure, and the store is never emptied behind your back: reclaiming space is a command you run.</p>
+    <p>Every package vibe fetches, for any project, lands in one [store](../glossary/index.xml#store) under your home directory, `~/.vibe/cache/`, keyed by the package's identity rather than by where it came from. A version fetched for one project is available to every other project on the machine, whichever registry they configure, and the store is never emptied behind your back: reclaiming space is a command you run.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#CACHE-MACHINE-GLOBAL"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#EXPLICIT-RECLAIM"/>
     <p>The store can be warmed on purpose. `vibe cache add` fetches a package and everything it depends on without touching any project, which is how you prepare for a flight or how a machine gets the manual of a package for local reading. `vibe cache list` shows what the store holds; `vibe cache check` verifies every entry against its fingerprint.</p>

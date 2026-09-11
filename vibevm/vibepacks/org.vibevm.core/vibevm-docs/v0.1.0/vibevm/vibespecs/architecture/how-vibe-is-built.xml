@@ -4,7 +4,8 @@
   <status stage="doc" state="work" audience="dev"/>
   <p>vibe is one binary built from a set of Rust libraries, each owning one concern: reading the description of a project, choosing versions, fetching from where packages are published, writing the tree on disk, talking to agents. This page maps the libraries, the seams between them, and the path an install takes through them.</p>
   <five-layers title="Five layers">
-    <p>Read the product bottom-up. *Identity*: a package is a coordinate plus a content fingerprint, and the kind is metadata. *Registry*: ordered package sources with mirrors, overrides and an optional index. *Store*: every fetched package version kept once per machine. *Materialisation*: the resolved graph copied into the project's dependency tree and recorded in the lock file. *Computed boot*: the packages' contributions projected into the two generated files an agent reads. Everything a user sees is one of these five layers or a surface over them.</p>
+    <p>Read the product bottom-up. *Identity*: a package is a [coordinate](../glossary/index.xml#coordinate) plus a content [fingerprint](../glossary/index.xml#fingerprint), and the kind is metadata. *[Registry](../glossary/index.xml#registry)*: ordered package sources with mirrors, overrides and an optional [index](../glossary/index.xml#index-registry). *[Store](../glossary/index.xml#store)*: every fetched package version kept once per machine.</p>
+    <p>*Materialisation*: the resolved graph copied into the project's dependency tree and recorded in the [lock file](../glossary/index.xml#lock-file). *Computed boot*: the packages' [contributions](../glossary/index.xml#contribution) projected into the two generated files an agent reads. Everything a user sees is one of these five layers or a surface over them.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#surfaces"/>
   </five-layers>
   <the-crates title="The crates">
@@ -19,11 +20,18 @@
       <tr><td>surfaces and checks</td><td>`vibe-cli`, `vibe-check`</td><td>the command line; the deterministic project linter</td></tr>
       <tr><td>reserved and tooling</td><td>`vibe-graph`, `vibe-test-support`, `xtask`</td><td>a reserved task-graph slot; test isolation of the settings home; the maintainer gates: code generation, the traceability map, engine synchronisation, mirroring, the release build</td></tr>
     </table>
-    <p>The dependency direction is fixed: a surface calls an orchestrator, an orchestrator calls a library through a seam, a library returns typed values. Domain libraries never prompt, never format terminal output and never decide authentication; those choices are made at the composition root, in the CLI or the MCP server.</p>
+    <p>The dependency direction is fixed: a surface calls an orchestrator, an orchestrator calls a library through a seam, a library returns typed values. Domain libraries never prompt, never format terminal output and never decide authentication; those choices are made at the composition root, in the CLI or the [MCP server](../glossary/index.xml#mcp-server).</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#prod-arch"/>
   </the-crates>
   <the-install-path title="The path of an install">
-    <p>1. Discover the workspace root and read the manifests, the lock file, the user configuration, the registries, mirrors, overrides and local package sources. 2. Compare the manifests with the lock file; if nothing changed, skip resolution. 3. Otherwise qualify every requested coordinate, build the solver's view of available versions and solve the whole graph, holding every pin the change does not touch. 4. Fetch every selected identity: a store hit is reused, a miss walks the allowed sources and inserts the verified tree into the store. 5. Build the plan, validate the managed blocks of the instruction files, and ask for confirmation. 6. Materialise the graph into the dependency tree by diff, regenerate the boot files, prune stale slots. 7. Record the graph, the provenance and the fingerprints in the lock file. 8. Render the human, quiet or JSON report.</p>
+    <p>1. Discover the workspace root and read the [manifests](../glossary/index.xml#manifest), the lock file, the user configuration, the registries, mirrors, overrides and local package sources.</p>
+    <p>2. Compare the manifests with the lock file; if nothing changed, skip resolution.</p>
+    <p>3. Otherwise qualify every requested coordinate, build the solver's view of available versions and solve the whole graph, holding every pin the change does not touch.</p>
+    <p>4. Fetch every selected identity: a store hit is reused, a miss walks the allowed sources and inserts the verified tree into the store.</p>
+    <p>5. Build the plan, validate the [managed blocks](../glossary/index.xml#managed-block) of the instruction files, and ask for confirmation.</p>
+    <p>6. Materialise the graph into the dependency tree by diff, regenerate the boot files, prune stale slots.</p>
+    <p>7. Record the graph, the provenance and the fingerprints in the lock file.</p>
+    <p>8. Render the human, quiet or JSON report.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#TWO-PHASES-SPLIT"/>
   </the-install-path>
   <the-seams title="The seams">
@@ -36,6 +44,6 @@
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-044#M-FORMAT-REGISTRY"/>
   </wire-and-authored>
   <reading-order title="Where to read next">
-    <p>The specifications are the authority: `PROP-000` for the foundational decisions, `PROP-009` for the loading model, `PROP-002` and `PROP-010` for registries and the store, `PROP-054` for the lifecycle and the extension machine, `PROP-045` for the document model. The traceability page of this manual explains how code cites them and how to ask the map which code implements which rule. The developer guide in the repository covers building, testing and the self-check panel.</p>
+    <p>The specifications are the authority: `PROP-000` for the foundational decisions, `PROP-009` for the loading model, `PROP-002` and `PROP-010` for registries and the store, `PROP-054` for the [lifecycle](../glossary/index.xml#lifecycle) and the extension machine, `PROP-045` for the document model. The traceability page of this manual explains how code cites them and how to ask the map which code implements which rule. The developer guide in the repository covers building, testing and the self-check panel.</p>
   </reading-order>
 </spec>

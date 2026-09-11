@@ -9,12 +9,12 @@
     <assert>vibe cache list --quiet</assert>
   </prompt>
   <what-happens title="What happens">
-    <p>The agent runs `vibe cache add org.vibevm.core/vibevm-docs`. A documentation package is never installed into a project; it is warmed into the machine store together with the packages it documents, so that every rule it cites can be resolved offline. Then the agent runs `vibe doc serve`: vibe starts a small web server that listens on your own machine only, renders each page from the store on request, and prints the address. Nothing is fetched from the internet while you read, and no page leaves the machine.</p>
+    <p>The agent runs `vibe cache add org.vibevm.core/vibevm-docs`. A documentation package is never installed into a project; it is warmed into the machine [store](../glossary/index.xml#store) together with the packages it documents, so that every rule it cites can be resolved offline. Then the agent runs `vibe doc serve`: vibe starts a small web server that listens on your own machine only, renders each page from the store on request, and prints the address. Nothing is fetched from the internet while you read, and no page leaves the machine.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#KIND-DOC-NOT-INSTALLED"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#LOCAL-SERVE"/>
   </what-happens>
   <by-hand title="By hand">
-    <p>1. Warm the store. Inside a project, its registries are the source; outside one, the machine-wide registries:</p>
+    <p>1. Warm the store. Inside a project, its [registries](../glossary/index.xml#registry) are the source; outside one, the machine-wide registries:</p>
     <example id="cache-add-docs" fixture="empty">
       <run>vibe cache add org.vibevm.core/vibevm-docs</run>
       <expect></expect>
