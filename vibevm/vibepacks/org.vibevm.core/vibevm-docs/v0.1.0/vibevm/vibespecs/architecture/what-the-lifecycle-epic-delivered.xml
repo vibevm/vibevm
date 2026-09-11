@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">What the lifecycle epic delivered</title>
+  <status stage="doc" state="work" audience="dev"/>
+  <p>Between July and September 2026 vibe grew from a package installer into a build system with an extension machine, a native ABI, deploy receipts and a terminal export. This page tells that route as one system, what was decided on the way, and what was left for later.</p>
+  <the-route title="The route, in eight stages">
+    <p>The work ran as eight numbered stages, each landed as atomic commits with tests and a traceability map, and recorded in a ledger that names every commit. Read them as one story rather than eight features.</p>
+    <table>
+      <tr><td>Stage</td><td>What it delivered</td></tr>
+      <tr><td>R1, diff materialisation</td><td>a strict record per dependency slot, so an install writes only what changed and never wipes a tree; a hash gate for mutable sources; hooks that run only on a real change</td></tr>
+      <tr><td>R2, the lifecycle engine</td><td>the strict `[[extension]]` grammar, the nine-phase line with its verbs and the clean chain, ordered collection of contributions, the context envelope, durable freshness with `--force`, script and binary handlers, data presets, `vibe extensions`</td></tr>
+      <tr><td>R3, the compiler</td><td>an explicit intermediate representation of the boot compiler with five levels and six carriers, a typed pass manager, the pass pipeline from parse to emit, a verifier, and compile traces with snapshots and timings</td></tr>
+      <tr><td>R4, staged transforms</td><td>one pure extension registry below the lifecycle and the workspace, four transform positions with owner-scoped activation and per-unit fingerprints, a built-in XML minifier, and the lane analyser that attributes the compiled lane's bytes</td></tr>
+      <tr><td>R5, the native tier</td><td>a C-and-JSON ABI for extensions, the safe author SDK and the quarantined loader, source and prebuilt resolution with in-slot builds, and parity proofs between a native minifier and the built-in one</td></tr>
+      <tr><td>R6, full compiler passes</td><td>the pass grammar behind `compiler_internals`, a lossless wire projection of the whole IR, before, after and replace positions, the mandatory verifier after plugin passes, and an end-to-end plain-text frontend with a JSON backend</td></tr>
+      <tr><td>R7, providers and agents</td><td>the model provider seam with an OpenAI-compatible adapter, the CLI agent handler, the hosted outbox with delegated resume, the MCP lifecycle surfaces, and the substrate for external orchestration</td></tr>
+      <tr><td>R8, package, build and deploy</td><td>the project skill binding, the mechanism and artifact grammar, artifact records and the target graph, the Cargo build provider, one-file skills, the Agent Plugins directory, client projections, deploy profiles with intents, receipts and recovery, a deterministic zip, platform applicability, and package-supplied native providers</td></tr>
+    </table>
+    <p>Beside the route, the scrape operation landed as its own contract: the deterministic removal of the vibe layer from a finished project, with a plan, a health proof and a recoverable in-place transaction.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#SCRAPED-TREE"/>
+  </the-route>
+  <decisions title="Decisions that hold">
+    <p>One nine-phase line: dependency materialisation is `install`, placement outside the project is `deploy`, and `package` mutates no destination. One extension plane: scheduled contributions answer when, sibling mechanism providers answer how, and built-ins are ordinary providers a host may replace by an exact pin. Native wire is C plus JSON, schema first; the author SDK is safe Rust and the loader is quarantined. Every external mutation has a plan, an intent, an independent verification and a receipt, and a third observed digest refuses. Automatic skill binding is project-only; user and client installation is an explicit deploy. Every subsystem keeps a complete algorithmic mode; a model enhances and never gates.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#WHY-C-ABI"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#LLM-IS-AN-ENHANCEMENT"/>
+  </decisions>
+  <boundaries title="Compatibility boundaries and migrations">
+    <p>The dependency slot record and the lifecycle state are strict, versioned machine formats; older trees are migrated once on the next install, never read in place. The compiler IR's wire projection is versioned per carrier. Deploy receipts and lifecycle fingerprints live under `.vibe/`, machine state that is not committed; losing them costs one full run, not correctness. Handwritten wire types are counted by a ratchet against a frozen baseline, so a new machine format cannot arrive without a schema.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-STATE-HOME"/>
+  </boundaries>
+  <deferred title="Deliberately left for later">
+    <p>Deploy targets beyond the first genres, a WebAssembly extension tier, per-language and per-resource preference overrides, cloud sync of user preferences, a built-in inference backend, and the general phase grammar beyond `clean install` for the clean lifecycle. Each is named in its specification with a compatibility law, so the door stays open without a half-built feature behind it.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#WASM"/>
+  </deferred>
+  <retired title="Retired lanes, kept as history">
+    <p>The campaign also ran execution lanes that are no longer current: a subscription-backed external worker lane was retired by the owner in September 2026, and its package source stays in the tree as history while its host dependency and boot contribution were removed. A reader who meets its name in old ledgers should treat it as evidence of how the work was done, not as a supported way to use the product.</p>
+  </retired>
+  <edge-cases title="Where the evidence lives">
+    <p>The stage-by-stage ledger with commit hashes is `campaigns/packages-2026-09/LIFECYCLE-EXTENSIONS-IMPLEMENTATION-LEDGER.md` in the repository; the contract is `PROP-054`, the scrape contract `PROP-056`, the native ABI and the compiler architecture documents sit beside the ledger. The ledger is a record, not a plan: it names what landed and what was measured, and nothing in this manual restates a number from it.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#R8-PACKAGE-DEPLOY"/>
+  </edge-cases>
+</spec>

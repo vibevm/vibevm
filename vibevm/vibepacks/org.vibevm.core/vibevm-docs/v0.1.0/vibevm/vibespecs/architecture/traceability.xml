@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Traceability: specs, code and the map</title>
+  <status stage="doc" state="work" audience="dev"/>
+  <p>Every public piece of code in vibe points at the rule it implements, and a generated map lets you ask in either direction: which code implements this rule, which rule does this code answer to.</p>
+  <example id="explain" fixture="hello-vibe">
+    <run>vibe explain "spec://org.vibevm.core/vibevm/common/PROP-000#KIND-SET" --path hello-vibe</run>
+    <expect></expect>
+  </example>
+  <marks title="Marks in the code">
+    <p>A Rust item that implements a rule carries an attribute naming the rule's address; a test that verifies one carries a verifying attribute; a module that serves one section as a whole declares a scope. The links live in the code, beside the thing they describe, so they travel with every refactor and every copy. The verbs are `implements`, `verifies`, `documents`, `deviates` and `informs`; a deviation must say why.</p>
+    <rule ref="spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#FORCE-EDGES-TRAVEL-WITH-THE-ARTEFACTS"/>
+    <rule ref="spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#RULE-VERBS-AND-MANDATORY-REASON"/>
+    <p>`implements` is a claim about code that runs. A type declaration does not carry it: an edge from a declaration is indistinguishable from coverage, and a map that counted declarations would be green about nothing.</p>
+    <rule ref="spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#RULE-IMPLEMENTS-IS-A-CLAIM-ABOUT-CODE-THAT-RUNS"/>
+  </marks>
+  <the-map title="The map">
+    <p>`cargo xtask specmap` walks the crates for marks and the specification tree for units, and writes `specmap.json`: nodes for every spec unit with its revision and content hash, nodes for every tagged code item, and the edges between them. The map is committed, and `cargo xtask specmap --check` fails when the tree moved and the map did not. The policy of what is scanned, which crates are gated and which are exempt lives in `specmap.toml`; the engine itself ships with the discipline package and is vendored, never edited in place.</p>
+    <rule ref="spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#FORCE-INVARIANTS-ARE-MACHINE-CHECKED"/>
+    <p>Three gates guard the map. The *orphan ratchet*: a public item in a gated crate without a mark fails the check, unless it is dispositioned with a debt id. The *resolve gate*: every edge into this project's own namespace must land on an existing anchor. The *suspect rule*: when a spec unit's revision bumps, every edge pinned to the old revision becomes suspect and the check names it, so the code is re-read against the rule that moved.</p>
+    <rule ref="spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#INVALIDATION-SPEC-BUMP-MAKES-EDGES-SUSPECT"/>
+    <p>Generated code is excluded from the orphan gate; the generator's input, the schema, carries the marks instead, and a schema scanner reads them.</p>
+    <rule ref="spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#RULE-GENERATED-CODE-IS-EXCLUDED"/>
+  </the-map>
+  <asking title="Asking the map">
+    <p>`vibe explain "spec://…#anchor"` builds the map fresh in memory and prints one target's subgraph: what implements, verifies or documents it. `vibe query` filters the map by address, symbol or kind and returns the many nodes that fit. `vibe select --where "lacks:verifies scope:spec://…"` walks the graph with a predicate: every rule with no verifier, the implementers of a rule and one hop around them. `--json` gives each answer to an agent.</p>
+    <example id="select" fixture="hello-vibe">
+      <run>vibe select --where "uri:spec://org.vibevm.core/vibevm/common/PROP-000#KIND-SET depth:1" --path hello-vibe</run>
+      <expect></expect>
+    </example>
+  </asking>
+  <documentation-edges title="Documentation in the map">
+    <p>This manual enters the same map. Every `rule` block on a page is a `documents` edge from the page to the rule it quotes, scanned on the host side through the engine's scanner seam, and the edge carries no revision pin: the citation is live, the page shows the rule's current text, and the only check is that the anchor exists. Whether the prose around a citation went stale is a human's question, not a suspect flag.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-EDGES-HOST-SIDE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#OBS-RULE-EDGE-UNPINNED"/>
+  </documentation-edges>
+  <edge-cases title="Edge cases and rules">
+    <p>Units come in four kinds, and each has a default edge: a requirement is implemented and verified, a design informs, a guide documents; a proposal decides, which is not yet a verb the system carries.</p>
+    <rule ref="spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#DECISION-FOUR-UNIT-KINDS"/>
+    <p>The map is carried, not generated: a mapping between prose and code cannot be inferred, only authored and verified, which is why the marks are in the code and the gates are in the build.</p>
+    <rule ref="spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#CONSEQUENCE-MAPPING-IS-CARRIED-NOT-GENERATED"/>
+    <p>A package can carry its own map, `package.specmap.json`, generated by `vibe specmap` before publishing, so a consumer queries an installed package without rebuilding it.</p>
+  </edge-cases>
+</spec>
