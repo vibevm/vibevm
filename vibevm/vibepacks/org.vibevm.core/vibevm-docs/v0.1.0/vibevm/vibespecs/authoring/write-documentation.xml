@@ -3,11 +3,11 @@
   <title id="root">Write documentation for a package</title>
   <status stage="doc" state="work" audience="author"/>
   <p>A manual for a package is itself a package: it names what it documents, carries a title and a summary, and is read rather than installed. This page writes one, with examples that are run and rules quoted from the source they come from.</p>
-  <prompt id="write-documentation">Create a documentation package org.acme/notes-flow-docs in packages/notes-flow-docs of the current VibeVM project, documenting the package org.acme/notes-flow. Give it a manifest with kind doc, a title and an abstract, and a [[documents]] entry for the subject. Write one page explaining what the flow does, with a rule quoted from the subject's protocol by address. Run vibe doc check on it.
+  <prompt id="write-documentation">Create a documentation package org.acme/notes-flow-docs in the current VibeVM project, as an in-tree package under vibevm/vibepacks/, documenting the package org.acme/notes-flow. Give it a manifest with kind doc, a title and an abstract, and a [[documents]] entry for the subject. Write one page explaining what the flow does, with a rule quoted from the subject's protocol by address. Run vibe doc check on it.
     <needs>the vibevm skill installed for your agent; a project with `vibe.toml` at the root and the subject package in it</needs>
-    <outcome>`packages/notes-flow-docs/vibe.toml` declares `kind = "doc"`, `title`, `abstract` and `[[documents]]`; the page under `vibevm/vibespecs/` has a first paragraph without terms and a `rule` block whose address resolves; `vibe doc check --citations` reports no unresolved citation</outcome>
-    <assert>grep -q "kind = \"doc\"" packages/notes-flow-docs/vibe.toml</assert>
-    <assert>vibe doc check --citations --path packages/notes-flow-docs</assert>
+    <outcome>`vibevm/vibepacks/org.acme/notes-flow-docs/v0.1.0/vibe.toml` declares `kind = "doc"`, `title`, `abstract` and `[[documents]]`; the page under `vibevm/vibespecs/` has a first paragraph without terms and a `rule` block whose address resolves; `vibe doc check --citations` reports no unresolved citation</outcome>
+    <assert>grep -q "kind = \"doc\"" vibevm/vibepacks/org.acme/notes-flow-docs/v0.1.0/vibe.toml</assert>
+    <assert>vibe doc check --citations --path vibevm/vibepacks/org.acme/notes-flow-docs/v0.1.0</assert>
   </prompt>
   <what-happens title="What happens">
     <p>The agent creates the package with the `doc` kind, fills the card, names the subject, and writes the first page in the XML dialect with the documentation vocabulary. `vibe doc check --citations` resolves every `rule` address against the subject's specification and fails on any that does not exist. The manual is published like any package; the site finds it through the `[[documents]]` edge and, because the subject's group published it under the `-docs` name, shows it as the subject's [official documentation](../glossary/index.xml#official).</p>

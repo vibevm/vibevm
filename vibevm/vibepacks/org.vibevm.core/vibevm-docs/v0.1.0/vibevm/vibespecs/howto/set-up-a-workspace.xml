@@ -12,7 +12,7 @@
     <assert>vibe check --quiet</assert>
   </prompt>
   <what-happens title="What happens">
-    <p>The agent adds a `[workspace]` table to the root [manifest](../glossary/index.xml#manifest) naming the member paths, and creates each member with `vibe init package org.acme/notes-flow packages/notes-flow`, which writes a manifest with a `[package]` table. Membership is explicit: a folder with a manifest that is not listed is not a member. Then it runs `vibe install` at the root: vibe discovers the workspace, resolves the requirements of every member in one unified resolution, and writes a single [lock file](../glossary/index.xml#lock-file) at the root.</p>
+    <p>The agent adds a `[workspace]` table to the root [manifest](../glossary/index.xml#manifest) naming the member paths, and writes each member's `vibe.toml` by hand with a `[package]` table: a member is a plain package folder, and `vibe init package` scaffolds a different layout, the in-tree slot the authoring pages describe. Membership is explicit: a folder with a manifest that is not listed is not a member. Then it runs `vibe install` at the root: vibe discovers the workspace, resolves the requirements of every member in one unified resolution, and writes a single [lock file](../glossary/index.xml#lock-file) at the root.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#EXPLICIT-MEMBERSHIP"/>
   </what-happens>
   <by-hand title="By hand">
@@ -21,9 +21,9 @@
       <run>cat vibe.toml</run>
       <expect></expect>
     </example>
-    <p>2. Create each member as a package in its folder:</p>
-    <example id="init-package" fixture="workspace-root">
-      <run>vibe init package org.acme/notes-flow packages/notes-flow</run>
+    <p>2. Give each member its own `vibe.toml` with a `[package]` table, the same fields `vibe init package` writes, with the kind you mean:</p>
+    <example id="member-manifest" fixture="workspace">
+      <run>cat packages/notes-flow/vibe.toml</run>
       <expect></expect>
     </example>
     <p>3. Install from the root, or from anywhere inside the workspace; the command finds the root and resolves the whole tree:</p>
