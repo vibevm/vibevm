@@ -4,18 +4,18 @@
     "progress-core": 11,
     "vibe-actions": 7,
     "vibe-agent-projection": 1,
-    "vibe-cli": 42,
-    "vibe-core": 33,
+    "vibe-cli": 44,
+    "vibe-core": 34,
     "vibe-facts": 2,
     "vibe-index": 27,
     "vibe-lifecycle": 2,
     "vibe-mcp": 7,
-    "vibe-publish": 3,
-    "vibe-registry": 7,
+    "vibe-publish": 7,
+    "vibe-registry": 8,
     "vibe-scrape": 5,
     "vibe-trace": 3,
     "vibe-wire": 2,
-    "vibe-workspace": 3,
-    "xtask": 12
+    "vibe-workspace": 4,
+    "xtask": 14
   }
 }
