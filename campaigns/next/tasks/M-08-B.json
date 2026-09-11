@@ -1,0 +1,130 @@
+{
+  "id": "M-08-B",
+  "tasks": [
+    {
+      "id": "M-08-B.1",
+      "title": "Separate hydration and probes from pure planning",
+      "goal": "Make adapter inspection operate only on admitted prepared captures.",
+      "read_paths": [
+        "crates/vibe-agent-projection/src/pkgskill.rs",
+        "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+        "crates/vibe-agent-projection/src/pkgskill/projection/binding.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/plugin/wire.rs",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+        "xtask/src/main.rs",
+        ".cargo/config.toml",
+        "crates/vibe-agent-projection/Cargo.toml",
+        "crates/vibe-agent-projection/src/lib.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-agent-projection/src/",
+        "crates/vibe-lifecycle/src/mechanism/deploy/",
+        "crates/vibe-mcp/src/",
+        "schemas/",
+        "formats/",
+        "crates/vibe-wire/",
+        "crates/vibe-agent-projection/Cargo.toml",
+        "crates/vibe-agent-projection/src/lib.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs"
+      ],
+      "steps": [
+        "Trace each prepare/plan/projection call to hydration, cache writes, PATH resolution and version probes.",
+        "Introduce an explicit prepared-input/evidence carrier using M-01 and M-16 contracts; move hydration/probes into named effectful preparation.",
+        "Make plan/inspect consume that carrier and return needs-preparation for absent/stale capture; preserve offline propagation."
+      ],
+      "positive_cases": [
+        "Prepared source supports deterministic plan/inspect with zero write/network/process calls.",
+        "Explicit preparation records exact source/client/probe identity."
+      ],
+      "negative_cases": [
+        "Empty cache cannot cause hidden hydration or native execution during query.",
+        "Changed source/client evidence refuses rather than silently reprobes."
+      ],
+      "checks": [
+        "cargo test -p vibe-agent-projection -- --list",
+        "cargo test -p vibe-agent-projection",
+        "cargo test -p vibe-lifecycle -- --list",
+        "cargo test -p vibe-lifecycle",
+        "cargo test -p vibe-mcp -- --list",
+        "cargo test -p vibe-mcp",
+        "cargo xtask check-codegen",
+        "cargo xtask wire-diff",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Operation spies and byte snapshots prove empty-cache query purity.",
+        "CLI/MCP identify missing preparation with the same typed reason."
+      ],
+      "safe_stop": "Pure query path works and effectful preparation is explicit; no apply required.",
+      "commit_subject": "refactor(adapters): separate preparation from pure projection planning",
+      "notes": [
+        "Schema changes: inspect the existing codegen entrypoint before regeneration; never hand-edit generated types or invent a new codegen command. The listed check-codegen and wire-diff commands are existing self-check gates.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-08-B.2",
+      "title": "Resolve bridge sources against their captured root",
+      "goal": "Fix any demonstrated hydrated source-root mismatch without inventing an unobserved bug.",
+      "read_paths": [
+        "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+        "crates/vibe-agent-projection/src/pkgskill/projection/binding.rs",
+        "crates/vibe-agent-projection/src/pkgskill.rs",
+        "crates/vibe-spec/src/resolver/lookup.rs",
+        "crates/vibe-install/src/slot_verify.rs",
+        "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+        "crates/vibe-agent-projection/Cargo.toml",
+        "crates/vibe-agent-projection/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-agent-projection/src/",
+        "fixtures/next/adapters/",
+        "campaigns/next/evidence/M-08-B/",
+        "crates/vibe-agent-projection/Cargo.toml",
+        "crates/vibe-agent-projection/src/lib.rs"
+      ],
+      "steps": [
+        "Create a fixture where provider.root differs from the hydrated captured source root and resources include nested files.",
+        "Trace actual resource resolution through automatic binding; record whether the suspected mismatch reproduces.",
+        "If reproduced, carry the admitted source root through resource selection and include closure/digest checks; if not, retain the characterization proving the correct current path."
+      ],
+      "positive_cases": [
+        "Captured nested resources project from the exact hydrated capture.",
+        "An already-correct route remains byte-compatible."
+      ],
+      "negative_cases": [
+        "Provider-relative fallback cannot read a different resource with the same name.",
+        "Missing/changed captured resource gives an explicit refusal rather than a partial plugin."
+      ],
+      "checks": [
+        "cargo test -p vibe-agent-projection -- --list",
+        "cargo test -p vibe-agent-projection",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Evidence identifies the actual source root and verifies complete projected membership.",
+        "No product fix is claimed unless the counterexample demonstrated the defect."
+      ],
+      "safe_stop": "Root-selection characterization passes; a demonstrated correction is isolated.",
+      "commit_subject": "fix(adapters): bind projected resources to admitted source captures",
+      "notes": [
+        "If no bug reproduces, use a test(adapters) commit subject describing the characterization instead of claiming a fix.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

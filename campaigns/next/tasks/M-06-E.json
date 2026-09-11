@@ -1,0 +1,139 @@
+{
+  "id": "M-06-E",
+  "tasks": [
+    {
+      "id": "M-06-E.1",
+      "title": "Compute marginal contribution including shared dependencies",
+      "goal": "Compare complete baseline and candidate closures rather than summing package sizes.",
+      "read_paths": [
+        "crates/vibe-install/src/plan.rs",
+        "crates/vibe-install/src/visibility_projection.rs",
+        "crates/vibe-package-source/src/source.rs",
+        "crates/vibe-cli/src/commands/tree/build.rs",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-install/Cargo.toml",
+        "crates/vibe-install/src/lib.rs",
+        "crates/vibe-package-source/Cargo.toml",
+        "crates/vibe-package-source/src/lib.rs"
+      ],
+      "write_paths": [
+        "vibevm/vibespecs/common/PROP-059-boot-observability.xml",
+        "crates/vibe-workspace/src/boot_debugger/",
+        "crates/vibe-install/src/",
+        "crates/vibe-package-source/src/",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-install/Cargo.toml",
+        "crates/vibe-install/src/lib.rs",
+        "crates/vibe-package-source/Cargo.toml",
+        "crates/vibe-package-source/src/lib.rs"
+      ],
+      "steps": [
+        "Consume M-05-E exact candidate graph with requested/resolved choices and technical provider edges.",
+        "Compute direct, inclusive and marginal measures from complete before/after worlds.",
+        "Attribute shared/transitive dependencies and changed configuration once; document non-additivity across independent experiments."
+      ],
+      "positive_cases": [
+        "Adding a package sharing an existing dependency has smaller marginal than inclusive footprint."
+      ],
+      "negative_cases": [
+        "Double-counted shared dependencies and summed independent deltas fail.",
+        "Unknown transitive capture cannot become zero cost."
+      ],
+      "checks": [
+        "cargo test -p vibe-workspace -- --list",
+        "cargo test -p vibe-workspace",
+        "cargo test -p vibe-install -- --list",
+        "cargo test -p vibe-install",
+        "cargo test -p vibe-package-source -- --list",
+        "cargo test -p vibe-package-source",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Every delta links to exact baseline/candidate graph and contribution identities.",
+        "Static and dynamic costs remain separately reported."
+      ],
+      "safe_stop": "Show partial delta with explicit unavailable closure; no install required.",
+      "commit_subject": "feat(boot): calculate dependency-aware marginal cost",
+      "notes": [
+        "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
+        "Permanent destination: vibevm/vibespecs/common/PROP-059-boot-observability.xml (PROPOSED file until its source-contract task creates it). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+        "TO CREATE: m_06_e_1_cases test family for the cases below. This is not an existing test. Enumerate the owning crate's tests before any optional filter; listed checks intentionally use unfiltered crate suites.",
+        "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-06-E.2",
+      "title": "Expose install, remove and reconfigure scenarios",
+      "goal": "Make preinstall what-if useful across conditions and branch changes.",
+      "read_paths": [
+        "crates/vibe-install/src/plan.rs",
+        "crates/vibe-resolver/src/features.rs",
+        "crates/vibe-workspace/src/extension_world.rs",
+        "crates/vibe-cli/src/commands/tree/model.rs",
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-cli/src/cli.rs",
+        "crates/vibe-cli/src/main.rs",
+        "crates/vibe-cli/src/commands/mod.rs",
+        "crates/vibe-cli/Cargo.toml",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs"
+      ],
+      "write_paths": [
+        "vibevm/vibespecs/common/PROP-059-boot-observability.xml",
+        "crates/vibe-workspace/src/boot_debugger/",
+        "crates/vibe-cli/src/commands/boot/",
+        "crates/vibe-mcp/src/tools/boot_debugger.rs",
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-cli/src/cli.rs",
+        "crates/vibe-cli/src/main.rs",
+        "crates/vibe-cli/src/commands/mod.rs",
+        "crates/vibe-cli/Cargo.toml",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs"
+      ],
+      "steps": [
+        "Add scenario controls for add/remove/toggle/reconfigure using immutable candidate requests.",
+        "Bind OS/target conditions and legal loading options; show potential conditional contributions without assuming future context.",
+        "Compare changes in package/feature/dependency/provenance and cost through one API/UI model."
+      ],
+      "positive_cases": [
+        "Changing continuity branch preserves unrelated shared contributions in the comparison."
+      ],
+      "negative_cases": [
+        "Missing mandatory selection and illegal static/dynamic placement return typed incompatibility.",
+        "Unknown future conditions cannot be reported as exact total session cost."
+      ],
+      "checks": [
+        "cargo test -p vibe-workspace -- --list",
+        "cargo test -p vibe-workspace",
+        "cargo test -p vibe-cli -- --list",
+        "cargo test -p vibe-cli",
+        "cargo test -p vibe-mcp -- --list",
+        "cargo test -p vibe-mcp",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Each scenario is inspectable before install and produces no project writes.",
+        "Machine clients can reproduce the viewer's comparison using captured inputs."
+      ],
+      "safe_stop": "Retain baseline and unapplied scenario; no implicit selection or install.",
+      "commit_subject": "feat(boot): compare preinstall configuration scenarios",
+      "notes": [
+        "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
+        "Permanent destination: vibevm/vibespecs/common/PROP-059-boot-observability.xml (PROPOSED file until its source-contract task creates it). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+        "TO CREATE: m_06_e_2_cases test family for the cases below. This is not an existing test. Enumerate the owning crate's tests before any optional filter; listed checks intentionally use unfiltered crate suites.",
+        "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

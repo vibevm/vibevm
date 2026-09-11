@@ -1,0 +1,149 @@
+{
+  "id": "M-08-D",
+  "tasks": [
+    {
+      "id": "M-08-D.1",
+      "title": "Admit typed client commands and executable identity",
+      "goal": "Define command artifacts that expose effects without making the data renderer a shell.",
+      "read_paths": [
+        "crates/vibe-lifecycle/src/mechanism/deploy/plugin/wire.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+        "xtask/src/main.rs",
+        ".cargo/config.toml",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+        "crates/vibe-agent-projection/Cargo.toml",
+        "crates/vibe-agent-projection/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-lifecycle/src/mechanism/deploy/",
+        "crates/vibe-agent-projection/src/",
+        "schemas/",
+        "formats/",
+        "crates/vibe-wire/",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+        "crates/vibe-agent-projection/Cargo.toml",
+        "crates/vibe-agent-projection/src/lib.rs"
+      ],
+      "steps": [
+        "Map existing fixed client argv builders to admitted operation IDs and typed parameters.",
+        "Resolve executable identities at the trusted surface during explicit preparation; bind version/evidence, cwd, environment references and target roots.",
+        "Keep novel native-provider execution a separately admitted code capability; reject untyped shell/template evaluation and missing client contracts."
+      ],
+      "positive_cases": [
+        "A supported exact client operation serializes deterministic argv from typed values.",
+        "Quoted/path-like parameters remain data in the admitted operation recipe."
+      ],
+      "negative_cases": [
+        "Interpreter injection, unbound executable and stale version evidence refuse.",
+        "A generic file grant cannot authorize process execution or a wider scope."
+      ],
+      "checks": [
+        "cargo test -p vibe-lifecycle -- --list",
+        "cargo test -p vibe-lifecycle",
+        "cargo test -p vibe-agent-projection -- --list",
+        "cargo test -p vibe-agent-projection",
+        "cargo test -p vibe-wire -- --list",
+        "cargo test -p vibe-wire",
+        "cargo xtask check-codegen",
+        "cargo xtask wire-diff",
+        "cargo run --quiet -p vibe-cli -- check --path . --quiet",
+        "cargo run --quiet -p vibe-cli -- facts check --exhaustive",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Fixture runner observes only the approved executable/argv/environment/cwd.",
+        "Plan exposes active content and process effects before admission."
+      ],
+      "safe_stop": "Typed command preparation is complete; no real client operation performed.",
+      "commit_subject": "feat(adapters): bind client operations to typed execution recipes",
+      "notes": [
+        "Schema changes: inspect the existing codegen entrypoint before regeneration; never hand-edit generated types or invent a new codegen command. The listed check-codegen and wire-diff commands are existing self-check gates.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-08-D.2",
+      "title": "Connect admitted commands to full deployment lifecycle",
+      "goal": "Run plan/apply/verify/recover/remove through the existing engine and universal operation service.",
+      "read_paths": [
+        "crates/vibe-lifecycle/src/mechanism/deploy/plugin/wire.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/plugin/opencode.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+        "crates/vibe-mcp/src/tools/lifecycle_run.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs",
+        "crates/vibe-cli/Cargo.toml",
+        "crates/vibe-cli/src/commands/mod.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-lifecycle/src/mechanism/deploy/",
+        "crates/vibe-orchestrator/src/",
+        "crates/vibe-mcp/src/",
+        "crates/vibe-cli/src/commands/",
+        "fixtures/next/adapters/",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs",
+        "crates/vibe-cli/Cargo.toml",
+        "crates/vibe-cli/src/commands/mod.rs"
+      ],
+      "steps": [
+        "Route admitted command/file plans into existing deployment journals and M-16 durable operation IDs; avoid a second deploy engine.",
+        "Implement independent observed-state checks, cancellation boundaries and recover/remove using retained host operation data.",
+        "Expose equivalent typed CLI/API/MCP outcomes including partial effects and newly required authority on expansion."
+      ],
+      "positive_cases": [
+        "A full isolated apply→verify→update→remove preserves foreign state.",
+        "Response loss reconnects to the same operation; supported recovery resumes the owned prefix."
+      ],
+      "negative_cases": [
+        "A changed executable/descriptor/grant cannot reuse stale authorization.",
+        "Provider error after one effect retains partial state instead of returning only text."
+      ],
+      "checks": [
+        "cargo test -p vibe-lifecycle -- --list",
+        "cargo test -p vibe-lifecycle",
+        "cargo test -p vibe-orchestrator -- --list",
+        "cargo test -p vibe-orchestrator",
+        "cargo test -p vibe-mcp -- --list",
+        "cargo test -p vibe-mcp",
+        "cargo test -p vibe-cli -- --list",
+        "cargo test -p vibe-cli",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "External surfaces agree on exact resources, authority decision and terminal/partial status.",
+        "All lifecycle verbs have executable behavior; plan-only is not acceptance."
+      ],
+      "safe_stop": "Full engine integration works on controlled client fixtures.",
+      "commit_subject": "feat(adapters): route admitted client operations through deploy recovery",
+      "notes": [
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

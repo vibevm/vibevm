@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">NEXT temporary contract 3.1 — Existing layers и минимальные additions</title>
+  <status stage="impl" state="plan"/>
+  <p><NEXT-A01-SCOPE fact="true" status="spec/done">Temporary normative staging unit. Its body is the accepted architecture from refined plan revision 4, section 3.1. Before production code cites this law, promote the relevant clauses into permanent specifications. This file is consumed only after semantic coverage, implemented behavior and retained evidence are accepted. The task/retirement checker cannot perform semantic acceptance.</NEXT-A01-SCOPE></p>
+  <p><NEXT-A01-U001 fact="true" status="spec/done">Requirement: authored manifests/facts + exact source captures ↓ selected world + immutable configuration requests ↓ existing resolver / visibility / extension registry ┌──────┴────────┐ source query library   existing compiler/materializer ↓ repo-owned change binding + existing fact observations ↓ explicit requested operation existing lifecycle / artifact / deployment mechanisms ↓ exact evidence + transparent change analysis ↓ explicit owner disposition durable closure</NEXT-A01-U001></p>
+  <fence lang="text">authored manifests/facts + exact source captures
+                    ↓
+    selected world + immutable configuration requests
+                    ↓
+    existing resolver / visibility / extension registry
+             ┌──────┴────────┐
+    source query library   existing compiler/materializer
+             ↓
+    repo-owned change binding + existing fact observations
+             ↓ explicit requested operation
+    existing lifecycle / artifact / deployment mechanisms
+             ↓
+    exact evidence + transparent change analysis
+             ↓ explicit owner disposition
+    durable closure</fence>
+  <p><NEXT-A01-U002 fact="true" status="spec/done">Новые logical modules допустимы как небольшие cells в существующих crates. Отдельный crate создаётся только при доказанной dependency boundary. Нельзя делать vibe-spec зависимым от lifecycle или requirements от executing engine. Source world construction остаётся в vibe-workspace/верхней composition, parser — в vibe-spec/vibe-specdoc, filesystem guarantees — в vibe-safefs.</NEXT-A01-U002></p>
+</spec>

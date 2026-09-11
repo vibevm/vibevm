@@ -1,0 +1,117 @@
+{
+  "id": "M-04-B",
+  "tasks": [
+    {
+      "id": "M-04-B.1",
+      "title": "Join complete facts, work coverage and exact evidence",
+      "goal": "Compose change analysis over one captured fact universe.",
+      "read_paths": [
+        "crates/vibe-requirements/src/query.rs",
+        "crates/vibe-requirements/src/rows.rs",
+        "crates/progress-core/src/terminal.rs",
+        "crates/progress-core/src/evidence.rs",
+        "crates/vibe-requirements/Cargo.toml",
+        "crates/vibe-requirements/src/lib.rs"
+      ],
+      "write_paths": [
+        "vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml",
+        "crates/vibe-requirements/src/change/",
+        "crates/vibe-requirements/src/query.rs",
+        "crates/vibe-requirements/Cargo.toml",
+        "crates/vibe-requirements/src/lib.rs"
+      ],
+      "steps": [
+        "Use M-02-C complete observations; join work edges, lifecycle witnesses and dispositions by exact fact/capture.",
+        "Propagate unavailable/missing/out-of-scope and completeness without a neutral global success score.",
+        "Reuse the existing terminal evaluator once; do not add a competing fact grammar."
+      ],
+      "positive_cases": [
+        "Existing evidence can meet an artifact need with no work item.",
+        "Missing work and missing evidence remain separately visible."
+      ],
+      "negative_cases": [
+        "Truncated or mixed-snapshot universe cannot claim complete analysis.",
+        "Relation counts cannot substitute for successful exact execution."
+      ],
+      "checks": [
+        "cargo test -p vibe-requirements -- --list",
+        "cargo test -p vibe-requirements",
+        "cargo test -p progress-core -- --list",
+        "cargo test -p progress-core",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Every row explains subject, work, evidence source/strength and completeness.",
+        "Neutral requirements output remains metadata-only."
+      ],
+      "safe_stop": "Return complete gaps or explicitly incomplete analysis; do not close.",
+      "commit_subject": "feat(change): compose complete evidence analysis",
+      "notes": [
+        "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
+        "Permanent destination: vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml (PROPOSED file until its source-contract task creates it). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+        "TO CREATE: m_04_b_1_cases test family for the cases below. This is not an existing test. Enumerate the owning crate's tests before any optional filter; listed checks intentionally use unfiltered crate suites.",
+        "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-04-B.2",
+      "title": "Preserve terminality and evidence-strength distinctions",
+      "goal": "Handle non-code requirements and weak legacy relations honestly.",
+      "read_paths": [
+        "crates/progress-core/src/terminal.rs",
+        "crates/progress-core/src/evidence.rs",
+        "crates/vibe-requirements/src/rows.rs",
+        "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
+        "crates/vibe-requirements/Cargo.toml",
+        "crates/vibe-requirements/src/lib.rs",
+        "crates/progress-core/Cargo.toml",
+        "crates/progress-core/src/lib.rs"
+      ],
+      "write_paths": [
+        "vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml",
+        "crates/vibe-requirements/src/change/",
+        "crates/progress-core/src/",
+        "crates/vibe-requirements/Cargo.toml",
+        "crates/vibe-requirements/src/lib.rs",
+        "crates/progress-core/Cargo.toml",
+        "crates/progress-core/src/lib.rs"
+      ],
+      "steps": [
+        "Exercise existing artifact vocabulary for specification, documentation, decisions, research and external evidence.",
+        "Represent authoring state, observer availability, matched identity and semantic acceptance separately.",
+        "Keep absent requires unclassified and preserve exact observer/producer provenance."
+      ],
+      "positive_cases": [
+        "Specification-only terminal facts remain valid without implementation.",
+        "Documentation/research facts are not forced into code/test artifacts."
+      ],
+      "negative_cases": [
+        "Absent requires never vacuously passes; verifies count never means tests ran.",
+        "Matched artifact identity alone cannot certify semantics."
+      ],
+      "checks": [
+        "cargo test -p vibe-requirements -- --list",
+        "cargo test -p vibe-requirements",
+        "cargo test -p progress-core -- --list",
+        "cargo test -p progress-core",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "A truth table covers each evidence-strength/availability distinction.",
+        "No terminality change silently alters existing fact laws."
+      ],
+      "safe_stop": "Expose unclassified or unavailable status without inventing a verdict.",
+      "commit_subject": "test(change): preserve terminality and evidence strength",
+      "notes": [
+        "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
+        "Permanent destination: vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml (PROPOSED file until its source-contract task creates it). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+        "TO CREATE: m_04_b_2_cases test family for the cases below. This is not an existing test. Enumerate the owning crate's tests before any optional filter; listed checks intentionally use unfiltered crate suites.",
+        "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

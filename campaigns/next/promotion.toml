@@ -1,0 +1,2822 @@
+schema = 1
+campaign_id = "NEXT"
+# Source witnesses are structural; semantic promotion requires reviewed permanent meaning and evidence.
+
+[[unit]]
+id = "NEXT-A01"
+state = "active"
+source_sha256 = "83de8a8e1f553d4ee52e06e00b1919834f0938ec2c77989d24de1907f0c404c9"
+
+[[unit]]
+id = "NEXT-A02"
+state = "active"
+source_sha256 = "3192669969251511388b96d5f2727021e3ed979b35977cca124a2843b83a390c"
+
+[[unit]]
+id = "NEXT-A03"
+state = "active"
+source_sha256 = "4183b493edc06d551fd07fd09196220ba54035a67db590c06737712bd5e89d51"
+
+[[unit]]
+id = "NEXT-A04"
+state = "active"
+source_sha256 = "61abb36f8ce2b6eebba4b27165885185b5c3857f4bb371664fd8d36c5659bd4e"
+
+[[unit]]
+id = "NEXT-A05"
+state = "active"
+source_sha256 = "6d6a7b8f313b4cc13164f8761e078f1039cd2f966e7556811ee36b618e5630c0"
+
+[[unit]]
+id = "NEXT-A06"
+state = "active"
+source_sha256 = "44c2257219c86228579cee99f82d6e30b1acc8d4b672d53d2d05012794bc6016"
+
+[[unit]]
+id = "NEXT-A07"
+state = "active"
+source_sha256 = "3cabcf029722d815c50583dbd4a7b210bdac8c0d57117f1b227e959f56d1d4bb"
+
+[[unit]]
+id = "NEXT-A08"
+state = "active"
+source_sha256 = "80c6e12b041328369fc5b6beca4dd22f9231a921082ba926aa8072ab44232908"
+
+[[unit]]
+id = "NEXT-A09"
+state = "active"
+source_sha256 = "e89c706794afaf418bc937bcb62ce848d28179f10d69a0bc297b99a11c5d7c35"
+
+[[unit]]
+id = "NEXT-A10"
+state = "active"
+source_sha256 = "b245db8392361456915358ad63e56be237acb8aac0c3939e520d4b7551da3e6a"
+
+[[unit]]
+id = "NEXT-A11"
+state = "active"
+source_sha256 = "53bb5f8420ac658b48871c2b8073422f97bb5f75b217229fa25cda18fdd3f53e"
+
+[[unit]]
+id = "NEXT-A12"
+state = "active"
+source_sha256 = "812f203f5388f4f001980883c6517b69921cd26fd308bf1bf133542f46c1a0ca"
+
+[[unit]]
+id = "NEXT-A13"
+state = "active"
+source_sha256 = "a8e27a1203b598485207b6acc7ed9cd55db83f6ccc19cab7ec6f18ab91ae230e"
+
+[[unit]]
+id = "NEXT-A14"
+state = "active"
+source_sha256 = "39e34fe2c8cd12a2cddf51d19aaae7b187438296c60162c32bd1caa55d4d3a38"
+
+[[unit]]
+id = "NEXT-A15"
+state = "active"
+source_sha256 = "6b63e846a622ee9c6e2777fe61ac012ece1c3252bc4ed34da3973c42100fb78d"
+
+[[unit]]
+id = "NEXT-A16"
+state = "active"
+source_sha256 = "59a86eef0d3f731d5d65f7ae8281f452c03930f566b6a83d2d375ebea6dc72f7"
+
+[[unit]]
+id = "NEXT-A17"
+state = "active"
+source_sha256 = "b2fff5a210b3c22ddc53f56b1e7693798e756be686cac557c0fee9b070c20278"
+
+[[unit]]
+id = "NEXT-A18"
+state = "active"
+source_sha256 = "a84a86c7485b984767a9ef3cbd1bb194d013ab65099e8ff2057d84ccd3a1d61e"
+
+[[unit]]
+id = "NEXT-A19"
+state = "active"
+source_sha256 = "f4a8b9fa44a3cf0695b5a12a870788feeb1ca0fad422525b63ceb662c1d5b8cd"
+
+[[unit]]
+id = "NEXT-A20"
+state = "active"
+source_sha256 = "3fd31f3f3bcb70b5175dbf8fb0ab479dcc71c044bee19ba5afa92d5ce636a3b2"
+
+[[unit]]
+id = "NEXT-A21"
+state = "active"
+source_sha256 = "e2a0726a6564f3279bfbc162b9d92b6491c098c475c2c71e386f6203960c8e9f"
+
+[[unit]]
+id = "NEXT-A22"
+state = "active"
+source_sha256 = "36fc319607aa07152eb1167890880096b48668169474e45de0c6879b48da7d53"
+
+[[unit]]
+id = "NEXT-A23"
+state = "active"
+source_sha256 = "a8c4274e62d98d8d0961eea9315b6c5eb470abfaa3f887a847e5b115ff214e52"
+
+[[unit]]
+id = "NEXT-A24"
+state = "active"
+source_sha256 = "1ca58da2bc557d33fa57505b586fac01eebb41b0544697367a9a544ad651a08e"
+
+[[unit]]
+id = "NEXT-A25"
+state = "active"
+source_sha256 = "143435448569afcab39a51bef7b4e5744727cf70e085656f6b775e85a586ff67"
+
+[[unit]]
+id = "NEXT-G01"
+state = "active"
+source_sha256 = "746835c8b53be3b2a4ca3fe4c5f1edf3df18692a0000395b70f2f4b9ae3a5fdf"
+
+[[unit]]
+id = "NEXT-G02"
+state = "active"
+source_sha256 = "2bbdc8c316c42caa529bb3007c394b042dd246e08d5a10f9379e2eaa127d346b"
+
+[[unit]]
+id = "NEXT-G06"
+state = "active"
+source_sha256 = "e1b5dc12d08c33f67040782cdc1db12cc3b015a5b41aa450e197869b6680c9ad"
+
+[[unit]]
+id = "NEXT-G07"
+state = "active"
+source_sha256 = "3a933de2e01b4cbabaf486a444c3d74590c6e9ba37efd93845ff86d644477e45"
+
+[[unit]]
+id = "NEXT-G08"
+state = "active"
+source_sha256 = "3d59185b42c9cc0500cd054bf37fd514129fe4833d4791bb6586a2b6f85567a4"
+
+[[unit]]
+id = "NEXT-G09"
+state = "active"
+source_sha256 = "3fe73add5f5b9380bbd1a122c6806bac1db80623e79e075312785937ae6e855c"
+
+[[unit]]
+id = "NEXT-G10"
+state = "active"
+source_sha256 = "d7f99c7b87db6ab2291909c6786e08d9cc99f09532b4998843cd32064c5650c3"
+
+[[unit]]
+id = "NEXT-G11"
+state = "active"
+source_sha256 = "0548d93874e8c1d6bc36ec17d665d1cc0c8f912c1e63b436768f867b261c46a4"
+
+[[unit]]
+id = "NEXT-G13"
+state = "active"
+source_sha256 = "ae3f75d0b3c4d4c72f9b88d968b93d623aba4c0f80fc75003811d09703704059"
+
+[[unit]]
+id = "NEXT-D-001"
+state = "active"
+source_sha256 = "2eefc5301ae020e41272da075435c3f0ede0eb14c5914d22a4dc478297d60f57"
+
+[[unit]]
+id = "NEXT-D-002"
+state = "active"
+source_sha256 = "4faac89fa6f23a0ff59276a9776dd3eb18718442424194b6c10c9305eb22708c"
+
+[[unit]]
+id = "NEXT-D-003"
+state = "active"
+source_sha256 = "d6e17e4fa8f400a0a9722e5e1ae3b4537b291e93ba9bb3adb33b5934d76ada7c"
+
+[[unit]]
+id = "NEXT-D-004"
+state = "active"
+source_sha256 = "604ac206da426f1b3f82e5515e54552b7bab4e41cba28b4554333a73c4528b50"
+
+[[unit]]
+id = "NEXT-D-005"
+state = "active"
+source_sha256 = "24d16bbf9c3f908447f6d008666da3d10a64a4883bfd6ec805701d3c76d2ad58"
+
+[[unit]]
+id = "NEXT-D-006"
+state = "active"
+source_sha256 = "1adf6c8c0f0aadf493e6fb3bbc98561b88ce255033be446b8caaaef950ae7637"
+
+[[unit]]
+id = "NEXT-D-007"
+state = "active"
+source_sha256 = "b217d4c8227465335359f5d029c125a78e7bcb647aa746acec45dbb16bd8042f"
+
+[[unit]]
+id = "NEXT-D-008"
+state = "active"
+source_sha256 = "fb6899b5577548cb0dd65e41dc1560d134c4e30ccebe7788bc8322ec3266bc52"
+
+[[unit]]
+id = "NEXT-D-009"
+state = "active"
+source_sha256 = "119f107be458ad60efd6383c00f9b2588c0ab11a12f61a1b4916daa887755238"
+
+[[unit]]
+id = "NEXT-D-010"
+state = "active"
+source_sha256 = "96c68a5849a26945710244f40c77225f6e8ef3de15e11246a30dc6a5004620fc"
+
+[[unit]]
+id = "NEXT-D-011"
+state = "active"
+source_sha256 = "0ebce173828ee18436c1a31c25f8ca1fc1bafa0dbcc99cd7dbef11d3a08ce8f1"
+
+[[unit]]
+id = "NEXT-D-012"
+state = "active"
+source_sha256 = "5b2b9c4e87fde18505f85d57514e670c462f05cf7d7607f2fce566f9084b0a7c"
+
+[[unit]]
+id = "NEXT-D-013"
+state = "active"
+source_sha256 = "e0dc1f468cbefe6b6a3d2beb8ca73b5561048487f424df3244d7ebf6d93adf8f"
+
+[[unit]]
+id = "NEXT-D-014"
+state = "active"
+source_sha256 = "960ccceb2eb4899a33f5c872e237da66d5d5d59490ec9332a39936e5ba7d6d67"
+
+[[unit]]
+id = "NEXT-D-015"
+state = "active"
+source_sha256 = "36f87f8b851edcd1c311a38bf08eba9dd516491c30513c9d85e12de1f0b0ea26"
+
+[[unit]]
+id = "NEXT-D-016"
+state = "active"
+source_sha256 = "4faa218486637cbc11bc8bac3639af486c4457a05bafc370db98ac67367c695c"
+
+[[unit]]
+id = "NEXT-D-017"
+state = "active"
+source_sha256 = "14852e607a0195f90a7764faa5374dad49d8fc18505b1bd526e410a6a1365939"
+
+[[unit]]
+id = "NEXT-D-018"
+state = "active"
+source_sha256 = "b7cba32825a0d8393631e30308095c804d23d58f2e22cecefecc0b02fec7da9b"
+
+[[unit]]
+id = "NEXT-D-019"
+state = "active"
+source_sha256 = "917ee5377a5535f74d70f61da0d6d3abe466576bac5111b4a81fa57592614c40"
+
+[[unit]]
+id = "NEXT-D-020"
+state = "active"
+source_sha256 = "dc95927790c91b459b6f0d365ed427a60409e1a5d91ccf26d91a46b15dbef250"
+
+[[unit]]
+id = "NEXT-D-021"
+state = "active"
+source_sha256 = "4b60639256fff291842b614b4481f617a38e7f9636e262ce91773706d4e1cb67"
+
+[[unit]]
+id = "NEXT-D-022"
+state = "active"
+source_sha256 = "906e564b769ebeea404e9412abb1a5fbaaedb810612781e7508fc7d47ddbd699"
+
+[[unit]]
+id = "NEXT-D-023"
+state = "active"
+source_sha256 = "0966664845414a12f9503405234b5faa89260458c533cadfe9dcf447d933cccc"
+
+[[unit]]
+id = "NEXT-D-024"
+state = "active"
+source_sha256 = "e8b116a5305239eb978ca35cf77017d70e46c43c636e3047dd4e110a6fa5a801"
+
+[[unit]]
+id = "NEXT-D-025"
+state = "active"
+source_sha256 = "e2d5918d1bc8430f5c7ffe1aa58c23be0d150c91a28bfc7945eae742a0fdb9fb"
+
+[[unit]]
+id = "NEXT-D-026"
+state = "active"
+source_sha256 = "43220e2b0feb69de2560a5ac7f0c66dbb028404c410472d1c27c3390b813d4ad"
+
+[[clause]]
+id = "NEXT-A01-U001"
+unit = "NEXT-A01"
+source_sha256 = "54c35711dcc96cf07d8cf605704391d560b9b63363a65776133103253c3951d8"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A01-U002"
+unit = "NEXT-A01"
+source_sha256 = "176d8352208aa62f819842b8263464a7f1e3ae09e696ec76ce808949ba6ca4f3"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A02-U001"
+unit = "NEXT-A02"
+source_sha256 = "27b9816296b3e94ad007e256378398e85afc39fe5d9290d1ec66f1666bb9934a"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A02-U002"
+unit = "NEXT-A02"
+source_sha256 = "f71624874a1d1466cfc551c21d6063cf6fb6039ea20872cc523a62c4c0a9db5a"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A02-U003"
+unit = "NEXT-A02"
+source_sha256 = "fea4f1b7da7be6281b510a444bb733ab5243f5000d6a4c459e1ff45b995e7116"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A02-U004"
+unit = "NEXT-A02"
+source_sha256 = "d1deb3be1e7c959440cc94588e2436da201e2631ea337d20742dd3ac0f527c54"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A02-U005"
+unit = "NEXT-A02"
+source_sha256 = "45100c9cbb063d842be51a06e47b7da24db381cc74255306300a778282a867d3"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A02-U006"
+unit = "NEXT-A02"
+source_sha256 = "4a577a0a36ce0b04b57c92976e0e241bd4f7b4102e4ee6d04b152e4eae39051e"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A02-U007"
+unit = "NEXT-A02"
+source_sha256 = "7fb907bea6573f0c25af6d3d986f37c1563a26faf08dd2cac42a0181e83c2fb7"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A02-U008"
+unit = "NEXT-A02"
+source_sha256 = "f5ee328f282a6814ffda206172d157e7880c436e4b906a4244024c7db6aee3f8"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A02-U009"
+unit = "NEXT-A02"
+source_sha256 = "c189867597bd79de17f361b9048475cd8c1b5889af1d29f60c01bb1187bd3f1a"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A02-U010"
+unit = "NEXT-A02"
+source_sha256 = "9d78d51ac47a9f0356035e2c10ad6e67e4f67823b83759739c9abd6b5a5f0a8f"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A02-U011"
+unit = "NEXT-A02"
+source_sha256 = "e85de7a37463b4e7ab0a50be5f0cf34f68a20f8b0592c89540fcd507f2b85b59"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A02-U012"
+unit = "NEXT-A02"
+source_sha256 = "d815cd887e695cfd62087253cbca056b289a0ae52eed74575759905dca5d2c9a"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A02-U013"
+unit = "NEXT-A02"
+source_sha256 = "b7c50c5ff07d2f2e51fe59b978810e0739558d5e8ebd814aef64a46218a2e4c7"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A03-U001"
+unit = "NEXT-A03"
+source_sha256 = "f909cbdf8a0a502e50bc4262e9eeca1f359f44ec828d98dd4cb0bc2a1f463de7"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A03-U002"
+unit = "NEXT-A03"
+source_sha256 = "bf1df9d82e26ded7397d99183e3335827d61d546571e71c231da0264a6242b19"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A03-U003"
+unit = "NEXT-A03"
+source_sha256 = "9318d4a587d4043c1bd8bc5c4ce6f1e0b2c6be19f7da3af25e1fb6561c544b56"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A03-U004"
+unit = "NEXT-A03"
+source_sha256 = "1bec9d2d0cb87176dfaf5bd53329f47e301659fc26c41d32d38c2a9fe3069a88"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A03-U005"
+unit = "NEXT-A03"
+source_sha256 = "4b3780daec1aecc25487b514cbc29253a4a6ff1d7a899df43c76d02795d74cef"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A03-U006"
+unit = "NEXT-A03"
+source_sha256 = "0d2461cebe30f176c1635d955444b435fd7eb27e6846af67ed60a8f0ea178354"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A03-U007"
+unit = "NEXT-A03"
+source_sha256 = "3159325611e0a3fa3a753425cebd41895bf3c7787a94155ebc9ddff1418ba42f"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A03-U008"
+unit = "NEXT-A03"
+source_sha256 = "1860423551d824de87622c34ad71ce08944adf4fa38f59a584323a4c441ec096"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A03-U009"
+unit = "NEXT-A03"
+source_sha256 = "605f18cced4a62260428bc0c671dcfb655343b58e07b8d4102d65aa6c90aeec0"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A03-U010"
+unit = "NEXT-A03"
+source_sha256 = "a45fc89c6f7ac1cd030dca96e6051000b64709b6ec1afbca737e2f721b5eb5c1"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A03-U011"
+unit = "NEXT-A03"
+source_sha256 = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A03-U012"
+unit = "NEXT-A03"
+source_sha256 = "658efddb9a10896014d7bf13a5b899a565ca975b449deb3c6938d100159edb94"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A04-U001"
+unit = "NEXT-A04"
+source_sha256 = "49d66f28f8f725b2f94be98361a3d80667f596bc0d5a1e1379ffa224faf94acc"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A04-U002"
+unit = "NEXT-A04"
+source_sha256 = "f4b6cd4d0cab54327e9b535287f040e891378648e919c40a3c6e77af53a36e7b"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A04-U003"
+unit = "NEXT-A04"
+source_sha256 = "f8e293650ef9f8fffdd9f63b5d62f7156fbdd56b9bb9d8cc108e62605bca1d46"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A04-U004"
+unit = "NEXT-A04"
+source_sha256 = "aedd3bf8d619b18939d10c58b3db2fbd325fe0991c6bd58e46dfa282ae470550"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A04-U005"
+unit = "NEXT-A04"
+source_sha256 = "39b288172dbe895d1af891a59651e2823938331a3abf24d7cb93d72e432823ec"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A04-U006"
+unit = "NEXT-A04"
+source_sha256 = "6516750dcc54857194115c44358308c89a44f3b6035389fa323e92a98abbae20"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A04-U007"
+unit = "NEXT-A04"
+source_sha256 = "04cdba1f92369a016296714800265a12963457419abb46857cd654dc319d5cf7"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A04-U008"
+unit = "NEXT-A04"
+source_sha256 = "3ce60f57f70235de4e405ca6ddf13bdd86a54a0a0cc90ad82f5d84335bd38122"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A04-U009"
+unit = "NEXT-A04"
+source_sha256 = "67db481c61f1261ec9b1d1d10342ee5c52d7732c446888c4d0ad620496974880"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A05-U001"
+unit = "NEXT-A05"
+source_sha256 = "9facb9c45abed4969e533743f4a833f469aa1bf44d3c583623eb7e7860edba35"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A05-U002"
+unit = "NEXT-A05"
+source_sha256 = "3d69a41298a8ca428c6c9ecefed6fde77fc275aaa2ad502bef079de089a80aae"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A05-U003"
+unit = "NEXT-A05"
+source_sha256 = "3a91968ea8231343756f00134d309df488eca6a9f40548890f004d5a03afb21e"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A05-U004"
+unit = "NEXT-A05"
+source_sha256 = "7ddd672dca033ff301ed90eff57e2b3f850db7bfba96498d2aa1c73d3dcfe566"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A05-U005"
+unit = "NEXT-A05"
+source_sha256 = "c58f94dcfbe073ec82329f5ead8c78815591a549e1d7268262c6cc3aced5b0f0"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A05-U006"
+unit = "NEXT-A05"
+source_sha256 = "23f67a4bdbd825342b716fc0e8d0a6c3e9a0d38383c1451b8cdd122afc899f29"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A05-U007"
+unit = "NEXT-A05"
+source_sha256 = "be52a5da33fae7d1640df471e04f650b262120c47cab5793e354b0bbb3178cb3"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A05-U008"
+unit = "NEXT-A05"
+source_sha256 = "f565b64ac8543d319884c11db39990974dc9156786eb950426de1c0d7de20f5d"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A06-U001"
+unit = "NEXT-A06"
+source_sha256 = "a68c97898908a90d8b69a801bfbb81ae3e59e77e57547ebbfff3a7c954b54333"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A06-U002"
+unit = "NEXT-A06"
+source_sha256 = "00716e24a187adad6f18791c2c6715346559a1dd0ff053b68170cf97ac169a51"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A06-U003"
+unit = "NEXT-A06"
+source_sha256 = "74ff953d713ff1cbba26166edf2b3beba72a7ad4a98de86cefebe7cfdf50799e"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A06-U004"
+unit = "NEXT-A06"
+source_sha256 = "3746b9a24b5f1d96784ed21cb281d4028457698118cce9955456615b7d06ffc6"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A06-U005"
+unit = "NEXT-A06"
+source_sha256 = "e9da864ac6f1b40f0726591c7471d83a16386d07c697f8ceb5e802b1efecb8b2"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A06-U006"
+unit = "NEXT-A06"
+source_sha256 = "3e8e25cfd05c7b1ab8b4da78755de10a346761816d973ae7fc6ab38d6e88b6e3"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A07-U001"
+unit = "NEXT-A07"
+source_sha256 = "bf3145d1d8dfcc5741f38323cfede9d8de412698e31580cd9f4332ca9faa9f55"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A07-U002"
+unit = "NEXT-A07"
+source_sha256 = "1071a3371649ef89326cffa6dac09a155b4077153e67928b2192bf196524d233"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A07-U003"
+unit = "NEXT-A07"
+source_sha256 = "206a6e5b09f7f0b64e52feec8e3c13e18248acc7b31a380b8a492a672d4a7468"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A07-U004"
+unit = "NEXT-A07"
+source_sha256 = "059cc4b0d8f6c920146e8db9b1e3a040c1224b88ee22f3ec80ad8904687a5174"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A08-U001"
+unit = "NEXT-A08"
+source_sha256 = "762f05a1aa3d3270a16dc2bf081e438f9e44bc59b3e88eb5fbcf3c0b472d3a12"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A08-U002"
+unit = "NEXT-A08"
+source_sha256 = "f7271db5a6f418f505b137beae3ffa931fb95ec2841ebb42f657829e9156206a"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A08-U003"
+unit = "NEXT-A08"
+source_sha256 = "7777b68d499dfe2d0fd8460e1a4d8098b263db5757f8b09d4d4df8f8c232ebc6"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A08-U004"
+unit = "NEXT-A08"
+source_sha256 = "5e90b607bad0eb4df896965ac6aa7d254ea218ae4c501256ad0296cd56338ba8"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A08-U005"
+unit = "NEXT-A08"
+source_sha256 = "5b5e4bd3c6be299efd1e81c026ad20dc372cdf4795e698a85294908a26c46036"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A08-U006"
+unit = "NEXT-A08"
+source_sha256 = "7898dcb1eb8fa3a108b678bd1af5e2e64c038dbb4b23eee9bd24eb77c4494d96"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A08-U007"
+unit = "NEXT-A08"
+source_sha256 = "5036fac42f4baf5c4ed70494a488b45e0fbe0523338cce9cecc66b942f8273ee"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A09-U001"
+unit = "NEXT-A09"
+source_sha256 = "2e8d2a34157cbc5bf079cd868d209adaf30160512cc89d3d115db74b57f272a7"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A09-U002"
+unit = "NEXT-A09"
+source_sha256 = "2c7b0afbcc3e3e77d7084ee4738225d1ff577e4e382c985a82107cf85aadee7a"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A09-U003"
+unit = "NEXT-A09"
+source_sha256 = "f2bb1349793fa0833e9885b214be863781d9bdb50f4a5b9901dcedb08c3b8192"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A09-U004"
+unit = "NEXT-A09"
+source_sha256 = "b6bb08fe2db3aa07e4a7175fb38f184d56e1a5419d9343cbbb77c836d1e1a954"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A09-U005"
+unit = "NEXT-A09"
+source_sha256 = "34143e79510fe6b80ec779e5c56cd708e477ddb6f91ba7c444cc8baaf24ee5ab"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A09-U006"
+unit = "NEXT-A09"
+source_sha256 = "10da75a6924c129e16e6e3ece1e5bb66effc65834578ec97f19374979a28d262"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A09-U007"
+unit = "NEXT-A09"
+source_sha256 = "c1f3687fc73c95a25fe5baa14af89beb720a66f3cf002cc8ef2cf03a50bfce08"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A10-U001"
+unit = "NEXT-A10"
+source_sha256 = "aeeb06758222243fc53b55c7ccfb2fd1693f83353fe022e6ea55e5e9958b6ce5"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A10-U002"
+unit = "NEXT-A10"
+source_sha256 = "4de1f9e133c411a8e8eaa8e5bc77424c9965530b14e75f6be362ddef4a1f9c85"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A10-U003"
+unit = "NEXT-A10"
+source_sha256 = "c4e1c15c38f923d36c77e57a987e973e381b16c679769e73315d1fa076159508"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A10-U004"
+unit = "NEXT-A10"
+source_sha256 = "059084b989b529e7f34bee2e42e40301e8b718e42ecd608f823f592e072932c6"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A10-U005"
+unit = "NEXT-A10"
+source_sha256 = "f73d788e35df2e910fee5afd548924bcf9bae59ae3185099bc35ea948efad5f6"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A10-U006"
+unit = "NEXT-A10"
+source_sha256 = "a264e83c08d70d7e8b2a57ef2efed74d94e9336319c889c8c452d07e3ebf02c2"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A11-U001"
+unit = "NEXT-A11"
+source_sha256 = "b84e837658a29a52c2b35a8f6bff27d83e3eb9c1779d275738912ae740d0cbb4"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A11-U002"
+unit = "NEXT-A11"
+source_sha256 = "7105d9fcff3492a33cd7a81b4c1765bae339b4240712f616ea499ad7e5620448"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A11-U003"
+unit = "NEXT-A11"
+source_sha256 = "66e57a73a3215898a1c6c2e49fa45be9c9a1bdd3fa91821b4f34dfeed50ebe7d"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A12-U001"
+unit = "NEXT-A12"
+source_sha256 = "e7538de56ee1515a581720c84644209dc0faa8dfaaca66cb163c900bbbc7754b"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A12-U002"
+unit = "NEXT-A12"
+source_sha256 = "d49420c87859a8b7273e1d0f57d5882e52be93b8aae61ae6d10442787ed70b60"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A12-U003"
+unit = "NEXT-A12"
+source_sha256 = "46fd25aeca304e22be88601a5128e262fbf741689ab00962087acfa4d5d03988"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A12-U004"
+unit = "NEXT-A12"
+source_sha256 = "7bf4d97a9ba303fbdea7fea2160119700d42827c827c24bbf4656583483cd3a1"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A12-U005"
+unit = "NEXT-A12"
+source_sha256 = "ccbc167a8d2486cae1c6bf450e632bd23f86e53404e4f47a815dea59b4e124e1"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A12-U006"
+unit = "NEXT-A12"
+source_sha256 = "ba04e5cfee257254eb316328c8868d2bc4228b8e9126a049a9e0c9ea0a2f0b63"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A12-U007"
+unit = "NEXT-A12"
+source_sha256 = "fb1b3e99bba09e58adb0dbd180ce4055125e7640e63a68ccb0d478a9c2c8b09d"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A12-U008"
+unit = "NEXT-A12"
+source_sha256 = "10878315b7a817096714f32c74d9abd6bd892ed0f247e132607bb987534b1914"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A12-U009"
+unit = "NEXT-A12"
+source_sha256 = "3b9897b8b6c164cc819b6620492a6bbc2ffab15fb15c5d2e793628537fea5bb5"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A12-U010"
+unit = "NEXT-A12"
+source_sha256 = "a46fdf23e37b116038a4e4a2d57be3d274c79c9a0dc92811106c5ae7d2381bf8"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A13-U001"
+unit = "NEXT-A13"
+source_sha256 = "c6a31d52ab65a9505e6cff178f44c2816351b91b66eb264d8304fdb889adf4a4"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A13-U002"
+unit = "NEXT-A13"
+source_sha256 = "118a462eaff88162d7f4855a55881c8c6873de2263f8fc01ae372fdd9ddbf1ec"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A13-U003"
+unit = "NEXT-A13"
+source_sha256 = "7cec534139efeb249ed01a602884d3eac53f8f4f1ecfdefbb3bc276245bc4a4a"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A13-U004"
+unit = "NEXT-A13"
+source_sha256 = "26a50ff9d4ffcf55c342708dee958a1f012c865fdec6eae8b0c8e8d4e6ce8856"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A13-U005"
+unit = "NEXT-A13"
+source_sha256 = "72e52c7b2b94d16f0c7a2bc613b683712b829f78c90d858fdc597abc235ea1e8"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A13-U006"
+unit = "NEXT-A13"
+source_sha256 = "91217bf585a39103d549e68b767d91ceeb0f64112373f5cd653a4b8c43c60a72"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A13-U007"
+unit = "NEXT-A13"
+source_sha256 = "553a9171ebe0e8186730286e117406026dca06dd010d1d55c41402fff3aff7ba"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A13-U008"
+unit = "NEXT-A13"
+source_sha256 = "e268284d60e041858d3a2cbb8b273239f085fa3c63f25697ba1318c00e5ddaa2"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A14-U001"
+unit = "NEXT-A14"
+source_sha256 = "6e13bd9a5f2d96045e0063e2abf12dd0fb805fea88dbd295ca1ae76b2697489c"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A14-U002"
+unit = "NEXT-A14"
+source_sha256 = "dc9150c28b8b01c3bbac2af7722fab748ed16216bf649da1571e392fe2f0a09d"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A14-U003"
+unit = "NEXT-A14"
+source_sha256 = "1bf126ef0c87ebeb4dd5c4f72e246beffddcff05a7ec5850f5611cde11474295"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A14-U004"
+unit = "NEXT-A14"
+source_sha256 = "c263027984fdd0404ca5284f08eb374629e2908c0cdbcb0661586cf237a6c2d1"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A14-U005"
+unit = "NEXT-A14"
+source_sha256 = "7d61a5a1e686917574cb202051b95249170caf4a91dd9b535597fbf1a054ddab"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A14-U006"
+unit = "NEXT-A14"
+source_sha256 = "566c70c854a0be8073a02c8837761769fe7da489d3fece96154a696499a94353"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A14-U007"
+unit = "NEXT-A14"
+source_sha256 = "c2484042c99e110b29bf002e1f8dd4c2b771206c1babcc11377e2e5927fb5f6d"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A14-U008"
+unit = "NEXT-A14"
+source_sha256 = "b020fb0c899ddd8f02e8869a9d640dcfe17680155d0ad2e3c48b22b4a2d469ae"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A15-U001"
+unit = "NEXT-A15"
+source_sha256 = "5e2bfbb9818e7714a01e4be319b682da63a9adce2846677b4c2d228630e5aaba"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A15-U002"
+unit = "NEXT-A15"
+source_sha256 = "233c198802ba1e670beec698e8cf3cbfe697dda0d9c28e51a0b03d622650ea51"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A15-U003"
+unit = "NEXT-A15"
+source_sha256 = "d596db316f6b7dfb73fefa125362fe3f6458fc5b70de1661935de76f7d3ca92f"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A15-U004"
+unit = "NEXT-A15"
+source_sha256 = "71c48f12378e082c6ca1b13514a99ed73fa9db82b39d0abebc24ede33def0142"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A15-U005"
+unit = "NEXT-A15"
+source_sha256 = "0934bb64843eff43d14966c3294f10b196eb62d3112647e34ea1dcca2594f7d8"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A15-U006"
+unit = "NEXT-A15"
+source_sha256 = "e82b540c464c11bb450bd52189ad600a1ad3d1389ccf772c6b748010f4b4398f"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A15-U007"
+unit = "NEXT-A15"
+source_sha256 = "eef1585962dff260d1793127081da8950f2dadf08c43cc947f1b6472af7281c7"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A15-U008"
+unit = "NEXT-A15"
+source_sha256 = "269654fce61d6204a6f5b517563978ed4ce3ada02202dd02dc8ef6d1e5b58adc"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A16-U001"
+unit = "NEXT-A16"
+source_sha256 = "6fac26ae5c141e86f74a9cb98eff84802c7fb5db8ed4f097ae6ef6a47193dcaa"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A16-U002"
+unit = "NEXT-A16"
+source_sha256 = "f462b5758d8a4c5ccb74273af3d1363205341fd8b45ab7a501235315a125f155"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A16-U003"
+unit = "NEXT-A16"
+source_sha256 = "e3ebbbe74df438b550d3b972ce0233cc7068cac407bfcbb78c9fd750ae212075"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A16-U004"
+unit = "NEXT-A16"
+source_sha256 = "a82a1f8e39696761ffbe51fc01ec73ff92d1814e4030137c0d67e896883ecfba"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A16-U005"
+unit = "NEXT-A16"
+source_sha256 = "4d2538efb9c38a36b747e1fd8c41b9142f87b6fd62b9bc5ab77a66c95f8816ef"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A16-U006"
+unit = "NEXT-A16"
+source_sha256 = "620708da834244e0cfdb89b67123e5828eb87a4b55ad6b8a86edc888dcde7a09"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A16-U007"
+unit = "NEXT-A16"
+source_sha256 = "0c308b21de8c1ccc78427858e4fc0fdbaeb52c8082a257e7db6ec45665c98ab6"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A16-U008"
+unit = "NEXT-A16"
+source_sha256 = "16769305b378d37dc470987561501564076c366b0cd912a3392a8e1e8edd3e1d"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A16-U009"
+unit = "NEXT-A16"
+source_sha256 = "24922b2356954d66cd845180d0c50b63777b3acbe3f06043de6e06ae38cff917"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A17-U001"
+unit = "NEXT-A17"
+source_sha256 = "f7b7016ebe8c9ac4ccbead3db3c3fa58353928ef3806d656d3c649a9fd67ca53"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A17-U002"
+unit = "NEXT-A17"
+source_sha256 = "b125c1c639c97653c3df8aa3225f756f65298c141904b1955be4f3fe759ffe3f"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A17-U003"
+unit = "NEXT-A17"
+source_sha256 = "a7a13cc959bafdcf21752808935c3c23f320b382f813058fcb865c62d1c711b6"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A17-U004"
+unit = "NEXT-A17"
+source_sha256 = "ad2980d5c12a1d979673a829b2e251053ef6762445ef8c59969465f4f7555475"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A17-U005"
+unit = "NEXT-A17"
+source_sha256 = "f78a51857180f97fc6a675e2169bc938650157206e88756456d772eb8ec07e17"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A18-U001"
+unit = "NEXT-A18"
+source_sha256 = "9f7a59146d82cd85259cd1684662fb49e78c8fae388b4fbce76fc41f7de1d7d8"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A18-U002"
+unit = "NEXT-A18"
+source_sha256 = "8e42a9ca0fb4e91c87905dd35648aabdd80ca5a2ebfe63114584335be614b8d1"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A18-U003"
+unit = "NEXT-A18"
+source_sha256 = "d702d0cd1d29750525fda41acea83e5e3e3cbfdbdb469f21fa867ac80437e381"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A19-U001"
+unit = "NEXT-A19"
+source_sha256 = "458d1fcda81e9212147b0d8504f6a3474abbd8d3634c96c5763fd3ddf8f1faf1"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A19-U002"
+unit = "NEXT-A19"
+source_sha256 = "c35b8964079e3c9e80d7c462a89b9e9d4fac697a0da20afe962aaaf39338a167"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A19-U003"
+unit = "NEXT-A19"
+source_sha256 = "d7fd99781f6e021fd890429254f839647643cf012e62fc3f5eb3171ebbe93690"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A19-U004"
+unit = "NEXT-A19"
+source_sha256 = "65051a1aba77ad8b7bbfb0d2b3653377f1b16cef65efff3234699d5981ea1686"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A19-U005"
+unit = "NEXT-A19"
+source_sha256 = "898ec1508e2bf1c43538087c2537061c1bb4b4bcdc867fdd55b91022df47120d"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A19-U006"
+unit = "NEXT-A19"
+source_sha256 = "3bc656108c795c17303cd1f2bd431320ee2f649325e15b457a90f3c126873613"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A19-U007"
+unit = "NEXT-A19"
+source_sha256 = "0edbe4243eaf036496725460d45b96fb308408c2a755aaa5cc50be38eb71c966"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A20-U001"
+unit = "NEXT-A20"
+source_sha256 = "ee521190f618f6a5e90984703466f56445c53b4189687ce80ce849e6cba691ec"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A20-U002"
+unit = "NEXT-A20"
+source_sha256 = "cf8567018e0807e05c8207b8b7eaa1de360b0216fb4cb8d819b1dcd6bcd8eda2"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A20-U003"
+unit = "NEXT-A20"
+source_sha256 = "fdb42a8107f05e86715888aef1af6976be2ac9563f120dc52cfa8d6550860d8e"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A20-U004"
+unit = "NEXT-A20"
+source_sha256 = "dc146b10970c0f6319b675fec93ba6c2d7011a012623dc6a0fd1e85bf509e581"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A20-U005"
+unit = "NEXT-A20"
+source_sha256 = "c69eb2f8541764e543461f6ada43294d27c51e8ce1b8ba246f3cd16f9b7effbb"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A20-U006"
+unit = "NEXT-A20"
+source_sha256 = "4baaf664a819aff4fa6eac93679fabc727d1b6ef52e8a996f797df3a78ed999c"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A21-U001"
+unit = "NEXT-A21"
+source_sha256 = "77e07e5c6618b7b58f9d5f916382b235c594354ab9b9b479e691c5bf6c8efbbc"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A21-U002"
+unit = "NEXT-A21"
+source_sha256 = "e49865825515d78e1b96da313b7cf59a1dc290eda5dbc5105629985b6af45aa3"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A21-U003"
+unit = "NEXT-A21"
+source_sha256 = "b4eb65ac63e52f2b14b7fe4f863f1fc5101bb0b51c450ef95c3ee5b80c7fbe8e"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A21-U004"
+unit = "NEXT-A21"
+source_sha256 = "387f44eee170d836891f10a04d778c01fe4db2487623c5dd54cc4968d4010b2f"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A21-U005"
+unit = "NEXT-A21"
+source_sha256 = "dce3f5e3cd3b373910a756ace866f456a4462f60dc3f70eaa557465ea1ebc9d8"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A21-U006"
+unit = "NEXT-A21"
+source_sha256 = "f27616052145abb12a68711f8b398f77a0611a6c742508c85c4de1bb1d345f73"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A21-U007"
+unit = "NEXT-A21"
+source_sha256 = "c81e887eaf8ebd13dbe9055215ed945d5d1e4b8b49cb49004ea92ae7cd907341"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A22-U001"
+unit = "NEXT-A22"
+source_sha256 = "7619aeea7c9154db8dfcae94068b080a3f8c0914bf778674aeb0b3e10e34902c"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A22-U002"
+unit = "NEXT-A22"
+source_sha256 = "922418a8c3af0ac1f94f761c4ecee5df5cb5e323796006521b74bcd292b2b342"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A22-U003"
+unit = "NEXT-A22"
+source_sha256 = "56aa98e722abc0e7ac183995b34d1e17bae0531653872199e0f6760daa2430a1"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A22-U004"
+unit = "NEXT-A22"
+source_sha256 = "9768ebfbf2ecfcca75b27241c5a5b51c9f8f5282532aff8a22b020c2dab281b8"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A22-U005"
+unit = "NEXT-A22"
+source_sha256 = "4809c6c675316ba1bfb08001e1421409b33bace455cac4230c243c9fc57b33d5"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A22-U006"
+unit = "NEXT-A22"
+source_sha256 = "c48b1366dacddea86c29f1cb4342ff52085085f5ff0bfcbf841d8170316e5c5c"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A22-U007"
+unit = "NEXT-A22"
+source_sha256 = "bccc41eaef92fb181ddbe736da4b02adc9f49e52da77f7189f2e55bb3c841461"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A22-U008"
+unit = "NEXT-A22"
+source_sha256 = "6ee09db590d3b50cb3bf6b4ec84ed191c9fc84c5f98801ea44f6376499a09b09"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A23-U001"
+unit = "NEXT-A23"
+source_sha256 = "b9b61f3b345a3eca5886a1d188f4c5174d89ab796aee5c409df76da9e8bd87a2"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A23-U002"
+unit = "NEXT-A23"
+source_sha256 = "035ff3df11c78594970418740e34af39de6b3b19fce48a96bb92b080f7c2eee2"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A23-U003"
+unit = "NEXT-A23"
+source_sha256 = "5d63596bf1221da2d125c8e6943e30f86d7f6fe5041c4e9ffbc3a8cf2324e6fa"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A23-U004"
+unit = "NEXT-A23"
+source_sha256 = "33359cf33f70f2f6d4cc22a36963d460babf649c907d5b9647a6cc232ea4ca14"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A23-U005"
+unit = "NEXT-A23"
+source_sha256 = "42f8a87b5b4453a2012dd84dd693625e521975415ac3efe29e3ca8258ddd0fe6"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A23-U006"
+unit = "NEXT-A23"
+source_sha256 = "c744cc7aac70cec26d7794f9db7c8d85d7f38bb7637c50ad866b679b9488d523"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A23-U007"
+unit = "NEXT-A23"
+source_sha256 = "51f3e08562afd869e0d529a78669295dc2fc305f78de8908063278d0960e991a"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A24-U001"
+unit = "NEXT-A24"
+source_sha256 = "edeedfb47d10ea7d063952130c39e36013a15b4f5904d5d6b5b04cc78dfa9c60"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A24-U002"
+unit = "NEXT-A24"
+source_sha256 = "e04e0cc0c6cde1724e7770741a3ff3d60050e2f361760845afde31025e36873a"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A24-U003"
+unit = "NEXT-A24"
+source_sha256 = "a1f2e21d7ce17e59a9f4d6ee0822ec631a0e7d879b8f11bb32ac3fc6f9b8f21b"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A24-U004"
+unit = "NEXT-A24"
+source_sha256 = "6ea001862bcef316995377dc502a4428ac8317c2912df089db71d29229f526df"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A24-U005"
+unit = "NEXT-A24"
+source_sha256 = "2a18b011af458dc57a78ef1c9243408260ce4d1ec6078ffb8b6947af333cd301"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A24-U006"
+unit = "NEXT-A24"
+source_sha256 = "a25d42f12fbf6bb8e0301ba82038554cf3f0a49788d5a2d69ded91ce156b04f7"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A24-U007"
+unit = "NEXT-A24"
+source_sha256 = "0b1da4914c4a9d3138dc1e039b8db52f9a6c33a7385286048d5f66d9673aa29d"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A25-U001"
+unit = "NEXT-A25"
+source_sha256 = "c0558598986a55105f89c60a81f457ac953cec61f3a65894fb15cf529b613a52"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A25-U002"
+unit = "NEXT-A25"
+source_sha256 = "83db3fdcc17401875b82d50a7d1d703cd27f2ce1b0458f3ae1d00d2d429def65"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A25-U003"
+unit = "NEXT-A25"
+source_sha256 = "8ba2dbe064a207bda1500591e42beb7de75b1a6bc4ac6fba39ec4b57ef7c5837"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-A25-U004"
+unit = "NEXT-A25"
+source_sha256 = "ffd71e014d6d0d985da52cb1d1c98e4a37eb29ff97d0a2082ead0eb4d0a8dfa7"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-G01-U001"
+unit = "NEXT-G01"
+source_sha256 = "283f79579fdfb530737bb9e77017e9aedbeb7de96d15892154baf73f492159bd"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-G01-U002"
+unit = "NEXT-G01"
+source_sha256 = "a341b755d2ae89b1c1d22afd9090c456a7bd2c78f9442e7872addfa09f76c1b8"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-G01-U003"
+unit = "NEXT-G01"
+source_sha256 = "12bfccca9b31a305e2e60e899d38075671072b1e03d06fb14171e5e18511cdf3"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-G01-U004"
+unit = "NEXT-G01"
+source_sha256 = "31989bfbdb70debe734770f53be654aa01fedbfeaf5f496adfcddbc0d4978856"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-G01-U005"
+unit = "NEXT-G01"
+source_sha256 = "de4e48c3c03dee6525e9524e9124bf1847d9ce26ea9a96ad47e8181393d216c8"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-G02-U001"
+unit = "NEXT-G02"
+source_sha256 = "d8ec841f2f8643c20ac1f1f69cc3f06adae48807bfa0682870788fbe222f8567"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-G06-U001"
+unit = "NEXT-G06"
+source_sha256 = "e8dbc46fe5a21577011f9a528909110092c5691edcce7e41ef4c5717ea8be18e"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-G06-U002"
+unit = "NEXT-G06"
+source_sha256 = "ad4671832bb5aa24dea18d0e8cbac43c56206c580feae0e9bef52576e299a53f"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-G06-U003"
+unit = "NEXT-G06"
+source_sha256 = "deb43c2fd3409c4e2159548758cc98e37ef6c807fde001a5180a4a44052fda85"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-G07-U001"
+unit = "NEXT-G07"
+source_sha256 = "ae78338b00ef98b5c0aef81cc644fa33538ef4e29bb2a9ab7635dd40a2c9ff93"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-G07-U002"
+unit = "NEXT-G07"
+source_sha256 = "46ff923fc7f7b5dd98465f8e68fcbe0413578566003ff73717ea59e7079cc5ba"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-G07-U003"
+unit = "NEXT-G07"
+source_sha256 = "ae84c3059ce388ec981802dd7817bdb073ef126580069ac7ce60483a5f79894a"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-G08-U001"
+unit = "NEXT-G08"
+source_sha256 = "1b0ae57ec47741e438efb5181a7149e1a9bc9a846259a9d4e88cf0bd882d46d2"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-G08-U002"
+unit = "NEXT-G08"
+source_sha256 = "c9e02791d7c8752ad8648ba9495ba68df588b4711ad1a9b5897d3f55785777e7"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-G08-U003"
+unit = "NEXT-G08"
+source_sha256 = "9d06fe51602d2087c5ef7ccb9a8cfcfd837f4ac95ca6985a516cb2eec636e19b"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-G08-U004"
+unit = "NEXT-G08"
+source_sha256 = "65262eddb2891947a3e071de637c74961bcadf5b9d86dac292fc29a030730862"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-G08-U005"
+unit = "NEXT-G08"
+source_sha256 = "e2e28713361cdfa586b221770ab750b9f81f1f981e0cbcde5249902e1da789fb"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-G08-U006"
+unit = "NEXT-G08"
+source_sha256 = "c1156e02e1aac538b521c858f2c5e95d6de45677daf6c1a513f7cf2f19f86f7a"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-G09-U001"
+unit = "NEXT-G09"
+source_sha256 = "3a1b1ddbbb4553fb8afd308feaafff75d4ded68cd20145430f4e93e6645f1265"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-G09-U002"
+unit = "NEXT-G09"
+source_sha256 = "6b77b964ae8788ceb6059421a13c6f0144ece72a8115d4189a0515c84e3050c8"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-G09-U003"
+unit = "NEXT-G09"
+source_sha256 = "66e199d7d5abf7ff1159739a9f3d880e828af66ebbf70fde9ad1c2d4d73620df"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-G09-U004"
+unit = "NEXT-G09"
+source_sha256 = "cc6394b2cb2ea686e2527b7c441b17b26e566af2b2a81a47f6dba2d5de48f4b5"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-G10-U001"
+unit = "NEXT-G10"
+source_sha256 = "bb688a35393305a6564954af14e487a12f33849ce31cd7bb116ead5ad6e2b0e9"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-G10-U002"
+unit = "NEXT-G10"
+source_sha256 = "9db5acc082937cf91315c99e005f115a0f7ac483af3841c76b6261a10b408c22"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-G10-U003"
+unit = "NEXT-G10"
+source_sha256 = "93bee5c02e1dec227f9959992459ae8608c373294220cf5a6176228ba2a9fcee"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-G11-U001"
+unit = "NEXT-G11"
+source_sha256 = "1201eae4b681b9ea0cf6057984a854847e2ddfc4fe4dc424e1995f2b8b7be81d"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-G11-U002"
+unit = "NEXT-G11"
+source_sha256 = "a792de5ff36088dabc0de52b767b0df5e7ae72e53e118fad2d3a5ebf95b5410d"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-G13-U001"
+unit = "NEXT-G13"
+source_sha256 = "0170abc5f03e5bc27b10d582ea0f9f1d6d76e78056cbf40bfc3426a6eac78a29"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-G13-U002"
+unit = "NEXT-G13"
+source_sha256 = "0c592e3d4539750e5b62e6a9cc6960f240dccb4b8cfe523900760303a7083f36"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-D-001-LAW"
+unit = "NEXT-D-001"
+source_sha256 = "acbd3aafb105b25bf8500b7c2555d6f5f0a2dd5f1f845342dfd290ba3e66c1a8"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-D-002-LAW"
+unit = "NEXT-D-002"
+source_sha256 = "0f54ec2caaca3262e2cc88d02eb15299594e644ae807f86c2d8f844378be28e6"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-D-003-LAW"
+unit = "NEXT-D-003"
+source_sha256 = "625d5521c464cde20735493bc9b7ffa4299ad5dc331812de6ed87c54158bfe15"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-D-004-LAW"
+unit = "NEXT-D-004"
+source_sha256 = "0330d80744678b4b6f2375ee76c603ae66f56a627211a44d9e8691ad29dfe437"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-D-005-LAW"
+unit = "NEXT-D-005"
+source_sha256 = "92af851020028f62bfe7620bb27189ca63b5068e4af44f99218d539f732ae3c4"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-D-006-LAW"
+unit = "NEXT-D-006"
+source_sha256 = "596cf00d664b6171c959e7e02978fcc34d8d1d9e1a046aa12a068ec603a7f91f"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-D-007-LAW"
+unit = "NEXT-D-007"
+source_sha256 = "702afd00a24e9bd3fdcde3ddbfe082000183b568a9481cf72ec5cd4f8c966664"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-D-008-LAW"
+unit = "NEXT-D-008"
+source_sha256 = "71c6826f26d8f0154c7423a3be4ca54f5f3fcf2106302273238107eea2268378"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-D-009-LAW"
+unit = "NEXT-D-009"
+source_sha256 = "0584edaf603d75ec7782e8061872b90b0595c9cfe96f6c993bf506883db5719c"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-D-010-LAW"
+unit = "NEXT-D-010"
+source_sha256 = "871de39210bff31a1f35e6dede9bc782a7f8d614250824170d524bd4cda454fe"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-D-011-LAW"
+unit = "NEXT-D-011"
+source_sha256 = "c946842d6879f722b3c338cc6ea6ba66aa04a8430cb4a5e59eda77b4334cbea3"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-D-012-LAW"
+unit = "NEXT-D-012"
+source_sha256 = "d284fe92fdefd77bc7817ae1f255bb529c9e51c8298a8396ba81d8e3abf767f7"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-D-013-LAW"
+unit = "NEXT-D-013"
+source_sha256 = "5678cce776075c973879bac879be75c2caf58aa44997c6f808a3efce8ffdf11c"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-D-014-LAW"
+unit = "NEXT-D-014"
+source_sha256 = "feda3cce4c92dfee795d7371c2edb2475720518840b92ff59a32ef1a7b8ab4ce"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-D-015-LAW"
+unit = "NEXT-D-015"
+source_sha256 = "1fdf9d2d217aa0aaa11e7e052fdfe0318f147e91b2b9afa86614593549df12f8"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-D-016-LAW"
+unit = "NEXT-D-016"
+source_sha256 = "c10f1feb0a8f9d85184d46024d78a37144af9ef838cbbf19495a65a28ee46b00"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-D-017-LAW"
+unit = "NEXT-D-017"
+source_sha256 = "f3d9f850aba063d216f46b51aa79815376b5a7ca4bc0cf8335257d0b1a468ca2"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-D-018-LAW"
+unit = "NEXT-D-018"
+source_sha256 = "41e3374d166741a5761fa4670ff7407c0f6c1a1e4e819b28551e5eb825267429"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-D-019-LAW"
+unit = "NEXT-D-019"
+source_sha256 = "0a2c8d251812826d93b7020fce9f170b5325cc600e7c7976bc9060676c70bf97"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-D-020-LAW"
+unit = "NEXT-D-020"
+source_sha256 = "11bf4c509c88c44f832ef3ec5b6cbb272397341b52dc470e3496771359dc5529"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-D-021-LAW"
+unit = "NEXT-D-021"
+source_sha256 = "7f562d9a50e3f9a5c37ee3738a66187cfde39594009a497d51aff2e9747eceb9"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-D-022-LAW"
+unit = "NEXT-D-022"
+source_sha256 = "298ae98bfd0c9d2ba1c61eecc4a0830eba90698a372cf7790b0c1c89046317ca"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-D-023-LAW"
+unit = "NEXT-D-023"
+source_sha256 = "bb8d4b67cc7f7119aeea7bc5e18d98053abaf0fe88e4e5002c9ba2fa2ac868d1"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-D-024-LAW"
+unit = "NEXT-D-024"
+source_sha256 = "6ba58e1366397f3f99a3f31f3c450ca29905614fa5735acea28fca76416b8a71"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-D-025-LAW"
+unit = "NEXT-D-025"
+source_sha256 = "6e73139672f8ed3923b685077eaefa38a4bb56aa7590ef822532c438fa413296"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []
+
+[[clause]]
+id = "NEXT-D-026-LAW"
+unit = "NEXT-D-026"
+source_sha256 = "0936e18d142987b13c54108f7164c7d7f8b3898cd2d330666066a58576dea91c"
+state = "pending"
+meaning_review = ""
+reviewer = ""
+acceptance_commit = ""
+targets = []
+evidence = []

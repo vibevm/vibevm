@@ -1,0 +1,185 @@
+{
+  "id": "M-15-E",
+  "tasks": [
+    {
+      "id": "M-15-E.1",
+      "title": "Implement the backend-neutral package transaction port",
+      "goal": "Keep foreign package resolution and installed-state authority explicit without choosing the open Arch policy.",
+      "read_paths": [
+        "crates/vibe-workspace/src/extension_world.rs",
+        "crates/vibe-install/src/plan.rs",
+        "crates/vibe-install/src/record.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+        "crates/vibe-lifecycle/src/native/platform.rs",
+        "vibevm/vibespecs/modules/vibe-workspace/PROP-020-install-hooks.xml",
+        "xtask/src/main.rs",
+        ".cargo/config.toml",
+        "crates/vibe-core/Cargo.toml",
+        "crates/vibe-core/src/lib.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-core/src/environment/",
+        "crates/vibe-orchestrator/src/environment/",
+        "crates/vibe-lifecycle/src/mechanism/deploy/",
+        "formats/",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-core/Cargo.toml",
+        "crates/vibe-core/src/lib.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy.rs"
+      ],
+      "steps": [
+        "Define captured backend capabilities/catalog/installed snapshot, native-version resolve result, fetch evidence, footprint and apply/observe/verify/recover contracts.",
+        "Use existing provider registry and M-16 operation identity; bind prepared plans to backend DB generation and exact catalog rather than re-solving at apply.",
+        "Implement an in-memory fixture backend proving separate authority and explicit cross-domain dependency requests without coupling to pacman behavior."
+      ],
+      "positive_cases": [
+        "A backend-native version including epoch/pkgrel survives unchanged.",
+        "DB/catalog drift invalidates an otherwise identical admitted request."
+      ],
+      "negative_cases": [
+        "Vibe creates a competing writable copy of the backend DB.",
+        "Apply silently resolves latest versions after approval."
+      ],
+      "checks": [
+        "cargo test -p vibe-core",
+        "cargo test -p vibe-lifecycle",
+        "cargo xtask check-codegen",
+        "TO CREATE: backend-neutral snapshot/transaction fixture."
+      ],
+      "acceptance": [
+        "The generic port supports both possible D-022 outcomes without hiding effects in shell text.",
+        "No backend-specific choice or host installation is committed."
+      ],
+      "safe_stop": "Neutral port and fixture backend are green; D-022-dependent work remains fenced.",
+      "commit_subject": "feat(environment): define foreign package backend transactions",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-064-runtime-package-management.xml; forward metadata only.",
+        "D-022 is OPEN. This child may proceed under generic foundations; subsequent Arch-specific children require the actual owner ruling.",
+        "The environment/ module is a proposed composition cell in the existing orchestrator; its owning export file is included for registration. Refine the perimeter before touching any additional crate.",
+        "Use full listed crate tests by default. If narrowing to a newly created test filter, first run cargo test -p <crate> -- --list and verify an exact nonzero test-name match; a zero-test run is not acceptance.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-15-E.2",
+      "title": "Implement the explicitly selected Arch backend policy",
+      "goal": "Deliver the owner-selected Arch strategy in the disposable Linux executor without silently assuming recommendation A.",
+      "read_paths": [
+        "vibevm/vibespecs/modules/vibe-workspace/PROP-020-install-hooks.xml",
+        "crates/vibe-core/src/manifest/package/hooks.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/native.rs",
+        "crates/vibe-install/src/plan.rs",
+        "crates/vibe-package-source/src/source.rs",
+        "crates/vibe-workspace/src/extension_world.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-orchestrator/src/environment/",
+        "crates/vibe-lifecycle/src/mechanism/deploy/",
+        "crates/vibe-lifecycle/tests/",
+        "formats/",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy.rs"
+      ],
+      "steps": [
+        "Read the recorded D-022 ruling before writing backend-specific semantics; if still OPEN stop this child and report the exact blocked choice.",
+        "For A, keep pacman/libalpm sole solver/DB/file owner and capture coherent repository order/epoch, trusted package bytes and native versions; bind root/DB/config/keyring/cache/hooks inside the Linux target.",
+        "For B, replace this child with expanded format/DB/version/signature/hook/upgrade/recovery compatibility tasks before implementation; do not claim B from a CLI rename or reuse A acceptance unchanged."
+      ],
+      "positive_cases": [
+        "The selected strategy exposes exact resolved closure and prepared transaction.",
+        "Repository mirrors retain native signature/trust policy and expected bytes."
+      ],
+      "negative_cases": [
+        "Recommendation A is treated as an owner decision.",
+        "A wrapper self-enrolls package trust or uses --overwrite to conceal competing ownership."
+      ],
+      "checks": [
+        "cargo test -p vibe-lifecycle",
+        "TO CREATE after D-022: isolated Arch backend integration fixture with exact repository captures and native verification."
+      ],
+      "acceptance": [
+        "Backend-specific behavior matches the recorded ruling and stays inside a disposable target.",
+        "No live host pacman operation, trust-store mutation or public network publication occurs."
+      ],
+      "safe_stop": "If D-022 is unresolved, leave no backend-specific writes; otherwise retain captured target/DB transaction evidence.",
+      "commit_subject": "feat(environment): implement the selected Arch backend policy",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-064-runtime-package-management.xml; forward metadata only.",
+        "B materially expands the executable tree: root must refine dependencies and acceptance before continuing. Source/archive captures use the M-15-K egress boundary.",
+        "The environment/ module is a proposed composition cell in the existing orchestrator; its owning export file is included for registration. Refine the perimeter before touching any additional crate.",
+        "Use full listed crate tests by default. If narrowing to a newly created test filter, first run cargo test -p <crate> -- --list and verify an exact nonzero test-name match; a zero-test run is not acceptance.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-15-E.3",
+      "title": "Prove Arch update ownership and failure recovery",
+      "goal": "Verify complete repository-epoch updates and truthful partial hook outcomes under the selected backend.",
+      "read_paths": [
+        "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+        "crates/vibe-core/src/manifest/package/hooks.rs",
+        "crates/vibe-cli/src/commands/uninstall.rs",
+        "vibevm/vibespecs/modules/vibe-workspace/PROP-020-install-hooks.xml",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-lifecycle/tests/",
+        "crates/vibe-orchestrator/tests/",
+        "crates/vibe-orchestrator/src/environment/",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-orchestrator/Cargo.toml"
+      ],
+      "steps": [
+        "Create an isolated captured old/new repository fixture and compare requested roots, backend-resolved transitive closure and actual DB/file ownership.",
+        "Exercise coherent full update, refusal of unsupported partial upgrade, stale DB plan and Vibe/backend configuration boundary.",
+        "Inject pre/post hook failures and interrupted apply; verify backend repair or rootfs rebuild is reported without claiming file deletion undid arbitrary effects."
+      ],
+      "positive_cases": [
+        "A complete admitted epoch update produces the exact observed closure.",
+        "Vibe-owned snippets coexist with backend-owned base config under explicit ownership."
+      ],
+      "negative_cases": [
+        "One held package silently creates a partial Arch upgrade strategy.",
+        "Post-transaction side effects are labelled atomically rolled back."
+      ],
+      "checks": [
+        "cargo test -p vibe-lifecycle",
+        "TO CREATE: selected-backend update/DB-drift/hook-failure integration tests in disposable Linux."
+      ],
+      "acceptance": [
+        "Actual backend ownership and DB generation agree with retained transaction evidence.",
+        "Every partial failure has an explicit repair/rebuild path and no host effects."
+      ],
+      "safe_stop": "Disposable backend state is recovered or preserved as a named failed fixture; no uncertain state is accepted.",
+      "commit_subject": "test(environment): prove Arch update and recovery boundaries",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-064-runtime-package-management.xml; forward metadata only.",
+        "The environment/ module is a proposed composition cell in the existing orchestrator; its owning export file is included for registration. Refine the perimeter before touching any additional crate.",
+        "Use full listed crate tests by default. If narrowing to a newly created test filter, first run cargo test -p <crate> -- --list and verify an exact nonzero test-name match; a zero-test run is not acceptance.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

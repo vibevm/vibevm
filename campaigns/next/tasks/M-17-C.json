@@ -1,0 +1,151 @@
+{
+  "id": "M-17-C",
+  "tasks": [
+    {
+      "id": "M-17-C.1",
+      "title": "Verify two-client analysis and rename journeys",
+      "goal": "Prove independent external clients can navigate, edit unsaved state and perform the saved-state rename protocol.",
+      "read_paths": [
+        "crates/vibe-mcp/src/lib.rs",
+        "crates/vibe-mcp/src/transport.rs",
+        "crates/vibe-mcp/src/context.rs",
+        "crates/vibe-cli/src/commands/refactor/mod.rs",
+        "crates/vibe-cli/src/commands/tree/model.rs",
+        "crates/vibe-specdoc/src/load.rs",
+        "crates/vibe-test-support/Cargo.toml",
+        "crates/vibe-test-support/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-mcp/tests/",
+        "crates/vibe-orchestrator/tests/",
+        "crates/vibe-test-support/src/",
+        "crates/vibe-test-support/Cargo.toml",
+        "crates/vibe-test-support/src/lib.rs"
+      ],
+      "steps": [
+        "Create two independent headless protocol clients with separate contexts/overlays and negotiated encodings, using implemented services rather than direct private helper calls.",
+        "Run inspect to unsaved edit to diagnostics/preview without disk effects; exercise created/deleted/moved buffers, partial syntax, stale pages and watch gaps.",
+        "Perform reviewed package rename only after explicit saves/fresh plan and both edit-barrier acknowledgements; inject competing buffer/disk edits and verify refusal/post-state navigation."
+      ],
+      "positive_cases": [
+        "Client A's unsaved changes never contaminate B's capture.",
+        "Successful saved rename regenerates a source tree both clients can navigate."
+      ],
+      "negative_cases": [
+        "A test bypasses transport validation by calling an internal helper.",
+        "Cross-client conflict metadata exposes another client's buffer content."
+      ],
+      "checks": [
+        "cargo test -p vibe-mcp",
+        "cargo test -p vibe-orchestrator",
+        "TO CREATE: independent two-client analysis/rename conformance suite."
+      ],
+      "acceptance": [
+        "Full external path uses exact schema/context/snapshot/authority identities.",
+        "No IDE/plugin/client MVP is built; clients are protocol test instruments."
+      ],
+      "safe_stop": "Both clients close cleanly and fixture disk changes are fully verified or recovery-owned.",
+      "commit_subject": "test(api): prove two-client analysis and rename conformance",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+        "Use full listed crate tests by default. If narrowing to a newly created test filter, first run cargo test -p <crate> -- --list and verify an exact nonzero test-name match; a zero-test run is not acceptance.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-17-C.2",
+      "title": "Verify long jobs, replay, cancellation and revoked inspection",
+      "goal": "Exercise failure and connection boundaries through independent external clients without duplicate effects.",
+      "read_paths": [
+        "crates/vibe-mcp/src/lib.rs",
+        "crates/vibe-mcp/src/tools/lifecycle_run.rs",
+        "crates/vibe-mcp/src/tools/lifecycle_tasks.rs",
+        "crates/vibe-lifecycle/src/runner/hosted.rs",
+        "crates/vibe-lifecycle/src/state/store.rs",
+        "crates/vibe-workspace/src/extension_world.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-mcp/tests/",
+        "crates/vibe-orchestrator/tests/",
+        "crates/vibe-lifecycle/tests/"
+      ],
+      "steps": [
+        "Submit identical admitted jobs concurrently through separate adapters and simulate lost responses, EOF, owner crash, restart and expired namespace/result retention.",
+        "Assert queries/control remain responsive, same-key attach never duplicates production, conflicting keys refuse and replay gaps resnapshot with retained terminal/partial identity.",
+        "Cancel before and after effects, resolve typed input/admission, revoke a contributed provider and inspect its captured schemas/results without execution."
+      ],
+      "positive_cases": [
+        "A durable outcome survives API restart and event payload expiry.",
+        "Cancellation reports either reached safe stop or exact partial/recovery effects."
+      ],
+      "negative_cases": [
+        "Expired dedup payload permits effect replay.",
+        "Revocation erases unique retained evidence or triggers the revoked native reader."
+      ],
+      "checks": [
+        "cargo test -p vibe-mcp",
+        "cargo test -p vibe-orchestrator",
+        "cargo test -p vibe-lifecycle",
+        "TO CREATE: multi-adapter concurrency/restart/cancel/revocation conformance cases."
+      ],
+      "acceptance": [
+        "Existing one-writer/one-parked limits are preserved and explicit.",
+        "Effect counters/journals provide independent evidence for every duplicate-prevention claim."
+      ],
+      "safe_stop": "All fixture operations are terminal or pinned recovery cases and no child process is unaccounted for.",
+      "commit_subject": "test(api): exercise reconnect cancellation and retained evidence",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+        "Use full listed crate tests by default. If narrowing to a newly created test filter, first run cargo test -p <crate> -- --list and verify an exact nonzero test-name match; a zero-test run is not acceptance.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-17-C.3",
+      "title": "Verify external HOME image and service actions",
+      "goal": "Close the M-15-inclusive external path with the same operation and provenance contracts as initial domains.",
+      "read_paths": [
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-mcp/src/tools/lifecycle_run.rs",
+        "crates/vibe-lifecycle/src/mechanism/record.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+        "crates/vibe-agent-projection/src/agents.rs",
+        "crates/vibe-workspace/src/boot_artifacts/analyzed.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-mcp/tests/",
+        "crates/vibe-orchestrator/tests/",
+        "crates/vibe-lifecycle/tests/"
+      ],
+      "steps": [
+        "Use two headless clients to inspect a HOME generation, prepare/update/verify it and navigate command ownership to source/producer evidence.",
+        "Prepare and run an isolated Docker rebuild/replacement with responsive progress/reconnect/cancel handling and exact runtime-data boundaries.",
+        "Discover service descriptors, perform admitted read/write and denied effects, rotate bindings and verify partial/error/health states plus retained no-GitHub evidence; clean exact fixture resources."
+      ],
+      "positive_cases": [
+        "The same client contract spans HOME generation, image stage and service operation.",
+        "A Docker replacement or service denial is inspectable through linked domain evidence."
+      ],
+      "negative_cases": [
+        "A supported runtime action still requires CLI text/TUI scripting.",
+        "A headless test contacts real model services/public registries or exposes host HOME/socket."
+      ],
+      "checks": [
+        "cargo test -p vibe-mcp",
+        "cargo test -p vibe-lifecycle",
+        "TO CREATE: two-client HOME/Docker/service full-path integration using admitted M-15 fixtures."
+      ],
+      "acceptance": [
+        "All required M-15 external action/model rows have actual conformance evidence.",
+        "No unavailable stub is accepted as proof of an implemented feature's external path."
+      ],
+      "safe_stop": "Managed fixture state is known, data preserved and all exact resource cleanup/recovery recorded.",
+      "commit_subject": "test(api): cover environment image and service action paths",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+        "Use full listed crate tests by default. If narrowing to a newly created test filter, first run cargo test -p <crate> -- --list and verify an exact nonzero test-name match; a zero-test run is not acceptance.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

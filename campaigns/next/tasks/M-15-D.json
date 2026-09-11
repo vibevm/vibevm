@@ -1,0 +1,122 @@
+{
+  "id": "M-15-D",
+  "tasks": [
+    {
+      "id": "M-15-D.1",
+      "title": "Recover generation switches and configuration effects",
+      "goal": "Preserve truthful old/new/partial states across interrupted activation, rollback and repair.",
+      "read_paths": [
+        "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+        "crates/vibe-lifecycle/src/state/io.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-orchestrator/src/environment/",
+        "crates/vibe-lifecycle/src/mechanism/deploy/",
+        "crates/vibe-lifecycle/tests/",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy.rs"
+      ],
+      "steps": [
+        "Partition staged payloads, activation pointer, mutable config and external effects into named journal domains with retained before-images where available.",
+        "Inject failures before/after pointer switch and each configuration write; implement observe/recover/rollback without re-executing unknown effects.",
+        "Keep previous usable manager/recovery artifacts pinned and report third-state drift rather than overwriting it."
+      ],
+      "positive_cases": [
+        "Interrupted pointer activation recovers to an evidenced usable generation.",
+        "Rollback restores generation/config only within proven reversible effects."
+      ],
+      "negative_cases": [
+        "Unknown external effect is called rolled back because files were deleted.",
+        "User edits after failure are overwritten by stale before-images."
+      ],
+      "checks": [
+        "cargo test -p vibe-lifecycle",
+        "TO CREATE: crash-prefix, third-state and retained-manager recovery fixtures."
+      ],
+      "acceptance": [
+        "Every injected failure exposes completed/pending/uncertain effects and an exact safe next action.",
+        "Rollback does not imply mutable database contents were reverted."
+      ],
+      "safe_stop": "A usable prior generation and complete journal remain available for each failure prefix.",
+      "commit_subject": "feat(environment): recover interrupted profile activation",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-064-runtime-package-management.xml; forward metadata only.",
+        "The environment/ module is a proposed composition cell in the existing orchestrator; its owning export file is included for registration. Refine the perimeter before touching any additional crate.",
+        "Use full listed crate tests by default. If narrowing to a newly created test filter, first run cargo test -p <crate> -- --list and verify an exact nonzero test-name match; a zero-test run is not acceptance.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-15-D.2",
+      "title": "Collect only unreferenced owned runtime content",
+      "goal": "Implement explicit GC plans that respect shared, pinned, live and recovery references.",
+      "read_paths": [
+        "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+        "crates/vibe-lifecycle/src/lease.rs",
+        "crates/vibe-lifecycle/src/state/store.rs",
+        "crates/vibe-cli/src/commands/uninstall.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-orchestrator/src/environment/",
+        "crates/vibe-lifecycle/src/mechanism/vibebin/",
+        "crates/vibe-lifecycle/tests/",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin.rs"
+      ],
+      "steps": [
+        "Compute GC candidates from generation/dependency/operation/live-process/recovery roots using exact object IDs and current leases.",
+        "Prepare and apply contained deletion with root/generation revalidation; maintain alias-root fencing against concurrent activation.",
+        "Test stale plans, retained old versions, shared objects, mutable data and failed cleanup; expose byte/reference reasons through ETO."
+      ],
+      "positive_cases": [
+        "Only an unreferenced owned generation and exclusive payloads are removed.",
+        "A running command or recovery-required operation protects its closure."
+      ],
+      "negative_cases": [
+        "A concurrent activation makes a previously unused object live before deletion.",
+        "Global cache/prune cleanup deletes unrelated user or Docker resources."
+      ],
+      "checks": [
+        "cargo test -p vibe-lifecycle",
+        "cargo test -p vibe-safefs",
+        "TO CREATE: live-reference, concurrent-GC and ownership-bound deletion tests."
+      ],
+      "acceptance": [
+        "GC never deletes mutable user data or shared/live/pinned/recovery content.",
+        "Plan and result identify exactly what was and was not deleted."
+      ],
+      "safe_stop": "Deletion journal and remaining roots are consistent; failed cleanup is retryable within exact ownership.",
+      "commit_subject": "feat(environment): guard runtime garbage collection with live references",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-064-runtime-package-management.xml; forward metadata only.",
+        "The environment/ module is a proposed composition cell in the existing orchestrator; its owning export file is included for registration. Refine the perimeter before touching any additional crate.",
+        "Use full listed crate tests by default. If narrowing to a newly created test filter, first run cargo test -p <crate> -- --list and verify an exact nonzero test-name match; a zero-test run is not acceptance.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

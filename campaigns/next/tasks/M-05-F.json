@@ -1,0 +1,117 @@
+{
+  "id": "M-05-F",
+  "tasks": [
+    {
+      "id": "M-05-F.1",
+      "title": "Express Redbook variants in its existing 1.0.0",
+      "goal": "Dogfood the accepted continuity group and additions without global conflicts.",
+      "read_paths": [
+        "vibevm/vibepacks/org.vibevm.world/redbook/v1.0.0/vibe.toml",
+        "vibe.toml",
+        "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml"
+      ],
+      "write_paths": [
+        "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+        "vibevm/vibepacks/org.vibevm.world/redbook/v1.0.0/vibe.toml",
+        "vibevm/vibepacks/org.vibevm.world/redbook/v1.0.0/"
+      ],
+      "steps": [
+        "Replace fixed continuity requirements with exactly-one MUP default/WAL alternative using the accepted feature algebra.",
+        "Add independent many additions and positive same-package branch-local addition groups.",
+        "Keep current version 1.0.0 and source rule aligned with D-019; do not add global WAL/MUP package conflicts or publish."
+      ],
+      "positive_cases": [
+        "Explicit MUP and WAL selections each activate their expected closure.",
+        "Optional additions use existing declared feature effects."
+      ],
+      "negative_cases": [
+        "Both continuity options selected conflict only within Redbook.",
+        "No-current-input unattended invocation cannot silently default."
+      ],
+      "checks": [
+        "cargo test -p vibe-core -- --list",
+        "cargo test -p vibe-core",
+        "cargo test -p vibe-resolver -- --list",
+        "cargo test -p vibe-resolver",
+        "cargo test -p vibe-install -- --list",
+        "cargo test -p vibe-install",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Local graph shows exactly one continuity branch with preserved addon semantics.",
+        "No version bump or external publication occurs in this task."
+      ],
+      "safe_stop": "Local definition and fixtures only; publication is root M-12 authority.",
+      "commit_subject": "feat(redbook): declare continuity choices in 1.0.0",
+      "notes": [
+        "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
+        "Permanent destination: vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml (existing source). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+        "TO CREATE: m_05_f_1_cases test family for the cases below. This is not an existing test. Enumerate the owning crate's tests before any optional filter; listed checks intentionally use unfiltered crate suites.",
+        "Write subtree includes only Redbook-owned source/spec/fixture edits required for its definition; no sibling package conflict edits.",
+        "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter."
+      ]
+    },
+    {
+      "id": "M-05-F.2",
+      "title": "Migrate existing Redbook consumers and branch intent",
+      "goal": "Replace manual exclusions without losing shared or dormant choices.",
+      "read_paths": [
+        "vibe.toml",
+        "vibevm/vibepacks/org.vibevm.world/redbook/v1.0.0/vibe.toml",
+        "crates/vibe-install/src/plan.rs",
+        "crates/vibe-install/src/record.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-install/Cargo.toml",
+        "crates/vibe-install/src/lib.rs"
+      ],
+      "write_paths": [
+        "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+        "vibe.toml",
+        "crates/vibe-install/tests/",
+        "crates/vibe-orchestrator/src/migration/",
+        "crates/vibe-install/src/",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-install/Cargo.toml",
+        "crates/vibe-install/src/lib.rs"
+      ],
+      "steps": [
+        "Build exact old-consumer fixtures with manual WAL excludes and independent MUP dependencies.",
+        "Use deterministic migration to propose explicit continuity selection only where old meaning is unambiguous; preserve independently required packages.",
+        "Test global/branch addons through switching and offline replay; retain dormant selections and diagnose removed options."
+      ],
+      "positive_cases": [
+        "Unambiguous manual-exclude setup migrates to equivalent selected intent.",
+        "Switching away and back restores dormant branch additions."
+      ],
+      "negative_cases": [
+        "Both/neither ambiguous continuity evidence returns NeedsInput.",
+        "Migration cannot delete a dependency independently required by another root."
+      ],
+      "checks": [
+        "cargo test -p vibe-install -- --list",
+        "cargo test -p vibe-install",
+        "cargo test -p vibe-orchestrator -- --list",
+        "cargo test -p vibe-orchestrator",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Before/after graph and comments demonstrate preserved consumer meaning.",
+        "Current consumer migration does not manufacture future version or publication approval."
+      ],
+      "safe_stop": "Keep an unapplied migration diff when intent is ambiguous.",
+      "commit_subject": "feat(redbook): migrate consumer continuity intent",
+      "notes": [
+        "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
+        "Permanent destination: vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml (existing source). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+        "TO CREATE: m_05_f_2_cases test family for the cases below. This is not an existing test. Enumerate the owning crate's tests before any optional filter; listed checks intentionally use unfiltered crate suites.",
+        "Use existing M-13 migration ownership rather than creating another engine; no runtime install against the real user home during fixture verification.",
+        "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

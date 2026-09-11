@@ -1,0 +1,186 @@
+{
+  "id": "M-05-C",
+  "tasks": [
+    {
+      "id": "M-05-C.1",
+      "title": "Freeze candidate metadata for one resolution transaction",
+      "goal": "Prevent mutable same-version metadata and repeated discovery from changing a solve.",
+      "read_paths": [
+        "crates/vibe-package-source/src/source.rs",
+        "crates/vibe-resolver/src/resolvo_engine/provider.rs",
+        "crates/vibe-install/src/plan/fetch.rs",
+        "crates/vibe-package-source/Cargo.toml",
+        "crates/vibe-package-source/src/lib.rs",
+        "crates/vibe-resolver/Cargo.toml",
+        "crates/vibe-resolver/src/lib.rs",
+        "crates/vibe-resolver/src/resolvo_engine/mod.rs",
+        "crates/vibe-install/Cargo.toml",
+        "crates/vibe-install/src/lib.rs",
+        "crates/vibe-install/src/plan.rs"
+      ],
+      "write_paths": [
+        "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+        "crates/vibe-package-source/src/",
+        "crates/vibe-resolver/src/resolvo_engine/",
+        "crates/vibe-install/src/plan/",
+        "crates/vibe-package-source/Cargo.toml",
+        "crates/vibe-package-source/src/lib.rs",
+        "crates/vibe-resolver/Cargo.toml",
+        "crates/vibe-resolver/src/lib.rs",
+        "crates/vibe-resolver/src/resolvo_engine/mod.rs",
+        "crates/vibe-install/Cargo.toml",
+        "crates/vibe-install/src/lib.rs",
+        "crates/vibe-install/src/plan.rs"
+      ],
+      "steps": [
+        "Bind candidate manifests to exact source/content/definition identity rather than version alone.",
+        "Create one immutable catalog view for a transaction and cache candidate capabilities within it.",
+        "Make missing/corrupt catalog data distinct from a candidate lacking a requested option."
+      ],
+      "positive_cases": [
+        "Repeated metadata access in one solve returns the same candidate definition."
+      ],
+      "negative_cases": [
+        "Same-version content replacement cannot mutate the in-flight catalog.",
+        "Discarded candidate metadata cannot trigger a global selection prompt."
+      ],
+      "checks": [
+        "cargo test -p vibe-package-source -- --list",
+        "cargo test -p vibe-package-source",
+        "cargo test -p vibe-resolver -- --list",
+        "cargo test -p vibe-resolver",
+        "cargo test -p vibe-install -- --list",
+        "cargo test -p vibe-install",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Catalog identity is reproducible and inspected through ETO.",
+        "Source corruption and candidate incompatibility have different outcomes."
+      ],
+      "safe_stop": "Return unavailable/corrupt catalog before any install effects.",
+      "commit_subject": "feat(resolver): freeze candidate configuration catalogs",
+      "notes": [
+        "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
+        "Permanent destination: vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml (existing source). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+        "TO CREATE: m_05_c_1_cases test family for the cases below. This is not an existing test. Enumerate the owning crate's tests before any optional filter; listed checks intentionally use unfiltered crate suites.",
+        "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-05-C.2",
+      "title": "Make activation candidate-conditioned and backtrackable",
+      "goal": "Scope feature and choice implications to the candidate that introduced them.",
+      "read_paths": [
+        "crates/vibe-resolver/src/features.rs",
+        "crates/vibe-resolver/src/resolvo_engine/provider.rs",
+        "crates/vibe-resolver/src/resolvo_engine/mod.rs",
+        "crates/vibe-resolver/src/resolvo_engine/capabilities.rs",
+        "crates/vibe-resolver/Cargo.toml",
+        "crates/vibe-resolver/src/lib.rs"
+      ],
+      "write_paths": [
+        "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+        "crates/vibe-resolver/src/",
+        "crates/vibe-resolver/Cargo.toml",
+        "crates/vibe-resolver/src/lib.rs"
+      ],
+      "steps": [
+        "Attach activation implications and induced requirements to selected candidate literals or an equivalent complete encoding.",
+        "Preserve each incoming consumer request/constraint through candidate rejection.",
+        "Bind default-based selections to shown exact definitions; changed semantic default requires rediscovery, never automatic backtracking selection."
+      ],
+      "positive_cases": [
+        "Solver rejects incompatible newest and accepts an older compatible candidate."
+      ],
+      "negative_cases": [
+        "Rejected candidate leaves no active features/providers/dependency effects.",
+        "Mandatory unresolved group on an unreachable candidate never prompts."
+      ],
+      "checks": [
+        "cargo test -p vibe-resolver -- --list",
+        "cargo test -p vibe-resolver",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Counterexample fixtures compare selected graph and all derived activation effects.",
+        "Conflict evidence retains the consumer and candidate reasons."
+      ],
+      "safe_stop": "Unsupported combinations refuse before mutation; no bounded retry masquerades as completeness.",
+      "commit_subject": "feat(resolver): condition activation on selected candidates",
+      "notes": [
+        "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
+        "Permanent destination: vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml (existing source). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+        "TO CREATE: m_05_c_2_cases test family for the cases below. This is not an existing test. Enumerate the owning crate's tests before any optional filter; listed checks intentionally use unfiltered crate suites.",
+        "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-05-C.3",
+      "title": "Use normalized requests across every solve route",
+      "goal": "Prevent visibility retry and metadata paths from losing constraints or selected edges.",
+      "read_paths": [
+        "crates/vibe-package-source/src/source.rs",
+        "crates/vibe-install/src/visibility_projection.rs",
+        "crates/vibe-install/src/plan.rs",
+        "crates/vibe-resolver/src/resolvo_engine/provider.rs",
+        "crates/vibe-resolver/src/lib.rs",
+        "crates/vibe-package-source/Cargo.toml",
+        "crates/vibe-package-source/src/lib.rs",
+        "crates/vibe-install/Cargo.toml",
+        "crates/vibe-install/src/lib.rs",
+        "crates/vibe-resolver/Cargo.toml"
+      ],
+      "write_paths": [
+        "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+        "crates/vibe-package-source/src/",
+        "crates/vibe-install/src/visibility_projection.rs",
+        "crates/vibe-install/src/plan.rs",
+        "crates/vibe-resolver/src/",
+        "crates/vibe-package-source/Cargo.toml",
+        "crates/vibe-package-source/src/lib.rs",
+        "crates/vibe-install/Cargo.toml",
+        "crates/vibe-install/src/lib.rs",
+        "crates/vibe-resolver/Cargo.toml",
+        "crates/vibe-resolver/src/lib.rs"
+      ],
+      "steps": [
+        "Thread the same immutable request/catalog through solve, manifest_of, solve_masked and conditional/visibility routes.",
+        "Retain all root constraints and actual capability/OR-provider choices in the final graph.",
+        "Expose backend capability refusal without fallback; keep incomplete conditional combinations explicitly unsupported."
+      ],
+      "positive_cases": [
+        "Visibility retry preserves the same consumer requests and exact choices as initial solving."
+      ],
+      "negative_cases": [
+        "First-wins dedup, reconstructed old manifest or unsupported backend cannot silently drop requested effects."
+      ],
+      "checks": [
+        "cargo test -p vibe-package-source -- --list",
+        "cargo test -p vibe-package-source",
+        "cargo test -p vibe-install -- --list",
+        "cargo test -p vibe-install",
+        "cargo test -p vibe-resolver -- --list",
+        "cargo test -p vibe-resolver",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Route parity fixtures produce identical selected graph or equivalent typed conflicts.",
+        "Every graph edge has a selected declaration/provider provenance."
+      ],
+      "safe_stop": "Do not apply a graph assembled from inconsistent solve routes.",
+      "commit_subject": "fix(resolver): preserve requests across visibility retries",
+      "notes": [
+        "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
+        "Permanent destination: vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml (existing source). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+        "TO CREATE: m_05_c_3_cases test family for the cases below. This is not an existing test. Enumerate the owning crate's tests before any optional filter; listed checks intentionally use unfiltered crate suites.",
+        "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

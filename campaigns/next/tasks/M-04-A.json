@@ -1,0 +1,132 @@
+{
+  "id": "M-04-A",
+  "tasks": [
+    {
+      "id": "M-04-A.1",
+      "title": "Persist exact question targets and stale states",
+      "goal": "Bind clarification questions to captured facts rather than mutable labels.",
+      "read_paths": [
+        "crates/vibe-requirements/src/query.rs",
+        "crates/vibe-requirements/src/rows.rs",
+        "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
+        "xtask/src/main.rs",
+        ".cargo/config.toml",
+        "crates/vibe-requirements/Cargo.toml",
+        "crates/vibe-requirements/src/lib.rs",
+        "crates/vibe-core/Cargo.toml",
+        "crates/vibe-core/src/lib.rs",
+        "crates/vibe-core/src/manifest/mod.rs",
+        "crates/vibe-wire/Cargo.toml",
+        "crates/vibe-wire/src/lib.rs"
+      ],
+      "write_paths": [
+        "vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml",
+        "crates/vibe-requirements/src/change/",
+        "crates/vibe-core/src/manifest/change/",
+        "schemas/",
+        "formats/",
+        "crates/vibe-wire/src/",
+        "crates/vibe-requirements/Cargo.toml",
+        "crates/vibe-requirements/src/lib.rs",
+        "crates/vibe-core/Cargo.toml",
+        "crates/vibe-core/src/lib.rs",
+        "crates/vibe-core/src/manifest/mod.rs",
+        "crates/vibe-wire/Cargo.toml",
+        "crates/vibe-wire/src/lib.rs"
+      ],
+      "steps": [
+        "Define question identity, exact target fact digest, scope, answer state and optional safe secret reference.",
+        "Implement deterministic list/validation and unknown/hold states without changing package-authored status.",
+        "Expose stale questions when target content or accepted origin changes."
+      ],
+      "positive_cases": [
+        "Question survives cosmetic title changes and retains its exact fact target."
+      ],
+      "negative_cases": [
+        "Changed target digest or missing origin cannot accept an old answer.",
+        "Raw secret values are rejected from persisted question/answer data."
+      ],
+      "checks": [
+        "cargo test -p vibe-requirements -- --list",
+        "cargo test -p vibe-requirements",
+        "cargo test -p vibe-core -- --list",
+        "cargo test -p vibe-core",
+        "cargo test -p vibe-wire -- --list",
+        "cargo test -p vibe-wire",
+        "cargo fmt --all -- --check",
+        "git diff --check",
+        "cargo xtask check-codegen",
+        "cargo xtask wire-diff"
+      ],
+      "acceptance": [
+        "Persisted and queried question records identify the same fact capture.",
+        "Validation produces typed errors without heuristic semantic verdicts."
+      ],
+      "safe_stop": "Questions can remain unknown/hold without promoting facts.",
+      "commit_subject": "feat(change): bind clarification questions to exact facts",
+      "notes": [
+        "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
+        "Permanent destination: vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml (PROPOSED file until its source-contract task creates it). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+        "TO CREATE: m_04_a_1_cases test family for the cases below. This is not an existing test. Enumerate the owning crate's tests before any optional filter; listed checks intentionally use unfiltered crate suites.",
+        "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-04-A.2",
+      "title": "Record answers as local refinements transactionally",
+      "goal": "Promote explicit accepted answers without rewriting dependency packages.",
+      "read_paths": [
+        "crates/vibe-requirements/src/query.rs",
+        "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
+        "crates/vibe-safefs/src/file.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-requirements/Cargo.toml",
+        "crates/vibe-requirements/src/lib.rs"
+      ],
+      "write_paths": [
+        "vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml",
+        "crates/vibe-orchestrator/src/change/",
+        "crates/vibe-requirements/src/change/",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-requirements/Cargo.toml",
+        "crates/vibe-requirements/src/lib.rs"
+      ],
+      "steps": [
+        "Prepare answer plus local refinement/decision edits using saved-state preconditions.",
+        "Validate target freshness and sensitivity before any write.",
+        "Apply with retained before-images and one writer; return exact created facts and partial recovery state."
+      ],
+      "positive_cases": [
+        "Accepted answer creates a local addressable refinement and links its question."
+      ],
+      "negative_cases": [
+        "Stale question, dirty affected buffer or concurrent local edit refuses.",
+        "Package source and unrelated questions remain untouched."
+      ],
+      "checks": [
+        "cargo test -p vibe-orchestrator -- --list",
+        "cargo test -p vibe-orchestrator",
+        "cargo test -p vibe-requirements -- --list",
+        "cargo test -p vibe-requirements",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Question/answer/refinement identities agree after apply.",
+        "Failure injection cannot report complete promotion with missing local fact."
+      ],
+      "safe_stop": "Keep a reviewable answer plan until saved-state inputs are current.",
+      "commit_subject": "feat(change): promote answers into local refinements",
+      "notes": [
+        "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
+        "Permanent destination: vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml (PROPOSED file until its source-contract task creates it). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+        "TO CREATE: m_04_a_2_cases test family for the cases below. This is not an existing test. Enumerate the owning crate's tests before any optional filter; listed checks intentionally use unfiltered crate suites.",
+        "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

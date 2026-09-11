@@ -1,0 +1,111 @@
+{
+  "id": "M-09-D",
+  "tasks": [
+    {
+      "id": "M-09-D.1",
+      "title": "Prove one product feat on two stacks",
+      "goal": "Implement one unchanged feat intent in Rust and TypeScript fixture consumers with independent evidence.",
+      "read_paths": [
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+        "crates/vibe-requirements/src/query.rs",
+        "crates/vibe-lifecycle/src/runner.rs",
+        "crates/vibe-lifecycle/src/runner/verify.rs",
+        "crates/vibe-orchestrator/src/dispatch/verify.rs",
+        "docs/authoring-feat.md",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs"
+      ],
+      "write_paths": [
+        "fixtures/next/native-reuse/",
+        "vibevm/vibespecs/examples/next/",
+        "crates/vibe-orchestrator/src/",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs"
+      ],
+      "steps": [
+        "Create one exact captured feat definition and two small existing-code fixture consumers using supported Rust and TypeScript stack contracts.",
+        "Apply the same origin through M-03 existing-file production and verify current source with each stack's declared checks.",
+        "Retain independent requests/output/evidence/closure per consumer; compare origin captures to prove no stack-specific feat copy."
+      ],
+      "positive_cases": [
+        "Both stacks satisfy the same unchanged feat intent with actual existing-file changes.",
+        "Each consumer has its own accepted boundary and source-test identity."
+      ],
+      "negative_cases": [
+        "Disjoint output-only demo or predecessor tests from old source fail the gate.",
+        "Changing the origin definition for one stack violates reuse."
+      ],
+      "checks": [
+        "cargo test -p vibe-orchestrator -- --list",
+        "cargo test -p vibe-orchestrator",
+        "cargo test -p vibe-lifecycle -- --list",
+        "cargo test -p vibe-lifecycle",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Two distinct consumer evidence chains point to one origin capture.",
+        "Actual stack commands are recorded and checked; source tests are not inferred from a generic green handler."
+      ],
+      "safe_stop": "First feat × two stacks is proven; second feat remains mandatory.",
+      "commit_subject": "test(examples): prove one feat across two existing-code stacks",
+      "notes": [
+        "Stack fixture files/check commands are TO CREATE from supported stack contracts; record exact commands before execution. Root supplies prepared runtimes; no guessed npm scripts.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-09-D.2",
+      "title": "Prove a second feat and explicit origin drift handling",
+      "goal": "Complete the two-by-two reuse matrix and verify consumer rebase behavior.",
+      "read_paths": [
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+        "crates/vibe-requirements/src/query.rs",
+        "crates/vibe-install/src/slot_verify.rs",
+        "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+        "docs/authoring-feat.md",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs"
+      ],
+      "write_paths": [
+        "fixtures/next/native-reuse/",
+        "vibevm/vibespecs/examples/next/",
+        "crates/vibe-orchestrator/src/",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs"
+      ],
+      "steps": [
+        "Add a substantively different second feat using the same two stack fixtures and full current-source evidence route.",
+        "Change an origin capture at the same version and inspect each consumer's drift independently; require explicit rebase before new applicability.",
+        "Record the complete four-cell reuse matrix, retained original captures and independent acceptance; do not reuse one consumer's verdict for another."
+      ],
+      "positive_cases": [
+        "Two unchanged feat origins each work in both stacks.",
+        "Explicit rebase binds the selected new capture without rewriting historical evidence."
+      ],
+      "negative_cases": [
+        "Same-version source drift cannot silently relabel old closure.",
+        "One failed/missing matrix cell keeps the reuse deliverable incomplete."
+      ],
+      "checks": [
+        "cargo test -p vibe-orchestrator -- --list",
+        "cargo test -p vibe-orchestrator",
+        "cargo test -p vibe-lifecycle -- --list",
+        "cargo test -p vibe-lifecycle",
+        "cargo test -p vibe-requirements -- --list",
+        "cargo test -p vibe-requirements",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Four actual runs have exact source/output/test and origin references.",
+        "Historical acceptance remains inspectable and stale applicability is explicit."
+      ],
+      "safe_stop": "Two-by-two proof and drift/rebase evidence are ready for review.",
+      "commit_subject": "test(examples): complete feat reuse and origin drift matrix",
+      "notes": [
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

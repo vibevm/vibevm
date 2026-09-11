@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">NEXT owner decision D-019</title>
+  <status stage="impl" state="plan"/>
+  <p><NEXT-D-019-STATE fact="true" status="spec/done">Owner state: accepted. This preference is settled; do not ask it again.</NEXT-D-019-STATE></p>
+  <p><NEXT-D-019-LAW fact="true" status="spec/done">Комплектацию любой версии Redbook можно менять. Перед будущей перезаписью агент предлагает новую версию; нынешнее введение вариантов — existing 1.0.0 без bump. Все актуальные собственные продукты/пакеты проекта — 1.0.0</NEXT-D-019-LAW></p>
+</spec>

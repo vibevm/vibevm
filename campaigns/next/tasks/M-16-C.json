@@ -1,0 +1,253 @@
+{
+  "id": "M-16-C",
+  "tasks": [
+    {
+      "id": "M-16-C.1",
+      "title": "Reserve scoped submissions before effects",
+      "goal": "Prevent duplicate effects across concurrent CLI/MCP/API submits and result-retention expiry.",
+      "read_paths": [
+        "crates/vibe-lifecycle/src/lease.rs",
+        "crates/vibe-lifecycle/src/state/store.rs",
+        "crates/vibe-lifecycle/src/state/io.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+        "crates/vibe-mcp/src/tools/lifecycle_run.rs",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/state/mod.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-orchestrator/src/",
+        "crates/vibe-lifecycle/src/state/",
+        "crates/vibe-lifecycle/src/lease.rs",
+        "formats/",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/state/mod.rs"
+      ],
+      "steps": [
+        "Add host-issued context/target/principal-scoped submission namespaces with epoch/expiry and atomic idempotency-key/request/plan reservations before effects.",
+        "Bind reservation to existing durable domain run/journal IDs; same key/payload attaches, different payload refuses, simultaneous surfaces have one winner.",
+        "Retain compact tombstones for live namespaces and pinned active/parked/recovery identities across expiry; reject retired namespaces even after large payload collection."
+      ],
+      "positive_cases": [
+        "Concurrent identical submits produce one actual domain invocation.",
+        "Lost response followed by retry returns the existing operation outcome."
+      ],
+      "negative_cases": [
+        "Collected result permits an old expired key to rerun an uncertain operation.",
+        "Caller invents or renews a submission namespace."
+      ],
+      "checks": [
+        "cargo test -p vibe-lifecycle",
+        "cargo test -p vibe-orchestrator",
+        "TO CREATE: simultaneous submit, expiry/tombstone and result-loss replay tests."
+      ],
+      "acceptance": [
+        "No effect starts before durable admission identity exists.",
+        "Dedup bookkeeping references existing journals rather than becoming a competing execution store."
+      ],
+      "safe_stop": "Reservation/replay tests pass with a fixture effect counter and no live domain mutation.",
+      "commit_subject": "feat(api): reserve idempotent submissions before execution",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+        "Use full listed crate tests by default. If narrowing to a newly created test filter, first run cargo test -p <crate> -- --list and verify an exact nonzero test-name match; a zero-test run is not acceptance.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-16-C.2",
+      "title": "Link short-lived operation owners to domain recovery",
+      "goal": "Retain inspectable truthful outcomes across API exit, EOF and execution-owner crashes.",
+      "read_paths": [
+        "crates/vibe-lifecycle/src/runner.rs",
+        "crates/vibe-lifecycle/src/runner/hosted.rs",
+        "crates/vibe-lifecycle/src/state/store.rs",
+        "crates/vibe-lifecycle/src/state/io.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+        "crates/vibe-mcp/src/tools/lifecycle_tasks.rs",
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/state/mod.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-orchestrator/src/",
+        "crates/vibe-lifecycle/src/runner/",
+        "crates/vibe-lifecycle/src/state/",
+        "crates/vibe-mcp/src/tools/lifecycle_tasks.rs",
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/runner.rs",
+        "crates/vibe-lifecycle/src/state/mod.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs"
+      ],
+      "steps": [
+        "Introduce operation handles that bind existing lifecycle/build/deploy/publication journals and retained terminal/partial results without duplicating their authority.",
+        "Advertise connection-loss policy; implement continue-to-completion or explicit safe-stop ownership and protected local attach/control for a still-running owner.",
+        "On owner crash recover from domain journals, preserving existing one-writer/one-parked limits and completed/pending/uncertain effects; do not synthesize success from EOF."
+      ],
+      "positive_cases": [
+        "An operation remains inspectable after the originating API process exits.",
+        "A reconnect attaches to a live owner or receives exact recovery-required state."
+      ],
+      "negative_cases": [
+        "Connection loss silently restarts a provider.",
+        "A second client bypasses the domain's existing execution limit."
+      ],
+      "checks": [
+        "cargo test -p vibe-lifecycle",
+        "cargo test -p vibe-orchestrator",
+        "cargo test -p vibe-mcp",
+        "TO CREATE: EOF, owner-crash, attach and parked-operation recovery cases."
+      ],
+      "acceptance": [
+        "Durable identity and recovery evidence survive transport lifetime.",
+        "No permanent autonomous service or multi-run scheduler is required."
+      ],
+      "safe_stop": "Fixture jobs are terminal or explicitly recovery-required; no orphaned process is hidden.",
+      "commit_subject": "feat(api): retain operation ownership and recovery across reconnect",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+        "Use full listed crate tests by default. If narrowing to a newly created test filter, first run cargo test -p <crate> -- --list and verify an exact nonzero test-name match; a zero-test run is not acceptance.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-16-C.3",
+      "title": "Multiplex progress, queries and cooperative controls",
+      "goal": "Keep machine sessions responsive during long operations with bounded replay and honest cancellation.",
+      "read_paths": [
+        "crates/vibe-mcp/src/lib.rs",
+        "crates/vibe-mcp/src/transport.rs",
+        "crates/vibe-mcp/src/tools/lifecycle_run/ports.rs",
+        "crates/vibe-cli/src/commands/lifecycle/observer.rs",
+        "crates/vibe-lifecycle/src/runner/hosted.rs",
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/tools/lifecycle_run.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-mcp/src/lib.rs",
+        "crates/vibe-mcp/src/transport.rs",
+        "crates/vibe-mcp/src/tools/lifecycle_run/",
+        "crates/vibe-orchestrator/src/",
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/tools/lifecycle_run.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs"
+      ],
+      "steps": [
+        "Separate request dispatch from long job execution and stream typed phase/state/progress/diagnostic events with per-stream sequence and context/target references.",
+        "Add flow control, bounded raw stdout/stderr and replay cursors; slow consumers receive explicit gaps/expired payload states without losing terminal result identity.",
+        "Implement cancellation-requested acknowledgement separately from reached safe stop; queries/control run while a job executes, and cancellation after committed effects returns partial/recovery outcomes."
+      ],
+      "positive_cases": [
+        "A long fixture job permits concurrent query and cancellation requests.",
+        "Replayed events link to the same durable operation and final result."
+      ],
+      "negative_cases": [
+        "Serial tools/call blocks all cancel handling.",
+        "Cancel acknowledgement is reported as rollback or an unlimited event queue accumulates."
+      ],
+      "checks": [
+        "cargo test -p vibe-mcp",
+        "cargo test -p vibe-orchestrator",
+        "TO CREATE: responsive long-job, slow-consumer, replay-gap and cooperative-cancel tests."
+      ],
+      "acceptance": [
+        "Stream ordering domains and cancellation capability limits are explicit.",
+        "Stopping trace observation never falsely cancels the underlying build."
+      ],
+      "safe_stop": "All fixture streams are closed or replayable and jobs have durable final/partial state.",
+      "commit_subject": "feat(api): multiplex operation events and cooperative controls",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+        "Use full listed crate tests by default. If narrowing to a newly created test filter, first run cargo test -p <crate> -- --list and verify an exact nonzero test-name match; a zero-test run is not acceptance.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-16-C.4",
+      "title": "Expose typed input and admission across all adapters",
+      "goal": "Remove machine-mode TTY/prose decisions and fixed startup defaults that hide per-operation capability.",
+      "read_paths": [
+        "crates/vibe-mcp/src/tools/lifecycle_run.rs",
+        "crates/vibe-mcp/src/tools/lifecycle_run/ports.rs",
+        "crates/vibe-mcp/src/tools/output.rs",
+        "crates/vibe-cli/src/commands/lifecycle/observer.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+        "vibevm/vibespecs/common/PROP-018-agentic-standalone-modes.xml",
+        "xtask/src/main.rs",
+        ".cargo/config.toml",
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs",
+        "crates/vibe-cli/Cargo.toml",
+        "crates/vibe-cli/src/commands/mod.rs",
+        "crates/vibe-cli/src/commands/lifecycle.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-mcp/src/tools/",
+        "crates/vibe-cli/src/commands/lifecycle/",
+        "crates/vibe-orchestrator/src/",
+        "formats/",
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs",
+        "crates/vibe-cli/Cargo.toml",
+        "crates/vibe-cli/src/commands/mod.rs",
+        "crates/vibe-cli/src/commands/lifecycle.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs"
+      ],
+      "steps": [
+        "Map domain NeedsSelection/input/approval requests to schemas bound to exact question, plan, scope and policy generation.",
+        "Carry explicit force/trace/deploy-profile and supported operation controls as validated requested options, preserving authority rather than silently choosing startup defaults.",
+        "Return structured phase and partial effects even when a handler exits without a final report; expose equivalent services through CLI, MCP and local API."
+      ],
+      "positive_cases": [
+        "A machine client resolves a typed selection and submits the exact resulting plan.",
+        "An authorization refusal includes scope and completed-effect truth."
+      ],
+      "negative_cases": [
+        "Free prose or assume-yes is parsed as a blanket grant.",
+        "An Err after prior writes is serialized as no effects."
+      ],
+      "checks": [
+        "cargo test -p vibe-cli",
+        "cargo test -p vibe-mcp",
+        "cargo test -p vibe-orchestrator",
+        "cargo xtask check-codegen"
+      ],
+      "acceptance": [
+        "Machine mode has no hidden TTY prompt or omitted per-operation option.",
+        "Public A/future B and exact target/effect grants remain unchanged."
+      ],
+      "safe_stop": "Adapter conformance passes with fixture decisions; no public or real-user mutation is invoked.",
+      "commit_subject": "feat(api): expose typed input and admission decisions",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+        "Use full listed crate tests by default. If narrowing to a newly created test filter, first run cargo test -p <crate> -- --list and verify an exact nonzero test-name match; a zero-test run is not acceptance.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

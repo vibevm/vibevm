@@ -1,0 +1,102 @@
+{
+  "id": "M-13-B",
+  "tasks": [
+    {
+      "id": "M-13-B.1",
+      "title": "Reconcile version, prototype and Redbook source policies",
+      "goal": "Make the accepted owner policy authoritative without rewriting historical or foreign identities.",
+      "read_paths": [
+        "vibevm/vibespecs/common/PROP-000.xml",
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+        "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+        "vibevm/vibepacks/org.vibevm.world/redbook/v1.0.0/vibe.toml",
+        "VIBEVM-SPEC.md"
+      ],
+      "write_paths": [
+        "vibevm/vibespecs/common/PROP-000.xml",
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+        "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+        "VIBEVM-SPEC.md"
+      ],
+      "steps": [
+        "After M-16-A, map old source assertions to accepted D-004/D-005/D-013/D-019 decisions and the exact M-13-A census.",
+        "Replace mandatory Redbook roster bump/global WAL-MUP conflict with current keep-1.0.0, future keep/new-version offer, Redbook-only exclusivity and retained capture semantics.",
+        "Document owner-only prototype graduation and distinguish product version, schema epoch and frozen/source capture; preserve generic non-Redbook freeze law and foreign versions."
+      ],
+      "positive_cases": [
+        "Current Redbook variants use accepted 1.0.0 without another version question.",
+        "Independent WAL/MUP coexistence is permitted outside the Redbook continuity group."
+      ],
+      "negative_cases": [
+        "No public release or version number implies graduation.",
+        "No rule grants blanket authority to rewrite frozen/foreign captures or historical evidence."
+      ],
+      "checks": [
+        "cargo run --quiet -p vibe-cli -- check --path . --quiet",
+        "cargo run --quiet -p vibe-cli -- facts check --exhaustive",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Permanent source anchors state each accepted policy and its exact scope.",
+        "No generated STATIC/INDEX or instruction mirror is manually edited."
+      ],
+      "safe_stop": "Canonical policy diff is ready for independent root review before derived regeneration.",
+      "commit_subject": "docs(policy): reconcile prototype and Redbook version decisions",
+      "notes": [
+        "Run the existing facts/spec validation commands supplied by the root after source edits. This task does not modify AGENTS.md/CLAUDE.md/GEMINI.md or publish anything."
+      ]
+    },
+    {
+      "id": "M-13-B.2",
+      "title": "Reconcile lifecycle roles, source semantics and ETO law",
+      "goal": "Install the accepted architectural source rules before dependent APIs and implementations.",
+      "read_paths": [
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+        "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
+        "vibevm/vibespecs/common/PROP-048-tokenomics.xml",
+        "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml",
+        "vibevm/vibespecs/common/PROP-031-algorithmic-refactoring.xml",
+        "vibevm/vibespecs/common/PROP-018-agentic-standalone-modes.xml",
+        "VIBEVM-SPEC.md"
+      ],
+      "write_paths": [
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+        "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
+        "vibevm/vibespecs/common/PROP-048-tokenomics.xml",
+        "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml",
+        "vibevm/vibespecs/common/PROP-031-algorithmic-refactoring.xml",
+        "vibevm/vibespecs/common/PROP-018-agentic-standalone-modes.xml",
+        "VIBEVM-SPEC.md"
+      ],
+      "steps": [
+        "Use M-16-A's actual capability/model census to reconcile proposal text with shared service ownership and ETO without inventing implemented features.",
+        "State create/build/ordinary-and-scoped verify roles and explicit full-pass composition; remove hidden producer permission from prerequisite invocation wording.",
+        "State no boot-size/token quota, classified ordinary CommonMark/XML-data, pure inspect versus effectful preparation and universal external access; preserve no plugin/IDE/MVP scope and target/effect authority."
+      ],
+      "positive_cases": [
+        "Canonical rules distinguish planned capability, implemented fact and accepted owner policy.",
+        "All meaningful supported operations/models owe an external typed path."
+      ],
+      "negative_cases": [
+        "Ordinary verify cannot create new producer work under a legacy exception.",
+        "ETO cannot authorize secret/raw-memory dumping, native sandbox claims or a new IDE/plugin project."
+      ],
+      "checks": [
+        "cargo run --quiet -p vibe-cli -- check --path . --quiet",
+        "cargo run --quiet -p vibe-cli -- facts check --exhaustive",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Source rules align with all retained decisions, including D-025/D-026 and open D-022.",
+        "Later feature atoms can cite permanent governing anchors rather than campaign prose."
+      ],
+      "safe_stop": "Canonical architecture source diff is ready; runtime behavior unchanged.",
+      "commit_subject": "docs(architecture): establish role classification and observability laws",
+      "notes": [
+        "M-13-B depends on M-16-A inventory only, not completed M-16-B/C/D; preserve the parent DAG."
+      ]
+    }
+  ]
+}

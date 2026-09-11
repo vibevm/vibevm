@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">NEXT owner decision D-013</title>
+  <status stage="impl" state="plan"/>
+  <p><NEXT-D-013-STATE fact="true" status="spec/done">Owner state: accepted. This preference is settled; do not ask it again.</NEXT-D-013-STATE></p>
+  <p><NEXT-D-013-LAW fact="true" status="spec/done">Вся текущая собственная линейка — прототип без постоянных пользователей. Только владелец объявляет выход из prototype; после этого вводятся обязательства для крупных breaking changes. Публикация/номер версии сами режим не меняют</NEXT-D-013-LAW></p>
+</spec>

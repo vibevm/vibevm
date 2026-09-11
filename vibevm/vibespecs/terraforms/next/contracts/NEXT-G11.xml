@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">NEXT temporary cross-cutting contract — Risks and design forks</title>
+  <status stage="impl" state="plan"/>
+  <p><NEXT-G11-SCOPE fact="true" status="spec/done">Frozen cross-cutting requirement source from refined plan revision 4 section 11. It complements domain contracts and must be promoted clause by clause; no product implementation or completion is asserted here.</NEXT-G11-SCOPE></p>
+  <p><NEXT-G11-U001 fact="true" status="spec/done">Requirement: | Risk | Accepted direction / remaining engineering obligation | |---|---| | R-001/R-002 | Truthful source/derivation proof and safe paths; weaker observation explicit | | R-003 | Pre/post transition in first complete executable scope, no producer invocation from scoped verify | | R-004 | One workspace continuation; multi-run separate future design | | R-005 | Unified candidate-conditioned requests/all edges; D-017 settled | | R-006/R-007 | Ready artifacts and effective smoke policy before publication, trusted channels/signatures optional | | R-008 | Neutral facts, complete joins, explicit retained closure | | R-009/R-010 | Explicit preparation/effects, package requests distinct from host grants; native trust not sandbox | | R-011 | Redbook source rule superseded, current own 1.0.0; captures/frozen elsewhere not bulk rewritten | | R-012 | Minimal change, no scheduler; complete required atoms | | R-013/R-014 | Four-client/resource-level parity and receipt coexistence, bridges complete | | R-015/R-016 | Existing boot representation, exact/unknown source attribution, no quotas, typed representation | | R-017 | Honest capture/moving-tree proof, explicit promote | | R-018 | Mandatory general derivatives, new identity/permissions, owner sovereignty | | R-019 | Single source classification before every consumer | | R-020 | Same authorization pipeline A/B, explicit future switch, revoke/out-of-scope refusal | | R-021 | Target/executor/principal/root distinction; instance/generation-bound authority and physical alias locks | | R-022 | Realized runtime closure and prefix/ABI proof; shared legacy/new binary validation | | R-023 | Reverse dependencies, retained generations/live roots, config/data separation, truthful backend recovery | | R-024 | Foreign version/signature/DB/file authority preserved; exact backend transaction capture | | R-025 | Linux execution/metadata, actual image evidence, no secrets, Docker userspace vs future VM boot | | R-026 | Machine service catalog with bound identity/auth; discovery does not authorize effects | | R-027 | Nix-like declared builds/substitution without mandatory GitHub; full independent-host and offline E2E | | R-028 | Complete operation/model register and real external coverage; no CLI/TUI/prose-only semantics | | R-029 | Snapshot/capture/occurrence identities, typed completeness and per-client overlays | | R-030 | Responsive API, durable operation identity/idempotency/reconnect and actual control boundaries | | R-031 | Strict inputs and all-path structured partial/unknown/recovery errors | | R-032 | Semantic package rename with complete scoped refs, saved-state CAS and truthful journal | | R-033 | Full versioned semantic internal views, pure trace readers, explicit detail/retention/redaction/completeness |</NEXT-G11-U001></p>
+  <fence lang="text">| Risk | Accepted direction / remaining engineering obligation |
+|---|---|
+| R-001/R-002 | Truthful source/derivation proof and safe paths; weaker observation explicit |
+| R-003 | Pre/post transition in first complete executable scope, no producer invocation from scoped verify |
+| R-004 | One workspace continuation; multi-run separate future design |
+| R-005 | Unified candidate-conditioned requests/all edges; D-017 settled |
+| R-006/R-007 | Ready artifacts and effective smoke policy before publication, trusted channels/signatures optional |
+| R-008 | Neutral facts, complete joins, explicit retained closure |
+| R-009/R-010 | Explicit preparation/effects, package requests distinct from host grants; native trust not sandbox |
+| R-011 | Redbook source rule superseded, current own 1.0.0; captures/frozen elsewhere not bulk rewritten |
+| R-012 | Minimal change, no scheduler; complete required atoms |
+| R-013/R-014 | Four-client/resource-level parity and receipt coexistence, bridges complete |
+| R-015/R-016 | Existing boot representation, exact/unknown source attribution, no quotas, typed representation |
+| R-017 | Honest capture/moving-tree proof, explicit promote |
+| R-018 | Mandatory general derivatives, new identity/permissions, owner sovereignty |
+| R-019 | Single source classification before every consumer |
+| R-020 | Same authorization pipeline A/B, explicit future switch, revoke/out-of-scope refusal |
+| R-021 | Target/executor/principal/root distinction; instance/generation-bound authority and physical alias locks |
+| R-022 | Realized runtime closure and prefix/ABI proof; shared legacy/new binary validation |
+| R-023 | Reverse dependencies, retained generations/live roots, config/data separation, truthful backend recovery |
+| R-024 | Foreign version/signature/DB/file authority preserved; exact backend transaction capture |
+| R-025 | Linux execution/metadata, actual image evidence, no secrets, Docker userspace vs future VM boot |
+| R-026 | Machine service catalog with bound identity/auth; discovery does not authorize effects |
+| R-027 | Nix-like declared builds/substitution without mandatory GitHub; full independent-host and offline E2E |
+| R-028 | Complete operation/model register and real external coverage; no CLI/TUI/prose-only semantics |
+| R-029 | Snapshot/capture/occurrence identities, typed completeness and per-client overlays |
+| R-030 | Responsive API, durable operation identity/idempotency/reconnect and actual control boundaries |
+| R-031 | Strict inputs and all-path structured partial/unknown/recovery errors |
+| R-032 | Semantic package rename with complete scoped refs, saved-state CAS and truthful journal |
+| R-033 | Full versioned semantic internal views, pure trace readers, explicit detail/retention/redaction/completeness |</fence>
+  <p><NEXT-G11-U002 fact="true" status="spec/done">No unresolved design preference from the original 19-question walkthrough remains. New D-022 about pacman's initial role is open; A recommended. All generic architecture and accepted HOME/Docker/network/Nix additions proceed. Exact wire/recipe/UI framework choices remain engineering work.</NEXT-G11-U002></p>
+</spec>

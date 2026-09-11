@@ -1,0 +1,109 @@
+{
+  "id": "M-10-A",
+  "tasks": [
+    {
+      "id": "M-10-A.1",
+      "title": "Define the required derivative family matrix",
+      "goal": "Make general local derivatives concrete across all source interpretations without a demand-permission gate.",
+      "read_paths": [
+        "crates/vibe-agent-projection/src/pkgskill.rs",
+        "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+        "crates/vibe-workspace/src/vibedeps/derived.rs",
+        "crates/vibe-spec/src/resolver/lookup.rs",
+        "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
+        "vibevm/vibespecs/common/PROP-028-package-families.xml"
+      ],
+      "write_paths": [
+        "vibevm/vibespecs/common/PROP-061-local-derivatives.xml",
+        "fixtures/next/derivatives/"
+      ],
+      "steps": [
+        "Enumerate required CommonMark, XML-data, Vibe-spec, opaque file and nested-tree cases, including code-bearing bytes treated as data.",
+        "Map existing composition/replacement/export mechanisms to each family; identify exact missing behavior and owning library rather than proposing a parallel priority language.",
+        "Create PROP-061 anchors and fixture manifests that distinguish base identity, local ownership, compatibility targets and downstream activation."
+      ],
+      "positive_cases": [
+        "Every required family has a meaningful local modification/replacement scenario.",
+        "A sealed source permits a separately owned local derivative."
+      ],
+      "negative_cases": [
+        "Text-only support cannot close general resource scope.",
+        "Neither absent demand evidence nor a sealed flag may become a new permission gate."
+      ],
+      "checks": [
+        "cargo test -p vibe-agent-projection -- --list",
+        "cargo test -p vibe-agent-projection",
+        "cargo test -p vibe-specdoc -- --list",
+        "cargo test -p vibe-specdoc",
+        "cargo run --quiet -p vibe-cli -- check --path . --quiet",
+        "cargo run --quiet -p vibe-cli -- facts check --exhaustive",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Canonical family matrix names actual source mechanisms and executable case requirements.",
+        "No original capture or upstream identity is edited."
+      ],
+      "safe_stop": "Family scope and canonical derivative contract are reviewable before implementation.",
+      "commit_subject": "docs(derivatives): define complete local resource family scope",
+      "notes": [
+        "PROP-061 and fixtures/next/derivatives are proposed paths. This task creates their first canonical/fixture content."
+      ]
+    },
+    {
+      "id": "M-10-A.2",
+      "title": "Choose one reusable derivative operation boundary",
+      "goal": "Integrate derive operations with source proof and artifact ownership instead of adding another truth store.",
+      "read_paths": [
+        "crates/vibe-spec/src/resolver/lookup.rs",
+        "crates/vibe-install/src/slot_verify.rs",
+        "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+        "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+        "crates/vibe-spec/src/compiler/ir.rs",
+        "crates/vibe-workspace/src/extension_world.rs",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs"
+      ],
+      "write_paths": [
+        "vibevm/vibespecs/common/PROP-061-local-derivatives.xml",
+        "crates/vibe-workspace/src/",
+        "fixtures/next/derivatives/",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs"
+      ],
+      "steps": [
+        "Trace source capture, existing composition output and downstream artifact/deploy ownership for two contrasting fixture families.",
+        "Define derive/show/diff/rebase/apply service boundaries and immutable input/output carriers using M-01/M-16; record which values are authored versus disposable output.",
+        "Add a small operation harness proving passive replacement and projection inspection never execute code or mutate installed source slots."
+      ],
+      "positive_cases": [
+        "One inert text replacement and one opaque tree use the same domain lifecycle.",
+        "Source provenance remains available after deleting disposable derived output."
+      ],
+      "negative_cases": [
+        "A derived cache cannot become the sole home of local authored source.",
+        "Derivation cannot secretly hydrate, execute a script or reuse upstream grants."
+      ],
+      "checks": [
+        "cargo test -p vibe-workspace -- --list",
+        "cargo test -p vibe-workspace",
+        "cargo test -p vibe-agent-projection -- --list",
+        "cargo test -p vibe-agent-projection",
+        "cargo run --quiet -p vibe-cli -- check --path . --quiet",
+        "cargo run --quiet -p vibe-cli -- facts check --exhaustive",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "One owning service has explicit input/output/effect boundaries for every operation.",
+        "Dependency direction remains acyclic; no second resolver/compiler is introduced."
+      ],
+      "safe_stop": "The common derivative service harness and ownership decision are ready.",
+      "commit_subject": "refactor(derivatives): define shared source and artifact operation seams",
+      "notes": [
+        "Exact new module names are proposed within existing workspace/source ownership; if a different crate is required, root must bind that perimeter before editing it.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

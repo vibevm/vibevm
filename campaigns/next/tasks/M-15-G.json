@@ -1,0 +1,202 @@
+{
+  "id": "M-15-G",
+  "tasks": [
+    {
+      "id": "M-15-G.1",
+      "title": "Lower image definitions into a reviewable build plan",
+      "goal": "Compose deterministic image stages from the same environment lock and existing artifact DAG.",
+      "read_paths": [
+        "crates/vibe-lifecycle/src/mechanism/build.rs",
+        "crates/vibe-lifecycle/src/mechanism/package.rs",
+        "crates/vibe-lifecycle/src/mechanism/record.rs",
+        "crates/vibe-core/src/manifest/artifact/binary_projection.rs",
+        "xtask/src/dist/build.rs",
+        "xtask/src/main.rs",
+        ".cargo/config.toml",
+        "crates/vibe-core/Cargo.toml",
+        "crates/vibe-core/src/lib.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-core/src/environment/",
+        "crates/vibe-orchestrator/src/environment/",
+        "crates/vibe-lifecycle/src/mechanism/build/",
+        "formats/",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism/build.rs",
+        "crates/vibe-core/Cargo.toml",
+        "crates/vibe-core/src/lib.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs"
+      ],
+      "steps": [
+        "Define ImageDefinition base/platform, lock/profile, runtime principal/home/workdir, entrypoint, ports/volumes and service-binding inputs.",
+        "Lower captured inputs into deterministic Dockerfile/context or supported BuildKit graph with separate preparation/build/realization/verification/runtime stages.",
+        "Expose exact stage/input/output provenance and bounded declared build context; diagnose opaque hand-authored escape-hatch guarantees explicitly."
+      ],
+      "positive_cases": [
+        "Identical normalized input captures lower to byte-identical plan/context.",
+        "Build-only dependencies stay out of the runtime output inventory."
+      ],
+      "negative_cases": [
+        "Recursive HOME/repository capture uploads undeclared credentials.",
+        "Changing a mutable tag at execution silently changes an approved base."
+      ],
+      "checks": [
+        "cargo test -p vibe-core",
+        "cargo test -p vibe-lifecycle",
+        "cargo xtask check-codegen",
+        "TO CREATE: deterministic image lowering and context-closure golden tests."
+      ],
+      "acceptance": [
+        "Generated build representation is reviewable and derived from one environment/artifact model.",
+        "No second scheduler/build language or real image push is added."
+      ],
+      "safe_stop": "A deterministic prepared plan exists; Docker execution has not started.",
+      "commit_subject": "feat(image): lower environment definitions into build stages",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-065-oci-agent-images.xml; forward metadata only.",
+        "The environment/ module is a proposed composition cell in the existing orchestrator; its owning export file is included for registration. Refine the perimeter before touching any additional crate.",
+        "Use full listed crate tests by default. If narrowing to a newly created test filter, first run cargo test -p <crate> -- --list and verify an exact nonzero test-name match; a zero-test run is not acceptance.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-15-G.2",
+      "title": "Execute BuildKit builds with structured stage evidence",
+      "goal": "Run prepared image builds through the existing provider and M-16 operation/control path.",
+      "read_paths": [
+        "crates/vibe-lifecycle/src/mechanism/build.rs",
+        "crates/vibe-lifecycle/src/mechanism/package.rs",
+        "crates/vibe-lifecycle/src/mechanism/record.rs",
+        "crates/vibe-mcp/src/tools/lifecycle_run.rs",
+        "crates/vibe-mcp/src/tools/lifecycle_run/ports.rs",
+        "crates/vibe-cli/src/commands/lifecycle/observer.rs",
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-lifecycle/src/mechanism/build/",
+        "crates/vibe-orchestrator/src/environment/",
+        "crates/vibe-mcp/src/tools/",
+        "crates/vibe-lifecycle/tests/",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism/build.rs",
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs"
+      ],
+      "steps": [
+        "Implement the BuildKit provider against the probed driver/platform/exporter capabilities, binding exact plan, worker, namespace and target IDs.",
+        "Capture structured progress, stage failure and resulting artifact identities through existing journals; cooperative cancellation preserves completed/uncertain effects.",
+        "Pass explicitly admitted secrets through supported secret/SSH mounts only; redact values from context, argv, logs, records and provenance."
+      ],
+      "positive_cases": [
+        "A prepared linux/amd64 image completes with stage-to-input/output links.",
+        "A cancelled or failed build remains inspectable through operation evidence."
+      ],
+      "negative_cases": [
+        "Build arguments or copied user token stores convey credentials.",
+        "A blocked tools/call prevents cancellation or independent queries."
+      ],
+      "checks": [
+        "cargo test -p vibe-lifecycle",
+        "cargo test -p vibe-mcp",
+        "TO CREATE: real isolated BuildKit success/failure/control fixture with explicit capability preflight."
+      ],
+      "acceptance": [
+        "Observed results identify builder/platform/driver and exact OCI subjects.",
+        "Runtime receives no Docker socket, broad host HOME mount or privileged agent capability."
+      ],
+      "safe_stop": "Image candidate or partial build evidence is retained; exact fixture resources are cleaned or recovery-pinned.",
+      "commit_subject": "feat(image): execute admitted BuildKit artifact jobs",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-065-oci-agent-images.xml; forward metadata only.",
+        "The environment/ module is a proposed composition cell in the existing orchestrator; its owning export file is included for registration. Refine the perimeter before touching any additional crate.",
+        "Use full listed crate tests by default. If narrowing to a newly created test filter, first run cargo test -p <crate> -- --list and verify an exact nonzero test-name match; a zero-test run is not acceptance.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-15-G.3",
+      "title": "Export OCI evidence and verify non-root runtime replay",
+      "goal": "Demonstrate local artifact delivery and offline execution without conflating export, load and publication.",
+      "read_paths": [
+        "crates/vibe-lifecycle/src/mechanism/package.rs",
+        "crates/vibe-lifecycle/src/mechanism/record.rs",
+        "crates/vibe-publish/src/release_manifest.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+        "crates/vibe-agent-projection/src/agents.rs",
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-orchestrator/src/environment/",
+        "crates/vibe-lifecycle/src/mechanism/package/",
+        "crates/vibe-lifecycle/tests/",
+        "crates/vibe-mcp/src/tools/",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism/package.rs",
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs"
+      ],
+      "steps": [
+        "Export to a local OCI artifact and inspect config/layers/manifest/index plus retained attestations/SBOM; report unavailable retention explicitly.",
+        "Load only into the admitted fixture runtime, run a captured smoke as the target ordinary user and verify installed tool and boot inventory supplied by prior groups.",
+        "Replay the prepared build with network denied under M-15-K and remove a required capture to prove an unavailable result; do not invoke public push."
+      ],
+      "positive_cases": [
+        "Exported OCI retains the claimed attestations on a supported exporter.",
+        "The non-root runtime executes a captured local command offline."
+      ],
+      "negative_cases": [
+        "A local image-store load silently strips evidence yet reports complete retention.",
+        "Missing source/base layer triggers an offline network fetch."
+      ],
+      "checks": [
+        "cargo test -p vibe-lifecycle",
+        "TO CREATE: OCI export/retention/non-root/offline runtime integration tests."
+      ],
+      "acceptance": [
+        "Local export, fixture load and registry push are distinct typed effects.",
+        "The evidence names its reproducibility level and does not infer Linux bootability."
+      ],
+      "safe_stop": "Local artifact and smoke result retained; fixture containers removed by exact IDs without deleting persistent data.",
+      "commit_subject": "feat(image): verify local OCI export and offline runtime",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-065-oci-agent-images.xml; forward metadata only.",
+        "The environment/ module is a proposed composition cell in the existing orchestrator; its owning export file is included for registration. Refine the perimeter before touching any additional crate.",
+        "Use full listed crate tests by default. If narrowing to a newly created test filter, first run cargo test -p <crate> -- --list and verify an exact nonzero test-name match; a zero-test run is not acceptance.",
+        "Service-catalog projection is introduced by M-15-H.1; verify it in H.3/I.1/J, not here. No dependency on a later service catalog or empty placeholder.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

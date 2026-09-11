@@ -1,0 +1,121 @@
+{
+  "id": "M-15-F",
+  "tasks": [
+    {
+      "id": "M-15-F.1",
+      "title": "Populate rootfs payloads with Linux-owned metadata",
+      "goal": "Assemble an offline Linux rootfs through the already prepared executor while preserving target filesystem semantics.",
+      "read_paths": [
+        "crates/vibe-safefs/src/file.rs",
+        "crates/vibe-safefs/src/component.rs",
+        "crates/vibe-core/src/manifest/artifact/binary_projection.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+        "crates/vibe-lifecycle/src/native/platform.rs",
+        "crates/vibe-lifecycle/src/mechanism/package.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-orchestrator/src/environment/",
+        "crates/vibe-lifecycle/src/mechanism/package/",
+        "crates/vibe-lifecycle/tests/",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism/package.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs"
+      ],
+      "steps": [
+        "Consume exact Vibe payload and selected backend closure from M-15-A/E inside the M-15-K worker; do not bootstrap the worker here.",
+        "Map target principals, files/directories/safe links/modes into an owned rootfs and emit a complete independent metadata inventory.",
+        "Validate host/target path separation and unsupported privileged metadata before writes; verify resulting Linux executables and links using target tools."
+      ],
+      "positive_cases": [
+        "POSIX executable mode and target-root symlink semantics survive Windows-controlled assembly.",
+        "Inventory matches realized files and declared runtime closure."
+      ],
+      "negative_cases": [
+        "Windows host identity is used as Linux UID/GID.",
+        "Rootfs extraction follows a target absolute link into the host."
+      ],
+      "checks": [
+        "cargo test -p vibe-lifecycle",
+        "TO CREATE: Linux rootfs metadata/ABI inventory integration test using the existing commissioned worker."
+      ],
+      "acceptance": [
+        "The rootfs is target-correct with independently observed metadata.",
+        "No target binary runs on the wrong architecture or directly in the Windows controller."
+      ],
+      "safe_stop": "An offline rootfs candidate and manifest are retained; no host service or deployment starts.",
+      "commit_subject": "feat(rootfs): populate Linux payloads with target metadata",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-065-oci-agent-images.xml; forward metadata only.",
+        "The environment/ module is a proposed composition cell in the existing orchestrator; its owning export file is included for registration. Refine the perimeter before touching any additional crate.",
+        "Use full listed crate tests by default. If narrowing to a newly created test filter, first run cargo test -p <crate> -- --list and verify an exact nonzero test-name match; a zero-test run is not acceptance.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-15-F.2",
+      "title": "Bind backend hooks and offline service preparation",
+      "goal": "Keep guest-root package effects inside the exact offline target and separate installation from service startup.",
+      "read_paths": [
+        "crates/vibe-core/src/manifest/package/hooks.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/native.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+        "vibevm/vibespecs/modules/vibe-workspace/PROP-020-install-hooks.xml",
+        "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-orchestrator/src/environment/",
+        "crates/vibe-lifecycle/src/mechanism/deploy/",
+        "crates/vibe-lifecycle/tests/",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy.rs"
+      ],
+      "steps": [
+        "Bind backend config, DB, cache, keyring and hook context to the intended rootfs; encode the selected root/sysroot behavior explicitly.",
+        "Separate emitted service/account/config definitions from live startup actions; admit only target-bound preparation effects.",
+        "Exercise a hook writing a permitted target resource and a disallowed host/service effect; return structured partial/error evidence and exact cleanup ownership."
+      ],
+      "positive_cases": [
+        "Offline preparation produces declared target configuration without starting services.",
+        "A legitimate admitted hook changes only the captured target footprint."
+      ],
+      "negative_cases": [
+        "A hook writes the controller's HOME or starts a host daemon.",
+        "Offline population is reported as proof of running or healthy services."
+      ],
+      "checks": [
+        "cargo test -p vibe-lifecycle",
+        "TO CREATE: offline-hook containment and no-host-service integration fixture."
+      ],
+      "acceptance": [
+        "All observed preparation effects belong to the target transaction domains.",
+        "Live activation remains a separate operation and authority."
+      ],
+      "safe_stop": "Offline target is complete or explicitly incomplete; all external service state is unchanged.",
+      "commit_subject": "feat(rootfs): separate offline preparation from live service effects",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-065-oci-agent-images.xml; forward metadata only.",
+        "The environment/ module is a proposed composition cell in the existing orchestrator; its owning export file is included for registration. Refine the perimeter before touching any additional crate.",
+        "Use full listed crate tests by default. If narrowing to a newly created test filter, first run cargo test -p <crate> -- --list and verify an exact nonzero test-name match; a zero-test run is not acceptance.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

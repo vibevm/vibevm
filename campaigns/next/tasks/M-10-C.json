@@ -1,0 +1,145 @@
+{
+  "id": "M-10-C",
+  "tasks": [
+    {
+      "id": "M-10-C.1",
+      "title": "Implement inert derive, show and diff across files and trees",
+      "goal": "Materialize local derivative results with complete resource membership and byte-preserving data handling.",
+      "read_paths": [
+        "crates/vibe-spec/src/resolver/lookup.rs",
+        "crates/vibe-install/src/slot_verify.rs",
+        "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+        "crates/vibe-safefs/src/file/bounded.rs",
+        "crates/vibe-safefs/src/component.rs",
+        "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-agent-projection/Cargo.toml",
+        "crates/vibe-agent-projection/src/lib.rs",
+        "crates/vibe-spec/Cargo.toml",
+        "crates/vibe-spec/src/lib.rs",
+        "crates/vibe-spec/src/resolver.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-workspace/src/",
+        "crates/vibe-agent-projection/src/",
+        "crates/vibe-spec/src/resolver/",
+        "fixtures/next/derivatives/",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-agent-projection/Cargo.toml",
+        "crates/vibe-agent-projection/src/lib.rs",
+        "crates/vibe-spec/Cargo.toml",
+        "crates/vibe-spec/src/lib.rs",
+        "crates/vibe-spec/src/resolver.rs"
+      ],
+      "steps": [
+        "Implement full replacement/local-source copy for each family in M-10-A using admitted captured inputs and retained local source.",
+        "Validate tree paths/membership before staged publication; preserve XML-data/opaque bytes and notices without running embedded content.",
+        "Expose show/diff through the owning service with raw/projection basis, exact digests and complete file additions/removals."
+      ],
+      "positive_cases": [
+        "CommonMark, XML-data, Vibe-spec, opaque file and nested tree each produce a usable independently owned result.",
+        "Removing generated output permits recreation from retained authored input."
+      ],
+      "negative_cases": [
+        "Traversal, changed base/local bytes, missing resource and duplicate path fail before publication.",
+        "Opaque script/code content remains inert."
+      ],
+      "checks": [
+        "cargo test -p vibe-workspace -- --list",
+        "cargo test -p vibe-workspace",
+        "cargo test -p vibe-agent-projection -- --list",
+        "cargo test -p vibe-agent-projection",
+        "cargo test -p vibe-spec -- --list",
+        "cargo test -p vibe-spec",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Every family has a real result and exact source/result inventory.",
+        "Passive operations have zero process/network/install side effects."
+      ],
+      "safe_stop": "General derivation/read/diff work locally; activation remains separate.",
+      "commit_subject": "feat(derivatives): derive and inspect complete inert resource trees",
+      "notes": [
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-10-C.2",
+      "title": "Implement explicit rebase and guarded authored apply",
+      "goal": "Preserve old provenance while rebasing a local derivative onto a newly selected base.",
+      "read_paths": [
+        "crates/vibe-install/src/slot_verify.rs",
+        "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+        "crates/vibe-lifecycle/src/state/fingerprint/inputs.rs",
+        "crates/vibe-safefs/src/file/bounded.rs",
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+        "crates/vibe-spec/src/resolver/lookup.rs",
+        "xtask/src/main.rs",
+        ".cargo/config.toml",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-core/Cargo.toml",
+        "crates/vibe-core/src/lib.rs",
+        "crates/vibe-core/src/manifest/mod.rs",
+        "crates/vibe-safefs/Cargo.toml",
+        "crates/vibe-safefs/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-workspace/src/",
+        "crates/vibe-core/src/manifest/",
+        "crates/vibe-safefs/src/",
+        "fixtures/next/derivatives/",
+        "schemas/",
+        "formats/",
+        "crates/vibe-wire/",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-core/Cargo.toml",
+        "crates/vibe-core/src/lib.rs",
+        "crates/vibe-core/src/manifest/mod.rs",
+        "crates/vibe-safefs/Cargo.toml",
+        "crates/vibe-safefs/src/lib.rs"
+      ],
+      "steps": [
+        "Compare old base/new base/local content and return rebase-required with reviewable changes; do not auto-merge.",
+        "After explicit selection, recapture saved source and apply a new binding under M-16 edit barrier/CAS with retained before-state.",
+        "Journal local binding/result publication, preserve old accepted provenance and implement inspect/recover for interruption."
+      ],
+      "positive_cases": [
+        "An explicit compatible rebase creates new provenance while preserving the prior chain.",
+        "Replay of an already-applied exact transaction is idempotent."
+      ],
+      "negative_cases": [
+        "Missing old capture, ambiguous patch, dirty buffer or concurrent edit refuses.",
+        "Unknown third state remains recovery-required rather than overwriting local work."
+      ],
+      "checks": [
+        "cargo test -p vibe-workspace -- --list",
+        "cargo test -p vibe-workspace",
+        "cargo test -p vibe-core -- --list",
+        "cargo test -p vibe-core",
+        "cargo test -p vibe-safefs -- --list",
+        "cargo test -p vibe-safefs",
+        "cargo test -p vibe-wire -- --list",
+        "cargo test -p vibe-wire",
+        "cargo xtask check-codegen",
+        "cargo xtask wire-diff",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Same-version base drift cannot silently change applicability.",
+        "Failure injection preserves authored source and truthful completed/pending effects."
+      ],
+      "safe_stop": "Explicit rebase/apply/recovery is proven with no automatic merge.",
+      "commit_subject": "feat(derivatives): apply explicit rebases with retained recovery",
+      "notes": [
+        "Schema changes: inspect the existing codegen entrypoint before regeneration; never hand-edit generated types or invent a new codegen command. The listed check-codegen and wire-diff commands are existing self-check gates.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,105 @@
+{
+  "id": "M-17-D",
+  "tasks": [
+    {
+      "id": "M-17-D.1",
+      "title": "Close every supported operation and model coverage row",
+      "goal": "Make ETO/interface completeness a mechanically checked property of the delivered product.",
+      "read_paths": [
+        "crates/vibe-cli/src/main.rs",
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-cli/src/commands/tree/model.rs",
+        "crates/vibe-workspace/src/compile_trace.rs",
+        "crates/vibe-workspace/src/extension_world.rs",
+        "formats/EPOCHS.toml",
+        "xtask/src/main.rs",
+        ".cargo/config.toml"
+      ],
+      "write_paths": [
+        "formats/capability-coverage/",
+        "xtask/src/",
+        "crates/vibe-mcp/tests/",
+        "crates/vibe-orchestrator/tests/"
+      ],
+      "steps": [
+        "Re-enumerate actual public registrations and semantic model families after all initial and M-15 work, comparing sets rather than counts to the original coverage denominator.",
+        "Attach exact valid/invalid request, result, typed partial error, event and model examples plus executable external scenario evidence for every supported row.",
+        "Run generated schema checks and all coverage conformance; classify access-restricted/target-unsupported separately from unimplemented interfaces and keep the latter blocking."
+      ],
+      "positive_cases": [
+        "Every delivered semantic capability has a strict external path and retained conformance case.",
+        "New registrations automatically produce a missing-coverage failure."
+      ],
+      "negative_cases": [
+        "Deleting an inventory row makes an uncovered feature disappear.",
+        "A generic unsupported response or matching schema name counts as functional proof."
+      ],
+      "checks": [
+        "cargo xtask check-codegen",
+        "cargo xtask wire-diff",
+        "cargo test -p vibe-mcp",
+        "cargo test -p vibe-orchestrator",
+        "TO CREATE/USE AFTER CREATION: coverage denominator and conformance check integrated in xtask; no invented pre-existing command."
+      ],
+      "acceptance": [
+        "No supported feature/model exists only in CLI, TUI, prose log or private dump.",
+        "The exact coverage set includes all M-01 through M-15 results and semantic package rename."
+      ],
+      "safe_stop": "Coverage is fully evidenced or explicit blockers remain; no hidden defer closes the campaign.",
+      "commit_subject": "test(api): enforce complete operation and model coverage",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+        "Use full listed crate tests by default. If narrowing to a newly created test filter, first run cargo test -p <crate> -- --list and verify an exact nonzero test-name match; a zero-test run is not acceptance."
+      ]
+    },
+    {
+      "id": "M-17-D.2",
+      "title": "Publish the local developer machine contract",
+      "goal": "Leave implementable client-neutral documentation and compatibility examples independent of temporary campaign files.",
+      "read_paths": [
+        "vibevm/vibespecs/common/PROP-018-agentic-standalone-modes.xml",
+        "vibevm/vibespecs/common/PROP-031-algorithmic-refactoring.xml",
+        "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+        "crates/vibe-mcp/src/transport.rs",
+        "crates/vibe-mcp/src/lib.rs",
+        "formats/EPOCHS.toml",
+        "xtask/src/main.rs",
+        ".cargo/config.toml"
+      ],
+      "write_paths": [
+        "docs/machine-api/",
+        "formats/capability-coverage/"
+      ],
+      "steps": [
+        "Document actual framing/negotiation, context registration, schema epochs, identities, overlays/edit barriers, authority, submissions/events/replay/cancel and recovery from generated examples.",
+        "Publish a local capability compatibility matrix covering contexts/targets/providers and retained/debug schemas, with typed missing/redacted/expired states and exact conformance references.",
+        "Document the five full headless journeys and how future adapters consume shared services; do not propose IDE screens, plugin packaging, LSP/DAP implementation or MVP milestones."
+      ],
+      "positive_cases": [
+        "A new external client can discover schemas and execute the proven admitted workflows from permanent documentation.",
+        "Retained evidence remains interpretable after provider/API exit."
+      ],
+      "negative_cases": [
+        "Documentation sends readers to campaign tasks or personal settings for domain semantics.",
+        "A future-client roadmap replaces missing backend contracts."
+      ],
+      "checks": [
+        "cargo run --quiet -p vibe-cli -- check --path . --quiet",
+        "cargo xtask check-codegen",
+        "TO CREATE: documented-example conformance check against generated schemas and implemented protocol."
+      ],
+      "acceptance": [
+        "Permanent developer documentation matches executable examples and all 26 owner decisions, with D-022's actual status explicit.",
+        "Root-owned promotion/retirement checks can remove the entire temporary campaign without breaking these contracts."
+      ],
+      "safe_stop": "Local developer contract is complete and reviewable; no public publication or IDE implementation occurs.",
+      "commit_subject": "docs(api): document complete machine operation contracts",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+        "Documentation is a local repository artifact; public release remains under existing explicit prepared-batch authority.",
+        "Use full listed crate tests by default. If narrowing to a newly created test filter, first run cargo test -p <crate> -- --list and verify an exact nonzero test-name match; a zero-test run is not acceptance."
+      ]
+    }
+  ]
+}

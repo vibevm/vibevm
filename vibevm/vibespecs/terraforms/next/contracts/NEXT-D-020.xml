@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">NEXT owner decision D-020</title>
+  <status stage="impl" state="plan"/>
+  <p><NEXT-D-020-STATE fact="true" status="spec/done">Owner state: accepted. This preference is settled; do not ask it again.</NEXT-D-020-STATE></p>
+  <p><NEXT-D-020-LAW fact="true" status="spec/done">VibeVM должен стать менеджером пакетов/окружений от пользовательского HOME до будущего Linux-дистрибутива; архитектура tools/install готовится сейчас, полный дистрибутив пока только outline</NEXT-D-020-LAW></p>
+</spec>

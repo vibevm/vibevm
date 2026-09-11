@@ -1,0 +1,109 @@
+{
+  "id": "M-12-A",
+  "tasks": [
+    {
+      "id": "M-12-A.1",
+      "title": "Verify the complete initial package and capability graph",
+      "goal": "Reconcile all accepted initial-route captures, versions and external coverage before integration.",
+      "read_paths": [
+        "vibevm/vibepacks/org.vibevm.world/redbook/v1.0.0/vibe.toml",
+        "vibe.toml",
+        "Cargo.toml",
+        "vibevm/vibespecs/modules/vibe-registry/PROP-023-bridge-packages.xml",
+        "vibevm/vibespecs/common/PROP-028-package-families.xml",
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+        "external:org.speckit.speckit/vibe.toml",
+        "external:com.external-skills.skills/vibe.toml"
+      ],
+      "write_paths": [
+        "fixtures/next/integration/",
+        "campaigns/next/evidence/M-12-A/"
+      ],
+      "steps": [
+        "Collect accepted M-01…M-11, M-13, M-14-C and M-17-A evidence, exact source captures and actual supported capability rows.",
+        "Resolve a composed local fixture containing Redbook choices, both bridges, four external adapters, local derivatives and native examples; verify every incoming edge and active owned 1.0.0 identity.",
+        "Join initial ETO/API coverage with real domain cases, recording missing results as open instead of substituting a supported-but-unimplemented row."
+      ],
+      "positive_cases": [
+        "The full initial graph resolves to the exact accepted captures and choices.",
+        "Every supported initial operation/model has independent external evidence from M-17-A."
+      ],
+      "negative_cases": [
+        "Mixed capture, wrong own version, missing bridge resource or unsupported mandatory client blocks readiness.",
+        "This gate cannot report M-15 or full M-17 done."
+      ],
+      "checks": [
+        "cargo test -p vibe-install -- --list",
+        "cargo test -p vibe-install",
+        "cargo test -p vibe-workspace -- --list",
+        "cargo test -p vibe-workspace",
+        "cargo test -p vibe-orchestrator -- --list",
+        "cargo test -p vibe-orchestrator",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "A reviewable graph/capability/evidence matrix has no unexplained mandatory gap.",
+        "Declared selected state matches actual installed/projection subjects."
+      ],
+      "safe_stop": "Initial integration census is complete; remaining route evidence is explicitly open.",
+      "commit_subject": "test(integration): reconcile initial package and capability closure",
+      "notes": [
+        "External bridge roots require root-bound isolated checkouts for external:org.speckit.speckit / external:com.external-skills.skills. Never modify the currently existing sibling source trees. Root binds actual external validation/publication commands after inspecting those checkouts.",
+        "fixtures/next/integration is a proposed controlled fixture subtree."
+      ]
+    },
+    {
+      "id": "M-12-A.2",
+      "title": "Reproduce the accepted initial graph offline",
+      "goal": "Prove a clean isolated consumer can replay exact initial-route inputs and behaviors.",
+      "read_paths": [
+        "crates/vibe-install/src/plan.rs",
+        "crates/vibe-package-source/src/source.rs",
+        "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+        "crates/vibe-install/src/slot_verify.rs",
+        "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+        "tools/self-check.sh"
+      ],
+      "write_paths": [
+        "fixtures/next/integration/",
+        "campaigns/next/evidence/M-12-A/"
+      ],
+      "steps": [
+        "Prepare complete captures from .1 into a controlled source/cache fixture; then replay in a second clean injected home with network/process counters.",
+        "Compare resulting lock, full package resources, boot contributions, derivatives, adapter receipts and native example evidence against the accepted graph.",
+        "Exercise missing-capture and changed-definition cases; run the existing full self-check only at this coherent integration boundary with root-provided environment isolation."
+      ],
+      "positive_cases": [
+        "Prepared offline replay reproduces exact selected sources/resources and declared operations.",
+        "Two clean consumers keep independent ownership while sharing allowed captured content."
+      ],
+      "negative_cases": [
+        "Offline missing input cannot trigger fetch/default reselect.",
+        "Byte-equal output alone cannot substitute for capture/receipt ownership agreement."
+      ],
+      "checks": [
+        "cargo test -p vibe-install -- --list",
+        "cargo test -p vibe-install",
+        "cargo test -p vibe-workspace -- --list",
+        "cargo test -p vibe-workspace",
+        "cargo test -p vibe-orchestrator -- --list",
+        "cargo test -p vibe-orchestrator",
+        "cargo fmt --all -- --check",
+        "git diff --check",
+        "bash tools/self-check.sh"
+      ],
+      "acceptance": [
+        "Offline replay evidence includes zero network attempts and exact output/ownership joins.",
+        "Full panel result includes every executed step, with unrun tail never claimed green."
+      ],
+      "safe_stop": "Offline initial-route integration is proven; no registry publication.",
+      "commit_subject": "test(integration): reproduce the initial route from captured inputs",
+      "notes": [
+        "Additional existing integration command: bash tools/self-check.sh. Run only when prerequisites are assembled; it is a broad integration gate, not a per-edit loop."
+      ]
+    }
+  ]
+}

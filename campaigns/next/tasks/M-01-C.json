@@ -1,0 +1,178 @@
+{
+  "id": "M-01-C",
+  "tasks": [
+    {
+      "id": "M-01-C.1",
+      "title": "Retain file observation for digest and parsing",
+      "goal": "Use one safely held source observation for every returned byte and identity.",
+      "read_paths": [
+        "crates/vibe-safefs/src/file/bounded.rs",
+        "crates/vibe-safefs/src/file.rs",
+        "crates/vibe-safefs/src/file/stream.rs",
+        "crates/vibe-safefs/Cargo.toml",
+        "crates/vibe-safefs/src/lib.rs",
+        "crates/vibe-spec/Cargo.toml",
+        "crates/vibe-spec/src/lib.rs",
+        "crates/vibe-spec/src/resolver.rs"
+      ],
+      "write_paths": [
+        "vibevm/vibespecs/common/PROP-057-resource-resolution.xml",
+        "crates/vibe-safefs/src/file/",
+        "crates/vibe-spec/src/resolver/",
+        "crates/vibe-safefs/Cargo.toml",
+        "crates/vibe-safefs/src/lib.rs",
+        "crates/vibe-safefs/src/file.rs",
+        "crates/vibe-spec/Cargo.toml",
+        "crates/vibe-spec/src/lib.rs",
+        "crates/vibe-spec/src/resolver.rs"
+      ],
+      "steps": [
+        "Retain root/parent/file capabilities and read through the existing safe seam.",
+        "Compute raw digest and parsing input from the same buffer or retained stream.",
+        "Define pre/post stability witnesses and honest unavailable handling without weakening single-link ownership."
+      ],
+      "positive_cases": [
+        "Stable regular file yields exact bytes and matching digest."
+      ],
+      "negative_cases": [
+        "Links, reparse points, hardlinks or concurrent replacement cannot silently receive stable success."
+      ],
+      "checks": [
+        "cargo test -p vibe-safefs -- --list",
+        "cargo test -p vibe-safefs",
+        "cargo test -p vibe-spec -- --list",
+        "cargo test -p vibe-spec",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Result states its measured stability window without claiming hostile-ABA prevention.",
+        "No query creates locks, directories or COW copies."
+      ],
+      "safe_stop": "Unsupported shared-file reads remain unavailable.",
+      "commit_subject": "feat(safefs): retain verified source observations",
+      "notes": [
+        "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
+        "Permanent destination: vibevm/vibespecs/common/PROP-057-resource-resolution.xml (PROPOSED file until its source-contract task creates it). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+        "TO CREATE: m_01_c_1_cases test family for the cases below. This is not an existing test. Enumerate the owning crate's tests before any optional filter; listed checks intentionally use unfiltered crate suites.",
+        "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-01-C.2",
+      "title": "Prove membership against trusted captured source",
+      "goal": "Separate local record agreement from independent source proof.",
+      "read_paths": [
+        "crates/vibe-install/src/slot_verify.rs",
+        "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+        "crates/vibe-safefs/src/file/bounded.rs",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-install/Cargo.toml",
+        "crates/vibe-install/src/lib.rs"
+      ],
+      "write_paths": [
+        "vibevm/vibespecs/common/PROP-057-resource-resolution.xml",
+        "crates/vibe-workspace/src/source_query/",
+        "crates/vibe-install/src/slot_verify.rs",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-install/Cargo.toml",
+        "crates/vibe-install/src/lib.rs"
+      ],
+      "steps": [
+        "Build a bounded immutable index from a capture verified against its trusted hash recipe.",
+        "Check document membership independently of mutable slot-record hashes.",
+        "Return observed, record-consistent or source-proven strength; strict missing-capture requests refuse offline."
+      ],
+      "positive_cases": [
+        "Verified captured member reaches source-proven; development source remains observed."
+      ],
+      "negative_cases": [
+        "Coordinated record/payload tampering and an unrecorded document cannot become source-proven."
+      ],
+      "checks": [
+        "cargo test -p vibe-workspace -- --list",
+        "cargo test -p vibe-workspace",
+        "cargo test -p vibe-install -- --list",
+        "cargo test -p vibe-install",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Tamper matrix distinguishes record-only, payload-only and coordinated changes.",
+        "No additional local digest is mistaken for authentication."
+      ],
+      "safe_stop": "Ship truthful weaker observation until stronger proof is available.",
+      "commit_subject": "feat(workspace): verify captured source membership",
+      "notes": [
+        "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
+        "Permanent destination: vibevm/vibespecs/common/PROP-057-resource-resolution.xml (PROPOSED file until its source-contract task creates it). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+        "TO CREATE: m_01_c_2_cases test family for the cases below. This is not an existing test. Enumerate the owning crate's tests before any optional filter; listed checks intentionally use unfiltered crate suites.",
+        "PROPOSED source-query subtree; no Merkle proof is assumed.",
+        "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-01-C.3",
+      "title": "Bind builtin converter and overlay provenance",
+      "goal": "Prove transformed returned bytes using existing pure conversion.",
+      "read_paths": [
+        "crates/vibe-specdoc/src/load.rs",
+        "crates/vibe-specdoc/src/xml_in.rs",
+        "crates/vibe-workspace/src/vibedeps/derived.rs",
+        "crates/vibe-install/src/slot_verify.rs",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-specdoc/Cargo.toml",
+        "crates/vibe-specdoc/src/lib.rs",
+        "crates/vibe-workspace/src/vibedeps.rs"
+      ],
+      "write_paths": [
+        "vibevm/vibespecs/common/PROP-057-resource-resolution.xml",
+        "crates/vibe-workspace/src/source_query/",
+        "crates/vibe-specdoc/src/",
+        "crates/vibe-workspace/src/vibedeps/derived.rs",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-specdoc/Cargo.toml",
+        "crates/vibe-specdoc/src/lib.rs",
+        "crates/vibe-workspace/src/vibedeps.rs"
+      ],
+      "steps": [
+        "Run only pure builtin conversion over verified capture bytes in memory.",
+        "Bind descriptor, converter recipe, authorized overlay and source-output map.",
+        "Compare materialized output before assigning derivation-proven; expose carriers reusable by later M-10."
+      ],
+      "positive_cases": [
+        "Declared Vibe XML has a named converter and exact output proof."
+      ],
+      "negative_cases": [
+        "Converter/overlay/output drift refuses; native conversion never runs implicitly."
+      ],
+      "checks": [
+        "cargo test -p vibe-workspace -- --list",
+        "cargo test -p vibe-workspace",
+        "cargo test -p vibe-specdoc -- --list",
+        "cargo test -p vibe-specdoc",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Every transformation between source and returned representation is inspectable.",
+        "Source/raw/representation hashes remain distinct."
+      ],
+      "safe_stop": "Unsupported custom transform returns unavailable proof.",
+      "commit_subject": "feat(specdoc): bind builtin source derivation proofs",
+      "notes": [
+        "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
+        "Permanent destination: vibevm/vibespecs/common/PROP-057-resource-resolution.xml (PROPOSED file until its source-contract task creates it). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+        "TO CREATE: m_01_c_3_cases test family for the cases below. This is not an existing test. Enumerate the owning crate's tests before any optional filter; listed checks intentionally use unfiltered crate suites.",
+        "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

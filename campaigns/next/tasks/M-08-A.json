@@ -1,0 +1,124 @@
+{
+  "id": "M-08-A",
+  "tasks": [
+    {
+      "id": "M-08-A.1",
+      "title": "Characterize legacy projection ownership lanes",
+      "goal": "Freeze existing per-operation behavior before replacing the fixed client catalog.",
+      "read_paths": [
+        "crates/vibe-agent-projection/src/agents.rs",
+        "crates/vibe-agent-projection/src/agents/home_paths.rs",
+        "crates/vibe-agent-projection/src/pkgskill.rs",
+        "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+        "crates/vibe-agent-projection/src/pkgskill/projection/binding.rs",
+        "crates/vibe-agent-projection/src/pkgskill/receipt/reconcile.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/plugin/opencode.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/skill.rs",
+        "crates/vibe-agent-projection/Cargo.toml",
+        "crates/vibe-agent-projection/src/lib.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-agent-projection/src/",
+        "crates/vibe-lifecycle/src/mechanism/deploy/",
+        "fixtures/next/adapters/",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+        "crates/vibe-agent-projection/Cargo.toml",
+        "crates/vibe-agent-projection/src/lib.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy.rs"
+      ],
+      "steps": [
+        "Enumerate existing standalone skill, automatic binding and lifecycle deploy operations by client, scope and file/tree/config shape.",
+        "Build isolated fixtures capturing exact paths, bytes, supported operations and receipt owner; distinguish coarse MCP scope flags from project skill support.",
+        "Record compatibility cases for logical config members versus physical locks and equal-byte foreign occupants."
+      ],
+      "positive_cases": [
+        "Existing supported install/update/remove shapes retain their exact bytes and ownership.",
+        "Codex project skill behavior is characterized separately from user-only MCP config."
+      ],
+      "negative_cases": [
+        "A second receipt family cannot silently claim an equal-byte occupant.",
+        "Unsupported directory/resource shape is an explicit case, not omitted coverage."
+      ],
+      "checks": [
+        "cargo test -p vibe-agent-projection -- --list",
+        "cargo test -p vibe-agent-projection",
+        "cargo test -p vibe-lifecycle -- --list",
+        "cargo test -p vibe-lifecycle",
+        "cargo run --quiet -p vibe-cli -- check --path . --quiet",
+        "cargo run --quiet -p vibe-cli -- facts check --exhaustive",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "A per-surface matrix links each row to an executable characterization case.",
+        "Fixtures use injected homes and preserve unrelated configuration."
+      ],
+      "safe_stop": "Legacy characterization passes before replacing client data structures.",
+      "commit_subject": "test(adapters): characterize legacy scopes and receipt ownership",
+      "notes": [
+        "fixtures/next/adapters is a proposed fixture subtree. Do not treat current coarse booleans as the future capability contract.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-08-A.2",
+      "title": "Specify four client contracts from exact versions",
+      "goal": "Define the required Claude Code, Codex, OpenCode and Qwen Code contracts without implying untested support.",
+      "read_paths": [
+        "crates/vibe-agent-projection/src/agents.rs",
+        "crates/vibe-agent-projection/src/agents/home_paths.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/plugin/wire.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/plugin/opencode.rs",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml"
+      ],
+      "write_paths": [
+        "fixtures/next/adapters/",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+        "campaigns/next/evidence/M-08-A/"
+      ],
+      "steps": [
+        "For each mandatory client bind an exact available version and official resource/config/launch documentation; record platform and source of observation.",
+        "Translate required skills, MCP/config and plugin surfaces into operation/scope/shape rows with explicit target paths and value grammar.",
+        "Define positive commissioning cases and unsupported-version refusals; keep Gemini/Copilot secondary and existing legacy clients intact."
+      ],
+      "positive_cases": [
+        "All four mandatory clients have exact versioned requested surfaces and acceptance cases.",
+        "A missing executable/version remains explicit evidence debt."
+      ],
+      "negative_cases": [
+        "Presence markers or official docs alone cannot count as runtime support.",
+        "Qwen must not be represented only by adding a fourth hardcoded executable field."
+      ],
+      "checks": [
+        "cargo test -p vibe-agent-projection -- --list",
+        "cargo test -p vibe-agent-projection",
+        "cargo test -p vibe-lifecycle -- --list",
+        "cargo test -p vibe-lifecycle",
+        "cargo run --quiet -p vibe-cli -- check --path . --quiet",
+        "cargo run --quiet -p vibe-cli -- facts check --exhaustive",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "The matrix distinguishes observed facts, proposed adapter data and unexecuted gates.",
+        "Every mandatory lifecycle scenario has a concrete future isolated proof."
+      ],
+      "safe_stop": "Four-client contracts are reviewable; no real user settings or client installation changed.",
+      "commit_subject": "docs(adapters): define exact four-client commissioning contracts",
+      "notes": [
+        "Read-only official-document/probe work at execution time must use explicit preparation. This task never installs into the real home.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,188 @@
+{
+  "id": "M-15-A",
+  "tasks": [
+    {
+      "id": "M-15-A.1",
+      "title": "Record exact payload production and closure",
+      "goal": "Turn existing source/prebuilt/build artifacts into independently verifiable realization inputs and outputs.",
+      "read_paths": [
+        "crates/vibe-lifecycle/src/mechanism/build.rs",
+        "crates/vibe-lifecycle/src/mechanism/package.rs",
+        "crates/vibe-lifecycle/src/mechanism/record.rs",
+        "crates/vibe-core/src/manifest/artifact/binary_projection.rs",
+        "crates/vibe-package-source/src/source.rs",
+        "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-core/Cargo.toml",
+        "crates/vibe-core/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-lifecycle/src/mechanism/build.rs",
+        "crates/vibe-lifecycle/src/mechanism/package.rs",
+        "crates/vibe-lifecycle/src/mechanism/record.rs",
+        "crates/vibe-core/src/environment/",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-core/Cargo.toml",
+        "crates/vibe-core/src/lib.rs"
+      ],
+      "steps": [
+        "Extend existing provider results with full source/toolchain/config/executor/target inputs, declared outputs and dependency roles rather than adding a parallel evidence store.",
+        "Support captured prebuilt files/archives and an explicit build recipe; bind output inventory and digest independently of recipe identity.",
+        "Exercise an isolated declared-input Linux build without network after preparation and report providers lacking enforcement as non-hermetic/unavailable."
+      ],
+      "positive_cases": [
+        "Captured prebuilt and source-build paths produce equivalent declared runtime inventories.",
+        "One changed toolchain/input invalidates reuse."
+      ],
+      "negative_cases": [
+        "A successful handler without complete output inventory is called a verified realization.",
+        "Ambient compiler, libc or network satisfies an undeclared hermetic dependency."
+      ],
+      "checks": [
+        "cargo test -p vibe-lifecycle",
+        "cargo test -p vibe-core",
+        "TO CREATE: source/prebuilt realization and declared-input isolation fixtures."
+      ],
+      "acceptance": [
+        "Input identity, output identity and reproducibility claim are separate fields backed by evidence.",
+        "All-input missing states refuse before activation."
+      ],
+      "safe_stop": "Verified realization artifacts exist in fixture storage; no profile is activated.",
+      "commit_subject": "feat(runtime): record exact payload realizations",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-064-runtime-package-management.xml; forward metadata only.",
+        "Use full listed crate tests by default. If narrowing to a newly created test filter, first run cargo test -p <crate> -- --list and verify an exact nonzero test-name match; a zero-test run is not acceptance.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-15-A.2",
+      "title": "Realize payload files with target filesystem semantics",
+      "goal": "Validate archives and preserve ordinary tools' files, links and modes without exposing host paths.",
+      "read_paths": [
+        "crates/vibe-safefs/src/file.rs",
+        "crates/vibe-safefs/src/component.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+        "crates/vibe-core/src/manifest/artifact/binary_projection.rs",
+        "crates/vibe-safefs/Cargo.toml",
+        "crates/vibe-safefs/src/lib.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin.rs",
+        "crates/vibe-lifecycle/src/mechanism/package.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-safefs/src/",
+        "crates/vibe-lifecycle/src/mechanism/vibebin/",
+        "crates/vibe-lifecycle/src/mechanism/package/",
+        "crates/vibe-lifecycle/tests/",
+        "crates/vibe-lifecycle/src/mechanism/package.rs",
+        "crates/vibe-safefs/Cargo.toml",
+        "crates/vibe-safefs/src/lib.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin.rs"
+      ],
+      "steps": [
+        "Pre-enumerate archive entries and metadata; reject traversal, duplicate/overlapping outputs, case collisions and link escape before writes.",
+        "Install into a staged target-bound store using Linux metadata semantics for Linux payloads; verify content, modes and link targets independently after extraction.",
+        "Represent unsupported xattrs/capabilities/device nodes explicitly; permit legitimate target-root absolute symlinks without following them into the Windows host."
+      ],
+      "positive_cases": [
+        "Executable modes and safe relative/absolute-in-root symlinks survive Linux realization.",
+        "Two tools share one exact runtime dependency payload."
+      ],
+      "negative_cases": [
+        "A malicious link or hardlink escapes the staged root.",
+        "NTFS copying is treated as proof of POSIX metadata preservation."
+      ],
+      "checks": [
+        "cargo test -p vibe-safefs",
+        "cargo test -p vibe-lifecycle",
+        "TO CREATE: archive traversal/link/mode corpus and Linux metadata integration test."
+      ],
+      "acceptance": [
+        "All written paths match the admitted inventory and target root.",
+        "Extraction failures preserve a staged partial result that cannot be activated as complete."
+      ],
+      "safe_stop": "Only verified staging content exists; rejected stages are retained or removed under exact ownership.",
+      "commit_subject": "feat(runtime): safely realize target-aware payload inventories",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-064-runtime-package-management.xml; forward metadata only.",
+        "Use full listed crate tests by default. If narrowing to a newly created test filter, first run cargo test -p <crate> -- --list and verify an exact nonzero test-name match; a zero-test run is not acceptance.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-15-A.3",
+      "title": "Unify legacy binary dispatch and trusted substitution",
+      "goal": "Route installed command selection through validated artifact/closure records instead of existence or debug-first fallback.",
+      "read_paths": [
+        "crates/vibe-cli/src/commands/bin.rs",
+        "crates/vibe-workspace/src/bins.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin/launcher.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin/config.rs",
+        "crates/vibe-lifecycle/src/mechanism/record.rs",
+        "crates/vibe-cli/Cargo.toml",
+        "crates/vibe-cli/src/commands/mod.rs",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-cli/src/commands/bin.rs",
+        "crates/vibe-workspace/src/bins.rs",
+        "crates/vibe-workspace/src/bins/",
+        "crates/vibe-lifecycle/src/mechanism/vibebin/",
+        "crates/vibe-cli/Cargo.toml",
+        "crates/vibe-cli/src/commands/mod.rs",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin.rs"
+      ],
+      "steps": [
+        "Replace public legacy existence/debug-first dispatch with the same recorded artifact validation used by new realization paths; keep user-visible compatibility where proof exists.",
+        "Validate substitute producer policy, closure/content/recipe/target and store-prefix compatibility before reuse; rebuild or explicitly refuse incompatible prefix-bound binaries.",
+        "Add command/path/exec regressions for corrupt/missing records, compatible caches and multiple command providers; no hidden GitHub or model execution."
+      ],
+      "positive_cases": [
+        "Legacy valid binary records resolve through the shared validator.",
+        "An authorized exact substitute runs from a compatible profile prefix."
+      ],
+      "negative_cases": [
+        "A stray target/debug binary wins over a recorded release artifact.",
+        "Binary strings are blindly rewritten to relocate a prefix-bound payload."
+      ],
+      "checks": [
+        "cargo test -p vibe-cli",
+        "cargo test -p vibe-workspace",
+        "cargo test -p vibe-lifecycle"
+      ],
+      "acceptance": [
+        "All public binary paths share one validation authority.",
+        "Corrupt or unrecorded binaries return structured diagnostics rather than execute."
+      ],
+      "safe_stop": "Binary routing passes fixtures and no real user's activation links are changed.",
+      "commit_subject": "fix(bin): validate recorded runtime artifacts before dispatch",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-064-runtime-package-management.xml; forward metadata only.",
+        "Use full listed crate tests by default. If narrowing to a newly created test filter, first run cargo test -p <crate> -- --list and verify an exact nonzero test-name match; a zero-test run is not acceptance.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

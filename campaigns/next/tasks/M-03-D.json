@@ -1,0 +1,124 @@
+{
+  "id": "M-03-D",
+  "tasks": [
+    {
+      "id": "M-03-D.1",
+      "title": "Characterize candidate production across the whole input prefix",
+      "goal": "Preserve the disjoint precursor proof without claiming integrated-code delivery.",
+      "read_paths": [
+        "crates/vibe-lifecycle/src/chain.rs",
+        "crates/vibe-lifecycle/src/runner.rs",
+        "crates/vibe-lifecycle/src/state/fingerprint/inputs.rs",
+        "crates/vibe-lifecycle/src/runner/hosted.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs"
+      ],
+      "write_paths": [
+        "vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml",
+        "crates/vibe-lifecycle/src/runner/",
+        "crates/vibe-lifecycle/tests/",
+        "crates/vibe-orchestrator/tests/",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/runner.rs"
+      ],
+      "steps": [
+        "After root-supplied M-11-D acceptance, construct a bounded managed candidate workload.",
+        "Enumerate the complete reached-prefix input/read/write membership, including globs and consumed artifacts.",
+        "Run candidate creation/hosted acceptance and independent semantic observation; label nonempty-output acceptance only as shape."
+      ],
+      "positive_cases": [
+        "A genuinely disjoint candidate is produced and independently observed."
+      ],
+      "negative_cases": [
+        "Overlap with any predecessor input is detected; nonempty file is not called tested code."
+      ],
+      "checks": [
+        "cargo test -p vibe-lifecycle -- --list",
+        "cargo test -p vibe-lifecycle",
+        "cargo test -p vibe-orchestrator -- --list",
+        "cargo test -p vibe-orchestrator",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Fixture explains its entire prefix and exact managed outputs.",
+        "Report explicitly marks this as an intermediate proof."
+      ],
+      "safe_stop": "Candidate-only evidence cannot close M-03-D or M-03.",
+      "commit_subject": "test(lifecycle): characterize whole-prefix candidate scope",
+      "notes": [
+        "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
+        "Permanent destination: vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml (PROPOSED file until its source-contract task creates it). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+        "TO CREATE: m_03_d_1_cases test family for the cases below. This is not an existing test. Enumerate the owning crate's tests before any optional filter; listed checks intentionally use unfiltered crate suites.",
+        "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-03-D.2",
+      "title": "Verify a controlled existing-file change",
+      "goal": "Use the accepted transition law to prove new source is actually built and tested.",
+      "read_paths": [
+        "crates/vibe-lifecycle/src/runner/verify.rs",
+        "crates/vibe-orchestrator/src/dispatch/verify.rs",
+        "crates/vibe-lifecycle/src/state/fingerprint/inputs.rs",
+        "crates/vibe-lifecycle/src/runner/hosted.rs",
+        "crates/vibe-lifecycle/src/mechanism/record.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/runner.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-orchestrator/src/dispatch/mod.rs"
+      ],
+      "write_paths": [
+        "vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml",
+        "crates/vibe-lifecycle/src/runner/",
+        "crates/vibe-orchestrator/src/dispatch/",
+        "crates/vibe-lifecycle/tests/",
+        "crates/vibe-orchestrator/tests/",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/runner.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-orchestrator/src/dispatch/mod.rs"
+      ],
+      "steps": [
+        "Consume M-11-D pre/post transition implementation; do not redeclare its ownership law.",
+        "Create and explicitly adopt variants of one existing-source edit, retaining pre-images, write set and post witnesses.",
+        "Run deterministic build/test over the post-source, then verify transition/current outputs; repeat verify without new production."
+      ],
+      "positive_cases": [
+        "Both executed and explicitly adopted output paths retain truthful authority.",
+        "New source tests run and a second verify reuses production."
+      ],
+      "negative_cases": [
+        "Outside-write edit, lost pre-image or changed consumed artifact refuses.",
+        "Old-source test evidence cannot accept the edited source."
+      ],
+      "checks": [
+        "cargo test -p vibe-lifecycle -- --list",
+        "cargo test -p vibe-lifecycle",
+        "cargo test -p vibe-orchestrator -- --list",
+        "cargo test -p vibe-orchestrator",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Real existing file changes and current-source build/test evidence names the new bytes.",
+        "Adopted evidence is never credited to an unexecuted producer."
+      ],
+      "safe_stop": "Keep candidate and failed verification evidence; repair is an explicit new request.",
+      "commit_subject": "feat(lifecycle): verify controlled existing-source transitions",
+      "notes": [
+        "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
+        "Permanent destination: vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml (PROPOSED file until its source-contract task creates it). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+        "TO CREATE: m_03_d_2_cases test family for the cases below. This is not an existing test. Enumerate the owning crate's tests before any optional filter; listed checks intentionally use unfiltered crate suites.",
+        "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

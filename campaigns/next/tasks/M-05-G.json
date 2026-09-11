@@ -1,0 +1,117 @@
+{
+  "id": "M-05-G",
+  "tasks": [
+    {
+      "id": "M-05-G.1",
+      "title": "Prove supported solver and workspace parity",
+      "goal": "Close candidate and configuration behavior across actually supported backends.",
+      "read_paths": [
+        "crates/vibe-resolver/src/lib.rs",
+        "crates/vibe-resolver/src/resolvo_engine/provider.rs",
+        "crates/vibe-package-source/src/source.rs",
+        "crates/vibe-install/src/visibility_projection.rs",
+        "crates/vibe-resolver/src/features.rs",
+        "crates/vibe-resolver/Cargo.toml",
+        "crates/vibe-package-source/Cargo.toml",
+        "crates/vibe-package-source/src/lib.rs"
+      ],
+      "write_paths": [
+        "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+        "crates/vibe-resolver/src/",
+        "crates/vibe-package-source/src/",
+        "crates/vibe-install/tests/",
+        "crates/vibe-resolver/Cargo.toml",
+        "crates/vibe-resolver/src/lib.rs",
+        "crates/vibe-package-source/Cargo.toml",
+        "crates/vibe-package-source/src/lib.rs"
+      ],
+      "steps": [
+        "Run the accepted feature/group corpus against each supported backend capability set.",
+        "Compare selected request/effect graph or equivalent typed conflict, including multi-member roots and capability/OR providers.",
+        "Keep unsupported semantics explicit and ensure all supported routes expose rejected-candidate reasons."
+      ],
+      "positive_cases": [
+        "Each supported backend preserves all consumers and finds the same valid configuration class."
+      ],
+      "negative_cases": [
+        "Candidate leakage, wrong-version conditional satisfaction and hidden fallback fail the corpus."
+      ],
+      "checks": [
+        "cargo test -p vibe-resolver -- --list",
+        "cargo test -p vibe-resolver",
+        "cargo test -p vibe-package-source -- --list",
+        "cargo test -p vibe-package-source",
+        "cargo test -p vibe-install -- --list",
+        "cargo test -p vibe-install",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Backend matrix records exact exercised modes and unsupported ones.",
+        "Final graph retains actual selected technical providers."
+      ],
+      "safe_stop": "A backend-specific unsupported result cannot be reported as full parity.",
+      "commit_subject": "test(resolver): prove configuration backend parity",
+      "notes": [
+        "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
+        "Permanent destination: vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml (existing source). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+        "TO CREATE: m_05_g_1_cases test family for the cases below. This is not an existing test. Enumerate the owning crate's tests before any optional filter; listed checks intentionally use unfiltered crate suites.",
+        "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-05-G.2",
+      "title": "Close transaction and Redbook coexistence regressions",
+      "goal": "Verify failure recovery, independent WAL/MUP use and current version policy.",
+      "read_paths": [
+        "crates/vibe-install/src/plan.rs",
+        "crates/vibe-install/src/record.rs",
+        "vibevm/vibepacks/org.vibevm.world/redbook/v1.0.0/vibe.toml",
+        "crates/vibe-cli/src/commands/uninstall.rs"
+      ],
+      "write_paths": [
+        "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+        "crates/vibe-install/tests/",
+        "crates/vibe-orchestrator/tests/",
+        "crates/vibe-cli/tests/"
+      ],
+      "steps": [
+        "Inject failures before/after owned manifest, lock, slots, boot and hook prefixes.",
+        "Exercise independent WAL/MUP roots together, then Redbook exclusive selection in the same fixture matrix.",
+        "Check offline replay, shared-dependency retention, explicit missing-input behavior and no automatic Redbook bump."
+      ],
+      "positive_cases": [
+        "Independent WAL/MUP coexist; Redbook contributes one selected branch.",
+        "Recovered transaction matches exact requested graph or reports partial effects."
+      ],
+      "negative_cases": [
+        "Source corruption, concurrent edits or unsupported rollback never yield successful complete apply.",
+        "Group exclusivity cannot become a global package ban."
+      ],
+      "checks": [
+        "cargo test -p vibe-install -- --list",
+        "cargo test -p vibe-install",
+        "cargo test -p vibe-orchestrator -- --list",
+        "cargo test -p vibe-orchestrator",
+        "cargo test -p vibe-cli -- --list",
+        "cargo test -p vibe-cli",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "M-05 gates include real contribution activation, recovery and exact replay.",
+        "Every failed prefix has a retained typed disposition, not a silent repair."
+      ],
+      "safe_stop": "Leave recovery-required evidence and no public republish.",
+      "commit_subject": "test(install): close choice recovery and coexistence gates",
+      "notes": [
+        "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
+        "Permanent destination: vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml (existing source). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+        "TO CREATE: m_05_g_2_cases test family for the cases below. This is not an existing test. Enumerate the owning crate's tests before any optional filter; listed checks intentionally use unfiltered crate suites.",
+        "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

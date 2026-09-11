@@ -1,0 +1,127 @@
+{
+  "id": "M-08-E",
+  "tasks": [
+    {
+      "id": "M-08-E.1",
+      "title": "Commission Claude Code and Codex external packages",
+      "goal": "Prove both mandatory client contracts through external package data and isolated runtime verification.",
+      "read_paths": [
+        "crates/vibe-agent-projection/src/agents.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/plugin/wire.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+        "crates/vibe-agent-projection/Cargo.toml",
+        "crates/vibe-agent-projection/src/lib.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy.rs"
+      ],
+      "write_paths": [
+        "fixtures/next/adapters/",
+        "crates/vibe-agent-projection/src/",
+        "crates/vibe-lifecycle/src/mechanism/deploy/",
+        "campaigns/next/evidence/M-08-E/",
+        "crates/vibe-agent-projection/Cargo.toml",
+        "crates/vibe-agent-projection/src/lib.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy.rs"
+      ],
+      "steps": [
+        "Create captured fixture packages for Claude Code and Codex using the accepted open descriptor schema; record exact client versions.",
+        "Run install/update/verify/recover/remove for each required scope/shape in isolated homes, inspecting real client state where available.",
+        "Compare core executable identity before/after introducing the descriptor; retain exact settings/resources and foreign-neighbor snapshots."
+      ],
+      "positive_cases": [
+        "Both clients load expected projected resources and execute the supported local launch contract.",
+        "Update and remove affect only the receipt-owned set."
+      ],
+      "negative_cases": [
+        "Wrong client version, truncated client output and foreign occupancy refuse.",
+        "Fixture-runner-only success cannot substitute for required actual client commissioning."
+      ],
+      "checks": [
+        "cargo test -p vibe-agent-projection -- --list",
+        "cargo test -p vibe-agent-projection",
+        "cargo test -p vibe-lifecycle -- --list",
+        "cargo test -p vibe-lifecycle",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Each required matrix row has exact client/core/capture/effect evidence.",
+        "Real user homes, secrets and installed client configuration remain untouched."
+      ],
+      "safe_stop": "Available isolated client evidence is complete; missing mandatory runtime remains pending.",
+      "commit_subject": "test(adapters): commission external Claude and Codex lifecycles",
+      "notes": [
+        "Do not download/install clients implicitly. Root binds exact prepared client runtimes and any explicit preparation authority.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-08-E.2",
+      "title": "Commission OpenCode and Qwen without core changes",
+      "goal": "Close remaining mandatory clients and the no-core-release extensibility proof.",
+      "read_paths": [
+        "crates/vibe-agent-projection/src/agents.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/plugin/opencode.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/skill.rs",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+        "crates/vibe-agent-projection/Cargo.toml",
+        "crates/vibe-agent-projection/src/lib.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy.rs"
+      ],
+      "write_paths": [
+        "fixtures/next/adapters/",
+        "crates/vibe-agent-projection/src/",
+        "crates/vibe-lifecycle/src/mechanism/deploy/",
+        "campaigns/next/evidence/M-08-E/",
+        "crates/vibe-agent-projection/Cargo.toml",
+        "crates/vibe-agent-projection/src/lib.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy.rs"
+      ],
+      "steps": [
+        "Create OpenCode and Qwen fixture descriptors with complete declared resource closure; use current exact documented client versions.",
+        "Execute full required lifecycle in isolated roots, including nested skill resources/config members and unsupported-operation refusal.",
+        "Add a further synthetic new-client descriptor using the same operations and prove it is accepted by the unchanged core binary; gather four-client coverage together."
+      ],
+      "positive_cases": [
+        "OpenCode and Qwen resources/settings survive full install/update/remove with foreign state preserved.",
+        "The unchanged binary recognizes an added package-defined client."
+      ],
+      "negative_cases": [
+        "Qwen documentation, detection or a fourth enum variant is not runtime proof.",
+        "Missing nested resource, unsupported mandatory row or lost foreign key prevents milestone acceptance."
+      ],
+      "checks": [
+        "cargo test -p vibe-agent-projection -- --list",
+        "cargo test -p vibe-agent-projection",
+        "cargo test -p vibe-lifecycle -- --list",
+        "cargo test -p vibe-lifecycle",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "All four mandatory matrices have independent observed-state evidence.",
+        "No required client row closes on an unsupported placeholder."
+      ],
+      "safe_stop": "Four-client/external extensibility evidence is ready for parent review.",
+      "commit_subject": "test(adapters): commission OpenCode and Qwen package projections",
+      "notes": [
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

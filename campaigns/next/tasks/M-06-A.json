@@ -1,0 +1,295 @@
+{
+  "id": "M-06-A",
+  "tasks": [
+    {
+      "id": "M-06-A.1",
+      "title": "Define explicit source interpretation and its migration",
+      "goal": "Place source classification before every semantic consumer.",
+      "read_paths": [
+        "crates/vibe-specdoc/src/load.rs",
+        "crates/vibe-core/src/manifest/package.rs",
+        "crates/vibe-facts/src/scan.rs",
+        "crates/vibe-workspace/src/vibedeps/derived.rs",
+        "xtask/src/main.rs",
+        ".cargo/config.toml",
+        "crates/vibe-core/Cargo.toml",
+        "crates/vibe-core/src/lib.rs",
+        "crates/vibe-core/src/manifest/mod.rs",
+        "crates/vibe-specdoc/Cargo.toml",
+        "crates/vibe-specdoc/src/lib.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-wire/Cargo.toml",
+        "crates/vibe-wire/src/lib.rs"
+      ],
+      "write_paths": [
+        "vibevm/vibespecs/common/PROP-059-boot-observability.xml",
+        "crates/vibe-core/src/manifest/source_descriptor/",
+        "crates/vibe-specdoc/src/",
+        "crates/vibe-orchestrator/src/migration/",
+        "schemas/",
+        "formats/",
+        "crates/vibe-wire/src/",
+        "crates/vibe-core/src/lib.rs",
+        "crates/vibe-core/src/manifest/mod.rs",
+        "crates/vibe-core/src/manifest/package.rs",
+        "crates/vibe-core/src/manifest/package/wire.rs",
+        "crates/vibe-core/Cargo.toml",
+        "crates/vibe-specdoc/Cargo.toml",
+        "crates/vibe-specdoc/src/lib.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-wire/Cargo.toml",
+        "crates/vibe-wire/src/lib.rs"
+      ],
+      "steps": [
+        "Define SourceDescriptor identity/media/interpretation/role/loading/trust and exact-file versus directory-default precedence.",
+        "Implement deterministic legacy declaration migration with the reader in this task, using the M-13 engine.",
+        "Classify conflicting/unknown old intent as NeedsInput; suffix/content sniffing may validate syntax but cannot enable Vibe semantics."
+      ],
+      "positive_cases": [
+        "An explicit file declaration overrides one less-specific directory default."
+      ],
+      "negative_cases": [
+        "Equally applicable conflicting declarations refuse; foreign contents do not become specs by extension."
+      ],
+      "checks": [
+        "cargo test -p vibe-core -- --list",
+        "cargo test -p vibe-core",
+        "cargo test -p vibe-specdoc -- --list",
+        "cargo test -p vibe-specdoc",
+        "cargo test -p vibe-orchestrator -- --list",
+        "cargo test -p vibe-orchestrator",
+        "cargo test -p vibe-wire -- --list",
+        "cargo test -p vibe-wire",
+        "cargo fmt --all -- --check",
+        "git diff --check",
+        "cargo xtask check-codegen",
+        "cargo xtask wire-diff"
+      ],
+      "acceptance": [
+        "Reader and executable migration land together with preserved comments/values.",
+        "One descriptor identity is available to downstream scanner/resolver/converter consumers."
+      ],
+      "safe_stop": "Keep ambiguous source interpretation unmodified with a typed migration plan.",
+      "commit_subject": "feat(specdoc): classify source interpretations explicitly",
+      "notes": [
+        "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
+        "Permanent destination: vibevm/vibespecs/common/PROP-059-boot-observability.xml (PROPOSED file until its source-contract task creates it). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+        "TO CREATE: m_06_a_1_cases test family for the cases below. This is not an existing test. Enumerate the owning crate's tests before any optional filter; listed checks intentionally use unfiltered crate suites.",
+        "PROPOSED core manifest/source_descriptor/; use the root-supplied migration module, not a second engine.",
+        "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
+        "Enclosing module/manifest wire registration edits are included only where required to make the new declared contract compiled and reachable; no unrelated parser migration.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-06-A.2",
+      "title": "Implement structural ordinary Markdown",
+      "goal": "Make ordinary Markdown navigable while preserving literal Vibe syntax.",
+      "read_paths": [
+        "crates/vibe-specdoc/src/load.rs",
+        "crates/vibe-spec/src/doctree.rs",
+        "Cargo.toml",
+        "crates/vibe-specdoc/Cargo.toml",
+        "crates/vibe-specdoc/src/lib.rs"
+      ],
+      "write_paths": [
+        "vibevm/vibespecs/common/PROP-059-boot-observability.xml",
+        "crates/vibe-specdoc/src/",
+        "crates/vibe-specdoc/Cargo.toml",
+        "Cargo.toml",
+        "Cargo.lock",
+        "crates/vibe-specdoc/src/lib.rs"
+      ],
+      "steps": [
+        "Implement CommonMark headings/sections/fences/links through the selected parser boundary; inspect existing dependencies before any addition.",
+        "Resolve durable manifest exports against exact section selectors and captured bytes.",
+        "Keep snapshot-local node IDs distinct from durable fact IDs; ordinary annotations/directives remain text."
+      ],
+      "positive_cases": [
+        "Nested fences and headings produce stable same-snapshot sections.",
+        "Literal @requires/#use text is retained without fact/directive effects."
+      ],
+      "negative_cases": [
+        "Duplicate heading without unique export is ambiguous.",
+        "A malformed section selector cannot silently choose a heading."
+      ],
+      "checks": [
+        "cargo test -p vibe-specdoc -- --list",
+        "cargo test -p vibe-specdoc",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Structural view and raw content point to the same captured document.",
+        "No CommonMark node acquires normative Vibe fact authority."
+      ],
+      "safe_stop": "Raw Markdown remains readable if a requested export cannot resolve.",
+      "commit_subject": "feat(specdoc): add ordinary Markdown structure",
+      "notes": [
+        "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
+        "Permanent destination: vibevm/vibespecs/common/PROP-059-boot-observability.xml (PROPOSED file until its source-contract task creates it). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+        "TO CREATE: m_06_a_2_cases test family for the cases below. This is not an existing test. Enumerate the owning crate's tests before any optional filter; listed checks intentionally use unfiltered crate suites.",
+        "Any new parser dependency is an implementation decision within the listed manifests; do not claim a library is already installed.",
+        "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-06-A.3",
+      "title": "Preserve XML-data and opaque resources",
+      "goal": "Keep data bytes and logical resources distinct from Vibe XML conversion.",
+      "read_paths": [
+        "crates/vibe-specdoc/src/load.rs",
+        "crates/vibe-specdoc/src/xml_in.rs",
+        "crates/vibe-spec/src/resolver/lookup.rs",
+        "crates/vibe-workspace/src/vibedeps/derived.rs",
+        "crates/vibe-specdoc/Cargo.toml",
+        "crates/vibe-specdoc/src/lib.rs",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-workspace/src/vibedeps.rs",
+        "crates/vibe-spec/Cargo.toml",
+        "crates/vibe-spec/src/lib.rs",
+        "crates/vibe-spec/src/resolver.rs"
+      ],
+      "write_paths": [
+        "vibevm/vibespecs/common/PROP-059-boot-observability.xml",
+        "crates/vibe-specdoc/src/",
+        "crates/vibe-workspace/src/vibedeps/derived.rs",
+        "crates/vibe-spec/src/resolver/",
+        "crates/vibe-specdoc/Cargo.toml",
+        "crates/vibe-specdoc/src/lib.rs",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-workspace/src/vibedeps.rs",
+        "crates/vibe-spec/Cargo.toml",
+        "crates/vibe-spec/src/lib.rs",
+        "crates/vibe-spec/src/resolver.rs"
+      ],
+      "steps": [
+        "Add XML-data/raw and opaque handling with encoding/comments/whitespace preserved.",
+        "Allow safe optional XML tree inspection without external entities or network; invalid data stays raw retrievable.",
+        "Change pair/collision enumeration to compare declared logical resource identities instead of same filename stem alone."
+      ],
+      "positive_cases": [
+        "Same-stem ordinary Markdown and XML-data coexist.",
+        "Non-UTF8 or intentionally invalid XML fixture keeps exact raw bytes."
+      ],
+      "negative_cases": [
+        "Spec-format conversion cannot normalize ordinary XML-data.",
+        "External entity loading and ambiguous declared representations refuse."
+      ],
+      "checks": [
+        "cargo test -p vibe-specdoc -- --list",
+        "cargo test -p vibe-specdoc",
+        "cargo test -p vibe-workspace -- --list",
+        "cargo test -p vibe-workspace",
+        "cargo test -p vibe-spec -- --list",
+        "cargo test -p vibe-spec",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Install/derive/read round-trips preserve data bytes exactly.",
+        "Optional structure failure does not invalidate unrelated facts."
+      ],
+      "safe_stop": "Expose raw resource with structured-view diagnostics; no guessed conversion.",
+      "commit_subject": "feat(specdoc): preserve plain XML and opaque resources",
+      "notes": [
+        "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
+        "Permanent destination: vibevm/vibespecs/common/PROP-059-boot-observability.xml (PROPOSED file until its source-contract task creates it). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+        "TO CREATE: m_06_a_3_cases test family for the cases below. This is not an existing test. Enumerate the owning crate's tests before any optional filter; listed checks intentionally use unfiltered crate suites.",
+        "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-06-A.4",
+      "title": "Route all source consumers through descriptors",
+      "goal": "Eliminate remaining suffix-only semantic fallback in the initial product path.",
+      "read_paths": [
+        "crates/vibe-facts/src/scan.rs",
+        "crates/vibe-facts/src/sync.rs",
+        "crates/vibe-spec/src/resolver/lookup.rs",
+        "crates/vibe-workspace/src/vibedeps/derived.rs",
+        "crates/vibe-workspace/src/install/bootgen/analyze.rs",
+        "crates/vibe-agent-projection/src/pkgskill/projection/binding.rs",
+        "crates/vibe-facts/Cargo.toml",
+        "crates/vibe-facts/src/lib.rs",
+        "crates/vibe-spec/Cargo.toml",
+        "crates/vibe-spec/src/lib.rs",
+        "crates/vibe-spec/src/resolver.rs",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-workspace/src/vibedeps.rs",
+        "crates/vibe-workspace/src/install.rs",
+        "crates/vibe-workspace/src/install/bootgen.rs",
+        "crates/vibe-agent-projection/Cargo.toml",
+        "crates/vibe-agent-projection/src/lib.rs",
+        "crates/vibe-agent-projection/src/pkgskill.rs"
+      ],
+      "write_paths": [
+        "vibevm/vibespecs/common/PROP-059-boot-observability.xml",
+        "crates/vibe-facts/src/scan.rs",
+        "crates/vibe-facts/src/sync.rs",
+        "crates/vibe-spec/src/resolver/",
+        "crates/vibe-workspace/src/vibedeps/derived.rs",
+        "crates/vibe-workspace/src/install/bootgen/",
+        "crates/vibe-agent-projection/src/pkgskill/",
+        "crates/vibe-facts/Cargo.toml",
+        "crates/vibe-facts/src/lib.rs",
+        "crates/vibe-spec/Cargo.toml",
+        "crates/vibe-spec/src/lib.rs",
+        "crates/vibe-spec/src/resolver.rs",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-workspace/src/vibedeps.rs",
+        "crates/vibe-workspace/src/install.rs",
+        "crates/vibe-workspace/src/install/bootgen.rs",
+        "crates/vibe-agent-projection/Cargo.toml",
+        "crates/vibe-agent-projection/src/lib.rs",
+        "crates/vibe-agent-projection/src/pkgskill.rs"
+      ],
+      "steps": [
+        "Pass one descriptor view through facts/sync, lookup, materialization, compiler/boot and skill resource preparation.",
+        "Require explicit loading for ordinary resources; literal embedded data cannot become managed compiler directives.",
+        "Build mixed-source fixtures that pass each consumer and record classification/provenance."
+      ],
+      "positive_cases": [
+        "Declared Vibe source retains existing facts and canonical projection.",
+        "Foreign bridge resources remain source-exact across all consumers."
+      ],
+      "negative_cases": [
+        "Any suffix-only fallback or ordinary same-stem false collision fails the matrix.",
+        "A resource under spec root does not enter boot automatically."
+      ],
+      "checks": [
+        "cargo test -p vibe-facts -- --list",
+        "cargo test -p vibe-facts",
+        "cargo test -p vibe-spec -- --list",
+        "cargo test -p vibe-spec",
+        "cargo test -p vibe-workspace -- --list",
+        "cargo test -p vibe-workspace",
+        "cargo test -p vibe-agent-projection -- --list",
+        "cargo test -p vibe-agent-projection",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Consumer inventory has no unclassified semantic path.",
+        "Existing equivalent Vibe fixtures preserve canonical output and status/void meaning."
+      ],
+      "safe_stop": "Do not open M-01 consumers until the classification matrix is complete.",
+      "commit_subject": "fix(spec): apply source classification across consumers",
+      "notes": [
+        "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
+        "Permanent destination: vibevm/vibespecs/common/PROP-059-boot-observability.xml (PROPOSED file until its source-contract task creates it). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+        "TO CREATE: m_06_a_4_cases test family for the cases below. This is not an existing test. Enumerate the owning crate's tests before any optional filter; listed checks intentionally use unfiltered crate suites.",
+        "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">NEXT temporary contract 3.4 — Minimal repo-owned change</title>
+  <status stage="impl" state="plan"/>
+  <p><NEXT-A04-SCOPE fact="true" status="spec/done">Temporary normative staging unit. Its body is the accepted architecture from refined plan revision 4, section 3.4. Before production code cites this law, promote the relevant clauses into permanent specifications. This file is consumed only after semantic coverage, implemented behavior and retained evidence are accepted. The task/retirement checker cannot perform semantic acceptance.</NEXT-A04-SCOPE></p>
+  <p><NEXT-A04-U001 fact="true" status="spec/done">Change не package kind, workspace node, diff или personal plan. Оно живёт в configured spec root:</NEXT-A04-U001></p>
+  <p><NEXT-A04-U002 fact="true" status="spec/done">Requirement: changes/&lt;immutable-id&gt;/ change.toml intent.md или intent.xml acceptance.md или acceptance.xml work.toml                 # optional questions.toml            # M-04 closure.toml              # M-04, excluded from intent snapshot</NEXT-A04-U002></p>
+  <fence lang="text">    changes/&lt;immutable-id&gt;/
+        change.toml
+        intent.md или intent.xml
+        acceptance.md или acceptance.xml
+        work.toml                 # optional
+        questions.toml            # M-04
+        closure.toml              # M-04, excluded from intent snapshot</fence>
+  <p><NEXT-A04-U003 fact="true" status="spec/done">ID имеет одну выбранную UUID/ULID grammar; slug/title — metadata. Renaming slug не меняет directory/spec addresses. Нельзя создавать второй current pointer.</NEXT-A04-U003></p>
+  <p><NEXT-A04-U004 fact="true" status="spec/done">ChangeManifest: ID, owning selected node, explicit origin fact addresses, accepted exact source captures, local document roles, optional refinement/decision references. Package facts не копируются; локальный refinement добавляет обязательства или явно именует deviation/replacement. Смена accepted origin — explicit rebase plan; latest SemVer не заменяет старый capture. Omitted package fact — out of selected scope, не waiver. Consumer adoption меняется отдельной операцией, не вследствие scaffold.</NEXT-A04-U004></p>
+  <p><NEXT-A04-U005 fact="true" status="spec/done">WorkIntentGraph: stable item IDs, facts, artifact needs, explicit predecessor relations и touches hints. Нет done/owner/current/status/evidence/runtime loops. Work DAG validation — purely structural. Existing artifact/evidence может закрывать need без work item. Absence work и absence evidence — независимые observations.</NEXT-A04-U005></p>
+  <p><NEXT-A04-U006 fact="true" status="spec/done">Identities:</NEXT-A04-U006></p>
+  <p><NEXT-A04-U007 fact="true" status="spec/done">Requirement: | Carrier | Содержимое | |---|---| | intent_snapshot_id | Meaning-bearing change manifest fields, local normative docs, accepted origin captures, relevant explicit dispositions; canonical frame | | work_plan_id | Work graph, отдельный digest; не auto-invalidates unrelated execution | | resolution_id | Selected effective world, exact package captures, active configuration/stack/provider identities | | lifecycle_declaration_id | Existing execution declaration semantics | | execution_request_id | Intent snapshot, selected work/operation, consumed artifacts/input contract, applicable policy, resolution и declaration | | execution/run ID | Конкретная попытка; не substitute для перечисленных digests | | closure ID | Explicit disposition и exact accepted snapshot/evidence/policy; excluded from its own subject |</NEXT-A04-U007></p>
+  <fence lang="text">| Carrier | Содержимое |
+|---|---|
+| intent_snapshot_id | Meaning-bearing change manifest fields, local normative docs, accepted origin captures, relevant explicit dispositions; canonical frame |
+| work_plan_id | Work graph, отдельный digest; не auto-invalidates unrelated execution |
+| resolution_id | Selected effective world, exact package captures, active configuration/stack/provider identities |
+| lifecycle_declaration_id | Existing execution declaration semantics |
+| execution_request_id | Intent snapshot, selected work/operation, consumed artifacts/input contract, applicable policy, resolution и declaration |
+| execution/run ID | Конкретная попытка; не substitute для перечисленных digests |
+| closure ID | Explicit disposition и exact accepted snapshot/evidence/policy; excluded from its own subject |</fence>
+  <p><NEXT-A04-U008 fact="true" status="spec/done">Selected work влияет на request; cosmetic editing или unrelated work reordering не invalidates intent. Если contribution реально читает весь work graph, его digest становится explicit input. Questions влияют на readiness profile; promoted answers становятся normative facts. Closure/observations/run logs не попадают в snapshot входа самих себя.</NEXT-A04-U008></p>
+  <p><NEXT-A04-U009 fact="true" status="spec/done">Read-only check/show/coverage полезны без executing change. New --from scaffold — отдельный явный write с no-overwrite/CAS. V1: one selected node, one origin feat, existing stack; несколько authored changes разрешены, multi-origin execution позже не prerequisite.</NEXT-A04-U009></p>
+</spec>

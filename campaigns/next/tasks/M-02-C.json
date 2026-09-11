@@ -1,0 +1,118 @@
+{
+  "id": "M-02-C",
+  "tasks": [
+    {
+      "id": "M-02-C.1",
+      "title": "Retain accepted origin captures and explicit rebase",
+      "goal": "Keep change origin stable across mutable package updates.",
+      "read_paths": [
+        "crates/vibe-requirements/src/query.rs",
+        "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+        "crates/vibe-install/src/record.rs",
+        "crates/vibe-requirements/Cargo.toml",
+        "crates/vibe-requirements/src/lib.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs"
+      ],
+      "write_paths": [
+        "vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml",
+        "crates/vibe-requirements/src/change/",
+        "crates/vibe-orchestrator/src/change/",
+        "crates/vibe-requirements/Cargo.toml",
+        "crates/vibe-requirements/src/lib.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs"
+      ],
+      "steps": [
+        "Resolve each origin against M-01 exact captures and store accepted identity in authored change intent.",
+        "Compare current selected capture to accepted origin without replacing it silently.",
+        "Implement explicit rebase preparation with old/new fact identity diff and saved-state preconditions."
+      ],
+      "positive_cases": [
+        "Reinstall reuses the accepted origin capture; explicit rebase binds a new one."
+      ],
+      "negative_cases": [
+        "Same-version changed content reports origin-drift.",
+        "Missing retained origin cannot be replaced by newest SemVer."
+      ],
+      "checks": [
+        "cargo test -p vibe-requirements -- --list",
+        "cargo test -p vibe-requirements",
+        "cargo test -p vibe-orchestrator -- --list",
+        "cargo test -p vibe-orchestrator",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Origin/rebase reports show exact old/new capture and affected fact addresses.",
+        "Package slots and historical accepted evidence remain unchanged."
+      ],
+      "safe_stop": "Return drift/unavailable with a reviewable rebase plan.",
+      "commit_subject": "feat(change): retain exact origin and rebase intent",
+      "notes": [
+        "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
+        "Permanent destination: vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml (PROPOSED file until its source-contract task creates it). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+        "TO CREATE: m_02_c_1_cases test family for the cases below. This is not an existing test. Enumerate the owning crate's tests before any optional filter; listed checks intentionally use unfiltered crate suites.",
+        "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-02-C.2",
+      "title": "Provide a complete same-snapshot fact selection seam",
+      "goal": "Prevent paginated or truncated requirements from masquerading as complete change scope.",
+      "read_paths": [
+        "crates/vibe-requirements/src/query.rs",
+        "crates/vibe-requirements/src/rows.rs",
+        "crates/vibe-facts/src/scan.rs",
+        "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
+        "crates/vibe-requirements/Cargo.toml",
+        "crates/vibe-requirements/src/lib.rs",
+        "crates/vibe-facts/Cargo.toml",
+        "crates/vibe-facts/src/lib.rs"
+      ],
+      "write_paths": [
+        "vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml",
+        "crates/vibe-requirements/src/",
+        "crates/vibe-facts/src/scan.rs",
+        "crates/vibe-requirements/Cargo.toml",
+        "crates/vibe-requirements/src/lib.rs",
+        "crates/vibe-facts/Cargo.toml",
+        "crates/vibe-facts/src/lib.rs"
+      ],
+      "steps": [
+        "Add exact-address batch/internal complete observation over one captured source set.",
+        "Preserve missing/unavailable/unclassified distinctions and explicit out-of-scope omissions.",
+        "Use snapshot-bound pagination where necessary; refuse mixed captures and propagate completeness to change analysis."
+      ],
+      "positive_cases": [
+        "A fact set larger than the existing query page limit is completely selected.",
+        "Spec-only requirements stay representable."
+      ],
+      "negative_cases": [
+        "Truncated pages, changed membership and unresolved selected facts cannot appear complete."
+      ],
+      "checks": [
+        "cargo test -p vibe-requirements -- --list",
+        "cargo test -p vibe-requirements",
+        "cargo test -p vibe-facts -- --list",
+        "cargo test -p vibe-facts",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Selected-address inventory equals observed complete universe or lists exact gaps.",
+        "Existing neutral query semantics and limits remain explicit compatibility behavior."
+      ],
+      "safe_stop": "Expose incomplete analysis, never allow incomplete data to certify closure.",
+      "commit_subject": "feat(requirements): observe complete change fact scopes",
+      "notes": [
+        "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
+        "Permanent destination: vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml (PROPOSED file until its source-contract task creates it). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+        "TO CREATE: m_02_c_2_cases test family for the cases below. This is not an existing test. Enumerate the owning crate's tests before any optional filter; listed checks intentionally use unfiltered crate suites.",
+        "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

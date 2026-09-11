@@ -1,0 +1,98 @@
+{
+  "id": "M-13-A",
+  "tasks": [
+    {
+      "id": "M-13-A.1",
+      "title": "Map current lifecycle, resolver and source consumers",
+      "goal": "Create an exact factual starting map for the known behavior/authority gaps before architectural changes.",
+      "read_paths": [
+        "crates/vibe-lifecycle/src/chain.rs",
+        "crates/vibe-lifecycle/src/runner.rs",
+        "crates/vibe-lifecycle/src/runner/verify.rs",
+        "crates/vibe-orchestrator/src/dispatch/verify.rs",
+        "crates/vibe-lifecycle/src/state/fingerprint/inputs.rs",
+        "crates/vibe-spec/src/resolver/lookup.rs",
+        "crates/vibe-resolver/src/features.rs",
+        "crates/vibe-install/src/plan.rs",
+        "crates/vibe-package-source/src/source.rs",
+        "crates/vibe-facts/src/scan.rs",
+        "crates/vibe-specdoc/src/load.rs",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+        "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+        "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml"
+      ],
+      "write_paths": [
+        "campaigns/next/evidence/M-13-A/"
+      ],
+      "steps": [
+        "Read the named call chains and map public entry→consumer→state/effect boundary for lifecycle, feature solve and classified source handling.",
+        "Record verified behavior versus target requirement for create-before-verify, solver routes/Fresh, unsafe lookup and foreign-content suffix inference.",
+        "Identify exact functions/carriers and bounded fixture recipes for downstream atoms; do not label an unexecuted exploit or imagined test as verified."
+      ],
+      "positive_cases": [
+        "Each finding cites a real call path and owning source contract.",
+        "Multiple resolver routes and pre-handler verify gates are represented separately."
+      ],
+      "negative_cases": [
+        "A field/helper/edge count cannot be accepted as whole-feature proof.",
+        "Unverified runtime behavior remains labeled unverified rather than assumed."
+      ],
+      "checks": [
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "The map distinguishes source facts, inference, owner rule and required runtime evidence.",
+        "No product code, generated lane or user state changed."
+      ],
+      "safe_stop": "Read-only consumer map is complete and can feed M-16-A without waiting for M-13-B.",
+      "commit_subject": "docs(campaign): record exact current consumer and authority seams",
+      "notes": [
+        "This is a factual census leaf, not a new acceptance verdict. Positive/negative cases describe the evidence classification to check; no product tests are claimed."
+      ]
+    },
+    {
+      "id": "M-13-A.2",
+      "title": "Census active owned versions and data boundaries",
+      "goal": "Identify exactly which active own manifests/policies may change while excluding foreign/history/generated data.",
+      "read_paths": [
+        "Cargo.toml",
+        "vibe.toml",
+        "vibevm/vibepacks/org.vibevm.world/redbook/v1.0.0/vibe.toml",
+        "vibevm/vibespecs/common/PROP-000.xml",
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+        "crates/vibe-core/src/manifest/package.rs",
+        "tools/self-check.sh"
+      ],
+      "write_paths": [
+        "campaigns/next/evidence/M-13-A/"
+      ],
+      "steps": [
+        "Use the actual workspace members and root package declarations to enumerate active owned package/product manifests; bind additional exact manifest paths before reading them.",
+        "Classify each current version/constraint/document mention as active own, upstream/third-party, frozen historical capture, fixture or machine epoch; record current 1.0.0 state.",
+        "Build a closed proposed edit list for M-13-D and a root/data/source authority table; preserve unknown ownership as a binding question rather than blanket replacement."
+      ],
+      "positive_cases": [
+        "Every active owned item in the resolved census has current version and owner evidence.",
+        "Machine format epochs and upstream pins remain separate from product version."
+      ],
+      "negative_cases": [
+        "Historical receipts/fixtures/dependency versions cannot enter the own-version edit list.",
+        "Unbound additional package roots cannot be silently claimed complete."
+      ],
+      "checks": [
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Census includes an explicit denominator and exact per-file proposed perimeter.",
+        "Any extra manifest binding needed for exhaustive coverage is named for the root."
+      ],
+      "safe_stop": "Accepted exact manifest census is ready; no version changed.",
+      "commit_subject": "docs(campaign): census active ownership versions and source boundaries",
+      "notes": [
+        "Only baseline-listed root/Redbook manifests and Cargo member declarations are currently bound. Root must add exact discovered owned-manifest read paths before claiming a complete active-package census; this is file binding, not reopening D-019."
+      ]
+    }
+  ]
+}

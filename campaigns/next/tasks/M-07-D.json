@@ -1,0 +1,119 @@
+{
+  "id": "M-07-D",
+  "tasks": [
+    {
+      "id": "M-07-D.1",
+      "title": "Fence the first destructive publication write",
+      "goal": "Move readiness and authority checks ahead of every delete/tag/release mutation.",
+      "read_paths": [
+        "xtask/src/dist/release.rs",
+        "xtask/src/dist/release/tests.rs",
+        "crates/vibe-publish/src/release_manifest.rs",
+        ".github/workflows/release-distributions.yml",
+        "crates/vibe-publish/Cargo.toml",
+        "crates/vibe-publish/src/lib.rs"
+      ],
+      "write_paths": [
+        "xtask/src/dist/",
+        "crates/vibe-publish/src/",
+        "vibevm/vibespecs/common/PROP-060-publication-authority.xml",
+        "crates/vibe-publish/Cargo.toml",
+        "crates/vibe-publish/src/lib.rs"
+      ],
+      "steps": [
+        "Identify the first remote mutation in each prepare/apply route and trace all callers.",
+        "Refactor routes to consume an immutable ready plan plus authority result; reobserve expected remote IDs/generation immediately before first write.",
+        "Retain previous asset/metadata recovery material before mutation; report changed preconditions without rebuilding/reapproving implicitly."
+      ],
+      "positive_cases": [
+        "Exact ready authorized subject reaches the writer once.",
+        "Plan-only and failed preflight preserve an existing release unchanged."
+      ],
+      "negative_cases": [
+        "Missing target bundle, changed smoke policy, stale approval or remote generation refuses before deletion.",
+        "No caller may bypass the fence through a helper or legacy command route."
+      ],
+      "checks": [
+        "cargo test -p xtask -- --list",
+        "cargo test -p xtask",
+        "cargo test -p vibe-publish -- --list",
+        "cargo test -p vibe-publish",
+        "cargo run --quiet -p vibe-cli -- check --path . --quiet",
+        "cargo run --quiet -p vibe-cli -- facts check --exhaustive",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Fault-instrumented writer receives zero calls on every preflight refusal.",
+        "All prepare/apply entrypoints consume the same fence."
+      ],
+      "safe_stop": "Preflight and writer ordering are proven with fake remote state; no live release changed.",
+      "commit_subject": "fix(publish): validate readiness before destructive writes",
+      "notes": [
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-07-D.2",
+      "title": "Recover interrupted remote publication prefixes",
+      "goal": "Retain truthful per-effect state and recovery for an interrupted admitted publication.",
+      "read_paths": [
+        "xtask/src/dist/release.rs",
+        "xtask/src/dist/release/tests.rs",
+        "crates/vibe-publish/src/release_manifest.rs",
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+        "xtask/src/main.rs",
+        ".cargo/config.toml",
+        "crates/vibe-publish/Cargo.toml",
+        "crates/vibe-publish/src/lib.rs"
+      ],
+      "write_paths": [
+        "xtask/src/dist/",
+        "crates/vibe-publish/src/",
+        "schemas/",
+        "formats/",
+        "crates/vibe-wire/",
+        "vibevm/vibespecs/common/PROP-060-publication-authority.xml",
+        "crates/vibe-publish/Cargo.toml",
+        "crates/vibe-publish/src/lib.rs"
+      ],
+      "steps": [
+        "Record each remote effect and retained before-state through the M-16 operation identity and existing publication records.",
+        "Implement inspect/recover for interrupted upload/replacement/finalization; compare actual remote IDs/generation before each continuation or restoration.",
+        "Represent committed, pending and unknown effects; use retained assets only under current recovery authority, with no blanket multi-remote atomicity claim."
+      ],
+      "positive_cases": [
+        "An interrupted isolated publication resumes its exact remaining effect set.",
+        "Supported restoration reproduces the retained old subject/assets."
+      ],
+      "negative_cases": [
+        "Foreign remote mutation, missing backup and ambiguous third state produce recovery-required.",
+        "Response loss cannot create a second publication or overwrite an unrelated release."
+      ],
+      "checks": [
+        "cargo test -p xtask -- --list",
+        "cargo test -p xtask",
+        "cargo test -p vibe-publish -- --list",
+        "cargo test -p vibe-publish",
+        "cargo test -p vibe-wire -- --list",
+        "cargo test -p vibe-wire",
+        "cargo xtask check-codegen",
+        "cargo xtask wire-diff",
+        "cargo run --quiet -p vibe-cli -- check --path . --quiet",
+        "cargo run --quiet -p vibe-cli -- facts check --exhaustive",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Independent post-state inspection matches every claimed completed/restored effect.",
+        "Recovery fixtures retain evidence after process exit and replay refusal."
+      ],
+      "safe_stop": "Journal and recovery rehearsal are complete against controlled fake remote storage.",
+      "commit_subject": "feat(publish): retain and recover interrupted release effects",
+      "notes": [
+        "Schema changes: inspect the existing codegen entrypoint before regeneration; never hand-edit generated types or invent a new codegen command. The listed check-codegen and wire-diff commands are existing self-check gates.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

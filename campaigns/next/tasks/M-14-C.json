@@ -1,0 +1,129 @@
+{
+  "id": "M-14-C",
+  "tasks": [
+    {
+      "id": "M-14-C.1",
+      "title": "Carry the target binding through local operation seams",
+      "goal": "Make existing local requests, prepared effects, grants and receipts refer to the exact target and principal.",
+      "read_paths": [
+        "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+        "crates/vibe-lifecycle/src/native/platform.rs",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+        "xtask/src/main.rs",
+        ".cargo/config.toml",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+        "crates/vibe-lifecycle/src/native/mod.rs",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-lifecycle/src/mechanism/deploy/",
+        "crates/vibe-lifecycle/src/native/",
+        "crates/vibe-workspace/src/extension_world.rs",
+        "formats/",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+        "crates/vibe-lifecycle/src/native/mod.rs",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs"
+      ],
+      "steps": [
+        "Trace the existing deploy/native and extension request carriers and add the M-14 bindings without changing legacy operation meaning.",
+        "Use trusted root registration from M-16; providers receive bound roots and requested capabilities, while the host issues exact effect grants.",
+        "Propagate instance/generation/platform/principal through plans, before-images, journals and retained inspection; reject mismatched replay before provider invocation."
+      ],
+      "positive_cases": [
+        "The same source package deployed into two injected homes gets distinct receipts.",
+        "A valid local compatibility request produces the same projected files as before."
+      ],
+      "negative_cases": [
+        "Changing only a body path redirects a valid grant to another root.",
+        "A package descriptor grants itself new filesystem or execution authority."
+      ],
+      "checks": [
+        "cargo test -p vibe-lifecycle",
+        "cargo test -p vibe-workspace",
+        "cargo xtask check-codegen"
+      ],
+      "acceptance": [
+        "Target identity survives every request-to-receipt carrier and appears in structured inspection.",
+        "Unsupported cross-target operations return before effects."
+      ],
+      "safe_stop": "Local compatibility is green; Linux execution stays unimplemented until M-15-K.",
+      "commit_subject": "feat(deploy): bind local effects to environment targets",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-063-environment-model.xml; forward metadata only until the promotion leaf creates the governing anchor.",
+        "Use full listed crate tests by default. If narrowing to a newly created test filter, first run cargo test -p <crate> -- --list and verify an exact nonzero test-name match; a zero-test run is not acceptance.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-14-C.2",
+      "title": "Fence aliased roots and stale target generations",
+      "goal": "Prove logical instance separation does not permit competing writes to the same physical resource.",
+      "read_paths": [
+        "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+        "crates/vibe-lifecycle/src/lease.rs",
+        "crates/vibe-safefs/src/file.rs",
+        "crates/vibe-safefs/src/component.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+        "crates/vibe-safefs/Cargo.toml",
+        "crates/vibe-safefs/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+        "crates/vibe-lifecycle/src/lease.rs",
+        "crates/vibe-safefs/src/",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+        "crates/vibe-safefs/Cargo.toml",
+        "crates/vibe-safefs/src/lib.rs"
+      ],
+      "steps": [
+        "Extend the existing physical resource identity/lease boundary to recognize equivalent roots across environment instances.",
+        "Revalidate root handle, principal, generation and resource ownership at admission and commit; keep logical config-member ownership under a shared physical file lock.",
+        "Add temporary-root concurrency/replay tests covering alias roots, relocated directories and third-state changes; record exact partial truth if drift occurs after a landed write."
+      ],
+      "positive_cases": [
+        "Disjoint injected homes can proceed independently.",
+        "Two aliases of one root conflict even when their logical instance IDs differ."
+      ],
+      "negative_cases": [
+        "Expired generation or changed root reuses an earlier plan.",
+        "Equal file bytes transfer ownership between receipt families."
+      ],
+      "checks": [
+        "cargo test -p vibe-safefs",
+        "cargo test -p vibe-lifecycle",
+        "TO CREATE: concurrent alias-root and stale-generation replay cases."
+      ],
+      "acceptance": [
+        "One physical resource cannot have two simultaneous admitted writers through distinct logical bindings.",
+        "Tests use disposable roots and never the developer's real HOME."
+      ],
+      "safe_stop": "Fencing tests pass and retained receipts remain inspectable after conflict.",
+      "commit_subject": "fix(deploy): fence alias roots and stale target replay",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-063-environment-model.xml; forward metadata only until the promotion leaf creates the governing anchor.",
+        "Use full listed crate tests by default. If narrowing to a newly created test filter, first run cargo test -p <crate> -- --list and verify an exact nonzero test-name match; a zero-test run is not acceptance.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

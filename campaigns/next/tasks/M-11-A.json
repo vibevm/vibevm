@@ -1,0 +1,132 @@
+{
+  "id": "M-11-A",
+  "tasks": [
+    {
+      "id": "M-11-A.1",
+      "title": "Inventory declared scope with exclusions before reads",
+      "goal": "Build a pure brownfield inventory that cannot observe excluded or unsafe paths.",
+      "read_paths": [
+        "crates/vibe-scrape/src/inventory.rs",
+        "crates/vibe-safefs/src/file/bounded.rs",
+        "crates/vibe-safefs/src/component.rs",
+        "crates/vibe-spec/src/resolver/lookup.rs",
+        "crates/vibe-facts/src/scan.rs",
+        "crates/vibe-scrape/Cargo.toml",
+        "crates/vibe-scrape/src/lib.rs",
+        "crates/vibe-safefs/Cargo.toml",
+        "crates/vibe-safefs/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-scrape/src/",
+        "crates/vibe-safefs/src/",
+        "fixtures/next/brownfield/",
+        "vibevm/vibespecs/common/PROP-062-brownfield-intake.xml",
+        "crates/vibe-scrape/Cargo.toml",
+        "crates/vibe-scrape/src/lib.rs",
+        "crates/vibe-safefs/Cargo.toml",
+        "crates/vibe-safefs/src/lib.rs"
+      ],
+      "steps": [
+        "Define the inventory request using a trusted root, explicit include/exclude rules and supported source kinds; create the relevant PROP-062 inventory anchors.",
+        "Apply exclusions before opening/statting content; retain separate absent/unreadable/unsafe/skipped reasons and bounded file metadata.",
+        "Return an in-memory deterministic inventory with no cache/state/lock creation, native analyzers or network."
+      ],
+      "positive_cases": [
+        "Included files are enumerated deterministically with source identity.",
+        "Excluded sensitive/unreadable subtrees trigger zero reader calls."
+      ],
+      "negative_cases": [
+        "Traversal, unsafe links and unbounded requested scope refuse or report explicit skipped/partial status.",
+        "Observe cannot create .vibe state, run tools or silently read excluded content."
+      ],
+      "checks": [
+        "cargo test -p vibe-scrape -- --list",
+        "cargo test -p vibe-scrape",
+        "cargo test -p vibe-safefs -- --list",
+        "cargo test -p vibe-safefs",
+        "cargo run --quiet -p vibe-cli -- check --path . --quiet",
+        "cargo run --quiet -p vibe-cli -- facts check --exhaustive",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Reader instrumentation proves exclusion-before-read and query purity.",
+        "Every omitted path category has a typed reason and completeness impact."
+      ],
+      "safe_stop": "Pure inventory works; no proposal or promotion performed.",
+      "commit_subject": "feat(brownfield): inventory declared scope without hidden effects",
+      "notes": [
+        "PROP-062/fixtures/next/brownfield are proposed paths. M-11-D may independently establish its transition section; do not make inventory a dependency of that pulled-forward atom.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-11-A.2",
+      "title": "Capture file witnesses and directory membership",
+      "goal": "Make brownfield observations honest under changing files and tree membership.",
+      "read_paths": [
+        "crates/vibe-scrape/src/inventory.rs",
+        "crates/vibe-lifecycle/src/state/fingerprint/inputs.rs",
+        "crates/vibe-safefs/src/file/bounded.rs",
+        "crates/vibe-safefs/src/file/stream.rs",
+        "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+        "xtask/src/main.rs",
+        ".cargo/config.toml",
+        "crates/vibe-scrape/Cargo.toml",
+        "crates/vibe-scrape/src/lib.rs",
+        "crates/vibe-safefs/Cargo.toml",
+        "crates/vibe-safefs/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-scrape/src/",
+        "crates/vibe-safefs/src/",
+        "schemas/",
+        "formats/",
+        "crates/vibe-wire/",
+        "fixtures/next/brownfield/",
+        "vibevm/vibespecs/common/PROP-062-brownfield-intake.xml",
+        "crates/vibe-scrape/Cargo.toml",
+        "crates/vibe-scrape/src/lib.rs",
+        "crates/vibe-safefs/Cargo.toml",
+        "crates/vibe-safefs/src/lib.rs"
+      ],
+      "steps": [
+        "Add per-file captured bytes/digests and enumeration membership witnesses with explicit observation window and provenance.",
+        "Detect content, size, identity and selected directory-entry changes around capture; report unstable rather than combine incompatible states.",
+        "Expose a generated complete/partial/unstable inventory report through M-16 snapshot identities and retain no false atomic-global-snapshot claim."
+      ],
+      "positive_cases": [
+        "Stable declared scope yields reproducible file/membership witnesses.",
+        "Unsupported or skipped scope remains inspectable with explicit incompleteness."
+      ],
+      "negative_cases": [
+        "Same-length mutation, new/deleted selected file or alias replacement invalidates the capture.",
+        "A successful individual file read cannot certify a mixed-time tree."
+      ],
+      "checks": [
+        "cargo test -p vibe-scrape -- --list",
+        "cargo test -p vibe-scrape",
+        "cargo test -p vibe-safefs -- --list",
+        "cargo test -p vibe-safefs",
+        "cargo test -p vibe-wire -- --list",
+        "cargo test -p vibe-wire",
+        "cargo xtask check-codegen",
+        "cargo xtask wire-diff",
+        "cargo run --quiet -p vibe-cli -- check --path . --quiet",
+        "cargo run --quiet -p vibe-cli -- facts check --exhaustive",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Mutation fixtures force unstable/incomplete rather than a guessed current inventory.",
+        "Metadata/provenance distinguishes capture from live applicability."
+      ],
+      "safe_stop": "Bounded captured inventory is ready for an analyzer.",
+      "commit_subject": "feat(brownfield): witness inventory bytes and membership",
+      "notes": [
+        "Schema changes: inspect the existing codegen entrypoint before regeneration; never hand-edit generated types or invent a new codegen command. The listed check-codegen and wire-diff commands are existing self-check gates.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

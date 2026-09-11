@@ -1,0 +1,101 @@
+{
+  "id": "M-12-D",
+  "tasks": [
+    {
+      "id": "M-12-D.1",
+      "title": "Prepare initial-route acceptance and exact publication batch",
+      "goal": "Produce the complete reviewable acceptance/effect package before requesting actual publication approval.",
+      "read_paths": [
+        "crates/vibe-publish/src/release_manifest.rs",
+        "xtask/src/dist/release.rs",
+        "xtask/src/dist/build.rs",
+        "vibevm/vibepacks/org.vibevm.world/redbook/v1.0.0/vibe.toml",
+        "vibevm/vibespecs/modules/vibe-registry/PROP-023-bridge-packages.xml",
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+        "DEV-GUIDE.md"
+      ],
+      "write_paths": [
+        "campaigns/next/evidence/M-12-D/",
+        "target/next-publication/"
+      ],
+      "steps": [
+        "Join independent initial-route acceptance evidence from M-12-A/B and all mandatory prerequisites; identify optional/incomplete future scope explicitly.",
+        "Build the exact local publication plan using M-07: source/lock/captures, all bundles, targets, replaced remote assets, effective smoke policy, producer trust and recoverability.",
+        "Recheck current own 1.0.0/Redbook decisions and B-ready isolated tests without enabling B; deliver one digest-bound batch for current-A approval."
+      ],
+      "positive_cases": [
+        "A complete initial-route subject has all mandatory local proof and exact planned effects.",
+        "A deliberately explicit smoke skip is preserved as skipped policy."
+      ],
+      "negative_cases": [
+        "Missing initial evidence, changed capture or unsupported mandatory feature prevents readiness.",
+        "Neither M-15 nor M-17-D is marked complete by this package."
+      ],
+      "checks": [
+        "cargo test -p xtask -- --list",
+        "cargo test -p xtask",
+        "cargo test -p vibe-publish -- --list",
+        "cargo test -p vibe-publish",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "The batch is concrete enough to authorize without further implementation design.",
+        "No public writes occurred; pending owner batch decision remains a separate unresolved action."
+      ],
+      "safe_stop": "Ready-to-approve local batch is a safe stop, not completed publication.",
+      "commit_subject": "docs(release): prepare exact initial-route publication evidence",
+      "notes": [
+        "target/next-publication is a proposed local artifact directory. Source tests and artifact smoke claims require actual evidence; producer success is not acceptance."
+      ]
+    },
+    {
+      "id": "M-12-D.2",
+      "title": "Execute and verify the approved publication batch",
+      "goal": "Only after the exact current-A approval, apply the batch and independently verify its declared publication/smoke outcome.",
+      "read_paths": [
+        "xtask/src/dist/release.rs",
+        "crates/vibe-publish/src/release_manifest.rs",
+        "xtask/src/dist/build.rs",
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml"
+      ],
+      "write_paths": [
+        "campaigns/next/evidence/M-12-D/",
+        "target/next-publication/"
+      ],
+      "steps": [
+        "Resolve the exact approved batch digest and targets; if approval is absent, declined or superseded, stop with publication still pending.",
+        "Invoke the implemented M-07 apply path with immediate authority/source/remote-state revalidation; follow only its approved effects and retained recovery plan.",
+        "Inspect resulting external assets/metadata and execute the batch's declared installed-artifact smoke policy; retain receipts or exact partial/recovery status, then report only the initial-route result."
+      ],
+      "positive_cases": [
+        "The unchanged approved batch publishes exactly its prepared subject.",
+        "Verified receipts and passed/skipped smoke policy match independent observations."
+      ],
+      "negative_cases": [
+        "Changed remote generation, policy, capture or approval requires a new plan rather than silent continuation.",
+        "Partial effects or pending approval never become done; live B remains disabled."
+      ],
+      "checks": [
+        "cargo test -p xtask -- --list",
+        "cargo test -p xtask",
+        "cargo test -p vibe-publish -- --list",
+        "cargo test -p vibe-publish",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Each actual external mutation is traceable to the exact owner-approved batch.",
+        "Final publication status is executed/verified or explicit partial/pending, separate from local readiness and expanded programme completion."
+      ],
+      "safe_stop": "Without approval: preserve the ready plan and stop. After approved effects: retain verified or recovery-required evidence.",
+      "commit_subject": "docs(release): record approved initial publication outcomes",
+      "notes": [
+        "This authored task is not approval for any remote destination. Root binds the actual publication commands/endpoints and authority receipt from .1; no guessed release/registry commands.",
+        "Local write_paths describe evidence/artifacts only. Remote authority comes solely from the exact approved batch; no messages to unrelated people/services."
+      ]
+    }
+  ]
+}

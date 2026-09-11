@@ -1,0 +1,137 @@
+{
+  "id": "M-15-B",
+  "tasks": [
+    {
+      "id": "M-15-B.1",
+      "title": "Resolve standalone environment definitions and locks",
+      "goal": "Use the existing Vibe solver for environment consumers without requiring a repository or inventing another dependency grammar.",
+      "read_paths": [
+        "crates/vibe-resolver/src/features.rs",
+        "crates/vibe-resolver/src/resolvo_engine/provider.rs",
+        "crates/vibe-package-source/src/source.rs",
+        "crates/vibe-install/src/plan.rs",
+        "crates/vibe-install/src/record.rs",
+        "crates/vibe-core/src/manifest/target_when.rs",
+        "crates/vibe-core/Cargo.toml",
+        "crates/vibe-core/src/lib.rs",
+        "crates/vibe-resolver/Cargo.toml",
+        "crates/vibe-resolver/src/lib.rs",
+        "crates/vibe-install/Cargo.toml",
+        "crates/vibe-install/src/lib.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-core/src/environment/",
+        "crates/vibe-resolver/src/",
+        "crates/vibe-install/src/",
+        "crates/vibe-orchestrator/src/environment/",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-core/Cargo.toml",
+        "crates/vibe-core/src/lib.rs",
+        "crates/vibe-resolver/Cargo.toml",
+        "crates/vibe-resolver/src/lib.rs",
+        "crates/vibe-install/Cargo.toml",
+        "crates/vibe-install/src/lib.rs",
+        "crates/vibe-orchestrator/Cargo.toml"
+      ],
+      "steps": [
+        "Parse environment desired roots/choices and target constraints into the shared M-05 normalized request model.",
+        "Add build/tool/runtime roles and backend-qualified requirements while keeping foreign versions opaque; solve each environment in its own domain.",
+        "Return exact requested and resolved closures, selected source/prebuilt strategy, freshness and unsatisfied constraints through pure plan/explain services."
+      ],
+      "positive_cases": [
+        "A plain directory without Git defines and resolves an environment.",
+        "Two environments choose different package versions without sharing mutable lock state."
+      ],
+      "negative_cases": [
+        "Role-specific ABI constraints disappear on a retry.",
+        "A foreign backend constraint is lossy-converted to Vibe SemVer."
+      ],
+      "checks": [
+        "cargo test -p vibe-core",
+        "cargo test -p vibe-resolver",
+        "cargo test -p vibe-install"
+      ],
+      "acceptance": [
+        "Environment locks reuse existing solver semantics and include exact recursive roles/captures.",
+        "No coding change or personal stewardship plan is created."
+      ],
+      "safe_stop": "The environment resolves to a captured lock or typed unsat/needs-input result; nothing is installed.",
+      "commit_subject": "feat(environment): resolve standalone target-aware definitions",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-064-runtime-package-management.xml; forward metadata only.",
+        "The environment/ module is a proposed composition cell in the existing orchestrator; its owning export file is included for registration. Refine the perimeter before touching any additional crate.",
+        "Use full listed crate tests by default. If narrowing to a newly created test filter, first run cargo test -p <crate> -- --list and verify an exact nonzero test-name match; a zero-test run is not acceptance.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-15-B.2",
+      "title": "Implement replaceable source and realization supply paths",
+      "goal": "Make fetch and substitution obey exact captures across local mirrors and offline replay.",
+      "read_paths": [
+        "crates/vibe-install/src/plan/fetch.rs",
+        "crates/vibe-package-source/src/source.rs",
+        "crates/vibe-install/src/record.rs",
+        "crates/vibe-lifecycle/src/mechanism/record.rs",
+        "crates/vibe-publish/src/release_manifest.rs",
+        "crates/vibe-package-source/Cargo.toml",
+        "crates/vibe-package-source/src/lib.rs",
+        "crates/vibe-install/Cargo.toml",
+        "crates/vibe-install/src/lib.rs",
+        "crates/vibe-install/src/plan.rs",
+        "crates/vibe-core/Cargo.toml",
+        "crates/vibe-core/src/lib.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-package-source/src/",
+        "crates/vibe-install/src/plan/fetch.rs",
+        "crates/vibe-core/src/environment/",
+        "crates/vibe-orchestrator/src/environment/",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-package-source/Cargo.toml",
+        "crates/vibe-package-source/src/lib.rs",
+        "crates/vibe-install/Cargo.toml",
+        "crates/vibe-install/src/lib.rs",
+        "crates/vibe-install/src/plan.rs",
+        "crates/vibe-core/Cargo.toml",
+        "crates/vibe-core/src/lib.rs",
+        "crates/vibe-orchestrator/Cargo.toml"
+      ],
+      "steps": [
+        "Separate logical identity and expected digests from replaceable local/Git/HTTP/artifact/OCI locators in the lock.",
+        "Prepare exact transitive source, toolchain, bootstrap and runtime inputs through admitted fetch; preserve native repository verification and producer policies.",
+        "Implement missing-capture diagnostics, authorized binary-cache substitution and all-input replay without implicit fallback to GitHub/latest/network."
+      ],
+      "positive_cases": [
+        "An exact local mirror supplies the same captured bytes with retained origin provenance.",
+        "Offline missing realization rebuilds only when complete inputs and build authority exist."
+      ],
+      "negative_cases": [
+        "Different mirror bytes are accepted under an existing identity.",
+        "Offline mode performs an undocumented control-plane request."
+      ],
+      "checks": [
+        "cargo test -p vibe-package-source",
+        "cargo test -p vibe-install",
+        "cargo test -p vibe-lifecycle",
+        "TO CREATE: local mirror/corruption/missing-input integration corpus."
+      ],
+      "acceptance": [
+        "Every delivered supply path has an explicit locator and verification contract.",
+        "Source and substitute outcomes identify exact inputs and any unavailable requirement."
+      ],
+      "safe_stop": "Prepared captures or explicit missing inputs are retained; no environment activation occurs.",
+      "commit_subject": "feat(environment): support exact mirror and cache supply paths",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-064-runtime-package-management.xml; forward metadata only.",
+        "The environment/ module is a proposed composition cell in the existing orchestrator; its owning export file is included for registration. Refine the perimeter before touching any additional crate.",
+        "Use full listed crate tests by default. If narrowing to a newly created test filter, first run cargo test -p <crate> -- --list and verify an exact nonzero test-name match; a zero-test run is not acceptance.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

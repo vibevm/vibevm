@@ -1,0 +1,3403 @@
+{
+  "schema": 1,
+  "campaign_id": "NEXT",
+  "title": "VibeVM next implementation and scaffold retirement",
+  "baseline_commit": "b1291b06d5704ee32f7486c86e1fae617fcbbddf",
+  "source_pair_revision": 4,
+  "baseline_fingerprint": "sha256:0b6524d4128c5ece0763b14f791cbdc3e9cc4c6fd30aefa14b4f93df12892084",
+  "baseline_files": [
+    {
+      "path": "campaigns/next/inputs/REFINED-IMPLEMENTATION-PLAN.md",
+      "sha256": "11cd76253638800fc90897220984912eb7d737ad12a423f9207299f2b70cb9e7"
+    },
+    {
+      "path": "campaigns/next/inputs/PROJECT-REVIEW.md",
+      "sha256": "084cf62c72427b65dd8b41241a841ca7b5ac521c7936333d9662d78b70986486"
+    }
+  ],
+  "temporary_zones": [
+    "campaigns/next/",
+    "vibevm/vibespecs/terraforms/next/",
+    "vibevm/vibespecs/terraforms/NEXT-IMPLEMENTATION-CAMPAIGN.xml"
+  ],
+  "canonical_candidates": {
+    "M-01": [
+      "vibevm/vibespecs/common/PROP-057-resource-resolution.xml",
+      "vibevm/vibespecs/common/PROP-029-fully-qualified-addresses.xml",
+      "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml"
+    ],
+    "M-02": [
+      "vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml"
+    ],
+    "M-03": [
+      "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml"
+    ],
+    "M-04": [
+      "vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml",
+      "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml"
+    ],
+    "M-05": [
+      "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "vibevm/vibespecs/common/PROP-044-change-native-formats.xml"
+    ],
+    "M-06": [
+      "vibevm/vibespecs/common/PROP-059-boot-observability.xml",
+      "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
+      "vibevm/vibespecs/common/PROP-048-tokenomics.xml"
+    ],
+    "M-07": [
+      "vibevm/vibespecs/common/PROP-060-publication-authority.xml",
+      "vibevm/vibespecs/common/PROP-016-source-mirrors.xml",
+      "vibevm/vibespecs/common/PROP-019-version-manager.xml"
+    ],
+    "M-08": [
+      "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml"
+    ],
+    "M-09": [
+      "vibevm/vibespecs/modules/vibe-registry/PROP-023-bridge-packages.xml",
+      "vibevm/vibespecs/common/PROP-028-package-families.xml"
+    ],
+    "M-10": [
+      "vibevm/vibespecs/common/PROP-061-local-derivatives.xml"
+    ],
+    "M-11": [
+      "vibevm/vibespecs/common/PROP-062-brownfield-intake.xml",
+      "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml"
+    ],
+    "M-12": [
+      "DEV-GUIDE.md",
+      "vibevm/vibespecs/common/PROP-060-publication-authority.xml"
+    ],
+    "M-13": [
+      "vibevm/vibespecs/common/PROP-000.xml",
+      "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml"
+    ],
+    "M-14": [
+      "vibevm/vibespecs/common/PROP-063-environment-model.xml"
+    ],
+    "M-15": [
+      "vibevm/vibespecs/common/PROP-064-runtime-package-management.xml",
+      "vibevm/vibespecs/common/PROP-065-oci-agent-images.xml",
+      "vibevm/vibespecs/common/PROP-066-ai-aware-service-catalog.xml"
+    ],
+    "M-16": [
+      "vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml",
+      "vibevm/vibespecs/common/PROP-018-agentic-standalone-modes.xml",
+      "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml"
+    ],
+    "M-17": [
+      "vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml",
+      "vibevm/vibespecs/common/PROP-031-algorithmic-refactoring.xml",
+      "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml"
+    ]
+  },
+  "units": [
+    {
+      "id": "NEXT-A01",
+      "kind": "architecture",
+      "source_section": "3.1",
+      "title": "Existing layers и минимальные additions",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-A01.xml",
+      "owner": "M-13",
+      "anchors": [
+        "NEXT-A01-U001",
+        "NEXT-A01-U002"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-000.xml",
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml"
+      ],
+      "retire_after": [
+        "M-13"
+      ]
+    },
+    {
+      "id": "NEXT-A02",
+      "kind": "architecture",
+      "source_section": "3.2",
+      "title": "Exact source query: selection, representation, proof",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-A02.xml",
+      "owner": "M-01",
+      "anchors": [
+        "NEXT-A02-U001",
+        "NEXT-A02-U002",
+        "NEXT-A02-U003",
+        "NEXT-A02-U004",
+        "NEXT-A02-U005",
+        "NEXT-A02-U006",
+        "NEXT-A02-U007",
+        "NEXT-A02-U008",
+        "NEXT-A02-U009",
+        "NEXT-A02-U010",
+        "NEXT-A02-U011",
+        "NEXT-A02-U012",
+        "NEXT-A02-U013"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-057-resource-resolution.xml",
+        "vibevm/vibespecs/common/PROP-029-fully-qualified-addresses.xml",
+        "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml"
+      ],
+      "retire_after": [
+        "M-01"
+      ]
+    },
+    {
+      "id": "NEXT-A03",
+      "kind": "architecture",
+      "source_section": "3.3",
+      "title": "Consumer configuration: features first, choices as constraints",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-A03.xml",
+      "owner": "M-05",
+      "anchors": [
+        "NEXT-A03-U001",
+        "NEXT-A03-U002",
+        "NEXT-A03-U003",
+        "NEXT-A03-U004",
+        "NEXT-A03-U005",
+        "NEXT-A03-U006",
+        "NEXT-A03-U007",
+        "NEXT-A03-U008",
+        "NEXT-A03-U009",
+        "NEXT-A03-U010",
+        "NEXT-A03-U011",
+        "NEXT-A03-U012"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml"
+      ],
+      "retire_after": [
+        "M-05"
+      ]
+    },
+    {
+      "id": "NEXT-A04",
+      "kind": "architecture",
+      "source_section": "3.4",
+      "title": "Minimal repo-owned change",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-A04.xml",
+      "owner": "M-02",
+      "anchors": [
+        "NEXT-A04-U001",
+        "NEXT-A04-U002",
+        "NEXT-A04-U003",
+        "NEXT-A04-U004",
+        "NEXT-A04-U005",
+        "NEXT-A04-U006",
+        "NEXT-A04-U007",
+        "NEXT-A04-U008",
+        "NEXT-A04-U009"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml"
+      ],
+      "retire_after": [
+        "M-02"
+      ]
+    },
+    {
+      "id": "NEXT-A05",
+      "kind": "architecture",
+      "source_section": "3.5",
+      "title": "Lifecycle compatibility and post-state causality",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-A05.xml",
+      "owner": "M-03",
+      "anchors": [
+        "NEXT-A05-U001",
+        "NEXT-A05-U002",
+        "NEXT-A05-U003",
+        "NEXT-A05-U004",
+        "NEXT-A05-U005",
+        "NEXT-A05-U006",
+        "NEXT-A05-U007",
+        "NEXT-A05-U008"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+        "vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml"
+      ],
+      "retire_after": [
+        "M-03"
+      ]
+    },
+    {
+      "id": "NEXT-A06",
+      "kind": "architecture",
+      "source_section": "3.6",
+      "title": "Analysis, clarification and closure",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-A06.xml",
+      "owner": "M-04",
+      "anchors": [
+        "NEXT-A06-U001",
+        "NEXT-A06-U002",
+        "NEXT-A06-U003",
+        "NEXT-A06-U004",
+        "NEXT-A06-U005",
+        "NEXT-A06-U006"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml",
+        "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml"
+      ],
+      "retire_after": [
+        "M-04"
+      ]
+    },
+    {
+      "id": "NEXT-A07",
+      "kind": "architecture",
+      "source_section": "3.7",
+      "title": "Source classification: ordinary Markdown, XML-data and foreign bridges",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-A07.xml",
+      "owner": "M-06",
+      "anchors": [
+        "NEXT-A07-U001",
+        "NEXT-A07-U002",
+        "NEXT-A07-U003",
+        "NEXT-A07-U004"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-059-boot-observability.xml",
+        "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
+        "vibevm/vibespecs/common/PROP-048-tokenomics.xml"
+      ],
+      "retire_after": [
+        "M-06"
+      ]
+    },
+    {
+      "id": "NEXT-A08",
+      "kind": "architecture",
+      "source_section": "3.8",
+      "title": "Boot debugger and preinstall calculator",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-A08.xml",
+      "owner": "M-06",
+      "anchors": [
+        "NEXT-A08-U001",
+        "NEXT-A08-U002",
+        "NEXT-A08-U003",
+        "NEXT-A08-U004",
+        "NEXT-A08-U005",
+        "NEXT-A08-U006",
+        "NEXT-A08-U007"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-059-boot-observability.xml",
+        "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
+        "vibevm/vibespecs/common/PROP-048-tokenomics.xml"
+      ],
+      "retire_after": [
+        "M-06"
+      ]
+    },
+    {
+      "id": "NEXT-A09",
+      "kind": "architecture",
+      "source_section": "3.9",
+      "title": "External adapters: new clients without compiled catalogue lock-in",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-A09.xml",
+      "owner": "M-08",
+      "anchors": [
+        "NEXT-A09-U001",
+        "NEXT-A09-U002",
+        "NEXT-A09-U003",
+        "NEXT-A09-U004",
+        "NEXT-A09-U005",
+        "NEXT-A09-U006",
+        "NEXT-A09-U007"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml"
+      ],
+      "retire_after": [
+        "M-08"
+      ]
+    },
+    {
+      "id": "NEXT-A10",
+      "kind": "architecture",
+      "source_section": "3.10",
+      "title": "General project-owned derivative resources",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-A10.xml",
+      "owner": "M-10",
+      "anchors": [
+        "NEXT-A10-U001",
+        "NEXT-A10-U002",
+        "NEXT-A10-U003",
+        "NEXT-A10-U004",
+        "NEXT-A10-U005",
+        "NEXT-A10-U006"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-061-local-derivatives.xml"
+      ],
+      "retire_after": [
+        "M-10"
+      ]
+    },
+    {
+      "id": "NEXT-A11",
+      "kind": "architecture",
+      "source_section": "3.11",
+      "title": "Bridges and brownfield",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-A11.xml",
+      "owner": "M-09",
+      "anchors": [
+        "NEXT-A11-U001",
+        "NEXT-A11-U002",
+        "NEXT-A11-U003"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/modules/vibe-registry/PROP-023-bridge-packages.xml",
+        "vibevm/vibespecs/common/PROP-028-package-families.xml"
+      ],
+      "retire_after": [
+        "M-09",
+        "M-11"
+      ]
+    },
+    {
+      "id": "NEXT-A12",
+      "kind": "architecture",
+      "source_section": "3.12",
+      "title": "Release evidence, prototype policy and A/B authorization",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-A12.xml",
+      "owner": "M-07",
+      "anchors": [
+        "NEXT-A12-U001",
+        "NEXT-A12-U002",
+        "NEXT-A12-U003",
+        "NEXT-A12-U004",
+        "NEXT-A12-U005",
+        "NEXT-A12-U006",
+        "NEXT-A12-U007",
+        "NEXT-A12-U008",
+        "NEXT-A12-U009",
+        "NEXT-A12-U010"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-060-publication-authority.xml",
+        "vibevm/vibespecs/common/PROP-016-source-mirrors.xml",
+        "vibevm/vibespecs/common/PROP-019-version-manager.xml"
+      ],
+      "retire_after": [
+        "M-07"
+      ]
+    },
+    {
+      "id": "NEXT-A13",
+      "kind": "architecture",
+      "source_section": "3.13",
+      "title": "Environment management: one package system, explicit targets",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-A13.xml",
+      "owner": "M-14",
+      "anchors": [
+        "NEXT-A13-U001",
+        "NEXT-A13-U002",
+        "NEXT-A13-U003",
+        "NEXT-A13-U004",
+        "NEXT-A13-U005",
+        "NEXT-A13-U006",
+        "NEXT-A13-U007",
+        "NEXT-A13-U008"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-063-environment-model.xml"
+      ],
+      "retire_after": [
+        "M-14"
+      ]
+    },
+    {
+      "id": "NEXT-A14",
+      "kind": "architecture",
+      "source_section": "3.14",
+      "title": "Installable tools, payloads and dependency closure",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-A14.xml",
+      "owner": "M-15",
+      "anchors": [
+        "NEXT-A14-U001",
+        "NEXT-A14-U002",
+        "NEXT-A14-U003",
+        "NEXT-A14-U004",
+        "NEXT-A14-U005",
+        "NEXT-A14-U006",
+        "NEXT-A14-U007",
+        "NEXT-A14-U008"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-064-runtime-package-management.xml",
+        "vibevm/vibespecs/common/PROP-065-oci-agent-images.xml",
+        "vibevm/vibespecs/common/PROP-066-ai-aware-service-catalog.xml"
+      ],
+      "retire_after": [
+        "M-15"
+      ]
+    },
+    {
+      "id": "NEXT-A15",
+      "kind": "architecture",
+      "source_section": "3.15",
+      "title": "Transaction domains and Arch interoperability",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-A15.xml",
+      "owner": "M-15",
+      "anchors": [
+        "NEXT-A15-U001",
+        "NEXT-A15-U002",
+        "NEXT-A15-U003",
+        "NEXT-A15-U004",
+        "NEXT-A15-U005",
+        "NEXT-A15-U006",
+        "NEXT-A15-U007",
+        "NEXT-A15-U008"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-064-runtime-package-management.xml",
+        "vibevm/vibespecs/common/PROP-065-oci-agent-images.xml",
+        "vibevm/vibespecs/common/PROP-066-ai-aware-service-catalog.xml"
+      ],
+      "retire_after": [
+        "M-15"
+      ]
+    },
+    {
+      "id": "NEXT-A16",
+      "kind": "architecture",
+      "source_section": "3.16",
+      "title": "Docker/OCI agent-image build capability",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-A16.xml",
+      "owner": "M-15",
+      "anchors": [
+        "NEXT-A16-U001",
+        "NEXT-A16-U002",
+        "NEXT-A16-U003",
+        "NEXT-A16-U004",
+        "NEXT-A16-U005",
+        "NEXT-A16-U006",
+        "NEXT-A16-U007",
+        "NEXT-A16-U008",
+        "NEXT-A16-U009"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-064-runtime-package-management.xml",
+        "vibevm/vibespecs/common/PROP-065-oci-agent-images.xml",
+        "vibevm/vibespecs/common/PROP-066-ai-aware-service-catalog.xml"
+      ],
+      "retire_after": [
+        "M-15"
+      ]
+    },
+    {
+      "id": "NEXT-A17",
+      "kind": "architecture",
+      "source_section": "3.17",
+      "title": "AI-aware tools and network services",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-A17.xml",
+      "owner": "M-15",
+      "anchors": [
+        "NEXT-A17-U001",
+        "NEXT-A17-U002",
+        "NEXT-A17-U003",
+        "NEXT-A17-U004",
+        "NEXT-A17-U005"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-064-runtime-package-management.xml",
+        "vibevm/vibespecs/common/PROP-065-oci-agent-images.xml",
+        "vibevm/vibespecs/common/PROP-066-ai-aware-service-catalog.xml"
+      ],
+      "retire_after": [
+        "M-15"
+      ]
+    },
+    {
+      "id": "NEXT-A18",
+      "kind": "architecture",
+      "source_section": "3.18",
+      "title": "Future Linux distribution shape and readiness boundary",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-A18.xml",
+      "owner": "M-15",
+      "anchors": [
+        "NEXT-A18-U001",
+        "NEXT-A18-U002",
+        "NEXT-A18-U003"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-064-runtime-package-management.xml",
+        "vibevm/vibespecs/common/PROP-065-oci-agent-images.xml",
+        "vibevm/vibespecs/common/PROP-066-ai-aware-service-catalog.xml"
+      ],
+      "retire_after": [
+        "M-15"
+      ]
+    },
+    {
+      "id": "NEXT-A19",
+      "kind": "architecture",
+      "source_section": "3.19",
+      "title": "Nix as design reference; no GitHub dependency",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-A19.xml",
+      "owner": "M-15",
+      "anchors": [
+        "NEXT-A19-U001",
+        "NEXT-A19-U002",
+        "NEXT-A19-U003",
+        "NEXT-A19-U004",
+        "NEXT-A19-U005",
+        "NEXT-A19-U006",
+        "NEXT-A19-U007"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-064-runtime-package-management.xml",
+        "vibevm/vibespecs/common/PROP-065-oci-agent-images.xml",
+        "vibevm/vibespecs/common/PROP-066-ai-aware-service-catalog.xml"
+      ],
+      "retire_after": [
+        "M-15"
+      ]
+    },
+    {
+      "id": "NEXT-A20",
+      "kind": "architecture",
+      "source_section": "3.20",
+      "title": "Extreme Total Observability and IDE compatibility as a product law",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-A20.xml",
+      "owner": "M-16",
+      "anchors": [
+        "NEXT-A20-U001",
+        "NEXT-A20-U002",
+        "NEXT-A20-U003",
+        "NEXT-A20-U004",
+        "NEXT-A20-U005",
+        "NEXT-A20-U006"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml",
+        "vibevm/vibespecs/common/PROP-018-agentic-standalone-modes.xml",
+        "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml"
+      ],
+      "retire_after": [
+        "M-17"
+      ]
+    },
+    {
+      "id": "NEXT-A21",
+      "kind": "architecture",
+      "source_section": "3.21",
+      "title": "One application service boundary, many transports",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-A21.xml",
+      "owner": "M-16",
+      "anchors": [
+        "NEXT-A21-U001",
+        "NEXT-A21-U002",
+        "NEXT-A21-U003",
+        "NEXT-A21-U004",
+        "NEXT-A21-U005",
+        "NEXT-A21-U006",
+        "NEXT-A21-U007"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml",
+        "vibevm/vibespecs/common/PROP-018-agentic-standalone-modes.xml",
+        "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml"
+      ],
+      "retire_after": [
+        "M-17"
+      ]
+    },
+    {
+      "id": "NEXT-A22",
+      "kind": "architecture",
+      "source_section": "3.22",
+      "title": "Addressable models, live editing and coherent observations",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-A22.xml",
+      "owner": "M-16",
+      "anchors": [
+        "NEXT-A22-U001",
+        "NEXT-A22-U002",
+        "NEXT-A22-U003",
+        "NEXT-A22-U004",
+        "NEXT-A22-U005",
+        "NEXT-A22-U006",
+        "NEXT-A22-U007",
+        "NEXT-A22-U008"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml",
+        "vibevm/vibespecs/common/PROP-018-agentic-standalone-modes.xml",
+        "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml"
+      ],
+      "retire_after": [
+        "M-17"
+      ]
+    },
+    {
+      "id": "NEXT-A23",
+      "kind": "architecture",
+      "source_section": "3.23",
+      "title": "Responsive operations, errors and reconnection",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-A23.xml",
+      "owner": "M-16",
+      "anchors": [
+        "NEXT-A23-U001",
+        "NEXT-A23-U002",
+        "NEXT-A23-U003",
+        "NEXT-A23-U004",
+        "NEXT-A23-U005",
+        "NEXT-A23-U006",
+        "NEXT-A23-U007"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml",
+        "vibevm/vibespecs/common/PROP-018-agentic-standalone-modes.xml",
+        "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml"
+      ],
+      "retire_after": [
+        "M-17"
+      ]
+    },
+    {
+      "id": "NEXT-A24",
+      "kind": "architecture",
+      "source_section": "3.24",
+      "title": "Complete debug capture and semantic refactoring",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-A24.xml",
+      "owner": "M-17",
+      "anchors": [
+        "NEXT-A24-U001",
+        "NEXT-A24-U002",
+        "NEXT-A24-U003",
+        "NEXT-A24-U004",
+        "NEXT-A24-U005",
+        "NEXT-A24-U006",
+        "NEXT-A24-U007"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml",
+        "vibevm/vibespecs/common/PROP-031-algorithmic-refactoring.xml",
+        "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml"
+      ],
+      "retire_after": [
+        "M-17"
+      ]
+    },
+    {
+      "id": "NEXT-A25",
+      "kind": "architecture",
+      "source_section": "3.25",
+      "title": "Domain-by-domain IDE/ETO obligations and full-path gates",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-A25.xml",
+      "owner": "M-17",
+      "anchors": [
+        "NEXT-A25-U001",
+        "NEXT-A25-U002",
+        "NEXT-A25-U003",
+        "NEXT-A25-U004"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml",
+        "vibevm/vibespecs/common/PROP-031-algorithmic-refactoring.xml",
+        "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml"
+      ],
+      "retire_after": [
+        "M-17"
+      ]
+    },
+    {
+      "id": "NEXT-G01",
+      "kind": "cross-cutting",
+      "source_section": "1",
+      "title": "Outcome and non-goals",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-G01.xml",
+      "owner": "M-13",
+      "anchors": [
+        "NEXT-G01-U001",
+        "NEXT-G01-U002",
+        "NEXT-G01-U003",
+        "NEXT-G01-U004",
+        "NEXT-G01-U005"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-000.xml",
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml"
+      ],
+      "retire_after": [
+        "M-17"
+      ]
+    },
+    {
+      "id": "NEXT-G02",
+      "kind": "cross-cutting",
+      "source_section": "2",
+      "title": "Architectural principles and boundaries",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-G02.xml",
+      "owner": "M-13",
+      "anchors": [
+        "NEXT-G02-U001"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-000.xml",
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml"
+      ],
+      "retire_after": [
+        "M-17"
+      ]
+    },
+    {
+      "id": "NEXT-G06",
+      "kind": "cross-cutting",
+      "source_section": "6",
+      "title": "Compatibility and migration strategy",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-G06.xml",
+      "owner": "M-13",
+      "anchors": [
+        "NEXT-G06-U001",
+        "NEXT-G06-U002",
+        "NEXT-G06-U003"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-000.xml",
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml"
+      ],
+      "retire_after": [
+        "M-17"
+      ]
+    },
+    {
+      "id": "NEXT-G07",
+      "kind": "cross-cutting",
+      "source_section": "7",
+      "title": "Determinism, offline, security and authority rules",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-G07.xml",
+      "owner": "M-16",
+      "anchors": [
+        "NEXT-G07-U001",
+        "NEXT-G07-U002",
+        "NEXT-G07-U003"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml",
+        "vibevm/vibespecs/common/PROP-018-agentic-standalone-modes.xml",
+        "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml"
+      ],
+      "retire_after": [
+        "M-17"
+      ]
+    },
+    {
+      "id": "NEXT-G08",
+      "kind": "cross-cutting",
+      "source_section": "8",
+      "title": "CLI/library/MCP and machine contracts",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-G08.xml",
+      "owner": "M-16",
+      "anchors": [
+        "NEXT-G08-U001",
+        "NEXT-G08-U002",
+        "NEXT-G08-U003",
+        "NEXT-G08-U004",
+        "NEXT-G08-U005",
+        "NEXT-G08-U006"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml",
+        "vibevm/vibespecs/common/PROP-018-agentic-standalone-modes.xml",
+        "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml"
+      ],
+      "retire_after": [
+        "M-17"
+      ]
+    },
+    {
+      "id": "NEXT-G09",
+      "kind": "cross-cutting",
+      "source_section": "9",
+      "title": "Verification matrix and exit gates",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-G09.xml",
+      "owner": "M-17",
+      "anchors": [
+        "NEXT-G09-U001",
+        "NEXT-G09-U002",
+        "NEXT-G09-U003",
+        "NEXT-G09-U004"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml",
+        "vibevm/vibespecs/common/PROP-031-algorithmic-refactoring.xml",
+        "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml"
+      ],
+      "retire_after": [
+        "M-17"
+      ]
+    },
+    {
+      "id": "NEXT-G10",
+      "kind": "cross-cutting",
+      "source_section": "10",
+      "title": "Rollback/safe-stop points",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-G10.xml",
+      "owner": "M-17",
+      "anchors": [
+        "NEXT-G10-U001",
+        "NEXT-G10-U002",
+        "NEXT-G10-U003"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml",
+        "vibevm/vibespecs/common/PROP-031-algorithmic-refactoring.xml",
+        "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml"
+      ],
+      "retire_after": [
+        "M-17"
+      ]
+    },
+    {
+      "id": "NEXT-G11",
+      "kind": "cross-cutting",
+      "source_section": "11",
+      "title": "Risks and design forks",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-G11.xml",
+      "owner": "M-17",
+      "anchors": [
+        "NEXT-G11-U001",
+        "NEXT-G11-U002"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml",
+        "vibevm/vibespecs/common/PROP-031-algorithmic-refactoring.xml",
+        "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml"
+      ],
+      "retire_after": [
+        "M-17"
+      ]
+    },
+    {
+      "id": "NEXT-G13",
+      "kind": "cross-cutting",
+      "source_section": "13",
+      "title": "Deferred work",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-G13.xml",
+      "owner": "M-17",
+      "anchors": [
+        "NEXT-G13-U001",
+        "NEXT-G13-U002"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml",
+        "vibevm/vibespecs/common/PROP-031-algorithmic-refactoring.xml",
+        "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml"
+      ],
+      "retire_after": [
+        "M-17"
+      ]
+    },
+    {
+      "id": "NEXT-D-001",
+      "kind": "decision",
+      "source_section": "12",
+      "title": "D-001",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-D-001.xml",
+      "owner": "M-09",
+      "anchors": [
+        "NEXT-D-001-LAW"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/modules/vibe-registry/PROP-023-bridge-packages.xml",
+        "vibevm/vibespecs/common/PROP-028-package-families.xml"
+      ],
+      "retire_after": [
+        "M-09"
+      ]
+    },
+    {
+      "id": "NEXT-D-002",
+      "kind": "decision",
+      "source_section": "12",
+      "title": "D-002",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-D-002.xml",
+      "owner": "M-03",
+      "anchors": [
+        "NEXT-D-002-LAW"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+        "vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml"
+      ],
+      "retire_after": [
+        "M-03"
+      ]
+    },
+    {
+      "id": "NEXT-D-003",
+      "kind": "decision",
+      "source_section": "12",
+      "title": "D-003",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-D-003.xml",
+      "owner": "M-13",
+      "anchors": [
+        "NEXT-D-003-LAW"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-000.xml",
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml"
+      ],
+      "retire_after": [
+        "M-13"
+      ]
+    },
+    {
+      "id": "NEXT-D-004",
+      "kind": "decision",
+      "source_section": "12",
+      "title": "D-004",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-D-004.xml",
+      "owner": "M-05",
+      "anchors": [
+        "NEXT-D-004-LAW"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml"
+      ],
+      "retire_after": [
+        "M-05"
+      ]
+    },
+    {
+      "id": "NEXT-D-005",
+      "kind": "decision",
+      "source_section": "12",
+      "title": "D-005",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-D-005.xml",
+      "owner": "M-05",
+      "anchors": [
+        "NEXT-D-005-LAW"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml"
+      ],
+      "retire_after": [
+        "M-05"
+      ]
+    },
+    {
+      "id": "NEXT-D-006",
+      "kind": "decision",
+      "source_section": "12",
+      "title": "D-006",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-D-006.xml",
+      "owner": "M-06",
+      "anchors": [
+        "NEXT-D-006-LAW"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-059-boot-observability.xml",
+        "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
+        "vibevm/vibespecs/common/PROP-048-tokenomics.xml"
+      ],
+      "retire_after": [
+        "M-06"
+      ]
+    },
+    {
+      "id": "NEXT-D-007",
+      "kind": "decision",
+      "source_section": "12",
+      "title": "D-007",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-D-007.xml",
+      "owner": "M-06",
+      "anchors": [
+        "NEXT-D-007-LAW"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-059-boot-observability.xml",
+        "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
+        "vibevm/vibespecs/common/PROP-048-tokenomics.xml"
+      ],
+      "retire_after": [
+        "M-06"
+      ]
+    },
+    {
+      "id": "NEXT-D-008",
+      "kind": "decision",
+      "source_section": "12",
+      "title": "D-008",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-D-008.xml",
+      "owner": "M-08",
+      "anchors": [
+        "NEXT-D-008-LAW"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml"
+      ],
+      "retire_after": [
+        "M-08"
+      ]
+    },
+    {
+      "id": "NEXT-D-009",
+      "kind": "decision",
+      "source_section": "12",
+      "title": "D-009",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-D-009.xml",
+      "owner": "M-10",
+      "anchors": [
+        "NEXT-D-009-LAW"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-061-local-derivatives.xml"
+      ],
+      "retire_after": [
+        "M-10"
+      ]
+    },
+    {
+      "id": "NEXT-D-010",
+      "kind": "decision",
+      "source_section": "12",
+      "title": "D-010",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-D-010.xml",
+      "owner": "M-07",
+      "anchors": [
+        "NEXT-D-010-LAW"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-060-publication-authority.xml",
+        "vibevm/vibespecs/common/PROP-016-source-mirrors.xml",
+        "vibevm/vibespecs/common/PROP-019-version-manager.xml"
+      ],
+      "retire_after": [
+        "M-07"
+      ]
+    },
+    {
+      "id": "NEXT-D-011",
+      "kind": "decision",
+      "source_section": "12",
+      "title": "D-011",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-D-011.xml",
+      "owner": "M-07",
+      "anchors": [
+        "NEXT-D-011-LAW"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-060-publication-authority.xml",
+        "vibevm/vibespecs/common/PROP-016-source-mirrors.xml",
+        "vibevm/vibespecs/common/PROP-019-version-manager.xml"
+      ],
+      "retire_after": [
+        "M-07"
+      ]
+    },
+    {
+      "id": "NEXT-D-012",
+      "kind": "decision",
+      "source_section": "12",
+      "title": "D-012",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-D-012.xml",
+      "owner": "M-08",
+      "anchors": [
+        "NEXT-D-012-LAW"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml"
+      ],
+      "retire_after": [
+        "M-08"
+      ]
+    },
+    {
+      "id": "NEXT-D-013",
+      "kind": "decision",
+      "source_section": "12",
+      "title": "D-013",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-D-013.xml",
+      "owner": "M-13",
+      "anchors": [
+        "NEXT-D-013-LAW"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-000.xml",
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml"
+      ],
+      "retire_after": [
+        "M-13"
+      ]
+    },
+    {
+      "id": "NEXT-D-014",
+      "kind": "decision",
+      "source_section": "12",
+      "title": "D-014",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-D-014.xml",
+      "owner": "M-06",
+      "anchors": [
+        "NEXT-D-014-LAW"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-059-boot-observability.xml",
+        "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
+        "vibevm/vibespecs/common/PROP-048-tokenomics.xml"
+      ],
+      "retire_after": [
+        "M-06"
+      ]
+    },
+    {
+      "id": "NEXT-D-015",
+      "kind": "decision",
+      "source_section": "12",
+      "title": "D-015",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-D-015.xml",
+      "owner": "M-07",
+      "anchors": [
+        "NEXT-D-015-LAW"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-060-publication-authority.xml",
+        "vibevm/vibespecs/common/PROP-016-source-mirrors.xml",
+        "vibevm/vibespecs/common/PROP-019-version-manager.xml"
+      ],
+      "retire_after": [
+        "M-07"
+      ]
+    },
+    {
+      "id": "NEXT-D-016",
+      "kind": "decision",
+      "source_section": "12",
+      "title": "D-016",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-D-016.xml",
+      "owner": "M-02",
+      "anchors": [
+        "NEXT-D-016-LAW"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml"
+      ],
+      "retire_after": [
+        "M-02"
+      ]
+    },
+    {
+      "id": "NEXT-D-017",
+      "kind": "decision",
+      "source_section": "12",
+      "title": "D-017",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-D-017.xml",
+      "owner": "M-05",
+      "anchors": [
+        "NEXT-D-017-LAW"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml"
+      ],
+      "retire_after": [
+        "M-05"
+      ]
+    },
+    {
+      "id": "NEXT-D-018",
+      "kind": "decision",
+      "source_section": "12",
+      "title": "D-018",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-D-018.xml",
+      "owner": "M-03",
+      "anchors": [
+        "NEXT-D-018-LAW"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+        "vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml"
+      ],
+      "retire_after": [
+        "M-03"
+      ]
+    },
+    {
+      "id": "NEXT-D-019",
+      "kind": "decision",
+      "source_section": "12",
+      "title": "D-019",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-D-019.xml",
+      "owner": "M-13",
+      "anchors": [
+        "NEXT-D-019-LAW"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-000.xml",
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml"
+      ],
+      "retire_after": [
+        "M-13"
+      ]
+    },
+    {
+      "id": "NEXT-D-020",
+      "kind": "decision",
+      "source_section": "12",
+      "title": "D-020",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-D-020.xml",
+      "owner": "M-14",
+      "anchors": [
+        "NEXT-D-020-LAW"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-063-environment-model.xml"
+      ],
+      "retire_after": [
+        "M-14"
+      ]
+    },
+    {
+      "id": "NEXT-D-021",
+      "kind": "decision",
+      "source_section": "12",
+      "title": "D-021",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-D-021.xml",
+      "owner": "M-15",
+      "anchors": [
+        "NEXT-D-021-LAW"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-064-runtime-package-management.xml",
+        "vibevm/vibespecs/common/PROP-065-oci-agent-images.xml",
+        "vibevm/vibespecs/common/PROP-066-ai-aware-service-catalog.xml"
+      ],
+      "retire_after": [
+        "M-15"
+      ]
+    },
+    {
+      "id": "NEXT-D-022",
+      "kind": "decision",
+      "source_section": "12",
+      "title": "D-022",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-D-022.xml",
+      "owner": "M-15",
+      "anchors": [
+        "NEXT-D-022-LAW"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-064-runtime-package-management.xml",
+        "vibevm/vibespecs/common/PROP-065-oci-agent-images.xml",
+        "vibevm/vibespecs/common/PROP-066-ai-aware-service-catalog.xml"
+      ],
+      "retire_after": [
+        "M-15"
+      ]
+    },
+    {
+      "id": "NEXT-D-023",
+      "kind": "decision",
+      "source_section": "12",
+      "title": "D-023",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-D-023.xml",
+      "owner": "M-15",
+      "anchors": [
+        "NEXT-D-023-LAW"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-064-runtime-package-management.xml",
+        "vibevm/vibespecs/common/PROP-065-oci-agent-images.xml",
+        "vibevm/vibespecs/common/PROP-066-ai-aware-service-catalog.xml"
+      ],
+      "retire_after": [
+        "M-15"
+      ]
+    },
+    {
+      "id": "NEXT-D-024",
+      "kind": "decision",
+      "source_section": "12",
+      "title": "D-024",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-D-024.xml",
+      "owner": "M-15",
+      "anchors": [
+        "NEXT-D-024-LAW"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-064-runtime-package-management.xml",
+        "vibevm/vibespecs/common/PROP-065-oci-agent-images.xml",
+        "vibevm/vibespecs/common/PROP-066-ai-aware-service-catalog.xml"
+      ],
+      "retire_after": [
+        "M-15"
+      ]
+    },
+    {
+      "id": "NEXT-D-025",
+      "kind": "decision",
+      "source_section": "12",
+      "title": "D-025",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-D-025.xml",
+      "owner": "M-16",
+      "anchors": [
+        "NEXT-D-025-LAW"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml",
+        "vibevm/vibespecs/common/PROP-018-agentic-standalone-modes.xml",
+        "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml"
+      ],
+      "retire_after": [
+        "M-16"
+      ]
+    },
+    {
+      "id": "NEXT-D-026",
+      "kind": "decision",
+      "source_section": "12",
+      "title": "D-026",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-D-026.xml",
+      "owner": "M-16",
+      "anchors": [
+        "NEXT-D-026-LAW"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml",
+        "vibevm/vibespecs/common/PROP-018-agentic-standalone-modes.xml",
+        "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml"
+      ],
+      "retire_after": [
+        "M-16"
+      ]
+    }
+  ],
+  "atoms": [
+    {
+      "id": "M-13-A",
+      "milestone": "M-13",
+      "baseline_row": "Characterize actual consumers/call paths, exact active-version census, root/data/source policy gaps | F-002/F-004/F-007/F-008/F-021 |",
+      "depends_on": []
+    },
+    {
+      "id": "M-13-B",
+      "milestone": "M-13",
+      "baseline_row": "Update governing source rules: D-002 separation, D-013 prototype, D-019 Redbook mutable roster/current 1.0.0, no global WAL/MUP ban, no boot quotas, D-025/D-026 universal service/ETO law from M-16-A | D-002/D-005/D-006/D-013/D-019 |",
+      "depends_on": [
+        "M-13-A",
+        "M-16-A"
+      ]
+    },
+    {
+      "id": "M-13-C",
+      "milestone": "M-13",
+      "baseline_row": "Versioned deterministic migration engine + request/report format: parse preserved syntax tree, plan in memory, validate, diff, typed NeedsInput, no LLM | D-003; F-020 |",
+      "depends_on": [
+        "M-13-B"
+      ]
+    },
+    {
+      "id": "M-13-D",
+      "milestone": "M-13",
+      "baseline_row": "Executable migration apply/recovery with before-state/CAS, preservation/ambiguity/idempotence fixtures and active own 1.0.0 reconciliation; concrete SourceDescriptor converter lands with its reader in M-06-A, feature converter with M-05-B | D-003/D-014/D-019 |",
+      "depends_on": [
+        "M-13-C"
+      ]
+    },
+    {
+      "id": "M-01-A",
+      "milestone": "M-01",
+      "baseline_row": "Shared validated URI/path и typed lookup errors; characterization всех existing compiler/prompt call sites | F-004 |",
+      "depends_on": [
+        "M-13-D",
+        "M-06-A"
+      ]
+    },
+    {
+      "id": "M-01-B",
+      "milestone": "M-01",
+      "baseline_row": "Opaque selected-source authority, visible closure и same snapshot witnesses; no unrelated newest scan | F-004/005 |",
+      "depends_on": [
+        "M-01-A"
+      ]
+    },
+    {
+      "id": "M-01-C",
+      "milestone": "M-01",
+      "baseline_row": "Retained reader + integrity ladder; original capture index/verified builtin derivation; refusal matrix | F-005/017 |",
+      "depends_on": [
+        "M-01-B"
+      ]
+    },
+    {
+      "id": "M-01-D",
+      "milestone": "M-01",
+      "baseline_row": "Classified builtin unit/resource/section extraction + generated response/errors; raw encoding/span basis, CLI/MCP parity | F-017/F-013/F-021 |",
+      "depends_on": [
+        "M-01-C",
+        "M-16-C"
+      ]
+    },
+    {
+      "id": "M-01-E",
+      "milestone": "M-01",
+      "baseline_row": "Native/portable adversarial corpus, bounded parsing, empty-cache read-only proof, expectation checks | F-004/005/013 |",
+      "depends_on": [
+        "M-01-D"
+      ]
+    },
+    {
+      "id": "M-02-A",
+      "milestone": "M-02",
+      "baseline_row": "Native feat fixture + local binding characterization; prove no copied package truth/personal cursor and complete source linkage | F-001; accepted D-016 |",
+      "depends_on": [
+        "M-01-E",
+        "M-13-D"
+      ]
+    },
+    {
+      "id": "M-02-B",
+      "milestone": "M-02",
+      "baseline_row": "Ratified authored manifest/graph grammar, immutable paths, intent/work hash frames | D-003/D-016; F-001 |",
+      "depends_on": [
+        "M-02-A",
+        "M-16-D"
+      ]
+    },
+    {
+      "id": "M-02-C",
+      "milestone": "M-02",
+      "baseline_row": "Origin exact capture/rebase and same-snapshot fact selection; complete observation seam без page truncation | F-005/006 |",
+      "depends_on": [
+        "M-02-B"
+      ]
+    },
+    {
+      "id": "M-02-D",
+      "milestone": "M-02",
+      "baseline_row": "New --from no-overwrite scaffold; check/show/coverage through one library and MCP query | Immutable outcome; F-001/006 |",
+      "depends_on": [
+        "M-02-C"
+      ]
+    },
+    {
+      "id": "M-03-A",
+      "milestone": "M-03",
+      "baseline_row": "Freeze create/build/ordinary-and-scoped-verify roles and explicit change apply full pass; historical invocation migration; exhaustive carrier/hash map | D-002/D-018; F-002 |",
+      "depends_on": [
+        "M-02-D"
+      ]
+    },
+    {
+      "id": "M-03-B",
+      "milestone": "M-03",
+      "baseline_row": "Thread production request vs invocation/scope across all durable/machine surfaces; evidence retains pre/post meaning | F-002/F-003 |",
+      "depends_on": [
+        "M-03-A",
+        "M-14-C",
+        "M-16-C"
+      ]
+    },
+    {
+      "id": "M-03-C",
+      "milestone": "M-03",
+      "baseline_row": "Workspace continuation conflict/cancel/displace/recovery, exact hosted no-provider acceptance | F-003 |",
+      "depends_on": [
+        "M-03-B"
+      ]
+    },
+    {
+      "id": "M-03-D",
+      "milestone": "M-03",
+      "baseline_row": "After M-11-D: disjoint characterization plus mandatory existing-file producer/adopt/resume/current-source verify | D-018; F-002/F-006 |",
+      "depends_on": [
+        "M-03-C",
+        "M-11-D"
+      ]
+    },
+    {
+      "id": "M-03-E",
+      "milestone": "M-03",
+      "baseline_row": "CLI/MCP/full-pass parity; no new producer on verify, fresh repeated verify, exact build/test evidence and failure recovery | D-002/D-018; F-002/F-003 |",
+      "depends_on": [
+        "M-03-D"
+      ]
+    },
+    {
+      "id": "M-04-A",
+      "milestone": "M-04",
+      "baseline_row": "Exact-address questions, answer→local fact transaction, stale/secret-reference validation | Clarification mandate; F-001 |",
+      "depends_on": [
+        "M-03-E"
+      ]
+    },
+    {
+      "id": "M-04-B",
+      "milestone": "M-04",
+      "baseline_row": "Complete same-snapshot join и evidence-strength model; reuse terminal evaluator | F-006 |",
+      "depends_on": [
+        "M-04-A"
+      ]
+    },
+    {
+      "id": "M-04-C",
+      "milestone": "M-04",
+      "baseline_row": "Policy fingerprint, explicit waivers/risks, structural vs semantic checks; optional advisory rubric | F-006/014 |",
+      "depends_on": [
+        "M-04-B"
+      ]
+    },
+    {
+      "id": "M-04-D",
+      "milestone": "M-04",
+      "baseline_row": "Closure with retained witnesses/immutable references; revalidation after state deletion | F-006 |",
+      "depends_on": [
+        "M-04-C"
+      ]
+    },
+    {
+      "id": "M-04-E",
+      "milestone": "M-04",
+      "baseline_row": "CLI/MCP parity, manual/adopted evidence; optional one-way personal plan projection | F-001/006 |",
+      "depends_on": [
+        "M-04-D"
+      ]
+    },
+    {
+      "id": "M-05-A",
+      "milestone": "M-05",
+      "baseline_row": "Characterize roots/Fresh/all-features/parser/conditional defects и solver capability matrix | F-007/008 |",
+      "depends_on": [
+        "M-13-D",
+        "M-06-A"
+      ]
+    },
+    {
+      "id": "M-05-B",
+      "milestone": "M-05",
+      "baseline_row": "Ratify typed activation/consumer/group grammar, environment resolution domains and dependency roles from M-14; comment-preserving migration | D-003/D-017 |",
+      "depends_on": [
+        "M-05-A",
+        "M-14-C"
+      ]
+    },
+    {
+      "id": "M-05-C",
+      "milestone": "M-05",
+      "baseline_row": "Immutable catalog + candidate-conditioned activation; all incoming constraints; shared solve/manifest/masked routes | F-008 |",
+      "depends_on": [
+        "M-05-B"
+      ]
+    },
+    {
+      "id": "M-05-D",
+      "milestone": "M-05",
+      "baseline_row": "Actual dependency/capability edges, feature/subskill contributions, requested/resolved lock provenance | F-007/008 |",
+      "depends_on": [
+        "M-05-C"
+      ]
+    },
+    {
+      "id": "M-05-E",
+      "milestone": "M-05",
+      "baseline_row": "Freshness before fast path; pure discovery; transaction/update/reinstall and reverse-closure removal seam; unattended/TTY UI | F-007/008/013 |",
+      "depends_on": [
+        "M-05-D",
+        "M-16-C"
+      ]
+    },
+    {
+      "id": "M-05-F",
+      "milestone": "M-05",
+      "baseline_row": "Redbook existing 1.0.0 exact-one MUP default/WAL alternative + global/branch addons; migrate manual exclusions preserving intent/shared deps | D-004/D-005/D-019; F-009 |",
+      "depends_on": [
+        "M-05-E"
+      ]
+    },
+    {
+      "id": "M-05-G",
+      "milestone": "M-05",
+      "baseline_row": "Supported-backend parity, all-root conflicts/recovery and positive independent WAL/MUP coexistence; Redbook-only exclusivity; no automatic bump | D-005/D-019; F-008/F-009 |",
+      "depends_on": [
+        "M-05-F"
+      ]
+    },
+    {
+      "id": "M-06-A",
+      "milestone": "M-06",
+      "baseline_row": "SourceDescriptor grammar/migration + CommonMark sections/XML-data/raw handling; classification shared before scan/resolve/convert/collision/boot | D-014; F-021/F-017 |",
+      "depends_on": [
+        "M-13-D"
+      ]
+    },
+    {
+      "id": "M-06-B",
+      "milestone": "M-06",
+      "baseline_row": "Actual captured boot graph/provenance/why-included + bytes/scalars/tokenizer metrics, occurrence/shared distinctions and no total cap | D-006/D-007; F-016 |",
+      "depends_on": [
+        "M-06-A",
+        "M-01-E"
+      ]
+    },
+    {
+      "id": "M-06-C",
+      "milestone": "M-06",
+      "baseline_row": "Versioned machine requests/results/errors/progress/snapshot pages + interactive tree/detail/compare UI on shared library | D-007; F-016 |",
+      "depends_on": [
+        "M-06-B",
+        "M-16-D"
+      ]
+    },
+    {
+      "id": "M-06-D",
+      "milestone": "M-06",
+      "baseline_row": "Frozen candidate-world preview protocol; explicit preparation vs pure builtin calculation, legal static/dynamic scenarios and incomplete states | D-006/D-007; F-013/F-008 |",
+      "depends_on": [
+        "M-06-C",
+        "M-05-E"
+      ]
+    },
+    {
+      "id": "M-06-E",
+      "milestone": "M-06",
+      "baseline_row": "Preinstall marginal cost with transitive/shared dependencies/choices/conditions; toggle/install/remove/reconfigure comparisons | D-006; F-016 |",
+      "depends_on": [
+        "M-06-D"
+      ]
+    },
+    {
+      "id": "M-06-F",
+      "milestone": "M-06",
+      "baseline_row": "Full UI/API/CLI/MCP parity, derivative provenance, million-token-scale no-quota scenarios, stale snapshots and honest unknown attribution | D-006/D-007/D-009/D-014 |",
+      "depends_on": [
+        "M-06-E",
+        "M-05-G",
+        "M-10-D"
+      ]
+    },
+    {
+      "id": "M-07-A",
+      "milestone": "M-07",
+      "baseline_row": "Shared prepared plan/evidence/authorization model; A approval and B bounded policy evaluator implemented with exact digest/scope/generation | D-011/D-015; F-010/F-011 |",
+      "depends_on": [
+        "M-13-D",
+        "M-14-A",
+        "M-16-B"
+      ]
+    },
+    {
+      "id": "M-07-B",
+      "milestone": "M-07",
+      "baseline_row": "Four native bundle smokes default-on; explicit skip parameter/scoped status, no full-tests side effect; standalone preparation reports | D-010 |",
+      "depends_on": [
+        "M-07-A"
+      ]
+    },
+    {
+      "id": "M-07-C",
+      "milestone": "M-07",
+      "baseline_row": "Approved producer/channel validation, explicit source tests/PR pipeline, optional signature path; read-only source provenance | D-010/D-011/D-015 |",
+      "depends_on": [
+        "M-07-B"
+      ]
+    },
+    {
+      "id": "M-07-D",
+      "milestone": "M-07",
+      "baseline_row": "Ready bundles + smoke effective policy before destructive prepare; A current approval gate, B dispatch path tested but disabled; pre-write revalidate and recovery | D-015; F-010 |",
+      "depends_on": [
+        "M-07-C"
+      ]
+    },
+    {
+      "id": "M-07-E",
+      "milestone": "M-07",
+      "baseline_row": "A/B same-plan effect parity, out-of-policy/revocation/stale-approval refusal, explicit skip successful path, native failures and remote restoration rehearsal | D-010/D-011/D-015 |",
+      "depends_on": [
+        "M-07-D"
+      ]
+    },
+    {
+      "id": "M-08-A",
+      "milestone": "M-08",
+      "baseline_row": "Legacy operation/scope/shape matrix; concrete target contracts for Claude Code/Codex/OpenCode/Qwen Code | D-012; F-012 |",
+      "depends_on": [
+        "M-13-D",
+        "M-06-A",
+        "M-01-E"
+      ]
+    },
+    {
+      "id": "M-08-B",
+      "milestone": "M-08",
+      "baseline_row": "Explicit prepare/probe vs pure planning; bridge hydrated source-root characterization/correction | F-013/F-015 |",
+      "depends_on": [
+        "M-08-A"
+      ]
+    },
+    {
+      "id": "M-08-C",
+      "milestone": "M-08",
+      "baseline_row": "External descriptor and open capability map + generic host operations/grants bound to M-14 target/root/principal; retained receipt/recovery/upgrade/revocation semantics | D-008; F-014/E27 |",
+      "depends_on": [
+        "M-08-B",
+        "M-14-C",
+        "M-16-C"
+      ]
+    },
+    {
+      "id": "M-08-D",
+      "milestone": "M-08",
+      "baseline_row": "Typed command/native client operation admission; real plan/apply/verify/recover/uninstall; expanded effects require new authority | D-008; F-014 |",
+      "depends_on": [
+        "M-08-C"
+      ]
+    },
+    {
+      "id": "M-08-E",
+      "milestone": "M-08",
+      "baseline_row": "External package fixtures for all four clients, exact settings/resources, full lifecycle proof with unchanged core binary; no lost resources/foreign state | D-008/D-012; F-012/F-015 |",
+      "depends_on": [
+        "M-08-D"
+      ]
+    },
+    {
+      "id": "M-09-A",
+      "milestone": "M-09",
+      "baseline_row": "Audit current five and clarify/checklist/analyze/converge exact resources; effects/layout/platform table | F-015 |",
+      "depends_on": [
+        "M-13-D"
+      ]
+    },
+    {
+      "id": "M-09-B",
+      "milestone": "M-09",
+      "baseline_row": "Both bridges flow at 1.0.0; complete foreign non-Vibe resource closure, source classification/provenance/notices and consumer migration | D-001/D-014; F-015/F-021 |",
+      "depends_on": [
+        "M-09-A",
+        "M-06-A",
+        "M-01-E",
+        "M-08-E"
+      ]
+    },
+    {
+      "id": "M-09-C",
+      "milestone": "M-09",
+      "baseline_row": "Native change/bug/assess profiles on existing primitives; scripts only explicit trusted action | F-001/014/015 |",
+      "depends_on": [
+        "M-09-B",
+        "M-03-E",
+        "M-04-E",
+        "M-10-D"
+      ]
+    },
+    {
+      "id": "M-09-D",
+      "milestone": "M-09",
+      "baseline_row": "Two product feats × two stacks; unchanged origins, independent acceptance, drift/rebase | Reusable-feat mandate; F-015 |",
+      "depends_on": [
+        "M-09-C"
+      ]
+    },
+    {
+      "id": "M-09-E",
+      "milestone": "M-09",
+      "baseline_row": "Required bridge/native journeys with external adapter effects, local derivatives and complete resource closure; no unsupported stub as acceptance | D-008/D-009/D-014; F-015 |",
+      "depends_on": [
+        "M-09-D"
+      ]
+    },
+    {
+      "id": "M-10-A",
+      "milestone": "M-10",
+      "baseline_row": "Classify required resource families/use cases and common derive lifecycle; integrate existing mechanisms without a demand-permission gate | D-009; F-019 |",
+      "depends_on": [
+        "M-13-D",
+        "M-06-A",
+        "M-01-E"
+      ]
+    },
+    {
+      "id": "M-10-B",
+      "milestone": "M-10",
+      "baseline_row": "DerivationBinding/base/local/result/recipe/provenance contract; owner sovereignty and compatibility/activation distinction | D-009; F-005/F-019 |",
+      "depends_on": [
+        "M-10-A"
+      ]
+    },
+    {
+      "id": "M-10-C",
+      "milestone": "M-10",
+      "baseline_row": "Generic derive/show/diff/rebase/apply for CommonMark, XML-data, Vibe specs, opaque files/trees; local source retained, no auto merge/execute | D-009/D-014 |",
+      "depends_on": [
+        "M-10-B"
+      ]
+    },
+    {
+      "id": "M-10-D",
+      "milestone": "M-10",
+      "baseline_row": "Source query/boot debugger/adapter/artifact integration, explicit activation of code-bearing derivative under new grants, drift/recovery proof | D-008/D-009; F-005/F-019 |",
+      "depends_on": [
+        "M-10-C",
+        "M-08-D",
+        "M-06-C"
+      ]
+    },
+    {
+      "id": "M-11-A",
+      "milestone": "M-11",
+      "baseline_row": "Pure inventory with witnesses/membership/capture and skipped/unstable scope, exclusions before reads | F-018 |",
+      "depends_on": [
+        "M-01-E"
+      ]
+    },
+    {
+      "id": "M-11-B",
+      "milestone": "M-11",
+      "baseline_row": "Stack-owned algorithmic proposal and explicit optional assist, assumptions and source evidence | Brownfield mandate |",
+      "depends_on": [
+        "M-11-A"
+      ]
+    },
+    {
+      "id": "M-11-C",
+      "milestone": "M-11",
+      "baseline_row": "Explicit promote with complete affected-set revalidation, preserve existing desired intent | D-016; F-018 |",
+      "depends_on": [
+        "M-11-B",
+        "M-02-D"
+      ]
+    },
+    {
+      "id": "M-11-D",
+      "milestone": "M-11",
+      "baseline_row": "Pulled-forward general pre/post transition and source applicability: after M-03-C, before M-03-D/E; exact consumed inputs, outside-write equality, explicit adopted authority | D-018; F-002 |",
+      "depends_on": [
+        "M-02-D",
+        "M-03-C"
+      ]
+    },
+    {
+      "id": "M-11-E",
+      "milestone": "M-11",
+      "baseline_row": "Real existing-project intake→promote→create→verify through completed M-03, current-source build/tests, concurrent-edit refusal | D-018; F-002/F-018 |",
+      "depends_on": [
+        "M-11-D",
+        "M-11-C",
+        "M-03-E",
+        "M-04-E"
+      ]
+    },
+    {
+      "id": "M-12-A",
+      "milestone": "M-12",
+      "baseline_row": "Full local graph Redbook/bridges/adapters/derivatives/native examples, active own 1.0.0 and offline exact reproduction | D-001/D-008/D-009/D-012/D-019 |",
+      "depends_on": [
+        "M-01-E",
+        "M-02-D",
+        "M-03-E",
+        "M-04-E",
+        "M-05-G",
+        "M-06-F",
+        "M-07-E",
+        "M-08-E",
+        "M-09-E",
+        "M-10-D",
+        "M-11-E",
+        "M-13-D",
+        "M-14-C",
+        "M-17-A"
+      ]
+    },
+    {
+      "id": "M-12-B",
+      "milestone": "M-12",
+      "baseline_row": "Docs match actual operations/machine debugger/prototype policy; no stable-release or full-test claim not supported by evidence | D-013; F-020 |",
+      "depends_on": [
+        "M-12-A"
+      ]
+    },
+    {
+      "id": "M-12-C",
+      "milestone": "M-12",
+      "baseline_row": "If demanded: one-way tracker export using same approved-plan/idempotent/concurrency protocol | D-015; optional baseline scope |",
+      "depends_on": [
+        "M-12-B"
+      ]
+    },
+    {
+      "id": "M-12-D",
+      "milestone": "M-12",
+      "baseline_row": "Initial-route acceptance and exact publication plan; one current-A approval, then approved external writes/receipts and declared smoke policy. Demonstrate B-ready tests without activating live B | D-010/D-011/D-015/D-019 |",
+      "depends_on": [
+        "M-12-B"
+      ]
+    },
+    {
+      "id": "M-14-A",
+      "milestone": "M-14",
+      "baseline_row": "Ratify EnvironmentDefinition/TargetBinding/ExecutionContext and platform roles; centralized layout/source-law amendment; freeze existing bare-install compatibility and future distro boundary | M-13-B |",
+      "depends_on": [
+        "M-13-B"
+      ]
+    },
+    {
+      "id": "M-14-B",
+      "milestone": "M-14",
+      "baseline_row": "Generated schemas/hash frames for exact lock/realization/payload inventory and backend-native closure; dependency roles and target filesystem semantics; legacy readers/migration fixtures, input/output/prefix identities and mirror/substitution policy | M-14-A, M-13-D, M-16-B |",
+      "depends_on": [
+        "M-14-A",
+        "M-13-D",
+        "M-16-B"
+      ]
+    },
+    {
+      "id": "M-14-C",
+      "milestone": "M-14",
+      "baseline_row": "Implement explicit local target binding through provider requests/plans/grants/receipts/locks, same-root alias fencing and cross-target refusal; executable environment/schema seams for M-03/M-05/M-08 | M-14-B |",
+      "depends_on": [
+        "M-14-B"
+      ]
+    },
+    {
+      "id": "M-15-K",
+      "milestone": "M-15",
+      "baseline_row": "Early Docker/Linux executor commissioning: pure availability/capability preflight, explicit scoped worker preparation, captured base/toolchain/bootstrap Vibe binary or independent bootstrap recipe, target-bound process/mount/network/principal execution and egress test boundary. No dependence on Vibe payload realization or pacman; unavailable engine blocks actual Linux proof | M-14-C, M-07-A, M-16-C |",
+      "depends_on": [
+        "M-14-C",
+        "M-07-A",
+        "M-16-C"
+      ]
+    },
+    {
+      "id": "M-15-A",
+      "milestone": "M-15",
+      "baseline_row": "Implement payload realization over captured source/prebuilt artifacts and existing build/package providers; files/directories/safe links/modes, complete runtime closure and independent digest/metadata verification; explicit isolated-build recipe, prefix-compatible trusted cache substitution; migrate legacy bin routing | M-15-K, M-01-E |",
+      "depends_on": [
+        "M-15-K",
+        "M-01-E"
+      ]
+    },
+    {
+      "id": "M-15-B",
+      "milestone": "M-15",
+      "baseline_row": "Environment manifest/lock + per-target dependency roles/backend refs; install/explain/plan/fetch through shared solver; source/prebuilt selection and ABI/prefix compatibility, recursive source/mirror lock; no coding-project/Git/GitHub requirement | M-15-A, M-05-E |",
+      "depends_on": [
+        "M-15-A",
+        "M-05-E"
+      ]
+    },
+    {
+      "id": "M-15-C",
+      "milestone": "M-15",
+      "baseline_row": "User-owned store/profile generations, explicit env exec/shell activation, install/update/remove/verify; reverse-dependency/command ownership checks; two independent HOME environments with shared immutable payloads | M-15-B, M-08-D |",
+      "depends_on": [
+        "M-15-B",
+        "M-08-D"
+      ]
+    },
+    {
+      "id": "M-15-D",
+      "milestone": "M-15",
+      "baseline_row": "Crash/rollback/repair/GC protocol across retained generations, mutable config/state and live references; concurrent/alias-root fencing; full home lifecycle fixture | M-15-C |",
+      "depends_on": [
+        "M-15-C"
+      ]
+    },
+    {
+      "id": "M-15-E",
+      "milestone": "M-15",
+      "baseline_row": "External backend port; recommended A delivers Arch/pacman coexistence in disposable Linux, while B requires expanded replacement compatibility gates before closure: coherent repo snapshot, trusted packages, exact plan/DB generation, native dependency/version semantics, separate file authority and partial-failure records | M-15-K, M-15-B, M-07-A; D-022 confirmation before committing backend-specific policy |",
+      "depends_on": [
+        "M-15-B",
+        "M-07-A",
+        "M-15-K"
+      ]
+    },
+    {
+      "id": "M-15-F",
+      "milestone": "M-15",
+      "baseline_row": "Linux rootfs population through already commissioned M-15-K executor from Windows control plane; target principal/metadata, offline-vs-live effects, root-bound hooks and independent runtime verification | M-15-K, M-15-A, M-15-E |",
+      "depends_on": [
+        "M-15-A",
+        "M-15-E",
+        "M-15-K"
+      ]
+    },
+    {
+      "id": "M-15-G",
+      "milestone": "M-15",
+      "baseline_row": "BuildKit provider + deterministic image-plan lowering, pinned base/closure, separate build/runtime stages, OCI export + inspect + non-root smoke, credential-free image/runtime bindings and offline prepared rebuild | M-15-F, M-15-D, M-07-B/C |",
+      "depends_on": [
+        "M-15-F",
+        "M-15-D",
+        "M-07-B",
+        "M-07-C"
+      ]
+    },
+    {
+      "id": "M-15-H",
+      "milestone": "M-15",
+      "baseline_row": "Package tool/service descriptor registry with structured requests/results/errors/probes, endpoint/auth bindings and automatic catalog projection; two local services + agent on isolated Docker network, authorized read/write and denied effect | M-15-G, M-08-E, M-06-C; D-023 accepted |",
+      "depends_on": [
+        "M-15-G",
+        "M-08-E",
+        "M-06-C"
+      ]
+    },
+    {
+      "id": "M-15-I",
+      "milestone": "M-15",
+      "baseline_row": "Integrate boot debugger with environment/package/runtime/service/image provenance and independent boot/disk/download/layer measurements; four selectable client image profiles; two clean builds, offline/missing-input cases and recovery/secret tests; Docker replacement/removal/failed-start rollback and runtime-reference GC; full supply-chain fixture with independently enforced/observed egress over control/children/builders, GitHub denied and separate all-network-off replay | M-15-H, M-06-F, M-10-D |",
+      "depends_on": [
+        "M-15-H",
+        "M-06-F",
+        "M-10-D"
+      ]
+    },
+    {
+      "id": "M-15-J",
+      "milestone": "M-15",
+      "baseline_row": "Complete HOME + Docker user journeys, machine API parity and future Linux/VM acceptance outline; reconcile docs/capability matrix and retained recovery/bootstrap route and self-hosted registry/source/cache/image walkthrough; explicit local evidence report | M-15-I, M-12-A/B |",
+      "depends_on": [
+        "M-15-I",
+        "M-12-A",
+        "M-12-B"
+      ]
+    },
+    {
+      "id": "M-16-A",
+      "milestone": "M-16",
+      "baseline_row": "Whole-product capability/model coverage census, ETO source-law decisions and ownership map; reconcile PROP-032 proposal with real domain authorities and current public commands | M-13-A |",
+      "depends_on": [
+        "M-13-A"
+      ]
+    },
+    {
+      "id": "M-16-B",
+      "milestone": "M-16",
+      "baseline_row": "Versioned registry/facade/context/entity/snapshot/location/error/event contracts and generated validation; strict schema/effect/applicability discovery, local framed API protocol negotiation | M-16-A, M-13-D, M-14-A |",
+      "depends_on": [
+        "M-16-A",
+        "M-13-D",
+        "M-14-A"
+      ]
+    },
+    {
+      "id": "M-16-C",
+      "milestone": "M-16",
+      "baseline_row": "Responsive on-demand host/CLI/MCP service adapters; atomic scoped submission reservation, host-issued namespace epochs/expiry and compact dedup tombstones, pinned active/recovery identities; domain-journal linkage, progress/replay/control/attach, typed input/admission and partial outcomes; existing execution limits preserved | M-16-B, M-14-C |",
+      "depends_on": [
+        "M-16-B",
+        "M-14-C"
+      ]
+    },
+    {
+      "id": "M-16-D",
+      "milestone": "M-16",
+      "baseline_row": "Client-scoped versioned overlays and same-capture pure analysis/navigation/preview, source-position conversion, watched invalidation/resnapshot, two edit modes, acknowledged cooperative edit barrier through commit and saved-state mutation boundary | M-16-C, M-06-A, M-01-E |",
+      "depends_on": [
+        "M-16-C",
+        "M-06-A",
+        "M-01-E"
+      ]
+    },
+    {
+      "id": "M-17-A",
+      "milestone": "M-17",
+      "baseline_row": "Complete initial-operation/model coverage: shared tree/reference/provenance and legacy/admin services, strict requests and partial-effect errors, externally readable stage snapshots, configurable capture/retention/export and captured extension schemas; real headless coverage for every supported initial row | Initial domain exits listed above, M-14-C, M-16-D |",
+      "depends_on": [
+        "M-01-E",
+        "M-03-E",
+        "M-04-E",
+        "M-05-G",
+        "M-06-F",
+        "M-07-E",
+        "M-08-E",
+        "M-09-E",
+        "M-10-D",
+        "M-11-E",
+        "M-14-C",
+        "M-16-D"
+      ]
+    },
+    {
+      "id": "M-17-B",
+      "milestone": "M-17",
+      "baseline_row": "Owned package-coordinate rename prepare/apply/status/recover: exact affected references/edits/moves/identity transitions, dirty/save boundary, collisions/unknowns, authored→generated regeneration and re-resolution; include environment definitions, preserve history/foreign sources | M-17-A, M-15-B |",
+      "depends_on": [
+        "M-17-A",
+        "M-15-B"
+      ]
+    },
+    {
+      "id": "M-17-C",
+      "milestone": "M-17",
+      "baseline_row": "Two-client full-path conformance across all initial + M-15 operations: inspect/unsaved edit/preview, rename/regenerate, long jobs/reconnect/cancel/partial failure, extension revoke/read, HOME update + Docker replacement + service grants | M-17-B, M-15-J |",
+      "depends_on": [
+        "M-17-B",
+        "M-15-J"
+      ]
+    },
+    {
+      "id": "M-17-D",
+      "milestone": "M-17",
+      "baseline_row": "Close coverage census with exact request/result/error/event/model examples and generated schema checks; publish local developer contract documentation and capability compatibility matrix; no implemented supported feature lacks an external path | M-17-C |",
+      "depends_on": [
+        "M-17-C"
+      ]
+    }
+  ],
+  "decisions": [
+    {
+      "id": "D-001",
+      "text": "Оба bridge-пакета Spec Kit и external-skills skills — flow; имена/upstream provenance сохраняются, текущая версия 1.0.0",
+      "owner_state": "accepted",
+      "owner": "M-09"
+    },
+    {
+      "id": "D-002",
+      "text": "create создаёт/меняет код; build детерминированно собирает; verify проверяет; полный проход имеет отдельный явный вход",
+      "owner_state": "accepted",
+      "owner": "M-03"
+    },
+    {
+      "id": "D-003",
+      "text": "Реальные алгоритмические версионированные миграции: сохранить выбор/комментарии, проверить, показать diff, безопасно записать; неоднозначность требует ответа, не LLM",
+      "owner_state": "accepted",
+      "owner": "M-13"
+    },
+    {
+      "id": "D-004",
+      "text": "Default Redbook — multi-user-planning, WAL — альтернатива. Unattended: explicit selection или explicit allow-defaults, иначе NeedsSelection. Выбор сохраняется и update не следует новому default",
+      "owner_state": "accepted",
+      "owner": "M-05"
+    },
+    {
+      "id": "D-005",
+      "text": "Взаимоисключение только continuity group Redbook; глобальный запрет сосуществования WAL/MUP не вводится",
+      "owner_state": "accepted",
+      "owner": "M-05"
+    },
+    {
+      "id": "D-006",
+      "text": "Никаких лимитов/квот/порогов допуска по размеру или tokens бутлейна. Калькулятор и диагностика, включая marginal static/dynamic вклад до установки",
+      "owner_state": "accepted",
+      "owner": "M-06"
+    },
+    {
+      "id": "D-007",
+      "text": "Сначала интерактивный debugger существующего представления: состав, why-included, provenance, сравнение/what-if; versioned machine input/output/errors/progress/snapshot IDs для IDE",
+      "owner_state": "accepted",
+      "owner": "M-06"
+    },
+    {
+      "id": "D-008",
+      "text": "Внешние package-defined адаптеры с записью настроек входят в первую волну; permissions/trust/plan/apply/update/recovery/uninstall обязательны сразу",
+      "owner_state": "accepted",
+      "owner": "M-08"
+    },
+    {
+      "id": "D-009",
+      "text": "Общие локальные производные ресурсы обязательны. Владелец проекта может создавать свою версию; sealed не запрещает её. New identity/exact provenance, совместимость проверяется отдельно",
+      "owner_state": "accepted",
+      "owner": "M-10"
+    },
+    {
+      "id": "D-010",
+      "text": "Artifact smoke включён перед публикацией по умолчанию, отключается явным параметром; skipped никогда не passed. Полные tests/checks — отдельно явно запускаемые действия",
+      "owner_state": "accepted",
+      "owner": "M-07"
+    },
+    {
+      "id": "D-011",
+      "text": "Доверенные исполнители/проверяемые каналы + exact subject validation; криптографические подписи опциональны",
+      "owner_state": "accepted",
+      "owner": "M-07"
+    },
+    {
+      "id": "D-012",
+      "text": "Обязательны Claude Code, Codex, OpenCode, Qwen Code в CLI-контексте. Gemini/Copilot глубоко вторичны и не блокируют первую волну",
+      "owner_state": "accepted",
+      "owner": "M-08"
+    },
+    {
+      "id": "D-013",
+      "text": "Вся текущая собственная линейка — прототип без постоянных пользователей. Только владелец объявляет выход из prototype; после этого вводятся обязательства для крупных breaking changes. Публикация/номер версии сами режим не меняют",
+      "owner_state": "accepted",
+      "owner": "M-13"
+    },
+    {
+      "id": "D-014",
+      "text": "Structured ordinary Markdown обязателен сейчас; XML может быть обычными данными. Foreign bridge contents по умолчанию не интерпретируются как Vibe specs. Это жизненно необходимая bridge machinery",
+      "owner_state": "accepted",
+      "owner": "M-06"
+    },
+    {
+      "id": "D-015",
+      "text": "Сейчас A: одно подтверждение complete prepared batch. Архитектура режима B — bounded autonomous publication — готова сразу, но включается только будущим явным решением владельца",
+      "owner_state": "accepted",
+      "owner": "M-07"
+    },
+    {
+      "id": "D-016",
+      "text": "Минимальный repo-owned change binding; no scheduler/personal cursor",
+      "owner_state": "accepted",
+      "owner": "M-02"
+    },
+    {
+      "id": "D-017",
+      "text": "Одна feature/request/effects algebra и constrained choice groups; никакой второй dependency grammar",
+      "owner_state": "accepted",
+      "owner": "M-05"
+    },
+    {
+      "id": "D-018",
+      "text": "Полноценный сценарий включает existing-file edits, pre/post witnesses и build/test новой версии source. Disjoint-only демонстрация не закрывает доставку",
+      "owner_state": "accepted",
+      "owner": "M-03"
+    },
+    {
+      "id": "D-019",
+      "text": "Комплектацию любой версии Redbook можно менять. Перед будущей перезаписью агент предлагает новую версию; нынешнее введение вариантов — existing 1.0.0 без bump. Все актуальные собственные продукты/пакеты проекта — 1.0.0",
+      "owner_state": "accepted",
+      "owner": "M-13"
+    },
+    {
+      "id": "D-020",
+      "text": "VibeVM должен стать менеджером пакетов/окружений от пользовательского HOME до будущего Linux-дистрибутива; архитектура tools/install готовится сейчас, полный дистрибутив пока только outline",
+      "owner_state": "accepted",
+      "owner": "M-14"
+    },
+    {
+      "id": "D-021",
+      "text": "HOME и Docker обязательны в одной отдельной практической фазе; image builder для ИИ-агентов использует общий environment/package design",
+      "owner_state": "accepted",
+      "owner": "M-15"
+    },
+    {
+      "id": "D-022",
+      "text": "Открыто: coexistence с pacman сначала или немедленная полная замена. Рекомендация A — Vibe управляет составом и собственными payloads, pacman/libalpm сохраняет Arch backend; будущая замена возможна через тот же port",
+      "owner_state": "open",
+      "owner": "M-15"
+    },
+    {
+      "id": "D-023",
+      "text": "Сначала локальная Docker-сеть сервисов и единый machine interface: автоматические descriptions/inventory, управление в пределах пользовательских разрешений",
+      "owner_state": "accepted",
+      "owner": "M-15"
+    },
+    {
+      "id": "D-024",
+      "text": "Nix — образец архитектуры; VibeVM не зависит от GitHub для bootstrap/source/registry/build/cache/images/update/publication. Источники и зеркала сменяемы; полный цикл без GitHub обязателен",
+      "owner_state": "accepted",
+      "owner": "M-15"
+    },
+    {
+      "id": "D-025",
+      "text": "Все возможности VibeVM и внутренние структуры для анализа/отладки должны быть доступны внешним IDE-клиентам; сначала переделать общую архитектуру фичей, сам плагин/IDE/MVP пока не планировать",
+      "owner_state": "accepted",
+      "owner": "M-16"
+    },
+    {
+      "id": "D-026",
+      "text": "Extreme Total Observability — общий принцип: каждое значимое состояние, решение, преобразование, действие и отказ имеет machine-readable inspection/explanation с provenance и явной неполнотой",
+      "owner_state": "accepted",
+      "owner": "M-16"
+    }
+  ],
+  "findings": [
+    {
+      "id": "F-004",
+      "title": "· P1 · Point resolver требует общей безопасной path boundary",
+      "body": "**Verified fact:** SpecAddress отвергает пустые doc segments, но не portable escape components; lookup использует path join; section lookup не проверяет pinned revision и duplicate anchors перед выбором узла (E11–E12).\n**Inference:** Подтверждена опасная static call chain parser→join→read. Exploit на файловом дереве не воспроизводился.\n**Impact:** Public CLI/MCP расширит доступность небезопасного seam, используемого также compiler/embed.\n**Disposition:** Общая validated address/path grammar, capability-relative reads, typed ambiguity/revision refusals, сохранение I/O errors вместо guessed not-found.\n**Mapping:** M-13, M-01; R-001."
+    },
+    {
+      "id": "F-005",
+      "title": "· P1 · Slot-record consistency не равна locked-source integrity",
+      "body": "**Verified fact:** record.source_hash сравнивается с expected hash; payload проверяется по hashes из того же record; mixed record path не пересчитывает aggregate source hash. Transformed path использует record-local derived hash (E13).\n**Inference:** Согласованная подмена record+payload не опровергается этими сравнениями. Это static trust finding, не воспроизведённая атака.\n**Impact:** Baseline require-locked-integrity обещает больше существующего verifier. Абсолютный закон «любой slot byte-exact source» также неверен: conversion и overlay существуют.\n**Disposition:** Разделить observed, record-consistent, source-proven, derivation-proven. Строгий запрос требует доказательства соответствующего уровня либо отказывает.\n**Mapping:** M-01; R-002."
+    },
+    {
+      "id": "F-002",
+      "title": "· P1 · Create→verify требует causal evidence, не нового имени fingerprint",
+      "body": "**Verified fact:** Measurement берётся до dispatch. Verify повторно наблюдает completed prefix до своих handlers и останавливается на stale/missing/unstable. Fingerprint включает весь context.artifacts. Build/test предшествуют create (E01–E03).\n**Inference:** Disjoint outputs самого create не гарантируют disjointness со всеми прежними producer inputs. Проверка в verify handler не обходит pre-handler gate. Обновление predecessor artifacts может снова инвалидировать create.\n**Impact:** Возможны повторное создание и ложное принятие «новый код проверен». Foundational build feat/--stack обещание не представлено текущими LifecycleArgs (E24).\n**Disposition:** D-018 требует existing-file edits в complete scenario. Transition atom M-11-D выполняется раньше, внутри первого executable route M-03. Disjoint artifact — только промежуточный proof. Pre-input measurement сохраняется; обычный/scoped verify проверяет/reuses completed production, но не запускает новое создание; full pass — отдельная явная composition по D-002.\n**Mapping:** M-03, M-11; D-002, D-018; R-003."
+    },
+    {
+      "id": "F-003",
+      "title": "· P1 · Изоляция сейчас workspace, не selected node",
+      "body": "**Verified fact:** Lease и state path workspace-rooted; fresh run меняет единственный header и убирает прежние delegated rows (E04).\n**Impact:** Baseline допускает параллельные independent parked changes в разных members, которых store не поддерживает.\n**Disposition:** E1 — один scoped continuation на workspace; другой scope получает conflict до displacement. Другая worktree допустима со своим state root. Multi-run store отложен.\n**Mapping:** M-03; R-004."
+    },
+    {
+      "id": "F-008",
+      "title": "· P1 · Selection должна переживать backtracking, visibility и все consumer constraints",
+      "body": "**Verified fact:** solve, manifest_of, solve_masked — разные routes. Visibility реконструирует declarations. Resolvo предварительно читает candidate metadata; root union first-wins de-duplicates по package identity (E08–E10).\n**Inference:** Mutable ChoiceOverlayProvider на одном route теряет edges или переносит requests отвергнутого candidate в selected world. First-wins теряет member constraints. Capability-valued effects требуют actual selected-provider edges в graph/lock.\n**Disposition:** Один immutable normalized request/catalog на всех routes; candidate-conditioned implications; сохранение каждого consumer edge. Не глобальный mutable feature union.\n**Mapping:** M-05; D-017; R-005."
+    },
+    {
+      "id": "F-007",
+      "title": "· P1 · Feature integration шире известного optional-dep gap",
+      "body": "**Verified fact:** Solve предшествует expansion; active_deps/forwarded features не управляют production solve; record пишет пустой subskills_active. Parser делит dep/feature по первому slash при qualified dependency names. Bare Fresh path предшествует feature processing (E07–E10).\n**Inference:** Optional=true само по себе проблему не решает; свежая установка может проигнорировать новый feature request. Structural validation через all=true ошибочно отвергает selectable exclusive groups.\n**Disposition:** Один typed feature/request/effect algebra; choice groups — thin authoring/UI constraints над теми же feature IDs. Отдельная полная choices.*.requires grammar отклонена. Full package bytes сохраняются; activation управляет effective contributions.\n**Mapping:** M-13, M-05; D-003, D-017; R-005."
+    },
+    {
+      "id": "F-010",
+      "title": "· P1 · Release изменяет remote state до native builds",
+      "body": "**Verified fact:** Workflow prepare предшествует build; prepare_with удаляет existing release, перемещает/создаёт tag, создаёт draft (E20–E21).\n**Impact:** Gate перед finalize не защищает старый release при неудачной сборке.\n**Disposition:** Все exact bundles готовы до destructive prepare. По D-010 smoke включён по умолчанию; explicit parameter позволяет skipped, что фиксируется отдельно от passed. Preflight проверяет effective smoke policy, subjects и approval перед первым write. По D-015 один prepared-plan pipeline поддерживает approval A сейчас и bounded policy B в будущем, без включения B этим pass.\n**Mapping:** M-07; D-010, D-011, D-015; R-006."
+    },
+    {
+      "id": "F-011",
+      "title": "· P1 · Receipt hashes не удостоверяют producer, reproducibility не следует из identity",
+      "body": "**Verified fact:** Actions уже pin по SHA; Rust channel stable; runner labels/apt packages не immutable environment. Distribution manifests уже связывают source и bundle (E20–E21).\n**Inference:** Три параллельных receipt системы дублируют existing manifest. Unsigned external JSON с верными hashes не доказывает прохождение checks; signature без authorized producer/policy тоже недостаточна.\n**Disposition:** Расширить existing evidence chain. D-011 выбирает approved producer/channel и exact subject validation; криптографическая подпись опциональна. Imported arbitrary JSON остаётся observational. Full source tests explicit, smoke separately default-on/skip-capable. Identity, execution provenance и воспроизводимость — разные claims.\n**Mapping:** M-07; D-010, D-011; R-007."
+    },
+    {
+      "id": "F-006",
+      "title": "· P1 · Counts, matched identity и closure — разные утверждения",
+      "body": "**Verified fact:** Terminality допускает self-carried specification и legacy edge counts; requirements не отдаёт terminal verdict, имеет limit 256/truncated; lifecycle state erasable (E04–E06).\n**Inference:** Verifies>0, matched, command ok и semantic acceptance нельзя склеивать. Closure с одними IDs из erasable state теряет основания. Truncated result не полная universe.\n**Disposition:** Прозрачный complete join с evidence strength/freshness; existing terminal resolver используется один раз. Closure содержит retained evidence values/immutable references и policy digest, исключается из собственного intent digest.\n**Mapping:** M-02, M-04; R-008."
+    },
+    {
+      "id": "F-013",
+      "title": "· P1 · Prepare helper может hydrate/cache",
+      "body": "**Verified fact:** prepare_declared_skill_projection вызывает hydration; composition создаёт cache files/directories; binding передаёт offline=false. Analyzer recompiles через compiler seats (E15, E17).\n**Inference:** Rename helper в plan/query не убирает эффекты.\n**Disposition:** Prepare/fetch отделить от pure query. Последняя получает admitted captures или unavailable; пустые caches не дают hidden fetch/write/provider execution.\n**Mapping:** M-01, M-06, M-08; R-009."
+    },
+    {
+      "id": "F-014",
+      "title": "· P1 · Closed descriptor не обезвреживает arbitrary argv и active content",
+      "body": "**Inference:** Typed argv может запустить interpreter, effectful client subcommand либо записать future-executable MCP config. Prompt способен требовать script execution; hash не safety approval.\n**Verified fact:** Current deploy использует закрытые client-specific argv builders; presence markers слабы (E16, E18).\n**Disposition:** D-008 включает external write adapters сразу. Package может описать новый client ID, относительные paths, keys и requested operations; host владеет semantics, symbolic-root bindings и issued grants. Запрос нового destination не даёт права писать туда. Closed client executable fields тоже заменяются open validated capability map (E27), иначе новый client всё ещё требует core release. Произвольный native provider остаётся explicit trusted execution, не sandbox.\n**Mapping:** M-08; D-008; R-010."
+    },
+    {
+      "id": "F-009",
+      "title": "· P1 · Owner version policy расходится с записанным Redbook edition rule",
+      "body": "**Verified fact:** Код и PROP-044 имеют snapshot/frozen; source Redbook требует bump при roster change, root называет redbook@1 immutable (E22).\n**Owner decision:** D-019 явно заменяет автоматический Redbook edition-bump rule: состав любой версии Redbook менять разрешено; перед будущей перезаписью агент предлагает новый номер, нынешние variants — existing 1.0.0 без bump. Все актуальные собственные продукты/пакеты — 1.0.0. D-013 считает их прототипом до личного объявления владельца.\n**Impact:** Нельзя оставить старое правило скрытой преградой реализации либо переписать исторические hashes. Номер 1.0.0 не exact capture и не обещание стабильности.\n**Disposition:** Сначала согласовать действующие source rules и актуальные manifests/references с ruling. Не менять чужие upstream versions, исторические receipts/fixtures и machine epoch numbers под предлогом выравнивания product version. Generic frozen semantics не отменена для прочих явно frozen packages; обнаруженный такой conflict классифицируется точно, не снимается bulk rewrite.\n**Mapping:** M-13, M-05, M-12; D-013, D-019; R-011."
+    },
+    {
+      "id": "F-001",
+      "title": "· P2 · Change — intent binding; work DAG не самостоятельный verdict",
+      "body": "**Recommendation:** Repo-owned scope оправдан переносимой локальной выборкой intent, отличной от dependency package, personal plan и run. Но graph без completion evidence не вычисляет честную eligible work. Slug в directory ломает stable addresses, closure внутри snapshot даёт self-reference.\n**Disposition:** Immutable ID directory; slug metadata; intent, work, resolution, request digests отдельно. Graph сообщает predecessors; blocked/ready — только явная policy над complete evidence.\n**Mapping:** M-02, M-04; D-016; R-012."
+    },
+    {
+      "id": "F-012",
+      "title": "· P2 · Adapters развиваются из трёх existing ownership lanes",
+      "body": "**Verified fact:** Standalone skills, automatic bindings и lifecycle deploy имеют разные receipts. Codex coarse scope bool и project skill path различаются. OpenCode владеет logical config members под physical lock (E16–E18).\n**Impact:** Новый generic receipt может ослабить recovery или смешать owners.\n**Disposition:** Characterization по surface/scope/shape/operation; reuse engines и explicit adoption между receipt families. First-wave write adapters обслуживают Claude Code, Codex, OpenCode, Qwen Code. Existing hardcoded client slots — конкретная migration surface (E27). New code/executable probes никогда не скрываются в pure plan.\n**Mapping:** M-08; R-013."
+    },
+    {
+      "id": "F-015",
+      "title": "· P2 · Bridge pin, taxonomy и resource closure — самостоятельные inputs",
+      "body": "**Verified fact:** Оба bridges kind=feat. Spec Kit bridge pin 96c9bd657bfd5de0d651a6165084932b7304ac99 отличается от research ce593cdc; выбраны пять resources; authorship metadata разделена. File-only skill deploy отвергает directory artifacts (E18–E19).\n**Inference / Owner decision:** Research не доказывает реально pinned templates. D-001 принят: оба bridges переводятся в flow в текущей 1.0.0, без смены имени/upstream identity.\n**Unverified:** Exact script/resource closure и возможное hydrated source_root/provider.root mismatch automatic binding не воспроизведены.\n**Disposition:** Проверить current five до расширения, сохранить весь resource closure, завершить mandatory bridge journeys через admitted actions. Foreign resources по D-014 default non-Vibe, plain Markdown структурный, XML-data byte-preserving. Diagnostic unsupported не заменяет required journey. Две native feats доказываются на двух stacks с реальными existing-file edits.\n**Mapping:** M-09, M-12; D-001; R-014."
+    },
+    {
+      "id": "F-016",
+      "title": "· P2 · Boot debugger должен объяснять точный состав без навязанного бюджета",
+      "body": "**Verified fact:** STATIC 246936 bytes; RENAMED ANCHORS comment 81113; STATIC+INDEX+восемь entry files 305959; с AGENTS.md 332080. Это UTF-8 bytes, не tokens, без personal/task/ambient tail. Existing compiler IR/analyzer есть (E15, E23).\n**Inference:** Marginal package contribution зависит от уже установленных/shared dependencies, choices, условий и compilation; сумма package sizes не даёт точный delta. Byte identity файлов не гарантирует provider cache hit.\n**Owner decision:** D-006 запрещает boot size/token quotas вообще. Нормален и маленький local model, и миллион tokens; программа сообщает факты, не диктует бюджет. D-007 требует interactive structure/provenance/why-included/compare/what-if debugger с machine-readable input/output, errors/progress и snapshot IDs для IDE, на существующем представлении.\n**Disposition:** Streaming/paged inspection без total boot cap; direct/inclusive/marginal metrics отдельно. Existing snapshot inspection pure; exact builtin preview использует тот же compiler in memory. Missing captures или требуемый effectful native stage дают incomplete/unknown, не fabricated zero; explicit preparation отделена от query.\n**Mapping:** M-06; D-006, D-007; R-015."
+    },
+    {
+      "id": "F-017",
+      "title": "· P2 · XML→Markdown — existing pivot, не raw map или semantic identity",
+      "body": "**Verified fact:** Pure project_spec_text уже проецирует XML; comments опускаются, DocTree normalizes lines; custom frontend — native execution (E12, E14–E15).\n**Disposition:** Сначала explicit source classification, затем соответствующий parser. Только declared Vibe XML проходит existing XML→Markdown pivot. Structured CommonMark имеет sections без Vibe facts; XML-data сохраняется byte-exact и может иметь безопасный структурный view. Raw hash/representation digest/span basis раздельны. Full compiler IR не становится source-query wire.\n**Mapping:** M-01, M-06; R-016."
+    },
+    {
+      "id": "F-018",
+      "title": "· P2 · Individually stable files не доказывают atomic tree snapshot",
+      "body": "**Verified fact:** Scrape inventory использует safe file identity и повторную directory listing, пропуская .git; это не ready-made budgeted brownfield policy (E25).\n**Inference:** Разные файлы могут представлять разные моменты состояния; tree digest не исправляет это.\n**Disposition:** Observation window/completeness явны. Promote требует immutable capture либо полной affected-set revalidation и cooperative exclusion boundary; uncooperative writers → refuse. Generic core не запускает stack tools.\n**Mapping:** M-11; D-018; R-017."
+    },
+    {
+      "id": "F-019",
+      "title": "· P2 · Обязательные local derivatives требуют собственной identity и отдельной activation authority",
+      "body": "**Verified fact:** Existing skill composition/host controls/boot composition покрывают отдельные семейства ресурсов (E15, E17–E18), но сами по себе не являются общим lifecycle local derivative.\n**Owner decision:** D-009 делает общий механизм обязательным; проект может создать собственную версию любого ресурса. Package sealed не запрещает такую отдельную identity; source provenance сохраняется, исходная compatibility не наследуется.\n**Impact:** Копия не должна притворяться upstream, получать его execution grants или автоматически сливаться с новой mutable версией base.\n**Disposition:** Общий authored binding/base capture/local source/result identity, derive/show/diff/rebase/apply с exact preconditions. Markdown, XML-data, Vibe specs и opaque resources; derive не executes. Activation/deploy executable derivative — существующий effect/trust protocol. Named slots могут расширять full replacement, но не ограничивают право local fork.\n**Mapping:** M-10 mandatory, M-01, M-08, M-06; D-009; R-018."
+    },
+    {
+      "id": "F-020",
+      "title": "· P2 · Portfolio должен проверять seams до умножения систем",
+      "body": "**Inference:** Baseline связывает descriptors с change, inventory с overlapping execution и прячет большие transaction/schema forks внутри длинных milestones.\n**Disposition:** Foundation M-13, затем ранний M-06-A classification; source resolver и selected-graph work питают debugger. M-11-D transition pulled forward в executable M-03 route. M-10 и M-08 mandatory, M-09 требует их реального integration. Atom-level dependencies явно разрывают кажущиеся parent cycles; M-12 зависит от initial programme exits; added HOME/Docker phase отдельно закрывается M-15-J.\n**Mapping:** весь route; R-012."
+    },
+    {
+      "id": "F-021",
+      "title": "· P1 · Foreign XML/Markdown ошибочно получают Vibe semantics по suffix",
+      "body": "**Verified fact:** load.rs классифицирует md/xml по расширению и направляет XML в closed spec dialect; pair detection считает X.md/X.xml одним документом. Facts scanner применяет это ко всем найденным sources; resolver также набирает candidates по suffix. Materialization converter может преобразовать spec-shaped XML без знания назначения (E26).\n**Inference:** Обычные XML-data способны вызвать false pair collision/invalid authored observation, а внешние Markdown — интерпретироваться как Vibe markup. Это static evidence; runtime exploit/failure fixtures ещё предстоит выполнить.\n**Owner decision:** D-014 называет non-interpretation жизненно необходимой bridge machinery. Foreign payload обычно вообще не знает VibeVM.\n**Disposition:** Один source descriptor перед enumeration, collision, canonical identity, facts/sync, conversion, source query и boot. Media, semantics, role/loading и trust раздельны. Spec semantics только explicit; namespace/path/suffix сами её не включают. XML-data and opaque fixtures сохраняют bytes; одинаковый filename stem разных logical resources не collision.\n**Mapping:** M-06-A, M-01, M-09, M-10; D-014; R-019."
+    },
+    {
+      "id": "F-022",
+      "title": "· P1 · Deployment identity and platform describe the host, not a target environment",
+      "body": "**Verified fact:** DeployExecution injects project/settings/user-home roots, but no environment instance/principal/rootfs identity. DeploymentHome hashes project/package/target; vibe-bin chooses LauncherFlavour::NATIVE, with POSIX mode operations compiled out on Windows. TargetWhen only carries OS; NativePlatform describes current-process native extension platforms (E32).\n**Inference:** A different output directory alone cannot produce a faithful Linux installation from Windows or independently identify two environments in one state home. Native provider ABI and payload runtime ABI cannot share one implicit platform.\n**Disposition:** Early M-14 target/executor/realization contracts; environment/root/principal/generation in requests, identity, grants, receipts and locks. Target filesystem semantics explicit; Linux operations execute in Linux or a proven metadata-preserving writer. Existing local compatibility retained; unsupported targets refuse.\n**Mapping:** M-14, M-03/M-05/M-08 carrier seams, M-15; D-020/D-021; R-021."
+    },
+    {
+      "id": "F-023",
+      "title": "· P1 · Source installation and a single binary store do not form an installed runtime closure",
+      "body": "**Verified fact:** BinaryDecl is Cargo-specific. New build/package providers really execute and record artifacts; build records use toolchain.host and omit a complete input census. vibe-bin has digest-addressed single-file payloads and per-command pointers. Public bin command routing still calls legacy existence/debug-first helpers (E30–E33).\n**Inference:** Neither source slot nor A2 existence proves a relocatable tool with exact runtime libraries, metadata and a coherent environment generation. Legacy bin dispatch does not inherit the successor's promised artifact-record verification.\n**Disposition:** Separate source capture, realization and installed payload manifest; build/tool/runtime dependency roles and target ABI; profile generations above reused store/receipt primitives. Migrate legacy bin consumers to exact validated artifacts. HOME compatibility is an explicit property, not arbitrary relocation of Arch /usr packages.\n**Mapping:** M-14-B/C, M-15-A/B/C; R-022."
+    },
+    {
+      "id": "F-024",
+      "title": "· P1 · Whole-environment remove and recovery need closure and ownership checks",
+      "body": "**Verified fact:** Current uninstall handler directly removes the selected slot, removes its lock row/root declaration, writes lock/manifest and then regenerates boot; this run path has no pre-removal incoming-dependency check. Current source hooks are script callbacks; source spec leaves undeclared output outside slot ownership. Deploy rollback differs by provider: retained payload pointer versus OpenCode update marked non-reversible (E18/E33/E34).\n**Inference:** Reusing this removal path as an OS package manager can break remaining consumers; deleting installed bytes does not reverse arbitrary hooks or preserve mutable application state. Static call-path finding, not a reproduced failure.\n**Disposition:** Environment remove re-solves desired/reverse closure and distinguishes explicit roots/shared dependencies. Profile activation, config/state migration, backend transactions and service effects have separate recorded recovery boundaries. GC roots include retained generations/live uses/recovery pins, with explicit ownership and no collateral deletion.\n**Mapping:** M-05-E integration, M-15-C/D/E; R-023."
+    },
+    {
+      "id": "F-025",
+      "title": "· P1 · Arch integration requires a backend authority boundary",
+      "body": "**Verified fact:** Pacman/libalpm owns dependency transactions and package files. Its root/sysroot behavior is not arbitrary prefix relocation; hooks can execute transaction effects. Repository order/signature policy and coherent Arch upgrades are material external contracts (E35–E37).\n**Inference:** Two independent solvers/databases claiming the same Arch files would introduce inconsistent ownership and recovery. Optional Vibe evidence signatures cannot be interpreted as disabling native repository/package trust.\n**Recommendation:** Vibe owns declarative composition and its own payloads; a backend preserves native version/DB semantics, exposes exact closure/transaction evidence and uses isolated Linux targets first. Pacman coexistence versus immediate full replacement is the one open D-022 preference; generic interfaces do not depend on that answer.\n**Mapping:** M-14, M-15-E/F; D-022; R-024."
+    },
+    {
+      "id": "F-026",
+      "title": "· P1 · Docker support needs a real image backend and scoped evidence",
+      "body": "**Verified fact:** Existing mechanisms have build/package/deploy extension seats; inspected code has no proven environment→OCI delivery contract. Docker/BuildKit provides target-platform builds, OCI export and secret mounts, but exporter/attestation support depends on configured driver/store (E30/E38–E40). Local read-only probe found Docker CLI 29.2.0 and Buildx v0.31.1-desktop.1; desktop-linux daemon connection failed (E43).\n**Inference:** Host cross-build metadata or a generated Dockerfile is not proof of an executable image, retained attestations, isolation or reproducibility. Docker userspace tests cannot prove a bootable distribution.\n**Disposition:** Package-defined BuildKit provider on existing artifact DAG, pinned inputs/runtime closure, actual Linux rootfs/metadata and non-root image tests; export/load/push distinct. Exact installed-content and bit-identical image claims separate. No secret values in layers/context/evidence. Docker runtime proof remains unverified here; future VMware covers boot/kernel/reboot.\n**Mapping:** M-14, M-15-F/G/I/J; D-020/D-021; R-025."
+    },
+    {
+      "id": "F-027",
+      "title": "· P2 · AI-aware infrastructure needs structured service bindings beyond agent config",
+      "body": "**Verified fact:** Current inspected agent projection/deploy surfaces configure clients and tools; they do not establish a managed network service catalog with operation schema, runtime endpoint identity and authorization. OpenAPI supplies reusable API description concepts (E16/E27/E42).\n**Owner decision:** D-023 selects local Docker network and one machine interface first.\n**Disposition:** Package-exported tool/service descriptors automatically enter the realized environment catalog and boot/debugger graph; explicit runtime endpoint/auth bindings, separate desired/installed/running/healthy states, pure catalog queries and admitted effectful probes/calls. Unwrapped resources remain honestly partial. Local agent plus two services proves discovery/read/write/refusal; no inferred network-wide administration.\n**Mapping:** M-14-A/B, M-15-H/I; D-023; R-026."
+    },
+    {
+      "id": "F-028",
+      "title": "· P1 · Nix-like profiles need closed builds and host-independent supply paths",
+      "body": "**Verified fact:** Current build records do not assert a complete input census; source/tree and binary payload identities differ (E30/E33). Nix documents store references, profiles and generic source locations, including non-GitHub references (E44).\n**Owner decision:** D-024 selects Nix as a design reference and requires VibeVM independence from GitHub.\n**Inference:** Content store and lockfile alone do not prove hermetic execution, relocatability, trusted binary substitution or an independently hosted complete supply chain. Existing generic Git registry is useful but does not prove every bootstrap/client/image/update path avoids GitHub.\n**Disposition:** Exact build recipes and runtime closure, explicit isolation levels, prefix-compatible substitution, self-hosted source/registry/artifact/OCI routes and mirror-preserved provenance. Required end-to-end fixture independently mediates/observes control-process, native-child and builder/daemon egress; application transport counters alone are insufficient. It permits only local fixture endpoints and proves source build, cache substitution, home lifecycle and image creation with zero GitHub attempts. Unobserved bypass makes proof unavailable; offline replay separately denies all network. Nix language/runtime not a prerequisite.\n**Mapping:** M-14-A/B, M-15-A/B/E/G/I/J; D-024; R-027."
+    },
+    {
+      "id": "F-029",
+      "title": "· P1 · Universal IDE/ETO coverage is not implied by selected JSON commands",
+      "body": "**Verified fact:** PROP-032 names a model/agent-first direction but explicitly remains a proposal. MCP registers eleven tools, while public CLI exposes a broader command set; list_tools enumerates installed tools, not every product capability/debug model (E45/E47/E48).\n**Owner decision:** D-025 requires all features and internal analysis/debug structures to support external IDE use before any plugin/MVP is planned. D-026 names the product principle Extreme Total Observability.\n**Disposition:** Whole-product capability/model census with strict external contracts and actual per-row conformance, shared application services, early M-16 contracts and complete M-17 coverage. No universal writable graph replacing domain truth; no CLI/TUI-only semantic feature. Known unimplemented interface is a gap, not a passing unavailable result.\n**Mapping:** M-16/M-17 and all domain exits; D-025/D-026; R-028."
+    },
+    {
+      "id": "F-030",
+      "title": "· P1 · Current package tree is a useful summary, not a complete source/reference snapshot",
+      "body": "**Verified fact:** Tree model/build modules are CLI-local. Visibility provenance is serde-skipped; IDs use group/name; collected references are emitted with resolved=false without resolving targets. Some read failures become absence, repeated inputs collapse into maps, and current time substitutes for no actual snapshot identity (E46).\n**Inference:** An IDE cannot infer dangling references, exact rename scope, complete inclusion occurrences or consistent live state from this summary. A mutable coordinate is not an immutable refactor-stable address.\n**Disposition:** Move semantic query authority into shared services, preserve existing renderer compatibility, expose typed provenance/occurrences/unchecked-vs-missing states and snapshot/completeness/location contracts. Logical identity, exact capture and view occurrence remain distinct; rename supplies old→new transition.\n**Mapping:** M-06/M-16-D/M-17-A/B; R-029."
+    },
+    {
+      "id": "F-031",
+      "title": "· P1 · Serial MCP dispatch and startup policy do not provide an interactive operation/session path",
+      "body": "**Verified fact:** Server loop is synchronous; notifications ignored, initialization returns a fixed version and tools.listChanged=false; stdio EOF ends the loop. Lifecycle MCP uses fixed hosted/no-force/no-trace behavior and no deploy profile; its observer discards plan/contribution events. Context reloads lock per call without a cross-query snapshot. Hosted tasks do retain domain continuation, not transport reconnect (E47/E48).\n**Inference:** Long calls cannot process independent cancel/query; a deploy phase name does not expose all deployment functionality. A connected editor also needs dirty-buffer snapshots, invalidation and reconnect identity absent from this surface.\n**Disposition:** Responsive typed service API with capability negotiation, explicit context/overlay snapshots, durable operation/event/result identity, atomic scoped submission reservation with host-issued expiry namespaces/tombstones, reattach and cooperative controls on existing journals. Registered buffer versions participate in a held edit barrier through commit; unrelated editors are not silently included in that guarantee. No permanent daemon or new task scheduler required.\n**Mapping:** M-16-B/C/D, M-03/M-08/M-15/M-17; R-030."
+    },
+    {
+      "id": "F-032",
+      "title": "· P1 · Text-only tool errors can hide effects and advertised schemas are not always enforced",
+      "body": "**Verified fact:** ToolError emits text-only failure; materialise_subskill copies in a loop and propagates mkdir/copy errors, so prior writes can exist without returned structured written list. Query optional types silently default, and list_tools ignores arguments despite restrictive advertised schemas (E49).\n**Inference:** Err≠not-executed; a generic IDE retry can duplicate or overwrite partial work if error shape obscures execution phase. Descriptor schema alone does not establish runtime validation. Static call-path finding, no failure injection executed here.\n**Disposition:** Strict owned/admitted request decoding and validated result/error/event schemas for every operation; structured phase/partial effects/uncertainty/recovery even without final report. Idempotency records precede effects; unsupported legacy forms migrate explicitly.\n**Mapping:** M-16-B/C, M-17-A/C; R-031."
+    },
+    {
+      "id": "F-033",
+      "title": "· P1 · Package rename requires a semantic transaction, not the current conversion command",
+      "body": "**Verified fact:** Public refactor grammar exposes three source-conversion operations; rename-package is proposed in PROP-031. PROP-031's all-or-nothing intent coexists with unresolved transaction/concurrency details; current tree reference enumeration is incomplete (E45/E46).\n**Inference:** String replacement or renaming a directory cannot prove package/reference/deployment compatibility. Published identity, authored references, generated outputs and immutable evidence have different owners.\n**Disposition:** Required owned-package rename library + prepare/apply/recover protocol: exact reference scope and edit plan, unknown/collision diagnostics, saved-buffer boundary and cooperative edit barrier, preconditions/journal, regeneration and re-resolution. Preserve history/foreign captures and separate publication/deployment migration.\n**Mapping:** M-16-D/M-17-B/C; R-032."
+    },
+    {
+      "id": "F-034",
+      "title": "· P2 · Existing compiler trace is a foundation, not total observability",
+      "body": "**Verified fact:** Accepted compiler carriers have compiler_ir/e1 snapshot bytes and a durable trace-index/observer seam. Production trace retention is fixed at 128 MiB per run and nine older runs; failures/skipped snapshots are explicitly observational. TraceRun reopening belongs to the writer/lock lifecycle (E50).\n**Inference:** Serializing some IR does not expose all solver/lifecycle/target/image/service state. Reading through a writer-open helper or silently rerunning providers would violate pure inspection. Fixed retention cannot justify a claim that every requested internal value is present.\n**Disposition:** Read-only semantic snapshot access across model families, configurable explicit capture/detail/export/retention, complete missing/redacted/evicted states, provenance and observational health separate from domain success. No memory-layout ABI, hidden total boot quota or mandatory retention of every frame forever.\n**Mapping:** M-06/M-16/M-17-A/C; D-026; R-033."
+    }
+  ],
+  "milestones": [
+    {
+      "id": "M-13",
+      "title": "Foundation, accepted source rules and migration runtime",
+      "body": "**Goal:** Перенести принятые решения в contracts и исполняемые migration/policy primitives.\n**Prerequisites:** Immutable baseline + accepted §12 + exact current tree; M-13-B after M-16-A inventory (which depends only on M-13-A).\n**Scope:** Truth contradictions, Redbook/prototype/version policy, command meanings, source classification contract, executable format migration.\n**Non-scope:** Live public writes/autonomy activation/graduation, переписывание history/upstream versions.\n**Surfaces:** PROP-003/018/031/032/036/043/044/045/048/054, VIBEVM-SPEC, active own manifests, schema registry/codegen, small migration library + CLI/MCP plan/apply; ETO product law and model/proposal truth reconciliation.\n**Compatibility:** Active own products/packages current 1.0.0; format epoch/read capability отдельны. Existing intent/comments preserved where migrated; old experimental support not perpetual.\n**Risks:** R-011/R-012/R-019/R-020.\n**Negative cases:** Source notes override owner, blind version replacement in fixtures/upstreams, publication auto-graduates, migration guesses selection or loses comments.\n\n| Atom | Deliverable / evidence | Основание |\n|---|---|---|\n| M-13-A | Characterize actual consumers/call paths, exact active-version census, root/data/source policy gaps | F-002/F-004/F-007/F-008/F-021 |\n| M-13-B | Update governing source rules: D-002 separation, D-013 prototype, D-019 Redbook mutable roster/current 1.0.0, no global WAL/MUP ban, no boot quotas, D-025/D-026 universal service/ETO law from M-16-A | D-002/D-005/D-006/D-013/D-019 |\n| M-13-C | Versioned deterministic migration engine + request/report format: parse preserved syntax tree, plan in memory, validate, diff, typed NeedsInput, no LLM | D-003; F-020 |\n| M-13-D | Executable migration apply/recovery with before-state/CAS, preservation/ambiguity/idempotence fixtures and active own 1.0.0 reconciliation; concrete SourceDescriptor converter lands with its reader in M-06-A, feature converter with M-05-B | D-003/D-014/D-019 |\n\n**Verification/exit:** Accepted policies authoritative in product contract; migrations actually executable and tested, not advice to an agent; derived state changes only after authored source commits. No silent scope/capture/history edits.\n**Safe stop:** Contract and dry-run migration report before apply; no public effects."
+    },
+    {
+      "id": "M-01",
+      "title": "Exact source resolution",
+      "body": "**Goal:** Safe bounded source unit через одну library/CLI/MCP.\n**Prerequisites:** M-13 and M-06-A source classification; M-16-C before M-01-D so structured query/context contracts exist. Accepted D-003 migration/wire primitives.\n**Scope:** Grammar, selected authority, observation/proof, classified Vibe/CommonMark/XML-data/opaque representation и resource exports, typed result.\n**Non-scope:** Effective compilation, native custom semantic query, pattern expansion, revision observer, cache hydration.\n**Surfaces:** vibe-spec address/resolver/embed/DocTree; vibe-specdoc pure projection; vibe-safefs readers; vibe-workspace owner views; vibe-cli/vibe-mcp; proposed SpecResolutionReport registered in schemas/formats.\n**Compatibility:** Shared security hardening может отвергнуть unsafe legacy references; inventory/migration до enforcement, без fallback escape.\n**Risks:** R-001/R-002/R-009/R-016.\n**Negative cases:** Traversal/ADS/reserved/case/NFC; duplicate/revision; ordinary same-stem MD/XML allowed; invalid XML-data fixture raw available; no false facts; unselected/newest slot; unreadable enumeration; record+payload tamper; transformed/in-place/hardlink; bounded response/cancellation.\n\n| Atom | Deliverable / evidence | Основание |\n|---|---|---|\n| M-01-A | Shared validated URI/path и typed lookup errors; characterization всех existing compiler/prompt call sites | F-004 |\n| M-01-B | Opaque selected-source authority, visible closure и same snapshot witnesses; no unrelated newest scan | F-004/005 |\n| M-01-C | Retained reader + integrity ladder; original capture index/verified builtin derivation; refusal matrix | F-005/017 |\n| M-01-D | Classified builtin unit/resource/section extraction + generated response/errors; raw encoding/span basis, CLI/MCP parity | F-017/F-013/F-021 |\n| M-01-E | Native/portable adversarial corpus, bounded parsing, empty-cache read-only proof, expectation checks | F-004/005/013 |\n\n**Verification/exit:** Returned content/digests from same snapshot; no false source proof; exact error parity; no changed tree/lock/cache/.vibe; unsupported OS primitive explicit.\n**Safe stop:** Source query independently useful; lifecycle untouched."
+    },
+    {
+      "id": "M-02",
+      "title": "Read-only change binding",
+      "body": "**Goal:** Repo-owned intent scope без scheduler.\n**Prerequisites:** M-01, M-13; M-16-D before M-02-B buffer/snapshot/write contract. D-016/D-003 already accepted.\n**Scope:** One origin/node, local refinements, separate intent/work identities, scaffold/check/show/coverage.\n**Non-scope:** Execution, personal plan ownership, automatic closure, multi-origin execution.\n**Surfaces:** vibe-facts/progress-core/vibe-requirements public read seams, small change domain library, vibe-core authored config, CLI/MCP; proposed ChangeManifest/WorkIntentGraph/change report.\n**Compatibility:** Additive opt-in directory under configured specs root, immutable ID addressability.\n**Risks:** R-008/R-012/R-016.\n**Negative cases:** Duplicate ID, slug rename, cycles, stale origin, copied package status, unclassified/truncated facts, closure self-reference.\n\n| Atom | Deliverable / evidence | Основание / gate |\n|---|---|---|\n| M-02-A | Native feat fixture + local binding characterization; prove no copied package truth/personal cursor and complete source linkage | F-001; accepted D-016 |\n| M-02-B | Ratified authored manifest/graph grammar, immutable paths, intent/work hash frames | D-003/D-016; F-001 |\n| M-02-C | Origin exact capture/rebase and same-snapshot fact selection; complete observation seam без page truncation | F-005/006 |\n| M-02-D | New --from no-overwrite scaffold; check/show/coverage through one library and MCP query | Immutable outcome; F-001/006 |\n\n**Verification/exit:** Two changes with same origin/local difference have distinct intent IDs; cosmetic slug stable; graph not evidence; source update typed drift; no hidden adoption.\n**Safe stop:** Binding и read-only analysis полезны без lifecycle migration."
+    },
+    {
+      "id": "M-03",
+      "title": "Scoped lifecycle and complete existing-file execution",
+      "body": "**Goal:** Production/verification roles и existing-file edits на одном lifecycle engine.\n**Prerequisites:** M-02; accepted D-002/D-003/D-018. M-14-C and M-16-C before M-03-B target/request/operation carriage. M-11-D после M-03-C и до M-03-D/E.\n**Scope:** Request/invocation distinction, all carriers, workspace park conflicts, fixed full-pass composition, pre/post transition reuse, current-source verification.\n**Non-scope:** Automatic repair/next-task, multi-run store, uncoordinated arbitrary writer, hidden fresh producer in ordinary/scoped verify.\n**Surfaces:** vibe-lifecycle state/execution/fingerprint/agent/evidence; orchestrator application/dispatch; CLI/MCP, lifecycle/state/context/tasks/outbox/artifact wires.\n**Compatibility:** Historical fingerprint readers/records remain recognizable; old park not relabelled. Ordinary and scoped public verify both prohibit new production; changed invocation law is explicit prototype migration, not a hidden legacy branch.\n**Risks:** R-003/R-004/R-008.\n**Negative cases:** Different change/node replay; create→verify observation identity falsely invalidates producer; post-source tests stale; outside-write edits; forced replacement; verify secretly creates.\n\n| Atom | Deliverable / evidence | Основание |\n|---|---|---|\n| M-03-A | Freeze create/build/ordinary-and-scoped-verify roles and explicit change apply full pass; historical invocation migration; exhaustive carrier/hash map | D-002/D-018; F-002 |\n| M-03-B | Thread production request vs invocation/scope across all durable/machine surfaces; evidence retains pre/post meaning | F-002/F-003 |\n| M-03-C | Workspace continuation conflict/cancel/displace/recovery, exact hosted no-provider acceptance | F-003 |\n| M-03-D | After M-11-D: disjoint characterization plus mandatory existing-file producer/adopt/resume/current-source verify | D-018; F-002/F-006 |\n| M-03-E | CLI/MCP/full-pass parity; no new producer on verify, fresh repeated verify, exact build/test evidence and failure recovery | D-002/D-018; F-002/F-003 |\n\n**Verification/exit:** Real existing file changed and checked; ordinary/scoped verify and build never dispatch new producer, including prerequisite slots; wrong scope/input cannot accept outputs; new source actually build/tested. Disjoint-only is insufficient.\n**Safe stop:** Intermediate candidate/park retained; complete milestone closes only after transition + integrated proof."
+    },
+    {
+      "id": "M-04",
+      "title": "Complete analysis, clarification and durable closure",
+      "body": "**Goal:** Видеть work/evidence gaps и записывать acceptance без synthetic neutral verdict.\n**Prerequisites:** M-02; M-03 for execution joins; accepted D-003 migration/wire primitives.\n**Scope:** Questions/refinements, existing terminality composition, explicit policy/waiver/risk, durable closure.\n**Non-scope:** Semantic regex gate, hardcoded question count, scheduler, automatic close, hidden LLM.\n**Surfaces:** Existing fact/requirements/progress APIs, change library, lifecycle evidence read projection, CLI/MCP; proposed question/closure/analysis contracts.\n**Compatibility:** Requirements query остаётся metadata-only.\n**Risks:** R-008/R-012.\n**Negative cases:** Truncated universe, absent requires, missing observer, legacy verifies count, stale question, waiver≠satisfied, cache deletion, invalid evidence producer.\n\n| Atom | Deliverable / evidence | Основание |\n|---|---|---|\n| M-04-A | Exact-address questions, answer→local fact transaction, stale/secret-reference validation | Clarification mandate; F-001 |\n| M-04-B | Complete same-snapshot join и evidence-strength model; reuse terminal evaluator | F-006 |\n| M-04-C | Policy fingerprint, explicit waivers/risks, structural vs semantic checks; optional advisory rubric | F-006/014 |\n| M-04-D | Closure with retained witnesses/immutable references; revalidation after state deletion | F-006 |\n| M-04-E | CLI/MCP parity, manual/adopted evidence; optional one-way personal plan projection | F-001/006 |\n\n**Verification/exit:** Specification-only terminal works; unclassified/unavailable honest; relation не successful run; closure survives erased cache as historical decision and refuses stale applicability.\n**Safe stop:** Complete analysis before closure writes; closure only after retention policy."
+    },
+    {
+      "id": "M-05",
+      "title": "Unified feature and choice configuration",
+      "body": "**Goal:** Consumer controls semantic selection; solver handles technical satisfiability.\n**Prerequisites:** M-13, M-06-A classification for effective contributions; M-14-C before M-05-B environment/target/dependency-role carriers. M-16-C before M-05-E external operations; D-003/D-004/D-005/D-017/D-019 already accepted.\n**Scope:** Typed activation, optional deps/forwarded features/subskills, four group cardinalities, positive guards, requested/resolved lock, source routes, UI/update/reinstall.\n**Non-scope:** Expressions/workflows, solver-selected defaults, incompatible configs of one shared instance.\n**Surfaces:** vibe-core manifests/lockfile; vibe-resolver; vibe-package-source source/cells/qualified; vibe-install plan/fetch/record/visibility/apply; vibe-workspace freshness/boot; CLI/MCP; generated config report/lock.\n**Compatibility:** Validated legacy lowering; default/exclusive/requires_any meanings retained; full package bytes not filtered. Unsupported solver capability explicit.\n**Risks:** R-005/R-009/R-011.\n**Negative cases:** Root loss, rejected-candidate leakage, weak features, wrong existing version, old unselected candidate missing option, definition drift, conditional oscillation, missing cache, dormant stale option, lost capability edge.\n\n| Atom | Deliverable / evidence | Основание / gate |\n|---|---|---|\n| M-05-A | Characterize roots/Fresh/all-features/parser/conditional defects и solver capability matrix | F-007/008 |\n| M-05-B | Ratify typed activation/consumer/group grammar, environment resolution domains and dependency roles from M-14; comment-preserving migration | D-003/D-017 |\n| M-05-C | Immutable catalog + candidate-conditioned activation; all incoming constraints; shared solve/manifest/masked routes | F-008 |\n| M-05-D | Actual dependency/capability edges, feature/subskill contributions, requested/resolved lock provenance | F-007/008 |\n| M-05-E | Freshness before fast path; pure discovery; transaction/update/reinstall and reverse-closure removal seam; unattended/TTY UI | F-007/008/013 |\n| M-05-F | Redbook existing 1.0.0 exact-one MUP default/WAL alternative + global/branch addons; migrate manual exclusions preserving intent/shared deps | D-004/D-005/D-019; F-009 |\n| M-05-G | Supported-backend parity, all-root conflicts/recovery and positive independent WAL/MUP coexistence; Redbook-only exclusivity; no automatic bump | D-005/D-019; F-008/F-009 |\n\n**Verification/exit:** Rejected candidate leaks no effects; compatible older version succeeds; discarded metadata never prompts; all member constraints survive; changed selection defeats Fresh; branch switch preserves shared deps; offline replay exact; unsat/NeedsSelection before mutation. Subskills admitted only after loading consumers work.\n**Safe stop:** Discovery-only; then exact-one; then addons. Public republish only M-12."
+    },
+    {
+      "id": "M-06",
+      "title": "Classified content and interactive boot debugger",
+      "body": "**Goal:** Foreign content works correctly; debugger explains actual/hypothetical boot без навязанного бюджета.\n**Prerequisites:** M-06-A after M-13; B after A+M-01; C additionally after M-16-D; D/E also after M-05-E; F after E+M-05-G+M-10-D.\n**Scope:** Mandatory CommonMark/XML-data/opaque/Vibe classification; actual tree/provenance, calculator, static/dynamic preinstall delta, structured protocol and interactive UI.\n**Non-scope:** Total boot quotas, canonical compaction/status stripping/externalization, new compiler/BootIR, hidden effectful preview.\n**Surfaces:** core source descriptors, specdoc/spec/facts/sync/derived converters, workspace compiler/observer/boot; shared debugger library; JSON CLI/MCP; thin local visual tree/details/compare viewer.\n**Compatibility:** Current canonical representation/ordering stays; classification migrates explicitly. Foreign data bytes unaffected by spec_format. Old suffix heuristics removed from all consumers.\n**Risks:** R-009/R-015/R-016/R-019.\n**Negative cases:** Foreign markers parsed as facts, valid/invalid XML-data, same-stem separate resources, data reserialized, false package attribution, shared-dep double count, changing snapshots/pages, large boot rejected, missing native preview mislabelled exact.\n\n| Atom | Deliverable / evidence | Основание |\n|---|---|---|\n| M-06-A | SourceDescriptor grammar/migration + CommonMark sections/XML-data/raw handling; classification shared before scan/resolve/convert/collision/boot | D-014; F-021/F-017 |\n| M-06-B | Actual captured boot graph/provenance/why-included + bytes/scalars/tokenizer metrics, occurrence/shared distinctions and no total cap | D-006/D-007; F-016 |\n| M-06-C | Versioned machine requests/results/errors/progress/snapshot pages + interactive tree/detail/compare UI on shared library | D-007; F-016 |\n| M-06-D | Frozen candidate-world preview protocol; explicit preparation vs pure builtin calculation, legal static/dynamic scenarios and incomplete states | D-006/D-007; F-013/F-008 |\n| M-06-E | Preinstall marginal cost with transitive/shared dependencies/choices/conditions; toggle/install/remove/reconfigure comparisons | D-006; F-016 |\n| M-06-F | Full UI/API/CLI/MCP parity, derivative provenance, million-token-scale no-quota scenarios, stale snapshots and honest unknown attribution | D-006/D-007/D-009/D-014 |\n\n**Verification/exit:** Interactive debugger and machine input/output both delivered; current canonical bytes unchanged; no hidden network/provider/write in query; counts/scenarios reproducible; no budget veto. Existing-tree calculator alone is not complete preinstall debugger.\n**Safe stop:** A classification first; then current snapshot inspector. Final milestone waits full preview/UI/protocol."
+    },
+    {
+      "id": "M-07",
+      "title": "Distribution evidence and switchable publication authority",
+      "body": "**Goal:** Exact prepared publication with default smoke and shared A/B authorization.\n**Prerequisites:** M-13 accepted policy/migration foundation + M-14-A target/executor contract + M-16-B shared service/error/event schemas; actual CI/remote mutations wait concrete mode-A batch approval.\n**Scope:** Existing manifest evidence, default-on explicit-skip smoke, trusted channels/optional signatures, prepared-plan authority, B implementation/tests initially disabled, delayed destructive prepare and recovery.\n**Non-scope:** Automatic live B activation/graduation, mandatory crypto/full tests, skipped==passed, unproved remote atomicity.\n**Surfaces:** xtask dist build/snapshot/release, publish manifests/host adapters, generated plan/authorization/receipt schemas, wrappers/CI producer, shared policy evaluator.\n**Compatibility:** Own product labels current 1.0.0; captures/epochs independent. Tests/checks explicit; smoke default-on at publish preparation, skip recorded in plan.\n**Risks:** R-006/R-007/R-020.\n**Negative cases:** Wrong subjects, forged/replayed trust, absent/failed smoke vs explicit skip, switched policy generation, revoked/expired/out-of-bound B, stale approval, remote generation changed.\n\n| Atom | Deliverable / evidence | Основание |\n|---|---|---|\n| M-07-A | Shared prepared plan/evidence/authorization model; A approval and B bounded policy evaluator implemented with exact digest/scope/generation | D-011/D-015; F-010/F-011 |\n| M-07-B | Four native bundle smokes default-on; explicit skip parameter/scoped status, no full-tests side effect; standalone preparation reports | D-010 |\n| M-07-C | Approved producer/channel validation, explicit source tests/PR pipeline, optional signature path; read-only source provenance | D-010/D-011/D-015 |\n| M-07-D | Ready bundles + smoke effective policy before destructive prepare; A current approval gate, B dispatch path tested but disabled; pre-write revalidate and recovery | D-015; F-010 |\n| M-07-E | A/B same-plan effect parity, out-of-policy/revocation/stale-approval refusal, explicit skip successful path, native failures and remote restoration rehearsal | D-010/D-011/D-015 |\n\n**Verification/exit:** Mandatory suite proves default smoke passes/failed blocks/explicit skip allowed without false pass. Same exact approved plan has same effects under A/B in isolated tests. Live policy remains A; no public writes without current batch approval. Full-test absence doesn't secretly block optional-test publication.\n**Safe stop:** Prepared artifacts/plan before authorization. Old release remains until authorized exact apply."
+    },
+    {
+      "id": "M-08",
+      "title": "First-wave external adapters and four-client commissioning",
+      "body": "**Goal:** New client via external package without core release, with complete write/config lifecycle.\n**Prerequisites:** M-13, M-06-A, prepared source/proof M-01; M-14-C and M-16-C before M-08-C so grants/receipts and external operations bind environment/principal/root. Generic adapters don't depend on change runtime.\n**Scope:** Legacy characterization, open client/capability map, package-authored destination/key requests, host grants/generic operations, full ownership lifecycle, four selected clients.\n**Non-scope:** Grant from detection/hash, ambient arbitrary argv in data interpreter, fake sandbox, read-only catalogue as completed external-write support.\n**Surfaces:** agent-projection/profiles/pkgskill; MCP config; lifecycle deploy model/native authority wire/protocol/ownership; shared extension registry; CLI/MCP prepare/plan/apply/revoke.\n**Compatibility:** Existing families retain ownership/readers; explicit cross-family adoption. Compiled client fields migrate to map; legacy views remain adapters.\n**Risks:** R-009/R-010/R-013/R-014.\n**Negative cases:** New client needs enum patch, requested key treated grant, malformed/overlapping members, no before-image rollback claim, shared physical targets, missing/changed descriptor, revoked provider used to uninstall, unsupported mandatory client scenario.\n\n| Atom | Deliverable / evidence | Основание |\n|---|---|---|\n| M-08-A | Legacy operation/scope/shape matrix; concrete target contracts for Claude Code/Codex/OpenCode/Qwen Code | D-012; F-012 |\n| M-08-B | Explicit prepare/probe vs pure planning; bridge hydrated source-root characterization/correction | F-013/F-015 |\n| M-08-C | External descriptor and open capability map + generic host operations/grants bound to M-14 target/root/principal; retained receipt/recovery/upgrade/revocation semantics | D-008; F-014/E27 |\n| M-08-D | Typed command/native client operation admission; real plan/apply/verify/recover/uninstall; expanded effects require new authority | D-008; F-014 |\n| M-08-E | External package fixtures for all four clients, exact settings/resources, full lifecycle proof with unchanged core binary; no lost resources/foreign state | D-008/D-012; F-012/F-015 |\n\n**Verification/exit:** New external descriptor configures a real additional client without core enum change; four supported matrices have actual evidence. No hidden probes/hydration in query; grants exact, changes visible, revocation/cleanup safe. Qwen official docs are reference, not runtime pass.\n**Safe stop:** Internal parity/plan-only are intermediate; milestone cannot close until external writes and all four client scenarios pass."
+    },
+    {
+      "id": "M-09",
+      "title": "Exact bridges and native reuse",
+      "body": "**Goal:** Useful journeys, honest upstream compatibility and reusable feat intent.\n**Prerequisites:** Audit after M-13; bridge runtime after M-06-A/M-01/M-08-E; derivative journey after M-10-D; native journey after M-03-E/M-04.\n**Scope:** Pinned Spec Kit dependency matrix; both bridge taxonomies; change/bug/assess profiles; two product feats across two stacks.\n**Non-scope:** Copy upstream runtime into VibeVM, claim latest upstream, automatic scripts, workflow state machine, monorepo foreign products.\n**Surfaces:** Separate bridge roots, embedded resources/composition, external native examples, change/profile integration, docs.\n**Compatibility:** D-001 accepted: both bridges flow, own wrapper version 1.0.0; coordinate/upstream captured identity retained, lock kind/capability migration explicit.\n**Risks:** R-003/R-008/R-010/R-014.\n**Negative cases:** Research pin mismatch, missing scripts/templates/layout, executable prompt instruction, directory resource loss, lost notices, duplicated feat per stack.\n\n| Atom | Deliverable / evidence | Основание / gate |\n|---|---|---|\n| M-09-A | Audit current five and clarify/checklist/analyze/converge exact resources; effects/layout/platform table | F-015 |\n| M-09-B | Both bridges flow at 1.0.0; complete foreign non-Vibe resource closure, source classification/provenance/notices and consumer migration | D-001/D-014; F-015/F-021 |\n| M-09-C | Native change/bug/assess profiles on existing primitives; scripts only explicit trusted action | F-001/014/015 |\n| M-09-D | Two product feats × two stacks; unchanged origins, independent acceptance, drift/rebase | Reusable-feat mandate; F-015 |\n| M-09-E | Required bridge/native journeys with external adapter effects, local derivatives and complete resource closure; no unsupported stub as acceptance | D-008/D-009/D-014; F-015 |\n\n**Verification/exit:** Resources offline and byte-exact after preparation; ordinary Markdown/XML never accidentally interpreted; required script steps explicit admitted actions. Two-stack reuse uses M-03 proven existing-file transitions with current-source tests. Mandatory journey cannot close on diagnostic-only unsupported or disjoint-only demo; no upstream authorship conflation.\n**Safe stop:** Audited capability matrix/local fixtures without republish."
+    },
+    {
+      "id": "M-10",
+      "title": "General local derivatives and consumer sovereignty",
+      "body": "**Goal:** Project owner creates/adapts resources with exact provenance and explicit update handling.\n**Prerequisites:** M-13, M-06-A and M-01 initial source/proof carriers; D accepted. M-10-D additionally M-08-C/D and M-06-C.\n**Scope:** Authored derivation binding/local source, full replacement/file-tree resources, resource roles, show/diff/rebase/apply, downstream references/activation separation.\n**Non-scope:** Automatic merge/execute, priority/workflow language, inheritance of upstream grants/identity, sealed blocking local fork.\n**Surfaces:** Shared source/derivation proof library, owning project manifests/spec resources, existing artifact cache/registry/deploy, source query and boot debugger projections.\n**Compatibility:** Original capture/source slot stays exact; own derivative has new qualified logical identity. Different role doesn't silently reinterpret upstream.\n**Risks:** R-002/R-010/R-018/R-019.\n**Negative cases:** Sealed local fork refused, same identity reused, missing/changed base, concurrent local edits, data XML normalized, source notices lost, executable auto-runs, inherited grants, unknown third-state recovery.\n\n| Atom | Deliverable / evidence | Основание |\n|---|---|---|\n| M-10-A | Classify required resource families/use cases and common derive lifecycle; integrate existing mechanisms without a demand-permission gate | D-009; F-019 |\n| M-10-B | DerivationBinding/base/local/result/recipe/provenance contract; owner sovereignty and compatibility/activation distinction | D-009; F-005/F-019 |\n| M-10-C | Generic derive/show/diff/rebase/apply for CommonMark, XML-data, Vibe specs, opaque files/trees; local source retained, no auto merge/execute | D-009/D-014 |\n| M-10-D | Source query/boot debugger/adapter/artifact integration, explicit activation of code-bearing derivative under new grants, drift/recovery proof | D-008/D-009; F-005/F-019 |\n\n**Verification/exit:** All resource families have real scenarios; sealed original can yield separately owned derivative; new identity/provenance visible; same-version base drift requires explicit rebase; passive derivation no execution; active use reauthorized.\n**Safe stop:** One text/resource slice intermediate; parent remains open until generic family and downstream proofs."
+    },
+    {
+      "id": "M-11",
+      "title": "Brownfield intake and reusable pre/post transition",
+      "body": "**Goal:** Observe/propose/promote with honest intent boundary and integrated existing-project proof.\n**Prerequisites:** A after M-01; B after A; C after B+M-02. **D is pulled forward after M-02 and M-03-C**, not after C or complete M-03. E after C+D+M-03-E+M-04.\n**Scope:** Safe inventory/captures, algorithmic stack proposal, explicit promote, shared transition contract used by M-03, real brownfield composition.\n**Non-scope:** Every-language inference, hidden tools, uncoordinated arbitrary writer, automatic promotion or repair.\n**Surfaces:** safefs/inventory, fact/source query, stack analyzer, change/lifecycle, generated inventory/proposal/transition reports.\n**Compatibility:** Pure observe no cache/state writes; old intent preserved; legacy lifecycle recipe remains distinct.\n**Risks:** R-003/R-008/R-009/R-017.\n**Negative cases:** Mixed-time tree, unsafe links, exclusion ignored, stale proposal, changed directory membership, lost pre-state, outside-write edit, wrong current-source tests.\n\n| Atom | Deliverable / evidence | Основание |\n|---|---|---|\n| M-11-A | Pure inventory with witnesses/membership/capture and skipped/unstable scope, exclusions before reads | F-018 |\n| M-11-B | Stack-owned algorithmic proposal and explicit optional assist, assumptions and source evidence | Brownfield mandate |\n| M-11-C | Explicit promote with complete affected-set revalidation, preserve existing desired intent | D-016; F-018 |\n| M-11-D | Pulled-forward general pre/post transition and source applicability: after M-03-C, before M-03-D/E; exact consumed inputs, outside-write equality, explicit adopted authority | D-018; F-002 |\n| M-11-E | Real existing-project intake→promote→create→verify through completed M-03, current-source build/tests, concurrent-edit refusal | D-018; F-002/F-018 |\n\n**Verification/exit:** D is accepted independently to unblock M-03; full parent closes only after A/B/C/E. Observations don't become intent without explicit promote; no false current-state evidence.\n**Safe stop:** Inventory/proposal and pulled-forward transition are valid intermediate stops, not completion of entire brownfield scope."
+    },
+    {
+      "id": "M-12",
+      "title": "Initial prototype integration and approved publication",
+      "body": "**Goal:** Original accepted programme plus M-14 target readiness and M-17-A initial ETO exposure integrated, documented and ready for explicit batch publication; new environment phase closes M-15-J, universal IDE/ETO closure M-17-D.\n**Prerequisites:** Required exits M-01…M-11, M-13, M-14-C and M-17-A initial external/model coverage, including M-06-F debugger, M-08-E four external adapters, M-10-D derivatives, M-11-E brownfield. Optional tracker not a dependency.\n**Scope:** Local package graph, bridge kinds, own 1.0.0 census, end-user docs, registry/index checks, current mode-A publication plan; B readiness and prototype state visible.\n**Non-scope:** Automatic graduation/B activation, Gemini/Copilot as blockers, changing foreign upstream versions, public write based solely on this review.\n**Surfaces:** External own packages/bridges, registry/index, distribution chain, docs, optional one-way tracker provider; common authorization pipeline.\n**Compatibility:** Prototype own line 1.0.0; exact captures and machine formats separate; future support commitments only after owner graduation.\n**Risks:** R-006/R-007/R-011/R-014/R-020.\n**Negative cases:** Required feature deferred in final report, wrong target/version, mixed capture graph, missing inert resource, stale approval, mode B enabled by default, auto public/stable declaration.\n\n| Atom | Deliverable / evidence | Основание |\n|---|---|---|\n| M-12-A | Full local graph Redbook/bridges/adapters/derivatives/native examples, active own 1.0.0 and offline exact reproduction | D-001/D-008/D-009/D-012/D-019 |\n| M-12-B | Docs match actual operations/machine debugger/prototype policy; no stable-release or full-test claim not supported by evidence | D-013; F-020 |\n| M-12-C | If demanded: one-way tracker export using same approved-plan/idempotent/concurrency protocol | D-015; optional baseline scope |\n| M-12-D | Initial-route acceptance and exact publication plan; one current-A approval, then approved external writes/receipts and declared smoke policy. Demonstrate B-ready tests without activating live B | D-010/D-011/D-015/D-019 |\n\n**Verification/exit:** Every mandatory initial programme result implemented and proven; M-15 HOME/Docker/service scope remains separately tracked and cannot be reported delivered here; external batch either executed under exact approval or remains concrete ready-to-approve state. Prototype status doesn't permit false completeness. Smoke skip visible; no actual publisher action performed by this document update.\n**Safe stop:** Initial local programme and approved-candidate publication plan before live consent; M-15 proceeds without waiting for public writes."
+    },
+    {
+      "id": "M-14",
+      "title": "Early package-manager architecture seams",
+      "body": "**Goal:** Existing feature/lifecycle/adapter work remains compatible with home environments, Linux roots and image execution.\n**Prerequisites:** A after M-13-B; B after A+M-13-D+M-16-B shared schemas; C after B. M-13 does not depend on full M-14. M-05-B, M-03-B and M-08-C consume C; M-07-A consumes A. No dependency on M-15 delivery.\n**Scope:** Concrete versioned target/environment/realization/payload/backend contracts, explicit local compatibility binding, target-root/principal/effect carriage, layout centralization, provider capabilities and future system-resource vocabulary; Nix-inspired exact builds/profiles and transport-independent supply paths.\n**Non-scope:** Docker builds, rootfs population, actual pacman transactions, privileged service/account effects, live distro installation.\n**Surfaces:** VIBEVM-SPEC; PROP-024/025/052/054 and source rules; core manifest/target_when/artifact/deploy/layout, lock/hash frames, lifecycle/native wires/receipts/locks, registry capabilities; CLI/MCP bindings.\n**Compatibility:** Existing project layout and bare install meanings preserved. Old host-only records retain old semantics; no assumed environment ownership or target-ABI proof. New tool behavior routes to existing validated artifact engine.\n**Risks:** R-021/R-022/R-025; overdesign or second generic executor.\n**Negative cases:** Same project/package deployed into two roots shares receipt ID; Windows host chooses Linux payload's launcher; stale root path reused; runtime ABI mistaken for native provider ABI; old user-home receipt adopted silently.\n\n| Atom | Deliverable / evidence | Exact prerequisites |\n|---|---|---|\n| M-14-A | Ratify EnvironmentDefinition/TargetBinding/ExecutionContext and platform roles; centralized layout/source-law amendment; freeze existing bare-install compatibility and future distro boundary | M-13-B |\n| M-14-B | Generated schemas/hash frames for exact lock/realization/payload inventory and backend-native closure; dependency roles and target filesystem semantics; legacy readers/migration fixtures, input/output/prefix identities and mirror/substitution policy | M-14-A, M-13-D, M-16-B |\n| M-14-C | Implement explicit local target binding through provider requests/plans/grants/receipts/locks, same-root alias fencing and cross-target refusal; executable environment/schema seams for M-03/M-05/M-08 | M-14-B |\n\n**Verification/exit:** Real local compatibility flow preserves behavior; two isolated injected homes have independent authority; unsupported Linux metadata/target explicit; request/receipt replay against another root refuses. Future capabilities are typed and tested as unsupported, not fake delivered providers. M-15 can extend implementations without replacing accepted core contracts.\n**Safe stop:** Target-aware local operations and reviewed future interfaces; no system or Docker mutation."
+    },
+    {
+      "id": "M-15",
+      "title": "Package-manager delivery: HOME, Linux userspace and AI-agent images",
+      "body": "**Goal:** One declarative package/environment model delivers a user-owned environment and reproducible Docker/OCI userspace with machine-described agent tools/services.\n**Prerequisites:** K is pulled forward after M-14-C+M-07-A+M-16-C; A after K+M-01-E; B after A+M-05-E; remaining edges below. Delivery may proceed before original-publication M-12-D; final local integration consumes M-12-A/B, never waits for live publication approval.\n**Scope:** Real payload installation and profile generations, exact runtime dependencies, complete install/update/remove/verify/recover/GC; Linux rootfs through isolated backend; BuildKit/OCI images; four selectable client profiles; local multi-service AI catalog and honest reproducibility/health evidence.\n**Non-scope:** Full Linux distro/ISO/kernel/bootloader/VMware tests, live host root mutation, autonomous fleet orchestration, forced pacman replacement, automatic network administration, model-inference subscription requirement.\n**Surfaces:** Shared source/solver/artifact/store/deploy engines, new environment consumer/library, versioned environment/image/service wires and CLI/MCP, package-defined backend/BuildKit adapters, isolated Linux fixtures and docs, M-06 debugger integration.\n**Compatibility:** Workspace install stays available; environments have separate resolution/ownership domains. Vibe/pacman ownership not merged. Runtime source resources retain D-014 semantics. No rewrite of upstream versions or native signature policies.\n**Risks:** R-021…R-026; root confusion, runtime dependency leakage, unsafe extraction, false atomic rollback/reproducibility, backend drift, leaked image secrets, catalog-as-authority.\n**Negative cases:** HOME not writable, different ABI/libc, command collision, shared dependency removal, config drift, GC of pinned/running generation, malicious archive paths/links, backend DB drift, hook failure, host service started by build, unavailable daemon/platform, stale endpoint, forged descriptors and injected secrets.\n\n| Atom | Deliverable / evidence | Exact prerequisites |\n|---|---|---|\n| M-15-K | Early Docker/Linux executor commissioning: pure availability/capability preflight, explicit scoped worker preparation, captured base/toolchain/bootstrap Vibe binary or independent bootstrap recipe, target-bound process/mount/network/principal execution and egress test boundary. No dependence on Vibe payload realization or pacman; unavailable engine blocks actual Linux proof | M-14-C, M-07-A, M-16-C |\n| M-15-A | Implement payload realization over captured source/prebuilt artifacts and existing build/package providers; files/directories/safe links/modes, complete runtime closure and independent digest/metadata verification; explicit isolated-build recipe, prefix-compatible trusted cache substitution; migrate legacy bin routing | M-15-K, M-01-E |\n| M-15-B | Environment manifest/lock + per-target dependency roles/backend refs; install/explain/plan/fetch through shared solver; source/prebuilt selection and ABI/prefix compatibility, recursive source/mirror lock; no coding-project/Git/GitHub requirement | M-15-A, M-05-E |\n| M-15-C | User-owned store/profile generations, explicit env exec/shell activation, install/update/remove/verify; reverse-dependency/command ownership checks; two independent HOME environments with shared immutable payloads | M-15-B, M-08-D |\n| M-15-D | Crash/rollback/repair/GC protocol across retained generations, mutable config/state and live references; concurrent/alias-root fencing; full home lifecycle fixture | M-15-C |\n| M-15-E | External backend port; recommended A delivers Arch/pacman coexistence in disposable Linux, while B requires expanded replacement compatibility gates before closure: coherent repo snapshot, trusted packages, exact plan/DB generation, native dependency/version semantics, separate file authority and partial-failure records | M-15-K, M-15-B, M-07-A; D-022 confirmation before committing backend-specific policy |\n| M-15-F | Linux rootfs population through already commissioned M-15-K executor from Windows control plane; target principal/metadata, offline-vs-live effects, root-bound hooks and independent runtime verification | M-15-K, M-15-A, M-15-E |\n| M-15-G | BuildKit provider + deterministic image-plan lowering, pinned base/closure, separate build/runtime stages, OCI export + inspect + non-root smoke, credential-free image/runtime bindings and offline prepared rebuild | M-15-F, M-15-D, M-07-B/C |\n| M-15-H | Package tool/service descriptor registry with structured requests/results/errors/probes, endpoint/auth bindings and automatic catalog projection; two local services + agent on isolated Docker network, authorized read/write and denied effect | M-15-G, M-08-E, M-06-C; D-023 accepted |\n| M-15-I | Integrate boot debugger with environment/package/runtime/service/image provenance and independent boot/disk/download/layer measurements; four selectable client image profiles; two clean builds, offline/missing-input cases and recovery/secret tests; Docker replacement/removal/failed-start rollback and runtime-reference GC; full supply-chain fixture with independently enforced/observed egress over control/children/builders, GitHub denied and separate all-network-off replay | M-15-H, M-06-F, M-10-D |\n| M-15-J | Complete HOME + Docker user journeys, machine API parity and future Linux/VM acceptance outline; reconcile docs/capability matrix and retained recovery/bootstrap route and self-hosted registry/source/cache/image walkthrough; explicit local evidence report | M-15-I, M-12-A/B |\n\n**Verification/exit:** Both home and Docker required. One home fixture installs at least two tools sharing a runtime dependency, switches versions, preserves user config, refuses breaking removal, recovers interrupted activation and safely collects only unreferenced generations. An Arch-based linux/amd64 image contains captured packages and Vibe-managed tools, runs as the chosen ordinary user and exposes correct boot/service catalog. All four chosen client profiles have actual config/launch verification. Local network has two services and bounded operations; no model subscription or remote publish required. Two independent builds establish declared resolution/content reproducibility; byte-identical OCI claims only if actually measured. Docker additionally proves image replacement, failed-start rollback, package removal/rebuild and safe image GC while retaining runtime data. No-GitHub fixture covers bootstrap, source build, trusted substitution, home lifecycle, image creation and local registry publication test with independently observed zero GitHub attempts across control/native children/builders; unobserved paths fail the proof. Rootfs/image proof does not imply Linux bootability. Required proof failures remain blockers, not skipped success.\n**Safe stop:** Home completion, prepared image, and local runtime proof are intermediate accepted slices; parent remains open until both modes and catalog pass. Daemon unavailability is an environment blocker for affected runtime atoms only. Public image push is a separate prepared batch under current A; it is not needed to prove local image creation."
+    },
+    {
+      "id": "M-16",
+      "title": "Early universal service and observation contracts",
+      "body": "**Goal:** Enforce ETO and external-client compatibility while domain features are designed, before an IDE/plugin is considered.\n**Prerequisites:** A after M-13-A; M-13-B consumes A. B after A+M-13-D+M-14-A; M-14-B consumes B. C after B+M-14-C. D after C+M-06-A+M-01-E. These are atom-level edges, not a dependency on complete M-13/M-14/M-01.\n**Scope:** Complete operation/model inventory, strict generated schemas, typed application facade, capability/context discovery, responsive operation/event/result controls, overlay/snapshot/location contract and conformance clients.\n**Non-scope:** IDE/plugin/MVP, screen design, actual LSP/DAP adapter, generic workflow scheduler, multi-park engine, universal writable graph DB.\n**Surfaces:** PROP-018/031/032/036/037/054 source reconciliation; CLI/MCP adapters, operation/schema registries, domain request/result/error/event frames, context/resource/overlay library and on-demand API host; existing journals/trace/read seams.\n**Compatibility:** Existing one-shot CLI and MCP legacy calls retain explicit adapters; negotiated new capabilities never inherit hidden old restrictions as full coverage. Current local/workspace execution limits and publication authority stay. No permanent daemon required for runtime environments.\n**Risks:** R-028…R-032; hidden CLI authority, scope escalation, false snapshot, duplicate/unknown effects, observational backpressure.\n**Negative cases:** Supported operation omitted from catalog; invalid input defaulted; response loss re-executes action; root replay; slow consumer blocks cancellation; stale/foreign buffer mixed into analysis; API EOF labelled rollback; unavailable stub passes coverage.\n\n| Atom | Deliverable / evidence | Exact prerequisites |\n|---|---|---|\n| M-16-A | Whole-product capability/model coverage census, ETO source-law decisions and ownership map; reconcile PROP-032 proposal with real domain authorities and current public commands | M-13-A |\n| M-16-B | Versioned registry/facade/context/entity/snapshot/location/error/event contracts and generated validation; strict schema/effect/applicability discovery, local framed API protocol negotiation | M-16-A, M-13-D, M-14-A |\n| M-16-C | Responsive on-demand host/CLI/MCP service adapters; atomic scoped submission reservation, host-issued namespace epochs/expiry and compact dedup tombstones, pinned active/recovery identities; domain-journal linkage, progress/replay/control/attach, typed input/admission and partial outcomes; existing execution limits preserved | M-16-B, M-14-C |\n| M-16-D | Client-scoped versioned overlays and same-capture pure analysis/navigation/preview, source-position conversion, watched invalidation/resnapshot, two edit modes, acknowledged cooperative edit barrier through commit and saved-state mutation boundary | M-16-C, M-06-A, M-01-E |\n\n**Verification/exit:** Actual local domain operation through CLI/canonical protocol/MCP has equal effects and structured result. Malformed inputs fail before effects; an injected post-effect failure reports its partial truth. Long operation permits queries/cancellation, reconnect does not duplicate it, old epoch incompatibility is explicit. Two headless clients have independent dirty buffers and compare same-snapshot diagnostics without file changes; stale/save-required applies refuse. A second client editing between check/commit or disconnecting during its barrier cannot pass cleanliness; concurrent same-key submits and retries after result eviction/namespace expiry cannot duplicate effects. Test service is a protocol client, not an IDE implementation.\n**Safe stop:** A inventory/source law, B contracts and C basic host are usable intermediate boundaries. D closes common editing semantics; future domain capabilities still need their own real coverage."
+    },
+    {
+      "id": "M-17",
+      "title": "Complete external model/action coverage and semantic package rename",
+      "body": "**Goal:** All supported VibeVM functionality and debug models are externally usable end-to-end, including package rename and HOME/Docker/service workflows.\n**Prerequisites:** A after initial domain exits M-01-E/M-03-E/M-04-E/M-05-G/M-06-F/M-07-E/M-08-E/M-09-E/M-10-D/M-11-E and M-14-C/M-16-D; M-12-A consumes A. B after A+M-15-B. C after B+M-15-J. D after C. No dependency on a plugin or on live publication M-12-D.\n**Scope:** Extract remaining CLI/TUI-only domain seams, publish full semantic tree/trace/internal-model views, migrate legacy errors/arguments, semantic package rename library/operations, extension observation contracts, whole-product conformance and portable API documentation.\n**Non-scope:** GUI/IDE/plugin planning or implementation; all-language code-refactor engine; silent foreign/history/published-identity edits; public publishing for the sake of an integration test.\n**Surfaces:** tree builder/model/provenance, refactor/source/manifest/reference consumers, tool/admin/registry/cache/settings/version commands, all domain services/MCP/CLI adapters, compiler trace/read model and runtime/image/service inspectors, schema/coverage registry and source governing docs.\n**Compatibility:** Old tree JSON and command forms are versioned adapters; provenance/unknown-resolution state appears in new semantic models without silent old-schema changes. Rename records identity transitions; old captures/receipts unchanged. Trace capture policy revised explicitly; domain result unchanged by observer health.\n**Risks:** R-028…R-033, R-021/R-025; partial census mistaken for complete model, raw-memory ABI freeze, unsafe rename, discarded evidence, effect duplication.\n**Negative cases:** Tree false≡unchecked, read error≡absence, missing occurrence/provenance, unbounded event buffering, capture silently capped/evicted, unknown reference rewritten, unsaved file overwritten, alias-root/case collision, updated image erases data, revoked provider required for inspection.\n\n| Atom | Deliverable / evidence | Exact prerequisites |\n|---|---|---|\n| M-17-A | Complete initial-operation/model coverage: shared tree/reference/provenance and legacy/admin services, strict requests and partial-effect errors, externally readable stage snapshots, configurable capture/retention/export and captured extension schemas; real headless coverage for every supported initial row | Initial domain exits listed above, M-14-C, M-16-D |\n| M-17-B | Owned package-coordinate rename prepare/apply/status/recover: exact affected references/edits/moves/identity transitions, dirty/save boundary, collisions/unknowns, authored→generated regeneration and re-resolution; include environment definitions, preserve history/foreign sources | M-17-A, M-15-B |\n| M-17-C | Two-client full-path conformance across all initial + M-15 operations: inspect/unsaved edit/preview, rename/regenerate, long jobs/reconnect/cancel/partial failure, extension revoke/read, HOME update + Docker replacement + service grants | M-17-B, M-15-J |\n| M-17-D | Close coverage census with exact request/result/error/event/model examples and generated schema checks; publish local developer contract documentation and capability compatibility matrix; no implemented supported feature lacks an external path | M-17-C |\n\n**Verification/exit:** Every supported capability/model row has an actual external scenario; no supported feature closes on shell scripting, TUI keys, a prose-only error or a stub unavailable. Full structure traversal reaches all authorized nodes; captures/overlays/positions are consistent. Rename updates known owned reference scope, preserves immutable/foreign records and reports unknown/external scope; concurrent modification and partial apply have honest recovery. Headless clients can explain package→boot→artifact→environment/image/service provenance after process exit. Current publication A, no-GitHub and no-boot-quota rules survive. ETO/IDE architectural compatibility complete; no plugin/MVP/IDE has been planned or built.\n**Safe stop:** M-17-A closes initial exposure before M-12. M-17-B rename and C cross-domain proofs follow new environment contracts. Whole external-compatibility completion is only M-17-D; independent future UI work starts from these verified contracts."
+    }
+  ],
+  "baseline_graph": {
+    "M-13-A": [],
+    "M-13-B": [
+      "M-13-A",
+      "M-16-A"
+    ],
+    "M-13-C": [
+      "M-13-B"
+    ],
+    "M-13-D": [
+      "M-13-C"
+    ],
+    "M-01-A": [
+      "M-13-D",
+      "M-06-A"
+    ],
+    "M-01-B": [
+      "M-01-A"
+    ],
+    "M-01-C": [
+      "M-01-B"
+    ],
+    "M-01-D": [
+      "M-01-C",
+      "M-16-C"
+    ],
+    "M-01-E": [
+      "M-01-D"
+    ],
+    "M-02-A": [
+      "M-01-E",
+      "M-13-D"
+    ],
+    "M-02-B": [
+      "M-02-A",
+      "M-16-D"
+    ],
+    "M-02-C": [
+      "M-02-B"
+    ],
+    "M-02-D": [
+      "M-02-C"
+    ],
+    "M-03-A": [
+      "M-02-D"
+    ],
+    "M-03-B": [
+      "M-03-A",
+      "M-14-C",
+      "M-16-C"
+    ],
+    "M-03-C": [
+      "M-03-B"
+    ],
+    "M-03-D": [
+      "M-03-C",
+      "M-11-D"
+    ],
+    "M-03-E": [
+      "M-03-D"
+    ],
+    "M-04-A": [
+      "M-03-E"
+    ],
+    "M-04-B": [
+      "M-04-A"
+    ],
+    "M-04-C": [
+      "M-04-B"
+    ],
+    "M-04-D": [
+      "M-04-C"
+    ],
+    "M-04-E": [
+      "M-04-D"
+    ],
+    "M-05-A": [
+      "M-13-D",
+      "M-06-A"
+    ],
+    "M-05-B": [
+      "M-05-A",
+      "M-14-C"
+    ],
+    "M-05-C": [
+      "M-05-B"
+    ],
+    "M-05-D": [
+      "M-05-C"
+    ],
+    "M-05-E": [
+      "M-05-D",
+      "M-16-C"
+    ],
+    "M-05-F": [
+      "M-05-E"
+    ],
+    "M-05-G": [
+      "M-05-F"
+    ],
+    "M-06-A": [
+      "M-13-D"
+    ],
+    "M-06-B": [
+      "M-06-A",
+      "M-01-E"
+    ],
+    "M-06-C": [
+      "M-06-B",
+      "M-16-D"
+    ],
+    "M-06-D": [
+      "M-06-C",
+      "M-05-E"
+    ],
+    "M-06-E": [
+      "M-06-D"
+    ],
+    "M-06-F": [
+      "M-06-E",
+      "M-05-G",
+      "M-10-D"
+    ],
+    "M-07-A": [
+      "M-13-D",
+      "M-14-A",
+      "M-16-B"
+    ],
+    "M-07-B": [
+      "M-07-A"
+    ],
+    "M-07-C": [
+      "M-07-B"
+    ],
+    "M-07-D": [
+      "M-07-C"
+    ],
+    "M-07-E": [
+      "M-07-D"
+    ],
+    "M-08-A": [
+      "M-13-D",
+      "M-06-A",
+      "M-01-E"
+    ],
+    "M-08-B": [
+      "M-08-A"
+    ],
+    "M-08-C": [
+      "M-08-B",
+      "M-14-C",
+      "M-16-C"
+    ],
+    "M-08-D": [
+      "M-08-C"
+    ],
+    "M-08-E": [
+      "M-08-D"
+    ],
+    "M-09-A": [
+      "M-13-D"
+    ],
+    "M-09-B": [
+      "M-09-A",
+      "M-06-A",
+      "M-01-E",
+      "M-08-E"
+    ],
+    "M-09-C": [
+      "M-09-B",
+      "M-03-E",
+      "M-04-E",
+      "M-10-D"
+    ],
+    "M-09-D": [
+      "M-09-C"
+    ],
+    "M-09-E": [
+      "M-09-D"
+    ],
+    "M-10-A": [
+      "M-13-D",
+      "M-06-A",
+      "M-01-E"
+    ],
+    "M-10-B": [
+      "M-10-A"
+    ],
+    "M-10-C": [
+      "M-10-B"
+    ],
+    "M-10-D": [
+      "M-10-C",
+      "M-08-D",
+      "M-06-C"
+    ],
+    "M-11-A": [
+      "M-01-E"
+    ],
+    "M-11-B": [
+      "M-11-A"
+    ],
+    "M-11-C": [
+      "M-11-B",
+      "M-02-D"
+    ],
+    "M-11-D": [
+      "M-02-D",
+      "M-03-C"
+    ],
+    "M-11-E": [
+      "M-11-D",
+      "M-11-C",
+      "M-03-E",
+      "M-04-E"
+    ],
+    "M-12-A": [
+      "M-01-E",
+      "M-02-D",
+      "M-03-E",
+      "M-04-E",
+      "M-05-G",
+      "M-06-F",
+      "M-07-E",
+      "M-08-E",
+      "M-09-E",
+      "M-10-D",
+      "M-11-E",
+      "M-13-D",
+      "M-14-C",
+      "M-17-A"
+    ],
+    "M-12-B": [
+      "M-12-A"
+    ],
+    "M-12-C": [
+      "M-12-B"
+    ],
+    "M-12-D": [
+      "M-12-B"
+    ],
+    "M-14-A": [
+      "M-13-B"
+    ],
+    "M-14-B": [
+      "M-14-A",
+      "M-13-D",
+      "M-16-B"
+    ],
+    "M-14-C": [
+      "M-14-B"
+    ],
+    "M-15-A": [
+      "M-15-K",
+      "M-01-E"
+    ],
+    "M-15-B": [
+      "M-15-A",
+      "M-05-E"
+    ],
+    "M-15-C": [
+      "M-15-B",
+      "M-08-D"
+    ],
+    "M-15-D": [
+      "M-15-C"
+    ],
+    "M-15-E": [
+      "M-15-B",
+      "M-07-A",
+      "M-15-K"
+    ],
+    "M-15-F": [
+      "M-15-A",
+      "M-15-E",
+      "M-15-K"
+    ],
+    "M-15-G": [
+      "M-15-F",
+      "M-15-D",
+      "M-07-B",
+      "M-07-C"
+    ],
+    "M-15-H": [
+      "M-15-G",
+      "M-08-E",
+      "M-06-C"
+    ],
+    "M-15-I": [
+      "M-15-H",
+      "M-06-F",
+      "M-10-D"
+    ],
+    "M-15-J": [
+      "M-15-I",
+      "M-12-A",
+      "M-12-B"
+    ],
+    "M-15-K": [
+      "M-14-C",
+      "M-07-A",
+      "M-16-C"
+    ],
+    "M-16-A": [
+      "M-13-A"
+    ],
+    "M-16-B": [
+      "M-16-A",
+      "M-13-D",
+      "M-14-A"
+    ],
+    "M-16-C": [
+      "M-16-B",
+      "M-14-C"
+    ],
+    "M-16-D": [
+      "M-16-C",
+      "M-06-A",
+      "M-01-E"
+    ],
+    "M-17-A": [
+      "M-01-E",
+      "M-03-E",
+      "M-04-E",
+      "M-05-G",
+      "M-06-F",
+      "M-07-E",
+      "M-08-E",
+      "M-09-E",
+      "M-10-D",
+      "M-11-E",
+      "M-14-C",
+      "M-16-D"
+    ],
+    "M-17-B": [
+      "M-17-A",
+      "M-15-B"
+    ],
+    "M-17-C": [
+      "M-17-B",
+      "M-15-J"
+    ],
+    "M-17-D": [
+      "M-17-C"
+    ]
+  },
+  "refinements": [],
+  "extra_dependencies": {
+    "M-01-A.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-01-B.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-01-C.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-01-D.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-01-E.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-02-A.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-02-B.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-02-C.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-02-D.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-03-A.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-03-B.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-03-C.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-03-D.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-03-E.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-04-A.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-04-B.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-04-C.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-04-D.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-04-E.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-05-A.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-05-B.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-05-C.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-05-D.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-05-E.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-05-F.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-05-G.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-06-A.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-06-B.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-06-C.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-06-D.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-06-E.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-06-F.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-07-A.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-07-B.1": [
+      "NEXT-P0-GATE",
+      "NEXT-NATIVE-RESOURCES"
+    ],
+    "M-07-C.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-07-D.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-07-E.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-08-A.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-08-B.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-08-C.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-08-D.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-08-E.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-09-A.1": [
+      "NEXT-P0-GATE",
+      "NEXT-EXTERNAL-CHECKOUTS"
+    ],
+    "M-09-B.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-09-C.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-09-D.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-09-E.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-10-A.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-10-B.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-10-C.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-10-D.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-11-A.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-11-B.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-11-C.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-11-D.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-11-E.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-12-A.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-12-B.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-12-C.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-12-D.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-13-A.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-13-B.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-13-C.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-13-D.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-14-A.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-14-B.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-14-C.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-15-K.1": [
+      "NEXT-P0-GATE",
+      "NEXT-DOCKER-RESOURCE"
+    ],
+    "M-15-A.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-15-B.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-15-C.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-15-D.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-15-E.1": [
+      "NEXT-P0-GATE",
+      "NEXT-DECISION-D022"
+    ],
+    "M-15-F.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-15-G.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-15-H.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-15-I.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-15-J.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-16-A.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-16-B.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-16-C.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-16-D.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-17-A.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-17-B.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-17-C.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-17-D.1": [
+      "NEXT-P0-GATE"
+    ],
+    "M-07-C.3": [
+      "NEXT-CI-AUTHORITY"
+    ],
+    "M-12-D.2": [
+      "NEXT-PUBLISH-AUTHORITY"
+    ]
+  },
+  "optional_nodes": [
+    "M-12-C",
+    "M-12-C.1",
+    "M-12-C.2",
+    "M-12-D.2",
+    "NEXT-PUBLISH-AUTHORITY",
+    "NEXT-HORIZONS",
+    "NEXT-HORIZON-DISTRO",
+    "NEXT-HORIZON-IDE",
+    "NEXT-HORIZON-AUTONOMY",
+    "NEXT-HORIZON-EXTRAS",
+    "NEXT-HORIZON-TRACKER"
+  ],
+  "dispatch_bindings": {
+    "M-13-D.2": "Exact active-owned per-file census produced and accepted by M-13-A; outer subtree is not dispatch permission.",
+    "M-17-A.2": "Accepted M-16 capability census expanded into finite per-family child batches with exact handlers/schemas/files/failure cases before code edits.",
+    "M-07-C.3": "Concrete current-A CI patch authorization after M-07-C.2 preparation.",
+    "M-12-D.2": "Concrete current-A publication authority, after M-12-D.1 preparation; deferred actual writes are not executed publication."
+  },
+  "auxiliary_nodes": [
+    "NEXT",
+    "NEXT-PREPARE",
+    "NEXT-P0",
+    "NEXT-P0.1",
+    "NEXT-P0.2",
+    "NEXT-P0.3",
+    "NEXT-P0-GATE",
+    "NEXT-RESOURCES",
+    "NEXT-DOCKER-RESOURCE",
+    "NEXT-NATIVE-RESOURCES",
+    "NEXT-EXTERNAL-CHECKOUTS",
+    "NEXT-DECISION-D022",
+    "NEXT-CI-AUTHORITY",
+    "NEXT-PUBLISH-AUTHORITY",
+    "NEXT-GATE-M-13",
+    "NEXT-GATE-M-16",
+    "NEXT-GATE-M-06",
+    "NEXT-GATE-M-01",
+    "NEXT-GATE-M-14",
+    "NEXT-GATE-M-02",
+    "NEXT-GATE-M-03",
+    "NEXT-GATE-M-11",
+    "NEXT-GATE-M-04",
+    "NEXT-GATE-M-05",
+    "NEXT-GATE-M-10",
+    "NEXT-GATE-M-08",
+    "NEXT-GATE-M-07",
+    "NEXT-GATE-M-09",
+    "NEXT-GATE-M-17",
+    "NEXT-GATE-M-12",
+    "NEXT-GATE-M-15",
+    "NEXT-RETIRE",
+    "RETIRE-NEXT-A01",
+    "RETIRE-NEXT-A02",
+    "RETIRE-NEXT-A03",
+    "RETIRE-NEXT-A04",
+    "RETIRE-NEXT-A05",
+    "RETIRE-NEXT-A06",
+    "RETIRE-NEXT-A07",
+    "RETIRE-NEXT-A08",
+    "RETIRE-NEXT-A09",
+    "RETIRE-NEXT-A10",
+    "RETIRE-NEXT-A11",
+    "RETIRE-NEXT-A12",
+    "RETIRE-NEXT-A13",
+    "RETIRE-NEXT-A14",
+    "RETIRE-NEXT-A15",
+    "RETIRE-NEXT-A16",
+    "RETIRE-NEXT-A17",
+    "RETIRE-NEXT-A18",
+    "RETIRE-NEXT-A19",
+    "RETIRE-NEXT-A20",
+    "RETIRE-NEXT-A21",
+    "RETIRE-NEXT-A22",
+    "RETIRE-NEXT-A23",
+    "RETIRE-NEXT-A24",
+    "RETIRE-NEXT-A25",
+    "RETIRE-NEXT-G01",
+    "RETIRE-NEXT-G02",
+    "RETIRE-NEXT-G06",
+    "RETIRE-NEXT-G07",
+    "RETIRE-NEXT-G08",
+    "RETIRE-NEXT-G09",
+    "RETIRE-NEXT-G10",
+    "RETIRE-NEXT-G11",
+    "RETIRE-NEXT-G13",
+    "RETIRE-NEXT-D-001",
+    "RETIRE-NEXT-D-002",
+    "RETIRE-NEXT-D-003",
+    "RETIRE-NEXT-D-004",
+    "RETIRE-NEXT-D-005",
+    "RETIRE-NEXT-D-006",
+    "RETIRE-NEXT-D-007",
+    "RETIRE-NEXT-D-008",
+    "RETIRE-NEXT-D-009",
+    "RETIRE-NEXT-D-010",
+    "RETIRE-NEXT-D-011",
+    "RETIRE-NEXT-D-012",
+    "RETIRE-NEXT-D-013",
+    "RETIRE-NEXT-D-014",
+    "RETIRE-NEXT-D-015",
+    "RETIRE-NEXT-D-016",
+    "RETIRE-NEXT-D-017",
+    "RETIRE-NEXT-D-018",
+    "RETIRE-NEXT-D-019",
+    "RETIRE-NEXT-D-020",
+    "RETIRE-NEXT-D-021",
+    "RETIRE-NEXT-D-022",
+    "RETIRE-NEXT-D-023",
+    "RETIRE-NEXT-D-024",
+    "RETIRE-NEXT-D-025",
+    "RETIRE-NEXT-D-026",
+    "NEXT-CLOSE",
+    "NEXT-CLOSE.1",
+    "NEXT-CLOSE.2",
+    "NEXT-CLOSE.3",
+    "NEXT-HORIZONS",
+    "NEXT-HORIZON-DISTRO",
+    "NEXT-HORIZON-IDE",
+    "NEXT-HORIZON-AUTONOMY",
+    "NEXT-HORIZON-EXTRAS",
+    "NEXT-HORIZON-TRACKER",
+    "NEXT-EXECUTION-AUTHORITY"
+  ],
+  "task_count": 201,
+  "task_files_sha256": {
+    "M-01-A": "bb141e979649b97d6718b85310bdce01cff84b7b2b47ff605f0c49ce61427a0f",
+    "M-01-B": "c7a886e1362a37cf156f55549c8dfe45699c1de3a37cc1c511217b0ca9a6cfe5",
+    "M-01-C": "65d1bc65710f463e4772c506ce7c9070deca276528cdde3ea8ca09aafb9ac507",
+    "M-01-D": "fafdd86da8d39268c210d1d1e4f4f323e213aae8504a517eafc6bacbea29c012",
+    "M-01-E": "e9ec75ff6d187164d88b401421750b7e2ab63c095d179469a80236598bce320e",
+    "M-02-A": "610e178572a470d045258a7c8f56095c75d7fac4b1dfc284a203f96097c0d977",
+    "M-02-B": "5f9911832c905c40652728f07a073fb3eca9f06bc9fe8329ae4183780087cbfe",
+    "M-02-C": "e1cdb357e200c27e5aaeebd4e640d4a83e94b0f6b1616c09343413eb062e3743",
+    "M-02-D": "175d21e513512f377daf7dc5573e10043ed7a8e56b3368f7a4cf078b7902d368",
+    "M-03-A": "53427b0767ec1cdbfcf57bcb5e7dbe0390b4d709b8950a77cfe83753f90ff6fe",
+    "M-03-B": "fd7f9a2495e99650353eeacd2c9c927f04772ac0b9ddffc4309d3b6ccfb4abe5",
+    "M-03-C": "55cb38b792b2ce672d7db9448d454d1053b8b8808ae51e030f91d2e5a2ba72ba",
+    "M-03-D": "0cfb9ef0da593c23d8eb8482c775f3f9fb8d81248ae9ed0be54441a7d3da9b37",
+    "M-03-E": "203fbe8641590f9a6017115292f958e05f641d2a0260a71271da103752631b03",
+    "M-04-A": "6e0c19f49755f81e2bc5c6e95c1d3ef221b304dfab967c86301f5d55307cdf2c",
+    "M-04-B": "fe1f51b6d6020bedf2f510726fbf5516f3b0896a479197a6cb4ea3510167f028",
+    "M-04-C": "0bc7ecdaffe11d0c3ec8f7e0e7f487cb8f2b3c78305b06ebf34f2a583c114374",
+    "M-04-D": "8582db5d390310f143f528fa1ed9523692b256efe314cf676e096bf779cc2b74",
+    "M-04-E": "85a66b5fbf999024eff82f4700532807da5e45968200ae6e33b0f69bc2bc0b7d",
+    "M-05-A": "a41089c1b0f458421968848bacaf1f0abd8f20c179e3865af1e9eb3312983cfe",
+    "M-05-B": "f3cb602fad13efbdbd677b3b6d5527e91eb97896e5c20c0ba2f963d394250802",
+    "M-05-C": "e5663a8de85c1bab332fe66bb499487fd92fcf52bc9b0674a01af80721c0cab3",
+    "M-05-D": "6dc3b99eecf4588f35aaf51978d71e401122ce2d5463fdc8cd385a14a0d53639",
+    "M-05-E": "ccec82074fd63f2140c1547346c0bf9fd26dddc9d9a7584626455b344d3e59fc",
+    "M-05-F": "e394677a618c17de0add4216d3ee7651d0182e21ea06e4c4b3b6b3d01fe1940d",
+    "M-05-G": "880947ef2d46539c68ebeb53f09a7476eef19cee8cb3fe0f94c84fb07aa015a2",
+    "M-06-A": "a123fcf13568b8896c5d00c2c80f5c02d4ff8feb80f5e9e0adf940358ef93e1d",
+    "M-06-B": "bc5709576bf12a3264d0184e349a0e1027381235dc5290013809d4fc8ff1bd90",
+    "M-06-C": "e0a3682ab48abe2947719378c012858a34262ed82944ea04772f2d59b8b1af8f",
+    "M-06-D": "32ba1f323547629409da4d64696624f28d07edc99b5bef2f96a406b057b58a61",
+    "M-06-E": "d6eac7287712e4c898986eef7f5afc82ccdc83e1d3c3718ecd9067ab8ebd4ee0",
+    "M-06-F": "eff499a5a06dac0b765a92b65bf436288ce7148025ee17fdc0339818eb87c6ba",
+    "M-07-A": "6c2de3e65587790c9336bf572c72ff2a8fce713139c210fe8b47cf6e03b2fb4f",
+    "M-07-B": "1971a7a7006867ac1e7a13018c7d83846ffad1d5b87e6fa4c9ece21fa30ba94a",
+    "M-07-C": "cd54a543253acceafe527ecb7b2968c0033ab954da7a11663328c4be64be49c3",
+    "M-07-D": "8c9e676e22499eb39e78f18f5b23c3190efa319764d5a4e17691ae70b16ea053",
+    "M-07-E": "afe2f1e4dba52578799e381c5983f06eeb4546b9853afa44053e729df62a9712",
+    "M-08-A": "15802bf16fd072587fae093c682dbfeb524f5317ac9d52e43b9102b666b30112",
+    "M-08-B": "e96bec210b6eb7ca81dc9dd19ef0285525200a6b3fd00811aa176e05a39d2aed",
+    "M-08-C": "c81037214dd9ee7d0225f8ac232a70600cd270d3c79758b67a13ff27ea33de05",
+    "M-08-D": "1821bedff09f475a125bdbdf7a12689f60e6e9c0c617d24369b64cd8f25aa733",
+    "M-08-E": "9ae44870d09641494f2405cb239c1f90cd538809149446293d1c2b8e1998f415",
+    "M-09-A": "77d051047ef116a117322e560cf1faa541bd5f0d43c0b6c9d93a3855d6fed5b3",
+    "M-09-B": "11c66c0b24bba24cfc21459b6296250ee45bc1c0b7a6d3277993cd81e4bd51a7",
+    "M-09-C": "b4b2d36e2d3aa6f3373771ffb77fcbd14526cd943f8558b3280644a21786ba42",
+    "M-09-D": "9c24dc363fdd6d24f7b945710d281fece1813cfe97bb2ddd1a38cceb296611e6",
+    "M-09-E": "9848371caebad89df75d81d7292abd6de58f3bfdf00156eea79db78afe272402",
+    "M-10-A": "826dc909f104f519cd5a80e1eb0f39a2be7d8777fd43406d89296896c10ffb9d",
+    "M-10-B": "40532818a87da4912762149c52e13e5915f82c4b4c474508034a72bd337df597",
+    "M-10-C": "d5ff1f0883135c7410b6355552081868459d478b2f4dd1dc1d5081c625e7d44a",
+    "M-10-D": "dab284a4ac786c9afc23e948cb17ef4f88e6cb2f086b033b46f5e20575e6705b",
+    "M-11-A": "2bd2701ca08d57e732bcca344e213afb333fc81e7e5d10bdf462e06f927d00ca",
+    "M-11-B": "9019782653cbe0e68f6bce0c1e5bab6dc5dc0236e03583dd4bf3d6485a843231",
+    "M-11-C": "b75517db56b7a3e4a33078e4b2a9a6db527e4d20fec7e4ed0ce3f84a42b0202f",
+    "M-11-D": "576ee57bc3eaecd6b84fd1e6e634b2376c2ea4cb5ce85c1fb95526405b8cca5d",
+    "M-11-E": "c2c0afef77f840e67eb472e21fbbdee82a3aa4b31a0c20a88708ce95f3f1ad0f",
+    "M-12-A": "9d6192b1860777eba65bc86f0ce05ae7b34455bd6b60d5ee3e3977cf7463c3e1",
+    "M-12-B": "3fc462c87999064061c772670ce8984768376fcb0b524bfbaa686f28987321df",
+    "M-12-C": "dc89e420ff1dc50f0703a59ad663e086767b6647ab8e0c3bd9e076cc83a8bd81",
+    "M-12-D": "66ef80eee6d4042bcca63536291ccd58573c2cf3cc55ccd7cf9cf51b37e49001",
+    "M-13-A": "ef94820644d518aee9d2bd339bae94f35be0e8e78e7c9dcee7f6f1c9b344ae5c",
+    "M-13-B": "76580f069ba2a3fe43ab8f57a834b8fdc8bc2f30986be84f221c41678fa3e028",
+    "M-13-C": "e0528093020b5d3ad3f636e9bf23b387e239839a021c91f04363a46657201e1a",
+    "M-13-D": "264da5a529411106ee9b0e9dc974aa15f4c80cd459ae30b7480ce3c28cd19e84",
+    "M-14-A": "6929563289ed583eb66c376157bdd5065051187c21fbf20edf7c645ba9934295",
+    "M-14-B": "80ec21889fda58ec20dd8b72358f04c3174fcfbd3a1526ecbb106493d630df64",
+    "M-14-C": "845cba955dab5255048d422d166376f2f5cf79b32af9d4eae2c008bd28015e39",
+    "M-15-A": "de5020d55eeb37718ff6090f3fbdc91d5aa0672715b429aecd03519cdad40c7b",
+    "M-15-B": "d55ab739020963218960fa71c32aef4bcc68bca96b9969ce4ff0a73d72501fd8",
+    "M-15-C": "dc08469916cc7891ce2ef2da3902e09a0cea411ad8068c77775f155b3e940008",
+    "M-15-D": "d04bd933b2d8d1178be5f89a6fd93a8f2ee8f892971b335d4bd86339492bde4b",
+    "M-15-E": "31982b862b466a72b882db83d9aa8e103e43bcdc98bd7ee249e79715b662228a",
+    "M-15-F": "6c6dc4e4bced41657842da8c1799c86d5b3ef59d66fd46e061799b50fb24ecd8",
+    "M-15-G": "0463b57ef08e20b50b642533236c5bb9618cf5c7d0b791841c1882508dc601ba",
+    "M-15-H": "3ff595491eeebea975fe522ef5d8a3b9434e2b6edf91a498b210abffd9cf83c2",
+    "M-15-I": "81b13f36efb80dedbd7d7164de2f39dc94ca0d4154c8830dedaa3ba99fd01b5a",
+    "M-15-J": "5d63e9fc0133a5210bb0f796bf61d620b8bcd5742501668be2173c8993577e61",
+    "M-15-K": "5fec5fc348739e24166f2fe8bf363ee1b5a327c1afdf4c41aca9c86833ed85ae",
+    "M-16-A": "116c07d86038d4a4768875ee08f7ced1fff3ef3740d00d57bedf82500d4aa1e6",
+    "M-16-B": "80a4aabcca4ff76fba97c40f6287c65df8f82a3c5d66896d0515624a5085c606",
+    "M-16-C": "a3fb211359bb8f0d29cdf94cf0e4d26d4c6d7b91c5b3ef65e9e2885461c89b6a",
+    "M-16-D": "bc0777f1a675fbab03e43a9c5765bc6bd4c3ad069714625b5e43fffab0dc0ecf",
+    "M-17-A": "2964ab4c8c2cb7c34a855a9632bd1af04f3b2acf57e21c9af6c74514f4b39611",
+    "M-17-B": "05d5f959726193f921e9c6d9993a82aaf8139349dba6f273aada836942b03e56",
+    "M-17-C": "1a41def177a610dfe9726e05eafdc50a933ecb99104938782a848285296cf0fd",
+    "M-17-D": "347e9cfa6cb0c7867eb471cad7d0c2d201ca879d6b1d04f4c472a19446b2c9bb"
+  }
+}

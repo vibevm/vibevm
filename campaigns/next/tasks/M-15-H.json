@@ -1,0 +1,179 @@
+{
+  "id": "M-15-H",
+  "tasks": [
+    {
+      "id": "M-15-H.1",
+      "title": "Project admitted tool and service descriptors into generations",
+      "goal": "Make installed infrastructure discoverable through schemas and exact deployment bindings.",
+      "read_paths": [
+        "crates/vibe-workspace/src/extension_world.rs",
+        "crates/vibe-agent-projection/src/agents.rs",
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-lifecycle/src/mechanism/record.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+        "xtask/src/main.rs",
+        ".cargo/config.toml",
+        "crates/vibe-core/Cargo.toml",
+        "crates/vibe-core/src/lib.rs",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-core/src/environment/",
+        "crates/vibe-workspace/src/extension_world.rs",
+        "crates/vibe-orchestrator/src/environment/",
+        "formats/",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-core/Cargo.toml",
+        "crates/vibe-core/src/lib.rs",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-orchestrator/Cargo.toml"
+      ],
+      "steps": [
+        "Define namespaced tool/service exports with input/output/error schemas, effects, dependencies, protocol and documentation/observer references.",
+        "Resolve endpoint identity/origin and credential reference names at deployment rather than baking developer addresses into packages.",
+        "Project admitted descriptors automatically into generation catalog and boot/debugger links; represent unwrapped tools as partial basic inventory."
+      ],
+      "positive_cases": [
+        "Installed packages contribute discoverable descriptors tied to exact captures.",
+        "One service exposes separate desired/installed/configured/running/healthy observations."
+      ],
+      "negative_cases": [
+        "Container existence is treated as service readiness.",
+        "A descriptor fetches a remote schema or enrolls its own credentials during catalog read."
+      ],
+      "checks": [
+        "cargo test -p vibe-core",
+        "cargo test -p vibe-workspace",
+        "cargo xtask check-codegen",
+        "TO CREATE: generation service-catalog projection fixtures."
+      ],
+      "acceptance": [
+        "Catalog read is pure and complete/partial states are machine-visible.",
+        "Existing OpenAPI/MCP descriptions are referenced rather than replaced by a new API language."
+      ],
+      "safe_stop": "A captured catalog is queryable with no service probe or network action.",
+      "commit_subject": "feat(services): project package exports into environment catalogs",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-066-ai-aware-service-catalog.xml; forward metadata only.",
+        "The environment/ module is a proposed composition cell in the existing orchestrator; its owning export file is included for registration. Refine the perimeter before touching any additional crate.",
+        "Use full listed crate tests by default. If narrowing to a newly created test filter, first run cargo test -p <crate> -- --list and verify an exact nonzero test-name match; a zero-test run is not acceptance.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-15-H.2",
+      "title": "Admit service probes and typed API calls",
+      "goal": "Expose bounded service operations without turning discovery into trust or ambient authority.",
+      "read_paths": [
+        "crates/vibe-mcp/src/tools/query.rs",
+        "crates/vibe-mcp/src/tools/output.rs",
+        "crates/vibe-mcp/src/context.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+        "crates/vibe-workspace/src/extension_world.rs",
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs",
+        "crates/vibe-core/Cargo.toml",
+        "crates/vibe-core/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-orchestrator/src/environment/",
+        "crates/vibe-mcp/src/tools/",
+        "crates/vibe-core/src/environment/",
+        "formats/",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs",
+        "crates/vibe-core/Cargo.toml",
+        "crates/vibe-core/src/lib.rs"
+      ],
+      "steps": [
+        "Validate operation arguments and declared effect/schema before service invocation; bind call to context, target endpoint identity, scope and policy generation.",
+        "Resolve authorized runtime credentials only for that service/operation; validate redirects/origins and explicitly permitted private Docker endpoints.",
+        "Store health/probe observation time/TTL and structured unavailable/stale/denied results; remote descriptions remain data rather than control instructions."
+      ],
+      "positive_cases": [
+        "An authorized read/write has exact request/result/effect evidence.",
+        "Credential rotation changes runtime binding without rebuilding secret values into the image."
+      ],
+      "negative_cases": [
+        "A schema or redirect causes credentials to reach a different origin.",
+        "Stale health is displayed as current or an ungranted effect is auto-approved."
+      ],
+      "checks": [
+        "cargo test -p vibe-mcp",
+        "cargo test -p vibe-core",
+        "TO CREATE: service argument/auth/origin/TTL tests using fixture endpoints."
+      ],
+      "acceptance": [
+        "Discovery and probe/call use distinct purity and authority semantics.",
+        "No Internet-wide discovery, fleet scheduler or arbitrary shell endpoint is created."
+      ],
+      "safe_stop": "Only explicitly admitted fixture calls have effects; catalog and denial evidence remain readable.",
+      "commit_subject": "feat(services): authorize typed endpoint operations",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-066-ai-aware-service-catalog.xml; forward metadata only.",
+        "The environment/ module is a proposed composition cell in the existing orchestrator; its owning export file is included for registration. Refine the perimeter before touching any additional crate.",
+        "Use full listed crate tests by default. If narrowing to a newly created test filter, first run cargo test -p <crate> -- --list and verify an exact nonzero test-name match; a zero-test run is not acceptance.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-15-H.3",
+      "title": "Prove agent discovery across two isolated services",
+      "goal": "Verify the service catalog's full local agent-facing path and its refusal conditions.",
+      "read_paths": [
+        "crates/vibe-agent-projection/src/agents.rs",
+        "crates/vibe-mcp/src/lib.rs",
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-workspace/src/boot_artifacts/analyzed.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+        "crates/vibe-test-support/Cargo.toml",
+        "crates/vibe-test-support/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-lifecycle/tests/",
+        "crates/vibe-mcp/tests/",
+        "crates/vibe-test-support/src/",
+        "crates/vibe-test-support/Cargo.toml",
+        "crates/vibe-test-support/src/lib.rs"
+      ],
+      "steps": [
+        "Create one non-root agent fixture and at least two managed test services on a uniquely named isolated Docker network using exact captures.",
+        "Discover generated descriptors, validate parameters, perform one authorized read and one controlled write, and reject an ungranted effect.",
+        "Change endpoint identity/schema, stop one service and rotate credentials; rebuild and inspect image/log/evidence surfaces for leaks; cleanup only exact fixture IDs."
+      ],
+      "positive_cases": [
+        "The agent resolves both services through runtime-bound catalog entries.",
+        "Unavailable/stale/rotated bindings produce explicit outcomes."
+      ],
+      "negative_cases": [
+        "An old endpoint receives a token after rebinding.",
+        "A denied action still mutates service data or secret material enters image layers."
+      ],
+      "checks": [
+        "cargo test -p vibe-mcp",
+        "TO CREATE: two-services-and-agent Docker integration journey; no live model subscription or public service is required."
+      ],
+      "acceptance": [
+        "Discovery, validation, authorized effects and refusal are independently observed.",
+        "Image/runtime/service IDs correlate through shared provenance."
+      ],
+      "safe_stop": "Fixture services/network are removed with volumes retained unless separately admitted for deletion.",
+      "commit_subject": "test(services): exercise local agent catalog and authorization",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-066-ai-aware-service-catalog.xml; forward metadata only.",
+        "Use full listed crate tests by default. If narrowing to a newly created test filter, first run cargo test -p <crate> -- --list and verify an exact nonzero test-name match; a zero-test run is not acceptance.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

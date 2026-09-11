@@ -1,0 +1,97 @@
+{
+  "id": "M-09-A",
+  "tasks": [
+    {
+      "id": "M-09-A.1",
+      "title": "Audit the pinned Spec Kit resource closure",
+      "goal": "Determine exactly what the current five bridge resources require and do.",
+      "read_paths": [
+        "vibevm/vibespecs/modules/vibe-registry/PROP-023-bridge-packages.xml",
+        "vibevm/vibespecs/common/PROP-028-package-families.xml",
+        "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+        "external:org.speckit.speckit/vibe.toml",
+        "external:org.speckit.speckit/skills/speckit-core/SKILL.md",
+        "external:org.speckit.speckit/README.md"
+      ],
+      "write_paths": [
+        "campaigns/next/evidence/M-09-A/",
+        "fixtures/next/bridges/"
+      ],
+      "steps": [
+        "Bind the isolated read-only external checkout and exact upstream capture from its manifest; compare against the review's pin without substituting a research/latest snapshot.",
+        "Walk the current five selected resources and their declared/script/template/config references; enumerate required relative layout, platform branches and effects.",
+        "Create a captured inventory fixture with hashes, attribution/notices and explicit missing/dynamic references; label evidence as audited rather than runtime proven."
+      ],
+      "positive_cases": [
+        "Each selected resource has a complete declared dependency/layout row.",
+        "Baseline and actual pin equality or drift is explicitly recorded."
+      ],
+      "negative_cases": [
+        "Missing script/template cannot be silently omitted.",
+        "A research snapshot or latest upstream cannot replace the manifest's captured identity."
+      ],
+      "checks": [
+        "cargo test -p vibe-agent-projection -- --list",
+        "cargo test -p vibe-agent-projection",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Inventory ties every selected file to its exact capture and required effect.",
+        "Unknown dynamic references remain visible acceptance debt."
+      ],
+      "safe_stop": "Pinned resource audit and reusable fixtures exist; external products remain unchanged.",
+      "commit_subject": "test(bridges): capture pinned Spec Kit resource requirements",
+      "notes": [
+        "External logical roots are unbound authoring metadata. Before execution, the root must provide isolated checkouts for external:org.speckit.speckit and/or external:com.external-skills.skills and verify their exact captures. Never write the currently existing sibling source trees. External package checks are taken from that checkout's own declared commands; no unverified command is claimed here.",
+        "fixtures/next/bridges is a proposed test subtree. This audit does not authorize script execution."
+      ]
+    },
+    {
+      "id": "M-09-A.2",
+      "title": "Audit expanded bridge procedures and platform effects",
+      "goal": "Define exact resource/effect support for clarify, checklist, analyze and converge before implementing their journey.",
+      "read_paths": [
+        "vibevm/vibespecs/modules/vibe-registry/PROP-023-bridge-packages.xml",
+        "vibevm/vibespecs/common/PROP-028-package-families.xml",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+        "external:org.speckit.speckit/vibe.toml",
+        "external:org.speckit.speckit/skills/speckit-core/SKILL.md"
+      ],
+      "write_paths": [
+        "campaigns/next/evidence/M-09-A/",
+        "fixtures/next/bridges/"
+      ],
+      "steps": [
+        "Starting from .1, resolve the named expanded procedures in the same upstream capture and distinguish documents from executable actions.",
+        "Classify each step as inert source, pure Vibe operation, explicit admitted script/client action or unavailable capability.",
+        "Add platform/layout/action fixtures and a support matrix that cannot mark a mandatory journey complete until its required action exists."
+      ],
+      "positive_cases": [
+        "Every added procedure has exact resources and a typed effect route.",
+        "Pure document consumption remains independent of action execution."
+      ],
+      "negative_cases": [
+        "A prose instruction to run a script cannot auto-execute.",
+        "Unsupported mandatory platform/action is not counted as successful integration."
+      ],
+      "checks": [
+        "cargo test -p vibe-agent-projection -- --list",
+        "cargo test -p vibe-agent-projection",
+        "cargo test -p vibe-lifecycle -- --list",
+        "cargo test -p vibe-lifecycle",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "The expanded matrix maps each required action to M-08 or existing lifecycle ownership.",
+        "All original five rows survive unchanged."
+      ],
+      "safe_stop": "Audited expansion is ready; no scripts or external install effects run.",
+      "commit_subject": "docs(bridges): map procedure resources and admitted effects",
+      "notes": [
+        "External logical roots are unbound authoring metadata. Before execution, the root must provide isolated checkouts for external:org.speckit.speckit and/or external:com.external-skills.skills and verify their exact captures. Never write the currently existing sibling source trees. External package checks are taken from that checkout's own declared commands; no unverified command is claimed here."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,229 @@
+{
+  "id": "M-15-I",
+  "tasks": [
+    {
+      "id": "M-15-I.1",
+      "title": "Connect image and runtime provenance to boot inspection",
+      "goal": "Explain package, environment, image and service contributions through the shared debugger and four selectable client profiles.",
+      "read_paths": [
+        "crates/vibe-spec/src/compiler/ir.rs",
+        "crates/vibe-workspace/src/install/bootgen/analyze.rs",
+        "crates/vibe-workspace/src/boot_artifacts/analyzed.rs",
+        "crates/vibe-agent-projection/src/agents.rs",
+        "crates/vibe-workspace/src/extension_world.rs",
+        "crates/vibe-lifecycle/src/mechanism/record.rs",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-workspace/src/boot_artifacts.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-agent-projection/Cargo.toml",
+        "crates/vibe-agent-projection/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-workspace/src/boot_artifacts/",
+        "crates/vibe-orchestrator/src/environment/",
+        "crates/vibe-agent-projection/src/",
+        "crates/vibe-lifecycle/tests/",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-workspace/src/boot_artifacts.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-agent-projection/Cargo.toml",
+        "crates/vibe-agent-projection/src/lib.rs"
+      ],
+      "steps": [
+        "Join domain-owned package/config/capture/producer/generation/image/service references without introducing a new authoritative graph.",
+        "Expose independent boot bytes/tokens, storage/download bytes and image-layer contributions with occurrence/shared/marginal semantics and unknown mappings.",
+        "Exercise Claude Code, Codex, OpenCode and Qwen Code as separate selectable image configurations and local launch contracts; no mandatory live model inference."
+      ],
+      "positive_cases": [
+        "An installed executable and service navigate to their captured package and producer.",
+        "All four required client profiles have observed configuration and local launch evidence."
+      ],
+      "negative_cases": [
+        "Storage or image size is labelled provider billing/token cost.",
+        "Missing client launch evidence is replaced with descriptor presence."
+      ],
+      "checks": [
+        "cargo test -p vibe-workspace",
+        "cargo test -p vibe-agent-projection",
+        "TO CREATE: image/boot provenance and four-profile launch integration cases."
+      ],
+      "acceptance": [
+        "Each claimed contribution and supported client profile has exact evidence.",
+        "Large boot remains streamable without a total token/size quota."
+      ],
+      "safe_stop": "Captured views and per-profile results are retained; no customer credentials or real model call is used.",
+      "commit_subject": "feat(image): expose environment and boot contribution provenance",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-065-oci-agent-images.xml; forward metadata only.",
+        "The environment/ module is a proposed composition cell in the existing orchestrator; its owning export file is included for registration. Refine the perimeter before touching any additional crate.",
+        "Use full listed crate tests by default. If narrowing to a newly created test filter, first run cargo test -p <crate> -- --list and verify an exact nonzero test-name match; a zero-test run is not acceptance.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-15-I.2",
+      "title": "Measure independent build reproducibility levels",
+      "goal": "Compare two cache-disabled builds at explicit resolution, rootfs and OCI identity levels.",
+      "read_paths": [
+        "crates/vibe-lifecycle/src/mechanism/record.rs",
+        "crates/vibe-lifecycle/src/mechanism/build.rs",
+        "crates/vibe-lifecycle/src/mechanism/package.rs",
+        "crates/vibe-publish/src/release_manifest.rs",
+        "crates/vibe-workspace/src/compile_trace.rs",
+        "crates/vibe-test-support/Cargo.toml",
+        "crates/vibe-test-support/src/lib.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-lifecycle/tests/",
+        "crates/vibe-test-support/src/",
+        "crates/vibe-orchestrator/src/environment/",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-test-support/Cargo.toml",
+        "crates/vibe-test-support/src/lib.rs",
+        "crates/vibe-orchestrator/Cargo.toml"
+      ],
+      "steps": [
+        "Run two independent cache-disabled fixture builds from the same complete prepared inputs and record exact builder/target/recipe context.",
+        "Compare dependency resolution, installed content/metadata and declared OCI config/layer/manifest/index subjects independently; compare archive bytes only if claimed.",
+        "Account explicitly for volatile attestations/logs; do not normalize unexplained runtime changes away, and rerun with a missing input to prove refusal."
+      ],
+      "positive_cases": [
+        "Equal installed inventories establish the precise content/metadata level.",
+        "Byte-identical OCI is claimed only when its exact declared subjects match."
+      ],
+      "negative_cases": [
+        "Cache reuse or normalized rootfs equality is called byte-identical OCI.",
+        "Unexplained payload drift is removed by normalization."
+      ],
+      "checks": [
+        "cargo test -p vibe-lifecycle",
+        "TO CREATE: two independent cache-disabled build comparison harness using M-15-K; archive comparison conditional on declared subject."
+      ],
+      "acceptance": [
+        "The report states measured equality and inequality rather than a blanket reproducible label.",
+        "All-network-off replay has independent enforcement evidence."
+      ],
+      "safe_stop": "Both artifacts and comparison evidence survive for review; clean only exact unused fixture resources.",
+      "commit_subject": "test(image): measure declared reproducibility levels",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-065-oci-agent-images.xml; forward metadata only.",
+        "The environment/ module is a proposed composition cell in the existing orchestrator; its owning export file is included for registration. Refine the perimeter before touching any additional crate.",
+        "Use full listed crate tests by default. If narrowing to a newly created test filter, first run cargo test -p <crate> -- --list and verify an exact nonzero test-name match; a zero-test run is not acceptance.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-15-I.3",
+      "title": "Replace images and recover failed deployments",
+      "goal": "Verify Docker update/remove/rollback and GC against actual live references and persistent data boundaries.",
+      "read_paths": [
+        "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+        "crates/vibe-cli/src/commands/uninstall.rs",
+        "crates/vibe-lifecycle/src/mechanism/record.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-test-support/Cargo.toml",
+        "crates/vibe-test-support/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-orchestrator/src/environment/",
+        "crates/vibe-lifecycle/tests/",
+        "crates/vibe-test-support/src/",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-test-support/Cargo.toml",
+        "crates/vibe-test-support/src/lib.rs"
+      ],
+      "steps": [
+        "Prepare and start a rebuilt generation from changed locked intent, verify readiness and switch only the explicitly managed local deployment.",
+        "Inject startup failure to retain/recover the prior image/config/runtime binding; rebuild after package removal rather than deleting a writable-container file.",
+        "Test image GC while old/live/recovery containers and exported artifacts retain references; preserve volumes and database contents throughout."
+      ],
+      "positive_cases": [
+        "Verified replacement becomes active and failed startup restores an evidenced prior runtime.",
+        "Removing a package rebuilds a closure that retains shared dependencies."
+      ],
+      "negative_cases": [
+        "Rollback claims to revert mutable service data/schema.",
+        "Global Docker prune or stale GC deletes a live image or unrelated resources."
+      ],
+      "checks": [
+        "cargo test -p vibe-lifecycle",
+        "TO CREATE: local Docker replacement/removal/failed-start/GC integration scenarios."
+      ],
+      "acceptance": [
+        "Runtime and data rollback are reported separately with exact partial effects.",
+        "Live-reference-safe GC deletes only recorded owned IDs."
+      ],
+      "safe_stop": "A known usable runtime or explicit recovery state remains; mutable data is retained.",
+      "commit_subject": "test(image): verify replacement and recovery with live references",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-065-oci-agent-images.xml; forward metadata only.",
+        "The environment/ module is a proposed composition cell in the existing orchestrator; its owning export file is included for registration. Refine the perimeter before touching any additional crate.",
+        "Use full listed crate tests by default. If narrowing to a newly created test filter, first run cargo test -p <crate> -- --list and verify an exact nonzero test-name match; a zero-test run is not acceptance.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-15-I.4",
+      "title": "Prove the complete supply chain without GitHub",
+      "goal": "Exercise bootstrap through local publication using independent local sources, mirrors, caches and OCI hosts.",
+      "read_paths": [
+        "crates/vibe-package-source/src/source.rs",
+        "crates/vibe-install/src/plan/fetch.rs",
+        "crates/vibe-publish/src/release_manifest.rs",
+        "xtask/src/dist/release.rs",
+        "crates/vibe-lifecycle/src/mechanism/build.rs",
+        "crates/vibe-lifecycle/src/mechanism/package.rs",
+        "crates/vibe-test-support/Cargo.toml",
+        "crates/vibe-test-support/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-test-support/src/",
+        "crates/vibe-orchestrator/tests/",
+        "crates/vibe-lifecycle/tests/",
+        "xtask/src/dist/release/tests.rs",
+        "crates/vibe-test-support/Cargo.toml",
+        "crates/vibe-test-support/src/lib.rs"
+      ],
+      "steps": [
+        "Prepare a local registry/source/artifact mirror/binary cache/OCI registry fixture with exact trusted captures for all transitive/bootstrap/client inputs.",
+        "Run bootstrap, resolve/fetch, source build and substitution, HOME lifecycle, image build/inspect and an explicitly admitted publication only to the local fixture registry.",
+        "Use M-15-K independent mediation/observation across controller, native children and builder/daemon workloads: local-only mode records zero GitHub/API/raw/release attempts; separate prepared replay denies every network path."
+      ],
+      "positive_cases": [
+        "The complete delivered cycle works through local non-GitHub transports.",
+        "Offline replay succeeds from captured inputs with no hidden transport."
+      ],
+      "negative_cases": [
+        "Only application HTTP counters are observed while children bypass policy.",
+        "A failed local source falls back to GitHub or an unobserved path is counted as proof."
+      ],
+      "checks": [
+        "cargo test -p vibe-package-source",
+        "cargo test -p vibe-lifecycle",
+        "TO CREATE: complete no-GitHub and independent all-network-off supply-chain harness; retain observer coverage evidence."
+      ],
+      "acceptance": [
+        "Every exercised process/transport class is covered by enforced and observed egress policy.",
+        "No host firewall/DNS edits, real publisher calls or public registry pushes occur."
+      ],
+      "safe_stop": "Local publication artifacts/evidence retained; exact fixture endpoints and resources are cleaned.",
+      "commit_subject": "test(supply): prove local-hosted and offline environment delivery",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-065-oci-agent-images.xml; forward metadata only.",
+        "Publication is only to a disposable named local fixture under the shared admission policy. Current public A and future B remain unchanged.",
+        "Use full listed crate tests by default. If narrowing to a newly created test filter, first run cargo test -p <crate> -- --list and verify an exact nonzero test-name match; a zero-test run is not acceptance.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

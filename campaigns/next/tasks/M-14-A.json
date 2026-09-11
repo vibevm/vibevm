@@ -1,0 +1,121 @@
+{
+  "id": "M-14-A",
+  "tasks": [
+    {
+      "id": "M-14-A.1",
+      "title": "Separate definition, executor and target identities",
+      "goal": "Freeze the environment roles and compatibility interpretation before existing host-based consumers acquire new fields.",
+      "read_paths": [
+        "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
+        "vibevm/vibespecs/modules/vibe-workspace/PROP-025-binary-delivery.xml",
+        "crates/vibe-core/src/manifest/target_when.rs",
+        "crates/vibe-lifecycle/src/native/platform.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+        "crates/vibe-core/src/manifest/artifact/binary_projection.rs",
+        "crates/vibe-core/Cargo.toml",
+        "crates/vibe-core/src/lib.rs",
+        "crates/vibe-core/src/manifest/mod.rs",
+        "crates/vibe-core/src/manifest/artifact/mod.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-core/src/manifest/target_when.rs",
+        "crates/vibe-core/src/manifest/artifact/binary_projection.rs",
+        "crates/vibe-core/src/environment/",
+        "crates/vibe-core/src/lib.rs",
+        "vibevm/vibespecs/common/PROP-063-environment-model.xml",
+        "crates/vibe-core/Cargo.toml",
+        "crates/vibe-core/src/manifest/mod.rs",
+        "crates/vibe-core/src/manifest/artifact/mod.rs"
+      ],
+      "steps": [
+        "First create/update the governing permanent anchors in vibevm/vibespecs/common/PROP-063-environment-model.xml for this task's contract, with desired-versus-implemented status explicit. Only then add executable types or tests citing those anchors. Final promotion/retirement records evidence later; it is not permission to postpone the source contract.",
+        "Trace each existing host/OS/platform field to its current meaning; list old-reader behavior and exact callers requiring an explicit target later.",
+        "Define EnvironmentDefinition, EnvironmentLock, ExecutionContext, TargetBinding and EnvironmentGeneration as separate identities; distinguish build machine, produced-tool runtime and compiler output target.",
+        "Add pure type constructors and compatibility results for workspace, HOME, offline rootfs and future live targets; preserve existing bare-install behavior and reject unimplemented targets explicitly."
+      ],
+      "positive_cases": [
+        "Existing project install binds to an explicit local target with unchanged semantics.",
+        "A Windows executor can describe a Linux target without selecting a Windows launcher."
+      ],
+      "negative_cases": [
+        "Executor ABI is substituted for target ABI.",
+        "Future live-system capability is advertised as implemented."
+      ],
+      "checks": [
+        "cargo test -p vibe-core",
+        "TO CREATE: environment-role and legacy-host-guard contract tests in vibe-core."
+      ],
+      "acceptance": [
+        "Each identity has named inputs and owned authority; no environment becomes a new package kind or stewardship DB.",
+        "Pure construction needs neither Docker nor a host HOME lookup."
+      ],
+      "safe_stop": "Types and compatibility tests are coherent; downstream consumers remain on their explicit legacy interpretation.",
+      "commit_subject": "feat(core): define environment and target identity roles",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-063-environment-model.xml; the permanent contract is established at the start of this task; later retirement proves preservation.",
+        "crates/vibe-core/src/environment/ is a proposed small domain module; confirm its parent export before adding files. D-022 remains OPEN and does not block these neutral roles.",
+        "Use full listed crate tests by default. If narrowing to a newly created test filter, first run cargo test -p <crate> -- --list and verify an exact nonzero test-name match; a zero-test run is not acceptance.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-14-A.2",
+      "title": "Centralize environment layout and prefix policy",
+      "goal": "Provide one injected layout/root policy for user profiles and offline targets without scattering machine paths through providers.",
+      "read_paths": [
+        "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin/config.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs",
+        "crates/vibe-core/src/manifest/target_when.rs",
+        "vibevm/vibespecs/modules/vibe-workspace/PROP-025-binary-delivery.xml",
+        "crates/vibe-core/Cargo.toml",
+        "crates/vibe-core/src/lib.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-core/src/environment/",
+        "crates/vibe-core/src/layout.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin/config.rs",
+        "crates/vibe-core/Cargo.toml",
+        "crates/vibe-core/src/lib.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin.rs"
+      ],
+      "steps": [
+        "Locate the existing layout authority named by the baseline and enumerate environment configuration, store, profile, state and cache roots.",
+        "Implement pure root-relative resource identity with environment instance, principal, path/case policy and prefix compatibility; preserve the existing project vibevm/ layout.",
+        "Represent relocatable, prefix-bound and unsupported payload compatibility and reserved future account/service/mount/boot resources; inject selected roots instead of re-reading ambient HOME/PATH."
+      ],
+      "positive_cases": [
+        "Two definitions can share immutable content yet have different target instance/root authority.",
+        "Valid Linux payload components survive Windows control-plane validation."
+      ],
+      "negative_cases": [
+        "A reused pathname silently transfers an old receipt to a different root.",
+        "Arbitrary /usr-oriented binaries are declared HOME-relocatable."
+      ],
+      "checks": [
+        "cargo test -p vibe-core",
+        "cargo test -p vibe-lifecycle",
+        "TO CREATE: injected-root, Linux-path and prefix-compatibility tests."
+      ],
+      "acceptance": [
+        "Every environment root has one layout constructor and callers receive explicit bindings.",
+        "No root privilege broker, live system mutation or pacman policy is introduced."
+      ],
+      "safe_stop": "Layout and compatibility values are tested as data; no deployment or rootfs operation runs.",
+      "commit_subject": "feat(core): centralize environment root and prefix policy",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-063-environment-model.xml; forward metadata only until the promotion leaf creates the governing anchor.",
+        "crates/vibe-core/src/layout.rs is the existing layout authority named in the baseline architecture; inspect it when the execution packet admits the implementation.",
+        "Use full listed crate tests by default. If narrowing to a newly created test filter, first run cargo test -p <crate> -- --list and verify an exact nonzero test-name match; a zero-test run is not acceptance.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}
