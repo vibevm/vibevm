@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Two trees: what you write and what vibe writes</title>
+  <status stage="doc" state="work" audience="user"/>
+  <p>A project keeps two kinds of text apart: the rules your team wrote, and the copies of shared rules that arrived with the packages you installed. Installing a package never edits your own text. Removing one never leaves a trace in it.</p>
+  <example id="list" fixture="hello-vibe">
+    <run>vibe list --path hello-vibe</run>
+    <expect></expect>
+  </example>
+  <the-rule title="The founding rule">
+    <p>Think of how a C++ program uses a library: you write `#include`, and the library's headers are read at build time, but nobody pastes the library's source into your files. vibe follows the same rule for text. Your specifications live in `vibevm/vibespecs/`; the packages you depend on are copied, whole and unchanged, into `vibevm/vibedeps/`, one folder per package and version. The two trees never mix.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#TWO-TREES"/>
+    <p>The consequence is simple to state and easy to forget: every file under `vibevm/vibedeps/` is a copy of something published elsewhere. Editing it changes nothing upstream and survives only until the next install. If you want a package to say something else, change the package, publish a new version, and update.</p>
+  </the-rule>
+  <why-commit title="Why the copies are committed">
+    <p>The copied tree is committed to your repository, which surprises people who expect a `node_modules`-style directory to be ignored. The reason is the reader: an agent that clones the repository must be able to start reading at once, without a network, without a tool, and without knowing that vibe exists. A committed tree makes the whole reading list a set of ordinary files in the checkout, and a code review can see exactly what text an agent will read after a dependency change.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#VIBEDEPS-COMMITTED"/>
+  </why-commit>
+  <what-regenerates title="What regenerates, and when">
+    <p>Three things in a project are derived from the manifest and the lock file, and vibe rebuilds them on demand: the dependency tree, the generated boot files, and the managed block in the agent instruction files. `vibe reinstall` rebuilds all three from the lock file and the machine store, without asking any registry; add `--force` to fetch the package files again from their sources.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#REINSTALL"/>
+    <p>`vibe clean` goes one step further and removes the derived state altogether, keeping everything you wrote, the lock file and the machine store. It is the command for a clean start before a build, and it refuses to run outside a project so it cannot sweep the wrong folder.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#CLEAN-KEEPS-AUTHORED"/>
+  </what-regenerates>
+  <edge-cases title="Edge cases and rules">
+    <p>A package's folder in the dependency tree is named by its group, its name and its version, so two versions of one package can sit side by side during an update and nothing is overwritten in place.</p>
+    <p>If you develop packages inside the same repository, their sources live in a third tree, `vibevm/vibepacks/`, which is yours to edit; when a project in that repository requires one of them, vibe still copies it into the dependency tree like any other package.</p>
+  </edge-cases>
+</spec>
