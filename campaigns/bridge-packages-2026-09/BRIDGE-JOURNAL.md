@@ -478,3 +478,30 @@ Authorship boundary:
 At the time of this correction, rebuilding the public index and mutable Vibe
 `v1.0.0` release for the corrected coordinates and authorship surfaces remains
 pending.
+
+## J-016 — Corrected bridge identities rebuilt and proved publicly
+
+Date: 2026-09-11
+
+Public index evidence:
+
+- The public index was fully rebuilt from GitHub at commit `c636f97`; it
+  contains 46 packages and 46 versions.
+- The old `org.vibevm.bridges/spec-kit` and
+  `org.vibevm.bridges/external-skills-skills` coordinates are absent. The corrected
+  `org.speckit/speckit` and `com.external-skills/skills` coordinates are present.
+- Both packages record `Oleg Chirukhin` as the package author. Their upstream
+  authors remain separate: `GitHub, Inc.` for Spec Kit and `external-skills` for
+  Skills. The index does not concatenate package and upstream authorship.
+
+Windows public-registry E2E:
+
+- Both corrected packages installed from the public registry into their normal
+  `vibedeps` slots.
+- Offline skill dry-runs succeeded with the Git binary deliberately configured
+  as missing, proving the authenticated cache-hit path for both packages.
+- Verbose package listing displayed package and upstream authors under separate
+  labels.
+- `vibe check` completed cleanly.
+
+The mutable Vibe `v1.0.0` release rebuild remains pending.
