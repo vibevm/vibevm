@@ -31,7 +31,27 @@
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#DECISION-TWO-REGISTERS"/>
     <example id="convert" fixture="package-spec">
       <run>vibe refactor convert-source --from md --to xml --dry-run vibevm/vibespecs</run>
-      <expect></expect>
+      <expect>dry-run ir-stable-loss vibevm/vibespecs/NOTES-FLOW.md
+--- source
++++ reverse-projection
+@@ -3,2 +3,3 @@
+ @fact:ONE-NOTE One note per review. @status:spec/done
+
++
+
+dry-run ir-stable-loss vibevm/vibespecs/boot/10-tool-review-notes.md
+--- source
++++ reverse-projection
+@@ -1,6 +1,5 @@
+-&lt;!-- vibe:static org.org.acme/review-notes — boot snippet --&gt;
+-
+ # review-notes
+
+ A `tool` package.
+
++
+
+summary converted=0 already=0 lossy-confirmed=0 refused=0 skipped-generated=0 skipped-foreign=0 skipped-harness=0 dry-run=2</expect>
     </example>
   </the-dialect>
   <immutable title="An address never moves">

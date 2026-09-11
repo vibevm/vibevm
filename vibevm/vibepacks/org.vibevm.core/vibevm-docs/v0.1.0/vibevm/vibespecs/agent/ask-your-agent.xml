@@ -22,11 +22,26 @@
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-018#NO-WRITE-BACK"/>
     <example id="agentic-explain" fixture="hello-vibe">
       <run>vibe agentic explain --path hello-vibe</run>
-      <expect></expect>
+      <expect>intent queued — run `vibe command` to fetch it, then carry it out</expect>
     </example>
     <example id="command" fixture="hello-vibe-relay">
       <run>vibe command --path hello-vibe</run>
-      <expect></expect>
+      <expect>---
+vibevm-intent: pending
+source: agentic explain
+---
+
+# Explain this project
+
+Detected in this project: vibe.toml.
+
+Explain this project to a developer seeing it for the first time, in at most three short paragraphs of plain prose.
+
+Work from these sources, in priority order:
+1. `README.md` at the project root — read it and summarise what the project is and does.
+2. `vibe.toml`, if present — fold in what its structure reveals: the package `kind`, what the project `requires`, and what it `provides`.
+
+If `README.md` is absent, say so in one clause and explain from `vibe.toml` alone. If neither is present, state that the project carries no description and stop. Do not invent features the sources do not support — prefer "the sources don't say" over guessing. Lead with the explanation; no preamble.</expect>
     </example>
     <p>The same handshake governs the build steps a project declares as agent work: when vibe runs under an agent, such a step is parked as a task for the agent to perform, and the same command resumes once the declared outputs exist. Under a person at a terminal, vibe can instead call a configured model provider, and pays for it only when the step actually runs.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-HANDSHAKE"/>

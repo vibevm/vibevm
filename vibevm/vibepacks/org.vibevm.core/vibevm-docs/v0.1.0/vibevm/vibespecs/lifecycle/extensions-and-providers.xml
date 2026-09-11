@@ -5,7 +5,9 @@
   <p>A package can plug into the build: run a step, transform a stage, or hand a task to an agent. This page explains how such plug-ins are declared, how a project turns them on, and how to see which ones ran and why.</p>
   <example id="extensions" fixture="hello-vibe">
     <run>vibe extensions --path hello-vibe</run>
-    <expect></expect>
+    <expect>Extensions
+  → [0] @vibe/package/skill/org.vibevm.world/wal/wal-status — point=phase:package handler=builtin provider=org.vibevm.world/wal@1.0.0 tier=preset state=effective
+1 extension declaration(s), 1 effective</expect>
   </example>
   <points-and-contributions title="Points and contributions">
     <p>The [lifecycle](../glossary/index.xml#lifecycle) exposes named *[extension points](../glossary/index.xml#extension-point)*, strings of the form `family:name`. The `phase:` family is the nine phases. The `slot:` family names places inside a phase where a stack or a discipline expects to plug something. The `compile:` family is the boot compiler's own pipeline, where a package may transform the text an agent will read. A *[contribution](../glossary/index.xml#contribution)* binds a handler to a point and is declared in a [manifest](../glossary/index.xml#manifest) as an `[[extension]]` table, in a package or in the project itself.</p>

@@ -19,27 +19,60 @@
     <p>1. Create the project. The name becomes the folder:</p>
     <example id="init" fixture="empty">
       <run>vibe init hello-vibe</run>
-      <expect></expect>
+      <expect>Initializing project `hello-vibe` in `hello-vibe`
+  ✓ created  vibevm/vibespecs/boot/00-core.md
+  ✓ created  vibevm/vibespecs/boot/90-user.md
+  ✓ created  vibe.toml
+  ✓ created  vibe.lock
+  ✓ created  .vibe/.gitignore
+  ✓ created  .gitignore
+  ✓ created  vibevm/vibespecs/boot/INDEX.md
+  ✓ created  CLAUDE.md
+  ✓ created  AGENTS.md
+  ✓ created  GEMINI.md
+
+Done. Project `hello-vibe`: 10 files created, 0 kept.
+
+Next:
+  • edit vibevm/vibespecs/boot/00-core.md and vibevm/vibespecs/common as your project takes shape
+  • install packages with `vibe install &lt;kind&gt;:&lt;name&gt;` (e.g. flow:wal)</expect>
     </example>
     <p>2. Install a package. The install shows a plan and asks for confirmation; `--assume-yes` skips the question in a script:</p>
     <example id="install" fixture="hello-vibe-empty">
       <run>vibe install org.vibevm.world/wal --path hello-vibe --assume-yes</run>
-      <expect></expect>
+      <expect>Resolving 1 root package…
+
+Materialising 1 package into vibedeps/:
+  org.vibevm.world/wal@1.0.0
+
+closure diff:
+  → + org.vibevm.world/wal@1.0.0 (root-edge)
+  → lane vibevm/vibespecs/boot/INDEX.md: 737 -&gt; 854 B
+
+Materialised 1 package into vibedeps/; regenerated boot artifacts for 1 node(s).</expect>
     </example>
     <p>3. Look at what is recorded:</p>
     <example id="list" fixture="hello-vibe">
       <run>vibe list --path hello-vibe</run>
-      <expect></expect>
+      <expect>KIND  NAME  VERSION  ROLE     BOOT SNIPPET
+flow  wal  1.0.0    package  —
+
+1 package installed.</expect>
     </example>
     <p>4. Look at the reading list the agent gets:</p>
     <example id="tree" fixture="hello-vibe">
       <run>vibe tree --plain --path hello-vibe</run>
-      <expect></expect>
+      <expect>project: &lt;TMP&gt;/work/hello-vibe
+STATIC.md: (none)
+packages: 1   roots: 1
+columns: load  T=transitive  C=condition  S=in STATIC.md
+
+org.vibevm.world/wal  dynamic  .  .  .</expect>
     </example>
     <p>5. Check the project:</p>
     <example id="check" fixture="hello-vibe">
       <run>vibe check --path hello-vibe</run>
-      <expect></expect>
+      <expect>vibe check: clean — every check passed against `&lt;TMP&gt;/work/hello-vibe`</expect>
     </example>
   </by-hand>
   <what-appeared title="What appeared on disk">

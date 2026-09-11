@@ -5,7 +5,11 @@
   <p>vibe keeps its own files in one folder in your home directory and reads a few environment variables. This page lists the folder's contents, every variable, and which wins when they disagree.</p>
   <example id="vars" fixture="hello-vibe">
     <run>vibe vars</run>
-    <expect></expect>
+    <expect>VIBEVM_INSTALL_ROOT=&lt;HOME&gt;/.vibe
+VIBEVM_HOME=(none)
+VIBE_INVOKED_BY=
+VIBE_UNATTENDED=false
+VIBE_LOG=warn</expect>
   </example>
   <the-folder title="The folder: ~/.vibe/">
     <table>

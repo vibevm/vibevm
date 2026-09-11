@@ -29,7 +29,20 @@
     <p>1. Create the package slot, then set `kind = "lang"` in its [manifest](../glossary/index.xml#manifest):</p>
     <example id="init-lang" fixture="project">
       <run>vibe init package org.acme/sql-style</run>
-      <expect></expect>
+      <expect>Creating package `org.acme/sql-style` in `&lt;TMP&gt;/work`
+  ✓ created  vibevm/vibepacks/org.acme/sql-style/v0.1.0/vibe.toml
+  ✓ created  vibevm/vibepacks/org.acme/sql-style/v0.1.0/vibevm/vibespecs/boot/10-tool-sql-style.md
+  ✓ created  vibevm/vibepacks/org.acme/sql-style/v0.1.0/README.md
+  • kept     vibevm/vibespecs/boot/INDEX.md (regenerated)
+  • kept     CLAUDE.md (regenerated)
+  • kept     AGENTS.md (regenerated)
+  • kept     GEMINI.md (regenerated)
+
+Done. Project `org.acme/sql-style`: 3 files created, 4 kept.
+
+Next:
+  • edit vibevm/vibespecs/boot/00-core.md and vibevm/vibespecs/common as your project takes shape
+  • install packages with `vibe install &lt;kind&gt;:&lt;name&gt;` (e.g. flow:wal)</expect>
     </example>
     <p>2. Inside the slot, write `vibevm/vibespecs/boot/sql-style.xml` with the rules an agent must follow every time. Put the guide under `vibevm/vibespecs/lang/sql-style/`, with the reasons, the idioms and the examples.</p>
     <p>3. Declare `[boot_snippet] source = "vibevm/vibespecs/boot/sql-style.xml"`, `category = "stack"`, so that the language rules come after the team's flows in a consumer's reading list.</p>
