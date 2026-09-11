@@ -17,7 +17,7 @@
   </what-happens>
   <by-hand title="By hand">
     <p>1. In the root `vibe.toml`, declare the members; globs are allowed:</p>
-    <example id="workspace-table" fixture="none">
+    <example id="workspace-table" fixture="workspace-root">
       <run>cat vibe.toml</run>
       <expect></expect>
     </example>

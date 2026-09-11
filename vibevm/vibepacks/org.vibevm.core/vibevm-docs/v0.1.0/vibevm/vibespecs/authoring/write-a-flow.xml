@@ -20,7 +20,7 @@
       <expect></expect>
     </example>
     <p>2. Write the manifest. A flow needs the package identity, a description, and the snippet declaration:</p>
-    <example id="manifest" fixture="none">
+    <example id="manifest" fixture="workspace">
       <run>cat packages/review-notes/vibe.toml</run>
       <expect></expect>
     </example>
