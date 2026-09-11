@@ -32,6 +32,8 @@
       <tr><td>`dependencies`</td><td>the resolved dependencies of this package, as exact coordinates</td></tr>
       <tr><td>`overridden`</td><td>true when an `[[override]]` supplied the package</td></tr>
       <tr><td>`features`, `subskills`</td><td>the active features and subskills recorded for the package</td></tr>
+      <tr><td>`files_written`</td><td>the project files this package's install wrote outside its own folder, so that uninstall can remove exactly them</td></tr>
+      <tr><td>`via_redirect`</td><td>the address of the registry stub that delegated the package elsewhere, when one was followed; absent otherwise</td></tr>
     </table>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#IDENTITY-TUPLE"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#SOURCE-KIND-VALUES"/>
@@ -46,5 +48,6 @@
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#LOCKFILE-RESPECTING"/>
     <p>The lock file records no [registry](../glossary/index.xml#registry) [index](../glossary/index.xml#index-registry) and no mirror: reproducing it needs only the [coordinates](../glossary/index.xml#coordinate), the [fingerprints](../glossary/index.xml#fingerprint) and a source that can serve them.</p>
     <p>`vibe why &lt;coordinate&gt;` explains from the lock file and the manifests why a package is in the project, or what blocked it.</p>
+    <p>The file is read strictly: a field vibe does not know is an error, not a warning, so a hand edit or a field from a newer vibe is caught at once.</p>
   </edge-cases>
 </spec>

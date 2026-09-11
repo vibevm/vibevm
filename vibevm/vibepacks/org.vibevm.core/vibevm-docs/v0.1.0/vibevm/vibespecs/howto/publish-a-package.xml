@@ -32,7 +32,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#EFF-FORCE-PUSH-CAUGHT"/>
   </versions>
   <workspaces title="Several packages at once">
-    <p>A repository that develops several packages publishes them with `vibe workspace publish`. It orders the members by their dependencies on each other and publishes each as its own repository. It stops at the first failure with a report of what was published and what remains. `--member` restricts the run to one node; `--dry-run` shows the selection and the order without pushing.</p>
+    <p>A repository that develops several packages publishes them with `vibe workspace publish`. It orders the members by their dependencies on each other and publishes each as its own repository. It stops at the first failure with a report of what was published and what remains. Each published copy carries an `[origin]` table naming the repository and the commit it came from, so a copy can always be traced to its source. `--member` restricts the run to one node; `--dry-run` shows the selection and the order without pushing.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#PUBLISH-REGEN"/>
   </workspaces>
   <edge-cases title="Edge cases and rules">

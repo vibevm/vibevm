@@ -3,32 +3,38 @@
   <title id="root">Remove VibeVM from a project</title>
   <status stage="doc" state="work" audience="user"/>
   <p>When a project is finished and must leave without a trace of the tool that helped build it, one operation removes every vibe file and reference while keeping the product and its build intact.</p>
-  <prompt id="scrape">Show me the scrape plan for the VibeVM project in the current folder, then export a scraped copy of it to the new folder ../product-clean, and prove that the copy builds without vibe.
-    <needs>the vibevm skill installed for your agent; a project with `vibe.toml` and a scrape contract, or the default one; the project's native build tool on the `PATH`</needs>
+  <prompt id="scrape">Show me the scrape plan for the VibeVM project in the current folder, then export a scraped copy of it into a new folder named product-clean beside the project, and prove that the copy builds without vibe.
+    <needs>the vibevm skill installed for your agent; a project with `vibe.toml` and a scrape contract adapted to it: `vibe scrape contract init` writes a conservative default that refuses to delete files whose modification it cannot prove and checks health with `cargo`; the project's native build tool on the `PATH`</needs>
     <outcome>`../product-clean` exists, holds no `vibevm/` directory, no `vibe.toml`, no `vibe.lock` and no managed block in the agent instruction files, and its native build and tests pass</outcome>
     <assert>test ! -e ../product-clean/vibe.toml</assert>
     <assert>test ! -e ../product-clean/vibevm</assert>
   </prompt>
   <what-happens title="What happens">
-    <p>The agent runs `vibe scrape --plan`, which reads the project's contract, classifies every file the tool ever wrote or marked, and prints the complete plan without writing anything: what is deleted, what is rewritten, what is kept under a neutral name. Then it runs `vibe scrape --output ../product-clean`, which creates the scraped copy in a new folder and runs the project's native health checks on it; the original is untouched. The copy is a plain project of its language: no [manifest](../glossary/index.xml#manifest), no [lock file](../glossary/index.xml#lock-file), no dependency tree, no boot files, no [managed block](../glossary/index.xml#managed-block), no source annotations that pointed at specifications.</p>
+    <p>The agent creates the contract with `vibe scrape contract init` if the project has none and adapts it: for vibe's own trees you never edited it sets `modified = "delete"`, and it keeps a health check that fits the project. It runs `vibe scrape --plan`, which reads the contract, classifies every file the tool ever wrote or marked, and prints the complete plan without writing anything: what is deleted, what is rewritten, what is kept under a neutral name. Then it runs `vibe scrape --output` with the absolute path of the new folder, which creates the scraped copy and runs the project's health checks on it; the original is untouched. The copy is a plain project of its language: no [manifest](../glossary/index.xml#manifest), no [lock file](../glossary/index.xml#lock-file), no dependency tree, no boot files, no [managed block](../glossary/index.xml#managed-block), no source annotations that pointed at specifications.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#SCRAPED-TREE"/>
   </what-happens>
   <by-hand title="By hand">
-    <p>1. Look at the plan:</p>
-    <example id="scrape-plan" fixture="hello-vibe">
+    <p>1. Create the contract. The default is conservative: it names vibe's trees, refuses anything it cannot prove unmodified, and checks health with `cargo`:</p>
+    <example id="scrape-contract" fixture="hello-cargo">
+      <run>vibe scrape contract init --path hello-vibe</run>
+      <expect></expect>
+    </example>
+    <p>2. Adapt it. A fresh project has no modification baseline for vibe's files, so the two `[[classify]]` rules refuse them as unknown; if you never edited those trees, set `modified = "delete"` on both. Replace the `[[healthcheck]]` if the project is not a Rust workspace. Then validate: `vibe scrape contract check --path hello-vibe`.</p>
+    <p>3. Look at the plan:</p>
+    <example id="scrape-plan" fixture="hello-vibe-scrape">
       <run>vibe scrape --plan --path hello-vibe</run>
       <expect></expect>
     </example>
-    <p>2. Export to a new folder, which must not exist yet:</p>
-    <example id="scrape-output" fixture="hello-vibe">
+    <p>4. Export to a new folder, which must not exist yet and is named without `..`:</p>
+    <example id="scrape-output" fixture="hello-vibe-scrape">
       <run>vibe scrape --output hello-clean --path hello-vibe</run>
       <expect></expect>
     </example>
-    <p>3. Or [scrape](../glossary/index.xml#scrape) in place, which is a recoverable transaction and requires explicit authorisation: `vibe scrape --in-place --assume-yes`. If it is interrupted, `vibe scrape --recover --path &lt;root&gt;` settles the pending transaction.</p>
+    <p>5. Or [scrape](../glossary/index.xml#scrape) in place, which is a recoverable transaction and requires explicit authorisation: `vibe scrape --in-place --assume-yes`. If it is interrupted, `vibe scrape --recover --path &lt;root&gt;` settles the pending transaction.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#SCRAPE-RECOVER-COMMAND"/>
   </by-hand>
   <the-contract title="The contract">
-    <p>What counts as vibe's and what counts as yours is not guessed from file names; a contract says it. The default contract lives at `vibevm/scrape/contract.toml` in the project, `vibe scrape contract` creates or validates one, and `--contract &lt;file&gt;` reads another. A contained contract is the last file removed, so the plan can be re-read until the end.</p>
+    <p>What counts as vibe's and what counts as yours is not guessed from file names; a contract says it. The contract lives at `vibevm/scrape/contract.toml` in the project: `vibe scrape contract init` writes the conservative default, `vibe scrape contract check` validates one, and `--contract &lt;file&gt;` reads another. A contained contract is the last file removed, so the plan can be re-read until the end.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#DEFAULT-CONTRACT"/>
     <p>A scrape never deletes a path blindly: a build script that calls a vibe tool, generated product sources that sit beside disposable generated state, an authored specification that shares a tree with generated boot output, all are dispositioned by the contract, and untouched files stay byte-identical.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#PRODUCT-PRESERVATION"/>
