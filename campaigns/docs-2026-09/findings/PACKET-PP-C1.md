@@ -3,7 +3,7 @@
 Читать сначала, ровно эти файлы: `campaigns/docs-2026-09/findings/PACKET-COMMON.md`
 (преамбул; ##subagent-quiet-clause действует), затем этот пакет. Файлы
 репозитория **не править** — только читать и писать отчёт; git не трогать
-(читающие команды можно). Scratch — `C:\Users\olegc\AppData\Local\Temp\claude\vibe-docs-phaseP\PP-C1\`.
+(читающие команды можно). Scratch — `<scratch>\vibe-docs-phaseP\PP-C1\`.
 Отчёт — `campaigns/docs-2026-09/findings/PP-C1-prose-checks.md`; отчёт о
 работе — `campaigns/docs-2026-09/findings/WORKER-REPORT-PP-C1.md`.
 

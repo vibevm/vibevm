@@ -46,7 +46,7 @@
   пересобирать**; в отчёт записать `vibe --version`, mtime файла и
   `git rev-parse HEAD`.
 - Песочница: под
-  `C:\Users\olegc\AppData\Local\Temp\claude\C--Users-olegc-git-v-vibevm\ab0a6173-074b-4107-8481-3df9593b6bb0\scratchpad\PP-C2\`
+  `<scratch>\PP-C2\`
   — каталог на фикстуру: `<фикстура>\home\` и `<фикстура>\work\`.
 - Команда `vibe …` из примера исполняется как абсолютный путь к бинарнику;
   в выводе `vibe.exe` заменяется на `vibe` (правило «имя исполняемого

@@ -56,7 +56,7 @@
   `vibe` через абсолютный путь или временный каталог с копией на PATH
   песочницы.
 - Песочницы под
-  `C:\Users\olegc\AppData\Local\Temp\claude\C--Users-olegc-git-v-vibevm\ab0a6173-074b-4107-8481-3df9593b6bb0\scratchpad\PP-O1\<id промпта>\`
+  `<scratch>\PP-O1\<id промпта>\`
   с `home\` и `work\`; окружение и фикстуры — по `EXAMPLES-TODO.md`
   (три переменные изоляции + `NO_COLOR`, поведенческие удалены; нативные
   пути; `[init] last_author = "vibevm docs fixtures"`).

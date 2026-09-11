@@ -3,7 +3,7 @@
 Дата: 2026-09-12
 Дерево: b1291b06
 Пакет: `campaigns/docs-2026-09/findings/PACKET-PP-C1.md` (преамбул `campaigns/docs-2026-09/findings/PACKET-COMMON.md`).
-Scratch: `C:\Users\olegc\AppData\Local\Temp\claude\vibe-docs-phaseP\PP-C1\`.
+Scratch: `<scratch>\vibe-docs-phaseP\PP-C1\`.
 
 ## Что сделано
 
@@ -221,7 +221,7 @@ import xml.etree.ElementTree as ET
 REPO_ROOT = os.getcwd()
 DOCS_BASE = "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0/vibevm/vibespecs"
 BANNED_FILE = "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0/style/banned.en.txt"
-OUT_JSON = "C:/Users/olegc/AppData/Local/Temp/claude/vibe-docs-phaseP/PP-C1/findings.json"
+OUT_JSON = "<scratch>/vibe-docs-phaseP/PP-C1/findings.json"
 
 FILLER_WORDS = {"just", "simply", "multiple", "specific", "certain", "various"}
 
@@ -863,8 +863,8 @@ print(json.dumps(findings["meta"], ensure_ascii=False, indent=1))
 import json
 from collections import Counter, defaultdict
 
-IN_JSON = r"C:\Users\olegc\AppData\Local\Temp\claude\vibe-docs-phaseP\PP-C1\findings.json"
-OUT_MD = r"C:\Users\olegc\AppData\Local\Temp\claude\vibe-docs-phaseP\PP-C1\PP-C1-prose-checks.md"
+IN_JSON = r"<scratch>\vibe-docs-phaseP\PP-C1\findings.json"
+OUT_MD = r"<scratch>\vibe-docs-phaseP\PP-C1\PP-C1-prose-checks.md"
 
 d = json.load(open(IN_JSON, encoding="utf-8"))
 
@@ -1254,7 +1254,7 @@ print("total lines:", len(L))
 # -*- coding: utf-8 -*-
 import re
 
-path = r"C:\Users\olegc\AppData\Local\Temp\claude\vibe-docs-phaseP\PP-C1\PP-C1-prose-checks.md"
+path = r"<scratch>\vibe-docs-phaseP\PP-C1\PP-C1-prose-checks.md"
 lines = open(path, encoding="utf-8").read().split("\n")
 
 problems = []
