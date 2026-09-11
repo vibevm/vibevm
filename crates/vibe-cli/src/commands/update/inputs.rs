@@ -82,6 +82,7 @@ pub(super) fn locked_package(
         name: vibe_core::PackageName::from_validated(cached.resolved.name.clone()),
         version: cached.resolved.version.clone(),
         bridge: cached.package_meta().bridge,
+        authors: cached.package_meta().authors.clone(),
         registry: cached.registry_name.clone(),
         source_url: vibe_core::SourceUrl::new(cached.source_uri.clone()),
         source_ref: cached.source_ref.clone(),

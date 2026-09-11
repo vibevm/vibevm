@@ -16,6 +16,7 @@ fn locked(group: &str, name: &str, kind: PackageKind) -> LockedPackage {
         group: Group::parse(group).unwrap(),
         version: "1.0.0".parse().unwrap(),
         bridge: false,
+        authors: Vec::new(),
         registry: None,
         source_url: SourceUrl::new("file:///fixture".to_string()),
         source_ref: None,

@@ -186,6 +186,7 @@ pub fn embedded_sources_from(sources: &[EmbeddedSourceDecl]) -> Vec<EmbeddedSour
             resolved_commit: source.commit.clone(),
             content_hash: source.content_hash.to_string(),
             upstream_license: source.upstream_license.clone(),
+            upstream_authors: source.upstream_authors.clone(),
             license_path: source.license_path.to_string_lossy().replace('\\', "/"),
             license_url: source.license_url.clone(),
         })
@@ -321,7 +322,7 @@ version = "0.1.0"
     fn bridge_source_provenance_projects_without_upstream_bytes() {
         let body = br#"
 [package]
-group = "org.vibevm.bridges"
+group = "org.example"
 name = "upstream-tool"
 kind = "tool"
 version = "1.0.0"
@@ -336,6 +337,7 @@ commit = "0123456789abcdef0123456789abcdef01234567"
 content_hash = "sha256-tree/1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 ref_hint = "refs/tags/v1.2.3"
 upstream_license = "MIT"
+upstream_authors = ["Example Contributors"]
 license_path = "LICENSE"
 license_url = "https://github.com/example/upstream/blob/0123456789abcdef0123456789abcdef01234567/LICENSE"
 "#;
@@ -345,6 +347,7 @@ license_url = "https://github.com/example/upstream/blob/0123456789abcdef01234567
         assert_eq!(sources.len(), 1);
         assert_eq!(sources[0].kind, "git");
         assert_eq!(sources[0].upstream_license, "MIT");
+        assert_eq!(sources[0].upstream_authors, ["Example Contributors"]);
         assert_eq!(sources[0].license_path, "LICENSE");
     }
 

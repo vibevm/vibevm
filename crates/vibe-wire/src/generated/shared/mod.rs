@@ -1002,6 +1002,11 @@ pub struct EmbeddedSourceEntry {
     /// authoritative.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub source_ref: Option<String>,
+
+    /// Authors of the embedded upstream project, kept distinct from the bridge
+    /// package authors.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub upstream_authors: Vec<String>,
 }
 
 /// One contribution's emission witness (`EmissionContributionWitness`).

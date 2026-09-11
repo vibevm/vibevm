@@ -113,11 +113,12 @@ fn write_bridge_fixture_package(dir: &Path) {
     std::fs::write(
         dir.join("vibe.toml"),
         r#"[package]
-group = "org.vibevm.bridges"
+group = "org.example"
 name = "upstream-tool"
 kind = "tool"
 version = "1.0.0"
 bridge = true
+authors = ["Bridge Maintainer"]
 license = "UPL-1.0"
 
 [[embedded_source]]
@@ -128,6 +129,7 @@ commit = "0123456789abcdef0123456789abcdef01234567"
 content_hash = "sha256-tree/1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 ref_hint = "refs/tags/v1.2.3"
 upstream_license = "MIT"
+upstream_authors = ["Example Contributors"]
 license_path = "LICENSE"
 license_url = "https://github.com/example/upstream/blob/0123456789abcdef0123456789abcdef01234567/LICENSE"
 "#,
@@ -206,9 +208,18 @@ fn bridge_provenance_reaches_the_index_payload() {
     .unwrap();
 
     assert_eq!(payload["bridge"], true);
+    assert_eq!(payload["authors"], serde_json::json!(["Bridge Maintainer"]));
     assert_eq!(payload["embedded_sources"][0]["name"], "upstream");
     assert_eq!(payload["embedded_sources"][0]["kind"], "git");
     assert_eq!(payload["embedded_sources"][0]["upstream_license"], "MIT");
+    assert_eq!(
+        payload["embedded_sources"][0]["upstream_authors"],
+        serde_json::json!(["Example Contributors"])
+    );
+    assert_ne!(
+        payload["authors"], payload["embedded_sources"][0]["upstream_authors"],
+        "bridge and upstream authorship must remain separate fields"
+    );
     assert_eq!(payload["embedded_sources"][0]["license_path"], "LICENSE");
 }
 

@@ -49,6 +49,7 @@ fn locked() -> LockedPackage {
         group: Group::parse("org.demo").unwrap(),
         version: "1.0.0".parse().unwrap(),
         bridge: false,
+        authors: Vec::new(),
         registry: None,
         source_url: SourceUrl::new("file:///fixture"),
         source_ref: None,

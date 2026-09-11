@@ -71,6 +71,9 @@ fn package_card(p: &Package, theme: &Theme) -> Card {
     card.push("name", &p.name);
     card.push("version", &p.version);
     card.push("kind", &p.kind);
+    if !p.authors.is_empty() {
+        card.push("package authors", p.authors.join(", "));
+    }
     if p.bridge {
         card.push("role", "bridge (maintainer package)");
         card.push("upstream", upstream_value(p.upstream.as_ref()));
@@ -113,6 +116,10 @@ fn upstream_value(upstream: Option<&Upstream>) -> String {
     }
     for source in &upstream.sources {
         lines.push(format!("{}: {}", source.name, source.url));
+        lines.push(format!(
+            "  upstream authors: {}",
+            source.upstream_authors.join(", ")
+        ));
         lines.push(format!("  commit: {}", source.commit));
         lines.push(format!("  hash: {}", source.content_hash));
         lines.push(format!(
@@ -233,6 +240,7 @@ mod tests {
             kind: "flow".to_string(),
             version: "1.2.3".to_string(),
             bridge: false,
+            authors: Vec::new(),
             upstream: None,
             content_hash: Some("abc0123456789".to_string()),
             source: Some(Source {
@@ -322,9 +330,22 @@ mod tests {
         let theme = Theme::default();
         let mut package = fixture_pkg();
         package.bridge = true;
+        package.authors = vec!["Bridge Maintainer".to_string()];
         package.upstream = Some(Upstream {
             describes: Some("pkg:github/github/spec-kit@v1.0.6".to_string()),
-            sources: Vec::new(),
+            sources: vec![UpstreamSource {
+                name: "upstream".to_string(),
+                url: "https://github.com/github/spec-kit.git".to_string(),
+                source_ref: Some("refs/tags/v1.0.6".to_string()),
+                commit: "96c9bd6".to_string(),
+                tree_oid: "tree".to_string(),
+                content_hash: "sha256-tree/1:hash".to_string(),
+                upstream_authors: vec!["GitHub, Inc.".to_string()],
+                license: "MIT".to_string(),
+                license_path: "LICENSE".to_string(),
+                license_url: "https://github.com/github/spec-kit/blob/96c9bd6/LICENSE".to_string(),
+                license_file_sha256: "sha256:license".to_string(),
+            }],
         });
         let card = package_card(&package, &theme);
         let rows: std::collections::HashMap<&str, &str> = card
@@ -333,8 +354,10 @@ mod tests {
             .map(|r| (r.header.as_str(), r.value.as_str()))
             .collect();
         assert_eq!(rows["role"], "bridge (maintainer package)");
+        assert_eq!(rows["package authors"], "Bridge Maintainer");
         assert!(rows["source"].contains("https://example.invalid/widget"));
         assert!(rows["upstream"].contains("pkg:github/github/spec-kit@v1.0.6"));
+        assert!(rows["upstream"].contains("upstream authors: GitHub, Inc."));
     }
 
     /// A missing-row card carries the id + status fields only.

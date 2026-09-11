@@ -252,6 +252,7 @@ mod tests {
             kind: "flow".to_string(),
             version: "0.1.0".to_string(),
             bridge: false,
+            authors: Vec::new(),
             upstream: None,
             content_hash: None,
             source: None,

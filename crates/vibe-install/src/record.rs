@@ -203,6 +203,7 @@ pub(crate) fn locked_package_from_fetched(
         name: PackageName::from_validated(c.resolved.name.clone()),
         version: c.resolved.version.clone(),
         bridge: c.package_meta().bridge,
+        authors: c.package_meta().authors.clone(),
         registry: c.registry_name.clone(),
         source_url: SourceUrl::new(c.source_uri.clone()),
         source_ref: c.source_ref.clone(),

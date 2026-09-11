@@ -87,6 +87,7 @@ fn locked(name: &str, dependencies: Vec<PackageRef>) -> LockedPackage {
         group: Group::parse("org.vibevm").expect("a valid group"),
         version: ver("1.0.0"),
         bridge: false,
+        authors: Vec::new(),
         registry: None,
         source_url: "file:///fixture".into(),
         source_ref: None,

@@ -108,8 +108,9 @@ schema_version = 7
 [[package]]
 kind = "tool"
 name = "adapter"
-group = "org.vibevm.bridges"
+group = "org.example"
 version = "1.0.0"
+authors = ["Bridge Package Maintainer"]
 source_url = "https://github.com/vibespecs/adapter.git"
 content_hash = "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 
@@ -120,6 +121,7 @@ source_ref = "refs/tags/v1.2.3"
 resolved_commit = "0123456789abcdef0123456789abcdef01234567"
 tree_oid = "89abcdef0123456789abcdef0123456789abcdef"
 content_hash = "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+upstream_authors = ["Example Upstream Authors"]
 upstream_license = "MIT"
 license_path = "LICENSE"
 license_url = "https://github.com/example/upstream/blob/0123456789abcdef0123456789abcdef01234567/LICENSE"
@@ -127,11 +129,13 @@ license_file_sha256 = "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccc
 "#;
     let lock: Lockfile = toml::from_str(raw).unwrap();
     let source = &lock.packages[0].embedded_sources[0];
+    assert_eq!(lock.packages[0].authors, ["Bridge Package Maintainer"]);
     assert_eq!(source.name, "upstream");
     assert_eq!(
         source.resolved_commit,
         "0123456789abcdef0123456789abcdef01234567"
     );
+    assert_eq!(source.upstream_authors, ["Example Upstream Authors"]);
     assert_eq!(source.license_path, std::path::PathBuf::from("LICENSE"));
 
     let rendered = toml::to_string_pretty(&lock).unwrap();
@@ -140,9 +144,12 @@ license_file_sha256 = "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccc
         "{rendered}"
     );
     assert!(!rendered.contains("cache_path"), "{rendered}");
-    assert!(!rendered.contains("auth"), "{rendered}");
+    assert!(!rendered.contains("\nauth ="), "{rendered}");
     let back: Lockfile = toml::from_str(&rendered).unwrap();
     assert_eq!(lock, back);
+
+    let missing_authors = raw.replace("upstream_authors = [\"Example Upstream Authors\"]\n", "");
+    assert!(toml::from_str::<Lockfile>(&missing_authors).is_err());
 }
 
 #[test]
@@ -156,8 +163,9 @@ schema_version = 7
 [[package]]
 kind = "tool"
 name = "adapter"
-group = "org.vibevm.bridges"
+group = "org.example"
 version = "1.0.0"
+authors = ["Bridge Package Maintainer"]
 source_url = "https://github.com/vibespecs/adapter.git"
 content_hash = "sha256:aaaa"
 
@@ -167,6 +175,7 @@ source_url = "https://github.com/example/upstream.git"
 resolved_commit = "0123456789abcdef0123456789abcdef01234567"
 tree_oid = "89abcdef0123456789abcdef0123456789abcdef"
 content_hash = "sha256:bbbb"
+upstream_authors = ["Example Upstream Authors"]
 upstream_license = "MIT"
 license_path = "LICENSE"
 license_url = "https://github.com/example/upstream/blob/0123456789abcdef0123456789abcdef01234567/LICENSE"

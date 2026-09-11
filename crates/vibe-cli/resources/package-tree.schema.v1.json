@@ -52,6 +52,7 @@
         "kind": { "enum": ["flow", "feat", "stack", "tool", "mcp", "lang"] },
         "version": { "type": "string" },
         "bridge": { "type": "boolean", "const": true, "description": "Present only when this is a maintainer-authored bridge package" },
+        "authors": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 }, "description": "Authors of package-owned bytes; never includes upstream-only authors" },
         "upstream": { "$ref": "#/$defs/upstream" },
         "content_hash": { "type": ["string", "null"] },
         "source": { "$ref": "#/$defs/source" },
@@ -75,7 +76,7 @@
     },
     "upstreamSource": {
       "type": "object",
-      "required": ["name", "url", "ref", "commit", "tree_oid", "content_hash", "license", "license_path", "license_url", "license_file_sha256"],
+      "required": ["name", "url", "ref", "commit", "tree_oid", "content_hash", "upstream_authors", "license", "license_path", "license_url", "license_file_sha256"],
       "additionalProperties": false,
       "properties": {
         "name": { "type": "string" },
@@ -84,6 +85,7 @@
         "commit": { "type": "string" },
         "tree_oid": { "type": "string" },
         "content_hash": { "type": "string" },
+        "upstream_authors": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 }, "description": "Authors of the upstream bytes, distinct from bridge-package authors" },
         "license": { "type": "string" },
         "license_path": { "type": "string" },
         "license_url": { "type": "string" },

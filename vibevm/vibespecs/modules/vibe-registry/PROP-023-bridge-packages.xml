@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">PROP-023 — Bridge packages</title>
-  <status stage="impl" state="done" comment="C 2026-09-11: bridge flag plus vendored, git-native and reference-backed source forms ship; immutable external pins, cache, lock, index and skill projection verified on Windows"/>
+  <status stage="impl" state="done" comment="C 2026-09-11: three source forms ship; owner corrected identity/storage law so third-party products default to their product coordinate and an independent source repository outside VibeVM"/>
   <p><status-line fact="true" status="impl/done">**Status: IMPLEMENTED** (specified 2026-06-24 in an owner-requested design
 session; verified against the tree 2026-07-25 by the spec-actualization
 campaign). The umbrella's own addition — `[package].bridge`, defaulting to
@@ -15,7 +15,7 @@ live machinery. The umbrella adds a flag and packaging/provenance conventions;
 each underlying mechanism remains independently usable.</status-line></p>
   <p><related fact="true" status="spec/done">**Related:** [PROP-002](PROP-002-decentralized-registry.xml) (a bridge is an
 ordinary package + identity), [PROP-008](PROP-008-qualified-naming.xml) (the
-maintainer's group, distinct from the upstream author),
+consumer-facing qualified product coordinate),
 [PROP-015 §2.6](../vibe-mcp/PROP-015-mcp-integration.xml#skill) +
 [PROP-015 #skill-include](../vibe-mcp/PROP-015-mcp-integration.xml#skill-include)
 (projecting a skill out of the bridged subtree, selectively),
@@ -125,13 +125,33 @@ mandates none of them:</COMPOSE-OPTIONAL></p>
       <p><req-maintainer fact="true" status="impl/done">`req r1`</req-maintainer></p>
       <facts ordered="false">
         <MAINTAINER-VS-AUTHOR fact="true" status="impl/done">The bridge's **maintainer** is distinct from the upstream **author**.</MAINTAINER-VS-AUTHOR>
-        <GROUP-PROVENANCE fact="true" status="impl/done">The
-  package's `group` ([PROP-008](PROP-008-qualified-naming.xml)) is the
-  maintainer's namespace; the upstream is recorded as provenance (its repository
-  URL, and — where applicable — the `describes` PURL the descriptor already
-  supports, [PROP-015 §0](../vibe-mcp/PROP-015-mcp-integration.xml)).</GROUP-PROVENANCE>
-        <PROVENANCE-VISIBLE fact="true" status="impl/done">A consumer
-  can therefore always see *who stewards this* and *what it wraps*.</PROVENANCE-VISIBLE>
+        <AUTHORSHIP-SEPARATION fact="true" status="impl/done">`[package].authors` names only the people or organisations that authored
+  the package's own metadata, adapters and other maintainer-owned payload. It
+  never absorbs the authors of referenced bytes. Every `[[embedded_source]]`
+  records those separately as a non-empty `upstream_authors` list. Listings,
+  locks and indexes preserve both lists under their own labels; they never
+  concatenate them into one ambiguous authorship claim.</AUTHORSHIP-SEPARATION>
+        <GROUP-PROVENANCE fact="true" status="impl/done">The package's qualified coordinate
+  ([PROP-008](PROP-008-qualified-naming.xml)) names the **product a consumer
+  installs**, not the codebase in which its packaging machinery happened to be
+  written. Packaging Spec Kit does not make it `org.vibevm/*`; its product
+  coordinate may be `org.speckit/speckit`. Packaging Matt Pocock's collection
+  may be `com.mattpocock/skills`. The distinct steward remains visible through
+  `[package].authors`, the package distribution `source_url`, `bridge = true`,
+  and the upstream repository/PURL recorded by `[[embedded_source]]` and
+  `describes`.</GROUP-PROVENANCE>
+        <PROVENANCE-VISIBLE fact="true" status="impl/done">A consumer can therefore see three separate answers: *what product is this*
+  (coordinate), *who maintains this packaging* (authors + distribution source),
+  and *what original bytes does it wrap* (upstream provenance).</PROVENANCE-VISIBLE>
+        <INDEPENDENT-REPOSITORY-DEFAULT fact="true" status="spec/done">**Not everything we package belongs to VibeVM.** A third-party product's
+  package source defaults to its own Git repository outside the VibeVM
+  monorepository and outside `org.vibevm/*`. Before scaffolding a bridge, the
+  maintainer must explicitly ask the owner whether the package belongs in an
+  existing product workspace or should be an independent repository. Silence
+  never authorises absorbing a foreign product into the VibeVM namespace.
+  Locally, independent package repositories may live under a neutral collection
+  such as `~/git/v/packages/`; publication still maps one package repository to
+  one registry repository.</INDEPENDENT-REPOSITORY-DEFAULT>
         <LICENSE-BOUNDARY fact="true" status="impl/done">A bridge records two distinct legal surfaces: `[package].license` describes
   only the maintainer-authored bridge package, while every external embedded
   source records its upstream licence and an immutable licence URL. A bridge
@@ -163,8 +183,8 @@ mandates none of them:</COMPOSE-OPTIONAL></p>
       <OOS-SECURITY-SCAN fact="true" status="spec/done">**Security scanning of wrapped third-party code** — the LLM "antivirus" is
   the same far-backlog item as for hooks
   ([PROP-020 §4](../vibe-workspace/PROP-020-install-hooks.xml#out-of-scope)); a
-  bridge's trust posture is its maintainer plus the hook allow-list/consent
-  gate, an explicitly accepted risk for now.</OOS-SECURITY-SCAN>
+  bridge's trust posture is dependency selection plus the installed extension
+  observability defined by PROP-054, an explicitly accepted risk for now.</OOS-SECURITY-SCAN>
       <OOS-LICENSE-TRACKING fact="true" status="spec/done">**Automated legal interpretation or compatibility adjudication** remains out
   of scope. Mechanical provenance is in scope: the bridge licence and each
   external source's upstream licence/immutable licence URL are recorded and
@@ -188,8 +208,13 @@ mandates none of them:</COMPOSE-OPTIONAL></p>
   paths/resources without executing upstream package machinery. Its normal
   bridge payload is still materialised in `vibedeps`, and an operator can ask
   for either the package root or an authenticated named source root.</ACC-REFERENCE>
-      <ACC-PROVENANCE fact="true" status="impl/done">Provenance (maintainer group + upstream URL/PURL) is recoverable for a bridge
-  package.</ACC-PROVENANCE>
+      <ACC-PROVENANCE fact="true" status="impl/done">Product identity, packaging stewardship and upstream URL/PURL are separately
+  recoverable for a bridge package; none is inferred from another.</ACC-PROVENANCE>
+      <ACC-AUTHORSHIP-SEPARATE fact="true" status="impl/done">Package authors and upstream authors are required, stored and displayed as
+  separate provenance fields.</ACC-AUTHORSHIP-SEPARATE>
+      <ACC-INDEPENDENT-SOURCE fact="true" status="spec/done">A third-party package is not placed below `org.vibevm` or in VibeVM's
+  monorepository without an explicit owner decision; the scaffolding workflow
+  asks this boundary question before choosing its coordinate or repository.</ACC-INDEPENDENT-SOURCE>
       <ACC-FLOOR-GREEN fact="true" status="spec/done">Full `self-check.sh` green; conform 0/0/0; specmap clean.</ACC-FLOOR-GREEN>
     </facts>
   </acceptance>

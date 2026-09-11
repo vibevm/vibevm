@@ -126,6 +126,7 @@ pub(crate) fn locked(name: &str, hash: &str, dependencies: &[&str]) -> LockedPac
         group: group(),
         version: version(),
         bridge: false,
+        authors: Vec::new(),
         registry: None,
         source_url: "file:///fixture".into(),
         source_ref: None,

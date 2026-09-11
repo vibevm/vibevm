@@ -278,6 +278,7 @@ fn build_package(
         kind: p.kind.as_str().to_string(),
         version: p.version.to_string(),
         bridge: p.bridge,
+        authors: p.authors.clone(),
         upstream: p.bridge.then(|| Upstream {
             describes: p.describes.clone(),
             sources: p
@@ -290,6 +291,7 @@ fn build_package(
                     commit: source.resolved_commit.clone(),
                     tree_oid: source.tree_oid.clone(),
                     content_hash: source.content_hash.as_str().to_string(),
+                    upstream_authors: source.upstream_authors.clone(),
                     license: source.upstream_license.clone(),
                     license_path: vibe_core::machine_json_path(&source.license_path),
                     license_url: source.license_url.clone(),

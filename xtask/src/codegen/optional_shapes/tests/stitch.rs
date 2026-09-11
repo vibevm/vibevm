@@ -209,9 +209,9 @@ fn the_same_key_with_different_decisions_refuses() -> Result<()> {
 
 /// The real data, walked: the vocabulary home — wrapped as
 /// `definitions`, exactly where `Vocabularies::resolve` places every
-/// fragment — carries 41 sites this pass rules on (the prior 33 plus the eight
-/// optional scalar/structure sites in the promoted compiler-IR closure) and two legal
-/// diamonds (`describes` and
+/// fragment — yields 44 site occurrences after the bridge provenance
+/// collections joined the prior surface. It includes the two legal diamonds
+/// (`describes` and
 /// `description` each live in both `subskill_entry` and `version_entry`
 /// with the same decision), so the map holds one key per pair while the
 /// tally counts all four.
@@ -224,7 +224,7 @@ fn the_real_vocabulary_home_walks_to_its_sites() -> Result<()> {
             .expect("the vocabulary home parses");
     let doc_shapes = shapes(json!({ "definitions": home }))?;
     assert_eq!(
-        doc_shapes.sites, 42,
+        doc_shapes.sites, 44,
         "the real shared home includes every promoted optional site"
     );
     Ok(())

@@ -266,6 +266,7 @@ mod tests {
             group: vibe_core::Group::parse(group).expect("valid group"),
             version: version.parse().expect("valid version"),
             bridge: false,
+            authors: Vec::new(),
             registry: None,
             source_url: vibe_core::SourceUrl::new("file:///fixture".to_string()),
             source_ref: None,

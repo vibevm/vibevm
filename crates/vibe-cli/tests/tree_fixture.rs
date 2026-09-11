@@ -154,6 +154,7 @@ name = "orphan"
 group = "org.vibevm"
 version = "1.0.0"
 bridge = true
+authors = ["Bridge Maintainer"]
 describes = "pkg:github/github/spec-kit@v1.0.6"
 source_url = "file:///fixture/orphan"
 content_hash = "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
@@ -165,6 +166,7 @@ source_ref = "refs/tags/v1.0.6"
 resolved_commit = "96c9bd657bfd5de0d651a6165084932b7304ac99"
 tree_oid = "0123456789abcdef0123456789abcdef01234567"
 content_hash = "sha256-tree/1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+upstream_authors = ["GitHub, Inc."]
 upstream_license = "MIT"
 license_path = "LICENSE"
 license_url = "https://github.com/github/spec-kit/blob/96c9bd657bfd5de0d651a6165084932b7304ac99/LICENSE"
@@ -263,6 +265,7 @@ fn build_tree_classifies_every_lane_on_a_hermetic_fixture() {
     assert_eq!(orphan["load"]["in_static_md"], false);
     assert_eq!(orphan["load"]["in_index_md"], false);
     assert_eq!(orphan["bridge"], true);
+    assert_eq!(orphan["authors"], serde_json::json!(["Bridge Maintainer"]));
     assert_eq!(
         orphan["upstream"]["describes"],
         "pkg:github/github/spec-kit@v1.0.6"
@@ -274,6 +277,10 @@ fn build_tree_classifies_every_lane_on_a_hermetic_fixture() {
     assert_eq!(
         orphan["upstream"]["sources"][0]["url"],
         "https://github.com/github/spec-kit.git"
+    );
+    assert_eq!(
+        orphan["upstream"]["sources"][0]["upstream_authors"],
+        serde_json::json!(["GitHub, Inc."])
     );
     assert!(
         pkgs["org.vibevm/crit"].get("bridge").is_none(),

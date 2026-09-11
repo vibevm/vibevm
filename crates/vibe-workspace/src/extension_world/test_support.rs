@@ -55,6 +55,7 @@ pub(super) fn locked(group_spelling: &str, name_spelling: &str, edges: &[&str]) 
         group: group(group_spelling),
         version: version("1.0.0"),
         bridge: false,
+        authors: Vec::new(),
         registry: None,
         source_url: "file:///fixture".into(),
         source_ref: None,

@@ -135,6 +135,7 @@ pub fn lock_embedded_sources_with(
                 resolved_commit: cached.resolved_commit,
                 tree_oid: cached.tree_oid,
                 content_hash: cached.content_hash,
+                upstream_authors: declaration.upstream_authors.clone(),
                 upstream_license: declaration.upstream_license.clone(),
                 license_path: declaration.license_path.clone(),
                 license_url: declaration.license_url.clone(),

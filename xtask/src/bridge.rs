@@ -22,6 +22,10 @@ pub enum BridgeCommand {
         commit: String,
         #[arg(long)]
         ref_hint: Option<String>,
+        /// Author of the referenced upstream bytes. Repeat for each author;
+        /// this is intentionally distinct from the package's own authors.
+        #[arg(long, required = true)]
+        upstream_author: Vec<String>,
         #[arg(long)]
         upstream_license: String,
         #[arg(long)]
@@ -41,6 +45,7 @@ struct EmbeddedSourceRow<'a> {
     #[serde(skip_serializing_if = "Option::is_none")]
     ref_hint: Option<&'a str>,
     auth: &'static str,
+    upstream_authors: &'a [String],
     upstream_license: &'a str,
     license_path: String,
     license_url: &'a str,
@@ -53,6 +58,7 @@ pub fn run_bridge(command: BridgeCommand) -> Result<()> {
             url,
             commit,
             ref_hint,
+            upstream_author,
             upstream_license,
             license_path,
             license_url,
@@ -61,6 +67,7 @@ pub fn run_bridge(command: BridgeCommand) -> Result<()> {
             &url,
             &commit,
             ref_hint.as_deref(),
+            &upstream_author,
             &upstream_license,
             &license_path,
             &license_url,
@@ -73,10 +80,21 @@ fn pin(
     url: &str,
     commit: &str,
     ref_hint: Option<&str>,
+    upstream_authors: &[String],
     upstream_license: &str,
     license_path: &std::path::Path,
     license_url: &str,
 ) -> Result<()> {
+    if upstream_authors.is_empty()
+        || upstream_authors.iter().any(|author| {
+            author.is_empty() || author.trim() != author || author.chars().any(char::is_control)
+        })
+    {
+        bail!(
+            "--upstream-author must be repeated at least once and every value must be trimmed, non-empty, and control-free"
+        );
+    }
+
     let scratch = tempfile::tempdir().context("creating temporary bridge checkout")?;
     let checkout = scratch.path().join("upstream");
     let shell = ShellGit::new();
@@ -111,6 +129,7 @@ fn pin(
         content_hash: hash,
         ref_hint,
         auth: "none",
+        upstream_authors,
         upstream_license,
         license_path: checked_license.to_string(),
         license_url,
