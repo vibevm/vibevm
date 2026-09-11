@@ -1,0 +1,1 @@
+error: not-configured: no `[[registry]]` entries to probe; add one with `vibe registry add` first

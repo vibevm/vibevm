@@ -1,0 +1,6 @@
+project: <TMP>/work/hello-vibe
+STATIC.md: (none)
+packages: 1   roots: 1
+columns: load  T=transitive  C=condition  S=in STATIC.md
+
+org.vibevm.world/wal  dynamic  .  .  .

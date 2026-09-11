@@ -1,0 +1,13 @@
+  → will run `@vibe/package/skill/org.vibevm.world/wal/wal-status` — point=phase:package, handler=builtin:package-skill-project, provider=org.vibevm.world/wal tier=preset
+  → package binding [org.vibevm.world/wal]: projected skill `wal-status` (claude=created, codex=created, opencode=created)
+lifecycle `package`:
+  → validate: ok
+  → install: fresh
+  → generate: no-op
+  → build: no-op
+  → test: no-op
+  → create: no-op
+  → verify: no-op
+  → package: ok
+  → verification: unavailable (0 input(s), 0 artifact(s))
+vibe lifecycle: package completed (8 phases, 1 contribution(s) selected, 1 executed, 1 ok, 0 fresh, 0 notice(s))

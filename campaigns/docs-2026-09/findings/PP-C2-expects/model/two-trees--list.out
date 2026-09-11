@@ -1,0 +1,4 @@
+KIND  NAME  VERSION  ROLE     BOOT SNIPPET
+flow  wal  1.0.0    package  —
+
+1 package installed.

@@ -1,0 +1,21 @@
+dry-run ir-stable-loss vibevm/vibespecs/NOTES-FLOW.md
+--- source
++++ reverse-projection
+@@ -3,2 +3,3 @@
+ @fact:ONE-NOTE One note per review. @status:spec/done
+
++
+
+dry-run ir-stable-loss vibevm/vibespecs/boot/10-tool-review-notes.md
+--- source
++++ reverse-projection
+@@ -1,6 +1,5 @@
+-<!-- vibe:static org.org.acme/review-notes — boot snippet -->
+-
+ # review-notes
+
+ A `tool` package.
+
++
+
+summary converted=0 already=0 lossy-confirmed=0 refused=0 skipped-generated=0 skipped-foreign=0 skipped-harness=0 dry-run=2

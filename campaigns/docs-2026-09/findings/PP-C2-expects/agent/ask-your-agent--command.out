@@ -1,0 +1,16 @@
+---
+vibevm-intent: pending
+source: agentic explain
+---
+
+# Explain this project
+
+Detected in this project: vibe.toml.
+
+Explain this project to a developer seeing it for the first time, in at most three short paragraphs of plain prose.
+
+Work from these sources, in priority order:
+1. `README.md` at the project root — read it and summarise what the project is and does.
+2. `vibe.toml`, if present — fold in what its structure reveals: the package `kind`, what the project `requires`, and what it `provides`.
+
+If `README.md` is absent, say so in one clause and explain from `vibe.toml` alone. If neither is present, state that the project carries no description and stop. Do not invent features the sources do not support — prefer "the sources don't say" over guessing. Lead with the explanation; no preamble.

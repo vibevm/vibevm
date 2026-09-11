@@ -1,0 +1,4 @@
+ M crates/vibe-cli/src/commands/show/source_path.rs
+ M crates/vibe-install/src/plan/fetch.rs
+ M xtask/src/bridge.rs
+?? campaigns/docs-2026-09/findings/PP-C2-expects/

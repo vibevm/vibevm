@@ -34,10 +34,10 @@ glossary + faq + diagnostics; каркас `0df597b3`; правка фиксту
 | Что | Состояние на передачу | Свидетельство |
 |---|---|---|
 | Страницы: XML корректен, inline — Markdown, `<`/`&` экранированы | принято | J-051…J-053; разбор 44 файлов стандартным парсером чист; `vibe check` 0 ошибок |
-| `expect` сняты с бинарника | ⏳ PP-C2 | `findings/WORKER-REPORT-PP-C2.md`; сборка бинарника — в отчёте; 3 примера «не сейчас» (`EXAMPLES-TODO.md` §not-now) |
+| `expect` сняты с бинарника | 39 из 59 сняты и вставлены (`700db4b8`, сборка и HEAD — в `findings/WORKER-REPORT-PP-C2b.md`); 15 ждут раннера A2.9 (список — `findings/PACKET-PP-C2c.md`), 5 — релиза, фазы 2 или починки B-133; снятия минимизированы словом владельца (J-067) | `EXAMPLES-TODO.md` §queue; `findings/PP-C2-expects/` |
 | Инвентарь legacy без пустых строк | принято: 1184 строки с решением (J-064) | `LEGACY-INVENTORY.md`, колонка «решение»; `findings/WORKER-REPORT-PP-C3.md`, `findings/PP-C3-dispose.py` |
 | P.6 стиль и P.7 цитаты с нулём замечаний | принято: замечания отработаны `435d3aef`, `2f48c888`; повторная проверка терминов и XML — 0 (J-059, J-060); открытые калибровки линтера — X-028, X-029 | `findings/PP-C1-prose-checks.md`, `findings/WORKER-REPORT-PP-C1.md` (скрипты `analyze.py`, `render_report.py`, `validate_md.py` — первые фикстуры A2.25) |
-| Каждый промпт прошёл прогон P.7b | частично: 7 зелёных из 19 в первом прогоне; после правок страниц повторный прогон PP-O1b; красные по багам продукта (B-133, B-135…B-138) остаются красными до починки, это записано в очереди A2.29 | `findings/WORKER-REPORT-PP-O1.md`, `findings/PP-O1-runs/`; промпты, ждущие фазы 2: `read-docs-locally`, `write-documentation`, `translate-documentation`; не прогоняемые в песочнице: `install-vibe`, `give-your-agent-the-skill` (только `--dry-run`) |
+| Каждый промпт прошёл прогон P.7b | частично: 7 зелёных из 19 в первом прогоне; семь исправленных промптов перепрогоняет гарнитура A2.29 (список — `findings/PACKET-PP-O1b.md`); красные по багам продукта (B-133, B-135…B-138) остаются красными до починки | `findings/WORKER-REPORT-PP-O1.md`, `findings/PP-O1-runs/`; промпты, ждущие фазы 2: `read-docs-locally`, `write-documentation`, `translate-documentation`; не прогоняемые в песочнице: `install-vibe`, `give-your-agent-the-skill` (только `--dry-run`) |
 | Стиль-ревью владельца P.8 | ⏳ OPEN | review-маркер в `LEDGER.md`; под целью сессии владельца волна B не ждёт его; замечания — в точке F1 |
 
 ## 3. Чего не трогать {#do-not-touch}

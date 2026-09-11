@@ -1,0 +1,7 @@
+[project]
+name = "work"
+version = "0.0.1"
+authors = ["vibevm docs fixtures"]
+
+[workspace]
+members = ["packages/*"]
