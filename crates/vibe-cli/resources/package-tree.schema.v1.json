@@ -51,6 +51,8 @@
         "name": { "type": "string" },
         "kind": { "enum": ["flow", "feat", "stack", "tool", "mcp", "lang"] },
         "version": { "type": "string" },
+        "bridge": { "type": "boolean", "const": true, "description": "Present only when this is a maintainer-authored bridge package" },
+        "upstream": { "$ref": "#/$defs/upstream" },
         "content_hash": { "type": ["string", "null"] },
         "source": { "$ref": "#/$defs/source" },
         "load": { "$ref": "#/$defs/load" },
@@ -60,6 +62,32 @@
           "description": "Out-edges (children in the tree), as \"group/name\"",
           "items": { "$ref": "#/$defs/packageId" }
         }
+      }
+    },
+    "upstream": {
+      "type": "object",
+      "required": ["describes", "sources"],
+      "additionalProperties": false,
+      "properties": {
+        "describes": { "type": ["string", "null"], "description": "PURL of the foreign project adapted by the bridge" },
+        "sources": { "type": "array", "items": { "$ref": "#/$defs/upstreamSource" } }
+      }
+    },
+    "upstreamSource": {
+      "type": "object",
+      "required": ["name", "url", "ref", "commit", "tree_oid", "content_hash", "license", "license_path", "license_url", "license_file_sha256"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "url": { "type": "string" },
+        "ref": { "type": ["string", "null"] },
+        "commit": { "type": "string" },
+        "tree_oid": { "type": "string" },
+        "content_hash": { "type": "string" },
+        "license": { "type": "string" },
+        "license_path": { "type": "string" },
+        "license_url": { "type": "string" },
+        "license_file_sha256": { "type": "string" }
       }
     },
     "source": {

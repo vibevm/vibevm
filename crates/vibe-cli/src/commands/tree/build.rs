@@ -22,7 +22,7 @@ use super::diagnostics;
 use super::model::{
     Boot, Carrier, Condition, ConditionKind, DeclaredLink, InPlaceSpec, IndexLane, Load,
     LoadOrigin, LoadType, Package, PackageTree, Project, SCHEMA_VERSION, Source, SourceKind,
-    StaticLane,
+    StaticLane, Upstream, UpstreamSource,
 };
 
 /// The host-authored boot files that seed the in-place `@spec` scan
@@ -277,6 +277,26 @@ fn build_package(
         name: p.name.to_string(),
         kind: p.kind.as_str().to_string(),
         version: p.version.to_string(),
+        bridge: p.bridge,
+        upstream: p.bridge.then(|| Upstream {
+            describes: p.describes.clone(),
+            sources: p
+                .embedded_sources
+                .iter()
+                .map(|source| UpstreamSource {
+                    name: source.name.clone(),
+                    url: source.source_url.as_str().to_string(),
+                    source_ref: source.source_ref.clone(),
+                    commit: source.resolved_commit.clone(),
+                    tree_oid: source.tree_oid.clone(),
+                    content_hash: source.content_hash.as_str().to_string(),
+                    license: source.upstream_license.clone(),
+                    license_path: vibe_core::machine_json_path(&source.license_path),
+                    license_url: source.license_url.clone(),
+                    license_file_sha256: source.license_file_sha256.as_str().to_string(),
+                })
+                .collect(),
+        }),
         content_hash: Some(p.content_hash.as_str().to_string()),
         source: Some(to_source(p)),
         load: Load {

@@ -153,8 +153,22 @@ kind = "flow"
 name = "orphan"
 group = "org.vibevm"
 version = "1.0.0"
+bridge = true
+describes = "pkg:github/github/spec-kit@v1.0.6"
 source_url = "file:///fixture/orphan"
 content_hash = "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+
+[[package.embedded_source]]
+name = "upstream"
+source_url = "https://github.com/github/spec-kit.git"
+source_ref = "refs/tags/v1.0.6"
+resolved_commit = "96c9bd657bfd5de0d651a6165084932b7304ac99"
+tree_oid = "0123456789abcdef0123456789abcdef01234567"
+content_hash = "sha256-tree/1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+upstream_license = "MIT"
+license_path = "LICENSE"
+license_url = "https://github.com/github/spec-kit/blob/96c9bd657bfd5de0d651a6165084932b7304ac99/LICENSE"
+license_file_sha256 = "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
 "#
     )
 }
@@ -248,4 +262,21 @@ fn build_tree_classifies_every_lane_on_a_hermetic_fixture() {
     assert_eq!(orphan["load"]["origin"], "none");
     assert_eq!(orphan["load"]["in_static_md"], false);
     assert_eq!(orphan["load"]["in_index_md"], false);
+    assert_eq!(orphan["bridge"], true);
+    assert_eq!(
+        orphan["upstream"]["describes"],
+        "pkg:github/github/spec-kit@v1.0.6"
+    );
+    assert_eq!(
+        orphan["source"]["url"], "file:///fixture/orphan",
+        "package delivery source stays distinct from upstream provenance"
+    );
+    assert_eq!(
+        orphan["upstream"]["sources"][0]["url"],
+        "https://github.com/github/spec-kit.git"
+    );
+    assert!(
+        pkgs["org.vibevm/crit"].get("bridge").is_none(),
+        "ordinary package JSON stays unchanged"
+    );
 }
