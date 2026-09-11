@@ -10,7 +10,7 @@
     <assert>vibe skill list --quiet</assert>
   </prompt>
   <what-happens title="What happens">
-    <p>The agent runs `vibe mcp install --auto --yes`. vibe detects the agents present on the machine and, for each, writes two things: an entry in the agent's configuration that starts `vibe mcp serve` as a server the agent can query, and a [skill](../glossary/index.xml#skill) file, `SKILL.md`, that teaches the agent the vibe commands and when to use them. Both writes touch only the vibevm entry of each configuration; anything else in those files is left alone. The command is idempotent: a second run reports every unchanged entry as unchanged.</p>
+    <p>The agent runs `vibe mcp install --auto --yes`. vibe detects the agents present on the machine and writes two things for each. The first is an entry in the agent's configuration that starts `vibe mcp serve` as a server the agent can query. The second is a [skill](../glossary/index.xml#skill) file, `SKILL.md`, that teaches the agent the vibe commands and when to use them. Both writes touch only the vibevm entry of each configuration; anything else in those files is left alone. The command is idempotent: a second run reports every unchanged entry as unchanged.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#CONSENT-WRITE-SCOPE"/>
   </what-happens>
   <by-hand title="By hand">

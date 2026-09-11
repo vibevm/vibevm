@@ -12,7 +12,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SESSION-START-ORDER"/>
     <p>`STATIC.xml` is the priority lane. It holds the text that must be in front of the agent before anything else, assembled from the packages that asked to be read that way, each package's text exactly once. It changes only when the set of packages or their versions change, which is what makes it cheap: an agent host can keep it cached across sessions.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-048#STATIC-ROLE"/>
-    <p>`INDEX.md` is a [manifest](../glossary/index.xml#manifest), not a payload. Each entry names a file and says whether it is *static*, to be read directly, or *dynamic*, an include the agent resolves as it goes; an entry can carry a condition, and then the agent reads it only when the condition holds for the current session, for example one operating system.</p>
+    <p>`INDEX.md` is a [manifest](../glossary/index.xml#manifest), not a payload. Each entry names a file and says whether it is *static*, to be read directly, or *dynamic*, an include the agent resolves as it goes. An entry can carry a condition; then the agent reads it only when the condition holds for the current session, for example one operating system.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#ARTIFACT-INDEX-MD"/>
   </the-order>
   <where-it-comes-from title="Where the list comes from">

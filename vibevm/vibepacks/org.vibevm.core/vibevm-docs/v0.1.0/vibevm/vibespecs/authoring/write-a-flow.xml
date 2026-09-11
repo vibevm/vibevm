@@ -10,7 +10,7 @@
     <assert>test -f packages/review-notes/vibevm/vibespecs/boot/review-notes.xml</assert>
   </prompt>
   <what-happens title="What happens">
-    <p>The agent runs `vibe init package org.acme/review-notes packages/review-notes`, which writes a [manifest](../glossary/index.xml#manifest) with a `[package]` table, the `vibevm/` layout and the two boot files every node has. It then writes three things: the [boot snippet](../glossary/index.xml#boot-snippet), a short instruction the agent of a consuming project reads at every session start; the protocol, the full rules under `vibevm/vibespecs/flows/review-notes/`, with anchored sections the snippet cites; and the manifest's `[boot_snippet]` table pointing at the snippet with the category `flow`. Finally it runs `vibe check` on the package, which validates the manifest and the layout like it would for any project.</p>
+    <p>The agent runs `vibe init package org.acme/review-notes packages/review-notes`, which writes a [manifest](../glossary/index.xml#manifest) with a `[package]` table, the `vibevm/` layout and the two boot files every node has. It then writes three things. The [boot snippet](../glossary/index.xml#boot-snippet) is a short instruction the agent of a consuming project reads at every session start. The protocol is the full set of rules under `vibevm/vibespecs/flows/review-notes/`, with anchored sections the snippet cites. The manifest's `[boot_snippet]` table points at the snippet with the category `flow`. Finally it runs `vibe check` on the package, which validates the manifest and the layout like it would for any project.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-024#PKG-PROJECT-LAW"/>
   </what-happens>
   <by-hand title="By hand">

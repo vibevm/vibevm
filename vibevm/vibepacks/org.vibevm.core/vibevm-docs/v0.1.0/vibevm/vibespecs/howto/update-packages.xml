@@ -10,7 +10,7 @@
     <assert>vibe list --quiet</assert>
   </prompt>
   <what-happens title="What happens">
-    <p>The agent first runs `vibe outdated`, which compares every pin in the [lock file](../glossary/index.xml#lock-file) with the newest version the [registry](../glossary/index.xml#registry) offers and prints the difference; it changes nothing. Then it runs `vibe update --all`: vibe re-resolves the graph, preferring the current version of every package that is not being updated, fetches what is new into the [store](../glossary/index.xml#store), shows the plan, and on confirmation replaces the package trees, rewrites the lock file and regenerates the boot files. The agent finishes by reading the lock file's diff back to you: that diff is the exact list of text your agent will read differently from now on.</p>
+    <p>The agent first runs `vibe outdated`, which compares every pin in the [lock file](../glossary/index.xml#lock-file) with the newest version the [registry](../glossary/index.xml#registry) offers and prints the difference; it changes nothing. Then it runs `vibe update --all`. vibe re-resolves the graph, preferring the current version of every package that is not being updated, and fetches what is new into the [store](../glossary/index.xml#store). It shows the plan; on confirmation it replaces the package trees, rewrites the lock file and regenerates the boot files. The agent finishes by reading the lock file's diff back to you: that diff is the exact list of text your agent will read differently from now on.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#UPDATE-MOVES-LOCK"/>
   </what-happens>
   <by-hand title="By hand">
@@ -32,7 +32,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#CF-RANGE"/>
   </the-constraint>
   <recovery title="Recovering after a breaking update">
-    <p>If an update leaves the project in a state that no longer checks, the lock file in version control is your way back: restore it and run `vibe reinstall`, which rebuilds the tree from the lock and the store without the network. If the store itself holds a damaged entry, `vibe cache check` finds it and `vibe cache clean --package` removes it, after which a fresh install fetches the package again.</p>
+    <p>If an update leaves the project in a state that no longer checks, the lock file in version control is your way back. Restore it and run `vibe reinstall`, which rebuilds the tree from the lock and the store without the network. If the store itself holds a damaged entry, `vibe cache check` finds it and `vibe cache clean --package` removes it, after which a fresh install fetches the package again.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#REINSTALL-NO-FORCE"/>
   </recovery>
   <edge-cases title="Edge cases and rules">

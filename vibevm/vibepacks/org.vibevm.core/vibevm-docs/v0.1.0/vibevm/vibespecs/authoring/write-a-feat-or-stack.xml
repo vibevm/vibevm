@@ -3,7 +3,7 @@
   <title id="root">Write a feat or a stack</title>
   <status stage="doc" state="work" audience="author"/>
   <p>A feat says what to build without saying how; a stack says how a technology does it. This page writes one of each and connects them through the abilities one needs and the other provides.</p>
-  <prompt id="write-a-feat-or-stack">Create two packages under packages/ in the current VibeVM project: a feat org.acme/welcome-page that describes a welcome page with acceptance criteria and requires the capability ui:page-host, and a stack org.acme/static-site that provides ui:page-host and explains how a page is built as a static HTML file. Run vibe check on both.
+  <prompt id="write-a-feat-or-stack">Create two packages under packages/ in the current VibeVM project. The first is a feat org.acme/welcome-page that describes a welcome page with acceptance criteria and requires the capability ui:page-host. The second is a stack org.acme/static-site that provides ui:page-host and explains how a page is built as a static HTML file. Run vibe check on both.
     <needs>the vibevm skill installed for your agent; a project with `vibe.toml` at the root</needs>
     <outcome>the feat's manifest requires `ui:page-host`, the stack's manifest provides it, each has its specification documents under `vibevm/vibespecs/`, and `vibe check` reports no errors for either</outcome>
     <assert>vibe check --path packages/welcome-page --quiet</assert>

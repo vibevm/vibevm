@@ -33,7 +33,7 @@
     </example>
   </by-hand>
   <one-manifest title="One manifest, three roles">
-    <p>Every node has a file named `vibe.toml`, and what the file contains decides what the node is: a `[package]` table makes it a publishable package, a `[project]` table makes it a consumer that is never published, and a `[workspace]` table makes it [coordinate](../glossary/index.xml#coordinate) members. A node cannot be both a package and a project, but a workspace root may be either, or neither.</p>
+    <p>Every node has a file named `vibe.toml`, and what the file contains decides what the node is. A `[package]` table makes it a publishable package; a `[project]` table makes it a consumer that is never published; a `[workspace]` table makes it [coordinate](../glossary/index.xml#coordinate) members. A node cannot be both a package and a project, but a workspace root may be either, or neither.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#PACKAGE-XOR-PROJECT"/>
   </one-manifest>
   <members-referring title="Members referring to each other">

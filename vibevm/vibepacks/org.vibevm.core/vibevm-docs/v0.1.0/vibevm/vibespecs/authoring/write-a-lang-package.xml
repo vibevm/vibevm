@@ -3,14 +3,14 @@
   <title id="root">Write a lang package</title>
   <status stage="doc" state="work" audience="author"/>
   <p>A lang package teaches an agent how to write in a language or a notation: the idioms, the constraints, the shape of a good file. This page writes one and explains how vibe recognises it as a language discipline.</p>
-  <prompt id="write-a-lang-package">Create a lang package org.acme/sql-style in packages/sql-style of the current VibeVM project: a guide on how our team writes SQL, with a boot snippet that names the three rules an agent must always follow and a guide document with the full idioms, examples and the reasons behind them. Run vibe check on it.
+  <prompt id="write-a-lang-package">Create a lang package org.acme/sql-style in packages/sql-style of the current VibeVM project: a guide on how our team writes SQL. Give it a boot snippet that names the three rules an agent must always follow, and a guide document with the full idioms, examples and the reasons behind them. Run vibe check on it.
     <needs>the vibevm skill installed for your agent; a project with `vibe.toml` at the root</needs>
     <outcome>`packages/sql-style/vibe.toml` declares `kind = "lang"` with a boot snippet; the guide under `vibevm/vibespecs/` has anchored sections the snippet cites; `vibe check` reports no errors</outcome>
     <assert>vibe check --path packages/sql-style --quiet</assert>
     <assert>grep -q "kind = \"lang\"" packages/sql-style/vibe.toml</assert>
   </prompt>
   <what-happens title="What happens">
-    <p>The agent creates the package skeleton, writes the guide and its snippet the way a flow's are written, and sets the kind to `lang`. The difference from a flow is the genre, not the mechanics: a flow says how the team works, a lang package says how to write in something, and the kind tells an agent, a [registry](../glossary/index.xml#registry) and the site which is which before the file is opened.</p>
+    <p>The agent creates the package skeleton, writes the guide and its snippet the way a flow's are written, and sets the kind to `lang`. The difference from a flow is the genre, not the mechanics. A flow says how the team works; a lang package says how to write in something. The kind tells an agent, a [registry](../glossary/index.xml#registry) and the site which is which before the file is opened.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#KIND-SET"/>
   </what-happens>
   <what-a-lang-is title="What a lang package is, and is not">
@@ -19,7 +19,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-028#FAM-CORE"/>
   </what-a-lang-is>
   <families title="When a language brings tools">
-    <p>A language guide that also ships tools, a checker, a formatter, a type oracle, becomes a family: the guide package `&lt;family&gt;-lang`, a server package `&lt;family&gt;-mcp` that serves the same tools to agents, and a bundle `&lt;family&gt;` that pins both at one version. The members move in unison; a consumer requires the bundle and gets a tested set.</p>
+    <p>A language guide that also ships tools, a checker, a formatter, a type oracle, becomes a family. The guide package is `&lt;family&gt;-lang`; a server package `&lt;family&gt;-mcp` serves the same tools to agents; a bundle `&lt;family&gt;` pins both at one version. The members move in unison; a consumer requires the bundle and gets a tested set.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-028#FAMILY-DEF"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-028#UNISON-LAW"/>
     <p>The family stem leads every named surface: crates, binaries, [skills](../glossary/index.xml#skill) and the server all carry the `&lt;family&gt;` prefix, so everything of one language sorts and reads together.</p>
@@ -31,7 +31,7 @@
       <run>vibe init package org.acme/sql-style packages/sql-style</run>
       <expect></expect>
     </example>
-    <p>2. Write `vibevm/vibespecs/boot/sql-style.xml` with the rules an agent must follow every time, and the guide under `vibevm/vibespecs/lang/sql-style/` with the reasons, the idioms and the examples.</p>
+    <p>2. Write `vibevm/vibespecs/boot/sql-style.xml` with the rules an agent must follow every time. Put the guide under `vibevm/vibespecs/lang/sql-style/`, with the reasons, the idioms and the examples.</p>
     <p>3. Declare `[boot_snippet] source = "vibevm/vibespecs/boot/sql-style.xml"`, `category = "stack"`, so that the language rules come after the team's flows in a consumer's reading list.</p>
     <p>4. Check: `vibe check --path packages/sql-style`.</p>
   </by-hand>

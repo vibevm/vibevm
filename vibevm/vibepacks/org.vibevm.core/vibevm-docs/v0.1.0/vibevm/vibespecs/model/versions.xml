@@ -19,7 +19,7 @@
     <p>After an update the dependency tree and the boot files are regenerated, and the diff of the lock file is the change log of what your agent will now read.</p>
   </moving>
   <what-a-version-promises title="What a version promises">
-    <p>A version number is a contract: version 1 does what version 1 is documented to do. Inside a version the files behind it may be rebuilt, corrected or re-published, and a reader of the documentation does not see that kitchen. This is also how vibe treats its own releases: the binary you get from `vibe self install latest` is whatever the main branch holds today, under one version number, and the manual describes the contract of that number rather than the files of one build.</p>
+    <p>A version number is a contract: version 1 does what version 1 is documented to do. Inside a version the files behind it may be rebuilt, corrected or re-published, and a reader of the documentation does not see that kitchen. This is also how vibe treats its own releases. The binary you get from `vibe self install latest` is whatever the main branch holds today, under one version number. The manual describes the contract of that number rather than the files of one build.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#OBS-VERSION-CONTRACT"/>
   </what-a-version-promises>
   <vibe-itself title="Versions of vibe itself">

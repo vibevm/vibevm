@@ -24,6 +24,6 @@
   </what-regenerates>
   <edge-cases title="Edge cases and rules">
     <p>A package's folder in the dependency tree is named by its group, its name and its version, so two versions of one package can sit side by side during an update and nothing is overwritten in place.</p>
-    <p>If you develop packages inside the same repository, their sources live in a third tree, `vibevm/vibepacks/`, which is yours to edit; when a project in that repository requires one of them, vibe still copies it into the dependency tree like any other package.</p>
+    <p>If you develop packages inside the same repository, their sources live in a third tree, `vibevm/vibepacks/`, which is yours to edit. When a project in that repository requires one of them, vibe still copies it into the dependency tree like any other package.</p>
   </edge-cases>
 </spec>

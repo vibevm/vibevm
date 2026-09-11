@@ -9,7 +9,7 @@
     <p>A request that includes a step that cannot be undone, publishing or deleting, says that the agent must confirm before that step. Keep that line when you adapt a request.</p>
   </the-prompt-blocks>
   <how-vibe-knows title="How vibe knows an agent is calling">
-    <p>vibe behaves the same whether a person or an agent types the command, with one refinement: an agent identifies itself with `--invoked-by &lt;name&gt;` or the environment variable `VIBE_INVOKED_BY`, and every machine-readable report then carries that name, so logs show who did what. The installed skill tells the agent to pass it. In a script, `--unattended` answers every confirmation and refuses to open any interactive wizard.</p>
+    <p>vibe behaves the same whether a person or an agent types the command, with one refinement. An agent identifies itself with `--invoked-by &lt;name&gt;` or the environment variable `VIBE_INVOKED_BY`. Every machine-readable report then carries that name, so logs show who did what. The installed skill tells the agent to pass it. In a script, `--unattended` answers every confirmation and refuses to open any interactive wizard.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-018#MODE-INFERRED"/>
   </how-vibe-knows>
   <two-transports title="Two ways for an agent to reach vibe">

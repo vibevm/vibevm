@@ -32,7 +32,7 @@
     <p>`vibe undeploy --profile &lt;name&gt;` reverses that profile. The listing never shows secrets.</p>
   </by-hand>
   <artifacts title="Artifacts and targets">
-    <p>The [manifest](../glossary/index.xml#manifest) declares what `build` produces and what `package` assembles as artifact targets with dependencies between them; vibe lowers them into one validated graph and records every produced artifact, so that `package` consumes exactly what `build` verified and `deploy` applies exactly what `package` assembled. An artifact or a target may declare the operating systems it applies to, and a target that does not apply to the current machine is skipped with a note.</p>
+    <p>The [manifest](../glossary/index.xml#manifest) declares what `build` produces and what `package` assembles, as artifact targets with dependencies between them. vibe lowers them into one validated graph and records every produced artifact. So `package` consumes exactly what `build` verified, and `deploy` applies exactly what `package` assembled. An artifact or a target may declare the operating systems it applies to, and a target that does not apply to the current machine is skipped with a note.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#R8-ARTIFACT-RUNTIME"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#R8-PLATFORM-APPLICABILITY"/>
     <p>A [deploy profile](../glossary/index.xml#deploy-profile) names its targets in order and the provider that applies each: a folder on this machine, an agent's project or user configuration, and the genres the specification lists. An installed package may replace a built-in provider through an exact pin, so a team can ship its own way of deploying.</p>

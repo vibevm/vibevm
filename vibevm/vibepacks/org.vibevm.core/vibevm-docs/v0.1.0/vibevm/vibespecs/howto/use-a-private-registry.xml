@@ -19,7 +19,7 @@
       <run>vibe registry add acme file:///tmp/acme-specs --path hello-vibe --position primary</run>
       <expect></expect>
     </example>
-    <p>2. Choose the authentication regime with `--auth`: `none` for public read, `ssh` for keys, `token-env` to read a token from an environment variable named after the host, or `credential-helper` to let the system's git helper answer.</p>
+    <p>2. Choose the authentication regime with `--auth`. The values are `none` for public read, `ssh` for keys, `token-env` for a token in an environment variable named after the host, and `credential-helper` for the system's git helper.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#AUTH-REGIMES"/>
     <p>3. Probe:</p>
     <example id="registry-test" fixture="hello-vibe">

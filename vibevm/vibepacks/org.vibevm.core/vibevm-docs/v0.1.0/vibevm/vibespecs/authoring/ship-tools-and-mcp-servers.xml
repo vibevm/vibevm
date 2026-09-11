@@ -10,7 +10,7 @@
     <assert>vibe bin exec notes-check --path packages/notes-tools -- --help</assert>
   </prompt>
   <what-happens title="What happens">
-    <p>The agent adds a `[[binary]]` table naming the tool and the crate directory inside the package, runs `vibe bin build`, which asks for consent and runs a release build inside the package's own workspace, and then `vibe bin exec`, which resolves the tool through the project's [lock file](../glossary/index.xml#lock-file) to the artifact of the exact version installed and runs it. Consumers get the same: installing the package materialises its source, building on first use produces the tool beside it, and the artifact never enters the package's [fingerprint](../glossary/index.xml#fingerprint).</p>
+    <p>The agent adds a `[[binary]]` table naming the tool and the crate directory inside the package. It runs `vibe bin build`, which asks for consent and runs a release build inside the package's own workspace. Then it runs `vibe bin exec`, which resolves the tool through the project's [lock file](../glossary/index.xml#lock-file) to the artifact of the exact version installed and runs it. Consumers get the same: installing the package materialises its source, building on first use produces the tool beside it, and the artifact never enters the package's [fingerprint](../glossary/index.xml#fingerprint).</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#BINARY-MUST"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#HASHES-STABLE"/>
   </what-happens>

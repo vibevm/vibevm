@@ -11,7 +11,7 @@
     <p>Anything a foreign parser reads, a report a script parses, a file another language writes, a [manifest](../glossary/index.xml#manifest) a browser fetches, is described by a schema and registered in one inventory. The Rust types and the TypeScript types are generated from the schema, never written by hand, so the two sides cannot drift. An unregistered format is not merely discouraged: it cannot be expressed in the type system that writes it.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#jtd"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-044#M-FORMAT-REGISTRY"/>
-    <p>The schemas are JSON Typedef documents under `schemas/` in the source tree; the [registry](../glossary/index.xml#registry) is `formats/REGISTRY.toml`, which records for each format its epoch, its schema, whether it can be rebuilt from other state, how many parsers read it, and a corpus of golden documents that a build compares against.</p>
+    <p>The schemas are JSON Typedef documents under `schemas/` in the source tree. The [registry](../glossary/index.xml#registry) is `formats/REGISTRY.toml`. For each format it records the epoch, the schema, whether the format can be rebuilt from other state, and how many parsers read it. It also names a corpus of golden documents that a build compares against.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-044#POLICY-IS-COMPUTED"/>
   </the-rule>
   <the-envelope title="The envelope">
