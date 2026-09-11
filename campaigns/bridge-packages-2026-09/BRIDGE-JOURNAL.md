@@ -505,3 +505,31 @@ Windows public-registry E2E:
 - `vibe check` completed cleanly.
 
 The mutable Vibe `v1.0.0` release rebuild remains pending.
+
+## J-017 — Corrected mutable Vibe 1.0.0 release verified
+
+Date: 2026-09-11
+
+GitHub Actions run `34600279966` completed successfully for source commit
+`a6b8c7740209b431c35e7b544cae583ed52ca297`:
+
+- preparation succeeded;
+- all four native builds succeeded;
+- all four uploads succeeded; and
+- final verification succeeded.
+
+The mutable public `v1.0.0` release now targets that commit and contains 15
+explicitly uploaded assets. GitHub may display its automatically generated
+source links separately from those uploaded assets.
+
+Downloaded-artifact evidence:
+
+- The downloaded Windows archive had SHA-256
+  `b260e66e17ec19b208126706ff2ba3a0dbe7eafec9d212d0754667e24efa35f0`,
+  matching the release metadata.
+- On the public-registry E2E project, the released `vibe 1.0.0` listed Oleg
+  Chirukhin under package authors while listing GitHub, Inc. and Matt Pocock
+  separately under upstream authors.
+- The released binary's `vibe check` was clean.
+- The bundled `vibevm-source.zip` contained 8,331 entries and zero paths below
+  `vibevm/vibepacks/org.vibevm.bridges`.
