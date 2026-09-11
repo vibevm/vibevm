@@ -333,6 +333,27 @@ Date: 2026-09-11
   source records are different fields. This removes the temporary need for
   `outdated` to guess bridge status from `describes` alone.
 
+## J-011 — First reference-backed bridges published and indexed
+
+Date: 2026-09-11
+
+Published as public mutable `v1.0.0` package repositories:
+
+- `https://github.com/vibespecs/org.vibevm.bridges.spec-kit`
+- `https://github.com/vibespecs/org.vibevm.bridges.matt-pocock-skills`
+
+Both repositories were created by the normal `vibe registry publish` path.
+Their public file listings contain only the bridge manifest, UPL licence,
+README, boot-directory marker, and (for Spec Kit) the maintainer-authored
+adapter. No upstream source file, submodule or gitlink was published.
+
+The public `vibespecs/index` catalog was rebuilt from the GitHub organization
+with the new reader/writer. Result: 46 packages / 46 versions, including two
+`feat` bridge entries. Both by-name rows carry `bridge = true`, package licence
+`UPL-1.0`, the upstream MIT licence, exact upstream commit, ref hint, source
+hash and licence path/URL as separate structured provenance. The index commit
+is `86c35b8`.
+
 Implementation consequence for bridge authors:
 
 - Package-local adapters are the default integration surface and work with all
