@@ -170,6 +170,90 @@ An **id**, the **`spec://…#ANCHOR`** it came from where one exists, a one-line
 
 ## P2 — the next wave drains from here {#p2}
 
+### B-123 — `vibe cache add` печатает «bytes untouched», хотя запись store заменена по хэшу {#b-123}
+
+| | |
+|---|---|
+| @fact:B123-ANCHOR **anchor** | `crates/vibe-cli/src/commands/cache/add.rs:70` (`was_present` считается до выборки) против `crates/vibe-registry/src/store/refresh.rs:24` (`insert_current_at` заменяет запись мутабельного источника по хэшу) |
+| @fact:B123-LOCATOR **locator** | `vibe cache add --offline <координата>` из корня с in-tree пакетом после правки его содержимого: строка отчёта «already present — bytes untouched (write-once)», а sidecar `v<версия>.sha256` и байты записи уже новые |
+| @fact:B123-SEVERITY **severity** | P2 — вывод CLI лжёт о сделанном; данные верны |
+| @fact:B123-DISPOSITION **disposition** | `open` — считать `was_present` после выборки или печатать «refreshed by hash» |
+| @fact:B123-FILED **filed by** | кампания docs-2026-09, фаза 0 (A0.8, A0.20; DEFERRALS X-001), 2026-09-11 |
+
+- @fact:B123-SUT **Суть.** Сайт документации на строку отчёта не опирается; человек, прогревающий store руками, — опирается и делает неверный вывод «ничего не обновилось».
+
+### B-124 — `judging-debt.py` цитирует якоря долга по старому адресу PROP-043 {#b-124}
+
+| | |
+|---|---|
+| @fact:B124-ANCHOR **anchor** | `campaigns/packages-2026-09/tasks/judging-debt.py`, докстринг: `PROP-043 §10.1`, `##DEBT-IS-A-LIST-NOT-A-RATIO`, `##DEBT-MUST-BE-ASKABLE` |
+| @fact:B124-LOCATOR **locator** | якоря живут в `vibevm/vibespecs/modules/vibe-progress/PROP-047-progress-campaigns.xml` §6.2 после разделения 2026-08-22; старый адрес — tombstone |
+| @fact:B124-SEVERITY **severity** | P3 — стале-ссылка в скрипте чужой зоны; поведение не задето |
+| @fact:B124-DISPOSITION **disposition** | `open` — правится попутно при внедрении `[judging] exempt` (docs-2026-09, фаза 2), тем же коммитом |
+| @fact:B124-FILED **filed by** | кампания docs-2026-09, фаза 0 (A0.19; DEFERRALS X-002), 2026-09-11 |
+
+### B-125 — `vibevm/vibedeps/.gitignore`, который пишет `vibe`, не в истории {#b-125}
+
+| | |
+|---|---|
+| @fact:B125-ANCHOR **anchor** | `crates/vibe-workspace/src/vibedeps/build_ignore.rs` — файл «Managed by vibe» появляется untracked после `vibe bin build` и `vibe cache add` из корня хоста |
+| @fact:B125-LOCATOR **locator** | `git status` после любой из этих команд в чистом чекауте; в той же сессии файл позже исчез (удалён пробой воркера) |
+| @fact:B125-SEVERITY **severity** | P3 — вопрос владельцу: файл должен быть в истории или в `.gitignore` корня; рендерер сайта делает `git pull` в выкладке и не должен спотыкаться об untracked-файл |
+| @fact:B125-DISPOSITION **disposition** | `open` — решает владелец |
+| @fact:B125-FILED **filed by** | кампания docs-2026-09, фаза 0 (журнал J-025; DEFERRALS X-005), 2026-09-11 |
+
+### B-126 — схема `install_plan` требует `plans`, а `vibe install --json` печатает `packages` {#b-126}
+
+| | |
+|---|---|
+| @fact:B126-ANCHOR **anchor** | `schemas/install_plan.jtd.json` (поле `plans`) против `crates/vibe-cli/src/commands/install/report.rs:150` (эмиттер пишет `packages`) |
+| @fact:B126-LOCATOR **locator** | документ `install:plan` потока `vibe install --json` невалиден по собственной схеме; сгенерированный тип `install_plan` в `vibe-cli` не используется, поэтому `cargo xtask check-codegen` расхождения не видит |
+| @fact:B126-SEVERITY **severity** | P2 — контракт `--json` нарушен; граничит с «гейт не смотрит», но `check-codegen` разрешимость эмиттера не заявляет (то же различие, что у `##B076-WHY-NOT-P1`) |
+| @fact:B126-DISPOSITION **disposition** | `open` — либо эмиттер через сгенерированный тип, либо схема по эмиттеру плюс тест «каждый документ `--json` валиден по своей схеме» |
+| @fact:B126-FILED **filed by** | кампания docs-2026-09, фаза 0 (A0.12; DEFERRALS X-008), 2026-09-11 |
+
+- @fact:B126-SUT **Суть.** Раннер примеров документации сверяет `--json` со схемой по карте фикстуры и до исправления помечает этот документ «не проверен», не «прошёл».
+
+### B-127 — ключи конверта `invoked_by` и `unattended` не объявлены ни в одной JTD-схеме {#b-127}
+
+| | |
+|---|---|
+| @fact:B127-ANCHOR **anchor** | `crates/vibe-cli/src/output.rs:471`, `:487` — конверт получает ключи при `--invoked-by` и `--unattended` |
+| @fact:B127-LOCATOR **locator** | любой `--json`-документ с `--invoked-by` невалиден по своей схеме (`additionalProperties` закрыты); `VIBE_INVOKED_BY` в окружении даёт тот же эффект молча |
+| @fact:B127-SEVERITY **severity** | P2 — контракт `--json` неполон; PROP-000 §16 требует схему на каждый wire |
+| @fact:B127-DISPOSITION **disposition** | `open` — объявить конверт одной общей схемой или `optionalProperties` в каждой |
+| @fact:B127-FILED **filed by** | кампания docs-2026-09, фаза 0 (A0.12; DEFERRALS X-009), 2026-09-11 |
+
+### B-128 — `install:closure-diff` собирается вручную и схемы не имеет {#b-128}
+
+| | |
+|---|---|
+| @fact:B128-ANCHOR **anchor** | `crates/vibe-cli/src/commands/install/closure_diff.rs:195`, `:208` |
+| @fact:B128-LOCATOR **locator** | документ потока `vibe install --json` вне реестра форматов и без JTD-схемы |
+| @fact:B128-SEVERITY **severity** | P2 — машинный вывод вне контракта JTD (PROP-000 §16, PROP-044) |
+| @fact:B128-DISPOSITION **disposition** | `open` — схема + регистрация в `formats/REGISTRY.toml` + генерируемый тип |
+| @fact:B128-FILED **filed by** | кампания docs-2026-09, фаза 0 (A0.12; DEFERRALS X-010), 2026-09-11 |
+
+### B-129 — `research/ts-demo` красный на HEAD по трём шагам floor {#b-129}
+
+| | |
+|---|---|
+| @fact:B129-ANCHOR **anchor** | `research/ts-demo/`: `prettier` (`src/main.ts:11`, 81 символ), `eslint` (плагин `@org.vibevm/eslint-plugin-ai-native` через `file:`-симлинк не резолвит `@typescript-eslint/utils`), `specmap` (orphan `compose`); `vibe.lock` схемы 6 при требуемой 7; `tsconfig.json` ниже пола GUIDE §1 на семь флагов без `deviates` |
+| @fact:B129-LOCATOR **locator** | `typescript-ai-native floor --path research/ts-demo` на `b1291b06`; панель `tools/self-check.sh` этот floor не гоняет, поэтому зелёная панель об этом молчит |
+| @fact:B129-SEVERITY **severity** | P2 — долг стека TypeScript, не кампании; boot-сниппет стека называет полом четыре флага, GUIDE — двенадцать (расхождение нормы) |
+| @fact:B129-DISPOSITION **disposition** | `open` — чинить резолв плагина до открытия web-пакета документации (A4.1 решает временный обход) |
+| @fact:B129-FILED **filed by** | кампания docs-2026-09, фаза 0 (A0.14; DEFERRALS X-013, X-014), 2026-09-11 |
+
+### B-130 — `min_vibe_version` нигде не проверяется; реальный гейт старого `vibe` — `deny_unknown_fields` {#b-130}
+
+| | |
+|---|---|
+| @fact:B130-ANCHOR **anchor** | `crates/vibe-core/src/manifest/` — `ManifestWire` с `deny_unknown_fields`; `min_vibe_version` — транзит в индекс и post-publish-хук, ни одного сравнения с версией `vibe` |
+| @fact:B130-LOCATOR **locator** | пакет с новым ключом манифеста отказывает старому `vibe` парсером, а не сообщением «нужна версия ≥ X»; поле декларативно |
+| @fact:B130-SEVERITY **severity** | P2 — обещание манифеста не подкреплено кодом; станет заметно с первыми doc-пакетами (новые ключи `title`, `abstract`, `[[documents]]`, `[documentation]`, `[translates]`, `[media]`) |
+| @fact:B130-DISPOSITION **disposition** | `open` — проверять поле до разбора остальных ключей и падать с понятным сообщением; вопрос владельцу о версии `vibe` (1.1.0) — в вопросах гейта фазы 0 кампании |
+| @fact:B130-FILED **filed by** | кампания docs-2026-09, фаза 0 (A0.3, F-05), 2026-09-11 |
+
 ### B-101 — локальный кэш пакетов ключуется версией и не видит правку источника без бампа {#b-101}
 
 | | |
