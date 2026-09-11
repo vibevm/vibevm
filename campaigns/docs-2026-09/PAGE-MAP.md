@@ -1,0 +1,138 @@
+# Карта страниц документации ядра — P.1 {#root}
+
+<status stage="spec" state="work" comment="P.1 кампании docs-2026-09, 2026-09-12; карта принимается владельцем целиком, страницы пишутся по ней в P.3; правки карты — на месте с датой"/>
+
+Пакет `org.vibevm.core/vibevm-docs`, язык `en`. Страница = один файл
+`vibevm/vibespecs/<раздел>/<имя>.xml` в диалекте PROP-045 со словарём
+документации (PROP-057 §10, PROP-045 §7). Заголовок и первый абзац ниже —
+**настоящий английский текст страницы**: первый абзац без единого термина
+глоссария, он же строка страницы в `llms.txt`. «Лестница» — порядок понятий,
+где каждое опирается только на введённые раньше; «источники» — что страница
+цитирует через `rule` или `derived`; «команды» — что она показывает через
+`example`. Аудитории — по PROP-043 (`user`, `author`, `dev`, `agent`).
+
+Правила из `STYLE.md`: концепт-страница — существительное в заголовке, задача —
+повелительное наклонение и промпт сначала (`prompt` с `needs`, `outcome`,
+`assert`); ни одна страница не заканчивается заключением. Лестница всего
+корпуса идёт сверху вниз по разделам: каждая страница может опираться на
+страницы выше себя и на глоссарий.
+
+Термины, которые вводятся по ходу лестницы (в порядке появления): *agent
+session*, *context*, *package*, *project*, *manifest* (`vibe.toml`), *lock
+file* (`vibe.lock`), *store* (`~/.vibe/cache/`), *registry*, *index*,
+*boot lane* (`STATIC.xml`, `INDEX.md`), *boot snippet*, *link type*,
+*kind*, *family*, *companion*, *coordinate* (`group/name@version`),
+*content hash*, *capability*, *skill*, *MCP server*, *lifecycle*, *phase*,
+*contribution*, *provider*, *deploy profile*, *receipt*, *workspace*,
+*spec*, *anchor*, *fact*, *traceability map*.
+
+## Раздел 1 — `start/` (учебник, `user`; маршрут новичка) {#start}
+
+| # | Файл | Заголовок | Тип | Первый абзац (английский, без терминов) | Лестница | Источники | Команды |
+|---|---|---|---|---|---|---|---|
+| 1 | `start/index` | The newcomer's route | путь | You have a coding agent and a project. VibeVM gives that agent the right text to read before it starts working, and keeps that text in step with what your team decided. This page walks you from an empty folder to a project your agent understands, one short step at a time. | путь по страницам 2–5, на каждом шаге одно правило через `rule` | PROP-000 §5, PROP-009 §2, PROP-052 §2 | `vibe init`, `vibe install`, `vibe check`, `vibe tree` |
+| 2 | `start/what-vibevm-is` | What VibeVM is | концепт | A coding agent starts every session knowing nothing about your project. VibeVM fixes that the way a package manager fixes missing libraries: you name what your project follows, and the agent gets the exact text to read at the start of each session. The text comes from packages, so a team, a company or a community can share it and improve it in one place. | agent session → context → package → project → registry; чем это не является (не IDE, не инференс) | VIBEVM-SPEC §1–§2, PROP-000 §5, PROP-048 (текст стоит) | `vibe --version`, `vibe list` |
+| 3 | `start/install-vibe` | Install vibe | задача | vibe is one program with no runtime to install. On Windows you download an archive and unpack it; on any platform with a Rust toolchain you build it from the source. When it is done, one command prints the version. | распакованный дистрибутив → `vibe self install` из исходников → PATH → проверка версии; где живут настройки (`~/.vibe`) | README «Install», RUNTIME-GUIDE §1–§3, PROP-019 §2.2, §2.6, §2.12 | `vibe --version`, `vibe self install latest`, `vibe self ls`, `vibe vars` |
+| 4 | `start/first-project` | Create your first project | задача, промпт сначала | A project is a folder your agent works in. This page creates one, adds the first shared rule set to it, and shows what appeared on disk and why the agent will now read it. Ten minutes, no prior knowledge. | промпт → что произойдёт → руками: `init`, `install`, `list`, `tree`, `check`; манифест и lock появляются; управляемый блок в `CLAUDE.md` | PROP-009 §2.2–§2.3, PROP-012 (managed block), PROP-052 §2 | `vibe init`, `vibe install org.vibevm.world/wal`, `vibe list`, `vibe tree --plain`, `vibe check` |
+| 5 | `start/what-a-project-contains` | What a project contains | концепт | After the first install, a project holds a handful of files you wrote and a larger set that vibe wrote for you. This page names each of them and says who is allowed to change it, so nothing you edit gets overwritten and nothing vibe generates gets edited by hand. | `vibe.toml` → `vibe.lock` → `vibevm/vibespecs` (yours) → `vibevm/vibedeps` (vibe's) → `vibevm/vibepacks` (in-tree packages) → `boot/STATIC.xml`, `INDEX.md` → managed block | PROP-052 §2, PROP-009 §2.3, VIBEVM-SPEC §4.2, §7 | `vibe show effective`, `vibe tree` |
+
+## Раздел 2 — `model/` (объяснение, `user`) {#model}
+
+| # | Файл | Заголовок | Тип | Первый абзац | Лестница | Источники | Команды |
+|---|---|---|---|---|---|---|---|
+| 6 | `model/two-trees` | Two trees: what you write and what vibe writes | концепт | A project keeps two kinds of text apart: the rules your team wrote, and the copies of shared rules that arrived with the packages you installed. Installing a package never edits your own text. Removing one never leaves a trace in it. | authored tree → materialised tree → the founding rule → what regenerates and when (`reinstall`, `clean`) | PROP-009 §1–§2 (`INSTALL-NEVER-EDITS`), PROP-053, PROP-052 | `vibe reinstall`, `vibe clean` |
+| 7 | `model/boot-lane` | The boot lane: how an agent reads a project | концепт | When an agent starts, it reads a short ordered list of files that vibe computed from everything the project depends on. The list has a fixed first file, read in full, and an index of the rest. Some entries are read always, some only when a condition holds, and nothing in the list is written by hand. | boot lane → `STATIC.xml` (priority lane) → `INDEX.md` entries → link types `static`/`dynamic`/`inline` → conditions (`when`) → why documentation is never here | PROP-009 §2.2–§2.5, PROP-035 (compiler), PROP-038, PROP-048 (tokenomics), PROP-057 §14 | `vibe tree`, `vibe show effective` |
+| 8 | `model/packages-and-kinds` | Packages and their kinds | концепт | Everything vibe installs is a package: a folder with a small manifest and the text or tools it delivers. Packages come in eight kinds, and the kind tells you what a package is for before you open it: a way of working, a feature, a technology, a tool, a language guide, an agent server, documentation, or an application. | package → manifest → coordinate `group/name@version` → kind (eight) → families and companions → what a kind is not (not identity) | VIBEVM-SPEC §4.1, PROP-000 §6, PROP-008, PROP-028, PROP-057 §2–§3 | `vibe list`, `vibe search`, `vibe why` |
+| 9 | `model/registries` | Registries and the index | концепт | A registry is where packages are published: by default a public organisation on GitHub, one repository per package. A project lists the registries it trusts, in order. An index beside the registry answers searches without cloning anything. | registry → naming convention (fqdn) → the index (`repomd.json`, `primary.jsonl`) → search → mirrors and overrides → private registries → git sources | PROP-002 §2, PROP-005, PROP-001, PROP-016, PROP-021 | `vibe registry list`, `vibe registry test`, `vibe search` |
+| 10 | `model/lock-and-store` | The lock file and the machine store | концепт | The lock file records exactly which package versions your project got, down to a fingerprint of their content, so a teammate installs the same bytes. The machine store keeps those bytes once per computer, so a second project or an offline day costs nothing extra. | `vibe.lock` → content hash as identity → the store `~/.vibe/cache/` → offline resolution → drift and refusal | PROP-002 §2.1, PROP-010 §2, PROP-030, VIBEVM-SPEC §7.5 | `vibe cache path`, `vibe cache list`, `vibe cache add`, `vibe install --offline` |
+| 11 | `model/versions` | Versions and updates | концепт | A version is a promise about behaviour, not a snapshot of files. Your project asks for a range, the lock file pins one number, and an update moves the pin on purpose. vibe itself follows the same rule: one number stands for one contract, however often the binary behind it is rebuilt. | semver constraints → pins → `update` and `outdated` → what a version promises (contracts) → vibe's own versions | PROP-003 §2.1 (constraints), PROP-057 §14 (`OBS-VERSION-CONTRACT`), PROP-019 §2.3 | `vibe outdated`, `vibe update`, `vibe self ls` |
+
+## Раздел 3 — `howto/` (как сделать, промпт сначала; `user`, `author`) {#howto}
+
+| # | Файл | Заголовок | Тип | Первый абзац | Лестница | Источники | Команды |
+|---|---|---|---|---|---|---|---|
+| 12 | `howto/install-a-package` | Install a package | задача | You found a package your project should follow. This page adds it to the project, records the exact version, and shows how to check that your agent will now read it. | prompt → what happens (resolve, fetch, plan, confirm, apply, lock, boot) → by hand → constraints (`@^1.0`) → refusing a plan | VIBEVM-SPEC §5.6, PROP-011 (incremental), PROP-020 (hooks) | `vibe install <coord>`, `vibe install --assume-yes`, `vibe list` |
+| 13 | `howto/update-packages` | Update packages | задача | Packages change. This page shows which of yours have a newer version, moves one or all of them forward, and explains what the lock file does during the move. | prompt → `outdated` → `update` → pin preferences (minimum churn) → recovery after a breaking update | PROP-003 §2.1–§2.3, ALPHA-NOTES «Recovery» | `vibe outdated`, `vibe update`, `vibe update --all` |
+| 14 | `howto/remove-a-package` | Remove a package | задача | Removing a package takes its text out of the project and out of the agent's reading list, and leaves everything you wrote untouched. | prompt → `uninstall` → what leaves and what stays → `clean` for derived state | VIBEVM-SPEC §5, PROP-053 | `vibe uninstall`, `vibe clean` |
+| 15 | `howto/work-offline` | Work offline | задача | On a plane or behind a firewall, vibe keeps working from what the machine already holds. This page warms the store before you leave and installs from it without a network. | prompt → `cache add` → `--offline` → hard error, never a partial result → checking the store | PROP-010 §2.5, §2.8, PROP-030 | `vibe cache add`, `vibe cache check`, `vibe install --offline` |
+| 16 | `howto/use-a-private-registry` | Use a private registry | задача | A company can keep its packages in its own place and still use vibe unchanged. This page points a project or a whole machine at a private registry, with or without an index, and keeps the public one as a fallback. | prompt → `[[registry]]` in the project → machine-wide `~/.vibe/registry.toml` → mirrors and overrides → authentication (tokens, never in files you commit) | PROP-002 §2.6, PROP-016, RUNTIME-GUIDE §3, PROP-000 §20 | `vibe registry add`, `vibe registry list`, `vibe registry test` |
+| 17 | `howto/publish-a-package` | Publish a package | задача, `author` | You wrote a package and want others to install it. This page publishes it to a registry as its own repository, tags the version, and checks that a fresh project can install it. | prompt → publish token (where it lives, never pasted) → `registry publish` → tags and versions → workspace publish in dependency order → what the index sees | PROP-002 §2.4, PROP-007 §3, PROP-000 §20, PROP-023 (bridge) | `vibe registry publish`, `vibe workspace publish` |
+| 18 | `howto/set-up-a-workspace` | Set up a workspace | задача, `author` | Several packages developed together can live in one repository and share one lock file. This page turns a folder into such a workspace and shows how members refer to each other by path. | prompt → workspace root → members → path sources → one lock → publishing members | PROP-007 §2 | `vibe init`, `vibe install` (path source), `vibe workspace publish` |
+| 19 | `howto/read-documentation-locally` | Read documentation locally | задача | Documentation of the packages you use, including private ones, can be read on your own machine with nothing sent anywhere. This page fetches the manual into the store and opens the reader in a browser. | prompt → `cache add` a doc package → `vibe doc serve` → the reader → the agent skill | PROP-057 §2, §11, §14 | `vibe cache add`, `vibe doc serve` (arrives with the campaign's phase 2; example added then) |
+
+## Раздел 4 — `agent/` (учебник + как сделать; `user`, `agent`) {#agent}
+
+| # | Файл | Заголовок | Тип | Первый абзац | Лестница | Источники | Команды |
+|---|---|---|---|---|---|---|---|
+| 20 | `agent/give-your-agent-the-skill` | Give your agent the vibevm skill | задача | Your agent works better when it knows what vibe is and how to call it. This page installs a small skill into the agent's own folder, and, for agents that support it, a server the agent can query directly. | prompt → `skill install` (Claude Code, OpenCode, Codex) → `mcp install --with-skill` → what the skill teaches → `--invoked-by` | PROP-018 §2.4–§2.6, §2.9, PROP-027, PROP-004 | `vibe skill list`, `vibe skill install`, `vibe mcp install --with-skill`, `vibe mcp status` |
+| 21 | `agent/ask-your-agent` | Ask your agent to do the work | концепт + задача | Every page in this manual that describes a task starts with the plain request you type to your agent. This page explains what those requests assume, how the agent proves the work is done, and what happens when vibe hands a job back to the agent instead of doing it itself. | prompt blocks and asserts → the skill → agent mode and the relay (`vibe command`) → `--unattended` → limits | PROP-057 §16 (`STYLE-PROMPT-FIRST`), PROP-018 §2.7, §2.10, PROP-054 §6.5 | `vibe agentic explain`, `vibe command`, `--invoked-by`, `--unattended` |
+| 22 | `agent/how-agents-read-this-manual` | How an agent reads this manual | справочник, `agent` | This manual is published for machines as much as for people. An agent can fetch any page as plain text, ask where a rule lives, and load the whole corpus in one file sized to its budget. | `llms.txt` tiers → `.md`/`.xml` projections → `manifest.json` → the resolver → the store offline → the skill's procedure | PROP-057 §13 (`SEO-LLMS-FILES`, `SEO-RAW-PROJECTIONS`, `SEO-MANIFEST-AND-RESOLVER`), §7.3–§7.4 of the vision | `vibe explain "spec://…"`, `vibe doc manifest --llms` |
+
+## Раздел 5 — `lifecycle/` (как сделать + объяснение; `user`, `author`) {#lifecycle}
+
+| # | Файл | Заголовок | Тип | Первый абзац | Лестница | Источники | Команды |
+|---|---|---|---|---|---|---|---|
+| 23 | `lifecycle/phases` | The lifecycle: from validate to deploy | концепт | Building software has a fixed order of steps, and vibe names them: check the workspace, produce generated sources, build, test, let an agent create what only an agent can, verify, assemble, deploy. Each step runs only when something it depends on changed. | lifecycle → nine phases → skip-when-fresh → the chain grammar (`vibe test` runs everything before it) → `--plan` → where contributions come from | PROP-054 §4.1–§4.4, PROP-053 | `vibe validate`, `vibe build`, `vibe test`, `vibe deploy --plan` |
+| 24 | `lifecycle/build-package-deploy` | Build, package and deploy a project | задача | This page takes a project from source to a running deployment with three commands, shows what each leaves on disk, and how to take a deployment down again without guessing what it owned. | prompt → deploy profiles → receipts → `deployments` → `undeploy` → generations | PROP-054 §4, §9, `vibe deploy --help` | `vibe package`, `vibe deploy`, `vibe deployments`, `vibe undeploy` |
+| 25 | `lifecycle/scrape` | Remove VibeVM from a project | задача | When a project is finished and must leave without a trace of the tool that helped build it, one operation removes every vibe file and reference while keeping the product and its build intact. | prompt → the contract file → plan → verification → in-place removal and recovery → what stays | PROP-056 §1–§3 | `vibe scrape --plan`, `vibe scrape` |
+| 26 | `lifecycle/extensions-and-providers` | Extensions and providers | концепт, `author` | A package can plug into the lifecycle: run a step, transform a stage, or hand a task to an agent. This page explains how such contributions are declared, how a project turns them on, and how to see which ones ran and why. | extension points → contributions (`[[extension]]`) → activation by installation → ordering → observability → providers and the handler kinds | PROP-054 §3, §5, §6 | `vibe extensions`, `vibe extensions analyze`, `vibe tools` |
+
+## Раздел 6 — `reference/` (справочник; `user`, `author`) {#reference}
+
+| # | Файл | Заголовок | Тип | Первый абзац | Лестница | Источники | Команды |
+|---|---|---|---|---|---|---|---|
+| 27 | `reference/commands` | Command reference | справочник, генерируется | Every command vibe accepts, with its options, in the words the program itself prints. Nothing on this page is written by hand. | one `derived kind="cli-help"` per command, grouped as in `vibe --help` | clap | all |
+| 28 | `reference/manifest` | The manifest: vibe.toml | справочник | The manifest is the one file you write to describe a project or a package: its name, what it depends on, where packages come from, and what it delivers. This page lists every table and field with its meaning. | `[project]` vs `[package]` → identity fields → `[requires]` → `[[registry]]`, `[[mirror]]`, `[[override]]` → `[boot_snippet]` → `[[skill]]`, `[[binary]]`, `[[mcp_server]]` → `[i18n]` → the card and relation fields (`title`, `abstract`, `[[documents]]`, `[documentation]`, `[translates]`, `[media]`) | VIBEVM-SPEC §7.2, PROP-024 §3, PROP-003 §2.7, PROP-057 §4, §5, §7 (`derived kind="manifest-field"` where possible) | `vibe check` |
+| 29 | `reference/lock-file` | The lock file: vibe.lock | справочник | The lock file is written by vibe and committed by you. This page explains every field so you can read a diff of it in a pull request and know what changed. | `[meta]` → `[[package]]` entries → `source_kind` → content hashes → `language_chain` → schema versions | VIBEVM-SPEC §7.5, PROP-002 §2.7, PROP-003 §2.7.5 | `vibe list`, `vibe why` |
+| 30 | `reference/machine-formats` | Machine formats and JSON reports | справочник | Every command can answer in JSON for scripts and agents. This page lists the documents, their schemas and the envelope fields that every document carries. | `--json` → envelopes → the schema per document (`derived kind="jtd-schema"`) → the formats registry → what is not yet schematised | PROP-000 §16, PROP-044 §6, `schemas/`, `formats/REGISTRY.toml` | `vibe list --json`, `vibe install --json` |
+| 31 | `reference/settings-and-environment` | Settings, paths and environment | справочник | vibe keeps its own files in one folder in your home directory and reads a few environment variables. This page lists the folder's contents, every variable, and which wins when they disagree. | `~/.vibe/` → `VIBE_SETTINGS` → registry and config files → prefs → `VIBE_OFFLINE`, `VIBE_INVOKED_BY`, `VIBE_UNATTENDED`, `VIBEVM_INDEX_URL_*` → precedence | RUNTIME-GUIDE §3, PROP-040 §8, PROP-010 §2.5, PROP-019 §2.14 | `vibe vars`, `vibe prefs list`, `vibe show config` |
+
+## Раздел 7 — `authoring/` (учебник + как сделать; `author`) {#authoring}
+
+| # | Файл | Заголовок | Тип | Первый абзац | Лестница | Источники | Команды |
+|---|---|---|---|---|---|---|---|
+| 32 | `authoring/write-a-flow` | Write a flow package | задача | A flow tells an agent how a team works: how to commit, what to check before pushing, how to keep notes between sessions. This page writes one from scratch, including the short text the agent reads at every session start. | prompt → package layout → manifest → the boot snippet (short, stable, tokens cost) → specs with anchors → skills → versioning → publishing | PROP-009 §2.5, PROP-048, PROP-049 (snippet genre), PROP-024 §2.2, addressable-specs flow | `vibe init --package`, `vibe check`, `vibe specmap` |
+| 33 | `authoring/write-a-feat-or-stack` | Write a feat or a stack | задача | A feat says what to build without saying how; a stack says how a technology does it. This page writes one of each and connects them through the abilities one needs and the other provides. | prompt → feat: spec, acceptance, capabilities → stack: mappings, capability files → `provides`/`requires` matching → versioning | VIBEVM-SPEC §4.1, PROP-002 §2.9 (capabilities), legacy authoring guides | `vibe check`, `vibe install` |
+| 34 | `authoring/write-a-lang-package` | Write a lang package | задача | A lang package teaches an agent how to write in a language or a notation: the idioms, the constraints, the shape of a good file. This page writes one and explains how vibe recognises it as a language discipline. | prompt → what a lang is (and is not) → recognised by its dependency on the core discipline, never by its group → guide, cards, toolchain → families | VIBEVM-SPEC §4.1 (`lang`), PROP-028 §2.1 | `vibe tools`, `vibe bin list` |
+| 35 | `authoring/ship-tools-and-mcp-servers` | Ship tools and MCP servers | задача | A package can deliver programs: command-line tools built on install, or a server your agent talks to. This page declares both, builds them in the package's own folder, and explains why a server pins the exact version of the tools it serves. | prompt → `[[binary]]` → consent-gated build → `vibe bin exec` → `[[mcp_server]]` → exact pin law → families `-lang`/`-mcp` | PROP-025 §2–§4, PROP-027 §2, PROP-028 §2.1–§2.2 | `vibe bin build`, `vibe bin exec`, `vibe mcp serve`, `vibe tools` |
+| 36 | `authoring/write-documentation` | Write documentation for a package | задача | A manual for a package is itself a package: it names what it documents, carries a title and a summary, and is read rather than installed. This page writes one, with examples that are run and rules quoted from the source they come from. | prompt → the `doc` kind → `[[documents]]` and `[documentation]` → the card (title, abstract, images) → the vocabulary: `example`, `rule`, `derived`, `note`, `figure`, `prompt`, `when` → checks → the skill → publishing | PROP-057 §2, §4, §7, §10, §16; PROP-045 §7 | `vibe doc check`, `vibe cache add`, `vibe doc serve` |
+| 37 | `authoring/translate-documentation` | Translate documentation | задача | A translation is a separate package in the same shape as the original: same pages, same anchors, same examples by reference, in another language. This page creates one and explains what makes it official. | prompt → `-<lang>` naming → `[translates]` → the mirror rule → `example ref` → officiality by publisher → the language selector | PROP-057 §5–§6, PROP-003 §2.7.6 | `vibe doc check --translations` |
+| 38 | `authoring/specs-agents-can-cite` | Write specs an agent can cite | концепт + задача | The text in a package is only useful to an agent if every rule in it has an address. This page shows the shape of such text: named sections, one idea per unit, a status on each, and an address that never changes once published. | spec → section anchors → facts and their ids → `spec://` addresses → the XML dialect and the Markdown form → statuses → tombstones on rename | PROP-045 §2, PROP-043 §3, PROP-029, addressable-specs flow | `vibe explain "spec://…"`, `vibe facts check`, `vibe refactor convert-source` |
+
+## Раздел 8 — `architecture/` (объяснение; `dev`) {#architecture}
+
+| # | Файл | Заголовок | Тип | Первый абзац | Лестница | Источники | Команды |
+|---|---|---|---|---|---|---|---|
+| 39 | `architecture/how-vibe-is-built` | How vibe is built | концепт | vibe is one binary built from a family of Rust libraries, each owning one concern: the manifest, resolution, the registry, the workspace on disk, the agent surfaces. This page maps the libraries, the seams between them, and the path an install takes through them. | crate map → the install path → seams (resolver, registry backend, materialisation) → wire contracts → where to read next | `docs-legacy/architecture.md` (regression source), PROP-000 §2, §16, §21, PROP-017, PROP-054 §9 | `cargo build`, `bash tools/self-check.sh` |
+| 40 | `architecture/traceability` | Traceability: specs, code and the map | концепт | Every public piece of code in vibe points at the rule it implements, and a generated map lets you ask in either direction: which code implements this rule, which rule does this code answer to. | `#[spec]` marks → the map (`specmap.json`) → edges (`implements`, `verifies`, `documents`) → `explain`, `query`, `select` → the ratchet and the gates | PROP-014 §2.6, PROP-057 §10 (`PIPE-EDGES-HOST-SIDE`), `specmap.toml` | `vibe explain`, `vibe query`, `vibe select`, `cargo xtask specmap --check` |
+| 41 | `architecture/what-the-lifecycle-epic-delivered` | What the lifecycle epic delivered | концепт, `dev`/`user` | Between July and September 2026 vibe grew from a package installer into a build system with an extension machine, a native ABI, deploy receipts and a terminal export. This page tells that route as one system, what was decided on the way, and what was left for later. | R1 → R8 as one route → the rulings → migrations and compatibility boundaries → deliberate deferrals → retired lanes | `campaigns/packages-2026-09/LIFECYCLE-EXTENSIONS-IMPLEMENTATION-LEDGER.md`, PROP-054, PROP-056, commits | — |
+
+## Раздел 9 — справочные страницы для всех {#common}
+
+| # | Файл | Заголовок | Тип | Первый абзац | Лестница | Источники | Команды |
+|---|---|---|---|---|---|---|---|
+| 42 | `glossary/index` | Glossary | справочник | One definition per term, and the only place a term is defined. Every other page links here the first time it uses a word from this list. | alphabetical; each entry: definition in plain words, the canonical anchor, the page that introduces it | the terms list above; anchors from the specs | — |
+| 43 | `faq/index` | Questions | как сделать | Real questions people asked, each answered in a few sentences with a link to the page that explains the mechanism. | grouped: install, registries, agents, versions, offline | `docs-legacy/faq/`, troubleshooting | — |
+| 44 | `diagnostics/errors` | From an error message to the rule | как сделать | vibe's error messages name the rule they enforce. This page lists the messages you are likely to meet, what each means, and the shortest way out, in the order they tend to appear. | install errors → registry errors → git errors → publish errors → lifecycle errors; each: message, meaning, way out, the rule address | `docs-legacy/troubleshooting.md` (regression source), error types in `vibe-core`, `vibe-install`, `vibe-registry`, `vibe-publish` | `vibe explain "spec://…"` |
+
+## Счёт и порядок {#count}
+
+44 страницы; минимум плана (13) перекрыт, разделы ИА §6 вижена покрыты все:
+начало (1–5), модель (6–11), как сделать (12–19), работа через агента
+(20–22), lifecycle и расширения (23–26), справочники (27–31), авторство
+(32–38), архитектура и мейнтейнер (39–40), lifecycle-эпик (41), глоссарий
+(42), FAQ (43), диагностика (44); «для агентов» — страница 22 плюс
+машинные файлы сайта.
+
+Порядок написания (P.3) — лестница корпуса: 2, 5, 6, 7, 8, 9, 10, 11, 3,
+4, 1, 12–19, 20–22, 23–26, 28–31, 27, 32–38, 39–41, 42, 44, 43.
+Глоссарий (42) собирается по ходу: каждый термин получает запись в момент
+первого введения.
+
+Обязательства (`actionstage="doc"`): корпус спек их ещё не несёт (A3.13
+размечает); карта называет источники, которые страница цитирует, — из них
+разметка и выведется. Команды с `example`: только существующие в
+`target/debug/vibe.exe`; страницы 19, 22, 36, 37 получают примеры для
+`vibe doc …` в фазе 3, когда команда появится.
+
+Изменения карты после приёмки — на месте с датой и строкой в журнале.
