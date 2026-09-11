@@ -45,7 +45,7 @@
 | `architecture/what-the-lifecycle-epic-delivered` | `retired` | Retired lanes, kept as history | The campaign also ran execution lanes that are no longer current: a |
 | `architecture/what-the-lifecycle-epic-delivered` | `edge-cases` | Where the evidence lives | The stage-by-stage ledger with commit hashes is `campaigns/packages-2026-09/LIFECYCLE-EXTENSIONS-IMPLEMENTATION-LEDGER.md` in the repository; the |
 | `authoring/ship-tools-and-mcp-servers` | `root` | Ship tools and MCP servers | |
-| `authoring/ship-tools-and-mcp-servers` | `what-happens` | What happens | The agent adds a `[[binary]]` table naming the tool and the crate |
+| `authoring/ship-tools-and-mcp-servers` | `what-happens` | What happens | The agent scaffolds the package slot with `vibe init package`, puts the |
 | `authoring/ship-tools-and-mcp-servers` | `code-in-a-package` | Code in a package | A package is a project made installable, so it may carry arbitrary |
 | `authoring/ship-tools-and-mcp-servers` | `binaries` | Binaries | Each tool is one `[[binary]]` entry: a `name`, unique in the package, |
 | `authoring/ship-tools-and-mcp-servers` | `servers` | MCP servers | A package of kind `mcp` delivers a server an agent talks to: |
@@ -64,22 +64,22 @@
 | `authoring/translate-documentation` | `staleness` | When the source moves | A translation records no revision or hash of the source. When the |
 | `authoring/translate-documentation` | `edge-cases` | Edge cases and rules | Sidecar files inside the source package, `README.ru.md` beside `README.md`, are how specifications |
 | `authoring/write-a-feat-or-stack` | `root` | Write a feat or a stack | |
-| `authoring/write-a-feat-or-stack` | `what-happens` | What happens | The agent creates both packages with `vibe init package`, writes the feat's |
+| `authoring/write-a-feat-or-stack` | `what-happens` | What happens | The agent creates both slots with `vibe init package`, sets their kinds |
 | `authoring/write-a-feat-or-stack` | `a-feat` | A feat | A feat describes what a feature does for its user, in terms |
 | `authoring/write-a-feat-or-stack` | `a-stack` | A stack | A stack is a technology context: it says how the abstract abilities |
 | `authoring/write-a-feat-or-stack` | `capabilities` | Capabilities | A capability is an abstract interface: a namespace, a colon, a name, |
 | `authoring/write-a-feat-or-stack` | `edge-cases` | Edge cases and rules | The word `stack` also names a family bundle: a package of kind |
 | `authoring/write-a-flow` | `root` | Write a flow package | |
-| `authoring/write-a-flow` | `what-happens` | What happens | The agent runs `vibe init package org.acme/review-notes packages/review-notes`, which writes a [manifest](../glossary/index.xml#manifest) |
-| `authoring/write-a-flow` | `by-hand` | By hand | 1. Create the package skeleton: |
+| `authoring/write-a-flow` | `what-happens` | What happens | The agent runs `vibe init package org.acme/review-notes`, which adds a package slot |
+| `authoring/write-a-flow` | `by-hand` | By hand | 1. Create the package slot: |
 | `authoring/write-a-flow` | `the-snippet` | The snippet is the expensive part | A snippet is paid for on every session start by every consumer. |
-| `authoring/write-a-flow` | `layout` | What goes where | Everything under the package root except build output is the package: that |
+| `authoring/write-a-flow` | `layout` | What goes where | Paths are relative to the package root, the slot `vibevm/vibepacks/org.acme/review-notes/v0.1.0/`. |
 | `authoring/write-a-flow` | `edge-cases` | Edge cases and rules | Cross-references inside the package are addresses, `spec://org.acme/review-notes/flows/review-notes/PROTOCOL#anchor`, never relative file paths; they |
 | `authoring/write-a-lang-package` | `root` | Write a lang package | |
 | `authoring/write-a-lang-package` | `what-happens` | What happens | The agent creates the package skeleton, writes the guide and its snippet |
 | `authoring/write-a-lang-package` | `what-a-lang-is` | What a lang package is, and is not | The genre is wider than programming languages: a guide to a query |
 | `authoring/write-a-lang-package` | `families` | When a language brings tools | A language guide that also ships tools, a checker, a formatter, a |
-| `authoring/write-a-lang-package` | `by-hand` | By hand | 1. Create the package and set the kind: |
+| `authoring/write-a-lang-package` | `by-hand` | By hand | 1. Create the package slot, then set `kind = "lang"` in its |
 | `authoring/write-a-lang-package` | `edge-cases` | Edge cases and rules | What a language brought that can be run is answered by `vibe |
 | `authoring/write-documentation` | `root` | Write documentation for a package | |
 | `authoring/write-documentation` | `what-happens` | What happens | The agent creates the package with the `doc` kind, fills the card, |
@@ -167,7 +167,7 @@
 | `howto/install-a-package` | `after-a-clone` | After cloning a project | `vibe install` with no package names installs what the manifest already requires, |
 | `howto/install-a-package` | `edge-cases` | Edge cases and rules | Installing a package by name re-resolves the whole graph, but every dependency |
 | `howto/publish-a-package` | `root` | Publish a package | |
-| `howto/publish-a-package` | `what-happens` | What happens | The agent runs `vibe registry publish packages/notes --dry-run` first and shows you |
+| `howto/publish-a-package` | `what-happens` | What happens | The agent runs `vibe registry publish vibevm/vibepacks/org.acme/notes/v0.1.0 --dry-run` first and shows you |
 | `howto/publish-a-package` | `by-hand` | By hand | 1. Put a publish token where vibe reads it. That is the |
 | `howto/publish-a-package` | `versions` | Versions never move | A published version is immutable: a tag that already exists is refused, |
 | `howto/publish-a-package` | `workspaces` | Several packages at once | A repository that develops several packages publishes them with `vibe workspace publish`. |

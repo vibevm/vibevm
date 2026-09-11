@@ -1,16 +1,17 @@
 # Примеры к снятию — очередь для воркера (P.3 → фикстуры) {#root}
 
-<status stage="spec" state="work" comment="ведётся с 2026-09-12; каждая строка — example на странице, чей expect снимается с target/debug/vibe.exe в песочнице фикстуры; после снятия строка получает «снято» и хэш коммита, в котором expect вставлен"/>
+<status stage="spec" state="work" comment="ведётся с 2026-09-12; каждая строка — example на странице, чей expect снимается с target/debug/vibe.exe в песочнице фикстуры; после снятия строка получает «снято» и хэш коммита, в котором expect вставлен; вторая редакция фикстур 2026-09-12 после PP-C2 (локальный реестр вместо сети, слоты вместо packages/)"/>
 
 Правило (PLAN P.3, R-07, PROP-057 `INV-EXAMPLES-RUN`): `expect` — только
 реально снятый вывод отладочного бинарника. Дешёвая модель снимает по этому
-списку (пакет `findings/PACKET-PP-C2.md`) и кладёт вывод в
-`findings/PP-C2-expects/`; центральная сессия читает и вставляет.
-Нормализация при снятии — правила A0.12 §3 в этом порядке: `paths`
-(`<TMP>`, `<HOME>`, `<REPO>`), `slashes`, `trailing_space`, имя исполняемого
-файла (`vibe.exe` → `vibe`). Версия продукта **не** подменяется при снятии:
-подмену `vibe 1.0.0` → `vibe <VERSION>` решает раннер фазы 2 (A2.9), а на
-странице стоит настоящая строка бинарника той сборки, с которой снято.
+списку (пакет `findings/PACKET-PP-C2.md`, повтор — `PACKET-PP-C2b.md`) и
+кладёт вывод в `findings/PP-C2-expects/`; центральная сессия читает и
+вставляет. Нормализация при снятии — правила A0.12 §3 в этом порядке:
+`paths` (`<TMP>`, `<HOME>`, `<REPO>`), `slashes`, `trailing_space`, имя
+исполняемого файла (`vibe.exe` → `vibe`). Версия продукта **не** подменяется
+при снятии: подмену `vibe 1.0.0` → `vibe <VERSION>` решает раннер фазы 2
+(A2.9), а на странице стоит настоящая строка бинарника той сборки, с
+которой снято.
 
 ## Три правила песочницы {#sandbox-rules}
 
@@ -20,45 +21,63 @@
    (`VIBE_OFFLINE`, `VIBE_UNATTENDED`, `VIBE_INVOKED_BY`,
    `VIBE_NO_DEFAULT_REGISTRY`, `VIBETERM`, `VIBEFRAME`) удаляются из
    унаследованного окружения. `--offline` и `--assume-yes` стоят в самой
-   команде примера или не стоят нигде. Команда установки без `--offline`
-   идёт в сеть к реестру, который `vibe init` записал в проект, — и это
-   честно: читатель видит то же.
+   команде примера или не стоят нигде.
 2. **cwd — каталог `work/` песочницы**, никогда корень хоста (P0-O4,
    отклонение 1: запуск из корня оставляет `vibevm/vibedeps/.gitignore`).
    Значения переменных — в нативном написании (`C:\…`), см. A0.12 §1.
-3. **Автор фикстур нейтрален.** Перед первым `vibe init` в `home/config.toml`
-   песочницы записывается `[init]\nlast_author = "vibevm docs fixtures"`,
-   иначе `vibe init` берёт имя оператора из `git config` (P0-O4).
+   Корень песочницы — короткий путь (`%TEMP%\vdocs\`): в глубоком каталоге
+   `git clone` реестра падает с `fatal: '$GIT_DIR' too big` (PP-C2 §5b).
+3. **Реестр — локальный.** `home/registry.toml` песочницы объявляет один
+   реестр `local` с адресом `file:///<корень хоста>/vibevm/vibepacks`:
+   in-tree реестр хоста, только чтение. Проект, созданный `vibe init`,
+   резолвит через него без сети; `vibe registry list --path hello-vibe`
+   честно печатает «No [[registry]] entries in vibe.toml» — реестр
+   машинный, не проектный. Прогрев store через `cache add --path <хост>`
+   больше не нужен: первая установка кладёт пакет в store сама. Причина
+   смены (PP-C2 §5a): оффлайн-установка после прогрева не резолвит `latest`
+   без клона реестра (B-131), а сетевой клон в песочнице рвётся на длине
+   пути (B-132).
+4. **Автор фикстур нейтрален.** До первого `vibe init` в `home/config.toml`
+   записывается `[init]\nlast_author = "vibevm docs fixtures"`, иначе `vibe
+   init` берёт имя оператора из `git config` (P0-O4).
 
 ## Фикстуры {#fixtures}
 
 Каждая фикстура — состояние песочницы (`home/` + `work/`) перед командой;
 строится из предыдущей ровно названными командами, cwd = `work/`.
+`vibe init package <координата>` без пути добавляет слот
+`vibevm/vibepacks/<группа>/<имя>/v0.1.0/` в проект cwd (PP-C2 §5d, проба
+2026-09-12); флаг `--kind` сейчас не действует (B-134) — вид правится в
+манифесте слота.
 
 | Фикстура | Из чего | Как готовится (cwd = `work/`) |
 |---|---|---|
-| `none` | — | пустые `home/` и `work/` |
-| `empty` | `none` | store прогрет пакетом `org.vibevm.world/wal` и его замыканием из in-tree реестра хоста: `vibe cache add --offline org.vibevm.world/wal --path <корень хоста>` (A0.17: project-local реестр `vibevm/vibepacks` первым; флага `--registry` у `cache add` нет). Ничего не материализуется; после команды `git status --short` хоста обязан быть пустым по этому пути |
-| `hello-vibe-empty` | `empty` | `vibe init hello-vibe` (реестр по умолчанию — тот, что пишет `vibe init`) |
-| `hello-vibe` | `hello-vibe-empty` | `vibe install org.vibevm.world/wal --path hello-vibe --assume-yes --offline` |
+| `none` | — | пустые `home/` и `work/`; `home/config.toml` с автором фикстур; `home/registry.toml` с реестром `local` (правило 3) |
+| `empty` | `none` | то же (store пуст; имя оставлено ради очереди: команды `cache add` на этой фикстуре наполняют store из локального реестра) |
+| `hello-vibe-empty` | `empty` | `vibe init hello-vibe` |
+| `hello-vibe` | `hello-vibe-empty` | `vibe install org.vibevm.world/wal --path hello-vibe --assume-yes` |
 | `hello-vibe-relay` | `hello-vibe` | `vibe agentic explain --path hello-vibe` — в `hello-vibe/.vibe/agentic/command.md` припаркована инструкция |
 | `hello-vibe-removed` | `hello-vibe` | `vibe uninstall org.vibevm.world/wal --path hello-vibe --assume-yes` |
-| `workspace-root` | `empty` | `vibe init` в `work/` (проект в cwd), затем в `vibe.toml` добавлена таблица `[workspace]` с `members = ["packages/*"]` — текст таблицы взять со страницы `howto/set-up-a-workspace`, шаг 1 |
-| `workspace` | `workspace-root` | `vibe init package org.acme/notes-flow packages/notes-flow`, затем `vibe init package org.acme/review-notes packages/review-notes`; установка не выполнялась |
-| `package-spec` | `workspace` | в `packages/notes-flow/vibevm/vibespecs/NOTES-FLOW.md` положен Markdown-спек из одного заголовка `# Notes flow {#root}` и одного абзаца `@fact:ONE-NOTE One note per review. @status:spec/done`; **cwd команды — `work/packages/notes-flow`** |
-| `package-notes` | `workspace` | `vibe init package org.acme/notes packages/notes`; затем `vibe registry add local <абсолютный путь к каталогу work/registry> --path . --position primary`, где `work/registry/` — пустой каталог (реестр-каталог без пакетов; публикация идёт с `--dry-run`, ничего не пишется) |
-| `docs-store` | `empty` | store прогрет пакетом `org.vibevm.core/vibevm-docs` — **невозможно до фазы 2** (вид `doc` неизвестен бинарнику); команды на этой фикстуре ждут A2.1 |
+| `project` | `empty` | `vibe init` в `work/` (проект в cwd; `[project] name = "work"`) |
+| `flow-slot` | `project` | `vibe init package org.acme/review-notes` — слот `vibevm/vibepacks/org.acme/review-notes/v0.1.0/` как есть (`kind = "tool"`, страница объясняет правку вида) |
+| `package-spec` | `flow-slot` | в слот положен `vibevm/vibespecs/NOTES-FLOW.md` из одного заголовка `# Notes flow {#root}` и одного абзаца `@fact:ONE-NOTE One note per review. @status:spec/done`; **cwd команды — `work/vibevm/vibepacks/org.acme/review-notes/v0.1.0`** |
+| `workspace-root` | `project` | в `work/vibe.toml` дописана таблица `[workspace]` с `members = ["packages/*"]` — текст со страницы `howto/set-up-a-workspace`, шаг 1 |
+| `workspace` | `workspace-root` | руками написаны `packages/notes-flow/vibe.toml` и `packages/review-notes/vibe.toml`: таблица `[package]` с теми же полями, что пишет `vibe init package` (`group`, `name`, `kind = "flow"`, `version = "0.1.0"`, `epoch = 1`, `authors`, `license = "UPL-1.0"`, `description`, `format = "normal"`), без `[boot_snippet]`; установка не выполнялась |
+| `package-notes` | `project` | `vibe init package org.acme/notes`; затем `vibe registry add local <абсолютный путь к пустому каталогу work/registry> --path . --position primary` — примеры публикации на ней ждут B-133 |
+| `docs-store` | `empty` | store с пакетом `org.vibevm.core/vibevm-docs` — **невозможно до фазы 2** (вид `doc` неизвестен бинарнику) |
 
 Фикстуры фазы 2 (A2.9) наследуют эту таблицу как первый корпус раннера:
 каждая строка становится `examples/<фикстура>/example.toml` пакета
-документации с объявленными правилами нормализации (A0.12 §5).
+документации с объявленными правилами нормализации (A0.12 §5); локальный
+реестр становится копией нужных пакетов внутри фикстуры (X-025).
 
-## Что не снимается в фазе P {#not-now}
+## Что не снимается сейчас {#not-now}
 
 | Страница | id | Почему | Когда |
 |---|---|---|---|
 | `start/install-vibe` | `windows-install` | вывод установщика снимается с дистрибутива релиза, не с отладочной сборки | фаза 5, публикация |
 | `howto/read-documentation-locally` | `cache-add-docs`, `doc-serve` | вид `doc` и `vibe doc` появляются в фазе 2 | A2.1, A2.20 |
+| `howto/publish-a-package` | `publish-dry-run`, `publish` | `--dry-run` требует publish-токен и режет букву диска как хост (B-133) | после починки B-133 |
 
 ## Очередь {#queue}
 
@@ -77,21 +96,21 @@
 | `authoring/ship-tools-and-mcp-servers` | `bin-list` | `vibe bin list --path hello-vibe` | `hello-vibe` | ждёт |
 | `authoring/specs-agents-can-cite` | `explain` | `vibe explain "spec://org.vibevm.core/vibevm/common/PROP-000#KIND-SET" --path hello-vibe` | `hello-vibe` | ждёт |
 | `authoring/specs-agents-can-cite` | `convert` | `vibe refactor convert-source --from md --to xml --dry-run vibevm/vibespecs` | `package-spec` | ждёт |
-| `authoring/write-a-flow` | `init-package` | `vibe init package org.acme/review-notes packages/review-notes` | `workspace-root` | ждёт |
-| `authoring/write-a-flow` | `manifest` | `cat packages/review-notes/vibe.toml` | `workspace` | ждёт |
-| `authoring/write-a-flow` | `check` | `vibe check --path packages/review-notes` | `workspace` | ждёт |
-| `authoring/write-a-lang-package` | `init-lang` | `vibe init package org.acme/sql-style packages/sql-style` | `workspace-root` | ждёт |
+| `authoring/write-a-flow` | `init-package` | `vibe init package org.acme/review-notes` | `project` | ждёт |
+| `authoring/write-a-flow` | `manifest` | `cat vibevm/vibepacks/org.acme/review-notes/v0.1.0/vibe.toml` | `flow-slot` | ждёт |
+| `authoring/write-a-flow` | `check` | `vibe check --path vibevm/vibepacks/org.acme/review-notes/v0.1.0` | `flow-slot` | ждёт |
+| `authoring/write-a-lang-package` | `init-lang` | `vibe init package org.acme/sql-style` | `project` | ждёт |
 | `howto/install-a-package` | `install` | `vibe install org.vibevm.world/wal --path hello-vibe --assume-yes` | `hello-vibe-empty` | ждёт |
 | `howto/install-a-package` | `list` | `vibe list --path hello-vibe` | `hello-vibe` | ждёт |
 | `howto/install-a-package` | `tree` | `vibe tree --plain --path hello-vibe` | `hello-vibe` | ждёт |
-| `howto/publish-a-package` | `publish-dry-run` | `vibe registry publish packages/notes --dry-run` | `package-notes` | ждёт |
-| `howto/publish-a-package` | `publish` | `vibe registry publish packages/notes --registry local --dry-run` | `package-notes` | ждёт |
+| `howto/publish-a-package` | `publish-dry-run` | `vibe registry publish vibevm/vibepacks/org.acme/notes/v0.1.0 --dry-run` | `package-notes` | не сейчас (B-133) |
+| `howto/publish-a-package` | `publish` | `vibe registry publish vibevm/vibepacks/org.acme/notes/v0.1.0 --registry local --dry-run` | `package-notes` | не сейчас (B-133) |
 | `howto/read-documentation-locally` | `cache-add-docs` | `vibe cache add org.vibevm.core/vibevm-docs` | `empty` | не сейчас (A2.1) |
 | `howto/read-documentation-locally` | `doc-serve` | `vibe doc serve --help` | `docs-store` | не сейчас (A2.20) |
 | `howto/remove-a-package` | `uninstall` | `vibe uninstall org.vibevm.world/wal --path hello-vibe --assume-yes` | `hello-vibe` | ждёт |
 | `howto/remove-a-package` | `tree` | `vibe tree --plain --path hello-vibe` | `hello-vibe-removed` | ждёт |
-| `howto/set-up-a-workspace` | `workspace-table` | `cat vibe.toml` | `none` | ждёт |
-| `howto/set-up-a-workspace` | `init-package` | `vibe init package org.acme/notes-flow packages/notes-flow` | `workspace-root` | ждёт |
+| `howto/set-up-a-workspace` | `workspace-table` | `cat vibe.toml` | `workspace-root` | ждёт |
+| `howto/set-up-a-workspace` | `member-manifest` | `cat packages/notes-flow/vibe.toml` | `workspace` | ждёт |
 | `howto/set-up-a-workspace` | `install` | `vibe install --assume-yes` | `workspace` | ждёт |
 | `howto/update-packages` | `outdated` | `vibe outdated --path hello-vibe` | `hello-vibe` | ждёт |
 | `howto/update-packages` | `update` | `vibe update org.vibevm.world/wal --path hello-vibe --assume-yes` | `hello-vibe` | ждёт |

@@ -71,6 +71,7 @@ A0.27 в плане отсутствует.
 | — | `eb803e29` `docs(backlog): file the phase-0 product findings` | B-123…B-130 из X-001, X-002, X-005, X-008–X-010, X-013 и F-05; P1 (X-017) не заводится — у владельца |
 | — | `ab7731b6` `chore(specmap): tag the bridge code and regenerate the map` | пять сирот bridge-кампании получили `specmark::scope!` (J-049); 8 унаследованных `unbumped-hash` записаны как данные |
 | — | `69053551` `chore(wire): raise the derive baseline for non-wire types` | J-048: ratchet держал не-wire типы; `release_manifest.rs` — настоящий wire, схема JTD у воркера P1-O3 |
+| — | `bb6320b1` `refactor(wire): generate the distribution manifests from a JTD schema` | P1-O3: одна схема с `x-wire-order`, поведение в `vibe-wire::behaviour` (правило сироты), байты голденов не сдвинулись; шаг 3 панели зелёный; панель падает на шаге 5 — унаследованные красные (`upstream_authors` в фикстуре теста, clippy в `xtask/src/bridge.rs` и `vibe-install`, дрейф корпуса `index/e1`) у воркера P1-O4 |
 | A1.1 + A1.2 | `ed75ce00` `docs(spec): admit doc and app kinds so documentation ships as packages` | под целью сессии владельца, с датированной пометкой «pending ratification» в тексте поправки; `VIBEVM-SPEC.md` §4.1 и PROP-000 `KIND-SET`/`INV-VOCABULARY` одним коммитом; ратификация — при слиянии (review-маркер) |
 | A1.11 | локальный файл, не коммитится | план стюарда r2: DOCS-SPIKES принят, current_node DOCS-CONTRACT; `GOAL.md` перерисован |
 
@@ -94,7 +95,8 @@ A0.27 в плане отсутствует.
 | P.3 | `8487c6a0` `docs(vibevm-docs): write the architecture section` | 3 страницы |
 | P.3 | `818a474d` `docs(vibevm-docs): write the glossary, questions and diagnostics` | глоссарий 50 терминов — единственное место определений; после PP-C1 `fingerprint` и `freshness fingerprint` разведены (одно слово — одно значение) |
 | P.4 | в `0df597b3` и `42457142` | `title`/`abstract` doc-пакета, тело скилла `vibevm-docs`, `INTERFACE-COPY.md`; карточка предмета (`org.vibevm.core/vibevm`) — некуда положить, корень хоста `[project]` → X-027 |
-| P.3 хвост | ждёт PP-C2 | 56 из 59 `expect` снимаются с `target/debug/vibe.exe` по `EXAMPLES-TODO.md`; 3 — «не сейчас» (релиз, фаза 2) |
+| P.3 хвост | PP-C2 → PP-C2b | первый прогон снял 15 из 56 (J-061); фикстуры переписаны (локальный реестр, слоты), очередь 54 «ждёт» + 5 «не сейчас» (релиз, фаза 2, B-133); повторное снятие у воркера PP-C2b |
+| P.3 правка | `c79325e7` `docs(vibevm-docs): describe the in-tree package layout` | семь страниц под реальную раскладку `vibe init package` (J-062); B-131…B-134 в BACKLOG |
 | P.5 | ждёт PP-C3 | седьмая колонка «решение» в `LEGACY-INVENTORY.md` |
 | P.6 + P.7 | `435d3aef` `docs(vibevm-docs): act on the first prose check`; `2f48c888` `docs(vibevm-docs): shorten the longest sentences` | PP-C1: 385 цитат (3 якоря исправлены, 9 плейсхолдеров/самоадресаций — правила X-029), 11 запрещённых слов (4 исправлены, `capabilities` снят со списка), 195 длинных фраз (35 переписаны, порог — X-028), 3 абзаца-процедуры разбиты, 308 терминов до введения → 212 ссылок на глоссарий; повторная проверка: 0 нарушений (J-059, J-060) |
 | P.7b | после PP-C2 | прогон 19 промптов `opus5` на фикстурах PP-C2; промпты, требующие `vibe doc`/вида `doc` (3), ждут фазы 2 |
