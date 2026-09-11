@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Work offline</title>
+  <status stage="doc" state="work" audience="user"/>
+  <p>On a plane or behind a firewall, vibe keeps working from what the machine already holds. This page warms the store before you leave and installs from it without a network.</p>
+  <prompt id="work-offline">Before I go offline, fetch into the machine store everything the VibeVM project in the current folder needs plus the package org.vibevm.world/multi-user-planning, then verify the store and show me that an offline install of this project succeeds.
+    <needs>the vibevm skill installed for your agent; network access now; a project with `vibe.toml`</needs>
+    <outcome>`vibe cache list` shows the project's packages and the extra one; `vibe cache check` reports every entry intact; `vibe install --offline` completes without a network request</outcome>
+    <assert>vibe cache check</assert>
+    <assert>vibe install --offline --assume-yes</assert>
+  </prompt>
+  <what-happens title="What happens">
+    <p>The agent runs `vibe cache add` for the extra package, which resolves it and its whole dependency closure and fetches every node into the store without touching the project. It runs `vibe install` once online so the project's own packages are in the store too, then `vibe cache check` to verify every stored entry against its fingerprint. Finally it runs `vibe install --offline`: resolution and fetch are satisfied from the store alone, and the command fails loudly if anything is missing rather than installing a partial graph.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#OFFLINE-LOCAL-ONLY"/>
+  </what-happens>
+  <by-hand title="By hand">
+    <p>1. Warm the store with a package and its dependencies; inside a project its registries are the source, outside one the machine-wide registries:</p>
+    <example id="cache-add" fixture="empty">
+      <run>vibe cache add org.vibevm.world/wal</run>
+      <expect></expect>
+    </example>
+    <p>2. See and verify what the store holds:</p>
+    <example id="cache-list" fixture="hello-vibe">
+      <run>vibe cache list</run>
+      <expect></expect>
+    </example>
+    <example id="cache-check" fixture="hello-vibe">
+      <run>vibe cache check</run>
+      <expect></expect>
+    </example>
+    <p>3. Install without a network:</p>
+    <example id="install-offline" fixture="hello-vibe-empty">
+      <run>vibe install org.vibevm.world/wal --path hello-vibe --offline --assume-yes</run>
+      <expect></expect>
+    </example>
+  </by-hand>
+  <switching-it-on title="Three ways to switch offline mode on">
+    <p>The flag `--offline` on any command; the environment variable `VIBE_OFFLINE=1`; or the setting `offline = true` under `[net]` in `~/.vibe/config.toml`. The flag wins over the variable, and the variable over the setting. Online remains the default.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#OFFLINE-LAYERING"/>
+  </switching-it-on>
+  <air-gapped title="A whole team without a network">
+    <p>For a machine that never sees the registry, `vibe registry vendor` writes a folder holding every package the lock file references, ready to be used as a mirror with a `file://` address on the other side. The fingerprints travel with it, so the mirror is verified like any other.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#MIRROR-LAYER"/>
+  </air-gapped>
+  <edge-cases title="Edge cases and rules">
+    <p>Offline resolution sees the store as of its last refresh: a version published after you went offline is invisible until you are back and run `vibe registry sync` or an online install.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#AS-OF-LAST-REFRESH"/>
+    <p>A package in the store is usable even when its registry no longer lists it; a package that never reached the store is a hard error naming the missing coordinate.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#OFFLINE-HARD-ERROR"/>
+  </edge-cases>
+</spec>

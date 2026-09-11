@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Install a package</title>
+  <status stage="doc" state="work" audience="user"/>
+  <p>You found a package your project should follow. This page adds it to the project, records the exact version, and shows how to check that your agent will now read it.</p>
+  <prompt id="install-a-package">Install the package org.vibevm.world/wal into the VibeVM project in the current folder, accept the plan, and tell me which version was recorded and what the agent will read from it at session start.
+    <needs>the vibevm skill installed for your agent; a project with `vibe.toml` in the current folder; network access to the project's registries, or the package already in the machine store</needs>
+    <outcome>`vibe.toml` lists the package under its requirements, `vibe.lock` pins one version with its content fingerprint, the package's tree sits under `vibevm/vibedeps/`, and `vibe tree` shows its boot snippet in the reading list</outcome>
+    <assert>grep -q "org.vibevm.world/wal" vibe.lock</assert>
+    <assert>vibe check --quiet</assert>
+  </prompt>
+  <what-happens title="What happens">
+    <p>The agent runs `vibe install org.vibevm.world/wal`. vibe walks the project's registries in order and asks the first one that knows the package for its versions; with no constraint given, it picks the newest stable release. It resolves the package's own dependencies with the rest of the project's graph, fetches everything that is not yet in the machine store, verifies each fingerprint, and prints a plan: which packages will be added at which versions, and which files will change. Nothing is written until you confirm. On confirmation vibe copies the packages into `vibevm/vibedeps/`, records the requirement in `vibe.toml` and the pins in `vibe.lock`, and regenerates the boot files. Then the agent runs `vibe tree` to show you the new reading list.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#PHASE-RESOLUTION"/>
+  </what-happens>
+  <by-hand title="By hand">
+    <p>1. Install by coordinate. Add `@` and a constraint to ask for a range or an exact version:</p>
+    <example id="install" fixture="hello-vibe-empty">
+      <run>vibe install org.vibevm.world/wal --path hello-vibe --assume-yes</run>
+      <expect></expect>
+    </example>
+    <p>2. Confirm the plan when asked. `--assume-yes` answers yes for scripts and agents.</p>
+    <p>3. Check what was recorded and what the agent will read:</p>
+    <example id="list" fixture="hello-vibe">
+      <run>vibe list --path hello-vibe</run>
+      <expect></expect>
+    </example>
+    <example id="tree" fixture="hello-vibe">
+      <run>vibe tree --plain --path hello-vibe</run>
+      <expect></expect>
+    </example>
+  </by-hand>
+  <constraints title="Asking for a version">
+    <p>`vibe install org.vibevm.world/wal@^1.0` accepts any 1.x; `@=1.0.0` accepts exactly one; `--exact` writes the resolved version as an exact pin into the manifest instead of a range. The manifest keeps the constraint you asked for; the lock file keeps the version you got.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#CF-RANGE"/>
+    <p>A kind prefix, as in `flow:org.vibevm.world/wal`, is optional and acts as a check: if the package turns out to be of another kind, the install stops.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#ROW-QUALIFIED-KIND-BEHAVIOUR"/>
+  </constraints>
+  <after-a-clone title="After cloning a project">
+    <p>`vibe install` with no package names installs what the manifest already requires, at the versions the lock file pins. When neither the manifest nor the lock changed since the last install, vibe does not even run the resolver: the lock file is the answer, and the command only checks that the tree matches it.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#LOCKFILE-RESPECTING"/>
+  </after-a-clone>
+  <edge-cases title="Edge cases and rules">
+    <p>Installing a package by name re-resolves the whole graph, but every dependency the change does not touch keeps its pinned version; only a real conflict triggers a full re-resolution.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#HOLD-THE-LOCK"/>
+    <p>A package may declare a script to run after it is installed. Installing the package is the consent to run it; the script runs inside the package's own folder and its effects are not tracked. Read the manifest of a package you do not trust before installing it.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#INSTALLATION-CONSENT-SUCCESSOR"/>
+    <p>A package that is already installed is not installed twice: vibe says so and points at `vibe update`.</p>
+    <p>A public registry that answers with an authentication error for a missing package is walked past, not treated as a failure; add `--auth-required` in a script that must notice a private registry being down.</p>
+  </edge-cases>
+</spec>

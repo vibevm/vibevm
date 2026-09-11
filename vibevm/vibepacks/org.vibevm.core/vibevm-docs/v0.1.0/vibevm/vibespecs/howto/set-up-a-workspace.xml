@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Set up a workspace</title>
+  <status stage="doc" state="work" audience="author"/>
+  <p>Several packages developed together can live in one repository and share one lock file. This page turns a folder into such a workspace and shows how members refer to each other by path.</p>
+  <prompt id="set-up-a-workspace">Turn the VibeVM project in the current folder into a workspace with two member packages under packages/: org.acme/notes-flow and org.acme/notes-docs, where notes-docs documents notes-flow. Run an install and show me that one lock file at the root covers both members.
+    <needs>the vibevm skill installed for your agent; a project with `vibe.toml` at the root</needs>
+    <outcome>the root `vibe.toml` carries a `[workspace]` table listing both members, each member folder carries its own `vibe.toml` with a `[package]` table, and one `vibe.lock` at the root records the resolution</outcome>
+    <assert>test -f packages/notes-flow/vibe.toml</assert>
+    <assert>test -f packages/notes-docs/vibe.toml</assert>
+    <assert>test ! -e packages/notes-flow/vibe.lock</assert>
+    <assert>vibe check --quiet</assert>
+  </prompt>
+  <what-happens title="What happens">
+    <p>The agent adds a `[workspace]` table to the root manifest naming the member paths, and creates each member with `vibe init package org.acme/notes-flow packages/notes-flow`, which writes a manifest with a `[package]` table. Membership is explicit: a folder with a manifest that is not listed is not a member. Then it runs `vibe install` at the root: vibe discovers the workspace, resolves the requirements of every member in one unified resolution, and writes a single lock file at the root.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#EXPLICIT-MEMBERSHIP"/>
+  </what-happens>
+  <by-hand title="By hand">
+    <p>1. In the root `vibe.toml`, declare the members; globs are allowed:</p>
+    <example id="workspace-table" fixture="none">
+      <run>cat vibe.toml</run>
+      <expect></expect>
+    </example>
+    <p>2. Create each member as a package in its folder:</p>
+    <example id="init-package" fixture="workspace-root">
+      <run>vibe init package org.acme/notes-flow packages/notes-flow</run>
+      <expect></expect>
+    </example>
+    <p>3. Install from the root, or from anywhere inside the workspace; the command finds the root and resolves the whole tree:</p>
+    <example id="install" fixture="workspace">
+      <run>vibe install --assume-yes</run>
+      <expect></expect>
+    </example>
+  </by-hand>
+  <one-manifest title="One manifest, three roles">
+    <p>Every node has a file named `vibe.toml`, and what the file contains decides what the node is: a `[package]` table makes it a publishable package, a `[project]` table makes it a consumer that is never published, and a `[workspace]` table makes it coordinate members. A node cannot be both a package and a project, but a workspace root may be either, or neither.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#PACKAGE-XOR-PROJECT"/>
+  </one-manifest>
+  <members-referring title="Members referring to each other">
+    <p>A member requires a sibling by path rather than by registry, with a `path` source in its requirements. The lock file records such an entry with a source kind of `path` and the member's folder relative to the root, so the lock stays portable across machines. When the workspace is published, the path becomes an ordinary coordinate in each published copy.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#MEMBER-IS-NODE"/>
+  </members-referring>
+  <edge-cases title="Edge cases and rules">
+    <p>Workspaces nest: a member may itself carry a `[workspace]` table. Nesting groups members; it does not create separate resolution domains, and the one lock file stays at the absolute root.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#NESTING-PRINCIPLE"/>
+    <p>`vibe install -p &lt;member&gt;` narrows what is reported, not what is resolved: the lock file and the dependency tree are always workspace-wide.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SCOPE-FLAG"/>
+    <p>The dependency tree lives once, at the root; members do not get their own copies of shared packages.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#TREE-VIBEDEPS"/>
+  </edge-cases>
+</spec>

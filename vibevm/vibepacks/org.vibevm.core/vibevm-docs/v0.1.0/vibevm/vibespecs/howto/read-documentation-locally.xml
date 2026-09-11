@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Read documentation locally</title>
+  <status stage="doc" state="work" audience="user"/>
+  <p>Documentation of the packages you use, including private ones, can be read on your own machine with nothing sent anywhere. This page fetches the manual into the store and opens the reader in a browser.</p>
+  <prompt id="read-docs-locally">Fetch the VibeVM manual, the package org.vibevm.core/vibevm-docs, into the machine store, open the local documentation reader, and tell me the address to open in my browser.
+    <needs>the vibevm skill installed for your agent; network access to the registry once, or the package already in the store</needs>
+    <outcome>`vibe cache list` shows `org.vibevm.core/vibevm-docs`; `vibe doc serve` is running and prints an address on `127.0.0.1`; the browser shows the manual's first page</outcome>
+    <assert>vibe cache list --quiet</assert>
+  </prompt>
+  <what-happens title="What happens">
+    <p>The agent runs `vibe cache add org.vibevm.core/vibevm-docs`. A documentation package is never installed into a project; it is warmed into the machine store together with the packages it documents, so that every rule it cites can be resolved offline. Then the agent runs `vibe doc serve`: vibe starts a small web server that listens on your own machine only, renders each page from the store on request, and prints the address. Nothing is fetched from the internet while you read, and no page leaves the machine.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#KIND-DOC-NOT-INSTALLED"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#LOCAL-SERVE"/>
+  </what-happens>
+  <by-hand title="By hand">
+    <p>1. Warm the store. Inside a project, its registries are the source; outside one, the machine-wide registries:</p>
+    <example id="cache-add-docs" fixture="empty">
+      <run>vibe cache add org.vibevm.core/vibevm-docs</run>
+      <expect></expect>
+    </example>
+    <p>2. Start the reader and open the printed address in a browser. Stop it with Ctrl+C:</p>
+    <example id="doc-serve" fixture="docs-store">
+      <run>vibe doc serve --help</run>
+      <expect></expect>
+    </example>
+    <p>3. Pick a language with the selector on any page; the reader shows the manual's own language where a page has no translation, and says so.</p>
+  </by-hand>
+  <private-packages title="Private packages">
+    <p>The same reader shows the documentation of packages that live in a private registry or only on your machine: whatever the store holds, the reader renders. This is the intended path for proprietary documentation, and it is why the reader never contacts the public site.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#INV-LOCAL-IS-OFFLINE"/>
+  </private-packages>
+  <the-shell title="The reader's shell">
+    <p>A released `vibe` carries the reader's interface inside the binary. A `vibe` you built from source carries a plain fallback; on the first `vibe doc serve` it offers to download the full interface for its version from the release assets, verified by digest, and stores it under `~/.vibe/opt/`. It never downloads without your yes, and it works, plainly, without it.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#LOCAL-OFFLINE-SHELL"/>
+  </the-shell>
+  <edge-cases title="Edge cases and rules">
+    <p>Warming a documentation package warms its subjects too, so the rules a page quotes resolve without a network.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#REL-WARMUP-CLOSURE"/>
+    <p>The reader can be embedded by an editor plugin through an iframe; then the plugin passes its own origin at launch and the reader accepts frames from that origin alone.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#LOCAL-CSP"/>
+    <p>An agent reads the same store: `vibe explain "spec://org.vibevm.core/vibevm-docs/start/what-vibevm-is"` prints a page or a block as text.</p>
+  </edge-cases>
+</spec>

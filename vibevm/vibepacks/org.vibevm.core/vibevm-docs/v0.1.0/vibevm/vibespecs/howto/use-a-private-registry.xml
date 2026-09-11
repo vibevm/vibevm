@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Use a private registry</title>
+  <status stage="doc" state="work" audience="user"/>
+  <p>A company can keep its packages in its own place and still use vibe unchanged. This page points a project or a whole machine at a private registry, with or without an index, and keeps the public one as a fallback.</p>
+  <prompt id="private-registry">Add the private registry named acme at git@github.com:acme-specs as the first registry of the VibeVM project in the current folder, authenticated over SSH, keep the public vibespecs registry as a fallback, and test that both are reachable.
+    <needs>the vibevm skill installed for your agent; an SSH key that the private host accepts, loaded in the agent; a project with `vibe.toml`</needs>
+    <outcome>`vibe registry list` shows `acme` first and `vibespecs` second; `vibe registry test` reports both reachable</outcome>
+    <assert>vibe registry list --quiet</assert>
+    <assert>vibe registry test</assert>
+  </prompt>
+  <what-happens title="What happens">
+    <p>The agent runs `vibe registry add acme git@github.com:acme-specs --auth ssh --position primary`, which writes a new registry block at the top of the manifest's list. From now on every resolution asks `acme` first and the public registry second, and a package that exists in both comes from `acme`. `vibe registry test` probes each registry for reachability and authentication without fetching anything.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REGISTRY-WALK-ORDER"/>
+  </what-happens>
+  <by-hand title="By hand">
+    <p>1. Add the registry to the project. The address is the organisation root, not a package repository:</p>
+    <example id="registry-add" fixture="hello-vibe">
+      <run>vibe registry add acme file:///tmp/acme-specs --path hello-vibe --position primary</run>
+      <expect></expect>
+    </example>
+    <p>2. Choose the authentication regime with `--auth`: `none` for public read, `ssh` for keys, `token-env` to read a token from an environment variable named after the host, or `credential-helper` to let the system's git helper answer.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#AUTH-REGIMES"/>
+    <p>3. Probe:</p>
+    <example id="registry-test" fixture="hello-vibe">
+      <run>vibe registry test --path hello-vibe</run>
+      <expect></expect>
+    </example>
+  </by-hand>
+  <machine-wide title="For every project on a machine">
+    <p>Put the same registry block into `~/.vibe/registry.toml`. It is merged after each project's own list, so projects that name their registries are unaffected and projects that do not inherit the machine's. `vibe init` seeds a new project's registries from this file, which is how a company's default becomes every new project's default.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#USER-LEVEL-REGISTRIES"/>
+  </machine-wide>
+  <tokens title="Tokens">
+    <p>A token never lands in a file vibe writes and never appears in its output. With `--auth token-env` vibe reads it from `VIBEVM_REGISTRY_TOKEN_&lt;HOST&gt;` at run time and sends it over an encrypted connection only. Keep the variable in your shell profile or your CI secret store, not in the repository.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#TOKEN-NEVER-ON-DISK"/>
+  </tokens>
+  <edge-cases title="Edge cases and rules">
+    <p>A private registry without an index still works; searches skip it and installs clone what they need. Add an index repository beside the packages and point `VIBEVM_INDEX_URL_ACME` at it to make searches and cold installs fast.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#INDEX-OPTIONAL"/>
+    <p>A mirror is not a second registry. Use `vibe registry set-mirror` for an alternative address of the same packages, verified against the same fingerprints; use `registry add` for a different source of packages.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#MIRROR-WALK-SEMANTICS"/>
+    <p>In a script that must notice a private registry being down, pass `--auth-required` to `vibe install`: an authentication error then stops the install instead of walking on to the public fallback.</p>
+  </edge-cases>
+</spec>

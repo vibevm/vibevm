@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Update packages</title>
+  <status stage="doc" state="work" audience="user"/>
+  <p>Packages change. This page shows which of yours have a newer version, moves one or all of them forward, and explains what the lock file does during the move.</p>
+  <prompt id="update-packages">In the VibeVM project in the current folder, show me which packages have newer versions, then update all of them, and summarise what changed in the lock file.
+    <needs>the vibevm skill installed for your agent; a project with `vibe.toml` and `vibe.lock`; network access to the project's registries</needs>
+    <outcome>`vibe outdated` lists the candidates, `vibe update --all` moves the pins, and the diff of `vibe.lock` shows the old and new versions</outcome>
+    <assert>vibe check --quiet</assert>
+    <assert>vibe list --quiet</assert>
+  </prompt>
+  <what-happens title="What happens">
+    <p>The agent first runs `vibe outdated`, which compares every pin in the lock file with the newest version the registry offers and prints the difference; it changes nothing. Then it runs `vibe update --all`: vibe re-resolves the graph, preferring the current version of every package that is not being updated, fetches what is new into the store, shows the plan, and on confirmation replaces the package trees, rewrites the lock file and regenerates the boot files. The agent finishes by reading the lock file's diff back to you: that diff is the exact list of text your agent will read differently from now on.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#UPDATE-MOVES-LOCK"/>
+  </what-happens>
+  <by-hand title="By hand">
+    <p>1. See what is behind:</p>
+    <example id="outdated" fixture="hello-vibe">
+      <run>vibe outdated --path hello-vibe</run>
+      <expect></expect>
+    </example>
+    <p>2. Update one package, or all of them:</p>
+    <example id="update" fixture="hello-vibe">
+      <run>vibe update org.vibevm.world/wal --path hello-vibe --assume-yes</run>
+      <expect></expect>
+    </example>
+    <p>`vibe update --all` updates everything in the lock file; the two forms are mutually exclusive.</p>
+    <p>3. Read the diff of `vibe.lock` before you commit it. Each changed entry names the old and the new version and fingerprint.</p>
+  </by-hand>
+  <the-constraint title="The constraint stays where you put it">
+    <p>An update moves the pin in the lock file within the constraint the manifest names; it never widens or narrows the constraint. If the manifest says `^1.0`, an update will not cross to 2.0 on its own. To move the constraint too, install the new version explicitly with a new constraint, or pass `--exact` to pin the resolved version in the manifest as well.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#CF-RANGE"/>
+  </the-constraint>
+  <recovery title="Recovering after a breaking update">
+    <p>If an update leaves the project in a state that no longer checks, the lock file in version control is your way back: restore it and run `vibe reinstall`, which rebuilds the tree from the lock and the store without the network. If the store itself holds a damaged entry, `vibe cache check` finds it and `vibe cache clean --package` removes it, after which a fresh install fetches the package again.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#REINSTALL-NO-FORCE"/>
+  </recovery>
+  <edge-cases title="Edge cases and rules">
+    <p>`vibe outdated` needs the registry and, for the fastest answer, its index; without a network it reports what it could not reach rather than guessing.</p>
+    <p>A dependency declared as a git branch is walked again on update and its lock entry moves to the branch's current commit; a tag or a commit stays where it is.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#ROW-GS-BRANCH-MEANING"/>
+    <p>`--upstream` also compares the upstream releases a package declares it describes, for packages that document a third-party library.</p>
+  </edge-cases>
+</spec>

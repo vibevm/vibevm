@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Publish a package</title>
+  <status stage="doc" state="work" audience="author"/>
+  <p>You wrote a package and want others to install it. This page publishes it to a registry as its own repository, tags the version, and checks that a fresh project can install it.</p>
+  <prompt id="publish-a-package">Publish the package in the folder packages/notes to the first registry of this project, using the publish token already in my environment, then create a scratch project elsewhere and install the published package into it to prove it works. Ask me before the actual push.
+    <needs>the vibevm skill installed for your agent; a publish token for the registry's host in the environment or under `~/.vibe/`; the package's `vibe.toml` complete, with a version that has not been published before</needs>
+    <outcome>a repository named after the package's coordinate exists in the registry organisation with a tag for the version; a scratch project installs it and `vibe list` shows the version</outcome>
+    <assert>vibe registry publish packages/notes --dry-run</assert>
+  </prompt>
+  <what-happens title="What happens">
+    <p>The agent runs `vibe registry publish packages/notes --dry-run` first and shows you what would happen: the registry, the repository name derived from the coordinate, the version tag. After your yes it runs the real command: vibe creates the repository in the registry organisation through the host's API if it does not exist, pushes the package's shippable tree, and tags the version. The package is then one more repository the registry's index will pick up. To prove it, the agent creates a scratch project and installs the package by coordinate.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#SHAPE-OWN-REPO"/>
+  </what-happens>
+  <by-hand title="By hand">
+    <p>1. Put a publish token where vibe reads it: the environment variable `VIBEVM_PUBLISH_TOKEN`, or a file `~/.vibe/&lt;host&gt;.publish.token` such as `~/.vibe/github.publish.token`, readable by you alone. The token needs the right to create repositories in the organisation.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#token-secrecy"/>
+    <p>2. Rehearse:</p>
+    <example id="publish-dry-run" fixture="package-notes">
+      <run>vibe registry publish packages/notes --dry-run</run>
+      <expect></expect>
+    </example>
+    <p>3. Publish. `--registry` picks a registry by name; without it the first one in the manifest is used:</p>
+    <example id="publish" fixture="package-notes">
+      <run>vibe registry publish packages/notes --registry local --dry-run</run>
+      <expect></expect>
+    </example>
+    <p>4. Install it from a fresh project to be sure: `vibe init scratch` and `vibe install &lt;group&gt;/notes --path scratch`.</p>
+  </by-hand>
+  <versions title="Versions never move">
+    <p>A published version is immutable: a tag that already exists is refused, and consumers verify the content fingerprint on every install, so a re-pushed tag is caught rather than silently accepted. To ship a fix, bump the version in the manifest and publish again.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#EFF-FORCE-PUSH-CAUGHT"/>
+  </versions>
+  <workspaces title="Several packages at once">
+    <p>A repository that develops several packages publishes them with `vibe workspace publish`: it orders the members by their dependencies on each other, publishes each as its own repository, and stops at the first failure with a report of what was published and what remains. `--member` restricts the run to one node; `--dry-run` shows the selection and the order without pushing.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#PUBLISH-REGEN"/>
+  </workspaces>
+  <edge-cases title="Edge cases and rules">
+    <p>`--repo-url` pushes straight to an existing git repository with your local git credentials and loads no publish token; use it for hosts without an API adapter.</p>
+    <p>The token is never sent to a package's install script and never printed, even in machine-readable output; if a command prints it, that is a bug to report.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#TOKEN-NEVER-IN-ENV"/>
+    <p>A documentation package is published the same way; what differs is how it is consumed, by `vibe cache add` and the site rather than by `vibe install`.</p>
+  </edge-cases>
+</spec>

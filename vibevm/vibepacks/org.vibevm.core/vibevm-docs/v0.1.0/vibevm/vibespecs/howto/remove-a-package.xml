@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Remove a package</title>
+  <status stage="doc" state="work" audience="user"/>
+  <p>Removing a package takes its text out of the project and out of the agent's reading list, and leaves everything you wrote untouched.</p>
+  <prompt id="remove-a-package">Remove the package org.vibevm.world/wal from the VibeVM project in the current folder and confirm that nothing of it remains in the reading list.
+    <needs>the vibevm skill installed for your agent; a project in which the package is installed</needs>
+    <outcome>the requirement is gone from `vibe.toml`, the entry is gone from `vibe.lock`, the package's folder is gone from `vibevm/vibedeps/`, and `vibe tree` no longer lists its snippet; `vibe check` reports no errors</outcome>
+    <assert>test ! -e vibevm/vibedeps/org.vibevm.world.wal</assert>
+    <assert>vibe check --quiet</assert>
+  </prompt>
+  <what-happens title="What happens">
+    <p>The agent runs `vibe uninstall org.vibevm.world/wal`. vibe shows what will leave: the requirement line in the manifest, the lock entry, the package's folder in the dependency tree, and any dependency that only this package needed. On confirmation it removes them and regenerates the boot files, so the next agent session no longer reads the package's snippet. Your own files, including the two boot files you own and anything in `vibevm/vibespecs/`, are never touched.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#TREE-AUTHORED"/>
+  </what-happens>
+  <by-hand title="By hand">
+    <p>1. Remove by coordinate; the version is not needed:</p>
+    <example id="uninstall" fixture="hello-vibe">
+      <run>vibe uninstall org.vibevm.world/wal --path hello-vibe --assume-yes</run>
+      <expect></expect>
+    </example>
+    <p>2. Check the reading list:</p>
+    <example id="tree" fixture="hello-vibe-removed">
+      <run>vibe tree --plain --path hello-vibe</run>
+      <expect></expect>
+    </example>
+  </by-hand>
+  <derived-state title="Removing derived state without removing packages">
+    <p>Sometimes you want a clean slate rather than a smaller graph: before a build, after a tool upgrade, or to prove the tree can be rebuilt. `vibe clean` deletes the dependency tree and the generated boot files and keeps the manifest, the lock file, everything you wrote and the machine store. `vibe clean install` chains the two steps.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#CLEAN-REMOVES-DERIVED"/>
+    <p>The command refuses to run outside a project, so it cannot sweep an unrelated folder by mistake.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#CLEAN-NEEDS-A-PROJECT"/>
+  </derived-state>
+  <edge-cases title="Edge cases and rules">
+    <p>Uninstalling a package that another installed package requires leaves the shared dependency in place; only packages nothing else needs are removed.</p>
+    <p>The machine store keeps the package's bytes after an uninstall. Reinstalling it later costs no network; `vibe cache clean --package` reclaims the space if you want it gone from the machine.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#CACHE-ACCRETIVE"/>
+    <p>Removing a package does not undo what its install script did, if it had one: hook effects are not tracked, by design.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#EFFECTS-EPHEMERAL"/>
+  </edge-cases>
+</spec>
