@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Give your agent the vibevm skill</title>
+  <status stage="doc" state="work" audience="user"/>
+  <p>Your agent works better when it knows what vibe is and how to call it. This page installs a small skill into the agent's own folder, and, for agents that support it, a server the agent can query directly.</p>
+  <prompt id="give-your-agent-the-skill">Wire vibe into every coding agent installed on this machine, for the VibeVM project in the current folder: install the vibevm skill and the MCP server entry, then show me what was written and for which agents.
+    <needs>vibe on the `PATH`; a project with `vibe.toml` in the current folder; at least one supported agent installed: Claude Code, Claude Desktop, Cursor, OpenCode or Codex</needs>
+    <outcome>`vibe mcp status` shows an up-to-date server entry and skill for each detected agent; the next agent session in this project knows the vibe commands and can query the project's packages</outcome>
+    <assert>vibe mcp status</assert>
+    <assert>vibe skill list --quiet</assert>
+  </prompt>
+  <what-happens title="What happens">
+    <p>The agent runs `vibe mcp install --auto --yes`. vibe detects the agents present on the machine and, for each, writes two things: an entry in the agent's configuration that starts `vibe mcp serve` as a server the agent can query, and a skill file, `SKILL.md`, that teaches the agent the vibe commands and when to use them. Both writes touch only the vibevm entry of each configuration; anything else in those files is left alone. The command is idempotent: a second run reports every unchanged entry as unchanged.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#CONSENT-WRITE-SCOPE"/>
+  </what-happens>
+  <by-hand title="By hand">
+    <p>1. See the plan first; nothing is written:</p>
+    <example id="mcp-status" fixture="hello-vibe">
+      <run>vibe mcp status --path hello-vibe</run>
+      <expect></expect>
+    </example>
+    <p>2. Install for every detected agent, or for one with `--agent claude`, `--agent codex`, `--agent opencode`, `--agent cursor`, `--agent claude-desktop`:</p>
+    <example id="mcp-install" fixture="hello-vibe">
+      <run>vibe mcp install --auto --yes --dry-run --path hello-vibe</run>
+      <expect></expect>
+    </example>
+    <p>3. Choose the scope: `--scope project` writes into the project's own agent folders, `--scope user` into your home configuration, `--scope both` into both. Without a project in the current folder the user scope is chosen for you.</p>
+  </by-hand>
+  <skills-from-packages title="Skills that packages bring">
+    <p>Packages can declare skills of their own, for any kind of package: a flow that ships a checklist skill, a language guide that ships a sweep skill, a manual that ships a reading skill. `vibe skill list` shows what the installed packages declare, and `vibe skill install` projects them into the agents' skill folders. Installing a skill is a projection of a file the package already carries, not a second delivery mechanism.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-018#PROJECTION-DEF"/>
+    <example id="skill-list" fixture="hello-vibe">
+      <run>vibe skill list --path hello-vibe</run>
+      <expect></expect>
+    </example>
+    <p>The skill of this manual, `vibevm-docs`, arrives the same way once the manual is in the machine store.</p>
+  </skills-from-packages>
+  <servers-from-packages title="Servers that packages bring">
+    <p>A package of the `mcp` kind delivers a server built from its own code, such as the discipline tools of a language family. `vibe mcp install` registers such servers in the agents' configurations beside vibe's own, with the path of the built binary; `vibe mcp status` reports whether each is built and current. Registering a server means the agent will run that package's code at session start, so registration asks for consent like an install does.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#CONSENT-TRUST-ACT"/>
+  </servers-from-packages>
+  <edge-cases title="Edge cases and rules">
+    <p>`vibe mcp upgrade` refreshes existing integrations to the shape shipped by the current binary after a vibe upgrade; it creates nothing new.</p>
+    <p>`vibe mcp uninstall` removes vibe's entry and skill and leaves every foreign entry in place; `vibe skill uninstall` strips only the skills vibe projected.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-018#CMD-SKILL-UNINSTALL"/>
+    <p>Cursor and Claude Desktop take the server entry but have no skill folders; vibe reports the skill as skipped for them rather than inventing a place.</p>
+  </edge-cases>
+</spec>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Ask your agent to do the work</title>
+  <status stage="doc" state="work" audience="user"/>
+  <p>Every page in this manual that describes a task starts with the plain request you type to your agent. This page explains what those requests assume, how the agent proves the work is done, and what happens when vibe hands a job back to the agent instead of doing it itself.</p>
+  <the-prompt-blocks title="The requests on these pages">
+    <p>A task page opens with a block you can copy into any agent that has the vibevm skill: it names the thing, states the result, and mentions no secrets. Under it, *needs* lists what the agent must have (the skill, network access, a token in the environment), *outcome* says what you will see when it worked, and the *assert* lines are commands that must succeed afterwards. The asserts are the point: an agent's answer cannot be checked by its wording, but a command's exit code can. Run them yourself, or ask the agent to run them and show you the results.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#STYLE-PROMPT-FIRST"/>
+    <p>A request that includes a step that cannot be undone, publishing or deleting, says that the agent must confirm before that step. Keep that line when you adapt a request.</p>
+  </the-prompt-blocks>
+  <how-vibe-knows title="How vibe knows an agent is calling">
+    <p>vibe behaves the same whether a person or an agent types the command, with one refinement: an agent identifies itself with `--invoked-by &lt;name&gt;` or the environment variable `VIBE_INVOKED_BY`, and every machine-readable report then carries that name, so logs show who did what. The installed skill tells the agent to pass it. In a script, `--unattended` answers every confirmation and refuses to open any interactive wizard.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-018#MODE-INFERRED"/>
+  </how-vibe-knows>
+  <two-transports title="Two ways for an agent to reach vibe">
+    <p>An agent can run vibe as a command, one process per call, which is the natural way for a quick question or a wide scan. Or it can talk to `vibe mcp serve`, a persistent server registered by `vibe mcp install`, which answers questions about the project's packages and can run the same operations without spawning a shell each time. The operation is defined once; which door the agent uses is the agent's choice, and the skill teaches it the heuristic.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-018#ONE-OP-TWO-TRANSPORTS"/>
+  </two-transports>
+  <the-relay title="When vibe hands the job back">
+    <p>vibe has no model inside it. When an operation needs reasoning, such as explaining a project in prose, vibe does not attempt it: it composes an instruction and parks it in the project's relay mailbox, `.vibe/agentic/command.md`. The agent then runs `vibe command`, which prints the instruction and clears the mailbox, and carries it out with its own model. There is no automatic write-back: if the result should reach vibe, the agent runs the command that records it.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-018#RELAY-PARKS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-018#NO-WRITE-BACK"/>
+    <example id="agentic-explain" fixture="hello-vibe">
+      <run>vibe agentic explain --path hello-vibe</run>
+      <expect></expect>
+    </example>
+    <example id="command" fixture="hello-vibe-relay">
+      <run>vibe command --path hello-vibe</run>
+      <expect></expect>
+    </example>
+    <p>The same handshake governs the build steps a project declares as agent work: when vibe runs under an agent, such a step is parked as a task for the agent to perform, and the same command resumes once the declared outputs exist. Under a person at a terminal, vibe can instead call a configured model provider, and pays for it only when the step actually runs.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-HANDSHAKE"/>
+  </the-relay>
+  <edge-cases title="Edge cases and rules">
+    <p>Running `vibe command` with an empty mailbox prints that nothing is pending; it is safe to call at any time.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-018#EMPTY-SLOT-OK"/>
+    <p>Every subsystem of vibe has a complete algorithmic mode; a model only ever improves a result, and each such enhancement is off unless the operator switches it on.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#LLM-IS-AN-ENHANCEMENT"/>
+    <p>An agent that reads this manual by address, rather than through a skill, finds the same requests in the plain-text form of each page; the pages are published for machines as much as for people.</p>
+  </edge-cases>
+</spec>
