@@ -25,6 +25,7 @@ walkdir.workspace = true
 chrono.workspace = true
 vibe-core.workspace = true
 vibe-registry.workspace = true
+vibe-wire.workspace = true
 
 [dev-dependencies]
 rust-ai-native-env-audit.workspace = true

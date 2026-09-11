@@ -1,0 +1,185 @@
+{
+  "metadata": {
+    "description": "The four-platform release aggregate `DISTRIBUTIONS.json`, and with it the whole distribution manifest family: the per-bundle `DISTRIBUTION.json` and the per-build platform fragment are the same document's nested shapes, published and read standalone as well as inside this root. Every object preserves the pre-JTD member order, so the published bytes do not move.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-019#instances"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::aggregate_distribution_manifest"
+    },
+    "x-wire-order": [
+      "schema_version",
+      "product",
+      "repository",
+      "version",
+      "tag",
+      "source_commit",
+      "platforms"
+    ]
+  },
+  "properties": {
+    "schema_version": { "type": "uint32" },
+    "product": { "type": "string" },
+    "repository": { "type": "string" },
+    "version": { "type": "string" },
+    "tag": { "type": "string" },
+    "source_commit": { "type": "string" },
+    "platforms": {
+      "elements": { "ref": "platform_distribution_fragment" },
+      "metadata": { "x-empty": "emit" }
+    }
+  },
+  "definitions": {
+    "byte_count": {
+      "type": "float64",
+      "metadata": {
+        "description": "An exact non-negative byte count. JTD has no uint64 form, so generated Rust narrows the numeric form to u64 and refuses fractions, negatives and overflow.",
+        "x-rust-type": "u64"
+      }
+    },
+    "distribution_component_name": {
+      "enum": ["vibe", "vibe-index"],
+      "metadata": {
+        "description": "Which runtime executable a bundle component is. Closed vocabulary: the installer resolves each component to a fixed destination path, so an unfamiliar name has no safe behaviour.",
+        "x-vocabulary": "closed"
+      }
+    },
+    "distribution_component": {
+      "metadata": {
+        "description": "One runtime executable carried inside a platform bundle.",
+        "x-wire-order": ["name", "path", "size", "digest"]
+      },
+      "properties": {
+        "name": { "ref": "distribution_component_name" },
+        "path": {
+          "type": "string",
+          "metadata": {
+            "description": "Bundle-relative executable path (`vibe.exe` on Windows, `vibe` elsewhere)."
+          }
+        },
+        "size": { "ref": "byte_count" },
+        "digest": {
+          "type": "string",
+          "metadata": {
+            "description": "Lowercase `sha256:<64 hex digits>` digest of the component bytes."
+          }
+        }
+      }
+    },
+    "distribution_source_archive": {
+      "metadata": {
+        "description": "Non-executable source snapshot shipped alongside the two runtime binaries.",
+        "x-wire-order": ["path", "size", "digest", "tree_oid"]
+      },
+      "properties": {
+        "path": { "type": "string" },
+        "size": { "ref": "byte_count" },
+        "digest": {
+          "type": "string",
+          "metadata": {
+            "description": "Lowercase `sha256:<64 hex digits>` digest of the archive bytes."
+          }
+        },
+        "tree_oid": {
+          "type": "string",
+          "metadata": {
+            "description": "Lowercase full Git tree object ID represented by the archive."
+          }
+        }
+      }
+    },
+    "bundle_distribution_manifest": {
+      "metadata": {
+        "description": "The `DISTRIBUTION.json` every platform bundle carries, and the exact manifest a platform fragment embeds.",
+        "x-wire-order": [
+          "schema_version",
+          "product",
+          "repository",
+          "version",
+          "tag",
+          "source_commit",
+          "target",
+          "components",
+          "source_archive"
+        ]
+      },
+      "properties": {
+        "schema_version": { "type": "uint32" },
+        "product": { "type": "string" },
+        "repository": { "type": "string" },
+        "version": {
+          "type": "string",
+          "metadata": {
+            "description": "SemVer without the Git tag's `v` prefix."
+          }
+        },
+        "tag": {
+          "type": "string",
+          "metadata": { "description": "Exactly `v<version>`." }
+        },
+        "source_commit": { "type": "string" },
+        "target": { "type": "string" },
+        "components": {
+          "elements": { "ref": "distribution_component" },
+          "metadata": { "x-empty": "emit" }
+        },
+        "source_archive": { "ref": "distribution_source_archive" }
+      }
+    },
+    "distribution_asset": {
+      "metadata": {
+        "description": "One published release asset — the complete platform bundle, or the raw bootstrap executable beside it.",
+        "x-wire-order": ["name", "size", "digest"]
+      },
+      "properties": {
+        "name": { "type": "string" },
+        "size": { "ref": "byte_count" },
+        "digest": {
+          "type": "string",
+          "metadata": {
+            "description": "Lowercase `sha256:<64 hex digits>` digest of the complete bundle."
+          }
+        }
+      }
+    },
+    "platform_distribution_fragment": {
+      "metadata": {
+        "description": "What one platform build emits for the release aggregation job, and one element of the aggregate's `platforms`.",
+        "x-wire-order": [
+          "schema_version",
+          "product",
+          "repository",
+          "version",
+          "tag",
+          "source_commit",
+          "target",
+          "asset",
+          "bootstrap",
+          "bundle"
+        ]
+      },
+      "properties": {
+        "schema_version": { "type": "uint32" },
+        "product": { "type": "string" },
+        "repository": { "type": "string" },
+        "version": { "type": "string" },
+        "tag": { "type": "string" },
+        "source_commit": { "type": "string" },
+        "target": { "type": "string" },
+        "asset": { "ref": "distribution_asset" },
+        "bootstrap": {
+          "ref": "distribution_asset",
+          "metadata": {
+            "description": "Raw `vibe[.exe]` used by dependency-light hosted bootstraps before they have a ZIP reader or an installed VVM."
+          }
+        },
+        "bundle": {
+          "ref": "bundle_distribution_manifest",
+          "metadata": {
+            "description": "The exact manifest embedded in this platform's bundle."
+          }
+        }
+      }
+    }
+  }
+}

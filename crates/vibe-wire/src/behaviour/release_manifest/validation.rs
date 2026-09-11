@@ -76,17 +76,27 @@ pub(super) fn target_sort_key(target: &str) -> usize {
     }
 }
 
+/// The canonical order of the two components inside a bundle manifest: the
+/// wire strings themselves, ascending. `"vibe"` sorts before `"vibe-index"`,
+/// which is the order every published `DISTRIBUTION.json` has always carried.
+/// The generated component name derives no `Ord` — ordering is a property of
+/// the wire vocabulary, not of the Rust enum's declaration order — so the
+/// sort key is stated here, beside the target order it stands next to.
+pub(super) fn component_sort_key(name: &DistributionComponentName) -> &'static str {
+    name.as_str()
+}
+
 pub(super) fn validate_components(
     target: &str,
     components: &[DistributionComponent],
 ) -> Result<(), ReleaseManifestError> {
     let names = components
         .iter()
-        .map(|component| component.name)
+        .map(|component| component.name.as_str())
         .collect::<BTreeSet<_>>();
     let required = [
-        DistributionComponentName::Vibe,
-        DistributionComponentName::VibeIndex,
+        DistributionComponentName::Vibe.as_str(),
+        DistributionComponentName::VibeIndex.as_str(),
     ]
     .into_iter()
     .collect::<BTreeSet<_>>();

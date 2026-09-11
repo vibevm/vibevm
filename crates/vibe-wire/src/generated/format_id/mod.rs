@@ -42,6 +42,8 @@ pub enum FormatId {
     DeployInverse,
     DeployLockResources,
     DeployReceipt,
+    DistributionAggregateManifest,
+    DistributionBundleManifest,
     ExtensionsAnalyze,
     Handshake,
     IndexByCap,

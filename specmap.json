@@ -26,6 +26,70 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/distribution/e1/aggregate_distribution_manifest.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "aggregate_distribution_manifest",
+      "end_line": 185
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/distribution/e1/aggregate_distribution_manifest.jtd.json",
+      "item_kind": "schema-def",
+      "line": 91,
+      "symbol": "aggregate_distribution_manifest::bundle_distribution_manifest",
+      "end_line": 128
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/distribution/e1/aggregate_distribution_manifest.jtd.json",
+      "item_kind": "schema-def",
+      "line": 33,
+      "symbol": "aggregate_distribution_manifest::byte_count",
+      "end_line": 39
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/distribution/e1/aggregate_distribution_manifest.jtd.json",
+      "item_kind": "schema-def",
+      "line": 129,
+      "symbol": "aggregate_distribution_manifest::distribution_asset",
+      "end_line": 144
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/distribution/e1/aggregate_distribution_manifest.jtd.json",
+      "item_kind": "schema-def",
+      "line": 47,
+      "symbol": "aggregate_distribution_manifest::distribution_component",
+      "end_line": 68
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/distribution/e1/aggregate_distribution_manifest.jtd.json",
+      "item_kind": "schema-def",
+      "line": 40,
+      "symbol": "aggregate_distribution_manifest::distribution_component_name",
+      "end_line": 46
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/distribution/e1/aggregate_distribution_manifest.jtd.json",
+      "item_kind": "schema-def",
+      "line": 69,
+      "symbol": "aggregate_distribution_manifest::distribution_source_archive",
+      "end_line": 90
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/distribution/e1/aggregate_distribution_manifest.jtd.json",
+      "item_kind": "schema-def",
+      "line": 145,
+      "symbol": "aggregate_distribution_manifest::platform_distribution_fragment",
+      "end_line": 183
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/artifact_record.jtd.json",
       "item_kind": "schema",
       "line": 1,
@@ -21368,19 +21432,10 @@
       "crate_name": "vibe-publish",
       "file": "crates/vibe-publish/src/release_manifest.rs",
       "item_kind": "mod",
-      "line": 10,
+      "line": 25,
       "symbol": "vibe_publish::release_manifest",
-      "end_line": 10,
+      "end_line": 25,
       "fingerprint": "tok1:37c353434014f670e872f4a1006aca84df4bc9b8d368221b31d9c19a637d501d"
-    },
-    {
-      "crate_name": "vibe-publish",
-      "file": "crates/vibe-publish/src/release_manifest/error.rs",
-      "item_kind": "enum",
-      "line": 7,
-      "symbol": "vibe_publish::release_manifest::error::ReleaseManifestError",
-      "end_line": 151,
-      "fingerprint": "tok1:d7e754cd08fef45fd7e607722a6137e69ebbd14e8fbb6acaac16293fd688760c"
     },
     {
       "crate_name": "vibe-publish",
@@ -28106,6 +28161,24 @@
       "fingerprint": "tok1:9cf768b01cdf0c2fabad294bbffd12abff101b480ef5f2ba2f395133d76b91c1"
     },
     {
+      "crate_name": "vibe-wire",
+      "file": "crates/vibe-wire/src/behaviour/release_manifest.rs",
+      "item_kind": "mod",
+      "line": 23,
+      "symbol": "vibe_wire::behaviour::release_manifest",
+      "end_line": 23,
+      "fingerprint": "tok1:37c353434014f670e872f4a1006aca84df4bc9b8d368221b31d9c19a637d501d"
+    },
+    {
+      "crate_name": "vibe-wire",
+      "file": "crates/vibe-wire/src/behaviour/release_manifest/error.rs",
+      "item_kind": "enum",
+      "line": 7,
+      "symbol": "vibe_wire::behaviour::release_manifest::error::ReleaseManifestError",
+      "end_line": 151,
+      "fingerprint": "tok1:d7e754cd08fef45fd7e607722a6137e69ebbd14e8fbb6acaac16293fd688760c"
+    },
+    {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/lib.rs",
       "item_kind": "mod",
@@ -30255,6 +30328,14 @@
       "line": 1,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-CLI",
+      "verb": "implements"
+    },
+    {
+      "file": "schemas/distribution/e1/aggregate_distribution_manifest.jtd.json",
+      "from_symbol": "aggregate_distribution_manifest",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#instances",
       "verb": "implements"
     },
     {
@@ -46174,15 +46255,7 @@
     {
       "file": "crates/vibe-publish/src/release_manifest.rs",
       "from_symbol": "vibe_publish::release_manifest",
-      "line": 10,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#instances",
-      "verb": "implements"
-    },
-    {
-      "file": "crates/vibe-publish/src/release_manifest/error.rs",
-      "from_symbol": "vibe_publish::release_manifest::error::ReleaseManifestError",
-      "line": 8,
+      "line": 25,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#instances",
       "verb": "implements"
@@ -52356,6 +52429,22 @@
       "line": 12,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#map-select",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-wire/src/behaviour/release_manifest.rs",
+      "from_symbol": "vibe_wire::behaviour::release_manifest",
+      "line": 23,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#instances",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-wire/src/behaviour/release_manifest/error.rs",
+      "from_symbol": "vibe_wire::behaviour::release_manifest::error::ReleaseManifestError",
+      "line": 8,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#instances",
       "verb": "implements"
     },
     {
