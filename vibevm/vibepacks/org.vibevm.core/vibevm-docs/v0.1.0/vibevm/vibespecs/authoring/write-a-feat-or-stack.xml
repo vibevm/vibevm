@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Write a feat or a stack</title>
+  <status stage="doc" state="work" audience="author"/>
+  <p>A feat says what to build without saying how; a stack says how a technology does it. This page writes one of each and connects them through the abilities one needs and the other provides.</p>
+  <prompt id="write-a-feat-or-stack">Create two packages under packages/ in the current VibeVM project: a feat org.acme/welcome-page that describes a welcome page with acceptance criteria and requires the capability ui:page-host, and a stack org.acme/static-site that provides ui:page-host and explains how a page is built as a static HTML file. Run vibe check on both.
+    <needs>the vibevm skill installed for your agent; a project with `vibe.toml` at the root</needs>
+    <outcome>the feat's manifest requires `ui:page-host`, the stack's manifest provides it, each has its specification documents under `vibevm/vibespecs/`, and `vibe check` reports no errors for either</outcome>
+    <assert>vibe check --path packages/welcome-page --quiet</assert>
+    <assert>vibe check --path packages/static-site --quiet</assert>
+  </prompt>
+  <what-happens title="What happens">
+    <p>The agent creates both packages with `vibe init package`, writes the feat's specification, acceptance criteria and capability requirement, writes the stack's description, conventions and the capability it provides, and checks each. When a project later installs the feat, the resolver looks for a package providing `ui:page-host` among the project's stacks; the stack satisfies it, and the two are matched without either naming the other.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#SHAPE-REGISTRY-ARRAY"/>
+  </what-happens>
+  <a-feat title="A feat">
+    <p>A feat describes what a feature does for its user, in terms any stack can implement: purpose, behaviour, acceptance criteria, data it needs, what happens when things go wrong. It never names a framework. Its manifest declares the abilities it needs from a stack as capabilities, `namespace:name@constraint`, and nothing else about technology.</p>
+    <table>
+      <tr><td>Path</td><td>Purpose</td></tr>
+      <tr><td>`vibevm/vibespecs/feats/&lt;name&gt;/SPEC.md`</td><td>what the feature does, for whom, and why</td></tr>
+      <tr><td>`vibevm/vibespecs/feats/&lt;name&gt;/acceptance.md`</td><td>observable criteria a build must meet</td></tr>
+      <tr><td>`vibevm/vibespecs/feats/&lt;name&gt;/data-model.md`, `api.md`, `ui-flows.md`, `failure-modes.md`</td><td>the parts that apply, one topic per file</td></tr>
+    </table>
+    <p>In the manifest: `[requires] capabilities = ["ui:page-host@^1"]` and, for a feat that needs a stack at all, `[compatibility] requires_kinds = ["stack"]`.</p>
+  </a-feat>
+  <a-stack title="A stack">
+    <p>A stack is a technology context: it says how the abstract abilities a feat asks for are realised with one set of tools, and it may bind the lifecycle's build and test phases to that toolchain. Its manifest declares what it provides, `[provides] capabilities = ["ui:page-host@1.0"]`, and its specification documents describe each provided capability in a file of its own, plus conventions, tooling and deployment.</p>
+    <table>
+      <tr><td>Path</td><td>Purpose</td></tr>
+      <tr><td>`vibevm/vibespecs/stacks/&lt;name&gt;/STACK.md`</td><td>what the stack is and when to choose it</td></tr>
+      <tr><td>`vibevm/vibespecs/stacks/&lt;name&gt;/capabilities/&lt;capability&gt;.md`</td><td>one file per provided ability: how it is realised</td></tr>
+      <tr><td>`vibevm/vibespecs/stacks/&lt;name&gt;/conventions.md`, `tooling.md`, `deployment.md`</td><td>naming and layout, the build and test commands, how a build ships</td></tr>
+      <tr><td>`vibevm/vibespecs/boot/&lt;name&gt;.xml`</td><td>an optional snippet that surfaces the active stack at session start</td></tr>
+    </table>
+    <p>A stack may also bind lifecycle contributions in its manifest, so that `vibe build` and `vibe test` in a consuming project run the stack's toolchain without further configuration.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#STACK-CONTRIBUTES-PRESET"/>
+  </a-stack>
+  <capabilities title="Capabilities">
+    <p>A capability is an abstract interface: a namespace, a colon, a name, and optionally a version constraint. A feat requires; a stack provides; the resolver matches them at install time, and refuses a project whose feats need an ability no installed stack provides. Choose names by what the ability does for the feature, not by the technology: `ui:page-host`, `db:relational`, `auth:oauth-callback`.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#IDENTITY-TUPLE"/>
+  </capabilities>
+  <edge-cases title="Edge cases and rules">
+    <p>The word `stack` also names a family bundle: a package of kind `stack` with nothing but exact pins of a language family's members. Both are stacks in the register; the description tells them apart.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-028#ROLE-AGGREGATOR"/>
+    <p>A feat's acceptance criteria are what the agent checks after a build; write them as observable facts, not as wishes.</p>
+    <p>Two feats requiring the same capability may be satisfied by one stack; a project with several stacks marks one as active for a build.</p>
+  </edge-cases>
+</spec>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Write specs an agent can cite</title>
+  <status stage="doc" state="work" audience="author"/>
+  <p>The text in a package is only useful to an agent if every rule in it has an address. This page shows the shape of such text: named sections, one idea per unit, a status on each, and an address that never changes once published.</p>
+  <two-processes title="Why an address">
+    <p>A person and an agent share one repository and nothing else: no hallway, no shared memory, no tone of voice. The specification tree is the only channel between them, and a channel works when a message can be pointed at. «Fix the retry count» sends the agent guessing; «fix `spec://org.acme/notes-flow/flows/notes/PROTOCOL#RETRY-COUNT`» sends it to one line. The second costs about twenty tokens; the first costs hundreds and may land on the wrong rule.</p>
+    <rule ref="spec://org.vibevm.world/addressable-specs/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL#THE-SPEC-TREE-IS-THE-ONLY-CHANNEL"/>
+    <rule ref="spec://org.vibevm.world/addressable-specs/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL#FOR-POINT-CORRECTIONS-THE-URI-WINS"/>
+  </two-processes>
+  <the-address title="The address">
+    <p>`spec://&lt;group&gt;/&lt;name&gt;[@&lt;version&gt;]/&lt;path&gt;/&lt;document&gt;#&lt;anchor&gt;`: the package coordinate, an optional version, the document's path inside `vibevm/vibespecs/` without its extension, and an anchor. The version is a feature, never an obligation: absent, the address resolves against the freshest installed version. Anchors are section ids and fact ids in one address space, so a rule is cited the same way whether it is a section or one sentence.</p>
+    <rule ref="spec://org.vibevm.world/addressable-specs/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL#URI-SCHEME-IS-THE-FULL-GRAMMAR"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#URI-VERSION-OPTIONAL"/>
+    <example id="explain" fixture="hello-vibe">
+      <run>vibe explain "spec://org.vibevm.core/vibevm/common/PROP-000#KIND-SET" --path hello-vibe</run>
+      <expect></expect>
+    </example>
+  </the-address>
+  <the-unit title="The unit">
+    <p>A unit is one anchored heading and the text under it, up to the next heading; it carries one decision or one rule, makes sense on its own, and fits on a page. If a unit needs «and also», it is two units. Contract statements use MUST, SHOULD and MAY; a reader must never guess whether a sentence binds. Checkable claims stand outside code fences, because a fence carries no anchor and an instruction inside one is unverified by construction.</p>
+    <rule ref="spec://org.vibevm.world/addressable-specs/flows/addressable-specs/authoring-rules#ONE-UNIT-CARRIES-ONE-DECISION"/>
+    <rule ref="spec://org.vibevm.world/addressable-specs/flows/addressable-specs/authoring-rules#CONTRACT-STATEMENTS-USE-RFC-2119-VERBS"/>
+    <rule ref="spec://org.vibevm.world/addressable-specs/flows/addressable-specs/authoring-rules#A-CHECKABLE-CLAIM-BELONGS-OUTSIDE-THE-FENCE"/>
+  </the-unit>
+  <the-dialect title="Two serialisations, one model">
+    <p>A specification is written in Markdown or in the project's XML dialect, and both parse into one document model. In XML a section is an element named after its anchor, `&lt;retry-policy title="3. Retries"&gt;`, and a rule is an element named after its id with the attribute `fact="true"` and a status; in Markdown the same rule is a paragraph opening with `@fact:RETRY-COUNT` and closing with `@status:spec/done`. A tool that knows nothing of your vocabulary still finds every rule by one attribute test, and a converter turns one form into the other without loss.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#NAMED-FACT-ELEMENTS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#XML-DIALECT-IS-THE-MD-SUBSET"/>
+    <p>The status on each unit says where it stands: `spec/done` for a settled rule, `impl/done` once code implements it, `spec/work` for a draft. Two id registers carry the signal at no cost: an upper-case id marks a rule with binding weight, a lower-case one a lead-in or a note.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#DECISION-TWO-REGISTERS"/>
+    <example id="convert" fixture="package-spec">
+      <run>vibe refactor convert-source --from md --to xml --dry-run vibevm/vibespecs</run>
+      <expect></expect>
+    </example>
+  </the-dialect>
+  <immutable title="An address never moves">
+    <p>Once published, an anchor is immutable. Renaming a section or a rule leaves a tombstone at the old anchor pointing at the new one, so a citation written last year still lands. Moving files does not change addresses either: the address is logical, the path is physics.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-052#ADDRESSES-SURVIVE-THE-MOVE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#INV-ANCHORS-IMMUTABLE"/>
+  </immutable>
+  <edge-cases title="Edge cases and rules">
+    <p>A generated file is never a citation target: cite the source document, not the compiled boot lane.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#COMPILED-LANE-IS-NOT-A-CITATION-TARGET"/>
+    <p>`vibe facts check` validates the markup of a package's specifications; `vibe check` validates the package as a whole; both run before publishing.</p>
+    <p>Code may cite specifications too, with an attribute on the item that implements a rule, and a map then answers which code implements which rule in both directions; the architecture pages of this manual explain that map.</p>
+  </edge-cases>
+</spec>

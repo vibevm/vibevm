@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Ship tools and MCP servers</title>
+  <status stage="doc" state="work" audience="author"/>
+  <p>A package can deliver programs: command-line tools built on install, or a server your agent talks to. This page declares both, builds them in the package's own folder, and explains why a server pins the exact version of the tools it serves.</p>
+  <prompt id="ship-tools">In the package packages/notes-tools of the current VibeVM project, declare the Rust crate crates/notes-check as a binary named notes-check, build it through vibe, and run it through vibe bin exec with --help to prove the dispatch works.
+    <needs>the vibevm skill installed for your agent; a package with a Cargo workspace at its root and a binary crate; the Rust toolchain on the `PATH`</needs>
+    <outcome>the manifest carries a `[[binary]]` table; `vibe bin list` shows the tool; `vibe bin build` produced it in the package's own target folder; `vibe bin exec notes-check -- --help` prints the tool's help</outcome>
+    <assert>vibe bin list --path packages/notes-tools</assert>
+    <assert>vibe bin exec notes-check --path packages/notes-tools -- --help</assert>
+  </prompt>
+  <what-happens title="What happens">
+    <p>The agent adds a `[[binary]]` table naming the tool and the crate directory inside the package, runs `vibe bin build`, which asks for consent and runs a release build inside the package's own workspace, and then `vibe bin exec`, which resolves the tool through the project's lock file to the artifact of the exact version installed and runs it. Consumers get the same: installing the package materialises its source, building on first use produces the tool beside it, and the artifact never enters the package's fingerprint.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#BINARY-MUST"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#HASHES-STABLE"/>
+  </what-happens>
+  <code-in-a-package title="Code in a package">
+    <p>A package is a project made installable, so it may carry arbitrary code at its root beside `vibevm/vibespecs/`: a Cargo workspace, crates, tests. The shippable tree is the source minus build output; `target/`, `node_modules/` and anything in `.vibeignore` never travel. Consumers receive the source and build it themselves, which keeps identity a property of what the author committed.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-024#ROOT-CODE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-024#WHY-SOURCE-IDENTITY"/>
+    <p>A code-bearing package keeps its own workspace manifest, and a consumer that is itself a Rust project excludes the dependency tree from its own workspace, so the two builds never collide.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-024#OWN-WORKSPACE"/>
+  </code-in-a-package>
+  <binaries title="Binaries">
+    <p>Each tool is one `[[binary]]` entry: a `name`, unique in the package, and a `crate`, a directory inside the shippable tree with a `Cargo.toml`. `vibe bin list` shows what the installed packages declare, `vibe bin build` builds the named tools or all of them, `vibe bin path` prints an artifact's location, and `vibe bin exec &lt;name&gt; -- &lt;args&gt;` runs it through the lock file. Building executes the package's build scripts, so it asks for consent the first time, like an install does.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#BINARY-TABLE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#BUILD-CONSENT"/>
+    <example id="bin-list" fixture="hello-vibe">
+      <run>vibe bin list --path hello-vibe</run>
+      <expect></expect>
+    </example>
+  </binaries>
+  <servers title="MCP servers">
+    <p>A package of kind `mcp` delivers a server an agent talks to: one or more `[[mcp_server]]` tables, each naming the binary that serves it and its arguments. The server is built like any binary and registered into the agents' configurations by `vibe mcp install`, beside vibe's own server. Once built, it runs without vibe: the agent launches the artifact directly.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#MCP-KIND-DEF"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#VIBE-FREE-SERVING"/>
+    <p>A server that serves another package's toolchain, the gates of a language discipline for example, must require that package with an exact pin, `=X.Y.Z`. The engines behind the agent's tools and the gates the consumer runs must resolve to one version set: one engine, one truth, enforced by the resolver rather than by the protocol.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#EXACT-PIN-LAW"/>
+  </servers>
+  <edge-cases title="Edge cases and rules">
+    <p>A tool's artifact belongs to the exact version installed; after an update the old artifact is not trusted, and the next `vibe bin exec` builds the new version first.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#TRUST-CURRENT-SLOT"/>
+    <p>Building needs the language's own package sources, from crates.io for Rust, unless they are vendored; an offline build says so rather than pretending.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#OFFLINE-HONESTY"/>
+    <p>The `[[mcp_server]]` table is legal only in packages of kind `mcp`; a `tool` package ships binaries but no servers.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#TABLE-ONLY-IN-KIND"/>
+  </edge-cases>
+</spec>
