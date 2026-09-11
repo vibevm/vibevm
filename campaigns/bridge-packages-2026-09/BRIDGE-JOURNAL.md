@@ -408,3 +408,32 @@ Date: 2026-09-11
   skill dry-run were green; package payload bytes matched and only the
   representation-specific slot record differed. With no boot contribution,
   `INDEX.md` matched and neither mode invented `STATIC.*`.
+
+Public-registry E2E:
+
+- A fresh project resolved and installed
+  `feat:org.vibevm.bridges/spec-kit@=1.0.0` directly from
+  `https://github.com/vibespecs`, not from the local package tree.
+- That install hydrated and locked the original upstream; after Git was
+  deliberately disabled, offline skill projection and `vibe check` both
+  succeeded. This closes the gap between local-fixture success and the actual
+  public repository/naming/tag path.
+
+## J-014 — Mutable Vibe 1.0.0 refreshed for bridge consumers
+
+Date: 2026-09-11
+
+GitHub Actions run `34589274750` rebuilt commit
+`99046814177dc7f2ba7a7bd3c2a595124e3d566f` on the native runner for each
+supported target. Checks/tests/self-check were opt-in and remained disabled;
+the run performed build, package, upload and remote verification only.
+
+All four build jobs and all four upload jobs succeeded:
+
+- `x86_64-pc-windows-msvc`
+- `x86_64-unknown-linux-musl`
+- `x86_64-apple-darwin`
+- `aarch64-apple-darwin`
+
+The final verifier succeeded, published `DISTRIBUTIONS.json`, and replaced the
+public mutable `v1.0.0` release with 17 assets pointing at commit `9904681`.
