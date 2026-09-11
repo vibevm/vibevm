@@ -114,26 +114,34 @@ exactly the tree vibevm will use.</CWD-IS-SLOT></p>
       <p><RUNNER-SEAM fact="true" status="impl/done">The process runner is an injectable seam (`HookRunner`) so tests assert the
 selection logic and argument/env shape without spawning real processes.</RUNNER-SEAM></p>
     </script-selection>
-    <trust-gate title="2.3 Trust gate — allow-list of groups, plus first-run consent">
+    <trust-gate title="2.3 Trust posture — installation is consent, observability is the gate">
       <p><req-trust fact="true" status="impl/done">`req r1`</req-trust></p>
-      <p><TRUST-CHEAP fact="true" status="impl/done">Running a package's hook is running third-party code at install time. Until a
-content-scanning gate exists (§4), trust is governed cheaply:</TRUST-CHEAP></p>
+      <p><TRUST-CHEAP fact="true" status="spec/done">**Historical proposal, superseded.** Running a package's hook is running
+third-party code at install time. This section originally proposed an
+allow-list and per-run consent; PROP-054 `##INSTALL-IS-CONSENT` later replaced
+that permission model for every extension handler.</TRUST-CHEAP></p>
       <facts ordered="false">
-        <ALLOW-LIST fact="true" status="impl/done">**Allow-listed groups run silently.** A config key (global
+        <ALLOW-LIST fact="true" status="spec/done">**Superseded design: allow-listed groups.** A config key (global
   `~/.vibe/config.toml` `[hooks].allowed_groups`, with a project-level
   override) lists trusted package groups. **`org.vibevm` is in the allow-list
   by default.** A package whose group is allow-listed runs its hooks with no
-  prompt.</ALLOW-LIST>
-        <FIRST-RUN-CONSENT fact="true" status="impl/done">**Other groups need consent.** On the first hook run of a non-allow-listed
+  prompt. This key was never a product input and is not part of the current
+  configuration grammar.</ALLOW-LIST>
+        <FIRST-RUN-CONSENT fact="true" status="spec/done">**Superseded design: first-run consent.** On the first hook run of a non-allow-listed
   package, vibevm prints what will run (phase, script path, group) and asks
   `y/n`. Declining skips the hook and marks the package install as
   hooks-skipped (surfaced, not silent).</FIRST-RUN-CONSENT>
-        <NON-INTERACTIVE-SAFETY fact="true" status="impl/done">**Non-interactive safety.** With `--assume-yes` / in CI, allow-listed
+        <NON-INTERACTIVE-SAFETY fact="true" status="spec/done">**Superseded design: non-interactive abort.** With `--assume-yes` / in CI, allow-listed
   packages still run; a non-allow-listed package's hook is **not** run
   silently — the install **aborts** with a hint to either allow-list the group
   or pass an explicit `--allow-hooks` opt-in. A script must never execute
   unseen third-party code by default.</NON-INTERACTIVE-SAFETY>
       </facts>
+      <p><INSTALLATION-CONSENT-SUCCESSOR fact="true" status="impl/done">**Current law.** Installing the package is the consent to run its declared
+hooks. There is no `[hooks].allowed_groups`, first-run prompt, or
+`--allow-hooks` permission layer. Safety is the PROP-054 observability model:
+the manifest is statically inspectable, selected contributions are narrated,
+and durable run evidence identifies what ran and which package supplied it.</INSTALLATION-CONSENT-SUCCESSOR></p>
     </trust-gate>
     <manifest title="2.4 Hooks are declared in the manifest">
       <p><req-manifest-hooks fact="true" status="impl/done">`req r1`</req-manifest-hooks></p>
@@ -181,8 +189,8 @@ phase:</STREAMS-AND-EXIT></p>
     <facts ordered="false">
       <OOS-CONTENT-SCANNING fact="true" status="spec/done">**Content scanning / the LLM "antivirus".** A future gate that inspects a
   package's hooks (and code) for malicious behaviour is far-backlog. Until it
-  lands, hook execution is an **explicitly accepted risk** governed only by
-  §2.3's allow-list + consent. This is the deliberate posture, not an
+  lands, hook execution is an **explicitly accepted risk** governed by
+  dependency selection plus PROP-054 observability. This is the deliberate posture, not an
   oversight — recorded here as the project's stance.</OOS-CONTENT-SCANNING>
       <OOS-SANDBOXING fact="true" status="spec/done">**Sandboxing / capability-limiting** hooks (containers, seccomp). Hooks run
   with the user's privileges, like `cargo build` scripts or `npm postinstall`.</OOS-SANDBOXING>
@@ -198,9 +206,9 @@ phase:</STREAMS-AND-EXIT></p>
   regeneration; `post-install` runs after the lockfile is written.</ACC-PHASE-TIMING>
       <ACC-INTERPRETER fact="true" status="impl/done">Interpreter selection follows §2.2 on each OS; a declared hook with no usable
   interpreter errors rather than silently skipping.</ACC-INTERPRETER>
-      <ACC-CONSENT fact="true" status="impl/done">An allow-listed group (incl. `org.vibevm` by default) runs hooks with no
-  prompt; a non-allow-listed package prompts interactively and **aborts** in a
-  non-interactive run without `--allow-hooks`.</ACC-CONSENT>
+      <ACC-CONSENT fact="true" status="impl/done">Any installed package's declared hook is eligible without a second consent
+  prompt or group allow-list; the execution plan and resulting run evidence
+  identify the hook, phase and providing package.</ACC-CONSENT>
       <ACC-FAILURE-SEMANTICS fact="true" status="impl/done">A `pre-install` non-zero exit rolls back the slot and fails the package; a
   `post-install` failure installs-but-flags.</ACC-FAILURE-SEMANTICS>
       <ACC-RESET-RERUN fact="true" status="impl/done">Updating, reinstalling or integrity-repairing a package restores the prior hook's recorded payload edits (per the materialization mode); a nonempty payload change reruns hooks exactly once and an empty change runs none.</ACC-RESET-RERUN>
