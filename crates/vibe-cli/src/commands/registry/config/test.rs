@@ -33,6 +33,8 @@ struct TestReportRegistry {
     /// - `unreachable` — DNS / TCP / cert error.
     /// - `missing-token` — `auth = "token-env"` declared but the
     ///   env-var resolved empty.
+    /// - `protocol-error` — the configured registry could not be
+    ///   initialised as a resolver.
     /// - `unknown` — any other shape; details in `note`.
     status: &'static str,
     /// Human-readable elaboration when `status` alone isn't
@@ -40,6 +42,26 @@ struct TestReportRegistry {
     /// the happy `reachable` path.
     #[serde(skip_serializing_if = "Option::is_none")]
     note: Option<String>,
+}
+
+/// A syntactically valid, fully-qualified coordinate in a namespace reserved
+/// for probes. Keeping the literal in one place lets a focused test prove that
+/// a future edit cannot accidentally turn connectivity checking into a local
+/// parse failure.
+const PROBE_PKGREF: &str = "flow:org.vibevm.probe/vibe-probe-99zzqq";
+
+fn report_ok<'a>(statuses: impl IntoIterator<Item = &'a str>) -> bool {
+    let mut statuses = statuses.into_iter();
+    matches!(statuses.next(), Some("reachable")) && statuses.all(|status| status == "reachable")
+}
+
+fn require_configured(registry_count: usize) -> Result<()> {
+    if registry_count == 0 {
+        bail!(
+            "not-configured: no `[[registry]]` entries to probe; add one with `vibe registry add` first"
+        );
+    }
+    Ok(())
 }
 
 pub(in crate::commands::registry) fn run_test(
@@ -57,17 +79,7 @@ pub(in crate::commands::registry) fn run_test(
     let manifest = Manifest::read(&manifest_path)
         .with_context(|| format!("reading `{}`", manifest_path.display()))?;
 
-    if manifest.registries.is_empty() {
-        ctx.summary("No `[[registry]]` entries to probe. Add one with `vibe registry add` first.");
-        if ctx.is_json() {
-            ctx.emit_json(&TestReport {
-                ok: true,
-                command: "registry:test",
-                registries: vec![],
-            })?;
-        }
-        return Ok(());
-    }
+    require_configured(manifest.registries.len())?;
 
     // Build a `MultiRegistryResolver` so each registry inherits the
     // exact auth configuration the install path would use. We then
@@ -85,11 +97,11 @@ pub(in crate::commands::registry) fn run_test(
     use vibe_registry::{MultiRegistryResolver, RegistryError};
 
     // The probe pkgref. Using a UUID-like suffix keeps the
-    // `(kind, name)` extraordinarily unlikely to clash with any
-    // real package — every host should respond
+    // `(group, name)` reserved for diagnostics and extraordinarily unlikely
+    // to clash with any real package — every host should respond
     // `UnknownPackage` for it. Underscores are not valid in
-    // package names (kebab-case only), so we use `flow:vibe-probe-XXXX`.
-    let probe_pkgref = PackageRef::parse("flow:vibe-probe-99zzqq")
+    // package names (kebab-case only), so the suffix stays alphanumeric.
+    let probe_pkgref = PackageRef::parse(PROBE_PKGREF)
         .context("internal: the hermetic probe pkgref literal must parse")?;
 
     let mut rows: Vec<TestReportRegistry> = Vec::with_capacity(manifest.registries.len());
@@ -103,13 +115,16 @@ pub(in crate::commands::registry) fn run_test(
         let single = std::slice::from_ref(reg);
         let resolver = match MultiRegistryResolver::open(single, &[], &[]) {
             Ok(r) => r,
-            Err(e) => {
+            Err(_) => {
                 rows.push(TestReportRegistry {
                     name: reg.name.clone(),
                     url: row_url,
                     auth: row_auth_label,
-                    status: "unknown",
-                    note: Some(format!("could not open resolver: {e}")),
+                    status: "protocol-error",
+                    // Do not echo the error: configuration errors may carry a
+                    // credential-bearing URL. The row already identifies the
+                    // affected registry without exposing resolver internals.
+                    note: Some("registry configuration could not initialize a resolver".into()),
                 });
                 continue;
             }
@@ -156,7 +171,13 @@ pub(in crate::commands::registry) fn run_test(
             Err(RegistryError::Git(GitError::NotInstalled)) => {
                 ("unknown", Some("`git` is not on PATH".to_string()))
             }
-            Err(other) => ("unknown", Some(format!("{other}"))),
+            // Keep the residual diagnostic credential-safe. Typed auth and
+            // network failures were handled above; an unclassified error may
+            // still contain a credential-bearing transport string.
+            Err(_) => (
+                "unknown",
+                Some("registry returned an unclassified failure".to_string()),
+            ),
         };
         rows.push(TestReportRegistry {
             name: reg.name.clone(),
@@ -167,9 +188,10 @@ pub(in crate::commands::registry) fn run_test(
         });
     }
 
+    let ok = report_ok(rows.iter().map(|row| row.status));
     if ctx.is_json() {
         ctx.emit_json(&TestReport {
-            ok: true,
+            ok,
             command: "registry:test",
             registries: rows,
         })?;
@@ -206,4 +228,31 @@ pub(in crate::commands::registry) fn run_test(
         rows.len()
     ));
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{PROBE_PKGREF, report_ok, require_configured};
+
+    #[test]
+    fn probe_coordinate_is_fully_qualified_and_impossible() {
+        assert_eq!(PROBE_PKGREF, "flow:org.vibevm.probe/vibe-probe-99zzqq");
+        let parsed = vibe_core::PackageRef::parse(PROBE_PKGREF).expect("probe coordinate parses");
+        assert_eq!(parsed.to_string(), PROBE_PKGREF);
+    }
+
+    #[test]
+    fn report_is_ok_only_when_every_configured_registry_is_reachable() {
+        assert!(report_ok(["reachable", "reachable"]));
+        assert!(!report_ok(["reachable", "unreachable"]));
+        assert!(!report_ok(["auth-required"]));
+        assert!(!report_ok(std::iter::empty::<&str>()));
+    }
+
+    #[test]
+    fn zero_configured_registries_is_an_explicit_error() {
+        let error = require_configured(0).expect_err("empty registry set must fail");
+        assert!(error.to_string().contains("not-configured"));
+        assert!(require_configured(1).is_ok());
+    }
 }
