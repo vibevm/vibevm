@@ -27,6 +27,33 @@ fn authenticated_tag_ref_read_uses_the_exact_singular_endpoint() {
 }
 
 #[test]
+fn authenticated_release_discovery_falls_back_to_the_draft_list() {
+    let mock = MockGithub::spawn();
+    let client = mock.client("release-token");
+    mock.json(StatusCode::NOT_FOUND, json!({"message": "Not Found"}));
+    let mut draft = release(92, "v1.0.0");
+    draft["draft"] = json!(true);
+    mock.json(StatusCode::OK, json!([draft]));
+
+    let found = client
+        .find_release_authenticated("v1.0.0")
+        .unwrap()
+        .unwrap();
+    assert_eq!(found.id, 92);
+    assert!(found.draft);
+    let state = mock.state.lock().unwrap();
+    assert_eq!(state.requests.len(), 2);
+    assert_eq!(
+        state.requests[1].uri,
+        "/api/repos/vibevm/vibe/releases?per_page=100"
+    );
+    assert_eq!(
+        state.requests[1].headers["authorization"],
+        "Bearer release-token"
+    );
+}
+
+#[test]
 fn existing_tag_is_read_then_force_moved() {
     let mock = MockGithub::spawn();
     let client = mock.client("release-token");

@@ -142,9 +142,9 @@ pub(crate) fn status(repo_root: &Path, raw_version: &str) -> Result<()> {
     let client = write_client()?;
     let tag = format!("v{version}");
     let release = client
-        .find_release(&tag)?
+        .find_release_authenticated(&tag)?
         .with_context(|| format!("GitHub release `{tag}` does not exist; run `dist prepare`"))?;
-    let assets = unique_assets(client.list_assets(release.id)?)?;
+    let assets = unique_assets(client.list_assets_authenticated(release.id)?)?;
     println!(
         "dist status: {} ({})",
         tag,

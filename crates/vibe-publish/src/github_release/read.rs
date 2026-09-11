@@ -39,7 +39,55 @@ impl GithubReleaseClient {
         &self,
         tag: &str,
     ) -> Result<Option<GithubRelease>, GithubReleaseError> {
-        self.find_release_inner(tag, true)
+        if let Some(release) = self.find_release_inner(tag, true)? {
+            return Ok(Some(release));
+        }
+        self.find_release_in_authenticated_list(tag)
+    }
+
+    fn find_release_in_authenticated_list(
+        &self,
+        tag: &str,
+    ) -> Result<Option<GithubRelease>, GithubReleaseError> {
+        const OPERATION: &str = "list releases for draft tag";
+        let mut url = self.api_url(&["releases"])?;
+        url.query_pairs_mut().append_pair("per_page", "100");
+        let origin = page_endpoint_identity(&url);
+        let mut found = None;
+        for _ in 0..MAX_ASSET_PAGES {
+            let response = self.send(
+                self.authenticated_read_request(Method::GET, url.clone(), GITHUB_JSON, OPERATION)?,
+                OPERATION,
+            )?;
+            let next = response
+                .headers()
+                .get(LINK)
+                .map(|value| value.to_str())
+                .transpose()
+                .map_err(|error| GithubReleaseError::InvalidResponse {
+                    operation: OPERATION,
+                    message: self.redact(format!("invalid Link header: {error}")),
+                })?
+                .and_then(next_link)
+                .map(str::to_string);
+            let page: Vec<GithubRelease> = self.json_response(response, OPERATION)?;
+            for release in page.into_iter().filter(|release| release.tag_name == tag) {
+                if found.replace(release).is_some() {
+                    return Err(GithubReleaseError::InvalidResponse {
+                        operation: OPERATION,
+                        message: format!("release list repeated tag `{}`", self.redact(tag)),
+                    });
+                }
+            }
+            let Some(next) = next else {
+                return Ok(found);
+            };
+            url = self.validated_next_page(&next, &origin, OPERATION)?;
+        }
+        Err(GithubReleaseError::InvalidResponse {
+            operation: OPERATION,
+            message: format!("release pagination exceeded {MAX_ASSET_PAGES} pages"),
+        })
     }
 
     fn find_release_inner(
@@ -90,12 +138,7 @@ impl GithubReleaseClient {
         let id = release_id.to_string();
         let mut url = self.api_url(&["releases", &id, "assets"])?;
         url.query_pairs_mut().append_pair("per_page", "100");
-        let origin = (
-            url.scheme().to_string(),
-            url.host_str().map(str::to_string),
-            url.port_or_known_default(),
-            url.path().to_string(),
-        );
+        let origin = page_endpoint_identity(&url);
         let operation = if authenticated {
             "list draft release assets"
         } else {
@@ -125,23 +168,7 @@ impl GithubReleaseClient {
             let Some(next) = next else {
                 return Ok(assets);
             };
-            let candidate = reqwest::Url::parse(&next).map_err(|error| {
-                GithubReleaseError::InvalidResponse {
-                    operation,
-                    message: self.redact(format!("invalid next-page URL: {error}")),
-                }
-            })?;
-            if candidate.scheme() != origin.0
-                || candidate.host_str() != origin.1.as_deref()
-                || candidate.port_or_known_default() != origin.2
-                || candidate.path() != origin.3
-            {
-                return Err(GithubReleaseError::InvalidResponse {
-                    operation,
-                    message: "next-page URL escaped the release-assets endpoint".to_string(),
-                });
-            }
-            url = candidate;
+            url = self.validated_next_page(&next, &origin, operation)?;
         }
         Err(GithubReleaseError::InvalidResponse {
             operation,
@@ -255,6 +282,39 @@ impl GithubReleaseClient {
         }
         Ok(response)
     }
+
+    fn validated_next_page(
+        &self,
+        next: &str,
+        origin: &(String, Option<String>, Option<u16>, String),
+        operation: &'static str,
+    ) -> Result<reqwest::Url, GithubReleaseError> {
+        let candidate =
+            reqwest::Url::parse(next).map_err(|error| GithubReleaseError::InvalidResponse {
+                operation,
+                message: self.redact(format!("invalid next-page URL: {error}")),
+            })?;
+        if candidate.scheme() != origin.0
+            || candidate.host_str() != origin.1.as_deref()
+            || candidate.port_or_known_default() != origin.2
+            || candidate.path() != origin.3
+        {
+            return Err(GithubReleaseError::InvalidResponse {
+                operation,
+                message: "next-page URL escaped its original GitHub endpoint".to_string(),
+            });
+        }
+        Ok(candidate)
+    }
+}
+
+fn page_endpoint_identity(url: &reqwest::Url) -> (String, Option<String>, Option<u16>, String) {
+    (
+        url.scheme().to_string(),
+        url.host_str().map(str::to_string),
+        url.port_or_known_default(),
+        url.path().to_string(),
+    )
 }
 
 fn next_link(header: &str) -> Option<&str> {
