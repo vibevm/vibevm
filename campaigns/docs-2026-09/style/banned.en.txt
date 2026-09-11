@@ -1,0 +1,90 @@
+# Banned words and phrases for English documentation prose — the data of
+# `vibe doc check --style` (PROP-057 §16, STYLE.md §3). One entry per line;
+# matching is case-insensitive and whole-word (a phrase matches as a phrase).
+# Lines starting with # are comments. Entries marked "(filler)" in STYLE.md
+# are listed without the qualifier: the linter flags them, the author decides.
+delve
+delves
+delving
+leverage
+leverages
+leveraging
+robust
+seamless
+seamlessly
+comprehensive
+crucial
+powerful
+flexible
+intuitive
+elegant
+streamline
+streamlines
+empower
+empowers
+unlock
+unlocks
+harness
+harnessing
+elevate
+journey
+landscape
+tapestry
+ecosystem
+paradigm
+holistic
+synergy
+nuanced
+granular
+utilize
+utilizes
+facilitate
+facilitates
+functionality
+capabilities
+cutting-edge
+state-of-the-art
+game-changer
+various
+numerous
+a number of
+multiple
+certain
+specific
+appropriate
+respective
+respectively
+essentially
+ultimately
+simply
+just
+easily
+it is important to note
+it is worth noting
+note that
+at its core
+in essence
+a testament to
+navigate the complexities
+in today's world
+whether you are
+not only
+but also
+this means that
+this ensures that
+is designed to
+aims to
+serves as
+acts as
+allows you to
+enables you to
+provides a way to
+can be used to
+let's dive in
+in this section we will
+in summary
+in conclusion
+key takeaways
+see the specification
+refer to the spec
+as described in
