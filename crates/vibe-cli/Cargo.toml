@@ -95,6 +95,12 @@ chromiumoxide.workspace = true
 tokio.workspace = true
 futures.workspace = true
 
+# `rfd` enables `wayland-backend/client_system` through `ashpd`; feature
+# unification with `dlopen` keeps the musl distribution free of a build-time
+# Wayland pkg-config/sysroot requirement while retaining the native picker.
+[target.'cfg(target_os = "linux")'.dependencies]
+wayland-backend.workspace = true
+
 [dev-dependencies]
 vibe-native-loader-compiler-fixture = { path = "../vibe-native-loader/tests/fixtures/native-compiler-plugin" }
 vibe-native-loader-json-backend-fixture = { path = "../vibe-native-loader/tests/fixtures/native-json-backend" }

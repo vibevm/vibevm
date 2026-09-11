@@ -200,6 +200,10 @@ icu_normalizer = { version = "2.2", default-features = false, features = [
 unicode-casefold = "0.2"
 anyhow = "1"
 arboard = "3.4"
+# Linux folder-picker support reaches Wayland through `rfd`/`ashpd`. Load the
+# client library at runtime so the portable musl release does not need a
+# target-side pkg-config sysroot merely to build the CLI.
+wayland-backend = { version = "0.3", features = ["dlopen"] }
 thiserror = "2"
 serde = { version = "1", features = ["derive"] }
 toml = "0.9"
