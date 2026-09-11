@@ -12,7 +12,7 @@
    из `docs/` с типом (`cmd`, `path`, `section`, `flag`) и меткой (`живо`,
    `устарело`, `неизвестно`).
 3. Индекс страниц и якорей нового руководства (сгенерирован из страниц):
-   `C:\Users\olegc\AppData\Local\Temp\claude\C--Users-olegc-git-v-vibevm\ab0a6173-074b-4107-8481-3df9593b6bb0\scratchpad\page-index.md`.
+   `<scratch>\page-index.md`.
 4. Сами страницы — для поиска утверждений:
    `vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0/vibevm/vibespecs/<раздел>/<страница>.xml`
    (44 файла в разделах `start`, `model`, `howto`, `agent`, `lifecycle`,

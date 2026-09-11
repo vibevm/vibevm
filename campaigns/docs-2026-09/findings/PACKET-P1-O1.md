@@ -4,7 +4,7 @@
 (преамбул; ##subagent-quiet-clause действует), затем этот пакет. Отличия от
 преамбула фазы 0: **правки файлов репозитория разрешены ровно в периметре
 ниже**; git по-прежнему не трогать (никаких add/commit/stash/checkout/restore);
-scratch — `C:\Users\olegc\AppData\Local\Temp\claude\vibe-docs-phase1\P1-O1\`;
+scratch — `<scratch>\vibe-docs-phase1\P1-O1\`;
 отчёт и находка пишутся в `campaigns/docs-2026-09/findings/`.
 
 ## Периметр файлов

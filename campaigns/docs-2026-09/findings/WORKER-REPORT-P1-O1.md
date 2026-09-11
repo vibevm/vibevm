@@ -10,7 +10,7 @@
   — одна строка индекса добавлена в конец списка.
 
 Scratch (промежуточные файлы и скрипты):
-`C:\Users\olegc\AppData\Local\Temp\claude\vibe-docs-phase1\P1-O1\`.
+`<scratch>\vibe-docs-phase1\P1-O1\`.
 
 Откат к Markdown не понадобился: конвертер принял документ, файл создан как
 `.xml`.
@@ -40,8 +40,8 @@ lines in: 2407 lines out: 2399
 
 ```
 $ ./target/debug/vibe.exe refactor convert-source --from md --to xml --dry-run \
-    "C:/Users/olegc/AppData/Local/Temp/claude/vibe-docs-phase1/P1-O1/documentation-vision.md"
-dry-run ir-stable-loss C:/Users/olegc/AppData/Local/Temp/claude/vibe-docs-phase1/P1-O1/documentation-vision.md
+    "<scratch>/vibe-docs-phase1/P1-O1/documentation-vision.md"
+dry-run ir-stable-loss <scratch>/vibe-docs-phase1/P1-O1/documentation-vision.md
 …
 summary converted=0 already=0 lossy-confirmed=0 refused=0 skipped-generated=0 skipped-foreign=0 skipped-harness=0 dry-run=1
 EXIT=0
@@ -54,10 +54,10 @@ EXIT=0
 
 ```
 $ ./target/debug/vibe.exe refactor convert-source --from md --to xml --force \
-    "C:/Users/olegc/AppData/Local/Temp/claude/vibe-docs-phase1/P1-O1/documentation-vision.md"
-loss C:/Users/olegc/AppData/Local/Temp/claude/vibe-docs-phase1/P1-O1/documentation-vision.md
+    "<scratch>/vibe-docs-phase1/P1-O1/documentation-vision.md"
+loss <scratch>/vibe-docs-phase1/P1-O1/documentation-vision.md
 …
-lossy-confirmed C:/Users/olegc/AppData/Local/Temp/claude/vibe-docs-phase1/P1-O1/documentation-vision.md
+lossy-confirmed <scratch>/vibe-docs-phase1/P1-O1/documentation-vision.md
 summary converted=0 already=0 lossy-confirmed=1 refused=0 skipped-generated=0 skipped-foreign=0 skipped-harness=0 dry-run=0
 EXIT=0
 ```
@@ -329,7 +329,7 @@ $ ./target/debug/vibe.exe facts check --exhaustive 2>&1 | grep -c "documentation
 
 ## 12. Приложение: скрипты
 
-Все три лежат в `C:\Users\olegc\AppData\Local\Temp\claude\vibe-docs-phase1\P1-O1\`.
+Все три лежат в `<scratch>\vibe-docs-phase1\P1-O1\`.
 `strip-provenance.py` (шаг 1) и `normalize-projection.py` (проверка §6) —
 по десятку строк каждый и описаны выше. Ниже — `mark-facts.py`, скрипт
 разметки, целиком.
@@ -366,8 +366,8 @@ import io
 import re
 import sys
 
-SRC = r"C:\Users\olegc\AppData\Local\Temp\claude\vibe-docs-phase1\P1-O1\documentation-vision.xml"
-DST = r"C:\Users\olegc\AppData\Local\Temp\claude\vibe-docs-phase1\P1-O1\documentation-vision.marked.xml"
+SRC = r"<scratch>\vibe-docs-phase1\P1-O1\documentation-vision.xml"
+DST = r"<scratch>\vibe-docs-phase1\P1-O1\documentation-vision.marked.xml"
 
 STATUS = "spec/done"
 
