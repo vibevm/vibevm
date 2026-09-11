@@ -342,3 +342,25 @@ If you `vibe install <pkgref>` against this manifest by accident, the install wi
 ## 7. Troubleshooting
 
 (Populated as real issues arise. Empty today.)
+
+## 8. Documentation
+
+The user-facing documentation of vibevm is being rebuilt as a *documentation package* — `org.vibevm.core/vibevm-docs`, kind `doc` — by the `campaigns/docs-2026-09` campaign. The contract is [PROP-057](vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml); the plan is `campaigns/docs-2026-09/PLAN.md`.
+
+**What a documentation package is.** A package that documents other packages (its *subjects*): it names them in `[[documents]]`, carries a `title` and an `abstract`, and is read, never installed. `vibe install` refuses it; `vibe cache add <coordinate>` warms it into the machine store, and the local reader (`vibe doc serve`) and `vibe explain` read the store.
+
+**Where things live, and when they arrive.**
+
+- The pages: `vibevm/vibepacks/org.vibevm.core/vibevm-docs/` — opened by phase P of the campaign.
+- The old `docs/` tree moves to `docs-legacy/` in phase 3 and stays readable; nothing cites it as normative.
+- The machinery — `vibe doc build | serve | check | manifest | todo | surface | diff` — lands with phase 2. Until then the campaign checks examples and citations by hand, as its plan describes.
+
+**How to check the documentation** once the machinery exists:
+
+```sh
+cargo run -p vibe-cli -- doc check --examples --citations --derived --translations --coverage --media --style
+```
+
+Examples run against the debug binary in a sandbox and compare exact output after the fixture's declared normalisation; `tools/self-check.sh` runs them as golden tests. A red example is fixed in the normalisation rules or in the product, never by loosening the comparison.
+
+Node is not needed for any of this. The site package `org.vibevm.doc/web` (Qwik 2.0) is built only on the server; its Node and pnpm pins and the MSYS path caveat are recorded in PROP-057 §12 and join this guide together with the package, in phase 4.
