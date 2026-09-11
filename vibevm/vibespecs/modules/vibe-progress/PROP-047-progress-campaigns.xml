@@ -49,7 +49,10 @@ stable.</CONFIG-MOVED-TO-FACTS></p>
       <CMD-REPORT fact="true" status="impl/done">**`report`** — the tree status: XML native, `--md` table,
   `--json`. Filters: `--view done|todo|qa|remove|doc|terminal` (the six resolution
   views: `state=done` · `action=continue` · `stage=test&amp;state=plan|work` ·
-  `action=remove` · `actionstage=doc` · derived terminal artifact closure), `--audience user|author|dev`,
+  `action=remove` · `actionstage=doc` · derived terminal artifact closure), `--audience user|author|dev|agent`
+  (`agent` admitted 2026-09-11 by PROP-057 through PROP-043 `##AUDIENCE-VALUES`;
+  the `doc` view lists the documentation's obligations and feeds the coverage
+  gate `vibe doc check --coverage`, PROP-057 §14),
   per-file and whole-project rollups, explicit-vs-computed columns, and the
   evidence column when a provider is wired (§4).</CMD-REPORT>
       <CMD-MIRROR fact="true" status="impl/done">**`mirror`** — materialize the per-file cache view (campaign
