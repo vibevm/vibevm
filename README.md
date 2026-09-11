@@ -8,7 +8,7 @@ The installable kinds are `flow`, `feat`, `stack`, `tool`, `mcp`, and `lang`.
 
 ## Status
 
-The current release is **1.0.0**. This is a closed alpha, not a compatibility promise: **1.0.0 will break** while `public = false`. Until the owner declares the first public presentation, breaking changes may ship without migrations; the recovery path is re-init / re-fetch. Read [Alpha notes](docs/ALPHA-NOTES.md) before adopting the release and [CHANGELOG.md](CHANGELOG.md) before updating.
+The current release is **1.0.0**. This is a closed alpha, not a compatibility promise: **1.0.0 will break** while `public = false`. Until the owner declares the first public presentation, breaking changes may ship without migrations; the recovery path is re-init / re-fetch. Read [Alpha notes](docs-legacy/ALPHA-NOTES.md) before adopting the release and [CHANGELOG.md](CHANGELOG.md) before updating.
 
 ## Install from the Windows distributive
 
@@ -82,7 +82,7 @@ vibe check --path hello-vibe
 vibe install --path hello-vibe
 ```
 
-The full core-command reference starts at [`docs/commands/`](docs/commands/).
+The full core-command reference starts at [`docs-legacy/commands/`](docs-legacy/commands/).
 
 ## Registries and search
 
@@ -126,17 +126,19 @@ vibe install --offline --path hello-vibe
 - `vibevm/vibespecs/boot/STATIC.xml` and `vibevm/vibespecs/boot/INDEX.md` — the computed agent boot lanes.
 - `vibevm/vibespecs/WAL.xml` — the project's living session checkpoint.
 
-`vibe` keeps authored project specs separate from materialised dependencies. See [the loading model](docs/loading-model.md) and [architecture](docs/architecture.md) for the full layout.
+`vibe` keeps authored project specs separate from materialised dependencies. See [the loading model](docs-legacy/loading-model.md) and [architecture](docs-legacy/architecture.md) for the full layout.
 
 ## Documentation
 
-- [Alpha notes](docs/ALPHA-NOTES.md) — compatibility posture and recovery after breaking updates.
-- [Core command reference](docs/commands/) — operator-facing CLI pages checked against live `--help`.
-- [Architecture](docs/architecture.md) — crate boundaries, seams, and data flow.
+- [The VibeVM manual](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0/README.md) — the core documentation as a `doc` package (pages under `vibevm/vibespecs/`); everything below is the archived 1.0.0 alpha layer.
+
+- [Alpha notes](docs-legacy/ALPHA-NOTES.md) — compatibility posture and recovery after breaking updates.
+- [Core command reference](docs-legacy/commands/) — operator-facing CLI pages checked against live `--help`.
+- [Architecture](docs-legacy/architecture.md) — crate boundaries, seams, and data flow.
 - [Runtime guide](RUNTIME-GUIDE.md) — machine requirements and runtime setup.
 - [Developer guide](DEV-GUIDE.md) — clone, build, test, and contributor setup.
 - [Changelog](CHANGELOG.md) — milestone history and release changes.
-- [Site manifest](docs/SITE-MANIFEST.toml) — machine-readable documentation inventory.
+- [Site manifest](docs-legacy/SITE-MANIFEST.toml) — machine-readable documentation inventory.
 
 ## Build and test from source
 
