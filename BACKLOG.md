@@ -1520,3 +1520,43 @@ structure, and it goes when the file does.
 | @fact:B122-SEVERITY **severity** | P3 — legacy-совместимость сужена, но прямой (новый) путь полноценен; сообщение об ошибке корректно называет чинящий шаг |
 | @fact:B122-DISPOSITION **disposition** | `open` — либо validate_plane учитывает lowering-проекцию (vibe-core узнаёт о ней — расширение периметра ядра), либо PROP-054-преемник фиксирует «[[binary]] не сочетается с [[deploy.target]]; мигрируйте на [[artifacts.build]]» как правило |
 | @fact:B122-FILED **filed by** | отчёт воркера R8-VIBE-BIN §0.9, зафиксировано центральной приёмкой 2026-08-30 |
+
+## B-131 — оффлайн-установка после `cache add` не резолвит `latest` без клона реестра
+
+| поле | значение |
+|---|---|
+| @fact:B131-WHAT **what** | `vibe cache add --offline org.vibevm.world/wal --path <хост>` кладёт `wal@1.0.0` в машинный store, но `vibe install org.vibevm.world/wal --path <свежий проект> --offline` (и с пином `@1.0.0`) падает: «`org.vibevm.world/wal@latest` is not resolvable offline — … not in the machine store». Резолвер сначала спрашивает у настроенных реестров (`github.com/vibespecs`, `gitverse.ru/vibespecs` из машинного `registry.toml`), что такое `latest`; без их клона это невозможно, и store не опрашивается. Сообщение об ошибке советует ровно то, что уже сделано (`vibe cache add`) |
+| @fact:B131-EFFECT **effect** | сценарий «прогреть store и уйти в оффлайн» (PROP-010 §2.8) не работает для проекта, чьи реестры ни разу не клонировались; после одной онлайн-установки работает. Документация (`howto/work-offline`) описывает контракт; фикстуры примеров обходят это локальным `file://` реестром |
+| @fact:B131-SEVERITY **severity** | P2 — контракт оффлайна нарушен в реальном случае «новая машина, store перенесён», сообщение вводит в заблуждение |
+| @fact:B131-DISPOSITION **disposition** | `open` — оффлайн-резолюция должна перечислять версии из store (и `file://` зеркал) до отказа; сообщение — называть, чего именно не хватает (клона реестра) |
+| @fact:B131-FILED **filed by** | кампания документации, снятие примеров PP-C2 §5a и проба центральной сессии, 2026-09-12 |
+
+## B-132 — клон реестра в глубоком каталоге рвётся на `fatal: '$GIT_DIR' too big`
+
+| поле | значение |
+|---|---|
+| @fact:B132-WHAT **what** | при `VIBE_SETTINGS` в каталоге длиной ~130 символов `vibe install org.vibevm.world/wal` (онлайн) падает не по сети, а внутри `git clone --recurse-submodules --no-checkout --no-tags`: назначение `<settings>/registries/<hash>/packages/org.vibevm.world.wal/clone` вместе с `.git/…` пробивает буфер Git для Windows (MSYS) — `fatal: '$GIT_DIR' too big`, статус 128 |
+| @fact:B132-EFFECT **effect** | пользователь с длинным домашним путём (корпоративные профили, `VIBE_SETTINGS` в глубокой папке) не может установить ни одного пакета; ошибка выглядит как поломка git, а не как ограничение длины пути |
+| @fact:B132-SEVERITY **severity** | P3 — воспроизводится только при глубоком `VIBE_SETTINGS`; обход — короткий каталог |
+| @fact:B132-DISPOSITION **disposition** | `open` — укоротить раскладку кэша реестров (хэш вместо `packages/<coord>/clone`), передавать `-c core.longpaths=true` на Windows (как делает F19 у fractality), и в сообщении называть длину пути |
+| @fact:B132-FILED **filed by** | кампания документации, PP-C2 §5b, 2026-09-12 |
+
+## B-133 — `registry publish --dry-run` требует publish-токен и режет букву диска как хост
+
+| поле | значение |
+|---|---|
+| @fact:B133-WHAT **what** | `vibe registry publish <пакет> --dry-run` при реестре-каталоге Windows (`C:/…/registry`) падает до какой-либо записи: «publish refused: no token available for host `C`». Хост берётся наивным разрезом URL, и `C:` читается как `scheme://host`; кроме того, `--dry-run` требует токен вообще |
+| @fact:B133-EFFECT **effect** | репетиция публикации в локальный реестр невозможна; на настоящем хосте `--dry-run` без токена тоже отказывает, хотя ничего не пишет. Примеры `howto/publish-a-package` ждут починки |
+| @fact:B133-SEVERITY **severity** | P3 — публикация в GitHub с токеном работает; страдают репетиция и локальные реестры |
+| @fact:B133-DISPOSITION **disposition** | `open` — разбирать адрес реестра как URL или путь до извлечения хоста; `--dry-run` не должен требовать токен, а сообщать, что его нет |
+| @fact:B133-FILED **filed by** | кампания документации, PP-C2 §5c, 2026-09-12 |
+
+## B-134 — `vibe init package … --kind <kind>` не действует
+
+| поле | значение |
+|---|---|
+| @fact:B134-WHAT **what** | `vibe init package org.acme/review-flow --kind flow`, `vibe init --kind flow package org.acme/flow-a` и `vibe init package org.acme/flow-b --kind lang` все создают слот `vibevm/vibepacks/org.acme/<имя>/v0.1.0/vibe.toml` с `kind = "tool"` и сниппетом `10-tool-<имя>.md`; `--help` обещает «Package kind: flow, feat, stack, tool, mcp, lang. Default: tool» |
+| @fact:B134-EFFECT **effect** | автор правит вид в манифесте руками; имя файла сниппета остаётся `10-tool-…` |
+| @fact:B134-SEVERITY **severity** | P3 — обход тривиален, но флаг лжёт |
+| @fact:B134-DISPOSITION **disposition** | `open` — прокинуть `--kind` в шаблон слота (манифест, имя и категория сниппета) или снять флаг из `--help` |
+| @fact:B134-FILED **filed by** | кампания документации, проба центральной сессии 2026-09-12 (три формы вызова) |
