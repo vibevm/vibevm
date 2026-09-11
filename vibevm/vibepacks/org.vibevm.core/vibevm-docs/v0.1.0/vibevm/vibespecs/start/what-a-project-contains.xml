@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">What a project contains</title>
+  <status stage="doc" state="work" audience="user"/>
+  <p>After the first install, a project holds a handful of files you wrote and a larger set that vibe wrote for you. This page names each of them and says who is allowed to change it, so nothing you edit gets overwritten and nothing vibe generates gets edited by hand.</p>
+  <example id="tree" fixture="hello-vibe">
+    <run>vibe tree --plain --path hello-vibe</run>
+    <expect></expect>
+  </example>
+  <the-files title="The files, one by one">
+    <p>Start with the two files at the root, because everything else is derived from them.</p>
+    <p>`vibe.toml` is the *manifest*. You write it, or `vibe init` writes the first version for you. It names the project, lists the packages it requires with a version range for each, and lists the registries to fetch them from. It is the only file a teammate needs to reproduce your setup, together with the lock file beside it.</p>
+    <p>`vibe.lock` is the *lock file*. vibe writes it, you commit it, and you never edit it. It records the exact version of every package that was installed, including the ones your packages pulled in, and a fingerprint of each package's content. With it, a fresh clone installs the same bytes on any machine.</p>
+    <p>Below them sits one directory, `vibevm/`, with three children. This layout is the same in every project and every package, and it is not configurable.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-052#THE-LAYOUT"/>
+    <p>`vibevm/vibespecs/` is *your* tree: the specifications and rules this project itself writes, in Markdown or in the project's XML dialect. vibe reads it and never writes into it, with one exception described below.</p>
+    <p>`vibevm/vibedeps/` is *vibe's* tree: one folder per installed package and version, holding that package's published files verbatim. You commit it, so a fresh clone is readable without running anything, but you never edit it. An edit there disappears at the next install.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#VIBEDEPS-COMMITTED"/>
+    <p>`vibevm/vibepacks/` holds packages this repository develops in place: a project that also publishes packages keeps their sources here, and vibe treats the directory as a small local registry. Most projects do not have it.</p>
+  </the-files>
+  <the-boot-files title="The boot files">
+    <p>The exception in your tree is `vibevm/vibespecs/boot/`. Two files there are yours: `00-core` holds the project's foundations, `90-user` holds your personal overrides, and vibe never touches either. Two files there are generated: `STATIC.xml`, the text an agent reads first and in full, and `INDEX.md`, a manifest of what it reads next. Both carry a header saying they are generated; the header is not decoration.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#ARTIFACTS-GENERATED"/>
+    <p>The agent finds the boot files through a short managed block at the end of `CLAUDE.md`, `AGENTS.md` and `GEMINI.md`, between the lines `&lt;vibevm&gt;` and `&lt;/vibevm&gt;`. vibe rewrites what is between the two markers and nothing else in those files; the rest of the file is yours, and so is the position of the block once it exists.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#OUTSIDE-PRESERVED"/>
+  </the-boot-files>
+  <who-writes-what title="Who writes what">
+    <table>
+      <tr><td>File or directory</td><td>Written by</td><td>Committed</td><td>Edited by hand</td></tr>
+      <tr><td>`vibe.toml`</td><td>you (first version by `vibe init`)</td><td>yes</td><td>yes</td></tr>
+      <tr><td>`vibe.lock`</td><td>vibe</td><td>yes</td><td>never</td></tr>
+      <tr><td>`vibevm/vibespecs/`</td><td>you</td><td>yes</td><td>yes</td></tr>
+      <tr><td>`vibevm/vibespecs/boot/00-core`, `90-user`</td><td>you</td><td>yes</td><td>yes</td></tr>
+      <tr><td>`vibevm/vibespecs/boot/STATIC.xml`, `INDEX.md`</td><td>vibe</td><td>yes</td><td>never</td></tr>
+      <tr><td>`vibevm/vibedeps/`</td><td>vibe</td><td>yes</td><td>never</td></tr>
+      <tr><td>`vibevm/vibepacks/`</td><td>you, when the repository develops packages</td><td>yes</td><td>yes</td></tr>
+      <tr><td>the `&lt;vibevm&gt;` block in agent instruction files</td><td>vibe</td><td>yes</td><td>only its position</td></tr>
+      <tr><td>`.vibe/`</td><td>vibe</td><td>no</td><td>never</td></tr>
+    </table>
+    <p>The last row is the project's scratch space: caches and internal state, ignored by git and safe to delete. The machine-wide store of fetched packages is elsewhere, in your home directory, and is shared by every project on the machine.</p>
+  </who-writes-what>
+  <edge-cases title="Edge cases and rules">
+    <p>If you delete `vibevm/vibedeps/` or the generated boot files, `vibe reinstall` rebuilds them from the lock file and the store without touching the network.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#REINSTALL-NO-FORCE"/>
+    <p>If a project from before the current layout carries a root `spec/` folder, vibe stops with a migration recipe rather than guessing. Old layouts are not read silently.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-052#NO-LEGACY-LAYOUT"/>
+    <p>If you write into `vibevm/vibedeps/` by accident, nothing breaks immediately; the next install overwrites the edit, because a package's folder there is a verbatim copy of what was published.</p>
+  </edge-cases>
+</spec>
