@@ -66,7 +66,7 @@ fn locked_at(olds: &[CachedPackage]) -> Lockfile {
     for old in olds {
         lockfile
             .packages
-            .push(super::super::inputs::locked_package(old, &[], None));
+            .push(super::super::inputs::locked_package(old, &[], None, &[]));
     }
     lockfile
 }
@@ -108,8 +108,18 @@ fn a_prune_that_fails_half_way_keeps_the_slots_it_really_removed() {
     std::fs::write(&unremovable, "not a directory").unwrap();
 
     let updated: Vec<Resolved> = vec![
-        (cached("org.demo", "first", "0.2.0"), Vec::new(), None),
-        (cached("org.demo", "second", "0.2.0"), Vec::new(), None),
+        (
+            cached("org.demo", "first", "0.2.0"),
+            Vec::new(),
+            None,
+            Vec::new(),
+        ),
+        (
+            cached("org.demo", "second", "0.2.0"),
+            Vec::new(),
+            None,
+            Vec::new(),
+        ),
     ];
     let mut measured = Measured::default();
     let error = prune_superseded(&workspace, &lockfile, &updated, &mut measured)
@@ -170,7 +180,12 @@ fn an_absent_superseded_slot_is_not_reported_as_pruned() {
     let workspace = workspace_at(dir.path());
     let old = cached("org.demo", "gone", "0.1.0");
     let lockfile = locked_at(&[old]);
-    let updated: Vec<Resolved> = vec![(cached("org.demo", "gone", "0.2.0"), Vec::new(), None)];
+    let updated: Vec<Resolved> = vec![(
+        cached("org.demo", "gone", "0.2.0"),
+        Vec::new(),
+        None,
+        Vec::new(),
+    )];
 
     let mut measured = Measured::default();
     prune_superseded(&workspace, &lockfile, &updated, &mut measured).expect("nothing to remove");

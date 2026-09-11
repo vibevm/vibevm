@@ -173,6 +173,17 @@ pub trait GitBackend: Send + Sync {
     /// — the caller cleans up.
     fn bootstrap(&self, url: &str, refname: &str, dest: &Path) -> Result<(), GitError>;
 
+    /// Clone and check out one exact ref without initialising submodules.
+    ///
+    /// Dependency-declared embedded sources are opaque upstream trees, not
+    /// package graphs. Their own gitlinks must therefore never trigger network
+    /// recursion or executable package machinery. Test backends inherit the
+    /// historical bootstrap behaviour unless they need to assert this
+    /// distinction; the shell backend implements the non-recursive operation.
+    fn bootstrap_embedded(&self, url: &str, refname: &str, dest: &Path) -> Result<(), GitError> {
+        self.bootstrap(url, refname, dest)
+    }
+
     /// Refresh `dest` to `refname`. Tags are peeled to detached commits,
     /// branches track their `origin` branch, and exact commits stay detached.
     /// Assumes `dest` is a git repository previously populated by `bootstrap`.
@@ -189,6 +200,13 @@ pub trait GitBackend: Send + Sync {
     /// lockfile field absent exactly as before this method existed. The
     /// production [`ShellGit`] overrides it to return the real SHA.
     fn head_commit(&self, _dest: &Path) -> Result<Option<String>, GitError> {
+        Ok(None)
+    }
+
+    /// The root tree object for the checked-out commit (`HEAD^{tree}`).
+    /// This is recorded beside the independent portable content hash for
+    /// audit/debugging; content authentication keys on the latter.
+    fn head_tree(&self, _dest: &Path) -> Result<Option<String>, GitError> {
         Ok(None)
     }
 

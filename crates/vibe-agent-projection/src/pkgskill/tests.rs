@@ -152,6 +152,133 @@ fn dry_run_writes_nothing() {
 }
 
 #[test]
+fn frontmatter_name_mismatch_refuses_before_target_mutation() {
+    let pkg = tempfile::tempdir().unwrap();
+    let proj = tempfile::tempdir().unwrap();
+    let body = make_skill_body(pkg.path(), "---\nname: somebody-else\n---\nbody");
+
+    let error = install_package_skill(
+        Agent::ClaudeCode,
+        Scope::Project,
+        Some(proj.path()),
+        "demo",
+        &body,
+        false,
+    )
+    .unwrap_err()
+    .to_string();
+
+    assert!(
+        error.contains("frontmatter name `somebody-else`"),
+        "{error}"
+    );
+    assert!(
+        error.contains("manifest-declared skill name `demo`"),
+        "{error}"
+    );
+    assert!(!proj.path().join(".claude").exists());
+}
+
+#[test]
+fn foreign_preexisting_target_refuses_install_and_uninstall() {
+    let pkg = tempfile::tempdir().unwrap();
+    let proj = tempfile::tempdir().unwrap();
+    let body = make_skill_body(pkg.path(), "wanted");
+    let target = proj.path().join(".claude/skills/demo");
+    fs::create_dir_all(&target).unwrap();
+    fs::write(target.join("SKILL.md"), "foreign").unwrap();
+
+    let install_error = install_package_skill(
+        Agent::ClaudeCode,
+        Scope::Project,
+        Some(proj.path()),
+        "demo",
+        &body,
+        false,
+    )
+    .unwrap_err()
+    .to_string();
+    assert!(
+        install_error.contains("foreign pre-existing skill target"),
+        "{install_error}"
+    );
+    assert_eq!(
+        fs::read_to_string(target.join("SKILL.md")).unwrap(),
+        "foreign"
+    );
+
+    let uninstall_error = uninstall_package_skill(
+        Agent::ClaudeCode,
+        Scope::Project,
+        Some(proj.path()),
+        "demo",
+        false,
+    )
+    .unwrap_err()
+    .to_string();
+    assert!(
+        uninstall_error.contains("foreign pre-existing skill target"),
+        "{uninstall_error}"
+    );
+    assert_eq!(
+        fs::read_to_string(target.join("SKILL.md")).unwrap(),
+        "foreign"
+    );
+}
+
+#[test]
+fn owned_update_and_uninstall_preserve_unowned_neighbors() {
+    let pkg = tempfile::tempdir().unwrap();
+    let proj = tempfile::tempdir().unwrap();
+    let body = make_skill_body(pkg.path(), "v1");
+    install_package_skill(
+        Agent::ClaudeCode,
+        Scope::Project,
+        Some(proj.path()),
+        "demo",
+        &body,
+        false,
+    )
+    .unwrap();
+    let target = proj.path().join(".claude/skills/demo");
+    fs::write(target.join("FOREIGN.md"), "neighbor").unwrap();
+
+    fs::remove_file(body.join("ref.md")).unwrap();
+    fs::write(body.join("SKILL.md"), "v2").unwrap();
+    let update = install_package_skill(
+        Agent::ClaudeCode,
+        Scope::Project,
+        Some(proj.path()),
+        "demo",
+        &body,
+        false,
+    )
+    .unwrap();
+    assert_eq!(update.status, "updated");
+    assert_eq!(fs::read_to_string(target.join("SKILL.md")).unwrap(), "v2");
+    assert!(!target.join("ref.md").exists());
+    assert_eq!(
+        fs::read_to_string(target.join("FOREIGN.md")).unwrap(),
+        "neighbor"
+    );
+
+    let uninstall = uninstall_package_skill(
+        Agent::ClaudeCode,
+        Scope::Project,
+        Some(proj.path()),
+        "demo",
+        false,
+    )
+    .unwrap();
+    assert_eq!(uninstall.status, "removed");
+    assert!(!target.join("SKILL.md").exists());
+    assert_eq!(
+        fs::read_to_string(target.join("FOREIGN.md")).unwrap(),
+        "neighbor"
+    );
+}
+
+#[test]
 fn uninstall_removes_then_reports_absent() {
     let pkg = tempfile::tempdir().unwrap();
     let proj = tempfile::tempdir().unwrap();

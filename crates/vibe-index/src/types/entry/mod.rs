@@ -29,7 +29,8 @@ mod relations;
 
 pub use aggregate::{NameEntry, PackageEntry, Tombstone};
 pub use content::{
-    BootSnippetEntry, DeliveryMode, FeaturesEntry, I18nEntry, SubskillEntry, WorkspaceOriginEntry,
+    BootSnippetEntry, DeliveryMode, EmbeddedSourceEntry, FeaturesEntry, I18nEntry, SubskillEntry,
+    WorkspaceOriginEntry,
 };
 pub use relations::{
     CompatibilityEntry, ConflictsEntry, ObsoletesEntry, ProvidesEntry, RequiresAnyEntry,

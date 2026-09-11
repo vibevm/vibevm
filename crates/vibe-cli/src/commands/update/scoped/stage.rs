@@ -134,7 +134,7 @@ pub(super) fn stage(
             is_local: false,
             via_redirect: None,
         };
-        updated.push((cached, p.dependencies, Some(placed.changed)));
+        updated.push((cached, p.dependencies, Some(placed.changed), Vec::new()));
     }
 
     // Build the partial resolution for the subtree — the form the shared
@@ -142,35 +142,38 @@ pub(super) fn stage(
     // `vibe install` hands to `apply_resolution`).
     let resolution: Vec<ResolvedDep> = updated
         .iter()
-        .map(|(cached, deps, in_place_changed)| ResolvedDep {
-            kind: cached.package_meta().kind,
-            group: cached.resolved.group.clone(),
-            name: cached.resolved.name.clone(),
-            version: cached.resolved.version.clone(),
-            content_dir: cached.cache_dir.clone(),
-            source_hash: Some(ContentHash::from_validated(cached.content_hash.clone())),
-            manifest: cached.manifest.clone(),
-            requires: deps
-                .iter()
-                .filter_map(|p| p.group.clone().map(|g| (g, p.name.to_string())))
-                .collect(),
-            admitted_by: None,
-            via_override: None,
-            // Mutable iff an in-workspace `file://` self-hosting source the
-            // author edits in place (PROP-011 §2.6); recorded so the materialise
-            // pass re-copies its slot.
-            source_mutable: vibe_workspace::freshness::is_in_workspace_file_source(
-                &cached.source_uri,
-                &workspace.root,
-            ),
-            in_place_changed: *in_place_changed,
-        })
+        .map(
+            |(cached, deps, in_place_changed, embedded_sources)| ResolvedDep {
+                kind: cached.package_meta().kind,
+                group: cached.resolved.group.clone(),
+                name: cached.resolved.name.clone(),
+                version: cached.resolved.version.clone(),
+                content_dir: cached.cache_dir.clone(),
+                source_hash: Some(ContentHash::from_validated(cached.content_hash.clone())),
+                embedded_sources: embedded_sources.clone(),
+                manifest: cached.manifest.clone(),
+                requires: deps
+                    .iter()
+                    .filter_map(|p| p.group.clone().map(|g| (g, p.name.to_string())))
+                    .collect(),
+                admitted_by: None,
+                via_override: None,
+                // Mutable iff an in-workspace `file://` self-hosting source the
+                // author edits in place (PROP-011 §2.6); recorded so the materialise
+                // pass re-copies its slot.
+                source_mutable: vibe_workspace::freshness::is_in_workspace_file_source(
+                    &cached.source_uri,
+                    &workspace.root,
+                ),
+                in_place_changed: *in_place_changed,
+            },
+        )
         .collect();
 
     let source_hashes = SourceHashes(
         updated
             .iter()
-            .map(|(cached, _, _)| {
+            .map(|(cached, _, _, _)| {
                 (
                     (cached.resolved.group.clone(), cached.resolved.name.clone()),
                     cached.content_hash.clone(),

@@ -349,6 +349,7 @@ pub fn execute_prepared(
         language: args.language.clone(),
         exact: args.exact,
         generated_by: generated_by(),
+        offline,
     };
 
     // The PREPARED planner, over the two values this command already owns.

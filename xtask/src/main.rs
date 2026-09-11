@@ -40,6 +40,7 @@ use anyhow::{Context, Result};
 use clap::{Parser, Subcommand};
 
 mod batch_review;
+mod bridge;
 mod codegen;
 mod conform;
 mod dist;
@@ -51,6 +52,7 @@ mod sync_engines;
 mod wire_diff;
 
 use batch_review::{BatchReviewArgs, run_batch_review};
+use bridge::run_bridge;
 use codegen::{run_check_codegen, run_codegen};
 use conform::{run_conform_check, run_conform_freeze};
 use dist::run_dist;
@@ -72,6 +74,12 @@ struct Cli {
 
 #[derive(Subcommand, Debug)]
 enum Cmd {
+    /// Author and verify zero-copy reference-backed bridge package inputs.
+    Bridge {
+        #[command(subcommand)]
+        command: bridge::BridgeCommand,
+    },
+
     /// Regenerate Rust types under each owning crate's `src/generated/`
     /// from JTD schemas under `schemas/`.
     Codegen,
@@ -384,6 +392,7 @@ enum TraceCmd {
 fn main() -> Result<()> {
     let cli = Cli::parse();
     match cli.command {
+        Cmd::Bridge { command } => run_bridge(command),
         Cmd::Codegen => run_codegen(),
         Cmd::CheckCodegen => run_check_codegen(),
         Cmd::Specmap { check } => run_specmap(check),

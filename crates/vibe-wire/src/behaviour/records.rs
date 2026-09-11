@@ -49,6 +49,8 @@ impl VersionEntry {
             homepage: None,
             keywords: Vec::new(),
             describes: None,
+            bridge: false,
+            embedded_sources: Vec::new(),
             compatibility: None,
             provides: None,
             requires: None,

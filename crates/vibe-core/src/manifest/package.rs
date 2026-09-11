@@ -35,6 +35,7 @@ use super::purl::Purl;
 
 mod binary;
 mod deps;
+mod embedded_source;
 mod features;
 mod hooks;
 mod mcp_server;
@@ -45,10 +46,11 @@ mod wire;
 
 pub use binary::BinaryDecl;
 pub use deps::{GitPackageDep, GitRefKind, PathPackageDep, VarRegistryDep};
+pub use embedded_source::{EmbeddedSourceAuth, EmbeddedSourceDecl, EmbeddedSourceKind};
 pub use features::FeaturesTable;
 pub use hooks::HooksDecl;
 pub use mcp_server::{MCP_ARG_VARS, McpServerDecl};
-pub use skill::SkillDecl;
+pub use skill::{SkillDecl, SkillResourceDecl};
 pub use weak_deps::{Recommends, Suggests};
 pub use when::WhenCondition;
 

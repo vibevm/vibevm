@@ -106,6 +106,7 @@ impl Fixture {
             version: "1.0.0".parse().unwrap(),
             content_dir: slot,
             source_hash: Some(ContentHash::parse(&format!("sha256:{}", "a".repeat(64))).unwrap()),
+            embedded_sources: Vec::new(),
             manifest,
             requires: Vec::new(),
             admitted_by: None,

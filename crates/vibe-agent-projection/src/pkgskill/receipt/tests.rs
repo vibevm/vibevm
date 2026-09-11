@@ -29,13 +29,16 @@ pub(super) fn provider(
             version: "0.1.0".into(),
             kind: PackageKind::Tool,
             root: root.to_path_buf(),
+            embedded_sources: Vec::new(),
         },
         declarations: vec![SkillDecl {
             name: skill.into(),
+            source: None,
             path: "skills/body".into(),
             description: None,
             agents: agents.iter().map(|agent| (*agent).into()).collect(),
             include: Vec::new(),
+            resources: Vec::new(),
         }],
     }
 }

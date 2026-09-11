@@ -28,16 +28,17 @@ use vibe_core::PackageKind as CorePackageKind;
 use vibe_core::manifest::i18n::I18nDecl;
 use vibe_core::manifest::{
     ActivationRules, BootCategory, BootSnippet, Compatibility, ConflictsList,
-    DeliveryMode as CoreDeliveryMode, FeaturesTable, Manifest, Obsoletes, OriginSection,
-    PackageMeta, Provides, Requires, RequiresAny, SubskillManifest,
+    DeliveryMode as CoreDeliveryMode, EmbeddedSourceDecl, EmbeddedSourceKind, FeaturesTable,
+    Manifest, Obsoletes, OriginSection, PackageMeta, Provides, Requires, RequiresAny,
+    SubskillManifest,
 };
 use walkdir::WalkDir;
 
 use crate::error::{Error, Result};
 use crate::types::{
-    BootSnippetEntry, CompatibilityEntry, ConflictsEntry, DeliveryMode, FeaturesEntry, I18nEntry,
-    ObsoletesEntry, PackageKind, ProvidesEntry, RequiresAnyEntry, RequiresEntry, SubskillEntry,
-    WorkspaceOriginEntry,
+    BootSnippetEntry, CompatibilityEntry, ConflictsEntry, DeliveryMode, EmbeddedSourceEntry,
+    FeaturesEntry, I18nEntry, ObsoletesEntry, PackageKind, ProvidesEntry, RequiresAnyEntry,
+    RequiresEntry, SubskillEntry, WorkspaceOriginEntry,
 };
 
 /// Parse a `vibe.toml` byte buffer into the canonical `vibe-core`
@@ -168,6 +169,29 @@ pub fn boot_snippet_from(b: &Option<BootSnippet>) -> Option<BootSnippetEntry> {
     })
 }
 
+/// Project immutable external-source declarations into the public catalog.
+/// These are provenance rows, not dependency nodes: their independent hash
+/// and upstream licence remain visibly separate from the bridge package's
+/// own content hash and licence.
+pub fn embedded_sources_from(sources: &[EmbeddedSourceDecl]) -> Vec<EmbeddedSourceEntry> {
+    sources
+        .iter()
+        .map(|source| EmbeddedSourceEntry {
+            name: source.name.clone(),
+            kind: match source.kind {
+                EmbeddedSourceKind::Git => "git".to_string(),
+            },
+            source_url: source.url.clone(),
+            source_ref: source.ref_hint.clone(),
+            resolved_commit: source.commit.clone(),
+            content_hash: source.content_hash.to_string(),
+            upstream_license: source.upstream_license.clone(),
+            license_path: source.license_path.to_string_lossy().replace('\\', "/"),
+            license_url: source.license_url.clone(),
+        })
+        .collect()
+}
+
 /// Project the `[origin]` provenance marker (PROP-007 §2.8) — present
 /// only on a copy `vibe workspace publish` generated from a workspace
 /// member — into the index entry's `workspace_origin` (PROP-008 §2.8).
@@ -291,6 +315,37 @@ version = "0.1.0"
         assert_eq!(pkg.name, "wal");
         assert_eq!(package_kind(pkg.kind), PackageKind::Flow);
         assert_eq!(pkg.version.to_string(), "0.1.0");
+    }
+
+    #[test]
+    fn bridge_source_provenance_projects_without_upstream_bytes() {
+        let body = br#"
+[package]
+group = "org.vibevm.bridges"
+name = "upstream-tool"
+kind = "tool"
+version = "1.0.0"
+bridge = true
+license = "UPL-1.0"
+
+[[embedded_source]]
+name = "upstream"
+kind = "git"
+url = "https://github.com/example/upstream.git"
+commit = "0123456789abcdef0123456789abcdef01234567"
+content_hash = "sha256-tree/1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+ref_hint = "refs/tags/v1.2.3"
+upstream_license = "MIT"
+license_path = "LICENSE"
+license_url = "https://github.com/example/upstream/blob/0123456789abcdef0123456789abcdef01234567/LICENSE"
+"#;
+        let manifest = parse_manifest(body).unwrap();
+        assert!(require_package(&manifest).unwrap().bridge);
+        let sources = embedded_sources_from(&manifest.embedded_sources);
+        assert_eq!(sources.len(), 1);
+        assert_eq!(sources[0].kind, "git");
+        assert_eq!(sources[0].upstream_license, "MIT");
+        assert_eq!(sources[0].license_path, "LICENSE");
     }
 
     #[test]

@@ -1,0 +1,39 @@
+[package]
+name = "spec-kit"
+group = "org.vibevm.bridges"
+kind = "feat"
+version = "1.0.0"
+epoch = 1
+format = "simple"
+authors = ["Oleg Chirukhin"]
+license = "UPL-1.0"
+description = "Zero-copy Vibe bridge to GitHub Spec Kit's core specification workflow"
+keywords = ["bridge", "spec-kit", "specification", "skills"]
+homepage = "https://github.com/github/spec-kit"
+describes = "pkg:github/github/spec-kit@1.0.6"
+bridge = true
+
+[[embedded_source]]
+name = "upstream"
+kind = "git"
+url = "https://github.com/github/spec-kit.git"
+commit = "96c9bd657bfd5de0d651a6165084932b7304ac99"
+content_hash = "sha256-tree/1:91249902cbdad534278a14c437ab9fd43439c3f1df96a7a051d47b08509c88fc"
+ref_hint = "refs/tags/v1.0.6"
+auth = "none"
+upstream_license = "MIT"
+license_path = "LICENSE"
+license_url = "https://github.com/github/spec-kit/blob/96c9bd657bfd5de0d651a6165084932b7304ac99/LICENSE"
+
+[[skill]]
+name = "speckit-core"
+path = "skills/speckit-core"
+description = "Use the upstream Spec Kit core command templates without vendoring them"
+agents = ["claude", "opencode", "codex"]
+include = ["SKILL.md"]
+
+[[skill.resource]]
+embedded_source = "upstream"
+path = "templates/commands"
+include = ["constitution.md", "specify.md", "plan.md", "tasks.md", "implement.md"]
+target = "references/upstream-commands"

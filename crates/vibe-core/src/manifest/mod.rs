@@ -48,8 +48,8 @@ pub use extension::{
     ExtensionKey, ExtensionPass, ExtensionPassKind, ExtensionUse, ExtensionWhen, ExtensionsControl,
 };
 pub use lockfile::{
-    CURRENT_SCHEMA_VERSION, LockedPackage, LockedSubskill, Lockfile, LockfileMeta, SourceKind,
-    VirtualCapabilityRecord,
+    CURRENT_SCHEMA_VERSION, LockedEmbeddedSource, LockedPackage, LockedSubskill, Lockfile,
+    LockfileMeta, SourceKind, VirtualCapabilityRecord,
 };
 pub use mechanism::{
     HOST_OWNER, MechanismDecl, MechanismFreshness, MechanismFreshnessParseError, MechanismKey,
@@ -58,10 +58,11 @@ pub use mechanism::{
 };
 pub use package::{
     AccessLevel, AllowFriendsOverride, BinaryDecl, BootCategory, BootSnippet, BootSnippetFragment,
-    Compatibility, ConditionalTarget, ConflictsList, FeaturesTable, GitPackageDep, GitRefKind,
-    HooksDecl, LinkType, MCP_ARG_VARS, Materialization, McpServerDecl, Obsoletes, OverrideEntry,
-    OverrideTable, OverrideTarget, PackageFormat, PackageMeta, PathPackageDep, Provides,
-    PublishPosture, Recommends, Requires, RequiresAny, SkillDecl, Suggests, TargetOs,
+    Compatibility, ConditionalTarget, ConflictsList, EmbeddedSourceAuth, EmbeddedSourceDecl,
+    EmbeddedSourceKind, FeaturesTable, GitPackageDep, GitRefKind, HooksDecl, LinkType,
+    MCP_ARG_VARS, Materialization, McpServerDecl, Obsoletes, OverrideEntry, OverrideTable,
+    OverrideTarget, PackageFormat, PackageMeta, PathPackageDep, Provides, PublishPosture,
+    Recommends, Requires, RequiresAny, SkillDecl, SkillResourceDecl, Suggests, TargetOs,
     VarRegistryDep, VisibilityMeta, WhenCondition,
 };
 pub use project::{

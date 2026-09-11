@@ -109,6 +109,32 @@ capabilities = ["interface:wal"]
     std::fs::write(dir.join("README.md"), "# wal\n").unwrap();
 }
 
+fn write_bridge_fixture_package(dir: &Path) {
+    std::fs::write(
+        dir.join("vibe.toml"),
+        r#"[package]
+group = "org.vibevm.bridges"
+name = "upstream-tool"
+kind = "tool"
+version = "1.0.0"
+bridge = true
+license = "UPL-1.0"
+
+[[embedded_source]]
+name = "upstream"
+kind = "git"
+url = "https://github.com/example/upstream.git"
+commit = "0123456789abcdef0123456789abcdef01234567"
+content_hash = "sha256-tree/1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+ref_hint = "refs/tags/v1.2.3"
+upstream_license = "MIT"
+license_path = "LICENSE"
+license_url = "https://github.com/example/upstream/blob/0123456789abcdef0123456789abcdef01234567/LICENSE"
+"#,
+    )
+    .unwrap();
+}
+
 fn outcome() -> PublishOutcome {
     PublishOutcome {
         kind: PackageKind::Flow,
@@ -159,6 +185,30 @@ fn fires_when_env_configured_and_index_returns_201() {
     assert_eq!(body["files_count"], 2);
     assert_eq!(body["i18n"]["default"], "en");
     assert!(body["indexed_at"].is_string());
+}
+
+#[test]
+fn bridge_provenance_reaches_the_index_payload() {
+    let work = tempfile::tempdir().unwrap();
+    write_bridge_fixture_package(work.path());
+    let manifest = vibe_core::manifest::Manifest::read(work.path().join("vibe.toml")).unwrap();
+
+    let payload = vibe_publish::post_hook::build_payload(
+        &outcome(),
+        &manifest,
+        work.path(),
+        "hooktest-bridge",
+        chrono::DateTime::parse_from_rfc3339("2026-09-11T00:00:00Z")
+            .unwrap()
+            .with_timezone(&chrono::Utc),
+    )
+    .unwrap();
+
+    assert_eq!(payload["bridge"], true);
+    assert_eq!(payload["embedded_sources"][0]["name"], "upstream");
+    assert_eq!(payload["embedded_sources"][0]["kind"], "git");
+    assert_eq!(payload["embedded_sources"][0]["upstream_license"], "MIT");
+    assert_eq!(payload["embedded_sources"][0]["license_path"], "LICENSE");
 }
 
 #[test]

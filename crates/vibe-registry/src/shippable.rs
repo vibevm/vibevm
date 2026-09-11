@@ -149,6 +149,13 @@ pub fn compute_content_hash(pkg_dir: &Path) -> Result<String, RegistryError> {
     compute_content_hash_with(RecipeId::Legacy0, pkg_dir)
 }
 
+/// Compute the current cross-platform tree recipe. Bridge authoring uses this
+/// spelling for immutable upstream pins so Windows and Unix maintainers agree
+/// on one digest before any package is published.
+pub fn compute_portable_content_hash(pkg_dir: &Path) -> Result<String, RegistryError> {
+    compute_content_hash_with(RecipeId::Tree1, pkg_dir)
+}
+
 #[cfg(test)]
 mod shippable_tree_tests {
     use super::*;

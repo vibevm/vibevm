@@ -39,6 +39,10 @@ pub enum ShowSubcommand {
     /// per-package `describes` declarations). Useful as a sanity
     /// check for upstream-version drift.
     Purls(ShowPurlsArgs),
+
+    /// Print the canonical on-disk root of an installed package or one of
+    /// its authenticated embedded sources.
+    SourcePath(ShowSourcePathArgs),
 }
 
 #[derive(Debug, clap::Args)]
@@ -71,6 +75,22 @@ pub struct ShowSubskillsArgs {
 
 #[derive(Debug, clap::Args)]
 pub struct ShowPurlsArgs {
+    /// Project root. Defaults to current directory.
+    #[arg(long, default_value = ".")]
+    pub path: PathBuf,
+}
+
+#[derive(Debug, clap::Args)]
+pub struct ShowSourcePathArgs {
+    /// Installed package reference. Qualified references are recommended;
+    /// a short name is accepted only when it is unambiguous in the lockfile.
+    pub package: String,
+
+    /// Return this locked embedded source's verified cache tree instead of
+    /// the package's normal `vibedeps` slot.
+    #[arg(long)]
+    pub embedded: Option<String>,
+
     /// Project root. Defaults to current directory.
     #[arg(long, default_value = ".")]
     pub path: PathBuf,

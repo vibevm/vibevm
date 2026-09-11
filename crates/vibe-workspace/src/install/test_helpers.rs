@@ -68,6 +68,7 @@ pub(super) fn dep_with_boot(
         version: ver(version),
         content_dir: pkg.path().to_path_buf(),
         source_hash: Some(source_hash()),
+        embedded_sources: Vec::new(),
         manifest,
         requires: vec![],
         admitted_by: None,

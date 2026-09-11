@@ -188,6 +188,7 @@ fn request() -> InstallRequest {
         language: None,
         exact: false,
         generated_by: "vibe test".to_string(),
+        offline: false,
     }
 }
 
@@ -583,6 +584,7 @@ fn transformed_verifier_rejects_a_live_overlay_hash_divergence() {
         version: cached.resolved.version.clone(),
         content_dir: cached.cache_dir.clone(),
         source_hash: Some(ContentHash::from_validated(cached.content_hash.clone())),
+        embedded_sources: Vec::new(),
         manifest: cached.manifest.clone(),
         requires: Vec::new(),
         admitted_by: None,

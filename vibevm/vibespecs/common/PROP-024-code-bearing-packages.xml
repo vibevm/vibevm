@@ -121,6 +121,11 @@ build-output denylist:</SHIPPABLE-TREE-DEF></p>
   count".</WHY-SOURCE-IDENTITY>
         <SOURCE-IS-SHIPPED fact="true" status="spec/done">A package's source — what its author commits — is precisely what is
   hashed, copied, and vendored.</SOURCE-IS-SHIPPED>
+        <REFERENCE-BRIDGE-SOURCE-BOUNDARY fact="true" status="impl/done">For a reference-backed bridge, the package source is only its
+  maintainer-authored manifest and adapters. A declared external embedded tree
+  is independently authenticated and cached; it is not part of the package
+  shippable tree or package `content_hash`, and it is never published as if the
+  bridge maintainer authored it.</REFERENCE-BRIDGE-SOURCE-BOUNDARY>
       </facts>
       <facts ordered="false">
         <VERBATIM-PRESERVED fact="true" status="spec/done">**"Verbatim" is preserved for the source.** PROP-009 §2.1 / `VIBEVM-SPEC.md`
@@ -284,8 +289,10 @@ L4 (implemented checkers) ships in the package whose language they check.</PLACE
   to the §2.2 build-output denylist.</SURF-VIBEIGNORE>
       <SURF-HOOKS fact="true" status="spec/done">**`[hooks].post-install`** (PROP-020) is the build lever; **`VIBE_PROJECT_ROOT`**
   is added to the hook environment (§2.3).</SURF-HOOKS>
-      <SURF-LOCK-UNAFFECTED fact="true" status="spec/done">**`vibe.lock`** is unaffected — identity is still `content_hash`, now over the
-  shippable tree (§2.2); no schema bump.</SURF-LOCK-UNAFFECTED>
+      <SURF-LOCK-UNAFFECTED fact="true" status="impl/done">**Original code-bearing-package law:** package identity remains `content_hash`
+  over the shippable tree (§2.2). Reference-backed bridges extend the lock with
+  separately nested embedded-source pins; those pins authenticate projected
+  upstream bytes but do not become part of package identity.</SURF-LOCK-UNAFFECTED>
     </facts>
   </surface>
   <rejected title="4. Rejected / deferred alternatives">

@@ -251,7 +251,7 @@ path = "skills/root"
         r#"[meta]
 generated_by = "test"
 generated_at = "2026-08-26T00:00:00Z"
-schema_version = 6
+schema_version = 7
 
 [[package]]
 kind = "tool"

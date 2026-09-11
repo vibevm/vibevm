@@ -19,9 +19,9 @@ use crate::manifest::project::{
 };
 
 use super::{
-    BinaryDecl, BootSnippet, Compatibility, ConditionalTarget, ConflictsList, FeaturesTable,
-    HooksDecl, McpServerDecl, Obsoletes, PackageMeta, Provides, Recommends, Requires, RequiresAny,
-    SkillDecl, Suggests,
+    BinaryDecl, BootSnippet, Compatibility, ConditionalTarget, ConflictsList, EmbeddedSourceDecl,
+    FeaturesTable, HooksDecl, McpServerDecl, Obsoletes, PackageMeta, Provides, Recommends,
+    Requires, RequiresAny, SkillDecl, Suggests,
 };
 
 /// Per-edge seepage level: how far the target travels toward consumers.
@@ -319,6 +319,12 @@ pub(crate) struct ManifestWire {
     recommends: Recommends,
     #[serde(default, skip_serializing_if = "Suggests::is_empty")]
     suggests: Suggests,
+    #[serde(
+        default,
+        rename = "embedded_source",
+        skip_serializing_if = "Vec::is_empty"
+    )]
+    embedded_sources: Vec<EmbeddedSourceDecl>,
     #[serde(default, rename = "skill", skip_serializing_if = "Vec::is_empty")]
     skills: Vec<SkillDecl>,
     #[serde(default, rename = "binary", skip_serializing_if = "Vec::is_empty")]
@@ -415,6 +421,7 @@ impl TryFrom<ManifestWire> for Manifest {
             conflicts: wire.conflicts,
             recommends: wire.recommends,
             suggests: wire.suggests,
+            embedded_sources: wire.embedded_sources,
             skills: wire.skills,
             binaries: wire.binaries,
             mcp_servers: wire.mcp_servers,
@@ -447,6 +454,7 @@ impl TryFrom<Manifest> for ManifestWire {
     type Error = String;
 
     fn try_from(manifest: Manifest) -> Result<Self, Self::Error> {
+        manifest.validate().map_err(|error| error.to_string())?;
         let has_project = manifest.project.is_some();
         let has_package = manifest.package.is_some();
         validate_extension_declarations(&manifest.extensions, has_project, has_package)?;
@@ -487,6 +495,7 @@ impl TryFrom<Manifest> for ManifestWire {
             conflicts: manifest.conflicts,
             recommends: manifest.recommends,
             suggests: manifest.suggests,
+            embedded_sources: manifest.embedded_sources,
             skills: manifest.skills,
             binaries: manifest.binaries,
             mcp_servers: manifest.mcp_servers,

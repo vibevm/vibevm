@@ -39,10 +39,26 @@ pub fn run(ctx: &output::Context, args: ListArgs) -> Result<()> {
             describes: Option<&'a str>,
         }
         #[derive(Serialize)]
+        struct EmbeddedSourceJson<'a> {
+            name: &'a str,
+            kind: &'static str,
+            source_url: &'a str,
+            #[serde(skip_serializing_if = "Option::is_none")]
+            source_ref: Option<&'a str>,
+            resolved_commit: &'a str,
+            tree_oid: &'a str,
+            content_hash: &'a str,
+            upstream_license: &'a str,
+            license_path: String,
+            license_url: &'a str,
+            license_file_sha256: &'a str,
+        }
+        #[derive(Serialize)]
         struct JsonEntry<'a> {
             kind: &'a str,
             name: &'a str,
             version: String,
+            bridge: bool,
             #[serde(skip_serializing_if = "Option::is_none")]
             registry: Option<&'a str>,
             source_url: &'a str,
@@ -57,6 +73,8 @@ pub fn run(ctx: &output::Context, args: ListArgs) -> Result<()> {
             #[serde(skip_serializing_if = "Option::is_none")]
             via_redirect: Option<&'a str>,
             content_hash: &'a str,
+            #[serde(skip_serializing_if = "Vec::is_empty")]
+            embedded_sources: Vec<EmbeddedSourceJson<'a>>,
             boot_snippet: Option<&'a str>,
             files_written: Vec<String>,
             #[serde(skip_serializing_if = "std::ops::Not::not")]
@@ -80,12 +98,30 @@ pub fn run(ctx: &output::Context, args: ListArgs) -> Result<()> {
                 kind: p.kind.as_str(),
                 name: &p.name,
                 version: p.version.to_string(),
+                bridge: p.bridge,
                 registry: p.registry.as_deref(),
                 source_url: &p.source_url,
                 source_ref: p.source_ref.as_deref(),
                 resolved_commit: p.resolved_commit.as_deref(),
                 via_redirect: p.via_redirect.as_deref(),
                 content_hash: &p.content_hash,
+                embedded_sources: p
+                    .embedded_sources
+                    .iter()
+                    .map(|source| EmbeddedSourceJson {
+                        name: &source.name,
+                        kind: "git",
+                        source_url: source.source_url.as_str(),
+                        source_ref: source.source_ref.as_deref(),
+                        resolved_commit: &source.resolved_commit,
+                        tree_oid: &source.tree_oid,
+                        content_hash: source.content_hash.as_str(),
+                        upstream_license: &source.upstream_license,
+                        license_path: machine_json_path(&source.license_path),
+                        license_url: &source.license_url,
+                        license_file_sha256: source.license_file_sha256.as_str(),
+                    })
+                    .collect(),
                 boot_snippet: p.boot_snippet.as_deref(),
                 files_written: p
                     .files_written
@@ -135,21 +171,28 @@ pub fn run(ctx: &output::Context, args: ListArgs) -> Result<()> {
     let mut k_w = "KIND".len();
     let mut n_w = "NAME".len();
     let mut v_w = "VERSION".len();
+    let mut r_w = "ROLE".len();
     for p in &filtered {
         k_w = k_w.max(p.kind.as_str().len());
         n_w = n_w.max(p.name.len());
         v_w = v_w.max(p.version.to_string().len());
+        r_w = r_w.max(if p.bridge {
+            "BRIDGE".len()
+        } else {
+            "package".len()
+        });
     }
     println!(
-        "{:<k_w$}  {:<n_w$}  {:<v_w$}  BOOT SNIPPET",
-        "KIND", "NAME", "VERSION"
+        "{:<k_w$}  {:<n_w$}  {:<v_w$}  {:<r_w$}  BOOT SNIPPET",
+        "KIND", "NAME", "VERSION", "ROLE"
     );
     for p in &filtered {
         println!(
-            "{:<k_w$}  {:<n_w$}  {:<v_w$}  {}",
+            "{:<k_w$}  {:<n_w$}  {:<v_w$}  {:<r_w$}  {}",
             p.kind.as_str(),
             p.name,
             p.version.to_string(),
+            if p.bridge { "BRIDGE" } else { "package" },
             p.boot_snippet.as_deref().unwrap_or("—"),
         );
         if args.verbose {
@@ -169,6 +212,20 @@ pub fn run(ctx: &output::Context, args: ListArgs) -> Result<()> {
             }
             if let Some(l) = &p.language {
                 println!("    language:  {l}");
+            }
+            for source in &p.embedded_sources {
+                println!("    embedded source {} (git):", source.name);
+                println!("      url:              {}", source.source_url);
+                if let Some(reference) = &source.source_ref {
+                    println!("      ref hint:         {reference}");
+                }
+                println!("      resolved commit:  {}", source.resolved_commit);
+                println!("      tree oid:         {}", source.tree_oid);
+                println!("      content hash:     {}", source.content_hash);
+                println!("      upstream license: {}", source.upstream_license);
+                println!("      license path:     {}", source.license_path.display());
+                println!("      license url:      {}", source.license_url);
+                println!("      license hash:     {}", source.license_file_sha256);
             }
         }
     }

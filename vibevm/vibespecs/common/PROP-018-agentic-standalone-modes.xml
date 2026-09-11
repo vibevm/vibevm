@@ -182,6 +182,25 @@ name        = "vim"                 # becomes the skill dir name in the agent
 path        = "skills/vim"          # file or dir (relative to package root) = the skill body
 description = "Drive vim from an agent"   # optional; shown in listings
 agents      = ["claude", "opencode"]      # optional; default = all skill-supporting agents</fence>
+      <p><SKILL-EXTERNAL-SHAPE fact="true" status="impl/done">A reference-backed bridge MAY select its body from a declared external
+source, and any skill MAY add authenticated source resources below a dedicated
+subdirectory:</SKILL-EXTERNAL-SHAPE></p>
+      <fence lang="toml">[[skill]]
+name   = "codebase-design"
+source = "upstream"
+path   = "skills/engineering/codebase-design"
+include = ["SKILL.md", "*.md"]
+
+[[skill.resource]]
+embedded_source = "upstream"
+path    = "templates"
+include = ["*.md"]
+target  = "references/upstream"</fence>
+      <p><SKILL-EXTERNAL-LAWS fact="true" status="impl/done">`source` and `embedded_source` name a manifest `[[embedded_source]]`.
+Absent `source` retains the package-root meaning. Resource targets are portable
+relative paths below `references/`; they cannot replace the local `SKILL.md`,
+scripts, or another resource. Include selection, case-fold collision checks and
+no-follow traversal apply before any agent directory is changed.</SKILL-EXTERNAL-LAWS></p>
       <p><MCP-TABLE-RESERVED fact="true" status="spec/done">A sibling `[[mcp]]` table (command / args / target agents) is specified the
 same way but is **near-term, not MVP** (§6) — the schema is reserved here so
 the vim-style "tool + mcp + skill" package is expressible end to end.</MCP-TABLE-RESERVED></p>
@@ -190,7 +209,8 @@ the vim-style "tool + mcp + skill" package is expressible end to end.</MCP-TABLE
       <p><req-projection fact="true" status="spec/done">`req r3`</req-projection></p>
       <facts ordered="false">
         <PROJECTION-DEF fact="true" status="spec/done">**Decision.** Installing a skill into an agent is a **projection**: read the
-  declared skill body from the package (in `vibedeps/…` once installed) and
+  declared skill body from the package (in `vibedeps/…` once installed) or an
+  external source authenticated by the package's matching lock record, and
   write it into each target agent's skill directory in that agent's own
   convention (`.claude/skills/&lt;name&gt;/…`, `.opencode/skills/&lt;name&gt;/…`,
   `.agents/skills/&lt;name&gt;/…` — the paths PROP-015 §2.6 already resolves).</PROJECTION-DEF>
@@ -200,6 +220,11 @@ the vim-style "tool + mcp + skill" package is expressible end to end.</MCP-TABLE
   the workspace, into the **agent**.</DISTINCT-FROM-DELIVERY>
         <NO-SHARED-CODE fact="true" status="spec/done">The two share no code path beyond the
   `Agent` skill-path resolver.</NO-SHARED-CODE>
+        <EXTERNAL-PROJECTION-BOUNDARY fact="true" status="impl/done">An external tree is projected only through the owning package declaration
+  and matching `vibe.lock` pin. A direct path into the machine cache is not a
+  package identity or installation surface and cannot bypass package ownership.
+  The bridge slot remains the provider root; the external tree is a separately
+  named content root carrying its own commit/hash/licence provenance.</EXTERNAL-PROJECTION-BOUNDARY>
       </facts>
     </projection>
     <vibe-skill title="2.6 Standalone MVP — `vibe skill install`">
@@ -407,6 +432,10 @@ consolidated backlog doc may be warranted — not today.)</sibling-backlogs></p>
   skill-supporting agent under the right path, preserves foreign skill dirs,
   is idempotent, and reports per-(agent, scope); `uninstall` is its inverse;
   `list` writes nothing.</ACC-SKILL-INSTALL>
+      <ACC-EXTERNAL-SKILL fact="true" status="impl/done">A locked reference-backed bridge projects a direct upstream skill or
+  package-local adapter plus selected upstream resources; a missing/mismatched
+  pin, hash mismatch, link/gitlink, traversal or target collision fails before
+  an agent directory is changed.</ACC-EXTERNAL-SKILL>
       <ACC-EXPLAIN-RELAY fact="true" status="spec/done">`vibe agentic explain`, run with a fixture project, writes a well-formed
   `.vibe/agentic/command.md` (frontmatter + the §2.10 prompt) and writes no other
   state; `vibe command` prints it, archives it to `command.done.md`, and

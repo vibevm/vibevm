@@ -979,6 +979,31 @@ pub struct EmbedResolutionSnapshot {
     pub explicit_use_keys: Vec<String>,
 }
 
+/// Immutable upstream provenance declared by a reference-backed bridge package.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct EmbeddedSourceEntry {
+    pub content_hash: String,
+
+    pub kind: String,
+
+    pub license_path: String,
+
+    pub license_url: String,
+
+    pub name: String,
+
+    pub resolved_commit: String,
+
+    pub source_url: String,
+
+    pub upstream_license: String,
+
+    /// Advertised immutable ref hint; the resolved commit remains
+    /// authoritative.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub source_ref: Option<String>,
+}
+
 /// One contribution's emission witness (`EmissionContributionWitness`).
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "kind")]
@@ -2518,6 +2543,11 @@ pub struct VersionEntry {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub boot_snippet: Option<BootSnippetEntry>,
 
+    /// True when this package is an authored bridge around separately licensed
+    /// upstream content.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub bridge: bool,
+
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub compatibility: Option<CompatibilityEntry>,
 
@@ -2531,6 +2561,9 @@ pub struct VersionEntry {
     /// Human-readable summary; absent when the package declares none.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
+
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub embedded_sources: Vec<EmbeddedSourceEntry>,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub features: Option<FeaturesEntry>,

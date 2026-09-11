@@ -158,6 +158,8 @@ mod tests {
             homepage: None,
             keywords: vec![],
             describes: None,
+            bridge: false,
+            embedded_sources: vec![],
             compatibility: Default::default(),
             provides: Default::default(),
             requires: Default::default(),

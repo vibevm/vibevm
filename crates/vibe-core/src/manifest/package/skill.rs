@@ -19,6 +19,8 @@ use serde::{Deserialize, Serialize};
 
 use crate::manifest::declarant_path::{declarant_path, is_windows_device_name};
 
+use super::embedded_source::valid_embedded_source_name;
+
 /// `[[skill]]` — one agent-installable skill a package ships (PROP-018 §2.4).
 ///
 /// `name` becomes the skill's directory name inside each target agent
@@ -60,6 +62,11 @@ pub struct SkillDecl {
     /// The skill id — becomes its directory name inside each agent
     /// (`.<agent>/skills/<name>/…`).
     pub name: String,
+    /// Optional immutable `[[embedded_source]]` identity. When present,
+    /// `path` and `include` select the skill body from that authenticated
+    /// source instead of from the package tree.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub source: Option<String>,
     /// File or directory (relative to the package root) whose contents are
     /// the skill body projected into the agent.
     pub path: PathBuf,
@@ -79,6 +86,26 @@ pub struct SkillDecl {
     /// opaque strings.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub include: Vec<String>,
+    /// Additional immutable upstream resources merged below the local
+    /// adapter-owned skill body. The manifest-level validator resolves each
+    /// resource's source identity.
+    #[serde(default, rename = "resource", skip_serializing_if = "Vec::is_empty")]
+    pub resources: Vec<SkillResourceDecl>,
+}
+
+/// One selected subtree from an authenticated `[[embedded_source]]` merged
+/// into an adapter-owned skill at projection time.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct SkillResourceDecl {
+    pub embedded_source: String,
+    /// Path relative to the embedded source root.
+    pub path: PathBuf,
+    /// Explicit selection below `path`. Remote whole-tree projection is not
+    /// an implicit default.
+    pub include: Vec<String>,
+    /// Destination below the projected skill's `references/` directory.
+    pub target: PathBuf,
 }
 
 impl SkillDecl {
@@ -98,6 +125,29 @@ impl SkillDecl {
                 self.path.display()
             ));
         }
+        if let Some(source) = &self.source {
+            if !valid_embedded_source_name(source) {
+                return Err(format!(
+                    "[[skill]] `{}` source `{source}` must name one portable [[embedded_source]]",
+                    self.name
+                ));
+            }
+            if self.include.is_empty() {
+                return Err(format!(
+                    "[[skill]] `{}` selects an external source and must declare a non-empty include list",
+                    self.name
+                ));
+            }
+            if !self.resources.is_empty() {
+                return Err(format!(
+                    "[[skill]] `{}` is a direct external skill and cannot also declare [[skill.resource]]; use a local adapter skill for composed resources",
+                    self.name
+                ));
+            }
+        }
+        for resource in &self.resources {
+            resource.validate(&self.name)?;
+        }
         Ok(())
     }
 
@@ -116,6 +166,35 @@ impl SkillDecl {
     #[must_use]
     pub fn is_windows_device_name(component: &str) -> bool {
         is_windows_device_name(component)
+    }
+}
+
+impl SkillResourceDecl {
+    fn validate(&self, skill_name: &str) -> Result<(), String> {
+        if !valid_embedded_source_name(&self.embedded_source) {
+            return Err(format!(
+                "[[skill.resource]] in `{skill_name}` embedded_source `{}` must be a portable source name",
+                self.embedded_source
+            ));
+        }
+        if !valid_declarant_path(&self.path) {
+            return Err(format!(
+                "[[skill.resource]] in `{skill_name}` path `{}` must be a non-empty embedded-source-relative normal path",
+                self.path.display()
+            ));
+        }
+        if self.include.is_empty() || self.include.iter().any(|pattern| !valid_include(pattern)) {
+            return Err(format!(
+                "[[skill.resource]] in `{skill_name}` include must be a non-empty list of safe source-relative glob patterns"
+            ));
+        }
+        if !valid_declarant_path(&self.target) || !is_below_references(&self.target) {
+            return Err(format!(
+                "[[skill.resource]] in `{skill_name}` target `{}` must be a normal path strictly below `references/`",
+                self.target.display()
+            ));
+        }
+        Ok(())
     }
 }
 
@@ -149,6 +228,27 @@ fn valid_declarant_path(path: &Path) -> bool {
     declarant_path(path).is_ok()
 }
 
+fn valid_include(pattern: &str) -> bool {
+    pattern.trim() == pattern
+        && !pattern.is_empty()
+        && !pattern.starts_with('/')
+        && !pattern.chars().any(|ch| matches!(ch, '\\' | ':'))
+        && pattern
+            .split('/')
+            .all(|component| !component.is_empty() && component != "." && component != "..")
+}
+
+fn is_below_references(path: &Path) -> bool {
+    let mut components = path.components();
+    matches!(
+        (components.next(), components.next()),
+        (
+            Some(std::path::Component::Normal(first)),
+            Some(std::path::Component::Normal(_))
+        ) if first == "references"
+    )
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -156,10 +256,12 @@ mod tests {
     fn decl(name: &str, path: &str) -> SkillDecl {
         SkillDecl {
             name: name.into(),
+            source: None,
             path: path.into(),
             description: None,
             agents: Vec::new(),
             include: Vec::new(),
+            resources: Vec::new(),
         }
     }
 
@@ -264,5 +366,30 @@ mod tests {
             let result = std::panic::catch_unwind(|| decl(name, "skills/x").validate());
             assert!(matches!(result, Ok(Err(_))), "{name:?}");
         }
+    }
+
+    #[test]
+    fn external_skill_and_adapter_resource_boundaries_are_closed() {
+        let mut direct = decl("review", "skills/review");
+        direct.source = Some("upstream".into());
+        assert!(direct.validate().unwrap_err().contains("non-empty include"));
+        direct.include = vec!["**/*".into()];
+        direct.validate().unwrap();
+
+        let mut adapter = decl("review", "skills/review");
+        adapter.resources.push(SkillResourceDecl {
+            embedded_source: "upstream".into(),
+            path: "docs".into(),
+            include: vec!["**/*.md".into()],
+            target: "references/upstream".into(),
+        });
+        adapter.validate().unwrap();
+        adapter.resources[0].target = "SKILL.md".into();
+        assert!(
+            adapter
+                .validate()
+                .unwrap_err()
+                .contains("below `references/`")
+        );
     }
 }

@@ -28,6 +28,8 @@ fn sample_entry() -> VersionEntry {
         homepage: None,
         keywords: vec!["wal".into()],
         describes: None,
+        bridge: false,
+        embedded_sources: vec![],
         // Empty projections are ABSENCE, not present-but-empty: the
         // writer normalises emptiness to a missing key, so a fixture
         // with nothing to say says nothing (§ the `is_empty` guards).
@@ -190,6 +192,35 @@ fn set_slots_round_trip_through_json() {
     assert!(back.yanked);
     assert!(back.frozen);
     assert_eq!(v, back);
+}
+
+#[test]
+fn bridge_provenance_is_optional_but_round_trips_when_present() {
+    let plain = sample_entry();
+    let plain_json = serde_json::to_string(&plain).unwrap();
+    assert!(!plain_json.contains("\"bridge\""), "{plain_json}");
+    assert!(!plain_json.contains("embedded_sources"), "{plain_json}");
+
+    let mut bridge = sample_entry();
+    bridge.bridge = true;
+    bridge.embedded_sources.push(EmbeddedSourceEntry {
+        name: "upstream".into(),
+        kind: "git".into(),
+        source_url: "https://github.com/example/upstream.git".into(),
+        source_ref: Some("refs/tags/v1.2.3".into()),
+        resolved_commit: "0123456789abcdef0123456789abcdef01234567".into(),
+        content_hash:
+            "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa".into(),
+        upstream_license: "MIT".into(),
+        license_path: "LICENSE".into(),
+        license_url: "https://github.com/example/upstream/blob/0123456789abcdef0123456789abcdef01234567/LICENSE".into(),
+    });
+
+    let json = serde_json::to_string(&bridge).unwrap();
+    assert!(json.contains("\"bridge\":true"), "{json}");
+    assert!(json.contains("\"upstream_license\":\"MIT\""), "{json}");
+    let back: VersionEntry = serde_json::from_str(&json).unwrap();
+    assert_eq!(back, bridge);
 }
 
 #[test]

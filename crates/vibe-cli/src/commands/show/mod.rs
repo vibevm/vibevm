@@ -25,6 +25,7 @@ mod config;
 mod effective;
 mod features;
 mod purls;
+mod source_path;
 mod subskills;
 
 use std::path::{Path, PathBuf};
@@ -35,13 +36,14 @@ use vibe_core::manifest::Manifest;
 use crate::cli::{ShowArgs, ShowSubcommand};
 use crate::output;
 
-pub fn run(ctx: &output::Context, args: ShowArgs) -> Result<()> {
+pub fn run(ctx: &output::Context, args: ShowArgs, offline: bool) -> Result<()> {
     match args.command {
         ShowSubcommand::Effective(sub) => effective::run_effective(ctx, sub),
         ShowSubcommand::Config(sub) => config::run_config(ctx, sub),
         ShowSubcommand::Features(sub) => features::run_features(ctx, sub),
         ShowSubcommand::Subskills(sub) => subskills::run_subskills(ctx, sub),
         ShowSubcommand::Purls(sub) => purls::run_purls(ctx, sub),
+        ShowSubcommand::SourcePath(sub) => source_path::run_source_path(ctx, sub, offline),
     }
 }
 

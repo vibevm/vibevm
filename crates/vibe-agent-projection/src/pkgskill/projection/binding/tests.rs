@@ -14,13 +14,16 @@ fn provider(root: &Path, name: &str, skill: &str, path: &str) -> ProjectSkillPro
             version: "0.1.0".into(),
             kind: PackageKind::Tool,
             root: root.to_path_buf(),
+            embedded_sources: Vec::new(),
         },
         declarations: vec![SkillDecl {
             name: skill.into(),
+            source: None,
             path: path.into(),
             description: None,
             agents: vec!["claude".into()],
             include: Vec::new(),
+            resources: Vec::new(),
         }],
     }
 }
@@ -81,6 +84,26 @@ fn physical_collision_overlap_and_empty_selection_are_plan_errors() {
         .unwrap_err()
         .to_string();
     assert!(error.contains("selects zero files"), "{error}");
+}
+
+#[test]
+fn frontmatter_name_mismatch_is_a_binding_plan_error() {
+    let project = tempfile::tempdir().unwrap();
+    let package = tempfile::tempdir().unwrap();
+    let source = package.path().join("skills/demo");
+    fs::create_dir_all(&source).unwrap();
+    fs::write(source.join("SKILL.md"), "---\nname: wrong-name\n---\nbody").unwrap();
+
+    let error = lower_project_skill_bindings(
+        project.path(),
+        vec![provider(package.path(), "package", "demo", "skills/demo")],
+    )
+    .unwrap_err()
+    .to_string();
+
+    assert!(error.contains("frontmatter name `wrong-name`"), "{error}");
+    assert!(!project.path().join(".claude/skills/demo").exists());
+    assert!(!project.path().join(".vibe/package-skills.toml").exists());
 }
 
 /// Planning judges the complete selected source set through the shared fold

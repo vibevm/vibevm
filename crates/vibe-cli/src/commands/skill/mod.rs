@@ -22,11 +22,11 @@ use vibe_core::machine_json_path;
 use crate::cli::{SkillArgs, SkillInstallArgs, SkillListArgs, SkillSubcommand, SkillUninstallArgs};
 use crate::output;
 
-pub fn run(ctx: &output::Context, args: SkillArgs) -> Result<()> {
+pub fn run(ctx: &output::Context, args: SkillArgs, offline: bool) -> Result<()> {
     match args.command {
         SkillSubcommand::List(sub) => run_list(ctx, sub),
-        SkillSubcommand::Install(sub) => run_install(ctx, sub),
-        SkillSubcommand::Uninstall(sub) => run_uninstall(ctx, sub),
+        SkillSubcommand::Install(sub) => run_install(ctx, sub, offline),
+        SkillSubcommand::Uninstall(sub) => run_uninstall(ctx, sub, offline),
     }
 }
 
@@ -97,10 +97,14 @@ fn run_list(ctx: &output::Context, args: SkillListArgs) -> Result<()> {
         let entries: Vec<serde_json::Value> = skills
             .iter()
             .map(|s| {
+                let source = s.decl.source.as_ref().map_or_else(
+                    || machine_json_path(&s.source),
+                    |embedded| format!("embedded:{embedded}/{}", machine_json_path(&s.decl.path)),
+                );
                 serde_json::json!({
                     "name": s.decl.name,
                     "origin": s.origin,
-                    "source": machine_json_path(&s.source),
+                    "source": source,
                     "description": s.decl.description,
                     "agents": s.decl.agents,
                 })
@@ -132,9 +136,18 @@ fn run_list(ctx: &output::Context, args: SkillListArgs) -> Result<()> {
             .as_deref()
             .map(|d| format!(" — {d}"))
             .unwrap_or_default();
+        let source = s.decl.source.as_ref().map(|embedded| {
+            format!(
+                " · source embedded:{embedded}/{}",
+                machine_json_path(&s.decl.path)
+            )
+        });
         ctx.step(&format!(
-            "{} [{}] → agents: {}{desc}",
-            s.decl.name, s.origin, agents
+            "{} [{}] → agents: {}{}{desc}",
+            s.decl.name,
+            s.origin,
+            agents,
+            source.as_deref().unwrap_or("")
         ));
     }
     ctx.summary(&format!("{} skill(s) declared.", skills.len()));
@@ -145,10 +158,11 @@ fn run_list(ctx: &output::Context, args: SkillListArgs) -> Result<()> {
 // install
 // ---------------------------------------------------------------------------
 
-fn run_install(ctx: &output::Context, args: SkillInstallArgs) -> Result<()> {
+fn run_install(ctx: &output::Context, args: SkillInstallArgs, offline: bool) -> Result<()> {
     let project_root = super::resolve_project_root(&args.path)?;
     let scope = resolve_scope(&args.scope)?;
-    let filter = DeclaredSkillFilter::new(&args.skills, args.agent.as_deref());
+    let filter =
+        DeclaredSkillFilter::new(&args.skills, args.agent.as_deref()).with_offline(offline);
     let plan = prepare_declared_skill_projection(&project_root, &filter, scope)?;
 
     ctx.heading("Skill install plan:");
@@ -177,10 +191,11 @@ fn run_install(ctx: &output::Context, args: SkillInstallArgs) -> Result<()> {
 // uninstall
 // ---------------------------------------------------------------------------
 
-fn run_uninstall(ctx: &output::Context, args: SkillUninstallArgs) -> Result<()> {
+fn run_uninstall(ctx: &output::Context, args: SkillUninstallArgs, offline: bool) -> Result<()> {
     let project_root = super::resolve_project_root(&args.path)?;
     let scope = resolve_scope(&args.scope)?;
-    let filter = DeclaredSkillFilter::new(&args.skills, args.agent.as_deref());
+    let filter =
+        DeclaredSkillFilter::new(&args.skills, args.agent.as_deref()).with_offline(offline);
     let plan = prepare_declared_skill_projection(&project_root, &filter, scope)?;
 
     ctx.heading("Skill uninstall plan:");

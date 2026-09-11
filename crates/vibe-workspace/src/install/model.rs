@@ -8,7 +8,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#
 use specmark::spec;
 use std::path::{Path, PathBuf};
 
-use vibe_core::manifest::{Manifest, SpecFormat};
+use vibe_core::manifest::{LockedEmbeddedSource, Manifest, SpecFormat};
 use vibe_core::{ContentHash, Group, PackageKind};
 
 use crate::WorkspaceError;
@@ -32,6 +32,9 @@ pub struct ResolvedDep {
     /// Fetched shippable-tree identity. Boot-only reconstruction may carry
     /// `None`; every path that materialises a slot requires `Some`.
     pub source_hash: Option<ContentHash>,
+    /// Immutable external source provenance authenticated for this package.
+    /// The workspace carries it without hydrating or interpreting the cache.
+    pub embedded_sources: Vec<LockedEmbeddedSource>,
     /// The package's parsed manifest (its `vibe.toml`) — read for the
     /// `[boot_snippet]` contribution.
     pub manifest: Manifest,

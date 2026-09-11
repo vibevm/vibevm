@@ -65,7 +65,12 @@ use stage::{PendingInPlace, Stage, stage};
 
 /// One re-resolved package: what was fetched, what it requires, and — for an
 /// in-place node — whether the fetch really advanced the working tree.
-type Resolved = (CachedPackage, Vec<PackageRef>, Option<bool>);
+type Resolved = (
+    CachedPackage,
+    Vec<PackageRef>,
+    Option<bool>,
+    Vec<vibe_core::manifest::LockedEmbeddedSource>,
+);
 
 pub(super) struct SourceHashes(HashMap<(Group, String), String>);
 
@@ -213,7 +218,9 @@ fn run(
             continue;
         }
         let cached = resolver.resolve_and_fetch(&pkgref, &store_root, None)?;
-        updated.push((cached, node.dependencies.clone(), None));
+        let embedded_sources =
+            vibe_registry::lock_embedded_sources(&cached.manifest.embedded_sources)?;
+        updated.push((cached, node.dependencies.clone(), None, embedded_sources));
     }
     // Every package this run re-resolved, counted before anything is consumed:
     // a failure draft must be able to say how big the run was even when the
@@ -397,7 +404,7 @@ fn prune_superseded(
     updated: &[Resolved],
     measured: &mut Measured,
 ) -> Result<()> {
-    for (cached, _, _) in updated {
+    for (cached, _, _, _) in updated {
         let name = &cached.resolved.name;
         let Some(old_v) = lockfile
             .find(&cached.resolved.group, name)

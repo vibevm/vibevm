@@ -13,7 +13,10 @@ use std::path::{Path, PathBuf};
 use anyhow::{Context, Result, bail};
 use vibe_agent_projection::pkgskill::ProjectSkillBinding;
 use vibe_core::lifecycle::{ExtensionPoint, Phase, PhasePoint};
-use vibe_core::manifest::{ExtensionKey, Lockfile, Manifest, Materialization, SkillDecl};
+use vibe_core::manifest::{
+    EmbeddedSourceDecl, ExtensionKey, LockedEmbeddedSource, Lockfile, Manifest, Materialization,
+    SkillDecl,
+};
 use vibe_core::{Group, PackageKind, PackageName};
 use vibe_lifecycle::{
     DependencyExtensionSource, DependencyProvider, DependencyProviderId, EffectiveManifestKind,
@@ -89,6 +92,8 @@ pub(crate) fn prepare_owner_runtime_inputs(
                 Ok(LoadedDependency {
                     source: source.clone(),
                     skills: resolved.manifest.skills.clone(),
+                    declared_sources: resolved.manifest.embedded_sources.clone(),
+                    embedded_sources: resolved.embedded_sources.clone(),
                 })
             })
             .collect::<Result<Vec<_>>>()?;
@@ -96,6 +101,7 @@ pub(crate) fn prepare_owner_runtime_inputs(
             &node_root,
             &view.host.provider,
             &manifest.skills,
+            &manifest.embedded_sources,
             &dependencies,
         )?;
         if rel == selected_rel {
@@ -378,6 +384,7 @@ fn load_registry_prepared(
         .collect::<Vec<_>>();
     let effective_stack = effective_stack(&host_manifest, &installed, mode)?;
     let host_skills = host_manifest.skills.clone();
+    let host_embedded_sources = host_manifest.embedded_sources.clone();
     let mechanism_routes = host_manifest.mechanism_routes.clone();
     let mut host = host_source(host_manifest, selected.clone())?;
     let host_identity = host.provider.identity.clone();
@@ -392,6 +399,7 @@ fn load_registry_prepared(
             &selected,
             &host.provider,
             &host_skills,
+            &host_embedded_sources,
             &loaded_dependencies,
         )?
     } else {
@@ -429,6 +437,8 @@ fn load_registry_prepared(
 pub(crate) struct LoadedDependency {
     pub(crate) source: DependencyExtensionSource,
     pub(crate) skills: Vec<SkillDecl>,
+    pub(crate) declared_sources: Vec<EmbeddedSourceDecl>,
+    pub(crate) embedded_sources: Vec<LockedEmbeddedSource>,
 }
 
 fn effective_manifest_kind(manifest: &Manifest) -> EffectiveManifestKind {

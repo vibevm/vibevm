@@ -151,6 +151,7 @@ fn request() -> InstallRequest {
         language: None,
         exact: false,
         generated_by: "vibe test".to_string(),
+        offline: false,
     }
 }
 

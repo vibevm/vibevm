@@ -213,6 +213,7 @@ fn general_install_defers_in_place_instead_of_recloning() {
         language: None,
         exact: false,
         generated_by: "vibe test".to_string(),
+        offline: false,
     };
 
     // Plan: the in-place giant is deferred, NOT re-cloned.
@@ -293,6 +294,7 @@ fn general_install_defers_in_place_instead_of_recloning() {
         language: None,
         exact: false,
         generated_by: "vibe test".to_string(),
+        offline: false,
     };
     let planned = match vibe_install::plan(&source, root, request, &NullObserver).unwrap() {
         Plan::Ready(planned) => planned,

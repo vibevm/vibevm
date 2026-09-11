@@ -61,6 +61,7 @@ pub fn provisional_world(
             version: locked.version.clone(),
             content_dir: slot,
             source_hash: Some(locked.content_hash.clone()),
+            embedded_sources: locked.embedded_sources.clone(),
             manifest,
             requires: locked
                 .dependencies

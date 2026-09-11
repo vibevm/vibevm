@@ -8,7 +8,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-
 use std::path::Path;
 
 use vibe_core::PackageRef;
-use vibe_core::manifest::{Lockfile, Manifest};
+use vibe_core::manifest::{LockedEmbeddedSource, Lockfile, Manifest};
 use vibe_registry::CachedPackage;
 use vibe_resolver::{ActivationContext, CapabilityTag, FeatureExpansion, FeatureRequest};
 
@@ -32,6 +32,10 @@ pub struct Fetched {
     pub cached: CachedPackage,
     pub feature_expansion: FeatureExpansion,
     pub meta: NodeInstallMeta,
+    /// External source pins authenticated during the read-mostly fetch phase.
+    /// Apply records these exact inputs without making a second network
+    /// decision after dependency-slot mutation begins.
+    pub embedded_sources: Vec<LockedEmbeddedSource>,
     /// `true` iff this is a re-resolve of an already-present `in-place`
     /// package (PROP-022 §2.4) that the plan deferred rather than re-cloned:
     /// `cached` was built from the existing slot (manifest read locally,

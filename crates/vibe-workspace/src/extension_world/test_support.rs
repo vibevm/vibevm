@@ -54,11 +54,13 @@ pub(super) fn locked(group_spelling: &str, name_spelling: &str, edges: &[&str]) 
         name: name(name_spelling),
         group: group(group_spelling),
         version: version("1.0.0"),
+        bridge: false,
         registry: None,
         source_url: "file:///fixture".into(),
         source_ref: None,
         resolved_commit: None,
         content_hash: ContentHash::parse("sha256:aa").unwrap(),
+        embedded_sources: Vec::new(),
         boot_snippet: None,
         files_written: Vec::new(),
         dependencies: edges
@@ -103,6 +105,7 @@ pub(super) fn resolved(
         version,
         content_dir: slot.clone(),
         source_hash: Some(ContentHash::parse("sha256:aa").unwrap()),
+        embedded_sources: Vec::new(),
         manifest: Manifest::read(slot.join(Manifest::FILENAME)).unwrap(),
         requires: edges
             .iter()

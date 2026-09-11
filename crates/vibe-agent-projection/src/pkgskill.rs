@@ -15,7 +15,8 @@ use std::collections::BTreeMap;
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
+use sha2::{Digest, Sha256};
 use specmark::spec;
 use thiserror::Error;
 use vibe_core::machine_json_path;
@@ -102,6 +103,31 @@ pub enum PackageSkillError {
           fix: rename the entry to an exact-UTF-8 portable name and rerun)"
     )]
     UnportablePath { path: EscapedOsPath, reason: String },
+
+    #[error(
+        "invalid projected skill metadata at `{path}`: {reason} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill; \
+          fix: make the SKILL.md frontmatter name match the manifest-declared skill name)"
+    )]
+    InvalidMetadata { path: PathBuf, reason: String },
+}
+
+const STANDALONE_RECEIPT_SCHEMA: u32 = 1;
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct StandaloneSkillReceipt {
+    schema: u32,
+    skill: String,
+    #[serde(default)]
+    file: Vec<StandaloneOwnedFile>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct StandaloneOwnedFile {
+    path: String,
+    sha256: String,
 }
 
 /// Per-(skill, agent, scope) outcome of projecting a package skill — the
@@ -137,10 +163,11 @@ pub struct PackageSkillReport {
 /// `source` is the package's declared `[[skill]].path` resolved to an
 /// absolute file or directory; its contents are copied into
 /// `<agent skills root>/<skill_name>/`. Idempotent: an identical
-/// projection is left `unchanged`; a divergent one is replaced wholesale
-/// and reported `updated`, so a file the source dropped leaves no stale
-/// copy. Agents with no filesystem skill loader (Cursor, Claude Desktop)
-/// or no surface for this scope report `skipped`.
+/// projection is left `unchanged`; a divergent owned projection is reconciled
+/// and reported `updated`, so a file the source dropped leaves no stale owned
+/// copy while unrelated neighbor files survive. Agents with no filesystem
+/// skill loader (Cursor, Claude Desktop) or no surface for this scope report
+/// `skipped`.
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill")]
 pub fn install_package_skill(
     agent: Agent,
@@ -220,10 +247,26 @@ pub fn install_package_skill_selecting(
     }
 
     let desired = snapshot_source(source, include)?;
+    validate_skill_frontmatter(skill_name, source, &desired)?;
     let current = snapshot_dir(&target)?;
-    let action = if current.is_none() {
+    let receipt_path = standalone_receipt_path(&root, skill_name);
+    let prior = read_standalone_receipt(&receipt_path, skill_name)?;
+    validate_standalone_ownership(&target, current.as_ref(), prior.as_ref(), &desired)?;
+    let desired_receipt = standalone_receipt(skill_name, &desired);
+    let action = if current.is_none() && prior.is_none() {
         "created"
-    } else if current.as_ref() == Some(&desired) {
+    } else if owned_projection_matches(current.as_ref(), prior.as_ref(), &desired)
+        && prior.as_ref().is_some_and(|receipt| {
+            receipt
+                .file
+                .iter()
+                .map(|file| (&file.path, &file.sha256))
+                .eq(desired_receipt
+                    .file
+                    .iter()
+                    .map(|file| (&file.path, &file.sha256)))
+        })
+    {
         "unchanged"
     } else {
         "updated"
@@ -232,28 +275,14 @@ pub fn install_package_skill_selecting(
     let status = crate::preview_status(action, dry_run);
 
     if !dry_run && status != "unchanged" {
-        // Replace the projection wholesale so the agent dir mirrors the
-        // package's skill body exactly. Only the skill's own dir is
-        // touched — foreign skill dirs are never read or removed.
-        if target
-            .try_exists()
-            .map_err(|source| PackageSkillError::Write {
+        receipt::ensure_no_follow_walk(containment_root, &target, true).map_err(|error| {
+            PackageSkillError::UnsafePath {
                 path: target.clone(),
-                source,
-            })?
-        {
-            receipt::ensure_no_follow_walk(containment_root, &target, false).map_err(|error| {
-                PackageSkillError::UnsafePath {
-                    path: target.clone(),
-                    reason: error.to_string(),
-                }
-            })?;
-            fs::remove_dir_all(&target).map_err(|source| PackageSkillError::Write {
-                path: target.clone(),
-                source,
-            })?;
-        }
-        write_snapshot(&target, &desired)?;
+                reason: error.to_string(),
+            }
+        })?;
+        reconcile_standalone_files(&target, prior.as_ref(), &desired)?;
+        write_standalone_receipt(&receipt_path, &desired_receipt)?;
     }
 
     Ok(PackageSkillReport {
@@ -312,22 +341,25 @@ pub fn uninstall_package_skill(
             path: target.clone(),
             source,
         })?;
-    let status: &'static str = match (exists, dry_run) {
+    let receipt_path = standalone_receipt_path(&root, skill_name);
+    let prior = read_standalone_receipt(&receipt_path, skill_name)?;
+    let current = snapshot_dir(&target)?;
+    validate_standalone_uninstall(&target, current.as_ref(), prior.as_ref())?;
+    let installed = exists || prior.is_some();
+    let status: &'static str = match (installed, dry_run) {
         (false, _) => "absent",
         (true, true) => "would-remove",
         (true, false) => "removed",
     };
-    if exists && !dry_run {
-        receipt::ensure_no_follow_walk(containment_root, &target, false).map_err(|error| {
+    if installed && !dry_run {
+        receipt::ensure_no_follow_walk(containment_root, &target, true).map_err(|error| {
             PackageSkillError::UnsafePath {
                 path: target.clone(),
                 reason: error.to_string(),
             }
         })?;
-        fs::remove_dir_all(&target).map_err(|source| PackageSkillError::Write {
-            path: target.clone(),
-            source,
-        })?;
+        remove_owned_standalone_files(&target, prior.as_ref())?;
+        remove_file_if_present(&receipt_path)?;
     }
     Ok(PackageSkillReport {
         skill: skill_name.to_string(),
@@ -337,6 +369,355 @@ pub fn uninstall_package_skill(
         status,
         note: None,
     })
+}
+
+fn standalone_receipt_path(skills_root: &Path, skill_name: &str) -> PathBuf {
+    skills_root.join(format!(".{skill_name}.vibe-skill-receipt.toml"))
+}
+
+fn digest_bytes(bytes: &[u8]) -> String {
+    format!("{:x}", Sha256::digest(bytes))
+}
+
+fn standalone_receipt(
+    skill_name: &str,
+    desired: &BTreeMap<String, Vec<u8>>,
+) -> StandaloneSkillReceipt {
+    StandaloneSkillReceipt {
+        schema: STANDALONE_RECEIPT_SCHEMA,
+        skill: skill_name.to_string(),
+        file: desired
+            .iter()
+            .map(|(path, bytes)| StandaloneOwnedFile {
+                path: path.clone(),
+                sha256: digest_bytes(bytes),
+            })
+            .collect(),
+    }
+}
+
+fn read_standalone_receipt(
+    path: &Path,
+    skill_name: &str,
+) -> Result<Option<StandaloneSkillReceipt>, PackageSkillError> {
+    let metadata = match fs::symlink_metadata(path) {
+        Ok(metadata) => metadata,
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => return Ok(None),
+        Err(source) => {
+            return Err(PackageSkillError::Read {
+                path: path.to_path_buf(),
+                source,
+            });
+        }
+    };
+    if metadata.file_type().is_symlink() || metadata_is_reparse(&metadata) || !metadata.is_file() {
+        return Err(PackageSkillError::UnsafePath {
+            path: path.to_path_buf(),
+            reason: "standalone ownership receipt is not a no-follow regular file".into(),
+        });
+    }
+    let text = fs::read_to_string(path).map_err(|source| PackageSkillError::Read {
+        path: path.to_path_buf(),
+        source,
+    })?;
+    let parsed: StandaloneSkillReceipt =
+        toml::from_str(&text).map_err(|error| PackageSkillError::UnsafePath {
+            path: path.to_path_buf(),
+            reason: format!("standalone ownership receipt is malformed: {error}"),
+        })?;
+    if parsed.schema != STANDALONE_RECEIPT_SCHEMA || parsed.skill != skill_name {
+        return Err(PackageSkillError::UnsafePath {
+            path: path.to_path_buf(),
+            reason: format!(
+                "standalone ownership receipt does not identify schema {STANDALONE_RECEIPT_SCHEMA} skill `{skill_name}`"
+            ),
+        });
+    }
+    receipt::judge_selection(parsed.file.iter().map(|file| file.path.as_str())).map_err(
+        |fault| PackageSkillError::UnsafePath {
+            path: path.to_path_buf(),
+            reason: format!("standalone ownership receipt has an unsafe file set: {fault}"),
+        },
+    )?;
+    if parsed.file.iter().any(|file| {
+        file.sha256.len() != 64
+            || !file
+                .sha256
+                .bytes()
+                .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte))
+    }) {
+        return Err(PackageSkillError::UnsafePath {
+            path: path.to_path_buf(),
+            reason: "standalone ownership receipt contains an invalid sha256".into(),
+        });
+    }
+    Ok(Some(parsed))
+}
+
+fn write_standalone_receipt(
+    path: &Path,
+    receipt: &StandaloneSkillReceipt,
+) -> Result<(), PackageSkillError> {
+    let encoded = toml::to_string(receipt).map_err(|error| PackageSkillError::UnsafePath {
+        path: path.to_path_buf(),
+        reason: format!("cannot encode standalone ownership receipt: {error}"),
+    })?;
+    fs::write(path, encoded).map_err(|source| PackageSkillError::Write {
+        path: path.to_path_buf(),
+        source,
+    })
+}
+
+fn owned_map(receipt: &StandaloneSkillReceipt) -> BTreeMap<&str, &str> {
+    receipt
+        .file
+        .iter()
+        .map(|file| (file.path.as_str(), file.sha256.as_str()))
+        .collect()
+}
+
+fn validate_standalone_ownership(
+    target: &Path,
+    current: Option<&BTreeMap<String, Vec<u8>>>,
+    prior: Option<&StandaloneSkillReceipt>,
+    desired: &BTreeMap<String, Vec<u8>>,
+) -> Result<(), PackageSkillError> {
+    if current.is_some() && prior.is_none() {
+        return Err(PackageSkillError::UnsafePath {
+            path: target.to_path_buf(),
+            reason: "refusing foreign pre-existing skill target without a Vibe ownership receipt"
+                .into(),
+        });
+    }
+    let (Some(current), Some(prior)) = (current, prior) else {
+        return Ok(());
+    };
+    let owned = owned_map(prior);
+    for (path, expected) in &owned {
+        if let Some(bytes) = current.get(*path)
+            && digest_bytes(bytes) != *expected
+        {
+            return Err(PackageSkillError::UnsafePath {
+                path: target.join(path),
+                reason: "refusing to overwrite or remove a tampered Vibe-owned skill file".into(),
+            });
+        }
+    }
+    for path in desired.keys() {
+        if current.contains_key(path) && !owned.contains_key(path.as_str()) {
+            return Err(PackageSkillError::UnsafePath {
+                path: target.join(path),
+                reason: "refusing to overwrite an unowned file inside a Vibe-owned skill target"
+                    .into(),
+            });
+        }
+    }
+    Ok(())
+}
+
+fn validate_standalone_uninstall(
+    target: &Path,
+    current: Option<&BTreeMap<String, Vec<u8>>>,
+    prior: Option<&StandaloneSkillReceipt>,
+) -> Result<(), PackageSkillError> {
+    if current.is_some() && prior.is_none() {
+        return Err(PackageSkillError::UnsafePath {
+            path: target.to_path_buf(),
+            reason: "refusing to uninstall foreign pre-existing skill target without a Vibe ownership receipt"
+                .into(),
+        });
+    }
+    let (Some(current), Some(prior)) = (current, prior) else {
+        return Ok(());
+    };
+    for file in &prior.file {
+        if let Some(bytes) = current.get(&file.path)
+            && digest_bytes(bytes) != file.sha256
+        {
+            return Err(PackageSkillError::UnsafePath {
+                path: target.join(&file.path),
+                reason: "refusing to remove a tampered Vibe-owned skill file".into(),
+            });
+        }
+    }
+    Ok(())
+}
+
+fn owned_projection_matches(
+    current: Option<&BTreeMap<String, Vec<u8>>>,
+    prior: Option<&StandaloneSkillReceipt>,
+    desired: &BTreeMap<String, Vec<u8>>,
+) -> bool {
+    let (Some(current), Some(prior)) = (current, prior) else {
+        return false;
+    };
+    let owned = owned_map(prior);
+    desired
+        .iter()
+        .all(|(path, bytes)| current.get(path) == Some(bytes))
+        && owned
+            .keys()
+            .all(|path| desired.contains_key(*path) || !current.contains_key(*path))
+}
+
+fn reconcile_standalone_files(
+    target: &Path,
+    prior: Option<&StandaloneSkillReceipt>,
+    desired: &BTreeMap<String, Vec<u8>>,
+) -> Result<(), PackageSkillError> {
+    if let Some(prior) = prior {
+        for file in &prior.file {
+            if !desired.contains_key(&file.path) {
+                remove_file_if_present(&target.join(&file.path))?;
+            }
+        }
+    }
+    write_snapshot(target, desired)
+}
+
+fn remove_owned_standalone_files(
+    target: &Path,
+    prior: Option<&StandaloneSkillReceipt>,
+) -> Result<(), PackageSkillError> {
+    let Some(prior) = prior else {
+        return Ok(());
+    };
+    for file in &prior.file {
+        remove_file_if_present(&target.join(&file.path))?;
+    }
+    remove_empty_dirs(target, target)?;
+    Ok(())
+}
+
+fn remove_file_if_present(path: &Path) -> Result<(), PackageSkillError> {
+    match fs::remove_file(path) {
+        Ok(()) => Ok(()),
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => Ok(()),
+        Err(source) => Err(PackageSkillError::Write {
+            path: path.to_path_buf(),
+            source,
+        }),
+    }
+}
+
+fn remove_empty_dirs(root: &Path, dir: &Path) -> Result<bool, PackageSkillError> {
+    if !dir.exists() {
+        return Ok(true);
+    }
+    for entry in fs::read_dir(dir).map_err(|source| PackageSkillError::Read {
+        path: dir.to_path_buf(),
+        source,
+    })? {
+        let entry = entry.map_err(|source| PackageSkillError::Read {
+            path: dir.to_path_buf(),
+            source,
+        })?;
+        let path = entry.path();
+        let metadata = fs::symlink_metadata(&path).map_err(|source| PackageSkillError::Read {
+            path: path.clone(),
+            source,
+        })?;
+        if metadata.is_dir()
+            && !metadata.file_type().is_symlink()
+            && !metadata_is_reparse(&metadata)
+        {
+            remove_empty_dirs(root, &path)?;
+        }
+    }
+    let empty = fs::read_dir(dir)
+        .map_err(|source| PackageSkillError::Read {
+            path: dir.to_path_buf(),
+            source,
+        })?
+        .next()
+        .is_none();
+    if empty {
+        fs::remove_dir(dir).map_err(|source| PackageSkillError::Write {
+            path: dir.to_path_buf(),
+            source,
+        })?;
+    }
+    Ok(dir == root && empty)
+}
+
+pub(crate) fn validate_skill_frontmatter(
+    skill_name: &str,
+    source: &Path,
+    selected: &BTreeMap<String, Vec<u8>>,
+) -> Result<(), PackageSkillError> {
+    let Some(bytes) = selected.get("SKILL.md") else {
+        return Ok(());
+    };
+    let skill_path = if source.is_file() {
+        source.to_path_buf()
+    } else {
+        source.join("SKILL.md")
+    };
+    let Ok(text) = std::str::from_utf8(bytes) else {
+        return Ok(());
+    };
+    let mut lines = text.lines();
+    if lines.next().map(str::trim_end) != Some("---") {
+        return Ok(());
+    }
+    let mut declared_name: Option<String> = None;
+    let mut closed = false;
+    for line in lines {
+        if line.trim_end() == "---" {
+            closed = true;
+            break;
+        }
+        if line.starts_with(char::is_whitespace) || line.trim_start().starts_with('#') {
+            continue;
+        }
+        let Some((key, value)) = line.split_once(':') else {
+            continue;
+        };
+        if key.trim() != "name" {
+            continue;
+        }
+        let value = value.trim();
+        let value = value
+            .strip_prefix('"')
+            .and_then(|value| value.strip_suffix('"'))
+            .or_else(|| {
+                value
+                    .strip_prefix('\'')
+                    .and_then(|value| value.strip_suffix('\''))
+            })
+            .unwrap_or_else(|| {
+                value
+                    .split_once(" #")
+                    .map_or(value, |(name, _)| name.trim())
+            });
+        if declared_name.replace(value.to_string()).is_some() {
+            return Err(PackageSkillError::InvalidMetadata {
+                path: skill_path,
+                reason: "frontmatter contains more than one top-level `name`".into(),
+            });
+        }
+    }
+    if !closed {
+        return if declared_name.is_some() {
+            Err(PackageSkillError::InvalidMetadata {
+                path: skill_path,
+                reason: "frontmatter opening delimiter has no closing `---`".into(),
+            })
+        } else {
+            Ok(())
+        };
+    }
+    if let Some(declared_name) = declared_name
+        && declared_name != skill_name
+    {
+        return Err(PackageSkillError::InvalidMetadata {
+            path: skill_path,
+            reason: format!(
+                "frontmatter name `{declared_name}` does not match manifest-declared skill name `{skill_name}`"
+            ),
+        });
+    }
+    Ok(())
 }
 
 fn skipped(skill_name: &str, agent: Agent, scope_str: &'static str) -> PackageSkillReport {

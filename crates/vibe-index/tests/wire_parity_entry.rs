@@ -85,6 +85,8 @@ fn fully_populated_entry() -> VersionEntry {
         homepage: Some("https://gitverse.ru/vibevm/vibevm".to_string()),
         keywords: vec!["wal".to_string(), "checkpoint".to_string()],
         describes: Some("pkg:generic/wal@1.2.3".to_string()),
+        bridge: false,
+        embedded_sources: vec![],
         compatibility: Some(CompatibilityEntry {
             min_vibe_version: Some("0.1.0".to_string()),
             requires_kinds: vec![PackageKind::Stack],

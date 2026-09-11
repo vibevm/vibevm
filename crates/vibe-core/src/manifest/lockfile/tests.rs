@@ -19,7 +19,7 @@ const FIXTURE: &str = r#"
 [meta]
 generated_by = "vibe 0.1.0-dev"
 generated_at = "2026-05-21T12:00:00Z"
-schema_version = 6
+schema_version = 7
 solver = "resolvo-0.x"
 root_dependencies = ["org.vibevm/wal", "org.vibevm/rust-cli"]
 
@@ -67,7 +67,7 @@ source_kind = "registry"
 )]
 fn parses_fully() {
     let lf: Lockfile = toml::from_str(FIXTURE).unwrap();
-    assert_eq!(lf.meta.schema_version, 6);
+    assert_eq!(lf.meta.schema_version, 7);
     assert_eq!(lf.meta.solver.as_deref(), Some("resolvo-0.x"));
     assert_eq!(lf.meta.root_dependencies.len(), 2);
     assert_eq!(lf.packages.len(), 2);
@@ -98,12 +98,92 @@ fn roundtrip() {
 }
 
 #[test]
+fn embedded_source_provenance_round_trips_without_machine_state() {
+    let raw = r#"
+[meta]
+generated_by = "vibe"
+generated_at = "2026-09-11T00:00:00Z"
+schema_version = 7
+
+[[package]]
+kind = "tool"
+name = "adapter"
+group = "org.vibevm.bridges"
+version = "1.0.0"
+source_url = "https://github.com/vibespecs/adapter.git"
+content_hash = "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+
+[[package.embedded_source]]
+name = "upstream"
+source_url = "https://github.com/example/upstream.git"
+source_ref = "refs/tags/v1.2.3"
+resolved_commit = "0123456789abcdef0123456789abcdef01234567"
+tree_oid = "89abcdef0123456789abcdef0123456789abcdef"
+content_hash = "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+upstream_license = "MIT"
+license_path = "LICENSE"
+license_url = "https://github.com/example/upstream/blob/0123456789abcdef0123456789abcdef01234567/LICENSE"
+license_file_sha256 = "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+"#;
+    let lock: Lockfile = toml::from_str(raw).unwrap();
+    let source = &lock.packages[0].embedded_sources[0];
+    assert_eq!(source.name, "upstream");
+    assert_eq!(
+        source.resolved_commit,
+        "0123456789abcdef0123456789abcdef01234567"
+    );
+    assert_eq!(source.license_path, std::path::PathBuf::from("LICENSE"));
+
+    let rendered = toml::to_string_pretty(&lock).unwrap();
+    assert!(
+        rendered.contains("[[package.embedded_source]]"),
+        "{rendered}"
+    );
+    assert!(!rendered.contains("cache_path"), "{rendered}");
+    assert!(!rendered.contains("auth"), "{rendered}");
+    let back: Lockfile = toml::from_str(&rendered).unwrap();
+    assert_eq!(lock, back);
+}
+
+#[test]
+fn embedded_source_lock_rejects_cache_paths_and_credentials() {
+    let raw = r#"
+[meta]
+generated_by = "vibe"
+generated_at = "2026-09-11T00:00:00Z"
+schema_version = 7
+
+[[package]]
+kind = "tool"
+name = "adapter"
+group = "org.vibevm.bridges"
+version = "1.0.0"
+source_url = "https://github.com/vibespecs/adapter.git"
+content_hash = "sha256:aaaa"
+
+[[package.embedded_source]]
+name = "upstream"
+source_url = "https://github.com/example/upstream.git"
+resolved_commit = "0123456789abcdef0123456789abcdef01234567"
+tree_oid = "89abcdef0123456789abcdef0123456789abcdef"
+content_hash = "sha256:bbbb"
+upstream_license = "MIT"
+license_path = "LICENSE"
+license_url = "https://github.com/example/upstream/blob/0123456789abcdef0123456789abcdef01234567/LICENSE"
+license_file_sha256 = "sha256:cccc"
+cache_path = "C:/secret/cache"
+"#;
+    assert!(toml::from_str::<Lockfile>(raw).is_err());
+    assert!(toml::from_str::<Lockfile>(&raw.replace("cache_path", "auth")).is_err());
+}
+
+#[test]
 fn absent_visibility_provenance_is_not_serialized() {
     let raw = r#"
 [meta]
 generated_by = "vibe"
 generated_at = "2026-08-23T00:00:00Z"
-schema_version = 6
+schema_version = 7
 
 [[package]]
 kind = "flow"
@@ -122,10 +202,10 @@ content_hash = "sha256:abc"
 }
 
 #[test]
-fn empty_lockfile_has_v6_defaults() {
+fn empty_lockfile_has_v7_defaults() {
     let lf = Lockfile::empty("vibe 0.1.0-dev", "2026-05-21T00:00:00Z");
     assert_eq!(lf.meta.schema_version, CURRENT_SCHEMA_VERSION);
-    assert_eq!(CURRENT_SCHEMA_VERSION, 6);
+    assert_eq!(CURRENT_SCHEMA_VERSION, 7);
     assert!(lf.meta.solver.is_none());
     assert!(lf.packages.is_empty());
 
@@ -142,7 +222,7 @@ fn read_accepts_current_version() {
         .write(&path)
         .unwrap();
     let lf = Lockfile::read(&path).unwrap();
-    assert_eq!(lf.meta.schema_version, 6);
+    assert_eq!(lf.meta.schema_version, 7);
 }
 
 #[test]
@@ -151,13 +231,13 @@ fn read_accepts_current_version() {
     r = 1
 )]
 fn read_rejects_non_current_version() {
-    // A pre-v6 lockfile is rejected outright — no legacy reader, no
+    // A pre-v7 lockfile is rejected outright — no legacy reader, no
     // migration. The fix is to regenerate with `vibe install`.
     let dir = tempfile::tempdir().unwrap();
     let path = dir.path().join("vibe.lock");
     std::fs::write(
         &path,
-        "[meta]\ngenerated_by = \"old\"\ngenerated_at = \"x\"\nschema_version = 5\n",
+        "[meta]\ngenerated_by = \"old\"\ngenerated_at = \"x\"\nschema_version = 6\n",
     )
     .unwrap();
     let err = Lockfile::read(&path).unwrap_err();
@@ -165,8 +245,8 @@ fn read_rejects_non_current_version() {
         matches!(
             err,
             crate::error::Error::UnsupportedLockfile {
-                found: 5,
-                expected: 6
+                found: 6,
+                expected: 7
             }
         ),
         "{err}"
@@ -185,7 +265,7 @@ fn path_source_kind_round_trips() {
 [meta]
 generated_by = "vibe"
 generated_at = "2026-05-21T00:00:00Z"
-schema_version = 6
+schema_version = 7
 
 [[package]]
 kind = "flow"
@@ -229,7 +309,7 @@ fn override_flag_round_trips() {
 [meta]
 generated_by = "vibe 0.1.0-dev"
 generated_at = "2026-05-21T00:00:00Z"
-schema_version = 6
+schema_version = 7
 
 [[package]]
 kind = "flow"
@@ -266,7 +346,7 @@ fn materialization_round_trips() {
 [meta]
 generated_by = "vibe"
 generated_at = "2026-05-21T00:00:00Z"
-schema_version = 6
+schema_version = 7
 
 [[package]]
 kind = "feat"
@@ -302,7 +382,7 @@ fn rejects_unknown_package_field() {
 [meta]
 generated_by = "vibe"
 generated_at = "2026-05-21T00:00:00Z"
-schema_version = 6
+schema_version = 7
 
 [[package]]
 kind = "flow"

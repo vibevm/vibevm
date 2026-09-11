@@ -50,6 +50,8 @@ fn entry(
         homepage: None,
         keywords: vec![name.into()],
         describes: describes.map(|s| s.to_string()),
+        bridge: false,
+        embedded_sources: vec![],
         compatibility: Default::default(),
         provides: (!capabilities.is_empty()).then_some(ProvidesEntry {
             capabilities: capabilities.iter().map(|s| s.to_string()).collect(),

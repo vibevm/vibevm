@@ -294,10 +294,12 @@ fn only_artifact_inputs_are_glob_capable() {
 
     let skill = SkillDecl {
         name: "s".into(),
+        source: None,
         path: "skills/*".into(),
         description: None,
         agents: Vec::new(),
         include: Vec::new(),
+        resources: Vec::new(),
     };
     assert!(skill.validate().is_err(), "a skill path is never a glob");
 

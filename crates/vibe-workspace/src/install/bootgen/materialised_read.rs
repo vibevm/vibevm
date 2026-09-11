@@ -101,6 +101,53 @@ fn durable_row(
         ));
     }
 
+    let declared_source_names = manifest
+        .embedded_sources
+        .iter()
+        .map(|source| source.name.as_str())
+        .collect::<std::collections::BTreeSet<_>>();
+    let locked_source_names = package
+        .embedded_sources
+        .iter()
+        .map(|source| source.name.as_str())
+        .collect::<std::collections::BTreeSet<_>>();
+    if manifest.embedded_sources.len() != package.embedded_sources.len()
+        || declared_source_names != locked_source_names
+    {
+        return Err(WorkspaceError::SlotLifecycle {
+            phase: "durable-world",
+            package: locked,
+            reason: "materialised [[embedded_source]] names/cardinality disagree with vibe.lock; rerun `vibe install`"
+                .to_string(),
+        });
+    }
+    for declaration in &manifest.embedded_sources {
+        let Some(locked_source) = package
+            .embedded_sources
+            .iter()
+            .find(|source| source.name == declaration.name)
+        else {
+            return Err(WorkspaceError::SlotLifecycle {
+                phase: "durable-world",
+                package: locked,
+                reason: format!(
+                    "materialised [[embedded_source]] `{}` has no authenticated vibe.lock row; rerun `vibe install`",
+                    declaration.name
+                ),
+            });
+        };
+        if !locked_source.matches_declaration(declaration) {
+            return Err(WorkspaceError::SlotLifecycle {
+                phase: "durable-world",
+                package: locked,
+                reason: format!(
+                    "materialised [[embedded_source]] `{}` disagrees with its authenticated vibe.lock row; rerun `vibe install`",
+                    declaration.name
+                ),
+            });
+        }
+    }
+
     let requires = package
         .dependencies
         .iter()
@@ -124,6 +171,7 @@ fn durable_row(
         version: package.version.clone(),
         content_dir: slot,
         source_hash: Some(package.content_hash.clone()),
+        embedded_sources: package.embedded_sources.clone(),
         manifest,
         requires,
         admitted_by: package.admitted_by.clone(),

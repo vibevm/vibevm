@@ -64,6 +64,9 @@ impl Manifest {
             if !self.suggests.is_empty() {
                 offenders.push("[suggests]");
             }
+            if !self.embedded_sources.is_empty() {
+                offenders.push("[[embedded_source]]");
+            }
             if !self.skills.is_empty() {
                 offenders.push("[[skill]]");
             }
@@ -95,10 +98,56 @@ impl Manifest {
             }
         }
 
+        let mut embedded_source_names = std::collections::BTreeSet::new();
+        for source in &self.embedded_sources {
+            source
+                .validate()
+                .map_err(|reason| Error::InvalidManifest { reason })?;
+            if !embedded_source_names.insert(source.name.as_str()) {
+                return Err(Error::InvalidManifest {
+                    reason: format!(
+                        "duplicate [[embedded_source]] name `{}` — source names are manifest-local identities",
+                        source.name
+                    ),
+                });
+            }
+        }
+        if !self.embedded_sources.is_empty()
+            && self
+                .package
+                .as_ref()
+                .is_some_and(|package| package.materialization.is_in_place())
+        {
+            return Err(Error::InvalidManifest {
+                reason: "[[embedded_source]] requires snapshot/copy materialization in v1; the bridge package slot and external immutable cache have separate ownership"
+                    .into(),
+            });
+        }
+
         for skill in &self.skills {
             skill
                 .validate()
                 .map_err(|reason| Error::InvalidManifest { reason })?;
+            if let Some(source) = &skill.source
+                && !embedded_source_names.contains(source.as_str())
+            {
+                return Err(Error::InvalidManifest {
+                    reason: format!(
+                        "[[skill]] `{}` references undeclared [[embedded_source]] `{source}`",
+                        skill.name
+                    ),
+                });
+            }
+            for resource in &skill.resources {
+                if !embedded_source_names.contains(resource.embedded_source.as_str()) {
+                    return Err(Error::InvalidManifest {
+                        reason: format!(
+                            "[[skill.resource]] in `{}` references undeclared [[embedded_source]] `{}`",
+                            skill.name, resource.embedded_source
+                        ),
+                    });
+                }
+            }
         }
 
         // Preserve the established diagnostic order: the legacy role,

@@ -10,6 +10,7 @@ use specmark::spec;
 use vibe_core::manifest::SkillDecl;
 use vibe_wire::generated::lifecycle_state::StateArtifact;
 
+use super::hydrate_declared_skill;
 use super::{DeclaredSkill, DeclaredSkillProvider, collect_declared_skills, skill_agents};
 use crate::agents::{Agent, Scope};
 use crate::pkgskill::{PackageSkillReport, receipt, snapshot_source};
@@ -85,6 +86,7 @@ pub fn lower_project_skill_bindings(
         for decl in input.declarations {
             skills.push(DeclaredSkill {
                 source: base.join(&decl.path),
+                source_root: base.clone(),
                 decl,
                 origin: origin.clone(),
                 provider: input.provider.clone(),
@@ -101,7 +103,8 @@ fn lower_skills(
     let mut bindings = Vec::with_capacity(skills.len());
     let mut identities = BTreeSet::new();
     let mut physical_targets: BTreeMap<receipt::FoldKey, String> = BTreeMap::new();
-    for skill in skills {
+    for mut skill in skills {
+        hydrate_declared_skill(&mut skill, false)?;
         let binding = lower_one_binding(project_root, skill)?;
         let identity = binding.identity();
         if !identities.insert(identity.clone()) {
@@ -122,8 +125,7 @@ fn lower_skills(
 }
 
 fn lower_one_binding(project_root: &Path, skill: DeclaredSkill) -> Result<ProjectSkillBinding> {
-    let provider_root = skill.provider.root();
-    receipt::ensure_no_follow_walk(provider_root, &skill.source, true).with_context(|| {
+    receipt::ensure_no_follow_walk(&skill.source_root, &skill.source, true).with_context(|| {
         format!(
             "unsafe source for package skill `{}` from `{}`",
             skill.decl.name,
@@ -133,6 +135,7 @@ fn lower_one_binding(project_root: &Path, skill: DeclaredSkill) -> Result<Projec
     let selected_files = match fs::symlink_metadata(&skill.source) {
         Ok(_) => {
             let files = snapshot_source(&skill.source, &skill.decl.include)?;
+            super::super::validate_skill_frontmatter(&skill.decl.name, &skill.source, &files)?;
             // Planning judges the **complete** selected set through the
             // shared portability law before anything is staged or written:
             // an unsafe spelling, or two spellings that are one file on a

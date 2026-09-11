@@ -6,5 +6,6 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#entry");
 
 pub use vibe_wire::generated::shared::{
-    BootSnippetEntry, DeliveryMode, FeaturesEntry, I18nEntry, SubskillEntry, WorkspaceOriginEntry,
+    BootSnippetEntry, DeliveryMode, EmbeddedSourceEntry, FeaturesEntry, I18nEntry, SubskillEntry,
+    WorkspaceOriginEntry,
 };

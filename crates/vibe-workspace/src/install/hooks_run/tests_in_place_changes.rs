@@ -87,6 +87,7 @@ fn already_placed(changed: bool) -> (TempDir, ResolvedDep) {
         version: ver("1.0.0"),
         content_dir: slot,
         source_hash: Some(hash()),
+        embedded_sources: Vec::new(),
         manifest,
         requires: Vec::new(),
         admitted_by: None,

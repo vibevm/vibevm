@@ -289,6 +289,34 @@ pub fn build_payload(
         });
     }
 
+    if meta.bridge {
+        payload["bridge"] = serde_json::Value::Bool(true);
+    }
+    if !manifest.embedded_sources.is_empty() {
+        payload["embedded_sources"] = serde_json::Value::Array(
+            manifest
+                .embedded_sources
+                .iter()
+                .map(|source| {
+                    let mut row = serde_json::json!({
+                        "name": source.name,
+                        "kind": source.kind,
+                        "source_url": source.url,
+                        "resolved_commit": source.commit,
+                        "content_hash": source.content_hash,
+                        "upstream_license": source.upstream_license,
+                        "license_path": source.license_path.to_string_lossy().replace('\\', "/"),
+                        "license_url": source.license_url,
+                    });
+                    if let Some(reference) = &source.ref_hint {
+                        row["source_ref"] = serde_json::Value::String(reference.clone());
+                    }
+                    row
+                })
+                .collect(),
+        );
+    }
+
     Ok(payload)
 }
 

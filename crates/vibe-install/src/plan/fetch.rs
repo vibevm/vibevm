@@ -15,6 +15,7 @@ pub(super) fn fetch_node<S: InstallSource + ?Sized>(
     lockfile: &Lockfile,
     store_root: &Path,
     root_features: &FeatureRequest,
+    offline: bool,
 ) -> Result<Fetched> {
     let pkgref = exact_pinned_pkgref(node);
     let expected = lockfile
@@ -27,6 +28,8 @@ pub(super) fn fetch_node<S: InstallSource + ?Sized>(
         FeatureRequest::default()
     };
     let feature_expansion = expand_features(&cached.manifest.features, &req)?;
+    let embedded_sources =
+        vibe_registry::lock_embedded_sources_with(&cached.manifest.embedded_sources, offline)?;
     Ok(Fetched {
         cached,
         feature_expansion,
@@ -34,6 +37,7 @@ pub(super) fn fetch_node<S: InstallSource + ?Sized>(
             dependencies: node.dependencies.clone(),
             is_root: node.is_root,
         },
+        embedded_sources,
         in_place_incremental: false,
     })
 }
@@ -52,10 +56,11 @@ pub(super) fn fetch_or_defer<S: InstallSource + ?Sized>(
     store_root: &Path,
     root_features: &FeatureRequest,
     workspace_root: &Path,
+    offline: bool,
 ) -> Result<Fetched> {
     match try_in_place_incremental(node, lockfile, workspace_root, root_features)? {
         Some(fetched) => Ok(fetched),
-        None => fetch_node(source, node, lockfile, store_root, root_features),
+        None => fetch_node(source, node, lockfile, store_root, root_features, offline),
     }
 }
 
@@ -141,6 +146,7 @@ pub(super) fn try_in_place_incremental(
             dependencies: node.dependencies.clone(),
             is_root: node.is_root,
         },
+        embedded_sources: old.embedded_sources.clone(),
         in_place_incremental: true,
     }))
 }
@@ -180,6 +186,7 @@ pub(super) fn expand_conditional_deps<S: InstallSource + ?Sized>(
     workspace_root: &Path,
     language_chain: &[String],
     root_features: &FeatureRequest,
+    offline: bool,
     root_manifest: &Manifest,
     root_id: &str,
     fetched: &mut Vec<Fetched>,
@@ -270,6 +277,7 @@ pub(super) fn expand_conditional_deps<S: InstallSource + ?Sized>(
             store_root,
             root_features,
             workspace_root,
+            offline,
             fetched,
         )?;
     }
@@ -282,6 +290,7 @@ fn sync_fetched_to_graph<S: InstallSource + ?Sized>(
     store_root: &Path,
     root_features: &FeatureRequest,
     workspace_root: &Path,
+    offline: bool,
     fetched: &mut Vec<Fetched>,
 ) -> Result<()> {
     let mut existing = std::mem::take(fetched);
@@ -301,6 +310,7 @@ fn sync_fetched_to_graph<S: InstallSource + ?Sized>(
                 store_root,
                 root_features,
                 workspace_root,
+                offline,
             )?,
         };
         item.meta.dependencies.clone_from(&node.dependencies);
