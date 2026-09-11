@@ -257,7 +257,7 @@ pub(super) fn installed_bundle_intact(store: &VersionStore, record: &InstallReco
 fn validate_platform_paths(manifest: &BundleDistributionManifest) -> Result<()> {
     let windows = manifest.target == "x86_64-pc-windows-msvc";
     for component in &manifest.components {
-        let expected = match (component.name, windows) {
+        let expected = match (&component.name, windows) {
             (DistributionComponentName::Vibe, true) => "vibe.exe",
             (DistributionComponentName::Vibe, false) => "vibe",
             (DistributionComponentName::VibeIndex, true) => "vibe-index.exe",

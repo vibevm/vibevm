@@ -31,6 +31,7 @@ pub mod native_mechanism;
 pub mod native_package;
 pub mod projections;
 pub mod records;
+pub mod release_manifest;
 pub(crate) mod required_nullable;
 pub mod requirements_report;
 pub(crate) mod scalars;

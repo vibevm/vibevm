@@ -812,6 +812,44 @@ unknown_fields = "deny"
 corpus = "formats/corpora/scrape-verification-health-evidence/e2"
 sunset = "none"
 
+# ── Release distribution manifests (2 records, 1 JTD), PROP-019 §2.12 ───────
+# The two documents the four independent distribution builds publish as
+# release assets. `DISTRIBUTIONS.json` is downloaded and parsed by the two
+# bounded installer scripts — `distribution/install/install.sh` (POSIX shell)
+# and `install.ps1` (PowerShell) — before any vibevm binary exists on the
+# machine, which is the textbook `##RISK-RAW-PARSERS` population.
+# `DISTRIBUTION.json` is the manifest each platform bundle carries; it is
+# read standalone by `vibe self` / `vibe vvm`, and it also travels inside
+# the aggregate as `platforms[].bundle`, so the installers' foreign parsers
+# walk that same shape. Both records therefore state the same honest parser
+# population and share one schema — the family is one document tree, and a
+# second schema would mint a second Rust type for the embedded manifest.
+# Strictness is DECLARED rather than computed: these readers refuse an
+# unknown member today (`deny_unknown_fields` on every hand-written struct
+# the generated types replace), and a release manifest with a member no
+# reader understands is a mismatched producer, not a newer writer to
+# tolerate — the same `unknown_fields = "deny"` beside `many` that the
+# scrape family records. Not recoverable: each document states the exact
+# size and digest of bytes one build produced, and nothing can reproject
+# those from source after the fact (the class `artifact-record` carries).
+[format.distribution-bundle-manifest]
+epoch = 1
+schema = "schemas/distribution/e1/aggregate_distribution_manifest.jtd.json"
+recoverable = false
+foreign_parsers = "many"
+unknown_fields = "deny"
+corpus = "none"
+sunset = "none"
+
+[format.distribution-aggregate-manifest]
+epoch = 1
+schema = "schemas/distribution/e1/aggregate_distribution_manifest.jtd.json"
+recoverable = false
+foreign_parsers = "many"
+unknown_fields = "deny"
+corpus = "none"
+sunset = "none"
+
 # ── Uninventoried surfaces (PROP-044 §6.5) ──────────────────────────────────
 [format.mcp-tools]
 epoch = 1

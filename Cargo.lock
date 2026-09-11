@@ -4776,6 +4776,7 @@ dependencies = [
  "tracing",
  "vibe-core",
  "vibe-registry",
+ "vibe-wire",
  "walkdir",
 ]
 
@@ -4955,10 +4956,12 @@ name = "vibe-wire"
 version = "1.0.0"
 dependencies = [
  "chrono",
+ "core-ai-native-specmark",
  "semver",
  "serde",
  "serde_json",
  "sha2",
+ "thiserror 2.0.18",
  "toml 0.9.12+spec-1.1.0",
  "vibe-core",
 ]
