@@ -12872,10 +12872,10 @@
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/cli/stop.rs",
       "item_kind": "fn",
-      "line": 25,
+      "line": 27,
       "symbol": "vibe_index::cli::stop::run",
-      "end_line": 55,
-      "fingerprint": "tok1:88969fc431f9d0a63a80f0d39c04ad43dddd54a2fb595985f075934199345bfd"
+      "end_line": 57,
+      "fingerprint": "tok1:8acf92fc34cf082f98c55785732952da28314a8b4a5e2690fca8b21bf5c68ff2"
     },
     {
       "crate_name": "vibe-index",
@@ -38327,11 +38327,10 @@
     {
       "file": "crates/vibe-index/src/cli/stop.rs",
       "from_symbol": "vibe_index::cli::stop::run",
-      "line": 25,
+      "line": 27,
       "provenance": "authored",
-      "uri": "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
-      "verb": "deviates",
-      "reason": "unsafe-gate: libc::kill is unsafe by FFI ABI, not by memory — a (pid, SIGTERM) value pair crosses the boundary, no pointers; the pid comes from the server lockfile and a stale one yields ESRCH, which the operator-facing message already covers"
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root",
+      "verb": "implements"
     },
     {
       "file": "crates/vibe-index/src/cli/verify.rs",

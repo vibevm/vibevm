@@ -10,6 +10,8 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root");
 
 use std::path::PathBuf;
+#[cfg(unix)]
+use std::process::Command;
 
 use clap::Parser;
 
@@ -22,13 +24,7 @@ pub struct Args {
     pub data_dir: PathBuf,
 }
 
-#[specmark::spec(
-    deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
-    reason = "unsafe-gate: libc::kill is unsafe by FFI ABI, not by memory — \
-              a (pid, SIGTERM) value pair crosses the boundary, no pointers; \
-              the pid comes from the server lockfile and a stale one yields \
-              ESRCH, which the operator-facing message already covers"
-)]
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root")]
 pub fn run(args: Args) -> Result<()> {
     let Some(pid) = ServerLock::read_pid(&args.data_dir) else {
         return Err(Error::InvalidInput(format!(
@@ -39,9 +35,15 @@ pub fn run(args: Args) -> Result<()> {
     println!("vibe-index server PID is {pid}");
     #[cfg(unix)]
     {
-        match unsafe { libc::kill(pid as i32, libc::SIGTERM) } {
-            0 => println!("sent SIGTERM"),
-            _ => println!("kill(2) returned an error; check the PID is still alive"),
+        match Command::new("kill")
+            .args(["-TERM", &pid.to_string()])
+            .status()
+        {
+            Ok(status) if status.success() => println!("sent SIGTERM"),
+            Ok(status) => println!("kill -TERM exited with {status}; check the PID is still alive"),
+            Err(error) => println!(
+                "could not invoke the POSIX kill utility ({error}); stop PID {pid} manually"
+            ),
         }
     }
     #[cfg(not(unix))]
