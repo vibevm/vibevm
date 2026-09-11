@@ -1,5 +1,7 @@
 //! Gitlink provenance captured before publication flattens working trees.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-023#classes");
+
 use std::path::Path;
 use std::process::{Command, Output};
 

@@ -1,6 +1,8 @@
 //! `[[embedded_source]]` — immutable external source inputs carried by a
 //! package manifest without vendoring those bytes into the package tree.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-021#source-abstraction");
+
 use serde::{Deserialize, Serialize};
 
 use crate::content_hash::ContentHash;
