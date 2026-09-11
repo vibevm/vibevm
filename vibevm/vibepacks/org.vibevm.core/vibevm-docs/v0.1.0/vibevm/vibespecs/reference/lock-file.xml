@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">The lock file: vibe.lock</title>
+  <status stage="doc" state="work" audience="user"/>
+  <p>The lock file is written by vibe and committed by you. This page explains every field so you can read a diff of it in a pull request and know what changed.</p>
+  <where title="Where it lives and who writes it">
+    <p>There is one `vibe.lock` per workspace, at the absolute root, beside the root manifest; members never have their own. `vibe install` and `vibe update` write it; `vibe clean` keeps it; nothing edits it by hand. It is the recorded decision; the dependency tree on disk is only its consequence and can always be rebuilt from it.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#NESTING-PRINCIPLE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#CLEAN-KEEPS-THE-LOCK"/>
+  </where>
+  <meta title="[meta]">
+    <table>
+      <tr><td>Field</td><td>Meaning</td></tr>
+      <tr><td>`generated_by`, `generated_at`</td><td>the vibe version and the time of the last write; informational</td></tr>
+      <tr><td>`schema_version`</td><td>the lock schema; an older vibe refuses a newer schema rather than misreading it</td></tr>
+      <tr><td>`solver`</td><td>the resolver that produced the graph</td></tr>
+      <tr><td>`root_dependencies`</td><td>the coordinates the manifests asked for directly; the baseline of the freshness check</td></tr>
+      <tr><td>`language_chain`</td><td>the resolved language preference and its fallbacks, so a re-install on another machine materialises the same files</td></tr>
+    </table>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#NO-NEW-FIELD"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#LF-META-LANGUAGE"/>
+  </meta>
+  <package-entries title="[[package]]">
+    <table>
+      <tr><td>Field</td><td>Meaning</td></tr>
+      <tr><td>`group`, `name`, `version`</td><td>the coordinate that was resolved</td></tr>
+      <tr><td>`kind`</td><td>the package's kind, for placement and filters</td></tr>
+      <tr><td>`content_hash`</td><td>the fingerprint of the package's shippable tree; the identity; verified on every fetch</td></tr>
+      <tr><td>`registry`</td><td>the name of the registry that answered, from the manifest's list</td></tr>
+      <tr><td>`source_url`, `source_ref`, `resolved_commit`</td><td>where and at what git ref the bytes were fetched this time; informational, always the canonical address even when a mirror served</td></tr>
+      <tr><td>`source_kind`</td><td>`registry`, `git`, `override` or `path`: which resolution path produced the entry; for `path` the URL field holds the member's folder relative to the root</td></tr>
+      <tr><td>`dependencies`</td><td>the resolved dependencies of this package, as exact coordinates</td></tr>
+      <tr><td>`overridden`</td><td>true when an `[[override]]` supplied the package</td></tr>
+      <tr><td>`features`, `subskills`</td><td>the active features and subskills recorded for the package</td></tr>
+    </table>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#IDENTITY-TUPLE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#SOURCE-KIND-VALUES"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#MIR-CANONICAL-IN-LOCKFILE"/>
+  </package-entries>
+  <reading-a-diff title="Reading a diff">
+    <p>A changed `version` with a changed `content_hash` is an update. A changed `content_hash` with the same version is impossible in a healthy world: vibe refuses it at fetch time, so if you see it in a diff someone edited the file. A changed `source_url` alone is a mirror or a host migration and means nothing for the project. A new entry with `source_kind = "override"` is a patch someone applied on purpose and should carry a reason in the commit message.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#EFF-LOCKFILE-STABLE"/>
+  </reading-a-diff>
+  <edge-cases title="Edge cases and rules">
+    <p>An unchanged manifest against an unchanged lock file makes `vibe install` skip the resolver entirely: the lock is the answer.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#LOCKFILE-RESPECTING"/>
+    <p>The lock file records no registry index and no mirror: reproducing it needs only the coordinates, the fingerprints and a source that can serve them.</p>
+    <p>`vibe why &lt;coordinate&gt;` explains from the lock file and the manifests why a package is in the project, or what blocked it.</p>
+  </edge-cases>
+</spec>
