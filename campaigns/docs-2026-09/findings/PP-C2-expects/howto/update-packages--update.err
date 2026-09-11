@@ -1,0 +1,1 @@
+error: no `[[registry]]` configured in `<TMP>/work/hello-vibe/vibe.toml` — `vibe update` re-fetches from the registry.

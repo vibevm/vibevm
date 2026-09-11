@@ -1,0 +1,23 @@
+# PP-C2b fixtures build log
+
+- `none`: base creation (empty home/+work/, config.toml with neutral author, registry.toml with `local` -> `file:///C:/Users/olegc/git/v/vibevm-docs/vibevm/vibepacks`). OK
+- `empty` (from `none`):
+  - no build steps (identical copy of parent)
+- `hello-vibe-empty` (from `empty`):
+  - `vibe init hello-vibe` (cwd=`work`) -> exit 0
+- `hello-vibe` (from `hello-vibe-empty`):
+  - `vibe install org.vibevm.world/wal --path hello-vibe --assume-yes` (cwd=`work`) -> exit 0
+- `hello-vibe-relay` (from `hello-vibe`):
+  - `vibe agentic explain --path hello-vibe` (cwd=`work`) -> exit 0
+- `hello-vibe-removed` (from `hello-vibe`):
+  - `vibe uninstall org.vibevm.world/wal --path hello-vibe --assume-yes` (cwd=`work`) -> exit 0
+- `project` (from `empty`):
+  - `vibe init` (cwd=`work`) -> exit 0
+- `flow-slot` (from `project`):
+  - `vibe init package org.acme/review-notes` (cwd=`work`) -> exit 0
+- `package-spec` (from `flow-slot`): wrote `work/vibevm/vibepacks/org.acme/review-notes/v0.1.0/vibevm/vibespecs/NOTES-FLOW.md` directly (one heading, one fact/status paragraph; no vibe command). OK
+- `workspace-root` (from `project`): appended `[workspace]` / `members = ["packages/*"]` to `work/vibe.toml` directly as raw bytes (LF), preserving whatever line ending `vibe init` itself used for the pre-existing content (native CRLF from `vibe init`: False); no vibe command. OK
+- `workspace` (from `workspace-root`): hand-wrote `work/packages/notes-flow/vibe.toml` and `work/packages/review-notes/vibe.toml`; fields group/version/epoch/license/format per recipe, kind forced to "flow" (recipe overrides real default), authors=['vibevm docs fixtures'] and description='' harvested from `flow-slot`'s real `vibe init package` output (template: `C:\Users\olegc\AppData\Local\Temp\vdocs\fixtures\flow-slot\work\vibevm\vibepacks\org.acme\review-notes\v0.1.0\vibe.toml`). No `[boot_snippet]`. No vibe command; no install run. OK
+- `package-notes` (from `project`):
+  - `vibe init package org.acme/notes` (cwd=`work`) -> exit 0
+  - `vibe registry add local "C:/Users/olegc/AppData/Local/Temp/vdocs/fixtures/package-notes/work/registry" --path . --position primary` (cwd=`work`) -> exit 0

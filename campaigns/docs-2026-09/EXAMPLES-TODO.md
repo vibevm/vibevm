@@ -58,6 +58,7 @@
 | `hello-vibe` | `hello-vibe-empty` | `vibe install org.vibevm.world/wal --path hello-vibe --assume-yes` |
 | `hello-vibe-relay` | `hello-vibe` | `vibe agentic explain --path hello-vibe` — в `hello-vibe/.vibe/agentic/command.md` припаркована инструкция |
 | `hello-vibe-removed` | `hello-vibe` | `vibe uninstall org.vibevm.world/wal --path hello-vibe --assume-yes` |
+| `hello-vibe-registry` | `hello-vibe` | `vibe registry add local C:/Users/olegc/git/v/vibevm-docs/vibevm/vibepacks --path hello-vibe` — реестр объявлен в манифесте проекта (для `outdated`/`update`, которые машинный реестр не читают, B-136) |
 | `hello-vibe-cwd` | `hello-vibe` | то же дерево; **cwd команды — `work/hello-vibe`** (для команд без `--path`: `vibe bin`, `vibe tools`) |
 | `hello-cargo` | `hello-vibe` | в `work/hello-vibe`: `cargo init --name hello --vcs none` (Cargo.toml и `src/main.rs`), затем `cargo generate-lockfile --offline` — проект с настоящим инструментом сборки для health-проверок и артефактов |
 | `hello-deploy` | `hello-cargo` | копия дерева `hello-vibe` под именем `work/hello-deploy`; в её `vibe.toml` дописаны таблицы со страницы `lifecycle/build-package-deploy`, шаг 1 (артефакт `hello`, цель `local` с `deploy:vibe-bin`, профиль `local`) |
@@ -68,6 +69,7 @@
 | `workspace-root` | `project` | в `work/vibe.toml` дописана таблица `[workspace]` с `members = ["packages/*"]` — текст со страницы `howto/set-up-a-workspace`, шаг 1 |
 | `workspace` | `workspace-root` | руками написаны `packages/notes-flow/vibe.toml` и `packages/review-notes/vibe.toml`: таблица `[package]` с теми же полями, что пишет `vibe init package` (`group`, `name`, `kind = "flow"`, `version = "0.1.0"`, `epoch = 1`, `authors`, `license = "UPL-1.0"`, `description`, `format = "normal"`), без `[boot_snippet]`; установка не выполнялась |
 | `package-notes` | `project` | `vibe init package org.acme/notes`; затем `vibe registry add local <абсолютный путь к пустому каталогу work/registry> --path . --position primary` — примеры публикации на ней ждут B-133 |
+| `host` | — | без дерева: **cwd команды — корень хоста** `C:\Users\olegc\git\v\vibevm-docs` (чекаут самого vibe, чьи спеки несут карту трассируемости); только читающие команды (`explain`, `select`); в выводе корень нормализуется в `<REPO>` |
 | `docs-store` | `empty` | store с пакетом `org.vibevm.core/vibevm-docs` — **невозможно до фазы 2** (вид `doc` неизвестен бинарнику) |
 
 Фикстуры фазы 2 (A2.9) наследуют эту таблицу как первый корпус раннера:
@@ -90,63 +92,62 @@
 
 | Страница | id | Команда | Фикстура | Состояние |
 |---|---|---|---|---|
-| `agent/ask-your-agent` | `agentic-explain` | `vibe agentic explain --path hello-vibe` | `hello-vibe` | ждёт |
-| `agent/ask-your-agent` | `command` | `vibe command --path hello-vibe` | `hello-vibe-relay` | ждёт |
-| `agent/give-your-agent-the-skill` | `mcp-status` | `vibe mcp status --path hello-vibe` | `hello-vibe` | ждёт |
-| `agent/give-your-agent-the-skill` | `mcp-install` | `vibe mcp install --auto --yes --dry-run --path hello-vibe` | `hello-vibe` | ждёт |
-| `agent/give-your-agent-the-skill` | `skill-list` | `vibe skill list --path hello-vibe` | `hello-vibe` | ждёт |
-| `architecture/traceability` | `explain` | `vibe explain "spec://org.vibevm.core/vibevm/common/PROP-000#KIND-SET" --path hello-vibe` | `hello-vibe` | ждёт |
-| `architecture/traceability` | `select` | `vibe select --where "uri:spec://org.vibevm.core/vibevm/common/PROP-000#KIND-SET depth:1" --path hello-vibe` | `hello-vibe` | ждёт |
-| `authoring/ship-tools-and-mcp-servers` | `bin-list` | `vibe bin list` | `hello-vibe-cwd` | ждёт |
-| `authoring/specs-agents-can-cite` | `explain` | `vibe explain "spec://org.vibevm.core/vibevm/common/PROP-000#KIND-SET" --path hello-vibe` | `hello-vibe` | ждёт |
-| `authoring/specs-agents-can-cite` | `convert` | `vibe refactor convert-source --from md --to xml --dry-run vibevm/vibespecs` | `package-spec` | ждёт |
-| `authoring/write-a-flow` | `init-package` | `vibe init package org.acme/review-notes` | `project` | ждёт |
-| `authoring/write-a-flow` | `manifest` | `cat vibevm/vibepacks/org.acme/review-notes/v0.1.0/vibe.toml` | `flow-slot` | ждёт |
-| `authoring/write-a-flow` | `check` | `vibe check --path vibevm/vibepacks/org.acme/review-notes/v0.1.0` | `flow-slot` | ждёт |
-| `authoring/write-a-lang-package` | `init-lang` | `vibe init package org.acme/sql-style` | `project` | ждёт |
-| `howto/install-a-package` | `install` | `vibe install org.vibevm.world/wal --path hello-vibe --assume-yes` | `hello-vibe-empty` | ждёт |
-| `howto/install-a-package` | `list` | `vibe list --path hello-vibe` | `hello-vibe` | ждёт |
-| `howto/install-a-package` | `tree` | `vibe tree --plain --path hello-vibe` | `hello-vibe` | ждёт |
+| `agent/ask-your-agent` | `agentic-explain` | `vibe agentic explain --path hello-vibe` | `hello-vibe` | снято 700db4b8 |
+| `agent/ask-your-agent` | `command` | `vibe command --path hello-vibe` | `hello-vibe-relay` | снято 700db4b8 |
+| `agent/give-your-agent-the-skill` | `mcp-status` | `vibe mcp status --path hello-vibe` | `hello-vibe` | снято 700db4b8 |
+| `agent/give-your-agent-the-skill` | `mcp-install` | `vibe mcp install --auto --yes --dry-run --path hello-vibe` | `hello-vibe` | снято 700db4b8 |
+| `agent/give-your-agent-the-skill` | `skill-list` | `vibe skill list --path hello-vibe` | `hello-vibe` | снято 700db4b8 |
+| `architecture/traceability` | `explain` | `vibe explain "spec://org.vibevm.core/vibevm/common/PROP-000#KIND-SET"` | `host` | ждёт раннера A2.9 (снятия минимизированы по слову владельца 2026-09-12) |
+| `architecture/traceability` | `select` | `vibe select --where "uri:spec://org.vibevm.core/vibevm/common/PROP-000#KIND-SET depth:1"` | `host` | ждёт раннера A2.9 (снятия минимизированы по слову владельца 2026-09-12) |
+| `authoring/ship-tools-and-mcp-servers` | `bin-list` | `vibe bin list` | `hello-vibe-cwd` | ждёт раннера A2.9 (снятия минимизированы по слову владельца 2026-09-12) |
+| `authoring/specs-agents-can-cite` | `explain` | `vibe explain "spec://org.vibevm.core/vibevm/common/PROP-000#KIND-SET"` | `host` | ждёт раннера A2.9 (снятия минимизированы по слову владельца 2026-09-12) |
+| `authoring/specs-agents-can-cite` | `convert` | `vibe refactor convert-source --from md --to xml --dry-run vibevm/vibespecs` | `package-spec` | снято 700db4b8 |
+| `authoring/write-a-flow` | `init-package` | `vibe init package org.acme/review-notes` | `project` | снято 700db4b8 |
+| `authoring/write-a-flow` | `manifest` | `cat vibevm/vibepacks/org.acme/review-notes/v0.1.0/vibe.toml` | `flow-slot` | снято 700db4b8 |
+| `authoring/write-a-flow` | `check` | `vibe check --path vibevm/vibepacks/org.acme/review-notes/v0.1.0` | `flow-slot` | снято 700db4b8 |
+| `authoring/write-a-lang-package` | `init-lang` | `vibe init package org.acme/sql-style` | `project` | снято 700db4b8 |
+| `howto/install-a-package` | `install` | `vibe install org.vibevm.world/wal --path hello-vibe --assume-yes` | `hello-vibe-empty` | снято 700db4b8 |
+| `howto/install-a-package` | `list` | `vibe list --path hello-vibe` | `hello-vibe` | снято 700db4b8 |
+| `howto/install-a-package` | `tree` | `vibe tree --plain --path hello-vibe` | `hello-vibe` | снято 700db4b8 |
 | `howto/publish-a-package` | `publish-dry-run` | `vibe registry publish vibevm/vibepacks/org.acme/notes/v0.1.0 --dry-run` | `package-notes` | не сейчас (B-133) |
 | `howto/publish-a-package` | `publish` | `vibe registry publish vibevm/vibepacks/org.acme/notes/v0.1.0 --registry local --dry-run` | `package-notes` | не сейчас (B-133) |
 | `howto/read-documentation-locally` | `cache-add-docs` | `vibe cache add org.vibevm.core/vibevm-docs` | `empty` | не сейчас (A2.1) |
 | `howto/read-documentation-locally` | `doc-serve` | `vibe doc serve --help` | `docs-store` | не сейчас (A2.20) |
-| `howto/remove-a-package` | `uninstall` | `vibe uninstall org.vibevm.world/wal --path hello-vibe --assume-yes` | `hello-vibe` | ждёт |
-| `howto/remove-a-package` | `tree` | `vibe tree --plain --path hello-vibe` | `hello-vibe-removed` | ждёт |
-| `howto/set-up-a-workspace` | `workspace-table` | `cat vibe.toml` | `workspace-root` | ждёт |
-| `howto/set-up-a-workspace` | `member-manifest` | `cat packages/notes-flow/vibe.toml` | `workspace` | ждёт |
-| `howto/set-up-a-workspace` | `install` | `vibe install --assume-yes` | `workspace` | ждёт |
-| `howto/update-packages` | `outdated` | `vibe outdated --path hello-vibe` | `hello-vibe` | ждёт |
-| `howto/update-packages` | `update` | `vibe update org.vibevm.world/wal --path hello-vibe --assume-yes` | `hello-vibe` | ждёт |
-| `howto/use-a-private-registry` | `registry-add` | `vibe registry add acme file:///tmp/acme-specs --path hello-vibe --position primary` | `hello-vibe` | ждёт |
-| `howto/use-a-private-registry` | `registry-test` | `vibe registry test --path hello-vibe` | `hello-vibe` | ждёт |
-| `howto/work-offline` | `cache-add` | `vibe cache add org.vibevm.world/wal` | `empty` | ждёт |
-| `howto/work-offline` | `cache-list` | `vibe cache list` | `hello-vibe` | ждёт |
-| `howto/work-offline` | `cache-check` | `vibe cache check` | `hello-vibe` | ждёт |
-| `howto/work-offline` | `install-offline` | `vibe install org.vibevm.world/wal --path hello-vibe --offline --assume-yes` | `hello-vibe-empty` | ждёт |
-| `lifecycle/build-package-deploy` | `package` | `vibe package --path hello-deploy --assume-yes` | `hello-deploy` | ждёт |
-| `lifecycle/build-package-deploy` | `deploy-plan` | `vibe deploy --plan --profile local --path hello-deploy` | `hello-deploy` | ждёт |
-| `lifecycle/build-package-deploy` | `deployments` | `vibe deployments` | `hello-vibe` | ждёт |
-| `lifecycle/extensions-and-providers` | `extensions` | `vibe extensions --path hello-vibe` | `hello-vibe` | ждёт |
-| `lifecycle/extensions-and-providers` | `tools` | `vibe tools` | `hello-vibe-cwd` | ждёт |
-| `lifecycle/phases` | `deploy-plan` | `vibe deploy --plan --profile local --path hello-deploy` | `hello-deploy` | ждёт |
-| `lifecycle/scrape` | `scrape-contract` | `vibe scrape contract init --path hello-vibe` | `hello-cargo` | ждёт |
-| `lifecycle/scrape` | `scrape-plan` | `vibe scrape --plan --path hello-vibe` | `hello-vibe-scrape` | ждёт |
-| `lifecycle/scrape` | `scrape-output` | `vibe scrape --output hello-clean --path hello-vibe` | `hello-vibe-scrape` | ждёт |
-| `model/boot-lane` | `tree` | `vibe tree --plain --path hello-vibe` | `hello-vibe` | ждёт |
-| `model/lock-and-store` | `cache-path` | `vibe cache path` | `hello-vibe` | ждёт |
-| `model/packages-and-kinds` | `list` | `vibe list --path hello-vibe` | `hello-vibe` | ждёт |
-| `model/registries` | `registry-list` | `vibe registry list --path hello-vibe` | `hello-vibe` | ждёт |
-| `model/two-trees` | `list` | `vibe list --path hello-vibe` | `hello-vibe` | ждёт |
-| `model/versions` | `outdated` | `vibe outdated --path hello-vibe` | `hello-vibe` | ждёт |
-| `reference/machine-formats` | `list-json` | `vibe list --json --path hello-vibe` | `hello-vibe` | ждёт |
-| `reference/settings-and-environment` | `vars` | `vibe vars` | `hello-vibe` | ждёт |
-| `start/first-project` | `init` | `vibe init hello-vibe` | `empty` | ждёт |
-| `start/first-project` | `install` | `vibe install org.vibevm.world/wal --path hello-vibe --assume-yes` | `hello-vibe-empty` | ждёт |
-| `start/first-project` | `list` | `vibe list --path hello-vibe` | `hello-vibe` | ждёт |
-| `start/first-project` | `tree` | `vibe tree --plain --path hello-vibe` | `hello-vibe` | ждёт |
-| `start/first-project` | `check` | `vibe check --path hello-vibe` | `hello-vibe` | ждёт |
+| `howto/remove-a-package` | `uninstall` | `vibe uninstall org.vibevm.world/wal --path hello-vibe --assume-yes` | `hello-vibe` | снято 700db4b8 |
+| `howto/remove-a-package` | `tree` | `vibe tree --plain --path hello-vibe` | `hello-vibe-removed` | снято 700db4b8 |
+| `howto/set-up-a-workspace` | `workspace-table` | `cat vibe.toml` | `workspace-root` | снято 700db4b8 |
+| `howto/set-up-a-workspace` | `member-manifest` | `cat packages/notes-flow/vibe.toml` | `workspace` | снято 700db4b8 |
+| `howto/set-up-a-workspace` | `install` | `vibe install --assume-yes` | `workspace` | снято 700db4b8 |
+| `howto/update-packages` | `outdated` | `vibe outdated --path hello-vibe` | `hello-vibe-registry` | ждёт раннера A2.9 (снятия минимизированы по слову владельца 2026-09-12) |
+| `howto/update-packages` | `update` | `vibe update org.vibevm.world/wal --path hello-vibe --assume-yes` | `hello-vibe-registry` | ждёт раннера A2.9 (снятия минимизированы по слову владельца 2026-09-12) |
+| `howto/use-a-private-registry` | `registry-add` | `vibe registry add acme git@github.com:acme-specs --path hello-vibe --position primary` | `hello-vibe` | ждёт раннера A2.9 (снятия минимизированы по слову владельца 2026-09-12) |
+| `howto/work-offline` | `cache-add` | `vibe cache add org.vibevm.world/wal` | `empty` | снято 700db4b8 |
+| `howto/work-offline` | `cache-list` | `vibe cache list` | `hello-vibe` | снято 700db4b8 |
+| `howto/work-offline` | `cache-check` | `vibe cache check` | `hello-vibe` | снято 700db4b8 |
+| `howto/work-offline` | `install-offline` | `vibe install org.vibevm.world/wal --path hello-vibe --offline --assume-yes` | `hello-vibe-empty` | снято 700db4b8 |
+| `lifecycle/build-package-deploy` | `package` | `vibe package --path hello-deploy --assume-yes` | `hello-deploy` | ждёт раннера A2.9 (снятия минимизированы по слову владельца 2026-09-12) |
+| `lifecycle/build-package-deploy` | `deploy-plan` | `vibe deploy --plan --profile local --path hello-deploy` | `hello-deploy` | ждёт раннера A2.9 (снятия минимизированы по слову владельца 2026-09-12) |
+| `lifecycle/build-package-deploy` | `deployments` | `vibe deployments` | `hello-vibe` | снято 700db4b8 |
+| `lifecycle/extensions-and-providers` | `extensions` | `vibe extensions --path hello-vibe` | `hello-vibe` | снято 700db4b8 |
+| `lifecycle/extensions-and-providers` | `tools` | `vibe tools` | `hello-vibe-cwd` | ждёт раннера A2.9 (снятия минимизированы по слову владельца 2026-09-12) |
+| `lifecycle/phases` | `deploy-plan` | `vibe deploy --plan --profile local --path hello-deploy` | `hello-deploy` | ждёт раннера A2.9 (снятия минимизированы по слову владельца 2026-09-12) |
+| `lifecycle/scrape` | `scrape-contract` | `vibe scrape contract init --path hello-vibe` | `hello-cargo` | ждёт раннера A2.9 (снятия минимизированы по слову владельца 2026-09-12) |
+| `lifecycle/scrape` | `scrape-plan` | `vibe scrape --plan --path hello-vibe` | `hello-vibe-scrape` | ждёт раннера A2.9 (снятия минимизированы по слову владельца 2026-09-12) |
+| `lifecycle/scrape` | `scrape-output` | `vibe scrape --output hello-clean --path hello-vibe` | `hello-vibe-scrape` | ждёт раннера A2.9 (снятия минимизированы по слову владельца 2026-09-12) |
+| `model/boot-lane` | `tree` | `vibe tree --plain --path hello-vibe` | `hello-vibe` | снято 700db4b8 |
+| `model/lock-and-store` | `cache-path` | `vibe cache path` | `hello-vibe` | снято 700db4b8 |
+| `model/packages-and-kinds` | `list` | `vibe list --path hello-vibe` | `hello-vibe` | снято 700db4b8 |
+| `model/registries` | `registry-list` | `vibe registry list --path hello-vibe` | `hello-vibe` | снято 700db4b8 |
+| `model/two-trees` | `list` | `vibe list --path hello-vibe` | `hello-vibe` | снято 700db4b8 |
+| `model/versions` | `outdated` | `vibe outdated --path hello-vibe` | `hello-vibe-registry` | ждёт раннера A2.9 (снятия минимизированы по слову владельца 2026-09-12) |
+| `reference/machine-formats` | `list-json` | `vibe list --json --path hello-vibe` | `hello-vibe` | снято 700db4b8 |
+| `reference/settings-and-environment` | `vars` | `vibe vars` | `hello-vibe` | снято 700db4b8 |
+| `start/first-project` | `init` | `vibe init hello-vibe` | `empty` | снято 700db4b8 |
+| `start/first-project` | `install` | `vibe install org.vibevm.world/wal --path hello-vibe --assume-yes` | `hello-vibe-empty` | снято 700db4b8 |
+| `start/first-project` | `list` | `vibe list --path hello-vibe` | `hello-vibe` | снято 700db4b8 |
+| `start/first-project` | `tree` | `vibe tree --plain --path hello-vibe` | `hello-vibe` | снято 700db4b8 |
+| `start/first-project` | `check` | `vibe check --path hello-vibe` | `hello-vibe` | снято 700db4b8 |
 | `start/install-vibe` | `windows-install` | `powershell -ExecutionPolicy Bypass -File .\install.ps1` | `none` | не сейчас (фаза 5) |
-| `start/install-vibe` | `version` | `vibe --version` | `hello-vibe` | вставлено вручную, подтвердить снятием |
-| `start/what-a-project-contains` | `tree` | `vibe tree --plain --path hello-vibe` | `hello-vibe` | ждёт |
-| `start/what-vibevm-is` | `version` | `vibe --version` | `hello-vibe` | вставлено вручную, подтвердить снятием |
+| `start/install-vibe` | `version` | `vibe --version` | `hello-vibe` | снято 700db4b8 |
+| `start/what-a-project-contains` | `tree` | `vibe tree --plain --path hello-vibe` | `hello-vibe` | снято 700db4b8 |
+| `start/what-vibevm-is` | `version` | `vibe --version` | `hello-vibe` | снято 700db4b8 |

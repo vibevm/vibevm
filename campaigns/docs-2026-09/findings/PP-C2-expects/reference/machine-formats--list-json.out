@@ -1,0 +1,21 @@
+{
+  "ok": true,
+  "command": "list",
+  "project": "<TMP>/work/hello-vibe",
+  "count": 1,
+  "packages": [
+    {
+      "kind": "flow",
+      "name": "wal",
+      "version": "1.0.0",
+      "bridge": false,
+      "authors": [
+        "Oleg Chirukhin"
+      ],
+      "source_url": "file:///<REPO>/vibevm/vibepacks/org.vibevm.world/wal/v1.0.0",
+      "content_hash": "sha256:58eccc204df7e63e78e8d15f9416b6fd528e786b74d9e0e5e2fcb859716ea0d0",
+      "boot_snippet": null,
+      "files_written": []
+    }
+  ]
+}

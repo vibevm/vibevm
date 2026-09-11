@@ -1,0 +1,10 @@
+Resolving 1 root package…
+
+Materialising 1 package into vibedeps/:
+  org.vibevm.world/wal@1.0.0
+
+closure diff:
+  → + org.vibevm.world/wal@1.0.0 (root-edge)
+  → lane vibevm/vibespecs/boot/INDEX.md: 737 -> 854 B
+
+Materialised 1 package into vibedeps/; regenerated boot artifacts for 1 node(s).

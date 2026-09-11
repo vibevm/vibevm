@@ -1,0 +1,14 @@
+Creating package `org.acme/review-notes` in `<TMP>/work`
+  ✓ created  vibevm/vibepacks/org.acme/review-notes/v0.1.0/vibe.toml
+  ✓ created  vibevm/vibepacks/org.acme/review-notes/v0.1.0/vibevm/vibespecs/boot/10-tool-review-notes.md
+  ✓ created  vibevm/vibepacks/org.acme/review-notes/v0.1.0/README.md
+  • kept     vibevm/vibespecs/boot/INDEX.md (regenerated)
+  • kept     CLAUDE.md (regenerated)
+  • kept     AGENTS.md (regenerated)
+  • kept     GEMINI.md (regenerated)
+
+Done. Project `org.acme/review-notes`: 3 files created, 4 kept.
+
+Next:
+  • edit vibevm/vibespecs/boot/00-core.md and vibevm/vibespecs/common as your project takes shape
+  • install packages with `vibe install <kind>:<name>` (e.g. flow:wal)

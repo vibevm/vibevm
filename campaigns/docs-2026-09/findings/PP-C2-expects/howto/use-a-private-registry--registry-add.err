@@ -1,0 +1,1 @@
+error: registry URL `file:///tmp/acme-specs`: publish refused: cannot derive an organization segment from `file:///tmp/acme-specs`. Configure `[[registry]].url` to a value `git` accepts (e.g. `git@gitverse.ru:vibespecs`). (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#publish; fix: include the organization segment after the host in `[[registry]].url`)

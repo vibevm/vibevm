@@ -2,7 +2,7 @@
 
 <status stage="doc" state="work" comment="генерируется скриптом campaigns/docs-2026-09/tasks/page-index.py из страниц пакета vibevm-docs; руками не править"/>
 
-Страниц: 44; секций с якорями: 275; примеров: 60; промптов: 19; ссылок `rule`: 381; блоков `derived`: 72; фигур: 0.
+Страниц: 44; секций с якорями: 275; примеров: 59; промптов: 19; ссылок `rule`: 381; блоков `derived`: 72; фигур: 0.
 
 | Страница | Якорь | Заголовок | Первые слова |
 |---|---|---|---|
@@ -34,7 +34,7 @@
 | `architecture/traceability` | `root` | Traceability: specs, code and the map | |
 | `architecture/traceability` | `marks` | Marks in the code | A Rust item that implements a rule carries an attribute naming the |
 | `architecture/traceability` | `the-map` | The map | `cargo xtask specmap` walks the crates for marks and the specification tree |
-| `architecture/traceability` | `asking` | Asking the map | `vibe explain "spec://…#anchor"` builds the map fresh in memory and prints one |
+| `architecture/traceability` | `asking` | Asking the map | The commands below run in a checkout of vibe itself, whose specifications |
 | `architecture/traceability` | `documentation-edges` | Documentation in the map | This manual enters the same map. Every `rule` block on a page |
 | `architecture/traceability` | `edge-cases` | Edge cases and rules | Units come in four kinds, and each has a default edge: a |
 | `architecture/what-the-lifecycle-epic-delivered` | `root` | What the lifecycle epic delivered | |

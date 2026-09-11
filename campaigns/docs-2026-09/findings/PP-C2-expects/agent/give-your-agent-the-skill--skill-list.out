@@ -1,0 +1,2 @@
+  → wal-status [flow:wal] → agents: all — Read the project WAL end to end and emit a ten-line orientation: phase, attention items, next step; warn on staleness
+1 skill(s) declared.

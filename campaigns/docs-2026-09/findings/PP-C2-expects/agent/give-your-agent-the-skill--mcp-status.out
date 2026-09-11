@@ -1,0 +1,15 @@
+Detected agents: claude, claude-desktop, opencode, codex
+  → would-create mcp     claude (project) → <TMP>/work/hello-vibe/.mcp.json (file does not exist yet)
+  → would-update mcp     claude (user) → <HOME>/.claude.json (mcpServers/vibevm differs)
+  → would-update mcp     claude-desktop (user) → <HOME>/AppData/Roaming/Claude/claude_desktop_config.json (mcpServers/vibevm absent)
+  → would-create mcp     cursor (project) → <TMP>/work/hello-vibe/.cursor/mcp.json (file does not exist yet)
+  → would-create mcp     cursor (user) → <HOME>/.cursor/mcp.json (file does not exist yet)
+  → would-create mcp     opencode (project) → <TMP>/work/hello-vibe/opencode.json (file does not exist yet)
+  → would-update mcp     opencode (user) → <HOME>/.config/opencode/opencode.json (mcp/vibevm differs)
+  → would-update mcp     codex (user) → <HOME>/.codex/config.toml ([mcp_servers.vibevm] absent)
+  → would-create skill   claude (project) → <TMP>/work/hello-vibe/.claude/skills/vibevm/SKILL.md
+  → would-update skill   claude (user) → <HOME>/.claude/skills/vibevm/SKILL.md
+  → would-create skill   opencode (project) → <TMP>/work/hello-vibe/.opencode/skills/vibevm/SKILL.md
+  → would-update skill   opencode (user) → <HOME>/.config/opencode/skills/vibevm/SKILL.md
+  → would-create skill   codex (project) → <TMP>/work/hello-vibe/.agents/skills/vibevm/SKILL.md
+  → would-create skill   codex (user) → <HOME>/.agents/skills/vibevm/SKILL.md

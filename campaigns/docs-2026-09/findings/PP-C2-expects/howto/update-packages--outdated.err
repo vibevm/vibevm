@@ -1,0 +1,1 @@
+error: no registry configured. Add a `[[registry]]` entry to `vibe.toml` or run `vibe outdated` against a project that has one.

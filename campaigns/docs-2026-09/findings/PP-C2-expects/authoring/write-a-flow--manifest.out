@@ -1,0 +1,15 @@
+[package]
+group = "org.acme"
+name = "review-notes"
+kind = "tool"
+version = "0.1.0"
+epoch = 1
+authors = ["vibevm docs fixtures"]
+license = "UPL-1.0"
+description = ""
+format = "normal"
+
+[boot_snippet]
+source = "vibevm/vibespecs/boot/10-tool-review-notes.md"
+category = "tool"
+link = "dynamic"

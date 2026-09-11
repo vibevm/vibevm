@@ -1,0 +1,5 @@
+
+Uninstall org.vibevm.world/wal@1.0.0 — remove `vibevm/vibedeps/org.vibevm.world.wal/1.0.0` and regenerate boot.
+  - removed  vibevm/vibedeps/org.vibevm.world.wal/1.0.0
+
+Uninstalled org.vibevm.world/wal@1.0.0 — removed its vibedeps/ slot, regenerated boot.

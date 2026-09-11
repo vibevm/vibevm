@@ -1,0 +1,6 @@
+  → would mcp     claude (project) → <TMP>/work/hello-vibe/.mcp.json (file does not exist yet)
+  → would mcp     opencode (project) → <TMP>/work/hello-vibe/opencode.json (file does not exist yet)
+  → would skill   claude (project) → <TMP>/work/hello-vibe/.claude/skills/vibevm/SKILL.md
+  → would skill   claude-desktop (project) → (no skill loader) (agent `claude-desktop` has no project-scope skill loader)
+  → would skill   opencode (project) → <TMP>/work/hello-vibe/.opencode/skills/vibevm/SKILL.md
+  → would skill   codex (project) → <TMP>/work/hello-vibe/.agents/skills/vibevm/SKILL.md

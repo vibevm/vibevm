@@ -1,0 +1,1 @@
+No `[[registry]]` entries in `vibe.toml`. Use `--registry <path>` on `vibe install` for a local-directory source, or add a `[[registry]]` block.
