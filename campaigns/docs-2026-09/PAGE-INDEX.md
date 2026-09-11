@@ -20,14 +20,14 @@
 | `agent/give-your-agent-the-skill` | `edge-cases` | Edge cases and rules | `vibe mcp upgrade` refreshes existing integrations to the shape shipped by the |
 | `agent/how-agents-read-this-manual` | `root` | How an agent reads this manual | |
 | `agent/how-agents-read-this-manual` | `the-files` | The machine files |  |
-| `agent/how-agents-read-this-manual` | `offline` | Without a network | The same pages live in the machine store once `vibe cache add |
+| `agent/how-agents-read-this-manual` | `offline` | Without a network | The same pages live in the machine [store](../glossary/index.xml#store) once `vibe cache add |
 | `agent/how-agents-read-this-manual` | `citing` | Citing a place | Every block on a page carries a number, `p12` and so on, |
 | `agent/how-agents-read-this-manual` | `procedure` | The procedure the skill teaches | 1. On an error, read the address the message names, then the |
-| `agent/how-agents-read-this-manual` | `edge-cases` | Edge cases and rules | Text written for agents is never part of a project's boot lane; |
+| `agent/how-agents-read-this-manual` | `edge-cases` | Edge cases and rules | Text written for agents is never part of a project's [boot lane](../glossary/index.xml#boot-lane); |
 | `architecture/how-vibe-is-built` | `root` | How vibe is built | |
-| `architecture/how-vibe-is-built` | `five-layers` | Five layers | Read the product bottom-up. *Identity*: a package is a coordinate plus a |
+| `architecture/how-vibe-is-built` | `five-layers` | Five layers | Read the product bottom-up. *Identity*: a package is a [coordinate](../glossary/index.xml#coordinate) plus a |
 | `architecture/how-vibe-is-built` | `the-crates` | The crates | The dependency direction is fixed: a surface calls an orchestrator, an orchestrator |
-| `architecture/how-vibe-is-built` | `the-install-path` | The path of an install | 1. Discover the workspace root and read the manifests, the lock file, |
+| `architecture/how-vibe-is-built` | `the-install-path` | The path of an install | 1. Discover the workspace root and read the [manifests](../glossary/index.xml#manifest), the lock file, |
 | `architecture/how-vibe-is-built` | `the-seams` | The seams | `GitBackend` isolates git: the production implementation shells out to the system git, |
 | `architecture/how-vibe-is-built` | `wire-and-authored` | Wire formats and authored formats | Two kinds of text cross the product's boundary. Machine formats, the JSON |
 | `architecture/how-vibe-is-built` | `reading-order` | Where to read next | The specifications are the authority: `PROP-000` for the foundational decisions, `PROP-009` for |
@@ -40,7 +40,7 @@
 | `architecture/what-the-lifecycle-epic-delivered` | `root` | What the lifecycle epic delivered | |
 | `architecture/what-the-lifecycle-epic-delivered` | `the-route` | The route, in eight stages | The work ran as eight numbered stages, each landed as atomic commits |
 | `architecture/what-the-lifecycle-epic-delivered` | `decisions` | Decisions that hold | One nine-phase line: dependency materialisation is `install`, placement outside the project is |
-| `architecture/what-the-lifecycle-epic-delivered` | `boundaries` | Compatibility boundaries and migrations | The dependency slot record and the lifecycle state are strict, versioned machine |
+| `architecture/what-the-lifecycle-epic-delivered` | `boundaries` | Compatibility boundaries and migrations | The dependency slot record and the [lifecycle](../glossary/index.xml#lifecycle) state are strict, versioned machine |
 | `architecture/what-the-lifecycle-epic-delivered` | `deferred` | Deliberately left for later | Deploy targets beyond the first genres, a WebAssembly extension tier, per-language and |
 | `architecture/what-the-lifecycle-epic-delivered` | `retired` | Retired lanes, kept as history | The campaign also ran execution lanes that are no longer current: a |
 | `architecture/what-the-lifecycle-epic-delivered` | `edge-cases` | Where the evidence lives | The stage-by-stage ledger with commit hashes is `campaigns/packages-2026-09/LIFECYCLE-EXTENSIONS-IMPLEMENTATION-LEDGER.md` in the repository; the |
@@ -52,13 +52,13 @@
 | `authoring/ship-tools-and-mcp-servers` | `edge-cases` | Edge cases and rules | A tool's artifact belongs to the exact version installed; after an update |
 | `authoring/specs-agents-can-cite` | `root` | Write specs an agent can cite | |
 | `authoring/specs-agents-can-cite` | `two-processes` | Why an address | A person and an agent share one repository and nothing else: no |
-| `authoring/specs-agents-can-cite` | `the-address` | The address | `spec://<group>/<name>[@<version>]/<path>/<document>#<anchor>`: the package coordinate, an optional version, the document's path inside `vibevm/vibespecs/` |
+| `authoring/specs-agents-can-cite` | `the-address` | The address | `spec://<group>/<name>[@<version>]/<path>/<document>#<anchor>`: the package [coordinate](../glossary/index.xml#coordinate), an optional version, the document's path inside `vibevm/vibespecs/` |
 | `authoring/specs-agents-can-cite` | `the-unit` | The unit | A unit is one anchored heading and the text under it, up |
 | `authoring/specs-agents-can-cite` | `the-dialect` | Two serialisations, one model | A specification is written in Markdown or in the project's XML dialect, |
 | `authoring/specs-agents-can-cite` | `immutable` | An address never moves | Once published, an anchor is immutable. Renaming a section or a rule |
 | `authoring/specs-agents-can-cite` | `edge-cases` | Edge cases and rules | A generated file is never a citation target: cite the source document, |
 | `authoring/translate-documentation` | `root` | Translate documentation | |
-| `authoring/translate-documentation` | `what-happens` | What happens | The agent copies the source's page tree, translates the prose of each |
+| `authoring/translate-documentation` | `what-happens` | What happens | The agent copies the source's page tree and translates the prose of |
 | `authoring/translate-documentation` | `the-manifest` | The manifest | The language of the package is the existing `[i18n] canonical` field, a |
 | `authoring/translate-documentation` | `the-rules` | The rules of a translation | A translation mirrors blocks, not sentences: within a block the translator writes |
 | `authoring/translate-documentation` | `staleness` | When the source moves | A translation records no revision or hash of the source. When the |
@@ -70,7 +70,7 @@
 | `authoring/write-a-feat-or-stack` | `capabilities` | Capabilities | A capability is an abstract interface: a namespace, a colon, a name, |
 | `authoring/write-a-feat-or-stack` | `edge-cases` | Edge cases and rules | The word `stack` also names a family bundle: a package of kind |
 | `authoring/write-a-flow` | `root` | Write a flow package | |
-| `authoring/write-a-flow` | `what-happens` | What happens | The agent runs `vibe init package org.acme/review-notes packages/review-notes`, which writes a manifest |
+| `authoring/write-a-flow` | `what-happens` | What happens | The agent runs `vibe init package org.acme/review-notes packages/review-notes`, which writes a [manifest](../glossary/index.xml#manifest) |
 | `authoring/write-a-flow` | `by-hand` | By hand | 1. Create the package skeleton: |
 | `authoring/write-a-flow` | `the-snippet` | The snippet is the expensive part | A snippet is paid for on every session start by every consumer. |
 | `authoring/write-a-flow` | `layout` | What goes where | Everything under the package root except build output is the package: that |
@@ -99,12 +99,12 @@
 | `faq/index` | `root` | Questions | |
 | `faq/index` | `q-commit-vibedeps` | Do I commit the dependency tree? | Yes. `vibevm/vibedeps/` is committed on purpose, so an agent that clones the |
 | `faq/index` | `q-conflict` | A dependency deep in my tree clashes on a version. How do I fix it? | First read the resolver's explanation: it names the two constraints that disagree, |
-| `faq/index` | `q-confirm` | Why does install ask me to confirm? | Because an install writes into your repository: the dependency tree, the lock |
+| `faq/index` | `q-confirm` | Why does install ask me to confirm? | Because an install writes into your repository: the dependency tree, the [lock |
 | `faq/index` | `q-llm` | Does vibe call a language model? | Not on its own. vibe has no model inside it and every |
 | `faq/index` | `q-two-versions` | Can two versions of one package coexist in a project? | No. Resolution picks one version per package across the workspace, and the |
-| `faq/index` | `q-registry-gone` | A registry I used has disappeared. Is my project stuck? | Not while the machine store holds the packages: a stored version is |
+| `faq/index` | `q-registry-gone` | A registry I used has disappeared. Is my project stuck? | Not while the machine [store](../glossary/index.xml#store) holds the packages: a stored version is |
 | `faq/index` | `q-pin` | How do I pin a package to an exact version? | Install it with `@=1.2.0`, or pass `--exact` to `vibe install` or `vibe |
-| `faq/index` | `q-edit-lock` | Can I edit vibe.lock by hand to silence a hash error? | No. A fingerprint mismatch means the bytes served are not the bytes |
+| `faq/index` | `q-edit-lock` | Can I edit vibe.lock by hand to silence a hash error? | No. A [fingerprint](../glossary/index.xml#fingerprint) mismatch means the bytes served are not the bytes |
 | `faq/index` | `q-why-eight-kinds` | Why so many package kinds? | Because a tool that knows what a package is for before opening |
 | `faq/index` | `q-offline` | I am on a plane. What works? | Everything that reads the store and the project: install from the store |
 | `faq/index` | `q-remove-vibe` | The project is done. How do I ship it without vibe? | `vibe scrape` removes the vibe layer by contract and proves the native |
@@ -119,7 +119,6 @@
 | `glossary/index` | `capability` | capability | An abstract ability a package provides or requires, written `namespace:name` with an |
 | `glossary/index` | `community` | community documentation | Documentation of a package that declares its subject but is not named |
 | `glossary/index` | `companion` | companion | A package tied to another by name for the default case of |
-| `glossary/index` | `content-hash` | content hash | The fingerprint of a package's shippable tree, the identity half of a |
 | `glossary/index` | `contribution` | contribution | A binding of a handler to an extension point, declared as an |
 | `glossary/index` | `coordinate` | coordinate | The name of a package: a group, a slash and a name, |
 | `glossary/index` | `deploy-profile` | deploy profile | A named, ordered list of targets and the providers that apply packaged |
@@ -128,7 +127,8 @@
 | `glossary/index` | `fact` | fact | One anchored unit of a specification with a status: a rule, a |
 | `glossary/index` | `family` | family | A set of packages sharing a name stem that move in unison: |
 | `glossary/index` | `feature` | feature | An optional, additive content set of a package, declared in `[features]` and |
-| `glossary/index` | `fingerprint-freshness` | fingerprint (freshness) | The hash of a phase run's declared inputs, recorded under `.vibe/`; a |
+| `glossary/index` | `fingerprint` | fingerprint | The hash of a package's shippable tree, the identity half of a |
+| `glossary/index` | `freshness-fingerprint` | freshness fingerprint | The hash of a phase run's declared inputs, recorded under `.vibe/`; a |
 | `glossary/index` | `git-source` | git source | A dependency declared by a git repository and a tag, commit or |
 | `glossary/index` | `handler` | handler | What a contribution runs: a built-in, a script, a binary, a native |
 | `glossary/index` | `hook` | hook | A package's `pre-install` or `post-install` script, run in the package's slot; installing |
@@ -161,67 +161,67 @@
 | `glossary/index` | `version-constraint` | version constraint | What a manifest asks for: a range such as `^1.0`, an exact |
 | `glossary/index` | `workspace` | workspace | A repository developing several packages together, declared by a `[workspace]` table listing |
 | `howto/install-a-package` | `root` | Install a package | |
-| `howto/install-a-package` | `what-happens` | What happens | The agent runs `vibe install org.vibevm.world/wal`. vibe walks the project's registries in |
-| `howto/install-a-package` | `by-hand` | By hand | 1. Install by coordinate. Add `@` and a constraint to ask for |
+| `howto/install-a-package` | `what-happens` | What happens | The agent runs `vibe install org.vibevm.world/wal`. vibe walks the project's [registries](../glossary/index.xml#registry) in |
+| `howto/install-a-package` | `by-hand` | By hand | 1. Install by [coordinate](../glossary/index.xml#coordinate). Add `@` and a constraint to ask for |
 | `howto/install-a-package` | `constraints` | Asking for a version | `vibe install org.vibevm.world/wal@^1.0` accepts any 1.x; `@=1.0.0` accepts exactly one; `--exact` writes |
 | `howto/install-a-package` | `after-a-clone` | After cloning a project | `vibe install` with no package names installs what the manifest already requires, |
 | `howto/install-a-package` | `edge-cases` | Edge cases and rules | Installing a package by name re-resolves the whole graph, but every dependency |
 | `howto/publish-a-package` | `root` | Publish a package | |
 | `howto/publish-a-package` | `what-happens` | What happens | The agent runs `vibe registry publish packages/notes --dry-run` first and shows you |
-| `howto/publish-a-package` | `by-hand` | By hand | 1. Put a publish token where vibe reads it: the environment variable |
+| `howto/publish-a-package` | `by-hand` | By hand | 1. Put a publish token where vibe reads it. That is the |
 | `howto/publish-a-package` | `versions` | Versions never move | A published version is immutable: a tag that already exists is refused, |
-| `howto/publish-a-package` | `workspaces` | Several packages at once | A repository that develops several packages publishes them with `vibe workspace publish`: |
+| `howto/publish-a-package` | `workspaces` | Several packages at once | A repository that develops several packages publishes them with `vibe workspace publish`. |
 | `howto/publish-a-package` | `edge-cases` | Edge cases and rules | `--repo-url` pushes straight to an existing git repository with your local git |
 | `howto/read-documentation-locally` | `root` | Read documentation locally | |
 | `howto/read-documentation-locally` | `what-happens` | What happens | The agent runs `vibe cache add org.vibevm.core/vibevm-docs`. A documentation package is never |
-| `howto/read-documentation-locally` | `by-hand` | By hand | 1. Warm the store. Inside a project, its registries are the source; |
+| `howto/read-documentation-locally` | `by-hand` | By hand | 1. Warm the store. Inside a project, its [registries](../glossary/index.xml#registry) are the source; |
 | `howto/read-documentation-locally` | `private-packages` | Private packages | The same reader shows the documentation of packages that live in a |
 | `howto/read-documentation-locally` | `the-shell` | The reader's shell | A released `vibe` carries the reader's interface inside the binary. A `vibe` |
 | `howto/read-documentation-locally` | `edge-cases` | Edge cases and rules | Warming a documentation package warms its subjects too, so the rules a |
 | `howto/remove-a-package` | `root` | Remove a package | |
 | `howto/remove-a-package` | `what-happens` | What happens | The agent runs `vibe uninstall org.vibevm.world/wal`. vibe shows what will leave: the |
-| `howto/remove-a-package` | `by-hand` | By hand | 1. Remove by coordinate; the version is not needed: |
+| `howto/remove-a-package` | `by-hand` | By hand | 1. Remove by [coordinate](../glossary/index.xml#coordinate); the version is not needed: |
 | `howto/remove-a-package` | `derived-state` | Removing derived state without removing packages | Sometimes you want a clean slate rather than a smaller graph: before |
 | `howto/remove-a-package` | `edge-cases` | Edge cases and rules | Uninstalling a package that another installed package requires leaves the shared dependency |
 | `howto/set-up-a-workspace` | `root` | Set up a workspace | |
-| `howto/set-up-a-workspace` | `what-happens` | What happens | The agent adds a `[workspace]` table to the root manifest naming the |
+| `howto/set-up-a-workspace` | `what-happens` | What happens | The agent adds a `[workspace]` table to the root [manifest](../glossary/index.xml#manifest) naming the |
 | `howto/set-up-a-workspace` | `by-hand` | By hand | 1. In the root `vibe.toml`, declare the members; globs are allowed: |
 | `howto/set-up-a-workspace` | `one-manifest` | One manifest, three roles | Every node has a file named `vibe.toml`, and what the file contains |
-| `howto/set-up-a-workspace` | `members-referring` | Members referring to each other | A member requires a sibling by path rather than by registry, with |
+| `howto/set-up-a-workspace` | `members-referring` | Members referring to each other | A member requires a sibling by path rather than by [registry](../glossary/index.xml#registry), with |
 | `howto/set-up-a-workspace` | `edge-cases` | Edge cases and rules | Workspaces nest: a member may itself carry a `[workspace]` table. Nesting groups |
 | `howto/update-packages` | `root` | Update packages | |
 | `howto/update-packages` | `what-happens` | What happens | The agent first runs `vibe outdated`, which compares every pin in the |
 | `howto/update-packages` | `by-hand` | By hand | 1. See what is behind: |
 | `howto/update-packages` | `the-constraint` | The constraint stays where you put it | An update moves the pin in the lock file within the constraint |
 | `howto/update-packages` | `recovery` | Recovering after a breaking update | If an update leaves the project in a state that no longer |
-| `howto/update-packages` | `edge-cases` | Edge cases and rules | `vibe outdated` needs the registry and, for the fastest answer, its index; |
+| `howto/update-packages` | `edge-cases` | Edge cases and rules | `vibe outdated` needs the registry and, for the fastest answer, its [index](../glossary/index.xml#index-registry); |
 | `howto/use-a-private-registry` | `root` | Use a private registry | |
 | `howto/use-a-private-registry` | `what-happens` | What happens | The agent runs `vibe registry add acme git@github.com:acme-specs --auth ssh --position primary`, |
 | `howto/use-a-private-registry` | `by-hand` | By hand | 1. Add the registry to the project. The address is the organisation |
 | `howto/use-a-private-registry` | `machine-wide` | For every project on a machine | Put the same registry block into `~/.vibe/registry.toml`. It is merged after each |
 | `howto/use-a-private-registry` | `tokens` | Tokens | A token never lands in a file vibe writes and never appears |
-| `howto/use-a-private-registry` | `edge-cases` | Edge cases and rules | A private registry without an index still works; searches skip it and |
+| `howto/use-a-private-registry` | `edge-cases` | Edge cases and rules | A private registry without an [index](../glossary/index.xml#index-registry) still works; searches skip it and |
 | `howto/work-offline` | `root` | Work offline | |
 | `howto/work-offline` | `what-happens` | What happens | The agent runs `vibe cache add` for the extra package, which resolves |
-| `howto/work-offline` | `by-hand` | By hand | 1. Warm the store with a package and its dependencies; inside a |
+| `howto/work-offline` | `by-hand` | By hand | 1. Warm the store with a package and its dependencies. Inside a |
 | `howto/work-offline` | `switching-it-on` | Three ways to switch offline mode on | The flag `--offline` on any command; the environment variable `VIBE_OFFLINE=1`; or the |
 | `howto/work-offline` | `air-gapped` | A whole team without a network | For a machine that never sees the registry, `vibe registry vendor` writes |
 | `howto/work-offline` | `edge-cases` | Edge cases and rules | Offline resolution sees the store as of its last refresh: a version |
 | `lifecycle/build-package-deploy` | `root` | Build, package and deploy a project | |
-| `lifecycle/build-package-deploy` | `what-happens` | What happens | `vibe deploy --plan` runs the whole default lifecycle in planning mode and |
+| `lifecycle/build-package-deploy` | `what-happens` | What happens | `vibe deploy --plan` runs the whole default [lifecycle](../glossary/index.xml#lifecycle) in planning mode and |
 | `lifecycle/build-package-deploy` | `by-hand` | By hand | 1. Assemble the distributables without touching any destination: |
-| `lifecycle/build-package-deploy` | `artifacts` | Artifacts and targets | The manifest declares what `build` produces and what `package` assembles as artifact |
+| `lifecycle/build-package-deploy` | `artifacts` | Artifacts and targets | The [manifest](../glossary/index.xml#manifest) declares what `build` produces and what `package` assembles, as artifact |
 | `lifecycle/build-package-deploy` | `edge-cases` | Edge cases and rules | Two deploys of the same profile do not race: the engine takes |
 | `lifecycle/extensions-and-providers` | `root` | Extensions and providers | |
-| `lifecycle/extensions-and-providers` | `points-and-contributions` | Points and contributions | The lifecycle exposes named *extension points*, strings of the form `family:name`. The |
+| `lifecycle/extensions-and-providers` | `points-and-contributions` | Points and contributions | The [lifecycle](../glossary/index.xml#lifecycle) exposes named *[extension points](../glossary/index.xml#extension-point)*, strings of the form `family:name`. The |
 | `lifecycle/extensions-and-providers` | `handlers` | Five kinds of handler | Every handler receives one context envelope, a versioned JSON document that names |
 | `lifecycle/extensions-and-providers` | `activation` | Switching contributions on | Installing a package is the consent to run its contributions: a dependency's |
 | `lifecycle/extensions-and-providers` | `seeing` | Seeing what ran | `vibe extensions` lists every declared contribution in the installed world with its |
 | `lifecycle/extensions-and-providers` | `providers` | Providers | A contribution of kind `agent` needs someone to run its prompt. Under |
 | `lifecycle/extensions-and-providers` | `edge-cases` | Edge cases and rules | A contribution may carry a selector that limits it to matching files |
 | `lifecycle/phases` | `root` | The lifecycle: from validate to deploy | |
-| `lifecycle/phases` | `the-phases` | The nine phases | vibe has two lifecycles. `clean` has one phase and removes derived state. |
-| `lifecycle/phases` | `fresh` | Nothing runs twice for nothing | Every phase run records a fingerprint of the inputs it declared; the |
+| `lifecycle/phases` | `the-phases` | The nine phases | vibe has two [lifecycles](../glossary/index.xml#lifecycle). `clean` has one phase and removes derived state. |
+| `lifecycle/phases` | `fresh` | Nothing runs twice for nothing | Every phase run records a [fingerprint](../glossary/index.xml#fingerprint) of the inputs it declared; the |
 | `lifecycle/phases` | `the-plan` | Seeing before doing | `--plan` reports what a phase run would do and changes nothing; every |
 | `lifecycle/phases` | `where-steps-come-from` | Where the steps come from | The phases are fixed; what runs inside them is contributed by packages. |
 | `lifecycle/phases` | `edge-cases` | Edge cases and rules | A failing step stops the chain; the phases before it keep their |
@@ -231,23 +231,23 @@
 | `lifecycle/scrape` | `the-contract` | The contract | What counts as vibe's and what counts as yours is not guessed |
 | `lifecycle/scrape` | `edge-cases` | Edge cases and rules | Scrape is not clean. `vibe clean` removes what vibe can regenerate and |
 | `model/boot-lane` | `root` | The boot lane: how an agent reads a project | |
-| `model/boot-lane` | `the-order` | The order of reading | An agent session begins with the instruction file its vendor reads, `CLAUDE.md`, |
-| `model/boot-lane` | `where-it-comes-from` | Where the list comes from | Every package may contribute one boot snippet: a short text meant to |
+| `model/boot-lane` | `the-order` | The order of reading | An [agent session](../glossary/index.xml#agent-session) begins with the instruction file its vendor reads, `CLAUDE.md`, |
+| `model/boot-lane` | `where-it-comes-from` | Where the list comes from | Every package may contribute one [boot snippet](../glossary/index.xml#boot-snippet): a short text meant to |
 | `model/boot-lane` | `cost` | Why it is short | Every word in the lane is paid for on every session start, |
 | `model/boot-lane` | `edge-cases` | Edge cases and rules | A snippet that declares a condition is always a dynamic entry, whatever |
 | `model/lock-and-store` | `root` | The lock file and the machine store | |
 | `model/lock-and-store` | `identity` | Identity is the content, not the address | A package version is identified by four things: its group, its name, |
 | `model/lock-and-store` | `the-lock-file` | The lock file | `vibe.lock` lists every package in the resolved graph, direct and transitive, with |
-| `model/lock-and-store` | `the-store` | The machine store | Every package vibe fetches, for any project, lands in one store under |
+| `model/lock-and-store` | `the-store` | The machine store | Every package vibe fetches, for any project, lands in one [store](../glossary/index.xml#store) under |
 | `model/lock-and-store` | `offline` | Offline | With `--offline`, or `VIBE_OFFLINE=1` in the environment, vibe touches no network at |
 | `model/lock-and-store` | `edge-cases` | Edge cases and rules | The settings folder, including the store, is `~/.vibe/` on every platform; the |
 | `model/packages-and-kinds` | `root` | Packages and their kinds | |
 | `model/packages-and-kinds` | `a-package` | What a package is | A package is a project made installable. It has the same layout |
 | `model/packages-and-kinds` | `the-kinds` | The eight kinds | The set is closed and grows only by an amendment to the |
-| `model/packages-and-kinds` | `families` | Families and companions | Some capabilities arrive as several packages that share a name stem: the |
+| `model/packages-and-kinds` | `families` | Families and companions | Some [capabilities](../glossary/index.xml#capability) arrive as several packages that share a name stem: the |
 | `model/packages-and-kinds` | `edge-cases` | Edge cases and rules | Changing a package's group or name creates a new package, not a |
 | `model/registries` | `root` | Registries and the index | |
-| `model/registries` | `what-a-registry-is` | What a registry is | A registry is not a server vibe runs. It is a hosting |
+| `model/registries` | `what-a-registry-is` | What a registry is | A [registry](../glossary/index.xml#registry) is not a server vibe runs. It is a hosting |
 | `model/registries` | `the-index` | The index | Cloning a repository to learn what is in it is slow, and |
 | `model/registries` | `mirrors-and-overrides` | Mirrors, overrides and git sources | A *mirror* is another address for the same registry, tried first for |
 | `model/registries` | `authentication` | Authentication | A public registry needs no credentials, and vibe sends none: it silences |
@@ -255,11 +255,11 @@
 | `model/two-trees` | `root` | Two trees: what you write and what vibe writes | |
 | `model/two-trees` | `the-rule` | The founding rule | Think of how a C++ program uses a library: you write `#include`, |
 | `model/two-trees` | `why-commit` | Why the copies are committed | The copied tree is committed to your repository, which surprises people who |
-| `model/two-trees` | `what-regenerates` | What regenerates, and when | Three things in a project are derived from the manifest and the |
+| `model/two-trees` | `what-regenerates` | What regenerates, and when | Three things in a project are derived from the [manifest](../glossary/index.xml#manifest) and the |
 | `model/two-trees` | `edge-cases` | Edge cases and rules | A package's folder in the dependency tree is named by its group, |
 | `model/versions` | `root` | Versions and updates | |
 | `model/versions` | `asking` | Asking for a version | Package versions follow semantic versioning: three numbers, where the first changes when |
-| `model/versions` | `moving` | Moving the pin | `vibe outdated` reads the lock file and the registry and lists the |
+| `model/versions` | `moving` | Moving the pin | `vibe outdated` reads the lock file and the [registry](../glossary/index.xml#registry) and lists the |
 | `model/versions` | `what-a-version-promises` | What a version promises | A version number is a contract: version 1 does what version 1 |
 | `model/versions` | `vibe-itself` | Versions of vibe itself | The program manages its own versions with `vibe self`: `self install` builds |
 | `model/versions` | `edge-cases` | Edge cases and rules | Two packages with the same coordinate and version but different bytes are |
@@ -277,11 +277,11 @@
 | `reference/lock-file` | `meta` | [meta] |  |
 | `reference/lock-file` | `package-entries` | [[package]] |  |
 | `reference/lock-file` | `reading-a-diff` | Reading a diff | A changed `version` with a changed `content_hash` is an update. A changed |
-| `reference/lock-file` | `edge-cases` | Edge cases and rules | An unchanged manifest against an unchanged lock file makes `vibe install` skip |
+| `reference/lock-file` | `edge-cases` | Edge cases and rules | An unchanged manifest against an unchanged [lock file](../glossary/index.xml#lock-file) makes `vibe install` skip |
 | `reference/machine-formats` | `root` | Machine formats and JSON reports | |
 | `reference/machine-formats` | `the-rule` | One rule for every format | Anything a foreign parser reads, a report a script parses, a file |
 | `reference/machine-formats` | `the-envelope` | The envelope | A `--json` document is one JSON object per command, or a stream |
-| `reference/machine-formats` | `the-documents` | The documents | The documents of the index server, the scrape contract and plan, the |
+| `reference/machine-formats` | `the-documents` | The documents | The documents of the [index](../glossary/index.xml#index-registry) server, the [scrape](../glossary/index.xml#scrape) contract and plan, the |
 | `reference/machine-formats` | `edge-cases` | Edge cases and rules | A document that no schema describes is a defect, not a feature; |
 | `reference/manifest` | `root` | The manifest: vibe.toml | |
 | `reference/manifest` | `one-file` | One file, three roles | Every node, whether a consumer project, a publishable package or a workspace |
