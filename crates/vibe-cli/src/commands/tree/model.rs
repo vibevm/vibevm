@@ -62,6 +62,10 @@ pub struct Package {
     /// Omitted for ordinary packages so their v1 JSON remains byte-stable.
     #[serde(skip_serializing_if = "is_false")]
     pub bridge: bool,
+    /// Authors of the package-owned bytes. Bridge upstream authors remain on
+    /// [`UpstreamSource`] and are never merged into this list.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub authors: Vec<String>,
     /// Upstream identity is deliberately separate from [`Package::source`]:
     /// `source` says where the bridge package bytes came from, while this says
     /// what foreign project those package bytes adapt.
@@ -124,6 +128,9 @@ pub struct UpstreamSource {
     pub commit: String,
     pub tree_oid: String,
     pub content_hash: String,
+    /// Authors of these upstream bytes. Never merged with the bridge
+    /// package's own authorship surface.
+    pub upstream_authors: Vec<String>,
     pub license: String,
     pub license_path: String,
     pub license_url: String,

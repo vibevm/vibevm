@@ -168,6 +168,7 @@ fn sanitize_lock(raw: &Lockfile) -> Lockfile {
                 group: source.group.clone(),
                 version: source.version.clone(),
                 bridge: false,
+                authors: Vec::new(),
                 registry: None,
                 source_url: source.source_url.clone(),
                 source_ref: None,

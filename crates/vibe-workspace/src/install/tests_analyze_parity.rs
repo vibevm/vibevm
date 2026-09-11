@@ -32,6 +32,7 @@ fn publish_resolution_lock(root: &Path, resolution: &[ResolvedDep]) {
             group: dep.group.clone(),
             version: dep.version.clone(),
             bridge: false,
+            authors: Vec::new(),
             registry: None,
             source_url: "file:///fixture".into(),
             source_ref: None,

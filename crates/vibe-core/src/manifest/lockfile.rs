@@ -244,6 +244,10 @@ pub struct LockedEmbeddedSource {
     pub tree_oid: String,
     /// Independent SHA-256 identity of the upstream tree.
     pub content_hash: ContentHash,
+    /// Authors of the referenced upstream bytes. This remains distinct from
+    /// the owning package's `[package].authors`, which records only package
+    /// authorship.
+    pub upstream_authors: Vec<String>,
     /// SPDX expression for the upstream bytes. This is distinct from the
     /// adapter package's own `[package].license`.
     pub upstream_license: String,
@@ -264,6 +268,7 @@ impl LockedEmbeddedSource {
             && self.source_ref == declaration.ref_hint
             && self.resolved_commit == declaration.commit
             && self.content_hash == declaration.content_hash
+            && self.upstream_authors == declaration.upstream_authors
             && self.upstream_license == declaration.upstream_license
             && self.license_path == declaration.license_path
             && self.license_url == declaration.license_url
@@ -313,6 +318,12 @@ pub struct LockedPackage {
     /// metadata.
     #[serde(default, skip_serializing_if = "is_false")]
     pub bridge: bool,
+
+    /// Authors of this package's own metadata, adapters, and other
+    /// package-owned payload. Authors of referenced bytes remain separate on
+    /// each [`LockedEmbeddedSource::upstream_authors`] list.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub authors: Vec<String>,
 
     /// Name of the registry that served this package — matches a
     /// `[[registry]].name` in `vibe.toml`. `None` for local-directory

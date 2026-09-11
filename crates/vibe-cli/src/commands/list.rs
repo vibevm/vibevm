@@ -48,6 +48,7 @@ pub fn run(ctx: &output::Context, args: ListArgs) -> Result<()> {
             resolved_commit: &'a str,
             tree_oid: &'a str,
             content_hash: &'a str,
+            upstream_authors: Vec<&'a str>,
             upstream_license: &'a str,
             license_path: String,
             license_url: &'a str,
@@ -59,6 +60,8 @@ pub fn run(ctx: &output::Context, args: ListArgs) -> Result<()> {
             name: &'a str,
             version: String,
             bridge: bool,
+            #[serde(skip_serializing_if = "Vec::is_empty")]
+            authors: Vec<&'a str>,
             #[serde(skip_serializing_if = "Option::is_none")]
             registry: Option<&'a str>,
             source_url: &'a str,
@@ -99,6 +102,7 @@ pub fn run(ctx: &output::Context, args: ListArgs) -> Result<()> {
                 name: &p.name,
                 version: p.version.to_string(),
                 bridge: p.bridge,
+                authors: p.authors.iter().map(String::as_str).collect(),
                 registry: p.registry.as_deref(),
                 source_url: &p.source_url,
                 source_ref: p.source_ref.as_deref(),
@@ -116,6 +120,11 @@ pub fn run(ctx: &output::Context, args: ListArgs) -> Result<()> {
                         resolved_commit: &source.resolved_commit,
                         tree_oid: &source.tree_oid,
                         content_hash: source.content_hash.as_str(),
+                        upstream_authors: source
+                            .upstream_authors
+                            .iter()
+                            .map(String::as_str)
+                            .collect(),
                         upstream_license: &source.upstream_license,
                         license_path: machine_json_path(&source.license_path),
                         license_url: &source.license_url,
@@ -196,6 +205,9 @@ pub fn run(ctx: &output::Context, args: ListArgs) -> Result<()> {
             p.boot_snippet.as_deref().unwrap_or("—"),
         );
         if args.verbose {
+            if !p.authors.is_empty() {
+                println!("    package authors: {}", p.authors.join(", "));
+            }
             if !p.features.is_empty() {
                 println!("    features:  {}", p.features.join(", "));
             }
@@ -222,6 +234,10 @@ pub fn run(ctx: &output::Context, args: ListArgs) -> Result<()> {
                 println!("      resolved commit:  {}", source.resolved_commit);
                 println!("      tree oid:         {}", source.tree_oid);
                 println!("      content hash:     {}", source.content_hash);
+                println!(
+                    "      upstream authors:  {}",
+                    source.upstream_authors.join(", ")
+                );
                 println!("      upstream license: {}", source.upstream_license);
                 println!("      license path:     {}", source.license_path.display());
                 println!("      license url:      {}", source.license_url);

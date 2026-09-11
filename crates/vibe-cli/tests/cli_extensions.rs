@@ -25,6 +25,7 @@ fn locked(group: &str, name: &str, kind: PackageKind, version: &str, hash: &str)
         group: Group::parse(group).unwrap(),
         version: version.parse().unwrap(),
         bridge: false,
+        authors: Vec::new(),
         registry: None,
         source_url: SourceUrl::new("file:///fixture"),
         source_ref: None,

@@ -305,6 +305,7 @@ pub fn build_payload(
                         "resolved_commit": source.commit,
                         "content_hash": source.content_hash,
                         "upstream_license": source.upstream_license,
+                        "upstream_authors": source.upstream_authors,
                         "license_path": source.license_path.to_string_lossy().replace('\\', "/"),
                         "license_url": source.license_url,
                     });

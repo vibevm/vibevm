@@ -43,6 +43,10 @@ pub struct EmbeddedSourceDecl {
     /// Public anonymous access is the only v1 posture.
     #[serde(default, skip_serializing_if = "is_default_auth")]
     pub auth: EmbeddedSourceAuth,
+    /// Authors of the referenced upstream bytes. This is deliberately
+    /// separate from `[package].authors`, which names only the authors of the
+    /// package's own metadata, adapters, and other package-owned payload.
+    pub upstream_authors: Vec<String>,
     /// SPDX expression describing the upstream bytes, distinct from the
     /// bridge package's own `[package].license`.
     pub upstream_license: String,
@@ -54,6 +58,10 @@ pub struct EmbeddedSourceDecl {
 
 fn is_default_auth(value: &EmbeddedSourceAuth) -> bool {
     *value == EmbeddedSourceAuth::None
+}
+
+fn valid_upstream_author(author: &str) -> bool {
+    !author.is_empty() && author.trim() == author && !author.chars().any(char::is_control)
 }
 
 impl EmbeddedSourceDecl {
@@ -87,6 +95,17 @@ impl EmbeddedSourceDecl {
         {
             return Err(format!(
                 "[[embedded_source]] `{}` ref_hint must be a full safe `refs/...` name",
+                self.name
+            ));
+        }
+        if self.upstream_authors.is_empty()
+            || self
+                .upstream_authors
+                .iter()
+                .any(|author| !valid_upstream_author(author))
+        {
+            return Err(format!(
+                "[[embedded_source]] `{}` upstream_authors must be a non-empty list of trimmed, non-empty, control-free author strings",
                 self.name
             ));
         }
@@ -202,6 +221,7 @@ mod tests {
             content_hash: ContentHash::from_validated(format!("sha256-tree/1:{}", "a".repeat(64))),
             ref_hint: Some("refs/tags/v1.2.3".into()),
             auth: EmbeddedSourceAuth::None,
+            upstream_authors: vec!["Example Upstream Authors".into()],
             upstream_license: "MIT OR Apache-2.0".into(),
             license_path: "LICENSE".into(),
             license_url: format!(
@@ -233,6 +253,19 @@ mod tests {
         source = declaration();
         source.ref_hint = Some("main".into());
         assert!(source.validate().unwrap_err().contains("refs/..."));
+
+        source = declaration();
+        source.upstream_authors.clear();
+        assert!(source.validate().unwrap_err().contains("upstream_authors"));
+
+        for author in ["", " leading", "trailing ", "line\nbreak"] {
+            source = declaration();
+            source.upstream_authors = vec![author.into()];
+            assert!(
+                source.validate().unwrap_err().contains("upstream_authors"),
+                "accepted invalid upstream author {author:?}"
+            );
+        }
 
         source = declaration();
         source.upstream_license.clear();

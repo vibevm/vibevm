@@ -32,7 +32,27 @@ impl Check for BridgeProvenanceCheck {
             let manifest_path = package_root.join(Manifest::FILENAME);
             let manifest = match Manifest::read(&manifest_path) {
                 Ok(manifest) => manifest,
-                Err(_) => continue, // ManifestValidity owns malformed manifests.
+                Err(error) => {
+                    // `upstream_authors` is structurally required by the core
+                    // manifest. Preserve the general ownership split with
+                    // ManifestValidity, but also surface this one
+                    // bridge-specific repair under the provenance check.
+                    if error.to_string().contains("upstream_authors") {
+                        let finding_path = manifest_path
+                            .strip_prefix(project_root)
+                            .ok()
+                            .map(portable_path);
+                        report.err(
+                            CheckId::BridgeProvenance,
+                            finding_path,
+                            None,
+                            format!(
+                                "[{source_label}] embedded upstream source has no explicit upstream authors. Fix: add `upstream_authors = [\"Upstream author or project\"]` to its `[[embedded_source]]` table; do not add these names to `[package].authors`."
+                            ),
+                        );
+                    }
+                    continue; // ManifestValidity owns every other malformed shape.
+                }
             };
             let Some(package) = manifest.package.as_ref() else {
                 continue;
@@ -46,6 +66,17 @@ impl Check for BridgeProvenanceCheck {
                 .ok()
                 .map(portable_path);
             let coordinate = format!("{}/{}@{}", package.group, package.name, package.version);
+
+            if package.authors.is_empty() {
+                report.err(
+                    CheckId::BridgeProvenance,
+                    finding_path.clone(),
+                    None,
+                    format!(
+                        "[{source_label}] bridge `{coordinate}` has no package authors. Fix: set `[package].authors` to the maintainers/authors of the bridge-owned metadata and adapters; keep upstream authors only in `[[embedded_source]].upstream_authors`."
+                    ),
+                );
+            }
 
             if package.describes.is_none() {
                 report.err(
@@ -123,6 +154,17 @@ fn check_embedded_source(
     finding_path: Option<PathBuf>,
     report: &mut CheckReport,
 ) {
+    if source.upstream_authors.is_empty() {
+        report.err(
+            CheckId::BridgeProvenance,
+            finding_path.clone(),
+            None,
+            format!(
+                "[{source_label}] bridge `{coordinate}` embedded source `{}` has no explicit upstream authors. Fix: add `upstream_authors = [\"Upstream author or project\"]` to this `[[embedded_source]]`; do not merge upstream authors into `[package].authors`.",
+                source.name
+            ),
+        );
+    }
     if !is_spdx_expression(&source.upstream_license) {
         report.err(
             CheckId::BridgeProvenance,
@@ -358,7 +400,7 @@ mod tests {
         fs::write(
             package.join("vibe.toml"),
             format!(
-                "[package]\ngroup = \"org.example\"\nname = \"bridge\"\nkind = \"feat\"\nversion = \"1.0.0\"\nepoch = 1\nbridge = true\n{tail}"
+                "[package]\ngroup = \"org.example\"\nname = \"bridge\"\nkind = \"feat\"\nversion = \"1.0.0\"\nepoch = 1\nbridge = true\nauthors = [\"Bridge Maintainer\"]\n{tail}"
             ),
         )
         .unwrap();
@@ -414,6 +456,35 @@ mod tests {
     }
 
     #[test]
+    fn package_and_upstream_authors_are_independent_requirements() {
+        let project = tempdir().unwrap();
+        write_minimal_project(project.path());
+        write_bridge(
+            project.path(),
+            "license = \"UPL-1.0\"\ndescribes = \"pkg:github/example/upstream@1.0.0\"\n",
+            true,
+        );
+        let manifest_path = project
+            .path()
+            .join(vibe_core::layout::current_packages_root())
+            .join("org.example/bridge/v1.0.0/vibe.toml");
+        let manifest = fs::read_to_string(&manifest_path)
+            .unwrap()
+            .replace("authors = [\"Bridge Maintainer\"]\n", "authors = []\n");
+        fs::write(&manifest_path, manifest).unwrap();
+        let hits = findings(project.path());
+        assert!(
+            hits.iter().any(|finding| {
+                finding.check == CheckId::BridgeProvenance
+                    && finding.severity == Severity::Error
+                    && finding.message.contains("no package authors")
+                    && finding.message.contains("upstream authors only")
+            }),
+            "got: {hits:?}"
+        );
+    }
+
+    #[test]
     fn legacy_bridge_without_upstream_section_warns_and_documented_one_is_green() {
         let project = tempdir().unwrap();
         write_minimal_project(project.path());
@@ -441,10 +512,16 @@ mod tests {
 
     #[test]
     fn reference_backed_shapes_need_no_copied_upstream_or_markdown_section() {
-        for (name, describes, path) in [
-            ("spec-kit", "pkg:github/github/spec-kit@1.0.6", ".specify"),
+        for (group, name, describes, path) in [
             (
-                "external-skills-skills",
+                "org.speckit",
+                "speckit",
+                "pkg:github/github/spec-kit@1.0.6",
+                ".specify",
+            ),
+            (
+                "com.external-skills",
+                "skills",
                 "pkg:github/external-skills/skills@1.2.3",
                 "skills/engineering/codebase-design",
             ),
@@ -454,7 +531,7 @@ mod tests {
             let package = project
                 .path()
                 .join(vibe_core::layout::current_packages_root())
-                .join("org.example")
+                .join(group)
                 .join(name)
                 .join("v1.0.0");
             fs::create_dir_all(&package).unwrap();
@@ -463,12 +540,13 @@ mod tests {
                 package.join("vibe.toml"),
                 format!(
                     r#"[package]
-group = "org.example"
+group = "{group}"
 name = "{name}"
 kind = "feat"
 version = "1.0.0"
 epoch = 1
 bridge = true
+authors = ["Bridge Maintainer"]
 license = "UPL-1.0"
 describes = "{describes}"
 
@@ -480,6 +558,7 @@ commit = "{COMMIT}"
 content_hash = "{TREE_HASH}"
 ref_hint = "refs/tags/v1.0.0"
 upstream_license = "MIT"
+upstream_authors = ["Example Contributors"]
 license_path = "LICENSE"
 license_url = "https://github.com/example/upstream/blob/{COMMIT}/LICENSE"
 
@@ -494,6 +573,41 @@ path = "{path}"
             let hits = findings(project.path());
             assert!(hits.is_empty(), "{name}: {hits:?}");
         }
+    }
+
+    #[test]
+    fn missing_upstream_authors_is_a_bridge_provenance_error() {
+        let project = tempdir().unwrap();
+        write_minimal_project(project.path());
+        write_bridge(
+            project.path(),
+            &format!(
+                r#"license = "UPL-1.0"
+describes = "pkg:github/example/upstream@1.0.0"
+
+[[embedded_source]]
+name = "upstream"
+kind = "git"
+url = "https://github.com/example/upstream.git"
+commit = "{COMMIT}"
+content_hash = "{TREE_HASH}"
+upstream_license = "MIT"
+license_path = "LICENSE"
+license_url = "https://github.com/example/upstream/blob/{COMMIT}/LICENSE"
+"#
+            ),
+            true,
+        );
+        let hits = findings(project.path());
+        assert!(
+            hits.iter().any(|finding| {
+                finding.check == CheckId::BridgeProvenance
+                    && finding.severity == Severity::Error
+                    && finding.message.contains("upstream authors")
+                    && finding.message.contains("[package].authors")
+            }),
+            "got: {hits:?}"
+        );
     }
 
     #[test]

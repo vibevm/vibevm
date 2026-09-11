@@ -212,6 +212,7 @@ fn bridge_provenance_is_optional_but_round_trips_when_present() {
         content_hash:
             "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa".into(),
         upstream_license: "MIT".into(),
+        upstream_authors: vec!["Example Contributors".into()],
         license_path: "LICENSE".into(),
         license_url: "https://github.com/example/upstream/blob/0123456789abcdef0123456789abcdef01234567/LICENSE".into(),
     });
@@ -219,8 +220,23 @@ fn bridge_provenance_is_optional_but_round_trips_when_present() {
     let json = serde_json::to_string(&bridge).unwrap();
     assert!(json.contains("\"bridge\":true"), "{json}");
     assert!(json.contains("\"upstream_license\":\"MIT\""), "{json}");
+    assert!(
+        json.contains("\"upstream_authors\":[\"Example Contributors\"]"),
+        "{json}"
+    );
     let back: VersionEntry = serde_json::from_str(&json).unwrap();
     assert_eq!(back, bridge);
+
+    // Epoch-e1 readers remain tolerant of catalog rows emitted before
+    // upstream authorship became explicit. New scanners never produce this
+    // empty form, but an old index remains readable and reports no authors.
+    let mut legacy: serde_json::Value = serde_json::from_str(&json).unwrap();
+    legacy["embedded_sources"][0]
+        .as_object_mut()
+        .unwrap()
+        .remove("upstream_authors");
+    let legacy_back: VersionEntry = serde_json::from_value(legacy).unwrap();
+    assert!(legacy_back.embedded_sources[0].upstream_authors.is_empty());
 }
 
 #[test]

@@ -437,3 +437,44 @@ All four build jobs and all four upload jobs succeeded:
 
 The final verifier succeeded, published `DISTRIBUTIONS.json`, and replaced the
 public mutable `v1.0.0` release with 17 assets pointing at commit `9904681`.
+
+## J-015 — Correction: bridge packages use upstream-facing identities
+
+Date: 2026-09-11
+
+Owner correction superseding J-012's source-location decision:
+
+- `org.vibevm.bridges/spec-kit` and its former public repository
+  `https://github.com/vibespecs/org.vibevm.bridges.spec-kit` are replaced by
+  `org.speckit/speckit` and
+  `https://github.com/vibespecs/org.speckit.speckit`.
+- `org.vibevm.bridges/external-skills-skills` and its former public repository
+  `https://example.invalid/removed-upstream` are
+  replaced by `com.external-skills/skills` and
+  `https://example.invalid/removed-upstream`.
+- Their canonical sources are now independent local Git repositories at
+  `C:\Users\olegc\git\v\packages\org.speckit.speckit` and
+  `C:\Users\olegc\git\v\packages\com.external-skills.skills`, not directories in
+  the VibeVM host repository.
+- The old public repositories were hard-deleted after the owner asserted that
+  they had zero users.
+
+Reusable identity rule:
+
+- A package namespace for a foreign product follows the consumer-facing
+  upstream product identity and must not imply VibeVM ownership.
+- Before packaging a foreign product, explicitly ask the owner whether its
+  source, repository, and namespace should be independent; do not infer that
+  decision from the host project's layout.
+
+Authorship boundary:
+
+- `[package].authors` names only the authors of the package payload or adapter.
+- `embedded_source.upstream_authors` records the authors of embedded or
+  referenced upstream content.
+- Lock, index, and UI surfaces preserve those fields separately and never
+  concatenate them.
+
+At the time of this correction, rebuilding the public index and mutable Vibe
+`v1.0.0` release for the corrected coordinates and authorship surfaces remains
+pending.

@@ -276,12 +276,13 @@ fn reference_bridge_manifest(skill_tail: &str) -> String {
     format!(
         r#"
 [package]
-group = "org.vibevm.bridges"
+group = "org.example"
 name = "upstream-skill"
 kind = "tool"
 version = "1.0.0"
 bridge = true
 license = "UPL-1.0"
+authors = ["Bridge Package Maintainer"]
 
 [[embedded_source]]
 name = "upstream"
@@ -291,6 +292,7 @@ commit = "{REFERENCE_COMMIT}"
 content_hash = "sha256-tree/1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 ref_hint = "refs/tags/v1.2.3"
 auth = "none"
+upstream_authors = ["Example Upstream Authors"]
 upstream_license = "MIT"
 license_path = "LICENSE"
 license_url = "https://github.com/example/upstream/blob/{REFERENCE_COMMIT}/LICENSE"
@@ -325,6 +327,14 @@ include = ["SKILL.md", "references/**/*.md"]
     let manifest = Manifest::parse_str(&raw).unwrap();
     assert_eq!(manifest.embedded_sources.len(), 1);
     assert_eq!(manifest.embedded_sources[0].name, "upstream");
+    assert_eq!(
+        manifest.package.as_ref().unwrap().authors,
+        ["Bridge Package Maintainer"]
+    );
+    assert_eq!(
+        manifest.embedded_sources[0].upstream_authors,
+        ["Example Upstream Authors"]
+    );
     assert_eq!(manifest.skills.len(), 2);
     assert!(manifest.skills[0].source.is_none());
     assert_eq!(manifest.skills[0].resources.len(), 1);
@@ -347,6 +357,7 @@ kind = "git"
 url = "https://github.com/example/upstream.git"
 commit = "{REFERENCE_COMMIT}"
 content_hash = "sha256-tree/1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+upstream_authors = ["Example Upstream Authors"]
 upstream_license = "MIT"
 license_path = "LICENSE"
 license_url = "https://github.com/example/upstream/blob/{REFERENCE_COMMIT}/LICENSE"
@@ -368,6 +379,19 @@ license_url = "https://github.com/example/upstream/blob/{REFERENCE_COMMIT}/LICEN
 #[test]
 fn embedded_source_wire_rejects_mutable_or_credentialed_identity() {
     let valid = reference_bridge_manifest("");
+    let without_upstream_authors =
+        valid.replace("upstream_authors = [\"Example Upstream Authors\"]\n", "");
+    let error = Manifest::parse_str(&without_upstream_authors)
+        .unwrap_err()
+        .to_string();
+    assert!(error.contains("upstream_authors"), "{error}");
+
+    for invalid_authors in ["[]", "[\" leading\"]", "[\"line\\nbreak\"]"] {
+        let invalid = valid.replace("[\"Example Upstream Authors\"]", invalid_authors);
+        let error = Manifest::parse_str(&invalid).unwrap_err().to_string();
+        assert!(error.contains("upstream_authors"), "{error}");
+    }
+
     for (from, to, needle) in [
         (
             "https://github.com/example/upstream.git",

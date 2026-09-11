@@ -63,6 +63,7 @@ fn fixture() -> TempDir {
         group: Group::parse("org.vibevm").expect("fixture package group"),
         version: "1.0.0".parse().expect("fixture package version"),
         bridge: false,
+        authors: Vec::new(),
         registry: None,
         source_url: SourceUrl::new("file:///fixture"),
         source_ref: None,
