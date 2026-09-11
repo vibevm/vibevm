@@ -23,8 +23,10 @@ and perform the double-render check.
 
 1. @fact:GOAL-SKILL-RESOLVE Resolve the exact stewardship context and read its
    settings, advisory custody and raw plan bytes once. Validate the plan graph
-   before deriving anything. A timeout, crash, compaction, new chat or model
-   change needs no session, receipt or takeover record. @status:impl/done
+   before deriving anything. A timeout, crash, compaction, new chat, model or
+   account change needs no session, receipt or takeover record. A refresh
+   preserves raw plan bytes, node states, evidence and supported extension
+   fields; it does not replan or authorize implementation. @status:impl/done
 2. @fact:GOAL-SKILL-SELECT Use valid `goal_node`; infer only a single
    unambiguous top-level non-terminal campaign. On ambiguity or invalid id,
    report the typed refusal and do not write. @status:impl/done
@@ -49,12 +51,18 @@ and perform the double-render check.
 6. @fact:GOAL-SKILL-VERIFY Re-read the marker and both outputs, recompute raw
    plan and Claude-condition SHA, count condition UTF-16 units, and render a
    second time in memory. Accept only exact hashes, a condition at most 4000
-   units, and byte-identical second rendering. @status:impl/done
+   units, and byte-identical second rendering. Compare complete output bytes
+   with the current renderer: an unchanged plan hash alone does not make older
+   generated instructions current after a compatible package update.
+   @status:impl/done
 
 ## Output {#output}
 
 @fact:GOAL-SKILL-REPORT Report the selected node, plan revision/hash, profile,
 current/stale result, both output paths, condition length and whether bytes
-changed. Print the exact manual continuation recipe: copy trimmed
-`GOAL-CLAUDE.txt`, run `claude -c` in the bound worktree, paste, Enter. Do not
-start the campaign merely because the goal was refreshed. @status:impl/done
+changed. Keep an ordinary refresh report harness-neutral. Show the manual
+Claude recipe only when the owner requests it or asks to continue through the
+Claude Code adapter: copy trimmed `GOAL-CLAUDE.txt`, run `claude -c` in the bound
+worktree, paste, Enter. The explicit formal-handoff workflow retains its required
+full goal and exact command output. Do not start the campaign merely because
+the goal was refreshed; follow the current owner's scope. @status:impl/done

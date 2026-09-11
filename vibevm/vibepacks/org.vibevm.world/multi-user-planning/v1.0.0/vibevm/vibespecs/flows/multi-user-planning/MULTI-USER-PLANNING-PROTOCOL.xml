@@ -55,15 +55,18 @@ report`. Recency alone grants no authority.</AUTHORITY-ORDER></p>
   `LAW-SINGLE-LIVE-WRITER`.</LAW-ONE-CENTRAL-HOLDER>
       <LAW-CASUAL-CONTINUATION fact="true" status="spec/done">**Ordinary
   continuation needs no custody ritual.** After timeout, crash, compaction, new
-  chat or model change, any owner-facing central agent may read the exact
+  chat, model or provider-account change, quota exhaustion or provider overload,
+  any owner-facing central agent may read the exact
   binding, settings, complete plan and tree and continue under the current
   owner instruction without session, handoff, receipt or takeover documents.
   Custody metadata does not grant or deny that authority.</LAW-CASUAL-CONTINUATION>
       <LAW-SINGLE-LIVE-WRITER fact="true" status="spec/done">**One observed live
   central writer at a time.** Parallel workers may execute disjoint atoms, but
-  an empirically observed conflicting central writer or moving input stops
-  writes until the owner resolves it. Stale holder, session or heartbeat
-  metadata alone is not a conflict verdict.</LAW-SINGLE-LIVE-WRITER>
+  an empirically observed conflicting central writer stops affected writes
+  until the owner resolves it. Changed inputs invalidate the affected snapshot:
+  attribute and recapture expected own writes or reconcilable external changes;
+  escalate unresolved semantic or writer conflicts. Stale holder, session or
+  heartbeat metadata alone is not a conflict verdict.</LAW-SINGLE-LIVE-WRITER>
       <LAW-CUSTODY-NOT-ACCEPTANCE fact="true" status="spec/done">**Custody
   metadata does not transfer acceptance.** In ordinary continuation or explicit
   formal handoff, the next coordinator inherits artifacts and claims as
@@ -88,6 +91,17 @@ report`. Recency alone grants no authority.</AUTHORITY-ORDER></p>
   is a deterministic projection, never a second plan.** It selects one stable
   campaign node and renders its mandates, accepted boundary, candidates,
   remaining route and exit proof. `plan.toml` always wins on divergence.</LAW-GOAL-IS-A-PROJECTION>
+      <LAW-EXECUTION-SCOPE fact="true" status="spec/done">**Current owner intent
+  governs execution.** A stored goal, ready frontier or recovery checkpoint does
+  not start a campaign when the owner requested planning, inspection or a stop.
+  Existing authorization survives ordinary interruption within its scope;
+  continuation does not require repeating already resolved approvals.</LAW-EXECUTION-SCOPE>
+      <LAW-RECOVER-EVIDENCE fact="true" status="spec/done">**Recover evidence
+  before repeating work.** Provider failure does not prove a failed operation.
+  Inspect surviving artifacts, live jobs and remote effects before retrying;
+  accepted unchanged evidence stays accepted, while unfinished decisions remain
+  candidates. Recover concise recorded rationale, never claim to reconstruct
+  lost internal reasoning. Retry bounds survive session and account changes.</LAW-RECOVER-EVIDENCE>
     </facts>
   </laws>
   <roles title="4. Roles">
@@ -127,6 +141,9 @@ product diff is integrated or intentionally rejected, then clean it.</NO-EARLY-C
   [`goal-projection.xml`](goal-projection.xml).</DOC-GOAL>
       <DOC-EXECUTION fact="true" status="spec/done">Central campaign execution:
   [`campaign-execution.xml`](campaign-execution.xml).</DOC-EXECUTION>
+      <DOC-RECOVERY fact="true" status="spec/done">Quota, overload and interrupted
+  operation recovery: [`interruption-recovery.xml`](interruption-recovery.xml).
+  Read when dispatch may outlive the coordinator or an interruption occurs.</DOC-RECOVERY>
       <DOC-HANDOFF fact="true" status="spec/done">Central custody and handoff:
   [`custody-and-handoff.xml`](custody-and-handoff.xml).</DOC-HANDOFF>
       <DOC-COLLAB fact="true" status="spec/done">Collaboration and acceptance:

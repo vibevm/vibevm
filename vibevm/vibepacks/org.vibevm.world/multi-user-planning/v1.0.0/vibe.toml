@@ -11,8 +11,8 @@ epoch = 1
 format = "normal"
 authors = ["Oleg Chirukhin"]
 license = "UPL-1.0"
-description = "Multi-contributor campaign stewardship with ritual-free session continuation, deterministic goals, and explicit opt-in handoffs"
-keywords = ["planning", "campaigns", "multi-user", "goal", "continuation", "handoff", "agents"]
+description = "Multi-contributor campaign stewardship with bounded execution, interruption recovery, deterministic goals, and opt-in handoffs"
+keywords = ["planning", "campaigns", "multi-user", "goal", "continuation", "recovery", "handoff", "agents"]
 
 [compatibility]
 min_vibe_version = "0.1.0"
@@ -24,7 +24,7 @@ requires_kinds = []
 [boot_snippet]
 source = "vibevm/vibespecs/boot/12-flow-multi-user-planning.xml"
 category = "flow"
-concepts = ["campaign stewardship", "ritual-free continuation", "user-local plan", "optional handoff", "verification economy"]
+concepts = ["campaign stewardship", "ritual-free continuation", "user-local plan", "optional handoff", "verification economy", "interruption recovery"]
 
 [[skill]]
 name = "steward-status"

@@ -41,8 +41,17 @@ without offer/receipt handoff, session documents or takeover ritual.</PURPOSE></
   continues the owner-requested atom without creating ritual records.</STEP-CONTINUE>
       <STEP-CONFLICT fact="true" status="test/work">In a separate probe, make
   another central writer observably live or move plan/tree input during the
-  snapshot. The fresh agent preserves artifacts, performs no overwrite and asks
-  the owner to select the writer.</STEP-CONFLICT>
+  snapshot. The fresh agent preserves artifacts and does not overwrite the
+  changed input. A live conflicting writer or unresolved semantic conflict
+  requires owner resolution. A separate control case with expected own writes
+  recaptures the snapshot and continues without another permission request.</STEP-CONFLICT>
+      <STEP-INTERRUPTION fact="true" status="test/work">Exercise provider
+  overload, exhausted quota and an owner-initiated account change against the
+  scenarios in
+  @spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/interruption-recovery#root.
+  Include a surviving worker, an operation with unknown remote effect and an
+  interrupted decision with no saved rationale. Use simulated outcomes; do not
+  consume real quota or trigger external mutations for this test.</STEP-INTERRUPTION>
     </facts>
   </procedure>
   <pass title="Pass criteria">
@@ -56,8 +65,14 @@ without offer/receipt handoff, session documents or takeover ritual.</PURPOSE></
       <PASS-AUTHORITY fact="true" status="test/work">Owner and project evidence
   govern continuation; custody metadata neither grants authority nor launders a
   candidate into accepted state.</PASS-AUTHORITY>
-      <PASS-SAFETY fact="true" status="test/work">An observed live writer or
-  moved input stops writes, while stale metadata alone does not.</PASS-SAFETY>
+      <PASS-SAFETY fact="true" status="test/work">An observed conflicting live
+  writer or unresolved semantic conflict stops affected writes; input movement
+  first invalidates its snapshot. Expected own writes are recaptured, and stale
+  custody metadata alone does not stop continuation.</PASS-SAFETY>
+      <PASS-RECOVERY fact="true" status="test/work">No live work is duplicated,
+  unknown external effects are reconciled before replay, retry bounds survive
+  account changes and an unfinished decision stays unaccepted. Accepted evidence
+  on unchanged subjects and every planning-only hold remain intact.</PASS-RECOVERY>
       <PASS-NO-SHARED-STATE fact="true" status="test/work">No personal state is
   added to the repository and no new shared mutable continuity file is
   introduced.</PASS-NO-SHARED-STATE>

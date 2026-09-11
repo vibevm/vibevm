@@ -95,10 +95,10 @@ their declaration order. No map/hash iteration order enters output.</ORDER></p>
   protocol. Both name the identical quality floor; only atom/checkpoint cadence
   differs.</PROJECT-PROFILE>
       <PROJECT-CONTINUITY fact="true" status="spec/done">**Continuation law:**
-  fixed text requires complete plan re-read after compact/resume, regeneration
-  on stale inputs, continued execution across intermediate atoms, and stopping
-  only for an owner-only decision, external blocker, or explicit
-  owner-requested central handoff.</PROJECT-CONTINUITY>
+  fixed text preserves current owner scope, complete-plan recovery after context
+  loss, warm reuse of validated inputs, evidence and side-effect reconciliation,
+  bounded suspicion-only mutation diagnostics, and authorized continuation
+  across intermediate atoms. A goal never grants execution authority.</PROJECT-CONTINUITY>
     </facts>
   </projection>
   <bytes title="5. Canonical bytes and marker">
@@ -109,7 +109,7 @@ HTML comment with fields in this order:</MARKER></p>
 endings, one trailing newline, exact heading order from §4, no timestamp,
 absolute path, session id, holder id, harness, model, token count or chat text.
 Markdown bullet text is copied from TOML without stylistic rewriting. Identical
-plan bytes + selected node + canonical profile produce byte-identical
+plan bytes + selected node + canonical profile under the same renderer produce byte-identical
 `GOAL.md`.</BYTE-LAW></p>
     <p><PROFILE-TEXT fact="true" status="spec/done">Canonical profile paragraph:
 `ultra` — “Use extended reasoning across the full route; larger coherent atoms
@@ -118,12 +118,23 @@ review and gate floor is unchanged.” `standard` — “Use smaller atoms, expl
 per-claim evidence and a backscan after every completed parent. The
 completeness, review and gate floor is unchanged.”</PROFILE-TEXT></p>
     <p><CONTINUITY-TEXT fact="true" status="spec/done">Canonical continuation
-paragraph: “After compact or resume, re-read the complete plan and refresh this
-goal if stale. Continue across accepted intermediate atoms; a short UI plan,
-context loss, difficulty, or worker termination is not completion. Stop only
-  for an owner-only decision, an external blocker, or an explicit
-  owner-requested central handoff.
-Declare completion only when every completion proof below is satisfied.”</CONTINUITY-TEXT></p>
+paragraph: “Follow the current owner instruction; status/planning-only requests,
+stops and scope limits govern execution. On cold start or after compact/resume,
+model or account change, read the complete plan and verify the actual tree,
+artifacts and live workers; refresh stale goal bytes. In an uninterrupted
+session reuse the complete validated plan while its revision and relevant
+input changes are accounted for; otherwise re-read it. Recover durable
+evidence and decisions; unfinished reasoning is not evidence. Retain accepted
+evidence for an unchanged exact subject and review surviving candidates
+before regeneration. Resolve unknown tool outcomes before replay; apply
+interruption-recovery retry rules to the same logical episode across
+restarts. Mutation diagnostics require concrete suspicion and lower cost than
+the named alternative proof; their bounded episode never resets on restart. When execution
+is authorized, continue across accepted intermediate atoms until the requested
+boundary, completion, an owner-only decision, external blocker, conflicting
+live writer or explicit formal handoff. Context loss or worker termination
+is not completion. Declare completion only when every completion proof is
+satisfied.”</CONTINUITY-TEXT></p>
   </bytes>
   <claude title="6. Claude Code goal-command adapter">
     <p><CLAUDE-OBSERVED-SURFACE fact="true" status="spec/done">Claude Code
@@ -137,14 +148,23 @@ The condition contains no newline; every input whitespace run is collapsed to
 one ASCII space. A human copies the whole trimmed file and pastes it into the
 interactive prompt. Agents never invoke slash commands on the user's behalf.</CLAUDE-FILE></p>
     <p><CLAUDE-CONDITION fact="true" status="spec/done">The condition is assembled
-in this fixed order: (1) “Complete campaign [id] title exactly as stewardship
-plan.toml revision N defines, including every non-terminal descendant and all
-completion proof in GOAL.md.”; (2) candidate ids/titles; (3) non-terminal direct
-child route ids/titles/states; (4) “After compact/resume re-read plan.toml and
-GOAL.md; do not stop at a short UI plan, an intermediate atom, difficulty or a
-worker/process ending; stop only for an owner-only decision, external blocker or
-  explicit owner-requested central handoff; the goal is met only when the selected node is accepted with
-all required descendants/gates and owner inspection.”</CLAUDE-CONDITION></p>
+in this fixed order: (1) “Within current owner-authorized scope, complete campaign
+[id] title exactly as the current stewardship plan.toml revision N defines,
+including every non-terminal descendant and every completion proof recorded in
+GOAL.md.”; (2) candidate ids/titles; (3) non-terminal direct child route
+ids/titles/states; (4) “Current owner scope wins, including status/planning-only
+and stop. On cold start, compact/resume or model/account change read the complete
+plan.toml and refresh stale GOAL.md; while warm, reuse the validated full plan
+only with accounted-for revision/input changes. Inspect artifacts and live
+workers before retries; resolve unknown tool outcomes before replay. Recover
+durable decisions, not unfinished reasoning; unchanged exact-subject acceptance
+survives. Follow interruption-recovery; retry and mutation episodes survive
+restart. Mutation diagnostics need concrete suspicion and lower cost than
+the named alternative proof. During authorized execution continue across intermediate atoms
+until the requested boundary, completion, owner-only decision, external
+blocker, conflicting live writer or explicit formal handoff. Process ending
+is not completion; the goal is met only when the selected node is accepted
+with all required descendants/gates and owner inspection.”</CLAUDE-CONDITION></p>
     <p><CLAUDE-BOUNDING fact="true" status="spec/done">Bounding never truncates
 the mandatory first/fourth clauses. Add candidate entries in pre-order, then
 direct-child route entries in order. If the next full `id + title + state` entry
@@ -162,13 +182,18 @@ is reported.</CLAUDE-HASH></p>
   <freshness title="7. Freshness and live switching">
     <p><STALE-TEST fact="true" status="spec/done">A goal is current only when its
 marker schema, plan id, plan revision, goal node, canonical profile and raw
-plan SHA equal current inputs, and either the actual Claude condition hash
-matches or the current deterministic render repeats the marker's `unavailable`
-refusal. Missing/malformed required output is stale. A changed interaction mode
+plan SHA equal current inputs, and both complete output byte sequences equal
+the current deterministic render. The actual Claude condition hash must match,
+or the render must repeat the marker's `unavailable` refusal with no command
+file. Checking the marker alone is insufficient: a compatible package update
+may improve fixed instructions without changing the plan or schema. Refresh
+only the derived outputs, preserving raw plan bytes and extension fields.
+Missing/malformed required output is stale. A changed interaction mode
 alone is not stale because it changes narration, not goal semantics.</STALE-TEST></p>
     <p><REFRESH-TRIGGERS fact="true" status="spec/done">Check at central-session
-start, after compaction/resume, after every accepted plan mutation, and after
-owner changes `goal_node` or planning profile. Any owner-facing continuing
+start, after compaction/resume or model/account change, after every accepted plan
+mutation, after a renderer/package update, and after owner changes `goal_node`
+or planning profile. Any owner-facing continuing
 session may refresh before further campaign execution unless an explicit formal
 handoff is currently `offering`.</REFRESH-TRIGGERS></p>
   </freshness>

@@ -154,6 +154,61 @@ class RendererTests(unittest.TestCase):
             stream.write("\n# raw-byte freshness probe\n")
         self.assertFalse(render_goal.run(self.args(context, check=True))["current"])
 
+    def test_refresh_preserves_raw_plan_and_extension_fields(self) -> None:
+        temporary, context = self.context()
+        self.addCleanup(temporary.cleanup)
+        plan_path = context / "plan.toml"
+        with plan_path.open("a", encoding="utf-8", newline="\n") as stream:
+            stream.write(
+                '\n# A campaign-owned contract on the last existing node.\n'
+                'contract = "campaigns/example/tasks/GATE.json#GATE.1"\n'
+                f'contract_sha256 = "{"a" * 64}"\n'
+            )
+        before = {path.name: path.read_bytes() for path in context.glob("*.toml")}
+        original = render_goal.parse_toml(before["plan.toml"], plan_path)
+        original_nodes = original["node"]
+        self.assertEqual(original_nodes[-1]["contract_sha256"], "a" * 64)
+
+        render_goal.run(self.args(context, check=True))
+        render_goal.run(self.args(context))
+        render_goal.run(self.args(context))
+
+        self.assertEqual(before, {path.name: path.read_bytes() for path in context.glob("*.toml")})
+        after = render_goal.parse_toml(plan_path.read_bytes(), plan_path)
+        self.assertEqual(after["node"], original_nodes)
+        self.assertEqual(after["revision"], original["revision"])
+
+    def test_same_input_renderer_upgrade_invalidates_and_refreshes_old_outputs(self) -> None:
+        # A marker-valid old render must not survive a compatible package update.
+        # Cover GOAL-only changes (unchanged marker) and adapter changes (old but
+        # internally consistent condition hash) independently.
+        for constant in ("CONTINUITY_TEXT", "CLAUDE_CONTINUITY"):
+            with self.subTest(constant=constant):
+                temporary, context = self.context()
+                try:
+                    plan_before = (context / "plan.toml").read_bytes()
+                    with mock.patch.object(render_goal, constant, "Earlier generated instruction."):
+                        old = render_goal.run(self.args(context))
+                    old_goal = (context / "GOAL.md").read_bytes()
+                    old_command = (context / "GOAL-CLAUDE.txt").read_bytes()
+                    status = render_goal.run(self.args(context, check=True))
+                    self.assertFalse(status["current"])
+                    self.assertEqual(status["plan_sha256"], old["plan_sha256"])
+                    self.assertEqual(status["plan_revision"], old["plan_revision"])
+                    self.assertEqual((context / "GOAL.md").read_bytes(), old_goal)
+                    self.assertEqual((context / "GOAL-CLAUDE.txt").read_bytes(), old_command)
+
+                    refreshed = render_goal.run(self.args(context))
+                    self.assertTrue(refreshed["current"])
+                    self.assertTrue(refreshed["goal_changed"])
+                    self.assertEqual(refreshed["claude_goal_changed"], constant == "CLAUDE_CONTINUITY")
+                    expected_goal, expected_command, _ = render_goal.render(render_goal.read_snapshot(context))
+                    self.assertEqual((context / "GOAL.md").read_bytes(), expected_goal)
+                    self.assertEqual((context / "GOAL-CLAUDE.txt").read_bytes(), expected_command)
+                    self.assertEqual((context / "plan.toml").read_bytes(), plan_before)
+                finally:
+                    temporary.cleanup()
+
     def test_revision_selection_and_profile_each_make_goal_stale(self) -> None:
         mutations = {
             "revision": ("plan.toml", "revision = 8", "revision = 9"),
@@ -378,6 +433,8 @@ class RendererTests(unittest.TestCase):
         condition = command.removeprefix("/goal ")
         self.assertLessEqual(render_goal.utf16_units(condition), 4000)
         self.assertIn("more in GOAL.md", condition)
+        self.assertTrue(condition.endswith(render_goal.collapse_ws(render_goal.CLAUDE_CONTINUITY)))
+        self.assertEqual(command.count("\n"), 0)
         self.assertEqual(result["claude_condition_utf16_units"], render_goal.utf16_units(condition))
 
 

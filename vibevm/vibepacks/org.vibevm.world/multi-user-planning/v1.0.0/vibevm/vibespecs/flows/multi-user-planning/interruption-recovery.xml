@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Recovery after interrupted reasoning and execution</title>
+  <status stage="spec" state="done"/>
+  <scope title="1. Facts survive; unfinished confidence does not">
+    <p><RECOVERY-SCOPE fact="true" status="spec/done">This is a coordination
+protocol for provider overload, rate limits, exhausted quota, timeout, crash,
+compaction, and a change of chat, model or account. It does not implement a
+provider client, retry daemon, account switcher or scheduler. The driver applies
+it using the harness and ordinary inspectable artifacts. Every recovery remains
+within current owner authority, including planning-only instructions, execution
+holds and explicit stops.</RECOVERY-SCOPE></p>
+    <p><REASONING-LOSS fact="true" status="spec/done">Private unfinished
+reasoning may be irretrievably lost. Do not claim to restore it from a summary.
+Recover durable facts, artifacts, accepted decisions and evidence; reconstruct
+the next decision afresh from those inputs. An unrecorded conclusion is not an
+accepted decision. A surviving narrative is a claim to check, not proof.</REASONING-LOSS></p>
+    <p><STATE-COMPATIBILITY fact="true" status="spec/done">Keep the existing
+schema-1 plan, stable ids, dependencies, mandate dispositions and acceptance
+tiers. No recovery status, second queue, mandatory session record, custody claim
+or handoff is introduced. Ordinary notes, task reports, tool/job receipts and
+existing node evidence can carry recovery facts. A compact working packet is a
+view over those sources, never another authoritative plan.</STATE-COMPATIBILITY></p>
+  </scope>
+  <classification title="2. Classify before repeating anything">
+    <table>
+      <tr><td>Observed condition</td><td>Response</td></tr>
+      <tr><td><TRANSIENT-SIGNAL fact="true" status="spec/done">A provider
+explicitly reports temporary overload, transient unavailability or a rate limit
+with a retry/reset hint.</TRANSIENT-SIGNAL></td><td><TRANSIENT-RESPONSE fact="true" status="spec/done">Use
+the bounded retry episode below when the request is safe to repeat. A status
+code alone may be ambiguous: quota exhaustion can also be reported as a rate
+limit. Use the provider's non-secret error classification and hints.</TRANSIENT-RESPONSE></td></tr>
+      <tr><td><CAPACITY-SIGNAL fact="true" status="spec/done">The provider
+reports exhausted account quota, insufficient entitlement or a limit that needs
+an external reset.</CAPACITY-SIGNAL></td><td><CAPACITY-RESPONSE fact="true" status="spec/done">Do
+not repeatedly probe unchanged capacity. Preserve work and use the known reset
+time as an external condition; if unknown, say it is unknown. Continue useful
+authorized work that does not need the unavailable resource, or stop with that
+blocker. Quota exhaustion is neither a product failure nor acceptance.</CAPACITY-RESPONSE></td></tr>
+      <tr><td><REQUEST-SIGNAL fact="true" status="spec/done">Authentication,
+permission, invalid request, unsupported capability or a prompt/context too
+large.</REQUEST-SIGNAL></td><td><REQUEST-RESPONSE fact="true" status="spec/done">Do not
+retry the unchanged request as though it were overload. Resolve the actual
+input, configuration or authority problem. For context size, rebuild a bounded
+packet from the complete durable plan without dropping obligations. Never copy
+credentials into reports or silently switch accounts.</REQUEST-RESPONSE></td></tr>
+      <tr><td><PRODUCT-SIGNAL fact="true" status="spec/done">A reproducible
+check/assertion fails on the intended subject, or a required behavior is
+observably wrong.</PRODUCT-SIGNAL></td><td><PRODUCT-RESPONSE fact="true" status="spec/done">Use
+normal diagnosis, repair and review. Every repeated attempt needs a changed
+input, circumstance, hypothesis or method that explains why it may add evidence;
+provider backoff is not a repair strategy.</PRODUCT-RESPONSE></td></tr>
+      <tr><td><UNKNOWN-SIGNAL fact="true" status="spec/done">A connection
+breaks or output disappears after a tool/job may have started or finished.</UNKNOWN-SIGNAL></td><td><UNKNOWN-RESPONSE fact="true" status="spec/done">The
+outcome is unknown. Reconcile the actual operation and surviving artifacts
+before deciding to retry. A missing final message is not a failed operation.</UNKNOWN-RESPONSE></td></tr>
+    </table>
+    <p><CAPTURE-FAILURE fact="true" status="spec/done">Capture only the
+necessary non-secret facts: affected existing node and operation, input subject,
+observed error class/time, request or job id when available, retry hint,
+surviving artifact locations, attempts already consumed and next discriminating
+check. Record uncertainty explicitly. Never preserve raw sensitive provider
+bodies, authorization headers, tokens or environment dumps for convenience.</CAPTURE-FAILURE></p>
+  </classification>
+  <retries title="3. Bounded retry episodes">
+    <p><RETRY-IDENTITY fact="true" status="spec/done">An episode belongs to one
+logical operation and input subject under the observed failure condition, not
+to one chat or account. Rewording the prompt, changing a worker, account or
+model, or reopening a session does not erase consumed attempts. A shared outage
+does not justify launching many equivalent requests in parallel. Use the
+existing report, packet, job journal or node evidence to retain the episode;
+there is no prescribed new file format.</RETRY-IDENTITY></p>
+    <p><RETRY-BUDGET fact="true" status="spec/done">Honor a project/runtime
+retry policy within owner authority and record the effective limits before
+automatic retry. If none exists, the default is at most three total submissions
+including the initial request, within ten minutes from the episode's first
+failure. These limits bound resource retries, not campaign size or overall
+implementation effort. Count known SDK/harness retries within the same budget;
+do not stack independent retry loops. When hidden retries prevent a trustworthy
+remaining budget, inspect runtime status or stop automatic retries and report
+that uncertainty. If a restart loses the budget evidence, do not assume zero
+attempts or grant a fresh default budget.</RETRY-BUDGET></p>
+    <p><RETRY-DELAY fact="true" status="spec/done">For an eligible transient
+failure, the default delays before the two possible retries are five and ten
+seconds, each with zero to twenty-five percent positive jitter. A valid server
+retry/reset hint is a minimum delay and takes precedence when longer. Do not
+retry before it, truncate it to fit the budget, or retry after the episode's
+deadline. A hint beyond the remaining window makes the resource temporarily
+unavailable. Respect stricter harness waiting limits; split a permitted wait
+into responsive intervals or stop with the next eligible time. Never busy-loop
+or simulate elapsed time.</RETRY-DELAY></p>
+    <p><RETRY-EXIT fact="true" status="spec/done">Stop retries on success,
+owner stop, exhausted attempt/time budget, a permanent error, ambiguous effect,
+or evidence that the operation is already live. A paused episode stays paused
+across restart. A new automatic episode requires an observed material change
+that resolves the previous condition, such as a confirmed quota reset, restored
+service or observed available capacity through an owner-configured provider, or
+explicit owner renewal. Record that reason and retain the old episode evidence.
+Elapsed chat time, a new account label, a new prompt name
+or a desire to keep trying is not renewal evidence. A read-only status check
+must itself be bounded; do not disguise indefinite retrying as status polling.</RETRY-EXIT></p>
+    <p><ACCOUNT-CHANGE fact="true" status="spec/done">The owner may change
+account or model using the client. The coordinator does not automate credential
+switching, move secrets, or treat another identity as an escape from provider
+restrictions. Verify the newly available capability through normal authorized
+client state and retain the logical episode's spent budget; renewal requires
+the changed availability or explicit authority described in `RETRY-EXIT`.
+On the same
+operating-system user and exact repository/worktree binding, this is ordinary
+continuation with the existing plan, not a formal handoff. Different bindings
+follow the normal context-resolution rules.</ACCOUNT-CHANGE></p>
+    <p><WAITING-CLAIMS fact="true" status="spec/done">Report a known next
+eligible time, remaining retry budget and practical next action when useful.
+Do not promise to wake, resume or notify later unless an external scheduler has
+actually been authorized and configured. The package itself creates no timer
+or automation. A pause for unavailable capacity never marks the campaign
+complete.</WAITING-CLAIMS></p>
+  </retries>
+  <effects title="4. Recover effects before replay">
+    <p><REQUEST-VERSUS-EFFECT fact="true" status="spec/done">Repeating a model
+generation request and repeating its tool actions are different decisions. A
+fresh generation should receive the verified current state and remaining task;
+it must not blindly replay an earlier transcript. Even a generation or tool
+request can create a billable job or external effect. Where completion is
+ambiguous, inspect request/job status before resubmission.</REQUEST-VERSUS-EFFECT></p>
+    <p><RECONCILE-EFFECT fact="true" status="spec/done">Use an available job
+id, operation receipt, process status, remote object/version, transaction state
+or durable postcondition to determine whether the operation is live, succeeded,
+failed without effect, or partly applied. Reuse the original idempotency key
+only when the operation contract supports it; never generate a new key to
+retry the same ambiguous effect. If postconditions prove success, record and
+review it without replay. If live, observe that job within the bounded runtime
+policy. If partial, repair or roll back only within existing authority. If the
+outcome cannot be established and duplicate effects matter, stop that operation
+with the unresolved fact; continue independent safe work.</RECONCILE-EFFECT></p>
+    <p><RETAIN-WORK fact="true" status="spec/done">Inventory diffs, files,
+reports, test output, logs and active worker jobs before regenerating anything.
+Keep usable partial output even if the producer's final turn failed. Do not
+launch a replacement writer until the old writer is known stopped or isolated
+from the new write perimeter. Distinguish a live worker from an observed
+conflicting central writer; ordinary stale metadata proves neither.</RETAIN-WORK></p>
+    <p><RETRY-NOT-ACCEPTANCE fact="true" status="spec/done">Successful retry
+recovers execution, not acceptance. Worker claims and recovered partial work
+remain candidates until the central review and required gates establish their
+declared tier. Durable accepted evidence remains valid for its unchanged
+subject. A missing log needed to establish a new claim calls for targeted
+reproduction; it does not erase unrelated accepted history.</RETRY-NOT-ACCEPTANCE></p>
+  </effects>
+  <continuity title="5. Preserve enough to restart intelligently">
+    <p><CHECKPOINT-ECONOMY fact="true" status="spec/done">At a useful decision,
+review or artifact boundary, persist the small set of facts a fresh coordinator
+would otherwise have to rediscover. Before an operation with consequential
+external effects, retain its purpose, input subject and recovery/idempotency
+identity when available so an interrupted acknowledgement can be reconciled.
+Use ordinary existing artifacts and evidence surfaces; do not create a universal
+checkpoint ritual or serialize each thought. A record is useful only if its
+discovery path is available from the current task or existing node evidence.</CHECKPOINT-ECONOMY></p>
+    <p><CHECKPOINT-CONTENTS fact="true" status="spec/done">A bounded continuity
+note may contain existing node ids, verified input identities, accepted boundary,
+candidate locations, live jobs, attempts consumed, concise decision conclusions
+and their reasons, unresolved alternatives, the next discriminating check and
+literal continuation command if known. Separate observed facts, hypotheses and
+owner rulings. Persist enough rationale to reassess a decision; neither demand
+nor claim preservation of hidden chain-of-thought.</CHECKPOINT-CONTENTS></p>
+    <facts ordered="true">
+      <RESUME-ORIENT fact="true" status="spec/done">Resolve current owner
+  scope and exact context; read settings and the complete plan; inspect actual
+  repository/input state. Preserve execution holds. A new model/account does
+  not inherit authority from a confident summary.</RESUME-ORIENT>
+      <RESUME-RECONCILE fact="true" status="spec/done">Reconcile live jobs,
+  ambiguous effects and surviving candidates. Recover consumed retry and
+  mutation budgets from evidence. Do not start another writer or issue another
+  effect while its predecessor's status is materially unknown.</RESUME-RECONCILE>
+      <RESUME-REASON fact="true" status="spec/done">Read concise decision
+  notes where present; check them against governing sources and actual state.
+  Reconstruct unrecorded reasoning as new tentative work. If there was no
+  checkpoint, use the tree, plan and inspectable artifacts; their absence
+  creates uncertainty to resolve, not a compulsory handoff or restart from zero.</RESUME-REASON>
+      <RESUME-VERIFY fact="true" status="spec/done">Compare evidence subjects
+  to current inputs. Retain unchanged accepted evidence; rerun only affected or
+  unverifiable gates, plus explicitly required integration/closure gates at
+  their actual boundaries. A recovered candidate still receives central review.</RESUME-VERIFY>
+      <RESUME-CONTINUE fact="true" status="spec/done">Update existing node
+  evidence and state only as justified, refresh the derived goal if stale,
+  and select the next bounded authorized action. Status/planning-only requests
+  finish within that scope; an execution instruction permits continuation
+  without a new permission ceremony.</RESUME-CONTINUE>
+    </facts>
+  </continuity>
+  <scenarios title="6. Acceptance examples for drivers and reviewers">
+    <facts ordered="false">
+      <CASE-OVERLOAD fact="true" status="spec/done">**Temporary overload:** a
+  pure request fails and names a twenty-second retry delay. One retry waits at
+  least twenty seconds, consumes the second submission and succeeds. No source
+  test fails by implication; no second retry runs after success.</CASE-OVERLOAD>
+      <CASE-LONG-HINT fact="true" status="spec/done">**Unavailable capacity:**
+  a retry hint is thirty minutes away under the default ten-minute window.
+  Preserve the task and report the eligible time. Do not poll every few
+  seconds, sleep past the budget, promise an unconfigured wakeup or mark the
+  campaign complete.</CASE-LONG-HINT>
+      <CASE-ACCOUNT-RESUME fact="true" status="spec/done">**Quota mid-decision:**
+  an account exhausts quota after a diff was written and before a verdict. The
+  owner opens the same checkout with another account. Read the complete plan,
+  recover the candidate diff and spent episode budget, reconstruct the missing
+  decision and run affected checks. Keep accepted nodes and execution holds;
+  neither accept the diff nor repeat its edits from a summary alone.</CASE-ACCOUNT-RESUME>
+      <CASE-PUBLISH-ACK fact="true" status="spec/done">**Lost publication
+  acknowledgement:** a publication request times out. Read remote state or the
+  original operation receipt before retrying. Matching published content is
+  evidence to review; a new publication with a new idempotency key is not the
+  recovery default.</CASE-PUBLISH-ACK>
+      <CASE-LIVE-WORKER fact="true" status="spec/done">**Coordinator disappears:**
+  a worker is still running when a fresh coordinator arrives. Observe its job,
+  retain its partial files and wait within policy or explicitly stop/isolate it
+  before replacement. Do not create two writers merely because the old chat is
+  gone.</CASE-LIVE-WORKER>
+      <CASE-MUTATION-RESUME fact="true" status="spec/done">**Interrupted
+  diagnostic:** one mutation has already produced a green result when context
+  is lost. Restore the original bytes, adjudicate equivalence, reachability and
+  the contract using the existing observation, and use the named alternative
+  if needed. A new account does not earn another mutant.</CASE-MUTATION-RESUME>
+      <CASE-NO-CHECKPOINT fact="true" status="spec/done">**Crash without notes:**
+  tree state contains a partial change with no durable decision. Inventory it
+  as candidate, reconstruct the intended obligation from existing node ids and
+  sources, and choose a bounded next check. The absence of hidden reasoning is
+  neither evidence of correctness nor a reason to discard useful work.</CASE-NO-CHECKPOINT>
+    </facts>
+  </scenarios>
+</spec>

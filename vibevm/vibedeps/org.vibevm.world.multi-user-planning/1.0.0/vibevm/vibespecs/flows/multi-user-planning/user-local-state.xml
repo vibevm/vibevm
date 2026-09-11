@@ -24,7 +24,16 @@ packaged, mirrored or treated as another contributor's authority.</STATE-HOME></
 settings, complete plan and repository tree are sufficient for ordinary
 continuation. `sessions/`, `handoffs/` and `records/` are optional diagnostic or
 explicit-formal-workflow material; a timeout, crash, compaction, new chat or
-model change does not require creating or receiving any of them.</OPTIONAL-CONTINUITY-RECORDS></p>
+model/account change, quota exhaustion or provider overload does not require
+creating or receiving any of them. Optional recovery evidence can use existing
+record/evidence surfaces without changing schema 1.</OPTIONAL-CONTINUITY-RECORDS></p>
+    <p><PROVIDER-IDENTITY-IS-NOT-CONTEXT fact="true" status="spec/done">A provider
+account is not a stewardship identity or binding key. An owner-initiated account
+change on the same OS user and exact checkout resumes the existing context;
+changing OS user or machine does not authorize reading another user's private
+state. Never store credentials or secrets in plans, goals, packets or recovery
+reports. Availability and retry observations belong in local evidence, not in
+shared project policy.</PROVIDER-IDENTITY-IS-NOT-CONTEXT></p>
     <p><OPAQUE-CONTEXT-ID fact="true" status="spec/done">`opaque-context-id` is a
 random UUID rendered as lowercase ASCII. It is an identity only; never parse
 meaning from it. Discovery scans `contexts/*/binding.toml`, so no mutable global

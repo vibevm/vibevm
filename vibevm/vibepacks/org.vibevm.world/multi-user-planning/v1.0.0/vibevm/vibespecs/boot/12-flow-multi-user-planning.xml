@@ -23,7 +23,8 @@ Never infer current state from a repository-level personal checkpoint.</RESOLVE-
   mandatory-holder law. Its current heirs are `CASUAL-CONTINUATION`,
   `ADVISORY-CUSTODY` and `LIVE-CONFLICT-STOPS`.</ONE-CENTRAL-HOLDER>
       <CASUAL-CONTINUATION fact="true" status="impl/done">A timeout, crash,
-  compaction, new chat or model change is ordinary continuation. Any
+  compaction, new chat, model/account change, quota exhaustion or provider
+  overload is ordinary continuation. Any
   owner-facing central agent may resume from the exact binding, settings,
   complete plan and repository evidence without creating session, handoff,
   receipt or takeover documents.</CASUAL-CONTINUATION>
@@ -32,9 +33,11 @@ Never infer current state from a repository-level personal checkpoint.</RESOLVE-
   a default write gate. Only a valid `offering` created by an explicit
   owner-requested formal handoff fences writes.</ADVISORY-CUSTODY>
       <LIVE-CONFLICT-STOPS fact="true" status="impl/done">An empirically
-  observed live conflicting writer or input drift stops writes until the
-  owner resolves the conflict. Stale or mismatched custody metadata alone does
-  not.</LIVE-CONFLICT-STOPS>
+  observed live conflicting writer stops affected writes until the owner
+  resolves the conflict. Input drift invalidates the affected snapshot:
+  recapture expected own changes; investigate other changes and escalate only
+  unresolved semantic or writer conflicts. Stale custody metadata alone does
+  not establish a conflict.</LIVE-CONFLICT-STOPS>
       <ACCEPTANCE-NEVER-TRANSFERS fact="true" status="impl/done">Custody may
   transfer. Acceptance does not: dirty changes and worker claims arrive as
   candidates until the incoming central agent independently reviews and gates
@@ -69,6 +72,14 @@ output is allowed after the fence; further repository/plan mutation is not.</CRE
   discovered obligation has a stable node or an explicit disposition. Never
   stop merely because the visible projection ended; close parents bottom-up
   only after their descendants and exit evidence close.</NO-SILENT-LOSS>
+      <EXECUTION-WINDOW fact="true" status="impl/done">Respect current owner
+  intent: planning/status requests and execution holds remain binding. During
+  authorized execution, judge viable candidates first, select a meaningful
+  outcome from existing nodes and dispatch only ready, bounded packets. A cold
+  or resumed session reads the complete plan; a warm session may reuse that
+  understanding after checking revision and relevant input changes. Parallelism
+  must fit integration and review capacity. Canon:
+  @spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/campaign-execution#root.</EXECUTION-WINDOW>
       <REPLAN-AND-BACKSCAN fact="true" status="impl/done">Replan when evidence,
   owner input, gates, architecture or resources change. At each milestone and
   before handoff, backscan the original mandate, current tree, plan and accepted
@@ -81,9 +92,23 @@ output is allowed after the fence; further repository/plan mutation is not.</CRE
   atom. Counterfactual mutation is not a routine gate: use one smallest
   reversible mutation only when a concrete observation makes the result
   suspicious and that probe is cheaper than the named alternative proof. Stop
-  after its exact rerun; never enter an open-ended mutation loop. Canon:
+  after its exact rerun; restart or account change does not reset the episode.
+  A compile/setup failure is not a behavioural kill, and an equivalent or
+  unreached survivor is inconclusive. Never enter an open-ended mutation loop. Canon:
   @spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/campaign-execution#MUTATION-DIAGNOSTIC-LAW.</MUTATION-IS-SUSPICION-TRIGGERED></p>
   </verification>
+  <recovery title="Interruption recovery">
+    <p><RECOVER-BEFORE-RETRY fact="true" status="impl/done">Recover surviving
+  artifacts, job status and effect receipts before regenerating or resubmitting.
+  Do not replay an operation whose effects are unknown. Accepted unchanged
+  evidence remains accepted; missing reasoning and unfinished decisions do not.
+  Keep concise decision/evidence and next-check notes at useful boundaries,
+  without a mandatory checkpoint ritual. Transient provider retries use bounded
+  backoff and server hints; exhausted quota/authentication needs an actual
+  availability change. Do not switch credentials automatically or reset retry
+  bounds after a session/account change. Read before recovery:
+  @spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/interruption-recovery#root.</RECOVER-BEFORE-RETRY></p>
+  </recovery>
   <profiles title="Persistent user profiles">
     <p><PROFILE-QUALITY-FLOOR fact="true" status="impl/done">The owner selects
 `ultra` or `standard` independently of the model name and may switch it during a

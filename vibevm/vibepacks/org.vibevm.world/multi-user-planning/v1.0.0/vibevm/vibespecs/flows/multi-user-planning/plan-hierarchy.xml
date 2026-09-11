@@ -65,6 +65,20 @@ superseded`. `candidate` means implementation exists but central acceptance is
 open. Parents close bottom-up: a parent cannot be `accepted` while a required
 descendant is non-terminal or while its own exit evidence is absent.</NODE-STATES></p>
   </format>
+  <execution-compatibility title="Execution without a plan migration">
+    <p><EXECUTION-COMPATIBILITY fact="true" status="spec/done">Working windows,
+bounded worker packets, verification reuse and interruption recovery are
+procedures over existing nodes. They do not introduce a second queue, new node
+states or required plan fields. Preserve stable ids, dependencies, dispositions,
+acceptance, evidence and campaign-specific extension fields. Derive a working
+packet from the complete plan; do not replace the plan with that packet.</EXECUTION-COMPATIBILITY></p>
+    <p><RECOVERY-EVIDENCE fact="true" status="spec/done">When retries or effects
+need a durable record, use existing evidence references and ordinary local
+reports. Identify the node, input snapshot, completed/unknown effects, consumed
+attempts and next discriminating check. This is evidence about execution, not
+new authority or a compulsory session record; old plans remain usable without
+it. Missing evidence requires reconstruction, not invented completion.</RECOVERY-EVIDENCE></p>
+  </execution-compatibility>
   <coverage title="3. Coverage before execution">
     <p><COVERAGE-SKELETON fact="true" status="spec/done">A campaign may begin
 before every distant atom is known, but never before every known obligation is

@@ -62,20 +62,38 @@ PROFILE_TEXT = {
     ),
 }
 CONTINUITY_TEXT = (
-    "After compact or resume, re-read the complete plan and refresh this goal if "
-    "stale. Continue across accepted intermediate atoms; a short UI plan, context "
-    "loss, difficulty, or worker termination is not completion. Stop only for an "
-    "owner-only decision, an external blocker, or an explicit owner-requested "
-    "central handoff. "
-    "Declare completion only when every completion proof below is satisfied."
+    "Follow the current owner instruction; status/planning-only requests, stops "
+    "and scope limits govern execution. On cold start or after compact/resume, "
+    "model or account change, read the complete plan and verify the actual tree, "
+    "artifacts and live workers; refresh stale goal bytes. In an uninterrupted "
+    "session reuse the complete validated plan while its revision and relevant "
+    "input changes are accounted for; otherwise re-read it. Recover durable "
+    "evidence and decisions; unfinished reasoning is not evidence. Retain accepted "
+    "evidence for an unchanged exact subject and review surviving candidates "
+    "before regeneration. Resolve unknown tool outcomes before replay; apply "
+    "interruption-recovery retry rules to the same logical episode across "
+    "restarts. Mutation diagnostics require concrete suspicion and lower cost than "
+    "the named alternative proof; their bounded episode never resets on restart. When execution "
+    "is authorized, continue across accepted intermediate atoms until the requested "
+    "boundary, completion, an owner-only decision, external blocker, conflicting "
+    "live writer or explicit formal handoff. Context loss or worker termination "
+    "is not completion. Declare completion only when every completion proof is "
+    "satisfied."
 )
 CLAUDE_CONTINUITY = (
-    "After compact/resume re-read plan.toml and GOAL.md; do not stop at a short UI "
-    "plan, an intermediate atom, difficulty or a worker/process ending; stop only "
-    "for an owner-only decision, external blocker or explicit owner-requested "
-    "central handoff; the goal is "
-    "met only when the selected node is accepted with all required descendants/"
-    "gates and owner inspection."
+    "Current owner scope wins, including status/planning-only and stop. On cold "
+    "start, compact/resume or model/account change read the complete plan.toml and "
+    "refresh stale GOAL.md; while warm, reuse the validated full plan only with "
+    "accounted-for revision/input changes. Inspect artifacts and live workers "
+    "before retries; resolve unknown tool outcomes before replay. Recover durable "
+    "decisions, not unfinished reasoning; unchanged exact-subject acceptance "
+    "survives. Follow interruption-recovery; retry and mutation episodes survive "
+    "restart. Mutation diagnostics need concrete suspicion and lower cost than "
+    "the named alternative proof. During authorized execution continue across intermediate atoms "
+    "until the requested boundary, completion, owner-only decision, external "
+    "blocker, conflicting live writer or explicit formal handoff. Process ending "
+    "is not completion; the goal is met only when the selected node is accepted "
+    "with all required descendants/gates and owner inspection."
 )
 
 
@@ -394,7 +412,8 @@ def section_with_entries(label: str, entries: list[str], id_entries: list[str], 
 
 def build_condition(selected: dict[str, Any], subtree: list[dict[str, Any]], revision: int) -> str:
     base = collapse_ws(
-        f"Complete campaign [{selected['id']}] {selected['title']} exactly as the current "
+        f"Within current owner-authorized scope, complete campaign [{selected['id']}] "
+        f"{selected['title']} exactly as the current "
         f"stewardship plan.toml revision {revision} defines, including every non-terminal "
         "descendant and every completion proof recorded in GOAL.md."
     )
