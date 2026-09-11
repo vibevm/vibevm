@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Install vibe</title>
+  <status stage="doc" state="work" audience="user"/>
+  <p>vibe is one program with no runtime to install. On Windows you download an archive and unpack it; on any platform with a Rust toolchain you build it from the source. When it is done, one command prints the version.</p>
+  <prompt id="install-vibe">Install vibe on this machine: on Windows from the latest release archive at github.com/vibevm/vibevm, otherwise by building the source checkout with its first-run script. Then open a new shell and confirm that `vibe --version` prints a version.
+    <needs>network access to github.com; on a platform other than Windows, git and a Rust toolchain</needs>
+    <outcome>`vibe --version` prints `vibe 1.0.0` in a new terminal, and `vibe self doctor` reports no problems</outcome>
+    <assert>vibe --version</assert>
+    <assert>vibe self doctor</assert>
+  </prompt>
+  <what-happens title="What happens">
+    <p>On Windows the agent downloads the release archive, unpacks it, and runs its installer script. The script imports the binary into vibe's own managed store under `~/.vibe/opt`, marks it active, and adds one folder of small launcher scripts to your user `PATH`. Everywhere else the agent clones the source repository and runs its first-run script, which builds the program and installs it through the same manager. Either way, the result is the same layout: versions under `~/.vibe/opt/vibevm/`, launchers in `~/.vibe/opt/bin/`, and a pointer that says which version is current.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#ROOT-DEFAULT"/>
+  </what-happens>
+  <by-hand title="By hand">
+    <windows title="On Windows" when="os:windows">
+      <p>1. Download `vibe-&lt;version&gt;-windows-x86_64.zip` from the releases page of `github.com/vibevm/vibevm`.</p>
+      <p>2. Unpack the archive into a folder of your choice.</p>
+      <p>3. In that folder run the installer:</p>
+      <example id="windows-install" fixture="none">
+        <run>powershell -ExecutionPolicy Bypass -File .\install.ps1</run>
+        <expect></expect>
+      </example>
+      <p>4. Open a new terminal, so that the changed `PATH` is read.</p>
+      <p>5. Check the result:</p>
+      <example id="version" fixture="hello-vibe">
+        <run>vibe --version</run>
+        <expect>vibe 1.0.0</expect>
+      </example>
+      <p>The archive also contains `SHA256SUMS.txt`. Compare the digest of `vibe.exe` with the line in that file before you run the installer; the installer does the same check.</p>
+    </windows>
+    <from-source title="From the source, on any platform">
+      <p>1. Install git and a Rust toolchain. OpenSSL is not needed.</p>
+      <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#TOOLS-LIST"/>
+      <p>2. Clone the repository: `git clone https://github.com/vibevm/vibevm.git` and enter the folder.</p>
+      <p>3. Run the first-run script: `bash tools/first-run.sh` on Linux and macOS, `.\tools\first-run.ps1` on Windows. It builds the program, installs it into the managed store and sets up the launchers.</p>
+      <p>4. Open a new terminal and run `vibe --version`, then `vibe self doctor`.</p>
+      <p>Later, `vibe self install latest` rebuilds from the tip of the main branch, `vibe self ls` lists the versions on the machine, and `vibe self rollback` returns to the previous one.</p>
+      <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#CMD-INSTALL"/>
+    </from-source>
+  </by-hand>
+  <where-things-go title="Where things go">
+    <p>vibe keeps everything it owns under one folder in your home directory, `~/.vibe/`: the installed versions and their launchers under `opt/`, the machine store of fetched packages under `cache/`, registry clones under `registries/`, and your settings files. Nothing is written anywhere else, and the whole folder can be moved by setting the environment variable `VIBE_SETTINGS`.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#THE-SETTINGS-HOME-IS-DOT-VIBE-NOT-XDG"/>
+    <p>The installer never overwrites a running binary and never edits your `PATH` twice: it adds one entry, guarded by a marker, and leaves the rest alone.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#RULE-NEVER-CLOBBER"/>
+  </where-things-go>
+  <edge-cases title="Edge cases and rules">
+    <p>If `vibe --version` prints nothing in the terminal where you ran the installer, open a new one: the `PATH` change applies to new shells only.</p>
+    <p>A ready-built binary from anywhere can join the managed store without a toolchain: `vibe self import ./vibe.exe --tag 1.0.0 --use`.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#CMD-IMPORT"/>
+    <p>Building an arbitrary git ref is running arbitrary code, as with any build from source. Build from the repository and the branches you trust.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#ACE-ACCEPTED"/>
+  </edge-cases>
+</spec>

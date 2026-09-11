@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">What VibeVM is</title>
+  <status stage="doc" state="work" audience="user"/>
+  <p>A coding agent starts every session knowing nothing about your project. VibeVM fixes that the way a package manager fixes missing libraries: you name what your project follows, and the agent gets the exact text to read at the start of each session. The text comes from packages, so a team, a company or a community can share it and improve it in one place.</p>
+  <example id="version" fixture="hello-vibe">
+    <run>vibe --version</run>
+    <expect>vibe 1.0.0</expect>
+  </example>
+  <the-problem title="The problem it solves">
+    <p>Every serious project has rules that never make it into the code: how to commit, what to check before pushing, which words mean what, how a feature is described before it is built. People learn these rules by working together. An agent has no such luck. It reads whatever file happens to be open, or a hand-written instruction file that drifts a little further from reality with every week.</p>
+    <p>VibeVM treats that instruction text as a dependency. A project declares which rule sets it follows, in a small manifest file, and vibe assembles from them the text an agent reads first. When a rule set improves, the project updates it like any other dependency. When two projects follow the same rule set, they get the same text, from the same source.</p>
+  </the-problem>
+  <how-it-works title="How it works">
+    <p>The unit vibe installs is a *package*: a folder with a short manifest and the text or tools it delivers. A package has a coordinate made of a group and a name, such as `org.vibevm.world/wal`, and a version. Packages live in a *registry*, which by default is a public organisation on GitHub with one repository per package. You do not need an account to read from it.</p>
+    <p>A *project* is any folder with a manifest named `vibe.toml`. The manifest lists the packages the project requires. When you run `vibe install`, vibe resolves versions, fetches the packages once into a store on your machine, copies them into the project, and writes two things: a lock file that records exactly what arrived, and the *boot lane*, the ordered reading list the agent follows at the start of a session.</p>
+    <p>The agent never runs vibe to start. It reads files. The first file is a short block at the end of your `CLAUDE.md`, `AGENTS.md` or `GEMINI.md` that points at the lane; the lane names the rest. That is the whole trick, and it is deliberately dull: any agent that can read a file can follow it.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#PURE-FILE-READING"/>
+    <p>Installing a package never edits the text you wrote yourself. Your own rules live in one tree, the copies that arrived with packages live in another, and vibe writes only into the second. This is the founding rule of the loading model, and everything else on this site follows from it.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#INCLUDE-RULE"/>
+  </how-it-works>
+  <what-it-is-not title="What it is not">
+    <p>VibeVM is not an agent and has no model inside it. It does not write code, does not talk to a language model on its own, and does not replace your editor. It prepares what an agent reads and, later in a project's life, runs the build steps a project declares. Which agent you use is your choice; the same project boots the same way in Claude Code, Codex, OpenCode or Cursor.</p>
+    <p>It is also not a wiki. The text vibe assembles is meant to be short, stable and cheap to read on every session start. Long explanations belong in documentation, like this manual, which an agent opens only when it needs them. Text costs tokens, and vibe is built around that fact.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-048#TOKENOMICS-IS-A-DESIGN-PRESSURE"/>
+  </what-it-is-not>
+  <where-next title="Where to go next">
+    <p>To see it on your own machine, install vibe and create a first project: the newcomer's route walks through both in ten minutes. To understand the pieces, read the pages on the two trees, the boot lane and packages, in that order.</p>
+  </where-next>
+</spec>
