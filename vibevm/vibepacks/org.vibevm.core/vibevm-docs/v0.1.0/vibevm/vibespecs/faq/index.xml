@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Questions</title>
+  <status stage="doc" state="work" audience="user"/>
+  <p>Real questions people asked, each answered in a few sentences with a link to the page that explains the mechanism.</p>
+  <q-commit-vibedeps title="Do I commit the dependency tree?">
+    <p>Yes. `vibevm/vibedeps/` is committed on purpose, so an agent that clones the repository can read the whole lane without running anything and a reviewer can see exactly what text changed when a dependency moved. It is vibe's tree, not yours: never edit it, and let `vibe reinstall` rebuild it when in doubt. See [Two trees](../model/two-trees.xml).</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#VIBEDEPS-COMMITTED"/>
+  </q-commit-vibedeps>
+  <q-conflict title="A dependency deep in my tree clashes on a version. How do I fix it?">
+    <p>First read the resolver's explanation: it names the two constraints that disagree, and overlapping ranges are not a conflict. Then climb the ladder from lightest to heaviest: widen a constraint you over-narrowed; move the intermediate dependency to a version with a compatible constraint with `vibe update`; add an `[[override]]` for the one coordinate with a `reason`; fork and use a git source when the dependency's own constraint must change. One version per package across the whole workspace is the rule, so vibe stops rather than installing two.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#OVERRIDE-SHORT-CIRCUIT"/>
+  </q-conflict>
+  <q-confirm title="Why does install ask me to confirm?">
+    <p>Because an install writes into your repository: the dependency tree, the lock file, the boot files, the managed block in the instruction files. The plan shows all of it first. In a script, `--assume-yes` or `--unattended` answers for you; declining is not an error and leaves nothing half-written.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#PLAN-UNIT"/>
+  </q-confirm>
+  <q-llm title="Does vibe call a language model?">
+    <p>Not on its own. vibe has no model inside it and every subsystem works algorithmically. When a step needs reasoning, vibe parks an instruction for the agent that hosts it, or, at a terminal, calls a provider you configured, only for that step and only if you switched the feature on. See [Ask your agent to do the work](../agent/ask-your-agent.xml).</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#LLM-IS-AN-ENHANCEMENT"/>
+  </q-llm>
+  <q-two-versions title="Can two versions of one package coexist in a project?">
+    <p>No. Resolution picks one version per package across the workspace, and the lane an agent reads would otherwise contain two versions of the same rules. If two members of a workspace truly need different majors, they are two workspaces.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#INSTALL-UNIFIED"/>
+  </q-two-versions>
+  <q-registry-gone title="A registry I used has disappeared. Is my project stuck?">
+    <p>Not while the machine store holds the packages: a stored version is usable even when no registry lists it any more, and `vibe reinstall` rebuilds the tree from the lock file and the store. For the long run, `vibe registry vendor` writes a mirror folder of everything the lock file references, which any machine can use as a `file://` mirror.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#A-CACHE-HIT-IS-AUTHORITATIVE-FOR-AVAILABILITY"/>
+  </q-registry-gone>
+  <q-pin title="How do I pin a package to an exact version?">
+    <p>Install it with `@=1.2.0`, or pass `--exact` to `vibe install` or `vibe update` to write the resolved version as an exact pin into the manifest. Without `--exact`, the manifest keeps a range and the lock file holds the pin, which is what most projects want.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#CF-EXACT"/>
+  </q-pin>
+  <q-edit-lock title="Can I edit vibe.lock by hand to silence a hash error?">
+    <p>No. A fingerprint mismatch means the bytes served are not the bytes the lock file remembered: a force-pushed tag, a broken mirror or a deliberate override. Find out which, then uninstall and reinstall to re-pin, remove the broken mirror, or record the override with its reason. Editing the lock file defeats the only integrity check you have.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#EFF-MIRROR-SUBSTITUTION"/>
+  </q-edit-lock>
+  <q-why-eight-kinds title="Why so many package kinds?">
+    <p>Because a tool that knows what a package is for before opening it can refuse the wrong thing early: a documentation package cannot carry a boot snippet, a server package must pin what it serves, a feature cannot name a framework. Each kind is one genre, and a word that meant two genres was split the moment it did.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#KIND-METADATA"/>
+  </q-why-eight-kinds>
+  <q-offline title="I am on a plane. What works?">
+    <p>Everything that reads the store and the project: install from the store with `--offline`, reinstall, check, tree, the local documentation reader. What does not work says so with the missing coordinate named, and never installs a partial result. Warm the store before you leave with `vibe cache add`. See [Work offline](../howto/work-offline.xml).</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#OFFLINE-NO-DEGRADE"/>
+  </q-offline>
+  <q-remove-vibe title="The project is done. How do I ship it without vibe?">
+    <p>`vibe scrape` removes the vibe layer by contract and proves the native build still passes, either into a new folder or in place with recovery. It is different from `vibe clean`, which removes only what vibe can regenerate. See [Remove VibeVM from a project](../lifecycle/scrape.xml).</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#RELATED-CLEAN"/>
+  </q-remove-vibe>
+  <q-docs-install title="Why can I not install the manual into my project?">
+    <p>Documentation is read, not executed, and it must not enter the lane an agent reads at every session start. So a documentation package is warmed into the machine store with `vibe cache add`, read locally with `vibe doc serve`, and reached by an agent through a skill or by address. See [Read documentation locally](../howto/read-documentation-locally.xml).</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#KIND-DOC-NOT-INSTALLED"/>
+  </q-docs-install>
+</spec>
