@@ -2232,7 +2232,7 @@ $V init --help | grep -q 'flow, feat, stack, tool, mcp, lang, doc, app'
 grep -q '"doc"' formats/vocabularies.json && grep -q '"app"' formats/vocabularies.json
 cargo xtask check-codegen && cargo xtask wire-diff
 $V doc check --path $D --examples --citations --derived --coverage --media --style --min 100
-$V doc check --path $R --translations --media --style || true   # фикстура намеренно расходится в одном блоке (F-44): вывод читается, гарантию держит следующая строка
+$V doc check --path $R --translations --media --style || true   # у фикстуры нет источника в store, и она намеренно расходится в одном блоке (F-44): строка не гейт, гарантию держит следующая
 cargo test -p vibe-doc translation
 $V doc manifest --path $D --llms full | head -1 | grep -q .
 $V doc manifest --path $D --json | grep -q '"primary"'
