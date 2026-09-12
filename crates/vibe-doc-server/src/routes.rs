@@ -19,7 +19,7 @@
 //! | `<base><coordinate>/<version>/<document>/` | the page: the island in the shell |
 //! | `<base><coordinate>/<version>/<document>.md` | `text/markdown` |
 //! | `<base><coordinate>/<version>/<document>.xml` | `application/xml` |
-//! | `<base><coordinate>/<version>/` and `…/latest/` | the package's own page: the card, the shelf, the agent surfaces |
+//! | `<base><coordinate>/<version>/` | the package's own page: the card, the shelf, the agent surfaces |
 //! | `<base>media/<name>`, `<base><coordinate>/<version>/media/<name>` | the card's pictures |
 //! | `<base>manifest.json` | the page manifest |
 //! | `<base>llms.txt`, `llms-small.txt`, `llms-medium.txt`, `llms-full.txt` | the agent files |
@@ -29,6 +29,13 @@
 //!
 //! A page address without its trailing slash is a 308 to the one with
 //! it, on the web and locally alike.
+//!
+//! **Every one of those addresses answers under `latest` as well**, and
+//! answers the same thing rather than a redirect to the number: the site
+//! publishes both spellings of a version as real pages, and a reader
+//! pointed at one package can only mean this version by `latest`. The
+//! translation is made once, at the top of [`answer`], so no lane below
+//! knows a version has two names.
 //!
 //! The order of those lanes is not arbitrary. The machine files and the
 //! resolver are the mount's own names; the package's pages live under a
@@ -110,6 +117,11 @@ fn answer(reader: &Reader, raw_path: &str, query: Option<&str>) -> Result<Respon
             reader.mount()
         )));
     };
+    // `latest` is read into the number ONCE, before any lane looks at the
+    // address, so every route below answers under both spellings without
+    // knowing there are two.
+    let numbered = as_numbered(reader, rest);
+    let rest = numbered.as_ref();
 
     if let Some(response) = machine_file(reader, rest)? {
         return Ok(response);
@@ -120,12 +132,8 @@ fn answer(reader: &Reader, raw_path: &str, query: Option<&str>) -> Result<Respon
     if rest == resolve::ROUTE || rest == concat_slash(resolve::ROUTE) {
         return resolve::answer(reader, query);
     }
-    // The package's own page, at the address the site gives it and at the
-    // `latest` spelling of that address (`##SITE-MOUNT`). A reader is
-    // pointed at ONE package, so `latest` can only be this version, and
-    // the two are one page rather than a redirect between them — which is
-    // what the site does with them too.
-    if rest == reader.prefix || rest == reader.latest_prefix() {
+    // The package's own page.
+    if rest == reader.prefix {
         return package_page(reader);
     }
     // The door above the mount. It means «the documentation», and the
@@ -155,6 +163,32 @@ fn answer(reader: &Reader, raw_path: &str, query: Option<&str>) -> Result<Respon
 /// `resolve/` beside `resolve` — the trailing slash a link may carry.
 fn concat_slash(route: &str) -> String {
     format!("{route}/")
+}
+
+/// One address with `latest` read as the version this reader serves
+/// (`##SITE-MOUNT`).
+///
+/// The site publishes every page at BOTH spellings of one version, and a
+/// link — the shell's version switcher, a citation followed to `latest`,
+/// an address somebody kept — arrives here under either. A reader is
+/// pointed at ONE package, so `latest` can only mean this version: the
+/// translation is total, and it is made in one place before any lane
+/// reads the address, so no route has to know that a version has two
+/// names.
+///
+/// The answer is the page itself and not a redirect to the other
+/// spelling. Three reasons, in the order they matter: the site answers
+/// `200` at both, so a reader sees locally what a reader sees on the web;
+/// the shell's version switcher OFFERS `latest`, and a redirect would put
+/// the number back in the address bar and read as a control that does
+/// nothing; and every relative address inside an island is written to be
+/// right under either spelling, so moving the reader out of the one they
+/// chose buys nothing and costs a round trip per asset.
+fn as_numbered<'a>(reader: &Reader, rest: &'a str) -> std::borrow::Cow<'a, str> {
+    match rest.strip_prefix(&reader.latest_prefix()) {
+        Some(tail) => std::borrow::Cow::Owned(format!("{}{tail}", reader.prefix)),
+        None => std::borrow::Cow::Borrowed(rest),
+    }
 }
 
 /// The package's own page: the card, the shelf of what this

@@ -368,6 +368,80 @@ async fn the_package_page_answers_at_both_spellings_of_its_address() {
     }
 }
 
+/// `latest` is this version, spelled the other way — for EVERY address
+/// the reader serves, not for the package page alone (`##SITE-MOUNT`).
+///
+/// The law is stated as an equality rather than as a list of expected
+/// statuses on purpose: what matters is that the two spellings are one
+/// address, whatever that address answers. A test that pinned each
+/// status would agree with a reader that answered `latest` correctly by
+/// accident on the four forms somebody thought to write down.
+#[tokio::test]
+async fn latest_answers_as_the_version_it_stands_for_on_every_address() {
+    for tail in [
+        // The page, in the shell.
+        "model/boot-lane/",
+        // Both projections, as files beside it.
+        "model/boot-lane.md",
+        "model/boot-lane.xml",
+        // A page address that lost its slash: the repair, under both.
+        "model/boot-lane",
+        // The package's own page.
+        "",
+        // The card's pictures, under the edition.
+        "media/b368aadb59c54a38.svg",
+        // An address this documentation does not carry: a refusal is an
+        // answer, and the two spellings owe the same one.
+        "model/nope/",
+        // A machine file the reader does not serve under the edition —
+        // pinned here because the ALIAS holds even where the address
+        // behind it is a disagreement with the site (see the report).
+        "llms.txt",
+    ] {
+        let numbered = get_bytes(&format!("/doc/com.example/thing-docs/0.2.0/{tail}")).await;
+        let latest = get_bytes(&format!("/doc/com.example/thing-docs/latest/{tail}")).await;
+        assert_eq!(latest.0, numbered.0, "status of `{tail}`");
+        assert_eq!(
+            latest.1.get(header::CONTENT_TYPE),
+            numbered.1.get(header::CONTENT_TYPE),
+            "type of `{tail}`"
+        );
+        assert_eq!(
+            latest.1.get(header::LOCATION),
+            numbered.1.get(header::LOCATION),
+            "where `{tail}` sends the reader"
+        );
+        assert_eq!(latest.2, numbered.2, "body of `{tail}`");
+    }
+}
+
+/// The picture's name above is the one the build actually writes, so the
+/// alias case cannot pass by comparing two identical 404s.
+#[tokio::test]
+async fn the_picture_the_alias_case_names_is_one_this_package_publishes() {
+    let tmp = tempfile::tempdir().unwrap();
+    package(tmp.path());
+    let slots = vibe_doc::media::slots(tmp.path(), "com.example/thing-docs").expect("slots read");
+    assert!(
+        slots
+            .iter()
+            .any(|slot| slot.address == "media/b368aadb59c54a38.svg"),
+        "the fixture's icon moved; the alias case names a picture nobody publishes: {:?}",
+        slots.iter().map(|slot| &slot.address).collect::<Vec<_>>()
+    );
+}
+
+/// `latest` is the VERSION segment and nothing else: a document of that
+/// name is still a document.
+#[tokio::test]
+async fn latest_is_read_only_where_a_version_stands() {
+    // Not a version position — the reader has no page called `latest`,
+    // and says so rather than reading the segment as a version.
+    let (status, _, body) = get_path("/doc/com.example/thing-docs/0.2.0/latest/").await;
+    assert_eq!(status, StatusCode::NOT_FOUND);
+    assert!(body.contains("latest.xml"), "{body}");
+}
+
 /// The door above the mount means «this documentation», and the
 /// documentation now has a page of its own to mean.
 #[tokio::test]

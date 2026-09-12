@@ -70,13 +70,17 @@ pub(crate) fn answer(reader: &Reader, rest: &str) -> Result<Option<Response>, Ap
     )))
 }
 
-/// The picture's name inside this address, in either spelling — or
-/// `None` when the address is about something else entirely.
+/// The picture's name inside this address, under the mount or under the
+/// edition — or `None` when the address is about something else
+/// entirely.
+///
+/// The `latest` spelling of the edition is not a third case: the address
+/// arrives here already read into the number
+/// ([`crate::routes::as_numbered`]).
 fn requested<'a>(reader: &Reader, rest: &'a str) -> Option<&'a str> {
     let under_mount = rest.strip_prefix(&format!("{DIRECTORY}/"));
     let under_edition = rest
         .strip_prefix(&reader.prefix)
-        .or_else(|| rest.strip_prefix(&reader.latest_prefix()))
         .and_then(|tail| tail.strip_prefix(&format!("{DIRECTORY}/")));
     under_mount.or(under_edition)
 }
