@@ -599,6 +599,6 @@ export function writeRootFiles(outDirName = "dist") {
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const result = writeRootFiles(process.argv[2] ?? "dist");
   process.stdout.write(
-    `root-files: wrote ${result.written.join(", ")}; ${result.faces} font file(s) published, ${result.preloaded} preload(s) pointed at the bundle\n`,
+    `root-files: wrote ${result.written.join(", ")}; ${result.faces} font file(s) published, ${result.rewritten} page(s) pointed at the bundled faces\n`,
   );
 }
