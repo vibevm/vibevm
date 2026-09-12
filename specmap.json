@@ -80872,6 +80872,15 @@
       "uri": "spec://org.vibevm.core/vibevm/design/README#idx-documentation-vision"
     },
     {
+      "anchor": "idx-documentation-maintenance",
+      "content_hash": "sha256:90524d0180414436f5bf1b277c8cdada7232406e394d8ced123abcb8ff0af4c5",
+      "doc_path": "design/README",
+      "file": "vibevm/vibespecs/design/README.md",
+      "heading": "[The documentation maintenance regulation](documentation-maintenance.xml) — the maintenance regulation of the documentation packages, drafted 2026-09-10 and rehearsed in phase 6 of the documentation campaign; PROP-058 is the norm, this is its reasoning @status:spec/done",
+      "line": 164,
+      "uri": "spec://org.vibevm.core/vibevm/design/README#idx-documentation-maintenance"
+    },
+    {
       "anchor": "root",
       "content_hash": "sha256:a907e0839f555ab54d42b83437af540f1ea764d70ee96a49eac04b0eb46155fd",
       "doc_path": "design/action-system",
@@ -82823,6 +82832,780 @@
       "heading": "The §7 PROP edits are boss work (spec authoring is never delegated), applied only on the owner's approval of this design. @status:spec/work",
       "line": 90,
       "uri": "spec://org.vibevm.core/vibevm/design/deterministic-loading-aliasing#impl-spec-edits"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:176a3021f368880b481690463a33d06ee4de9e2b778a15d5d3ac3f8342b8d306",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "Сопровождение документации — регламент, черновик кампании",
+      "line": 3,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#root"
+    },
+    {
+      "anchor": "companion-line",
+      "content_hash": "sha256:914ec010cf3930082dac296f8ed1fa45c3865eb0c6e85bd254fdb8dcbb71b7a2",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "**Explains:** [PROP-058](../common/PROP-058-documentation-maintenance.xml). @status:spec/done",
+      "line": 5,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#companion-line"
+    },
+    {
+      "anchor": "why",
+      "content_hash": "sha256:f42d9dc28a5954d23bd1c97fa5b54a415fc900f48179c5394f0016e66043298b",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "0. Зачем",
+      "line": 6,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#why"
+    },
+    {
+      "anchor": "why-1",
+      "content_hash": "sha256:c8a88628a77f0ca1a6ae4b32260e8ce2b6f53df0539f32a7c1125dceff4da373",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "Документация дрейфует с первого дня после публикации. Продукт меняет\nкоманды и поля; читатели приносят вопросы, на которые страниц нет; мелкие\nправки, накопившись, ломают лестницу понятий и тон. Ни один из трёх\nпроцессов не останавливается сам. Значит, обновление — не «когда руки\nдойдут», а регламент с триггерами, дежурными, инструментами и гейтами. @status:spec/done",
+      "line": 7,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#why-1"
+    },
+    {
+      "anchor": "why-2",
+      "content_hash": "sha256:833d7c30067dd56e7c62fb84d84f490114e4348915cf42a6a5418eb87e4e11e4",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "Одно ограничение задано владельцем: продукт выходит по десять раз в день и\nпринимает по сто pull request'ов, документация между проверками неизбежно\nдрейфует, и этот риск принят. Второе ограничение оттуда же: версия —\nконтракт на поведение, а не набор файлов; внутри версии продукт меняется\nневидимо, десять релизов в день могут нести один номер, история\nпереписывается, и отличить одну amend-версию от другой не может никто.\nПоэтому регламент не опирается ни на что, кроме номера версии, который\nвладелец меняет осознанно: единственная «разница», которую считает машина, —\nразница между объявленными версиями по снимкам поверхности (§2.5), и она —\nвнутренняя кухня разработчиков документации; читатель видит номер и\nконтракт (`VISION.md`, D-27). Внутри версии всё сравнивается только с\nтекущим состоянием. Регламент не ставит технических замков между\nрелизом продукта и документацией. Он делает три вещи: измеряет дрейф,\nпоказывает его читателю и закрепляет обещание команды время от времени\nпроводить полную сверку (§2.4). @status:spec/done",
+      "line": 12,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#why-2"
+    },
+    {
+      "anchor": "why-3",
+      "content_hash": "sha256:492348321804d477f927e79f361c5fceddf075318aa9437503e12022b736b2a7",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "Этот документ описывает регламент **до** того, как документация написана,\nчтобы кампания реализации сразу накапливала материал для него: каждая\nудача, неудача и находка кампании записывается в журнал с пометкой, какое\nправило регламента она подтверждает, меняет или создаёт. В фазе 6 регламент\nпереписывается по журналу и дважды репетируется на свежей документации,\nпрежде чем стать нормой. @status:spec/done",
+      "line": 27,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#why-3"
+    },
+    {
+      "anchor": "drift",
+      "content_hash": "sha256:5bd3c0cb24b8c556e06dc985bc96423952983822607fe7f72e34089874907c81",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "1. Три источника дрейфа и что их ловит",
+      "line": 34,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#drift"
+    },
+    {
+      "anchor": "loops",
+      "content_hash": "sha256:1564cf3fded29dfe98f01a79f27ad0e2f3ed1baf93e0d64aa4499e53d55743ea",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "2. Четыре петли",
+      "line": 62,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#loops"
+    },
+    {
+      "anchor": "loop-commit",
+      "content_hash": "sha256:3d2cd52209a92d222028b3b48c3bfe21e740d92a5784bc0e52f5973be064e2f0",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "2.1 Петля коммита: мелочи",
+      "line": 119,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#loop-commit"
+    },
+    {
+      "anchor": "loop-commit-1",
+      "content_hash": "sha256:23087678eed5695e779bec4a1c1700ce3efbe1dcb4459802b09d572c82bb9297",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "Правило одно, и это привычка команды, а не технический гейт: **изменение\nпродукта, которое видно пользователю, несёт документацию в том же коммите**\n— как сегодня DEV-GUIDE и RUNTIME-GUIDE (план, R-11). «Видно пользователю»\n— это новая или изменённая команда, флаг, поле манифеста или lock-файла,\nформат отчёта, сообщение об ошибке с адресом, факт спеки с\n`actionstage=\"doc\"`, новый PROP. Привычку держит чекбокс в шаблоне pull\nrequest'а: «документация: обновлена / долг записан / не нужна». @status:spec/done",
+      "line": 120,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#loop-commit-1"
+    },
+    {
+      "anchor": "loop-commit-2",
+      "content_hash": "sha256:9d694a8b775a7cf729aa553d50843bf74388ce5f04330d9b3569103c6e836382",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "Если документация в том же коммите невозможна (большая страница, ждёт\nрешения), коммит несёт **строку долга**: запись в `BACKLOG.md` с префиксом\n`docs:` и severity, с адресом изменения. Панель считает строки долга и\nпечатает дрейф числом; ни то ни другое не роняет сборку — при десяти релизах\nв день замок между продуктом и документацией недопустим, дрейф между\nсверками принят как риск (§2.4). Месячная петля дренирует долг, полная\nсверка добирает всё, что осталось. Долг без адреса не принимается. @status:spec/done",
+      "line": 127,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#loop-commit-2"
+    },
+    {
+      "anchor": "loop-commit-3",
+      "content_hash": "sha256:6f53cf7b7556fdb963af25f506f84422df89ab3eb81d4d5c30b41da682862428",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "Для правок только документации — путь короткий: правка → `vibe doc check\n--style --examples --citations` на затронутых страницах → коммит\n`docs(vibevm-docs): …`. Мелкая правка подчиняется дисциплине §6. @status:spec/done",
+      "line": 134,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#loop-commit-3"
+    },
+    {
+      "anchor": "loop-commit-4",
+      "content_hash": "sha256:c1c3cef295d6c464c71919b4463c31dc2862f0d15ad848522f9e401d00fdbb2e",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "Первое действие любой правки — `git status` и проверка живого конфликта\nписателей (журнал, J-005): две центральные сессии в одном дереве — стоп. @status:spec/done",
+      "line": 137,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#loop-commit-4"
+    },
+    {
+      "anchor": "loop-weekly",
+      "content_hash": "sha256:51ecc0f6885e0a770382083133e5d30a894c9e9af563060f89b33b90036379f5",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "2.2 Недельная петля: малое ревью",
+      "line": 140,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#loop-weekly"
+    },
+    {
+      "anchor": "loop-weekly-1",
+      "content_hash": "sha256:748c148763090c7204a10ffbfd0dee9bfe1a2c6dc0cdc07274923c7c5ba84960",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "Порядок, буквально: @status:spec/done",
+      "line": 141,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#loop-weekly-1"
+    },
+    {
+      "anchor": "loop-weekly-2",
+      "content_hash": "sha256:a2b86ad74fa079baa86ef8742e56a1bb0c8ba20bc0b780a6520fbaca5275375f",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "Дешёвая модель запускает `vibe doc todo --format md` и `vibe doc check`\n   по всему пакету и кладёт отчёт в журнал недели. Центральная сессия читает\n   отчёт, не сырые выводы. @status:spec/done",
+      "line": 143,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#loop-weekly-2"
+    },
+    {
+      "anchor": "loop-weekly-3",
+      "content_hash": "sha256:61772a6add5771cdd3ce34735b2e355a5b350da275720e6df9931cdae50601a7",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "Сортировка очереди: что чинится за пять минут — чинится сейчас (не больше\n   пяти правок за петлю, иначе это не мелочь); что больше — становится\n   строкой долга с severity; что спорно — вопрос владельцу одной строкой. @status:spec/done",
+      "line": 146,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#loop-weekly-3"
+    },
+    {
+      "anchor": "loop-weekly-4",
+      "content_hash": "sha256:b01514c393250c7a6e3aaa891ad7cc9852ae881618ee28f16e3574680fc7058c",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "Сигналы недели (§5): вопросы людей и агентов, отставание адаптаций,\n   страницы с аномальным поведением читателей. Каждый сигнал — либо правка,\n   либо долг, либо «наблюдение без действия» с причиной. @status:spec/done",
+      "line": 149,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#loop-weekly-4"
+    },
+    {
+      "anchor": "loop-weekly-5",
+      "content_hash": "sha256:db0f004c4d6bc6142be0c2a9392efc9abd49373f44bdb2a427e02cf4ede1eab8",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "**Страница недели.** Одна страница по кругу (порядок — `reviews.toml`);\n   владелец или центральная сессия читает её вслух как читатель из\n   `STYLE.md` §1. Спотыкание — правка или долг. Дата чтения — в\n   `reviews.toml`. @status:spec/done",
+      "line": 152,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#loop-weekly-5"
+    },
+    {
+      "anchor": "loop-weekly-6",
+      "content_hash": "sha256:af94c47f3eed585cd24bca27743f21d57e93162f267978bce8e0634d12fff75d",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "Запись в журнал: что сделано, что отложено, что удивило. Мелкие правки\n   публикуются патч-версией пакета документации раз в неделю (вопрос\n   владельцу, §11). @status:spec/done",
+      "line": 156,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#loop-weekly-6"
+    },
+    {
+      "anchor": "loop-monthly",
+      "content_hash": "sha256:2b4f4097797f34a5e350ae46bdaff1c45efb9979b2a837d5ca8b9668c381a0a3",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "2.3 Месячная петля: большое ревью",
+      "line": 161,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#loop-monthly"
+    },
+    {
+      "anchor": "loop-monthly-1",
+      "content_hash": "sha256:787274977a0dddb3460d78fae8e084a3aef45ac57d2d46934c17c91bdf75bf60",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "**Метрики** (§7) за месяц — таблица в отчёте; тренд важнее значения. @status:spec/done",
+      "line": 163,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#loop-monthly-1"
+    },
+    {
+      "anchor": "loop-monthly-2",
+      "content_hash": "sha256:fe0e6cf9bb9e02e36196da34a18125d95f6e9bec44e94be86e79489051ceac23",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "**Аудит корпуса**: каждая верхнеуровневая команда, каждое поле манифеста,\n   каждый kind имеет страницу (сверка с `derived`); глоссарий — одно слово,\n   одно значение (поиск синонимов по корпусу); лестница между страницами\n   (термин впервые введён там, где его ищут); дубли и мёртвые страницы;\n   уровни `llms.txt` укладываются в бюджеты токенов; выборка из десяти\n   промптов прогоняется агентом (`vibe doc check --prompts --sample 10`,\n   D-30) — красный ассерт → правка страницы или долг. @status:spec/done",
+      "line": 164,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#loop-monthly-2"
+    },
+    {
+      "anchor": "loop-monthly-3",
+      "content_hash": "sha256:ac60c8499a57cf971ddbe52f6c00ada1e9e465335544426a2c9f0c166b20cfd9",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "**Аналитика**: страницы с высоким выходом и коротким чтением —\n   кандидаты на переписывание; запросы поиска без результата (когда поиск\n   появится); принятые IndexNow, ошибки Search Console. @status:spec/done",
+      "line": 171,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#loop-monthly-3"
+    },
+    {
+      "anchor": "loop-monthly-4",
+      "content_hash": "sha256:a80f6dd30b85fcd288d0cc010becad84efff3b676cbcd77079b7095233fae56e",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "**Адаптации**: суммарное отставание; страницы, где отставание больше трёх\n   ревизий, — в очередь адаптации. @status:spec/done",
+      "line": 174,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#loop-monthly-4"
+    },
+    {
+      "anchor": "loop-monthly-5",
+      "content_hash": "sha256:937f048a3133e085585f52449b9490a4cd79eec75ef332e9e12fadf19acd5ae4",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "**Долг**: `BACKLOG.md` строки `docs:` — каждая либо закрыта, либо получила\n   атом, либо переоценена с причиной. @status:spec/done",
+      "line": 176,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#loop-monthly-5"
+    },
+    {
+      "anchor": "loop-monthly-6",
+      "content_hash": "sha256:9f766c6e8c9f9aa85438cb7720497c137cfb74c9a604719c23e5caa4265a5176",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "**Стиль**: тики, проскочившие за месяц (найдены при чтении), добавляются\n   в списки линтера; ложные срабатывания линтера — правка правила. @status:spec/done",
+      "line": 178,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#loop-monthly-6"
+    },
+    {
+      "anchor": "loop-monthly-7",
+      "content_hash": "sha256:930d25506c522c2419157babe85067470671835486d53f7b94daf6cd90a21823",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "**Журнал → регламент**: каждая запись месяца с пустым полем «→ регламент»\n   получает решение; изменения регламента — правки этого документа (потом\n   PROP) с датой и ссылкой на записи. @status:spec/done",
+      "line": 180,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#loop-monthly-7"
+    },
+    {
+      "anchor": "loop-monthly-8",
+      "content_hash": "sha256:9f52225881f246f5a1c3feeb16934f3d62313bce9d2eb1913680bdf3dba3a008",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "**Чтение вслух трёх страниц** владельцем: одна новая, одна самая\n   посещаемая, одна самая старая по `reviews.toml`. @status:spec/done",
+      "line": 183,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#loop-monthly-8"
+    },
+    {
+      "anchor": "loop-monthly-9",
+      "content_hash": "sha256:647beb9276f6f708c024d90f0ca4a80a32d74e354167c92976417ac104a5af9f",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "**Релиз** пакета документации минорной версией с changelog, собранным из\n   журнала месяца (человеческий текст пишет центральная сессия). @status:spec/done",
+      "line": 185,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#loop-monthly-9"
+    },
+    {
+      "anchor": "loop-reconcile",
+      "content_hash": "sha256:93345a361151fe9f80073f536e1b6ca4d14860a0bac755199609f122d4548667",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "2.4 Полная сверка: обещание команды, не замок",
+      "line": 189,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#loop-reconcile"
+    },
+    {
+      "anchor": "loop-reconcile-1",
+      "content_hash": "sha256:7dfe5166a96d61e0cac7270d9212e8754a1bd84b6010e083e90bc1a05873d30e",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "Продукт выходит по десять раз в день и принимает по сто pull request'ов;\nдокументация между сверками дрейфует, и этот риск принят. Ни один\nтехнический гейт не связывает релиз продукта с документацией, и ничто не\nпытается измерить «сколько изменилось с прошлого раза» — такой меры нет по\nзамыслу проекта (D-27). Вместо замка — две вещи: **текущие пробелы**\nизмеряются (`vibe doc todo` печатает число команд, полей и обязательств без\nстраницы, красных примеров и неразрешимых цитат; никогда не роняет сборку) и\nкоманда **обещает себе полную сверку**: раз в квартал и перед крупной вехой\n— мажорной версией, публичным анонсом, — не на каждый релиз. @status:spec/done",
+      "line": 190,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#loop-reconcile-1"
+    },
+    {
+      "anchor": "loop-reconcile-2",
+      "content_hash": "sha256:408a9247facd5c67cdc3fb2d78a2325aa86dbb07a6c6fa56664c01fd834a1bfd",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "Порядок сверки, день–два: @status:spec/done",
+      "line": 199,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#loop-reconcile-2"
+    },
+    {
+      "anchor": "loop-reconcile-3",
+      "content_hash": "sha256:1046067ac9d9fea903fb6a722ef0165c99bc88c1d4ff795be3cbae91993db2e9",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "Дешёвая модель собирает документацию против **текущего релизного**\n   бинарника, не отладочного (J-001): `vibe doc todo`, `vibe doc check` со\n   всеми флагами, все примеры и **все промпты через агента**\n   (`--prompts`, D-30); отчёт — в журнал. @status:spec/done",
+      "line": 201,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#loop-reconcile-3"
+    },
+    {
+      "anchor": "loop-reconcile-4",
+      "content_hash": "sha256:22cc69e8f6bc5e8796f0dbc2448583340fccfaf58e977985787368ffe642ba49",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "Центральная сессия закрывает пробелы: страницы для новых команд, полей и\n   обязательств пишутся или получают долг с атомом; `derived`\n   перегенерируются; примеры с изменившимся выводом обновляются как\n   golden-тесты; неразрешимые цитаты чинятся. @status:spec/done",
+      "line": 205,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#loop-reconcile-4"
+    },
+    {
+      "anchor": "loop-reconcile-5",
+      "content_hash": "sha256:dd02c14256260877793f9885cc859c1dc352ffd78aedfd04a5dd451e33fcf92a",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "**Каждая страница перечитывается против текущего продукта** — это и\n   есть сверка, потому что устаревшую прозу машина не видит: рядом с\n   текстом открыты `--help` и спека, коридоры переписываются там, где\n   разошлись. Порядок — по `reviews.toml`, от самых давно не читанных.\n   Страницы, до которых руки не дошли, остаются с прежней датой чтения —\n   честно. @status:spec/done",
+      "line": 209,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#loop-reconcile-5"
+    },
+    {
+      "anchor": "loop-reconcile-6",
+      "content_hash": "sha256:25166b2a81e52292e3cfae61701b9b7d2670c55207a3f9782cd6fbddb96488ed",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "Адаптации перечитываются против источника; расхождение структуры\n   (`--translations`) — ноль. @status:spec/done",
+      "line": 215,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#loop-reconcile-6"
+    },
+    {
+      "anchor": "loop-reconcile-7",
+      "content_hash": "sha256:638a8b2afcfaf22624118cc2ad257fd0a20a11bdca8762864f002e043316e4b5",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "Пакет документации релизится версией, совместимой с текущим релизом\n   продукта (`[[documents]] version`); сайт показывает её как `latest`; после\n   публикации — `curl` корневых ссылок домена на `/doc/sitemap.xml` и\n   `/doc/llms.txt` (J-004), IndexNow по изменённым адресам. @status:spec/done",
+      "line": 217,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#loop-reconcile-7"
+    },
+    {
+      "anchor": "loop-reconcile-8",
+      "content_hash": "sha256:c5d0a16839350047bd06798a9a81a9c982746ea6eae5e5129b679a884d74682c",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "Отчёт сверки в журнал: пробелы до и после, число перечитанных и\n   переписанных страниц, время. Ноль пробелов и все даты чтения не старше\n   сверки — единственный гейт, и это гейт сверки, не релиза продукта. @status:spec/done",
+      "line": 221,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#loop-reconcile-8"
+    },
+    {
+      "anchor": "loop-version",
+      "content_hash": "sha256:ff8451f1713ada85c402578b306398572e65ce525eb7311f3a096b18eb1c9d62",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "2.5 Смена версии: псевдоистория для разработчиков документации",
+      "line": 226,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#loop-version"
+    },
+    {
+      "anchor": "loop-version-1",
+      "content_hash": "sha256:e580a30174fb89d5644fe1fd7589f9468353817eebcb27308dbc4353e9d3bdcb",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "Версия — контракт на поведение. Владелец поднимает номер осознанно, когда\nконтракт изменился, и это единственный момент, когда машина считает\n«разницу между версиями» (D-27). Смысл механизма — не искать, что\nизменилось в файлах, а **алгоритмически назвать страницы, которые надо\nобновить**, чтобы LLM правила их, а не перечитывала всю документацию. @status:spec/done",
+      "line": 227,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#loop-version-1"
+    },
+    {
+      "anchor": "loop-version-2",
+      "content_hash": "sha256:8cbde0b2d2eb261238521677a38789ae0b9045e113d197304c1986b5410d75b8",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "Порядок, часы: @status:spec/done",
+      "line": 232,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#loop-version-2"
+    },
+    {
+      "anchor": "loop-version-3",
+      "content_hash": "sha256:9c297342160916b89060cdc9a627c4d73829e67ac56b0e479b7b8d5266769bdf",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "Владелец меняет номер версии продукта. Никакого технического гейта на\n   этом шаге нет и не будет. @status:spec/done",
+      "line": 234,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#loop-version-3"
+    },
+    {
+      "anchor": "loop-version-4",
+      "content_hash": "sha256:f3696462340bd6b9ee40e6e9985eaebcbe6d3ba41f5659c9e230f37ee69f3eb2",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "Дешёвая модель записывает снимок поверхности новой версии против\n   текущего релизного бинарника: `vibe doc surface --record <новая>` →\n   `maintenance/surface/<новая>.json`. Снимок старой версии уже лежит рядом —\n   его записала последняя полная сверка или прошлая смена версии. @status:spec/done",
+      "line": 236,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#loop-version-4"
+    },
+    {
+      "anchor": "loop-version-5",
+      "content_hash": "sha256:70da07c0a65b0727abd5a9a24c4daf5b16449a13c27ac1d598cbc116b20d7f4e",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "`vibe doc diff <старая> <новая>` печатает список: что изменилось в\n   контракте (команда, флаг, поле, обязательство, схема) и какие страницы\n   это цитируют, выводят или обязаны покрывать; у каждой страницы —\n   причина. Пустой список — тоже ответ. @status:spec/done",
+      "line": 240,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#loop-version-5"
+    },
+    {
+      "anchor": "loop-version-6",
+      "content_hash": "sha256:b027a71a06a62b38ad29bc78ee8fcbf12b8d9797aecf787205b7d3e97bd62fb2",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "Центральная сессия обновляет **только перечисленные страницы** (и\n   пишет новые для того, что появилось без страницы); остальное не трогается.\n   То, что не успевает, — долг `docs:` с атомом. @status:spec/done",
+      "line": 244,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#loop-version-6"
+    },
+    {
+      "anchor": "loop-version-7",
+      "content_hash": "sha256:265cd98bd8cb48d6cc8a96481801d98a9946a0283cdc36574b5af4ea4c381804",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "Человеческий changelog между версиями для читателей пишется по выводу\n   diff — руками, по `STYLE.md`; сам вывод diff наружу не публикуется. @status:spec/done",
+      "line": 247,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#loop-version-7"
+    },
+    {
+      "anchor": "loop-version-8",
+      "content_hash": "sha256:72b09edcdc2eb0452d8dfdf478588bae3277598fdd3fe0cdfc1f613bbfa233cf",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "Пакет документации выходит с новым `[[documents]] version`; сайт\n   показывает его как `latest` для новой версии. Читатель видит номер и\n   контракт, ничего из кухни. @status:spec/done",
+      "line": 249,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#loop-version-8"
+    },
+    {
+      "anchor": "loop-version-9",
+      "content_hash": "sha256:131cb8c40bacb12b19b5161c6f72cd8faca71194e644bef096d720079e746b7e",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "Запись в журнал: сколько страниц назвал diff, сколько обновлено, время. @status:spec/done",
+      "line": 252,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#loop-version-9"
+    },
+    {
+      "anchor": "loop-version-10",
+      "content_hash": "sha256:0b9526ba29138980fa74ebb6b7451b8a6ed96e6c8d7afb7eced9179f3478cb49",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "Внутри версии тот же инструмент можно запустить как `vibe doc diff <версия>\nnow` — подсказка полной сверке, какие страницы перечитать первыми. Это\nкухня: никаких следов на страницах, никаких меток для читателя (вопрос\nвладельцу, `VISION.md` §10 п. 14). @status:spec/done",
+      "line": 254,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#loop-version-10"
+    },
+    {
+      "anchor": "tools",
+      "content_hash": "sha256:5ef927937f77f07a5c2fa2ca3c88758b95d2e6efa1503ea7b61cfdae425e6bf5",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "3. Инструменты",
+      "line": 260,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#tools"
+    },
+    {
+      "anchor": "tools-1",
+      "content_hash": "sha256:9443d69b437cc37b1692af31d45867b077830fc70c1b61f883ce3264e146d56f",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "**`vibe doc todo`** — очередь сопровождения по **текущему** состоянию, без\n  сравнений «с тех пор»: команды, поля манифеста и обязательства без\n  страницы (гейт покрытия), красные примеры, неразрешимые цитаты,\n  расхождения структуры адаптаций, возраст страниц по `reviews.toml`\n  (старше 90 дней), строки долга из `BACKLOG.md`, статистика линтера;\n  `--format md` для отчёта недели, `--format json` для метрик. Печатает\n  числа, никогда не роняет сборку. @status:spec/done",
+      "line": 262,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#tools-1"
+    },
+    {
+      "anchor": "tools-2",
+      "content_hash": "sha256:cb00a83f91fc51702288ca477a5f111b1c61b320c9980f5e53cca12521f7ed4a",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "**`vibe doc check`** — существующие проверки (D-14, D-25); флаг\n  `--prompts` прогоняет промпты страниц сценариев через агента-исполнителя\n  и проверяет ассерты (D-30) — дорого, поэтому не в панели: руками, в\n  месячной петле выборкой, на сверке целиком. @status:spec/done",
+      "line": 269,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#tools-2"
+    },
+    {
+      "anchor": "tools-3",
+      "content_hash": "sha256:2bcd75e878ae075bfaaeff0b3af0f0739090fced691a5ae89180f8c53c91daf1",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "**`vibe doc surface --record <версия>`** — снимок поверхности продукта\n  на объявленную версию: структурный JSON (команды и флаги из `--help`,\n  поля манифеста и lock-файла, схемы, тексты фактов с `actionstage=\"doc\"`,\n  реестр форматов), не хэш; ключ — только номер версии, который назвал\n  владелец. Лежит в `maintenance/surface/<версия>.json` пакета документации;\n  сайт этот каталог не рендерит. @status:spec/done",
+      "line": 273,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#tools-3"
+    },
+    {
+      "anchor": "tools-4",
+      "content_hash": "sha256:c3fc11ef76283f44138bb222df735eb5074b856b34004a5acb101951fea352a8",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "**`vibe doc diff <старая> <новая>`** — разница двух снимков, переведённая\n  в страницы: через граф цитат `rule`, источники `derived` и карту покрытия\n  — «что изменилось → какие страницы обновить → почему». Только для\n  разработчиков документации (§2.5). @status:spec/done",
+      "line": 279,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#tools-4"
+    },
+    {
+      "anchor": "tools-5",
+      "content_hash": "sha256:7f70ee8dcd68d7c69e871dcfb47f56c3b1f7bcfd2e11070413d829e8b8059a80",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "**`reviews.toml`** в пакете документации: страница → дата последнего\n  чтения вслух и кто читал; порядок «страницы недели». Данные, не генерат и\n  не история: дата говорит «когда читали», а не «против чего». @status:spec/done",
+      "line": 283,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#tools-5"
+    },
+    {
+      "anchor": "tools-6",
+      "content_hash": "sha256:cf9e9fe3e7f45bc4d68f4d91a092da4a4c55bdb2baf4ab23128dc67219152daf",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "**`JOURNAL.md`** — журнал (§4). В кампании — в папке вижена, с фазы 1 в\n  зоне кампании; после кампании — в пакете документации. @status:spec/done",
+      "line": 286,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#tools-6"
+    },
+    {
+      "anchor": "tools-7",
+      "content_hash": "sha256:90acedfd37314ccf29ab54755141508983af143cc25b30a705765177765760ac",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "**`CHANGELOG.md`** пакета документации — что изменилось для читателя,\n  по версиям; пишется из журнала, человеческим текстом. @status:spec/done",
+      "line": 288,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#tools-7"
+    },
+    {
+      "anchor": "tools-8",
+      "content_hash": "sha256:b05ca53fa57a2b5ca6df6dfe4bf9bcf1bec403818deb18ba112bbf363635336c",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "**`BACKLOG.md`** хоста — долг документации строками `docs:` с severity. @status:spec/done",
+      "line": 290,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#tools-8"
+    },
+    {
+      "anchor": "journal",
+      "content_hash": "sha256:71f44eb175f9bcbe705cdaf18b6513eef503227ccb678ba984fdac8f2d768322",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "4. Журнал",
+      "line": 293,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#journal"
+    },
+    {
+      "anchor": "journal-1",
+      "content_hash": "sha256:886863196ac6e71d5e8be61c5daa389b6091935ac6af53764c7e1e239bc3921b",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "Одна таблица, только дописывается. Поля: дата; тип — `успех`, `неудача`,\n`находка`, `наблюдение`; стабильный идентификатор `J-NNN`; что случилось;\nсвидетельство (команда, коммит, якорь, файл); **→ регламент** — какое\nправило это подтверждает, меняет или создаёт, либо «наблюдение без\nдействия: причина». @status:spec/done",
+      "line": 294,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#journal-1"
+    },
+    {
+      "anchor": "journal-2",
+      "content_hash": "sha256:19cb5dc5c836daece80831d3bbc8050cfe6f217d074576167684b5a818846d51",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "Три закона журнала: @status:spec/done",
+      "line": 299,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#journal-2"
+    },
+    {
+      "anchor": "journal-3",
+      "content_hash": "sha256:ba5626d4c99f2a820a54a17fde568c15b96268ce0398dbac0cfe9eb0adfc0078",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "**Запись делается в том же атоме**, где случилось событие: красная проба,\n   ложное срабатывание линтера, опровергнутое предсказание, обходной путь,\n   удачный приём. Не «в конце недели по памяти». @status:spec/done",
+      "line": 301,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#journal-3"
+    },
+    {
+      "anchor": "journal-4",
+      "content_hash": "sha256:fb8b49d4667887184733cb1b9c75fddb88d43f05a415efbd3710bfadfa0a2bd1",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "**Поле «→ регламент» не остаётся пустым** дольше месячной петли. @status:spec/done",
+      "line": 304,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#journal-4"
+    },
+    {
+      "anchor": "journal-5",
+      "content_hash": "sha256:78d7dc15b630c626a51b3d1a8f924e56db8ce71419df0e436aaf65f7831dd6be",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "**Правило без находки — гипотеза.** Каждое правило регламента ссылается на\n   записи журнала, которые его породили; правило без ссылки помечается\n   «гипотеза» и проверяется. Так находки кампании не теряются и не\n   выдумываются: регламент растёт только из того, что случилось. @status:spec/done",
+      "line": 305,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#journal-5"
+    },
+    {
+      "anchor": "signals",
+      "content_hash": "sha256:b870694a96d44aa052d095ec7de5f653baf97b59a8bfa6475fd232d944101abf",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "5. Сигналы",
+      "line": 311,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#signals"
+    },
+    {
+      "anchor": "small-edits",
+      "content_hash": "sha256:c9204154bd2b0a799458d40911e8cf1ae29357b4dfce592eb9fb5d1943bb451b",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "6. Дисциплина мелких правок",
+      "line": 360,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#small-edits"
+    },
+    {
+      "anchor": "small-edits-1",
+      "content_hash": "sha256:ad16589412302e9b7e83b00618502fda211f9f3b7a39b3cf4c5be27395056273",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "Одна правка — один коммит `docs(vibevm-docs): …` с конкретным описанием. @status:spec/done",
+      "line": 362,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#small-edits-1"
+    },
+    {
+      "anchor": "small-edits-2",
+      "content_hash": "sha256:871a8b9fd528dfc3a30bcc052b7c793ed396f99cd9f98b680c49f541964bc0f2",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "Якоря не меняются (R-06); `derived` руками не правится (R-03); число или\n   имя поля в прозе — только с `rule` рядом (R-01). @status:spec/done",
+      "line": 363,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#small-edits-2"
+    },
+    {
+      "anchor": "small-edits-3",
+      "content_hash": "sha256:ddfa6f6d840433bb121a892fbbb907d44aa8f74b2813b9b2375a376543f1a91c",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "Вставленный термин вводится на месте (`STYLE.md` §2); линтер стиля\n   зелёный на странице. @status:spec/done",
+      "line": 365,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#small-edits-3"
+    },
+    {
+      "anchor": "small-edits-4",
+      "content_hash": "sha256:581dc57a481f5124e063aacb51495fdc1362dc3efd389676d7f3609433d2f6db",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "**Правило пяти правок:** пятая мелкая правка одной страницы с последнего\n   чтения вслух ставит страницу в очередь «страница недели» — накопленные\n   заплатки ломают лестницу незаметно для каждого автора заплатки. @status:spec/done",
+      "line": 367,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#small-edits-4"
+    },
+    {
+      "anchor": "small-edits-5",
+      "content_hash": "sha256:c9128f627773a6bd48dd2fe5ca36cf240380ac3b378af5362cea4c7bd1849e74",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "Мелкая правка, которая тянет за собой другие страницы, — не мелкая: она\n   становится долгом с атомом. @status:spec/done",
+      "line": 370,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#small-edits-5"
+    },
+    {
+      "anchor": "metrics",
+      "content_hash": "sha256:a52f4db443dae5648eb8fa8818fc003ea58db24138feddccfed569386408a78d",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "7. Метрики месячного ревью",
+      "line": 374,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#metrics"
+    },
+    {
+      "anchor": "metrics-25",
+      "content_hash": "sha256:9b1e767f7fa9260a68392431aff386f5f54a68140d653d950ee244ad571555f8",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "Восемь чисел, не больше; таблица в отчёте месяца, тренд рядом. @status:spec/done",
+      "line": 422,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#metrics-25"
+    },
+    {
+      "anchor": "roles",
+      "content_hash": "sha256:384ca1e9b12f8b940858f11d75731ceb4993916a8823b2dd8763da209d1de963",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "8. Роли по ярусам",
+      "line": 424,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#roles"
+    },
+    {
+      "anchor": "self-change",
+      "content_hash": "sha256:5b86ad43d8ca97ec1fbd669f4b9877e7de5a6404cb8607776a9af4794ddb63a8",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "9. Как меняется сам регламент",
+      "line": 468,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#self-change"
+    },
+    {
+      "anchor": "self-change-1",
+      "content_hash": "sha256:50005dea965e8a45283f746c60998faaacc8a5a97bc77270e64487d79c5471fb",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "Регламент — не догма: он меняется по журналу в месячной петле (§2.3 п. 7).\nКаждое изменение — правка с датой и ссылками на записи `J-NNN`. Раз в\nквартал — вопрос владельцу: какие петли оказались лишними, какие метрики\nникто не смотрит, какие правила ни разу не сработали. Правило, не\nсработавшее за квартал, помечается «спящее» и выносится из чеклиста; правило\nбез записи-основания — «гипотеза». Так регламент худеет, а не толстеет. @status:spec/done",
+      "line": 469,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#self-change-1"
+    },
+    {
+      "anchor": "landing",
+      "content_hash": "sha256:dbeb55cd531bb73261e5a272dcc763ebfedce9e20acc2100f2220b7966188ce8",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "10. Куда ложится норма",
+      "line": 476,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#landing"
+    },
+    {
+      "anchor": "open",
+      "content_hash": "sha256:8a1895437e73758f0e9541b0176c54dcf788cc57114c221e803809fcbcbe567d",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "11. Открытые вопросы владельцу",
+      "line": 525,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#open"
+    },
+    {
+      "anchor": "open-1",
+      "content_hash": "sha256:046354e51a2e3784498c1bb882cf4b14ff7fb465bd91b36446d28720dc8c5c8f",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "Каденции: неделя и месяц, как здесь, или две недели и квартал. @status:spec/done",
+      "line": 527,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#open-1"
+    },
+    {
+      "anchor": "open-2",
+      "content_hash": "sha256:48a229974391e0a1c8829350df34e8fb21fa7d13170ac307cc8baa828d040b71",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "Дежурный по недельной петле: владелец с центральной сессией или только\n   сессия с отчётом владельцу. @status:spec/done",
+      "line": 528,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#open-2"
+    },
+    {
+      "anchor": "open-3",
+      "content_hash": "sha256:f35aa181059fcd8f3b7202b708d4171afb8bb1d9b8a6992bf856ff730926016b",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "Публиковать мелкие правки патч-версией еженедельно или копить до\n   месячного релиза. @status:spec/done",
+      "line": 530,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#open-3"
+    },
+    {
+      "anchor": "open-4",
+      "content_hash": "sha256:ca9a1a6a3a314362a84484fa3d16d412fe6a90d0fd2d87947e5faa5ddbbf9470",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "Сигнал от агентов `docs-gap:` в `BACKLOG.md` проектов-потребителей —\n   уместно ли писать в чужой файл по воле скилла, или только предлагать. @status:spec/done",
+      "line": 532,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#open-4"
+    },
+    {
+      "anchor": "open-5",
+      "content_hash": "sha256:d12bfcede061967b816f3bb4f3ace11f056a1027f60e2e82a0cd4200eda92bf4",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "Каденция полной сверки: раз в квартал, перед крупной вехой, или и то и\n   другое. Рекомендация — и то и другое, с правом владельца отложить. @status:spec/done",
+      "line": 534,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#open-5"
+    },
+    {
+      "anchor": "open-6",
+      "content_hash": "sha256:cfe114ada13822ad8de60d1c054bf65aa112f374040d2e47c2d1d4d55b308c35",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "Примеры с `expect` — единственная техническая связка продукта с\n   документацией (golden-тесты в панели): оставить как тесты или тоже\n   перевести в измеритель. Рекомендация — оставить: они правятся как любой\n   golden-файл и стоят минуты. @status:spec/done",
+      "line": 536,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#open-6"
+    },
+    {
+      "anchor": "open-7",
+      "content_hash": "sha256:1555b83483d3f91fbdc0631930305bc071ec7b902c9b11e6e95f1f7748679714",
+      "doc_path": "design/documentation-maintenance",
+      "file": "vibevm/vibespecs/design/documentation-maintenance.xml",
+      "heading": "Псевдоистория версий (§2.5): где хранить снимки и разрешить ли\n   внутренний `vibe doc diff <версия> now` как подсказку сверке\n   (`VISION.md` §10 п. 14). @status:spec/done",
+      "line": 540,
+      "uri": "spec://org.vibevm.core/vibevm/design/documentation-maintenance#open-7"
     },
     {
       "anchor": "root",
