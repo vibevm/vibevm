@@ -1,0 +1,14 @@
+# The documentation shell this build of `vibe` belongs with (PROP-057
+# `##SHELL-PIN`). Authored record, one generated field: `cargo xtask
+# embed-doc-shell` rewrites `sha256` after it builds the shell and copies
+# it into `shell/`, and leaves the rest alone.
+#
+# The shell directory itself is NOT committed — it is a build product of
+# the web package and a megabyte of content-hashed chunks. So on a fresh
+# clone this digest names a shell nobody has, which is exactly right: a
+# build without `--features embedded-shell` ships the bare fallback and
+# says so, and a release build has run the xtask step first.
+schema = 1
+package = "org.vibevm.doc/web"
+version = "0.1.0"
+sha256 = "d700bac7b1d395ce1c44cb181f12abf7c1ee668b093ea7930367adce59eba570"

@@ -1808,6 +1808,25 @@ dependencies = [
 ]
 
 [[package]]
+name = "include_dir"
+version = "0.7.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "923d117408f1e49d914f1a379a309cffe4f18c05cf4e3d12e613a15fc81bd0dd"
+dependencies = [
+ "include_dir_macros",
+]
+
+[[package]]
+name = "include_dir_macros"
+version = "0.7.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7cab85a7ed0bd5f0e76d93846e0147172bed2e2d3f859bcc33a8d9699cad1a75"
+dependencies = [
+ "proc-macro2",
+ "quote",
+]
+
+[[package]]
 name = "indexmap"
 version = "2.14.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4203,7 +4222,7 @@ checksum = "f2f6fb2847f6742cd76af783a2a2c49e9375d0a111c7bef6f71cd9e738c72d6e"
 dependencies = [
  "memoffset",
  "tempfile",
- "windows-sys 0.60.2",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -4438,6 +4457,7 @@ dependencies = [
  "vibe-core",
  "vibe-doc",
  "vibe-doc-server",
+ "vibe-doc-shell",
  "vibe-facts",
  "vibe-graph",
  "vibe-install",
@@ -4522,6 +4542,22 @@ dependencies = [
  "tower",
  "vibe-core",
  "vibe-doc",
+ "vibe-doc-shell",
+]
+
+[[package]]
+name = "vibe-doc-shell"
+version = "1.0.0"
+dependencies = [
+ "base64",
+ "core-ai-native-specmark",
+ "include_dir",
+ "serde",
+ "serde_json",
+ "sha2",
+ "tempfile",
+ "thiserror 2.0.18",
+ "toml 0.9.12+spec-1.1.0",
 ]
 
 [[package]]
@@ -5790,6 +5826,7 @@ dependencies = [
  "tempfile",
  "toml 0.9.12+spec-1.1.0",
  "vibe-core",
+ "vibe-doc-shell",
  "vibe-index",
  "vibe-publish",
  "vibe-registry",

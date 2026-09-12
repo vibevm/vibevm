@@ -391,7 +391,7 @@ The user-facing documentation of vibevm is being rebuilt as a *documentation pac
 
 - The pages: `vibevm/vibepacks/org.vibevm.core/vibevm-docs/` — opened by phase P of the campaign.
 - The old `docs/` tree moves to `docs-legacy/` in phase 3 and stays readable; nothing cites it as normative.
-- The machinery: `vibe doc build | check | manifest | serve` ships now. The maintenance verbs (`todo`, `surface`, `diff`) and the reader's shell are later phases of the same campaign.
+- The machinery: `vibe doc build | check | manifest | serve | shell` ships now. The maintenance verbs (`todo`, `surface`, `diff`) ship with them.
 
 **The four verbs.** Each is a thin surface over the `vibe-doc` library, which is where everything with content in it lives ([PROP-057 §10](vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml)); nothing below duplicates a rule, and `--path` defaults to the current directory everywhere.
 
@@ -410,6 +410,9 @@ cargo run -p vibe-cli -- doc manifest --llms index
 
 # Read it locally. Loopback only; bare islands until the shell ships.
 cargo run -p vibe-cli -- doc serve --port 8413
+
+# Which shell does this binary carry, and is it the one the build pinned?
+cargo run -p vibe-cli -- doc shell status
 ```
 
 `--style` joins `doc check` with the prose linter, later in the same phase.
@@ -420,4 +423,20 @@ cargo run -p vibe-cli -- doc serve --port 8413
 
 **The local reader binds `127.0.0.1` and only that.** There is no host flag and there is not going to be one: the reader serves proprietary packages' documentation, and one reachable from another machine is serving it to them. It sends a content policy naming no external source, no CORS header at all, and `frame-ancestors 'none'` unless `--frame-ancestor <origin>` names an editor's webview.
 
-Node is not needed for any of this. The site package `org.vibevm.doc/web` (Qwik 2.0) is built only on the server; its Node and pnpm pins, the floor and the MSYS path caveat are in [§2.6](#26-node-and-pnpm-for-the-site).
+**The reader's shell, and why your build has the bare one.** A page a person reads is the *island* — the content HTML the Rust pipeline renders — inside the *shell*: the head, the styles, the navigation, the behaviour, which are a build of the site package `org.vibevm.doc/web`. A release build compiles that shell into `vibe`; a plain `cargo build` on a machine with no Node compiles the **bare shell** instead, which is typography and no scripts and still a page you can read. `vibe doc shell status` says which one you have and whether it matches `crates/vibe-doc-shell/doc-shell.lock`.
+
+To carry the real one locally:
+
+```sh
+# Build the shell from the web package and put it where the crate can
+# compile it in. Needs Node and pnpm (§2.6); writes
+# crates/vibe-doc-shell/shell/, which is gitignored, and re-pins
+# doc-shell.lock.
+cargo xtask embed-doc-shell
+
+cargo build -p vibe-cli --features vibe-doc-shell/embedded-shell
+```
+
+On a release binary built from source there is a third way: `vibe doc shell install` downloads the shell that release was built with, verifies it against the pin, and stores it under `~/.vibe/opt/vibevm/doc-shell/<sha256>/`. It **asks first, every time**, and nothing in `vibe doc` ever reaches the network without that answer — which is the whole promise of the local mode.
+
+Node is not needed to build or run the product. The site package `org.vibevm.doc/web` (Qwik 2.0) is built on the server and by `cargo xtask embed-doc-shell`; its Node and pnpm pins, the floor and the MSYS path caveat are in [§2.6](#26-node-and-pnpm-for-the-site).

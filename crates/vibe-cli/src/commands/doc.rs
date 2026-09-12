@@ -9,6 +9,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-LIBRARY");
 
+pub mod shell;
 pub mod surface;
 pub mod todo;
 
@@ -53,6 +54,15 @@ pub struct DocEnv {
     pub current_exe: Option<PathBuf>,
     /// The process id, so two runs on one machine cannot share a sandbox.
     pub pid: u32,
+    /// `$VIBEVM_INSTALL_ROOT/opt`, else `~/.vibe/opt` — where a
+    /// downloaded reader shell is kept (PROP-019 §2.4).
+    pub install_root: Option<PathBuf>,
+    /// Has the invocation already declared that nobody is at the
+    /// keyboard? The one consent in this surface reads it rather than
+    /// guessing from the terminal alone.
+    pub unattended: bool,
+    /// Is the invocation printing a machine document? Same reason.
+    pub json: bool,
 }
 
 /// Run `vibe doc …`.
@@ -62,6 +72,7 @@ pub fn run(args: DocArgs, env: DocEnv) -> Result<()> {
         DocCommand::Check(check) => run_check(check, env),
         DocCommand::Manifest(manifest) => run_manifest(manifest, env),
         DocCommand::Serve(serve) => run_serve(serve, env),
+        DocCommand::Shell(args) => shell::run(args, env),
         DocCommand::Surface(record) => surface::run_surface(record, env),
         DocCommand::Diff(diff) => surface::run_diff(diff, env),
         DocCommand::Todo(queue) => todo::run_todo(queue, env),

@@ -25,6 +25,11 @@ vibe-doc.workspace = true
 # The local reader `vibe doc serve` starts: axum lives there and never
 # in the pipeline (PROP-057 ##PIPE-CRATES).
 vibe-doc-server.workspace = true
+# The reader's shell: `vibe doc shell` reports on it and installs it, and
+# `vibe doc serve` hands one to the server. The `embedded-shell` feature
+# is NOT turned on here — a release build turns it on from the outside,
+# so a plain `cargo build` needs no Node (##SHELL-RELEASE-BUILD).
+vibe-doc-shell.workspace = true
 vibe-facts.workspace = true
 vibe-actions.workspace = true
 vibe-graph.workspace = true

@@ -44,6 +44,7 @@ mod bridge;
 mod codegen;
 mod conform;
 mod dist;
+mod doc_shell;
 mod epochs;
 mod mirror;
 mod rebuild;
@@ -56,6 +57,7 @@ use bridge::run_bridge;
 use codegen::{run_check_codegen, run_codegen};
 use conform::{run_conform_check, run_conform_freeze};
 use dist::run_dist;
+use doc_shell::run_embed_doc_shell;
 use mirror::run_mirror;
 use rebuild::run_rebuild;
 use specmap::run_specmap;
@@ -235,6 +237,20 @@ enum Cmd {
         check: bool,
     },
 
+    /// Build the documentation reader's shell from the web package and
+    /// put it where a release build of `vibe` compiles it in (PROP-057
+    /// `##SHELL-XTASK-EMBED`). Runs `pnpm build:embedded`, copies the
+    /// route template and the served statics into
+    /// `crates/vibe-doc-shell/shell/` (gitignored), writes the shell's
+    /// index and re-pins `doc-shell.lock`.
+    EmbedDocShell {
+        /// Embed the output already in the package instead of building
+        /// it again — for a second run on an unchanged tree, and for a
+        /// machine where the build has just been done by hand.
+        #[arg(long)]
+        no_build: bool,
+    },
+
     /// Build, inspect and publish the four native vibevm distribution bundles.
     Dist {
         #[command(subcommand)]
@@ -397,6 +413,7 @@ fn main() -> Result<()> {
         Cmd::CheckCodegen => run_check_codegen(),
         Cmd::Specmap { check } => run_specmap(check),
         Cmd::SyncEngines { check } => run_sync_engines(check),
+        Cmd::EmbedDocShell { no_build } => run_embed_doc_shell(&repo_root()?, no_build),
         Cmd::Dist { command } => run_dist(&repo_root()?, command),
         Cmd::TestGate { baseline } => rust_ai_native_cli::run_test_gate(&repo_root()?, &baseline),
         Cmd::Tripwire { base, debt } => {

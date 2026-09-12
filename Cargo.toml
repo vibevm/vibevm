@@ -14,6 +14,7 @@ members = [
     "crates/vibe-core",
     "crates/vibe-doc",
     "crates/vibe-doc-server",
+    "crates/vibe-doc-shell",
     "crates/vibe-extension-registry",
     "crates/vibe-ext",
     "crates/vibe-facts",
@@ -50,6 +51,7 @@ default-members = [
     "crates/vibe-core",
     "crates/vibe-doc",
     "crates/vibe-doc-server",
+    "crates/vibe-doc-shell",
     "crates/vibe-extension-registry",
     "crates/vibe-ext",
     "crates/vibe-facts",
@@ -103,6 +105,9 @@ vibe-core = { path = "crates/vibe-core", version = "1.0.0" }
 # `derived` generators every documentation surface projects.
 vibe-doc = { path = "crates/vibe-doc", version = "1.0.0" }
 vibe-doc-server = { path = "crates/vibe-doc-server", version = "1.0.0" }
+# The reader's shell: one type over the shell built into this binary, the
+# shell downloaded into the machine store, and the bare fallback.
+vibe-doc-shell = { path = "crates/vibe-doc-shell", version = "1.0.0" }
 # The R4.0 pure registry kernel: the one extension declaration/activation/
 # ordering/selector/view collector below lifecycle, workspace and spec.
 vibe-extension-registry = { path = "crates/vibe-extension-registry", version = "1.0.0" }
@@ -222,6 +227,15 @@ console = "0.16"
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 sha2 = "0.10"
+# The built documentation shell, compiled into `vibe` behind the
+# `embedded-shell` feature (PROP-057 ##SHELL-XTASK-EMBED). MIT, four
+# crates in the whole graph. Chosen over `rust-embed` on a measurement
+# recorded in the phase-0 finding A0.11: a `rust-embed` debug build reads
+# the directory from disk at run time unless `debug-embed` is remembered
+# everywhere, and a reader that must be autonomous cannot depend on
+# remembering. Optional, because a build without Node ships the bare
+# fallback shell instead.
+include_dir = "0.7.4"
 # Shared release ZIP reader/writer for the xtask producer and VVM bootstrap
 # consumer. MIT; default codecs are disabled so the distribution surface
 # carries only the zlib-rs-backed DEFLATE codec it emits and accepts.

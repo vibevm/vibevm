@@ -41,6 +41,10 @@ pub enum DocCommand {
     /// site glues into its own frame.
     Serve(DocServeArgs),
 
+    /// The reader's shell: what this binary carries, and how to get the
+    /// real one when it carries the bare fallback.
+    Shell(DocShellArgs),
+
     /// Record what the product's surface looks like on one declared
     /// version: the command tree with its flags, the keys the manifest
     /// and the lock file accept, the members of every published schema,
@@ -173,6 +177,52 @@ pub struct DocServeArgs {
     /// running one.
     #[arg(long, value_name = "PATH")]
     pub binary: Option<PathBuf>,
+}
+
+/// `vibe doc shell` — the reader's shell.
+#[derive(Debug, clap::Args)]
+pub struct DocShellArgs {
+    #[command(subcommand)]
+    pub command: Option<DocShellCommand>,
+}
+
+/// The `vibe doc shell` subcommands. None means `status`.
+#[derive(Debug, clap::Subcommand)]
+pub enum DocShellCommand {
+    /// What shell this binary carries, and whether it is the one the
+    /// build pinned: the digest measured from the bytes now, the digest
+    /// the shell's own index records, the digest compiled in, and the
+    /// pin. Non-zero exit when they disagree.
+    Status(DocShellStatusArgs),
+
+    /// Download the shell this version of `vibe` was built with and place
+    /// it in the machine store. Asks first, every time, and never runs by
+    /// itself: a reader that reached the network on its own would have
+    /// broken the one promise the local mode makes.
+    Install(DocShellInstallArgs),
+}
+
+/// `vibe doc shell status`.
+#[derive(Debug, clap::Args)]
+pub struct DocShellStatusArgs {
+    /// Print the report as JSON.
+    #[arg(long)]
+    pub json: bool,
+}
+
+/// `vibe doc shell install`.
+#[derive(Debug, clap::Args)]
+pub struct DocShellInstallArgs {
+    /// Take the download as approved. The flag is the consent — there is
+    /// no setting that makes it permanent.
+    #[arg(long)]
+    pub assume_yes: bool,
+
+    /// Where the release assets are read from. The default is the
+    /// project's own releases; a mirror or a local directory is for a
+    /// test and for an air-gapped copy.
+    #[arg(long, value_name = "URL")]
+    pub from: Option<String>,
 }
 
 /// `vibe doc surface` — the surface of one declared version.

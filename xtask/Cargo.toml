@@ -30,6 +30,10 @@ zip.workspace = true
 sha2.workspace = true
 vibe-core.workspace = true
 vibe-registry.workspace = true
+# `embed-doc-shell` writes the shell's index and its pin, and the digest
+# in both is measured by the crate that will re-measure it later — one
+# algorithm, so the comparison means something (PROP-057 ##SHELL-PIN).
+vibe-doc-shell.workspace = true
 # The CLI path (not only the tests) needs a scratch directory to
 # reproject into; the tests were using it as a dev-dependency before.
 tempfile.workspace = true
