@@ -1,6 +1,10 @@
 //! Observed-tree scoping: `facts.toml` include globs, the always-on
 //! default excludes — by directory and by file name — and the project's own
 //! enumerated `exclude` globs (PROP-043 §6, the facts home).
+//!
+//! Beside them, on a different axis and never touching the enumeration:
+//! `[judging] exempt` ([`JudgingExemption`]), which says of an observed
+//! file that it is never judged (PROP-057 `##OBS-NOT-JUDGED`).
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#config");
 
@@ -78,6 +82,28 @@ pub struct ProgressSection {
     pub cache_dir: Option<String>,
 }
 
+/// The `[judging]` table — which observed documents are never *judged*
+/// (PROP-057 `##OBS-NOT-JUDGED`). Absent in most projects, and absent
+/// means "everything observed is also judged".
+#[derive(Debug, Clone, Default, Deserialize)]
+pub struct JudgingSection {
+    /// Globs matched against the `/`-separated repo-relative path of an
+    /// observed file: the file stays in the corpus and keeps its statuses,
+    /// and it enters no judging debt.
+    ///
+    /// This is the one axis `exclude` cannot express. A documentation
+    /// package is authored, current and worth observing — `vibe facts`
+    /// must see its pages — but its genre is non-normative, so a verdict
+    /// on one of its paragraphs asserts nothing. Excluding it would hide
+    /// the pages; judging it would mint addresses on prose that nothing
+    /// resolves against. `exempt` is the third answer: observed, never
+    /// judged.
+    ///
+    /// Absent ⇒ empty ⇒ the behaviour of a config that never had the key.
+    #[serde(default)]
+    pub exempt: Vec<String>,
+}
+
 #[derive(Debug, Clone, Deserialize)]
 pub struct ScopeConfig {
     #[serde(default)]
@@ -100,6 +126,8 @@ pub struct ScopeConfig {
     #[serde(default)]
     pub exclude: Vec<String>,
     #[serde(default)]
+    pub judging: JudgingSection,
+    #[serde(default)]
     pub progress: ProgressSection,
 }
 
@@ -109,8 +137,57 @@ impl Default for ScopeConfig {
             schema: Some(1),
             include: DEFAULT_INCLUDES.iter().map(|s| s.to_string()).collect(),
             exclude: Vec::new(),
+            judging: JudgingSection::default(),
             progress: ProgressSection::default(),
         }
+    }
+}
+
+impl ScopeConfig {
+    /// The `[judging] exempt` globs of this config, compiled once.
+    pub fn judging_exemption(&self) -> Result<JudgingExemption> {
+        JudgingExemption::compile(&self.judging.exempt)
+    }
+}
+
+/// The compiled `[judging] exempt` globs — "observed, never judged"
+/// (PROP-057 `##OBS-NOT-JUDGED`).
+///
+/// Deliberately separate from the enumeration in [`observed_files`]: an
+/// exemption must never be able to shrink the corpus. A consumer that
+/// counts debt asks this; a consumer that lists, parses, checks or maps
+/// the corpus never does, and the type makes that split visible at the
+/// call site rather than leaving it to a comment.
+#[derive(Debug, Clone, Default)]
+pub struct JudgingExemption {
+    globs: Vec<glob::Pattern>,
+}
+
+impl JudgingExemption {
+    /// Compile the patterns, naming any that is not a valid glob.
+    ///
+    /// An invalid pattern is an error and never a silent skip: a skipped
+    /// exemption would put a documentation package back into the debt,
+    /// which is the failure this key exists to prevent.
+    pub fn compile(patterns: &[String]) -> Result<Self> {
+        let globs = patterns
+            .iter()
+            .map(|p| {
+                glob::Pattern::new(p).with_context(|| format!("bad judging exempt glob `{p}`"))
+            })
+            .collect::<Result<Vec<_>>>()?;
+        Ok(JudgingExemption { globs })
+    }
+
+    /// No exemptions declared — every observed file is judged.
+    pub fn is_empty(&self) -> bool {
+        self.globs.is_empty()
+    }
+
+    /// Is this repo-relative path observed but never judged?
+    pub fn covers(&self, rel: &Path) -> bool {
+        let path = rel_str(rel);
+        self.globs.iter().any(|g| g.matches(&path))
     }
 }
 
@@ -398,6 +475,102 @@ mod tests {
             format!("{err:#}").contains("packages/a**/x.md"),
             "error must name the pattern: {err:#}"
         );
+    }
+
+    /// The whole point of the key, and the one law that must never bend:
+    /// an exemption changes what is JUDGED, never what is OBSERVED. An
+    /// exempt page is in the corpus, parsed, checked and mapped exactly as
+    /// before — `exclude` is the key that removes a file, and this is not
+    /// that key (PROP-057 `##OBS-NOT-JUDGED`).
+    #[test]
+    fn a_judging_exemption_leaves_the_corpus_untouched() {
+        let dir = package_tree();
+        let cfg = ScopeConfig {
+            include: vec!["packages/**/*.md".into()],
+            judging: JudgingSection {
+                exempt: vec!["packages/x/**".into()],
+            },
+            ..ScopeConfig::default()
+        };
+        let (files, report) = observed_files_reported(dir.path(), &cfg).expect("enumerate");
+        let names: Vec<String> = files.iter().map(|f| rel_str(f)).collect();
+        assert!(
+            names.contains(&"packages/x/v0.1.0/spec/cards/scaffold-a.md".to_string()),
+            "{names:?}"
+        );
+        assert_eq!(report.dropped, 0, "an exemption drops nothing");
+
+        let exemption = cfg.judging_exemption().expect("compile");
+        assert!(exemption.covers(Path::new("packages/x/v0.1.0/spec/cards/scaffold-a.md")));
+        assert!(!exemption.covers(Path::new("packages/y/v0.1.0/spec/cards/scaffold-a.md")));
+    }
+
+    #[test]
+    fn no_judging_key_exempts_nothing() {
+        let cfg = ScopeConfig::default();
+        let exemption = cfg.judging_exemption().expect("compile");
+        assert!(exemption.is_empty());
+        assert!(!exemption.covers(Path::new("vibevm/vibepacks/g/n/v0.1.0/a.xml")));
+    }
+
+    #[test]
+    fn an_invalid_judging_exempt_glob_is_an_error_naming_the_pattern() {
+        let err = JudgingExemption::compile(&["packages/a**/x.md".to_string()])
+            .expect_err("invalid glob");
+        assert!(
+            format!("{err:#}").contains("packages/a**/x.md"),
+            "error must name the pattern: {err:#}"
+        );
+    }
+
+    /// The glob dialect of the key, written down where a second reader can
+    /// be held to it. The debt is counted today by a stopgap script
+    /// outside this crate (PROP-047 `##DEBT-MUST-BE-ASKABLE`), and a
+    /// pattern that meant one thing to the script and another to the verb
+    /// that replaces it would move the debt silently on the day of the
+    /// swap.
+    ///
+    /// It is the dialect `exclude` has had since DRIFT-024, deliberately:
+    /// one configuration file must not hold two readings of `*`. `**`
+    /// stands for zero or more whole components, and — the part that
+    /// surprises — a plain `*` crosses separators too, because the crate's
+    /// default `MatchOptions` do not require a literal separator. So a
+    /// pattern is at least as wide as it looks and never narrower, which
+    /// is the safe direction for an exemption to err only under review:
+    /// every pattern here is enumerated and reviewed, never a wildcard.
+    #[test]
+    fn the_exempt_globs_speak_the_dialect_the_exclude_key_speaks() {
+        let exemption = JudgingExemption::compile(&[
+            "a/**/c".to_string(),
+            "b/**".to_string(),
+            "d/*/f".to_string(),
+        ])
+        .expect("compile");
+        assert!(exemption.covers(Path::new("a/c")), "zero components");
+        assert!(exemption.covers(Path::new("a/x/y/c")), "many components");
+        assert!(!exemption.covers(Path::new("a/x/cx")));
+        assert!(exemption.covers(Path::new("b/x/y.xml")));
+        assert!(!exemption.covers(Path::new("bx/y.xml")), "a component ends");
+        assert!(exemption.covers(Path::new("d/e/f")));
+        assert!(
+            exemption.covers(Path::new("d/e/x/f")),
+            "a plain `*` crosses separators under the default MatchOptions"
+        );
+    }
+
+    #[test]
+    fn the_judging_table_is_read_from_facts_toml() {
+        let dir = tempfile::tempdir().expect("tempdir");
+        std::fs::write(
+            dir.path().join("facts.toml"),
+            "schema = 1\ninclude = [\"a/**/*.xml\"]\n\n\
+             [judging]\nexempt = [\"a/docs/**\"]\n",
+        )
+        .expect("write");
+        let cfg = load_config(dir.path()).expect("load");
+        let exemption = cfg.judging_exemption().expect("compile");
+        assert!(exemption.covers(Path::new("a/docs/page.xml")));
+        assert!(!exemption.covers(Path::new("a/specs/page.xml")));
     }
 
     #[test]

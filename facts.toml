@@ -225,3 +225,41 @@ exclude = [
     # package's XML specs and the wider namespace remain observed.
     "vibevm/vibepacks/org.vibevm.world/zai-glm-claude/v1.0.0/README.md",
 ]
+
+# DOCUMENTATION: OBSERVED, NEVER JUDGED (PROP-057 ##OBS-NOT-JUDGED).
+#
+# A third answer, beside `include` and `exclude`, for a genre the first two
+# cannot place. Every exclusion above removes a file because the project is
+# not the source of truth for it (a licence, a dependency copy) or because
+# markup written into it dies on regeneration (a derived index, the boot
+# artifacts). A documentation package is neither: it is authored here, it is
+# current, and `vibe facts` must see its pages and their statuses. What it
+# is not is normative — a verdict on a paragraph of a manual asserts nothing
+# this project could be wrong about, and the campaign's own line (F-096) is
+# that a document belongs in the corpus when it asserts something this
+# project could be wrong about. The manual quotes the rules; it does not
+# make them.
+#
+# This is the rule the book and the legacy projections needed and did not
+# have. Both were EXCLUDED for want of a way to say "marked, never
+# verified" (F-080, F-091, and §3.3's own admission that `--exhaustive`
+# cannot express it), and both went dark as a result. `exempt` says it
+# directly: the file stays observed, keeps its statuses and its place in the
+# map, and enters no judging debt.
+#
+# The list is by GLOB and not by package name because the debt is counted
+# over paths. It must stay narrow enough to name the packages it frees:
+# never widen it to `vibevm/vibepacks/**`, and never use it to quiet a
+# normative package that is merely behind on its verdicts — that is debt,
+# and debt is paid, not exempted.
+#
+# The list cannot go stale: `every_in_tree_doc_package_is_exempt_from_judging`
+# (crates/vibe-facts/tests/judging_exempt.rs) walks the tree for packages of
+# kind `doc` and fails if one is not covered here.
+[judging]
+exempt = [
+    # The core manual — `kind = "doc"`, 44 pages, the subject of
+    # campaigns/docs-2026-09. Version-agnostic so the next slot inherits the
+    # exemption rather than silently entering the debt on the day it opens.
+    "vibevm/vibepacks/org.vibevm.core/vibevm-docs/**",
+]
