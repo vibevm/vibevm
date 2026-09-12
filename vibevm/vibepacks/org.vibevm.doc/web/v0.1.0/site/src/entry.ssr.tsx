@@ -15,14 +15,43 @@ import {
   type RenderToStreamOptions,
 } from "@qwik.dev/core/server";
 
+import { localeFromPath } from "./landing/i18n.ts";
 import Root from "./root.tsx";
 
+/**
+ * The document's language, read off the address being rendered.
+ *
+ * `<html lang>` is a container attribute: it is written before any
+ * component runs, so no route can set it and it has to be decided here.
+ * The address is the only thing available at this point that knows the
+ * answer — and on this site the address is where the language lives
+ * anyway (D-06): English at the root, every other language a directory
+ * under it.
+ *
+ * A documentation address answers English here and gets its real
+ * language on the article the pipeline renders, which is where a page
+ * whose shell and whose text are in different languages needs it.
+ *
+ * A missing or unparsable URL answers English rather than throwing: a
+ * page that renders in the wrong language is a defect, and a page that
+ * does not render is an outage.
+ */
+function documentLanguage(url: unknown): string {
+  if (typeof url !== "string") return "en";
+  try {
+    return localeFromPath(new URL(url).pathname);
+  } catch {
+    return "en";
+  }
+}
+
 export default function render(opts: RenderToStreamOptions) {
+  const url: unknown = opts.serverData?.["url"];
   return renderToStream(<Root />, {
     ...opts,
-    // The language of the shell, not of the documentation: a page's own
-    // language is a segment of its address and is set on the article the
-    // pipeline renders.
-    containerAttributes: { lang: "en", ...opts.containerAttributes },
+    containerAttributes: {
+      lang: documentLanguage(url),
+      ...opts.containerAttributes,
+    },
   });
 }

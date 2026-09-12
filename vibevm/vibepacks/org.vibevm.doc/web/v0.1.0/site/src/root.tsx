@@ -1,7 +1,11 @@
 /** @scope spec://org.vibevm.core/vibevm/common/PROP-057#READER-SETTINGS */
 
 import { component$ } from "@qwik.dev/core";
-import { QwikRouterProvider, RouterOutlet } from "@qwik.dev/router";
+import {
+  DocumentHeadTags,
+  QwikRouterProvider,
+  RouterOutlet,
+} from "@qwik.dev/router";
 import themeInit from "@vibe-docs/design/theme-init.js?raw";
 
 import "./global.css";
@@ -16,6 +20,14 @@ import "./global.css";
  * one cannot be. The cost is that a Content-Security-Policy for this
  * site has to carry the script's hash — which is the deployment's
  * business, and cheaper than a flash on every page load.
+ *
+ * `DocumentHeadTags` renders what each route declared in its `head`
+ * export: the title, the description, `canonical`, the `hreflang` set,
+ * Open Graph, the Twitter card, the structured data and the font
+ * preloads. Without it a route's `head` is a value nobody reads, and a
+ * page can be perfectly right to a reader and invisible to a crawler
+ * (`##SEO-STRUCTURED-DATA`). It sits after the two constants above so
+ * that the charset is settled before anything carrying a URL is parsed.
  */
 export default component$(() => {
   return (
@@ -24,6 +36,7 @@ export default component$(() => {
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <script dangerouslySetInnerHTML={themeInit} />
+        <DocumentHeadTags />
       </head>
       <body>
         <RouterOutlet />

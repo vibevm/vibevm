@@ -1,0 +1,119 @@
+/* The landing's frame: the reading column, the header's nav, the
+   footer's two columns, and the warm wash behind all of it. */
+
+.landing-page {
+  /* The footer belongs at the bottom of the viewport on a short page —
+     the 404 is one screen of text and would otherwise leave the footer
+     floating in the middle of nothing. */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.landing-page > .footer {
+  margin-top: auto;
+}
+
+/* A single off-centre glow rather than a gradient template: it is the
+   one piece of atmosphere the page has, and it is derived from the
+   accent so a theme change carries it along. */
+.landing-page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(
+      70% 55% at 78% 8%,
+      color-mix(in srgb, var(--accent) 10%, transparent),
+      transparent 60%
+    ),
+    radial-gradient(
+      60% 50% at 6% 100%,
+      color-mix(in srgb, var(--accent) 5%, transparent),
+      transparent 55%
+    );
+  pointer-events: none;
+}
+
+/* The landing's measure. Narrower than the header's 1200px on purpose:
+   the hero is a two-column composition and the eye needs the pair to sit
+   together, not to span the window. */
+.landing-shell {
+  width: 100%;
+  max-width: 1100px;
+  margin-inline: auto;
+  padding-inline: 32px;
+}
+
+.landing-nav {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  font-size: 14px;
+  color: var(--text-2);
+}
+
+.landing-nav__link {
+  transition: color var(--speed) ease;
+}
+
+.landing-nav__link:hover {
+  color: var(--text);
+}
+
+.landing-nav__lang {
+  display: inline-flex;
+  gap: 10px;
+}
+
+.landing-nav__lang-link {
+  transition: color var(--speed) ease;
+}
+
+.landing-nav__lang-link--current {
+  color: var(--text);
+}
+
+.landing-nav__lang-link:hover {
+  color: var(--text);
+}
+
+.landing-footer__brand,
+.landing-footer__links {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--text-2);
+}
+
+.landing-footer__links {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.landing-footer__links a {
+  transition: color var(--speed) ease;
+}
+
+.landing-footer__links a:hover {
+  color: var(--accent);
+}
+
+/* The redirect stub at `/en/` — a page nobody should see for longer
+   than it takes the browser to follow it. */
+.landing-redirect {
+  padding-block: clamp(64px, 16vh, 160px);
+  max-width: 34rem;
+  color: var(--text-2);
+}
+
+@media (max-width: 520px) {
+  .landing-shell {
+    padding-inline: 20px;
+  }
+  .landing-nav__link--wide {
+    display: none;
+  }
+}
